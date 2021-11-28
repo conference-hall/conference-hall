@@ -1,4 +1,5 @@
 import { ActionFunction, LoaderFunction, redirect, useSubmit } from 'remix';
+import { Container } from '../components/Container';
 import { useFirebaseSignIn } from '../firebase/useFirebaseSignIn';
 import { createUserSession, getAuthUser } from '../server/auth.server';
 
@@ -19,8 +20,8 @@ export default function Login() {
   if (isSigning) return null
   
   return (
-    <div className="min-h-screen flex items-center justify-center">
+    <Container className="min-h-screen flex items-center justify-center">
       <button type="button" onClick={signin}>Login with google</button>
-    </div>
+    </Container>
   )
 }

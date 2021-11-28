@@ -10,6 +10,7 @@ import {
   useCatch,
   useLoaderData,
 } from 'remix';
+import { Navbar } from './components/Navbar';
 
 import { initializeFirebase } from './firebase/init';
 import tailwind from './tailwind.css';
@@ -48,15 +49,18 @@ type DocumentProps = { children: ReactNode; title?: string };
 
 function Document({ children, title }: DocumentProps) {
   return (
-    <html lang="en">
+    <html lang="en" className="h-full bg-gray-100">
       <head>
         <meta charSet="utf-8" />
         <Meta />
         {title ? <title>{title}</title> : null}
         <Links />
       </head>
-      <body>
-        {children}
+      <body className="h-full">
+        <div className="min-h-full">
+          <Navbar />
+          {children}
+        </div>
         <Scripts />
         {process.env.NODE_ENV === 'development' && <LiveReload />}
       </body>
