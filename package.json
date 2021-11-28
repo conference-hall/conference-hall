@@ -14,6 +14,9 @@
     "db:reset": "prisma migrate reset",
     "db:studio": "prisma studio"
   },
+  "prisma": {
+    "seed": "node --require esbuild-register prisma/seed.ts"
+  },
   "dependencies": {
     "@prisma/client": "^3.5.0",
     "@remix-run/react": "^1.0.6",
@@ -23,7 +26,8 @@
     "firebase-admin": "^10.0.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "remix": "^1.0.6"
+    "remix": "^1.0.6",
+    "zod": "^3.11.6"
   },
   "devDependencies": {
     "@remix-run/dev": "^1.0.6",
@@ -31,6 +35,7 @@
     "@types/react": "^17.0.24",
     "@types/react-dom": "^17.0.9",
     "concurrently": "^6.4.0",
+    "esbuild-register": "^3.2.0",
     "prisma": "^3.5.0",
     "tailwindcss": "^2.2.19",
     "typescript": "^4.1.2"

@@ -1,3 +1,5 @@
+import { Link } from 'remix';
+
 export function Navbar() {
   return (
     <nav className="bg-indigo-600">
@@ -12,7 +14,7 @@ export function Navbar() {
               />
             </div>
             <div className="ml-4 text-lg font-bold text-indigo-100">
-              Conference Hall
+              <Link to="/">Conference Hall</Link>
             </div>
           </div>
         </div>
