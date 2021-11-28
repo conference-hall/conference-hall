@@ -1,0 +1,21 @@
+[
+  {
+    "type": "user",
+    "data": [{ "id": "user1", "name": "boby" }]
+  },
+  {
+    "type": "event",
+    "data": [
+      {
+        "id": "event1",
+        "name": "Devfest Nantes",
+        "description": "The event !",
+        "type": "CONFERENCE",
+        "visibility": "PUBLIC",
+        "creatorId": "user1",
+        "cfpStart": "2020-10-05T14:48:00.000Z",
+        "cfpEnd": "2090-10-05T14:48:00.000Z"
+      }
+    ]
+  }
+]

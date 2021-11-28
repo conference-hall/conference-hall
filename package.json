@@ -12,7 +12,9 @@
     "start": "remix-serve build",
     "db:migrate": "prisma migrate dev",
     "db:reset": "prisma migrate reset",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run"
   },
   "prisma": {
     "seed": "node --require esbuild-register prisma/seed.ts"
@@ -32,9 +34,11 @@
   "devDependencies": {
     "@remix-run/dev": "^1.0.6",
     "@tailwindcss/forms": "^0.3.4",
+    "@testing-library/cypress": "^8.0.2",
     "@types/react": "^17.0.24",
     "@types/react-dom": "^17.0.9",
     "concurrently": "^6.4.0",
+    "cypress": "^9.1.0",
     "esbuild-register": "^3.2.0",
     "prisma": "^3.5.0",
     "tailwindcss": "^2.2.19",
