@@ -1,7 +1,17 @@
 import { ReactNode } from 'react';
-import { Meta, useCatch } from 'remix';
-import { LinksFunction } from 'remix';
-import { LiveReload, Outlet, Links, Scripts } from 'remix';
+import {
+  LinksFunction,
+  LoaderFunction,
+  Meta,
+  LiveReload,
+  Outlet,
+  Links,
+  Scripts,
+  useCatch,
+  useLoaderData,
+} from 'remix';
+
+import { initializeFirebase } from './firebase/init';
 import tailwind from './tailwind.css';
 
 export const links: LinksFunction = () => {
@@ -11,7 +21,22 @@ export const links: LinksFunction = () => {
   ];
 };
 
+export const loader: LoaderFunction = () => {
+  return {
+    firebase: {
+      FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
+      FIREBASE_AUTH_DOMAIN: process.env.FIREBASE_AUTH_DOMAIN,
+      FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
+      FIREBASE_AUTH_EMULATOR_HOST: process.env.FIREBASE_AUTH_EMULATOR_HOST,
+    },
+  };
+};
+
 export default function App() {
+  const data = useLoaderData();
+
+  initializeFirebase(data.firebase);
+
   return (
     <Document title="Conference Hall">
       <Outlet />

@@ -1,6 +1,9 @@
 # node
 node_modules
 
+# logs
+*.log
+
 # remix
 /.cache
 /build
@@ -8,3 +11,9 @@ node_modules
 
 # tailwind
 tailwind.css
+
+# firebase
+.firebaserc
+
+# docker
+/docker/firebase/.cache/firebase
