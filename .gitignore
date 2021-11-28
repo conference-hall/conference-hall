@@ -1,0 +1,10 @@
+# node
+node_modules
+
+# remix
+/.cache
+/build
+/public/build
+
+# tailwind
+tailwind.css
