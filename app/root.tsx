@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { config } from './server/config.server';
 import {
   LinksFunction,
   LoaderFunction,
@@ -25,10 +26,10 @@ export const links: LinksFunction = () => {
 export const loader: LoaderFunction = () => {
   return {
     firebase: {
-      FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
-      FIREBASE_AUTH_DOMAIN: process.env.FIREBASE_AUTH_DOMAIN,
-      FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
-      FIREBASE_AUTH_EMULATOR_HOST: process.env.FIREBASE_AUTH_EMULATOR_HOST,
+      FIREBASE_API_KEY: config.FIREBASE_API_KEY,
+      FIREBASE_AUTH_DOMAIN: config.FIREBASE_AUTH_DOMAIN,
+      FIREBASE_PROJECT_ID: config.FIREBASE_PROJECT_ID,
+      FIREBASE_AUTH_EMULATOR_HOST: config.FIREBASE_AUTH_EMULATOR_HOST,
     },
   };
 };

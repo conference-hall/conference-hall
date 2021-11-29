@@ -2,15 +2,14 @@ import { User } from '@prisma/client';
 import * as admin from 'firebase-admin'
 import { DecodedIdToken } from 'firebase-admin/lib/auth/token-verifier';
 import { createCookieSessionStorage, redirect } from 'remix';
+import { config } from './config.server';
 import { db } from './db.server';
 
 if (!admin.apps.length) {
   admin.initializeApp({
-    projectId: process.env.FIREBASE_PROJECT_ID,
+    projectId: config.FIREBASE_PROJECT_ID,
   })
 }
-
-const cookieSecret = process.env.COOKIE_SIGNED_SECRET || 'secr3t'
 
 const expiresIn = 60 * 60 * 24 * 5 * 1000;
 
@@ -21,7 +20,7 @@ const storage = createCookieSessionStorage({
     httpOnly: true,
     secure: true,
     path: '/',
-    secrets: [cookieSecret],
+    secrets: [config.COOKIE_SIGNED_SECRET],
     sameSite: 'lax', 
   },
 });
