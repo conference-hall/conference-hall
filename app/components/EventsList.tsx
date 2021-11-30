@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import { CalendarIcon, LocationMarkerIcon } from '@heroicons/react/solid';
 import { Link } from 'react-router-dom';
+import { CfpState } from '../server/common/cfp-dates';
 
 type EventsListProps = { children: ReactNode };
 
@@ -14,9 +15,17 @@ export function EventsList({ children }: EventsListProps) {
   );
 }
 
-type EventsItem = { id: string; name: string; type: string; address: string | null };
+type EventsItemProps = {
+  id: string;
+  name: string;
+  type: string;
+  address: string | null;
+  cfpStart?: string;
+  cfpEnd?: string;
+  cfpState: CfpState;
+};
 
-export function EventItem({ id, name, type, address }: EventsItem) {
+export function EventItem({ id, name, type, address, cfpStart, cfpEnd, cfpState }: EventsItemProps) {
   return (
     <li>
       <Link to={`/event/${id}`} className="block hover:bg-gray-50">
@@ -38,9 +47,18 @@ export function EventItem({ id, name, type, address }: EventsItem) {
             </div>
             <div className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
               <CalendarIcon className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" aria-hidden="true" />
-              <p>
-                CFP open until <time dateTime="2020-01-07">January 7, 2020</time>
-              </p>
+              {cfpState === 'FINISHED' && <p>CFP is finished</p>}
+              {cfpState === 'OPENED' && type === 'MEETUP' && <p>CFP is opened</p>}
+              {cfpState === 'OPENED' && type === 'CONFERENCE' && (
+                <p>
+                  CFP is opened until <time dateTime={cfpEnd}>{cfpEnd}</time>
+                </p>
+              )}
+              {cfpState === 'CLOSED' && (
+                <p>
+                  CFP will open the <time dateTime={cfpStart}>{cfpStart}</time>
+                </p>
+              )}
             </div>
           </div>
         </div>

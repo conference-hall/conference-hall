@@ -4,8 +4,8 @@ import { db } from '../db';
 type SearchEventsArgs = { terms?: string };
 
 export async function searchEvents({ terms }: SearchEventsArgs) {
-  const results = await db.event.findMany({
-    select: { id: true, name: true, type: true, address: true },
+  const events = await db.event.findMany({
+    select: { id: true, name: true, type: true, address: true, cfpStart: true, cfpEnd: true },
     where: {
       visibility: EventVisibility.PUBLIC,
       name: { contains: terms, mode: 'insensitive' },
@@ -14,5 +14,5 @@ export async function searchEvents({ terms }: SearchEventsArgs) {
     orderBy: { cfpStart: 'desc' },
   });
 
-  return { terms, results };
+  return { terms, events };
 }

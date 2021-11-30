@@ -13,8 +13,8 @@ describe('Search Events service', () => {
       const event2 = await buildEvent({ cfpStart: addDays(new Date(), 1) });
 
       const data = await searchEvents({});
-      expect(data.results.length).toBe(2);
-      expect(data.results.map((e) => e.id)).toEqual([event2.id, event1.id]);
+      expect(data.events.length).toBe(2);
+      expect(data.events.map((e) => e.id)).toEqual([event2.id, event1.id]);
     });
 
     it('returns only public events', async () => {
@@ -22,8 +22,8 @@ describe('Search Events service', () => {
       await buildEvent({ cfpStart: new Date(), visibility: EventVisibility.PRIVATE });
 
       const data = await searchEvents({});
-      expect(data.results.length).toBe(1);
-      expect(data.results.map((e) => e.id)).toEqual([event.id]);
+      expect(data.events.length).toBe(1);
+      expect(data.events.map((e) => e.id)).toEqual([event.id]);
     });
 
     it('search by event name (insensitive)', async () => {
@@ -31,19 +31,21 @@ describe('Search Events service', () => {
       await buildEvent({ name: 'Devoxx France', cfpStart: new Date() });
 
       const data = await searchEvents({ terms: 'devfest' });
-      expect(data.results.length).toBe(1);
-      expect(data.results.map((e) => e.id)).toEqual([event.id]);
+      expect(data.events.length).toBe(1);
+      expect(data.events.map((e) => e.id)).toEqual([event.id]);
     });
 
     it('return event data', async () => {
       const event = await buildEvent({ name: 'Devfest Nantes', cfpStart: new Date() });
 
       const data = await searchEvents({});
-      expect(data.results[0]).toEqual({
+      expect(data.events[0]).toEqual({
         id: event.id,
         name: event.name,
         type: event.type,
         address: event.address,
+        cfpStart: event.cfpStart,
+        cfpEnd: event.cfpEnd,
       });
     });
   });
