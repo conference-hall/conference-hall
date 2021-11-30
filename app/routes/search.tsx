@@ -18,6 +18,7 @@ export default function SearchRoute() {
         {data.results.map((result) => (
           <div key={result.id}>{result.name}</div>
         ))}
+        {data.results?.length === 0 ? <p>No events found.</p> : null}
       </div>
     </Container>
   );

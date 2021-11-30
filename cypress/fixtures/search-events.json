@@ -15,6 +15,16 @@
         "creatorId": "user1",
         "cfpStart": "2020-10-05T14:48:00.000Z",
         "cfpEnd": "2090-10-05T14:48:00.000Z"
+      },
+      {
+        "id": "event2",
+        "name": "Devoxx France",
+        "description": "A Devoxx event",
+        "type": "CONFERENCE",
+        "visibility": "PUBLIC",
+        "creatorId": "user1",
+        "cfpStart": "2020-10-05T14:48:00.000Z",
+        "cfpEnd": "2090-10-05T14:48:00.000Z"
       }
     ]
   }

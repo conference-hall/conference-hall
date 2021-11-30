@@ -7,14 +7,44 @@ declare global {
   namespace Cypress {
     interface Chainable {
       /**
-       * Click on a button by its name
-       * @example cy.clickButton('search')
+       * Click on a button or a link by its name
+       * @example cy.clickOn('search')
        */
-      clickButton(name: string): void;
+      clickOn(name: string | RegExp): void;
+
+      /**
+       * Type text in a text input by its label
+       * @example cy.typeOn('label', 'Hello World')
+       */
+      typeOn(label: string | RegExp, text: string): void;
+
+      /**
+       * Assert the text exists in the page
+       * @example cy.assertText('Hello World')
+       */
+      assertText(text: string): void;
+
+      /**
+       * Assert the page URL contains a path
+       * @example cy.assertUrl('/search')
+       */
+      assertUrl(path: string): void;
     }
   }
 }
 
-Cypress.Commands.add('clickButton', (name) => {
-  cy.findByRole('button', { name }).click();
+Cypress.Commands.add('clickOn', (name) => {
+  cy.findByRole(/button|link/, { name }).click();
+});
+
+Cypress.Commands.add('typeOn', (label, text) => {
+  cy.findByLabelText(label).type(text);
+});
+
+Cypress.Commands.add('assertText', (text) => {
+  cy.findByText(text).should('exist');
+});
+
+Cypress.Commands.add('assertUrl', (path) => {
+  cy.url().should('include', path);
 });
