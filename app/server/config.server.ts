@@ -1,6 +1,3 @@
-import path from 'path'
-import * as dotenv from 'dotenv'
-
 const ENV = process.env.NODE_ENV || 'development'
 
 export let config: Config;
@@ -46,11 +43,8 @@ if (ENV === 'production') {
   config = new Config();
 } else {
   if (!global.__config) {
-    const envFile = ENV === 'test' ? '.env.test' : '.env.dev'
-    const envFilePath = path.join(__dirname, '..', envFile)
-    dotenv.config({ path:  envFilePath })
+    console.log(`🌍 Environment "${ENV}".`)
     global.__config = new Config();
-    console.log(`🌍 Environment "${ENV}" using "${envFilePath}".`)
   }
   config = global.__config;
 }
