@@ -43,7 +43,7 @@ if (ENV === 'production') {
   config = new Config();
 } else {
   if (!global.__config) {
-    console.log(`🌍 Environment "${ENV}".`)
+    console.info(`🌍 Environment "${ENV}".`)
     global.__config = new Config();
   }
   config = global.__config;

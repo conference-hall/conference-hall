@@ -1,5 +1,5 @@
 /// <reference types="cypress" />
-import { seed, resetDB } from './db-seed';
+import { seedFromFile, resetTestDatabase } from '../../tests/db-helpers'
 
 /**
  * @type {Cypress.PluginConfig}
@@ -7,11 +7,11 @@ import { seed, resetDB } from './db-seed';
 module.exports = (on, config) => {
   on('task', {
     'db:reset': async () => {
-      await resetDB();
+      await resetTestDatabase();
       return null;
     },
     'db:seed': async (fixtureFile) => {
-      await seed(`${config.fixturesFolder}/${fixtureFile}.json`);
+      await seedFromFile(`${config.fixturesFolder}/${fixtureFile}.json`);
       return null;
     },
   });

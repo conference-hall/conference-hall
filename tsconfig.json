@@ -1,5 +1,6 @@
 {
   "include": ["remix.env.d.ts", "**/*.ts", "**/*.tsx"],
+  "exclude": ["cypress"],
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2019"],
     "esModuleInterop": true,
@@ -9,10 +10,9 @@
     "target": "ES2019",
     "strict": true,
     "paths": {
-      "~/*": ["./app/*"]
+      "~/*": ["./app/*"],
+      "tests/*": ["./tests/*"]
     },
-
-    // Remix takes care of building everything in `remix build`.
     "noEmit": true
-  }
+  },
 }
