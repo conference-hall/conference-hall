@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { config } from './server/config.server';
+import { config } from './server/config';
 import {
   LinksFunction,
   LoaderFunction,

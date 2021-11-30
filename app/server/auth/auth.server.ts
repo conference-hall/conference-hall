@@ -2,8 +2,8 @@ import { User } from '@prisma/client';
 import * as admin from 'firebase-admin'
 import { DecodedIdToken } from 'firebase-admin/lib/auth/token-verifier';
 import { createCookieSessionStorage, redirect } from 'remix';
-import { config } from './config.server';
-import { db } from './db.server';
+import { config } from '../config';
+import { db } from '../db';
 
 if (!admin.apps.length) {
   admin.initializeApp({

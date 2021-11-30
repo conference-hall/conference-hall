@@ -1,15 +1,14 @@
 import { LoaderFunction, useLoaderData } from 'remix';
-import { Container } from '../components/Container';
-import { SearchEventForm } from '../components/SearchEventForm';
-import { searchEvents, ISearchResult } from '../server/search.server';
+import { Container } from '~/components/Container';
+import { SearchEventForm } from '~/components/SearchEventForm';
+import { searchEvents, SearchResult } from '~/server/search-events/search.server';
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const data = await searchEvents(request);
-  return data;
+  return searchEvents(request);
 };
 
 export default function SearchRoute() {
-  const data = useLoaderData<ISearchResult>();
+  const data = useLoaderData<SearchResult>();
 
   return (
     <Container>
