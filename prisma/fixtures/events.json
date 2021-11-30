@@ -1,0 +1,49 @@
+[
+  {
+    "type": "event",
+    "data": [
+      {
+        "id": "event1",
+        "name": "Devfest Nantes",
+        "description": "The event !",
+        "address": "La Cité des Congrès, Nantes, France",
+        "type": "CONFERENCE",
+        "visibility": "PUBLIC",
+        "cfpStart": "2020-10-05T14:48:00.000Z",
+        "cfpEnd": "2090-10-05T14:48:00.000Z",
+        "creatorId": "user1"
+      },
+      {
+        "id": "event2",
+        "name": "Devoxx France",
+        "description": "A Devoxx event",
+        "address": "Le Palais des Congrès, Paris, France",
+        "type": "CONFERENCE",
+        "visibility": "PUBLIC",
+        "cfpStart": "2020-10-05T14:48:00.000Z",
+        "cfpEnd": "2090-10-05T14:48:00.000Z",
+        "creatorId": "user1"
+      },
+      {
+        "name": "GDG Nantes",
+        "description": "The meetup to be!",
+        "address": "Nantes, France",
+        "type": "MEETUP",
+        "visibility": "PUBLIC",
+        "cfpStart": "2020-10-05T14:48:00.000Z",
+        "cfpEnd": null,
+        "creatorId": "user1"
+      },
+      {
+        "name": "VIP event",
+        "description": "This is very selective",
+        "address": "London, UK",
+        "type": "CONFERENCE",
+        "visibility": "PRIVATE",
+        "cfpStart": "2020-10-05T14:48:00.000Z",
+        "cfpEnd": "2090-10-05T14:48:00.000Z",
+        "creatorId": "user1"
+      }
+    ]
+  }
+]

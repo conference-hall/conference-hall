@@ -12,6 +12,7 @@
         "description": "The event !",
         "type": "CONFERENCE",
         "visibility": "PUBLIC",
+        "address": "Nantes, France",
         "creatorId": "user1",
         "cfpStart": "2020-10-05T14:48:00.000Z",
         "cfpEnd": "2090-10-05T14:48:00.000Z"
@@ -22,6 +23,7 @@
         "description": "A Devoxx event",
         "type": "CONFERENCE",
         "visibility": "PUBLIC",
+        "address": "Paris, France",
         "creatorId": "user1",
         "cfpStart": "2020-10-05T14:48:00.000Z",
         "cfpEnd": "2090-10-05T14:48:00.000Z"
