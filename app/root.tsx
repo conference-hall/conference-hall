@@ -15,6 +15,7 @@ import { Navbar } from './components/Navbar';
 
 import { initializeFirebase } from './firebase/init';
 import tailwind from './tailwind.css';
+import { Footer } from './components/Footer';
 
 export const links: LinksFunction = () => {
   return [
@@ -61,6 +62,7 @@ function Document({ children, title }: DocumentProps) {
         <div className="min-h-full">
           <Navbar />
           {children}
+          <Footer />
         </div>
         <Scripts />
         {process.env.NODE_ENV === 'development' && <LiveReload />}

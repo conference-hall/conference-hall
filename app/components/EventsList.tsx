@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { CalendarIcon, LocationMarkerIcon } from '@heroicons/react/solid';
-import { Link } from 'react-router-dom';
 import { CfpState } from '../server/common/cfp-dates';
+import { Link } from 'remix';
 
 type EventsListProps = { children: ReactNode };
 
