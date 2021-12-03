@@ -5,6 +5,7 @@
       {
         "id": "event1",
         "name": "Devfest Nantes",
+        "slug": "devfest-nantes",
         "description": "The event !",
         "address": "La Cité des Congrès, Nantes, France",
         "type": "CONFERENCE",
@@ -16,6 +17,7 @@
       {
         "id": "event2",
         "name": "Devoxx France",
+        "slug": "devoxx-france",
         "description": "A Devoxx event",
         "address": "Le Palais des Congrès, Paris, France",
         "type": "CONFERENCE",
@@ -26,6 +28,7 @@
       },
       {
         "name": "GDG Nantes",
+        "slug": "gdg-nantes",
         "description": "The meetup to be!",
         "address": "Nantes, France",
         "type": "MEETUP",
@@ -36,6 +39,7 @@
       },
       {
         "name": "VIP event",
+        "slug": "vip-event",
         "description": "This is very selective",
         "address": "London, UK",
         "type": "CONFERENCE",

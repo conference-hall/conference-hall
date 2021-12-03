@@ -9,6 +9,7 @@
       {
         "id": "event1",
         "name": "Devfest Nantes",
+        "slug": "devfest-nantes",
         "description": "The event !",
         "type": "CONFERENCE",
         "visibility": "PUBLIC",
@@ -20,6 +21,7 @@
       {
         "id": "event2",
         "name": "Devoxx France",
+        "slug": "devoxx-france",
         "description": "A Devoxx event",
         "type": "CONFERENCE",
         "visibility": "PUBLIC",

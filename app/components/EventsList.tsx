@@ -16,7 +16,7 @@ export function EventsList({ children }: EventsListProps) {
 }
 
 type EventsItemProps = {
-  id: string;
+  slug: string;
   name: string;
   type: string;
   address: string | null;
@@ -25,10 +25,10 @@ type EventsItemProps = {
   cfpState: CfpState;
 };
 
-export function EventItem({ id, name, type, address, cfpStart, cfpEnd, cfpState }: EventsItemProps) {
+export function EventItem({ slug, name, type, address, cfpStart, cfpEnd, cfpState }: EventsItemProps) {
   return (
     <li>
-      <Link to={`/event/${id}`} className="block hover:bg-gray-50">
+      <Link to={`/${slug}`} className="block hover:bg-gray-50">
         <div className="px-4 py-4 sm:px-6">
           <div className="flex items-center justify-between">
             <p className="text-sm font-medium text-indigo-600 truncate">{name}</p>

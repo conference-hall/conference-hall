@@ -75,6 +75,7 @@ CREATE TABLE "beta_keys" (
 -- CreateTable
 CREATE TABLE "events" (
     "id" TEXT NOT NULL,
+    "slug" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "type" "EventType" NOT NULL DEFAULT E'CONFERENCE',
@@ -249,6 +250,9 @@ CREATE TABLE "_proposals_categories" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "talks_invitationUuid_key" ON "talks"("invitationUuid");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "events_slug_key" ON "events"("slug");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "organizations_invitationId_key" ON "organizations"("invitationId");

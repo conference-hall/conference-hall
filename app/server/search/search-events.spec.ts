@@ -16,7 +16,7 @@ describe('Search events', () => {
     const data = await searchEvents(route);
 
     expect(data.results.length).toBe(2);
-    expect(data.results.map((e) => e.id)).toEqual([event2.id, event1.id]);
+    expect(data.results.map((e) => e.slug)).toEqual([event2.slug, event1.slug]);
   });
 
   it('returns only public events', async () => {
@@ -27,7 +27,7 @@ describe('Search events', () => {
     const data = await searchEvents(route);
 
     expect(data.results.length).toBe(1);
-    expect(data.results.map((e) => e.id)).toEqual([event.id]);
+    expect(data.results.map((e) => e.slug)).toEqual([event.slug]);
   });
 
   it('search by event name (insensitive)', async () => {
@@ -38,7 +38,7 @@ describe('Search events', () => {
     const data = await searchEvents(route);
 
     expect(data.results.length).toBe(1);
-    expect(data.results.map((e) => e.id)).toEqual([event.id]);
+    expect(data.results.map((e) => e.slug)).toEqual([event.slug]);
   });
 
   it('return event data', async () => {
@@ -48,7 +48,7 @@ describe('Search events', () => {
     const data = await searchEvents(route);
 
     expect(data.results[0]).toEqual({
-      id: event.id,
+      slug: event.slug,
       name: event.name,
       type: event.type,
       address: event.address,

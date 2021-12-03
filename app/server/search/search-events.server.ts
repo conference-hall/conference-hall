@@ -11,7 +11,7 @@ const SearchEventsCriterias = z.object({
 export type SearchEvents = {
   terms?: string;
   results: Array<{
-    id: string;
+    slug: string;
     name: string;
     type: 'CONFERENCE' | 'MEETUP';
     address: string | null;
@@ -30,7 +30,7 @@ export async function searchEvents({ request }: DataFunctionArgs): Promise<Searc
 
   const { terms } = criterias.data;
   const events = await db.event.findMany({
-    select: { id: true, name: true, type: true, address: true, cfpStart: true, cfpEnd: true },
+    select: { slug: true, name: true, type: true, address: true, cfpStart: true, cfpEnd: true },
     where: {
       visibility: EventVisibility.PUBLIC,
       name: { contains: terms, mode: 'insensitive' },
@@ -42,7 +42,7 @@ export async function searchEvents({ request }: DataFunctionArgs): Promise<Searc
   return {
     terms,
     results: events.map((event) => ({
-      id: event.id,
+      slug: event.slug,
       name: event.name,
       type: event.type,
       address: event.address,

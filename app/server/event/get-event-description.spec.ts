@@ -9,9 +9,32 @@ describe('Get event description', () => {
   it('returns incoming events sorted by cfp start date by default', async () => {
     const event = await buildEvent();
 
-    const route = buildLoaderRoute(`/event/${event.id}`, { slug: event.id });
+    const route = buildLoaderRoute(`/event/${event.slug}`, { eventSlug: event.slug });
     const data = await getEventDescription(route);
 
-    expect(data.id).toEqual(event.id);
+    expect(data).toEqual({
+      slug: event.slug,
+      name: event.name,
+      description: event.description,
+      type: event.type,
+      address: event.address,
+      conferenceStart: event.conferenceStart?.toISOString(),
+      conferenceEnd: event.conferenceEnd?.toISOString(),
+      cfpStart: event.cfpStart?.toISOString(),
+      cfpEnd: event.cfpEnd?.toISOString(),
+      cfpState: 'CLOSED',
+    });
+  });
+
+  it('throws a 404 error when event is not found', async () => {
+    expect.assertions(1);
+    try {
+      const route = buildLoaderRoute('/event/not-found', { eventSlug: 'not-found' });
+      await getEventDescription(route)
+    } catch (error) {
+      if (error instanceof Response) {
+        expect(error.status).toEqual(404);
+      }
+    }
   });
 });

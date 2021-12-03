@@ -1,8 +1,8 @@
 import { seedFromFile } from '../tests/db-helpers';
 
 const files = [
-  `${__dirname}/fixtures/users.json`,
-  `${__dirname}/fixtures/events.json`,
+  `${__dirname}/seeds/users.json`,
+  `${__dirname}/seeds/events.json`,
 ]
 
 async function seed() {

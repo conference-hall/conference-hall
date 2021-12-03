@@ -19,7 +19,7 @@ export default function SearchRoute() {
       ) : (
         <EventsList>
           {data.results.map((result) => (
-            <EventItem key={result.id} {...result} />
+            <EventItem key={result.slug} {...result} />
           ))}
         </EventsList>
       )}
