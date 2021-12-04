@@ -52,8 +52,6 @@ describe('Search events', () => {
       name: event.name,
       type: event.type,
       address: event.address,
-      cfpStart: event.cfpStart?.toISOString(),
-      cfpEnd: undefined,
       cfpState: 'CLOSED',
     });
   });

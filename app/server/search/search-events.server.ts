@@ -15,8 +15,6 @@ export type SearchEvents = {
     name: string;
     type: 'CONFERENCE' | 'MEETUP';
     address: string | null;
-    cfpStart?: string;
-    cfpEnd?: string;
     cfpState: CfpState;
   }>;
 };
@@ -46,8 +44,6 @@ export async function searchEvents({ request }: DataFunctionArgs): Promise<Searc
       name: event.name,
       type: event.type,
       address: event.address,
-      cfpStart: event.cfpStart?.toISOString(),
-      cfpEnd: event.cfpEnd?.toISOString(),
       cfpState: getCfpState(event.type, event.cfpStart, event.cfpEnd),
     })),
   };

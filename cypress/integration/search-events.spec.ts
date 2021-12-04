@@ -16,15 +16,40 @@ describe('Search events', () => {
     it('displays incoming events by default', () => {
       cy.visit('/search');
       cy.assertText('Devfest Nantes');
-      cy.assertText('Devoxx France');
+      cy.assertText('GDG Nantes');
     });
   
-    it('search events', () => {
+    it('search conference events', () => {
       cy.visit('/search');
       cy.typeOn('Search events', 'Devfest{enter}');
       cy.assertText('Devfest Nantes');
       cy.assertText('Nantes, France');
-      cy.assertText('CONFERENCE');
+      cy.assertText('Call for paper is open');
+      cy.assertText('Conference');
+    });
+
+    it('search conference events', () => {
+      cy.visit('/search');
+      cy.typeOn('Search events', 'devfest{enter}');
+      cy.assertText('Devfest Nantes');
+      cy.assertText('Nantes, France');
+      cy.assertText('Call for paper is open');
+      cy.assertText('Conference');
+    });
+
+    it('search meetup events', () => {
+      cy.visit('/search');
+      cy.typeOn('Search events', 'gdg{enter}');
+      cy.assertText('GDG Nantes');
+      cy.assertText('Nantes, France');
+      cy.assertText('Call for paper is open');
+      cy.assertText('Meetup');
+    });
+
+    it('opens event page on click', () => {
+      cy.visit('/search');
+      cy.clickOn(/Devfest Nantes/)
+      cy.assertUrl('/devfest-nantes');
     });
 
     it('displays no result page if no events found', () => {

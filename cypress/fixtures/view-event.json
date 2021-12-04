@@ -15,20 +15,10 @@
         "visibility": "PUBLIC",
         "address": "Nantes, France",
         "creatorId": "user1",
+        "conferenceStart": "2020-10-05T00:00:00.000Z",
+        "conferenceEnd": "2020-10-05T00:00:00.000Z",
         "cfpStart": "2020-10-05T00:00:00.000Z",
-        "cfpEnd": "2090-10-05T23:59:59.000Z"
-      },
-      {
-        "id": "event2",
-        "name": "GDG Nantes",
-        "slug": "gdg-nantes",
-        "description": "A great meetup",
-        "type": "MEETUP",
-        "visibility": "PUBLIC",
-        "address": "Nantes, France",
-        "creatorId": "user1",
-        "cfpStart": "2020-10-05T00:00:00.000Z",
-        "cfpEnd": null
+        "cfpEnd": "2020-10-05T23:59:59.000Z"
       }
     ]
   }

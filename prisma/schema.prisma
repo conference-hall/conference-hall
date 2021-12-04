@@ -83,8 +83,9 @@ model Event {
   lat                      Float?
   lng                      Float?
   timezone                 String?
-  contact                  String?
-  website                  String?
+  contactEmail             String?
+  websiteUrl               String?
+  codeOfConductUrl         String?
   bannerUrl                String?
   conferenceStart          DateTime?
   conferenceEnd            DateTime?

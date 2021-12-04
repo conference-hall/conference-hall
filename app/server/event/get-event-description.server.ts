@@ -10,6 +10,10 @@ export interface EventDescription {
   name: string;
   description: string;
   address: string | null;
+  websiteUrl: string | null;
+  contactEmail: string | null;
+  codeOfConductUrl: string | null;
+  bannerUrl: string | null;
   type: 'CONFERENCE' | 'MEETUP';
   conferenceStart?: string;
   conferenceEnd?: string;
@@ -35,6 +39,10 @@ export async function getEventDescription({ params }: DataFunctionArgs): Promise
     name: event.name,
     description: event.description,
     address: event.address,
+    websiteUrl: event.websiteUrl,
+    contactEmail: event.contactEmail,
+    codeOfConductUrl: event.codeOfConductUrl,
+    bannerUrl: event.bannerUrl,
     type: event.type,
     conferenceStart: event.conferenceStart?.toUTCString(),
     conferenceEnd: event.conferenceEnd?.toUTCString(),

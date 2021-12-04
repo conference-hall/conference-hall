@@ -6,11 +6,17 @@ import { ExternalLink } from '~/components/Links';
 import { SectionPanel } from '~/components/Panels';
 import { IconLabel } from '~/components/IconLabel';
 import { EventDescription, getEventDescription } from '~/server/event/get-event-description.server';
+import { formatCFPDate, formatCFPState, formatConferenceDates } from '../../components/utils/event';
 
 export const loader = getEventDescription;
 
 export default function EventRoute() {
   const data = useLoaderData<EventDescription>();
+
+  const eventDateFormatted = formatConferenceDates(data.conferenceStart, data.conferenceEnd);
+  const cfpStateFormatted = formatCFPState(data.cfpState);
+  const cfpDateFormatted = formatCFPDate(data.cfpState, data.cfpStart, data.cfpEnd);
+
   return (
     <>
       <header className="bg-indigo-900 pb-28">
@@ -21,9 +27,11 @@ export default function EventRoute() {
               <IconLabel icon={LocationMarkerIcon} className="mt-2 text-indigo-100">
                 {data.address}
               </IconLabel>
-              <IconLabel icon={CalendarIcon} className="mt-2 text-indigo-100">
-                2 days conference - 29-28 oct. 2021
-              </IconLabel>
+              {eventDateFormatted && (
+                <IconLabel icon={CalendarIcon} className="mt-2 text-indigo-100">
+                  {eventDateFormatted}
+                </IconLabel>
+              )}
             </div>
           </div>
         </div>
@@ -36,11 +44,11 @@ export default function EventRoute() {
           padding
         >
           <div>
-            <h3 className="text-lg leading-6 font-medium text-gray-900">Call for paper is open</h3>
-            <p className="mt-1 text-sm text-gray-500">Until Thu, 05 Oct 2090 14:48:00 GMT</p>
+            <h3 className="text-lg leading-6 font-medium text-gray-900">{cfpStateFormatted}</h3>
+            {cfpDateFormatted && <p className="mt-1 text-sm text-gray-500">{cfpDateFormatted}</p>}
           </div>
           <div>
-            <p className="mt-2 text-sm text-gray-900">{data.description}</p>
+            <p className="text-sm text-gray-900">{data.description}</p>
           </div>
           <div>
             <h3 className="text-base leading-6 font-medium text-gray-900">Formats</h3>
@@ -88,24 +96,32 @@ export default function EventRoute() {
         </SectionPanel>
         <SectionPanel id="event-submission" title="Event links and submission">
           <img
-            src="https://pbs.twimg.com/profile_banners/3530607858/1623273738/1500x500"
+            src={data.bannerUrl || 'https://placekitten.com/g/800/300'}
             className="w-full object-cover lg:h-64"
             aria-hidden="true"
             alt=""
           />
           <div className="grid grid-cols-1 gap-6 px-4 py-5 sm:px-6">
-            <ExternalLink href="https://devfest.gdgnantes.com" icon={GlobeIcon}>
-              https://devfest.gdgnantes.com
-            </ExternalLink>
-            <ExternalLink href="https://devfest.gdgnantes.com" icon={HeartIcon}>
-              Code of conduct
-            </ExternalLink>
-            <ExternalLink href="mailto://bureau@gdgnantes.com" icon={MailIcon}>
-              Contacts
-            </ExternalLink>
-            <ButtonLink to="submission" block>
-              Submit a talk
-            </ButtonLink>
+            {data.websiteUrl && (
+              <ExternalLink href={data.websiteUrl} icon={GlobeIcon}>
+                {data.websiteUrl}
+              </ExternalLink>
+            )}
+            {data.codeOfConductUrl && (
+              <ExternalLink href={data.codeOfConductUrl} icon={HeartIcon}>
+                Code of conduct
+              </ExternalLink>
+            )}
+            {data.contactEmail && (
+              <ExternalLink href={`mailto:${data.contactEmail}`} icon={MailIcon}>
+                Contacts
+              </ExternalLink>
+            )}
+            {data.cfpState === 'OPENED' && (
+              <ButtonLink to="submission" block>
+                Submit a talk
+              </ButtonLink>
+            )}
           </div>
         </SectionPanel>
       </Container>
