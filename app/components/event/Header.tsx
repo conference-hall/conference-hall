@@ -1,3 +1,4 @@
+import React from 'react'
 import { CalendarIcon, LocationMarkerIcon } from '@heroicons/react/solid';
 import { formatConferenceDates } from '../../utils/event';
 import { IconLabel } from '../ui/IconLabel';

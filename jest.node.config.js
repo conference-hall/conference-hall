@@ -1,5 +1,6 @@
 module.exports = {
-  roots: ['app'],
+  displayName: 'Node',
+  roots: ['app/firebase', 'app/server', 'app/utils'],
   resetMocks: true,
   testEnvironment: 'node',
   transform: {
@@ -9,5 +10,5 @@ module.exports = {
     '^~/(.*)$': '<rootDir>/app/$1',
     '^tests/(.*)$': '<rootDir>/tests/$1',
   },
-  setupFilesAfterEnv: ['<rootDir>/tests/setup-tests.ts'],
+  setupFilesAfterEnv: ['<rootDir>/tests/setup-tests.ts', '@testing-library/jest-dom'],
 };
