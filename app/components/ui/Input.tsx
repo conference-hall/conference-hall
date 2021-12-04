@@ -1,15 +1,27 @@
 import cn from 'classnames';
 
-type InputProps = { error?: string } & React.InputHTMLAttributes<HTMLInputElement>;
+type InputProps = { label: string; error?: string } & React.InputHTMLAttributes<HTMLInputElement>;
 
-export function Input({ id, className, error, ...rest }: InputProps) {
+export function Input({ id, label, className, error, ...rest }: InputProps) {
   const styles = cn(baseStyles, {
     [defaultStyles]: !error,
     [errorStyles]: !!error,
   });
 
   return (
-    <input id={id} className={styles} {...rest} />
+    <div className={className}>
+      <label htmlFor={id} className="block text-sm font-medium text-gray-700">
+        {label}
+      </label>
+      <div className="mt-1">
+        <input id={id} className={styles} {...rest} />
+      </div>
+      {error && (
+        <p className="mt-2 text-sm text-red-600" id="email-error">
+          {error}
+        </p>
+      )}
+    </div>
   );
 }
 

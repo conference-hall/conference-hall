@@ -8,7 +8,7 @@ import { getEventDescription } from './get-event-description.server';
 describe('Get event description', () => {
   setupDatabase();
 
-  it('returns incoming events sorted by cfp start date by default', async () => {
+  it('returns event description data', async () => {
     const event = await buildEvent();
     const format = await buildFormat({ eventId: event.id });
     const category = await buildCategory({ eventId: event.id });
@@ -17,17 +17,12 @@ describe('Get event description', () => {
     const data = await getEventDescription(route);
 
     expect(data).toEqual({
-      slug: event.slug,
-      name: event.name,
       description: event.description,
       type: event.type,
-      address: event.address,
       bannerUrl: event.bannerUrl,
       websiteUrl: event.websiteUrl,
       contactEmail: event.contactEmail,
       codeOfConductUrl: event.codeOfConductUrl,
-      conferenceStart: event.conferenceStart?.toISOString(),
-      conferenceEnd: event.conferenceEnd?.toISOString(),
       cfpStart: event.cfpStart?.toISOString(),
       cfpEnd: event.cfpEnd?.toISOString(),
       cfpState: 'CLOSED',

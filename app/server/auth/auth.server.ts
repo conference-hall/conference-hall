@@ -40,7 +40,7 @@ export async function createUserSession(request: Request) {
     const newCookie = await storage.commitSession(session)
     return redirect(redirectTo, { headers: { 'Set-Cookie': newCookie } });
   } catch (e) {
-    return redirect('login');
+    return redirect('/login');
   }
 }
 
@@ -124,5 +124,5 @@ export async function requireAuthUser(request: Request) {
 function getLoginUrl(request: Request) {
   const redirectTo = new URL(request.url).pathname
   const searchParams = new URLSearchParams([["redirectTo", redirectTo]]);
-  return `login?${searchParams}`
+  return `/login?${searchParams}`
 }

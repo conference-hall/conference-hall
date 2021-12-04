@@ -22,7 +22,7 @@ export function useFirebaseSignIn(onSubmit: SubmitFunction): FirebaseSignReturn 
     getRedirectResult(getAuth()).then(async (credentials) => {
       if (credentials) {
         const tokenId = await credentials.user.getIdToken();
-        onSubmit({ tokenId, redirectTo }, { method: 'post' });
+        onSubmit({ tokenId, redirectTo }, { method: 'post', replace: true });
       } else {
         console.log('No credentials');
       }

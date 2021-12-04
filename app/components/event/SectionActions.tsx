@@ -44,7 +44,7 @@ export function SectionActions({
           </ExternalLink>
         )}
         {cfpState === 'OPENED' && (
-          <ButtonLink to="submission" block>
+          <ButtonLink to="submit" block>
             Submit a talk
           </ButtonLink>
         )}

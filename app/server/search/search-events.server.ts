@@ -1,12 +1,7 @@
-import z from 'zod';
 import { DataFunctionArgs } from '@remix-run/server-runtime';
 import { EventVisibility } from '@prisma/client';
 import { CfpState, getCfpState } from '~/utils/event';
 import { db } from '../db';
-
-const SearchEventsCriterias = z.object({
-  terms: z.string().optional(),
-});
 
 export type SearchEvents = {
   terms?: string;
@@ -21,12 +16,8 @@ export type SearchEvents = {
 
 export async function searchEvents({ request }: DataFunctionArgs): Promise<SearchEvents> {
   const url = new URL(request.url);
-  const criterias = SearchEventsCriterias.safeParse(Object.fromEntries(url.searchParams));
-  if (!criterias.success) {
-    throw new Response('Bad search parameters', { status: 400 });
-  }
+  const terms = url.searchParams.get('terms') ?? undefined;
 
-  const { terms } = criterias.data;
   const events = await db.event.findMany({
     select: { slug: true, name: true, type: true, address: true, cfpStart: true, cfpEnd: true },
     where: {
