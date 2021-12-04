@@ -1,8 +1,8 @@
 import { setupDatabase } from 'tests/db-helpers';
 import { buildEvent } from 'tests/factories/events';
 import { buildLoaderRoute } from 'tests/remix-helpers';
-import { buildCategory } from '../../../tests/factories/categories';
-import { buildFormat } from '../../../tests/factories/formats';
+import { buildCategory } from 'tests/factories/categories';
+import { buildFormat } from 'tests/factories/formats';
 import { getEventDescription } from './get-event-description.server';
 
 describe('Get event description', () => {

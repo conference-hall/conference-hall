@@ -1,7 +1,7 @@
+import z from 'zod';
 import { DataFunctionArgs } from '@remix-run/server-runtime';
 import { EventVisibility } from '@prisma/client';
-import z from 'zod';
-import { CfpState, getCfpState } from '../common/cfp-dates';
+import { CfpState, getCfpState } from '~/utils/event';
 import { db } from '../db';
 
 const SearchEventsCriterias = z.object({

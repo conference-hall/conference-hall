@@ -1,7 +1,7 @@
 import { Form } from 'remix';
-import { Button } from '../components/Buttons';
-import { Container } from '../components/Container';
-import { SearchEventForm } from '../components/SearchEventForm';
+import { Button } from '../components/ui/Buttons';
+import { Container } from '../components/ui/Container';
+import { SearchEventForm } from '../components/search/SearchEventForm';
 
 export default function IndexRoute() {
   return (

@@ -1,8 +1,8 @@
 import { LoaderFunction, useLoaderData } from 'remix';
-import { Container } from '~/components/Container';
-import { SearchEventForm } from '~/components/SearchEventForm';
+import { Container } from '~/components/ui/Container';
+import { SearchEventForm } from '~/components/search/SearchEventForm';
 import { SearchEvents, searchEvents } from '~/server/search/search-events.server';
-import { EventItem, EventsList } from '../components/EventsList';
+import { EventItem, EventsList } from '../components/search/EventsList';
 
 export const loader: LoaderFunction = async ({ request, params, context }) => {
   return searchEvents({ request, params, context });

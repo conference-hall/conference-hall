@@ -11,11 +11,11 @@ import {
   useCatch,
   useLoaderData,
 } from 'remix';
-import { Navbar } from './components/Navbar';
+import { Navbar } from './components/layout/Navbar';
 
 import { initializeFirebase } from './firebase/init';
 import tailwind from './tailwind.css';
-import { Footer } from './components/Footer';
+import { Footer } from './components/layout/Footer';
 
 export const links: LinksFunction = () => {
   return [

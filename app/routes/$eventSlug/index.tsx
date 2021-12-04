@@ -1,11 +1,11 @@
 import { CalendarIcon, GlobeIcon, HeartIcon, LocationMarkerIcon, MailIcon } from '@heroicons/react/solid';
 import { useLoaderData } from 'remix';
-import { Container } from '~/components/Container';
-import { ButtonLink } from '~/components/Buttons';
-import { ExternalLink } from '~/components/Links';
-import { SectionPanel } from '~/components/Panels';
-import { IconLabel } from '~/components/IconLabel';
-import { formatCFPDate, formatCFPState, formatConferenceDates } from '~/components/utils/event';
+import { Container } from '~/components/ui/Container';
+import { ButtonLink } from '~/components/ui/Buttons';
+import { ExternalLink } from '~/components/ui/Links';
+import { SectionPanel } from '~/components/ui/Panels';
+import { IconLabel } from '~/components/ui/IconLabel';
+import { formatCFPDate, formatCFPState, formatConferenceDates } from '~/utils/event';
 import { EventDescription, getEventDescription } from '~/server/event/get-event-description.server';
 
 export const loader = getEventDescription;

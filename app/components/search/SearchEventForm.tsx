@@ -1,5 +1,5 @@
 import { Form } from 'remix';
-import { Input } from './Input';
+import { Input } from '../ui/Input';
 
 type SearchEventFormProps = { terms?: string };
 
