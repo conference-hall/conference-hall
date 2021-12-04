@@ -1,14 +1,9 @@
-import { seedFromFile } from '../tests/db-helpers';
-
-const files = [
-  `${__dirname}/seeds/users.json`,
-  `${__dirname}/seeds/events.json`,
-]
+import seedUsers from './seeds/users';
+import seedEvents from './seeds/events';
 
 async function seed() {
-  for (const file of files) {
-    await seedFromFile(file);
-  }
+  await seedUsers();
+  await seedEvents();
 }
 
 seed();
