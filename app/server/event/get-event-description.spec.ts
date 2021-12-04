@@ -1,6 +1,8 @@
 import { setupDatabase } from 'tests/db-helpers';
 import { buildEvent } from 'tests/factories/events';
 import { buildLoaderRoute } from 'tests/remix-helpers';
+import { buildCategory } from '../../../tests/factories/categories';
+import { buildFormat } from '../../../tests/factories/formats';
 import { getEventDescription } from './get-event-description.server';
 
 describe('Get event description', () => {
@@ -8,6 +10,8 @@ describe('Get event description', () => {
 
   it('returns incoming events sorted by cfp start date by default', async () => {
     const event = await buildEvent();
+    const format = await buildFormat({ eventId: event.id });
+    const category = await buildCategory({ eventId: event.id });
 
     const route = buildLoaderRoute(`/event/${event.slug}`, { eventSlug: event.slug });
     const data = await getEventDescription(route);
@@ -27,6 +31,8 @@ describe('Get event description', () => {
       cfpStart: event.cfpStart?.toISOString(),
       cfpEnd: event.cfpEnd?.toISOString(),
       cfpState: 'CLOSED',
+      formats: [{ id: format.id, name: format.name, description: null }],
+      categories: [{ id: category.id, name: category.name, description: null }],
     });
   });
 

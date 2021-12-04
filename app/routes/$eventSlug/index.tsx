@@ -5,8 +5,8 @@ import { ButtonLink } from '~/components/Buttons';
 import { ExternalLink } from '~/components/Links';
 import { SectionPanel } from '~/components/Panels';
 import { IconLabel } from '~/components/IconLabel';
+import { formatCFPDate, formatCFPState, formatConferenceDates } from '~/components/utils/event';
 import { EventDescription, getEventDescription } from '~/server/event/get-event-description.server';
-import { formatCFPDate, formatCFPState, formatConferenceDates } from '../../components/utils/event';
 
 export const loader = getEventDescription;
 
@@ -55,18 +55,12 @@ export default function EventRoute() {
             <p className="mt-1 max-w-2xl text-sm text-gray-500">Talks formats proposed by the conference.</p>
             <div className="mt-4 text-sm text-gray-900">
               <dl className="border border-gray-200 rounded-md divide-y divide-gray-200">
-                <div className="pl-3 pr-4 py-3 text-sm">
-                  <dt className="text-sm font-medium text-gray-500">Conference (45 min)</dt>
-                  <dd className="mt-1 text-sm text-gray-900 line-clamp-2">
-                    Fugiat ipsum ipsum deserunt culpa aute sint do nostrud anim incididunt
-                  </dd>
-                </div>
-                <div className="pl-3 pr-4 py-3 text-sm">
-                  <dt className="text-sm font-medium text-gray-500">Quickies (20 min)</dt>
-                  <dd className="mt-1 text-sm text-gray-900 line-clamp-2">
-                    Fugiat ipsum ipsum deserunt culpa aute sint do nostrud anim incididunt
-                  </dd>
-                </div>
+                {data.formats.map((f) => (
+                  <div key={f.name} className="pl-3 pr-4 py-3 text-sm">
+                    <dt className="text-sm font-medium text-gray-500">{f.name} </dt>
+                    <dd className="mt-1 text-sm text-gray-900 line-clamp-2">{f.description}</dd>
+                  </div>
+                ))}
               </dl>
             </div>
           </div>
@@ -77,19 +71,12 @@ export default function EventRoute() {
             </p>
             <div className="mt-4 text-sm text-gray-900">
               <dl role="list" className="border border-gray-200 rounded-md divide-y divide-gray-200">
-                <div className="pl-3 pr-4 py-3 text-sm">
-                  <dt className="text-sm font-medium text-gray-500">Quikies</dt>
-                  <dd className="mt-1 text-sm text-gray-900 line-clamp-2">
-                    Fugiat ipsum ipsum deserunt culpa aute sint do nostrud an
-                  </dd>
-                </div>
-                <div className="pl-3 pr-4 py-3 text-sm">
-                  <dt className="text-sm font-medium text-gray-500">Quikies</dt>
-                  <dd className="mt-1 text-sm text-gray-900 line-clamp-2">
-                    Fugiat ipsum ipsum deserunt culpa aute sint do nostrud anim incididunt cillum culpa consequat.
-                    Excepteur qui ipsum aliquip consequat sint.
-                  </dd>
-                </div>
+              {data.categories.map((c) => (
+                  <div key={c.name} className="pl-3 pr-4 py-3 text-sm">
+                    <dt className="text-sm font-medium text-gray-500">{c.name} </dt>
+                    <dd className="mt-1 text-sm text-gray-900 line-clamp-2">{c.description}</dd>
+                  </div>
+                ))}
               </dl>
             </div>
           </div>

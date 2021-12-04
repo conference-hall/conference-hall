@@ -20,7 +20,9 @@ export interface EventDescription {
   cfpStart?: string;
   cfpEnd?: string;
   cfpState: CfpState;
-};
+  formats: Array<{ id: string; name: string; description: string | null }>;
+  categories: Array<{ id: string; name: string; description: string | null }>;
+}
 
 export async function getEventDescription({ params }: DataFunctionArgs): Promise<EventDescription> {
   const criterias = eventSlugParam.safeParse(params.eventSlug);
@@ -28,10 +30,10 @@ export async function getEventDescription({ params }: DataFunctionArgs): Promise
     throw new Response('Bad search parameters', { status: 400 });
   }
 
-  const slug= criterias.data;
-  const event = await db.event.findUnique({ where: { slug } });
+  const slug = criterias.data;
+  const event = await db.event.findUnique({ where: { slug }, include: { formats: true, categories: true } });
   if (!event) {
-    throw new Response('Event not found', { status: 404 }); 
+    throw new Response('Event not found', { status: 404 });
   }
 
   return {
@@ -49,5 +51,7 @@ export async function getEventDescription({ params }: DataFunctionArgs): Promise
     cfpStart: event.cfpStart?.toUTCString(),
     cfpEnd: event.cfpEnd?.toUTCString(),
     cfpState: getCfpState(event.type, event.cfpStart, event.cfpEnd),
+    formats: event.formats.map((f) => ({ id: f.id, name: f.name, description: f.description })),
+    categories: event.categories.map((c) => ({ id: c.id, name: c.name, description: c.description })),
   };
 }

@@ -1,7 +1,9 @@
+import { buildCategory } from '../../tests/factories/categories';
 import { buildEvent } from '../../tests/factories/events';
+import { buildFormat } from '../../tests/factories/formats';
 
 export default async () => {
-  await buildEvent({
+  const event1 = await buildEvent({
     name: 'Devfest Nantes',
     slug: 'devfest-nantes',
     description: 'The event !',
@@ -16,6 +18,48 @@ export default async () => {
     cfpStart: '2020-10-05T14:48:00.000Z',
     cfpEnd: '2090-10-05T14:48:00.000Z',
     creatorId: 'user1',
+  });
+
+  buildFormat({
+    eventId: event1.id,
+    name: 'Conference (50 min)',
+    description: 'It could be a live code, slides, or both. 50min including Q&A',
+  });
+
+  buildFormat({
+    eventId: event1.id,
+    name: 'Quickie (20 min)',
+    description: 'A short talk. 20min including Q&A',
+  });
+
+  buildFormat({
+    eventId: event1.id,
+    name: 'Codelab (2 hours)',
+    description: "Hand's On! Let's code. 2 hours workshop",
+  });
+
+  buildCategory({
+    eventId: event1.id,
+    name: 'Web',
+    description: 'All Frameworks, libraries, HTML, CSS...',
+  });
+
+  buildCategory({
+    eventId: event1.id,
+    name: 'Cloud & DevOps',
+    description: 'Tools / solutions / methods to run our app.',
+  });
+
+  buildCategory({
+    eventId: event1.id,
+    name: 'Mobile & IoT',
+    description: 'All Mobile, IoT subjects',
+  });
+
+  buildCategory({
+    eventId: event1.id,
+    name: 'UX / UI',
+    description: 'Everything about Design & UX.',
   });
 
   await buildEvent({
