@@ -1,8 +1,8 @@
 import cn from 'classnames';
-import React, { ReactNode } from 'react';
+import React from 'react';
 
 type Icon = React.ComponentType<{ className?: string }>;
-type IconLabelProps = { children: ReactNode, icon: Icon, className?: string };
+type IconLabelProps = { children: React.ReactNode, icon: Icon, className?: string };
 
 export function IconLabel({ children, icon: Icon, className }: IconLabelProps) {
   return (

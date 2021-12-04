@@ -1,3 +1,4 @@
+import React from 'react'
 import cn from 'classnames';
 import { CfpState, formatCFPDate, formatCFPState } from '../../utils/event';
 import { SectionPanel } from '../ui/Panels';

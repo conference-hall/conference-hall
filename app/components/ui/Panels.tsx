@@ -1,7 +1,13 @@
-import { ReactNode } from 'react';
+import React from 'react';
 import cn from 'classnames';
 
-type SectionPanelProps = { id: string; title: string; padding?: boolean; children: ReactNode; className?: string };
+type SectionPanelProps = {
+  id: string;
+  title: string;
+  padding?: boolean;
+  children: React.ReactNode;
+  className?: string;
+};
 
 export function SectionPanel({ id, title, children, padding, className }: SectionPanelProps) {
   const styles = cn('bg-white shadow overflow-hidden sm:rounded-lg', { 'px-4 py-5 sm:px-6': padding }, className);

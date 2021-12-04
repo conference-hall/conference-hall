@@ -1,6 +1,3 @@
-/**
- * @jest-environment jsdom
- */
 import React from 'react'
 import { render } from '../../../tests/react-helpers';
 import { Header } from './Header';

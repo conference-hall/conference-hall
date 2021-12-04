@@ -1,10 +1,10 @@
-import { ReactNode } from 'react';
+import React from 'react';
 import { CalendarIcon, LocationMarkerIcon } from '@heroicons/react/solid';
 import { Link } from 'remix';
 import { formatCFPState, formatEventType, CfpState } from '~/utils/event';
 import { IconLabel } from '../ui/IconLabel';
 
-type EventsListProps = { children: ReactNode };
+type EventsListProps = { children: React.ReactNode };
 
 export function EventsList({ children }: EventsListProps) {
   return (

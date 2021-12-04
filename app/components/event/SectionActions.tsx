@@ -1,3 +1,4 @@
+import React from 'react'
 import { GlobeIcon, HeartIcon, MailIcon } from '@heroicons/react/solid';
 import { ButtonLink } from '../ui/Buttons';
 import { ExternalLink } from '../ui/Links';
