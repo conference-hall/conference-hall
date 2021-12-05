@@ -1,7 +1,7 @@
 import { EventType, EventVisibility, Prisma } from '@prisma/client';
 import slugify from 'limax';
 import { v4 as uuid } from 'uuid';
-import { db } from '../../app/server/db';
+import { db } from '../../app/services/db';
 import { buildUser } from './users';
 
 export async function buildEvent(input: Partial<Prisma.EventUncheckedCreateInput> = {}) {

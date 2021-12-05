@@ -1,8 +1,8 @@
 import { useLoaderData } from 'remix';
-import { Container } from '~/components/ui/Container';
-import { EventDescription, getEventDescription } from '~/server/event/get-event-description.server';
-import { SectionInfo } from '~/components/event/SectionInfo';
-import { SectionActions } from '~/components/event/SectionActions';
+import { Container } from '~/components/layout/Container';
+import { EventDescription, getEventDescription } from '~/features/event-page/load-event.server';
+import { SectionActions } from '../../features/event-page/components/SectionActions';
+import { SectionInfo } from '../../features/event-page/components/SectionInfo';
 
 export const loader = getEventDescription;
 

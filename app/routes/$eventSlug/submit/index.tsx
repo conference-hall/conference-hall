@@ -1,16 +1,16 @@
 import { LoaderFunction, useLoaderData } from 'remix';
-import { TalkSelectionStep, getTalkSelectionStep } from '~/server/event/submit/get-talk-selection-step.server';
-import { TalksEmptyState } from '~/components/event-submission/TalksEmptyState';
-import { TalksSelection } from '~/components/event-submission/TalksSelection';
-import { ButtonLink } from '~/components/ui/Buttons';
-import { requireUserSession } from '~/server/auth/auth.server';
-import { Heading } from '../../../components/ui/Heading';
+import { TalkSelectionStep, loadTalksSelection } from '~/features/event-submission/load-talks-selection.server';
+import { ButtonLink } from '~/components/Buttons';
+import { requireUserSession } from '~/features/auth/auth.server';
+import { Heading } from '../../../components/Heading';
+import { TalksEmptyState } from '../../../features/event-submission/components/TalksEmptyState';
+import { TalksSelection } from '../../../features/event-submission/components/TalksSelection';
 
 export const handle = { step: 'selection' };
 
 export const loader: LoaderFunction = async ({ request, context, params }) => {
   await requireUserSession(request);
-  return getTalkSelectionStep({ request, context, params });
+  return loadTalksSelection({ request, context, params });
 };
 
 export default function EventSubmitRoute() {

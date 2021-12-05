@@ -1,6 +1,6 @@
 import { Outlet, useLoaderData } from 'remix';
-import { Header } from '~/components/event/Header';
-import { EventHeader, getEventHeader } from '../server/event/get-event-header.server';
+import { Header } from '../features/event-page/components/Header';
+import { EventHeader, getEventHeader } from '../features/event-page/load-event-header.server';
 
 export const loader = getEventHeader;
 

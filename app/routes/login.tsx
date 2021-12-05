@@ -1,8 +1,8 @@
 import { ActionFunction, LoaderFunction, redirect, useSubmit } from 'remix';
-import { Button } from '../components/ui/Buttons';
-import { Container } from '../components/ui/Container';
-import { useFirebaseSignIn } from '../firebase/useFirebaseSignIn';
-import { createUserSession, getAuthUser } from '../server/auth/auth.server';
+import { Button } from '../components/Buttons';
+import { Container } from '../components/layout/Container';
+import { useFirebaseSignIn } from '../services/firebase/useFirebaseSignIn';
+import { createUserSession, getAuthUser } from '../features/auth/auth.server';
 
 export const action: ActionFunction = async ({ request }) => {
   return createUserSession(request)

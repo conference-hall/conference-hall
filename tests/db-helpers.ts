@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 
-import { config } from '../app/server/config'
-import { db } from '../app/server/db'
+import { config } from '../app/services/config'
+import { db } from '../app/services/db'
 
 export async function disconnect() {
   await db.$disconnect()

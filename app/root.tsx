@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { config } from './server/config';
+import { config } from './services/config';
 import {
   LinksFunction,
   LoaderFunction,
@@ -13,7 +13,7 @@ import {
 } from 'remix';
 import { Navbar } from './components/layout/Navbar';
 
-import { initializeFirebase } from './firebase/init';
+import { initializeFirebase } from './services/firebase/init';
 import tailwind from './tailwind.css';
 import { Footer } from './components/layout/Footer';
 
@@ -80,6 +80,9 @@ export function CatchBoundary() {
         <h1>
           {caught.status} {caught.statusText}
         </h1>
+        <p>
+          {caught.data}
+        </p>
       </div>
     </Document>
   );

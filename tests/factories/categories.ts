@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client';
-import { db } from '../../app/server/db';
+import { db } from '../../app/services/db';
 import { buildEvent } from './events';
 
 export async function buildCategory(input: Partial<Prisma.EventCategoryUncheckedCreateInput> = {}) {
