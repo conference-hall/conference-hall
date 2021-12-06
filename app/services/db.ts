@@ -15,7 +15,7 @@ if (config.isProduction) {
   db.$connect();
 } else {
   if (!global.__db) {
-    global.__db = new PrismaClient({ log: ["query"] });
+    global.__db = new PrismaClient();
     global.__db.$connect();
   }
   db = global.__db;

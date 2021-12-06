@@ -1,8 +1,9 @@
 module.exports = {
   displayName: 'Node',
-  roots: ['app/firebase', 'app/server', 'app/utils'],
+  roots: ['app'],
   resetMocks: true,
   testEnvironment: 'node',
+  testPathIgnorePatterns: ['/node_modules/', '/components/'],
   transform: {
     '^.+\\.tsx?$': 'esbuild-jest',
   },
@@ -10,5 +11,5 @@ module.exports = {
     '^~/(.*)$': '<rootDir>/app/$1',
     '^tests/(.*)$': '<rootDir>/tests/$1',
   },
-  setupFilesAfterEnv: ['<rootDir>/tests/setup-tests.ts', '@testing-library/jest-dom'],
+  setupFilesAfterEnv: ['<rootDir>/tests/setup-tests.ts'],
 };
