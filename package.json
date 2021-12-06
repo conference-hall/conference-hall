@@ -10,7 +10,7 @@
     "db:migrate": "dotenv -e .env.dev -- prisma migrate dev",
     "db:reset": "dotenv -e .env.dev -- prisma migrate reset",
     "db:studio": "dotenv -e .env.dev -- prisma studio",
-    "test": "dotenv -e .env.test -- jest -i",
+    "test": "npm run test:db:migrate && dotenv -e .env.test -- jest -i",
     "test:server": "npm run test:db:migrate && concurrently \"npm run dev:css\" \"npm run test:remix\"",
     "test:remix": "dotenv -e .env.test -- remix dev",
     "test:db:migrate": "dotenv -e .env.test -- prisma migrate dev",

@@ -3,9 +3,10 @@ import z from 'zod';
 const TalkFormSchema = z.object({
   title: z.string().nonempty(),
   abstract: z.string().nonempty(),
-  references: z.string().optional(),
-  formats: z.array(z.string()).optional(),
-  categories: z.array(z.string()).optional(),
+  references: z.string().nullable(),
+  level: z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']).nullable(),
+  formats: z.array(z.string()),
+  categories: z.array(z.string()),
 });
 
 type Options = { isFormatsRequired: boolean; isCategoriesRequired: boolean };
@@ -23,6 +24,7 @@ export function getTalkData(form: FormData, { isFormatsRequired, isCategoriesReq
     title: form.get('title'),
     abstract: form.get('abstract'),
     references: form.get('references'),
+    level: form.get('level'),
     formats: form.getAll('formats'),
     categories: form.getAll('categories'),
   });

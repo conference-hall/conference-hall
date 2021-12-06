@@ -9,6 +9,7 @@ describe('Talk form data validation', () => {
     form.append('title', 'Title Talk');
     form.append('abstract', 'Abstract Talk');
     form.append('references', 'References Talk');
+    form.append('level', 'BEGINNER');
     form.append('formats', 'Conference');
     form.append('formats', 'Quickies');
     form.append('categories', 'Web');
@@ -21,6 +22,7 @@ describe('Talk form data validation', () => {
       title: 'Title Talk',
       abstract: 'Abstract Talk',
       references: 'References Talk',
+      level: 'BEGINNER',
       formats: ['Conference', 'Quickies'],
       categories: ['Web', 'Mobile'],
     });
@@ -30,7 +32,6 @@ describe('Talk form data validation', () => {
     const form = new FormData();
     form.append('title', '');
     form.append('abstract', '');
-    form.append('references', '');
 
     const result = getTalkData(form, { isFormatsRequired: false, isCategoriesRequired: false });
 
@@ -42,11 +43,26 @@ describe('Talk form data validation', () => {
     }
   });
 
+  it('should not validate incorrect level', async () => {
+    const form = new FormData();
+    form.append('title', 'Title Talk');
+    form.append('abstract', 'Abstract Talk');
+    form.append('level', 'INVALID');
+
+    const result = getTalkData(form, { isFormatsRequired: false, isCategoriesRequired: false });
+
+    expect(result.success).toBe(false);
+
+    if (!result.success) {
+      const errors = Object.keys(result.error.flatten().fieldErrors);
+      expect(errors).toEqual(['level']);
+    }
+  });
+
   it('should not validate empty formats or categories when required', async () => {
     const form = new FormData();
     form.append('title', 'Title');
     form.append('abstract', 'Abstract');
-    form.append('references', 'Reference');
 
     const result = getTalkData(form, { isFormatsRequired: true, isCategoriesRequired: true });
 

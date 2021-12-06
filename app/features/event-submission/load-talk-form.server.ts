@@ -7,6 +7,7 @@ export type TalkFormData = {
     title: string;
     abstract: string;
     references: string | null;
+    level: string | null;
   };
   formats: Array<{ id: string; name: string; description: string | null }>;
   categories: Array<{ id: string; name: string; description: string | null }>;
@@ -19,7 +20,7 @@ export async function loadTalk({ request, params }: DataFunctionArgs): Promise<T
   let talk;
   if (talkId !== 'new') {
     talk = await db.talk.findFirst({
-      select: { title: true, abstract: true, references: true },
+      select: { title: true, abstract: true, references: true, level: true },
       where: { id: talkId, speakers: { some: { id: uid } } },
     });
     if (!talk) {
