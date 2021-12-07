@@ -67,14 +67,12 @@ export function TalkForm({ initialValues, errors, formats, categories }: TalkFor
         />
       </div>
       {formats?.length > 0 ? (
-        <div className="px-8 py-6 sm:px-8 lg:w-8/12">
-          <Heading description="Select one or severals formats proposed by the event organizers.">Formats</Heading>
+        <div className="px-8 py-3 sm:px-8 lg:w-8/12">
           <FormatsForm formats={formats} />
         </div>
       ) : null}
       {categories?.length > 0 ? (
-        <div className="px-8 py-6 sm:px-8 lg:w-8/12">
-          <Heading description="Select categories that are the best fit for your proposal.">Categories</Heading>
+        <div className="px-8 py-3 sm:px-8 lg:w-8/12">
           <CategoriesForm categories={categories} />
         </div>
       ) : null}

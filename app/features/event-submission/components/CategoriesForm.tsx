@@ -6,12 +6,15 @@ type CategoriesFormProps = {
     name: string;
     description: string | null;
   }>;
-  initialValues?: string[]
+  initialValues?: string[];
 };
 
 export function CategoriesForm({ categories, initialValues }: CategoriesFormProps) {
   return (
-    <CheckboxGroup label="Select proposal categories">
+    <CheckboxGroup
+      label="Select proposal categories"
+      description="Select categories that are the best fit for your proposal."
+    >
       {categories.map((c: any) => (
         <Checkbox
           key={c.id}
@@ -19,9 +22,10 @@ export function CategoriesForm({ categories, initialValues }: CategoriesFormProp
           name="categories"
           value={c.id}
           defaultChecked={initialValues?.includes(c.id)}
-          label={c.name}
           description={c.description}
-        />
+        >
+          {c.name}
+        </Checkbox>
       ))}
     </CheckboxGroup>
   );

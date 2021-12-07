@@ -6,12 +6,15 @@ type FormatsFormProps = {
     name: string;
     description: string | null;
   }>;
-  initialValues?: string[]
+  initialValues?: string[];
 };
 
 export function FormatsForm({ formats, initialValues }: FormatsFormProps) {
   return (
-    <CheckboxGroup label="Select proposal formats">
+    <CheckboxGroup
+      label="Select proposal formats"
+      description="Select one or severals formats proposed by the event organizers."
+    >
       {formats.map((f: any) => (
         <Checkbox
           key={f.id}
@@ -19,9 +22,10 @@ export function FormatsForm({ formats, initialValues }: FormatsFormProps) {
           name="formats"
           value={f.id}
           defaultChecked={initialValues?.includes(f.id)}
-          label={f.name}
           description={f.description}
-        />
+        >
+          {f.name}
+        </Checkbox>
       ))}
     </CheckboxGroup>
   );

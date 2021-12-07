@@ -17,6 +17,8 @@ export default async () => {
     conferenceEnd: '2091-11-21T00:00:00.000Z',
     cfpStart: '2020-10-05T14:48:00.000Z',
     cfpEnd: '2090-10-05T14:48:00.000Z',
+    surveyEnabled: true,
+    surveyQuestions: ['gender', 'tshirt', 'diet', 'accomodation', 'transports', 'info'],
     creatorId: 'user1',
   });
 

@@ -24,21 +24,30 @@ export function RadioGroup({ label, description, inline, className, children }: 
   );
 }
 
-type RadioProps = React.InputHTMLAttributes<HTMLInputElement>;
+type RadioProps = { description?: string | null } & React.InputHTMLAttributes<HTMLInputElement>;
 
-export function Radio({ id, name, children, ...rest }: RadioProps) {
+export function Radio({ id, name, description, children, ...rest }: RadioProps) {
   return (
-    <div key={id} className="flex items-center">
-      <input
-        id={id}
-        name={name}
-        type="radio"
-        className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
-        {...rest}
-      />
-      <label htmlFor={id} className="ml-3 block text-sm text-gray-700">
-        {children}
-      </label>
+    <div className="relative flex items-start">
+      <div className="flex items-center h-5">
+        <input
+          id={id}
+          name={name}
+          type="radio"
+          className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
+          {...rest}
+        />
+      </div>
+      <div className="text-sm">
+        <label htmlFor={id} className="ml-3 block text-sm text-gray-700">
+          {children}
+        </label>
+        {description && (
+          <p id={`${id}-description`} className="text-gray-500">
+            {description}
+          </p>
+        )}
+      </div>
     </div>
   );
 }
