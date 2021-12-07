@@ -5,11 +5,14 @@ import { Radio, RadioGroup } from '../../../components/forms/RadioGroup';
 import { TextArea } from '../../../components/forms/TextArea';
 import { Heading } from '../../../components/Heading';
 import { loadSurveyQuestions } from '../../../features/event-submission/load-survey-questions';
+import { saveSurvey } from '../../../features/event-submission/save-survey.server';
 import { SurveyQuestions } from '../../../services/survey/questions';
 
 export const handle = { step: 'survey' };
 
 export const loader = loadSurveyQuestions;
+
+export const action = saveSurvey;
 
 export default function EventSubmitTalkRoute() {
   const questions = useLoaderData<SurveyQuestions>();

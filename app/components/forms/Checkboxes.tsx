@@ -24,11 +24,11 @@ export function CheckboxGroup({ label, description, inline, className, children 
   );
 }
 
-type CheckboxProps = { description?: string | null } & React.InputHTMLAttributes<HTMLInputElement>;
+type CheckboxProps = { description?: string | null; className?: string } & React.InputHTMLAttributes<HTMLInputElement>;
 
-export function Checkbox({ id, name, description, children, ...rest }: CheckboxProps) {
+export function Checkbox({ id, name, description, className, children, ...rest }: CheckboxProps) {
   return (
-    <div className="relative flex items-start">
+    <div className={cn('relative flex items-start', className)}>
       <div className="flex items-center h-5">
         <input
           id={id}
