@@ -1,8 +1,9 @@
-import { DataFunctionArgs } from '@remix-run/server-runtime';
+import { ActionFunction, LoaderFunction, redirect } from 'remix';
 import { db } from '../../services/db';
-import { getEnabledQuestions, QUESTIONS, SurveyQuestions } from '../../services/survey/questions';
+import { getEnabledQuestions, QUESTIONS } from '../../services/survey/questions';
+import { requireUserSession } from '../auth/auth.server';
 
-export async function loadSurveyQuestions({ params }: DataFunctionArgs): Promise<SurveyQuestions> {
+export const loadSurvey: LoaderFunction = async ({ params }) => {
   const event = await db.event.findUnique({
     select: { surveyEnabled: true, surveyQuestions: true },
     where: { slug: params.eventSlug },
@@ -18,3 +19,9 @@ export async function loadSurveyQuestions({ params }: DataFunctionArgs): Promise
 
   return QUESTIONS.filter(question => enabledQuestions.includes(question.name));
 }
+
+export const saveSurvey: ActionFunction = async ({ request, params }) => {
+  const uid = await requireUserSession(request);
+  const { eventSlug, talkId } = params;
+  return redirect(`/${eventSlug}/submission/${talkId}/submit`);
+};

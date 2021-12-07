@@ -3,7 +3,7 @@ import { buildEvent } from 'tests/factories/events';
 import { buildLoaderRoute } from 'tests/remix-helpers';
 import { buildCategory } from 'tests/factories/categories';
 import { buildFormat } from 'tests/factories/formats';
-import { getEventDescription } from './load-event.server';
+import { loadEvent } from './event.server';
 
 describe('Get event description', () => {
   setupDatabase();
@@ -14,7 +14,7 @@ describe('Get event description', () => {
     const category = await buildCategory({ eventId: event.id });
 
     const route = buildLoaderRoute(`/event/${event.slug}`, { eventSlug: event.slug });
-    const data = await getEventDescription(route);
+    const data = await loadEvent(route);
 
     expect(data).toEqual({
       description: event.description,
@@ -35,7 +35,7 @@ describe('Get event description', () => {
     expect.assertions(1);
     try {
       const route = buildLoaderRoute('/event/not-found', { eventSlug: 'not-found' });
-      await getEventDescription(route)
+      await loadEvent(route)
     } catch (error) {
       if (error instanceof Response) {
         expect(error.status).toEqual(404);

@@ -1,7 +1,7 @@
 import { setupDatabase } from 'tests/db-helpers';
 import { buildEvent } from 'tests/factories/events';
 import { buildLoaderRoute } from 'tests/remix-helpers';
-import { getEventHeader } from './load-event-header.server';
+import { loadEventHeader } from './event-header.server';
 
 describe('Get event header', () => {
   setupDatabase();
@@ -10,7 +10,7 @@ describe('Get event header', () => {
     const event = await buildEvent();
 
     const route = buildLoaderRoute(`/event/${event.slug}`, { eventSlug: event.slug });
-    const data = await getEventHeader(route);
+    const data = await loadEventHeader(route);
 
     expect(data).toEqual({
       slug: event.slug,
@@ -25,7 +25,7 @@ describe('Get event header', () => {
     expect.assertions(1);
     try {
       const route = buildLoaderRoute('/event/not-found', { eventSlug: 'not-found' });
-      await getEventHeader(route)
+      await loadEventHeader(route)
     } catch (error) {
       if (error instanceof Response) {
         expect(error.status).toEqual(404);

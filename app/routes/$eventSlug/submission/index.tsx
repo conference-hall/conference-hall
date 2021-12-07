@@ -1,5 +1,5 @@
 import { LoaderFunction, useLoaderData } from 'remix';
-import { TalkSelectionStep, loadTalksSelection } from '~/features/event-submission/load-talks-selection.server';
+import { TalkSelectionStep, loadTalksSelection } from '~/features/event-submission/selection.server';
 import { ButtonLink } from '~/components/Buttons';
 import { requireUserSession } from '~/features/auth/auth.server';
 import { Heading } from '../../../components/Heading';

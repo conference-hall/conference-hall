@@ -3,7 +3,7 @@ import { Container } from '../../components/layout/Container';
 import { SectionPanel } from '../../components/Panels';
 import { requireUserSession } from '../../features/auth/auth.server';
 import { Steps } from '../../features/event-submission/components/Steps';
-import { loadSubmissionSteps, SubmitSteps } from '../../features/event-submission/load-steps.server';
+import { loadSubmissionSteps, SubmitSteps } from '../../features/event-submission/steps.server';
 
 export const loader: LoaderFunction = async ({ request, context, params }) => {
   await requireUserSession(request);

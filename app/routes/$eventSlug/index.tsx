@@ -1,10 +1,10 @@
 import { useLoaderData } from 'remix';
 import { Container } from '~/components/layout/Container';
-import { EventDescription, getEventDescription } from '~/features/event-page/load-event.server';
+import { EventDescription, loadEvent } from '~/features/event-page/event.server';
 import { SectionActions } from '../../features/event-page/components/SectionActions';
 import { SectionInfo } from '../../features/event-page/components/SectionInfo';
 
-export const loader = getEventDescription;
+export const loader = loadEvent;
 
 export default function EventRoute() {
   const data = useLoaderData<EventDescription>();

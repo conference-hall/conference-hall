@@ -2,24 +2,23 @@ import { Form, useActionData, useLoaderData } from 'remix';
 import { Button, ButtonLink } from '~/components/Buttons';
 import { TalkForm } from '../../../features/event-submission/components/TalkForm';
 import { usePreviousStep } from '../../../features/event-submission/hooks/usePreviousStep';
-import { loadTalk, TalkFormData } from '../../../features/event-submission/load-talk-form.server';
-import { saveProposal } from '../../../features/event-submission/save-proposal.server';
+import { loadProposal, ProposalData, saveProposal } from '../../../features/event-submission/proposal.server';
 import { ValidationErrors } from '../../../features/event-submission/validation/errors';
 
 export const handle = { step: 'proposal' };
 
-export const loader = loadTalk;
+export const loader = loadProposal;
 
 export const action = saveProposal;
 
 export default function EventSubmitTalkRoute() {
-  const data = useLoaderData<TalkFormData>();
+  const talk = useLoaderData<ProposalData>();
   const errors = useActionData<ValidationErrors>();
   const previousStepPath = usePreviousStep()
 
   return (
     <Form method="post">
-      <TalkForm {...data} errors={errors?.fieldErrors} />
+      <TalkForm initialValues={talk} errors={errors?.fieldErrors} />
 
       <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
         <ButtonLink to={previousStepPath} variant="secondary">

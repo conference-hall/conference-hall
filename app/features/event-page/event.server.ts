@@ -1,4 +1,4 @@
-import { DataFunctionArgs } from '@remix-run/server-runtime';
+import { LoaderFunction } from 'remix';
 import { CfpState, getCfpState } from '~/utils/event';
 import { db } from '../../services/db';
 
@@ -16,7 +16,7 @@ export interface EventDescription {
   categories: Array<{ id: string; name: string; description: string | null }>;
 }
 
-export async function getEventDescription({ params }: DataFunctionArgs): Promise<EventDescription> {
+export const loadEvent: LoaderFunction = async ({ params }) => {
   const event = await db.event.findUnique({
     where: { slug: params.eventSlug },
     include: { formats: true, categories: true },

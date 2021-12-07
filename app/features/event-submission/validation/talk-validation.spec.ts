@@ -1,7 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import { getTalkData } from './talk-form-validation';
+import { validate } from './talk-validation';
 
 describe('Talk form data validation', () => {
   it('should validate the talk form', async () => {
@@ -10,12 +10,8 @@ describe('Talk form data validation', () => {
     form.append('abstract', 'Abstract Talk');
     form.append('references', 'References Talk');
     form.append('level', 'BEGINNER');
-    form.append('formats', 'Conference');
-    form.append('formats', 'Quickies');
-    form.append('categories', 'Web');
-    form.append('categories', 'Mobile');
 
-    const result = getTalkData(form, { isFormatsRequired: false, isCategoriesRequired: false });
+    const result = validate(form);
 
     expect(result.success).toBe(true);
     expect(result.success && result.data).toEqual({
@@ -23,8 +19,6 @@ describe('Talk form data validation', () => {
       abstract: 'Abstract Talk',
       references: 'References Talk',
       level: 'BEGINNER',
-      formats: ['Conference', 'Quickies'],
-      categories: ['Web', 'Mobile'],
     });
   });
 
@@ -33,7 +27,7 @@ describe('Talk form data validation', () => {
     form.append('title', '');
     form.append('abstract', '');
 
-    const result = getTalkData(form, { isFormatsRequired: false, isCategoriesRequired: false });
+    const result = validate(form);
 
     expect(result.success).toBe(false);
 
@@ -49,28 +43,13 @@ describe('Talk form data validation', () => {
     form.append('abstract', 'Abstract Talk');
     form.append('level', 'INVALID');
 
-    const result = getTalkData(form, { isFormatsRequired: false, isCategoriesRequired: false });
+    const result = validate(form);
 
     expect(result.success).toBe(false);
 
     if (!result.success) {
       const errors = Object.keys(result.error.flatten().fieldErrors);
       expect(errors).toEqual(['level']);
-    }
-  });
-
-  it('should not validate empty formats or categories when required', async () => {
-    const form = new FormData();
-    form.append('title', 'Title');
-    form.append('abstract', 'Abstract');
-
-    const result = getTalkData(form, { isFormatsRequired: true, isCategoriesRequired: true });
-
-    expect(result.success).toBe(false);
-
-    if (!result.success) {
-      const errors = Object.keys(result.error.flatten().fieldErrors);
-      expect(errors).toEqual(['formats', 'categories']);
     }
   });
 });

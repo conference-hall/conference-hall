@@ -1,5 +1,5 @@
 import { useMatches, useParams } from 'remix';
-import { SubmitSteps } from '../load-steps.server';
+import { SubmitSteps } from '../steps.server';
 
 export function usePreviousStep() {
   const params = useParams();

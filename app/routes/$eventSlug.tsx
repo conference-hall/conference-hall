@@ -1,8 +1,8 @@
 import { Outlet, useLoaderData } from 'remix';
 import { Header } from '../features/event-page/components/Header';
-import { EventHeader, getEventHeader } from '../features/event-page/load-event-header.server';
+import { EventHeader, loadEventHeader } from '../features/event-page/event-header.server';
 
-export const loader = getEventHeader;
+export const loader = loadEventHeader;
 
 export default function EventRoute() {
   const data = useLoaderData<EventHeader>();

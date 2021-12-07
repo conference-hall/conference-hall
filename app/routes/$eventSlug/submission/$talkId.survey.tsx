@@ -1,17 +1,16 @@
-import { Form, useLoaderData, useParams } from 'remix';
+import { Form, useLoaderData } from 'remix';
 import { Button, ButtonLink } from '~/components/Buttons';
 import { Checkbox, CheckboxGroup } from '../../../components/forms/Checkboxes';
 import { Radio, RadioGroup } from '../../../components/forms/RadioGroup';
 import { TextArea } from '../../../components/forms/TextArea';
 import { Heading } from '../../../components/Heading';
 import { usePreviousStep } from '../../../features/event-submission/hooks/usePreviousStep';
-import { loadSurveyQuestions } from '../../../features/event-submission/load-survey-questions';
-import { saveSurvey } from '../../../features/event-submission/save-survey.server';
+import { loadSurvey, saveSurvey } from '../../../features/event-submission/survey.server';
 import { SurveyQuestions } from '../../../services/survey/questions';
 
 export const handle = { step: 'survey' };
 
-export const loader = loadSurveyQuestions;
+export const loader = loadSurvey;
 
 export const action = saveSurvey;
 

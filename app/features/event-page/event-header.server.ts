@@ -1,4 +1,4 @@
-import { DataFunctionArgs } from '@remix-run/server-runtime';
+import { LoaderFunction } from 'remix';
 import { db } from '../../services/db';
 
 export interface EventHeader {
@@ -9,7 +9,7 @@ export interface EventHeader {
   conferenceEnd?: string;
 }
 
-export async function getEventHeader({ params }: DataFunctionArgs): Promise<EventHeader> {
+export const loadEventHeader: LoaderFunction = async ({ params }) => {
   const event = await db.event.findUnique({
     select: { slug: true, name: true, address: true, conferenceStart: true, conferenceEnd: true },
     where: { slug: params.eventSlug },
