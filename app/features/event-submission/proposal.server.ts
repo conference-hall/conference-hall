@@ -73,7 +73,7 @@ export const saveProposal: ActionFunction = async ({ request, params }) => {
       abstract: talk.abstract,
       level: talk.level,
       references: talk.references,
-      status: 'SUBMITTED',
+      status: 'DRAFT',
       talk: { connect: { id: talk.id } },
       event: { connect: { id: event.id } },
       speakers: { connect: [{ id: uid }] },
