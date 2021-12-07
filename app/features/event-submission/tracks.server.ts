@@ -6,26 +6,35 @@ import { validate } from './validation/tracks-validation';
 export type TracksData = {
   formats: Array<{ id: string; name: string; description: string | null }>;
   categories: Array<{ id: string; name: string; description: string | null }>;
+  initialValues: {
+    formats: string[];
+    categories: string[];
+  },
 };
 
 export const loadTracks: LoaderFunction = async ({ request, params }) => {
-  const uid = await requireUserSession(request);
-
-  const talk = await db.talk.findFirst({
-    select: { title: true, abstract: true, references: true, level: true },
-    where: { id: params.talkId, speakers: { some: { id: uid } } },
-  });
-  if (!talk) throw new Response('Talk not found', { status: 404 });
+  const { talkId, eventSlug } = params;
+  if (!talkId) throw new Response('Talk id is required', { status: 400 });
 
   const event = await db.event.findUnique({
-    select: { formats: true, categories: true },
-    where: { slug: params.eventSlug },
+    select: { id: true, formats: true, categories: true },
+    where: { slug: eventSlug },
   });
   if (!event) throw new Response('Event not found', { status: 404 });
+
+  const proposal = await db.proposal.findUnique({
+    select: { formats: true, categories: true },
+    where: { talkId_eventId: { talkId, eventId: event.id } },
+  });
+  if (!proposal) throw new Response('Proposal not found', { status: 404 });
 
   return {
     formats: event.formats ?? [],
     categories: event.categories ?? [],
+    initialValues: {
+      formats: proposal.formats.map(f => f.id),
+      categories: proposal.categories.map(c => c.id),
+    },
   };
 }
 
