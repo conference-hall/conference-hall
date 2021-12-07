@@ -5,8 +5,7 @@ import { Radio, RadioGroup } from '../../../components/forms/RadioGroup';
 import { TextArea } from '../../../components/forms/TextArea';
 import { Heading } from '../../../components/Heading';
 import { usePreviousStep } from '../../../features/event-submission/hooks/usePreviousStep';
-import { loadSurvey, saveSurvey } from '../../../features/event-submission/survey.server';
-import { SurveyQuestions } from '../../../services/survey/questions';
+import { loadSurvey, saveSurvey, SurveyForm } from '../../../features/event-submission/survey.server';
 
 export const handle = { step: 'survey' };
 
@@ -15,8 +14,8 @@ export const loader = loadSurvey;
 export const action = saveSurvey;
 
 export default function EventSubmitTalkRoute() {
-  const questions = useLoaderData<SurveyQuestions>();
-  const previousStepPath = usePreviousStep()
+  const { questions, initialValues } = useLoaderData<SurveyForm>();
+  const previousStepPath = usePreviousStep();
 
   return (
     <Form method="post">
@@ -32,6 +31,7 @@ export default function EventSubmitTalkRoute() {
                 id={question.name}
                 name={question.name}
                 label={question.label}
+                defaultValue={initialValues[question.name] as string}
                 className="mt-6"
               />
             );
@@ -39,7 +39,13 @@ export default function EventSubmitTalkRoute() {
             return (
               <CheckboxGroup key={question.name} label={question.label} inline className="mt-6">
                 {question.answers?.map((answer) => (
-                  <Checkbox key={answer.name} id={answer.name} name={question.name} value={answer.name}>
+                  <Checkbox
+                    key={answer.name}
+                    id={answer.name}
+                    name={question.name}
+                    value={answer.name}
+                    defaultChecked={initialValues[question.name]?.includes(answer.name)}
+                  >
                     {answer.label}
                   </Checkbox>
                 ))}
@@ -49,7 +55,13 @@ export default function EventSubmitTalkRoute() {
             return (
               <RadioGroup key={question.name} label={question.label} inline className="mt-6">
                 {question.answers?.map((answer) => (
-                  <Radio key={answer.name} id={answer.name} name={question.name} value={answer.name}>
+                  <Radio
+                    key={answer.name}
+                    id={answer.name}
+                    name={question.name}
+                    value={answer.name}
+                    defaultChecked={initialValues[question.name] === answer.name}
+                  >
                     {answer.label}
                   </Radio>
                 ))}
