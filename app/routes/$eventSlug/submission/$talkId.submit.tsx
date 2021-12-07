@@ -1,12 +1,18 @@
-import { Form } from 'remix';
+import { Form, useLoaderData } from 'remix';
 import { Button, ButtonLink } from '~/components/Buttons';
 import { Checkbox } from '../../../components/forms/Checkboxes';
 import { Heading } from '../../../components/Heading';
 import { usePreviousStep } from '../../../features/event-submission/hooks/usePreviousStep';
+import { loadProposal, SubmitForm, submitProposal } from '../../../features/event-submission/submit.server';
 
 export const handle = { step: 'submission' };
 
+export const loader = loadProposal
+
+export const action = submitProposal
+
 export default function EventSubmitTalkRoute() {
+  const proposal = useLoaderData<SubmitForm>()
   const previousStepPath = usePreviousStep()
 
   return (
@@ -16,15 +22,17 @@ export default function EventSubmitTalkRoute() {
           Almost done!
         </Heading>
         <p className="mt-4">
-          You are going to submit "Name of the proposal"
+          You are going to submit "{proposal.title}"
         </p>
         <p className="mt-4">
-          With speakers
+          Speakers: {proposal.speakers.map(s => s.name).join(', ')}
         </p>
         <p className="mt-4">
-          With categories and formats...
+          Formats: {proposal.formats.join(', ')}
         </p>
-       
+        <p className="mt-4">
+          Categories: {proposal.categories.join(', ')}
+        </p>
       </div>
       <div className="px-4 py-3 bg-gray-50 flex items-center justify-between sm:px-6">
         <ButtonLink to={previousStepPath} variant="secondary">
