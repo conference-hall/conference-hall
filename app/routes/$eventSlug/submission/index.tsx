@@ -24,7 +24,7 @@ export default function EventSubmitRoute() {
       <div className="px-4 py-5 sm:px-6 flex justify-between items-center flex-wrap sm:flex-nowrap">
         <Heading description="Select or create a new proposal to submit.">Proposal selection</Heading>
         <div className="flex-shrink-0">
-          <ButtonLink to="talk/new">New proposal</ButtonLink>
+          <ButtonLink to="new">New proposal</ButtonLink>
         </div>
       </div>
       <TalksSelection talks={data} />

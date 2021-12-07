@@ -21,7 +21,7 @@ export function TalksEmptyState() {
       <h3 className="mt-2 text-sm font-medium text-gray-900">No talks</h3>
       <p className="mt-1 text-sm text-gray-500">Get started by creating your first talk.</p>
       <div className="mt-6">
-        <ButtonLink to="talk/new">New talk</ButtonLink>
+        <ButtonLink to="new">New talk</ButtonLink>
       </div>
     </div>
   );

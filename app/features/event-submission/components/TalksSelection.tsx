@@ -18,7 +18,7 @@ export function TalksSelection({ talks }: TalksSelectionProps) {
     <ul role="list" className="border-t border-gray-200 divide-y divide-gray-200">
       {talks.map((talk) => (
         <li key={talk.id}>
-          <Link to={`talk/${talk.id}`} className="block hover:bg-gray-50">
+          <Link to={talk.id} className="block hover:bg-gray-50">
             <div className="px-4 py-4 flex items-center sm:px-6">
               <div className="min-w-0 flex-1 sm:flex sm:items-center sm:justify-between">
                 <div className="truncate">

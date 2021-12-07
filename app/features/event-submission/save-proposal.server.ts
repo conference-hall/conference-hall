@@ -59,7 +59,7 @@ export const saveProposal: ActionFunction = async ({ request, params }) => {
   });
 
   if (event.surveyEnabled) {
-    return redirect(`/${eventSlug}/submit/talk/${talk.id}/survey`);
+    return redirect(`/${eventSlug}/submission/${talk.id}/survey`);
   }
-  return redirect(`/${eventSlug}/submit/talk/${talk.id}/submit`);
+  return redirect(`/${eventSlug}/submission/${talk.id}/submit`);
 };

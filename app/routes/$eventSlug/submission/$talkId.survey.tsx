@@ -59,7 +59,7 @@ export default function EventSubmitTalkRoute() {
         })}
       </div>
       <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
-        <ButtonLink to={`/${params.eventSlug}/submit/talk/${params.talkId}`} variant="secondary">
+        <ButtonLink to={`/${params.eventSlug}/submission/${params.talkId}`} variant="secondary">
           Back
         </ButtonLink>
         <Button type="submit" className="ml-4">

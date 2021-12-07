@@ -29,7 +29,7 @@ export default function EventSubmitTalkRoute() {
        
       </div>
       <div className="px-4 py-3 bg-gray-50 flex items-center justify-between sm:px-6">
-        <ButtonLink to={`/${params.eventSlug}/submit/talk/${params.talkId}/survey`} variant="secondary">
+        <ButtonLink to={`/${params.eventSlug}/submission/${params.talkId}/survey`} variant="secondary">
           Back
         </ButtonLink>
         <div className="flex items-center">
