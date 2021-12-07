@@ -4,6 +4,7 @@ import { Checkbox, CheckboxGroup } from '../../../components/forms/Checkboxes';
 import { Radio, RadioGroup } from '../../../components/forms/RadioGroup';
 import { TextArea } from '../../../components/forms/TextArea';
 import { Heading } from '../../../components/Heading';
+import { usePreviousStep } from '../../../features/event-submission/hooks/usePreviousStep';
 import { loadSurveyQuestions } from '../../../features/event-submission/load-survey-questions';
 import { saveSurvey } from '../../../features/event-submission/save-survey.server';
 import { SurveyQuestions } from '../../../services/survey/questions';
@@ -16,7 +17,7 @@ export const action = saveSurvey;
 
 export default function EventSubmitTalkRoute() {
   const questions = useLoaderData<SurveyQuestions>();
-  const params = useParams();
+  const previousStepPath = usePreviousStep()
 
   return (
     <Form method="post">
@@ -59,7 +60,7 @@ export default function EventSubmitTalkRoute() {
         })}
       </div>
       <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
-        <ButtonLink to={`/${params.eventSlug}/submission/${params.talkId}`} variant="secondary">
+        <ButtonLink to={previousStepPath} variant="secondary">
           Back
         </ButtonLink>
         <Button type="submit" className="ml-4">

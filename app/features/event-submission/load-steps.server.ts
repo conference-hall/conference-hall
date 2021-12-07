@@ -5,10 +5,13 @@ import { getEnabledQuestions } from '../../services/survey/questions';
 export type SubmitSteps = Array<{
   key: string;
   name: string;
+  path: string;
   enabled: boolean;
 }>;
 
 export async function loadSubmissionSteps({ params }: DataFunctionArgs): Promise<SubmitSteps> {
+  const { eventSlug, talkId } = params;
+
   const event = await db.event.findUnique({
     select: { surveyEnabled: true, surveyQuestions: true },
     where: { slug: params.eventSlug },
@@ -21,11 +24,11 @@ export async function loadSubmissionSteps({ params }: DataFunctionArgs): Promise
   const isSurveyStepEnabled = event.surveyEnabled && Boolean(enabledQuestions?.length);
 
   const steps = [
-    { key: 'selection', name: 'Selection', enabled: true },
-    { key: 'proposal', name: 'Your proposal', enabled: true },
-    { key: 'survey', name: 'Survey', enabled: isSurveyStepEnabled },
-    { key: 'submission', name: 'Submission', enabled: true },
+    { key: 'selection', name: 'Selection', path: `/${eventSlug}/submission`, enabled: true },
+    { key: 'proposal', name: 'Your proposal', path: `/${eventSlug}/submission/${talkId}`, enabled: true },
+    { key: 'survey', name: 'Survey', path: `/${eventSlug}/submission/${talkId}/survey`, enabled: isSurveyStepEnabled },
+    { key: 'submission', name: 'Submission', path: `/${eventSlug}/submission/${talkId}/submit`, enabled: true },
   ];
 
-  return steps.filter(step => step.enabled);
+  return steps.filter((step) => step.enabled);
 }

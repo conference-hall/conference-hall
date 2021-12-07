@@ -51,7 +51,7 @@ export function TalkForm({ initialValues, errors, formats, categories }: TalkFor
         />
         <RadioGroup label="Level" inline className="mt-6">
           {LEVELS.map(({ key, label }) => (
-            <Radio name="level" id={key} value={key} defaultChecked={initialValues?.level === key}>
+            <Radio name="level" key={key} id={key} value={key} defaultChecked={initialValues?.level === key}>
               {label}
             </Radio>
           ))}

@@ -1,15 +1,13 @@
-import { Form, useMatches, useParams } from 'remix';
+import { Form } from 'remix';
 import { Button, ButtonLink } from '~/components/Buttons';
 import { Checkbox } from '../../../components/forms/Checkboxes';
 import { Heading } from '../../../components/Heading';
-import { loadSurveyQuestions } from '../../../features/event-submission/load-survey-questions';
+import { usePreviousStep } from '../../../features/event-submission/hooks/usePreviousStep';
 
 export const handle = { step: 'submission' };
 
-export const loader = loadSurveyQuestions;
-
 export default function EventSubmitTalkRoute() {
-  const params = useParams();
+  const previousStepPath = usePreviousStep()
 
   return (
     <Form method="post">
@@ -29,7 +27,7 @@ export default function EventSubmitTalkRoute() {
        
       </div>
       <div className="px-4 py-3 bg-gray-50 flex items-center justify-between sm:px-6">
-        <ButtonLink to={`/${params.eventSlug}/submission/${params.talkId}/survey`} variant="secondary">
+        <ButtonLink to={previousStepPath} variant="secondary">
           Back
         </ButtonLink>
         <div className="flex items-center">
