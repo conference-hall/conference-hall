@@ -16,7 +16,7 @@ export default function EventSubmitRoute() {
   const currentStep = matches[matches.length - 1].handle?.step
 
   return (
-    <Container className="-mt-24 grid grid-cols-1 items-start sm:gap-8">
+    <Container className="mt-8 grid grid-cols-1 items-start sm:gap-8">
       <SectionPanel id="talk-submission" title="Talk submission">
         <Steps steps={steps} currentStep={currentStep} />
         <div className="overflow-hidden sm:rounded-md">

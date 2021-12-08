@@ -9,7 +9,7 @@ export const loader = loadEvent;
 export default function EventRoute() {
   const data = useLoaderData<EventDescription>();
   return (
-    <Container className="-mt-24 grid grid-cols-1 items-start lg:grid-cols-3 sm:gap-8">
+    <Container className="mt-8 grid grid-cols-1 items-start lg:grid-cols-3 sm:gap-8">
       <SectionInfo
         className="lg:col-span-2"
         description={data.description}
