@@ -7,16 +7,17 @@ import { NavLink } from 'remix';
 
 type HeaderProps = {
   slug: string;
+  type: 'CONFERENCE' | 'MEETUP';
   name: string;
   address: string | null;
   conferenceStart?: string;
   conferenceEnd?: string;
 };
 
-export function Header({ slug, name, address, conferenceStart, conferenceEnd }: HeaderProps) {
+export function Header({ slug, name, type, address, conferenceStart, conferenceEnd }: HeaderProps) {
   return (
     <header className="bg-white shadow">
-      <div className="lg:flex lg:items-center lg:justify-between min-w-0 max-w-7xl mx-auto py-6 pb-8 px-4 sm:px-6 lg:px-8">
+      <div className="lg:flex lg:items-center lg:justify-between min-w-0 max-w-7xl mx-auto py-10 pb-8 px-4 sm:px-6 lg:px-8">
         <div className="flex-1 min-w-0">
           <h1 className="text-2xl leading-6 font-bold text-gray-900">{name}</h1>
           <div className="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:mt-0 sm:space-x-6">
@@ -35,7 +36,7 @@ export function Header({ slug, name, address, conferenceStart, conferenceEnd }: 
         <div className="sm:block">
           <nav className="-mb-px flex space-x-8">
             <NavLink to={`/${slug}`} end className={activeTab}>
-              Conference
+              {type === 'CONFERENCE' ? 'Conference' : 'Meetup'}
             </NavLink>
             <NavLink to={`/${slug}/proposals`} className={activeTab}>
               Your proposals

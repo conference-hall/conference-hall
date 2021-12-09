@@ -1,4 +1,4 @@
-import { Outlet, useLoaderData, useParams } from 'remix';
+import { Outlet, useLoaderData } from 'remix';
 import { Header } from '../features/event-page/components/Header';
 import { EventHeader, loadEventHeader } from '../features/event-page/event-header.server';
 
@@ -10,6 +10,7 @@ export default function EventRoute() {
     <>
       <Header
         slug={data.slug}
+        type={data.type}
         name={data.name}
         address={data.address}
         conferenceStart={data.conferenceStart}
