@@ -21,7 +21,7 @@ export default function EventSubmitTalkRoute() {
 
       <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
         <Button type="submit" className="ml-4">
-          Next
+          Save as draft and continue
         </Button>
       </div>
     </Form>

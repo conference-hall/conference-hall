@@ -28,7 +28,7 @@ export default function EventSubmitRoute() {
           <ButtonLink to="new">New proposal</ButtonLink>
         </div>
       </div>
-      <div className="mt-8 bg-white shadow lg:rounded-lg">
+      <div className="mt-8">
         <TalksSelection talks={data} />
       </div>
     </Container>

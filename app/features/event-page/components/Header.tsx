@@ -42,7 +42,7 @@ export function Header({ slug, name, type, address, conferenceStart, conferenceE
               Your proposals
             </NavLink>
             <NavLink to={`/${slug}/submission`} className={activeTab}>
-              Submit a talk
+              Submit a proposal
             </NavLink>
           </nav>
         </div>
