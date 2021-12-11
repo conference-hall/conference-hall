@@ -1,33 +1,32 @@
-import { Form, useActionData, useLoaderData } from 'remix';
-import { Button, ButtonLink } from '~/components/Buttons';
-import { TalkForm } from '../../../features/event-submission/components/TalkForm';
-import { usePreviousStep } from '../../../features/event-submission/hooks/usePreviousStep';
-import { loadProposal, ProposalData, saveProposal } from '../../../features/event-submission/proposal.server';
-import { ValidationErrors } from '../../../features/event-submission/validation/errors';
+import { LoaderFunction, Outlet, useLoaderData, useMatches } from 'remix';
+import { Container } from '../../../components/layout/Container';
+import { SectionPanel } from '../../../components/Panels';
+import { requireUserSession } from '../../../features/auth/auth.server';
+import { Steps } from '../../../features/event-submission/components/Steps';
+import { loadSubmissionSteps, SubmitSteps } from '../../../features/event-submission/steps.server';
 
-export const handle = { step: 'proposal' };
+export const handle = { step: 'root' };
 
-export const loader = loadProposal;
+export const loader: LoaderFunction = async ({ request, context, params }) => {
+  await requireUserSession(request);
+  return loadSubmissionSteps({ request, context, params });
+};
 
-export const action = saveProposal;
-
-export default function EventSubmitTalkRoute() {
-  const talk = useLoaderData<ProposalData>();
-  const errors = useActionData<ValidationErrors>();
-  const previousStepPath = usePreviousStep()
+export default function EventSubmitRoute() {
+  const steps = useLoaderData<SubmitSteps>()
+  const matches = useMatches();
+  const currentStep = matches[matches.length - 1].handle?.step
 
   return (
-    <Form method="post">
-      <TalkForm initialValues={talk} errors={errors?.fieldErrors} />
-
-      <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
-        <ButtonLink to={previousStepPath} variant="secondary">
-          Back
-        </ButtonLink>
-        <Button type="submit" className="ml-4">
-          Next
-        </Button>
-      </div>
-    </Form>
+    <Container className="mt-8 grid grid-cols-1 items-start sm:gap-8">
+      <SectionPanel id="talk-submission" title="Talk submission">
+        <Steps steps={steps} currentStep={currentStep} />
+        <div className="overflow-hidden sm:rounded-md">
+          <Outlet />
+        </div>
+      </SectionPanel>
+    </Container>
   );
 }
+
+

@@ -1,5 +1,5 @@
 import { Form, useLoaderData } from 'remix';
-import { Button, ButtonLink } from '~/components/Buttons';
+import { Button, ButtonLink } from '../../../components/Buttons';
 import { Checkbox, CheckboxGroup } from '../../../components/forms/Checkboxes';
 import { Radio, RadioGroup } from '../../../components/forms/RadioGroup';
 import { TextArea } from '../../../components/forms/TextArea';

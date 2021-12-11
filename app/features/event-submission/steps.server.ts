@@ -35,7 +35,6 @@ export const loadSubmissionSteps: LoaderFunction = async ({ params }) => {
   const isTracksStepEnabled = !!event.formats.length || !!event.categories.length;
 
   const steps = [
-    { key: 'selection', name: 'Selection', path: `/${eventSlug}/submission`, enabled: true },
     { key: 'proposal', name: 'Proposal', path: `/${eventSlug}/submission/${talkId}`, enabled: true },
     { key: 'tracks', name: 'Tracks', path: `/${eventSlug}/submission/${talkId}/tracks`, enabled: isTracksStepEnabled },
     { key: 'survey', name: 'Survey', path: `/${eventSlug}/submission/${talkId}/survey`, enabled: isSurveyStepEnabled },

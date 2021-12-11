@@ -1,5 +1,5 @@
 import { Form, useLoaderData } from 'remix';
-import { Button, ButtonLink } from '~/components/Buttons';
+import { Button, ButtonLink } from '../../../components/Buttons';
 import { CategoriesForm } from '../../../features/event-submission/components/CategoriesForm';
 import { FormatsForm } from '../../../features/event-submission/components/FormatsForm';
 import { usePreviousStep } from '../../../features/event-submission/hooks/usePreviousStep';

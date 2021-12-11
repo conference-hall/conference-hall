@@ -5,6 +5,7 @@ import { requireUserSession } from '~/features/auth/auth.server';
 import { Heading } from '../../../components/Heading';
 import { TalksEmptyState } from '../../../features/event-submission/components/TalksEmptyState';
 import { TalksSelection } from '../../../features/event-submission/components/TalksSelection';
+import { Container } from '../../../components/layout/Container';
 
 export const handle = { step: 'selection' };
 
@@ -20,14 +21,16 @@ export default function EventSubmitRoute() {
     return <TalksEmptyState />;
   }
   return (
-    <>
-      <div className="px-4 py-5 sm:px-6 flex justify-between items-center flex-wrap sm:flex-nowrap">
+    <Container className="mt-8">
+      <div className="flex justify-between items-center flex-wrap sm:flex-nowrap">
         <Heading description="Select or create a new proposal to submit.">Proposal selection</Heading>
         <div className="flex-shrink-0">
           <ButtonLink to="new">New proposal</ButtonLink>
         </div>
       </div>
-      <TalksSelection talks={data} />
-    </>
+      <div className="mt-8 bg-white shadow lg:rounded-lg">
+        <TalksSelection talks={data} />
+      </div>
+    </Container>
   );
 }

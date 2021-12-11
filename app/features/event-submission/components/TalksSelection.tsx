@@ -15,7 +15,7 @@ type TalksSelectionProps = {
 
 export function TalksSelection({ talks }: TalksSelectionProps) {
   return (
-    <ul role="list" className="border-t border-gray-200 divide-y divide-gray-200">
+    <ul role="list" className="divide-y divide-gray-200">
       {talks.map((talk) => (
         <li key={talk.id}>
           <Link to={talk.id} className="block hover:bg-gray-50">
