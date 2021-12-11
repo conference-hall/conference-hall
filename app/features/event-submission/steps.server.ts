@@ -20,8 +20,7 @@ export const loadSubmissionSteps: LoaderFunction = async ({ params }) => {
       cfpEnd: true,
       surveyEnabled: true,
       surveyQuestions: true,
-      formats: true,
-      categories: true,
+      _count: { select: { formats: true, categories: true } },
     },
     where: { slug: params.eventSlug },
   });
@@ -30,9 +29,8 @@ export const loadSubmissionSteps: LoaderFunction = async ({ params }) => {
   const isCfpOpen = getCfpState(event.type, event.cfpStart, event.cfpEnd) === 'OPENED';
   if (!isCfpOpen) throw new Response('CFP is not opened', { status: 403 });
 
-  const enabledQuestions = getEnabledQuestions(event.surveyQuestions);
-  const isSurveyStepEnabled = event.surveyEnabled && !!enabledQuestions?.length;
-  const isTracksStepEnabled = !!event.formats.length || !!event.categories.length;
+  const isSurveyStepEnabled = event.surveyEnabled;
+  const isTracksStepEnabled = event._count.categories > 0 || event._count.formats > 0;
 
   const steps = [
     { key: 'proposal', name: 'Proposal', path: `/${eventSlug}/submission/${talkId}`, enabled: true },
