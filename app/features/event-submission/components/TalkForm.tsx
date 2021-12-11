@@ -40,7 +40,7 @@ export function TalkForm({ initialValues, errors }: TalkFormProps) {
         description="Brief description of the talk. Markdown is supported "
         name="abstract"
         className="mt-6"
-        rows={4}
+        rows={8}
         defaultValue={initialValues?.abstract}
         error={errors?.abstract?.[0]}
       />
