@@ -10,6 +10,7 @@ import {
   Scripts,
   useCatch,
   useLoaderData,
+  ScrollRestoration,
 } from 'remix';
 import { Navbar } from './components/layout/Navbar';
 
@@ -54,6 +55,7 @@ function Document({ children, title }: DocumentProps) {
     <html lang="en" className="h-full bg-gray-100">
       <head>
         <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <Meta />
         {title ? <title>{title}</title> : null}
         <Links />
@@ -64,6 +66,7 @@ function Document({ children, title }: DocumentProps) {
           {children}
           <Footer />
         </div>
+        <ScrollRestoration />
         <Scripts />
         {process.env.NODE_ENV === 'development' && <LiveReload />}
       </body>
