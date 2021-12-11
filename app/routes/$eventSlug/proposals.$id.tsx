@@ -4,6 +4,7 @@ import { useLoaderData } from 'remix';
 import { Container } from '~/components/layout/Container';
 import { ButtonLink } from '../../components/Buttons';
 import { IconLabel } from '../../components/IconLabel';
+import { Markdown } from '../../components/markdown';
 import { loadSpeakerProposal, SpeakerProposal } from '../../features/event-speaker-proposals/proposal.server';
 
 export const loader = loadSpeakerProposal;
@@ -16,7 +17,7 @@ export default function EventSpeakerProposalRoute() {
         <div className="px-4 py-5 sm:px-6 -ml-4 -mt-4 flex justify-between items-center flex-wrap sm:flex-nowrap">
           <div className="ml-4 mt-4">
             <h3 className="text-lg leading-6 font-medium text-gray-900">{proposal.title}</h3>
-            <p className="mt-1 text-sm text-gray-500">
+            <div className="mt-1 text-sm text-gray-500">
               {proposal.status === 'DRAFT' ? (
                 <IconLabel icon={ExclamationIcon} className="text-sm text-yellow-600">
                   This proposal is still in draft. Don't forget to submit it.
@@ -27,7 +28,7 @@ export default function EventSpeakerProposalRoute() {
                   <time dateTime={proposal.createdAt}>{formatRelative(new Date(proposal.createdAt), new Date())}</time>
                 </IconLabel>
               )}
-            </p>
+            </div>
           </div>
           <div className="ml-4 mt-4 flex-shrink-0">
             {proposal.status === 'DRAFT' ? (
@@ -53,16 +54,7 @@ export default function EventSpeakerProposalRoute() {
               </li>
             ))}
           </ul>
-          <dl className="mt-4 grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
-            <div className="sm:col-span-2">
-              <dt className="text-sm font-medium text-gray-500">Abstract</dt>
-              <dd className="mt-1 text-sm text-gray-900">{proposal.abstract}</dd>
-            </div>
-            <div className="sm:col-span-2">
-              <dt className="text-sm font-medium text-gray-500">References</dt>
-              <dd className="mt-1 text-sm text-gray-900">{proposal.references || '—'}</dd>
-            </div>
-          </dl>
+          <Markdown source={proposal.abstract} className="mt-4" />
         </div>
 
         <div className="border-t border-gray-200 px-4 py-5 sm:px-6">
@@ -82,6 +74,15 @@ export default function EventSpeakerProposalRoute() {
             <div className="sm:col-span-1">
               <dt className="text-sm font-medium text-gray-500">Categories</dt>
               <dd className="mt-1 text-sm text-gray-900">{proposal.categories.join(', ') || '—'}</dd>
+            </div>
+          </dl>
+        </div>
+
+        <div className="border-t border-gray-200 px-4 py-5 sm:px-6">
+          <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
+            <div className="sm:col-span-2">
+              <dt className="text-sm font-medium text-gray-500">References</dt>
+              <Markdown source={proposal.references || '—'} component="dd" className="mt-1" />
             </div>
           </dl>
         </div>

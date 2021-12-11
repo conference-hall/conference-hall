@@ -2,6 +2,7 @@ import React from 'react'
 import cn from 'classnames';
 import { SectionPanel } from '../../../components/Panels';
 import { CfpState, formatCFPDate, formatCFPState } from '../../../utils/event';
+import { Markdown } from '../../../components/markdown';
 
 type SectionInfoProps = {
   description: string | null;
@@ -33,9 +34,7 @@ export function SectionInfo({
         <h3 className="text-lg leading-6 font-medium text-gray-900">{formatCFPState(cfpState)}</h3>
         {!!cfpStart && <p className="mt-1 text-sm text-gray-500">{formatCFPDate(cfpState, cfpStart, cfpEnd)}</p>}
       </div>
-      <div>
-        <p className="text-sm text-gray-900">{description}</p>
-      </div>
+      <Markdown source={description} />
       {formats.length > 0 ? (
         <div>
           <h3 className="text-base leading-6 font-medium text-gray-900">Formats</h3>
