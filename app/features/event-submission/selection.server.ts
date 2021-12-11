@@ -1,6 +1,6 @@
-import { DataFunctionArgs } from '@remix-run/server-runtime';
 import { requireAuthUserId } from '../auth/auth.server';
 import { db } from '../../services/db';
+import { LoaderFunction } from 'remix';
 
 export type TalkSelectionStep = Array<{
   id: string;
@@ -8,11 +8,24 @@ export type TalkSelectionStep = Array<{
   speakers: Array<{ id: string; name: string | null; photoURL: string | null }>;
 }>;
 
-export async function loadTalksSelection({ request }: DataFunctionArgs): Promise<TalkSelectionStep> {
+export const loadTalksSelection: LoaderFunction = async ({ request, params }) => {
   const uid = await requireAuthUserId(request);
+
+  const event = await db.event.findUnique({
+    select: { id: true, maxProposals: true },
+    where: { slug: params.eventSlug },
+  });
+  if (!event) throw new Response('Event not found', { status: 404 });
+
   const talks = await db.talk.findMany({
     select: { id: true, title: true, speakers: true },
-    where: { speakers: { some: { id: uid } } },
+    where: {
+      speakers: { some: { id: uid } },
+      OR: [
+        { proposals: { none: { eventId: event.id } } },
+        { proposals: { some: { eventId: event.id, status: 'DRAFT' } } },
+      ],
+    },
     orderBy: { createdAt: 'desc' },
   });
 
@@ -21,4 +34,4 @@ export async function loadTalksSelection({ request }: DataFunctionArgs): Promise
     title: talk.title,
     speakers: talk.speakers.map((speaker) => ({ id: speaker.id, name: speaker.name, photoURL: speaker.photoURL })),
   }));
-}
+};
