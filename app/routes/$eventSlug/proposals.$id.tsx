@@ -1,18 +1,91 @@
-import { LoaderFunction, useParams } from 'remix';
+import { CalendarIcon, ExclamationIcon } from '@heroicons/react/solid';
+import { formatRelative } from 'date-fns';
+import { useLoaderData } from 'remix';
 import { Container } from '~/components/layout/Container';
-import { Heading } from '../../components/Heading';
-import { requireUserSession } from '../../features/auth/auth.server';
+import { ButtonLink } from '../../components/Buttons';
+import { IconLabel } from '../../components/IconLabel';
+import { loadSpeakerProposal, SpeakerProposal } from '../../features/event-speaker-proposals/proposal.server';
 
-export const loader: LoaderFunction = async ({ request }) => {
-  await requireUserSession(request);
-  return null;
-};
+export const loader = loadSpeakerProposal;
 
 export default function EventSpeakerProposalRoute() {
-  const { id } = useParams()
+  const proposal = useLoaderData<SpeakerProposal>();
   return (
     <Container className="mt-8">
-      <Heading>Proposal {id}</Heading>
+      <div className="mt-8 bg-white shadow overflow-hidden sm:rounded-lg">
+        <div className="px-4 py-5 sm:px-6 -ml-4 -mt-4 flex justify-between items-center flex-wrap sm:flex-nowrap">
+          <div className="ml-4 mt-4">
+            <h3 className="text-lg leading-6 font-medium text-gray-900">{proposal.title}</h3>
+            <p className="mt-1 text-sm text-gray-500">
+              {proposal.status === 'DRAFT' ? (
+                <IconLabel icon={ExclamationIcon} className="text-sm text-yellow-600">
+                  This proposal is still in draft. Don't forget to submit it.
+                </IconLabel>
+              ) : (
+                <IconLabel icon={CalendarIcon} className="text-sm text-gray-500" iconClassName="text-gray-400">
+                  Submitted&nbsp;
+                  <time dateTime={proposal.createdAt}>{formatRelative(new Date(proposal.createdAt), new Date())}</time>
+                </IconLabel>
+              )}
+            </p>
+          </div>
+          <div className="ml-4 mt-4 flex-shrink-0">
+            {proposal.status === 'DRAFT' ? (
+              <ButtonLink to={`../submission/${proposal.talkId}`}>Submit proposal</ButtonLink>
+            ) : (
+              <ButtonLink to="edit">Edit proposal</ButtonLink>
+            )}
+          </div>
+        </div>
+
+        <div className="border-t border-gray-200 px-4 py-5 sm:px-6">
+          <ul role="list" className="divide-y divide-gray-200 sm:col-span-2">
+            {proposal.speakers.map((speaker) => (
+              <li key={speaker.id} className="flex items-center">
+                <img
+                  className="h-10 w-10 rounded-full"
+                  src={speaker.photoURL || 'http://placekitten.com/100/100'}
+                  alt={speaker.name || 'Speaker'}
+                />
+                <div className="ml-3">
+                  <p className="text-sm font-medium text-gray-900">{speaker.name}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+          <dl className="mt-4 grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
+            <div className="sm:col-span-2">
+              <dt className="text-sm font-medium text-gray-500">Abstract</dt>
+              <dd className="mt-1 text-sm text-gray-900">{proposal.abstract}</dd>
+            </div>
+            <div className="sm:col-span-2">
+              <dt className="text-sm font-medium text-gray-500">References</dt>
+              <dd className="mt-1 text-sm text-gray-900">{proposal.references || '—'}</dd>
+            </div>
+          </dl>
+        </div>
+
+        <div className="border-t border-gray-200 px-4 py-5 sm:px-6">
+          <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
+            <div className="sm:col-span-1">
+              <dt className="text-sm font-medium text-gray-500">Language</dt>
+              <dd className="mt-1 text-sm text-gray-900">{proposal.languages || '—'}</dd>
+            </div>
+            <div className="sm:col-span-1">
+              <dt className="text-sm font-medium text-gray-500">Level</dt>
+              <dd className="mt-1 text-sm text-gray-900">{proposal.level || '—'}</dd>
+            </div>
+            <div className="sm:col-span-1">
+              <dt className="text-sm font-medium text-gray-500">Formats</dt>
+              <dd className="mt-1 text-sm text-gray-900">{proposal.formats.join(', ') || '—'}</dd>
+            </div>
+            <div className="sm:col-span-1">
+              <dt className="text-sm font-medium text-gray-500">Categories</dt>
+              <dd className="mt-1 text-sm text-gray-900">{proposal.categories.join(', ') || '—'}</dd>
+            </div>
+          </dl>
+        </div>
+      </div>
     </Container>
   );
 }
