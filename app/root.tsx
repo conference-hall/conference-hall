@@ -83,9 +83,7 @@ export function CatchBoundary() {
         <h1>
           {caught.status} {caught.statusText}
         </h1>
-        <p>
-          {caught.data}
-        </p>
+        <p>{caught.data}</p>
       </div>
     </Document>
   );

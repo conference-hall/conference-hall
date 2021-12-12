@@ -2,6 +2,7 @@ import { Heading } from '../../../components/Heading';
 import { Input } from '../../../components/forms/Input';
 import { TextArea } from '../../../components/forms/TextArea';
 import { Radio, RadioGroup } from '../../../components/forms/RadioGroup';
+import { MarkdownTextArea } from '../../../components/forms/MarkdownTextArea';
 
 const LEVELS = [
   { key: 'BEGINNER', label: 'Beginner' },
@@ -35,7 +36,7 @@ export function TalkForm({ initialValues, errors }: TalkFormProps) {
         defaultValue={initialValues?.title}
         error={errors?.title?.[0]}
       />
-      <TextArea
+      <MarkdownTextArea
         label="Abstract"
         description="Brief description of the talk. Markdown is supported "
         name="abstract"
@@ -51,7 +52,7 @@ export function TalkForm({ initialValues, errors }: TalkFormProps) {
           </Radio>
         ))}
       </RadioGroup>
-      <TextArea
+      <MarkdownTextArea
         label="References"
         description="Give more info about your talk: slides, workshop pre-requities, github repo, video, summary, steps of the talk, which conference or meetup where it has been already given?"
         name="references"
