@@ -1,4 +1,4 @@
-import { Checkbox, CheckboxGroup } from '../../../components/forms/Checkboxes';
+import { Checkbox, CheckboxGroup } from '~/components/forms/Checkboxes';
 
 type FormatsFormProps = {
   formats: Array<{

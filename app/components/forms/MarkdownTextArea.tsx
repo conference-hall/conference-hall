@@ -90,7 +90,6 @@ function MardownPreviewModal({ markdown, isOpen, onClose }: MardownPreviewModalP
     <Dialog className="fixed z-10 inset-0 overflow-y-auto" open={isOpen} onClose={onClose}>
       <div className="block p-0 min-h-screen pt-4 px-4 pb-20 text-center">
         <Dialog.Overlay className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
-        <Dialog.Title>Mardown preview</Dialog.Title>
         <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left shadow-xl transform sm:my-8 sm:align-middle w-full md:max-w-5xl sm:p-6">
           {markdown ? <Markdown source={markdown} /> : <p>Nothing to preview.</p>}
         </div>

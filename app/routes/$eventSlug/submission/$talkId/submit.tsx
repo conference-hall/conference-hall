@@ -1,9 +1,9 @@
 import { Form, useLoaderData } from 'remix';
 import { Button, ButtonLink } from '~/components/Buttons';
-import { Checkbox } from '../../../../components/forms/Checkboxes';
-import { Heading } from '../../../../components/Heading';
-import { usePreviousStep } from '../../../../features/event-submission/hooks/usePreviousStep';
-import { loadProposal, SubmitForm, submitProposal } from '../../../../features/event-submission/submit.server';
+import { Checkbox } from '~/components/forms/Checkboxes';
+import { Heading } from '~/components/Heading';
+import { usePreviousStep } from '~/features/event-submission/hooks/usePreviousStep';
+import { loadProposal, SubmitForm, submitProposal } from '~/features/event-submission/step-submit.server';
 
 export const handle = { step: 'submission' };
 

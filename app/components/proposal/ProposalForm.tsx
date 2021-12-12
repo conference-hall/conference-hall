@@ -1,8 +1,6 @@
-import { Heading } from '../../../components/Heading';
-import { Input } from '../../../components/forms/Input';
-import { TextArea } from '../../../components/forms/TextArea';
-import { Radio, RadioGroup } from '../../../components/forms/RadioGroup';
-import { MarkdownTextArea } from '../../../components/forms/MarkdownTextArea';
+import { Input } from '~/components/forms/Input';
+import { Radio, RadioGroup } from '~/components/forms/RadioGroup';
+import { MarkdownTextArea } from '~/components/forms/MarkdownTextArea';
 
 const LEVELS = [
   { key: 'BEGINNER', label: 'Beginner' },
@@ -10,7 +8,7 @@ const LEVELS = [
   { key: 'ADVANCED', label: 'Advanced' },
 ];
 
-type TalkFormProps = {
+type ProposalFormProps = {
   initialValues?: {
     title: string;
     abstract: string;
@@ -22,17 +20,13 @@ type TalkFormProps = {
   };
 };
 
-export function TalkForm({ initialValues, errors }: TalkFormProps) {
+export function ProposalForm({ initialValues, errors }: ProposalFormProps) {
   return (
-    <div className="px-8 py-6 sm:px-8 lg:w-8/12">
-      <Heading description="This information will be displayed publicly so be careful what you share.">
-        Your proposal
-      </Heading>
+    <>
       <Input
         type="text"
         label="Title"
         name="title"
-        className="mt-6"
         defaultValue={initialValues?.title}
         error={errors?.title?.[0]}
       />
@@ -61,6 +55,6 @@ export function TalkForm({ initialValues, errors }: TalkFormProps) {
         defaultValue={initialValues?.references ?? ''}
         error={errors?.references?.[0]}
       />
-    </div>
+    </>
   );
 }

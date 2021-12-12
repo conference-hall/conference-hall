@@ -1,9 +1,9 @@
 import { Form, useActionData, useLoaderData } from 'remix';
-import { Button, ButtonLink } from '~/components/Buttons';
-import { TalkForm } from '~/features/event-submission/components/TalkForm';
-import { usePreviousStep } from '~/features/event-submission/hooks/usePreviousStep';
-import { loadProposal, ProposalData, saveProposal } from '~/features/event-submission/proposal.server';
+import { Button } from '~/components/Buttons';
+import { loadProposal, ProposalData, saveProposal } from '~/features/event-submission/step-proposal.server';
 import { ValidationErrors } from '~/features/event-submission/validation/errors';
+import { Heading } from '~/components/Heading';
+import { ProposalForm } from '~/components/proposal/ProposalForm';
 
 export const handle = { step: 'proposal' };
 
@@ -17,7 +17,15 @@ export default function EventSubmitTalkRoute() {
 
   return (
     <Form method="post">
-      <TalkForm initialValues={talk} errors={errors?.fieldErrors} />
+      <div className="px-8 py-6 sm:px-8">
+        <Heading
+          description="This information will be displayed publicly so be careful what you share."
+          className="mb-6"
+        >
+          Your proposal
+        </Heading>
+        <ProposalForm initialValues={talk} errors={errors?.fieldErrors} />
+      </div>
 
       <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
         <Button type="submit" className="ml-4">

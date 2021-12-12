@@ -2,10 +2,10 @@ import { CalendarIcon, ExclamationIcon } from '@heroicons/react/solid';
 import { formatRelative } from 'date-fns';
 import { useLoaderData } from 'remix';
 import { Container } from '~/components/layout/Container';
-import { ButtonLink } from '../../components/Buttons';
-import { IconLabel } from '../../components/IconLabel';
-import { Markdown } from '../../components/Markdown';
-import { loadSpeakerProposal, SpeakerProposal } from '../../features/event-speaker-proposals/proposal.server';
+import { ButtonLink } from '../../../components/Buttons';
+import { IconLabel } from '../../../components/IconLabel';
+import { Markdown } from '../../../components/Markdown';
+import { loadSpeakerProposal, SpeakerProposal } from '../../../features/event-proposals/view-proposal.server';
 
 export const loader = loadSpeakerProposal;
 

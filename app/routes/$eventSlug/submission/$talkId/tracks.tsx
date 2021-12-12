@@ -1,9 +1,9 @@
 import { Form, useLoaderData } from 'remix';
 import { Button, ButtonLink } from '~/components/Buttons';
-import { CategoriesForm } from '~/features/event-submission/components/CategoriesForm';
-import { FormatsForm } from '~/features/event-submission/components/FormatsForm';
+import { CategoriesForm } from '~/components/proposal/CategoriesForm';
+import { FormatsForm } from '~/components/proposal/FormatsForm';
 import { usePreviousStep } from '~/features/event-submission/hooks/usePreviousStep';
-import { loadTracks, saveTracks, TracksData } from '~/features/event-submission/tracks.server';
+import { loadTracks, saveTracks, TracksData } from '~/features/event-submission/step-tracks.server';
 
 export const handle = { step: 'tracks' };
 

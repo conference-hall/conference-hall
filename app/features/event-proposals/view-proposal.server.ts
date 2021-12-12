@@ -27,24 +27,11 @@ export const loadSpeakerProposal: LoaderFunction = async ({ request, params }) =
   if (!event) throw new Response('Event not found', { status: 404 });
 
   const proposal = await db.proposal.findFirst({
-    select: {
-      id: true,
-      talkId: true,
-      title: true,
-      abstract: true,
-      status: true,
-      level: true,
-      languages: true,
-      references: true,
-      createdAt: true,
-      speakers: true,
-      formats: { select: { name: true } },
-      categories: { select: { name: true } },
-    },
     where: {
       speakers: { some: { id: uid } },
       id: params.id,
     },
+    include: { speakers: true, formats: true, categories: true },
     orderBy: { createdAt: 'desc' },
   });
   if (!proposal) throw new Response('Proposal not found', { status: 404 });

@@ -43,6 +43,12 @@ export const saveProposal: ActionFunction = async ({ request, params }) => {
     if (!talk) throw new Response('Not your talk!', { status: 401 });
   }
 
+  const event = await db.event.findUnique({
+    select: { id: true, formats: true, categories: true, surveyEnabled: true },
+    where: { slug: eventSlug },
+  });
+  if (!event) throw new Response('Event not found', { status: 404 });
+
   const talk = await db.talk.upsert({
     where: { id: talkId },
     update: { ...result.data },
@@ -52,12 +58,6 @@ export const saveProposal: ActionFunction = async ({ request, params }) => {
       speakers: { connect: [{ id: uid }] },
     },
   });
-
-  const event = await db.event.findUnique({
-    select: { id: true, formats: true, categories: true, surveyEnabled: true },
-    where: { slug: eventSlug },
-  });
-  if (!event) throw new Response('Event not found', { status: 404 });
 
   await db.proposal.upsert({
     where: { talkId_eventId: { talkId: talk.id, eventId: event.id } },

@@ -5,7 +5,7 @@ import { Radio, RadioGroup } from '~/components/forms/RadioGroup';
 import { TextArea } from '~/components/forms/TextArea';
 import { Heading } from '~/components/Heading';
 import { usePreviousStep } from '~/features/event-submission/hooks/usePreviousStep';
-import { loadSurvey, saveSurvey, SurveyForm } from '~/features/event-submission/survey.server';
+import { loadSurvey, saveSurvey, SurveyForm } from '~/features/event-submission/step-survey.server';
 
 export const handle = { step: 'survey' };
 
