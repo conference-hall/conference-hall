@@ -1,7 +1,7 @@
+import { ActionFunction, LoaderFunction, redirect } from 'remix';
+import { z } from 'zod';
 import { requireUserSession } from '../auth/auth.server';
 import { db } from '../../services/db';
-import { ActionFunction, LoaderFunction, redirect } from 'remix';
-import { validate } from '../event-submission/validation/talk-validation';
 
 export type SpeakerEditProposal = {
   proposal: {
@@ -69,17 +69,17 @@ export const editProposal: ActionFunction = async ({ request, params }) => {
   const uid = await requireUserSession(request);
   const { eventSlug, id } = params;
 
-  const form = await request.formData();
-  const result = validate(form);
-  if (!result.success) {
-    return result.error.flatten();
-  }
-
   const event = await db.event.findUnique({
-    select: { id: true },
+    select: { id: true, formatsRequired: true, categoriesRequired: true },
     where: { slug: eventSlug },
   });
   if (!event) throw new Response('Event not found', { status: 404 });
+
+  const form = await request.formData();
+  const result = validateProposalForm(form, event.formatsRequired, event.categoriesRequired);
+  if (!result.success) {
+    return result.error.flatten();
+  }
 
   const proposal = await db.proposal.findFirst({
     where: { id, speakers: { some: { id: uid } } },
@@ -106,3 +106,29 @@ export const editProposal: ActionFunction = async ({ request, params }) => {
 
   return redirect(`/${eventSlug}/proposals/${id}`);
 };
+
+export function validateProposalForm(form: FormData, formatsRequired: boolean, categoriesRequired: boolean) {
+  const ProposalSchema = z.object({
+    title: z.string().nonempty(),
+    abstract: z.string().nonempty(),
+    references: z.string().nullable(),
+    level: z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']).nullable(),
+    formats: z.array(z.string()),
+    categories: z.array(z.string()),
+  }).refine((data: any) => (formatsRequired ? Boolean(data.formats?.length) : true), {
+    message: 'Formats are required',
+    path: ['formats'],
+  }).refine((data: any) => (categoriesRequired ? Boolean(data.categories?.length) : true), {
+    message: 'Categories are required',
+    path: ['categories'],
+  });
+
+  return ProposalSchema.safeParse({
+    title: form.get('title'),
+    abstract: form.get('abstract'),
+    references: form.get('references'),
+    level: form.get('level'),
+    formats: form.getAll('formats'),
+    categories: form.getAll('categories'),
+  })
+}

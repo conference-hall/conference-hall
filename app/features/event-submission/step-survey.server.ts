@@ -1,8 +1,8 @@
 import { ActionFunction, LoaderFunction, redirect } from 'remix';
+import { z } from 'zod';
 import { db } from '../../services/db';
 import { getEnabledQuestions, QUESTIONS, SurveyQuestions } from '../../services/survey/questions';
 import { requireUserSession } from '../auth/auth.server';
-import { validate } from './validation/survey-validation';
 
 export type SurveyForm = {
   questions: SurveyQuestions;
@@ -34,12 +34,28 @@ export const loadSurvey: LoaderFunction = async ({ request, params }) => {
   };
 };
 
+const SurveyFormSchema = z.object({
+  gender: z.string().nullable(),
+  tshirt: z.string().nullable(),
+  accomodation: z.string().nullable(),
+  transports: z.array(z.string()).nullable(),
+  diet: z.array(z.string()).nullable(),
+  info: z.string().nullable(),
+});
+
 export const saveSurvey: ActionFunction = async ({ request, params }) => {
   const uid = await requireUserSession(request);
   const { eventSlug, talkId } = params;
 
   const form = await request.formData();
-  const answers = validate(form);
+  const answers = SurveyFormSchema.safeParse({
+    gender: form.get('gender'),
+    tshirt: form.get('tshirt'),
+    accomodation: form.get('accomodation'),
+    transports: form.getAll('transports'),
+    diet: form.getAll('diet'),
+    info: form.get('info'),
+  });
   if (!answers.success) throw new Response('Bad survey values', { status: 400 });
 
   const event = await db.event.findUnique({

@@ -1,7 +1,7 @@
 import { ActionFunction, LoaderFunction, redirect } from 'remix';
+import { z } from 'zod';
 import { db } from '../../services/db';
 import { requireUserSession } from '../auth/auth.server';
-import { validate } from './validation/tracks-validation';
 
 export type TracksData = {
   formats: Array<{ id: string; name: string; description: string | null }>;
@@ -9,7 +9,7 @@ export type TracksData = {
   initialValues: {
     formats: string[];
     categories: string[];
-  },
+  };
 };
 
 export const loadTracks: LoaderFunction = async ({ request, params }) => {
@@ -32,11 +32,11 @@ export const loadTracks: LoaderFunction = async ({ request, params }) => {
     formats: event.formats ?? [],
     categories: event.categories ?? [],
     initialValues: {
-      formats: proposal.formats.map(f => f.id),
-      categories: proposal.categories.map(c => c.id),
+      formats: proposal.formats.map((f) => f.id),
+      categories: proposal.categories.map((c) => c.id),
     },
   };
-}
+};
 
 export const saveTracks: ActionFunction = async ({ request, params }) => {
   const uid = await requireUserSession(request);
@@ -46,10 +46,7 @@ export const saveTracks: ActionFunction = async ({ request, params }) => {
   if (!event) throw new Response('Event not found', { status: 404 });
 
   const form = await request.formData();
-  const result = validate(form, {
-    isFormatsRequired: event.formatsRequired,
-    isCategoriesRequired: event.categoriesRequired,
-  });
+  const result = validateTracks(form, event.formatsRequired, event.categoriesRequired);
   if (!result.success) {
     return result.error.flatten();
   }
@@ -72,3 +69,20 @@ export const saveTracks: ActionFunction = async ({ request, params }) => {
   return redirect(`/${eventSlug}/submission/${talk.id}/submit`);
 };
 
+export function validateTracks(form: FormData, formatsRequired: boolean, categoriesRequired: boolean) {
+  const TracksSchema = z.object({
+    formats: z.array(z.string()),
+    categories: z.array(z.string()),
+  }).refine((data: any) => (formatsRequired ? Boolean(data.formats?.length) : true), {
+    message: 'Formats are required',
+    path: ['formats'],
+  }).refine((data: any) => (categoriesRequired ? Boolean(data.categories?.length) : true), {
+    message: 'Categories are required',
+    path: ['categories'],
+  });
+
+  return TracksSchema.safeParse({
+    formats: form.getAll('formats'),
+    categories: form.getAll('categories'),
+  })
+}

@@ -15,6 +15,7 @@ describe('Get event header', () => {
     expect(data).toEqual({
       slug: event.slug,
       name: event.name,
+      type: event.type,
       address: event.address,
       conferenceStart: event.conferenceStart?.toISOString(),
       conferenceEnd: event.conferenceEnd?.toISOString(),

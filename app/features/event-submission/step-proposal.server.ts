@@ -1,7 +1,7 @@
 import { ActionFunction, LoaderFunction, redirect } from 'remix';
+import { z } from 'zod';
 import { db } from '../../services/db';
 import { requireUserSession } from '../auth/auth.server';
-import { validate } from './validation/talk-validation';
 
 export type ProposalData = {
   title: string;
@@ -33,14 +33,9 @@ export const saveProposal: ActionFunction = async ({ request, params }) => {
   const { eventSlug, talkId } = params;
 
   const form = await request.formData();
-  const result = validate(form);
+  const result = validateProposal(form)
   if (!result.success) {
     return result.error.flatten();
-  }
-
-  if (talkId !== 'new') {
-    const talk = await db.talk.findFirst({ where: { id: talkId, speakers: { some: { id: uid } } } });
-    if (!talk) throw new Response('Not your talk!', { status: 401 });
   }
 
   const event = await db.event.findUnique({
@@ -48,6 +43,11 @@ export const saveProposal: ActionFunction = async ({ request, params }) => {
     where: { slug: eventSlug },
   });
   if (!event) throw new Response('Event not found', { status: 404 });
+
+  if (talkId !== 'new') {
+    const talk = await db.talk.findFirst({ where: { id: talkId, speakers: { some: { id: uid } } } });
+    if (!talk) throw new Response('Not your talk!', { status: 401 });
+  }
 
   const talk = await db.talk.upsert({
     where: { id: talkId },
@@ -88,3 +88,19 @@ export const saveProposal: ActionFunction = async ({ request, params }) => {
   }
   return redirect(`/${eventSlug}/submission/${talk.id}/submit`);
 };
+
+export function validateProposal(form: FormData) {
+  const ProposalSchema = z.object({
+    title: z.string().nonempty(),
+    abstract: z.string().nonempty(),
+    references: z.string().nullable(),
+    level: z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']).nullable(),
+  });
+
+  return ProposalSchema.safeParse({
+    title: form.get('title'),
+    abstract: form.get('abstract'),
+    references: form.get('references'),
+    level: form.get('level'),
+  })
+}

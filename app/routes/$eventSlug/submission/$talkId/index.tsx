@@ -1,7 +1,7 @@
 import { Form, useActionData, useLoaderData } from 'remix';
 import { Button } from '~/components/Buttons';
 import { loadProposal, ProposalData, saveProposal } from '~/features/event-submission/step-proposal.server';
-import { ValidationErrors } from '~/features/event-submission/validation/errors';
+import { ValidationErrors } from '~/utils/validation-errors';
 import { Heading } from '~/components/Heading';
 import { ProposalForm } from '~/components/proposal/ProposalForm';
 
