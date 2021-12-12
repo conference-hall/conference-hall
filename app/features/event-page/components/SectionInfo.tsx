@@ -2,7 +2,7 @@ import React from 'react'
 import cn from 'classnames';
 import { SectionPanel } from '../../../components/Panels';
 import { CfpState, formatCFPDate, formatCFPState } from '../../../utils/event';
-import { Markdown } from '../../../components/MarkdownRender';
+import { Markdown } from '../../../components/Markdown';
 
 type SectionInfoProps = {
   description: string | null;

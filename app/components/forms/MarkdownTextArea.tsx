@@ -2,7 +2,7 @@ import { ChangeEventHandler, useState } from 'react';
 import cn from 'classnames';
 import { Dialog } from '@headlessui/react';
 import { Button } from '../Buttons';
-import { Markdown } from '../MarkdownRender';
+import { Markdown } from '../Markdown';
 
 type MarkdownTextAreaProps = {
   label: string;
