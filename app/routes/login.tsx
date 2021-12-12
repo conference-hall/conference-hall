@@ -21,7 +21,7 @@ export default function Login() {
   if (isSigning) return null
   
   return (
-    <Container className="min-h-screen flex items-center justify-center">
+    <Container className="py-8 flex justify-center">
       <Button type="button" onClick={signin}>Login with Google</Button>
     </Container>
   )
