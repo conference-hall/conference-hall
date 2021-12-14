@@ -1,10 +1,12 @@
-import { ChevronRightIcon } from '@heroicons/react/solid';
+import { ChevronRightIcon, ExclamationIcon } from '@heroicons/react/solid';
 import { Link } from 'remix';
+import { IconLabel } from '../../../components/IconLabel';
 
 type TalksSelectionProps = {
   talks: Array<{
     id: string;
     title: string;
+    isDraft: boolean;
     speakers: Array<{
       id: string;
       name: string | null;
@@ -20,10 +22,19 @@ export function TalksSelection({ talks }: TalksSelectionProps) {
         {talks.map((talk) => (
           <li key={talk.id}>
             <Link to={talk.id} className="block hover:bg-gray-50">
-              <div className="px-4 py-6 flex items-center sm:px-6">
+              <div className="px-4 py-4 flex items-center sm:px-6">
                 <div className="min-w-0 flex-1 sm:flex sm:items-center sm:justify-between">
                   <div className="truncate">
-                    <p className="font-medium text-sm text-indigo-600 truncate">{talk.title}</p>
+                    <div className="flex text-sm">
+                      <p className="font-medium text-indigo-600 truncate">{talk.title}</p>
+                    </div>
+                    {talk.isDraft && (
+                      <div className="mt-2 flex">
+                        <IconLabel icon={ExclamationIcon} className="text-sm text-yellow-600">
+                          This proposal is still in draft. Don't forget to submit it.
+                        </IconLabel>
+                      </div>
+                    )}
                   </div>
                   <div className="mt-4 flex-shrink-0 sm:mt-0 sm:ml-5">
                     <div className="flex overflow-hidden -space-x-1">
