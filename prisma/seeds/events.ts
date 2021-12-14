@@ -19,7 +19,7 @@ export default async () => {
     cfpEnd: '2090-10-05T14:48:00.000Z',
     surveyEnabled: true,
     surveyQuestions: ['gender', 'tshirt', 'diet', 'accomodation', 'transports', 'info'],
-    creatorId: 'user1',
+    creatorId: 'tpSmd3FehZIM3Wp4HYSBnfnQmXLb',
   });
 
   buildFormat({
@@ -75,7 +75,7 @@ export default async () => {
     conferenceEnd: '2091-11-20T00:00:00.000Z',
     cfpStart: '2020-10-05T14:48:00.000Z',
     cfpEnd: '2090-10-05T14:48:00.000Z',
-    creatorId: 'user1',
+    creatorId: 'tpSmd3FehZIM3Wp4HYSBnfnQmXLb',
   });
 
   await buildEvent({
@@ -87,7 +87,7 @@ export default async () => {
     visibility: 'PUBLIC',
     cfpStart: '2020-10-05T14:48:00.000Z',
     cfpEnd: null,
-    creatorId: 'user1',
+    creatorId: 'tpSmd3FehZIM3Wp4HYSBnfnQmXLb',
   });
 
   await buildEvent({
@@ -99,6 +99,6 @@ export default async () => {
     visibility: 'PRIVATE',
     cfpStart: null,
     cfpEnd: null,
-    creatorId: 'user1',
+    creatorId: 'tpSmd3FehZIM3Wp4HYSBnfnQmXLb',
   });
 };
