@@ -86,21 +86,22 @@ export const editProposal: ActionFunction = async ({ request, params }) => {
   });
   if (!proposal) throw new Response('Proposal not found', { status: 404 });
 
+  const { formats, categories, ...talk } = result.data;
+
   await db.proposal.update({
     where: { id },
     data: {
-      title: result.data.title,
-      abstract: result.data.abstract,
-      level: result.data.level,
-      references: result.data.references,
+      ...talk,
       speakers: { set: [], connect: [{ id: uid }] },
+      formats: { set: [], connect: formats.map((id) => ({ id })) },
+      categories: { set: [], connect: categories.map((id) => ({ id })) },
     },
   });
 
   if (proposal.talkId) {
     await db.talk.update({
       where: { id: proposal.talkId },
-      data: { ...result.data },
+      data: talk,
     });
   }
 
@@ -108,20 +109,23 @@ export const editProposal: ActionFunction = async ({ request, params }) => {
 };
 
 export function validateProposalForm(form: FormData, formatsRequired: boolean, categoriesRequired: boolean) {
-  const ProposalSchema = z.object({
-    title: z.string().nonempty(),
-    abstract: z.string().nonempty(),
-    references: z.string().nullable(),
-    level: z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']).nullable(),
-    formats: z.array(z.string()),
-    categories: z.array(z.string()),
-  }).refine((data: any) => (formatsRequired ? Boolean(data.formats?.length) : true), {
-    message: 'Formats are required',
-    path: ['formats'],
-  }).refine((data: any) => (categoriesRequired ? Boolean(data.categories?.length) : true), {
-    message: 'Categories are required',
-    path: ['categories'],
-  });
+  const ProposalSchema = z
+    .object({
+      title: z.string().nonempty(),
+      abstract: z.string().nonempty(),
+      references: z.string().nullable(),
+      level: z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']).nullable(),
+      formats: z.array(z.string()),
+      categories: z.array(z.string()),
+    })
+    .refine((data: any) => (formatsRequired ? Boolean(data.formats?.length) : true), {
+      message: 'Formats are required',
+      path: ['formats'],
+    })
+    .refine((data: any) => (categoriesRequired ? Boolean(data.categories?.length) : true), {
+      message: 'Categories are required',
+      path: ['categories'],
+    });
 
   return ProposalSchema.safeParse({
     title: form.get('title'),
@@ -130,5 +134,5 @@ export function validateProposalForm(form: FormData, formatsRequired: boolean, c
     level: form.get('level'),
     formats: form.getAll('formats'),
     categories: form.getAll('categories'),
-  })
+  });
 }
