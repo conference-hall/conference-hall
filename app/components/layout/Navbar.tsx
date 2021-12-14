@@ -1,6 +1,10 @@
 import { Link } from 'remix';
+import { AuthUser } from '../../features/auth/auth.server';
+import { UserAvatar } from './UserAvatar';
 
-export function Navbar() {
+type NavbarProps = { user?: AuthUser }
+
+export function Navbar({ user }: NavbarProps) {
   return (
     <nav className="bg-indigo-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -16,6 +20,9 @@ export function Navbar() {
             <div className="ml-4 text-lg font-bold text-indigo-100">
               <Link to="/">Conference Hall</Link>
             </div>
+          </div>
+          <div className="flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+            {user ? <UserAvatar picture={user.picture}/> : null}
           </div>
         </div>
       </div>

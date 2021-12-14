@@ -17,6 +17,7 @@ import { Navbar } from './components/layout/Navbar';
 import { initializeFirebase } from './services/firebase/init';
 import tailwind from './tailwind.css';
 import { Footer } from './components/layout/Footer';
+import { AuthUser, getAuthUser } from './features/auth/auth.server';
 
 export const links: LinksFunction = () => {
   return [
@@ -25,8 +26,10 @@ export const links: LinksFunction = () => {
   ];
 };
 
-export const loader: LoaderFunction = () => {
+export const loader: LoaderFunction = async ({ request }) => {
+  const user = await getAuthUser(request)
   return {
+    user,
     firebase: {
       FIREBASE_API_KEY: config.FIREBASE_API_KEY,
       FIREBASE_AUTH_DOMAIN: config.FIREBASE_AUTH_DOMAIN,
@@ -42,15 +45,15 @@ export default function App() {
   initializeFirebase(data.firebase);
 
   return (
-    <Document title="Conference Hall">
+    <Document title="Conference Hall" user={data.user}>
       <Outlet />
     </Document>
   );
 }
 
-type DocumentProps = { children: ReactNode; title?: string };
+type DocumentProps = { children: ReactNode; title?: string; user?: AuthUser };
 
-function Document({ children, title }: DocumentProps) {
+function Document({ children, title, user }: DocumentProps) {
   return (
     <html lang="en" className="bg-gray-100">
       <head>
@@ -62,7 +65,7 @@ function Document({ children, title }: DocumentProps) {
       </head>
       <body className="h-full">
         <div className="min-h-full">
-          <Navbar />
+          <Navbar user={user} />
           {children}
           <Footer />
         </div>
