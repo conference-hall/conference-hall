@@ -1,13 +1,14 @@
-import { ActionFunction, LoaderFunction, redirect } from 'remix';
+import { ActionFunction, json, LoaderFunction, redirect } from 'remix';
 import { db } from '../../services/db';
 import { getCfpState } from '../../utils/event';
 import { requireUserSession } from '../auth/auth.server';
 
 export type SubmitForm = {
   title: string;
-  speakers: Array<{ name: string; photoURL: string | null }>;
+  speakers: Array<{ name: string | null; photoURL: string | null }>;
   formats: string[];
   categories: string[];
+  codeOfConductUrl: string | null;
 };
 
 export const loadProposal: LoaderFunction = async ({ request, params }) => {
@@ -16,7 +17,7 @@ export const loadProposal: LoaderFunction = async ({ request, params }) => {
   if (!talkId) throw new Response('Talk id is required', { status: 400 });
 
   const event = await db.event.findUnique({
-    select: { id: true, formats: true, categories: true },
+    select: { id: true, formats: true, categories: true, codeOfConductUrl: true },
     where: { slug: eventSlug },
   });
   if (!event) throw new Response('Event not found', { status: 404 });
@@ -31,12 +32,13 @@ export const loadProposal: LoaderFunction = async ({ request, params }) => {
     throw new Response('Not your proposal!', { status: 403 });
   }
 
-  return {
+  return json<SubmitForm>({
     title: proposal.title,
     speakers: proposal.speakers.map((s) => ({ name: s.name, photoURL: s.photoURL })),
     formats: proposal.formats.map((f) => f.name),
     categories: proposal.categories.map((c) => c.name),
-  };
+    codeOfConductUrl: event.codeOfConductUrl,
+  });
 };
 
 export const submitProposal: ActionFunction = async ({ request, params }) => {
