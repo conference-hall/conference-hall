@@ -15,6 +15,7 @@ export default function EventRoute() {
         address={data.address}
         conferenceStart={data.conferenceStart}
         conferenceEnd={data.conferenceEnd}
+        surveyEnabled={data.surveyEnabled}
       />
       <Outlet />
     </>

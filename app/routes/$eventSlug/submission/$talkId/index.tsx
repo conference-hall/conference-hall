@@ -11,7 +11,7 @@ export const loader = loadProposal;
 
 export const action = saveProposal;
 
-export default function EventSubmitTalkRoute() {
+export default function SubmissionProposalRoute() {
   const talk = useLoaderData<ProposalData>();
   const errors = useActionData<ValidationErrors>();
 

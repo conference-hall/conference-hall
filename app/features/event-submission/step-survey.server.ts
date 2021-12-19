@@ -1,11 +1,11 @@
-import { ActionFunction, LoaderFunction, redirect } from 'remix';
+import { ActionFunction, LoaderFunction } from 'remix';
 import { z } from 'zod';
 import { db } from '../../services/db';
 import { QUESTIONS, SurveyQuestions } from '../../services/survey/questions';
 import { jsonToArray } from '../../utils/prisma';
 import { requireUserSession } from '../auth/auth.server';
 
-export type SurveyForm = {
+export type SurveyQuestionsForm = {
   questions: SurveyQuestions;
   initialValues: { [key: string]: string | string[] | null };
 };
@@ -46,7 +46,6 @@ const SurveyFormSchema = z.object({
 
 export const saveSurvey: ActionFunction = async ({ request, params }) => {
   const uid = await requireUserSession(request);
-  const { eventSlug, talkId } = params;
 
   const form = await request.formData();
   const answers = SurveyFormSchema.safeParse({
@@ -74,6 +73,4 @@ export const saveSurvey: ActionFunction = async ({ request, params }) => {
       answers: answers.data,
     },
   });
-
-  return redirect(`/${eventSlug}/submission/${talkId}/submit`);
 };

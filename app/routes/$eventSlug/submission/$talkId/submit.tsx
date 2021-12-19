@@ -11,7 +11,7 @@ export const loader = loadProposal;
 
 export const action = submitProposal;
 
-export default function EventSubmitTalkRoute() {
+export default function SubmissionSubmitRoute() {
   const data = useLoaderData<SubmitForm>();
   const [acceptCod, setAcceptCod] = useState(!data.codeOfConductUrl);
 

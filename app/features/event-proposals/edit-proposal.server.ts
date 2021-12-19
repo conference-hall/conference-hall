@@ -118,7 +118,7 @@ export function validateProposalForm(form: FormData, formatsRequired: boolean, c
       abstract: z.string().nonempty(),
       references: z.string().nullable(),
       level: z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']).nullable(),
-      languages: z.array(z.string()).nonempty(),
+      languages: z.array(z.string()),
       formats: z.array(z.string()),
       categories: z.array(z.string()),
     })

@@ -47,6 +47,7 @@ export const saveProposal: ActionFunction = async ({ request, params }) => {
   const form = await request.formData();
   const result = validateProposal(form)
   if (!result.success) {
+    console.error(result.error.flatten());
     return result.error.flatten();
   }
 
@@ -108,7 +109,7 @@ export function validateProposal(form: FormData) {
     title: z.string().nonempty(),
     abstract: z.string().nonempty(),
     references: z.string().nullable(),
-    languages: z.array(z.string()).nonempty(),
+    languages: z.array(z.string()),
     level: z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']).nullable(),
   });
 

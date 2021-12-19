@@ -12,9 +12,10 @@ type HeaderProps = {
   address: string | null;
   conferenceStart?: string;
   conferenceEnd?: string;
+  surveyEnabled: boolean;
 };
 
-export function Header({ slug, name, type, address, conferenceStart, conferenceEnd }: HeaderProps) {
+export function Header({ slug, name, type, address, conferenceStart, conferenceEnd, surveyEnabled }: HeaderProps) {
   return (
     <header className="bg-white shadow">
       <div className="lg:flex lg:items-center lg:justify-between min-w-0 max-w-7xl mx-auto py-10 pb-8 px-4 sm:px-6 lg:px-8">
@@ -41,6 +42,11 @@ export function Header({ slug, name, type, address, conferenceStart, conferenceE
             <NavLink to={`/${slug}/proposals`} className={activeTab}>
               Your proposals
             </NavLink>
+            {surveyEnabled && (
+              <NavLink to={`/${slug}/survey`} className={activeTab}>
+                Survey
+              </NavLink>
+            )}
             <NavLink to={`/${slug}/submission`} className={activeTab}>
               Submit a proposal
             </NavLink>

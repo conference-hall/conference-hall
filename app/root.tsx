@@ -10,7 +10,6 @@ import {
   Scripts,
   useCatch,
   useLoaderData,
-  ScrollRestoration,
 } from 'remix';
 import { Navbar } from './components/layout/Navbar';
 
@@ -27,7 +26,7 @@ export const links: LinksFunction = () => {
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const user = await getAuthUser(request)
+  const user = await getAuthUser(request);
   return {
     user,
     firebase: {
@@ -69,7 +68,6 @@ function Document({ children, title, user }: DocumentProps) {
           {children}
           <Footer />
         </div>
-        <ScrollRestoration />
         <Scripts />
         {process.env.NODE_ENV === 'development' && <LiveReload />}
       </body>
