@@ -3,7 +3,6 @@ import { formatRelative } from 'date-fns';
 import { useLoaderData } from 'remix';
 import { Container } from '~/components/layout/Container';
 import { ButtonLink } from '../../../components/Buttons';
-import { Heading } from '../../../components/Heading';
 import { IconLabel } from '../../../components/IconLabel';
 import { Markdown } from '../../../components/Markdown';
 import { loadSpeakerProposal, SpeakerProposal } from '../../../features/event-proposals/view-proposal.server';

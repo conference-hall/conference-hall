@@ -7,13 +7,6 @@ export type SurveyQuestions = Array<{
   answers?: Array<{ name: string; label: string }>;
 }>;
 
-export function getEnabledQuestions(surveyQuestions: Prisma.JsonValue) {
-  if (!surveyQuestions) return null
-  if (typeof surveyQuestions !== 'object') return null
-  if (!Array.isArray(surveyQuestions)) return null
-  return surveyQuestions as string[]
-}
-
 export const QUESTIONS: SurveyQuestions = [
   {
     name: 'gender',

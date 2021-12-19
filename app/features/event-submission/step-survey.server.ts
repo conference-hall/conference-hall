@@ -1,7 +1,8 @@
 import { ActionFunction, LoaderFunction, redirect } from 'remix';
 import { z } from 'zod';
 import { db } from '../../services/db';
-import { getEnabledQuestions, QUESTIONS, SurveyQuestions } from '../../services/survey/questions';
+import { QUESTIONS, SurveyQuestions } from '../../services/survey/questions';
+import { jsonToArray } from '../../utils/prisma';
 import { requireUserSession } from '../auth/auth.server';
 
 export type SurveyForm = {
@@ -18,7 +19,7 @@ export const loadSurvey: LoaderFunction = async ({ request, params }) => {
   });
   if (!event) throw new Response('Event not found', { status: 404 });
 
-  const enabledQuestions = getEnabledQuestions(event.surveyQuestions);
+  const enabledQuestions = jsonToArray(event.surveyQuestions);
   if (!event.surveyEnabled || !enabledQuestions?.length) {
     throw new Response('Event survey is not enabled', { status: 403 });
   }

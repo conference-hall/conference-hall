@@ -1,12 +1,14 @@
-import { ActionFunction, LoaderFunction, redirect } from 'remix';
+import { ActionFunction, json, LoaderFunction, redirect } from 'remix';
 import { z } from 'zod';
 import { db } from '../../services/db';
+import { jsonToArray } from '../../utils/prisma';
 import { requireUserSession } from '../auth/auth.server';
 
 export type ProposalData = {
   title: string;
   abstract: string;
   references: string | null;
+  language: string | null;
   level: string | null;
 } | null;
 
@@ -17,7 +19,7 @@ export const loadProposal: LoaderFunction = async ({ request, params }) => {
   let talk = null;
   if (talkId !== 'new') {
     talk = await db.talk.findFirst({
-      select: { title: true, abstract: true, references: true, level: true },
+      select: { title: true, abstract: true, references: true, level: true, languages: true },
       where: { id: talkId, speakers: { some: { id: uid } } },
     });
     if (!talk) {
@@ -25,7 +27,17 @@ export const loadProposal: LoaderFunction = async ({ request, params }) => {
     }
   }
 
-  return talk;
+  if (!talk) return null;
+  
+  const languages = jsonToArray(talk.languages)
+
+  return json<ProposalData>({
+    title: talk.title,
+    abstract: talk.abstract,
+    references: talk.references,
+    language: languages.length > 0 ? languages[0] : null,
+    level: talk.level,
+  });
 }
 
 export const saveProposal: ActionFunction = async ({ request, params }) => {
@@ -66,6 +78,7 @@ export const saveProposal: ActionFunction = async ({ request, params }) => {
       abstract: talk.abstract,
       level: talk.level,
       references: talk.references,
+      languages: talk.languages || [],
       speakers: { set: [], connect: [{ id: uid }] },
     },
     create: {
@@ -73,6 +86,7 @@ export const saveProposal: ActionFunction = async ({ request, params }) => {
       abstract: talk.abstract,
       level: talk.level,
       references: talk.references,
+      languages: talk.languages || [],
       status: 'DRAFT',
       talk: { connect: { id: talk.id } },
       event: { connect: { id: event.id } },
@@ -94,6 +108,7 @@ export function validateProposal(form: FormData) {
     title: z.string().nonempty(),
     abstract: z.string().nonempty(),
     references: z.string().nullable(),
+    languages: z.array(z.string()).nonempty(),
     level: z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']).nullable(),
   });
 
@@ -101,6 +116,7 @@ export function validateProposal(form: FormData) {
     title: form.get('title'),
     abstract: form.get('abstract'),
     references: form.get('references'),
+    languages: form.get('language') ? [form.get('language')] : [],
     level: form.get('level'),
   })
 }

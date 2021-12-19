@@ -1,6 +1,5 @@
 import { LoaderFunction } from 'remix';
 import { db } from '../../services/db';
-import { getEnabledQuestions } from '../../services/survey/questions';
 import { getCfpState } from '../../utils/event';
 
 export type SubmitSteps = Array<{

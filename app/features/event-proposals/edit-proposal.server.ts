@@ -1,17 +1,18 @@
-import { ActionFunction, LoaderFunction, redirect } from 'remix';
+import { ActionFunction, json, LoaderFunction, redirect } from 'remix';
 import { z } from 'zod';
 import { requireUserSession } from '../auth/auth.server';
 import { db } from '../../services/db';
+import { jsonToArray } from '../../utils/prisma';
 
 export type SpeakerEditProposal = {
   proposal: {
     id: string;
-    talkId: string;
+    talkId: string | null;
     title: string;
     abstract: string;
     status: string;
     level: string | null;
-    languages: string | null;
+    language: string | null;
     references: string | null;
     createdAt: string;
     formats: string[];
@@ -41,7 +42,9 @@ export const loadSpeakerEditProposal: LoaderFunction = async ({ request, params 
   });
   if (!proposal) throw new Response('Proposal not found', { status: 404 });
 
-  return {
+  const languages = jsonToArray(proposal.languages);
+
+  return json<SpeakerEditProposal>({
     proposal: {
       id: proposal.id,
       talkId: proposal.talkId,
@@ -49,9 +52,9 @@ export const loadSpeakerEditProposal: LoaderFunction = async ({ request, params 
       abstract: proposal.abstract,
       status: proposal.status,
       level: proposal.level,
-      languages: proposal.languages,
+      language: languages.length > 0 ? languages[0] : null,
       references: proposal.references,
-      createdAt: proposal.createdAt,
+      createdAt: proposal.createdAt.toISOString(),
       formats: proposal.formats.map(({ id }) => id),
       categories: proposal.categories.map(({ id }) => id),
       speakers: proposal.speakers.map((speaker) => ({
@@ -62,7 +65,7 @@ export const loadSpeakerEditProposal: LoaderFunction = async ({ request, params 
     },
     formats: event.formats ?? [],
     categories: event.categories ?? [],
-  };
+  });
 };
 
 export const editProposal: ActionFunction = async ({ request, params }) => {
@@ -115,6 +118,7 @@ export function validateProposalForm(form: FormData, formatsRequired: boolean, c
       abstract: z.string().nonempty(),
       references: z.string().nullable(),
       level: z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']).nullable(),
+      languages: z.array(z.string()).nonempty(),
       formats: z.array(z.string()),
       categories: z.array(z.string()),
     })
@@ -132,6 +136,7 @@ export function validateProposalForm(form: FormData, formatsRequired: boolean, c
     abstract: form.get('abstract'),
     references: form.get('references'),
     level: form.get('level'),
+    languages: form.get('language') ? [form.get('language')] : [],
     formats: form.getAll('formats'),
     categories: form.getAll('categories'),
   });

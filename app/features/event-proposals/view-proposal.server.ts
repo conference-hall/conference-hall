@@ -1,6 +1,14 @@
 import { requireUserSession } from '../auth/auth.server';
 import { db } from '../../services/db';
 import { LoaderFunction } from 'remix';
+import { jsonToArray } from '../../utils/prisma';
+import LANGUAGES from '../../utils/languages.json';
+
+function getLanguage(key: string) {
+  const entry = Object.entries(LANGUAGES).find(([k]) => k === key);
+  if (!entry) return null;
+  return entry[1];
+}
 
 export type SpeakerProposal = {
   id: string;
@@ -36,6 +44,8 @@ export const loadSpeakerProposal: LoaderFunction = async ({ request, params }) =
   });
   if (!proposal) throw new Response('Proposal not found', { status: 404 });
 
+  const languages = jsonToArray(proposal.languages);
+
   return {
     id: proposal.id,
     talkId: proposal.talkId,
@@ -43,7 +53,7 @@ export const loadSpeakerProposal: LoaderFunction = async ({ request, params }) =
     abstract: proposal.abstract,
     status: proposal.status,
     level: proposal.level,
-    languages: proposal.languages,
+    languages: languages.length > 0 ? getLanguage(languages[0]) : null,
     references: proposal.references,
     createdAt: proposal.createdAt,
     formats: proposal.formats.map(({ name }) => name),
