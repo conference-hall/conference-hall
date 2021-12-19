@@ -17,7 +17,7 @@ type TalksSelectionProps = {
 
 export function TalksSelection({ talks }: TalksSelectionProps) {
   return (
-    <div className="bg-white shadow overflow-hidden sm:rounded-md">
+    <div className="bg-white border border-gray-200 overflow-hidden sm:rounded-md">
       <ul role="list" className="divide-y divide-gray-200">
         {talks.map((talk) => (
           <li key={talk.id}>

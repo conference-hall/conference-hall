@@ -1,4 +1,4 @@
-import { Checkbox, CheckboxGroup } from '~/components/forms/Checkboxes';
+import { Checkbox, CheckboxHeadingGroup } from '~/components/forms/Checkboxes';
 
 type FormatsFormProps = {
   formats: Array<{
@@ -11,7 +11,7 @@ type FormatsFormProps = {
 
 export function FormatsForm({ formats, initialValues }: FormatsFormProps) {
   return (
-    <CheckboxGroup
+    <CheckboxHeadingGroup
       label="Select proposal formats"
       description="Select one or severals formats proposed by the event organizers."
     >
@@ -27,6 +27,6 @@ export function FormatsForm({ formats, initialValues }: FormatsFormProps) {
           {f.name}
         </Checkbox>
       ))}
-    </CheckboxGroup>
+    </CheckboxHeadingGroup>
   );
 }

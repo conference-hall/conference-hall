@@ -1,6 +1,5 @@
 import React from 'react'
 import { GlobeIcon, HeartIcon, MailIcon } from '@heroicons/react/solid';
-import { SectionPanel } from '../../../components/Panels';
 import { ExternalLink } from '../../../components/Links';
 import { ButtonLink } from '../../../components/Buttons';
 
@@ -20,10 +19,10 @@ export function SectionActions({
   cfpState,
 }: SectionActionsProps) {
   return (
-    <SectionPanel id="event-submission" title="Event links and submission">
+    <section className="border border-gray-200 rounded-md bg-white">
       <img
         src={bannerUrl || 'https://placekitten.com/g/800/300'}
-        className="w-full object-cover bg-indigo-800 lg:h-64"
+        className="w-full object-cover rounded-t-md bg-indigo-800 lg:h-64"
         aria-hidden="true"
         alt=""
       />
@@ -49,6 +48,6 @@ export function SectionActions({
           </ButtonLink>
         )}
       </div>
-    </SectionPanel>
+    </section>
   );
 }

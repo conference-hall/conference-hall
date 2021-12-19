@@ -20,7 +20,7 @@ type ProposalsListProps = {
 
 export function ProposalsList({ proposals }: ProposalsListProps) {
   return (
-    <div className="bg-white shadow overflow-hidden sm:rounded-md">
+    <div className="bg-white border border-gray-200 overflow-hidden sm:rounded-md">
       <ul role="list" className="divide-y divide-gray-200">
         {proposals.map((proposal) => (
           <li key={proposal.id}>

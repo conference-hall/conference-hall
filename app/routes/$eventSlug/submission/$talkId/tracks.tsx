@@ -17,19 +17,17 @@ export default function SubmissionTracksRoute() {
 
   return (
     <Form method="post">
-      {data.formats?.length > 0 ? (
-        <div className="px-8 py-3 sm:px-8 lg:w-8/12">
+      <div className="px-8 py-6 sm:py-10 space-y-12">
+        {data.formats?.length > 0 ? (
           <FormatsForm formats={data.formats} initialValues={data.initialValues.formats} />
-        </div>
-      ) : null}
+        ) : null}
 
-      {data.categories?.length > 0 ? (
-        <div className="px-8 py-3 sm:px-8 lg:w-8/12">
+        {data.categories?.length > 0 ? (
           <CategoriesForm categories={data.categories} initialValues={data.initialValues.categories} />
-        </div>
-      ) : null}
+        ) : null}
+      </div>
 
-      <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
+      <div className="px-4 py-5 border-t border-gray-200 text-right sm:px-6">
         <ButtonLink to={previousStepPath} variant="secondary">
           Back
         </ButtonLink>

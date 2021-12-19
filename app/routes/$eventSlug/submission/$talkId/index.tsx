@@ -17,7 +17,7 @@ export default function EventSubmitTalkRoute() {
 
   return (
     <Form method="post">
-      <div className="px-8 py-6 sm:px-8">
+      <div className="px-8 py-6 sm:py-10">
         <Heading
           description="This information will be displayed publicly so be careful what you share."
           className="mb-6"
@@ -27,7 +27,7 @@ export default function EventSubmitTalkRoute() {
         <ProposalForm initialValues={talk} errors={errors?.fieldErrors} />
       </div>
 
-      <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
+      <div className="px-4 py-5 border-t border-gray-200 text-right sm:px-6">
         <Button type="submit" className="ml-4">
           Save as draft and continue
         </Button>

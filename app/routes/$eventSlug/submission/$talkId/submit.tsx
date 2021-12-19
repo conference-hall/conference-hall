@@ -7,44 +7,39 @@ import { loadProposal, SubmitForm, submitProposal } from '~/features/event-submi
 
 export const handle = { step: 'submission' };
 
-export const loader = loadProposal
+export const loader = loadProposal;
 
-export const action = submitProposal
+export const action = submitProposal;
 
 export default function EventSubmitTalkRoute() {
-  const proposal = useLoaderData<SubmitForm>()
-  const previousStepPath = usePreviousStep()
+  const proposal = useLoaderData<SubmitForm>();
+  const previousStepPath = usePreviousStep();
 
   return (
     <Form method="post">
-      <div className="px-8 py-6 sm:px-8 lg:w-8/12">
-        <Heading description="This information will be displayed publicly so be careful what you share.">
-          Almost done!
-        </Heading>
-        <p className="mt-4">
-          You are going to submit "{proposal.title}"
-        </p>
-        <p className="mt-4">
-          Speakers: {proposal.speakers.map(s => s.name).join(', ')}
-        </p>
-        <p className="mt-4">
-          Formats: {proposal.formats.join(', ')}
-        </p>
-        <p className="mt-4">
-          Categories: {proposal.categories.join(', ')}
-        </p>
-      </div>
-      <div className="px-4 py-3 bg-gray-50 flex items-center justify-between sm:px-6">
-        <ButtonLink to={previousStepPath} variant="secondary">
-          Back
-        </ButtonLink>
-        <div className="flex items-center">
-          <Checkbox id="cod-agreement" name="cod-agreement" value="agree">
-            Please agree with our code of conduct.
-          </Checkbox>
-          <Button type="submit" className="ml-8">
-            Submit proposal
-          </Button>
+      <div className="flex flex-col items-center py-20">
+        <p className="text-3xl leading-6 font-medium text-gray-900">{proposal.title}</p>
+        <ul role="list" className="mt-6 divide-y divide-gray-200 sm:col-span-2">
+          {proposal.speakers.map((speaker) => (
+            <li key={speaker.name} className="flex items-center">
+              <img
+                className="h-10 w-10 rounded-full"
+                src={speaker.photoURL || 'http://placekitten.com/100/100'}
+                alt={speaker.name || 'Speaker'}
+              />
+              <div className="ml-3">
+                <p className="text-sm font-medium text-gray-900">{speaker.name}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+        <p className="mt-4 text-sm text-gray-500">{proposal.formats.join(', ')}</p>
+        <p className="mt-4 text-sm text-gray-500">{proposal.categories.join(', ')}</p>
+        <Checkbox className="mt-16" id="cod-agreement" name="cod-agreement" value="agree">
+          Please agree with the code of conduct of the event.
+        </Checkbox>
+        <div className="mt-6">
+          <Button type="submit">Submit proposal</Button>
         </div>
       </div>
     </Form>

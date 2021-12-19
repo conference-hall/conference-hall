@@ -1,6 +1,5 @@
-import React from 'react'
+import React from 'react';
 import cn from 'classnames';
-import { SectionPanel } from '../../../components/Panels';
 import { CfpState, formatCFPDate, formatCFPState } from '../../../utils/event';
 import { Markdown } from '../../../components/Markdown';
 
@@ -24,23 +23,22 @@ export function SectionInfo({
   className,
 }: SectionInfoProps) {
   return (
-    <SectionPanel
-      id="event-information"
-      title="Event information"
-      className={cn('grid gap-x-4 gap-y-8', className)}
-      padding
-    >
+    <section className={cn('grid gap-x-4 gap-y-8', className)}>
       <div>
-        <h3 className="text-lg leading-6 font-medium text-gray-900">{formatCFPState(cfpState)}</h3>
-        {!!cfpStart && <p className="mt-1 text-sm text-gray-500">{formatCFPDate(cfpState, cfpStart, cfpEnd)}</p>}
+        <div>
+          <h3 className="text-lg leading-6 font-medium text-gray-900">{formatCFPState(cfpState)}</h3>
+          {!!cfpStart && <p className="mt-1 text-sm text-gray-500">{formatCFPDate(cfpState, cfpStart, cfpEnd)}</p>}
+        </div>
+        <div className="mt-8 px-6 py-6 border border-gray-200 rounded-md bg-white">
+          <Markdown source={description} />
+        </div>
       </div>
-      <Markdown source={description} />
       {formats.length > 0 ? (
         <div>
           <h3 className="text-base leading-6 font-medium text-gray-900">Formats</h3>
           <p className="mt-1 max-w-2xl text-sm text-gray-500">Talks formats proposed by the conference.</p>
           <div className="mt-4 text-sm text-gray-900">
-            <dl className="border border-gray-200 rounded-md divide-y divide-gray-200">
+            <dl className="border border-gray-200 rounded-md divide-y divide-gray-200 bg-white">
               {formats.map((f) => (
                 <div key={f.name} className="pl-3 pr-4 py-3 text-sm">
                   <dt className="text-sm font-medium text-gray-500">{f.name} </dt>
@@ -58,7 +56,7 @@ export function SectionInfo({
             Different categories and tracks proposed by the conference.
           </p>
           <div className="mt-4 text-sm text-gray-900">
-            <dl role="list" className="border border-gray-200 rounded-md divide-y divide-gray-200">
+            <dl role="list" className="border border-gray-200 rounded-md divide-y divide-gray-200 bg-white">
               {categories.map((c) => (
                 <div key={c.name} className="pl-3 pr-4 py-3 text-sm">
                   <dt className="text-sm font-medium text-gray-500">{c.name} </dt>
@@ -69,6 +67,6 @@ export function SectionInfo({
           </div>
         </div>
       ) : null}
-    </SectionPanel>
+    </section>
   );
 }

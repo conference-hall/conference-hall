@@ -1,4 +1,4 @@
-import { Checkbox, CheckboxGroup } from '../forms/Checkboxes';
+import { Checkbox, CheckboxHeadingGroup } from '../forms/Checkboxes';
 
 type CategoriesFormProps = {
   categories: Array<{
@@ -11,7 +11,7 @@ type CategoriesFormProps = {
 
 export function CategoriesForm({ categories, initialValues }: CategoriesFormProps) {
   return (
-    <CheckboxGroup
+    <CheckboxHeadingGroup
       label="Select proposal categories"
       description="Select categories that are the best fit for your proposal."
     >
@@ -27,6 +27,6 @@ export function CategoriesForm({ categories, initialValues }: CategoriesFormProp
           {c.name}
         </Checkbox>
       ))}
-    </CheckboxGroup>
+    </CheckboxHeadingGroup>
   );
 }

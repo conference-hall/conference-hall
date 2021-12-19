@@ -55,7 +55,7 @@ type DocumentProps = { children: ReactNode; title?: string; user?: AuthUser };
 
 function Document({ children, title, user }: DocumentProps) {
   return (
-    <html lang="en" className="bg-gray-100">
+    <html lang="en" className="bg-gray-50">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -63,7 +63,7 @@ function Document({ children, title, user }: DocumentProps) {
         {title ? <title>{title}</title> : null}
         <Links />
       </head>
-      <body className="h-full">
+      <body className="h-full font-sans antialiased text-gray-600">
         <div className="min-h-full">
           <Navbar user={user} />
           {children}

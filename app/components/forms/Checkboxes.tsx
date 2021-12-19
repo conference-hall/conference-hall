@@ -24,6 +24,21 @@ export function CheckboxGroup({ label, description, inline, className, children 
   );
 }
 
+export function CheckboxHeadingGroup({ label, description, inline, className, children }: CheckboxGroupProps) {
+  const layoutStyle = cn('space-y-4', { 'sm:flex sm:items-center sm:space-y-0 sm:space-x-10': inline });
+
+  return (
+    <div className={className}>
+      <label className="text-lg leading-6 font-medium text-gray-900">{label}</label>
+      {description && <p className="mt-1 text-sm leading-5 text-gray-500">{description}</p>}
+      <fieldset className="mt-6">
+        <legend className="sr-only">{label}</legend>
+        <div className={layoutStyle}>{children}</div>
+      </fieldset>
+    </div>
+  );
+}
+
 type CheckboxProps = { description?: string | null; className?: string } & React.InputHTMLAttributes<HTMLInputElement>;
 
 export function Checkbox({ id, name, description, className, children, ...rest }: CheckboxProps) {

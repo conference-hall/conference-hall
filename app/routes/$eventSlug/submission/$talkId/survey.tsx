@@ -19,58 +19,60 @@ export default function EventSubmitTalkRoute() {
 
   return (
     <Form method="post">
-      <div className="px-8 py-6 sm:px-8 lg:w-8/12">
+      <div className="px-8 py-6 sm:py-10">
         <Heading description="This information will be displayed publicly so be careful what you share.">
           We have some questions for you.
         </Heading>
-        {questions.map((question) => {
-          if (question.type === 'text') {
-            return (
-              <TextArea
-                key={question.name}
-                id={question.name}
-                name={question.name}
-                label={question.label}
-                defaultValue={initialValues[question.name] as string}
-                className="mt-6"
-              />
-            );
-          } else if (question.type === 'checkbox') {
-            return (
-              <CheckboxGroup key={question.name} label={question.label} inline className="mt-6">
-                {question.answers?.map((answer) => (
-                  <Checkbox
-                    key={answer.name}
-                    id={answer.name}
-                    name={question.name}
-                    value={answer.name}
-                    defaultChecked={initialValues[question.name]?.includes(answer.name)}
-                  >
-                    {answer.label}
-                  </Checkbox>
-                ))}
-              </CheckboxGroup>
-            );
-          } else if (question.type === 'radio') {
-            return (
-              <RadioGroup key={question.name} label={question.label} inline className="mt-6">
-                {question.answers?.map((answer) => (
-                  <Radio
-                    key={answer.name}
-                    id={answer.name}
-                    name={question.name}
-                    value={answer.name}
-                    defaultChecked={initialValues[question.name] === answer.name}
-                  >
-                    {answer.label}
-                  </Radio>
-                ))}
-              </RadioGroup>
-            );
-          }
-        })}
+        <div className="space-y-10">
+          {questions.map((question) => {
+            if (question.type === 'text') {
+              return (
+                <TextArea
+                  key={question.name}
+                  id={question.name}
+                  name={question.name}
+                  label={question.label}
+                  defaultValue={initialValues[question.name] as string}
+                  className="mt-6"
+                />
+              );
+            } else if (question.type === 'checkbox') {
+              return (
+                <CheckboxGroup key={question.name} label={question.label} inline className="mt-6">
+                  {question.answers?.map((answer) => (
+                    <Checkbox
+                      key={answer.name}
+                      id={answer.name}
+                      name={question.name}
+                      value={answer.name}
+                      defaultChecked={initialValues[question.name]?.includes(answer.name)}
+                    >
+                      {answer.label}
+                    </Checkbox>
+                  ))}
+                </CheckboxGroup>
+              );
+            } else if (question.type === 'radio') {
+              return (
+                <RadioGroup key={question.name} label={question.label} inline className="mt-6">
+                  {question.answers?.map((answer) => (
+                    <Radio
+                      key={answer.name}
+                      id={answer.name}
+                      name={question.name}
+                      value={answer.name}
+                      defaultChecked={initialValues[question.name] === answer.name}
+                    >
+                      {answer.label}
+                    </Radio>
+                  ))}
+                </RadioGroup>
+              );
+            }
+          })}
+        </div>
       </div>
-      <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
+      <div className="px-4 py-5 border-t border-gray-200 text-right sm:px-6">
         <ButtonLink to={previousStepPath} variant="secondary">
           Back
         </ButtonLink>

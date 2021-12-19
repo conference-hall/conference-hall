@@ -15,7 +15,7 @@ export function Steps({ steps, currentStep }: StepsProps) {
 
   return (
     <nav aria-label="Progress">
-      <ol role="list" className="border-b border-gray-300 divide-y divide-gray-300 md:flex md:divide-y-0">
+      <ol role="list" className="border-b border-gray-200 divide-y divide-gray-200 md:flex md:divide-y-0">
         {steps.map((step, stepIdx) => (
           <li key={step.key} className="relative md:flex-1 md:flex">
             {stepIdx < currentStepIdx ? (
@@ -37,7 +37,7 @@ export function Steps({ steps, currentStep }: StepsProps) {
             ) : (
               <span className="lex items-center">
                 <span className="px-6 py-4 flex items-center text-sm font-medium">
-                  <span className="flex-shrink-0 w-10 h-10 flex items-center justify-center border-2 border-gray-300 rounded-full">
+                  <span className="flex-shrink-0 w-10 h-10 flex items-center justify-center border-2 border-gray-200 rounded-full">
                     <span className="text-gray-500">{stepIdx + 1}</span>
                   </span>
                   <span className="ml-4 text-sm font-medium text-gray-500">{step.name}</span>
@@ -50,7 +50,7 @@ export function Steps({ steps, currentStep }: StepsProps) {
                 {/* Arrow separator for lg screens and up */}
                 <div className="hidden md:block absolute top-0 right-0 h-full w-5" aria-hidden="true">
                   <svg
-                    className="h-full w-full text-gray-300"
+                    className="h-full w-full text-gray-200"
                     viewBox="0 0 22 80"
                     fill="none"
                     preserveAspectRatio="none"
