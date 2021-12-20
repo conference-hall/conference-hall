@@ -4,8 +4,6 @@ import cn from 'classnames'
 type AlertProps = { message: string, className?: string };
 
 export default function SuccessAlert({ message, className }: AlertProps) {
-  if (!message) return null;
-
   return (
     <div className={cn("rounded-md bg-green-50 border border-green-400 p-4", className)}>
       <div className="flex">
