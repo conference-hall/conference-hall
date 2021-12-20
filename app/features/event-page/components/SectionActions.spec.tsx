@@ -10,7 +10,6 @@ describe('Section action component', () => {
         websiteUrl="https://devfest.gdgnantes.com"
         contactEmail="https://devfest.gdgnantes.com"
         codeOfConductUrl="https://devfest.gdgnantes.com/cod.html"
-        cfpState="OPENED"
       />
     );
 
@@ -27,7 +26,6 @@ describe('Section action component', () => {
         websiteUrl={null}
         contactEmail={null}
         codeOfConductUrl={null}
-        cfpState="CLOSED"
       />
     );
 

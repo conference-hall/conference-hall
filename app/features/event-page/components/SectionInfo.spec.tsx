@@ -7,9 +7,6 @@ describe('Section information component', () => {
     const { getByText } = render(
       <SectionInfo
         description="Event description"
-        cfpState="OPENED"
-        cfpStart="2020-11-20T00:00:00.000Z"
-        cfpEnd="2020-11-20T23:59:59.000Z"
         formats={[{ id: "f1", name:"format 1", description: 'desc format 1'}]}
         categories={[{ id: "f1", name:"cat 1", description: 'desc cat 1'}]}
       />
@@ -25,9 +22,6 @@ describe('Section information component', () => {
     const { queryByText } = render(
       <SectionInfo
         description="Event description"
-        cfpState="OPENED"
-        cfpStart="2020-11-20T00:00:00.000Z"
-        cfpEnd="2020-11-20T23:59:59.000Z"
         formats={[]}
         categories={[]}
       />

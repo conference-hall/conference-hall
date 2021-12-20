@@ -12,6 +12,7 @@ describe('Header component', () => {
         address="Nantes, France"
         conferenceStart="2020-11-20T00:00:00.000Z"
         conferenceEnd="2020-11-21T00:00:00.000Z"
+        surveyEnabled={true}
       />
     );
 
