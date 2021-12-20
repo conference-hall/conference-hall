@@ -1,14 +1,11 @@
-import React from 'react'
 import { GlobeIcon, HeartIcon, MailIcon } from '@heroicons/react/solid';
 import { ExternalLink } from '../../../components/Links';
-import { ButtonLink } from '../../../components/Buttons';
 
 type SectionActionsProps = {
   bannerUrl: string | null;
   websiteUrl: string | null;
   codeOfConductUrl: string | null;
   contactEmail: string | null;
-  cfpState: string | null;
 };
 
 export function SectionActions({
@@ -16,10 +13,9 @@ export function SectionActions({
   websiteUrl,
   codeOfConductUrl,
   contactEmail,
-  cfpState,
 }: SectionActionsProps) {
   return (
-    <section className="border border-gray-200 rounded-md bg-white">
+    <section className="border border-gray-200 shadow-sm rounded-md bg-white">
       <img
         src={bannerUrl || 'https://placekitten.com/g/800/300'}
         className="w-full object-cover rounded-t-md bg-indigo-800 lg:h-64"
@@ -41,11 +37,6 @@ export function SectionActions({
           <ExternalLink href={`mailto:${contactEmail}`} icon={MailIcon}>
             Contacts
           </ExternalLink>
-        )}
-        {cfpState === 'OPENED' && (
-          <ButtonLink to="submission" block>
-            Submit a talk
-          </ButtonLink>
         )}
       </div>
     </section>

@@ -1,13 +1,9 @@
 import React from 'react';
 import cn from 'classnames';
-import { CfpState, formatCFPDate, formatCFPState } from '../../../utils/event';
 import { Markdown } from '../../../components/Markdown';
 
 type SectionInfoProps = {
   description: string | null;
-  cfpState: CfpState;
-  cfpStart?: string;
-  cfpEnd?: string;
   formats: Array<{ id: string; name: string; description: string | null }>;
   categories: Array<{ id: string; name: string; description: string | null }>;
   className?: string;
@@ -15,23 +11,14 @@ type SectionInfoProps = {
 
 export function SectionInfo({
   description,
-  cfpState,
-  cfpStart,
-  cfpEnd,
   formats,
   categories,
   className,
 }: SectionInfoProps) {
   return (
     <section className={cn('grid gap-x-4 gap-y-8', className)}>
-      <div>
-        <div>
-          <h3 className="text-lg leading-6 font-medium text-gray-900">{formatCFPState(cfpState)}</h3>
-          {!!cfpStart && <p className="mt-1 text-sm text-gray-500">{formatCFPDate(cfpState, cfpStart, cfpEnd)}</p>}
-        </div>
-        <div className="mt-8 px-6 py-6 border border-gray-200 rounded-md bg-white">
-          <Markdown source={description} />
-        </div>
+      <div className="px-6 py-6 border border-gray-200 rounded-md bg-white">
+        <Markdown source={description} />
       </div>
       {formats.length > 0 ? (
         <div>
