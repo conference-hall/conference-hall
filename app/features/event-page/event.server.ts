@@ -1,9 +1,10 @@
-import { LoaderFunction } from 'remix';
+import { json, LoaderFunction } from 'remix';
 import { CfpState, getCfpState } from '~/utils/event';
 import { db } from '../../services/db';
 
 export interface EventDescription {
   description: string;
+  address: string | null;
   websiteUrl: string | null;
   contactEmail: string | null;
   codeOfConductUrl: string | null;
@@ -25,8 +26,9 @@ export const loadEvent: LoaderFunction = async ({ params }) => {
     throw new Response('Event not found', { status: 404 });
   }
 
-  return {
+  return json<EventDescription>({
     description: event.description,
+    address: event.address,
     websiteUrl: event.websiteUrl,
     contactEmail: event.contactEmail,
     codeOfConductUrl: event.codeOfConductUrl,
@@ -37,5 +39,5 @@ export const loadEvent: LoaderFunction = async ({ params }) => {
     cfpState: getCfpState(event.type, event.cfpStart, event.cfpEnd),
     formats: event.formats.map((f) => ({ id: f.id, name: f.name, description: f.description })),
     categories: event.categories.map((c) => ({ id: c.id, name: c.name, description: c.description })),
-  };
+  });
 }

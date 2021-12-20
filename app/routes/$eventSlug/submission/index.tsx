@@ -1,35 +1,41 @@
-import { LoaderFunction, useLoaderData } from 'remix';
-import { TalkSelectionStep, loadTalksSelection } from '~/features/event-submission/selection.server';
+import { useLoaderData } from 'remix';
+import { SelectionStep, loadSelection } from '~/features/event-submission/selection.server';
 import { ButtonLink } from '~/components/Buttons';
-import { requireUserSession } from '~/features/auth/auth.server';
 import { Heading } from '../../../components/Heading';
 import { TalksEmptyState } from '../../../features/event-submission/components/TalksEmptyState';
 import { TalksSelection } from '../../../features/event-submission/components/TalksSelection';
 import { Container } from '../../../components/layout/Container';
+import { AlertInfo } from '../../../components/Alerts';
 
 export const handle = { step: 'selection' };
 
-export const loader: LoaderFunction = async ({ request, context, params }) => {
-  await requireUserSession(request);
-  return loadTalksSelection({ request, context, params });
-};
+export const loader = loadSelection;
 
 export default function EventSubmitRoute() {
-  const data = useLoaderData<TalkSelectionStep>();
+  const data = useLoaderData<SelectionStep>();
 
-  if (data.length === 0) {
-    return <TalksEmptyState />;
-  }
   return (
     <Container className="mt-8">
-      <div className="flex justify-between items-center flex-wrap sm:flex-nowrap">
+      <div className="flex justify-between items-center flex-wrap sm:flex-nowrap mb-4">
         <Heading description="Select or create a new proposal to submit.">Proposal selection</Heading>
-        <div className="flex-shrink-0">
-          <ButtonLink to="new">New proposal</ButtonLink>
-        </div>
+        {data?.talks.length !== 0 && (
+          <div className="flex-shrink-0">
+            <ButtonLink to="new">New proposal</ButtonLink>
+          </div>
+        )}
       </div>
-      <div className="mt-8">
-        <TalksSelection talks={data} />
+
+      {!!data?.maxProposals && (
+        <AlertInfo>
+          You can submit a maximum of <span className="font-semibold">{data.maxProposals} proposals.</span>{' '}
+          {data.submittedProposals > 0
+            ? `You have already submitted ${data.submittedProposals} proposals out of ${data.maxProposals}.`
+            : null}
+        </AlertInfo>
+      )}
+
+      <div className="mt-4">
+        {data?.talks.length === 0 ? <TalksEmptyState /> : <TalksSelection talks={data?.talks} />}
       </div>
     </Container>
   );

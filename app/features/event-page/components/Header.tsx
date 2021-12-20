@@ -1,6 +1,6 @@
 import React from 'react';
 import cn from 'classnames';
-import { CalendarIcon, LocationMarkerIcon } from '@heroicons/react/solid';
+import { CalendarIcon } from '@heroicons/react/solid';
 import { IconLabel } from '../../../components/IconLabel';
 import { formatConferenceDates } from '../../../utils/event';
 import { NavLink } from 'remix';
@@ -9,27 +9,21 @@ type HeaderProps = {
   slug: string;
   type: 'CONFERENCE' | 'MEETUP';
   name: string;
-  address: string | null;
   conferenceStart?: string;
   conferenceEnd?: string;
   surveyEnabled: boolean;
 };
 
-export function Header({ slug, name, type, address, conferenceStart, conferenceEnd, surveyEnabled }: HeaderProps) {
+export function Header({ slug, name, type, conferenceStart, conferenceEnd, surveyEnabled }: HeaderProps) {
   return (
     <header className="bg-white shadow">
       <div className="lg:flex lg:items-center lg:justify-between min-w-0 max-w-7xl mx-auto py-10 pb-8 px-4 sm:px-6 lg:px-8">
         <div className="flex-1 min-w-0">
           <h1 className="text-2xl leading-6 font-bold text-gray-900">{name}</h1>
           <div className="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:mt-0 sm:space-x-6">
-            <IconLabel icon={LocationMarkerIcon} className="mt-2 text-gray-500">
-              {address}
+            <IconLabel icon={CalendarIcon} className="mt-2 text-gray-500">
+              {formatConferenceDates(type, conferenceStart, conferenceEnd)}
             </IconLabel>
-            {!!conferenceStart && (
-              <IconLabel icon={CalendarIcon} className="mt-2 text-gray-500">
-                {formatConferenceDates(conferenceStart, conferenceEnd)}
-              </IconLabel>
-            )}
           </div>
         </div>
       </div>

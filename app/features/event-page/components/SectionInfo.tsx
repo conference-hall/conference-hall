@@ -1,9 +1,14 @@
 import React from 'react';
 import cn from 'classnames';
 import { Markdown } from '../../../components/Markdown';
+import { Heading } from '../../../components/Heading';
+import { CfpState, formatCFPDate, formatCFPState } from '../../../utils/event';
 
 type SectionInfoProps = {
   description: string | null;
+  cfpStart?: string;
+  cfpEnd?: string;
+  cfpState: CfpState;
   formats: Array<{ id: string; name: string; description: string | null }>;
   categories: Array<{ id: string; name: string; description: string | null }>;
   className?: string;
@@ -11,12 +16,18 @@ type SectionInfoProps = {
 
 export function SectionInfo({
   description,
+  cfpStart,
+  cfpEnd,
+  cfpState,
   formats,
   categories,
   className,
 }: SectionInfoProps) {
   return (
     <section className={cn('grid gap-x-4 gap-y-8', className)}>
+      <div className="flex justify-between items-center flex-wrap sm:flex-nowrap">
+        <Heading description={formatCFPDate(cfpState, cfpStart, cfpEnd)}>{formatCFPState(cfpState)}</Heading>
+      </div>
       <div className="px-6 py-6 border border-gray-200 rounded-md bg-white">
         <Markdown source={description} />
       </div>

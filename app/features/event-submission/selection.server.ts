@@ -1,22 +1,34 @@
-import { requireAuthUserId } from '../auth/auth.server';
+import { requireUserSession } from '../auth/auth.server';
 import { db } from '../../services/db';
-import { LoaderFunction } from 'remix';
+import { json, LoaderFunction } from 'remix';
 
-export type TalkSelectionStep = Array<{
-  id: string;
-  title: string;
-  isDraft: boolean;
-  speakers: Array<{ id: string; name: string | null; photoURL: string | null }>;
-}>;
+export type SelectionStep = {
+  maxProposals: number | null;
+  submittedProposals: number;
+  talks: Array<{
+    id: string;
+    title: string;
+    isDraft: boolean;
+    speakers: Array<{ id: string; name: string | null; photoURL: string | null }>;
+  }>;
+};
 
-export const loadTalksSelection: LoaderFunction = async ({ request, params }) => {
-  const uid = await requireAuthUserId(request);
+export const loadSelection: LoaderFunction = async ({ request, params }) => {
+  const uid = await requireUserSession(request);
 
   const event = await db.event.findUnique({
     select: { id: true, maxProposals: true },
     where: { slug: params.eventSlug },
   });
   if (!event) throw new Response('Event not found', { status: 404 });
+
+  const submittedProposals = await db.proposal.count({
+    where: {
+      eventId: event.id,
+      speakers: { some: { id: uid } },
+      status: { not: { equals: 'DRAFT' } },
+    },
+  });
 
   const talks = await db.talk.findMany({
     select: {
@@ -39,10 +51,14 @@ export const loadTalksSelection: LoaderFunction = async ({ request, params }) =>
     orderBy: { createdAt: 'desc' },
   });
 
-  return talks.map((talk) => ({
-    id: talk.id,
-    title: talk.title,
-    isDraft: talk.proposals.length > 0,
-    speakers: talk.speakers.map((speaker) => ({ id: speaker.id, name: speaker.name, photoURL: speaker.photoURL })),
-  }));
+  return json<SelectionStep>({
+    maxProposals: event.maxProposals,
+    submittedProposals,
+    talks: talks.map((talk) => ({
+      id: talk.id,
+      title: talk.title,
+      isDraft: talk.proposals.length > 0,
+      speakers: talk.speakers.map((speaker) => ({ id: speaker.id, name: speaker.name, photoURL: speaker.photoURL })),
+    })),
+  });
 };

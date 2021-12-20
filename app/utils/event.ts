@@ -42,8 +42,8 @@ export function formatEventType(type: 'CONFERENCE' | 'MEETUP') {
   }
 }
 
-export function formatConferenceDates(start?: string, end?: string) {
-  if (!start || !end) return;
+export function formatConferenceDates(type: 'CONFERENCE' | 'MEETUP', start?: string, end?: string) {
+  if (!start || !end) return formatEventType(type);
   const startDate = new Date(start);
   const endDate = new Date(end);
   

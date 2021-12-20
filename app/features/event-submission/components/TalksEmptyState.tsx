@@ -2,7 +2,7 @@ import { ButtonLink } from '../../../components/Buttons';
 
 export function TalksEmptyState() {
   return (
-    <div className="text-center py-8">
+    <div className="bg-white border border-gray-200 rounded-md text-center py-20">
       <svg
         className="mx-auto h-12 w-12 text-gray-400"
         fill="none"
@@ -18,10 +18,10 @@ export function TalksEmptyState() {
           d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"
         />
       </svg>
-      <h3 className="mt-2 text-sm font-medium text-gray-900">No talks</h3>
-      <p className="mt-1 text-sm text-gray-500">Get started by creating your first talk.</p>
+      <h3 className="mt-2 text-sm font-medium text-gray-900">No proposals</h3>
+      <p className="mt-1 text-sm text-gray-500">Get started by creating your first proposal.</p>
       <div className="mt-6">
-        <ButtonLink to="new">New talk</ButtonLink>
+        <ButtonLink to="new">New proposal</ButtonLink>
       </div>
     </div>
   );
