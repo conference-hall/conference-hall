@@ -10,6 +10,7 @@ import {
   Scripts,
   useCatch,
   useLoaderData,
+  ScrollRestoration,
 } from 'remix';
 import { Navbar } from './components/layout/Navbar';
 
@@ -17,6 +18,7 @@ import { initializeFirebase } from './services/firebase/init';
 import { AuthUser, getAuthUser } from './features/auth/auth.server';
 
 import tailwind from './tailwind.css';
+import { Footer } from './components/layout/Footer';
 
 export const links: LinksFunction = () => {
   return [
@@ -54,7 +56,7 @@ type DocumentProps = { children: ReactNode; title?: string; user?: AuthUser };
 
 function Document({ children, title, user }: DocumentProps) {
   return (
-    <html lang="en" className="bg-gray-50">
+    <html lang="en">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -62,12 +64,14 @@ function Document({ children, title, user }: DocumentProps) {
         {title ? <title>{title}</title> : null}
         <Links />
       </head>
-      <body className="h-full font-sans antialiased text-gray-600">
+      <body className="h-screen font-sans antialiased text-gray-600">
         <div className="min-h-full">
           <Navbar user={user} />
           {children}
         </div>
+        <Footer />
         <Scripts />
+        <ScrollRestoration />
         {process.env.NODE_ENV === 'development' && <LiveReload />}
       </body>
     </html>

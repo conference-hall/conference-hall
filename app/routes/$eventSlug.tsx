@@ -14,8 +14,10 @@ export default function EventRoute() {
         slug={data.slug}
         type={data.type}
         name={data.name}
+        address={data.address}
         conferenceStart={data.conferenceStart}
         conferenceEnd={data.conferenceEnd}
+        cfpState={data.cfpState}
         surveyEnabled={data.surveyEnabled}
       />
       <Outlet />
