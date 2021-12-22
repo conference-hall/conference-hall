@@ -18,7 +18,7 @@ export default function EventSurveyRoute() {
   const result = useActionData();
 
   return (
-    <Container className="mt-8">
+    <Container className="my-8">
       <Heading description="This information will be displayed publicly so be careful what you share.">
         We have some questions for you.
       </Heading>

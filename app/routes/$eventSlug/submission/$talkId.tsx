@@ -18,7 +18,7 @@ export default function EventSubmitRoute() {
   const currentStep = matches[matches.length - 1].handle?.step
 
   return (
-    <Container className="mt-8 grid grid-cols-1 items-start sm:gap-8">
+    <Container className="my-8 grid grid-cols-1 items-start sm:gap-8">
       <SectionPanel id="talk-submission" title="Talk submission">
         <Steps steps={steps} currentStep={currentStep} />
         <div className="overflow-hidden sm:rounded-md">
@@ -32,7 +32,7 @@ export default function EventSubmitRoute() {
 export function CatchBoundary() {
   const caught = useCatch();
   return (
-    <Container className="mt-8 px-8 py-32 text-center">
+    <Container className="my-8 px-8 py-32 text-center">
       <h1 className="text-8xl font-black text-indigo-400">{caught.status}</h1>
       <p className="mt-10 text-4xl font-bold text-gray-600">{caught.data}</p>
     </Container>

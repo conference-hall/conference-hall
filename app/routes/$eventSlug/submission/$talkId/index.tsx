@@ -27,8 +27,8 @@ export default function SubmissionProposalRoute() {
         <ProposalForm initialValues={talk} errors={errors?.fieldErrors} />
       </div>
 
-      <div className="px-4 py-5 border-t border-gray-200 text-right sm:px-6">
-        <Button type="submit" className="ml-4">
+      <div className="px-4 py-5 text-right sm:px-6">
+        <Button type="submit">
           Save as draft and continue
         </Button>
       </div>

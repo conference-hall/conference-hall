@@ -6,7 +6,7 @@ type AlertProps = { children: ReactNode; className?: string };
 
 export function AlertSuccess({ children, className }: AlertProps) {
   return (
-    <div className={cn('rounded-md bg-green-50 border border-green-200 p-4', className)}>
+    <div className={cn('rounded-md bg-green-50 p-4', className)}>
       <div className="flex">
         <div className="flex-shrink-0">
           <CheckCircleIcon className="h-5 w-5 text-green-400" aria-hidden="true" />
@@ -21,7 +21,7 @@ export function AlertSuccess({ children, className }: AlertProps) {
 
 export function AlertInfo({ children, className }: AlertProps) {
   return (
-    <div className={cn('rounded-md bg-blue-50 border border-blue-200 p-4', className)}>
+    <div className={cn('rounded-md bg-blue-50 p-4', className)}>
       <div className="flex">
         <div className="flex-shrink-0">
           <InformationCircleIcon className="h-5 w-5 text-blue-400" aria-hidden="true" />

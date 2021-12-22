@@ -17,46 +17,40 @@ type TalksSelectionProps = {
 
 export function TalksSelection({ talks }: TalksSelectionProps) {
   return (
-    <div className="bg-white border border-gray-200 overflow-hidden sm:rounded-md">
-      <ul role="list" className="divide-y divide-gray-200">
+      <ul role="list" className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {talks.map((talk) => (
-          <li key={talk.id}>
-            <Link to={talk.id} className="block hover:bg-gray-50">
-              <div className="px-4 py-4 flex items-center sm:px-6">
-                <div className="min-w-0 flex-1 sm:flex sm:items-center sm:justify-between">
-                  <div className="truncate">
-                    <div className="flex text-sm">
-                      <p className="font-medium text-indigo-600 truncate">{talk.title}</p>
-                    </div>
-                    {talk.isDraft && (
-                      <div className="mt-2 flex">
-                        <IconLabel icon={ExclamationIcon} className="text-sm text-yellow-600">
-                          This proposal is still in draft. Don't forget to submit it.
-                        </IconLabel>
-                      </div>
-                    )}
-                  </div>
-                  <div className="mt-4 flex-shrink-0 sm:mt-0 sm:ml-5">
-                    <div className="flex overflow-hidden -space-x-1">
-                      {talk.speakers.map((speaker) => (
-                        <img
-                          key={speaker.id}
-                          className="inline-block h-6 w-6 rounded-full ring-2 ring-white"
-                          src={speaker.photoURL || 'http://placekitten.com/100/100'}
-                          alt={speaker.name || 'co-speaker'}
-                        />
-                      ))}
-                    </div>
+          <li key={talk.id} className="col-span-1 bg-white rounded-lg border border-gray-200">
+            <Link to={talk.id} className="block hover:bg-indigo-50 rounded-lg">
+              <div className="px-4 py-4 sm:px-6 h-40 flex flex-col justify-between">
+                <div>
+                  <p className="text-base font-semibold text-indigo-600 truncate">{talk.title}</p>
+
+                  <div className="mt-2 flex items-center overflow-hidden -space-x-1">
+                    {talk.speakers.map((speaker) => (
+                      <img
+                        key={speaker.id}
+                        className="inline-block h-6 w-6 rounded-full ring-2 ring-white"
+                        src={speaker.photoURL || 'http://placekitten.com/100/100'}
+                        alt={speaker.name || 'Speaker'}
+                      />
+                    ))}
+                    <span className="pl-3 text-sm test-gray-500 truncate">
+                      by {talk.speakers.map((s) => s.name).join(', ')}
+                    </span>
                   </div>
                 </div>
-                <div className="ml-5 flex-shrink-0">
-                  <ChevronRightIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+
+                <div>
+                  {talk.isDraft ? (
+                    <IconLabel icon={ExclamationIcon} className="text-sm text-yellow-600">
+                      Draft proposal, don't forget to submit it.
+                    </IconLabel>
+                  ) : null}
                 </div>
               </div>
             </Link>
           </li>
         ))}
       </ul>
-    </div>
   );
 }

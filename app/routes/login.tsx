@@ -21,8 +21,13 @@ export default function Login() {
   if (isSigning) return null
   
   return (
-    <Container className="py-8 flex justify-center">
-      <Button type="button" onClick={signin}>Login with Google</Button>
-    </Container>
+    <div className="flex flex-col items-center justify-center h-[calc(100vh-64px)] pb-64 max-w-xl mx-auto">
+      <h1 className="text-6xl text-center font-black">Log in to Conference Hall</h1>
+      <div className="mt-12 p-8 space-y-4 max-w-sm">
+        <Button type="button" block onClick={signin}>Continue with Google</Button>
+        <Button type="button" block onClick={signin}>Continue with GitHub</Button>
+        <Button type="button" block onClick={signin}>Continue with Twitter</Button>
+      </div>
+    </div>
   )
 }

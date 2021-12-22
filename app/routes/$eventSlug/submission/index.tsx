@@ -15,8 +15,8 @@ export default function EventSubmitRoute() {
   const data = useLoaderData<SelectionStep>();
 
   return (
-    <Container className="mt-8">
-      <div className="flex justify-between items-center flex-wrap sm:flex-nowrap mb-4">
+    <Container className="my-8 space-y-8">
+      <div className="flex justify-between items-center flex-wrap sm:flex-nowrap">
         <Heading description="Select or create a new proposal to submit.">Proposal selection</Heading>
         {data?.talks.length !== 0 && (
           <div className="flex-shrink-0">
@@ -26,7 +26,7 @@ export default function EventSubmitRoute() {
       </div>
 
       {!!data?.maxProposals && (
-        <AlertInfo>
+        <AlertInfo className="my-2">
           You can submit a maximum of <span className="font-semibold">{data.maxProposals} proposals.</span>{' '}
           {data.submittedProposals > 0
             ? `You have already submitted ${data.submittedProposals} proposals out of ${data.maxProposals}.`
@@ -34,7 +34,7 @@ export default function EventSubmitRoute() {
         </AlertInfo>
       )}
 
-      <div className="mt-4">
+      <div>
         {data?.talks.length === 0 ? <TalksEmptyState /> : <TalksSelection talks={data?.talks} />}
       </div>
     </Container>

@@ -27,7 +27,7 @@ export default function SubmissionSurveyRoute() {
         </Heading>
         <SurveyForm questions={questions} initialValues={initialValues} />
       </div>
-      <div className="px-4 py-5 border-t border-gray-200 text-right sm:px-6">
+      <div className="px-4 py-5 text-right sm:px-6">
         <ButtonLink to={previousStepPath} variant="secondary">
           Back
         </ButtonLink>
