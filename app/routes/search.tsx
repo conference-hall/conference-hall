@@ -12,17 +12,24 @@ export default function SearchRoute() {
   const data = useLoaderData<SearchEvents>();
 
   return (
-    <Container>
-      <SearchEventForm terms={data.terms} />
-      {data.results?.length === 0 ? (
-        <p>No events found.</p>
-      ) : (
-        <EventsList>
-          {data.results.map((result) => (
-            <EventItem key={result.slug} {...result} />
-          ))}
-        </EventsList>
-      )}
-    </Container>
+    <div className="bg-gray-50 h-[calc(100vh-64px)]">
+      <div className="bg-white border-y border-gray-200">
+        <Container className="py-16">
+          <h1 className="text-3xl leading-6 font-black">Search for conferences and meetups.</h1>
+          <SearchEventForm terms={data.terms} className="mt-16" />
+        </Container>
+      </div>
+      <Container className="pt-8">
+        {data.results?.length === 0 ? (
+          <p>No events found.</p>
+        ) : (
+          <EventsList>
+            {data.results.map((result) => (
+              <EventItem key={result.slug} {...result} />
+            ))}
+          </EventsList>
+        )}
+      </Container>
+    </div>
   );
 }

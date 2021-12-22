@@ -14,17 +14,17 @@ describe('#formatEventType', () => {
 
 describe('#formatEventDates', () => {
   it('return undefined when no dates', () => {
-    const message = formatConferenceDates();
+    const message = formatConferenceDates('CONFERENCE');
     expect(message).toBeUndefined();
   });
 
   it('return one day conference info', () => {
-    const message = formatConferenceDates('2020-10-05T00:00:00.000Z', '2020-10-05T00:00:00.000Z');
+    const message = formatConferenceDates('CONFERENCE', '2020-10-05T00:00:00.000Z', '2020-10-05T00:00:00.000Z');
     expect(message).toBe('1 day conference - October 5th, 2020');
   });
 
   it('return several days conference info', () => {
-    const message = formatConferenceDates('2020-10-05T00:00:00.000Z', '2020-10-07T00:00:00.000Z');
+    const message = formatConferenceDates('CONFERENCE', '2020-10-05T00:00:00.000Z', '2020-10-07T00:00:00.000Z');
     expect(message).toBe('3 days conference · October 5th — October 7th, 2020');
   });
 });

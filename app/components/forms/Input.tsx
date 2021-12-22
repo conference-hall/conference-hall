@@ -1,6 +1,6 @@
 import cn from 'classnames';
 
-type InputProps = { label: string; error?: string } & React.InputHTMLAttributes<HTMLInputElement>;
+type InputProps = { label?: string; error?: string } & React.InputHTMLAttributes<HTMLInputElement>;
 
 export function Input({ id, label, className, error, ...rest }: InputProps) {
   const styles = cn(baseStyles, {
@@ -10,9 +10,11 @@ export function Input({ id, label, className, error, ...rest }: InputProps) {
 
   return (
     <div className={className}>
-      <label htmlFor={id} className="block text-sm font-medium text-gray-700">
-        {label}
-      </label>
+      {label && (
+        <label htmlFor={id} className="block text-sm font-medium text-gray-700">
+          {label}
+        </label>
+      )}
       <div className="mt-1">
         <input id={id} className={styles} {...rest} />
       </div>

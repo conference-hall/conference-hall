@@ -31,7 +31,7 @@ export function Header({
       <header className="bg-white border-t border-gray-200">
         <div className="lg:flex lg:items-center lg:justify-between min-w-0 max-w-7xl mx-auto py-10 pb-4 px-4 sm:px-6 lg:px-8">
           <div className="flex-1 min-w-0">
-            <h1 className="text-2xl leading-6 font-bold text-gray-800">{name}</h1>
+            <h1 className="text-2xl leading-6 font-bold">{name}</h1>
             <div className="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:mt-0 sm:space-x-6">
               {address && (
                 <IconLabel icon={LocationMarkerIcon} className="mt-2 text-gray-500">

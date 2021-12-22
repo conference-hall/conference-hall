@@ -1,17 +1,16 @@
 import { Form } from 'remix';
 import { Input } from '../../../components/forms/Input';
 
-type SearchEventFormProps = { terms?: string };
+type SearchEventFormProps = { terms?: string, className?: string };
 
-export function SearchEventForm({ terms }: SearchEventFormProps) {
+export function SearchEventForm({ terms, className }: SearchEventFormProps) {
   return (
-    <Form action="/search" method="get" className="my-8">
+    <Form action="/search" method="get" className={className}>
       <Input
-        label="Search"
         type="search"
         name="terms"
-        placeholder="Search events"
-        aria-label="Search events"
+        placeholder="Search..."
+        aria-label="Search conferences and meetups."
         defaultValue={terms}
       />
     </Form>
