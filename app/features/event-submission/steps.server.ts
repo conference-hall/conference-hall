@@ -23,10 +23,10 @@ export const loadSubmissionSteps: LoaderFunction = async ({ params }) => {
     },
     where: { slug: params.eventSlug },
   });
-  if (!event) throw new Response('Event not found', { status: 404 });
+  if (!event) throw new Response('Event not found.', { status: 404 });
 
   const isCfpOpen = getCfpState(event.type, event.cfpStart, event.cfpEnd) === 'OPENED';
-  if (!isCfpOpen) throw new Response('CFP is not opened', { status: 403 });
+  if (!isCfpOpen) throw new Response('CFP is not opened!', { status: 403 });
 
   const isSurveyStepEnabled = event.surveyEnabled;
   const isTracksStepEnabled = event._count.categories > 0 || event._count.formats > 0;

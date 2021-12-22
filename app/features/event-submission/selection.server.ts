@@ -20,7 +20,7 @@ export const loadSelection: LoaderFunction = async ({ request, params }) => {
     select: { id: true, maxProposals: true },
     where: { slug: params.eventSlug },
   });
-  if (!event) throw new Response('Event not found', { status: 404 });
+  if (!event) throw new Response('Event not found.', { status: 404 });
 
   const submittedProposals = await db.proposal.count({
     where: {

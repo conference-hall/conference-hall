@@ -1,4 +1,4 @@
-import { useLoaderData } from 'remix';
+import { useCatch, useLoaderData } from 'remix';
 import { Container } from '~/components/layout/Container';
 import { EventDescription, loadEvent } from '~/features/event-page/event.server';
 import { SectionActions } from '../../features/event-page/components/SectionActions';
@@ -30,6 +30,16 @@ export default function EventRoute() {
           cfpState={data.cfpState}
         />
       </div>
+    </Container>
+  );
+}
+
+export function CatchBoundary() {
+  const caught = useCatch();
+  return (
+    <Container className="mt-8 px-8 py-32 text-center">
+      <h1 className="text-8xl font-black text-indigo-400">{caught.status}</h1>
+      <p className="mt-10 text-4xl font-bold text-gray-600">{caught.data}</p>
     </Container>
   );
 }

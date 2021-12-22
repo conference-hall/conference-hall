@@ -20,13 +20,13 @@ export const loadProposal: LoaderFunction = async ({ request, params }) => {
     select: { id: true, formats: true, categories: true, codeOfConductUrl: true },
     where: { slug: eventSlug },
   });
-  if (!event) throw new Response('Event not found', { status: 404 });
+  if (!event) throw new Response('Event not found.', { status: 404 });
 
   const proposal = await db.proposal.findUnique({
     select: { title: true, speakers: true, formats: true, categories: true },
     where: { talkId_eventId: { talkId, eventId: event.id } },
   });
-  if (!proposal) throw new Response('Proposal not found', { status: 404 });
+  if (!proposal) throw new Response('Proposal not found.', { status: 404 });
 
   if (!proposal.speakers.some((s) => s.id === uid)) {
     throw new Response('Not your proposal!', { status: 403 });
@@ -50,10 +50,10 @@ export const submitProposal: ActionFunction = async ({ request, params }) => {
     select: { id: true, type: true, cfpStart: true, cfpEnd: true, maxProposals: true },
     where: { slug: eventSlug },
   });
-  if (!event) throw new Response('Event not found', { status: 404 });
+  if (!event) throw new Response('Event not found.', { status: 404 });
 
   const isCfpOpen = getCfpState(event.type, event.cfpStart, event.cfpEnd) === 'OPENED';
-  if (!isCfpOpen) throw new Response('CFP is not opened', { status: 403 });
+  if (!isCfpOpen) throw new Response('CFP is not opened!', { status: 403 });
 
   if (event.maxProposals) {
     const nbProposals = await db.proposal.count({
@@ -65,7 +65,7 @@ export const submitProposal: ActionFunction = async ({ request, params }) => {
       },
     });
     if (nbProposals >= event.maxProposals) {
-      throw new Response('You have reached the maximum number of proposals', { status: 403 });
+      throw new Response('You have reached the maximum number of proposals.', { status: 403 });
     }
   }
 

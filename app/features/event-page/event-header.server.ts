@@ -25,7 +25,7 @@ export const loadEventHeader: LoaderFunction = async ({ params }) => {
     where: { slug: params.eventSlug },
   });
 
-  if (!event) throw new Response('Event not found', { status: 404 });
+  if (!event) throw new Response('Event not found.', { status: 404 });
 
   return json<EventHeader>({
     slug: event.slug,

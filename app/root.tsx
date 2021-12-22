@@ -14,9 +14,9 @@ import {
 import { Navbar } from './components/layout/Navbar';
 
 import { initializeFirebase } from './services/firebase/init';
-import tailwind from './tailwind.css';
-import { Footer } from './components/layout/Footer';
 import { AuthUser, getAuthUser } from './features/auth/auth.server';
+
+import tailwind from './tailwind.css';
 
 export const links: LinksFunction = () => {
   return [
@@ -66,7 +66,6 @@ function Document({ children, title, user }: DocumentProps) {
         <div className="min-h-full">
           <Navbar user={user} />
           {children}
-          <Footer />
         </div>
         <Scripts />
         {process.env.NODE_ENV === 'development' && <LiveReload />}

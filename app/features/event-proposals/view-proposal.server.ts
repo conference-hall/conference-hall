@@ -32,7 +32,7 @@ export const loadSpeakerProposal: LoaderFunction = async ({ request, params }) =
     select: { id: true },
     where: { slug: params.eventSlug },
   });
-  if (!event) throw new Response('Event not found', { status: 404 });
+  if (!event) throw new Response('Event not found.', { status: 404 });
 
   const proposal = await db.proposal.findFirst({
     where: {
@@ -42,7 +42,7 @@ export const loadSpeakerProposal: LoaderFunction = async ({ request, params }) =
     include: { speakers: true, formats: true, categories: true },
     orderBy: { createdAt: 'desc' },
   });
-  if (!proposal) throw new Response('Proposal not found', { status: 404 });
+  if (!proposal) throw new Response('Proposal not found.', { status: 404 });
 
   const languages = jsonToArray(proposal.languages);
 

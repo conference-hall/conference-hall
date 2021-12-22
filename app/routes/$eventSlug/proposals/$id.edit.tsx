@@ -1,4 +1,4 @@
-import { Form, useLoaderData } from 'remix';
+import { Form, useCatch, useLoaderData } from 'remix';
 import { Container } from '~/components/layout/Container';
 import { Button } from '../../../components/Buttons';
 import {
@@ -50,3 +50,14 @@ export default function EditProposalRoute() {
     </Container>
   );
 }
+
+export function CatchBoundary() {
+  const caught = useCatch();
+  return (
+    <Container className="mt-8 px-8 py-32 text-center">
+      <h1 className="text-8xl font-black text-indigo-400">{caught.status}</h1>
+      <p className="mt-10 text-4xl font-bold text-gray-600">{caught.data}</p>
+    </Container>
+  );
+}
+

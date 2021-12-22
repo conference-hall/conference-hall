@@ -1,6 +1,6 @@
 import { CalendarIcon, ExclamationIcon } from '@heroicons/react/solid';
 import { formatRelative } from 'date-fns';
-import { useLoaderData } from 'remix';
+import { useCatch, useLoaderData } from 'remix';
 import { Container } from '~/components/layout/Container';
 import { ButtonLink } from '../../../components/Buttons';
 import { IconLabel } from '../../../components/IconLabel';
@@ -87,6 +87,16 @@ export default function EventSpeakerProposalRoute() {
           </dl>
         </div>
       </div>
+    </Container>
+  );
+}
+
+export function CatchBoundary() {
+  const caught = useCatch();
+  return (
+    <Container className="mt-8 px-8 py-32 text-center">
+      <h1 className="text-8xl font-black text-indigo-400">{caught.status}</h1>
+      <p className="mt-10 text-4xl font-bold text-gray-600">{caught.data}</p>
     </Container>
   );
 }

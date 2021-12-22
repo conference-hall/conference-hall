@@ -30,7 +30,7 @@ export const loadSpeakerEditProposal: LoaderFunction = async ({ request, params 
     select: { id: true, formats: true, categories: true },
     where: { slug: params.eventSlug },
   });
-  if (!event) throw new Response('Event not found', { status: 404 });
+  if (!event) throw new Response('Event not found.', { status: 404 });
 
   const proposal = await db.proposal.findFirst({
     where: {
@@ -40,7 +40,7 @@ export const loadSpeakerEditProposal: LoaderFunction = async ({ request, params 
     include: { speakers: true, formats: true, categories: true },
     orderBy: { createdAt: 'desc' },
   });
-  if (!proposal) throw new Response('Proposal not found', { status: 404 });
+  if (!proposal) throw new Response('Proposal not found.', { status: 404 });
 
   const languages = jsonToArray(proposal.languages);
 
@@ -76,7 +76,9 @@ export const editProposal: ActionFunction = async ({ request, params }) => {
     select: { id: true, formatsRequired: true, categoriesRequired: true },
     where: { slug: eventSlug },
   });
-  if (!event) throw new Response('Event not found', { status: 404 });
+  if (!event) throw new Response('Event not found.', { status: 404 });
+
+  // TODO Check if CFP is open
 
   const form = await request.formData();
   const result = validateProposalForm(form, event.formatsRequired, event.categoriesRequired);
@@ -87,7 +89,7 @@ export const editProposal: ActionFunction = async ({ request, params }) => {
   const proposal = await db.proposal.findFirst({
     where: { id, speakers: { some: { id: uid } } },
   });
-  if (!proposal) throw new Response('Proposal not found', { status: 404 });
+  if (!proposal) throw new Response('Proposal not found.', { status: 404 });
 
   const { formats, categories, ...talk } = result.data;
 

@@ -23,7 +23,7 @@ export const loadProposal: LoaderFunction = async ({ request, params }) => {
       where: { id: talkId, speakers: { some: { id: uid } } },
     });
     if (!talk) {
-      throw new Response('Talk not found', { status: 404 });
+      throw new Response('Proposal not found.', { status: 404 });
     }
   }
 
@@ -55,11 +55,11 @@ export const saveProposal: ActionFunction = async ({ request, params }) => {
     select: { id: true, formats: true, categories: true, surveyEnabled: true },
     where: { slug: eventSlug },
   });
-  if (!event) throw new Response('Event not found', { status: 404 });
+  if (!event) throw new Response('Event not found.', { status: 404 });
 
   if (talkId !== 'new') {
     const talk = await db.talk.findFirst({ where: { id: talkId, speakers: { some: { id: uid } } } });
-    if (!talk) throw new Response('Not your talk!', { status: 401 });
+    if (!talk) throw new Response('Not your proposal!', { status: 401 });
   }
 
   const talk = await db.talk.upsert({
