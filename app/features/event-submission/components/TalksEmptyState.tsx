@@ -2,7 +2,7 @@ import { ButtonLink } from '../../../components/Buttons';
 
 export function TalksEmptyState() {
   return (
-    <div className="bg-white border border-gray-200 rounded-md text-center py-20">
+    <div className="text-center py-20">
       <svg
         className="mx-auto h-12 w-12 text-gray-400"
         fill="none"

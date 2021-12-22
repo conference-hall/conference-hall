@@ -71,10 +71,24 @@ export default async () => {
     address: 'Le Palais des Congrès, Paris, France',
     type: 'CONFERENCE',
     visibility: 'PUBLIC',
-    conferenceStart: '2091-11-20T00:00:00.000Z',
-    conferenceEnd: '2091-11-20T00:00:00.000Z',
-    cfpStart: '2020-10-05T14:48:00.000Z',
-    cfpEnd: '2090-10-05T14:48:00.000Z',
+    conferenceStart: '2001-11-20T00:00:00.000Z',
+    conferenceEnd: '2001-11-20T00:00:00.000Z',
+    cfpStart: '2001-10-05T14:48:00.000Z',
+    cfpEnd: '2001-10-05T14:48:00.000Z',
+    creatorId: 'tpSmd3FehZIM3Wp4HYSBnfnQmXLb',
+  });
+
+  await buildEvent({
+    name: 'BDX.io',
+    slug: 'bdx-io',
+    description: 'BDX IO',
+    address: 'Toulouse, France',
+    type: 'CONFERENCE',
+    visibility: 'PUBLIC',
+    conferenceStart: '2100-11-20T00:00:00.000Z',
+    conferenceEnd: '2100-11-20T00:00:00.000Z',
+    cfpStart: '2100-10-05T14:48:00.000Z',
+    cfpEnd: '2100-10-05T14:48:00.000Z',
     creatorId: 'tpSmd3FehZIM3Wp4HYSBnfnQmXLb',
   });
 

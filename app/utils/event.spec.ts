@@ -32,7 +32,7 @@ describe('#formatEventDates', () => {
 describe('#formatCFPState', () => {
   it('return closed cfp message', () => {
     const message = formatCFPState('CLOSED');
-    expect(message).toBe('Call for paper is closed');
+    expect(message).toBe('Call for paper is not open yet');
   });
 
   it('return opened cfp message', () => {
@@ -42,7 +42,7 @@ describe('#formatCFPState', () => {
 
   it('return finished cfp message', () => {
     const message = formatCFPState('FINISHED');
-    expect(message).toBe('Call for paper is finished');
+    expect(message).toBe('Call for paper is closed');
   });
 });
 

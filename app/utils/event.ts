@@ -60,11 +60,11 @@ export function formatConferenceDates(type: 'CONFERENCE' | 'MEETUP', start?: str
 export function formatCFPState(state: CfpState) {
   switch (state) {
     case 'CLOSED':
-      return 'Call for paper is closed';
+      return 'Call for paper is not open yet';
     case 'OPENED':
       return 'Call for paper is open';
     case 'FINISHED':
-      return 'Call for paper is finished';
+      return 'Call for paper is closed';
   }
 }
 

@@ -3,6 +3,7 @@ import { useCatch, useLoaderData } from 'remix';
 import { Container } from '~/components/layout/Container';
 import { EventDescription, loadEvent } from '~/features/event-page/event.server';
 import { ButtonLink } from '../../components/Buttons';
+import { CfpHeader } from '../../components/event/CfpInfo';
 import { Heading } from '../../components/Heading';
 import { ExternalLink } from '../../components/Links';
 import { Markdown } from '../../components/Markdown';
@@ -16,14 +17,7 @@ export default function EventRoute() {
     <div>
       <section className="py-8 border-b border-gray-200">
         <Container className="flex justify-between items-center flex-wrap sm:flex-nowrap">
-          <Heading description={formatCFPDate(data.cfpState, data.cfpStart, data.cfpEnd)}>
-            <span className="flex items-center space-x-3">
-              <span className="h-4 w-4 bg-green-100 rounded-full flex items-center justify-center" aria-hidden="true">
-                <span className="h-2 w-2 bg-green-400 rounded-full"></span>
-              </span>
-              <span className="block">{formatCFPState(data.cfpState)}</span>
-            </span>
-          </Heading>
+          <CfpHeader cfpState={data.cfpState} cfpStart={data.cfpStart} cfpEnd={data.cfpEnd} />
           {data.cfpState === 'OPENED' && (
             <div className="flex-shrink-0">
               <ButtonLink to="submission" block>
