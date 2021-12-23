@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { requireUserSession } from '../auth/auth.server';
 import { db } from '../../services/db';
 import { jsonToArray } from '../../utils/prisma';
+import { getCfpState } from '../../utils/event';
 
 export type SpeakerEditProposal = {
   proposal: {
@@ -73,44 +74,52 @@ export const editProposal: ActionFunction = async ({ request, params }) => {
   const { eventSlug, id } = params;
 
   const event = await db.event.findUnique({
-    select: { id: true, formatsRequired: true, categoriesRequired: true },
+    select: { id: true, type: true, cfpStart: true, cfpEnd: true, formatsRequired: true, categoriesRequired: true },
     where: { slug: eventSlug },
   });
   if (!event) throw new Response('Event not found.', { status: 404 });
 
-  // TODO Check if CFP is open
-
-  const form = await request.formData();
-  const result = validateProposalForm(form, event.formatsRequired, event.categoriesRequired);
-  if (!result.success) {
-    return result.error.flatten();
-  }
+  const isCfpOpen = getCfpState(event.type, event.cfpStart, event.cfpEnd) === 'OPENED';
+  if (!isCfpOpen) throw new Response('CFP is not opened!', { status: 403 });
 
   const proposal = await db.proposal.findFirst({
     where: { id, speakers: { some: { id: uid } } },
   });
   if (!proposal) throw new Response('Proposal not found.', { status: 404 });
 
-  const { formats, categories, ...talk } = result.data;
+  const form = await request.formData();
+  const method = form.get('_method');
 
-  await db.proposal.update({
-    where: { id },
-    data: {
-      ...talk,
-      speakers: { set: [], connect: [{ id: uid }] },
-      formats: { set: [], connect: formats.map((id) => ({ id })) },
-      categories: { set: [], connect: categories.map((id) => ({ id })) },
-    },
-  });
+  if (method === 'DELETE') {
+    await db.proposal.delete({ where: { id } });
+    return redirect(`/${eventSlug}/proposals`);
+  } else {
+    const result = validateProposalForm(form, event.formatsRequired, event.categoriesRequired);
+    if (!result.success) {
+      return result.error.flatten();
+    }
 
-  if (proposal.talkId) {
-    await db.talk.update({
-      where: { id: proposal.talkId },
-      data: talk,
+    const { formats, categories, ...talk } = result.data;
+
+    await db.proposal.update({
+      where: { id },
+      data: {
+        ...talk,
+        speakers: { set: [], connect: [{ id: uid }] },
+        formats: { set: [], connect: formats.map((id) => ({ id })) },
+        categories: { set: [], connect: categories.map((id) => ({ id })) },
+      },
     });
-  }
 
-  return redirect(`/${eventSlug}/proposals/${id}`);
+    if (proposal.talkId) {
+      await db.talk.update({
+        where: { id: proposal.talkId },
+        data: talk,
+      });
+    }
+
+    return redirect(`/${eventSlug}/proposals/${id}`);
+  }
 };
 
 export function validateProposalForm(form: FormData, formatsRequired: boolean, categoriesRequired: boolean) {

@@ -5,6 +5,7 @@ import { Container } from '~/components/layout/Container';
 import { ButtonLink } from '../../../components/Buttons';
 import { IconLabel } from '../../../components/IconLabel';
 import { Markdown } from '../../../components/Markdown';
+import { DeleteProposalButton } from '../../../components/proposal/DeleteProposalButton';
 import { loadSpeakerProposal, SpeakerProposal } from '../../../features/event-proposals/view-proposal.server';
 
 export const loader = loadSpeakerProposal;
@@ -29,7 +30,8 @@ export default function EventSpeakerProposalRoute() {
             )}
           </div>
         </div>
-        <div className="flex-shrink-0">
+        <div className="flex-shrink-0 space-x-4">
+          <DeleteProposalButton />
           {proposal.status === 'DRAFT' ? (
             <ButtonLink to={`../submission/${proposal.talkId}`}>Submit proposal</ButtonLink>
           ) : (
