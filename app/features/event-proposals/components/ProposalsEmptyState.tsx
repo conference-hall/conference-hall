@@ -20,7 +20,7 @@ export function ProposalsEmptyState() {
       </svg>
       <h3 className="mt-2 text-sm font-medium text-gray-900">No submitted proposals yet!</h3>
       <p className="mt-1 text-sm text-gray-600">Get started by submitting your first proposal.</p>
-      <div className="mt-6">
+      <div className="mt-12">
         <ButtonLink to="../submission">Submit a proposal</ButtonLink>
       </div>
     </div>

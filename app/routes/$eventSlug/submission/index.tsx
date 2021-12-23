@@ -6,6 +6,7 @@ import { TalksEmptyState } from '../../../features/event-submission/components/T
 import { TalksSelection } from '../../../features/event-submission/components/TalksSelection';
 import { Container } from '../../../components/layout/Container';
 import { AlertInfo } from '../../../components/Alerts';
+import { MaxProposalsReached } from '../../../features/event-submission/components/MaxProposalsReached';
 
 export const handle = { step: 'selection' };
 
@@ -13,6 +14,22 @@ export const loader = loadSelection;
 
 export default function EventSubmitRoute() {
   const data = useLoaderData<SelectionStep>();
+
+  if (data.maxProposals && data.submittedProposals >= data.maxProposals) {
+    return (
+      <Container className="mt-8">
+        <MaxProposalsReached maxProposals={data.maxProposals} />
+      </Container>
+    );
+  }
+
+  if (data?.talks?.length === 0) {
+    return (
+      <Container className="mt-8">
+        <TalksEmptyState />
+      </Container>
+    );
+  }
 
   return (
     <Container className="my-8 space-y-8">
@@ -35,7 +52,7 @@ export default function EventSubmitRoute() {
       )}
 
       <div>
-        {data?.talks.length === 0 ? <TalksEmptyState /> : <TalksSelection talks={data?.talks} />}
+        <TalksSelection talks={data?.talks} />
       </div>
     </Container>
   );
