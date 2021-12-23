@@ -1,6 +1,7 @@
 import { LoaderFunction } from 'remix';
 import { db } from '../../services/db';
 import { getCfpState } from '../../utils/event';
+import { requireUserSession } from '../auth/auth.server';
 
 export type SubmitSteps = Array<{
   key: string;
@@ -9,7 +10,9 @@ export type SubmitSteps = Array<{
   enabled: boolean;
 }>;
 
-export const loadSubmissionSteps: LoaderFunction = async ({ params }) => {
+export const loadSubmissionSteps: LoaderFunction = async ({ request, params }) => {
+  await requireUserSession(request);
+
   const { eventSlug, talkId } = params;
 
   const event = await db.event.findUnique({

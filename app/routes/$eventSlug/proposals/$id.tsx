@@ -2,6 +2,7 @@ import { CalendarIcon, ExclamationIcon } from '@heroicons/react/solid';
 import { formatRelative } from 'date-fns';
 import { useCatch, useLoaderData } from 'remix';
 import { Container } from '~/components/layout/Container';
+import { useEvent } from '../../$eventSlug';
 import { ButtonLink } from '../../../components/Buttons';
 import { IconLabel } from '../../../components/IconLabel';
 import { Markdown } from '../../../components/Markdown';
@@ -11,7 +12,9 @@ import { loadSpeakerProposal, SpeakerProposal } from '../../../features/event-pr
 export const loader = loadSpeakerProposal;
 
 export default function EventSpeakerProposalRoute() {
+  const event = useEvent();
   const proposal = useLoaderData<SpeakerProposal>();
+
   return (
     <Container className="mt-8">
       <div className="flex justify-between items-center flex-wrap sm:flex-nowrap">
@@ -30,14 +33,17 @@ export default function EventSpeakerProposalRoute() {
             )}
           </div>
         </div>
-        <div className="flex-shrink-0 space-x-4">
-          <DeleteProposalButton />
-          {proposal.status === 'DRAFT' ? (
-            <ButtonLink to={`../submission/${proposal.talkId}`}>Submit proposal</ButtonLink>
-          ) : (
-            <ButtonLink to="edit">Edit proposal</ButtonLink>
-          )}
-        </div>
+
+        {event.cfpState === 'OPENED' && (
+          <div className="flex-shrink-0 space-x-4">
+            <DeleteProposalButton />
+            {proposal.status === 'DRAFT' ? (
+              <ButtonLink to={`../submission/${proposal.talkId}`}>Submit proposal</ButtonLink>
+            ) : (
+              <ButtonLink to="edit">Edit proposal</ButtonLink>
+            )}
+          </div>
+        )}
       </div>
 
       <div className="mt-8 bg-white border border-gray-200 overflow-hidden sm:rounded-lg">

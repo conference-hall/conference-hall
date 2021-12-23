@@ -1,4 +1,4 @@
-import { useLoaderData } from 'remix';
+import { useCatch, useLoaderData } from 'remix';
 import { SelectionStep, loadSelection } from '~/features/event-submission/selection.server';
 import { ButtonLink } from '~/components/Buttons';
 import { Heading } from '../../../components/Heading';
@@ -54,6 +54,16 @@ export default function EventSubmitRoute() {
       <div>
         <TalksSelection talks={data?.talks} />
       </div>
+    </Container>
+  );
+}
+
+export function CatchBoundary() {
+  const caught = useCatch();
+  return (
+    <Container className="my-8 px-8 py-32 text-center">
+      <h1 className="text-8xl font-black text-indigo-400">{caught.status}</h1>
+      <p className="mt-10 text-4xl font-bold text-gray-600">{caught.data}</p>
     </Container>
   );
 }

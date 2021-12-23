@@ -1,14 +1,14 @@
-import { Outlet, useCatch, useLoaderData } from 'remix';
+import { Outlet, useCatch, useLoaderData, useOutletContext } from 'remix';
 import { ButtonLink } from '../components/Buttons';
 import { Container } from '../components/layout/Container';
 import { Header } from '../features/event-page/components/Header';
 import { EventTabs } from '../features/event-page/components/Tabs';
-import { EventHeader, loadEventHeader } from '../features/event-page/event-header.server';
+import { EventData, loadEvent } from '../features/event-page/event.server';
 
-export const loader = loadEventHeader;
+export const loader = loadEvent;
 
 export default function EventRoute() {
-  const data = useLoaderData<EventHeader>();
+  const data = useLoaderData<EventData>();
   return (
     <>
       <Header
@@ -19,9 +19,13 @@ export default function EventRoute() {
         conferenceEnd={data.conferenceEnd}
       />
       <EventTabs slug={data.slug} type={data.type} cfpState={data.cfpState} surveyEnabled={data.surveyEnabled} />
-      <Outlet />
+      <Outlet context={data} />
     </>
   );
+}
+
+export function useEvent() {
+  return useOutletContext<EventData>();
 }
 
 export function CatchBoundary() {
@@ -31,7 +35,7 @@ export function CatchBoundary() {
       <h1 className="text-8xl font-black text-indigo-400">{caught.status}</h1>
       <p className="mt-10 text-4xl font-bold text-gray-600">{caught.data}</p>
       <ButtonLink to="/search" variant="secondary" className="mt-16">
-        Find your event
+        Search for event
       </ButtonLink>
     </Container>
   );

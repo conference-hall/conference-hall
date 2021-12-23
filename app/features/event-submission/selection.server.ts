@@ -1,6 +1,7 @@
 import { requireUserSession } from '../auth/auth.server';
 import { db } from '../../services/db';
 import { json, LoaderFunction } from 'remix';
+import { getCfpState } from '../../utils/event';
 
 export type SelectionStep = {
   maxProposals: number | null;
@@ -17,10 +18,13 @@ export const loadSelection: LoaderFunction = async ({ request, params }) => {
   const uid = await requireUserSession(request);
 
   const event = await db.event.findUnique({
-    select: { id: true, maxProposals: true },
+    select: { id: true, maxProposals: true, type: true, cfpStart: true, cfpEnd: true },
     where: { slug: params.eventSlug },
   });
   if (!event) throw new Response('Event not found.', { status: 404 });
+
+  const isCfpOpen = getCfpState(event.type, event.cfpStart, event.cfpEnd) === 'OPENED';
+  if (!isCfpOpen) throw new Response('CFP is not opened!', { status: 403 });
 
   const submittedProposals = await db.proposal.count({
     where: {

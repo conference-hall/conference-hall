@@ -1,4 +1,4 @@
-import { requireAuthUserId } from '../auth/auth.server';
+import { requireUserSession } from '../auth/auth.server';
 import { db } from '../../services/db';
 import { LoaderFunction } from 'remix';
 
@@ -12,7 +12,7 @@ export type SpeakerProposals = Array<{
 }>;
 
 export const loadSpeakerProposals: LoaderFunction = async ({ request, params }) => {
-  const uid = await requireAuthUserId(request);
+  const uid = await requireUserSession(request);
 
   const event = await db.event.findUnique({
     select: { id: true },

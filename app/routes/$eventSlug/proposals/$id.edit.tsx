@@ -16,6 +16,7 @@ export const action = editProposal;
 
 export default function EditProposalRoute() {
   const data = useLoaderData<SpeakerEditProposal>();
+
   return (
     <Container className="mt-8">
       <Form method="post" className="mt-8 bg-white border border-gray-200 overflow-hidden sm:rounded-lg">
