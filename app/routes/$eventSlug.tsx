@@ -2,6 +2,7 @@ import { Outlet, useCatch, useLoaderData } from 'remix';
 import { ButtonLink } from '../components/Buttons';
 import { Container } from '../components/layout/Container';
 import { Header } from '../features/event-page/components/Header';
+import { EventTabs } from '../features/event-page/components/Tabs';
 import { EventHeader, loadEventHeader } from '../features/event-page/event-header.server';
 
 export const loader = loadEventHeader;
@@ -11,15 +12,13 @@ export default function EventRoute() {
   return (
     <>
       <Header
-        slug={data.slug}
         type={data.type}
         name={data.name}
         address={data.address}
         conferenceStart={data.conferenceStart}
         conferenceEnd={data.conferenceEnd}
-        cfpState={data.cfpState}
-        surveyEnabled={data.surveyEnabled}
       />
+      <EventTabs slug={data.slug} type={data.type} cfpState={data.cfpState} surveyEnabled={data.surveyEnabled} />
       <Outlet />
     </>
   );
@@ -31,7 +30,9 @@ export function CatchBoundary() {
     <Container className="mt-8 px-8 py-32 text-center">
       <h1 className="text-8xl font-black text-indigo-400">{caught.status}</h1>
       <p className="mt-10 text-4xl font-bold text-gray-600">{caught.data}</p>
-      <ButtonLink to="/search" variant="secondary" className="mt-16">Find your event</ButtonLink>
+      <ButtonLink to="/search" variant="secondary" className="mt-16">
+        Find your event
+      </ButtonLink>
     </Container>
   );
 }

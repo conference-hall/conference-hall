@@ -1,21 +1,23 @@
 import { json, LoaderFunction } from 'remix';
 import { db } from '../../services/db';
-import { getCfpState } from '../../utils/event';
+import { CfpState, getCfpState } from '../../utils/event';
 
 export interface EventHeader {
+  id: string;
   slug: string;
   type: 'CONFERENCE' | 'MEETUP';
   name: string;
   address: string | null;
   conferenceStart?: string;
   conferenceEnd?: string;
-  cfpState: string;
+  cfpState: CfpState;
   surveyEnabled: boolean;
 }
 
 export const loadEventHeader: LoaderFunction = async ({ params }) => {
   const event = await db.event.findUnique({
     select: {
+      id: true,
       slug: true,
       type: true,
       name: true,
@@ -32,6 +34,7 @@ export const loadEventHeader: LoaderFunction = async ({ params }) => {
   if (!event) throw new Response('Event not found.', { status: 404 });
 
   return json<EventHeader>({
+    id: event.id,
     slug: event.slug,
     name: event.name,
     type: event.type,
