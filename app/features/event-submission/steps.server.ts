@@ -1,4 +1,4 @@
-import { LoaderFunction } from 'remix';
+import { json, LoaderFunction } from 'remix';
 import { db } from '../../services/db';
 import { getCfpState } from '../../utils/event';
 import { requireUserSession } from '../auth/auth.server';
@@ -41,5 +41,5 @@ export const loadSubmissionSteps: LoaderFunction = async ({ request, params }) =
     { key: 'submission', name: 'Submission', path: `/${eventSlug}/submission/${talkId}/submit`, enabled: true },
   ];
 
-  return steps.filter((step) => step.enabled);
+  return json<SubmitSteps>(steps.filter((step) => step.enabled));
 }

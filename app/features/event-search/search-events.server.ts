@@ -1,5 +1,5 @@
-import { DataFunctionArgs } from '@remix-run/server-runtime';
 import { EventVisibility } from '@prisma/client';
+import { json, LoaderFunction } from 'remix';
 import { CfpState, getCfpState } from '~/utils/event';
 import { db } from '../../services/db';
 
@@ -14,7 +14,7 @@ export type SearchEvents = {
   }>;
 };
 
-export async function searchEvents({ request }: DataFunctionArgs): Promise<SearchEvents> {
+export const searchEvents: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
   const terms = url.searchParams.get('terms') ?? undefined;
 
@@ -28,7 +28,7 @@ export async function searchEvents({ request }: DataFunctionArgs): Promise<Searc
     orderBy: { cfpStart: 'desc' },
   });
 
-  return {
+  return json<SearchEvents>({
     terms,
     results: events.map((event) => ({
       slug: event.slug,
@@ -37,5 +37,5 @@ export async function searchEvents({ request }: DataFunctionArgs): Promise<Searc
       address: event.address,
       cfpState: getCfpState(event.type, event.cfpStart, event.cfpEnd),
     })),
-  };
+  });
 }

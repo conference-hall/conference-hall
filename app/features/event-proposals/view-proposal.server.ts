@@ -1,6 +1,6 @@
 import { requireUserSession } from '../auth/auth.server';
 import { db } from '../../services/db';
-import { LoaderFunction } from 'remix';
+import { json, LoaderFunction } from 'remix';
 import { jsonToArray } from '../../utils/prisma';
 import LANGUAGES from '../../utils/languages.json';
 
@@ -12,7 +12,7 @@ function getLanguage(key: string) {
 
 export type SpeakerProposal = {
   id: string;
-  talkId: string;
+  talkId: string | null;
   title: string;
   abstract: string;
   status: string;
@@ -46,7 +46,7 @@ export const loadSpeakerProposal: LoaderFunction = async ({ request, params }) =
 
   const languages = jsonToArray(proposal.languages);
 
-  return {
+  return json<SpeakerProposal>({
     id: proposal.id,
     talkId: proposal.talkId,
     title: proposal.title,
@@ -55,9 +55,9 @@ export const loadSpeakerProposal: LoaderFunction = async ({ request, params }) =
     level: proposal.level,
     languages: languages.length > 0 ? getLanguage(languages[0]) : null,
     references: proposal.references,
-    createdAt: proposal.createdAt,
+    createdAt: proposal.createdAt.toISOString(),
     formats: proposal.formats.map(({ name }) => name),
     categories: proposal.categories.map(({ name }) => name),
     speakers: proposal.speakers.map((speaker) => ({ id: speaker.id, name: speaker.name, photoURL: speaker.photoURL })),
-  };
+  });
 };

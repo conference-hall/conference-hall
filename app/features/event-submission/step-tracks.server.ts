@@ -1,4 +1,4 @@
-import { ActionFunction, LoaderFunction, redirect } from 'remix';
+import { ActionFunction, json, LoaderFunction, redirect } from 'remix';
 import { z } from 'zod';
 import { db } from '../../services/db';
 import { requireUserSession } from '../auth/auth.server';
@@ -28,14 +28,14 @@ export const loadTracks: LoaderFunction = async ({ request, params }) => {
   });
   if (!proposal) throw new Response('Proposal not found', { status: 404 });
 
-  return {
+  return json<TracksData>({
     formats: event.formats ?? [],
     categories: event.categories ?? [],
     initialValues: {
       formats: proposal.formats.map((f) => f.id),
       categories: proposal.categories.map((c) => c.id),
     },
-  };
+  });
 };
 
 export const saveTracks: ActionFunction = async ({ request, params }) => {

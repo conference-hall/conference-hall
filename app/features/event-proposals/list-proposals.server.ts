@@ -1,11 +1,11 @@
 import { requireUserSession } from '../auth/auth.server';
 import { db } from '../../services/db';
-import { LoaderFunction } from 'remix';
+import { json, LoaderFunction } from 'remix';
 
 export type SpeakerProposals = Array<{
   id: string;
   title: string;
-  talkId: string;
+  talkId: string | null;
   status: string;
   createdAt: string;
   speakers: Array<{ id: string; name: string | null; photoURL: string | null }>;
@@ -29,12 +29,18 @@ export const loadSpeakerProposals: LoaderFunction = async ({ request, params }) 
     orderBy: { createdAt: 'desc' },
   });
 
-  return proposals.map((proposal) => ({
-    id: proposal.id,
-    title: proposal.title,
-    talkId: proposal.talkId,
-    status: proposal.status,
-    createdAt: proposal.createdAt,
-    speakers: proposal.speakers.map((speaker) => ({ id: speaker.id, name: speaker.name, photoURL: speaker.photoURL })),
-  }));
+  return json<SpeakerProposals>(
+    proposals.map((proposal) => ({
+      id: proposal.id,
+      title: proposal.title,
+      talkId: proposal.talkId,
+      status: proposal.status,
+      createdAt: proposal.createdAt.toISOString(),
+      speakers: proposal.speakers.map((speaker) => ({
+        id: speaker.id,
+        name: speaker.name,
+        photoURL: speaker.photoURL,
+      })),
+    }))
+  );
 };
