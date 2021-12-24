@@ -24,11 +24,9 @@ export default function EventSurveyRoute() {
       </Heading>
       <Form method="post">
         {result?.message && <AlertSuccess className="mt-8">{result?.message}</AlertSuccess>}
-        <div className="bg-white border border-gray-200 rounded-md px-6 mt-8">
-          <SurveyForm questions={questions} initialValues={initialValues} />
-          <div className="py-5 text-right">
-            <Button type="submit">Save survey</Button>
-          </div>
+        <SurveyForm questions={questions} initialValues={initialValues} />
+        <div className="py-5 mt-12 text-right border-t border-gray-200">
+          <Button type="submit">Save survey</Button>
         </div>
       </Form>
     </Container>

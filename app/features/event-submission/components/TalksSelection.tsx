@@ -17,7 +17,7 @@ type TalksSelectionProps = {
 
 export function TalksSelection({ talks }: TalksSelectionProps) {
   return (
-      <ul role="list" className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <ul role="list" className="grid grid-cols-1 gap-6 sm:grid-cols-2">
         {talks.map((talk) => (
           <li key={talk.id} className="col-span-1 bg-white rounded-lg border border-gray-200">
             <Link to={talk.id} className="block hover:bg-indigo-50 rounded-lg">

@@ -7,7 +7,7 @@ type ProposalsListProps = {
   proposals: Array<{
     id: string;
     title: string;
-    talkId: string;
+    talkId: string | null;
     status: string;
     createdAt: string;
     speakers: Array<{
@@ -20,7 +20,7 @@ type ProposalsListProps = {
 
 export function ProposalsList({ proposals }: ProposalsListProps) {
   return (
-    <ul role="list" className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <ul role="list" className="grid grid-cols-1 gap-6 sm:grid-cols-2">
       {proposals.map((proposal) => (
         <li key={proposal.id} className="col-span-1 bg-white rounded-lg border border-gray-200">
           <Link to={proposal.id} className="block hover:bg-indigo-50 rounded-lg">

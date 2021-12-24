@@ -17,9 +17,7 @@ export default function EventSubmitRoute() {
     <Container className="my-8 grid grid-cols-1 items-start sm:gap-8">
       <SectionPanel id="talk-submission" title="Talk submission">
         <Steps steps={steps} currentStep={currentStep} />
-        <div className="overflow-hidden sm:rounded-md">
-          <Outlet />
-        </div>
+        <Outlet />
       </SectionPanel>
     </Container>
   );
