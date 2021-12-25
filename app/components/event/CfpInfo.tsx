@@ -1,6 +1,6 @@
 import cn from 'classnames';
 import { CfpState, formatCFPDate, formatCFPState } from '../../utils/event';
-import { Heading } from '../Heading';
+import { H2, Text } from '../Typography';
 
 type CfpLabelProps = { cfpState: CfpState; className?: string };
 
@@ -17,12 +17,13 @@ type CfpHeaderProps = { cfpState: CfpState; cfpStart?: string; cfpEnd?: string }
 
 export function CfpHeader({ cfpState, cfpStart, cfpEnd }: CfpHeaderProps) {
   return (
-    <Heading description={formatCFPDate(cfpState, cfpStart, cfpEnd)}>
-      <span className="flex items-center space-x-3">
+    <div>
+      <H2 className="flex items-center space-x-3">
         <CfpIcon cfpState={cfpState} />
         <span className="block">{formatCFPState(cfpState)}</span>
-      </span>
-    </Heading>
+      </H2>
+      <Text variant="secondary" className="mt-1">{formatCFPDate(cfpState, cfpStart, cfpEnd)}</Text>
+    </div>
   );
 }
 

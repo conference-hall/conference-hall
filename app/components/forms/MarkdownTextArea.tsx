@@ -3,6 +3,7 @@ import cn from 'classnames';
 import { Dialog } from '@headlessui/react';
 import { Button } from '../Buttons';
 import { Markdown } from '../Markdown';
+import { XIcon } from '@heroicons/react/solid';
 
 type MarkdownTextAreaProps = {
   label: string;
@@ -83,14 +84,24 @@ export function MarkdownTextArea({
   );
 }
 
-type MardownPreviewModalProps = { markdown?: string | null; isOpen: boolean; onClose: (value: boolean) => void };
+type MardownPreviewModalProps = { markdown?: string | null; isOpen: boolean; onClose: () => void };
 
 function MardownPreviewModal({ markdown, isOpen, onClose }: MardownPreviewModalProps) {
   return (
     <Dialog className="fixed z-10 inset-0 overflow-y-auto" open={isOpen} onClose={onClose}>
       <div className="block p-0 min-h-screen pt-4 px-4 pb-20 text-center">
         <Dialog.Overlay className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
-        <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left shadow-xl transform sm:my-8 sm:align-middle w-full md:max-w-5xl sm:p-6">
+        <div className="hidden sm:block absolute top-0 right-0 pt-4 pr-4">
+          <button
+            type="button"
+            className="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            onClick={onClose}
+          >
+            <span className="sr-only">Close</span>
+            <XIcon className="h-6 w-6" aria-hidden="true" />
+          </button>
+        </div>
+        <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left shadow-xl transform sm:my-8 sm:align-middle w-full md:max-w-5xl sm:p-6 overflow-scroll">
           {markdown ? <Markdown source={markdown} /> : <p>Nothing to preview.</p>}
         </div>
       </div>

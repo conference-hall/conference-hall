@@ -6,6 +6,7 @@ import { ButtonLink } from '../../components/Buttons';
 import { CfpHeader } from '../../components/event/CfpInfo';
 import { ExternalLink } from '../../components/Links';
 import { Markdown } from '../../components/Markdown';
+import { H2, Text } from '../../components/Typography';
 
 export default function EventRoute() {
   const event = useEvent();
@@ -34,7 +35,7 @@ export default function EventRoute() {
 
       <section className="py-16 border-b border-gray-200 bg-gray-50">
         <Container>
-          <Markdown source={event.description} />
+          <Markdown source={event.description} size="base" />
           {event.websiteUrl || event.contactEmail || event.codeOfConductUrl ? (
             <div className="mt-10 flex space-x-16">
               {event.websiteUrl && (
@@ -62,14 +63,20 @@ export default function EventRoute() {
           <Container className="grid grid-cols-2 gap-16">
             {event.formats.length > 0 ? (
               <div>
-                <h3 className="text-lg leading-6 font-medium text-gray-900">Formats</h3>
-                <p className="mt-1 max-w-2xl text-sm text-gray-500">Talks formats proposed by the conference.</p>
-                <div className="mt-4 text-sm text-gray-900">
+                <H2>Formats</H2>
+                <Text variant="secondary" className="mt-1">
+                  Talks formats proposed by the conference.
+                </Text>
+                <div className="mt-4">
                   <dl className="border border-gray-200 rounded-md divide-y divide-gray-200 bg-white">
                     {event.formats.map((f) => (
-                      <div key={f.name} className="pl-3 pr-4 py-3 text-sm">
-                        <dt className="text-sm font-medium text-gray-500">{f.name} </dt>
-                        <dd className="mt-1 text-sm text-gray-900 line-clamp-2">{f.description}</dd>
+                      <div key={f.name} className="pl-3 pr-4 py-3">
+                        <Text as="dt" variant="secondary" className="font-semibold">
+                          {f.name}
+                        </Text>
+                        <Text as="dd" className="mt-1">
+                          {f.description}
+                        </Text>
                       </div>
                     ))}
                   </dl>
@@ -79,16 +86,20 @@ export default function EventRoute() {
 
             {event.categories.length > 0 ? (
               <div>
-                <h3 className="text-lg leading-6 font-medium text-gray-900">Categories</h3>
-                <p className="mt-1 max-w-2xl text-sm text-gray-500">
+                <H2>Categories</H2>
+                <Text variant="secondary" className="mt-1">
                   Different categories and tracks proposed by the conference.
-                </p>
-                <div className="mt-4 text-sm text-gray-900">
+                </Text>
+                <div className="mt-4">
                   <dl role="list" className="border border-gray-200 rounded-md divide-y divide-gray-200 bg-white">
                     {event.categories.map((c) => (
-                      <div key={c.name} className="pl-3 pr-4 py-3 text-sm">
-                        <dt className="text-sm font-medium text-gray-500">{c.name} </dt>
-                        <dd className="mt-1 text-sm text-gray-900 line-clamp-2">{c.description}</dd>
+                      <div key={c.name} className="pl-3 pr-4 py-3">
+                        <Text as="dt" variant="secondary" className="font-semibold">
+                          {c.name}
+                        </Text>
+                        <Text as="dd" className="mt-1">
+                          {c.description}
+                        </Text>
                       </div>
                     ))}
                   </dl>

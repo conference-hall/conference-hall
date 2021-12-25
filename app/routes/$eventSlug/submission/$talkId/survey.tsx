@@ -1,8 +1,8 @@
 import { ActionFunction, Form, redirect, useLoaderData } from 'remix';
 import { Button, ButtonLink } from '~/components/Buttons';
-import { Heading } from '~/components/Heading';
 import { usePreviousStep } from '~/features/event-submission/hooks/usePreviousStep';
 import { loadSurvey, saveSurvey, SurveyQuestionsForm } from '~/features/event-submission/step-survey.server';
+import { H2, Text } from '../../../../components/Typography';
 import { SurveyForm } from '../../../../features/event-submission/components/SurveyForm';
 
 export const handle = { step: 'survey' };
@@ -22,9 +22,12 @@ export default function SubmissionSurveyRoute() {
   return (
     <Form method="post">
       <div className="px-8 py-6 sm:py-10">
-        <Heading description="This information will be displayed publicly so be careful what you share.">
-          We have some questions for you.
-        </Heading>
+        <div>
+          <H2>We have some questions for you.</H2>
+          <Text variant="secondary" className="mt-1">
+            This information will be displayed publicly so be careful what you share.
+          </Text>
+        </div>
         <SurveyForm questions={questions} initialValues={initialValues} />
       </div>
       <div className="px-4 py-5 text-right sm:px-6">

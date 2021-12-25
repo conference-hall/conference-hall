@@ -9,6 +9,7 @@ import {
 import { CategoriesForm } from '../../../components/proposal/CategoriesForm';
 import { ProposalForm } from '../../../components/proposal/ProposalForm';
 import { FormatsForm } from '../../../components/proposal/FormatsForm';
+import { H2 } from '../../../components/Typography';
 
 export const loader = loadSpeakerEditProposal;
 
@@ -22,7 +23,7 @@ export default function EditProposalRoute() {
       <Form method="post" className="mt-8 bg-white border border-gray-200 overflow-hidden sm:rounded-lg">
         <div className="px-4 py-5 sm:px-6 -ml-4 -mt-4 border-b border-gray-200 flex justify-between items-center flex-wrap sm:flex-nowrap">
           <div className="ml-4 mt-4">
-            <h3 className="text-lg leading-6 font-medium text-gray-900">{data.proposal.title}</h3>
+            <H2>{data.proposal.title}</H2>
           </div>
         </div>
 

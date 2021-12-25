@@ -7,6 +7,7 @@ import { ButtonLink } from '../../../components/Buttons';
 import { IconLabel } from '../../../components/IconLabel';
 import { Markdown } from '../../../components/Markdown';
 import { DeleteProposalButton } from '../../../components/proposal/DeleteProposalButton';
+import { H2 } from '../../../components/Typography';
 import { loadSpeakerProposal, SpeakerProposal } from '../../../features/event-proposals/view-proposal.server';
 
 export const loader = loadSpeakerProposal;
@@ -18,9 +19,9 @@ export default function EventSpeakerProposalRoute() {
   return (
     <Container className="mt-8">
       <div className="flex justify-between items-center flex-wrap sm:flex-nowrap">
-        <div className="">
-          <h3 className="text-lg leading-6 font-medium text-gray-900">{proposal.title}</h3>
-          <div className="mt-1 text-sm text-gray-500">
+        <div>
+          <H2>{proposal.title}</H2>
+          <div className="mt-1">
             {proposal.status === 'DRAFT' ? (
               <IconLabel icon={ExclamationIcon} className="text-sm text-yellow-600">
                 This proposal is still in draft. Don't forget to submit it.

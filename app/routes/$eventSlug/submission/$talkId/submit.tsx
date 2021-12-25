@@ -4,6 +4,7 @@ import { Button } from '~/components/Buttons';
 import { Checkbox } from '~/components/forms/Checkboxes';
 import { loadProposal, SubmitForm, submitProposal } from '~/features/event-submission/step-submit.server';
 import { ExternalLink } from '../../../../components/Links';
+import { H1, Text } from '../../../../components/Typography';
 
 export const handle = { step: 'submission' };
 
@@ -18,26 +19,31 @@ export default function SubmissionSubmitRoute() {
   return (
     <Form method="post">
       <div className="flex flex-col items-center py-20">
-        <p className="text-3xl leading-6 font-medium text-gray-900">{data.title}</p>
-        <ul role="list" className="mt-6 divide-y divide-gray-200 sm:col-span-2">
+        <H1>{data.title}</H1>
+
+        <div className="mt-2 flex items-center overflow-hidden -space-x-1">
           {data.speakers.map((speaker) => (
-            <li key={speaker.name} className="flex items-center">
-              <img
-                className="h-10 w-10 rounded-full"
-                src={speaker.photoURL || 'http://placekitten.com/100/100'}
-                alt={speaker.name || 'Speaker'}
-              />
-              <div className="ml-3">
-                <p className="text-sm font-medium text-gray-900">{speaker.name}</p>
-              </div>
-            </li>
+            <img
+              key={speaker.name}
+              className="inline-block h-6 w-6 rounded-full ring-2 ring-white"
+              src={speaker.photoURL || 'http://placekitten.com/100/100'}
+              alt={speaker.name || 'Speaker'}
+            />
           ))}
-        </ul>
-        <p className="mt-4 text-sm text-gray-500">{data.formats.join(', ')}</p>
-        <p className="mt-4 text-sm text-gray-500">{data.categories.join(', ')}</p>
+          <span className="pl-3 text-sm test-gray-500 truncate">
+            by {data.speakers.map((s) => s.name).join(', ')}
+          </span>
+        </div>
+
+        <Text variant="secondary" className="mt-8">
+          {data.formats.join(', ')}
+        </Text>
+        <Text variant="secondary" className="mt-4">
+          {data.categories.join(', ')}
+        </Text>
         {data.codeOfConductUrl && (
           <Checkbox
-            className="mt-16"
+            className="mt-16 font-medium"
             id="cod-agreement"
             name="cod-agreement"
             value="agree"

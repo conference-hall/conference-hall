@@ -1,12 +1,12 @@
 import { useCatch, useLoaderData } from 'remix';
 import { SelectionStep, loadSelection } from '~/features/event-submission/selection.server';
 import { ButtonLink } from '~/components/Buttons';
-import { Heading } from '../../../components/Heading';
 import { TalksEmptyState } from '../../../features/event-submission/components/TalksEmptyState';
 import { TalksSelection } from '../../../features/event-submission/components/TalksSelection';
 import { Container } from '../../../components/layout/Container';
 import { AlertInfo } from '../../../components/Alerts';
 import { MaxProposalsReached } from '../../../features/event-submission/components/MaxProposalsReached';
+import { H2, Text } from '../../../components/Typography';
 
 export const handle = { step: 'selection' };
 
@@ -34,7 +34,10 @@ export default function EventSubmitRoute() {
   return (
     <Container className="my-8 space-y-8">
       <div className="flex justify-between items-center flex-wrap sm:flex-nowrap">
-        <Heading description="Select or create a new proposal to submit.">Proposal selection</Heading>
+        <div>
+          <H2>Proposal selection</H2>
+          <Text variant="secondary" className="mt-1">Select or create a new proposal to submit.</Text>
+        </div>
         {data?.talks.length !== 0 && (
           <div className="flex-shrink-0">
             <ButtonLink to="new">New proposal</ButtonLink>
