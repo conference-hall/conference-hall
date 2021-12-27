@@ -26,7 +26,7 @@ export default function EventRoute() {
       </section>
 
       <img
-        src={event.bannerUrl || 'https://placekitten.com/g/1200/300'}
+        src={event.bannerUrl || 'https://placekitten.com/1200/300'}
         className="w-full object-cover lg:h-64 opacity-80 bg-gray-50"
         height="256px"
         aria-hidden="true"

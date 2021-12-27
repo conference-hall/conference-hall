@@ -67,53 +67,59 @@ export async function requireUserSession(request: Request) {
       throw redirect(getLoginUrl(request))
     }
     const token = await admin.auth().verifySessionCookie(firebaseSession, true)
+    if (!token.uid) {
+      throw destroyUserSession(request);
+    }
     return token.uid
   } catch (error)  {
     throw redirect(getLoginUrl(request))
   }
 }
 
-export async function getAuthUserId(request: Request) {
+export type AuthUser = {
+  id: string
+  name: string | null
+  email: string | null
+  picture: string | null
+  bio: string | null
+  references: string | null
+  company: string | null
+  github: string | null
+  twitter: string | null
+  address: string | null
+  lat: number | null
+  lng: number | null
+  timezone: string | null
+}
+
+export async function getAuthUser(request: Request): Promise<AuthUser | null> {
   const cookie = request.headers.get('Cookie')
   const session = await storage.getSession(cookie);
   const uid = session.get('uid')
   if (!uid || typeof uid !== "string") {
     return null;
   };
-  return uid
-}
-
-export async function requireAuthUserId(request: Request) {
-  const uid = await getAuthUserId(request);
-  if (!uid) {
-    throw destroyUserSession(request);
-  }
-  return uid;
-}
-
-export class AuthUser {
-  id: string
-  name: string | null
-  email: string | null
-  picture: string | null
-
-  constructor(user: User) {
-    this.id = user.id
-    this.name = user.name
-    this.email = user.email
-    this.picture = user.photoURL
-  }
-}
-
-export async function getAuthUser(request: Request) {
-  const userId = await getAuthUserId(request);
-  if (!userId) return null;
-  const user = await db.user.findUnique({ where: { id: userId } });
+  const user = await db.user.findUnique({ where: { id: uid } });
   if (!user) return null;
-  return new AuthUser(user);
+
+  return {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    picture: user.photoURL,
+    bio: user.bio,
+    references: user.references,
+    company: user.company,
+    github: user.github,
+    twitter: user.twitter,
+    address: user.address,
+    lat: user.lat,
+    lng: user.lng,
+    timezone: user.timezone,
+  };
 }
 
-export async function requireAuthUser(request: Request) {
+export async function requireAuthUser(request: Request): Promise<AuthUser>  {
   const user = await getAuthUser(request);
   if (!user) {
     throw destroyUserSession(request);
