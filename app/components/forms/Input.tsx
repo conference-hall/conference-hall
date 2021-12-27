@@ -2,7 +2,7 @@ import cn from 'classnames';
 
 type InputProps = { label?: string; error?: string } & React.InputHTMLAttributes<HTMLInputElement>;
 
-export function Input({ id, label, className, error, ...rest }: InputProps) {
+export function Input({ id, label, type = 'text', className, error, ...rest }: InputProps) {
   const styles = cn(baseStyles, {
     [defaultStyles]: !error,
     [errorStyles]: !!error,
@@ -16,7 +16,7 @@ export function Input({ id, label, className, error, ...rest }: InputProps) {
         </label>
       )}
       <div className="mt-1">
-        <input id={id} className={styles} {...rest} />
+        <input id={id} type={type} className={styles} {...rest} />
       </div>
       {error && (
         <p className="mt-1 text-sm text-red-600" id="email-error">

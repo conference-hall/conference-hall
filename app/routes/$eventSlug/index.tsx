@@ -27,13 +27,13 @@ export default function EventRoute() {
 
       <img
         src={event.bannerUrl || 'https://placekitten.com/1200/300'}
-        className="w-full object-cover lg:h-64 opacity-80 bg-gray-50"
+        className="w-full object-cover lg:h-64 bg-gray-100"
         height="256px"
         aria-hidden="true"
         alt=""
       />
 
-      <section className="py-16 border-b border-gray-200 bg-gray-50">
+      <section className="py-16 border-b border-gray-200 bg-gray-100">
         <Container>
           <Markdown source={event.description} size="base" />
           {event.websiteUrl || event.contactEmail || event.codeOfConductUrl ? (

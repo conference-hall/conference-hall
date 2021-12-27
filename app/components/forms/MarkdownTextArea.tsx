@@ -7,7 +7,7 @@ import { XIcon } from '@heroicons/react/solid';
 
 type MarkdownTextAreaProps = {
   label: string;
-  description: string;
+  description?: string;
   defaultValue?: string | null;
   error?: string;
 } & React.TextareaHTMLAttributes<HTMLTextAreaElement>;
