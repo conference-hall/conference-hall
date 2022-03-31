@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from '@prisma/client';
 import { config } from './config';
 
 let db: PrismaClient;
@@ -15,7 +15,8 @@ if (config.isProduction) {
   db.$connect();
 } else {
   if (!global.__db) {
-    global.__db = new PrismaClient({ log: ["query"] });
+    const log: Prisma.LogLevel[] = config.isDevelopment ? ['query'] : [];
+    global.__db = new PrismaClient({ log });
     global.__db.$connect();
   }
   db = global.__db;

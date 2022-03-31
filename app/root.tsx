@@ -72,7 +72,7 @@ function Document({ children, title, user }: DocumentProps) {
         <Footer />
         <Scripts />
         <ScrollRestoration />
-        {process.env.NODE_ENV === 'development' && <LiveReload />}
+        <LiveReload />
       </body>
     </html>
   );

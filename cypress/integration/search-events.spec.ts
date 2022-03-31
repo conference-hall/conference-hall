@@ -1,12 +1,12 @@
-describe('Search events', () => {
+describe('Search conferences and meetups.', () => {
   beforeEach(() => {
     cy.task('db:reset').task('db:seed', 'search-events');
   });
 
   describe('From home page', () => {
-    it('redirect to search page and search events', () => {
+    it('redirect to search page and Search conferences and meetups.', () => {
       cy.visit('/');
-      cy.typeOn('Search events', 'Devfest{enter}');
+      cy.typeOn('Search conferences and meetups.', 'Devfest{enter}');
       cy.assertUrl('/search?terms=Devfest');
       cy.assertText('Devfest Nantes');
     });
@@ -21,29 +21,26 @@ describe('Search events', () => {
   
     it('search conference events', () => {
       cy.visit('/search');
-      cy.typeOn('Search events', 'Devfest{enter}');
+      cy.typeOn('Search conferences and meetups.', 'Devfest{enter}');
       cy.assertText('Devfest Nantes');
       cy.assertText('Nantes, France');
       cy.assertText('Call for paper is open');
-      cy.assertText('Conference');
     });
 
     it('search conference events', () => {
       cy.visit('/search');
-      cy.typeOn('Search events', 'devfest{enter}');
+      cy.typeOn('Search conferences and meetups.', 'devfest{enter}');
       cy.assertText('Devfest Nantes');
       cy.assertText('Nantes, France');
       cy.assertText('Call for paper is open');
-      cy.assertText('Conference');
     });
 
     it('search meetup events', () => {
       cy.visit('/search');
-      cy.typeOn('Search events', 'gdg{enter}');
+      cy.typeOn('Search conferences and meetups.', 'gdg{enter}');
       cy.assertText('GDG Nantes');
       cy.assertText('Nantes, France');
       cy.assertText('Call for paper is open');
-      cy.assertText('Meetup');
     });
 
     it('opens event page on click', () => {
@@ -54,7 +51,7 @@ describe('Search events', () => {
 
     it('displays no result page if no events found', () => {
       cy.visit('/search');
-      cy.typeOn('Search events', 'nothing{enter}');
+      cy.typeOn('Search conferences and meetups.', 'nothing{enter}');
       cy.assertText('No events found.');
     });
   });

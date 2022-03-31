@@ -12,10 +12,10 @@ describe('#formatEventType', () => {
   });
 });
 
-describe('#formatEventDates', () => {
-  it('return undefined when no dates', () => {
+describe('#formatConferenceDates', () => {
+  it('return conference type when no dates', () => {
     const message = formatConferenceDates('CONFERENCE');
-    expect(message).toBeUndefined();
+    expect(message).toBe('Conference');
   });
 
   it('return one day conference info', () => {
