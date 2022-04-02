@@ -4,9 +4,9 @@ import cn from 'classnames';
 import { Form } from 'remix';
 import { Link } from 'react-router-dom';
 
-type UserAvatarProps = { picture?: string | null };
+type UserAvatarProps = { email: string, picture?: string | null };
 
-export function UserAvatar({ picture }: UserAvatarProps) {
+export function UserAvatar({ email, picture }: UserAvatarProps) {
   return (
     <Menu as="div" className="ml-3 relative z-20">
       <div>
@@ -32,7 +32,7 @@ export function UserAvatar({ picture }: UserAvatarProps) {
         <Menu.Items className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none">
           <div className="px-4 py-3">
             <p className="text-sm">Signed in as</p>
-            <p className="text-sm font-medium text-gray-900 truncate">tom@example.com</p>
+            <p className="text-sm font-medium text-gray-900 truncate">{email}</p>
           </div>
           <div className="py-1">
             <Menu.Item>

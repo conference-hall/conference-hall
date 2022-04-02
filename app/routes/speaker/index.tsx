@@ -1,7 +1,7 @@
 import { LoaderFunction, useLoaderData } from 'remix';
 import { AuthUser, requireAuthUser } from '../../features/auth/auth.server';
 import { Container } from '../../components/layout/Container';
-import { H1, H2, H3, Text } from '../../components/Typography';
+import { H2, H3, Text } from '../../components/Typography';
 import { Markdown } from '../../components/Markdown';
 import { IconLabel } from '../../components/IconLabel';
 import { GlobeAltIcon, HomeIcon, LocationMarkerIcon } from '@heroicons/react/solid';

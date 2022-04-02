@@ -1,8 +1,9 @@
 import cn from 'classnames';
+import { forwardRef, Ref } from 'react';
 
 type InputProps = { label?: string; error?: string } & React.InputHTMLAttributes<HTMLInputElement>;
 
-export function Input({ id, label, type = 'text', className, error, ...rest }: InputProps) {
+function InputField({ id, label, type = 'text', className, error, ...rest }: InputProps, ref: Ref<HTMLInputElement>) {
   const styles = cn(baseStyles, {
     [defaultStyles]: !error,
     [errorStyles]: !!error,
@@ -16,7 +17,7 @@ export function Input({ id, label, type = 'text', className, error, ...rest }: I
         </label>
       )}
       <div className="mt-1">
-        <input id={id} type={type} className={styles} {...rest} />
+        <input id={id} type={type} ref={ref} className={styles} {...rest} />
       </div>
       {error && (
         <p className="mt-1 text-sm text-red-600" id="email-error">
@@ -35,3 +36,5 @@ const errorStyles = cn([
   'border-red-300 text-red-900 placeholder-red-300',
   'focus:outline-none focus:ring-red-500 focus:border-red-500',
 ]);
+
+export const Input = forwardRef(InputField)

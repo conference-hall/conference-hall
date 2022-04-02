@@ -22,7 +22,7 @@ export function Navbar({ user }: NavbarProps) {
             </div>
           </div>
           <div className="flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-            {user ? <UserAvatar picture={user.picture}/> : null}
+            {user ? <UserAvatar email={user.email} picture={user.picture}/> : null}
           </div>
         </div>
       </div>

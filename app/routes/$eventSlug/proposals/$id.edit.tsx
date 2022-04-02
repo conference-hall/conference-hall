@@ -1,4 +1,4 @@
-import { Form, useCatch, useLoaderData } from 'remix';
+import { Form, useActionData, useCatch, useLoaderData } from 'remix';
 import { Container } from '~/components/layout/Container';
 import { Button } from '../../../components/Buttons';
 import {
@@ -10,6 +10,7 @@ import { CategoriesForm } from '../../../components/proposal/CategoriesForm';
 import { ProposalForm } from '../../../components/proposal/ProposalForm';
 import { FormatsForm } from '../../../components/proposal/FormatsForm';
 import { H2 } from '../../../components/Typography';
+import { ValidationErrors } from '../../../utils/validation-errors';
 
 export const loader = loadSpeakerEditProposal;
 
@@ -17,6 +18,7 @@ export const action = editProposal;
 
 export default function EditProposalRoute() {
   const data = useLoaderData<SpeakerEditProposal>();
+  const errors = useActionData<ValidationErrors>();
 
   return (
     <Container className="mt-8">
@@ -28,7 +30,7 @@ export default function EditProposalRoute() {
         </div>
 
         <div className="px-4 py-10 sm:px-6">
-          <ProposalForm initialValues={data.proposal} />
+          <ProposalForm initialValues={data.proposal} errors={errors?.fieldErrors} />
         </div>
 
         {data.formats?.length > 0 ? (
@@ -62,4 +64,3 @@ export function CatchBoundary() {
     </Container>
   );
 }
-
