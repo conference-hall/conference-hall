@@ -42,8 +42,11 @@ export default function SpeakerRoute() {
       <div className="sticky top-0 z-10 pt-4 border-b bg-white bg-opacity-70 border-gray-200 backdrop-blur-xl">
         <Container>
           <nav className="-mb-px flex space-x-8">
-            <NavLink to="/speaker" className={activeTab}>
+            <NavLink to="/speaker" end className={activeTab}>
               Your profile
+            </NavLink>
+            <NavLink to="/speaker/talks" className={activeTab}>
+              Your talks
             </NavLink>
           </nav>
         </Container>

@@ -37,7 +37,7 @@ export function ProposalsList({ proposals }: ProposalsListProps) {
                       alt={speaker.name || 'Speaker'}
                     />
                   ))}
-                  <span className="pl-3 text-sm test-gray-500 truncate">
+                  <span className="pl-3 text-sm text-gray-500 truncate">
                     by {proposal.speakers.map((s) => s.name).join(', ')}
                   </span>
                 </div>

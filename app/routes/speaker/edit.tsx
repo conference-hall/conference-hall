@@ -1,4 +1,4 @@
-import { Form, LoaderFunction, NavLink, useActionData, useFetcher, useLoaderData, useSubmit } from 'remix';
+import { Form, LoaderFunction, NavLink, useActionData, useLoaderData, useSubmit } from 'remix';
 import { CreditCardIcon, KeyIcon, UserCircleIcon } from '@heroicons/react/solid';
 import { Container } from '../../components/layout/Container';
 import { IconLabel } from '../../components/IconLabel';
@@ -8,7 +8,7 @@ import { Button } from '../../components/Buttons';
 import { H2, Text } from '../../components/Typography';
 import { editProfile, loadProfile, SpeakerProfile } from '../../features/speaker-profile/edit-profile.server';
 import { ValidationErrors } from '../../utils/validation-errors';
-import { useCallback, useRef } from 'react';
+import { useCallback } from 'react';
 import { getAuth } from 'firebase/auth';
 
 export const loader: LoaderFunction = loadProfile;

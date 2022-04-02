@@ -14,7 +14,8 @@ export const loader: LoaderFunction = ({ request }) => {
 export default function ProfileRoute() {
   const user = useLoaderData<AuthUser>();
   return (
-    <Container className="m-8">
+    <Container className="mt-8">
+      <h1 className="sr-only">Your profile</h1>
       <div className="mt-8 grid grid-cols-1 gap-4 items-start lg:grid-cols-3 lg:gap-8">
         <div className="lg:col-span-2">
           <H2>Biography</H2>
