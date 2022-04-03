@@ -2,7 +2,7 @@ import { Form, useActionData, useLoaderData } from 'remix';
 import { Button } from '~/components/Buttons';
 import { loadProposal, ProposalData, saveProposal } from '~/features/event-submission/step-proposal.server';
 import { ValidationErrors } from '~/utils/validation-errors';
-import { ProposalForm } from '~/components/proposal/ProposalForm';
+import { TalkAbstractForm } from '~/components/proposal/TalkAbstractForm';
 import { H2, Text } from '../../../../components/Typography';
 
 export const handle = { step: 'proposal' };
@@ -22,7 +22,7 @@ export default function SubmissionProposalRoute() {
           <H2>Your proposal</H2>
           <Text variant="secondary" className="mt-1">This information will be displayed publicly so be careful what you share.</Text>
         </div>
-        <ProposalForm initialValues={talk} errors={errors?.fieldErrors} />
+        <TalkAbstractForm initialValues={talk} errors={errors?.fieldErrors} />
       </div>
 
       <div className="px-4 py-5 text-right sm:px-6">

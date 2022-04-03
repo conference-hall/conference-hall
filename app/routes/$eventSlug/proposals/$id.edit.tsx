@@ -7,7 +7,7 @@ import {
   SpeakerEditProposal,
 } from '../../../features/event-proposals/edit-proposal.server';
 import { CategoriesForm } from '../../../components/proposal/CategoriesForm';
-import { ProposalForm } from '../../../components/proposal/ProposalForm';
+import { TalkAbstractForm } from '../../../components/proposal/TalkAbstractForm';
 import { FormatsForm } from '../../../components/proposal/FormatsForm';
 import { H2 } from '../../../components/Typography';
 import { ValidationErrors } from '../../../utils/validation-errors';
@@ -30,7 +30,7 @@ export default function EditProposalRoute() {
         </div>
 
         <div className="px-4 py-10 sm:px-6">
-          <ProposalForm initialValues={data.proposal} errors={errors?.fieldErrors} />
+          <TalkAbstractForm initialValues={data.proposal} errors={errors?.fieldErrors} />
         </div>
 
         {data.formats?.length > 0 ? (

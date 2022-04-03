@@ -12,7 +12,7 @@ const LEVELS = [
 
 const LANGUAGES_OPTIONS = Object.entries(languages).map(([value, label]) => ({ value, label }))
 
-type ProposalFormProps = {
+type TalkAbstractProps = {
   initialValues?: {
     title: string;
     abstract: string;
@@ -25,7 +25,7 @@ type ProposalFormProps = {
   };
 };
 
-export function ProposalForm({ initialValues, errors }: ProposalFormProps) {
+export function TalkAbstractForm({ initialValues, errors }: TalkAbstractProps) {
   return (
     <div className="space-y-10">
       <Input
