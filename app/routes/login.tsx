@@ -1,6 +1,5 @@
 import { ActionFunction, LoaderFunction, redirect, useSubmit } from 'remix';
 import { Button } from '../components/Buttons';
-import { Container } from '../components/layout/Container';
 import { useFirebaseSignIn } from '../services/firebase/useFirebaseSignIn';
 import { createUserSession, getAuthUser } from '../features/auth/auth.server';
 
