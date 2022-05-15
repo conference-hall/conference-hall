@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { db } from '../services/db';
 
-export type SpeakerProfile = {
+export type SpeakerSettings = {
   name: string | null;
   email: string | null;
   photoURL: string | null;
@@ -14,11 +14,11 @@ export type SpeakerProfile = {
 };
 
 /**
- * Get a speaker profile
+ * Get a speaker settings
  * @param speakerId Id of the speaker
  * @returns SpeakerProfile
  */
-export async function getProfile(speakerId: string): Promise<SpeakerProfile> {
+export async function getSettings(speakerId: string): Promise<SpeakerSettings> {
   const speaker = await db.user.findUnique({ where: { id: speakerId } });
   if (!speaker) throw new SpeakerNotFoundError();
   return {
@@ -35,11 +35,11 @@ export async function getProfile(speakerId: string): Promise<SpeakerProfile> {
 }
 
 /**
- * Update a speaker profile
+ * Update a speaker settings
  * @param speakerId Id of the speaker
- * @param data Profile data
+ * @param data Settings data
  */
-export async function updateProfile(speakerId: string, data: ProfileUpdateData) {
+export async function updateProfile(speakerId: string, data: SettingsUpdateData) {
   const speaker = await db.user.findUnique({ where: { id: speakerId } });
   if (!speaker) throw new SpeakerNotFoundError();
 
@@ -64,11 +64,11 @@ const SpeakerAdditionalInfo = z.object({
   github: z.string(),
 });
 
-type ProfileSchema = typeof SpeakerPersonalInfo | typeof SpeakerDetails | typeof SpeakerAdditionalInfo;
-type ProfileUpdateData = z.infer<ProfileSchema>;
+type SettingsSchema = typeof SpeakerPersonalInfo | typeof SpeakerDetails | typeof SpeakerAdditionalInfo;
+type SettingsUpdateData = z.infer<SettingsSchema>;
 
 export function validateProfileData(form: FormData, type: string) {
-  let schema: ProfileSchema = SpeakerPersonalInfo;
+  let schema: SettingsSchema = SpeakerPersonalInfo;
   if (type === 'DETAILS') schema = SpeakerDetails;
   if (type === 'ADDITIONAL') schema = SpeakerAdditionalInfo;
 

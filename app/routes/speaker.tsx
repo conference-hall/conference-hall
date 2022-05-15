@@ -33,7 +33,7 @@ export default function SpeakerRoute() {
             </div>
           </div>
           <div className="mt-5 flex justify-center sm:mt-0 space-x-4">
-            <ButtonLink to="/speaker/edit" variant="secondary">
+            <ButtonLink to="/speaker/settings" variant="secondary">
               Edit profile
             </ButtonLink>
           </div>
@@ -43,10 +43,13 @@ export default function SpeakerRoute() {
         <Container>
           <nav className="-mb-px flex space-x-8">
             <NavLink to="/speaker" end className={activeTab}>
-              Your profile
+              Activity
             </NavLink>
             <NavLink to="/speaker/talks" className={activeTab}>
               Your talks
+            </NavLink>
+            <NavLink to="/speaker/settings" className={activeTab}>
+              Settings
             </NavLink>
           </nav>
         </Container>

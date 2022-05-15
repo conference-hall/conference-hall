@@ -6,21 +6,22 @@ import { Container } from '../../components/layout/Container';
 import { H3, Text } from '../../components/Typography';
 import { Markdown } from '../../components/Markdown';
 import { IconLabel } from '../../components/IconLabel';
-import { getProfile, SpeakerProfile } from '../../features/speaker-profile.server';
+import { getSpeakerActivity, SpeakerActivity } from '../../features/speaker-activity.server';
 import { Link } from '../../components/Links';
+import { Activity } from '../../features/Activity';
 
 export const loader: LoaderFunction =  async ({ request, params }) => {
   const uid = await requireUserSession(request);
   try {
-    const profile = await getProfile(uid);
-    return json<SpeakerProfile>(profile);
+    const profile = await getSpeakerActivity(uid);
+    return json<SpeakerActivity>(profile);
   } catch {
     throw new Response('Speaker not found.', { status: 404 });
   }
 };
 
 export default function ProfileRoute() {
-  const user = useLoaderData<SpeakerProfile>();
+  const user = useLoaderData<SpeakerActivity>();
   return (
     <Container className="mt-8">
       <h1 className="sr-only">Your profile</h1>
@@ -29,7 +30,7 @@ export default function ProfileRoute() {
           <div className="flex justify-between items-center flex-wrap sm:flex-nowrap">
             <H3>{user.name}'s profile</H3>
             <div className="flex-shrink-0 space-x-4">
-              <Link to="edit">Edit profile</Link>
+              <Link to="settings">Edit profile</Link>
             </div>
           </div>
           {user.bio ? (
@@ -54,7 +55,8 @@ export default function ProfileRoute() {
           )}
         </div>
         <div className="lg:col-span-2">
-          <Text className="mt-4">No submitted proposals yet!.</Text>
+          {/* <Text className="mt-4">No submitted proposals yet!.</Text> */}
+          <Activity />
         </div>
       </div>
     </Container>
