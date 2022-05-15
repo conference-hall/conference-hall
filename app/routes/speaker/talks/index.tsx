@@ -7,6 +7,7 @@ import { Container } from '../../../components/layout/Container';
 import { H2, Text } from '../../../components/Typography';
 import { requireUserSession } from '../../../features/auth/auth.server';
 import { findSpeakerTalks, SpeakerTalks } from '../../../features/speaker-talks.server';
+import { ButtonLink } from '../../../components/Buttons';
 
 export const loader: LoaderFunction = async ({ request }) => {
   const uid = await requireUserSession(request);
@@ -17,6 +18,18 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function SpeakerTalksRoute() {
   const talks = useLoaderData<SpeakerTalks>();
 
+  if (talks.length === 0) {
+    return (
+      <Container className="mt-8 py-8 flex flex-col items-center">
+        <h3 className="mt-2 text-sm font-medium text-gray-900">No talk abstracts yet!</h3>
+        <p className="mt-1 text-sm text-gray-600">Get started by creating your first talk abstract.</p>
+        <div className="mt-12">
+          <ButtonLink to="new">Create a talk abstract</ButtonLink>
+        </div>
+      </Container>
+    );
+  }
+
   return (
     <Container className="mt-8">
       <div className="flex justify-between items-center flex-wrap sm:flex-nowrap">
@@ -25,6 +38,9 @@ export default function SpeakerTalksRoute() {
           <Text variant="secondary" className="mt-1">
             All your talk abstracts.
           </Text>
+        </div>
+        <div className="flex-shrink-0 space-x-4">
+          <ButtonLink to="new">Create a talk abstract</ButtonLink>
         </div>
       </div>
       <div className="mt-8">
@@ -52,9 +68,7 @@ export default function SpeakerTalksRoute() {
                   <div>
                     <IconLabel icon={CalendarIcon} className="text-sm text-gray-500" iconClassName="text-gray-400">
                       Created&nbsp;
-                      <time dateTime={talk.createdAt}>
-                        {formatRelative(new Date(talk.createdAt), new Date())}
-                      </time>
+                      <time dateTime={talk.createdAt}>{formatRelative(new Date(talk.createdAt), new Date())}</time>
                     </IconLabel>
                   </div>
                 </div>

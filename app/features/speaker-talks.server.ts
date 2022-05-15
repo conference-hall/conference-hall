@@ -44,7 +44,7 @@ export interface SpeakerTalk {
   references: string | null;
   createdAt: string;
   speakers: Array<{ id: string; name: string | null; photoURL: string | null }>;
-};
+}
 
 /**
  * Get a talk for a speaker
@@ -58,7 +58,7 @@ export async function getSpeakerTalk(speakerId: string, talkId?: string): Promis
       speakers: { some: { id: speakerId } },
       id: talkId,
     },
-    include: { speakers: true }
+    include: { speakers: true },
   });
   if (!talk) throw new TalkNotFoundError();
 
@@ -74,7 +74,7 @@ export async function getSpeakerTalk(speakerId: string, talkId?: string): Promis
     createdAt: talk.createdAt.toISOString(),
     speakers: talk.speakers.map((speaker) => ({ id: speaker.id, name: speaker.name, photoURL: speaker.photoURL })),
   };
-};
+}
 
 /**
  * Delete a talk for a speaker
@@ -88,6 +88,22 @@ export async function deleteSpeakerTalk(speakerId: string, talkId?: string) {
   if (!talk) throw new TalkNotFoundError();
 
   await db.talk.delete({ where: { id: talkId } });
+}
+
+/**
+ * Create a new talk for a speaker
+ * @param speakerId Id of the speaker
+ * @param data Talk data
+ */
+export async function createSpeakerTalk(speakerId: string, data: TalkUpdateFormData) {
+  const result = await db.talk.create({
+    data: {
+      ...data,
+      creator: { connect: { id: speakerId } },
+      speakers: { connect: [{ id: speakerId }] },
+    },
+  });
+  return result.id;
 }
 
 /**

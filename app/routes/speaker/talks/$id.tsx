@@ -27,37 +27,29 @@ export default function SpeakerTalkRoute() {
       <div className="flex justify-between items-center flex-wrap sm:flex-nowrap">
         <div>
           <H1>{talk.title}</H1>
-          <div className="mt-2 flex items-center overflow-hidden -space-x-1">
-            {talk.speakers.map((speaker) => (
-              <img
-                key={speaker.name}
-                className="inline-block h-6 w-6 rounded-full ring-2 ring-white"
-                src={speaker.photoURL || 'http://placekitten.com/100/100'}
-                alt={speaker.name || 'Speaker'}
-              />
-            ))}
-            <span className="pl-3 text-sm test-gray-500 truncate">
-              by {talk.speakers.map((s) => s.name).join(', ')}
-            </span>
-          </div>
+          <span className="text-sm test-gray-500 truncate">
+            by {talk.speakers.map((s) => s.name).join(', ')}
+          </span>
         </div>
 
         <div className="flex-shrink-0 space-x-4">
-          <ButtonLink to="edit">Edit proposal</ButtonLink>
+          <ButtonLink to="edit">Edit abstract</ButtonLink>
         </div>
       </div>
 
-      <p>Level: {getLevel(talk.level)}</p>
-      <p>Language: {getLanguage(talk.language)}</p>
+      <div className="mt-4">
+        <p>Level: {getLevel(talk.level)}</p>
+        <p>Language: {getLanguage(talk.language)}</p>
 
-      <Markdown
-        source={talk.abstract}
-        className="bg-white border border-gray-200 overflow-hidden sm:rounded-lg p-4 mt-4"
-      />
-      <Markdown
-        source={talk.references}
-        className="bg-white border border-gray-200 overflow-hidden sm:rounded-lg p-4 mt-4"
-      />
+        <Markdown
+          source={talk.abstract}
+          className="bg-white border border-gray-200 overflow-hidden sm:rounded-lg p-4 mt-4"
+        />
+        <Markdown
+          source={talk.references}
+          className="bg-white border border-gray-200 overflow-hidden sm:rounded-lg p-4 mt-4"
+        />
+      </div>
     </Container>
   );
 }
