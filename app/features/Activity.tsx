@@ -1,74 +1,47 @@
+import { formatRelative } from 'date-fns';
 import { MicrophoneIcon, PlusIcon, XIcon, CheckIcon } from '@heroicons/react/solid';
 import { ExclamationIcon, DotsHorizontalIcon } from '@heroicons/react/outline';
 import { IconLabel } from '../components/IconLabel';
 import { Link } from '../components/Links';
 
-const activity = [
-  {
-    id: 1,
-    name: 'Le Web et la Typographie',
-    date: '6d ago',
-    hasMore: true,
-    steps: [
-      {
-        id: 2,
-        action: 'Submitted',
-        name: 'Technosaure 2022 #3',
-        date: '2d ago',
-      },
-      {
-        id: 3,
-        action: 'Accepted',
-        name: 'DevFest Nantes',
-        date: '5d ago',
-      },
-    ],
-  },
-  {
-    id: 5,
-    name: 'GitHub Actions: Automatisez vous la vie',
-    date: '6d ago',
-  },
-  {
-    id: 6,
-    name: 'Build the perfect CFP for your Community',
-    date: '6d ago',
-    steps: [
-      {
-        id: 2,
-        action: 'Rejected',
-        name: 'Microsoft tech summit',
-        date: '2d ago',
-      },
-    ],
-  },
-];
+interface ActivitiesProps {
+  activities: Array<{
+    id: string;
+    title: string;
+    date: string;
+    speakers: string[];
+    proposals: Array<{ eventSlug: string; eventName: string; date: string; status: string }>;
+  }>;
+}
 
-export function Activity() {
+export function Activity({ activities }: ActivitiesProps) {
+  const hasMore = activities.length > 3;
   return (
     <div>
-      {activity.map((item) => (
-        <ul key={item.id} role="list" className="p-4 rounded-lg hover:bg-gray-50 ">
-          <li key={item.id}>
+      {activities.map((activity) => (
+        <ul key={activity.id} role="list" className="p-4 rounded-lg hover:bg-gray-50 ">
+          <li key={activity.id}>
             <TalkActivity
-              name={item.name}
-              date={item.date}
-              noSubmission={!item.steps}
-              showTimeline={item.steps ? item.steps.length > 0 : false}
+              talkId={activity.id}
+              talkTitle={activity.title}
+              date={activity.date}
+              noSubmission={activity.proposals.length === 0}
+              showTimeline={activity.proposals ? activity.proposals.length > 0 : false}
             />
           </li>
-          {item.steps?.map((step, index2) => (
-            <li key={step.id}>
+          {activity.proposals?.map((proposal, index2) => (
+            <li key={proposal.eventSlug}>
               <EventActivity
-                key={step.id}
-                name={step.name}
-                date={step.date}
-                action={step.action}
-                showTimeline={index2 < item.steps.length - 1 || !!item.hasMore}
+                key={proposal.eventSlug}
+                eventName={proposal.eventName}
+                eventSlug={proposal.eventSlug}
+                date={proposal.date}
+                status={proposal.status}
+                showTimeline={index2 < activity.proposals.length - 1 || hasMore}
               />
             </li>
           ))}
-          {item.hasMore && (
+          {hasMore && (
             <li key="more">
               <MoreInfo />
             </li>
@@ -88,12 +61,13 @@ function ActivityLine() {
 }
 
 interface TalkActivityProps extends ActivityItemProps {
+  talkId: string;
+  talkTitle: string;
   date: string;
-  name: string;
   noSubmission: boolean;
 }
 
-function TalkActivity({ name, date, noSubmission, showTimeline }: TalkActivityProps) {
+function TalkActivity({ talkId, talkTitle, date, noSubmission, showTimeline }: TalkActivityProps) {
   return (
     <div className="relative pb-8">
       {showTimeline && <ActivityLine />}
@@ -104,10 +78,10 @@ function TalkActivity({ name, date, noSubmission, showTimeline }: TalkActivityPr
         <div className="min-w-0 flex-1 flex items-start justify-between">
           <div>
             <div className="text-sm text-gray-500">
-              <a href="#" className="font-medium text-gray-900">
-                {name}
-              </a>{' '}
-              updated <span className="whitespace-nowrap">{date}</span>
+              <Link to={`talks/${talkId}`} className="font-medium text-gray-900 hover:text-gray-900">
+                {talkTitle}
+              </Link>{' '}
+              updated <span className="whitespace-nowrap">{formatRelative(new Date(date), new Date())}</span>
             </div>
             <p className="mt-0.5 text-sm text-gray-500">by Clark Kent</p>
             {noSubmission && (
@@ -117,9 +91,9 @@ function TalkActivity({ name, date, noSubmission, showTimeline }: TalkActivityPr
             )}
           </div>
           <div className="text-sm text-gray-700 flex gap-4">
-            <Link to="/">View</Link>
-            <Link to="/">Edit</Link>
-            <Link to="/">Submit</Link>
+            <Link to={`talks/${talkId}`}>View</Link>
+            <Link to={`talks/${talkId}/edit`}>Edit</Link>
+            <Link to={`/search`}>Submit</Link>
           </div>
         </div>
       </div>
@@ -128,12 +102,13 @@ function TalkActivity({ name, date, noSubmission, showTimeline }: TalkActivityPr
 }
 
 interface EventActivityProps extends ActivityItemProps {
-  name: string;
+  eventName: string;
+  eventSlug: string;
   date: string;
-  action: string;
+  status: string;
 }
 
-function EventActivity({ name, date, showTimeline, action }: EventActivityProps) {
+function EventActivity({ eventName, eventSlug, date, showTimeline, status }: EventActivityProps) {
   return (
     <div className="relative pb-4">
       {showTimeline && <ActivityLine />}
@@ -141,19 +116,20 @@ function EventActivity({ name, date, showTimeline, action }: EventActivityProps)
         <div>
           <div className="relative px-1">
             <div className="h-8 w-8 bg-gray-100 rounded-full flex items-center justify-center">
-              {action === 'Submitted' && <PlusIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />}
-              {action === 'Accepted' && <CheckIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />}
-              {action === 'Rejected' && <XIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />}
+              {status === 'DRAFT' && <ExclamationIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />}
+              {status === 'SUBMITTED' && <PlusIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />}
+              {status === 'ACCEPTED' && <CheckIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />}
+              {status === 'REJECTED' && <XIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />}
             </div>
           </div>
         </div>
         <div className="min-w-0 flex-1 py-1.5">
           <div className="text-sm text-gray-500">
-            {action} at{' '}
-            <a href="/" className="font-medium text-gray-900">
-              {name}
-            </a>{' '}
-            <span className="whitespace-nowrap">{date}</span>
+            {status} to{' '}
+            <Link to={`/${eventSlug}/proposals`} className="font-medium text-gray-900 hover:text-gray-900">
+              {eventName}
+            </Link>{' '}
+            <span className="whitespace-nowrap">{formatRelative(new Date(date), new Date())}</span>
           </div>
         </div>
       </div>
@@ -173,7 +149,9 @@ function MoreInfo() {
           </div>
         </div>
         <div className="min-w-0 flex-1 py-1.5">
-            <Link className="underline text-gray-500 hover:text-gray-500" to="/">View 5 more activities</Link>
+          <Link className="underline text-gray-500 hover:text-gray-500" to="/">
+            View 5 more activities
+          </Link>
         </div>
       </div>
     </div>
