@@ -1,4 +1,4 @@
-import { Form } from 'remix';
+import { Form } from '@remix-run/react';
 import { Input } from '../../../components/forms/Input';
 
 type SearchEventFormProps = { terms?: string, className?: string };

@@ -1,5 +1,5 @@
 import { CheckIcon } from '@heroicons/react/solid';
-import { Link } from 'remix';
+import { Link } from '@remix-run/react';
 
 type StepsProps = {
   steps: Array<{

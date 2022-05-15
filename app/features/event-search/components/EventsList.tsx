@@ -1,6 +1,6 @@
 import React from 'react';
 import { LocationMarkerIcon } from '@heroicons/react/solid';
-import { Link } from 'remix';
+import { Link } from '@remix-run/react';
 import { formatEventType, CfpState } from '~/utils/event';
 import { IconLabel } from '../../../components/IconLabel';
 import { CfpLabel } from '../../../components/event/CfpInfo';

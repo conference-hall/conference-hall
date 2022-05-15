@@ -14,6 +14,9 @@
       "~/*": ["./app/*"],
       "tests/*": ["./tests/*"]
     },
-    "noEmit": true
-  },
+    "noEmit": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowJs": true,
+    "isolatedModules": true
+  }
 }

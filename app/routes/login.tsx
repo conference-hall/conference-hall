@@ -1,4 +1,6 @@
-import { ActionFunction, LoaderFunction, redirect, useSubmit } from 'remix';
+import type { ActionFunction, LoaderFunction } from '@remix-run/node';
+import { redirect } from '@remix-run/node';
+import { useSubmit } from '@remix-run/react';
 import { Button } from '../components/Buttons';
 import { useFirebaseSignIn } from '../services/firebase/useFirebaseSignIn';
 import { createUserSession, getAuthUser } from '../features/auth/auth.server';

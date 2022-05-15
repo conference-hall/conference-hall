@@ -1,4 +1,4 @@
-import { Form, useActionData, useCatch, useLoaderData } from 'remix';
+import { Form, useActionData, useCatch, useLoaderData } from '@remix-run/react';
 import { Container } from '~/components/layout/Container';
 import { Button } from '../../../components/Buttons';
 import { TalkAbstractForm } from '../../../components/proposal/TalkAbstractForm';

@@ -1,8 +1,7 @@
 import { ReactNode } from 'react';
 import { config } from './services/config';
+import { LinksFunction, LoaderFunction } from '@remix-run/node';
 import {
-  LinksFunction,
-  LoaderFunction,
   Meta,
   LiveReload,
   Outlet,
@@ -11,7 +10,7 @@ import {
   useCatch,
   useLoaderData,
   ScrollRestoration,
-} from 'remix';
+} from '@remix-run/react';
 import { Navbar } from './components/layout/Navbar';
 
 import { initializeFirebase } from './services/firebase/init';

@@ -1,6 +1,6 @@
 import { CalendarIcon } from '@heroicons/react/solid';
 import { formatRelative } from 'date-fns';
-import { useLoaderData, Link } from 'remix';
+import { useLoaderData, Link } from '@remix-run/react';
 import { IconLabel } from '../../../components/IconLabel';
 import { Container } from '../../../components/layout/Container';
 import { H2, Text } from '../../../components/Typography';

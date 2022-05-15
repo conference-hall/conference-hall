@@ -1,4 +1,4 @@
-import { Outlet, useCatch, useLoaderData, useMatches } from 'remix';
+import { Outlet, useCatch, useLoaderData, useMatches } from '@remix-run/react';
 import { Container } from '../../../components/layout/Container';
 import { SectionPanel } from '../../../components/Panels';
 import { Steps } from '../../../features/event-submission/components/Steps';

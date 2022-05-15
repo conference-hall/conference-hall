@@ -1,4 +1,5 @@
-import { Form, LoaderFunction, NavLink, useActionData, useLoaderData, useSubmit } from 'remix';
+import type { LoaderFunction } from '@remix-run/node';
+import { Form, NavLink, useActionData, useLoaderData, useSubmit } from '@remix-run/react';
 import { CreditCardIcon, KeyIcon, UserCircleIcon } from '@heroicons/react/solid';
 import { Container } from '../../components/layout/Container';
 import { IconLabel } from '../../components/IconLabel';

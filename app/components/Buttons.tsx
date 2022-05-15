@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, LinkProps } from 'remix';
+import { Link, LinkProps } from '@remix-run/react';
 import cn from 'classnames';
 
 type ButtonProps = ButtonStylesProps & React.ButtonHTMLAttributes<HTMLButtonElement>;

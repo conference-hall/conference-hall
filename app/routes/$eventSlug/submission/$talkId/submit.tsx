@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Form, useLoaderData } from 'remix';
+import { Form, useLoaderData } from '@remix-run/react';
 import { Button } from '~/components/Buttons';
 import { Checkbox } from '~/components/forms/Checkboxes';
 import { loadProposal, SubmitForm, submitProposal } from '~/features/event-submission/step-submit.server';

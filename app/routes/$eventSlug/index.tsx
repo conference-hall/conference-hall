@@ -1,5 +1,5 @@
 import { GlobeIcon, HeartIcon, MailIcon } from '@heroicons/react/solid';
-import { useCatch } from 'remix';
+import { useCatch } from '@remix-run/react';
 import { Container } from '~/components/layout/Container';
 import { useEvent } from '../$eventSlug';
 import { ButtonLink } from '../../components/Buttons';

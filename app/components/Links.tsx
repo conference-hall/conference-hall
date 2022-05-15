@@ -1,6 +1,6 @@
 import React from 'react';
 import cn from 'classnames';
-import { Link as RemixLink, LinkProps as RemixLinkProps } from 'remix';
+import { Link as RemixLink, LinkProps as RemixLinkProps } from '@remix-run/react';
 
 const linkStyle = 'flex text-sm text-indigo-600 hover:text-indigo-500';
 

@@ -1,6 +1,7 @@
+import type { LoaderFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import { requireUserSession } from '../auth/auth.server';
 import { db } from '../../services/db';
-import { json, LoaderFunction } from 'remix';
 
 export type SpeakerProposals = Array<{
   id: string;

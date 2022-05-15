@@ -1,4 +1,5 @@
-import { json, LoaderFunction } from 'remix';
+import type { LoaderFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import { db } from '../../services/db';
 import { getCfpState } from '../../utils/event';
 import { requireUserSession } from '../auth/auth.server';

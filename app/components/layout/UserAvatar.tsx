@@ -1,8 +1,7 @@
 import { Fragment } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import cn from 'classnames';
-import { Form } from 'remix';
-import { Link } from 'react-router-dom';
+import { Form, Link } from '@remix-run/react';
 
 type UserAvatarProps = { email: string, picture?: string | null };
 

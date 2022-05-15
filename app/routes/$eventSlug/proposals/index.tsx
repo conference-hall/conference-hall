@@ -1,4 +1,4 @@
-import { LoaderFunction, useLoaderData } from 'remix';
+import { useLoaderData } from '@remix-run/react';
 import { Container } from '~/components/layout/Container';
 import { useEvent } from '../../$eventSlug';
 import { ButtonLink } from '../../../components/Buttons';

@@ -1,4 +1,4 @@
-import { Link } from 'remix';
+import { Link } from '@remix-run/react';
 import { AuthUser } from '../../features/auth/auth.server';
 import { UserAvatar } from './UserAvatar';
 

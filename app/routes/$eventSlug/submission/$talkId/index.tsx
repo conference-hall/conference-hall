@@ -1,4 +1,4 @@
-import { Form, useActionData, useLoaderData } from 'remix';
+import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import { Button } from '~/components/Buttons';
 import { loadProposal, ProposalData, saveProposal } from '~/features/event-submission/step-proposal.server';
 import { ValidationErrors } from '~/utils/validation-errors';

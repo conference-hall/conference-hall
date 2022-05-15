@@ -1,4 +1,5 @@
-import { ActionFunction, json, LoaderFunction, redirect } from 'remix';
+import type { ActionFunction, LoaderFunction } from '@remix-run/node';
+import { json, redirect } from '@remix-run/node';
 import { db } from '../../services/db';
 import { getCfpState } from '../../utils/event';
 import { requireUserSession } from '../auth/auth.server';

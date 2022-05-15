@@ -1,6 +1,6 @@
 import { CalendarIcon, ExclamationIcon } from '@heroicons/react/solid';
 import { formatRelative } from 'date-fns';
-import { useCatch, useLoaderData } from 'remix';
+import { useCatch, useLoaderData } from '@remix-run/react';
 import { Container } from '~/components/layout/Container';
 import { useEvent } from '../../$eventSlug';
 import { ButtonLink } from '../../../components/Buttons';

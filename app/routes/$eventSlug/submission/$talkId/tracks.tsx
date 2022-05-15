@@ -1,4 +1,4 @@
-import { Form, useLoaderData } from 'remix';
+import { Form, useLoaderData } from '@remix-run/react';
 import { Button, ButtonLink } from '~/components/Buttons';
 import { CategoriesForm } from '~/components/proposal/CategoriesForm';
 import { FormatsForm } from '~/components/proposal/FormatsForm';

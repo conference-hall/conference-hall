@@ -1,4 +1,5 @@
-import { ActionFunction, Form, useActionData, useLoaderData } from 'remix';
+import type { ActionFunction } from '@remix-run/node';
+import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import { Button } from '~/components/Buttons';
 import { Container } from '~/components/layout/Container';
 import { loadSurvey, saveSurvey, SurveyQuestionsForm } from '~/features/event-submission/step-survey.server';

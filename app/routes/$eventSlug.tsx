@@ -1,4 +1,4 @@
-import { Outlet, useCatch, useLoaderData, useOutletContext } from 'remix';
+import { Outlet, useCatch, useLoaderData, useOutletContext } from '@remix-run/react';
 import { ButtonLink } from '../components/Buttons';
 import { Container } from '../components/layout/Container';
 import { Header } from '../features/event-page/components/Header';

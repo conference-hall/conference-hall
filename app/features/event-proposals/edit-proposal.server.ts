@@ -1,4 +1,5 @@
-import { ActionFunction, json, LoaderFunction, redirect } from 'remix';
+import type { ActionFunction, LoaderFunction } from '@remix-run/node';
+import { json, redirect } from '@remix-run/node';
 import { z } from 'zod';
 import { requireUserSession } from '../auth/auth.server';
 import { db } from '../../services/db';

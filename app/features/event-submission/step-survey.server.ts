@@ -1,4 +1,4 @@
-import { ActionFunction, LoaderFunction } from 'remix';
+import type { ActionFunction, LoaderFunction } from '@remix-run/node';
 import { z } from 'zod';
 import { db } from '../../services/db';
 import { QUESTIONS, SurveyQuestions } from '../../services/survey/questions';

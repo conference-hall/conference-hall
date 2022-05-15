@@ -1,8 +1,8 @@
-import { LoaderFunction, NavLink, Outlet, useCatch, useLoaderData } from 'remix';
+import type { LoaderFunction } from '@remix-run/node';
+import { NavLink, Outlet, useCatch, useLoaderData } from '@remix-run/react';
 import cn from 'classnames';
 import { Container } from '../components/layout/Container';
 import { AuthUser, requireAuthUser } from '../features/auth/auth.server';
-import { ExternalLink } from '../components/Links';
 import { ButtonLink } from '../components/Buttons';
 
 export const loader: LoaderFunction = ({ request }) => {

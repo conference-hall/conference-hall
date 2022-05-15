@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { SubmitFunction, useSearchParams, useTransition } from 'remix';
+import { SubmitFunction, useSearchParams, useTransition } from '@remix-run/react';
 import {
   getAuth,
   getRedirectResult,

@@ -1,4 +1,5 @@
-import { LoaderFunction, useLoaderData } from 'remix';
+import type { LoaderFunction } from '@remix-run/node';
+import { useLoaderData } from '@remix-run/react';
 import { AuthUser, requireAuthUser } from '../../features/auth/auth.server';
 import { Container } from '../../components/layout/Container';
 import { H2, H3, Text } from '../../components/Typography';

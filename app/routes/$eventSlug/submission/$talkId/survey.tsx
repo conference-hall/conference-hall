@@ -1,4 +1,6 @@
-import { ActionFunction, Form, redirect, useLoaderData } from 'remix';
+import type { ActionFunction } from '@remix-run/node';
+import { redirect } from '@remix-run/node';
+import { Form, useLoaderData } from '@remix-run/react';
 import { Button, ButtonLink } from '~/components/Buttons';
 import { usePreviousStep } from '~/features/event-submission/hooks/usePreviousStep';
 import { loadSurvey, saveSurvey, SurveyQuestionsForm } from '~/features/event-submission/step-survey.server';

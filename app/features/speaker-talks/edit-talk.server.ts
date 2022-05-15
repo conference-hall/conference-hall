@@ -1,9 +1,9 @@
+import type { ActionFunction, LoaderFunction } from '@remix-run/node';
+import { json, redirect } from '@remix-run/node';
+import { z } from 'zod';
 import { requireUserSession } from '../auth/auth.server';
 import { db } from '../../services/db';
-import { ActionFunction, json, LoaderFunction, redirect } from 'remix';
 import { jsonToArray } from '../../utils/prisma';
-import LANGUAGES from '../../utils/languages.json';
-import { z } from 'zod';
 
 export type SpeakerTalk = {
   id: string;

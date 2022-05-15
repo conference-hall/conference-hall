@@ -2,7 +2,11 @@ import * as React from 'react';
 import { render, RenderOptions } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 
-const AllTheProviders: React.FC = ({ children }) => {
+interface Props {
+  children: React.ReactNode;
+}
+
+const AllTheProviders: React.FC<Props> = ({ children }) => {
   return <MemoryRouter>{children}</MemoryRouter>;
 };
 

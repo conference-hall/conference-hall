@@ -1,7 +1,7 @@
 import { Dialog } from '@headlessui/react';
 import { ExclamationIcon, XIcon } from '@heroicons/react/solid';
 import { useState } from 'react';
-import { Form } from 'remix';
+import { Form } from '@remix-run/react';
 import { Button } from '../Buttons';
 
 export function DeleteProposalButton() {

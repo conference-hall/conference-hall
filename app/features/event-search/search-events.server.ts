@@ -1,5 +1,6 @@
+import type { LoaderFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import { EventVisibility } from '@prisma/client';
-import { json, LoaderFunction } from 'remix';
 import { CfpState, getCfpState } from '~/utils/event';
 import { db } from '../../services/db';
 

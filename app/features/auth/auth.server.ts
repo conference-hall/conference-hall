@@ -1,7 +1,6 @@
-import { User } from '@prisma/client';
 import * as admin from 'firebase-admin';
 import { DecodedIdToken } from 'firebase-admin/lib/auth/token-verifier';
-import { createCookieSessionStorage, redirect } from 'remix';
+import { createCookieSessionStorage, redirect } from '@remix-run/node';
 import { config } from '../../services/config';
 import { db } from '../../services/db';
 
