@@ -1,5 +1,3 @@
-import { Prisma } from '@prisma/client';
-
 export type SurveyQuestions = Array<{
   name: string;
   label: string;

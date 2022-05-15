@@ -1,14 +1,20 @@
+import { json, LoaderFunction } from '@remix-run/node';
 import { CalendarIcon } from '@heroicons/react/solid';
 import { formatRelative } from 'date-fns';
 import { useLoaderData, Link } from '@remix-run/react';
 import { IconLabel } from '../../../components/IconLabel';
 import { Container } from '../../../components/layout/Container';
 import { H2, Text } from '../../../components/Typography';
-import { loadSpeakerTalks, SpeakerTalks } from '../../../features/speaker-talks/list-talks.server';
+import { requireUserSession } from '../../../features/auth/auth.server';
+import { findSpeakerTalks, SpeakerTalks } from '../../../features/speaker-talks.server';
 
-export const loader = loadSpeakerTalks;
+export const loader: LoaderFunction = async ({ request }) => {
+  const uid = await requireUserSession(request);
+  const talks = await findSpeakerTalks(uid);
+  return json<SpeakerTalks>(talks);
+};
 
-export default function TalksRoute() {
+export default function SpeakerTalksRoute() {
   const talks = useLoaderData<SpeakerTalks>();
 
   return (

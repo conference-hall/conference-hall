@@ -1,48 +1,63 @@
-import { Form, useActionData, useCatch, useLoaderData } from '@remix-run/react';
+import { json, LoaderFunction } from '@remix-run/node';
+import { useLoaderData } from '@remix-run/react';
 import { Container } from '~/components/layout/Container';
-import { Button } from '../../../components/Buttons';
-import { TalkAbstractForm } from '../../../components/proposal/TalkAbstractForm';
-import { H2 } from '../../../components/Typography';
-import { editSpeakerTalk, loadSpeakerTalk, SpeakerTalk } from '../../../features/speaker-talks/edit-talk.server';
-import { ValidationErrors } from '../../../utils/validation-errors';
+import { ButtonLink } from '../../../components/Buttons';
+import { Markdown } from '../../../components/Markdown';
+import { H1 } from '../../../components/Typography';
+import { requireUserSession } from '../../../features/auth/auth.server';
+import { getSpeakerTalk, SpeakerTalk } from '../../../features/speaker-talks.server';
+import { getLanguage } from '../../../utils/languages';
+import { getLevel } from '../../../utils/levels';
 
-export const loader = loadSpeakerTalk;
-
-export const action = editSpeakerTalk;
+export const loader: LoaderFunction =  async ({ request, params }) => {
+  const uid = await requireUserSession(request);
+  try {
+    const talk = await getSpeakerTalk(uid, params.id);
+    return json<SpeakerTalk>(talk);
+  } catch {
+    throw new Response('Talk not found.', { status: 404 });
+  }
+};
 
 export default function SpeakerTalkRoute() {
   const talk = useLoaderData<SpeakerTalk>();
-  const errors = useActionData<ValidationErrors>();
 
   return (
     <Container className="mt-8">
-      <Form method="post" className="mt-8 bg-white border border-gray-200 overflow-hidden sm:rounded-lg">
-        <div className="px-4 py-5 sm:px-6 -ml-4 -mt-4 border-b border-gray-200 flex justify-between items-center flex-wrap sm:flex-nowrap">
-          <div className="ml-4 mt-4">
-            <H2>{talk.title}</H2>
+      <div className="flex justify-between items-center flex-wrap sm:flex-nowrap">
+        <div>
+          <H1>{talk.title}</H1>
+          <div className="mt-2 flex items-center overflow-hidden -space-x-1">
+            {talk.speakers.map((speaker) => (
+              <img
+                key={speaker.name}
+                className="inline-block h-6 w-6 rounded-full ring-2 ring-white"
+                src={speaker.photoURL || 'http://placekitten.com/100/100'}
+                alt={speaker.name || 'Speaker'}
+              />
+            ))}
+            <span className="pl-3 text-sm test-gray-500 truncate">
+              by {talk.speakers.map((s) => s.name).join(', ')}
+            </span>
           </div>
         </div>
 
-        <div className="px-4 py-10 sm:px-6">
-          <TalkAbstractForm initialValues={talk} errors={errors?.fieldErrors} />
+        <div className="flex-shrink-0 space-x-4">
+          <ButtonLink to="edit">Edit proposal</ButtonLink>
         </div>
+      </div>
 
-        <div className="px-4 py-5 border-t border-gray-200 text-right sm:px-6">
-          <Button type="submit" className="ml-4">
-            Save abstract
-          </Button>
-        </div>
-      </Form>
-    </Container>
-  );
-}
+      <p>Level: {getLevel(talk.level)}</p>
+      <p>Language: {getLanguage(talk.language)}</p>
 
-export function CatchBoundary() {
-  const caught = useCatch();
-  return (
-    <Container className="mt-8 px-8 py-32 text-center">
-      <h1 className="text-8xl font-black text-indigo-400">{caught.status}</h1>
-      <p className="mt-10 text-4xl font-bold text-gray-600">{caught.data}</p>
+      <Markdown
+        source={talk.abstract}
+        className="bg-white border border-gray-200 overflow-hidden sm:rounded-lg p-4 mt-4"
+      />
+      <Markdown
+        source={talk.references}
+        className="bg-white border border-gray-200 overflow-hidden sm:rounded-lg p-4 mt-4"
+      />
     </Container>
   );
 }

@@ -1,4 +1,4 @@
-import type { LoaderFunction } from '@remix-run/node';
+import { ActionFunction, json, LoaderFunction, redirect } from '@remix-run/node';
 import { Form, NavLink, useActionData, useLoaderData, useSubmit } from '@remix-run/react';
 import { CreditCardIcon, KeyIcon, UserCircleIcon } from '@heroicons/react/solid';
 import { Container } from '../../components/layout/Container';
@@ -7,14 +7,37 @@ import { Input } from '../../components/forms/Input';
 import { MarkdownTextArea } from '../../components/forms/MarkdownTextArea';
 import { Button } from '../../components/Buttons';
 import { H2, Text } from '../../components/Typography';
-import { editProfile, loadProfile, SpeakerProfile } from '../../features/speaker-profile/edit-profile.server';
+import { getProfile, SpeakerProfile, updateProfile, validateProfileData } from '../../features/speaker-profile.server';
 import { ValidationErrors } from '../../utils/validation-errors';
 import { useCallback } from 'react';
 import { getAuth } from 'firebase/auth';
+import { requireUserSession } from '../../features/auth/auth.server';
 
-export const loader: LoaderFunction = loadProfile;
+export const loader: LoaderFunction = async ({ request }) => {
+  const uid = await requireUserSession(request);
+  try {
+    const profile = await getProfile(uid);
+    return json<SpeakerProfile>(profile);
+  } catch {
+    throw new Response('Speaker not found.', { status: 404 });
+  }
+};
 
-export const action = editProfile;
+export const action: ActionFunction = async ({ request }) => {
+  const uid = await requireUserSession(request);
+  const form = await request.formData();
+  const type = form.get('_type') as string;
+  const result = validateProfileData(form, type);
+  if (!result.success) {
+    return result.error.flatten();
+  }
+  try {
+    await updateProfile(uid, result.data);
+    return redirect('/speaker/edit');
+  } catch {
+    throw new Response('Speaker not found.', { status: 404 });
+  }
+};
 
 export default function ProfileEditRoute() {
   const user = useLoaderData<SpeakerProfile>();
@@ -86,7 +109,7 @@ export default function ProfileEditRoute() {
                       id="name"
                       name="name"
                       label="Full name"
-                      defaultValue={user.name}
+                      defaultValue={user.name || ''}
                       key={user.name}
                       error={fieldErrors?.name?.[0]}
                     />
@@ -94,7 +117,7 @@ export default function ProfileEditRoute() {
                       id="email"
                       name="email"
                       label="Email address"
-                      defaultValue={user.email}
+                      defaultValue={user.email || ''}
                       key={user.email}
                       error={fieldErrors?.email?.[0]}
                     />
@@ -102,7 +125,7 @@ export default function ProfileEditRoute() {
                       id="photoURL"
                       name="photoURL"
                       label="Avatar picture URL"
-                      defaultValue={user.photoURL}
+                      defaultValue={user.photoURL || ''}
                       key={user.photoURL}
                       error={fieldErrors?.photoURL?.[0]}
                     />
@@ -137,7 +160,7 @@ export default function ProfileEditRoute() {
                       description="Brief description for your profile."
                       rows={5}
                       error={fieldErrors?.bio?.[0]}
-                      defaultValue={user.bio}
+                      defaultValue={user.bio || ''}
                     />
                     <MarkdownTextArea
                       id="references"
@@ -146,7 +169,7 @@ export default function ProfileEditRoute() {
                       description="Give some information about your speaker experience: your already-given talks, conferences or meetups as speaker, video links..."
                       rows={5}
                       error={fieldErrors?.references?.[0]}
-                      defaultValue={user.references}
+                      defaultValue={user.references || ''}
                     />
                   </div>
                 </div>
@@ -172,28 +195,28 @@ export default function ProfileEditRoute() {
                       id="company"
                       name="company"
                       label="Company"
-                      defaultValue={user.company}
+                      defaultValue={user.company || ''}
                       error={fieldErrors?.company?.[0]}
                     />
                     <Input
                       id="address"
                       name="address"
                       label="Location (city, country)"
-                      defaultValue={user.address}
+                      defaultValue={user.address || ''}
                       error={fieldErrors?.address?.[0]}
                     />
                     <Input
                       id="twitter"
                       name="twitter"
                       label="Twitter username"
-                      defaultValue={user.twitter}
+                      defaultValue={user.twitter || ''}
                       error={fieldErrors?.twitter?.[0]}
                     />
                     <Input
                       id="github"
                       name="github"
                       label="GitHub username"
-                      defaultValue={user.github}
+                      defaultValue={user.github || ''}
                       error={fieldErrors?.github?.[0]}
                     />
                   </div>

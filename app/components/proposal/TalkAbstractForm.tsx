@@ -2,15 +2,8 @@ import { Input } from '~/components/forms/Input';
 import { Radio, RadioGroup } from '~/components/forms/RadioGroup';
 import { MarkdownTextArea } from '~/components/forms/MarkdownTextArea';
 import { Select } from '../forms/Select';
-import languages from '../../utils/languages.json';
-
-const LEVELS = [
-  { key: 'BEGINNER', label: 'Beginner' },
-  { key: 'INTERMEDIATE', label: 'Intermediate' },
-  { key: 'ADVANCED', label: 'Advanced' },
-];
-
-const LANGUAGES_OPTIONS = Object.entries(languages).map(([value, label]) => ({ value, label }))
+import { LANGUAGES } from '../../utils/languages';
+import { LEVELS } from '../../utils/levels';
 
 type TalkAbstractProps = {
   initialValues?: {
@@ -52,9 +45,11 @@ export function TalkAbstractForm({ initialValues, errors }: TalkAbstractProps) {
           </Radio>
         ))}
       </RadioGroup>
-      <Select label="Language" id="language" name="language" defaultValue={initialValues?.language || ''} >
-        {LANGUAGES_OPTIONS.map((option) => (
-          <option key={option.value} value={option.value}>{option.label}</option>
+      <Select label="Language" id="language" name="language" defaultValue={initialValues?.language || ''}>
+        {LANGUAGES.map(({ key, label }) => (
+          <option key={key} value={key}>
+            {label}
+          </option>
         ))}
       </Select>
       <MarkdownTextArea

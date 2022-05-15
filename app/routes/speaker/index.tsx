@@ -1,19 +1,25 @@
-import type { LoaderFunction } from '@remix-run/node';
+import { json, LoaderFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
-import { AuthUser, requireAuthUser } from '../../features/auth/auth.server';
+import { GlobeAltIcon, HomeIcon, LocationMarkerIcon } from '@heroicons/react/solid';
+import { requireUserSession } from '../../features/auth/auth.server';
 import { Container } from '../../components/layout/Container';
 import { H2, H3, Text } from '../../components/Typography';
 import { Markdown } from '../../components/Markdown';
 import { IconLabel } from '../../components/IconLabel';
-import { GlobeAltIcon, HomeIcon, LocationMarkerIcon } from '@heroicons/react/solid';
+import { getProfile, SpeakerProfile } from '../../features/speaker-profile.server';
 
-export const loader: LoaderFunction = ({ request }) => {
-  const user = requireAuthUser(request);
-  return user;
+export const loader: LoaderFunction =  async ({ request, params }) => {
+  const uid = await requireUserSession(request);
+  try {
+    const profile = await getProfile(uid);
+    return json<SpeakerProfile>(profile);
+  } catch {
+    throw new Response('Speaker not found.', { status: 404 });
+  }
 };
 
 export default function ProfileRoute() {
-  const user = useLoaderData<AuthUser>();
+  const user = useLoaderData<SpeakerProfile>();
   return (
     <Container className="mt-8">
       <h1 className="sr-only">Your profile</h1>
