@@ -13,7 +13,7 @@ Install dependencies:
 npm install
 ```
 
-Start Docker image for Firebase Auth emulator:
+Start Docker image for Postgres DB and Firebase Auth emulator:
 
 ```sh
 docker compose up -d

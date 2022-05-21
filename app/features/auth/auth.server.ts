@@ -53,8 +53,7 @@ async function createUserFromToken(decodedToken: DecodedIdToken) {
 export async function destroyUserSession(request: Request) {
   const cookie = request.headers.get('Cookie');
   const session = await storage.getSession(cookie);
-  const destroyedCookie = await storage.destroySession(session);
-  return redirect('/', { headers: { 'Set-Cookie': destroyedCookie } });
+  return storage.destroySession(session);
 }
 
 export async function requireUserSession(request: Request) {
@@ -63,15 +62,18 @@ export async function requireUserSession(request: Request) {
     const session = await storage.getSession(cookie);
     const firebaseSession = session.get('firebaseSession');
     if (!firebaseSession) {
-      throw redirect(getLoginUrl(request));
+      const destroyedCookie = await destroyUserSession(request);
+      throw redirect(getLoginUrl(request), { headers: { 'Set-Cookie': destroyedCookie } });
     }
     const token = await admin.auth().verifySessionCookie(firebaseSession, true);
     if (!token.uid) {
-      throw destroyUserSession(request);
+      const destroyedCookie = await destroyUserSession(request);
+      throw redirect(getLoginUrl(request), { headers: { 'Set-Cookie': destroyedCookie } });
     }
     return token.uid;
   } catch (error) {
-    throw redirect(getLoginUrl(request));
+    const destroyedCookie = await destroyUserSession(request);
+    throw redirect(getLoginUrl(request), { headers: { 'Set-Cookie': destroyedCookie } });
   }
 }
 
@@ -115,7 +117,8 @@ export async function getAuthUser(request: Request): Promise<AuthUser | null> {
 export async function requireAuthUser(request: Request): Promise<AuthUser> {
   const user = await getAuthUser(request);
   if (!user) {
-    throw destroyUserSession(request);
+    const destroyedCookie = await destroyUserSession(request);
+    throw redirect(getLoginUrl(request), { headers: { 'Set-Cookie': destroyedCookie } });
   }
   return user;
 }
