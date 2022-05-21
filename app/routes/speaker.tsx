@@ -1,9 +1,8 @@
 import type { LoaderFunction } from '@remix-run/node';
-import { NavLink, Outlet, useCatch, useLoaderData } from '@remix-run/react';
+import { NavLink, Outlet, useCatch } from '@remix-run/react';
 import cn from 'classnames';
 import { Container } from '../components/layout/Container';
-import { AuthUser, requireAuthUser } from '../features/auth/auth.server';
-import { ButtonLink } from '../components/Buttons';
+import { requireAuthUser } from '../features/auth/auth.server';
 
 export const loader: LoaderFunction = ({ request }) => {
   const user = requireAuthUser(request);
@@ -11,34 +10,8 @@ export const loader: LoaderFunction = ({ request }) => {
 };
 
 export default function SpeakerRoute() {
-  const user = useLoaderData<AuthUser>();
   return (
     <>
-      <header className="bg-white border-t border-gray-200">
-        <Container className="pt-8 pb-4 sm:flex sm:items-center sm:justify-between">
-          <div className="sm:flex sm:items-center sm:justify-between">
-            <div className="sm:flex sm:space-x-5">
-              <div className="flex-shrink-0">
-                <img
-                  className="mx-auto h-20 w-20 rounded-full"
-                  src={user.picture || 'https://placekitten.com/100/100'}
-                  alt=""
-                />
-              </div>
-              <div className="mt-4 text-center sm:mt-0 sm:pt-1 sm:text-left">
-                <p className="text-sm font-medium text-gray-600">Welcome back,</p>
-                <p className="text-xl font-bold text-gray-900 sm:text-2xl">{user.name}</p>
-                <p className="text-sm font-medium text-gray-600">{user.email}</p>
-              </div>
-            </div>
-          </div>
-          <div className="mt-5 flex justify-center sm:mt-0 space-x-4">
-            <ButtonLink to="/search">
-              Submit a talk
-            </ButtonLink>
-          </div>
-        </Container>
-      </header>
       <div className="sticky top-0 z-10 pt-4 border-b bg-white border-gray-200">
         <Container>
           <nav className="-mb-px flex space-x-8">

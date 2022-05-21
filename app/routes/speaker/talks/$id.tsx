@@ -12,6 +12,7 @@ import { getSpeakerTalk, SpeakerTalk } from '../../../features/speaker-talks.ser
 import { getLanguage } from '../../../utils/languages';
 import { getLevel } from '../../../utils/levels';
 import TalkActions from '../components/TalkActions';
+import { AddCoSpeakerButton } from '../components/CoSpeaker';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const uid = await requireUserSession(request);
@@ -43,12 +44,12 @@ export default function SpeakerTalkRoute() {
         </div>
       </div>
 
-      <div className="flex flex-row w-full gap-4 mt-8">
+      <div className="flex flex-row gap-4 mt-8">
         <div className="w-2/3 bg-white border border-gray-200 overflow-hidden sm:rounded-lg p-4">
           <H2>Abstract</H2>
-          <Markdown source={talk.abstract} className="mt-4" />
+          <Markdown source={talk.abstract} className="mt-2" />
           <H2 className="mt-8">References</H2>
-          <Markdown source={talk.references} className="mt-4" />
+          <Markdown source={talk.references} className="mt-2" />
         </div>
         <div className="w-1/3">
           <div className="bg-white border border-gray-200 overflow-hidden sm:rounded-lg p-4">
@@ -63,10 +64,7 @@ export default function SpeakerTalkRoute() {
                 <Text className="ml-3">{speaker.name}</Text>
               </div>
             ))}
-            <Button variant="text" className="group flex items-center mt-4">
-              <UserAddIcon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
-              Add a co-speaker
-            </Button>
+            <AddCoSpeakerButton />
           </div>
           <div className="bg-white border border-gray-200 overflow-hidden sm:rounded-lg p-4 mt-4">
             <H2>Submissions</H2>

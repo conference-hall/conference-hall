@@ -2,6 +2,7 @@ import { Fragment } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import { ArchiveIcon, ChevronDownIcon, PencilAltIcon, TrashIcon, UserAddIcon } from '@heroicons/react/solid';
 import { Link } from '@remix-run/react';
+import { AddCoSpeakerMenu } from './CoSpeaker';
 
 export default function TalkActions() {
   return (
@@ -31,10 +32,7 @@ export default function TalkActions() {
               </Link>
             </Menu.Item>
             <Menu.Item>
-              <a href="#" className="group flex items-center px-4 py-2 text-sm">
-                <UserAddIcon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
-                Add a co-speaker
-              </a>
+              <AddCoSpeakerMenu />
             </Menu.Item>
           </div>
           <div className="py-1">
