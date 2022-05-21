@@ -1,8 +1,8 @@
 import { formatRelative } from 'date-fns';
 import { MicrophoneIcon, PlusIcon, XIcon, CheckIcon } from '@heroicons/react/solid';
 import { ExclamationIcon, DotsHorizontalIcon } from '@heroicons/react/outline';
-import { IconLabel } from '../components/IconLabel';
-import { Link } from '../components/Links';
+import { IconLabel } from '../../../components/IconLabel';
+import { Link } from '../../../components/Links';
 
 interface ActivitiesProps {
   activities: Array<{
@@ -19,7 +19,7 @@ export function Activity({ activities }: ActivitiesProps) {
   return (
     <div>
       {activities.map((activity) => (
-        <ul key={activity.id} role="list" className="p-4 rounded-lg hover:bg-gray-50 ">
+        <ul key={activity.id} role="list" className="p-4 rounded-lg">
           <li key={activity.id}>
             <TalkActivity
               talkId={activity.id}
@@ -53,7 +53,7 @@ export function Activity({ activities }: ActivitiesProps) {
 }
 
 interface ActivityItemProps {
-  showTimeline: boolean;
+  showTimeline?: boolean;
 }
 
 function ActivityLine() {
@@ -67,7 +67,7 @@ interface TalkActivityProps extends ActivityItemProps {
   noSubmission: boolean;
 }
 
-function TalkActivity({ talkId, talkTitle, date, noSubmission, showTimeline }: TalkActivityProps) {
+function TalkActivity({ talkId, talkTitle, date, noSubmission, showTimeline = false }: TalkActivityProps) {
   return (
     <div className="relative pb-8">
       {showTimeline && <ActivityLine />}
@@ -108,14 +108,14 @@ interface EventActivityProps extends ActivityItemProps {
   status: string;
 }
 
-function EventActivity({ eventName, eventSlug, date, showTimeline, status }: EventActivityProps) {
+export function EventActivity({ eventName, eventSlug, date, showTimeline = false, status }: EventActivityProps) {
   return (
     <div className="relative pb-4">
       {showTimeline && <ActivityLine />}
       <div className="relative flex items-start space-x-3">
         <div>
           <div className="relative px-1">
-            <div className="h-8 w-8 bg-gray-100 rounded-full flex items-center justify-center">
+            <div className="h-8 w-8 bg-gray-200 rounded-full flex items-center justify-center">
               {status === 'DRAFT' && <ExclamationIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />}
               {status === 'SUBMITTED' && <PlusIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />}
               {status === 'ACCEPTED' && <CheckIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />}

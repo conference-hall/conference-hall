@@ -33,11 +33,10 @@ export default function EventRoute() {
         alt=""
       />
 
-      <section className="py-16 border-b border-gray-200 bg-gray-100">
+      <section className="pt-16 pb-8">
         <Container>
-          <Markdown source={event.description} size="base" />
           {event.websiteUrl || event.contactEmail || event.codeOfConductUrl ? (
-            <div className="mt-10 flex space-x-16">
+            <div className="flex gap-16">
               {event.websiteUrl && (
                 <ExternalLink href={event.websiteUrl} icon={GlobeIcon}>
                   Website
@@ -58,8 +57,14 @@ export default function EventRoute() {
         </Container>
       </section>
 
+      <section className="py-8">
+        <Container>
+          <Markdown source={event.description} size="base" />
+        </Container>
+      </section>
+
       {event.formats.length > 0 || event.categories.length > 0 ? (
-        <section className="py-16">
+        <section className="py-8">
           <Container className="grid grid-cols-2 gap-16">
             {event.formats.length > 0 ? (
               <div>

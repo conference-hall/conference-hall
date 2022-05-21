@@ -8,7 +8,7 @@ import { Markdown } from '../../components/Markdown';
 import { IconLabel } from '../../components/IconLabel';
 import { getSpeakerActivity, SpeakerActivity } from '../../features/speaker-activity.server';
 import { Link } from '../../components/Links';
-import { Activity } from '../../features/Activity';
+import { Activity } from './components/Activity';
 
 export const loader: LoaderFunction =  async ({ request, params }) => {
   const uid = await requireUserSession(request);
@@ -26,7 +26,7 @@ export default function ProfileRoute() {
     <Container className="mt-8">
       <h1 className="sr-only">Your profile</h1>
       <div className="mt-8 grid grid-cols-1 gap-4 items-start lg:grid-cols-3 lg:gap-8">
-        <div className="rounded-lg overflow-hidden border border-gray-200 p-6">
+        <div className="rounded-lg overflow-hidden border border-gray-200 p-6 bg-white">
           <div className="flex justify-between items-center flex-wrap sm:flex-nowrap">
             <H3>{profile.name}'s profile</H3>
             <div className="flex-shrink-0 space-x-4">
@@ -34,12 +34,12 @@ export default function ProfileRoute() {
             </div>
           </div>
           {profile.bio ? (
-            <Markdown className="mt-4 truncate" source={profile.bio} />
+            <Markdown className="mt-4 line-clamp-5" source={profile.bio} />
           ) : (
             <Text className="mt-4">No biography defined.</Text>
           )}
           {profile.references ? (
-            <Markdown className="mt-4" source={profile.references} />
+            <Markdown className="mt-4 line-clamp-5" source={profile.references} />
           ) : (
             <Text className="mt-4">No references defined.</Text>
           )}

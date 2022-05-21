@@ -14,7 +14,7 @@ export default function SearchRoute() {
   const data = useLoaderData<SearchEvents>();
 
   return (
-    <div className="bg-gray-100 h-[calc(100vh-64px)]">
+    <div>
       <div className="bg-white border-y border-gray-200">
         <Container className="py-16">
           <H1>Search for conferences and meetups.</H1>

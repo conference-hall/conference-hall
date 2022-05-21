@@ -65,12 +65,12 @@ export default function SettingsRoute() {
 
   return (
     <Container className="my-8">
-      <h1 className="sr-only">Edit profile</h1>
+      <h1 className="sr-only">Settings</h1>
       <div className="lg:grid lg:grid-cols-12 lg:gap-x-5">
         <aside className="py-6 px-2 sm:px-6 lg:py-0 lg:px-0 lg:col-span-3">
           <nav className="space-y-1">
             <NavLink
-              to={{ pathname: '/speaker/settings', hash: '#personal-info' }}
+              to="#personal-info"
               className="group rounded-md px-3 py-2 flex items-center text-sm font-medium text-gray-900 hover:text-gray-900 hover:bg-gray-50"
             >
               <IconLabel icon={UserCircleIcon} iconClassName="text-gray-400 group-hover:text-gray-500">
@@ -78,7 +78,7 @@ export default function SettingsRoute() {
               </IconLabel>
             </NavLink>
             <NavLink
-              to={{ pathname: '/speaker/settings', hash: '#speaker-details' }}
+              to="#speaker-details"
               className="group rounded-md px-3 py-2 flex items-center text-sm font-medium text-gray-900 hover:text-gray-900 hover:bg-gray-50"
             >
               <IconLabel icon={KeyIcon} iconClassName="text-gray-400 group-hover:text-gray-500">
@@ -86,7 +86,7 @@ export default function SettingsRoute() {
               </IconLabel>
             </NavLink>
             <NavLink
-              to={{ pathname: '/speaker/settings', hash: '#additional-info' }}
+              to="#additional-info"
               className="group rounded-md px-3 py-2 flex items-center text-sm font-medium text-gray-900 hover:text-gray-900 hover:bg-gray-50"
             >
               <IconLabel icon={CreditCardIcon} iconClassName="text-gray-400 group-hover:text-gray-500">
@@ -99,9 +99,10 @@ export default function SettingsRoute() {
         <div className="space-y-6 sm:px-6 lg:px-0 lg:col-span-9">
           <Form method="post">
             <div className="border border-gray-200 sm:rounded-md sm:overflow-hidden">
+              <a id="personal-info" href="#personal-info" className="scroll-mt-16" />
               <div className="bg-white py-6 px-4 space-y-6 sm:p-6">
                 <div>
-                  <H2 id="personal-info">Personal information</H2>
+                  <H2>Personal information</H2>
                   <Text variant="secondary" className="mt-1">
                     Use a permanent address where you can receive email.
                   </Text>
@@ -146,9 +147,10 @@ export default function SettingsRoute() {
 
           <Form method="post">
             <div className="border border-gray-200 sm:rounded-md sm:overflow-hidden">
+              <a id="speaker-details" href="#speaker-details" className="scroll-mt-16" />
               <div className="bg-white py-6 px-4 space-y-6 sm:p-6">
                 <div>
-                  <H2 id="speaker-details">Speaker details</H2>
+                  <H2>Speaker details</H2>
                   <Text variant="secondary" className="mt-1">
                     Give more information about you, these information will be visible by organizers when you submit a
                     talk.
@@ -185,9 +187,10 @@ export default function SettingsRoute() {
 
           <Form method="post">
             <div className="border border-gray-200 sm:rounded-md sm:overflow-hidden">
+              <a id="additional-info" href="#additional-info" className="scroll-mt-16" />
               <div className="bg-white py-6 px-4 space-y-6 sm:p-6">
                 <div>
-                  <H2 id="additional-info">Additional information</H2>
+                  <H2>Additional information</H2>
                   <Text variant="secondary" className="mt-1">
                     Helps organizers to know more about you.
                   </Text>

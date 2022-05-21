@@ -1,16 +1,7 @@
 import { ReactNode } from 'react';
 import { config } from './services/config';
 import { LinksFunction, LoaderFunction } from '@remix-run/node';
-import {
-  Meta,
-  LiveReload,
-  Outlet,
-  Links,
-  Scripts,
-  useCatch,
-  useLoaderData,
-  ScrollRestoration,
-} from '@remix-run/react';
+import { Meta, LiveReload, Outlet, Links, Scripts, useCatch, useLoaderData, ScrollRestoration } from '@remix-run/react';
 import { Navbar } from './components/layout/Navbar';
 
 import { initializeFirebase } from './services/firebase/init';
@@ -55,7 +46,7 @@ type DocumentProps = { children: ReactNode; title?: string; user?: AuthUser };
 
 function Document({ children, title, user }: DocumentProps) {
   return (
-    <html lang="en">
+    <html lang="en" className="scroll-smooth">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -63,11 +54,9 @@ function Document({ children, title, user }: DocumentProps) {
         {title ? <title>{title}</title> : null}
         <Links />
       </head>
-      <body className="h-screen font-sans antialiased text-gray-600">
-        <div className="min-h-full">
-          <Navbar user={user} />
-          {children}
-        </div>
+      <body className="font-sans antialiased text-gray-600 bg-gray-100">
+        <Navbar user={user} />
+        {children}
         <Footer />
         <Scripts />
         <ScrollRestoration />

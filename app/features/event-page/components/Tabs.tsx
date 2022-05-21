@@ -13,7 +13,7 @@ type EventTabsProps = {
 
 export function EventTabs({ slug, type, cfpState, surveyEnabled }: EventTabsProps) {
   return (
-    <div className="sticky top-0 z-10 pt-4 border-b bg-white bg-opacity-70 border-gray-200 backdrop-blur-xl">
+    <div className="sticky top-0 z-10 pt-4 border-b bg-white border-gray-200">
       <Container>
         <nav className="-mb-px flex space-x-8">
           <NavLink to={`/${slug}`} end className={activeTab}>

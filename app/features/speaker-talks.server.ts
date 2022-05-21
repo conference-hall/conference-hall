@@ -23,11 +23,11 @@ export async function findSpeakerTalks(speakerId: string): Promise<SpeakerTalks>
     orderBy: { createdAt: 'desc' },
   });
 
-  return talks.map((proposal) => ({
-    id: proposal.id,
-    title: proposal.title,
-    createdAt: proposal.createdAt.toISOString(),
-    speakers: proposal.speakers.map((speaker) => ({
+  return talks.map((talk) => ({
+    id: talk.id,
+    title: talk.title,
+    createdAt: talk.createdAt.toISOString(),
+    speakers: talk.speakers.map((speaker) => ({
       id: speaker.id,
       name: speaker.name,
       photoURL: speaker.photoURL,
@@ -44,6 +44,7 @@ export interface SpeakerTalk {
   references: string | null;
   createdAt: string;
   speakers: Array<{ id: string; name: string | null; photoURL: string | null }>;
+  proposals: Array<{ eventSlug: string; eventName: string; status: string; date: string }>;
 }
 
 /**
@@ -58,7 +59,7 @@ export async function getSpeakerTalk(speakerId: string, talkId?: string): Promis
       speakers: { some: { id: speakerId } },
       id: talkId,
     },
-    include: { speakers: true },
+    include: { speakers: true, proposals: { include: { event: true } } },
   });
   if (!talk) throw new TalkNotFoundError();
 
@@ -73,6 +74,12 @@ export async function getSpeakerTalk(speakerId: string, talkId?: string): Promis
     references: talk.references,
     createdAt: talk.createdAt.toISOString(),
     speakers: talk.speakers.map((speaker) => ({ id: speaker.id, name: speaker.name, photoURL: speaker.photoURL })),
+    proposals: talk.proposals.map((proposal) => ({
+      eventSlug: proposal.event.slug,
+      eventName: proposal.event.name,
+      status: proposal.status,
+      date: proposal.updatedAt.toISOString(),
+    }))
   };
 }
 

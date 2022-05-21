@@ -2,6 +2,7 @@ import { Fragment } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import cn from 'classnames';
 import { Form, Link } from '@remix-run/react';
+import { CogIcon, FireIcon, GlobeAltIcon, LightningBoltIcon, LogoutIcon, MicrophoneIcon, PencilAltIcon, SearchIcon } from '@heroicons/react/solid';
 
 type UserAvatarProps = { email: string, picture?: string | null };
 
@@ -38,11 +39,53 @@ export function UserAvatar({ email, picture }: UserAvatarProps) {
               {({ active }) => (
                 <Link
                   to="/speaker"
-                  className={cn('block px-4 py-2 text-sm text-gray-700 text-left', {
+                  className={cn('group flex items-center px-4 py-2 text-sm text-gray-700', {
                     'bg-gray-100 text-gray-900': active,
                   })}
                 >
-                  Profile
+                  <FireIcon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
+                  Activity
+                </Link>
+              )}
+            </Menu.Item>
+            <Menu.Item>
+              {({ active }) => (
+                <Link
+                  to="/speaker/talks"
+                  className={cn('group flex items-center px-4 py-2 text-sm text-gray-700', {
+                    'bg-gray-100 text-gray-900': active,
+                  })}
+                >
+                  <MicrophoneIcon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
+                  Talks
+                </Link>
+              )}
+            </Menu.Item>
+            <Menu.Item>
+              {({ active }) => (
+                <Link
+                  to="/speaker/settings"
+                  className={cn('group flex items-center px-4 py-2 text-sm text-gray-700', {
+                    'bg-gray-100 text-gray-900': active,
+                  })}
+                >
+                  <CogIcon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
+                  Settings
+                </Link>
+              )}
+            </Menu.Item>
+          </div>
+          <div className="py-1">
+            <Menu.Item>
+              {({ active }) => (
+                <Link
+                  to="/search"
+                  className={cn('group flex items-center px-4 py-2 text-sm text-gray-700', {
+                    'bg-gray-100 text-gray-900': active,
+                  })}
+                >
+                  <SearchIcon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
+                  Search events
                 </Link>
               )}
             </Menu.Item>
@@ -55,6 +98,7 @@ export function UserAvatar({ email, picture }: UserAvatarProps) {
                     type="submit"
                     className={cn('block px-4 py-2 text-sm text-gray-700 w-full text-left', { 'bg-gray-100': active })}
                   >
+                    <LogoutIcon className="inline mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
                     Sign out
                   </button>
                 </Form>

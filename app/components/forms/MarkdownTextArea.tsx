@@ -101,7 +101,7 @@ function MardownPreviewModal({ markdown, isOpen, onClose }: MardownPreviewModalP
             <XIcon className="h-6 w-6" aria-hidden="true" />
           </button>
         </div>
-        <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left shadow-xl transform sm:my-8 sm:align-middle w-full md:max-w-5xl sm:p-6 overflow-scroll">
+        <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left shadow-xl transform sm:my-8 sm:align-middle w-full md:max-w-5xl sm:p-6">
           {markdown ? <Markdown source={markdown} /> : <p>Nothing to preview.</p>}
         </div>
       </div>

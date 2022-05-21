@@ -21,12 +21,11 @@ export function SurveyForm({ questions, initialValues }: SurveyFormProps) {
               label={question.label}
               defaultValue={initialValues[question.name] as string}
               rows={5}
-              className="mt-6"
             />
           );
         } else if (question.type === 'checkbox') {
           return (
-            <CheckboxGroup key={question.name} label={question.label} inline className="mt-6">
+            <CheckboxGroup key={question.name} label={question.label} inline>
               {question.answers?.map((answer) => (
                 <Checkbox
                   key={answer.name}
@@ -42,7 +41,7 @@ export function SurveyForm({ questions, initialValues }: SurveyFormProps) {
           );
         } else if (question.type === 'radio') {
           return (
-            <RadioGroup key={question.name} label={question.label} inline className="mt-6">
+            <RadioGroup key={question.name} label={question.label} inline>
               {question.answers?.map((answer) => (
                 <Radio
                   key={answer.name}

@@ -26,10 +26,12 @@ export default function EventSurveyRoute() {
           This information will be displayed publicly so be careful what you share.
         </Text>
       </div>
-      <Form method="post">
-        {result?.message && <AlertSuccess className="mt-8">{result?.message}</AlertSuccess>}
-        <SurveyForm questions={questions} initialValues={initialValues} />
-        <div className="py-5 mt-12 text-right border-t border-gray-200">
+      {result?.message && <AlertSuccess className="mt-8">{result?.message}</AlertSuccess>}
+      <Form method="post" className="border mt-8 border-gray-200 sm:rounded-md sm:overflow-hidden">
+        <div className="bg-white py-6 px-4 sm:p-6">
+          <SurveyForm questions={questions} initialValues={initialValues} />
+        </div>
+        <div className="px-4 py-3 bg-gray-50 text-right space-x-4 sm:px-6">
           <Button type="submit">Save survey</Button>
         </div>
       </Form>

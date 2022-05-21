@@ -30,7 +30,9 @@ export default function SubmissionSurveyRoute() {
             This information will be displayed publicly so be careful what you share.
           </Text>
         </div>
-        <SurveyForm questions={questions} initialValues={initialValues} />
+        <div className="mt-6">
+          <SurveyForm questions={questions} initialValues={initialValues} />
+        </div>
       </div>
       <div className="px-4 py-5 text-right sm:px-6">
         <ButtonLink to={previousStepPath} variant="secondary">

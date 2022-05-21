@@ -2,7 +2,7 @@ import React from 'react';
 import cn from 'classnames';
 import { Link as RemixLink, LinkProps as RemixLinkProps } from '@remix-run/react';
 
-const linkStyle = 'flex-inline text-sm text-indigo-600 hover:text-indigo-500';
+const linkStyle = 'inline-flex text-sm text-indigo-600 hover:text-indigo-500 items-center';
 
 type Icon = React.ComponentType<{ className?: string }>;
 type LinkProps = { icon?: Icon } & RemixLinkProps;
