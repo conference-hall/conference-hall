@@ -1,9 +1,11 @@
 import { Dialog } from '@headlessui/react';
-import { LinkIcon, UserAddIcon } from '@heroicons/react/solid';
-import { useState } from 'react';
+import { CheckIcon, LinkIcon, UserAddIcon } from '@heroicons/react/solid';
+import { useFetcher } from '@remix-run/react';
+import { useEffect, useState } from 'react';
 import { Button } from '../../../components/Buttons';
 import Modal from '../../../components/dialogs/Modals';
 import { Text } from '../../../components/Typography';
+import { InvitationLink } from '../talks/$id.invite';
 
 type CoSpeakerDrawerProps = {
   open: boolean;
@@ -11,6 +13,15 @@ type CoSpeakerDrawerProps = {
 };
 
 function CoSpeakerDrawer({ open, onClose }: CoSpeakerDrawerProps) {
+  const invite = useFetcher<InvitationLink>();
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    if (invite.data?.link && open) {
+      navigator.clipboard.writeText(invite.data?.link).then(() => setCopied(true));
+    }
+  }, [invite.data?.link, open]);
+
   return (
     <Modal open={open} onClose={onClose}>
       <div>
@@ -26,10 +37,19 @@ function CoSpeakerDrawer({ open, onClose }: CoSpeakerDrawerProps) {
           </Text>
         </div>
       </div>
-      <Button onClick={onClose} block className="mt-5 sm:mt-6 flex items-center">
-        <LinkIcon className="mr-3 h-5 w-5 text-white" aria-hidden="true" />
-        Copy invitation link
-      </Button>
+      <invite.Form method="post" action="invite">
+        {copied ? (
+          <Button type="submit" block className="mt-5 sm:mt-6 flex items-center" variant='secondary'>
+            <CheckIcon className="mr-3 h-5 w-5 text-green-500" aria-hidden="true" />
+            Invitation link copied!
+          </Button>
+        ) : (
+          <Button type="submit" block className="mt-5 sm:mt-6 flex items-center">
+            <LinkIcon className="mr-3 h-5 w-5 text-white" aria-hidden="true" />
+            Copy invitation link
+          </Button>
+        )}
+      </invite.Form>
     </Modal>
   );
 }

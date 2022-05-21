@@ -1,9 +1,8 @@
-import { UserAddIcon } from '@heroicons/react/solid';
-import { json, LoaderFunction } from '@remix-run/node';
+import { ActionFunction, json, LoaderFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { Container } from '~/components/layout/Container';
 import Badge from '../../../components/Badges';
-import { Button, ButtonLink } from '../../../components/Buttons';
+import { ButtonLink } from '../../../components/Buttons';
 import { Markdown } from '../../../components/Markdown';
 import { H1, H2, Text } from '../../../components/Typography';
 import { EventActivity } from '../components/Activity';
@@ -23,6 +22,19 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     throw new Response('Talk not found.', { status: 404 });
   }
 };
+
+export const action: ActionFunction = async ({ request, params }) => {
+  const uid = await requireUserSession(request);
+  const talkId = params.id;
+  const form = await request.formData();
+  const action = form.get('_action');
+  if (action === 'speaker-invitation') {
+    const invitationId = talkId + '-' + uid;
+    return json({
+      link: `http://localhost:3000/invitation/${invitationId}`,
+    });
+  }
+}
 
 export default function SpeakerTalkRoute() {
   const talk = useLoaderData<SpeakerTalk>();
