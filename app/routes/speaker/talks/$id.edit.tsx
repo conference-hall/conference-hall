@@ -17,6 +17,9 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const uid = await requireUserSession(request);
   try {
     const talk = await getSpeakerTalk(uid, params.id);
+    if (talk.archived) {
+      throw new Response('Talk archived.', { status: 403 });
+    }
     return json<SpeakerTalk>(talk);
   } catch {
     throw new Response('Talk not found.', { status: 404 });

@@ -21,7 +21,7 @@ export async function findSpeakerTalks(speakerId: string): Promise<SpeakerTalks>
     where: {
       speakers: { some: { id: speakerId } },
     },
-    orderBy: { createdAt: 'desc' },
+    orderBy: { updatedAt: 'desc' },
   });
 
   return talks.map((talk) => ({
@@ -43,6 +43,7 @@ export interface SpeakerTalk {
   level: string | null;
   languages: string[];
   references: string | null;
+  archived: boolean;
   createdAt: string;
   isOwner: boolean;
   speakers: Array<{
@@ -78,6 +79,7 @@ export async function getSpeakerTalk(speakerId: string, talkId?: string): Promis
     level: talk.level,
     languages: jsonToArray(talk.languages),
     references: talk.references,
+    archived: talk.archived,
     createdAt: talk.createdAt.toISOString(),
     isOwner: speakerId === talk.creatorId,
     speakers: talk.speakers
@@ -168,7 +170,7 @@ export function validateTalkForm(form: FormData) {
 
 /**
  * Remove a co-speaker from a talk
- * @param uid User id of the speaker
+ * @param uid User id of the connected user
  * @param talkId Id of the talk
  * @param speakerId Id of the co-speaker to remove
  */
@@ -179,6 +181,34 @@ export const removeCoSpeaker = async (uid: string, talkId: string, speakerId: st
   if (!talk) throw new TalkNotFoundError();
 
   await db.talk.update({ where: { id: talkId }, data: { speakers: { disconnect: { id: speakerId } } } });
+};
+
+/**
+ * Archive a talk
+ * @param uid User id of the connected user
+ * @param talkId Id of the talk
+ */
+ export const archiveTalk = async (uid: string, talkId: string) => {
+  const talk = await db.talk.findFirst({
+    where: { id: talkId, speakers: { some: { id: uid } } },
+  });
+  if (!talk) throw new TalkNotFoundError();
+
+  await db.talk.update({ where: { id: talkId }, data: { archived: true } });
+};
+
+/**
+ * Restore an archived talk
+ * @param uid User id of the connected user
+ * @param talkId Id of the talk
+ */
+ export const restoreTalk = async (uid: string, talkId: string) => {
+  const talk = await db.talk.findFirst({
+    where: { id: talkId, speakers: { some: { id: uid } } },
+  });
+  if (!talk) throw new TalkNotFoundError();
+
+  await db.talk.update({ where: { id: talkId }, data: { archived: false } });
 };
 
 export class TalkNotFoundError extends Error {

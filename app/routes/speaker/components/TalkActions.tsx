@@ -1,8 +1,8 @@
 import { Fragment } from 'react';
 import { Menu, Transition } from '@headlessui/react';
-import { ArchiveIcon, ChevronDownIcon, PencilAltIcon, TrashIcon, UserAddIcon } from '@heroicons/react/solid';
-import { Link } from '@remix-run/react';
-import { AddCoSpeakerMenu } from './CoSpeaker';
+import { ArchiveIcon, ChevronDownIcon, PencilAltIcon, TrashIcon } from '@heroicons/react/solid';
+import { Form, Link } from '@remix-run/react';
+import { Button } from '../../../components/Buttons';
 
 export default function TalkActions() {
   return (
@@ -26,7 +26,7 @@ export default function TalkActions() {
         <Menu.Items className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none">
           <div className="py-1">
             <Menu.Item>
-              <Link to='edit' className="group flex items-center px-4 py-2 text-sm">
+              <Link to="edit" className="group flex items-center px-4 py-2 text-sm">
                 <PencilAltIcon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
                 Edit
               </Link>
@@ -34,10 +34,13 @@ export default function TalkActions() {
           </div>
           <div className="py-1">
             <Menu.Item>
-              <a href="#" className="group flex items-center px-4 py-2 text-sm">
-                <ArchiveIcon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
-                Archive
-              </a>
+              <Form method="post">
+                <input type="hidden" name="_action" value="archive-talk" />
+                <button type="submit" className="group flex w-full items-center px-4 py-2 text-sm">
+                  <ArchiveIcon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
+                  Archive
+                </button>
+              </Form>
             </Menu.Item>
             <Menu.Item>
               <a href="#" className="group flex items-center px-4 py-2 text-sm">

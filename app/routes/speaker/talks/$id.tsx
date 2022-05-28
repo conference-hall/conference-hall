@@ -2,12 +2,18 @@ import { ActionFunction, json, LoaderFunction } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
 import { Container } from '~/components/layout/Container';
 import Badge from '../../../components/Badges';
-import { ButtonLink } from '../../../components/Buttons';
+import { Button, ButtonLink } from '../../../components/Buttons';
 import { Markdown } from '../../../components/Markdown';
 import { H1, H2, Text } from '../../../components/Typography';
 import { EventActivity } from '../components/Activity';
 import { requireUserSession } from '../../../features/auth/auth.server';
-import { getSpeakerTalk, removeCoSpeaker, SpeakerTalk } from '../../../features/speaker-talks.server';
+import {
+  archiveTalk,
+  getSpeakerTalk,
+  removeCoSpeaker,
+  restoreTalk,
+  SpeakerTalk,
+} from '../../../features/speaker-talks.server';
 import { getLanguage } from '../../../utils/languages';
 import { getLevel } from '../../../utils/levels';
 import TalkActions from '../components/TalkActions';
@@ -27,13 +33,18 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 export const action: ActionFunction = async ({ request, params }) => {
   const uid = await requireUserSession(request);
   const talkId = params.id;
+  if (!talkId) return null;
   const form = await request.formData();
   const action = form.get('_action');
-  if (action === 'speaker-remove' && talkId) {
+  if (action === 'remove-speaker') {
     const speakerId = form.get('_speakerId')?.toString();
     if (speakerId) await removeCoSpeaker(uid, talkId, speakerId);
-    return json({});
+  } else if (action === 'archive-talk') {
+    await archiveTalk(uid, talkId);
+  } else if (action === 'restore-talk') {
+    await restoreTalk(uid, talkId);
   }
+  return null;
 };
 
 export default function SpeakerTalkRoute() {
@@ -55,8 +66,16 @@ export default function SpeakerTalkRoute() {
         </div>
 
         <div className="flex-shrink-0 space-x-4">
-          <TalkActions />
-          <ButtonLink to={`/search?talkId=${talk.id}`}>Submit</ButtonLink>
+          {!talk.archived && <TalkActions />}
+          {!talk.archived && <ButtonLink to={`/search?talkId=${talk.id}`}>Submit</ButtonLink>}
+          {talk.archived && (
+            <Form method="post">
+              <input type="hidden" name="_action" value="restore-talk" />
+              <Button type="submit" variant="secondary">
+                Restore
+              </Button>
+            </Form>
+          )}
         </div>
       </div>
 
@@ -88,20 +107,22 @@ export default function SpeakerTalkRoute() {
                 <div>
                   {!speaker.isOwner && (
                     <Form method="post">
-                      <input type="hidden" name="_action" value="speaker-remove" />
+                      <input type="hidden" name="_action" value="remove-speaker" />
                       <input type="hidden" name="_speakerId" value={speaker.id} />
-                      <button
-                        type="submit"
-                        className="inline-flex items-center p-1 border border-transparent rounded-full text-gray-400 bg-white hover:bg-gray-100 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
-                      >
-                        <TrashIcon className="h-5 w-5" aria-hidden="true" />
-                      </button>
+                      {!talk.archived && (
+                        <button
+                          type="submit"
+                          className="inline-flex items-center p-1 border border-transparent rounded-full text-gray-400 bg-white hover:bg-gray-100 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                        >
+                          <TrashIcon className="h-5 w-5" aria-hidden="true" />
+                        </button>
+                      )}
                     </Form>
                   )}
                 </div>
               </div>
             ))}
-            <AddCoSpeakerButton />
+            {!talk.archived && <AddCoSpeakerButton />}
           </div>
           <div className="bg-white border border-gray-200 overflow-hidden sm:rounded-lg p-4 mt-4">
             <H2>Submissions</H2>
