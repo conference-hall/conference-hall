@@ -26,7 +26,7 @@ export function ButtonLink({ to, children, variant, size, block, disabled, class
 
 type ButtonStylesProps = {
   variant?: 'primary' | 'secondary' | 'text';
-  size?: 'small' | 'regular';
+  size?: 'small' | 'regular' | 'large';
   block?: boolean;
   className?: string;
   disabled?: boolean;
@@ -45,6 +45,7 @@ const getStyles = ({ variant = 'primary', size = 'regular', block, disabled, cla
       ['text-gray-700 bg-white hover:bg-gray-50 border-gray-300']: variant === 'secondary',
       ['text-gray-400 bg-gray-100 hover:bg-gray-100 border-gray-300 cursor-not-allowed']: disabled,
       ['px-2.5 py-1.5 text-xs']: size === 'small',
+      ['px-6 py-3 text-base']: size === 'large',
       ['w-full justify-center']: block,
     },
     className

@@ -15,7 +15,7 @@ export default function SearchRoute() {
 
   return (
     <div>
-      <div className="bg-white border-y border-gray-200">
+      <div className="bg-white">
         <Container className="py-16">
           <H1>Search for conferences and meetups.</H1>
           <SearchEventForm terms={data.terms} className="mt-16" />
