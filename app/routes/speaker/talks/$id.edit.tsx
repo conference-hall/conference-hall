@@ -6,9 +6,9 @@ import { TalkAbstractForm } from '../../../components/proposal/TalkAbstractForm'
 import { H1 } from '../../../components/Typography';
 import { requireUserSession } from '../../../features/auth/auth.server';
 import {
-  getSpeakerTalk,
+  getTalk,
   SpeakerTalk,
-  updateSpeakerTalk,
+  updateTalk,
   validateTalkForm,
 } from '../../../features/speaker-talks.server';
 import { ValidationErrors } from '../../../utils/validation-errors';
@@ -16,7 +16,7 @@ import { ValidationErrors } from '../../../utils/validation-errors';
 export const loader: LoaderFunction = async ({ request, params }) => {
   const uid = await requireUserSession(request);
   try {
-    const talk = await getSpeakerTalk(uid, params.id);
+    const talk = await getTalk(uid, params.id);
     if (talk.archived) {
       throw new Response('Talk archived.', { status: 403 });
     }
@@ -34,7 +34,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     if (!result.success) {
       return result.error.flatten();
     } else {
-      await updateSpeakerTalk(uid, params.id, result.data);
+      await updateTalk(uid, params.id, result.data);
       return redirect(`/speaker/talks/${params.id}`);
     }
   } catch {

@@ -6,12 +6,12 @@ import { IconLabel } from '../../../components/IconLabel';
 import { Container } from '../../../components/layout/Container';
 import { H2, Text } from '../../../components/Typography';
 import { requireUserSession } from '../../../features/auth/auth.server';
-import { findSpeakerTalks, SpeakerTalks } from '../../../features/speaker-talks.server';
+import { findTalks, SpeakerTalks } from '../../../features/speaker-talks.server';
 import { ButtonLink } from '../../../components/Buttons';
 
 export const loader: LoaderFunction = async ({ request }) => {
   const uid = await requireUserSession(request);
-  const talks = await findSpeakerTalks(uid);
+  const talks = await findTalks(uid);
   return json<SpeakerTalks>(talks);
 };
 

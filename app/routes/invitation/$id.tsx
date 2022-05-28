@@ -6,50 +6,32 @@ import { Container } from '../../components/layout/Container';
 import { Link } from '../../components/Links';
 import { H1, H2, Text } from '../../components/Typography';
 import { requireUserSession } from '../../features/auth/auth.server';
-import { db } from '../../services/db';
-
-type Invitation = {
-  type: 'SPEAKER' | 'ORGANIZATION';
-  title: string;
-  invitedBy: string;
-};
+import { getInvitation, Invitation } from '../../features/invitations.server';
+import { inviteCoSpeaker } from '../../features/speaker-talks.server';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   await requireUserSession(request);
-  const invitation = await db.invite.findUnique({
-    select: { type: true, talk: true, organization: true, invitedBy: true },
-    where: { id: params.id },
-  });
-  if (!invitation) {
+  const invitationId = params.id;
+  if (!invitationId) return null;
+  try {
+    const invitation = await getInvitation(invitationId);
+    return json<Invitation>(invitation);
+  } catch (err) {
     throw new Response('Invitation not found.', { status: 404 });
   }
-  return json<Invitation>({
-    type: invitation.type,
-    title: invitation.talk?.title || '',
-    invitedBy: invitation.invitedBy.name || '',
-  });
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
   const uid = await requireUserSession(request);
+  const invitationId = params.id;
+  if (!invitationId) return null;
 
-  const invitation = await db.invite.findUnique({
-    select: { type: true, talk: true, organization: true, invitedBy: true },
-    where: { id: params.id },
-  });
-  if (!invitation) {
+  try {
+    const talk = await inviteCoSpeaker(invitationId, uid);
+    return redirect(`/speaker/talks/${talk.id}`);
+  } catch (err) {
     throw new Response('Invitation not found.', { status: 404 });
   }
-
-  if (invitation.type === 'SPEAKER' && invitation.talk) {
-    const talk = await db.talk.update({
-      data: { speakers: { connect: { id: uid } } },
-      where: { id: invitation.talk.id },
-    });
-    return redirect(`/speaker/talks/${talk.id}`);
-  }
-
-  return null;
 };
 
 export default function InvitationRoute() {

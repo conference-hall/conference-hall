@@ -9,7 +9,7 @@ import { EventActivity } from '../components/Activity';
 import { requireUserSession } from '../../../features/auth/auth.server';
 import {
   archiveTalk,
-  getSpeakerTalk,
+  getTalk,
   removeCoSpeaker,
   restoreTalk,
   SpeakerTalk,
@@ -23,7 +23,7 @@ import { TrashIcon } from '@heroicons/react/outline';
 export const loader: LoaderFunction = async ({ request, params }) => {
   const uid = await requireUserSession(request);
   try {
-    const talk = await getSpeakerTalk(uid, params.id);
+    const talk = await getTalk(uid, params.id);
     return json<SpeakerTalk>(talk);
   } catch {
     throw new Response('Talk not found.', { status: 404 });

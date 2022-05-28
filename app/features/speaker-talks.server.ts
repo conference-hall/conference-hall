@@ -12,14 +12,14 @@ export type SpeakerTalks = Array<{
 
 /**
  * List all talks for a speaker
- * @param speakerId Id of the speaker
+ * @param uid Id of the connected user
  * @returns SpeakerTalks
  */
-export async function findSpeakerTalks(speakerId: string): Promise<SpeakerTalks> {
+export async function findTalks(uid: string): Promise<SpeakerTalks> {
   const talks = await db.talk.findMany({
     select: { id: true, title: true, createdAt: true, speakers: true },
     where: {
-      speakers: { some: { id: speakerId } },
+      speakers: { some: { id: uid } },
     },
     orderBy: { updatedAt: 'desc' },
   });
@@ -58,14 +58,14 @@ export interface SpeakerTalk {
 
 /**
  * Get a talk for a speaker
- * @param speakerId Id of the speaker
+ * @param uid Id of the connected user
  * @param talkId Id of the talk
  * @returns SpeakerTalk
  */
-export async function getSpeakerTalk(speakerId: string, talkId?: string): Promise<SpeakerTalk> {
+export async function getTalk(uid: string, talkId?: string): Promise<SpeakerTalk> {
   const talk = await db.talk.findFirst({
     where: {
-      speakers: { some: { id: speakerId } },
+      speakers: { some: { id: uid } },
       id: talkId,
     },
     include: { speakers: true, proposals: { include: { event: true } } },
@@ -81,14 +81,14 @@ export async function getSpeakerTalk(speakerId: string, talkId?: string): Promis
     references: talk.references,
     archived: talk.archived,
     createdAt: talk.createdAt.toISOString(),
-    isOwner: speakerId === talk.creatorId,
+    isOwner: uid === talk.creatorId,
     speakers: talk.speakers
       .map((speaker) => ({
         id: speaker.id,
         name: speaker.name,
         photoURL: speaker.photoURL,
         isOwner: speaker.id === talk.creatorId,
-        isCurrentUser: speaker.id === speakerId,
+        isCurrentUser: speaker.id === uid,
       }))
       .sort((a, b) => (a.isOwner ? -1 : 0) - (b.isOwner ? -1 : 0)),
     proposals: talk.proposals.map((proposal) => ({
@@ -102,12 +102,12 @@ export async function getSpeakerTalk(speakerId: string, talkId?: string): Promis
 
 /**
  * Delete a talk for a speaker
- * @param speakerId Id of the speaker
+ * @param uid Id of the connected user
  * @param talkId Id of the talk
  */
-export async function deleteSpeakerTalk(speakerId: string, talkId?: string) {
+export async function deleteTalk(uid: string, talkId?: string) {
   const talk = await db.talk.findFirst({
-    where: { id: talkId, speakers: { some: { id: speakerId } } },
+    where: { id: talkId, speakers: { some: { id: uid } } },
   });
   if (!talk) throw new TalkNotFoundError();
 
@@ -116,15 +116,15 @@ export async function deleteSpeakerTalk(speakerId: string, talkId?: string) {
 
 /**
  * Create a new talk for a speaker
- * @param speakerId Id of the speaker
+ * @param uid Id of the connected user
  * @param data Talk data
  */
-export async function createSpeakerTalk(speakerId: string, data: TalkUpdateFormData) {
+export async function createTalk(uid: string, data: TalkData) {
   const result = await db.talk.create({
     data: {
       ...data,
-      creator: { connect: { id: speakerId } },
-      speakers: { connect: [{ id: speakerId }] },
+      creator: { connect: { id: uid } },
+      speakers: { connect: [{ id: uid }] },
     },
   });
   return result.id;
@@ -132,13 +132,13 @@ export async function createSpeakerTalk(speakerId: string, data: TalkUpdateFormD
 
 /**
  * Update a talk for a speaker
- * @param speakerId Id of the speaker
+ * @param uid Id of the connected user
  * @param talkId Id of the talk
  * @param data Talk data
  */
-export async function updateSpeakerTalk(speakerId: string, talkId?: string, data?: TalkUpdateFormData) {
+export async function updateTalk(uid: string, talkId?: string, data?: TalkData) {
   const talk = await db.talk.findFirst({
-    where: { id: talkId, speakers: { some: { id: speakerId } } },
+    where: { id: talkId, speakers: { some: { id: uid } } },
   });
   if (!talk || !data) throw new TalkNotFoundError();
 
@@ -148,7 +148,7 @@ export async function updateSpeakerTalk(speakerId: string, talkId?: string, data
   });
 }
 
-type TalkUpdateFormData = z.infer<typeof TalkSchema>;
+type TalkData = z.infer<typeof TalkSchema>;
 
 const TalkSchema = z.object({
   title: z.string().min(1),
@@ -169,23 +169,44 @@ export function validateTalkForm(form: FormData) {
 }
 
 /**
- * Remove a co-speaker from a talk
- * @param uid User id of the connected user
- * @param talkId Id of the talk
- * @param speakerId Id of the co-speaker to remove
+ * Invite a co-speaker to a talk
+ * @param invitationId Id of the invitation
+ * @param coSpeakerId Id of the co-speaker to add
  */
-export const removeCoSpeaker = async (uid: string, talkId: string, speakerId: string) => {
+ export const inviteCoSpeaker = async (invitationId: string, coSpeakerId: string) => {
+  const invitation = await db.invite.findUnique({
+    select: { type: true, talk: true, organization: true, invitedBy: true },
+    where: { id: invitationId },
+  });
+  if (!invitation || invitation.type !== 'SPEAKER' || !invitation.talk) {
+    throw new InvitationFoundError();
+  }
+
+  const talk = await db.talk.update({
+    data: { speakers: { connect: { id: coSpeakerId } } },
+    where: { id: invitation.talk.id },
+  });
+  return { id: talk.id };
+};
+
+/**
+ * Remove a co-speaker from a talk
+ * @param uid Id of the connected user
+ * @param talkId Id of the talk
+ * @param coSpeakerId Id of the co-speaker to remove
+ */
+export const removeCoSpeaker = async (uid: string, talkId: string, coSpeakerId: string) => {
   const talk = await db.talk.findFirst({
     where: { id: talkId, speakers: { some: { id: uid } } },
   });
   if (!talk) throw new TalkNotFoundError();
 
-  await db.talk.update({ where: { id: talkId }, data: { speakers: { disconnect: { id: speakerId } } } });
+  await db.talk.update({ where: { id: talkId }, data: { speakers: { disconnect: { id: coSpeakerId } } } });
 };
 
 /**
  * Archive a talk
- * @param uid User id of the connected user
+ * @param uid Id of the connected user
  * @param talkId Id of the talk
  */
  export const archiveTalk = async (uid: string, talkId: string) => {
@@ -199,7 +220,7 @@ export const removeCoSpeaker = async (uid: string, talkId: string, speakerId: st
 
 /**
  * Restore an archived talk
- * @param uid User id of the connected user
+ * @param uid Id of the connected user
  * @param talkId Id of the talk
  */
  export const restoreTalk = async (uid: string, talkId: string) => {
@@ -210,6 +231,13 @@ export const removeCoSpeaker = async (uid: string, talkId: string, speakerId: st
 
   await db.talk.update({ where: { id: talkId }, data: { archived: false } });
 };
+
+export class InvitationFoundError extends Error {
+  constructor() {
+    super('Invitation not found');
+    this.name = 'InvitationFoundError';
+  }
+}
 
 export class TalkNotFoundError extends Error {
   constructor() {

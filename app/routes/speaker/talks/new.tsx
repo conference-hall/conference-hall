@@ -5,7 +5,7 @@ import { Button } from '../../../components/Buttons';
 import { TalkAbstractForm } from '../../../components/proposal/TalkAbstractForm';
 import { H1 } from '../../../components/Typography';
 import { requireUserSession } from '../../../features/auth/auth.server';
-import { createSpeakerTalk, validateTalkForm } from '../../../features/speaker-talks.server';
+import { createTalk, validateTalkForm } from '../../../features/speaker-talks.server';
 import { ValidationErrors } from '../../../utils/validation-errors';
 
 export const action: ActionFunction = async ({ request, params }) => {
@@ -16,7 +16,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   if (!result.success) {
     return result.error.flatten();
   } else {
-    const talkId = await createSpeakerTalk(uid, result.data);
+    const talkId = await createTalk(uid, result.data);
     return redirect(`/speaker/talks/${talkId}`);
   }
 };
