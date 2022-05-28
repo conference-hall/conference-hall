@@ -2,6 +2,7 @@ import type { ActionFunction, LoaderFunction } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { z } from 'zod';
 import { db } from '../../services/db';
+import { getArray } from '../../utils/form';
 import { jsonToArray } from '../../utils/prisma';
 import { requireUserSession } from '../auth/auth.server';
 
@@ -9,7 +10,7 @@ export type ProposalData = {
   title: string;
   abstract: string;
   references: string | null;
-  language: string | null;
+  languages: string[];
   level: string | null;
 } | null;
 
@@ -30,13 +31,11 @@ export const loadProposal: LoaderFunction = async ({ request, params }) => {
 
   if (!talk) return null;
   
-  const languages = jsonToArray(talk.languages)
-
   return json<ProposalData>({
     title: talk.title,
     abstract: talk.abstract,
     references: talk.references,
-    language: languages.length > 0 ? languages[0] : null,
+    languages: jsonToArray(talk.languages),
     level: talk.level,
   });
 }
@@ -48,7 +47,6 @@ export const saveProposal: ActionFunction = async ({ request, params }) => {
   const form = await request.formData();
   const result = validateProposal(form)
   if (!result.success) {
-    console.error(result.error.flatten());
     return result.error.flatten();
   }
 
@@ -118,7 +116,7 @@ export function validateProposal(form: FormData) {
     title: form.get('title'),
     abstract: form.get('abstract'),
     references: form.get('references'),
-    languages: form.get('language') ? [form.get('language')] : [],
     level: form.get('level'),
+    languages: getArray(form, 'languages'),
   })
 }

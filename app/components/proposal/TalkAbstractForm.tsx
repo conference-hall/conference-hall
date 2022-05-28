@@ -1,16 +1,15 @@
 import { Input } from '~/components/forms/Input';
 import { Radio, RadioGroup } from '~/components/forms/RadioGroup';
 import { MarkdownTextArea } from '~/components/forms/MarkdownTextArea';
-import { Select } from '../forms/Select';
-import { LANGUAGES } from '../../utils/languages';
 import { LEVELS } from '../../utils/levels';
+import LanguagesSelect from '../forms/LanguagesSelect';
 
 type TalkAbstractProps = {
   initialValues?: {
     title: string;
     abstract: string;
     references: string | null;
-    language: string | null;
+    languages: string[];
     level: string | null;
   } | null;
   errors?: {
@@ -45,13 +44,7 @@ export function TalkAbstractForm({ initialValues, errors }: TalkAbstractProps) {
           </Radio>
         ))}
       </RadioGroup>
-      <Select label="Language" id="language" name="language" defaultValue={initialValues?.language || ''}>
-        {LANGUAGES.map(({ key, label }) => (
-          <option key={key} value={key}>
-            {label}
-          </option>
-        ))}
-      </Select>
+      <LanguagesSelect values={initialValues?.languages ?? []} />
       <MarkdownTextArea
         label="References"
         description="Give more info about your talk: slides, workshop pre-requities, github repo, video, summary, steps of the talk, which conference or meetup where it has been already given?"

@@ -31,9 +31,6 @@ export default function TalkActions() {
                 Edit
               </Link>
             </Menu.Item>
-            <Menu.Item>
-              <AddCoSpeakerMenu />
-            </Menu.Item>
           </div>
           <div className="py-1">
             <Menu.Item>

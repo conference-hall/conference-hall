@@ -46,7 +46,11 @@ export default function SpeakerTalkRoute() {
           <H1>{talk.title}</H1>
           <div className="mt-2 flex gap-2">
             <Badge color="indigo">{getLevel(talk.level)}</Badge>
-            <Badge color="indigo">{getLanguage(talk.language)}</Badge>
+            {talk.languages.map((language) => (
+              <Badge key={language} color="indigo">
+                {getLanguage(language)}
+              </Badge>
+            ))}
           </div>
         </div>
 
@@ -67,8 +71,8 @@ export default function SpeakerTalkRoute() {
           <div className="bg-white border border-gray-200 overflow-hidden sm:rounded-lg p-4">
             <H2>Speakers</H2>
             {talk.speakers.map((speaker) => (
-              <div className="mt-4 flex justify-between items-center">
-                <div key={speaker.id} className="flex items-center">
+              <div key={speaker.id} className="mt-4 flex justify-between items-center">
+                <div className="flex items-center">
                   <img
                     className="inline-block h-9 w-9 rounded-full"
                     src={speaker.photoURL || 'http://placekitten.com/100/100'}

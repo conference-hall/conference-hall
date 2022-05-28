@@ -5,6 +5,7 @@ import { requireUserSession } from '../auth/auth.server';
 import { db } from '../../services/db';
 import { jsonToArray } from '../../utils/prisma';
 import { getCfpState } from '../../utils/event';
+import { getArray } from '../../utils/form';
 
 export type SpeakerEditProposal = {
   proposal: {
@@ -14,7 +15,7 @@ export type SpeakerEditProposal = {
     abstract: string;
     status: string;
     level: string | null;
-    language: string | null;
+    languages: string[];
     references: string | null;
     createdAt: string;
     formats: string[];
@@ -44,8 +45,6 @@ export const loadSpeakerEditProposal: LoaderFunction = async ({ request, params 
   });
   if (!proposal) throw new Response('Proposal not found.', { status: 404 });
 
-  const languages = jsonToArray(proposal.languages);
-
   return json<SpeakerEditProposal>({
     proposal: {
       id: proposal.id,
@@ -54,7 +53,7 @@ export const loadSpeakerEditProposal: LoaderFunction = async ({ request, params 
       abstract: proposal.abstract,
       status: proposal.status,
       level: proposal.level,
-      language: languages.length > 0 ? languages[0] : null,
+      languages: jsonToArray(proposal.languages),
       references: proposal.references,
       createdAt: proposal.createdAt.toISOString(),
       formats: proposal.formats.map(({ id }) => id),
@@ -148,8 +147,8 @@ export function validateProposalForm(form: FormData, formatsRequired: boolean, c
     abstract: form.get('abstract'),
     references: form.get('references'),
     level: form.get('level'),
-    languages: form.get('language') ? [form.get('language')] : [],
     formats: form.getAll('formats'),
     categories: form.getAll('categories'),
+    languages: getArray(form, 'languages'),
   });
 }

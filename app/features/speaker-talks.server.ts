@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { db } from '../services/db';
+import { getArray } from '../utils/form';
 import { jsonToArray } from '../utils/prisma';
 
 export type SpeakerTalks = Array<{
@@ -40,7 +41,7 @@ export interface SpeakerTalk {
   title: string;
   abstract: string;
   level: string | null;
-  language: string | null;
+  languages: string[];
   references: string | null;
   createdAt: string;
   isOwner: boolean;
@@ -70,24 +71,24 @@ export async function getSpeakerTalk(speakerId: string, talkId?: string): Promis
   });
   if (!talk) throw new TalkNotFoundError();
 
-  const languages = jsonToArray(talk.languages);
-
   return {
     id: talk.id,
     title: talk.title,
     abstract: talk.abstract,
     level: talk.level,
-    language: languages.length > 0 ? languages[0] : null,
+    languages: jsonToArray(talk.languages),
     references: talk.references,
     createdAt: talk.createdAt.toISOString(),
     isOwner: speakerId === talk.creatorId,
-    speakers: talk.speakers.map((speaker) => ({
-      id: speaker.id,
-      name: speaker.name,
-      photoURL: speaker.photoURL,
-      isOwner: speaker.id === talk.creatorId,
-      isCurrentUser: speaker.id === speakerId,
-    })).sort((a, b) => (a.isOwner ? -1 : 0) - (b.isOwner ? -1 : 0)),
+    speakers: talk.speakers
+      .map((speaker) => ({
+        id: speaker.id,
+        name: speaker.name,
+        photoURL: speaker.photoURL,
+        isOwner: speaker.id === talk.creatorId,
+        isCurrentUser: speaker.id === speakerId,
+      }))
+      .sort((a, b) => (a.isOwner ? -1 : 0) - (b.isOwner ? -1 : 0)),
     proposals: talk.proposals.map((proposal) => ({
       eventSlug: proposal.event.slug,
       eventName: proposal.event.name,
@@ -148,8 +149,8 @@ export async function updateSpeakerTalk(speakerId: string, talkId?: string, data
 type TalkUpdateFormData = z.infer<typeof TalkSchema>;
 
 const TalkSchema = z.object({
-  title: z.string().nonempty(),
-  abstract: z.string().nonempty(),
+  title: z.string().min(1),
+  abstract: z.string().min(1),
   references: z.string().nullable(),
   level: z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']).nullable(),
   languages: z.array(z.string()),
@@ -161,13 +162,13 @@ export function validateTalkForm(form: FormData) {
     abstract: form.get('abstract'),
     references: form.get('references'),
     level: form.get('level'),
-    languages: form.get('language') ? [form.get('language')] : [],
+    languages: getArray(form, 'languages'),
   });
 }
 
 /**
  * Remove a co-speaker from a talk
- * @param uid User id of the speaker 
+ * @param uid User id of the speaker
  * @param talkId Id of the talk
  * @param speakerId Id of the co-speaker to remove
  */
@@ -178,7 +179,7 @@ export const removeCoSpeaker = async (uid: string, talkId: string, speakerId: st
   if (!talk) throw new TalkNotFoundError();
 
   await db.talk.update({ where: { id: talkId }, data: { speakers: { disconnect: { id: speakerId } } } });
-}
+};
 
 export class TalkNotFoundError extends Error {
   constructor() {
