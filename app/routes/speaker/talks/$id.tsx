@@ -1,5 +1,5 @@
 import { ActionFunction, json, LoaderFunction } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
+import { Form, useLoaderData } from '@remix-run/react';
 import { Container } from '~/components/layout/Container';
 import Badge from '../../../components/Badges';
 import { ButtonLink } from '../../../components/Buttons';
@@ -7,11 +7,12 @@ import { Markdown } from '../../../components/Markdown';
 import { H1, H2, Text } from '../../../components/Typography';
 import { EventActivity } from '../components/Activity';
 import { requireUserSession } from '../../../features/auth/auth.server';
-import { getSpeakerTalk, SpeakerTalk } from '../../../features/speaker-talks.server';
+import { getSpeakerTalk, removeCoSpeaker, SpeakerTalk } from '../../../features/speaker-talks.server';
 import { getLanguage } from '../../../utils/languages';
 import { getLevel } from '../../../utils/levels';
 import TalkActions from '../components/TalkActions';
 import { AddCoSpeakerButton } from '../components/CoSpeaker';
+import { TrashIcon } from '@heroicons/react/outline';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const uid = await requireUserSession(request);
@@ -28,13 +29,12 @@ export const action: ActionFunction = async ({ request, params }) => {
   const talkId = params.id;
   const form = await request.formData();
   const action = form.get('_action');
-  if (action === 'speaker-invitation') {
-    const invitationId = talkId + '-' + uid;
-    return json({
-      link: `http://localhost:3000/invitation/${invitationId}`,
-    });
+  if (action === 'speaker-remove' && talkId) {
+    const speakerId = form.get('_speakerId')?.toString();
+    if (speakerId) await removeCoSpeaker(uid, talkId, speakerId);
+    return json({});
   }
-}
+};
 
 export default function SpeakerTalkRoute() {
   const talk = useLoaderData<SpeakerTalk>();
@@ -45,8 +45,8 @@ export default function SpeakerTalkRoute() {
         <div>
           <H1>{talk.title}</H1>
           <div className="mt-2 flex gap-2">
-            <Badge color='indigo'>{getLevel(talk.level)}</Badge>
-            <Badge color='indigo'>{getLanguage(talk.language)}</Badge>
+            <Badge color="indigo">{getLevel(talk.level)}</Badge>
+            <Badge color="indigo">{getLanguage(talk.language)}</Badge>
           </div>
         </div>
 
@@ -67,13 +67,34 @@ export default function SpeakerTalkRoute() {
           <div className="bg-white border border-gray-200 overflow-hidden sm:rounded-lg p-4">
             <H2>Speakers</H2>
             {talk.speakers.map((speaker) => (
-              <div key={speaker.id} className="mt-4 flex items-center">
-                <img
-                  className="inline-block h-9 w-9 rounded-full"
-                  src={speaker.photoURL || 'http://placekitten.com/100/100'}
-                  alt={speaker.name || 'Speaker'}
-                />
-                <Text className="ml-3">{speaker.name}</Text>
+              <div className="mt-4 flex justify-between items-center">
+                <div key={speaker.id} className="flex items-center">
+                  <img
+                    className="inline-block h-9 w-9 rounded-full"
+                    src={speaker.photoURL || 'http://placekitten.com/100/100'}
+                    alt={speaker.name || 'Speaker'}
+                  />
+                  <div className="ml-3">
+                    <Text>{speaker.name}</Text>
+                    <Text variant="secondary" size="xs">
+                      {speaker.isOwner ? 'Owner' : 'Co-speaker'}
+                    </Text>
+                  </div>
+                </div>
+                <div>
+                  {!speaker.isOwner && (
+                    <Form method="post">
+                      <input type="hidden" name="_action" value="speaker-remove" />
+                      <input type="hidden" name="_speakerId" value={speaker.id} />
+                      <button
+                        type="submit"
+                        className="inline-flex items-center p-1 border border-transparent rounded-full text-gray-400 bg-white hover:bg-gray-100 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                      >
+                        <TrashIcon className="h-5 w-5" aria-hidden="true" />
+                      </button>
+                    </Form>
+                  )}
+                </div>
               </div>
             ))}
             <AddCoSpeakerButton />

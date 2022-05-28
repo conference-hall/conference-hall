@@ -43,7 +43,14 @@ export interface SpeakerTalk {
   language: string | null;
   references: string | null;
   createdAt: string;
-  speakers: Array<{ id: string; name: string | null; photoURL: string | null }>;
+  isOwner: boolean;
+  speakers: Array<{
+    id: string;
+    name: string | null;
+    photoURL: string | null;
+    isOwner: boolean;
+    isCurrentUser: boolean;
+  }>;
   proposals: Array<{ eventSlug: string; eventName: string; status: string; date: string }>;
 }
 
@@ -73,13 +80,20 @@ export async function getSpeakerTalk(speakerId: string, talkId?: string): Promis
     language: languages.length > 0 ? languages[0] : null,
     references: talk.references,
     createdAt: talk.createdAt.toISOString(),
-    speakers: talk.speakers.map((speaker) => ({ id: speaker.id, name: speaker.name, photoURL: speaker.photoURL })),
+    isOwner: speakerId === talk.creatorId,
+    speakers: talk.speakers.map((speaker) => ({
+      id: speaker.id,
+      name: speaker.name,
+      photoURL: speaker.photoURL,
+      isOwner: speaker.id === talk.creatorId,
+      isCurrentUser: speaker.id === speakerId,
+    })).sort((a, b) => (a.isOwner ? -1 : 0) - (b.isOwner ? -1 : 0)),
     proposals: talk.proposals.map((proposal) => ({
       eventSlug: proposal.event.slug,
       eventName: proposal.event.name,
       status: proposal.status,
       date: proposal.updatedAt.toISOString(),
-    }))
+    })),
   };
 }
 
@@ -149,6 +163,21 @@ export function validateTalkForm(form: FormData) {
     level: form.get('level'),
     languages: form.get('language') ? [form.get('language')] : [],
   });
+}
+
+/**
+ * Remove a co-speaker from a talk
+ * @param uid User id of the speaker 
+ * @param talkId Id of the talk
+ * @param speakerId Id of the co-speaker to remove
+ */
+export const removeCoSpeaker = async (uid: string, talkId: string, speakerId: string) => {
+  const talk = await db.talk.findFirst({
+    where: { id: talkId, speakers: { some: { id: uid } } },
+  });
+  if (!talk) throw new TalkNotFoundError();
+
+  await db.talk.update({ where: { id: talkId }, data: { speakers: { disconnect: { id: speakerId } } } });
 }
 
 export class TalkNotFoundError extends Error {
