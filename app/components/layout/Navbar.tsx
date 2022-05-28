@@ -1,8 +1,9 @@
-import { Link } from '@remix-run/react';
+import { Link as RemixLink } from '@remix-run/react';
 import { AuthUser } from '../../features/auth/auth.server';
+import { Link } from '../Links';
 import { UserAvatar } from './UserAvatar';
 
-type NavbarProps = { user?: AuthUser }
+type NavbarProps = { user?: AuthUser };
 
 export function Navbar({ user }: NavbarProps) {
   return (
@@ -18,11 +19,11 @@ export function Navbar({ user }: NavbarProps) {
               />
             </div>
             <div className="ml-4 font-sans text-lg font-bold text-gray-800">
-              <Link to="/">Conference Hall</Link>
+              <RemixLink to="/">Conference Hall</RemixLink>
             </div>
           </div>
           <div className="flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-            {user ? <UserAvatar email={user.email} picture={user.picture}/> : null}
+            {user ? <UserAvatar email={user.email} picture={user.picture} /> : <Link to="/login">Login</Link>}
           </div>
         </div>
       </div>
