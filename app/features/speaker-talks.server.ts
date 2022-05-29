@@ -6,20 +6,26 @@ import { jsonToArray } from '../utils/prisma';
 export type SpeakerTalks = Array<{
   id: string;
   title: string;
+  archived: boolean;
   createdAt: string;
   speakers: Array<{ id: string; name: string | null; photoURL: string | null }>;
 }>;
+
+type TalksListOptions = {
+  archived?: boolean;
+}
 
 /**
  * List all talks for a speaker
  * @param uid Id of the connected user
  * @returns SpeakerTalks
  */
-export async function findTalks(uid: string): Promise<SpeakerTalks> {
+export async function findTalks(uid: string, options?: TalksListOptions): Promise<SpeakerTalks> {
   const talks = await db.talk.findMany({
-    select: { id: true, title: true, createdAt: true, speakers: true },
+    select: { id: true, title: true, archived:true, createdAt: true, speakers: true },
     where: {
       speakers: { some: { id: uid } },
+      archived: options?.archived ?? false
     },
     orderBy: { updatedAt: 'desc' },
   });
@@ -27,6 +33,7 @@ export async function findTalks(uid: string): Promise<SpeakerTalks> {
   return talks.map((talk) => ({
     id: talk.id,
     title: talk.title,
+    archived: talk.archived,
     createdAt: talk.createdAt.toISOString(),
     speakers: talk.speakers.map((speaker) => ({
       id: speaker.id,

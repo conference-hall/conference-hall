@@ -1,21 +1,26 @@
 import { json, LoaderFunction } from '@remix-run/node';
 import { CalendarIcon } from '@heroicons/react/solid';
 import { formatRelative } from 'date-fns';
-import { useLoaderData, Link } from '@remix-run/react';
+import { useLoaderData, Link, Form, useSearchParams } from '@remix-run/react';
 import { IconLabel } from '../../../components/IconLabel';
 import { Container } from '../../../components/layout/Container';
 import { H2, Text } from '../../../components/Typography';
 import { requireUserSession } from '../../../features/auth/auth.server';
 import { findTalks, SpeakerTalks } from '../../../features/speaker-talks.server';
 import { ButtonLink } from '../../../components/Buttons';
+import Badge from '../../../components/Badges';
 
 export const loader: LoaderFunction = async ({ request }) => {
   const uid = await requireUserSession(request);
-  const talks = await findTalks(uid);
+  const { searchParams } = new URL(request.url);
+  const archived = Boolean(searchParams.get('archived'));
+  const talks = await findTalks(uid, { archived });
   return json<SpeakerTalks>(talks);
 };
 
 export default function SpeakerTalksRoute() {
+  const [searchParams] = useSearchParams();
+  const archived = Boolean(searchParams.get('archived'));
   const talks = useLoaderData<SpeakerTalks>();
 
   if (talks.length === 0) {
@@ -40,6 +45,11 @@ export default function SpeakerTalksRoute() {
           </Text>
         </div>
         <div className="flex-shrink-0 space-x-4">
+          {archived ? (
+            <Link to="/speaker/talks">Active talks</Link>
+          ) : (
+            <Link to="/speaker/talks?archived=true">Archived talks</Link>
+          )}
           <ButtonLink to="new">Create a talk abstract</ButtonLink>
         </div>
       </div>
@@ -50,7 +60,10 @@ export default function SpeakerTalksRoute() {
               <Link to={talk.id} className="block hover:bg-indigo-50 rounded-lg">
                 <div className="px-4 py-4 sm:px-6 h-40 flex flex-col justify-between">
                   <div>
-                    <p className="text-base font-semibold text-indigo-600 truncate">{talk.title}</p>
+                    <div className="flex justify-between">
+                      <p className="text-base font-semibold text-indigo-600 truncate">{talk.title}</p>
+                      {talk.archived && <Badge rounded={false}>Archived</Badge>}
+                    </div>
                     <div className="mt-2 flex items-center overflow-hidden -space-x-1">
                       {talk.speakers.map((speaker) => (
                         <img
