@@ -1,20 +1,54 @@
 import { Form, useActionData, useCatch, useLoaderData } from '@remix-run/react';
 import { Container } from '~/components/layout/Container';
 import { Button } from '../../../components/Buttons';
-import {
-  editProposal,
-  loadSpeakerEditProposal,
-  SpeakerEditProposal,
-} from '../../../features/event-proposals/edit-proposal.server';
 import { CategoriesForm } from '../../../components/proposal/CategoriesForm';
 import { TalkAbstractForm } from '../../../components/proposal/TalkAbstractForm';
 import { FormatsForm } from '../../../components/proposal/FormatsForm';
 import { H2 } from '../../../components/Typography';
 import { ValidationErrors } from '../../../utils/validation-errors';
+import { ActionFunction, json, LoaderFunction, redirect } from '@remix-run/node';
+import { requireUserSession } from '../../../features/auth/auth.server';
+import {
+  deleteProposal,
+  EventFormatsAndCategories,
+  getEventFormatsAndCategories,
+  getSpeakerProposal,
+  SpeakerProposal,
+  updateProposal,
+  validateProposalForm,
+} from '../../../features/events-proposals.server';
 
-export const loader = loadSpeakerEditProposal;
+export type SpeakerEditProposal = { proposal: SpeakerProposal } & EventFormatsAndCategories;
 
-export const action = editProposal;
+export const loader: LoaderFunction = async ({ request, params }) => {
+  const uid = await requireUserSession(request);
+  const slug = params.eventSlug!;
+  const proposalId = params.id!;
+  try {
+    const proposal = await getSpeakerProposal(proposalId, uid);
+    const { formats, categories } = await getEventFormatsAndCategories(slug);
+    return json<SpeakerEditProposal>({ proposal, formats, categories });
+  } catch (err) {
+    throw new Response('Proposal not found.', { status: 404 });
+  }
+};
+
+export const action: ActionFunction = async ({ request, params }) => {
+  const uid = await requireUserSession(request);
+  const slug = params.eventSlug!;
+  const proposalId = params.id!;
+  const form = await request.formData();
+  const method = form.get('_method');
+  if (method === 'DELETE') {
+    await deleteProposal(proposalId, uid);
+    return redirect(`/${slug}/proposals`);
+  } else {
+    const result = validateProposalForm(form);
+    if (!result.success) return result.error.flatten();
+    await updateProposal(slug, proposalId, uid, result.data);
+    return redirect(`/${slug}/proposals/${proposalId}`);
+  }
+};
 
 export default function EditProposalRoute() {
   const data = useLoaderData<SpeakerEditProposal>();

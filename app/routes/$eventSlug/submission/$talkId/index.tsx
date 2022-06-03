@@ -1,6 +1,6 @@
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import { Button } from '~/components/Buttons';
-import { loadProposal, ProposalData, saveProposal } from '~/features/event-submission/step-proposal.server';
+import { loadProposal, ProposalData, saveProposal } from '~/features/events-submission/step-proposal.server';
 import { ValidationErrors } from '~/utils/validation-errors';
 import { TalkAbstractForm } from '~/components/proposal/TalkAbstractForm';
 import { H2, Text } from '../../../../components/Typography';

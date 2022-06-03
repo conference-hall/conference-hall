@@ -1,5 +1,5 @@
 import { useMatches } from '@remix-run/react';
-import { SubmitSteps } from '../../../../features/event-submission/steps.server';
+import { SubmitSteps } from '../../../../features/events-submission/steps.server';
 
 export function usePreviousStep() {
   const matches = useMatches();

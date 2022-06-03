@@ -5,9 +5,9 @@ import { useEvent } from '../../$eventSlug';
 import { ButtonLink } from '../../../components/Buttons';
 import { H2, Text } from '../../../components/Typography';
 import { requireUserSession } from '../../../features/auth/auth.server';
+import { fetchSpeakerProposals, SpeakerProposals } from '../../../features/events-proposals.server';
 import { ProposalsEmptyState } from './components/ProposalsEmptyState';
 import { ProposalsList } from './components/ProposalsList';
-import { fetchSpeakerProposals, SpeakerProposals } from '../../../features/event-proposals/list-proposals.server';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const uid = await requireUserSession(request);

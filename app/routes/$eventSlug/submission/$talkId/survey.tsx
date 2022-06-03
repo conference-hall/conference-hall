@@ -13,7 +13,7 @@ import {
   saveSurvey,
   SurveyAnswers,
   validateSurveyForm,
-} from '~/features/event-submission/step-survey.server';
+} from '~/features/events-submission/step-survey.server';
 
 type SurveyQuestionsForm = {
   questions: SurveyQuestions;

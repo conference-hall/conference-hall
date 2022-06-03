@@ -1,5 +1,5 @@
 import { useCatch, useLoaderData } from '@remix-run/react';
-import { SelectionStep, loadSelection } from '~/features/event-submission/selection.server';
+import { SelectionStep, loadSelection } from '~/features/events-submission/selection.server';
 import { ButtonLink } from '~/components/Buttons';
 import { TalksEmptyState } from './components/TalksEmptyState';
 import { TalksSelection } from './components/TalksSelection';

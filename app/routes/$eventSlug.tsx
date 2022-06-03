@@ -4,7 +4,7 @@ import { ButtonLink } from '../components/Buttons';
 import { Header } from '../components/event/Header';
 import { EventTabs } from '../components/event/Tabs';
 import { Container } from '../components/layout/Container';
-import { EventData, getEventPage } from '../features/event-page.server';
+import { EventData, getEventPage } from '../features/events-page.server';
 
 export const loader: LoaderFunction = async ({ params }) => {
   const slug = params.eventSlug;

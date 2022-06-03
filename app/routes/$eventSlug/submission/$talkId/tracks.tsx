@@ -2,7 +2,7 @@ import { Form, useLoaderData } from '@remix-run/react';
 import { Button, ButtonLink } from '~/components/Buttons';
 import { CategoriesForm } from '~/components/proposal/CategoriesForm';
 import { FormatsForm } from '~/components/proposal/FormatsForm';
-import { loadTracks, saveTracks, TracksData } from '~/features/event-submission/step-tracks.server';
+import { loadTracks, saveTracks, TracksData } from '~/features/events-submission/step-tracks.server';
 import { usePreviousStep } from '../hooks/usePreviousStep';
 
 export const handle = { step: 'tracks' };

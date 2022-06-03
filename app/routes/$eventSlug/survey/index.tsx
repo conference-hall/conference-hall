@@ -2,7 +2,7 @@ import { ActionFunction, json, LoaderFunction } from '@remix-run/node';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import { Button } from '~/components/Buttons';
 import { Container } from '~/components/layout/Container';
-import { getSurveyAnswers, getSurveyQuestions, saveSurvey, SurveyAnswers, validateSurveyForm } from '~/features/event-submission/step-survey.server';
+import { getSurveyAnswers, getSurveyQuestions, saveSurvey, SurveyAnswers, validateSurveyForm } from '~/features/events-submission/step-survey.server';
 import { SurveyForm } from '~/routes/$eventSlug/submission/components/SurveyForm';
 import { AlertSuccess } from '../../../components/Alerts';
 import { H2, Text } from '../../../components/Typography';
