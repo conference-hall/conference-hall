@@ -25,7 +25,7 @@ type EventsItemProps = {
 
 export function EventItem({ slug, name, type, address, cfpState }: EventsItemProps) {
   return (
-    <li className="col-span-1 bg-white rounded-lg shadow">
+    <li className="col-span-1 bg-white rounded-lg border border-gray-200">
       <Link to={`/${slug}`} className="block hover:bg-gray-50 rounded-lg">
         <div className="px-4 py-6 sm:px-6 h-40 flex flex-col justify-between">
           <div>

@@ -54,7 +54,7 @@ function Document({ children, title, user }: DocumentProps) {
         {title ? <title>{title}</title> : null}
         <Links />
       </head>
-      <body className="font-sans antialiased text-gray-600 bg-gray-100">
+      <body className="font-sans antialiased text-gray-600 bg-white">
         <Navbar user={user} />
         {children}
         <Footer />

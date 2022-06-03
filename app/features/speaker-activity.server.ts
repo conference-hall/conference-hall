@@ -31,7 +31,7 @@ export async function getSpeakerActivity(speakerId: string): Promise<SpeakerActi
   if (!speaker) throw new SpeakerNotFoundError();
 
   const talksActivity = await db.talk.findMany({
-    where: { speakers: { some: { id: speakerId } } },
+    where: { archived: false, speakers: { some: { id: speakerId } } },
     include: {
       speakers: { select: { name: true } },
       proposals: {
