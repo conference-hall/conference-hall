@@ -1,13 +1,20 @@
+import { json, LoaderFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { Container } from '~/components/layout/Container';
 import { useEvent } from '../../$eventSlug';
 import { ButtonLink } from '../../../components/Buttons';
 import { H2, Text } from '../../../components/Typography';
-import { ProposalsEmptyState } from '../../../features/event-proposals/components/ProposalsEmptyState';
-import { ProposalsList } from '../../../features/event-proposals/components/ProposalsList';
-import { loadSpeakerProposals, SpeakerProposals } from '../../../features/event-proposals/list-proposals.server';
+import { requireUserSession } from '../../../features/auth/auth.server';
+import { ProposalsEmptyState } from './components/ProposalsEmptyState';
+import { ProposalsList } from './components/ProposalsList';
+import { fetchSpeakerProposals, SpeakerProposals } from '../../../features/event-proposals/list-proposals.server';
 
-export const loader = loadSpeakerProposals;
+export const loader: LoaderFunction = async ({ request, params }) => {
+  const uid = await requireUserSession(request);
+  const slug = params.eventSlug!;
+  const proposals = await fetchSpeakerProposals(slug, uid);
+  return json<SpeakerProposals>(proposals);
+};
 
 export default function EventSpeakerProposalsRoute() {
   const event = useEvent();

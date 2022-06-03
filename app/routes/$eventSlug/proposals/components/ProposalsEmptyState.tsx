@@ -1,7 +1,7 @@
-import { ButtonLink } from '../../../components/Buttons';
-import { CfpLabel } from '../../../components/event/CfpInfo';
-import { Container } from '../../../components/layout/Container';
-import { CfpState } from '../../../utils/event';
+import { ButtonLink } from '../../../../components/Buttons';
+import { CfpLabel } from '../../../../components/event/CfpInfo';
+import { Container } from '../../../../components/layout/Container';
+import { CfpState } from '../../../../utils/event';
 
 type ProposalEmptyStateProps = { cfpState: CfpState };
 

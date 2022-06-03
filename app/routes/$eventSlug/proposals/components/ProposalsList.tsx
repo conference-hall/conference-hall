@@ -1,7 +1,7 @@
 import formatRelative from 'date-fns/formatRelative';
 import { CalendarIcon, ChevronRightIcon, ExclamationIcon } from '@heroicons/react/solid';
 import { Link } from '@remix-run/react';
-import { IconLabel } from '../../../components/IconLabel';
+import { IconLabel } from '../../../../components/IconLabel';
 
 type ProposalsListProps = {
   proposals: Array<{
