@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { db } from '../../services/db';
 import { getArray } from '../../utils/form';
 import { jsonToArray } from '../../utils/prisma';
-import { requireUserSession } from '../auth/auth.server';
+import { requireUserSession } from '../auth.server';
 
 export type ProposalData = {
   title: string;

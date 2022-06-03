@@ -3,7 +3,7 @@ import { redirect } from '@remix-run/node';
 import { useSubmit } from '@remix-run/react';
 import { Button } from '../components/Buttons';
 import { useFirebaseSignIn } from '../services/firebase/useFirebaseSignIn';
-import { createUserSession, getAuthUser } from '../features/auth/auth.server';
+import { createUserSession, getAuthUser } from '../features/auth.server';
 
 export const action: ActionFunction = async ({ request }) => {
   return createUserSession(request)

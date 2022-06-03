@@ -2,7 +2,7 @@ import type { ActionFunction, LoaderFunction } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { db } from '../../services/db';
 import { getCfpState } from '../../utils/event';
-import { requireUserSession } from '../auth/auth.server';
+import { requireUserSession } from '../auth.server';
 
 export type SubmitForm = {
   title: string;

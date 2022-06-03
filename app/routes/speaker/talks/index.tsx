@@ -5,7 +5,7 @@ import { useLoaderData, Link, Form, useSearchParams } from '@remix-run/react';
 import { IconLabel } from '../../../components/IconLabel';
 import { Container } from '../../../components/layout/Container';
 import { H2, Text } from '../../../components/Typography';
-import { requireUserSession } from '../../../features/auth/auth.server';
+import { requireUserSession } from '../../../features/auth.server';
 import { findTalks, SpeakerTalks } from '../../../features/speaker-talks.server';
 import { ButtonLink } from '../../../components/Buttons';
 import Badge from '../../../components/Badges';

@@ -1,5 +1,5 @@
 import { ActionFunction, json } from '@remix-run/node';
-import { requireUserSession } from '../../../features/auth/auth.server';
+import { requireUserSession } from '../../../features/auth.server';
 import { db } from '../../../services/db';
 
 export type InvitationLink = {

@@ -16,7 +16,7 @@ import {
 import { ValidationErrors } from '../../utils/validation-errors';
 import { useCallback } from 'react';
 import { getAuth } from 'firebase/auth';
-import { requireUserSession } from '../../features/auth/auth.server';
+import { requireUserSession } from '../../features/auth.server';
 
 export const loader: LoaderFunction = async ({ request }) => {
   const uid = await requireUserSession(request);

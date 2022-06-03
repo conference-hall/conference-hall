@@ -5,7 +5,7 @@ import { Button } from '../../components/Buttons';
 import { Container } from '../../components/layout/Container';
 import { Link } from '../../components/Links';
 import { H1, H2, Text } from '../../components/Typography';
-import { requireUserSession } from '../../features/auth/auth.server';
+import { requireUserSession } from '../../features/auth.server';
 import { getInvitation, Invitation } from '../../features/invitations.server';
 import { inviteCoSpeaker } from '../../features/speaker-talks.server';
 

@@ -1,6 +1,6 @@
 import type { ActionFunction, LoaderFunction } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
-import { destroyUserSession } from '../features/auth/auth.server';
+import { destroyUserSession } from '../features/auth.server';
 
 export const action: ActionFunction = async ({ request }) => {
   const destroyedCookie = await destroyUserSession(request);

@@ -3,7 +3,7 @@ import { redirect } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
 import { Button, ButtonLink } from '~/components/Buttons';
 import { H2, Text } from '../../../../components/Typography';
-import { requireUserSession } from '../../../../features/auth/auth.server';
+import { requireUserSession } from '../../../../features/auth.server';
 import { SurveyQuestions } from '../../../../services/survey/questions';
 import { SurveyForm } from '../components/SurveyForm';
 import { usePreviousStep } from '../hooks/usePreviousStep';

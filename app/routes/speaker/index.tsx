@@ -1,7 +1,7 @@
 import { json, LoaderFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { GlobeAltIcon, HomeIcon, LocationMarkerIcon } from '@heroicons/react/solid';
-import { requireUserSession } from '../../features/auth/auth.server';
+import { requireUserSession } from '../../features/auth.server';
 import { Container } from '../../components/layout/Container';
 import { H3, Text } from '../../components/Typography';
 import { Markdown } from '../../components/Markdown';

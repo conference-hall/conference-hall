@@ -5,7 +5,7 @@ import { Meta, LiveReload, Outlet, Links, Scripts, useCatch, useLoaderData, Scro
 import { Navbar } from './components/layout/Navbar';
 
 import { initializeFirebase } from './services/firebase/init';
-import { AuthUser, getAuthUser } from './features/auth/auth.server';
+import { AuthUser, getAuthUser } from './features/auth.server';
 
 import tailwind from './tailwind.css';
 import { Footer } from './components/layout/Footer';

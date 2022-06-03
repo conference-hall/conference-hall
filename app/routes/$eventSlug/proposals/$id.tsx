@@ -10,7 +10,7 @@ import { DeleteProposalButton } from '../../../components/proposal/DeleteProposa
 import { H2 } from '../../../components/Typography';
 import { getSpeakerProposal, SpeakerProposal } from '../../../features/events-proposals.server';
 import { json, LoaderFunction } from '@remix-run/node';
-import { requireUserSession } from '../../../features/auth/auth.server';
+import { requireUserSession } from '../../../features/auth.server';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const uid = await requireUserSession(request);

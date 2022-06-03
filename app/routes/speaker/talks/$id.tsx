@@ -6,7 +6,7 @@ import { Button, ButtonLink } from '../../../components/Buttons';
 import { Markdown } from '../../../components/Markdown';
 import { H1, H2, Text } from '../../../components/Typography';
 import { EventActivity } from '../components/Activity';
-import { requireUserSession } from '../../../features/auth/auth.server';
+import { requireUserSession } from '../../../features/auth.server';
 import {
   archiveTalk,
   getTalk,

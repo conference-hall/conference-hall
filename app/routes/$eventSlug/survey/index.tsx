@@ -6,7 +6,7 @@ import { getSurveyAnswers, getSurveyQuestions, saveSurvey, SurveyAnswers, valida
 import { SurveyForm } from '~/routes/$eventSlug/submission/components/SurveyForm';
 import { AlertSuccess } from '../../../components/Alerts';
 import { H2, Text } from '../../../components/Typography';
-import { requireUserSession } from '../../../features/auth/auth.server';
+import { requireUserSession } from '../../../features/auth.server';
 import { SurveyQuestions } from '../../../services/survey/questions';
 
 type SurveyQuestionsForm = {

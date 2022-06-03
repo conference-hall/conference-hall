@@ -7,7 +7,7 @@ import { FormatsForm } from '../../../components/proposal/FormatsForm';
 import { H2 } from '../../../components/Typography';
 import { ValidationErrors } from '../../../utils/validation-errors';
 import { ActionFunction, json, LoaderFunction, redirect } from '@remix-run/node';
-import { requireUserSession } from '../../../features/auth/auth.server';
+import { requireUserSession } from '../../../features/auth.server';
 import {
   deleteProposal,
   EventFormatsAndCategories,

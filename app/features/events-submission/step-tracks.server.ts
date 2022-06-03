@@ -2,7 +2,7 @@ import type { ActionFunction, LoaderFunction } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { z } from 'zod';
 import { db } from '../../services/db';
-import { requireUserSession } from '../auth/auth.server';
+import { requireUserSession } from '../auth.server';
 
 export type TracksData = {
   formats: Array<{ id: string; name: string; description: string | null }>;

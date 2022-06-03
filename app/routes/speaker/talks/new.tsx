@@ -4,7 +4,7 @@ import { Container } from '~/components/layout/Container';
 import { Button } from '../../../components/Buttons';
 import { TalkAbstractForm } from '../../../components/proposal/TalkAbstractForm';
 import { H1 } from '../../../components/Typography';
-import { requireUserSession } from '../../../features/auth/auth.server';
+import { requireUserSession } from '../../../features/auth.server';
 import { createTalk, validateTalkForm } from '../../../features/speaker-talks.server';
 import { ValidationErrors } from '../../../utils/validation-errors';
 
