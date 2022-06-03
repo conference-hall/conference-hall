@@ -1,8 +1,7 @@
-import React from 'react';
 import cn from 'classnames';
-import { CfpState } from '../../../utils/event';
 import { NavLink } from '@remix-run/react';
-import { Container } from '../../../components/layout/Container';
+import { CfpState } from '../../utils/event';
+import { Container } from '../layout/Container';
 
 type EventTabsProps = {
   slug: string;

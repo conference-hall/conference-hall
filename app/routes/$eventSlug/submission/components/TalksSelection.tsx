@@ -1,6 +1,6 @@
-import { ChevronRightIcon, ExclamationIcon } from '@heroicons/react/solid';
+import { ExclamationIcon } from '@heroicons/react/solid';
 import { Link } from '@remix-run/react';
-import { IconLabel } from '../../../components/IconLabel';
+import { IconLabel } from '../../../../components/IconLabel';
 
 type TalksSelectionProps = {
   talks: Array<{

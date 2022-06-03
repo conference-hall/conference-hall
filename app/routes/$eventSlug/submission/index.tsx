@@ -1,11 +1,11 @@
 import { useCatch, useLoaderData } from '@remix-run/react';
 import { SelectionStep, loadSelection } from '~/features/event-submission/selection.server';
 import { ButtonLink } from '~/components/Buttons';
-import { TalksEmptyState } from '../../../features/event-submission/components/TalksEmptyState';
-import { TalksSelection } from '../../../features/event-submission/components/TalksSelection';
+import { TalksEmptyState } from './components/TalksEmptyState';
+import { TalksSelection } from './components/TalksSelection';
 import { Container } from '../../../components/layout/Container';
 import { AlertInfo } from '../../../components/Alerts';
-import { MaxProposalsReached } from '../../../features/event-submission/components/MaxProposalsReached';
+import { MaxProposalsReached } from './components/MaxProposalsReached';
 import { H2, Text } from '../../../components/Typography';
 
 export const handle = { step: 'selection' };

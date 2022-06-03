@@ -1,7 +1,7 @@
-import { SurveyQuestions } from '../../../services/survey/questions';
-import { Checkbox, CheckboxGroup } from '../../../components/forms/Checkboxes';
-import { Radio, RadioGroup } from '../../../components/forms/RadioGroup';
-import { TextArea } from '../../../components/forms/TextArea';
+import { SurveyQuestions } from '../../../../services/survey/questions';
+import { Checkbox, CheckboxGroup } from '../../../../components/forms/Checkboxes';
+import { Radio, RadioGroup } from '../../../../components/forms/RadioGroup';
+import { TextArea } from '../../../../components/forms/TextArea';
 
 export type SurveyFormProps = {
   questions: SurveyQuestions;

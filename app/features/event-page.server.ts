@@ -1,4 +1,3 @@
-import type { LoaderFunction } from '@remix-run/node';
 import { CfpState, getCfpState } from '~/utils/event';
 import { db } from '../services/db';
 

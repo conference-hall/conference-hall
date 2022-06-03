@@ -1,7 +1,6 @@
-import React from 'react';
 import { CalendarIcon, LocationMarkerIcon } from '@heroicons/react/solid';
-import { IconLabel } from '../../../components/IconLabel';
-import { formatConferenceDates } from '../../../utils/event';
+import { formatConferenceDates } from '../../utils/event';
+import { IconLabel } from '../IconLabel';
 
 type HeaderProps = {
   type: 'CONFERENCE' | 'MEETUP';

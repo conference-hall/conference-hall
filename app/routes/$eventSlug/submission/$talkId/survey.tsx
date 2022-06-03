@@ -1,24 +1,56 @@
-import type { ActionFunction } from '@remix-run/node';
+import { ActionFunction, json, LoaderFunction } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
 import { Button, ButtonLink } from '~/components/Buttons';
-import { usePreviousStep } from '~/features/event-submission/hooks/usePreviousStep';
-import { loadSurvey, saveSurvey, SurveyQuestionsForm } from '~/features/event-submission/step-survey.server';
 import { H2, Text } from '../../../../components/Typography';
-import { SurveyForm } from '../../../../features/event-submission/components/SurveyForm';
+import { requireUserSession } from '../../../../features/auth/auth.server';
+import { SurveyQuestions } from '../../../../services/survey/questions';
+import { SurveyForm } from '../components/SurveyForm';
+import { usePreviousStep } from '../hooks/usePreviousStep';
+import {
+  getSurveyAnswers,
+  getSurveyQuestions,
+  saveSurvey,
+  SurveyAnswers,
+  validateSurveyForm,
+} from '~/features/event-submission/step-survey.server';
+
+type SurveyQuestionsForm = {
+  questions: SurveyQuestions;
+  answers: SurveyAnswers;
+};
 
 export const handle = { step: 'survey' };
 
-export const loader = loadSurvey;
+export const loader: LoaderFunction = async ({ request, params }) => {
+  const uid = await requireUserSession(request);
+  const slug = params.eventSlug!;
+  try {
+    const questions = await getSurveyQuestions(slug);
+    const answers = await getSurveyAnswers(slug, uid);
+    return json<SurveyQuestionsForm>({ questions, answers });
+  } catch (err) {
+    throw new Response('Event not found', { status: 404 });
+  }
+};
 
-export const action: ActionFunction = async ({ request, params, context }) => {
-  const { eventSlug, talkId } = params;
-  await saveSurvey({ request, params, context });
-  return redirect(`/${eventSlug}/submission/${talkId}/submit`);
+export const action: ActionFunction = async ({ request, params }) => {
+  const uid = await requireUserSession(request);
+  const slug = params.eventSlug!;
+  const talkId = params.talkId!;
+  const form = await request.formData();
+  const result = validateSurveyForm(form);
+  if (!result.success) throw new Response('Bad survey values', { status: 400 });
+  try {
+    await saveSurvey(uid, slug, result.data);
+    return redirect(`/${slug}/submission/${talkId}/submit`);
+  } catch (err) {
+    throw new Response('Event not found', { status: 404 });
+  }
 };
 
 export default function SubmissionSurveyRoute() {
-  const { questions, initialValues } = useLoaderData<SurveyQuestionsForm>();
+  const { questions, answers } = useLoaderData<SurveyQuestionsForm>();
   const previousStepPath = usePreviousStep();
 
   return (
@@ -31,7 +63,7 @@ export default function SubmissionSurveyRoute() {
           </Text>
         </div>
         <div className="mt-6">
-          <SurveyForm questions={questions} initialValues={initialValues} />
+          <SurveyForm questions={questions} initialValues={answers} />
         </div>
       </div>
       <div className="px-4 py-5 text-right sm:px-6">

@@ -1,41 +1,52 @@
-import type { ActionFunction, LoaderFunction } from '@remix-run/node';
 import { z } from 'zod';
 import { db } from '../../services/db';
 import { QUESTIONS, SurveyQuestions } from '../../services/survey/questions';
 import { jsonToArray } from '../../utils/prisma';
-import { requireUserSession } from '../auth/auth.server';
 
-export type SurveyQuestionsForm = {
-  questions: SurveyQuestions;
-  initialValues: { [key: string]: string | string[] | null };
-};
+export type SurveyAnswers = { [key: string]: string | string[] | null };
 
-export const loadSurvey: LoaderFunction = async ({ request, params }) => {
-  const uid = await requireUserSession(request);
-
+export async function getSurveyQuestions(slug: string): Promise<SurveyQuestions> {
   const event = await db.event.findUnique({
     select: { id: true, surveyEnabled: true, surveyQuestions: true },
-    where: { slug: params.eventSlug },
+    where: { slug: slug },
   });
-  if (!event) throw new Response('Event not found', { status: 404 });
+  if (!event) throw new EventNotFoundError();
 
   const enabledQuestions = jsonToArray(event.surveyQuestions);
   if (!event.surveyEnabled || !enabledQuestions?.length) {
-    throw new Response('Event survey is not enabled', { status: 403 });
+    throw new SurveyNotEnabledError();
   }
 
-  const userSurvey = await db.survey.findUnique({
-    select: { answers: true },
-    where: { userId_eventId: { eventId: event.id, userId: uid } },
-  });
-
-  return {
-    questions: QUESTIONS.filter((question) => enabledQuestions.includes(question.name)),
-    initialValues: userSurvey?.answers ?? {},
-  };
+  return QUESTIONS.filter((question) => enabledQuestions.includes(question.name))
 };
 
-const SurveyFormSchema = z.object({
+export async function getSurveyAnswers(slug: string, uid: string): Promise<SurveyAnswers> {
+  const userSurvey = await db.survey.findFirst({
+    select: { answers: true },
+    where: { event: { slug }, user: { id: uid } },
+  });
+
+  return (userSurvey?.answers ?? {}) as SurveyAnswers;
+};
+
+export async function saveSurvey(uid: string, slug: string, answers: SurveyData) {
+  const event = await db.event.findUnique({ select: { id: true }, where: { slug } });
+  if (!event) throw new EventNotFoundError();
+
+  await db.survey.upsert({
+    where: { userId_eventId: { eventId: event.id, userId: uid } },
+    update: { answers },
+    create: {
+      event: { connect: { id: event.id } },
+      user: { connect: { id: uid } },
+      answers: answers,
+    },
+  });
+};
+
+type SurveyData = z.infer<typeof SurveySchema>;
+
+const SurveySchema = z.object({
   gender: z.string().nullable(),
   tshirt: z.string().nullable(),
   accomodation: z.string().nullable(),
@@ -44,11 +55,8 @@ const SurveyFormSchema = z.object({
   info: z.string().nullable(),
 });
 
-export const saveSurvey: ActionFunction = async ({ request, params }) => {
-  const uid = await requireUserSession(request);
-
-  const form = await request.formData();
-  const answers = SurveyFormSchema.safeParse({
+export function validateSurveyForm(form: FormData) {
+  return SurveySchema.safeParse({
     gender: form.get('gender'),
     tshirt: form.get('tshirt'),
     accomodation: form.get('accomodation'),
@@ -56,21 +64,18 @@ export const saveSurvey: ActionFunction = async ({ request, params }) => {
     diet: form.getAll('diet'),
     info: form.get('info'),
   });
-  if (!answers.success) throw new Response('Bad survey values', { status: 400 });
+}
 
-  const event = await db.event.findUnique({
-    select: { id: true },
-    where: { slug: params.eventSlug },
-  });
-  if (!event) throw new Response('Event not found', { status: 404 });
+export class EventNotFoundError extends Error {
+  constructor() {
+    super('Event not found');
+    this.name = 'EventNotFoundError';
+  }
+}
 
-  await db.survey.upsert({
-    where: { userId_eventId: { eventId: event.id, userId: uid } },
-    update: { answers: answers.data },
-    create: {
-      event: { connect: { id: event.id } },
-      user: { connect: { id: uid } },
-      answers: answers.data,
-    },
-  });
-};
+export class SurveyNotEnabledError extends Error {
+  constructor() {
+    super('Survey not enabled');
+    this.name = 'SurveyNotEnabledError';
+  }
+}
