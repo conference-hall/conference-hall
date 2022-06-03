@@ -1,7 +1,6 @@
 import type { LoaderFunction } from '@remix-run/node';
-import { json } from '@remix-run/node';
 import { CfpState, getCfpState } from '~/utils/event';
-import { db } from '../../services/db';
+import { db } from '../services/db';
 
 export interface EventData {
   id: string;
@@ -24,16 +23,16 @@ export interface EventData {
   categories: Array<{ id: string; name: string; description: string | null }>;
 }
 
-export const loadEvent: LoaderFunction = async ({ params }) => {
+export async function getEventPage(slug: string): Promise<EventData> {
   const event = await db.event.findUnique({
-    where: { slug: params.eventSlug },
+    where: { slug: slug },
     include: { formats: true, categories: true },
   });
   if (!event) {
-    throw new Response('Event not found', { status: 404 });
+    throw new EventNotFoundError();
   }
 
-  return json<EventData>({
+  return {
     id: event.id,
     slug: event.slug,
     type: event.type,
@@ -52,5 +51,12 @@ export const loadEvent: LoaderFunction = async ({ params }) => {
     bannerUrl: event.bannerUrl,
     formats: event.formats.map((f) => ({ id: f.id, name: f.name, description: f.description })),
     categories: event.categories.map((c) => ({ id: c.id, name: c.name, description: c.description })),
-  });
+  };
+}
+
+export class EventNotFoundError extends Error {
+  constructor() {
+    super('Event not found');
+    this.name = 'EventNotFoundError';
+  }
 }

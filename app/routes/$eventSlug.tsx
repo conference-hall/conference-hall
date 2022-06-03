@@ -1,11 +1,22 @@
+import { json, LoaderFunction } from '@remix-run/node';
 import { Outlet, useCatch, useLoaderData, useOutletContext } from '@remix-run/react';
 import { ButtonLink } from '../components/Buttons';
+import { Header } from '../components/event/Header';
+import { EventTabs } from '../components/event/Tabs';
 import { Container } from '../components/layout/Container';
-import { Header } from '../features/event-page/components/Header';
-import { EventTabs } from '../features/event-page/components/Tabs';
-import { EventData, loadEvent } from '../features/event-page/event.server';
+import { EventData, getEventPage } from '../features/event-page.server';
 
-export const loader = loadEvent;
+export const loader: LoaderFunction = async ({ params }) => {
+  const slug = params.eventSlug;
+  if (!slug) throw new Response('Event not found', { status: 404 })
+
+  try {
+    const event = await getEventPage(slug);
+    return json<EventData>(event);
+  } catch (err) {
+    throw new Response('Event not found', { status: 404 })
+  }
+}
 
 export default function EventRoute() {
   const data = useLoaderData<EventData>();
