@@ -2,8 +2,8 @@ import React from 'react';
 import { LocationMarkerIcon } from '@heroicons/react/solid';
 import { Link } from '@remix-run/react';
 import { formatEventType, CfpState } from '~/utils/event';
-import { IconLabel } from '../../../components/IconLabel';
-import { CfpLabel } from '../../../components/event/CfpInfo';
+import { IconLabel } from '../IconLabel';
+import { CfpLabel } from '../event/CfpInfo';
 
 type EventsListProps = { children: React.ReactNode };
 

@@ -1,18 +1,20 @@
-import type { LoaderFunction } from '@remix-run/node';
+import { json, LoaderFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { Container } from '~/components/layout/Container';
-import { SearchEventForm } from '~/features/event-search/components/SearchEventForm';
-import { SearchEvents, searchEvents } from '~/features/event-search/search-events.server';
+import { SearchEventForm } from '~/components/search/SearchEventForm';
+import { SearchEvents, searchEvents } from '~/features/search-events.server';
 import { H1, Text } from '../components/Typography';
-import { EventItem, EventsList } from '../features/event-search/components/EventsList';
+import { EventItem, EventsList } from '../components/search/EventsList';
 
-export const loader: LoaderFunction = async ({ request, params, context }) => {
-  return searchEvents({ request, params, context });
-};
+export const loader: LoaderFunction = async ({ request }) => {
+  const url = new URL(request.url);
+  const terms = url.searchParams.get('terms') ?? undefined;
+  const results = await searchEvents(terms);
+  return json<SearchEvents>(results);
+}
 
 export default function SearchRoute() {
   const data = useLoaderData<SearchEvents>();
-
   return (
     <div>
       <div className="bg-white">

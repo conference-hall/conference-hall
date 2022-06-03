@@ -1,7 +1,6 @@
 import c from 'classnames'
 import { Form } from '@remix-run/react';
-import { Button } from '../../../components/Buttons';
-import { Input } from '../../../components/forms/Input';
+import { Input } from '../forms/Input';
 
 type SearchEventFormProps = { terms?: string; className?: string };
 

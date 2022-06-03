@@ -1,4 +1,4 @@
-import { Button, ButtonLink } from '../components/Buttons';
+import { ButtonLink } from '../components/Buttons';
 import { Container } from '../components/layout/Container';
 import { H1, H2 } from '../components/Typography';
 

@@ -1,8 +1,6 @@
-import type { LoaderFunction } from '@remix-run/node';
-import { json } from '@remix-run/node';
 import { EventVisibility } from '@prisma/client';
 import { CfpState, getCfpState } from '~/utils/event';
-import { db } from '../../services/db';
+import { db } from '../services/db';
 
 export type SearchEvents = {
   terms?: string;
@@ -15,10 +13,7 @@ export type SearchEvents = {
   }>;
 };
 
-export const searchEvents: LoaderFunction = async ({ request }) => {
-  const url = new URL(request.url);
-  const terms = url.searchParams.get('terms') ?? undefined;
-
+export async function searchEvents(terms?: string): Promise<SearchEvents> {
   const events = await db.event.findMany({
     select: { slug: true, name: true, type: true, address: true, cfpStart: true, cfpEnd: true },
     where: {
@@ -29,7 +24,7 @@ export const searchEvents: LoaderFunction = async ({ request }) => {
     orderBy: { cfpStart: 'desc' },
   });
 
-  return json<SearchEvents>({
+  return {
     terms,
     results: events.map((event) => ({
       slug: event.slug,
@@ -38,5 +33,5 @@ export const searchEvents: LoaderFunction = async ({ request }) => {
       address: event.address,
       cfpState: getCfpState(event.type, event.cfpStart, event.cfpEnd),
     })),
-  });
+  };
 }
