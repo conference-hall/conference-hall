@@ -1,21 +1,13 @@
-import type { LoaderFunction } from '@remix-run/node';
-import { json } from '@remix-run/node';
 import { db } from '../../services/db';
 import { getCfpState } from '../../utils/event';
-import { requireUserSession } from '../auth.server';
 
-export type SubmitSteps = Array<{
-  key: string;
-  name: string;
-  path: string;
-  enabled: boolean;
-}>;
+export type EventSubmissionInfo ={
+  isCfpOpen: boolean;
+  hasSurvey: boolean;
+  hasTracks: boolean;
+};
 
-export const loadSubmissionSteps: LoaderFunction = async ({ request, params }) => {
-  await requireUserSession(request);
-
-  const { eventSlug, talkId } = params;
-
+export async function getEventSubmissionInfo(slug: string): Promise<EventSubmissionInfo> {
   const event = await db.event.findUnique({
     select: {
       type: true,
@@ -25,22 +17,20 @@ export const loadSubmissionSteps: LoaderFunction = async ({ request, params }) =
       surveyQuestions: true,
       _count: { select: { formats: true, categories: true } },
     },
-    where: { slug: params.eventSlug },
+    where: { slug },
   });
-  if (!event) throw new Response('Event not found.', { status: 404 });
+  if (!event) throw new EventNotFoundError();
 
   const isCfpOpen = getCfpState(event.type, event.cfpStart, event.cfpEnd) === 'OPENED';
-  if (!isCfpOpen) throw new Response('CFP is not opened!', { status: 403 });
+  const hasSurvey = event.surveyEnabled;
+  const hasTracks = event._count.categories > 0 || event._count.formats > 0;
 
-  const isSurveyStepEnabled = event.surveyEnabled;
-  const isTracksStepEnabled = event._count.categories > 0 || event._count.formats > 0;
+  return { hasSurvey, hasTracks, isCfpOpen };
+}
 
-  const steps = [
-    { key: 'proposal', name: 'Proposal', path: `/${eventSlug}/submission/${talkId}`, enabled: true },
-    { key: 'tracks', name: 'Tracks', path: `/${eventSlug}/submission/${talkId}/tracks`, enabled: isTracksStepEnabled },
-    { key: 'survey', name: 'Survey', path: `/${eventSlug}/submission/${talkId}/survey`, enabled: isSurveyStepEnabled },
-    { key: 'submission', name: 'Submission', path: `/${eventSlug}/submission/${talkId}/submit`, enabled: true },
-  ];
-
-  return json<SubmitSteps>(steps.filter((step) => step.enabled));
+export class EventNotFoundError extends Error {
+  constructor() {
+    super('Event not found');
+    this.name = 'EventNotFoundError';
+  }
 }
