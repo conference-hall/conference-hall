@@ -2,15 +2,44 @@ import { useState } from 'react';
 import { Form, useLoaderData } from '@remix-run/react';
 import { Button } from '~/components/Buttons';
 import { Checkbox } from '~/components/forms/Checkboxes';
-import { loadProposal, SubmitForm, submitProposal } from '~/features/events-submission/step-submit.server';
+import { getProposalInfo, ProposalInfo, submitProposal } from '~/features/events-submission/step-submit.server';
 import { ExternalLink } from '../../../../components/Links';
 import { H1, Text } from '../../../../components/Typography';
+import { ActionFunction, json, LoaderFunction, redirect } from '@remix-run/node';
+import { requireUserSession } from '../../../../features/auth.server';
+import { getEventSubmissionInfo } from '../../../../features/events-submission/steps.server';
+
+type SubmitForm = ProposalInfo & { codeOfConductUrl: string | null };
 
 export const handle = { step: 'submission' };
 
-export const loader = loadProposal;
+export const loader: LoaderFunction = async ({ request, params }) => {
+  const uid = await requireUserSession(request);
+  const eventSlug = params.eventSlug!;
+  const talkId = params.talkId!;
+  try {
+    const event = await getEventSubmissionInfo(eventSlug);
+    const proposal = await getProposalInfo(talkId, event.id, uid);
+    return json<SubmitForm>({
+      ...proposal,
+      codeOfConductUrl: event.codeOfConductUrl,
+    });
+  } catch (err) {
+    throw new Response('Event not found', { status: 404 });
+  }
+};
 
-export const action = submitProposal;
+export const action: ActionFunction = async ({ request, params }) => {
+  const uid = await requireUserSession(request);
+  const eventSlug = params.eventSlug!;
+  const talkId = params.talkId!;
+  try {
+    await submitProposal(talkId, eventSlug, uid);
+    return redirect(`/${eventSlug}/submission`);
+  } catch (err) {
+    throw new Response('Event not found', { status: 404 });
+  }
+};
 
 export default function SubmissionSubmitRoute() {
   const data = useLoaderData<SubmitForm>();
