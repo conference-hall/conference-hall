@@ -1,18 +1,52 @@
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import { Button } from '~/components/Buttons';
-import { loadProposal, ProposalData, saveProposal } from '~/features/events-submission/step-proposal.server';
+import { saveDraftProposalForEvent, validateProposalForm } from '~/features/events-submission/step-proposal.server';
 import { ValidationErrors } from '~/utils/validation-errors';
 import { TalkAbstractForm } from '~/components/proposal/TalkAbstractForm';
 import { H2, Text } from '../../../../components/Typography';
+import { requireUserSession } from '../../../../features/auth.server';
+import { ActionFunction, json, LoaderFunction, redirect } from '@remix-run/node';
+import { getTalk, SpeakerTalk } from '../../../../features/speaker-talks.server';
+import { getEventSubmissionInfo } from '../../../../features/events-submission/steps.server';
 
 export const handle = { step: 'proposal' };
 
-export const loader = loadProposal;
+export const loader: LoaderFunction = async ({ request, params }) => {
+  const uid = await requireUserSession(request);
+  const talkId = params.talkId!;
+  if (talkId !== 'new') {
+    const talk = await getTalk(uid, talkId);
+    return json<SpeakerTalk>(talk)
+  }
+  return null;
+}
 
-export const action = saveProposal;
+export const action: ActionFunction = async ({ request, params }) => {
+  const uid = await requireUserSession(request);
+  const slug = params.eventSlug!;
+  const talkId = params.talkId!;
+
+  const form = await request.formData();
+  const result = validateProposalForm(form)
+  if (!result.success) return result.error.flatten();
+
+  try {
+    const eventInfo = await getEventSubmissionInfo(slug)
+    const savedProposal = await saveDraftProposalForEvent(talkId, eventInfo.id, uid, result.data);
+    if (eventInfo.hasTracks) {
+      return redirect(`/${slug}/submission/${savedProposal.talkId}/tracks`);
+    } else if (eventInfo.hasSurvey) {
+      return redirect(`/${slug}/submission/${savedProposal.talkId}/survey`);
+    } else {
+      return redirect(`/${slug}/submission/${savedProposal.talkId}/submit`);
+    }
+  } catch(err) {
+    throw new Response('Event not found.', { status: 404 });
+  }
+};
 
 export default function SubmissionProposalRoute() {
-  const talk = useLoaderData<ProposalData>();
+  const talk = useLoaderData<SpeakerTalk>();
   const errors = useActionData<ValidationErrors>();
 
   return (
