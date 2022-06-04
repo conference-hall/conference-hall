@@ -12,13 +12,11 @@ function InputField({ id, label, type = 'text', className, error, ...rest }: Inp
   return (
     <div className={className}>
       {label && (
-        <label htmlFor={id} className="block text-sm font-medium text-gray-700">
+        <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-1">
           {label}
         </label>
       )}
-      <div className="mt-1">
-        <input id={id} type={type} ref={ref} className={styles} {...rest} />
-      </div>
+      <input id={id} type={type} ref={ref} className={styles} {...rest} />
       {error && (
         <p className="mt-1 text-sm text-red-600" id="email-error">
           {error}
