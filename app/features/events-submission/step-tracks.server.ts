@@ -1,89 +1,59 @@
-import type { ActionFunction, LoaderFunction } from '@remix-run/node';
-import { json, redirect } from '@remix-run/node';
+import type { ActionFunction } from '@remix-run/node';
+import { redirect } from '@remix-run/node';
 import { z } from 'zod';
 import { db } from '../../services/db';
-import { requireUserSession } from '../auth.server';
 
-export type TracksData = {
-  formats: Array<{ id: string; name: string; description: string | null }>;
-  categories: Array<{ id: string; name: string; description: string | null }>;
-  initialValues: {
-    formats: string[];
-    categories: string[];
-  };
+export type ProposalTracks = {
+  formats: string[];
+  categories: string[];
 };
 
-export const loadTracks: LoaderFunction = async ({ request, params }) => {
-  const { talkId, eventSlug } = params;
-  if (!talkId) throw new Response('Talk id is required', { status: 400 });
-
-  const event = await db.event.findUnique({
-    select: { id: true, formats: true, categories: true },
-    where: { slug: eventSlug },
-  });
-  if (!event) throw new Response('Event not found', { status: 404 });
-
-  const proposal = await db.proposal.findUnique({
+export async function getProposalTracks(talkId: string, eventId: string, uid: string): Promise<ProposalTracks> {
+  const proposal = await db.proposal.findFirst({
     select: { formats: true, categories: true },
-    where: { talkId_eventId: { talkId, eventId: event.id } },
+    where: { talkId, eventId, speakers: { some: { id: uid } } },
   });
-  if (!proposal) throw new Response('Proposal not found', { status: 404 });
+  if (!proposal) throw new ProposalNotFoundError();
 
-  return json<TracksData>({
-    formats: event.formats ?? [],
-    categories: event.categories ?? [],
-    initialValues: {
-      formats: proposal.formats.map((f) => f.id),
-      categories: proposal.categories.map((c) => c.id),
-    },
+  return {
+    formats: proposal.formats.map((f) => f.id),
+    categories: proposal.categories.map((c) => c.id),
+  };
+}
+
+export async function saveTracks(talkId: string, eventId: string, uid: string, data: TrackData): Promise<void> {
+  const proposal = await db.proposal.findFirst({
+    select: { id: true },
+    where: { talkId, eventId, speakers: { some: { id: uid } } },
   });
-};
+  if (!proposal) throw new ProposalNotFoundError();
 
-export const saveTracks: ActionFunction = async ({ request, params }) => {
-  const uid = await requireUserSession(request);
-  const { eventSlug, talkId } = params;
-
-  const event = await db.event.findUnique({ where: { slug: eventSlug } });
-  if (!event) throw new Response('Event not found', { status: 404 });
-
-  const form = await request.formData();
-  const result = validateTracks(form, event.formatsRequired, event.categoriesRequired);
-  if (!result.success) {
-    return result.error.flatten();
-  }
-
-  const talk = await db.talk.findFirst({ where: { id: talkId, speakers: { some: { id: uid } } } });
-  if (!talk) throw new Response('Not your talk!', { status: 401 });
-
-  const { formats, categories } = result.data;
   await db.proposal.update({
-    where: { talkId_eventId: { talkId: talk.id, eventId: event.id } },
+    where: { id: proposal.id },
     data: {
-      formats: { set: [], connect: formats?.map((f) => ({ id: f })) },
-      categories: { set: [], connect: categories?.map((c) => ({ id: c })) },
+      formats: { set: [], connect: data.formats?.map((f) => ({ id: f })) },
+      categories: { set: [], connect: data.categories?.map((c) => ({ id: c })) },
     },
   });
-
-  if (event.surveyEnabled) {
-    return redirect(`/${eventSlug}/submission/${talk.id}/survey`);
-  }
-  return redirect(`/${eventSlug}/submission/${talk.id}/submit`);
 };
 
-export function validateTracks(form: FormData, formatsRequired: boolean, categoriesRequired: boolean) {
-  const TracksSchema = z.object({
-    formats: z.array(z.string()),
-    categories: z.array(z.string()),
-  }).refine((data: any) => (formatsRequired ? Boolean(data.formats?.length) : true), {
-    message: 'Formats are required',
-    path: ['formats'],
-  }).refine((data: any) => (categoriesRequired ? Boolean(data.categories?.length) : true), {
-    message: 'Categories are required',
-    path: ['categories'],
-  });
+type TrackData = z.infer<typeof TracksSchema>;
 
+const TracksSchema = z.object({
+  formats: z.array(z.string()),
+  categories: z.array(z.string()),
+});
+
+export function validateTracksForm(form: FormData) {
   return TracksSchema.safeParse({
     formats: form.getAll('formats'),
     categories: form.getAll('categories'),
-  })
+  });
+}
+
+export class ProposalNotFoundError extends Error {
+  constructor() {
+    super('Proposal not found');
+    this.name = 'ProposalNotFoundError';
+  }
 }

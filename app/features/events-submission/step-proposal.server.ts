@@ -68,7 +68,7 @@ export function validateProposalForm(form: FormData) {
 
 export class TalkNotFoundError extends Error {
   constructor() {
-    super('Proposal not found');
+    super('Talk not found');
     this.name = 'TalkNotFoundError';
   }
 }

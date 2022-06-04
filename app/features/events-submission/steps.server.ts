@@ -1,11 +1,15 @@
 import { db } from '../../services/db';
 import { getCfpState } from '../../utils/event';
 
-export type EventSubmissionInfo ={
+export type EventTracks = Array<{ id: string; name: string; description: string | null }>
+
+export type EventSubmissionInfo = {
   id: string;
   isCfpOpen: boolean;
   hasSurvey: boolean;
   hasTracks: boolean;
+  formats: EventTracks;
+  categories: EventTracks;
 };
 
 export async function getEventSubmissionInfo(slug: string): Promise<EventSubmissionInfo> {
@@ -17,7 +21,8 @@ export async function getEventSubmissionInfo(slug: string): Promise<EventSubmiss
       cfpEnd: true,
       surveyEnabled: true,
       surveyQuestions: true,
-      _count: { select: { formats: true, categories: true } },
+      formats: true,
+      categories: true,
     },
     where: { slug },
   });
@@ -25,9 +30,9 @@ export async function getEventSubmissionInfo(slug: string): Promise<EventSubmiss
 
   const isCfpOpen = getCfpState(event.type, event.cfpStart, event.cfpEnd) === 'OPENED';
   const hasSurvey = event.surveyEnabled;
-  const hasTracks = event._count.categories > 0 || event._count.formats > 0;
+  const hasTracks = event.categories.length > 0 || event.formats.length > 0;
 
-  return { id: event.id, hasSurvey, hasTracks, isCfpOpen };
+  return { id: event.id, hasSurvey, hasTracks, isCfpOpen, formats: event.formats, categories: event.categories };
 }
 
 export class EventNotFoundError extends Error {

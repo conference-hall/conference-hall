@@ -1,29 +1,70 @@
+import { ActionFunction, json, LoaderFunction, redirect } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
 import { Button, ButtonLink } from '~/components/Buttons';
 import { CategoriesForm } from '~/components/proposal/CategoriesForm';
 import { FormatsForm } from '~/components/proposal/FormatsForm';
-import { loadTracks, saveTracks, TracksData } from '~/features/events-submission/step-tracks.server';
+import { getProposalTracks, ProposalTracks, saveTracks, validateTracksForm } from '~/features/events-submission/step-tracks.server';
+import { requireUserSession } from '../../../../features/auth.server';
+import { EventTracks, getEventSubmissionInfo } from '../../../../features/events-submission/steps.server';
 import { usePreviousStep } from '../hooks/usePreviousStep';
+
+type Tracks = {
+  event: { formats: EventTracks, categories: EventTracks };
+  proposal: ProposalTracks
+}
 
 export const handle = { step: 'tracks' };
 
-export const loader = loadTracks;
+export const loader: LoaderFunction = async ({ request, params }) => {
+  const uid = await requireUserSession(request);
+  const eventSlug = params.eventSlug!;
+  const talkId = params.talkId!;
+  try {
+    const event = await getEventSubmissionInfo(eventSlug);
+    const proposalTracks = await getProposalTracks(talkId, event.id, uid)
 
-export const action = saveTracks;
+    return json<Tracks>({
+      event: { formats: event.formats, categories: event.categories },
+      proposal: proposalTracks,
+    });
+  } catch (error) {
+    throw new Response('Event not found.', { status: 404 });
+  }
+};
+
+export const action: ActionFunction = async ({ request, params }) => {
+  const uid = await requireUserSession(request);
+  const eventSlug = params.eventSlug!;
+  const talkId = params.talkId!;
+  const form = await request.formData();
+  const result = validateTracksForm(form);
+  if (!result.success) return result.error.flatten();
+
+  try {
+    const event = await getEventSubmissionInfo(eventSlug);
+    await saveTracks(talkId, event.id, uid, result.data);
+    if (event.hasSurvey) {
+      return redirect(`/${eventSlug}/submission/${talkId}/survey`);
+    }
+    return redirect(`/${eventSlug}/submission/${talkId}/submit`);
+  } catch (error) {
+    throw new Response('Event not found.', { status: 404 });
+  }
+};
 
 export default function SubmissionTracksRoute() {
-  const data = useLoaderData<TracksData>();
+  const { event, proposal } = useLoaderData<Tracks>();
   const previousStepPath = usePreviousStep();
 
   return (
     <Form method="post">
       <div className="px-8 py-6 sm:py-10 space-y-12">
-        {data.formats?.length > 0 ? (
-          <FormatsForm formats={data.formats} initialValues={data.initialValues.formats} />
+        {event.formats?.length > 0 ? (
+          <FormatsForm formats={event.formats} initialValues={proposal.formats} />
         ) : null}
 
-        {data.categories?.length > 0 ? (
-          <CategoriesForm categories={data.categories} initialValues={data.initialValues.categories} />
+        {event.categories?.length > 0 ? (
+          <CategoriesForm categories={event.categories} initialValues={proposal.categories} />
         ) : null}
       </div>
 

@@ -31,11 +31,11 @@ export const action: ActionFunction = async ({ request, params }) => {
   if (!result.success) return result.error.flatten();
 
   try {
-    const eventInfo = await getEventSubmissionInfo(slug)
-    const savedProposal = await saveDraftProposalForEvent(talkId, eventInfo.id, uid, result.data);
-    if (eventInfo.hasTracks) {
+    const event = await getEventSubmissionInfo(slug)
+    const savedProposal = await saveDraftProposalForEvent(talkId, event.id, uid, result.data);
+    if (event.hasTracks) {
       return redirect(`/${slug}/submission/${savedProposal.talkId}/tracks`);
-    } else if (eventInfo.hasSurvey) {
+    } else if (event.hasSurvey) {
       return redirect(`/${slug}/submission/${savedProposal.talkId}/survey`);
     } else {
       return redirect(`/${slug}/submission/${savedProposal.talkId}/submit`);
