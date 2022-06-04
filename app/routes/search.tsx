@@ -5,12 +5,17 @@ import { SearchEventForm } from '~/components/search/SearchEventForm';
 import { H1, Text } from '../components/Typography';
 import { EventItem, EventsList } from '../components/search/EventsList';
 import { searchEvents, SearchEvents } from '../services/events/search.server';
+import { mapErrorToResponse } from '../services/errors';
 
 export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
   const terms = url.searchParams.get('terms') ?? undefined;
-  const results = await searchEvents(terms);
-  return json<SearchEvents>(results);
+  try {
+    const results = await searchEvents(terms);
+    return json<SearchEvents>(results);
+  } catch (err) {
+    mapErrorToResponse(err);
+  }
 }
 
 export default function SearchRoute() {

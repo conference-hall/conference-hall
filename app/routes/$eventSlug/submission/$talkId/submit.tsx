@@ -8,6 +8,7 @@ import { ActionFunction, json, LoaderFunction, redirect } from '@remix-run/node'
 import { requireUserSession } from '../../../../services/auth/auth.server';
 import { getEvent } from '../../../../services/events/event.server';
 import { getProposalInfo, ProposalInfo, submitProposal } from '../../../../services/events/submit.server';
+import { mapErrorToResponse } from '../../../../services/errors';
 
 type SubmitForm = ProposalInfo & { codeOfConductUrl: string | null };
 
@@ -25,7 +26,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       codeOfConductUrl: event.codeOfConductUrl,
     });
   } catch (err) {
-    throw new Response('Event not found', { status: 404 });
+    mapErrorToResponse(err);
   }
 };
 
@@ -37,7 +38,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     await submitProposal(talkId, eventSlug, uid);
     return redirect(`/${eventSlug}/submission`);
   } catch (err) {
-    throw new Response('Event not found', { status: 404 });
+    mapErrorToResponse(err);
   }
 };
 

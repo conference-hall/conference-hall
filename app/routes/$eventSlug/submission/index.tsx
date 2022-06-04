@@ -14,6 +14,7 @@ import {
   ProposalCountsForEvent,
   TalksToSubmit,
 } from '../../../services/events/submit.server';
+import { mapErrorToResponse } from '../../../services/errors';
 
 type SelectionStep = { talks: TalksToSubmit; proposalsCount: ProposalCountsForEvent };
 
@@ -28,7 +29,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     const proposalsCount = await getProposalCountsForEvent(uid, slug);
     return json<SelectionStep>({ talks, proposalsCount });
   } catch (err) {
-    throw new Response('Event not found.', { status: 404 });
+    mapErrorToResponse(err);
   }
 };
 

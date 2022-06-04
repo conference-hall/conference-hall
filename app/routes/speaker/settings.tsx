@@ -12,14 +12,15 @@ import { useCallback } from 'react';
 import { getAuth } from 'firebase/auth';
 import { requireUserSession } from '../../services/auth/auth.server';
 import { getSettings, SpeakerSettings, updateProfile, validateProfileData } from '../../services/speakers/settings.server';
+import { mapErrorToResponse } from '../../services/errors';
 
 export const loader: LoaderFunction = async ({ request }) => {
   const uid = await requireUserSession(request);
   try {
     const profile = await getSettings(uid);
     return json<SpeakerSettings>(profile);
-  } catch {
-    throw new Response('Speaker not found.', { status: 404 });
+  } catch(err) {
+    mapErrorToResponse(err);
   }
 };
 
@@ -34,8 +35,8 @@ export const action: ActionFunction = async ({ request }) => {
   try {
     await updateProfile(uid, result.data);
     return redirect('/speaker/settings');
-  } catch {
-    throw new Response('Speaker not found.', { status: 404 });
+  } catch(err) {
+    mapErrorToResponse(err);
   }
 };
 

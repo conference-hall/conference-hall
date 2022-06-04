@@ -5,6 +5,7 @@ import { Button, ButtonLink } from '../../../components/Buttons';
 import { TalkAbstractForm } from '../../../components/proposal/TalkAbstractForm';
 import { H1 } from '../../../components/Typography';
 import { requireUserSession } from '../../../services/auth/auth.server';
+import { mapErrorToResponse } from '../../../services/errors';
 import { getTalk, SpeakerTalk, updateTalk, validateTalkForm } from '../../../services/speakers/talks.server';
 import { ValidationErrors } from '../../../utils/validation-errors';
 
@@ -16,8 +17,8 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       throw new Response('Talk archived.', { status: 403 });
     }
     return json<SpeakerTalk>(talk);
-  } catch {
-    throw new Response('Talk not found.', { status: 404 });
+  } catch(err) {
+    mapErrorToResponse(err);
   }
 };
 
@@ -32,8 +33,8 @@ export const action: ActionFunction = async ({ request, params }) => {
       await updateTalk(uid, params.id, result.data);
       return redirect(`/speaker/talks/${params.id}`);
     }
-  } catch {
-    throw new Response('Talk not found.', { status: 404 });
+  } catch(err) {
+    mapErrorToResponse(err);
   }
 };
 

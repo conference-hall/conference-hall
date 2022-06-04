@@ -4,6 +4,7 @@ import { Button, ButtonLink } from '~/components/Buttons';
 import { CategoriesForm } from '~/components/proposal/CategoriesForm';
 import { FormatsForm } from '~/components/proposal/FormatsForm';
 import { requireUserSession } from '../../../../services/auth/auth.server';
+import { mapErrorToResponse } from '../../../../services/errors';
 import { EventTracks, getEvent } from '../../../../services/events/event.server';
 import { getProposalTracks, ProposalTracks, saveTracks, validateTracksForm } from '../../../../services/events/tracks.server';
 import { usePreviousStep } from '../../components/usePreviousStep';
@@ -27,8 +28,8 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       event: { formats: event.formats, categories: event.categories },
       proposal: proposalTracks,
     });
-  } catch (error) {
-    throw new Response('Event not found.', { status: 404 });
+  } catch (err) {
+    mapErrorToResponse(err);
   }
 };
 
@@ -47,8 +48,8 @@ export const action: ActionFunction = async ({ request, params }) => {
       return redirect(`/${eventSlug}/submission/${talkId}/survey`);
     }
     return redirect(`/${eventSlug}/submission/${talkId}/submit`);
-  } catch (error) {
-    throw new Response('Event not found.', { status: 404 });
+  } catch (err) {
+    mapErrorToResponse(err);
   }
 };
 

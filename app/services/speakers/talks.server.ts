@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { db } from '../../services/db';
 import { getArray } from '../../utils/form';
 import { jsonToArray } from '../../utils/prisma';
+import { InvitationFoundError, TalkNotFoundError } from '../errors';
 
 export type SpeakerTalks = Array<{
   id: string;
@@ -238,17 +239,3 @@ export const removeCoSpeaker = async (uid: string, talkId: string, coSpeakerId: 
 
   await db.talk.update({ where: { id: talkId }, data: { archived: false } });
 };
-
-export class InvitationFoundError extends Error {
-  constructor() {
-    super('Invitation not found');
-    this.name = 'InvitationFoundError';
-  }
-}
-
-export class TalkNotFoundError extends Error {
-  constructor() {
-    super('Talk not found');
-    this.name = 'TalkNotFoundError';
-  }
-}

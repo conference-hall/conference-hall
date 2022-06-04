@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { db } from '../db';
 import { jsonToArray } from '../../utils/prisma';
+import { EventNotFoundError, SurveyNotEnabledError } from '../errors';
 
 export type SurveyAnswers = { [key: string]: string | string[] | null };
 
@@ -63,20 +64,6 @@ export function validateSurveyForm(form: FormData) {
     diet: form.getAll('diet'),
     info: form.get('info'),
   });
-}
-
-export class EventNotFoundError extends Error {
-  constructor() {
-    super('Event not found');
-    this.name = 'EventNotFoundError';
-  }
-}
-
-export class SurveyNotEnabledError extends Error {
-  constructor() {
-    super('Survey not enabled');
-    this.name = 'SurveyNotEnabledError';
-  }
 }
 
 export type SurveyQuestions = Array<{

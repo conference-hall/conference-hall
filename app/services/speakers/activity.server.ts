@@ -1,4 +1,5 @@
 import { db } from '../../services/db';
+import { SpeakerNotFoundError } from '../errors';
 
 export type SpeakerActivity = {
   profile: {
@@ -69,9 +70,3 @@ export async function getSpeakerActivity(speakerId: string): Promise<SpeakerActi
   };
 }
 
-export class SpeakerNotFoundError extends Error {
-  constructor() {
-    super('Speaker not found');
-    this.name = 'SpeakerNotFoundError';
-  }
-}

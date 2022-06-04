@@ -8,6 +8,7 @@ import { ActionFunction, json, LoaderFunction, redirect } from '@remix-run/node'
 import { getTalk, SpeakerTalk } from '../../../../services/speakers/talks.server';
 import { saveDraftProposalForEvent, validateDraftProposalForm } from '../../../../services/events/submit.server';
 import { getEvent } from '../../../../services/events/event.server';
+import { mapErrorToResponse } from '../../../../services/errors';
 
 export const handle = { step: 'proposal' };
 
@@ -15,8 +16,12 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const uid = await requireUserSession(request);
   const talkId = params.talkId!;
   if (talkId !== 'new') {
-    const talk = await getTalk(uid, talkId);
-    return json<SpeakerTalk>(talk)
+    try {
+      const talk = await getTalk(uid, talkId);
+      return json<SpeakerTalk>(talk)
+    } catch (err) {
+      mapErrorToResponse(err);
+    }
   }
   return null;
 }
@@ -41,8 +46,7 @@ export const action: ActionFunction = async ({ request, params }) => {
       return redirect(`/${slug}/submission/${savedProposal.talkId}/submit`);
     }
   } catch(err) {
-    console.log(err)
-    throw new Response('Event not found.', { status: 404 });
+    mapErrorToResponse(err);
   }
 };
 

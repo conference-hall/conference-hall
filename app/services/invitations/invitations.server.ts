@@ -1,4 +1,5 @@
 import { db } from '../db';
+import { InvitationFoundError } from '../errors';
 
 export type Invitation = {
   type: 'SPEAKER' | 'ORGANIZATION';
@@ -26,9 +27,3 @@ export const getInvitation = async (invitationId: string): Promise<Invitation> =
   };
 };
 
-export class InvitationFoundError extends Error {
-  constructor() {
-    super('Invitation not found');
-    this.name = 'InvitationFoundError';
-  }
-}

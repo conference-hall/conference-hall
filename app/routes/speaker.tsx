@@ -4,8 +4,8 @@ import cn from 'classnames';
 import { Container } from '../components/layout/Container';
 import { requireAuthUser } from '../services/auth/auth.server';
 
-export const loader: LoaderFunction = ({ request }) => {
-  const user = requireAuthUser(request);
+export const loader: LoaderFunction = async ({ request }) => {
+  const user = await requireAuthUser(request);
   return user;
 };
 

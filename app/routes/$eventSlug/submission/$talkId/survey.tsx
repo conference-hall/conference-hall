@@ -4,6 +4,7 @@ import { Form, useLoaderData } from '@remix-run/react';
 import { Button, ButtonLink } from '~/components/Buttons';
 import { H2, Text } from '../../../../components/Typography';
 import { requireUserSession } from '../../../../services/auth/auth.server';
+import { mapErrorToResponse } from '../../../../services/errors';
 import { getSurveyAnswers, getSurveyQuestions, saveSurvey, SurveyAnswers, SurveyQuestions, validateSurveyForm } from '../../../../services/events/survey.server';
 import { SurveyForm } from '../../components/SurveyForm';
 import { usePreviousStep } from '../../components/usePreviousStep';
@@ -23,7 +24,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     const answers = await getSurveyAnswers(slug, uid);
     return json<SurveyQuestionsForm>({ questions, answers });
   } catch (err) {
-    throw new Response('Event not found', { status: 404 });
+    mapErrorToResponse(err);
   }
 };
 
@@ -38,7 +39,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     await saveSurvey(uid, slug, result.data);
     return redirect(`/${slug}/submission/${talkId}/submit`);
   } catch (err) {
-    throw new Response('Event not found', { status: 404 });
+    mapErrorToResponse(err);
   }
 };
 

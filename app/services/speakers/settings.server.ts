@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { db } from '../../services/db';
+import { SpeakerNotFoundError } from '../errors';
 
 export type SpeakerSettings = {
   name: string | null;
@@ -83,11 +84,4 @@ export function validateProfileData(form: FormData, type: string) {
     twitter: form.get('twitter'),
     github: form.get('github'),
   });
-}
-
-export class SpeakerNotFoundError extends Error {
-  constructor() {
-    super('Speaker not found');
-    this.name = 'SpeakerNotFoundError';
-  }
 }

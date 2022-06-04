@@ -9,13 +9,18 @@ import { requireUserSession } from '../../../services/auth/auth.server';
 import { ButtonLink } from '../../../components/Buttons';
 import Badge from '../../../components/Badges';
 import { findTalks, SpeakerTalks } from '../../../services/speakers/talks.server';
+import { mapErrorToResponse } from '../../../services/errors';
 
 export const loader: LoaderFunction = async ({ request }) => {
   const uid = await requireUserSession(request);
   const { searchParams } = new URL(request.url);
   const archived = Boolean(searchParams.get('archived'));
-  const talks = await findTalks(uid, { archived });
-  return json<SpeakerTalks>(talks);
+  try {
+    const talks = await findTalks(uid, { archived });
+    return json<SpeakerTalks>(talks);
+  } catch(err) {
+    mapErrorToResponse(err);
+  }
 };
 
 export default function SpeakerTalksRoute() {

@@ -6,6 +6,7 @@ import { Container } from '../../components/layout/Container';
 import { Link } from '../../components/Links';
 import { H1, H2, Text } from '../../components/Typography';
 import { requireUserSession } from '../../services/auth/auth.server';
+import { mapErrorToResponse } from '../../services/errors';
 import { getInvitation, Invitation } from '../../services/invitations/invitations.server';
 import { inviteCoSpeaker } from '../../services/speakers/talks.server';
 
@@ -17,7 +18,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     const invitation = await getInvitation(invitationId);
     return json<Invitation>(invitation);
   } catch (err) {
-    throw new Response('Invitation not found.', { status: 404 });
+    mapErrorToResponse(err);
   }
 };
 
@@ -30,7 +31,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     const talk = await inviteCoSpeaker(invitationId, uid);
     return redirect(`/speaker/talks/${talk.id}`);
   } catch (err) {
-    throw new Response('Invitation not found.', { status: 404 });
+    mapErrorToResponse(err);
   }
 };
 

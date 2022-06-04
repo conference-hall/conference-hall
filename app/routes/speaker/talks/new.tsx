@@ -5,6 +5,7 @@ import { Button } from '../../../components/Buttons';
 import { TalkAbstractForm } from '../../../components/proposal/TalkAbstractForm';
 import { H1 } from '../../../components/Typography';
 import { requireUserSession } from '../../../services/auth/auth.server';
+import { mapErrorToResponse } from '../../../services/errors';
 import { createTalk, validateTalkForm } from '../../../services/speakers/talks.server';
 import { ValidationErrors } from '../../../utils/validation-errors';
 
@@ -15,9 +16,12 @@ export const action: ActionFunction = async ({ request, params }) => {
   const result = validateTalkForm(form);
   if (!result.success) {
     return result.error.flatten();
-  } else {
+  }
+  try {
     const talkId = await createTalk(uid, result.data);
     return redirect(`/speaker/talks/${talkId}`);
+  } catch(err) {
+    mapErrorToResponse(err);
   }
 };
 

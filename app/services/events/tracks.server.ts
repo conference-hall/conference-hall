@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { db } from '../db';
+import { ProposalNotFoundError } from '../errors';
 
 export type ProposalTracks = {
   formats: string[];
@@ -47,11 +48,4 @@ export function validateTracksForm(form: FormData) {
     formats: form.getAll('formats'),
     categories: form.getAll('categories'),
   });
-}
-
-export class ProposalNotFoundError extends Error {
-  constructor() {
-    super('Proposal not found');
-    this.name = 'ProposalNotFoundError';
-  }
 }

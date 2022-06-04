@@ -11,6 +11,7 @@ import { H2 } from '../../../components/Typography';
 import { json, LoaderFunction } from '@remix-run/node';
 import { requireUserSession } from '../../../services/auth/auth.server';
 import { getSpeakerProposal, SpeakerProposal } from '../../../services/events/proposals.server';
+import { mapErrorToResponse } from '../../../services/errors';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const uid = await requireUserSession(request);
@@ -19,7 +20,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     const proposal = await getSpeakerProposal(proposalId, uid);
     return json<SpeakerProposal>(proposal);
   } catch (err) {
-    throw new Response('Proposal not found.', { status: 404 });
+    mapErrorToResponse(err);
   }
 };
 

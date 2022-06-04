@@ -13,14 +13,15 @@ import TalkActions from '../components/TalkActions';
 import { AddCoSpeakerButton } from '../components/CoSpeaker';
 import { TrashIcon } from '@heroicons/react/outline';
 import { archiveTalk, getTalk, removeCoSpeaker, restoreTalk, SpeakerTalk } from '../../../services/speakers/talks.server';
+import { mapErrorToResponse } from '../../../services/errors';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const uid = await requireUserSession(request);
   try {
     const talk = await getTalk(uid, params.id);
     return json<SpeakerTalk>(talk);
-  } catch {
-    throw new Response('Talk not found.', { status: 404 });
+  } catch(err) {
+    mapErrorToResponse(err);
   }
 };
 

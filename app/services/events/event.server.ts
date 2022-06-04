@@ -1,5 +1,6 @@
 import { CfpState, getCfpState } from '~/utils/event';
 import { db } from '../db';
+import { EventNotFoundError } from '../errors';
 
 export type EventTracks = Array<{ id: string; name: string; description: string | null }>;
 
@@ -61,9 +62,3 @@ export async function getEvent(slug: string): Promise<EventData> {
   };
 }
 
-export class EventNotFoundError extends Error {
-  constructor() {
-    super('Event not found');
-    this.name = 'EventNotFoundError';
-  }
-}

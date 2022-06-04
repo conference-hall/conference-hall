@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { db } from '../db';
 import { getArray } from '../../utils/form';
 import { getCfpState } from '../../utils/event';
+import { CfpNotOpenError, EventNotFoundError, MaxSubmittedProposalsReachedError, ProposalNotFoundError, ProposalSubmissionError, TalkNotFoundError } from '../errors';
 
 export type TalksToSubmit = Array<{
   id: string;
@@ -189,51 +190,11 @@ export async function submitProposal(talkId: string, eventSlug: string, uid: str
     data: { status: 'SUBMITTED' },
     where: { talkId, eventId: event.id, speakers: { some: { id: uid } } },
   });
-  if (result.count === 0) throw new ProposalNotFoundError();
+  if (result.count === 0) throw new ProposalSubmissionError();
 
   // TODO Email notification to speakers
   // TODO Email notification to organizers
   // TODO Slack notification
 }
 
-export class TalkNotFoundError extends Error {
-  constructor() {
-    super('Talk not found');
-    this.name = 'TalkNotFoundError';
-  }
-}
 
-export class ProposalNotFoundError extends Error {
-  constructor() {
-    super('Proposal not found');
-    this.name = 'ProposalNotFoundError';
-  }
-}
-
-export class EventNotFoundError extends Error {
-  constructor() {
-    super('Event not found');
-    this.name = 'EventNotFoundError';
-  }
-}
-
-export class CfpNotOpenError extends Error {
-  constructor() {
-    super('CFP not open');
-    this.name = 'CfpNotOpenError';
-  }
-}
-
-export class MaxSubmittedProposalsReachedError extends Error {
-  constructor() {
-    super('You have reached the maximum number of proposals.');
-    this.name = 'MaxSubmittedProposalsReachedError';
-  }
-}
-
-export class ProposalSubmissionError extends Error {
-  constructor() {
-    super('Error while submitting proposal');
-    this.name = 'ProposalSubmissionError';
-  }
-}

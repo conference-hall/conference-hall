@@ -10,14 +10,15 @@ import { Link } from '../../components/Links';
 import { Activity } from './components/Activity';
 import { ButtonLink } from '../../components/Buttons';
 import { getSpeakerActivity, SpeakerActivity } from '../../services/speakers/activity.server';
+import { mapErrorToResponse } from '../../services/errors';
 
 export const loader: LoaderFunction = async ({ request }) => {
   const uid = await requireUserSession(request);
   try {
     const profile = await getSpeakerActivity(uid);
     return json<SpeakerActivity>(profile);
-  } catch {
-    throw new Response('Speaker not found.', { status: 404 });
+  } catch(err) {
+    mapErrorToResponse(err);
   }
 };
 

@@ -10,6 +10,7 @@ import { ActionFunction, json, LoaderFunction, redirect } from '@remix-run/node'
 import { requireUserSession } from '../../../services/auth/auth.server';
 import { deleteProposal, getSpeakerProposal, SpeakerProposal, updateProposal, validateProposalForm } from '../../../services/events/proposals.server';
 import { EventTracks, getEvent } from '../../../services/events/event.server';
+import { mapErrorToResponse } from '../../../services/errors';
 
 export type SpeakerEditProposal = { 
   event: { formats: EventTracks, categories: EventTracks }
@@ -25,7 +26,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     const { formats, categories } = await getEvent(eventSlug);
     return json<SpeakerEditProposal>({ proposal, event: { formats, categories } });
   } catch (err) {
-    throw new Response('Proposal not found.', { status: 404 });
+    mapErrorToResponse(err);
   }
 };
 
@@ -34,15 +35,19 @@ export const action: ActionFunction = async ({ request, params }) => {
   const eventSlug = params.eventSlug!;
   const proposalId = params.id!;
   const form = await request.formData();
-  const method = form.get('_method');
-  if (method === 'DELETE') {
-    await deleteProposal(proposalId, uid);
-    return redirect(`/${eventSlug}/proposals`);
-  } else {
-    const result = validateProposalForm(form);
-    if (!result.success) return result.error.flatten();
-    await updateProposal(eventSlug, proposalId, uid, result.data);
-    return redirect(`/${eventSlug}/proposals/${proposalId}`);
+  try {
+    const method = form.get('_method');
+    if (method === 'DELETE') {
+      await deleteProposal(proposalId, uid);
+      return redirect(`/${eventSlug}/proposals`);
+    } else {
+      const result = validateProposalForm(form);
+      if (!result.success) return result.error.flatten();
+      await updateProposal(eventSlug, proposalId, uid, result.data);
+      return redirect(`/${eventSlug}/proposals/${proposalId}`);
+    }
+  } catch (err) {
+    mapErrorToResponse(err);
   }
 };
 

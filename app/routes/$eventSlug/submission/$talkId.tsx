@@ -5,6 +5,7 @@ import { Steps } from '../components/Steps';
 import { json, LoaderFunction } from '@remix-run/node';
 import { requireUserSession } from '../../../services/auth/auth.server';
 import { getEvent } from '../../../services/events/event.server';
+import { mapErrorToResponse } from '../../../services/errors';
 
 export type SubmitSteps = Array<{
   key: string;
@@ -31,7 +32,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     ];
     return json<SubmitSteps>(steps.filter((step) => step.enabled));
   } catch(err) {
-    throw new Response('Event not found.', { status: 404 });
+    mapErrorToResponse(err);
   }
 }
 

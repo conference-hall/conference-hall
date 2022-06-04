@@ -6,6 +6,7 @@ import { SurveyForm } from '~/routes/$eventSlug/components/SurveyForm';
 import { AlertSuccess } from '../../../components/Alerts';
 import { H2, Text } from '../../../components/Typography';
 import { requireUserSession } from '../../../services/auth/auth.server';
+import { mapErrorToResponse } from '../../../services/errors';
 import { getSurveyAnswers, getSurveyQuestions, saveSurvey, SurveyAnswers, SurveyQuestions, validateSurveyForm } from '../../../services/events/survey.server';
 
 type SurveyQuestionsForm = {
@@ -21,7 +22,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     const answers = await getSurveyAnswers(slug, uid);
     return json<SurveyQuestionsForm>({ questions, answers });
   } catch (err) {
-    throw new Response('Event not found', { status: 404 });
+    mapErrorToResponse(err);
   }
 };
 
@@ -35,7 +36,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     await saveSurvey(uid, slug, result.data);
     return { message: 'Survey saved, thank you!' };
   } catch (err) {
-    throw new Response('Event not found', { status: 404 });
+    mapErrorToResponse(err);
   }
 };
 

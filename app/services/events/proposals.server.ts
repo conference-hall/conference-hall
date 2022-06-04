@@ -3,6 +3,7 @@ import { db } from '../../services/db';
 import { getCfpState } from '../../utils/event';
 import { getArray } from '../../utils/form';
 import { jsonToArray } from '../../utils/prisma';
+import { CfpNotOpenError, EventNotFoundError, ProposalNotFoundError } from '../errors';
 
 export type SpeakerProposals = Array<{
   id: string;
@@ -140,25 +141,4 @@ export function validateProposalForm(form: FormData) {
     categories: form.getAll('categories'),
     languages: getArray(form, 'languages'),
   });
-}
-
-export class EventNotFoundError extends Error {
-  constructor() {
-    super('Event not found');
-    this.name = 'EventNotFoundError';
-  }
-}
-
-export class ProposalNotFoundError extends Error {
-  constructor() {
-    super('Proposal not found');
-    this.name = 'ProposalNotFoundError';
-  }
-}
-
-export class CfpNotOpenError extends Error {
-  constructor() {
-    super('CFP not open');
-    this.name = 'CfpNotOpenError';
-  }
 }
