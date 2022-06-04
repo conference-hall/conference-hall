@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { db } from '../services/db';
+import { db } from '../../services/db';
 
 export type SpeakerSettings = {
   name: string | null;

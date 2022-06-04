@@ -1,10 +1,10 @@
 import { Outlet, useCatch, useLoaderData, useMatches } from '@remix-run/react';
 import { Container } from '../../../components/layout/Container';
 import { SectionPanel } from '../../../components/Panels';
-import { Steps } from './components/Steps';
-import { getEventSubmissionInfo } from '../../../features/events-submission/steps.server';
+import { Steps } from '../components/Steps';
 import { json, LoaderFunction } from '@remix-run/node';
-import { requireUserSession } from '../../../features/auth.server';
+import { requireUserSession } from '../../../services/auth/auth.server';
+import { getEvent } from '../../../services/events/event.server';
 
 export type SubmitSteps = Array<{
   key: string;
@@ -21,12 +21,12 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const talkId = params.talkId!;
 
   try {
-    const eventInfo = await getEventSubmissionInfo(slug);
-    if (!eventInfo.isCfpOpen) throw new Response('CFP is not opened!', { status: 403 });
+    const event = await getEvent(slug);
+    if (!event.isCfpOpen) throw new Response('CFP is not opened!', { status: 403 });
     const steps = [
       { key: 'proposal', name: 'Proposal', path: `/${slug}/submission/${talkId}`, enabled: true },
-      { key: 'tracks', name: 'Tracks', path: `/${slug}/submission/${talkId}/tracks`, enabled: eventInfo.hasTracks },
-      { key: 'survey', name: 'Survey', path: `/${slug}/submission/${talkId}/survey`, enabled: eventInfo.hasSurvey },
+      { key: 'tracks', name: 'Tracks', path: `/${slug}/submission/${talkId}/tracks`, enabled: event.hasTracks },
+      { key: 'survey', name: 'Survey', path: `/${slug}/submission/${talkId}/survey`, enabled: event.hasSurvey },
       { key: 'submission', name: 'Submission', path: `/${slug}/submission/${talkId}/submit`, enabled: true },
     ];
     return json<SubmitSteps>(steps.filter((step) => step.enabled));

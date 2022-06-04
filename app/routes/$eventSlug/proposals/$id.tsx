@@ -8,9 +8,9 @@ import { IconLabel } from '../../../components/IconLabel';
 import { Markdown } from '../../../components/Markdown';
 import { DeleteProposalButton } from '../../../components/proposal/DeleteProposalButton';
 import { H2 } from '../../../components/Typography';
-import { getSpeakerProposal, SpeakerProposal } from '../../../features/events-proposals.server';
 import { json, LoaderFunction } from '@remix-run/node';
-import { requireUserSession } from '../../../features/auth.server';
+import { requireUserSession } from '../../../services/auth/auth.server';
+import { getSpeakerProposal, SpeakerProposal } from '../../../services/events/proposals.server';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const uid = await requireUserSession(request);

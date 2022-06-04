@@ -5,10 +5,10 @@ import { useLoaderData, Link, Form, useSearchParams } from '@remix-run/react';
 import { IconLabel } from '../../../components/IconLabel';
 import { Container } from '../../../components/layout/Container';
 import { H2, Text } from '../../../components/Typography';
-import { requireUserSession } from '../../../features/auth.server';
-import { findTalks, SpeakerTalks } from '../../../features/speaker-talks.server';
+import { requireUserSession } from '../../../services/auth/auth.server';
 import { ButtonLink } from '../../../components/Buttons';
 import Badge from '../../../components/Badges';
+import { findTalks, SpeakerTalks } from '../../../services/speakers/talks.server';
 
 export const loader: LoaderFunction = async ({ request }) => {
   const uid = await requireUserSession(request);

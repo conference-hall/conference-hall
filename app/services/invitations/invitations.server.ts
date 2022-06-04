@@ -1,4 +1,4 @@
-import { db } from '../services/db';
+import { db } from '../db';
 
 export type Invitation = {
   type: 'SPEAKER' | 'ORGANIZATION';

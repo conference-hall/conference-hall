@@ -2,7 +2,7 @@ import type { LoaderFunction } from '@remix-run/node';
 import { NavLink, Outlet, useCatch } from '@remix-run/react';
 import cn from 'classnames';
 import { Container } from '../components/layout/Container';
-import { requireAuthUser } from '../features/auth.server';
+import { requireAuthUser } from '../services/auth/auth.server';
 
 export const loader: LoaderFunction = ({ request }) => {
   const user = requireAuthUser(request);

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { db } from '../../services/db';
+import { db } from '../db';
 
 export type ProposalTracks = {
   formats: string[];

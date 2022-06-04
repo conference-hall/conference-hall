@@ -2,12 +2,12 @@ import { useState } from 'react';
 import { Form, useLoaderData } from '@remix-run/react';
 import { Button } from '~/components/Buttons';
 import { Checkbox } from '~/components/forms/Checkboxes';
-import { getProposalInfo, ProposalInfo, submitProposal } from '~/features/events-submission/step-submit.server';
 import { ExternalLink } from '../../../../components/Links';
 import { H1, Text } from '../../../../components/Typography';
 import { ActionFunction, json, LoaderFunction, redirect } from '@remix-run/node';
-import { requireUserSession } from '../../../../features/auth.server';
-import { getEventSubmissionInfo } from '../../../../features/events-submission/steps.server';
+import { requireUserSession } from '../../../../services/auth/auth.server';
+import { getEvent } from '../../../../services/events/event.server';
+import { getProposalInfo, ProposalInfo, submitProposal } from '../../../../services/events/submit.server';
 
 type SubmitForm = ProposalInfo & { codeOfConductUrl: string | null };
 
@@ -18,7 +18,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const eventSlug = params.eventSlug!;
   const talkId = params.talkId!;
   try {
-    const event = await getEventSubmissionInfo(eventSlug);
+    const event = await getEvent(eventSlug);
     const proposal = await getProposalInfo(talkId, event.id, uid);
     return json<SubmitForm>({
       ...proposal,

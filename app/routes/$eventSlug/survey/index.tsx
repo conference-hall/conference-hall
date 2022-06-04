@@ -2,12 +2,11 @@ import { ActionFunction, json, LoaderFunction } from '@remix-run/node';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import { Button } from '~/components/Buttons';
 import { Container } from '~/components/layout/Container';
-import { getSurveyAnswers, getSurveyQuestions, saveSurvey, SurveyAnswers, validateSurveyForm } from '~/features/events-submission/step-survey.server';
-import { SurveyForm } from '~/routes/$eventSlug/submission/components/SurveyForm';
+import { SurveyForm } from '~/routes/$eventSlug/components/SurveyForm';
 import { AlertSuccess } from '../../../components/Alerts';
 import { H2, Text } from '../../../components/Typography';
-import { requireUserSession } from '../../../features/auth.server';
-import { SurveyQuestions } from '../../../services/survey/questions';
+import { requireUserSession } from '../../../services/auth/auth.server';
+import { getSurveyAnswers, getSurveyQuestions, saveSurvey, SurveyAnswers, SurveyQuestions, validateSurveyForm } from '../../../services/events/survey.server';
 
 type SurveyQuestionsForm = {
   questions: SurveyQuestions

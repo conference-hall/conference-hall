@@ -7,16 +7,11 @@ import { Input } from '../../components/forms/Input';
 import { MarkdownTextArea } from '../../components/forms/MarkdownTextArea';
 import { Button } from '../../components/Buttons';
 import { H2, Text } from '../../components/Typography';
-import {
-  getSettings,
-  SpeakerSettings,
-  updateProfile,
-  validateProfileData,
-} from '../../features/speaker-settings.server';
 import { ValidationErrors } from '../../utils/validation-errors';
 import { useCallback } from 'react';
 import { getAuth } from 'firebase/auth';
-import { requireUserSession } from '../../features/auth.server';
+import { requireUserSession } from '../../services/auth/auth.server';
+import { getSettings, SpeakerSettings, updateProfile, validateProfileData } from '../../services/speakers/settings.server';
 
 export const loader: LoaderFunction = async ({ request }) => {
   const uid = await requireUserSession(request);

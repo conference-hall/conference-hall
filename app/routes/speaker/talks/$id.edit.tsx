@@ -4,13 +4,8 @@ import { Container } from '~/components/layout/Container';
 import { Button, ButtonLink } from '../../../components/Buttons';
 import { TalkAbstractForm } from '../../../components/proposal/TalkAbstractForm';
 import { H1 } from '../../../components/Typography';
-import { requireUserSession } from '../../../features/auth.server';
-import {
-  getTalk,
-  SpeakerTalk,
-  updateTalk,
-  validateTalkForm,
-} from '../../../features/speaker-talks.server';
+import { requireUserSession } from '../../../services/auth/auth.server';
+import { getTalk, SpeakerTalk, updateTalk, validateTalkForm } from '../../../services/speakers/talks.server';
 import { ValidationErrors } from '../../../utils/validation-errors';
 
 export const loader: LoaderFunction = async ({ request, params }) => {

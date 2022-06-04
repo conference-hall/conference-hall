@@ -5,9 +5,9 @@ import { Button } from '../../components/Buttons';
 import { Container } from '../../components/layout/Container';
 import { Link } from '../../components/Links';
 import { H1, H2, Text } from '../../components/Typography';
-import { requireUserSession } from '../../features/auth.server';
-import { getInvitation, Invitation } from '../../features/invitations.server';
-import { inviteCoSpeaker } from '../../features/speaker-talks.server';
+import { requireUserSession } from '../../services/auth/auth.server';
+import { getInvitation, Invitation } from '../../services/invitations/invitations.server';
+import { inviteCoSpeaker } from '../../services/speakers/talks.server';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   await requireUserSession(request);

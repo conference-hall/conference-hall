@@ -3,17 +3,10 @@ import { redirect } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
 import { Button, ButtonLink } from '~/components/Buttons';
 import { H2, Text } from '../../../../components/Typography';
-import { requireUserSession } from '../../../../features/auth.server';
-import { SurveyQuestions } from '../../../../services/survey/questions';
-import { SurveyForm } from '../components/SurveyForm';
-import { usePreviousStep } from '../hooks/usePreviousStep';
-import {
-  getSurveyAnswers,
-  getSurveyQuestions,
-  saveSurvey,
-  SurveyAnswers,
-  validateSurveyForm,
-} from '~/features/events-submission/step-survey.server';
+import { requireUserSession } from '../../../../services/auth/auth.server';
+import { getSurveyAnswers, getSurveyQuestions, saveSurvey, SurveyAnswers, SurveyQuestions, validateSurveyForm } from '../../../../services/events/survey.server';
+import { SurveyForm } from '../../components/SurveyForm';
+import { usePreviousStep } from '../../components/usePreviousStep';
 
 type SurveyQuestionsForm = {
   questions: SurveyQuestions;

@@ -1,4 +1,4 @@
-import { ButtonLink } from '../../../../components/Buttons';
+import { ButtonLink } from '../../../components/Buttons';
 
 export function TalksEmptyState() {
   return (

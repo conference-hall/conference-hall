@@ -1,5 +1,5 @@
 import { Link as RemixLink } from '@remix-run/react';
-import { AuthUser } from '../../features/auth.server';
+import { AuthUser } from '../../services/auth/auth.server';
 import { Link } from '../Links';
 import { UserAvatar } from './UserAvatar';
 

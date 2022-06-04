@@ -3,10 +3,10 @@ import { Form, useLoaderData } from '@remix-run/react';
 import { Button, ButtonLink } from '~/components/Buttons';
 import { CategoriesForm } from '~/components/proposal/CategoriesForm';
 import { FormatsForm } from '~/components/proposal/FormatsForm';
-import { getProposalTracks, ProposalTracks, saveTracks, validateTracksForm } from '~/features/events-submission/step-tracks.server';
-import { requireUserSession } from '../../../../features/auth.server';
-import { EventTracks, getEventSubmissionInfo } from '../../../../features/events-submission/steps.server';
-import { usePreviousStep } from '../hooks/usePreviousStep';
+import { requireUserSession } from '../../../../services/auth/auth.server';
+import { EventTracks, getEvent } from '../../../../services/events/event.server';
+import { getProposalTracks, ProposalTracks, saveTracks, validateTracksForm } from '../../../../services/events/tracks.server';
+import { usePreviousStep } from '../../components/usePreviousStep';
 
 type Tracks = {
   event: { formats: EventTracks, categories: EventTracks };
@@ -20,7 +20,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const eventSlug = params.eventSlug!;
   const talkId = params.talkId!;
   try {
-    const event = await getEventSubmissionInfo(eventSlug);
+    const event = await getEvent(eventSlug);
     const proposalTracks = await getProposalTracks(talkId, event.id, uid)
 
     return json<Tracks>({
@@ -41,7 +41,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   if (!result.success) return result.error.flatten();
 
   try {
-    const event = await getEventSubmissionInfo(eventSlug);
+    const event = await getEvent(eventSlug);
     await saveTracks(talkId, event.id, uid, result.data);
     if (event.hasSurvey) {
       return redirect(`/${eventSlug}/submission/${talkId}/survey`);

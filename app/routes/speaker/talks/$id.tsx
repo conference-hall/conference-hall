@@ -6,19 +6,13 @@ import { Button, ButtonLink } from '../../../components/Buttons';
 import { Markdown } from '../../../components/Markdown';
 import { H1, H2, Text } from '../../../components/Typography';
 import { EventActivity } from '../components/Activity';
-import { requireUserSession } from '../../../features/auth.server';
-import {
-  archiveTalk,
-  getTalk,
-  removeCoSpeaker,
-  restoreTalk,
-  SpeakerTalk,
-} from '../../../features/speaker-talks.server';
+import { requireUserSession } from '../../../services/auth/auth.server';
 import { getLanguage } from '../../../utils/languages';
 import { getLevel } from '../../../utils/levels';
 import TalkActions from '../components/TalkActions';
 import { AddCoSpeakerButton } from '../components/CoSpeaker';
 import { TrashIcon } from '@heroicons/react/outline';
+import { archiveTalk, getTalk, removeCoSpeaker, restoreTalk, SpeakerTalk } from '../../../services/speakers/talks.server';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const uid = await requireUserSession(request);

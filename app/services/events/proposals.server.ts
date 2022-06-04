@@ -1,8 +1,8 @@
 import { z } from 'zod';
-import { db } from '../services/db';
-import { getCfpState } from '../utils/event';
-import { getArray } from '../utils/form';
-import { jsonToArray } from '../utils/prisma';
+import { db } from '../../services/db';
+import { getCfpState } from '../../utils/event';
+import { getArray } from '../../utils/form';
+import { jsonToArray } from '../../utils/prisma';
 
 export type SpeakerProposals = Array<{
   id: string;
@@ -76,23 +76,6 @@ export async function getSpeakerProposal(proposalId: string, uid: string) {
     formats: proposal.formats.map(({ name }) => name),
     categories: proposal.categories.map(({ name }) => name),
     speakers: proposal.speakers.map((speaker) => ({ id: speaker.id, name: speaker.name, photoURL: speaker.photoURL })),
-  };
-}
-
-export type EventFormatsAndCategories = {
-  formats: Array<{ id: string; name: string; description: string | null }>;
-  categories: Array<{ id: string; name: string; description: string | null }>;
-};
-
-export async function getEventFormatsAndCategories(slug: string) {
-  const event = await db.event.findUnique({
-    select: { id: true, formats: true, categories: true },
-    where: { slug },
-  });
-  if (!event) throw new EventNotFoundError();
-  return {
-    formats: event.formats ?? [],
-    categories: event.categories ?? [],
   };
 }
 

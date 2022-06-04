@@ -1,5 +1,7 @@
 import { CfpState, getCfpState } from '~/utils/event';
-import { db } from '../services/db';
+import { db } from '../db';
+
+export type EventTracks = Array<{ id: string; name: string; description: string | null }>;
 
 export interface EventData {
   id: string;
@@ -18,11 +20,14 @@ export interface EventData {
   cfpStart?: string;
   cfpEnd?: string;
   cfpState: CfpState;
-  formats: Array<{ id: string; name: string; description: string | null }>;
-  categories: Array<{ id: string; name: string; description: string | null }>;
+  isCfpOpen: boolean;
+  hasSurvey: boolean;
+  hasTracks: boolean;
+  formats: EventTracks;
+  categories: EventTracks;
 }
 
-export async function getEventPage(slug: string): Promise<EventData> {
+export async function getEvent(slug: string): Promise<EventData> {
   const event = await db.event.findUnique({
     where: { slug: slug },
     include: { formats: true, categories: true },
@@ -48,6 +53,9 @@ export async function getEventPage(slug: string): Promise<EventData> {
     contactEmail: event.contactEmail,
     codeOfConductUrl: event.codeOfConductUrl,
     bannerUrl: event.bannerUrl,
+    isCfpOpen: getCfpState(event.type, event.cfpStart, event.cfpEnd) === 'OPENED',
+    hasSurvey: event.surveyEnabled,
+    hasTracks: event.categories.length > 0 || event.formats.length > 0,
     formats: event.formats.map((f) => ({ id: f.id, name: f.name, description: f.description })),
     categories: event.categories.map((c) => ({ id: c.id, name: c.name, description: c.description })),
   };

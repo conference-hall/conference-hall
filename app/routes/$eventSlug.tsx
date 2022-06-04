@@ -4,14 +4,14 @@ import { ButtonLink } from '../components/Buttons';
 import { Header } from '../components/event/Header';
 import { EventTabs } from '../components/event/Tabs';
 import { Container } from '../components/layout/Container';
-import { EventData, getEventPage } from '../features/events-page.server';
+import { EventData, getEvent } from '../services/events/event.server';
 
 export const loader: LoaderFunction = async ({ params }) => {
   const slug = params.eventSlug;
   if (!slug) throw new Response('Event not found', { status: 404 })
 
   try {
-    const event = await getEventPage(slug);
+    const event = await getEvent(slug);
     return json<EventData>(event);
   } catch (err) {
     throw new Response('Event not found', { status: 404 })

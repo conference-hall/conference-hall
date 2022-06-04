@@ -1,6 +1,6 @@
 import { EventVisibility } from '@prisma/client';
 import { CfpState, getCfpState } from '~/utils/event';
-import { db } from '../services/db';
+import { db } from '../../services/db';
 
 export type SearchEvents = {
   terms?: string;

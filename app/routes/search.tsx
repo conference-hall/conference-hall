@@ -2,9 +2,9 @@ import { json, LoaderFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { Container } from '~/components/layout/Container';
 import { SearchEventForm } from '~/components/search/SearchEventForm';
-import { SearchEvents, searchEvents } from '~/features/events-search.server';
 import { H1, Text } from '../components/Typography';
 import { EventItem, EventsList } from '../components/search/EventsList';
+import { searchEvents, SearchEvents } from '../services/events/search.server';
 
 export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);

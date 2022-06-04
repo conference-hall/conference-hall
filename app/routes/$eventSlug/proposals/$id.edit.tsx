@@ -7,27 +7,23 @@ import { FormatsForm } from '../../../components/proposal/FormatsForm';
 import { H2 } from '../../../components/Typography';
 import { ValidationErrors } from '../../../utils/validation-errors';
 import { ActionFunction, json, LoaderFunction, redirect } from '@remix-run/node';
-import { requireUserSession } from '../../../features/auth.server';
-import {
-  deleteProposal,
-  EventFormatsAndCategories,
-  getEventFormatsAndCategories,
-  getSpeakerProposal,
-  SpeakerProposal,
-  updateProposal,
-  validateProposalForm,
-} from '../../../features/events-proposals.server';
+import { requireUserSession } from '../../../services/auth/auth.server';
+import { deleteProposal, getSpeakerProposal, SpeakerProposal, updateProposal, validateProposalForm } from '../../../services/events/proposals.server';
+import { EventTracks, getEvent } from '../../../services/events/event.server';
 
-export type SpeakerEditProposal = { proposal: SpeakerProposal } & EventFormatsAndCategories;
+export type SpeakerEditProposal = { 
+  event: { formats: EventTracks, categories: EventTracks }
+  proposal: SpeakerProposal
+};
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const uid = await requireUserSession(request);
-  const slug = params.eventSlug!;
+  const eventSlug = params.eventSlug!;
   const proposalId = params.id!;
   try {
     const proposal = await getSpeakerProposal(proposalId, uid);
-    const { formats, categories } = await getEventFormatsAndCategories(slug);
-    return json<SpeakerEditProposal>({ proposal, formats, categories });
+    const { formats, categories } = await getEvent(eventSlug);
+    return json<SpeakerEditProposal>({ proposal, event: { formats, categories } });
   } catch (err) {
     throw new Response('Proposal not found.', { status: 404 });
   }
@@ -35,23 +31,23 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
 export const action: ActionFunction = async ({ request, params }) => {
   const uid = await requireUserSession(request);
-  const slug = params.eventSlug!;
+  const eventSlug = params.eventSlug!;
   const proposalId = params.id!;
   const form = await request.formData();
   const method = form.get('_method');
   if (method === 'DELETE') {
     await deleteProposal(proposalId, uid);
-    return redirect(`/${slug}/proposals`);
+    return redirect(`/${eventSlug}/proposals`);
   } else {
     const result = validateProposalForm(form);
     if (!result.success) return result.error.flatten();
-    await updateProposal(slug, proposalId, uid, result.data);
-    return redirect(`/${slug}/proposals/${proposalId}`);
+    await updateProposal(eventSlug, proposalId, uid, result.data);
+    return redirect(`/${eventSlug}/proposals/${proposalId}`);
   }
 };
 
 export default function EditProposalRoute() {
-  const data = useLoaderData<SpeakerEditProposal>();
+  const { event, proposal } = useLoaderData<SpeakerEditProposal>();
   const errors = useActionData<ValidationErrors>();
 
   return (
@@ -59,23 +55,23 @@ export default function EditProposalRoute() {
       <Form method="post" className="mt-8 bg-white border border-gray-200 overflow-hidden sm:rounded-lg">
         <div className="px-4 py-5 sm:px-6 -ml-4 -mt-4 border-b border-gray-200 flex justify-between items-center flex-wrap sm:flex-nowrap">
           <div className="ml-4 mt-4">
-            <H2>{data.proposal.title}</H2>
+            <H2>{proposal.title}</H2>
           </div>
         </div>
 
         <div className="px-4 py-10 sm:px-6">
-          <TalkAbstractForm initialValues={data.proposal} errors={errors?.fieldErrors} />
+          <TalkAbstractForm initialValues={proposal} errors={errors?.fieldErrors} />
         </div>
 
-        {data.formats?.length > 0 ? (
+        {event.formats?.length > 0 ? (
           <div className="border-t border-gray-200 px-4 py-10 sm:px-6">
-            <FormatsForm formats={data.formats} initialValues={data.proposal.formats} />
+            <FormatsForm formats={event.formats} initialValues={proposal.formats} />
           </div>
         ) : null}
 
-        {data.categories?.length > 0 ? (
+        {event.categories?.length > 0 ? (
           <div className="border-t border-gray-200 px-4 py-10 sm:px-6">
-            <CategoriesForm categories={data.categories} initialValues={data.proposal.categories} />
+            <CategoriesForm categories={event.categories} initialValues={proposal.categories} />
           </div>
         ) : null}
 

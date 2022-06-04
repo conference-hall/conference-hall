@@ -1,13 +1,13 @@
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import { Button } from '~/components/Buttons';
-import { saveDraftProposalForEvent, validateProposalForm } from '~/features/events-submission/step-proposal.server';
 import { ValidationErrors } from '~/utils/validation-errors';
 import { TalkAbstractForm } from '~/components/proposal/TalkAbstractForm';
 import { H2, Text } from '../../../../components/Typography';
-import { requireUserSession } from '../../../../features/auth.server';
+import { requireUserSession } from '../../../../services/auth/auth.server';
 import { ActionFunction, json, LoaderFunction, redirect } from '@remix-run/node';
-import { getTalk, SpeakerTalk } from '../../../../features/speaker-talks.server';
-import { getEventSubmissionInfo } from '../../../../features/events-submission/steps.server';
+import { getTalk, SpeakerTalk } from '../../../../services/speakers/talks.server';
+import { saveDraftProposalForEvent, validateDraftProposalForm } from '../../../../services/events/submit.server';
+import { getEvent } from '../../../../services/events/event.server';
 
 export const handle = { step: 'proposal' };
 
@@ -27,11 +27,11 @@ export const action: ActionFunction = async ({ request, params }) => {
   const talkId = params.talkId!;
 
   const form = await request.formData();
-  const result = validateProposalForm(form)
+  const result = validateDraftProposalForm(form)
   if (!result.success) return result.error.flatten();
 
   try {
-    const event = await getEventSubmissionInfo(slug)
+    const event = await getEvent(slug)
     const savedProposal = await saveDraftProposalForEvent(talkId, event.id, uid, result.data);
     if (event.hasTracks) {
       return redirect(`/${slug}/submission/${savedProposal.talkId}/tracks`);
@@ -41,6 +41,7 @@ export const action: ActionFunction = async ({ request, params }) => {
       return redirect(`/${slug}/submission/${savedProposal.talkId}/submit`);
     }
   } catch(err) {
+    console.log(err)
     throw new Response('Event not found.', { status: 404 });
   }
 };

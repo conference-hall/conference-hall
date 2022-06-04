@@ -1,19 +1,19 @@
 import { useCatch, useLoaderData } from '@remix-run/react';
 import { ButtonLink } from '~/components/Buttons';
-import { TalksEmptyState } from './components/TalksEmptyState';
-import { TalksSelection } from './components/TalksSelection';
+import { TalksEmptyState } from '../components/TalksEmptyState';
+import { TalksSelection } from '../components/TalksSelection';
 import { Container } from '../../../components/layout/Container';
 import { AlertInfo } from '../../../components/Alerts';
-import { MaxProposalsReached } from './components/MaxProposalsReached';
+import { MaxProposalsReached } from '../components/MaxProposalsReached';
 import { H2, Text } from '../../../components/Typography';
-import { requireUserSession } from '../../../features/auth.server';
+import { requireUserSession } from '../../../services/auth/auth.server';
 import { json, LoaderFunction } from '@remix-run/node';
 import {
   fetchTalksToSubmitForEvent,
   getProposalCountsForEvent,
   ProposalCountsForEvent,
   TalksToSubmit,
-} from '~/features/events-submission/selection.server';
+} from '../../../services/events/submit.server';
 
 type SelectionStep = { talks: TalksToSubmit; proposalsCount: ProposalCountsForEvent };
 

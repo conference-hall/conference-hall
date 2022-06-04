@@ -1,6 +1,5 @@
 import { z } from 'zod';
-import { db } from '../../services/db';
-import { QUESTIONS, SurveyQuestions } from '../../services/survey/questions';
+import { db } from '../db';
 import { jsonToArray } from '../../utils/prisma';
 
 export type SurveyAnswers = { [key: string]: string | string[] | null };
@@ -17,8 +16,8 @@ export async function getSurveyQuestions(slug: string): Promise<SurveyQuestions>
     throw new SurveyNotEnabledError();
   }
 
-  return QUESTIONS.filter((question) => enabledQuestions.includes(question.name))
-};
+  return QUESTIONS.filter((question) => enabledQuestions.includes(question.name));
+}
 
 export async function getSurveyAnswers(slug: string, uid: string): Promise<SurveyAnswers> {
   const userSurvey = await db.survey.findFirst({
@@ -27,7 +26,7 @@ export async function getSurveyAnswers(slug: string, uid: string): Promise<Surve
   });
 
   return (userSurvey?.answers ?? {}) as SurveyAnswers;
-};
+}
 
 export async function saveSurvey(uid: string, slug: string, answers: SurveyData) {
   const event = await db.event.findUnique({ select: { id: true }, where: { slug } });
@@ -42,7 +41,7 @@ export async function saveSurvey(uid: string, slug: string, answers: SurveyData)
       answers: answers,
     },
   });
-};
+}
 
 type SurveyData = z.infer<typeof SurveySchema>;
 
@@ -79,3 +78,72 @@ export class SurveyNotEnabledError extends Error {
     this.name = 'SurveyNotEnabledError';
   }
 }
+
+export type SurveyQuestions = Array<{
+  name: string;
+  label: string;
+  type: 'text' | 'checkbox' | 'radio';
+  answers?: Array<{ name: string; label: string }>;
+}>;
+
+const QUESTIONS: SurveyQuestions = [
+  {
+    name: 'gender',
+    label: "What's your gender?",
+    type: 'radio',
+    answers: [
+      { name: 'male', label: 'Male' },
+      { name: 'female', label: 'Female' },
+      { name: 'genderless', label: 'Genderless' },
+    ],
+  },
+  {
+    name: 'tshirt',
+    label: "What's your Tshirt size?",
+    type: 'radio',
+    answers: [
+      { name: 'S', label: 'S' },
+      { name: 'M', label: 'M' },
+      { name: 'L', label: 'L' },
+      { name: 'XL', label: 'XL' },
+      { name: 'XXL', label: 'XXL' },
+      { name: 'XXXL', label: 'XXXL' },
+    ],
+  },
+  {
+    name: 'accomodation',
+    label: 'Do you need accommodation funding? (Hotel, AirBnB...)',
+    type: 'radio',
+    answers: [
+      { name: 'yes', label: 'Yes' },
+      { name: 'no', label: 'No' },
+    ],
+  },
+  {
+    name: 'transports',
+    label: 'Do you need transports funding?',
+    type: 'checkbox',
+    answers: [
+      { name: 'taxi', label: 'Taxi' },
+      { name: 'train', label: 'Train' },
+      { name: 'plane', label: 'Plane' },
+    ],
+  },
+  {
+    name: 'diet',
+    label: 'Do you have any special diet restrictions?',
+    type: 'checkbox',
+    answers: [
+      { name: 'vegetarian', label: 'Vegetarian' },
+      { name: 'vegan', label: 'Vegan' },
+      { name: 'halal', label: 'Halal' },
+      { name: 'gluten-free', label: 'Gluten-free' },
+      { name: 'nut allergy', label: 'Nut allergy' },
+    ],
+  },
+  {
+    name: 'info',
+    label: 'Do you have specific information to share?',
+    type: 'text',
+  },
+];

@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { db } from '../services/db';
-import { getArray } from '../utils/form';
-import { jsonToArray } from '../utils/prisma';
+import { db } from '../../services/db';
+import { getArray } from '../../utils/form';
+import { jsonToArray } from '../../utils/prisma';
 
 export type SpeakerTalks = Array<{
   id: string;
