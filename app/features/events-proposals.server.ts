@@ -1,10 +1,8 @@
-import { ActionFunction, redirect } from '@remix-run/node';
 import { z } from 'zod';
 import { db } from '../services/db';
 import { getCfpState } from '../utils/event';
 import { getArray } from '../utils/form';
 import { jsonToArray } from '../utils/prisma';
-import { requireUserSession } from './auth.server';
 
 export type SpeakerProposals = Array<{
   id: string;

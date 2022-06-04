@@ -1,39 +1,22 @@
-import type { LoaderFunction } from '@remix-run/node';
-import { json } from '@remix-run/node';
-import { requireUserSession } from '../auth.server';
 import { db } from '../../services/db';
 import { getCfpState } from '../../utils/event';
 
-export type SelectionStep = {
-  maxProposals: number | null;
-  submittedProposals: number;
-  talks: Array<{
-    id: string;
-    title: string;
-    isDraft: boolean;
-    speakers: Array<{ id: string; name: string | null; photoURL: string | null }>;
-  }>;
-};
+export type TalksToSubmit = Array<{
+  id: string;
+  title: string;
+  isDraft: boolean;
+  speakers: Array<{ id: string; name: string | null; photoURL: string | null }>;
+}>;
 
-export const loadSelection: LoaderFunction = async ({ request, params }) => {
-  const uid = await requireUserSession(request);
-
+export async function fetchTalksToSubmitForEvent(uid: string, slug: string): Promise<TalksToSubmit> {
   const event = await db.event.findUnique({
-    select: { id: true, maxProposals: true, type: true, cfpStart: true, cfpEnd: true },
-    where: { slug: params.eventSlug },
+    select: { id: true, type: true, cfpStart: true, cfpEnd: true },
+    where: { slug },
   });
-  if (!event) throw new Response('Event not found.', { status: 404 });
+  if (!event) throw new EventNotFoundError();
 
   const isCfpOpen = getCfpState(event.type, event.cfpStart, event.cfpEnd) === 'OPENED';
-  if (!isCfpOpen) throw new Response('CFP is not opened!', { status: 403 });
-
-  const submittedProposals = await db.proposal.count({
-    where: {
-      eventId: event.id,
-      speakers: { some: { id: uid } },
-      status: { not: { equals: 'DRAFT' } },
-    },
-  });
+  if (!isCfpOpen) throw new CfpNotOpenError();
 
   const talks = await db.talk.findMany({
     select: {
@@ -56,14 +39,50 @@ export const loadSelection: LoaderFunction = async ({ request, params }) => {
     orderBy: { createdAt: 'desc' },
   });
 
-  return json<SelectionStep>({
-    maxProposals: event.maxProposals,
-    submittedProposals,
-    talks: talks.map((talk) => ({
-      id: talk.id,
-      title: talk.title,
-      isDraft: talk.proposals.length > 0,
-      speakers: talk.speakers.map((speaker) => ({ id: speaker.id, name: speaker.name, photoURL: speaker.photoURL })),
-    })),
-  });
+  return talks.map((talk) => ({
+    id: talk.id,
+    title: talk.title,
+    isDraft: talk.proposals.length > 0,
+    speakers: talk.speakers.map((speaker) => ({ id: speaker.id, name: speaker.name, photoURL: speaker.photoURL })),
+  }));
+}
+
+export type ProposalCountsForEvent = {
+  max: number | null;
+  submitted: number;
 };
+
+export async function getProposalCountsForEvent(uid: string, slug: string): Promise<ProposalCountsForEvent> {
+  const event = await db.event.findUnique({
+    select: { id: true, maxProposals: true },
+    where: { slug },
+  });
+  if (!event) throw new EventNotFoundError();
+
+  const submittedProposals = await db.proposal.count({
+    where: {
+      eventId: event.id,
+      speakers: { some: { id: uid } },
+      status: { not: { equals: 'DRAFT' } },
+    },
+  });
+
+  return {
+    max: event.maxProposals,
+    submitted: submittedProposals,
+  };
+}
+
+export class EventNotFoundError extends Error {
+  constructor() {
+    super('Event not found');
+    this.name = 'EventNotFoundError';
+  }
+}
+
+export class CfpNotOpenError extends Error {
+  constructor() {
+    super('CFP not open');
+    this.name = 'CfpNotOpenError';
+  }
+}
