@@ -7,7 +7,7 @@ import { requireUserSession } from '../../../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../../../services/errors';
 import { EventTracks, getEvent } from '../../../../services/events/event.server';
 import { getProposalTracks, ProposalTracks, saveTracks, validateTracksForm } from '../../../../services/events/tracks.server';
-import { usePreviousStep } from '../../components/usePreviousStep';
+import { useSubmissionStep } from '../../components/useSubmissionStep';
 
 type Tracks = {
   event: { formats: EventTracks, categories: EventTracks };
@@ -55,7 +55,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 
 export default function SubmissionTracksRoute() {
   const { event, proposal } = useLoaderData<Tracks>();
-  const previousStepPath = usePreviousStep();
+  const { previousPath } = useSubmissionStep();
 
   return (
     <Form method="post">
@@ -70,7 +70,7 @@ export default function SubmissionTracksRoute() {
       </div>
 
       <div className="px-4 py-5 text-right sm:px-6">
-        <ButtonLink to={previousStepPath} variant="secondary">
+        <ButtonLink to={previousPath} variant="secondary">
           Back
         </ButtonLink>
         <Button type="submit" className="ml-4">

@@ -2,7 +2,14 @@ import { z } from 'zod';
 import { db } from '../db';
 import { getArray } from '../../utils/form';
 import { getCfpState } from '../../utils/event';
-import { CfpNotOpenError, EventNotFoundError, MaxSubmittedProposalsReachedError, ProposalNotFoundError, ProposalSubmissionError, TalkNotFoundError } from '../errors';
+import {
+  CfpNotOpenError,
+  EventNotFoundError,
+  MaxSubmittedProposalsReachedError,
+  ProposalNotFoundError,
+  ProposalSubmissionError,
+  TalkNotFoundError,
+} from '../errors';
 
 export type TalksToSubmit = Array<{
   id: string;
@@ -78,11 +85,14 @@ export async function getProposalCountsForEvent(uid: string, slug: string): Prom
 
 export type ProposalSaved = { talkId: string };
 
-export async function saveDraftProposalForEvent(talkId: string, eventId: string, uid: string, data: ProposalData) {
+export async function saveDraftProposalForEvent(talkId: string, eventSlug: string, uid: string, data: ProposalData) {
   if (talkId !== 'new') {
     const talk = await db.talk.findFirst({ where: { id: talkId, speakers: { some: { id: uid } } } });
     if (!talk) throw new TalkNotFoundError();
   }
+
+  const event = await db.event.findUnique({ select: { id: true }, where: { slug: eventSlug } });
+  if (!event) throw new EventNotFoundError();
 
   const talk = await db.talk.upsert({
     where: { id: talkId },
@@ -95,7 +105,7 @@ export async function saveDraftProposalForEvent(talkId: string, eventId: string,
   });
 
   await db.proposal.upsert({
-    where: { talkId_eventId: { talkId: talk.id, eventId: eventId } },
+    where: { talkId_eventId: { talkId: talk.id, eventId: event.id } },
     update: {
       title: talk.title,
       abstract: talk.abstract,
@@ -112,7 +122,7 @@ export async function saveDraftProposalForEvent(talkId: string, eventId: string,
       languages: talk.languages || [],
       status: 'DRAFT',
       talk: { connect: { id: talk.id } },
-      event: { connect: { id: eventId } },
+      event: { connect: { id: event.id } },
       speakers: { connect: [{ id: uid }] },
     },
   });
@@ -196,5 +206,3 @@ export async function submitProposal(talkId: string, eventSlug: string, uid: str
   // TODO Email notification to organizers
   // TODO Slack notification
 }
-
-

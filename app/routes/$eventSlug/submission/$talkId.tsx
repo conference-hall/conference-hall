@@ -26,6 +26,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     if (!event.isCfpOpen) throw new Response('CFP is not opened!', { status: 403 });
     const steps = [
       { key: 'proposal', name: 'Proposal', path: `/${slug}/submission/${talkId}`, enabled: true },
+      { key: 'speakers', name: 'Speakers', path: `/${slug}/submission/${talkId}/speakers`, enabled: true },
       { key: 'tracks', name: 'Tracks', path: `/${slug}/submission/${talkId}/tracks`, enabled: event.hasTracks },
       { key: 'survey', name: 'Survey', path: `/${slug}/submission/${talkId}/survey`, enabled: event.hasSurvey },
       { key: 'submission', name: 'Submission', path: `/${slug}/submission/${talkId}/submit`, enabled: true },

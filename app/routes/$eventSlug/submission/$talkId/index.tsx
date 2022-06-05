@@ -28,7 +28,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
 export const action: ActionFunction = async ({ request, params }) => {
   const uid = await requireUserSession(request);
-  const slug = params.eventSlug!;
+  const eventSlug = params.eventSlug!;
   const talkId = params.talkId!;
 
   const form = await request.formData();
@@ -36,15 +36,8 @@ export const action: ActionFunction = async ({ request, params }) => {
   if (!result.success) return result.error.flatten();
 
   try {
-    const event = await getEvent(slug)
-    const savedProposal = await saveDraftProposalForEvent(talkId, event.id, uid, result.data);
-    if (event.hasTracks) {
-      return redirect(`/${slug}/submission/${savedProposal.talkId}/tracks`);
-    } else if (event.hasSurvey) {
-      return redirect(`/${slug}/submission/${savedProposal.talkId}/survey`);
-    } else {
-      return redirect(`/${slug}/submission/${savedProposal.talkId}/submit`);
-    }
+    const savedProposal = await saveDraftProposalForEvent(talkId, eventSlug, uid, result.data);
+    return redirect(`/${eventSlug}/submission/${savedProposal.talkId}/speakers`);
   } catch(err) {
     mapErrorToResponse(err);
   }
