@@ -1,19 +1,19 @@
 import { ActionFunction, json, LoaderFunction } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
-import { Container } from '~/components/layout/Container';
-import Badge from '../../../components/Badges';
-import { Button, ButtonLink } from '../../../components/Buttons';
-import { Markdown } from '../../../components/Markdown';
-import { H1, H2, Text } from '../../../components/Typography';
-import { EventActivity } from '../components/Activity';
+import { Container } from '~/components-ui/Container';
+import Badge from '../../../components-ui/Badges';
+import { Button, ButtonLink } from '../../../components-ui/Buttons';
+import { Markdown } from '../../../components-ui/Markdown';
+import { H1, H2, Text } from '../../../components-ui/Typography';
+import { EventActivity } from '../../../components-app/SpeakerActivities';
 import { requireUserSession } from '../../../services/auth/auth.server';
 import { getLanguage } from '../../../utils/languages';
 import { getLevel } from '../../../utils/levels';
-import TalkActions from '../components/TalkActions';
-import { AddCoSpeakerButton } from '../components/CoSpeaker';
 import { TrashIcon } from '@heroicons/react/outline';
 import { archiveTalk, getTalk, removeCoSpeaker, restoreTalk, SpeakerTalk } from '../../../services/speakers/talks.server';
 import { mapErrorToResponse } from '../../../services/errors';
+import TalkActions from '../../../components-app/TalkActions';
+import { AddCoSpeakerButton } from '../../../components-app/CoSpeaker';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const uid = await requireUserSession(request);

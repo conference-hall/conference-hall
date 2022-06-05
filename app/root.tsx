@@ -2,13 +2,13 @@ import { ReactNode } from 'react';
 import { config } from './services/config';
 import { LinksFunction, LoaderFunction } from '@remix-run/node';
 import { Meta, LiveReload, Outlet, Links, Scripts, useCatch, useLoaderData, ScrollRestoration } from '@remix-run/react';
-import { Navbar } from './components/layout/Navbar';
 
 import { initializeFirebase } from './services/auth/firebase';
 import { AuthUser, getAuthUser } from './services/auth/auth.server';
 
 import tailwind from './tailwind.css';
-import { Footer } from './components/layout/Footer';
+import { Footer } from './components-app/Footer';
+import { Navbar } from './components-app/Navbar';
 
 export const links: LinksFunction = () => {
   return [

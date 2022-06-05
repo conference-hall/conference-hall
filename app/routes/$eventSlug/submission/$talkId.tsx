@@ -1,11 +1,11 @@
 import { Outlet, useCatch, useLoaderData, useMatches } from '@remix-run/react';
-import { Container } from '../../../components/layout/Container';
-import { SectionPanel } from '../../../components/Panels';
-import { Steps } from '../components/Steps';
+import { Container } from '../../../components-ui/Container';
+import { SectionPanel } from '../../../components-ui/Panels';
 import { json, LoaderFunction } from '@remix-run/node';
 import { requireUserSession } from '../../../services/auth/auth.server';
 import { getEvent } from '../../../services/events/event.server';
 import { mapErrorToResponse } from '../../../services/errors';
+import { SubmissionSteps } from '../../../components-app/SubmissionSteps';
 
 export type SubmitSteps = Array<{
   key: string;
@@ -46,7 +46,7 @@ export default function EventSubmitRoute() {
   return (
     <Container className="my-8 grid grid-cols-1 items-start sm:gap-8">
       <SectionPanel id="talk-submission" title="Talk submission">
-        <Steps steps={steps} currentStep={currentStep} />
+        <SubmissionSteps steps={steps} currentStep={currentStep} />
         <Outlet />
       </SectionPanel>
     </Container>

@@ -2,13 +2,13 @@ import { json, LoaderFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { GlobeAltIcon, HomeIcon, LocationMarkerIcon } from '@heroicons/react/solid';
 import { requireUserSession } from '../../services/auth/auth.server';
-import { Container } from '../../components/layout/Container';
-import { H3, Text } from '../../components/Typography';
-import { Markdown } from '../../components/Markdown';
-import { IconLabel } from '../../components/IconLabel';
-import { Link } from '../../components/Links';
-import { Activity } from './components/Activity';
-import { ButtonLink } from '../../components/Buttons';
+import { Container } from '../../components-ui/Container';
+import { H3, Text } from '../../components-ui/Typography';
+import { Markdown } from '../../components-ui/Markdown';
+import { IconLabel } from '../../components-ui/IconLabel';
+import { Link } from '../../components-ui/Links';
+import { SpeakerActivities } from '../../components-app/SpeakerActivities';
+import { ButtonLink } from '../../components-ui/Buttons';
 import { getSpeakerActivity, SpeakerActivity } from '../../services/speakers/activity.server';
 import { mapErrorToResponse } from '../../services/errors';
 
@@ -80,7 +80,7 @@ export default function ProfileRoute() {
           </div>
           <div className="lg:col-span-2">
             {activities.length > 0 ? (
-              <Activity activities={activities} />
+              <SpeakerActivities activities={activities} />
             ) : (
               <Text className="mt-4">No submitted proposals yet!.</Text>
             )}

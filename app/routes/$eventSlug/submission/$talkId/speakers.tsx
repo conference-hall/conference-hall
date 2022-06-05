@@ -1,15 +1,15 @@
 import { TrashIcon } from '@heroicons/react/solid';
 import { json, LoaderFunction } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
-import { Button, ButtonLink } from '~/components/Buttons';
-import { MarkdownTextArea } from '../../../../components/forms/MarkdownTextArea';
-import { Link } from '../../../../components/Links';
-import { H2, Text } from '../../../../components/Typography';
+import { Button, ButtonLink } from '~/components-ui/Buttons';
+import { AddCoSpeakerButton } from '../../../../components-app/CoSpeaker';
+import { useSubmissionStep } from '../../../../components-app/useSubmissionStep';
+import { MarkdownTextArea } from '../../../../components-ui/forms/MarkdownTextArea';
+import { Link } from '../../../../components-ui/Links';
+import { H2, Text } from '../../../../components-ui/Typography';
 import { requireUserSession } from '../../../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../../../services/errors';
 import { getTalk, SpeakerTalk } from '../../../../services/speakers/talks.server';
-import { AddCoSpeakerButton } from '../../../speaker/components/CoSpeaker';
-import { useSubmissionStep } from '../../components/useSubmissionStep';
 
 export const handle = { step: 'speakers' };
 

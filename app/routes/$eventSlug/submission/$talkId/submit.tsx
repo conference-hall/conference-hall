@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Form, useLoaderData } from '@remix-run/react';
-import { Button } from '~/components/Buttons';
-import { Checkbox } from '~/components/forms/Checkboxes';
-import { ExternalLink } from '../../../../components/Links';
-import { H1, Text } from '../../../../components/Typography';
+import { Button } from '~/components-ui/Buttons';
+import { Checkbox } from '~/components-ui/forms/Checkboxes';
+import { ExternalLink } from '../../../../components-ui/Links';
+import { H1, Text } from '../../../../components-ui/Typography';
 import { ActionFunction, json, LoaderFunction, redirect } from '@remix-run/node';
 import { requireUserSession } from '../../../../services/auth/auth.server';
 import { getEvent } from '../../../../services/events/event.server';

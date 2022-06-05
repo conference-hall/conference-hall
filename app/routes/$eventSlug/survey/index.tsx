@@ -1,10 +1,10 @@
 import { ActionFunction, json, LoaderFunction } from '@remix-run/node';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
-import { Button } from '~/components/Buttons';
-import { Container } from '~/components/layout/Container';
-import { SurveyForm } from '~/routes/$eventSlug/components/SurveyForm';
-import { AlertSuccess } from '../../../components/Alerts';
-import { H2, Text } from '../../../components/Typography';
+import { Button } from '~/components-ui/Buttons';
+import { Container } from '~/components-ui/Container';
+import { EventSurveyForm } from '../../../components-app/EventSurveyForm';
+import { AlertSuccess } from '../../../components-ui/Alerts';
+import { H2, Text } from '../../../components-ui/Typography';
 import { requireUserSession } from '../../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../../services/errors';
 import { getSurveyAnswers, getSurveyQuestions, saveSurvey, SurveyAnswers, SurveyQuestions, validateSurveyForm } from '../../../services/events/survey.server';
@@ -55,7 +55,7 @@ export default function EventSurveyRoute() {
       {result?.message && <AlertSuccess className="mt-8">{result?.message}</AlertSuccess>}
       <Form method="post" className="border mt-8 border-gray-200 sm:rounded-md sm:overflow-hidden">
         <div className="bg-white py-6 px-4 sm:p-6">
-          <SurveyForm questions={questions} initialValues={answers} />
+          <EventSurveyForm questions={questions} initialValues={answers} />
         </div>
         <div className="px-4 py-3 bg-gray-50 text-right space-x-4 sm:px-6">
           <Button type="submit">Save survey</Button>

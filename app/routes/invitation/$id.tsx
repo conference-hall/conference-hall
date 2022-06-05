@@ -1,10 +1,10 @@
 import { StarIcon } from '@heroicons/react/solid';
 import { ActionFunction, json, LoaderFunction, redirect } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
-import { Button } from '../../components/Buttons';
-import { Container } from '../../components/layout/Container';
-import { Link } from '../../components/Links';
-import { H1, H2, Text } from '../../components/Typography';
+import { Button } from '../../components-ui/Buttons';
+import { Container } from '../../components-ui/Container';
+import { Link } from '../../components-ui/Links';
+import { H1, H2, Text } from '../../components-ui/Typography';
 import { requireUserSession } from '../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../services/errors';
 import { getInvitation, Invitation } from '../../services/invitations/invitations.server';

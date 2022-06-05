@@ -1,13 +1,13 @@
 import { ActionFunction, json, LoaderFunction } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
-import { Button, ButtonLink } from '~/components/Buttons';
-import { H2, Text } from '../../../../components/Typography';
+import { Button, ButtonLink } from '~/components-ui/Buttons';
+import { EventSurveyForm } from '../../../../components-app/EventSurveyForm';
+import { useSubmissionStep } from '../../../../components-app/useSubmissionStep';
+import { H2, Text } from '../../../../components-ui/Typography';
 import { requireUserSession } from '../../../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../../../services/errors';
 import { getSurveyAnswers, getSurveyQuestions, saveSurvey, SurveyAnswers, SurveyQuestions, validateSurveyForm } from '../../../../services/events/survey.server';
-import { SurveyForm } from '../../components/SurveyForm';
-import { useSubmissionStep } from '../../components/useSubmissionStep';
 
 type SurveyQuestionsForm = {
   questions: SurveyQuestions;
@@ -57,7 +57,7 @@ export default function SubmissionSurveyRoute() {
           </Text>
         </div>
         <div className="mt-6">
-          <SurveyForm questions={questions} initialValues={answers} />
+          <EventSurveyForm questions={questions} initialValues={answers} />
         </div>
       </div>
       <div className="px-4 py-5 text-right sm:px-6">

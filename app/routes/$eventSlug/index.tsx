@@ -1,12 +1,12 @@
 import { GlobeIcon, HeartIcon, MailIcon } from '@heroicons/react/solid';
 import { useCatch } from '@remix-run/react';
-import { Container } from '~/components/layout/Container';
+import { Container } from '~/components-ui/Container';
 import { useEvent } from '../$eventSlug';
-import { ButtonLink } from '../../components/Buttons';
-import { CfpHeader } from '../../components/event/CfpInfo';
-import { ExternalLink } from '../../components/Links';
-import { Markdown } from '../../components/Markdown';
-import { H2, Text } from '../../components/Typography';
+import { ButtonLink } from '../../components-ui/Buttons';
+import { CfpHeader } from '../../components-app/CfpInfo';
+import { ExternalLink } from '../../components-ui/Links';
+import { Markdown } from '../../components-ui/Markdown';
+import { H2, Text } from '../../components-ui/Typography';
 
 export default function EventRoute() {
   const event = useEvent();

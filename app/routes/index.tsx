@@ -1,6 +1,6 @@
-import { ButtonLink } from '../components/Buttons';
-import { Container } from '../components/layout/Container';
-import { H1, H2 } from '../components/Typography';
+import { ButtonLink } from '../components-ui/Buttons';
+import { Container } from '../components-ui/Container';
+import { H1, H2 } from '../components-ui/Typography';
 
 export default function IndexRoute() {
   return (

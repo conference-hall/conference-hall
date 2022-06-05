@@ -1,12 +1,12 @@
 import { ActionFunction, json, LoaderFunction, redirect } from '@remix-run/node';
 import { Form, NavLink, useActionData, useLoaderData, useSubmit } from '@remix-run/react';
 import { CreditCardIcon, KeyIcon, UserCircleIcon } from '@heroicons/react/solid';
-import { Container } from '../../components/layout/Container';
-import { IconLabel } from '../../components/IconLabel';
-import { Input } from '../../components/forms/Input';
-import { MarkdownTextArea } from '../../components/forms/MarkdownTextArea';
-import { Button } from '../../components/Buttons';
-import { H2, Text } from '../../components/Typography';
+import { Container } from '../../components-ui/Container';
+import { IconLabel } from '../../components-ui/IconLabel';
+import { Input } from '../../components-ui/forms/Input';
+import { MarkdownTextArea } from '../../components-ui/forms/MarkdownTextArea';
+import { Button } from '../../components-ui/Buttons';
+import { H2, Text } from '../../components-ui/Typography';
 import { ValidationErrors } from '../../utils/validation-errors';
 import { useCallback } from 'react';
 import { getAuth } from 'firebase/auth';

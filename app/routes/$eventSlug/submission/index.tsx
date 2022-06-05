@@ -1,11 +1,9 @@
 import { useCatch, useLoaderData } from '@remix-run/react';
-import { ButtonLink } from '~/components/Buttons';
-import { TalksEmptyState } from '../components/TalksEmptyState';
-import { TalksSelection } from '../components/TalksSelection';
-import { Container } from '../../../components/layout/Container';
-import { AlertInfo } from '../../../components/Alerts';
-import { MaxProposalsReached } from '../components/MaxProposalsReached';
-import { H2, Text } from '../../../components/Typography';
+import { ButtonLink } from '~/components-ui/Buttons';
+import { Container } from '../../../components-ui/Container';
+import { AlertInfo } from '../../../components-ui/Alerts';
+import { MaxProposalsReached } from '../../../components-app/MaxProposalsReached';
+import { H2, Text } from '../../../components-ui/Typography';
 import { requireUserSession } from '../../../services/auth/auth.server';
 import { json, LoaderFunction } from '@remix-run/node';
 import {
@@ -15,6 +13,7 @@ import {
   TalksToSubmit,
 } from '../../../services/events/submit.server';
 import { mapErrorToResponse } from '../../../services/errors';
+import { SubmissionTalksList } from '../../../components-app/SubmissionTalksList';
 
 type SelectionStep = { talks: TalksToSubmit; proposalsCount: ProposalCountsForEvent };
 
@@ -45,14 +44,6 @@ export default function EventSubmitRoute() {
     );
   }
 
-  if (data?.talks?.length === 0) {
-    return (
-      <Container className="mt-8">
-        <TalksEmptyState />
-      </Container>
-    );
-  }
-
   return (
     <Container className="my-8 space-y-8">
       <div className="flex justify-between items-center flex-wrap sm:flex-nowrap">
@@ -76,9 +67,7 @@ export default function EventSubmitRoute() {
         </AlertInfo>
       )}
 
-      <div>
-        <TalksSelection talks={data?.talks} />
-      </div>
+      <SubmissionTalksList talks={data?.talks} />
     </Container>
   );
 }

@@ -2,12 +2,12 @@ import { json, LoaderFunction } from '@remix-run/node';
 import { CalendarIcon } from '@heroicons/react/solid';
 import { formatRelative } from 'date-fns';
 import { useLoaderData, Link, Form, useSearchParams } from '@remix-run/react';
-import { IconLabel } from '../../../components/IconLabel';
-import { Container } from '../../../components/layout/Container';
-import { H2, Text } from '../../../components/Typography';
+import { IconLabel } from '../../../components-ui/IconLabel';
+import { Container } from '../../../components-ui/Container';
+import { H2, Text } from '../../../components-ui/Typography';
 import { requireUserSession } from '../../../services/auth/auth.server';
-import { ButtonLink } from '../../../components/Buttons';
-import Badge from '../../../components/Badges';
+import { ButtonLink } from '../../../components-ui/Buttons';
+import Badge from '../../../components-ui/Badges';
 import { findTalks, SpeakerTalks } from '../../../services/speakers/talks.server';
 import { mapErrorToResponse } from '../../../services/errors';
 

@@ -1,9 +1,9 @@
 import { ActionFunction, json, LoaderFunction, redirect } from '@remix-run/node';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
-import { Container } from '~/components/layout/Container';
-import { Button, ButtonLink } from '../../../components/Buttons';
-import { TalkAbstractForm } from '../../../components/proposal/TalkAbstractForm';
-import { H1 } from '../../../components/Typography';
+import { Container } from '~/components-ui/Container';
+import { TalkAbstractForm } from '../../../components-app/TalkAbstractForm';
+import { Button, ButtonLink } from '../../../components-ui/Buttons';
+import { H1 } from '../../../components-ui/Typography';
 import { requireUserSession } from '../../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../../services/errors';
 import { getTalk, SpeakerTalk, updateTalk, validateTalkForm } from '../../../services/speakers/talks.server';

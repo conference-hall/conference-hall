@@ -1,16 +1,16 @@
 import { Form, useActionData, useCatch, useLoaderData } from '@remix-run/react';
-import { Container } from '~/components/layout/Container';
-import { Button } from '../../../components/Buttons';
-import { CategoriesForm } from '../../../components/proposal/CategoriesForm';
-import { TalkAbstractForm } from '../../../components/proposal/TalkAbstractForm';
-import { FormatsForm } from '../../../components/proposal/FormatsForm';
-import { H2 } from '../../../components/Typography';
+import { Container } from '~/components-ui/Container';
+import { Button } from '../../../components-ui/Buttons';
+import { CategoriesForm } from '../../../components-app/CategoriesForm';
+import { H2 } from '../../../components-ui/Typography';
 import { ValidationErrors } from '../../../utils/validation-errors';
 import { ActionFunction, json, LoaderFunction, redirect } from '@remix-run/node';
 import { requireUserSession } from '../../../services/auth/auth.server';
 import { deleteProposal, getSpeakerProposal, SpeakerProposal, updateProposal, validateProposalForm } from '../../../services/events/proposals.server';
 import { EventTracks, getEvent } from '../../../services/events/event.server';
 import { mapErrorToResponse } from '../../../services/errors';
+import { TalkAbstractForm } from '../../../components-app/TalkAbstractForm';
+import { FormatsForm } from '../../../components-app/FormatsForm';
 
 export type SpeakerEditProposal = { 
   event: { formats: EventTracks, categories: EventTracks }

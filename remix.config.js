@@ -6,7 +6,6 @@ module.exports = {
   browserBuildDirectory: 'public/build',
   publicPath: '/build/',
   serverBuildDirectory: 'build',
-  ignoredRouteFiles: ['**/components/**/*.tsx', '**/hooks/**/*.ts'],
   devServerPort: 8002,
   serverDependenciesToBundle: [/^marked.*/],
 };

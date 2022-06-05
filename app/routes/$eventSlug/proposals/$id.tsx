@@ -1,17 +1,17 @@
 import { CalendarIcon, ExclamationIcon } from '@heroicons/react/solid';
 import { formatRelative } from 'date-fns';
 import { useCatch, useLoaderData } from '@remix-run/react';
-import { Container } from '~/components/layout/Container';
+import { Container } from '~/components-ui/Container';
 import { useEvent } from '../../$eventSlug';
-import { ButtonLink } from '../../../components/Buttons';
-import { IconLabel } from '../../../components/IconLabel';
-import { Markdown } from '../../../components/Markdown';
-import { DeleteProposalButton } from '../../../components/proposal/DeleteProposalButton';
-import { H2 } from '../../../components/Typography';
+import { ButtonLink } from '../../../components-ui/Buttons';
+import { IconLabel } from '../../../components-ui/IconLabel';
+import { Markdown } from '../../../components-ui/Markdown';
+import { H2 } from '../../../components-ui/Typography';
 import { json, LoaderFunction } from '@remix-run/node';
 import { requireUserSession } from '../../../services/auth/auth.server';
 import { getSpeakerProposal, SpeakerProposal } from '../../../services/events/proposals.server';
 import { mapErrorToResponse } from '../../../services/errors';
+import { DeleteProposalButton } from '../../../components-app/DeleteProposalButton';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const uid = await requireUserSession(request);

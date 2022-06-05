@@ -1,11 +1,11 @@
 import { json, LoaderFunction } from '@remix-run/node';
 import { useLoaderData, useSearchParams } from '@remix-run/react';
-import { Container } from '~/components/layout/Container';
-import { SearchEventForm } from '~/components/search/SearchEventForm';
-import { H1, Text } from '../components/Typography';
-import { EventItem, EventsList } from '../components/search/EventsList';
+import { Container } from '../components-ui/Container';
+import { H1, Text } from '../components-ui/Typography';
+import { SearchEventsList } from '../components-app/SearchEventsList';
 import { searchEvents, SearchEvents, validateFilters } from '../services/events/search.server';
 import { mapErrorToResponse } from '../services/errors';
+import { SearchEventsForm } from '../components-app/SearchEventsForm';
 
 export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
@@ -28,18 +28,14 @@ export default function SearchRoute() {
       <div>
         <Container className="py-24">
           <H1>Conferences and meetups.</H1>
-          <SearchEventForm filters={data.filters} className="mt-4" />
+          <SearchEventsForm filters={data.filters} className="mt-4" />
         </Container>
       </div>
       <Container className="pb-8">
         {data.results?.length === 0 ? (
           <Text>No events found.</Text>
         ) : (
-          <EventsList>
-            {data.results.map((result) => (
-              <EventItem key={result.slug} forTalkId={talkId} {...result} />
-            ))}
-          </EventsList>
+          <SearchEventsList events={data.results} forTalkId={talkId} />
         )}
       </Container>
     </div>

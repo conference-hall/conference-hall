@@ -1,0 +1,32 @@
+import { Checkbox, CheckboxHeadingGroup } from '../components-ui/forms/Checkboxes';
+
+type Props = {
+  categories: Array<{
+    id: string;
+    name: string;
+    description: string | null;
+  }>;
+  initialValues?: string[];
+};
+
+export function CategoriesForm({ categories, initialValues }: Props) {
+  return (
+    <CheckboxHeadingGroup
+      label="Select proposal categories"
+      description="Select categories that are the best fit for your proposal."
+    >
+      {categories.map((c: any) => (
+        <Checkbox
+          key={c.id}
+          id={c.id}
+          name="categories"
+          value={c.id}
+          defaultChecked={initialValues?.includes(c.id)}
+          description={c.description}
+        >
+          {c.name}
+        </Checkbox>
+      ))}
+    </CheckboxHeadingGroup>
+  );
+}

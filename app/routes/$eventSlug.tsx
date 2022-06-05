@@ -1,9 +1,9 @@
 import { json, LoaderFunction } from '@remix-run/node';
 import { Outlet, useCatch, useLoaderData, useOutletContext } from '@remix-run/react';
-import { ButtonLink } from '../components/Buttons';
-import { Header } from '../components/event/Header';
-import { EventTabs } from '../components/event/Tabs';
-import { Container } from '../components/layout/Container';
+import { EventHeader } from '../components-app/EventHeader';
+import { EventTabs } from '../components-app/EventTabs';
+import { ButtonLink } from '../components-ui/Buttons';
+import { Container } from '../components-ui/Container';
 import { mapErrorToResponse } from '../services/errors';
 import { EventData, getEvent } from '../services/events/event.server';
 
@@ -23,7 +23,7 @@ export default function EventRoute() {
   const data = useLoaderData<EventData>();
   return (
     <>
-      <Header
+      <EventHeader
         type={data.type}
         name={data.name}
         address={data.address}
