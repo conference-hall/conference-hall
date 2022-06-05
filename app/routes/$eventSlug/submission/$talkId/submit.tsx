@@ -36,7 +36,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   const talkId = params.talkId!;
   try {
     await submitProposal(talkId, eventSlug, uid);
-    return redirect(`/${eventSlug}/submission`);
+    return redirect(`/${eventSlug}/proposals`);
   } catch (err) {
     mapErrorToResponse(err);
   }

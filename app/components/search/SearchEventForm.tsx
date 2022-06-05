@@ -1,5 +1,5 @@
 import c from 'classnames';
-import { Form, useSubmit } from '@remix-run/react';
+import { Form, useSearchParams, useSubmit } from '@remix-run/react';
 import { Input } from '../forms/Input';
 import DetailedSelect from '../forms/DetailedSelect';
 import { SearchFilters } from '../../services/events/search.server';
@@ -12,14 +12,12 @@ type SearchEventFormProps = {
 
 export function SearchEventForm({ filters, className }: SearchEventFormProps) {
   const { terms, type, cfp } = filters;
+  const [searchParams] = useSearchParams();
   const submit = useSubmit();
 
   function handleChange(name: string, id: string) {
-    let data: SearchFilters = {};
-    if (terms) data.terms = terms;
-    if (type) data.type = type;
-    if (cfp) data.cfp = cfp;
-    submit({ ...data, [name]: id }, { method: 'get', action: '/search' });
+    const params = Object.fromEntries(searchParams);
+    submit({ ...params, [name]: id }, { method: 'get', action: '/search' });
   }
 
   return (
@@ -31,6 +29,7 @@ export function SearchEventForm({ filters, className }: SearchEventFormProps) {
           placeholder="Search conferences and meetups..."
           aria-label="Search conferences and meetups."
           defaultValue={terms}
+          autoComplete="off"
           className=" w-full"
         />
         <Button type="submit">Search</Button>

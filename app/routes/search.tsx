@@ -1,5 +1,5 @@
 import { json, LoaderFunction } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
+import { useLoaderData, useSearchParams } from '@remix-run/react';
 import { Container } from '~/components/layout/Container';
 import { SearchEventForm } from '~/components/search/SearchEventForm';
 import { H1, Text } from '../components/Typography';
@@ -20,6 +20,9 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export default function SearchRoute() {
   const data = useLoaderData<SearchEvents>();
+  const [searchParams] = useSearchParams();
+  const talkId = searchParams.get('talkId');
+
   return (
     <div>
       <div>
@@ -34,7 +37,7 @@ export default function SearchRoute() {
         ) : (
           <EventsList>
             {data.results.map((result) => (
-              <EventItem key={result.slug} {...result} />
+              <EventItem key={result.slug} forTalkId={talkId} {...result} />
             ))}
           </EventsList>
         )}
