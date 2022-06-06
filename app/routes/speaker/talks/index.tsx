@@ -1,15 +1,13 @@
 import { json, LoaderFunction } from '@remix-run/node';
-import { CalendarIcon } from '@heroicons/react/solid';
-import { formatRelative } from 'date-fns';
-import { useLoaderData, Link, Form, useSearchParams } from '@remix-run/react';
-import { IconLabel } from '../../../components-ui/IconLabel';
+import { useLoaderData, Link, Form, useSearchParams, useNavigate } from '@remix-run/react';
 import { Container } from '../../../components-ui/Container';
 import { H2, Text } from '../../../components-ui/Typography';
 import { requireUserSession } from '../../../services/auth/auth.server';
 import { ButtonLink } from '../../../components-ui/Buttons';
-import Badge from '../../../components-ui/Badges';
 import { findTalks, SpeakerTalks } from '../../../services/speakers/talks.server';
 import { mapErrorToResponse } from '../../../services/errors';
+import { SpeakerTalksList } from '../../../components-app/SpeakerTalksList';
+import DetailedSelect from '../../../components-ui/forms/DetailedSelect';
 
 export const loader: LoaderFunction = async ({ request }) => {
   const uid = await requireUserSession(request);
@@ -18,26 +16,20 @@ export const loader: LoaderFunction = async ({ request }) => {
   try {
     const talks = await findTalks(uid, { archived });
     return json<SpeakerTalks>(talks);
-  } catch(err) {
+  } catch (err) {
     mapErrorToResponse(err);
   }
 };
 
 export default function SpeakerTalksRoute() {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const archived = Boolean(searchParams.get('archived'));
   const talks = useLoaderData<SpeakerTalks>();
 
-  if (talks.length === 0) {
-    return (
-      <Container className="mt-8 py-8 flex flex-col items-center">
-        <h3 className="mt-2 text-sm font-medium text-gray-900">No talk abstracts yet!</h3>
-        <p className="mt-1 text-sm text-gray-600">Get started by creating your first talk abstract.</p>
-        <div className="mt-12">
-          <ButtonLink to="new">Create a talk abstract</ButtonLink>
-        </div>
-      </Container>
-    );
+  const handleStatus = (name: string, value: string) => {
+    const path = value === 'archived' ? '?archived=true' : '';
+    navigate(`/speaker/talks${path}`)
   }
 
   return (
@@ -49,51 +41,22 @@ export default function SpeakerTalksRoute() {
             All your talk abstracts.
           </Text>
         </div>
-        <div className="flex-shrink-0 space-x-4">
-          {archived ? (
-            <Link to="/speaker/talks">Active talks</Link>
-          ) : (
-            <Link to="/speaker/talks?archived=true">Archived talks</Link>
-          )}
+        <div className="flex flex-shrink-0 gap-4">
+          <DetailedSelect
+            name="status"
+            label="Talk status"
+            value={archived ? 'archived' : 'active'}
+            onChange={handleStatus}
+            options={[
+              { id: 'active', label: 'Active talks' },
+              { id: 'archived', label: 'Archived talks' },
+            ]}
+          />
           <ButtonLink to="new">Create a talk abstract</ButtonLink>
         </div>
       </div>
       <div className="mt-8">
-        <ul role="list" className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-          {talks.map((talk) => (
-            <li key={talk.id} className="col-span-1 bg-white rounded-lg border border-gray-200">
-              <Link to={talk.id} className="block hover:bg-indigo-50 rounded-lg">
-                <div className="px-4 py-4 sm:px-6 h-40 flex flex-col justify-between">
-                  <div>
-                    <div className="flex justify-between">
-                      <p className="text-base font-semibold text-indigo-600 truncate">{talk.title}</p>
-                      {talk.archived && <Badge rounded={false}>Archived</Badge>}
-                    </div>
-                    <div className="mt-2 flex items-center overflow-hidden -space-x-1">
-                      {talk.speakers.map((speaker) => (
-                        <img
-                          key={speaker.id}
-                          className="inline-block h-6 w-6 rounded-full ring-2 ring-white"
-                          src={speaker.photoURL || 'http://placekitten.com/100/100'}
-                          alt={speaker.name || 'Speaker'}
-                        />
-                      ))}
-                      <span className="pl-3 text-sm text-gray-500 truncate">
-                        by {talk.speakers.map((s) => s.name).join(', ')}
-                      </span>
-                    </div>
-                  </div>
-                  <div>
-                    <IconLabel icon={CalendarIcon} className="text-sm text-gray-500" iconClassName="text-gray-400">
-                      Created&nbsp;
-                      <time dateTime={talk.createdAt}>{formatRelative(new Date(talk.createdAt), new Date())}</time>
-                    </IconLabel>
-                  </div>
-                </div>
-              </Link>
-            </li>
-          ))}
-        </ul>
+        <SpeakerTalksList talks={talks} />
       </div>
     </Container>
   );
