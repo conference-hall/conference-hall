@@ -204,6 +204,8 @@ model Proposal {
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
   messages        Message[]
+  invitationUuid  String?         @unique
+  invitation      Invite?         @relation(fields: [invitationUuid], references: [id])
 
   @@unique([talkId, eventId])
   @@map("proposals")
@@ -281,19 +283,19 @@ enum MessageChannel {
 model Invite {
   id           String        @id @default(uuid())
   type         InviteType
-  entityId     String
   userId       String
   invitedBy    User          @relation(fields: [userId], references: [id])
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   organization Organization?
   talk         Talk?
+  proposal     Proposal?
 
-  @@unique([type, entityId])
   @@map("invites")
 }
 
 enum InviteType {
   ORGANIZATION
-  SPEAKER
+  TALK
+  PROPOSAL
 }

@@ -48,14 +48,14 @@ export async function updateProfile(speakerId: string, data: SettingsUpdateData)
 }
 
 const SpeakerPersonalInfo = z.object({
-  name: z.string().nonempty(),
-  email: z.string().email().nonempty(),
-  photoURL: z.string().url().nonempty(),
+  name: z.string().min(1),
+  email: z.string().email().min(1),
+  photoURL: z.string().url().min(1),
 });
 
 const SpeakerDetails = z.object({
-  bio: z.string(),
-  references: z.string(),
+  bio: z.string().nullable(),
+  references: z.string().nullable(),
 });
 
 const SpeakerAdditionalInfo = z.object({
@@ -68,7 +68,7 @@ const SpeakerAdditionalInfo = z.object({
 type SettingsSchema = typeof SpeakerPersonalInfo | typeof SpeakerDetails | typeof SpeakerAdditionalInfo;
 type SettingsUpdateData = z.infer<SettingsSchema>;
 
-export function validateProfileData(form: FormData, type: string) {
+export function validateProfileData(form: FormData, type?: string) {
   let schema: SettingsSchema = SpeakerPersonalInfo;
   if (type === 'DETAILS') schema = SpeakerDetails;
   if (type === 'ADDITIONAL') schema = SpeakerAdditionalInfo;

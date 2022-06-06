@@ -7,8 +7,9 @@ import { Link } from '../../components-ui/Links';
 import { H1, H2, Text } from '../../components-ui/Typography';
 import { requireUserSession } from '../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../services/errors';
+import { inviteCoSpeakerToProposal } from '../../services/events/proposals.server';
 import { getInvitation, Invitation } from '../../services/invitations/invitations.server';
-import { inviteCoSpeaker } from '../../services/speakers/talks.server';
+import { inviteCoSpeakerToTalk } from '../../services/speakers/talks.server';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   await requireUserSession(request);
@@ -24,12 +25,18 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
 export const action: ActionFunction = async ({ request, params }) => {
   const uid = await requireUserSession(request);
-  const invitationId = params.id;
-  if (!invitationId) return null;
+  const invitationId = params.id!;
+  const form = await request.formData();
+  const type = form.get('_type') as Invitation['type'];
 
   try {
-    const talk = await inviteCoSpeaker(invitationId, uid);
-    return redirect(`/speaker/talks/${talk.id}`);
+    if (type === 'TALK') {
+      const talk = await inviteCoSpeakerToTalk(invitationId, uid);
+      return redirect(`/speaker/talks/${talk.id}`);
+    } else {
+      const proposal = await inviteCoSpeakerToProposal(invitationId, uid);
+      return redirect(`/${proposal.eventSlug}/proposals/${proposal.proposalId}`);
+    }
   } catch (err) {
     mapErrorToResponse(err);
   }
@@ -52,6 +59,7 @@ export default function InvitationRoute() {
         </H1>
 
         <Form method="post" className="mt-8">
+          <input type="hidden" name="_type" value={invitation.type} />
           <Button type="submit">Accept invitation</Button>
         </Form>
         <Link to="/" className="text-xs mt-2">

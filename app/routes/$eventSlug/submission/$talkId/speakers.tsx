@@ -1,38 +1,93 @@
-import { TrashIcon } from '@heroicons/react/solid';
-import { json, LoaderFunction } from '@remix-run/node';
-import { Form, useLoaderData } from '@remix-run/react';
+import { ActionFunction, json, LoaderFunction, redirect } from '@remix-run/node';
+import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import { Button, ButtonLink } from '~/components-ui/Buttons';
-import { AddCoSpeakerButton } from '../../../../components-app/CoSpeaker';
+import { InviteCoSpeakerButton, CoSpeakersList } from '../../../../components-app/CoSpeaker';
 import { useSubmissionStep } from '../../../../components-app/useSubmissionStep';
 import { MarkdownTextArea } from '../../../../components-ui/forms/MarkdownTextArea';
-import { Link } from '../../../../components-ui/Links';
+import { ExternalLink } from '../../../../components-ui/Links';
 import { H2, Text } from '../../../../components-ui/Typography';
-import { requireUserSession } from '../../../../services/auth/auth.server';
+import { requireAuthUser, requireUserSession } from '../../../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../../../services/errors';
-import { getTalk, SpeakerTalk } from '../../../../services/speakers/talks.server';
+import { getEvent } from '../../../../services/events/event.server';
+import { removeCoSpeakerFromProposal } from '../../../../services/events/proposals.server';
+import { getProposalSpeakers } from '../../../../services/events/speakers.server';
+import { updateProfile, validateProfileData } from '../../../../services/speakers/settings.server';
+import { ValidationErrors } from '../../../../utils/validation-errors';
+
+type SubmissionSpeakers = {
+  proposalId: string;
+  currentSpeaker: {
+    bio: string | null;
+  }
+  speakers: Array<{
+    id: string;
+    name: string | null;
+    photoURL: string | null;
+    isOwner: boolean;
+  }>;
+}
 
 export const handle = { step: 'speakers' };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const uid = await requireUserSession(request);
+  const user = await requireAuthUser(request);
+  const eventSlug = params.eventSlug!;
   const talkId = params.talkId!;
   try {
-    const talk = await getTalk(uid, talkId);
-    return json<SpeakerTalk>(talk);
+    const proposal = await getProposalSpeakers(talkId, eventSlug, user.id);
+    return json<SubmissionSpeakers>({
+      proposalId: proposal.id,
+      currentSpeaker: { bio: user.bio },
+      speakers: proposal.speakers.filter(speaker => speaker.id !== user.id),
+    });
   } catch (err) {
     mapErrorToResponse(err);
   }
   return null;
 };
 
+export const action: ActionFunction = async ({ request, params }) => {
+  const uid = await requireUserSession(request);
+  const talkId = params.talkId!;
+  const eventSlug = params.eventSlug!;
+  const form = await request.formData();
+  const result = validateProfileData(form, 'DETAILS');
+
+  if (!result.success) {
+    return result.error.flatten();
+  }
+  try {
+    const action = form.get('_action');
+    if (action === 'remove-speaker') {
+      const speakerId = form.get('_speakerId')?.toString() as string;
+      await removeCoSpeakerFromProposal(uid, talkId, eventSlug, speakerId);
+      return null;
+    } else {
+      await updateProfile(uid, result.data);
+      const event = await getEvent(eventSlug)
+      if (event.hasTracks) {
+        return redirect(`/${eventSlug}/submission/${talkId}/tracks`);
+      } else if (event.hasSurvey) {
+        return redirect(`/${eventSlug}/submission/${talkId}/survey`);
+      } else {
+        return redirect(`/${eventSlug}/submission/${talkId}/submit`);
+      }
+    }
+  } catch(err) {
+    mapErrorToResponse(err);
+  }
+};
+
 export default function SubmissionSpeakerRoute() {
-  const talk = useLoaderData<SpeakerTalk>();
-  const { previousPath, nextPath } = useSubmissionStep();
+  const data = useLoaderData<SubmissionSpeakers>();
+  const errors = useActionData<ValidationErrors>();
+  const { previousPath } = useSubmissionStep();
+  const fieldErrors = errors?.fieldErrors;
 
   return (
     <>
       <div className="px-8 py-6 sm:py-10">
-        <Form method="post">
+        <Form id="speaker-form" method="post">
           <div>
             <H2>Speaker details</H2>
             <Text variant="secondary" className="mt-1">
@@ -43,14 +98,13 @@ export default function SubmissionSpeakerRoute() {
             id="bio"
             name="bio"
             label="Biography"
-            description="Brief description for your profile."
             rows={5}
-            // error={fieldErrors?.bio?.[0]}
-            // defaultValue={user.bio || ''}
+            error={fieldErrors?.bio?.[0]}
+            defaultValue={data.currentSpeaker.bio || ''}
             className="mt-6"
           />
           <Text className="mt-2">
-            You can give more information about you in <Link to="/speaker/settings">your settings page.</Link>
+            You can give more information about you from <ExternalLink href="/speaker/settings">the settings page.</ExternalLink>
           </Text>
         </Form>
         <div className="mt-12">
@@ -58,49 +112,17 @@ export default function SubmissionSpeakerRoute() {
           <Text variant="secondary" className="mt-1">
             This information will be displayed publicly so be careful what you share.
           </Text>
-          <div className="py-4 max-w-md">
-            {talk.speakers.map((speaker) => (
-              <div key={speaker.id} className="mt-4 flex justify-between items-center">
-                <div className="flex items-center">
-                  <img
-                    className="inline-block h-9 w-9 rounded-full"
-                    src={speaker.photoURL || 'http://placekitten.com/100/100'}
-                    alt={speaker.name || 'Speaker'}
-                  />
-                  <div className="ml-3">
-                    <Text>{speaker.name}</Text>
-                    <Text variant="secondary" size="xs">
-                      {speaker.isOwner ? 'Owner' : 'Co-speaker'}
-                    </Text>
-                  </div>
-                </div>
-                <div>
-                  {!speaker.isOwner && (
-                    <Form method="post">
-                      <input type="hidden" name="_action" value="remove-speaker" />
-                      <input type="hidden" name="_speakerId" value={speaker.id} />
-                      <button
-                        type="submit"
-                        className="inline-flex items-center p-1 border border-transparent rounded-full text-gray-400 bg-white hover:bg-gray-100 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
-                      >
-                        <TrashIcon className="h-5 w-5" aria-hidden="true" />
-                      </button>
-                    </Form>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-          <AddCoSpeakerButton />
+          <CoSpeakersList speakers={data.speakers} showRemoveAction className="py-4 max-w-md" />
+          <InviteCoSpeakerButton to='PROPOSAL' id={data.proposalId} />
         </div>
       </div>
       <div className="px-4 py-5 text-right sm:px-6">
         <ButtonLink to={previousPath} variant="secondary">
           Back
         </ButtonLink>
-        <ButtonLink to={nextPath} className="ml-4">
+        <Button form="speaker-form" className="ml-4">
           Next
-        </ButtonLink>
+        </Button>
       </div>
     </>
   );

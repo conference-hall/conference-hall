@@ -3,7 +3,7 @@ import { db } from '../../services/db';
 import { getCfpState } from '../../utils/event';
 import { getArray } from '../../utils/form';
 import { jsonToArray } from '../../utils/prisma';
-import { CfpNotOpenError, EventNotFoundError, ProposalNotFoundError } from '../errors';
+import { CfpNotOpenError, EventNotFoundError, InvitationFoundError, ProposalNotFoundError } from '../errors';
 
 export type SpeakerProposals = Array<{
   id: string;
@@ -142,3 +142,48 @@ export function validateProposalForm(form: FormData) {
     languages: getArray(form, 'languages'),
   });
 }
+
+/**
+ * Invite a co-speaker to a proposal
+ * @param invitationId Id of the invitation
+ * @param coSpeakerId Id of the co-speaker to add
+ */
+ export async function inviteCoSpeakerToProposal(invitationId: string, coSpeakerId: string) {
+  const invitation = await db.invite.findUnique({
+    select: { type: true, proposal: true, organization: true, invitedBy: true },
+    where: { id: invitationId },
+  });
+  if (!invitation || invitation.type !== 'PROPOSAL' || !invitation.proposal) {
+    throw new InvitationFoundError();
+  }
+
+  const proposal = await db.proposal.update({
+    select: { id: true, talkId: true, event: true },
+    data: { speakers: { connect: { id: coSpeakerId } } },
+    where: { id: invitation.proposal.id },
+  });
+
+  if (proposal.talkId) {
+    await db.talk.update({
+      data: { speakers: { connect: { id: coSpeakerId } } },
+      where: { id: proposal.talkId },
+    });
+  }
+  return { proposalId: proposal.id, eventSlug: proposal.event.slug };
+};
+
+/**
+ * Remove a co-speaker from a proposal
+ * @param uid Id of the connected user
+ * @param talkId Id of the talk
+ * @param eventSlug Slug of the event
+ * @param coSpeakerId Id of the co-speaker to remove
+ */
+ export async function removeCoSpeakerFromProposal(uid: string, talkId: string, eventSlug: string, coSpeakerId: string) {
+  const proposal = await db.proposal.findFirst({
+    where: { talkId, event: { slug: eventSlug }, speakers: { some: { id: uid } } },
+  });
+  if (!proposal) throw new ProposalNotFoundError();
+
+  await db.proposal.update({ where: { id: proposal.id }, data: { speakers: { disconnect: { id: coSpeakerId } } } });
+};

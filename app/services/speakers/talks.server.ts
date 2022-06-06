@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { db } from '../../services/db';
 import { getArray } from '../../utils/form';
 import { jsonToArray } from '../../utils/prisma';
-import { InvitationFoundError, TalkNotFoundError } from '../errors';
+import { InvitationFoundError, ProposalNotFoundError, TalkNotFoundError } from '../errors';
 
 export type SpeakerTalks = Array<{
   id: string;
@@ -181,12 +181,12 @@ export function validateTalkForm(form: FormData) {
  * @param invitationId Id of the invitation
  * @param coSpeakerId Id of the co-speaker to add
  */
- export const inviteCoSpeaker = async (invitationId: string, coSpeakerId: string) => {
+ export async function inviteCoSpeakerToTalk(invitationId: string, coSpeakerId: string) {
   const invitation = await db.invite.findUnique({
     select: { type: true, talk: true, organization: true, invitedBy: true },
     where: { id: invitationId },
   });
-  if (!invitation || invitation.type !== 'SPEAKER' || !invitation.talk) {
+  if (!invitation || invitation.type !== 'TALK' || !invitation.talk) {
     throw new InvitationFoundError();
   }
 
@@ -203,7 +203,7 @@ export function validateTalkForm(form: FormData) {
  * @param talkId Id of the talk
  * @param coSpeakerId Id of the co-speaker to remove
  */
-export const removeCoSpeaker = async (uid: string, talkId: string, coSpeakerId: string) => {
+export async function removeCoSpeakerFromTalk(uid: string, talkId: string, coSpeakerId: string) {
   const talk = await db.talk.findFirst({
     where: { id: talkId, speakers: { some: { id: uid } } },
   });
@@ -217,7 +217,7 @@ export const removeCoSpeaker = async (uid: string, talkId: string, coSpeakerId: 
  * @param uid Id of the connected user
  * @param talkId Id of the talk
  */
- export const archiveTalk = async (uid: string, talkId: string) => {
+ export async function archiveTalk(uid: string, talkId: string) {
   const talk = await db.talk.findFirst({
     where: { id: talkId, speakers: { some: { id: uid } } },
   });
@@ -231,7 +231,7 @@ export const removeCoSpeaker = async (uid: string, talkId: string, coSpeakerId: 
  * @param uid Id of the connected user
  * @param talkId Id of the talk
  */
- export const restoreTalk = async (uid: string, talkId: string) => {
+ export async function restoreTalk(uid: string, talkId: string) {
   const talk = await db.talk.findFirst({
     where: { id: talkId, speakers: { some: { id: uid } } },
   });

@@ -73,6 +73,12 @@ export class InvitationFoundError extends NotFoundError {
   }
 }
 
+export class InvitationGenerateError extends BadRequestError {
+  constructor() {
+    super('Could not generate invitation key');
+  }
+}
+
 export class SpeakerNotFoundError extends NotFoundError {
   constructor() {
     super('Speaker not found');

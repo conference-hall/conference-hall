@@ -23,7 +23,7 @@ CREATE TYPE "RatingFeeling" AS ENUM ('POSITIVE', 'NEGATIVE', 'NEUTRAL', 'NO_OPIN
 CREATE TYPE "MessageChannel" AS ENUM ('ORGANIZER', 'SPEAKER');
 
 -- CreateEnum
-CREATE TYPE "InviteType" AS ENUM ('ORGANIZATION', 'SPEAKER');
+CREATE TYPE "InviteType" AS ENUM ('ORGANIZATION', 'TALK', 'PROPOSAL');
 
 -- CreateTable
 CREATE TABLE "users" (
@@ -173,6 +173,7 @@ CREATE TABLE "proposals" (
     "speakerNotified" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "invitationUuid" TEXT,
 
     CONSTRAINT "proposals_pkey" PRIMARY KEY ("id")
 );
@@ -217,7 +218,6 @@ CREATE TABLE "messages" (
 CREATE TABLE "invites" (
     "id" TEXT NOT NULL,
     "type" "InviteType" NOT NULL,
-    "entityId" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -227,12 +227,6 @@ CREATE TABLE "invites" (
 
 -- CreateTable
 CREATE TABLE "_speakers_talks" (
-    "A" TEXT NOT NULL,
-    "B" TEXT NOT NULL
-);
-
--- CreateTable
-CREATE TABLE "_speakers_proposals" (
     "A" TEXT NOT NULL,
     "B" TEXT NOT NULL
 );
@@ -249,6 +243,12 @@ CREATE TABLE "_proposals_categories" (
     "B" TEXT NOT NULL
 );
 
+-- CreateTable
+CREATE TABLE "_speakers_proposals" (
+    "A" TEXT NOT NULL,
+    "B" TEXT NOT NULL
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "talks_invitationUuid_key" ON "talks"("invitationUuid");
 
@@ -257,6 +257,9 @@ CREATE UNIQUE INDEX "events_slug_key" ON "events"("slug");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "organizations_invitationId_key" ON "organizations"("invitationId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "proposals_invitationUuid_key" ON "proposals"("invitationUuid");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "proposals_talkId_eventId_key" ON "proposals"("talkId", "eventId");
@@ -271,19 +274,10 @@ CREATE UNIQUE INDEX "surveys_userId_eventId_key" ON "surveys"("userId", "eventId
 CREATE UNIQUE INDEX "ratings_userId_proposalId_key" ON "ratings"("userId", "proposalId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "invites_type_entityId_key" ON "invites"("type", "entityId");
-
--- CreateIndex
 CREATE UNIQUE INDEX "_speakers_talks_AB_unique" ON "_speakers_talks"("A", "B");
 
 -- CreateIndex
 CREATE INDEX "_speakers_talks_B_index" ON "_speakers_talks"("B");
-
--- CreateIndex
-CREATE UNIQUE INDEX "_speakers_proposals_AB_unique" ON "_speakers_proposals"("A", "B");
-
--- CreateIndex
-CREATE INDEX "_speakers_proposals_B_index" ON "_speakers_proposals"("B");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_proposals_formats_AB_unique" ON "_proposals_formats"("A", "B");
@@ -297,6 +291,12 @@ CREATE UNIQUE INDEX "_proposals_categories_AB_unique" ON "_proposals_categories"
 -- CreateIndex
 CREATE INDEX "_proposals_categories_B_index" ON "_proposals_categories"("B");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "_speakers_proposals_AB_unique" ON "_speakers_proposals"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_speakers_proposals_B_index" ON "_speakers_proposals"("B");
+
 -- AddForeignKey
 ALTER TABLE "talks" ADD CONSTRAINT "talks_creatorId_fkey" FOREIGN KEY ("creatorId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
@@ -304,10 +304,10 @@ ALTER TABLE "talks" ADD CONSTRAINT "talks_creatorId_fkey" FOREIGN KEY ("creatorI
 ALTER TABLE "talks" ADD CONSTRAINT "talks_invitationUuid_fkey" FOREIGN KEY ("invitationUuid") REFERENCES "invites"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "events" ADD CONSTRAINT "events_organizationId_fkey" FOREIGN KEY ("organizationId") REFERENCES "organizations"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "events" ADD CONSTRAINT "events_creatorId_fkey" FOREIGN KEY ("creatorId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "events" ADD CONSTRAINT "events_creatorId_fkey" FOREIGN KEY ("creatorId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "events" ADD CONSTRAINT "events_organizationId_fkey" FOREIGN KEY ("organizationId") REFERENCES "organizations"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "event_formats" ADD CONSTRAINT "event_formats_eventId_fkey" FOREIGN KEY ("eventId") REFERENCES "events"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -331,6 +331,9 @@ ALTER TABLE "proposals" ADD CONSTRAINT "proposals_talkId_fkey" FOREIGN KEY ("tal
 ALTER TABLE "proposals" ADD CONSTRAINT "proposals_eventId_fkey" FOREIGN KEY ("eventId") REFERENCES "events"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "proposals" ADD CONSTRAINT "proposals_invitationUuid_fkey" FOREIGN KEY ("invitationUuid") REFERENCES "invites"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "surveys" ADD CONSTRAINT "surveys_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -352,25 +355,25 @@ ALTER TABLE "messages" ADD CONSTRAINT "messages_proposalId_fkey" FOREIGN KEY ("p
 ALTER TABLE "invites" ADD CONSTRAINT "invites_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_speakers_talks" ADD FOREIGN KEY ("A") REFERENCES "talks"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_speakers_talks" ADD CONSTRAINT "_speakers_talks_A_fkey" FOREIGN KEY ("A") REFERENCES "talks"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_speakers_talks" ADD FOREIGN KEY ("B") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_speakers_talks" ADD CONSTRAINT "_speakers_talks_B_fkey" FOREIGN KEY ("B") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_speakers_proposals" ADD FOREIGN KEY ("A") REFERENCES "proposals"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_proposals_formats" ADD CONSTRAINT "_proposals_formats_A_fkey" FOREIGN KEY ("A") REFERENCES "event_formats"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_speakers_proposals" ADD FOREIGN KEY ("B") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_proposals_formats" ADD CONSTRAINT "_proposals_formats_B_fkey" FOREIGN KEY ("B") REFERENCES "proposals"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_proposals_formats" ADD FOREIGN KEY ("A") REFERENCES "event_formats"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_proposals_categories" ADD CONSTRAINT "_proposals_categories_A_fkey" FOREIGN KEY ("A") REFERENCES "event_categories"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_proposals_formats" ADD FOREIGN KEY ("B") REFERENCES "proposals"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_proposals_categories" ADD CONSTRAINT "_proposals_categories_B_fkey" FOREIGN KEY ("B") REFERENCES "proposals"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_proposals_categories" ADD FOREIGN KEY ("A") REFERENCES "event_categories"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_speakers_proposals" ADD CONSTRAINT "_speakers_proposals_A_fkey" FOREIGN KEY ("A") REFERENCES "proposals"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_proposals_categories" ADD FOREIGN KEY ("B") REFERENCES "proposals"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_speakers_proposals" ADD CONSTRAINT "_speakers_proposals_B_fkey" FOREIGN KEY ("B") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;

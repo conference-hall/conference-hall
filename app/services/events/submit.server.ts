@@ -102,8 +102,11 @@ export async function saveDraftProposalForEvent(talkId: string, eventSlug: strin
       creator: { connect: { id: uid } },
       speakers: { connect: [{ id: uid }] },
     },
+    include: { speakers: true },
   });
 
+  const speakers = talk.speakers.map((speaker) => ({ id: speaker.id }));
+  
   await db.proposal.upsert({
     where: { talkId_eventId: { talkId: talk.id, eventId: event.id } },
     update: {
@@ -112,7 +115,7 @@ export async function saveDraftProposalForEvent(talkId: string, eventSlug: strin
       level: talk.level,
       references: talk.references,
       languages: talk.languages || [],
-      speakers: { set: [], connect: [{ id: uid }] },
+      speakers: { set: [], connect: speakers },
     },
     create: {
       title: talk.title,
@@ -123,7 +126,7 @@ export async function saveDraftProposalForEvent(talkId: string, eventSlug: strin
       status: 'DRAFT',
       talk: { connect: { id: talk.id } },
       event: { connect: { id: event.id } },
-      speakers: { connect: [{ id: uid }] },
+      speakers: { connect: speakers },
     },
   });
 
