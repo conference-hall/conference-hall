@@ -5,6 +5,10 @@ import { db } from '../../services/db';
 
 export type SearchEvents = {
   filters: SearchFilters;
+  pagination: {
+    current: number;
+    total: number;
+  };
   results: Array<{
     slug: string;
     name: string;
@@ -14,21 +18,33 @@ export type SearchEvents = {
   }>;
 };
 
-export async function searchEvents(filters: SearchFilters): Promise<SearchEvents> {
+const RESULTS_BY_PAGE = 12;
+
+export async function searchEvents(filters: SearchFilters, page: SearchPage = 1): Promise<SearchEvents> {
   const { terms, type, cfp } = filters;
+
+  const eventsWhereInput: Prisma.EventWhereInput = {
+    visibility: EventVisibility.PUBLIC,
+    name: { contains: terms, mode: 'insensitive' },
+    ...mapFiltersQuery(type, cfp),
+  };
+
+  const eventsCount = await db.event.count({ where: eventsWhereInput });
+  const total = Math.ceil(eventsCount / RESULTS_BY_PAGE);
+
+  const pageIndex = page > 0 ? (page <= total ? page - 1 : total - 1) : 0;
 
   const events = await db.event.findMany({
     select: { slug: true, name: true, type: true, address: true, cfpStart: true, cfpEnd: true },
-    where: {
-      visibility: EventVisibility.PUBLIC,
-      name: { contains: terms, mode: 'insensitive' },
-      ...mapFilters(type, cfp),
-    },
-    orderBy: { cfpStart: 'desc' },
+    where: eventsWhereInput,
+    orderBy: [{ cfpStart: 'desc' }, { name: 'asc' }],
+    skip: pageIndex * RESULTS_BY_PAGE,
+    take: RESULTS_BY_PAGE,
   });
 
   return {
     filters,
+    pagination: { current: pageIndex + 1, total },
     results: events.map((event) => ({
       slug: event.slug,
       name: event.name,
@@ -39,7 +55,7 @@ export async function searchEvents(filters: SearchFilters): Promise<SearchEvents
   };
 }
 
-function mapFilters(type?: string, cfp?: string): Prisma.EventWhereInput {
+function mapFiltersQuery(type?: string, cfp?: string): Prisma.EventWhereInput {
   const PAST_CFP = { cfpEnd: { lt: new Date() } };
   const INCOMING_CFP = { cfpStart: { not: null }, OR: [{ cfpEnd: null }, { cfpEnd: { gt: new Date() } }] };
   const cfpFilter = cfp === 'past' ? PAST_CFP : INCOMING_CFP;
@@ -77,4 +93,13 @@ export function validateFilters(params: URLSearchParams) {
     cfp: params.get('cfp'),
   });
   return result.success ? result.data : {};
+}
+
+export type SearchPage = z.infer<typeof SearchPageSchema>;
+
+const SearchPageSchema = z.preprocess((a) => parseInt(a as string, 10), z.number().positive().optional());
+
+export function validatePage(params: URLSearchParams) {
+  const result = SearchPageSchema.safeParse(params.get('page'));
+  return result.success ? result.data : 1;
 }

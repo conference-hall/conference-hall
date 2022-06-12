@@ -94,6 +94,20 @@ export default async () => {
   });
 
   await buildEvent({
+    name: 'Sunny Tech',
+    slug: 'sunny-tech',
+    description: 'Sunny Tech',
+    address: 'Montpellier, France',
+    type: 'CONFERENCE',
+    visibility: 'PUBLIC',
+    conferenceStart: '2091-11-20T00:00:00.000Z',
+    conferenceEnd: '2091-11-21T00:00:00.000Z',
+    cfpStart: '2020-10-05T14:49:00.000Z',
+    cfpEnd: '2090-10-05T14:49:00.000Z',
+    creatorId: 'tpSmd3FehZIM3Wp4HYSBnfnQmXLb',
+  });
+
+  await buildEvent({
     name: 'GDG Nantes',
     slug: 'gdg-nantes',
     description: 'The meetup to be!',
@@ -116,4 +130,21 @@ export default async () => {
     cfpEnd: null,
     creatorId: 'tpSmd3FehZIM3Wp4HYSBnfnQmXLb',
   });
+
+  await Promise.all(
+    Array.from({ length: 50 }, (_, i) => i + 1).map((num) => {
+      const eventNumber = String(num).padStart(3, '0');
+      return buildEvent({
+        name: `Meetup ${eventNumber}`,
+        slug: `meetup-${eventNumber}`,
+        description: `The meetup number ${eventNumber}`,
+        address: 'Nantes, France',
+        type: 'MEETUP',
+        visibility: 'PUBLIC',
+        cfpStart: '2020-10-05T14:48:00.000Z',
+        cfpEnd: null,
+        creatorId: 'tpSmd3FehZIM3Wp4HYSBnfnQmXLb',
+      });
+    })
+  );
 };
