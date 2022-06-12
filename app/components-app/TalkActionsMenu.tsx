@@ -1,9 +1,10 @@
 import { Fragment } from 'react';
 import { Menu, Transition } from '@headlessui/react';
-import { ArchiveIcon, ChevronDownIcon, PencilAltIcon, TrashIcon } from '@heroicons/react/solid';
+import { ArchiveIcon, ChevronDownIcon, PencilAltIcon } from '@heroicons/react/solid';
 import { Form, Link } from '@remix-run/react';
+import { TalkDeleteMenu } from './TalkDelete';
 
-export default function TalkActions() {
+export function TalkActionsMenu() {
   return (
     <Menu as="div" className="relative inline-block text-left z-10">
       <div>
@@ -42,10 +43,7 @@ export default function TalkActions() {
               </Form>
             </Menu.Item>
             <Menu.Item>
-              <a href="#" className="group flex items-center px-4 py-2 text-sm">
-                <TrashIcon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
-                Delete
-              </a>
+              <TalkDeleteMenu />
             </Menu.Item>
           </div>
         </Menu.Items>

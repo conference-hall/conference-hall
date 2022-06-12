@@ -1,6 +1,6 @@
-import { ActionFunction, json, LoaderFunction } from '@remix-run/node';
+import { ActionFunction, json, LoaderFunction, redirect } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
-import { Container } from '~/components-ui/Container';
+import { Container } from '../../../components-ui/Container';
 import Badge from '../../../components-ui/Badges';
 import { Button, ButtonLink } from '../../../components-ui/Buttons';
 import { Markdown } from '../../../components-ui/Markdown';
@@ -11,13 +11,14 @@ import { getLanguage } from '../../../utils/languages';
 import { getLevel } from '../../../utils/levels';
 import {
   archiveTalk,
+  deleteTalk,
   getTalk,
   removeCoSpeakerFromTalk,
   restoreTalk,
   SpeakerTalk,
 } from '../../../services/speakers/talks.server';
 import { mapErrorToResponse } from '../../../services/errors';
-import TalkActions from '../../../components-app/TalkActions';
+import { TalkActionsMenu } from '../../../components-app/TalkActionsMenu';
 import { InviteCoSpeakerButton, CoSpeakersList } from '../../../components-app/CoSpeaker';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
@@ -43,6 +44,9 @@ export const action: ActionFunction = async ({ request, params }) => {
     await archiveTalk(uid, talkId);
   } else if (action === 'restore-talk') {
     await restoreTalk(uid, talkId);
+  } else if (action === 'delete-talk') {
+    await deleteTalk(uid, talkId);
+    return redirect('/speaker/talks');
   }
   return null;
 };
@@ -66,7 +70,7 @@ export default function SpeakerTalkRoute() {
         </div>
 
         <div className="flex-shrink-0 space-x-4">
-          {!talk.archived && <TalkActions />}
+          {!talk.archived && <TalkActionsMenu />}
           {!talk.archived && <ButtonLink to={`/search?talkId=${talk.id}`}>Submit</ButtonLink>}
           {talk.archived && (
             <Form method="post">

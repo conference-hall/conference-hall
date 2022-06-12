@@ -11,7 +11,7 @@ import { json, LoaderFunction } from '@remix-run/node';
 import { requireUserSession } from '../../../services/auth/auth.server';
 import { getSpeakerProposal, SpeakerProposal } from '../../../services/events/proposals.server';
 import { mapErrorToResponse } from '../../../services/errors';
-import { DeleteProposalButton } from '../../../components-app/DeleteProposalButton';
+import { EventProposalDeleteButton } from '../../../components-app/EventProposalDelete';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const uid = await requireUserSession(request);
@@ -49,7 +49,7 @@ export default function EventSpeakerProposalRoute() {
 
         {event.cfpState === 'OPENED' && (
           <div className="flex-shrink-0 space-x-4">
-            <DeleteProposalButton />
+            <EventProposalDeleteButton />
             {proposal.status === 'DRAFT' ? (
               <ButtonLink to={`../submission/${proposal.talkId}`}>Submit proposal</ButtonLink>
             ) : (

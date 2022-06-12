@@ -1,24 +1,25 @@
 import { Dialog } from '@headlessui/react';
-import { ExclamationIcon, XIcon } from '@heroicons/react/solid';
+import { ExclamationIcon, TrashIcon, XIcon } from '@heroicons/react/solid';
 import { useState } from 'react';
 import { Form } from '@remix-run/react';
 import { Button } from '../components-ui/Buttons';
 
-export function DeleteProposalButton() {
+export function TalkDeleteMenu() {
   const [isModalOpen, setModalOpen] = useState(false);
   return (
     <>
-      <Button variant="secondary" onClick={() => setModalOpen(true)}>
-        Delete proposal
-      </Button>
-      <DeleteProposalModal isOpen={isModalOpen} onClose={() => setModalOpen(false)} />
+      <button onClick={() => setModalOpen(true)} className="group w-full flex items-center px-4 py-2 text-sm">
+        <TrashIcon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
+        Delete
+      </button>
+      <TalkDeleteModal isOpen={isModalOpen} onClose={() => setModalOpen(false)} />
     </>
   );
 }
 
-type DeleteProposalModalProps = { isOpen: boolean; onClose: () => void };
+type TalkDeleteModalProps = { isOpen: boolean; onClose: () => void };
 
-function DeleteProposalModal({ isOpen, onClose }: DeleteProposalModalProps) {
+function TalkDeleteModal({ isOpen, onClose }: TalkDeleteModalProps) {
   return (
     <Dialog as="div" className="fixed z-10 inset-0 overflow-y-auto" open={isOpen} onClose={onClose}>
       <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -45,21 +46,20 @@ function DeleteProposalModal({ isOpen, onClose }: DeleteProposalModalProps) {
             </div>
             <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
               <Dialog.Title as="h3" className="text-lg leading-6 font-medium text-gray-900">
-                Delete proposal
+                Delete talk
               </Dialog.Title>
               <div className="mt-2">
                 <p className="text-sm text-gray-500">
-                  Are you sure you want to delete your proposal? The talk will still be in your profile, so you will be{' '}
-                  able to submit it again later.
+                  Are you sure you want to delete your talk? It's a definitive action. You can't undo it.
                 </p>
               </div>
             </div>
           </div>
 
-          <Form action="edit" method="post" onSubmit={onClose} className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-            <input type="hidden" name="_method" value="DELETE" />
+          <Form method="post" onSubmit={onClose} className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+            <input type="hidden" name="_action" value="delete-talk" />
             <Button type="submit" block className="sm:ml-3 sm:w-auto">
-              Delete proposal
+              Delete talk
             </Button>
             <Button onClick={onClose} type="button" block variant="secondary" className="mt-3 sm:mt-0 sm:w-auto ">
               Cancel
