@@ -175,7 +175,7 @@ export async function getProposalInfo(talkId: string, eventId: string, uid: stri
   };
 }
 
-export async function submitProposal(talkId: string, eventSlug: string, uid: string) {
+export async function submitProposal(talkId: string, eventSlug: string, uid: string, data: SubmissionData) {
   const event = await db.event.findUnique({
     select: { id: true, type: true, cfpStart: true, cfpEnd: true, maxProposals: true },
     where: { slug: eventSlug },
@@ -200,7 +200,7 @@ export async function submitProposal(talkId: string, eventSlug: string, uid: str
   }
 
   const result = await db.proposal.updateMany({
-    data: { status: 'SUBMITTED' },
+    data: { status: 'SUBMITTED', comments: data.message },
     where: { talkId, eventId: event.id, speakers: { some: { id: uid } } },
   });
   if (result.count === 0) throw new ProposalSubmissionError();
@@ -208,4 +208,17 @@ export async function submitProposal(talkId: string, eventSlug: string, uid: str
   // TODO Email notification to speakers
   // TODO Email notification to organizers
   // TODO Slack notification
+}
+
+type SubmissionData = z.infer<typeof SubmissionSchema>;
+
+const SubmissionSchema = z.object({
+  message: z.string().max(1000).optional(),
+});
+
+export function validateSubmission(form: FormData) {
+  const result = SubmissionSchema.safeParse({
+    message: form.get('message'),
+  });
+  return result.success ? result.data : {}
 }

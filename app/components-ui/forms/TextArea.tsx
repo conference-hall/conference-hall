@@ -1,6 +1,7 @@
 import cn from 'classnames';
 
 type Props = {
+  id: string;
   label: string;
   description?: string;
   error?: string;
