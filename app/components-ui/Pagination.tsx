@@ -1,7 +1,6 @@
 import c from 'classnames';
-import { useSearchParams } from '@remix-run/react';
+import { Link, useSearchParams } from '@remix-run/react';
 import { useMemo } from 'react';
-import { Link } from 'react-router-dom';
 import { Text } from './Typography';
 
 type Props = {

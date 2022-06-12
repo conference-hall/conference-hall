@@ -38,21 +38,20 @@ model User {
 }
 
 model Talk {
-  id             String     @id @default(uuid())
-  title          String
-  abstract       String
-  level          TalkLevel?
-  languages      Json?
-  references     String?
-  creatorId      String
-  creator        User       @relation(fields: [creatorId], references: [id])
-  archived       Boolean    @default(false)
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @updatedAt
-  speakers       User[]     @relation("speakers_talks")
-  proposals      Proposal[]
-  invitationUuid String?    @unique
-  invitation     Invite?    @relation(fields: [invitationUuid], references: [id])
+  id         String     @id @default(uuid())
+  title      String
+  abstract   String
+  level      TalkLevel?
+  languages  Json?
+  references String?
+  creatorId  String
+  creator    User       @relation(fields: [creatorId], references: [id])
+  archived   Boolean    @default(false)
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  speakers   User[]     @relation("speakers_talks")
+  proposals  Proposal[]
+  invitation Invite?
 
   @@map("talks")
 }
@@ -151,14 +150,13 @@ enum EventVisibility {
 }
 
 model Organization {
-  id           String               @id @default(uuid())
-  name         String
-  invitationId String?              @unique
-  invitation   Invite?              @relation(fields: [invitationId], references: [id])
-  createdAt    DateTime             @default(now())
-  updatedAt    DateTime             @updatedAt
-  members      OrganizationMember[]
-  events       Event[]
+  id         String               @id @default(uuid())
+  name       String
+  createdAt  DateTime             @default(now())
+  updatedAt  DateTime             @updatedAt
+  members    OrganizationMember[]
+  events     Event[]
+  invitation Invite?
 
   @@map("organizations")
 }
@@ -204,8 +202,7 @@ model Proposal {
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
   messages        Message[]
-  invitationUuid  String?         @unique
-  invitation      Invite?         @relation(fields: [invitationUuid], references: [id])
+  invitation      Invite?
 
   @@unique([talkId, eventId])
   @@map("proposals")
@@ -281,15 +278,21 @@ enum MessageChannel {
 }
 
 model Invite {
-  id           String        @id @default(uuid())
-  type         InviteType
-  userId       String
-  invitedBy    User          @relation(fields: [userId], references: [id])
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  organization Organization?
-  talk         Talk?
-  proposal     Proposal?
+  id        String     @id @default(uuid())
+  type      InviteType
+  userId    String
+  invitedBy User       @relation(fields: [userId], references: [id])
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  organizationlId String?       @unique
+  organization    Organization? @relation(fields: [organizationlId], references: [id], onDelete: Cascade)
+
+  talkId String? @unique
+  talk   Talk?   @relation(fields: [talkId], references: [id], onDelete: Cascade)
+
+  proposalId String?   @unique
+  proposal   Proposal? @relation(fields: [proposalId], references: [id], onDelete: Cascade)
 
   @@map("invites")
 }

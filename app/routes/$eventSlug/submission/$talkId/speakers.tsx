@@ -16,6 +16,7 @@ import { ValidationErrors } from '../../../../utils/validation-errors';
 
 type SubmissionSpeakers = {
   proposalId: string;
+  invitationLink?: string;
   currentSpeaker: {
     bio: string | null;
   }
@@ -37,6 +38,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     const proposal = await getProposalSpeakers(talkId, eventSlug, user.id);
     return json<SubmissionSpeakers>({
       proposalId: proposal.id,
+      invitationLink: proposal.invitationLink,
       currentSpeaker: { bio: user.bio },
       speakers: proposal.speakers.filter(speaker => speaker.id !== user.id),
     });
@@ -113,7 +115,7 @@ export default function SubmissionSpeakerRoute() {
             This information will be displayed publicly so be careful what you share.
           </Text>
           <CoSpeakersList speakers={data.speakers} showRemoveAction className="py-4 max-w-md" />
-          <InviteCoSpeakerButton to='PROPOSAL' id={data.proposalId} />
+          <InviteCoSpeakerButton to='PROPOSAL' id={data.proposalId} invitationLink={data.invitationLink} />
         </div>
       </div>
       <div className="px-4 py-5 text-right sm:px-6">

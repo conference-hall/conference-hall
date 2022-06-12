@@ -3,6 +3,7 @@ import { db } from '../../services/db';
 import { getArray } from '../../utils/form';
 import { jsonToArray } from '../../utils/prisma';
 import { InvitationFoundError, ProposalNotFoundError, TalkNotFoundError } from '../errors';
+import { buildInvitationLink } from '../invitations/invitations.server';
 
 export type SpeakerTalks = Array<{
   id: string;
@@ -14,7 +15,7 @@ export type SpeakerTalks = Array<{
 
 type TalksListOptions = {
   archived?: boolean;
-}
+};
 
 /**
  * List all talks for a speaker
@@ -23,10 +24,10 @@ type TalksListOptions = {
  */
 export async function findTalks(uid: string, options?: TalksListOptions): Promise<SpeakerTalks> {
   const talks = await db.talk.findMany({
-    select: { id: true, title: true, archived:true, createdAt: true, speakers: true },
+    select: { id: true, title: true, archived: true, createdAt: true, speakers: true },
     where: {
       speakers: { some: { id: uid } },
-      archived: options?.archived ?? false
+      archived: options?.archived ?? false,
     },
     orderBy: { updatedAt: 'desc' },
   });
@@ -62,6 +63,7 @@ export interface SpeakerTalk {
     isCurrentUser: boolean;
   }>;
   proposals: Array<{ eventSlug: string; eventName: string; status: string; date: string }>;
+  invitationLink?: string;
 }
 
 /**
@@ -76,7 +78,7 @@ export async function getTalk(uid: string, talkId?: string): Promise<SpeakerTalk
       speakers: { some: { id: uid } },
       id: talkId,
     },
-    include: { speakers: true, proposals: { include: { event: true } } },
+    include: { speakers: true, proposals: { include: { event: true } }, invitation: true },
   });
   if (!talk) throw new TalkNotFoundError();
 
@@ -105,6 +107,7 @@ export async function getTalk(uid: string, talkId?: string): Promise<SpeakerTalk
       status: proposal.status,
       date: proposal.updatedAt.toISOString(),
     })),
+    invitationLink: buildInvitationLink( talk.invitation?.id),
   };
 }
 
@@ -181,7 +184,7 @@ export function validateTalkForm(form: FormData) {
  * @param invitationId Id of the invitation
  * @param coSpeakerId Id of the co-speaker to add
  */
- export async function inviteCoSpeakerToTalk(invitationId: string, coSpeakerId: string) {
+export async function inviteCoSpeakerToTalk(invitationId: string, coSpeakerId: string) {
   const invitation = await db.invite.findUnique({
     select: { type: true, talk: true, organization: true, invitedBy: true },
     where: { id: invitationId },
@@ -195,7 +198,7 @@ export function validateTalkForm(form: FormData) {
     where: { id: invitation.talk.id },
   });
   return { id: talk.id };
-};
+}
 
 /**
  * Remove a co-speaker from a talk
@@ -210,32 +213,32 @@ export async function removeCoSpeakerFromTalk(uid: string, talkId: string, coSpe
   if (!talk) throw new TalkNotFoundError();
 
   await db.talk.update({ where: { id: talkId }, data: { speakers: { disconnect: { id: coSpeakerId } } } });
-};
+}
 
 /**
  * Archive a talk
  * @param uid Id of the connected user
  * @param talkId Id of the talk
  */
- export async function archiveTalk(uid: string, talkId: string) {
+export async function archiveTalk(uid: string, talkId: string) {
   const talk = await db.talk.findFirst({
     where: { id: talkId, speakers: { some: { id: uid } } },
   });
   if (!talk) throw new TalkNotFoundError();
 
   await db.talk.update({ where: { id: talkId }, data: { archived: true } });
-};
+}
 
 /**
  * Restore an archived talk
  * @param uid Id of the connected user
  * @param talkId Id of the talk
  */
- export async function restoreTalk(uid: string, talkId: string) {
+export async function restoreTalk(uid: string, talkId: string) {
   const talk = await db.talk.findFirst({
     where: { id: talkId, speakers: { some: { id: uid } } },
   });
   if (!talk) throw new TalkNotFoundError();
 
   await db.talk.update({ where: { id: talkId }, data: { archived: false } });
-};
+}

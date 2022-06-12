@@ -43,7 +43,12 @@ export async function generateInvitationLink(type: InviteType, entityId: string,
     invitationKey = await generateProposalInvitationKey(entityId, uid);
   }
   if (!invitationKey) throw new InvitationGenerateError();
-  return `http://localhost:3000/invitation/${invitationKey}`;
+  return buildInvitationLink(invitationKey);
+}
+
+export function buildInvitationLink(invitationId?: string) {
+  if (!invitationId) return
+  return `http://localhost:3000/invitation/${invitationId}`;
 }
 
 async function generateTalkInvitationKey(talkId: string, uid: string): Promise<string> {
@@ -88,4 +93,18 @@ async function generateProposalInvitationKey(proposalId: string, uid: string): P
     },
   });
   return invite.id;
+}
+
+/**
+ * Revoke an invitation link
+ * @param type Type of the invitation
+ * @param entityId Id of the entity that should have the invite
+ * @param uid Id of the user who is revoking
+ */
+export async function revokeInvitationLink(type: InviteType, entityId: string, uid: string) {
+  if (type === 'TALK') {
+    await db.invite.deleteMany({ where: { type: 'TALK', talk: { id: entityId, speakers: { some: { id: uid } } } } });
+  } else if (type === 'PROPOSAL') {
+    await db.invite.deleteMany({ where: { type: 'PROPOSAL', proposal: { id: entityId, speakers: { some: { id: uid } } } } });
+  }
 }

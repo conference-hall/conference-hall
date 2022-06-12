@@ -94,7 +94,7 @@ export default function SpeakerTalkRoute() {
           <div className="bg-white border border-gray-200 overflow-hidden sm:rounded-lg p-4">
             <H2>Speakers</H2>
             <CoSpeakersList speakers={talk.speakers} showRemoveAction={!talk.archived} />
-            {!talk.archived && <InviteCoSpeakerButton to="TALK" id={talk.id} />}
+            {!talk.archived && <InviteCoSpeakerButton to="TALK" id={talk.id} invitationLink={talk.invitationLink} />}
           </div>
           <div className="bg-white border border-gray-200 overflow-hidden sm:rounded-lg p-4 mt-4">
             <H2>Submissions</H2>

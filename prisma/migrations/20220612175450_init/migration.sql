@@ -59,7 +59,6 @@ CREATE TABLE "talks" (
     "archived" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "invitationUuid" TEXT,
 
     CONSTRAINT "talks_pkey" PRIMARY KEY ("id")
 );
@@ -139,7 +138,6 @@ CREATE TABLE "event_categories" (
 CREATE TABLE "organizations" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "invitationId" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -173,7 +171,6 @@ CREATE TABLE "proposals" (
     "speakerNotified" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "invitationUuid" TEXT,
 
     CONSTRAINT "proposals_pkey" PRIMARY KEY ("id")
 );
@@ -221,6 +218,9 @@ CREATE TABLE "invites" (
     "userId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "organizationlId" TEXT,
+    "talkId" TEXT,
+    "proposalId" TEXT,
 
     CONSTRAINT "invites_pkey" PRIMARY KEY ("id")
 );
@@ -250,16 +250,7 @@ CREATE TABLE "_speakers_proposals" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "talks_invitationUuid_key" ON "talks"("invitationUuid");
-
--- CreateIndex
 CREATE UNIQUE INDEX "events_slug_key" ON "events"("slug");
-
--- CreateIndex
-CREATE UNIQUE INDEX "organizations_invitationId_key" ON "organizations"("invitationId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "proposals_invitationUuid_key" ON "proposals"("invitationUuid");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "proposals_talkId_eventId_key" ON "proposals"("talkId", "eventId");
@@ -272,6 +263,15 @@ CREATE UNIQUE INDEX "surveys_userId_eventId_key" ON "surveys"("userId", "eventId
 
 -- CreateIndex
 CREATE UNIQUE INDEX "ratings_userId_proposalId_key" ON "ratings"("userId", "proposalId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "invites_organizationlId_key" ON "invites"("organizationlId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "invites_talkId_key" ON "invites"("talkId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "invites_proposalId_key" ON "invites"("proposalId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_speakers_talks_AB_unique" ON "_speakers_talks"("A", "B");
@@ -301,9 +301,6 @@ CREATE INDEX "_speakers_proposals_B_index" ON "_speakers_proposals"("B");
 ALTER TABLE "talks" ADD CONSTRAINT "talks_creatorId_fkey" FOREIGN KEY ("creatorId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "talks" ADD CONSTRAINT "talks_invitationUuid_fkey" FOREIGN KEY ("invitationUuid") REFERENCES "invites"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "events" ADD CONSTRAINT "events_creatorId_fkey" FOREIGN KEY ("creatorId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -316,9 +313,6 @@ ALTER TABLE "event_formats" ADD CONSTRAINT "event_formats_eventId_fkey" FOREIGN 
 ALTER TABLE "event_categories" ADD CONSTRAINT "event_categories_eventId_fkey" FOREIGN KEY ("eventId") REFERENCES "events"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "organizations" ADD CONSTRAINT "organizations_invitationId_fkey" FOREIGN KEY ("invitationId") REFERENCES "invites"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "organizations_members" ADD CONSTRAINT "organizations_members_memberId_fkey" FOREIGN KEY ("memberId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -329,9 +323,6 @@ ALTER TABLE "proposals" ADD CONSTRAINT "proposals_talkId_fkey" FOREIGN KEY ("tal
 
 -- AddForeignKey
 ALTER TABLE "proposals" ADD CONSTRAINT "proposals_eventId_fkey" FOREIGN KEY ("eventId") REFERENCES "events"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "proposals" ADD CONSTRAINT "proposals_invitationUuid_fkey" FOREIGN KEY ("invitationUuid") REFERENCES "invites"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "surveys" ADD CONSTRAINT "surveys_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -353,6 +344,15 @@ ALTER TABLE "messages" ADD CONSTRAINT "messages_proposalId_fkey" FOREIGN KEY ("p
 
 -- AddForeignKey
 ALTER TABLE "invites" ADD CONSTRAINT "invites_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "invites" ADD CONSTRAINT "invites_talkId_fkey" FOREIGN KEY ("talkId") REFERENCES "talks"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "invites" ADD CONSTRAINT "invites_organizationlId_fkey" FOREIGN KEY ("organizationlId") REFERENCES "organizations"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "invites" ADD CONSTRAINT "invites_proposalId_fkey" FOREIGN KEY ("proposalId") REFERENCES "proposals"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_speakers_talks" ADD CONSTRAINT "_speakers_talks_A_fkey" FOREIGN KEY ("A") REFERENCES "talks"("id") ON DELETE CASCADE ON UPDATE CASCADE;
