@@ -32,7 +32,7 @@ export async function searchEvents(filters: SearchFilters, page: SearchPage = 1)
   const eventsCount = await db.event.count({ where: eventsWhereInput });
   const total = Math.ceil(eventsCount / RESULTS_BY_PAGE);
 
-  const pageIndex = page > 0 ? (page <= total ? page - 1 : total - 1) : 0;
+  const pageIndex = computePageIndex(page, total)
 
   const events = await db.event.findMany({
     select: { slug: true, name: true, type: true, address: true, cfpStart: true, cfpEnd: true },
@@ -53,6 +53,13 @@ export async function searchEvents(filters: SearchFilters, page: SearchPage = 1)
       cfpState: getCfpState(event.type, event.cfpStart, event.cfpEnd),
     })),
   };
+}
+
+function computePageIndex(current: number, total: number) {
+  if (total === 0) return 0;
+  if (current <= 0) return 0;
+  if (current > total) return total - 1;
+  return current - 1;
 }
 
 function mapFiltersQuery(type?: string, cfp?: string): Prisma.EventWhereInput {

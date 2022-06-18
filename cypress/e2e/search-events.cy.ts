@@ -6,6 +6,7 @@ describe('Search conferences and meetups.', () => {
   describe('From home page', () => {
     it('redirect to search page and Search conferences and meetups.', () => {
       cy.visit('/');
+      cy.clickOn('See all conferences and meetups');
       cy.typeOn('Search conferences and meetups.', 'Devfest{enter}');
       cy.assertUrl('/search?terms=Devfest');
       cy.assertText('Devfest Nantes');
