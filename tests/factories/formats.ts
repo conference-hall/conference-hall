@@ -1,13 +1,9 @@
-import { Prisma } from '@prisma/client';
-import { db } from '../../app/services/db';
-import { buildEvent } from './events';
+import { randCatchPhrase, randParagraph } from '@ngneat/falso';
+import { createEventFormatFactory } from '../../prisma/factories';
 
-export async function buildFormat(input: Partial<Prisma.EventFormatUncheckedCreateInput> = {}) {
-  const data: Prisma.EventFormatUncheckedCreateInput = {
-    name: 'Format name',
-    ...input,
-    eventId: input.eventId || (await buildEvent()).id,
-  };
-
-  return db.eventFormat.create({ data });
+export function EventFormatFactory() {
+  return createEventFormatFactory({
+    name: randCatchPhrase(),
+    description: randParagraph(),
+  });
 }

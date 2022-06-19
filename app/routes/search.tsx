@@ -6,7 +6,6 @@ import { SearchEventsList } from '../components-app/SearchEventsList';
 import { searchEvents, SearchEvents, validateFilters, validatePage } from '../services/events/search.server';
 import { mapErrorToResponse } from '../services/errors';
 import { SearchEventsForm } from '../components-app/SearchEventsForm';
-import { Link } from '../components-ui/Links';
 import { SearchPagination } from '../components-ui/Pagination';
 
 export const loader: LoaderFunction = async ({ request }) => {

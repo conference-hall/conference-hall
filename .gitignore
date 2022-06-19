@@ -9,6 +9,9 @@ node_modules
 /build
 /public/build
 
+# prisma
+/prisma/factories
+
 # tailwind
 tailwind.css
 

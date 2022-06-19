@@ -1,13 +1,9 @@
-import { Prisma } from '@prisma/client';
-import { db } from '../../app/services/db';
-import { buildEvent } from './events';
+import { randCatchPhrase, randParagraph } from '@ngneat/falso';
+import { createEventCategoryFactory } from '../../prisma/factories';
 
-export async function buildCategory(input: Partial<Prisma.EventCategoryUncheckedCreateInput> = {}) {
-  const data: Prisma.EventCategoryUncheckedCreateInput = {
-    name: 'Category name',
-    ...input,
-    eventId: input.eventId || (await buildEvent()).id,
-  };
-
-  return db.eventCategory.create({ data });
+export function EventCategoryFactory() {
+  return createEventCategoryFactory({ 
+    name: randCatchPhrase(),
+    description: randParagraph(),
+  });
 }
