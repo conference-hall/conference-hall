@@ -1,7 +1,20 @@
 describe('Search conferences and meetups.', () => {
+  const event1 = {
+    name: 'EventFactory',
+    attrs: { name: 'Devfest Nantes', slug: 'devfest-nantes', address: 'Nantes, France' },
+    traits: ['conference-cfp-open'],
+  };
+  const event2 = {
+    name: 'EventFactory',
+    attrs: { name: 'GDG Nantes', slug: 'gdg-nantes', address: 'Nantes, France' },
+    traits: ['meetup-cfp-open'],
+  };
+
   beforeEach(() => {
-    cy.task('db:reset').task('db:seed', 'search-events');
+    cy.task('resetDB').task('factory', [event1, event2]);
   });
+
+  afterEach(() => cy.task('disconnectDB'));
 
   describe('From home page', () => {
     it('redirect to search page and Search conferences and meetups.', () => {
@@ -19,7 +32,7 @@ describe('Search conferences and meetups.', () => {
       cy.assertText('Devfest Nantes');
       cy.assertText('GDG Nantes');
     });
-  
+
     it('search conference events', () => {
       cy.visit('/search');
       cy.typeOn('Search conferences and meetups.', 'Devfest{enter}');
@@ -46,7 +59,7 @@ describe('Search conferences and meetups.', () => {
 
     it('opens event page on click', () => {
       cy.visit('/search');
-      cy.clickOn(/Devfest Nantes/)
+      cy.clickOn(/Devfest Nantes/);
       cy.assertUrl('/devfest-nantes');
     });
 

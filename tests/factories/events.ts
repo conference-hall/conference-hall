@@ -1,7 +1,7 @@
 import * as fake from '@ngneat/falso';
 import { EventType, EventVisibility, Prisma } from '@prisma/client';
 import { createEventFactory } from '../../prisma/factories';
-import { applyTraits } from './helper';
+import { applyTraits } from './factories';
 import { UserFactory } from './users';
 
 type Trait =

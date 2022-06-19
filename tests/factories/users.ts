@@ -9,7 +9,7 @@ import {
   randUserName,
 } from '@ngneat/falso';
 import { createUserFactory } from '../../prisma/factories';
-import { applyTraits } from './helper';
+import { applyTraits } from './factories';
 
 type Trait = 'auth-user-1';
 

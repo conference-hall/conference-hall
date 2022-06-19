@@ -75,7 +75,7 @@ describe('#formatCFPDate', () => {
 
 describe('#getCfpState', () => {
   beforeEach(() => {
-    jest.useFakeTimers('modern');
+    jest.useFakeTimers();
   });
 
   afterEach(() => {

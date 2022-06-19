@@ -1,13 +1,12 @@
-import * as fs from 'fs';
-
 import { config } from '../app/services/config'
 import { db } from '../app/services/db'
 
-export async function disconnect() {
+export async function disconnectDB() {
   await db.$disconnect()
+  return 'db disconnected'
 }
 
-export async function resetTestDatabase() {
+export async function resetDB() {
   if (config.isTest) {
     await db.betaKey.deleteMany()
     await db.invite.deleteMany()
@@ -23,24 +22,5 @@ export async function resetTestDatabase() {
     await db.organization.deleteMany()
     await db.user.deleteMany()
   }
-}
-
-export async function seedFromFile(filename: string) {
-  const content = fs.readFileSync(filename, 'utf8');
-  const datasets = JSON.parse(content);
-
-  for (const dataset of datasets) {
-    const { type, data } = dataset;
-    // @ts-ignore
-    const obj = db[type];
-    if (!obj) {
-      throw new Error(`Type "${type}" does not exist in your prisma schema.`);
-    }
-    await obj.createMany({ data });
-  }
-}
-
-export function setupDatabase() {
-  beforeEach(resetTestDatabase)
-  afterAll(disconnect)
+  return 'db reset'
 }
