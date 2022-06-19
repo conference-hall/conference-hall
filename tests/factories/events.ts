@@ -13,6 +13,7 @@ type Trait =
   | 'meetup-cfp-open'
   | 'meetup-cfp-close'
   | 'private'
+  | 'archived'
   | 'withSurvey';
 
 const TRAITS: Record<Trait, Partial<Prisma.EventCreateInput>> = {
@@ -51,6 +52,9 @@ const TRAITS: Record<Trait, Partial<Prisma.EventCreateInput>> = {
   },
   private: {
     visibility: EventVisibility.PRIVATE,
+  },
+  archived: {
+    archived: true,
   },
   withSurvey: {
     surveyEnabled: true,

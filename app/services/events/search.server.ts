@@ -25,6 +25,7 @@ export async function searchEvents(filters: SearchFilters, page: SearchPage = 1)
 
   const eventsWhereInput: Prisma.EventWhereInput = {
     visibility: EventVisibility.PUBLIC,
+    archived: false,
     name: { contains: terms, mode: 'insensitive' },
     ...mapFiltersQuery(type, cfp),
   };
