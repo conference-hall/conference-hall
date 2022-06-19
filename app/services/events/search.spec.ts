@@ -4,7 +4,30 @@ import { searchEvents, validateFilters, validatePage } from './search.server';
 
 describe('#searchEvents', () => {
   beforeEach(() => resetDB());
-  afterEach(() => disconnectDB());
+  afterAll(() => disconnectDB());
+
+  it('should return the default response', async () => {
+    await EventFactory('conference-cfp-open').create({
+      name: 'conf-1',
+      slug: 'conf-1',
+      address: 'address-1',
+    });
+
+    const result = await searchEvents({ type: 'conference', cfp: 'incoming' });
+
+    expect(result).toEqual({
+      filters: { type: 'conference', cfp: 'incoming' },
+      pagination: { current: 1, total: 1 },
+      results: [{ 
+        slug: 'conf-1',
+        name: 'conf-1',
+        type: 'CONFERENCE',
+        address: 'address-1',
+        cfpState: 'OPENED',
+      }],
+    });
+  });
+
 
   it('should return all open and future events by default', async () => {
     await EventFactory('conference-cfp-open').create({ name: 'conf-1' });
