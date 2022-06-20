@@ -10,9 +10,9 @@ describe('#getEvent', () => {
   afterAll(() => disconnectDB());
 
   it('should return the default response', async () => {
-    const event = await EventFactory('conference-cfp-open', 'withSurvey').create();
-    const format = await EventFormatFactory().create({ event: { connect: { id: event.id } } });
-    const category = await EventCategoryFactory().create({ event: { connect: { id: event.id } } });
+    const event = await EventFactory.create({ traits: ['conference-cfp-open', 'withSurvey']});
+    const format = await EventFormatFactory.create({ eventId: event.id });
+    const category = await EventCategoryFactory.create({ eventId: event.id });
 
     const result = await getEvent(event.slug);
 

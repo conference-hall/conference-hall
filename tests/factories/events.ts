@@ -1,22 +1,10 @@
 import * as fake from '@ngneat/falso';
 import { EventType, EventVisibility, Prisma } from '@prisma/client';
-import { createEventFactory } from '../../prisma/factories';
-import { applyTraits } from './factories';
+import { db } from '../../app/services/db';
+import { applyTraits } from './helpers/traits';
 import { UserFactory } from './users';
 
-type Trait =
-  | 'conference'
-  | 'conference-cfp-open'
-  | 'conference-cfp-past'
-  | 'conference-cfp-future'
-  | 'meetup'
-  | 'meetup-cfp-open'
-  | 'meetup-cfp-close'
-  | 'private'
-  | 'archived'
-  | 'withSurvey';
-
-const TRAITS: Record<Trait, Partial<Prisma.EventCreateInput>> = {
+const TRAITS = {
   conference: {
     type: EventType.CONFERENCE,
     conferenceStart: '2091-11-20T00:00:00.000Z',
@@ -62,24 +50,35 @@ const TRAITS: Record<Trait, Partial<Prisma.EventCreateInput>> = {
   },
 };
 
-export function EventFactory(...traits: Trait[]) {
-  const attributes = {
-    name: fake.randSportsTeam(),
-    slug: `slug-${fake.randUuid()}`,
-    description: fake.randParagraph(),
-    address: fake.randFullAddress(),
-    bannerUrl: fake.randImg({ width: 1200, height: 300 }),
-    websiteUrl: fake.randUrl(),
-    contactEmail: fake.randEmail(),
-    codeOfConductUrl: fake.randUrl(),
-    type: fake.rand([EventType.CONFERENCE, EventType.MEETUP]),
-    visibility: EventVisibility.PUBLIC,
-    ...applyTraits(TRAITS, traits),
-  };
+type Trait = keyof typeof TRAITS;
 
-  const hooks = {
-    beforeCreate: (attrs: Prisma.EventCreateInput) => Object.assign({ creator: { create: UserFactory().build() } }, attrs),
-  };
+type FactoryOptions = {
+  attributes?: Partial<Prisma.EventCreateInput>,
+  traits?: Trait[],
+}
 
-  return createEventFactory(attributes, {}, hooks);
+export const EventFactory = {
+  build: (options: FactoryOptions = {}) => {
+    const { attributes = {}, traits = [] } = options;
+
+    const defaultAttributes = {
+      name: fake.randSportsTeam(),
+      slug: `slug-${fake.randUuid()}`,
+      description: fake.randParagraph(),
+      address: fake.randFullAddress(),
+      bannerUrl: fake.randImg({ width: 1200, height: 300 }),
+      websiteUrl: fake.randUrl(),
+      contactEmail: fake.randEmail(),
+      codeOfConductUrl: fake.randUrl(),
+      type: fake.rand([EventType.CONFERENCE, EventType.MEETUP]),
+      visibility: EventVisibility.PUBLIC,
+      creator: { create:  UserFactory.build()},
+    }
+
+    return { ...defaultAttributes, ...applyTraits(TRAITS, traits), ...attributes };
+  },
+  create: (options: FactoryOptions = {}) => {
+    const data = EventFactory.build(options);
+    return db.event.create({ data })
+  }
 }

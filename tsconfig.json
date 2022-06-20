@@ -17,6 +17,6 @@
     "noEmit": true,
     "forceConsistentCasingInFileNames": true,
     "allowJs": true,
-    "isolatedModules": false
+    "isolatedModules": true
   }
 }

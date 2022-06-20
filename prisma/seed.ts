@@ -4,46 +4,49 @@ import { EventCategoryFactory } from '../tests/factories/categories';
 import { EventFactory } from '../tests/factories/events';
 
 async function seed() {
-  await UserFactory('auth-user-1').create();
+  await UserFactory.create({ traits: ['auth-user-1'] });
 
-  const event1 = await EventFactory('conference', 'conference-cfp-open', 'withSurvey').create({
-    name: 'Devfest Nantes',
-    slug: 'devfest-nantes',
-    maxProposals: 3,
+  const event1 = await EventFactory.create({
+    traits: ['conference', 'conference-cfp-open', 'withSurvey'],
+    attributes: {
+      name: 'Devfest Nantes',
+      slug: 'devfest-nantes',
+      maxProposals: 3,
+    },
   });
-  await EventFormatFactory().create({ event: { connect: { id: event1.id } } });
-  await EventFormatFactory().create({ event: { connect: { id: event1.id } } });
-  await EventFormatFactory().create({ event: { connect: { id: event1.id } } });
-  await EventCategoryFactory().create({ event: { connect: { id: event1.id } } });
-  await EventCategoryFactory().create({ event: { connect: { id: event1.id } } });
-  await EventCategoryFactory().create({ event: { connect: { id: event1.id } } });
+  await EventFormatFactory.create({ eventId: event1.id });
+  await EventFormatFactory.create({ eventId: event1.id });
+  await EventFormatFactory.create({ eventId: event1.id });
+  await EventCategoryFactory.create({ eventId: event1.id });
+  await EventCategoryFactory.create({ eventId: event1.id });
+  await EventCategoryFactory.create({ eventId: event1.id });
 
-  await EventFactory('conference-cfp-past').create({
-    name: 'Devoxx France',
-    slug: 'devoxx-france',
-  });
-
-  await EventFactory('conference-cfp-future').create({
-    name: 'BDX.io',
-    slug: 'bdx-io',
+  await EventFactory.create({
+    traits: ['conference-cfp-past'],
+    attributes: { name: 'Devoxx France', slug: 'devoxx-france' },
   });
 
-  await EventFactory('conference-cfp-open').create({
-    name: 'Sunny Tech',
-    slug: 'sunny-tech',
+  await EventFactory.create({
+    traits: ['conference-cfp-future'],
+    attributes: { name: 'BDX.io', slug: 'bdx-io' },
   });
 
-  await EventFactory('conference', 'private').create({
-    name: 'VIP event',
-    slug: 'vip-event',
+  await EventFactory.create({
+    traits: ['conference-cfp-open'],
+    attributes: { name: 'Sunny Tech', slug: 'sunny-tech' },
   });
 
-  await EventFactory('meetup-cfp-open').create({
-    name: 'GDG Nantes',
-    slug: 'gdg-nantes',
+  await EventFactory.create({
+    traits: ['conference', 'private'],
+    attributes: { name: 'VIP event', slug: 'vip-event' },
   });
 
-  await Promise.all(Array.from({ length: 50 }).map(() => EventFactory('meetup-cfp-open').create()));
+  await EventFactory.create({
+    traits: ['meetup-cfp-open'],
+    attributes: { name: 'GDG Nantes', slug: 'gdg-nantes' },
+  });
+
+  await Promise.all(Array.from({ length: 50 }).map(() => EventFactory.create({ traits: ['meetup-cfp-open'] })));
 }
 
 seed();

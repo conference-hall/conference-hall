@@ -1,7 +1,7 @@
 describe('View event page', () => {
   const event = {
     name: 'EventFactory',
-    attrs: {
+    attributes: {
       name: 'Devfest Nantes',
       slug: 'devfest-nantes',
       address: 'Nantes, France',

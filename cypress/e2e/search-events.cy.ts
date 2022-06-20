@@ -1,12 +1,12 @@
 describe('Search conferences and meetups.', () => {
   const event1 = {
     name: 'EventFactory',
-    attrs: { name: 'Devfest Nantes', slug: 'devfest-nantes', address: 'Nantes, France' },
+    attributes: { name: 'Devfest Nantes', slug: 'devfest-nantes', address: 'Nantes, France' },
     traits: ['conference-cfp-open'],
   };
   const event2 = {
     name: 'EventFactory',
-    attrs: { name: 'GDG Nantes', slug: 'gdg-nantes', address: 'Nantes, France' },
+    attributes: { name: 'GDG Nantes', slug: 'gdg-nantes', address: 'Nantes, France' },
     traits: ['meetup-cfp-open'],
   };
 
