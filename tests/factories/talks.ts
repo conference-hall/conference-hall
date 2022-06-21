@@ -13,12 +13,12 @@ type Trait = keyof typeof TRAITS;
 type FactoryOptions = {
   attributes?: Partial<Prisma.TalkCreateInput>;
   traits?: Trait[];
-  withSpeakers?: string[];
+  speakerIds?: string[];
 };
 
 export const TalkFactory = {
   build: (options: FactoryOptions = {}) => {
-    const { attributes = {}, traits = [], withSpeakers } = options;
+    const { attributes = {}, traits = [], speakerIds } = options;
 
     const creator = UserFactory.build();
 
@@ -32,9 +32,9 @@ export const TalkFactory = {
       speakers: { connectOrCreate: { create: creator, where: { id: creator.id } } },
     };
 
-    if (withSpeakers) {
-      defaultAttributes.creator = { connect: { id: withSpeakers[0] } };
-      defaultAttributes.speakers = { connect: withSpeakers.map(id => ({ id })) };
+    if (speakerIds) {
+      defaultAttributes.creator = { connect: { id: speakerIds[0] } };
+      defaultAttributes.speakers = { connect: speakerIds.map(id => ({ id })) };
     }
 
     return { ...defaultAttributes, ...applyTraits(TRAITS, traits), ...attributes };

@@ -11,7 +11,7 @@ import { mapErrorToResponse } from '../../../../services/errors';
 import { getEvent } from '../../../../services/events/event.server';
 import { removeCoSpeakerFromProposal } from '../../../../services/events/proposals.server';
 import { getProposalSpeakers } from '../../../../services/events/speakers.server';
-import { updateProfile, validateProfileData } from '../../../../services/speakers/settings.server';
+import { updateSettings, validateProfileData } from '../../../../services/speakers/settings.server';
 import { ValidationErrors } from '../../../../utils/validation-errors';
 
 type SubmissionSpeakers = {
@@ -65,7 +65,7 @@ export const action: ActionFunction = async ({ request, params }) => {
       await removeCoSpeakerFromProposal(uid, talkId, eventSlug, speakerId);
       return null;
     } else {
-      await updateProfile(uid, result.data);
+      await updateSettings(uid, result.data);
       const event = await getEvent(eventSlug)
       if (event.hasTracks) {
         return redirect(`/${eventSlug}/submission/${talkId}/tracks`);

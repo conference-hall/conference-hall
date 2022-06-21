@@ -1,8 +1,8 @@
 import { z } from 'zod';
 import { db } from '../../services/db';
-import { SpeakerNotFoundError } from '../errors';
+import { UserNotFoundError } from '../errors';
 
-export type SpeakerSettings = {
+export type UserSettings = {
   name: string | null;
   email: string | null;
   photoURL: string | null;
@@ -15,63 +15,63 @@ export type SpeakerSettings = {
 };
 
 /**
- * Get a speaker settings
- * @param speakerId Id of the speaker
- * @returns SpeakerProfile
+ * Get a user settings
+ * @param userId Id of the user
+ * @returns UserSettings
  */
-export async function getSettings(speakerId: string): Promise<SpeakerSettings> {
-  const speaker = await db.user.findUnique({ where: { id: speakerId } });
-  if (!speaker) throw new SpeakerNotFoundError();
+export async function getSettings(userId: string): Promise<UserSettings> {
+  const user = await db.user.findUnique({ where: { id: userId } });
+  if (!user) throw new UserNotFoundError();
   return {
-    name: speaker.name,
-    email: speaker.email,
-    photoURL: speaker.photoURL,
-    bio: speaker.bio,
-    references: speaker.references,
-    company: speaker.company,
-    address: speaker.address,
-    twitter: speaker.twitter,
-    github: speaker.github,
+    name: user.name,
+    email: user.email,
+    photoURL: user.photoURL,
+    bio: user.bio,
+    references: user.references,
+    company: user.company,
+    address: user.address,
+    twitter: user.twitter,
+    github: user.github,
   };
 }
 
 /**
- * Update a speaker settings
- * @param speakerId Id of the speaker
+ * Update a user settings
+ * @param userId Id of the user
  * @param data Settings data
  */
-export async function updateProfile(speakerId: string, data: SettingsUpdateData) {
-  const speaker = await db.user.findUnique({ where: { id: speakerId } });
-  if (!speaker) throw new SpeakerNotFoundError();
+export async function updateSettings(userId: string, data: SettingsUpdateData) {
+  const user = await db.user.findUnique({ where: { id: userId } });
+  if (!user) throw new UserNotFoundError();
 
-  await db.user.update({ where: { id: speakerId }, data });
+  await db.user.update({ where: { id: userId }, data });
 }
 
-const SpeakerPersonalInfo = z.object({
+const UserPersonalInfo = z.object({
   name: z.string().min(1),
   email: z.string().email().min(1),
   photoURL: z.string().url().min(1),
 });
 
-const SpeakerDetails = z.object({
+const UserDetails = z.object({
   bio: z.string().nullable(),
   references: z.string().nullable(),
 });
 
-const SpeakerAdditionalInfo = z.object({
+const UserAdditionalInfo = z.object({
   company: z.string(),
   address: z.string(),
   twitter: z.string(),
   github: z.string(),
 });
 
-type SettingsSchema = typeof SpeakerPersonalInfo | typeof SpeakerDetails | typeof SpeakerAdditionalInfo;
+type SettingsSchema = typeof UserPersonalInfo | typeof UserDetails | typeof UserAdditionalInfo;
 type SettingsUpdateData = z.infer<SettingsSchema>;
 
 export function validateProfileData(form: FormData, type?: string) {
-  let schema: SettingsSchema = SpeakerPersonalInfo;
-  if (type === 'DETAILS') schema = SpeakerDetails;
-  if (type === 'ADDITIONAL') schema = SpeakerAdditionalInfo;
+  let schema: SettingsSchema = UserPersonalInfo;
+  if (type === 'DETAILS') schema = UserDetails;
+  if (type === 'ADDITIONAL') schema = UserAdditionalInfo;
 
   return schema.safeParse({
     name: form.get('name'),

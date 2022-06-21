@@ -11,14 +11,14 @@ import { ValidationErrors } from '../../utils/validation-errors';
 import { useCallback } from 'react';
 import { getAuth } from 'firebase/auth';
 import { requireUserSession } from '../../services/auth/auth.server';
-import { getSettings, SpeakerSettings, updateProfile, validateProfileData } from '../../services/speakers/settings.server';
+import { getSettings, UserSettings, updateSettings, validateProfileData } from '../../services/speakers/settings.server';
 import { mapErrorToResponse } from '../../services/errors';
 
 export const loader: LoaderFunction = async ({ request }) => {
   const uid = await requireUserSession(request);
   try {
     const profile = await getSettings(uid);
-    return json<SpeakerSettings>(profile);
+    return json<UserSettings>(profile);
   } catch(err) {
     mapErrorToResponse(err);
   }
@@ -33,7 +33,7 @@ export const action: ActionFunction = async ({ request }) => {
     return result.error.flatten();
   }
   try {
-    await updateProfile(uid, result.data);
+    await updateSettings(uid, result.data);
     return redirect('/speaker/settings');
   } catch(err) {
     mapErrorToResponse(err);
@@ -41,7 +41,7 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 export default function SettingsRoute() {
-  const user = useLoaderData<SpeakerSettings>();
+  const user = useLoaderData<UserSettings>();
   const errors = useActionData<ValidationErrors>();
   const fieldErrors = errors?.fieldErrors;
   const submit = useSubmit();

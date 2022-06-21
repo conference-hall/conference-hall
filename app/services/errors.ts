@@ -79,6 +79,12 @@ export class InvitationGenerateError extends BadRequestError {
   }
 }
 
+export class UserNotFoundError extends NotFoundError {
+  constructor() {
+    super('User not found');
+  }
+}
+
 export class SpeakerNotFoundError extends NotFoundError {
   constructor() {
     super('Speaker not found');
