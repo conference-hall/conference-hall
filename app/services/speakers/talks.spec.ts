@@ -1,3 +1,4 @@
+import { TalkLevel } from '@prisma/client';
 import { eventFactory } from '../../../tests/factories/events';
 import { inviteFactory } from '../../../tests/factories/invite';
 import { proposalFactory } from '../../../tests/factories/proposals';
@@ -5,7 +6,7 @@ import { talkFactory } from '../../../tests/factories/talks';
 import { userFactory } from '../../../tests/factories/users';
 import { db } from '../db';
 import { TalkNotFoundError } from '../errors';
-import { deleteTalk, findTalks, getTalk } from './talks.server';
+import { createTalk, deleteTalk, findTalks, getTalk, updateTalk, validateTalkForm } from './talks.server';
 
 describe('#findTalks', () => {
   it('returns speaker talks list', async () => {
@@ -115,7 +116,7 @@ describe('#getTalk', () => {
 
   it('returns proposals when talk submitted', async () => {
     const speaker = await userFactory();
-    const event = await eventFactory()
+    const event = await eventFactory();
     const talk = await talkFactory({ speakers: [speaker] });
     const proposal = await proposalFactory({ talk, event });
 
@@ -144,8 +145,8 @@ describe('#deleteTalk', () => {
 
     await deleteTalk(speaker.id, talk.id);
 
-    const count = await db.talk.count({ where: { id: talk.id }})
-    expect(count).toBe(0)
+    const count = await db.talk.count({ where: { id: talk.id } });
+    expect(count).toBe(0);
   });
 
   it('throws an error when talk does not belong to the speaker', async () => {
@@ -160,4 +161,112 @@ describe('#deleteTalk', () => {
     const speaker = await userFactory();
     await expect(deleteTalk(speaker.id, 'XXX')).rejects.toThrowError(TalkNotFoundError);
   });
-})
+});
+
+describe('#createTalk', () => {
+  it('creates a speaker talk', async () => {
+    const speaker = await userFactory();
+    const talk = await talkFactory({ speakers: [speaker] });
+
+    await updateTalk(speaker.id, talk.id, {
+      title: 'Talk title',
+      abstract: 'Talk abstract',
+      references: 'Talk references',
+      languages: ['fr'],
+      level: TalkLevel.ADVANCED,
+    });
+
+    const actual = await db.talk.findUnique({ where: { id: talk.id }, include: { speakers: true } });
+
+    expect(talk).not.toBeNull();
+    expect(actual?.title).toBe('Talk title');
+    expect(actual?.abstract).toBe('Talk abstract');
+    expect(actual?.references).toBe('Talk references');
+    expect(actual?.languages).toEqual(['fr']);
+    expect(actual?.level).toEqual(TalkLevel.ADVANCED);
+  });
+});
+
+describe('#updateTalk', () => {
+  it('updates a speaker talk', async () => {
+    const speaker = await userFactory();
+
+    const talkId = await createTalk(speaker.id, {
+      title: 'Talk title',
+      abstract: 'Talk abstract',
+      references: 'Talk references',
+      languages: ['fr'],
+      level: TalkLevel.ADVANCED,
+    });
+
+    const talk = await db.talk.findUnique({ where: { id: talkId }, include: { speakers: true } });
+
+    expect(talk?.title).toBe('Talk title');
+    expect(talk?.abstract).toBe('Talk abstract');
+    expect(talk?.references).toBe('Talk references');
+    expect(talk?.languages).toEqual(['fr']);
+    expect(talk?.level).toEqual(TalkLevel.ADVANCED);
+    expect(talk?.speakers[0].id).toBe(speaker.id);
+  });
+
+  it('throws an error when talk does not belong to the speaker', async () => {
+    const speaker = await userFactory();
+    const otherSpeaker = await userFactory();
+    const talk = await talkFactory({ speakers: [otherSpeaker] });
+    const updateData = {
+      title: 'Talk title',
+      abstract: 'Talk abstract',
+      references: 'Talk references',
+      languages: ['fr'],
+      level: TalkLevel.ADVANCED,
+    };
+    await expect(updateTalk(speaker.id, talk.id, updateData)).rejects.toThrowError(TalkNotFoundError);
+  });
+
+  it('throws an error when talk not found', async () => {
+    const speaker = await userFactory();
+    const updateData = {
+      title: 'Talk title',
+      abstract: 'Talk abstract',
+      references: 'Talk references',
+      languages: ['fr'],
+      level: TalkLevel.ADVANCED,
+    };
+    await expect(updateTalk(speaker.id, 'XXX', updateData)).rejects.toThrowError(TalkNotFoundError);
+  });
+});
+
+describe('#validateTalkForm', () => {
+  it('validates talk form data', () => {
+    const formData = new FormData();
+    formData.append('title', 'Hello world');
+    formData.append('abstract', 'Welcome to the world!');
+    formData.append('references', 'This is my world.');
+    formData.append('languages[0]', 'en');
+    formData.append('languages[1]', 'fr');
+    formData.append('level', 'ADVANCED');
+
+    const result = validateTalkForm(formData);
+    expect(result.success && result.data).toEqual({
+      title: 'Hello world',
+      abstract: 'Welcome to the world!',
+      references: 'This is my world.',
+      languages: ['en', 'fr'],
+      level: TalkLevel.ADVANCED,
+    });
+  });
+
+  it('validates mandatory and format for personal information', () => {
+    const formData = new FormData();
+    formData.append('title', '');
+    formData.append('abstract', '');
+    formData.append('level', 'BAD_VALUE');
+
+    const result = validateTalkForm(formData);
+    expect(!result.success && result.error.errors.map((e) => e.code)).toEqual([
+      'too_small',
+      'too_small',
+      'invalid_enum_value',
+    ]);
+  });
+});
