@@ -3,8 +3,9 @@ import { inviteFactory } from '../../../tests/factories/invite';
 import { proposalFactory } from '../../../tests/factories/proposals';
 import { talkFactory } from '../../../tests/factories/talks';
 import { userFactory } from '../../../tests/factories/users';
+import { db } from '../db';
 import { TalkNotFoundError } from '../errors';
-import { findTalks, getTalk } from './talks.server';
+import { deleteTalk, findTalks, getTalk } from './talks.server';
 
 describe('#findTalks', () => {
   it('returns speaker talks list', async () => {
@@ -135,3 +136,28 @@ describe('#getTalk', () => {
     await expect(getTalk(speaker.id, 'XXX')).rejects.toThrowError(TalkNotFoundError);
   });
 });
+
+describe('#deleteTalk', () => {
+  it('deletes a speaker talk', async () => {
+    const speaker = await userFactory();
+    const talk = await talkFactory({ speakers: [speaker] });
+
+    await deleteTalk(speaker.id, talk.id);
+
+    const count = await db.talk.count({ where: { id: talk.id }})
+    expect(count).toBe(0)
+  });
+
+  it('throws an error when talk does not belong to the speaker', async () => {
+    const speaker = await userFactory();
+    const otherSpeaker = await userFactory();
+    const talk = await talkFactory({ speakers: [otherSpeaker] });
+
+    await expect(deleteTalk(speaker.id, talk.id)).rejects.toThrowError(TalkNotFoundError);
+  });
+
+  it('throws an error when talk not found', async () => {
+    const speaker = await userFactory();
+    await expect(deleteTalk(speaker.id, 'XXX')).rejects.toThrowError(TalkNotFoundError);
+  });
+})
