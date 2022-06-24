@@ -67,7 +67,7 @@ export class SurveyNotEnabledError extends BadRequestError {
   }
 }
 
-export class InvitationFoundError extends NotFoundError {
+export class InvitationNotFoundError extends NotFoundError {
   constructor() {
     super('Invitation not found');
   }

@@ -3,7 +3,7 @@ import { db } from '../../services/db';
 import { getCfpState } from '../../utils/event';
 import { getArray } from '../../utils/form';
 import { jsonToArray } from '../../utils/prisma';
-import { CfpNotOpenError, EventNotFoundError, InvitationFoundError, ProposalNotFoundError } from '../errors';
+import { CfpNotOpenError, EventNotFoundError, InvitationNotFoundError, ProposalNotFoundError } from '../errors';
 
 export type SpeakerProposals = Array<{
   id: string;
@@ -154,7 +154,7 @@ export function validateProposalForm(form: FormData) {
     where: { id: invitationId },
   });
   if (!invitation || invitation.type !== 'PROPOSAL' || !invitation.proposal) {
-    throw new InvitationFoundError();
+    throw new InvitationNotFoundError();
   }
 
   const proposal = await db.proposal.update({

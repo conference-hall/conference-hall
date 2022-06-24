@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { db } from '../../services/db';
 import { getArray } from '../../utils/form';
 import { jsonToArray } from '../../utils/prisma';
-import { InvitationFoundError as InvitationNotFoundError, TalkNotFoundError } from '../errors';
+import { InvitationNotFoundError, TalkNotFoundError } from '../errors';
 import { buildInvitationLink } from '../invitations/invitations.server';
 
 export type SpeakerTalks = Array<{

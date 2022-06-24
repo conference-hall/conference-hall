@@ -1,6 +1,6 @@
 import { type InviteType } from '@prisma/client';
 import { db } from '../db';
-import { InvitationFoundError, InvitationGenerateError, ProposalNotFoundError, TalkNotFoundError } from '../errors';
+import { InvitationNotFoundError, InvitationGenerateError, ProposalNotFoundError, TalkNotFoundError } from '../errors';
 
 export type Invitation = {
   type: InviteType;
@@ -19,7 +19,7 @@ export const getInvitation = async (invitationId: string): Promise<Invitation> =
     where: { id: invitationId },
   });
   if (!invitation) {
-    throw new InvitationFoundError();
+    throw new InvitationNotFoundError();
   }
   return {
     type: invitation.type,
