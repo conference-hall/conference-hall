@@ -10,31 +10,26 @@ const TRAITS = {
 type Trait = keyof typeof TRAITS;
 
 type FactoryOptions = {
-  attributes?: Partial<Prisma.UserCreateInput>,
-  traits?: Trait[],
-}
+  attributes?: Partial<Prisma.UserCreateInput>;
+  traits?: Trait[];
+};
 
-export const UserFactory = {
-  build: (options: FactoryOptions = {}) => {
-    const { attributes = {}, traits = [] } = options;
+export const userFactory = (options: FactoryOptions = {}) => {
+  const { attributes = {}, traits = [] } = options;
 
-    const defaultAttributes = {
-      id: fake.randUuid(),
-      name: fake.randFullName(),
-      email: fake.randEmail(),
-      photoURL: fake.randAvatar(),
-      address: fake.randCity(),
-      bio: fake.randParagraph(),
-      references: fake.randParagraph(),
-      company: fake.randCompanyName(),
-      github: fake.randUserName(),
-      twitter: fake.randUserName(),
-    }
+  const defaultAttributes = {
+    name: fake.randFullName(),
+    email: fake.randEmail(),
+    photoURL: fake.randAvatar(),
+    address: fake.randCity(),
+    bio: fake.randParagraph(),
+    references: fake.randParagraph(),
+    company: fake.randCompanyName(),
+    github: fake.randUserName(),
+    twitter: fake.randUserName(),
+  };
 
-    return { ...defaultAttributes, ...applyTraits(TRAITS, traits), ...attributes };
-  },
-  create: (options: FactoryOptions = {}) => {
-    const data = UserFactory.build(options);
-    return db.user.create({ data })
-  }
-}
+  const data = { ...defaultAttributes, ...applyTraits(TRAITS, traits), ...attributes };
+
+  return db.user.create({ data });
+};

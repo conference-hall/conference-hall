@@ -1,22 +1,6 @@
 describe('View event page', () => {
-  const event = {
-    name: 'EventFactory',
-    attributes: {
-      name: 'Devfest Nantes',
-      slug: 'devfest-nantes',
-      address: 'Nantes, France',
-      description: 'The event !',
-      conferenceStart: '2020-10-05T00:00:00.000Z',
-      conferenceEnd: '2020-10-05T00:00:00.000Z',
-      cfpStart: '2020-10-05T00:00:00.000Z',
-      cfpEnd: '2020-10-05T23:59:59.000Z',
-    },
-    traits: ['conference'],
-  };
-
   beforeEach(() => {
-    cy.task('resetDB');
-    cy.task('factory', [event]);
+    cy.task('resetDB').task('seedDB', 'view-event');
   });
 
   afterEach(() => cy.task('disconnectDB'));

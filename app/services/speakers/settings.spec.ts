@@ -1,5 +1,5 @@
 import { disconnectDB, resetDB } from '../../../tests/db-helpers';
-import { UserFactory } from '../../../tests/factories/users';
+import { userFactory } from '../../../tests/factories/users';
 import { db } from '../db';
 import { UserNotFoundError } from '../errors';
 import { getSettings, updateSettings, validateProfileData } from './settings.server';
@@ -8,8 +8,8 @@ describe('#getSettings', () => {
   beforeEach(() => resetDB());
   afterAll(() => disconnectDB());
 
-  it('should return the default response', async () => {
-    const user = await UserFactory.create();
+  it('returns the default response', async () => {
+    const user = await userFactory();
 
     const response = await getSettings(user.id);
     expect(response).toEqual({
@@ -25,7 +25,7 @@ describe('#getSettings', () => {
     });
   });
 
-  it('should throw an error when user not found', async () => {
+  it('throws an error when user not found', async () => {
     await expect(getSettings('XXX')).rejects.toThrowError(UserNotFoundError);
   });
 });
@@ -34,8 +34,8 @@ describe('#updateSettings', () => {
   beforeEach(() => resetDB());
   afterAll(() => disconnectDB());
 
-  it('should update personal information', async () => {
-    const user = await UserFactory.create();
+  it('updates personal information', async () => {
+    const user = await userFactory();
 
     const data = {
       name: 'John Doe',
@@ -51,8 +51,8 @@ describe('#updateSettings', () => {
     expect(updated?.photoURL).toEqual(data.photoURL);
   });
 
-  it('should update user details', async () => {
-    const user = await UserFactory.create();
+  it('updates user details', async () => {
+    const user = await userFactory();
 
     const data = {
       bio: 'lorem ipsum',
@@ -66,8 +66,8 @@ describe('#updateSettings', () => {
     expect(updated?.references).toEqual(data.references);
   });
 
-  it('should update user details', async () => {
-    const user = await UserFactory.create();
+  it('updates user details', async () => {
+    const user = await userFactory();
 
     const data = {
       company: 'company',
@@ -85,14 +85,14 @@ describe('#updateSettings', () => {
     expect(updated?.github).toEqual(data.github);
   });
 
-  it('should throw an error when user not found', async () => {
+  it('throws an error when user not found', async () => {
     const data = { bio: '', references: '' };
     await expect(updateSettings('XXX', data)).rejects.toThrowError(UserNotFoundError);
   });
 });
 
 describe('#validateProfileData', () => {
-  it('should validate personal information', () => {
+  it('validates personal information', () => {
     const formData = new FormData();
     formData.append('name', 'John Doe');
     formData.append('email', 'john.doe@email.com');
@@ -106,7 +106,7 @@ describe('#validateProfileData', () => {
     });
   });
 
-  it('should validate user details', () => {
+  it('validates user details', () => {
     const formData = new FormData();
     formData.append('bio', 'lorem ipsum');
     formData.append('references', 'impedit quidem quisquam');
@@ -118,7 +118,7 @@ describe('#validateProfileData', () => {
     });
   });
 
-  it('should validate additional indormation', () => {
+  it('validates additional indormation', () => {
     const formData = new FormData();
     formData.append('company', 'company');
     formData.append('address', 'address');
@@ -134,7 +134,7 @@ describe('#validateProfileData', () => {
     });
   });
 
-  it('should validate mandatory and format for personal information', () => {
+  it('validates mandatory and format for personal information', () => {
     const formData = new FormData();
     formData.append('name', '');
     formData.append('email', '');

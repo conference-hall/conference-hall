@@ -1,6 +1,5 @@
 import { defineConfig } from 'cypress';
 import { disconnectDB, resetDB } from './tests/db-helpers';
-import { execFactoryTask } from './tests/factories/helpers/cypress';
 
 export default defineConfig({
   screenshotOnRunFailure: false,
@@ -11,7 +10,16 @@ export default defineConfig({
       return on('task', {
         resetDB,
         disconnectDB,
-        factory: execFactoryTask,
+        seedDB: async (name: string) => {
+          try {
+            const file = await import(`./cypress/e2e/${name}.seed.ts`)
+            await file.seed()
+          } catch (err) {
+            console.error(err)
+            throw new Error('An error occurred seeding the database')
+          }
+          return 'loaded'
+        },
       });
     },
   },

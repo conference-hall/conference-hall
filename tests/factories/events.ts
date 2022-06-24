@@ -2,7 +2,6 @@ import * as fake from '@ngneat/falso';
 import { EventType, EventVisibility, Prisma } from '@prisma/client';
 import { db } from '../../app/services/db';
 import { applyTraits } from './helpers/traits';
-import { UserFactory } from './users';
 
 const TRAITS = {
   conference: {
@@ -53,32 +52,28 @@ const TRAITS = {
 type Trait = keyof typeof TRAITS;
 
 type FactoryOptions = {
-  attributes?: Partial<Prisma.EventCreateInput>,
-  traits?: Trait[],
-}
+  attributes?: Partial<Prisma.EventCreateInput>;
+  traits?: Trait[];
+};
 
-export const EventFactory = {
-  build: (options: FactoryOptions = {}) => {
-    const { attributes = {}, traits = [] } = options;
+export const eventFactory = (options: FactoryOptions = {}) => {
+  const { attributes = {}, traits = [] } = options;
 
-    const defaultAttributes = {
-      name: fake.randSportsTeam(),
-      slug: `slug-${fake.randUuid()}`,
-      description: fake.randParagraph(),
-      address: fake.randFullAddress(),
-      bannerUrl: fake.randImg({ width: 1200, height: 300 }),
-      websiteUrl: fake.randUrl(),
-      contactEmail: fake.randEmail(),
-      codeOfConductUrl: fake.randUrl(),
-      type: fake.rand([EventType.CONFERENCE, EventType.MEETUP]),
-      visibility: EventVisibility.PUBLIC,
-      creator: { create:  UserFactory.build()},
-    }
+  const defaultAttributes: Prisma.EventCreateInput = {
+    name: fake.randSportsTeam(),
+    slug: `slug-${fake.randUuid()}`,
+    description: fake.randParagraph(),
+    address: fake.randFullAddress(),
+    bannerUrl: fake.randImg({ width: 1200, height: 300 }),
+    websiteUrl: fake.randUrl(),
+    contactEmail: fake.randEmail(),
+    codeOfConductUrl: fake.randUrl(),
+    type: fake.rand([EventType.CONFERENCE, EventType.MEETUP]),
+    visibility: EventVisibility.PUBLIC,
+    creator: { create: { name: fake.randFullName() } },
+  };
 
-    return { ...defaultAttributes, ...applyTraits(TRAITS, traits), ...attributes };
-  },
-  create: (options: FactoryOptions = {}) => {
-    const data = EventFactory.build(options);
-    return db.event.create({ data })
-  }
+  const data = { ...defaultAttributes, ...applyTraits(TRAITS, traits), ...attributes };
+
+  return db.event.create({ data });
 }

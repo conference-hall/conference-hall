@@ -1,13 +1,13 @@
 import { disconnectDB, resetDB } from '../../../tests/db-helpers';
-import { EventFactory } from '../../../tests/factories/events';
+import { eventFactory } from '../../../tests/factories/events';
 import { searchEvents, validateFilters, validatePage } from './search.server';
 
 describe('#searchEvents', () => {
   beforeEach(() => resetDB());
   afterAll(() => disconnectDB());
 
-  it('should return the default response', async () => {
-    await EventFactory.create({
+  it('returns the default response', async () => {
+    await eventFactory({
       traits: ['conference-cfp-open'],
       attributes: { name: 'conf-1', slug: 'conf-1', address: 'address-1' },
     });
@@ -29,12 +29,12 @@ describe('#searchEvents', () => {
     });
   });
 
-  it('should return all open and future events by default', async () => {
-    await EventFactory.create({ traits: ['conference-cfp-open'], attributes: { name: 'conf-1' } });
-    await EventFactory.create({ traits: ['conference-cfp-future'], attributes: { name: 'conf-2' } });
-    await EventFactory.create({ traits: ['meetup-cfp-open'], attributes: { name: 'conf-3' } });
-    await EventFactory.create({ traits: ['meetup-cfp-close'] });
-    await EventFactory.create({ traits: ['conference-cfp-past'] });
+  it('returns all open and future events by default', async () => {
+    await eventFactory({ traits: ['conference-cfp-open'], attributes: { name: 'conf-1' } });
+    await eventFactory({ traits: ['conference-cfp-future'], attributes: { name: 'conf-2' } });
+    await eventFactory({ traits: ['meetup-cfp-open'], attributes: { name: 'conf-3' } });
+    await eventFactory({ traits: ['meetup-cfp-close'] });
+    await eventFactory({ traits: ['conference-cfp-past'] });
 
     const result = await searchEvents({});
 
@@ -49,9 +49,9 @@ describe('#searchEvents', () => {
     expect(cfpStates).toEqual(['CLOSED', 'OPENED', 'OPENED']);
   });
 
-  it('should not return private events', async () => {
-    await EventFactory.create({ traits: ['conference-cfp-open'], attributes: { name: 'conf-1' } });
-    await EventFactory.create({ traits: ['conference-cfp-open', 'private'] });
+  it('doesnt returns private events', async () => {
+    await eventFactory({ traits: ['conference-cfp-open'], attributes: { name: 'conf-1' } });
+    await eventFactory({ traits: ['conference-cfp-open', 'private'] });
 
     const result = await searchEvents({});
 
@@ -59,9 +59,9 @@ describe('#searchEvents', () => {
     expect(result.results[0].name).toBe('conf-1');
   });
 
-  it('should not return archived events', async () => {
-    await EventFactory.create({ traits: ['conference-cfp-open'], attributes: { name: 'conf-1' } });
-    await EventFactory.create({ traits: ['conference-cfp-open', 'archived'] });
+  it('doesnt returns archived events', async () => {
+    await eventFactory({ traits: ['conference-cfp-open'], attributes: { name: 'conf-1' } });
+    await eventFactory({ traits: ['conference-cfp-open', 'archived'] });
 
     const result = await searchEvents({});
 
@@ -69,16 +69,16 @@ describe('#searchEvents', () => {
     expect(result.results[0].name).toBe('conf-1');
   });
 
-  it('should sort events by cfp start date and name', async () => {
-    await EventFactory.create({
+  it('sorts events by cfp start date and name', async () => {
+    await eventFactory({
       traits: ['conference-cfp-open'],
       attributes: { name: 'conf-1', cfpStart: '2020-01-01T00:00:00.000Z' },
     });
-    await EventFactory.create({
+    await eventFactory({
       traits: ['conference-cfp-open'],
       attributes: { name: 'conf-2', cfpStart: '2020-02-01T00:00:00.000Z' },
     });
-    await EventFactory.create({
+    await eventFactory({
       traits: ['conference-cfp-open'],
       attributes: { name: 'conf-3', cfpStart: '2020-02-01T00:00:00.000Z' },
     });
@@ -91,9 +91,9 @@ describe('#searchEvents', () => {
     expect(names).toEqual(['conf-2', 'conf-3', 'conf-1']);
   });
 
-  it('should filter by name (insensitive)', async () => {
-    await EventFactory.create({ traits: ['conference-cfp-open'], attributes: { name: 'expected-conf' } });
-    await EventFactory.create({ traits: ['conference-cfp-open'], attributes: { name: 'not-returned' } });
+  it('filters by name (insensitive)', async () => {
+    await eventFactory({ traits: ['conference-cfp-open'], attributes: { name: 'expected-conf' } });
+    await eventFactory({ traits: ['conference-cfp-open'], attributes: { name: 'not-returned' } });
 
     const result = await searchEvents({ terms: 'ExpEctEd' });
 
@@ -102,9 +102,9 @@ describe('#searchEvents', () => {
     expect(result.filters.terms).toBe('ExpEctEd');
   });
 
-  it('should filter by past CFP only', async () => {
-    await EventFactory.create({ traits: ['conference-cfp-open'], attributes: { name: 'conf-1' } });
-    await EventFactory.create({ traits: ['conference-cfp-past'], attributes: { name: 'conf-2' } });
+  it('filters by past CFP only', async () => {
+    await eventFactory({ traits: ['conference-cfp-open'], attributes: { name: 'conf-1' } });
+    await eventFactory({ traits: ['conference-cfp-past'], attributes: { name: 'conf-2' } });
 
     const result = await searchEvents({ cfp: 'past' });
 
@@ -113,9 +113,9 @@ describe('#searchEvents', () => {
     expect(result.filters.cfp).toBe('past');
   });
 
-  it('should filter by incoming CFP only', async () => {
-    await EventFactory.create({ traits: ['conference-cfp-open'], attributes: { name: 'conf-1' } });
-    await EventFactory.create({ traits: ['conference-cfp-past'], attributes: { name: 'conf-2' } });
+  it('filters by incoming CFP only', async () => {
+    await eventFactory({ traits: ['conference-cfp-open'], attributes: { name: 'conf-1' } });
+    await eventFactory({ traits: ['conference-cfp-past'], attributes: { name: 'conf-2' } });
 
     const result = await searchEvents({ cfp: 'incoming' });
 
@@ -124,9 +124,9 @@ describe('#searchEvents', () => {
     expect(result.filters.cfp).toBe('incoming');
   });
 
-  it('should filter by conference type', async () => {
-    await EventFactory.create({ traits: ['conference-cfp-open'], attributes: { name: 'conf-1' } });
-    await EventFactory.create({ traits: ['meetup-cfp-open'], attributes: { name: 'conf-2' } });
+  it('filters by conference type', async () => {
+    await eventFactory({ traits: ['conference-cfp-open'], attributes: { name: 'conf-1' } });
+    await eventFactory({ traits: ['meetup-cfp-open'], attributes: { name: 'conf-2' } });
 
     const result = await searchEvents({ type: 'conference' });
 
@@ -135,9 +135,9 @@ describe('#searchEvents', () => {
     expect(result.filters.type).toBe('conference');
   });
 
-  it('should filter by meetup type', async () => {
-    await EventFactory.create({ traits: ['conference-cfp-open'], attributes: { name: 'conf-1' } });
-    await EventFactory.create({ traits: ['meetup-cfp-open'], attributes: { name: 'conf-2' } });
+  it('filters by meetup type', async () => {
+    await eventFactory({ traits: ['conference-cfp-open'], attributes: { name: 'conf-1' } });
+    await eventFactory({ traits: ['meetup-cfp-open'], attributes: { name: 'conf-2' } });
 
     const result = await searchEvents({ type: 'meetup' });
 
@@ -146,8 +146,8 @@ describe('#searchEvents', () => {
     expect(result.filters.type).toBe('meetup');
   });
 
-  it('should return the given page', async () => {
-    await Promise.all(Array.from({ length: 36 }).map(() => EventFactory.create({ traits: ['meetup-cfp-open'] })));
+  it('returns the given page', async () => {
+    await Promise.all(Array.from({ length: 36 }).map(() => eventFactory({ traits: ['meetup-cfp-open'] })));
 
     const result = await searchEvents({}, 2);
     expect(result.results.length).toBe(12);
@@ -165,25 +165,25 @@ describe('#searchEvents', () => {
 });
 
 describe('#validateFilters', () => {
-  it('should return valid filters', () => {
+  it('returns valid filters', () => {
     const params = new URLSearchParams({ terms: 'foo', type: 'all', cfp: 'incoming' });
     const result = validateFilters(params);
     expect(result).toEqual({ terms: 'foo', type: 'all', cfp: 'incoming' });
   });
 
-  it('should trim "terms" filter', () => {
+  it('trims "terms" filter', () => {
     const params = new URLSearchParams({ terms: '  foo  ' });
     const result = validateFilters(params);
     expect(result.terms).toBe('foo');
   });
 
-  it('should returns undefined when incorrect "type" filter', () => {
+  it('returns undefined when incorrect "type" filter', () => {
     const params = new URLSearchParams({ type: 'XXX' });
     const result = validateFilters(params);
     expect(result.type).toBe(undefined);
   });
 
-  it('should returns undefined when incorrect "cfp" filter', () => {
+  it('returns undefined when incorrect "cfp" filter', () => {
     const params = new URLSearchParams({ cfp: 'XXX' });
     const result = validateFilters(params);
     expect(result.cfp).toBe(undefined);
@@ -191,13 +191,13 @@ describe('#validateFilters', () => {
 });
 
 describe('#validatePage', () => {
-  it('should return valid page', () => {
+  it('returns valid page', () => {
     const params = new URLSearchParams({ page: '1' });
     const result = validatePage(params);
     expect(result).toBe(1);
   });
 
-  it('should return page 1 when page number invalid', () => {
+  it('returns page 1 when page number invalid', () => {
     const params = new URLSearchParams({ terms: 'XXX' });
     const result = validatePage(params);
     expect(result).toBe(1);

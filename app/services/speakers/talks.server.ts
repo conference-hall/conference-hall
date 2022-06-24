@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { db } from '../../services/db';
 import { getArray } from '../../utils/form';
 import { jsonToArray } from '../../utils/prisma';
-import { InvitationFoundError, ProposalNotFoundError, TalkNotFoundError } from '../errors';
+import { InvitationFoundError as InvitationNotFoundError, TalkNotFoundError } from '../errors';
 import { buildInvitationLink } from '../invitations/invitations.server';
 
 export type SpeakerTalks = Array<{
@@ -72,7 +72,7 @@ export interface SpeakerTalk {
  * @param talkId Id of the talk
  * @returns SpeakerTalk
  */
-export async function getTalk(uid: string, talkId?: string): Promise<SpeakerTalk> {
+export async function getTalk(uid: string, talkId: string): Promise<SpeakerTalk> {
   const talk = await db.talk.findFirst({
     where: {
       speakers: { some: { id: uid } },
@@ -107,7 +107,7 @@ export async function getTalk(uid: string, talkId?: string): Promise<SpeakerTalk
       status: proposal.status,
       date: proposal.updatedAt.toISOString(),
     })),
-    invitationLink: buildInvitationLink( talk.invitation?.id),
+    invitationLink: buildInvitationLink(talk.invitation?.id),
   };
 }
 
@@ -116,7 +116,7 @@ export async function getTalk(uid: string, talkId?: string): Promise<SpeakerTalk
  * @param uid Id of the connected user
  * @param talkId Id of the talk
  */
-export async function deleteTalk(uid: string, talkId?: string) {
+export async function deleteTalk(uid: string, talkId: string) {
   const talk = await db.talk.findFirst({
     where: { id: talkId, speakers: { some: { id: uid } } },
   });
@@ -190,7 +190,7 @@ export async function inviteCoSpeakerToTalk(invitationId: string, coSpeakerId: s
     where: { id: invitationId },
   });
   if (!invitation || invitation.type !== 'TALK' || !invitation.talk) {
-    throw new InvitationFoundError();
+    throw new InvitationNotFoundError();
   }
 
   const talk = await db.talk.update({

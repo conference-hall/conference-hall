@@ -1,7 +1,7 @@
 import { disconnectDB, resetDB } from '../../../tests/db-helpers';
-import { EventCategoryFactory } from '../../../tests/factories/categories';
-import { EventFactory } from '../../../tests/factories/events';
-import { EventFormatFactory } from '../../../tests/factories/formats';
+import { eventCategoryFactory } from '../../../tests/factories/categories';
+import { eventFactory } from '../../../tests/factories/events';
+import { eventFormatFactory } from '../../../tests/factories/formats';
 import { EventNotFoundError } from '../errors';
 import { getEvent } from './event.server';
 
@@ -9,10 +9,10 @@ describe('#getEvent', () => {
   beforeEach(() => resetDB());
   afterAll(() => disconnectDB());
 
-  it('should return the default response', async () => {
-    const event = await EventFactory.create({ traits: ['conference-cfp-open', 'withSurvey']});
-    const format = await EventFormatFactory.create({ eventId: event.id });
-    const category = await EventCategoryFactory.create({ eventId: event.id });
+  it('returns the default response', async () => {
+    const event = await eventFactory({ traits: ['conference-cfp-open', 'withSurvey']});
+    const format = await eventFormatFactory({ event });
+    const category = await eventCategoryFactory({ event });
 
     const result = await getEvent(event.slug);
 
@@ -41,7 +41,7 @@ describe('#getEvent', () => {
     });
   });
 
-  it('should throw an error when event not found', async () => {
+  it('throws an error when event not found', async () => {
     await expect(getEvent('XXX')).rejects.toThrowError(EventNotFoundError);
   });
 });

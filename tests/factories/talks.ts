@@ -1,46 +1,33 @@
 import * as fake from '@ngneat/falso';
-import { Prisma, TalkLevel } from '@prisma/client';
+import { Prisma, TalkLevel, User } from '@prisma/client';
 import { db } from '../../app/services/db';
 import { applyTraits } from './helpers/traits';
-import { UserFactory } from './users';
+import { userFactory } from './users';
 
-const TRAITS = {
-  'auth-user-1': { id: 'tpSmd3FehZIM3Wp4HYSBnfnQmXLb' },
-};
+const TRAITS = {};
 
 type Trait = keyof typeof TRAITS;
 
 type FactoryOptions = {
+  speakers: User[];
   attributes?: Partial<Prisma.TalkCreateInput>;
   traits?: Trait[];
-  speakerIds?: string[];
 };
 
-export const TalkFactory = {
-  build: (options: FactoryOptions = {}) => {
-    const { attributes = {}, traits = [], speakerIds } = options;
+export const talkFactory = (options: FactoryOptions) => {
+  const { attributes = {}, traits = [], speakers } = options;
 
-    const creator = UserFactory.build();
+  const defaultAttributes: Prisma.TalkCreateInput = {
+    title: fake.randPost().title,
+    abstract: fake.randParagraph(),
+    references: fake.randParagraph(),
+    languages: ['en'],
+    level: TalkLevel.INTERMEDIATE,
+    creator: { connect: { id: speakers[0].id } },
+    speakers: { connect: speakers.map(({ id }) => ({ id })) },
+  };
 
-    const defaultAttributes: Prisma.TalkCreateInput = {
-      title: fake.randPost().title,
-      abstract: fake.randParagraph(),
-      references: fake.randParagraph(),
-      languages: ['en'],
-      level: TalkLevel.INTERMEDIATE,
-      creator: { connectOrCreate: { create: creator, where: { id: creator.id } } },
-      speakers: { connectOrCreate: { create: creator, where: { id: creator.id } } },
-    };
+  const data = { ...defaultAttributes, ...applyTraits(TRAITS, traits), ...attributes };
 
-    if (speakerIds) {
-      defaultAttributes.creator = { connect: { id: speakerIds[0] } };
-      defaultAttributes.speakers = { connect: speakerIds.map(id => ({ id })) };
-    }
-
-    return { ...defaultAttributes, ...applyTraits(TRAITS, traits), ...attributes };
-  },
-  create: (options: FactoryOptions = {}) => {
-    const data = TalkFactory.build(options);
-    return db.talk.create({ data });
-  },
-};
+  return db.talk.create({ data, include: { speakers: true } });
+}

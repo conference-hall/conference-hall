@@ -1,17 +1,6 @@
 describe('Search conferences and meetups.', () => {
-  const event1 = {
-    name: 'EventFactory',
-    attributes: { name: 'Devfest Nantes', slug: 'devfest-nantes', address: 'Nantes, France' },
-    traits: ['conference-cfp-open'],
-  };
-  const event2 = {
-    name: 'EventFactory',
-    attributes: { name: 'GDG Nantes', slug: 'gdg-nantes', address: 'Nantes, France' },
-    traits: ['meetup-cfp-open'],
-  };
-
-  beforeEach(() => {
-    cy.task('resetDB').task('factory', [event1, event2]);
+  before(() => {
+    cy.task('resetDB').task('seedDB', 'search-events');
   });
 
   afterEach(() => cy.task('disconnectDB'));
