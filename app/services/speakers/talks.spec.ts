@@ -1,4 +1,5 @@
 import { TalkLevel } from '@prisma/client';
+import { disconnectDB, resetDB } from '../../../tests/db-helpers';
 import { eventFactory } from '../../../tests/factories/events';
 import { inviteFactory } from '../../../tests/factories/invite';
 import { proposalFactory } from '../../../tests/factories/proposals';
@@ -20,6 +21,9 @@ import {
 } from './talks.server';
 
 describe('#findTalks', () => {
+  beforeEach(() => resetDB());
+  afterAll(() => disconnectDB());
+
   it('returns speaker talks list', async () => {
     const speaker = await userFactory();
     const talk = await talkFactory({ speakers: [speaker] });
@@ -70,6 +74,9 @@ describe('#findTalks', () => {
 });
 
 describe('#getTalk', () => {
+  beforeEach(() => resetDB());
+  afterAll(() => disconnectDB());
+
   it('returns speaker talk', async () => {
     const speaker = await userFactory();
     const talk = await talkFactory({ speakers: [speaker] });
@@ -150,6 +157,9 @@ describe('#getTalk', () => {
 });
 
 describe('#deleteTalk', () => {
+  beforeEach(() => resetDB());
+  afterAll(() => disconnectDB());
+
   it('deletes a speaker talk', async () => {
     const speaker = await userFactory();
     const talk = await talkFactory({ speakers: [speaker] });
@@ -175,6 +185,9 @@ describe('#deleteTalk', () => {
 });
 
 describe('#createTalk', () => {
+  beforeEach(() => resetDB());
+  afterAll(() => disconnectDB());
+
   it('creates a speaker talk', async () => {
     const speaker = await userFactory();
     const talk = await talkFactory({ speakers: [speaker] });
@@ -199,6 +212,9 @@ describe('#createTalk', () => {
 });
 
 describe('#updateTalk', () => {
+  beforeEach(() => resetDB());
+  afterAll(() => disconnectDB());
+
   it('updates a speaker talk', async () => {
     const speaker = await userFactory();
 
@@ -283,6 +299,9 @@ describe('#validateTalkForm', () => {
 });
 
 describe('#inviteCoSpeakerToTalk', () => {
+  beforeEach(() => resetDB());
+  afterAll(() => disconnectDB());
+
   it('adds a cospeaker to the talk', async () => {
     const speaker = await userFactory();
     const invite = await inviteFactory({
@@ -321,6 +340,9 @@ describe('#inviteCoSpeakerToTalk', () => {
 });
 
 describe('#inviteCoSpeakerToTalk', () => {
+  beforeEach(() => resetDB());
+  afterAll(() => disconnectDB());
+
   it('adds a cospeaker to the talk', async () => {
     const speaker = await userFactory();
     const cospeaker = await userFactory();
@@ -352,6 +374,9 @@ describe('#inviteCoSpeakerToTalk', () => {
 });
 
 describe('#archiveTalk', () => {
+  beforeEach(() => resetDB());
+  afterAll(() => disconnectDB());
+
   it('archives a talk', async () => {
     const speaker = await userFactory();
     const talk = await talkFactory({ speakers: [speaker] });
@@ -377,6 +402,9 @@ describe('#archiveTalk', () => {
 });
 
 describe('#restoreTalk', () => {
+  beforeEach(() => resetDB());
+  afterAll(() => disconnectDB());
+  
   it('restores a archived talk', async () => {
     const speaker = await userFactory();
     const talk = await talkFactory({ speakers: [speaker], attributes: { archived: true } });
