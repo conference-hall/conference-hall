@@ -91,7 +91,7 @@ const SearchFiltersSchema = z.preprocess(
     terms: z.string().optional(),
     type: z.enum(['all', 'conference', 'meetup']).optional(),
     cfp: z.enum(['incoming', 'past']).optional(),
-    talkId: z.string().optional(),
+    talkId: z.string().nullable().optional(),
   })
 );
 

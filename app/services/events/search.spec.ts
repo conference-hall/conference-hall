@@ -168,7 +168,7 @@ describe('#validateFilters', () => {
   it('returns valid filters', () => {
     const params = new URLSearchParams({ terms: 'foo', type: 'all', cfp: 'incoming' });
     const result = validateFilters(params);
-    expect(result).toEqual({ terms: 'foo', type: 'all', cfp: 'incoming' });
+    expect(result).toEqual({ terms: 'foo', type: 'all', cfp: 'incoming', talkId: null });
   });
 
   it('trims "terms" filter', () => {
