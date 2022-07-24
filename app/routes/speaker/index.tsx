@@ -17,7 +17,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   try {
     const profile = await getSpeakerActivity(uid);
     return json<SpeakerActivity>(profile);
-  } catch(err) {
+  } catch (err) {
     mapErrorToResponse(err);
   }
 };
@@ -44,7 +44,7 @@ export default function ProfileRoute() {
           </div>
         </div>
         <div className="mt-5 flex justify-center sm:mt-0 space-x-4">
-          <ButtonLink to="/search">Submit a talk</ButtonLink>
+          <ButtonLink to="/">Submit a talk</ButtonLink>
         </div>
       </Container>
       <Container className="mt-8">

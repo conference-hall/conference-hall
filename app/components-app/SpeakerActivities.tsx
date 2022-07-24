@@ -93,7 +93,7 @@ function TalkActivity({ talkId, talkTitle, date, noSubmission, showTimeline = fa
           <div className="text-sm text-gray-700 flex gap-4">
             <Link to={`talks/${talkId}`}>View</Link>
             <Link to={`talks/${talkId}/edit`}>Edit</Link>
-            <Link to={`/search`}>Submit</Link>
+            <Link to="/">Submit</Link>
           </div>
         </div>
       </div>

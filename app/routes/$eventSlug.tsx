@@ -46,7 +46,7 @@ export function CatchBoundary() {
     <Container className="mt-8 px-8 py-32 text-center">
       <h1 className="text-8xl font-black text-indigo-400">{caught.status}</h1>
       <p className="mt-10 text-4xl font-bold text-gray-600">{caught.data}</p>
-      <ButtonLink to="/search" variant="secondary" className="mt-16">
+      <ButtonLink to="/" variant="secondary" className="mt-16">
         Search for event
       </ButtonLink>
     </Container>

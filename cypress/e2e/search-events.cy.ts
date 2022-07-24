@@ -5,25 +5,25 @@ describe('Search conferences and meetups.', () => {
 
   afterEach(() => cy.task('disconnectDB'));
 
-  describe('From home page', () => {
+  describe('From about page', () => {
     it('redirect to search page and Search conferences and meetups.', () => {
-      cy.visit('/');
+      cy.visit('/about');
       cy.clickOn('See all conferences and meetups');
       cy.typeOn('Search conferences and meetups.', 'Devfest{enter}');
-      cy.assertUrl('/search?terms=Devfest');
+      cy.assertUrl('/?terms=Devfest');
       cy.assertText('Devfest Nantes');
     });
   });
 
   describe('From search page', () => {
     it('displays incoming events by default', () => {
-      cy.visit('/search');
+      cy.visit('/');
       cy.assertText('Devfest Nantes');
       cy.assertText('GDG Nantes');
     });
 
     it('search conference events', () => {
-      cy.visit('/search');
+      cy.visit('/');
       cy.typeOn('Search conferences and meetups.', 'Devfest{enter}');
       cy.assertText('Devfest Nantes');
       cy.assertText('Nantes, France');
@@ -31,7 +31,7 @@ describe('Search conferences and meetups.', () => {
     });
 
     it('search conference events', () => {
-      cy.visit('/search');
+      cy.visit('/');
       cy.typeOn('Search conferences and meetups.', 'devfest{enter}');
       cy.assertText('Devfest Nantes');
       cy.assertText('Nantes, France');
@@ -39,7 +39,7 @@ describe('Search conferences and meetups.', () => {
     });
 
     it('search meetup events', () => {
-      cy.visit('/search');
+      cy.visit('/');
       cy.typeOn('Search conferences and meetups.', 'gdg{enter}');
       cy.assertText('GDG Nantes');
       cy.assertText('Nantes, France');
@@ -47,13 +47,13 @@ describe('Search conferences and meetups.', () => {
     });
 
     it('opens event page on click', () => {
-      cy.visit('/search');
+      cy.visit('/');
       cy.clickOn(/Devfest Nantes/);
       cy.assertUrl('/devfest-nantes');
     });
 
     it('displays no result page if no events found', () => {
-      cy.visit('/search');
+      cy.visit('/');
       cy.typeOn('Search conferences and meetups.', 'nothing{enter}');
       cy.assertText('No events found.');
     });

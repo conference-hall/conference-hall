@@ -17,11 +17,11 @@ export function SearchEventsForm({ filters, className }: Props) {
 
   function handleChange(name: string, id: string) {
     const params = Object.fromEntries(searchParams);
-    submit({ ...params, [name]: id }, { method: 'get', action: '/search' });
+    submit({ ...params, [name]: id }, { method: 'get', action: '/' });
   }
 
   return (
-    <Form action="/search" method="get" className={c(className)}>
+    <Form action="/" method="get" className={c(className)}>
       <div className="gap-4 sm:flex sm:items-center">
         <Input
           type="search"

@@ -79,7 +79,7 @@ export function UserMenu({ email, picture }: Props) {
             <Menu.Item>
               {({ active }) => (
                 <Link
-                  to="/search"
+                  to="/"
                   className={cn('group flex items-center px-4 py-2 text-sm text-gray-700', {
                     'bg-gray-100 text-gray-900': active,
                   })}

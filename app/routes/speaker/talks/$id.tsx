@@ -24,7 +24,7 @@ import { InviteCoSpeakerButton, CoSpeakersList } from '../../../components-app/C
 export const loader: LoaderFunction = async ({ request, params }) => {
   const uid = await requireUserSession(request);
   try {
-    const talk = await getTalk(uid, params.id);
+    const talk = await getTalk(uid, params.id!);
     return json<SpeakerTalk>(talk);
   } catch (err) {
     mapErrorToResponse(err);
@@ -71,7 +71,7 @@ export default function SpeakerTalkRoute() {
 
         <div className="flex-shrink-0 space-x-4">
           {!talk.archived && <TalkActionsMenu />}
-          {!talk.archived && <ButtonLink to={`/search?talkId=${talk.id}`}>Submit</ButtonLink>}
+          {!talk.archived && <ButtonLink to={`/?talkId=${talk.id}`}>Submit</ButtonLink>}
           {talk.archived && (
             <Form method="post">
               <input type="hidden" name="_action" value="restore-talk" />
