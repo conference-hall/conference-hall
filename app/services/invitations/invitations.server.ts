@@ -1,4 +1,5 @@
 import { type InviteType } from '@prisma/client';
+import { config } from '../config';
 import { db } from '../db';
 import { InvitationNotFoundError, InvitationGenerateError, ProposalNotFoundError, TalkNotFoundError } from '../errors';
 
@@ -48,7 +49,7 @@ export async function generateInvitationLink(type: InviteType, entityId: string,
 
 export function buildInvitationLink(invitationId?: string) {
   if (!invitationId) return;
-  return `http://localhost:3000/invitation/${invitationId}`;
+  return `${config.appUrl}/invitation/${invitationId}`;
 }
 
 async function generateTalkInvitationKey(talkId: string, uid: string): Promise<string> {

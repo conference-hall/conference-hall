@@ -5,6 +5,7 @@ import { inviteFactory } from '../../../tests/factories/invite';
 import { proposalFactory } from '../../../tests/factories/proposals';
 import { talkFactory } from '../../../tests/factories/talks';
 import { userFactory } from '../../../tests/factories/users';
+import { config } from '../config';
 import { db } from '../db';
 import { InvitationNotFoundError, TalkNotFoundError } from '../errors';
 import {
@@ -158,7 +159,7 @@ describe('#getTalk', () => {
     const result = await getTalk(speaker.id, talk.id);
 
     expect(result.id).toBe(talk.id);
-    expect(result.invitationLink).toBe(`http://localhost:3000/invitation/${invite.id}`);
+    expect(result.invitationLink).toBe(`${config.appUrl}/invitation/${invite.id}`);
   });
 
   it('returns proposals when talk submitted', async () => {

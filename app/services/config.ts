@@ -19,6 +19,12 @@ class Config {
     this.COOKIE_SIGNED_SECRET = process.env.COOKIE_SIGNED_SECRET || 'secr3t';
   }
 
+  get appUrl(): string {
+    const { PROTOCOL, DOMAIN, PORT } = process.env;
+    if (PORT) return `${PROTOCOL}://${DOMAIN}`;
+    return `${PROTOCOL}://${DOMAIN}:${PORT}`;
+  }
+
   get isProduction(): boolean {
     return this.ENV === 'production';
   }
