@@ -68,12 +68,12 @@ export async function getSpeakerActivity(speakerId: string): Promise<SpeakerActi
     activities: talksActivity.map((talk) => ({
       id: talk.id,
       title: talk.title,
-      date: talk.updatedAt.toISOString(),
+      date: talk.updatedAt.toUTCString(),
       speakers: talk.speakers.map((speaker) => speaker.name || ''),
       proposals: talk.proposals.map((proposal) => ({
         eventName: proposal.event.name,
         eventSlug: proposal.event.slug,
-        date: proposal.updatedAt.toISOString(),
+        date: proposal.updatedAt.toUTCString(),
         status: proposal.status,
       })),
     })),

@@ -43,7 +43,7 @@ export async function findTalks(uid: string, options?: TalksListOptions): Promis
     id: talk.id,
     title: talk.title,
     archived: talk.archived,
-    createdAt: talk.createdAt.toISOString(),
+    createdAt: talk.createdAt.toUTCString(),
     speakers: talk.speakers.map((speaker) => ({
       id: speaker.id,
       name: speaker.name,
@@ -106,7 +106,7 @@ export async function getTalk(uid: string, talkId: string): Promise<SpeakerTalk>
     languages: jsonToArray(talk.languages),
     references: talk.references,
     archived: talk.archived,
-    createdAt: talk.createdAt.toISOString(),
+    createdAt: talk.createdAt.toUTCString(),
     isOwner: uid === talk.creatorId,
     speakers: talk.speakers
       .map((speaker) => ({
@@ -121,7 +121,7 @@ export async function getTalk(uid: string, talkId: string): Promise<SpeakerTalk>
       eventSlug: proposal.event.slug,
       eventName: proposal.event.name,
       status: proposal.status,
-      date: proposal.updatedAt.toISOString(),
+      date: proposal.updatedAt.toUTCString(),
     })),
     invitationLink: buildInvitationLink(talk.invitation?.id),
   };

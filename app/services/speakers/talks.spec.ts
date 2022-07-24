@@ -44,7 +44,7 @@ describe('#findTalks', () => {
         id: talk.id,
         title: talk.title,
         archived: false,
-        createdAt: talk.createdAt.toISOString(),
+        createdAt: talk.createdAt.toUTCString(),
         speakers: [{ id: speaker.id, name: speaker.name, photoURL: speaker.photoURL }],
       },
     ]);
@@ -103,7 +103,7 @@ describe('#getTalk', () => {
       languages: talk.languages,
       references: talk.references,
       archived: talk.archived,
-      createdAt: talk.createdAt.toISOString(),
+      createdAt: talk.createdAt.toUTCString(),
       isOwner: true,
       speakers: [
         {
@@ -172,7 +172,7 @@ describe('#getTalk', () => {
 
     expect(result.proposals).toEqual([
       {
-        date: proposal.updatedAt.toISOString(),
+        date: proposal.updatedAt.toUTCString(),
         eventName: proposal.event.name,
         eventSlug: proposal.event.slug,
         status: 'SUBMITTED',

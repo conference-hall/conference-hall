@@ -28,7 +28,7 @@ export async function fetchSpeakerProposals(slug: string, uid: string) {
     title: proposal.title,
     talkId: proposal.talkId,
     status: proposal.status,
-    createdAt: proposal.createdAt.toISOString(),
+    createdAt: proposal.createdAt.toUTCString(),
     speakers: proposal.speakers.map((speaker) => ({
       id: speaker.id,
       name: speaker.name,
@@ -73,7 +73,7 @@ export async function getSpeakerProposal(proposalId: string, uid: string) {
     status: proposal.status,
     level: proposal.level,
     references: proposal.references,
-    createdAt: proposal.createdAt.toISOString(),
+    createdAt: proposal.createdAt.toUTCString(),
     languages: jsonToArray(proposal.languages),
     formats: proposal.formats.map(({ id, name }) => ({ id, name })),
     categories: proposal.categories.map(({ id, name }) => ({ id, name })),
