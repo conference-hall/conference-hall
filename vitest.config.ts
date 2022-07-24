@@ -10,7 +10,6 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'happy-dom',
-    globalSetup: './tests/global-setup.ts',
     setupFiles: ['./tests/setup-tests.ts'],
     exclude: ['./cypress', './node_modules'],
   },
