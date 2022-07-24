@@ -21,8 +21,8 @@ import {
 } from './talks.server';
 
 describe('#findTalks', () => {
-  beforeEach(() => resetDB());
-  afterAll(() => disconnectDB());
+  beforeEach(async () => { await resetDB() });
+  afterAll(async () => { await disconnectDB() });
 
   it('returns speaker talks list', async () => {
     const speaker = await userFactory();
@@ -74,8 +74,8 @@ describe('#findTalks', () => {
 });
 
 describe('#getTalk', () => {
-  beforeEach(() => resetDB());
-  afterAll(() => disconnectDB());
+  beforeEach(async () => { await resetDB() });
+  afterAll(async () => { await disconnectDB() });
 
   it('returns speaker talk', async () => {
     const speaker = await userFactory();
@@ -157,8 +157,8 @@ describe('#getTalk', () => {
 });
 
 describe('#deleteTalk', () => {
-  beforeEach(() => resetDB());
-  afterAll(() => disconnectDB());
+  beforeEach(async () => { await resetDB() });
+  afterAll(async () => { await disconnectDB() });
 
   it('deletes a speaker talk', async () => {
     const speaker = await userFactory();
@@ -201,8 +201,8 @@ describe('#deleteTalk', () => {
 });
 
 describe('#createTalk', () => {
-  beforeEach(() => resetDB());
-  afterAll(() => disconnectDB());
+  beforeEach(async () => { await resetDB() });
+  afterAll(async () => { await disconnectDB() });
 
   it('creates a speaker talk', async () => {
     const speaker = await userFactory();
@@ -228,8 +228,8 @@ describe('#createTalk', () => {
 });
 
 describe('#updateTalk', () => {
-  beforeEach(() => resetDB());
-  afterAll(() => disconnectDB());
+  beforeEach(async () => { await resetDB() });
+  afterAll(async () => { await disconnectDB() });
 
   it('updates a speaker talk', async () => {
     const speaker = await userFactory();
@@ -315,8 +315,8 @@ describe('#validateTalkForm', () => {
 });
 
 describe('#inviteCoSpeakerToTalk', () => {
-  beforeEach(() => resetDB());
-  afterAll(() => disconnectDB());
+  beforeEach(async () => { await resetDB() });
+  afterAll(async () => { await disconnectDB() });
 
   it('adds a cospeaker to the talk', async () => {
     const speaker = await userFactory();
@@ -356,8 +356,8 @@ describe('#inviteCoSpeakerToTalk', () => {
 });
 
 describe('#inviteCoSpeakerToTalk', () => {
-  beforeEach(() => resetDB());
-  afterAll(() => disconnectDB());
+  beforeEach(async () => { await resetDB() });
+  afterAll(async () => { await disconnectDB() });
 
   it('adds a cospeaker to the talk', async () => {
     const speaker = await userFactory();
@@ -390,8 +390,8 @@ describe('#inviteCoSpeakerToTalk', () => {
 });
 
 describe('#archiveTalk', () => {
-  beforeEach(() => resetDB());
-  afterAll(() => disconnectDB());
+  beforeEach(async () => { await resetDB() });
+  afterAll(async () => { await disconnectDB() });
 
   it('archives a talk', async () => {
     const speaker = await userFactory();
@@ -418,8 +418,8 @@ describe('#archiveTalk', () => {
 });
 
 describe('#restoreTalk', () => {
-  beforeEach(() => resetDB());
-  afterAll(() => disconnectDB());
+  beforeEach(async () => { await resetDB() });
+  afterAll(async () => { await disconnectDB() });
   
   it('restores a archived talk', async () => {
     const speaker = await userFactory();

@@ -6,8 +6,8 @@ import { EventNotFoundError, SurveyNotEnabledError } from '../errors';
 import { getSurveyAnswers, getSurveyQuestions, saveSurvey, validateSurveyForm } from './survey.server';
 
 describe('#getSurveyQuestions', () => {
-  beforeEach(() => resetDB());
-  afterAll(() => disconnectDB());
+  beforeEach(async () => { await resetDB() });
+  afterAll(async () => { await disconnectDB() });
 
   it('returns the default survey questions', async () => {
     const event = await eventFactory({ traits: ['withSurvey'] });
@@ -46,8 +46,8 @@ describe('#getSurveyQuestions', () => {
 });
 
 describe('#getSurveyAnswers', () => {
-  beforeEach(() => resetDB());
-  afterAll(() => disconnectDB());
+  beforeEach(async () => { await resetDB() });
+  afterAll(async () => { await disconnectDB() });
 
   it('returns the user answers for an event', async () => {
     const event = await eventFactory({ traits: ['withSurvey'] });
@@ -76,8 +76,8 @@ describe('#getSurveyAnswers', () => {
 });
 
 describe('#saveSurvey', () => {
-  beforeEach(() => resetDB());
-  afterAll(() => disconnectDB());
+  beforeEach(async () => { await resetDB() });
+  afterAll(async () => { await disconnectDB() });
 
   it('creates user survey for event when it exists', async () => {
     const event = await eventFactory({ traits: ['withSurvey'] });

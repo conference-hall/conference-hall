@@ -10,8 +10,8 @@ import { ProposalNotFoundError } from '../errors';
 import { getProposalTracks, saveTracks, validateTracksForm } from './tracks.server';
 
 describe('#getProposalTracks', () => {
-  beforeEach(() => resetDB());
-  afterAll(() => disconnectDB());
+  beforeEach(async () => { await resetDB() });
+  afterAll(async () => { await disconnectDB() });
 
   it('returns the default response', async () => {
     const event = await eventFactory({ traits: ['conference-cfp-open'] });
@@ -54,8 +54,8 @@ describe('#getProposalTracks', () => {
 });
 
 describe('#saveTracks', () => {
-  beforeEach(() => resetDB());
-  afterAll(() => disconnectDB());
+  beforeEach(async () => { await resetDB() });
+  afterAll(async () => { await disconnectDB() });
 
   it('set tracks of the proposal', async () => {
     const event = await eventFactory({ traits: ['conference-cfp-open'] });

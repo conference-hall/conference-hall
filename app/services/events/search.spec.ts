@@ -3,8 +3,8 @@ import { eventFactory } from '../../../tests/factories/events';
 import { searchEvents, validateFilters, validatePage } from './search.server';
 
 describe('#searchEvents', () => {
-  beforeEach(() => resetDB());
-  afterAll(() => disconnectDB());
+  beforeEach(async () => { await resetDB() });
+  afterAll(async () => { await disconnectDB() });
 
   it('returns the default response', async () => {
     await eventFactory({

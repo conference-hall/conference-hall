@@ -6,11 +6,15 @@ import { EventNotFoundError } from '../errors';
 import { getEvent } from './event.server';
 
 describe('#getEvent', () => {
-  beforeEach(() => resetDB());
-  afterAll(() => disconnectDB());
+  beforeEach(async () => {
+    await resetDB();
+  });
+  afterAll(async () => {
+    await disconnectDB();
+  });
 
   it('returns the default response', async () => {
-    const event = await eventFactory({ traits: ['conference-cfp-open', 'withSurvey']});
+    const event = await eventFactory({ traits: ['conference-cfp-open', 'withSurvey'] });
     const format = await eventFormatFactory({ event });
     const category = await eventCategoryFactory({ event });
 

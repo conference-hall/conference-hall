@@ -5,8 +5,8 @@ import { UserNotFoundError } from '../errors';
 import { getSettings, updateSettings, validateProfileData } from './settings.server';
 
 describe('#getSettings', () => {
-  beforeEach(() => resetDB());
-  afterAll(() => disconnectDB());
+  beforeEach(async () => { await resetDB() });
+  afterAll(async () => { await disconnectDB() });
 
   it('returns the default response', async () => {
     const user = await userFactory();
@@ -31,8 +31,8 @@ describe('#getSettings', () => {
 });
 
 describe('#updateSettings', () => {
-  beforeEach(() => resetDB());
-  afterAll(() => disconnectDB());
+  beforeEach(async () => { await resetDB() });
+  afterAll(async () => { await disconnectDB() });
 
   it('updates personal information', async () => {
     const user = await userFactory();
