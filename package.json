@@ -19,7 +19,7 @@
     "db:studio": "dotenv -e .env.dev -- prisma studio",
     "db:reset": "dotenv -e .env.dev -- prisma migrate reset",
     "db:migrate:dev": "dotenv -e .env.dev -- prisma migrate dev",
-    "db:migrate:test": "dotenv -e .env.test -- prisma migrate dev",
+    "db:migrate:test": "dotenv -e .env.test -- prisma db push --accept-data-loss",
     "css:generate": "tailwindcss -o ./app/tailwind.css",
     "tsc": "tsc -b"
   },
