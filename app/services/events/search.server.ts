@@ -91,6 +91,7 @@ const SearchFiltersSchema = z.preprocess(
     terms: z.string().optional(),
     type: z.enum(['all', 'conference', 'meetup']).optional(),
     cfp: z.enum(['incoming', 'past']).optional(),
+    talkId: z.string().optional(),
   })
 );
 
@@ -99,6 +100,7 @@ export function validateFilters(params: URLSearchParams) {
     terms: params.get('terms'),
     type: params.get('type'),
     cfp: params.get('cfp'),
+    talkId: params.get('talkId'),
   });
   return result.success ? result.data : {};
 }

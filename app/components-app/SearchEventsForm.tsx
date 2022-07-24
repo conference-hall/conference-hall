@@ -13,6 +13,7 @@ type Props = {
 export function SearchEventsForm({ filters, className }: Props) {
   const { terms, type, cfp } = filters;
   const [searchParams] = useSearchParams();
+  const talkId = searchParams.get('talkId')
   const submit = useSubmit();
 
   function handleChange(name: string, id: string) {
@@ -22,6 +23,7 @@ export function SearchEventsForm({ filters, className }: Props) {
 
   return (
     <Form action="/" method="get" className={c(className)}>
+      {talkId && <input type="hidden" name="talkId" value={talkId} />}
       <div className="gap-4 sm:flex sm:items-center">
         <Input
           type="search"
