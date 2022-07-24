@@ -4,15 +4,7 @@ import { getCfpState } from '../../utils/event';
 import { getArray } from '../../utils/form';
 import { jsonToArray } from '../../utils/prisma';
 import { CfpNotOpenError, EventNotFoundError, InvitationNotFoundError, ProposalNotFoundError } from '../errors';
-
-export type SpeakerProposals = Array<{
-  id: string;
-  title: string;
-  talkId: string | null;
-  status: string;
-  createdAt: string;
-  speakers: Array<{ id: string; name: string | null; photoURL: string | null }>;
-}>;
+import { buildInvitationLink } from '../invitations/invitations.server';
 
 export async function fetchSpeakerProposals(slug: string, uid: string) {
   const proposals = await db.proposal.findMany({
@@ -38,28 +30,13 @@ export async function fetchSpeakerProposals(slug: string, uid: string) {
   }));
 }
 
-export type SpeakerProposal = {
-  id: string;
-  talkId: string | null;
-  title: string;
-  abstract: string;
-  status: string;
-  level: string | null;
-  references: string | null;
-  createdAt: string;
-  languages: string[];
-  formats: string[];
-  categories: string[];
-  speakers: Array<{ id: string; name: string | null; photoURL: string | null }>;
-};
-
 export async function getSpeakerProposal(proposalId: string, uid: string) {
   const proposal = await db.proposal.findFirst({
     where: {
       speakers: { some: { id: uid } },
       id: proposalId,
     },
-    include: { speakers: true, formats: true, categories: true },
+    include: { speakers: true, formats: true, categories: true, talk: true, invitation: true },
     orderBy: { createdAt: 'desc' },
   });
   if (!proposal) throw new ProposalNotFoundError();
@@ -76,7 +53,13 @@ export async function getSpeakerProposal(proposalId: string, uid: string) {
     languages: jsonToArray(proposal.languages),
     formats: proposal.formats.map(({ name }) => name),
     categories: proposal.categories.map(({ name }) => name),
-    speakers: proposal.speakers.map((speaker) => ({ id: speaker.id, name: speaker.name, photoURL: speaker.photoURL })),
+    invitationLink: buildInvitationLink(proposal.invitation?.id),
+    speakers: proposal.speakers.map((speaker) => ({
+      id: speaker.id,
+      name: speaker.name,
+      photoURL: speaker.photoURL,
+      isOwner: speaker.id === proposal?.talk?.creatorId,
+    })),
   };
 }
 
@@ -148,7 +131,7 @@ export function validateProposalForm(form: FormData) {
  * @param invitationId Id of the invitation
  * @param coSpeakerId Id of the co-speaker to add
  */
- export async function inviteCoSpeakerToProposal(invitationId: string, coSpeakerId: string) {
+export async function inviteCoSpeakerToProposal(invitationId: string, coSpeakerId: string) {
   const invitation = await db.invite.findUnique({
     select: { type: true, proposal: true, organization: true, invitedBy: true },
     where: { id: invitationId },
@@ -170,7 +153,7 @@ export function validateProposalForm(form: FormData) {
     });
   }
   return { proposalId: proposal.id, eventSlug: proposal.event.slug };
-};
+}
 
 /**
  * Remove a co-speaker from a proposal
@@ -179,11 +162,11 @@ export function validateProposalForm(form: FormData) {
  * @param eventSlug Slug of the event
  * @param coSpeakerId Id of the co-speaker to remove
  */
- export async function removeCoSpeakerFromProposal(uid: string, talkId: string, eventSlug: string, coSpeakerId: string) {
+export async function removeCoSpeakerFromProposal(uid: string, talkId: string, eventSlug: string, coSpeakerId: string) {
   const proposal = await db.proposal.findFirst({
     where: { talkId, event: { slug: eventSlug }, speakers: { some: { id: uid } } },
   });
   if (!proposal) throw new ProposalNotFoundError();
 
   await db.proposal.update({ where: { id: proposal.id }, data: { speakers: { disconnect: { id: coSpeakerId } } } });
-};
+}

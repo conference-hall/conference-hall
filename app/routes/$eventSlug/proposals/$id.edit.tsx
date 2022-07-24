@@ -4,30 +4,26 @@ import { Button } from '../../../components-ui/Buttons';
 import { CategoriesForm } from '../../../components-app/CategoriesForm';
 import { H2 } from '../../../components-ui/Typography';
 import { ValidationErrors } from '../../../utils/validation-errors';
-import { ActionFunction, json, LoaderFunction, redirect } from '@remix-run/node';
+import { ActionFunction, json, LoaderArgs, redirect } from '@remix-run/node';
 import { requireUserSession } from '../../../services/auth/auth.server';
-import { deleteProposal, getSpeakerProposal, SpeakerProposal, updateProposal, validateProposalForm } from '../../../services/events/proposals.server';
-import { EventTracks, getEvent } from '../../../services/events/event.server';
+import {
+  deleteProposal,
+  getSpeakerProposal,
+  updateProposal,
+  validateProposalForm,
+} from '../../../services/events/proposals.server';
+import { getEvent } from '../../../services/events/event.server';
 import { mapErrorToResponse } from '../../../services/errors';
 import { TalkAbstractForm } from '../../../components-app/TalkAbstractForm';
 import { FormatsForm } from '../../../components-app/FormatsForm';
 
-export type SpeakerEditProposal = { 
-  event: { formats: EventTracks, categories: EventTracks }
-  proposal: SpeakerProposal
-};
-
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   const uid = await requireUserSession(request);
   const eventSlug = params.eventSlug!;
   const proposalId = params.id!;
-  try {
-    const proposal = await getSpeakerProposal(proposalId, uid);
-    const { formats, categories } = await getEvent(eventSlug);
-    return json<SpeakerEditProposal>({ proposal, event: { formats, categories } });
-  } catch (err) {
-    mapErrorToResponse(err);
-  }
+  const proposal = await getSpeakerProposal(proposalId, uid).catch(mapErrorToResponse);
+  const event = await getEvent(eventSlug).catch(mapErrorToResponse);
+  return json({ proposal, event: { formats: event?.formats, categories: event?.categories } });
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
@@ -52,7 +48,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export default function EditProposalRoute() {
-  const { event, proposal } = useLoaderData<SpeakerEditProposal>();
+  const { event, proposal } = useLoaderData<typeof loader>();
   const errors = useActionData<ValidationErrors>();
 
   return (

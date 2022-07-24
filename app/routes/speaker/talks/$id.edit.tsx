@@ -12,7 +12,7 @@ import { ValidationErrors } from '../../../utils/validation-errors';
 export const loader: LoaderFunction = async ({ request, params }) => {
   const uid = await requireUserSession(request);
   try {
-    const talk = await getTalk(uid, params.id);
+    const talk = await getTalk(uid, params.id!);
     if (talk.archived) {
       throw new Response('Talk archived.', { status: 403 });
     }
