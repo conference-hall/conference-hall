@@ -22,15 +22,15 @@
     "db:migrate:dev": "dotenv -e .env.dev -- prisma migrate dev",
     "db:migrate:test": "dotenv -e .env.test -- prisma db push --accept-data-loss",
     "css:generate": "tailwindcss -o ./app/tailwind.css",
-    "format": "prettier --write .",
+    "format": "prettier -l --write .",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
     "tsc": "tsc -b",
     "prepare": "husky install"
   },
   "lint-staged": {
-    "**/*.{ts,tsx,js,jsx,json,md,mdx,html,css,yml}": "npm run format",
+    "**/*.{ts,tsx}": "npm run tsc",
     "**/*.{ts,tsx,js,jsx}": "npm run lint -- --fix",
-    "**/*.{ts,tsx}": "npm run tsc"
+    "**/*.{json,md,mdx,html,css,yml}": "npm run format"
   },
   "prisma": {
     "seed": "node --require esbuild-register prisma/seed.ts"
@@ -74,6 +74,7 @@
     "esbuild-register": "^3.3.3",
     "eslint": "^8.20.0",
     "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
     "happy-dom": "^6.0.4",
     "husky": "^8.0.1",
     "lint-staged": "^13.0.3",
