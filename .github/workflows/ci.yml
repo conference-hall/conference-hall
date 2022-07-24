@@ -24,4 +24,4 @@ jobs:
       - name: Execute tests
         run: npm test
       - name: Execute e2e tests
-        run: npm test
+        run: npm run cypress:run
