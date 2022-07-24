@@ -4,7 +4,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  tests:
+  ci:
+    name: Tests & linting
     runs-on: ubuntu-latest
 
     steps:
