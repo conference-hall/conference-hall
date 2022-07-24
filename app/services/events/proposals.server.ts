@@ -30,6 +30,18 @@ export async function fetchSpeakerProposals(slug: string, uid: string) {
   }));
 }
 
+export async function isTalkAlreadySubmitted(slug: string, talkId: string, uid: string) {
+  const proposal = await db.proposal.findFirst({
+    where: {
+      talk: { id: talkId },
+      event: { slug },
+      status: { not: 'DRAFT' },
+      speakers: { some: { id: uid } },
+    },
+  });
+  return Boolean(proposal)
+}
+
 export async function getSpeakerProposal(proposalId: string, uid: string) {
   const proposal = await db.proposal.findFirst({
     where: {
@@ -37,7 +49,6 @@ export async function getSpeakerProposal(proposalId: string, uid: string) {
       id: proposalId,
     },
     include: { speakers: true, formats: true, categories: true, talk: true, invitation: true },
-    orderBy: { createdAt: 'desc' },
   });
   if (!proposal) throw new ProposalNotFoundError();
 

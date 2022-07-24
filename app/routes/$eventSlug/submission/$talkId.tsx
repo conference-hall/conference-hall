@@ -6,6 +6,7 @@ import { requireUserSession } from '../../../services/auth/auth.server';
 import { getEvent } from '../../../services/events/event.server';
 import { mapErrorToResponse } from '../../../services/errors';
 import { SubmissionSteps } from '../../../components-app/SubmissionSteps';
+import { isTalkAlreadySubmitted } from '../../../services/events/proposals.server';
 
 export type SubmitSteps = Array<{
   key: string;
@@ -17,13 +18,17 @@ export type SubmitSteps = Array<{
 export const handle = { step: 'root' };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  await requireUserSession(request);
+  const uid = await requireUserSession(request);
   const slug = params.eventSlug!;
   const talkId = params.talkId!;
 
   try {
     const event = await getEvent(slug);
     if (!event.isCfpOpen) throw new Response('CFP is not opened!', { status: 403 });
+
+    const isAlreadySubmitted = await isTalkAlreadySubmitted(slug, talkId, uid)
+    if (isAlreadySubmitted) throw new Response('Talk proposal already submitted.', { status: 400 })
+
     const steps = [
       { key: 'proposal', name: 'Proposal', path: `/${slug}/submission/${talkId}`, enabled: true },
       { key: 'speakers', name: 'Speakers', path: `/${slug}/submission/${talkId}/speakers`, enabled: true },
