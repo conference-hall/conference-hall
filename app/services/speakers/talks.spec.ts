@@ -170,6 +170,22 @@ describe('#deleteTalk', () => {
     expect(count).toBe(0);
   });
 
+  it('deletes a speaker talk and talk proposals still in draft', async () => {
+    const speaker = await userFactory();
+    const talk = await talkFactory({ speakers: [speaker] });
+    const event1 = await eventFactory()
+    await proposalFactory({ event: event1, talk, traits: ['draft'] })
+    const event2 = await eventFactory()
+    await proposalFactory({ event: event2, talk, traits: ['submitted'] })
+
+    await deleteTalk(speaker.id, talk.id);
+
+    const countTalk = await db.talk.count();
+    const countProposal = await db.proposal.count();
+    expect(countTalk).toBe(0);
+    expect(countProposal).toBe(1);
+  });
+
   it('throws an error when talk does not belong to the speaker', async () => {
     const speaker = await userFactory();
     const otherSpeaker = await userFactory();

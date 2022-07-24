@@ -7,6 +7,7 @@ const TRAITS = {
   draft: { status: ProposalStatus.DRAFT },
   accepted: { status: ProposalStatus.ACCEPTED },
   rejected: { status: ProposalStatus.REJECTED },
+  submitted: { status: ProposalStatus.SUBMITTED },
 };
 
 type Trait = keyof typeof TRAITS;

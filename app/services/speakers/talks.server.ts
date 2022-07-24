@@ -1,3 +1,4 @@
+import { ProposalStatus } from '@prisma/client';
 import { z } from 'zod';
 import { db } from '../../services/db';
 import { getArray } from '../../utils/form';
@@ -122,7 +123,10 @@ export async function deleteTalk(uid: string, talkId: string) {
   });
   if (!talk) throw new TalkNotFoundError();
 
-  await db.talk.delete({ where: { id: talkId } });
+  await db.$transaction([
+    db.proposal.deleteMany({ where: { talkId, status: ProposalStatus.DRAFT } }),
+    db.talk.delete({ where: { id: talkId } }),
+  ])
 }
 
 /**
