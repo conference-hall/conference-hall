@@ -22,7 +22,8 @@ export function Navbar({ user }: Props) {
               <RemixLink to="/">Conference Hall</RemixLink>
             </div>
           </div>
-          <div className="flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+          <div className="flex items-center gap-8 pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+            <Link to="/about">About</Link>
             {user ? <UserMenu email={user.email} picture={user.picture} /> : <Link to="/login">Login</Link>}
           </div>
         </div>
