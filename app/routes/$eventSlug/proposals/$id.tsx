@@ -79,11 +79,13 @@ export default function EventSpeakerProposalRoute() {
           </div>
           <dl className="bg-white border border-gray-200 overflow-hidden sm:rounded-lg p-4 mt-4">
             <H2 as="dt">Formats</H2>
-            <dd className="mt-4 text-sm text-gray-900">{proposal.formats.join(', ') || '—'}</dd>
+            <dd className="mt-4 text-sm text-gray-900">{proposal.formats.map(({ name }) => name).join(', ') || '—'}</dd>
             <H2 as="dt" className="mt-8">
               Categories
             </H2>
-            <dd className="mt-4 text-sm text-gray-900">{proposal.categories.join(', ') || '—'}</dd>
+            <dd className="mt-4 text-sm text-gray-900">
+              {proposal.categories.map(({ name }) => name).join(', ') || '—'}
+            </dd>
           </dl>
         </div>
       </div>

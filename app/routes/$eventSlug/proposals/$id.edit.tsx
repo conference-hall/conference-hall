@@ -1,8 +1,7 @@
 import { Form, useActionData, useCatch, useLoaderData } from '@remix-run/react';
 import { Container } from '~/components-ui/Container';
-import { Button } from '../../../components-ui/Buttons';
+import { Button, ButtonLink } from '../../../components-ui/Buttons';
 import { CategoriesForm } from '../../../components-app/CategoriesForm';
-import { H2 } from '../../../components-ui/Typography';
 import { ValidationErrors } from '../../../utils/validation-errors';
 import { ActionFunction, json, LoaderArgs, redirect } from '@remix-run/node';
 import { requireUserSession } from '../../../services/auth/auth.server';
@@ -12,18 +11,17 @@ import {
   updateProposal,
   validateProposalForm,
 } from '../../../services/events/proposals.server';
-import { getEvent } from '../../../services/events/event.server';
 import { mapErrorToResponse } from '../../../services/errors';
 import { TalkAbstractForm } from '../../../components-app/TalkAbstractForm';
 import { FormatsForm } from '../../../components-app/FormatsForm';
+import { useEvent } from '../../$eventSlug';
+import { H2 } from '../../../components-ui/Typography';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const uid = await requireUserSession(request);
-  const eventSlug = params.eventSlug!;
   const proposalId = params.id!;
   const proposal = await getSpeakerProposal(proposalId, uid).catch(mapErrorToResponse);
-  const event = await getEvent(eventSlug).catch(mapErrorToResponse);
-  return json({ proposal, event: { formats: event?.formats, categories: event?.categories } });
+  return json(proposal);
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
@@ -48,35 +46,45 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export default function EditProposalRoute() {
-  const { event, proposal } = useLoaderData<typeof loader>();
+  const event = useEvent();
+  const proposal = useLoaderData<typeof loader>();
   const errors = useActionData<ValidationErrors>();
 
   return (
-    <Container className="mt-8">
-      <Form method="post" className="mt-8 bg-white border border-gray-200 overflow-hidden sm:rounded-lg">
-        <div className="px-4 py-5 sm:px-6 -ml-4 -mt-4 border-b border-gray-200 flex justify-between items-center flex-wrap sm:flex-nowrap">
-          <div className="ml-4 mt-4">
-            <H2>{proposal.title}</H2>
-          </div>
+    <Container className="py-8">
+      <div className="flex justify-between items-center flex-wrap sm:flex-nowrap">
+        <div>
+          <H2>{proposal.title}</H2>
+          <span className="text-sm test-gray-500 truncate">by {proposal.speakers.map((s) => s.name).join(', ')}</span>
         </div>
+        <div className="flex-shrink-0 space-x-4">
+          <ButtonLink to={`/${event.slug}/proposals/${proposal.id}`} variant="secondary" className="ml-4">
+            Cancel
+          </ButtonLink>
+        </div>
+      </div>
 
-        <div className="px-4 py-10 sm:px-6">
+      <Form method="post" className="mt-4 bg-white border border-gray-200 overflow-hidden sm:rounded-lg">
+        <div className="px-4 py-8 sm:px-6">
           <TalkAbstractForm initialValues={proposal} errors={errors?.fieldErrors} />
+
+          {event.formats?.length > 0 ? (
+            <div className="pt-10">
+              <FormatsForm formats={event.formats} initialValues={proposal.formats.map(({ id }) => id)} />
+            </div>
+          ) : null}
+
+          {event.categories?.length > 0 ? (
+            <div className="pt-10">
+              <CategoriesForm categories={event.categories} initialValues={proposal.categories.map(({ id }) => id)} />
+            </div>
+          ) : null}
         </div>
 
-        {event.formats?.length > 0 ? (
-          <div className="border-t border-gray-200 px-4 py-10 sm:px-6">
-            <FormatsForm formats={event.formats} initialValues={proposal.formats} />
-          </div>
-        ) : null}
-
-        {event.categories?.length > 0 ? (
-          <div className="border-t border-gray-200 px-4 py-10 sm:px-6">
-            <CategoriesForm categories={event.categories} initialValues={proposal.categories} />
-          </div>
-        ) : null}
-
-        <div className="px-4 py-5 border-t border-gray-200 text-right sm:px-6">
+        <div className="px-4 py-3 bg-gray-50 text-right space-x-4 sm:px-6">
+          <ButtonLink to={`/${event.slug}/proposals/${proposal.id}`} variant="secondary" className="ml-4">
+            Cancel
+          </ButtonLink>
           <Button type="submit" className="ml-4">
             Save proposal
           </Button>
