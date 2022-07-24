@@ -5,6 +5,7 @@ import { config } from './config';
 let db: PrismaClient;
 
 declare global {
+  // eslint-disable-next-line no-var
   var __db: PrismaClient | undefined;
 }
 

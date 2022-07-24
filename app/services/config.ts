@@ -36,6 +36,7 @@ class Config {
 // the server with every change, but we want to make sure we don't
 // reload the env config with every change either.
 declare global {
+  // eslint-disable-next-line no-var
   var __config: Config | undefined;
 }
 

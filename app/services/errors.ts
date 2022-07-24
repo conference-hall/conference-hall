@@ -4,7 +4,7 @@ class NotFoundError extends Error {}
 
 class BadRequestError extends Error {}
 
-export function mapErrorToResponse(error: any) {
+export function mapErrorToResponse(error: unknown) {
   if (error instanceof Response) {
     throw error;
   }
@@ -20,7 +20,9 @@ export function mapErrorToResponse(error: any) {
       statusText: error.message,
     });
   }
-  throw new Response(error.message, { status: 500, statusText: error.message });
+  if (error instanceof Error) {
+    throw new Response(error.message, { status: 500, statusText: error.message });
+  }
 }
 
 export class EventNotFoundError extends NotFoundError {

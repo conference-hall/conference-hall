@@ -15,7 +15,7 @@ export function FormatsForm({ formats, initialValues }: Props) {
       label="Select proposal formats"
       description="Select one or severals formats proposed by the event organizers."
     >
-      {formats.map((f: any) => (
+      {formats.map((f) => (
         <Checkbox
           key={f.id}
           id={f.id}

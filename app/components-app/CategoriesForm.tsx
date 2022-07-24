@@ -15,7 +15,7 @@ export function CategoriesForm({ categories, initialValues }: Props) {
       label="Select proposal categories"
       description="Select categories that are the best fit for your proposal."
     >
-      {categories.map((c: any) => (
+      {categories.map((c) => (
         <Checkbox
           key={c.id}
           id={c.id}
