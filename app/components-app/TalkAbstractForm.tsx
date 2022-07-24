@@ -39,7 +39,13 @@ export function TalkAbstractForm({ initialValues, errors }: Props) {
       />
       <RadioGroup label="Level" inline>
         {LEVELS.map(({ key, label }) => (
-          <Radio name="level" key={key} id={key} value={key} defaultChecked={initialValues?.level === key}>
+          <Radio
+            name="level"
+            key={key}
+            id={key}
+            value={key}
+            defaultChecked={initialValues?.level === key}
+          >
             {label}
           </Radio>
         ))}

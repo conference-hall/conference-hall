@@ -18,7 +18,12 @@ export type SpeakerActivity = {
     title: string;
     date: string;
     speakers: string[];
-    proposals: Array<{ eventSlug: string; eventName: string; date: string; status: string }>;
+    proposals: Array<{
+      eventSlug: string;
+      eventName: string;
+      date: string;
+      status: string;
+    }>;
   }>;
 };
 
@@ -27,7 +32,9 @@ export type SpeakerActivity = {
  * @param speakerId Id of the speaker
  * @returns SpeakerActivity
  */
-export async function getSpeakerActivity(speakerId: string): Promise<SpeakerActivity> {
+export async function getSpeakerActivity(
+  speakerId: string
+): Promise<SpeakerActivity> {
   const speaker = await db.user.findUnique({ where: { id: speakerId } });
   if (!speaker) throw new SpeakerNotFoundError();
 
@@ -36,7 +43,12 @@ export async function getSpeakerActivity(speakerId: string): Promise<SpeakerActi
     include: {
       speakers: { select: { name: true } },
       proposals: {
-        select: { title: true, status: true, updatedAt: true, event: { select: { slug: true, name: true } } },
+        select: {
+          title: true,
+          status: true,
+          updatedAt: true,
+          event: { select: { slug: true, name: true } },
+        },
         orderBy: { updatedAt: 'desc' },
       },
     },
@@ -69,4 +81,3 @@ export async function getSpeakerActivity(speakerId: string): Promise<SpeakerActi
     })),
   };
 }
-

@@ -1,7 +1,16 @@
 import { ReactNode } from 'react';
 import { config } from './services/config';
 import { LinksFunction, LoaderFunction } from '@remix-run/node';
-import { Meta, LiveReload, Outlet, Links, Scripts, useCatch, useLoaderData, ScrollRestoration } from '@remix-run/react';
+import {
+  Meta,
+  LiveReload,
+  Outlet,
+  Links,
+  Scripts,
+  useCatch,
+  useLoaderData,
+  ScrollRestoration,
+} from '@remix-run/react';
 
 import { initializeFirebase } from './services/auth/firebase';
 import { AuthUser, getAuthUser } from './services/auth/auth.server';
@@ -54,7 +63,7 @@ function Document({ children, title, user }: DocumentProps) {
         {title ? <title>{title}</title> : null}
         <Links />
       </head>
-      <body className="font-sans antialiased text-gray-600 bg-white">
+      <body className="bg-white font-sans text-gray-600 antialiased">
         <Navbar user={user} />
         {children}
         <Footer />

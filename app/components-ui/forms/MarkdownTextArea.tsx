@@ -12,8 +12,10 @@ type MarkdownTextAreaProps = {
   error?: string;
 } & React.TextareaHTMLAttributes<HTMLTextAreaElement>;
 
-const baseStyles = 'border-gray-300 focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500';
-const errorStyles = 'border-red-300 focus:outline-none focus:ring-red-500 focus:border-red-500';
+const baseStyles =
+  'border-gray-300 focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500';
+const errorStyles =
+  'border-red-300 focus:outline-none focus:ring-red-500 focus:border-red-500';
 
 export function MarkdownTextArea({
   id,
@@ -29,12 +31,16 @@ export function MarkdownTextArea({
 
   const handleClosePreview = () => setPreviewOpen(false);
   const handleOpenPreview = () => setPreviewOpen(true);
-  const handleChangeText: ChangeEventHandler<HTMLTextAreaElement> = (e) => setMarkdown(e.target.value);
+  const handleChangeText: ChangeEventHandler<HTMLTextAreaElement> = (e) =>
+    setMarkdown(e.target.value);
 
-  const styles = cn('shadow-sm block w-full sm:text-sm rounded-md overflow-hidden border mt-1', {
-    [baseStyles]: !error,
-    [errorStyles]: !!error,
-  });
+  const styles = cn(
+    'shadow-sm block w-full sm:text-sm rounded-md overflow-hidden border mt-1',
+    {
+      [baseStyles]: !error,
+      [errorStyles]: !!error,
+    }
+  );
 
   return (
     <div className={className}>
@@ -45,7 +51,7 @@ export function MarkdownTextArea({
         <div className={styles}>
           <textarea
             id={id}
-            className="block py-3 w-full border-0 placeholder-gray-500 focus:ring-0 sm:text-sm"
+            className="block w-full border-0 py-3 placeholder-gray-500 focus:ring-0 sm:text-sm"
             {...rest}
             defaultValue={defaultValue}
             onChange={handleChangeText}
@@ -60,13 +66,22 @@ export function MarkdownTextArea({
             </div>
           </div>
         </div>
-        <div className="absolute bottom-0 inset-x-px border-t border-gray-200 px-2 py-2 flex justify-between items-center space-x-3 sm:px-3">
+        <div className="absolute inset-x-px bottom-0 flex items-center justify-between space-x-3 border-t border-gray-200 px-2 py-2 sm:px-3">
           <p className="text-xs text-gray-500">Mardown supported.</p>
           <div className="flex-shrink-0">
-            <Button type="button" variant="secondary" size="small" onClick={handleOpenPreview}>
+            <Button
+              type="button"
+              variant="secondary"
+              size="small"
+              onClick={handleOpenPreview}
+            >
               Preview
             </Button>
-            <MardownPreviewModal markdown={markdown} isOpen={isPreviewOpen} onClose={handleClosePreview} />
+            <MardownPreviewModal
+              markdown={markdown}
+              isOpen={isPreviewOpen}
+              onClose={handleClosePreview}
+            />
           </div>
         </div>
       </div>
@@ -84,25 +99,41 @@ export function MarkdownTextArea({
   );
 }
 
-type MardownPreviewModalProps = { markdown?: string | null; isOpen: boolean; onClose: () => void };
+type MardownPreviewModalProps = {
+  markdown?: string | null;
+  isOpen: boolean;
+  onClose: () => void;
+};
 
-function MardownPreviewModal({ markdown, isOpen, onClose }: MardownPreviewModalProps) {
+function MardownPreviewModal({
+  markdown,
+  isOpen,
+  onClose,
+}: MardownPreviewModalProps) {
   return (
-    <Dialog className="fixed z-10 inset-0 overflow-y-auto" open={isOpen} onClose={onClose}>
-      <div className="block p-0 min-h-screen pt-4 px-4 pb-20 text-center">
+    <Dialog
+      className="fixed inset-0 z-10 overflow-y-auto"
+      open={isOpen}
+      onClose={onClose}
+    >
+      <div className="block min-h-screen p-0 px-4 pt-4 pb-20 text-center">
         <Dialog.Overlay className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
-        <div className="hidden sm:block absolute top-0 right-0 pt-4 pr-4">
+        <div className="absolute top-0 right-0 hidden pt-4 pr-4 sm:block">
           <button
             type="button"
-            className="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
             onClick={onClose}
           >
             <span className="sr-only">Close</span>
             <XIcon className="h-6 w-6" aria-hidden="true" />
           </button>
         </div>
-        <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left shadow-xl transform sm:my-8 sm:align-middle w-full md:max-w-5xl sm:p-6">
-          {markdown ? <Markdown source={markdown} /> : <p>Nothing to preview.</p>}
+        <div className="inline-block w-full transform rounded-lg bg-white px-4 pt-5 pb-4 text-left align-bottom shadow-xl sm:my-8 sm:p-6 sm:align-middle md:max-w-5xl">
+          {markdown ? (
+            <Markdown source={markdown} />
+          ) : (
+            <p>Nothing to preview.</p>
+          )}
         </div>
       </div>
     </Dialog>

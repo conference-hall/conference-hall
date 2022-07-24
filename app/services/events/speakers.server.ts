@@ -1,5 +1,5 @@
 import { db } from '../db';
-import {  ProposalNotFoundError } from '../errors';
+import { ProposalNotFoundError } from '../errors';
 import { buildInvitationLink } from '../invitations/invitations.server';
 
 export interface ProposalSpeakers {
@@ -21,10 +21,23 @@ export interface ProposalSpeakers {
  * @param uid Id of the connected user
  * @returns SpeakerTalk
  */
-export async function getProposalSpeakers(talkId: string, eventSlug: string, uid: string): Promise<ProposalSpeakers> {
+export async function getProposalSpeakers(
+  talkId: string,
+  eventSlug: string,
+  uid: string
+): Promise<ProposalSpeakers> {
   const proposal = await db.proposal.findFirst({
-    select: { id: true, speakers: true, talk: { select: { creatorId: true } }, invitation: true },
-    where: { talkId, event: { slug: eventSlug }, speakers: { some: { id: uid } } },
+    select: {
+      id: true,
+      speakers: true,
+      talk: { select: { creatorId: true } },
+      invitation: true,
+    },
+    where: {
+      talkId,
+      event: { slug: eventSlug },
+      speakers: { some: { id: uid } },
+    },
   });
   if (!proposal) throw new ProposalNotFoundError();
 

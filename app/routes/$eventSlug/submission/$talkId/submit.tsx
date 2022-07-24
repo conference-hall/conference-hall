@@ -4,10 +4,20 @@ import { Button } from '~/components-ui/Buttons';
 import { Checkbox } from '~/components-ui/forms/Checkboxes';
 import { ExternalLink } from '../../../../components-ui/Links';
 import { H1, Text } from '../../../../components-ui/Typography';
-import { ActionFunction, json, LoaderFunction, redirect } from '@remix-run/node';
+import {
+  ActionFunction,
+  json,
+  LoaderFunction,
+  redirect,
+} from '@remix-run/node';
 import { requireUserSession } from '../../../../services/auth/auth.server';
 import { getEvent } from '../../../../services/events/event.server';
-import { getProposalInfo, ProposalInfo, submitProposal, validateSubmission } from '../../../../services/events/submit.server';
+import {
+  getProposalInfo,
+  ProposalInfo,
+  submitProposal,
+  validateSubmission,
+} from '../../../../services/events/submit.server';
 import { mapErrorToResponse } from '../../../../services/errors';
 import { Input } from '../../../../components-ui/forms/Input';
 import { TextArea } from '../../../../components-ui/forms/TextArea';
@@ -36,7 +46,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   const uid = await requireUserSession(request);
   const eventSlug = params.eventSlug!;
   const talkId = params.talkId!;
-  const form = await request.formData()
+  const form = await request.formData();
   const data = validateSubmission(form);
   try {
     await submitProposal(talkId, eventSlug, uid, data);
@@ -52,10 +62,10 @@ export default function SubmissionSubmitRoute() {
 
   return (
     <Form method="post">
-      <div className="w-full flex flex-col items-center py-20">
+      <div className="flex w-full flex-col items-center py-20">
         <H1>{data.title}</H1>
 
-        <div className="mt-2 overflow-hidden -space-x-1">
+        <div className="mt-2 -space-x-1 overflow-hidden">
           {data.speakers.map((speaker) => (
             <img
               key={speaker.name}
@@ -64,7 +74,9 @@ export default function SubmissionSubmitRoute() {
               alt={speaker.name || 'Speaker'}
             />
           ))}
-          <span className="pl-3 text-sm test-gray-500 truncate">by {data.speakers.map((s) => s.name).join(', ')}</span>
+          <span className="test-gray-500 truncate pl-3 text-sm">
+            by {data.speakers.map((s) => s.name).join(', ')}
+          </span>
         </div>
 
         <Text variant="secondary" className="mt-8">
@@ -78,7 +90,7 @@ export default function SubmissionSubmitRoute() {
           id="message"
           name="message"
           label="Message to organizers"
-          className="block mt-16 w-1/3 "
+          className="mt-16 block w-1/3 "
           rows={4}
         />
 

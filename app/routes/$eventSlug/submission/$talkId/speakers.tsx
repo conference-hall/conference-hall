@@ -1,17 +1,31 @@
-import { ActionFunction, json, LoaderFunction, redirect } from '@remix-run/node';
+import {
+  ActionFunction,
+  json,
+  LoaderFunction,
+  redirect,
+} from '@remix-run/node';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import { Button, ButtonLink } from '~/components-ui/Buttons';
-import { InviteCoSpeakerButton, CoSpeakersList } from '../../../../components-app/CoSpeaker';
+import {
+  InviteCoSpeakerButton,
+  CoSpeakersList,
+} from '../../../../components-app/CoSpeaker';
 import { useSubmissionStep } from '../../../../components-app/useSubmissionStep';
 import { MarkdownTextArea } from '../../../../components-ui/forms/MarkdownTextArea';
 import { ExternalLink } from '../../../../components-ui/Links';
 import { H2, Text } from '../../../../components-ui/Typography';
-import { requireAuthUser, requireUserSession } from '../../../../services/auth/auth.server';
+import {
+  requireAuthUser,
+  requireUserSession,
+} from '../../../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../../../services/errors';
 import { getEvent } from '../../../../services/events/event.server';
 import { removeCoSpeakerFromProposal } from '../../../../services/events/proposals.server';
 import { getProposalSpeakers } from '../../../../services/events/speakers.server';
-import { updateSettings, validateProfileData } from '../../../../services/speakers/settings.server';
+import {
+  updateSettings,
+  validateProfileData,
+} from '../../../../services/speakers/settings.server';
 import { ValidationErrors } from '../../../../utils/validation-errors';
 
 type SubmissionSpeakers = {
@@ -19,14 +33,14 @@ type SubmissionSpeakers = {
   invitationLink?: string;
   currentSpeaker: {
     bio: string | null;
-  }
+  };
   speakers: Array<{
     id: string;
     name: string | null;
     photoURL: string | null;
     isOwner: boolean;
   }>;
-}
+};
 
 export const handle = { step: 'speakers' };
 
@@ -40,7 +54,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       proposalId: proposal.id,
       invitationLink: proposal.invitationLink,
       currentSpeaker: { bio: user.bio },
-      speakers: proposal.speakers.filter(speaker => speaker.id !== user.id),
+      speakers: proposal.speakers.filter((speaker) => speaker.id !== user.id),
     });
   } catch (err) {
     mapErrorToResponse(err);
@@ -66,7 +80,7 @@ export const action: ActionFunction = async ({ request, params }) => {
       return null;
     } else {
       await updateSettings(uid, result.data);
-      const event = await getEvent(eventSlug)
+      const event = await getEvent(eventSlug);
       if (event.hasTracks) {
         return redirect(`/${eventSlug}/submission/${talkId}/tracks`);
       } else if (event.hasSurvey) {
@@ -75,7 +89,7 @@ export const action: ActionFunction = async ({ request, params }) => {
         return redirect(`/${eventSlug}/submission/${talkId}/submit`);
       }
     }
-  } catch(err) {
+  } catch (err) {
     mapErrorToResponse(err);
   }
 };
@@ -93,7 +107,8 @@ export default function SubmissionSpeakerRoute() {
           <div>
             <H2>Speaker details</H2>
             <Text variant="secondary" className="mt-1">
-              Give more information about you, these information will be visible by organizers when you submit a talk.
+              Give more information about you, these information will be visible
+              by organizers when you submit a talk.
             </Text>
           </div>
           <MarkdownTextArea
@@ -106,16 +121,28 @@ export default function SubmissionSpeakerRoute() {
             className="mt-6"
           />
           <Text className="mt-2">
-            You can give more information about you from <ExternalLink href="/speaker/settings">the settings page.</ExternalLink>
+            You can give more information about you from{' '}
+            <ExternalLink href="/speaker/settings">
+              the settings page.
+            </ExternalLink>
           </Text>
         </Form>
         <div className="mt-12">
           <H2>Co-speakers</H2>
           <Text variant="secondary" className="mt-1">
-            This information will be displayed publicly so be careful what you share.
+            This information will be displayed publicly so be careful what you
+            share.
           </Text>
-          <CoSpeakersList speakers={data.speakers} showRemoveAction className="py-4 max-w-md" />
-          <InviteCoSpeakerButton to='PROPOSAL' id={data.proposalId} invitationLink={data.invitationLink} />
+          <CoSpeakersList
+            speakers={data.speakers}
+            showRemoveAction
+            className="max-w-md py-4"
+          />
+          <InviteCoSpeakerButton
+            to="PROPOSAL"
+            id={data.proposalId}
+            invitationLink={data.invitationLink}
+          />
         </div>
       </div>
       <div className="px-4 py-5 text-right sm:px-6">

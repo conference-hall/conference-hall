@@ -7,7 +7,14 @@ import { useSubmissionStep } from '../../../../components-app/useSubmissionStep'
 import { H2, Text } from '../../../../components-ui/Typography';
 import { requireUserSession } from '../../../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../../../services/errors';
-import { getSurveyAnswers, getSurveyQuestions, saveSurvey, SurveyAnswers, SurveyQuestions, validateSurveyForm } from '../../../../services/events/survey.server';
+import {
+  getSurveyAnswers,
+  getSurveyQuestions,
+  saveSurvey,
+  SurveyAnswers,
+  SurveyQuestions,
+  validateSurveyForm,
+} from '../../../../services/events/survey.server';
 
 type SurveyQuestionsForm = {
   questions: SurveyQuestions;
@@ -53,7 +60,8 @@ export default function SubmissionSurveyRoute() {
         <div>
           <H2>We have some questions for you.</H2>
           <Text variant="secondary" className="mt-1">
-            This information will be displayed publicly so be careful what you share.
+            This information will be displayed publicly so be careful what you
+            share.
           </Text>
         </div>
         <div className="mt-6">

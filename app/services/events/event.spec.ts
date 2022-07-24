@@ -14,7 +14,9 @@ describe('#getEvent', () => {
   });
 
   it('returns the default response', async () => {
-    const event = await eventFactory({ traits: ['conference-cfp-open', 'withSurvey'] });
+    const event = await eventFactory({
+      traits: ['conference-cfp-open', 'withSurvey'],
+    });
     const format = await eventFormatFactory({ event });
     const category = await eventCategoryFactory({ event });
 
@@ -40,8 +42,16 @@ describe('#getEvent', () => {
       surveyEnabled: true, // TODO not necessary? hasSurvey: true
       hasSurvey: true,
       hasTracks: true,
-      formats: [{ id: format.id, name: format.name, description: format.description }],
-      categories: [{ id: category.id, name: category.name, description: category.description }],
+      formats: [
+        { id: format.id, name: format.name, description: format.description },
+      ],
+      categories: [
+        {
+          id: category.id,
+          name: category.name,
+          description: category.description,
+        },
+      ],
     });
   });
 

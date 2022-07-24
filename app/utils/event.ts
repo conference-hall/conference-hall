@@ -1,52 +1,60 @@
-import differenceInCalendarDays from 'date-fns/differenceInCalendarDays'
-import isSameDay from 'date-fns/isSameDay'
-import format from 'date-fns/format'
+import differenceInCalendarDays from 'date-fns/differenceInCalendarDays';
+import isSameDay from 'date-fns/isSameDay';
+import format from 'date-fns/format';
 
-export type CfpState = 'CLOSED' | 'OPENED' | 'FINISHED'
+export type CfpState = 'CLOSED' | 'OPENED' | 'FINISHED';
 
 function isConferenceOpened(start?: Date | null, end?: Date | null) {
-  if (!start || !end) return false
-  const today = new Date()
-  return today >= start && today <= end
+  if (!start || !end) return false;
+  const today = new Date();
+  return today >= start && today <= end;
 }
 
 function isConferenceFinished(end?: Date | null) {
-  if (!end) return false
-  const today = new Date()
-  return today > end
+  if (!end) return false;
+  const today = new Date();
+  return today > end;
 }
 
 function isMeetupOpened(start?: Date | null) {
-  if (!start) return false
-  const today = new Date()
-  return today >= start
+  if (!start) return false;
+  const today = new Date();
+  return today >= start;
 }
 
-export function getCfpState(type: string, start?: Date | null, end?: Date | null) : CfpState {
+export function getCfpState(
+  type: string,
+  start?: Date | null,
+  end?: Date | null
+): CfpState {
   if (type === 'MEETUP') {
-    if (isMeetupOpened(start)) return 'OPENED'
+    if (isMeetupOpened(start)) return 'OPENED';
   }
   if (type === 'CONFERENCE') {
-    if (isConferenceOpened(start, end)) return 'OPENED'
-    if (isConferenceFinished(end)) return 'FINISHED'
+    if (isConferenceOpened(start, end)) return 'OPENED';
+    if (isConferenceFinished(end)) return 'FINISHED';
   }
-  return 'CLOSED'
+  return 'CLOSED';
 }
 
 export function formatEventType(type: 'CONFERENCE' | 'MEETUP') {
   switch (type) {
     case 'CONFERENCE':
-      return 'Conference'
+      return 'Conference';
     case 'MEETUP':
-      return 'Meetup'
+      return 'Meetup';
   }
 }
 
-export function formatConferenceDates(type: 'CONFERENCE' | 'MEETUP', start?: string, end?: string) {
+export function formatConferenceDates(
+  type: 'CONFERENCE' | 'MEETUP',
+  start?: string,
+  end?: string
+) {
   if (!start || !end) return formatEventType(type);
   const startDate = new Date(start);
   const endDate = new Date(end);
-  
+
   if (isSameDay(startDate, endDate)) {
     return `1 day conference - ${format(startDate, 'PPP')}`;
   }

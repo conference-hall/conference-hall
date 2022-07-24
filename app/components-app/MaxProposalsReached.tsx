@@ -4,7 +4,7 @@ type Props = { maxProposals: number };
 
 export function MaxProposalsReached({ maxProposals }: Props) {
   return (
-    <div className="text-center py-8">
+    <div className="py-8 text-center">
       <svg
         className="mx-auto h-12 w-12 text-gray-400"
         fill="none"

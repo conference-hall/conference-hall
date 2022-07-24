@@ -24,13 +24,18 @@ export function SubmissionTalksList({ talks }: Props) {
   return (
     <ul role="list" className="grid grid-cols-1 gap-6 sm:grid-cols-2">
       {talks.map((talk) => (
-        <li key={talk.id} className="col-span-1 bg-white rounded-lg border border-gray-200">
-          <Link to={talk.id} className="block hover:bg-indigo-50 rounded-lg">
-            <div className="px-4 py-4 sm:px-6 h-40 flex flex-col justify-between">
+        <li
+          key={talk.id}
+          className="col-span-1 rounded-lg border border-gray-200 bg-white"
+        >
+          <Link to={talk.id} className="block rounded-lg hover:bg-indigo-50">
+            <div className="flex h-40 flex-col justify-between px-4 py-4 sm:px-6">
               <div>
-                <p className="text-base font-semibold text-indigo-600 truncate">{talk.title}</p>
+                <p className="truncate text-base font-semibold text-indigo-600">
+                  {talk.title}
+                </p>
 
-                <div className="mt-2 flex items-center overflow-hidden -space-x-1">
+                <div className="mt-2 flex items-center -space-x-1 overflow-hidden">
                   {talk.speakers.map((speaker) => (
                     <img
                       key={speaker.id}
@@ -39,7 +44,7 @@ export function SubmissionTalksList({ talks }: Props) {
                       alt={speaker.name || 'Speaker'}
                     />
                   ))}
-                  <span className="pl-3 text-sm test-gray-500 truncate">
+                  <span className="test-gray-500 truncate pl-3 text-sm">
                     by {talk.speakers.map((s) => s.name).join(', ')}
                   </span>
                 </div>
@@ -47,7 +52,10 @@ export function SubmissionTalksList({ talks }: Props) {
 
               <div>
                 {talk.isDraft ? (
-                  <IconLabel icon={ExclamationIcon} className="text-sm text-yellow-600">
+                  <IconLabel
+                    icon={ExclamationIcon}
+                    className="text-sm text-yellow-600"
+                  >
                     Draft proposal, don't forget to submit it.
                   </IconLabel>
                 ) : null}
@@ -62,7 +70,7 @@ export function SubmissionTalksList({ talks }: Props) {
 
 function EmptyState() {
   return (
-    <div className="text-center py-8">
+    <div className="py-8 text-center">
       <svg
         className="mx-auto h-12 w-12 text-gray-400"
         fill="none"
@@ -78,8 +86,12 @@ function EmptyState() {
           d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"
         />
       </svg>
-      <h3 className="mt-2 text-sm font-medium text-gray-900">Nothing to submit!</h3>
-      <p className="mt-1 text-sm text-gray-600">Get started by creating a new proposal.</p>
+      <h3 className="mt-2 text-sm font-medium text-gray-900">
+        Nothing to submit!
+      </h3>
+      <p className="mt-1 text-sm text-gray-600">
+        Get started by creating a new proposal.
+      </p>
       <div className="mt-12">
         <ButtonLink to="new">Create a new proposal</ButtonLink>
       </div>

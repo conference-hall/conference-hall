@@ -18,14 +18,18 @@ export type TalksToSubmit = Array<{
   speakers: Array<{ id: string; name: string | null; photoURL: string | null }>;
 }>;
 
-export async function fetchTalksToSubmitForEvent(uid: string, slug: string): Promise<TalksToSubmit> {
+export async function fetchTalksToSubmitForEvent(
+  uid: string,
+  slug: string
+): Promise<TalksToSubmit> {
   const event = await db.event.findUnique({
     select: { id: true, type: true, cfpStart: true, cfpEnd: true },
     where: { slug },
   });
   if (!event) throw new EventNotFoundError();
 
-  const isCfpOpen = getCfpState(event.type, event.cfpStart, event.cfpEnd) === 'OPENED';
+  const isCfpOpen =
+    getCfpState(event.type, event.cfpStart, event.cfpEnd) === 'OPENED';
   if (!isCfpOpen) throw new CfpNotOpenError();
 
   const talks = await db.talk.findMany({
@@ -53,7 +57,11 @@ export async function fetchTalksToSubmitForEvent(uid: string, slug: string): Pro
     id: talk.id,
     title: talk.title,
     isDraft: talk.proposals.length > 0,
-    speakers: talk.speakers.map((speaker) => ({ id: speaker.id, name: speaker.name, photoURL: speaker.photoURL })),
+    speakers: talk.speakers.map((speaker) => ({
+      id: speaker.id,
+      name: speaker.name,
+      photoURL: speaker.photoURL,
+    })),
   }));
 }
 
@@ -62,7 +70,10 @@ export type ProposalCountsForEvent = {
   submitted: number;
 };
 
-export async function getProposalCountsForEvent(uid: string, slug: string): Promise<ProposalCountsForEvent> {
+export async function getProposalCountsForEvent(
+  uid: string,
+  slug: string
+): Promise<ProposalCountsForEvent> {
   const event = await db.event.findUnique({
     select: { id: true, maxProposals: true },
     where: { slug },
@@ -85,13 +96,23 @@ export async function getProposalCountsForEvent(uid: string, slug: string): Prom
 
 export type ProposalSaved = { talkId: string };
 
-export async function saveDraftProposalForEvent(talkId: string, eventSlug: string, uid: string, data: ProposalData) {
+export async function saveDraftProposalForEvent(
+  talkId: string,
+  eventSlug: string,
+  uid: string,
+  data: ProposalData
+) {
   if (talkId !== 'new') {
-    const talk = await db.talk.findFirst({ where: { id: talkId, speakers: { some: { id: uid } } } });
+    const talk = await db.talk.findFirst({
+      where: { id: talkId, speakers: { some: { id: uid } } },
+    });
     if (!talk) throw new TalkNotFoundError();
   }
 
-  const event = await db.event.findUnique({ select: { id: true }, where: { slug: eventSlug } });
+  const event = await db.event.findUnique({
+    select: { id: true },
+    where: { slug: eventSlug },
+  });
   if (!event) throw new EventNotFoundError();
 
   const talk = await db.talk.upsert({
@@ -106,7 +127,7 @@ export async function saveDraftProposalForEvent(talkId: string, eventSlug: strin
   });
 
   const speakers = talk.speakers.map((speaker) => ({ id: speaker.id }));
-  
+
   await db.proposal.upsert({
     where: { talkId_eventId: { talkId: talk.id, eventId: event.id } },
     update: {
@@ -160,7 +181,11 @@ export type ProposalInfo = {
   categories: string[];
 };
 
-export async function getProposalInfo(talkId: string, eventId: string, uid: string): Promise<ProposalInfo> {
+export async function getProposalInfo(
+  talkId: string,
+  eventId: string,
+  uid: string
+): Promise<ProposalInfo> {
   const proposal = await db.proposal.findFirst({
     select: { title: true, formats: true, categories: true, speakers: true },
     where: { talkId, eventId, speakers: { some: { id: uid } } },
@@ -169,20 +194,35 @@ export async function getProposalInfo(talkId: string, eventId: string, uid: stri
 
   return {
     title: proposal.title,
-    speakers: proposal.speakers.map((s) => ({ name: s.name, photoURL: s.photoURL })),
+    speakers: proposal.speakers.map((s) => ({
+      name: s.name,
+      photoURL: s.photoURL,
+    })),
     formats: proposal.formats.map((f) => f.name),
     categories: proposal.categories.map((c) => c.name),
   };
 }
 
-export async function submitProposal(talkId: string, eventSlug: string, uid: string, data: SubmissionData) {
+export async function submitProposal(
+  talkId: string,
+  eventSlug: string,
+  uid: string,
+  data: SubmissionData
+) {
   const event = await db.event.findUnique({
-    select: { id: true, type: true, cfpStart: true, cfpEnd: true, maxProposals: true },
+    select: {
+      id: true,
+      type: true,
+      cfpStart: true,
+      cfpEnd: true,
+      maxProposals: true,
+    },
     where: { slug: eventSlug },
   });
   if (!event) throw new EventNotFoundError();
 
-  const isCfpOpen = getCfpState(event.type, event.cfpStart, event.cfpEnd) === 'OPENED';
+  const isCfpOpen =
+    getCfpState(event.type, event.cfpStart, event.cfpEnd) === 'OPENED';
   if (!isCfpOpen) throw new CfpNotOpenError();
 
   if (event.maxProposals) {
@@ -220,5 +260,5 @@ export function validateSubmission(form: FormData) {
   const result = SubmissionSchema.safeParse({
     message: form.get('message'),
   });
-  return result.success ? result.data : {}
+  return result.success ? result.data : {};
 }

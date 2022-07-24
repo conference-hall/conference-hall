@@ -6,29 +6,37 @@ import { useFirebaseSignIn } from '../services/auth/useFirebaseSignIn';
 import { createUserSession, getAuthUser } from '../services/auth/auth.server';
 
 export const action: ActionFunction = async ({ request }) => {
-  return createUserSession(request)
+  return createUserSession(request);
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const user = await getAuthUser(request)
-  if (user) return redirect('/')
-  return null
-}
+  const user = await getAuthUser(request);
+  if (user) return redirect('/');
+  return null;
+};
 
 export default function Login() {
-  const submit = useSubmit()
-  const [isSigning, signin] = useFirebaseSignIn(submit)
+  const submit = useSubmit();
+  const [isSigning, signin] = useFirebaseSignIn(submit);
 
-  if (isSigning) return null
-  
+  if (isSigning) return null;
+
   return (
-    <div className="flex flex-col items-center justify-center h-[calc(100vh-64px)] pb-64 max-w-3xl mx-auto">
-      <h1 className="text-6xl text-center font-black">Log in to Conference Hall</h1>
-      <div className="mt-12 p-8 space-y-4 max-w-sm">
-        <Button type="button" block onClick={signin}>Continue with Google</Button>
-        <Button type="button" block onClick={signin}>Continue with GitHub</Button>
-        <Button type="button" block onClick={signin}>Continue with Twitter</Button>
+    <div className="mx-auto flex h-[calc(100vh-64px)] max-w-3xl flex-col items-center justify-center pb-64">
+      <h1 className="text-center text-6xl font-black">
+        Log in to Conference Hall
+      </h1>
+      <div className="mt-12 max-w-sm space-y-4 p-8">
+        <Button type="button" block onClick={signin}>
+          Continue with Google
+        </Button>
+        <Button type="button" block onClick={signin}>
+          Continue with GitHub
+        </Button>
+        <Button type="button" block onClick={signin}>
+          Continue with Twitter
+        </Button>
       </div>
     </div>
-  )
+  );
 }

@@ -20,7 +20,10 @@ export type SearchEvents = {
 
 const RESULTS_BY_PAGE = 12;
 
-export async function searchEvents(filters: SearchFilters, page: SearchPage = 1): Promise<SearchEvents> {
+export async function searchEvents(
+  filters: SearchFilters,
+  page: SearchPage = 1
+): Promise<SearchEvents> {
   const { terms, type, cfp } = filters;
 
   const eventsWhereInput: Prisma.EventWhereInput = {
@@ -33,10 +36,17 @@ export async function searchEvents(filters: SearchFilters, page: SearchPage = 1)
   const eventsCount = await db.event.count({ where: eventsWhereInput });
   const total = Math.ceil(eventsCount / RESULTS_BY_PAGE);
 
-  const pageIndex = computePageIndex(page, total)
+  const pageIndex = computePageIndex(page, total);
 
   const events = await db.event.findMany({
-    select: { slug: true, name: true, type: true, address: true, cfpStart: true, cfpEnd: true },
+    select: {
+      slug: true,
+      name: true,
+      type: true,
+      address: true,
+      cfpStart: true,
+      cfpEnd: true,
+    },
     where: eventsWhereInput,
     orderBy: [{ cfpStart: 'desc' }, { name: 'asc' }],
     skip: pageIndex * RESULTS_BY_PAGE,
@@ -65,7 +75,10 @@ function computePageIndex(current: number, total: number) {
 
 function mapFiltersQuery(type?: string, cfp?: string): Prisma.EventWhereInput {
   const PAST_CFP = { cfpEnd: { lt: new Date() } };
-  const INCOMING_CFP = { cfpStart: { not: null }, OR: [{ cfpEnd: null }, { cfpEnd: { gt: new Date() } }] };
+  const INCOMING_CFP = {
+    cfpStart: { not: null },
+    OR: [{ cfpEnd: null }, { cfpEnd: { gt: new Date() } }],
+  };
   const cfpFilter = cfp === 'past' ? PAST_CFP : INCOMING_CFP;
 
   switch (type) {
@@ -84,7 +97,9 @@ const SearchFiltersSchema = z.preprocess(
   (filters: any) => ({
     ...filters,
     terms: filters.terms?.trim(),
-    type: ['all', 'conference', 'meetup'].includes(filters.type) ? filters.type : undefined,
+    type: ['all', 'conference', 'meetup'].includes(filters.type)
+      ? filters.type
+      : undefined,
     cfp: ['incoming', 'past'].includes(filters.cfp) ? filters.cfp : undefined,
   }),
   z.object({
@@ -107,7 +122,10 @@ export function validateFilters(params: URLSearchParams) {
 
 export type SearchPage = z.infer<typeof SearchPageSchema>;
 
-const SearchPageSchema = z.preprocess((a) => parseInt(a as string, 10), z.number().positive().optional());
+const SearchPageSchema = z.preprocess(
+  (a) => parseInt(a as string, 10),
+  z.number().positive().optional()
+);
 
 export function validatePage(params: URLSearchParams) {
   const result = SearchPageSchema.safeParse(params.get('page'));

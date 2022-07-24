@@ -24,29 +24,55 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   try {
     const event = await getEvent(slug);
-    if (!event.isCfpOpen) throw new Response('CFP is not opened!', { status: 403 });
+    if (!event.isCfpOpen)
+      throw new Response('CFP is not opened!', { status: 403 });
 
-    const isAlreadySubmitted = await isTalkAlreadySubmitted(slug, talkId, uid)
-    if (isAlreadySubmitted) throw new Response('Talk proposal already submitted.', { status: 400 })
+    const isAlreadySubmitted = await isTalkAlreadySubmitted(slug, talkId, uid);
+    if (isAlreadySubmitted)
+      throw new Response('Talk proposal already submitted.', { status: 400 });
 
     const steps = [
-      { key: 'proposal', name: 'Proposal', path: `/${slug}/submission/${talkId}`, enabled: true },
-      { key: 'speakers', name: 'Speakers', path: `/${slug}/submission/${talkId}/speakers`, enabled: true },
-      { key: 'tracks', name: 'Tracks', path: `/${slug}/submission/${talkId}/tracks`, enabled: event.hasTracks },
-      { key: 'survey', name: 'Survey', path: `/${slug}/submission/${talkId}/survey`, enabled: event.hasSurvey },
-      { key: 'submission', name: 'Submission', path: `/${slug}/submission/${talkId}/submit`, enabled: true },
+      {
+        key: 'proposal',
+        name: 'Proposal',
+        path: `/${slug}/submission/${talkId}`,
+        enabled: true,
+      },
+      {
+        key: 'speakers',
+        name: 'Speakers',
+        path: `/${slug}/submission/${talkId}/speakers`,
+        enabled: true,
+      },
+      {
+        key: 'tracks',
+        name: 'Tracks',
+        path: `/${slug}/submission/${talkId}/tracks`,
+        enabled: event.hasTracks,
+      },
+      {
+        key: 'survey',
+        name: 'Survey',
+        path: `/${slug}/submission/${talkId}/survey`,
+        enabled: event.hasSurvey,
+      },
+      {
+        key: 'submission',
+        name: 'Submission',
+        path: `/${slug}/submission/${talkId}/submit`,
+        enabled: true,
+      },
     ];
     return json<SubmitSteps>(steps.filter((step) => step.enabled));
-  } catch(err) {
+  } catch (err) {
     mapErrorToResponse(err);
   }
-}
-
+};
 
 export default function EventSubmitRoute() {
-  const steps = useLoaderData<SubmitSteps>()
+  const steps = useLoaderData<SubmitSteps>();
   const matches = useMatches();
-  const currentStep = matches[matches.length - 1].handle?.step
+  const currentStep = matches[matches.length - 1].handle?.step;
 
   return (
     <Container className="my-8 grid grid-cols-1 items-start sm:gap-8">
@@ -67,5 +93,3 @@ export function CatchBoundary() {
     </Container>
   );
 }
-
-

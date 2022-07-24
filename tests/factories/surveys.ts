@@ -16,7 +16,10 @@ export const surveyFactory = (options: FactoryOptions) => {
     event: { connect: { id: event.id } },
   };
 
-  const data = { ...defaultAttributes, ...attributes } as Prisma.SurveyCreateInput;
+  const data = {
+    ...defaultAttributes,
+    ...attributes,
+  } as Prisma.SurveyCreateInput;
 
   return db.survey.create({ data });
 };

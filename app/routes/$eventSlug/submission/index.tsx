@@ -15,7 +15,10 @@ import {
 import { mapErrorToResponse } from '../../../services/errors';
 import { SubmissionTalksList } from '../../../components-app/SubmissionTalksList';
 
-type SelectionStep = { talks: TalksToSubmit; proposalsCount: ProposalCountsForEvent };
+type SelectionStep = {
+  talks: TalksToSubmit;
+  proposalsCount: ProposalCountsForEvent;
+};
 
 export const handle = { step: 'selection' };
 
@@ -46,7 +49,7 @@ export default function EventSubmitRoute() {
 
   return (
     <Container className="my-8 space-y-8">
-      <div className="flex justify-between items-center flex-wrap sm:flex-nowrap">
+      <div className="flex flex-wrap items-center justify-between sm:flex-nowrap">
         <div>
           <H2>Proposal selection</H2>
           <Text variant="secondary" className="mt-1">
@@ -62,8 +65,11 @@ export default function EventSubmitRoute() {
 
       {Boolean(max) && (
         <AlertInfo className="my-2">
-          You can submit a maximum of <span className="font-semibold">{max} proposals.</span>{' '}
-          {submitted > 0 ? `You have already submitted ${submitted} proposals out of ${max}.` : null}
+          You can submit a maximum of{' '}
+          <span className="font-semibold">{max} proposals.</span>{' '}
+          {submitted > 0
+            ? `You have already submitted ${submitted} proposals out of ${max}.`
+            : null}
         </AlertInfo>
       )}
 

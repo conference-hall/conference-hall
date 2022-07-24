@@ -3,7 +3,12 @@ import { useLoaderData, useSearchParams } from '@remix-run/react';
 import { Container } from '../components-ui/Container';
 import { H1, Text } from '../components-ui/Typography';
 import { SearchEventsList } from '../components-app/SearchEventsList';
-import { searchEvents, SearchEvents, validateFilters, validatePage } from '../services/events/search.server';
+import {
+  searchEvents,
+  SearchEvents,
+  validateFilters,
+  validatePage,
+} from '../services/events/search.server';
 import { mapErrorToResponse } from '../services/errors';
 import { SearchEventsForm } from '../components-app/SearchEventsForm';
 import { SearchPagination } from '../components-ui/Pagination';
@@ -40,7 +45,9 @@ export default function IndexRoute() {
         ) : (
           <SearchEventsList events={results} forTalkId={talkId} />
         )}
-        {pagination.total > 1 && <SearchPagination pathname="/" {...pagination} className="mt-8" />}
+        {pagination.total > 1 && (
+          <SearchPagination pathname="/" {...pagination} className="mt-8" />
+        )}
       </Container>
     </div>
   );

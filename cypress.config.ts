@@ -12,13 +12,13 @@ export default defineConfig({
         disconnectDB,
         seedDB: async (name: string) => {
           try {
-            const file = await import(`./cypress/e2e/${name}.seed.ts`)
-            await file.seed()
+            const file = await import(`./cypress/e2e/${name}.seed.ts`);
+            await file.seed();
           } catch (err) {
-            console.error(err)
-            throw new Error('An error occurred seeding the database')
+            console.error(err);
+            throw new Error('An error occurred seeding the database');
           }
-          return 'loaded'
+          return 'loaded';
         },
       });
     },

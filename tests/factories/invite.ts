@@ -7,4 +7,4 @@ type FactoryOptions = {
 
 export const inviteFactory = (options: FactoryOptions) => {
   return db.invite.create({ data: options.attributes });
-}
+};

@@ -21,8 +21,12 @@ import {
 } from './talks.server';
 
 describe('#findTalks', () => {
-  beforeEach(async () => { await resetDB() });
-  afterAll(async () => { await disconnectDB() });
+  beforeEach(async () => {
+    await resetDB();
+  });
+  afterAll(async () => {
+    await disconnectDB();
+  });
 
   it('returns speaker talks list', async () => {
     const speaker = await userFactory();
@@ -40,7 +44,9 @@ describe('#findTalks', () => {
         title: talk.title,
         archived: false,
         createdAt: talk.createdAt.toISOString(),
-        speakers: [{ id: speaker.id, name: speaker.name, photoURL: speaker.photoURL }],
+        speakers: [
+          { id: speaker.id, name: speaker.name, photoURL: speaker.photoURL },
+        ],
       },
     ]);
   });
@@ -64,7 +70,10 @@ describe('#findTalks', () => {
   it('returns archived talks when archived option is set', async () => {
     const speaker = await userFactory();
     await talkFactory({ speakers: [speaker] });
-    const talk = await talkFactory({ speakers: [speaker], attributes: { archived: true } });
+    const talk = await talkFactory({
+      speakers: [speaker],
+      attributes: { archived: true },
+    });
 
     const result = await findTalks(speaker.id, { archived: true });
 
@@ -74,8 +83,12 @@ describe('#findTalks', () => {
 });
 
 describe('#getTalk', () => {
-  beforeEach(async () => { await resetDB() });
-  afterAll(async () => { await disconnectDB() });
+  beforeEach(async () => {
+    await resetDB();
+  });
+  afterAll(async () => {
+    await disconnectDB();
+  });
 
   it('returns speaker talk', async () => {
     const speaker = await userFactory();
@@ -94,7 +107,13 @@ describe('#getTalk', () => {
       createdAt: talk.createdAt.toISOString(),
       isOwner: true,
       speakers: [
-        { id: speaker.id, name: speaker.name, photoURL: speaker.photoURL, isOwner: true, isCurrentUser: true },
+        {
+          id: speaker.id,
+          name: speaker.name,
+          photoURL: speaker.photoURL,
+          isOwner: true,
+          isCurrentUser: true,
+        },
       ],
       proposals: [],
     });
@@ -111,8 +130,20 @@ describe('#getTalk', () => {
     expect(result.id).toBe(talk.id);
     expect(result.isOwner).toBe(false);
     expect(result.speakers).toEqual([
-      { id: owner.id, name: owner.name, photoURL: owner.photoURL, isOwner: true, isCurrentUser: false },
-      { id: cospeaker.id, name: cospeaker.name, photoURL: cospeaker.photoURL, isOwner: false, isCurrentUser: true },
+      {
+        id: owner.id,
+        name: owner.name,
+        photoURL: owner.photoURL,
+        isOwner: true,
+        isCurrentUser: false,
+      },
+      {
+        id: cospeaker.id,
+        name: cospeaker.name,
+        photoURL: cospeaker.photoURL,
+        isOwner: false,
+        isCurrentUser: true,
+      },
     ]);
   });
 
@@ -129,7 +160,9 @@ describe('#getTalk', () => {
     const result = await getTalk(speaker.id, talk.id);
 
     expect(result.id).toBe(talk.id);
-    expect(result.invitationLink).toBe(`http://localhost:3000/invitation/${invite.id}`);
+    expect(result.invitationLink).toBe(
+      `http://localhost:3000/invitation/${invite.id}`
+    );
   });
 
   it('returns proposals when talk submitted', async () => {
@@ -152,13 +185,19 @@ describe('#getTalk', () => {
 
   it('throws an error when talk not found', async () => {
     const speaker = await userFactory();
-    await expect(getTalk(speaker.id, 'XXX')).rejects.toThrowError(TalkNotFoundError);
+    await expect(getTalk(speaker.id, 'XXX')).rejects.toThrowError(
+      TalkNotFoundError
+    );
   });
 });
 
 describe('#deleteTalk', () => {
-  beforeEach(async () => { await resetDB() });
-  afterAll(async () => { await disconnectDB() });
+  beforeEach(async () => {
+    await resetDB();
+  });
+  afterAll(async () => {
+    await disconnectDB();
+  });
 
   it('deletes a speaker talk', async () => {
     const speaker = await userFactory();
@@ -173,10 +212,10 @@ describe('#deleteTalk', () => {
   it('deletes a speaker talk and talk proposals still in draft', async () => {
     const speaker = await userFactory();
     const talk = await talkFactory({ speakers: [speaker] });
-    const event1 = await eventFactory()
-    await proposalFactory({ event: event1, talk, traits: ['draft'] })
-    const event2 = await eventFactory()
-    await proposalFactory({ event: event2, talk, traits: ['submitted'] })
+    const event1 = await eventFactory();
+    await proposalFactory({ event: event1, talk, traits: ['draft'] });
+    const event2 = await eventFactory();
+    await proposalFactory({ event: event2, talk, traits: ['submitted'] });
 
     await deleteTalk(speaker.id, talk.id);
 
@@ -191,18 +230,26 @@ describe('#deleteTalk', () => {
     const otherSpeaker = await userFactory();
     const talk = await talkFactory({ speakers: [otherSpeaker] });
 
-    await expect(deleteTalk(speaker.id, talk.id)).rejects.toThrowError(TalkNotFoundError);
+    await expect(deleteTalk(speaker.id, talk.id)).rejects.toThrowError(
+      TalkNotFoundError
+    );
   });
 
   it('throws an error when talk not found', async () => {
     const speaker = await userFactory();
-    await expect(deleteTalk(speaker.id, 'XXX')).rejects.toThrowError(TalkNotFoundError);
+    await expect(deleteTalk(speaker.id, 'XXX')).rejects.toThrowError(
+      TalkNotFoundError
+    );
   });
 });
 
 describe('#createTalk', () => {
-  beforeEach(async () => { await resetDB() });
-  afterAll(async () => { await disconnectDB() });
+  beforeEach(async () => {
+    await resetDB();
+  });
+  afterAll(async () => {
+    await disconnectDB();
+  });
 
   it('creates a speaker talk', async () => {
     const speaker = await userFactory();
@@ -216,7 +263,10 @@ describe('#createTalk', () => {
       level: TalkLevel.ADVANCED,
     });
 
-    const actual = await db.talk.findUnique({ where: { id: talk.id }, include: { speakers: true } });
+    const actual = await db.talk.findUnique({
+      where: { id: talk.id },
+      include: { speakers: true },
+    });
 
     expect(talk).not.toBeNull();
     expect(actual?.title).toBe('Talk title');
@@ -228,8 +278,12 @@ describe('#createTalk', () => {
 });
 
 describe('#updateTalk', () => {
-  beforeEach(async () => { await resetDB() });
-  afterAll(async () => { await disconnectDB() });
+  beforeEach(async () => {
+    await resetDB();
+  });
+  afterAll(async () => {
+    await disconnectDB();
+  });
 
   it('updates a speaker talk', async () => {
     const speaker = await userFactory();
@@ -242,7 +296,10 @@ describe('#updateTalk', () => {
       level: TalkLevel.ADVANCED,
     });
 
-    const talk = await db.talk.findUnique({ where: { id: talkId }, include: { speakers: true } });
+    const talk = await db.talk.findUnique({
+      where: { id: talkId },
+      include: { speakers: true },
+    });
 
     expect(talk?.title).toBe('Talk title');
     expect(talk?.abstract).toBe('Talk abstract');
@@ -263,7 +320,9 @@ describe('#updateTalk', () => {
       languages: ['fr'],
       level: TalkLevel.ADVANCED,
     };
-    await expect(updateTalk(speaker.id, talk.id, updateData)).rejects.toThrowError(TalkNotFoundError);
+    await expect(
+      updateTalk(speaker.id, talk.id, updateData)
+    ).rejects.toThrowError(TalkNotFoundError);
   });
 
   it('throws an error when talk not found', async () => {
@@ -275,7 +334,9 @@ describe('#updateTalk', () => {
       languages: ['fr'],
       level: TalkLevel.ADVANCED,
     };
-    await expect(updateTalk(speaker.id, 'XXX', updateData)).rejects.toThrowError(TalkNotFoundError);
+    await expect(
+      updateTalk(speaker.id, 'XXX', updateData)
+    ).rejects.toThrowError(TalkNotFoundError);
   });
 });
 
@@ -315,8 +376,12 @@ describe('#validateTalkForm', () => {
 });
 
 describe('#inviteCoSpeakerToTalk', () => {
-  beforeEach(async () => { await resetDB() });
-  afterAll(async () => { await disconnectDB() });
+  beforeEach(async () => {
+    await resetDB();
+  });
+  afterAll(async () => {
+    await disconnectDB();
+  });
 
   it('adds a cospeaker to the talk', async () => {
     const speaker = await userFactory();
@@ -331,7 +396,10 @@ describe('#inviteCoSpeakerToTalk', () => {
 
     const { id } = await inviteCoSpeakerToTalk(invite.id, cospeaker.id);
 
-    const talk = await db.talk.findUnique({ where: { id }, include: { speakers: true } });
+    const talk = await db.talk.findUnique({
+      where: { id },
+      include: { speakers: true },
+    });
 
     const speakers = talk?.speakers.map(({ id }) => id);
     expect(speakers?.length).toBe(2);
@@ -346,18 +414,26 @@ describe('#inviteCoSpeakerToTalk', () => {
     });
     const cospeaker = await userFactory();
 
-    await expect(inviteCoSpeakerToTalk(invite.id, cospeaker.id)).rejects.toThrowError(InvitationNotFoundError);
+    await expect(
+      inviteCoSpeakerToTalk(invite.id, cospeaker.id)
+    ).rejects.toThrowError(InvitationNotFoundError);
   });
 
   it('throws an error when invitation not found', async () => {
     const speaker = await userFactory();
-    await expect(inviteCoSpeakerToTalk('XXX', speaker.id)).rejects.toThrowError(InvitationNotFoundError);
+    await expect(inviteCoSpeakerToTalk('XXX', speaker.id)).rejects.toThrowError(
+      InvitationNotFoundError
+    );
   });
 });
 
 describe('#inviteCoSpeakerToTalk', () => {
-  beforeEach(async () => { await resetDB() });
-  afterAll(async () => { await disconnectDB() });
+  beforeEach(async () => {
+    await resetDB();
+  });
+  afterAll(async () => {
+    await disconnectDB();
+  });
 
   it('adds a cospeaker to the talk', async () => {
     const speaker = await userFactory();
@@ -366,7 +442,10 @@ describe('#inviteCoSpeakerToTalk', () => {
 
     await removeCoSpeakerFromTalk(speaker.id, talk.id, cospeaker.id);
 
-    const talkUpdated = await db.talk.findUnique({ where: { id: talk.id }, include: { speakers: true } });
+    const talkUpdated = await db.talk.findUnique({
+      where: { id: talk.id },
+      include: { speakers: true },
+    });
 
     const speakers = talkUpdated?.speakers.map(({ id }) => id);
     expect(speakers?.length).toBe(1);
@@ -379,19 +458,27 @@ describe('#inviteCoSpeakerToTalk', () => {
     const talk = await talkFactory({ speakers: [speaker, cospeaker] });
 
     const updater = await userFactory();
-    await expect(removeCoSpeakerFromTalk(updater.id, talk.id, cospeaker.id)).rejects.toThrowError(TalkNotFoundError);
+    await expect(
+      removeCoSpeakerFromTalk(updater.id, talk.id, cospeaker.id)
+    ).rejects.toThrowError(TalkNotFoundError);
   });
 
   it('throws an error when talk not found', async () => {
     const speaker = await userFactory();
     const cospeaker = await userFactory();
-    await expect(removeCoSpeakerFromTalk(speaker.id, 'XXX', cospeaker.id)).rejects.toThrowError(TalkNotFoundError);
+    await expect(
+      removeCoSpeakerFromTalk(speaker.id, 'XXX', cospeaker.id)
+    ).rejects.toThrowError(TalkNotFoundError);
   });
 });
 
 describe('#archiveTalk', () => {
-  beforeEach(async () => { await resetDB() });
-  afterAll(async () => { await disconnectDB() });
+  beforeEach(async () => {
+    await resetDB();
+  });
+  afterAll(async () => {
+    await disconnectDB();
+  });
 
   it('archives a talk', async () => {
     const speaker = await userFactory();
@@ -408,22 +495,33 @@ describe('#archiveTalk', () => {
     const talk = await talkFactory({ speakers: [speaker] });
     const updater = await userFactory();
 
-    await expect(archiveTalk(updater.id, talk.id)).rejects.toThrowError(TalkNotFoundError);
+    await expect(archiveTalk(updater.id, talk.id)).rejects.toThrowError(
+      TalkNotFoundError
+    );
   });
 
   it('throws an error when talk not found', async () => {
     const speaker = await userFactory();
-    await expect(archiveTalk(speaker.id, 'XXX')).rejects.toThrowError(TalkNotFoundError);
+    await expect(archiveTalk(speaker.id, 'XXX')).rejects.toThrowError(
+      TalkNotFoundError
+    );
   });
 });
 
 describe('#restoreTalk', () => {
-  beforeEach(async () => { await resetDB() });
-  afterAll(async () => { await disconnectDB() });
-  
+  beforeEach(async () => {
+    await resetDB();
+  });
+  afterAll(async () => {
+    await disconnectDB();
+  });
+
   it('restores a archived talk', async () => {
     const speaker = await userFactory();
-    const talk = await talkFactory({ speakers: [speaker], attributes: { archived: true } });
+    const talk = await talkFactory({
+      speakers: [speaker],
+      attributes: { archived: true },
+    });
 
     await restoreTalk(speaker.id, talk.id);
 
@@ -433,14 +531,21 @@ describe('#restoreTalk', () => {
 
   it('throws an error when talk doesnt belong to the speaker', async () => {
     const speaker = await userFactory();
-    const talk = await talkFactory({ speakers: [speaker], attributes: { archived: true } });
+    const talk = await talkFactory({
+      speakers: [speaker],
+      attributes: { archived: true },
+    });
     const updater = await userFactory();
 
-    await expect(restoreTalk(updater.id, talk.id)).rejects.toThrowError(TalkNotFoundError);
+    await expect(restoreTalk(updater.id, talk.id)).rejects.toThrowError(
+      TalkNotFoundError
+    );
   });
 
   it('throws an error when talk not found', async () => {
     const speaker = await userFactory();
-    await expect(restoreTalk(speaker.id, 'XXX')).rejects.toThrowError(TalkNotFoundError);
+    await expect(restoreTalk(speaker.id, 'XXX')).rejects.toThrowError(
+      TalkNotFoundError
+    );
   });
 });

@@ -17,11 +17,17 @@ export function mapErrorToResponse(error: any) {
     throw error;
   }
   if (error instanceof NotFoundError) {
-    throw new Response(error.message, { status: 404, statusText: error.message });
-  } 
+    throw new Response(error.message, {
+      status: 404,
+      statusText: error.message,
+    });
+  }
   if (error instanceof BadRequestError) {
-    throw new Response(error.message, { status: 400, statusText: error.message });
-  } 
+    throw new Response(error.message, {
+      status: 400,
+      statusText: error.message,
+    });
+  }
   throw new Response(error.message, { status: 500, statusText: error.message });
 }
 

@@ -14,12 +14,17 @@ import { EventProposalDeleteButton } from '../../../components-app/EventProposal
 import Badge from '../../../components-ui/Badges';
 import { getLevel } from '../../../utils/levels';
 import { getLanguage } from '../../../utils/languages';
-import { CoSpeakersList, InviteCoSpeakerButton } from '../../../components-app/CoSpeaker';
+import {
+  CoSpeakersList,
+  InviteCoSpeakerButton,
+} from '../../../components-app/CoSpeaker';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const uid = await requireUserSession(request);
   const proposalId = params.id!;
-  const proposal = await getSpeakerProposal(proposalId, uid).catch(mapErrorToResponse);
+  const proposal = await getSpeakerProposal(proposalId, uid).catch(
+    mapErrorToResponse
+  );
   return json(proposal);
 };
 
@@ -29,7 +34,7 @@ export default function EventSpeakerProposalRoute() {
 
   return (
     <Container className="mt-8">
-      <div className="flex justify-between items-center flex-wrap sm:flex-nowrap">
+      <div className="flex flex-wrap items-center justify-between sm:flex-nowrap">
         <div>
           <H1>{proposal.title}</H1>
           <div className="mt-2 flex gap-2">
@@ -46,7 +51,9 @@ export default function EventSpeakerProposalRoute() {
           <div className="flex-shrink-0 space-x-4">
             <EventProposalDeleteButton />
             {proposal.status === 'DRAFT' ? (
-              <ButtonLink to={`../submission/${proposal.talkId}`}>Submit proposal</ButtonLink>
+              <ButtonLink to={`../submission/${proposal.talkId}`}>
+                Submit proposal
+              </ButtonLink>
             ) : (
               <ButtonLink to="edit">Edit proposal</ButtonLink>
             )}
@@ -62,24 +69,33 @@ export default function EventSpeakerProposalRoute() {
         </div>
       )}
 
-      <div className="flex flex-row gap-4 mt-8">
-        <div className="w-2/3 bg-white border border-gray-200 overflow-hidden sm:rounded-lg p-4">
+      <div className="mt-8 flex flex-row gap-4">
+        <div className="w-2/3 overflow-hidden border border-gray-200 bg-white p-4 sm:rounded-lg">
           <H2>Abstract</H2>
           <Markdown source={proposal.abstract} className="mt-2" />
           <H2 className="mt-8">References</H2>
           <Markdown source={proposal.references} className="mt-2" />
         </div>
         <div className="w-1/3">
-          <div className="bg-white border border-gray-200 overflow-hidden sm:rounded-lg p-4">
+          <div className="overflow-hidden border border-gray-200 bg-white p-4 sm:rounded-lg">
             <H2>Speakers</H2>
-            <CoSpeakersList speakers={proposal.speakers} showRemoveAction={event.cfpState === 'OPENED'} />
+            <CoSpeakersList
+              speakers={proposal.speakers}
+              showRemoveAction={event.cfpState === 'OPENED'}
+            />
             {event.cfpState === 'OPENED' && (
-              <InviteCoSpeakerButton to="PROPOSAL" id={proposal.id} invitationLink={proposal.invitationLink} />
+              <InviteCoSpeakerButton
+                to="PROPOSAL"
+                id={proposal.id}
+                invitationLink={proposal.invitationLink}
+              />
             )}
           </div>
-          <dl className="bg-white border border-gray-200 overflow-hidden sm:rounded-lg p-4 mt-4">
+          <dl className="mt-4 overflow-hidden border border-gray-200 bg-white p-4 sm:rounded-lg">
             <H2 as="dt">Formats</H2>
-            <dd className="mt-4 text-sm text-gray-900">{proposal.formats.map(({ name }) => name).join(', ') || '—'}</dd>
+            <dd className="mt-4 text-sm text-gray-900">
+              {proposal.formats.map(({ name }) => name).join(', ') || '—'}
+            </dd>
             <H2 as="dt" className="mt-8">
               Categories
             </H2>

@@ -2,9 +2,19 @@ import { ClipboardCopyIcon } from '@heroicons/react/outline';
 import { CheckIcon } from '@heroicons/react/solid';
 import { useState } from 'react';
 
-type Props = { label?: string; error?: string } & React.InputHTMLAttributes<HTMLInputElement>;
+type Props = {
+  label?: string;
+  error?: string;
+} & React.InputHTMLAttributes<HTMLInputElement>;
 
-export function CopyInput({ id, type = 'text', value, className, error, ...rest }: Props) {
+export function CopyInput({
+  id,
+  type = 'text',
+  value,
+  className,
+  error,
+  ...rest
+}: Props) {
   const [copied, setCopied] = useState(false);
 
   const handleClick = () => {
@@ -15,28 +25,34 @@ export function CopyInput({ id, type = 'text', value, className, error, ...rest 
   return (
     <div className={className}>
       <div className="mt-1 flex rounded-md shadow-sm">
-        <div className="relative flex items-stretch flex-grow focus-within:z-10">
+        <div className="relative flex flex-grow items-stretch focus-within:z-10">
           <input
             id={id}
             type={type}
             value={value}
-            className="focus:ring-indigo-500 focus:border-indigo-500 block w-full rounded-none rounded-l-md sm:text-sm border-gray-300"
+            className="block w-full rounded-none rounded-l-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
             {...rest}
           />
         </div>
         <button
           type="button"
           onClick={handleClick}
-          className="-ml-px relative inline-flex items-center space-x-2 px-4 py-2 border border-gray-300 text-sm font-medium rounded-r-md text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+          className="relative -ml-px inline-flex items-center space-x-2 rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
         >
           {copied ? (
             <>
-              <CheckIcon className="h-5 w-5 text-green-500" aria-hidden="true" />
+              <CheckIcon
+                className="h-5 w-5 text-green-500"
+                aria-hidden="true"
+              />
               <span>Copied!</span>
             </>
           ) : (
             <>
-              <ClipboardCopyIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+              <ClipboardCopyIcon
+                className="h-5 w-5 text-gray-400"
+                aria-hidden="true"
+              />
               <span>Copy</span>
             </>
           )}

@@ -1,9 +1,15 @@
 import cn from 'classnames';
 import { forwardRef, Ref } from 'react';
 
-type Props = { label?: string; error?: string } & React.InputHTMLAttributes<HTMLInputElement>;
+type Props = {
+  label?: string;
+  error?: string;
+} & React.InputHTMLAttributes<HTMLInputElement>;
 
-function InputField({ id, label, type = 'text', className, error, ...rest }: Props, ref: Ref<HTMLInputElement>) {
+function InputField(
+  { id, label, type = 'text', className, error, ...rest }: Props,
+  ref: Ref<HTMLInputElement>
+) {
   const styles = cn(baseStyles, {
     [defaultStyles]: !error,
     [errorStyles]: !!error,
@@ -12,7 +18,10 @@ function InputField({ id, label, type = 'text', className, error, ...rest }: Pro
   return (
     <div className={className}>
       {label && (
-        <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-1">
+        <label
+          htmlFor={id}
+          className="mb-1 block text-sm font-medium text-gray-700"
+        >
           {label}
         </label>
       )}
@@ -28,11 +37,14 @@ function InputField({ id, label, type = 'text', className, error, ...rest }: Pro
 
 const baseStyles = cn(['block w-full', 'sm:text-sm', 'shadow-sm rounded-md']);
 
-const defaultStyles = cn(['border-gray-300', 'focus:ring-indigo-500 focus:border-indigo-500']);
+const defaultStyles = cn([
+  'border-gray-300',
+  'focus:ring-indigo-500 focus:border-indigo-500',
+]);
 
 const errorStyles = cn([
   'border-red-300 text-red-900 placeholder-red-300',
   'focus:outline-none focus:ring-red-500 focus:border-red-500',
 ]);
 
-export const Input = forwardRef(InputField)
+export const Input = forwardRef(InputField);

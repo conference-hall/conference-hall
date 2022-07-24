@@ -33,7 +33,9 @@ export async function createUserSession(request: Request) {
     const redirectTo = data.get('redirectTo') as string;
     const decodedToken = await admin.auth().verifyIdToken(tokenId);
     const user = await createUserFromToken(decodedToken);
-    const firebaseSession = await admin.auth().createSessionCookie(tokenId, { expiresIn });
+    const firebaseSession = await admin
+      .auth()
+      .createSessionCookie(tokenId, { expiresIn });
     session.set('firebaseSession', firebaseSession);
     session.set('uid', user.id);
     const newCookie = await storage.commitSession(session);
@@ -63,17 +65,23 @@ export async function requireUserSession(request: Request) {
     const firebaseSession = session.get('firebaseSession');
     if (!firebaseSession) {
       const destroyedCookie = await destroyUserSession(request);
-      throw redirect(getLoginUrl(request), { headers: { 'Set-Cookie': destroyedCookie } });
+      throw redirect(getLoginUrl(request), {
+        headers: { 'Set-Cookie': destroyedCookie },
+      });
     }
     const token = await admin.auth().verifySessionCookie(firebaseSession, true);
     if (!token.uid) {
       const destroyedCookie = await destroyUserSession(request);
-      throw redirect(getLoginUrl(request), { headers: { 'Set-Cookie': destroyedCookie } });
+      throw redirect(getLoginUrl(request), {
+        headers: { 'Set-Cookie': destroyedCookie },
+      });
     }
     return token.uid;
   } catch (error) {
     const destroyedCookie = await destroyUserSession(request);
-    throw redirect(getLoginUrl(request), { headers: { 'Set-Cookie': destroyedCookie } });
+    throw redirect(getLoginUrl(request), {
+      headers: { 'Set-Cookie': destroyedCookie },
+    });
   }
 }
 
@@ -118,7 +126,9 @@ export async function requireAuthUser(request: Request): Promise<AuthUser> {
   const user = await getAuthUser(request);
   if (!user) {
     const destroyedCookie = await destroyUserSession(request);
-    throw redirect(getLoginUrl(request), { headers: { 'Set-Cookie': destroyedCookie } });
+    throw redirect(getLoginUrl(request), {
+      headers: { 'Set-Cookie': destroyedCookie },
+    });
   }
   return user;
 }

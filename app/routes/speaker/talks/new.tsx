@@ -6,7 +6,10 @@ import { Button } from '../../../components-ui/Buttons';
 import { H1 } from '../../../components-ui/Typography';
 import { requireUserSession } from '../../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../../services/errors';
-import { createTalk, validateTalkForm } from '../../../services/speakers/talks.server';
+import {
+  createTalk,
+  validateTalkForm,
+} from '../../../services/speakers/talks.server';
 import { ValidationErrors } from '../../../utils/validation-errors';
 
 export const action: ActionFunction = async ({ request, params }) => {
@@ -20,7 +23,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   try {
     const talkId = await createTalk(uid, result.data);
     return redirect(`/speaker/talks/${talkId}`);
-  } catch(err) {
+  } catch (err) {
     mapErrorToResponse(err);
   }
 };
@@ -32,12 +35,15 @@ export default function NewSpeakerTalkRoute() {
     <Container className="py-8">
       <H1>New talk abstract</H1>
 
-      <Form method="post" className="mt-4 bg-white border border-gray-200 overflow-hidden sm:rounded-lg">
+      <Form
+        method="post"
+        className="mt-4 overflow-hidden border border-gray-200 bg-white sm:rounded-lg"
+      >
         <div className="px-4 py-8 sm:px-6">
           <TalkAbstractForm errors={errors?.fieldErrors} />
         </div>
 
-        <div className="px-4 py-3 bg-gray-50 text-right space-x-4 sm:px-6">
+        <div className="space-x-4 bg-gray-50 px-4 py-3 text-right sm:px-6">
           <Button type="submit" className="ml-4">
             Create abstract
           </Button>

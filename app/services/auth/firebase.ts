@@ -10,7 +10,7 @@ type FirebaseConfig = {
 
 export const initializeFirebase = (config?: FirebaseConfig) => {
   if (!config || getApps().length) return;
-  
+
   const app = initializeApp({
     apiKey: config.FIREBASE_API_KEY,
     authDomain: config.FIREBASE_AUTH_DOMAIN,

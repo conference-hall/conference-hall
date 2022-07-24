@@ -1,4 +1,9 @@
-import { ActionFunction, json, LoaderFunction, redirect } from '@remix-run/node';
+import {
+  ActionFunction,
+  json,
+  LoaderFunction,
+  redirect,
+} from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
 import { Container } from '../../../components-ui/Container';
 import Badge from '../../../components-ui/Badges';
@@ -19,7 +24,10 @@ import {
 } from '../../../services/speakers/talks.server';
 import { mapErrorToResponse } from '../../../services/errors';
 import { TalkActionsMenu } from '../../../components-app/TalkActionsMenu';
-import { InviteCoSpeakerButton, CoSpeakersList } from '../../../components-app/CoSpeaker';
+import {
+  InviteCoSpeakerButton,
+  CoSpeakersList,
+} from '../../../components-app/CoSpeaker';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const uid = await requireUserSession(request);
@@ -56,7 +64,7 @@ export default function SpeakerTalkRoute() {
 
   return (
     <Container className="mt-8">
-      <div className="flex justify-between items-center flex-wrap sm:flex-nowrap">
+      <div className="flex flex-wrap items-center justify-between sm:flex-nowrap">
         <div>
           <H1>{talk.title}</H1>
           <div className="mt-2 flex gap-2">
@@ -71,7 +79,9 @@ export default function SpeakerTalkRoute() {
 
         <div className="flex-shrink-0 space-x-4">
           {!talk.archived && <TalkActionsMenu />}
-          {!talk.archived && <ButtonLink to={`/?talkId=${talk.id}`}>Submit</ButtonLink>}
+          {!talk.archived && (
+            <ButtonLink to={`/?talkId=${talk.id}`}>Submit</ButtonLink>
+          )}
           {talk.archived && (
             <Form method="post">
               <input type="hidden" name="_action" value="restore-talk" />
@@ -83,20 +93,29 @@ export default function SpeakerTalkRoute() {
         </div>
       </div>
 
-      <div className="flex flex-row gap-4 mt-8">
-        <div className="w-2/3 bg-white border border-gray-200 overflow-hidden sm:rounded-lg p-4">
+      <div className="mt-8 flex flex-row gap-4">
+        <div className="w-2/3 overflow-hidden border border-gray-200 bg-white p-4 sm:rounded-lg">
           <H2>Abstract</H2>
           <Markdown source={talk.abstract} className="mt-2" />
           <H2 className="mt-8">References</H2>
           <Markdown source={talk.references} className="mt-2" />
         </div>
         <div className="w-1/3">
-          <div className="bg-white border border-gray-200 overflow-hidden sm:rounded-lg p-4">
+          <div className="overflow-hidden border border-gray-200 bg-white p-4 sm:rounded-lg">
             <H2>Speakers</H2>
-            <CoSpeakersList speakers={talk.speakers} showRemoveAction={!talk.archived} />
-            {!talk.archived && <InviteCoSpeakerButton to="TALK" id={talk.id} invitationLink={talk.invitationLink} />}
+            <CoSpeakersList
+              speakers={talk.speakers}
+              showRemoveAction={!talk.archived}
+            />
+            {!talk.archived && (
+              <InviteCoSpeakerButton
+                to="TALK"
+                id={talk.id}
+                invitationLink={talk.invitationLink}
+              />
+            )}
           </div>
-          <div className="bg-white border border-gray-200 overflow-hidden sm:rounded-lg p-4 mt-4">
+          <div className="mt-4 overflow-hidden border border-gray-200 bg-white p-4 sm:rounded-lg">
             <H2>Submissions</H2>
             <div className="mt-4">
               {talk.proposals.map((proposal) => (

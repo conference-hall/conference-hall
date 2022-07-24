@@ -9,13 +9,23 @@ type CheckboxGroupProps = {
   children: ReactNode;
 };
 
-export function CheckboxGroup({ label, description, inline, className, children }: CheckboxGroupProps) {
-  const layoutStyle = cn('space-y-4', { 'sm:flex sm:items-center sm:space-y-0 sm:space-x-10': inline });
+export function CheckboxGroup({
+  label,
+  description,
+  inline,
+  className,
+  children,
+}: CheckboxGroupProps) {
+  const layoutStyle = cn('space-y-4', {
+    'sm:flex sm:items-center sm:space-y-0 sm:space-x-10': inline,
+  });
 
   return (
     <div className={className}>
       <label className="text-sm font-medium text-gray-700">{label}</label>
-      {description && <p className="text-sm leading-5 text-gray-500">{description}</p>}
+      {description && (
+        <p className="text-sm leading-5 text-gray-500">{description}</p>
+      )}
       <fieldset className="mt-2">
         <legend className="sr-only">{label}</legend>
         <div className={layoutStyle}>{children}</div>
@@ -24,13 +34,25 @@ export function CheckboxGroup({ label, description, inline, className, children 
   );
 }
 
-export function CheckboxHeadingGroup({ label, description, inline, className, children }: CheckboxGroupProps) {
-  const layoutStyle = cn('space-y-4', { 'sm:flex sm:items-center sm:space-y-0 sm:space-x-10': inline });
+export function CheckboxHeadingGroup({
+  label,
+  description,
+  inline,
+  className,
+  children,
+}: CheckboxGroupProps) {
+  const layoutStyle = cn('space-y-4', {
+    'sm:flex sm:items-center sm:space-y-0 sm:space-x-10': inline,
+  });
 
   return (
     <div className={className}>
-      <label className="text-lg leading-6 font-medium text-gray-900">{label}</label>
-      {description && <p className="mt-1 text-sm leading-5 text-gray-500">{description}</p>}
+      <label className="text-lg font-medium leading-6 text-gray-900">
+        {label}
+      </label>
+      {description && (
+        <p className="mt-1 text-sm leading-5 text-gray-500">{description}</p>
+      )}
       <fieldset className="mt-6">
         <legend className="sr-only">{label}</legend>
         <div className={layoutStyle}>{children}</div>
@@ -39,18 +61,28 @@ export function CheckboxHeadingGroup({ label, description, inline, className, ch
   );
 }
 
-type CheckboxProps = { description?: string | null; className?: string } & React.InputHTMLAttributes<HTMLInputElement>;
+type CheckboxProps = {
+  description?: string | null;
+  className?: string;
+} & React.InputHTMLAttributes<HTMLInputElement>;
 
-export function Checkbox({ id, name, description, className, children, ...rest }: CheckboxProps) {
+export function Checkbox({
+  id,
+  name,
+  description,
+  className,
+  children,
+  ...rest
+}: CheckboxProps) {
   return (
     <div className={cn('relative flex items-start', className)}>
-      <div className="flex items-center h-5">
+      <div className="flex h-5 items-center">
         <input
           id={id}
           aria-describedby={`${id}-description`}
           name={name}
           type="checkbox"
-          className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+          className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
           {...rest}
         />
       </div>

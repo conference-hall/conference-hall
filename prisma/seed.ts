@@ -46,7 +46,11 @@ async function seed() {
     attributes: { name: 'GDG Nantes', slug: 'gdg-nantes' },
   });
 
-  await Promise.all(Array.from({ length: 50 }).map(() => eventFactory({ traits: ['meetup-cfp-open'] })));
+  await Promise.all(
+    Array.from({ length: 50 }).map(() =>
+      eventFactory({ traits: ['meetup-cfp-open'] })
+    )
+  );
 }
 
 seed();

@@ -10,7 +10,10 @@ const AllTheProviders: React.FC<Props> = ({ children }) => {
   return <MemoryRouter>{children}</MemoryRouter>;
 };
 
-function customRender(ui: React.ReactElement, options?: Omit<RenderOptions, 'wrapper'>) {
+function customRender(
+  ui: React.ReactElement,
+  options?: Omit<RenderOptions, 'wrapper'>
+) {
   return render(ui, { wrapper: AllTheProviders, ...options });
 }
 

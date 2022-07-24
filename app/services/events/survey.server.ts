@@ -5,7 +5,9 @@ import { EventNotFoundError, SurveyNotEnabledError } from '../errors';
 
 export type SurveyAnswers = { [key: string]: string | string[] | null };
 
-export async function getSurveyQuestions(slug: string): Promise<SurveyQuestions> {
+export async function getSurveyQuestions(
+  slug: string
+): Promise<SurveyQuestions> {
   const event = await db.event.findUnique({
     select: { id: true, surveyEnabled: true, surveyQuestions: true },
     where: { slug: slug },
@@ -17,10 +19,15 @@ export async function getSurveyQuestions(slug: string): Promise<SurveyQuestions>
     throw new SurveyNotEnabledError();
   }
 
-  return QUESTIONS.filter((question) => enabledQuestions.includes(question.name));
+  return QUESTIONS.filter((question) =>
+    enabledQuestions.includes(question.name)
+  );
 }
 
-export async function getSurveyAnswers(slug: string, uid: string): Promise<SurveyAnswers> {
+export async function getSurveyAnswers(
+  slug: string,
+  uid: string
+): Promise<SurveyAnswers> {
   const userSurvey = await db.survey.findFirst({
     select: { answers: true },
     where: { event: { slug }, user: { id: uid } },
@@ -29,8 +36,15 @@ export async function getSurveyAnswers(slug: string, uid: string): Promise<Surve
   return (userSurvey?.answers ?? {}) as SurveyAnswers;
 }
 
-export async function saveSurvey(uid: string, slug: string, answers: SurveyData) {
-  const event = await db.event.findUnique({ select: { id: true }, where: { slug } });
+export async function saveSurvey(
+  uid: string,
+  slug: string,
+  answers: SurveyData
+) {
+  const event = await db.event.findUnique({
+    select: { id: true },
+    where: { slug },
+  });
   if (!event) throw new EventNotFoundError();
 
   await db.survey.upsert({

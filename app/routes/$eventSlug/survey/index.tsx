@@ -7,12 +7,19 @@ import { AlertSuccess } from '../../../components-ui/Alerts';
 import { H2, Text } from '../../../components-ui/Typography';
 import { requireUserSession } from '../../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../../services/errors';
-import { getSurveyAnswers, getSurveyQuestions, saveSurvey, SurveyAnswers, SurveyQuestions, validateSurveyForm } from '../../../services/events/survey.server';
+import {
+  getSurveyAnswers,
+  getSurveyQuestions,
+  saveSurvey,
+  SurveyAnswers,
+  SurveyQuestions,
+  validateSurveyForm,
+} from '../../../services/events/survey.server';
 
 type SurveyQuestionsForm = {
-  questions: SurveyQuestions
-  answers: SurveyAnswers
-}
+  questions: SurveyQuestions;
+  answers: SurveyAnswers;
+};
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const uid = await requireUserSession(request);
@@ -49,15 +56,21 @@ export default function EventSurveyRoute() {
       <div>
         <H2>We have some questions for you.</H2>
         <Text variant="secondary" className="mt-1">
-          This information will be displayed publicly so be careful what you share.
+          This information will be displayed publicly so be careful what you
+          share.
         </Text>
       </div>
-      {result?.message && <AlertSuccess className="mt-8">{result?.message}</AlertSuccess>}
-      <Form method="post" className="border mt-8 border-gray-200 sm:rounded-md sm:overflow-hidden">
+      {result?.message && (
+        <AlertSuccess className="mt-8">{result?.message}</AlertSuccess>
+      )}
+      <Form
+        method="post"
+        className="mt-8 border border-gray-200 sm:overflow-hidden sm:rounded-md"
+      >
         <div className="bg-white py-6 px-4 sm:p-6">
           <EventSurveyForm questions={questions} initialValues={answers} />
         </div>
-        <div className="px-4 py-3 bg-gray-50 text-right space-x-4 sm:px-6">
+        <div className="space-x-4 bg-gray-50 px-4 py-3 text-right sm:px-6">
           <Button type="submit">Save survey</Button>
         </div>
       </Form>

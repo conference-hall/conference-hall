@@ -2,11 +2,19 @@ import { disconnectDB, resetDB } from '../../../tests/db-helpers';
 import { userFactory } from '../../../tests/factories/users';
 import { db } from '../db';
 import { UserNotFoundError } from '../errors';
-import { getSettings, updateSettings, validateProfileData } from './settings.server';
+import {
+  getSettings,
+  updateSettings,
+  validateProfileData,
+} from './settings.server';
 
 describe('#getSettings', () => {
-  beforeEach(async () => { await resetDB() });
-  afterAll(async () => { await disconnectDB() });
+  beforeEach(async () => {
+    await resetDB();
+  });
+  afterAll(async () => {
+    await disconnectDB();
+  });
 
   it('returns the default response', async () => {
     const user = await userFactory();
@@ -31,8 +39,12 @@ describe('#getSettings', () => {
 });
 
 describe('#updateSettings', () => {
-  beforeEach(async () => { await resetDB() });
-  afterAll(async () => { await disconnectDB() });
+  beforeEach(async () => {
+    await resetDB();
+  });
+  afterAll(async () => {
+    await disconnectDB();
+  });
 
   it('updates personal information', async () => {
     const user = await userFactory();
@@ -87,7 +99,9 @@ describe('#updateSettings', () => {
 
   it('throws an error when user not found', async () => {
     const data = { bio: '', references: '' };
-    await expect(updateSettings('XXX', data)).rejects.toThrowError(UserNotFoundError);
+    await expect(updateSettings('XXX', data)).rejects.toThrowError(
+      UserNotFoundError
+    );
   });
 });
 

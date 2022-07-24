@@ -32,7 +32,9 @@ export function EventSurveyForm({ questions, initialValues }: Props) {
                   id={answer.name}
                   name={question.name}
                   value={answer.name}
-                  defaultChecked={initialValues[question.name]?.includes(answer.name)}
+                  defaultChecked={initialValues[question.name]?.includes(
+                    answer.name
+                  )}
                 >
                   {answer.label}
                 </Checkbox>

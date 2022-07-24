@@ -9,7 +9,12 @@ type Props = {
   children: React.ReactNode;
 };
 
-export default function Drawer({ title, children, onClose, open = false }: Props) {
+export default function Drawer({
+  title,
+  children,
+  onClose,
+  open = false,
+}: Props) {
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-20" onClose={onClose}>
@@ -41,7 +46,9 @@ export default function Drawer({ title, children, onClose, open = false }: Props
                   <div className="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl">
                     <div className="px-4 sm:px-6">
                       <div className="flex items-start justify-between">
-                        <Dialog.Title className="text-lg font-medium text-gray-900">{title}</Dialog.Title>
+                        <Dialog.Title className="text-lg font-medium text-gray-900">
+                          {title}
+                        </Dialog.Title>
                         <div className="ml-3 flex h-7 items-center">
                           <button
                             type="button"
@@ -54,7 +61,9 @@ export default function Drawer({ title, children, onClose, open = false }: Props
                         </div>
                       </div>
                     </div>
-                    <div className="relative mt-6 flex-1 px-4 sm:px-6">{children}</div>
+                    <div className="relative mt-6 flex-1 px-4 sm:px-6">
+                      {children}
+                    </div>
                   </div>
                 </Dialog.Panel>
               </Transition.Child>

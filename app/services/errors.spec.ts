@@ -1,4 +1,8 @@
-import { CfpNotOpenError, EventNotFoundError, mapErrorToResponse } from './errors';
+import {
+  CfpNotOpenError,
+  EventNotFoundError,
+  mapErrorToResponse,
+} from './errors';
 
 describe('#mapErrorToResponse', () => {
   it('should map NotFound error to a Response 404 error', () => {
@@ -31,7 +35,7 @@ describe('#mapErrorToResponse', () => {
     } catch (err: any) {
       expect(err.status).toBe(404);
     }
-  })
+  });
 
   it('should throw Response 500 error for other errors', () => {
     const error = new Error('Something went wrong');
@@ -42,5 +46,5 @@ describe('#mapErrorToResponse', () => {
       expect(err.status).toBe(500);
       expect(err.statusText).toBe('Something went wrong');
     }
-  })
+  });
 });

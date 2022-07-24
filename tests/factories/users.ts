@@ -29,7 +29,11 @@ export const userFactory = (options: FactoryOptions = {}) => {
     twitter: fake.randUserName(),
   };
 
-  const data = { ...defaultAttributes, ...applyTraits(TRAITS, traits), ...attributes };
+  const data = {
+    ...defaultAttributes,
+    ...applyTraits(TRAITS, traits),
+    ...attributes,
+  };
 
   return db.user.create({ data });
 };

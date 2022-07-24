@@ -45,7 +45,14 @@ const TRAITS = {
   },
   withSurvey: {
     surveyEnabled: true,
-    surveyQuestions: Array('gender', 'tshirt', 'diet', 'accomodation', 'transports', 'info'),
+    surveyQuestions: Array(
+      'gender',
+      'tshirt',
+      'diet',
+      'accomodation',
+      'transports',
+      'info'
+    ),
   },
 };
 
@@ -73,7 +80,11 @@ export const eventFactory = (options: FactoryOptions = {}) => {
     creator: { create: { name: fake.randFullName() } },
   };
 
-  const data = { ...defaultAttributes, ...applyTraits(TRAITS, traits), ...attributes };
+  const data = {
+    ...defaultAttributes,
+    ...applyTraits(TRAITS, traits),
+    ...attributes,
+  };
 
   return db.event.create({ data });
-}
+};

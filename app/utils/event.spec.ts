@@ -1,5 +1,11 @@
 import { vi } from 'vitest';
-import { formatCFPDate, formatCFPState, formatConferenceDates, formatEventType, getCfpState } from './event';
+import {
+  formatCFPDate,
+  formatCFPState,
+  formatConferenceDates,
+  formatEventType,
+  getCfpState,
+} from './event';
 
 describe('#formatEventType', () => {
   it('return conference label', () => {
@@ -20,12 +26,20 @@ describe('#formatConferenceDates', () => {
   });
 
   it('return one day conference info', () => {
-    const message = formatConferenceDates('CONFERENCE', '2020-10-05T00:00:00.000Z', '2020-10-05T00:00:00.000Z');
+    const message = formatConferenceDates(
+      'CONFERENCE',
+      '2020-10-05T00:00:00.000Z',
+      '2020-10-05T00:00:00.000Z'
+    );
     expect(message).toBe('1 day conference - October 5th, 2020');
   });
 
   it('return several days conference info', () => {
-    const message = formatConferenceDates('CONFERENCE', '2020-10-05T00:00:00.000Z', '2020-10-07T00:00:00.000Z');
+    const message = formatConferenceDates(
+      'CONFERENCE',
+      '2020-10-05T00:00:00.000Z',
+      '2020-10-07T00:00:00.000Z'
+    );
     expect(message).toBe('3 days conference · October 5th — October 7th, 2020');
   });
 });
@@ -59,17 +73,31 @@ describe('#formatCFPDate', () => {
   });
 
   it('return one day conference info', () => {
-    const message = formatCFPDate('CLOSED', '2020-10-05T00:00:00.000Z', '2020-10-07T00:00:00.000Z');
-    expect(message).toBe('Will open Monday, October 5th, 2020 at 2:00 AM GMT+2');
+    const message = formatCFPDate(
+      'CLOSED',
+      '2020-10-05T00:00:00.000Z',
+      '2020-10-07T00:00:00.000Z'
+    );
+    expect(message).toBe(
+      'Will open Monday, October 5th, 2020 at 2:00 AM GMT+2'
+    );
   });
 
   it('return several days conference info', () => {
-    const message = formatCFPDate('OPENED', '2020-10-05T00:00:00.000Z', '2020-10-07T00:00:00.000Z');
+    const message = formatCFPDate(
+      'OPENED',
+      '2020-10-05T00:00:00.000Z',
+      '2020-10-07T00:00:00.000Z'
+    );
     expect(message).toBe('Until Wednesday, October 7th, 2020 at 2:00 AM GMT+2');
   });
 
   it('return several days conference info', () => {
-    const message = formatCFPDate('FINISHED', '2020-10-05T00:00:00.000Z', '2020-10-07T00:00:00.000Z');
+    const message = formatCFPDate(
+      'FINISHED',
+      '2020-10-05T00:00:00.000Z',
+      '2020-10-07T00:00:00.000Z'
+    );
     expect(message).toBe('Since Wednesday, October 7th, 2020');
   });
 });

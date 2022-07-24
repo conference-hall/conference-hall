@@ -11,7 +11,9 @@ import { fetchSpeakerProposals } from '../../../services/events/proposals.server
 export const loader = async ({ request, params }: LoaderArgs) => {
   const uid = await requireUserSession(request);
   const slug = params.eventSlug!;
-  const proposals = await fetchSpeakerProposals(slug, uid).catch(mapErrorToResponse);
+  const proposals = await fetchSpeakerProposals(slug, uid).catch(
+    mapErrorToResponse
+  );
   return json(proposals);
 };
 

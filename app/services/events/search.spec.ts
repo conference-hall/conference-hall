@@ -3,8 +3,12 @@ import { eventFactory } from '../../../tests/factories/events';
 import { searchEvents, validateFilters, validatePage } from './search.server';
 
 describe('#searchEvents', () => {
-  beforeEach(async () => { await resetDB() });
-  afterAll(async () => { await disconnectDB() });
+  beforeEach(async () => {
+    await resetDB();
+  });
+  afterAll(async () => {
+    await disconnectDB();
+  });
 
   it('returns the default response', async () => {
     await eventFactory({
@@ -30,9 +34,18 @@ describe('#searchEvents', () => {
   });
 
   it('returns all open and future events by default', async () => {
-    await eventFactory({ traits: ['conference-cfp-open'], attributes: { name: 'conf-1' } });
-    await eventFactory({ traits: ['conference-cfp-future'], attributes: { name: 'conf-2' } });
-    await eventFactory({ traits: ['meetup-cfp-open'], attributes: { name: 'conf-3' } });
+    await eventFactory({
+      traits: ['conference-cfp-open'],
+      attributes: { name: 'conf-1' },
+    });
+    await eventFactory({
+      traits: ['conference-cfp-future'],
+      attributes: { name: 'conf-2' },
+    });
+    await eventFactory({
+      traits: ['meetup-cfp-open'],
+      attributes: { name: 'conf-3' },
+    });
     await eventFactory({ traits: ['meetup-cfp-close'] });
     await eventFactory({ traits: ['conference-cfp-past'] });
 
@@ -50,7 +63,10 @@ describe('#searchEvents', () => {
   });
 
   it('doesnt returns private events', async () => {
-    await eventFactory({ traits: ['conference-cfp-open'], attributes: { name: 'conf-1' } });
+    await eventFactory({
+      traits: ['conference-cfp-open'],
+      attributes: { name: 'conf-1' },
+    });
     await eventFactory({ traits: ['conference-cfp-open', 'private'] });
 
     const result = await searchEvents({});
@@ -60,7 +76,10 @@ describe('#searchEvents', () => {
   });
 
   it('doesnt returns archived events', async () => {
-    await eventFactory({ traits: ['conference-cfp-open'], attributes: { name: 'conf-1' } });
+    await eventFactory({
+      traits: ['conference-cfp-open'],
+      attributes: { name: 'conf-1' },
+    });
     await eventFactory({ traits: ['conference-cfp-open', 'archived'] });
 
     const result = await searchEvents({});
@@ -92,8 +111,14 @@ describe('#searchEvents', () => {
   });
 
   it('filters by name (insensitive)', async () => {
-    await eventFactory({ traits: ['conference-cfp-open'], attributes: { name: 'expected-conf' } });
-    await eventFactory({ traits: ['conference-cfp-open'], attributes: { name: 'not-returned' } });
+    await eventFactory({
+      traits: ['conference-cfp-open'],
+      attributes: { name: 'expected-conf' },
+    });
+    await eventFactory({
+      traits: ['conference-cfp-open'],
+      attributes: { name: 'not-returned' },
+    });
 
     const result = await searchEvents({ terms: 'ExpEctEd' });
 
@@ -103,8 +128,14 @@ describe('#searchEvents', () => {
   });
 
   it('filters by past CFP only', async () => {
-    await eventFactory({ traits: ['conference-cfp-open'], attributes: { name: 'conf-1' } });
-    await eventFactory({ traits: ['conference-cfp-past'], attributes: { name: 'conf-2' } });
+    await eventFactory({
+      traits: ['conference-cfp-open'],
+      attributes: { name: 'conf-1' },
+    });
+    await eventFactory({
+      traits: ['conference-cfp-past'],
+      attributes: { name: 'conf-2' },
+    });
 
     const result = await searchEvents({ cfp: 'past' });
 
@@ -114,8 +145,14 @@ describe('#searchEvents', () => {
   });
 
   it('filters by incoming CFP only', async () => {
-    await eventFactory({ traits: ['conference-cfp-open'], attributes: { name: 'conf-1' } });
-    await eventFactory({ traits: ['conference-cfp-past'], attributes: { name: 'conf-2' } });
+    await eventFactory({
+      traits: ['conference-cfp-open'],
+      attributes: { name: 'conf-1' },
+    });
+    await eventFactory({
+      traits: ['conference-cfp-past'],
+      attributes: { name: 'conf-2' },
+    });
 
     const result = await searchEvents({ cfp: 'incoming' });
 
@@ -125,8 +162,14 @@ describe('#searchEvents', () => {
   });
 
   it('filters by conference type', async () => {
-    await eventFactory({ traits: ['conference-cfp-open'], attributes: { name: 'conf-1' } });
-    await eventFactory({ traits: ['meetup-cfp-open'], attributes: { name: 'conf-2' } });
+    await eventFactory({
+      traits: ['conference-cfp-open'],
+      attributes: { name: 'conf-1' },
+    });
+    await eventFactory({
+      traits: ['meetup-cfp-open'],
+      attributes: { name: 'conf-2' },
+    });
 
     const result = await searchEvents({ type: 'conference' });
 
@@ -136,8 +179,14 @@ describe('#searchEvents', () => {
   });
 
   it('filters by meetup type', async () => {
-    await eventFactory({ traits: ['conference-cfp-open'], attributes: { name: 'conf-1' } });
-    await eventFactory({ traits: ['meetup-cfp-open'], attributes: { name: 'conf-2' } });
+    await eventFactory({
+      traits: ['conference-cfp-open'],
+      attributes: { name: 'conf-1' },
+    });
+    await eventFactory({
+      traits: ['meetup-cfp-open'],
+      attributes: { name: 'conf-2' },
+    });
 
     const result = await searchEvents({ type: 'meetup' });
 
@@ -147,7 +196,11 @@ describe('#searchEvents', () => {
   });
 
   it('returns the given page', async () => {
-    await Promise.all(Array.from({ length: 36 }).map(() => eventFactory({ traits: ['meetup-cfp-open'] })));
+    await Promise.all(
+      Array.from({ length: 36 }).map(() =>
+        eventFactory({ traits: ['meetup-cfp-open'] })
+      )
+    );
 
     const result = await searchEvents({}, 2);
     expect(result.results.length).toBe(12);
@@ -166,9 +219,18 @@ describe('#searchEvents', () => {
 
 describe('#validateFilters', () => {
   it('returns valid filters', () => {
-    const params = new URLSearchParams({ terms: 'foo', type: 'all', cfp: 'incoming' });
+    const params = new URLSearchParams({
+      terms: 'foo',
+      type: 'all',
+      cfp: 'incoming',
+    });
     const result = validateFilters(params);
-    expect(result).toEqual({ terms: 'foo', type: 'all', cfp: 'incoming', talkId: null });
+    expect(result).toEqual({
+      terms: 'foo',
+      type: 'all',
+      cfp: 'incoming',
+      talkId: null,
+    });
   });
 
   it('trims "terms" filter', () => {

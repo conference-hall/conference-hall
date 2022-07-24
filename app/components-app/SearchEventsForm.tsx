@@ -13,7 +13,7 @@ type Props = {
 export function SearchEventsForm({ filters, className }: Props) {
   const { terms, type, cfp } = filters;
   const [searchParams] = useSearchParams();
-  const talkId = searchParams.get('talkId')
+  const talkId = searchParams.get('talkId');
   const submit = useSubmit();
 
   function handleChange(name: string, id: string) {

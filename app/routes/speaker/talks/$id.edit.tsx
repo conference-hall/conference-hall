@@ -1,4 +1,9 @@
-import { ActionFunction, json, LoaderFunction, redirect } from '@remix-run/node';
+import {
+  ActionFunction,
+  json,
+  LoaderFunction,
+  redirect,
+} from '@remix-run/node';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import { Container } from '~/components-ui/Container';
 import { TalkAbstractForm } from '../../../components-app/TalkAbstractForm';
@@ -6,7 +11,12 @@ import { Button, ButtonLink } from '../../../components-ui/Buttons';
 import { H1 } from '../../../components-ui/Typography';
 import { requireUserSession } from '../../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../../services/errors';
-import { getTalk, SpeakerTalk, updateTalk, validateTalkForm } from '../../../services/speakers/talks.server';
+import {
+  getTalk,
+  SpeakerTalk,
+  updateTalk,
+  validateTalkForm,
+} from '../../../services/speakers/talks.server';
 import { ValidationErrors } from '../../../utils/validation-errors';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
@@ -17,7 +27,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       throw new Response('Talk archived.', { status: 403 });
     }
     return json<SpeakerTalk>(talk);
-  } catch(err) {
+  } catch (err) {
     mapErrorToResponse(err);
   }
 };
@@ -33,7 +43,7 @@ export const action: ActionFunction = async ({ request, params }) => {
       await updateTalk(uid, params.id, result.data);
       return redirect(`/speaker/talks/${params.id}`);
     }
-  } catch(err) {
+  } catch (err) {
     mapErrorToResponse(err);
   }
 };
@@ -44,25 +54,38 @@ export default function SpeakerTalkRoute() {
 
   return (
     <Container className="py-8">
-      <div className="flex justify-between items-center flex-wrap sm:flex-nowrap">
+      <div className="flex flex-wrap items-center justify-between sm:flex-nowrap">
         <div>
           <H1>{talk.title}</H1>
-          <span className="text-sm test-gray-500 truncate">by {talk.speakers.map((s) => s.name).join(', ')}</span>
+          <span className="test-gray-500 truncate text-sm">
+            by {talk.speakers.map((s) => s.name).join(', ')}
+          </span>
         </div>
         <div className="flex-shrink-0 space-x-4">
-          <ButtonLink to={`/speaker/talks/${talk.id}`} variant="secondary" className="ml-4">
+          <ButtonLink
+            to={`/speaker/talks/${talk.id}`}
+            variant="secondary"
+            className="ml-4"
+          >
             Cancel
           </ButtonLink>
         </div>
       </div>
 
-      <Form method="post" className="mt-4 bg-white border border-gray-200 overflow-hidden sm:rounded-lg">
+      <Form
+        method="post"
+        className="mt-4 overflow-hidden border border-gray-200 bg-white sm:rounded-lg"
+      >
         <div className="px-4 py-8 sm:px-6">
           <TalkAbstractForm initialValues={talk} errors={errors?.fieldErrors} />
         </div>
 
-        <div className="px-4 py-3 bg-gray-50 text-right space-x-4 sm:px-6">
-          <ButtonLink to={`/speaker/talks/${talk.id}`} variant="secondary" className="ml-4">
+        <div className="space-x-4 bg-gray-50 px-4 py-3 text-right sm:px-6">
+          <ButtonLink
+            to={`/speaker/talks/${talk.id}`}
+            variant="secondary"
+            className="ml-4"
+          >
             Cancel
           </ButtonLink>
           <Button type="submit" className="ml-4">

@@ -3,11 +3,20 @@ import { eventFactory } from '../../../tests/factories/events';
 import { surveyFactory } from '../../../tests/factories/surveys';
 import { userFactory } from '../../../tests/factories/users';
 import { EventNotFoundError, SurveyNotEnabledError } from '../errors';
-import { getSurveyAnswers, getSurveyQuestions, saveSurvey, validateSurveyForm } from './survey.server';
+import {
+  getSurveyAnswers,
+  getSurveyQuestions,
+  saveSurvey,
+  validateSurveyForm,
+} from './survey.server';
 
 describe('#getSurveyQuestions', () => {
-  beforeEach(async () => { await resetDB() });
-  afterAll(async () => { await disconnectDB() });
+  beforeEach(async () => {
+    await resetDB();
+  });
+  afterAll(async () => {
+    await disconnectDB();
+  });
 
   it('returns the default survey questions', async () => {
     const event = await eventFactory({ traits: ['withSurvey'] });
@@ -15,7 +24,14 @@ describe('#getSurveyQuestions', () => {
     const questions = await getSurveyQuestions(event.slug);
 
     const questionNames = questions.map(({ name }) => name);
-    expect(questionNames).toEqual(['gender', 'tshirt', 'accomodation', 'transports', 'diet', 'info']);
+    expect(questionNames).toEqual([
+      'gender',
+      'tshirt',
+      'accomodation',
+      'transports',
+      'diet',
+      'info',
+    ]);
   });
 
   it('returns the selected survey questions', async () => {
@@ -31,30 +47,48 @@ describe('#getSurveyQuestions', () => {
   });
 
   it('throws an error when event not found', async () => {
-    await expect(getSurveyQuestions('XXX')).rejects.toThrowError(EventNotFoundError);
+    await expect(getSurveyQuestions('XXX')).rejects.toThrowError(
+      EventNotFoundError
+    );
   });
 
   it('throws an error when survey not enabled', async () => {
     const event = await eventFactory();
-    await expect(getSurveyQuestions(event.slug)).rejects.toThrowError(SurveyNotEnabledError);
+    await expect(getSurveyQuestions(event.slug)).rejects.toThrowError(
+      SurveyNotEnabledError
+    );
   });
 
   it('throws an error when no question selected on survey', async () => {
     const event = await eventFactory({ attributes: { surveyEnabled: true } });
-    await expect(getSurveyQuestions(event.slug)).rejects.toThrowError(SurveyNotEnabledError);
+    await expect(getSurveyQuestions(event.slug)).rejects.toThrowError(
+      SurveyNotEnabledError
+    );
   });
 });
 
 describe('#getSurveyAnswers', () => {
-  beforeEach(async () => { await resetDB() });
-  afterAll(async () => { await disconnectDB() });
+  beforeEach(async () => {
+    await resetDB();
+  });
+  afterAll(async () => {
+    await disconnectDB();
+  });
 
   it('returns the user answers for an event', async () => {
     const event = await eventFactory({ traits: ['withSurvey'] });
     const user1 = await userFactory();
-    await surveyFactory({ user: user1, event, attributes: { answers: { gender: 'male' } } });
+    await surveyFactory({
+      user: user1,
+      event,
+      attributes: { answers: { gender: 'male' } },
+    });
     const user2 = await userFactory();
-    await surveyFactory({ user: user2, event, attributes: { answers: { gender: 'female' } } });
+    await surveyFactory({
+      user: user2,
+      event,
+      attributes: { answers: { gender: 'female' } },
+    });
 
     const answers = await getSurveyAnswers(event.slug, user2.id);
 
@@ -76,8 +110,12 @@ describe('#getSurveyAnswers', () => {
 });
 
 describe('#saveSurvey', () => {
-  beforeEach(async () => { await resetDB() });
-  afterAll(async () => { await disconnectDB() });
+  beforeEach(async () => {
+    await resetDB();
+  });
+  afterAll(async () => {
+    await disconnectDB();
+  });
 
   it('creates user survey for event when it exists', async () => {
     const event = await eventFactory({ traits: ['withSurvey'] });
@@ -180,4 +218,4 @@ describe('#validateSurveyForm', () => {
       info: 'Hello',
     });
   });
-})
+});

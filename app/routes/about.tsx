@@ -8,7 +8,9 @@ export default function AboutRoute() {
       <section className="bg-white">
         <Container className="py-16">
           <H1>Welcome to Conference Hall.</H1>
-          <H2 className="text-gray-500 mt-2">All-in-one call for paper platform.</H2>
+          <H2 className="mt-2 text-gray-500">
+            All-in-one call for paper platform.
+          </H2>
           <div className="mt-12">
             <ButtonLink to="/" size="large">
               See all conferences and meetups

@@ -1,5 +1,12 @@
 import * as fake from '@ngneat/falso';
-import { Event, Prisma, ProposalStatus, Talk, TalkLevel, User } from '@prisma/client';
+import {
+  Event,
+  Prisma,
+  ProposalStatus,
+  Talk,
+  TalkLevel,
+  User,
+} from '@prisma/client';
 import { db } from '../../app/services/db';
 import { applyTraits } from './helpers/traits';
 
@@ -34,7 +41,11 @@ export const proposalFactory = (options: FactoryOptions) => {
     event: { connect: { id: event.id } },
   };
 
-  const data = { ...defaultAttributes, ...applyTraits(TRAITS, traits), ...attributes };
+  const data = {
+    ...defaultAttributes,
+    ...applyTraits(TRAITS, traits),
+    ...attributes,
+  };
 
   return db.proposal.create({ data, include: { event: true } });
 };

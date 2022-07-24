@@ -20,7 +20,9 @@ import { H2 } from '../../../components-ui/Typography';
 export const loader = async ({ request, params }: LoaderArgs) => {
   const uid = await requireUserSession(request);
   const proposalId = params.id!;
-  const proposal = await getSpeakerProposal(proposalId, uid).catch(mapErrorToResponse);
+  const proposal = await getSpeakerProposal(proposalId, uid).catch(
+    mapErrorToResponse
+  );
   return json(proposal);
 };
 
@@ -52,37 +54,59 @@ export default function EditProposalRoute() {
 
   return (
     <Container className="py-8">
-      <div className="flex justify-between items-center flex-wrap sm:flex-nowrap">
+      <div className="flex flex-wrap items-center justify-between sm:flex-nowrap">
         <div>
           <H2>{proposal.title}</H2>
-          <span className="text-sm test-gray-500 truncate">by {proposal.speakers.map((s) => s.name).join(', ')}</span>
+          <span className="test-gray-500 truncate text-sm">
+            by {proposal.speakers.map((s) => s.name).join(', ')}
+          </span>
         </div>
         <div className="flex-shrink-0 space-x-4">
-          <ButtonLink to={`/${event.slug}/proposals/${proposal.id}`} variant="secondary" className="ml-4">
+          <ButtonLink
+            to={`/${event.slug}/proposals/${proposal.id}`}
+            variant="secondary"
+            className="ml-4"
+          >
             Cancel
           </ButtonLink>
         </div>
       </div>
 
-      <Form method="post" className="mt-4 bg-white border border-gray-200 overflow-hidden sm:rounded-lg">
+      <Form
+        method="post"
+        className="mt-4 overflow-hidden border border-gray-200 bg-white sm:rounded-lg"
+      >
         <div className="px-4 py-8 sm:px-6">
-          <TalkAbstractForm initialValues={proposal} errors={errors?.fieldErrors} />
+          <TalkAbstractForm
+            initialValues={proposal}
+            errors={errors?.fieldErrors}
+          />
 
           {event.formats?.length > 0 ? (
             <div className="pt-10">
-              <FormatsForm formats={event.formats} initialValues={proposal.formats.map(({ id }) => id)} />
+              <FormatsForm
+                formats={event.formats}
+                initialValues={proposal.formats.map(({ id }) => id)}
+              />
             </div>
           ) : null}
 
           {event.categories?.length > 0 ? (
             <div className="pt-10">
-              <CategoriesForm categories={event.categories} initialValues={proposal.categories.map(({ id }) => id)} />
+              <CategoriesForm
+                categories={event.categories}
+                initialValues={proposal.categories.map(({ id }) => id)}
+              />
             </div>
           ) : null}
         </div>
 
-        <div className="px-4 py-3 bg-gray-50 text-right space-x-4 sm:px-6">
-          <ButtonLink to={`/${event.slug}/proposals/${proposal.id}`} variant="secondary" className="ml-4">
+        <div className="space-x-4 bg-gray-50 px-4 py-3 text-right sm:px-6">
+          <ButtonLink
+            to={`/${event.slug}/proposals/${proposal.id}`}
+            variant="secondary"
+            className="ml-4"
+          >
             Cancel
           </ButtonLink>
           <Button type="submit" className="ml-4">

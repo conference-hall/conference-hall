@@ -27,7 +27,11 @@ export const talkFactory = (options: FactoryOptions) => {
     speakers: { connect: speakers.map(({ id }) => ({ id })) },
   };
 
-  const data = { ...defaultAttributes, ...applyTraits(TRAITS, traits), ...attributes };
+  const data = {
+    ...defaultAttributes,
+    ...applyTraits(TRAITS, traits),
+    ...attributes,
+  };
 
   return db.talk.create({ data, include: { speakers: true } });
-}
+};

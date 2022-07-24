@@ -3,9 +3,20 @@ import { Button } from '~/components-ui/Buttons';
 import { ValidationErrors } from '~/utils/validation-errors';
 import { H2, Text } from '../../../../components-ui/Typography';
 import { requireUserSession } from '../../../../services/auth/auth.server';
-import { ActionFunction, json, LoaderFunction, redirect } from '@remix-run/node';
-import { getTalk, SpeakerTalk } from '../../../../services/speakers/talks.server';
-import { saveDraftProposalForEvent, validateDraftProposalForm } from '../../../../services/events/submit.server';
+import {
+  ActionFunction,
+  json,
+  LoaderFunction,
+  redirect,
+} from '@remix-run/node';
+import {
+  getTalk,
+  SpeakerTalk,
+} from '../../../../services/speakers/talks.server';
+import {
+  saveDraftProposalForEvent,
+  validateDraftProposalForm,
+} from '../../../../services/events/submit.server';
 import { mapErrorToResponse } from '../../../../services/errors';
 import { TalkAbstractForm } from '../../../../components-app/TalkAbstractForm';
 
@@ -17,13 +28,13 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   if (talkId !== 'new') {
     try {
       const talk = await getTalk(uid, talkId);
-      return json<SpeakerTalk>(talk)
+      return json<SpeakerTalk>(talk);
     } catch (err) {
       mapErrorToResponse(err);
     }
   }
   return null;
-}
+};
 
 export const action: ActionFunction = async ({ request, params }) => {
   const uid = await requireUserSession(request);
@@ -31,13 +42,20 @@ export const action: ActionFunction = async ({ request, params }) => {
   const talkId = params.talkId!;
 
   const form = await request.formData();
-  const result = validateDraftProposalForm(form)
+  const result = validateDraftProposalForm(form);
   if (!result.success) return result.error.flatten();
 
   try {
-    const savedProposal = await saveDraftProposalForEvent(talkId, eventSlug, uid, result.data);
-    return redirect(`/${eventSlug}/submission/${savedProposal.talkId}/speakers`);
-  } catch(err) {
+    const savedProposal = await saveDraftProposalForEvent(
+      talkId,
+      eventSlug,
+      uid,
+      result.data
+    );
+    return redirect(
+      `/${eventSlug}/submission/${savedProposal.talkId}/speakers`
+    );
+  } catch (err) {
     mapErrorToResponse(err);
   }
 };
@@ -51,15 +69,16 @@ export default function SubmissionProposalRoute() {
       <div className="px-8 py-6 sm:py-10">
         <div className="mb-6">
           <H2>Your proposal</H2>
-          <Text variant="secondary" className="mt-1">This information will be displayed publicly so be careful what you share.</Text>
+          <Text variant="secondary" className="mt-1">
+            This information will be displayed publicly so be careful what you
+            share.
+          </Text>
         </div>
         <TalkAbstractForm initialValues={talk} errors={errors?.fieldErrors} />
       </div>
 
       <div className="px-4 py-5 text-right sm:px-6">
-        <Button type="submit">
-          Save as draft and continue
-        </Button>
+        <Button type="submit">Save as draft and continue</Button>
       </div>
     </Form>
   );

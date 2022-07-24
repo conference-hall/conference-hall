@@ -16,16 +16,25 @@ export default function LanguagesSelect({ values, className }: Props) {
     <Listbox name="languages" value={selected} onChange={setSelected} multiple>
       {({ open }) => (
         <div className={className}>
-          <Listbox.Label className="block text-sm font-medium text-gray-700">Languages</Listbox.Label>
-          <div className="mt-1 relative">
-            <Listbox.Button className="bg-white relative w-full border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+          <Listbox.Label className="block text-sm font-medium text-gray-700">
+            Languages
+          </Listbox.Label>
+          <div className="relative mt-1">
+            <Listbox.Button className="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
               {selected.length > 0 ? (
-                <Text className="block truncate">{selected.map(getLanguage).join(', ')}</Text>
+                <Text className="block truncate">
+                  {selected.map(getLanguage).join(', ')}
+                </Text>
               ) : (
-                <Text variant='secondary' className="block truncate">Select spoken languages for the talk.</Text>
+                <Text variant="secondary" className="block truncate">
+                  Select spoken languages for the talk.
+                </Text>
               )}
-              <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                <SelectorIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+              <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                <SelectorIcon
+                  className="h-5 w-5 text-gray-400"
+                  aria-hidden="true"
+                />
               </span>
             </Listbox.Button>
 
@@ -36,21 +45,26 @@ export default function LanguagesSelect({ values, className }: Props) {
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <Listbox.Options className="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
+              <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                 {LANGUAGES.map((language) => (
                   <Listbox.Option
                     key={language.id}
                     value={language.id}
                     className={({ active }) =>
                       c(
-                        active ? 'text-white bg-indigo-600' : 'text-gray-900',
-                        'cursor-default select-none relative py-2 pl-3 pr-9'
+                        active ? 'bg-indigo-600 text-white' : 'text-gray-900',
+                        'relative cursor-default select-none py-2 pl-3 pr-9'
                       )
                     }
                   >
                     {({ selected, active }) => (
                       <>
-                        <span className={c(selected ? 'font-semibold' : 'font-normal', 'block truncate')}>
+                        <span
+                          className={c(
+                            selected ? 'font-semibold' : 'font-normal',
+                            'block truncate'
+                          )}
+                        >
                           {language.label}
                         </span>
 

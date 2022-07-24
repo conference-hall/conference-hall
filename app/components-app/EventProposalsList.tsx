@@ -30,13 +30,21 @@ export function EventProposalsList({ proposals, cfpState }: Props) {
   return (
     <ul role="list" className="grid grid-cols-1 gap-6 sm:grid-cols-2">
       {proposals.map((proposal) => (
-        <li key={proposal.id} className="col-span-1 bg-white rounded-lg border border-gray-200">
-          <Link to={proposal.id} className="block hover:bg-indigo-50 rounded-lg">
-            <div className="px-4 py-4 sm:px-6 h-40 flex flex-col justify-between">
+        <li
+          key={proposal.id}
+          className="col-span-1 rounded-lg border border-gray-200 bg-white"
+        >
+          <Link
+            to={proposal.id}
+            className="block rounded-lg hover:bg-indigo-50"
+          >
+            <div className="flex h-40 flex-col justify-between px-4 py-4 sm:px-6">
               <div>
-                <p className="text-base font-semibold text-indigo-600 truncate">{proposal.title}</p>
+                <p className="truncate text-base font-semibold text-indigo-600">
+                  {proposal.title}
+                </p>
 
-                <div className="mt-2 flex items-center overflow-hidden -space-x-1">
+                <div className="mt-2 flex items-center -space-x-1 overflow-hidden">
                   {proposal.speakers.map((speaker) => (
                     <img
                       key={speaker.id}
@@ -45,7 +53,7 @@ export function EventProposalsList({ proposals, cfpState }: Props) {
                       alt={speaker.name || 'Speaker'}
                     />
                   ))}
-                  <span className="pl-3 text-sm text-gray-500 truncate">
+                  <span className="truncate pl-3 text-sm text-gray-500">
                     by {proposal.speakers.map((s) => s.name).join(', ')}
                   </span>
                 </div>
@@ -53,11 +61,18 @@ export function EventProposalsList({ proposals, cfpState }: Props) {
 
               <div>
                 {proposal.status === 'DRAFT' ? (
-                  <IconLabel icon={ExclamationIcon} className="text-sm text-yellow-600">
+                  <IconLabel
+                    icon={ExclamationIcon}
+                    className="text-sm text-yellow-600"
+                  >
                     Draft proposal, don't forget to submit it.
                   </IconLabel>
                 ) : (
-                  <IconLabel icon={CalendarIcon} className="text-sm text-gray-500" iconClassName="text-gray-400">
+                  <IconLabel
+                    icon={CalendarIcon}
+                    className="text-sm text-gray-500"
+                    iconClassName="text-gray-400"
+                  >
                     Submitted&nbsp;
                     <time dateTime={proposal.createdAt}>
                       {formatRelative(new Date(proposal.createdAt), new Date())}
@@ -77,7 +92,7 @@ type EmptyStateProps = { cfpState: CfpState };
 
 export function EmptyState({ cfpState }: EmptyStateProps) {
   return (
-    <Container className="mt-8 py-8 flex flex-col items-center">
+    <Container className="mt-8 flex flex-col items-center py-8">
       <svg
         className="mx-auto h-12 w-12 text-gray-400"
         fill="none"
@@ -95,8 +110,12 @@ export function EmptyState({ cfpState }: EmptyStateProps) {
       </svg>
       {cfpState === 'OPENED' ? (
         <>
-          <h3 className="mt-2 text-sm font-medium text-gray-900">No submitted proposals yet!</h3>
-          <p className="mt-1 text-sm text-gray-600">Get started by submitting your first proposal.</p>
+          <h3 className="mt-2 text-sm font-medium text-gray-900">
+            No submitted proposals yet!
+          </h3>
+          <p className="mt-1 text-sm text-gray-600">
+            Get started by submitting your first proposal.
+          </p>
         </>
       ) : (
         <>

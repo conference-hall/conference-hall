@@ -1,5 +1,10 @@
 import { json, LoaderFunction } from '@remix-run/node';
-import { Outlet, useCatch, useLoaderData, useOutletContext } from '@remix-run/react';
+import {
+  Outlet,
+  useCatch,
+  useLoaderData,
+  useOutletContext,
+} from '@remix-run/react';
 import { EventHeader } from '../components-app/EventHeader';
 import { EventTabs } from '../components-app/EventTabs';
 import { ButtonLink } from '../components-ui/Buttons';
@@ -9,7 +14,7 @@ import { EventData, getEvent } from '../services/events/event.server';
 
 export const loader: LoaderFunction = async ({ params }) => {
   const slug = params.eventSlug;
-  if (!slug) throw new Response('Event not found', { status: 404 })
+  if (!slug) throw new Response('Event not found', { status: 404 });
 
   try {
     const event = await getEvent(slug);
@@ -17,7 +22,7 @@ export const loader: LoaderFunction = async ({ params }) => {
   } catch (err) {
     mapErrorToResponse(err);
   }
-}
+};
 
 export default function EventRoute() {
   const data = useLoaderData<EventData>();
@@ -30,7 +35,12 @@ export default function EventRoute() {
         conferenceStart={data.conferenceStart}
         conferenceEnd={data.conferenceEnd}
       />
-      <EventTabs slug={data.slug} type={data.type} cfpState={data.cfpState} surveyEnabled={data.surveyEnabled} />
+      <EventTabs
+        slug={data.slug}
+        type={data.type}
+        cfpState={data.cfpState}
+        surveyEnabled={data.surveyEnabled}
+      />
       <Outlet context={data} />
     </>
   );

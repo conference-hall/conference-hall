@@ -1,6 +1,21 @@
-import { ActionFunction, json, LoaderFunction, redirect } from '@remix-run/node';
-import { Form, NavLink, useActionData, useLoaderData, useSubmit } from '@remix-run/react';
-import { CreditCardIcon, KeyIcon, UserCircleIcon } from '@heroicons/react/solid';
+import {
+  ActionFunction,
+  json,
+  LoaderFunction,
+  redirect,
+} from '@remix-run/node';
+import {
+  Form,
+  NavLink,
+  useActionData,
+  useLoaderData,
+  useSubmit,
+} from '@remix-run/react';
+import {
+  CreditCardIcon,
+  KeyIcon,
+  UserCircleIcon,
+} from '@heroicons/react/solid';
 import { Container } from '../../components-ui/Container';
 import { IconLabel } from '../../components-ui/IconLabel';
 import { Input } from '../../components-ui/forms/Input';
@@ -11,7 +26,12 @@ import { ValidationErrors } from '../../utils/validation-errors';
 import { useCallback } from 'react';
 import { getAuth } from 'firebase/auth';
 import { requireUserSession } from '../../services/auth/auth.server';
-import { getSettings, UserSettings, updateSettings, validateProfileData } from '../../services/speakers/settings.server';
+import {
+  getSettings,
+  UserSettings,
+  updateSettings,
+  validateProfileData,
+} from '../../services/speakers/settings.server';
 import { mapErrorToResponse } from '../../services/errors';
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -19,7 +39,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   try {
     const profile = await getSettings(uid);
     return json<UserSettings>(profile);
-  } catch(err) {
+  } catch (err) {
     mapErrorToResponse(err);
   }
 };
@@ -35,7 +55,7 @@ export const action: ActionFunction = async ({ request }) => {
   try {
     await updateSettings(uid, result.data);
     return redirect('/speaker/settings');
-  } catch(err) {
+  } catch (err) {
     mapErrorToResponse(err);
   }
 };
@@ -63,40 +83,53 @@ export default function SettingsRoute() {
     <Container className="my-8">
       <h1 className="sr-only">Settings</h1>
       <div className="lg:grid lg:grid-cols-12 lg:gap-x-5">
-        <aside className="py-6 px-2 sm:px-6 lg:py-0 lg:px-0 lg:col-span-3">
+        <aside className="py-6 px-2 sm:px-6 lg:col-span-3 lg:py-0 lg:px-0">
           <nav className="space-y-1">
             <NavLink
               to="#personal-info"
-              className="group rounded-md px-3 py-2 flex items-center text-sm font-medium text-gray-900 hover:text-gray-900 hover:bg-gray-50"
+              className="group flex items-center rounded-md px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-50 hover:text-gray-900"
             >
-              <IconLabel icon={UserCircleIcon} iconClassName="text-gray-400 group-hover:text-gray-500">
+              <IconLabel
+                icon={UserCircleIcon}
+                iconClassName="text-gray-400 group-hover:text-gray-500"
+              >
                 Personal information
               </IconLabel>
             </NavLink>
             <NavLink
               to="#speaker-details"
-              className="group rounded-md px-3 py-2 flex items-center text-sm font-medium text-gray-900 hover:text-gray-900 hover:bg-gray-50"
+              className="group flex items-center rounded-md px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-50 hover:text-gray-900"
             >
-              <IconLabel icon={KeyIcon} iconClassName="text-gray-400 group-hover:text-gray-500">
+              <IconLabel
+                icon={KeyIcon}
+                iconClassName="text-gray-400 group-hover:text-gray-500"
+              >
                 Speaker details
               </IconLabel>
             </NavLink>
             <NavLink
               to="#additional-info"
-              className="group rounded-md px-3 py-2 flex items-center text-sm font-medium text-gray-900 hover:text-gray-900 hover:bg-gray-50"
+              className="group flex items-center rounded-md px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-50 hover:text-gray-900"
             >
-              <IconLabel icon={CreditCardIcon} iconClassName="text-gray-400 group-hover:text-gray-500">
+              <IconLabel
+                icon={CreditCardIcon}
+                iconClassName="text-gray-400 group-hover:text-gray-500"
+              >
                 Additional information
               </IconLabel>
             </NavLink>
           </nav>
         </aside>
 
-        <div className="space-y-6 sm:px-6 lg:px-0 lg:col-span-9">
+        <div className="space-y-6 sm:px-6 lg:col-span-9 lg:px-0">
           <Form method="post">
-            <div className="border border-gray-200 sm:rounded-md sm:overflow-hidden">
-              <a id="personal-info" href="#personal-info" className="scroll-mt-16" />
-              <div className="bg-white py-6 px-4 space-y-6 sm:p-6">
+            <div className="border border-gray-200 sm:overflow-hidden sm:rounded-md">
+              <a
+                id="personal-info"
+                href="#personal-info"
+                className="scroll-mt-16"
+              />
+              <div className="space-y-6 bg-white py-6 px-4 sm:p-6">
                 <div>
                   <H2>Personal information</H2>
                   <Text variant="secondary" className="mt-1">
@@ -132,8 +165,12 @@ export default function SettingsRoute() {
                   />
                 </div>
               </div>
-              <div className="px-4 py-3 bg-gray-50 text-right space-x-4 sm:px-6">
-                <Button type="button" onClick={resetCurrentUser} variant="secondary">
+              <div className="space-x-4 bg-gray-50 px-4 py-3 text-right sm:px-6">
+                <Button
+                  type="button"
+                  onClick={resetCurrentUser}
+                  variant="secondary"
+                >
                   Reset default
                 </Button>
                 <Button type="submit">Save</Button>
@@ -142,14 +179,18 @@ export default function SettingsRoute() {
           </Form>
 
           <Form method="post">
-            <div className="border border-gray-200 sm:rounded-md sm:overflow-hidden">
-              <a id="speaker-details" href="#speaker-details" className="scroll-mt-16" />
-              <div className="bg-white py-6 px-4 space-y-6 sm:p-6">
+            <div className="border border-gray-200 sm:overflow-hidden sm:rounded-md">
+              <a
+                id="speaker-details"
+                href="#speaker-details"
+                className="scroll-mt-16"
+              />
+              <div className="space-y-6 bg-white py-6 px-4 sm:p-6">
                 <div>
                   <H2>Speaker details</H2>
                   <Text variant="secondary" className="mt-1">
-                    Give more information about you, these information will be visible by organizers when you submit a
-                    talk.
+                    Give more information about you, these information will be
+                    visible by organizers when you submit a talk.
                   </Text>
                 </div>
 
@@ -175,16 +216,20 @@ export default function SettingsRoute() {
                   />
                 </div>
               </div>
-              <div className="px-4 py-3 bg-gray-50 text-right space-x-4 sm:px-6">
+              <div className="space-x-4 bg-gray-50 px-4 py-3 text-right sm:px-6">
                 <Button type="submit">Save</Button>
               </div>
             </div>
           </Form>
 
           <Form method="post">
-            <div className="border border-gray-200 sm:rounded-md sm:overflow-hidden">
-              <a id="additional-info" href="#additional-info" className="scroll-mt-16" />
-              <div className="bg-white py-6 px-4 space-y-6 sm:p-6">
+            <div className="border border-gray-200 sm:overflow-hidden sm:rounded-md">
+              <a
+                id="additional-info"
+                href="#additional-info"
+                className="scroll-mt-16"
+              />
+              <div className="space-y-6 bg-white py-6 px-4 sm:p-6">
                 <div>
                   <H2>Additional information</H2>
                   <Text variant="secondary" className="mt-1">
@@ -224,7 +269,7 @@ export default function SettingsRoute() {
                   />
                 </div>
               </div>
-              <div className="px-4 py-3 bg-gray-50 text-right space-x-4 sm:px-6">
+              <div className="space-x-4 bg-gray-50 px-4 py-3 text-right sm:px-6">
                 <Button type="submit">Save</Button>
               </div>
             </div>

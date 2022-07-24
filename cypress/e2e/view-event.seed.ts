@@ -1,4 +1,4 @@
-import { eventFactory } from '../../tests/factories/events'
+import { eventFactory } from '../../tests/factories/events';
 
 export const seed = async () => {
   await eventFactory({
@@ -13,5 +13,5 @@ export const seed = async () => {
       cfpEnd: '2020-10-05T23:59:59.000Z',
     },
     traits: ['conference'],
-  })
-}
+  });
+};
