@@ -1,4 +1,4 @@
-import { Event, Prisma, User } from '@prisma/client';
+import type { Event, Prisma, User } from '@prisma/client';
 import { db } from '../../app/services/db';
 
 type FactoryOptions = {

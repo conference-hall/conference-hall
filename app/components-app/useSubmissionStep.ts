@@ -1,5 +1,5 @@
 import { useMatches } from '@remix-run/react';
-import { SubmitSteps } from '../routes/$eventSlug/submission/$talkId';
+import type { SubmitSteps } from '../routes/$eventSlug/submission/$talkId';
 
 type SubmissionStepHook = {
   previousPath: string;
@@ -16,9 +16,7 @@ export function useSubmissionStep(): SubmissionStepHook {
     return { previousPath: '', nextPath: '' };
   }
 
-  const currentStepIndex = steps.findIndex(
-    (step) => step.key === currentStep && step.enabled
-  );
+  const currentStepIndex = steps.findIndex((step) => step.key === currentStep && step.enabled);
   const previousPath = steps?.[currentStepIndex - 1]?.path;
   const nextPath = steps?.[currentStepIndex + 1]?.path;
 

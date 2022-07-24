@@ -1,10 +1,6 @@
 import { StarIcon } from '@heroicons/react/solid';
-import {
-  ActionFunction,
-  json,
-  LoaderFunction,
-  redirect,
-} from '@remix-run/node';
+import type { ActionFunction, LoaderFunction } from '@remix-run/node';
+import { json, redirect } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
 import { Button } from '../../components-ui/Buttons';
 import { Container } from '../../components-ui/Container';
@@ -13,10 +9,8 @@ import { H1, H2, Text } from '../../components-ui/Typography';
 import { requireUserSession } from '../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../services/errors';
 import { inviteCoSpeakerToProposal } from '../../services/events/proposals.server';
-import {
-  getInvitation,
-  Invitation,
-} from '../../services/invitations/invitations.server';
+import type { Invitation } from '../../services/invitations/invitations.server';
+import { getInvitation } from '../../services/invitations/invitations.server';
 import { inviteCoSpeakerToTalk } from '../../services/speakers/talks.server';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
@@ -43,9 +37,7 @@ export const action: ActionFunction = async ({ request, params }) => {
       return redirect(`/speaker/talks/${talk.id}`);
     } else {
       const proposal = await inviteCoSpeakerToProposal(invitationId, uid);
-      return redirect(
-        `/${proposal.eventSlug}/proposals/${proposal.proposalId}`
-      );
+      return redirect(`/${proposal.eventSlug}/proposals/${proposal.proposalId}`);
     }
   } catch (err) {
     mapErrorToResponse(err);

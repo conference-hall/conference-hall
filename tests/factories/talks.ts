@@ -1,8 +1,8 @@
 import * as fake from '@ngneat/falso';
-import { Prisma, TalkLevel, User } from '@prisma/client';
+import type { Prisma, User } from '@prisma/client';
+import { TalkLevel } from '@prisma/client';
 import { db } from '../../app/services/db';
 import { applyTraits } from './helpers/traits';
-import { userFactory } from './users';
 
 const TRAITS = {};
 

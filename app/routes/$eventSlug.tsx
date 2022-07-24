@@ -1,16 +1,13 @@
-import { json, LoaderFunction } from '@remix-run/node';
-import {
-  Outlet,
-  useCatch,
-  useLoaderData,
-  useOutletContext,
-} from '@remix-run/react';
+import type { LoaderFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import { Outlet, useCatch, useLoaderData, useOutletContext } from '@remix-run/react';
 import { EventHeader } from '../components-app/EventHeader';
 import { EventTabs } from '../components-app/EventTabs';
 import { ButtonLink } from '../components-ui/Buttons';
 import { Container } from '../components-ui/Container';
 import { mapErrorToResponse } from '../services/errors';
-import { EventData, getEvent } from '../services/events/event.server';
+import type { EventData } from '../services/events/event.server';
+import { getEvent } from '../services/events/event.server';
 
 export const loader: LoaderFunction = async ({ params }) => {
   const slug = params.eventSlug;
@@ -35,12 +32,7 @@ export default function EventRoute() {
         conferenceStart={data.conferenceStart}
         conferenceEnd={data.conferenceEnd}
       />
-      <EventTabs
-        slug={data.slug}
-        type={data.type}
-        cfpState={data.cfpState}
-        surveyEnabled={data.surveyEnabled}
-      />
+      <EventTabs slug={data.slug} type={data.type} cfpState={data.cfpState} surveyEnabled={data.surveyEnabled} />
       <Outlet context={data} />
     </>
   );

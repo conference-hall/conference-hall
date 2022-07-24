@@ -196,11 +196,7 @@ describe('#searchEvents', () => {
   });
 
   it('returns the given page', async () => {
-    await Promise.all(
-      Array.from({ length: 36 }).map(() =>
-        eventFactory({ traits: ['meetup-cfp-open'] })
-      )
-    );
+    await Promise.all(Array.from({ length: 36 }).map(() => eventFactory({ traits: ['meetup-cfp-open'] })));
 
     const result = await searchEvents({}, 2);
     expect(result.results.length).toBe(12);

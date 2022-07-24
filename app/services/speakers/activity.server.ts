@@ -32,9 +32,7 @@ export type SpeakerActivity = {
  * @param speakerId Id of the speaker
  * @returns SpeakerActivity
  */
-export async function getSpeakerActivity(
-  speakerId: string
-): Promise<SpeakerActivity> {
+export async function getSpeakerActivity(speakerId: string): Promise<SpeakerActivity> {
   const speaker = await db.user.findUnique({ where: { id: speakerId } });
   if (!speaker) throw new SpeakerNotFoundError();
 

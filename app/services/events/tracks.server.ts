@@ -7,11 +7,7 @@ export type ProposalTracks = {
   categories: string[];
 };
 
-export async function getProposalTracks(
-  talkId: string,
-  eventId: string,
-  uid: string
-): Promise<ProposalTracks> {
+export async function getProposalTracks(talkId: string, eventId: string, uid: string): Promise<ProposalTracks> {
   const proposal = await db.proposal.findFirst({
     select: { formats: true, categories: true },
     where: { talkId, eventId, speakers: { some: { id: uid } } },
@@ -24,12 +20,7 @@ export async function getProposalTracks(
   };
 }
 
-export async function saveTracks(
-  talkId: string,
-  eventId: string,
-  uid: string,
-  data: TrackData
-): Promise<void> {
+export async function saveTracks(talkId: string, eventId: string, uid: string, data: TrackData): Promise<void> {
   const proposal = await db.proposal.findFirst({
     select: { id: true },
     where: { talkId, eventId, speakers: { some: { id: uid } } },

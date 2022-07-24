@@ -1,5 +1,6 @@
 import { type InviteType } from '@prisma/client';
-import { ActionFunction, json } from '@remix-run/node';
+import type { ActionFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import { requireUserSession } from '../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../services/errors';
 import { generateInvitationLink } from '../../services/invitations/invitations.server';

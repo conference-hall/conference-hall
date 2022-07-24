@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import cn from 'classnames';
 
 type RadioGroupProps = {
@@ -9,13 +9,7 @@ type RadioGroupProps = {
   children: ReactNode;
 };
 
-export function RadioGroup({
-  label,
-  description,
-  inline,
-  className,
-  children,
-}: RadioGroupProps) {
+export function RadioGroup({ label, description, inline, className, children }: RadioGroupProps) {
   const layoutStyle = cn('space-y-4', {
     'sm:flex sm:items-center sm:space-y-0 sm:space-x-10': inline,
   });
@@ -23,9 +17,7 @@ export function RadioGroup({
   return (
     <div className={className}>
       <label className="text-sm font-medium text-gray-700">{label}</label>
-      {description && (
-        <p className="text-sm leading-5 text-gray-500">{description}</p>
-      )}
+      {description && <p className="text-sm leading-5 text-gray-500">{description}</p>}
       <fieldset className="mt-2">
         <legend className="sr-only">{label}</legend>
         <div className={layoutStyle}>{children}</div>
@@ -38,13 +30,7 @@ type RadioProps = {
   description?: string | null;
 } & React.InputHTMLAttributes<HTMLInputElement>;
 
-export function Radio({
-  id,
-  name,
-  description,
-  children,
-  ...rest
-}: RadioProps) {
+export function Radio({ id, name, description, children, ...rest }: RadioProps) {
   return (
     <div className="relative flex items-start">
       <div className="flex h-5 items-center">

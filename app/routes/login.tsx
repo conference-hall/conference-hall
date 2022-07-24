@@ -23,9 +23,7 @@ export default function Login() {
 
   return (
     <div className="mx-auto flex h-[calc(100vh-64px)] max-w-3xl flex-col items-center justify-center pb-64">
-      <h1 className="text-center text-6xl font-black">
-        Log in to Conference Hall
-      </h1>
+      <h1 className="text-center text-6xl font-black">Log in to Conference Hall</h1>
       <div className="mt-12 max-w-sm space-y-4 p-8">
         <Button type="button" block onClick={signin}>
           Continue with Google

@@ -1,7 +1,8 @@
 import { Outlet, useCatch, useLoaderData, useMatches } from '@remix-run/react';
 import { Container } from '../../../components-ui/Container';
 import { SectionPanel } from '../../../components-ui/Panels';
-import { json, LoaderFunction } from '@remix-run/node';
+import type { LoaderFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import { requireUserSession } from '../../../services/auth/auth.server';
 import { getEvent } from '../../../services/events/event.server';
 import { mapErrorToResponse } from '../../../services/errors';
@@ -24,12 +25,10 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   try {
     const event = await getEvent(slug);
-    if (!event.isCfpOpen)
-      throw new Response('CFP is not opened!', { status: 403 });
+    if (!event.isCfpOpen) throw new Response('CFP is not opened!', { status: 403 });
 
     const isAlreadySubmitted = await isTalkAlreadySubmitted(slug, talkId, uid);
-    if (isAlreadySubmitted)
-      throw new Response('Talk proposal already submitted.', { status: 400 });
+    if (isAlreadySubmitted) throw new Response('Talk proposal already submitted.', { status: 400 });
 
     const steps = [
       {

@@ -1,12 +1,6 @@
 import * as fake from '@ngneat/falso';
-import {
-  Event,
-  Prisma,
-  ProposalStatus,
-  Talk,
-  TalkLevel,
-  User,
-} from '@prisma/client';
+import type { Event, Prisma, Talk, User } from '@prisma/client';
+import { ProposalStatus, TalkLevel } from '@prisma/client';
 import { db } from '../../app/services/db';
 import { applyTraits } from './helpers/traits';
 

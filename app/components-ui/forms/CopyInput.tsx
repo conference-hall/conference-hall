@@ -7,14 +7,7 @@ type Props = {
   error?: string;
 } & React.InputHTMLAttributes<HTMLInputElement>;
 
-export function CopyInput({
-  id,
-  type = 'text',
-  value,
-  className,
-  error,
-  ...rest
-}: Props) {
+export function CopyInput({ id, type = 'text', value, className, error, ...rest }: Props) {
   const [copied, setCopied] = useState(false);
 
   const handleClick = () => {
@@ -41,18 +34,12 @@ export function CopyInput({
         >
           {copied ? (
             <>
-              <CheckIcon
-                className="h-5 w-5 text-green-500"
-                aria-hidden="true"
-              />
+              <CheckIcon className="h-5 w-5 text-green-500" aria-hidden="true" />
               <span>Copied!</span>
             </>
           ) : (
             <>
-              <ClipboardCopyIcon
-                className="h-5 w-5 text-gray-400"
-                aria-hidden="true"
-              />
+              <ClipboardCopyIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
               <span>Copy</span>
             </>
           )}

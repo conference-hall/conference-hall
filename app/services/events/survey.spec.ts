@@ -3,12 +3,7 @@ import { eventFactory } from '../../../tests/factories/events';
 import { surveyFactory } from '../../../tests/factories/surveys';
 import { userFactory } from '../../../tests/factories/users';
 import { EventNotFoundError, SurveyNotEnabledError } from '../errors';
-import {
-  getSurveyAnswers,
-  getSurveyQuestions,
-  saveSurvey,
-  validateSurveyForm,
-} from './survey.server';
+import { getSurveyAnswers, getSurveyQuestions, saveSurvey, validateSurveyForm } from './survey.server';
 
 describe('#getSurveyQuestions', () => {
   beforeEach(async () => {
@@ -24,14 +19,7 @@ describe('#getSurveyQuestions', () => {
     const questions = await getSurveyQuestions(event.slug);
 
     const questionNames = questions.map(({ name }) => name);
-    expect(questionNames).toEqual([
-      'gender',
-      'tshirt',
-      'accomodation',
-      'transports',
-      'diet',
-      'info',
-    ]);
+    expect(questionNames).toEqual(['gender', 'tshirt', 'accomodation', 'transports', 'diet', 'info']);
   });
 
   it('returns the selected survey questions', async () => {
@@ -47,23 +35,17 @@ describe('#getSurveyQuestions', () => {
   });
 
   it('throws an error when event not found', async () => {
-    await expect(getSurveyQuestions('XXX')).rejects.toThrowError(
-      EventNotFoundError
-    );
+    await expect(getSurveyQuestions('XXX')).rejects.toThrowError(EventNotFoundError);
   });
 
   it('throws an error when survey not enabled', async () => {
     const event = await eventFactory();
-    await expect(getSurveyQuestions(event.slug)).rejects.toThrowError(
-      SurveyNotEnabledError
-    );
+    await expect(getSurveyQuestions(event.slug)).rejects.toThrowError(SurveyNotEnabledError);
   });
 
   it('throws an error when no question selected on survey', async () => {
     const event = await eventFactory({ attributes: { surveyEnabled: true } });
-    await expect(getSurveyQuestions(event.slug)).rejects.toThrowError(
-      SurveyNotEnabledError
-    );
+    await expect(getSurveyQuestions(event.slug)).rejects.toThrowError(SurveyNotEnabledError);
   });
 });
 

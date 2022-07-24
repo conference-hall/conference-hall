@@ -1,16 +1,8 @@
 import { Response } from '@remix-run/node';
 
-class NotFoundError extends Error {
-  constructor(message: string) {
-    super(message);
-  }
-}
+class NotFoundError extends Error {}
 
-class BadRequestError extends Error {
-  constructor(message: string) {
-    super(message);
-  }
-}
+class BadRequestError extends Error {}
 
 export function mapErrorToResponse(error: any) {
   if (error instanceof Response) {

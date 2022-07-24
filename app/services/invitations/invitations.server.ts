@@ -1,11 +1,6 @@
 import { type InviteType } from '@prisma/client';
 import { db } from '../db';
-import {
-  InvitationNotFoundError,
-  InvitationGenerateError,
-  ProposalNotFoundError,
-  TalkNotFoundError,
-} from '../errors';
+import { InvitationNotFoundError, InvitationGenerateError, ProposalNotFoundError, TalkNotFoundError } from '../errors';
 
 export type Invitation = {
   type: InviteType;
@@ -18,9 +13,7 @@ export type Invitation = {
  * @param invitationId Id of the invitation
  * @returns Invitation data
  */
-export const getInvitation = async (
-  invitationId: string
-): Promise<Invitation> => {
+export const getInvitation = async (invitationId: string): Promise<Invitation> => {
   const invitation = await db.invite.findUnique({
     select: { type: true, talk: true, proposal: true, invitedBy: true },
     where: { id: invitationId },
@@ -42,11 +35,7 @@ export const getInvitation = async (
  * @param uid Id of the user who is inviting
  * @returns Invitation link
  */
-export async function generateInvitationLink(
-  type: InviteType,
-  entityId: string,
-  uid: string
-) {
+export async function generateInvitationLink(type: InviteType, entityId: string, uid: string) {
   let invitationKey: string | undefined;
   if (type === 'TALK') {
     invitationKey = await generateTalkInvitationKey(entityId, uid);
@@ -62,10 +51,7 @@ export function buildInvitationLink(invitationId?: string) {
   return `http://localhost:3000/invitation/${invitationId}`;
 }
 
-async function generateTalkInvitationKey(
-  talkId: string,
-  uid: string
-): Promise<string> {
+async function generateTalkInvitationKey(talkId: string, uid: string): Promise<string> {
   const talk = await db.talk.findFirst({
     select: { id: true, invitation: true },
     where: {
@@ -87,10 +73,7 @@ async function generateTalkInvitationKey(
   return invite.id;
 }
 
-async function generateProposalInvitationKey(
-  proposalId: string,
-  uid: string
-): Promise<string> {
+async function generateProposalInvitationKey(proposalId: string, uid: string): Promise<string> {
   const proposal = await db.proposal.findFirst({
     select: { id: true, invitation: true },
     where: {
@@ -118,11 +101,7 @@ async function generateProposalInvitationKey(
  * @param entityId Id of the entity that should have the invite
  * @param uid Id of the user who is revoking
  */
-export async function revokeInvitationLink(
-  type: InviteType,
-  entityId: string,
-  uid: string
-) {
+export async function revokeInvitationLink(type: InviteType, entityId: string, uid: string) {
   if (type === 'TALK') {
     await db.invite.deleteMany({
       where: {

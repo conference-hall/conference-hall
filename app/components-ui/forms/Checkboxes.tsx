@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import cn from 'classnames';
 
 type CheckboxGroupProps = {
@@ -9,13 +9,7 @@ type CheckboxGroupProps = {
   children: ReactNode;
 };
 
-export function CheckboxGroup({
-  label,
-  description,
-  inline,
-  className,
-  children,
-}: CheckboxGroupProps) {
+export function CheckboxGroup({ label, description, inline, className, children }: CheckboxGroupProps) {
   const layoutStyle = cn('space-y-4', {
     'sm:flex sm:items-center sm:space-y-0 sm:space-x-10': inline,
   });
@@ -23,9 +17,7 @@ export function CheckboxGroup({
   return (
     <div className={className}>
       <label className="text-sm font-medium text-gray-700">{label}</label>
-      {description && (
-        <p className="text-sm leading-5 text-gray-500">{description}</p>
-      )}
+      {description && <p className="text-sm leading-5 text-gray-500">{description}</p>}
       <fieldset className="mt-2">
         <legend className="sr-only">{label}</legend>
         <div className={layoutStyle}>{children}</div>
@@ -34,25 +26,15 @@ export function CheckboxGroup({
   );
 }
 
-export function CheckboxHeadingGroup({
-  label,
-  description,
-  inline,
-  className,
-  children,
-}: CheckboxGroupProps) {
+export function CheckboxHeadingGroup({ label, description, inline, className, children }: CheckboxGroupProps) {
   const layoutStyle = cn('space-y-4', {
     'sm:flex sm:items-center sm:space-y-0 sm:space-x-10': inline,
   });
 
   return (
     <div className={className}>
-      <label className="text-lg font-medium leading-6 text-gray-900">
-        {label}
-      </label>
-      {description && (
-        <p className="mt-1 text-sm leading-5 text-gray-500">{description}</p>
-      )}
+      <label className="text-lg font-medium leading-6 text-gray-900">{label}</label>
+      {description && <p className="mt-1 text-sm leading-5 text-gray-500">{description}</p>}
       <fieldset className="mt-6">
         <legend className="sr-only">{label}</legend>
         <div className={layoutStyle}>{children}</div>
@@ -66,14 +48,7 @@ type CheckboxProps = {
   className?: string;
 } & React.InputHTMLAttributes<HTMLInputElement>;
 
-export function Checkbox({
-  id,
-  name,
-  description,
-  className,
-  children,
-  ...rest
-}: CheckboxProps) {
+export function Checkbox({ id, name, description, className, children, ...rest }: CheckboxProps) {
   return (
     <div className={cn('relative flex items-start', className)}>
       <div className="flex h-5 items-center">

@@ -1,5 +1,5 @@
 import * as admin from 'firebase-admin';
-import { DecodedIdToken } from 'firebase-admin/lib/auth/token-verifier';
+import type { DecodedIdToken } from 'firebase-admin/lib/auth/token-verifier';
 import { createCookieSessionStorage, redirect } from '@remix-run/node';
 import { config } from '../config';
 import { db } from '../db';
@@ -33,9 +33,7 @@ export async function createUserSession(request: Request) {
     const redirectTo = data.get('redirectTo') as string;
     const decodedToken = await admin.auth().verifyIdToken(tokenId);
     const user = await createUserFromToken(decodedToken);
-    const firebaseSession = await admin
-      .auth()
-      .createSessionCookie(tokenId, { expiresIn });
+    const firebaseSession = await admin.auth().createSessionCookie(tokenId, { expiresIn });
     session.set('firebaseSession', firebaseSession);
     session.set('uid', user.id);
     const newCookie = await storage.commitSession(session);

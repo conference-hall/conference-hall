@@ -1,6 +1,8 @@
 import z from 'zod';
-import { EventVisibility, Prisma } from '@prisma/client';
-import { CfpState, getCfpState } from '~/utils/event';
+import type { Prisma } from '@prisma/client';
+import { EventVisibility } from '@prisma/client';
+import type { CfpState } from '~/utils/event';
+import { getCfpState } from '~/utils/event';
 import { db } from '../../services/db';
 
 export type SearchEvents = {
@@ -20,10 +22,7 @@ export type SearchEvents = {
 
 const RESULTS_BY_PAGE = 12;
 
-export async function searchEvents(
-  filters: SearchFilters,
-  page: SearchPage = 1
-): Promise<SearchEvents> {
+export async function searchEvents(filters: SearchFilters, page: SearchPage = 1): Promise<SearchEvents> {
   const { terms, type, cfp } = filters;
 
   const eventsWhereInput: Prisma.EventWhereInput = {
@@ -97,9 +96,7 @@ const SearchFiltersSchema = z.preprocess(
   (filters: any) => ({
     ...filters,
     terms: filters.terms?.trim(),
-    type: ['all', 'conference', 'meetup'].includes(filters.type)
-      ? filters.type
-      : undefined,
+    type: ['all', 'conference', 'meetup'].includes(filters.type) ? filters.type : undefined,
     cfp: ['incoming', 'past'].includes(filters.cfp) ? filters.cfp : undefined,
   }),
   z.object({
@@ -122,10 +119,7 @@ export function validateFilters(params: URLSearchParams) {
 
 export type SearchPage = z.infer<typeof SearchPageSchema>;
 
-const SearchPageSchema = z.preprocess(
-  (a) => parseInt(a as string, 10),
-  z.number().positive().optional()
-);
+const SearchPageSchema = z.preprocess((a) => parseInt(a as string, 10), z.number().positive().optional());
 
 export function validatePage(params: URLSearchParams) {
   const result = SearchPageSchema.safeParse(params.get('page'));

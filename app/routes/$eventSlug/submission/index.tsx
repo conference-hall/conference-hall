@@ -5,13 +5,10 @@ import { AlertInfo } from '../../../components-ui/Alerts';
 import { MaxProposalsReached } from '../../../components-app/MaxProposalsReached';
 import { H2, Text } from '../../../components-ui/Typography';
 import { requireUserSession } from '../../../services/auth/auth.server';
-import { json, LoaderFunction } from '@remix-run/node';
-import {
-  fetchTalksToSubmitForEvent,
-  getProposalCountsForEvent,
-  ProposalCountsForEvent,
-  TalksToSubmit,
-} from '../../../services/events/submit.server';
+import type { LoaderFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import type { ProposalCountsForEvent, TalksToSubmit } from '../../../services/events/submit.server';
+import { fetchTalksToSubmitForEvent, getProposalCountsForEvent } from '../../../services/events/submit.server';
 import { mapErrorToResponse } from '../../../services/errors';
 import { SubmissionTalksList } from '../../../components-app/SubmissionTalksList';
 
@@ -65,11 +62,8 @@ export default function EventSubmitRoute() {
 
       {Boolean(max) && (
         <AlertInfo className="my-2">
-          You can submit a maximum of{' '}
-          <span className="font-semibold">{max} proposals.</span>{' '}
-          {submitted > 0
-            ? `You have already submitted ${submitted} proposals out of ${max}.`
-            : null}
+          You can submit a maximum of <span className="font-semibold">{max} proposals.</span>{' '}
+          {submitted > 0 ? `You have already submitted ${submitted} proposals out of ${max}.` : null}
         </AlertInfo>
       )}
 

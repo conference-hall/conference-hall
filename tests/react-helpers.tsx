@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { render, RenderOptions } from '@testing-library/react';
+import type { RenderOptions } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 
 interface Props {
@@ -10,10 +11,7 @@ const AllTheProviders: React.FC<Props> = ({ children }) => {
   return <MemoryRouter>{children}</MemoryRouter>;
 };
 
-function customRender(
-  ui: React.ReactElement,
-  options?: Omit<RenderOptions, 'wrapper'>
-) {
+function customRender(ui: React.ReactElement, options?: Omit<RenderOptions, 'wrapper'>) {
   return render(ui, { wrapper: AllTheProviders, ...options });
 }
 

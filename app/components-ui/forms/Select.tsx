@@ -3,14 +3,7 @@ type Props = {
   error?: string;
 } & React.SelectHTMLAttributes<HTMLSelectElement>;
 
-export function Select({
-  id,
-  label,
-  children,
-  className,
-  error,
-  ...rest
-}: Props) {
+export function Select({ id, label, children, className, error, ...rest }: Props) {
   return (
     <div className={className}>
       <label htmlFor={id} className="block text-sm font-medium text-gray-700">

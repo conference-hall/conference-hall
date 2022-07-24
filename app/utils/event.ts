@@ -22,11 +22,7 @@ function isMeetupOpened(start?: Date | null) {
   return today >= start;
 }
 
-export function getCfpState(
-  type: string,
-  start?: Date | null,
-  end?: Date | null
-): CfpState {
+export function getCfpState(type: string, start?: Date | null, end?: Date | null): CfpState {
   if (type === 'MEETUP') {
     if (isMeetupOpened(start)) return 'OPENED';
   }
@@ -46,11 +42,7 @@ export function formatEventType(type: 'CONFERENCE' | 'MEETUP') {
   }
 }
 
-export function formatConferenceDates(
-  type: 'CONFERENCE' | 'MEETUP',
-  start?: string,
-  end?: string
-) {
+export function formatConferenceDates(type: 'CONFERENCE' | 'MEETUP', start?: string, end?: string) {
   if (!start || !end) return formatEventType(type);
   const startDate = new Date(start);
   const endDate = new Date(end);

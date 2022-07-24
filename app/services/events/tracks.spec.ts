@@ -7,11 +7,7 @@ import { talkFactory } from '../../../tests/factories/talks';
 import { userFactory } from '../../../tests/factories/users';
 import { db } from '../db';
 import { ProposalNotFoundError } from '../errors';
-import {
-  getProposalTracks,
-  saveTracks,
-  validateTracksForm,
-} from './tracks.server';
+import { getProposalTracks, saveTracks, validateTracksForm } from './tracks.server';
 
 describe('#getProposalTracks', () => {
   beforeEach(async () => {
@@ -51,17 +47,13 @@ describe('#getProposalTracks', () => {
     await proposalFactory({ event, talk });
 
     const user = await userFactory();
-    await expect(
-      getProposalTracks(talk.id, event.id, user.id)
-    ).rejects.toThrowError(ProposalNotFoundError);
+    await expect(getProposalTracks(talk.id, event.id, user.id)).rejects.toThrowError(ProposalNotFoundError);
   });
 
   it('throws an error when proposal not found', async () => {
     const event = await eventFactory({ traits: ['conference-cfp-open'] });
     const speaker = await userFactory();
-    await expect(
-      getProposalTracks('XXX', event.id, speaker.id)
-    ).rejects.toThrowError(ProposalNotFoundError);
+    await expect(getProposalTracks('XXX', event.id, speaker.id)).rejects.toThrowError(ProposalNotFoundError);
   });
 });
 
@@ -129,9 +121,9 @@ describe('#saveTracks', () => {
   it('throws an error when proposal not found', async () => {
     const event = await eventFactory({ traits: ['conference-cfp-open'] });
     const speaker = await userFactory();
-    await expect(
-      saveTracks('XXX', event.id, speaker.id, { formats: [], categories: [] })
-    ).rejects.toThrowError(ProposalNotFoundError);
+    await expect(saveTracks('XXX', event.id, speaker.id, { formats: [], categories: [] })).rejects.toThrowError(
+      ProposalNotFoundError
+    );
   });
 });
 

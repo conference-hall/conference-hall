@@ -1,9 +1,5 @@
-import {
-  ActionFunction,
-  json,
-  LoaderFunction,
-  redirect,
-} from '@remix-run/node';
+import type { ActionFunction, LoaderFunction } from '@remix-run/node';
+import { json, redirect } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
 import { Container } from '../../../components-ui/Container';
 import Badge from '../../../components-ui/Badges';
@@ -14,20 +10,17 @@ import { EventActivity } from '../../../components-app/SpeakerActivities';
 import { requireUserSession } from '../../../services/auth/auth.server';
 import { getLanguage } from '../../../utils/languages';
 import { getLevel } from '../../../utils/levels';
+import type { SpeakerTalk } from '../../../services/speakers/talks.server';
 import {
   archiveTalk,
   deleteTalk,
   getTalk,
   removeCoSpeakerFromTalk,
   restoreTalk,
-  SpeakerTalk,
 } from '../../../services/speakers/talks.server';
 import { mapErrorToResponse } from '../../../services/errors';
 import { TalkActionsMenu } from '../../../components-app/TalkActionsMenu';
-import {
-  InviteCoSpeakerButton,
-  CoSpeakersList,
-} from '../../../components-app/CoSpeaker';
+import { InviteCoSpeakerButton, CoSpeakersList } from '../../../components-app/CoSpeaker';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const uid = await requireUserSession(request);
@@ -79,9 +72,7 @@ export default function SpeakerTalkRoute() {
 
         <div className="flex-shrink-0 space-x-4">
           {!talk.archived && <TalkActionsMenu />}
-          {!talk.archived && (
-            <ButtonLink to={`/?talkId=${talk.id}`}>Submit</ButtonLink>
-          )}
+          {!talk.archived && <ButtonLink to={`/?talkId=${talk.id}`}>Submit</ButtonLink>}
           {talk.archived && (
             <Form method="post">
               <input type="hidden" name="_action" value="restore-talk" />
@@ -103,17 +94,8 @@ export default function SpeakerTalkRoute() {
         <div className="w-1/3">
           <div className="overflow-hidden border border-gray-200 bg-white p-4 sm:rounded-lg">
             <H2>Speakers</H2>
-            <CoSpeakersList
-              speakers={talk.speakers}
-              showRemoveAction={!talk.archived}
-            />
-            {!talk.archived && (
-              <InviteCoSpeakerButton
-                to="TALK"
-                id={talk.id}
-                invitationLink={talk.invitationLink}
-              />
-            )}
+            <CoSpeakersList speakers={talk.speakers} showRemoveAction={!talk.archived} />
+            {!talk.archived && <InviteCoSpeakerButton to="TALK" id={talk.id} invitationLink={talk.invitationLink} />}
           </div>
           <div className="mt-4 overflow-hidden border border-gray-200 bg-white p-4 sm:rounded-lg">
             <H2>Submissions</H2>

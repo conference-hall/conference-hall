@@ -1,4 +1,5 @@
-import { ActionFunction, json, LoaderFunction } from '@remix-run/node';
+import type { ActionFunction, LoaderFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import { Button } from '~/components-ui/Buttons';
 import { Container } from '~/components-ui/Container';
@@ -7,12 +8,11 @@ import { AlertSuccess } from '../../../components-ui/Alerts';
 import { H2, Text } from '../../../components-ui/Typography';
 import { requireUserSession } from '../../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../../services/errors';
+import type { SurveyAnswers, SurveyQuestions } from '../../../services/events/survey.server';
 import {
   getSurveyAnswers,
   getSurveyQuestions,
   saveSurvey,
-  SurveyAnswers,
-  SurveyQuestions,
   validateSurveyForm,
 } from '../../../services/events/survey.server';
 
@@ -56,17 +56,11 @@ export default function EventSurveyRoute() {
       <div>
         <H2>We have some questions for you.</H2>
         <Text variant="secondary" className="mt-1">
-          This information will be displayed publicly so be careful what you
-          share.
+          This information will be displayed publicly so be careful what you share.
         </Text>
       </div>
-      {result?.message && (
-        <AlertSuccess className="mt-8">{result?.message}</AlertSuccess>
-      )}
-      <Form
-        method="post"
-        className="mt-8 border border-gray-200 sm:overflow-hidden sm:rounded-md"
-      >
+      {result?.message && <AlertSuccess className="mt-8">{result?.message}</AlertSuccess>}
+      <Form method="post" className="mt-8 border border-gray-200 sm:overflow-hidden sm:rounded-md">
         <div className="bg-white py-6 px-4 sm:p-6">
           <EventSurveyForm questions={questions} initialValues={answers} />
         </div>

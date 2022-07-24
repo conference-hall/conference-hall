@@ -1,19 +1,12 @@
-import { json, LoaderFunction } from '@remix-run/node';
-import {
-  useLoaderData,
-  Link,
-  Form,
-  useSearchParams,
-  useNavigate,
-} from '@remix-run/react';
+import type { LoaderFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import { useLoaderData, useSearchParams, useNavigate } from '@remix-run/react';
 import { Container } from '../../../components-ui/Container';
 import { H2, Text } from '../../../components-ui/Typography';
 import { requireUserSession } from '../../../services/auth/auth.server';
 import { ButtonLink } from '../../../components-ui/Buttons';
-import {
-  findTalks,
-  SpeakerTalks,
-} from '../../../services/speakers/talks.server';
+import type { SpeakerTalks } from '../../../services/speakers/talks.server';
+import { findTalks } from '../../../services/speakers/talks.server';
 import { mapErrorToResponse } from '../../../services/errors';
 import { SpeakerTalksList } from '../../../components-app/SpeakerTalksList';
 import DetailedSelect from '../../../components-ui/forms/DetailedSelect';

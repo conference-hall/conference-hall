@@ -15,37 +15,24 @@ export function SubmissionSteps({ steps, currentStep }: Props) {
 
   return (
     <nav aria-label="Progress">
-      <ol
-        role="list"
-        className="divide-y divide-gray-200 border-b border-gray-200 md:flex md:divide-y-0"
-      >
+      <ol className="divide-y divide-gray-200 border-b border-gray-200 md:flex md:divide-y-0">
         {steps.map((step, stepIdx) => (
           <li key={step.key} className="relative md:flex md:flex-1">
             {stepIdx < currentStepIdx ? (
               <Link to={step.path} className="group flex w-full items-center">
                 <span className="flex items-center px-6 py-4 text-sm font-medium">
                   <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-indigo-600 group-hover:bg-indigo-800">
-                    <CheckIcon
-                      className="h-6 w-6 text-white"
-                      aria-hidden="true"
-                    />
+                    <CheckIcon className="h-6 w-6 text-white" aria-hidden="true" />
                   </span>
-                  <span className="ml-4 text-sm font-medium text-gray-900">
-                    {step.name}
-                  </span>
+                  <span className="ml-4 text-sm font-medium text-gray-900">{step.name}</span>
                 </span>
               </Link>
             ) : stepIdx === currentStepIdx ? (
-              <span
-                className="flex items-center px-6 py-4 text-sm font-medium"
-                aria-current="step"
-              >
+              <span className="flex items-center px-6 py-4 text-sm font-medium" aria-current="step">
                 <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border-2 border-indigo-600">
                   <span className="text-indigo-600">{stepIdx + 1}</span>
                 </span>
-                <span className="ml-4 text-sm font-medium text-indigo-600">
-                  {step.name}
-                </span>
+                <span className="ml-4 text-sm font-medium text-indigo-600">{step.name}</span>
               </span>
             ) : (
               <span className="lex items-center">
@@ -53,9 +40,7 @@ export function SubmissionSteps({ steps, currentStep }: Props) {
                   <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border-2 border-gray-200">
                     <span className="text-gray-500">{stepIdx + 1}</span>
                   </span>
-                  <span className="ml-4 text-sm font-medium text-gray-500">
-                    {step.name}
-                  </span>
+                  <span className="ml-4 text-sm font-medium text-gray-500">{step.name}</span>
                 </span>
               </span>
             )}
@@ -63,10 +48,7 @@ export function SubmissionSteps({ steps, currentStep }: Props) {
             {stepIdx !== steps.length - 1 ? (
               <>
                 {/* Arrow separator for lg screens and up */}
-                <div
-                  className="absolute top-0 right-0 hidden h-full w-5 md:block"
-                  aria-hidden="true"
-                >
+                <div className="absolute top-0 right-0 hidden h-full w-5 md:block" aria-hidden="true">
                   <svg
                     className="h-full w-full text-gray-200"
                     viewBox="0 0 22 80"

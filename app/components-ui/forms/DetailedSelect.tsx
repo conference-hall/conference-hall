@@ -11,13 +11,7 @@ type Props = {
   onChange?: (name: string, value: string) => void;
 };
 
-export default function DetailedSelect({
-  name,
-  label,
-  options,
-  value,
-  onChange,
-}: Props) {
+export default function DetailedSelect({ name, label, options, value, onChange }: Props) {
   const handleChange = useCallback(
     (id: string) => {
       if (onChange) onChange(name, id);
@@ -32,14 +26,9 @@ export default function DetailedSelect({
           <Listbox.Label className="sr-only">{label}</Listbox.Label>
           <div className="relative">
             <Listbox.Button className="relative inline-flex items-center rounded-md p-2 text-sm text-gray-900 focus:z-10 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
-              <p className="mx-2.5 text-sm">
-                {options.find((o) => o.id === value)?.label}
-              </p>
+              <p className="mx-2.5 text-sm">{options.find((o) => o.id === value)?.label}</p>
               <span className="sr-only">{label}</span>
-              <ChevronDownIcon
-                className="h-5 w-5 text-gray-900"
-                aria-hidden="true"
-              />
+              <ChevronDownIcon className="h-5 w-5 text-gray-900" aria-hidden="true" />
             </Listbox.Button>
 
             <Transition
@@ -64,29 +53,11 @@ export default function DetailedSelect({
                     {({ selected, active }) => (
                       <div className="flex flex-col">
                         <div className="flex justify-between">
-                          <p
-                            className={
-                              selected ? 'font-semibold' : 'font-normal'
-                            }
-                          >
-                            {option.label}
-                          </p>
-                          {selected ? (
-                            <CheckIcon
-                              className="h-5 w-5 text-indigo-500"
-                              aria-hidden="true"
-                            />
-                          ) : null}
+                          <p className={selected ? 'font-semibold' : 'font-normal'}>{option.label}</p>
+                          {selected ? <CheckIcon className="h-5 w-5 text-indigo-500" aria-hidden="true" /> : null}
                         </div>
                         {option.description && (
-                          <p
-                            className={c(
-                              active ? 'text-gray-900' : 'text-gray-500',
-                              'mt-2'
-                            )}
-                          >
-                            {option.description}
-                          </p>
+                          <p className={c(active ? 'text-gray-900' : 'text-gray-500', 'mt-2')}>{option.description}</p>
                         )}
                       </div>
                     )}

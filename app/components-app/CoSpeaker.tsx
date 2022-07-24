@@ -1,17 +1,12 @@
 import { Dialog } from '@headlessui/react';
-import {
-  BanIcon,
-  LinkIcon,
-  TrashIcon,
-  UserAddIcon,
-} from '@heroicons/react/solid';
+import { BanIcon, LinkIcon, TrashIcon, UserAddIcon } from '@heroicons/react/solid';
 import { Form, useFetcher } from '@remix-run/react';
 import { useState } from 'react';
 import { Button } from '../components-ui/Buttons';
 import Modal from '../components-ui/dialogs/Modals';
 import { CopyInput } from '../components-ui/forms/CopyInput';
 import { Text } from '../components-ui/Typography';
-import { InvitationLink } from '../routes/invitation/generate';
+import type { InvitationLink } from '../routes/invitation/generate';
 
 type InviteType = 'TALK' | 'PROPOSAL';
 
@@ -26,18 +21,11 @@ type CoSpeakersListProps = {
   className?: string;
 };
 
-export function CoSpeakersList({
-  speakers,
-  showRemoveAction = false,
-  className,
-}: CoSpeakersListProps) {
+export function CoSpeakersList({ speakers, showRemoveAction = false, className }: CoSpeakersListProps) {
   return (
     <div className={className}>
       {speakers.map((speaker) => (
-        <div
-          key={speaker.id}
-          className="mt-4 flex items-center justify-between"
-        >
+        <div key={speaker.id} className="mt-4 flex items-center justify-between">
           <div className="flex items-center">
             <img
               className="inline-block h-9 w-9 rounded-full"
@@ -51,9 +39,7 @@ export function CoSpeakersList({
               </Text>
             </div>
           </div>
-          {showRemoveAction && !speaker.isOwner && (
-            <RemoveCoSpeakerButton speakerId={speaker.id} />
-          )}
+          {showRemoveAction && !speaker.isOwner && <RemoveCoSpeakerButton speakerId={speaker.id} />}
         </div>
       ))}
     </div>
@@ -83,15 +69,8 @@ export function InviteCoSpeakerButton({ to, id, invitationLink }: InviteProps) {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <Button
-        variant="text"
-        onClick={() => setOpen(true)}
-        className="group mt-4 flex items-center"
-      >
-        <UserAddIcon
-          className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
-          aria-hidden="true"
-        />
+      <Button variant="text" onClick={() => setOpen(true)} className="group mt-4 flex items-center">
+        <UserAddIcon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
         Invite a co-speaker
       </Button>
       <CoSpeakerDrawer
@@ -113,13 +92,7 @@ type CoSpeakerDrawerProps = {
   entityId: string;
 };
 
-function CoSpeakerDrawer({
-  open,
-  onClose,
-  invitationLink,
-  inviteType,
-  entityId,
-}: CoSpeakerDrawerProps) {
+function CoSpeakerDrawer({ open, onClose, invitationLink, inviteType, entityId }: CoSpeakerDrawerProps) {
   const invite = useFetcher<InvitationLink>();
 
   return (
@@ -129,36 +102,22 @@ function CoSpeakerDrawer({
           <UserAddIcon className="h-6 w-6 text-indigo-600" aria-hidden="true" />
         </div>
         <div className="mt-3 text-center sm:mt-5">
-          <Dialog.Title
-            as="h3"
-            className="text-lg font-medium leading-6 text-gray-900"
-          >
+          <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900">
             Invite a co-speaker
           </Dialog.Title>
           <Text variant="secondary" className="mt-4">
-            You can invite a co-speaker to join your talk by sharing an
-            invitation link. Copy it and send it by email. The co-speaker will
-            be automatically added once the invitation has been accepted.
+            You can invite a co-speaker to join your talk by sharing an invitation link. Copy it and send it by email.
+            The co-speaker will be automatically added once the invitation has been accepted.
           </Text>
         </div>
       </div>
-      {invitationLink && (
-        <CopyInput value={invitationLink} disabled className="mt-8" />
-      )}
+      {invitationLink && <CopyInput value={invitationLink} disabled className="mt-8" />}
       {invitationLink ? (
         <invite.Form method="post" action="/invitation/revoke">
           <input type="hidden" name="_type" value={inviteType} />
           <input type="hidden" name="_id" value={entityId} />
-          <Button
-            type="submit"
-            block
-            className="mt-8 flex items-center"
-            variant="secondary"
-          >
-            <BanIcon
-              className="mr-3 h-5 w-5 text-gray-500"
-              aria-hidden="true"
-            />
+          <Button type="submit" block className="mt-8 flex items-center" variant="secondary">
+            <BanIcon className="mr-3 h-5 w-5 text-gray-500" aria-hidden="true" />
             Revoke invitation link
           </Button>
         </invite.Form>

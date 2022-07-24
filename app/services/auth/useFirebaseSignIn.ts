@@ -1,9 +1,6 @@
 import { useEffect, useState } from 'react';
-import {
-  SubmitFunction,
-  useSearchParams,
-  useTransition,
-} from '@remix-run/react';
+import type { SubmitFunction } from '@remix-run/react';
+import { useSearchParams, useTransition } from '@remix-run/react';
 import {
   getAuth,
   getRedirectResult,
@@ -15,9 +12,7 @@ import {
 
 type FirebaseSignReturn = [boolean, () => Promise<void>];
 
-export function useFirebaseSignIn(
-  onSubmit: SubmitFunction
-): FirebaseSignReturn {
+export function useFirebaseSignIn(onSubmit: SubmitFunction): FirebaseSignReturn {
   const transition = useTransition();
   const [isAuthenticating, setAuthenticating] = useState(true);
 
@@ -34,7 +29,7 @@ export function useFirebaseSignIn(
       }
       setAuthenticating(false);
     });
-  }, [redirectTo]);
+  }, [redirectTo, onSubmit]);
 
   const signin = async () => {
     const provider = new GoogleAuthProvider();
@@ -44,10 +39,5 @@ export function useFirebaseSignIn(
     await signInWithRedirect(auth, provider);
   };
 
-  return [
-    isAuthenticating ||
-      transition.state === 'submitting' ||
-      transition.state === 'loading',
-    signin,
-  ];
+  return [isAuthenticating || transition.state === 'submitting' || transition.state === 'loading', signin];
 }

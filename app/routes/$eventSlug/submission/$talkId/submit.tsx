@@ -4,22 +4,13 @@ import { Button } from '~/components-ui/Buttons';
 import { Checkbox } from '~/components-ui/forms/Checkboxes';
 import { ExternalLink } from '../../../../components-ui/Links';
 import { H1, Text } from '../../../../components-ui/Typography';
-import {
-  ActionFunction,
-  json,
-  LoaderFunction,
-  redirect,
-} from '@remix-run/node';
+import type { ActionFunction, LoaderFunction } from '@remix-run/node';
+import { json, redirect } from '@remix-run/node';
 import { requireUserSession } from '../../../../services/auth/auth.server';
 import { getEvent } from '../../../../services/events/event.server';
-import {
-  getProposalInfo,
-  ProposalInfo,
-  submitProposal,
-  validateSubmission,
-} from '../../../../services/events/submit.server';
+import type { ProposalInfo } from '../../../../services/events/submit.server';
+import { getProposalInfo, submitProposal, validateSubmission } from '../../../../services/events/submit.server';
 import { mapErrorToResponse } from '../../../../services/errors';
-import { Input } from '../../../../components-ui/forms/Input';
 import { TextArea } from '../../../../components-ui/forms/TextArea';
 
 type SubmitForm = ProposalInfo & { codeOfConductUrl: string | null };
@@ -74,9 +65,7 @@ export default function SubmissionSubmitRoute() {
               alt={speaker.name || 'Speaker'}
             />
           ))}
-          <span className="test-gray-500 truncate pl-3 text-sm">
-            by {data.speakers.map((s) => s.name).join(', ')}
-          </span>
+          <span className="test-gray-500 truncate pl-3 text-sm">by {data.speakers.map((s) => s.name).join(', ')}</span>
         </div>
 
         <Text variant="secondary" className="mt-8">
@@ -86,13 +75,7 @@ export default function SubmissionSubmitRoute() {
           {data.categories.join(', ')}
         </Text>
 
-        <TextArea
-          id="message"
-          name="message"
-          label="Message to organizers"
-          className="mt-16 block w-1/3 "
-          rows={4}
-        />
+        <TextArea id="message" name="message" label="Message to organizers" className="mt-16 block w-1/3 " rows={4} />
 
         {data.codeOfConductUrl && (
           <Checkbox

@@ -3,12 +3,7 @@ import { db } from '../../services/db';
 import { getCfpState } from '../../utils/event';
 import { getArray } from '../../utils/form';
 import { jsonToArray } from '../../utils/prisma';
-import {
-  CfpNotOpenError,
-  EventNotFoundError,
-  InvitationNotFoundError,
-  ProposalNotFoundError,
-} from '../errors';
+import { CfpNotOpenError, EventNotFoundError, InvitationNotFoundError, ProposalNotFoundError } from '../errors';
 import { buildInvitationLink } from '../invitations/invitations.server';
 
 export async function fetchSpeakerProposals(slug: string, uid: string) {
@@ -42,11 +37,7 @@ export async function fetchSpeakerProposals(slug: string, uid: string) {
   }));
 }
 
-export async function isTalkAlreadySubmitted(
-  slug: string,
-  talkId: string,
-  uid: string
-) {
+export async function isTalkAlreadySubmitted(slug: string, talkId: string, uid: string) {
   const proposal = await db.proposal.findFirst({
     where: {
       talk: { id: talkId },
@@ -102,20 +93,14 @@ export async function deleteProposal(proposalId: string, uid: string) {
   });
 }
 
-export async function updateProposal(
-  slug: string,
-  proposalId: string,
-  uid: string,
-  data: ProposalData
-) {
+export async function updateProposal(slug: string, proposalId: string, uid: string, data: ProposalData) {
   const event = await db.event.findUnique({
     select: { id: true, type: true, cfpStart: true, cfpEnd: true },
     where: { slug },
   });
   if (!event) throw new EventNotFoundError();
 
-  const isCfpOpen =
-    getCfpState(event.type, event.cfpStart, event.cfpEnd) === 'OPENED';
+  const isCfpOpen = getCfpState(event.type, event.cfpStart, event.cfpEnd) === 'OPENED';
   if (!isCfpOpen) throw new CfpNotOpenError();
 
   const proposal = await db.proposal.findFirst({
@@ -172,10 +157,7 @@ export function validateProposalForm(form: FormData) {
  * @param invitationId Id of the invitation
  * @param coSpeakerId Id of the co-speaker to add
  */
-export async function inviteCoSpeakerToProposal(
-  invitationId: string,
-  coSpeakerId: string
-) {
+export async function inviteCoSpeakerToProposal(invitationId: string, coSpeakerId: string) {
   const invitation = await db.invite.findUnique({
     select: { type: true, proposal: true, organization: true, invitedBy: true },
     where: { id: invitationId },
@@ -206,12 +188,7 @@ export async function inviteCoSpeakerToProposal(
  * @param eventSlug Slug of the event
  * @param coSpeakerId Id of the co-speaker to remove
  */
-export async function removeCoSpeakerFromProposal(
-  uid: string,
-  talkId: string,
-  eventSlug: string,
-  coSpeakerId: string
-) {
+export async function removeCoSpeakerFromProposal(uid: string, talkId: string, eventSlug: string, coSpeakerId: string) {
   const proposal = await db.proposal.findFirst({
     where: {
       talkId,

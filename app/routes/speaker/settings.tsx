@@ -1,37 +1,19 @@
-import {
-  ActionFunction,
-  json,
-  LoaderFunction,
-  redirect,
-} from '@remix-run/node';
-import {
-  Form,
-  NavLink,
-  useActionData,
-  useLoaderData,
-  useSubmit,
-} from '@remix-run/react';
-import {
-  CreditCardIcon,
-  KeyIcon,
-  UserCircleIcon,
-} from '@heroicons/react/solid';
+import type { ActionFunction, LoaderFunction } from '@remix-run/node';
+import { json, redirect } from '@remix-run/node';
+import { Form, NavLink, useActionData, useLoaderData, useSubmit } from '@remix-run/react';
+import { CreditCardIcon, KeyIcon, UserCircleIcon } from '@heroicons/react/solid';
 import { Container } from '../../components-ui/Container';
 import { IconLabel } from '../../components-ui/IconLabel';
 import { Input } from '../../components-ui/forms/Input';
 import { MarkdownTextArea } from '../../components-ui/forms/MarkdownTextArea';
 import { Button } from '../../components-ui/Buttons';
 import { H2, Text } from '../../components-ui/Typography';
-import { ValidationErrors } from '../../utils/validation-errors';
+import type { ValidationErrors } from '../../utils/validation-errors';
 import { useCallback } from 'react';
 import { getAuth } from 'firebase/auth';
 import { requireUserSession } from '../../services/auth/auth.server';
-import {
-  getSettings,
-  UserSettings,
-  updateSettings,
-  validateProfileData,
-} from '../../services/speakers/settings.server';
+import type { UserSettings } from '../../services/speakers/settings.server';
+import { getSettings, updateSettings, validateProfileData } from '../../services/speakers/settings.server';
 import { mapErrorToResponse } from '../../services/errors';
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -77,7 +59,7 @@ export default function SettingsRoute() {
       },
       { method: 'post' }
     );
-  }, []);
+  }, [submit]);
 
   return (
     <Container className="my-8">
@@ -89,10 +71,7 @@ export default function SettingsRoute() {
               to="#personal-info"
               className="group flex items-center rounded-md px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-50 hover:text-gray-900"
             >
-              <IconLabel
-                icon={UserCircleIcon}
-                iconClassName="text-gray-400 group-hover:text-gray-500"
-              >
+              <IconLabel icon={UserCircleIcon} iconClassName="text-gray-400 group-hover:text-gray-500">
                 Personal information
               </IconLabel>
             </NavLink>
@@ -100,10 +79,7 @@ export default function SettingsRoute() {
               to="#speaker-details"
               className="group flex items-center rounded-md px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-50 hover:text-gray-900"
             >
-              <IconLabel
-                icon={KeyIcon}
-                iconClassName="text-gray-400 group-hover:text-gray-500"
-              >
+              <IconLabel icon={KeyIcon} iconClassName="text-gray-400 group-hover:text-gray-500">
                 Speaker details
               </IconLabel>
             </NavLink>
@@ -111,10 +87,7 @@ export default function SettingsRoute() {
               to="#additional-info"
               className="group flex items-center rounded-md px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-50 hover:text-gray-900"
             >
-              <IconLabel
-                icon={CreditCardIcon}
-                iconClassName="text-gray-400 group-hover:text-gray-500"
-              >
+              <IconLabel icon={CreditCardIcon} iconClassName="text-gray-400 group-hover:text-gray-500">
                 Additional information
               </IconLabel>
             </NavLink>
@@ -124,11 +97,7 @@ export default function SettingsRoute() {
         <div className="space-y-6 sm:px-6 lg:col-span-9 lg:px-0">
           <Form method="post">
             <div className="border border-gray-200 sm:overflow-hidden sm:rounded-md">
-              <a
-                id="personal-info"
-                href="#personal-info"
-                className="scroll-mt-16"
-              />
+              <a id="personal-info" href="#personal-info" className="scroll-mt-16" aria-hidden={true} />
               <div className="space-y-6 bg-white py-6 px-4 sm:p-6">
                 <div>
                   <H2>Personal information</H2>
@@ -166,11 +135,7 @@ export default function SettingsRoute() {
                 </div>
               </div>
               <div className="space-x-4 bg-gray-50 px-4 py-3 text-right sm:px-6">
-                <Button
-                  type="button"
-                  onClick={resetCurrentUser}
-                  variant="secondary"
-                >
+                <Button type="button" onClick={resetCurrentUser} variant="secondary">
                   Reset default
                 </Button>
                 <Button type="submit">Save</Button>
@@ -180,17 +145,13 @@ export default function SettingsRoute() {
 
           <Form method="post">
             <div className="border border-gray-200 sm:overflow-hidden sm:rounded-md">
-              <a
-                id="speaker-details"
-                href="#speaker-details"
-                className="scroll-mt-16"
-              />
+              <a id="speaker-details" href="#speaker-details" className="scroll-mt-16" />
               <div className="space-y-6 bg-white py-6 px-4 sm:p-6">
                 <div>
                   <H2>Speaker details</H2>
                   <Text variant="secondary" className="mt-1">
-                    Give more information about you, these information will be
-                    visible by organizers when you submit a talk.
+                    Give more information about you, these information will be visible by organizers when you submit a
+                    talk.
                   </Text>
                 </div>
 
@@ -224,11 +185,7 @@ export default function SettingsRoute() {
 
           <Form method="post">
             <div className="border border-gray-200 sm:overflow-hidden sm:rounded-md">
-              <a
-                id="additional-info"
-                href="#additional-info"
-                className="scroll-mt-16"
-              />
+              <a id="additional-info" href="#additional-info" className="scroll-mt-16" />
               <div className="space-y-6 bg-white py-6 px-4 sm:p-6">
                 <div>
                   <H2>Additional information</H2>

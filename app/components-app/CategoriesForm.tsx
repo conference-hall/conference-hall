@@ -1,7 +1,4 @@
-import {
-  Checkbox,
-  CheckboxHeadingGroup,
-} from '../components-ui/forms/Checkboxes';
+import { Checkbox, CheckboxHeadingGroup } from '../components-ui/forms/Checkboxes';
 
 type Props = {
   categories: Array<{

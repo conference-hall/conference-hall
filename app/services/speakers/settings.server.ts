@@ -65,10 +65,7 @@ const UserAdditionalInfo = z.object({
   github: z.string(),
 });
 
-type SettingsSchema =
-  | typeof UserPersonalInfo
-  | typeof UserDetails
-  | typeof UserAdditionalInfo;
+type SettingsSchema = typeof UserPersonalInfo | typeof UserDetails | typeof UserAdditionalInfo;
 type SettingsUpdateData = z.infer<SettingsSchema>;
 
 export function validateProfileData(form: FormData, type?: string) {

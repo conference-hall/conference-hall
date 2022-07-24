@@ -1,5 +1,5 @@
 import * as fake from '@ngneat/falso';
-import { Prisma } from '@prisma/client';
+import type { Prisma } from '@prisma/client';
 import { db } from '../../app/services/db';
 import { applyTraits } from './helpers/traits';
 

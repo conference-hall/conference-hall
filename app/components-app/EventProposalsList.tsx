@@ -3,7 +3,7 @@ import { CalendarIcon, ExclamationIcon } from '@heroicons/react/solid';
 import { Link } from '@remix-run/react';
 import { IconLabel } from '../components-ui/IconLabel';
 import { Container } from '../components-ui/Container';
-import { CfpState } from '../utils/event';
+import type { CfpState } from '../utils/event';
 import { CfpLabel } from './CfpInfo';
 
 type Props = {
@@ -28,21 +28,13 @@ export function EventProposalsList({ proposals, cfpState }: Props) {
   }
 
   return (
-    <ul role="list" className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+    <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2">
       {proposals.map((proposal) => (
-        <li
-          key={proposal.id}
-          className="col-span-1 rounded-lg border border-gray-200 bg-white"
-        >
-          <Link
-            to={proposal.id}
-            className="block rounded-lg hover:bg-indigo-50"
-          >
+        <li key={proposal.id} className="col-span-1 rounded-lg border border-gray-200 bg-white">
+          <Link to={proposal.id} className="block rounded-lg hover:bg-indigo-50">
             <div className="flex h-40 flex-col justify-between px-4 py-4 sm:px-6">
               <div>
-                <p className="truncate text-base font-semibold text-indigo-600">
-                  {proposal.title}
-                </p>
+                <p className="truncate text-base font-semibold text-indigo-600">{proposal.title}</p>
 
                 <div className="mt-2 flex items-center -space-x-1 overflow-hidden">
                   {proposal.speakers.map((speaker) => (
@@ -61,18 +53,11 @@ export function EventProposalsList({ proposals, cfpState }: Props) {
 
               <div>
                 {proposal.status === 'DRAFT' ? (
-                  <IconLabel
-                    icon={ExclamationIcon}
-                    className="text-sm text-yellow-600"
-                  >
+                  <IconLabel icon={ExclamationIcon} className="text-sm text-yellow-600">
                     Draft proposal, don't forget to submit it.
                   </IconLabel>
                 ) : (
-                  <IconLabel
-                    icon={CalendarIcon}
-                    className="text-sm text-gray-500"
-                    iconClassName="text-gray-400"
-                  >
+                  <IconLabel icon={CalendarIcon} className="text-sm text-gray-500" iconClassName="text-gray-400">
                     Submitted&nbsp;
                     <time dateTime={proposal.createdAt}>
                       {formatRelative(new Date(proposal.createdAt), new Date())}
@@ -110,12 +95,8 @@ export function EmptyState({ cfpState }: EmptyStateProps) {
       </svg>
       {cfpState === 'OPENED' ? (
         <>
-          <h3 className="mt-2 text-sm font-medium text-gray-900">
-            No submitted proposals yet!
-          </h3>
-          <p className="mt-1 text-sm text-gray-600">
-            Get started by submitting your first proposal.
-          </p>
+          <h3 className="mt-2 text-sm font-medium text-gray-900">No submitted proposals yet!</h3>
+          <p className="mt-1 text-sm text-gray-600">Get started by submitting your first proposal.</p>
         </>
       ) : (
         <>

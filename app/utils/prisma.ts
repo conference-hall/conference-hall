@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import type { Prisma } from '@prisma/client';
 
 export function jsonToArray(json: Prisma.JsonValue) {
   if (!json) return [];

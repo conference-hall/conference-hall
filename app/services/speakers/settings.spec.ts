@@ -2,11 +2,7 @@ import { disconnectDB, resetDB } from '../../../tests/db-helpers';
 import { userFactory } from '../../../tests/factories/users';
 import { db } from '../db';
 import { UserNotFoundError } from '../errors';
-import {
-  getSettings,
-  updateSettings,
-  validateProfileData,
-} from './settings.server';
+import { getSettings, updateSettings, validateProfileData } from './settings.server';
 
 describe('#getSettings', () => {
   beforeEach(async () => {
@@ -78,7 +74,7 @@ describe('#updateSettings', () => {
     expect(updated?.references).toEqual(data.references);
   });
 
-  it('updates user details', async () => {
+  it('updates user additional information', async () => {
     const user = await userFactory();
 
     const data = {
@@ -99,9 +95,7 @@ describe('#updateSettings', () => {
 
   it('throws an error when user not found', async () => {
     const data = { bio: '', references: '' };
-    await expect(updateSettings('XXX', data)).rejects.toThrowError(
-      UserNotFoundError
-    );
+    await expect(updateSettings('XXX', data)).rejects.toThrowError(UserNotFoundError);
   });
 });
 

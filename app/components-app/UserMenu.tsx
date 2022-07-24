@@ -2,13 +2,7 @@ import { Fragment } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import cn from 'classnames';
 import { Form, Link } from '@remix-run/react';
-import {
-  CogIcon,
-  FireIcon,
-  LogoutIcon,
-  MicrophoneIcon,
-  SearchIcon,
-} from '@heroicons/react/solid';
+import { CogIcon, FireIcon, LogoutIcon, MicrophoneIcon, SearchIcon } from '@heroicons/react/solid';
 
 type Props = { email: string; picture?: string | null };
 
@@ -38,26 +32,18 @@ export function UserMenu({ email, picture }: Props) {
         <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="px-4 py-3">
             <p className="text-sm">Signed in as</p>
-            <p className="truncate text-sm font-medium text-gray-900">
-              {email}
-            </p>
+            <p className="truncate text-sm font-medium text-gray-900">{email}</p>
           </div>
           <div className="py-1">
             <Menu.Item>
               {({ active }) => (
                 <Link
                   to="/speaker"
-                  className={cn(
-                    'group flex items-center px-4 py-2 text-sm text-gray-700',
-                    {
-                      'bg-gray-100 text-gray-900': active,
-                    }
-                  )}
+                  className={cn('group flex items-center px-4 py-2 text-sm text-gray-700', {
+                    'bg-gray-100 text-gray-900': active,
+                  })}
                 >
-                  <FireIcon
-                    className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
-                    aria-hidden="true"
-                  />
+                  <FireIcon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
                   Activity
                 </Link>
               )}
@@ -66,17 +52,11 @@ export function UserMenu({ email, picture }: Props) {
               {({ active }) => (
                 <Link
                   to="/speaker/talks"
-                  className={cn(
-                    'group flex items-center px-4 py-2 text-sm text-gray-700',
-                    {
-                      'bg-gray-100 text-gray-900': active,
-                    }
-                  )}
+                  className={cn('group flex items-center px-4 py-2 text-sm text-gray-700', {
+                    'bg-gray-100 text-gray-900': active,
+                  })}
                 >
-                  <MicrophoneIcon
-                    className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
-                    aria-hidden="true"
-                  />
+                  <MicrophoneIcon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
                   Talks
                 </Link>
               )}
@@ -85,17 +65,11 @@ export function UserMenu({ email, picture }: Props) {
               {({ active }) => (
                 <Link
                   to="/speaker/settings"
-                  className={cn(
-                    'group flex items-center px-4 py-2 text-sm text-gray-700',
-                    {
-                      'bg-gray-100 text-gray-900': active,
-                    }
-                  )}
+                  className={cn('group flex items-center px-4 py-2 text-sm text-gray-700', {
+                    'bg-gray-100 text-gray-900': active,
+                  })}
                 >
-                  <CogIcon
-                    className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
-                    aria-hidden="true"
-                  />
+                  <CogIcon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
                   Settings
                 </Link>
               )}
@@ -106,17 +80,11 @@ export function UserMenu({ email, picture }: Props) {
               {({ active }) => (
                 <Link
                   to="/"
-                  className={cn(
-                    'group flex items-center px-4 py-2 text-sm text-gray-700',
-                    {
-                      'bg-gray-100 text-gray-900': active,
-                    }
-                  )}
+                  className={cn('group flex items-center px-4 py-2 text-sm text-gray-700', {
+                    'bg-gray-100 text-gray-900': active,
+                  })}
                 >
-                  <SearchIcon
-                    className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
-                    aria-hidden="true"
-                  />
+                  <SearchIcon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
                   Search events
                 </Link>
               )}
@@ -128,10 +96,7 @@ export function UserMenu({ email, picture }: Props) {
                 <Form action="/logout" method="post">
                   <button
                     type="submit"
-                    className={cn(
-                      'block w-full px-4 py-2 text-left text-sm text-gray-700',
-                      { 'bg-gray-100': active }
-                    )}
+                    className={cn('block w-full px-4 py-2 text-left text-sm text-gray-700', { 'bg-gray-100': active })}
                   >
                     <LogoutIcon
                       className="mr-3 inline h-5 w-5 text-gray-400 group-hover:text-gray-500"

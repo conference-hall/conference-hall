@@ -9,18 +9,10 @@ type Props = {
   iconClassName?: string;
 };
 
-export function IconLabel({
-  children,
-  icon: Icon,
-  className,
-  iconClassName,
-}: Props) {
+export function IconLabel({ children, icon: Icon, className, iconClassName }: Props) {
   return (
     <div className={cn('flex items-center text-sm', className)}>
-      <Icon
-        className={cn('mr-1.5 h-5 w-5 flex-shrink-0 self-start', iconClassName)}
-        aria-hidden="true"
-      />
+      <Icon className={cn('mr-1.5 h-5 w-5 flex-shrink-0 self-start', iconClassName)} aria-hidden="true" />
       {children}
     </div>
   );

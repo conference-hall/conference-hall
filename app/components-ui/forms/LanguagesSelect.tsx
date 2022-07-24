@@ -16,25 +16,18 @@ export default function LanguagesSelect({ values, className }: Props) {
     <Listbox name="languages" value={selected} onChange={setSelected} multiple>
       {({ open }) => (
         <div className={className}>
-          <Listbox.Label className="block text-sm font-medium text-gray-700">
-            Languages
-          </Listbox.Label>
+          <Listbox.Label className="block text-sm font-medium text-gray-700">Languages</Listbox.Label>
           <div className="relative mt-1">
             <Listbox.Button className="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
               {selected.length > 0 ? (
-                <Text className="block truncate">
-                  {selected.map(getLanguage).join(', ')}
-                </Text>
+                <Text className="block truncate">{selected.map(getLanguage).join(', ')}</Text>
               ) : (
                 <Text variant="secondary" className="block truncate">
                   Select spoken languages for the talk.
                 </Text>
               )}
               <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                <SelectorIcon
-                  className="h-5 w-5 text-gray-400"
-                  aria-hidden="true"
-                />
+                <SelectorIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
               </span>
             </Listbox.Button>
 
@@ -59,12 +52,7 @@ export default function LanguagesSelect({ values, className }: Props) {
                   >
                     {({ selected, active }) => (
                       <>
-                        <span
-                          className={c(
-                            selected ? 'font-semibold' : 'font-normal',
-                            'block truncate'
-                          )}
-                        >
+                        <span className={c(selected ? 'font-semibold' : 'font-normal', 'block truncate')}>
                           {language.label}
                         </span>
 

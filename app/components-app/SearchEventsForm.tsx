@@ -1,6 +1,6 @@
 import c from 'classnames';
 import { Form, useSearchParams, useSubmit } from '@remix-run/react';
-import { SearchFilters } from '../services/events/search.server';
+import type { SearchFilters } from '../services/events/search.server';
 import { Input } from '../components-ui/forms/Input';
 import { Button } from '../components-ui/Buttons';
 import DetailedSelect from '../components-ui/forms/DetailedSelect';

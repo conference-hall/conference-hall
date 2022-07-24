@@ -1,50 +1,37 @@
-import {
-  CfpNotOpenError,
-  EventNotFoundError,
-  mapErrorToResponse,
-} from './errors';
+import { Response } from '@remix-run/node';
+import { getError } from '../../tests/test-helpers';
+
+import { CfpNotOpenError, EventNotFoundError, mapErrorToResponse } from './errors';
 
 describe('#mapErrorToResponse', () => {
-  it('should map NotFound error to a Response 404 error', () => {
+  it('should map NotFound error to a Response 404 error', async () => {
     const error = new EventNotFoundError();
-    try {
-      mapErrorToResponse(error);
-      expect(true).toBe(false);
-    } catch (err: any) {
-      expect(err.status).toBe(404);
-      expect(err.statusText).toBe('Event not found');
-    }
+
+    const err = await getError<Response>(() => mapErrorToResponse(error));
+    expect(err.status).toBe(404);
+    expect(err.statusText).toBe('Event not found');
   });
 
-  it('should map BadRequest error to a Response 400 error', () => {
+  it('should map BadRequest error to a Response 400 error', async () => {
     const error = new CfpNotOpenError();
-    try {
-      mapErrorToResponse(error);
-      expect(true).toBe(false);
-    } catch (err: any) {
-      expect(err.status).toBe(400);
-      expect(err.statusText).toBe('CFP not open');
-    }
+
+    const err = await getError<Response>(() => mapErrorToResponse(error));
+    expect(err.status).toBe(400);
+    expect(err.statusText).toBe('CFP not open');
   });
 
-  it('should throw the Response if provided as error', () => {
+  it('should throw the Response if provided as error', async () => {
     const error = new Response('Something went wrong', { status: 404 });
-    try {
-      mapErrorToResponse(error);
-      expect(true).toBe(false);
-    } catch (err: any) {
-      expect(err.status).toBe(404);
-    }
+
+    const err = await getError<Response>(() => mapErrorToResponse(error));
+    expect(err.status).toBe(404);
   });
 
-  it('should throw Response 500 error for other errors', () => {
+  it('should throw Response 500 error for other errors', async () => {
     const error = new Error('Something went wrong');
-    try {
-      mapErrorToResponse(error);
-      expect(true).toBe(false);
-    } catch (err: any) {
-      expect(err.status).toBe(500);
-      expect(err.statusText).toBe('Something went wrong');
-    }
+
+    const err = await getError<Response>(() => mapErrorToResponse(error));
+    expect(err.status).toBe(500);
+    expect(err.statusText).toBe('Something went wrong');
   });
 });

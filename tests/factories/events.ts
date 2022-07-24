@@ -1,5 +1,6 @@
 import * as fake from '@ngneat/falso';
-import { EventType, EventVisibility, Prisma } from '@prisma/client';
+import type { Prisma } from '@prisma/client';
+import { EventType, EventVisibility } from '@prisma/client';
 import { db } from '../../app/services/db';
 import { applyTraits } from './helpers/traits';
 
@@ -45,14 +46,7 @@ const TRAITS = {
   },
   withSurvey: {
     surveyEnabled: true,
-    surveyQuestions: Array(
-      'gender',
-      'tshirt',
-      'diet',
-      'accomodation',
-      'transports',
-      'info'
-    ),
+    surveyQuestions: ['gender', 'tshirt', 'diet', 'accomodation', 'transports', 'info'],
   },
 };
 

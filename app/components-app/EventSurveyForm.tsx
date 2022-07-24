@@ -1,7 +1,7 @@
 import { Checkbox, CheckboxGroup } from '../components-ui/forms/Checkboxes';
 import { Radio, RadioGroup } from '../components-ui/forms/RadioGroup';
 import { TextArea } from '../components-ui/forms/TextArea';
-import { SurveyQuestions } from '../services/events/survey.server';
+import type { SurveyQuestions } from '../services/events/survey.server';
 
 export type Props = {
   questions: SurveyQuestions;
@@ -32,9 +32,7 @@ export function EventSurveyForm({ questions, initialValues }: Props) {
                   id={answer.name}
                   name={question.name}
                   value={answer.name}
-                  defaultChecked={initialValues[question.name]?.includes(
-                    answer.name
-                  )}
+                  defaultChecked={initialValues[question.name]?.includes(answer.name)}
                 >
                   {answer.label}
                 </Checkbox>
@@ -58,6 +56,7 @@ export function EventSurveyForm({ questions, initialValues }: Props) {
             </RadioGroup>
           );
         }
+        return null;
       })}
     </div>
   );

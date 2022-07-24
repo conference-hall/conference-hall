@@ -1,19 +1,11 @@
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { config } from './services/config';
-import { LinksFunction, LoaderFunction } from '@remix-run/node';
-import {
-  Meta,
-  LiveReload,
-  Outlet,
-  Links,
-  Scripts,
-  useCatch,
-  useLoaderData,
-  ScrollRestoration,
-} from '@remix-run/react';
+import type { LinksFunction, LoaderFunction } from '@remix-run/node';
+import { Meta, LiveReload, Outlet, Links, Scripts, useCatch, useLoaderData, ScrollRestoration } from '@remix-run/react';
 
 import { initializeFirebase } from './services/auth/firebase';
-import { AuthUser, getAuthUser } from './services/auth/auth.server';
+import type { AuthUser } from './services/auth/auth.server';
+import { getAuthUser } from './services/auth/auth.server';
 
 import tailwind from './tailwind.css';
 import { Footer } from './components-app/Footer';

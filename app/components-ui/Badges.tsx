@@ -24,13 +24,7 @@ type Props = {
   className?: string;
 };
 
-export default function Badge({
-  size = 'base',
-  color = 'gray',
-  rounded = true,
-  children,
-  className,
-}: Props) {
+export default function Badge({ size = 'base', color = 'gray', rounded = true, children, className }: Props) {
   const style = c(
     'inline-flex items-center font-medium',
     badgeSizes[size],

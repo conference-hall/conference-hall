@@ -1,10 +1,5 @@
 import { formatRelative } from 'date-fns';
-import {
-  MicrophoneIcon,
-  PlusIcon,
-  XIcon,
-  CheckIcon,
-} from '@heroicons/react/solid';
+import { MicrophoneIcon, PlusIcon, XIcon, CheckIcon } from '@heroicons/react/solid';
 import { ExclamationIcon, DotsHorizontalIcon } from '@heroicons/react/outline';
 import { IconLabel } from '../components-ui/IconLabel';
 import { Link } from '../components-ui/Links';
@@ -29,16 +24,14 @@ export function SpeakerActivities({ activities }: Props) {
   return (
     <div>
       {activities.map((activity) => (
-        <ul key={activity.id} role="list" className="rounded-lg p-4">
+        <ul key={activity.id} className="rounded-lg p-4">
           <li key={activity.id}>
             <TalkActivity
               talkId={activity.id}
               talkTitle={activity.title}
               date={activity.date}
               noSubmission={activity.proposals.length === 0}
-              showTimeline={
-                activity.proposals ? activity.proposals.length > 0 : false
-              }
+              showTimeline={activity.proposals ? activity.proposals.length > 0 : false}
             />
           </li>
           {activity.proposals?.map((proposal, index2) => (
@@ -69,12 +62,7 @@ interface ActivityItemProps {
 }
 
 function ActivityLine() {
-  return (
-    <span
-      className="absolute top-5 left-5 -ml-px h-full w-0.5 bg-gray-200"
-      aria-hidden="true"
-    />
-  );
+  return <span className="absolute top-5 left-5 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true" />;
 }
 
 interface TalkActivityProps extends ActivityItemProps {
@@ -84,13 +72,7 @@ interface TalkActivityProps extends ActivityItemProps {
   noSubmission: boolean;
 }
 
-function TalkActivity({
-  talkId,
-  talkTitle,
-  date,
-  noSubmission,
-  showTimeline = false,
-}: TalkActivityProps) {
+function TalkActivity({ talkId, talkTitle, date, noSubmission, showTimeline = false }: TalkActivityProps) {
   return (
     <div className="relative pb-8">
       {showTimeline && <ActivityLine />}
@@ -101,23 +83,14 @@ function TalkActivity({
         <div className="flex min-w-0 flex-1 items-start justify-between">
           <div>
             <div className="text-sm text-gray-500">
-              <Link
-                to={`talks/${talkId}`}
-                className="font-medium text-gray-900 hover:text-gray-900"
-              >
+              <Link to={`talks/${talkId}`} className="font-medium text-gray-900 hover:text-gray-900">
                 {talkTitle}
               </Link>{' '}
-              updated{' '}
-              <span className="whitespace-nowrap">
-                {formatRelative(new Date(date), new Date())}
-              </span>
+              updated <span className="whitespace-nowrap">{formatRelative(new Date(date), new Date())}</span>
             </div>
             <p className="mt-0.5 text-sm text-gray-500">by Clark Kent</p>
             {noSubmission && (
-              <IconLabel
-                icon={ExclamationIcon}
-                className="mt-2 text-sm text-yellow-600"
-              >
+              <IconLabel icon={ExclamationIcon} className="mt-2 text-sm text-yellow-600">
                 Not submitted yet. Search for great event.
               </IconLabel>
             )}
@@ -140,13 +113,7 @@ interface EventActivityProps extends ActivityItemProps {
   status: string;
 }
 
-export function EventActivity({
-  eventName,
-  eventSlug,
-  date,
-  showTimeline = false,
-  status,
-}: EventActivityProps) {
+export function EventActivity({ eventName, eventSlug, date, showTimeline = false, status }: EventActivityProps) {
   return (
     <div className="relative pb-4">
       {showTimeline && <ActivityLine />}
@@ -154,42 +121,20 @@ export function EventActivity({
         <div>
           <div className="relative px-1">
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200">
-              {status === 'DRAFT' && (
-                <ExclamationIcon
-                  className="h-5 w-5 text-gray-500"
-                  aria-hidden="true"
-                />
-              )}
-              {status === 'SUBMITTED' && (
-                <PlusIcon
-                  className="h-5 w-5 text-gray-500"
-                  aria-hidden="true"
-                />
-              )}
-              {status === 'ACCEPTED' && (
-                <CheckIcon
-                  className="h-5 w-5 text-gray-500"
-                  aria-hidden="true"
-                />
-              )}
-              {status === 'REJECTED' && (
-                <XIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />
-              )}
+              {status === 'DRAFT' && <ExclamationIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />}
+              {status === 'SUBMITTED' && <PlusIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />}
+              {status === 'ACCEPTED' && <CheckIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />}
+              {status === 'REJECTED' && <XIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />}
             </div>
           </div>
         </div>
         <div className="min-w-0 flex-1 py-1.5">
           <div className="text-sm text-gray-500">
             {status} to{' '}
-            <Link
-              to={`/${eventSlug}/proposals`}
-              className="font-medium text-gray-900 hover:text-gray-900"
-            >
+            <Link to={`/${eventSlug}/proposals`} className="font-medium text-gray-900 hover:text-gray-900">
               {eventName}
             </Link>{' '}
-            <span className="whitespace-nowrap">
-              {formatRelative(new Date(date), new Date())}
-            </span>
+            <span className="whitespace-nowrap">{formatRelative(new Date(date), new Date())}</span>
           </div>
         </div>
       </div>
@@ -204,10 +149,7 @@ function MoreInfo() {
         <div>
           <div className="relative px-1">
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100">
-              <DotsHorizontalIcon
-                className="h-5 w-5 text-gray-500"
-                aria-hidden="true"
-              />
+              <DotsHorizontalIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />
             </div>
           </div>
         </div>

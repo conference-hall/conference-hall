@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import type { Prisma } from '@prisma/client';
 import { db } from '../../app/services/db';
 
 type FactoryOptions = {

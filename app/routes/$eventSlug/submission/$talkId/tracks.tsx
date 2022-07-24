@@ -1,24 +1,14 @@
-import {
-  ActionFunction,
-  json,
-  LoaderFunction,
-  redirect,
-} from '@remix-run/node';
+import type { ActionFunction, LoaderFunction } from '@remix-run/node';
+import { json, redirect } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
 import { Button, ButtonLink } from '~/components-ui/Buttons';
 import { CategoriesForm } from '~/components-app/CategoriesForm';
 import { requireUserSession } from '../../../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../../../services/errors';
-import {
-  EventTracks,
-  getEvent,
-} from '../../../../services/events/event.server';
-import {
-  getProposalTracks,
-  ProposalTracks,
-  saveTracks,
-  validateTracksForm,
-} from '../../../../services/events/tracks.server';
+import type { EventTracks } from '../../../../services/events/event.server';
+import { getEvent } from '../../../../services/events/event.server';
+import type { ProposalTracks } from '../../../../services/events/tracks.server';
+import { getProposalTracks, saveTracks, validateTracksForm } from '../../../../services/events/tracks.server';
 import { useSubmissionStep } from '../../../../components-app/useSubmissionStep';
 import { FormatsForm } from '../../../../components-app/FormatsForm';
 
@@ -73,18 +63,10 @@ export default function SubmissionTracksRoute() {
   return (
     <Form method="post">
       <div className="space-y-12 px-8 py-6 sm:py-10">
-        {event.formats?.length > 0 ? (
-          <FormatsForm
-            formats={event.formats}
-            initialValues={proposal.formats}
-          />
-        ) : null}
+        {event.formats?.length > 0 ? <FormatsForm formats={event.formats} initialValues={proposal.formats} /> : null}
 
         {event.categories?.length > 0 ? (
-          <CategoriesForm
-            categories={event.categories}
-            initialValues={proposal.categories}
-          />
+          <CategoriesForm categories={event.categories} initialValues={proposal.categories} />
         ) : null}
       </div>
 

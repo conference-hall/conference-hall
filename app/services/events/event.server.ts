@@ -1,4 +1,5 @@
-import { CfpState, getCfpState } from '~/utils/event';
+import type { CfpState } from '~/utils/event';
+import { getCfpState } from '~/utils/event';
 import { db } from '../db';
 import { EventNotFoundError } from '../errors';
 
@@ -58,8 +59,7 @@ export async function getEvent(slug: string): Promise<EventData> {
     contactEmail: event.contactEmail,
     codeOfConductUrl: event.codeOfConductUrl,
     bannerUrl: event.bannerUrl,
-    isCfpOpen:
-      getCfpState(event.type, event.cfpStart, event.cfpEnd) === 'OPENED',
+    isCfpOpen: getCfpState(event.type, event.cfpStart, event.cfpEnd) === 'OPENED',
     hasSurvey: event.surveyEnabled,
     hasTracks: event.categories.length > 0 || event.formats.length > 0,
     formats: event.formats.map((f) => ({

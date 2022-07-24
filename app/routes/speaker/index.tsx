@@ -1,10 +1,7 @@
-import { json, LoaderFunction } from '@remix-run/node';
+import type { LoaderFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
-import {
-  GlobeAltIcon,
-  HomeIcon,
-  LocationMarkerIcon,
-} from '@heroicons/react/solid';
+import { GlobeAltIcon, HomeIcon, LocationMarkerIcon } from '@heroicons/react/solid';
 import { requireUserSession } from '../../services/auth/auth.server';
 import { Container } from '../../components-ui/Container';
 import { H3, Text } from '../../components-ui/Typography';
@@ -13,10 +10,8 @@ import { IconLabel } from '../../components-ui/IconLabel';
 import { Link } from '../../components-ui/Links';
 import { SpeakerActivities } from '../../components-app/SpeakerActivities';
 import { ButtonLink } from '../../components-ui/Buttons';
-import {
-  getSpeakerActivity,
-  SpeakerActivity,
-} from '../../services/speakers/activity.server';
+import type { SpeakerActivity } from '../../services/speakers/activity.server';
+import { getSpeakerActivity } from '../../services/speakers/activity.server';
 import { mapErrorToResponse } from '../../services/errors';
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -45,12 +40,8 @@ export default function ProfileRoute() {
             </div>
             <div className="mt-4 text-center sm:mt-0 sm:pt-1 sm:text-left">
               <p className="text-sm font-medium text-gray-600">Welcome back,</p>
-              <p className="text-xl font-bold text-gray-900 sm:text-2xl">
-                {profile.name}
-              </p>
-              <p className="text-sm font-medium text-gray-600">
-                {profile.email}
-              </p>
+              <p className="text-xl font-bold text-gray-900 sm:text-2xl">{profile.name}</p>
+              <p className="text-sm font-medium text-gray-600">{profile.email}</p>
             </div>
           </div>
         </div>
@@ -74,29 +65,16 @@ export default function ProfileRoute() {
               <Text className="mt-4">No biography defined.</Text>
             )}
             {profile.references ? (
-              <Markdown
-                className="mt-4 line-clamp-5"
-                source={profile.references}
-              />
+              <Markdown className="mt-4 line-clamp-5" source={profile.references} />
             ) : (
               <Text className="mt-4">No references defined.</Text>
             )}
             {profile.address ? (
               <div className="mt-6 grid grid-cols-1 gap-4">
-                {profile.company && (
-                  <IconLabel icon={HomeIcon}>{profile.company}</IconLabel>
-                )}
-                {profile.address && (
-                  <IconLabel icon={LocationMarkerIcon}>
-                    {profile.address}
-                  </IconLabel>
-                )}
-                {profile.twitter && (
-                  <IconLabel icon={GlobeAltIcon}>{profile.twitter}</IconLabel>
-                )}
-                {profile.github && (
-                  <IconLabel icon={GlobeAltIcon}>{profile.github}</IconLabel>
-                )}
+                {profile.company && <IconLabel icon={HomeIcon}>{profile.company}</IconLabel>}
+                {profile.address && <IconLabel icon={LocationMarkerIcon}>{profile.address}</IconLabel>}
+                {profile.twitter && <IconLabel icon={GlobeAltIcon}>{profile.twitter}</IconLabel>}
+                {profile.github && <IconLabel icon={GlobeAltIcon}>{profile.github}</IconLabel>}
               </div>
             ) : (
               <Text className="mt-4">Nothing defined.</Text>

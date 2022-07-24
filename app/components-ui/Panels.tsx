@@ -9,13 +9,7 @@ type Props = {
   className?: string;
 };
 
-export function SectionPanel({
-  id,
-  title,
-  children,
-  padding,
-  className,
-}: Props) {
+export function SectionPanel({ id, title, children, padding, className }: Props) {
   const styles = cn(
     'bg-white border border-gray-200 overflow-hidden sm:rounded-lg',
     { 'px-4 py-5 sm:px-6': padding },

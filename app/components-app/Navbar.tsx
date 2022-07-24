@@ -1,6 +1,6 @@
 import { Link as RemixLink } from '@remix-run/react';
 import { Link } from '../components-ui/Links';
-import { AuthUser } from '../services/auth/auth.server';
+import type { AuthUser } from '../services/auth/auth.server';
 import { UserMenu } from './UserMenu';
 
 type Props = { user?: AuthUser };
@@ -23,11 +23,7 @@ export function Navbar({ user }: Props) {
             </div>
           </div>
           <div className="flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-            {user ? (
-              <UserMenu email={user.email} picture={user.picture} />
-            ) : (
-              <Link to="/login">Login</Link>
-            )}
+            {user ? <UserMenu email={user.email} picture={user.picture} /> : <Link to="/login">Login</Link>}
           </div>
         </div>
       </div>

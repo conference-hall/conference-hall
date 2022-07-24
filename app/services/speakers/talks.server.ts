@@ -23,10 +23,7 @@ type TalksListOptions = {
  * @param uid Id of the connected user
  * @returns SpeakerTalks
  */
-export async function findTalks(
-  uid: string,
-  options?: TalksListOptions
-): Promise<SpeakerTalks> {
+export async function findTalks(uid: string, options?: TalksListOptions): Promise<SpeakerTalks> {
   const talks = await db.talk.findMany({
     select: {
       id: true,
@@ -87,10 +84,7 @@ export interface SpeakerTalk {
  * @param talkId Id of the talk
  * @returns SpeakerTalk
  */
-export async function getTalk(
-  uid: string,
-  talkId: string
-): Promise<SpeakerTalk> {
+export async function getTalk(uid: string, talkId: string): Promise<SpeakerTalk> {
   const talk = await db.talk.findFirst({
     where: {
       speakers: { some: { id: uid } },
@@ -172,11 +166,7 @@ export async function createTalk(uid: string, data: TalkData) {
  * @param talkId Id of the talk
  * @param data Talk data
  */
-export async function updateTalk(
-  uid: string,
-  talkId?: string,
-  data?: TalkData
-) {
+export async function updateTalk(uid: string, talkId?: string, data?: TalkData) {
   const talk = await db.talk.findFirst({
     where: { id: talkId, speakers: { some: { id: uid } } },
   });
@@ -213,10 +203,7 @@ export function validateTalkForm(form: FormData) {
  * @param invitationId Id of the invitation
  * @param coSpeakerId Id of the co-speaker to add
  */
-export async function inviteCoSpeakerToTalk(
-  invitationId: string,
-  coSpeakerId: string
-) {
+export async function inviteCoSpeakerToTalk(invitationId: string, coSpeakerId: string) {
   const invitation = await db.invite.findUnique({
     select: { type: true, talk: true, organization: true, invitedBy: true },
     where: { id: invitationId },
@@ -238,11 +225,7 @@ export async function inviteCoSpeakerToTalk(
  * @param talkId Id of the talk
  * @param coSpeakerId Id of the co-speaker to remove
  */
-export async function removeCoSpeakerFromTalk(
-  uid: string,
-  talkId: string,
-  coSpeakerId: string
-) {
+export async function removeCoSpeakerFromTalk(uid: string, talkId: string, coSpeakerId: string) {
   const talk = await db.talk.findFirst({
     where: { id: talkId, speakers: { some: { id: uid } } },
   });

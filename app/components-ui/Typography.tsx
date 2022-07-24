@@ -19,20 +19,9 @@ type TitleProps = {
   className?: string;
 };
 
-function Title({
-  variant = 'primary',
-  size,
-  as,
-  className,
-  ...rest
-}: TitleProps & { size: keyof typeof titleSize }) {
+function Title({ variant = 'primary', size, as, className, ...rest }: TitleProps & { size: keyof typeof titleSize }) {
   const Tag = as ?? size;
-  return (
-    <Tag
-      className={c(titleSize[size], titleColors[variant], className)}
-      {...rest}
-    />
-  );
+  return <Tag className={c(titleSize[size], titleColors[variant], className)} {...rest} />;
 }
 
 export function H1(props: TitleProps) {
@@ -69,18 +58,7 @@ type TextProps = {
   children: React.ReactNode;
 };
 
-export function Text({
-  variant = 'primary',
-  size = 'sm',
-  className,
-  as = 'p',
-  ...rest
-}: TextProps) {
+export function Text({ variant = 'primary', size = 'sm', className, as = 'p', ...rest }: TextProps) {
   const Tag = as ?? 'p';
-  return (
-    <Tag
-      className={c(textSize[size], textColors[variant], className)}
-      {...rest}
-    />
-  );
+  return <Tag className={c(textSize[size], textColors[variant], className)} {...rest} />;
 }

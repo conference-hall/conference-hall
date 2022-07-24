@@ -21,11 +21,7 @@ export interface ProposalSpeakers {
  * @param uid Id of the connected user
  * @returns SpeakerTalk
  */
-export async function getProposalSpeakers(
-  talkId: string,
-  eventSlug: string,
-  uid: string
-): Promise<ProposalSpeakers> {
+export async function getProposalSpeakers(talkId: string, eventSlug: string, uid: string): Promise<ProposalSpeakers> {
   const proposal = await db.proposal.findFirst({
     select: {
       id: true,

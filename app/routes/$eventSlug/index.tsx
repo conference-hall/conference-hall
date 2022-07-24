@@ -14,11 +14,7 @@ export default function EventRoute() {
     <div>
       <section className="border-b border-gray-200 py-8">
         <Container className="flex flex-wrap items-center justify-between sm:flex-nowrap">
-          <CfpHeader
-            cfpState={event.cfpState}
-            cfpStart={event.cfpStart}
-            cfpEnd={event.cfpEnd}
-          />
+          <CfpHeader cfpState={event.cfpState} cfpStart={event.cfpStart} cfpEnd={event.cfpEnd} />
           {event.cfpState === 'OPENED' && (
             <div className="flex-shrink-0">
               <ButtonLink to="submission" block>
@@ -47,10 +43,7 @@ export default function EventRoute() {
                 </ExternalLink>
               )}
               {event.contactEmail && (
-                <ExternalLink
-                  href={`mailto:${event.contactEmail}`}
-                  icon={MailIcon}
-                >
+                <ExternalLink href={`mailto:${event.contactEmail}`} icon={MailIcon}>
                   Contacts
                 </ExternalLink>
               )}
@@ -83,11 +76,7 @@ export default function EventRoute() {
                   <dl className="divide-y divide-gray-200 rounded-md border border-gray-200 bg-white">
                     {event.formats.map((f) => (
                       <div key={f.name} className="py-3 pl-3 pr-4">
-                        <Text
-                          as="dt"
-                          variant="secondary"
-                          className="font-semibold"
-                        >
+                        <Text as="dt" variant="secondary" className="font-semibold">
                           {f.name}
                         </Text>
                         <Text as="dd" className="mt-1">
@@ -107,17 +96,10 @@ export default function EventRoute() {
                   Different categories and tracks proposed by the conference.
                 </Text>
                 <div className="mt-4">
-                  <dl
-                    role="list"
-                    className="divide-y divide-gray-200 rounded-md border border-gray-200 bg-white"
-                  >
+                  <dl role="list" className="divide-y divide-gray-200 rounded-md border border-gray-200 bg-white">
                     {event.categories.map((c) => (
                       <div key={c.name} className="py-3 pl-3 pr-4">
-                        <Text
-                          as="dt"
-                          variant="secondary"
-                          className="font-semibold"
-                        >
+                        <Text as="dt" variant="secondary" className="font-semibold">
                           {c.name}
                         </Text>
                         <Text as="dd" className="mt-1">

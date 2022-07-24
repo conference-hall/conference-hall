@@ -42,9 +42,7 @@ describe('#getEvent', () => {
       surveyEnabled: true, // TODO not necessary? hasSurvey: true
       hasSurvey: true,
       hasTracks: true,
-      formats: [
-        { id: format.id, name: format.name, description: format.description },
-      ],
+      formats: [{ id: format.id, name: format.name, description: format.description }],
       categories: [
         {
           id: category.id,

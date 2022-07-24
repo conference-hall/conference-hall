@@ -1,32 +1,19 @@
-import {
-  ActionFunction,
-  json,
-  LoaderFunction,
-  redirect,
-} from '@remix-run/node';
+import type { ActionFunction, LoaderFunction } from '@remix-run/node';
+import { json, redirect } from '@remix-run/node';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import { Button, ButtonLink } from '~/components-ui/Buttons';
-import {
-  InviteCoSpeakerButton,
-  CoSpeakersList,
-} from '../../../../components-app/CoSpeaker';
+import { InviteCoSpeakerButton, CoSpeakersList } from '../../../../components-app/CoSpeaker';
 import { useSubmissionStep } from '../../../../components-app/useSubmissionStep';
 import { MarkdownTextArea } from '../../../../components-ui/forms/MarkdownTextArea';
 import { ExternalLink } from '../../../../components-ui/Links';
 import { H2, Text } from '../../../../components-ui/Typography';
-import {
-  requireAuthUser,
-  requireUserSession,
-} from '../../../../services/auth/auth.server';
+import { requireAuthUser, requireUserSession } from '../../../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../../../services/errors';
 import { getEvent } from '../../../../services/events/event.server';
 import { removeCoSpeakerFromProposal } from '../../../../services/events/proposals.server';
 import { getProposalSpeakers } from '../../../../services/events/speakers.server';
-import {
-  updateSettings,
-  validateProfileData,
-} from '../../../../services/speakers/settings.server';
-import { ValidationErrors } from '../../../../utils/validation-errors';
+import { updateSettings, validateProfileData } from '../../../../services/speakers/settings.server';
+import type { ValidationErrors } from '../../../../utils/validation-errors';
 
 type SubmissionSpeakers = {
   proposalId: string;
@@ -107,8 +94,7 @@ export default function SubmissionSpeakerRoute() {
           <div>
             <H2>Speaker details</H2>
             <Text variant="secondary" className="mt-1">
-              Give more information about you, these information will be visible
-              by organizers when you submit a talk.
+              Give more information about you, these information will be visible by organizers when you submit a talk.
             </Text>
           </div>
           <MarkdownTextArea
@@ -122,27 +108,16 @@ export default function SubmissionSpeakerRoute() {
           />
           <Text className="mt-2">
             You can give more information about you from{' '}
-            <ExternalLink href="/speaker/settings">
-              the settings page.
-            </ExternalLink>
+            <ExternalLink href="/speaker/settings">the settings page.</ExternalLink>
           </Text>
         </Form>
         <div className="mt-12">
           <H2>Co-speakers</H2>
           <Text variant="secondary" className="mt-1">
-            This information will be displayed publicly so be careful what you
-            share.
+            This information will be displayed publicly so be careful what you share.
           </Text>
-          <CoSpeakersList
-            speakers={data.speakers}
-            showRemoveAction
-            className="max-w-md py-4"
-          />
-          <InviteCoSpeakerButton
-            to="PROPOSAL"
-            id={data.proposalId}
-            invitationLink={data.invitationLink}
-          />
+          <CoSpeakersList speakers={data.speakers} showRemoveAction className="max-w-md py-4" />
+          <InviteCoSpeakerButton to="PROPOSAL" id={data.proposalId} invitationLink={data.invitationLink} />
         </div>
       </div>
       <div className="px-4 py-5 text-right sm:px-6">

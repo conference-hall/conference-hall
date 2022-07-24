@@ -1,4 +1,5 @@
-import { json, LoaderArgs } from '@remix-run/node';
+import type { LoaderArgs } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { Container } from '~/components-ui/Container';
 import { useEvent } from '../../$eventSlug';
@@ -11,9 +12,7 @@ import { fetchSpeakerProposals } from '../../../services/events/proposals.server
 export const loader = async ({ request, params }: LoaderArgs) => {
   const uid = await requireUserSession(request);
   const slug = params.eventSlug!;
-  const proposals = await fetchSpeakerProposals(slug, uid).catch(
-    mapErrorToResponse
-  );
+  const proposals = await fetchSpeakerProposals(slug, uid).catch(mapErrorToResponse);
   return json(proposals);
 };
 
