@@ -24,11 +24,10 @@
     "css:generate": "tailwindcss -o ./app/tailwind.css",
     "format": "prettier -l --write .",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
-    "tsc": "tsc -b",
+    "tsc": "tsc -b && tsc -b cypress",
     "prepare": "husky install"
   },
   "lint-staged": {
-    "**/*.{ts,tsx}": "npm run tsc",
     "**/*.{ts,tsx,js,jsx}": "npm run lint -- --fix",
     "**/*.{json,md,mdx,html,css,yml}": "npm run format"
   },

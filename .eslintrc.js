@@ -19,7 +19,7 @@ module.exports = {
     },
   },
   rules: {
-    'prettier/prettier': 'error',
+    'prettier/prettier': 'warn',
     'jsx-a11y/anchor-has-content': 'off',
   },
 };
