@@ -24,12 +24,13 @@
     "css:generate": "tailwindcss -o ./app/tailwind.css",
     "format": "prettier --write .",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
-    "tsc": "tsc -b && tsc -b cypress",
+    "tsc": "tsc -b",
     "prepare": "husky install"
   },
   "lint-staged": {
-    "**/*.{ts,tsx,js,jsx,json,md,mdx,html,css,yml}": "npm run format -- --fix",
-    "**/*.{ts,tsx,js,jsx}": "npm run lint"
+    "**/*.{ts,tsx,js,jsx,json,md,mdx,html,css,yml}": "npm run format",
+    "**/*.{ts,tsx,js,jsx}": "npm run lint -- --fix",
+    "**/*.{ts,tsx}": "npm run tsc"
   },
   "prisma": {
     "seed": "node --require esbuild-register prisma/seed.ts"
