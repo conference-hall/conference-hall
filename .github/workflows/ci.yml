@@ -32,7 +32,7 @@ jobs:
         run: docker compose up -d --build
 
       - name: Wait for database start...
-        run: ./docker/postgres/wait-for-it.sh localhost 5432
+        run: ./docker/wait-for-db.sh
 
       - name: Execute tests
         run: npm test
