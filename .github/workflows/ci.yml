@@ -31,6 +31,9 @@ jobs:
       - name: Start database and firebase emulators
         run: docker compose up -d --build
 
+      - name: Wait for database start...
+        run: ./docker/postgres/wait-for-it.sh localhost 5432
+
       - name: Execute tests
         run: npm test
 
