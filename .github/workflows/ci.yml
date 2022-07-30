@@ -28,9 +28,6 @@ jobs:
       - name: Typescript checking
         run: npm run tsc
 
-      - uses: docker/setup-buildx-action@v2
-        name: Setup docker cache
-
       - name: Start database and firebase emulators
         run: docker compose up -d --build
 
