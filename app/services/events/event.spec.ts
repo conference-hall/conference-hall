@@ -1,4 +1,4 @@
-import { disconnectDB, resetDB } from '../../../tests/db-helpers';
+import { resetDB } from '../../../tests/db-helpers';
 import { eventCategoryFactory } from '../../../tests/factories/categories';
 import { eventFactory } from '../../../tests/factories/events';
 import { eventFormatFactory } from '../../../tests/factories/formats';
@@ -6,12 +6,7 @@ import { EventNotFoundError } from '../errors';
 import { getEvent } from './event.server';
 
 describe('#getEvent', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterAll(async () => {
-    await disconnectDB();
-  });
+  afterEach(resetDB);
 
   it('returns the default response', async () => {
     const event = await eventFactory({

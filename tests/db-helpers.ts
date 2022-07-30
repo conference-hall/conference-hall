@@ -7,20 +7,25 @@ export async function disconnectDB() {
 }
 
 export async function resetDB() {
-  if (config.isTest) {
-    await db.betaKey.deleteMany();
-    await db.invite.deleteMany();
-    await db.survey.deleteMany();
-    await db.message.deleteMany();
-    await db.rating.deleteMany();
-    await db.proposal.deleteMany();
-    await db.talk.deleteMany();
-    await db.eventFormat.deleteMany();
-    await db.eventCategory.deleteMany();
-    await db.event.deleteMany();
-    await db.organizationMember.deleteMany();
-    await db.organization.deleteMany();
-    await db.user.deleteMany();
-  }
-  return 'db reset';
+  if (!config.isTest) return 'Not a test database';
+
+  await db.$transaction([
+    db.betaKey.deleteMany(),
+    db.invite.deleteMany(),
+    db.survey.deleteMany(),
+    db.message.deleteMany(),
+    db.proposal.deleteMany(),
+    db.rating.deleteMany(),
+    db.talk.deleteMany(),
+    db.eventFormat.deleteMany(),
+    db.eventCategory.deleteMany(),
+    db.event.deleteMany(),
+    db.organizationMember.deleteMany(),
+    db.organization.deleteMany(),
+    db.user.deleteMany(),
+  ]);
+
+  await disconnectDB();
+
+  return 'db reset done';
 }

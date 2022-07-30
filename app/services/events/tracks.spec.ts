@@ -1,4 +1,4 @@
-import { disconnectDB, resetDB } from '../../../tests/db-helpers';
+import { resetDB } from '../../../tests/db-helpers';
 import { eventCategoryFactory } from '../../../tests/factories/categories';
 import { eventFactory } from '../../../tests/factories/events';
 import { eventFormatFactory } from '../../../tests/factories/formats';
@@ -10,12 +10,7 @@ import { ProposalNotFoundError } from '../errors';
 import { getProposalTracks, saveTracks, validateTracksForm } from './tracks.server';
 
 describe('#getProposalTracks', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterAll(async () => {
-    await disconnectDB();
-  });
+  afterEach(resetDB);
 
   it('returns the default response', async () => {
     const event = await eventFactory({ traits: ['conference-cfp-open'] });
@@ -58,12 +53,7 @@ describe('#getProposalTracks', () => {
 });
 
 describe('#saveTracks', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterAll(async () => {
-    await disconnectDB();
-  });
+  afterEach(resetDB);
 
   it('set tracks of the proposal', async () => {
     const event = await eventFactory({ traits: ['conference-cfp-open'] });

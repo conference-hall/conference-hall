@@ -1,4 +1,4 @@
-import { disconnectDB, resetDB } from '../../../tests/db-helpers';
+import { resetDB } from '../../../tests/db-helpers';
 import { eventFactory } from '../../../tests/factories/events';
 import { surveyFactory } from '../../../tests/factories/surveys';
 import { userFactory } from '../../../tests/factories/users';
@@ -6,12 +6,7 @@ import { EventNotFoundError, SurveyNotEnabledError } from '../errors';
 import { getSurveyAnswers, getSurveyQuestions, saveSurvey, validateSurveyForm } from './survey.server';
 
 describe('#getSurveyQuestions', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterAll(async () => {
-    await disconnectDB();
-  });
+  afterEach(resetDB);
 
   it('returns the default survey questions', async () => {
     const event = await eventFactory({ traits: ['withSurvey'] });
@@ -50,12 +45,7 @@ describe('#getSurveyQuestions', () => {
 });
 
 describe('#getSurveyAnswers', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterAll(async () => {
-    await disconnectDB();
-  });
+  afterEach(resetDB);
 
   it('returns the user answers for an event', async () => {
     const event = await eventFactory({ traits: ['withSurvey'] });
@@ -92,12 +82,7 @@ describe('#getSurveyAnswers', () => {
 });
 
 describe('#saveSurvey', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterAll(async () => {
-    await disconnectDB();
-  });
+  afterEach(resetDB);
 
   it('creates user survey for event when it exists', async () => {
     const event = await eventFactory({ traits: ['withSurvey'] });

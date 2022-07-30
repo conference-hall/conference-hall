@@ -1,9 +1,6 @@
 describe('Search conferences and meetups.', () => {
-  before(() => {
-    cy.task('resetDB').task('seedDB', 'search-events');
-  });
-
-  afterEach(() => cy.task('disconnectDB'));
+  beforeEach(() => cy.task('seedDB', 'search-events'));
+  afterEach(() => cy.task('resetDB'));
 
   describe('From about page', () => {
     it('redirect to search page and Search conferences and meetups.', () => {

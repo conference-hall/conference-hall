@@ -1,9 +1,6 @@
 describe('View event page', () => {
-  beforeEach(() => {
-    cy.task('resetDB').task('seedDB', 'view-event');
-  });
-
-  afterEach(() => cy.task('disconnectDB'));
+  beforeEach(() => cy.task('seedDB', 'view-event'));
+  afterEach(() => cy.task('resetDB'));
 
   it('displays incoming events by default', () => {
     cy.visit('/devfest-nantes');

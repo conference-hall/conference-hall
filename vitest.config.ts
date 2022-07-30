@@ -9,6 +9,7 @@ export default defineConfig({
   plugins: [react(), tsconfigPaths()],
   test: {
     globals: true,
+    threads: false,
     environment: 'happy-dom',
     setupFiles: ['./tests/setup-tests.ts'],
     exclude: ['./cypress', './node_modules'],
