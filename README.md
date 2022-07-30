@@ -39,3 +39,19 @@ npm run db:reset
 docker exec -it ch_firebase_emulators sh
 firebase --project=conference-hall emulators:export fixtures
 ```
+
+### Execute tests
+
+The docker image for Postgres DB and Firebase Auth emulator MUST be running.
+
+Execute unit and integration tests:
+
+```
+npm run test
+```
+
+Execute end-to-end tests:
+
+```
+npm run cypress:run
+```

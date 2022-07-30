@@ -12,8 +12,7 @@
     "dev:remix": "dotenv -e .env.dev -- remix dev",
     "test": "run-s db:migrate:test test:unit",
     "test:unit": "dotenv -e .env.test -- vitest --no-threads",
-    "test:server": "npm run db:migrate:test && run-p test:server:*",
-    "test:server:css": "npm run css:generate -- --watch",
+    "test:server": "npm run db:migrate:test && run-s css:generate test:server:remix",
     "test:server:remix": "dotenv -e .env.test -- remix dev",
     "cypress:open": "start-server-and-test test:server http://localhost:3001 'dotenv -e .env.test -- cypress open'",
     "cypress:run": "start-server-and-test test:server http://localhost:3001 'dotenv -e .env.test -- cypress run'",
@@ -28,8 +27,8 @@
     "prepare": "husky install"
   },
   "lint-staged": {
-    "**/*.{ts,tsx,js,jsx}": "npm run lint -- --fix",
-    "**/*.{json,md,mdx,html,css,yml}": "npm run format"
+    "**/*.{ts,tsx,js,jsx}": "eslint --cache --cache-location ./node_modules/.cache/eslint",
+    "**/*.{json,md,mdx,html,css,yml}": "prettier -l --write"
   },
   "prisma": {
     "seed": "node --require esbuild-register prisma/seed.ts"

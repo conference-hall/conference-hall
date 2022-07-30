@@ -6,6 +6,10 @@ on:
     branches:
       - main
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   ci:
     name: Tests & linting
@@ -30,6 +34,9 @@ jobs:
 
       - name: Start database and firebase emulators
         run: docker compose up -d --build
+
+      - name: Wait for database start...
+        run: ./docker/wait-for-db.sh
 
       - name: Execute tests
         run: npm test
