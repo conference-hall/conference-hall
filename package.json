@@ -27,8 +27,8 @@
     "prepare": "husky install"
   },
   "lint-staged": {
-    "**/*.{ts,tsx,js,jsx}": "npm run lint -- --fix",
-    "**/*.{json,md,mdx,html,css,yml}": "npm run format"
+    "**/*.{ts,tsx,js,jsx}": "eslint --cache --cache-location ./node_modules/.cache/eslint",
+    "**/*.{json,md,mdx,html,css,yml}": "prettier -l --write"
   },
   "prisma": {
     "seed": "node --require esbuild-register prisma/seed.ts"
