@@ -4,7 +4,11 @@ import { TalkLevel } from '@prisma/client';
 import { db } from '../../app/services/db';
 import { applyTraits } from './helpers/traits';
 
-const TRAITS = {};
+const TRAITS = {
+  archived: {
+    archived: true,
+  },
+};
 
 type Trait = keyof typeof TRAITS;
 

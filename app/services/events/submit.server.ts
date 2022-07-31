@@ -98,10 +98,13 @@ export async function saveDraftProposalForEvent(talkId: string, eventSlug: strin
   }
 
   const event = await db.event.findUnique({
-    select: { id: true },
+    select: { id: true, type: true, cfpStart: true, cfpEnd: true },
     where: { slug: eventSlug },
   });
   if (!event) throw new EventNotFoundError();
+
+  const isCfpOpen = getCfpState(event.type, event.cfpStart, event.cfpEnd) === 'OPENED';
+  if (!isCfpOpen) throw new CfpNotOpenError();
 
   const talk = await db.talk.upsert({
     where: { id: talkId },

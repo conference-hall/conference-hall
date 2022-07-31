@@ -317,7 +317,7 @@ describe('#validateTalkForm', () => {
     });
   });
 
-  it('validates mandatory and format for personal information', () => {
+  it('validates mandatory and format talk form data', () => {
     const formData = new FormData();
     formData.append('title', '');
     formData.append('abstract', '');
