@@ -50,7 +50,7 @@ describe('#getInvitation', () => {
 describe('#buildInvitationLink', () => {
   it('generates the invitation link from the invitation token', () => {
     const link = buildInvitationLink('CODE_INVITE');
-    expect(link).toEqual('http://localhost/invitation/CODE_INVITE');
+    expect(link).toEqual('http://localhost:3001/invitation/CODE_INVITE');
   });
 
   it('returns undefined if no invitation token given', () => {
@@ -74,7 +74,7 @@ describe('#generateInvitationLink', () => {
       expect(invite?.talkId).toEqual(talk.id);
       expect(invite?.type).toEqual(InviteType.TALK);
       expect(invite?.userId).toEqual(speaker.id);
-      expect(link).toEqual(`http://localhost/invitation/${invite?.id}`);
+      expect(link).toEqual(`http://localhost:3001/invitation/${invite?.id}`);
     });
 
     it('returns existing invitation link for a talk', async () => {
@@ -87,7 +87,7 @@ describe('#generateInvitationLink', () => {
       expect(invite?.talkId).toEqual(talk.id);
       expect(invite?.type).toEqual(InviteType.TALK);
       expect(invite?.userId).toEqual(speaker.id);
-      expect(link).toEqual(`http://localhost/invitation/${invite?.id}`);
+      expect(link).toEqual(`http://localhost:3001/invitation/${invite?.id}`);
     });
 
     it('throws an error when talk does not belong to user', async () => {
@@ -117,7 +117,7 @@ describe('#generateInvitationLink', () => {
       expect(invite?.proposalId).toEqual(proposal.id);
       expect(invite?.type).toEqual(InviteType.PROPOSAL);
       expect(invite?.userId).toEqual(speaker.id);
-      expect(link).toEqual(`http://localhost/invitation/${invite?.id}`);
+      expect(link).toEqual(`http://localhost:3001/invitation/${invite?.id}`);
     });
 
     it('returns existing invitation link for a proposal', async () => {
@@ -132,7 +132,7 @@ describe('#generateInvitationLink', () => {
       expect(invite?.proposalId).toEqual(proposal.id);
       expect(invite?.type).toEqual(InviteType.PROPOSAL);
       expect(invite?.userId).toEqual(speaker.id);
-      expect(link).toEqual(`http://localhost/invitation/${invite?.id}`);
+      expect(link).toEqual(`http://localhost:3001/invitation/${invite?.id}`);
     });
 
     it('throws an error when talk does not belong to user', async () => {

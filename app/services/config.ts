@@ -21,7 +21,7 @@ class Config {
 
   get appUrl(): string {
     const { PROTOCOL, DOMAIN, PORT } = process.env;
-    if (PORT) return `${PROTOCOL}://${DOMAIN}`;
+    if (!PORT) return `${PROTOCOL}://${DOMAIN}`;
     return `${PROTOCOL}://${DOMAIN}:${PORT}`;
   }
 

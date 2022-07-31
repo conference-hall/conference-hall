@@ -1,11 +1,12 @@
 import { defineConfig } from 'cypress';
+import { config } from './app/services/config';
 import { disconnectDB, resetDB } from './tests/db-helpers';
 
 export default defineConfig({
   screenshotOnRunFailure: false,
   video: false,
   e2e: {
-    baseUrl: 'http://localhost:3001',
+    baseUrl: config.appUrl,
     setupNodeEvents(on) {
       return on('task', {
         resetDB,

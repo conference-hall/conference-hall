@@ -130,7 +130,7 @@ describe('#getSpeakerProposal', () => {
       level: proposal.level,
       createdAt: proposal.createdAt.toUTCString(),
       languages: proposal.languages,
-      invitationLink: `http://localhost/invitation/${invite?.id}`,
+      invitationLink: `http://localhost:3001/invitation/${invite?.id}`,
       formats: [{ id: format.id, name: format.name }],
       categories: [{ id: category.id, name: category.name }],
       speakers: [
