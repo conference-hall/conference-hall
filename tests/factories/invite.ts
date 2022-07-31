@@ -1,18 +1,19 @@
-import type { Prisma, Proposal, Talk } from '@prisma/client';
+import type { Prisma, Proposal, Talk, User } from '@prisma/client';
 import { db } from '../../app/services/db';
 import { userFactory } from './users';
 
 type FactoryOptions = {
   proposal?: Proposal;
   talk?: Talk;
+  user?: User;
   attributes?: Prisma.InviteCreateInput;
 };
 
 export const inviteFactory = async (options: FactoryOptions) => {
-  const { attributes, proposal, talk } = options;
+  const { attributes, proposal, talk, user } = options;
 
   if (proposal) {
-    const inviteBy = await userFactory();
+    const inviteBy = user || (await userFactory());
     const defaultAttributes: Prisma.InviteCreateInput = {
       type: 'PROPOSAL',
       proposal: { connect: { id: proposal.id } },
@@ -22,7 +23,7 @@ export const inviteFactory = async (options: FactoryOptions) => {
   }
 
   if (talk) {
-    const inviteBy = await userFactory();
+    const inviteBy = user || (await userFactory());
     const defaultAttributes: Prisma.InviteCreateInput = {
       type: 'TALK',
       talk: { connect: { id: talk.id } },
