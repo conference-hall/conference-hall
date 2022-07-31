@@ -1,16 +1,16 @@
 import type { ActionFunction, LoaderFunction } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
-import { Button, ButtonLink } from '~/components-ui/Buttons';
-import { CategoriesForm } from '~/components-app/CategoriesForm';
+import { Button, ButtonLink } from '~/design-system/Buttons';
+import { CategoriesForm } from '~/components/CategoriesForm';
 import { requireUserSession } from '../../../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../../../services/errors';
 import type { EventTracks } from '../../../../services/events/event.server';
 import { getEvent } from '../../../../services/events/event.server';
 import type { ProposalTracks } from '../../../../services/events/tracks.server';
 import { getProposalTracks, saveTracks, validateTracksForm } from '../../../../services/events/tracks.server';
-import { useSubmissionStep } from '../../../../components-app/useSubmissionStep';
-import { FormatsForm } from '../../../../components-app/FormatsForm';
+import { useSubmissionStep } from '../../../../components/useSubmissionStep';
+import { FormatsForm } from '../../../../components/FormatsForm';
 
 type Tracks = {
   event: { formats: EventTracks; categories: EventTracks };

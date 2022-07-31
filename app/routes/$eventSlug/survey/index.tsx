@@ -1,11 +1,11 @@
 import type { ActionFunction, LoaderFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
-import { Button } from '~/components-ui/Buttons';
-import { Container } from '~/components-ui/Container';
-import { EventSurveyForm } from '../../../components-app/EventSurveyForm';
-import { AlertSuccess } from '../../../components-ui/Alerts';
-import { H2, Text } from '../../../components-ui/Typography';
+import { Button } from '~/design-system/Buttons';
+import { Container } from '~/design-system/Container';
+import { EventSurveyForm } from '../../../components/EventSurveyForm';
+import { AlertSuccess } from '../../../design-system/Alerts';
+import { H2, Text } from '../../../design-system/Typography';
 import { requireUserSession } from '../../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../../services/errors';
 import type { SurveyAnswers, SurveyQuestions } from '../../../services/events/survey.server';

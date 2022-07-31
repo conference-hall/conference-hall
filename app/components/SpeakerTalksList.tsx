@@ -1,8 +1,8 @@
 import { CalendarIcon } from '@heroicons/react/solid';
 import { Link } from '@remix-run/react';
 import { formatRelative } from 'date-fns';
-import Badge from '../components-ui/Badges';
-import { IconLabel } from '../components-ui/IconLabel';
+import Badge from '../design-system/Badges';
+import { IconLabel } from '../design-system/IconLabel';
 
 type Props = {
   talks: Array<{

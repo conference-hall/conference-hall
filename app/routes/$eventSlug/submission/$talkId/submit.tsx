@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Form, useLoaderData } from '@remix-run/react';
-import { Button } from '~/components-ui/Buttons';
-import { Checkbox } from '~/components-ui/forms/Checkboxes';
-import { ExternalLink } from '../../../../components-ui/Links';
-import { H1, Text } from '../../../../components-ui/Typography';
+import { Button } from '~/design-system/Buttons';
+import { Checkbox } from '~/design-system/forms/Checkboxes';
+import { ExternalLink } from '../../../../design-system/Links';
+import { H1, Text } from '../../../../design-system/Typography';
 import type { ActionFunction, LoaderFunction } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { requireUserSession } from '../../../../services/auth/auth.server';
@@ -11,7 +11,7 @@ import { getEvent } from '../../../../services/events/event.server';
 import type { ProposalInfo } from '../../../../services/events/submit.server';
 import { getProposalInfo, submitProposal, validateSubmission } from '../../../../services/events/submit.server';
 import { mapErrorToResponse } from '../../../../services/errors';
-import { TextArea } from '../../../../components-ui/forms/TextArea';
+import { TextArea } from '../../../../design-system/forms/TextArea';
 
 type SubmitForm = ProposalInfo & { codeOfConductUrl: string | null };
 

@@ -1,7 +1,7 @@
 import { Form, useActionData, useCatch, useLoaderData } from '@remix-run/react';
-import { Container } from '~/components-ui/Container';
-import { Button, ButtonLink } from '../../../components-ui/Buttons';
-import { CategoriesForm } from '../../../components-app/CategoriesForm';
+import { Container } from '~/design-system/Container';
+import { Button, ButtonLink } from '../../../design-system/Buttons';
+import { CategoriesForm } from '../../../components/CategoriesForm';
 import type { ValidationErrors } from '../../../utils/validation-errors';
 import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
@@ -13,10 +13,10 @@ import {
   validateProposalForm,
 } from '../../../services/events/proposals.server';
 import { mapErrorToResponse } from '../../../services/errors';
-import { TalkAbstractForm } from '../../../components-app/TalkAbstractForm';
-import { FormatsForm } from '../../../components-app/FormatsForm';
+import { TalkAbstractForm } from '../../../components/TalkAbstractForm';
+import { FormatsForm } from '../../../components/FormatsForm';
 import { useEvent } from '../../$eventSlug';
-import { H2 } from '../../../components-ui/Typography';
+import { H2 } from '../../../design-system/Typography';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const uid = await requireUserSession(request);

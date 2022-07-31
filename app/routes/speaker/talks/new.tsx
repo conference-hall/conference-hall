@@ -1,10 +1,10 @@
 import type { ActionFunction } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
-import { Container } from '~/components-ui/Container';
-import { TalkAbstractForm } from '../../../components-app/TalkAbstractForm';
-import { Button } from '../../../components-ui/Buttons';
-import { H1 } from '../../../components-ui/Typography';
+import { Container } from '~/design-system/Container';
+import { TalkAbstractForm } from '../../../components/TalkAbstractForm';
+import { Button } from '../../../design-system/Buttons';
+import { H1 } from '../../../design-system/Typography';
 import { requireUserSession } from '../../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../../services/errors';
 import { createTalk, validateTalkForm } from '../../../services/speakers/talks.server';

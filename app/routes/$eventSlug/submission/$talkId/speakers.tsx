@@ -1,12 +1,12 @@
 import type { ActionFunction, LoaderFunction } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
-import { Button, ButtonLink } from '~/components-ui/Buttons';
-import { InviteCoSpeakerButton, CoSpeakersList } from '../../../../components-app/CoSpeaker';
-import { useSubmissionStep } from '../../../../components-app/useSubmissionStep';
-import { MarkdownTextArea } from '../../../../components-ui/forms/MarkdownTextArea';
-import { ExternalLink } from '../../../../components-ui/Links';
-import { H2, Text } from '../../../../components-ui/Typography';
+import { Button, ButtonLink } from '~/design-system/Buttons';
+import { InviteCoSpeakerButton, CoSpeakersList } from '../../../../components/CoSpeaker';
+import { useSubmissionStep } from '../../../../components/useSubmissionStep';
+import { MarkdownTextArea } from '../../../../design-system/forms/MarkdownTextArea';
+import { ExternalLink } from '../../../../design-system/Links';
+import { H2, Text } from '../../../../design-system/Typography';
 import { requireAuthUser, requireUserSession } from '../../../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../../../services/errors';
 import { getEvent } from '../../../../services/events/event.server';

@@ -2,7 +2,7 @@ import { Dialog } from '@headlessui/react';
 import { ExclamationIcon, XIcon } from '@heroicons/react/solid';
 import { useState } from 'react';
 import { Form } from '@remix-run/react';
-import { Button } from '../components-ui/Buttons';
+import { Button } from '../design-system/Buttons';
 
 export function EventProposalDeleteButton() {
   const [isModalOpen, setModalOpen] = useState(false);

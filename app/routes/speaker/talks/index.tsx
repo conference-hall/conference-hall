@@ -1,15 +1,15 @@
 import type { LoaderFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData, useSearchParams, useNavigate } from '@remix-run/react';
-import { Container } from '../../../components-ui/Container';
-import { H2, Text } from '../../../components-ui/Typography';
+import { Container } from '../../../design-system/Container';
+import { H2, Text } from '../../../design-system/Typography';
 import { requireUserSession } from '../../../services/auth/auth.server';
-import { ButtonLink } from '../../../components-ui/Buttons';
+import { ButtonLink } from '../../../design-system/Buttons';
 import type { SpeakerTalks } from '../../../services/speakers/talks.server';
 import { findTalks } from '../../../services/speakers/talks.server';
 import { mapErrorToResponse } from '../../../services/errors';
-import { SpeakerTalksList } from '../../../components-app/SpeakerTalksList';
-import DetailedSelect from '../../../components-ui/forms/DetailedSelect';
+import { SpeakerTalksList } from '../../../components/SpeakerTalksList';
+import DetailedSelect from '../../../design-system/forms/DetailedSelect';
 
 export const loader: LoaderFunction = async ({ request }) => {
   const uid = await requireUserSession(request);

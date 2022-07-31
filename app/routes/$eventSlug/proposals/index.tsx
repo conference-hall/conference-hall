@@ -1,10 +1,10 @@
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
-import { Container } from '~/components-ui/Container';
+import { Container } from '~/design-system/Container';
 import { useEvent } from '../../$eventSlug';
-import { EventProposalsList } from '../../../components-app/EventProposalsList';
-import { H2, Text } from '../../../components-ui/Typography';
+import { EventProposalsList } from '../../../components/EventProposalsList';
+import { H2, Text } from '../../../design-system/Typography';
 import { requireUserSession } from '../../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../../services/errors';
 import { fetchSpeakerProposals } from '../../../services/events/proposals.server';

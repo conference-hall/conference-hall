@@ -1,7 +1,7 @@
 import cn from 'classnames';
 import { NavLink } from '@remix-run/react';
 import type { CfpState } from '../utils/event';
-import { Container } from '../components-ui/Container';
+import { Container } from '../design-system/Container';
 
 type Props = {
   slug: string;

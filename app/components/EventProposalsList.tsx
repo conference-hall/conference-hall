@@ -1,8 +1,8 @@
 import formatRelative from 'date-fns/formatRelative';
 import { CalendarIcon, ExclamationIcon } from '@heroicons/react/solid';
 import { Link } from '@remix-run/react';
-import { IconLabel } from '../components-ui/IconLabel';
-import { Container } from '../components-ui/Container';
+import { IconLabel } from '../design-system/IconLabel';
+import { Container } from '../design-system/Container';
 import type { CfpState } from '../utils/event';
 import { CfpLabel } from './CfpInfo';
 

@@ -1,6 +1,6 @@
-import { Checkbox, CheckboxGroup } from '../components-ui/forms/Checkboxes';
-import { Radio, RadioGroup } from '../components-ui/forms/RadioGroup';
-import { TextArea } from '../components-ui/forms/TextArea';
+import { Checkbox, CheckboxGroup } from '../design-system/forms/Checkboxes';
+import { Radio, RadioGroup } from '../design-system/forms/RadioGroup';
+import { TextArea } from '../design-system/forms/TextArea';
 import type { SurveyQuestions } from '../services/events/survey.server';
 
 export type Props = {

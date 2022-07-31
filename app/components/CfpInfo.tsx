@@ -1,7 +1,7 @@
 import cn from 'classnames';
 import type { CfpState } from '../utils/event';
 import { formatCFPDate, formatCFPState } from '../utils/event';
-import { H2, Text } from '../components-ui/Typography';
+import { H2, Text } from '../design-system/Typography';
 
 type CfpLabelProps = { cfpState: CfpState; className?: string };
 

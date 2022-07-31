@@ -1,6 +1,6 @@
-import { ButtonLink } from '../components-ui/Buttons';
-import { Container } from '../components-ui/Container';
-import { H1, H2 } from '../components-ui/Typography';
+import { ButtonLink } from '../design-system/Buttons';
+import { Container } from '../design-system/Container';
+import { H1, H2 } from '../design-system/Typography';
 
 export default function AboutRoute() {
   return (

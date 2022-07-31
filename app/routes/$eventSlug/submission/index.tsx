@@ -1,16 +1,16 @@
 import { useCatch, useLoaderData } from '@remix-run/react';
-import { ButtonLink } from '~/components-ui/Buttons';
-import { Container } from '../../../components-ui/Container';
-import { AlertInfo } from '../../../components-ui/Alerts';
-import { MaxProposalsReached } from '../../../components-app/MaxProposalsReached';
-import { H2, Text } from '../../../components-ui/Typography';
+import { ButtonLink } from '~/design-system/Buttons';
+import { Container } from '../../../design-system/Container';
+import { AlertInfo } from '../../../design-system/Alerts';
+import { MaxProposalsReached } from '../../../components/MaxProposalsReached';
+import { H2, Text } from '../../../design-system/Typography';
 import { requireUserSession } from '../../../services/auth/auth.server';
 import type { LoaderFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import type { ProposalCountsForEvent, TalksToSubmit } from '../../../services/events/submit.server';
 import { fetchTalksToSubmitForEvent, getProposalCountsForEvent } from '../../../services/events/submit.server';
 import { mapErrorToResponse } from '../../../services/errors';
-import { SubmissionTalksList } from '../../../components-app/SubmissionTalksList';
+import { SubmissionTalksList } from '../../../components/SubmissionTalksList';
 
 type SelectionStep = {
   talks: TalksToSubmit;

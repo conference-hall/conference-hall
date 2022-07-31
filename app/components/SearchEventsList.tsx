@@ -2,7 +2,7 @@ import { LocationMarkerIcon } from '@heroicons/react/solid';
 import { Link } from '@remix-run/react';
 import type { CfpState } from '~/utils/event';
 import { formatEventType } from '~/utils/event';
-import { IconLabel } from '../components-ui/IconLabel';
+import { IconLabel } from '../design-system/IconLabel';
 import { CfpLabel } from './CfpInfo';
 
 type Props = {

@@ -1,5 +1,5 @@
 import { CalendarIcon, LocationMarkerIcon } from '@heroicons/react/solid';
-import { IconLabel } from '../components-ui/IconLabel';
+import { IconLabel } from '../design-system/IconLabel';
 import { formatConferenceDates } from '../utils/event';
 
 type Props = {

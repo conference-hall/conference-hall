@@ -1,9 +1,9 @@
 import c from 'classnames';
 import { Form, useSearchParams, useSubmit } from '@remix-run/react';
 import type { SearchFilters } from '../services/events/search.server';
-import { Input } from '../components-ui/forms/Input';
-import { Button } from '../components-ui/Buttons';
-import DetailedSelect from '../components-ui/forms/DetailedSelect';
+import { Input } from '../design-system/forms/Input';
+import { Button } from '../design-system/Buttons';
+import DetailedSelect from '../design-system/forms/DetailedSelect';
 
 type Props = {
   filters: SearchFilters;

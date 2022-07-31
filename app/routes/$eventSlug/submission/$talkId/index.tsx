@@ -1,7 +1,7 @@
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
-import { Button } from '~/components-ui/Buttons';
+import { Button } from '~/design-system/Buttons';
 import type { ValidationErrors } from '~/utils/validation-errors';
-import { H2, Text } from '../../../../components-ui/Typography';
+import { H2, Text } from '../../../../design-system/Typography';
 import { requireUserSession } from '../../../../services/auth/auth.server';
 import type { ActionFunction, LoaderFunction } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
@@ -9,7 +9,7 @@ import type { SpeakerTalk } from '../../../../services/speakers/talks.server';
 import { getTalk } from '../../../../services/speakers/talks.server';
 import { saveDraftProposalForEvent, validateDraftProposalForm } from '../../../../services/events/submit.server';
 import { mapErrorToResponse } from '../../../../services/errors';
-import { TalkAbstractForm } from '../../../../components-app/TalkAbstractForm';
+import { TalkAbstractForm } from '../../../../components/TalkAbstractForm';
 
 export const handle = { step: 'proposal' };
 

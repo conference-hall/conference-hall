@@ -1,10 +1,10 @@
 import type { LoaderFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Outlet, useCatch, useLoaderData, useOutletContext } from '@remix-run/react';
-import { EventHeader } from '../components-app/EventHeader';
-import { EventTabs } from '../components-app/EventTabs';
-import { ButtonLink } from '../components-ui/Buttons';
-import { Container } from '../components-ui/Container';
+import { EventHeader } from '../components/EventHeader';
+import { EventTabs } from '../components/EventTabs';
+import { ButtonLink } from '../design-system/Buttons';
+import { Container } from '../design-system/Container';
 import { mapErrorToResponse } from '../services/errors';
 import type { EventData } from '../services/events/event.server';
 import { getEvent } from '../services/events/event.server';

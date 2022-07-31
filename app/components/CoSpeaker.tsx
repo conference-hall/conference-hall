@@ -2,10 +2,10 @@ import { Dialog } from '@headlessui/react';
 import { BanIcon, LinkIcon, TrashIcon, UserAddIcon } from '@heroicons/react/solid';
 import { Form, useFetcher } from '@remix-run/react';
 import { useState } from 'react';
-import { Button } from '../components-ui/Buttons';
-import Modal from '../components-ui/dialogs/Modals';
-import { CopyInput } from '../components-ui/forms/CopyInput';
-import { Text } from '../components-ui/Typography';
+import { Button } from '../design-system/Buttons';
+import Modal from '../design-system/dialogs/Modals';
+import { CopyInput } from '../design-system/forms/CopyInput';
+import { Text } from '../design-system/Typography';
 import type { InvitationLink } from '../routes/invitation/generate';
 
 type InviteType = 'TALK' | 'PROPOSAL';

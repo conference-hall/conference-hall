@@ -1,8 +1,8 @@
-import { Input } from '~/components-ui/forms/Input';
-import { Radio, RadioGroup } from '~/components-ui/forms/RadioGroup';
-import { MarkdownTextArea } from '~/components-ui/forms/MarkdownTextArea';
+import { Input } from '~/design-system/forms/Input';
+import { Radio, RadioGroup } from '~/design-system/forms/RadioGroup';
+import { MarkdownTextArea } from '~/design-system/forms/MarkdownTextArea';
 import { LEVELS } from '../utils/levels';
-import LanguagesSelect from '../components-ui/forms/LanguagesSelect';
+import LanguagesSelect from '../design-system/forms/LanguagesSelect';
 
 type Props = {
   initialValues?: {

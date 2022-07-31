@@ -1,4 +1,4 @@
-import { ButtonLink } from '../components-ui/Buttons';
+import { ButtonLink } from '../design-system/Buttons';
 
 type Props = { maxProposals: number };
 

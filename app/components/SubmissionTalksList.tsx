@@ -1,7 +1,7 @@
 import { ExclamationIcon } from '@heroicons/react/solid';
 import { Link } from '@remix-run/react';
-import { ButtonLink } from '../components-ui/Buttons';
-import { IconLabel } from '../components-ui/IconLabel';
+import { ButtonLink } from '../design-system/Buttons';
+import { IconLabel } from '../design-system/IconLabel';
 
 type Props = {
   talks: Array<{

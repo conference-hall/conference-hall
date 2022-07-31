@@ -1,14 +1,14 @@
 import type { LoaderFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData, useSearchParams } from '@remix-run/react';
-import { Container } from '../components-ui/Container';
-import { H1, Text } from '../components-ui/Typography';
-import { SearchEventsList } from '../components-app/SearchEventsList';
+import { Container } from '../design-system/Container';
+import { H1, Text } from '../design-system/Typography';
+import { SearchEventsList } from '../components/SearchEventsList';
 import type { SearchEvents } from '../services/events/search.server';
 import { searchEvents, validateFilters, validatePage } from '../services/events/search.server';
 import { mapErrorToResponse } from '../services/errors';
-import { SearchEventsForm } from '../components-app/SearchEventsForm';
-import { SearchPagination } from '../components-ui/Pagination';
+import { SearchEventsForm } from '../components/SearchEventsForm';
+import { SearchPagination } from '../design-system/Pagination';
 
 export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);

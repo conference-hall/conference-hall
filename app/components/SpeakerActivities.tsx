@@ -1,8 +1,8 @@
 import { formatRelative } from 'date-fns';
 import { MicrophoneIcon, PlusIcon, XIcon, CheckIcon } from '@heroicons/react/solid';
 import { ExclamationIcon, DotsHorizontalIcon } from '@heroicons/react/outline';
-import { IconLabel } from '../components-ui/IconLabel';
-import { Link } from '../components-ui/Links';
+import { IconLabel } from '../design-system/IconLabel';
+import { Link } from '../design-system/Links';
 
 interface Props {
   activities: Array<{

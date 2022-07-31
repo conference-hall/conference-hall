@@ -8,8 +8,8 @@ import type { AuthUser } from './services/auth/auth.server';
 import { getAuthUser } from './services/auth/auth.server';
 
 import tailwind from './tailwind.css';
-import { Footer } from './components-app/Footer';
-import { Navbar } from './components-app/Navbar';
+import { Footer } from './components/Footer';
+import { Navbar } from './components/Navbar';
 
 export const links: LinksFunction = () => {
   return [
