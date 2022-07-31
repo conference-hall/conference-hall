@@ -27,7 +27,7 @@
     "prepare": "husky install"
   },
   "lint-staged": {
-    "**/*.{ts,tsx,js,jsx}": "eslint --cache --cache-location ./node_modules/.cache/eslint",
+    "**/*.{ts,tsx,js,jsx}": "eslint --fix --cache --cache-location ./node_modules/.cache/eslint",
     "**/*.{json,md,mdx,html,css,yml}": "prettier -l --write"
   },
   "prisma": {

@@ -409,14 +409,18 @@ describe('#removeCoSpeakerFromProposal', () => {
     await proposalFactory({ event, talk });
 
     const updater = await userFactory();
-    await expect(removeCoSpeakerFromProposal(updater.id, talk.id, event.slug, cospeaker.id)).rejects.toThrowError(ProposalNotFoundError);
+    await expect(removeCoSpeakerFromProposal(updater.id, talk.id, event.slug, cospeaker.id)).rejects.toThrowError(
+      ProposalNotFoundError
+    );
   });
 
   it('throws an error when talk not found', async () => {
     const event = await eventFactory();
     const speaker = await userFactory();
-    
+
     const cospeaker = await userFactory();
-    await expect(removeCoSpeakerFromProposal(speaker.id, 'XXX', event.slug, cospeaker.id)).rejects.toThrowError(ProposalNotFoundError);
+    await expect(removeCoSpeakerFromProposal(speaker.id, 'XXX', event.slug, cospeaker.id)).rejects.toThrowError(
+      ProposalNotFoundError
+    );
   });
 });

@@ -363,7 +363,7 @@ describe('#inviteCoSpeakerToTalk', () => {
 describe('#removeCoSpeakerFromTalk', () => {
   afterEach(resetDB);
 
-  it('adds a cospeaker to the talk', async () => {
+  it('removes a cospeaker from the talk', async () => {
     const speaker = await userFactory();
     const cospeaker = await userFactory();
     const talk = await talkFactory({ speakers: [speaker, cospeaker] });
