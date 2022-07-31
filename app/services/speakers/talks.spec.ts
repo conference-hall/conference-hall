@@ -1,5 +1,5 @@
 import { TalkLevel } from '@prisma/client';
-import { disconnectDB, resetDB } from '../../../tests/db-helpers';
+import { resetDB } from '../../../tests/db-helpers';
 import { eventFactory } from '../../../tests/factories/events';
 import { inviteFactory } from '../../../tests/factories/invite';
 import { proposalFactory } from '../../../tests/factories/proposals';
@@ -22,12 +22,7 @@ import {
 } from './talks.server';
 
 describe('#findTalks', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterAll(async () => {
-    await disconnectDB();
-  });
+  afterEach(resetDB);
 
   it('returns speaker talks list', async () => {
     const speaker = await userFactory();
@@ -82,12 +77,7 @@ describe('#findTalks', () => {
 });
 
 describe('#getTalk', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterAll(async () => {
-    await disconnectDB();
-  });
+  afterEach(resetDB);
 
   it('returns speaker talk', async () => {
     const speaker = await userFactory();
@@ -148,18 +138,13 @@ describe('#getTalk', () => {
 
   it('returns the talk invitation link when invitation generated', async () => {
     const speaker = await userFactory();
-    const invite = await inviteFactory({
-      attributes: { type: 'TALK', invitedBy: { connect: { id: speaker.id } } },
-    });
-    const talk = await talkFactory({
-      speakers: [speaker],
-      attributes: { invitation: { connect: { id: invite.id } } },
-    });
+    const talk = await talkFactory({ speakers: [speaker] });
+    const invite = await inviteFactory({ talk });
 
     const result = await getTalk(speaker.id, talk.id);
 
     expect(result.id).toBe(talk.id);
-    expect(result.invitationLink).toBe(`${config.appUrl}/invitation/${invite.id}`);
+    expect(result.invitationLink).toBe(`${config.appUrl}/invitation/${invite?.id}`);
   });
 
   it('returns proposals when talk submitted', async () => {
@@ -187,12 +172,7 @@ describe('#getTalk', () => {
 });
 
 describe('#deleteTalk', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterAll(async () => {
-    await disconnectDB();
-  });
+  afterEach(resetDB);
 
   it('deletes a speaker talk', async () => {
     const speaker = await userFactory();
@@ -235,12 +215,7 @@ describe('#deleteTalk', () => {
 });
 
 describe('#createTalk', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterAll(async () => {
-    await disconnectDB();
-  });
+  afterEach(resetDB);
 
   it('creates a speaker talk', async () => {
     const speaker = await userFactory();
@@ -269,12 +244,7 @@ describe('#createTalk', () => {
 });
 
 describe('#updateTalk', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterAll(async () => {
-    await disconnectDB();
-  });
+  afterEach(resetDB);
 
   it('updates a speaker talk', async () => {
     const speaker = await userFactory();
@@ -363,45 +333,25 @@ describe('#validateTalkForm', () => {
 });
 
 describe('#inviteCoSpeakerToTalk', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterAll(async () => {
-    await disconnectDB();
-  });
+  afterEach(resetDB);
 
   it('adds a cospeaker to the talk', async () => {
     const speaker = await userFactory();
-    const invite = await inviteFactory({
-      attributes: { type: 'TALK', invitedBy: { connect: { id: speaker.id } } },
-    });
-    await talkFactory({
-      speakers: [speaker],
-      attributes: { invitation: { connect: { id: invite.id } } },
-    });
+    const talk = await talkFactory({ speakers: [speaker] });
+    const invite = await inviteFactory({ talk });
     const cospeaker = await userFactory();
 
-    const { id } = await inviteCoSpeakerToTalk(invite.id, cospeaker.id);
+    const { id } = await inviteCoSpeakerToTalk(invite?.id!, cospeaker.id);
 
-    const talk = await db.talk.findUnique({
+    const result = await db.talk.findUnique({
       where: { id },
       include: { speakers: true },
     });
 
-    const speakers = talk?.speakers.map(({ id }) => id);
+    const speakers = result?.speakers.map(({ id }) => id);
     expect(speakers?.length).toBe(2);
     expect(speakers).toContain(speaker.id);
     expect(speakers).toContain(cospeaker.id);
-  });
-
-  it('throws an error when invitation is not linked to the talk', async () => {
-    const speaker = await userFactory();
-    const invite = await inviteFactory({
-      attributes: { type: 'TALK', invitedBy: { connect: { id: speaker.id } } },
-    });
-    const cospeaker = await userFactory();
-
-    await expect(inviteCoSpeakerToTalk(invite.id, cospeaker.id)).rejects.toThrowError(InvitationNotFoundError);
   });
 
   it('throws an error when invitation not found', async () => {
@@ -411,14 +361,9 @@ describe('#inviteCoSpeakerToTalk', () => {
 });
 
 describe('#removeCoSpeakerFromTalk', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterAll(async () => {
-    await disconnectDB();
-  });
+  afterEach(resetDB);
 
-  it('adds a cospeaker to the talk', async () => {
+  it('removes a cospeaker from the talk', async () => {
     const speaker = await userFactory();
     const cospeaker = await userFactory();
     const talk = await talkFactory({ speakers: [speaker, cospeaker] });
@@ -452,12 +397,7 @@ describe('#removeCoSpeakerFromTalk', () => {
 });
 
 describe('#archiveTalk', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterAll(async () => {
-    await disconnectDB();
-  });
+  afterEach(resetDB);
 
   it('archives a talk', async () => {
     const speaker = await userFactory();
@@ -484,12 +424,7 @@ describe('#archiveTalk', () => {
 });
 
 describe('#restoreTalk', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterAll(async () => {
-    await disconnectDB();
-  });
+  afterEach(resetDB);
 
   it('restores a archived talk', async () => {
     const speaker = await userFactory();

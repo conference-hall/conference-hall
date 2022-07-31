@@ -1,14 +1,9 @@
-import { disconnectDB, resetDB } from '../../../tests/db-helpers';
+import { resetDB } from '../../../tests/db-helpers';
 import { eventFactory } from '../../../tests/factories/events';
 import { searchEvents, validateFilters, validatePage } from './search.server';
 
 describe('#searchEvents', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterAll(async () => {
-    await disconnectDB();
-  });
+  afterEach(resetDB);
 
   it('returns the default response', async () => {
     await eventFactory({

@@ -159,7 +159,7 @@ export function validateProposalForm(form: FormData) {
  */
 export async function inviteCoSpeakerToProposal(invitationId: string, coSpeakerId: string) {
   const invitation = await db.invite.findUnique({
-    select: { type: true, proposal: true, organization: true, invitedBy: true },
+    select: { type: true, proposal: true, invitedBy: true },
     where: { id: invitationId },
   });
   if (!invitation || invitation.type !== 'PROPOSAL' || !invitation.proposal) {

@@ -9,7 +9,6 @@ import { searchEvents, validateFilters, validatePage } from '../services/events/
 import { mapErrorToResponse } from '../services/errors';
 import { SearchEventsForm } from '../components-app/SearchEventsForm';
 import { SearchPagination } from '../components-ui/Pagination';
-import { Link } from '../components-ui/Links';
 
 export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
