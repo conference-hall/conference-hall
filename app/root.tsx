@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { config } from './services/config';
-import type { LinksFunction, LoaderFunction } from '@remix-run/node';
+import type { LinksFunction, LoaderArgs } from '@remix-run/node';
 import { Meta, LiveReload, Outlet, Links, Scripts, useCatch, useLoaderData, ScrollRestoration } from '@remix-run/react';
 
 import { initializeFirebase } from './services/auth/firebase';
@@ -18,7 +18,7 @@ export const links: LinksFunction = () => {
   ];
 };
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: LoaderArgs) => {
   const user = await getAuthUser(request);
   return {
     user,
@@ -32,7 +32,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export default function App() {
-  const data = useLoaderData();
+  const data = useLoaderData<typeof loader>();
 
   initializeFirebase(data.firebase);
 
@@ -43,7 +43,7 @@ export default function App() {
   );
 }
 
-type DocumentProps = { children: ReactNode; title?: string; user?: AuthUser };
+type DocumentProps = { children: ReactNode; title?: string; user?: AuthUser | null };
 
 function Document({ children, title, user }: DocumentProps) {
   return (

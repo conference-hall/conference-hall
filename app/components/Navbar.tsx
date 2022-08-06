@@ -3,7 +3,7 @@ import { Link } from '../design-system/Links';
 import type { AuthUser } from '../services/auth/auth.server';
 import { UserMenu } from './UserMenu';
 
-type Props = { user?: AuthUser };
+type Props = { user?: AuthUser | null };
 
 export function Navbar({ user }: Props) {
   return (

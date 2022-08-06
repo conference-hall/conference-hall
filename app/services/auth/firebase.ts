@@ -19,4 +19,6 @@ export const initializeFirebase = (config?: FirebaseConfig) => {
 
   const auth = getAuth(app);
   connectAuthEmulator(auth, `http://${config.FIREBASE_AUTH_EMULATOR_HOST}`);
+
+  return app;
 };
