@@ -68,7 +68,6 @@
     "@types/react-dom": "^18.0.6",
     "@vitejs/plugin-react": "^2.0.0",
     "cypress": "^10.3.1",
-    "cypress-firebase": "^2.2.2",
     "dotenv-cli": "^6.0.0",
     "esbuild-register": "^3.3.3",
     "eslint": "^8.20.0",

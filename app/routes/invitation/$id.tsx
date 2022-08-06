@@ -6,7 +6,7 @@ import { Button } from '../../design-system/Buttons';
 import { Container } from '../../design-system/Container';
 import { Link } from '../../design-system/Links';
 import { H1, H2, Text } from '../../design-system/Typography';
-import { requireUserSession } from '../../services/auth/auth.server';
+import { sessionRequired } from '../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../services/errors';
 import { inviteCoSpeakerToProposal } from '../../services/events/proposals.server';
 import type { Invitation } from '../../services/invitations/invitations.server';
@@ -14,7 +14,7 @@ import { getInvitation } from '../../services/invitations/invitations.server';
 import { inviteCoSpeakerToTalk } from '../../services/speakers/talks.server';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  await requireUserSession(request);
+  await sessionRequired(request);
   const invitationId = params.id;
   if (!invitationId) return null;
   try {
@@ -26,7 +26,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const uid = await requireUserSession(request);
+  const uid = await sessionRequired(request);
   const invitationId = params.id!;
   const form = await request.formData();
   const type = form.get('_type') as Invitation['type'];

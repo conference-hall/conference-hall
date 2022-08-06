@@ -4,7 +4,7 @@ import cn from 'classnames';
 import { Form, Link } from '@remix-run/react';
 import { CogIcon, FireIcon, LogoutIcon, MicrophoneIcon, SearchIcon } from '@heroicons/react/solid';
 
-type Props = { email: string; picture?: string | null };
+type Props = { email?: string; picture?: string | null };
 
 export function UserMenu({ email, picture }: Props) {
   return (

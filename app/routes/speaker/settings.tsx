@@ -11,13 +11,13 @@ import { H2, Text } from '../../design-system/Typography';
 import type { ValidationErrors } from '../../utils/validation-errors';
 import { useCallback } from 'react';
 import { getAuth } from 'firebase/auth';
-import { requireUserSession } from '../../services/auth/auth.server';
 import type { UserSettings } from '../../services/speakers/settings.server';
 import { getSettings, updateSettings, validateProfileData } from '../../services/speakers/settings.server';
 import { mapErrorToResponse } from '../../services/errors';
+import { sessionRequired } from '../../services/auth/auth.server';
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const uid = await requireUserSession(request);
+  const uid = await sessionRequired(request);
   try {
     const profile = await getSettings(uid);
     return json<UserSettings>(profile);
@@ -27,7 +27,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export const action: ActionFunction = async ({ request }) => {
-  const uid = await requireUserSession(request);
+  const uid = await sessionRequired(request);
   const form = await request.formData();
   const type = form.get('_type') as string;
   const result = validateProfileData(form, type);

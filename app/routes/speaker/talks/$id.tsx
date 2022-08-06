@@ -7,7 +7,7 @@ import { Button, ButtonLink } from '../../../design-system/Buttons';
 import { Markdown } from '../../../design-system/Markdown';
 import { H1, H2 } from '../../../design-system/Typography';
 import { EventActivity } from '../../../components/SpeakerActivities';
-import { requireUserSession } from '../../../services/auth/auth.server';
+import { sessionRequired } from '../../../services/auth/auth.server';
 import { getLanguage } from '../../../utils/languages';
 import { getLevel } from '../../../utils/levels';
 import type { SpeakerTalk } from '../../../services/speakers/talks.server';
@@ -23,7 +23,7 @@ import { TalkActionsMenu } from '../../../components/TalkActionsMenu';
 import { InviteCoSpeakerButton, CoSpeakersList } from '../../../components/CoSpeaker';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const uid = await requireUserSession(request);
+  const uid = await sessionRequired(request);
   try {
     const talk = await getTalk(uid, params.id!);
     return json<SpeakerTalk>(talk);
@@ -33,7 +33,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const uid = await requireUserSession(request);
+  const uid = await sessionRequired(request);
   const talkId = params.id;
   if (!talkId) return null;
   const form = await request.formData();

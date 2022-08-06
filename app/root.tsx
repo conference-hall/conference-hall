@@ -4,8 +4,8 @@ import type { LinksFunction, LoaderArgs } from '@remix-run/node';
 import { Meta, LiveReload, Outlet, Links, Scripts, useCatch, useLoaderData, ScrollRestoration } from '@remix-run/react';
 
 import { initializeFirebase } from './services/auth/firebase';
-import type { AuthUser } from './services/auth/auth.server';
-import { getAuthUser } from './services/auth/auth.server';
+import { isSessionValid } from './services/auth/auth.server';
+import { getUser } from './services/user.server';
 
 import tailwind from './tailwind.css';
 import { Footer } from './components/Footer';
@@ -19,7 +19,8 @@ export const links: LinksFunction = () => {
 };
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const user = await getAuthUser(request);
+  const uid = await isSessionValid(request);
+  const user = uid ? await getUser(uid) : null;
   return {
     user,
     firebase: {
@@ -43,7 +44,7 @@ export default function App() {
   );
 }
 
-type DocumentProps = { children: ReactNode; title?: string; user?: AuthUser | null };
+type DocumentProps = { children: ReactNode; title?: string; user?: { email?: string; picture?: string } | null };
 
 function Document({ children, title, user }: DocumentProps) {
   return (

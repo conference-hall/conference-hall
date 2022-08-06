@@ -1,8 +1,7 @@
 import * as admin from 'firebase-admin';
-import type { DecodedIdToken } from 'firebase-admin/lib/auth/token-verifier';
 import { createCookieSessionStorage, redirect } from '@remix-run/node';
 import { config } from '../config';
-import { db } from '../db';
+import { createUser } from '../user.server';
 
 if (!admin.apps.length) {
   admin.initializeApp({
@@ -12,7 +11,7 @@ if (!admin.apps.length) {
 
 const expiresIn = 60 * 60 * 24 * 5 * 1000;
 
-const storage = createCookieSessionStorage({
+const { getSession, commitSession, destroySession } = createCookieSessionStorage({
   cookie: {
     name: '__session',
     maxAge: expiresIn,
@@ -24,115 +23,66 @@ const storage = createCookieSessionStorage({
   },
 });
 
-export async function createUserSession(request: Request) {
+/**
+ * checks that the current session is a valid session be getting the token
+ * from the session cookie and validating it with firebase
+ */
+export const isSessionValid = async (request: Request) => {
+  const session = await getSession(request.headers.get('cookie'));
   try {
-    const cookie = request.headers.get('Cookie');
-    const session = await storage.getSession(cookie);
-    const data = await request.formData();
-    const tokenId = data.get('tokenId') as string;
-    const redirectTo = data.get('redirectTo') as string;
-    const decodedToken = await admin.auth().verifyIdToken(tokenId);
-    const user = await createUserFromToken(decodedToken);
-    const firebaseSession = await admin.auth().createSessionCookie(tokenId, { expiresIn });
-    session.set('firebaseSession', firebaseSession);
-    session.set('uid', user.id);
-    const newCookie = await storage.commitSession(session);
-    return redirect(redirectTo, { headers: { 'Set-Cookie': newCookie } });
-  } catch (e) {
-    return redirect('/login');
-  }
-}
-
-async function createUserFromToken(decodedToken: DecodedIdToken) {
-  const { uid, name, email, picture } = decodedToken;
-  const user = await db.user.findUnique({ where: { id: uid } });
-  if (user) return user;
-  return db.user.create({ data: { id: uid, name, email, photoURL: picture } });
-}
-
-export async function destroyUserSession(request: Request) {
-  const cookie = request.headers.get('Cookie');
-  const session = await storage.getSession(cookie);
-  return storage.destroySession(session);
-}
-
-export async function requireUserSession(request: Request) {
-  try {
-    const cookie = request.headers.get('Cookie');
-    const session = await storage.getSession(cookie);
-    const firebaseSession = session.get('firebaseSession');
-    if (!firebaseSession) {
-      const destroyedCookie = await destroyUserSession(request);
-      throw redirect(getLoginUrl(request), {
-        headers: { 'Set-Cookie': destroyedCookie },
-      });
-    }
-    const token = await admin.auth().verifySessionCookie(firebaseSession, true);
-    if (!token.uid) {
-      const destroyedCookie = await destroyUserSession(request);
-      throw redirect(getLoginUrl(request), {
-        headers: { 'Set-Cookie': destroyedCookie },
-      });
-    }
-    return token.uid;
+    // Verify the session cookie. In this case an additional check is added to detect
+    // if the user's Firebase session was revoked, user deleted/disabled, etc.
+    const decodedTokenId = await admin.auth().verifySessionCookie(session.get('idToken'), true /** checkRevoked */);
+    return decodedTokenId.uid;
   } catch (error) {
-    const destroyedCookie = await destroyUserSession(request);
-    throw redirect(getLoginUrl(request), {
-      headers: { 'Set-Cookie': destroyedCookie },
-    });
-  }
-}
-
-export type AuthUser = {
-  id: string;
-  name: string;
-  email: string;
-  picture: string;
-  bio: string;
-  references: string;
-  company: string;
-  github: string;
-  twitter: string;
-  address: string;
-};
-
-export async function getAuthUser(request: Request): Promise<AuthUser | null> {
-  const cookie = request.headers.get('Cookie');
-  const session = await storage.getSession(cookie);
-  const uid = session.get('uid');
-  if (!uid || typeof uid !== 'string') {
     return null;
   }
-  const user = await db.user.findUnique({ where: { id: uid } });
-  if (!user) return null;
+};
 
-  return {
-    id: user.id,
-    name: user.name || '',
-    email: user.email || '',
-    picture: user.photoURL || '',
-    bio: user.bio || '',
-    references: user.references || '',
-    company: user.company || '',
-    github: user.github || '',
-    twitter: user.twitter || '',
-    address: user.address || '',
-  };
-}
-
-export async function requireAuthUser(request: Request): Promise<AuthUser> {
-  const user = await getAuthUser(request);
-  if (!user) {
-    const destroyedCookie = await destroyUserSession(request);
-    throw redirect(getLoginUrl(request), {
-      headers: { 'Set-Cookie': destroyedCookie },
-    });
+export const sessionRequired = async (request: Request) => {
+  const uid = await isSessionValid(request);
+  if (!uid) {
+    const redirectTo = new URL(request.url).pathname;
+    const searchParams = new URLSearchParams([['redirectTo', redirectTo]]);
+    throw redirect(`/login?${searchParams}`);
   }
-  return user;
-}
+  return uid;
+};
 
-function getLoginUrl(request: Request) {
-  const redirectTo = new URL(request.url).pathname;
-  const searchParams = new URLSearchParams([['redirectTo', redirectTo]]);
-  return `/login?${searchParams}`;
-}
+/**
+ * login the session by verifying the token, if all is good create/set cookie
+ * and redirect to the appropriate route
+ */
+export const sessionLogin = async (request: Request) => {
+  const data = await request.formData();
+  const idToken = data.get('tokenId') as string;
+  const redirectTo = data.get('redirectTo') as string;
+  try {
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
+    const sessionCookie = await admin.auth().createSessionCookie(idToken, { expiresIn });
+    // Create db user
+    const { uid, name, email, picture } = decodedToken;
+    await createUser({ uid, name, email, picture });
+    // Set cookie policy for session cookie.
+    const session = await getSession(request.headers.get('cookie'));
+    session.set('idToken', sessionCookie);
+    return redirect(redirectTo, { headers: { 'Set-Cookie': await commitSession(session) } });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+/**
+ * revokes the session cookie from the firebase admin instance
+ * @param {*} request
+ * @returns
+ */
+export const sessionLogout = async (request: Request) => {
+  const session = await getSession(request.headers.get('cookie'));
+
+  // Verify the session cookie. In this case an additional check is added to detect
+  // if the user's Firebase session was revoked, user deleted/disabled, etc.
+  const decodedTokenId = await admin.auth().verifySessionCookie(session.get('idToken'), true /** checkRevoked */);
+  await admin.auth().revokeRefreshTokens(decodedTokenId?.sub);
+  return redirect('/', { headers: { 'Set-Cookie': await destroySession(session) } });
+};

@@ -4,7 +4,12 @@ import { db } from '../../app/services/db';
 import { applyTraits } from './helpers/traits';
 
 const TRAITS = {
-  'auth-user-1': { id: 'tpSmd3FehZIM3Wp4HYSBnfnQmXLb' },
+  'clark-kent': {
+    id: '9licQdPND0UtBhShJ7vveJ703sJs',
+    name: 'Clark Kent',
+    email: 'superman@example.com',
+    photoURL: 'https://s3.amazonaws.com/comicgeeks/characters/avatars/19.jpg',
+  },
 };
 
 type Trait = keyof typeof TRAITS;

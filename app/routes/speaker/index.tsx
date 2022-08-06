@@ -2,7 +2,6 @@ import type { LoaderFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { GlobeAltIcon, HomeIcon, LocationMarkerIcon } from '@heroicons/react/solid';
-import { requireUserSession } from '../../services/auth/auth.server';
 import { Container } from '../../design-system/Container';
 import { H3, Text } from '../../design-system/Typography';
 import { Markdown } from '../../design-system/Markdown';
@@ -13,9 +12,10 @@ import { ButtonLink } from '../../design-system/Buttons';
 import type { SpeakerActivity } from '../../services/speakers/activity.server';
 import { getSpeakerActivity } from '../../services/speakers/activity.server';
 import { mapErrorToResponse } from '../../services/errors';
+import { sessionRequired } from '../../services/auth/auth.server';
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const uid = await requireUserSession(request);
+  const uid = await sessionRequired(request);
   try {
     const profile = await getSpeakerActivity(uid);
     return json<SpeakerActivity>(profile);

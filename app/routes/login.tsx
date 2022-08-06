@@ -3,15 +3,15 @@ import { redirect } from '@remix-run/node';
 import { useSubmit } from '@remix-run/react';
 import { Button } from '../design-system/Buttons';
 import { useFirebaseSignIn } from '../services/auth/useFirebaseSignIn';
-import { createUserSession, getAuthUser } from '../services/auth/auth.server';
+import { isSessionValid, sessionLogin } from '../services/auth/auth.server';
 
 export const action: ActionFunction = async ({ request }) => {
-  return createUserSession(request);
+  return sessionLogin(request);
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const user = await getAuthUser(request);
-  if (user) return redirect('/');
+  const uid = await isSessionValid(request);
+  if (uid) return redirect('/');
   return null;
 };
 

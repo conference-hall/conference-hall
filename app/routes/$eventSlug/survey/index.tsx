@@ -6,7 +6,7 @@ import { Container } from '~/design-system/Container';
 import { EventSurveyForm } from '../../../components/EventSurveyForm';
 import { AlertSuccess } from '../../../design-system/Alerts';
 import { H2, Text } from '../../../design-system/Typography';
-import { requireUserSession } from '../../../services/auth/auth.server';
+import { sessionRequired } from '../../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../../services/errors';
 import type { SurveyAnswers, SurveyQuestions } from '../../../services/events/survey.server';
 import {
@@ -22,7 +22,7 @@ type SurveyQuestionsForm = {
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const uid = await requireUserSession(request);
+  const uid = await sessionRequired(request);
   const slug = params.eventSlug!;
   try {
     const questions = await getSurveyQuestions(slug);
@@ -34,7 +34,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const uid = await requireUserSession(request);
+  const uid = await sessionRequired(request);
   const slug = params.eventSlug!;
   const form = await request.formData();
   const result = validateSurveyForm(form);

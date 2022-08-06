@@ -8,7 +8,7 @@ import { Markdown } from '../../../design-system/Markdown';
 import { H1, H2 } from '../../../design-system/Typography';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { requireUserSession } from '../../../services/auth/auth.server';
+import { sessionRequired } from '../../../services/auth/auth.server';
 import { getSpeakerProposal } from '../../../services/events/proposals.server';
 import { mapErrorToResponse } from '../../../services/errors';
 import { EventProposalDeleteButton } from '../../../components/EventProposalDelete';
@@ -18,7 +18,7 @@ import { getLanguage } from '../../../utils/languages';
 import { CoSpeakersList, InviteCoSpeakerButton } from '../../../components/CoSpeaker';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const uid = await requireUserSession(request);
+  const uid = await sessionRequired(request);
   const proposalId = params.id!;
   const proposal = await getSpeakerProposal(proposalId, uid).catch(mapErrorToResponse);
   return json(proposal);

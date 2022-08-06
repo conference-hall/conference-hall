@@ -2,11 +2,10 @@ import type { LoaderFunction } from '@remix-run/node';
 import { NavLink, Outlet, useCatch } from '@remix-run/react';
 import cn from 'classnames';
 import { Container } from '../design-system/Container';
-import { requireAuthUser } from '../services/auth/auth.server';
+import { sessionRequired } from '../services/auth/auth.server';
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const user = await requireAuthUser(request);
-  return user;
+  return sessionRequired(request);
 };
 
 export default function SpeakerRoute() {
