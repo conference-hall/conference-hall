@@ -1,11 +1,8 @@
-import { userFactory } from '../tests/factories/users';
 import { eventFormatFactory } from '../tests/factories/formats';
 import { eventCategoryFactory } from '../tests/factories/categories';
 import { eventFactory } from '../tests/factories/events';
 
 async function seed() {
-  await userFactory({ traits: ['auth-user-1'] });
-
   const event = await eventFactory({
     traits: ['conference', 'conference-cfp-open', 'withSurvey'],
     attributes: {
