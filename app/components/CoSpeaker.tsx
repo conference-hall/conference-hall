@@ -111,7 +111,9 @@ function CoSpeakerDrawer({ open, onClose, invitationLink, inviteType, entityId }
           </Text>
         </div>
       </div>
-      {invitationLink && <CopyInput value={invitationLink} disabled className="mt-8" />}
+      {invitationLink && (
+        <CopyInput aria-label="Copy co-speaker invitation link" value={invitationLink} disabled className="mt-8" />
+      )}
       {invitationLink ? (
         <invite.Form method="post" action="/invitation/revoke">
           <input type="hidden" name="_type" value={inviteType} />

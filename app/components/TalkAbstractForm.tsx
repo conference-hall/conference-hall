@@ -46,9 +46,10 @@ export function TalkAbstractForm({ initialValues, errors }: Props) {
       </RadioGroup>
       <LanguagesSelect values={initialValues?.languages ?? []} />
       <MarkdownTextArea
+        id="references"
+        name="references"
         label="References"
         description="Give more info about your talk: slides, workshop pre-requities, github repo, video, summary, steps of the talk, which conference or meetup where it has been already given?"
-        name="references"
         rows={4}
         defaultValue={initialValues?.references ?? ''}
         error={errors?.references?.[0]}
