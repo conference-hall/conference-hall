@@ -29,6 +29,11 @@ declare global {
        * @example cy.assertUrl('/search')
        */
       assertUrl(path: string): void;
+
+      /**
+       * Connect with a user
+       */
+      login(): void;
     }
   }
 }
@@ -47,4 +52,14 @@ Cypress.Commands.add('assertText', (text) => {
 
 Cypress.Commands.add('assertUrl', (path) => {
   cy.url().should('include', path);
+});
+
+Cypress.Commands.add('login', () => {
+  cy.session([], () => {
+    cy.visit('/login');
+    cy.clickOn('Continue with Google');
+    cy.url().should('contain', '/emulator');
+    cy.findByText('Clark Kent').click();
+    cy.url().should('equal', 'http://localhost:3001/');
+  });
 });

@@ -3,8 +3,9 @@ import { Menu, Transition } from '@headlessui/react';
 import cn from 'classnames';
 import { Form, Link } from '@remix-run/react';
 import { CogIcon, FireIcon, LogoutIcon, MicrophoneIcon, SearchIcon } from '@heroicons/react/solid';
+import { getAuth } from 'firebase/auth';
 
-type Props = { email: string; picture?: string | null };
+type Props = { email: string | null; picture: string | null };
 
 export function UserMenu({ email, picture }: Props) {
   return (
@@ -96,6 +97,7 @@ export function UserMenu({ email, picture }: Props) {
                 <Form action="/logout" method="post">
                   <button
                     type="submit"
+                    onClick={() => getAuth().signOut()}
                     className={cn('block w-full px-4 py-2 text-left text-sm text-gray-700', { 'bg-gray-100': active })}
                   >
                     <LogoutIcon

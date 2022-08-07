@@ -3,7 +3,7 @@ import { json, redirect } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
 import { Button, ButtonLink } from '~/design-system/Buttons';
 import { CategoriesForm } from '~/components/CategoriesForm';
-import { requireUserSession } from '../../../../services/auth/auth.server';
+import { sessionRequired } from '../../../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../../../services/errors';
 import type { EventTracks } from '../../../../services/events/event.server';
 import { getEvent } from '../../../../services/events/event.server';
@@ -20,7 +20,7 @@ type Tracks = {
 export const handle = { step: 'tracks' };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const uid = await requireUserSession(request);
+  const uid = await sessionRequired(request);
   const eventSlug = params.eventSlug!;
   const talkId = params.talkId!;
   try {
@@ -37,7 +37,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const uid = await requireUserSession(request);
+  const uid = await sessionRequired(request);
   const eventSlug = params.eventSlug!;
   const talkId = params.talkId!;
   const form = await request.formData();

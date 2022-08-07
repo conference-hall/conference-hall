@@ -5,7 +5,7 @@ import { CategoriesForm } from '../../../components/CategoriesForm';
 import type { ValidationErrors } from '../../../utils/validation-errors';
 import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
-import { requireUserSession } from '../../../services/auth/auth.server';
+import { sessionRequired } from '../../../services/auth/auth.server';
 import {
   deleteProposal,
   getSpeakerProposal,
@@ -19,14 +19,14 @@ import { useEvent } from '../../$eventSlug';
 import { H2 } from '../../../design-system/Typography';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const uid = await requireUserSession(request);
+  const uid = await sessionRequired(request);
   const proposalId = params.id!;
   const proposal = await getSpeakerProposal(proposalId, uid).catch(mapErrorToResponse);
   return json(proposal);
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const uid = await requireUserSession(request);
+  const uid = await sessionRequired(request);
   const eventSlug = params.eventSlug!;
   const proposalId = params.id!;
   const form = await request.formData();

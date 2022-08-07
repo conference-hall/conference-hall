@@ -1,11 +1,11 @@
 import type { ReactNode } from 'react';
 import { config } from './services/config';
-import type { LinksFunction, LoaderFunction } from '@remix-run/node';
+import type { LinksFunction, LoaderArgs } from '@remix-run/node';
 import { Meta, LiveReload, Outlet, Links, Scripts, useCatch, useLoaderData, ScrollRestoration } from '@remix-run/react';
 
 import { initializeFirebase } from './services/auth/firebase';
-import type { AuthUser } from './services/auth/auth.server';
-import { getAuthUser } from './services/auth/auth.server';
+import { isSessionValid } from './services/auth/auth.server';
+import { getUser } from './services/auth/user.server';
 
 import tailwind from './tailwind.css';
 import { Footer } from './components/Footer';
@@ -18,8 +18,9 @@ export const links: LinksFunction = () => {
   ];
 };
 
-export const loader: LoaderFunction = async ({ request }) => {
-  const user = await getAuthUser(request);
+export const loader = async ({ request }: LoaderArgs) => {
+  const uid = await isSessionValid(request);
+  const user = uid ? await getUser(uid).catch() : null;
   return {
     user,
     firebase: {
@@ -32,7 +33,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export default function App() {
-  const data = useLoaderData();
+  const data = useLoaderData<typeof loader>();
 
   initializeFirebase(data.firebase);
 
@@ -43,7 +44,11 @@ export default function App() {
   );
 }
 
-type DocumentProps = { children: ReactNode; title?: string; user?: AuthUser };
+type DocumentProps = {
+  children: ReactNode;
+  title?: string;
+  user?: { email: string | null; picture: string | null } | null;
+};
 
 function Document({ children, title, user }: DocumentProps) {
   return (

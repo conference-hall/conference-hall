@@ -3,7 +3,7 @@ import { json } from '@remix-run/node';
 import { useLoaderData, useSearchParams, useNavigate } from '@remix-run/react';
 import { Container } from '../../../design-system/Container';
 import { H2, Text } from '../../../design-system/Typography';
-import { requireUserSession } from '../../../services/auth/auth.server';
+import { sessionRequired } from '../../../services/auth/auth.server';
 import { ButtonLink } from '../../../design-system/Buttons';
 import type { SpeakerTalks } from '../../../services/speakers/talks.server';
 import { findTalks } from '../../../services/speakers/talks.server';
@@ -12,7 +12,7 @@ import { SpeakerTalksList } from '../../../components/SpeakerTalksList';
 import DetailedSelect from '../../../design-system/forms/DetailedSelect';
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const uid = await requireUserSession(request);
+  const uid = await sessionRequired(request);
   const { searchParams } = new URL(request.url);
   const archived = Boolean(searchParams.get('archived'));
   try {

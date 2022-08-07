@@ -6,7 +6,7 @@ import { ExternalLink } from '../../../../design-system/Links';
 import { H1, Text } from '../../../../design-system/Typography';
 import type { ActionFunction, LoaderFunction } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
-import { requireUserSession } from '../../../../services/auth/auth.server';
+import { sessionRequired } from '../../../../services/auth/auth.server';
 import { getEvent } from '../../../../services/events/event.server';
 import type { ProposalInfo } from '../../../../services/events/submit.server';
 import { getProposalInfo, submitProposal, validateSubmission } from '../../../../services/events/submit.server';
@@ -18,7 +18,7 @@ type SubmitForm = ProposalInfo & { codeOfConductUrl: string | null };
 export const handle = { step: 'submission' };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const uid = await requireUserSession(request);
+  const uid = await sessionRequired(request);
   const eventSlug = params.eventSlug!;
   const talkId = params.talkId!;
   try {
@@ -34,7 +34,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const uid = await requireUserSession(request);
+  const uid = await sessionRequired(request);
   const eventSlug = params.eventSlug!;
   const talkId = params.talkId!;
   const form = await request.formData();

@@ -4,18 +4,18 @@ export let config: Config;
 
 class Config {
   ENV: string;
-  FIREBASE_PROJECT_ID?: string;
-  FIREBASE_API_KEY?: string;
-  FIREBASE_AUTH_DOMAIN?: string;
-  FIREBASE_AUTH_EMULATOR_HOST?: string;
+  FIREBASE_PROJECT_ID: string;
+  FIREBASE_API_KEY: string;
+  FIREBASE_AUTH_DOMAIN: string;
+  FIREBASE_AUTH_EMULATOR_HOST: string;
   COOKIE_SIGNED_SECRET: string;
 
   constructor() {
     this.ENV = ENV;
-    this.FIREBASE_PROJECT_ID = process.env.FIREBASE_PROJECT_ID;
-    this.FIREBASE_API_KEY = process.env.FIREBASE_API_KEY;
-    this.FIREBASE_AUTH_DOMAIN = process.env.FIREBASE_AUTH_DOMAIN;
-    this.FIREBASE_AUTH_EMULATOR_HOST = process.env.FIREBASE_AUTH_EMULATOR_HOST;
+    this.FIREBASE_PROJECT_ID = process.env.FIREBASE_PROJECT_ID || '';
+    this.FIREBASE_API_KEY = process.env.FIREBASE_API_KEY || '';
+    this.FIREBASE_AUTH_DOMAIN = process.env.FIREBASE_AUTH_DOMAIN || '';
+    this.FIREBASE_AUTH_EMULATOR_HOST = process.env.FIREBASE_AUTH_EMULATOR_HOST || '';
     this.COOKIE_SIGNED_SECRET = process.env.COOKIE_SIGNED_SECRET || 'secr3t';
   }
 

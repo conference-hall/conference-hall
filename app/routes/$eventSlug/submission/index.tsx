@@ -4,7 +4,7 @@ import { Container } from '../../../design-system/Container';
 import { AlertInfo } from '../../../design-system/Alerts';
 import { MaxProposalsReached } from '../../../components/MaxProposalsReached';
 import { H2, Text } from '../../../design-system/Typography';
-import { requireUserSession } from '../../../services/auth/auth.server';
+import { sessionRequired } from '../../../services/auth/auth.server';
 import type { LoaderFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import type { ProposalCountsForEvent, TalksToSubmit } from '../../../services/events/submit.server';
@@ -20,7 +20,7 @@ type SelectionStep = {
 export const handle = { step: 'selection' };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const uid = await requireUserSession(request);
+  const uid = await sessionRequired(request);
   const slug = params.eventSlug!;
 
   try {

@@ -2,7 +2,7 @@ import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import { Button } from '~/design-system/Buttons';
 import type { ValidationErrors } from '~/utils/validation-errors';
 import { H2, Text } from '../../../../design-system/Typography';
-import { requireUserSession } from '../../../../services/auth/auth.server';
+import { sessionRequired } from '../../../../services/auth/auth.server';
 import type { ActionFunction, LoaderFunction } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import type { SpeakerTalk } from '../../../../services/speakers/talks.server';
@@ -14,7 +14,7 @@ import { TalkAbstractForm } from '../../../../components/TalkAbstractForm';
 export const handle = { step: 'proposal' };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const uid = await requireUserSession(request);
+  const uid = await sessionRequired(request);
   const talkId = params.talkId!;
   if (talkId !== 'new') {
     try {
@@ -28,7 +28,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const uid = await requireUserSession(request);
+  const uid = await sessionRequired(request);
   const eventSlug = params.eventSlug!;
   const talkId = params.talkId!;
 

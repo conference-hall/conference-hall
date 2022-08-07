@@ -5,13 +5,13 @@ import { Container } from '~/design-system/Container';
 import { TalkAbstractForm } from '../../../components/TalkAbstractForm';
 import { Button } from '../../../design-system/Buttons';
 import { H1 } from '../../../design-system/Typography';
-import { requireUserSession } from '../../../services/auth/auth.server';
+import { sessionRequired } from '../../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../../services/errors';
 import { createTalk, validateTalkForm } from '../../../services/speakers/talks.server';
 import type { ValidationErrors } from '../../../utils/validation-errors';
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const uid = await requireUserSession(request);
+  const uid = await sessionRequired(request);
   const form = await request.formData();
 
   const result = validateTalkForm(form);

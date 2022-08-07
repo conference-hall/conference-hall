@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import type { SubmitFunction } from '@remix-run/react';
 import { useSearchParams, useTransition } from '@remix-run/react';
 import {
@@ -14,30 +14,34 @@ type FirebaseSignReturn = [boolean, () => Promise<void>];
 
 export function useFirebaseSignIn(onSubmit: SubmitFunction): FirebaseSignReturn {
   const transition = useTransition();
-  const [isAuthenticating, setAuthenticating] = useState(true);
-
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const isRedirecting = Boolean(searchParams.get('redirecting'));
   const redirectTo = searchParams.get('redirectTo') || '/';
 
   useEffect(() => {
-    getRedirectResult(getAuth()).then(async (credentials) => {
-      if (credentials) {
+    getRedirectResult(getAuth())
+      .then(async (credentials) => {
+        if (!credentials) return;
         const tokenId = await credentials.user.getIdToken();
         onSubmit({ tokenId, redirectTo }, { method: 'post', replace: true });
-      } else {
-        console.log('No credentials');
-      }
-      setAuthenticating(false);
-    });
-  }, [redirectTo, onSubmit]);
+      })
+      .catch((error) => {
+        setSearchParams(new URLSearchParams({ redirectTo }));
+        console.error(error);
+      });
+  }, [redirectTo, onSubmit, setSearchParams]);
 
   const signin = async () => {
+    setSearchParams(new URLSearchParams({ redirecting: 'true', redirectTo }));
     const provider = new GoogleAuthProvider();
     provider.setCustomParameters({ prompt: 'select_account' });
     const auth = getAuth();
     await setPersistence(auth, inMemoryPersistence);
-    await signInWithRedirect(auth, provider);
+    await signInWithRedirect(auth, provider).catch((error) => {
+      setSearchParams(new URLSearchParams({ redirectTo }));
+      console.error(error);
+    });
   };
 
-  return [isAuthenticating || transition.state === 'submitting' || transition.state === 'loading', signin];
+  return [isRedirecting || transition.state === 'submitting', signin];
 }

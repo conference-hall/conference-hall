@@ -5,14 +5,14 @@ import { Container } from '~/design-system/Container';
 import { TalkAbstractForm } from '../../../components/TalkAbstractForm';
 import { Button, ButtonLink } from '../../../design-system/Buttons';
 import { H1 } from '../../../design-system/Typography';
-import { requireUserSession } from '../../../services/auth/auth.server';
+import { sessionRequired } from '../../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../../services/errors';
 import type { SpeakerTalk } from '../../../services/speakers/talks.server';
 import { getTalk, updateTalk, validateTalkForm } from '../../../services/speakers/talks.server';
 import type { ValidationErrors } from '../../../utils/validation-errors';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const uid = await requireUserSession(request);
+  const uid = await sessionRequired(request);
   try {
     const talk = await getTalk(uid, params.id!);
     if (talk.archived) {
@@ -25,7 +25,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const uid = await requireUserSession(request);
+  const uid = await sessionRequired(request);
   const form = await request.formData();
   try {
     const result = validateTalkForm(form);

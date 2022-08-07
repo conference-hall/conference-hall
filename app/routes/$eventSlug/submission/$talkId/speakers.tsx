@@ -7,12 +7,13 @@ import { useSubmissionStep } from '../../../../components/useSubmissionStep';
 import { MarkdownTextArea } from '../../../../design-system/forms/MarkdownTextArea';
 import { ExternalLink } from '../../../../design-system/Links';
 import { H2, Text } from '../../../../design-system/Typography';
-import { requireAuthUser, requireUserSession } from '../../../../services/auth/auth.server';
+import { sessionRequired } from '../../../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../../../services/errors';
 import { getEvent } from '../../../../services/events/event.server';
 import { removeCoSpeakerFromProposal } from '../../../../services/events/proposals.server';
 import { getProposalSpeakers } from '../../../../services/events/speakers.server';
 import { updateSettings, validateProfileData } from '../../../../services/speakers/settings.server';
+import { getUser } from '../../../../services/auth/user.server';
 import type { ValidationErrors } from '../../../../utils/validation-errors';
 
 type SubmissionSpeakers = {
@@ -32,7 +33,8 @@ type SubmissionSpeakers = {
 export const handle = { step: 'speakers' };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const user = await requireAuthUser(request);
+  const uid = await sessionRequired(request);
+  const user = await getUser(uid);
   const eventSlug = params.eventSlug!;
   const talkId = params.talkId!;
   try {
@@ -50,7 +52,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const uid = await requireUserSession(request);
+  const uid = await sessionRequired(request);
   const talkId = params.talkId!;
   const eventSlug = params.eventSlug!;
   const form = await request.formData();
