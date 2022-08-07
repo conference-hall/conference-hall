@@ -5,7 +5,7 @@ import { Form, Link } from '@remix-run/react';
 import { CogIcon, FireIcon, LogoutIcon, MicrophoneIcon, SearchIcon } from '@heroicons/react/solid';
 import { getAuth } from 'firebase/auth';
 
-type Props = { email?: string; picture?: string | null };
+type Props = { email: string | null; picture: string | null };
 
 export function UserMenu({ email, picture }: Props) {
   return (

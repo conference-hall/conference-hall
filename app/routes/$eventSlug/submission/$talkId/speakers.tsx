@@ -13,7 +13,7 @@ import { getEvent } from '../../../../services/events/event.server';
 import { removeCoSpeakerFromProposal } from '../../../../services/events/proposals.server';
 import { getProposalSpeakers } from '../../../../services/events/speakers.server';
 import { updateSettings, validateProfileData } from '../../../../services/speakers/settings.server';
-import { getUser } from '../../../../services/user.server';
+import { getUser } from '../../../../services/auth/user.server';
 import type { ValidationErrors } from '../../../../utils/validation-errors';
 
 type SubmissionSpeakers = {

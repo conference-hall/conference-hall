@@ -5,7 +5,7 @@ import { Meta, LiveReload, Outlet, Links, Scripts, useCatch, useLoaderData, Scro
 
 import { initializeFirebase } from './services/auth/firebase';
 import { isSessionValid } from './services/auth/auth.server';
-import { getUser } from './services/user.server';
+import { getUser } from './services/auth/user.server';
 
 import tailwind from './tailwind.css';
 import { Footer } from './components/Footer';
@@ -20,7 +20,7 @@ export const links: LinksFunction = () => {
 
 export const loader = async ({ request }: LoaderArgs) => {
   const uid = await isSessionValid(request);
-  const user = uid ? await getUser(uid) : null;
+  const user = uid ? await getUser(uid).catch() : null;
   return {
     user,
     firebase: {
@@ -44,7 +44,11 @@ export default function App() {
   );
 }
 
-type DocumentProps = { children: ReactNode; title?: string; user?: { email?: string; picture?: string } | null };
+type DocumentProps = {
+  children: ReactNode;
+  title?: string;
+  user?: { email: string | null; picture: string | null } | null;
+};
 
 function Document({ children, title, user }: DocumentProps) {
   return (
