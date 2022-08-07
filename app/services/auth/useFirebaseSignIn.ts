@@ -1,6 +1,6 @@
-import { useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 import type { SubmitFunction } from '@remix-run/react';
-import { useLocation, useSearchParams, useTransition } from '@remix-run/react';
+import { useSearchParams, useTransition } from '@remix-run/react';
 import {
   getAuth,
   getRedirectResult,
