@@ -14,7 +14,7 @@
     "test:unit": "dotenv -e .env.test -- vitest --config ./vitest.config.ts",
     "test:server": "npm run db:migrate:test && run-s css:generate test:server:remix",
     "test:server:remix": "dotenv -e .env.test -- remix dev",
-    "cypress:open": "start-server-and-test test:server http://localhost:3001 'dotenv -e .env.test -- cypress open'",
+    "cypress:open": "start-server-and-test test:server http://localhost:3001 'dotenv -e .env.test -- cypress open --e2e -b electron'",
     "cypress:run": "start-server-and-test test:server http://localhost:3001 'dotenv -e .env.test -- cypress run'",
     "db:studio": "dotenv -e .env.dev -- prisma studio",
     "db:reset": "dotenv -e .env.dev -- prisma migrate reset",

@@ -37,6 +37,12 @@ declare global {
       assertText(text: string): void;
 
       /**
+       * Assert the text exists in an input
+       * @example cy.assertInputText('label', 'Hello World')
+       */
+      assertInputText(label: string | RegExp, text: string): void;
+
+      /**
        * Assert the page URL contains a path
        * @example cy.assertUrl('/search')
        */
@@ -51,9 +57,7 @@ declare global {
 }
 
 Cypress.Commands.add('clickOn', (name) => {
-  cy.findAllByRole(/button|link|checkbox|radio/, { name })
-    .then((elements) => elements[0])
-    .click({ force: true });
+  cy.findByRole(/button|link|checkbox|radio/, { name }).click({ force: true });
 });
 
 Cypress.Commands.add('selectOn', (label, value) => {
@@ -67,6 +71,10 @@ Cypress.Commands.add('typeOn', (label, text) => {
 
 Cypress.Commands.add('assertText', (text) => {
   cy.findByText(text).should('exist');
+});
+
+Cypress.Commands.add('assertInputText', (label, text) => {
+  cy.findByLabelText(label).should('contain.value', text);
 });
 
 Cypress.Commands.add('assertUrl', (path) => {

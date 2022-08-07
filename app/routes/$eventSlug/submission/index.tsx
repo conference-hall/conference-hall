@@ -55,7 +55,7 @@ export default function EventSubmitRoute() {
         </div>
         {data?.talks.length !== 0 && (
           <div className="flex-shrink-0">
-            <ButtonLink to="new">New proposal</ButtonLink>
+            <ButtonLink to="new">Create a new proposal</ButtonLink>
           </div>
         )}
       </div>
