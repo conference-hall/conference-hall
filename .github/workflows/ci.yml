@@ -42,7 +42,7 @@ jobs:
         run: npm test
 
       - name: Execute e2e tests
-        run: npm run cypress:run
+        run: npm run cy:run
 
       - name: Stop database and firebase emulators
         if: always()

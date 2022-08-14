@@ -53,5 +53,5 @@ npm run test
 Execute end-to-end tests:
 
 ```
-npm run cypress:run
+npm run cy:run
 ```

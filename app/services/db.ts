@@ -13,15 +13,19 @@ declare global {
 // the server with every change, but we want to make sure we don't
 // create a new connection to the DB with every change either.
 if (config.isProduction) {
-  db = new PrismaClient();
-  db.$connect();
+  db = getClient();
 } else {
   if (!global.__db) {
-    const log: Prisma.LogLevel[] = config.isDevelopment ? ['query'] : [];
-    global.__db = new PrismaClient({ log });
-    global.__db.$connect();
+    global.__db = getClient();
   }
   db = global.__db;
+}
+
+function getClient() {
+  const log: Prisma.LogLevel[] = config.isDevelopment ? ['query'] : [];
+  const client = new PrismaClient({ log });
+  client.$connect();
+  return client;
 }
 
 export { db };
