@@ -1,9 +1,15 @@
 class LoginPage {
   visit(redirectTo?: string) {
     if (redirectTo) {
-      return cy.visit(`/login?redirectTo=${redirectTo}`);
+      cy.visit(`/login?redirectTo=${redirectTo}`);
+    } else {
+      cy.visit('/login');
     }
-    return cy.visit('/login');
+    this.isPageVisible();
+  }
+
+  isPageVisible() {
+    cy.findByRole('heading', { name: 'Log in to Conference Hall' }).should('exist');
   }
 
   signinWithGoogle(username: string) {

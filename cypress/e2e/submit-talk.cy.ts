@@ -1,4 +1,7 @@
-import SubmissionPage from '../page-objects/submission.page';
+import EventProposalPage from '../page-objects/event-proposal.page';
+import EventProposalsPage from '../page-objects/event-proposals.page';
+import EventSurveyPage from '../page-objects/event-survey.page';
+import EventSubmissionPage from '../page-objects/event-submission.page';
 
 describe('Submit a talk to event', () => {
   beforeEach(() => {
@@ -8,13 +11,17 @@ describe('Submit a talk to event', () => {
 
   afterEach(() => cy.task('disconnectDB'));
 
-  const submission = new SubmissionPage();
+  const submission = new EventSubmissionPage();
+  const proposals = new EventProposalsPage();
+  const proposal = new EventProposalPage();
+  const survey = new EventSurveyPage();
 
   it('submit a new talk for a conference (full wizard)', () => {
     submission.visit('devfest-nantes');
     submission.createNewProposal();
 
     // Step: talk creation
+    submission.isTalkStepVisible();
     submission.fillTalkForm({
       title: 'The amazing talk',
       abstract: 'An amazing abstract for an amazing talk.',
@@ -25,15 +32,18 @@ describe('Submit a talk to event', () => {
     submission.submitTalkForm();
 
     // Step: speaker
+    submission.isSpeakerStepVisible();
     submission.fillSpeakerForm({ bio: 'I am the best!' });
     submission.submitSpeakerForm();
 
     // Step: tracks
+    submission.isTracksStepVisible();
     submission.selectFormatTrack('Quickie');
     submission.selectCategoryTrack('Web');
     submission.submitTracksForm();
 
     // Step: survey
+    submission.isSurveyStepVisible();
     submission.fillSurveyForm({
       gender: 'Male',
       tshirt: 'XXXL',
@@ -45,20 +55,19 @@ describe('Submit a talk to event', () => {
     submission.submitSurveyForm();
 
     // Step: confirmation
+    submission.isConfirmationStepVisible();
     cy.assertText('The amazing talk');
     cy.assertText('by Clark Kent');
     submission.fillConfirmationForm({ message: 'You rock!', cod: true });
-    submission.submitProposal();
+    submission.submitConfirmation();
 
     // Check proposal list
-    cy.assertUrl('/devfest-nantes/proposals');
-    cy.assertText('Your proposals');
-    cy.assertText('The amazing talk');
-    cy.assertText('by Clark Kent');
+    proposals.isPageVisible('devfest-nantes');
+    proposals.list().should('have.length', 1);
+    proposals.proposal('The amazing talk').should('contain', 'by Clark Kent').click();
 
     // Check proposal info
-    cy.clickOn(/The amazing talk/);
-    cy.assertUrl(/\/devfest-nantes\/proposals\/(.*)/);
+    proposal.isPageVisible('devfest-nantes');
     cy.assertText('The amazing talk');
     cy.assertText('Intermediate');
     cy.assertText('English');
@@ -69,21 +78,22 @@ describe('Submit a talk to event', () => {
     cy.assertText('Web');
 
     // Check survey info
-    cy.clickOn('Survey');
-    cy.assertChecked('Male');
-    cy.assertChecked('XXXL');
-    cy.assertChecked('Yes');
-    cy.assertChecked('Taxi');
-    cy.assertChecked('Vegetarian');
-    cy.assertInputText('Do you have specific information to share?', 'Thanks!');
+    survey.visit('devfest-nantes');
+    survey.gender('Male').should('be.checked');
+    survey.tshirt('XXXL').should('be.checked');
+    survey.accommodation('Yes').should('be.checked');
+    survey.transport('Taxi').should('be.checked');
+    survey.meal('Vegetarian').should('be.checked');
+    survey.message().should('contain.value', 'Thanks!');
   });
 
   it('submit an existing talk', () => {
     submission.visit('devfest-nantes');
 
-    cy.clickOn(/My existing talk/);
-    cy.assertUrl(/\/devfest-nantes\/submission\/(.*)/);
+    submission.talks().should('have.length', 1);
+    submission.talk('My existing talk').click();
 
+    submission.isTalkStepVisible();
     cy.assertInputText('Title', 'My existing talk');
     cy.assertInputText('Abstract', 'My existing abstract');
     cy.assertChecked('Advanced');
@@ -99,29 +109,29 @@ describe('Submit a talk to event', () => {
     submission.submitTalkForm();
 
     // Step: speaker
-    cy.assertText('Speaker details');
+    submission.isSpeakerStepVisible();
     submission.submitSpeakerForm();
 
     // Step: tracks
-    cy.assertText('Select one or severals formats proposed by the event organizers.');
+    submission.isTracksStepVisible();
     submission.submitTracksForm();
 
     // Step: survey
-    cy.assertText('We have some questions for you.');
+    submission.isSurveyStepVisible();
     submission.submitSurveyForm();
 
     // Step: confirmation
+    submission.isConfirmationStepVisible();
     submission.fillConfirmationForm({ cod: true });
-    submission.submitProposal();
+    submission.submitConfirmation();
 
     // Check proposal list
-    cy.assertUrl('/devfest-nantes/proposals');
-    cy.assertText('Your proposals');
-    cy.assertText('Title UPDATED');
+    proposals.isPageVisible('devfest-nantes');
+    proposals.list().should('have.length', 1);
+    proposals.proposal('Title UPDATED').should('exist').click();
 
     // Check proposal info
-    cy.clickOn(/UPDATED/);
-    cy.assertUrl(/\/devfest-nantes\/proposals\/(.*)/);
+    proposal.isPageVisible('devfest-nantes');
     cy.assertText('Title UPDATED');
     cy.assertText('Intermediate');
     cy.assertText('English');
@@ -134,6 +144,7 @@ describe('Submit a talk to event', () => {
     submission.createNewProposal();
 
     // Step: talk creation
+    submission.isTalkStepVisible();
     submission.fillTalkForm({
       title: 'The amazing talk',
       abstract: 'An amazing abstract for an amazing talk.',
@@ -141,22 +152,23 @@ describe('Submit a talk to event', () => {
     submission.submitTalkForm();
 
     // Step: speaker
-    cy.assertText('Speaker details');
+    submission.isSpeakerStepVisible();
     submission.submitSpeakerForm();
 
     // Step: tracks
+    submission.isTracksStepVisible();
     submission.selectFormatTrack('Quickie');
     submission.selectCategoryTrack('Web');
     submission.submitTracksForm();
 
     // Step: confirmation
+    submission.isConfirmationStepVisible();
     submission.fillConfirmationForm({ message: 'You rock!', cod: true });
-    submission.submitProposal();
+    submission.submitConfirmation();
 
     // Check proposal list
-    cy.assertUrl('/without-survey/proposals');
-    cy.assertText('Your proposals');
-    cy.assertText('The amazing talk');
+    proposals.isPageVisible('without-survey');
+    proposals.list().should('have.length', 1);
   });
 
   it('submit a new talk for a conference (w/o tracks)', () => {
@@ -164,6 +176,7 @@ describe('Submit a talk to event', () => {
     submission.createNewProposal();
 
     // Step: talk creation
+    submission.isTalkStepVisible();
     submission.fillTalkForm({
       title: 'The amazing talk',
       abstract: 'An amazing abstract for an amazing talk.',
@@ -171,37 +184,22 @@ describe('Submit a talk to event', () => {
     submission.submitTalkForm();
 
     // Step: speaker
-    cy.assertText('Speaker details');
+    submission.isSpeakerStepVisible();
     submission.submitSpeakerForm();
 
     // Step: survey
-    submission.fillSurveyForm({
-      gender: 'Male',
-      tshirt: 'XXXL',
-      accomodation: 'Yes',
-      transport: 'Taxi',
-      meal: 'Vegetarian',
-      message: 'Thanks!',
-    });
+    submission.isSurveyStepVisible();
+    submission.fillSurveyForm({ gender: 'Male' });
     submission.submitSurveyForm();
 
     // Step: confirmation
+    submission.isConfirmationStepVisible();
     submission.fillConfirmationForm({ message: 'You rock!', cod: true });
-    submission.submitProposal();
+    submission.submitConfirmation();
 
     // Check proposal list
-    cy.assertUrl('/without-tracks/proposals');
-    cy.assertText('Your proposals');
-    cy.assertText('The amazing talk');
-
-    // Check survey info
-    cy.clickOn('Survey');
-    cy.assertChecked('Male');
-    cy.assertChecked('XXXL');
-    cy.assertChecked('Yes');
-    cy.assertChecked('Taxi');
-    cy.assertChecked('Vegetarian');
-    cy.assertInputText('Do you have specific information to share?', 'Thanks!');
+    proposals.isPageVisible('without-tracks');
+    proposals.list().should('have.length', 1);
   });
 
   it('submit a new talk for a conference (w/o survey, tracks and code of conduct)', () => {
@@ -209,6 +207,7 @@ describe('Submit a talk to event', () => {
     submission.createNewProposal();
 
     // Step: talk creation
+    submission.isTalkStepVisible();
     submission.fillTalkForm({
       title: 'The amazing talk',
       abstract: 'An amazing abstract for an amazing talk.',
@@ -216,15 +215,15 @@ describe('Submit a talk to event', () => {
     submission.submitTalkForm();
 
     // Step: speaker
-    cy.assertText('Speaker details');
+    submission.isSpeakerStepVisible();
     submission.submitSpeakerForm();
 
     // Step: confirmation
-    submission.submitProposal();
+    submission.isConfirmationStepVisible();
+    submission.submitConfirmation();
 
     // Check proposal list
-    cy.assertUrl('/without-survey-tracks/proposals');
-    cy.assertText('Your proposals');
-    cy.assertText('The amazing talk');
+    proposals.isPageVisible('without-survey-tracks');
+    proposals.list().should('have.length', 1);
   });
 });

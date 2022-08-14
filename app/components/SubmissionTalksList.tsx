@@ -22,7 +22,7 @@ export function SubmissionTalksList({ talks }: Props) {
   }
 
   return (
-    <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+    <ul aria-label="Talks list" className="grid grid-cols-1 gap-6 sm:grid-cols-2">
       {talks.map((talk) => (
         <li key={talk.id} className="col-span-1 rounded-lg border border-gray-200 bg-white">
           <Link to={talk.id} className="block rounded-lg hover:bg-indigo-50">

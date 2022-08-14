@@ -1,10 +1,11 @@
 class SpeakerTalksPage {
   visit() {
-    return cy.visit('/speaker/talks');
+    cy.visit('/speaker/talks');
+    this.isPageVisible();
   }
 
-  title() {
-    return cy.findByText('Your talks');
+  isPageVisible() {
+    cy.findByRole('heading', { name: 'Your talks' }).should('exist');
   }
 }
 

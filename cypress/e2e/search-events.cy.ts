@@ -1,5 +1,5 @@
 import AboutPage from '../page-objects/about.page';
-import SearchEventPage from '../page-objects/search-event.page';
+import EventSearchPage from '../page-objects/event-search.page';
 
 describe('Search conferences and meetups.', () => {
   beforeEach(() => cy.task('seedDB', 'search-events'));
@@ -10,6 +10,7 @@ describe('Search conferences and meetups.', () => {
 
     it('redirect to search page and Search conferences and meetups.', () => {
       about.visit();
+
       const search = about.goToSearch();
 
       search.search('Devfest');
@@ -19,7 +20,7 @@ describe('Search conferences and meetups.', () => {
   });
 
   describe('From search page', () => {
-    const search = new SearchEventPage();
+    const search = new EventSearchPage();
 
     it('displays incoming events by default', () => {
       search.visit();

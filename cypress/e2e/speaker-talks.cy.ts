@@ -12,6 +12,5 @@ describe('Speaker talks page', () => {
 
   it('displays the speaker talks', () => {
     page.visit();
-    page.title().should('exist');
   });
 });
