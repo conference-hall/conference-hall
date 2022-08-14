@@ -17,7 +17,11 @@ export function SubmissionSteps({ steps, currentStep }: Props) {
     <nav aria-label="Progress">
       <ol className="divide-y divide-gray-200 border-b border-gray-200 md:flex md:divide-y-0">
         {steps.map((step, stepIdx) => (
-          <li key={step.key} className="relative md:flex md:flex-1">
+          <li
+            key={step.key}
+            className="relative md:flex md:flex-1"
+            aria-current={stepIdx === currentStepIdx ? 'step' : undefined}
+          >
             {stepIdx < currentStepIdx ? (
               <Link to={step.path} className="group flex w-full items-center">
                 <span className="flex items-center px-6 py-4 text-sm font-medium">
@@ -28,7 +32,7 @@ export function SubmissionSteps({ steps, currentStep }: Props) {
                 </span>
               </Link>
             ) : stepIdx === currentStepIdx ? (
-              <span className="flex items-center px-6 py-4 text-sm font-medium" aria-current="step">
+              <span className="flex items-center px-6 py-4 text-sm font-medium">
                 <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border-2 border-indigo-600">
                   <span className="text-indigo-600">{stepIdx + 1}</span>
                 </span>

@@ -1,13 +1,18 @@
-import SearchEventPage from './search-event.page';
+import EventSearchPage from './event-search.page';
 
 class AboutPage {
   visit() {
-    return cy.visit('/about');
+    cy.visit('/about');
+    this.isPageVisible();
+  }
+
+  isPageVisible() {
+    cy.findByRole('heading', { name: 'Welcome to Conference Hall.' }).should('exist');
   }
 
   goToSearch() {
     cy.clickOn('See all conferences and meetups');
-    return new SearchEventPage();
+    return new EventSearchPage();
   }
 }
 

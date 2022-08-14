@@ -20,17 +20,42 @@ type ConfirmationFormType = {
   cod?: boolean;
 };
 
-class SubmissionPage {
+class EventSubmissionPage {
   visit(slug: string) {
     cy.visit(`/${slug}/submission`);
+    this.isPageVisible();
   }
+
+  isPageVisible() {
+    cy.findByRole('heading', { name: 'Proposal selection' }).should('exist');
+  }
+
+  /**
+   * Talks list
+   */
 
   createNewProposal() {
     return cy.clickOn('Create a new proposal');
   }
 
-  fillTalkForm(data: TalkFormType) {
+  talks() {
+    return cy.findByRole('list', { name: 'Talks list' }).children();
+  }
+
+  talk(name: string) {
+    return this.talks().contains(name);
+  }
+
+  /**
+   * Talk step
+   */
+
+  isTalkStepVisible() {
     cy.assertUrl(/\/(.*)\/submission\/(.*)/);
+    cy.findByRole('listitem', { current: 'step' }).should('contain', 'Proposal');
+  }
+
+  fillTalkForm(data: TalkFormType) {
     cy.typeOn('Title', data.title);
     cy.typeOn('Abstract', data.abstract);
     if (data.level) cy.clickOn(data.level);
@@ -42,8 +67,16 @@ class SubmissionPage {
     return cy.clickOn('Save as draft and continue');
   }
 
-  fillSpeakerForm({ bio }: { bio: string }) {
+  /**
+   * Speaker step
+   */
+
+  isSpeakerStepVisible() {
     cy.assertUrl(/\/(.*)\/submission\/(.*)\/speakers/);
+    cy.findByRole('listitem', { current: 'step' }).should('contain', 'Speaker');
+  }
+
+  fillSpeakerForm({ bio }: { bio: string }) {
     cy.typeOn('Biography', bio);
   }
 
@@ -62,15 +95,20 @@ class SubmissionPage {
     return cy.clickOn('Close');
   }
 
-  selectFormatTrack(format: string) {
+  /**
+   * Tracks step
+   */
+
+  isTracksStepVisible() {
     cy.assertUrl(/\/(.*)\/submission\/(.*)\/tracks/);
-    cy.assertText('Select one or severals formats proposed by the event organizers.');
+    cy.findByRole('listitem', { current: 'step' }).should('contain', 'Tracks');
+  }
+
+  selectFormatTrack(format: string) {
     cy.clickOn(format);
   }
 
   selectCategoryTrack(category: string) {
-    cy.assertUrl(/\/(.*)\/submission\/(.*)\/tracks/);
-    cy.assertText('Select categories that are the best fit for your proposal.');
     cy.clickOn(category);
   }
 
@@ -78,10 +116,16 @@ class SubmissionPage {
     return cy.clickOn('Next');
   }
 
-  fillSurveyForm(data: SurveyFormType) {
-    cy.assertUrl(/\/(.*)\/submission\/(.*)\/survey/);
-    cy.assertText('We have some questions for you.');
+  /**
+   * Survey step
+   */
 
+  isSurveyStepVisible() {
+    cy.assertUrl(/\/(.*)\/submission\/(.*)\/survey/);
+    cy.findByRole('listitem', { current: 'step' }).should('contain', 'Survey');
+  }
+
+  fillSurveyForm(data: SurveyFormType) {
     if (data.gender) cy.clickOn(data.gender);
     if (data.tshirt) cy.clickOn(data.tshirt);
     if (data.accomodation) cy.clickOn(data.accomodation);
@@ -94,15 +138,22 @@ class SubmissionPage {
     return cy.clickOn('Next');
   }
 
-  fillConfirmationForm(data: ConfirmationFormType) {
+  /**
+   * Confirmation step
+   */
+  isConfirmationStepVisible() {
     cy.assertUrl(/\/(.*)\/submission\/(.*)\/submit/);
+    cy.findByRole('listitem', { current: 'step' }).should('contain', 'Submission');
+  }
+
+  fillConfirmationForm(data: ConfirmationFormType) {
     if (data.message) cy.typeOn('Message to organizers', data.message);
     if (data.cod) cy.clickOn('Please agree with the code of conduct of the event.');
   }
 
-  submitProposal() {
+  submitConfirmation() {
     return cy.clickOn('Submit proposal');
   }
 }
 
-export default SubmissionPage;
+export default EventSubmissionPage;

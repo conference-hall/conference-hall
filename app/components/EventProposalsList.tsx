@@ -28,7 +28,7 @@ export function EventProposalsList({ proposals, cfpState }: Props) {
   }
 
   return (
-    <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+    <ul aria-label="Proposals list" className="grid grid-cols-1 gap-6 sm:grid-cols-2">
       {proposals.map((proposal) => (
         <li key={proposal.id} className="col-span-1 rounded-lg border border-gray-200 bg-white">
           <Link to={proposal.id} className="block rounded-lg hover:bg-indigo-50">

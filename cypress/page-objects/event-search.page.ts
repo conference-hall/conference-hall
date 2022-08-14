@@ -1,6 +1,11 @@
 class SearchEventPage {
   visit() {
-    return cy.visit('/');
+    cy.visit('/');
+    this.isPageVisible();
+  }
+
+  isPageVisible() {
+    cy.findByRole('heading', { name: 'Conferences and meetups.' }).should('exist');
   }
 
   search(text: string) {
