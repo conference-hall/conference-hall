@@ -1,22 +1,27 @@
+import LoginPage from '../page-objects/login.page';
+
 describe('Authentication', () => {
   afterEach(() => cy.task('resetDB'));
 
+  const login = new LoginPage();
+
   it('login', () => {
-    cy.visit('/login');
-    cy.clickOn('Continue with Google');
-    cy.url().should('contain', '/emulator');
-    cy.findByText('Clark Kent').click();
+    login.visit();
+    login.signinWithGoogle('Clark Kent');
+
     cy.url().should('equal', 'http://localhost:3001/');
     cy.clickOn('Open user menu');
     cy.assertText('Signed in as');
     cy.assertText('superman@example.com');
   });
 
-  it('login and redirect to the path', () => {
-    cy.visit('/login?redirectTo=/speaker/talks');
-    cy.clickOn('Continue with Google');
-    cy.url().should('contain', '/emulator');
-    cy.findByText('Clark Kent').click();
+  it('login and redirected', () => {
+    login.visit('/speaker/talks');
+    login.signinWithGoogle('Clark Kent');
+
     cy.url().should('contains', '/speaker/talks');
+    cy.clickOn('Open user menu');
+    cy.assertText('Signed in as');
+    cy.assertText('superman@example.com');
   });
 });

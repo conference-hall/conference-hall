@@ -1,57 +1,60 @@
+import AboutPage from '../page-objects/about.page';
+import SearchEventPage from '../page-objects/search-event.page';
+
 describe('Search conferences and meetups.', () => {
   beforeEach(() => cy.task('seedDB', 'search-events'));
   afterEach(() => cy.task('resetDB'));
 
   describe('From about page', () => {
+    const about = new AboutPage();
+
     it('redirect to search page and Search conferences and meetups.', () => {
-      cy.visit('/about');
-      cy.clickOn('See all conferences and meetups');
-      cy.typeOn('Search conferences and meetups.', 'Devfest{enter}');
-      cy.assertUrl('/?terms=Devfest');
-      cy.assertText('Devfest Nantes');
+      about.visit();
+      const search = about.goToSearch();
+
+      search.search('Devfest');
+      search.results().should('have.length', 1);
+      search.result('Devfest Nantes').should('exist');
     });
   });
 
   describe('From search page', () => {
+    const search = new SearchEventPage();
+
     it('displays incoming events by default', () => {
-      cy.visit('/');
-      cy.assertText('Devfest Nantes');
-      cy.assertText('GDG Nantes');
+      search.visit();
+      search.results().should('have.length', 2);
+      search.result('Devfest Nantes').should('exist');
+      search.result('GDG Nantes').should('exist');
     });
 
     it('search conference events', () => {
-      cy.visit('/');
-      cy.typeOn('Search conferences and meetups.', 'Devfest{enter}');
-      cy.assertText('Devfest Nantes');
-      cy.assertText('Nantes, France');
-      cy.assertText('Call for paper is open');
-    });
+      search.visit();
+      search.search('devfest');
 
-    it('search conference events', () => {
-      cy.visit('/');
-      cy.typeOn('Search conferences and meetups.', 'devfest{enter}');
-      cy.assertText('Devfest Nantes');
-      cy.assertText('Nantes, France');
-      cy.assertText('Call for paper is open');
+      cy.url().should('include', '/?terms=devfest');
+      search.results().should('have.length', 1);
+      search.result('Devfest Nantes').should('contain', 'Nantes, France').and('contain', 'Call for paper is open');
     });
 
     it('search meetup events', () => {
-      cy.visit('/');
-      cy.typeOn('Search conferences and meetups.', 'gdg{enter}');
-      cy.assertText('GDG Nantes');
-      cy.assertText('Nantes, France');
-      cy.assertText('Call for paper is open');
+      search.visit();
+      search.search('gdg');
+
+      cy.url().should('include', '/?terms=gdg');
+      search.results().should('have.length', 1);
+      search.result('GDG Nantes').should('contain', 'Nantes, France').and('contain', 'Call for paper is open');
     });
 
     it('opens event page on click', () => {
-      cy.visit('/');
-      cy.clickOn(/Devfest Nantes/);
+      search.visit();
+      search.result('Devfest Nantes').click();
       cy.assertUrl('/devfest-nantes');
     });
 
     it('displays no result page if no events found', () => {
-      cy.visit('/');
-      cy.typeOn('Search conferences and meetups.', 'nothing{enter}');
+      search.visit();
+      search.search('nothing');
       cy.assertText('No events found.');
     });
   });

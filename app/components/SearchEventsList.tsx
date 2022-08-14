@@ -18,7 +18,7 @@ type Props = {
 
 export function SearchEventsList({ events, forTalkId }: Props) {
   return (
-    <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <ul aria-label="Search results" className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {events.map((event) => (
         <li key={event.slug} className="col-span-1 rounded-lg border border-gray-200 bg-white">
           <Link

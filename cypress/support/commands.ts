@@ -10,19 +10,19 @@ declare global {
        * Click on button, link or checkbox by its name
        * @example cy.clickOn('search')
        */
-      clickOn(name: string | RegExp): void;
+      clickOn(name: string | RegExp): Chainable<JQuery<HTMLElement>>;
 
       /**
        * Select a value on a list box
        * @example cy.selectOn('Sex', 'Female')
        */
-      selectOn(label: string | RegExp, value: string): void;
+      selectOn(label: string | RegExp, value: string): Chainable<JQuery<HTMLElement>>;
 
       /**
        * Type text in a text input by its label
        * @example cy.typeOn('label', 'Hello World')
        */
-      typeOn(label: string | RegExp, text: string): void;
+      typeOn(label: string | RegExp, text: string): Chainable<JQuery<HTMLElement>>;
 
       /**
        * Assert if a checkbox or radio is checked
@@ -57,16 +57,16 @@ declare global {
 }
 
 Cypress.Commands.add('clickOn', (name) => {
-  cy.findByRole(/button|link|checkbox|radio/, { name }).click({ force: true });
+  return cy.findByRole(/button|link|checkbox|radio/, { name }).click({ force: true });
 });
 
 Cypress.Commands.add('selectOn', (label, value) => {
   cy.findByLabelText(label).click({ force: true });
-  cy.findByRole('option', { name: value }).click({ force: true }).type('{esc}');
+  return cy.findByRole('option', { name: value }).click({ force: true }).type('{esc}');
 });
 
-Cypress.Commands.add('typeOn', (label, text) => {
-  cy.findByLabelText(label).clear().type(text, { force: true });
+Cypress.Commands.add('typeOn', (label: string | RegExp, text: string) => {
+  return cy.findByLabelText(label).clear().type(text, { force: true });
 });
 
 Cypress.Commands.add('assertText', (text) => {
