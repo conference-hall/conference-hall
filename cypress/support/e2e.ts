@@ -1,6 +1,7 @@
 // load type definitions that come with Cypress module
 /// <reference types="cypress" />
 
+import '@testing-library/cypress/add-commands';
 import './commands';
 
 Cypress.on('uncaught:exception', (err) => {

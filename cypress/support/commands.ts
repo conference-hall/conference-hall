@@ -1,7 +1,7 @@
 // load type definitions that come with Cypress module
 /// <reference types="cypress" />
 
-import '@testing-library/cypress/add-commands';
+export {}; // make the file a module, to get rid of the warning
 
 declare global {
   namespace Cypress {
@@ -66,7 +66,7 @@ Cypress.Commands.add('selectOn', (label, value) => {
 });
 
 Cypress.Commands.add('typeOn', (label, text) => {
-  cy.findByLabelText(label).type(text, { force: true });
+  cy.findByLabelText(label).clear().type(text, { force: true });
 });
 
 Cypress.Commands.add('assertText', (text) => {
