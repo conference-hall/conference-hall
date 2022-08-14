@@ -1,11 +1,14 @@
-import { resetDB } from '../../../tests/db-helpers';
+import { resetDB, disconnectDB } from '../../../tests/db-helpers';
 import { userFactory } from '../../../tests/factories/users';
 import { db } from '../db';
 import { UserNotFoundError } from '../errors';
 import { getSettings, updateSettings, validateProfileData } from './settings.server';
 
 describe('#getSettings', () => {
-  afterEach(resetDB);
+  beforeEach(async () => {
+    await resetDB();
+  });
+  afterEach(disconnectDB);
 
   it('returns the default response', async () => {
     const user = await userFactory();
@@ -30,7 +33,10 @@ describe('#getSettings', () => {
 });
 
 describe('#updateSettings', () => {
-  afterEach(resetDB);
+  beforeEach(async () => {
+    await resetDB();
+  });
+  afterEach(disconnectDB);
 
   it('updates personal information', async () => {
     const user = await userFactory();

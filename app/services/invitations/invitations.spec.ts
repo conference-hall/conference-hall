@@ -1,5 +1,5 @@
 import { InviteType } from '@prisma/client';
-import { resetDB } from '../../../tests/db-helpers';
+import { resetDB, disconnectDB } from '../../../tests/db-helpers';
 import { eventFactory } from '../../../tests/factories/events';
 import { inviteFactory } from '../../../tests/factories/invite';
 import { proposalFactory } from '../../../tests/factories/proposals';
@@ -10,7 +10,10 @@ import { InvitationNotFoundError, ProposalNotFoundError, TalkNotFoundError } fro
 import { buildInvitationLink, generateInvitationLink, getInvitation, revokeInvitationLink } from './invitations.server';
 
 describe('#getInvitation', () => {
-  afterEach(resetDB);
+  beforeEach(async () => {
+    await resetDB();
+  });
+  afterEach(disconnectDB);
 
   it('returns invite for a proposal', async () => {
     const event = await eventFactory();
@@ -60,7 +63,10 @@ describe('#buildInvitationLink', () => {
 });
 
 describe('#generateInvitationLink', () => {
-  afterEach(resetDB);
+  beforeEach(async () => {
+    await resetDB();
+  });
+  afterEach(disconnectDB);
 
   describe('for talk invitation', () => {
     it('generates an invitation for a talk', async () => {
@@ -156,7 +162,10 @@ describe('#generateInvitationLink', () => {
 });
 
 describe('#revokeInvitationLink', () => {
-  afterEach(resetDB);
+  beforeEach(async () => {
+    await resetDB();
+  });
+  afterEach(disconnectDB);
 
   describe('for talk invitation', () => {
     it('revokes an invitation for a talk', async () => {

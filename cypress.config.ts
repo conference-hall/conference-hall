@@ -1,6 +1,6 @@
 import { defineConfig } from 'cypress';
 import { config } from './app/services/config';
-import { resetDB } from './tests/db-helpers';
+import { resetDB, disconnectDB } from './tests/db-helpers';
 
 export default defineConfig({
   screenshotOnRunFailure: false,
@@ -11,9 +11,10 @@ export default defineConfig({
     setupNodeEvents(on, config) {
       // setup custom task
       return on('task', {
-        resetDB,
+        disconnectDB,
         seedDB: async (name: string) => {
           try {
+            await resetDB();
             const file = await import(`./cypress/e2e/${name}.seed.ts`);
             await file.seed();
           } catch (err) {

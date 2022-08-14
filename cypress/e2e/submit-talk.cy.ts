@@ -6,7 +6,7 @@ describe('Submit a talk to event', () => {
     cy.login();
   });
 
-  afterEach(() => cy.task('resetDB'));
+  afterEach(() => cy.task('disconnectDB'));
 
   const submission = new SubmissionPage();
 

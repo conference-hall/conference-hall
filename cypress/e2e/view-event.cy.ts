@@ -2,7 +2,7 @@ import EventPage from '../page-objects/event.page';
 
 describe('View event page', () => {
   beforeEach(() => cy.task('seedDB', 'view-event'));
-  afterEach(() => cy.task('resetDB'));
+  afterEach(() => cy.task('disconnectDB'));
 
   const event = new EventPage();
 

@@ -1,5 +1,5 @@
 import { TalkLevel } from '@prisma/client';
-import { resetDB } from '../../../tests/db-helpers';
+import { resetDB, disconnectDB } from '../../../tests/db-helpers';
 import { eventCategoryFactory } from '../../../tests/factories/categories';
 import { eventFactory } from '../../../tests/factories/events';
 import { eventFormatFactory } from '../../../tests/factories/formats';
@@ -26,7 +26,10 @@ import {
 } from './submit.server';
 
 describe('#fetchTalksToSubmitForEvent', () => {
-  afterEach(resetDB);
+  beforeEach(async () => {
+    await resetDB();
+  });
+  afterEach(disconnectDB);
 
   it('returns talks that can be submitted', async () => {
     const event = await eventFactory({ traits: ['conference-cfp-open'] });
@@ -77,7 +80,10 @@ describe('#fetchTalksToSubmitForEvent', () => {
 });
 
 describe('#getProposalCountsForEvent', () => {
-  afterEach(resetDB);
+  beforeEach(async () => {
+    await resetDB();
+  });
+  afterEach(disconnectDB);
 
   it('counts speaker proposals for an event', async () => {
     const event = await eventFactory({ traits: ['conference-cfp-open'], attributes: { maxProposals: 3 } });
@@ -106,7 +112,10 @@ describe('#getProposalCountsForEvent', () => {
 });
 
 describe('#saveDraftProposalForEvent', () => {
-  afterEach(resetDB);
+  beforeEach(async () => {
+    await resetDB();
+  });
+  afterEach(disconnectDB);
 
   it('create a new draft proposal from scratch', async () => {
     const event = await eventFactory({ traits: ['conference-cfp-open'] });
@@ -272,7 +281,10 @@ describe('#validateDraftProposalForm', () => {
 });
 
 describe('#getProposalInfo', () => {
-  afterEach(resetDB);
+  beforeEach(async () => {
+    await resetDB();
+  });
+  afterEach(disconnectDB);
 
   it('returns info about the proposal submitted on event', async () => {
     const event = await eventFactory();
@@ -312,7 +324,10 @@ describe('#getProposalInfo', () => {
 });
 
 describe('#submitProposal', () => {
-  afterEach(resetDB);
+  beforeEach(async () => {
+    await resetDB();
+  });
+  afterEach(disconnectDB);
 
   it('submit a proposal', async () => {
     const event = await eventFactory({ traits: ['conference-cfp-open'] });

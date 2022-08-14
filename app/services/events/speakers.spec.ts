@@ -1,4 +1,4 @@
-import { resetDB } from '../../../tests/db-helpers';
+import { resetDB, disconnectDB } from '../../../tests/db-helpers';
 import { eventFactory } from '../../../tests/factories/events';
 import { inviteFactory } from '../../../tests/factories/invite';
 import { proposalFactory } from '../../../tests/factories/proposals';
@@ -8,7 +8,10 @@ import { ProposalNotFoundError } from '../errors';
 import { getProposalSpeakers } from './speakers.server';
 
 describe('#getProposalSpeakers', () => {
-  afterEach(resetDB);
+  beforeEach(async () => {
+    await resetDB();
+  });
+  afterEach(disconnectDB);
 
   it('returns speakers of a proposal', async () => {
     const event = await eventFactory();

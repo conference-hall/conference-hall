@@ -1,11 +1,14 @@
-import { resetDB } from '../../../tests/db-helpers';
+import { resetDB, disconnectDB } from '../../../tests/db-helpers';
 import { userFactory } from '../../../tests/factories/users';
 import { db } from '../db';
 import { UserNotFoundError } from '../errors';
 import { createUser, getUser } from './user.server';
 
 describe('#createUser', () => {
-  afterEach(resetDB);
+  beforeEach(async () => {
+    await resetDB();
+  });
+  afterEach(disconnectDB);
 
   it('creates a new user', async () => {
     const result = await createUser({
@@ -42,7 +45,10 @@ describe('#createUser', () => {
 });
 
 describe('#getEvent', () => {
-  afterEach(resetDB);
+  beforeEach(async () => {
+    await resetDB();
+  });
+  afterEach(disconnectDB);
 
   it('returns the default response', async () => {
     const user = await userFactory();

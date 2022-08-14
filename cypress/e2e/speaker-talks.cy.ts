@@ -6,7 +6,7 @@ describe('Speaker talks page', () => {
     cy.login();
   });
 
-  afterEach(() => cy.task('resetDB'));
+  afterEach(() => cy.task('disconnectDB'));
 
   const page = new SpeakerTalksPage();
 

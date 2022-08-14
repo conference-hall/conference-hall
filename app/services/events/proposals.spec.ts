@@ -1,5 +1,5 @@
 import { TalkLevel } from '@prisma/client';
-import { resetDB } from '../../../tests/db-helpers';
+import { resetDB, disconnectDB } from '../../../tests/db-helpers';
 import { eventCategoryFactory } from '../../../tests/factories/categories';
 import { eventFactory } from '../../../tests/factories/events';
 import { eventFormatFactory } from '../../../tests/factories/formats';
@@ -21,7 +21,10 @@ import {
 } from './proposals.server';
 
 describe('#fetchSpeakerProposals', () => {
-  afterEach(resetDB);
+  beforeEach(async () => {
+    await resetDB();
+  });
+  afterEach(disconnectDB);
 
   it('returns event proposals of the speaker', async () => {
     const event = await eventFactory();
@@ -58,7 +61,10 @@ describe('#fetchSpeakerProposals', () => {
 });
 
 describe('#isTalkAlreadySubmitted', () => {
-  afterEach(resetDB);
+  beforeEach(async () => {
+    await resetDB();
+  });
+  afterEach(disconnectDB);
 
   it('returns true if the talk already submitted for the event', async () => {
     const event = await eventFactory();
@@ -106,7 +112,10 @@ describe('#isTalkAlreadySubmitted', () => {
 });
 
 describe('#getSpeakerProposal', () => {
-  afterEach(resetDB);
+  beforeEach(async () => {
+    await resetDB();
+  });
+  afterEach(disconnectDB);
 
   it('returns event proposals of the speaker', async () => {
     const event = await eventFactory();
@@ -162,7 +171,10 @@ describe('#getSpeakerProposal', () => {
 });
 
 describe('#deleteProposal', () => {
-  afterEach(resetDB);
+  beforeEach(async () => {
+    await resetDB();
+  });
+  afterEach(disconnectDB);
 
   it('deletes a proposal', async () => {
     const event = await eventFactory();
@@ -193,7 +205,10 @@ describe('#deleteProposal', () => {
 });
 
 describe('#updateProposal', () => {
-  afterEach(resetDB);
+  beforeEach(async () => {
+    await resetDB();
+  });
+  afterEach(disconnectDB);
 
   it('updates the proposal and the related talk', async () => {
     const event = await eventFactory({ traits: ['conference-cfp-open'] });
@@ -340,7 +355,10 @@ describe('#validateProposalForm', () => {
 });
 
 describe('#inviteCoSpeakerToProposal', () => {
-  afterEach(resetDB);
+  beforeEach(async () => {
+    await resetDB();
+  });
+  afterEach(disconnectDB);
 
   it('adds the speaker to the proposal and the talk', async () => {
     const event = await eventFactory();
@@ -380,7 +398,10 @@ describe('#inviteCoSpeakerToProposal', () => {
 });
 
 describe('#removeCoSpeakerFromProposal', () => {
-  afterEach(resetDB);
+  beforeEach(async () => {
+    await resetDB();
+  });
+  afterEach(disconnectDB);
 
   it('removes a cospeaker from the proposal', async () => {
     const event = await eventFactory();

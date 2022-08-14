@@ -1,7 +1,7 @@
 import LoginPage from '../page-objects/login.page';
 
 describe('Authentication', () => {
-  afterEach(() => cy.task('resetDB'));
+  afterEach(() => cy.task('disconnectDB'));
 
   const login = new LoginPage();
 
