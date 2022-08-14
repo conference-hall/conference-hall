@@ -1,59 +1,54 @@
+import SubmissionPage from '../page-objects/submission.page';
+
 describe('Submit a talk to event', () => {
-  beforeEach(() => cy.task('seedDB', 'submit-talk'));
+  beforeEach(() => {
+    cy.task('seedDB', 'submit-talk');
+    cy.login();
+  });
+
   afterEach(() => cy.task('resetDB'));
 
+  const submission = new SubmissionPage();
+
   it('submit a new talk for a conference (full wizard)', () => {
-    cy.login();
-    cy.visit('/devfest-nantes/submission');
-    cy.assertUrl('/devfest-nantes/submission');
-    cy.assertText('Proposal selection');
-    cy.clickOn('Create a new proposal');
+    submission.visit('devfest-nantes');
+    submission.createNewProposal();
 
     // Step: talk creation
-    cy.assertUrl(/\/devfest-nantes\/submission\/(.*)/);
-    cy.typeOn('Title', 'The amazing talk');
-    cy.typeOn('Abstract', 'An amazing abstract for an amazing talk.');
-    cy.clickOn('Intermediate');
-    cy.selectOn('Languages', 'English');
-    cy.typeOn('References', 'Best talk ever!');
-    cy.clickOn('Save as draft and continue');
+    submission.fillTalkForm({
+      title: 'The amazing talk',
+      abstract: 'An amazing abstract for an amazing talk.',
+      level: 'Intermediate',
+      language: 'English',
+      references: 'Best talk ever!',
+    });
+    submission.submitTalkForm();
 
     // Step: speaker
-    cy.assertUrl(/\/devfest-nantes\/submission\/(.*)\/speakers/);
-    cy.typeOn('Biography', 'I am the best!');
-    cy.clickOn('Invite a co-speaker');
-    cy.clickOn('Generate invitation link');
-    cy.assertInputText('Copy co-speaker invitation link', 'http://localhost:3001/invitation');
-    cy.clickOn('Revoke invitation link');
-    cy.clickOn('Close');
-    cy.clickOn('Next');
+    submission.fillSpeakerForm({ bio: 'I am the best!' });
+    submission.submitSpeakerForm();
 
     // Step: tracks
-    cy.assertUrl(/\/devfest-nantes\/submission\/(.*)\/tracks/);
-    cy.assertText('Select one or severals formats proposed by the event organizers.');
-    cy.clickOn('Quickie');
-    cy.assertText('Select categories that are the best fit for your proposal.');
-    cy.clickOn('Web');
-    cy.clickOn('Next');
+    submission.selectFormatTrack('Quickie');
+    submission.selectCategoryTrack('Web');
+    submission.submitTracksForm();
 
     // Step: survey
-    cy.assertUrl(/\/devfest-nantes\/submission\/(.*)\/survey/);
-    cy.assertText('We have some questions for you.');
-    cy.clickOn('Male');
-    cy.clickOn('XXXL');
-    cy.clickOn('Yes');
-    cy.clickOn('Taxi');
-    cy.clickOn('Vegetarian');
-    cy.typeOn('Do you have specific information to share?', 'Thanks!');
-    cy.clickOn('Next');
+    submission.fillSurveyForm({
+      gender: 'Male',
+      tshirt: 'XXXL',
+      accomodation: 'Yes',
+      transport: 'Taxi',
+      meal: 'Vegetarian',
+      message: 'Thanks!',
+    });
+    submission.submitSurveyForm();
 
     // Step: confirmation
-    cy.assertUrl(/\/devfest-nantes\/submission\/(.*)\/submit/);
     cy.assertText('The amazing talk');
     cy.assertText('by Clark Kent');
-    cy.typeOn('Message to organizers', 'You rock!');
-    cy.clickOn('Please agree with the code of conduct of the event.');
-    cy.clickOn('Submit proposal');
+    submission.fillConfirmationForm({ message: 'You rock!', cod: true });
+    submission.submitProposal();
 
     // Check proposal list
     cy.assertUrl('/devfest-nantes/proposals');
@@ -84,10 +79,7 @@ describe('Submit a talk to event', () => {
   });
 
   it('submit an existing talk', () => {
-    cy.login();
-    cy.visit('/devfest-nantes/submission');
-    cy.assertUrl('/devfest-nantes/submission');
-    cy.assertText('Proposal selection');
+    submission.visit('devfest-nantes');
 
     cy.clickOn(/My existing talk/);
     cy.assertUrl(/\/devfest-nantes\/submission\/(.*)/);
@@ -97,77 +89,69 @@ describe('Submit a talk to event', () => {
     cy.assertChecked('Advanced');
     cy.assertInputText('References', 'My existing references');
 
-    cy.typeOn('Title', ' UPDATED');
-    cy.typeOn('Abstract', ' UPDATED');
-    cy.clickOn('Intermediate');
-    cy.selectOn('Languages', 'English');
-    cy.typeOn('References', ' UPDATED');
-    cy.clickOn('Save as draft and continue');
+    submission.fillTalkForm({
+      title: 'Title UPDATED',
+      abstract: 'Abstract UPDATED',
+      level: 'Intermediate',
+      language: 'English',
+      references: 'References UPDATED',
+    });
+    submission.submitTalkForm();
 
     // Step: speaker
-    cy.assertUrl(/\/devfest-nantes\/submission\/(.*)\/speakers/);
     cy.assertText('Speaker details');
-    cy.clickOn('Next');
+    submission.submitSpeakerForm();
 
     // Step: tracks
-    cy.assertUrl(/\/devfest-nantes\/submission\/(.*)\/tracks/);
     cy.assertText('Select one or severals formats proposed by the event organizers.');
-    cy.clickOn('Next');
+    submission.submitTracksForm();
 
     // Step: survey
-    cy.assertUrl(/\/devfest-nantes\/submission\/(.*)\/survey/);
     cy.assertText('We have some questions for you.');
-    cy.clickOn('Next');
+    submission.submitSurveyForm();
 
     // Step: confirmation
-    cy.assertUrl(/\/devfest-nantes\/submission\/(.*)\/submit/);
-    cy.clickOn('Please agree with the code of conduct of the event.');
-    cy.clickOn('Submit proposal');
+    submission.fillConfirmationForm({ cod: true });
+    submission.submitProposal();
 
     // Check proposal list
     cy.assertUrl('/devfest-nantes/proposals');
     cy.assertText('Your proposals');
-    cy.assertText('My existing talk UPDATED');
+    cy.assertText('Title UPDATED');
 
     // Check proposal info
-    cy.clickOn(/My existing talk UPDATED/);
+    cy.clickOn(/UPDATED/);
     cy.assertUrl(/\/devfest-nantes\/proposals\/(.*)/);
-    cy.assertText('My existing talk UPDATED');
+    cy.assertText('Title UPDATED');
     cy.assertText('Intermediate');
     cy.assertText('English');
-    cy.assertText('My existing abstract UPDATED');
-    cy.assertText('My existing references UPDATED');
+    cy.assertText('Abstract UPDATED');
+    cy.assertText('References UPDATED');
   });
 
   it('submit a new talk for a conference (w/o survey)', () => {
-    cy.login();
-    cy.visit('/without-survey/submission');
-    cy.assertText('Proposal selection');
-    cy.clickOn('Create a new proposal');
+    submission.visit('without-survey');
+    submission.createNewProposal();
 
     // Step: talk creation
-    cy.assertUrl(/\/without-survey\/submission\/(.*)/);
-    cy.typeOn('Title', 'The amazing talk');
-    cy.typeOn('Abstract', 'An amazing abstract for an amazing talk.');
-    cy.clickOn('Save as draft and continue');
+    submission.fillTalkForm({
+      title: 'The amazing talk',
+      abstract: 'An amazing abstract for an amazing talk.',
+    });
+    submission.submitTalkForm();
 
     // Step: speaker
-    cy.assertUrl(/\/without-survey\/submission\/(.*)\/speakers/);
-    cy.clickOn('Next');
+    cy.assertText('Speaker details');
+    submission.submitSpeakerForm();
 
     // Step: tracks
-    cy.assertUrl(/\/without-survey\/submission\/(.*)\/tracks/);
-    cy.assertText('Select one or severals formats proposed by the event organizers.');
-    cy.clickOn('Quickie');
-    cy.assertText('Select categories that are the best fit for your proposal.');
-    cy.clickOn('Web');
-    cy.clickOn('Next');
+    submission.selectFormatTrack('Quickie');
+    submission.selectCategoryTrack('Web');
+    submission.submitTracksForm();
 
     // Step: confirmation
-    cy.assertUrl(/\/without-survey\/submission\/(.*)\/submit/);
-    cy.assertText('The amazing talk');
-    cy.clickOn('Please agree with the code of conduct of the event.');
-    cy.clickOn('Submit proposal');
+    submission.fillConfirmationForm({ message: 'You rock!', cod: true });
+    submission.submitProposal();
 
     // Check proposal list
     cy.assertUrl('/without-survey/proposals');
@@ -176,37 +160,34 @@ describe('Submit a talk to event', () => {
   });
 
   it('submit a new talk for a conference (w/o tracks)', () => {
-    cy.login();
-    cy.visit('/without-tracks/submission');
-    cy.assertText('Proposal selection');
-    cy.clickOn('Create a new proposal');
+    submission.visit('without-tracks');
+    submission.createNewProposal();
 
     // Step: talk creation
-    cy.assertUrl(/\/without-tracks\/submission\/(.*)/);
-    cy.typeOn('Title', 'The amazing talk');
-    cy.typeOn('Abstract', 'An amazing abstract for an amazing talk.');
-    cy.clickOn('Save as draft and continue');
+    submission.fillTalkForm({
+      title: 'The amazing talk',
+      abstract: 'An amazing abstract for an amazing talk.',
+    });
+    submission.submitTalkForm();
 
     // Step: speaker
-    cy.assertUrl(/\/without-tracks\/submission\/(.*)\/speakers/);
-    cy.clickOn('Next');
+    cy.assertText('Speaker details');
+    submission.submitSpeakerForm();
 
     // Step: survey
-    cy.assertUrl(/\/without-tracks\/submission\/(.*)\/survey/);
-    cy.assertText('We have some questions for you.');
-    cy.clickOn('Male');
-    cy.clickOn('XXXL');
-    cy.clickOn('Yes');
-    cy.clickOn('Taxi');
-    cy.clickOn('Vegetarian');
-    cy.typeOn('Do you have specific information to share?', 'Thanks!');
-    cy.clickOn('Next');
+    submission.fillSurveyForm({
+      gender: 'Male',
+      tshirt: 'XXXL',
+      accomodation: 'Yes',
+      transport: 'Taxi',
+      meal: 'Vegetarian',
+      message: 'Thanks!',
+    });
+    submission.submitSurveyForm();
 
     // Step: confirmation
-    cy.assertUrl(/\/without-tracks\/submission\/(.*)\/submit/);
-    cy.assertText('The amazing talk');
-    cy.clickOn('Please agree with the code of conduct of the event.');
-    cy.clickOn('Submit proposal');
+    submission.fillConfirmationForm({ message: 'You rock!', cod: true });
+    submission.submitProposal();
 
     // Check proposal list
     cy.assertUrl('/without-tracks/proposals');
@@ -224,25 +205,22 @@ describe('Submit a talk to event', () => {
   });
 
   it('submit a new talk for a conference (w/o survey, tracks and code of conduct)', () => {
-    cy.login();
-    cy.visit('/without-survey-tracks/submission');
-    cy.assertText('Proposal selection');
-    cy.clickOn('Create a new proposal');
+    submission.visit('without-survey-tracks');
+    submission.createNewProposal();
 
     // Step: talk creation
-    cy.assertUrl(/\/without-survey-tracks\/submission\/(.*)/);
-    cy.typeOn('Title', 'The amazing talk');
-    cy.typeOn('Abstract', 'An amazing abstract for an amazing talk.');
-    cy.clickOn('Save as draft and continue');
+    submission.fillTalkForm({
+      title: 'The amazing talk',
+      abstract: 'An amazing abstract for an amazing talk.',
+    });
+    submission.submitTalkForm();
 
     // Step: speaker
-    cy.assertUrl(/\/without-survey-tracks\/submission\/(.*)\/speakers/);
-    cy.clickOn('Next');
+    cy.assertText('Speaker details');
+    submission.submitSpeakerForm();
 
     // Step: confirmation
-    cy.assertUrl(/\/without-survey-tracks\/submission\/(.*)\/submit/);
-    cy.assertText('The amazing talk');
-    cy.clickOn('Submit proposal');
+    submission.submitProposal();
 
     // Check proposal list
     cy.assertUrl('/without-survey-tracks/proposals');

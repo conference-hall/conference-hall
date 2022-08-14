@@ -66,7 +66,7 @@ Cypress.Commands.add('selectOn', (label, value) => {
 });
 
 Cypress.Commands.add('typeOn', (label: string | RegExp, text: string) => {
-  return cy.findByLabelText(label).clear().type(text, { force: true });
+  return cy.findByLabelText(label).clear({ force: true }).type(text, { force: true });
 });
 
 Cypress.Commands.add('assertText', (text) => {
