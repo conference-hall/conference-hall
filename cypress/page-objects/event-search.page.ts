@@ -1,6 +1,6 @@
 class SearchEventPage {
-  visit() {
-    cy.visit('/');
+  visit(searchParams?: string) {
+    cy.visit(`/${searchParams || ''}`);
     this.isPageVisible();
   }
 
@@ -10,6 +10,14 @@ class SearchEventPage {
 
   search(text: string) {
     return cy.typeOn('Search conferences and meetups.', `${text}{enter}`);
+  }
+
+  filterByCfpStatus(status: string) {
+    return cy.findByLabelText('Filter by CFP status').click().parent().findByRole('option', { name: status });
+  }
+
+  filterByEventTypes(status: string) {
+    return cy.findByLabelText('Filter by event types').click().parent().findByRole('option', { name: status });
   }
 
   results() {
