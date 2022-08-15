@@ -97,6 +97,5 @@ Cypress.Commands.add('login', () => {
     cy.clickOn('Continue with Google');
     cy.url().should('contain', '/emulator');
     cy.findByText('Clark Kent').click();
-    cy.url().should('equal', 'http://localhost:3001/');
   });
 });

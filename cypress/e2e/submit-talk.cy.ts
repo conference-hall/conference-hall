@@ -62,12 +62,12 @@ describe('Submit a talk to event', () => {
     submission.submitConfirmation();
 
     // Check proposal list
-    proposals.isPageVisible('devfest-nantes');
+    proposals.isPageVisible();
     proposals.list().should('have.length', 1);
     proposals.proposal('The amazing talk').should('contain', 'by Clark Kent').click();
 
     // Check proposal info
-    proposal.isPageVisible('devfest-nantes');
+    proposal.isPageVisible();
     cy.assertText('The amazing talk');
     cy.assertText('Intermediate');
     cy.assertText('English');
@@ -126,12 +126,12 @@ describe('Submit a talk to event', () => {
     submission.submitConfirmation();
 
     // Check proposal list
-    proposals.isPageVisible('devfest-nantes');
+    proposals.isPageVisible();
     proposals.list().should('have.length', 1);
     proposals.proposal('Title UPDATED').should('exist').click();
 
     // Check proposal info
-    proposal.isPageVisible('devfest-nantes');
+    proposal.isPageVisible();
     cy.assertText('Title UPDATED');
     cy.assertText('Intermediate');
     cy.assertText('English');
@@ -167,7 +167,7 @@ describe('Submit a talk to event', () => {
     submission.submitConfirmation();
 
     // Check proposal list
-    proposals.isPageVisible('without-survey');
+    proposals.isPageVisible();
     proposals.list().should('have.length', 1);
   });
 
@@ -198,7 +198,7 @@ describe('Submit a talk to event', () => {
     submission.submitConfirmation();
 
     // Check proposal list
-    proposals.isPageVisible('without-tracks');
+    proposals.isPageVisible();
     proposals.list().should('have.length', 1);
   });
 
@@ -223,7 +223,7 @@ describe('Submit a talk to event', () => {
     submission.submitConfirmation();
 
     // Check proposal list
-    proposals.isPageVisible('without-survey-tracks');
+    proposals.isPageVisible();
     proposals.list().should('have.length', 1);
   });
 });

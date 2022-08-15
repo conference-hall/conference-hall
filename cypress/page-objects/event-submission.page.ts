@@ -51,7 +51,6 @@ class EventSubmissionPage {
    */
 
   isTalkStepVisible() {
-    cy.assertUrl(/\/(.*)\/submission\/(.*)/);
     cy.findByRole('listitem', { current: 'step' }).should('contain', 'Proposal');
   }
 
@@ -72,7 +71,6 @@ class EventSubmissionPage {
    */
 
   isSpeakerStepVisible() {
-    cy.assertUrl(/\/(.*)\/submission\/(.*)\/speakers/);
     cy.findByRole('listitem', { current: 'step' }).should('contain', 'Speaker');
   }
 
@@ -100,7 +98,6 @@ class EventSubmissionPage {
    */
 
   isTracksStepVisible() {
-    cy.assertUrl(/\/(.*)\/submission\/(.*)\/tracks/);
     cy.findByRole('listitem', { current: 'step' }).should('contain', 'Tracks');
   }
 
@@ -121,7 +118,6 @@ class EventSubmissionPage {
    */
 
   isSurveyStepVisible() {
-    cy.assertUrl(/\/(.*)\/submission\/(.*)\/survey/);
     cy.findByRole('listitem', { current: 'step' }).should('contain', 'Survey');
   }
 
@@ -142,7 +138,6 @@ class EventSubmissionPage {
    * Confirmation step
    */
   isConfirmationStepVisible() {
-    cy.assertUrl(/\/(.*)\/submission\/(.*)\/submit/);
     cy.findByRole('listitem', { current: 'step' }).should('contain', 'Submission');
   }
 

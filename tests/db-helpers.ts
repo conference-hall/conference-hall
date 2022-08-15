@@ -7,7 +7,7 @@ export async function disconnectDB() {
 }
 
 export async function resetDB() {
-  if (!config.isTest) return 'Not a test database';
+  if (config.isProduction) return '🚨 Reset DB cannot be executed in production.';
 
   await db.$transaction([
     db.betaKey.deleteMany(),
