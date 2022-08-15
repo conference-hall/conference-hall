@@ -57,16 +57,16 @@ declare global {
 }
 
 Cypress.Commands.add('clickOn', (name) => {
-  return cy.findByRole(/button|link|checkbox|radio/, { name }).click({ force: true });
+  return cy.findByRole(/button|link|checkbox|radio/, { name }).click();
 });
 
 Cypress.Commands.add('selectOn', (label, value) => {
-  cy.findByLabelText(label).click({ force: true });
-  return cy.findByRole('option', { name: value }).click({ force: true }).type('{esc}');
+  cy.findByLabelText(label).click();
+  return cy.findByRole('option', { name: value }).click().type('{esc}');
 });
 
 Cypress.Commands.add('typeOn', (label: string | RegExp, text: string) => {
-  return cy.findByLabelText(label).clear({ force: true }).type(text, { force: true });
+  return cy.findByLabelText(label).clear().type(text);
 });
 
 Cypress.Commands.add('assertText', (text) => {
