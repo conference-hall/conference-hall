@@ -1,8 +1,8 @@
-import AboutPage from '../page-objects/about.page';
-import EventSearchPage from '../page-objects/event-search.page';
+import AboutPage from '../../page-objects/about.page';
+import EventSearchPage from '../../page-objects/event-search.page';
 
 describe('Search conferences and meetups.', () => {
-  beforeEach(() => cy.task('seedDB', 'search-events'));
+  beforeEach(() => cy.task('seedDB', 'search/events'));
   afterEach(() => cy.task('disconnectDB'));
 
   describe('From about page', () => {
