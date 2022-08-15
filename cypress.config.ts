@@ -2,9 +2,15 @@ import { defineConfig } from 'cypress';
 import { config } from './app/services/config';
 import { resetDB, disconnectDB } from './tests/db-helpers';
 
+const isCI = Boolean(process.env.CI);
+
 export default defineConfig({
   screenshotOnRunFailure: false,
   video: false,
+  reporter: isCI ? 'junit' : 'spec',
+  reporterOptions: {
+    mochaFile: './test-results/e2e-[hash].xml',
+  },
   e2e: {
     baseUrl: config.appUrl,
     experimentalSessionAndOrigin: true,
