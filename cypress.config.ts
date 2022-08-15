@@ -14,7 +14,8 @@ export default defineConfig({
   e2e: {
     baseUrl: config.appUrl,
     experimentalSessionAndOrigin: true,
-    setupNodeEvents(on, config) {
+    scrollBehavior: 'center',
+    setupNodeEvents(on) {
       // setup custom task
       return on('task', {
         disconnectDB,
