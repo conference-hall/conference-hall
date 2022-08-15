@@ -1,11 +1,10 @@
 class EventProposalPage {
   visit(slug: string, proposalId: string) {
     cy.visit(`/${slug}/proposals/${proposalId}`);
-    this.isPageVisible(slug);
+    this.isPageVisible();
   }
 
-  isPageVisible(slug: string) {
-    cy.assertUrl(new RegExp(`/${slug}/proposals/(.*)`));
+  isPageVisible() {
     cy.findByRole('heading', { name: 'Abstract' }).should('exist');
   }
 }

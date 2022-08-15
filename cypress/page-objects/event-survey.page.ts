@@ -1,11 +1,10 @@
 class EventSurveyPage {
   visit(slug: string) {
     cy.visit(`/${slug}/survey`);
-    this.isPageVisible(slug);
+    this.isPageVisible();
   }
 
-  isPageVisible(slug: string) {
-    cy.assertUrl(`/${slug}/survey`);
+  isPageVisible() {
     cy.findByRole('heading', { name: 'We have some questions for you.' }).should('exist');
   }
 
