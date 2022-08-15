@@ -20,3 +20,6 @@ tailwind.css
 
 # docker
 /docker/firebase/.cache/firebase
+
+# tests
+test-results
