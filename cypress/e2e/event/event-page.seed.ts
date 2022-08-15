@@ -1,8 +1,6 @@
-import { userFactory } from '../../tests/factories/users';
-import { eventFactory } from '../../tests/factories/events';
+import { eventFactory } from '../../../tests/factories/events';
 
 export const seed = async () => {
-  await userFactory({ traits: ['clark-kent'] });
   await eventFactory({
     attributes: {
       name: 'Devfest Nantes',

@@ -1,11 +1,11 @@
-import EventProposalPage from '../page-objects/event-proposal.page';
-import EventProposalsPage from '../page-objects/event-proposals.page';
-import EventSurveyPage from '../page-objects/event-survey.page';
-import EventSubmissionPage from '../page-objects/event-submission.page';
+import EventProposalPage from '../../page-objects/event-proposal.page';
+import EventProposalsPage from '../../page-objects/event-proposals.page';
+import EventSurveyPage from '../../page-objects/event-survey.page';
+import EventSubmissionPage from '../../page-objects/event-submission.page';
 
 describe('Submit a talk to event', () => {
   beforeEach(() => {
-    cy.task('seedDB', 'submit-talk');
+    cy.task('seedDB', 'event/submit-talk');
     cy.login();
   });
 
