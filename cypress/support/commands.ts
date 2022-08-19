@@ -51,7 +51,7 @@ declare global {
       /**
        * Connect with a user
        */
-      login(): void;
+      login(username?: string): void;
     }
   }
 }
@@ -91,11 +91,11 @@ Cypress.Commands.add('assertChecked', (name) => {
     .should('be.checked');
 });
 
-Cypress.Commands.add('login', () => {
-  cy.session([], () => {
+Cypress.Commands.add('login', (username = 'Clark Kent') => {
+  cy.session([username], () => {
     cy.visit('/login');
     cy.clickOn('Continue with Google');
     cy.url().should('contain', '/emulator');
-    cy.findByText('Clark Kent').click();
+    cy.findByText(username).click();
   });
 });

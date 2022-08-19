@@ -10,6 +10,13 @@ const TRAITS = {
     email: 'superman@example.com',
     photoURL: 'https://s3.amazonaws.com/comicgeeks/characters/avatars/19.jpg',
   },
+  'bruce-wayne': {
+    id: 'e9HDr773xNpXbOy2H0C7FDhGD2fc',
+    name: 'Bruce Wayne',
+    email: 'batman@example.com',
+    photoURL:
+      'http://multiversitystatic.s3.amazonaws.com/uploads/2013/02/Bruce-Wayne-Jordan-Gibson-Art-Of-The-Week.png',
+  },
 };
 
 type Trait = keyof typeof TRAITS;

@@ -1,19 +1,20 @@
 import { userFactory } from '../../../tests/factories/users';
 import { eventFactory } from '../../../tests/factories/events';
+import { talkFactory } from '../../../tests/factories/talks';
 
 export const seed = async () => {
-  await userFactory({ traits: ['clark-kent'] });
+  await userFactory({ traits: ['bruce-wayne'] });
+  const speaker1 = await userFactory({ traits: ['clark-kent'] });
+
   await eventFactory({
     attributes: {
       name: 'Devfest Nantes',
       slug: 'devfest-nantes',
-      address: 'Nantes, France',
-      description: 'The event !',
-      conferenceStart: '2020-10-05T00:00:00.000Z',
-      conferenceEnd: '2020-10-05T00:00:00.000Z',
-      cfpStart: '2020-10-05T00:00:00.000Z',
-      cfpEnd: '2020-10-05T23:59:59.000Z',
     },
-    traits: ['conference'],
+    traits: ['conference-cfp-open'],
   });
+
+  await talkFactory({ attributes: { title: 'Awesome talk' }, speakers: [speaker1] });
+  await talkFactory({ attributes: { title: 'Best talk ever' }, speakers: [speaker1] });
+  await talkFactory({ attributes: { title: 'Archived talk', archived: true }, speakers: [speaker1] });
 };

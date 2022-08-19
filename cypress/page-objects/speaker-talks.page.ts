@@ -7,6 +7,22 @@ class SpeakerTalksPage {
   isPageVisible() {
     cy.findByRole('heading', { name: 'Your talks' }).should('exist');
   }
+
+  list() {
+    return cy.findByRole('list', { name: 'Talks list' }).children();
+  }
+
+  talk(name: string) {
+    return this.list().contains(name);
+  }
+
+  filterByTalkStatus(status: string) {
+    return cy.findByLabelText('Talk status').click().parent().findByRole('option', { name: status });
+  }
+
+  createNewTalk() {
+    return cy.findByRole('link', { name: 'Create a talk abstract' });
+  }
 }
 
 export default SpeakerTalksPage;
