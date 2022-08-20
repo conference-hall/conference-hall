@@ -1,5 +1,5 @@
-import SpeakerEditTalkPage from 'page-objects/speaker-edit-talk.page';
-import SpeakerNewTalkPage from 'page-objects/speaker-new-talk.page';
+import SpeakerTalkPage from '../../page-objects/speaker-talk.page';
+import SpeakerNewTalkPage from '../../page-objects/speaker-new-talk.page';
 import SpeakerTalksPage from '../../page-objects/speaker-talks.page';
 
 describe('Speaker talks page', () => {
@@ -11,7 +11,7 @@ describe('Speaker talks page', () => {
 
   const talks = new SpeakerTalksPage();
   const newTalk = new SpeakerNewTalkPage();
-  const editTalk = new SpeakerEditTalkPage();
+  const talk = new SpeakerTalkPage();
 
   it('displays the active speaker talks', () => {
     cy.login();
@@ -41,7 +41,7 @@ describe('Speaker talks page', () => {
     cy.login();
     talks.visit();
     talks.talk('Awesome talk').click();
-    editTalk.isPageVisible();
+    talk.isPageVisible();
     cy.assertText('Awesome talk');
   });
 

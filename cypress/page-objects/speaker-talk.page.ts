@@ -1,4 +1,4 @@
-class SpeakerEditTalkPage {
+class SpeakerTalkPage {
   visit(talkId: string) {
     cy.visit(`/speaker/talks/${talkId}`);
     this.isPageVisible();
@@ -9,4 +9,4 @@ class SpeakerEditTalkPage {
   }
 }
 
-export default SpeakerEditTalkPage;
+export default SpeakerTalkPage;

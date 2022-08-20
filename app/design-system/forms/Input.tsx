@@ -20,9 +20,17 @@ function InputField({ id, label, type = 'text', className, error, ...rest }: Pro
           {label}
         </label>
       )}
-      <input id={id} type={type} ref={ref} className={styles} {...rest} />
+      <input
+        id={id}
+        type={type}
+        ref={ref}
+        aria-invalid={Boolean(error)}
+        aria-describedby={error ? `${id}-description` : undefined}
+        className={styles}
+        {...rest}
+      />
       {error && (
-        <p className="mt-1 text-sm text-red-600" id="email-error">
+        <p className="mt-1 text-sm text-red-600" id={`${id}-description`}>
           {error}
         </p>
       )}

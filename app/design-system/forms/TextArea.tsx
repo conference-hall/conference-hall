@@ -23,18 +23,18 @@ export function TextArea({ id, label, description, className, error, ...rest }: 
         {label}
       </label>
       <div className="mt-1">
-        <textarea id={id} className={styles} {...rest} aria-describedby={`${id}-description`} />
+        <textarea
+          id={id}
+          className={styles}
+          {...rest}
+          aria-invalid={Boolean(error)}
+          aria-describedby={description || error ? `${id}-description` : undefined}
+        />
       </div>
-      {description && (
-        <p id={`${id}-description`} className="mt-1 text-sm text-gray-500">
-          {description}
-        </p>
-      )}
-      {error && (
-        <p className="mt-1 text-sm text-red-600" id="email-error">
-          {error}
-        </p>
-      )}
+      <div id={`${id}-description`}>
+        {description && <p className="mt-1 text-sm text-gray-500">{description}</p>}
+        {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
+      </div>
     </div>
   );
 }
