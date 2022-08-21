@@ -95,12 +95,12 @@ export default function SettingsRoute() {
         </aside>
 
         <div className="space-y-6 sm:px-6 lg:col-span-9 lg:px-0">
-          <Form method="post">
+          <Form method="post" aria-labelledby="personal-info-label">
             <div className="border border-gray-200 sm:overflow-hidden sm:rounded-md">
               <a id="personal-info" href="#personal-info" className="scroll-mt-16" aria-hidden={true} />
               <div className="space-y-6 bg-white py-6 px-4 sm:p-6">
                 <div>
-                  <H2>Personal information</H2>
+                  <H2 id="personal-info-label">Personal information</H2>
                   <Text variant="secondary" className="mt-1">
                     Use a permanent address where you can receive email.
                   </Text>
@@ -143,12 +143,12 @@ export default function SettingsRoute() {
             </div>
           </Form>
 
-          <Form method="post">
+          <Form method="post" aria-labelledby="speaker-details-label">
             <div className="border border-gray-200 sm:overflow-hidden sm:rounded-md">
               <a id="speaker-details" href="#speaker-details" className="scroll-mt-16" />
               <div className="space-y-6 bg-white py-6 px-4 sm:p-6">
                 <div>
-                  <H2>Speaker details</H2>
+                  <H2 id="speaker-details-label">Speaker details</H2>
                   <Text variant="secondary" className="mt-1">
                     Give more information about you, these information will be visible by organizers when you submit a
                     talk.
@@ -183,12 +183,12 @@ export default function SettingsRoute() {
             </div>
           </Form>
 
-          <Form method="post">
+          <Form method="post" aria-labelledby="additional-info-label">
             <div className="border border-gray-200 sm:overflow-hidden sm:rounded-md">
               <a id="additional-info" href="#additional-info" className="scroll-mt-16" />
               <div className="space-y-6 bg-white py-6 px-4 sm:p-6">
                 <div>
-                  <H2>Additional information</H2>
+                  <H2 id="additional-info-label">Additional information</H2>
                   <Text variant="secondary" className="mt-1">
                     Helps organizers to know more about you.
                   </Text>

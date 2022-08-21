@@ -4,7 +4,7 @@ import SpeakerSettingsPage from 'page-objects/speaker-settings.page';
 
 describe('Speaker activity page', () => {
   beforeEach(() => {
-    cy.task('seedDB', 'speaker/activity-page');
+    cy.task('seedDB', 'speaker/activity');
     cy.login();
   });
 
