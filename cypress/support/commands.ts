@@ -49,6 +49,12 @@ declare global {
       assertInputText(label: string | RegExp, text: string): void;
 
       /**
+       * Assert the link exists in the page
+       * @example cy.assertLink('Hello World', 'https://hello.world')
+       */
+      assertLink(name: string, href: string): void;
+
+      /**
        * Assert the page URL contains a path
        * @example cy.assertUrl('/search')
        */
@@ -93,6 +99,10 @@ Cypress.Commands.add('assertUrl', (path) => {
   } else {
     cy.url().should('match', path);
   }
+});
+
+Cypress.Commands.add('assertLink', (name, href) => {
+  cy.findByRole('link', { name }).should('have.attr', 'href', href);
 });
 
 Cypress.Commands.add('assertChecked', (name) => {

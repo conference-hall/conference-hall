@@ -20,7 +20,7 @@ export const links: LinksFunction = () => {
 
 export const loader = async ({ request }: LoaderArgs) => {
   const uid = await isSessionValid(request);
-  const user = uid ? await getUser(uid).catch() : null;
+  const user = uid ? await getUser(uid).catch(() => console.log('No user connected.')) : null;
   return {
     user,
     firebase: {

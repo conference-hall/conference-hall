@@ -8,8 +8,8 @@ class EventPage {
     cy.assertUrl(`/${slug}`);
   }
 
-  name(name: string) {
-    return cy.findByRole('heading', { name });
+  submitButton() {
+    return cy.findAllByRole('link', { name: 'Submit a proposal' }).first();
   }
 }
 
