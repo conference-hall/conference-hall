@@ -26,11 +26,11 @@ export const proposalFactory = (options: FactoryOptions) => {
   const { attributes = {}, traits = [], talk, event, formats, categories } = options;
 
   const defaultAttributes: Prisma.ProposalCreateInput = {
-    title: fake.randPost().title,
-    abstract: fake.randParagraph(),
-    references: fake.randParagraph(),
-    languages: ['en'],
-    level: TalkLevel.INTERMEDIATE,
+    title: talk?.title || fake.randPost().title,
+    abstract: talk?.abstract || fake.randParagraph(),
+    references: talk?.references || fake.randParagraph(),
+    languages: talk?.languages || ['en'],
+    level: talk?.level || TalkLevel.INTERMEDIATE,
     status: ProposalStatus.SUBMITTED,
     talk: { connect: { id: talk.id } },
     speakers: { connect: talk.speakers.map(({ id }) => ({ id })) },

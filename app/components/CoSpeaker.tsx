@@ -39,22 +39,25 @@ export function CoSpeakersList({ speakers, showRemoveAction = false, className }
               </Text>
             </div>
           </div>
-          {showRemoveAction && !speaker.isOwner && <RemoveCoSpeakerButton speakerId={speaker.id} />}
+          {showRemoveAction && !speaker.isOwner && (
+            <RemoveCoSpeakerButton speakerId={speaker.id} speakerName={speaker.name} />
+          )}
         </div>
       ))}
     </div>
   );
 }
 
-type RemoveCoSpeakerButtonProps = { speakerId: string };
+type RemoveCoSpeakerButtonProps = { speakerId: string; speakerName: string | null };
 
-function RemoveCoSpeakerButton({ speakerId }: RemoveCoSpeakerButtonProps) {
+function RemoveCoSpeakerButton({ speakerId, speakerName }: RemoveCoSpeakerButtonProps) {
   return (
     <Form method="post">
       <input type="hidden" name="_action" value="remove-speaker" />
       <input type="hidden" name="_speakerId" value={speakerId} />
       <button
         type="submit"
+        aria-label={`Remove speaker ${speakerName}`}
         className="inline-flex items-center rounded-full border border-transparent bg-white p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
       >
         <TrashIcon className="h-5 w-5" aria-hidden="true" />

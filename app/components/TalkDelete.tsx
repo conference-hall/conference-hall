@@ -1,14 +1,20 @@
 import { Dialog } from '@headlessui/react';
+import { forwardRef, useState } from 'react';
+import type { Ref } from 'react';
 import { ExclamationIcon, TrashIcon, XIcon } from '@heroicons/react/solid';
-import { useState } from 'react';
 import { Form } from '@remix-run/react';
 import { Button } from '../design-system/Buttons';
 
-export function TalkDeleteMenu() {
+function TalkDelete({ ...rest }, ref: Ref<HTMLButtonElement>) {
   const [isModalOpen, setModalOpen] = useState(false);
   return (
     <>
-      <button onClick={() => setModalOpen(true)} className="group flex w-full items-center px-4 py-2 text-sm">
+      <button
+        ref={ref}
+        {...rest}
+        onClick={() => setModalOpen(true)}
+        className="group flex w-full items-center px-4 py-2 text-sm"
+      >
         <TrashIcon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
         Delete
       </button>
@@ -70,3 +76,5 @@ function TalkDeleteModal({ isOpen, onClose }: TalkDeleteModalProps) {
     </Dialog>
   );
 }
+
+export const TalkDeleteMenu = forwardRef(TalkDelete);

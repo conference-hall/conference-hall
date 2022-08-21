@@ -37,6 +37,12 @@ declare global {
       assertText(text: string): void;
 
       /**
+       * Assert the text doesn't exist in the page
+       * @example cy.assertNoText('Hello World')
+       */
+      assertNoText(text: string): void;
+
+      /**
        * Assert the text exists in an input
        * @example cy.assertInputText('label', 'Hello World')
        */
@@ -71,6 +77,10 @@ Cypress.Commands.add('typeOn', (label: string | RegExp, text: string) => {
 
 Cypress.Commands.add('assertText', (text) => {
   cy.findByText(text).should('exist');
+});
+
+Cypress.Commands.add('assertNoText', (text) => {
+  cy.findByText(text).should('not.exist');
 });
 
 Cypress.Commands.add('assertInputText', (label, text) => {
