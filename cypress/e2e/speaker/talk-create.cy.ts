@@ -3,7 +3,7 @@ import SpeakerTalkPage from 'page-objects/speaker-talk.page';
 
 describe('Speaker talk creation page', () => {
   beforeEach(() => {
-    cy.task('seedDB', 'speaker/talks-list');
+    cy.task('seedDB', 'speaker/talk-create');
     cy.login();
   });
 

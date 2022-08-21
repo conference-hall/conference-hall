@@ -50,12 +50,12 @@ export async function saveSurvey(uid: string, slug: string, answers: SurveyData)
 type SurveyData = z.infer<typeof SurveySchema>;
 
 const SurveySchema = z.object({
-  gender: z.string().nullable(),
-  tshirt: z.string().nullable(),
-  accomodation: z.string().nullable(),
-  transports: z.array(z.string()).nullable(),
-  diet: z.array(z.string()).nullable(),
-  info: z.string().nullable(),
+  gender: z.string().trim().nullable(),
+  tshirt: z.string().trim().nullable(),
+  accomodation: z.string().trim().nullable(),
+  transports: z.array(z.string().trim()).nullable(),
+  diet: z.array(z.string().trim()).nullable(),
+  info: z.string().trim().nullable(),
 });
 
 export function validateSurveyForm(form: FormData) {

@@ -148,10 +148,10 @@ export async function saveDraftProposalForEvent(talkId: string, eventSlug: strin
 type ProposalData = z.infer<typeof ProposalSchema>;
 
 const ProposalSchema = z.object({
-  title: z.string().min(1),
-  abstract: z.string().min(1),
-  references: z.string().nullable(),
-  languages: z.array(z.string()),
+  title: z.string().trim().min(1),
+  abstract: z.string().trim().min(1),
+  references: z.string().trim().nullable(),
+  languages: z.array(z.string().trim()),
   level: z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']).nullable(),
 });
 
@@ -234,7 +234,7 @@ export async function submitProposal(talkId: string, eventSlug: string, uid: str
 type SubmissionData = z.infer<typeof SubmissionSchema>;
 
 const SubmissionSchema = z.object({
-  message: z.string().max(1000).optional(),
+  message: z.string().trim().max(1000).optional(),
 });
 
 export function validateSubmission(form: FormData) {

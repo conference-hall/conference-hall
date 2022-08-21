@@ -42,8 +42,8 @@ export async function saveTracks(talkId: string, eventId: string, uid: string, d
 type TrackData = z.infer<typeof TracksSchema>;
 
 const TracksSchema = z.object({
-  formats: z.array(z.string()),
-  categories: z.array(z.string()),
+  formats: z.array(z.string().trim()),
+  categories: z.array(z.string().trim()),
 });
 
 export function validateTracksForm(form: FormData) {

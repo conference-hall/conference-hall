@@ -131,13 +131,13 @@ export async function updateProposal(slug: string, proposalId: string, uid: stri
 type ProposalData = z.infer<typeof ProposalSchema>;
 
 const ProposalSchema = z.object({
-  title: z.string().min(1),
-  abstract: z.string().min(1),
-  references: z.string().nullable(),
+  title: z.string().trim().min(1),
+  abstract: z.string().trim().min(1),
+  references: z.string().trim().nullable(),
   level: z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']).nullable(),
-  languages: z.array(z.string()),
-  formats: z.array(z.string()),
-  categories: z.array(z.string()),
+  languages: z.array(z.string().trim()),
+  formats: z.array(z.string().trim()),
+  categories: z.array(z.string().trim()),
 });
 
 export function validateProposalForm(form: FormData) {

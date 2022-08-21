@@ -100,10 +100,10 @@ const SearchFiltersSchema = z.preprocess(
     cfp: ['incoming', 'past'].includes(filters.cfp) ? filters.cfp : undefined,
   }),
   z.object({
-    terms: z.string().optional(),
+    terms: z.string().trim().optional(),
     type: z.enum(['all', 'conference', 'meetup']).optional(),
     cfp: z.enum(['incoming', 'past']).optional(),
-    talkId: z.string().nullable().optional(),
+    talkId: z.string().trim().nullable().optional(),
   })
 );
 

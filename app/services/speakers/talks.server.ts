@@ -181,8 +181,8 @@ export async function updateTalk(uid: string, talkId?: string, data?: TalkData) 
 type TalkData = z.infer<typeof TalkSchema>;
 
 const TalkSchema = z.object({
-  title: z.string().min(1),
-  abstract: z.string().min(1),
+  title: z.string().trim().min(1),
+  abstract: z.string().trim().min(1),
   references: z.string().nullable(),
   level: z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']).nullable(),
   languages: z.array(z.string()),

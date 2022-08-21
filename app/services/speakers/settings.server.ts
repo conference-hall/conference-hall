@@ -48,21 +48,21 @@ export async function updateSettings(userId: string, data: SettingsUpdateData) {
 }
 
 const UserPersonalInfo = z.object({
-  name: z.string().min(1),
-  email: z.string().email().min(1),
-  photoURL: z.string().url().min(1),
+  name: z.string().trim().min(1),
+  email: z.string().email().trim().min(1),
+  photoURL: z.string().url().trim().min(1),
 });
 
 const UserDetails = z.object({
-  bio: z.string().nullable(),
-  references: z.string().nullable(),
+  bio: z.string().trim().nullable(),
+  references: z.string().trim().nullable(),
 });
 
 const UserAdditionalInfo = z.object({
-  company: z.string(),
-  address: z.string(),
-  twitter: z.string(),
-  github: z.string(),
+  company: z.string().trim(),
+  address: z.string().trim(),
+  twitter: z.string().trim(),
+  github: z.string().trim(),
 });
 
 type SettingsSchema = typeof UserPersonalInfo | typeof UserDetails | typeof UserAdditionalInfo;
