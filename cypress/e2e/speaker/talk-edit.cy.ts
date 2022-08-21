@@ -37,7 +37,7 @@ describe('Speaker talk edition page', () => {
     cy.assertText('New references');
   });
 
-  it.only('display errors on mandatory fields', () => {
+  it('display errors on mandatory fields', () => {
     editTalk.visit('awesome-talk');
     editTalk.fillTalkForm({
       title: ' ',

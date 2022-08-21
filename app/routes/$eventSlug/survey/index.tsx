@@ -54,13 +54,17 @@ export default function EventSurveyRoute() {
   return (
     <Container className="my-8">
       <div>
-        <H2>We have some questions for you.</H2>
+        <H2 id="survey-form-label">We have some questions for you.</H2>
         <Text variant="secondary" className="mt-1">
           This information will be displayed publicly so be careful what you share.
         </Text>
       </div>
       {result?.message && <AlertSuccess className="mt-8">{result?.message}</AlertSuccess>}
-      <Form method="post" className="mt-8 border border-gray-200 sm:overflow-hidden sm:rounded-md">
+      <Form
+        aria-labelledby="survey-form-label"
+        method="post"
+        className="mt-8 border border-gray-200 sm:overflow-hidden sm:rounded-md"
+      >
         <div className="bg-white py-6 px-4 sm:p-6">
           <EventSurveyForm questions={questions} initialValues={answers} />
         </div>
