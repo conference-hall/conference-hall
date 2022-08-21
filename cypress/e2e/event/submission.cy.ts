@@ -5,7 +5,7 @@ import EventSubmissionPage from '../../page-objects/event-submission.page';
 
 describe('Submit a talk to event', () => {
   beforeEach(() => {
-    cy.task('seedDB', 'event/submit-talk');
+    cy.task('seedDB', 'event/submission');
   });
 
   afterEach(() => cy.task('disconnectDB'));
@@ -234,6 +234,40 @@ describe('Submit a talk to event', () => {
       // Check proposal list
       proposals.isPageVisible();
       proposals.list().should('have.length', 1);
+    });
+
+    it('cannot submit a talk when max proposal reached', () => {
+      submission.visit('with-max-proposals');
+      cy.assertText('You can submit a maximum of');
+      cy.assertText('1 proposals.');
+
+      submission.talk('My existing talk').click();
+      submission.isTalkStepVisible();
+      submission.submitTalkForm();
+
+      // Step: speaker
+      submission.isSpeakerStepVisible();
+      submission.submitSpeakerForm();
+
+      // Step: confirmation
+      submission.isConfirmationStepVisible();
+      submission.fillConfirmationForm({ cod: true });
+      submission.submitConfirmation();
+
+      cy.clickOn('Submit a proposal');
+      cy.assertText('You have submitted the maximum of proposals for the event. Thanks!');
+      submission.checkMyProposalsButton();
+      proposals.isPageVisible();
+    });
+
+    it('cannot submit a talk to an event with a cfp not open yet', () => {
+      cy.visit('/conference-cfp-future/submission');
+      cy.assertText('CFP not open');
+    });
+
+    it('cannot submit a talk to an event with a cfp already closed', () => {
+      cy.visit('/conference-cfp-past/submission');
+      cy.assertText('CFP not open');
     });
   });
 });

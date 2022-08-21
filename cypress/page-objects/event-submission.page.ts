@@ -148,6 +148,13 @@ class EventSubmissionPage {
   submitConfirmation() {
     return cy.clickOn('Submit proposal');
   }
+
+  /**
+   * Max proposals
+   */
+  checkMyProposalsButton() {
+    return cy.clickOn('Check my submitted proposals');
+  }
 }
 
 export default EventSubmissionPage;
