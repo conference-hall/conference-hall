@@ -1,6 +1,6 @@
 import { formatRelative } from 'date-fns';
-import { MicrophoneIcon, PlusIcon, XIcon, CheckIcon } from '@heroicons/react/solid';
-import { ExclamationIcon, DotsHorizontalIcon } from '@heroicons/react/outline';
+import { MicrophoneIcon, PlusIcon, XMarkIcon, CheckIcon } from '@heroicons/react/20/solid';
+import { ExclamationCircleIcon, EllipsisHorizontalIcon } from '@heroicons/react/24/outline';
 import { IconLabel } from '../design-system/IconLabel';
 import { Link } from '../design-system/Links';
 
@@ -90,7 +90,7 @@ function TalkActivity({ talkId, talkTitle, date, noSubmission, showTimeline = fa
             </div>
             <p className="mt-0.5 text-sm text-gray-500">by Clark Kent</p>
             {noSubmission && (
-              <IconLabel icon={ExclamationIcon} className="mt-2 text-sm text-yellow-600">
+              <IconLabel icon={ExclamationCircleIcon} className="mt-2 text-sm text-yellow-600">
                 Not submitted yet. Search for great event.
               </IconLabel>
             )}
@@ -121,10 +121,10 @@ export function EventActivity({ eventName, eventSlug, date, showTimeline = false
         <div>
           <div className="relative px-1">
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200">
-              {status === 'DRAFT' && <ExclamationIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />}
+              {status === 'DRAFT' && <ExclamationCircleIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />}
               {status === 'SUBMITTED' && <PlusIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />}
               {status === 'ACCEPTED' && <CheckIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />}
-              {status === 'REJECTED' && <XIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />}
+              {status === 'REJECTED' && <XMarkIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />}
             </div>
           </div>
         </div>
@@ -149,7 +149,7 @@ function MoreInfo() {
         <div>
           <div className="relative px-1">
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100">
-              <DotsHorizontalIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />
+              <EllipsisHorizontalIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />
             </div>
           </div>
         </div>

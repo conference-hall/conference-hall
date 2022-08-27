@@ -1,4 +1,4 @@
-import { ExclamationIcon } from '@heroicons/react/solid';
+import { ExclamationCircleIcon } from '@heroicons/react/20/solid';
 import { useCatch, useLoaderData } from '@remix-run/react';
 import { Container } from '~/design-system/Container';
 import { useEvent } from '../../$eventSlug';
@@ -73,7 +73,7 @@ export default function EventSpeakerProposalRoute() {
 
       {proposal.status === 'DRAFT' && (
         <div className="mt-8">
-          <IconLabel icon={ExclamationIcon} className="text-sm text-yellow-600">
+          <IconLabel icon={ExclamationCircleIcon} className="text-sm text-yellow-600">
             This proposal is still in draft. Don't forget to submit it.
           </IconLabel>
         </div>

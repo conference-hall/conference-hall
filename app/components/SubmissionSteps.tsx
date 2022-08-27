@@ -1,4 +1,4 @@
-import { CheckIcon } from '@heroicons/react/solid';
+import { CheckIcon } from '@heroicons/react/20/solid';
 import { Link } from '@remix-run/react';
 
 type Props = {

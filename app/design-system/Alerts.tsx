@@ -1,4 +1,4 @@
-import { CheckCircleIcon, InformationCircleIcon } from '@heroicons/react/solid';
+import { CheckCircleIcon, InformationCircleIcon } from '@heroicons/react/20/solid';
 import cn from 'classnames';
 import type { ReactNode } from 'react';
 

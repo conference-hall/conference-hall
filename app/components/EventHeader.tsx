@@ -1,4 +1,4 @@
-import { CalendarIcon, LocationMarkerIcon } from '@heroicons/react/solid';
+import { CalendarIcon, MapPinIcon } from '@heroicons/react/20/solid';
 import { IconLabel } from '../design-system/IconLabel';
 import { formatConferenceDates } from '../utils/event';
 
@@ -18,7 +18,7 @@ export function EventHeader({ name, type, address, conferenceStart, conferenceEn
           <h1 className="text-2xl font-bold leading-6 text-gray-900">{name}</h1>
           <div className="mt-1 flex flex-col sm:mt-0 sm:flex-row sm:flex-wrap sm:space-x-6">
             {address && (
-              <IconLabel icon={LocationMarkerIcon} className="mt-2 text-gray-500">
+              <IconLabel icon={MapPinIcon} className="mt-2 text-gray-500">
                 {address}
               </IconLabel>
             )}

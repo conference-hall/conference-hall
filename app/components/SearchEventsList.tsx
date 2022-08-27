@@ -1,4 +1,4 @@
-import { LocationMarkerIcon } from '@heroicons/react/solid';
+import { MapPinIcon } from '@heroicons/react/20/solid';
 import { Link } from '@remix-run/react';
 import type { CfpState } from '~/utils/event';
 import { formatEventType } from '~/utils/event';
@@ -31,7 +31,7 @@ export function SearchEventsList({ events, forTalkId }: Props) {
                   <span className="text-base font-semibold text-indigo-600">{event.name}</span>
                   <span className="text-xs text-gray-500"> · {formatEventType(event.type)}</span>
                 </p>
-                <IconLabel icon={LocationMarkerIcon} className="mt-2 text-gray-500" iconClassName="text-gray-400">
+                <IconLabel icon={MapPinIcon} className="mt-2 text-gray-500" iconClassName="text-gray-400">
                   {event.address}
                 </IconLabel>
               </div>

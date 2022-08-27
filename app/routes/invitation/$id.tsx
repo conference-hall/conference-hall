@@ -1,4 +1,4 @@
-import { StarIcon } from '@heroicons/react/solid';
+import { StarIcon } from '@heroicons/react/20/solid';
 import type { ActionFunction, LoaderFunction } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';

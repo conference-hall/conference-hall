@@ -4,7 +4,7 @@ import cn from 'classnames';
 import { Dialog } from '@headlessui/react';
 import { Button } from '../Buttons';
 import { Markdown } from '../Markdown';
-import { XIcon } from '@heroicons/react/solid';
+import { XMarkIcon } from '@heroicons/react/20/solid';
 
 type MarkdownTextAreaProps = {
   label: string;
@@ -97,7 +97,7 @@ function MardownPreviewModal({ markdown, isOpen, onClose }: MardownPreviewModalP
             onClick={onClose}
           >
             <span className="sr-only">Close</span>
-            <XIcon className="h-6 w-6" aria-hidden="true" />
+            <XMarkIcon className="h-6 w-6" aria-hidden="true" />
           </button>
         </div>
         <div className="inline-block w-full transform rounded-lg bg-white px-4 pt-5 pb-4 text-left align-bottom shadow-xl sm:my-8 sm:p-6 sm:align-middle md:max-w-5xl">

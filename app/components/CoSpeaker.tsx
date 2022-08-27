@@ -1,5 +1,5 @@
 import { Dialog } from '@headlessui/react';
-import { BanIcon, LinkIcon, TrashIcon, UserAddIcon } from '@heroicons/react/solid';
+import { NoSymbolIcon, LinkIcon, TrashIcon, UserPlusIcon } from '@heroicons/react/20/solid';
 import { Form, useFetcher } from '@remix-run/react';
 import { useState } from 'react';
 import { Button } from '../design-system/Buttons';
@@ -73,7 +73,7 @@ export function InviteCoSpeakerButton({ to, id, invitationLink }: InviteProps) {
   return (
     <>
       <Button variant="text" onClick={() => setOpen(true)} className="group mt-4 flex items-center">
-        <UserAddIcon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
+        <UserPlusIcon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
         Invite a co-speaker
       </Button>
       <CoSpeakerDrawer
@@ -102,7 +102,7 @@ function CoSpeakerDrawer({ open, onClose, invitationLink, inviteType, entityId }
     <Modal open={open} onClose={onClose}>
       <div>
         <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-indigo-100">
-          <UserAddIcon className="h-6 w-6 text-indigo-600" aria-hidden="true" />
+          <UserPlusIcon className="h-6 w-6 text-indigo-600" aria-hidden="true" />
         </div>
         <div className="mt-3 text-center sm:mt-5">
           <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900">
@@ -122,7 +122,7 @@ function CoSpeakerDrawer({ open, onClose, invitationLink, inviteType, entityId }
           <input type="hidden" name="_type" value={inviteType} />
           <input type="hidden" name="_id" value={entityId} />
           <Button type="submit" block className="mt-8 flex items-center" variant="secondary">
-            <BanIcon className="mr-3 h-5 w-5 text-gray-500" aria-hidden="true" />
+            <NoSymbolIcon className="mr-3 h-5 w-5 text-gray-500" aria-hidden="true" />
             Revoke invitation link
           </Button>
         </invite.Form>

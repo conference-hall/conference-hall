@@ -1,5 +1,5 @@
-import { ClipboardCopyIcon } from '@heroicons/react/outline';
-import { CheckIcon } from '@heroicons/react/solid';
+import { ClipboardDocumentIcon } from '@heroicons/react/24/outline';
+import { CheckIcon } from '@heroicons/react/20/solid';
 import { useState } from 'react';
 
 type Props = {
@@ -39,7 +39,7 @@ export function CopyInput({ id, type = 'text', value, className, error, ...rest 
             </>
           ) : (
             <>
-              <ClipboardCopyIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+              <ClipboardDocumentIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
               <span>Copy</span>
             </>
           )}

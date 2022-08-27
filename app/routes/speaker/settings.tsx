@@ -1,7 +1,7 @@
 import type { ActionFunction, LoaderFunction } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, NavLink, useActionData, useLoaderData, useSubmit } from '@remix-run/react';
-import { CreditCardIcon, KeyIcon, UserCircleIcon } from '@heroicons/react/solid';
+import { CreditCardIcon, KeyIcon, UserCircleIcon } from '@heroicons/react/20/solid';
 import { Container } from '../../design-system/Container';
 import { IconLabel } from '../../design-system/IconLabel';
 import { Input } from '../../design-system/forms/Input';

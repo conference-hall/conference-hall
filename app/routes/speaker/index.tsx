@@ -1,7 +1,7 @@
 import type { LoaderFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
-import { GlobeAltIcon, HomeIcon, LocationMarkerIcon } from '@heroicons/react/solid';
+import { GlobeAltIcon, HomeIcon, MapPinIcon } from '@heroicons/react/20/solid';
 import { Container } from '../../design-system/Container';
 import { H3, Text } from '../../design-system/Typography';
 import { Markdown } from '../../design-system/Markdown';
@@ -72,7 +72,7 @@ export default function ProfileRoute() {
             {profile.address ? (
               <div className="mt-6 grid grid-cols-1 gap-4">
                 {profile.company && <IconLabel icon={HomeIcon}>{profile.company}</IconLabel>}
-                {profile.address && <IconLabel icon={LocationMarkerIcon}>{profile.address}</IconLabel>}
+                {profile.address && <IconLabel icon={MapPinIcon}>{profile.address}</IconLabel>}
                 {profile.twitter && <IconLabel icon={GlobeAltIcon}>{profile.twitter}</IconLabel>}
                 {profile.github && <IconLabel icon={GlobeAltIcon}>{profile.github}</IconLabel>}
               </div>

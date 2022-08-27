@@ -1,5 +1,5 @@
 import formatRelative from 'date-fns/formatRelative';
-import { CalendarIcon, ExclamationIcon } from '@heroicons/react/solid';
+import { CalendarIcon, ExclamationCircleIcon } from '@heroicons/react/20/solid';
 import { Link } from '@remix-run/react';
 import { IconLabel } from '../design-system/IconLabel';
 import { Container } from '../design-system/Container';
@@ -53,7 +53,7 @@ export function EventProposalsList({ proposals, cfpState }: Props) {
 
               <div>
                 {proposal.status === 'DRAFT' ? (
-                  <IconLabel icon={ExclamationIcon} className="text-sm text-yellow-600">
+                  <IconLabel icon={ExclamationCircleIcon} className="text-sm text-yellow-600">
                     Draft proposal, don't forget to submit it.
                   </IconLabel>
                 ) : (

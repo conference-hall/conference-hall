@@ -2,7 +2,13 @@ import { Fragment } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import cn from 'classnames';
 import { Form, Link } from '@remix-run/react';
-import { CogIcon, FireIcon, LogoutIcon, MicrophoneIcon, SearchIcon } from '@heroicons/react/solid';
+import {
+  CogIcon,
+  FireIcon,
+  ArrowRightOnRectangleIcon,
+  MicrophoneIcon,
+  MagnifyingGlassIcon,
+} from '@heroicons/react/20/solid';
 import { getAuth } from 'firebase/auth';
 
 type Props = { email: string | null; picture: string | null };
@@ -85,7 +91,10 @@ export function UserMenu({ email, picture }: Props) {
                     'bg-gray-100 text-gray-900': active,
                   })}
                 >
-                  <SearchIcon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
+                  <MagnifyingGlassIcon
+                    className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
+                    aria-hidden="true"
+                  />
                   Search events
                 </Link>
               )}
@@ -100,7 +109,7 @@ export function UserMenu({ email, picture }: Props) {
                     onClick={() => getAuth().signOut()}
                     className={cn('block w-full px-4 py-2 text-left text-sm text-gray-700', { 'bg-gray-100': active })}
                   >
-                    <LogoutIcon
+                    <ArrowRightOnRectangleIcon
                       className="mr-3 inline h-5 w-5 text-gray-400 group-hover:text-gray-500"
                       aria-hidden="true"
                     />

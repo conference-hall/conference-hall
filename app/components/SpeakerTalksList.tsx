@@ -1,4 +1,4 @@
-import { CalendarIcon } from '@heroicons/react/solid';
+import { CalendarIcon } from '@heroicons/react/20/solid';
 import { Link } from '@remix-run/react';
 import { formatRelative } from 'date-fns';
 import Badge from '../design-system/Badges';

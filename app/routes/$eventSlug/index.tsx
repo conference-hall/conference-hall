@@ -1,4 +1,4 @@
-import { GlobeIcon, HeartIcon, MailIcon } from '@heroicons/react/solid';
+import { GlobeEuropeAfricaIcon, HeartIcon, EnvelopeIcon } from '@heroicons/react/20/solid';
 import { useCatch } from '@remix-run/react';
 import { Container } from '~/design-system/Container';
 import { useEvent } from '../$eventSlug';
@@ -38,12 +38,12 @@ export default function EventRoute() {
           {event.websiteUrl || event.contactEmail || event.codeOfConductUrl ? (
             <div className="flex gap-16">
               {event.websiteUrl && (
-                <ExternalLink href={event.websiteUrl} icon={GlobeIcon}>
+                <ExternalLink href={event.websiteUrl} icon={GlobeEuropeAfricaIcon}>
                   Website
                 </ExternalLink>
               )}
               {event.contactEmail && (
-                <ExternalLink href={`mailto:${event.contactEmail}`} icon={MailIcon}>
+                <ExternalLink href={`mailto:${event.contactEmail}`} icon={EnvelopeIcon}>
                   Contacts
                 </ExternalLink>
               )}

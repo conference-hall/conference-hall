@@ -1,4 +1,4 @@
-import { ExclamationIcon } from '@heroicons/react/solid';
+import { ExclamationCircleIcon } from '@heroicons/react/20/solid';
 import { Link } from '@remix-run/react';
 import { ButtonLink } from '../design-system/Buttons';
 import { IconLabel } from '../design-system/IconLabel';
@@ -47,7 +47,7 @@ export function SubmissionTalksList({ talks }: Props) {
 
               <div>
                 {talk.isDraft ? (
-                  <IconLabel icon={ExclamationIcon} className="text-sm text-yellow-600">
+                  <IconLabel icon={ExclamationCircleIcon} className="text-sm text-yellow-600">
                     Draft proposal, don't forget to submit it.
                   </IconLabel>
                 ) : null}

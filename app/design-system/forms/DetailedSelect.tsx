@@ -1,7 +1,7 @@
 import { Fragment, useCallback } from 'react';
 import c from 'classnames';
 import { Listbox, Transition } from '@headlessui/react';
-import { CheckIcon, ChevronDownIcon } from '@heroicons/react/solid';
+import { CheckIcon, ChevronDownIcon } from '@heroicons/react/20/solid';
 
 type Props = {
   name: string;
