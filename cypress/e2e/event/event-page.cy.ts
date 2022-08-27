@@ -1,3 +1,4 @@
+import SearchEventPage from 'page-objects/event-search.page';
 import EventSubmissionPage from 'page-objects/event-submission.page';
 import EventPage from '../../page-objects/event.page';
 
@@ -7,6 +8,7 @@ describe('View event page', () => {
 
   const event = new EventPage();
   const submission = new EventSubmissionPage();
+  const search = new SearchEventPage();
 
   it('displays event info when CFP open', () => {
     event.visit('devfest-nantes');
@@ -35,6 +37,13 @@ describe('View event page', () => {
     event.visit('event-cfp-past');
     cy.assertText('Call for paper is closed');
     cy.assertText('Since Friday, October 5th, 2001');
+  });
+
+  it('displays a not found page if event does not exist', () => {
+    event.visit('event-dont-exist');
+    cy.assertText('Event not found');
+    event.searchForEvent().click();
+    search.isPageVisible();
   });
 
   it('can submit a proposal', () => {
