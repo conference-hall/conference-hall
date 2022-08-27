@@ -6,7 +6,7 @@ type FactoryOptions = {
   proposal?: Proposal;
   talk?: Talk;
   user?: User;
-  attributes?: Prisma.InviteCreateInput;
+  attributes?: Partial<Prisma.InviteCreateInput>;
 };
 
 export const inviteFactory = async (options: FactoryOptions) => {
