@@ -6,10 +6,10 @@ import { ButtonLink } from '../../../design-system/Buttons';
 import { IconLabel } from '../../../design-system/IconLabel';
 import { Markdown } from '../../../design-system/Markdown';
 import { H1, H2 } from '../../../design-system/Typography';
-import type { LoaderArgs } from '@remix-run/node';
+import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { sessionRequired } from '../../../services/auth/auth.server';
-import { getSpeakerProposal } from '../../../services/events/proposals.server';
+import { getSpeakerProposal, removeCoSpeakerFromProposal } from '../../../services/events/proposals.server';
 import { mapErrorToResponse } from '../../../services/errors';
 import { EventProposalDeleteButton } from '../../../components/EventProposalDelete';
 import Badge from '../../../design-system/Badges';
@@ -22,6 +22,22 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const proposalId = params.id!;
   const proposal = await getSpeakerProposal(proposalId, uid).catch(mapErrorToResponse);
   return json(proposal);
+};
+
+export const action: ActionFunction = async ({ request, params }) => {
+  const uid = await sessionRequired(request);
+  const proposalId = params.id!;
+  const form = await request.formData();
+  try {
+    const action = form.get('_action');
+    if (action === 'remove-speaker') {
+      const speakerId = form.get('_speakerId')?.toString() as string;
+      await removeCoSpeakerFromProposal(uid, proposalId, speakerId);
+      return null;
+    }
+  } catch (err) {
+    mapErrorToResponse(err);
+  }
 };
 
 export default function EventSpeakerProposalRoute() {

@@ -10,7 +10,7 @@ import { H2, Text } from '../../../../design-system/Typography';
 import { sessionRequired } from '../../../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../../../services/errors';
 import { getEvent } from '../../../../services/events/event.server';
-import { removeCoSpeakerFromProposal } from '../../../../services/events/proposals.server';
+import { removeCoSpeakerFromTalkAndEvent } from '../../../../services/events/proposals.server';
 import { getProposalSpeakers } from '../../../../services/events/speakers.server';
 import { updateSettings, validateProfileData } from '../../../../services/speakers/settings.server';
 import { getUser } from '../../../../services/auth/user.server';
@@ -65,7 +65,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     const action = form.get('_action');
     if (action === 'remove-speaker') {
       const speakerId = form.get('_speakerId')?.toString() as string;
-      await removeCoSpeakerFromProposal(uid, talkId, eventSlug, speakerId);
+      await removeCoSpeakerFromTalkAndEvent(uid, talkId, eventSlug, speakerId);
       return null;
     } else {
       await updateSettings(uid, result.data);

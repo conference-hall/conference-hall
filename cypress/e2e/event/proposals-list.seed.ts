@@ -36,4 +36,10 @@ export const seed = async () => {
   });
 
   await proposalFactory({ event: event2, talk: talk1, formats: [format], categories: [category] });
+
+  // No talks
+  await eventFactory({
+    attributes: { slug: 'event-without-talks' },
+    traits: ['conference-cfp-open'],
+  });
 };

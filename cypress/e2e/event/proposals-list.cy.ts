@@ -37,4 +37,11 @@ describe('Event proposals list', () => {
     proposals.list().should('have.length', 1);
     proposals.proposal('My talk 1').should('contain.text', 'Submitted');
   });
+
+  it('displays empty state when no proposals', () => {
+    cy.login();
+    proposals.visit('event-without-talks');
+    cy.assertText('No submitted proposals yet!');
+    cy.assertText('Get started by submitting your first proposal.');
+  });
 });

@@ -16,6 +16,7 @@ import {
   inviteCoSpeakerToProposal,
   isTalkAlreadySubmitted,
   removeCoSpeakerFromProposal,
+  removeCoSpeakerFromTalkAndEvent,
   updateProposal,
   validateProposalForm,
 } from './proposals.server';
@@ -397,7 +398,7 @@ describe('#inviteCoSpeakerToProposal', () => {
   });
 });
 
-describe('#removeCoSpeakerFromProposal', () => {
+describe('#removeCoSpeakerFromTalkAndEvent', () => {
   beforeEach(async () => {
     await resetDB();
   });
@@ -410,7 +411,7 @@ describe('#removeCoSpeakerFromProposal', () => {
     const talk = await talkFactory({ speakers: [speaker, cospeaker] });
     const proposal = await proposalFactory({ event, talk });
 
-    await removeCoSpeakerFromProposal(speaker.id, talk.id, event.slug, cospeaker.id);
+    await removeCoSpeakerFromTalkAndEvent(speaker.id, talk.id, event.slug, cospeaker.id);
 
     const proposalUpdated = await db.proposal.findUnique({
       where: { id: proposal.id },
@@ -430,7 +431,7 @@ describe('#removeCoSpeakerFromProposal', () => {
     await proposalFactory({ event, talk });
 
     const updater = await userFactory();
-    await expect(removeCoSpeakerFromProposal(updater.id, talk.id, event.slug, cospeaker.id)).rejects.toThrowError(
+    await expect(removeCoSpeakerFromTalkAndEvent(updater.id, talk.id, event.slug, cospeaker.id)).rejects.toThrowError(
       ProposalNotFoundError
     );
   });
@@ -440,7 +441,55 @@ describe('#removeCoSpeakerFromProposal', () => {
     const speaker = await userFactory();
 
     const cospeaker = await userFactory();
-    await expect(removeCoSpeakerFromProposal(speaker.id, 'XXX', event.slug, cospeaker.id)).rejects.toThrowError(
+    await expect(removeCoSpeakerFromTalkAndEvent(speaker.id, 'XXX', event.slug, cospeaker.id)).rejects.toThrowError(
+      ProposalNotFoundError
+    );
+  });
+});
+
+describe('#removeCoSpeakerFromProposal', () => {
+  beforeEach(async () => {
+    await resetDB();
+  });
+  afterEach(disconnectDB);
+
+  it('removes a cospeaker from the proposal', async () => {
+    const event = await eventFactory();
+    const speaker = await userFactory();
+    const cospeaker = await userFactory();
+    const talk = await talkFactory({ speakers: [speaker, cospeaker] });
+    const proposal = await proposalFactory({ event, talk });
+
+    await removeCoSpeakerFromProposal(speaker.id, proposal.id, cospeaker.id);
+
+    const proposalUpdated = await db.proposal.findUnique({
+      where: { id: proposal.id },
+      include: { speakers: true },
+    });
+
+    const speakers = proposalUpdated?.speakers.map(({ id }) => id);
+    expect(speakers?.length).toBe(1);
+    expect(speakers).toContain(speaker.id);
+  });
+
+  it('throws an error when talk doesnt belong to the speaker', async () => {
+    const event = await eventFactory();
+    const speaker = await userFactory();
+    const cospeaker = await userFactory();
+    const talk = await talkFactory({ speakers: [speaker, cospeaker] });
+    const proposal = await proposalFactory({ event, talk });
+
+    const updater = await userFactory();
+    await expect(removeCoSpeakerFromProposal(updater.id, proposal.id, cospeaker.id)).rejects.toThrowError(
+      ProposalNotFoundError
+    );
+  });
+
+  it('throws an error when talk not found', async () => {
+    const speaker = await userFactory();
+
+    const cospeaker = await userFactory();
+    await expect(removeCoSpeakerFromProposal(speaker.id, 'XXX', cospeaker.id)).rejects.toThrowError(
       ProposalNotFoundError
     );
   });
