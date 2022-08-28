@@ -44,13 +44,11 @@ export function SubmissionTalksList({ talks }: Props) {
               </div>
             </div>
 
-            <div>
-              {talk.isDraft ? (
-                <IconLabel icon={ExclamationCircleIcon} className="text-sm text-yellow-600">
-                  Draft proposal, don't forget to submit it.
-                </IconLabel>
-              ) : null}
-            </div>
+            {talk.isDraft ? (
+              <IconLabel icon={ExclamationCircleIcon} className="text-sm text-yellow-600">
+                Draft proposal, don't forget to submit it.
+              </IconLabel>
+            ) : null}
           </div>
         </CardLink>
       ))}

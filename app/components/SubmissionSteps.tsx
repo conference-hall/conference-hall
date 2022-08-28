@@ -10,11 +10,46 @@ type Props = {
   currentStep: string;
 };
 
-export function SubmissionSteps({ steps, currentStep }: Props) {
+function SubmissionStepsMobile({ steps, currentStep }: Props) {
   const currentStepIdx = steps.findIndex((step) => step.key === currentStep);
 
   return (
-    <nav aria-label="Progress">
+    <nav className="mt-6 flex items-center md:hidden" aria-label="Progress">
+      <p className="text-sm font-bold">
+        Step {currentStepIdx + 1} of {steps.length}
+      </p>
+      <ol className="ml-8 flex items-center space-x-5">
+        {steps.map((step, stepIdx) => (
+          <li key={step.key}>
+            {stepIdx < currentStepIdx ? (
+              <Link to={step.path} className="block h-2.5 w-2.5 rounded-full bg-indigo-600 hover:bg-indigo-900">
+                <span className="sr-only">{step.name}</span>
+              </Link>
+            ) : stepIdx === currentStepIdx ? (
+              <Link to={step.path} className="relative flex items-center justify-center" aria-current="step">
+                <span className="absolute flex h-5 w-5 p-px" aria-hidden="true">
+                  <span className="h-full w-full rounded-full bg-indigo-200" />
+                </span>
+                <span className="relative block h-2.5 w-2.5 rounded-full bg-indigo-600" aria-hidden="true" />
+                <span className="sr-only">{step.name}</span>
+              </Link>
+            ) : (
+              <Link to={step.path} className="block h-2.5 w-2.5 rounded-full bg-gray-200 hover:bg-gray-400">
+                <span className="sr-only">{step.name}</span>
+              </Link>
+            )}
+          </li>
+        ))}
+      </ol>
+    </nav>
+  );
+}
+
+function SubmissionStepsDesktop({ steps, currentStep }: Props) {
+  const currentStepIdx = steps.findIndex((step) => step.key === currentStep);
+
+  return (
+    <nav aria-label="Progress" className="hidden md:block">
       <ol className="divide-y divide-gray-200 border-b border-gray-200 md:flex md:divide-y-0">
         {steps.map((step, stepIdx) => (
           <li
@@ -73,5 +108,14 @@ export function SubmissionSteps({ steps, currentStep }: Props) {
         ))}
       </ol>
     </nav>
+  );
+}
+
+export function SubmissionSteps(props: Props) {
+  return (
+    <>
+      <SubmissionStepsMobile {...props} />
+      <SubmissionStepsDesktop {...props} />
+    </>
   );
 }

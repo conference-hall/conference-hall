@@ -55,19 +55,17 @@ export default function SubmissionSurveyRoute() {
   const { previousPath } = useSubmissionStep();
 
   return (
-    <Form method="post">
-      <div className="px-8 py-6 sm:py-10">
-        <div>
-          <H2>We have some questions for you.</H2>
-          <Text variant="secondary" className="mt-1">
-            This information will be displayed publicly so be careful what you share.
-          </Text>
-        </div>
-        <div className="mt-6">
-          <EventSurveyForm questions={questions} initialValues={answers} />
-        </div>
+    <Form method="post" className="py-6 sm:px-8 sm:py-10">
+      <div>
+        <H2>We have some questions for you.</H2>
+        <Text variant="secondary" className="mt-1">
+          This information will be displayed publicly so be careful what you share.
+        </Text>
       </div>
-      <div className="px-4 py-5 text-right sm:px-6">
+      <div className="mt-6">
+        <EventSurveyForm questions={questions} initialValues={answers} />
+      </div>
+      <div className="py-5 text-right">
         <ButtonLink to={previousPath} variant="secondary">
           Back
         </ButtonLink>

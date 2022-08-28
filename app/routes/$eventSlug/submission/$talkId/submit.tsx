@@ -52,51 +52,55 @@ export default function SubmissionSubmitRoute() {
   const [acceptedCod, setAcceptCod] = useState(!data.codeOfConductUrl);
 
   return (
-    <Form method="post">
-      <div className="flex w-full flex-col items-center py-20">
-        <H1>{data.title}</H1>
+    <Form method="post" className="py-6 sm:px-8 sm:py-10">
+      <H1>{data.title}</H1>
 
-        <div className="mt-2 -space-x-1 overflow-hidden">
-          {data.speakers.map((speaker) => (
-            <img
-              key={speaker.name}
-              className="inline-block h-6 w-6 rounded-full ring-2 ring-white"
-              src={speaker.photoURL || 'http://placekitten.com/100/100'}
-              alt={speaker.name || 'Speaker'}
-            />
-          ))}
-          <span className="test-gray-500 truncate pl-3 text-sm">by {data.speakers.map((s) => s.name).join(', ')}</span>
-        </div>
+      <div className="mt-2 -space-x-1 overflow-hidden">
+        {data.speakers.map((speaker) => (
+          <img
+            key={speaker.name}
+            className="inline-block h-6 w-6 rounded-full ring-2 ring-white"
+            src={speaker.photoURL || 'http://placekitten.com/100/100'}
+            alt={speaker.name || 'Speaker'}
+          />
+        ))}
+        <span className="test-gray-500 truncate pl-3 text-sm">by {data.speakers.map((s) => s.name).join(', ')}</span>
+      </div>
 
-        <Text variant="secondary" className="mt-8">
-          {data.formats.join(', ')}
-        </Text>
-        <Text variant="secondary" className="mt-4">
-          {data.categories.join(', ')}
-        </Text>
-
-        <TextArea id="message" name="message" label="Message to organizers" className="mt-16 block w-1/3 " rows={4} />
-
-        {data.codeOfConductUrl && (
-          <Checkbox
-            className="mt-8 font-medium"
-            id="cod-agreement"
-            name="cod-agreement"
-            value="agree"
-            onChange={() => setAcceptCod(!acceptedCod)}
-          >
-            Please agree with the{' '}
-            <ExternalLink href={data.codeOfConductUrl} className="inline-flex">
-              code of conduct
-            </ExternalLink>{' '}
-            of the event.
-          </Checkbox>
+      <div className="mt-8 space-y-4">
+        {data.formats.length > 0 && (
+          <Text variant="secondary">
+            <b>Formats:</b> {data.formats.join(', ')}
+          </Text>
         )}
-        <div className="mt-6">
-          <Button type="submit" disabled={!acceptedCod}>
-            Submit proposal
-          </Button>
-        </div>
+        {data.categories.length > 0 && (
+          <Text variant="secondary">
+            <b>Categories:</b> {data.categories.join(', ')}
+          </Text>
+        )}
+      </div>
+
+      <TextArea id="message" name="message" label="Message to organizers" className="mt-8 " rows={4} />
+
+      {data.codeOfConductUrl && (
+        <Checkbox
+          className="mt-8 font-medium"
+          id="cod-agreement"
+          name="cod-agreement"
+          value="agree"
+          onChange={() => setAcceptCod(!acceptedCod)}
+        >
+          Please agree with the{' '}
+          <ExternalLink href={data.codeOfConductUrl} className="inline-flex">
+            code of conduct
+          </ExternalLink>{' '}
+          of the event.
+        </Checkbox>
+      )}
+      <div className="mt-6">
+        <Button type="submit" disabled={!acceptedCod}>
+          Submit proposal
+        </Button>
       </div>
     </Form>
   );

@@ -50,7 +50,7 @@ export default function SubmissionProposalRoute() {
 
   return (
     <Form method="post">
-      <div className="px-8 py-6 sm:py-10">
+      <div className="py-6 sm:px-8 sm:py-10">
         <div className="mb-6">
           <H2>Your proposal</H2>
           <Text variant="secondary" className="mt-1">

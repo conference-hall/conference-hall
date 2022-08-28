@@ -74,11 +74,17 @@ export default function EventSubmitRoute() {
   const currentStep = matches[matches.length - 1].handle?.step;
 
   return (
-    <Container className="my-8 grid grid-cols-1 items-start sm:gap-8">
-      <SectionPanel id="talk-submission" title="Talk submission">
+    <Container className="md:my-8">
+      <section
+        aria-labelledby="talk-submission"
+        className="overflow-hidden bg-white sm:rounded-lg md:border md:border-gray-200"
+      >
+        <h2 className="sr-only" id="talk-submission">
+          Talk submission
+        </h2>
         <SubmissionSteps steps={steps} currentStep={currentStep} />
         <Outlet />
-      </SectionPanel>
+      </section>
     </Container>
   );
 }

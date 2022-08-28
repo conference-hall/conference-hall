@@ -62,7 +62,7 @@ export default function SubmissionTracksRoute() {
 
   return (
     <Form method="post">
-      <div className="space-y-12 px-8 py-6 sm:py-10">
+      <div className="space-y-12 py-6 px-4 sm:px-8 sm:py-10">
         {event.formats?.length > 0 ? <FormatsForm formats={event.formats} initialValues={proposal.formats} /> : null}
 
         {event.categories?.length > 0 ? (

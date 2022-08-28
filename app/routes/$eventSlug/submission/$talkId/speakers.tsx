@@ -91,7 +91,7 @@ export default function SubmissionSpeakerRoute() {
 
   return (
     <>
-      <div className="px-8 py-6 sm:py-10">
+      <div className="py-6 sm:px-8 sm:py-10">
         <Form id="speaker-form" method="post">
           <div>
             <H2>Speaker details</H2>
@@ -122,7 +122,7 @@ export default function SubmissionSpeakerRoute() {
           <InviteCoSpeakerButton to="PROPOSAL" id={data.proposalId} invitationLink={data.invitationLink} />
         </div>
       </div>
-      <div className="px-4 py-5 text-right sm:px-6">
+      <div className="py-5 text-right sm:px-8">
         <ButtonLink to={previousPath} variant="secondary">
           Back
         </ButtonLink>
