@@ -1,5 +1,5 @@
 import { MapPinIcon } from '@heroicons/react/20/solid';
-import { Link } from '@remix-run/react';
+import { CardLink } from '~/design-system/Card';
 import type { CfpState } from '~/utils/event';
 import { formatEventType } from '~/utils/event';
 import { IconLabel } from '../design-system/IconLabel';
@@ -20,25 +20,20 @@ export function SearchEventsList({ events, forTalkId }: Props) {
   return (
     <ul aria-label="Search results" className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {events.map((event) => (
-        <li key={event.slug} className="col-span-1 rounded-lg border border-gray-200 bg-white">
-          <Link
-            to={forTalkId ? `/${event.slug}/submission/${forTalkId}` : `/${event.slug}`}
-            className="block rounded-lg hover:bg-gray-50"
-          >
-            <div className="flex h-40 flex-col justify-between px-4 py-6 sm:px-6">
-              <div>
-                <p className="truncate">
-                  <span className="text-base font-semibold text-indigo-600">{event.name}</span>
-                  <span className="text-xs text-gray-500"> · {formatEventType(event.type)}</span>
-                </p>
-                <IconLabel icon={MapPinIcon} className="mt-2 text-gray-500" iconClassName="text-gray-400">
-                  {event.address}
-                </IconLabel>
-              </div>
-              <CfpLabel cfpState={event.cfpState} className="mt-6" />
+        <CardLink as="li" key={event.slug} to={forTalkId ? `/${event.slug}/submission/${forTalkId}` : `/${event.slug}`}>
+          <div className="flex h-40 flex-col justify-between px-4 py-6 sm:px-6">
+            <div>
+              <p className="truncate">
+                <span className="text-base font-semibold text-indigo-600">{event.name}</span>
+                <span className="text-xs text-gray-500"> · {formatEventType(event.type)}</span>
+              </p>
+              <IconLabel icon={MapPinIcon} className="mt-2 text-gray-500" iconClassName="text-gray-400" lineCamp={2}>
+                {event.address}
+              </IconLabel>
             </div>
-          </Link>
-        </li>
+            <CfpLabel cfpState={event.cfpState} className="mt-6" />
+          </div>
+        </CardLink>
       ))}
     </ul>
   );

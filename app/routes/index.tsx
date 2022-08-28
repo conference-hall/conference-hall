@@ -30,12 +30,10 @@ export default function IndexRoute() {
 
   return (
     <div>
-      <div>
-        <Container className="py-24">
-          <H1>Conferences and meetups.</H1>
-          <SearchEventsForm filters={filters} className="mt-4" />
-        </Container>
-      </div>
+      <Container className="py-0 sm:py-24">
+        <H1 className="hidden sm:block">Conferences and meetups.</H1>
+        <SearchEventsForm filters={filters} className="mt-4" />
+      </Container>
       <Container className="pb-8">
         {results?.length === 0 ? (
           <Text>No events found.</Text>

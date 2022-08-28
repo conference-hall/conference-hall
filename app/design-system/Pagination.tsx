@@ -10,6 +10,12 @@ type Props = {
   className?: string;
 };
 
+function getPageSearchParams(page: number, searchParams: URLSearchParams) {
+  searchParams.delete('page');
+  searchParams.append('page', String(page));
+  return searchParams.toString();
+}
+
 export function SearchPagination({ pathname, current, total, className }: Props) {
   const [searchParams] = useSearchParams();
 
@@ -18,9 +24,6 @@ export function SearchPagination({ pathname, current, total, className }: Props)
   return (
     <nav className={c('flex items-center justify-center border-t border-gray-200 px-4 sm:px-0', className)}>
       {pages.map((page) => {
-        searchParams.delete('page');
-        searchParams.append('page', String(page));
-
         const styles = c('border-t-2 pt-4 px-4 inline-flex items-center text-sm font-medium', {
           'border-indigo-500 text-indigo-600': page === current,
           'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': page !== current,
@@ -30,7 +33,7 @@ export function SearchPagination({ pathname, current, total, className }: Props)
           return (
             <Link
               key={page}
-              to={{ pathname, search: searchParams.toString() }}
+              to={{ pathname, search: getPageSearchParams(page, searchParams) }}
               aria-current={page === current ? 'page' : undefined}
               className={styles}
             >

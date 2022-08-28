@@ -1,5 +1,4 @@
-import c from 'classnames';
-import { Form, useSearchParams, useSubmit, useTransition } from '@remix-run/react';
+import { Form, useSearchParams, useSubmit } from '@remix-run/react';
 import type { SearchFilters } from '../services/events/search.server';
 import { Input } from '../design-system/forms/Input';
 import { Button } from '../design-system/Buttons';
@@ -15,7 +14,6 @@ export function SearchEventsForm({ filters, className }: Props) {
   const [searchParams] = useSearchParams();
   const talkId = searchParams.get('talkId');
   const submit = useSubmit();
-  const transition = useTransition();
 
   function handleChange(name: string, id: string) {
     const params = Object.fromEntries(searchParams);
@@ -23,9 +21,9 @@ export function SearchEventsForm({ filters, className }: Props) {
   }
 
   return (
-    <Form action="/" method="get" className={c(className)}>
+    <Form action="/" method="get" className={className}>
       {talkId && <input type="hidden" name="talkId" value={talkId} />}
-      <div className="gap-4 sm:flex sm:items-center">
+      <div className="flex sm:items-center sm:gap-4">
         <Input
           type="search"
           name="terms"
@@ -35,9 +33,11 @@ export function SearchEventsForm({ filters, className }: Props) {
           autoComplete="off"
           className=" w-full"
         />
-        <Button type="submit">Search</Button>
+        <Button type="submit" className="hidden sm:block">
+          Search
+        </Button>
       </div>
-      <div className="flex justify-end pt-4">
+      <div className="flex justify-between py-4 sm:justify-end">
         <DetailedSelect
           name="cfp"
           label="Filter by CFP status"
