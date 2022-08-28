@@ -45,23 +45,19 @@ export default function EventSubmitRoute() {
   }
 
   return (
-    <Container className="my-8 space-y-8">
-      <div className="flex flex-wrap items-center justify-between sm:flex-nowrap">
+    <Container className="my-4 sm:my-8">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <H2>Proposal selection</H2>
           <Text variant="secondary" className="mt-1">
             Select or create a new proposal to submit.
           </Text>
         </div>
-        {data?.talks.length !== 0 && (
-          <div className="flex-shrink-0">
-            <ButtonLink to="new">Create a new proposal</ButtonLink>
-          </div>
-        )}
+        {data?.talks.length !== 0 && <ButtonLink to="new">Create a new proposal</ButtonLink>}
       </div>
 
       {Boolean(max) && (
-        <AlertInfo className="my-2">
+        <AlertInfo className="my-4">
           You can submit a maximum of <span className="font-semibold">{max} proposals.</span>{' '}
           {submitted > 0 ? `You have already submitted ${submitted} proposals out of ${max}.` : null}
         </AlertInfo>

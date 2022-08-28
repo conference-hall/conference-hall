@@ -1,5 +1,5 @@
 import { ExclamationCircleIcon } from '@heroicons/react/20/solid';
-import { Link } from '@remix-run/react';
+import { CardLink } from '~/design-system/Card';
 import { ButtonLink } from '../design-system/Buttons';
 import { IconLabel } from '../design-system/IconLabel';
 
@@ -22,39 +22,37 @@ export function SubmissionTalksList({ talks }: Props) {
   }
 
   return (
-    <ul aria-label="Talks list" className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+    <ul aria-label="Talks list" className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2">
       {talks.map((talk) => (
-        <li key={talk.id} className="col-span-1 rounded-lg border border-gray-200 bg-white">
-          <Link to={talk.id} className="block rounded-lg hover:bg-indigo-50">
-            <div className="flex h-40 flex-col justify-between px-4 py-4 sm:px-6">
-              <div>
-                <p className="truncate text-base font-semibold text-indigo-600">{talk.title}</p>
+        <CardLink as="li" key={talk.id} to={talk.id}>
+          <div className="flex h-40 flex-col justify-between px-4 py-4 sm:px-6">
+            <div>
+              <p className="truncate text-base font-semibold text-indigo-600">{talk.title}</p>
 
-                <div className="mt-2 flex items-center -space-x-1 overflow-hidden">
-                  {talk.speakers.map((speaker) => (
-                    <img
-                      key={speaker.id}
-                      className="inline-block h-6 w-6 rounded-full ring-2 ring-white"
-                      src={speaker.photoURL || 'http://placekitten.com/100/100'}
-                      alt={speaker.name || 'Speaker'}
-                    />
-                  ))}
-                  <span className="test-gray-500 truncate pl-3 text-sm">
-                    by {talk.speakers.map((s) => s.name).join(', ')}
-                  </span>
-                </div>
-              </div>
-
-              <div>
-                {talk.isDraft ? (
-                  <IconLabel icon={ExclamationCircleIcon} className="text-sm text-yellow-600">
-                    Draft proposal, don't forget to submit it.
-                  </IconLabel>
-                ) : null}
+              <div className="mt-2 flex items-center -space-x-1 overflow-hidden">
+                {talk.speakers.map((speaker) => (
+                  <img
+                    key={speaker.id}
+                    className="inline-block h-6 w-6 rounded-full ring-2 ring-white"
+                    src={speaker.photoURL || 'http://placekitten.com/100/100'}
+                    alt={speaker.name || 'Speaker'}
+                  />
+                ))}
+                <span className="test-gray-500 truncate pl-3 text-sm">
+                  by {talk.speakers.map((s) => s.name).join(', ')}
+                </span>
               </div>
             </div>
-          </Link>
-        </li>
+
+            <div>
+              {talk.isDraft ? (
+                <IconLabel icon={ExclamationCircleIcon} className="text-sm text-yellow-600">
+                  Draft proposal, don't forget to submit it.
+                </IconLabel>
+              ) : null}
+            </div>
+          </div>
+        </CardLink>
       ))}
     </ul>
   );

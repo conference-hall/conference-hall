@@ -37,7 +37,7 @@ type ButtonStylesProps = {
 const getStyles = ({ variant = 'primary', size = 'regular', block, disabled, loading, className }: ButtonStylesProps) =>
   cn(
     [
-      'relative inline-flex items-center px-4 py-2',
+      'relative inline-flex justify-center items-center px-4 py-2',
       'border rounded-md shadow-sm',
       'text-sm font-medium',
       'focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500',
@@ -48,7 +48,7 @@ const getStyles = ({ variant = 'primary', size = 'regular', block, disabled, loa
       'opacity-50 cursor-not-allowed': disabled || loading,
       'px-2.5 py-1.5 text-xs': size === 'small',
       'px-6 py-3 text-base': size === 'large',
-      'w-full justify-center': block,
+      'w-full': block,
     },
     className
   );
