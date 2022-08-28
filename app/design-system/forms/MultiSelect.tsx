@@ -2,28 +2,37 @@ import { Fragment, useState } from 'react';
 import c from 'classnames';
 import { Listbox, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
-import { getLanguage, LANGUAGES } from '../../utils/languages';
 import { Text } from '../Typography';
 
+type Option = { value: string; label: string };
+
 type Props = {
-  values: string[];
+  name: string;
+  label: string;
+  placeholder: string;
+  options: Array<Option>;
+  defaultValues: string[];
   className?: string;
 };
 
-export default function LanguagesSelect({ values, className }: Props) {
-  const [selected, setSelected] = useState<string[]>(values);
+function getOptionLabel(selectedValues: string[], options: Array<Option>) {
+  return selectedValues.map((current) => options.find(({ value }) => value === current)?.label).join(', ');
+}
+
+export default function MultiSelect({ name, label, placeholder, options, defaultValues, className }: Props) {
+  const [selected, setSelected] = useState<string[]>(defaultValues);
   return (
-    <Listbox name="languages" value={selected} onChange={setSelected} multiple>
+    <Listbox name={name} value={selected} onChange={setSelected} multiple>
       {({ open }) => (
         <div className={className}>
-          <Listbox.Label className="block text-sm font-medium text-gray-700">Languages</Listbox.Label>
+          <Listbox.Label className="block text-sm font-medium text-gray-700">{label}</Listbox.Label>
           <div className="relative mt-1">
             <Listbox.Button className="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
               {selected.length > 0 ? (
-                <Text className="block truncate">{selected.map(getLanguage).join(', ')}</Text>
+                <Text className="block truncate">{getOptionLabel(selected, options)}</Text>
               ) : (
                 <Text variant="secondary" className="block truncate">
-                  Select spoken languages for the talk.
+                  {placeholder}
                 </Text>
               )}
               <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
@@ -39,10 +48,10 @@ export default function LanguagesSelect({ values, className }: Props) {
               leaveTo="opacity-0"
             >
               <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                {LANGUAGES.map((language) => (
+                {options.map((option) => (
                   <Listbox.Option
-                    key={language.id}
-                    value={language.id}
+                    key={option.value}
+                    value={option.value}
                     className={({ active }) =>
                       c(
                         active ? 'bg-indigo-600 text-white' : 'text-gray-900',
@@ -53,7 +62,7 @@ export default function LanguagesSelect({ values, className }: Props) {
                     {({ selected, active }) => (
                       <>
                         <span className={c(selected ? 'font-semibold' : 'font-normal', 'block truncate')}>
-                          {language.label}
+                          {option.label}
                         </span>
 
                         {selected ? (

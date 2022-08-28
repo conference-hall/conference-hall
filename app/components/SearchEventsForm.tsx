@@ -1,5 +1,5 @@
 import c from 'classnames';
-import { Form, useSearchParams, useSubmit } from '@remix-run/react';
+import { Form, useSearchParams, useSubmit, useTransition } from '@remix-run/react';
 import type { SearchFilters } from '../services/events/search.server';
 import { Input } from '../design-system/forms/Input';
 import { Button } from '../design-system/Buttons';
@@ -15,6 +15,7 @@ export function SearchEventsForm({ filters, className }: Props) {
   const [searchParams] = useSearchParams();
   const talkId = searchParams.get('talkId');
   const submit = useSubmit();
+  const transition = useTransition();
 
   function handleChange(name: string, id: string) {
     const params = Object.fromEntries(searchParams);

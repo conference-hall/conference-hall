@@ -3,7 +3,7 @@ import { Menu, Transition } from '@headlessui/react';
 import cn from 'classnames';
 import { Form, Link } from '@remix-run/react';
 import {
-  CogIcon,
+  Cog6ToothIcon,
   FireIcon,
   ArrowRightOnRectangleIcon,
   MicrophoneIcon,
@@ -76,7 +76,7 @@ export function UserMenu({ email, picture }: Props) {
                     'bg-gray-100 text-gray-900': active,
                   })}
                 >
-                  <CogIcon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
+                  <Cog6ToothIcon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
                   Settings
                 </Link>
               )}

@@ -2,7 +2,8 @@ import { Input } from '~/design-system/forms/Input';
 import { Radio, RadioGroup } from '~/design-system/forms/RadioGroup';
 import { MarkdownTextArea } from '~/design-system/forms/MarkdownTextArea';
 import { LEVELS } from '../utils/levels';
-import LanguagesSelect from '../design-system/forms/LanguagesSelect';
+import MultiSelect from '~/design-system/forms/MultiSelect';
+import { LANGUAGES } from '~/utils/languages';
 
 type Props = {
   initialValues?: {
@@ -44,7 +45,13 @@ export function TalkAbstractForm({ initialValues, errors }: Props) {
           </Radio>
         ))}
       </RadioGroup>
-      <LanguagesSelect values={initialValues?.languages ?? []} />
+      <MultiSelect
+        name="languages"
+        label="Languages"
+        placeholder="Select spoken languages for the talk."
+        options={LANGUAGES}
+        defaultValues={initialValues?.languages ?? []}
+      />
       <MarkdownTextArea
         id="references"
         name="references"
