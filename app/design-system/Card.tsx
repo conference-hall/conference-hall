@@ -8,8 +8,7 @@ type CardProps = {
   children: React.ReactNode;
 };
 
-export function Card({ as = 'p', className, ...rest }: CardProps) {
-  const Tag = as ?? 'div';
+export function Card({ as: Tag = 'div', className, ...rest }: CardProps) {
   return <Tag className={c('rounded-lg border border-gray-300 bg-white shadow-sm', className)} {...rest} />;
 }
 

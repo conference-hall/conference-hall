@@ -14,16 +14,16 @@ export function CfpLabel({ cfpState, className }: CfpLabelProps) {
   );
 }
 
-type CfpHeaderProps = {
+type CfpInfoProps = {
   cfpState: CfpState;
   cfpStart?: string;
   cfpEnd?: string;
 };
 
-export function CfpHeader({ cfpState, cfpStart, cfpEnd }: CfpHeaderProps) {
+export function CfpInfo({ cfpState, cfpStart, cfpEnd }: CfpInfoProps) {
   return (
     <div>
-      <H2 className="flex items-center space-x-3">
+      <H2 className="inline-flex items-center space-x-3">
         <CfpIcon cfpState={cfpState} />
         <span className="block">{formatCFPState(cfpState)}</span>
       </H2>
