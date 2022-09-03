@@ -1,10 +1,10 @@
+import type { CfpState } from '~/utils/event';
 import formatRelative from 'date-fns/formatRelative';
 import { CalendarIcon, ExclamationCircleIcon } from '@heroicons/react/20/solid';
-import { Link } from '@remix-run/react';
-import { IconLabel } from '../design-system/IconLabel';
-import { Container } from '../design-system/Container';
-import type { CfpState } from '../utils/event';
 import { CfpLabel } from './CfpInfo';
+import { CardLink } from '~/design-system/Card';
+import { IconLabel } from '~/design-system/IconLabel';
+import { Container } from '~/design-system/Container';
 
 type Props = {
   proposals: Array<{
@@ -30,44 +30,40 @@ export function EventProposalsList({ proposals, cfpState }: Props) {
   return (
     <ul aria-label="Proposals list" className="grid grid-cols-1 gap-6 sm:grid-cols-2">
       {proposals.map((proposal) => (
-        <li key={proposal.id} className="col-span-1 rounded-lg border border-gray-200 bg-white">
-          <Link to={proposal.id} className="block rounded-lg hover:bg-indigo-50">
-            <div className="flex h-40 flex-col justify-between px-4 py-4 sm:px-6">
-              <div>
-                <p className="truncate text-base font-semibold text-indigo-600">{proposal.title}</p>
+        <CardLink as="li" key={proposal.id} to={proposal.id}>
+          <div className="flex h-40 flex-col justify-between px-4 py-4 sm:px-6">
+            <div>
+              <p className="truncate text-base font-semibold text-indigo-600">{proposal.title}</p>
 
-                <div className="mt-2 flex items-center -space-x-1 overflow-hidden">
-                  {proposal.speakers.map((speaker) => (
-                    <img
-                      key={speaker.id}
-                      className="inline-block h-6 w-6 rounded-full ring-2 ring-white"
-                      src={speaker.photoURL || 'http://placekitten.com/100/100'}
-                      alt={speaker.name || 'Speaker'}
-                    />
-                  ))}
-                  <span className="truncate pl-3 text-sm text-gray-500">
-                    by {proposal.speakers.map((s) => s.name).join(', ')}
-                  </span>
-                </div>
-              </div>
-
-              <div>
-                {proposal.status === 'DRAFT' ? (
-                  <IconLabel icon={ExclamationCircleIcon} className="text-sm text-yellow-600">
-                    Draft proposal, don't forget to submit it.
-                  </IconLabel>
-                ) : (
-                  <IconLabel icon={CalendarIcon} className="text-sm text-gray-500" iconClassName="text-gray-400">
-                    Submitted&nbsp;
-                    <time dateTime={proposal.createdAt}>
-                      {formatRelative(new Date(proposal.createdAt), new Date())}
-                    </time>
-                  </IconLabel>
-                )}
+              <div className="mt-2 flex items-center -space-x-1 overflow-hidden">
+                {proposal.speakers.map((speaker) => (
+                  <img
+                    key={speaker.id}
+                    className="inline-block h-6 w-6 rounded-full ring-2 ring-white"
+                    src={speaker.photoURL || 'http://placekitten.com/100/100'}
+                    alt={speaker.name || 'Speaker'}
+                  />
+                ))}
+                <span className="truncate pl-3 text-sm text-gray-500">
+                  by {proposal.speakers.map((s) => s.name).join(', ')}
+                </span>
               </div>
             </div>
-          </Link>
-        </li>
+
+            <div>
+              {proposal.status === 'DRAFT' ? (
+                <IconLabel icon={ExclamationCircleIcon} className="text-sm text-yellow-600">
+                  Draft proposal, don't forget to submit it.
+                </IconLabel>
+              ) : (
+                <IconLabel icon={CalendarIcon} className="text-sm text-gray-500" iconClassName="text-gray-400">
+                  Submitted&nbsp;
+                  <time dateTime={proposal.createdAt}>{formatRelative(new Date(proposal.createdAt), new Date())}</time>
+                </IconLabel>
+              )}
+            </div>
+          </div>
+        </CardLink>
       ))}
     </ul>
   );

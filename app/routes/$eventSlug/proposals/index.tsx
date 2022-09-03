@@ -21,14 +21,14 @@ export default function EventSpeakerProposalsRoute() {
   const proposals = useLoaderData<typeof loader>();
 
   return (
-    <Container className="mt-8">
+    <Container className="mt-4 sm:my-8">
       <div>
         <H2>Your proposals</H2>
         <Text variant="secondary" className="mt-1">
           All your draft and submitted proposals for the event
         </Text>
       </div>
-      <div className="mt-8">
+      <div className="my-8">
         <EventProposalsList proposals={proposals} cfpState={event.cfpState} />
       </div>
     </Container>
