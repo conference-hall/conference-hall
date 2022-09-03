@@ -76,8 +76,8 @@ model Event {
   description              String
   type                     EventType       @default(CONFERENCE)
   visibility               EventVisibility @default(PRIVATE)
-  organizationId           String?
-  organization             Organization?   @relation(fields: [organizationId], references: [id])
+  organizationId           String
+  organization             Organization    @relation(fields: [organizationId], references: [id])
   address                  String?
   lat                      Float?
   lng                      Float?
@@ -152,6 +152,7 @@ enum EventVisibility {
 model Organization {
   id         String               @id @default(uuid())
   name       String
+  slug       String               @unique
   createdAt  DateTime             @default(now())
   updatedAt  DateTime             @updatedAt
   members    OrganizationMember[]
