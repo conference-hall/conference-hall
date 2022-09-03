@@ -2,6 +2,7 @@ import { Dialog } from '@headlessui/react';
 import { NoSymbolIcon, LinkIcon, TrashIcon, UserPlusIcon } from '@heroicons/react/20/solid';
 import { Form, useFetcher } from '@remix-run/react';
 import { useState } from 'react';
+import { Avatar } from '~/design-system/Avatar';
 import { Button } from '../design-system/Buttons';
 import Modal from '../design-system/dialogs/Modals';
 import { CopyInput } from '../design-system/forms/CopyInput';
@@ -27,11 +28,7 @@ export function CoSpeakersList({ speakers, showRemoveAction = false, className }
       {speakers.map((speaker) => (
         <div key={speaker.id} className="mt-4 flex items-center justify-between">
           <div className="flex items-center">
-            <img
-              className="inline-block h-9 w-9 rounded-full"
-              src={speaker.photoURL || 'http://placekitten.com/100/100'}
-              alt={speaker.name || 'Co-speaker'}
-            />
+            <Avatar photoURL={speaker.photoURL} alt={speaker.name} />
             <div className="ml-3">
               <Text>{speaker.name}</Text>
               <Text variant="secondary" size="xs">

@@ -12,6 +12,7 @@ import type { ProposalInfo } from '../../../../services/events/submit.server';
 import { getProposalInfo, submitProposal, validateSubmission } from '../../../../services/events/submit.server';
 import { mapErrorToResponse } from '../../../../services/errors';
 import { TextArea } from '../../../../design-system/forms/TextArea';
+import { AvatarGroup } from '~/design-system/Avatar';
 
 type SubmitForm = ProposalInfo & { codeOfConductUrl: string | null };
 
@@ -55,17 +56,7 @@ export default function SubmissionSubmitRoute() {
     <Form method="post" className="py-6 sm:px-8 sm:py-10">
       <H1>{data.title}</H1>
 
-      <div className="mt-2 -space-x-1 overflow-hidden">
-        {data.speakers.map((speaker) => (
-          <img
-            key={speaker.name}
-            className="inline-block h-6 w-6 rounded-full ring-2 ring-white"
-            src={speaker.photoURL || 'http://placekitten.com/100/100'}
-            alt={speaker.name || 'Speaker'}
-          />
-        ))}
-        <span className="test-gray-500 truncate pl-3 text-sm">by {data.speakers.map((s) => s.name).join(', ')}</span>
-      </div>
+      <AvatarGroup avatars={data.speakers} displayNames className="mt-2" />
 
       <div className="mt-8 space-y-4">
         {data.formats.length > 0 && (

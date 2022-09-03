@@ -1,5 +1,6 @@
 import { CalendarIcon } from '@heroicons/react/20/solid';
 import { formatRelative } from 'date-fns';
+import { AvatarGroup } from '~/design-system/Avatar';
 import Badge from '~/design-system/Badges';
 import { CardLink } from '~/design-system/Card';
 import { IconLabel } from '~/design-system/IconLabel';
@@ -33,19 +34,7 @@ export function SpeakerTalksList({ talks }: Props) {
                 <p className="truncate text-base font-semibold text-indigo-600">{talk.title}</p>
                 {talk.archived && <Badge rounded={false}>Archived</Badge>}
               </div>
-              <div className="mt-2 flex items-center -space-x-1 overflow-hidden">
-                {talk.speakers.map((speaker) => (
-                  <img
-                    key={speaker.id}
-                    className="inline-block h-6 w-6 rounded-full ring-2 ring-white"
-                    src={speaker.photoURL || 'http://placekitten.com/100/100'}
-                    alt={speaker.name || 'Speaker'}
-                  />
-                ))}
-                <span className="truncate pl-3 text-sm text-gray-500">
-                  by {talk.speakers.map((s) => s.name).join(', ')}
-                </span>
-              </div>
+              <AvatarGroup avatars={talk.speakers} displayNames className="mt-2" />
             </div>
             <div>
               <IconLabel icon={CalendarIcon} className="text-sm text-gray-500" iconClassName="text-gray-400">

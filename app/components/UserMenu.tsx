@@ -10,6 +10,7 @@ import {
   MagnifyingGlassIcon,
 } from '@heroicons/react/20/solid';
 import { getAuth } from 'firebase/auth';
+import { Avatar } from '~/design-system/Avatar';
 
 type Props = { email: string | null; picture: string | null };
 
@@ -19,12 +20,7 @@ export function UserMenu({ email, picture }: Props) {
       <div>
         <Menu.Button className="flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
           <span className="sr-only">Open user menu</span>
-          <img
-            className="h-8 w-8 rounded-full"
-            src={picture || 'http://placekitten.com/100/100'}
-            alt=""
-            aria-hidden="true"
-          />
+          <Avatar photoURL={picture} />
         </Menu.Button>
       </div>
       <Transition

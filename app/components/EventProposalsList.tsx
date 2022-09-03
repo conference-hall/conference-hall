@@ -5,6 +5,7 @@ import { CfpLabel } from './CfpInfo';
 import { CardLink } from '~/design-system/Card';
 import { IconLabel } from '~/design-system/IconLabel';
 import { Container } from '~/design-system/Container';
+import { AvatarGroup } from '~/design-system/Avatar';
 
 type Props = {
   proposals: Array<{
@@ -34,20 +35,7 @@ export function EventProposalsList({ proposals, cfpState }: Props) {
           <div className="flex h-40 flex-col justify-between px-4 py-4 sm:px-6">
             <div>
               <p className="truncate text-base font-semibold text-indigo-600">{proposal.title}</p>
-
-              <div className="mt-2 flex items-center -space-x-1 overflow-hidden">
-                {proposal.speakers.map((speaker) => (
-                  <img
-                    key={speaker.id}
-                    className="inline-block h-6 w-6 rounded-full ring-2 ring-white"
-                    src={speaker.photoURL || 'http://placekitten.com/100/100'}
-                    alt={speaker.name || 'Speaker'}
-                  />
-                ))}
-                <span className="truncate pl-3 text-sm text-gray-500">
-                  by {proposal.speakers.map((s) => s.name).join(', ')}
-                </span>
-              </div>
+              <AvatarGroup avatars={proposal.speakers} displayNames className="mt-2" />
             </div>
 
             <div>

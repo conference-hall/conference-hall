@@ -2,6 +2,7 @@ import type { LoaderFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { GlobeAltIcon, HomeIcon, MapPinIcon } from '@heroicons/react/20/solid';
+import { Avatar } from '~/design-system/Avatar';
 import { Container } from '../../design-system/Container';
 import { H3, Text } from '../../design-system/Typography';
 import { Markdown } from '../../design-system/Markdown';
@@ -31,13 +32,7 @@ export default function ProfileRoute() {
       <Container className="pt-8 pb-4 sm:flex sm:items-center sm:justify-between">
         <div className="sm:flex sm:items-center sm:justify-between">
           <div className="sm:flex sm:space-x-5">
-            <div className="flex-shrink-0">
-              <img
-                className="mx-auto h-20 w-20 rounded-full ring-4 ring-indigo-500"
-                src={profile.photoURL || 'https://placekitten.com/100/100'}
-                alt=""
-              />
-            </div>
+            <Avatar photoURL={profile.photoURL} size="xl" ring />
             <div className="mt-4 text-center sm:mt-0 sm:pt-1 sm:text-left">
               <p className="text-sm font-medium text-gray-600">Welcome back,</p>
               <p className="text-xl font-bold text-gray-900 sm:text-2xl">{profile.name}</p>

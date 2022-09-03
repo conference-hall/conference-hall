@@ -1,7 +1,8 @@
 import { ExclamationCircleIcon } from '@heroicons/react/20/solid';
+import { AvatarGroup } from '~/design-system/Avatar';
+import { ButtonLink } from '~/design-system/Buttons';
 import { CardLink } from '~/design-system/Card';
-import { ButtonLink } from '../design-system/Buttons';
-import { IconLabel } from '../design-system/IconLabel';
+import { IconLabel } from '~/design-system/IconLabel';
 
 type Props = {
   talks: Array<{
@@ -28,20 +29,7 @@ export function SubmissionTalksList({ talks }: Props) {
           <div className="flex h-40 flex-col justify-between px-4 py-4 sm:px-6">
             <div>
               <p className="truncate text-base font-semibold text-indigo-600">{talk.title}</p>
-
-              <div className="mt-2 flex items-center -space-x-1 overflow-hidden">
-                {talk.speakers.map((speaker) => (
-                  <img
-                    key={speaker.id}
-                    className="inline-block h-6 w-6 rounded-full ring-2 ring-white"
-                    src={speaker.photoURL || 'http://placekitten.com/100/100'}
-                    alt={speaker.name || 'Speaker'}
-                  />
-                ))}
-                <span className="test-gray-500 truncate pl-3 text-sm">
-                  by {talk.speakers.map((s) => s.name).join(', ')}
-                </span>
-              </div>
+              <AvatarGroup avatars={talk.speakers} displayNames className="mt-2" />
             </div>
 
             {talk.isDraft ? (
