@@ -43,8 +43,18 @@ CREATE TABLE "users" (
     "timezone" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "organizerKey" TEXT,
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "organizer-key-access" (
+    "id" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "revokedAt" TIMESTAMP(3),
+
+    CONSTRAINT "organizer-key-access_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -300,6 +310,9 @@ CREATE UNIQUE INDEX "_speakers_proposals_AB_unique" ON "_speakers_proposals"("A"
 
 -- CreateIndex
 CREATE INDEX "_speakers_proposals_B_index" ON "_speakers_proposals"("B");
+
+-- AddForeignKey
+ALTER TABLE "users" ADD CONSTRAINT "users_organizerKey_fkey" FOREIGN KEY ("organizerKey") REFERENCES "organizer-key-access"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "talks" ADD CONSTRAINT "talks_creatorId_fkey" FOREIGN KEY ("creatorId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

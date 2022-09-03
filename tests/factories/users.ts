@@ -2,6 +2,7 @@ import * as fake from '@ngneat/falso';
 import type { Prisma } from '@prisma/client';
 import { db } from '../../app/services/db';
 import { applyTraits } from './helpers/traits';
+import { organizerKeyFactory } from './organizer-key';
 
 const TRAITS = {
   'clark-kent': {
@@ -24,12 +25,13 @@ type Trait = keyof typeof TRAITS;
 type FactoryOptions = {
   attributes?: Partial<Prisma.UserCreateInput>;
   traits?: Trait[];
+  isOrganizer?: boolean;
 };
 
-export const userFactory = (options: FactoryOptions = {}) => {
-  const { attributes = {}, traits = [] } = options;
+export const userFactory = async (options: FactoryOptions = {}) => {
+  const { attributes = {}, traits = [], isOrganizer = false } = options;
 
-  const defaultAttributes = {
+  const defaultAttributes: Prisma.UserCreateInput = {
     name: fake.randFullName(),
     email: fake.randEmail(),
     photoURL: fake.randAvatar(),
@@ -40,6 +42,11 @@ export const userFactory = (options: FactoryOptions = {}) => {
     github: fake.randUserName(),
     twitter: fake.randUserName(),
   };
+
+  if (isOrganizer) {
+    const key = await organizerKeyFactory();
+    defaultAttributes.organizerKeyAccess = { connect: { id: key.id } };
+  }
 
   const data = {
     ...defaultAttributes,

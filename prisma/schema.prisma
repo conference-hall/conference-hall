@@ -8,33 +8,44 @@ datasource db {
 }
 
 model User {
-  id            String               @id @default(uuid())
-  email         String?
-  name          String?
-  bio           String?
-  photoURL      String?
-  betaAccess    String?
-  github        String?
-  company       String?
-  references    String?
-  twitter       String?
-  address       String?
-  lat           Float?
-  lng           Float?
-  timezone      String?
-  createdAt     DateTime             @default(now())
-  updatedAt     DateTime             @updatedAt
-  talks         Talk[]               @relation("speakers_talks")
-  proposals     Proposal[]           @relation("speakers_proposals")
-  organizations OrganizationMember[]
-  ratings       Rating[]
-  surveys       Survey[]
-  createdTalks  Talk[]
-  createdEvents Event[]
-  messages      Message[]
-  invites       Invite[]
+  id                 String               @id @default(uuid())
+  email              String?
+  name               String?
+  bio                String?
+  photoURL           String?
+  betaAccess         String?
+  github             String?
+  company            String?
+  references         String?
+  twitter            String?
+  address            String?
+  lat                Float?
+  lng                Float?
+  timezone           String?
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  organizerKey       String?
+  organizerKeyAccess OrganizerKeyAccess?  @relation(fields: [organizerKey], references: [id])
+  talks              Talk[]               @relation("speakers_talks")
+  proposals          Proposal[]           @relation("speakers_proposals")
+  organizations      OrganizationMember[]
+  ratings            Rating[]
+  surveys            Survey[]
+  createdTalks       Talk[]
+  createdEvents      Event[]
+  messages           Message[]
+  invites            Invite[]
 
   @@map("users")
+}
+
+model OrganizerKeyAccess {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  revokedAt DateTime?
+  users     User[]
+
+  @@map("organizer-key-access")
 }
 
 model Talk {
