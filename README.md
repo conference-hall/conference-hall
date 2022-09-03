@@ -3,7 +3,7 @@
 ## Prerequisites
 
 - Docker
-- Node 14+
+- Node 18+
 
 ## Development
 
