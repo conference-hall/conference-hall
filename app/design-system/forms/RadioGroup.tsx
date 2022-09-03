@@ -42,16 +42,14 @@ export function Radio({ id, name, description, children, ...rest }: RadioProps) 
           {...rest}
         />
       </div>
-      <div className="text-sm">
-        <label htmlFor={id} className="ml-3 block text-sm text-gray-700">
-          {children}
-        </label>
+      <label htmlFor={id} className="block pl-3 text-sm text-gray-700">
+        {children}
         {description && (
           <p id={`${id}-description`} className="text-gray-500">
             {description}
           </p>
         )}
-      </div>
+      </label>
     </div>
   );
 }

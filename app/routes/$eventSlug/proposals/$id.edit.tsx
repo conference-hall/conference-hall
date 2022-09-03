@@ -52,21 +52,16 @@ export default function EditProposalRoute() {
   const errors = useActionData<ValidationErrors>();
 
   return (
-    <Container className="py-8">
+    <Container className="my-4 sm:my-8">
       <div className="flex flex-wrap items-center justify-between sm:flex-nowrap">
         <div>
           <H2>{proposal.title}</H2>
           <span className="test-gray-500 truncate text-sm">by {proposal.speakers.map((s) => s.name).join(', ')}</span>
         </div>
-        <div className="flex-shrink-0 space-x-4">
-          <ButtonLink to={`/${event.slug}/proposals/${proposal.id}`} variant="secondary" className="ml-4">
-            Cancel
-          </ButtonLink>
-        </div>
       </div>
 
-      <Form method="post" className="mt-4 overflow-hidden border border-gray-200 bg-white sm:rounded-lg">
-        <div className="px-4 py-8 sm:px-6">
+      <Form method="post" className="sm:mt-4 sm:rounded-lg sm:border sm:border-gray-200">
+        <div className="py-8 sm:px-6">
           <TalkAbstractForm initialValues={proposal} errors={errors?.fieldErrors} />
 
           {event.formats?.length > 0 ? (
@@ -82,13 +77,11 @@ export default function EditProposalRoute() {
           ) : null}
         </div>
 
-        <div className="space-x-4 bg-gray-50 px-4 py-3 text-right sm:px-6">
-          <ButtonLink to={`/${event.slug}/proposals/${proposal.id}`} variant="secondary" className="ml-4">
+        <div className="flex flex-col gap-4 py-3 sm:flex-row sm:justify-end sm:bg-gray-50 sm:px-6">
+          <ButtonLink to={`/${event.slug}/proposals/${proposal.id}`} variant="secondary">
             Cancel
           </ButtonLink>
-          <Button type="submit" className="ml-4">
-            Save proposal
-          </Button>
+          <Button type="submit">Save proposal</Button>
         </div>
       </Form>
     </Container>

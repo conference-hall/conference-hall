@@ -61,16 +61,14 @@ export function Checkbox({ id, name, description, className, children, ...rest }
           {...rest}
         />
       </div>
-      <div className="ml-3 text-sm">
-        <label htmlFor={id} className="text-gray-700">
-          {children}
-        </label>
+      <label htmlFor={id} className="pl-3 text-sm text-gray-700">
+        {children}
         {description && (
           <p id={`${id}-description`} className="text-gray-500">
             {description}
           </p>
         )}
-      </div>
+      </label>
     </div>
   );
 }
