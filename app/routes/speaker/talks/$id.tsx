@@ -76,7 +76,7 @@ export default function SpeakerTalkRoute() {
           {talk.archived && (
             <Form method="post">
               <input type="hidden" name="_action" value="restore-talk" />
-              <Button type="submit" variant="secondary" className="w-full sm:w-auto">
+              <Button type="submit" variant="secondary">
                 Restore
               </Button>
             </Form>

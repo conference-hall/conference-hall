@@ -48,19 +48,19 @@ export default function InvitationRoute() {
   const invitation = useLoaderData<Invitation>();
   return (
     <Container className="m-24">
-      <div className="flex flex-col items-center bg-white px-4 py-5 shadow sm:rounded-lg sm:p-6">
+      <div className="flex flex-col items-center bg-white px-4 py-5 sm:rounded-lg sm:p-6">
         <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-indigo-100">
           <StarIcon className="h-6 w-6 text-indigo-600" aria-hidden="true" />
         </div>
-        <Text className="mt-4">Invitation sent by {invitation.invitedBy}</Text>
-        <H2 as="h1" className="mt-2">
+        <H2 as="h1" className="mt-8 text-center">
           You have been invited as co-speaker for
         </H2>
         <H1 as="p" className="mt-6">
           "{invitation.title}"
         </H1>
+        <Text className="mt-2">Invitation sent by {invitation.invitedBy}</Text>
 
-        <Form method="post" className="mt-8">
+        <Form method="post" className="mt-8 flex w-full flex-col justify-center sm:w-auto">
           <input type="hidden" name="_type" value={invitation.type} />
           <Button type="submit">Accept invitation</Button>
         </Form>

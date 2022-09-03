@@ -66,12 +66,10 @@ export default function SubmissionSurveyRoute() {
         <EventSurveyForm questions={questions} initialValues={answers} />
       </div>
       <div className="my-4 flex justify-between gap-4 sm:flex-row sm:justify-end sm:px-8 sm:pb-4">
-        <ButtonLink to={previousPath} variant="secondary" className="w-full sm:w-auto">
+        <ButtonLink to={previousPath} variant="secondary">
           Back
         </ButtonLink>
-        <Button type="submit" className="w-full sm:w-auto">
-          Next
-        </Button>
+        <Button type="submit">Next</Button>
       </div>
     </Form>
   );
