@@ -62,10 +62,10 @@ export default function SettingsRoute() {
   }, [submit]);
 
   return (
-    <Container className="my-8">
+    <Container className="my-4 sm:my-8">
       <h1 className="sr-only">Settings</h1>
       <div className="lg:grid lg:grid-cols-12 lg:gap-x-5">
-        <aside className="py-6 px-2 sm:px-6 lg:col-span-3 lg:py-0 lg:px-0">
+        <aside className="hidden py-6 px-2 sm:block sm:px-6 lg:col-span-3 lg:py-0 lg:px-0">
           <nav className="space-y-1">
             <NavLink
               to="#personal-info"
