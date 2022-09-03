@@ -54,7 +54,6 @@ describe('Speaker talk page', () => {
     talk.deleteTalk().click();
     talk.deleteConfirmDialog().should('exist');
     talk.cancelDelete().click();
-    talk.deleteConfirmDialog().should('not.exist');
     cy.assertText('Awesome talk');
   });
 

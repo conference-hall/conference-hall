@@ -49,7 +49,6 @@ describe('Event proposal page details', () => {
     proposal.deleteProposal().click();
     proposal.deleteConfirmDialog().should('exist');
     proposal.cancelDelete().click();
-    proposal.deleteConfirmDialog().should('not.exist');
     cy.assertText('Awesome talk');
   });
 
