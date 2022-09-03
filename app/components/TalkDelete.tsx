@@ -47,7 +47,7 @@ function TalkDeleteModal({ isOpen, onClose }: TalkDeleteModalProps) {
 
       <Form method="post" onSubmit={onClose} className="mt-4 flex flex-col gap-4 sm:flex-row sm:justify-end">
         <input type="hidden" name="_action" value="delete-talk" />
-        <Button onClick={onClose} type="button" block variant="secondary" className="sm:w-auto ">
+        <Button onClick={onClose} type="button" block variant="secondary" className="sm:w-auto">
           Cancel
         </Button>
         <Button type="submit" block className="sm:w-auto">

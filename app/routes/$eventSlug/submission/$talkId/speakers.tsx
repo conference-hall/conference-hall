@@ -118,15 +118,17 @@ export default function SubmissionSpeakerRoute() {
           <Text variant="secondary" className="mt-1">
             This information will be displayed publicly so be careful what you share.
           </Text>
-          <CoSpeakersList speakers={data.speakers} showRemoveAction className="max-w-md py-4" />
+          {data.speakers.length > 1 && (
+            <CoSpeakersList speakers={data.speakers} showRemoveAction className="max-w-md py-4" />
+          )}
           <InviteCoSpeakerButton to="PROPOSAL" id={data.proposalId} invitationLink={data.invitationLink} />
         </div>
       </div>
-      <div className="py-5 text-right sm:px-8">
-        <ButtonLink to={previousPath} variant="secondary">
+      <div className="my-4 flex justify-between gap-4 sm:flex-row sm:justify-end sm:px-8 sm:pb-4">
+        <ButtonLink to={previousPath} variant="secondary" className="w-full sm:w-auto">
           Back
         </ButtonLink>
-        <Button form="speaker-form" className="ml-4">
+        <Button form="speaker-form" className="w-full sm:w-auto">
           Next
         </Button>
       </div>

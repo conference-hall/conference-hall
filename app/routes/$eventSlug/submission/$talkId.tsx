@@ -1,13 +1,12 @@
 import { Outlet, useCatch, useLoaderData, useMatches } from '@remix-run/react';
-import { Container } from '../../../design-system/Container';
-import { SectionPanel } from '../../../design-system/Panels';
 import type { LoaderFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { sessionRequired } from '../../../services/auth/auth.server';
-import { getEvent } from '../../../services/events/event.server';
-import { mapErrorToResponse } from '../../../services/errors';
-import { SubmissionSteps } from '../../../components/SubmissionSteps';
-import { isTalkAlreadySubmitted } from '../../../services/events/proposals.server';
+import { sessionRequired } from '~/services/auth/auth.server';
+import { getEvent } from '~/services/events/event.server';
+import { isTalkAlreadySubmitted } from '~/services/events/proposals.server';
+import { mapErrorToResponse } from '~/services/errors';
+import { Container } from '~/design-system/Container';
+import { SubmissionSteps } from '~/components/SubmissionSteps';
 
 export type SubmitSteps = Array<{
   key: string;

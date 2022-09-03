@@ -60,8 +60,10 @@ export default function SubmissionProposalRoute() {
         <TalkAbstractForm initialValues={talk} errors={errors?.fieldErrors} />
       </div>
 
-      <div className="px-4 py-5 text-right sm:px-6">
-        <Button type="submit">Save as draft and continue</Button>
+      <div className="py-5 text-right sm:px-6">
+        <Button type="submit" className="w-full sm:w-auto">
+          Save as draft and continue
+        </Button>
       </div>
     </Form>
   );

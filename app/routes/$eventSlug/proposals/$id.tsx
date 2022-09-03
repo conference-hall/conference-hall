@@ -50,7 +50,7 @@ export default function EventSpeakerProposalRoute() {
         <div>
           <H2>{proposal.title}</H2>
           <div className="mt-2 flex gap-2">
-            <Badge color="indigo">{getLevel(proposal.level)}</Badge>
+            {proposal.level && <Badge color="indigo">{getLevel(proposal.level)}</Badge>}
             {proposal.languages.map((language) => (
               <Badge key={language} color="indigo">
                 {getLanguage(language)}

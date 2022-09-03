@@ -55,7 +55,7 @@ export default function SubmissionSurveyRoute() {
   const { previousPath } = useSubmissionStep();
 
   return (
-    <Form method="post" className="py-6 sm:px-8 sm:py-10">
+    <Form method="post" className="pt-6 sm:px-8 sm:py-10">
       <div>
         <H2>We have some questions for you.</H2>
         <Text variant="secondary" className="mt-1">
@@ -65,11 +65,11 @@ export default function SubmissionSurveyRoute() {
       <div className="mt-6">
         <EventSurveyForm questions={questions} initialValues={answers} />
       </div>
-      <div className="py-5 text-right">
-        <ButtonLink to={previousPath} variant="secondary">
+      <div className="my-4 flex justify-between gap-4 sm:flex-row sm:justify-end sm:px-8 sm:pb-4">
+        <ButtonLink to={previousPath} variant="secondary" className="w-full sm:w-auto">
           Back
         </ButtonLink>
-        <Button type="submit" className="ml-4">
+        <Button type="submit" className="w-full sm:w-auto">
           Next
         </Button>
       </div>

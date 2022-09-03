@@ -98,7 +98,7 @@ export default function SubmissionSubmitRoute() {
         </Checkbox>
       )}
       <div className="mt-6">
-        <Button type="submit" disabled={!acceptedCod}>
+        <Button type="submit" disabled={!acceptedCod} className="w-full sm:w-auto">
           Submit proposal
         </Button>
       </div>

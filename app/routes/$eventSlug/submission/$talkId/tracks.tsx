@@ -62,7 +62,7 @@ export default function SubmissionTracksRoute() {
 
   return (
     <Form method="post">
-      <div className="space-y-12 py-6 px-4 sm:px-8 sm:py-10">
+      <div className="space-y-12 py-6 sm:px-8 sm:py-10">
         {event.formats?.length > 0 ? <FormatsForm formats={event.formats} initialValues={proposal.formats} /> : null}
 
         {event.categories?.length > 0 ? (
@@ -70,11 +70,11 @@ export default function SubmissionTracksRoute() {
         ) : null}
       </div>
 
-      <div className="px-4 py-5 text-right sm:px-6">
-        <ButtonLink to={previousPath} variant="secondary">
+      <div className="my-4 flex justify-between gap-4 sm:flex-row sm:justify-end sm:px-8 sm:pb-4">
+        <ButtonLink to={previousPath} variant="secondary" className="w-full sm:w-auto">
           Back
         </ButtonLink>
-        <Button type="submit" className="ml-4">
+        <Button type="submit" className="w-full sm:w-auto">
           Next
         </Button>
       </div>
