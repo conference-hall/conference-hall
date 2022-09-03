@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { NavTabs } from '~/design-system/NavTabs';
 
 export function SpeakerTabs() {
-  const eventTabs = useMemo(
+  const speakerTabs = useMemo(
     () => [
       { to: '/speaker', label: 'Activity', enabled: true, end: true },
       { to: '/speaker/talks', label: 'Your talks', enabled: true },
@@ -11,5 +11,5 @@ export function SpeakerTabs() {
     []
   );
 
-  return <NavTabs tabs={eventTabs} />;
+  return <NavTabs tabs={speakerTabs} />;
 }
