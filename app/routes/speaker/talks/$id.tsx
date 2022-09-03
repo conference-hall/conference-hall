@@ -85,19 +85,19 @@ export default function SpeakerTalkRoute() {
       </div>
 
       <div className="mt-8 flex flex-row gap-4">
-        <div className="w-2/3 overflow-hidden border border-gray-200 bg-white p-4 sm:rounded-lg">
+        <div className="w-2/3 border border-gray-200 bg-white p-4 sm:rounded-lg">
           <H2>Abstract</H2>
           <Markdown source={talk.abstract} className="mt-2" />
           <H2 className="mt-8">References</H2>
           <Markdown source={talk.references} className="mt-2" />
         </div>
         <div className="w-1/3">
-          <div className="overflow-hidden border border-gray-200 bg-white p-4 sm:rounded-lg">
+          <div className="border border-gray-200 bg-white p-4 sm:rounded-lg">
             <H2>Speakers</H2>
             <CoSpeakersList speakers={talk.speakers} showRemoveAction={!talk.archived} />
             {!talk.archived && <InviteCoSpeakerButton to="TALK" id={talk.id} invitationLink={talk.invitationLink} />}
           </div>
-          <div className="mt-4 overflow-hidden border border-gray-200 bg-white p-4 sm:rounded-lg">
+          <div className="mt-4 border border-gray-200 bg-white p-4 sm:rounded-lg">
             <H2>Submissions</H2>
             <div className="mt-4">
               {talk.proposals.map((proposal) => (

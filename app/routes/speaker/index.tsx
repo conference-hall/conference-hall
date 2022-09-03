@@ -52,7 +52,7 @@ export default function ProfileRoute() {
       <Container className="mt-8">
         <h1 className="sr-only">Your activity</h1>
         <div className="mt-8 grid grid-cols-1 items-start gap-4 lg:grid-cols-3 lg:gap-8">
-          <div className="overflow-hidden rounded-lg border border-gray-200 bg-white p-6">
+          <div className="rounded-lg border border-gray-200 bg-white p-6">
             <div className="flex flex-wrap items-center justify-between sm:flex-nowrap">
               <H3>{profile.name}'s profile</H3>
               <div className="flex-shrink-0 space-x-4">

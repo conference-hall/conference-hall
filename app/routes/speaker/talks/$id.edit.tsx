@@ -58,7 +58,7 @@ export default function SpeakerTalkRoute() {
         </div>
       </div>
 
-      <Form method="post" className="mt-4 overflow-hidden border border-gray-200 bg-white sm:rounded-lg">
+      <Form method="post" className="mt-4 border border-gray-200 bg-white sm:rounded-lg">
         <div className="px-4 py-8 sm:px-6">
           <TalkAbstractForm initialValues={talk} errors={errors?.fieldErrors} />
         </div>

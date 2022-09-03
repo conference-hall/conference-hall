@@ -75,10 +75,7 @@ export default function EventSubmitRoute() {
 
   return (
     <Container className="md:my-8">
-      <section
-        aria-labelledby="talk-submission"
-        className="overflow-hidden bg-white sm:rounded-lg md:border md:border-gray-200"
-      >
+      <section aria-labelledby="talk-submission" className="bg-white sm:rounded-lg md:border md:border-gray-200">
         <h2 className="sr-only" id="talk-submission">
           Talk submission
         </h2>
