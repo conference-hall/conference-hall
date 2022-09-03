@@ -18,12 +18,9 @@ export function CardLink({ as, className, children, ...rest }: CardLinkProps) {
   return (
     <Card
       as={as}
-      className={c(
-        'focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400',
-        className
-      )}
+      className="focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
     >
-      <Link {...rest} className="focus:outline-none">
+      <Link {...rest} className={c('focus:outline-none', className)}>
         {children}
       </Link>
     </Card>
