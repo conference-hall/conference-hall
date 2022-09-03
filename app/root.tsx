@@ -10,6 +10,8 @@ import { getUser } from './services/auth/user.server';
 import tailwind from './tailwind.css';
 import { Footer } from './components/Footer';
 import { Navbar } from './components/Navbar';
+import { H1, Text } from './design-system/Typography';
+import { Container } from './design-system/Container';
 
 export const links: LinksFunction = () => {
   return [
@@ -48,7 +50,7 @@ export default function App() {
 type DocumentProps = {
   children: ReactNode;
   title?: string;
-  user?: { email: string | null; picture: string | null } | null;
+  user?: { email?: string | null; picture?: string | null } | null;
 };
 
 function Document({ children, title, user }: DocumentProps) {
@@ -78,12 +80,12 @@ export function CatchBoundary() {
 
   return (
     <Document title={`${caught.status} ${caught.statusText}`}>
-      <div>
-        <h1>
+      <Container className="my-4 sm:my-8">
+        <H1>
           {caught.status} {caught.statusText}
-        </h1>
-        <p>{caught.data}</p>
-      </div>
+        </H1>
+        <Text>{caught.data}</Text>
+      </Container>
     </Document>
   );
 }
@@ -94,11 +96,11 @@ export function ErrorBoundary({ error }: { error: Error }) {
   }
 
   return (
-    <Document title="Uh-oh!">
-      <div>
-        <h1>App Error</h1>
-        <pre>{error.message}</pre>
-      </div>
+    <Document title="Oops!">
+      <Container className="my-4 sm:my-8">
+        <H1>App Error</H1>
+        <Text>{error.message}</Text>
+      </Container>
     </Document>
   );
 }

@@ -2,7 +2,7 @@ import { Link as RemixLink } from '@remix-run/react';
 import { Link } from '../design-system/Links';
 import { UserMenu } from './UserMenu';
 
-type Props = { user?: { email: string | null; picture: string | null } | null };
+type Props = { user?: { email?: string | null; picture?: string | null } | null };
 
 export function Navbar({ user }: Props) {
   return (

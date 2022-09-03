@@ -8,11 +8,32 @@ import {
   ArrowRightOnRectangleIcon,
   MicrophoneIcon,
   MagnifyingGlassIcon,
+  BuildingOfficeIcon,
 } from '@heroicons/react/20/solid';
 import { getAuth } from 'firebase/auth';
 import { Avatar } from '~/design-system/Avatar';
 
-type Props = { email: string | null; picture: string | null };
+type Props = { email?: string | null; picture?: string | null };
+
+type MenuItemProps = { to: string; label: string; icon: React.ComponentType<{ className?: string }> };
+
+function MenuItem({ to, icon: Icon, label }: MenuItemProps) {
+  return (
+    <Menu.Item>
+      {({ active }) => (
+        <Link
+          to={to}
+          className={cn('group flex items-center px-4 py-2 text-sm text-gray-700', {
+            'bg-gray-100 text-gray-900': active,
+          })}
+        >
+          <Icon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
+          {label}
+        </Link>
+      )}
+    </Menu.Item>
+  );
+}
 
 export function UserMenu({ email, picture }: Props) {
   return (
@@ -38,63 +59,15 @@ export function UserMenu({ email, picture }: Props) {
             <p className="truncate text-sm font-medium text-gray-900">{email}</p>
           </div>
           <div className="py-1">
-            <Menu.Item>
-              {({ active }) => (
-                <Link
-                  to="/speaker"
-                  className={cn('group flex items-center px-4 py-2 text-sm text-gray-700', {
-                    'bg-gray-100 text-gray-900': active,
-                  })}
-                >
-                  <FireIcon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
-                  Activity
-                </Link>
-              )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <Link
-                  to="/speaker/talks"
-                  className={cn('group flex items-center px-4 py-2 text-sm text-gray-700', {
-                    'bg-gray-100 text-gray-900': active,
-                  })}
-                >
-                  <MicrophoneIcon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
-                  Talks
-                </Link>
-              )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <Link
-                  to="/speaker/settings"
-                  className={cn('group flex items-center px-4 py-2 text-sm text-gray-700', {
-                    'bg-gray-100 text-gray-900': active,
-                  })}
-                >
-                  <Cog6ToothIcon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
-                  Settings
-                </Link>
-              )}
-            </Menu.Item>
+            <MenuItem to="/" label="Search events" icon={MagnifyingGlassIcon} />
           </div>
           <div className="py-1">
-            <Menu.Item>
-              {({ active }) => (
-                <Link
-                  to="/"
-                  className={cn('group flex items-center px-4 py-2 text-sm text-gray-700', {
-                    'bg-gray-100 text-gray-900': active,
-                  })}
-                >
-                  <MagnifyingGlassIcon
-                    className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
-                    aria-hidden="true"
-                  />
-                  Search events
-                </Link>
-              )}
-            </Menu.Item>
+            <MenuItem to="/speaker" label="Activity" icon={FireIcon} />
+            <MenuItem to="/speaker/talks" label="Your talks" icon={MicrophoneIcon} />
+            <MenuItem to="/speaker/settings" label="Settings" icon={Cog6ToothIcon} />
+          </div>
+          <div className="py-1">
+            <MenuItem to="/organizer" label="Your organizations" icon={BuildingOfficeIcon} />
           </div>
           <div className="py-1">
             <Menu.Item>
