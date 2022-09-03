@@ -1,20 +1,15 @@
 import type { ActionFunction, LoaderFunction } from '@remix-run/node';
-import { json } from '@remix-run/node';
+import type { SurveyAnswers, SurveyQuestions } from '~/services/events/survey.server';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
+import { json } from '@remix-run/node';
+import { EventSurveyForm } from '~/components/EventSurveyForm';
+import { AlertSuccess } from '~/design-system/Alerts';
 import { Button } from '~/design-system/Buttons';
 import { Container } from '~/design-system/Container';
-import { EventSurveyForm } from '../../../components/EventSurveyForm';
-import { AlertSuccess } from '../../../design-system/Alerts';
-import { H2, Text } from '../../../design-system/Typography';
-import { sessionRequired } from '../../../services/auth/auth.server';
-import { mapErrorToResponse } from '../../../services/errors';
-import type { SurveyAnswers, SurveyQuestions } from '../../../services/events/survey.server';
-import {
-  getSurveyAnswers,
-  getSurveyQuestions,
-  saveSurvey,
-  validateSurveyForm,
-} from '../../../services/events/survey.server';
+import { H2, Text } from '~/design-system/Typography';
+import { sessionRequired } from '~/services/auth/auth.server';
+import { mapErrorToResponse } from '~/services/errors';
+import { getSurveyAnswers, getSurveyQuestions, saveSurvey, validateSurveyForm } from '~/services/events/survey.server';
 
 type SurveyQuestionsForm = {
   questions: SurveyQuestions;
@@ -52,7 +47,7 @@ export default function EventSurveyRoute() {
   const result = useActionData();
 
   return (
-    <Container className="my-8">
+    <Container className="mt-4 sm:my-8">
       <div>
         <H2 id="survey-form-label">We have some questions for you.</H2>
         <Text variant="secondary" className="mt-1">
@@ -62,14 +57,16 @@ export default function EventSurveyRoute() {
       {result?.message && <AlertSuccess className="mt-8">{result?.message}</AlertSuccess>}
       <Form
         aria-labelledby="survey-form-label"
+        className="mt-8 sm:overflow-hidden sm:rounded-md sm:border sm:border-gray-200"
         method="post"
-        className="mt-8 border border-gray-200 sm:overflow-hidden sm:rounded-md"
       >
-        <div className="bg-white py-6 px-4 sm:p-6">
+        <div className="bg-white sm:p-6">
           <EventSurveyForm questions={questions} initialValues={answers} />
         </div>
-        <div className="space-x-4 bg-gray-50 px-4 py-3 text-right sm:px-6">
-          <Button type="submit">Save survey</Button>
+        <div className="space-x-4 py-8 sm:bg-gray-50 sm:py-3 sm:px-6 sm:text-right">
+          <Button type="submit" className="w-full sm:w-fit">
+            Save survey
+          </Button>
         </div>
       </Form>
     </Container>
