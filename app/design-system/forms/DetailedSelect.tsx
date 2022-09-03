@@ -9,9 +9,10 @@ type Props = {
   options: { id: string; label: string; description?: string }[];
   value?: string;
   onChange?: (name: string, value: string) => void;
+  className?: string;
 };
 
-export default function DetailedSelect({ name, label, options, value, onChange }: Props) {
+export default function DetailedSelect({ name, label, options, value, onChange, className }: Props) {
   const handleChange = useCallback(
     (id: string) => {
       if (onChange) onChange(name, id);
@@ -25,7 +26,12 @@ export default function DetailedSelect({ name, label, options, value, onChange }
         <>
           <Listbox.Label className="sr-only">{label}</Listbox.Label>
           <div className="relative">
-            <Listbox.Button className="relative inline-flex items-center rounded-md p-2 text-sm text-gray-900 focus:z-10 focus:outline-none focus:ring-2 focus:ring-gray-500">
+            <Listbox.Button
+              className={c(
+                className,
+                'relative inline-flex items-center rounded-md p-2 text-sm text-gray-900 focus:z-10 focus:outline-none focus:ring-2 focus:ring-gray-500'
+              )}
+            >
               <p className="mx-2.5 text-sm">{options.find((o) => o.id === value)?.label}</p>
               <span className="sr-only">{label}</span>
               <ChevronDownIcon className="h-5 w-5 text-gray-900" aria-hidden="true" />

@@ -35,29 +35,31 @@ export default function SpeakerTalksRoute() {
   };
 
   return (
-    <Container className="mt-8">
-      <div className="flex flex-wrap items-center justify-between sm:flex-nowrap">
-        <div>
+    <Container className="my-4 sm:my-8">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+        <div className="hidden sm:block">
           <H2>Your talks</H2>
           <Text variant="secondary" className="mt-1">
             All your talk abstracts.
           </Text>
         </div>
-        <div className="flex flex-shrink-0 gap-4">
-          <DetailedSelect
-            name="status"
-            label="Talk status"
-            value={archived ? 'archived' : 'active'}
-            onChange={handleStatus}
-            options={[
-              { id: 'active', label: 'Active talks' },
-              { id: 'archived', label: 'Archived talks' },
-            ]}
-          />
+        <div className="flex flex-col gap-4 sm:mt-0 sm:flex-row">
+          <div className="hidden sm:block">
+            <DetailedSelect
+              name="status"
+              label="Talk status"
+              value={archived ? 'archived' : 'active'}
+              onChange={handleStatus}
+              options={[
+                { id: 'active', label: 'Active talks' },
+                { id: 'archived', label: 'Archived talks' },
+              ]}
+            />
+          </div>
           <ButtonLink to="new">Create a talk abstract</ButtonLink>
         </div>
       </div>
-      <div className="mt-8">
+      <div className="my-8">
         <SpeakerTalksList talks={talks} />
       </div>
     </Container>

@@ -56,7 +56,7 @@ export default function SpeakerTalkRoute() {
   const talk = useLoaderData<SpeakerTalk>();
 
   return (
-    <Container className="mt-8">
+    <Container className="my-4 sm:my-8">
       <div className="flex flex-wrap items-center justify-between sm:flex-nowrap">
         <div>
           <H1>{talk.title}</H1>

@@ -30,7 +30,7 @@ export default function NewSpeakerTalkRoute() {
   const errors = useActionData<ValidationErrors>();
 
   return (
-    <Container className="py-8">
+    <Container className="my-4 sm:my-8">
       <H1>New talk abstract</H1>
 
       <Form method="post" className="mt-4 border border-gray-200 bg-white sm:rounded-lg">
