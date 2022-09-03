@@ -6,6 +6,7 @@ type FirebaseConfig = {
   FIREBASE_AUTH_DOMAIN: string;
   FIREBASE_PROJECT_ID: string;
   FIREBASE_AUTH_EMULATOR_HOST: string;
+  isProduction: boolean;
 };
 
 export const initializeFirebase = (config?: FirebaseConfig) => {
@@ -17,8 +18,10 @@ export const initializeFirebase = (config?: FirebaseConfig) => {
     projectId: config.FIREBASE_PROJECT_ID,
   });
 
-  const auth = getAuth(app);
-  connectAuthEmulator(auth, `http://${config.FIREBASE_AUTH_EMULATOR_HOST}`);
+  if (!config.isProduction) {
+    const auth = getAuth(app);
+    connectAuthEmulator(auth, `http://${config.FIREBASE_AUTH_EMULATOR_HOST}`, { disableWarnings: true });
+  }
 
   return app;
 };
