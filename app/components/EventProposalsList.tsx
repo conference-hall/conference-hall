@@ -24,7 +24,7 @@ type Props = {
 };
 
 export function EventProposalsList({ proposals, cfpState }: Props) {
-  if (cfpState !== 'OPENED') {
+  if (cfpState !== 'OPENED' && proposals.length === 0) {
     return (
       <EmptyState icon={ExclamationCircleIcon}>
         <CfpLabel cfpState={cfpState} />

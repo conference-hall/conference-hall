@@ -43,6 +43,6 @@ describe('Search conferences and meetups.', () => {
   it('displays no result page if no events found', () => {
     search.visit();
     search.search('nothing');
-    cy.assertText('No events found.');
+    cy.assertText('No results found!');
   });
 });
