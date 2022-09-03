@@ -96,7 +96,7 @@ export default function SettingsRoute() {
 
         <div className="space-y-6 sm:px-6 lg:col-span-9 lg:px-0">
           <Form method="post" aria-labelledby="personal-info-label">
-            <div className="border border-gray-200 sm:rounded-md">
+            <div className="overflow-hidden border border-gray-200 sm:rounded-md">
               <a id="personal-info" href="#personal-info" className="scroll-mt-16" aria-hidden={true} />
               <div className="space-y-6 bg-white py-6 px-4 sm:p-6">
                 <div>
@@ -144,7 +144,7 @@ export default function SettingsRoute() {
           </Form>
 
           <Form method="post" aria-labelledby="speaker-details-label">
-            <div className="border border-gray-200 sm:rounded-md">
+            <div className="overflow-hidden border border-gray-200 sm:rounded-md">
               <a id="speaker-details" href="#speaker-details" className="scroll-mt-16" />
               <div className="space-y-6 bg-white py-6 px-4 sm:p-6">
                 <div>
@@ -184,7 +184,7 @@ export default function SettingsRoute() {
           </Form>
 
           <Form method="post" aria-labelledby="additional-info-label">
-            <div className="border border-gray-200 sm:rounded-md">
+            <div className="overflow-hidden border border-gray-200 sm:rounded-md">
               <a id="additional-info" href="#additional-info" className="scroll-mt-16" />
               <div className="space-y-6 bg-white py-6 px-4 sm:p-6">
                 <div>

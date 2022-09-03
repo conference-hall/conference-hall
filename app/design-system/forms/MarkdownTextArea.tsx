@@ -56,7 +56,7 @@ export function MarkdownTextArea({
           <div aria-hidden="true">
             <div className="py-2">
               <div className="py-px">
-                <div className="h-7" />
+                <div className="h-8" />
               </div>
             </div>
           </div>

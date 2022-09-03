@@ -4,7 +4,7 @@ import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import { Container } from '~/design-system/Container';
 import { TalkAbstractForm } from '../../../components/TalkAbstractForm';
 import { Button, ButtonLink } from '../../../design-system/Buttons';
-import { H1 } from '../../../design-system/Typography';
+import { H2 } from '../../../design-system/Typography';
 import { sessionRequired } from '../../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../../services/errors';
 import type { SpeakerTalk } from '../../../services/speakers/talks.server';
@@ -48,28 +48,21 @@ export default function SpeakerTalkRoute() {
     <Container className="my-4 sm:my-8">
       <div className="flex flex-wrap items-center justify-between sm:flex-nowrap">
         <div>
-          <H1>{talk.title}</H1>
+          <H2>{talk.title}</H2>
           <span className="test-gray-500 truncate text-sm">by {talk.speakers.map((s) => s.name).join(', ')}</span>
-        </div>
-        <div className="flex-shrink-0 space-x-4">
-          <ButtonLink to={`/speaker/talks/${talk.id}`} variant="secondary" className="ml-4">
-            Cancel
-          </ButtonLink>
         </div>
       </div>
 
-      <Form method="post" className="mt-4 border border-gray-200 bg-white sm:rounded-lg">
-        <div className="px-4 py-8 sm:px-6">
+      <Form method="post" className="sm:mt-4 sm:rounded-lg sm:border sm:border-gray-200">
+        <div className="py-8 sm:px-6">
           <TalkAbstractForm initialValues={talk} errors={errors?.fieldErrors} />
         </div>
 
-        <div className="space-x-4 bg-gray-50 px-4 py-3 text-right sm:px-6">
-          <ButtonLink to={`/speaker/talks/${talk.id}`} variant="secondary" className="ml-4">
+        <div className="flex flex-col gap-4 py-3 sm:flex-row sm:justify-end sm:bg-gray-50 sm:px-6">
+          <ButtonLink to={`/speaker/talks/${talk.id}`} variant="secondary">
             Cancel
           </ButtonLink>
-          <Button type="submit" className="ml-4">
-            Save abstract
-          </Button>
+          <Button type="submit">Save abstract</Button>
         </div>
       </Form>
     </Container>

@@ -34,9 +34,9 @@ function SubmissionStepsMobile({ steps, currentStep }: Props) {
                 <span className="sr-only">{step.name}</span>
               </Link>
             ) : (
-              <Link to={step.path} className="block h-2.5 w-2.5 rounded-full bg-gray-200 hover:bg-gray-400">
+              <div className="block h-2.5 w-2.5 rounded-full bg-gray-200">
                 <span className="sr-only">{step.name}</span>
-              </Link>
+              </div>
             )}
           </li>
         ))}
@@ -74,7 +74,7 @@ function SubmissionStepsDesktop({ steps, currentStep }: Props) {
                 <span className="ml-4 text-sm font-medium text-indigo-600">{step.name}</span>
               </span>
             ) : (
-              <span className="lex items-center">
+              <span className="flex items-center">
                 <span className="flex items-center px-6 py-4 text-sm font-medium">
                   <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border-2 border-gray-200">
                     <span className="text-gray-500">{stepIdx + 1}</span>
