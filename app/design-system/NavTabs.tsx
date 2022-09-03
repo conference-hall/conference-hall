@@ -30,9 +30,11 @@ function MobileNavTabs({ tabs, currentTab, className }: NavTabsProps) {
           <Menu.Items className="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
             {tabs.map((tab) => (
               <Menu.Item key={tab.to}>
-                <NavLink to={tab.to} end={tab.end} className={tabMobileStyle}>
-                  {tab.label}
-                </NavLink>
+                {({ active }) => (
+                  <NavLink to={tab.to} end={tab.end} className={tabMobileStyle(active)}>
+                    {tab.label}
+                  </NavLink>
+                )}
               </Menu.Item>
             ))}
           </Menu.Items>
@@ -42,7 +44,7 @@ function MobileNavTabs({ tabs, currentTab, className }: NavTabsProps) {
   );
 }
 
-const tabMobileStyle = ({ isActive }: { isActive: boolean }) => {
+const tabMobileStyle = (isActive: boolean) => {
   return cn('group flex w-full items-center rounded-md p-2 text-sm', {
     'bg-indigo-500 text-white': isActive,
     'text-gray-900': !isActive,
