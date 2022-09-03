@@ -2,13 +2,15 @@ import type { LoaderFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData, useSearchParams } from '@remix-run/react';
 import { Container } from '../design-system/Container';
-import { H1, Text } from '../design-system/Typography';
+import { H1 } from '../design-system/Typography';
 import { SearchEventsList } from '../components/SearchEventsList';
 import type { SearchEvents } from '../services/events/search.server';
 import { searchEvents, validateFilters, validatePage } from '../services/events/search.server';
 import { mapErrorToResponse } from '../services/errors';
 import { SearchEventsForm } from '../components/SearchEventsForm';
 import { SearchPagination } from '../design-system/Pagination';
+import { EmptyState } from '~/design-system/EmptyState';
+import { FaceFrownIcon } from '@heroicons/react/24/outline';
 
 export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
@@ -36,7 +38,11 @@ export default function IndexRoute() {
       </Container>
       <Container className="pb-8">
         {results?.length === 0 ? (
-          <Text>No events found.</Text>
+          <EmptyState
+            icon={FaceFrownIcon}
+            label="No results found!"
+            description="Adjust the filters to find your results."
+          />
         ) : (
           <SearchEventsList events={results} forTalkId={talkId} />
         )}

@@ -46,12 +46,10 @@ function EventProposalDeleteModal({ isOpen, onClose }: DeleteProposalModalProps)
         className="mt-4 flex flex-col gap-4 sm:flex-row sm:justify-end"
       >
         <input type="hidden" name="_method" value="DELETE" />
-        <Button onClick={onClose} type="button" block variant="secondary" className="sm:w-auto ">
+        <Button onClick={onClose} type="button" variant="secondary">
           Cancel
         </Button>
-        <Button type="submit" block className="sm:w-auto">
-          Delete proposal
-        </Button>
+        <Button type="submit">Delete proposal</Button>
       </Form>
     </Modal>
   );

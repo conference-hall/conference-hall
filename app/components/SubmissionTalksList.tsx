@@ -1,7 +1,8 @@
-import { ExclamationCircleIcon } from '@heroicons/react/20/solid';
+import { ExclamationCircleIcon, InboxIcon } from '@heroicons/react/24/outline';
 import { AvatarGroup } from '~/design-system/Avatar';
 import { ButtonLink } from '~/design-system/Buttons';
 import { CardLink } from '~/design-system/Card';
+import { EmptyState } from '~/design-system/EmptyState';
 import { IconLabel } from '~/design-system/IconLabel';
 
 type Props = {
@@ -19,7 +20,11 @@ type Props = {
 
 export function SubmissionTalksList({ talks }: Props) {
   if (talks.length === 0) {
-    return <EmptyState />;
+    return (
+      <EmptyState icon={InboxIcon} label="Nothing to submit!" description="Get started by creating a new proposal.">
+        <ButtonLink to="new">Create a new proposal</ButtonLink>
+      </EmptyState>
+    );
   }
 
   return (
@@ -41,32 +46,5 @@ export function SubmissionTalksList({ talks }: Props) {
         </CardLink>
       ))}
     </ul>
-  );
-}
-
-function EmptyState() {
-  return (
-    <div className="py-8 text-center">
-      <svg
-        className="mx-auto h-12 w-12 text-gray-400"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        aria-hidden="true"
-      >
-        <path
-          vectorEffect="non-scaling-stroke"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={2}
-          d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"
-        />
-      </svg>
-      <h3 className="mt-2 text-sm font-medium text-gray-900">Nothing to submit!</h3>
-      <p className="mt-1 text-sm text-gray-600">Get started by creating a new proposal.</p>
-      <div className="mt-12">
-        <ButtonLink to="new">Create a new proposal</ButtonLink>
-      </div>
-    </div>
   );
 }

@@ -1,5 +1,4 @@
 import cn from 'classnames';
-import React from 'react';
 
 type Icon = React.ComponentType<{ className?: string }>;
 type Props = {
