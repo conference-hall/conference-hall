@@ -69,7 +69,7 @@ declare global {
 }
 
 Cypress.Commands.add('clickOn', (name) => {
-  return cy.findByRole(/button|link|checkbox|radio/, { name }).click();
+  return cy.findByRole(/button|link|checkbox|radio/, { name: RegExp(`.*${name}.*`) }).click();
 });
 
 Cypress.Commands.add('selectOn', (label, value) => {
