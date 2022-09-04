@@ -90,3 +90,9 @@ export class SpeakerNotFoundError extends NotFoundError {
     super('Speaker not found');
   }
 }
+
+export class OrganizationNotFoundError extends NotFoundError {
+  constructor() {
+    super('Organization not found');
+  }
+}

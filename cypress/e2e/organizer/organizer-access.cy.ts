@@ -1,9 +1,13 @@
+import OrganizationPage from 'page-objects/organizer-organization.page';
+
 describe('Organizer page access and redirections', () => {
   beforeEach(() => {
     cy.task('seedDB', 'organizer/organizer-access');
   });
 
   afterEach(() => cy.task('disconnectDB'));
+
+  const organization = new OrganizationPage();
 
   it('redirects to signin, when user is not connected', () => {
     cy.visit('organizer');
@@ -31,6 +35,7 @@ describe('Organizer page access and redirections', () => {
   it('redirects to organization page when has only one organization', () => {
     cy.login('Clark Kent');
     cy.visit('organizer');
-    cy.assertText("Clark kent's orga");
+    organization.isPageVisible();
+    cy.assertText('Awesome orga');
   });
 });
