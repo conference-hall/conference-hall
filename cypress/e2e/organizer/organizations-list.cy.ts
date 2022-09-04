@@ -1,3 +1,5 @@
+import OrganizationsPage from 'page-objects/organizer-organizations';
+
 describe('Organizations page list', () => {
   beforeEach(() => {
     cy.task('seedDB', 'organizer/organizations-list');
@@ -5,9 +7,12 @@ describe('Organizations page list', () => {
 
   afterEach(() => cy.task('disconnectDB'));
 
+  const organizations = new OrganizationsPage();
+
   it('displays organization list when user has severals organizations', () => {
     cy.login();
-    cy.visit('organizer');
-    cy.assertText('My organizations');
+    organizations.visit();
+    organizations.list().should('have.length', 3);
+    organizations.newOrganization().should('exist');
   });
 });
