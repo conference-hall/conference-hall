@@ -4,9 +4,14 @@ import { Container } from '~/design-system/Container';
 import { sessionRequired } from '~/services/auth/auth.server';
 import { H1, H2 } from '~/design-system/Typography';
 import { getOrganization } from '~/services/organizers/organizations';
-import { useCatch, useLoaderData } from '@remix-run/react';
+import { Outlet, useCatch, useLoaderData } from '@remix-run/react';
 import { ButtonLink } from '~/design-system/Buttons';
 import { mapErrorToResponse } from '~/services/errors';
+import { OrganizationTabs } from '~/components/OrganizationTabs';
+
+export type OrganizationContext = {
+  organization: typeof loader;
+};
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const uid = await sessionRequired(request);
@@ -18,10 +23,14 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 export default function OrganizationRoute() {
   const organization = useLoaderData<typeof loader>();
   return (
-    <Container className="my-4 sm:my-8">
-      <H1 className="sr-only">Organization page</H1>
-      <H2>{organization.name}</H2>
-    </Container>
+    <>
+      <Container className="my-4">
+        <H1 className="sr-only">Organization page</H1>
+        <H2>{organization.name}</H2>
+      </Container>
+      <OrganizationTabs slug={organization.slug} />
+      <Outlet context={{ organization }} />
+    </>
   );
 }
 
