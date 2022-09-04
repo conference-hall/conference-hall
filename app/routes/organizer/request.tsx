@@ -8,10 +8,10 @@ export const loader: LoaderFunction = async ({ request }) => {
   return null;
 };
 
-export default function OrganizationRoute() {
+export default function RequestAccessRoute() {
   return (
     <Container className="my-4 sm:my-8">
-      <H1>Clark kent's orga</H1>
+      <H1>Request access</H1>
     </Container>
   );
 }

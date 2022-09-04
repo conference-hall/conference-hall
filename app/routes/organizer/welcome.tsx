@@ -10,7 +10,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   return null;
 };
 
-export default function OrganizerRoute() {
+export default function WelcomeRoute() {
   return (
     <Container className="my-4 sm:my-8">
       <EmptyState icon={BuildingOfficeIcon} label="You don't have any organizations.">

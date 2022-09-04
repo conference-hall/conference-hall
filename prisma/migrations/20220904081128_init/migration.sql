@@ -74,14 +74,6 @@ CREATE TABLE "talks" (
 );
 
 -- CreateTable
-CREATE TABLE "beta_keys" (
-    "id" TEXT NOT NULL,
-    "organization" TEXT,
-
-    CONSTRAINT "beta_keys_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "events" (
     "id" TEXT NOT NULL,
     "slug" TEXT NOT NULL,

@@ -10,7 +10,6 @@ export async function resetDB() {
   if (config.isProduction) return '🚨 Reset DB cannot be executed in production.';
 
   await db.$transaction([
-    db.betaKey.deleteMany(),
     db.invite.deleteMany(),
     db.survey.deleteMany(),
     db.message.deleteMany(),
@@ -22,6 +21,7 @@ export async function resetDB() {
     db.event.deleteMany(),
     db.organizationMember.deleteMany(),
     db.organization.deleteMany(),
+    db.organizerKeyAccess.deleteMany(),
     db.user.deleteMany(),
   ]);
 

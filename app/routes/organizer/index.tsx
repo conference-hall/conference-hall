@@ -3,12 +3,12 @@ import { redirect } from '@remix-run/node';
 import { Container } from '~/design-system/Container';
 import { sessionRequired } from '~/services/auth/auth.server';
 import { H1 } from '~/design-system/Typography';
+import { hasOrganizerAccess } from '~/services/organizers/access';
 
 export const loader: LoaderFunction = async ({ request }) => {
-  await sessionRequired(request);
-
-  const hasOrganizerAccess = true;
-  if (!hasOrganizerAccess) return redirect('/organizer/request');
+  const uid = await sessionRequired(request);
+  const hasAccess = await hasOrganizerAccess(uid);
+  if (!hasAccess) return redirect('/organizer/request');
 
   const organizations = 0;
   if (organizations === 0) return redirect('/organizer/welcome');

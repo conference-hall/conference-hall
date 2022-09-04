@@ -73,13 +73,6 @@ enum TalkLevel {
   ADVANCED
 }
 
-model BetaKey {
-  id           String  @id @default(uuid())
-  organization String?
-
-  @@map("beta_keys")
-}
-
 model Event {
   id                       String          @id @default(uuid())
   slug                     String          @unique

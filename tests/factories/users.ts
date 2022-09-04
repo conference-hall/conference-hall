@@ -18,6 +18,12 @@ const TRAITS = {
     photoURL:
       'http://multiversitystatic.s3.amazonaws.com/uploads/2013/02/Bruce-Wayne-Jordan-Gibson-Art-Of-The-Week.png',
   },
+  'peter-parker': {
+    id: 'tpSmd3FehZIM3Wp4HYSBnfnQmXLb',
+    name: 'Peter Parker',
+    email: 'spiderman@example.com',
+    photoURL: 'https://www.mdcu-comics.fr/uploads/news/2020/09/news_illustre_1600620975_30.jpg',
+  },
 };
 
 type Trait = keyof typeof TRAITS;
