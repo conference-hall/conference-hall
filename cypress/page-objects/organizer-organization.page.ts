@@ -7,6 +7,30 @@ class OrganizationPage {
   isPageVisible() {
     cy.findByRole('heading', { name: 'Organization page' }).should('exist');
   }
+
+  eventsTab() {
+    return cy.findByRole('link', { name: 'Events' });
+  }
+
+  membersTab() {
+    return cy.findByRole('link', { name: 'Members' });
+  }
+
+  settingsTab() {
+    return cy.findByRole('link', { name: 'Settings' });
+  }
+
+  newEvent() {
+    return cy.findByRole('link', { name: 'New event' });
+  }
+
+  list() {
+    return cy.findByRole('list', { name: 'Events list' }).children();
+  }
+
+  event(name: string) {
+    return this.list().contains(name);
+  }
 }
 
 export default OrganizationPage;

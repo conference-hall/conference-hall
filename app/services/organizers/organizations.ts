@@ -27,10 +27,35 @@ export async function getOrganizations(uid: string) {
  * @returns organization
  */
 export async function getOrganization(slug: string, uid: string) {
-  const organization = await db.organization.findFirst({
-    select: { name: true, slug: true },
-    where: { slug, members: { some: { memberId: uid } } },
+  const orgaMember = await db.organizationMember.findFirst({
+    where: { memberId: uid, organization: { slug } },
+    orderBy: { organization: { name: 'asc' } },
+    include: { organization: true },
   });
-  if (!organization) throw new OrganizationNotFoundError();
-  return organization;
+
+  if (!orgaMember) throw new OrganizationNotFoundError();
+
+  return {
+    name: orgaMember.organization.name,
+    slug: orgaMember.organization.slug,
+    role: orgaMember.role,
+  };
+}
+
+/**
+ * Get organization events
+ * @param slug organization slug
+ * @param uid Id of the user
+ * @returns organization
+ */
+export async function getOrganizationEvents(slug: string, uid: string) {
+  const events = await db.event.findMany({
+    where: { organization: { slug, members: { some: { memberId: uid } } } },
+    orderBy: { name: 'asc' },
+  });
+  return events.map((event) => ({
+    slug: event.slug,
+    name: event.name,
+    type: event.type,
+  }));
 }

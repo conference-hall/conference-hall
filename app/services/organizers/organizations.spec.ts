@@ -1,8 +1,9 @@
 import { disconnectDB, resetDB } from 'tests/db-helpers';
+import { eventFactory } from 'tests/factories/events';
 import { organizationFactory } from 'tests/factories/organization';
 import { userFactory } from 'tests/factories/users';
 import { OrganizationNotFoundError } from '../errors';
-import { getOrganization, getOrganizations } from './organizations';
+import { getOrganization, getOrganizationEvents, getOrganizations } from './organizations';
 
 describe('#getOrganizations', () => {
   beforeEach(async () => {
@@ -39,7 +40,7 @@ describe('#getOrganization', () => {
 
     const organizations = await getOrganization('my-orga2', user.id);
 
-    expect(organizations).toEqual({ name: 'My orga 2', slug: 'my-orga2' });
+    expect(organizations).toEqual({ name: 'My orga 2', slug: 'my-orga2', role: 'MEMBER' });
   });
 
   it('throws an error when user is not member of the organization', async () => {
@@ -51,5 +52,37 @@ describe('#getOrganization', () => {
   it('throws an error when organization not found', async () => {
     const user = await userFactory();
     await expect(getOrganization('XXX', user.id)).rejects.toThrowError(OrganizationNotFoundError);
+  });
+});
+
+describe('#getOrganizationEvents', () => {
+  beforeEach(async () => {
+    await resetDB();
+  });
+  afterEach(disconnectDB);
+
+  it('returns organization events', async () => {
+    const user = await userFactory();
+    const organization = await organizationFactory({ owners: [user], attributes: { slug: 'my-orga' } });
+    await eventFactory({ attributes: { name: 'Event 1', slug: 'event1' }, organization });
+    await eventFactory({ attributes: { name: 'Event 2', slug: 'event2' }, organization });
+
+    const organization2 = await organizationFactory({ owners: [user] });
+    await eventFactory({ traits: ['conference-cfp-open'], organization: organization2 });
+
+    const events = await getOrganizationEvents('my-orga', user.id);
+    expect(events).toEqual([
+      { name: 'Event 1', slug: 'event1', type: 'CONFERENCE' },
+      { name: 'Event 2', slug: 'event2', type: 'CONFERENCE' },
+    ]);
+  });
+
+  it('returns nothing when user is not member of the organization', async () => {
+    const user = await userFactory();
+    const organization = await organizationFactory({ attributes: { slug: 'my-orga' } });
+    await eventFactory({ organization });
+
+    const events = await getOrganizationEvents('my-orga', user.id);
+    expect(events).toEqual([]);
   });
 });

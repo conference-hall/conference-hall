@@ -1,16 +1,16 @@
 import { useMemo } from 'react';
 import { NavTabs } from '~/design-system/NavTabs';
 
-type Props = { slug: string };
+type Props = { slug: string; role: string };
 
-export function OrganizationTabs({ slug }: Props) {
+export function OrganizationTabs({ slug, role }: Props) {
   const tabs = useMemo(
     () => [
       { to: `/organizer/${slug}`, label: 'Events', enabled: true, end: true },
-      { to: `/organizer/${slug}/members`, label: 'Members', enabled: true },
-      { to: `/organizer/${slug}/settings`, label: 'Settings', enabled: true },
+      { to: `/organizer/${slug}/members`, label: 'Members', enabled: role !== 'REVIEWER' },
+      { to: `/organizer/${slug}/settings`, label: 'Settings', enabled: role === 'OWNER' },
     ],
-    [slug]
+    [slug, role]
   );
 
   return <NavTabs tabs={tabs} />;

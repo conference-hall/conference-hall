@@ -28,7 +28,7 @@ export default function OrganizationRoute() {
         <H1 className="sr-only">Organization page</H1>
         <H2>{organization.name}</H2>
       </Container>
-      <OrganizationTabs slug={organization.slug} />
+      <OrganizationTabs slug={organization.slug} role={organization.role} />
       <Outlet context={{ organization }} />
     </>
   );

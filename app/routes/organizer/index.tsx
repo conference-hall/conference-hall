@@ -17,7 +17,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 
   const organizations = await getOrganizations(uid);
   if (organizations.length === 0) return redirect('/organizer/welcome');
-  if (organizations.length === 1) return redirect('/organizer/slug');
+  if (organizations.length === 1) return redirect(`/organizer/${organizations[0].slug}`);
 
   return json(organizations);
 };
