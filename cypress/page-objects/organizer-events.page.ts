@@ -1,4 +1,4 @@
-class OrganizationPage {
+class OrganizationEventsPage {
   visit(slug: string) {
     cy.visit(`/organizer/${slug}`);
     this.isPageVisible();
@@ -33,4 +33,4 @@ class OrganizationPage {
   }
 }
 
-export default OrganizationPage;
+export default OrganizationEventsPage;

@@ -1,4 +1,4 @@
-import OrganizationPage from 'page-objects/organizer-organization.page';
+import OrganizationEventsPage from 'page-objects/organizer-events.page';
 
 describe('Organizer page access and redirections', () => {
   beforeEach(() => {
@@ -7,7 +7,7 @@ describe('Organizer page access and redirections', () => {
 
   afterEach(() => cy.task('disconnectDB'));
 
-  const organization = new OrganizationPage();
+  const organization = new OrganizationEventsPage();
 
   it('redirects to signin, when user is not connected', () => {
     cy.visit('organizer');

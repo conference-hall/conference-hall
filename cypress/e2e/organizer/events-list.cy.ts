@@ -1,4 +1,4 @@
-import OrganizationPage from 'page-objects/organizer-organization.page';
+import OrganizationEventsPage from 'page-objects/organizer-events.page';
 
 describe('Organization event list', () => {
   beforeEach(() => {
@@ -7,7 +7,7 @@ describe('Organization event list', () => {
 
   afterEach(() => cy.task('disconnectDB'));
 
-  const organization = new OrganizationPage();
+  const organization = new OrganizationEventsPage();
 
   describe('as a organization owner', () => {
     beforeEach(() => cy.login('Clark Kent'));

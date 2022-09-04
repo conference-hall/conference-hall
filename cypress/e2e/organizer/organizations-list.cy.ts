@@ -1,4 +1,4 @@
-import OrganizationPage from 'page-objects/organizer-organization.page';
+import OrganizationEventsPage from 'page-objects/organizer-events.page';
 import OrganizationsPage from 'page-objects/organizer-organizations.page';
 
 describe('Organizations page list', () => {
@@ -9,7 +9,7 @@ describe('Organizations page list', () => {
   afterEach(() => cy.task('disconnectDB'));
 
   const organizations = new OrganizationsPage();
-  const organization = new OrganizationPage();
+  const organization = new OrganizationEventsPage();
 
   it('displays organization list when user has severals organizations', () => {
     cy.login();

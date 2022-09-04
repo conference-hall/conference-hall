@@ -21,6 +21,20 @@ export async function getOrganizations(uid: string) {
 }
 
 /**
+ * Returns role user of an organization
+ * @param slug organization slug
+ * @param uid Id of the user
+ * @returns user role, null does not belong to it
+ */
+export async function getUserRole(slug: string, uid: string) {
+  const orgaMember = await db.organizationMember.findFirst({
+    where: { memberId: uid, organization: { slug } },
+  });
+  if (!orgaMember) return null;
+  return orgaMember.role;
+}
+
+/**
  * Get organization for user
  * @param slug organization slug
  * @param uid Id of the user
@@ -46,16 +60,41 @@ export async function getOrganization(slug: string, uid: string) {
  * Get organization events
  * @param slug organization slug
  * @param uid Id of the user
- * @returns organization
+ * @returns organization events
  */
 export async function getOrganizationEvents(slug: string, uid: string) {
+  const role = await getUserRole(slug, uid);
+  if (!role) return [];
+
   const events = await db.event.findMany({
-    where: { organization: { slug, members: { some: { memberId: uid } } } },
+    where: { organization: { slug } },
     orderBy: { name: 'asc' },
   });
   return events.map((event) => ({
     slug: event.slug,
     name: event.name,
     type: event.type,
+  }));
+}
+
+/**
+ * Get organization members
+ * @param slug organization slug
+ * @param uid Id of the user
+ * @returns organization members
+ */
+export async function getOrganizationMembers(slug: string, uid: string) {
+  const role = await getUserRole(slug, uid);
+  if (!role) return [];
+
+  const members = await db.organizationMember.findMany({
+    where: { organization: { slug } },
+    orderBy: { member: { name: 'asc' } },
+    include: { member: true },
+  });
+
+  return members.map(({ member, role }) => ({
+    role,
+    name: member.name,
   }));
 }
