@@ -1,4 +1,4 @@
-describe('Organizer page access', () => {
+describe('Organizer page access and redirections', () => {
   beforeEach(() => {
     cy.task('seedDB', 'organizer/organizer-access');
   });
@@ -20,5 +20,17 @@ describe('Organizer page access', () => {
     cy.login('Bruce Wayne');
     cy.visit('organizer');
     cy.assertText('Request access');
+  });
+
+  it('redirects to request page when user has no access', () => {
+    cy.login('Bruce Wayne');
+    cy.visit('organizer');
+    cy.assertText('Request access');
+  });
+
+  it('redirects to organization page when has only one organization', () => {
+    cy.login('Clark Kent');
+    cy.visit('organizer');
+    cy.assertText("Clark kent's orga");
   });
 });
