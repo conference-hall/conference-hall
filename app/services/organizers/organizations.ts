@@ -1,5 +1,6 @@
+import { OrganizationRole } from '@prisma/client';
 import { db } from '../db';
-import { OrganizationNotFoundError } from '../errors';
+import { ForbiddenOperationError, OrganizationNotFoundError } from '../errors';
 
 /**
  * Get user organizations
@@ -99,4 +100,38 @@ export async function getOrganizationMembers(slug: string, uid: string) {
     name: member.name,
     photoURL: member.photoURL,
   }));
+}
+
+/**
+ * Change member role
+ * @param slug organization slug
+ * @param uid Id of the user
+ * @param memberId Id of the member to update
+ * @param memberRole Role to set to the member
+ */
+export async function changeMemberRole(slug: string, uid: string, memberId: string, memberRole: OrganizationRole) {
+  if (uid === memberId) throw new ForbiddenOperationError();
+
+  const role = await getUserRole(slug, uid);
+  if (role !== OrganizationRole.OWNER) throw new ForbiddenOperationError();
+
+  await db.organizationMember.updateMany({
+    data: { role: memberRole },
+    where: { organization: { slug }, memberId },
+  });
+}
+
+/**
+ * Remove member
+ * @param slug organization slug
+ * @param uid Id of the user
+ * @param memberId Id of the member to remove
+ */
+export async function removeMember(slug: string, uid: string, memberId: string) {
+  if (uid === memberId) throw new ForbiddenOperationError();
+
+  const role = await getUserRole(slug, uid);
+  if (role !== OrganizationRole.OWNER) throw new ForbiddenOperationError();
+
+  await db.organizationMember.deleteMany({ where: { organization: { slug }, memberId } });
 }

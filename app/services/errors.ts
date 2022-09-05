@@ -2,6 +2,8 @@ import { Response } from '@remix-run/node';
 
 class NotFoundError extends Error {}
 
+class ForbiddenError extends Error {}
+
 class BadRequestError extends Error {}
 
 export function mapErrorToResponse(error: unknown) {
@@ -17,6 +19,12 @@ export function mapErrorToResponse(error: unknown) {
   if (error instanceof BadRequestError) {
     throw new Response(error.message, {
       status: 400,
+      statusText: error.message,
+    });
+  }
+  if (error instanceof ForbiddenError) {
+    throw new Response(error.message, {
+      status: 403,
       statusText: error.message,
     });
   }
@@ -94,5 +102,11 @@ export class SpeakerNotFoundError extends NotFoundError {
 export class OrganizationNotFoundError extends NotFoundError {
   constructor() {
     super('Organization not found');
+  }
+}
+
+export class ForbiddenOperationError extends ForbiddenError {
+  constructor() {
+    super('Forbidden operation');
   }
 }
