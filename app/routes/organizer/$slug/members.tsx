@@ -24,6 +24,7 @@ export default function OrganizationMembersRoute() {
     <>
       <Container className="my-4 sm:my-8">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <h2 className="sr-only">Organization members</h2>
           <Input
             type="search"
             name="query"

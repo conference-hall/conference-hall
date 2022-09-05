@@ -30,6 +30,7 @@ export default function OrganizationEventsRoute() {
           label={`Welcome to "${organization.name}"`}
           description="Get started by creating your first event."
         >
+          <h2 className="sr-only">Organization events</h2>
           <ButtonLink variant="secondary" to="new" size="small" className="mt-4 sm:mt-0">
             New event
           </ButtonLink>
@@ -41,6 +42,7 @@ export default function OrganizationEventsRoute() {
   return (
     <Container className="my-4 sm:my-8">
       <div className="sm:flex sm:items-center sm:justify-between">
+        <h2 className="sr-only">Organization events</h2>
         <Input
           type="search"
           name="query"

@@ -5,7 +5,7 @@ class OrganizationMembersPage {
   }
 
   isPageVisible() {
-    cy.findByRole('heading', { name: 'Members' }).should('exist');
+    cy.findByRole('heading', { name: 'Organization members' }).should('exist');
   }
 
   list() {
