@@ -17,8 +17,9 @@ describe('Organization members list', () => {
       members.list().should('have.length', 3);
     });
 
-    it.skip('can invite a new member', () => {
+    it('can invite a new member', () => {
       members.visit('awesome-orga');
+      members.generateInvite().should('exist');
     });
 
     it('can change a member role', () => {

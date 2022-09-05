@@ -35,7 +35,7 @@ class EventProposalPage {
   generateCoSpeakerInvite() {
     cy.clickOn('Invite a co-speaker');
     cy.clickOn('Generate invitation link');
-    return cy.findByLabelText('Copy co-speaker invitation link');
+    return cy.findByLabelText('Copy invitation link');
   }
 
   closeCoSpeakerModal() {

@@ -1,4 +1,5 @@
 import { InviteType } from '@prisma/client';
+import { organizationFactory } from 'tests/factories/organization';
 import { resetDB, disconnectDB } from '../../../tests/db-helpers';
 import { eventFactory } from '../../../tests/factories/events';
 import { inviteFactory } from '../../../tests/factories/invite';
@@ -6,7 +7,12 @@ import { proposalFactory } from '../../../tests/factories/proposals';
 import { talkFactory } from '../../../tests/factories/talks';
 import { userFactory } from '../../../tests/factories/users';
 import { db } from '../db';
-import { InvitationNotFoundError, ProposalNotFoundError, TalkNotFoundError } from '../errors';
+import {
+  InvitationNotFoundError,
+  OrganizationNotFoundError,
+  ProposalNotFoundError,
+  TalkNotFoundError,
+} from '../errors';
 import { buildInvitationLink, generateInvitationLink, getInvitation, revokeInvitationLink } from './invitations.server';
 
 describe('#getInvitation', () => {
@@ -42,6 +48,20 @@ describe('#getInvitation', () => {
       type: InviteType.TALK,
       title: talk.title,
       invitedBy: speaker.name,
+    });
+  });
+
+  it('returns invite for an organization', async () => {
+    const owner = await userFactory();
+    const organization = await organizationFactory({ owners: [owner] });
+    const invite = await inviteFactory({ organization, user: owner });
+
+    const result = await getInvitation(invite?.id!);
+
+    expect(result).toEqual({
+      type: InviteType.ORGANIZATION,
+      title: organization.name,
+      invitedBy: owner.name,
     });
   });
 
@@ -159,6 +179,50 @@ describe('#generateInvitationLink', () => {
       );
     });
   });
+
+  describe('for organization invitation', () => {
+    it('generates an invitation for an organization', async () => {
+      const owner = await userFactory();
+      const organization = await organizationFactory({ owners: [owner] });
+
+      const link = await generateInvitationLink(InviteType.ORGANIZATION, organization.id, owner.id);
+
+      const invite = await db.invite.findFirst();
+
+      expect(invite?.organizationId).toEqual(organization.id);
+      expect(invite?.type).toEqual(InviteType.ORGANIZATION);
+      expect(invite?.userId).toEqual(owner.id);
+      expect(link).toEqual(`http://localhost:3001/invitation/${invite?.id}`);
+    });
+
+    it('returns existing invitation link for a proposal', async () => {
+      const owner = await userFactory();
+      const organization = await organizationFactory({ owners: [owner] });
+      const invite = await inviteFactory({ organization, user: owner });
+
+      const link = await generateInvitationLink(InviteType.ORGANIZATION, organization.id, owner.id);
+
+      expect(invite?.organizationId).toEqual(organization.id);
+      expect(invite?.type).toEqual(InviteType.ORGANIZATION);
+      expect(invite?.userId).toEqual(owner.id);
+      expect(link).toEqual(`http://localhost:3001/invitation/${invite?.id}`);
+    });
+
+    it('throws an error when organization does not belong to user', async () => {
+      const organization = await organizationFactory();
+      const user = await userFactory();
+      await expect(generateInvitationLink(InviteType.ORGANIZATION, organization.id, user.id)).rejects.toThrowError(
+        OrganizationNotFoundError
+      );
+    });
+
+    it('throws an error when talk is not found', async () => {
+      const user = await userFactory();
+      await expect(generateInvitationLink(InviteType.ORGANIZATION, 'XXX', user.id)).rejects.toThrowError(
+        OrganizationNotFoundError
+      );
+    });
+  });
 });
 
 describe('#revokeInvitationLink', () => {
@@ -218,6 +282,33 @@ describe('#revokeInvitationLink', () => {
 
       const user = await userFactory();
       await revokeInvitationLink(InviteType.PROPOSAL, proposal.id, user.id);
+
+      const count = await db.invite.count({ where: { id: invite?.id } });
+
+      expect(count).toEqual(1);
+    });
+  });
+
+  describe('for organization invitation', () => {
+    it('revokes an invitation for a organization', async () => {
+      const owner = await userFactory();
+      const organization = await organizationFactory({ owners: [owner] });
+      const invite = await inviteFactory({ organization, user: owner });
+
+      await revokeInvitationLink(InviteType.ORGANIZATION, organization.id, owner.id);
+
+      const count = await db.invite.count({ where: { id: invite?.id } });
+
+      expect(count).toEqual(0);
+    });
+
+    it('does nothing if invitation not created by user', async () => {
+      const owner = await userFactory();
+      const organization = await organizationFactory({ owners: [owner] });
+      const invite = await inviteFactory({ organization, user: owner });
+
+      const user = await userFactory();
+      await revokeInvitationLink(InviteType.ORGANIZATION, organization.id, user.id);
 
       const count = await db.invite.count({ where: { id: invite?.id } });
 

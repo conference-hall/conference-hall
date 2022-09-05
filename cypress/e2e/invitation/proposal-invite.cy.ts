@@ -14,7 +14,7 @@ describe('Proposal invitation page', () => {
     cy.login('Bruce Wayne');
     invitation.visit('invitation-1');
     cy.assertText('Invitation sent by Clark Kent');
-    cy.assertText('You have been invited as co-speaker for');
+    cy.assertText('You have been invited to');
     cy.assertText('"Awesome talk"');
     invitation.acceptInvite().click();
     proposal.isPageVisible();
@@ -30,7 +30,7 @@ describe('Proposal invitation page', () => {
     search.isPageVisible();
   });
 
-  it('go back to homepage', () => {
+  it('display error page when invitation not found', () => {
     cy.login('Bruce Wayne');
     cy.visit('/invitation/invitation-X');
     cy.assertText('Invitation not found');

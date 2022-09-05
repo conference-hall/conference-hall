@@ -221,7 +221,7 @@ CREATE TABLE "invites" (
     "userId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "organizationlId" TEXT,
+    "organizationId" TEXT,
     "talkId" TEXT,
     "proposalId" TEXT,
 
@@ -271,7 +271,7 @@ CREATE UNIQUE INDEX "surveys_userId_eventId_key" ON "surveys"("userId", "eventId
 CREATE UNIQUE INDEX "ratings_userId_proposalId_key" ON "ratings"("userId", "proposalId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "invites_organizationlId_key" ON "invites"("organizationlId");
+CREATE UNIQUE INDEX "invites_organizationId_key" ON "invites"("organizationId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "invites_talkId_key" ON "invites"("talkId");
@@ -355,7 +355,7 @@ ALTER TABLE "messages" ADD CONSTRAINT "messages_proposalId_fkey" FOREIGN KEY ("p
 ALTER TABLE "invites" ADD CONSTRAINT "invites_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "invites" ADD CONSTRAINT "invites_organizationlId_fkey" FOREIGN KEY ("organizationlId") REFERENCES "organizations"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "invites" ADD CONSTRAINT "invites_organizationId_fkey" FOREIGN KEY ("organizationId") REFERENCES "organizations"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "invites" ADD CONSTRAINT "invites_talkId_fkey" FOREIGN KEY ("talkId") REFERENCES "talks"("id") ON DELETE CASCADE ON UPDATE CASCADE;

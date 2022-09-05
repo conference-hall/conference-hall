@@ -2,6 +2,7 @@ import { StarIcon } from '@heroicons/react/20/solid';
 import type { ActionFunction, LoaderFunction } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
+import { inviteMemberToOrganization } from '~/services/organizers/organizations';
 import { Button } from '../../design-system/Buttons';
 import { Container } from '../../design-system/Container';
 import { Link } from '../../design-system/Links';
@@ -35,9 +36,12 @@ export const action: ActionFunction = async ({ request, params }) => {
     if (type === 'TALK') {
       const talk = await inviteCoSpeakerToTalk(invitationId, uid);
       return redirect(`/speaker/talks/${talk.id}`);
-    } else {
+    } else if (type === 'PROPOSAL') {
       const proposal = await inviteCoSpeakerToProposal(invitationId, uid);
       return redirect(`/${proposal.eventSlug}/proposals/${proposal.proposalId}`);
+    } else if (type === 'ORGANIZATION') {
+      const organization = await inviteMemberToOrganization(invitationId, uid);
+      return redirect(`/organizer/${organization.slug}`);
     }
   } catch (err) {
     mapErrorToResponse(err);
@@ -53,7 +57,7 @@ export default function InvitationRoute() {
           <StarIcon className="h-6 w-6 text-indigo-600" aria-hidden="true" />
         </div>
         <H2 as="h1" className="mt-8 text-center">
-          You have been invited as co-speaker for
+          You have been invited to
         </H2>
         <H1 as="p" className="mt-6">
           "{invitation.title}"

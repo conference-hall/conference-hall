@@ -16,6 +16,12 @@ class OrganizationMembersPage {
     return this.list().contains(name);
   }
 
+  generateInvite() {
+    cy.clickOn('Invite member');
+    cy.clickOn('Generate invitation link');
+    return cy.findByLabelText('Copy invitation link');
+  }
+
   changeRoleButton(name: string) {
     return cy.findByRole('list', { name: 'Members list' }).findByLabelText(`Change role of ${name}`);
   }

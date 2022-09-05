@@ -4,17 +4,18 @@ import { json } from '@remix-run/node';
 import { Container } from '~/design-system/Container';
 import { sessionRequired } from '~/services/auth/auth.server';
 import { Text } from '~/design-system/Typography';
-import { ButtonLink } from '~/design-system/Buttons';
 import {
   changeMemberRole,
+  getInvitationLink,
   getOrganizationMembers,
   getUserRole,
   removeMember,
 } from '~/services/organizers/organizations';
-import { useLoaderData } from '@remix-run/react';
+import { useLoaderData, useOutletContext } from '@remix-run/react';
 import { Avatar } from '~/design-system/Avatar';
-import { ChangeRoleButton, RemoveButton } from '~/components/MemberActions';
+import { ChangeRoleButton, InviteMemberButton, RemoveButton } from '~/components/MemberActions';
 import { Input } from '~/design-system/forms/Input';
+import type { OrganizationContext } from '../$slug';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const uid = await sessionRequired(request);
@@ -22,8 +23,9 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const role = await getUserRole(slug, uid);
   if (role === 'REVIEWER') throw new Response('Forbidden', { status: 403 });
 
+  const invitationLink = await getInvitationLink(slug, uid);
   const members = await getOrganizationMembers(slug, uid);
-  return json({ userId: uid, userRole: role, members });
+  return json({ userId: uid, userRole: role, invitationLink, members });
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
@@ -43,7 +45,8 @@ export const action = async ({ request, params }: ActionArgs) => {
 };
 
 export default function OrganizationMembersRoute() {
-  const { userId, userRole, members } = useLoaderData<typeof loader>();
+  const { organization } = useOutletContext<OrganizationContext>();
+  const { userId, userRole, invitationLink, members } = useLoaderData<typeof loader>();
 
   return (
     <>
@@ -57,7 +60,7 @@ export default function OrganizationMembersRoute() {
             placeholder="Find a member"
             className="w-full sm:w-80"
           />
-          {userRole === 'OWNER' && <ButtonLink to="new">Invite member</ButtonLink>}
+          {userRole === 'OWNER' && <InviteMemberButton id={organization.id} invitationLink={invitationLink} />}
         </div>
         <div className="my-8 overflow-hidden bg-white sm:rounded-md sm:border sm:border-gray-200 sm:shadow-sm">
           <ul aria-label="Members list" className="divide-y divide-gray-200">

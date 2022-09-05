@@ -1,9 +1,11 @@
+import { UserPlusIcon } from '@heroicons/react/20/solid';
 import { ShieldExclamationIcon, UserMinusIcon } from '@heroicons/react/24/outline';
 import { Form } from '@remix-run/react';
 import { useMemo, useState } from 'react';
 import { Button } from '~/design-system/Buttons';
 import { Modal } from '~/design-system/dialogs/Modals';
 import { Radio, RadioGroup } from '~/design-system/forms/RadioGroup';
+import { InvitationModal } from './InvitationModal';
 
 type RemoveButtonProps = { memberId: string; memberName: string | null };
 
@@ -129,5 +131,29 @@ function ChangeRoleModal({ memberId, memberName, memberRole, isOpen, onClose }: 
         </Modal.Actions>
       </Form>
     </Modal>
+  );
+}
+
+type InviteProps = { id: string; invitationLink?: string };
+
+export function InviteMemberButton({ id, invitationLink }: InviteProps) {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <Button onClick={() => setOpen(true)} className="group mt-4 flex items-center">
+        <UserPlusIcon className="mr-3 h-5 w-5" aria-hidden="true" />
+        Invite member
+      </Button>
+      <InvitationModal
+        open={open}
+        type="ORGANIZATION"
+        id={id}
+        invitationLink={invitationLink}
+        onClose={() => setOpen(false)}
+        title="Invite a member"
+        description="You can invite a member to join your organization by sharing an invitation link. Copy it and send it by email.
+            The member will be automatically added once the invitation has been accepted."
+      />
+    </>
   );
 }

@@ -1,7 +1,13 @@
 import { type InviteType } from '@prisma/client';
 import { config } from '../config';
 import { db } from '../db';
-import { InvitationNotFoundError, InvitationGenerateError, ProposalNotFoundError, TalkNotFoundError } from '../errors';
+import {
+  InvitationNotFoundError,
+  InvitationGenerateError,
+  ProposalNotFoundError,
+  TalkNotFoundError,
+  OrganizationNotFoundError,
+} from '../errors';
 
 export type Invitation = {
   type: InviteType;
@@ -16,7 +22,7 @@ export type Invitation = {
  */
 export const getInvitation = async (invitationId: string): Promise<Invitation> => {
   const invitation = await db.invite.findUnique({
-    select: { type: true, talk: true, proposal: true, invitedBy: true },
+    select: { type: true, talk: true, proposal: true, organization: true, invitedBy: true },
     where: { id: invitationId },
   });
   if (!invitation) {
@@ -24,7 +30,7 @@ export const getInvitation = async (invitationId: string): Promise<Invitation> =
   }
   return {
     type: invitation.type,
-    title: invitation.talk?.title || invitation.proposal?.title || '',
+    title: invitation.talk?.title || invitation.proposal?.title || invitation.organization?.name || '',
     invitedBy: invitation.invitedBy.name || '',
   };
 };
@@ -42,7 +48,10 @@ export async function generateInvitationLink(type: InviteType, entityId: string,
     invitationKey = await generateTalkInvitationKey(entityId, uid);
   } else if (type === 'PROPOSAL') {
     invitationKey = await generateProposalInvitationKey(entityId, uid);
+  } else if (type === 'ORGANIZATION') {
+    invitationKey = await generateOrganizationInvitationKey(entityId, uid);
   }
+
   if (!invitationKey) throw new InvitationGenerateError();
   return buildInvitationLink(invitationKey);
 }
@@ -96,6 +105,29 @@ async function generateProposalInvitationKey(proposalId: string, uid: string): P
   return invite.id;
 }
 
+async function generateOrganizationInvitationKey(organizationId: string, uid: string): Promise<string> {
+  const organization = await db.organization.findFirst({
+    select: { id: true, invitation: true },
+    where: {
+      members: { some: { memberId: uid, role: 'OWNER' } },
+      id: organizationId,
+    },
+  });
+
+  if (!organization) throw new OrganizationNotFoundError();
+
+  if (organization.invitation) return organization.invitation.id;
+
+  const invite = await db.invite.create({
+    data: {
+      type: 'ORGANIZATION',
+      organization: { connect: { id: organizationId } },
+      invitedBy: { connect: { id: uid } },
+    },
+  });
+  return invite.id;
+}
+
 /**
  * Revoke an invitation link
  * @param type Type of the invitation
@@ -115,6 +147,13 @@ export async function revokeInvitationLink(type: InviteType, entityId: string, u
       where: {
         type: 'PROPOSAL',
         proposal: { id: entityId, speakers: { some: { id: uid } } },
+      },
+    });
+  } else if (type === 'ORGANIZATION') {
+    await db.invite.deleteMany({
+      where: {
+        type: 'ORGANIZATION',
+        organization: { id: entityId, members: { some: { memberId: uid } } },
       },
     });
   }

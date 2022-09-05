@@ -1,15 +1,18 @@
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventFactory } from 'tests/factories/events';
+import { inviteFactory } from 'tests/factories/invite';
 import { organizationFactory } from 'tests/factories/organization';
 import { userFactory } from 'tests/factories/users';
 import { db } from '../db';
 import { ForbiddenOperationError, OrganizationNotFoundError } from '../errors';
 import {
   changeMemberRole,
+  getInvitationLink,
   getOrganization,
   getOrganizationEvents,
   getOrganizationMembers,
   getOrganizations,
+  getUserRole,
   removeMember,
 } from './organizations';
 
@@ -35,6 +38,27 @@ describe('#getOrganizations', () => {
   });
 });
 
+describe('#getUserRole', () => {
+  beforeEach(async () => {
+    await resetDB();
+  });
+  afterEach(disconnectDB);
+
+  it('returns the role of the user in the organization', async () => {
+    const user = await userFactory();
+    const orga = await organizationFactory({ members: [user] });
+    const role = await getUserRole(orga.slug, user.id);
+    expect(role).toEqual('MEMBER');
+  });
+
+  it('returns null if user does not belong to the organization', async () => {
+    const user = await userFactory();
+    const orga = await organizationFactory();
+    const role = await getUserRole(orga.slug, user.id);
+    expect(role).toBeNull();
+  });
+});
+
 describe('#getOrganization', () => {
   beforeEach(async () => {
     await resetDB();
@@ -44,11 +68,11 @@ describe('#getOrganization', () => {
   it('returns organization belonging to user', async () => {
     const user = await userFactory();
     await organizationFactory({ owners: [user], attributes: { name: 'My orga 1', slug: 'my-orga1' } });
-    await organizationFactory({ members: [user], attributes: { name: 'My orga 2', slug: 'my-orga2' } });
+    const orga = await organizationFactory({ members: [user], attributes: { name: 'My orga 2', slug: 'my-orga2' } });
 
     const organizations = await getOrganization('my-orga2', user.id);
 
-    expect(organizations).toEqual({ name: 'My orga 2', slug: 'my-orga2', role: 'MEMBER' });
+    expect(organizations).toEqual({ id: orga.id, name: 'My orga 2', slug: 'my-orga2', role: 'MEMBER' });
   });
 
   it('throws an error when user is not member of the organization', async () => {
@@ -212,5 +236,27 @@ describe('#removeMember', () => {
     const orga = await organizationFactory({ owners: [owner], members: [member] });
 
     await expect(removeMember(orga.slug, member.id, owner.id)).rejects.toThrowError(ForbiddenOperationError);
+  });
+});
+
+describe('#getInvitationLink', () => {
+  beforeEach(async () => {
+    await resetDB();
+  });
+  afterEach(disconnectDB);
+
+  it('returns the role of the user in the organization', async () => {
+    const user = await userFactory();
+    const organization = await organizationFactory({ members: [user] });
+    const invite = await inviteFactory({ organization, user });
+    const link = await getInvitationLink(organization.slug, user.id);
+    expect(link).toEqual(`http://localhost:3001/invitation/${invite?.id}`);
+  });
+
+  it('returns nothing if no invite found', async () => {
+    const user = await userFactory();
+    const organization = await organizationFactory({ members: [user] });
+    const link = await getInvitationLink(organization.slug, user.id);
+    expect(link).toBeUndefined();
   });
 });

@@ -1,26 +1,24 @@
 import SearchEventPage from 'page-objects/event-search.page';
 import InvitationPage from 'page-objects/invitation.page';
-import SpeakerTalkPage from 'page-objects/speaker-talk.page';
+import OrganizationEventsPage from 'page-objects/organizer-events.page';
 
-describe('Talk invitation page', () => {
-  beforeEach(() => cy.task('seedDB', 'invitation/talk-invite'));
+describe('Organization invitation page', () => {
+  beforeEach(() => cy.task('seedDB', 'invitation/organization-invite'));
   afterEach(() => cy.task('disconnectDB'));
 
   const invitation = new InvitationPage();
-  const talk = new SpeakerTalkPage();
+  const organization = new OrganizationEventsPage();
   const search = new SearchEventPage();
 
-  it('can accept an invite to a talk', () => {
+  it('can accept an invite to an organization', () => {
     cy.login('Bruce Wayne');
     invitation.visit('invitation-1');
     cy.assertText('Invitation sent by Clark Kent');
     cy.assertText('You have been invited to');
-    cy.assertText('"Awesome talk"');
+    cy.assertText('"Awesome organization"');
     invitation.acceptInvite().click();
-    talk.isPageVisible();
-    cy.assertText('Awesome talk');
-    cy.assertText('Clark Kent');
-    cy.assertText('Bruce Wayne');
+    organization.isPageVisible();
+    cy.assertText('Awesome organization');
   });
 
   it('go back to homepage', () => {

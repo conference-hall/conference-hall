@@ -10,7 +10,7 @@ import { mapErrorToResponse } from '~/services/errors';
 import { OrganizationTabs } from '~/components/OrganizationTabs';
 
 export type OrganizationContext = {
-  organization: typeof loader;
+  organization: Awaited<ReturnType<typeof getOrganization>>;
 };
 
 export const loader = async ({ request, params }: LoaderArgs) => {
