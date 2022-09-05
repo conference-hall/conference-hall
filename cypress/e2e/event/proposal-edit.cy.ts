@@ -12,7 +12,7 @@ describe('Speaker proposal edition page', () => {
   const editProposal = new EventEditProposalPage();
   const proposal = new EventProposalPage();
 
-  it.only('can edit a proposal', () => {
+  it('can edit a proposal', () => {
     editProposal.visit('devfest-nantes', 'awesome-proposal');
 
     cy.assertInputText('Title', 'Awesome talk');

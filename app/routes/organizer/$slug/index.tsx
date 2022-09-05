@@ -3,12 +3,13 @@ import type { OrganizationContext } from '../$slug';
 import { json } from '@remix-run/node';
 import { Container } from '~/design-system/Container';
 import { sessionRequired } from '~/services/auth/auth.server';
-import { H3, Text } from '~/design-system/Typography';
+import { Text } from '~/design-system/Typography';
 import { Link, useLoaderData, useOutletContext } from '@remix-run/react';
 import { ButtonLink } from '~/design-system/Buttons';
 import { EmptyState } from '~/design-system/EmptyState';
 import { ChevronRightIcon, StarIcon } from '@heroicons/react/24/outline';
 import { getOrganizationEvents } from '~/services/organizers/organizations';
+import { Input } from '~/design-system/forms/Input';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const uid = await sessionRequired(request);
@@ -40,7 +41,13 @@ export default function OrganizationEventsRoute() {
   return (
     <Container className="my-4 sm:my-8">
       <div className="sm:flex sm:items-center sm:justify-between">
-        <H3>Events</H3>
+        <Input
+          type="search"
+          name="query"
+          aria-label="Find an event"
+          placeholder="Find an event"
+          className="w-full sm:w-80"
+        />
         <ButtonLink to="new" size="small" className="mt-4 sm:mt-0">
           New event
         </ButtonLink>

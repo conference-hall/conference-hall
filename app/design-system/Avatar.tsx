@@ -15,14 +15,20 @@ type AvatarProps = {
 
 export function Avatar({ photoURL, alt, size = 'base', ring = false, ringColor = 'primary', className }: AvatarProps) {
   const styles = c(
-    'mx-auto rounded-full',
+    'mx-auto rounded-full bg-gray-200',
     sizes[size],
     ring ? rings[size] : null,
     ring ? ringsColor[ringColor] : null,
     className
   );
   return (
-    <img className={styles} src={photoURL || 'http://placekitten.com/100/100'} alt={alt || ''} aria-hidden={!alt} />
+    <img
+      className={styles}
+      src={photoURL || 'http://placekitten.com/100/100'}
+      alt={alt || ''}
+      aria-hidden={!alt}
+      loading="lazy"
+    />
   );
 }
 

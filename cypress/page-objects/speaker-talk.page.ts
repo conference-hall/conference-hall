@@ -32,7 +32,7 @@ class SpeakerTalkPage {
   }
 
   deleteConfirmDialog() {
-    return cy.findByRole('dialog', { name: 'Delete talk' });
+    return cy.findByRole('dialog', { name: 'Are you sure you want to delete your talk?' });
   }
 
   cancelDelete() {

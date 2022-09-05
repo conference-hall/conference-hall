@@ -2,12 +2,13 @@ import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Container } from '~/design-system/Container';
 import { sessionRequired } from '~/services/auth/auth.server';
-import { H3, Text } from '~/design-system/Typography';
+import { Text } from '~/design-system/Typography';
 import { ButtonLink } from '~/design-system/Buttons';
 import { getOrganizationMembers } from '~/services/organizers/organizations';
 import { useLoaderData } from '@remix-run/react';
 import { Avatar } from '~/design-system/Avatar';
 import { ChangeRoleButton, RemoveButton } from '~/components/MemberActions';
+import { Input } from '~/design-system/forms/Input';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const uid = await sessionRequired(request);
@@ -22,11 +23,15 @@ export default function OrganizationMembersRoute() {
   return (
     <>
       <Container className="my-4 sm:my-8">
-        <div className="sm:flex sm:items-center sm:justify-between">
-          <H3>Members</H3>
-          <ButtonLink to="new" size="small" className="mt-4 sm:mt-0">
-            Invite member
-          </ButtonLink>
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <Input
+            type="search"
+            name="query"
+            aria-label="Find a member"
+            placeholder="Find a member"
+            className="w-full sm:w-80"
+          />
+          <ButtonLink to="new">Invite member</ButtonLink>
         </div>
         <div className="my-8 overflow-hidden bg-white sm:rounded-md sm:border sm:border-gray-200 sm:shadow-sm">
           <ul aria-label="Members list" className="divide-y divide-gray-200">

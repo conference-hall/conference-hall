@@ -21,7 +21,7 @@ class EventProposalPage {
   }
 
   deleteConfirmDialog() {
-    return cy.findByRole('dialog', { name: 'Delete proposal' });
+    return cy.findByRole('dialog', { name: 'Are you sure you want to delete your proposal?' });
   }
 
   cancelDelete() {

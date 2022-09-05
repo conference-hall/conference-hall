@@ -89,7 +89,7 @@ describe('Speaker talk page', () => {
     talk.closeCoSpeakerModal();
   });
 
-  it.only('can remove a co-speaker', () => {
+  it('can remove a co-speaker', () => {
     talk.visit('awesome-talk');
     cy.assertText('Bruce Wayne');
     talk.removeCoSpeaker('Bruce Wayne').click();
