@@ -140,7 +140,7 @@ export function InviteMemberButton({ id, invitationLink }: InviteProps) {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <Button onClick={() => setOpen(true)} className="group mt-4 flex items-center">
+      <Button onClick={() => setOpen(true)} className="group flex items-center">
         <UserPlusIcon className="mr-3 h-5 w-5" aria-hidden="true" />
         Invite member
       </Button>

@@ -1,4 +1,5 @@
 import { OrganizationRole } from '@prisma/client';
+import { z } from 'zod';
 import { db } from '../db';
 import { ForbiddenOperationError, InvitationNotFoundError, OrganizationNotFoundError } from '../errors';
 import { buildInvitationLink } from '../invitations/invitations.server';
@@ -170,4 +171,41 @@ export async function inviteMemberToOrganization(invitationId: string, memberId:
   });
 
   return { slug: invitation.organization.slug };
+}
+
+/**
+ * Update the organization
+ * @param slug Slug of the organizatoin
+ * @param uid User id
+ * @param data Organization data
+ */
+export async function updateOrganization(slug: string, uid: string, data: OrganizationData) {
+  const organization = await db.organization.findFirst({
+    where: { slug, members: { some: { memberId: uid, role: 'OWNER' } } },
+  });
+  if (!organization) throw new OrganizationNotFoundError();
+
+  return await db.$transaction(async (trx) => {
+    const existSlug = await trx.organization.findFirst({ where: { slug: data.slug } });
+    if (existSlug && existSlug.id !== organization.id) {
+      return { fieldErrors: { name: [], slug: ['Slug already exists, please try another one.'] } };
+    }
+
+    await trx.organization.update({ where: { id: organization.id }, data });
+    return { slug: data.slug };
+  });
+}
+
+type OrganizationData = z.infer<typeof OrganizationSchema>;
+
+const OrganizationSchema = z.object({
+  name: z.string().trim().min(3).max(50),
+  slug: z.string().trim().min(3).max(50),
+});
+
+export function validateOrganizationSettingsForm(form: FormData) {
+  return OrganizationSchema.safeParse({
+    name: form.get('name'),
+    slug: form.get('slug'),
+  });
 }

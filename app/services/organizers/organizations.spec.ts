@@ -260,3 +260,13 @@ describe('#getInvitationLink', () => {
     expect(link).toBeUndefined();
   });
 });
+
+describe('#updateOrganization', () => {
+  it.todo('updates the organization');
+  it.todo('throws an error if organization does not exist');
+  it.todo('returns an error if the slug already exists');
+});
+
+describe('#validateOrganizationSettingsForm', () => {
+  it.todo('validate the organization data');
+});
