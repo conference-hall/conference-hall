@@ -1,6 +1,9 @@
+import c from 'classnames';
+import type { ReactNode } from 'react';
 import { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
+import { Text } from '../Typography';
 
 type Props = {
   open: boolean;
@@ -8,7 +11,7 @@ type Props = {
   children: React.ReactNode;
 };
 
-export default function Modal({ open, onClose, children }: Props) {
+export function Modal({ open, onClose, children }: Props) {
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={onClose}>
@@ -55,3 +58,41 @@ export default function Modal({ open, onClose, children }: Props) {
     </Transition.Root>
   );
 }
+
+const iconTextColors = { info: 'text-indigo-600', danger: 'text-red-600' };
+const iconBgColors = { info: 'bg-indigo-100', danger: 'bg-red-100' };
+
+type ModalTitleProps = {
+  icon: React.ComponentType<{ className?: string }>;
+  title: string;
+  description?: string;
+  iconColor?: keyof typeof iconTextColors;
+};
+
+function Title({ icon: Icon, title, description, iconColor = 'info' }: ModalTitleProps) {
+  return (
+    <div>
+      <div className={c('mx-auto flex h-12 w-12 items-center justify-center rounded-full', iconBgColors[iconColor])}>
+        <Icon className={c('h-6 w-6', iconTextColors[iconColor])} aria-hidden="true" />
+      </div>
+      <div className="mt-3 text-center sm:mt-5">
+        <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900">
+          {title}
+        </Dialog.Title>
+        {description && (
+          <Text variant="secondary" className="mt-4">
+            {description}
+          </Text>
+        )}
+      </div>
+    </div>
+  );
+}
+
+Modal.Title = Title;
+
+function Actions({ children }: { children: ReactNode }) {
+  return <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:justify-end">{children}</div>;
+}
+
+Modal.Actions = Actions;

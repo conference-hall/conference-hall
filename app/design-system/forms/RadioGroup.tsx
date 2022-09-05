@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import cn from 'classnames';
 
 type RadioGroupProps = {
-  label: string;
+  label?: string;
   description?: string;
   inline?: boolean;
   className?: string;
@@ -16,7 +16,7 @@ export function RadioGroup({ label, description, inline, className, children }: 
 
   return (
     <div className={className}>
-      <label className="text-sm font-medium text-gray-700">{label}</label>
+      {label && <label className="text-sm font-medium text-gray-700">{label}</label>}
       {description && <p className="text-sm leading-5 text-gray-500">{description}</p>}
       <fieldset className="mt-2">
         <legend className="sr-only">{label}</legend>

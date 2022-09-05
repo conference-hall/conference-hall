@@ -94,9 +94,18 @@ describe('#getOrganizationMembers', () => {
   afterEach(disconnectDB);
 
   it('returns organization members', async () => {
-    const owner = await userFactory({ traits: ['clark-kent'] });
-    const member = await userFactory({ traits: ['bruce-wayne'] });
-    const reviewer = await userFactory({ traits: ['peter-parker'] });
+    const owner = await userFactory({
+      traits: ['clark-kent'],
+      attributes: { id: '1', photoURL: 'https://img.com/a.png' },
+    });
+    const member = await userFactory({
+      traits: ['bruce-wayne'],
+      attributes: { id: '2', photoURL: 'https://img.com/b.png' },
+    });
+    const reviewer = await userFactory({
+      traits: ['peter-parker'],
+      attributes: { id: '3', photoURL: 'https://img.com/c.png' },
+    });
     const organization = await organizationFactory({
       owners: [owner],
       members: [member],
@@ -108,9 +117,9 @@ describe('#getOrganizationMembers', () => {
 
     const members = await getOrganizationMembers(organization.slug, owner.id);
     expect(members).toEqual([
-      { name: 'Bruce Wayne', role: 'MEMBER' },
-      { name: 'Clark Kent', role: 'OWNER' },
-      { name: 'Peter Parker', role: 'REVIEWER' },
+      { id: '2', name: 'Bruce Wayne', role: 'MEMBER', photoURL: 'https://img.com/b.png' },
+      { id: '1', name: 'Clark Kent', role: 'OWNER', photoURL: 'https://img.com/a.png' },
+      { id: '3', name: 'Peter Parker', role: 'REVIEWER', photoURL: 'https://img.com/c.png' },
     ]);
   });
 

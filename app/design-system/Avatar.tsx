@@ -1,7 +1,7 @@
 import c from 'classnames';
 
-const sizes = { s: 'h-6 w-6', base: 'h-8 w-8', l: 'h-16 w-16', xl: 'h-20 w-20' };
-const rings = { s: 'ring-2', base: 'ring-2', l: 'ring-4', xl: 'ring-4' };
+const sizes = { s: 'h-6 w-6', base: 'h-8 w-8', m: 'h-12 w-12', l: 'h-16 w-16', xl: 'h-20 w-20' };
+const rings = { s: 'ring-2', base: 'ring-2', m: 'ring-2', l: 'ring-4', xl: 'ring-4' };
 const ringsColor = { white: 'ring-white', primary: 'ring-indigo-500' };
 
 type AvatarProps = {

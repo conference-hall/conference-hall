@@ -6,9 +6,11 @@ import { organizationFactory } from 'tests/factories/organization';
 
 async function seed() {
   const user = await userFactory({ traits: ['clark-kent'] });
+  const user2 = await userFactory({ traits: ['bruce-wayne'] });
 
   const organization = await organizationFactory({
     owners: [user],
+    members: [user2],
     attributes: { name: 'GDG Nantes', slug: 'gdg-nantes' },
   });
 
@@ -40,9 +42,16 @@ async function seed() {
     attributes: { name: 'VIP event', slug: 'vip-event' },
   });
 
+  const organization2 = await organizationFactory({
+    owners: [user2],
+    members: [user],
+    attributes: { name: 'Devoxx', slug: 'devoxx' },
+  });
+
   await eventFactory({
     traits: ['conference-cfp-past'],
     attributes: { name: 'Devoxx France', slug: 'devoxx-france' },
+    organization: organization2,
   });
 
   await eventFactory({

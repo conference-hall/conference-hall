@@ -6,7 +6,8 @@ import { H3, Text } from '~/design-system/Typography';
 import { ButtonLink } from '~/design-system/Buttons';
 import { getOrganizationMembers } from '~/services/organizers/organizations';
 import { useLoaderData } from '@remix-run/react';
-import { TrashIcon } from '@heroicons/react/20/solid';
+import { Avatar } from '~/design-system/Avatar';
+import { ChangeRoleButton, RemoveButton } from '~/components/MemberActions';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const uid = await sessionRequired(request);
@@ -27,23 +28,27 @@ export default function OrganizationMembersRoute() {
             Invite member
           </ButtonLink>
         </div>
-        <div className="my-4 overflow-hidden border border-gray-200 bg-white shadow-sm sm:my-8 sm:rounded-md">
+        <div className="my-8 overflow-hidden bg-white sm:rounded-md sm:border sm:border-gray-200 sm:shadow-sm">
           <ul aria-label="Members list" className="divide-y divide-gray-200">
             {members.map((member) => (
-              <li key={member.name}>
-                <div className="flex px-4 py-4 sm:px-6">
-                  <div className="min-w-0 flex-1 truncate sm:flex sm:items-center sm:justify-between">
-                    <div className="flex items-baseline text-sm">
+              <li key={member.id}>
+                <div className="flex flex-col gap-4 px-4 py-4 sm:flex-row sm:items-center sm:gap-0 sm:px-6">
+                  <div className="flex min-w-0 flex-1 items-center">
+                    <div className="flex-shrink-0">
+                      <Avatar photoURL={member.photoURL} size="m" />
+                    </div>
+                    <div className="min-w-0 flex-1 px-4">
                       <Text as="p" variant="link" className="truncate font-medium">
                         {member.name}
                       </Text>
-                      <Text as="p" variant="secondary" size="xs" className="ml-1 truncate font-normal">
+                      <Text as="p" variant="secondary" size="sm" className="mt-1 truncate font-normal">
                         {member.role.toLowerCase()}
                       </Text>
                     </div>
                   </div>
-                  <div className="ml-5 flex-shrink-0">
-                    <TrashIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                  <div className="flex w-full gap-2 sm:w-auto">
+                    <ChangeRoleButton memberId={member.id} memberName={member.name} memberRole={member.role} />
+                    <RemoveButton memberId={member.id} memberName={member.name} />
                   </div>
                 </div>
               </li>

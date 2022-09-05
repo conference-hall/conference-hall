@@ -1,10 +1,9 @@
-import { Dialog } from '@headlessui/react';
 import { NoSymbolIcon, LinkIcon, TrashIcon, UserPlusIcon } from '@heroicons/react/20/solid';
 import { Form, useFetcher } from '@remix-run/react';
 import { useState } from 'react';
 import { Avatar } from '~/design-system/Avatar';
+import { Modal } from '~/design-system/dialogs/Modals';
 import { Button } from '../design-system/Buttons';
-import Modal from '../design-system/dialogs/Modals';
 import { CopyInput } from '../design-system/forms/CopyInput';
 import { Text } from '../design-system/Typography';
 import type { InvitationLink } from '../routes/invitation/generate';
@@ -97,42 +96,36 @@ function CoSpeakerDrawer({ open, onClose, invitationLink, inviteType, entityId }
 
   return (
     <Modal open={open} onClose={onClose}>
-      <div>
-        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-indigo-100">
-          <UserPlusIcon className="h-6 w-6 text-indigo-600" aria-hidden="true" />
-        </div>
-        <div className="mt-3 text-center sm:mt-5">
-          <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900">
-            Invite a co-speaker
-          </Dialog.Title>
-          <Text variant="secondary" className="mt-4">
-            You can invite a co-speaker to join your talk by sharing an invitation link. Copy it and send it by email.
-            The co-speaker will be automatically added once the invitation has been accepted.
-          </Text>
-        </div>
-      </div>
+      <Modal.Title
+        icon={UserPlusIcon}
+        title="Invite a co-speaker"
+        description="You can invite a co-speaker to join your talk by sharing an invitation link. Copy it and send it by email.
+            The co-speaker will be automatically added once the invitation has been accepted."
+      />
       {invitationLink && (
         <CopyInput aria-label="Copy co-speaker invitation link" value={invitationLink} disabled className="mt-8" />
       )}
-      {invitationLink ? (
-        <invite.Form method="post" action="/invitation/revoke">
-          <input type="hidden" name="_type" value={inviteType} />
-          <input type="hidden" name="_id" value={entityId} />
-          <Button type="submit" block className="mt-8 flex items-center" variant="secondary">
-            <NoSymbolIcon className="mr-3 h-5 w-5 text-gray-500" aria-hidden="true" />
-            Revoke invitation link
-          </Button>
-        </invite.Form>
-      ) : (
-        <invite.Form method="post" action="/invitation/generate">
-          <input type="hidden" name="_type" value={inviteType} />
-          <input type="hidden" name="_id" value={entityId} />
-          <Button type="submit" block className="mt-8 flex items-center">
-            <LinkIcon className="mr-3 h-5 w-5 text-white" aria-hidden="true" />
-            Generate invitation link
-          </Button>
-        </invite.Form>
-      )}
+      <Modal.Actions>
+        {invitationLink ? (
+          <invite.Form method="post" action="/invitation/revoke">
+            <input type="hidden" name="_type" value={inviteType} />
+            <input type="hidden" name="_id" value={entityId} />
+            <Button type="submit" variant="secondary">
+              <NoSymbolIcon className="mr-3 h-5 w-5 text-gray-500" aria-hidden="true" />
+              Revoke invitation link
+            </Button>
+          </invite.Form>
+        ) : (
+          <invite.Form method="post" action="/invitation/generate">
+            <input type="hidden" name="_type" value={inviteType} />
+            <input type="hidden" name="_id" value={entityId} />
+            <Button type="submit">
+              <LinkIcon className="mr-3 h-5 w-5 text-white" aria-hidden="true" />
+              Generate invitation link
+            </Button>
+          </invite.Form>
+        )}
+      </Modal.Actions>
     </Modal>
   );
 }

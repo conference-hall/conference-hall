@@ -95,6 +95,8 @@ export async function getOrganizationMembers(slug: string, uid: string) {
 
   return members.map(({ member, role }) => ({
     role,
+    id: member.id,
     name: member.name,
+    photoURL: member.photoURL,
   }));
 }
