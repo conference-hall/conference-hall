@@ -1,9 +1,8 @@
 import cn from 'classnames';
 
-type Icon = React.ComponentType<{ className?: string }>;
 type Props = {
   children: React.ReactNode;
-  icon: Icon;
+  icon: React.ComponentType<{ className?: string }>;
   lineCamp?: boolean;
   truncate?: boolean;
   className?: string;

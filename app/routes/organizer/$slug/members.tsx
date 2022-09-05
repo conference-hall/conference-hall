@@ -16,6 +16,7 @@ import { Avatar } from '~/design-system/Avatar';
 import { ChangeRoleButton, InviteMemberButton, RemoveButton } from '~/components/MemberActions';
 import { Input } from '~/design-system/forms/Input';
 import type { OrganizationContext } from '../$slug';
+import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const uid = await sessionRequired(request);
@@ -59,6 +60,7 @@ export default function OrganizationMembersRoute() {
             aria-label="Find a member"
             placeholder="Find a member"
             className="w-full sm:w-80"
+            icon={MagnifyingGlassIcon}
           />
           {userRole === 'OWNER' && <InviteMemberButton id={organization.id} invitationLink={invitationLink} />}
         </div>

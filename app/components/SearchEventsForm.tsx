@@ -2,7 +2,8 @@ import { Form, useSearchParams, useSubmit } from '@remix-run/react';
 import type { SearchFilters } from '../services/events/search.server';
 import { Input } from '../design-system/forms/Input';
 import { Button } from '../design-system/Buttons';
-import DetailedSelect from '../design-system/forms/DetailedSelect';
+import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
+import Select from '~/design-system/forms/Select';
 
 type Props = {
   filters: SearchFilters;
@@ -32,27 +33,32 @@ export function SearchEventsForm({ filters, className }: Props) {
           defaultValue={terms}
           autoComplete="off"
           className=" w-full"
+          icon={MagnifyingGlassIcon}
         />
         <Button type="submit" className="hidden sm:block">
           Search
         </Button>
       </div>
-      <div className="flex justify-between py-4 sm:justify-end">
-        <DetailedSelect
+      <div className="flex flex-col justify-between gap-4 py-4 sm:flex-row sm:justify-end">
+        <Select
           name="cfp"
           label="Filter by CFP status"
           value={cfp || 'incoming'}
           onChange={handleChange}
+          className="sm:w-56"
+          srOnly
           options={[
             { id: 'incoming', label: 'Incoming CFP' },
             { id: 'past', label: 'Past CFP' },
           ]}
         />
-        <DetailedSelect
+        <Select
           name="type"
           label="Filter by event types"
           value={type || 'all'}
           onChange={handleChange}
+          srOnly
+          className="sm:w-56"
           options={[
             { id: 'all', label: 'Conferences & Meetups' },
             { id: 'conference', label: 'Conferences only' },

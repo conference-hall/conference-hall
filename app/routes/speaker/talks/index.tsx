@@ -9,7 +9,7 @@ import type { SpeakerTalks } from '../../../services/speakers/talks.server';
 import { findTalks } from '../../../services/speakers/talks.server';
 import { mapErrorToResponse } from '../../../services/errors';
 import { SpeakerTalksList } from '../../../components/SpeakerTalksList';
-import DetailedSelect from '../../../design-system/forms/DetailedSelect';
+import Select from '~/design-system/forms/Select';
 
 export const loader: LoaderFunction = async ({ request }) => {
   const uid = await sessionRequired(request);
@@ -44,18 +44,18 @@ export default function SpeakerTalksRoute() {
           </Text>
         </div>
         <div className="flex flex-col gap-4 sm:mt-0 sm:flex-row">
-          <div className="hidden sm:block">
-            <DetailedSelect
-              name="status"
-              label="Talk status"
-              value={archived ? 'archived' : 'active'}
-              onChange={handleStatus}
-              options={[
-                { id: 'active', label: 'Active talks' },
-                { id: 'archived', label: 'Archived talks' },
-              ]}
-            />
-          </div>
+          <Select
+            name="status"
+            label="Talk status"
+            value={archived ? 'archived' : 'active'}
+            onChange={handleStatus}
+            className="sm:w-40"
+            srOnly
+            options={[
+              { id: 'active', label: 'Active talks' },
+              { id: 'archived', label: 'Archived talks' },
+            ]}
+          />
           <ButtonLink to="new">Create a talk abstract</ButtonLink>
         </div>
       </div>

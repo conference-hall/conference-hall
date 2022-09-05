@@ -10,6 +10,7 @@ import { EmptyState } from '~/design-system/EmptyState';
 import { ChevronRightIcon, StarIcon } from '@heroicons/react/24/outline';
 import { getOrganizationEvents } from '~/services/organizers/organizations';
 import { Input } from '~/design-system/forms/Input';
+import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const uid = await sessionRequired(request);
@@ -49,6 +50,7 @@ export default function OrganizationEventsRoute() {
           aria-label="Find an event"
           placeholder="Find an event"
           className="w-full sm:w-80"
+          icon={MagnifyingGlassIcon}
         />
         <ButtonLink to="new">New event</ButtonLink>
       </div>
