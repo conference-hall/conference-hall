@@ -34,8 +34,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
 export const action: ActionFunction = async ({ request, params }) => {
   const uid = await sessionRequired(request);
-  const talkId = params.id;
-  if (!talkId) return null;
+  const talkId = params.id!;
   const form = await request.formData();
   const action = form.get('_action');
   if (action === 'remove-speaker') {

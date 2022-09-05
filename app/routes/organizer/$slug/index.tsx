@@ -41,7 +41,7 @@ export default function OrganizationEventsRoute() {
 
   return (
     <Container className="my-4 sm:my-8">
-      <div className="sm:flex sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="sr-only">Organization events</h2>
         <Input
           type="search"
@@ -50,9 +50,7 @@ export default function OrganizationEventsRoute() {
           placeholder="Find an event"
           className="w-full sm:w-80"
         />
-        <ButtonLink to="new" size="small" className="mt-4 sm:mt-0">
-          New event
-        </ButtonLink>
+        <ButtonLink to="new">New event</ButtonLink>
       </div>
       <div className="my-4 overflow-hidden border border-gray-200 bg-white shadow-sm sm:my-8 sm:rounded-md">
         <ul aria-label="Events list" className="divide-y divide-gray-200">

@@ -1,10 +1,16 @@
-import type { LoaderArgs } from '@remix-run/node';
+import type { ActionArgs, LoaderArgs } from '@remix-run/node';
+import type { OrganizationRole } from '@prisma/client';
 import { json } from '@remix-run/node';
 import { Container } from '~/design-system/Container';
 import { sessionRequired } from '~/services/auth/auth.server';
 import { Text } from '~/design-system/Typography';
 import { ButtonLink } from '~/design-system/Buttons';
-import { getOrganizationMembers } from '~/services/organizers/organizations';
+import {
+  changeMemberRole,
+  getOrganizationMembers,
+  getUserRole,
+  removeMember,
+} from '~/services/organizers/organizations';
 import { useLoaderData } from '@remix-run/react';
 import { Avatar } from '~/design-system/Avatar';
 import { ChangeRoleButton, RemoveButton } from '~/components/MemberActions';
@@ -13,12 +19,31 @@ import { Input } from '~/design-system/forms/Input';
 export const loader = async ({ request, params }: LoaderArgs) => {
   const uid = await sessionRequired(request);
   const slug = params.slug!;
+  const role = await getUserRole(slug, uid);
+  if (role === 'REVIEWER') throw new Response('Forbidden', { status: 403 });
+
   const members = await getOrganizationMembers(slug, uid);
-  return json(members);
+  return json({ userId: uid, userRole: role, members });
+};
+
+export const action = async ({ request, params }: ActionArgs) => {
+  const uid = await sessionRequired(request);
+  const slug = params.id!;
+  const form = await request.formData();
+  const action = form.get('_action')!;
+  const memberId = String(form.get('_memberId'))!;
+
+  if (action === 'remove-member') {
+    await removeMember(slug, uid, memberId);
+  } else if (action === 'change-role') {
+    const memberRole = form.get('memberRole') as OrganizationRole;
+    await changeMemberRole(slug, uid, memberId, memberRole);
+  }
+  return null;
 };
 
 export default function OrganizationMembersRoute() {
-  const members = useLoaderData<typeof loader>();
+  const { userId, userRole, members } = useLoaderData<typeof loader>();
 
   return (
     <>
@@ -32,7 +57,7 @@ export default function OrganizationMembersRoute() {
             placeholder="Find a member"
             className="w-full sm:w-80"
           />
-          <ButtonLink to="new">Invite member</ButtonLink>
+          {userRole === 'OWNER' && <ButtonLink to="new">Invite member</ButtonLink>}
         </div>
         <div className="my-8 overflow-hidden bg-white sm:rounded-md sm:border sm:border-gray-200 sm:shadow-sm">
           <ul aria-label="Members list" className="divide-y divide-gray-200">
@@ -52,10 +77,12 @@ export default function OrganizationMembersRoute() {
                       </Text>
                     </div>
                   </div>
-                  <div className="flex w-full gap-2 sm:w-auto">
-                    <ChangeRoleButton memberId={member.id} memberName={member.name} memberRole={member.role} />
-                    <RemoveButton memberId={member.id} memberName={member.name} />
-                  </div>
+                  {userId !== member.id && userRole === 'OWNER' && (
+                    <div className="flex w-full gap-2 sm:w-auto">
+                      <ChangeRoleButton memberId={member.id} memberName={member.name} memberRole={member.role} />
+                      <RemoveButton memberId={member.id} memberName={member.name} />
+                    </div>
+                  )}
                 </div>
               </li>
             ))}

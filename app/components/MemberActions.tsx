@@ -107,7 +107,14 @@ function ChangeRoleModal({ memberId, memberName, memberRole, isOpen, onClose }: 
         <Modal.Title title={`Change the role of ${memberName}?`} icon={ShieldExclamationIcon} />
         <RadioGroup className="mt-4 sm:mt-8">
           {roles.map((role) => (
-            <Radio key={role.value} id={role.value} name="role" value={role.value} description={role.description}>
+            <Radio
+              key={role.value}
+              id={role.value}
+              name="memberRole"
+              value={role.value}
+              description={role.description}
+              required
+            >
               {role.label}
             </Radio>
           ))}
