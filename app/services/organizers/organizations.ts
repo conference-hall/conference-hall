@@ -200,7 +200,12 @@ type OrganizationData = z.infer<typeof OrganizationSchema>;
 
 const OrganizationSchema = z.object({
   name: z.string().trim().min(3).max(50),
-  slug: z.string().trim().min(3).max(50),
+  slug: z
+    .string()
+    .regex(/^[a-z0-9\\-]*$/, { message: 'Must only contain lower case alphanumeric and dashes (-).' })
+    .trim()
+    .min(3)
+    .max(50),
 });
 
 export function validateOrganizationSettingsForm(form: FormData) {

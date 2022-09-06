@@ -14,6 +14,8 @@ import {
   getOrganizations,
   getUserRole,
   removeMember,
+  updateOrganization,
+  validateOrganizationSettingsForm,
 } from './organizations';
 
 describe('#getOrganizations', () => {
@@ -262,11 +264,75 @@ describe('#getInvitationLink', () => {
 });
 
 describe('#updateOrganization', () => {
-  it.todo('updates the organization');
-  it.todo('throws an error if organization does not exist');
-  it.todo('returns an error if the slug already exists');
+  beforeEach(async () => {
+    await resetDB();
+  });
+  afterEach(disconnectDB);
+
+  it('updates the organization', async () => {
+    const user = await userFactory();
+    const organization = await organizationFactory({
+      attributes: { name: 'Hello world', slug: 'hello-world' },
+      owners: [user],
+    });
+    const result = await updateOrganization(organization.slug, user.id, {
+      name: 'Hello world updated',
+      slug: 'hello-world-updated',
+    });
+    expect(result.slug).toEqual('hello-world-updated');
+  });
+
+  it('throws an error if user is not owner', async () => {
+    const user = await userFactory();
+    const organization = await organizationFactory({ members: [user] });
+
+    await expect(updateOrganization(organization.slug, user.id, { name: 'name', slug: 'slug' })).rejects.toThrowError(
+      OrganizationNotFoundError
+    );
+  });
+
+  it('returns an error if the slug already exists', async () => {
+    const user = await userFactory();
+    const organization = await organizationFactory({ attributes: { slug: 'hello-world-1' }, owners: [user] });
+    await organizationFactory({ attributes: { slug: 'hello-world-2' }, owners: [user] });
+    const result = await updateOrganization(organization.slug, user.id, {
+      name: 'Hello world',
+      slug: 'hello-world-2',
+    });
+    expect(result?.fieldErrors?.slug).toEqual(['Slug already exists, please try another one.']);
+  });
 });
 
 describe('#validateOrganizationSettingsForm', () => {
-  it.todo('validate the organization data');
+  it('validates the organization data', () => {
+    const formData = new FormData();
+    formData.append('name', 'Hello world');
+    formData.append('slug', 'hello-world-1');
+
+    const result = validateOrganizationSettingsForm(formData);
+    expect(result.success && result.data).toEqual({
+      name: 'Hello world',
+      slug: 'hello-world-1',
+    });
+  });
+
+  it('returns errors when data too small', () => {
+    const formData = new FormData();
+    formData.append('name', 'H');
+    formData.append('slug', 'h');
+
+    const result = validateOrganizationSettingsForm(formData);
+    expect(!result.success && result.error.errors.map((e) => e.code)).toEqual(['too_small', 'too_small']);
+  });
+
+  it('validates slug format (alpha-num and dash only)', () => {
+    const formData = new FormData();
+    formData.append('name', 'Hello world');
+    formData.append('slug', 'Hello world/');
+
+    const result = validateOrganizationSettingsForm(formData);
+    expect(!result.success && result.error.errors.map((e) => e.message)).toEqual([
+      'Must only contain lower case alphanumeric and dashes (-).',
+    ]);
+  });
 });
