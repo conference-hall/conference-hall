@@ -10,7 +10,7 @@ import {
   getOrganizationMembers,
   getUserRole,
   removeMember,
-} from '~/services/organizers/organizations';
+} from '~/services/organizers/organizations.server';
 import { useLoaderData, useOutletContext } from '@remix-run/react';
 import { Avatar } from '~/design-system/Avatar';
 import { ChangeRoleButton, InviteMemberButton, RemoveButton } from '~/components/MemberActions';

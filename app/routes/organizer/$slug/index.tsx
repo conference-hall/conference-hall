@@ -8,7 +8,7 @@ import { Link, useLoaderData, useOutletContext } from '@remix-run/react';
 import { ButtonLink } from '~/design-system/Buttons';
 import { EmptyState } from '~/design-system/EmptyState';
 import { ChevronRightIcon, StarIcon } from '@heroicons/react/24/outline';
-import { getOrganizationEvents } from '~/services/organizers/organizations';
+import { getOrganizationEvents } from '~/services/organizers/organizations.server';
 import { Input } from '~/design-system/forms/Input';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 

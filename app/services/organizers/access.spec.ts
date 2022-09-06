@@ -1,7 +1,7 @@
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { organizationFactory } from 'tests/factories/organization';
 import { userFactory } from 'tests/factories/users';
-import { hasOrganizerAccess } from './access';
+import { hasOrganizerAccess } from './access.server';
 
 describe('#hasOrganizerAccess', () => {
   beforeEach(async () => {

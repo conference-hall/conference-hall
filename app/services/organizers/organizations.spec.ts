@@ -16,7 +16,7 @@ import {
   removeMember,
   updateOrganization,
   validateOrganizationSettingsForm,
-} from './organizations';
+} from './organizations.server';
 
 describe('#getOrganizations', () => {
   beforeEach(async () => {

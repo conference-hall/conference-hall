@@ -2,7 +2,7 @@ import { StarIcon } from '@heroicons/react/20/solid';
 import type { ActionFunction, LoaderFunction } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
-import { inviteMemberToOrganization } from '~/services/organizers/organizations';
+import { inviteMemberToOrganization } from '~/services/organizers/organizations.server';
 import { Button } from '../../design-system/Buttons';
 import { Container } from '../../design-system/Container';
 import { Link } from '../../design-system/Links';

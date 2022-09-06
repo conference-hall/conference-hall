@@ -8,14 +8,18 @@ import { Form, useActionData, useOutletContext } from '@remix-run/react';
 import { Input } from '~/design-system/forms/Input';
 import { Button } from '~/design-system/Buttons';
 import type { OrganizationContext } from '../$slug';
-import { getUserRole, updateOrganization, validateOrganizationSettingsForm } from '~/services/organizers/organizations';
+import {
+  getUserRole,
+  updateOrganization,
+  validateOrganizationSettingsForm,
+} from '~/services/organizers/organizations.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const uid = await sessionRequired(request);
   const slug = params.slug!;
   const role = await getUserRole(slug, uid);
   if (role !== 'OWNER') throw new Response('Forbidden', { status: 403 });
-  return json({ name: slug });
+  return null;
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
