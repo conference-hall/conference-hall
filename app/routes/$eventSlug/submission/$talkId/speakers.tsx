@@ -100,7 +100,6 @@ export default function SubmissionSpeakerRoute() {
             </Text>
           </div>
           <MarkdownTextArea
-            id="bio"
             name="bio"
             label="Biography"
             rows={5}

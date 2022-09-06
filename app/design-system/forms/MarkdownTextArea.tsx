@@ -17,7 +17,7 @@ const baseStyles = 'border-gray-300 focus-within:border-indigo-500 focus-within:
 const errorStyles = 'border-red-300 focus:outline-none focus:ring-red-500 focus:border-red-500';
 
 export function MarkdownTextArea({
-  id,
+  name,
   label,
   description,
   className,
@@ -39,18 +39,19 @@ export function MarkdownTextArea({
 
   return (
     <div className={className}>
-      <label htmlFor={id} className="block text-sm font-medium text-gray-700">
+      <label htmlFor={name} className="block text-sm font-medium text-gray-700">
         {label}
       </label>
       <div className="relative">
         <div className={styles}>
           <textarea
-            id={id}
+            id={name}
+            name={name}
             className="block w-full border-0 py-3 placeholder-gray-500 focus:ring-0 sm:text-sm"
             {...rest}
             defaultValue={defaultValue}
             onChange={handleChangeText}
-            aria-describedby={`${id}-description`}
+            aria-describedby={`${name}-description`}
           />
           {/* Spacer element to match the height of the toolbar */}
           <div aria-hidden="true">
@@ -71,7 +72,7 @@ export function MarkdownTextArea({
           </div>
         </div>
       </div>
-      <div id={`${id}-description`}>
+      <div id={`${name}-description`}>
         {description && <p className="mt-1 text-sm text-gray-500">{description}</p>}
         {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
       </div>

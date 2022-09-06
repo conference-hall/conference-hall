@@ -55,8 +55,8 @@ export default function OrganizationMembersRoute() {
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <h2 className="sr-only">Organization members</h2>
           <Input
-            type="search"
             name="query"
+            type="search"
             aria-label="Find a member"
             placeholder="Find a member"
             className="w-full sm:w-80"

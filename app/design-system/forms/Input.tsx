@@ -9,7 +9,7 @@ type Props = {
 } & React.InputHTMLAttributes<HTMLInputElement>;
 
 function InputField(
-  { id, label, type = 'text', className, icon: Icon, error, ...rest }: Props,
+  { name, label, type = 'text', className, icon: Icon, error, ...rest }: Props,
   ref: Ref<HTMLInputElement>
 ) {
   const styles = cn(baseStyles, {
@@ -21,7 +21,7 @@ function InputField(
   return (
     <div className={className}>
       {label && (
-        <label htmlFor={id} className="mb-1 block text-sm font-medium text-gray-700">
+        <label htmlFor={name} className="mb-1 block text-sm font-medium text-gray-700">
           {label}
         </label>
       )}
@@ -32,17 +32,18 @@ function InputField(
           </div>
         )}
         <input
-          id={id}
+          id={name}
+          name={name}
           type={type}
           ref={ref}
           aria-invalid={Boolean(error)}
-          aria-describedby={error ? `${id}-description` : undefined}
+          aria-describedby={error ? `${name}-description` : undefined}
           className={styles}
           {...rest}
         />
       </div>
       {error && (
-        <p className="mt-1 text-sm text-red-600" id={`${id}-description`}>
+        <p className="mt-1 text-sm text-red-600" id={`${name}-description`}>
           {error}
         </p>
       )}

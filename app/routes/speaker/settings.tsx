@@ -109,7 +109,6 @@ export default function SettingsRoute() {
                 <div className="grid grid-cols-1 gap-6">
                   <input type="hidden" name="_type" value="INFO" />
                   <Input
-                    id="name"
                     name="name"
                     label="Full name"
                     defaultValue={user.name || ''}
@@ -117,7 +116,6 @@ export default function SettingsRoute() {
                     error={fieldErrors?.name?.[0]}
                   />
                   <Input
-                    id="email"
                     name="email"
                     label="Email address"
                     defaultValue={user.email || ''}
@@ -125,7 +123,6 @@ export default function SettingsRoute() {
                     error={fieldErrors?.email?.[0]}
                   />
                   <Input
-                    id="photoURL"
                     name="photoURL"
                     label="Avatar picture URL"
                     defaultValue={user.photoURL || ''}
@@ -158,7 +155,6 @@ export default function SettingsRoute() {
                 <div className="grid grid-cols-1 gap-6">
                   <input type="hidden" name="_type" value="DETAILS" />
                   <MarkdownTextArea
-                    id="bio"
                     name="bio"
                     label="Biography"
                     description="Brief description for your profile."
@@ -167,7 +163,6 @@ export default function SettingsRoute() {
                     defaultValue={user.bio || ''}
                   />
                   <MarkdownTextArea
-                    id="references"
                     name="references"
                     label="Speaker references"
                     description="Give some information about your speaker experience: your already-given talks, conferences or meetups as speaker, video links..."
@@ -197,28 +192,24 @@ export default function SettingsRoute() {
                 <div className="grid grid-cols-1 gap-6">
                   <input type="hidden" name="_type" value="ADDITIONAL" />
                   <Input
-                    id="company"
                     name="company"
                     label="Company"
                     defaultValue={user.company || ''}
                     error={fieldErrors?.company?.[0]}
                   />
                   <Input
-                    id="address"
                     name="address"
                     label="Location (city, country)"
                     defaultValue={user.address || ''}
                     error={fieldErrors?.address?.[0]}
                   />
                   <Input
-                    id="twitter"
                     name="twitter"
                     label="Twitter username"
                     defaultValue={user.twitter || ''}
                     error={fieldErrors?.twitter?.[0]}
                   />
                   <Input
-                    id="github"
                     name="github"
                     label="GitHub username"
                     defaultValue={user.github || ''}

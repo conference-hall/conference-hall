@@ -16,7 +16,6 @@ export function EventSurveyForm({ questions, initialValues }: Props) {
           return (
             <TextArea
               key={question.name}
-              id={question.name}
               name={question.name}
               label={question.label}
               defaultValue={initialValues[question.name] as string}

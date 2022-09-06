@@ -45,8 +45,8 @@ export default function OrganizationEventsRoute() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="sr-only">Organization events</h2>
         <Input
-          type="search"
           name="query"
+          type="search"
           aria-label="Find an event"
           placeholder="Find an event"
           className="w-full sm:w-80"

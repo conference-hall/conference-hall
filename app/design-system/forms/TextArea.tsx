@@ -1,7 +1,7 @@
 import cn from 'classnames';
 
 type Props = {
-  id: string;
+  name: string;
   label: string;
   description?: string;
   error?: string;
@@ -11,7 +11,7 @@ const baseStyles = 'focus:ring-indigo-500 focus:border-indigo-500 border-gray-30
 const errorStyles =
   'border-red-300 text-red-900 placeholder-red-300 focus:outline-none focus:ring-red-500 focus:border-red-500';
 
-export function TextArea({ id, label, description, className, error, ...rest }: Props) {
+export function TextArea({ name, label, description, className, error, ...rest }: Props) {
   const styles = cn('shadow-sm block w-full sm:text-sm rounded-md', {
     [baseStyles]: !error,
     [errorStyles]: !!error,
@@ -19,19 +19,20 @@ export function TextArea({ id, label, description, className, error, ...rest }: 
 
   return (
     <div className={className}>
-      <label htmlFor={id} className="block text-sm font-medium text-gray-700">
+      <label htmlFor={name} className="block text-sm font-medium text-gray-700">
         {label}
       </label>
       <div className="mt-1">
         <textarea
-          id={id}
+          id={name}
+          name={name}
           className={styles}
           {...rest}
           aria-invalid={Boolean(error)}
-          aria-describedby={description || error ? `${id}-description` : undefined}
+          aria-describedby={description || error ? `${name}-description` : undefined}
         />
       </div>
-      <div id={`${id}-description`}>
+      <div id={`${name}-description`}>
         {description && <p className="mt-1 text-sm text-gray-500">{description}</p>}
         {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
       </div>

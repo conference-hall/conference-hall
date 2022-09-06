@@ -71,7 +71,7 @@ export default function SubmissionSubmitRoute() {
         )}
       </div>
 
-      <TextArea id="message" name="message" label="Message to organizers" className="mt-8 " rows={4} />
+      <TextArea name="message" label="Message to organizers" className="mt-8 " rows={4} />
 
       {data.codeOfConductUrl && (
         <Checkbox

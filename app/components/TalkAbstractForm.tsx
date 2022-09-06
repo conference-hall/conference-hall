@@ -21,16 +21,8 @@ type Props = {
 export function TalkAbstractForm({ initialValues, errors }: Props) {
   return (
     <div className="space-y-10">
-      <Input
-        id="title"
-        name="title"
-        type="text"
-        label="Title"
-        defaultValue={initialValues?.title}
-        error={errors?.title?.[0]}
-      />
+      <Input name="title" type="text" label="Title" defaultValue={initialValues?.title} error={errors?.title?.[0]} />
       <MarkdownTextArea
-        id="abstract"
         name="abstract"
         label="Abstract"
         description="Brief description of the talk. Markdown is supported "
@@ -53,7 +45,6 @@ export function TalkAbstractForm({ initialValues, errors }: Props) {
         defaultValues={initialValues?.languages ?? []}
       />
       <MarkdownTextArea
-        id="references"
         name="references"
         label="References"
         description="Give more info about your talk: slides, workshop pre-requities, github repo, video, summary, steps of the talk, which conference or meetup where it has been already given?"
