@@ -34,6 +34,8 @@ describe('#getEvent', () => {
       cfpStart: event.cfpStart?.toUTCString(),
       cfpEnd: event.cfpEnd?.toUTCString(),
       cfpState: 'OPENED',
+      formats: [],
+      categories: [],
     });
   });
 

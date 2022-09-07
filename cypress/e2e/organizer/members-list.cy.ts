@@ -31,7 +31,7 @@ describe('Organization members list', () => {
       members.changeRoleButton('Bruce Wayne').click();
       members.selectRoleToChange('Bruce Wayne', 'Owner');
       members.confirmChangeRole('Bruce Wayne');
-      members.member('Bruce Wayne').assertText('owner');
+      members.member('Bruce Wayne').parent().should('contain.text', 'owner');
     });
 
     it('can remove a member', () => {
