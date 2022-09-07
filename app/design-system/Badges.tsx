@@ -26,7 +26,7 @@ type Props = {
 
 export default function Badge({ size = 'base', color = 'gray', rounded = true, children, className }: Props) {
   const style = c(
-    'inline-flex items-center font-medium',
+    'inline-flex items-center font-medium whitespace-nowrap',
     badgeSizes[size],
     badgeColors[color],
     rounded ? 'rounded-full' : 'rounded',

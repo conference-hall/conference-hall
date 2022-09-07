@@ -16,7 +16,7 @@ function getPageSearchParams(page: number, searchParams: URLSearchParams) {
   return searchParams.toString();
 }
 
-export function SearchPagination({ pathname, current, total, className }: Props) {
+export function Pagination({ pathname, current, total, className }: Props) {
   const [searchParams] = useSearchParams();
 
   const pages = useMemo(() => Array.from({ length: total }, (_, i) => i + 1), [total]);

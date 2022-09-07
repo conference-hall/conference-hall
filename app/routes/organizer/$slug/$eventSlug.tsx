@@ -36,7 +36,7 @@ export default function OrganizationEventRoute() {
   return (
     <>
       <Container as="header" className="my-4 flex flex-col sm:flex-row sm:justify-between">
-        <div className="flex flex-col gap-6 sm:flex-row">
+        <div className="flex flex-col gap-4 sm:flex-row sm:gap-6">
           <H1 className="sr-only">Event page</H1>
           <H2 className="flex items-center gap-2">
             <Link to={`/organizer/${organization.slug}`} className="truncate hover:underline">
@@ -53,7 +53,7 @@ export default function OrganizationEventRoute() {
             <Badge color={event.visibility === 'PRIVATE' ? 'red' : 'green'}>{event.visibility.toLowerCase()}</Badge>
           </div>
         </div>
-        <CfpLabel cfpState={event.cfpState} />
+        <CfpLabel cfpState={event.cfpState} className="hidden sm:flex" />
       </Container>
       <OrganizerEvenTabs orgaSlug={organization.slug} eventSlug={event.slug} role={organization.role} />
       <Outlet context={{ event }} />

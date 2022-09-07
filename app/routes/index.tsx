@@ -8,7 +8,7 @@ import type { SearchEvents } from '../services/events/search.server';
 import { searchEvents, validateFilters, validatePage } from '../services/events/search.server';
 import { mapErrorToResponse } from '../services/errors';
 import { SearchEventsForm } from '../components/SearchEventsForm';
-import { SearchPagination } from '../design-system/Pagination';
+import { Pagination } from '../design-system/Pagination';
 import { EmptyState } from '~/design-system/EmptyState';
 import { FaceFrownIcon } from '@heroicons/react/24/outline';
 
@@ -46,7 +46,7 @@ export default function IndexRoute() {
         ) : (
           <SearchEventsList events={results} forTalkId={talkId} />
         )}
-        {pagination.total > 1 && <SearchPagination pathname="/" {...pagination} className="mt-8" />}
+        {pagination.total > 1 && <Pagination pathname="/" {...pagination} className="mt-8" />}
       </Container>
     </div>
   );

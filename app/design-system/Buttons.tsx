@@ -37,7 +37,7 @@ type ButtonStylesProps = {
 const getStyles = ({ variant = 'primary', size = 'regular', block, disabled, loading, className }: ButtonStylesProps) =>
   cn(
     [
-      'relative inline-flex justify-center items-center px-4 py-2',
+      'relative inline-flex justify-center items-center px-4 py-2 whitespace-nowrap',
       'w-full sm:w-auto',
       'border rounded-md shadow-sm',
       'text-sm font-medium',
