@@ -7,62 +7,18 @@ import { IconLabel } from '~/design-system/IconLabel';
 import { Text } from '~/design-system/Typography';
 import { Button } from '~/design-system/Buttons';
 
-const proposals = [
-  {
-    id: '1',
-    title: 'Le web et la typographie',
-    speakers: ['Benjamin Petetot'],
-    formats: ['⚡️ Quickie'],
-    categories: ['Web'],
-    status: 'Accepted',
-    rates: { you: 2, loves: 1, hates: 1, total: '4.0' },
-  },
-  {
-    id: '2',
-    title: 'GitHub Actions: Automatisez-vous la vie',
-    speakers: ['Benjamin Petetot', 'Lise Quesnel'],
-    formats: ['⚡️ Quickie'],
-    categories: ['Web', 'Cloud', 'Cloud', 'Cloud', 'Cloud', 'Cloud', 'Cloud', 'Cloud', 'Cloud', 'Cloud'],
-    status: 'Rejected',
-    rates: { you: 3, loves: 2, hates: 0, total: '2.1' },
-  },
-  {
-    id: '3',
-    title: 'Firebase le nouveau cloud qui déchire',
-    speakers: ['Lise Quesnel'],
-    formats: ['⚡️ Quickie'],
-    categories: ['Cloud', 'Cloud'],
-    status: null,
-    rates: { you: 0, loves: 0, hates: 0, total: '0' },
-  },
-];
+type Proposal = {
+  id: string;
+  title: string;
+  status: string;
+  speakers: (string | null)[];
+  ratings: { hates: number; loves: number; you: number; total: number };
+};
 
-type Props = { total: number };
+type Props = { proposals: Array<Proposal> };
 
-function useCheckboxSelection() {
-  const checkbox = useRef<HTMLInputElement>(null);
-  const [checked, setChecked] = useState(false);
-  const [selection, setSelected] = useState<typeof proposals>([]);
-  const [indeterminate, setIndeterminate] = useState(false);
-
-  useEffect(() => {
-    const isIndeterminate = selection.length > 0 && selection.length < proposals.length;
-    setChecked(selection.length === proposals.length);
-    setIndeterminate(isIndeterminate);
-    checkbox!.current!.indeterminate = isIndeterminate;
-  }, [selection]);
-
-  function toggleAll() {
-    setSelected(checked || indeterminate ? [] : proposals);
-    setChecked(!checked && !indeterminate);
-    setIndeterminate(false);
-  }
-
-  return { checkbox, selection, checked, setSelected, toggleAll };
-}
-
-export function ProposalsList({ total }: Props) {
-  const { checkbox, selection, checked, setSelected, toggleAll } = useCheckboxSelection();
+export function ProposalsList({ proposals }: Props) {
+  const { checkbox, selection, checked, setSelected, toggleAll } = useCheckboxSelection(proposals);
 
   return (
     <div className="-mx-4 mt-4 overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:-mx-6 md:mx-0 md:rounded-lg">
@@ -77,7 +33,7 @@ export function ProposalsList({ total }: Props) {
           />
           <div className="flex items-baseline">
             {selection.length === 0 ? (
-              <Text className="font-medium">{total} proposals</Text>
+              <Text className="font-medium">{proposals.length} proposals</Text>
             ) : (
               <Text className="font-medium">{selection.length} selected</Text>
             )}
@@ -99,9 +55,6 @@ export function ProposalsList({ total }: Props) {
               Select a proposal
             </th>
             <th scope="col">Proposal details</th>
-            <th scope="col" className="hidden lg:table-cell">
-              Formats and categories
-            </th>
             <th scope="col" className="hidden sm:table-cell">
               Status
             </th>
@@ -114,7 +67,7 @@ export function ProposalsList({ total }: Props) {
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-200 bg-white">
-          {proposals.map((proposal) => (
+          {proposals.map((proposal: any) => (
             <tr
               key={proposal.id}
               className={c('relative hover:bg-gray-50', { 'bg-gray-50': selection.includes(proposal) })}
@@ -127,7 +80,9 @@ export function ProposalsList({ total }: Props) {
                   value={proposal.id}
                   checked={selection.includes(proposal)}
                   onChange={(e) =>
-                    setSelected(e.target.checked ? [...selection, proposal] : selection.filter((p) => p !== proposal))
+                    setSelected(
+                      e.target.checked ? [...selection, proposal] : selection.filter((p: any) => p !== proposal)
+                    )
                   }
                 />
               </td>
@@ -143,36 +98,29 @@ export function ProposalsList({ total }: Props) {
                   </Text>
                 </Link>
               </td>
-              <td className="hidden w-0 px-3 py-4 lg:table-cell">
-                <div className="flex items-center justify-end gap-2">
-                  <Badge>{proposal.formats[0]}</Badge>
-                  <Badge>{proposal.categories[0]}</Badge>
-                  <Badge>+2</Badge>
-                </div>
-              </td>
               <td className="hidden w-0 px-3 py-4 text-center sm:table-cell">
                 {proposal.status && (
                   <div className="flex items-center justify-end gap-2">
-                    <Badge color={proposal.status === 'Accepted' ? 'blue' : 'pink'}>{proposal.status}</Badge>
+                    <Badge>{proposal.status?.toLowerCase()}</Badge>
                   </div>
                 )}
               </td>
               <td className="hidden w-0 px-3 py-4 lg:table-cell">
                 <div className="flex items-center justify-around gap-4">
                   <IconLabel icon={XCircleIcon} iconClassName="text-gray-400">
-                    {proposal.rates.hates}
+                    {proposal.ratings.hates}
                   </IconLabel>
                   <IconLabel icon={HeartIcon} iconClassName="text-gray-400">
-                    {proposal.rates.loves}
+                    {proposal.ratings.loves}
                   </IconLabel>
                   <IconLabel icon={StarIcon} iconClassName="text-gray-400">
-                    {proposal.rates.you}
+                    {proposal.ratings.you}
                   </IconLabel>
                 </div>
               </td>
               <td className="w-0 px-3 py-4 pr-4 text-right sm:pr-6">
                 <Text variant="secondary" className="ml-2 text-base font-semibold">
-                  {proposal.rates.total}
+                  {proposal.ratings.total}
                 </Text>
               </td>
             </tr>
@@ -181,4 +129,26 @@ export function ProposalsList({ total }: Props) {
       </table>
     </div>
   );
+}
+
+function useCheckboxSelection(proposals: Array<Proposal>) {
+  const checkbox = useRef<HTMLInputElement>(null);
+  const [checked, setChecked] = useState(false);
+  const [selection, setSelected] = useState<Array<Proposal>>([]);
+  const [indeterminate, setIndeterminate] = useState(false);
+
+  useEffect(() => {
+    const isIndeterminate = selection.length > 0 && selection.length < proposals.length;
+    setChecked(proposals.length !== 0 && selection.length === proposals.length);
+    setIndeterminate(isIndeterminate);
+    checkbox!.current!.indeterminate = isIndeterminate;
+  }, [selection, proposals]);
+
+  function toggleAll() {
+    setSelected(checked || indeterminate ? [] : proposals);
+    setChecked(!checked && !indeterminate);
+    setIndeterminate(false);
+  }
+
+  return { checkbox, selection, checked, setSelected, toggleAll };
 }
