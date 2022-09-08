@@ -4,6 +4,7 @@ import { EventVisibility } from '@prisma/client';
 import type { CfpState } from '~/utils/event';
 import { getCfpState } from '~/utils/event';
 import { db } from '../../services/db';
+import { getPagination } from '../utils/pagination';
 
 export type SearchEvents = {
   filters: SearchFilters;
@@ -33,28 +34,22 @@ export async function searchEvents(filters: SearchFilters, page: SearchPage = 1)
   };
 
   const eventsCount = await db.event.count({ where: eventsWhereInput });
-  const total = Math.ceil(eventsCount / RESULTS_BY_PAGE);
-
-  const pageIndex = computePageIndex(page, total);
+  const pagination = getPagination(page, eventsCount, RESULTS_BY_PAGE);
 
   const events = await db.event.findMany({
-    select: {
-      slug: true,
-      name: true,
-      type: true,
-      address: true,
-      cfpStart: true,
-      cfpEnd: true,
-    },
+    select: { slug: true, name: true, type: true, address: true, cfpStart: true, cfpEnd: true },
     where: eventsWhereInput,
     orderBy: [{ cfpStart: 'desc' }, { name: 'asc' }],
-    skip: pageIndex * RESULTS_BY_PAGE,
+    skip: pagination.pageIndex * RESULTS_BY_PAGE,
     take: RESULTS_BY_PAGE,
   });
 
   return {
     filters,
-    pagination: { current: pageIndex + 1, total },
+    pagination: {
+      current: pagination.currentPage,
+      total: pagination.totalPages,
+    },
     results: events.map((event) => ({
       slug: event.slug,
       name: event.name,
@@ -63,13 +58,6 @@ export async function searchEvents(filters: SearchFilters, page: SearchPage = 1)
       cfpState: getCfpState(event.type, event.cfpStart, event.cfpEnd),
     })),
   };
-}
-
-function computePageIndex(current: number, total: number) {
-  if (total === 0) return 0;
-  if (current <= 0) return 0;
-  if (current > total) return total - 1;
-  return current - 1;
 }
 
 function mapFiltersQuery(type?: string, cfp?: string): Prisma.EventWhereInput {

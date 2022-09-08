@@ -5,6 +5,7 @@ import { userFactory } from 'tests/factories/users';
 import { organizationFactory } from 'tests/factories/organization';
 import { talkFactory } from 'tests/factories/talks';
 import { proposalFactory } from 'tests/factories/proposals';
+import { ratingFactory } from 'tests/factories/ratings';
 
 async function seed() {
   const user = await userFactory({ traits: ['clark-kent'] });
@@ -33,7 +34,7 @@ async function seed() {
   const cat2 = await eventCategoryFactory({ event });
   await eventCategoryFactory({ event });
 
-  await eventFactory({
+  const meetup = await eventFactory({
     traits: ['meetup-cfp-open'],
     organization,
     attributes: { name: 'GDG Nantes', slug: 'gdg-nantes' },
@@ -80,7 +81,15 @@ async function seed() {
     speakers: [user3],
   });
 
-  await proposalFactory({ talk: talk1, event, categories: [cat1], formats: [format1], traits: ['submitted'] });
+  const proposal1 = await proposalFactory({
+    talk: talk1,
+    event,
+    categories: [cat1],
+    formats: [format1],
+    traits: ['submitted'],
+  });
+  await ratingFactory({ proposal: proposal1, user: user, attributes: { feeling: 'POSITIVE', rating: 5 } });
+  await ratingFactory({ proposal: proposal1, user: user2, attributes: { feeling: 'NEGATIVE', rating: 0 } });
 
   const talk2 = await talkFactory({
     attributes: {
@@ -93,7 +102,15 @@ async function seed() {
     speakers: [user3, user2],
   });
 
-  await proposalFactory({ talk: talk2, event, categories: [cat2], formats: [format1, format2], traits: ['accepted'] });
+  const proposal2 = await proposalFactory({
+    talk: talk2,
+    event,
+    categories: [cat2],
+    formats: [format1, format2],
+    traits: ['accepted'],
+  });
+  await ratingFactory({ proposal: proposal2, user: user, attributes: { feeling: 'NO_OPINION', rating: null } });
+  await ratingFactory({ proposal: proposal2, user: user2, attributes: { feeling: 'NEUTRAL', rating: 3 } });
 
   const talk3 = await talkFactory({
     attributes: {
@@ -107,6 +124,13 @@ async function seed() {
   });
 
   await proposalFactory({ talk: talk3, event, categories: [], formats: [], traits: ['rejected'] });
+
+  await Promise.all(
+    Array.from({ length: 26 }).map(async () => {
+      const talk = await talkFactory({ speakers: [user3] });
+      return proposalFactory({ event: meetup, talk });
+    })
+  );
 }
 
 seed();

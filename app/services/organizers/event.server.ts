@@ -3,11 +3,13 @@ import { z } from 'zod';
 import { getCfpState } from '~/utils/event';
 import { db } from '../db';
 import { EventNotFoundError } from '../errors';
+import { getPagination } from '../utils/pagination';
+import { RatingsDetails } from '../utils/ratings';
 
 /**
  * Get event for user
- * @param slug event slug
- * @param uid Id of the user
+ * @param slug event's slug
+ * @param uid Id of the user (member of the event's organization)
  * @returns event
  */
 export async function getEvent(slug: string, uid: string) {
@@ -31,14 +33,22 @@ export async function getEvent(slug: string, uid: string) {
 
 const RESULTS_BY_PAGE = 25;
 
-export async function getProposals(slug: string, uid: string, filters: Filters, page: Pagination = 1) {
+/**
+ * Search for event proposals
+ * @param slug event's slug
+ * @param uid Id of the user (member of the event's organization)
+ * @param filters Filters to apply to the search
+ * @param page Results page number
+ * @returns results of the search with filters, pagination and total results
+ */
+export async function searchProposals(slug: string, uid: string, filters: Filters, page: Pagination = 1) {
   const { query, ratings, formats, categories, status } = filters;
 
   const ratingClause = ratings === 'rated' ? { some: { userId: uid } } : { none: { userId: uid } };
 
   const proposalsWhereInput: Prisma.ProposalWhereInput = {
-    status,
     event: { slug, organization: { members: { some: { memberId: uid } } } },
+    status: { equals: status, not: 'DRAFT' },
     formats: formats ? { some: { id: formats } } : {},
     categories: categories ? { some: { id: categories } } : {},
     ratings: ratings ? ratingClause : {},
@@ -49,40 +59,44 @@ export async function getProposals(slug: string, uid: string, filters: Filters, 
   };
 
   const proposalsCount = await db.proposal.count({ where: proposalsWhereInput });
-  const total = Math.ceil(proposalsCount / RESULTS_BY_PAGE);
-  const pageIndex = computePageIndex(page, total);
+  const pagination = getPagination(page, proposalsCount, RESULTS_BY_PAGE);
 
   const proposals = await db.proposal.findMany({
     include: { speakers: true, ratings: true },
     where: proposalsWhereInput,
     orderBy: [orderBy(filters), { title: 'asc' }],
-    skip: pageIndex * RESULTS_BY_PAGE,
+    skip: pagination.pageIndex * RESULTS_BY_PAGE,
     take: RESULTS_BY_PAGE,
   });
 
   return {
     filters,
-    pagination: { current: pageIndex + 1, total },
-    results: proposals.map((proposal) => ({
-      id: proposal.id,
-      title: proposal.title,
-      status: proposal.status,
-      speakers: proposal.speakers.map(({ name }) => name),
-      ratings: { hates: 0, loves: 0, you: 0, total: 0 },
-    })),
+    total: proposalsCount,
+    pagination: {
+      current: pagination.currentPage,
+      total: pagination.totalPages,
+    },
+    results: proposals.map((proposal) => {
+      const ratings = new RatingsDetails(proposal.ratings);
+      return {
+        id: proposal.id,
+        title: proposal.title,
+        status: proposal.status,
+        speakers: proposal.speakers.map(({ name }) => name),
+        ratings: {
+          positives: ratings.positives,
+          negatives: ratings.negatives,
+          you: ratings.fromUser(uid)?.rating ?? null,
+          total: ratings.average,
+        },
+      };
+    }),
   };
 }
 
 function orderBy({ sort }: Filters): Prisma.ProposalOrderByWithRelationInput {
   if (sort === 'oldest') return { createdAt: 'asc' };
   return { createdAt: 'desc' };
-}
-
-function computePageIndex(current: number, total: number) {
-  if (total === 0) return 0;
-  if (current <= 0) return 0;
-  if (current > total) return total - 1;
-  return current - 1;
 }
 
 export type Filters = z.infer<typeof FiltersSchema>;

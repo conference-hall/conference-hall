@@ -9,7 +9,7 @@ import { ProposalsList } from '~/components/ProposalsList';
 import ProposalsFilters from '~/components/ProposalsFilters';
 import { Pagination } from '~/design-system/Pagination';
 import type { Filters } from '~/services/organizers/event.server';
-import { getProposals, validateFilters, validatePage } from '~/services/organizers/event.server';
+import { searchProposals, validateFilters, validatePage } from '~/services/organizers/event.server';
 import { mapErrorToResponse } from '~/services/errors';
 import type { OrganizerEventContext } from '../$eventSlug';
 
@@ -20,7 +20,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const page = validatePage(url.searchParams);
 
   try {
-    const results = await getProposals(params.eventSlug!, uid, filters, page);
+    const results = await searchProposals(params.eventSlug!, uid, filters, page);
     return json(results);
   } catch (err) {
     throw mapErrorToResponse(err);

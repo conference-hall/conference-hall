@@ -12,7 +12,7 @@ type Proposal = {
   title: string;
   status: string;
   speakers: (string | null)[];
-  ratings: { hates: number; loves: number; you: number; total: number };
+  ratings: { negatives: number; positives: number; you: number | null; total: number | null };
 };
 
 type Props = { proposals: Array<Proposal> };
@@ -67,7 +67,7 @@ export function ProposalsList({ proposals }: Props) {
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-200 bg-white">
-          {proposals.map((proposal: any) => (
+          {proposals.map((proposal) => (
             <tr
               key={proposal.id}
               className={c('relative hover:bg-gray-50', { 'bg-gray-50': selection.includes(proposal) })}
@@ -80,9 +80,7 @@ export function ProposalsList({ proposals }: Props) {
                   value={proposal.id}
                   checked={selection.includes(proposal)}
                   onChange={(e) =>
-                    setSelected(
-                      e.target.checked ? [...selection, proposal] : selection.filter((p: any) => p !== proposal)
-                    )
+                    setSelected(e.target.checked ? [...selection, proposal] : selection.filter((p) => p !== proposal))
                   }
                 />
               </td>
@@ -108,19 +106,19 @@ export function ProposalsList({ proposals }: Props) {
               <td className="hidden w-0 px-3 py-4 lg:table-cell">
                 <div className="flex items-center justify-around gap-4">
                   <IconLabel icon={XCircleIcon} iconClassName="text-gray-400">
-                    {proposal.ratings.hates}
+                    {proposal.ratings.negatives}
                   </IconLabel>
                   <IconLabel icon={HeartIcon} iconClassName="text-gray-400">
-                    {proposal.ratings.loves}
+                    {proposal.ratings.positives}
                   </IconLabel>
                   <IconLabel icon={StarIcon} iconClassName="text-gray-400">
-                    {proposal.ratings.you}
+                    {formatRating(proposal.ratings.you)}
                   </IconLabel>
                 </div>
               </td>
               <td className="w-0 px-3 py-4 pr-4 text-right sm:pr-6">
                 <Text variant="secondary" className="ml-2 text-base font-semibold">
-                  {proposal.ratings.total}
+                  {formatRating(proposal.ratings.total)}
                 </Text>
               </td>
             </tr>
@@ -151,4 +149,14 @@ function useCheckboxSelection(proposals: Array<Proposal>) {
   }
 
   return { checkbox, selection, checked, setSelected, toggleAll };
+}
+
+function formatRating(rating: number | null) {
+  if (rating === null) return '-';
+  return (Math.round(rating * 10) / 10)
+    .toLocaleString(undefined, {
+      minimumFractionDigits: 1,
+      maximumFractionDigits: 1,
+    })
+    .replace(/\.0$/, '');
 }
