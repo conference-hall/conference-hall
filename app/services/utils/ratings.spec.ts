@@ -1,5 +1,5 @@
 import { RatingFeeling } from '@prisma/client';
-import { RatingsDetails } from './ratings';
+import { RatingsDetails } from './ratings.server';
 
 describe('#RatingsInfo', () => {
   it('computes ratings info from user ratings', () => {

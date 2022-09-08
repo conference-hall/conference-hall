@@ -11,7 +11,7 @@ type Props = {
 };
 
 export function SearchEventsForm({ filters, className }: Props) {
-  const { terms, type, cfp } = filters;
+  const { query, type, cfp } = filters;
   const [searchParams] = useSearchParams();
   const talkId = searchParams.get('talkId');
   const submit = useSubmit();
@@ -27,10 +27,10 @@ export function SearchEventsForm({ filters, className }: Props) {
       <div className="flex sm:items-center sm:gap-4">
         <Input
           type="search"
-          name="terms"
+          name="query"
           placeholder="Search conferences and meetups..."
           aria-label="Search conferences and meetups."
-          defaultValue={terms}
+          defaultValue={query}
           autoComplete="off"
           className=" w-full"
           icon={MagnifyingGlassIcon}

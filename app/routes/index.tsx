@@ -1,32 +1,32 @@
-import type { LoaderFunction } from '@remix-run/node';
+import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData, useSearchParams } from '@remix-run/react';
 import { Container } from '../design-system/Container';
 import { H1 } from '../design-system/Typography';
 import { SearchEventsList } from '../components/SearchEventsList';
-import type { SearchEvents } from '../services/events/search.server';
-import { searchEvents, validateFilters, validatePage } from '../services/events/search.server';
+import { searchEvents, validateFilters } from '../services/events/search.server';
 import { mapErrorToResponse } from '../services/errors';
 import { SearchEventsForm } from '../components/SearchEventsForm';
 import { Pagination } from '../design-system/Pagination';
 import { EmptyState } from '~/design-system/EmptyState';
 import { FaceFrownIcon } from '@heroicons/react/24/outline';
+import { validatePage } from '~/services/utils/pagination.server';
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: LoaderArgs) => {
   const url = new URL(request.url);
   const filters = validateFilters(url.searchParams);
   const page = validatePage(url.searchParams);
 
   try {
     const results = await searchEvents(filters, page);
-    return json<SearchEvents>(results);
+    return json(results);
   } catch (err) {
-    mapErrorToResponse(err);
+    throw mapErrorToResponse(err);
   }
 };
 
 export default function IndexRoute() {
-  const { filters, results, pagination } = useLoaderData<SearchEvents>();
+  const { filters, results, pagination } = useLoaderData<typeof loader>();
   const [searchParams] = useSearchParams();
   const talkId = searchParams.get('talkId');
 

@@ -3,8 +3,9 @@ import { z } from 'zod';
 import { getCfpState } from '~/utils/event';
 import { db } from '../db';
 import { EventNotFoundError } from '../errors';
-import { getPagination } from '../utils/pagination';
-import { RatingsDetails } from '../utils/ratings';
+import type { Pagination } from '../utils/pagination.server';
+import { getPagination } from '../utils/pagination.server';
+import { RatingsDetails } from '../utils/ratings.server';
 
 /**
  * Get event for user
@@ -120,13 +121,4 @@ export function validateFilters(params: URLSearchParams) {
     categories: params.get('categories') || undefined,
   });
   return result.success ? result.data : {};
-}
-
-export type Pagination = z.infer<typeof PaginationSchema>;
-
-const PaginationSchema = z.preprocess((a) => parseInt(a as string, 10), z.number().positive().optional());
-
-export function validatePage(params: URLSearchParams) {
-  const result = PaginationSchema.safeParse(params.get('page'));
-  return result.success ? result.data : 1;
 }

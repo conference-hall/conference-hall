@@ -19,7 +19,7 @@ describe('Search conferences and meetups.', () => {
     search.visit();
     search.search('devfest');
 
-    cy.url().should('include', '/?terms=devfest');
+    cy.url().should('include', '/?query=devfest');
     search.results().should('have.length', 1);
     search.result('Devfest Nantes').should('contain', 'Nantes, France').and('contain', 'Call for paper is open');
   });
@@ -28,7 +28,7 @@ describe('Search conferences and meetups.', () => {
     search.visit();
     search.search('gdg');
 
-    cy.url().should('include', '/?terms=gdg');
+    cy.url().should('include', '/?query=gdg');
     search.results().should('have.length', 1);
     search.result('GDG Nantes').should('contain', 'Nantes, France').and('contain', 'Call for paper is open');
   });

@@ -1,6 +1,6 @@
 import { resetDB, disconnectDB } from '../../../tests/db-helpers';
 import { eventFactory } from '../../../tests/factories/events';
-import { searchEvents, validateFilters, validatePage } from './search.server';
+import { searchEvents, validateFilters } from './search.server';
 
 describe('#searchEvents', () => {
   beforeEach(async () => {
@@ -118,11 +118,11 @@ describe('#searchEvents', () => {
       attributes: { name: 'not-returned' },
     });
 
-    const result = await searchEvents({ terms: 'ExpEctEd' });
+    const result = await searchEvents({ query: 'ExpEctEd' });
 
     expect(result.results.length).toBe(1);
     expect(result.results[0].name).toBe('expected-conf');
-    expect(result.filters.terms).toBe('ExpEctEd');
+    expect(result.filters.query).toBe('ExpEctEd');
   });
 
   it('filters by past CFP only', async () => {
@@ -214,23 +214,23 @@ describe('#searchEvents', () => {
 describe('#validateFilters', () => {
   it('returns valid filters', () => {
     const params = new URLSearchParams({
-      terms: 'foo',
+      query: 'foo',
       type: 'all',
       cfp: 'incoming',
     });
     const result = validateFilters(params);
     expect(result).toEqual({
-      terms: 'foo',
+      query: 'foo',
       type: 'all',
       cfp: 'incoming',
       talkId: null,
     });
   });
 
-  it('trims "terms" filter', () => {
-    const params = new URLSearchParams({ terms: '  foo  ' });
+  it('trims "query" filter', () => {
+    const params = new URLSearchParams({ query: '  foo  ' });
     const result = validateFilters(params);
-    expect(result.terms).toBe('foo');
+    expect(result.query).toBe('foo');
   });
 
   it('returns undefined when incorrect "type" filter', () => {
@@ -243,19 +243,5 @@ describe('#validateFilters', () => {
     const params = new URLSearchParams({ cfp: 'XXX' });
     const result = validateFilters(params);
     expect(result.cfp).toBe(undefined);
-  });
-});
-
-describe('#validatePage', () => {
-  it('returns valid page', () => {
-    const params = new URLSearchParams({ page: '1' });
-    const result = validatePage(params);
-    expect(result).toBe(1);
-  });
-
-  it('returns page 1 when page number invalid', () => {
-    const params = new URLSearchParams({ terms: 'XXX' });
-    const result = validatePage(params);
-    expect(result).toBe(1);
   });
 });

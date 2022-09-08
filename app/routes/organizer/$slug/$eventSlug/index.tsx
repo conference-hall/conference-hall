@@ -9,7 +9,8 @@ import { ProposalsList } from '~/components/ProposalsList';
 import ProposalsFilters from '~/components/ProposalsFilters';
 import { Pagination } from '~/design-system/Pagination';
 import type { Filters } from '~/services/organizers/event.server';
-import { searchProposals, validateFilters, validatePage } from '~/services/organizers/event.server';
+import { searchProposals, validateFilters } from '~/services/organizers/event.server';
+import { validatePage } from '~/services/utils/pagination.server';
 import { mapErrorToResponse } from '~/services/errors';
 import type { OrganizerEventContext } from '../$eventSlug';
 
