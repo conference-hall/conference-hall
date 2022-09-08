@@ -15,9 +15,9 @@ type Proposal = {
   ratings: { negatives: number; positives: number; you: number | null; total: number | null };
 };
 
-type Props = { proposals: Array<Proposal> };
+type Props = { proposals: Array<Proposal>; total: number };
 
-export function ProposalsList({ proposals }: Props) {
+export function ProposalsList({ proposals, total }: Props) {
   const { checkbox, selection, checked, setSelected, toggleAll } = useCheckboxSelection(proposals);
 
   return (
@@ -33,7 +33,7 @@ export function ProposalsList({ proposals }: Props) {
           />
           <div className="flex items-baseline">
             {selection.length === 0 ? (
-              <Text className="font-medium">{proposals.length} proposals</Text>
+              <Text className="font-medium">{total} proposals</Text>
             ) : (
               <Text className="font-medium">{selection.length} selected</Text>
             )}
