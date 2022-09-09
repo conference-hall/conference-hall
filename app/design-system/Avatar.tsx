@@ -61,3 +61,19 @@ export function AvatarGroup({ avatars, displayNames = false, className }: Avatar
     </div>
   );
 }
+
+type AvatarNameProps = { name: string; subtitle?: string } & AvatarProps;
+
+export function AvatarName({ name, subtitle, className, ...rest }: AvatarNameProps) {
+  return (
+    <div className="flex items-center">
+      <div>
+        <Avatar {...rest} />
+      </div>
+      <div className="ml-3">
+        <p className="text-sm font-medium text-gray-700 group-hover:text-gray-900">{name}</p>
+        <p className="text-xs font-medium text-gray-500 group-hover:text-gray-700">{subtitle}</p>
+      </div>
+    </div>
+  );
+}

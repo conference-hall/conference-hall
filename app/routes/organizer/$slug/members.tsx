@@ -3,7 +3,6 @@ import type { OrganizationRole } from '@prisma/client';
 import { json } from '@remix-run/node';
 import { Container } from '~/design-system/Container';
 import { sessionRequired } from '~/services/auth/auth.server';
-import { Text } from '~/design-system/Typography';
 import {
   changeMemberRole,
   getInvitationLink,
@@ -12,7 +11,7 @@ import {
   removeMember,
 } from '~/services/organizers/organizations.server';
 import { useLoaderData, useOutletContext } from '@remix-run/react';
-import { Avatar } from '~/design-system/Avatar';
+import { AvatarName } from '~/design-system/Avatar';
 import { ChangeRoleButton, InviteMemberButton, RemoveButton } from '~/components/MemberActions';
 import { Input } from '~/design-system/forms/Input';
 import type { OrganizationContext } from '../$slug';
@@ -68,20 +67,12 @@ export default function OrganizationMembersRoute() {
           <ul aria-label="Members list" className="divide-y divide-gray-200">
             {members.map((member) => (
               <li key={member.id}>
-                <div className="flex flex-col gap-4 px-4 py-4 sm:flex-row sm:items-center sm:gap-0 sm:px-6">
-                  <div className="flex min-w-0 flex-1 items-center">
-                    <div className="flex-shrink-0">
-                      <Avatar photoURL={member.photoURL} size="m" />
-                    </div>
-                    <div className="min-w-0 flex-1 px-4">
-                      <Text as="p" variant="link" className="truncate font-medium">
-                        {member.name}
-                      </Text>
-                      <Text as="p" variant="secondary" size="s" className="mt-1 truncate font-normal">
-                        {member.role.toLowerCase()}
-                      </Text>
-                    </div>
-                  </div>
+                <div className="flex flex-col px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+                  <AvatarName
+                    photoURL={member.photoURL}
+                    name={member.name || 'Unknown'}
+                    subtitle={member.role.toLowerCase()}
+                  />
                   {userId !== member.id && userRole === 'OWNER' && (
                     <div className="flex w-full gap-2 sm:w-auto">
                       <ChangeRoleButton memberId={member.id} memberName={member.name} memberRole={member.role} />

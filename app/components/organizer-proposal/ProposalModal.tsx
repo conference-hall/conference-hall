@@ -11,7 +11,7 @@ import {
 import { Button } from '~/design-system/Buttons';
 import { H1, Text } from '~/design-system/Typography';
 import { TextArea } from '~/design-system/forms/TextArea';
-import { Avatar } from '~/design-system/Avatar';
+import { Avatar, AvatarName } from '~/design-system/Avatar';
 import { Dialog, Disclosure } from '@headlessui/react';
 import Badge from '~/design-system/Badges';
 import { useNavigate, useSearchParams } from '@remix-run/react';
@@ -234,15 +234,7 @@ function SpeakerInfos() {
           <Disclosure.Button
             className={c('flex w-full items-center justify-between px-6 py-4 hover:bg-gray-50', { 'bg-gray-50': open })}
           >
-            <div className="flex w-full items-center gap-3">
-              <Avatar photoURL="http://placekitten.com/24/24" alt="speaker" />
-              <div className="overflow-hidden">
-                <Text className="truncate">Benjamin Petetot</Text>
-                <Text className="truncate" variant="secondary" size="xs">
-                  ben@example.com
-                </Text>
-              </div>
-            </div>
+            <AvatarName photoURL="http://placekitten.com/24/24" name="Benjamin Petetot" subtitle="ben@example.com" />
             {open ? <ChevronDownIcon className="h-6 w-6" /> : <ChevronRightIcon className="h-6 w-6" />}
           </Disclosure.Button>
           <Disclosure.Panel className={c('space-y-4 py-4 px-6', { 'bg-gray-50': open })}>
@@ -300,12 +292,7 @@ function TotalRating() {
           </Disclosure.Button>
           <Disclosure.Panel className="space-y-4 border-b border-gray-200 px-6 py-8">
             <div className="flex justify-between">
-              <div className="flex w-full items-center gap-3">
-                <Avatar size="xs" photoURL="http://placekitten.com/24/24" alt="speaker" />
-                <div className="overflow-hidden">
-                  <Text className="truncate">Benjamin Petetot</Text>
-                </div>
-              </div>
+              <AvatarName photoURL="http://placekitten.com/24/24" size="xs" name="Benjamin Petetot" />
               <div className="flex items-center justify-around gap-4">
                 <IconLabel icon={HeartIcon} iconClassName="text-gray-400">
                   1
@@ -316,12 +303,7 @@ function TotalRating() {
               </div>
             </div>
             <div className="flex justify-between">
-              <div className="flex w-full items-center gap-3">
-                <Avatar size="xs" photoURL="http://placekitten.com/24/24" alt="speaker" />
-                <div className="overflow-hidden">
-                  <Text className="truncate">Benjamin Petetot</Text>
-                </div>
-              </div>
+              <AvatarName photoURL="http://placekitten.com/24/24" size="xs" name="Benjamin Petetot" />
               <div className="flex items-center justify-around gap-4">
                 <IconLabel icon={HeartIcon} iconClassName="text-gray-400">
                   1

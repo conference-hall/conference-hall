@@ -1,9 +1,8 @@
 import { TrashIcon, UserPlusIcon } from '@heroicons/react/20/solid';
 import { Form } from '@remix-run/react';
 import { useState } from 'react';
-import { Avatar } from '~/design-system/Avatar';
+import { AvatarName } from '~/design-system/Avatar';
 import { Button } from '../design-system/Buttons';
-import { Text } from '../design-system/Typography';
 import { InvitationModal } from './InvitationModal';
 
 type InviteType = 'TALK' | 'PROPOSAL';
@@ -24,15 +23,12 @@ export function CoSpeakersList({ speakers, showRemoveAction = false, className }
     <div className={className}>
       {speakers.map((speaker) => (
         <div key={speaker.id} className="mt-4 flex items-center justify-between">
-          <div className="flex items-center">
-            <Avatar photoURL={speaker.photoURL} alt={speaker.name} />
-            <div className="ml-3">
-              <Text>{speaker.name}</Text>
-              <Text variant="secondary" size="xs">
-                {speaker.isOwner ? 'Owner' : 'Co-speaker'}
-              </Text>
-            </div>
-          </div>
+          <AvatarName
+            photoURL={speaker.photoURL}
+            alt={speaker.name}
+            name={speaker.name || 'Unknown'}
+            subtitle={speaker.isOwner ? 'Owner' : 'Co-speaker'}
+          />
           {showRemoveAction && !speaker.isOwner && (
             <RemoveCoSpeakerButton speakerId={speaker.id} speakerName={speaker.name} />
           )}
