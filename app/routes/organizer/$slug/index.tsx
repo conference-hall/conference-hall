@@ -58,7 +58,7 @@ export default function OrganizationEventsRoute() {
         <ul aria-label="Events list" className="divide-y divide-gray-200">
           {events.map((event) => (
             <li key={event.slug}>
-              <Link to={event.slug} className="block hover:bg-gray-50">
+              <Link to={`${event.slug}/proposals`} className="block hover:bg-gray-50">
                 <div className="flex px-4 py-4 sm:px-6">
                   <div className="min-w-0 flex-1 truncate sm:flex sm:items-center sm:justify-between">
                     <div className="flex items-baseline text-sm">

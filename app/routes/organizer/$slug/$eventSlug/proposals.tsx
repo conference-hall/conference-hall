@@ -2,7 +2,7 @@ import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Container } from '~/design-system/Container';
 import { sessionRequired } from '~/services/auth/auth.server';
-import { useLoaderData, useOutletContext, useParams } from '@remix-run/react';
+import { Outlet, useLoaderData, useLocation, useOutletContext } from '@remix-run/react';
 import { EmptyState } from '~/design-system/EmptyState';
 import { InboxIcon } from '@heroicons/react/24/outline';
 import { ProposalsList } from '~/components/ProposalsList';
@@ -29,8 +29,8 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
 export default function OrganizerEventProposalsRoute() {
   const { results, filters, pagination, total } = useLoaderData<typeof loader>();
-  const { slug, eventSlug } = useParams();
   const { event } = useOutletContext<OrganizerEventContext>();
+  const location = useLocation();
 
   const hasFilters = Object.values(filters).filter(Boolean).length !== 0;
 
@@ -53,12 +53,8 @@ export default function OrganizerEventProposalsRoute() {
       <h2 className="sr-only">Event proposals</h2>
       <ProposalsFilters filters={filters} formats={event.formats} categories={event.categories} />
       <ProposalsList proposals={results} total={total} />
-      <Pagination
-        pathname={`/organizer/${slug}/${eventSlug}`}
-        current={pagination.current}
-        total={pagination.total}
-        className="mt-8"
-      />
+      <Pagination pathname={location.pathname} current={pagination.current} total={pagination.total} className="mt-8" />
+      <Outlet />
     </Container>
   );
 }

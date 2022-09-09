@@ -15,7 +15,7 @@ type AvatarProps = {
 
 export function Avatar({ photoURL, alt, size = 'base', ring = false, ringColor = 'primary', className }: AvatarProps) {
   const styles = c(
-    'mx-auto rounded-full bg-gray-200',
+    'rounded-full bg-gray-200',
     sizes[size],
     ring ? rings[size] : null,
     ring ? ringsColor[ringColor] : null,

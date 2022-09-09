@@ -2,7 +2,7 @@ import cn from 'classnames';
 
 type Props = {
   name: string;
-  label: string;
+  label?: string;
   description?: string;
   error?: string;
 } & React.TextareaHTMLAttributes<HTMLTextAreaElement>;
@@ -19,19 +19,19 @@ export function TextArea({ name, label, description, className, error, ...rest }
 
   return (
     <div className={className}>
-      <label htmlFor={name} className="block text-sm font-medium text-gray-700">
-        {label}
-      </label>
-      <div className="mt-1">
-        <textarea
-          id={name}
-          name={name}
-          className={styles}
-          {...rest}
-          aria-invalid={Boolean(error)}
-          aria-describedby={description || error ? `${name}-description` : undefined}
-        />
-      </div>
+      {label && (
+        <label htmlFor={name} className="mb-1 block text-sm font-medium text-gray-700">
+          {label}
+        </label>
+      )}
+      <textarea
+        id={name}
+        name={name}
+        className={styles}
+        {...rest}
+        aria-invalid={Boolean(error)}
+        aria-describedby={description || error ? `${name}-description` : undefined}
+      />
       <div id={`${name}-description`}>
         {description && <p className="mt-1 text-sm text-gray-500">{description}</p>}
         {error && <p className="mt-1 text-sm text-red-600">{error}</p>}

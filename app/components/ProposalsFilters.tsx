@@ -4,7 +4,7 @@ import { Input } from '~/design-system/forms/Input';
 import { AdjustmentsVerticalIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { useState } from 'react';
 import Select from '~/design-system/forms/Select';
-import { Form, useParams, useSearchParams, useSubmit } from '@remix-run/react';
+import { Form, useLocation, useSearchParams, useSubmit } from '@remix-run/react';
 import type { Filters } from '~/services/organizers/event.server';
 
 type Props = {
@@ -35,15 +35,13 @@ const sortOptions = [
 
 export default function ProposalsFilters({ filters, formats, categories }: Props) {
   const { query, ...others } = filters;
-  const { slug, eventSlug } = useParams();
+  const location = useLocation();
   const [searchParams] = useSearchParams();
   const submit = useSubmit();
 
-  const action = `/organizer/${slug}/${eventSlug}`;
-
   function handleChange(name: string, id: string) {
     const params = Object.fromEntries(searchParams);
-    submit({ ...params, [name]: id }, { method: 'get', action });
+    submit({ ...params, [name]: id }, { method: 'get', action: location.pathname });
   }
 
   const defaultOpened = Object.values(others).filter(Boolean).length !== 0;
@@ -51,7 +49,7 @@ export default function ProposalsFilters({ filters, formats, categories }: Props
   const hasFilters = defaultOpened || Boolean(query);
 
   return (
-    <Form action={action} method="get">
+    <Form action={location.pathname} method="get">
       <div className="flex flex-col gap-4 pb-4 sm:flex-row sm:items-center sm:justify-between">
         <Input
           name="query"
@@ -65,7 +63,7 @@ export default function ProposalsFilters({ filters, formats, categories }: Props
         />
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
           {hasFilters && (
-            <ButtonLink to={action} type="reset" variant="secondary">
+            <ButtonLink to={location.pathname} type="button" variant="secondary">
               Clear
             </ButtonLink>
           )}
