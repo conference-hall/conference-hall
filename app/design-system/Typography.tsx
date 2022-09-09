@@ -37,8 +37,8 @@ export function H3(props: TitleProps) {
 }
 
 const textSize = {
-  base: 'text-base',
-  sm: 'text-sm',
+  m: 'text-base',
+  s: 'text-sm',
   xs: 'text-xs',
 };
 
@@ -58,7 +58,7 @@ type TextProps = {
   children: React.ReactNode;
 };
 
-export function Text({ variant = 'primary', size = 'sm', className, as = 'p', ...rest }: TextProps) {
+export function Text({ variant = 'primary', size = 's', className, as = 'p', ...rest }: TextProps) {
   const Tag = as ?? 'p';
   return <Tag className={c(textSize[size], textColors[variant], className)} {...rest} />;
 }

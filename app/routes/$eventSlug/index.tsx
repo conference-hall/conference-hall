@@ -34,7 +34,7 @@ export default function EventRoute() {
       </Container>
 
       <Container as="section" className="mt-8">
-        <Markdown source={event.description} size="base" />
+        <Markdown source={event.description} size="m" />
       </Container>
 
       {event.websiteUrl || event.contactEmail || event.codeOfConductUrl ? (

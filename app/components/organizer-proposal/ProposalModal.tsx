@@ -17,7 +17,7 @@ import Badge from '~/design-system/Badges';
 import { useNavigate, useSearchParams } from '@remix-run/react';
 import { IconLabel } from '~/design-system/IconLabel';
 import Select from '~/design-system/forms/Select';
-import { PencilIcon } from '@heroicons/react/20/solid';
+import { PencilSquareIcon } from '@heroicons/react/20/solid';
 
 type Props = { proposal: string | null };
 
@@ -31,8 +31,7 @@ export function ProposalModal({ proposal }: Props) {
         <div className="absolute top-0 z-20 h-screen bg-white">
           <div className="flex h-28 items-center justify-between border-b border-gray-200 bg-gray-50 py-8 px-8">
             <div>
-              <Button variant="secondary">
-                <ChevronLeftIcon className="mr-3 h-4 w-4" />
+              <Button variant="secondary" iconLeft={ChevronLeftIcon}>
                 Back to list
               </Button>
             </div>
@@ -52,8 +51,7 @@ export function ProposalModal({ proposal }: Props) {
                 srOnly
                 value="SUBMITTED"
               />
-              <Button variant="secondary">
-                <PencilIcon className="mr-3 h-3 w-3" />
+              <Button variant="secondary" iconLeft={PencilSquareIcon}>
                 Edit
               </Button>
             </div>
@@ -71,21 +69,19 @@ export function ProposalModal({ proposal }: Props) {
           </div>
           <div className="flex h-28 items-center justify-between border-t border-gray-200 bg-gray-50 py-8 px-8">
             <div className="w-24">
-              <Button variant="secondary">
-                <ChevronLeftIcon className="mr-3 h-4 w-4" />
+              <Button variant="secondary" iconLeft={ChevronLeftIcon}>
                 Previous
               </Button>
             </div>
             <div className="flex flex-col items-center gap-2 font-medium">
               <Ratings />
-              <Text size="sm" variant="secondary">
+              <Text size="s" variant="secondary">
                 Not rated yet!
               </Text>
             </div>
             <div className="w-24">
-              <Button variant="secondary">
+              <Button variant="secondary" iconRight={ChevronRightIcon}>
                 Next
-                <ChevronRightIcon className="ml-3 h-4 w-4" />
               </Button>
             </div>
           </div>
@@ -305,7 +301,7 @@ function TotalRating() {
           <Disclosure.Panel className="space-y-4 border-b border-gray-200 px-6 py-8">
             <div className="flex justify-between">
               <div className="flex w-full items-center gap-3">
-                <Avatar size="s" photoURL="http://placekitten.com/24/24" alt="speaker" />
+                <Avatar size="xs" photoURL="http://placekitten.com/24/24" alt="speaker" />
                 <div className="overflow-hidden">
                   <Text className="truncate">Benjamin Petetot</Text>
                 </div>
@@ -321,7 +317,7 @@ function TotalRating() {
             </div>
             <div className="flex justify-between">
               <div className="flex w-full items-center gap-3">
-                <Avatar size="s" photoURL="http://placekitten.com/24/24" alt="speaker" />
+                <Avatar size="xs" photoURL="http://placekitten.com/24/24" alt="speaker" />
                 <div className="overflow-hidden">
                   <Text className="truncate">Benjamin Petetot</Text>
                 </div>

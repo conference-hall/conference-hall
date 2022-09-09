@@ -9,7 +9,7 @@ export default function AboutRoute() {
         <H1>Welcome to Conference Hall.</H1>
         <H2 className="mt-2 text-gray-500">All-in-one call for paper platform.</H2>
         <div className="mt-12">
-          <ButtonLink to="/" size="large">
+          <ButtonLink to="/" size="l">
             See all conferences and meetups
           </ButtonLink>
         </div>

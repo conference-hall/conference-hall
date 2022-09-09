@@ -77,7 +77,7 @@ export default function OrganizationMembersRoute() {
                       <Text as="p" variant="link" className="truncate font-medium">
                         {member.name}
                       </Text>
-                      <Text as="p" variant="secondary" size="sm" className="mt-1 truncate font-normal">
+                      <Text as="p" variant="secondary" size="s" className="mt-1 truncate font-normal">
                         {member.role.toLowerCase()}
                       </Text>
                     </div>

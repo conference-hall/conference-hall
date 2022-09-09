@@ -5,36 +5,67 @@ import cn from 'classnames';
 
 type ButtonProps = ButtonStylesProps & React.ButtonHTMLAttributes<HTMLButtonElement>;
 
-export function Button({ children, variant, size, block, disabled, loading, className, ...rest }: ButtonProps) {
+export function Button({
+  children,
+  variant,
+  size,
+  block,
+  disabled,
+  loading,
+  className,
+  iconClassName,
+  iconLeft: IconLeft,
+  iconRight: IconRight,
+  ...rest
+}: ButtonProps) {
   const styles = getStyles({ variant, size, block, disabled, loading, className });
   return (
     <button className={styles} disabled={disabled} aria-disabled={disabled} {...rest}>
+      {IconLeft && <IconLeft className={getIconStyle({ size, dir: 'left', iconClassName })} aria-hidden="true" />}
       {children}
+      {IconRight && <IconRight className={getIconStyle({ size, dir: 'right', iconClassName })} aria-hidden="true" />}
     </button>
   );
 }
 
 type ButtonLinkProps = ButtonStylesProps & LinkProps;
 
-export function ButtonLink({ children, variant, size, block, disabled, loading, className, ...rest }: ButtonLinkProps) {
+export function ButtonLink({
+  children,
+  variant,
+  size,
+  block,
+  disabled,
+  loading,
+  className,
+  iconClassName,
+  iconLeft: IconLeft,
+  iconRight: IconRight,
+  ...rest
+}: ButtonLinkProps) {
   const styles = getStyles({ variant, size, block, disabled, loading, className });
   return (
     <Link className={styles} {...rest}>
+      {IconLeft && <IconLeft className={getIconStyle({ size, dir: 'left', iconClassName })} aria-hidden="true" />}
       {children}
+      {IconRight && <IconRight className={getIconStyle({ size, dir: 'right', iconClassName })} aria-hidden="true" />}
     </Link>
   );
 }
 
 type ButtonStylesProps = {
   variant?: 'primary' | 'secondary' | 'text';
-  size?: 'small' | 'regular' | 'large';
+  size?: 's' | 'm' | 'l';
   block?: boolean;
   loading?: boolean;
   className?: string;
+  iconClassName?: string;
   disabled?: boolean;
+  iconLeft?: React.ComponentType<{ className?: string }>;
+  iconRight?: React.ComponentType<{ className?: string }>;
 };
 
-const getStyles = ({ variant = 'primary', size = 'regular', block, disabled, loading, className }: ButtonStylesProps) =>
+const getStyles = ({ variant = 'primary', size = 'm', block, disabled, loading, className }: ButtonStylesProps) =>
   cn(
     [
       'relative inline-flex justify-center items-center px-4 py-2 whitespace-nowrap',
@@ -47,9 +78,28 @@ const getStyles = ({ variant = 'primary', size = 'regular', block, disabled, loa
       'text-white bg-indigo-600 hover:bg-indigo-700 border border-transparent': variant === 'primary',
       'text-gray-700 bg-white hover:bg-gray-50 border-gray-300': variant === 'secondary',
       'opacity-50 cursor-not-allowed': disabled || loading,
-      'px-2.5 py-1.5 text-xs': size === 'small',
-      'px-6 py-3 text-base': size === 'large',
+      'px-2.5 py-1.5 text-xs': size === 's',
+      'px-6 py-3 text-base': size === 'l',
       'sm:w-full': block,
     },
     className
+  );
+
+type IconStylesProps = {
+  size?: 's' | 'm' | 'l';
+  dir?: 'right' | 'left';
+  iconClassName?: string;
+};
+
+const getIconStyle = ({ size = 'm', dir, iconClassName }: IconStylesProps) =>
+  cn(
+    {
+      '-ml-0.5 mr-2 h-4 w-4': size === 's' && dir === 'left',
+      '-ml-1 mr-2 h-5 w-5': size === 'm' && dir === 'left',
+      '-ml-1 mr-3 h-5 w-5': size === 'l' && dir === 'left',
+      'ml-2 -mr-0.5 h-4 w-4': size === 's' && dir === 'right',
+      'ml-2 -mr-1 h-5 w-5': size === 'm' && dir === 'right',
+      'ml-3 -mr-1 h-5 w-5': size === 'l' && dir === 'right',
+    },
+    iconClassName
   );

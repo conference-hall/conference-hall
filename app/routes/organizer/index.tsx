@@ -29,7 +29,7 @@ export default function OrganizerRoute() {
     <Container className="my-4 sm:my-8">
       <div className="sm:flex sm:items-center sm:justify-between">
         <H1>Organizations</H1>
-        <ButtonLink variant="secondary" to="/organizer/new" size="small" className="mt-4 sm:mt-0">
+        <ButtonLink variant="secondary" to="/organizer/new" size="s" className="mt-4 sm:mt-0">
           New organization
         </ButtonLink>
       </div>

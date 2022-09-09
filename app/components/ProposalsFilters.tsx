@@ -72,13 +72,9 @@ export default function ProposalsFilters({ filters, formats, categories }: Props
             onClick={() => setFiltersOpen(!filtersOpen)}
             variant="secondary"
             className="group flex items-center"
+            iconLeft={AdjustmentsVerticalIcon}
+            iconClassName={c('text-gray-400 group-hover:text-gray-500', { 'rotate-180 text-indigo-400': filtersOpen })}
           >
-            <AdjustmentsVerticalIcon
-              className={c('mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500', {
-                'rotate-180 text-indigo-400': filtersOpen,
-              })}
-              aria-hidden="true"
-            />
             Filters
           </Button>
         </div>

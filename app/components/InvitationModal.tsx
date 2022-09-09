@@ -31,8 +31,7 @@ export function InvitationModal({ title, description, open, onClose, invitationL
           <invite.Form method="post" action="/invitation/revoke">
             <input type="hidden" name="_type" value={type} />
             <input type="hidden" name="_id" value={id} />
-            <Button type="submit" variant="secondary">
-              <NoSymbolIcon className="mr-3 h-5 w-5 text-gray-500" aria-hidden="true" />
+            <Button type="submit" variant="secondary" iconLeft={NoSymbolIcon}>
               Revoke invitation link
             </Button>
           </invite.Form>
@@ -40,8 +39,7 @@ export function InvitationModal({ title, description, open, onClose, invitationL
           <invite.Form method="post" action="/invitation/generate">
             <input type="hidden" name="_type" value={type} />
             <input type="hidden" name="_id" value={id} />
-            <Button type="submit">
-              <LinkIcon className="mr-3 h-5 w-5 text-white" aria-hidden="true" />
+            <Button type="submit" iconLeft={LinkIcon}>
               Generate invitation link
             </Button>
           </invite.Form>

@@ -41,10 +41,10 @@ export function ProposalsList({ proposals, total }: Props) {
           </div>
         </div>
         <div className="flex flex-row items-center gap-2">
-          <Button variant="secondary" size="small" disabled={selection.length === 0}>
+          <Button variant="secondary" size="s" disabled={selection.length === 0}>
             Mark as...
           </Button>
-          <Button variant="secondary" size="small" disabled={selection.length === 0}>
+          <Button variant="secondary" size="s" disabled={selection.length === 0}>
             Export
           </Button>
         </div>

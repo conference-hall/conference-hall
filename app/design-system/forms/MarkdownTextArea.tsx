@@ -65,7 +65,7 @@ export function MarkdownTextArea({
         <div className="absolute inset-x-px bottom-0 flex items-center justify-between space-x-3 border-t border-gray-200 px-2 py-2 sm:px-3">
           <p className="text-xs text-gray-500">Mardown supported.</p>
           <div className="flex-shrink-0">
-            <Button type="button" variant="secondary" size="small" onClick={handleOpenPreview}>
+            <Button type="button" variant="secondary" size="s" onClick={handleOpenPreview}>
               Preview
             </Button>
             <MardownPreviewModal markdown={markdown} isOpen={isPreviewOpen} onClose={handleClosePreview} />

@@ -1,7 +1,7 @@
 import c from 'classnames';
 
-const sizes = { s: 'h-6 w-6', base: 'h-8 w-8', m: 'h-12 w-12', l: 'h-16 w-16', xl: 'h-20 w-20' };
-const rings = { s: 'ring-2', base: 'ring-2', m: 'ring-2', l: 'ring-4', xl: 'ring-4' };
+const sizes = { xs: 'h-6 w-6', s: 'h-8 w-8', m: 'h-12 w-12', l: 'h-16 w-16', xl: 'h-20 w-20' };
+const rings = { xs: 'ring-2', s: 'ring-2', m: 'ring-2', l: 'ring-4', xl: 'ring-4' };
 const ringsColor = { white: 'ring-white', primary: 'ring-indigo-500' };
 
 type AvatarProps = {
@@ -13,7 +13,7 @@ type AvatarProps = {
   className?: string;
 };
 
-export function Avatar({ photoURL, alt, size = 'base', ring = false, ringColor = 'primary', className }: AvatarProps) {
+export function Avatar({ photoURL, alt, size = 's', ring = false, ringColor = 'primary', className }: AvatarProps) {
   const styles = c(
     'rounded-full bg-gray-200',
     sizes[size],
@@ -49,7 +49,7 @@ export function AvatarGroup({ avatars, displayNames = false, className }: Avatar
           key={avatar.name}
           photoURL={avatar.photoURL}
           alt={avatar.name}
-          size="s"
+          size="xs"
           ring
           ringColor="white"
           className="inline-block"

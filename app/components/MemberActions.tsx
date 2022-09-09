@@ -16,7 +16,7 @@ export function RemoveButton({ memberId, memberName }: RemoveButtonProps) {
       <Button
         aria-label={`Remove ${memberName} from organization`}
         variant="secondary"
-        size="small"
+        size="s"
         onClick={() => setModalOpen(true)}
       >
         Remove
@@ -70,7 +70,7 @@ export function ChangeRoleButton({ memberId, memberName, memberRole }: ChangeRol
       <Button
         aria-label={`Change role of ${memberName}`}
         variant="secondary"
-        size="small"
+        size="s"
         onClick={() => setModalOpen(true)}
       >
         Change role
@@ -140,8 +140,7 @@ export function InviteMemberButton({ id, invitationLink }: InviteProps) {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <Button onClick={() => setOpen(true)} className="group flex items-center">
-        <UserPlusIcon className="mr-3 h-5 w-5" aria-hidden="true" />
+      <Button onClick={() => setOpen(true)} iconLeft={UserPlusIcon}>
         Invite member
       </Button>
       <InvitationModal

@@ -32,7 +32,7 @@ export default function OrganizationEventsRoute() {
           description="Get started by creating your first event."
         >
           <h2 className="sr-only">Organization events</h2>
-          <ButtonLink variant="secondary" to="new" size="small" className="mt-4 sm:mt-0">
+          <ButtonLink variant="secondary" to="new" size="s" className="mt-4 sm:mt-0">
             New event
           </ButtonLink>
         </EmptyState>
