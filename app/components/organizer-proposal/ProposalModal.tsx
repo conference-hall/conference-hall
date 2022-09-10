@@ -4,7 +4,6 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   HeartIcon,
-  NoSymbolIcon,
   StarIcon,
   XCircleIcon,
 } from '@heroicons/react/24/outline';
@@ -18,6 +17,7 @@ import { useNavigate, useSearchParams } from '@remix-run/react';
 import { IconLabel } from '~/design-system/IconLabel';
 import Select from '~/design-system/forms/Select';
 import { PencilSquareIcon } from '@heroicons/react/20/solid';
+import { RatingButtons } from './RatingButtons';
 
 type Props = { proposal: string | null };
 
@@ -73,12 +73,7 @@ export function ProposalModal({ proposal }: Props) {
                 Previous
               </Button>
             </div>
-            <div className="flex flex-col items-center gap-2 font-medium">
-              <Ratings />
-              <Text size="s" variant="secondary">
-                Not rated yet!
-              </Text>
-            </div>
+            <RatingButtons />
             <div className="w-24">
               <Button variant="secondary" iconRight={ChevronRightIcon}>
                 Next
@@ -208,21 +203,6 @@ function RightPanel() {
         </div>
       </div>
     </>
-  );
-}
-
-function Ratings({ className }: { className?: string }) {
-  return (
-    <div className={c('flex items-center gap-6', className)}>
-      <NoSymbolIcon className="h-10 w-10" />
-      <XCircleIcon className="h-10 w-10" />
-      <StarIcon className="h-10 w-10" />
-      <StarIcon className="h-10 w-10" />
-      <StarIcon className="h-10 w-10" />
-      <StarIcon className="h-10 w-10" />
-      <StarIcon className="h-10 w-10" />
-      <HeartIcon className="h-10 w-10" />
-    </div>
   );
 }
 
