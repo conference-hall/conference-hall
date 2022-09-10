@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { getCfpState } from '~/utils/event';
 import { jsonToArray } from '~/utils/prisma';
 import { db } from '../db';
-import { EventNotFoundError, ProposalNotFoundError } from '../errors';
+import { EventNotFoundError, ForbiddenOperationError, ProposalNotFoundError } from '../errors';
 import type { Pagination } from '../utils/pagination.server';
 import { getPagination } from '../utils/pagination.server';
 import { RatingsDetails } from '../utils/ratings.server';
@@ -44,29 +44,16 @@ const RESULTS_BY_PAGE = 25;
  * @returns results of the search with filters, pagination and total results
  */
 export async function searchProposals(slug: string, uid: string, filters: Filters, page: Pagination = 1) {
-  const { query, ratings, formats, categories, status } = filters;
+  const whereClause = proposalWhereInput(slug, uid, filters);
+  const orderByClause = proposalOrderBy(filters);
 
-  const ratingClause = ratings === 'rated' ? { some: { userId: uid } } : { none: { userId: uid } };
-
-  const proposalsWhereInput: Prisma.ProposalWhereInput = {
-    event: { slug, organization: { members: { some: { memberId: uid } } } },
-    status: { equals: status, not: 'DRAFT' },
-    formats: formats ? { some: { id: formats } } : {},
-    categories: categories ? { some: { id: categories } } : {},
-    ratings: ratings ? ratingClause : {},
-    OR: [
-      { title: { contains: query, mode: 'insensitive' } },
-      { speakers: { some: { name: { contains: query, mode: 'insensitive' } } } },
-    ],
-  };
-
-  const proposalsCount = await db.proposal.count({ where: proposalsWhereInput });
+  const proposalsCount = await db.proposal.count({ where: whereClause });
   const pagination = getPagination(page, proposalsCount, RESULTS_BY_PAGE);
 
   const proposals = await db.proposal.findMany({
     include: { speakers: true, ratings: true },
-    where: proposalsWhereInput,
-    orderBy: [orderBy(filters), { title: 'asc' }],
+    where: whereClause,
+    orderBy: orderByClause,
     skip: pagination.pageIndex * RESULTS_BY_PAGE,
     take: RESULTS_BY_PAGE,
   });
@@ -96,9 +83,26 @@ export async function searchProposals(slug: string, uid: string, filters: Filter
   };
 }
 
-function orderBy({ sort }: Filters): Prisma.ProposalOrderByWithRelationInput {
-  if (sort === 'oldest') return { createdAt: 'asc' };
-  return { createdAt: 'desc' };
+function proposalWhereInput(slug: string, uid: string, filters: Filters): Prisma.ProposalWhereInput {
+  const { query, ratings, formats, categories, status } = filters;
+  const ratingClause = ratings === 'rated' ? { some: { userId: uid } } : { none: { userId: uid } };
+
+  return {
+    event: { slug, organization: { members: { some: { memberId: uid } } } },
+    status: { equals: status, not: 'DRAFT' },
+    formats: formats ? { some: { id: formats } } : {},
+    categories: categories ? { some: { id: categories } } : {},
+    ratings: ratings ? ratingClause : {},
+    OR: [
+      { title: { contains: query, mode: 'insensitive' } },
+      { speakers: { some: { name: { contains: query, mode: 'insensitive' } } } },
+    ],
+  };
+}
+
+function proposalOrderBy(filters: Filters): Prisma.ProposalOrderByWithRelationInput[] {
+  if (filters.sort === 'oldest') return [{ createdAt: 'asc' }, { title: 'asc' }];
+  return [{ createdAt: 'desc' }, { title: 'asc' }];
 }
 
 export type Filters = z.infer<typeof FiltersSchema>;
@@ -126,10 +130,33 @@ export function validateFilters(params: URLSearchParams) {
 
 /**
  * Retrieve proposal informations
+ * @param eventSlug event slug
  * @param proposalId Proposal id
  * @param uid User id
+ * @param filters Search filters
  */
-export async function getProposal(proposalId: string, uid: string) {
+export async function getProposalReview(eventSlug: string, proposalId: string, uid: string, filters: Filters) {
+  const event = db.event.findFirst({
+    where: { slug: eventSlug, organization: { members: { some: { memberId: uid } } } },
+  });
+  if (!event) throw new ForbiddenOperationError();
+
+  const whereClause = proposalWhereInput(eventSlug, uid, filters);
+  const orderByClause = proposalOrderBy(filters);
+
+  const proposalIds = (
+    await db.proposal.findMany({
+      select: { id: true },
+      where: whereClause,
+      orderBy: orderByClause,
+    })
+  ).map(({ id }) => id);
+
+  const totalProposals = proposalIds.length;
+  const curIndex = proposalIds.findIndex((id) => id === proposalId);
+  const previousId = proposalIds.at(curIndex - 1);
+  const nextId = curIndex + 1 >= totalProposals ? proposalIds.at(0) : proposalIds.at(curIndex + 1);
+
   const proposal = await db.proposal.findFirst({
     include: {
       speakers: true,
@@ -138,7 +165,7 @@ export async function getProposal(proposalId: string, uid: string) {
       ratings: { include: { user: true } },
       messages: { include: { user: true } },
     },
-    where: { id: proposalId, event: { organization: { members: { some: { memberId: uid } } } } },
+    where: { id: proposalId },
   });
   if (!proposal) throw new ProposalNotFoundError();
 
@@ -146,47 +173,55 @@ export async function getProposal(proposalId: string, uid: string) {
   const userRating = ratingDetails.fromUser(uid);
 
   return {
-    title: proposal.title,
-    abstract: proposal.abstract,
-    references: proposal.references,
-    comments: proposal.comments,
-    level: proposal.level,
-    languages: jsonToArray(proposal.languages),
-    formats: proposal.formats.map(({ name }) => name),
-    categories: proposal.categories.map(({ name }) => name),
-    speakers: proposal.speakers.map((speaker) => ({
-      id: speaker.id,
-      name: speaker.name,
-      photoURL: speaker.photoURL,
-      bio: speaker.bio,
-      references: speaker.references,
-      email: speaker.email,
-      company: speaker.company,
-      address: speaker.address,
-      github: speaker.github,
-      twitter: speaker.twitter,
-    })),
-    rating: {
-      average: ratingDetails.average,
-      positives: ratingDetails.positives,
-      negatives: ratingDetails.negatives,
-      userRating: {
-        rating: userRating?.rating,
-        feeling: userRating?.feeling,
+    pagination: {
+      total: totalProposals,
+      current: curIndex + 1,
+      previousId,
+      nextId,
+    },
+    proposal: {
+      title: proposal.title,
+      abstract: proposal.abstract,
+      references: proposal.references,
+      comments: proposal.comments,
+      level: proposal.level,
+      languages: jsonToArray(proposal.languages),
+      formats: proposal.formats.map(({ name }) => name),
+      categories: proposal.categories.map(({ name }) => name),
+      speakers: proposal.speakers.map((speaker) => ({
+        id: speaker.id,
+        name: speaker.name,
+        photoURL: speaker.photoURL,
+        bio: speaker.bio,
+        references: speaker.references,
+        email: speaker.email,
+        company: speaker.company,
+        address: speaker.address,
+        github: speaker.github,
+        twitter: speaker.twitter,
+      })),
+      rating: {
+        average: ratingDetails.average,
+        positives: ratingDetails.positives,
+        negatives: ratingDetails.negatives,
+        userRating: {
+          rating: userRating?.rating,
+          feeling: userRating?.feeling,
+        },
+        membersRatings: proposal.ratings.map((rating) => ({
+          id: rating.user.id,
+          name: rating.user.name,
+          photoURL: rating.user.photoURL,
+          rating: rating.rating,
+          feeling: rating.feeling,
+        })),
       },
-      membersRatings: proposal.ratings.map((rating) => ({
-        id: rating.user.id,
-        name: rating.user.name,
-        photoURL: rating.user.photoURL,
-        rating: rating.rating,
-        feeling: rating.feeling,
+      messages: proposal.messages.map((message) => ({
+        id: message.id,
+        name: message.user.name,
+        photoURL: message.user.photoURL,
+        message: message.message,
       })),
     },
-    messages: proposal.messages.map((message) => ({
-      id: message.id,
-      name: message.user.name,
-      photoURL: message.user.photoURL,
-      message: message.message,
-    })),
   };
 }

@@ -3,15 +3,14 @@ import { json } from '@remix-run/node';
 import { Container } from '~/design-system/Container';
 import { sessionRequired } from '~/services/auth/auth.server';
 import { useLoaderData, useLocation, useOutletContext } from '@remix-run/react';
-import { EmptyState } from '~/design-system/EmptyState';
-import { InboxIcon } from '@heroicons/react/24/outline';
-import { ProposalsList } from '~/components/ProposalsList';
-import ProposalsFilters from '~/components/ProposalsFilters';
+import { ProposalsList } from '~/components/proposals-list/ProposalsList';
+import ProposalsFilters from '~/components/proposals-list/ProposalsFilters';
 import { Pagination } from '~/design-system/Pagination';
 import { searchProposals, validateFilters } from '~/services/organizers/event.server';
 import { validatePage } from '~/services/utils/pagination.server';
 import { mapErrorToResponse } from '~/services/errors';
 import type { OrganizerEventContext } from '../$eventSlug';
+import { NoProposals } from '~/components/proposals-list/NoProposals';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const uid = await sessionRequired(request);
@@ -34,19 +33,7 @@ export default function OrganizerEventProposalsRoute() {
 
   const hasFilters = Object.values(filters).filter(Boolean).length !== 0;
 
-  if (results.length === 0 && !hasFilters) {
-    return (
-      <Container className="my-4 sm:my-16">
-        <EmptyState
-          icon={InboxIcon}
-          label="No proposals yet!"
-          description="Open the call for paper and share your event link to get more proposals!"
-        >
-          <h2 className="sr-only">Event proposals</h2>
-        </EmptyState>
-      </Container>
-    );
-  }
+  if (results.length === 0 && !hasFilters) return <NoProposals />;
 
   return (
     <Container className="my-4 sm:my-8">

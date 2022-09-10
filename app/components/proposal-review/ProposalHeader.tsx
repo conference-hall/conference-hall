@@ -5,9 +5,9 @@ import c from 'classnames';
 import Select from '~/design-system/forms/Select';
 import { H1, Text } from '~/design-system/Typography';
 
-type Props = { proposal: { title: string }; className?: string };
+type Props = { proposal: { title: string }; current: number; total: number; className?: string };
 
-export function ProposalHeader({ proposal, className }: Props) {
+export function ProposalHeader({ proposal, current, total, className }: Props) {
   const [searchParams] = useSearchParams();
 
   return (
@@ -24,7 +24,7 @@ export function ProposalHeader({ proposal, className }: Props) {
       <div className="text-center">
         <H1>{proposal.title}</H1>
         <Text size="xs" className="mt-2">
-          3 / 201
+          {current} / {total}
         </Text>
       </div>
       <div className="flex gap-4">
