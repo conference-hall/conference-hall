@@ -5,47 +5,74 @@ import { AvatarName } from '~/design-system/Avatar';
 import Badge from '~/design-system/Badges';
 import { Text } from '~/design-system/Typography';
 
-type Props = { className?: string };
+type Speaker = {
+  id: string;
+  name: string | null;
+  photoURL: string | null;
+  bio: string | null;
+  references: string | null;
+  email: string | null;
+  company: string | null;
+  address: string | null;
+  github: string | null;
+  twitter: string | null;
+};
 
-export function SpeakersPanel({ className }: Props) {
+type Props = {
+  proposal: {
+    speakers: Array<Speaker>;
+    formats: string[];
+    categories: string[];
+  };
+  className?: string;
+};
+
+export function SpeakersPanel({ proposal, className }: Props) {
   return (
     <section className={c('space-y-8 overflow-auto py-8', className)}>
       <div>
         <Text className="mx-6 text-sm font-semibold">Speakers</Text>
         <div className="mt-4">
-          <SpeakerInfos />
-          <SpeakerInfos />
+          {proposal.speakers.map((speaker) => (
+            <SpeakerInfos key={speaker.id} speaker={speaker} />
+          ))}
         </div>
       </div>
-      <div className="mx-6">
-        <Text className="text-sm font-semibold">Formats</Text>
-        <div className="mt-4 flex flex-wrap gap-2">
-          <Badge>Quickie</Badge>
+      {proposal.formats.length > 0 && (
+        <div className="mx-6">
+          <Text className="text-sm font-semibold">Formats</Text>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {proposal.formats.map((name) => (
+              <Badge key={name}>{name}</Badge>
+            ))}
+          </div>
         </div>
-      </div>
-      <div className="mx-6">
-        <Text className="text-sm font-semibold">Categories</Text>
-        <div className="mt-4 flex flex-wrap gap-2">
-          <Badge>Web</Badge>
-          <Badge>Cloud</Badge>
-          <Badge>Web</Badge>
-          <Badge>Cloud</Badge>
-          <Badge>Web</Badge>
-          <Badge>Cloud</Badge>
+      )}
+      {proposal.categories.length > 0 && (
+        <div className="mx-6">
+          <Text className="text-sm font-semibold">Categories</Text>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {proposal.categories.map((name) => (
+              <Badge key={name}>{name}</Badge>
+            ))}
+          </div>
         </div>
-      </div>
-      <div className="mx-6">
-        <Text className="text-sm font-semibold">Tags</Text>
-        <div className="mt-4 flex flex-wrap gap-2">
-          <Badge>Top speaker</Badge>
-          <Badge>Awesome talk</Badge>
+      )}
+      {proposal.formats.length > 0 && (
+        <div className="mx-6">
+          <Text className="text-sm font-semibold">Tags</Text>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {proposal.formats.map((name) => (
+              <Badge key={name}>{name}</Badge>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </section>
   );
 }
 
-function SpeakerInfos() {
+function SpeakerInfos({ speaker }: { speaker: Speaker }) {
   return (
     <Disclosure as="div">
       {({ open }) => (
@@ -53,34 +80,28 @@ function SpeakerInfos() {
           <Disclosure.Button
             className={c('flex w-full items-center justify-between px-6 py-4 hover:bg-gray-50', { 'bg-gray-50': open })}
           >
-            <AvatarName photoURL="http://placekitten.com/24/24" name="Benjamin Petetot" subtitle="ben@example.com" />
+            <AvatarName photoURL={speaker.photoURL} name={speaker.name} subtitle={speaker.email} />
             {open ? <ChevronDownIcon className="h-6 w-6" /> : <ChevronRightIcon className="h-6 w-6" />}
           </Disclosure.Button>
           <Disclosure.Panel className={c('space-y-4 py-4 px-6', { 'bg-gray-50': open })}>
-            <div>
-              <Text className="text-sm font-semibold">Biography</Text>
-              <Text className="mt-4">
-                Some of you might be surprised to know that the Cloud isn't in the sky, it's undersea. Google Cloud is
-                underpinned by fiber optic cables that criss-cross the globe to create one of the most advanced networks
-                supporting failover, redundancy, and a highly performant virtualized network.
-              </Text>
-            </div>
-            <div>
-              <Text className="text-sm font-semibold">References</Text>
-              <Text className="mt-4">
-                Some of you might be surprised to know that the Cloud isn't in the sky, it's undersea. Google Cloud is
-                underpinned by fiber optic cables that criss-cross the globe to create one of the most advanced networks
-                supporting failover, redundancy, and a highly performant virtualized network.
-              </Text>
-            </div>
-            <div>
-              <Text className="text-sm font-semibold">Survey</Text>
-              <Text className="mt-4">
-                Some of you might be surprised to know that the Cloud isn't in the sky, it's undersea. Google Cloud is
-                underpinned by fiber optic cables that criss-cross the globe to create one of the most advanced networks
-                supporting failover, redundancy, and a highly performant virtualized network.
-              </Text>
-            </div>
+            {speaker.bio && (
+              <div>
+                <Text className="text-sm font-semibold">Biography</Text>
+                <Text className="mt-4">{speaker.bio}</Text>
+              </div>
+            )}
+            {speaker.references && (
+              <div>
+                <Text className="text-sm font-semibold">References</Text>
+                <Text className="mt-4">{speaker.references}</Text>
+              </div>
+            )}
+            {speaker.bio && (
+              <div>
+                <Text className="text-sm font-semibold">Survey</Text>
+                <Text className="mt-4">{speaker.bio}</Text>
+              </div>
+            )}
           </Disclosure.Panel>
         </>
       )}

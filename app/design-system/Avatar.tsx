@@ -62,7 +62,7 @@ export function AvatarGroup({ avatars, displayNames = false, className }: Avatar
   );
 }
 
-type AvatarNameProps = { name: string; subtitle?: string } & AvatarProps;
+type AvatarNameProps = { name?: string | null; subtitle?: string | null } & AvatarProps;
 
 export function AvatarName({ name, subtitle, className, ...rest }: AvatarNameProps) {
   return (
@@ -70,8 +70,8 @@ export function AvatarName({ name, subtitle, className, ...rest }: AvatarNamePro
       <div>
         <Avatar {...rest} />
       </div>
-      <div className="ml-3">
-        <p className="text-sm font-medium text-gray-700 group-hover:text-gray-900">{name}</p>
+      <div className="ml-3 text-left">
+        <p className="text-sm font-medium text-gray-700 group-hover:text-gray-900">{name || 'Unknown'}</p>
         <p className="text-xs font-medium text-gray-500 group-hover:text-gray-700">{subtitle}</p>
       </div>
     </div>

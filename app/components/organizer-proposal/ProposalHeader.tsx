@@ -5,9 +5,9 @@ import c from 'classnames';
 import Select from '~/design-system/forms/Select';
 import { H1, Text } from '~/design-system/Typography';
 
-type Props = { className?: string };
+type Props = { proposal: { title: string }; className?: string };
 
-export function ProposalHeader({ className }: Props) {
+export function ProposalHeader({ proposal, className }: Props) {
   const [searchParams] = useSearchParams();
 
   return (
@@ -22,7 +22,7 @@ export function ProposalHeader({ className }: Props) {
         </ButtonLink>
       </div>
       <div className="text-center">
-        <H1>The awesome proposal</H1>
+        <H1>{proposal.title}</H1>
         <Text size="xs" className="mt-2">
           3 / 201
         </Text>

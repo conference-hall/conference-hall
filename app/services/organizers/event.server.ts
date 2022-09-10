@@ -1,8 +1,9 @@
 import type { Prisma } from '@prisma/client';
 import { z } from 'zod';
 import { getCfpState } from '~/utils/event';
+import { jsonToArray } from '~/utils/prisma';
 import { db } from '../db';
-import { EventNotFoundError } from '../errors';
+import { EventNotFoundError, ProposalNotFoundError } from '../errors';
 import type { Pagination } from '../utils/pagination.server';
 import { getPagination } from '../utils/pagination.server';
 import { RatingsDetails } from '../utils/ratings.server';
@@ -121,4 +122,71 @@ export function validateFilters(params: URLSearchParams) {
     categories: params.get('categories') || undefined,
   });
   return result.success ? result.data : {};
+}
+
+/**
+ * Retrieve proposal informations
+ * @param proposalId Proposal id
+ * @param uid User id
+ */
+export async function getProposal(proposalId: string, uid: string) {
+  const proposal = await db.proposal.findFirst({
+    include: {
+      speakers: true,
+      formats: true,
+      categories: true,
+      ratings: { include: { user: true } },
+      messages: { include: { user: true } },
+    },
+    where: { id: proposalId, event: { organization: { members: { some: { memberId: uid } } } } },
+  });
+  if (!proposal) throw new ProposalNotFoundError();
+
+  const ratingDetails = new RatingsDetails(proposal.ratings);
+  const userRating = ratingDetails.fromUser(uid);
+
+  return {
+    title: proposal.title,
+    abstract: proposal.abstract,
+    references: proposal.references,
+    comments: proposal.comments,
+    level: proposal.level,
+    languages: jsonToArray(proposal.languages),
+    formats: proposal.formats.map(({ name }) => name),
+    categories: proposal.categories.map(({ name }) => name),
+    speakers: proposal.speakers.map((speaker) => ({
+      id: speaker.id,
+      name: speaker.name,
+      photoURL: speaker.photoURL,
+      bio: speaker.bio,
+      references: speaker.references,
+      email: speaker.email,
+      company: speaker.company,
+      address: speaker.address,
+      github: speaker.github,
+      twitter: speaker.twitter,
+    })),
+    rating: {
+      average: ratingDetails.average,
+      positives: ratingDetails.positives,
+      negatives: ratingDetails.negatives,
+      userRating: {
+        rating: userRating?.rating,
+        feeling: userRating?.feeling,
+      },
+      membersRatings: proposal.ratings.map((rating) => ({
+        id: rating.user.id,
+        name: rating.user.name,
+        photoURL: rating.user.photoURL,
+        rating: rating.rating,
+        feeling: rating.feeling,
+      })),
+    },
+    messages: proposal.messages.map((message) => ({
+      id: message.id,
+      name: message.user.name,
+      photoURL: message.user.photoURL,
+      message: message.message,
+    })),
+  };
 }
