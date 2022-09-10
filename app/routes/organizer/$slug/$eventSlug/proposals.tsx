@@ -2,7 +2,7 @@ import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Container } from '~/design-system/Container';
 import { sessionRequired } from '~/services/auth/auth.server';
-import { Outlet, useLoaderData, useLocation, useOutletContext } from '@remix-run/react';
+import { useLoaderData, useLocation, useOutletContext } from '@remix-run/react';
 import { EmptyState } from '~/design-system/EmptyState';
 import { InboxIcon } from '@heroicons/react/24/outline';
 import { ProposalsList } from '~/components/ProposalsList';
@@ -54,7 +54,6 @@ export default function OrganizerEventProposalsRoute() {
       <ProposalsFilters filters={filters} formats={event.formats} categories={event.categories} />
       <ProposalsList proposals={results} total={total} />
       <Pagination pathname={location.pathname} current={pagination.current} total={pagination.total} className="mt-8" />
-      <Outlet />
     </Container>
   );
 }
