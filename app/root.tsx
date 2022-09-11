@@ -12,6 +12,7 @@ import { Footer } from './components/Footer';
 import { Navbar } from './components/Navbar';
 import { H1, Text } from './design-system/Typography';
 import { Container } from './design-system/Container';
+import { GlobalLoading } from './components/GlobalLoading';
 
 export const links: LinksFunction = () => {
   return [
@@ -64,6 +65,7 @@ function Document({ children, title, user }: DocumentProps) {
         <Links />
       </head>
       <body className="bg-white font-sans text-gray-600 antialiased">
+        <GlobalLoading />
         <Navbar user={user} />
         {children}
         <Footer />
