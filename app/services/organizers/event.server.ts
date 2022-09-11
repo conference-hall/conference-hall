@@ -1,4 +1,5 @@
 import type { Prisma } from '@prisma/client';
+import { MessageChannel } from '@prisma/client';
 import { z } from 'zod';
 import { getCfpState } from '~/utils/event';
 import { jsonToArray } from '~/utils/prisma';
@@ -216,7 +217,7 @@ export async function getProposalReview(eventSlug: string, proposalId: string, u
           feeling: rating.feeling,
         })),
       },
-      messages: proposal.messages.map((message) => ({
+      messages: proposal.messages.reverse().map((message) => ({
         id: message.id,
         name: message.user.name,
         photoURL: message.user.photoURL,
@@ -260,4 +261,22 @@ export function validateRating(form: FormData) {
   });
   if (!result.success) return null;
   return result.data;
+}
+
+/**
+ * Add an organizer comment to a proposal
+ * @param eventSlug event slug
+ * @param proposalId Proposal id
+ * @param uid User id
+ * @param message User message
+ */
+export async function addProposalComment(eventSlug: string, proposalId: string, uid: string, message: string) {
+  const event = await db.event.findFirst({
+    where: { slug: eventSlug, organization: { members: { some: { memberId: uid } } } },
+  });
+  if (!event) throw new ForbiddenOperationError();
+
+  await db.message.create({
+    data: { userId: uid, proposalId, message, channel: MessageChannel.ORGANIZER },
+  });
 }

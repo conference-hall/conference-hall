@@ -31,7 +31,7 @@ export default function OrganizerProposalRoute() {
       <div className="grid h-[calc(100%-224px)] grid-cols-8 items-stretch divide-x divide-gray-200">
         <SpeakersPanel className="col-span-2" proposal={proposal} />
         <ProposalPanel className="col-span-4" proposal={proposal} />
-        <OrganizerPanel className="col-span-2" rating={proposal.rating} messages={proposal.messages} />
+        <OrganizerPanel className="col-span-2" messages={proposal.messages} />
       </div>
       <ProposalFooter
         className="h-28"
