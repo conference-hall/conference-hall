@@ -15,7 +15,7 @@ type AvatarProps = {
 
 export function Avatar({ photoURL, alt, size = 's', ring = false, ringColor = 'primary', className }: AvatarProps) {
   const styles = c(
-    'rounded-full bg-gray-200',
+    'shrink-0 rounded-full bg-gray-200',
     sizes[size],
     ring ? rings[size] : null,
     ring ? ringsColor[ringColor] : null,
@@ -67,9 +67,7 @@ type AvatarNameProps = { name?: string | null; subtitle?: string | null } & Avat
 export function AvatarName({ name, subtitle, className, ...rest }: AvatarNameProps) {
   return (
     <div className="flex items-center">
-      <div>
-        <Avatar {...rest} />
-      </div>
+      <Avatar {...rest} />
       <div className="ml-3 text-left">
         <p className="text-sm font-medium text-gray-700 group-hover:text-gray-900">{name || 'Unknown'}</p>
         <p className="text-xs font-medium text-gray-500 group-hover:text-gray-700">{subtitle}</p>

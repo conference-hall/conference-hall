@@ -217,13 +217,15 @@ export async function getProposalReview(eventSlug: string, proposalId: string, u
           feeling: rating.feeling,
         })),
       },
-      messages: proposal.messages.reverse().map((message) => ({
-        id: message.id,
-        userId: message.userId,
-        name: message.user.name,
-        photoURL: message.user.photoURL,
-        message: message.message,
-      })),
+      messages: proposal.messages
+        .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+        .map((message) => ({
+          id: message.id,
+          userId: message.userId,
+          name: message.user.name,
+          photoURL: message.user.photoURL,
+          message: message.message,
+        })),
     },
   };
 }

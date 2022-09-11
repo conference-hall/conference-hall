@@ -81,7 +81,9 @@ function TotalRating({ rating }: { rating: Rating }) {
                 {rating.negatives}
               </IconLabel>
             </div>
-            <ChevronRightIcon className={c('h-6 w-6 transition-transform', { 'rotate-0': !open, 'rotate-90': open })} />
+            <ChevronRightIcon
+              className={c('h-6 w-6 shrink-0 transition-transform', { 'rotate-0': !open, 'rotate-90': open })}
+            />
           </Disclosure.Button>
           <Disclosure.Panel className="grow space-y-4 overflow-auto px-6 pt-4 pb-8">
             {rating.membersRatings.length === 0 && <Text>No rated yet.</Text>}
@@ -109,7 +111,9 @@ function SpeakerInfos({ speaker }: { speaker: Speaker }) {
         <>
           <Disclosure.Button className="flex w-full items-center justify-between px-6 py-8 hover:bg-gray-50">
             <AvatarName photoURL={speaker.photoURL} name={speaker.name} subtitle={speaker.email} />
-            <ChevronRightIcon className={c('h-6 w-6 transition-transform', { 'rotate-0': !open, 'rotate-90': open })} />
+            <ChevronRightIcon
+              className={c('h-6 w-6 shrink-0 transition-transform', { 'rotate-0': !open, 'rotate-90': open })}
+            />
           </Disclosure.Button>
           <Disclosure.Panel className="space-y-4 px-6 pt-4 pb-8">
             <div className="grid grid-cols-2 gap-4">

@@ -55,9 +55,9 @@ function OrganizerComments({ uid, messages }: { uid: string; messages: Array<Mes
         {messages.map((message) => (
           <div key={message.id} className="group flex items-end gap-4">
             <Avatar photoURL={message.photoURL} />
-            <div className="grow">
+            <div className="min-w-0 grow">
               <div className="relative">
-                <Text size="xs" variant="secondary" className="pl-4">
+                <Text size="xs" variant="secondary" className="truncate pl-4">
                   {message.name}
                 </Text>
                 {uid === message.userId && (
@@ -71,7 +71,7 @@ function OrganizerComments({ uid, messages }: { uid: string; messages: Array<Mes
                   />
                 )}
               </div>
-              <Text as="div" className="mt-1 rounded-r-md rounded-tl-md bg-gray-100 px-4 py-4">
+              <Text as="div" className="mt-1 break-all rounded-r-md rounded-tl-md bg-gray-100 px-4 py-4">
                 {message.message}
               </Text>
             </div>
