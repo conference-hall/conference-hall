@@ -1,6 +1,14 @@
 import c from 'classnames';
 import { Disclosure } from '@headlessui/react';
-import { ChevronRightIcon, HeartIcon, StarIcon, XCircleIcon } from '@heroicons/react/24/outline';
+import {
+  BuildingOffice2Icon,
+  ChevronRightIcon,
+  GlobeEuropeAfricaIcon,
+  HeartIcon,
+  MapPinIcon,
+  StarIcon,
+  XCircleIcon,
+} from '@heroicons/react/24/outline';
 import { AvatarName } from '~/design-system/Avatar';
 import Badge from '~/design-system/Badges';
 import { Text } from '~/design-system/Typography';
@@ -104,24 +112,30 @@ function SpeakerInfos({ speaker }: { speaker: Speaker }) {
             <ChevronRightIcon className={c('h-6 w-6 transition-transform', { 'rotate-0': !open, 'rotate-90': open })} />
           </Disclosure.Button>
           <Disclosure.Panel className="space-y-4 px-6 pt-4 pb-8">
-            {speaker.bio && (
-              <div>
-                <Text className="text-sm font-semibold">Biography</Text>
-                <Text className="mt-4">{speaker.bio}</Text>
-              </div>
-            )}
-            {speaker.references && (
-              <div>
-                <Text className="text-sm font-semibold">References</Text>
-                <Text className="mt-4">{speaker.references}</Text>
-              </div>
-            )}
-            {speaker.bio && (
-              <div>
-                <Text className="text-sm font-semibold">Survey</Text>
-                <Text className="mt-4">{speaker.bio}</Text>
-              </div>
-            )}
+            <div className="grid grid-cols-2 gap-4">
+              {speaker.company && (
+                <IconLabel truncate icon={BuildingOffice2Icon}>
+                  {speaker.company}
+                </IconLabel>
+              )}
+              {speaker.address && (
+                <IconLabel truncate icon={MapPinIcon}>
+                  {speaker.address}
+                </IconLabel>
+              )}
+              {speaker.github && (
+                <IconLabel truncate icon={GlobeEuropeAfricaIcon}>
+                  {speaker.github}
+                </IconLabel>
+              )}
+              {speaker.twitter && (
+                <IconLabel truncate icon={GlobeEuropeAfricaIcon}>
+                  {speaker.twitter}
+                </IconLabel>
+              )}
+            </div>
+            {speaker.bio && <Text>{speaker.bio}</Text>}
+            {speaker.references && <Text className="mt-1">{speaker.references}</Text>}
           </Disclosure.Panel>
         </>
       )}

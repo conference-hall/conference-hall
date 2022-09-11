@@ -13,7 +13,7 @@ export function IconLabel({ children, icon: Icon, className, truncate, lineCamp 
   return (
     <div className={cn('flex items-center text-sm', className)}>
       <Icon className={cn('mr-1.5 h-5 w-5 flex-shrink-0 self-start', iconClassName)} aria-hidden="true" />
-      <span className={cn({ truncate, 'line-clamp-2': lineCamp })}>{children}</span>
+      <span className={cn('text-gray-700', { truncate, 'line-clamp-2': lineCamp })}>{children}</span>
     </div>
   );
 }
