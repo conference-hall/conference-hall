@@ -9,7 +9,7 @@ import { Pagination } from '~/design-system/Pagination';
 import { searchProposals, validateFilters } from '~/services/organizers/event.server';
 import { validatePage } from '~/services/utils/pagination.server';
 import { mapErrorToResponse } from '~/services/errors';
-import type { OrganizerEventContext } from '../$eventSlug';
+import type { OrganizerEventContext } from '../../$eventSlug';
 import { NoProposals } from '~/components/proposals-list/NoProposals';
 
 export const loader = async ({ request, params }: LoaderArgs) => {

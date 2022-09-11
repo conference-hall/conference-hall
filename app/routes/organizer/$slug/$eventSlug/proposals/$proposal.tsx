@@ -33,7 +33,12 @@ export default function OrganizerProposalRoute() {
         <ProposalPanel className="col-span-4" proposal={proposal} />
         <OrganizerPanel className="col-span-2" rating={proposal.rating} messages={proposal.messages} />
       </div>
-      <ProposalFooter className="h-28" nextId={pagination.nextId} previousId={pagination.previousId} />
+      <ProposalFooter
+        className="h-28"
+        userRating={proposal.rating.userRating}
+        nextId={pagination.nextId}
+        previousId={pagination.previousId}
+      />
     </div>
   );
 }

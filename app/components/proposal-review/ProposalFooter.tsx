@@ -4,9 +4,14 @@ import { ButtonLink } from '~/design-system/Buttons';
 import { RatingButtons } from './RatingButtons';
 import { useParams, useSearchParams } from '@remix-run/react';
 
-type Props = { nextId?: string; previousId?: string; className?: string };
+type Props = {
+  nextId?: string;
+  previousId?: string;
+  userRating: { rating?: number | null; feeling?: string | null };
+  className?: string;
+};
 
-export function ProposalFooter({ nextId, previousId, className }: Props) {
+export function ProposalFooter({ nextId, previousId, userRating, className }: Props) {
   const { slug, eventSlug } = useParams();
   const [searchParams] = useSearchParams();
 
@@ -22,7 +27,7 @@ export function ProposalFooter({ nextId, previousId, className }: Props) {
           Previous
         </ButtonLink>
       </div>
-      <RatingButtons />
+      <RatingButtons userRating={userRating} />
       <div className="w-24">
         <ButtonLink
           to={{ pathname: `/organizer/${slug}/${eventSlug}/proposals/${nextId}`, search: searchParams.toString() }}

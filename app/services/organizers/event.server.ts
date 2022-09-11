@@ -136,7 +136,7 @@ export function validateFilters(params: URLSearchParams) {
  * @param filters Search filters
  */
 export async function getProposalReview(eventSlug: string, proposalId: string, uid: string, filters: Filters) {
-  const event = db.event.findFirst({
+  const event = await db.event.findFirst({
     where: { slug: eventSlug, organization: { members: { some: { memberId: uid } } } },
   });
   if (!event) throw new ForbiddenOperationError();
@@ -224,4 +224,40 @@ export async function getProposalReview(eventSlug: string, proposalId: string, u
       })),
     },
   };
+}
+
+/**
+ * Rate a proposal by a speaker
+ * @param eventSlug event slug
+ * @param proposalId Proposal id
+ * @param uid User id
+ * @param data Rating data
+ */
+export async function rateProposal(eventSlug: string, proposalId: string, uid: string, data: RatingData) {
+  const event = await db.event.findFirst({
+    where: { slug: eventSlug, organization: { members: { some: { memberId: uid } } } },
+  });
+  if (!event) throw new ForbiddenOperationError();
+
+  await db.rating.upsert({
+    where: { userId_proposalId: { userId: uid, proposalId } },
+    update: data,
+    create: { userId: uid, proposalId, ...data },
+  });
+}
+
+export type RatingData = z.infer<typeof RatingDataSchema>;
+
+const RatingDataSchema = z.object({
+  rating: z.preprocess((a) => (a !== '' ? parseInt(a as string, 10) : null), z.number().min(0).max(5).nullable()),
+  feeling: z.enum(['NEUTRAL', 'POSITIVE', 'NEGATIVE', 'NO_OPINION']),
+});
+
+export function validateRating(form: FormData) {
+  const result = RatingDataSchema.safeParse({
+    rating: form.get('rating'),
+    feeling: form.get('feeling'),
+  });
+  if (!result.success) return null;
+  return result.data;
 }

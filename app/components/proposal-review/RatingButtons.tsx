@@ -1,8 +1,9 @@
 import c from 'classnames';
+import { useCallback, useState } from 'react';
 import { RadioGroup } from '@headlessui/react';
 import { HeartIcon, NoSymbolIcon, StarIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import { Text } from '~/design-system/Typography';
-import { useCallback, useState } from 'react';
+import { useFetcher, useLocation } from '@remix-run/react';
 
 type Option = {
   label: string;
@@ -25,30 +26,48 @@ const options: Array<Option> = [
 
 type StyleProps = { option: Option; index: number };
 
-export function RatingButtons() {
-  const [selected, setSelected] = useState<Option>();
-  const [over, setOver] = useState<Option>();
+type Rating = { rating?: number | null; feeling?: string | null };
+
+type Props = { userRating: Rating };
+
+export function RatingButtons({ userRating }: Props) {
+  const location = useLocation();
+  const fetcher = useFetcher();
+  const defaultIndex = findRatingOptionIndex(userRating, fetcher.submission?.formData);
+  const [overIndex, setOverIndex] = useState<number>(-1);
 
   const iconStyles = useCallback(
     ({ option, index }: StyleProps) => {
-      const currentSelected = isSelected(index, selected);
-      const currentOver = isSelected(index, over);
+      const currentSelected = isSelected(index, defaultIndex);
+      const currentOver = isSelected(index, overIndex);
       return c('h-8 w-8 sm:h-10 sm:w-10', {
         'stroke-indigo-500': !currentSelected && currentOver,
         [option.fill]: currentSelected,
       });
     },
-    [selected, over]
+    [defaultIndex, overIndex]
+  );
+
+  const handleSubmit = useCallback(
+    (index: string) => {
+      const option = options[parseInt(index, 10)];
+      if (!option) return;
+      fetcher.submit(
+        { rating: option.value === null ? '' : String(option.value), feeling: option.feeling },
+        { action: `${location.pathname}/rate`, method: 'post' }
+      );
+    },
+    [fetcher, location]
   );
 
   return (
-    <div className="text-center font-medium">
-      <RadioGroup value={selected} onChange={setSelected}>
+    <fetcher.Form className="text-center font-medium">
+      <RadioGroup value={String(defaultIndex)} onChange={handleSubmit}>
         <RadioGroup.Label className="sr-only"> Choose a rating value </RadioGroup.Label>
-        <div className="flex items-center" onMouseOut={() => setOver(undefined)}>
+        <div className="flex items-center" onMouseOut={() => setOverIndex(-1)}>
           {options.map((option, index) => (
-            <RadioGroup.Option key={index} value={option}>
-              <div className="cursor-pointer px-1 sm:px-3" onMouseOver={() => setOver(option)}>
+            <RadioGroup.Option key={index} value={String(index)}>
+              <div className="cursor-pointer px-1 sm:px-3" onMouseOver={() => setOverIndex(index)}>
                 <option.Icon className={iconStyles({ option, index })} />
                 <RadioGroup.Label className="sr-only">{option.label}</RadioGroup.Label>
               </div>
@@ -57,17 +76,27 @@ export function RatingButtons() {
         </div>
       </RadioGroup>
       <Text size="m" variant="secondary" className="mt-2 hidden sm:block">
-        {over?.label ?? selected?.label ?? 'Not rated yet!'}
+        {options[overIndex]?.label ?? options[defaultIndex]?.label ?? 'Not rated yet!'}
       </Text>
-    </div>
+    </fetcher.Form>
   );
 }
 
-function isSelected(currentIdx: number, selected?: Option) {
-  const selectedIdx = options.findIndex((o) => o === selected);
+function isSelected(currentIdx: number, selectedIdx?: number) {
   if (selectedIdx === undefined) return false;
   if (selectedIdx === 0 && currentIdx === selectedIdx) return true;
   if (selectedIdx === 1 && currentIdx === selectedIdx) return true;
   if (currentIdx > 1 && selectedIdx >= currentIdx) return true;
   return false;
+}
+
+function findRatingOptionIndex(userRating: Rating, submissionData: FormData | undefined) {
+  let ratings = userRating;
+  // optimistic ui
+  if (submissionData) {
+    const rating = String(submissionData.get('rating'));
+    const feeling = String(submissionData.get('feeling'));
+    ratings = { rating: rating !== '' ? parseInt(rating, 10) : null, feeling };
+  }
+  return options.findIndex((option) => option.value === ratings.rating && option.feeling === ratings.feeling);
 }
