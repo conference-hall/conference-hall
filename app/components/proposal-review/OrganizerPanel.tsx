@@ -5,34 +5,42 @@ import { Input } from '~/design-system/forms/Input';
 import { Button } from '~/design-system/Buttons';
 import { useFetcher, useLocation } from '@remix-run/react';
 import { useEffect, useRef } from 'react';
+import { XMarkIcon } from '@heroicons/react/20/solid';
+import { IconButton } from '~/design-system/IconButtons';
 
 type Message = {
   id: string;
+  userId: string;
   name: string | null;
   photoURL: string | null;
   message: string;
 };
 
 type Props = {
+  uid: string;
   messages: Array<Message>;
   className?: string;
 };
 
-export function OrganizerPanel({ messages, className }: Props) {
+export function OrganizerPanel({ uid, messages, className }: Props) {
   return (
     <section className={c('relative flex min-h-full flex-col', className)}>
-      <OrganizerComments messages={messages} />
+      <OrganizerComments uid={uid} messages={messages} />
     </section>
   );
 }
 
-function OrganizerComments({ messages }: { messages: Array<Message> }) {
+function OrganizerComments({ uid, messages }: { uid: string; messages: Array<Message> }) {
   const fetcher = useFetcher();
   const location = useLocation();
 
   const isAdding = fetcher.state === 'submitting';
   const formRef = useRef<HTMLFormElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleDelete = (messageId: string) => {
+    fetcher.submit({ _action: 'delete', messageId }, { action: `${location.pathname}/comments`, method: 'post' });
+  };
 
   useEffect(() => {
     if (isAdding) {
@@ -45,12 +53,24 @@ function OrganizerComments({ messages }: { messages: Array<Message> }) {
     <div className="flex flex-1 flex-col justify-between overflow-hidden">
       <div className="flex flex-col-reverse gap-4 overflow-auto px-6 py-4">
         {messages.map((message) => (
-          <div key={message.id} className="flex items-end gap-4">
+          <div key={message.id} className="group flex items-end gap-4">
             <Avatar photoURL={message.photoURL} />
             <div className="grow">
-              <Text size="xs" variant="secondary" className="pl-4">
-                {message.name}
-              </Text>
+              <div className="relative">
+                <Text size="xs" variant="secondary" className="pl-4">
+                  {message.name}
+                </Text>
+                {uid === message.userId && (
+                  <IconButton
+                    aria-label="Delete comment"
+                    icon={XMarkIcon}
+                    variant="secondary"
+                    size="xs"
+                    className="absolute right-0 bottom-0 hidden group-hover:block"
+                    onClick={() => handleDelete(message.id)}
+                  />
+                )}
+              </div>
               <Text as="div" className="mt-1 rounded-r-md rounded-tl-md bg-gray-100 px-4 py-4">
                 {message.message}
               </Text>

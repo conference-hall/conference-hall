@@ -219,6 +219,7 @@ export async function getProposalReview(eventSlug: string, proposalId: string, u
       },
       messages: proposal.messages.reverse().map((message) => ({
         id: message.id,
+        userId: message.userId,
         name: message.user.name,
         photoURL: message.user.photoURL,
         message: message.message,
@@ -279,4 +280,20 @@ export async function addProposalComment(eventSlug: string, proposalId: string, 
   await db.message.create({
     data: { userId: uid, proposalId, message, channel: MessageChannel.ORGANIZER },
   });
+}
+
+/**
+ * Remove an organizer comment to a proposal
+ * @param eventSlug event slug
+ * @param proposalId Proposal id
+ * @param uid User id
+ * @param messageId Message id
+ */
+export async function removeProposalComment(eventSlug: string, proposalId: string, uid: string, messageId: string) {
+  const event = await db.event.findFirst({
+    where: { slug: eventSlug, organization: { members: { some: { memberId: uid } } } },
+  });
+  if (!event) throw new ForbiddenOperationError();
+
+  await db.message.deleteMany({ where: { id: messageId, userId: uid, proposalId } });
 }

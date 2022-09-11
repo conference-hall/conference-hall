@@ -54,7 +54,7 @@ export function ButtonLink({
 }
 
 type ButtonStylesProps = {
-  variant?: 'primary' | 'secondary' | 'text';
+  variant?: 'primary' | 'secondary';
   size?: 's' | 'm' | 'l';
   block?: boolean;
   loading?: boolean;

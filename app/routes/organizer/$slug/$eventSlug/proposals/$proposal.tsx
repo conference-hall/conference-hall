@@ -16,14 +16,14 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     const url = new URL(request.url);
     const filters = validateFilters(url.searchParams);
     const result = await getProposalReview(params.eventSlug!, params.proposal!, uid, filters);
-    return json(result);
+    return json({ uid, ...result });
   } catch (e) {
     throw mapErrorToResponse(e);
   }
 };
 
 export default function OrganizerProposalRoute() {
-  const { proposal, pagination } = useLoaderData<typeof loader>();
+  const { uid, proposal, pagination } = useLoaderData<typeof loader>();
 
   return (
     <div className="absolute top-0 z-20 h-screen w-screen bg-white">
@@ -31,7 +31,7 @@ export default function OrganizerProposalRoute() {
       <div className="grid h-[calc(100%-224px)] grid-cols-8 items-stretch divide-x divide-gray-200">
         <SpeakersPanel className="col-span-2" proposal={proposal} />
         <ProposalPanel className="col-span-4" proposal={proposal} />
-        <OrganizerPanel className="col-span-2" messages={proposal.messages} />
+        <OrganizerPanel className="col-span-2" uid={uid} messages={proposal.messages} />
       </div>
       <ProposalFooter
         className="h-28"

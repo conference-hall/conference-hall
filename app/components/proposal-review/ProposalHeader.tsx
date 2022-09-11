@@ -1,8 +1,10 @@
 import c from 'classnames';
-import { ChevronLeftIcon, PencilSquareIcon } from '@heroicons/react/20/solid';
+import { PencilSquareIcon } from '@heroicons/react/20/solid';
 import { useParams, useSearchParams } from '@remix-run/react';
-import { Button, ButtonLink } from '~/design-system/Buttons';
+import { Button } from '~/design-system/Buttons';
 import { H1, Text } from '~/design-system/Typography';
+import { IconButtonLink } from '~/design-system/IconButtons';
+import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 
 type Props = { proposal: { title: string }; current: number; total: number; className?: string };
 
@@ -13,13 +15,13 @@ export function ProposalHeader({ proposal, current, total, className }: Props) {
   return (
     <div className={c('flex items-center justify-between border-b border-gray-200 bg-gray-50 py-8 px-8', className)}>
       <div>
-        <ButtonLink
+        <IconButtonLink
+          aria-label="Back to list"
           to={{ pathname: `/organizer/${slug}/${eventSlug}/proposals`, search: searchParams.toString() }}
           variant="secondary"
-          iconLeft={ChevronLeftIcon}
-        >
-          Back to list
-        </ButtonLink>
+          size="l"
+          icon={ChevronLeftIcon}
+        />
       </div>
       <div className="text-center">
         <H1>{proposal.title}</H1>
