@@ -1,10 +1,8 @@
 import c from 'classnames';
-import { PencilSquareIcon } from '@heroicons/react/20/solid';
 import { useParams, useSearchParams } from '@remix-run/react';
-import { Button } from '~/design-system/Buttons';
 import { H1, Text } from '~/design-system/Typography';
 import { IconButtonLink } from '~/design-system/IconButtons';
-import { ChevronLeftIcon } from '@heroicons/react/24/outline';
+import { ChevronLeftIcon, PencilSquareIcon } from '@heroicons/react/24/outline';
 
 type Props = { proposal: { title: string }; current: number; total: number; className?: string };
 
@@ -29,10 +27,14 @@ export function ProposalHeader({ proposal, current, total, className }: Props) {
           {current} / {total}
         </Text>
       </div>
-      <div className="flex gap-4">
-        <Button variant="secondary" iconLeft={PencilSquareIcon}>
-          Edit
-        </Button>
+      <div>
+        <IconButtonLink
+          aria-label="Edit proposal"
+          to={{ pathname: `/organizer/${slug}/${eventSlug}/proposals`, search: searchParams.toString() }}
+          variant="secondary"
+          size="l"
+          icon={PencilSquareIcon}
+        />
       </div>
     </div>
   );
