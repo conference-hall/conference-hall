@@ -44,8 +44,6 @@ type Props = {
   proposal: {
     speakers: Array<Speaker>;
     rating: Rating;
-    formats: string[];
-    categories: string[];
   };
   className?: string;
 };
@@ -59,7 +57,7 @@ export function SpeakersPanel({ proposal, className }: Props) {
           <SpeakerInfos key={speaker.id} speaker={speaker} />
         ))}
       </div>
-      <ProposalDetails formats={proposal.formats} categories={proposal.categories} />
+      <ProposalTags />
     </section>
   );
 }
@@ -71,15 +69,9 @@ function TotalRating({ rating }: { rating: Rating }) {
         <>
           <Disclosure.Button className="flex w-full items-center justify-between px-6 py-8 hover:bg-gray-50">
             <div className="flex items-center justify-around gap-4 font-medium">
-              <IconLabel icon={StarIcon} iconClassName="text-gray-400">
-                {rating.average ?? '-'}
-              </IconLabel>
-              <IconLabel icon={HeartIcon} iconClassName="text-gray-400">
-                {rating.positives}
-              </IconLabel>
-              <IconLabel icon={XCircleIcon} iconClassName="text-gray-400">
-                {rating.negatives}
-              </IconLabel>
+              <IconLabel icon={StarIcon}>{rating.average ?? '-'}</IconLabel>
+              <IconLabel icon={HeartIcon}>{rating.positives}</IconLabel>
+              <IconLabel icon={XCircleIcon}>{rating.negatives}</IconLabel>
             </div>
             <ChevronRightIcon
               className={c('h-6 w-6 shrink-0 transition-transform', { 'rotate-0': !open, 'rotate-90': open })}
@@ -147,34 +139,15 @@ function SpeakerInfos({ speaker }: { speaker: Speaker }) {
   );
 }
 
-function ProposalDetails({ formats, categories }: { formats: string[]; categories: string[] }) {
+function ProposalTags() {
+  const tags = ['Top speaker', 'Awesome talk'];
   return (
     <div className="space-y-8 pb-8">
-      {formats.length > 0 && (
-        <div className="mx-6">
-          <Text className="text-sm font-semibold">Formats</Text>
-          <div className="mt-4 flex flex-wrap gap-2">
-            {formats.map((name) => (
-              <Badge key={name}>{name}</Badge>
-            ))}
-          </div>
-        </div>
-      )}
-      {categories.length > 0 && (
-        <div className="mx-6">
-          <Text className="text-sm font-semibold">Categories</Text>
-          <div className="mt-4 flex flex-wrap gap-2">
-            {categories.map((name) => (
-              <Badge key={name}>{name}</Badge>
-            ))}
-          </div>
-        </div>
-      )}
-      {formats.length > 0 && (
+      {tags.length > 0 && (
         <div className="mx-6">
           <Text className="text-sm font-semibold">Tags</Text>
           <div className="mt-4 flex flex-wrap gap-2">
-            {formats.map((name) => (
+            {tags.map((name) => (
               <Badge key={name}>{name}</Badge>
             ))}
           </div>

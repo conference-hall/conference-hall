@@ -3,7 +3,7 @@ import { useCallback, useState } from 'react';
 import { RadioGroup } from '@headlessui/react';
 import { HeartIcon, NoSymbolIcon, StarIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import { Text } from '~/design-system/Typography';
-import { useFetcher, useLocation } from '@remix-run/react';
+import { useFetcher, useParams } from '@remix-run/react';
 
 type Option = {
   label: string;
@@ -31,10 +31,12 @@ type Rating = { rating?: number | null; feeling?: string | null };
 type Props = { userRating: Rating };
 
 export function RatingButtons({ userRating }: Props) {
-  const location = useLocation();
+  const { slug, eventSlug, proposal: proposalId } = useParams();
   const fetcher = useFetcher();
   const defaultIndex = findRatingOptionIndex(userRating, fetcher.submission?.formData);
   const [overIndex, setOverIndex] = useState<number>(-1);
+
+  const action = `/organizer/${slug}/${eventSlug}/proposals/${proposalId}/rate`;
 
   const iconStyles = useCallback(
     ({ option, index }: StyleProps) => {
@@ -54,10 +56,10 @@ export function RatingButtons({ userRating }: Props) {
       if (!option) return;
       fetcher.submit(
         { rating: option.value === null ? '' : String(option.value), feeling: option.feeling },
-        { action: `${location.pathname}/rate`, method: 'post' }
+        { action, method: 'post' }
       );
     },
-    [fetcher, location]
+    [fetcher, action]
   );
 
   return (

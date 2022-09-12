@@ -20,7 +20,7 @@ export function TextArea({ name, label, description, className, error, ...rest }
   return (
     <div className={className}>
       {label && (
-        <label htmlFor={name} className="mb-1 block text-sm font-medium text-gray-700">
+        <label htmlFor={name} className="mb-1 block text-sm font-medium text-gray-900">
           {label}
         </label>
       )}

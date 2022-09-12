@@ -16,7 +16,7 @@ export function CheckboxGroup({ label, description, inline, className, children 
 
   return (
     <div className={className}>
-      <label className="text-sm font-medium text-gray-700">{label}</label>
+      <label className="text-sm font-medium text-gray-900">{label}</label>
       {description && <p className="text-sm leading-5 text-gray-500">{description}</p>}
       <fieldset className="mt-2">
         <legend className="sr-only">{label}</legend>
@@ -33,9 +33,9 @@ export function CheckboxHeadingGroup({ label, description, inline, className, ch
 
   return (
     <div className={className}>
-      <label className="text-lg font-medium leading-6 text-gray-900">{label}</label>
-      {description && <p className="mt-1 text-sm leading-5 text-gray-500">{description}</p>}
-      <fieldset className="mt-6">
+      <label className="text-sm font-medium text-gray-900">{label}</label>
+      {description && <p className="mt-1 text-sm text-gray-500">{description}</p>}
+      <fieldset className="mt-4">
         <legend className="sr-only">{label}</legend>
         <div className={layoutStyle}>{children}</div>
       </fieldset>
@@ -61,7 +61,7 @@ export function Checkbox({ id, name, description, className, children, ...rest }
           {...rest}
         />
       </div>
-      <label htmlFor={id} className="pl-3 text-sm text-gray-700">
+      <label htmlFor={id} className="pl-3 text-sm text-gray-900">
         {children}
         {description && (
           <p id={`${id}-description`} className="text-gray-500">

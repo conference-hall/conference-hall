@@ -7,7 +7,7 @@ import { ChevronLeftIcon, PencilSquareIcon } from '@heroicons/react/24/outline';
 type Props = { proposal: { title: string }; current: number; total: number; className?: string };
 
 export function ProposalHeader({ proposal, current, total, className }: Props) {
-  const { slug, eventSlug } = useParams();
+  const { slug, eventSlug, proposal: proposalId } = useParams();
   const [searchParams] = useSearchParams();
 
   return (
@@ -30,7 +30,10 @@ export function ProposalHeader({ proposal, current, total, className }: Props) {
       <div>
         <IconButtonLink
           aria-label="Edit proposal"
-          to={{ pathname: `/organizer/${slug}/${eventSlug}/proposals`, search: searchParams.toString() }}
+          to={{
+            pathname: `/organizer/${slug}/${eventSlug}/proposals/${proposalId}/edit`,
+            search: searchParams.toString(),
+          }}
           variant="secondary"
           size="l"
           icon={PencilSquareIcon}

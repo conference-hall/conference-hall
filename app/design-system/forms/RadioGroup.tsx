@@ -16,7 +16,7 @@ export function RadioGroup({ label, description, inline, className, children }: 
 
   return (
     <div className={className}>
-      {label && <label className="text-sm font-medium text-gray-700">{label}</label>}
+      {label && <label className="text-sm font-medium text-gray-900">{label}</label>}
       {description && <p className="text-sm leading-5 text-gray-500">{description}</p>}
       <fieldset className="mt-2">
         <legend className="sr-only">{label}</legend>
@@ -42,7 +42,7 @@ export function Radio({ id, name, description, children, ...rest }: RadioProps) 
           {...rest}
         />
       </div>
-      <label htmlFor={id} className="block pl-3 text-sm text-gray-700">
+      <label htmlFor={id} className="block pl-3 text-sm text-gray-900">
         {children}
         {description && (
           <p id={`${id}-description`} className="text-gray-500">

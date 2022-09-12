@@ -39,7 +39,7 @@ export function MarkdownTextArea({
 
   return (
     <div className={className}>
-      <label htmlFor={name} className="block text-sm font-medium text-gray-700">
+      <label htmlFor={name} className="block text-sm font-medium text-gray-900">
         {label}
       </label>
       <div className="relative">

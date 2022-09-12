@@ -4,17 +4,14 @@ type Props = {
   categories: Array<{
     id: string;
     name: string;
-    description: string | null;
+    description?: string | null;
   }>;
   initialValues?: string[];
 };
 
 export function CategoriesForm({ categories, initialValues }: Props) {
   return (
-    <CheckboxHeadingGroup
-      label="Select proposal categories"
-      description="Select categories that are the best fit for your proposal."
-    >
+    <CheckboxHeadingGroup label="Select proposal categories">
       {categories.map((c) => (
         <Checkbox
           key={c.id}

@@ -3,10 +3,10 @@ import { Avatar } from '~/design-system/Avatar';
 import { Text } from '~/design-system/Typography';
 import { Input } from '~/design-system/forms/Input';
 import { Button } from '~/design-system/Buttons';
-import { useFetcher, useLocation } from '@remix-run/react';
+import { useFetcher, useParams } from '@remix-run/react';
 import { useEffect, useRef } from 'react';
-import { XMarkIcon } from '@heroicons/react/20/solid';
 import { IconButton } from '~/design-system/IconButtons';
+import { TrashIcon } from '@heroicons/react/24/outline';
 
 type Message = {
   id: string;
@@ -31,15 +31,21 @@ export function OrganizerPanel({ uid, messages, className }: Props) {
 }
 
 function OrganizerComments({ uid, messages }: { uid: string; messages: Array<Message> }) {
+  const { slug, eventSlug, proposal: proposalId } = useParams();
   const fetcher = useFetcher();
-  const location = useLocation();
 
   const isAdding = fetcher.state === 'submitting';
   const formRef = useRef<HTMLFormElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleDelete = (messageId: string) => {
-    fetcher.submit({ _action: 'delete', messageId }, { action: `${location.pathname}/comments`, method: 'post' });
+    fetcher.submit(
+      { _action: 'delete', messageId },
+      {
+        action: `/organizer/${slug}/${eventSlug}/proposals/${proposalId}/comments`,
+        method: 'post',
+      }
+    );
   };
 
   useEffect(() => {
@@ -63,7 +69,7 @@ function OrganizerComments({ uid, messages }: { uid: string; messages: Array<Mes
                 {uid === message.userId && (
                   <IconButton
                     aria-label="Delete comment"
-                    icon={XMarkIcon}
+                    icon={TrashIcon}
                     variant="secondary"
                     size="xs"
                     className="absolute right-0 bottom-0 hidden group-hover:block"
@@ -80,7 +86,7 @@ function OrganizerComments({ uid, messages }: { uid: string; messages: Array<Mes
       </div>
       <fetcher.Form
         ref={formRef}
-        action={`${location.pathname}/comments`}
+        action={`/organizer/${slug}/${eventSlug}/proposals/${proposalId}/comments`}
         method="post"
         className="flex gap-2 border-t border-gray-200 bg-white p-6"
       >

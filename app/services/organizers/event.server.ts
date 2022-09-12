@@ -187,8 +187,8 @@ export async function getProposalReview(eventSlug: string, proposalId: string, u
       comments: proposal.comments,
       level: proposal.level,
       languages: jsonToArray(proposal.languages),
-      formats: proposal.formats.map(({ name }) => name),
-      categories: proposal.categories.map(({ name }) => name),
+      formats: proposal.formats.map(({ id, name }) => ({ id, name })),
+      categories: proposal.categories.map(({ id, name }) => ({ id, name })),
       speakers: proposal.speakers.map((speaker) => ({
         id: speaker.id,
         name: speaker.name,

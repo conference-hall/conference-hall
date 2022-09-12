@@ -4,17 +4,14 @@ type Props = {
   formats: Array<{
     id: string;
     name: string;
-    description: string | null;
+    description?: string | null;
   }>;
   initialValues?: string[];
 };
 
 export function FormatsForm({ formats, initialValues }: Props) {
   return (
-    <CheckboxHeadingGroup
-      label="Select proposal formats"
-      description="Select one or severals formats proposed by the event organizers."
-    >
+    <CheckboxHeadingGroup label="Select proposal formats">
       {formats.map((f) => (
         <Checkbox
           key={f.id}

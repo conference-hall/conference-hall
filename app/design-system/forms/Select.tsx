@@ -25,7 +25,7 @@ export default function Select({ name, label, options, value, onChange, classNam
     <Listbox name={name} value={value} onChange={handleChange}>
       {({ open }) => (
         <div className={className}>
-          <Listbox.Label className={c('block text-sm font-medium text-gray-700', { 'sr-only': srOnly })}>
+          <Listbox.Label className={c('block text-sm font-medium text-gray-900', { 'sr-only': srOnly })}>
             {label}
           </Listbox.Label>
           <div className={c('relative', { 'mt-1': !srOnly })}>
