@@ -52,8 +52,8 @@ export function SpeakersPanel({ proposal, className }: Props) {
     <section className={c('space-y-8 overflow-auto', className)}>
       <div className="divide-y divide-gray-200 border-b border-gray-200">
         <TotalRating rating={proposal.rating} />
-        {proposal.speakers.map((speaker) => (
-          <SpeakerInfos key={speaker.id} speaker={speaker} />
+        {proposal.speakers.map((speaker, index) => (
+          <SpeakerInfos key={speaker.id} speaker={speaker} defaultOpen={index === 0} />
         ))}
       </div>
     </section>
@@ -94,9 +94,9 @@ function TotalRating({ rating }: { rating: Rating }) {
   );
 }
 
-function SpeakerInfos({ speaker }: { speaker: Speaker }) {
+function SpeakerInfos({ speaker, defaultOpen }: { speaker: Speaker; defaultOpen: boolean }) {
   return (
-    <Disclosure as="div">
+    <Disclosure as="div" defaultOpen={defaultOpen}>
       {({ open }) => (
         <>
           <Disclosure.Button className="flex w-full items-center justify-between px-6 py-8 hover:bg-gray-50">

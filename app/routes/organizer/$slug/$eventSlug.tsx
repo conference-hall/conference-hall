@@ -43,11 +43,7 @@ export default function OrganizationEventRoute() {
               {organization.name}
             </Link>
             <ChevronRightIcon className="h-4 w-4 text-gray-600" />
-            <Link
-              to={`/${event.slug}/proposals`}
-              target="_blank"
-              className="flex items-center truncate hover:underline"
-            >
+            <Link to={`/${event.slug}`} target="_blank" className="flex items-center truncate hover:underline">
               {event.name}
               <ArrowTopRightOnSquareIcon className="ml-2 h-4 w-4" />
             </Link>
