@@ -10,7 +10,6 @@ import {
   XCircleIcon,
 } from '@heroicons/react/24/outline';
 import { AvatarName } from '~/design-system/Avatar';
-import Badge from '~/design-system/Badges';
 import { Text } from '~/design-system/Typography';
 import { IconLabel } from '~/design-system/IconLabel';
 
@@ -57,7 +56,6 @@ export function SpeakersPanel({ proposal, className }: Props) {
           <SpeakerInfos key={speaker.id} speaker={speaker} />
         ))}
       </div>
-      <ProposalTags />
     </section>
   );
 }
@@ -136,23 +134,5 @@ function SpeakerInfos({ speaker }: { speaker: Speaker }) {
         </>
       )}
     </Disclosure>
-  );
-}
-
-function ProposalTags() {
-  const tags = ['Top speaker', 'Awesome talk'];
-  return (
-    <div className="space-y-8 pb-8">
-      {tags.length > 0 && (
-        <div className="mx-6">
-          <Text className="text-sm font-semibold">Tags</Text>
-          <div className="mt-4 flex flex-wrap gap-2">
-            {tags.map((name) => (
-              <Badge key={name}>{name}</Badge>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
   );
 }

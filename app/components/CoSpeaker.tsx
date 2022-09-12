@@ -63,7 +63,7 @@ export function InviteCoSpeakerButton({ to, id, invitationLink }: InviteProps) {
   return (
     <>
       <Button
-        variant="text"
+        variant="secondary"
         onClick={() => setOpen(true)}
         iconLeft={UserPlusIcon}
         className="group mt-4 flex items-center"
