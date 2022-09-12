@@ -1,13 +1,16 @@
 import type { Prisma } from '@prisma/client';
+import { OrganizationRole } from '@prisma/client';
 import { MessageChannel } from '@prisma/client';
 import { z } from 'zod';
 import { getCfpState } from '~/utils/event';
+import { getArray } from '~/utils/form';
 import { jsonToArray } from '~/utils/prisma';
 import { db } from '../db';
 import { EventNotFoundError, ForbiddenOperationError, ProposalNotFoundError } from '../errors';
 import type { Pagination } from '../utils/pagination.server';
 import { getPagination } from '../utils/pagination.server';
 import { RatingsDetails } from '../utils/ratings.server';
+import { getUserRole } from './organizations.server';
 
 /**
  * Get event for user
@@ -298,4 +301,52 @@ export async function removeProposalComment(eventSlug: string, proposalId: strin
   if (!event) throw new ForbiddenOperationError();
 
   await db.message.deleteMany({ where: { id: messageId, userId: uid, proposalId } });
+}
+
+/**
+ * Update proposal data from organizer page
+ * @param orgaSlug Organization slug
+ * @param proposalId Proposal Id
+ * @param uid User id
+ * @param data Data to update
+ */
+export async function updateProposal(orgaSlug: string, proposalId: string, uid: string, data: ProposalData) {
+  const role = await getUserRole(orgaSlug, uid);
+  if (role === OrganizationRole.REVIEWER) throw new ForbiddenOperationError();
+
+  const { formats, categories, ...talk } = data;
+
+  await db.proposal.update({
+    where: { id: proposalId },
+    data: {
+      ...talk,
+      speakers: { set: [], connect: [{ id: uid }] },
+      formats: { set: [], connect: formats.map((id) => ({ id })) },
+      categories: { set: [], connect: categories.map((id) => ({ id })) },
+    },
+  });
+}
+
+type ProposalData = z.infer<typeof ProposalSchema>;
+
+const ProposalSchema = z.object({
+  title: z.string().trim().min(1),
+  abstract: z.string().trim().min(1),
+  references: z.string().trim().nullable(),
+  level: z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']).nullable(),
+  languages: z.array(z.string().trim()),
+  formats: z.array(z.string().trim()),
+  categories: z.array(z.string().trim()),
+});
+
+export function validateProposalForm(form: FormData) {
+  return ProposalSchema.safeParse({
+    title: form.get('title'),
+    abstract: form.get('abstract'),
+    references: form.get('references'),
+    level: form.get('level'),
+    formats: form.getAll('formats'),
+    categories: form.getAll('categories'),
+    languages: getArray(form, 'languages'),
+  });
 }

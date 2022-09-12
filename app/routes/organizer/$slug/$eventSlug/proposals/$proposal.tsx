@@ -32,7 +32,7 @@ export default function OrganizerProposalRoute() {
   const { uid, proposal, pagination } = proposalReview;
 
   return (
-    <div className="absolute top-0 z-20 h-screen w-screen bg-white">
+    <div className="absolute top-0 z-30 h-screen w-screen bg-white">
       <ProposalHeader className="h-28" proposal={proposal} current={pagination.current} total={pagination.total} />
       <div className="grid h-[calc(100%-224px)] grid-cols-8 items-stretch divide-x divide-gray-200">
         <SpeakersPanel className="col-span-2" proposal={proposal} />

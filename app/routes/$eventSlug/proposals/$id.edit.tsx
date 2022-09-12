@@ -2,8 +2,7 @@ import { Form, useActionData, useCatch, useLoaderData } from '@remix-run/react';
 import { Container } from '~/design-system/Container';
 import { Button, ButtonLink } from '../../../design-system/Buttons';
 import { CategoriesForm } from '../../../components/CategoriesForm';
-import type { ValidationErrors } from '../../../utils/validation-errors';
-import type { ActionFunction, LoaderArgs } from '@remix-run/node';
+import type { ActionArgs, ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { sessionRequired } from '../../../services/auth/auth.server';
 import {
@@ -21,11 +20,15 @@ import { H2 } from '../../../design-system/Typography';
 export const loader = async ({ request, params }: LoaderArgs) => {
   const uid = await sessionRequired(request);
   const proposalId = params.id!;
-  const proposal = await getSpeakerProposal(proposalId, uid).catch(mapErrorToResponse);
-  return json(proposal);
+  try {
+    const proposal = await getSpeakerProposal(proposalId, uid);
+    return json(proposal);
+  } catch (e) {
+    throw mapErrorToResponse(e);
+  }
 };
 
-export const action: ActionFunction = async ({ request, params }) => {
+export const action: ActionFunction = async ({ request, params }: ActionArgs) => {
   const uid = await sessionRequired(request);
   const eventSlug = params.eventSlug!;
   const proposalId = params.id!;
@@ -34,12 +37,12 @@ export const action: ActionFunction = async ({ request, params }) => {
     const method = form.get('_method');
     if (method === 'DELETE') {
       await deleteProposal(proposalId, uid);
-      return redirect(`/${eventSlug}/proposals`);
+      throw redirect(`/${eventSlug}/proposals`);
     } else {
       const result = validateProposalForm(form);
       if (!result.success) return result.error.flatten();
       await updateProposal(eventSlug, proposalId, uid, result.data);
-      return redirect(`/${eventSlug}/proposals/${proposalId}`);
+      throw redirect(`/${eventSlug}/proposals/${proposalId}`);
     }
   } catch (err) {
     mapErrorToResponse(err);
@@ -49,7 +52,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 export default function EditProposalRoute() {
   const event = useEvent();
   const proposal = useLoaderData<typeof loader>();
-  const errors = useActionData<ValidationErrors>();
+  const errors = useActionData<typeof action>();
 
   return (
     <Container className="my-4 sm:my-8">

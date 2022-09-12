@@ -18,7 +18,7 @@ function useTabs(tabs: Array<Tab>) {
 
 function MobileNavTabs({ tabs, currentTab, className }: NavTabsProps) {
   return (
-    <Container className={cn('z-10 inline-block w-full py-4 text-left', className)}>
+    <Container className={cn('z-20 inline-block w-full py-4 text-left', className)}>
       <div className="relative">
         <Menu>
           <Menu.Button className="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
@@ -53,7 +53,7 @@ const tabMobileStyle = (isActive: boolean) => {
 
 function DesktopNavTabs({ tabs, currentTab, className }: NavTabsProps) {
   return (
-    <div className={cn('sticky top-0 z-10 border-b border-gray-200 bg-white pt-4', className)}>
+    <div className={cn('sticky top-0 z-20 border-b border-gray-200 bg-white pt-4', className)}>
       <Container>
         <nav className="-mb-px flex space-x-8" aria-label="Tabs">
           {tabs.map((tab) => (
