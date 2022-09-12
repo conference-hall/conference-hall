@@ -1,3 +1,4 @@
+import slugify from '@sindresorhus/slugify';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 import { json } from '@remix-run/node';
@@ -8,11 +9,8 @@ import { Form, useActionData, useOutletContext } from '@remix-run/react';
 import { Input } from '~/design-system/forms/Input';
 import { Button } from '~/design-system/Buttons';
 import type { OrganizationContext } from '../$slug';
-import {
-  getUserRole,
-  updateOrganization,
-  validateOrganizationSettingsForm,
-} from '~/services/organizers/organizations.server';
+import { getUserRole, updateOrganization, validateOrganizationData } from '~/services/organizers/organizations.server';
+import { useState } from 'react';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const uid = await sessionRequired(request);
@@ -25,19 +23,21 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 export const action = async ({ request, params }: ActionArgs) => {
   const uid = await sessionRequired(request);
   const form = await request.formData();
-  const result = validateOrganizationSettingsForm(form);
+  const result = validateOrganizationData(form);
   if (!result.success) {
     return result.error.flatten();
   } else {
     const updated = await updateOrganization(params.slug!, uid, result.data);
     if (updated?.fieldErrors) return json(updated);
-    return redirect(`/organizer/${updated.slug}/settings`);
+    throw redirect(`/organizer/${updated.slug}/settings`);
   }
 };
 
 export default function OrganizationSettingsRoute() {
   const { organization } = useOutletContext<OrganizationContext>();
   const result = useActionData();
+  const [name, setName] = useState<string>(organization.name);
+  const [slug, setSlug] = useState<string>(organization.slug);
 
   return (
     <Container className="my-4 sm:my-8">
@@ -48,15 +48,24 @@ export default function OrganizationSettingsRoute() {
             <Input
               name="name"
               label="Name"
-              defaultValue={organization.name}
               required
+              autoComplete="off"
+              value={name}
+              onChange={(e) => {
+                setName(e.target.value);
+                setSlug(slugify(e.target.value.toLowerCase()));
+              }}
               error={result?.fieldErrors?.name?.[0]}
             />
             <Input
               name="slug"
               label="Slug"
-              defaultValue={organization.slug}
               required
+              autoComplete="off"
+              value={slug}
+              onChange={(e) => {
+                setSlug(e.target.value);
+              }}
               error={result?.fieldErrors?.slug?.[0]}
             />
           </div>

@@ -11,7 +11,10 @@ import { buildInvitationLink } from '../invitations/invitations.server';
  */
 export async function getOrganizations(uid: string) {
   const organizations = await db.organizationMember.findMany({
-    select: { role: true, organization: true },
+    select: {
+      role: true,
+      organization: { include: { _count: { select: { members: true, events: { where: { archived: false } } } } } },
+    },
     where: { memberId: uid },
     orderBy: { organization: { name: 'asc' } },
   });
@@ -20,6 +23,8 @@ export async function getOrganizations(uid: string) {
     name: member.organization.name,
     slug: member.organization.slug,
     role: member.role,
+    membersCount: member.organization._count.members,
+    eventsCount: member.organization._count.events,
   }));
 }
 
@@ -174,24 +179,42 @@ export async function inviteMemberToOrganization(invitationId: string, memberId:
 }
 
 /**
- * Update the organization
- * @param slug Slug of the organizatoin
+ * Create an organization
+ * @param uid User id
+ * @param data Organization data
+ */
+export async function createOrganization(uid: string, data: OrganizationData) {
+  return await db.$transaction(async (trx) => {
+    const existSlug = await trx.organization.findFirst({ where: { slug: data.slug } });
+    if (existSlug) return { fieldErrors: { name: [], slug: ['Slug already exists, please try another one.'] } };
+
+    const updated = await trx.organization.create({ select: { id: true }, data });
+    await trx.organizationMember.create({
+      data: { memberId: uid, organizationId: updated.id, role: OrganizationRole.OWNER },
+    });
+    return { slug: data.slug };
+  });
+}
+
+/**
+ * Update an organization
+ * @param slug Slug of the organization to update
  * @param uid User id
  * @param data Organization data
  */
 export async function updateOrganization(slug: string, uid: string, data: OrganizationData) {
-  const organization = await db.organization.findFirst({
+  let organization = await db.organization.findFirst({
     where: { slug, members: { some: { memberId: uid, role: 'OWNER' } } },
   });
   if (!organization) throw new OrganizationNotFoundError();
 
   return await db.$transaction(async (trx) => {
     const existSlug = await trx.organization.findFirst({ where: { slug: data.slug } });
-    if (existSlug && existSlug.id !== organization.id) {
+    if (existSlug && existSlug.id !== organization?.id) {
       return { fieldErrors: { name: [], slug: ['Slug already exists, please try another one.'] } };
     }
 
-    await trx.organization.update({ where: { id: organization.id }, data });
+    await trx.organization.update({ select: { id: true }, where: { slug }, data });
     return { slug: data.slug };
   });
 }
@@ -208,7 +231,7 @@ const OrganizationSchema = z.object({
     .max(50),
 });
 
-export function validateOrganizationSettingsForm(form: FormData) {
+export function validateOrganizationData(form: FormData) {
   return OrganizationSchema.safeParse({
     name: form.get('name'),
     slug: form.get('slug'),

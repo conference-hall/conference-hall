@@ -1,14 +1,21 @@
-import type { LoaderArgs } from '@remix-run/node';
+import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 import { Container } from '~/design-system/Container';
 import { sessionRequired } from '~/services/auth/auth.server';
 import { H1, Text } from '~/design-system/Typography';
 import { hasOrganizerAccess } from '~/services/organizers/access.server';
-import { getOrganizations } from '~/services/organizers/organizations.server';
-import { ChevronRightIcon } from '@heroicons/react/20/solid';
-import { Link, useLoaderData } from '@remix-run/react';
-import { ButtonLink } from '~/design-system/Buttons';
+import {
+  getOrganizations,
+  createOrganization,
+  validateOrganizationData,
+} from '~/services/organizers/organizations.server';
+import { useActionData, useLoaderData } from '@remix-run/react';
+import { CardLink } from '~/design-system/Card';
+import Badge from '~/design-system/Badges';
+import { IconLabel } from '~/design-system/IconLabel';
+import { MegaphoneIcon, UsersIcon } from '@heroicons/react/24/outline';
+import { OrganizationNewButton } from '~/components/OrganizationNew';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const uid = await sessionRequired(request);
@@ -22,42 +29,51 @@ export const loader = async ({ request }: LoaderArgs) => {
   return json(organizations);
 };
 
+export const action = async ({ request }: ActionArgs) => {
+  const uid = await sessionRequired(request);
+  const form = await request.formData();
+  const result = validateOrganizationData(form);
+  if (!result.success) {
+    return result.error.flatten();
+  } else {
+    const updated = await createOrganization(uid, result.data);
+    if (updated?.fieldErrors) return json(updated);
+    throw redirect(`/organizer/${updated.slug}`);
+  }
+};
+
 export default function OrganizerRoute() {
   const data = useLoaderData<typeof loader>();
+  const result = useActionData();
 
   return (
     <Container className="my-4 sm:my-8">
       <div className="sm:flex sm:items-center sm:justify-between">
-        <H1>Organizations</H1>
-        <ButtonLink variant="secondary" to="/organizer/new" size="s" className="mt-4 sm:mt-0">
-          New organization
-        </ButtonLink>
+        <H1>Select an organization</H1>
+        <OrganizationNewButton errors={result?.fieldErrors} />
       </div>
-      <div className="my-4 overflow-hidden border border-gray-200 bg-white shadow-sm sm:my-8 sm:rounded-md">
-        <ul aria-label="Organizations list" className="divide-y divide-gray-200">
-          {data.map((orga) => (
-            <li key={orga.slug}>
-              <Link to={`/organizer/${orga.slug}`} className="block hover:bg-gray-50">
-                <div className="flex px-4 py-4 sm:px-6">
-                  <div className="min-w-0 flex-1 truncate sm:flex sm:items-center sm:justify-between">
-                    <div className="flex items-baseline text-sm">
-                      <Text as="p" variant="link" className="truncate font-medium">
-                        {orga.name}
-                      </Text>
-                      <Text as="p" variant="secondary" size="xs" className="ml-1 truncate font-normal">
-                        as {orga.role.toLowerCase()}
-                      </Text>
-                    </div>
-                  </div>
-                  <div className="ml-5 flex-shrink-0">
-                    <ChevronRightIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
-                  </div>
-                </div>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <ul aria-label="Organizations list" className="my-8 grid grid-cols-1 gap-6 sm:grid-cols-2">
+        {data.map((orga) => (
+          <CardLink as="li" key={orga.slug} to={orga.slug}>
+            <div className="flex h-40 flex-col justify-between px-4 py-4 sm:px-6">
+              <div className="flex items-center justify-between gap-1">
+                <Text as="p" size="l" variant="link" className="truncate font-medium">
+                  {orga.name}
+                </Text>
+                <Badge>{orga.role.toLowerCase()}</Badge>
+              </div>
+              <div className="space-y-2">
+                <IconLabel icon={MegaphoneIcon} truncate>
+                  {`${orga.eventsCount} events`}
+                </IconLabel>
+                <IconLabel icon={UsersIcon} truncate>
+                  {`${orga.membersCount} members`}
+                </IconLabel>
+              </div>
+            </div>
+          </CardLink>
+        ))}
+      </ul>
     </Container>
   );
 }

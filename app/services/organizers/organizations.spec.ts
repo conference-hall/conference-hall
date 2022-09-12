@@ -15,7 +15,7 @@ import {
   getUserRole,
   removeMember,
   updateOrganization,
-  validateOrganizationSettingsForm,
+  validateOrganizationData,
 } from './organizations.server';
 
 describe('#getOrganizations', () => {
@@ -303,13 +303,13 @@ describe('#updateOrganization', () => {
   });
 });
 
-describe('#validateOrganizationSettingsForm', () => {
+describe('#validateOrganizationData', () => {
   it('validates the organization data', () => {
     const formData = new FormData();
     formData.append('name', 'Hello world');
     formData.append('slug', 'hello-world-1');
 
-    const result = validateOrganizationSettingsForm(formData);
+    const result = validateOrganizationData(formData);
     expect(result.success && result.data).toEqual({
       name: 'Hello world',
       slug: 'hello-world-1',
@@ -321,7 +321,7 @@ describe('#validateOrganizationSettingsForm', () => {
     formData.append('name', 'H');
     formData.append('slug', 'h');
 
-    const result = validateOrganizationSettingsForm(formData);
+    const result = validateOrganizationData(formData);
     expect(!result.success && result.error.errors.map((e) => e.code)).toEqual(['too_small', 'too_small']);
   });
 
@@ -330,7 +330,7 @@ describe('#validateOrganizationSettingsForm', () => {
     formData.append('name', 'Hello world');
     formData.append('slug', 'Hello world/');
 
-    const result = validateOrganizationSettingsForm(formData);
+    const result = validateOrganizationData(formData);
     expect(!result.success && result.error.errors.map((e) => e.message)).toEqual([
       'Must only contain lower case alphanumeric and dashes (-).',
     ]);

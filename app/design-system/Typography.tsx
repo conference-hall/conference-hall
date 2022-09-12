@@ -37,6 +37,8 @@ export function H3(props: TitleProps) {
 }
 
 const textSize = {
+  xl: 'text-xl',
+  l: 'text-lg',
   m: 'text-base',
   s: 'text-sm',
   xs: 'text-xs',

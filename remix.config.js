@@ -7,5 +7,5 @@ module.exports = {
   publicPath: '/build/',
   serverBuildDirectory: 'build',
   devServerPort: 8002,
-  serverDependenciesToBundle: [/^marked.*/],
+  serverDependenciesToBundle: [/^marked.*/, '@sindresorhus/slugify', '@sindresorhus/transliterate'],
 };
