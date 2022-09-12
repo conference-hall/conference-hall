@@ -33,9 +33,9 @@ describe('#getOrganizations', () => {
     const organizations = await getOrganizations(user.id);
 
     expect(organizations).toEqual([
-      { name: 'My orga member', slug: 'orga-member', role: 'MEMBER' },
-      { name: 'My orga owner', slug: 'orga-owner', role: 'OWNER' },
-      { name: 'My orga reviewer', slug: 'orga-reviewer', role: 'REVIEWER' },
+      { name: 'My orga member', slug: 'orga-member', role: 'MEMBER', eventsCount: 0, membersCount: 1 },
+      { name: 'My orga owner', slug: 'orga-owner', role: 'OWNER', eventsCount: 0, membersCount: 1 },
+      { name: 'My orga reviewer', slug: 'orga-reviewer', role: 'REVIEWER', eventsCount: 0, membersCount: 1 },
     ]);
   });
 });
