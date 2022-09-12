@@ -34,11 +34,11 @@ export default function EventRoute() {
       </Container>
 
       <Container as="section" className="mt-8">
-        <Markdown source={event.description} size="m" />
+        <Markdown source={event.description} />
       </Container>
 
       {event.websiteUrl || event.contactEmail || event.codeOfConductUrl ? (
-        <Container as="section" className="mt-8 flex flex-col gap-4 sm:mt-8 sm:flex-row sm:gap-16">
+        <Container as="section" className="mt-8 flex flex-col gap-4 sm:mt-12 sm:flex-row sm:gap-16">
           {event.websiteUrl && (
             <ExternalLink href={event.websiteUrl} icon={GlobeEuropeAfricaIcon}>
               Website
@@ -58,27 +58,25 @@ export default function EventRoute() {
       ) : null}
 
       {event.formats.length > 0 || event.categories.length > 0 ? (
-        <Container className="mt-8 grid grid-cols-1 gap-8 sm:mt-16 sm:grid-cols-2 sm:gap-16">
+        <Container className="mt-8 grid grid-cols-1 gap-8 sm:mt-16 sm:grid-cols-2 sm:gap-24">
           {event.formats.length > 0 ? (
             <div>
               <H2>Formats</H2>
               <Text variant="secondary" className="mt-1">
                 Talks formats proposed by the conference.
               </Text>
-              <div className="mt-4">
-                <dl className="divide-y divide-gray-200 rounded-md border border-gray-200 bg-white">
-                  {event.formats.map((f) => (
-                    <div key={f.name} className="py-3 pl-3 pr-4">
-                      <Text as="dt" variant="secondary" className="font-semibold">
-                        {f.name}
-                      </Text>
-                      <Text as="dd" className="mt-1">
-                        {f.description}
-                      </Text>
-                    </div>
-                  ))}
-                </dl>
-              </div>
+              <dl role="list" className="mt-4 space-y-6">
+                {event.formats.map((f) => (
+                  <div key={f.name}>
+                    <Text as="dt" className="font-medium">
+                      {f.name}
+                    </Text>
+                    <Text as="dd" className="mt-1">
+                      {f.description}
+                    </Text>
+                  </div>
+                ))}
+              </dl>
             </div>
           ) : null}
 
@@ -88,20 +86,18 @@ export default function EventRoute() {
               <Text variant="secondary" className="mt-1">
                 Different categories and tracks proposed by the conference.
               </Text>
-              <div className="mt-4">
-                <dl role="list" className="divide-y divide-gray-200 rounded-md border border-gray-200 bg-white">
-                  {event.categories.map((c) => (
-                    <div key={c.name} className="py-3 pl-3 pr-4">
-                      <Text as="dt" variant="secondary" className="font-semibold">
-                        {c.name}
-                      </Text>
-                      <Text as="dd" className="mt-1">
-                        {c.description}
-                      </Text>
-                    </div>
-                  ))}
-                </dl>
-              </div>
+              <dl role="list" className="mt-4 space-y-6">
+                {event.categories.map((c) => (
+                  <div key={c.name}>
+                    <Text as="dt" className="font-medium">
+                      {c.name}
+                    </Text>
+                    <Text as="dd" className="mt-1">
+                      {c.description}
+                    </Text>
+                  </div>
+                ))}
+              </dl>
             </div>
           ) : null}
         </Container>
