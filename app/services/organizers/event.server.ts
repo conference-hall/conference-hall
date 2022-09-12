@@ -350,3 +350,60 @@ export function validateProposalForm(form: FormData) {
     languages: getArray(form, 'languages'),
   });
 }
+
+/**
+ * Create an event
+ * @param orgaSlug Organization slug
+ * @param uid User id
+ * @param data Event data
+ */
+export async function createEvent(orgaSlug: string, uid: string, data: EventCreateData) {
+  const organization = await db.organization.findFirst({
+    where: { slug: orgaSlug, members: { some: { memberId: uid, role: OrganizationRole.OWNER } } },
+  });
+  if (!organization) throw new ForbiddenOperationError();
+
+  return await db.$transaction(async (trx) => {
+    const existSlug = await trx.event.findFirst({ where: { slug: data.slug } });
+    if (existSlug) {
+      return { fieldErrors: { name: [], slug: ['Slug already exists, please try another one.'] } };
+    }
+
+    await trx.event.create({
+      select: { id: true },
+      data: {
+        ...data,
+        creator: { connect: { id: uid } },
+        organization: { connect: { id: organization.id } },
+      },
+    });
+    return { slug: data.slug };
+  });
+}
+
+type EventCreateData = z.infer<typeof EventCreateSchema>;
+
+const EventCreateSchema = z.object({
+  type: z.enum(['CONFERENCE', 'MEETUP']),
+  name: z.string().trim().min(3).max(50),
+  description: z.string().trim().min(1),
+  address: z.string().trim().min(1),
+  visibility: z.enum(['PUBLIC', 'PRIVATE']),
+  slug: z
+    .string()
+    .regex(/^[a-z0-9\\-]*$/, { message: 'Must only contain lower case alphanumeric and dashes (-).' })
+    .trim()
+    .min(3)
+    .max(50),
+});
+
+export function validateEventCreateForm(form: FormData) {
+  return EventCreateSchema.safeParse({
+    type: form.get('type'),
+    name: form.get('name'),
+    slug: form.get('slug'),
+    description: form.get('description'),
+    address: form.get('address'),
+    visibility: form.get('visibility'),
+  });
+}

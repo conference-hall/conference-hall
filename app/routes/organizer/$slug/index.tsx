@@ -3,14 +3,14 @@ import type { OrganizationContext } from '../$slug';
 import { json } from '@remix-run/node';
 import { Container } from '~/design-system/Container';
 import { sessionRequired } from '~/services/auth/auth.server';
-import { Text } from '~/design-system/Typography';
-import { Link, useLoaderData, useOutletContext } from '@remix-run/react';
-import { ButtonLink } from '~/design-system/Buttons';
+import { H2, Text } from '~/design-system/Typography';
+import { Link, Outlet, useLoaderData, useOutletContext } from '@remix-run/react';
 import { EmptyState } from '~/design-system/EmptyState';
 import { ChevronRightIcon, StarIcon } from '@heroicons/react/24/outline';
 import { getOrganizationEvents } from '~/services/organizers/organizations.server';
 import { Input } from '~/design-system/forms/Input';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
+import { ButtonLink } from '~/design-system/Buttons';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const uid = await sessionRequired(request);
@@ -26,16 +26,13 @@ export default function OrganizationEventsRoute() {
   if (events.length === 0) {
     return (
       <Container className="my-4 sm:my-16">
-        <EmptyState
-          icon={StarIcon}
-          label={`Welcome to "${organization.name}"`}
-          description="Get started by creating your first event."
-        >
+        <EmptyState icon={StarIcon} className="flex flex-col items-center gap-2">
+          <H2>{`Welcome to "${organization.name}"`}</H2>
+          <Text variant="secondary">Get started by creating your first event.</Text>
           <h2 className="sr-only">Organization events</h2>
-          <ButtonLink variant="secondary" to="new" size="s" className="mt-4 sm:mt-0">
-            New event
-          </ButtonLink>
+          <ButtonLink to="new">New event</ButtonLink>
         </EmptyState>
+        <Outlet />
       </Container>
     );
   }
@@ -79,6 +76,7 @@ export default function OrganizationEventsRoute() {
           ))}
         </ul>
       </div>
+      <Outlet />
     </Container>
   );
 }
