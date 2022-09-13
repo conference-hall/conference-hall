@@ -5,14 +5,23 @@ import { Input } from '~/design-system/forms/Input';
 import { MarkdownTextArea } from '~/design-system/forms/MarkdownTextArea';
 import { RadioGroup } from '@headlessui/react';
 
+type EventValues = {
+  name: string;
+  slug: string;
+  description: string;
+  address: string | null;
+  visibility: 'PUBLIC' | 'PRIVATE';
+};
+
 type Props = {
   type: 'MEETUP' | 'CONFERENCE';
+  initialValues?: EventValues;
   errors?: Record<string, string[]>;
 };
 
-export function EventInfoForm({ type, errors }: Props) {
-  const [name, setName] = useState<string>('');
-  const [slug, setSlug] = useState<string>('');
+export function EventInfoForm({ type, initialValues, errors }: Props) {
+  const [name, setName] = useState<string>(initialValues?.name || '');
+  const [slug, setSlug] = useState<string>(initialValues?.slug || '');
 
   return (
     <>
@@ -39,7 +48,13 @@ export function EventInfoForm({ type, errors }: Props) {
         error={errors?.slug?.[0]}
         required
       />
-      <Input name="address" label="Venue address or city" required autoComplete="off" error={errors?.address?.[0]} />
+      <Input
+        name="address"
+        label="Venue address or city"
+        autoComplete="off"
+        defaultValue={initialValues?.address ?? ''}
+        error={errors?.address?.[0]}
+      />
       {type === 'CONFERENCE' && (
         <div className="grid grid-cols-2 gap-6">
           <Input
@@ -61,12 +76,13 @@ export function EventInfoForm({ type, errors }: Props) {
       <MarkdownTextArea
         name="description"
         label="Description"
+        defaultValue={initialValues?.description}
         required
         rows={5}
         autoComplete="off"
         error={errors?.description?.[0]}
       />
-      <EventVisibilityRadioGroup />
+      <EventVisibilityRadioGroup defaultValue={initialValues?.visibility} />
     </>
   );
 }
@@ -80,8 +96,12 @@ const settings = [
   },
 ];
 
-export default function EventVisibilityRadioGroup() {
-  const [selected, setSelected] = useState('PRIVATE');
+export default function EventVisibilityRadioGroup({
+  defaultValue = 'PRIVATE',
+}: {
+  defaultValue?: 'PUBLIC' | 'PRIVATE';
+}) {
+  const [selected, setSelected] = useState(defaultValue);
 
   return (
     <RadioGroup name="visibility" value={selected} onChange={setSelected}>

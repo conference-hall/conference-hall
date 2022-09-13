@@ -1,9 +1,8 @@
 import type { ActionFunction, LoaderFunction } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
-import { Form, NavLink, useActionData, useLoaderData, useSubmit } from '@remix-run/react';
+import { Form, useActionData, useLoaderData, useSubmit } from '@remix-run/react';
 import { CreditCardIcon, KeyIcon, UserCircleIcon } from '@heroicons/react/20/solid';
 import { Container } from '../../design-system/Container';
-import { IconLabel } from '../../design-system/IconLabel';
 import { Input } from '../../design-system/forms/Input';
 import { MarkdownTextArea } from '../../design-system/forms/MarkdownTextArea';
 import { Button } from '../../design-system/Buttons';
@@ -15,6 +14,7 @@ import type { UserSettings } from '../../services/speakers/settings.server';
 import { getSettings, updateSettings, validateProfileData } from '../../services/speakers/settings.server';
 import { mapErrorToResponse } from '../../services/errors';
 import { sessionRequired } from '../../services/auth/auth.server';
+import { NavMenu } from '~/design-system/NavMenu';
 
 export const loader: LoaderFunction = async ({ request }) => {
   const uid = await sessionRequired(request);
@@ -61,38 +61,17 @@ export default function SettingsRoute() {
     );
   }, [submit]);
 
+  const MENU_ITEMS = [
+    { to: '#personal-info', icon: UserCircleIcon, label: 'Personal information' },
+    { to: '#speaker-details', icon: KeyIcon, label: 'Speaker details' },
+    { to: '#additional-info', icon: CreditCardIcon, label: 'Additional information' },
+  ];
+
   return (
     <Container className="my-4 sm:my-8">
       <h1 className="sr-only">Settings</h1>
       <div className="lg:grid lg:grid-cols-12 lg:gap-x-5">
-        <aside className="hidden py-6 px-2 sm:block sm:px-6 lg:col-span-3 lg:py-0 lg:px-0">
-          <nav className="space-y-1">
-            <NavLink
-              to="#personal-info"
-              className="group flex items-center rounded-md px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-50 hover:text-gray-900"
-            >
-              <IconLabel icon={UserCircleIcon} iconClassName="text-gray-400 group-hover:text-gray-500">
-                Personal information
-              </IconLabel>
-            </NavLink>
-            <NavLink
-              to="#speaker-details"
-              className="group flex items-center rounded-md px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-50 hover:text-gray-900"
-            >
-              <IconLabel icon={KeyIcon} iconClassName="text-gray-400 group-hover:text-gray-500">
-                Speaker details
-              </IconLabel>
-            </NavLink>
-            <NavLink
-              to="#additional-info"
-              className="group flex items-center rounded-md px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-50 hover:text-gray-900"
-            >
-              <IconLabel icon={CreditCardIcon} iconClassName="text-gray-400 group-hover:text-gray-500">
-                Additional information
-              </IconLabel>
-            </NavLink>
-          </nav>
-        </aside>
+        <NavMenu items={MENU_ITEMS} className="hidden sm:block" />
 
         <div className="space-y-6 sm:px-6 lg:col-span-9 lg:px-0">
           <Form method="post" aria-labelledby="personal-info-label">

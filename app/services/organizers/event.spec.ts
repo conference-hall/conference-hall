@@ -37,6 +37,8 @@ describe('#getEvent', () => {
       name: event.name,
       slug: event.slug,
       type: event.type,
+      address: event.address,
+      description: event.description,
       visibility: event.visibility,
       cfpStart: event.cfpStart?.toUTCString(),
       cfpEnd: event.cfpEnd?.toUTCString(),
