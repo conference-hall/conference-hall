@@ -76,7 +76,7 @@ export type SurveyQuestions = Array<{
   answers?: Array<{ name: string; label: string }>;
 }>;
 
-const QUESTIONS: SurveyQuestions = [
+export const QUESTIONS: SurveyQuestions = [
   {
     name: 'gender',
     label: "What's your gender?",

@@ -4,12 +4,13 @@ import { forwardRef } from 'react';
 
 type Props = {
   label?: string;
+  description?: string;
   error?: string;
   icon?: React.ComponentType<{ className?: string }>;
 } & React.InputHTMLAttributes<HTMLInputElement>;
 
 function InputField(
-  { name, label, type = 'text', className, icon: Icon, error, ...rest }: Props,
+  { name, label, description, type = 'text', className, icon: Icon, error, ...rest }: Props,
   ref: Ref<HTMLInputElement>
 ) {
   const styles = cn(baseStyles, {
@@ -42,11 +43,10 @@ function InputField(
           {...rest}
         />
       </div>
-      {error && (
-        <p className="mt-1 text-sm text-red-600" id={`${name}-description`}>
-          {error}
-        </p>
-      )}
+      <div id={`${name}-description`}>
+        {description && <p className="mt-1 text-sm text-gray-500">{description}</p>}
+        {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
+      </div>
     </div>
   );
 }

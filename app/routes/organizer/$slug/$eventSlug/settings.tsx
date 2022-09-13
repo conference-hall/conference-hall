@@ -44,7 +44,7 @@ export default function OrganizationSettingsRoute() {
       <div className="lg:grid lg:grid-cols-12 lg:gap-x-12">
         <NavMenu items={menus} />
 
-        <div className="space-y-20 sm:px-6 lg:col-span-9 lg:px-0">
+        <div className="space-y-16 sm:px-6 lg:col-span-9 lg:px-0">
           <Outlet context={{ event }} />
         </div>
       </div>

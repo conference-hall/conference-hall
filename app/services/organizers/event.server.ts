@@ -4,7 +4,7 @@ import { MessageChannel } from '@prisma/client';
 import { z } from 'zod';
 import { getCfpState } from '~/utils/event';
 import { getArray } from '~/utils/form';
-import { jsonToArray } from '~/utils/prisma';
+import { jsonToArray, jsonToObject } from '~/utils/prisma';
 import { db } from '../db';
 import { EventNotFoundError, ForbiddenOperationError, ProposalNotFoundError } from '../errors';
 import type { Pagination } from '../utils/pagination.server';
@@ -29,13 +29,31 @@ export async function getEvent(slug: string, uid: string) {
     slug: event.slug,
     type: event.type,
     address: event.address,
+    conferenceStart: event.conferenceStart?.toUTCString(),
+    conferenceEnd: event.conferenceEnd?.toUTCString(),
     description: event.description,
     visibility: event.visibility,
+    websiteUrl: event.websiteUrl,
+    codeOfConductUrl: event.codeOfConductUrl,
+    contactEmail: event.contactEmail,
+    bannerUrl: event.bannerUrl,
+    maxProposals: event.maxProposals,
+    surveyEnabled: event.surveyEnabled,
+    surveyQuestions: jsonToArray(event.surveyQuestions),
+    deliberationEnabled: event.deliberationEnabled,
+    displayOrganizersRatings: event.displayOrganizersRatings,
+    displayProposalsRatings: event.displayProposalsRatings,
+    displayProposalsSpeakers: event.displayProposalsSpeakers,
+    emailOrganizer: event.emailOrganizer,
+    emailNotifications: jsonToObject(event.emailNotifications),
+    slackWebhookUrl: event.slackWebhookUrl,
+    slackNotifications: jsonToObject(event.slackNotifications),
+    apiKey: event.apiKey,
     cfpStart: event.cfpStart?.toUTCString(),
     cfpEnd: event.cfpEnd?.toUTCString(),
     cfpState: getCfpState(event.type, event.cfpStart, event.cfpEnd),
-    formats: event.formats.map(({ id, name }) => ({ id, name })),
-    categories: event.categories.map(({ id, name }) => ({ id, name })),
+    formats: event.formats.map(({ id, name, description }) => ({ id, name, description })),
+    categories: event.categories.map(({ id, name, description }) => ({ id, name, description })),
   };
 }
 

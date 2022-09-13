@@ -2,14 +2,11 @@ import { useState } from 'react';
 import c from 'classnames';
 import slugify from '@sindresorhus/slugify';
 import { Input } from '~/design-system/forms/Input';
-import { MarkdownTextArea } from '~/design-system/forms/MarkdownTextArea';
 import { RadioGroup } from '@headlessui/react';
 
 type EventValues = {
   name: string;
   slug: string;
-  description: string;
-  address: string | null;
   visibility: 'PUBLIC' | 'PRIVATE';
 };
 
@@ -19,7 +16,7 @@ type Props = {
   errors?: Record<string, string[]>;
 };
 
-export function EventInfoForm({ type, initialValues, errors }: Props) {
+export function EventInfoForm({ initialValues, errors }: Props) {
   const [name, setName] = useState<string>(initialValues?.name || '');
   const [slug, setSlug] = useState<string>(initialValues?.slug || '');
 
@@ -47,40 +44,6 @@ export function EventInfoForm({ type, initialValues, errors }: Props) {
         autoComplete="off"
         error={errors?.slug?.[0]}
         required
-      />
-      <Input
-        name="address"
-        label="Venue address or city"
-        autoComplete="off"
-        defaultValue={initialValues?.address ?? ''}
-        error={errors?.address?.[0]}
-      />
-      {type === 'CONFERENCE' && (
-        <div className="grid grid-cols-2 gap-6">
-          <Input
-            name="startDate"
-            label="Start date"
-            autoComplete="off"
-            error={errors?.startDate?.[0]}
-            className="col-span-2 sm:col-span-1"
-          />
-          <Input
-            name="endDate"
-            label="End date"
-            autoComplete="off"
-            error={errors?.startDate?.[0]}
-            className="col-span-2 sm:col-span-1"
-          />
-        </div>
-      )}
-      <MarkdownTextArea
-        name="description"
-        label="Description"
-        defaultValue={initialValues?.description}
-        required
-        rows={5}
-        autoComplete="off"
-        error={errors?.description?.[0]}
       />
       <EventVisibilityRadioGroup defaultValue={initialValues?.visibility} />
     </>

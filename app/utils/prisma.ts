@@ -6,3 +6,9 @@ export function jsonToArray(json: Prisma.JsonValue) {
   if (!Array.isArray(json)) return Object.values(json) as string[];
   return json as string[];
 }
+
+export function jsonToObject(json: Prisma.JsonValue) {
+  if (!json) return {};
+  if (typeof json !== 'object') return {};
+  return json as Record<string, any>;
+}

@@ -2,8 +2,9 @@ import type { LoaderArgs } from '@remix-run/node';
 import { sessionRequired } from '~/services/auth/auth.server';
 import { H2, Text } from '~/design-system/Typography';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
-import { Form } from '@remix-run/react';
+import { Form, useOutletContext } from '@remix-run/react';
 import { Button } from '~/design-system/Buttons';
+import type { OrganizerEventContext } from '../../$eventSlug';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);
@@ -11,6 +12,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 export default function EventReviewSettingsRoute() {
+  const { event } = useOutletContext<OrganizerEventContext>();
   return (
     <>
       <section>
@@ -19,7 +21,11 @@ export default function EventReviewSettingsRoute() {
           <Text variant="secondary">
             Enable or disabled proposal review. When disabled, reviewers won't be able to review proposals anymore.
           </Text>
-          <Button>Disable proposal review</Button>
+          {event.deliberationEnabled ? (
+            <Button>Disable proposal review</Button>
+          ) : (
+            <Button>Enable proposal review</Button>
+          )}
         </Form>
       </section>
       <section>
@@ -28,6 +34,7 @@ export default function EventReviewSettingsRoute() {
           <Checkbox
             id="hideOrganizersRatings"
             name="hideOrganizersRatings"
+            defaultChecked={!event.displayOrganizersRatings}
             description="Organizer ratings won't be visible in the review page."
           >
             Hide organizers ratings
@@ -35,6 +42,7 @@ export default function EventReviewSettingsRoute() {
           <Checkbox
             id="hideProposalsRatings"
             name="hideProposalsRatings"
+            defaultChecked={!event.displayProposalsRatings}
             description="Proposal global ratings won't be visibile in the proposals list."
           >
             Hide ratings from proposal list
@@ -42,6 +50,7 @@ export default function EventReviewSettingsRoute() {
           <Checkbox
             id="hideProposalsSpeakers"
             name="hideProposalsSpeakers"
+            defaultChecked={!event.displayProposalsSpeakers}
             description="Used for anonymized reviews, all speakers information are not visible in proposal list and review page."
           >
             Hide speakers from proposal page
