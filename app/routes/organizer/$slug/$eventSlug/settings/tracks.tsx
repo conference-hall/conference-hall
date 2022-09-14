@@ -7,7 +7,7 @@ import { Checkbox } from '~/design-system/forms/Checkboxes';
 import { useOutletContext } from '@remix-run/react';
 import type { OrganizerEventContext } from '../../$eventSlug';
 import { IconButton } from '~/design-system/IconButtons';
-import { TrashIcon } from '@heroicons/react/24/outline';
+import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);
@@ -71,8 +71,9 @@ function TrackList({ tracks }: TrackListProps) {
               {track.description}
             </Text>
           </div>
-          <div className="ml-4 flex-shrink-0">
-            <IconButton icon={TrashIcon} variant="secondary" aria-label={`Remove format ${track.name}`} />
+          <div className="ml-4 flex-shrink-0 space-x-2">
+            <IconButton icon={PencilIcon} size="xs" variant="secondary" aria-label={`Edit ${track.name}`} />
+            <IconButton icon={TrashIcon} size="xs" variant="secondary" aria-label={`Remove ${track.name}`} />
           </div>
         </li>
       ))}

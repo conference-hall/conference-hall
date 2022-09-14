@@ -34,6 +34,7 @@ describe('#getEvent', () => {
     const result = await getEvent(event.slug, user.id);
 
     expect(result).toEqual({
+      id: event.id,
       name: event.name,
       slug: event.slug,
       type: event.type,

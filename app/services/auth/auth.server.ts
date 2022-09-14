@@ -6,6 +6,7 @@ import { createUser } from './user.server';
 if (!admin.apps.length) {
   admin.initializeApp({
     projectId: config.FIREBASE_PROJECT_ID,
+    storageBucket: config.FIREBASE_STORAGE,
   });
 }
 

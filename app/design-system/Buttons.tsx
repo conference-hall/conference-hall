@@ -53,7 +53,7 @@ export function ButtonLink({
   );
 }
 
-type ButtonStylesProps = {
+export type ButtonStylesProps = {
   variant?: 'primary' | 'secondary';
   size?: 's' | 'm' | 'l';
   block?: boolean;
@@ -65,7 +65,14 @@ type ButtonStylesProps = {
   iconRight?: React.ComponentType<{ className?: string }>;
 };
 
-const getStyles = ({ variant = 'primary', size = 'm', block, disabled, loading, className }: ButtonStylesProps) =>
+export const getStyles = ({
+  variant = 'primary',
+  size = 'm',
+  block,
+  disabled,
+  loading,
+  className,
+}: ButtonStylesProps) =>
   cn(
     [
       'relative inline-flex justify-center items-center whitespace-nowrap',

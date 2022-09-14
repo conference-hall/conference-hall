@@ -8,6 +8,7 @@ class Config {
   FIREBASE_API_KEY: string;
   FIREBASE_AUTH_DOMAIN: string;
   FIREBASE_AUTH_EMULATOR_HOST: string;
+  FIREBASE_STORAGE: string;
   GOOGLE_PLACES_API_KEY: string;
   COOKIE_SIGNED_SECRET: string;
 
@@ -17,6 +18,7 @@ class Config {
     this.FIREBASE_API_KEY = process.env.FIREBASE_API_KEY || '';
     this.FIREBASE_AUTH_DOMAIN = process.env.FIREBASE_AUTH_DOMAIN || '';
     this.FIREBASE_AUTH_EMULATOR_HOST = process.env.FIREBASE_AUTH_EMULATOR_HOST || '';
+    this.FIREBASE_STORAGE = process.env.FIREBASE_STORAGE || '';
     this.GOOGLE_PLACES_API_KEY = process.env.GOOGLE_PLACES_API_KEY || '';
     this.COOKIE_SIGNED_SECRET = process.env.COOKIE_SIGNED_SECRET || 'secr3t';
   }

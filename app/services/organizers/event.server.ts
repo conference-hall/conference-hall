@@ -1,6 +1,7 @@
 import type { Prisma } from '@prisma/client';
 import { OrganizationRole } from '@prisma/client';
 import { MessageChannel } from '@prisma/client';
+import { unstable_parseMultipartFormData } from '@remix-run/node';
 import { z } from 'zod';
 import { getCfpState } from '~/utils/event';
 import { getArray } from '~/utils/form';
@@ -11,6 +12,7 @@ import { geocode } from '../utils/geocode.server';
 import type { Pagination } from '../utils/pagination.server';
 import { getPagination } from '../utils/pagination.server';
 import { RatingsDetails } from '../utils/ratings.server';
+import { uploadToStorageHandler } from '../utils/storage.server';
 import { getUserRole } from './organizations.server';
 
 /**
@@ -26,6 +28,7 @@ export async function getEvent(slug: string, uid: string) {
   });
   if (!event) throw new EventNotFoundError();
   return {
+    id: event.id,
     name: event.name,
     slug: event.slug,
     type: event.type,
@@ -515,4 +518,31 @@ export function validateEventDetailsInfo(form: FormData) {
       websiteUrl: form.get('websiteUrl'),
       contactEmail: form.get('contactEmail'),
     });
+}
+
+/**
+ * Update an event
+ * @param orgaSlug Organization slug
+ * @param eventSlug Event slug
+ * @param uid User id
+ * @param data event data
+ */
+export async function uploadAndSaveEventBanner(orgaSlug: string, eventSlug: string, uid: string, request: Request) {
+  const organization = await db.organization.findFirst({
+    where: { slug: orgaSlug, members: { some: { memberId: uid, role: OrganizationRole.OWNER } } },
+  });
+  if (!organization) throw new ForbiddenOperationError();
+
+  const currentEvent = await db.event.findUnique({ where: { slug: eventSlug } });
+  if (!currentEvent) throw new EventNotFoundError();
+
+  const formData = await unstable_parseMultipartFormData(
+    request,
+    uploadToStorageHandler({ name: 'bannerUrl', path: currentEvent.id, maxFileSize: 300_000 })
+  );
+
+  const result = z.string().url().safeParse(formData.get('bannerUrl'));
+  if (result.success) {
+    await db.event.update({ where: { slug: eventSlug }, data: { bannerUrl: result.data } });
+  }
 }
