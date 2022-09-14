@@ -427,3 +427,83 @@ export function validateEventCreateForm(form: FormData) {
     visibility: form.get('visibility'),
   });
 }
+
+/**
+ * Update an event
+ * @param orgaSlug Organization slug
+ * @param eventSlug Event slug
+ * @param uid User id
+ * @param data event data
+ */
+export async function updateEvent(
+  orgaSlug: string,
+  eventSlug: string,
+  uid: string,
+  data: Partial<Prisma.EventCreateInput>
+) {
+  const organization = await db.organization.findFirst({
+    where: { slug: orgaSlug, members: { some: { memberId: uid, role: OrganizationRole.OWNER } } },
+  });
+  if (!organization) throw new ForbiddenOperationError();
+
+  return await db.$transaction(async (trx) => {
+    if (data.slug) {
+      const currentEvent = await db.event.findUnique({ where: { slug: eventSlug } });
+      const existSlug = await trx.event.findFirst({ where: { slug: data.slug } });
+      if (existSlug && currentEvent?.id !== existSlug.id) {
+        return { fieldErrors: { name: [], slug: ['Slug already exists, please try another one.'] } };
+      }
+    }
+
+    const updated = await trx.event.update({ where: { slug: eventSlug }, data: { ...data } });
+    return { slug: updated.slug };
+  });
+}
+
+export function validateEventGeneralInfo(form: FormData) {
+  return z
+    .object({
+      name: z.string().trim().min(3).max(50),
+      visibility: z.enum(['PUBLIC', 'PRIVATE']),
+      slug: z
+        .string()
+        .regex(/^[a-z0-9\\-]*$/, { message: 'Must only contain lower case alphanumeric and dashes (-).' })
+        .trim()
+        .min(3)
+        .max(50),
+    })
+    .safeParse({
+      name: form.get('name'),
+      slug: form.get('slug'),
+      visibility: form.get('visibility'),
+    });
+}
+
+export function validateEventDetailsInfo(form: FormData) {
+  return z
+    .object({
+      address: z.string().trim().min(1).optional(),
+      description: z.string().trim().min(1).optional(),
+      conferenceStart: z.preprocess((d: any) => (d !== '' ? new Date(d) : null), z.date().nullable()),
+      conferenceEnd: z.preprocess((d: any) => (d !== '' ? new Date(d) : null), z.date().nullable()),
+      websiteUrl: z.string().url().trim().optional(),
+      contactEmail: z.string().email().trim().optional(),
+    })
+    .refine(
+      ({ conferenceStart, conferenceEnd }) => {
+        if (conferenceStart && !conferenceEnd) return false;
+        if (conferenceEnd && !conferenceStart) return false;
+        if (conferenceStart && conferenceEnd && conferenceStart > conferenceEnd) return false;
+        return true;
+      },
+      { path: ['conferenceStart'], message: 'Conference start date must be after the conference end date.' }
+    )
+    .safeParse({
+      address: form.get('address'),
+      description: form.get('description'),
+      conferenceStart: form.get('conferenceStart'),
+      conferenceEnd: form.get('conferenceEnd'),
+      websiteUrl: form.get('websiteUrl'),
+      contactEmail: form.get('contactEmail'),
+    });
+}

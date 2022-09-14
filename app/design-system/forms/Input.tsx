@@ -2,7 +2,7 @@ import cn from 'classnames';
 import type { Ref } from 'react';
 import { forwardRef } from 'react';
 
-type Props = {
+export type InputProps = {
   label?: string;
   description?: string;
   error?: string;
@@ -10,7 +10,7 @@ type Props = {
 } & React.InputHTMLAttributes<HTMLInputElement>;
 
 function InputField(
-  { name, label, description, type = 'text', className, icon: Icon, error, ...rest }: Props,
+  { name, label, description, type = 'text', className, icon: Icon, error, ...rest }: InputProps,
   ref: Ref<HTMLInputElement>
 ) {
   const styles = cn(baseStyles, {
