@@ -85,13 +85,6 @@ export default function EventGeneralSettingsRoute() {
         </Text>
         <Form method="post" className="mt-6 space-y-4">
           <input type="hidden" name="_action" value="details" />
-          <Input
-            name="address"
-            label="Venue address or city"
-            autoComplete="off"
-            defaultValue={event?.address ?? ''}
-            error={result?.fieldErrors?.address?.[0]}
-          />
           {event.type === 'CONFERENCE' && (
             <DateRangeInput
               start={{ name: 'conferenceStart', label: 'Start date', value: event?.conferenceStart }}
@@ -99,6 +92,13 @@ export default function EventGeneralSettingsRoute() {
               error={result?.fieldErrors?.conferenceStart?.[0]}
             />
           )}
+          <Input
+            name="address"
+            label="Venue address or city"
+            autoComplete="off"
+            defaultValue={event?.address ?? ''}
+            error={result?.fieldErrors?.address?.[0]}
+          />
           <MarkdownTextArea
             name="description"
             label="Description"

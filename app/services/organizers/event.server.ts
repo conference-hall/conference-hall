@@ -7,6 +7,7 @@ import { getArray } from '~/utils/form';
 import { jsonToArray, jsonToObject } from '~/utils/prisma';
 import { db } from '../db';
 import { EventNotFoundError, ForbiddenOperationError, ProposalNotFoundError } from '../errors';
+import { geocode } from '../utils/geocode.server';
 import type { Pagination } from '../utils/pagination.server';
 import { getPagination } from '../utils/pagination.server';
 import { RatingsDetails } from '../utils/ratings.server';
@@ -446,9 +447,17 @@ export async function updateEvent(
   });
   if (!organization) throw new ForbiddenOperationError();
 
+  const currentEvent = await db.event.findUnique({ where: { slug: eventSlug } });
+
+  if (data.address && currentEvent?.address !== data.address) {
+    const geocodedAddress = await geocode(data.address);
+    data.address = geocodedAddress.address;
+    data.lat = geocodedAddress.lat;
+    data.lng = geocodedAddress.lng;
+  }
+
   return await db.$transaction(async (trx) => {
     if (data.slug) {
-      const currentEvent = await db.event.findUnique({ where: { slug: eventSlug } });
       const existSlug = await trx.event.findFirst({ where: { slug: data.slug } });
       if (existSlug && currentEvent?.id !== existSlug.id) {
         return { fieldErrors: { name: [], slug: ['Slug already exists, please try another one.'] } };
