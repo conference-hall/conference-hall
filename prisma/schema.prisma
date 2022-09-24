@@ -46,7 +46,7 @@ model OrganizerKeyAccess {
   revokedAt DateTime?
   users     User[]
 
-  @@map("organizer-key-access")
+  @@map("organizer_key_access")
 }
 
 model Talk {
