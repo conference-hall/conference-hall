@@ -1,59 +1,91 @@
+import type { ChangeEvent } from 'react';
 import type { LoaderArgs } from '@remix-run/node';
 import { sessionRequired } from '~/services/auth/auth.server';
 import { H2, Text } from '~/design-system/Typography';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
-import { Form, useOutletContext } from '@remix-run/react';
+import { Form, useOutletContext, useSubmit } from '@remix-run/react';
 import { Button } from '~/design-system/Buttons';
 import type { OrganizerEventContext } from '../../$eventSlug';
+import { updateEvent, validateReviewSettings } from '~/services/organizers/event.server';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);
   return null;
 };
 
+export const action = async ({ request, params }: LoaderArgs) => {
+  const uid = await sessionRequired(request);
+  const { slug, eventSlug } = params;
+  const form = await request.formData();
+  const action = form.get('_action');
+
+  switch (action) {
+    case 'enable-review': {
+      await updateEvent(slug!, eventSlug!, uid, { deliberationEnabled: form.get('deliberationEnabled') === 'true' });
+      break;
+    }
+    case 'save-review-settings': {
+      const result = validateReviewSettings(form);
+      if (result) await updateEvent(slug!, eventSlug!, uid, result);
+      break;
+    }
+  }
+  return null;
+};
+
 export default function EventReviewSettingsRoute() {
   const { event } = useOutletContext<OrganizerEventContext>();
+
+  const submit = useSubmit();
+
+  function handleChange(event: ChangeEvent<HTMLFormElement>) {
+    submit(event.currentTarget);
+  }
+
   return (
     <>
       <section>
         <H2 className="border-b border-gray-200 pb-3">Proposals review</H2>
-        <Form className="mt-6 space-y-4">
+        <Form method="post" className="mt-6 space-y-4">
           <Text variant="secondary">
             Enable or disabled proposal review. When disabled, reviewers won't be able to review proposals anymore.
           </Text>
+          <input type="hidden" name="_action" value="enable-review" />
+          <input type="hidden" name="deliberationEnabled" value={String(!event.deliberationEnabled)} />
           {event.deliberationEnabled ? (
-            <Button>Disable proposal review</Button>
+            <Button type="submit">Disable proposal review</Button>
           ) : (
-            <Button>Enable proposal review</Button>
+            <Button type="submit">Enable proposal review</Button>
           )}
         </Form>
       </section>
       <section>
         <H2 className="border-b border-gray-200 pb-3">Review settings</H2>
-        <Form className="mt-6 space-y-4">
+        <Form method="post" onChange={handleChange} className="mt-6 space-y-4">
+          <input type="hidden" name="_action" value="save-review-settings" />
           <Checkbox
-            id="hideOrganizersRatings"
-            name="hideOrganizersRatings"
-            defaultChecked={!event.displayOrganizersRatings}
-            description="Organizer ratings won't be visible in the review page."
+            id="displayOrganizersRatings"
+            name="displayOrganizersRatings"
+            defaultChecked={event.displayOrganizersRatings}
+            description="When disabled, organizer ratings won't be visible in the review page."
           >
-            Hide organizers ratings
+            Display organizers ratings
           </Checkbox>
           <Checkbox
-            id="hideProposalsRatings"
-            name="hideProposalsRatings"
-            defaultChecked={!event.displayProposalsRatings}
-            description="Proposal global ratings won't be visibile in the proposals list."
+            id="displayProposalsRatings"
+            name="displayProposalsRatings"
+            defaultChecked={event.displayProposalsRatings}
+            description="When disabled, proposal global ratings won't be visibile in the proposals list."
           >
-            Hide ratings from proposal list
+            Display ratings in proposal list
           </Checkbox>
           <Checkbox
-            id="hideProposalsSpeakers"
-            name="hideProposalsSpeakers"
-            defaultChecked={!event.displayProposalsSpeakers}
-            description="Used for anonymized reviews, all speakers information are not visible in proposal list and review page."
+            id="displayProposalsSpeakers"
+            name="displayProposalsSpeakers"
+            defaultChecked={event.displayProposalsSpeakers}
+            description="When disabled, all speakers information are not visible in proposal list and review page. Used for anonymized reviews."
           >
-            Hide speakers from proposal page
+            Display speakers in proposal page
           </Checkbox>
         </Form>
       </section>

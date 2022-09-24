@@ -36,15 +36,16 @@ export const action = async ({ request, params }: LoaderArgs) => {
 export default function EventSurveySettingsRoute() {
   const { event } = useOutletContext<OrganizerEventContext>();
   const { questions } = useLoaderData<typeof loader>();
+
   return (
     <>
       <section>
         <H2 className="border-b border-gray-200 pb-3">Speaker survey</H2>
-        <Text variant="secondary" className="mt-6">
-          When enabled a short survey will be asked to speakers when they submit a proposal. It will provide some
-          information about gender, transport or accommodation needs.
-        </Text>
-        <Form method="post" className="mt-6">
+        <Form method="post" className="mt-6 space-y-4">
+          <Text variant="secondary">
+            When enabled a short survey will be asked to speakers when they submit a proposal. It will provide some
+            information about gender, transport or accommodation needs.
+          </Text>
           <input type="hidden" name="_action" value="enable-survey" />
           <input type="hidden" name="surveyEnabled" value={String(!event.surveyEnabled)} />
           {event.surveyEnabled ? (

@@ -3,7 +3,7 @@ import { OrganizationRole } from '@prisma/client';
 import { MessageChannel } from '@prisma/client';
 import { unstable_parseMultipartFormData } from '@remix-run/node';
 import { z } from 'zod';
-import { formData, numeric, repeatable, text } from 'zod-form-data';
+import { checkbox, formData, numeric, repeatable, text } from 'zod-form-data';
 import { getCfpState } from '~/utils/event';
 import { jsonToArray, jsonToObject } from '~/utils/prisma';
 import { checkboxValidator, dateValidator, slugValidator } from '~/utils/validation-errors';
@@ -505,6 +505,15 @@ export function validateEventCfpSettings(form: FormData) {
 export function validateSurveyQuestionsData(form: FormData) {
   const result = formData({
     surveyQuestions: repeatable(z.array(z.string())),
+  }).safeParse(form);
+  return result.success ? result.data : null;
+}
+
+export function validateReviewSettings(form: FormData) {
+  const result = formData({
+    displayOrganizersRatings: checkbox(),
+    displayProposalsRatings: checkbox(),
+    displayProposalsSpeakers: checkbox(),
   }).safeParse(form);
   return result.success ? result.data : null;
 }
