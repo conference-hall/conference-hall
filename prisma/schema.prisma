@@ -78,7 +78,7 @@ model Event {
   id                       String          @id @default(uuid())
   slug                     String          @unique
   name                     String
-  description              String
+  description              String?
   type                     EventType       @default(CONFERENCE)
   visibility               EventVisibility @default(PRIVATE)
   organizationId           String

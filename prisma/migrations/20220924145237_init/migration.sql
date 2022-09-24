@@ -78,7 +78,7 @@ CREATE TABLE "events" (
     "id" TEXT NOT NULL,
     "slug" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "description" TEXT NOT NULL,
+    "description" TEXT,
     "type" "EventType" NOT NULL DEFAULT 'CONFERENCE',
     "visibility" "EventVisibility" NOT NULL DEFAULT 'PRIVATE',
     "organizationId" TEXT NOT NULL,

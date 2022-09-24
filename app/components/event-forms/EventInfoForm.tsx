@@ -10,7 +10,6 @@ type EventValues = {
 };
 
 type Props = {
-  type: 'MEETUP' | 'CONFERENCE';
   initialValues?: EventValues;
   errors?: Record<string, string[]>;
 };
@@ -30,8 +29,8 @@ export function EventInfoForm({ initialValues, errors }: Props) {
           setSlug(slugify(e.target.value.toLowerCase()));
         }}
         autoComplete="off"
-        error={errors?.name?.[0]}
         required
+        error={errors?.name?.[0]}
       />
       <Input
         name="slug"
@@ -41,8 +40,8 @@ export function EventInfoForm({ initialValues, errors }: Props) {
           setSlug(e.target.value);
         }}
         autoComplete="off"
-        error={errors?.slug?.[0]}
         required
+        error={errors?.slug?.[0]}
       />
       <EventVisibilityRadioGroup defaultValue={initialValues?.visibility} />
     </>

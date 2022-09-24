@@ -1,8 +1,6 @@
-import { useState } from 'react';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import slugify from '@sindresorhus/slugify';
 import { sessionRequired } from '~/services/auth/auth.server';
 import { H2, Text } from '~/design-system/Typography';
 import { Form, useActionData, useOutletContext } from '@remix-run/react';
@@ -10,9 +8,9 @@ import { Button } from '~/design-system/Buttons';
 import { Input } from '~/design-system/forms/Input';
 import { MarkdownTextArea } from '~/design-system/forms/MarkdownTextArea';
 import type { OrganizerEventContext } from '../../$eventSlug';
-import EventVisibilityRadioGroup from '~/components/event-forms/EventVisibilityRadioGroup';
 import { updateEvent, validateEventDetailsInfo, validateEventGeneralInfo } from '~/services/organizers/event.server';
 import { DateRangeInput } from '~/design-system/forms/DateRangeInput';
+import { EventInfoForm } from '~/components/event-forms/EventInfoForm';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);
@@ -42,8 +40,6 @@ export const action = async ({ request, params }: ActionArgs) => {
 export default function EventGeneralSettingsRoute() {
   const { event } = useOutletContext<OrganizerEventContext>();
   const result = useActionData();
-  const [name, setName] = useState<string>(event?.name || '');
-  const [slug, setSlug] = useState<string>(event?.slug || '');
 
   return (
     <>
@@ -51,30 +47,7 @@ export default function EventGeneralSettingsRoute() {
         <H2 className="border-b border-gray-200 pb-3">General</H2>
         <Form method="post" className="mt-6 space-y-4">
           <input type="hidden" name="_action" value="general" />
-          <Input
-            name="name"
-            label="Name"
-            value={name}
-            onChange={(e) => {
-              setName(e.target.value);
-              setSlug(slugify(e.target.value.toLowerCase()));
-            }}
-            autoComplete="off"
-            required
-            error={result?.fieldErrors?.name?.[0]}
-          />
-          <Input
-            name="slug"
-            label="Event URL"
-            value={slug}
-            onChange={(e) => {
-              setSlug(e.target.value);
-            }}
-            autoComplete="off"
-            required
-            error={result?.fieldErrors?.slug?.[0]}
-          />
-          <EventVisibilityRadioGroup defaultValue={event?.visibility} />
+          <EventInfoForm initialValues={event} errors={result?.fieldErrors} />
           <Button type="submit">Update event</Button>
         </Form>
       </section>
@@ -96,13 +69,13 @@ export default function EventGeneralSettingsRoute() {
             name="address"
             label="Venue address or city"
             autoComplete="off"
-            defaultValue={event?.address ?? ''}
+            defaultValue={event?.address || ''}
             error={result?.fieldErrors?.address?.[0]}
           />
           <MarkdownTextArea
             name="description"
             label="Description"
-            defaultValue={event?.description}
+            defaultValue={event?.description || ''}
             required
             rows={5}
             autoComplete="off"

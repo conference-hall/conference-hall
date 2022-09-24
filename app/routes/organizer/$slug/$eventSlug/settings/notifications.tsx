@@ -65,7 +65,6 @@ export default function EventNotificationsSettingsRoute() {
             id="sendToOrganizers"
             name="sendToOrganizers"
             description="Sent emails will have organizer's email as BCC."
-            defaultChecked={event.emailNotifications?.sendToOrganizers}
           >
             Send notifications directly to organizer's emails
           </Checkbox>

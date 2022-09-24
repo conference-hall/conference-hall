@@ -5,7 +5,7 @@ import { unstable_parseMultipartFormData } from '@remix-run/node';
 import { z } from 'zod';
 import { checkbox, formData, numeric, repeatable, text } from 'zod-form-data';
 import { getCfpState } from '~/utils/event';
-import { jsonToArray, jsonToObject } from '~/utils/prisma';
+import { jsonToArray } from '~/utils/prisma';
 import { checkboxValidator, dateValidator, slugValidator } from '~/utils/validation-errors';
 import { db } from '../db';
 import { EventNotFoundError, ForbiddenOperationError, ProposalNotFoundError } from '../errors';
@@ -52,9 +52,8 @@ export async function getEvent(slug: string, uid: string) {
     formatsRequired: event.formatsRequired,
     categoriesRequired: event.categoriesRequired,
     emailOrganizer: event.emailOrganizer,
-    emailNotifications: jsonToObject(event.emailNotifications),
+    emailNotifications: jsonToArray(event.emailNotifications),
     slackWebhookUrl: event.slackWebhookUrl,
-    slackNotifications: jsonToObject(event.slackNotifications),
     apiKey: event.apiKey,
     cfpStart: event.cfpStart?.toUTCString(),
     cfpEnd: event.cfpEnd?.toUTCString(),
@@ -394,8 +393,6 @@ type EventCreateData = z.infer<typeof EventCreateSchema>;
 const EventCreateSchema = z.object({
   type: text(z.enum(['CONFERENCE', 'MEETUP'])),
   name: text(z.string().trim().min(3).max(50)),
-  description: text(z.string().trim().min(1)),
-  address: text(z.string().trim().min(1)),
   visibility: text(z.enum(['PUBLIC', 'PRIVATE'])),
   slug: text(slugValidator),
 });
