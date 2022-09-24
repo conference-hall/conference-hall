@@ -37,7 +37,7 @@ describe('Speaker talk creation page', () => {
     newTalk.visit();
     newTalk.fillTalkForm({});
     newTalk.createAbstract().click();
-    newTalk.error('Title').should('contain.text', 'String must contain at least 1 character(s)');
-    newTalk.error('Abstract').should('contain.text', 'String must contain at least 1 character(s)');
+    newTalk.titleInput().then(($el: any) => expect($el[0].checkValidity()).to.be.false);
+    newTalk.abstractInput().then(($el: any) => expect($el[0].checkValidity()).to.be.false);
   });
 });

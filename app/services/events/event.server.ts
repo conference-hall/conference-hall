@@ -18,7 +18,7 @@ export interface EventData {
   conferenceStart?: string;
   conferenceEnd?: string;
   surveyEnabled: boolean;
-  description: string;
+  description: string | null;
   websiteUrl: string | null;
   contactEmail: string | null;
   codeOfConductUrl: string | null;

@@ -28,13 +28,12 @@ class SpeakerNewTalkPage {
     return cy.findByRole('button', { name: 'Create abstract' });
   }
 
-  error(label: string) {
-    return cy
-      .findByLabelText(label)
-      .invoke('attr', 'id')
-      .then((id) => {
-        return cy.get(`#${id}-description`);
-      });
+  titleInput() {
+    return cy.findByLabelText('Title');
+  }
+
+  abstractInput() {
+    return cy.findByLabelText('Abstract');
   }
 }
 

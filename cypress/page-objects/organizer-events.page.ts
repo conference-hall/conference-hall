@@ -9,7 +9,7 @@ class OrganizationEventsPage {
   }
 
   eventsTab() {
-    return cy.findByRole('link', { name: 'Events' });
+    return cy.findByRole('link', { name: 'Organization events' });
   }
 
   membersTab() {
