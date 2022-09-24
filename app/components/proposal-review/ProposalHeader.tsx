@@ -2,7 +2,7 @@ import c from 'classnames';
 import { useParams, useSearchParams } from '@remix-run/react';
 import { H1, Text } from '~/design-system/Typography';
 import { IconButtonLink } from '~/design-system/IconButtons';
-import { ChevronLeftIcon, PencilSquareIcon } from '@heroicons/react/24/outline';
+import { PencilSquareIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
 type Props = { proposal: { title: string }; current: number; total: number; className?: string };
 
@@ -18,7 +18,7 @@ export function ProposalHeader({ proposal, current, total, className }: Props) {
           to={{ pathname: `/organizer/${slug}/${eventSlug}/proposals`, search: searchParams.toString() }}
           variant="secondary"
           size="l"
-          icon={ChevronLeftIcon}
+          icon={XMarkIcon}
         />
       </div>
       <div className="text-center">
