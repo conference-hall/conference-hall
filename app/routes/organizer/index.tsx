@@ -1,21 +1,17 @@
-import type { ActionArgs, LoaderArgs } from '@remix-run/node';
+import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 import { Container } from '~/design-system/Container';
 import { sessionRequired } from '~/services/auth/auth.server';
 import { H1, Text } from '~/design-system/Typography';
 import { hasOrganizerAccess } from '~/services/organizers/access.server';
-import {
-  getOrganizations,
-  createOrganization,
-  validateOrganizationData,
-} from '~/services/organizers/organizations.server';
-import { useActionData, useLoaderData } from '@remix-run/react';
+import { getOrganizations } from '~/services/organizers/organizations.server';
+import { useLoaderData } from '@remix-run/react';
 import { CardLink } from '~/design-system/Card';
 import Badge from '~/design-system/Badges';
 import { IconLabel } from '~/design-system/IconLabel';
 import { MegaphoneIcon, UsersIcon } from '@heroicons/react/24/outline';
-import { OrganizationNewButton } from '~/components/OrganizationNew';
+import { ButtonLink } from '~/design-system/Buttons';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const uid = await sessionRequired(request);
@@ -23,34 +19,19 @@ export const loader = async ({ request }: LoaderArgs) => {
   if (!hasAccess) return redirect('/organizer/request');
 
   const organizations = await getOrganizations(uid);
-  if (organizations.length === 0) return redirect('/organizer/welcome');
-  if (organizations.length === 1) return redirect(`/organizer/${organizations[0].slug}`);
+  if (organizations.length === 0) return redirect('/organizer/new');
 
   return json(organizations);
 };
 
-export const action = async ({ request }: ActionArgs) => {
-  const uid = await sessionRequired(request);
-  const form = await request.formData();
-  const result = validateOrganizationData(form);
-  if (!result.success) {
-    return result.error.flatten();
-  } else {
-    const updated = await createOrganization(uid, result.data);
-    if (updated?.fieldErrors) return json(updated);
-    throw redirect(`/organizer/${updated.slug}`);
-  }
-};
-
 export default function OrganizerRoute() {
   const data = useLoaderData<typeof loader>();
-  const result = useActionData();
 
   return (
     <Container className="my-4 sm:my-8">
       <div className="sm:flex sm:items-center sm:justify-between">
         <H1>Select an organization</H1>
-        <OrganizationNewButton errors={result?.fieldErrors} />
+        <ButtonLink to="/organizer/new">New organization</ButtonLink>
       </div>
       <ul aria-label="Organizations list" className="my-8 grid grid-cols-1 gap-6 sm:grid-cols-2">
         {data.map((orga) => (

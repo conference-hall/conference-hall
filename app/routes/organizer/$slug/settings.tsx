@@ -1,16 +1,14 @@
-import slugify from '@sindresorhus/slugify';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Container } from '~/design-system/Container';
 import { sessionRequired } from '~/services/auth/auth.server';
 import { H2 } from '~/design-system/Typography';
-import { Form, useActionData, useOutletContext } from '@remix-run/react';
-import { Input } from '~/design-system/forms/Input';
+import { Form, useOutletContext } from '@remix-run/react';
 import { Button } from '~/design-system/Buttons';
 import type { OrganizationContext } from '../$slug';
 import { getUserRole, updateOrganization, validateOrganizationData } from '~/services/organizers/organizations.server';
-import { useState } from 'react';
+import { OrganizationNewForm } from '~/components/organizations/OrganizationNew';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const uid = await sessionRequired(request);
@@ -35,9 +33,6 @@ export const action = async ({ request, params }: ActionArgs) => {
 
 export default function OrganizationSettingsRoute() {
   const { organization } = useOutletContext<OrganizationContext>();
-  const result = useActionData();
-  const [name, setName] = useState<string>(organization.name);
-  const [slug, setSlug] = useState<string>(organization.slug);
 
   return (
     <Container className="my-4 sm:my-8">
@@ -45,29 +40,7 @@ export default function OrganizationSettingsRoute() {
         <div className="overflow-hidden border border-gray-200 sm:rounded-md">
           <div className="space-y-6 bg-white py-6 px-4 sm:p-6">
             <H2>Organization settings</H2>
-            <Input
-              name="name"
-              label="Name"
-              required
-              autoComplete="off"
-              value={name}
-              onChange={(e) => {
-                setName(e.target.value);
-                setSlug(slugify(e.target.value.toLowerCase()));
-              }}
-              error={result?.fieldErrors?.name?.[0]}
-            />
-            <Input
-              name="slug"
-              label="Slug"
-              required
-              autoComplete="off"
-              value={slug}
-              onChange={(e) => {
-                setSlug(e.target.value);
-              }}
-              error={result?.fieldErrors?.slug?.[0]}
-            />
+            <OrganizationNewForm initialValues={organization} />
           </div>
           <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
             <Button type="submit">Save</Button>

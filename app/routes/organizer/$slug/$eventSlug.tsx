@@ -1,10 +1,10 @@
-import { ArrowTopRightOnSquareIcon } from '@heroicons/react/20/solid';
+import { ArrowTopRightOnSquareIcon, HomeIcon } from '@heroicons/react/20/solid';
 import { ChevronRightIcon } from '@heroicons/react/24/outline';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Link, Outlet, useLoaderData, useOutletContext } from '@remix-run/react';
 import { CfpLabel } from '~/components/CfpInfo';
-import { OrganizerEvenTabs } from '~/components/OrganizerEventTabs';
+import { EventTabs } from '~/components/event-forms/EventTabs';
 import Badge from '~/design-system/Badges';
 import { Container } from '~/design-system/Container';
 import { H1, H2 } from '~/design-system/Typography';
@@ -38,7 +38,11 @@ export default function OrganizationEventRoute() {
       <Container as="header" className="my-4 flex flex-col sm:flex-row sm:justify-between">
         <div className="flex flex-col gap-4 sm:flex-row sm:gap-6">
           <H1 className="sr-only">Event page</H1>
-          <H2 className="flex items-center gap-2">
+          <H2 className="flex items-center gap-4">
+            <Link to="/organizer" className="truncate hover:underline">
+              <HomeIcon className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+            </Link>
+            <ChevronRightIcon className="h-4 w-4 text-gray-600" />
             <Link to={`/organizer/${organization.slug}`} className="truncate hover:underline">
               {organization.name}
             </Link>
@@ -55,7 +59,7 @@ export default function OrganizationEventRoute() {
         </div>
         <CfpLabel cfpState={event.cfpState} className="hidden sm:flex" />
       </Container>
-      <OrganizerEvenTabs orgaSlug={organization.slug} eventSlug={event.slug} role={organization.role} />
+      <EventTabs orgaSlug={organization.slug} eventSlug={event.slug} role={organization.role} />
       <Outlet context={{ event }} />
     </>
   );
