@@ -502,6 +502,13 @@ export function validateEventCfpSettings(form: FormData) {
   ).safeParse(form);
 }
 
+export function validateSurveyQuestionsData(form: FormData) {
+  const result = formData({
+    surveyQuestions: repeatable(z.array(z.string())),
+  }).safeParse(form);
+  return result.success ? result.data : null;
+}
+
 /**
  * Update an event
  * @param orgaSlug Organization slug

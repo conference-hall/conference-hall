@@ -57,7 +57,9 @@ export function Checkbox({ id, name, description, className, children, ...rest }
           aria-describedby={`${id}-description`}
           name={name}
           type="checkbox"
-          className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+          className={cn('h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500', {
+            'cursor-not-allowed opacity-50': rest?.disabled,
+          })}
           {...rest}
         />
       </div>

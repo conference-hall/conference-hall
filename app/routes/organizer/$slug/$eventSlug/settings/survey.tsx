@@ -6,10 +6,31 @@ import { Form, useLoaderData, useOutletContext } from '@remix-run/react';
 import { QUESTIONS } from '~/services/events/survey.server';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
 import type { OrganizerEventContext } from '../../$eventSlug';
+import { updateEvent, validateSurveyQuestionsData } from '~/services/organizers/event.server';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);
   return { questions: QUESTIONS };
+};
+
+export const action = async ({ request, params }: LoaderArgs) => {
+  const uid = await sessionRequired(request);
+  const { slug, eventSlug } = params;
+  const form = await request.formData();
+  const action = form.get('_action');
+
+  switch (action) {
+    case 'enable-survey': {
+      await updateEvent(slug!, eventSlug!, uid, { surveyEnabled: form.get('surveyEnabled') === 'true' });
+      break;
+    }
+    case 'save-questions': {
+      const result = validateSurveyQuestionsData(form);
+      if (result) await updateEvent(slug!, eventSlug!, uid, result);
+      break;
+    }
+  }
+  return null;
 };
 
 export default function EventSurveySettingsRoute() {
@@ -23,22 +44,27 @@ export default function EventSurveySettingsRoute() {
           When enabled a short survey will be asked to speakers when they submit a proposal. It will provide some
           information about gender, transport or accommodation needs.
         </Text>
-        {event.surveyEnabled ? (
-          <Button className="mt-6">Disable survey</Button>
-        ) : (
-          <Button className="mt-6">Enable survey</Button>
-        )}
+        <Form method="post" className="mt-6">
+          <input type="hidden" name="_action" value="enable-survey" />
+          <input type="hidden" name="surveyEnabled" value={String(!event.surveyEnabled)} />
+          {event.surveyEnabled ? (
+            <Button type="submit">Disable survey</Button>
+          ) : (
+            <Button type="submit">Enable survey</Button>
+          )}
+        </Form>
       </section>
       <section>
         <H2 className="border-b border-gray-200 pb-3">Questions</H2>
         <Text variant="secondary" className="mt-6">
           Select questions that you want to ask to speakers.
         </Text>
-        <Form className="mt-6 space-y-4">
+        <Form method="post" className="mt-6 space-y-4">
+          <input type="hidden" name="_action" value="save-questions" />
           {questions.map((question) => (
             <Checkbox
               key={question.name}
-              name="questions"
+              name="surveyQuestions"
               value={question.name}
               defaultChecked={event.surveyQuestions.includes(question.name)}
               disabled={!event.surveyEnabled}
@@ -46,7 +72,9 @@ export default function EventSurveySettingsRoute() {
               {question.label}
             </Checkbox>
           ))}
-          <Button disabled={!event.surveyEnabled}>Save questions</Button>
+          <Button type="submit" disabled={!event.surveyEnabled}>
+            Save questions
+          </Button>
         </Form>
       </section>
     </>
