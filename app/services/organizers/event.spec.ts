@@ -54,6 +54,8 @@ describe('#getEvent', () => {
       displayOrganizersRatings: event.displayOrganizersRatings,
       displayProposalsRatings: event.displayProposalsRatings,
       displayProposalsSpeakers: event.displayProposalsSpeakers,
+      formatsRequired: event.formatsRequired,
+      categoriesRequired: event.categoriesRequired,
       emailOrganizer: event.emailOrganizer,
       emailNotifications: {},
       slackWebhookUrl: event.slackWebhookUrl,

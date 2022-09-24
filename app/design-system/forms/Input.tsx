@@ -37,10 +37,11 @@ function InputField(
           name={name}
           type={type}
           ref={ref}
+          className={styles}
+          autoComplete="off"
+          {...rest}
           aria-invalid={Boolean(error)}
           aria-describedby={error ? `${name}-description` : undefined}
-          className={styles}
-          {...rest}
         />
       </div>
       <div id={`${name}-description`}>

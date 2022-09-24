@@ -28,6 +28,7 @@ export function TextArea({ name, label, description, className, error, ...rest }
         id={name}
         name={name}
         className={styles}
+        autoComplete="off"
         {...rest}
         aria-invalid={Boolean(error)}
         aria-describedby={description || error ? `${name}-description` : undefined}

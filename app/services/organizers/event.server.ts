@@ -3,9 +3,10 @@ import { OrganizationRole } from '@prisma/client';
 import { MessageChannel } from '@prisma/client';
 import { unstable_parseMultipartFormData } from '@remix-run/node';
 import { z } from 'zod';
+import { formData, numeric, repeatable, text } from 'zod-form-data';
 import { getCfpState } from '~/utils/event';
-import { getArray } from '~/utils/form';
 import { jsonToArray, jsonToObject } from '~/utils/prisma';
+import { checkboxValidator, dateValidator, slugValidator } from '~/utils/validation-errors';
 import { db } from '../db';
 import { EventNotFoundError, ForbiddenOperationError, ProposalNotFoundError } from '../errors';
 import { geocode } from '../utils/geocode.server';
@@ -48,6 +49,8 @@ export async function getEvent(slug: string, uid: string) {
     displayOrganizersRatings: event.displayOrganizersRatings,
     displayProposalsRatings: event.displayProposalsRatings,
     displayProposalsSpeakers: event.displayProposalsSpeakers,
+    formatsRequired: event.formatsRequired,
+    categoriesRequired: event.categoriesRequired,
     emailOrganizer: event.emailOrganizer,
     emailNotifications: jsonToObject(event.emailNotifications),
     slackWebhookUrl: event.slackWebhookUrl,
@@ -136,23 +139,16 @@ function proposalOrderBy(filters: Filters): Prisma.ProposalOrderByWithRelationIn
 export type Filters = z.infer<typeof FiltersSchema>;
 
 const FiltersSchema = z.object({
-  query: z.string().trim().optional(),
-  sort: z.enum(['newest', 'oldest']).optional(),
-  ratings: z.enum(['rated', 'not-rated']).optional(),
-  status: z.enum(['SUBMITTED', 'ACCEPTED', 'REJECTED', 'CONFIRMED', 'DECLINED']).optional(),
-  formats: z.string().optional(),
-  categories: z.string().optional(),
+  query: text(z.string().trim().optional()),
+  sort: text(z.enum(['newest', 'oldest']).optional()),
+  ratings: text(z.enum(['rated', 'not-rated']).optional()),
+  status: text(z.enum(['SUBMITTED', 'ACCEPTED', 'REJECTED', 'CONFIRMED', 'DECLINED']).optional()),
+  formats: text(z.string().optional()),
+  categories: text(z.string().optional()),
 });
 
 export function validateFilters(params: URLSearchParams) {
-  const result = FiltersSchema.safeParse({
-    query: params.get('query') || undefined,
-    sort: params.get('sort') || undefined,
-    ratings: params.get('ratings') || undefined,
-    status: params.get('status') || undefined,
-    formats: params.get('formats') || undefined,
-    categories: params.get('categories') || undefined,
-  });
+  const result = formData(FiltersSchema).safeParse(params);
   return result.success ? result.data : {};
 }
 
@@ -280,17 +276,13 @@ export async function rateProposal(eventSlug: string, proposalId: string, uid: s
 export type RatingData = z.infer<typeof RatingDataSchema>;
 
 const RatingDataSchema = z.object({
-  rating: z.preprocess((a) => (a !== '' ? parseInt(a as string, 10) : null), z.number().min(0).max(5).nullable()),
-  feeling: z.enum(['NEUTRAL', 'POSITIVE', 'NEGATIVE', 'NO_OPINION']),
+  rating: numeric(z.number().min(0).max(5).nullable().default(null)),
+  feeling: text(z.enum(['NEUTRAL', 'POSITIVE', 'NEGATIVE', 'NO_OPINION'])),
 });
 
 export function validateRating(form: FormData) {
-  const result = RatingDataSchema.safeParse({
-    rating: form.get('rating'),
-    feeling: form.get('feeling'),
-  });
-  if (!result.success) return null;
-  return result.data;
+  const result = formData(RatingDataSchema).safeParse(form);
+  return result.success ? result.data : null;
 }
 
 /**
@@ -345,8 +337,8 @@ export async function updateProposal(orgaSlug: string, proposalId: string, uid: 
     data: {
       ...talk,
       speakers: { set: [], connect: [{ id: uid }] },
-      formats: { set: [], connect: formats.map((id) => ({ id })) },
-      categories: { set: [], connect: categories.map((id) => ({ id })) },
+      formats: { set: [], connect: formats?.map((id) => ({ id })) },
+      categories: { set: [], connect: categories?.map((id) => ({ id })) },
     },
   });
 }
@@ -354,25 +346,17 @@ export async function updateProposal(orgaSlug: string, proposalId: string, uid: 
 type ProposalData = z.infer<typeof ProposalSchema>;
 
 const ProposalSchema = z.object({
-  title: z.string().trim().min(1),
-  abstract: z.string().trim().min(1),
-  references: z.string().trim().nullable(),
-  level: z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']).nullable(),
-  languages: z.array(z.string().trim()),
-  formats: z.array(z.string().trim()),
-  categories: z.array(z.string().trim()),
+  title: text(z.string().trim().min(1)),
+  abstract: text(z.string().trim().min(1)),
+  references: text(z.string().trim().nullable().default(null)),
+  level: text(z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']).nullable().default(null)),
+  languages: repeatable(z.array(z.string())).optional(),
+  formats: repeatable(z.array(z.string())).optional(),
+  categories: repeatable(z.array(z.string())).optional(),
 });
 
 export function validateProposalForm(form: FormData) {
-  return ProposalSchema.safeParse({
-    title: form.get('title'),
-    abstract: form.get('abstract'),
-    references: form.get('references'),
-    level: form.get('level'),
-    formats: form.getAll('formats'),
-    categories: form.getAll('categories'),
-    languages: getArray(form, 'languages'),
-  });
+  return formData(ProposalSchema).safeParse(form);
 }
 
 /**
@@ -408,28 +392,16 @@ export async function createEvent(orgaSlug: string, uid: string, data: EventCrea
 type EventCreateData = z.infer<typeof EventCreateSchema>;
 
 const EventCreateSchema = z.object({
-  type: z.enum(['CONFERENCE', 'MEETUP']),
-  name: z.string().trim().min(3).max(50),
-  description: z.string().trim().min(1),
-  address: z.string().trim().min(1),
-  visibility: z.enum(['PUBLIC', 'PRIVATE']),
-  slug: z
-    .string()
-    .regex(/^[a-z0-9\\-]*$/, { message: 'Must only contain lower case alphanumeric and dashes (-).' })
-    .trim()
-    .min(3)
-    .max(50),
+  type: text(z.enum(['CONFERENCE', 'MEETUP'])),
+  name: text(z.string().trim().min(3).max(50)),
+  description: text(z.string().trim().min(1)),
+  address: text(z.string().trim().min(1)),
+  visibility: text(z.enum(['PUBLIC', 'PRIVATE'])),
+  slug: text(slugValidator),
 });
 
 export function validateEventCreateForm(form: FormData) {
-  return EventCreateSchema.safeParse({
-    type: form.get('type'),
-    name: form.get('name'),
-    slug: form.get('slug'),
-    description: form.get('description'),
-    address: form.get('address'),
-    visibility: form.get('visibility'),
-  });
+  return formData(EventCreateSchema).safeParse(form);
 }
 
 /**
@@ -450,7 +422,8 @@ export async function updateEvent(
   });
   if (!organization) throw new ForbiddenOperationError();
 
-  const currentEvent = await db.event.findUnique({ where: { slug: eventSlug } });
+  const currentEvent = await db.event.findFirst({ where: { slug: eventSlug, organizationId: organization.id } });
+  if (!currentEvent) throw new EventNotFoundError();
 
   if (data.address && currentEvent?.address !== data.address) {
     const geocodedAddress = await geocode(data.address);
@@ -473,51 +446,40 @@ export async function updateEvent(
 }
 
 export function validateEventGeneralInfo(form: FormData) {
-  return z
-    .object({
-      name: z.string().trim().min(3).max(50),
-      visibility: z.enum(['PUBLIC', 'PRIVATE']),
-      slug: z
-        .string()
-        .regex(/^[a-z0-9\\-]*$/, { message: 'Must only contain lower case alphanumeric and dashes (-).' })
-        .trim()
-        .min(3)
-        .max(50),
-    })
-    .safeParse({
-      name: form.get('name'),
-      slug: form.get('slug'),
-      visibility: form.get('visibility'),
-    });
+  return formData({
+    name: text(z.string().trim().min(3).max(50)),
+    visibility: text(z.enum(['PUBLIC', 'PRIVATE'])),
+    slug: text(slugValidator),
+  }).safeParse(form);
 }
 
 export function validateEventDetailsInfo(form: FormData) {
-  return z
-    .object({
-      address: z.string().trim().min(1).optional(),
-      description: z.string().trim().min(1).optional(),
-      conferenceStart: z.preprocess((d: any) => (d !== '' ? new Date(d) : null), z.date().nullable()),
-      conferenceEnd: z.preprocess((d: any) => (d !== '' ? new Date(d) : null), z.date().nullable()),
-      websiteUrl: z.string().url().trim().optional(),
-      contactEmail: z.string().email().trim().optional(),
-    })
-    .refine(
-      ({ conferenceStart, conferenceEnd }) => {
-        if (conferenceStart && !conferenceEnd) return false;
-        if (conferenceEnd && !conferenceStart) return false;
-        if (conferenceStart && conferenceEnd && conferenceStart > conferenceEnd) return false;
-        return true;
-      },
-      { path: ['conferenceStart'], message: 'Conference start date must be after the conference end date.' }
-    )
-    .safeParse({
-      address: form.get('address'),
-      description: form.get('description'),
-      conferenceStart: form.get('conferenceStart'),
-      conferenceEnd: form.get('conferenceEnd'),
-      websiteUrl: form.get('websiteUrl'),
-      contactEmail: form.get('contactEmail'),
-    });
+  return formData(
+    z
+      .object({
+        address: text(z.string().trim().nullable().default(null)),
+        description: text(z.string().trim().min(1).optional()),
+        conferenceStart: text(dateValidator),
+        conferenceEnd: text(dateValidator),
+        websiteUrl: text(z.string().url().trim().nullable().default(null)),
+        contactEmail: text(z.string().email().trim().nullable().default(null)),
+      })
+      .refine(
+        ({ conferenceStart, conferenceEnd }) => {
+          if (conferenceStart && !conferenceEnd) return false;
+          if (conferenceEnd && !conferenceStart) return false;
+          if (conferenceStart && conferenceEnd && conferenceStart > conferenceEnd) return false;
+          return true;
+        },
+        { path: ['conferenceStart'], message: 'Conference start date must be after the conference end date.' }
+      )
+  ).safeParse(form);
+}
+
+export function validateEventTrackSettings(form: FormData) {
+  return formData(
+    z.object({ formatsRequired: text(checkboxValidator), categoriesRequired: text(checkboxValidator) })
+  ).safeParse(form);
 }
 
 /**
@@ -533,7 +495,7 @@ export async function uploadAndSaveEventBanner(orgaSlug: string, eventSlug: stri
   });
   if (!organization) throw new ForbiddenOperationError();
 
-  const currentEvent = await db.event.findUnique({ where: { slug: eventSlug } });
+  const currentEvent = await db.event.findFirst({ where: { slug: eventSlug, organizationId: organization.id } });
   if (!currentEvent) throw new EventNotFoundError();
 
   const formData = await unstable_parseMultipartFormData(
@@ -545,4 +507,110 @@ export async function uploadAndSaveEventBanner(orgaSlug: string, eventSlug: stri
   if (result.success) {
     await db.event.update({ where: { slug: eventSlug }, data: { bannerUrl: result.data } });
   }
+}
+
+/**
+ * Create or update a track format to an event
+ * @param orgaSlug Organization slug
+ * @param eventSlug Event slug
+ * @param uid User id
+ * @param data Track format data
+ */
+export async function saveFormat(orgaSlug: string, eventSlug: string, uid: string, data: TrackSaveData) {
+  const organization = await db.organization.findFirst({
+    where: { slug: orgaSlug, members: { some: { memberId: uid, role: OrganizationRole.OWNER } } },
+  });
+  if (!organization) throw new ForbiddenOperationError();
+
+  const currentEvent = await db.event.findFirst({ where: { slug: eventSlug, organizationId: organization.id } });
+  if (!currentEvent) throw new EventNotFoundError();
+
+  if (data.id) {
+    await db.eventFormat.update({
+      where: { id: data.id },
+      data: { name: data.name, description: data.description },
+    });
+  } else {
+    await db.eventFormat.create({
+      data: { name: data.name, description: data.description, event: { connect: { id: currentEvent.id } } },
+    });
+  }
+}
+
+/**
+ * Create or update a track category to an event
+ * @param orgaSlug Organization slug
+ * @param eventSlug Event slug
+ * @param uid User id
+ * @param data Track category data
+ */
+export async function saveCategory(orgaSlug: string, eventSlug: string, uid: string, data: TrackSaveData) {
+  const organization = await db.organization.findFirst({
+    where: { slug: orgaSlug, members: { some: { memberId: uid, role: OrganizationRole.OWNER } } },
+  });
+  if (!organization) throw new ForbiddenOperationError();
+
+  const currentEvent = await db.event.findFirst({ where: { slug: eventSlug, organizationId: organization.id } });
+  if (!currentEvent) throw new EventNotFoundError();
+
+  if (data.id) {
+    await db.eventCategory.update({
+      where: { id: data.id },
+      data: { name: data.name, description: data.description },
+    });
+  } else {
+    await db.eventCategory.create({
+      data: { name: data.name, description: data.description, event: { connect: { id: currentEvent.id } } },
+    });
+  }
+}
+
+type TrackSaveData = z.infer<typeof TrackSaveSchema>;
+
+const TrackSaveSchema = z.object({
+  id: text(z.string().trim().optional()),
+  name: text(z.string().trim().min(1)),
+  description: text(z.string().trim().nullable().default(null)),
+});
+
+export function validateTrackData(form: FormData) {
+  return formData(TrackSaveSchema).safeParse(form);
+}
+
+/**
+ * Delete a track format from an event
+ * @param orgaSlug Organization slug
+ * @param eventSlug Event slug
+ * @param uid User id
+ * @param formatId Format id to remove
+ */
+export async function deleteFormat(orgaSlug: string, eventSlug: string, uid: string, formatId: string) {
+  const organization = await db.organization.findFirst({
+    where: { slug: orgaSlug, members: { some: { memberId: uid, role: OrganizationRole.OWNER } } },
+  });
+  if (!organization) throw new ForbiddenOperationError();
+
+  const currentEvent = await db.event.findFirst({ where: { slug: eventSlug, organizationId: organization.id } });
+  if (!currentEvent) throw new EventNotFoundError();
+
+  await db.eventFormat.delete({ where: { id: formatId } });
+}
+
+/**
+ * Delete a track category from an event
+ * @param orgaSlug Organization slug
+ * @param eventSlug Event slug
+ * @param uid User id
+ * @param categoryId Category id to remove
+ */
+export async function deleteCategory(orgaSlug: string, eventSlug: string, uid: string, categoryId: string) {
+  const organization = await db.organization.findFirst({
+    where: { slug: orgaSlug, members: { some: { memberId: uid, role: OrganizationRole.OWNER } } },
+  });
+  if (!organization) throw new ForbiddenOperationError();
+
+  const currentEvent = await db.event.findFirst({ where: { slug: eventSlug, organizationId: organization.id } });
+  if (!currentEvent) throw new EventNotFoundError();
+
+  await db.eventCategory.delete({ where: { id: categoryId } });
 }

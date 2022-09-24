@@ -51,7 +51,8 @@
     "react-dom": "^18.2.0",
     "remix": "^1.7.0",
     "xss": "^1.0.14",
-    "zod": "^3.18.0"
+    "zod": "^3.18.0",
+    "zod-form-data": "^1.2.1"
   },
   "devDependencies": {
     "@ngneat/falso": "^6.1.0",
