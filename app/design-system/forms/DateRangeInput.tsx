@@ -33,9 +33,7 @@ export function DateRangeInput({ start, end, error, className }: Props) {
     (event: ChangeEvent<HTMLInputElement>) => {
       const newEndDate = event.target.valueAsDate;
       setEndDate(newEndDate);
-      if (!newEndDate) return setStartDate(null);
       if (!startDate) return setStartDate(newEndDate);
-      if (newEndDate <= startDate) return setStartDate(newEndDate);
     },
     [startDate]
   );

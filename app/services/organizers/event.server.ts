@@ -439,7 +439,6 @@ export async function updateEvent(
         return { fieldErrors: { name: [], slug: ['Slug already exists, please try another one.'] } };
       }
     }
-
     const updated = await trx.event.update({ where: { slug: eventSlug }, data: { ...data } });
     return { slug: updated.slug };
   });
@@ -479,6 +478,27 @@ export function validateEventDetailsInfo(form: FormData) {
 export function validateEventTrackSettings(form: FormData) {
   return formData(
     z.object({ formatsRequired: text(checkboxValidator), categoriesRequired: text(checkboxValidator) })
+  ).safeParse(form);
+}
+
+export function validateEventCfpSettings(form: FormData) {
+  return formData(
+    z
+      .object({
+        cfpStart: text(dateValidator),
+        cfpEnd: text(dateValidator),
+        codeOfConductUrl: text(z.string().url().trim().nullable().default(null)),
+        maxProposals: numeric(z.number().nullable().default(null)),
+      })
+      .refine(
+        ({ cfpStart, cfpEnd }) => {
+          if (cfpStart && !cfpEnd) return false;
+          if (cfpEnd && !cfpStart) return false;
+          if (cfpStart && cfpEnd && cfpStart > cfpEnd) return false;
+          return true;
+        },
+        { path: ['cfpStart'], message: 'Call for paper start date must be after the end date.' }
+      )
   ).safeParse(form);
 }
 
