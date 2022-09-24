@@ -518,6 +518,19 @@ export function validateReviewSettings(form: FormData) {
   return result.success ? result.data : null;
 }
 
+export function validateEmailNotificationSettings(form: FormData) {
+  return formData({
+    emailOrganizer: text(z.string().email().nullable().default(null)),
+  }).safeParse(form);
+}
+
+export function validateNotificationSettings(form: FormData) {
+  const result = formData({
+    emailNotifications: repeatable(z.array(z.string())),
+  }).safeParse(form);
+  return result.success ? result.data : null;
+}
+
 /**
  * Update an event
  * @param orgaSlug Organization slug

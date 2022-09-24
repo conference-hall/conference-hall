@@ -65,6 +65,7 @@ export default function EventSurveySettingsRoute() {
           {questions.map((question) => (
             <Checkbox
               key={question.name}
+              id={question.name}
               name="surveyQuestions"
               value={question.name}
               defaultChecked={event.surveyQuestions.includes(question.name)}
