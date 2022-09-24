@@ -531,6 +531,12 @@ export function validateNotificationSettings(form: FormData) {
   return result.success ? result.data : null;
 }
 
+export function validateSlackIntegration(form: FormData) {
+  return formData({
+    slackWebhookUrl: text(z.string().url().nullable().default(null)),
+  }).safeParse(form);
+}
+
 /**
  * Update an event
  * @param orgaSlug Organization slug
