@@ -1,4 +1,4 @@
-import EventSurveyPage from '../../page-objects/event-survey.page';
+import EventSurveyPage from 'page-objects/event/survey.page';
 
 describe('Submit a talk to event', () => {
   beforeEach(() => {

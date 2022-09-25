@@ -1,6 +1,6 @@
-import SearchEventPage from 'page-objects/event-search.page';
-import SpeakerActivityPage from 'page-objects/speaker-activity.page';
-import SpeakerSettingsPage from 'page-objects/speaker-settings.page';
+import SearchEventPage from 'page-objects/search.page';
+import SpeakerActivityPage from 'page-objects/speaker/activity.page';
+import SpeakerSettingsPage from 'page-objects/speaker/settings.page';
 
 describe('Speaker activity page', () => {
   beforeEach(() => {

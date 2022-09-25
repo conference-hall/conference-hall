@@ -1,4 +1,4 @@
-import OrganizationMembersPage from 'page-objects/organizer-members.page';
+import OrganizationMembersPage from 'page-objects/organizer/members-list.page';
 
 describe('Organization members list', () => {
   beforeEach(() => {

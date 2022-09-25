@@ -1,6 +1,6 @@
-import OrganizerEventNewPage from 'page-objects/organizer-event-new.page';
-import OrganizerEventSettingsPage from 'page-objects/organizer-event-settings.page';
-import OrganizationEventsPage from 'page-objects/organizer-events.page';
+import OrganizerEventNewPage from 'page-objects/organizer/event-new.page';
+import OrganizerEventSettingsPage from 'page-objects/organizer/event-settings.page';
+import OrganizationEventsPage from 'page-objects/organizer/events-list.page';
 
 describe('Organizer event creation', () => {
   beforeEach(() => {

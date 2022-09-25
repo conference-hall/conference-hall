@@ -1,5 +1,5 @@
-import OrganizerEventNewPage from 'page-objects/organizer-event-new.page';
-import OrganizationEventsPage from 'page-objects/organizer-events.page';
+import OrganizerEventNewPage from 'page-objects/organizer/event-new.page';
+import OrganizationEventsPage from 'page-objects/organizer/events-list.page';
 
 describe('Organization event list', () => {
   beforeEach(() => {
@@ -28,7 +28,7 @@ describe('Organization event list', () => {
 
     it('can create a new event', () => {
       organization.visit('awesome-orga');
-      organization.newEvent().should('exist');
+      organization.newEvent().click();
       eventNew.isPageVisible();
     });
 

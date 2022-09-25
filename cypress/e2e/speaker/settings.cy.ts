@@ -1,4 +1,4 @@
-import SpeakerSettingsPage from 'page-objects/speaker-settings.page';
+import SpeakerSettingsPage from 'page-objects/speaker/settings.page';
 
 describe('Speaker settings page', () => {
   beforeEach(() => {

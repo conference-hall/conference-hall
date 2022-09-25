@@ -1,6 +1,6 @@
-import EventProposalPage from 'page-objects/event-proposal.page';
-import SearchEventPage from 'page-objects/event-search.page';
+import EventProposalPage from 'page-objects/event/proposal.page';
 import InvitationPage from 'page-objects/invitation.page';
+import SearchEventPage from 'page-objects/search.page';
 
 describe('Proposal invitation page', () => {
   beforeEach(() => cy.task('seedDB', 'invitation/proposal-invite'));

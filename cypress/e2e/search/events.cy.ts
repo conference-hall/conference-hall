@@ -1,11 +1,11 @@
-import EventSearchPage from '../../page-objects/event-search.page';
-import EventPage from '../../page-objects/event.page';
+import EventPage from 'page-objects/event/event.page';
+import SearchEventPage from 'page-objects/search.page';
 
 describe('Search conferences and meetups.', () => {
   beforeEach(() => cy.task('seedDB', 'search/events'));
   afterEach(() => cy.task('disconnectDB'));
 
-  const search = new EventSearchPage();
+  const search = new SearchEventPage();
   const event = new EventPage();
 
   it('displays incoming events by default', () => {

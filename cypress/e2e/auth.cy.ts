@@ -1,6 +1,6 @@
-import SearchEventPage from '../page-objects/event-search.page';
-import LoginPage from '../page-objects/login.page';
-import SpeakerTalksPage from '../page-objects/speaker-talks.page';
+import LoginPage from 'page-objects/login.page';
+import SearchEventPage from 'page-objects/search.page';
+import SpeakerTalksPage from 'page-objects/speaker/talks-list.page';
 
 describe('Authentication', () => {
   afterEach(() => cy.task('disconnectDB'));

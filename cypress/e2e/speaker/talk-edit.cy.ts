@@ -1,5 +1,5 @@
-import SpeakerEditTalkPage from 'page-objects/speaker-edit-talk.page';
-import SpeakerTalkPage from 'page-objects/speaker-talk.page';
+import SpeakerEditTalkPage from 'page-objects/speaker/talk-edit.page';
+import SpeakerTalkPage from 'page-objects/speaker/talk.page';
 
 describe('Speaker talk edition page', () => {
   beforeEach(() => {

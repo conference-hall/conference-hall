@@ -1,6 +1,6 @@
-import SearchEventPage from 'page-objects/event-search.page';
 import InvitationPage from 'page-objects/invitation.page';
-import SpeakerTalkPage from 'page-objects/speaker-talk.page';
+import SearchEventPage from 'page-objects/search.page';
+import SpeakerTalkPage from 'page-objects/speaker/talk.page';
 
 describe('Talk invitation page', () => {
   beforeEach(() => cy.task('seedDB', 'invitation/talk-invite'));

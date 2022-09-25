@@ -1,6 +1,6 @@
-import OrganizationEventsPage from 'page-objects/organizer-events.page';
-import OrganizationsPage from 'page-objects/organizer-organizations.page';
-import OrganizationNewPage from 'page-objects/organizer-orga-new.page';
+import OrganizationEventsPage from 'page-objects/organizer/events-list.page';
+import OrganizationNewPage from 'page-objects/organizer/organization-new.page';
+import OrganizationsPage from 'page-objects/organizer/organizations-list.page';
 
 describe('Organizations page list', () => {
   beforeEach(() => {

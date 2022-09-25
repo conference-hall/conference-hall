@@ -1,6 +1,6 @@
-import SpeakerTalkPage from '../../page-objects/speaker-talk.page';
-import SpeakerNewTalkPage from '../../page-objects/speaker-new-talk.page';
-import SpeakerTalksPage from '../../page-objects/speaker-talks.page';
+import SpeakerNewTalkPage from 'page-objects/speaker/talk-new.page';
+import SpeakerTalkPage from 'page-objects/speaker/talk.page';
+import SpeakerTalksPage from 'page-objects/speaker/talks-list.page';
 
 describe('Speaker talks page', () => {
   beforeEach(() => {

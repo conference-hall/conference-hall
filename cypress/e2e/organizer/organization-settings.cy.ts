@@ -1,4 +1,4 @@
-import OrganizationSettingsPage from 'page-objects/organizer-orga-settings.page';
+import OrganizationSettingsPage from 'page-objects/organizer/organization-settings.page';
 
 describe('Organization settings', () => {
   beforeEach(() => {

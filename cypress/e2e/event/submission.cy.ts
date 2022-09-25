@@ -1,7 +1,7 @@
-import EventProposalPage from '../../page-objects/event-proposal.page';
-import EventProposalsPage from '../../page-objects/event-proposals.page';
-import EventSurveyPage from '../../page-objects/event-survey.page';
-import EventSubmissionPage from '../../page-objects/event-submission.page';
+import EventProposalPage from 'page-objects/event/proposal.page';
+import EventProposalsPage from 'page-objects/event/proposals.page';
+import EventSubmissionPage from 'page-objects/event/submission.page';
+import EventSurveyPage from 'page-objects/event/survey.page';
 
 describe('Submit a talk to event', () => {
   beforeEach(() => {
