@@ -1,7 +1,6 @@
 import type { Event, EventCategory, EventFormat, Organization, Proposal, User } from '@prisma/client';
 import { MessageChannel } from '@prisma/client';
-import type { Filters } from './event.server';
-import { addProposalComment, removeProposalComment } from './event.server';
+import { addProposalComment, checkOrganizerEventAccess, removeProposalComment } from './event.server';
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventCategoryFactory } from 'tests/factories/categories';
 import { eventFactory } from 'tests/factories/events';
@@ -12,10 +11,75 @@ import { ratingFactory } from 'tests/factories/ratings';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
 import { getProposalReview } from './event.server';
-import { getEvent, searchProposals, rateProposal } from './event.server';
 import { EventNotFoundError, ForbiddenOperationError } from '../errors';
 import { db } from '../db';
 import { messageFactory } from 'tests/factories/messages';
+import type { Filters } from './event.server';
+import {
+  getEvent,
+  searchProposals,
+  rateProposal,
+  createEvent,
+  deleteCategory,
+  deleteFormat,
+  saveCategory,
+  saveFormat,
+  updateEvent,
+  updateProposal,
+} from './event.server';
+
+describe('#checkOrganizerEventAccess', () => {
+  beforeEach(async () => {
+    await resetDB();
+  });
+  afterEach(disconnectDB);
+
+  it('returns the organizer role when user has access to the event', async () => {
+    const user = await userFactory();
+    const organization = await organizationFactory({ owners: [user] });
+    const event = await eventFactory({ organization });
+
+    const result = await checkOrganizerEventAccess(organization.slug, event.slug, user.id);
+
+    expect(result).toEqual('OWNER');
+  });
+
+  it('returns the organizer role if user role part of accepted ones', async () => {
+    const user = await userFactory();
+    const organization = await organizationFactory({ owners: [user] });
+    const event = await eventFactory({ organization });
+
+    const result = await checkOrganizerEventAccess(organization.slug, event.slug, user.id, ['OWNER']);
+
+    expect(result).toEqual('OWNER');
+  });
+
+  it('throws an error if user role is not in the accepted role list', async () => {
+    const user = await userFactory();
+    const organization = await organizationFactory({ owners: [user] });
+    const event = await eventFactory({ organization });
+    await expect(checkOrganizerEventAccess(organization.slug, event.slug, user.id, ['MEMBER'])).rejects.toThrowError(
+      ForbiddenOperationError
+    );
+  });
+
+  it('throws an error if user role is not part of the organization', async () => {
+    const user = await userFactory();
+    const organization = await organizationFactory();
+    const event = await eventFactory({ organization });
+    await expect(checkOrganizerEventAccess(organization.slug, event.slug, user.id)).rejects.toThrowError(
+      ForbiddenOperationError
+    );
+  });
+
+  it('throws an error if event does not exist', async () => {
+    const user = await userFactory();
+    const organization = await organizationFactory({ owners: [user] });
+    await expect(checkOrganizerEventAccess(organization.slug, 'AAAA', user.id)).rejects.toThrowError(
+      ForbiddenOperationError
+    );
+  });
+});
 
 describe('#getEvent', () => {
   beforeEach(async () => {
@@ -502,5 +566,396 @@ describe('#removeProposalComment', () => {
     await expect(
       removeProposalComment(organization.slug, event.slug, proposal.id, user.id, message.id)
     ).rejects.toThrowError(ForbiddenOperationError);
+  });
+});
+
+describe('#updateProposal', () => {
+  let owner: User, reviewer: User, speaker: User;
+  let organization: Organization;
+  let event: Event;
+  let format: EventFormat;
+  let category: EventCategory;
+  let proposal: Proposal;
+
+  beforeEach(async () => {
+    await resetDB();
+    owner = await userFactory();
+    reviewer = await userFactory();
+    speaker = await userFactory();
+    organization = await organizationFactory({ owners: [owner], reviewers: [reviewer] });
+    event = await eventFactory({ organization });
+    format = await eventFormatFactory({ event });
+    category = await eventCategoryFactory({ event });
+    proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+  });
+  afterEach(disconnectDB);
+
+  it('updates the proposal', async () => {
+    const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+
+    const updated = await updateProposal(organization.slug, event.slug, proposal.id, owner.id, {
+      title: 'Updated',
+      abstract: 'Updated',
+      level: 'ADVANCED',
+      references: 'Updated',
+      formats: [format.id],
+      categories: [category.id],
+    });
+
+    expect(updated.title).toBe('Updated');
+    expect(updated.abstract).toBe('Updated');
+    expect(updated.level).toBe('ADVANCED');
+    expect(updated.references).toBe('Updated');
+
+    const formatCount = await db.eventFormat.count({ where: { proposals: { some: { id: proposal.id } } } });
+    expect(formatCount).toBe(1);
+
+    const categoryCount = await db.eventCategory.count({ where: { proposals: { some: { id: proposal.id } } } });
+    expect(categoryCount).toBe(1);
+  });
+
+  it('throws an error if user has not a owner or member role in the organization', async () => {
+    await expect(
+      updateProposal(organization.slug, event.slug, proposal.id, reviewer.id, {
+        title: 'Updated',
+        abstract: 'Updated',
+        level: null,
+        references: null,
+      })
+    ).rejects.toThrowError(ForbiddenOperationError);
+  });
+
+  it('throws an error if user does not belong to event orga', async () => {
+    const user = await userFactory();
+    const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+    await expect(
+      updateProposal(organization.slug, event.slug, proposal.id, user.id, {
+        title: 'Updated',
+        abstract: 'Updated',
+        level: null,
+        references: null,
+      })
+    ).rejects.toThrowError(ForbiddenOperationError);
+  });
+});
+
+describe('#createEvent', () => {
+  let owner: User, reviewer: User;
+  let organization: Organization;
+
+  beforeEach(async () => {
+    await resetDB();
+    owner = await userFactory();
+    reviewer = await userFactory();
+    organization = await organizationFactory({ owners: [owner], reviewers: [reviewer] });
+  });
+  afterEach(disconnectDB);
+
+  it('creates a new event into the organization', async () => {
+    const created = await createEvent(organization.slug, owner.id, {
+      type: 'CONFERENCE',
+      name: 'Hello world',
+      slug: 'hello-world',
+      visibility: 'PUBLIC',
+    });
+
+    expect(created.slug).toBe('hello-world');
+
+    const event = await db.event.findUnique({ where: { slug: created.slug } });
+    expect(event?.type).toBe('CONFERENCE');
+    expect(event?.name).toBe('Hello world');
+    expect(event?.slug).toBe('hello-world');
+    expect(event?.visibility).toBe('PUBLIC');
+    expect(event?.organizationId).toBe(organization.id);
+    expect(event?.creatorId).toBe(owner.id);
+  });
+
+  it('returns an error message when slug already exists', async () => {
+    await eventFactory({ organization, attributes: { slug: 'hello-world' } });
+
+    const created = await createEvent(organization.slug, owner.id, {
+      type: 'CONFERENCE',
+      name: 'Hello world',
+      slug: 'hello-world',
+      visibility: 'PUBLIC',
+    });
+
+    expect(created?.fieldErrors?.slug).toEqual(['Slug already exists, please try another one.']);
+  });
+
+  it('throws an error if user is not owner', async () => {
+    await expect(
+      createEvent(organization.slug, reviewer.id, {
+        type: 'CONFERENCE',
+        name: 'Hello world',
+        slug: 'hello-world',
+        visibility: 'PUBLIC',
+      })
+    ).rejects.toThrowError(ForbiddenOperationError);
+  });
+
+  it('throws an error if user does not belong to event orga', async () => {
+    const user = await userFactory();
+    await expect(
+      createEvent(organization.slug, user.id, {
+        type: 'CONFERENCE',
+        name: 'Hello world',
+        slug: 'hello-world',
+        visibility: 'PUBLIC',
+      })
+    ).rejects.toThrowError(ForbiddenOperationError);
+  });
+});
+
+describe('#updateEvent', () => {
+  let owner: User, reviewer: User;
+  let organization: Organization;
+  let event: Event;
+
+  beforeEach(async () => {
+    await resetDB();
+    owner = await userFactory();
+    reviewer = await userFactory();
+    organization = await organizationFactory({ owners: [owner], reviewers: [reviewer] });
+    event = await eventFactory({ organization });
+  });
+  afterEach(disconnectDB);
+
+  it('creates a new event into the organization', async () => {
+    const created = await updateEvent(organization.slug, event.slug, owner.id, {
+      name: 'Updated',
+      slug: 'updated',
+      visibility: 'PUBLIC',
+      address: 'Address',
+      description: 'Updated',
+      categoriesRequired: true,
+      formatsRequired: true,
+      codeOfConductUrl: 'codeOfConductUrl',
+      emailNotifications: ['submitted'],
+      bannerUrl: 'Banner',
+      apiKey: 'apiKey',
+    });
+
+    expect(created.slug).toBe('updated');
+
+    const updated = await db.event.findUnique({ where: { slug: created.slug } });
+    expect(updated?.name).toBe('Updated');
+    expect(updated?.slug).toBe('updated');
+    expect(updated?.visibility).toBe('PUBLIC');
+    expect(updated?.address).toBe('Address');
+    expect(updated?.categoriesRequired).toBe(true);
+    expect(updated?.formatsRequired).toBe(true);
+    expect(updated?.description).toBe('Updated');
+    expect(updated?.bannerUrl).toBe('Banner');
+    expect(updated?.codeOfConductUrl).toBe('codeOfConductUrl');
+    expect(updated?.emailNotifications).toEqual(['submitted']);
+    expect(updated?.apiKey).toBe('apiKey');
+  });
+
+  it.todo('test address geocoding');
+
+  it('returns an error message when slug already exists', async () => {
+    await eventFactory({ organization, attributes: { slug: 'hello-world' } });
+    const created = await updateEvent(organization.slug, event.slug, owner.id, { slug: 'hello-world' });
+    expect(created?.fieldErrors?.slug).toEqual(['Slug already exists, please try another one.']);
+  });
+
+  it('throws an error if user is not owner', async () => {
+    await expect(updateEvent(organization.slug, event.slug, reviewer.id, { name: 'Hello world' })).rejects.toThrowError(
+      ForbiddenOperationError
+    );
+  });
+
+  it('throws an error if user does not belong to event orga', async () => {
+    const user = await userFactory();
+    await expect(updateEvent(organization.slug, event.slug, user.id, { name: 'Hello world' })).rejects.toThrowError(
+      ForbiddenOperationError
+    );
+  });
+});
+
+it.todo('#uploadAndSaveEventBanner');
+
+describe('#saveFormat', () => {
+  let owner: User, reviewer: User;
+  let organization: Organization;
+  let event: Event;
+
+  beforeEach(async () => {
+    await resetDB();
+    owner = await userFactory();
+    reviewer = await userFactory();
+    organization = await organizationFactory({ owners: [owner], reviewers: [reviewer] });
+    event = await eventFactory({ organization });
+  });
+  afterEach(disconnectDB);
+
+  it('adds a new format', async () => {
+    await saveFormat(organization.slug, event.slug, owner.id, {
+      name: 'Format 1',
+      description: 'Format 1',
+    });
+
+    const updated = await db.event.findUnique({ where: { slug: event.slug }, include: { formats: true } });
+
+    expect(updated?.formats.length).toBe(1);
+    expect(updated?.formats[0].name).toBe('Format 1');
+    expect(updated?.formats[0].description).toBe('Format 1');
+  });
+
+  it('updates an event format', async () => {
+    const format = await eventFormatFactory({ event, attributes: { name: 'name', description: 'desc' } });
+    await saveFormat(organization.slug, event.slug, owner.id, {
+      id: format.id,
+      name: 'Format 1',
+      description: 'Format 1',
+    });
+
+    const updated = await db.event.findUnique({ where: { slug: event.slug }, include: { formats: true } });
+
+    expect(updated?.formats.length).toBe(1);
+    expect(updated?.formats[0].name).toBe('Format 1');
+    expect(updated?.formats[0].description).toBe('Format 1');
+  });
+
+  it('throws an error if user is not owner', async () => {
+    await expect(
+      saveFormat(organization.slug, event.slug, reviewer.id, { name: 'Hello world', description: null })
+    ).rejects.toThrowError(ForbiddenOperationError);
+  });
+
+  it('throws an error if user does not belong to event orga', async () => {
+    const user = await userFactory();
+    await expect(
+      saveFormat(organization.slug, event.slug, user.id, { name: 'Hello world', description: null })
+    ).rejects.toThrowError(ForbiddenOperationError);
+  });
+});
+
+describe('#saveCategory', () => {
+  let owner: User, reviewer: User;
+  let organization: Organization;
+  let event: Event;
+
+  beforeEach(async () => {
+    await resetDB();
+    owner = await userFactory();
+    reviewer = await userFactory();
+    organization = await organizationFactory({ owners: [owner], reviewers: [reviewer] });
+    event = await eventFactory({ organization });
+  });
+  afterEach(disconnectDB);
+
+  it('adds a new category', async () => {
+    await saveCategory(organization.slug, event.slug, owner.id, {
+      name: 'Category 1',
+      description: 'Category 1',
+    });
+
+    const updated = await db.event.findUnique({ where: { slug: event.slug }, include: { categories: true } });
+
+    expect(updated?.categories.length).toBe(1);
+    expect(updated?.categories[0].name).toBe('Category 1');
+    expect(updated?.categories[0].description).toBe('Category 1');
+  });
+
+  it('updates an event category', async () => {
+    const category = await eventCategoryFactory({ event, attributes: { name: 'name', description: 'desc' } });
+    await saveCategory(organization.slug, event.slug, owner.id, {
+      id: category.id,
+      name: 'Category 1',
+      description: 'Category 1',
+    });
+
+    const updated = await db.event.findUnique({ where: { slug: event.slug }, include: { categories: true } });
+
+    expect(updated?.categories.length).toBe(1);
+    expect(updated?.categories[0].name).toBe('Category 1');
+    expect(updated?.categories[0].description).toBe('Category 1');
+  });
+
+  it('throws an error if user is not owner', async () => {
+    await expect(
+      saveCategory(organization.slug, event.slug, reviewer.id, { name: 'Hello world', description: null })
+    ).rejects.toThrowError(ForbiddenOperationError);
+  });
+
+  it('throws an error if user does not belong to event orga', async () => {
+    const user = await userFactory();
+    await expect(
+      saveCategory(organization.slug, event.slug, user.id, { name: 'Hello world', description: null })
+    ).rejects.toThrowError(ForbiddenOperationError);
+  });
+});
+
+describe('#deleteFormat', () => {
+  let owner: User, reviewer: User;
+  let organization: Organization;
+  let event: Event;
+  let format: EventFormat;
+
+  beforeEach(async () => {
+    await resetDB();
+    owner = await userFactory();
+    reviewer = await userFactory();
+    organization = await organizationFactory({ owners: [owner], reviewers: [reviewer] });
+    event = await eventFactory({ organization });
+    format = await eventFormatFactory({ event });
+  });
+  afterEach(disconnectDB);
+
+  it('deletes an event format', async () => {
+    await deleteFormat(organization.slug, event.slug, owner.id, format.id);
+    const updated = await db.event.findUnique({ where: { slug: event.slug }, include: { formats: true } });
+    expect(updated?.formats.length).toBe(0);
+  });
+
+  it('throws an error if user is not owner', async () => {
+    await expect(deleteFormat(organization.slug, event.slug, reviewer.id, format.id)).rejects.toThrowError(
+      ForbiddenOperationError
+    );
+  });
+
+  it('throws an error if user does not belong to event orga', async () => {
+    const user = await userFactory();
+    await expect(deleteFormat(organization.slug, event.slug, user.id, format.id)).rejects.toThrowError(
+      ForbiddenOperationError
+    );
+  });
+});
+
+describe('#deleteCategory', () => {
+  let owner: User, reviewer: User;
+  let organization: Organization;
+  let event: Event;
+  let category: EventCategory;
+
+  beforeEach(async () => {
+    await resetDB();
+    owner = await userFactory();
+    reviewer = await userFactory();
+    organization = await organizationFactory({ owners: [owner], reviewers: [reviewer] });
+    event = await eventFactory({ organization });
+    category = await eventCategoryFactory({ event });
+  });
+  afterEach(disconnectDB);
+
+  it('deletes an event category', async () => {
+    await deleteCategory(organization.slug, event.slug, owner.id, category.id);
+    const updated = await db.event.findUnique({ where: { slug: event.slug }, include: { categories: true } });
+    expect(updated?.categories.length).toBe(0);
+  });
+
+  it('throws an error if user is not owner', async () => {
+    await expect(deleteCategory(organization.slug, event.slug, reviewer.id, category.id)).rejects.toThrowError(
+      ForbiddenOperationError
+    );
+  });
+
+  it('throws an error if user does not belong to event orga', async () => {
+    const user = await userFactory();
+    await expect(deleteCategory(organization.slug, event.slug, user.id, category.id)).rejects.toThrowError(
+      ForbiddenOperationError
+    );
   });
 });

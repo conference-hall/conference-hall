@@ -395,7 +395,7 @@ export async function updateProposal(
 
   const { formats, categories, ...talk } = data;
 
-  await db.proposal.update({
+  return await db.proposal.update({
     where: { id: proposalId },
     data: {
       ...talk,
@@ -438,7 +438,6 @@ export async function createEvent(orgaSlug: string, uid: string, data: EventCrea
     }
 
     await trx.event.create({
-      select: { id: true },
       data: {
         ...data,
         creator: { connect: { id: uid } },
@@ -626,9 +625,6 @@ export async function uploadAndSaveEventBanner(orgaSlug: string, eventSlug: stri
 export async function saveFormat(orgaSlug: string, eventSlug: string, uid: string, data: TrackSaveData) {
   await checkOrganizerEventAccess(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER]);
 
-  const currentEvent = await db.event.findFirst({ where: { slug: eventSlug } });
-  if (!currentEvent) throw new EventNotFoundError();
-
   if (data.id) {
     await db.eventFormat.update({
       where: { id: data.id },
@@ -636,7 +632,7 @@ export async function saveFormat(orgaSlug: string, eventSlug: string, uid: strin
     });
   } else {
     await db.eventFormat.create({
-      data: { name: data.name, description: data.description, event: { connect: { id: currentEvent.id } } },
+      data: { name: data.name, description: data.description, event: { connect: { slug: eventSlug } } },
     });
   }
 }
@@ -651,9 +647,6 @@ export async function saveFormat(orgaSlug: string, eventSlug: string, uid: strin
 export async function saveCategory(orgaSlug: string, eventSlug: string, uid: string, data: TrackSaveData) {
   await checkOrganizerEventAccess(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER]);
 
-  const currentEvent = await db.event.findFirst({ where: { slug: eventSlug } });
-  if (!currentEvent) throw new EventNotFoundError();
-
   if (data.id) {
     await db.eventCategory.update({
       where: { id: data.id },
@@ -661,7 +654,7 @@ export async function saveCategory(orgaSlug: string, eventSlug: string, uid: str
     });
   } else {
     await db.eventCategory.create({
-      data: { name: data.name, description: data.description, event: { connect: { id: currentEvent.id } } },
+      data: { name: data.name, description: data.description, event: { connect: { slug: eventSlug } } },
     });
   }
 }
@@ -688,9 +681,6 @@ export function validateTrackData(form: FormData) {
 export async function deleteFormat(orgaSlug: string, eventSlug: string, uid: string, formatId: string) {
   await checkOrganizerEventAccess(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER]);
 
-  const currentEvent = await db.event.findFirst({ where: { slug: eventSlug } });
-  if (!currentEvent) throw new EventNotFoundError();
-
   await db.eventFormat.delete({ where: { id: formatId } });
 }
 
@@ -703,9 +693,6 @@ export async function deleteFormat(orgaSlug: string, eventSlug: string, uid: str
  */
 export async function deleteCategory(orgaSlug: string, eventSlug: string, uid: string, categoryId: string) {
   await checkOrganizerEventAccess(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER]);
-
-  const currentEvent = await db.event.findFirst({ where: { slug: eventSlug } });
-  if (!currentEvent) throw new EventNotFoundError();
 
   await db.eventCategory.delete({ where: { id: categoryId } });
 }
