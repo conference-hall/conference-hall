@@ -3,7 +3,7 @@ import { CardLink } from '~/design-system/Card';
 import type { CfpState } from '~/utils/event';
 import { formatEventType } from '~/utils/event';
 import { IconLabel } from '../design-system/IconLabel';
-import { CfpLabel } from './CfpInfo';
+import { CfpElapsedTime } from './CfpInfo';
 
 type Props = {
   events: Array<{
@@ -12,6 +12,8 @@ type Props = {
     type: 'CONFERENCE' | 'MEETUP';
     address: string | null;
     cfpState: CfpState;
+    cfpStart?: string;
+    cfpEnd?: string;
   }>;
   forTalkId: string | null;
 };
@@ -35,7 +37,7 @@ export function SearchEventsList({ events, forTalkId }: Props) {
               {event.address}
             </IconLabel>
           </div>
-          <CfpLabel cfpState={event.cfpState} />
+          <CfpElapsedTime cfpState={event.cfpState} cfpStart={event.cfpStart} cfpEnd={event.cfpEnd} />
         </CardLink>
       ))}
     </ul>

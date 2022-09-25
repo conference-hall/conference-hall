@@ -26,7 +26,7 @@ export function CfpInfo({ cfpState, cfpStart, cfpEnd }: CfpInfoProps) {
     <div>
       <H2 className="inline-flex items-center space-x-3">
         <CfpIcon cfpState={cfpState} />
-        <span className="block">{formatCFPState(cfpState)}</span>
+        <span className="block">{formatCFPElapsedTime(cfpState, cfpStart, cfpEnd)}</span>
       </H2>
       <Text variant="secondary" className="mt-1">
         {formatCFPDate(cfpState, cfpStart, cfpEnd)}

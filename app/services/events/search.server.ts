@@ -41,6 +41,8 @@ export async function searchEvents(filters: SearchFilters, page: Pagination = 1)
       type: event.type,
       address: event.address,
       cfpState: getCfpState(event.type, event.cfpStart, event.cfpEnd),
+      cfpStart: event.cfpStart?.toUTCString(),
+      cfpEnd: event.cfpEnd?.toUTCString(),
     })),
   };
 }

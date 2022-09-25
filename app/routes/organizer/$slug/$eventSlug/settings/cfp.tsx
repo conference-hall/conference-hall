@@ -8,6 +8,7 @@ import { Input } from '~/design-system/forms/Input';
 import type { OrganizerEventContext } from '../../$eventSlug';
 import { DateRangeInput } from '~/design-system/forms/DateRangeInput';
 import { updateEvent, validateEventCfpSettings } from '~/services/organizers/event.server';
+import { Checkbox } from '~/design-system/forms/Checkboxes';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);
@@ -33,16 +34,31 @@ export default function EventCfpSettingsRoute() {
     <>
       <section>
         <H2 className="border-b border-gray-200 pb-3">Call for paper</H2>
-        <Text variant="secondary" className="mt-6">
-          Define the period during which the call for papers should be open. The opening and closing of the CFP will be
-          done automatically according to these dates and times.
-        </Text>
         <Form method="post" className="mt-6 space-y-4">
-          <DateRangeInput
-            start={{ name: 'cfpStart', label: 'Opening date', value: event.cfpStart }}
-            end={{ name: 'cfpEnd', label: 'Closing date', value: event.cfpEnd }}
-            error={result?.fieldErrors?.cfpStart?.[0]}
-          />
+          <input type="hidden" name="type" value={event.type} />
+          {event.type === 'CONFERENCE' ? (
+            <>
+              <Text variant="secondary" className="mt-6">
+                Define the period during which the call for papers should be open. The opening and closing of the CFP
+                will be done automatically according to these dates and times.
+              </Text>
+              <DateRangeInput
+                start={{ name: 'cfpStart', label: 'Opening date', value: event.cfpStart }}
+                end={{ name: 'cfpEnd', label: 'Closing date', value: event.cfpEnd }}
+                error={result?.fieldErrors?.cfpStart?.[0]}
+              />
+            </>
+          ) : (
+            <Checkbox
+              id="cfpStart"
+              name="cfpStart"
+              description="The call for paper will be opened until this checkbox is checked."
+              value={new Date().toISOString()}
+              defaultChecked={Boolean(event.cfpStart)}
+            >
+              Call for paper opened
+            </Checkbox>
+          )}
           <Input
             name="maxProposals"
             label="Maximum of proposals per speaker"

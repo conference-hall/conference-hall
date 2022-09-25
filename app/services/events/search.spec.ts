@@ -9,7 +9,7 @@ describe('#searchEvents', () => {
   afterEach(disconnectDB);
 
   it('returns the default response', async () => {
-    await eventFactory({
+    const event = await eventFactory({
       traits: ['conference-cfp-open'],
       attributes: { name: 'conf-1', slug: 'conf-1', address: 'address-1' },
     });
@@ -26,6 +26,8 @@ describe('#searchEvents', () => {
           type: 'CONFERENCE',
           address: 'address-1',
           cfpState: 'OPENED',
+          cfpStart: event.cfpStart?.toUTCString(),
+          cfpEnd: event.cfpEnd?.toUTCString(),
         },
       ],
     });

@@ -76,11 +76,11 @@ export function formatCFPElapsedTime(state: CfpState, start?: string | null, end
 
   switch (state) {
     case 'CLOSED':
-      return `CFP will be open in ${formatDistanceToNow(startDate)}`;
+      return `Call for paper will be open in ${formatDistanceToNow(startDate)}`;
     case 'OPENED':
-      return `CFP is still open for ${formatDistanceToNow(endDate)}`;
+      return `Call for paper is open for ${formatDistanceToNow(endDate)}`;
     case 'FINISHED':
-      return `CFP closed since ${formatDistanceToNow(endDate)}`;
+      return `Call for paper closed since ${formatDistanceToNow(endDate)}`;
   }
 }
 

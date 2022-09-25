@@ -539,13 +539,15 @@ export function validateEventCfpSettings(form: FormData) {
   return formData(
     z
       .object({
+        type: text(z.enum(['CONFERENCE', 'MEETUP'])),
         cfpStart: text(dateValidator),
         cfpEnd: text(dateValidator),
         codeOfConductUrl: text(z.string().url().trim().nullable().default(null)),
         maxProposals: numeric(z.number().nullable().default(null)),
       })
       .refine(
-        ({ cfpStart, cfpEnd }) => {
+        ({ type, cfpStart, cfpEnd }) => {
+          if (type === 'MEETUP') return true;
           if (cfpStart && !cfpEnd) return false;
           if (cfpEnd && !cfpStart) return false;
           if (cfpStart && cfpEnd && cfpStart > cfpEnd) return false;
