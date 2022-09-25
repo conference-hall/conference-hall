@@ -1,6 +1,6 @@
 import cn from 'classnames';
 import type { CfpState } from '../utils/event';
-import { formatCFPDate, formatCFPState } from '../utils/event';
+import { formatCFPDate, formatCFPState, formatCFPElapsedTime } from '../utils/event';
 import { H2, Text } from '../design-system/Typography';
 
 type CfpLabelProps = { cfpState: CfpState; className?: string };
@@ -18,6 +18,7 @@ type CfpInfoProps = {
   cfpState: CfpState;
   cfpStart?: string;
   cfpEnd?: string;
+  className?: string;
 };
 
 export function CfpInfo({ cfpState, cfpStart, cfpEnd }: CfpInfoProps) {
@@ -30,6 +31,15 @@ export function CfpInfo({ cfpState, cfpStart, cfpEnd }: CfpInfoProps) {
       <Text variant="secondary" className="mt-1">
         {formatCFPDate(cfpState, cfpStart, cfpEnd)}
       </Text>
+    </div>
+  );
+}
+
+export function CfpElapsedTime({ cfpState, cfpStart, cfpEnd, className }: CfpInfoProps) {
+  return (
+    <div className={cn('flex items-center space-x-3', className)}>
+      <CfpIcon cfpState={cfpState} />
+      <span className="block text-sm font-semibold">{formatCFPElapsedTime(cfpState, cfpStart, cfpEnd)}</span>
     </div>
   );
 }

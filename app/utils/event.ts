@@ -1,6 +1,7 @@
-import differenceInCalendarDays from 'date-fns/differenceInCalendarDays';
-import isSameDay from 'date-fns/isSameDay';
 import format from 'date-fns/format';
+import isSameDay from 'date-fns/isSameDay';
+import differenceInCalendarDays from 'date-fns/differenceInCalendarDays';
+import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 
 export type CfpState = 'CLOSED' | 'OPENED' | 'FINISHED';
 
@@ -65,6 +66,21 @@ export function formatCFPState(state: CfpState) {
       return 'Call for paper is open';
     case 'FINISHED':
       return 'Call for paper is closed';
+  }
+}
+
+export function formatCFPElapsedTime(state: CfpState, start?: string | null, end?: string | null) {
+  if (!start || !end) return formatCFPState(state);
+  const startDate = new Date(start);
+  const endDate = new Date(end);
+
+  switch (state) {
+    case 'CLOSED':
+      return `CFP will be open in ${formatDistanceToNow(startDate)}`;
+    case 'OPENED':
+      return `CFP is still open for ${formatDistanceToNow(endDate)}`;
+    case 'FINISHED':
+      return `CFP closed since ${formatDistanceToNow(endDate)}`;
   }
 }
 

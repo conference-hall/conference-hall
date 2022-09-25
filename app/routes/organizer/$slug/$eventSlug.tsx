@@ -3,7 +3,7 @@ import { ChevronRightIcon } from '@heroicons/react/24/outline';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Link, Outlet, useLoaderData, useOutletContext } from '@remix-run/react';
-import { CfpLabel } from '~/components/CfpInfo';
+import { CfpElapsedTime } from '~/components/CfpInfo';
 import { EventTabs } from '~/components/event-forms/EventTabs';
 import Badge from '~/design-system/Badges';
 import { Container } from '~/design-system/Container';
@@ -57,7 +57,12 @@ export default function OrganizationEventRoute() {
             <Badge color={event.visibility === 'PRIVATE' ? 'red' : 'green'}>{event.visibility.toLowerCase()}</Badge>
           </div>
         </div>
-        <CfpLabel cfpState={event.cfpState} className="hidden sm:flex" />
+        <CfpElapsedTime
+          cfpState={event.cfpState}
+          cfpStart={event.cfpStart}
+          cfpEnd={event.cfpEnd}
+          className="hidden sm:flex"
+        />
       </Container>
       <EventTabs orgaSlug={organization.slug} eventSlug={event.slug} role={organization.role} />
       <Outlet context={{ event }} />

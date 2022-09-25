@@ -47,6 +47,10 @@ describe('#formatCFPState', () => {
   });
 });
 
+describe('#formatCFPElapsedTime', () => {
+  it.todo('should be tested');
+});
+
 describe('#formatCFPDate', () => {
   it('return undefined if no dates', () => {
     const message = formatCFPDate('CLOSED');
