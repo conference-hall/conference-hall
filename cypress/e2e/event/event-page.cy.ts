@@ -3,7 +3,10 @@ import EventSubmissionPage from 'page-objects/event-submission.page';
 import EventPage from '../../page-objects/event.page';
 
 describe('View event page', () => {
-  beforeEach(() => cy.task('seedDB', 'event/event-page'));
+  beforeEach(() => {
+    cy.task('seedDB', 'event/event-page');
+    cy.clock(new Date(2021, 3, 14));
+  });
   afterEach(() => cy.task('disconnectDB'));
 
   const event = new EventPage();
@@ -15,7 +18,7 @@ describe('View event page', () => {
     cy.assertText('Devfest Nantes');
     cy.assertText('Nantes, France');
     cy.assertText('1 day conference - October 5th, 2020');
-    cy.assertText('Call for paper is open');
+    cy.assertText('Call for paper is open for over 69 years');
     cy.assertText('Until Thursday, October 5th, 2090 at 2:48 PM GMT+0');
     cy.assertText('The event !');
     cy.assertLink('Website', 'https://devfest.gdgnantes.com');
@@ -29,13 +32,13 @@ describe('View event page', () => {
 
   it('displays event info when CFP in the future', () => {
     event.visit('event-cfp-future');
-    cy.assertText('Call for paper is not open yet');
+    cy.assertText('Call for paper will be open in over 79 years');
     cy.assertText('Will open Tuesday, October 5th, 2100 at 2:48 PM GMT+0');
   });
 
   it('displays event info when CFP in the past', () => {
     event.visit('event-cfp-past');
-    cy.assertText('Call for paper is closed');
+    cy.assertText('Call for paper closed since over 19 years');
     cy.assertText('Since Friday, October 5th, 2001');
   });
 
