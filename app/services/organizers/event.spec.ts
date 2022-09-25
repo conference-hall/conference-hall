@@ -1,4 +1,5 @@
 import type { Event, EventCategory, EventFormat, Proposal, User } from '@prisma/client';
+import type { Filters } from './event.server';
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventCategoryFactory } from 'tests/factories/categories';
 import { eventFactory } from 'tests/factories/events';
@@ -8,9 +9,9 @@ import { proposalFactory } from 'tests/factories/proposals';
 import { ratingFactory } from 'tests/factories/ratings';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
-import type { Filters } from './event.server';
+import { getProposalReview } from './event.server';
 import { getEvent, searchProposals } from './event.server';
-import { EventNotFoundError } from '../errors';
+import { EventNotFoundError, ForbiddenOperationError } from '../errors';
 
 describe('#getEvent', () => {
   beforeEach(async () => {
@@ -283,5 +284,82 @@ describe('#searchProposals', () => {
 
     expect(proposals.total).toBe(1);
     expect(proposals.results[0].ratings).toEqual({ negatives: 1, positives: 1, you: 5, total: 2.5 });
+  });
+});
+
+describe('#getProposalReview', () => {
+  let owner: User, speaker: User;
+  let event: Event;
+  let format: EventFormat;
+  let category: EventCategory;
+
+  beforeEach(async () => {
+    await resetDB();
+    owner = await userFactory({ traits: ['clark-kent'] });
+    speaker = await userFactory({ traits: ['peter-parker'] });
+    event = await eventFactory({ organization: await organizationFactory({ owners: [owner] }) });
+    format = await eventFormatFactory({ event });
+    category = await eventCategoryFactory({ event });
+  });
+  afterEach(disconnectDB);
+
+  it('returns proposal review data', async () => {
+    const proposal = await proposalFactory({
+      event,
+      formats: [format],
+      categories: [category],
+      talk: await talkFactory({ speakers: [speaker] }),
+    });
+
+    const reviewInfo = await getProposalReview(event.slug, proposal.id, owner.id, {});
+
+    expect(reviewInfo.pagination).toEqual({ current: 1, total: 1, previousId: proposal.id, nextId: proposal.id });
+    expect(reviewInfo.proposal).toEqual({
+      title: proposal.title,
+      abstract: proposal.abstract,
+      references: proposal.references,
+      comments: proposal.comments,
+      level: proposal.level,
+      languages: ['en'],
+      formats: [{ id: format.id, name: format.name }],
+      categories: [{ id: category.id, name: category.name }],
+      speakers: [
+        {
+          id: speaker.id,
+          name: speaker.name,
+          photoURL: speaker.photoURL,
+          bio: speaker.bio,
+          references: speaker.references,
+          email: speaker.email,
+          company: speaker.company,
+          address: speaker.address,
+          github: speaker.github,
+          twitter: speaker.twitter,
+        },
+      ],
+      rating: {
+        average: null,
+        positives: 0,
+        negatives: 0,
+        userRating: { rating: undefined, feeling: undefined },
+        membersRatings: [],
+      },
+      messages: [],
+    });
+  });
+
+  it.todo('returns organizers ratings');
+
+  it.todo('returns organizers messages');
+
+  it.todo('returns pagination for next and previous proposals');
+
+  it.todo('returns pagination for next and previous proposals with filters');
+
+  it('throws an error if user does not belong to event orga', async () => {
+    const user = await userFactory();
+    const event = await eventFactory();
+    const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [user] }) });
+    await expect(getProposalReview(event.slug, proposal.id, user.id, {})).rejects.toThrowError(ForbiddenOperationError);
   });
 });
