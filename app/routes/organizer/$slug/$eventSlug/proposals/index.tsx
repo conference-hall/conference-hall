@@ -19,7 +19,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const page = validatePage(url.searchParams);
 
   try {
-    const results = await searchProposals(params.eventSlug!, uid, filters, page);
+    const results = await searchProposals(params.slug!, params.eventSlug!, uid, filters, page);
     return json(results);
   } catch (err) {
     throw mapErrorToResponse(err);

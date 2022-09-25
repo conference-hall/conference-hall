@@ -20,7 +20,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   try {
     const url = new URL(request.url);
     const filters = validateFilters(url.searchParams);
-    const result = await getProposalReview(params.eventSlug!, params.proposal!, uid, filters);
+    const result = await getProposalReview(params.slug!, params.eventSlug!, params.proposal!, uid, filters);
     return json({ uid, ...result });
   } catch (e) {
     throw mapErrorToResponse(e);

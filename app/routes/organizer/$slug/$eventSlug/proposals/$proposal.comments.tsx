@@ -6,15 +6,15 @@ import { addProposalComment, removeProposalComment } from '~/services/organizers
 export const action = async ({ request, params }: ActionArgs) => {
   const uid = await sessionRequired(request);
   try {
-    const { eventSlug, proposal } = params;
+    const { slug, eventSlug, proposal } = params;
     const form = await request.formData();
     const action = form.get('_action')?.toString();
     if (action === 'delete') {
       const messageId = form.get('messageId')?.toString();
-      if (messageId) await removeProposalComment(eventSlug!, proposal!, uid, messageId);
+      if (messageId) await removeProposalComment(slug!, eventSlug!, proposal!, uid, messageId);
     } else {
       const comment = form.get('comment')?.toString();
-      if (comment) await addProposalComment(eventSlug!, proposal!, uid, comment);
+      if (comment) await addProposalComment(slug!, eventSlug!, proposal!, uid, comment);
     }
     return null;
   } catch (e) {

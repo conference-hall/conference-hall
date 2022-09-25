@@ -8,7 +8,7 @@ export const action = async ({ request, params }: ActionArgs) => {
   try {
     const form = await request.formData();
     const data = validateRating(form);
-    if (data) await rateProposal(params.eventSlug!, params.proposal!, uid, data);
+    if (data) await rateProposal(params.slug!, params.eventSlug!, params.proposal!, uid, data);
     return null;
   } catch (e) {
     throw mapErrorToResponse(e);

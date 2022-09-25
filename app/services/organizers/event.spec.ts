@@ -1,4 +1,4 @@
-import type { Event, EventCategory, EventFormat, Proposal, User } from '@prisma/client';
+import type { Event, EventCategory, EventFormat, Organization, Proposal, User } from '@prisma/client';
 import type { Filters } from './event.server';
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventCategoryFactory } from 'tests/factories/categories';
@@ -78,6 +78,7 @@ describe('#getEvent', () => {
 
 describe('#searchProposals', () => {
   let owner: User, speaker: User;
+  let organization: Organization;
   let event: Event, event2: Event;
   let format: EventFormat;
   let category: EventCategory;
@@ -86,7 +87,8 @@ describe('#searchProposals', () => {
     await resetDB();
     owner = await userFactory({ traits: ['clark-kent'] });
     speaker = await userFactory({ traits: ['peter-parker'] });
-    event = await eventFactory({ organization: await organizationFactory({ owners: [owner] }) });
+    organization = await organizationFactory({ owners: [owner] });
+    event = await eventFactory({ organization });
     format = await eventFormatFactory({ event });
     category = await eventCategoryFactory({ event });
     event2 = await eventFactory();
@@ -97,7 +99,7 @@ describe('#searchProposals', () => {
     const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
     await proposalFactory({ event: event2, talk: await talkFactory({ speakers: [owner] }) });
 
-    const proposals = await searchProposals(event.slug, owner.id, {});
+    const proposals = await searchProposals(organization.slug, event.slug, owner.id, {});
 
     expect(proposals.filters).toEqual({});
     expect(proposals.pagination).toEqual({ current: 1, total: 1 });
@@ -145,7 +147,7 @@ describe('#searchProposals', () => {
 
     it('filters proposals by title', async () => {
       const filters = { query: 'world' };
-      const proposals = await searchProposals(event.slug, owner.id, filters);
+      const proposals = await searchProposals(organization.slug, event.slug, owner.id, filters);
       expect(proposals.filters).toEqual(filters);
       expect(proposals.results.length).toBe(1);
       expect(proposals.results[0].id).toBe(proposal1.id);
@@ -153,7 +155,7 @@ describe('#searchProposals', () => {
 
     it('filters proposals by speaker name', async () => {
       const filters = { query: 'parker' };
-      const proposals = await searchProposals(event.slug, owner.id, filters);
+      const proposals = await searchProposals(organization.slug, event.slug, owner.id, filters);
       expect(proposals.results.length).toBe(2);
       expect(proposals.results[0].id).toBe(proposal3.id);
       expect(proposals.results[1].id).toBe(proposal1.id);
@@ -161,21 +163,21 @@ describe('#searchProposals', () => {
 
     it('filters proposals by formats', async () => {
       const filters = { formats: format.id };
-      const proposals = await searchProposals(event.slug, owner.id, filters);
+      const proposals = await searchProposals(organization.slug, event.slug, owner.id, filters);
       expect(proposals.results.length).toBe(1);
       expect(proposals.results[0].id).toBe(proposal1.id);
     });
 
     it('filters proposals by categories', async () => {
       const filters = { categories: category.id };
-      const proposals = await searchProposals(event.slug, owner.id, filters);
+      const proposals = await searchProposals(organization.slug, event.slug, owner.id, filters);
       expect(proposals.results.length).toBe(1);
       expect(proposals.results[0].id).toBe(proposal2.id);
     });
 
     it('filters proposals by status', async () => {
       const filters: Filters = { status: 'ACCEPTED' };
-      const proposals = await searchProposals(event.slug, owner.id, filters);
+      const proposals = await searchProposals(organization.slug, event.slug, owner.id, filters);
       expect(proposals.results.length).toBe(1);
       expect(proposals.results[0].id).toBe(proposal2.id);
     });
@@ -183,7 +185,7 @@ describe('#searchProposals', () => {
     it('filters proposals by user rated only', async () => {
       await ratingFactory({ user: owner, proposal: proposal1 });
       const filters: Filters = { ratings: 'rated' };
-      const proposals = await searchProposals(event.slug, owner.id, filters);
+      const proposals = await searchProposals(organization.slug, event.slug, owner.id, filters);
       expect(proposals.results.length).toBe(1);
       expect(proposals.results[0].id).toBe(proposal1.id);
     });
@@ -191,14 +193,14 @@ describe('#searchProposals', () => {
     it('filters proposals by user not rated only', async () => {
       await ratingFactory({ user: owner, proposal: proposal1 });
       const filters: Filters = { ratings: 'not-rated' };
-      const proposals = await searchProposals(event.slug, owner.id, filters);
+      const proposals = await searchProposals(organization.slug, event.slug, owner.id, filters);
       expect(proposals.results.length).toBe(2);
       expect(proposals.results[0].id).toBe(proposal3.id);
       expect(proposals.results[1].id).toBe(proposal2.id);
     });
 
     it('sorts by newest (default)', async () => {
-      const proposals = await searchProposals(event.slug, owner.id, {});
+      const proposals = await searchProposals(organization.slug, event.slug, owner.id, {});
       expect(proposals.results.length).toBe(3);
       expect(proposals.results[0].id).toBe(proposal3.id);
       expect(proposals.results[1].id).toBe(proposal2.id);
@@ -207,7 +209,7 @@ describe('#searchProposals', () => {
 
     it('sorts by oldest', async () => {
       const filters: Filters = { sort: 'oldest' };
-      const proposals = await searchProposals(event.slug, owner.id, filters);
+      const proposals = await searchProposals(organization.slug, event.slug, owner.id, filters);
       expect(proposals.results.length).toBe(3);
       expect(proposals.results[0].id).toBe(proposal1.id);
       expect(proposals.results[1].id).toBe(proposal2.id);
@@ -226,38 +228,28 @@ describe('#searchProposals', () => {
       })
     );
 
-    const result = await searchProposals(event.slug, owner.id, {}, 1);
+    const result = await searchProposals(organization.slug, event.slug, owner.id, {}, 1);
     expect(result.total).toBe(26);
     expect(result.results.length).toBe(25);
     expect(result.pagination.current).toBe(1);
     expect(result.pagination.total).toBe(2);
 
-    const result2 = await searchProposals(event.slug, owner.id, {}, 2);
+    const result2 = await searchProposals(organization.slug, event.slug, owner.id, {}, 2);
     expect(result2.results.length).toBe(1);
     expect(result2.pagination.current).toBe(2);
     expect(result2.pagination.total).toBe(2);
 
-    const result3 = await searchProposals(event.slug, owner.id, {}, -1);
+    const result3 = await searchProposals(organization.slug, event.slug, owner.id, {}, -1);
     expect(result3.results.length).toBe(25);
     expect(result3.pagination.current).toBe(1);
 
-    const result4 = await searchProposals(event.slug, owner.id, {}, 10);
+    const result4 = await searchProposals(organization.slug, event.slug, owner.id, {}, 10);
     expect(result4.results.length).toBe(1);
     expect(result4.pagination.current).toBe(2);
   });
 
   it('returns empty results of an event without proposals', async () => {
-    const proposals = await searchProposals(event.slug, owner.id, {});
-
-    expect(proposals.filters).toEqual({});
-    expect(proposals.pagination).toEqual({ current: 1, total: 0 });
-    expect(proposals.results).toEqual([]);
-  });
-
-  it('returns nothing when user not member of event organization', async () => {
-    await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-
-    const proposals = await searchProposals(event.slug, speaker.id, {});
+    const proposals = await searchProposals(organization.slug, event.slug, owner.id, {});
 
     expect(proposals.filters).toEqual({});
     expect(proposals.pagination).toEqual({ current: 1, total: 0 });
@@ -268,7 +260,7 @@ describe('#searchProposals', () => {
     const talk = await talkFactory({ speakers: [speaker] });
     await proposalFactory({ event, talk, traits: ['draft'] });
 
-    const proposals = await searchProposals(event.slug, owner.id, {});
+    const proposals = await searchProposals(organization.slug, event.slug, owner.id, {});
 
     expect(proposals.total).toBe(0);
     expect(proposals.results).toEqual([]);
@@ -280,15 +272,25 @@ describe('#searchProposals', () => {
     await ratingFactory({ user: speaker, proposal, attributes: { feeling: 'NEGATIVE', rating: 0 } });
     await ratingFactory({ user: owner, proposal, attributes: { feeling: 'POSITIVE', rating: 5 } });
 
-    const proposals = await searchProposals(event.slug, owner.id, {});
+    const proposals = await searchProposals(organization.slug, event.slug, owner.id, {});
 
     expect(proposals.total).toBe(1);
     expect(proposals.results[0].ratings).toEqual({ negatives: 1, positives: 1, you: 5, total: 2.5 });
+  });
+
+  it('throws an error if user does not belong to event orga', async () => {
+    const user = await userFactory();
+    const event = await eventFactory();
+    await proposalFactory({ event, talk: await talkFactory({ speakers: [user] }) });
+    await expect(searchProposals(organization.slug, event.slug, user.id, {})).rejects.toThrowError(
+      ForbiddenOperationError
+    );
   });
 });
 
 describe('#getProposalReview', () => {
   let owner: User, speaker: User;
+  let organization: Organization;
   let event: Event;
   let format: EventFormat;
   let category: EventCategory;
@@ -297,7 +299,8 @@ describe('#getProposalReview', () => {
     await resetDB();
     owner = await userFactory({ traits: ['clark-kent'] });
     speaker = await userFactory({ traits: ['peter-parker'] });
-    event = await eventFactory({ organization: await organizationFactory({ owners: [owner] }) });
+    organization = await organizationFactory({ owners: [owner] });
+    event = await eventFactory({ organization });
     format = await eventFormatFactory({ event });
     category = await eventCategoryFactory({ event });
   });
@@ -311,7 +314,7 @@ describe('#getProposalReview', () => {
       talk: await talkFactory({ speakers: [speaker] }),
     });
 
-    const reviewInfo = await getProposalReview(event.slug, proposal.id, owner.id, {});
+    const reviewInfo = await getProposalReview(organization.slug, event.slug, proposal.id, owner.id, {});
 
     expect(reviewInfo.pagination).toEqual({ current: 1, total: 1, previousId: proposal.id, nextId: proposal.id });
     expect(reviewInfo.proposal).toEqual({
@@ -360,6 +363,8 @@ describe('#getProposalReview', () => {
     const user = await userFactory();
     const event = await eventFactory();
     const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [user] }) });
-    await expect(getProposalReview(event.slug, proposal.id, user.id, {})).rejects.toThrowError(ForbiddenOperationError);
+    await expect(getProposalReview(organization.slug, event.slug, proposal.id, user.id, {})).rejects.toThrowError(
+      ForbiddenOperationError
+    );
   });
 });

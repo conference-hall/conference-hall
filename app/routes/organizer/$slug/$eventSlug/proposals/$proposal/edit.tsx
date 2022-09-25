@@ -22,7 +22,7 @@ export const action = async ({ request, params }: ActionArgs) => {
     const form = await request.formData();
     const result = validateProposalForm(form);
     if (!result.success) return result.error.flatten();
-    await updateProposal(params.slug!, params.proposal!, uid, result.data);
+    await updateProposal(slug!, eventSlug!, params.proposal!, uid, result.data);
     const url = new URL(request.url);
     throw redirect(`/organizer/${slug}/${eventSlug}/proposals/${proposal}${url.search}`);
   } catch (err) {

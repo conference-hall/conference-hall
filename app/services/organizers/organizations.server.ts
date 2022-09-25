@@ -35,9 +35,7 @@ export async function getOrganizations(uid: string) {
  * @returns user role, null does not belong to it
  */
 export async function getUserRole(slug: string, uid: string) {
-  const orgaMember = await db.organizationMember.findFirst({
-    where: { memberId: uid, organization: { slug } },
-  });
+  const orgaMember = await db.organizationMember.findFirst({ where: { memberId: uid, organization: { slug } } });
   if (!orgaMember) return null;
   return orgaMember.role;
 }

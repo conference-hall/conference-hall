@@ -17,6 +17,40 @@ import { uploadToStorageHandler } from '../utils/storage.server';
 import { getUserRole } from './organizations.server';
 
 /**
+ * Check the organizer role to an event.
+ * Returns the user role or throws an error when user not member or does not have the correct role.
+ *
+ * @param orgaSlug organization slug
+ * @param eventSlug event slug
+ * @param uid Id of the user to check
+ * @param roles list of checked roles (all if no roles given)
+ * @returns user role else throw a forbidden error
+ */
+export async function checkOrganizerEventAccess(
+  orgaSlug: string,
+  eventSlug: string,
+  uid: string,
+  roles?: OrganizationRole[]
+) {
+  const rolesToCheck = roles || [OrganizationRole.MEMBER, OrganizationRole.REVIEWER, OrganizationRole.OWNER];
+
+  const member = await db.organizationMember.findFirst({
+    where: {
+      memberId: uid,
+      organization: {
+        slug: orgaSlug,
+        events: { some: { slug: eventSlug } },
+      },
+    },
+  });
+
+  if (!member || !rolesToCheck.includes(member.role)) {
+    throw new ForbiddenOperationError();
+  }
+  return member.role;
+}
+
+/**
  * Get event for user
  * @param slug event's slug
  * @param uid Id of the user (member of the event's organization)
@@ -67,14 +101,22 @@ const RESULTS_BY_PAGE = 25;
 
 /**
  * Search for event proposals
- * @param slug event's slug
+ * @param eventSlug event's slug
  * @param uid Id of the user (member of the event's organization)
  * @param filters Filters to apply to the search
  * @param page Results page number
  * @returns results of the search with filters, pagination and total results
  */
-export async function searchProposals(slug: string, uid: string, filters: Filters, page: Pagination = 1) {
-  const whereClause = proposalWhereInput(slug, uid, filters);
+export async function searchProposals(
+  orgaSlug: string,
+  eventSlug: string,
+  uid: string,
+  filters: Filters,
+  page: Pagination = 1
+) {
+  await checkOrganizerEventAccess(orgaSlug, eventSlug, uid);
+
+  const whereClause = proposalWhereInput(eventSlug, uid, filters);
   const orderByClause = proposalOrderBy(filters);
 
   const proposalsCount = await db.proposal.count({ where: whereClause });
@@ -118,7 +160,7 @@ function proposalWhereInput(slug: string, uid: string, filters: Filters): Prisma
   const ratingClause = ratings === 'rated' ? { some: { userId: uid } } : { none: { userId: uid } };
 
   return {
-    event: { slug, organization: { members: { some: { memberId: uid } } } },
+    event: { slug },
     status: { equals: status, not: 'DRAFT' },
     formats: formats ? { some: { id: formats } } : {},
     categories: categories ? { some: { id: categories } } : {},
@@ -153,16 +195,20 @@ export function validateFilters(params: URLSearchParams) {
 
 /**
  * Retrieve proposal informations
+ * @param orgaSlug organizer slug
  * @param eventSlug event slug
  * @param proposalId Proposal id
  * @param uid User id
  * @param filters Search filters
  */
-export async function getProposalReview(eventSlug: string, proposalId: string, uid: string, filters: Filters) {
-  const event = await db.event.findFirst({
-    where: { slug: eventSlug, organization: { members: { some: { memberId: uid } } } },
-  });
-  if (!event) throw new ForbiddenOperationError();
+export async function getProposalReview(
+  orgaSlug: string,
+  eventSlug: string,
+  proposalId: string,
+  uid: string,
+  filters: Filters
+) {
+  await checkOrganizerEventAccess(orgaSlug, eventSlug, uid);
 
   const whereClause = proposalWhereInput(eventSlug, uid, filters);
   const orderByClause = proposalOrderBy(filters);
@@ -254,16 +300,20 @@ export async function getProposalReview(eventSlug: string, proposalId: string, u
 
 /**
  * Rate a proposal by a speaker
+ * @param orgaSlug organization slug
  * @param eventSlug event slug
  * @param proposalId Proposal id
  * @param uid User id
  * @param data Rating data
  */
-export async function rateProposal(eventSlug: string, proposalId: string, uid: string, data: RatingData) {
-  const event = await db.event.findFirst({
-    where: { slug: eventSlug, organization: { members: { some: { memberId: uid } } } },
-  });
-  if (!event) throw new ForbiddenOperationError();
+export async function rateProposal(
+  orgaSlug: string,
+  eventSlug: string,
+  proposalId: string,
+  uid: string,
+  data: RatingData
+) {
+  await checkOrganizerEventAccess(orgaSlug, eventSlug, uid);
 
   await db.rating.upsert({
     where: { userId_proposalId: { userId: uid, proposalId } },
@@ -286,16 +336,20 @@ export function validateRating(form: FormData) {
 
 /**
  * Add an organizer comment to a proposal
+ * @param orgaSlug organization slug
  * @param eventSlug event slug
  * @param proposalId Proposal id
  * @param uid User id
  * @param message User message
  */
-export async function addProposalComment(eventSlug: string, proposalId: string, uid: string, message: string) {
-  const event = await db.event.findFirst({
-    where: { slug: eventSlug, organization: { members: { some: { memberId: uid } } } },
-  });
-  if (!event) throw new ForbiddenOperationError();
+export async function addProposalComment(
+  orgaSlug: string,
+  eventSlug: string,
+  proposalId: string,
+  uid: string,
+  message: string
+) {
+  await checkOrganizerEventAccess(orgaSlug, eventSlug, uid);
 
   await db.message.create({
     data: { userId: uid, proposalId, message, channel: MessageChannel.ORGANIZER },
@@ -304,16 +358,20 @@ export async function addProposalComment(eventSlug: string, proposalId: string, 
 
 /**
  * Remove an organizer comment to a proposal
- * @param eventSlug event slug
+ * @param orgaSlug organization slug
+ * @param eventSlug Event slug
  * @param proposalId Proposal id
  * @param uid User id
  * @param messageId Message id
  */
-export async function removeProposalComment(eventSlug: string, proposalId: string, uid: string, messageId: string) {
-  const event = await db.event.findFirst({
-    where: { slug: eventSlug, organization: { members: { some: { memberId: uid } } } },
-  });
-  if (!event) throw new ForbiddenOperationError();
+export async function removeProposalComment(
+  orgaSlug: string,
+  eventSlug: string,
+  proposalId: string,
+  uid: string,
+  messageId: string
+) {
+  await checkOrganizerEventAccess(orgaSlug, eventSlug, uid);
 
   await db.message.deleteMany({ where: { id: messageId, userId: uid, proposalId } });
 }
@@ -321,13 +379,19 @@ export async function removeProposalComment(eventSlug: string, proposalId: strin
 /**
  * Update proposal data from organizer page
  * @param orgaSlug Organization slug
+ * @param eventSlug Event slug
  * @param proposalId Proposal Id
  * @param uid User id
  * @param data Data to update
  */
-export async function updateProposal(orgaSlug: string, proposalId: string, uid: string, data: ProposalData) {
-  const role = await getUserRole(orgaSlug, uid);
-  if (role === OrganizationRole.REVIEWER) throw new ForbiddenOperationError();
+export async function updateProposal(
+  orgaSlug: string,
+  eventSlug: string,
+  proposalId: string,
+  uid: string,
+  data: ProposalData
+) {
+  await checkOrganizerEventAccess(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER, OrganizationRole.MEMBER]);
 
   const { formats, categories, ...talk } = data;
 
@@ -365,10 +429,8 @@ export function validateProposalForm(form: FormData) {
  * @param data Event data
  */
 export async function createEvent(orgaSlug: string, uid: string, data: EventCreateData) {
-  const organization = await db.organization.findFirst({
-    where: { slug: orgaSlug, members: { some: { memberId: uid, role: OrganizationRole.OWNER } } },
-  });
-  if (!organization) throw new ForbiddenOperationError();
+  const role = await getUserRole(orgaSlug, uid);
+  if (role !== OrganizationRole.OWNER) throw new ForbiddenOperationError();
 
   return await db.$transaction(async (trx) => {
     const existSlug = await trx.event.findFirst({ where: { slug: data.slug } });
@@ -381,7 +443,7 @@ export async function createEvent(orgaSlug: string, uid: string, data: EventCrea
       data: {
         ...data,
         creator: { connect: { id: uid } },
-        organization: { connect: { id: organization.id } },
+        organization: { connect: { slug: orgaSlug } },
       },
     });
     return { slug: data.slug };
@@ -414,15 +476,12 @@ export async function updateEvent(
   uid: string,
   data: Partial<Prisma.EventCreateInput>
 ) {
-  const organization = await db.organization.findFirst({
-    where: { slug: orgaSlug, members: { some: { memberId: uid, role: OrganizationRole.OWNER } } },
-  });
-  if (!organization) throw new ForbiddenOperationError();
+  await checkOrganizerEventAccess(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER]);
 
-  const currentEvent = await db.event.findFirst({ where: { slug: eventSlug, organizationId: organization.id } });
-  if (!currentEvent) throw new EventNotFoundError();
+  const event = await db.event.findFirst({ where: { slug: eventSlug } });
+  if (!event) throw new EventNotFoundError();
 
-  if (data.address && currentEvent?.address !== data.address) {
+  if (data.address && event?.address !== data.address) {
     const geocodedAddress = await geocode(data.address);
     data.address = geocodedAddress.address;
     data.lat = geocodedAddress.lat;
@@ -432,7 +491,7 @@ export async function updateEvent(
   return await db.$transaction(async (trx) => {
     if (data.slug) {
       const existSlug = await trx.event.findFirst({ where: { slug: data.slug } });
-      if (existSlug && currentEvent?.id !== existSlug.id) {
+      if (existSlug && event?.id !== existSlug.id) {
         return { fieldErrors: { name: [], slug: ['Slug already exists, please try another one.'] } };
       }
     }
@@ -542,17 +601,14 @@ export function validateSlackIntegration(form: FormData) {
  * @param data event data
  */
 export async function uploadAndSaveEventBanner(orgaSlug: string, eventSlug: string, uid: string, request: Request) {
-  const organization = await db.organization.findFirst({
-    where: { slug: orgaSlug, members: { some: { memberId: uid, role: OrganizationRole.OWNER } } },
-  });
-  if (!organization) throw new ForbiddenOperationError();
+  await checkOrganizerEventAccess(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER]);
 
-  const currentEvent = await db.event.findFirst({ where: { slug: eventSlug, organizationId: organization.id } });
-  if (!currentEvent) throw new EventNotFoundError();
+  const event = await db.event.findFirst({ where: { slug: eventSlug } });
+  if (!event) throw new EventNotFoundError();
 
   const formData = await unstable_parseMultipartFormData(
     request,
-    uploadToStorageHandler({ name: 'bannerUrl', path: currentEvent.id, maxFileSize: 300_000 })
+    uploadToStorageHandler({ name: 'bannerUrl', path: event.id, maxFileSize: 300_000 })
   );
 
   const result = z.string().url().safeParse(formData.get('bannerUrl'));
@@ -569,12 +625,9 @@ export async function uploadAndSaveEventBanner(orgaSlug: string, eventSlug: stri
  * @param data Track format data
  */
 export async function saveFormat(orgaSlug: string, eventSlug: string, uid: string, data: TrackSaveData) {
-  const organization = await db.organization.findFirst({
-    where: { slug: orgaSlug, members: { some: { memberId: uid, role: OrganizationRole.OWNER } } },
-  });
-  if (!organization) throw new ForbiddenOperationError();
+  await checkOrganizerEventAccess(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER]);
 
-  const currentEvent = await db.event.findFirst({ where: { slug: eventSlug, organizationId: organization.id } });
+  const currentEvent = await db.event.findFirst({ where: { slug: eventSlug } });
   if (!currentEvent) throw new EventNotFoundError();
 
   if (data.id) {
@@ -597,12 +650,9 @@ export async function saveFormat(orgaSlug: string, eventSlug: string, uid: strin
  * @param data Track category data
  */
 export async function saveCategory(orgaSlug: string, eventSlug: string, uid: string, data: TrackSaveData) {
-  const organization = await db.organization.findFirst({
-    where: { slug: orgaSlug, members: { some: { memberId: uid, role: OrganizationRole.OWNER } } },
-  });
-  if (!organization) throw new ForbiddenOperationError();
+  await checkOrganizerEventAccess(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER]);
 
-  const currentEvent = await db.event.findFirst({ where: { slug: eventSlug, organizationId: organization.id } });
+  const currentEvent = await db.event.findFirst({ where: { slug: eventSlug } });
   if (!currentEvent) throw new EventNotFoundError();
 
   if (data.id) {
@@ -637,12 +687,9 @@ export function validateTrackData(form: FormData) {
  * @param formatId Format id to remove
  */
 export async function deleteFormat(orgaSlug: string, eventSlug: string, uid: string, formatId: string) {
-  const organization = await db.organization.findFirst({
-    where: { slug: orgaSlug, members: { some: { memberId: uid, role: OrganizationRole.OWNER } } },
-  });
-  if (!organization) throw new ForbiddenOperationError();
+  await checkOrganizerEventAccess(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER]);
 
-  const currentEvent = await db.event.findFirst({ where: { slug: eventSlug, organizationId: organization.id } });
+  const currentEvent = await db.event.findFirst({ where: { slug: eventSlug } });
   if (!currentEvent) throw new EventNotFoundError();
 
   await db.eventFormat.delete({ where: { id: formatId } });
@@ -656,12 +703,9 @@ export async function deleteFormat(orgaSlug: string, eventSlug: string, uid: str
  * @param categoryId Category id to remove
  */
 export async function deleteCategory(orgaSlug: string, eventSlug: string, uid: string, categoryId: string) {
-  const organization = await db.organization.findFirst({
-    where: { slug: orgaSlug, members: { some: { memberId: uid, role: OrganizationRole.OWNER } } },
-  });
-  if (!organization) throw new ForbiddenOperationError();
+  await checkOrganizerEventAccess(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER]);
 
-  const currentEvent = await db.event.findFirst({ where: { slug: eventSlug, organizationId: organization.id } });
+  const currentEvent = await db.event.findFirst({ where: { slug: eventSlug } });
   if (!currentEvent) throw new EventNotFoundError();
 
   await db.eventCategory.delete({ where: { id: categoryId } });
