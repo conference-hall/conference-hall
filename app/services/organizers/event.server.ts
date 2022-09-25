@@ -399,7 +399,6 @@ export async function updateProposal(
     where: { id: proposalId },
     data: {
       ...talk,
-      speakers: { set: [], connect: [{ id: uid }] },
       formats: { set: [], connect: formats?.map((id) => ({ id })) },
       categories: { set: [], connect: categories?.map((id) => ({ id })) },
     },
