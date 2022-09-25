@@ -16,7 +16,7 @@ export async function hasOrganizerAccess(uid: string) {
  * @param key Organizer access key
  */
 export async function validateOrganizerAccess(uid: string, key: string) {
-  const access = await db.organizerKeyAccess.findUnique({ where: { id: key } });
+  const access = await db.organizerKeyAccess.findFirst({ where: { id: key, revokedAt: { equals: null } } });
   if (!access) {
     return { fieldErrors: { key: ['Invalid API key'] } };
   }
