@@ -1,3 +1,4 @@
+import OrganizerEventNewPage from 'page-objects/organizer-event-new.page';
 import OrganizationEventsPage from 'page-objects/organizer-events.page';
 
 describe('Organization event list', () => {
@@ -8,6 +9,7 @@ describe('Organization event list', () => {
   afterEach(() => cy.task('disconnectDB'));
 
   const organization = new OrganizationEventsPage();
+  const eventNew = new OrganizerEventNewPage();
 
   describe('as a organization owner', () => {
     beforeEach(() => cy.login('Clark Kent'));
@@ -27,6 +29,7 @@ describe('Organization event list', () => {
     it('can create a new event', () => {
       organization.visit('awesome-orga');
       organization.newEvent().should('exist');
+      eventNew.isPageVisible();
     });
 
     it('displayed empty state when no event and can create a new one', () => {

@@ -11,9 +11,12 @@ import { UserGroupIcon } from '@heroicons/react/24/outline';
 import { EventInfoForm } from '~/components/event-forms/EventInfoForm';
 import { CardLink } from '~/design-system/Card';
 import { createEvent, validateEventCreateForm } from '~/services/organizers/event.server';
+import { getUserRole } from '~/services/organizers/organizations.server';
 
-export const loader = async ({ request }: LoaderArgs) => {
-  await sessionRequired(request);
+export const loader = async ({ request, params }: LoaderArgs) => {
+  const uid = await sessionRequired(request);
+  const role = await getUserRole(params.slug!, uid);
+  if (role !== 'OWNER') throw redirect(`/organizer/${params.slug}`);
   return null;
 };
 
@@ -51,7 +54,7 @@ function SelectEventType() {
             <MegaphoneIcon className="h-6 w-6 text-indigo-600" />
           </div>
           <span className="flex flex-col gap-2">
-            <H2>Conference</H2>
+            <H2>New conference</H2>
             <Text variant="secondary">
               Conferences are open to proposals for a time limited period. You can also make the conference public or
               private.
@@ -63,7 +66,7 @@ function SelectEventType() {
             <UserGroupIcon className="h-6 w-6 text-indigo-600" />
           </div>
           <span className="flex flex-col gap-2">
-            <H2>Meetup</H2>
+            <H2>New meetup</H2>
             <Text variant="secondary">
               Meetup are open to proposals all the year. You can manually open or close the call for paper. You can also
               make the meetup public or private.
