@@ -20,4 +20,11 @@ describe('Organizations page list', () => {
     organization.isPageVisible();
     cy.assertText('Awesome orga 2');
   });
+
+  it('can create a new organization', () => {
+    cy.login();
+    organizations.visit();
+    organizations.newOrganization().click();
+    cy.assertText('Create a new organization');
+  });
 });

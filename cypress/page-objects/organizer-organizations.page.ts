@@ -17,7 +17,7 @@ class OrganizationsPage {
   }
 
   newOrganization() {
-    return cy.findByRole('button', { name: 'New organization' });
+    return cy.findByRole('link', { name: 'New organization' });
   }
 }
 
