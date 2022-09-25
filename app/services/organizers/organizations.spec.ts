@@ -1,18 +1,21 @@
+import { OrganizationRole } from '@prisma/client';
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventFactory } from 'tests/factories/events';
 import { inviteFactory } from 'tests/factories/invite';
 import { organizationFactory } from 'tests/factories/organization';
 import { userFactory } from 'tests/factories/users';
 import { db } from '../db';
-import { ForbiddenOperationError, OrganizationNotFoundError } from '../errors';
+import { ForbiddenOperationError, InvitationNotFoundError, OrganizationNotFoundError } from '../errors';
 import {
   changeMemberRole,
+  createOrganization,
   getInvitationLink,
   getOrganization,
   getOrganizationEvents,
   getOrganizationMembers,
   getOrganizations,
   getUserRole,
+  inviteMemberToOrganization,
   removeMember,
   updateOrganization,
   validateOrganizationData,
@@ -26,9 +29,11 @@ describe('#getOrganizations', () => {
 
   it('return user organizations', async () => {
     const user = await userFactory();
+    const user2 = await userFactory();
     await organizationFactory({ owners: [user], attributes: { name: 'My orga owner', slug: 'orga-owner' } });
     await organizationFactory({ members: [user], attributes: { name: 'My orga member', slug: 'orga-member' } });
     await organizationFactory({ reviewers: [user], attributes: { name: 'My orga reviewer', slug: 'orga-reviewer' } });
+    await organizationFactory({ owners: [user2], attributes: { name: 'Not orga', slug: 'not-orga' } });
 
     const organizations = await getOrganizations(user.id);
 
@@ -36,6 +41,22 @@ describe('#getOrganizations', () => {
       { name: 'My orga member', slug: 'orga-member', role: 'MEMBER', eventsCount: 0, membersCount: 1 },
       { name: 'My orga owner', slug: 'orga-owner', role: 'OWNER', eventsCount: 0, membersCount: 1 },
       { name: 'My orga reviewer', slug: 'orga-reviewer', role: 'REVIEWER', eventsCount: 0, membersCount: 1 },
+    ]);
+  });
+
+  it('does not count archived events', async () => {
+    const user = await userFactory();
+    const organization = await organizationFactory({
+      owners: [user],
+      attributes: { name: 'My orga owner', slug: 'orga-owner' },
+    });
+    await eventFactory({ organization });
+    await eventFactory({ organization, traits: ['archived'] });
+
+    const organizations = await getOrganizations(user.id);
+
+    expect(organizations).toEqual([
+      { name: 'My orga owner', slug: 'orga-owner', role: 'OWNER', eventsCount: 1, membersCount: 1 },
     ]);
   });
 });
@@ -260,6 +281,60 @@ describe('#getInvitationLink', () => {
     const organization = await organizationFactory({ members: [user] });
     const link = await getInvitationLink(organization.slug, user.id);
     expect(link).toBeUndefined();
+  });
+});
+
+describe('#inviteMemberToOrganization', () => {
+  beforeEach(async () => {
+    await resetDB();
+  });
+  afterEach(disconnectDB);
+
+  it('adds the member as reviewer to the organization', async () => {
+    const owner = await userFactory();
+    const member = await userFactory();
+    const organization = await organizationFactory({ owners: [owner] });
+    const invite = await inviteFactory({ organization, user: owner });
+
+    await inviteMemberToOrganization(invite?.id!, member.id);
+
+    const orgaMember = await db.organizationMember.findUnique({
+      where: { memberId_organizationId: { memberId: member.id, organizationId: organization.id } },
+    });
+    expect(orgaMember?.role).toBe(OrganizationRole.REVIEWER);
+  });
+
+  it('throws an error when invitation not found', async () => {
+    const user = await userFactory();
+    await expect(inviteMemberToOrganization('XXX', user.id)).rejects.toThrowError(InvitationNotFoundError);
+  });
+});
+
+describe('#createOrganization', () => {
+  beforeEach(async () => {
+    await resetDB();
+  });
+  afterEach(disconnectDB);
+
+  it('creates the organization and add the user as owner', async () => {
+    const user = await userFactory();
+    const result = await createOrganization(user.id, { name: 'Hello world', slug: 'hello-world' });
+
+    const organization = await db.organization.findUnique({ where: { slug: result.slug } });
+    expect(organization?.name).toBe('Hello world');
+    expect(organization?.slug).toBe('hello-world');
+
+    const orgaMember = await db.organizationMember.findUnique({
+      where: { memberId_organizationId: { memberId: user.id, organizationId: organization?.id! } },
+    });
+    expect(orgaMember?.role).toBe(OrganizationRole.OWNER);
+  });
+
+  it('returns an error if the slug already exists', async () => {
+    const user = await userFactory();
+    await organizationFactory({ attributes: { slug: 'hello-world' }, owners: [user] });
+    const result = await createOrganization(user.id, { name: 'Hello world', slug: 'hello-world' });
+    expect(result?.fieldErrors?.slug).toEqual(['Slug already exists, please try another one.']);
   });
 });
 
