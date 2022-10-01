@@ -24,8 +24,11 @@ describe('#getProfile', () => {
       address: user.address,
       twitter: user.twitter,
       github: user.github,
+      organizationsCount: 0,
     });
   });
+
+  it.todo('returns a profile with organizations count');
 
   it('throws an error when user not found', async () => {
     await expect(getProfile('XXX')).rejects.toThrowError(UserNotFoundError);

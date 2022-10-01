@@ -21,7 +21,7 @@ class SpeakerTalksPage {
   }
 
   createNewTalk() {
-    return cy.findByRole('link', { name: 'Create a talk abstract' });
+    return cy.findByRole('link', { name: 'New talk' });
   }
 }
 

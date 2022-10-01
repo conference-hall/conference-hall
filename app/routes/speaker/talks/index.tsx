@@ -4,7 +4,6 @@ import { useLoaderData, useSearchParams, useNavigate } from '@remix-run/react';
 import { Container } from '../../../design-system/Container';
 import { H2, Text } from '../../../design-system/Typography';
 import { sessionRequired } from '../../../services/auth/auth.server';
-import { ButtonLink } from '../../../design-system/Buttons';
 import type { SpeakerTalks } from '../../../services/speakers/talks.server';
 import { findTalks } from '../../../services/speakers/talks.server';
 import { mapErrorToResponse } from '../../../services/errors';
@@ -56,7 +55,6 @@ export default function SpeakerTalksRoute() {
               { id: 'archived', label: 'Archived talks' },
             ]}
           />
-          <ButtonLink to="new">Create a talk abstract</ButtonLink>
         </div>
       </div>
       <div className="my-8">

@@ -35,9 +35,7 @@ export default function SpeakerRoute() {
           </div>
         </div>
         <div className="mt-5 flex justify-center space-x-4 sm:mt-0">
-          <ButtonLink to="/" variant="secondary">
-            Submit a talk
-          </ButtonLink>
+          <ButtonLink to="/speaker/talks/new">New talk</ButtonLink>
         </div>
       </Container>
       <SpeakerTabs hasOrganization={profile.organizationsCount > 0} />
