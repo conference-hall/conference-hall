@@ -1,26 +1,17 @@
 import { z } from 'zod';
-import { db } from '../../services/db';
+import { db } from '../db';
 import { UserNotFoundError } from '../errors';
-
-export type UserSettings = {
-  name: string | null;
-  email: string | null;
-  photoURL: string | null;
-  bio: string | null;
-  references: string | null;
-  company: string | null;
-  address: string | null;
-  twitter: string | null;
-  github: string | null;
-};
 
 /**
  * Get a user settings
  * @param userId Id of the user
  * @returns UserSettings
  */
-export async function getSettings(userId: string): Promise<UserSettings> {
-  const user = await db.user.findUnique({ where: { id: userId } });
+export async function getProfile(userId: string) {
+  const user = await db.user.findUnique({
+    where: { id: userId },
+    include: { _count: { select: { organizations: true } } },
+  });
   if (!user) throw new UserNotFoundError();
   return {
     name: user.name,
@@ -32,6 +23,7 @@ export async function getSettings(userId: string): Promise<UserSettings> {
     address: user.address,
     twitter: user.twitter,
     github: user.github,
+    organizationsCount: user._count.organizations,
   };
 }
 

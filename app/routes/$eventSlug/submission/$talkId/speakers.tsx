@@ -12,7 +12,7 @@ import { mapErrorToResponse } from '../../../../services/errors';
 import { getEvent } from '../../../../services/events/event.server';
 import { removeCoSpeakerFromTalkAndEvent } from '../../../../services/events/proposals.server';
 import { getProposalSpeakers } from '../../../../services/events/speakers.server';
-import { updateSettings, validateProfileData } from '../../../../services/speakers/settings.server';
+import { updateSettings, validateProfileData } from '../../../../services/speakers/profile.server';
 import { getUser } from '../../../../services/auth/user.server';
 import type { ValidationErrors } from '../../../../utils/validation-errors';
 

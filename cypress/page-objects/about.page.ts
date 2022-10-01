@@ -1,4 +1,4 @@
-import EventSearchPage from './event-search.page';
+import SearchEventPage from './search.page';
 
 class AboutPage {
   visit() {
@@ -12,7 +12,7 @@ class AboutPage {
 
   goToSearch() {
     cy.clickOn('See all conferences and meetups');
-    return new EventSearchPage();
+    return new SearchEventPage();
   }
 }
 

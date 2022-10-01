@@ -1,4 +1,4 @@
-import type { ActionFunction, LoaderFunction } from '@remix-run/node';
+import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData, useLoaderData, useSubmit } from '@remix-run/react';
 import { CreditCardIcon, KeyIcon, UserCircleIcon } from '@heroicons/react/20/solid';
@@ -10,19 +10,18 @@ import { H2, Text } from '../../design-system/Typography';
 import type { ValidationErrors } from '../../utils/validation-errors';
 import { useCallback } from 'react';
 import { getAuth } from 'firebase/auth';
-import type { UserSettings } from '../../services/speakers/settings.server';
-import { getSettings, updateSettings, validateProfileData } from '../../services/speakers/settings.server';
+import { getProfile, updateSettings, validateProfileData } from '../../services/speakers/profile.server';
 import { mapErrorToResponse } from '../../services/errors';
 import { sessionRequired } from '../../services/auth/auth.server';
 import { NavMenu } from '~/design-system/NavMenu';
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: LoaderArgs) => {
   const uid = await sessionRequired(request);
   try {
-    const profile = await getSettings(uid);
-    return json<UserSettings>(profile);
+    const profile = await getProfile(uid);
+    return json(profile);
   } catch (err) {
-    mapErrorToResponse(err);
+    throw mapErrorToResponse(err);
   }
 };
 
@@ -42,8 +41,8 @@ export const action: ActionFunction = async ({ request }) => {
   }
 };
 
-export default function SettingsRoute() {
-  const user = useLoaderData<UserSettings>();
+export default function ProfileRoute() {
+  const user = useLoaderData<typeof loader>();
   const errors = useActionData<ValidationErrors>();
   const fieldErrors = errors?.fieldErrors;
   const submit = useSubmit();
@@ -69,7 +68,7 @@ export default function SettingsRoute() {
 
   return (
     <Container className="my-4 sm:my-8">
-      <h1 className="sr-only">Settings</h1>
+      <h1 className="sr-only">Profile</h1>
       <div className="lg:grid lg:grid-cols-12 lg:gap-x-5">
         <NavMenu items={MENU_ITEMS} className="hidden sm:block" />
 

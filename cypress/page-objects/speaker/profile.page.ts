@@ -16,14 +16,14 @@ type AdditionalInfoType = {
   github?: string;
 };
 
-class SpeakerSettingsPage {
+class SpeakerProfilePage {
   visit() {
-    cy.visit('/speaker/settings');
+    cy.visit('/speaker/profile');
     this.isPageVisible();
   }
 
   isPageVisible() {
-    cy.findByRole('heading', { name: 'Settings' }).should('exist');
+    cy.findByRole('heading', { name: 'Profile' }).should('exist');
   }
 
   fillPersonalInfoForm(data: PersonalInfoType) {
@@ -66,4 +66,4 @@ class SpeakerSettingsPage {
   }
 }
 
-export default SpeakerSettingsPage;
+export default SpeakerProfilePage;

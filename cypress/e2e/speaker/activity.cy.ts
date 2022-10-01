@@ -1,6 +1,6 @@
 import SearchEventPage from 'page-objects/search.page';
 import SpeakerActivityPage from 'page-objects/speaker/activity.page';
-import SpeakerSettingsPage from 'page-objects/speaker/settings.page';
+import SpeakerProfilePage from 'page-objects/speaker/profile.page';
 
 describe('Speaker activity page', () => {
   beforeEach(() => {
@@ -11,7 +11,7 @@ describe('Speaker activity page', () => {
   afterEach(() => cy.task('disconnectDB'));
 
   const activity = new SpeakerActivityPage();
-  const settings = new SpeakerSettingsPage();
+  const profile = new SpeakerProfilePage();
   const search = new SearchEventPage();
 
   it('displays the speaker activity page', () => {
@@ -31,7 +31,7 @@ describe('Speaker activity page', () => {
   it('can edit the profile', () => {
     activity.visit();
     activity.editProfile().click();
-    settings.isPageVisible();
+    profile.isPageVisible();
   });
 
   it('can submit a talk', () => {

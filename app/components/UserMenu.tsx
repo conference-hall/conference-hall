@@ -3,12 +3,12 @@ import { Menu, Transition } from '@headlessui/react';
 import cn from 'classnames';
 import { Form, Link } from '@remix-run/react';
 import {
-  Cog6ToothIcon,
   FireIcon,
   ArrowRightOnRectangleIcon,
   MicrophoneIcon,
   MagnifyingGlassIcon,
   BuildingOfficeIcon,
+  UserCircleIcon,
 } from '@heroicons/react/20/solid';
 import { getAuth } from 'firebase/auth';
 import { Avatar } from '~/design-system/Avatar';
@@ -64,7 +64,7 @@ export function UserMenu({ email, picture }: Props) {
           <div className="py-1">
             <MenuItem to="/speaker" label="Activity" icon={FireIcon} />
             <MenuItem to="/speaker/talks" label="Your talks" icon={MicrophoneIcon} />
-            <MenuItem to="/speaker/settings" label="Settings" icon={Cog6ToothIcon} />
+            <MenuItem to="/speaker/profile" label="Your profile" icon={UserCircleIcon} />
           </div>
           <div className="py-1">
             <MenuItem to="/organizer" label="Your organizations" icon={BuildingOfficeIcon} />

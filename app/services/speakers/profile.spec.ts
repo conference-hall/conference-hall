@@ -2,9 +2,9 @@ import { resetDB, disconnectDB } from '../../../tests/db-helpers';
 import { userFactory } from '../../../tests/factories/users';
 import { db } from '../db';
 import { UserNotFoundError } from '../errors';
-import { getSettings, updateSettings, validateProfileData } from './settings.server';
+import { getProfile, updateSettings, validateProfileData } from './profile.server';
 
-describe('#getSettings', () => {
+describe('#getProfile', () => {
   beforeEach(async () => {
     await resetDB();
   });
@@ -13,7 +13,7 @@ describe('#getSettings', () => {
   it('returns the default response', async () => {
     const user = await userFactory();
 
-    const response = await getSettings(user.id);
+    const response = await getProfile(user.id);
     expect(response).toEqual({
       name: user.name,
       email: user.email,
@@ -28,7 +28,7 @@ describe('#getSettings', () => {
   });
 
   it('throws an error when user not found', async () => {
-    await expect(getSettings('XXX')).rejects.toThrowError(UserNotFoundError);
+    await expect(getProfile('XXX')).rejects.toThrowError(UserNotFoundError);
   });
 });
 
