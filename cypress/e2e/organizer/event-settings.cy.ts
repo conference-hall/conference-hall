@@ -1,6 +1,7 @@
 import CfpSettings from 'page-objects/organizer/event-settings/cfp-settings.page';
 import CustomizeSettings from 'page-objects/organizer/event-settings/customize-settings.page';
 import GeneralSettings from 'page-objects/organizer/event-settings/general-settings.page';
+import SurveySettings from 'page-objects/organizer/event-settings/survey-settings.page';
 import TracksSettings from 'page-objects/organizer/event-settings/tracks-settings.page';
 
 describe('Event settings', () => {
@@ -14,9 +15,12 @@ describe('Event settings', () => {
   const customize = new CustomizeSettings();
   const tracks = new TracksSettings();
   const cfp = new CfpSettings();
+  const survey = new SurveySettings();
 
   describe('as a organization owner', () => {
     beforeEach(() => cy.login('Clark Kent'));
+
+    it.skip('Navigation settings menu');
 
     describe('general settings', () => {
       it.skip('initial values');
@@ -152,6 +156,35 @@ describe('Event settings', () => {
           maxProposals: '12',
           codeOfConductUrl: 'https://website.com',
         });
+      });
+    });
+
+    describe('survey settings', () => {
+      it.skip('initial values');
+
+      it('enables or disables survey', () => {
+        survey.visit('orga-1', 'conference-1');
+        survey.enableSurvey().click();
+        survey.disableSurvey().should('exist');
+        survey.saveQuestion().should('not.be.disabled');
+        survey.disableSurvey().click();
+        survey.enableSurvey().should('exist');
+        survey.saveQuestion().should('be.disabled');
+      });
+
+      it('save survey questions', () => {
+        survey.visit('orga-1', 'conference-1');
+        survey.enableSurvey().click();
+        survey.disableSurvey().should('exist');
+        survey.saveQuestion().should('not.be.disabled');
+
+        cy.findByLabelText("What's your gender?").click();
+        cy.findByLabelText("What's your Tshirt size?").click();
+        cy.findByLabelText('Do you need accommodation funding? (Hotel, AirBnB...)').click();
+        cy.findByLabelText('Do you need transports funding?').click();
+        cy.findByLabelText('Do you have any special diet restrictions?').click();
+        cy.findByLabelText('Do you have specific information to share?').click();
+        survey.saveQuestion().click();
       });
     });
   });
