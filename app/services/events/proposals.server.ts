@@ -1,8 +1,8 @@
+import { formData } from 'zod-form-data';
 import type { ProposalUpdateData } from '~/schemas/proposal';
 import { ProposalUpdateSchema } from '~/schemas/proposal';
 import { db } from '../../services/db';
 import { getCfpState } from '../../utils/event';
-import { getArray } from '../../utils/form';
 import { jsonToArray } from '../../utils/prisma';
 import { CfpNotOpenError, EventNotFoundError, InvitationNotFoundError, ProposalNotFoundError } from '../errors';
 import { buildInvitationLink } from '../invitations/invitations.server';
@@ -130,15 +130,7 @@ export async function updateProposal(slug: string, proposalId: string, uid: stri
 }
 
 export function validateProposalForm(form: FormData) {
-  return ProposalUpdateSchema.safeParse({
-    title: form.get('title'),
-    abstract: form.get('abstract'),
-    references: form.get('references'),
-    level: form.get('level'),
-    formats: form.getAll('formats'),
-    categories: form.getAll('categories'),
-    languages: getArray(form, 'languages'),
-  });
+  return formData(ProposalUpdateSchema).safeParse(form);
 }
 
 /**
