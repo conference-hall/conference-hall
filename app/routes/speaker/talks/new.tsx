@@ -1,4 +1,4 @@
-import type { ActionFunction } from '@remix-run/node';
+import type { LoaderArgs } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
 import { Container } from '~/design-system/Container';
@@ -8,9 +8,8 @@ import { H1 } from '../../../design-system/Typography';
 import { sessionRequired } from '../../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../../services/errors';
 import { createTalk, validateTalkForm } from '../../../services/speakers/talks.server';
-import type { ValidationErrors } from '../../../utils/validation-errors';
 
-export const action: ActionFunction = async ({ request, params }) => {
+export const action = async ({ request }: LoaderArgs) => {
   const uid = await sessionRequired(request);
   const form = await request.formData();
 
@@ -22,12 +21,12 @@ export const action: ActionFunction = async ({ request, params }) => {
     const talkId = await createTalk(uid, result.data);
     return redirect(`/speaker/talks/${talkId}`);
   } catch (err) {
-    mapErrorToResponse(err);
+    throw mapErrorToResponse(err);
   }
 };
 
 export default function NewSpeakerTalkRoute() {
-  const errors = useActionData<ValidationErrors>();
+  const errors = useActionData();
 
   return (
     <Container className="my-4 sm:my-8">

@@ -1,11 +1,9 @@
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import { Button } from '~/design-system/Buttons';
-import type { ValidationErrors } from '~/utils/validation-errors';
 import { H2, Text } from '../../../../design-system/Typography';
 import { sessionRequired } from '../../../../services/auth/auth.server';
-import type { ActionFunction, LoaderFunction } from '@remix-run/node';
+import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
-import type { SpeakerTalk } from '../../../../services/speakers/talks.server';
 import { getTalk } from '../../../../services/speakers/talks.server';
 import { saveDraftProposalForEvent, validateDraftProposalForm } from '../../../../services/events/submit.server';
 import { mapErrorToResponse } from '../../../../services/errors';
@@ -13,18 +11,19 @@ import { TalkAbstractForm } from '../../../../components/TalkAbstractForm';
 
 export const handle = { step: 'proposal' };
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   const uid = await sessionRequired(request);
   const talkId = params.talkId!;
-  if (talkId !== 'new') {
-    try {
+  try {
+    if (talkId === 'new') {
+      return json(null);
+    } else {
       const talk = await getTalk(uid, talkId);
-      return json<SpeakerTalk>(talk);
-    } catch (err) {
-      mapErrorToResponse(err);
+      return json(talk);
     }
+  } catch (err) {
+    throw mapErrorToResponse(err);
   }
-  return null;
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
@@ -45,8 +44,8 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export default function SubmissionProposalRoute() {
-  const talk = useLoaderData<SpeakerTalk>();
-  const errors = useActionData<ValidationErrors>();
+  const talk = useLoaderData<typeof loader>();
+  const errors = useActionData();
 
   return (
     <Form method="post">

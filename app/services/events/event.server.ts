@@ -1,43 +1,13 @@
-import type { CfpState } from '~/utils/event';
 import { getCfpState } from '~/utils/event';
 import { db } from '../db';
 import { EventNotFoundError } from '../errors';
 
-export type EventTracks = Array<{
-  id: string;
-  name: string;
-  description: string | null;
-}>;
-
-export interface EventData {
-  id: string;
-  slug: string;
-  type: 'CONFERENCE' | 'MEETUP';
-  name: string;
-  address: string | null;
-  conferenceStart?: string;
-  conferenceEnd?: string;
-  surveyEnabled: boolean;
-  description: string | null;
-  websiteUrl: string | null;
-  contactEmail: string | null;
-  codeOfConductUrl: string | null;
-  bannerUrl: string | null;
-  cfpStart?: string;
-  cfpEnd?: string;
-  cfpState: CfpState;
-  isCfpOpen: boolean;
-  hasSurvey: boolean;
-  hasTracks: boolean;
-  formats: EventTracks;
-  categories: EventTracks;
-}
-
-export async function getEvent(slug: string): Promise<EventData> {
+export async function getEvent(slug: string) {
   const event = await db.event.findUnique({
     where: { slug: slug },
     include: { formats: true, categories: true },
   });
+
   if (!event) {
     throw new EventNotFoundError();
   }

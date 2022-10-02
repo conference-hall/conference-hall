@@ -9,18 +9,12 @@ import {
   OrganizationNotFoundError,
 } from '../errors';
 
-export type Invitation = {
-  type: InviteType;
-  title: string;
-  invitedBy: string;
-};
-
 /**
  * Get invitation data from an invitation id
  * @param invitationId Id of the invitation
  * @returns Invitation data
  */
-export const getInvitation = async (invitationId: string): Promise<Invitation> => {
+export const getInvitation = async (invitationId: string) => {
   const invitation = await db.invite.findUnique({
     select: { type: true, talk: true, proposal: true, organization: true, invitedBy: true },
     where: { id: invitationId },
@@ -61,7 +55,7 @@ export function buildInvitationLink(invitationId?: string) {
   return `${config.appUrl}/invitation/${invitationId}`;
 }
 
-async function generateTalkInvitationKey(talkId: string, uid: string): Promise<string> {
+async function generateTalkInvitationKey(talkId: string, uid: string) {
   const talk = await db.talk.findFirst({
     select: { id: true, invitation: true },
     where: {
@@ -83,7 +77,7 @@ async function generateTalkInvitationKey(talkId: string, uid: string): Promise<s
   return invite.id;
 }
 
-async function generateProposalInvitationKey(proposalId: string, uid: string): Promise<string> {
+async function generateProposalInvitationKey(proposalId: string, uid: string) {
   const proposal = await db.proposal.findFirst({
     select: { id: true, invitation: true },
     where: {
@@ -105,7 +99,7 @@ async function generateProposalInvitationKey(proposalId: string, uid: string): P
   return invite.id;
 }
 
-async function generateOrganizationInvitationKey(organizationId: string, uid: string): Promise<string> {
+async function generateOrganizationInvitationKey(organizationId: string, uid: string) {
   const organization = await db.organization.findFirst({
     select: { id: true, invitation: true },
     where: {

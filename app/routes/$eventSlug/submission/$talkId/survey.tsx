@@ -1,4 +1,4 @@
-import type { ActionFunction, LoaderFunction } from '@remix-run/node';
+import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
@@ -8,7 +8,6 @@ import { useSubmissionStep } from '../../../../components/useSubmissionStep';
 import { H2, Text } from '../../../../design-system/Typography';
 import { sessionRequired } from '../../../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../../../services/errors';
-import type { SurveyAnswers, SurveyQuestions } from '../../../../services/events/survey.server';
 import {
   getSurveyAnswers,
   getSurveyQuestions,
@@ -16,22 +15,17 @@ import {
   validateSurveyForm,
 } from '../../../../services/events/survey.server';
 
-type SurveyQuestionsForm = {
-  questions: SurveyQuestions;
-  answers: SurveyAnswers;
-};
-
 export const handle = { step: 'survey' };
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   const uid = await sessionRequired(request);
   const slug = params.eventSlug!;
   try {
     const questions = await getSurveyQuestions(slug);
     const answers = await getSurveyAnswers(slug, uid);
-    return json<SurveyQuestionsForm>({ questions, answers });
+    return json({ questions, answers });
   } catch (err) {
-    mapErrorToResponse(err);
+    throw mapErrorToResponse(err);
   }
 };
 
@@ -51,7 +45,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export default function SubmissionSurveyRoute() {
-  const { questions, answers } = useLoaderData<SurveyQuestionsForm>();
+  const { questions, answers } = useLoaderData<typeof loader>();
   const { previousPath } = useSubmissionStep();
 
   return (

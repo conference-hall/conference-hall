@@ -1,25 +1,18 @@
-import type { ActionFunction, LoaderFunction } from '@remix-run/node';
+import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
 import { Button, ButtonLink } from '~/design-system/Buttons';
 import { CategoriesForm } from '~/components/CategoriesForm';
 import { sessionRequired } from '../../../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../../../services/errors';
-import type { EventTracks } from '../../../../services/events/event.server';
 import { getEvent } from '../../../../services/events/event.server';
-import type { ProposalTracks } from '../../../../services/events/tracks.server';
 import { getProposalTracks, saveTracks, validateTracksForm } from '../../../../services/events/tracks.server';
 import { useSubmissionStep } from '../../../../components/useSubmissionStep';
 import { FormatsForm } from '../../../../components/FormatsForm';
 
-type Tracks = {
-  event: { formats: EventTracks; categories: EventTracks };
-  proposal: ProposalTracks;
-};
-
 export const handle = { step: 'tracks' };
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   const uid = await sessionRequired(request);
   const eventSlug = params.eventSlug!;
   const talkId = params.talkId!;
@@ -27,12 +20,12 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     const event = await getEvent(eventSlug);
     const proposalTracks = await getProposalTracks(talkId, event.id, uid);
 
-    return json<Tracks>({
+    return json({
       event: { formats: event.formats, categories: event.categories },
       proposal: proposalTracks,
     });
   } catch (err) {
-    mapErrorToResponse(err);
+    throw mapErrorToResponse(err);
   }
 };
 
@@ -57,7 +50,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export default function SubmissionTracksRoute() {
-  const { event, proposal } = useLoaderData<Tracks>();
+  const { event, proposal } = useLoaderData<typeof loader>();
   const { previousPath } = useSubmissionStep();
 
   return (

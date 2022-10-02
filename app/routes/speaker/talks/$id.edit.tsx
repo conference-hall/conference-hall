@@ -1,4 +1,4 @@
-import type { ActionFunction, LoaderFunction } from '@remix-run/node';
+import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import { Container } from '~/design-system/Container';
@@ -7,20 +7,18 @@ import { Button, ButtonLink } from '../../../design-system/Buttons';
 import { H2 } from '../../../design-system/Typography';
 import { sessionRequired } from '../../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../../services/errors';
-import type { SpeakerTalk } from '../../../services/speakers/talks.server';
 import { getTalk, updateTalk, validateTalkForm } from '../../../services/speakers/talks.server';
-import type { ValidationErrors } from '../../../utils/validation-errors';
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   const uid = await sessionRequired(request);
   try {
     const talk = await getTalk(uid, params.id!);
     if (talk.archived) {
       throw new Response('Talk archived.', { status: 403 });
     }
-    return json<SpeakerTalk>(talk);
+    return json(talk);
   } catch (err) {
-    mapErrorToResponse(err);
+    throw mapErrorToResponse(err);
   }
 };
 
@@ -41,8 +39,8 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export default function SpeakerTalkRoute() {
-  const talk = useLoaderData<SpeakerTalk>();
-  const errors = useActionData<ValidationErrors>();
+  const talk = useLoaderData<typeof loader>();
+  const errors = useActionData();
 
   return (
     <Container className="my-4 sm:my-8">

@@ -7,7 +7,6 @@ import { Input } from '../../design-system/forms/Input';
 import { MarkdownTextArea } from '../../design-system/forms/MarkdownTextArea';
 import { Button } from '../../design-system/Buttons';
 import { H2, Text } from '../../design-system/Typography';
-import type { ValidationErrors } from '../../utils/validation-errors';
 import { useCallback } from 'react';
 import { getAuth } from 'firebase/auth';
 import { getProfile, updateSettings, validateProfileData } from '../../services/speakers/profile.server';
@@ -43,7 +42,7 @@ export const action: ActionFunction = async ({ request }) => {
 
 export default function ProfileRoute() {
   const user = useLoaderData<typeof loader>();
-  const errors = useActionData<ValidationErrors>();
+  const errors = useActionData();
   const fieldErrors = errors?.fieldErrors;
   const submit = useSubmit();
 

@@ -3,19 +3,32 @@ import { OrganizationRole } from '@prisma/client';
 import { MessageChannel } from '@prisma/client';
 import { unstable_parseMultipartFormData } from '@remix-run/node';
 import { z } from 'zod';
-import { checkbox, formData, numeric, repeatable, text } from 'zod-form-data';
+import { formData, text } from 'zod-form-data';
+import type { EventCreateData, EventTrackSaveData } from '~/schemas/event';
+import type { ProposalRatingData, ProposalsFilters, ProposalUpdateData } from '~/schemas/proposal';
+import { ProposalUpdateSchema, ProposalRatingDataSchema, ProposalsFiltersSchema } from '~/schemas/proposal';
 import { getCfpState } from '~/utils/event';
 import { jsonToArray } from '~/utils/prisma';
-import { checkboxValidator, dateValidator, slugValidator } from '~/utils/validation-errors';
 import { db } from '../db';
 import { EventNotFoundError, ForbiddenOperationError, ProposalNotFoundError } from '../errors';
 import { geocode } from '../utils/geocode.server';
-import type { Pagination } from '../utils/pagination.server';
 import { getPagination } from '../utils/pagination.server';
 import { RatingsDetails } from '../utils/ratings.server';
 import { uploadToStorageHandler } from '../utils/storage.server';
 import { getUserRole } from './organizations.server';
-
+import {
+  EventCfpSettingsSchema,
+  EventCreateSchema,
+  EventDetailsSettingsSchema,
+  EventGeneralSettingsSchema,
+  EventNotificationsSettingsSchema,
+  EventReviewSettingsSchema,
+  EventSlackSettingsSchema,
+  EventSurveySettingsSchema,
+  EventTrackSaveSchema,
+  EventTracksSettingsSchema,
+} from '~/schemas/event';
+import type { Pagination } from '~/schemas/pagination';
 /**
  * Check the organizer role to an event.
  * Returns the user role or throws an error when user not member or does not have the correct role.
@@ -111,7 +124,7 @@ export async function searchProposals(
   orgaSlug: string,
   eventSlug: string,
   uid: string,
-  filters: Filters,
+  filters: ProposalsFilters,
   page: Pagination = 1
 ) {
   await checkOrganizerEventAccess(orgaSlug, eventSlug, uid);
@@ -155,7 +168,7 @@ export async function searchProposals(
   };
 }
 
-function proposalWhereInput(slug: string, uid: string, filters: Filters): Prisma.ProposalWhereInput {
+function proposalWhereInput(slug: string, uid: string, filters: ProposalsFilters): Prisma.ProposalWhereInput {
   const { query, ratings, formats, categories, status } = filters;
   const ratingClause = ratings === 'rated' ? { some: { userId: uid } } : { none: { userId: uid } };
 
@@ -172,24 +185,13 @@ function proposalWhereInput(slug: string, uid: string, filters: Filters): Prisma
   };
 }
 
-function proposalOrderBy(filters: Filters): Prisma.ProposalOrderByWithRelationInput[] {
+function proposalOrderBy(filters: ProposalsFilters): Prisma.ProposalOrderByWithRelationInput[] {
   if (filters.sort === 'oldest') return [{ createdAt: 'asc' }, { title: 'asc' }];
   return [{ createdAt: 'desc' }, { title: 'asc' }];
 }
 
-export type Filters = z.infer<typeof FiltersSchema>;
-
-const FiltersSchema = z.object({
-  query: text(z.string().trim().optional()),
-  sort: text(z.enum(['newest', 'oldest']).optional()),
-  ratings: text(z.enum(['rated', 'not-rated']).optional()),
-  status: text(z.enum(['SUBMITTED', 'ACCEPTED', 'REJECTED', 'CONFIRMED', 'DECLINED']).optional()),
-  formats: text(z.string().optional()),
-  categories: text(z.string().optional()),
-});
-
 export function validateFilters(params: URLSearchParams) {
-  const result = formData(FiltersSchema).safeParse(params);
+  const result = formData(ProposalsFiltersSchema).safeParse(params);
   return result.success ? result.data : {};
 }
 
@@ -206,7 +208,7 @@ export async function getProposalReview(
   eventSlug: string,
   proposalId: string,
   uid: string,
-  filters: Filters
+  filters: ProposalsFilters
 ) {
   await checkOrganizerEventAccess(orgaSlug, eventSlug, uid);
 
@@ -311,7 +313,7 @@ export async function rateProposal(
   eventSlug: string,
   proposalId: string,
   uid: string,
-  data: RatingData
+  data: ProposalRatingData
 ) {
   await checkOrganizerEventAccess(orgaSlug, eventSlug, uid);
 
@@ -322,15 +324,8 @@ export async function rateProposal(
   });
 }
 
-export type RatingData = z.infer<typeof RatingDataSchema>;
-
-const RatingDataSchema = z.object({
-  rating: numeric(z.number().min(0).max(5).nullable().default(null)),
-  feeling: text(z.enum(['NEUTRAL', 'POSITIVE', 'NEGATIVE', 'NO_OPINION'])),
-});
-
 export function validateRating(form: FormData) {
-  const result = formData(RatingDataSchema).safeParse(form);
+  const result = formData(ProposalRatingDataSchema).safeParse(form);
   return result.success ? result.data : null;
 }
 
@@ -389,7 +384,7 @@ export async function updateProposal(
   eventSlug: string,
   proposalId: string,
   uid: string,
-  data: ProposalData
+  data: ProposalUpdateData
 ) {
   await checkOrganizerEventAccess(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER, OrganizationRole.MEMBER]);
 
@@ -405,20 +400,8 @@ export async function updateProposal(
   });
 }
 
-type ProposalData = z.infer<typeof ProposalSchema>;
-
-const ProposalSchema = z.object({
-  title: text(z.string().trim().min(1)),
-  abstract: text(z.string().trim().min(1)),
-  references: text(z.string().trim().nullable().default(null)),
-  level: text(z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']).nullable().default(null)),
-  languages: repeatable(z.array(z.string())).optional(),
-  formats: repeatable(z.array(z.string())).optional(),
-  categories: repeatable(z.array(z.string())).optional(),
-});
-
 export function validateProposalForm(form: FormData) {
-  return formData(ProposalSchema).safeParse(form);
+  return formData(ProposalUpdateSchema).safeParse(form);
 }
 
 /**
@@ -447,15 +430,6 @@ export async function createEvent(orgaSlug: string, uid: string, data: EventCrea
     return { slug: data.slug };
   });
 }
-
-type EventCreateData = z.infer<typeof EventCreateSchema>;
-
-const EventCreateSchema = z.object({
-  type: text(z.enum(['CONFERENCE', 'MEETUP'])),
-  name: text(z.string().trim().min(3).max(50)),
-  visibility: text(z.enum(['PUBLIC', 'PRIVATE'])),
-  slug: text(slugValidator),
-});
 
 export function validateEventCreateForm(form: FormData) {
   return formData(EventCreateSchema).safeParse(form);
@@ -499,78 +473,28 @@ export async function updateEvent(
 }
 
 export function validateEventGeneralInfo(form: FormData) {
-  return formData({
-    name: text(z.string().trim().min(3).max(50)),
-    visibility: text(z.enum(['PUBLIC', 'PRIVATE'])),
-    slug: text(slugValidator),
-  }).safeParse(form);
+  return formData(EventGeneralSettingsSchema).safeParse(form);
 }
 
 export function validateEventDetailsInfo(form: FormData) {
-  return formData(
-    z
-      .object({
-        address: text(z.string().trim().nullable().default(null)),
-        description: text(z.string().trim().min(1).optional()),
-        conferenceStart: text(dateValidator),
-        conferenceEnd: text(dateValidator),
-        websiteUrl: text(z.string().url().trim().nullable().default(null)),
-        contactEmail: text(z.string().email().trim().nullable().default(null)),
-      })
-      .refine(
-        ({ conferenceStart, conferenceEnd }) => {
-          if (conferenceStart && !conferenceEnd) return false;
-          if (conferenceEnd && !conferenceStart) return false;
-          if (conferenceStart && conferenceEnd && conferenceStart > conferenceEnd) return false;
-          return true;
-        },
-        { path: ['conferenceStart'], message: 'Conference start date must be after the conference end date.' }
-      )
-  ).safeParse(form);
+  return formData(EventDetailsSettingsSchema).safeParse(form);
 }
 
 export function validateEventTrackSettings(form: FormData) {
-  return formData(
-    z.object({ formatsRequired: text(checkboxValidator), categoriesRequired: text(checkboxValidator) })
-  ).safeParse(form);
+  return formData(EventTracksSettingsSchema).safeParse(form);
 }
 
 export function validateEventCfpSettings(form: FormData) {
-  return formData(
-    z
-      .object({
-        type: text(z.enum(['CONFERENCE', 'MEETUP'])),
-        cfpStart: text(dateValidator),
-        cfpEnd: text(dateValidator),
-        codeOfConductUrl: text(z.string().url().trim().nullable().default(null)),
-        maxProposals: numeric(z.number().nullable().default(null)),
-      })
-      .refine(
-        ({ type, cfpStart, cfpEnd }) => {
-          if (type === 'MEETUP') return true;
-          if (cfpStart && !cfpEnd) return false;
-          if (cfpEnd && !cfpStart) return false;
-          if (cfpStart && cfpEnd && cfpStart > cfpEnd) return false;
-          return true;
-        },
-        { path: ['cfpStart'], message: 'Call for paper start date must be after the end date.' }
-      )
-  ).safeParse(form);
+  return formData(EventCfpSettingsSchema).safeParse(form);
 }
 
 export function validateSurveyQuestionsData(form: FormData) {
-  const result = formData({
-    surveyQuestions: repeatable(z.array(z.string())),
-  }).safeParse(form);
+  const result = formData(EventSurveySettingsSchema).safeParse(form);
   return result.success ? result.data : null;
 }
 
 export function validateReviewSettings(form: FormData) {
-  const result = formData({
-    displayOrganizersRatings: checkbox(),
-    displayProposalsRatings: checkbox(),
-    displayProposalsSpeakers: checkbox(),
-  }).safeParse(form);
+  const result = formData(EventReviewSettingsSchema).safeParse(form);
   return result.success ? result.data : null;
 }
 
@@ -581,16 +505,12 @@ export function validateEmailNotificationSettings(form: FormData) {
 }
 
 export function validateNotificationSettings(form: FormData) {
-  const result = formData({
-    emailNotifications: repeatable(z.array(z.string())),
-  }).safeParse(form);
+  const result = formData(EventNotificationsSettingsSchema).safeParse(form);
   return result.success ? result.data : null;
 }
 
 export function validateSlackIntegration(form: FormData) {
-  return formData({
-    slackWebhookUrl: text(z.string().url().nullable().default(null)),
-  }).safeParse(form);
+  return formData(EventSlackSettingsSchema).safeParse(form);
 }
 
 /**
@@ -624,7 +544,7 @@ export async function uploadAndSaveEventBanner(orgaSlug: string, eventSlug: stri
  * @param uid User id
  * @param data Track format data
  */
-export async function saveFormat(orgaSlug: string, eventSlug: string, uid: string, data: TrackSaveData) {
+export async function saveFormat(orgaSlug: string, eventSlug: string, uid: string, data: EventTrackSaveData) {
   await checkOrganizerEventAccess(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER]);
 
   if (data.id) {
@@ -646,7 +566,7 @@ export async function saveFormat(orgaSlug: string, eventSlug: string, uid: strin
  * @param uid User id
  * @param data Track category data
  */
-export async function saveCategory(orgaSlug: string, eventSlug: string, uid: string, data: TrackSaveData) {
+export async function saveCategory(orgaSlug: string, eventSlug: string, uid: string, data: EventTrackSaveData) {
   await checkOrganizerEventAccess(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER]);
 
   if (data.id) {
@@ -661,16 +581,8 @@ export async function saveCategory(orgaSlug: string, eventSlug: string, uid: str
   }
 }
 
-type TrackSaveData = z.infer<typeof TrackSaveSchema>;
-
-const TrackSaveSchema = z.object({
-  id: text(z.string().trim().optional()),
-  name: text(z.string().trim().min(1)),
-  description: text(z.string().trim().nullable().default(null)),
-});
-
 export function validateTrackData(form: FormData) {
-  return formData(TrackSaveSchema).safeParse(form);
+  return formData(EventTrackSaveSchema).safeParse(form);
 }
 
 /**

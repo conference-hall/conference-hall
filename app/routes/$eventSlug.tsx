@@ -1,4 +1,4 @@
-import type { LoaderFunction } from '@remix-run/node';
+import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Outlet, useCatch, useLoaderData, useOutletContext } from '@remix-run/react';
 import { EventHeader } from '~/components/EventHeader';
@@ -7,22 +7,21 @@ import { ButtonLink } from '~/design-system/Buttons';
 import { Container } from '~/design-system/Container';
 import { mapErrorToResponse } from '~/services/errors';
 import { getEvent } from '~/services/events/event.server';
-import type { EventData } from '~/services/events/event.server';
 
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader = async ({ params }: LoaderArgs) => {
   const slug = params.eventSlug;
   if (!slug) throw new Response('Event not found', { status: 404 });
 
   try {
     const event = await getEvent(slug);
-    return json<EventData>(event);
+    return json(event);
   } catch (err) {
-    mapErrorToResponse(err);
+    throw mapErrorToResponse(err);
   }
 };
 
 export default function EventRoute() {
-  const data = useLoaderData<EventData>();
+  const data = useLoaderData<typeof loader>();
 
   return (
     <>
@@ -40,7 +39,7 @@ export default function EventRoute() {
 }
 
 export function useEvent() {
-  return useOutletContext<EventData>();
+  return useOutletContext<Awaited<ReturnType<typeof getEvent>>>();
 }
 
 export function CatchBoundary() {

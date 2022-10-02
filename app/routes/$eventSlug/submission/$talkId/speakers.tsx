@@ -1,4 +1,4 @@
-import type { ActionFunction, LoaderFunction } from '@remix-run/node';
+import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import { Button, ButtonLink } from '~/design-system/Buttons';
@@ -14,41 +14,25 @@ import { removeCoSpeakerFromTalkAndEvent } from '../../../../services/events/pro
 import { getProposalSpeakers } from '../../../../services/events/speakers.server';
 import { updateSettings, validateProfileData } from '../../../../services/speakers/profile.server';
 import { getUser } from '../../../../services/auth/user.server';
-import type { ValidationErrors } from '../../../../utils/validation-errors';
-
-type SubmissionSpeakers = {
-  proposalId: string;
-  invitationLink?: string;
-  currentSpeaker: {
-    bio: string | null;
-  };
-  speakers: Array<{
-    id: string;
-    name: string | null;
-    photoURL: string | null;
-    isOwner: boolean;
-  }>;
-};
 
 export const handle = { step: 'speakers' };
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   const uid = await sessionRequired(request);
   const user = await getUser(uid);
   const eventSlug = params.eventSlug!;
   const talkId = params.talkId!;
   try {
     const proposal = await getProposalSpeakers(talkId, eventSlug, user.id);
-    return json<SubmissionSpeakers>({
+    return json({
       proposalId: proposal.id,
       invitationLink: proposal.invitationLink,
       currentSpeaker: { bio: user.bio },
       speakers: proposal.speakers.filter((speaker) => speaker.id !== user.id),
     });
   } catch (err) {
-    mapErrorToResponse(err);
+    throw mapErrorToResponse(err);
   }
-  return null;
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
@@ -84,8 +68,8 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export default function SubmissionSpeakerRoute() {
-  const data = useLoaderData<SubmissionSpeakers>();
-  const errors = useActionData<ValidationErrors>();
+  const data = useLoaderData<typeof loader>();
+  const errors = useActionData();
   const { previousPath } = useSubmissionStep();
   const fieldErrors = errors?.fieldErrors;
 

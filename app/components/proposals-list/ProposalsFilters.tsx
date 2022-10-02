@@ -5,10 +5,10 @@ import { AdjustmentsVerticalIcon, MagnifyingGlassIcon } from '@heroicons/react/2
 import { useState } from 'react';
 import Select from '~/design-system/forms/Select';
 import { Form, useLocation, useSearchParams, useSubmit } from '@remix-run/react';
-import type { Filters } from '~/services/organizers/event.server';
+import type { ProposalsFilters as ProposalsFiltersType } from '~/schemas/proposal';
 
 type Props = {
-  filters: Filters;
+  filters: ProposalsFiltersType;
   formats: Array<{ id: string; name: string }>;
   categories: Array<{ id: string; name: string }>;
 };

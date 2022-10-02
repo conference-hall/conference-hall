@@ -1,10 +1,11 @@
-import z from 'zod';
 import type { Prisma } from '@prisma/client';
 import { EventVisibility } from '@prisma/client';
 import { getCfpState } from '~/utils/event';
 import { db } from '../../services/db';
-import type { Pagination } from '../utils/pagination.server';
 import { getPagination } from '../utils/pagination.server';
+import type { SearchFilters } from '~/schemas/search';
+import { SearchFiltersSchema } from '~/schemas/search';
+import type { Pagination } from '~/schemas/pagination';
 
 const RESULTS_BY_PAGE = 12;
 
@@ -64,23 +65,6 @@ function mapFiltersQuery(type?: string, cfp?: string): Prisma.EventWhereInput {
       return { type: undefined, ...cfpFilter };
   }
 }
-
-export type SearchFilters = z.infer<typeof SearchFiltersSchema>;
-
-const SearchFiltersSchema = z.preprocess(
-  (filters: any) => ({
-    ...filters,
-    query: filters.query?.trim(),
-    type: ['all', 'conference', 'meetup'].includes(filters.type) ? filters.type : undefined,
-    cfp: ['incoming', 'past'].includes(filters.cfp) ? filters.cfp : undefined,
-  }),
-  z.object({
-    query: z.string().trim().optional(),
-    type: z.enum(['all', 'conference', 'meetup']).optional(),
-    cfp: z.enum(['incoming', 'past']).optional(),
-    talkId: z.string().trim().nullable().optional(),
-  })
-);
 
 export function validateFilters(params: URLSearchParams) {
   const result = SearchFiltersSchema.safeParse({

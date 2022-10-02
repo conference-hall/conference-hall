@@ -1,24 +1,23 @@
-import type { LoaderFunction } from '@remix-run/node';
+import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData, useSearchParams, useNavigate } from '@remix-run/react';
 import { Container } from '../../../design-system/Container';
 import { H2, Text } from '../../../design-system/Typography';
 import { sessionRequired } from '../../../services/auth/auth.server';
-import type { SpeakerTalks } from '../../../services/speakers/talks.server';
 import { findTalks } from '../../../services/speakers/talks.server';
 import { mapErrorToResponse } from '../../../services/errors';
 import { SpeakerTalksList } from '../../../components/SpeakerTalksList';
 import Select from '~/design-system/forms/Select';
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: LoaderArgs) => {
   const uid = await sessionRequired(request);
   const { searchParams } = new URL(request.url);
   const archived = Boolean(searchParams.get('archived'));
   try {
     const talks = await findTalks(uid, { archived });
-    return json<SpeakerTalks>(talks);
+    return json(talks);
   } catch (err) {
-    mapErrorToResponse(err);
+    throw mapErrorToResponse(err);
   }
 };
 
@@ -26,7 +25,7 @@ export default function SpeakerTalksRoute() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const archived = Boolean(searchParams.get('archived'));
-  const talks = useLoaderData<SpeakerTalks>();
+  const talks = useLoaderData<typeof loader>();
 
   const handleStatus = (name: string, value: string) => {
     const path = value === 'archived' ? '?archived=true' : '';

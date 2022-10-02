@@ -5,7 +5,6 @@ import { useFetcher } from '@remix-run/react';
 import { Button } from '~/design-system/Buttons';
 import { Modal } from '~/design-system/dialogs/Modals';
 import { CopyInput } from '~/design-system/forms/CopyInput';
-import type { InvitationLink } from '~/routes/invitation/generate';
 
 type InvitationModalProps = {
   title: string;
@@ -18,7 +17,7 @@ type InvitationModalProps = {
 };
 
 export function InvitationModal({ title, description, open, onClose, invitationLink, type, id }: InvitationModalProps) {
-  const invite = useFetcher<InvitationLink>();
+  const invite = useFetcher();
 
   return (
     <Modal open={open} onClose={onClose}>

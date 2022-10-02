@@ -1,4 +1,3 @@
-import { z } from 'zod';
 import { db } from '../db';
 import { getArray } from '../../utils/form';
 import { getCfpState } from '../../utils/event';
@@ -10,15 +9,10 @@ import {
   ProposalSubmissionError,
   TalkNotFoundError,
 } from '../errors';
+import type { ProposalCreateData, ProposalSubmissionData } from '~/schemas/proposal';
+import { ProposalSubmissionSchema, ProposalCreateSchema } from '~/schemas/proposal';
 
-export type TalksToSubmit = Array<{
-  id: string;
-  title: string;
-  isDraft: boolean;
-  speakers: Array<{ id: string; name: string | null; photoURL: string | null }>;
-}>;
-
-export async function fetchTalksToSubmitForEvent(uid: string, slug: string): Promise<TalksToSubmit> {
+export async function fetchTalksToSubmitForEvent(uid: string, slug: string) {
   const event = await db.event.findUnique({
     select: { id: true, type: true, cfpStart: true, cfpEnd: true },
     where: { slug },
@@ -61,12 +55,7 @@ export async function fetchTalksToSubmitForEvent(uid: string, slug: string): Pro
   }));
 }
 
-export type ProposalCountsForEvent = {
-  max: number | null;
-  submitted: number;
-};
-
-export async function getProposalCountsForEvent(uid: string, slug: string): Promise<ProposalCountsForEvent> {
+export async function getProposalCountsForEvent(uid: string, slug: string) {
   const event = await db.event.findUnique({
     select: { id: true, maxProposals: true },
     where: { slug },
@@ -87,9 +76,12 @@ export async function getProposalCountsForEvent(uid: string, slug: string): Prom
   };
 }
 
-export type ProposalSaved = { talkId: string };
-
-export async function saveDraftProposalForEvent(talkId: string, eventSlug: string, uid: string, data: ProposalData) {
+export async function saveDraftProposalForEvent(
+  talkId: string,
+  eventSlug: string,
+  uid: string,
+  data: ProposalCreateData
+) {
   if (talkId !== 'new') {
     const talk = await db.talk.findFirst({
       where: { id: talkId, speakers: { some: { id: uid } } },
@@ -145,18 +137,8 @@ export async function saveDraftProposalForEvent(talkId: string, eventSlug: strin
   return { talkId: talk.id };
 }
 
-type ProposalData = z.infer<typeof ProposalSchema>;
-
-const ProposalSchema = z.object({
-  title: z.string().trim().min(1),
-  abstract: z.string().trim().min(1),
-  references: z.string().trim().nullable(),
-  languages: z.array(z.string().trim()),
-  level: z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']).nullable(),
-});
-
 export function validateDraftProposalForm(form: FormData) {
-  return ProposalSchema.safeParse({
+  return ProposalCreateSchema.safeParse({
     title: form.get('title'),
     abstract: form.get('abstract'),
     references: form.get('references'),
@@ -165,14 +147,7 @@ export function validateDraftProposalForm(form: FormData) {
   });
 }
 
-export type ProposalInfo = {
-  title: string;
-  speakers: Array<{ name: string | null; photoURL: string | null }>;
-  formats: string[];
-  categories: string[];
-};
-
-export async function getProposalInfo(talkId: string, eventId: string, uid: string): Promise<ProposalInfo> {
+export async function getProposalInfo(talkId: string, eventId: string, uid: string) {
   const proposal = await db.proposal.findFirst({
     select: { title: true, formats: true, categories: true, speakers: true },
     where: { talkId, eventId, speakers: { some: { id: uid } } },
@@ -190,7 +165,7 @@ export async function getProposalInfo(talkId: string, eventId: string, uid: stri
   };
 }
 
-export async function submitProposal(talkId: string, eventSlug: string, uid: string, data: SubmissionData) {
+export async function submitProposal(talkId: string, eventSlug: string, uid: string, data: ProposalSubmissionData) {
   const event = await db.event.findUnique({
     select: {
       id: true,
@@ -231,14 +206,8 @@ export async function submitProposal(talkId: string, eventSlug: string, uid: str
   // TODO Slack notification
 }
 
-type SubmissionData = z.infer<typeof SubmissionSchema>;
-
-const SubmissionSchema = z.object({
-  message: z.string().trim().max(1000).optional(),
-});
-
 export function validateSubmission(form: FormData) {
-  const result = SubmissionSchema.safeParse({
+  const result = ProposalSubmissionSchema.safeParse({
     message: form.get('message'),
   });
   return result.success ? result.data : {};

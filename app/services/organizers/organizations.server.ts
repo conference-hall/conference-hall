@@ -1,5 +1,6 @@
 import { OrganizationRole } from '@prisma/client';
-import { z } from 'zod';
+import type { OrganizationSaveData } from '~/schemas/organization';
+import { OrganizationSaveSchema } from '~/schemas/organization';
 import { db } from '../db';
 import { ForbiddenOperationError, InvitationNotFoundError, OrganizationNotFoundError } from '../errors';
 import { buildInvitationLink } from '../invitations/invitations.server';
@@ -181,7 +182,7 @@ export async function inviteMemberToOrganization(invitationId: string, memberId:
  * @param uid User id
  * @param data Organization data
  */
-export async function createOrganization(uid: string, data: OrganizationData) {
+export async function createOrganization(uid: string, data: OrganizationSaveData) {
   return await db.$transaction(async (trx) => {
     const existSlug = await trx.organization.findFirst({ where: { slug: data.slug } });
     if (existSlug) return { fieldErrors: { name: [], slug: ['Slug already exists, please try another one.'] } };
@@ -200,7 +201,7 @@ export async function createOrganization(uid: string, data: OrganizationData) {
  * @param uid User id
  * @param data Organization data
  */
-export async function updateOrganization(slug: string, uid: string, data: OrganizationData) {
+export async function updateOrganization(slug: string, uid: string, data: OrganizationSaveData) {
   let organization = await db.organization.findFirst({
     where: { slug, members: { some: { memberId: uid, role: 'OWNER' } } },
   });
@@ -217,20 +218,8 @@ export async function updateOrganization(slug: string, uid: string, data: Organi
   });
 }
 
-type OrganizationData = z.infer<typeof OrganizationSchema>;
-
-const OrganizationSchema = z.object({
-  name: z.string().trim().min(3).max(50),
-  slug: z
-    .string()
-    .regex(/^[a-z0-9\\-]*$/, { message: 'Must only contain lower case alphanumeric and dashes (-).' })
-    .trim()
-    .min(3)
-    .max(50),
-});
-
 export function validateOrganizationData(form: FormData) {
-  return OrganizationSchema.safeParse({
+  return OrganizationSaveSchema.safeParse({
     name: form.get('name'),
     slug: form.get('slug'),
   });
