@@ -1,3 +1,4 @@
+import CfpSettings from 'page-objects/organizer/event-settings/cfp-settings.page';
 import CustomizeSettings from 'page-objects/organizer/event-settings/customize-settings.page';
 import GeneralSettings from 'page-objects/organizer/event-settings/general-settings.page';
 import TracksSettings from 'page-objects/organizer/event-settings/tracks-settings.page';
@@ -12,11 +13,15 @@ describe('Event settings', () => {
   const general = new GeneralSettings();
   const customize = new CustomizeSettings();
   const tracks = new TracksSettings();
+  const cfp = new CfpSettings();
 
   describe('as a organization owner', () => {
     beforeEach(() => cy.login('Clark Kent'));
 
     describe('general settings', () => {
+      it.skip('initial values');
+      it.skip('check error fields');
+
       it('can update general event info', () => {
         general.visit('orga-1', 'conference-1');
 
@@ -53,8 +58,6 @@ describe('Event settings', () => {
           cy.assertInputText('Contact email', 'contact@email.com');
         });
       });
-
-      it.skip('check error fields');
     });
 
     describe('customize settings', () => {
@@ -65,6 +68,8 @@ describe('Event settings', () => {
     });
 
     describe('tracks settings', () => {
+      it.skip('initial values');
+
       it('add, edit and remove a format', () => {
         tracks.visit('orga-1', 'conference-1');
 
@@ -132,6 +137,20 @@ describe('Event settings', () => {
           cy.clickOn('Remove Cloud');
           cy.assertNoText('Cloud');
           cy.assertNoText('This is the cloud');
+        });
+      });
+    });
+
+    describe('cfp settings', () => {
+      it.skip('initial values');
+
+      it('updates CFP settings', () => {
+        cfp.visit('orga-1', 'conference-1');
+        cfp.saveForm({
+          cfpStart: '2022-12-12',
+          cfpEnd: '2022-12-13',
+          maxProposals: '12',
+          codeOfConductUrl: 'https://website.com',
         });
       });
     });
