@@ -28,8 +28,10 @@ describe('Speaker talk page', () => {
     cy.assertText('Awesome references');
     cy.assertText('Advanced');
     cy.assertText('French');
-    cy.assertText('Clark Kent');
-    cy.assertText('Bruce Wayne');
+    talk.speakersBlock().within(() => {
+      cy.assertText('Clark Kent');
+      cy.assertText('Bruce Wayne');
+    });
   });
 
   it('can edit a talk', () => {

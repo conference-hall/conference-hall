@@ -12,8 +12,8 @@ class SpeakerActivityPage {
     return cy.findByRole('link', { name: 'Edit profile' });
   }
 
-  submitTalk() {
-    return cy.findByRole('link', { name: 'Submit a talk' });
+  newTalk() {
+    return cy.findByRole('link', { name: 'New talk' });
   }
 }
 

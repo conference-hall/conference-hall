@@ -1,6 +1,6 @@
-import SearchEventPage from 'page-objects/search.page';
 import SpeakerActivityPage from 'page-objects/speaker/activity.page';
 import SpeakerProfilePage from 'page-objects/speaker/profile.page';
+import SpeakerNewTalkPage from 'page-objects/speaker/talk-new.page';
 
 describe('Speaker activity page', () => {
   beforeEach(() => {
@@ -12,7 +12,7 @@ describe('Speaker activity page', () => {
 
   const activity = new SpeakerActivityPage();
   const profile = new SpeakerProfilePage();
-  const search = new SearchEventPage();
+  const newTalk = new SpeakerNewTalkPage();
 
   it('displays the speaker activity page', () => {
     activity.visit();
@@ -34,9 +34,9 @@ describe('Speaker activity page', () => {
     profile.isPageVisible();
   });
 
-  it('can submit a talk', () => {
+  it('can create a new talk', () => {
     activity.visit();
-    activity.submitTalk().click();
-    search.isPageVisible();
+    activity.newTalk().click();
+    newTalk.isPageVisible();
   });
 });

@@ -43,6 +43,10 @@ class SpeakerTalkPage {
     return this.deleteConfirmDialog().findByRole('button', { name: 'Delete talk' });
   }
 
+  speakersBlock() {
+    return cy.findByRole('heading', { name: 'Speakers' }).parent();
+  }
+
   generateCoSpeakerInvite() {
     cy.clickOn('Invite a co-speaker');
     cy.clickOn('Generate invitation link');

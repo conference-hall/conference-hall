@@ -19,8 +19,10 @@ describe('Talk invitation page', () => {
     invitation.acceptInvite().click();
     talk.isPageVisible();
     cy.assertText('Awesome talk');
-    cy.assertText('Clark Kent');
-    cy.assertText('Bruce Wayne');
+    talk.speakersBlock().within(() => {
+      cy.assertText('Clark Kent');
+      cy.assertText('Bruce Wayne');
+    });
   });
 
   it('go back to homepage', () => {
