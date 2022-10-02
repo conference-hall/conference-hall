@@ -8,7 +8,7 @@ class OrganizerEventSettingsPage {
     cy.findByRole('heading', { name: 'Settings' }).should('exist');
   }
 
-  settingsNav() {
+  nav() {
     return cy.findByRole('navigation', { name: 'Event settings menu' });
   }
 }

@@ -1,6 +1,7 @@
 import ApiSettings from 'page-objects/organizer/event-settings/api-settings.page';
 import CfpSettings from 'page-objects/organizer/event-settings/cfp-settings.page';
 import CustomizeSettings from 'page-objects/organizer/event-settings/customize-settings.page';
+import OrganizerEventSettingsPage from 'page-objects/organizer/event-settings/event-settings.page';
 import GeneralSettings from 'page-objects/organizer/event-settings/general-settings.page';
 import NotificationsSettings from 'page-objects/organizer/event-settings/notifications-settings.page';
 import ProposalReviewSettings from 'page-objects/organizer/event-settings/proposal-review-settings.page';
@@ -15,6 +16,7 @@ describe('Event settings', () => {
 
   afterEach(() => cy.task('disconnectDB'));
 
+  const settings = new OrganizerEventSettingsPage();
   const general = new GeneralSettings();
   const customize = new CustomizeSettings();
   const tracks = new TracksSettings();
@@ -28,7 +30,32 @@ describe('Event settings', () => {
   describe('as a organization owner', () => {
     beforeEach(() => cy.login('Clark Kent'));
 
-    it.skip('Navigation settings menu');
+    it('navigates through settings nav bar', () => {
+      settings.visit('orga-1', 'conference-1');
+      settings.nav().within(() => cy.clickOn('General'));
+      general.isPageVisible();
+
+      settings.nav().within(() => cy.clickOn('Customize'));
+      customize.isPageVisible();
+
+      settings.nav().within(() => cy.clickOn('Tracks'));
+      tracks.isPageVisible();
+
+      settings.nav().within(() => cy.clickOn('Speaker survey'));
+      survey.isPageVisible();
+
+      settings.nav().within(() => cy.clickOn('Proposals review'));
+      review.isPageVisible();
+
+      settings.nav().within(() => cy.clickOn('Email notifications'));
+      notifications.isPageVisible();
+
+      settings.nav().within(() => cy.clickOn('Slack integration'));
+      slack.isPageVisible();
+
+      settings.nav().within(() => cy.clickOn('Web API'));
+      api.isPageVisible();
+    });
 
     describe('general settings', () => {
       it.skip('initial values');
