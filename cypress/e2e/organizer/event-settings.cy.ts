@@ -1,6 +1,7 @@
 import CfpSettings from 'page-objects/organizer/event-settings/cfp-settings.page';
 import CustomizeSettings from 'page-objects/organizer/event-settings/customize-settings.page';
 import GeneralSettings from 'page-objects/organizer/event-settings/general-settings.page';
+import NotificationsSettings from 'page-objects/organizer/event-settings/notifications-settings.page';
 import ProposalReviewSettings from 'page-objects/organizer/event-settings/proposal-review-settings.page';
 import SurveySettings from 'page-objects/organizer/event-settings/survey-settings.page';
 import TracksSettings from 'page-objects/organizer/event-settings/tracks-settings.page';
@@ -18,6 +19,7 @@ describe('Event settings', () => {
   const cfp = new CfpSettings();
   const survey = new SurveySettings();
   const review = new ProposalReviewSettings();
+  const notifications = new NotificationsSettings();
 
   describe('as a organization owner', () => {
     beforeEach(() => cy.login('Clark Kent'));
@@ -207,6 +209,26 @@ describe('Event settings', () => {
         cy.clickOn('Display organizers ratings');
         cy.clickOn('Display ratings in proposal list');
         cy.clickOn('Display speakers in proposal page');
+      });
+    });
+
+    describe.only('notifications settings', () => {
+      it.skip('initial values');
+      it.skip('display form errors');
+
+      it('fills notification settings', () => {
+        notifications.visit('orga-1', 'conference-1');
+        notifications.saveForm('test@example.com');
+      });
+
+      it('save notifications', () => {
+        notifications.visit('orga-1', 'conference-1');
+
+        cy.clickOn('Submitted proposals');
+        cy.clickOn('Confirmed proposals');
+        cy.clickOn('Declined proposals');
+        cy.clickOn('Accepted proposals');
+        cy.clickOn('Rejected proposals');
       });
     });
   });
