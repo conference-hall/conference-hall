@@ -1,6 +1,7 @@
 import CfpSettings from 'page-objects/organizer/event-settings/cfp-settings.page';
 import CustomizeSettings from 'page-objects/organizer/event-settings/customize-settings.page';
 import GeneralSettings from 'page-objects/organizer/event-settings/general-settings.page';
+import ProposalReviewSettings from 'page-objects/organizer/event-settings/proposal-review-settings.page';
 import SurveySettings from 'page-objects/organizer/event-settings/survey-settings.page';
 import TracksSettings from 'page-objects/organizer/event-settings/tracks-settings.page';
 
@@ -16,6 +17,7 @@ describe('Event settings', () => {
   const tracks = new TracksSettings();
   const cfp = new CfpSettings();
   const survey = new SurveySettings();
+  const review = new ProposalReviewSettings();
 
   describe('as a organization owner', () => {
     beforeEach(() => cy.login('Clark Kent'));
@@ -185,6 +187,26 @@ describe('Event settings', () => {
         cy.findByLabelText('Do you have any special diet restrictions?').click();
         cy.findByLabelText('Do you have specific information to share?').click();
         survey.saveQuestion().click();
+      });
+    });
+
+    describe('proposal review settings', () => {
+      it.skip('initial values');
+
+      it('enables or disables proposal reviews', () => {
+        review.visit('orga-1', 'conference-1');
+        review.enableProposalReview().click();
+        review.disableProposalReview().should('exist');
+        review.disableProposalReview().click();
+        review.enableProposalReview().should('exist');
+      });
+
+      it('save proposal review settings', () => {
+        review.visit('orga-1', 'conference-1');
+
+        cy.clickOn('Display organizers ratings');
+        cy.clickOn('Display ratings in proposal list');
+        cy.clickOn('Display speakers in proposal page');
       });
     });
   });
