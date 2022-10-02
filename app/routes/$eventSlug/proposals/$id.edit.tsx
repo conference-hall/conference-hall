@@ -39,8 +39,8 @@ export const action: ActionFunction = async ({ request, params }: ActionArgs) =>
       await deleteProposal(proposalId, uid);
       throw redirect(`/${eventSlug}/proposals`);
     } else {
-      const result = validateProposalForm(form);
-      if (!result.success) return result.error.flatten();
+      const result = await validateProposalForm(form);
+      if (result.error) return json(result.error.fieldErrors);
       await updateProposal(eventSlug, proposalId, uid, result.data);
       throw redirect(`/${eventSlug}/proposals/${proposalId}`);
     }
@@ -65,7 +65,7 @@ export default function EditProposalRoute() {
 
       <Form method="post" className="sm:mt-4 sm:rounded-lg sm:border sm:border-gray-200">
         <div className="py-8 sm:px-6">
-          <TalkAbstractForm initialValues={proposal} errors={errors?.fieldErrors} />
+          <TalkAbstractForm initialValues={proposal} errors={errors} />
 
           {event.formats?.length > 0 ? (
             <div className="pt-10">

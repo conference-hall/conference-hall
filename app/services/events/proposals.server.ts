@@ -1,4 +1,4 @@
-import { formData } from 'zod-form-data';
+import { withZod } from '@remix-validated-form/with-zod';
 import type { ProposalUpdateData } from '~/schemas/proposal';
 import { ProposalUpdateSchema } from '~/schemas/proposal';
 import { db } from '../../services/db';
@@ -130,7 +130,7 @@ export async function updateProposal(slug: string, proposalId: string, uid: stri
 }
 
 export function validateProposalForm(form: FormData) {
-  return formData(ProposalUpdateSchema).safeParse(form);
+  return withZod(ProposalUpdateSchema).validate(form);
 }
 
 /**

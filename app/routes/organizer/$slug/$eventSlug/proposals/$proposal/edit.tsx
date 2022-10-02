@@ -1,4 +1,5 @@
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 import type { OrganizerProposalContext } from '../$proposal';
 import { sessionRequired } from '~/services/auth/auth.server';
@@ -20,8 +21,8 @@ export const action = async ({ request, params }: ActionArgs) => {
   try {
     const { slug, eventSlug, proposal } = params;
     const form = await request.formData();
-    const result = validateProposalForm(form);
-    if (!result.success) return result.error.flatten();
+    const result = await validateProposalForm(form);
+    if (result.error) return json(result.error.fieldErrors);
     await updateProposal(slug!, eventSlug!, params.proposal!, uid, result.data);
     const url = new URL(request.url);
     throw redirect(`/organizer/${slug}/${eventSlug}/proposals/${proposal}${url.search}`);
@@ -42,7 +43,7 @@ export default function OrganizerProposalContentRoute() {
   return (
     <Form method="post" className="flex h-full flex-1 flex-col justify-between overflow-hidden">
       <div className="flex flex-col gap-8 overflow-auto py-8 sm:px-8">
-        <TalkAbstractForm initialValues={proposalReview.proposal} errors={errors?.fieldErrors} />
+        <TalkAbstractForm initialValues={proposalReview.proposal} errors={errors} />
         {event.formats.length > 0 && <FormatsForm formats={event.formats} initialValues={formatsIds} />}
         {event.categories.length > 0 && <CategoriesForm categories={event.categories} initialValues={categoriesIds} />}
       </div>

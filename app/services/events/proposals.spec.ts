@@ -319,8 +319,8 @@ describe('#updateProposal', () => {
   });
 });
 
-describe.skip('#validateProposalForm', () => {
-  it('validates fields', () => {
+describe('#validateProposalForm', () => {
+  it('validates fields', async () => {
     const formData = new FormData();
     formData.append('title', 'Title changed');
     formData.append('abstract', 'Abstract changes');
@@ -332,9 +332,9 @@ describe.skip('#validateProposalForm', () => {
     formData.append('categories', 'C1');
     formData.append('categories', 'C2');
 
-    const result = validateProposalForm(formData);
+    const result = await validateProposalForm(formData);
 
-    expect(result.success && result.data).toEqual({
+    expect(!result.error && result.data).toEqual({
       title: 'Title changed',
       abstract: 'Abstract changes',
       references: 'References changes',
@@ -345,13 +345,13 @@ describe.skip('#validateProposalForm', () => {
     });
   });
 
-  it('validates mandatory fields', () => {
+  it('validates mandatory fields', async () => {
     const formData = new FormData();
     formData.append('title', '');
     formData.append('abstract', '');
-    const result = validateProposalForm(formData);
+    const result = await validateProposalForm(formData);
 
-    expect(!result.success && result.error.errors.map((e) => e.code)).toEqual(['too_small', 'too_small']);
+    expect(result.error && result.error.fieldErrors).toEqual({ abstract: 'Required', title: 'Required' });
   });
 });
 

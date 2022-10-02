@@ -29,6 +29,7 @@ import {
   EventTracksSettingsSchema,
 } from '~/schemas/event';
 import type { Pagination } from '~/schemas/pagination';
+import { withZod } from '@remix-validated-form/with-zod';
 /**
  * Check the organizer role to an event.
  * Returns the user role or throws an error when user not member or does not have the correct role.
@@ -401,7 +402,7 @@ export async function updateProposal(
 }
 
 export function validateProposalForm(form: FormData) {
-  return formData(ProposalUpdateSchema).safeParse(form);
+  return withZod(ProposalUpdateSchema).validate(form);
 }
 
 /**
