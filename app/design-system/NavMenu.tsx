@@ -6,10 +6,10 @@ type NavItem = { to: string; icon: React.ComponentType<{ className?: string }>; 
 
 type Props = { items: Array<NavItem>; className?: string };
 
-export function NavMenu({ items, className }: Props) {
+export function NavMenu({ items, className, ...rest }: Props) {
   return (
-    <aside className={c('py-6 px-2 sm:px-6 lg:col-span-3 lg:py-0 lg:px-0', className)}>
-      <nav className="space-y-1">
+    <aside className={className}>
+      <nav className="space-y-1" {...rest}>
         {items.map((item) => (
           <NavLink key={item.to} to={item.to} className={menuStyles} end>
             <IconLabel icon={item.icon} iconClassName="text-gray-400 group-hover:text-gray-500">

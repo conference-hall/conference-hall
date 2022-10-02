@@ -105,7 +105,7 @@ describe('Submit a talk to event', () => {
       submission.isTalkStepVisible();
       cy.assertInputText('Title', 'My existing talk');
       cy.assertInputText('Abstract', 'My existing abstract');
-      cy.assertChecked('Advanced');
+      cy.assertRadioChecked('Advanced');
       cy.assertInputText('References', 'My existing references');
 
       submission.fillTalkForm({

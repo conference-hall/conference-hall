@@ -24,17 +24,7 @@ export default function OrganizationEventsRoute() {
   const events = useLoaderData<typeof loader>();
 
   if (events.length === 0) {
-    return (
-      <Container className="my-4 sm:my-16">
-        <EmptyState icon={StarIcon} className="flex flex-col items-center gap-2">
-          <H2>{`Welcome to "${organization.name}"`}</H2>
-          <Text variant="secondary">Get started by creating your first event.</Text>
-          <h2 className="sr-only">Organization events</h2>
-          <ButtonLink to="new">New event</ButtonLink>
-        </EmptyState>
-        <Outlet />
-      </Container>
-    );
+    return <OrganizationEventsEmpty organization={organization} />;
   }
 
   return (
@@ -49,7 +39,7 @@ export default function OrganizationEventsRoute() {
           className="w-full sm:w-80"
           icon={MagnifyingGlassIcon}
         />
-        <ButtonLink to="new">New event</ButtonLink>
+        {organization.role === 'OWNER' && <ButtonLink to="new">New event</ButtonLink>}
       </div>
       <div className="my-4 overflow-hidden border border-gray-200 bg-white shadow-sm sm:my-8 sm:rounded-md">
         <ul aria-label="Events list" className="divide-y divide-gray-200">
@@ -80,3 +70,22 @@ export default function OrganizationEventsRoute() {
     </Container>
   );
 }
+
+const OrganizationEventsEmpty = ({ organization }: OrganizationContext) => (
+  <Container className="my-4 sm:my-16">
+    <EmptyState icon={StarIcon} className="flex flex-col items-center gap-2">
+      <h2 className="sr-only">Organization events</h2>
+      <H2>{`Welcome to "${organization.name}"`}</H2>
+
+      {organization.role === 'OWNER' ? (
+        <>
+          <Text variant="secondary">Get started by creating your first event.</Text>
+          <ButtonLink to="new">New event</ButtonLink>
+        </>
+      ) : (
+        <Text variant="secondary">No event created yet.</Text>
+      )}
+    </EmptyState>
+    <Outlet />
+  </Container>
+);

@@ -7,6 +7,10 @@ class OrganizerEventSettingsPage {
   isPageVisible() {
     cy.findByRole('heading', { name: 'Settings' }).should('exist');
   }
+
+  settingsNav() {
+    return cy.findByRole('navigation', { name: 'Event settings menu' });
+  }
 }
 
 export default OrganizerEventSettingsPage;

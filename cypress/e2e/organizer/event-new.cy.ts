@@ -1,5 +1,5 @@
 import OrganizerEventNewPage from 'page-objects/organizer/event-new.page';
-import OrganizerEventSettingsPage from 'page-objects/organizer/event-settings.page';
+import OrganizerEventSettingsPage from 'page-objects/organizer/event-settings/event-settings.page';
 import OrganizationEventsPage from 'page-objects/organizer/events-list.page';
 
 describe('Organizer event creation', () => {
@@ -52,15 +52,21 @@ describe('Organizer event creation', () => {
     });
   });
 
-  it('cannot create new event as a organization member', () => {
-    cy.login('Bruce Wayne');
-    cy.visit(`/organizer/awesome-orga/new`);
-    eventsList.isPageVisible();
+  describe('as a organization member', () => {
+    beforeEach(() => cy.login('Bruce Wayne'));
+
+    it('cannot create an event', () => {
+      cy.visit(`/organizer/awesome-orga/new`);
+      eventsList.isPageVisible();
+    });
   });
 
-  it('cannot create new event as a organization reviewer', () => {
-    cy.login('Bruce Wayne');
-    cy.visit(`/organizer/awesome-orga/new`);
-    eventsList.isPageVisible();
+  describe('as a organization reviewer', () => {
+    beforeEach(() => cy.login('Peter Parker'));
+
+    it('cannot create an event', () => {
+      cy.visit(`/organizer/awesome-orga/new`);
+      eventsList.isPageVisible();
+    });
   });
 });

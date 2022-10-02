@@ -70,7 +70,7 @@ export default function ProfileRoute() {
     <Container className="my-4 sm:my-8">
       <h1 className="sr-only">Profile</h1>
       <div className="lg:grid lg:grid-cols-12 lg:gap-x-5">
-        <NavMenu items={MENU_ITEMS} className="hidden sm:block" />
+        <NavMenu items={MENU_ITEMS} className="hidden py-6 px-2 sm:block sm:px-6 lg:col-span-3 lg:py-0 lg:px-0" />
 
         <div className="space-y-6 sm:px-6 lg:col-span-9 lg:px-0">
           <Form method="post" aria-labelledby="personal-info-label">

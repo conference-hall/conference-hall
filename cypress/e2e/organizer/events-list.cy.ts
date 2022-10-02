@@ -47,6 +47,7 @@ describe('Organization event list', () => {
       organization.eventsTab().should('exist');
       organization.membersTab().should('exist');
       organization.settingsTab().should('not.exist');
+      organization.newEvent().should('not.exist');
     });
   });
 
@@ -58,6 +59,7 @@ describe('Organization event list', () => {
       organization.eventsTab().should('exist');
       organization.membersTab().should('not.exist');
       organization.settingsTab().should('not.exist');
+      organization.newEvent().should('not.exist');
     });
   });
 });

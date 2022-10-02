@@ -25,10 +25,16 @@ declare global {
       typeOn(label: string | RegExp, text: string): Chainable<JQuery<HTMLElement>>;
 
       /**
-       * Assert if a checkbox or radio is checked
+       * Assert if a checkbox is checked
        * @example cy.assertChecked('name')
        */
       assertChecked(text: string): void;
+
+      /**
+       * Assert if a radio is checked
+       * @example cy.assertRadioChecked('name')
+       */
+      assertRadioChecked(text: string): void;
 
       /**
        * Assert the text exists in the page
@@ -106,9 +112,11 @@ Cypress.Commands.add('assertLink', (name, href) => {
 });
 
 Cypress.Commands.add('assertChecked', (name) => {
-  cy.findAllByRole(/checkbox|radio/, { name })
-    .then((elements) => elements[0])
-    .should('be.checked');
+  cy.findAllByRole('checkbox', { name, checked: true });
+});
+
+Cypress.Commands.add('assertRadioChecked', (name) => {
+  cy.findAllByRole('radio', { name, checked: true });
 });
 
 Cypress.Commands.add('login', (username = 'Clark Kent') => {

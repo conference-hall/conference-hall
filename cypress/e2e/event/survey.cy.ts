@@ -18,8 +18,8 @@ describe('Submit a talk to event', () => {
     cy.login();
     survey.visit('devfest-nantes');
 
-    cy.assertChecked('Male');
-    cy.assertChecked('XL');
+    cy.assertRadioChecked('Male');
+    cy.assertRadioChecked('XL');
     cy.assertChecked('Train');
     cy.assertChecked('Taxi');
     cy.assertChecked('Vegan');
@@ -35,9 +35,9 @@ describe('Submit a talk to event', () => {
     survey.form().submit();
 
     cy.assertText('Survey saved, thank you!');
-    cy.assertChecked('Female');
-    cy.assertChecked('XXL');
-    cy.assertChecked('No');
+    cy.assertRadioChecked('Female');
+    cy.assertRadioChecked('XXL');
+    cy.assertRadioChecked('No');
     cy.assertChecked('Plane');
     cy.assertChecked('Halal');
     cy.assertInputText('Do you have specific information to share?', 'World');

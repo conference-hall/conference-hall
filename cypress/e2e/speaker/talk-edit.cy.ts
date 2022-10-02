@@ -17,7 +17,7 @@ describe('Speaker talk edition page', () => {
 
     cy.assertInputText('Title', 'Awesome talk');
     cy.assertInputText('Abstract', 'Awesome abstract');
-    cy.assertChecked('Advanced');
+    cy.assertRadioChecked('Advanced');
     cy.assertInputText('References', 'Awesome references');
 
     editTalk.fillTalkForm({
