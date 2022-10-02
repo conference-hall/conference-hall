@@ -9,23 +9,23 @@ describe('Event settings', () => {
 
   afterEach(() => cy.task('disconnectDB'));
 
-  const generalSettings = new GeneralSettings();
-  const customizeSettings = new CustomizeSettings();
-  const tracksSettings = new TracksSettings();
+  const general = new GeneralSettings();
+  const customize = new CustomizeSettings();
+  const tracks = new TracksSettings();
 
   describe('as a organization owner', () => {
     beforeEach(() => cy.login('Clark Kent'));
 
     describe('general settings', () => {
       it('can update general event info', () => {
-        generalSettings.visit('orga-1', 'conference-1');
+        general.visit('orga-1', 'conference-1');
 
-        generalSettings.saveGeneralForm({ name: 'Conference 2', visibility: 'Private' });
+        general.saveGeneralForm({ name: 'Conference 2', visibility: 'Private' });
 
         cy.assertUrl('/organizer/orga-1/conference-2/settings');
         cy.reload();
 
-        generalSettings.generalBlock().within(() => {
+        general.generalBlock().within(() => {
           cy.assertInputText('Name', 'Conference 2');
           cy.assertInputText('Event URL', 'conference-2');
           cy.assertRadioChecked('Private');
@@ -33,9 +33,9 @@ describe('Event settings', () => {
       });
 
       it('can update event details', () => {
-        generalSettings.visit('orga-1', 'conference-1');
+        general.visit('orga-1', 'conference-1');
 
-        generalSettings.saveDetailsForm({
+        general.saveDetailsForm({
           startDate: '2022-12-12',
           endDate: '2022-12-13',
           address: 'Nantes, France',
@@ -44,7 +44,7 @@ describe('Event settings', () => {
           contactEmail: 'contact@email.com',
         });
 
-        generalSettings.detailsBlock().within(() => {
+        general.detailsBlock().within(() => {
           cy.assertInputText('Start date', '2022-12-12');
           cy.assertInputText('End date', '2022-12-13');
           cy.assertInputText('Venue address or city', 'Nantes, France');
@@ -54,19 +54,85 @@ describe('Event settings', () => {
         });
       });
 
-      it('todo should check error fields');
+      it.skip('check error fields');
     });
 
     describe('customize settings', () => {
       it('can upload a new banner', () => {
-        customizeSettings.visit('orga-1', 'conference-1');
-        customizeSettings.uploadBanner().selectFile('cypress/fixtures/banner.jpg', { force: true });
+        customize.visit('orga-1', 'conference-1');
+        customize.uploadBanner().selectFile('cypress/fixtures/banner.jpg', { force: true });
       });
     });
 
     describe('tracks settings', () => {
-      it('create a format', () => {
-        tracksSettings.visit('orga-1', 'conference-1');
+      it('add, edit and remove a format', () => {
+        tracks.visit('orga-1', 'conference-1');
+
+        tracks.formatsRequired();
+        tracks.newFormat().click();
+
+        tracks.newFormatModal().within(() => {
+          cy.typeOn('Name', 'Quickie');
+          cy.typeOn('Description', 'Small talk');
+          cy.clickOn('Save format');
+        });
+
+        tracks.formatsBlock().within(() => {
+          cy.assertText('Quickie');
+          cy.assertText('Small talk');
+          cy.clickOn('Edit Quickie');
+        });
+
+        tracks.newFormatModal().within(() => {
+          cy.assertInputText('Name', 'Quickie');
+          cy.assertInputText('Description', 'Small talk');
+          cy.typeOn('Name', 'Conf');
+          cy.typeOn('Description', 'Long talk');
+          cy.clickOn('Save format');
+        });
+
+        tracks.formatsBlock().within(() => {
+          cy.assertText('Conf');
+          cy.assertText('Long talk');
+          cy.clickOn('Remove Conf');
+          cy.assertNoText('Conf');
+          cy.assertNoText('Long talk');
+        });
+      });
+
+      it('add, edit and remove a category', () => {
+        tracks.visit('orga-1', 'conference-1');
+
+        tracks.categoriesRequired();
+        tracks.newCategory().click();
+
+        tracks.newCategoryModal().within(() => {
+          cy.typeOn('Name', 'Web');
+          cy.typeOn('Description', 'This is the web');
+          cy.clickOn('Save category');
+        });
+
+        tracks.categoriesBlock().within(() => {
+          cy.assertText('Web');
+          cy.assertText('This is the web');
+          cy.clickOn('Edit Web');
+        });
+
+        tracks.newCategoryModal().within(() => {
+          cy.assertInputText('Name', 'Web');
+          cy.assertInputText('Description', 'This is the web');
+          cy.typeOn('Name', 'Cloud');
+          cy.typeOn('Description', 'This is the cloud');
+          cy.clickOn('Save category');
+        });
+
+        tracks.categoriesBlock().within(() => {
+          cy.assertText('Cloud');
+          cy.assertText('This is the cloud');
+          cy.clickOn('Remove Cloud');
+          cy.assertNoText('Cloud');
+          cy.assertNoText('This is the cloud');
+        });
       });
     });
   });
