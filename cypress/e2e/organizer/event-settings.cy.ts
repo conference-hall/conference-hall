@@ -1,8 +1,10 @@
+import ApiSettings from 'page-objects/organizer/event-settings/api-settings.page';
 import CfpSettings from 'page-objects/organizer/event-settings/cfp-settings.page';
 import CustomizeSettings from 'page-objects/organizer/event-settings/customize-settings.page';
 import GeneralSettings from 'page-objects/organizer/event-settings/general-settings.page';
 import NotificationsSettings from 'page-objects/organizer/event-settings/notifications-settings.page';
 import ProposalReviewSettings from 'page-objects/organizer/event-settings/proposal-review-settings.page';
+import SlackSettings from 'page-objects/organizer/event-settings/slack-settings.page';
 import SurveySettings from 'page-objects/organizer/event-settings/survey-settings.page';
 import TracksSettings from 'page-objects/organizer/event-settings/tracks-settings.page';
 
@@ -20,6 +22,8 @@ describe('Event settings', () => {
   const survey = new SurveySettings();
   const review = new ProposalReviewSettings();
   const notifications = new NotificationsSettings();
+  const slack = new SlackSettings();
+  const api = new ApiSettings();
 
   describe('as a organization owner', () => {
     beforeEach(() => cy.login('Clark Kent'));
@@ -212,7 +216,7 @@ describe('Event settings', () => {
       });
     });
 
-    describe.only('notifications settings', () => {
+    describe('notifications settings', () => {
       it.skip('initial values');
       it.skip('display form errors');
 
@@ -229,6 +233,32 @@ describe('Event settings', () => {
         cy.clickOn('Declined proposals');
         cy.clickOn('Accepted proposals');
         cy.clickOn('Rejected proposals');
+      });
+    });
+
+    describe('slack integration settings', () => {
+      it.skip('initial values');
+      it.skip('display form errors');
+
+      it('fills slack web hook url', () => {
+        slack.visit('orga-1', 'conference-1');
+        slack.saveSlackWebhook('https://slack.com/webhook/test');
+      });
+    });
+
+    describe('API integration settings', () => {
+      it.skip('initial values');
+
+      it('generate and revoke API key', () => {
+        api.visit('orga-1', 'conference-1');
+
+        api.generateAPIKey().click();
+        api.revokeAPIKey().should('exist');
+        api.apiKey().should('not.have.value', '');
+
+        api.revokeAPIKey().click();
+        api.generateAPIKey().should('exist');
+        api.apiKey().should('have.value', '');
       });
     });
   });

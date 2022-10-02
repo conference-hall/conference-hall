@@ -45,14 +45,14 @@ export default function EventApiSettingsRoute() {
         </Text>
 
         <Form method="post" className="mt-6 space-y-4">
-          <Input label="API key" disabled value={event.apiKey || ''} />
+          <Input name="apiKey" label="API key" disabled value={event.apiKey || ''} />
           {event.apiKey ? (
             <input type="hidden" name="_action" value="revoke-api-key" />
           ) : (
             <input type="hidden" name="_action" value="generate-api-key" />
           )}
           <Button type="submit" variant="secondary">
-            {event.apiKey ? 'Revoke API key' : 'Generate API Key'}
+            {event.apiKey ? 'Revoke API key' : 'Generate API key'}
           </Button>
         </Form>
       </section>
