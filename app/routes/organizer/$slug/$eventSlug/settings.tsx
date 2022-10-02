@@ -1,4 +1,5 @@
 import type { LoaderArgs } from '@remix-run/node';
+import { redirect } from '@remix-run/node';
 import { Outlet, useOutletContext, useParams } from '@remix-run/react';
 import { Container } from '~/design-system/Container';
 import { NavMenu } from '~/design-system/NavMenu';
@@ -15,9 +16,13 @@ import {
   SwatchIcon,
 } from '@heroicons/react/24/outline';
 import type { OrganizerEventContext } from '../$eventSlug';
+import { getUserRole } from '~/services/organizers/organizations.server';
 
-export const loader = async ({ request }: LoaderArgs) => {
-  await sessionRequired(request);
+export const loader = async ({ request, params }: LoaderArgs) => {
+  const uid = await sessionRequired(request);
+  const { slug, eventSlug } = params;
+  const role = await getUserRole(slug!, uid);
+  if (role !== 'OWNER') throw redirect(`/organizer/${slug}/${eventSlug}/proposals`);
   return null;
 };
 

@@ -268,6 +268,7 @@ describe('Event settings', () => {
 
     it('cannot create new event as a organization member', () => {
       cy.visit(`/organizer/orga-1/conference-1/settings`);
+      cy.assertUrl(`/organizer/orga-1/conference-1/proposals`);
     });
   });
 
@@ -276,6 +277,7 @@ describe('Event settings', () => {
 
     it('cannot create new event as a organization reviewer', () => {
       cy.visit(`/organizer/orga-1/conference-1/settings`);
+      cy.assertUrl(`/organizer/orga-1/conference-1/proposals`);
     });
   });
 });
