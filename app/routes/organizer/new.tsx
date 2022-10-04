@@ -23,7 +23,7 @@ export const action = async ({ request }: ActionArgs) => {
     return json(result.error.fieldErrors);
   } else {
     const updated = await createOrganization(uid, result.data);
-    if (updated?.fieldErrors) return json(updated);
+    if (updated?.fieldErrors) return json(updated.fieldErrors);
     throw redirect(`/organizer/${updated.slug}`);
   }
 };
