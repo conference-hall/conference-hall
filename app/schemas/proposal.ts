@@ -1,11 +1,11 @@
 import { z } from 'zod';
 import { numeric, repeatable, text } from 'zod-form-data';
 
-export const ProposalLevelSchema = z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']);
+const ProposalLevelSchema = z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']);
 
-export const ProposalStatusSchema = z.enum(['SUBMITTED', 'ACCEPTED', 'REJECTED', 'CONFIRMED', 'DECLINED']);
+const ProposalStatusSchema = z.enum(['SUBMITTED', 'ACCEPTED', 'REJECTED', 'CONFIRMED', 'DECLINED']);
 
-export const ProposalRatingsSchema = z.enum(['NEUTRAL', 'POSITIVE', 'NEGATIVE', 'NO_OPINION']);
+const ProposalRatingsSchema = z.enum(['NEUTRAL', 'POSITIVE', 'NEGATIVE', 'NO_OPINION']);
 
 export const ProposalCreateSchema = z.object({
   title: z.string().trim().min(1),
@@ -45,9 +45,6 @@ export const ProposalRatingDataSchema = z.object({
   feeling: text(ProposalRatingsSchema),
 });
 
-export type ProposalLevel = z.infer<typeof ProposalLevelSchema>;
-export type ProposalStatus = z.infer<typeof ProposalStatusSchema>;
-export type ProposalRatings = z.infer<typeof ProposalRatingsSchema>;
 export type ProposalCreateData = z.infer<typeof ProposalCreateSchema>;
 export type ProposalUpdateData = z.infer<typeof ProposalUpdateSchema>;
 export type ProposalSubmissionData = z.infer<typeof ProposalSubmissionSchema>;

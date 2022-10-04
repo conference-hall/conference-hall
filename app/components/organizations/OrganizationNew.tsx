@@ -1,15 +1,13 @@
 import slugify from '@sindresorhus/slugify';
 import { useState } from 'react';
-import { useActionData } from '@remix-run/react';
 import { Input } from '~/design-system/forms/Input';
 
 type OrganizationFormProps = {
   initialValues?: { name: string; slug: string };
+  errors?: Record<string, string>;
 };
 
-export function OrganizationNewForm({ initialValues }: OrganizationFormProps) {
-  const result = useActionData();
-
+export function OrganizationNewForm({ initialValues, errors }: OrganizationFormProps) {
   const [name, setName] = useState<string>(initialValues?.name ?? '');
   const [slug, setSlug] = useState<string>(initialValues?.slug ?? '');
 
@@ -25,7 +23,7 @@ export function OrganizationNewForm({ initialValues }: OrganizationFormProps) {
           setName(e.target.value);
           setSlug(slugify(e.target.value.toLowerCase()));
         }}
-        error={result?.fieldErrors?.name?.[0]}
+        error={errors?.name}
         className="mt-8"
       />
       <Input
@@ -37,7 +35,7 @@ export function OrganizationNewForm({ initialValues }: OrganizationFormProps) {
         onChange={(e) => {
           setSlug(e.target.value);
         }}
-        error={result?.fieldErrors?.slug?.[0]}
+        error={errors?.slug}
         className="mt-4"
       />
     </>

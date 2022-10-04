@@ -1,6 +1,5 @@
 import { OrganizationRole } from '@prisma/client';
 import type { OrganizationSaveData } from '~/schemas/organization';
-import { OrganizationSaveSchema } from '~/schemas/organization';
 import { db } from '../db';
 import { ForbiddenOperationError, InvitationNotFoundError, OrganizationNotFoundError } from '../errors';
 import { buildInvitationLink } from '../invitations/invitations.server';
@@ -185,7 +184,7 @@ export async function inviteMemberToOrganization(invitationId: string, memberId:
 export async function createOrganization(uid: string, data: OrganizationSaveData) {
   return await db.$transaction(async (trx) => {
     const existSlug = await trx.organization.findFirst({ where: { slug: data.slug } });
-    if (existSlug) return { fieldErrors: { name: [], slug: ['Slug already exists, please try another one.'] } };
+    if (existSlug) return { fieldErrors: { slug: 'Slug already exists, please try another one.' } };
 
     const updated = await trx.organization.create({ select: { id: true }, data });
     await trx.organizationMember.create({
@@ -215,12 +214,5 @@ export async function updateOrganization(slug: string, uid: string, data: Organi
 
     await trx.organization.update({ select: { id: true }, where: { slug }, data });
     return { slug: data.slug };
-  });
-}
-
-export function validateOrganizationData(form: FormData) {
-  return OrganizationSaveSchema.safeParse({
-    name: form.get('name'),
-    slug: form.get('slug'),
   });
 }
