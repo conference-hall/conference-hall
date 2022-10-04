@@ -29,7 +29,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     return json({
       proposalId: proposal.id,
       invitationLink: proposal.invitationLink,
-      currentSpeaker: { bio: user.bio },
+      currentSpeaker: { bio: user.bio, references: user.references },
       speakers: proposal.speakers.filter((speaker) => speaker.id !== user.id),
     });
   } catch (err) {
@@ -90,9 +90,10 @@ export default function SubmissionSpeakerRoute() {
             defaultValue={data.currentSpeaker.bio || ''}
             className="mt-6"
           />
+          <input type="hidden" name="references" value={data.currentSpeaker.references || ''} />
           <Text className="mt-2">
             You can give more information about you from{' '}
-            <ExternalLink href="/speaker/settings">the settings page.</ExternalLink>
+            <ExternalLink href="/speaker/settings">the profile page.</ExternalLink>
           </Text>
         </Form>
         <div className="mt-12">

@@ -41,7 +41,7 @@ export const action: ActionFunction = async ({ request }) => {
     }
     if (result.error) return json(result.error.fieldErrors);
     await updateSettings(uid, result.data);
-    return redirect('/speaker/settings');
+    return redirect('/speaker/profile');
   } catch (err) {
     mapErrorToResponse(err);
   }

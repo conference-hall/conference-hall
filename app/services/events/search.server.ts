@@ -4,7 +4,6 @@ import { getCfpState } from '~/utils/event';
 import { db } from '../../services/db';
 import { getPagination } from '../utils/pagination.server';
 import type { SearchFilters } from '~/schemas/search';
-import { SearchFiltersSchema } from '~/schemas/search';
 import type { Pagination } from '~/schemas/pagination';
 
 const RESULTS_BY_PAGE = 12;
@@ -64,14 +63,4 @@ function mapFiltersQuery(type?: string, cfp?: string): Prisma.EventWhereInput {
     default:
       return { type: undefined, ...cfpFilter };
   }
-}
-
-export function validateFilters(params: URLSearchParams) {
-  const result = SearchFiltersSchema.safeParse({
-    query: params.get('query'),
-    type: params.get('type'),
-    cfp: params.get('cfp'),
-    talkId: params.get('talkId'),
-  });
-  return result.success ? result.data : {};
 }

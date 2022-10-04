@@ -4,17 +4,18 @@ import { useLoaderData, useSearchParams } from '@remix-run/react';
 import { Container } from '../design-system/Container';
 import { H1 } from '../design-system/Typography';
 import { SearchEventsList } from '../components/SearchEventsList';
-import { searchEvents, validateFilters } from '../services/events/search.server';
+import { searchEvents } from '../services/events/search.server';
 import { mapErrorToResponse } from '../services/errors';
 import { SearchEventsForm } from '../components/SearchEventsForm';
 import { Pagination } from '../design-system/Pagination';
 import { EmptyState } from '~/design-system/EmptyState';
 import { FaceFrownIcon } from '@heroicons/react/24/outline';
 import { parsePage } from '~/schemas/pagination';
+import { parseFilters } from '~/schemas/search';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const url = new URL(request.url);
-  const filters = validateFilters(url.searchParams);
+  const filters = await parseFilters(url.searchParams);
   const page = await parsePage(url.searchParams);
 
   try {
