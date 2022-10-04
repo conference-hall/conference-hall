@@ -12,8 +12,10 @@ import { mapErrorToResponse } from '../../../../services/errors';
 import { getEvent } from '../../../../services/events/event.server';
 import { removeCoSpeakerFromTalkAndEvent } from '../../../../services/events/proposals.server';
 import { getProposalSpeakers } from '../../../../services/events/speakers.server';
-import { updateSettings, validateProfileData } from '../../../../services/speakers/profile.server';
+import { updateSettings } from '../../../../services/speakers/profile.server';
 import { getUser } from '../../../../services/auth/user.server';
+import { DetailsSchema } from '~/schemas/profile';
+import { withZod } from '@remix-validated-form/with-zod';
 
 export const handle = { step: 'speakers' };
 
@@ -40,11 +42,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   const talkId = params.talkId!;
   const eventSlug = params.eventSlug!;
   const form = await request.formData();
-  const result = validateProfileData(form, 'DETAILS');
 
-  if (!result.success) {
-    return result.error.flatten();
-  }
   try {
     const action = form.get('_action');
     if (action === 'remove-speaker') {
@@ -52,6 +50,8 @@ export const action: ActionFunction = async ({ request, params }) => {
       await removeCoSpeakerFromTalkAndEvent(uid, talkId, eventSlug, speakerId);
       return null;
     } else {
+      const result = await withZod(DetailsSchema).validate(form);
+      if (result.error) return json(result.error.fieldErrors);
       await updateSettings(uid, result.data);
       const event = await getEvent(eventSlug);
       if (event.hasTracks) {
@@ -71,7 +71,6 @@ export default function SubmissionSpeakerRoute() {
   const data = useLoaderData<typeof loader>();
   const errors = useActionData();
   const { previousPath } = useSubmissionStep();
-  const fieldErrors = errors?.fieldErrors;
 
   return (
     <>
@@ -87,7 +86,7 @@ export default function SubmissionSpeakerRoute() {
             name="bio"
             label="Biography"
             rows={5}
-            error={fieldErrors?.bio?.[0]}
+            error={errors?.bio}
             defaultValue={data.currentSpeaker.bio || ''}
             className="mt-6"
           />

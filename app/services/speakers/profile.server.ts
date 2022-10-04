@@ -1,5 +1,4 @@
-import type { ProfileSchema, ProfileUpdateData } from '~/schemas/profile';
-import { AdditionalInfoSchema, DetailsSchema, PersonalInfoSchema } from '~/schemas/profile';
+import type { ProfileUpdateData } from '~/schemas/profile';
 import { db } from '../db';
 import { UserNotFoundError } from '../errors';
 
@@ -38,22 +37,4 @@ export async function updateSettings(userId: string, data: ProfileUpdateData) {
   if (!user) throw new UserNotFoundError();
 
   await db.user.update({ where: { id: userId }, data });
-}
-
-export function validateProfileData(form: FormData, type?: string) {
-  let schema: ProfileSchema = PersonalInfoSchema;
-  if (type === 'DETAILS') schema = DetailsSchema;
-  if (type === 'ADDITIONAL') schema = AdditionalInfoSchema;
-
-  return schema.safeParse({
-    name: form.get('name'),
-    email: form.get('email'),
-    photoURL: form.get('photoURL'),
-    bio: form.get('bio'),
-    references: form.get('references'),
-    company: form.get('company'),
-    address: form.get('address'),
-    twitter: form.get('twitter'),
-    github: form.get('github'),
-  });
 }

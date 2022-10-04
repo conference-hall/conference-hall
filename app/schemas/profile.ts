@@ -18,6 +18,6 @@ export const AdditionalInfoSchema = z.object({
   github: z.string().trim(),
 });
 
-export type ProfileSchema = typeof PersonalInfoSchema | typeof DetailsSchema | typeof AdditionalInfoSchema;
+type ProfileSchema = typeof PersonalInfoSchema | typeof DetailsSchema | typeof AdditionalInfoSchema;
 
 export type ProfileUpdateData = z.infer<ProfileSchema>;
