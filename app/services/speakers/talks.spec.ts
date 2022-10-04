@@ -18,7 +18,6 @@ import {
   removeCoSpeakerFromTalk,
   restoreTalk,
   updateTalk,
-  validateTalkForm,
 } from './talks.server';
 
 describe('#findTalks', () => {
@@ -309,41 +308,6 @@ describe('#updateTalk', () => {
       level: TalkLevel.ADVANCED,
     };
     await expect(updateTalk(speaker.id, 'XXX', updateData)).rejects.toThrowError(TalkNotFoundError);
-  });
-});
-
-describe('#validateTalkForm', () => {
-  it('validates talk form data', () => {
-    const formData = new FormData();
-    formData.append('title', 'Hello world');
-    formData.append('abstract', 'Welcome to the world!');
-    formData.append('references', 'This is my world.');
-    formData.append('languages[0]', 'en');
-    formData.append('languages[1]', 'fr');
-    formData.append('level', 'ADVANCED');
-
-    const result = validateTalkForm(formData);
-    expect(result.success && result.data).toEqual({
-      title: 'Hello world',
-      abstract: 'Welcome to the world!',
-      references: 'This is my world.',
-      languages: ['en', 'fr'],
-      level: TalkLevel.ADVANCED,
-    });
-  });
-
-  it('validates mandatory and format talk form data', () => {
-    const formData = new FormData();
-    formData.append('title', '');
-    formData.append('abstract', '');
-    formData.append('level', 'BAD_VALUE');
-
-    const result = validateTalkForm(formData);
-    expect(!result.success && result.error.errors.map((e) => e.code)).toEqual([
-      'too_small',
-      'too_small',
-      'invalid_enum_value',
-    ]);
   });
 });
 

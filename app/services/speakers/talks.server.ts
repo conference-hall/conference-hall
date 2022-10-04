@@ -1,8 +1,6 @@
 import { ProposalStatus } from '@prisma/client';
 import type { TalkSaveData } from '~/schemas/talks';
-import { TalkSaveSchema } from '~/schemas/talks';
 import { db } from '../../services/db';
-import { getArray } from '../../utils/form';
 import { jsonToArray } from '../../utils/prisma';
 import { InvitationNotFoundError, TalkNotFoundError } from '../errors';
 import { buildInvitationLink } from '../invitations/invitations.server';
@@ -140,16 +138,6 @@ export async function updateTalk(uid: string, talkId?: string, data?: TalkSaveDa
   await db.talk.update({
     where: { id: talkId },
     data,
-  });
-}
-
-export function validateTalkForm(form: FormData) {
-  return TalkSaveSchema.safeParse({
-    title: form.get('title'),
-    abstract: form.get('abstract'),
-    references: form.get('references'),
-    level: form.get('level'),
-    languages: getArray(form, 'languages'),
   });
 }
 

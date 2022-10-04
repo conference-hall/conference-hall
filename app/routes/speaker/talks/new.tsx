@@ -1,22 +1,22 @@
 import type { LoaderArgs } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
+import { withZod } from '@remix-validated-form/with-zod';
 import { Container } from '~/design-system/Container';
+import { TalkSaveSchema } from '~/schemas/talks';
 import { TalkAbstractForm } from '../../../components/TalkAbstractForm';
 import { Button } from '../../../design-system/Buttons';
 import { H1 } from '../../../design-system/Typography';
 import { sessionRequired } from '../../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../../services/errors';
-import { createTalk, validateTalkForm } from '../../../services/speakers/talks.server';
+import { createTalk } from '../../../services/speakers/talks.server';
 
 export const action = async ({ request }: LoaderArgs) => {
   const uid = await sessionRequired(request);
   const form = await request.formData();
 
-  const result = validateTalkForm(form);
-  if (!result.success) {
-    return result.error.flatten();
-  }
+  const result = await withZod(TalkSaveSchema).validate(form);
+  if (result.error) return result.error.fieldErrors;
   try {
     const talkId = await createTalk(uid, result.data);
     return redirect(`/speaker/talks/${talkId}`);
@@ -34,7 +34,7 @@ export default function NewSpeakerTalkRoute() {
 
       <Form method="post" className="mt-4 border border-gray-200 bg-white sm:rounded-lg">
         <div className="px-4 py-8 sm:px-6">
-          <TalkAbstractForm errors={errors?.fieldErrors} />
+          <TalkAbstractForm errors={errors} />
         </div>
 
         <div className="space-x-4 bg-gray-50 px-4 py-3 text-right sm:px-6">

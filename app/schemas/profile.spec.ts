@@ -24,9 +24,9 @@ describe('Validate PersonalInfoSchema', () => {
 
     const result = await withZod(PersonalInfoSchema).validate(formData);
     expect(result?.error?.fieldErrors).toEqual({
-      name: 'String must contain at least 1 character(s)',
-      email: 'Invalid email',
-      photoURL: 'Invalid url',
+      name: 'Required',
+      email: 'Required',
+      photoURL: 'Required',
     });
   });
 });
