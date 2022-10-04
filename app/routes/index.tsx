@@ -10,12 +10,12 @@ import { SearchEventsForm } from '../components/SearchEventsForm';
 import { Pagination } from '../design-system/Pagination';
 import { EmptyState } from '~/design-system/EmptyState';
 import { FaceFrownIcon } from '@heroicons/react/24/outline';
-import { validatePage } from '~/services/utils/pagination.server';
+import { parsePage } from '~/schemas/pagination';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const url = new URL(request.url);
   const filters = validateFilters(url.searchParams);
-  const page = validatePage(url.searchParams);
+  const page = await parsePage(url.searchParams);
 
   try {
     const results = await searchEvents(filters, page);

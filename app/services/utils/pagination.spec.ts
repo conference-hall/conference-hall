@@ -1,4 +1,4 @@
-import { getPagination, validatePage } from './pagination.server';
+import { getPagination } from './pagination.server';
 
 describe('#getPagination', () => {
   it('computes pagination for the first page', () => {
@@ -39,19 +39,5 @@ describe('#getPagination', () => {
     expect(pagination.currentPage).toBe(10);
     expect(pagination.pageIndex).toBe(9);
     expect(pagination.totalPages).toBe(10);
-  });
-});
-
-describe('#validatePage', () => {
-  it('returns valid page', () => {
-    const params = new URLSearchParams({ page: '1' });
-    const result = validatePage(params);
-    expect(result).toBe(1);
-  });
-
-  it('returns page 1 when page number invalid', () => {
-    const params = new URLSearchParams({ query: 'XXX' });
-    const result = validatePage(params);
-    expect(result).toBe(1);
   });
 });

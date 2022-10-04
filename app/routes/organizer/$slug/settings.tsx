@@ -27,7 +27,7 @@ export const action = async ({ request, params }: ActionArgs) => {
     return json(result.error.fieldErrors);
   } else {
     const updated = await updateOrganization(params.slug!, uid, result.data);
-    if (updated?.fieldErrors) return json(updated);
+    if (updated?.fieldErrors) return json(updated.fieldErrors);
     throw redirect(`/organizer/${updated.slug}/settings`);
   }
 };
