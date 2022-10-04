@@ -5,9 +5,11 @@ import { sessionRequired } from '../../../../services/auth/auth.server';
 import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { getTalk } from '../../../../services/speakers/talks.server';
-import { saveDraftProposalForEvent, validateDraftProposalForm } from '../../../../services/events/submit.server';
+import { saveDraftProposalForEvent } from '../../../../services/events/submit.server';
 import { mapErrorToResponse } from '../../../../services/errors';
 import { TalkAbstractForm } from '../../../../components/TalkAbstractForm';
+import { ProposalCreateSchema } from '~/schemas/proposal';
+import { withZod } from '@remix-validated-form/with-zod';
 
 export const handle = { step: 'proposal' };
 
@@ -32,8 +34,8 @@ export const action: ActionFunction = async ({ request, params }) => {
   const talkId = params.talkId!;
 
   const form = await request.formData();
-  const result = validateDraftProposalForm(form);
-  if (!result.success) return result.error.flatten();
+  const result = await withZod(ProposalCreateSchema).validate(form);
+  if (result.error) return result.error.fieldErrors;
 
   try {
     const savedProposal = await saveDraftProposalForEvent(talkId, eventSlug, uid, result.data);
@@ -56,7 +58,7 @@ export default function SubmissionProposalRoute() {
             This information will be displayed publicly so be careful what you share.
           </Text>
         </div>
-        <TalkAbstractForm initialValues={talk} errors={errors?.fieldErrors} />
+        <TalkAbstractForm initialValues={talk} errors={errors} />
       </div>
 
       <div className="py-5 text-right sm:px-6">

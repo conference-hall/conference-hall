@@ -5,17 +5,14 @@ import { CategoriesForm } from '../../../components/CategoriesForm';
 import type { ActionArgs, ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { sessionRequired } from '../../../services/auth/auth.server';
-import {
-  deleteProposal,
-  getSpeakerProposal,
-  updateProposal,
-  validateProposalForm,
-} from '../../../services/events/proposals.server';
+import { deleteProposal, getSpeakerProposal, updateProposal } from '../../../services/events/proposals.server';
 import { mapErrorToResponse } from '../../../services/errors';
 import { TalkAbstractForm } from '../../../components/TalkAbstractForm';
 import { FormatsForm } from '../../../components/FormatsForm';
 import { useEvent } from '../../$eventSlug';
 import { H2 } from '../../../design-system/Typography';
+import { ProposalUpdateSchema } from '~/schemas/proposal';
+import { withZod } from '@remix-validated-form/with-zod';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const uid = await sessionRequired(request);
@@ -39,7 +36,7 @@ export const action: ActionFunction = async ({ request, params }: ActionArgs) =>
       await deleteProposal(proposalId, uid);
       throw redirect(`/${eventSlug}/proposals`);
     } else {
-      const result = await validateProposalForm(form);
+      const result = await withZod(ProposalUpdateSchema).validate(form);
       if (result.error) return json(result.error.fieldErrors);
       await updateProposal(eventSlug, proposalId, uid, result.data);
       throw redirect(`/${eventSlug}/proposals/${proposalId}`);

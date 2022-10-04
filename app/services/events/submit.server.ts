@@ -1,5 +1,4 @@
 import { db } from '../db';
-import { getArray } from '../../utils/form';
 import { getCfpState } from '../../utils/event';
 import {
   CfpNotOpenError,
@@ -10,7 +9,6 @@ import {
   TalkNotFoundError,
 } from '../errors';
 import type { ProposalCreateData, ProposalSubmissionData } from '~/schemas/proposal';
-import { ProposalSubmissionSchema, ProposalCreateSchema } from '~/schemas/proposal';
 
 export async function fetchTalksToSubmitForEvent(uid: string, slug: string) {
   const event = await db.event.findUnique({
@@ -137,16 +135,6 @@ export async function saveDraftProposalForEvent(
   return { talkId: talk.id };
 }
 
-export function validateDraftProposalForm(form: FormData) {
-  return ProposalCreateSchema.safeParse({
-    title: form.get('title'),
-    abstract: form.get('abstract'),
-    references: form.get('references'),
-    level: form.get('level'),
-    languages: getArray(form, 'languages'),
-  });
-}
-
 export async function getProposalInfo(talkId: string, eventId: string, uid: string) {
   const proposal = await db.proposal.findFirst({
     select: { title: true, formats: true, categories: true, speakers: true },
@@ -204,11 +192,4 @@ export async function submitProposal(talkId: string, eventSlug: string, uid: str
   // TODO Email notification to speakers
   // TODO Email notification to organizers
   // TODO Slack notification
-}
-
-export function validateSubmission(form: FormData) {
-  const result = ProposalSubmissionSchema.safeParse({
-    message: form.get('message'),
-  });
-  return result.success ? result.data : {};
 }

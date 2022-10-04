@@ -1,6 +1,4 @@
-import { withZod } from '@remix-validated-form/with-zod';
 import type { ProposalUpdateData } from '~/schemas/proposal';
-import { ProposalUpdateSchema } from '~/schemas/proposal';
 import { db } from '../../services/db';
 import { getCfpState } from '../../utils/event';
 import { jsonToArray } from '../../utils/prisma';
@@ -127,10 +125,6 @@ export async function updateProposal(slug: string, proposalId: string, uid: stri
       data: talk,
     });
   }
-}
-
-export function validateProposalForm(form: FormData) {
-  return withZod(ProposalUpdateSchema).validate(form);
 }
 
 /**

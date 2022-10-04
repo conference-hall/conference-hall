@@ -8,10 +8,12 @@ import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { sessionRequired } from '../../../../services/auth/auth.server';
 import { getEvent } from '../../../../services/events/event.server';
-import { getProposalInfo, submitProposal, validateSubmission } from '../../../../services/events/submit.server';
+import { getProposalInfo, submitProposal } from '../../../../services/events/submit.server';
 import { mapErrorToResponse } from '../../../../services/errors';
 import { TextArea } from '../../../../design-system/forms/TextArea';
 import { AvatarGroup } from '~/design-system/Avatar';
+import { withZod } from '@remix-validated-form/with-zod';
+import { ProposalSubmissionSchema } from '~/schemas/proposal';
 
 export const handle = { step: 'submission' };
 
@@ -33,9 +35,9 @@ export const action: ActionFunction = async ({ request, params }) => {
   const eventSlug = params.eventSlug!;
   const talkId = params.talkId!;
   const form = await request.formData();
-  const data = validateSubmission(form);
+  const result = await withZod(ProposalSubmissionSchema).validate(form);
   try {
-    await submitProposal(talkId, eventSlug, uid, data);
+    await submitProposal(talkId, eventSlug, uid, result?.data ?? {});
     return redirect(`/${eventSlug}/proposals`);
   } catch (err) {
     throw mapErrorToResponse(err);

@@ -1,12 +1,11 @@
+import { z } from 'zod';
 import type { Prisma } from '@prisma/client';
 import { OrganizationRole } from '@prisma/client';
 import { MessageChannel } from '@prisma/client';
 import { unstable_parseMultipartFormData } from '@remix-run/node';
-import { z } from 'zod';
 import { formData, text } from 'zod-form-data';
 import type { EventCreateData, EventTrackSaveData } from '~/schemas/event';
 import type { ProposalRatingData, ProposalsFilters, ProposalUpdateData } from '~/schemas/proposal';
-import { ProposalUpdateSchema, ProposalRatingDataSchema, ProposalsFiltersSchema } from '~/schemas/proposal';
 import { getCfpState } from '~/utils/event';
 import { jsonToArray } from '~/utils/prisma';
 import { db } from '../db';
@@ -29,7 +28,7 @@ import {
   EventTracksSettingsSchema,
 } from '~/schemas/event';
 import type { Pagination } from '~/schemas/pagination';
-import { withZod } from '@remix-validated-form/with-zod';
+
 /**
  * Check the organizer role to an event.
  * Returns the user role or throws an error when user not member or does not have the correct role.
@@ -191,11 +190,6 @@ function proposalOrderBy(filters: ProposalsFilters): Prisma.ProposalOrderByWithR
   return [{ createdAt: 'desc' }, { title: 'asc' }];
 }
 
-export function validateFilters(params: URLSearchParams) {
-  const result = formData(ProposalsFiltersSchema).safeParse(params);
-  return result.success ? result.data : {};
-}
-
 /**
  * Retrieve proposal informations
  * @param orgaSlug organizer slug
@@ -325,11 +319,6 @@ export async function rateProposal(
   });
 }
 
-export function validateRating(form: FormData) {
-  const result = formData(ProposalRatingDataSchema).safeParse(form);
-  return result.success ? result.data : null;
-}
-
 /**
  * Add an organizer comment to a proposal
  * @param orgaSlug organization slug
@@ -399,10 +388,6 @@ export async function updateProposal(
       categories: { set: [], connect: categories?.map((id) => ({ id })) },
     },
   });
-}
-
-export function validateProposalForm(form: FormData) {
-  return withZod(ProposalUpdateSchema).validate(form);
 }
 
 /**

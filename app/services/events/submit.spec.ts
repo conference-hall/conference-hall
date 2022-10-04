@@ -21,8 +21,6 @@ import {
   getProposalInfo,
   saveDraftProposalForEvent,
   submitProposal,
-  validateDraftProposalForm,
-  validateSubmission,
 } from './submit.server';
 
 describe('#fetchTalksToSubmitForEvent', () => {
@@ -245,41 +243,6 @@ describe('#saveDraftProposalForEvent', () => {
   });
 });
 
-describe('#validateDraftProposalForm', () => {
-  it('validates proposal form data', () => {
-    const formData = new FormData();
-    formData.append('title', 'Hello world');
-    formData.append('abstract', 'Welcome to the world!');
-    formData.append('references', 'This is my world.');
-    formData.append('languages[0]', 'en');
-    formData.append('languages[1]', 'fr');
-    formData.append('level', 'ADVANCED');
-
-    const result = validateDraftProposalForm(formData);
-    expect(result.success && result.data).toEqual({
-      title: 'Hello world',
-      abstract: 'Welcome to the world!',
-      references: 'This is my world.',
-      languages: ['en', 'fr'],
-      level: TalkLevel.ADVANCED,
-    });
-  });
-
-  it('validates mandatory and format proposal form data', () => {
-    const formData = new FormData();
-    formData.append('title', '');
-    formData.append('abstract', '');
-    formData.append('level', 'BAD_VALUE');
-
-    const result = validateDraftProposalForm(formData);
-    expect(!result.success && result.error.errors.map((e) => e.code)).toEqual([
-      'too_small',
-      'too_small',
-      'invalid_enum_value',
-    ]);
-  });
-});
-
 describe('#getProposalInfo', () => {
   beforeEach(async () => {
     await resetDB();
@@ -399,15 +362,5 @@ describe('#submitProposal', () => {
     const data = { message: 'User message' };
 
     await expect(submitProposal(talk.id, 'XXX', speaker.id, data)).rejects.toThrowError(EventNotFoundError);
-  });
-});
-
-describe('#validateSubmission', () => {
-  it('validates proposal form data', () => {
-    const formData = new FormData();
-    formData.append('message', 'Hello world');
-
-    const result = validateSubmission(formData);
-    expect(result).toEqual({ message: 'Hello world' });
   });
 });
