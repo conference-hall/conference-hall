@@ -7,7 +7,7 @@ import { talkFactory } from '../../../tests/factories/talks';
 import { userFactory } from '../../../tests/factories/users';
 import { db } from '../db';
 import { ProposalNotFoundError } from '../errors';
-import { getProposalTracks, saveTracks, validateTracksForm } from './tracks.server';
+import { getProposalTracks, saveTracks } from './tracks.server';
 
 describe('#getProposalTracks', () => {
   beforeEach(async () => {
@@ -120,21 +120,5 @@ describe('#saveTracks', () => {
     await expect(saveTracks('XXX', event.id, speaker.id, { formats: [], categories: [] })).rejects.toThrowError(
       ProposalNotFoundError
     );
-  });
-});
-
-describe('#validateTracksForm', () => {
-  it('validates tracks form inputs', async () => {
-    const formData = new FormData();
-    formData.append('formats', 'format 1');
-    formData.append('formats', 'format 2');
-    formData.append('categories', 'category 1');
-    formData.append('categories', 'category 2');
-
-    const result = validateTracksForm(formData);
-    expect(result.success && result.data).toEqual({
-      formats: ['format 1', 'format 2'],
-      categories: ['category 1', 'category 2'],
-    });
   });
 });

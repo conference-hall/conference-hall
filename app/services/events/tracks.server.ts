@@ -1,5 +1,4 @@
 import type { TrackUpdateData } from '~/schemas/tracks';
-import { TracksUpdateSchema } from '~/schemas/tracks';
 import { db } from '../db';
 import { ProposalNotFoundError } from '../errors';
 
@@ -32,12 +31,5 @@ export async function saveTracks(talkId: string, eventId: string, uid: string, d
         connect: data.categories?.map((c) => ({ id: c })),
       },
     },
-  });
-}
-
-export function validateTracksForm(form: FormData) {
-  return TracksUpdateSchema.safeParse({
-    formats: form.getAll('formats'),
-    categories: form.getAll('categories'),
   });
 }

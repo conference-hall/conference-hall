@@ -6,9 +6,11 @@ import { CategoriesForm } from '~/components/CategoriesForm';
 import { sessionRequired } from '../../../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../../../services/errors';
 import { getEvent } from '../../../../services/events/event.server';
-import { getProposalTracks, saveTracks, validateTracksForm } from '../../../../services/events/tracks.server';
+import { getProposalTracks, saveTracks } from '../../../../services/events/tracks.server';
 import { useSubmissionStep } from '../../../../components/useSubmissionStep';
 import { FormatsForm } from '../../../../components/FormatsForm';
+import { withZod } from '@remix-validated-form/with-zod';
+import { TracksUpdateSchema } from '~/schemas/tracks';
 
 export const handle = { step: 'tracks' };
 
@@ -34,8 +36,9 @@ export const action: ActionFunction = async ({ request, params }) => {
   const eventSlug = params.eventSlug!;
   const talkId = params.talkId!;
   const form = await request.formData();
-  const result = validateTracksForm(form);
-  if (!result.success) return result.error.flatten();
+
+  const result = await withZod(TracksUpdateSchema).validate(form);
+  if (result.error) return result.error?.fieldErrors;
 
   try {
     const event = await getEvent(eventSlug);
