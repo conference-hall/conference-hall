@@ -1,6 +1,6 @@
 import { resetDB, disconnectDB } from '../../../tests/db-helpers';
 import { eventFactory } from '../../../tests/factories/events';
-import { searchEvents, validateFilters } from './search.server';
+import { searchEvents } from './search.server';
 
 describe('#searchEvents', () => {
   beforeEach(async () => {
@@ -210,40 +210,5 @@ describe('#searchEvents', () => {
     const result3 = await searchEvents({}, 10);
     expect(result3.results.length).toBe(12);
     expect(result3.pagination.current).toBe(3);
-  });
-});
-
-describe('#validateFilters', () => {
-  it('returns valid filters', () => {
-    const params = new URLSearchParams({
-      query: 'foo',
-      type: 'all',
-      cfp: 'incoming',
-    });
-    const result = validateFilters(params);
-    expect(result).toEqual({
-      query: 'foo',
-      type: 'all',
-      cfp: 'incoming',
-      talkId: null,
-    });
-  });
-
-  it('trims "query" filter', () => {
-    const params = new URLSearchParams({ query: '  foo  ' });
-    const result = validateFilters(params);
-    expect(result.query).toBe('foo');
-  });
-
-  it('returns undefined when incorrect "type" filter', () => {
-    const params = new URLSearchParams({ type: 'XXX' });
-    const result = validateFilters(params);
-    expect(result.type).toBe(undefined);
-  });
-
-  it('returns undefined when incorrect "cfp" filter', () => {
-    const params = new URLSearchParams({ cfp: 'XXX' });
-    const result = validateFilters(params);
-    expect(result.cfp).toBe(undefined);
   });
 });

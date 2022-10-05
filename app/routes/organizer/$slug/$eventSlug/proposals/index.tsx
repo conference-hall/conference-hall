@@ -1,25 +1,27 @@
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { Container } from '~/design-system/Container';
-import { sessionRequired } from '~/services/auth/auth.server';
 import { useLoaderData, useLocation, useOutletContext } from '@remix-run/react';
+import { searchProposals } from '~/services/organizers/event.server';
+import { mapErrorToResponse } from '~/services/errors';
+import { sessionRequired } from '~/services/auth/auth.server';
 import { ProposalsList } from '~/components/proposals-list/ProposalsList';
 import ProposalsFilters from '~/components/proposals-list/ProposalsFilters';
-import { Pagination } from '~/design-system/Pagination';
-import { searchProposals, validateFilters } from '~/services/organizers/event.server';
-import { validatePage } from '~/services/utils/pagination.server';
-import { mapErrorToResponse } from '~/services/errors';
-import type { OrganizerEventContext } from '../../$eventSlug';
 import { NoProposals } from '~/components/proposals-list/NoProposals';
+import { Container } from '~/design-system/Container';
+import { Pagination } from '~/design-system/Pagination';
+import { parsePage } from '~/schemas/pagination';
+import type { OrganizerEventContext } from '../../$eventSlug';
+import { withZod } from '@remix-validated-form/with-zod';
+import { ProposalsFiltersSchema } from '~/schemas/proposal';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const uid = await sessionRequired(request);
   const url = new URL(request.url);
-  const filters = validateFilters(url.searchParams);
-  const page = validatePage(url.searchParams);
+  const filters = await withZod(ProposalsFiltersSchema).validate(url.searchParams);
+  const page = await parsePage(url.searchParams);
 
   try {
-    const results = await searchProposals(params.slug!, params.eventSlug!, uid, filters, page);
+    const results = await searchProposals(params.slug!, params.eventSlug!, uid, filters.data ?? {}, page);
     return json(results);
   } catch (err) {
     throw mapErrorToResponse(err);

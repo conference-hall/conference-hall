@@ -14,7 +14,6 @@ import { getProposalReview } from './event.server';
 import { EventNotFoundError, ForbiddenOperationError } from '../errors';
 import { db } from '../db';
 import { messageFactory } from 'tests/factories/messages';
-import type { Filters } from './event.server';
 import {
   getEvent,
   searchProposals,
@@ -27,6 +26,7 @@ import {
   updateEvent,
   updateProposal,
 } from './event.server';
+import type { ProposalsFilters } from '~/schemas/proposal';
 
 describe('#checkOrganizerEventAccess', () => {
   beforeEach(async () => {
@@ -244,7 +244,7 @@ describe('#searchProposals', () => {
     });
 
     it('filters proposals by status', async () => {
-      const filters: Filters = { status: 'ACCEPTED' };
+      const filters: ProposalsFilters = { status: 'ACCEPTED' };
       const proposals = await searchProposals(organization.slug, event.slug, owner.id, filters);
       expect(proposals.results.length).toBe(1);
       expect(proposals.results[0].id).toBe(proposal2.id);
@@ -252,7 +252,7 @@ describe('#searchProposals', () => {
 
     it('filters proposals by user rated only', async () => {
       await ratingFactory({ user: owner, proposal: proposal1 });
-      const filters: Filters = { ratings: 'rated' };
+      const filters: ProposalsFilters = { ratings: 'rated' };
       const proposals = await searchProposals(organization.slug, event.slug, owner.id, filters);
       expect(proposals.results.length).toBe(1);
       expect(proposals.results[0].id).toBe(proposal1.id);
@@ -260,7 +260,7 @@ describe('#searchProposals', () => {
 
     it('filters proposals by user not rated only', async () => {
       await ratingFactory({ user: owner, proposal: proposal1 });
-      const filters: Filters = { ratings: 'not-rated' };
+      const filters: ProposalsFilters = { ratings: 'not-rated' };
       const proposals = await searchProposals(organization.slug, event.slug, owner.id, filters);
       expect(proposals.results.length).toBe(2);
       expect(proposals.results[0].id).toBe(proposal3.id);
@@ -276,7 +276,7 @@ describe('#searchProposals', () => {
     });
 
     it('sorts by oldest', async () => {
-      const filters: Filters = { sort: 'oldest' };
+      const filters: ProposalsFilters = { sort: 'oldest' };
       const proposals = await searchProposals(organization.slug, event.slug, owner.id, filters);
       expect(proposals.results.length).toBe(3);
       expect(proposals.results[0].id).toBe(proposal1.id);
@@ -598,6 +598,7 @@ describe('#updateProposal', () => {
       abstract: 'Updated',
       level: 'ADVANCED',
       references: 'Updated',
+      languages: [],
       formats: [format.id],
       categories: [category.id],
     });
@@ -621,6 +622,7 @@ describe('#updateProposal', () => {
         abstract: 'Updated',
         level: null,
         references: null,
+        languages: [],
       })
     ).rejects.toThrowError(ForbiddenOperationError);
   });
@@ -634,6 +636,7 @@ describe('#updateProposal', () => {
         abstract: 'Updated',
         level: null,
         references: null,
+        languages: [],
       })
     ).rejects.toThrowError(ForbiddenOperationError);
   });
@@ -680,7 +683,7 @@ describe('#createEvent', () => {
       visibility: 'PUBLIC',
     });
 
-    expect(created?.fieldErrors?.slug).toEqual(['Slug already exists, please try another one.']);
+    expect(created?.error?.fieldErrors?.slug).toEqual('Slug already exists, please try another one.');
   });
 
   it('throws an error if user is not owner', async () => {
@@ -757,7 +760,7 @@ describe('#updateEvent', () => {
   it('returns an error message when slug already exists', async () => {
     await eventFactory({ organization, attributes: { slug: 'hello-world' } });
     const created = await updateEvent(organization.slug, event.slug, owner.id, { slug: 'hello-world' });
-    expect(created?.fieldErrors?.slug).toEqual(['Slug already exists, please try another one.']);
+    expect(created?.error?.fieldErrors?.slug).toEqual('Slug already exists, please try another one.');
   });
 
   it('throws an error if user is not owner', async () => {

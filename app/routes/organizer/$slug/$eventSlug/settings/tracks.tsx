@@ -1,5 +1,6 @@
 import type { ChangeEvent } from 'react';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import { sessionRequired } from '~/services/auth/auth.server';
 import { H2, Text } from '~/design-system/Typography';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
@@ -13,10 +14,10 @@ import {
   saveCategory,
   saveFormat,
   updateEvent,
-  validateEventTrackSettings,
-  validateTrackData,
 } from '~/services/organizers/event.server';
 import { EditTrackButton, NewTrackButton } from '~/components/event-forms/SaveTrackForm';
+import { withZod } from '@remix-validated-form/with-zod';
+import { EventTrackSaveSchema, EventTracksSettingsSchema } from '~/schemas/event';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);
@@ -42,20 +43,20 @@ export const action = async ({ request, params }: ActionArgs) => {
       break;
     }
     case 'save-formats': {
-      const results = validateTrackData(formData);
-      if (!results.success) return results.error.flatten();
+      const results = await withZod(EventTrackSaveSchema).validate(formData);
+      if (results.error) return json(results.error.fieldErrors);
       await saveFormat(slug!, eventSlug!, uid, results.data);
       break;
     }
     case 'save-categories': {
-      const results = validateTrackData(formData);
-      if (!results.success) return results.error.flatten();
+      const results = await withZod(EventTrackSaveSchema).validate(formData);
+      if (results.error) return json(results.error.fieldErrors);
       await saveCategory(slug!, eventSlug!, uid, results.data);
       break;
     }
     case 'update-track-settings': {
-      const results = validateEventTrackSettings(formData);
-      if (!results.success) return results.error.flatten();
+      const results = await withZod(EventTracksSettingsSchema).validate(formData);
+      if (results.error) return json(results.error.fieldErrors);
       await updateEvent(slug!, eventSlug!, uid, results.data);
       break;
     }

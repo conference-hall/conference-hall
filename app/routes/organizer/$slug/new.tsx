@@ -10,8 +10,10 @@ import { MegaphoneIcon } from '@heroicons/react/20/solid';
 import { UserGroupIcon } from '@heroicons/react/24/outline';
 import { EventInfoForm } from '~/components/event-forms/EventInfoForm';
 import { CardLink } from '~/design-system/Card';
-import { createEvent, validateEventCreateForm } from '~/services/organizers/event.server';
+import { createEvent } from '~/services/organizers/event.server';
 import { getUserRole } from '~/services/organizers/organizations.server';
+import { withZod } from '@remix-validated-form/with-zod';
+import { EventCreateSchema } from '~/schemas/event';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const uid = await sessionRequired(request);
@@ -24,22 +26,27 @@ export const action = async ({ request, params }: ActionArgs) => {
   const uid = await sessionRequired(request);
   const { slug } = params;
   const form = await request.formData();
-  const result = validateEventCreateForm(form);
-  if (!result.success) {
-    return result.error.flatten();
+  const result = await withZod(EventCreateSchema).validate(form);
+  if (result.error) {
+    return json(result.error.fieldErrors);
   } else {
     const updated = await createEvent(slug!, uid, result.data);
     if (updated.slug) throw redirect(`/organizer/${slug}/${updated.slug}/settings`);
-    return json(updated);
+    return json(updated.error?.fieldErrors);
   }
 };
 
 export default function NewEventRoute() {
   const [searchParams] = useSearchParams();
+  const errors = useActionData<typeof action>();
   const type = searchParams.get('type');
   return (
     <Container className="max-w-5xl">
-      {type === 'CONFERENCE' || type === 'MEETUP' ? <CreateEventForm type={type} /> : <SelectEventType />}
+      {type === 'CONFERENCE' || type === 'MEETUP' ? (
+        <CreateEventForm type={type} errors={errors} />
+      ) : (
+        <SelectEventType />
+      )}
     </Container>
   );
 }
@@ -81,8 +88,7 @@ function SelectEventType() {
   );
 }
 
-function CreateEventForm({ type }: { type: string }) {
-  const result = useActionData();
+function CreateEventForm({ type, errors }: { type: string; errors?: Record<string, string> }) {
   return (
     <>
       <div className="mt-12 mb-12 space-y-6 text-center">
@@ -95,7 +101,7 @@ function CreateEventForm({ type }: { type: string }) {
         method="post"
         className="space-y-8 border border-gray-200 bg-white p-8 shadow sm:overflow-hidden sm:rounded-md"
       >
-        <EventInfoForm errors={result?.fieldErrors} />
+        <EventInfoForm errors={errors} />
         <input name="type" type="hidden" value={type} />
         <div className="flex justify-end gap-2">
           <ButtonLink to="." variant="secondary">

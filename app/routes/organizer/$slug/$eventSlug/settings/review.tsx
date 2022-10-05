@@ -6,7 +6,9 @@ import { Checkbox } from '~/design-system/forms/Checkboxes';
 import { Form, useOutletContext, useSubmit } from '@remix-run/react';
 import { Button } from '~/design-system/Buttons';
 import type { OrganizerEventContext } from '../../$eventSlug';
-import { updateEvent, validateReviewSettings } from '~/services/organizers/event.server';
+import { updateEvent } from '~/services/organizers/event.server';
+import { withZod } from '@remix-validated-form/with-zod';
+import { EventReviewSettingsSchema } from '~/schemas/event';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);
@@ -25,8 +27,8 @@ export const action = async ({ request, params }: LoaderArgs) => {
       break;
     }
     case 'save-review-settings': {
-      const result = validateReviewSettings(form);
-      if (result) await updateEvent(slug!, eventSlug!, uid, result);
+      const result = await withZod(EventReviewSettingsSchema).validate(form);
+      if (!result.error) await updateEvent(slug!, eventSlug!, uid, result.data);
       break;
     }
   }

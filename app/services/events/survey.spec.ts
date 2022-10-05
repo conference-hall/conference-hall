@@ -3,7 +3,7 @@ import { eventFactory } from '../../../tests/factories/events';
 import { surveyFactory } from '../../../tests/factories/surveys';
 import { userFactory } from '../../../tests/factories/users';
 import { EventNotFoundError, SurveyNotEnabledError } from '../errors';
-import { getSurveyAnswers, getSurveyQuestions, saveSurvey, validateSurveyForm } from './survey.server';
+import { getSurveyAnswers, getSurveyQuestions, saveSurvey } from './survey.server';
 
 describe('#getSurveyQuestions', () => {
   beforeEach(async () => {
@@ -169,29 +169,5 @@ describe('#saveSurvey', () => {
         info: 'World',
       })
     ).rejects.toThrowError(EventNotFoundError);
-  });
-});
-
-describe('#validateSurveyForm', () => {
-  it('validates survey form inputs', async () => {
-    const formData = new FormData();
-    formData.append('gender', 'male');
-    formData.append('tshirt', 'XL');
-    formData.append('accomodation', 'true');
-    formData.append('transports', 'taxi');
-    formData.append('transports', 'train');
-    formData.append('diet', 'vegan');
-    formData.append('diet', 'vegetarian');
-    formData.append('info', 'Hello');
-
-    const result = validateSurveyForm(formData);
-    expect(result.success && result.data).toEqual({
-      gender: 'male',
-      tshirt: 'XL',
-      accomodation: 'true',
-      transports: ['taxi', 'train'],
-      diet: ['vegan', 'vegetarian'],
-      info: 'Hello',
-    });
   });
 });

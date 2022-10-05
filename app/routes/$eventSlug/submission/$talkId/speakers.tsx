@@ -1,4 +1,4 @@
-import type { ActionFunction, LoaderFunction } from '@remix-run/node';
+import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import { Button, ButtonLink } from '~/design-system/Buttons';
@@ -12,62 +12,47 @@ import { mapErrorToResponse } from '../../../../services/errors';
 import { getEvent } from '../../../../services/events/event.server';
 import { removeCoSpeakerFromTalkAndEvent } from '../../../../services/events/proposals.server';
 import { getProposalSpeakers } from '../../../../services/events/speakers.server';
-import { updateSettings, validateProfileData } from '../../../../services/speakers/profile.server';
+import { updateSettings } from '../../../../services/speakers/profile.server';
 import { getUser } from '../../../../services/auth/user.server';
-import type { ValidationErrors } from '../../../../utils/validation-errors';
-
-type SubmissionSpeakers = {
-  proposalId: string;
-  invitationLink?: string;
-  currentSpeaker: {
-    bio: string | null;
-  };
-  speakers: Array<{
-    id: string;
-    name: string | null;
-    photoURL: string | null;
-    isOwner: boolean;
-  }>;
-};
+import { DetailsSchema } from '~/schemas/profile';
+import { withZod } from '@remix-validated-form/with-zod';
 
 export const handle = { step: 'speakers' };
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   const uid = await sessionRequired(request);
   const user = await getUser(uid);
   const eventSlug = params.eventSlug!;
   const talkId = params.talkId!;
   try {
     const proposal = await getProposalSpeakers(talkId, eventSlug, user.id);
-    return json<SubmissionSpeakers>({
+    return json({
       proposalId: proposal.id,
       invitationLink: proposal.invitationLink,
-      currentSpeaker: { bio: user.bio },
+      currentSpeaker: { bio: user.bio, references: user.references },
       speakers: proposal.speakers.filter((speaker) => speaker.id !== user.id),
     });
   } catch (err) {
-    mapErrorToResponse(err);
+    throw mapErrorToResponse(err);
   }
-  return null;
 };
 
-export const action: ActionFunction = async ({ request, params }) => {
+export const action = async ({ request, params }: ActionArgs) => {
   const uid = await sessionRequired(request);
   const talkId = params.talkId!;
   const eventSlug = params.eventSlug!;
   const form = await request.formData();
-  const result = validateProfileData(form, 'DETAILS');
 
-  if (!result.success) {
-    return result.error.flatten();
-  }
   try {
     const action = form.get('_action');
     if (action === 'remove-speaker') {
       const speakerId = form.get('_speakerId')?.toString() as string;
       await removeCoSpeakerFromTalkAndEvent(uid, talkId, eventSlug, speakerId);
-      return null;
+      return json(null);
     } else {
+      const result = await withZod(DetailsSchema).validate(form);
+      if (result.error) return json(result.error.fieldErrors);
+
       await updateSettings(uid, result.data);
       const event = await getEvent(eventSlug);
       if (event.hasTracks) {
@@ -79,15 +64,14 @@ export const action: ActionFunction = async ({ request, params }) => {
       }
     }
   } catch (err) {
-    mapErrorToResponse(err);
+    throw mapErrorToResponse(err);
   }
 };
 
 export default function SubmissionSpeakerRoute() {
-  const data = useLoaderData<SubmissionSpeakers>();
-  const errors = useActionData<ValidationErrors>();
+  const data = useLoaderData<typeof loader>();
+  const errors = useActionData<typeof action>();
   const { previousPath } = useSubmissionStep();
-  const fieldErrors = errors?.fieldErrors;
 
   return (
     <>
@@ -103,13 +87,14 @@ export default function SubmissionSpeakerRoute() {
             name="bio"
             label="Biography"
             rows={5}
-            error={fieldErrors?.bio?.[0]}
+            error={errors?.bio}
             defaultValue={data.currentSpeaker.bio || ''}
             className="mt-6"
           />
+          <input type="hidden" name="references" value={data.currentSpeaker.references || ''} />
           <Text className="mt-2">
             You can give more information about you from{' '}
-            <ExternalLink href="/speaker/settings">the settings page.</ExternalLink>
+            <ExternalLink href="/speaker/settings">the profile page.</ExternalLink>
           </Text>
         </Form>
         <div className="mt-12">

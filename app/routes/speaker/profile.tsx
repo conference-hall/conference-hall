@@ -1,4 +1,4 @@
-import type { ActionFunction, LoaderArgs } from '@remix-run/node';
+import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData, useLoaderData, useSubmit } from '@remix-run/react';
 import { CreditCardIcon, KeyIcon, UserCircleIcon } from '@heroicons/react/20/solid';
@@ -7,13 +7,14 @@ import { Input } from '../../design-system/forms/Input';
 import { MarkdownTextArea } from '../../design-system/forms/MarkdownTextArea';
 import { Button } from '../../design-system/Buttons';
 import { H2, Text } from '../../design-system/Typography';
-import type { ValidationErrors } from '../../utils/validation-errors';
 import { useCallback } from 'react';
 import { getAuth } from 'firebase/auth';
-import { getProfile, updateSettings, validateProfileData } from '../../services/speakers/profile.server';
+import { getProfile, updateSettings } from '../../services/speakers/profile.server';
 import { mapErrorToResponse } from '../../services/errors';
 import { sessionRequired } from '../../services/auth/auth.server';
 import { NavMenu } from '~/design-system/NavMenu';
+import { withZod } from '@remix-validated-form/with-zod';
+import { AdditionalInfoSchema, DetailsSchema, PersonalInfoSchema } from '~/schemas/profile';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const uid = await sessionRequired(request);
@@ -25,26 +26,30 @@ export const loader = async ({ request }: LoaderArgs) => {
   }
 };
 
-export const action: ActionFunction = async ({ request }) => {
+export const action = async ({ request }: ActionArgs) => {
   const uid = await sessionRequired(request);
   const form = await request.formData();
   const type = form.get('_type') as string;
-  const result = validateProfileData(form, type);
-  if (!result.success) {
-    return result.error.flatten();
-  }
   try {
+    let result;
+    if (type === 'INFO') {
+      result = await withZod(PersonalInfoSchema).validate(form);
+    } else if (type === 'DETAILS') {
+      result = await withZod(DetailsSchema).validate(form);
+    } else {
+      result = await withZod(AdditionalInfoSchema).validate(form);
+    }
+    if (result.error) return json(result.error.fieldErrors);
     await updateSettings(uid, result.data);
-    return redirect('/speaker/settings');
+    return redirect('/speaker/profile');
   } catch (err) {
-    mapErrorToResponse(err);
+    throw mapErrorToResponse(err);
   }
 };
 
 export default function ProfileRoute() {
   const user = useLoaderData<typeof loader>();
-  const errors = useActionData<ValidationErrors>();
-  const fieldErrors = errors?.fieldErrors;
+  const errors = useActionData<typeof action>();
   const submit = useSubmit();
 
   const resetCurrentUser = useCallback(() => {
@@ -91,21 +96,21 @@ export default function ProfileRoute() {
                     label="Full name"
                     defaultValue={user.name || ''}
                     key={user.name}
-                    error={fieldErrors?.name?.[0]}
+                    error={errors?.name}
                   />
                   <Input
                     name="email"
                     label="Email address"
                     defaultValue={user.email || ''}
                     key={user.email}
-                    error={fieldErrors?.email?.[0]}
+                    error={errors?.email}
                   />
                   <Input
                     name="photoURL"
                     label="Avatar picture URL"
                     defaultValue={user.photoURL || ''}
                     key={user.photoURL}
-                    error={fieldErrors?.photoURL?.[0]}
+                    error={errors?.photoURL}
                   />
                 </div>
               </div>
@@ -137,7 +142,7 @@ export default function ProfileRoute() {
                     label="Biography"
                     description="Brief description for your profile."
                     rows={5}
-                    error={fieldErrors?.bio?.[0]}
+                    error={errors?.bio}
                     defaultValue={user.bio || ''}
                   />
                   <MarkdownTextArea
@@ -145,7 +150,7 @@ export default function ProfileRoute() {
                     label="Speaker references"
                     description="Give some information about your speaker experience: your already-given talks, conferences or meetups as speaker, video links..."
                     rows={5}
-                    error={fieldErrors?.references?.[0]}
+                    error={errors?.references}
                     defaultValue={user.references || ''}
                   />
                 </div>
@@ -169,29 +174,24 @@ export default function ProfileRoute() {
 
                 <div className="grid grid-cols-1 gap-6">
                   <input type="hidden" name="_type" value="ADDITIONAL" />
-                  <Input
-                    name="company"
-                    label="Company"
-                    defaultValue={user.company || ''}
-                    error={fieldErrors?.company?.[0]}
-                  />
+                  <Input name="company" label="Company" defaultValue={user.company || ''} error={errors?.company} />
                   <Input
                     name="address"
                     label="Location (city, country)"
                     defaultValue={user.address || ''}
-                    error={fieldErrors?.address?.[0]}
+                    error={errors?.address}
                   />
                   <Input
                     name="twitter"
                     label="Twitter username"
                     defaultValue={user.twitter || ''}
-                    error={fieldErrors?.twitter?.[0]}
+                    error={errors?.twitter}
                   />
                   <Input
                     name="github"
                     label="GitHub username"
                     defaultValue={user.github || ''}
-                    error={fieldErrors?.github?.[0]}
+                    error={errors?.github}
                   />
                 </div>
               </div>

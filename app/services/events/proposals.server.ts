@@ -1,7 +1,6 @@
-import { z } from 'zod';
+import type { ProposalUpdateData } from '~/schemas/proposal';
 import { db } from '../../services/db';
 import { getCfpState } from '../../utils/event';
-import { getArray } from '../../utils/form';
 import { jsonToArray } from '../../utils/prisma';
 import { CfpNotOpenError, EventNotFoundError, InvitationNotFoundError, ProposalNotFoundError } from '../errors';
 import { buildInvitationLink } from '../invitations/invitations.server';
@@ -93,7 +92,7 @@ export async function deleteProposal(proposalId: string, uid: string) {
   });
 }
 
-export async function updateProposal(slug: string, proposalId: string, uid: string, data: ProposalData) {
+export async function updateProposal(slug: string, proposalId: string, uid: string, data: ProposalUpdateData) {
   const event = await db.event.findUnique({
     select: { id: true, type: true, cfpStart: true, cfpEnd: true },
     where: { slug },
@@ -115,8 +114,8 @@ export async function updateProposal(slug: string, proposalId: string, uid: stri
     data: {
       ...talk,
       speakers: { set: [], connect: [{ id: uid }] },
-      formats: { set: [], connect: formats.map((id) => ({ id })) },
-      categories: { set: [], connect: categories.map((id) => ({ id })) },
+      formats: { set: [], connect: formats?.map((id) => ({ id })) },
+      categories: { set: [], connect: categories?.map((id) => ({ id })) },
     },
   });
 
@@ -126,30 +125,6 @@ export async function updateProposal(slug: string, proposalId: string, uid: stri
       data: talk,
     });
   }
-}
-
-type ProposalData = z.infer<typeof ProposalSchema>;
-
-const ProposalSchema = z.object({
-  title: z.string().trim().min(1),
-  abstract: z.string().trim().min(1),
-  references: z.string().trim().nullable(),
-  level: z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']).nullable(),
-  languages: z.array(z.string().trim()),
-  formats: z.array(z.string().trim()),
-  categories: z.array(z.string().trim()),
-});
-
-export function validateProposalForm(form: FormData) {
-  return ProposalSchema.safeParse({
-    title: form.get('title'),
-    abstract: form.get('abstract'),
-    references: form.get('references'),
-    level: form.get('level'),
-    formats: form.getAll('formats'),
-    categories: form.getAll('categories'),
-    languages: getArray(form, 'languages'),
-  });
 }
 
 /**

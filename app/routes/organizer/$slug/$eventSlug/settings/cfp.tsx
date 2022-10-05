@@ -1,4 +1,4 @@
-import type { LoaderArgs } from '@remix-run/node';
+import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { sessionRequired } from '~/services/auth/auth.server';
 import { H2, Text } from '~/design-system/Typography';
@@ -7,29 +7,31 @@ import { Button } from '~/design-system/Buttons';
 import { Input } from '~/design-system/forms/Input';
 import type { OrganizerEventContext } from '../../$eventSlug';
 import { DateRangeInput } from '~/design-system/forms/DateRangeInput';
-import { updateEvent, validateEventCfpSettings } from '~/services/organizers/event.server';
+import { updateEvent } from '~/services/organizers/event.server';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
+import { withZod } from '@remix-validated-form/with-zod';
+import { EventCfpSettingsSchema } from '~/schemas/event';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);
   return null;
 };
 
-export const action = async ({ request, params }: LoaderArgs) => {
+export const action = async ({ request, params }: ActionArgs) => {
   const uid = await sessionRequired(request);
   const { slug, eventSlug } = params;
   const form = await request.formData();
-  const result = validateEventCfpSettings(form);
-  if (!result.success) {
-    return json(result.error.flatten());
+  const result = await withZod(EventCfpSettingsSchema).validate(form);
+  if (result.error) {
+    return json(result.error.fieldErrors);
   }
   await updateEvent(slug!, eventSlug!, uid, result.data);
-  return null;
+  return json(null);
 };
 
 export default function EventCfpSettingsRoute() {
   const { event } = useOutletContext<OrganizerEventContext>();
-  const result = useActionData();
+  const errors = useActionData<typeof action>();
   return (
     <>
       <section>
@@ -45,7 +47,7 @@ export default function EventCfpSettingsRoute() {
               <DateRangeInput
                 start={{ name: 'cfpStart', label: 'Opening date', value: event.cfpStart }}
                 end={{ name: 'cfpEnd', label: 'Closing date', value: event.cfpEnd }}
-                error={result?.fieldErrors?.cfpStart?.[0]}
+                error={errors?.cfpStart}
               />
             </>
           ) : (
@@ -66,14 +68,14 @@ export default function EventCfpSettingsRoute() {
             defaultValue={event.maxProposals || ''}
             autoComplete="off"
             description="Optional. Limits the number of proposals a speaker can submit to the event."
-            error={result?.fieldErrors?.maxProposals?.[0]}
+            error={errors?.maxProposals}
           />
           <Input
             name="codeOfConductUrl"
             label="Code of conduct URL"
             defaultValue={event.codeOfConductUrl || ''}
             description="Optional. Speakers will be required to agree to the code of conduct before submitting their proposal."
-            error={result?.fieldErrors?.codeOfConductUrl?.[0]}
+            error={errors?.codeOfConductUrl}
           />
           <Button>Update CFP preferences</Button>
         </Form>

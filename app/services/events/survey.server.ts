@@ -1,11 +1,9 @@
-import { z } from 'zod';
 import { db } from '../db';
 import { jsonToArray } from '../../utils/prisma';
 import { EventNotFoundError, SurveyNotEnabledError } from '../errors';
+import type { SurveyData, SurveyQuestions } from '~/schemas/survey';
 
-export type SurveyAnswers = { [key: string]: string | string[] | null };
-
-export async function getSurveyQuestions(slug: string): Promise<SurveyQuestions> {
+export async function getSurveyQuestions(slug: string) {
   const event = await db.event.findUnique({
     select: { id: true, surveyEnabled: true, surveyQuestions: true },
     where: { slug: slug },
@@ -20,13 +18,13 @@ export async function getSurveyQuestions(slug: string): Promise<SurveyQuestions>
   return QUESTIONS.filter((question) => enabledQuestions.includes(question.name));
 }
 
-export async function getSurveyAnswers(slug: string, uid: string): Promise<SurveyAnswers> {
+export async function getSurveyAnswers(slug: string, uid: string) {
   const userSurvey = await db.survey.findFirst({
     select: { answers: true },
     where: { event: { slug }, user: { id: uid } },
   });
 
-  return (userSurvey?.answers ?? {}) as SurveyAnswers;
+  return (userSurvey?.answers ?? {}) as Record<string, unknown>;
 }
 
 export async function saveSurvey(uid: string, slug: string, answers: SurveyData) {
@@ -46,35 +44,6 @@ export async function saveSurvey(uid: string, slug: string, answers: SurveyData)
     },
   });
 }
-
-type SurveyData = z.infer<typeof SurveySchema>;
-
-const SurveySchema = z.object({
-  gender: z.string().trim().nullable(),
-  tshirt: z.string().trim().nullable(),
-  accomodation: z.string().trim().nullable(),
-  transports: z.array(z.string().trim()).nullable(),
-  diet: z.array(z.string().trim()).nullable(),
-  info: z.string().trim().nullable(),
-});
-
-export function validateSurveyForm(form: FormData) {
-  return SurveySchema.safeParse({
-    gender: form.get('gender'),
-    tshirt: form.get('tshirt'),
-    accomodation: form.get('accomodation'),
-    transports: form.getAll('transports'),
-    diet: form.getAll('diet'),
-    info: form.get('info'),
-  });
-}
-
-export type SurveyQuestions = Array<{
-  name: string;
-  label: string;
-  type: 'text' | 'checkbox' | 'radio';
-  answers?: Array<{ name: string; label: string }>;
-}>;
 
 export const QUESTIONS: SurveyQuestions = [
   {

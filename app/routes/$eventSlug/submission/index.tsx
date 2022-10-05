@@ -5,35 +5,29 @@ import { AlertInfo } from '../../../design-system/Alerts';
 import { MaxProposalsReached } from '../../../components/MaxProposalsReached';
 import { H2, Text } from '../../../design-system/Typography';
 import { sessionRequired } from '../../../services/auth/auth.server';
-import type { LoaderFunction } from '@remix-run/node';
+import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import type { ProposalCountsForEvent, TalksToSubmit } from '../../../services/events/submit.server';
 import { fetchTalksToSubmitForEvent, getProposalCountsForEvent } from '../../../services/events/submit.server';
 import { mapErrorToResponse } from '../../../services/errors';
 import { SubmissionTalksList } from '../../../components/SubmissionTalksList';
 
-type SelectionStep = {
-  talks: TalksToSubmit;
-  proposalsCount: ProposalCountsForEvent;
-};
-
 export const handle = { step: 'selection' };
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   const uid = await sessionRequired(request);
   const slug = params.eventSlug!;
 
   try {
     const talks = await fetchTalksToSubmitForEvent(uid, slug);
     const proposalsCount = await getProposalCountsForEvent(uid, slug);
-    return json<SelectionStep>({ talks, proposalsCount });
+    return json({ talks, proposalsCount });
   } catch (err) {
-    mapErrorToResponse(err);
+    throw mapErrorToResponse(err);
   }
 };
 
 export default function EventSubmitRoute() {
-  const data = useLoaderData<SelectionStep>();
+  const data = useLoaderData<typeof loader>();
   const { max, submitted } = data.proposalsCount;
 
   if (max && submitted >= max) {

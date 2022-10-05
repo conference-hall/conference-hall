@@ -7,7 +7,9 @@ import { ExternalLink } from '~/design-system/Links';
 import { Button } from '~/design-system/Buttons';
 import { Input } from '~/design-system/forms/Input';
 import type { OrganizerEventContext } from '../../$eventSlug';
-import { updateEvent, validateSlackIntegration } from '~/services/organizers/event.server';
+import { updateEvent } from '~/services/organizers/event.server';
+import { EventSlackSettingsSchema } from '~/schemas/event';
+import { withZod } from '@remix-validated-form/with-zod';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);
@@ -18,15 +20,15 @@ export const action = async ({ request, params }: ActionArgs) => {
   const uid = await sessionRequired(request);
   const { slug, eventSlug } = params;
   const form = await request.formData();
-  const result = validateSlackIntegration(form);
-  if (!result.success) return json(result.error.flatten());
+  const result = await withZod(EventSlackSettingsSchema).validate(form);
+  if (result.error) return json(result.error.fieldErrors);
   await updateEvent(slug!, eventSlug!, uid, result.data);
-  return null;
+  return json(null);
 };
 
 export default function EventIntegrationsSettingsRoute() {
   const { event } = useOutletContext<OrganizerEventContext>();
-  const result = useActionData();
+  const errors = useActionData<typeof action>();
   return (
     <>
       <section>
@@ -43,7 +45,7 @@ export default function EventIntegrationsSettingsRoute() {
             name="slackWebhookUrl"
             label="Web hook URL"
             defaultValue={event.slackWebhookUrl || ''}
-            error={result?.fieldErrors?.slackWebhookUrl?.[0]}
+            error={errors?.slackWebhookUrl}
           />
           <Button type="submit" variant="secondary">
             Save Web hook URL

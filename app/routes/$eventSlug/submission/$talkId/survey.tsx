@@ -1,37 +1,28 @@
-import type { ActionFunction, LoaderFunction } from '@remix-run/node';
+import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
+import { withZod } from '@remix-validated-form/with-zod';
 import { Button, ButtonLink } from '~/design-system/Buttons';
+import { SurveySchema } from '~/schemas/survey';
 import { EventSurveyForm } from '../../../../components/EventSurveyForm';
 import { useSubmissionStep } from '../../../../components/useSubmissionStep';
 import { H2, Text } from '../../../../design-system/Typography';
 import { sessionRequired } from '../../../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../../../services/errors';
-import type { SurveyAnswers, SurveyQuestions } from '../../../../services/events/survey.server';
-import {
-  getSurveyAnswers,
-  getSurveyQuestions,
-  saveSurvey,
-  validateSurveyForm,
-} from '../../../../services/events/survey.server';
-
-type SurveyQuestionsForm = {
-  questions: SurveyQuestions;
-  answers: SurveyAnswers;
-};
+import { getSurveyAnswers, getSurveyQuestions, saveSurvey } from '../../../../services/events/survey.server';
 
 export const handle = { step: 'survey' };
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   const uid = await sessionRequired(request);
   const slug = params.eventSlug!;
   try {
     const questions = await getSurveyQuestions(slug);
     const answers = await getSurveyAnswers(slug, uid);
-    return json<SurveyQuestionsForm>({ questions, answers });
+    return json({ questions, answers });
   } catch (err) {
-    mapErrorToResponse(err);
+    throw mapErrorToResponse(err);
   }
 };
 
@@ -40,8 +31,8 @@ export const action: ActionFunction = async ({ request, params }) => {
   const slug = params.eventSlug!;
   const talkId = params.talkId!;
   const form = await request.formData();
-  const result = validateSurveyForm(form);
-  if (!result.success) throw new Response('Bad survey values', { status: 400 });
+  const result = await withZod(SurveySchema).validate(form);
+  if (result.error) throw new Response('Bad survey values', { status: 400 });
   try {
     await saveSurvey(uid, slug, result.data);
     return redirect(`/${slug}/submission/${talkId}/submit`);
@@ -51,7 +42,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export default function SubmissionSurveyRoute() {
-  const { questions, answers } = useLoaderData<SurveyQuestionsForm>();
+  const { questions, answers } = useLoaderData<typeof loader>();
   const { previousPath } = useSubmissionStep();
 
   return (

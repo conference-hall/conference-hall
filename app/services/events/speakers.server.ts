@@ -2,26 +2,14 @@ import { db } from '../db';
 import { ProposalNotFoundError } from '../errors';
 import { buildInvitationLink } from '../invitations/invitations.server';
 
-export interface ProposalSpeakers {
-  id: string;
-  isOwner: boolean;
-  invitationLink?: string;
-  speakers: Array<{
-    id: string;
-    name: string | null;
-    photoURL: string | null;
-    isOwner: boolean;
-  }>;
-}
-
 /**
  * Get speakers of a proposal for an event
  * @param talkId Id of the talk
  * @param eventSlug Slig of the event
  * @param uid Id of the connected user
- * @returns SpeakerTalk
+ * @returns Speakers
  */
-export async function getProposalSpeakers(talkId: string, eventSlug: string, uid: string): Promise<ProposalSpeakers> {
+export async function getProposalSpeakers(talkId: string, eventSlug: string, uid: string) {
   const proposal = await db.proposal.findFirst({
     select: {
       id: true,

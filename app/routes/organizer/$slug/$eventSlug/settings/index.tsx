@@ -8,9 +8,11 @@ import { Button } from '~/design-system/Buttons';
 import { Input } from '~/design-system/forms/Input';
 import { MarkdownTextArea } from '~/design-system/forms/MarkdownTextArea';
 import type { OrganizerEventContext } from '../../$eventSlug';
-import { updateEvent, validateEventDetailsInfo, validateEventGeneralInfo } from '~/services/organizers/event.server';
+import { updateEvent } from '~/services/organizers/event.server';
 import { DateRangeInput } from '~/design-system/forms/DateRangeInput';
 import { EventInfoForm } from '~/components/event-forms/EventInfoForm';
+import { withZod } from '@remix-validated-form/with-zod';
+import { EventDetailsSettingsSchema, EventGeneralSettingsSchema } from '~/schemas/event';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);
@@ -24,22 +26,22 @@ export const action = async ({ request, params }: ActionArgs) => {
   const action = form.get('_action');
 
   if (action === 'general') {
-    const result = validateEventGeneralInfo(form);
-    if (!result.success) return json(result.error.flatten());
+    const result = await withZod(EventGeneralSettingsSchema).validate(form);
+    if (result.error) return json(result.error.fieldErrors);
     const updated = await updateEvent(slug!, eventSlug!, uid, result.data);
-    if (updated.slug) throw redirect(`/organizer/${slug}/${updated.slug}/settings`);
-    return json(updated);
+    if (updated.slug) return redirect(`/organizer/${slug}/${updated.slug}/settings`);
+    return json(updated?.error?.fieldErrors);
   } else if (action === 'details') {
-    const result = validateEventDetailsInfo(form);
-    if (!result.success) return json(result.error.flatten());
+    const result = await withZod(EventDetailsSettingsSchema).validate(form);
+    if (result.error) return json(result.error?.fieldErrors);
     await updateEvent(slug!, eventSlug!, uid, result.data);
   }
-  return null;
+  return json(null);
 };
 
 export default function EventGeneralSettingsRoute() {
   const { event } = useOutletContext<OrganizerEventContext>();
-  const result = useActionData();
+  const errors = useActionData<typeof action>();
 
   return (
     <>
@@ -47,7 +49,7 @@ export default function EventGeneralSettingsRoute() {
         <H2 className="border-b border-gray-200 pb-3">General</H2>
         <Form method="post" className="mt-6 space-y-4">
           <input type="hidden" name="_action" value="general" />
-          <EventInfoForm initialValues={event} errors={result?.fieldErrors} />
+          <EventInfoForm initialValues={event} errors={errors} />
           <Button type="submit">Update event</Button>
         </Form>
       </section>
@@ -62,7 +64,7 @@ export default function EventGeneralSettingsRoute() {
             <DateRangeInput
               start={{ name: 'conferenceStart', label: 'Start date', value: event?.conferenceStart }}
               end={{ name: 'conferenceEnd', label: 'End date', value: event?.conferenceEnd }}
-              error={result?.fieldErrors?.conferenceStart?.[0]}
+              error={errors?.conferenceStart}
             />
           )}
           <Input
@@ -70,28 +72,27 @@ export default function EventGeneralSettingsRoute() {
             label="Venue address or city"
             autoComplete="off"
             defaultValue={event?.address || ''}
-            error={result?.fieldErrors?.address?.[0]}
+            error={errors?.address}
           />
           <MarkdownTextArea
             name="description"
             label="Description"
             defaultValue={event?.description || ''}
-            required
             rows={5}
             autoComplete="off"
-            error={result?.fieldErrors?.description?.[0]}
+            error={errors?.description}
           />
           <Input
             name="websiteUrl"
             label="Website URL"
             defaultValue={event.websiteUrl || ''}
-            error={result?.fieldErrors?.websiteUrl?.[0]}
+            error={errors?.websiteUrl}
           />
           <Input
             name="contactEmail"
             label="Contact email"
             defaultValue={event.contactEmail || ''}
-            error={result?.fieldErrors?.contactEmail?.[0]}
+            error={errors?.contactEmail}
           />
           <Button type="submit">Update event details</Button>
         </Form>

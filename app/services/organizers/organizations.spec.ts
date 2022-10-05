@@ -18,7 +18,6 @@ import {
   inviteMemberToOrganization,
   removeMember,
   updateOrganization,
-  validateOrganizationData,
 } from './organizations.server';
 
 describe('#getOrganizations', () => {
@@ -334,7 +333,7 @@ describe('#createOrganization', () => {
     const user = await userFactory();
     await organizationFactory({ attributes: { slug: 'hello-world' }, owners: [user] });
     const result = await createOrganization(user.id, { name: 'Hello world', slug: 'hello-world' });
-    expect(result?.fieldErrors?.slug).toEqual(['Slug already exists, please try another one.']);
+    expect(result?.fieldErrors?.slug).toEqual('Slug already exists, please try another one.');
   });
 });
 
@@ -374,40 +373,6 @@ describe('#updateOrganization', () => {
       name: 'Hello world',
       slug: 'hello-world-2',
     });
-    expect(result?.fieldErrors?.slug).toEqual(['Slug already exists, please try another one.']);
-  });
-});
-
-describe('#validateOrganizationData', () => {
-  it('validates the organization data', () => {
-    const formData = new FormData();
-    formData.append('name', 'Hello world');
-    formData.append('slug', 'hello-world-1');
-
-    const result = validateOrganizationData(formData);
-    expect(result.success && result.data).toEqual({
-      name: 'Hello world',
-      slug: 'hello-world-1',
-    });
-  });
-
-  it('returns errors when data too small', () => {
-    const formData = new FormData();
-    formData.append('name', 'H');
-    formData.append('slug', 'h');
-
-    const result = validateOrganizationData(formData);
-    expect(!result.success && result.error.errors.map((e) => e.code)).toEqual(['too_small', 'too_small']);
-  });
-
-  it('validates slug format (alpha-num and dash only)', () => {
-    const formData = new FormData();
-    formData.append('name', 'Hello world');
-    formData.append('slug', 'Hello world/');
-
-    const result = validateOrganizationData(formData);
-    expect(!result.success && result.error.errors.map((e) => e.message)).toEqual([
-      'Must only contain lower case alphanumeric and dashes (-).',
-    ]);
+    expect(result?.fieldErrors?.slug).toEqual('Slug already exists, please try another one.');
   });
 });

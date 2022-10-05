@@ -6,10 +6,12 @@ import { ProposalHeader } from '~/components/proposal-review/ProposalHeader';
 import { SpeakersPanel } from '~/components/proposal-review/SpeakersPanel';
 import { OrganizerPanel } from '~/components/proposal-review/OrganizerPanel';
 import { ProposalFooter } from '~/components/proposal-review/ProposalFooter';
-import { getProposalReview, validateFilters } from '~/services/organizers/event.server';
+import { getProposalReview } from '~/services/organizers/event.server';
 import { mapErrorToResponse } from '~/services/errors';
 import { Outlet, useLoaderData, useNavigate, useOutletContext, useSearchParams } from '@remix-run/react';
 import type { OrganizerEventContext } from '../../$eventSlug';
+import { withZod } from '@remix-validated-form/with-zod';
+import { ProposalsFiltersSchema } from '~/schemas/proposal';
 
 export type OrganizerProposalContext = {
   proposalReview: Awaited<ReturnType<typeof getProposalReview>>;
@@ -19,8 +21,8 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const uid = await sessionRequired(request);
   try {
     const url = new URL(request.url);
-    const filters = validateFilters(url.searchParams);
-    const result = await getProposalReview(params.slug!, params.eventSlug!, params.proposal!, uid, filters);
+    const filters = await withZod(ProposalsFiltersSchema).validate(url.searchParams);
+    const result = await getProposalReview(params.slug!, params.eventSlug!, params.proposal!, uid, filters.data ?? {});
     return json({ uid, ...result });
   } catch (e) {
     throw mapErrorToResponse(e);

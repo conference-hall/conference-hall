@@ -1,29 +1,18 @@
 import { ProposalStatus } from '@prisma/client';
-import { z } from 'zod';
+import type { TalkSaveData } from '~/schemas/talks';
 import { db } from '../../services/db';
-import { getArray } from '../../utils/form';
 import { jsonToArray } from '../../utils/prisma';
 import { InvitationNotFoundError, TalkNotFoundError } from '../errors';
 import { buildInvitationLink } from '../invitations/invitations.server';
 
-export type SpeakerTalks = Array<{
-  id: string;
-  title: string;
-  archived: boolean;
-  createdAt: string;
-  speakers: Array<{ id: string; name: string | null; photoURL: string | null }>;
-}>;
-
-type TalksListOptions = {
-  archived?: boolean;
-};
+type TalksListOptions = { archived?: boolean };
 
 /**
  * List all talks for a speaker
  * @param uid Id of the connected user
- * @returns SpeakerTalks
+ * @returns speaker talks
  */
-export async function findTalks(uid: string, options?: TalksListOptions): Promise<SpeakerTalks> {
+export async function findTalks(uid: string, options?: TalksListOptions) {
   const talks = await db.talk.findMany({
     select: {
       id: true,
@@ -52,39 +41,13 @@ export async function findTalks(uid: string, options?: TalksListOptions): Promis
   }));
 }
 
-export interface SpeakerTalk {
-  id: string;
-  title: string;
-  abstract: string;
-  level: string | null;
-  languages: string[];
-  references: string | null;
-  archived: boolean;
-  createdAt: string;
-  isOwner: boolean;
-  speakers: Array<{
-    id: string;
-    name: string | null;
-    photoURL: string | null;
-    isOwner: boolean;
-    isCurrentUser: boolean;
-  }>;
-  proposals: Array<{
-    eventSlug: string;
-    eventName: string;
-    status: string;
-    date: string;
-  }>;
-  invitationLink?: string;
-}
-
 /**
  * Get a talk for a speaker
  * @param uid Id of the connected user
  * @param talkId Id of the talk
- * @returns SpeakerTalk
+ * @returns Speaker talk
  */
-export async function getTalk(uid: string, talkId: string): Promise<SpeakerTalk> {
+export async function getTalk(uid: string, talkId: string) {
   const talk = await db.talk.findFirst({
     where: {
       speakers: { some: { id: uid } },
@@ -149,7 +112,7 @@ export async function deleteTalk(uid: string, talkId: string) {
  * @param uid Id of the connected user
  * @param data Talk data
  */
-export async function createTalk(uid: string, data: TalkData) {
+export async function createTalk(uid: string, data: TalkSaveData) {
   const result = await db.talk.create({
     data: {
       ...data,
@@ -166,7 +129,7 @@ export async function createTalk(uid: string, data: TalkData) {
  * @param talkId Id of the talk
  * @param data Talk data
  */
-export async function updateTalk(uid: string, talkId?: string, data?: TalkData) {
+export async function updateTalk(uid: string, talkId?: string, data?: TalkSaveData) {
   const talk = await db.talk.findFirst({
     where: { id: talkId, speakers: { some: { id: uid } } },
   });
@@ -175,26 +138,6 @@ export async function updateTalk(uid: string, talkId?: string, data?: TalkData) 
   await db.talk.update({
     where: { id: talkId },
     data,
-  });
-}
-
-type TalkData = z.infer<typeof TalkSchema>;
-
-const TalkSchema = z.object({
-  title: z.string().trim().min(1),
-  abstract: z.string().trim().min(1),
-  references: z.string().nullable(),
-  level: z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']).nullable(),
-  languages: z.array(z.string()),
-});
-
-export function validateTalkForm(form: FormData) {
-  return TalkSchema.safeParse({
-    title: form.get('title'),
-    abstract: form.get('abstract'),
-    references: form.get('references'),
-    level: form.get('level'),
-    languages: getArray(form, 'languages'),
   });
 }
 

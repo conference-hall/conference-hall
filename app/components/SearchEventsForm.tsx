@@ -1,9 +1,9 @@
 import { Form, useSearchParams, useSubmit } from '@remix-run/react';
-import type { SearchFilters } from '../services/events/search.server';
 import { Input } from '../design-system/forms/Input';
 import { Button } from '../design-system/Buttons';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import Select from '~/design-system/forms/Select';
+import type { SearchFilters } from '~/schemas/search';
 
 type Props = {
   filters: SearchFilters;

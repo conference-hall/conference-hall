@@ -4,33 +4,29 @@ import { Button } from '~/design-system/Buttons';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
 import { ExternalLink } from '../../../../design-system/Links';
 import { H1, Text } from '../../../../design-system/Typography';
-import type { ActionFunction, LoaderFunction } from '@remix-run/node';
+import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { sessionRequired } from '../../../../services/auth/auth.server';
 import { getEvent } from '../../../../services/events/event.server';
-import type { ProposalInfo } from '../../../../services/events/submit.server';
-import { getProposalInfo, submitProposal, validateSubmission } from '../../../../services/events/submit.server';
+import { getProposalInfo, submitProposal } from '../../../../services/events/submit.server';
 import { mapErrorToResponse } from '../../../../services/errors';
 import { TextArea } from '../../../../design-system/forms/TextArea';
 import { AvatarGroup } from '~/design-system/Avatar';
-
-type SubmitForm = ProposalInfo & { codeOfConductUrl: string | null };
+import { withZod } from '@remix-validated-form/with-zod';
+import { ProposalSubmissionSchema } from '~/schemas/proposal';
 
 export const handle = { step: 'submission' };
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   const uid = await sessionRequired(request);
   const eventSlug = params.eventSlug!;
   const talkId = params.talkId!;
   try {
     const event = await getEvent(eventSlug);
     const proposal = await getProposalInfo(talkId, event.id, uid);
-    return json<SubmitForm>({
-      ...proposal,
-      codeOfConductUrl: event.codeOfConductUrl,
-    });
+    return json({ ...proposal, codeOfConductUrl: event.codeOfConductUrl });
   } catch (err) {
-    mapErrorToResponse(err);
+    throw mapErrorToResponse(err);
   }
 };
 
@@ -39,17 +35,17 @@ export const action: ActionFunction = async ({ request, params }) => {
   const eventSlug = params.eventSlug!;
   const talkId = params.talkId!;
   const form = await request.formData();
-  const data = validateSubmission(form);
+  const result = await withZod(ProposalSubmissionSchema).validate(form);
   try {
-    await submitProposal(talkId, eventSlug, uid, data);
+    if (result?.data) await submitProposal(talkId, eventSlug, uid, result?.data);
     return redirect(`/${eventSlug}/proposals`);
   } catch (err) {
-    mapErrorToResponse(err);
+    throw mapErrorToResponse(err);
   }
 };
 
 export default function SubmissionSubmitRoute() {
-  const data = useLoaderData<SubmitForm>();
+  const data = useLoaderData<typeof loader>();
   const [acceptedCod, setAcceptCod] = useState(!data.codeOfConductUrl);
 
   return (

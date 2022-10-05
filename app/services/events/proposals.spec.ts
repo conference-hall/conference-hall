@@ -18,7 +18,6 @@ import {
   removeCoSpeakerFromProposal,
   removeCoSpeakerFromTalkAndEvent,
   updateProposal,
-  validateProposalForm,
 } from './proposals.server';
 
 describe('#fetchSpeakerProposals', () => {
@@ -316,42 +315,6 @@ describe('#updateProposal', () => {
     };
 
     await expect(updateProposal(event.slug, proposal.id, speaker.id, data)).rejects.toThrowError(ProposalNotFoundError);
-  });
-});
-
-describe('#validateProposalForm', () => {
-  it('validates fields', () => {
-    const formData = new FormData();
-    formData.append('title', 'Title changed');
-    formData.append('abstract', 'Abstract changes');
-    formData.append('references', 'References changes');
-    formData.append('level', 'INTERMEDIATE');
-    formData.append('languages[0]', 'en');
-    formData.append('formats', 'F1');
-    formData.append('formats', 'F2');
-    formData.append('categories', 'C1');
-    formData.append('categories', 'C2');
-
-    const result = validateProposalForm(formData);
-
-    expect(result.success && result.data).toEqual({
-      title: 'Title changed',
-      abstract: 'Abstract changes',
-      references: 'References changes',
-      level: 'INTERMEDIATE',
-      languages: ['en'],
-      formats: ['F1', 'F2'],
-      categories: ['C1', 'C2'],
-    });
-  });
-
-  it('validates mandatory fields', () => {
-    const formData = new FormData();
-    formData.append('title', '');
-    formData.append('abstract', '');
-    const result = validateProposalForm(formData);
-
-    expect(!result.success && result.error.errors.map((e) => e.code)).toEqual(['too_small', 'too_small']);
   });
 });
 

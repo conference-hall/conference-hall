@@ -1,13 +1,8 @@
-import { z } from 'zod';
+import type { TrackUpdateData } from '~/schemas/tracks';
 import { db } from '../db';
 import { ProposalNotFoundError } from '../errors';
 
-export type ProposalTracks = {
-  formats: string[];
-  categories: string[];
-};
-
-export async function getProposalTracks(talkId: string, eventId: string, uid: string): Promise<ProposalTracks> {
+export async function getProposalTracks(talkId: string, eventId: string, uid: string) {
   const proposal = await db.proposal.findFirst({
     select: { formats: true, categories: true },
     where: { talkId, eventId, speakers: { some: { id: uid } } },
@@ -20,7 +15,7 @@ export async function getProposalTracks(talkId: string, eventId: string, uid: st
   };
 }
 
-export async function saveTracks(talkId: string, eventId: string, uid: string, data: TrackData): Promise<void> {
+export async function saveTracks(talkId: string, eventId: string, uid: string, data: TrackUpdateData) {
   const proposal = await db.proposal.findFirst({
     select: { id: true },
     where: { talkId, eventId, speakers: { some: { id: uid } } },
@@ -36,19 +31,5 @@ export async function saveTracks(talkId: string, eventId: string, uid: string, d
         connect: data.categories?.map((c) => ({ id: c })),
       },
     },
-  });
-}
-
-type TrackData = z.infer<typeof TracksSchema>;
-
-const TracksSchema = z.object({
-  formats: z.array(z.string().trim()),
-  categories: z.array(z.string().trim()),
-});
-
-export function validateTracksForm(form: FormData) {
-  return TracksSchema.safeParse({
-    formats: form.getAll('formats'),
-    categories: form.getAll('categories'),
   });
 }

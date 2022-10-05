@@ -1,17 +1,16 @@
 import type { ChangeEvent } from 'react';
+import { json } from '@remix-run/node';
 import type { LoaderArgs } from '@remix-run/node';
-import { sessionRequired } from '~/services/auth/auth.server';
+import { Form, useActionData, useOutletContext, useSubmit } from '@remix-run/react';
+import { withZod } from '@remix-validated-form/with-zod';
 import { H2 } from '~/design-system/Typography';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
-import { Form, useActionData, useOutletContext, useSubmit } from '@remix-run/react';
 import { Input } from '~/design-system/forms/Input';
-import type { OrganizerEventContext } from '../../$eventSlug';
 import { Button } from '~/design-system/Buttons';
-import {
-  updateEvent,
-  validateEmailNotificationSettings,
-  validateNotificationSettings,
-} from '~/services/organizers/event.server';
+import { sessionRequired } from '~/services/auth/auth.server';
+import { updateEvent } from '~/services/organizers/event.server';
+import { EventEmailNotificationsSettingsSchema, EventNotificationsSettingsSchema } from '~/schemas/event';
+import type { OrganizerEventContext } from '../../$eventSlug';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);
@@ -26,23 +25,23 @@ export const action = async ({ request, params }: LoaderArgs) => {
 
   switch (action) {
     case 'save-email-notifications': {
-      const results = validateEmailNotificationSettings(form);
-      if (!results.success) return results.error.flatten();
-      await updateEvent(slug!, eventSlug!, uid, results.data);
+      const result = await withZod(EventEmailNotificationsSettingsSchema).validate(form);
+      if (result.error) return json(result.error.fieldErrors);
+      await updateEvent(slug!, eventSlug!, uid, result.data);
       break;
     }
     case 'save-notifications': {
-      const result = validateNotificationSettings(form);
-      if (result) await updateEvent(slug!, eventSlug!, uid, result);
+      const result = await withZod(EventNotificationsSettingsSchema).validate(form);
+      if (!result.error) await updateEvent(slug!, eventSlug!, uid, result.data);
       break;
     }
   }
-  return null;
+  return json(null);
 };
 
 export default function EventNotificationsSettingsRoute() {
   const { event } = useOutletContext<OrganizerEventContext>();
-  const result = useActionData();
+  const errors = useActionData<typeof action>();
 
   const submit = useSubmit();
 
@@ -59,7 +58,7 @@ export default function EventNotificationsSettingsRoute() {
             name="emailOrganizer"
             label="Notification email"
             defaultValue={event.emailOrganizer || ''}
-            error={result?.fieldErrors?.emailOrganizer?.[0]}
+            error={errors?.emailOrganizer}
           />
           <Checkbox
             id="sendToOrganizers"
