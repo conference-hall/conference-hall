@@ -3,7 +3,6 @@ import type { Prisma } from '@prisma/client';
 import { OrganizationRole } from '@prisma/client';
 import { MessageChannel } from '@prisma/client';
 import { unstable_parseMultipartFormData } from '@remix-run/node';
-import { formData, text } from 'zod-form-data';
 import type { EventCreateData, EventTrackSaveData } from '~/schemas/event';
 import type { ProposalRatingData, ProposalsFilters, ProposalUpdateData } from '~/schemas/proposal';
 import { getCfpState } from '~/utils/event';
@@ -15,18 +14,6 @@ import { getPagination } from '../utils/pagination.server';
 import { RatingsDetails } from '../utils/ratings.server';
 import { uploadToStorageHandler } from '../utils/storage.server';
 import { getUserRole } from './organizations.server';
-import {
-  EventCfpSettingsSchema,
-  EventCreateSchema,
-  EventDetailsSettingsSchema,
-  EventGeneralSettingsSchema,
-  EventNotificationsSettingsSchema,
-  EventReviewSettingsSchema,
-  EventSlackSettingsSchema,
-  EventSurveySettingsSchema,
-  EventTrackSaveSchema,
-  EventTracksSettingsSchema,
-} from '~/schemas/event';
 import type { Pagination } from '~/schemas/pagination';
 
 /**
@@ -417,10 +404,6 @@ export async function createEvent(orgaSlug: string, uid: string, data: EventCrea
   });
 }
 
-export function validateEventCreateForm(form: FormData) {
-  return formData(EventCreateSchema).safeParse(form);
-}
-
 /**
  * Update an event
  * @param orgaSlug Organization slug
@@ -456,47 +439,6 @@ export async function updateEvent(
     const updated = await trx.event.update({ where: { slug: eventSlug }, data: { ...data } });
     return { slug: updated.slug };
   });
-}
-
-export function validateEventGeneralInfo(form: FormData) {
-  return formData(EventGeneralSettingsSchema).safeParse(form);
-}
-
-export function validateEventDetailsInfo(form: FormData) {
-  return formData(EventDetailsSettingsSchema).safeParse(form);
-}
-
-export function validateEventTrackSettings(form: FormData) {
-  return formData(EventTracksSettingsSchema).safeParse(form);
-}
-
-export function validateEventCfpSettings(form: FormData) {
-  return formData(EventCfpSettingsSchema).safeParse(form);
-}
-
-export function validateSurveyQuestionsData(form: FormData) {
-  const result = formData(EventSurveySettingsSchema).safeParse(form);
-  return result.success ? result.data : null;
-}
-
-export function validateReviewSettings(form: FormData) {
-  const result = formData(EventReviewSettingsSchema).safeParse(form);
-  return result.success ? result.data : null;
-}
-
-export function validateEmailNotificationSettings(form: FormData) {
-  return formData({
-    emailOrganizer: text(z.string().email().nullable().default(null)),
-  }).safeParse(form);
-}
-
-export function validateNotificationSettings(form: FormData) {
-  const result = formData(EventNotificationsSettingsSchema).safeParse(form);
-  return result.success ? result.data : null;
-}
-
-export function validateSlackIntegration(form: FormData) {
-  return formData(EventSlackSettingsSchema).safeParse(form);
 }
 
 /**
@@ -565,10 +507,6 @@ export async function saveCategory(orgaSlug: string, eventSlug: string, uid: str
       data: { name: data.name, description: data.description, event: { connect: { slug: eventSlug } } },
     });
   }
-}
-
-export function validateTrackData(form: FormData) {
-  return formData(EventTrackSaveSchema).safeParse(form);
 }
 
 /**

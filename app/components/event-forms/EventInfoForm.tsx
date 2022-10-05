@@ -11,7 +11,7 @@ type EventValues = {
 
 type Props = {
   initialValues?: EventValues;
-  errors?: Record<string, string[]>;
+  errors?: Record<string, string>;
 };
 
 export function EventInfoForm({ initialValues, errors }: Props) {
@@ -30,7 +30,7 @@ export function EventInfoForm({ initialValues, errors }: Props) {
         }}
         autoComplete="off"
         required
-        error={errors?.name?.[0]}
+        error={errors?.name}
       />
       <Input
         name="slug"
@@ -41,7 +41,7 @@ export function EventInfoForm({ initialValues, errors }: Props) {
         }}
         autoComplete="off"
         required
-        error={errors?.slug?.[0]}
+        error={errors?.slug}
       />
       <EventVisibilityRadioGroup defaultValue={initialValues?.visibility} />
     </>

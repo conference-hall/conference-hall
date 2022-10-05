@@ -6,7 +6,9 @@ import { Form, useLoaderData, useOutletContext } from '@remix-run/react';
 import { QUESTIONS } from '~/services/events/survey.server';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
 import type { OrganizerEventContext } from '../../$eventSlug';
-import { updateEvent, validateSurveyQuestionsData } from '~/services/organizers/event.server';
+import { updateEvent } from '~/services/organizers/event.server';
+import { withZod } from '@remix-validated-form/with-zod';
+import { EventSurveySettingsSchema } from '~/schemas/event';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);
@@ -25,8 +27,8 @@ export const action = async ({ request, params }: LoaderArgs) => {
       break;
     }
     case 'save-questions': {
-      const result = validateSurveyQuestionsData(form);
-      if (result) await updateEvent(slug!, eventSlug!, uid, result);
+      const result = await withZod(EventSurveySettingsSchema).validate(form);
+      if (!result.error) await updateEvent(slug!, eventSlug!, uid, result.data);
       break;
     }
   }

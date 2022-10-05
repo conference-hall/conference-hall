@@ -3,6 +3,7 @@ import { checkbox, numeric, repeatable, text } from 'zod-form-data';
 import { checkboxValidator, dateValidator, slugValidator } from '~/schemas/validators';
 
 export const EventTypeSchema = z.enum(['CONFERENCE', 'MEETUP']);
+
 export const EventVisibilitySchema = z.enum(['PUBLIC', 'PRIVATE']);
 
 export const EventCreateSchema = z.object({
@@ -73,6 +74,10 @@ export const EventReviewSettingsSchema = z.object({
 
 export const EventNotificationsSettingsSchema = z.object({
   emailNotifications: repeatable(z.array(z.string())),
+});
+
+export const EventEmailNotificationsSettingsSchema = z.object({
+  emailOrganizer: text(z.string().email().nullable().default(null)),
 });
 
 export const EventSlackSettingsSchema = z.object({
