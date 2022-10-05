@@ -373,6 +373,6 @@ describe('#updateOrganization', () => {
       name: 'Hello world',
       slug: 'hello-world-2',
     });
-    expect(result?.fieldErrors?.slug).toEqual(['Slug already exists, please try another one.']);
+    expect(result?.fieldErrors?.slug).toEqual('Slug already exists, please try another one.');
   });
 });
