@@ -8,8 +8,10 @@ import { Container } from '~/design-system/Container';
 import { H2, Text } from '~/design-system/Typography';
 import { sessionRequired } from '~/services/auth/auth.server';
 import { mapErrorToResponse } from '~/services/errors';
-import { getSurveyAnswers, getSurveyQuestions, saveSurvey, validateSurveyForm } from '~/services/events/survey.server';
+import { getSurveyAnswers, getSurveyQuestions, saveSurvey } from '~/services/events/survey.server';
 import type { SurveyQuestions } from '~/schemas/survey';
+import { SurveySchema } from '~/schemas/survey';
+import { withZod } from '@remix-validated-form/with-zod';
 
 type SurveyQuestionsForm = {
   questions: SurveyQuestions;
@@ -32,8 +34,8 @@ export const action: ActionFunction = async ({ request, params }) => {
   const uid = await sessionRequired(request);
   const slug = params.eventSlug!;
   const form = await request.formData();
-  const result = validateSurveyForm(form);
-  if (!result.success) throw new Response('Bad survey values', { status: 400 });
+  const result = await withZod(SurveySchema).validate(form);
+  if (result.error) throw new Response('Bad survey values', { status: 400 });
   try {
     await saveSurvey(uid, slug, result.data);
     return { message: 'Survey saved, thank you!' };

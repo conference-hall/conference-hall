@@ -1,8 +1,7 @@
-import { z } from 'zod';
 import { db } from '../db';
 import { jsonToArray } from '../../utils/prisma';
 import { EventNotFoundError, SurveyNotEnabledError } from '../errors';
-import type { SurveyQuestions } from '~/schemas/survey';
+import type { SurveyData, SurveyQuestions } from '~/schemas/survey';
 
 export async function getSurveyQuestions(slug: string) {
   const event = await db.event.findUnique({
@@ -43,28 +42,6 @@ export async function saveSurvey(uid: string, slug: string, answers: SurveyData)
       user: { connect: { id: uid } },
       answers: answers,
     },
-  });
-}
-
-type SurveyData = z.infer<typeof SurveySchema>;
-
-const SurveySchema = z.object({
-  gender: z.string().trim().nullable(),
-  tshirt: z.string().trim().nullable(),
-  accomodation: z.string().trim().nullable(),
-  transports: z.array(z.string().trim()).nullable(),
-  diet: z.array(z.string().trim()).nullable(),
-  info: z.string().trim().nullable(),
-});
-
-export function validateSurveyForm(form: FormData) {
-  return SurveySchema.safeParse({
-    gender: form.get('gender'),
-    tshirt: form.get('tshirt'),
-    accomodation: form.get('accomodation'),
-    transports: form.getAll('transports'),
-    diet: form.getAll('diet'),
-    info: form.get('info'),
   });
 }
 
