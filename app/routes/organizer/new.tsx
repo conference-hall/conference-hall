@@ -29,7 +29,7 @@ export const action = async ({ request }: ActionArgs) => {
 };
 
 export default function NewOrganizationRoute() {
-  const errors = useActionData();
+  const errors = useActionData<typeof action>();
 
   return (
     <Container className="max-w-5xl">

@@ -23,12 +23,12 @@ export const action = async ({ request, params }: ActionArgs) => {
   const result = await withZod(EventSlackSettingsSchema).validate(form);
   if (result.error) return json(result.error.fieldErrors);
   await updateEvent(slug!, eventSlug!, uid, result.data);
-  return null;
+  return json(null);
 };
 
 export default function EventIntegrationsSettingsRoute() {
   const { event } = useOutletContext<OrganizerEventContext>();
-  const errors = useActionData();
+  const errors = useActionData<typeof action>();
   return (
     <>
       <section>

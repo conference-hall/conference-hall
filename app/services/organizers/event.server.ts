@@ -433,7 +433,7 @@ export async function updateEvent(
     if (data.slug) {
       const existSlug = await trx.event.findFirst({ where: { slug: data.slug } });
       if (existSlug && event?.id !== existSlug.id) {
-        return { fieldErrors: { name: [], slug: ['Slug already exists, please try another one.'] } };
+        return { error: { fieldErrors: { slug: 'Slug already exists, please try another one.' } } };
       }
     }
     const updated = await trx.event.update({ where: { slug: eventSlug }, data: { ...data } });

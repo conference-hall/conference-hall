@@ -1,4 +1,4 @@
-import type { ActionFunction, LoaderFunction } from '@remix-run/node';
+import type { ActionArgs, LoaderFunction } from '@remix-run/node';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import { json } from '@remix-run/node';
 import { EventSurveyForm } from '~/components/EventSurveyForm';
@@ -30,7 +30,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   }
 };
 
-export const action: ActionFunction = async ({ request, params }) => {
+export const action = async ({ request, params }: ActionArgs) => {
   const uid = await sessionRequired(request);
   const slug = params.eventSlug!;
   const form = await request.formData();
@@ -38,15 +38,15 @@ export const action: ActionFunction = async ({ request, params }) => {
   if (result.error) throw new Response('Bad survey values', { status: 400 });
   try {
     await saveSurvey(uid, slug, result.data);
-    return { message: 'Survey saved, thank you!' };
+    return json({ message: 'Survey saved, thank you!' });
   } catch (err) {
-    mapErrorToResponse(err);
+    throw mapErrorToResponse(err);
   }
 };
 
 export default function EventSurveyRoute() {
   const { questions, answers } = useLoaderData<SurveyQuestionsForm>();
-  const result = useActionData();
+  const result = useActionData<typeof action>();
 
   return (
     <Container className="mt-4 sm:my-8">

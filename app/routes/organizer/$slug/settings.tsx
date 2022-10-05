@@ -34,7 +34,7 @@ export const action = async ({ request, params }: ActionArgs) => {
 
 export default function OrganizationSettingsRoute() {
   const { organization } = useOutletContext<OrganizationContext>();
-  const errors = useActionData();
+  const errors = useActionData<typeof action>();
 
   return (
     <Container className="my-4 sm:my-8">

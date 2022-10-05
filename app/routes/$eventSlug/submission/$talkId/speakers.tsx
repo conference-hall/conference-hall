@@ -1,4 +1,4 @@
-import type { ActionFunction, LoaderArgs } from '@remix-run/node';
+import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import { Button, ButtonLink } from '~/design-system/Buttons';
@@ -37,7 +37,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   }
 };
 
-export const action: ActionFunction = async ({ request, params }) => {
+export const action = async ({ request, params }: ActionArgs) => {
   const uid = await sessionRequired(request);
   const talkId = params.talkId!;
   const eventSlug = params.eventSlug!;
@@ -48,10 +48,11 @@ export const action: ActionFunction = async ({ request, params }) => {
     if (action === 'remove-speaker') {
       const speakerId = form.get('_speakerId')?.toString() as string;
       await removeCoSpeakerFromTalkAndEvent(uid, talkId, eventSlug, speakerId);
-      return null;
+      return json(null);
     } else {
       const result = await withZod(DetailsSchema).validate(form);
       if (result.error) return json(result.error.fieldErrors);
+
       await updateSettings(uid, result.data);
       const event = await getEvent(eventSlug);
       if (event.hasTracks) {
@@ -63,13 +64,13 @@ export const action: ActionFunction = async ({ request, params }) => {
       }
     }
   } catch (err) {
-    mapErrorToResponse(err);
+    throw mapErrorToResponse(err);
   }
 };
 
 export default function SubmissionSpeakerRoute() {
   const data = useLoaderData<typeof loader>();
-  const errors = useActionData();
+  const errors = useActionData<typeof action>();
   const { previousPath } = useSubmissionStep();
 
   return (

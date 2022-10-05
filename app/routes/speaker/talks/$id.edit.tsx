@@ -1,4 +1,4 @@
-import type { ActionFunction, LoaderArgs } from '@remix-run/node';
+import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import { withZod } from '@remix-validated-form/with-zod';
@@ -24,25 +24,25 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   }
 };
 
-export const action: ActionFunction = async ({ request, params }) => {
+export const action = async ({ request, params }: ActionArgs) => {
   const uid = await sessionRequired(request);
   const form = await request.formData();
   try {
     const result = await withZod(TalkSaveSchema).validate(form);
     if (result.error) {
-      return result.error.fieldErrors;
+      return json(result.error.fieldErrors);
     } else {
       await updateTalk(uid, params.id, result.data);
       return redirect(`/speaker/talks/${params.id}`);
     }
   } catch (err) {
-    mapErrorToResponse(err);
+    throw mapErrorToResponse(err);
   }
 };
 
 export default function SpeakerTalkRoute() {
   const talk = useLoaderData<typeof loader>();
-  const errors = useActionData();
+  const errors = useActionData<typeof action>();
 
   return (
     <Container className="my-4 sm:my-8">

@@ -1,4 +1,5 @@
 import type { LoaderArgs } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
 import { withZod } from '@remix-validated-form/with-zod';
@@ -16,7 +17,7 @@ export const action = async ({ request }: LoaderArgs) => {
   const form = await request.formData();
 
   const result = await withZod(TalkSaveSchema).validate(form);
-  if (result.error) return result.error.fieldErrors;
+  if (result.error) return json(result.error.fieldErrors);
   try {
     const talkId = await createTalk(uid, result.data);
     return redirect(`/speaker/talks/${talkId}`);
@@ -26,7 +27,7 @@ export const action = async ({ request }: LoaderArgs) => {
 };
 
 export default function NewSpeakerTalkRoute() {
-  const errors = useActionData();
+  const errors = useActionData<typeof action>();
 
   return (
     <Container className="my-4 sm:my-8">

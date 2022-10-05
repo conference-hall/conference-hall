@@ -38,7 +38,7 @@ export const action = async ({ request, params }: ActionArgs) => {
 
 export default function NewEventRoute() {
   const [searchParams] = useSearchParams();
-  const errors = useActionData();
+  const errors = useActionData<typeof action>();
   const type = searchParams.get('type');
   return (
     <Container className="max-w-5xl">

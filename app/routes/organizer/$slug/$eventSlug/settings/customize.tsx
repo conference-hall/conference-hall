@@ -22,7 +22,7 @@ export const action = async ({ request, params }: ActionArgs) => {
   try {
     const { slug, eventSlug } = params;
     await uploadAndSaveEventBanner(slug!, eventSlug!, uid, request);
-    return null;
+    return json(null);
   } catch (error) {
     if (error instanceof UploadingError) {
       return json({ error: error.message });
@@ -34,7 +34,7 @@ export const action = async ({ request, params }: ActionArgs) => {
 export default function EventGeneralSettingsRoute() {
   const { event } = useOutletContext<OrganizerEventContext>();
   const submit = useSubmit();
-  const result = useActionData();
+  const result = useActionData<typeof action>();
 
   const handleSubmit = (e: ChangeEvent<HTMLFormElement>) => {
     if (e.currentTarget[0] && (e.currentTarget[0] as HTMLInputElement).value) {

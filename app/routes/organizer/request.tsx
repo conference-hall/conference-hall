@@ -25,7 +25,7 @@ export const action = async ({ request }: ActionArgs) => {
 };
 
 export default function RequestAccessRoute() {
-  const result = useActionData();
+  const result = useActionData<typeof action>();
   return (
     <Container className="my-4 flex justify-center sm:my-8">
       <Card className="my-16 max-w-2xl p-8">

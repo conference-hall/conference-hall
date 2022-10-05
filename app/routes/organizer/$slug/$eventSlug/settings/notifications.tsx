@@ -36,12 +36,12 @@ export const action = async ({ request, params }: LoaderArgs) => {
       break;
     }
   }
-  return null;
+  return json(null);
 };
 
 export default function EventNotificationsSettingsRoute() {
   const { event } = useOutletContext<OrganizerEventContext>();
-  const errors = useActionData();
+  const errors = useActionData<typeof action>();
 
   const submit = useSubmit();
 

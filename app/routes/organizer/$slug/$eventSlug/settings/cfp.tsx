@@ -1,4 +1,4 @@
-import type { LoaderArgs } from '@remix-run/node';
+import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { sessionRequired } from '~/services/auth/auth.server';
 import { H2, Text } from '~/design-system/Typography';
@@ -17,7 +17,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   return null;
 };
 
-export const action = async ({ request, params }: LoaderArgs) => {
+export const action = async ({ request, params }: ActionArgs) => {
   const uid = await sessionRequired(request);
   const { slug, eventSlug } = params;
   const form = await request.formData();
@@ -26,12 +26,12 @@ export const action = async ({ request, params }: LoaderArgs) => {
     return json(result.error.fieldErrors);
   }
   await updateEvent(slug!, eventSlug!, uid, result.data);
-  return null;
+  return json(null);
 };
 
 export default function EventCfpSettingsRoute() {
   const { event } = useOutletContext<OrganizerEventContext>();
-  const errors = useActionData();
+  const errors = useActionData<typeof action>();
   return (
     <>
       <section>

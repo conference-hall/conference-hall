@@ -1,4 +1,4 @@
-import type { ActionFunction, LoaderArgs } from '@remix-run/node';
+import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData, useLoaderData, useSubmit } from '@remix-run/react';
 import { CreditCardIcon, KeyIcon, UserCircleIcon } from '@heroicons/react/20/solid';
@@ -26,7 +26,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   }
 };
 
-export const action: ActionFunction = async ({ request }) => {
+export const action = async ({ request }: ActionArgs) => {
   const uid = await sessionRequired(request);
   const form = await request.formData();
   const type = form.get('_type') as string;
@@ -43,13 +43,13 @@ export const action: ActionFunction = async ({ request }) => {
     await updateSettings(uid, result.data);
     return redirect('/speaker/profile');
   } catch (err) {
-    mapErrorToResponse(err);
+    throw mapErrorToResponse(err);
   }
 };
 
 export default function ProfileRoute() {
   const user = useLoaderData<typeof loader>();
-  const errors = useActionData();
+  const errors = useActionData<typeof action>();
   const submit = useSubmit();
 
   const resetCurrentUser = useCallback(() => {

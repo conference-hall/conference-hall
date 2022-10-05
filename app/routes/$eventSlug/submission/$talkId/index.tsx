@@ -2,7 +2,7 @@ import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import { Button } from '~/design-system/Buttons';
 import { H2, Text } from '../../../../design-system/Typography';
 import { sessionRequired } from '../../../../services/auth/auth.server';
-import type { ActionFunction, LoaderArgs } from '@remix-run/node';
+import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { getTalk } from '../../../../services/speakers/talks.server';
 import { saveDraftProposalForEvent } from '../../../../services/events/submit.server';
@@ -28,26 +28,26 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   }
 };
 
-export const action: ActionFunction = async ({ request, params }) => {
+export const action = async ({ request, params }: ActionArgs) => {
   const uid = await sessionRequired(request);
   const eventSlug = params.eventSlug!;
   const talkId = params.talkId!;
 
   const form = await request.formData();
   const result = await withZod(ProposalCreateSchema).validate(form);
-  if (result.error) return result.error.fieldErrors;
+  if (result.error) return json(result.error.fieldErrors);
 
   try {
     const savedProposal = await saveDraftProposalForEvent(talkId, eventSlug, uid, result.data);
     return redirect(`/${eventSlug}/submission/${savedProposal.talkId}/speakers`);
   } catch (err) {
-    mapErrorToResponse(err);
+    throw mapErrorToResponse(err);
   }
 };
 
 export default function SubmissionProposalRoute() {
   const talk = useLoaderData<typeof loader>();
-  const errors = useActionData();
+  const errors = useActionData<typeof action>();
 
   return (
     <Form method="post">
