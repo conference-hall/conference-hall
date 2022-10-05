@@ -390,7 +390,7 @@ export async function createEvent(orgaSlug: string, uid: string, data: EventCrea
   return await db.$transaction(async (trx) => {
     const existSlug = await trx.event.findFirst({ where: { slug: data.slug } });
     if (existSlug) {
-      return { fieldErrors: { name: [], slug: ['Slug already exists, please try another one.'] } };
+      return { error: { fieldErrors: { slug: 'Slug already exists, please try another one.' } } };
     }
 
     await trx.event.create({

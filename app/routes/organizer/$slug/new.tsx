@@ -32,7 +32,7 @@ export const action = async ({ request, params }: ActionArgs) => {
   } else {
     const updated = await createEvent(slug!, uid, result.data);
     if (updated.slug) throw redirect(`/organizer/${slug}/${updated.slug}/settings`);
-    return json(updated);
+    return json(updated.error?.fieldErrors);
   }
 };
 

@@ -1,26 +1,14 @@
 import { z } from 'zod';
 import { numeric, repeatable, text } from 'zod-form-data';
-
-const ProposalLevelSchema = text(z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']));
+import { TalkSaveSchema } from './talks';
 
 const ProposalStatusSchema = text(z.enum(['SUBMITTED', 'ACCEPTED', 'REJECTED', 'CONFIRMED', 'DECLINED']));
 
 const ProposalRatingsSchema = text(z.enum(['NEUTRAL', 'POSITIVE', 'NEGATIVE', 'NO_OPINION']));
 
-export const ProposalCreateSchema = z.object({
-  title: text(z.string().trim().min(1)),
-  abstract: text(z.string().trim().min(1)),
-  references: text(z.string().trim().nullable().default(null)),
-  languages: repeatable(z.array(z.string().trim())).optional(),
-  level: ProposalLevelSchema.nullable().default(null),
-});
+export const ProposalCreateSchema = TalkSaveSchema;
 
-export const ProposalUpdateSchema = z.object({
-  title: text(z.string().trim().min(1)),
-  abstract: text(z.string().trim().min(1)),
-  references: text(z.string().trim().nullable().default(null)),
-  languages: repeatable(z.array(z.string())).optional(),
-  level: ProposalLevelSchema.nullable().default(null),
+export const ProposalUpdateSchema = TalkSaveSchema.extend({
   formats: repeatable(z.array(z.string())).optional(),
   categories: repeatable(z.array(z.string())).optional(),
 });

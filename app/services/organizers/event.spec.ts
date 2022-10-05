@@ -680,7 +680,7 @@ describe('#createEvent', () => {
       visibility: 'PUBLIC',
     });
 
-    expect(created?.fieldErrors?.slug).toEqual(['Slug already exists, please try another one.']);
+    expect(created?.error?.fieldErrors?.slug).toEqual('Slug already exists, please try another one.');
   });
 
   it('throws an error if user is not owner', async () => {
