@@ -22,7 +22,7 @@ export const EventGeneralSettingsSchema = z.object({
 export const EventDetailsSettingsSchema = z
   .object({
     address: text(z.string().trim().nullable().default(null)),
-    description: text(z.string().trim().min(1).optional()),
+    description: text(z.string().trim().min(1).nullable().default(null)),
     conferenceStart: text(dateValidator),
     conferenceEnd: text(dateValidator),
     websiteUrl: text(z.string().url().trim().nullable().default(null)),

@@ -78,7 +78,6 @@ export default function EventGeneralSettingsRoute() {
             name="description"
             label="Description"
             defaultValue={event?.description || ''}
-            required
             rows={5}
             autoComplete="off"
             error={errors?.description}
