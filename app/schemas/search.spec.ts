@@ -24,4 +24,12 @@ describe('#parseFilters', () => {
     const result = await parseFilters(params);
     expect(result.cfp).toBe(undefined);
   });
+
+  it('reset filters', async () => {
+    const params = new URLSearchParams({ query: '', type: '', cfp: '' });
+    const result = await parseFilters(params);
+    expect(result.query).toBe(undefined);
+    expect(result.type).toBe(undefined);
+    expect(result.cfp).toBe(undefined);
+  });
 });

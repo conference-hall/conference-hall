@@ -34,4 +34,21 @@ describe('Validate TalkSaveSchema', () => {
       level: "Invalid enum value. Expected 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED', received 'BAD_VALUE'",
     });
   });
+
+  it('reset talk form data', async () => {
+    const formData = new FormData();
+    formData.append('title', 'Hello world');
+    formData.append('abstract', 'Welcome to the world!');
+    formData.append('references', '');
+    formData.append('level', '');
+
+    const result = await withZod(TalkSaveSchema).validate(formData);
+    expect(result.data).toEqual({
+      title: 'Hello world',
+      abstract: 'Welcome to the world!',
+      references: null,
+      level: null,
+      languages: [],
+    });
+  });
 });

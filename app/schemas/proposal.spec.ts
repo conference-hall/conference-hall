@@ -34,6 +34,23 @@ describe('Validate ProposalCreateSchema', () => {
       level: "Invalid enum value. Expected 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED', received 'BAD_VALUE'",
     });
   });
+
+  it('reset proposal form data', async () => {
+    const formData = new FormData();
+    formData.append('title', 'Hello world');
+    formData.append('abstract', 'Welcome to the world!');
+    formData.append('references', '');
+    formData.append('level', '');
+
+    const result = await withZod(ProposalCreateSchema).validate(formData);
+    expect(result.data).toEqual({
+      title: 'Hello world',
+      abstract: 'Welcome to the world!',
+      references: null,
+      languages: [],
+      level: null,
+    });
+  });
 });
 
 describe('Validate ProposalUpdateSchema', () => {
@@ -71,15 +88,41 @@ describe('Validate ProposalUpdateSchema', () => {
 
     expect(result?.error?.fieldErrors).toEqual({ abstract: 'Required', title: 'Required' });
   });
+
+  it('reset fields', async () => {
+    const formData = new FormData();
+    formData.append('title', 'Title changed');
+    formData.append('abstract', 'Abstract changes');
+    formData.append('references', '');
+    formData.append('level', '');
+
+    const result = await withZod(ProposalUpdateSchema).validate(formData);
+
+    expect(result.data).toEqual({
+      title: 'Title changed',
+      abstract: 'Abstract changes',
+      references: null,
+      level: null,
+      languages: [],
+    });
+  });
 });
 
 describe('Validate ProposalSubmissionSchema', () => {
-  it('validates proposal form data', async () => {
+  it('validates submission message', async () => {
     const formData = new FormData();
     formData.append('message', 'Hello world');
 
     const result = await withZod(ProposalSubmissionSchema).validate(formData);
     expect(result.data).toEqual({ message: 'Hello world' });
+  });
+
+  it('reset submission message', async () => {
+    const formData = new FormData();
+    formData.append('message', '');
+
+    const result = await withZod(ProposalSubmissionSchema).validate(formData);
+    expect(result.data).toEqual({ message: null });
   });
 });
 

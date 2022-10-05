@@ -14,7 +14,7 @@ export const ProposalUpdateSchema = TalkSaveSchema.extend({
 });
 
 export const ProposalSubmissionSchema = z.object({
-  message: text(z.string().trim().max(1000).optional()),
+  message: text(z.string().trim().max(1000).nullable().default(null)),
 });
 
 export const ProposalsFiltersSchema = z.object({

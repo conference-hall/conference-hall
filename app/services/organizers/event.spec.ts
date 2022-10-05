@@ -598,6 +598,7 @@ describe('#updateProposal', () => {
       abstract: 'Updated',
       level: 'ADVANCED',
       references: 'Updated',
+      languages: [],
       formats: [format.id],
       categories: [category.id],
     });
@@ -621,6 +622,7 @@ describe('#updateProposal', () => {
         abstract: 'Updated',
         level: null,
         references: null,
+        languages: [],
       })
     ).rejects.toThrowError(ForbiddenOperationError);
   });
@@ -634,6 +636,7 @@ describe('#updateProposal', () => {
         abstract: 'Updated',
         level: null,
         references: null,
+        languages: [],
       })
     ).rejects.toThrowError(ForbiddenOperationError);
   });

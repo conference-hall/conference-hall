@@ -37,7 +37,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   const form = await request.formData();
   const result = await withZod(ProposalSubmissionSchema).validate(form);
   try {
-    await submitProposal(talkId, eventSlug, uid, result?.data ?? {});
+    if (result?.data) await submitProposal(talkId, eventSlug, uid, result?.data);
     return redirect(`/${eventSlug}/proposals`);
   } catch (err) {
     throw mapErrorToResponse(err);

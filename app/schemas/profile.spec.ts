@@ -43,6 +43,15 @@ describe('Validate DetailsSchema', () => {
       references: 'impedit quidem quisquam',
     });
   });
+
+  it('reset user details', async () => {
+    const formData = new FormData();
+    formData.append('bio', '');
+    formData.append('references', '');
+
+    const result = await withZod(DetailsSchema).validate(formData);
+    expect(result.data).toEqual({ bio: null, references: null });
+  });
 });
 
 describe('Validate AdditionalInfoSchema', () => {
@@ -60,5 +69,16 @@ describe('Validate AdditionalInfoSchema', () => {
       twitter: 'twitter',
       github: 'github',
     });
+  });
+
+  it('reset additional indormation', async () => {
+    const formData = new FormData();
+    formData.append('company', '');
+    formData.append('address', '');
+    formData.append('twitter', '');
+    formData.append('github', '');
+
+    const result = await withZod(AdditionalInfoSchema).validate(formData);
+    expect(result.data).toEqual({ company: null, address: null, twitter: null, github: null });
   });
 });

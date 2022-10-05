@@ -23,4 +23,20 @@ describe('Validate SurveySchema', () => {
       info: 'Hello',
     });
   });
+
+  it('reset survey form inputs', async () => {
+    const formData = new FormData();
+    formData.append('gender', '');
+    formData.append('tshirt', '');
+    formData.append('accomodation', '');
+    formData.append('info', '');
+
+    const result = await withZod(SurveySchema).validate(formData);
+    expect(result.data).toEqual({
+      gender: null,
+      tshirt: null,
+      accomodation: null,
+      info: null,
+    });
+  });
 });
