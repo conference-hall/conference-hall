@@ -16,7 +16,7 @@ declare global {
        * Select a value on a list box
        * @example cy.selectOn('Sex', 'Female')
        */
-      selectOn(label: string | RegExp, value: string): Chainable<JQuery<HTMLElement>>;
+      selectOn(label: string | RegExp, value: string, exit?: boolean): Chainable<JQuery<HTMLElement>>;
 
       /**
        * Type text in a text input by its label
@@ -78,9 +78,10 @@ Cypress.Commands.add('clickOn', (name) => {
   return cy.findByRole(/button|link|checkbox|radio/, { name: RegExp(`.*${name}.*`) }).click();
 });
 
-Cypress.Commands.add('selectOn', (label, value) => {
+Cypress.Commands.add('selectOn', (label, value, exit = true) => {
   cy.findByLabelText(label).click();
-  return cy.findByRole('option', { name: value }).click();
+  const select = cy.findByRole('option', { name: value }).click();
+  if (exit) select.type('{esc}');
 });
 
 Cypress.Commands.add('typeOn', (label: string | RegExp, text: string) => {

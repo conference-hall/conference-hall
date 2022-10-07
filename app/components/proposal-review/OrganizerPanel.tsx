@@ -56,7 +56,7 @@ function OrganizerComments({ uid, messages }: { uid: string; messages: Array<Mes
   }, [isAdding]);
 
   return (
-    <div className="flex flex-1 flex-col justify-between overflow-hidden">
+    <section aria-label="Organizer messages section" className="flex flex-1 flex-col justify-between overflow-hidden">
       <div className="flex flex-col-reverse gap-4 overflow-auto px-6 py-4">
         {messages.map((message) => (
           <div key={message.id} className="group flex items-end gap-4">
@@ -104,6 +104,6 @@ function OrganizerComments({ uid, messages }: { uid: string; messages: Array<Mes
           Send
         </Button>
       </fetcher.Form>
-    </div>
+    </section>
   );
 }

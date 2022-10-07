@@ -62,10 +62,13 @@ export function SpeakersPanel({ proposal, className }: Props) {
 
 function TotalRating({ rating }: { rating: Rating }) {
   return (
-    <Disclosure as="div" className="flex flex-col overflow-hidden">
+    <Disclosure as="section" className="flex flex-col overflow-hidden">
       {({ open }) => (
         <>
-          <Disclosure.Button className="flex w-full items-center justify-between px-6 py-8 hover:bg-gray-50">
+          <Disclosure.Button
+            aria-label="Toggle organizer ratings details"
+            className="flex w-full items-center justify-between px-6 py-8 hover:bg-gray-50"
+          >
             <div className="flex items-center justify-around gap-4 font-medium">
               <IconLabel icon={StarIcon}>{rating.average ?? '-'}</IconLabel>
               <IconLabel icon={HeartIcon}>{rating.positives}</IconLabel>
@@ -75,7 +78,10 @@ function TotalRating({ rating }: { rating: Rating }) {
               className={c('h-6 w-6 shrink-0 transition-transform', { 'rotate-0': !open, 'rotate-90': open })}
             />
           </Disclosure.Button>
-          <Disclosure.Panel className="grow space-y-4 overflow-auto px-6 pt-4 pb-8">
+          <Disclosure.Panel
+            aria-label="Organizer ratings details"
+            className="grow space-y-4 overflow-auto px-6 pt-4 pb-8"
+          >
             {rating.membersRatings.length === 0 && <Text>No rated yet.</Text>}
             {rating.membersRatings.map((member) => (
               <div key={member.id} className="flex justify-between">
@@ -96,16 +102,19 @@ function TotalRating({ rating }: { rating: Rating }) {
 
 function SpeakerInfos({ speaker, defaultOpen }: { speaker: Speaker; defaultOpen: boolean }) {
   return (
-    <Disclosure as="div" defaultOpen={defaultOpen}>
+    <Disclosure as="section" defaultOpen={defaultOpen}>
       {({ open }) => (
         <>
-          <Disclosure.Button className="flex w-full items-center justify-between px-6 py-8 hover:bg-gray-50">
+          <Disclosure.Button
+            aria-label={`Toggle speaker ${speaker.name} details`}
+            className="flex w-full items-center justify-between px-6 py-8 hover:bg-gray-50"
+          >
             <AvatarName photoURL={speaker.photoURL} name={speaker.name} subtitle={speaker.email} />
             <ChevronRightIcon
               className={c('h-6 w-6 shrink-0 transition-transform', { 'rotate-0': !open, 'rotate-90': open })}
             />
           </Disclosure.Button>
-          <Disclosure.Panel className="space-y-4 px-6 pt-4 pb-8">
+          <Disclosure.Panel aria-label={`Speaker ${speaker.name} details`} className="space-y-4 px-6 pt-4 pb-8">
             <div className="grid grid-cols-2 gap-4">
               {speaker.company && (
                 <IconLabel truncate icon={BuildingOffice2Icon}>

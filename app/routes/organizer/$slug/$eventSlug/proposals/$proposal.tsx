@@ -41,9 +41,9 @@ export default function OrganizerProposalRoute() {
       <ProposalHeader className="h-28" proposal={proposal} current={pagination.current} total={pagination.total} />
       <div className="grid h-[calc(100%-224px)] grid-cols-8 items-stretch divide-x divide-gray-200">
         <SpeakersPanel className="col-span-2" proposal={proposal} />
-        <div className="col-span-4 overflow-hidden">
+        <section aria-label="Proposal details section" className="col-span-4 overflow-hidden">
           <Outlet context={{ event, proposalReview }} />
-        </div>
+        </section>
         <OrganizerPanel className="col-span-2" uid={uid} messages={proposal.messages} />
       </div>
       <ProposalFooter

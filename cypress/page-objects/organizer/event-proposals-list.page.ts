@@ -29,23 +29,23 @@ class OrganizationEventsProposalsPage {
   }
 
   filterRatings(name: string) {
-    return cy.selectOn('Rated by you', name);
+    return cy.selectOn('Rated by you', name, false);
   }
 
   filterFormat(name: string) {
-    return cy.selectOn('Formats', name);
+    return cy.selectOn('Formats', name, false);
   }
 
   filterCategory(name: string) {
-    return cy.selectOn('Categories', name);
+    return cy.selectOn('Categories', name, false);
   }
 
   filterStatus(name: string) {
-    return cy.selectOn('Status', name);
+    return cy.selectOn('Status', name, false);
   }
 
   sortBy(sort: string) {
-    return cy.selectOn('Sort', sort);
+    return cy.selectOn('Sort', sort, false);
   }
 }
 
