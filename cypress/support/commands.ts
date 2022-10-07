@@ -80,7 +80,7 @@ Cypress.Commands.add('clickOn', (name) => {
 
 Cypress.Commands.add('selectOn', (label, value) => {
   cy.findByLabelText(label).click();
-  return cy.findByRole('option', { name: value }).click().type('{esc}');
+  return cy.findByRole('option', { name: value }).click();
 });
 
 Cypress.Commands.add('typeOn', (label: string | RegExp, text: string) => {
