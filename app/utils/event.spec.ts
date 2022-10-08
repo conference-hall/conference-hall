@@ -1,5 +1,12 @@
 import { vi } from 'vitest';
-import { formatCFPDate, formatCFPState, formatConferenceDates, formatEventType, getCfpState } from './event';
+import {
+  formatCFPDate,
+  formatCFPElapsedTime,
+  formatCFPState,
+  formatConferenceDates,
+  formatEventType,
+  getCfpState,
+} from './event';
 
 describe('#formatEventType', () => {
   it('return conference label', () => {
@@ -48,7 +55,42 @@ describe('#formatCFPState', () => {
 });
 
 describe('#formatCFPElapsedTime', () => {
-  it.todo('should be tested');
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('return "CFP not open" if no dates', () => {
+    const message = formatCFPElapsedTime('CLOSED');
+    expect(message).toBe('Call for paper is not open yet');
+  });
+
+  it('returns closed CFP', () => {
+    vi.setSystemTime(new Date('2020-02-26T00:00:00.000Z'));
+    const start = '2020-02-27T00:00:00.000Z';
+    const end = '2020-02-28T23:59:59.000Z';
+    const message = formatCFPElapsedTime('CLOSED', start, end);
+    expect(message).toBe('Call for paper will be open in 1 day');
+  });
+
+  it('returns opened CFP', () => {
+    vi.setSystemTime(new Date('2020-02-27T12:00:00.000Z'));
+    const start = '2020-02-27T00:00:00.000Z';
+    const end = '2020-02-28T23:59:59.000Z';
+    const message = formatCFPElapsedTime('OPENED', start, end);
+    expect(message).toBe('Call for paper is open for 1 day');
+  });
+
+  it('returns finished CFP', () => {
+    vi.setSystemTime(new Date('2020-02-30T00:00:00.000Z'));
+    const start = '2020-02-27T00:00:00.000Z';
+    const end = '2020-02-28T23:59:59.000Z';
+    const message = formatCFPElapsedTime('FINISHED', start, end);
+    expect(message).toBe('Call for paper closed since 1 day');
+  });
 });
 
 describe('#formatCFPDate', () => {
