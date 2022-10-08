@@ -1,3 +1,4 @@
+import { organizationFactory } from 'tests/factories/organization';
 import { resetDB, disconnectDB } from '../../../tests/db-helpers';
 import { userFactory } from '../../../tests/factories/users';
 import { db } from '../db';
@@ -28,7 +29,15 @@ describe('#getProfile', () => {
     });
   });
 
-  it.todo('returns a profile with organizations count');
+  it('returns a profile with organizations count', async () => {
+    const user = await userFactory();
+    await organizationFactory({ owners: [user] });
+    await organizationFactory({ reviewers: [user] });
+    await organizationFactory({ members: [user] });
+
+    const response = await getProfile(user.id);
+    expect(response.organizationsCount).toBe(3);
+  });
 
   it('throws an error when user not found', async () => {
     await expect(getProfile('XXX')).rejects.toThrowError(UserNotFoundError);
