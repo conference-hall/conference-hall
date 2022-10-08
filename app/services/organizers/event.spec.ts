@@ -357,7 +357,7 @@ describe('#searchProposals', () => {
 });
 
 describe('#getProposalReview', () => {
-  let owner: User, speaker: User;
+  let owner: User, member: User, speaker: User;
   let organization: Organization;
   let event: Event;
   let format: EventFormat;
@@ -366,8 +366,9 @@ describe('#getProposalReview', () => {
   beforeEach(async () => {
     await resetDB();
     owner = await userFactory({ traits: ['clark-kent'] });
+    member = await userFactory({ traits: ['bruce-wayne'] });
     speaker = await userFactory({ traits: ['peter-parker'] });
-    organization = await organizationFactory({ owners: [owner] });
+    organization = await organizationFactory({ owners: [owner, member] });
     event = await eventFactory({ organization });
     format = await eventFormatFactory({ event });
     category = await eventCategoryFactory({ event });
@@ -419,13 +420,102 @@ describe('#getProposalReview', () => {
     });
   });
 
-  it.todo('returns organizers ratings');
+  it('returns organizers ratings', async () => {
+    const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+    await ratingFactory({ proposal, user: owner, attributes: { feeling: 'NEGATIVE', rating: 0 } });
+    await ratingFactory({ proposal, user: member, attributes: { feeling: 'POSITIVE', rating: 5 } });
 
-  it.todo('returns organizers messages');
+    const reviewInfo = await getProposalReview(organization.slug, event.slug, proposal.id, owner.id, {});
 
-  it.todo('returns pagination for next and previous proposals');
+    expect(reviewInfo.proposal.rating).toEqual({
+      average: 2.5,
+      positives: 1,
+      negatives: 1,
+      userRating: { rating: 0, feeling: 'NEGATIVE' },
+      membersRatings: [
+        {
+          id: owner.id,
+          name: owner.name,
+          photoURL: owner.photoURL,
+          feeling: 'NEGATIVE',
+          rating: 0,
+        },
+        {
+          id: member.id,
+          name: member.name,
+          photoURL: member.photoURL,
+          feeling: 'POSITIVE',
+          rating: 5,
+        },
+      ],
+    });
+  });
 
-  it.todo('returns pagination for next and previous proposals with filters');
+  it('returns organizers messages', async () => {
+    const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+    const message1 = await messageFactory({ proposal, user: owner, attributes: { message: 'Message 1' } });
+    const message2 = await messageFactory({ proposal, user: member, attributes: { message: 'Message 2' } });
+
+    const reviewInfo = await getProposalReview(organization.slug, event.slug, proposal.id, owner.id, {});
+
+    expect(reviewInfo.proposal.messages).toEqual([
+      {
+        id: message2.id,
+        userId: member.id,
+        name: member.name,
+        photoURL: member.photoURL,
+        message: 'Message 2',
+      },
+      {
+        id: message1.id,
+        userId: owner.id,
+        name: owner.name,
+        photoURL: owner.photoURL,
+        message: 'Message 1',
+      },
+    ]);
+  });
+
+  it('returns pagination for next and previous proposals', async () => {
+    const proposal1 = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+    const proposal2 = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+    const proposal3 = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+
+    const reviewInfo = await getProposalReview(organization.slug, event.slug, proposal2.id, owner.id, {});
+
+    expect(reviewInfo.pagination).toEqual({
+      current: 2,
+      total: 3,
+      nextId: proposal1.id,
+      previousId: proposal3.id,
+    });
+  });
+
+  it('returns pagination for next and previous proposals with filters', async () => {
+    const proposal1 = await proposalFactory({
+      event,
+      talk: await talkFactory({ speakers: [speaker], attributes: { title: 'foo' } }),
+    });
+    await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker], attributes: { title: 'bar' } }) });
+    const proposal3 = await proposalFactory({
+      event,
+      talk: await talkFactory({ speakers: [speaker], attributes: { title: 'foo' } }),
+    });
+    await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker], attributes: { title: 'bar' } }) });
+    const proposal5 = await proposalFactory({
+      event,
+      talk: await talkFactory({ speakers: [speaker], attributes: { title: 'foo' } }),
+    });
+
+    const reviewInfo = await getProposalReview(organization.slug, event.slug, proposal3.id, owner.id, { query: 'foo' });
+
+    expect(reviewInfo.pagination).toEqual({
+      current: 2,
+      total: 3,
+      nextId: proposal1.id,
+      previousId: proposal5.id,
+    });
+  });
 
   it('throws an error if user does not belong to event orga', async () => {
     const user = await userFactory();
