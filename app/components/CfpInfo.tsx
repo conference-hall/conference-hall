@@ -1,5 +1,5 @@
+import type { CfpState } from '~/schemas/event';
 import cn from 'classnames';
-import type { CfpState } from '../utils/event';
 import { formatCFPDate, formatCFPState, formatCFPElapsedTime } from '../utils/event';
 import { H2, Text } from '../design-system/Typography';
 

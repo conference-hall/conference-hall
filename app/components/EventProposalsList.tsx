@@ -1,4 +1,4 @@
-import type { CfpState } from '~/utils/event';
+import type { CfpState } from '~/schemas/event';
 import formatRelative from 'date-fns/formatRelative';
 import { CalendarIcon, ExclamationCircleIcon, InboxIcon } from '@heroicons/react/24/outline';
 import { CfpLabel } from './CfpInfo';

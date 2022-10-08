@@ -1,8 +1,8 @@
+import type { CfpState, EventType } from '~/schemas/event';
 import { useMemo } from 'react';
 import { NavTabs } from '~/design-system/NavTabs';
-import type { CfpState } from '~/utils/event';
 
-type Props = { slug: string; type: 'CONFERENCE' | 'MEETUP'; cfpState: CfpState; surveyEnabled: boolean };
+type Props = { slug: string; type: EventType; cfpState: CfpState; surveyEnabled: boolean };
 
 export function EventTabs({ slug, type, cfpState, surveyEnabled }: Props) {
   const eventTabs = useMemo(

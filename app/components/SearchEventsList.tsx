@@ -1,8 +1,8 @@
+import type { CfpState } from '~/schemas/event';
 import { MapPinIcon } from '@heroicons/react/20/solid';
 import { CardLink } from '~/design-system/Card';
-import type { CfpState } from '~/utils/event';
+import { IconLabel } from '~/design-system/IconLabel';
 import { formatEventType } from '~/utils/event';
-import { IconLabel } from '../design-system/IconLabel';
 import { CfpElapsedTime } from './CfpInfo';
 
 type Props = {
