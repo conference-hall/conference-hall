@@ -9,17 +9,14 @@ export type CfpState = 'CLOSED' | 'OPENED' | 'FINISHED';
 export type EventType = z.infer<typeof EventTypeSchema>;
 export type EventVisibility = z.infer<typeof EventVisibilitySchema>;
 
-export const EventCreateSchema = z.object({
-  type: text(EventTypeSchema),
+export const EventGeneralSettingsSchema = z.object({
   name: text(z.string().trim().min(3).max(50)),
   visibility: text(EventVisibilitySchema),
   slug: text(slugValidator),
 });
 
-export const EventGeneralSettingsSchema = z.object({
-  name: text(z.string().trim().min(3).max(50)),
-  visibility: text(EventVisibilitySchema),
-  slug: text(slugValidator),
+export const EventCreateSchema = EventGeneralSettingsSchema.extend({
+  type: text(EventTypeSchema),
 });
 
 export const EventDetailsSettingsSchema = z
