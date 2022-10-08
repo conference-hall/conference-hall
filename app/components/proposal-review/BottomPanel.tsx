@@ -11,12 +11,13 @@ type Props = {
   className?: string;
 };
 
-export function ProposalFooter({ nextId, previousId, userRating, className }: Props) {
+export function BottomPanel({ nextId, previousId, userRating, className }: Props) {
   const { slug, eventSlug } = useParams();
   const [searchParams] = useSearchParams();
 
   return (
     <section
+      aria-label="Review proposal actions section"
       className={c('flex items-center justify-between border-t border-gray-200 bg-gray-50 py-8 px-8', className)}
     >
       <div className="w-24">

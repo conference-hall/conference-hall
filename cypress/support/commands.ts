@@ -28,7 +28,7 @@ declare global {
        * Assert if a checkbox is checked
        * @example cy.assertChecked('name')
        */
-      assertChecked(text: string): void;
+      assertChecked(text: string | RegExp): void;
 
       /**
        * Assert if a radio is checked

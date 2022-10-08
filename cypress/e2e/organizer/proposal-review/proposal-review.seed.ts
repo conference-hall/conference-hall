@@ -1,19 +1,37 @@
-import { eventCategoryFactory } from '../../../tests/factories/categories';
-import { eventFactory } from '../../../tests/factories/events';
-import { ratingFactory } from '../../../tests/factories/ratings';
-import { eventFormatFactory } from '../../../tests/factories/formats';
-import { organizationFactory } from '../../../tests/factories/organization';
-import { proposalFactory } from '../../../tests/factories/proposals';
-import { talkFactory } from '../../../tests/factories/talks';
-import { userFactory } from '../../../tests/factories/users';
-import { messageFactory } from '../../../tests/factories/messages';
+import { eventCategoryFactory } from '../../../../tests/factories/categories';
+import { eventFactory } from '../../../../tests/factories/events';
+import { ratingFactory } from '../../../../tests/factories/ratings';
+import { eventFormatFactory } from '../../../../tests/factories/formats';
+import { organizationFactory } from '../../../../tests/factories/organization';
+import { proposalFactory } from '../../../../tests/factories/proposals';
+import { talkFactory } from '../../../../tests/factories/talks';
+import { userFactory } from '../../../../tests/factories/users';
+import { messageFactory } from '../../../../tests/factories/messages';
 
 export const seed = async () => {
   const organizer1 = await userFactory({ traits: ['clark-kent'] });
   const organizer2 = await userFactory({ traits: ['bruce-wayne'] });
   const organizer3 = await userFactory({ traits: ['peter-parker'] });
-  const speaker1 = await userFactory({ attributes: { name: 'Marie Jane' } });
-  const speaker2 = await userFactory({ attributes: { name: 'Robin' } });
+
+  const speaker1 = await userFactory({
+    attributes: {
+      name: 'Marie Jane',
+      email: 'marie@example.com',
+      bio: 'MJ Bio',
+      references: 'MJ References',
+      address: 'Nantes',
+      company: 'MJ Corp',
+      github: 'https://github.com',
+      twitter: 'https://twitter.com',
+    },
+  });
+  const speaker2 = await userFactory({
+    attributes: {
+      name: 'Robin',
+      email: 'robin@example.com',
+      bio: 'Robin Bio',
+    },
+  });
 
   const organization = await organizationFactory({
     attributes: { name: 'Awesome orga', slug: 'orga-1' },

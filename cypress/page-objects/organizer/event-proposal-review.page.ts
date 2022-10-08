@@ -1,3 +1,13 @@
+type ProposalFormType = {
+  title: string;
+  abstract: string;
+  level: string;
+  language: string;
+  references: string;
+  format: string;
+  category: string;
+};
+
 class ProposalReviewPage {
   visit(orgaSlug: string, eventSlug: string, proposalId: string) {
     cy.visit(`/organizer/${orgaSlug}/${eventSlug}/proposals/${proposalId}`);
@@ -40,8 +50,44 @@ class ProposalReviewPage {
     return cy.findByLabelText(`Speaker ${speakerName} details`);
   }
 
-  organizerMessagesSection() {
+  organizerCommentsSection() {
     return cy.findByLabelText('Organizer messages section');
+  }
+
+  bottomActionSection() {
+    return cy.findByLabelText('Review proposal actions section');
+  }
+
+  rate(rating: string) {
+    return cy.clickOn(rating);
+  }
+
+  writeComment(comment: string) {
+    cy.typeOn('Write a comment to other organizers', comment);
+    return cy.clickOn('Send');
+  }
+
+  deleteComment() {
+    return cy.findByRole('button', { name: '', hidden: true }).click({ force: true });
+  }
+
+  editProposal() {
+    return cy.clickOn('Edit proposal');
+  }
+
+  fillProposalForm(data: ProposalFormType) {
+    cy.typeOn('Title', data.title);
+    cy.typeOn('Abstract', data.abstract);
+    cy.clickOn(data.level);
+    cy.selectOn('Languages', data.language);
+    cy.typeOn('References', data.references);
+    cy.clickOn(data.format);
+    cy.clickOn(data.category);
+    return cy.clickOn('Save proposal');
+  }
+
+  cancelUpdateProposal() {
+    return cy.clickOn('Cancel');
   }
 }
 

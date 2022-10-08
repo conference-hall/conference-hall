@@ -22,7 +22,7 @@ type Props = {
   className?: string;
 };
 
-export function OrganizerPanel({ uid, messages, className }: Props) {
+export function RightPanel({ uid, messages, className }: Props) {
   return (
     <section className={c('relative flex min-h-full flex-col', className)}>
       <OrganizerComments uid={uid} messages={messages} />

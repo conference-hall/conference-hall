@@ -3,7 +3,7 @@ import OrganizationEventsProposalsPage from 'page-objects/organizer/event-propos
 
 describe('Organizer proposal review page', () => {
   beforeEach(() => {
-    cy.task('seedDB', 'organizer/event-proposal-review');
+    cy.task('seedDB', 'organizer/proposal-review/proposal-review');
   });
 
   afterEach(() => cy.task('disconnectDB'));

@@ -2,10 +2,10 @@ import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import FullscreenDialog from '~/design-system/dialogs/FullscreenDialog';
 import { sessionRequired } from '~/services/auth/auth.server';
-import { ProposalHeader } from '~/components/proposal-review/ProposalHeader';
-import { SpeakersPanel } from '~/components/proposal-review/SpeakersPanel';
-import { OrganizerPanel } from '~/components/proposal-review/OrganizerPanel';
-import { ProposalFooter } from '~/components/proposal-review/ProposalFooter';
+import { TopPanel } from '~/components/proposal-review/TopPanel';
+import { LeftPanel } from '~/components/proposal-review/LeftPanel';
+import { RightPanel } from '~/components/proposal-review/RightPanel';
+import { BottomPanel } from '~/components/proposal-review/BottomPanel';
 import { getProposalReview } from '~/services/organizers/event.server';
 import { mapErrorToResponse } from '~/services/errors';
 import { Outlet, useLoaderData, useNavigate, useOutletContext, useSearchParams } from '@remix-run/react';
@@ -38,15 +38,15 @@ export default function OrganizerProposalRoute() {
 
   return (
     <FullscreenDialog title="Proposal review" onClose={() => navigate(`../proposals?${searchParams.toString()}`)}>
-      <ProposalHeader className="h-28" proposal={proposal} current={pagination.current} total={pagination.total} />
+      <TopPanel className="h-28" proposal={proposal} current={pagination.current} total={pagination.total} />
       <div className="grid h-[calc(100%-224px)] grid-cols-8 items-stretch divide-x divide-gray-200">
-        <SpeakersPanel className="col-span-2" proposal={proposal} />
+        <LeftPanel className="col-span-2" proposal={proposal} />
         <section aria-label="Proposal details section" className="col-span-4 overflow-hidden">
           <Outlet context={{ event, proposalReview }} />
         </section>
-        <OrganizerPanel className="col-span-2" uid={uid} messages={proposal.messages} />
+        <RightPanel className="col-span-2" uid={uid} messages={proposal.messages} />
       </div>
-      <ProposalFooter
+      <BottomPanel
         className="h-28"
         userRating={proposal.rating.userRating}
         nextId={pagination.nextId}

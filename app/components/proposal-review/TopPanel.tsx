@@ -6,7 +6,7 @@ import { PencilSquareIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
 type Props = { proposal: { title: string }; current: number; total: number; className?: string };
 
-export function ProposalHeader({ proposal, current, total, className }: Props) {
+export function TopPanel({ proposal, current, total, className }: Props) {
   const { slug, eventSlug, proposal: proposalId } = useParams();
   const [searchParams] = useSearchParams();
 

@@ -47,7 +47,7 @@ type Props = {
   className?: string;
 };
 
-export function SpeakersPanel({ proposal, className }: Props) {
+export function LeftPanel({ proposal, className }: Props) {
   return (
     <section className={c('space-y-8 overflow-auto', className)}>
       <div className="divide-y divide-gray-200 border-b border-gray-200">
@@ -70,9 +70,15 @@ function TotalRating({ rating }: { rating: Rating }) {
             className="flex w-full items-center justify-between px-6 py-8 hover:bg-gray-50"
           >
             <div className="flex items-center justify-around gap-4 font-medium">
-              <IconLabel icon={StarIcon}>{rating.average ?? '-'}</IconLabel>
-              <IconLabel icon={HeartIcon}>{rating.positives}</IconLabel>
-              <IconLabel icon={XCircleIcon}>{rating.negatives}</IconLabel>
+              <IconLabel icon={StarIcon} srOnly={`Rating total ${rating.average} out of 5`}>
+                {rating.average ?? '-'}
+              </IconLabel>
+              <IconLabel icon={HeartIcon} srOnly={`${rating.positives} loves ratings`}>
+                {rating.positives}
+              </IconLabel>
+              <IconLabel icon={XCircleIcon} srOnly={`${rating.negatives} negatives ratings`}>
+                {rating.negatives}
+              </IconLabel>
             </div>
             <ChevronRightIcon
               className={c('h-6 w-6 shrink-0 transition-transform', { 'rotate-0': !open, 'rotate-90': open })}
