@@ -2,9 +2,12 @@ import { z } from 'zod';
 import { checkbox, numeric, repeatable, text } from 'zod-form-data';
 import { checkboxValidator, dateValidator, slugValidator } from '~/schemas/validators';
 
-export const EventTypeSchema = z.enum(['CONFERENCE', 'MEETUP']);
+const EventTypeSchema = z.enum(['CONFERENCE', 'MEETUP']);
+const EventVisibilitySchema = z.enum(['PUBLIC', 'PRIVATE']);
 
-export const EventVisibilitySchema = z.enum(['PUBLIC', 'PRIVATE']);
+export type CfpState = 'CLOSED' | 'OPENED' | 'FINISHED';
+export type EventType = z.infer<typeof EventTypeSchema>;
+export type EventVisibility = z.infer<typeof EventVisibilitySchema>;
 
 export const EventCreateSchema = z.object({
   type: text(EventTypeSchema),

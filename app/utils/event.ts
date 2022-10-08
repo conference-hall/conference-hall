@@ -2,8 +2,7 @@ import format from 'date-fns/format';
 import isSameDay from 'date-fns/isSameDay';
 import differenceInCalendarDays from 'date-fns/differenceInCalendarDays';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
-
-export type CfpState = 'CLOSED' | 'OPENED' | 'FINISHED';
+import type { CfpState, EventType } from '~/schemas/event';
 
 function isConferenceOpened(start?: Date | null, end?: Date | null) {
   if (!start || !end) return false;
@@ -34,7 +33,7 @@ export function getCfpState(type: string, start?: Date | null, end?: Date | null
   return 'CLOSED';
 }
 
-export function formatEventType(type: 'CONFERENCE' | 'MEETUP') {
+export function formatEventType(type: EventType) {
   switch (type) {
     case 'CONFERENCE':
       return 'Conference';
@@ -43,7 +42,7 @@ export function formatEventType(type: 'CONFERENCE' | 'MEETUP') {
   }
 }
 
-export function formatConferenceDates(type: 'CONFERENCE' | 'MEETUP', start?: string, end?: string) {
+export function formatConferenceDates(type: EventType, start?: string, end?: string) {
   if (!start || !end) return formatEventType(type);
   const startDate = new Date(start);
   const endDate = new Date(end);
