@@ -11,5 +11,5 @@ export const seed = async () => {
     owners: [owner],
   });
 
-  inviteFactory({ organization, user: owner, attributes: { id: 'invitation-1' } });
+  await inviteFactory({ organization, user: owner, attributes: { id: 'invitation-1' } });
 };

@@ -14,6 +14,6 @@ export const seed = async () => {
     reviewers: [organizer3],
   });
 
-  eventFactory({ organization, attributes: { slug: 'event-1' } });
-  eventFactory({ organization, attributes: { slug: 'event-2' } });
+  await eventFactory({ organization, attributes: { slug: 'event-1' } });
+  await eventFactory({ organization, attributes: { slug: 'event-2' } });
 };

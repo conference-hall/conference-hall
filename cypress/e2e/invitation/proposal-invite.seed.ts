@@ -31,5 +31,5 @@ export const seed = async () => {
     attributes: { id: 'awesome-proposal' },
   });
 
-  inviteFactory({ proposal, user: speaker1, attributes: { id: 'invitation-1' } });
+  await inviteFactory({ proposal, user: speaker1, attributes: { id: 'invitation-1' } });
 };

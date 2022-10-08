@@ -18,5 +18,5 @@ export const seed = async () => {
     speakers: [speaker1, speaker2],
   });
 
-  inviteFactory({ talk, user: speaker1, attributes: { id: 'invitation-1' } });
+  await inviteFactory({ talk, user: speaker1, attributes: { id: 'invitation-1' } });
 };
