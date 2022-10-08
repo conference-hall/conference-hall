@@ -52,7 +52,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         key: 'survey',
         name: 'Survey',
         path: `/${slug}/submission/${talkId}/survey`,
-        enabled: event.hasSurvey,
+        enabled: event.surveyEnabled,
       },
       {
         key: 'submission',

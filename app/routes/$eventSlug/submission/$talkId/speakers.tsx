@@ -57,7 +57,7 @@ export const action = async ({ request, params }: ActionArgs) => {
       const event = await getEvent(eventSlug);
       if (event.hasTracks) {
         return redirect(`/${eventSlug}/submission/${talkId}/tracks`);
-      } else if (event.hasSurvey) {
+      } else if (event.surveyEnabled) {
         return redirect(`/${eventSlug}/submission/${talkId}/survey`);
       } else {
         return redirect(`/${eventSlug}/submission/${talkId}/submit`);

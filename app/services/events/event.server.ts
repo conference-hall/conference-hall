@@ -30,7 +30,6 @@ export async function getEvent(slug: string) {
     codeOfConductUrl: event.codeOfConductUrl,
     bannerUrl: event.bannerUrl,
     isCfpOpen: getCfpState(event.type, event.cfpStart, event.cfpEnd) === 'OPENED',
-    hasSurvey: event.surveyEnabled,
     hasTracks: event.categories.length > 0 || event.formats.length > 0,
     formats: event.formats.map((f) => ({
       id: f.id,

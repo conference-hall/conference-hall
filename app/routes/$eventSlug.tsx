@@ -21,19 +21,19 @@ export const loader = async ({ params }: LoaderArgs) => {
 };
 
 export default function EventRoute() {
-  const data = useLoaderData<typeof loader>();
+  const event = useLoaderData<typeof loader>();
 
   return (
     <>
       <EventHeader
-        type={data.type}
-        name={data.name}
-        address={data.address}
-        conferenceStart={data.conferenceStart}
-        conferenceEnd={data.conferenceEnd}
+        type={event.type}
+        name={event.name}
+        address={event.address}
+        conferenceStart={event.conferenceStart}
+        conferenceEnd={event.conferenceEnd}
       />
-      <EventTabs slug={data.slug} type={data.type} cfpState={data.cfpState} surveyEnabled={data.surveyEnabled} />
-      <Outlet context={data} />
+      <EventTabs slug={event.slug} type={event.type} cfpState={event.cfpState} surveyEnabled={event.surveyEnabled} />
+      <Outlet context={event} />
     </>
   );
 }

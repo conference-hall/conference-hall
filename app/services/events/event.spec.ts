@@ -37,8 +37,7 @@ describe('#getEvent', () => {
       cfpEnd: event.cfpEnd?.toUTCString(),
       cfpState: 'OPENED',
       isCfpOpen: true,
-      surveyEnabled: true, // TODO not necessary? hasSurvey: true
-      hasSurvey: true,
+      surveyEnabled: true,
       hasTracks: true,
       formats: [{ id: format.id, name: format.name, description: format.description }],
       categories: [

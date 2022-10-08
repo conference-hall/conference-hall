@@ -43,7 +43,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   try {
     const event = await getEvent(eventSlug);
     await saveTracks(talkId, event.id, uid, result.data);
-    if (event.hasSurvey) {
+    if (event.surveyEnabled) {
       return redirect(`/${eventSlug}/submission/${talkId}/survey`);
     }
     return redirect(`/${eventSlug}/submission/${talkId}/submit`);
