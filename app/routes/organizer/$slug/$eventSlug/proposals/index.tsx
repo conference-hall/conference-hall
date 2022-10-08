@@ -38,7 +38,7 @@ export default function OrganizerEventProposalsRoute() {
   if (results.length === 0 && !hasFilters) return <NoProposals />;
 
   return (
-    <Container className="my-4 sm:my-8">
+    <Container className="my-4 sm:my-12">
       <h2 className="sr-only">Event proposals</h2>
       <ProposalsFilters filters={filters} formats={event.formats} categories={event.categories} />
       <ProposalsList proposals={results} total={total} />

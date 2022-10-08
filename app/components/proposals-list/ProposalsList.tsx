@@ -23,7 +23,7 @@ export function ProposalsList({ proposals, total }: Props) {
 
   return (
     <div className="-mx-4 mt-4 overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:-mx-6 md:mx-0 md:rounded-lg">
-      <div className="flex flex-row items-center justify-between border-b border-gray-200 bg-gray-50 px-4 py-2 sm:px-6">
+      <div className="flex flex-row items-center justify-between border-b border-gray-200 bg-gray-100 px-4 py-2 sm:px-6">
         <div className="flex flex-row items-center">
           <input
             type="checkbox"
@@ -106,7 +106,7 @@ function ProposalRow({ proposal, isSelected, onSelect }: ProposalRowProp) {
           onChange={onSelect}
         />
       </td>
-      <td scope="row" className="w-full max-w-0 truncate py-4 px-4 sm:w-auto sm:max-w-none sm:p-0">
+      <td scope="row" className="w-full max-w-0 truncate py-6 px-4 sm:w-auto sm:max-w-none sm:p-0">
         <Link
           to={{ pathname: `${location.pathname}/${proposal.id}`, search: searchParams.toString() }}
           aria-label={`Open proposal "${proposal.title}"`}
@@ -118,14 +118,14 @@ function ProposalRow({ proposal, isSelected, onSelect }: ProposalRowProp) {
           </Text>
         </Link>
       </td>
-      <td className="hidden w-0 px-3 py-4 text-center sm:table-cell">
+      <td className="hidden w-0 px-3 py-6 text-center sm:table-cell">
         {proposal.status && (
           <div className="flex items-center justify-end gap-2">
             <Badge>{proposal.status?.toLowerCase()}</Badge>
           </div>
         )}
       </td>
-      <td className="hidden w-0 px-3 py-4 lg:table-cell">
+      <td className="hidden w-0 px-3 py-6 lg:table-cell">
         <div className="flex items-center justify-around gap-4">
           <IconLabel icon={XCircleIcon} iconClassName="text-gray-400">
             {proposal.ratings.negatives}
@@ -138,7 +138,7 @@ function ProposalRow({ proposal, isSelected, onSelect }: ProposalRowProp) {
           </IconLabel>
         </div>
       </td>
-      <td className="w-0 px-3 py-4 pr-4 text-right sm:pr-6">
+      <td className="w-0 px-3 py-6 pr-4 text-right sm:pr-6">
         <Text variant="secondary" className="ml-2 text-base font-semibold">
           {formatRating(proposal.ratings.total)}
         </Text>

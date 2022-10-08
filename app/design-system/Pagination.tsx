@@ -21,6 +21,8 @@ export function Pagination({ pathname, current, total, className }: Props) {
 
   const pages = useMemo(() => Array.from({ length: total }, (_, i) => i + 1), [total]);
 
+  if (total <= 1) return null;
+
   return (
     <nav className={c('flex items-center justify-center border-t border-gray-200 px-4 sm:px-0', className)}>
       {pages.map((page) => {

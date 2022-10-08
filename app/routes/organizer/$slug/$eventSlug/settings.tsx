@@ -44,7 +44,7 @@ export default function OrganizationSettingsRoute() {
   const { event } = useOutletContext<OrganizerEventContext>();
 
   return (
-    <Container className="my-4 sm:my-8">
+    <Container className="my-4 sm:my-12">
       <h1 className="sr-only">Settings</h1>
       <div className="sm:grid sm:grid-cols-12 sm:gap-x-12">
         <NavMenu aria-label="Event settings menu" items={menus} className="py-6 px-2 sm:col-span-3 sm:py-0 sm:px-0" />
