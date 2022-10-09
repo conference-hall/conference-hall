@@ -1,4 +1,5 @@
-import type { ReactNode } from 'react';
+import type { ReactNode, Ref } from 'react';
+import { forwardRef } from 'react';
 import cn from 'classnames';
 
 type CheckboxGroupProps = {
@@ -48,11 +49,15 @@ type CheckboxProps = {
   className?: string;
 } & React.InputHTMLAttributes<HTMLInputElement>;
 
-export function Checkbox({ id, name, description, className, children, ...rest }: CheckboxProps) {
+export function CheckboxField(
+  { id, name, description, className, children, ...rest }: CheckboxProps,
+  ref: Ref<HTMLInputElement>
+) {
   return (
     <div className={cn('relative flex items-start', className)}>
       <div className="flex h-5 items-center">
         <input
+          ref={ref}
           id={id}
           aria-describedby={`${id}-description`}
           name={name}
@@ -63,14 +68,18 @@ export function Checkbox({ id, name, description, className, children, ...rest }
           {...rest}
         />
       </div>
-      <label htmlFor={id} className="pl-3 text-sm text-gray-900">
-        {children}
-        {description && (
-          <p id={`${id}-description`} className="text-gray-500">
-            {description}
-          </p>
-        )}
-      </label>
+      {children && (
+        <label htmlFor={id} className="pl-3 text-sm text-gray-900">
+          {children}
+          {description && (
+            <p id={`${id}-description`} className="text-gray-500">
+              {description}
+            </p>
+          )}
+        </label>
+      )}
     </div>
   );
 }
+
+export const Checkbox = forwardRef(CheckboxField);

@@ -1,4 +1,4 @@
-import type { LoaderArgs } from '@remix-run/node';
+import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData, useLocation, useOutletContext } from '@remix-run/react';
 import { searchProposals } from '~/services/organizers/event.server';
@@ -13,6 +13,8 @@ import { parsePage } from '~/schemas/pagination';
 import type { OrganizerEventContext } from '../../$eventSlug';
 import { withZod } from '@remix-validated-form/with-zod';
 import { ProposalsFiltersSchema } from '~/schemas/proposal';
+import { MARK_AS_ACCEPTED_ACTION, MARK_AS_REJECTED_ACTION } from '~/components/proposals-list/UpdateStatusMenu';
+import { EXPORT_ALL_ACTION, EXPORT_SELECTED_ACTION } from '~/components/proposals-list/ExportProposalsMenu';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const uid = await sessionRequired(request);
@@ -25,6 +27,26 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     return json(results);
   } catch (err) {
     throw mapErrorToResponse(err);
+  }
+};
+
+export const action = async ({ request }: ActionArgs) => {
+  const form = await request.formData();
+  const action = form.get('_action');
+
+  switch (action) {
+    case MARK_AS_ACCEPTED_ACTION: {
+      return json(null);
+    }
+    case MARK_AS_REJECTED_ACTION: {
+      return json(null);
+    }
+    case EXPORT_SELECTED_ACTION: {
+      return json(null);
+    }
+    case EXPORT_ALL_ACTION: {
+      return json(null);
+    }
   }
 };
 
