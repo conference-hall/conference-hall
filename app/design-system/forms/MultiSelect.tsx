@@ -1,8 +1,9 @@
-import { Fragment, useState } from 'react';
 import c from 'classnames';
-import { Listbox, Transition } from '@headlessui/react';
+import { useState } from 'react';
+import { Listbox } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
 import { Text } from '../Typography';
+import { SelectTransition } from '../Transitions';
 
 type Option = { value: string; label: string };
 
@@ -40,13 +41,7 @@ export default function MultiSelect({ name, label, placeholder, options, default
               </span>
             </Listbox.Button>
 
-            <Transition
-              show={open}
-              as={Fragment}
-              leave="transition ease-in duration-100"
-              leaveFrom="opacity-100"
-              leaveTo="opacity-0"
-            >
+            <SelectTransition show={open}>
               <Listbox.Options className="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                 {options.map((option) => (
                   <Listbox.Option
@@ -80,7 +75,7 @@ export default function MultiSelect({ name, label, placeholder, options, default
                   </Listbox.Option>
                 ))}
               </Listbox.Options>
-            </Transition>
+            </SelectTransition>
           </div>
         </div>
       )}

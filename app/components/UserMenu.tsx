@@ -1,5 +1,4 @@
-import { Fragment } from 'react';
-import { Menu, Transition } from '@headlessui/react';
+import { Menu } from '@headlessui/react';
 import cn from 'classnames';
 import { Form, Link } from '@remix-run/react';
 import {
@@ -12,6 +11,7 @@ import {
 } from '@heroicons/react/20/solid';
 import { getAuth } from 'firebase/auth';
 import { Avatar } from '~/design-system/Avatar';
+import { MenuTransition } from '~/design-system/Transitions';
 
 type Props = { email?: string | null; picture?: string | null };
 
@@ -44,15 +44,7 @@ export function UserMenu({ email, picture }: Props) {
           <Avatar photoURL={picture} />
         </Menu.Button>
       </div>
-      <Transition
-        as={Fragment}
-        enter="transition ease-out duration-100"
-        enterFrom="transform opacity-0 scale-95"
-        enterTo="transform opacity-100 scale-100"
-        leave="transition ease-in duration-75"
-        leaveFrom="transform opacity-100 scale-100"
-        leaveTo="transform opacity-0 scale-95"
-      >
+      <MenuTransition>
         <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="px-4 py-3">
             <p className="text-sm">Signed in as</p>
@@ -89,7 +81,7 @@ export function UserMenu({ email, picture }: Props) {
             </Menu.Item>
           </div>
         </Menu.Items>
-      </Transition>
+      </MenuTransition>
     </Menu>
   );
 }

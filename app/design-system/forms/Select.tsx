@@ -1,7 +1,8 @@
-import { Fragment, useCallback } from 'react';
 import c from 'classnames';
-import { Listbox, Transition } from '@headlessui/react';
+import { useCallback } from 'react';
+import { Listbox } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
+import { SelectTransition } from '../Transitions';
 
 type Props = {
   name: string;
@@ -36,14 +37,8 @@ export default function Select({ name, label, options, value, onChange, classNam
               </span>
             </Listbox.Button>
 
-            <Transition
-              show={open}
-              as={Fragment}
-              leave="transition ease-in duration-100"
-              leaveFrom="opacity-100"
-              leaveTo="opacity-0"
-            >
-              <Listbox.Options className="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+            <SelectTransition show={open}>
+              <Listbox.Options className="absolute z-30 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                 {options.map((option) => (
                   <Listbox.Option
                     key={option.id}
@@ -76,7 +71,7 @@ export default function Select({ name, label, options, value, onChange, classNam
                   </Listbox.Option>
                 ))}
               </Listbox.Options>
-            </Transition>
+            </SelectTransition>
           </div>
         </div>
       )}

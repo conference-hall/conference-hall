@@ -1,9 +1,9 @@
-import { Fragment } from 'react';
-import { Menu, Transition } from '@headlessui/react';
+import { Menu } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import { Form } from '@remix-run/react';
 import type { ButtonStylesProps } from '~/design-system/Buttons';
 import { getStyles } from '~/design-system/Buttons';
+import { MenuTransition } from '~/design-system/Transitions';
 
 export const MARK_AS_ACCEPTED_ACTION = 'mark-as-accepted';
 export const MARK_AS_REJECTED_ACTION = 'mark-as-rejected';
@@ -20,16 +20,7 @@ export function UpdateStatusMenu({ selection, ...rest }: Props) {
         Mark as...
         <ChevronDownIcon className="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
       </Menu.Button>
-
-      <Transition
-        as={Fragment}
-        enter="transition ease-out duration-100"
-        enterFrom="transform opacity-0 scale-95"
-        enterTo="transform opacity-100 scale-100"
-        leave="transition ease-in duration-75"
-        leaveFrom="transform opacity-100 scale-100"
-        leaveTo="transform opacity-0 scale-95"
-      >
+      <MenuTransition>
         <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <Menu.Item>
             <Form method="post">
@@ -60,7 +51,7 @@ export function UpdateStatusMenu({ selection, ...rest }: Props) {
             </Form>
           </Menu.Item>
         </Menu.Items>
-      </Transition>
+      </MenuTransition>
     </Menu>
   );
 }
