@@ -20,7 +20,7 @@ import { withZod } from '@remix-validated-form/with-zod';
 export const handle = { step: 'speakers' };
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   const user = await getUser(uid);
   const eventSlug = params.eventSlug!;
   const talkId = params.talkId!;
@@ -38,7 +38,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   const talkId = params.talkId!;
   const eventSlug = params.eventSlug!;
   const form = await request.formData();

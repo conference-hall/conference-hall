@@ -14,7 +14,7 @@ import { withZod } from '@remix-validated-form/with-zod';
 export const handle = { step: 'proposal' };
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   const talkId = params.talkId!;
   try {
     if (talkId === 'new') {
@@ -29,7 +29,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   const eventSlug = params.eventSlug!;
   const talkId = params.talkId!;
 

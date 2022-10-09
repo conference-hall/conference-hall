@@ -14,7 +14,7 @@ import { SubmissionTalksList } from '../../../components/SubmissionTalksList';
 export const handle = { step: 'selection' };
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   const slug = params.eventSlug!;
 
   try {

@@ -14,7 +14,7 @@ import { getActivity } from '~/services/speakers/activity.server';
 import type { ProfileContext } from '../speaker';
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   try {
     const profile = await getActivity(uid);
     return json(profile);

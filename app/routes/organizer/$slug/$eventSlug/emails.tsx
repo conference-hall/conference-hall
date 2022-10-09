@@ -8,7 +8,7 @@ import { sessionRequired } from '~/services/auth/auth.server';
 import { getUserRole } from '~/services/organizers/organizations.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   const { slug, eventSlug } = params;
   const role = await getUserRole(slug!, uid);
   if (role !== 'OWNER') throw redirect(`/organizer/${slug}/${eventSlug}/proposals`);

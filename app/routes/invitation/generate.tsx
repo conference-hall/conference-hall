@@ -6,7 +6,7 @@ import { mapErrorToResponse } from '../../services/errors';
 import { generateInvitationLink } from '../../services/invitations/invitations.server';
 
 export const action = async ({ request }: LoaderArgs) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   const form = await request.formData();
   const type = form.get('_type') as InviteType;
   const id = form.get('_id') as string;

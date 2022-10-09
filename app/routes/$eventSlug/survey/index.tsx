@@ -19,7 +19,7 @@ type SurveyQuestionsForm = {
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   const slug = params.eventSlug!;
   try {
     const questions = await getSurveyQuestions(slug);
@@ -31,7 +31,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   const slug = params.eventSlug!;
   const form = await request.formData();
   const result = await withZod(SurveySchema).validate(form);

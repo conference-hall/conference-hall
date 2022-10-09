@@ -1,18 +1,20 @@
 import type { ReactNode } from 'react';
-import { config } from './services/config';
 import type { LinksFunction, LoaderArgs } from '@remix-run/node';
+import { config } from './services/config';
+import { json } from '@remix-run/node';
 import { Meta, LiveReload, Outlet, Links, Scripts, useCatch, useLoaderData, ScrollRestoration } from '@remix-run/react';
-
 import { initializeFirebase } from './services/auth/firebase';
-import { isSessionValid } from './services/auth/auth.server';
+import { commitSession, getSession } from './services/auth/auth.server';
 import { getUser } from './services/auth/user.server';
-
-import tailwind from './tailwind.css';
 import { Footer } from './components/Footer';
 import { Navbar } from './components/Navbar';
 import { H1, Text } from './design-system/Typography';
 import { Container } from './design-system/Container';
 import { GlobalLoading } from './components/GlobalLoading';
+import { Toast } from './design-system/Toast';
+import type { ToastData } from './utils/toasts';
+import { getToast } from './utils/toasts';
+import tailwind from './tailwind.css';
 
 export const links: LinksFunction = () => {
   return [
@@ -22,18 +24,24 @@ export const links: LinksFunction = () => {
 };
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const uid = await isSessionValid(request);
+  const { uid, session } = await getSession(request);
   const user = uid ? await getUser(uid).catch(() => console.log('No user connected.')) : null;
-  return {
-    user,
-    firebase: {
-      FIREBASE_API_KEY: config.FIREBASE_API_KEY,
-      FIREBASE_AUTH_DOMAIN: config.FIREBASE_AUTH_DOMAIN,
-      FIREBASE_PROJECT_ID: config.FIREBASE_PROJECT_ID,
-      FIREBASE_AUTH_EMULATOR_HOST: config.FIREBASE_AUTH_EMULATOR_HOST,
-      isProduction: config.isProduction,
+  const toast = getToast(session);
+
+  return json(
+    {
+      user,
+      toast,
+      firebase: {
+        FIREBASE_API_KEY: config.FIREBASE_API_KEY,
+        FIREBASE_AUTH_DOMAIN: config.FIREBASE_AUTH_DOMAIN,
+        FIREBASE_PROJECT_ID: config.FIREBASE_PROJECT_ID,
+        FIREBASE_AUTH_EMULATOR_HOST: config.FIREBASE_AUTH_EMULATOR_HOST,
+        isProduction: config.isProduction,
+      },
     },
-  };
+    { headers: { 'Set-Cookie': await commitSession(session) } }
+  );
 };
 
 export default function App() {
@@ -42,7 +50,7 @@ export default function App() {
   initializeFirebase(data.firebase);
 
   return (
-    <Document title="Conference Hall" user={data.user}>
+    <Document title="Conference Hall" user={data.user} toast={data.toast}>
       <Outlet />
     </Document>
   );
@@ -52,9 +60,10 @@ type DocumentProps = {
   children: ReactNode;
   title?: string;
   user?: { email?: string | null; picture?: string | null } | null;
+  toast?: ToastData | null;
 };
 
-function Document({ children, title, user }: DocumentProps) {
+function Document({ children, title, user, toast }: DocumentProps) {
   return (
     <html lang="en" className="scroll-smooth">
       <head>
@@ -72,6 +81,7 @@ function Document({ children, title, user }: DocumentProps) {
         <Scripts />
         <ScrollRestoration />
         <LiveReload />
+        <Toast toast={toast} />
       </body>
     </html>
   );

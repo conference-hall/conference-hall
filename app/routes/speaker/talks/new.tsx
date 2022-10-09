@@ -13,7 +13,7 @@ import { mapErrorToResponse } from '../../../services/errors';
 import { createTalk } from '../../../services/speakers/talks.server';
 
 export const action = async ({ request }: LoaderArgs) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   const form = await request.formData();
 
   const result = await withZod(TalkSaveSchema).validate(form);

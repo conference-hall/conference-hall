@@ -14,7 +14,7 @@ export type OrganizationContext = {
 };
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   try {
     const slug = params.slug!;
     const organization = await getOrganization(slug, uid);

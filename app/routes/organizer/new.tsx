@@ -16,7 +16,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export const action = async ({ request }: ActionArgs) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   const form = await request.formData();
   const result = await withZod(OrganizationSaveSchema).validate(form);
   if (result.error) {

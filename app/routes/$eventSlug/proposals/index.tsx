@@ -10,7 +10,7 @@ import { mapErrorToResponse } from '../../../services/errors';
 import { fetchSpeakerProposals } from '../../../services/events/proposals.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   const slug = params.eventSlug!;
   const proposals = await fetchSpeakerProposals(slug, uid).catch(mapErrorToResponse);
   return json(proposals);

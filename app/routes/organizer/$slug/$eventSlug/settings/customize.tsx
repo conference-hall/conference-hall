@@ -18,7 +18,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   try {
     const { slug, eventSlug } = params;
     await uploadAndSaveEventBanner(slug!, eventSlug!, uid, request);

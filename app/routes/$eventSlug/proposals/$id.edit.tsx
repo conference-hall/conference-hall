@@ -15,7 +15,7 @@ import { ProposalUpdateSchema } from '~/schemas/proposal';
 import { withZod } from '@remix-validated-form/with-zod';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   const proposalId = params.id!;
   try {
     const proposal = await getSpeakerProposal(proposalId, uid);
@@ -26,7 +26,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const action: ActionFunction = async ({ request, params }: ActionArgs) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   const eventSlug = params.eventSlug!;
   const proposalId = params.id!;
   const form = await request.formData();

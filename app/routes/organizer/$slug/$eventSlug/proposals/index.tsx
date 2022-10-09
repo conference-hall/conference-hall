@@ -17,7 +17,7 @@ import { MARK_AS_ACCEPTED_ACTION, MARK_AS_REJECTED_ACTION } from '~/components/p
 import { EXPORT_ALL_ACTION, EXPORT_SELECTED_ACTION } from '~/components/proposals-list/ExportProposalsMenu';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   const url = new URL(request.url);
   const filters = await withZod(ProposalsFiltersSchema).validate(url.searchParams);
   const page = await parsePage(url.searchParams);

@@ -17,7 +17,7 @@ import { withZod } from '@remix-validated-form/with-zod';
 import { AdditionalInfoSchema, DetailsSchema, PersonalInfoSchema } from '~/schemas/profile';
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   try {
     const profile = await getProfile(uid);
     return json(profile);
@@ -27,7 +27,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 export const action = async ({ request }: ActionArgs) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   const form = await request.formData();
   const type = form.get('_type') as string;
   try {

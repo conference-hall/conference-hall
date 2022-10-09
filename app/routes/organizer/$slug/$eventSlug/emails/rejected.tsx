@@ -15,7 +15,7 @@ import { mapErrorToResponse } from '~/services/errors';
 import { searchProposals } from '~/services/organizers/event.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   const url = new URL(request.url);
   const { data } = await withZod(ProposalsFiltersSchema).validate(url.searchParams);
   const page = await parsePage(url.searchParams);

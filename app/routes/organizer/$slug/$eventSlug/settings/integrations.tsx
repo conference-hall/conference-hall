@@ -17,7 +17,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   const { slug, eventSlug } = params;
   const form = await request.formData();
   const result = await withZod(EventSlackSettingsSchema).validate(form);

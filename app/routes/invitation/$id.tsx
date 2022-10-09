@@ -28,7 +28,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   const invitationId = params.id!;
   const form = await request.formData();
   const type = form.get('_type');

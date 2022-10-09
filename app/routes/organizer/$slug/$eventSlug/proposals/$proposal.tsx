@@ -18,7 +18,7 @@ export type OrganizerProposalContext = {
 } & OrganizerEventContext;
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   try {
     const url = new URL(request.url);
     const filters = await withZod(ProposalsFiltersSchema).validate(url.searchParams);

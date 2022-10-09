@@ -12,7 +12,7 @@ import { OrganizationSaveSchema } from '~/schemas/organization';
 import type { OrganizationContext } from '../$slug';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   const slug = params.slug!;
   const role = await getUserRole(slug, uid);
   if (role !== 'OWNER') throw new Response('Forbidden', { status: 403 });
@@ -20,7 +20,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   const form = await request.formData();
   const result = await withZod(OrganizationSaveSchema).validate(form);
   if (result.error) {

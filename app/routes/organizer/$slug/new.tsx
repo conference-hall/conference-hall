@@ -16,14 +16,14 @@ import { withZod } from '@remix-validated-form/with-zod';
 import { EventCreateSchema } from '~/schemas/event';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   const role = await getUserRole(params.slug!, uid);
   if (role !== 'OWNER') throw redirect(`/organizer/${params.slug}`);
   return null;
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   const { slug } = params;
   const form = await request.formData();
   const result = await withZod(EventCreateSchema).validate(form);

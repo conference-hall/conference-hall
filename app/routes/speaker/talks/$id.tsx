@@ -22,7 +22,7 @@ import { TalkActionsMenu } from '../../../components/TalkActionsMenu';
 import { InviteCoSpeakerButton, CoSpeakersList } from '../../../components/CoSpeaker';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   try {
     const talk = await getTalk(uid, params.id!);
     return json(talk);
@@ -32,7 +32,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   const talkId = params.id!;
   const form = await request.formData();
   const action = form.get('_action');

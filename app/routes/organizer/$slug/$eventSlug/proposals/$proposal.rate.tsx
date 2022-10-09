@@ -6,7 +6,7 @@ import { mapErrorToResponse } from '~/services/errors';
 import { rateProposal } from '~/services/organizers/event.server';
 
 export const action = async ({ request, params }: ActionArgs) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   try {
     const form = await request.formData();
     const result = await withZod(ProposalRatingDataSchema).validate(form);

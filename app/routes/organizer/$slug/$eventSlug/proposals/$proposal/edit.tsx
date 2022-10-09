@@ -19,7 +19,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   try {
     const { slug, eventSlug, proposal } = params;
     const form = await request.formData();

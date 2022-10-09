@@ -17,7 +17,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 export const action = async ({ request }: ActionArgs) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   const form = await request.formData();
   const result = await validateOrganizerAccess(uid, String(form.get('key')));
   if (result?.fieldErrors) return json(result);

@@ -13,7 +13,7 @@ import { getProfile } from '~/services/speakers/profile.server';
 export type ProfileContext = { profile: Awaited<ReturnType<typeof getProfile>> };
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   try {
     const profile = await getProfile(uid);
     return json(profile);

@@ -18,7 +18,7 @@ import { ProposalSubmissionSchema } from '~/schemas/proposal';
 export const handle = { step: 'submission' };
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   const eventSlug = params.eventSlug!;
   const talkId = params.talkId!;
   try {
@@ -31,7 +31,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   const eventSlug = params.eventSlug!;
   const talkId = params.talkId!;
   const form = await request.formData();

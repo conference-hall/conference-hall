@@ -18,7 +18,7 @@ import type { OrganizationContext } from '../$slug';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   const slug = params.slug!;
   const role = await getUserRole(slug, uid);
   if (role === 'REVIEWER') throw new Response('Forbidden', { status: 403 });
@@ -29,7 +29,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   const slug = params.id!;
   const form = await request.formData();
   const action = form.get('_action')!;

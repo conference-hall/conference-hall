@@ -18,14 +18,14 @@ import { getLanguage } from '../../../utils/languages';
 import { CoSpeakersList, InviteCoSpeakerButton } from '../../../components/CoSpeaker';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   const proposalId = params.id!;
   const proposal = await getSpeakerProposal(proposalId, uid).catch(mapErrorToResponse);
   return json(proposal);
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   const proposalId = params.id!;
   const form = await request.formData();
   try {

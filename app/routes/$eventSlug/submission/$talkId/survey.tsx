@@ -15,7 +15,7 @@ import { getSurveyAnswers, getSurveyQuestions, saveSurvey } from '../../../../se
 export const handle = { step: 'survey' };
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   const slug = params.eventSlug!;
   try {
     const questions = await getSurveyQuestions(slug);
@@ -27,7 +27,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   const slug = params.eventSlug!;
   const talkId = params.talkId!;
   const form = await request.formData();

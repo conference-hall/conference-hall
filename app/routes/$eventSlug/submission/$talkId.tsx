@@ -18,7 +18,7 @@ export type SubmitSteps = Array<{
 export const handle = { step: 'root' };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   const slug = params.eventSlug!;
   const talkId = params.talkId!;
 

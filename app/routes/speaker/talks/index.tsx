@@ -10,7 +10,7 @@ import { SpeakerTalksList } from '../../../components/SpeakerTalksList';
 import Select from '~/design-system/forms/Select';
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   const { searchParams } = new URL(request.url);
   const archived = Boolean(searchParams.get('archived'));
   try {

@@ -4,6 +4,7 @@ import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import { withZod } from '@remix-validated-form/with-zod';
 import { Container } from '~/design-system/Container';
 import { TalkSaveSchema } from '~/schemas/talks';
+import { createToast } from '~/utils/toasts';
 import { TalkAbstractForm } from '../../../components/TalkAbstractForm';
 import { Button, ButtonLink } from '../../../design-system/Buttons';
 import { H2 } from '../../../design-system/Typography';
@@ -12,7 +13,7 @@ import { mapErrorToResponse } from '../../../services/errors';
 import { getTalk, updateTalk } from '../../../services/speakers/talks.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   try {
     const talk = await getTalk(uid, params.id!);
     if (talk.archived) {
@@ -25,15 +26,16 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
-  const uid = await sessionRequired(request);
+  const { uid, session } = await sessionRequired(request);
   const form = await request.formData();
   try {
     const result = await withZod(TalkSaveSchema).validate(form);
     if (result.error) {
       return json(result.error.fieldErrors);
     } else {
-      await updateTalk(uid, params.id, result.data);
-      return redirect(`/speaker/talks/${params.id}`);
+      await updateTalk(uid!, params.id, result.data);
+      const toast = await createToast(session, 'Talk successfully saved.');
+      return redirect(`/speaker/talks/${params.id}`, toast);
     }
   } catch (err) {
     throw mapErrorToResponse(err);

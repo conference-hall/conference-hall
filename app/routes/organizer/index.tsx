@@ -14,7 +14,7 @@ import { MegaphoneIcon, UsersIcon } from '@heroicons/react/24/outline';
 import { ButtonLink } from '~/design-system/Buttons';
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   const hasAccess = await hasOrganizerAccess(uid);
   if (!hasAccess) return redirect('/organizer/request');
 

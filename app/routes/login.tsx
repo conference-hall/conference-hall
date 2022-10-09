@@ -3,7 +3,7 @@ import { redirect } from '@remix-run/node';
 import { useSubmit } from '@remix-run/react';
 import { Button } from '../design-system/Buttons';
 import { useFirebaseSignIn } from '../services/auth/useFirebaseSignIn';
-import { isSessionValid, sessionLogin } from '../services/auth/auth.server';
+import { getSession, sessionLogin } from '../services/auth/auth.server';
 import { Container } from '../design-system/Container';
 import { H1 } from '../design-system/Typography';
 
@@ -12,7 +12,7 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const uid = await isSessionValid(request);
+  const { uid } = await getSession(request);
   if (uid) return redirect('/');
   return null;
 };

@@ -13,7 +13,7 @@ import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { ButtonLink } from '~/design-system/Buttons';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   const slug = params.slug!;
   const events = await getOrganizationEvents(slug, uid);
   return json(events);

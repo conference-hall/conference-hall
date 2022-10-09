@@ -15,7 +15,7 @@ export type OrganizerEventContext = {
 };
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const uid = await sessionRequired(request);
+  const { uid } = await sessionRequired(request);
   try {
     const eventSlug = params.eventSlug!;
     const event = await getEvent(eventSlug, uid);
