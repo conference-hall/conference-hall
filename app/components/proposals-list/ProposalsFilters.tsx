@@ -120,7 +120,7 @@ export default function ProposalsFilters({ filters, formats, categories }: Props
             label="Status"
             onChange={handleChange}
             options={statusOptions}
-            value={filters.status || ''}
+            value={filters.status?.[0] ?? ''}
             className="flex-1"
             srOnly
           />

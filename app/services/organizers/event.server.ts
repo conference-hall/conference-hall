@@ -161,7 +161,7 @@ function proposalWhereInput(slug: string, uid: string, filters: ProposalsFilters
 
   return {
     event: { slug },
-    status: { equals: status, not: 'DRAFT' },
+    status: { in: status, not: 'DRAFT' },
     formats: formats ? { some: { id: formats } } : {},
     categories: categories ? { some: { id: categories } } : {},
     ratings: ratings ? ratingClause : {},

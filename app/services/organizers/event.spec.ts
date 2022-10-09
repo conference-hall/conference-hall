@@ -244,7 +244,7 @@ describe('#searchProposals', () => {
     });
 
     it('filters proposals by status', async () => {
-      const filters: ProposalsFilters = { status: 'ACCEPTED' };
+      const filters: ProposalsFilters = { status: ['ACCEPTED'] };
       const proposals = await searchProposals(organization.slug, event.slug, owner.id, filters);
       expect(proposals.results.length).toBe(1);
       expect(proposals.results[0].id).toBe(proposal2.id);

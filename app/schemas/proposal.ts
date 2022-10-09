@@ -21,7 +21,7 @@ export const ProposalsFiltersSchema = z.object({
   query: text(z.string().trim().optional()),
   sort: text(z.enum(['newest', 'oldest']).optional()),
   ratings: text(z.enum(['rated', 'not-rated']).optional()),
-  status: ProposalStatusSchema.optional(),
+  status: repeatable(z.array(ProposalStatusSchema)).optional(),
   formats: text(z.string().optional()),
   categories: text(z.string().optional()),
 });

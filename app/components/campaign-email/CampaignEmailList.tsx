@@ -13,7 +13,7 @@ type Proposal = {
 
 type Props = { proposals: Array<Proposal>; total: number };
 
-export function ProposalsEmailList({ proposals, total }: Props) {
+export function CampaignEmailList({ proposals, total }: Props) {
   const { checkbox, selection, checked, setSelected, toggleAll } = useCheckboxSelection(proposals);
 
   return (

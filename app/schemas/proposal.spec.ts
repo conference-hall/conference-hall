@@ -145,7 +145,7 @@ describe('Validate ProposalsFiltersSchema', () => {
     expect(result.data).toEqual({
       query: 'foo',
       sort: 'newest',
-      status: 'ACCEPTED',
+      status: ['ACCEPTED'],
       formats: 'Format 1',
       categories: 'Category 1',
     });
@@ -159,7 +159,7 @@ describe('Validate ProposalsFiltersSchema', () => {
     const result = await withZod(ProposalsFiltersSchema).validate(params);
     expect(result.error?.fieldErrors).toEqual({
       sort: "Invalid enum value. Expected 'newest' | 'oldest', received 'toto'",
-      status:
+      'status[0]':
         "Invalid enum value. Expected 'SUBMITTED' | 'ACCEPTED' | 'REJECTED' | 'CONFIRMED' | 'DECLINED', received 'toto'",
     });
   });
