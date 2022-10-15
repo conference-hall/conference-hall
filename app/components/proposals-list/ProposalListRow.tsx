@@ -22,7 +22,13 @@ export function ProposaListRow({ proposal, isSelected, onSelect }: ProposalRowPr
     <tr key={proposal.id} className={c('relative hover:bg-gray-50', { 'bg-gray-50': isSelected })}>
       <td className="relative hidden w-12 px-4 sm:table-cell sm:w-16 sm:px-4">
         {isSelected && <div className="absolute inset-y-0 left-0 w-0.5 bg-indigo-600" />}
-        <Checkbox value={proposal.id} checked={isSelected} onChange={onSelect} className="absolute left-2 top-1/2" />
+        <Checkbox
+          aria-label={`Select proposal "${proposal.title}"`}
+          value={proposal.id}
+          checked={isSelected}
+          onChange={onSelect}
+          className="absolute left-2 top-1/2"
+        />
       </td>
       <td scope="row" className="w-full max-w-0 truncate py-6 px-4 sm:w-auto sm:max-w-none sm:p-0">
         <Link

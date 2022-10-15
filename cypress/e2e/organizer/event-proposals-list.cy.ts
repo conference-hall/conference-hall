@@ -118,4 +118,26 @@ describe('Organizer event proposals', () => {
       cy.assertUrl('sort=oldest');
     });
   });
+
+  describe('Actions on proposals', () => {
+    it('marks selected proposals as accepted', () => {
+      cy.login('Clark Kent');
+      proposals.visit('orga-1', 'conference-1');
+      proposals.selectProposal('Talk 1').click();
+      proposals.selectProposal('Talk 3').click();
+      cy.assertText('2 selected');
+      proposals.markAs('Accepted proposal(s)');
+      cy.assertToast('2 proposals marked as "accepted".');
+    });
+
+    it('marks selected proposals as rejected', () => {
+      cy.login('Clark Kent');
+      proposals.visit('orga-1', 'conference-1');
+      proposals.selectProposal('Talk 1').click();
+      proposals.selectProposal('Talk 3').click();
+      cy.assertText('2 selected');
+      proposals.markAs('Rejected proposal(s)');
+      cy.assertToast('2 proposals marked as "rejected".');
+    });
+  });
 });

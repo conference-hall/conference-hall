@@ -16,6 +16,15 @@ class OrganizationEventsProposalsPage {
     return cy.findByRole('link', { name: `Open proposal "${name}"` });
   }
 
+  selectProposal(name: string) {
+    return cy.findByRole('checkbox', { name: `Select proposal "${name}"` });
+  }
+
+  markAs(name: string) {
+    cy.clickOn('Mark as...');
+    return cy.findByRole('button', { name }).click();
+  }
+
   filterSearch() {
     return cy.findByLabelText('Find a proposal');
   }

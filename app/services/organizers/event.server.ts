@@ -4,7 +4,7 @@ import { OrganizationRole } from '@prisma/client';
 import { MessageChannel } from '@prisma/client';
 import { unstable_parseMultipartFormData } from '@remix-run/node';
 import type { EventCreateData, EventTrackSaveData } from '~/schemas/event';
-import type { ProposalRatingData, ProposalsFilters, ProposalUpdateData } from '~/schemas/proposal';
+import type { ProposalRatingData, ProposalsFilters, ProposalStatusData, ProposalUpdateData } from '~/schemas/proposal';
 import { getCfpState } from '~/utils/event';
 import { jsonToArray } from '~/utils/prisma';
 import { db } from '../db';
@@ -533,4 +533,25 @@ export async function deleteCategory(orgaSlug: string, eventSlug: string, uid: s
   await checkOrganizerEventAccess(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER]);
 
   await db.eventCategory.delete({ where: { id: categoryId } });
+}
+
+/**
+ * Update proposals status
+ * @param orgaSlug Organization slug
+ * @param eventSlug Event slug
+ * @param uid User id
+ * @param proposalIds Proposal Ids
+ * @param status Status to update
+ */
+export async function updateProposalsStatus(
+  orgaSlug: string,
+  eventSlug: string,
+  uid: string,
+  proposalIds: string[],
+  status: ProposalStatusData
+) {
+  await checkOrganizerEventAccess(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER, OrganizationRole.MEMBER]);
+
+  const result = await db.proposal.updateMany({ where: { id: { in: proposalIds } }, data: { status } });
+  return result.count;
 }

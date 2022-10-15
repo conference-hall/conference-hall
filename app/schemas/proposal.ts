@@ -31,6 +31,12 @@ export const ProposalRatingDataSchema = z.object({
   feeling: ProposalRatingsSchema,
 });
 
+export const ProposalsStatusUpdateSchema = z.object({
+  status: ProposalStatusSchema,
+  selection: repeatable(z.array(z.string())),
+});
+
+export type ProposalStatusData = z.infer<typeof ProposalStatusSchema>;
 export type ProposalCreateData = z.infer<typeof ProposalCreateSchema>;
 export type ProposalUpdateData = z.infer<typeof ProposalUpdateSchema>;
 export type ProposalSubmissionData = z.infer<typeof ProposalSubmissionSchema>;

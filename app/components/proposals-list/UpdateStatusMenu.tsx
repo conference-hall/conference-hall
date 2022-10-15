@@ -5,8 +5,7 @@ import type { ButtonStylesProps } from '~/design-system/Buttons';
 import { getStyles } from '~/design-system/Buttons';
 import { MenuTransition } from '~/design-system/Transitions';
 
-export const MARK_AS_ACCEPTED_ACTION = 'mark-as-accepted';
-export const MARK_AS_REJECTED_ACTION = 'mark-as-rejected';
+export const UPDATE_PROPOSAL_STATUS_ACTION = 'update-proposal-status';
 
 type Props = { selection: Array<string> } & ButtonStylesProps;
 
@@ -24,29 +23,31 @@ export function UpdateStatusMenu({ selection, ...rest }: Props) {
         <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <Menu.Item>
             <Form method="post">
-              <input type="hidden" name="_action" value={MARK_AS_ACCEPTED_ACTION} />
+              <input type="hidden" name="_action" value={UPDATE_PROPOSAL_STATUS_ACTION} />
+              <input type="hidden" name="status" value="ACCEPTED" />
               {selection.map((id) => (
-                <input key={id} type="hidden" name="selection[]" value={id} />
+                <input key={id} type="hidden" name="selection" value={id} />
               ))}
               <button
                 type="submit"
                 className="flex w-full items-center px-4 py-3 text-sm hover:bg-gray-100 hover:text-gray-900"
               >
-                Accepted proposal
+                Accepted proposal(s)
               </button>
             </Form>
           </Menu.Item>
           <Menu.Item>
             <Form method="post">
-              <input type="hidden" name="_action" value={MARK_AS_REJECTED_ACTION} />
+              <input type="hidden" name="_action" value={UPDATE_PROPOSAL_STATUS_ACTION} />
+              <input type="hidden" name="status" value="REJECTED" />
               {selection.map((id) => (
-                <input key={id} type="hidden" name="selection[]" value={id} />
+                <input key={id} type="hidden" name="selection" value={id} />
               ))}
               <button
                 type="submit"
                 className="flex w-full items-center px-4 py-3 text-sm hover:bg-gray-100 hover:text-gray-900"
               >
-                Rejected proposal
+                Rejected proposal(s)
               </button>
             </Form>
           </Menu.Item>

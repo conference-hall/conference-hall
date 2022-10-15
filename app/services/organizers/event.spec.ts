@@ -1,6 +1,11 @@
 import type { Event, EventCategory, EventFormat, Organization, Proposal, User } from '@prisma/client';
 import { MessageChannel } from '@prisma/client';
-import { addProposalComment, checkOrganizerEventAccess, removeProposalComment } from './event.server';
+import {
+  addProposalComment,
+  checkOrganizerEventAccess,
+  removeProposalComment,
+  updateProposalsStatus,
+} from './event.server';
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventCategoryFactory } from 'tests/factories/categories';
 import { eventFactory } from 'tests/factories/events';
@@ -1050,5 +1055,53 @@ describe('#deleteCategory', () => {
     await expect(deleteCategory(organization.slug, event.slug, user.id, category.id)).rejects.toThrowError(
       ForbiddenOperationError
     );
+  });
+});
+
+describe('#updateProposalsStatus', () => {
+  let owner: User, reviewer: User, speaker: User;
+  let organization: Organization;
+  let event: Event;
+
+  beforeEach(async () => {
+    await resetDB();
+    owner = await userFactory();
+    reviewer = await userFactory();
+    speaker = await userFactory();
+    organization = await organizationFactory({ owners: [owner], reviewers: [reviewer] });
+    event = await eventFactory({ organization });
+  });
+  afterEach(disconnectDB);
+
+  it('updates the proposal', async () => {
+    const proposal1 = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+    const proposal2 = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+
+    const updatedCount = await updateProposalsStatus(
+      organization.slug,
+      event.slug,
+      owner.id,
+      [proposal1.id, proposal2.id],
+      'ACCEPTED'
+    );
+
+    expect(updatedCount).toBe(2);
+    const proposals = await db.proposal.findMany();
+    expect(proposals[0].status).toBe('ACCEPTED');
+    expect(proposals[1].status).toBe('ACCEPTED');
+  });
+
+  it('throws an error if user has not a owner or member role in the organization', async () => {
+    await expect(
+      updateProposalsStatus(organization.slug, event.slug, reviewer.id, [], 'ACCEPTED')
+    ).rejects.toThrowError(ForbiddenOperationError);
+  });
+
+  it('throws an error if user does not belong to event orga', async () => {
+    const user = await userFactory();
+    const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+    await expect(
+      updateProposalsStatus(organization.slug, event.slug, user.id, [proposal.id], 'ACCEPTED')
+    ).rejects.toThrowError(ForbiddenOperationError);
   });
 });

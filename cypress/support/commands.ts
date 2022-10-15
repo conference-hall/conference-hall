@@ -67,6 +67,12 @@ declare global {
       assertUrl(path: string | RegExp): void;
 
       /**
+       * Assert a toast display a label
+       * @param label Label of the toast
+       */
+      assertToast(label: string): void;
+
+      /**
        * Connect with a user
        */
       login(username?: string): void;
@@ -127,4 +133,8 @@ Cypress.Commands.add('login', (username = 'Clark Kent') => {
     cy.url().should('contain', '/emulator');
     cy.findByText(username).click();
   });
+});
+
+Cypress.Commands.add('assertToast', (label) => {
+  cy.get('#toast').should('contain.text', label);
 });

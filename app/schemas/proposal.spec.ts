@@ -1,6 +1,7 @@
 import { withZod } from '@remix-validated-form/with-zod';
 import {
   ProposalCreateSchema,
+  ProposalsStatusUpdateSchema,
   ProposalRatingDataSchema,
   ProposalsFiltersSchema,
   ProposalSubmissionSchema,
@@ -187,6 +188,32 @@ describe('Validate ProposalRatingDataSchema', () => {
     expect(result.error?.fieldErrors).toEqual({
       feeling: "Invalid enum value. Expected 'NEUTRAL' | 'POSITIVE' | 'NEGATIVE' | 'NO_OPINION', received 'toto'",
       rating: 'Expected number, received string',
+    });
+  });
+});
+
+describe('Validate ProposalsStatusUpdateSchema', () => {
+  it('validates status update schema', async () => {
+    const formData = new FormData();
+    formData.append('status', 'ACCEPTED');
+    formData.append('selection', '1');
+    formData.append('selection', '2');
+
+    const result = await withZod(ProposalsStatusUpdateSchema).validate(formData);
+    expect(result.data).toEqual({
+      status: 'ACCEPTED',
+      selection: ['1', '2'],
+    });
+  });
+
+  it('returns errors on invalid data', async () => {
+    const formData = new FormData();
+    formData.append('status', 'foo');
+
+    const result = await withZod(ProposalsStatusUpdateSchema).validate(formData);
+    expect(result.error?.fieldErrors).toEqual({
+      status:
+        "Invalid enum value. Expected 'SUBMITTED' | 'ACCEPTED' | 'REJECTED' | 'CONFIRMED' | 'DECLINED', received 'foo'",
     });
   });
 });
