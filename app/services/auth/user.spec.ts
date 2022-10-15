@@ -56,6 +56,7 @@ describe('#getUser', () => {
 
     const response = await getUser(user.id);
     expect(response).toEqual({
+      id: user.id,
       name: user.name,
       email: user.email,
       photoURL: user.photoURL,
