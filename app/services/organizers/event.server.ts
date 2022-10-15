@@ -555,3 +555,46 @@ export async function updateProposalsStatus(
   const result = await db.proposal.updateMany({ where: { id: { in: proposalIds } }, data: { status } });
   return result.count;
 }
+
+/**
+ * Export proposals
+ * @param orgaSlug Organization slug
+ * @param eventSlug Event slug
+ * @param uid User id
+ * @param filters Filters criterias
+ */
+export async function exportProposalsFromFilters(
+  orgaSlug: string,
+  eventSlug: string,
+  uid: string,
+  filters: ProposalsFilters
+) {
+  await checkOrganizerEventAccess(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER, OrganizationRole.MEMBER]);
+
+  const whereClause = proposalWhereInput(eventSlug, uid, filters);
+  const orderByClause = proposalOrderBy(filters);
+  const proposals = await db.proposal.findMany({
+    include: { speakers: true, ratings: true },
+    where: whereClause,
+    orderBy: orderByClause,
+  });
+
+  return proposals.map((proposal) => {
+    const ratings = new RatingsDetails(proposal.ratings);
+    return {
+      id: proposal.id,
+      title: proposal.title,
+      status: proposal.status,
+      speakers: proposal.speakers.map((speaker) => ({
+        name: speaker.name,
+        bio: speaker.bio,
+        company: speaker.company,
+      })),
+      ratings: {
+        positives: ratings.positives,
+        negatives: ratings.negatives,
+        total: ratings.average,
+      },
+    };
+  });
+}

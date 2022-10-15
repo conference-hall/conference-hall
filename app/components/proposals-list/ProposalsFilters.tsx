@@ -4,8 +4,9 @@ import { Input } from '~/design-system/forms/Input';
 import { AdjustmentsVerticalIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { useState } from 'react';
 import Select from '~/design-system/forms/Select';
-import { Form, useLocation, useSearchParams, useSubmit } from '@remix-run/react';
+import { useLocation, useSearchParams, useSubmit } from '@remix-run/react';
 import type { ProposalsFilters as ProposalsFiltersType } from '~/schemas/proposal';
+import { useDebouncedCallback } from 'use-debounce';
 
 type Props = {
   filters: ProposalsFiltersType;
@@ -35,21 +36,23 @@ const sortOptions = [
 
 export default function ProposalsFilters({ filters, formats, categories }: Props) {
   const { query, ...others } = filters;
+  const submit = useSubmit();
   const location = useLocation();
   const [searchParams] = useSearchParams();
-  const submit = useSubmit();
 
   function handleChange(name: string, id: string) {
     const params = Object.fromEntries(searchParams);
     submit({ ...params, [name]: id }, { method: 'get', action: location.pathname });
   }
 
+  const debounceHandleChange = useDebouncedCallback(handleChange, 500);
+
   const defaultOpened = Object.values(others).filter(Boolean).length !== 0;
   const [filtersOpen, setFiltersOpen] = useState(defaultOpened);
   const hasFilters = defaultOpened || Boolean(query);
 
   return (
-    <Form action={location.pathname} method="get">
+    <>
       <div className="flex flex-col gap-4 pb-4 sm:flex-row sm:items-center sm:justify-between">
         <Input
           name="query"
@@ -60,6 +63,7 @@ export default function ProposalsFilters({ filters, formats, categories }: Props
           autoComplete="off"
           defaultValue={query}
           icon={MagnifyingGlassIcon}
+          onChange={(e) => debounceHandleChange('query', e.target.value)}
         />
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
           {hasFilters && (
@@ -135,6 +139,6 @@ export default function ProposalsFilters({ filters, formats, categories }: Props
           />
         </div>
       )}
-    </Form>
+    </>
   );
 }

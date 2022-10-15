@@ -13,8 +13,6 @@ import { parsePage } from '~/schemas/pagination';
 import type { OrganizerEventContext } from '../../$eventSlug';
 import { withZod } from '@remix-validated-form/with-zod';
 import { ProposalsStatusUpdateSchema, ProposalsFiltersSchema } from '~/schemas/proposal';
-import { UPDATE_PROPOSAL_STATUS_ACTION } from '~/components/proposals-list/UpdateStatusMenu';
-import { EXPORT_ALL_ACTION, EXPORT_SELECTED_ACTION } from '~/components/proposals-list/ExportProposalsMenu';
 import { createToast } from '~/utils/toasts';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
@@ -35,23 +33,10 @@ export const action = async ({ request, params }: ActionArgs) => {
   const { uid, session } = await sessionRequired(request);
   const { slug, eventSlug } = params;
   const form = await request.formData();
-  const action = form.get('_action');
-
-  switch (action) {
-    case UPDATE_PROPOSAL_STATUS_ACTION: {
-      const { data, error } = await withZod(ProposalsStatusUpdateSchema).validate(form);
-      if (error) return json(null);
-      const result = await updateProposalsStatus(slug!, eventSlug!, uid, data.selection, data.status);
-      return json(null, await createToast(session, `${result} proposals marked as "${data.status.toLowerCase()}".`));
-    }
-    case EXPORT_SELECTED_ACTION: {
-      return json(null);
-    }
-    case EXPORT_ALL_ACTION: {
-      return json(null);
-    }
-  }
-  return json(null);
+  const { data, error } = await withZod(ProposalsStatusUpdateSchema).validate(form);
+  if (error) return json(null);
+  const result = await updateProposalsStatus(slug!, eventSlug!, uid, data.selection, data.status);
+  return json(null, await createToast(session, `${result} proposals marked as "${data.status.toLowerCase()}".`));
 };
 
 export default function OrganizerEventProposalsRoute() {

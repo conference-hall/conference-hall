@@ -51,6 +51,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "remix": "^1.6.8",
+    "use-debounce": "^8.0.4",
     "xss": "^1.0.14",
     "zod": "^3.19.1",
     "zod-form-data": "^1.2.2"

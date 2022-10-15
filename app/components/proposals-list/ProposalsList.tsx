@@ -36,7 +36,7 @@ export function ProposalsList({ proposals, total }: Props) {
         </div>
         <div className="flex flex-row items-center gap-2">
           <UpdateStatusMenu variant="secondary" size="s" selection={selection} />
-          <ExportProposalsStatus variant="secondary" size="s" selection={selection} />
+          <ExportProposalsStatus variant="secondary" size="s" selection={selection} total={total} />
         </div>
       </div>
       <table className="min-w-full">
