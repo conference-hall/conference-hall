@@ -1,8 +1,10 @@
+import type { UserContext } from '~/root';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Outlet, useCatch, useLoaderData, useOutletContext } from '@remix-run/react';
 import { EventHeader } from '~/components/EventHeader';
 import { EventTabs } from '~/components/EventTabs';
+import { Navbar } from '~/components/Navbar';
 import { ButtonLink } from '~/design-system/Buttons';
 import { Container } from '~/design-system/Container';
 import { mapErrorToResponse } from '~/services/errors';
@@ -21,10 +23,12 @@ export const loader = async ({ params }: LoaderArgs) => {
 };
 
 export default function EventRoute() {
+  const { user } = useOutletContext<UserContext>();
   const event = useLoaderData<typeof loader>();
 
   return (
     <>
+      <Navbar user={user} />
       <EventHeader
         type={event.type}
         name={event.name}

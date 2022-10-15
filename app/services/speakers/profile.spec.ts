@@ -1,48 +1,8 @@
-import { organizationFactory } from 'tests/factories/organization';
 import { resetDB, disconnectDB } from '../../../tests/db-helpers';
 import { userFactory } from '../../../tests/factories/users';
 import { db } from '../db';
 import { UserNotFoundError } from '../errors';
-import { getProfile, updateSettings } from './profile.server';
-
-describe('#getProfile', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterEach(disconnectDB);
-
-  it('returns the default response', async () => {
-    const user = await userFactory();
-
-    const response = await getProfile(user.id);
-    expect(response).toEqual({
-      name: user.name,
-      email: user.email,
-      photoURL: user.photoURL,
-      bio: user.bio,
-      references: user.references,
-      company: user.company,
-      address: user.address,
-      twitter: user.twitter,
-      github: user.github,
-      organizationsCount: 0,
-    });
-  });
-
-  it('returns a profile with organizations count', async () => {
-    const user = await userFactory();
-    await organizationFactory({ owners: [user] });
-    await organizationFactory({ reviewers: [user] });
-    await organizationFactory({ members: [user] });
-
-    const response = await getProfile(user.id);
-    expect(response.organizationsCount).toBe(3);
-  });
-
-  it('throws an error when user not found', async () => {
-    await expect(getProfile('XXX')).rejects.toThrowError(UserNotFoundError);
-  });
-});
+import { updateSettings } from './profile.server';
 
 describe('#updateSettings', () => {
   beforeEach(async () => {

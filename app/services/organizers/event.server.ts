@@ -32,6 +32,8 @@ export async function checkOrganizerEventAccess(
   uid: string,
   roles?: OrganizationRole[]
 ) {
+  if (!orgaSlug || !eventSlug) throw new ForbiddenOperationError();
+
   const rolesToCheck = roles || [OrganizationRole.MEMBER, OrganizationRole.REVIEWER, OrganizationRole.OWNER];
 
   const member = await db.organizationMember.findFirst({

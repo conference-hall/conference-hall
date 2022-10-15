@@ -16,24 +16,27 @@ export async function createUser(input: UserCreateInput) {
 }
 
 /**
- * Returns user info following it's uid
- * @param uid User uid
- * @returns User info
+ * Get a user data
+ * @param userId Id of the user
+ * @returns user data
  */
-export async function getUser(uid: string) {
-  const user = await db.user.findUnique({ where: { id: uid } });
+export async function getUser(userId: string) {
+  const user = await db.user.findUnique({
+    where: { id: userId },
+    include: { _count: { select: { organizations: true } } },
+  });
   if (!user) throw new UserNotFoundError();
-
   return {
     id: user.id,
     name: user.name,
     email: user.email,
-    picture: user.photoURL,
+    photoURL: user.photoURL,
     bio: user.bio,
     references: user.references,
     company: user.company,
-    github: user.github,
-    twitter: user.twitter,
     address: user.address,
+    twitter: user.twitter,
+    github: user.github,
+    organizationsCount: user._count.organizations,
   };
 }

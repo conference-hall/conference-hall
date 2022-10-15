@@ -1,6 +1,7 @@
+import type { UserContext } from '~/root';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
-import { Form, useActionData, useLoaderData, useSubmit } from '@remix-run/react';
+import { Form, useActionData, useOutletContext, useSubmit } from '@remix-run/react';
 import { CreditCardIcon, KeyIcon, UserCircleIcon } from '@heroicons/react/20/solid';
 import { Container } from '../../design-system/Container';
 import { Input } from '../../design-system/forms/Input';
@@ -9,7 +10,7 @@ import { Button } from '../../design-system/Buttons';
 import { H2, Text } from '../../design-system/Typography';
 import { useCallback } from 'react';
 import { getAuth } from 'firebase/auth';
-import { getProfile, updateSettings } from '../../services/speakers/profile.server';
+import { updateSettings } from '../../services/speakers/profile.server';
 import { mapErrorToResponse } from '../../services/errors';
 import { sessionRequired } from '../../services/auth/auth.server';
 import { NavMenu } from '~/design-system/NavMenu';
@@ -17,13 +18,8 @@ import { withZod } from '@remix-validated-form/with-zod';
 import { AdditionalInfoSchema, DetailsSchema, PersonalInfoSchema } from '~/schemas/profile';
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const { uid } = await sessionRequired(request);
-  try {
-    const profile = await getProfile(uid);
-    return json(profile);
-  } catch (err) {
-    throw mapErrorToResponse(err);
-  }
+  await sessionRequired(request);
+  return json(null);
 };
 
 export const action = async ({ request }: ActionArgs) => {
@@ -48,7 +44,7 @@ export const action = async ({ request }: ActionArgs) => {
 };
 
 export default function ProfileRoute() {
-  const user = useLoaderData<typeof loader>();
+  const { user } = useOutletContext<UserContext>();
   const errors = useActionData<typeof action>();
   const submit = useSubmit();
 

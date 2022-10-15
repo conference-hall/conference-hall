@@ -36,6 +36,11 @@ export const ProposalsStatusUpdateSchema = z.object({
   selection: repeatable(z.array(z.string())),
 });
 
+export const ProposalsExportFiltersSchema = ProposalsFiltersSchema.extend({
+  orga: text(z.string()),
+  event: text(z.string()),
+});
+
 export type ProposalStatusData = z.infer<typeof ProposalStatusSchema>;
 export type ProposalCreateData = z.infer<typeof ProposalCreateSchema>;
 export type ProposalUpdateData = z.infer<typeof ProposalUpdateSchema>;

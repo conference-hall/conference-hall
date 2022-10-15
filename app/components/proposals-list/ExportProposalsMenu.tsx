@@ -1,6 +1,6 @@
 import { Menu } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
-import { useSearchParams } from '@remix-run/react';
+import { useParams, useSearchParams } from '@remix-run/react';
 import type { ButtonStylesProps } from '~/design-system/Buttons';
 import { getStyles } from '~/design-system/Buttons';
 import { MenuTransition } from '~/design-system/Transitions';
@@ -9,7 +9,8 @@ type Props = { selection: Array<string>; total: number } & ButtonStylesProps;
 
 export function ExportProposalsStatus({ selection, total, ...rest }: Props) {
   const styles = getStyles(rest);
-  const [params] = useSearchParams();
+  const params = useParams();
+  const [searchParams] = useSearchParams();
 
   return (
     <Menu as="div" className="relative z-20 inline-block text-left">
@@ -22,7 +23,7 @@ export function ExportProposalsStatus({ selection, total, ...rest }: Props) {
         <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <Menu.Item>
             <a
-              href={`./export/json?${params.toString()}`}
+              href={`/export/proposals/json?orga=${params.slug}&event=${params.eventSlug}&${searchParams.toString()}`}
               target="_blank"
               rel="noreferrer"
               className="group flex w-full items-center px-4 py-3 text-sm hover:bg-gray-100 hover:text-gray-900"

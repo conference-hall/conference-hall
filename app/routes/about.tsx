@@ -1,10 +1,16 @@
+import type { UserContext } from '~/root';
+import { useOutletContext } from '@remix-run/react';
+import { Navbar } from '~/components/Navbar';
 import { ButtonLink } from '../design-system/Buttons';
 import { Container } from '../design-system/Container';
 import { H1, H2 } from '../design-system/Typography';
 
 export default function AboutRoute() {
+  const { user } = useOutletContext<UserContext>();
+
   return (
-    <div>
+    <>
+      <Navbar user={user} />
       <Container as="section" className="py-8 sm:py-16">
         <H1>Welcome to Conference Hall.</H1>
         <H2 className="mt-2 text-gray-500">All-in-one call for paper platform.</H2>
@@ -38,6 +44,6 @@ export default function AboutRoute() {
           <li>Fully open source</li>
         </ul>
       </Container>
-    </div>
+    </>
   );
 }

@@ -1,3 +1,4 @@
+import type { UserContext } from '~/root';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData, useOutletContext } from '@remix-run/react';
@@ -11,13 +12,12 @@ import { SpeakerActivities } from '../../components/SpeakerActivities';
 import { mapErrorToResponse } from '../../services/errors';
 import { sessionRequired } from '../../services/auth/auth.server';
 import { getActivity } from '~/services/speakers/activity.server';
-import type { ProfileContext } from '../speaker';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
   try {
-    const profile = await getActivity(uid);
-    return json(profile);
+    const activities = await getActivity(uid);
+    return json(activities);
   } catch (err) {
     throw mapErrorToResponse(err);
   }
@@ -25,7 +25,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 export default function ProfileRoute() {
   const activities = useLoaderData<typeof loader>();
-  const { profile } = useOutletContext<ProfileContext>();
+  const { user } = useOutletContext<UserContext>();
 
   return (
     <>
@@ -34,27 +34,27 @@ export default function ProfileRoute() {
         <div className="mt-8 grid grid-cols-1 items-start gap-4 lg:grid-cols-3 lg:gap-8">
           <div className="rounded-lg border border-gray-200 bg-white p-6">
             <div className="flex flex-wrap items-center justify-between sm:flex-nowrap">
-              <H3>{profile.name}'s profile</H3>
+              <H3>{user.name}'s profile</H3>
               <div className="flex-shrink-0 space-x-4">
                 <Link to="profile">Edit profile</Link>
               </div>
             </div>
-            {profile.bio ? (
-              <Markdown className="mt-4 line-clamp-5" source={profile.bio} />
+            {user.bio ? (
+              <Markdown className="mt-4 line-clamp-5" source={user.bio} />
             ) : (
               <Text className="mt-4">No biography defined.</Text>
             )}
-            {profile.references ? (
-              <Markdown className="mt-4 line-clamp-5" source={profile.references} />
+            {user.references ? (
+              <Markdown className="mt-4 line-clamp-5" source={user.references} />
             ) : (
               <Text className="mt-4">No references defined.</Text>
             )}
-            {profile.address ? (
+            {user.address ? (
               <div className="mt-6 grid grid-cols-1 gap-4">
-                {profile.company && <IconLabel icon={HomeIcon}>{profile.company}</IconLabel>}
-                {profile.address && <IconLabel icon={MapPinIcon}>{profile.address}</IconLabel>}
-                {profile.twitter && <IconLabel icon={GlobeAltIcon}>{profile.twitter}</IconLabel>}
-                {profile.github && <IconLabel icon={GlobeAltIcon}>{profile.github}</IconLabel>}
+                {user.company && <IconLabel icon={HomeIcon}>{user.company}</IconLabel>}
+                {user.address && <IconLabel icon={MapPinIcon}>{user.address}</IconLabel>}
+                {user.twitter && <IconLabel icon={GlobeAltIcon}>{user.twitter}</IconLabel>}
+                {user.github && <IconLabel icon={GlobeAltIcon}>{user.github}</IconLabel>}
               </div>
             ) : (
               <Text className="mt-4">Nothing defined.</Text>

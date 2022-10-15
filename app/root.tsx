@@ -7,7 +7,6 @@ import { initializeFirebase } from './services/auth/firebase';
 import { commitSession, getSession } from './services/auth/auth.server';
 import { getUser } from './services/auth/user.server';
 import { Footer } from './components/Footer';
-import { Navbar } from './components/Navbar';
 import { H1, Text } from './design-system/Typography';
 import { Container } from './design-system/Container';
 import { GlobalLoading } from './components/GlobalLoading';
@@ -22,6 +21,8 @@ export const links: LinksFunction = () => {
     { rel: 'stylesheet', href: tailwind },
   ];
 };
+
+export type UserContext = { user: Awaited<ReturnType<typeof getUser>> };
 
 export const loader = async ({ request }: LoaderArgs) => {
   const { uid, session } = await getSession(request);
@@ -45,25 +46,20 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 export default function App() {
-  const data = useLoaderData<typeof loader>();
+  const { user, firebase, toast } = useLoaderData<typeof loader>();
 
-  initializeFirebase(data.firebase);
+  initializeFirebase(firebase);
 
   return (
-    <Document title="Conference Hall" user={data.user} toast={data.toast}>
-      <Outlet />
+    <Document title="Conference Hall" toast={toast}>
+      <Outlet context={{ user }} />
     </Document>
   );
 }
 
-type DocumentProps = {
-  children: ReactNode;
-  title?: string;
-  user?: { email?: string | null; picture?: string | null } | null;
-  toast?: ToastData | null;
-};
+type DocumentProps = { children: ReactNode; title?: string; toast?: ToastData | null };
 
-function Document({ children, title, user, toast }: DocumentProps) {
+function Document({ children, title, toast }: DocumentProps) {
   return (
     <html lang="en" className="scroll-smooth">
       <head>
@@ -75,7 +71,6 @@ function Document({ children, title, user, toast }: DocumentProps) {
       </head>
       <body className="bg-white font-sans text-gray-600 antialiased">
         <GlobalLoading />
-        <Navbar user={user} />
         {children}
         <Footer />
         <Scripts />

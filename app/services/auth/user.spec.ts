@@ -1,3 +1,4 @@
+import { organizationFactory } from 'tests/factories/organization';
 import { resetDB, disconnectDB } from '../../../tests/db-helpers';
 import { userFactory } from '../../../tests/factories/users';
 import { db } from '../db';
@@ -44,7 +45,7 @@ describe('#createUser', () => {
   });
 });
 
-describe('#getEvent', () => {
+describe('#getUser', () => {
   beforeEach(async () => {
     await resetDB();
   });
@@ -52,22 +53,33 @@ describe('#getEvent', () => {
 
   it('returns the default response', async () => {
     const user = await userFactory();
-    const result = await getUser(user.id);
-    expect(result).toEqual({
-      id: user.id,
+
+    const response = await getUser(user.id);
+    expect(response).toEqual({
       name: user.name,
       email: user.email,
-      picture: user.photoURL,
+      photoURL: user.photoURL,
       bio: user.bio,
       references: user.references,
       company: user.company,
-      github: user.github,
-      twitter: user.twitter,
       address: user.address,
+      twitter: user.twitter,
+      github: user.github,
+      organizationsCount: 0,
     });
   });
 
-  it('throws an error when event not found', async () => {
+  it('returns a profile with organizations count', async () => {
+    const user = await userFactory();
+    await organizationFactory({ owners: [user] });
+    await organizationFactory({ reviewers: [user] });
+    await organizationFactory({ members: [user] });
+
+    const response = await getUser(user.id);
+    expect(response.organizationsCount).toBe(3);
+  });
+
+  it('throws an error when user not found', async () => {
     await expect(getUser('XXX')).rejects.toThrowError(UserNotFoundError);
   });
 });
