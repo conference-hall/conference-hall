@@ -32,7 +32,7 @@ export function MarkdownTextArea({
   const handleOpenPreview = () => setPreviewOpen(true);
   const handleChangeText: ChangeEventHandler<HTMLTextAreaElement> = (e) => setMarkdown(e.target.value);
 
-  const styles = cn('shadow-sm block w-full sm:text-sm rounded-md overflow-hidden border mt-1', {
+  const styles = cn('shadow-sm block w-full text-gray-900 sm:text-sm rounded-md overflow-hidden border mt-1', {
     [baseStyles]: !error,
     [errorStyles]: !!error,
   });

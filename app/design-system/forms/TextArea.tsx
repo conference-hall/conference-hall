@@ -12,7 +12,7 @@ const errorStyles =
   'border-red-300 text-red-900 placeholder-red-300 focus:outline-none focus:ring-red-500 focus:border-red-500';
 
 export function TextArea({ name, label, description, className, error, ...rest }: Props) {
-  const styles = cn('shadow-sm block w-full sm:text-sm rounded-md', {
+  const styles = cn('shadow-sm block w-full text-gray-900 sm:text-sm rounded-md', {
     [baseStyles]: !error,
     [errorStyles]: !!error,
   });

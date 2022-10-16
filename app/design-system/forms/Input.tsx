@@ -52,7 +52,7 @@ function InputField(
   );
 }
 
-const baseStyles = cn(['block w-full', 'sm:text-sm', 'rounded-md']);
+const baseStyles = cn(['block w-full', 'text-gray-900 sm:text-sm', 'rounded-md']);
 
 const defaultStyles = cn(['border-gray-300', 'focus:ring-indigo-500 focus:border-indigo-500']);
 
