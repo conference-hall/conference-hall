@@ -157,7 +157,7 @@ export async function searchProposals(
   };
 }
 
-function proposalWhereInput(slug: string, uid: string, filters: ProposalsFilters): Prisma.ProposalWhereInput {
+export function proposalWhereInput(slug: string, uid: string, filters: ProposalsFilters): Prisma.ProposalWhereInput {
   const { query, ratings, formats, categories, status } = filters;
   const ratingClause = ratings === 'rated' ? { some: { userId: uid } } : { none: { userId: uid } };
 

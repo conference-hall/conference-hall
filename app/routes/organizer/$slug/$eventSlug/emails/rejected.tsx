@@ -1,4 +1,4 @@
-import type { LoaderArgs } from '@remix-run/node';
+import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData, useLocation, useSearchParams } from '@remix-run/react';
 import { withZod } from '@remix-validated-form/with-zod';
@@ -12,6 +12,7 @@ import type { ProposalsFilters } from '~/schemas/proposal';
 import { ProposalsFiltersSchema } from '~/schemas/proposal';
 import { sessionRequired } from '~/services/auth/auth.server';
 import { mapErrorToResponse } from '~/services/errors';
+import { sendAllRejectionCampaign } from '~/services/organizers/emails-campaign.server';
 import { searchProposals } from '~/services/organizers/event.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
@@ -28,6 +29,13 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   } catch (err) {
     throw mapErrorToResponse(err);
   }
+};
+
+export const action = async ({ request, params }: ActionArgs) => {
+  const { uid } = await sessionRequired(request);
+  const { slug, eventSlug } = params;
+  await sendAllRejectionCampaign(slug!, eventSlug!, uid);
+  return json(null);
 };
 
 export default function RejectedProposalEmails() {

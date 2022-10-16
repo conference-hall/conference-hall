@@ -11,6 +11,10 @@ class Config {
   FIREBASE_STORAGE: string;
   GOOGLE_PLACES_API_KEY: string;
   COOKIE_SIGNED_SECRET: string;
+  MAILGUN_DOMAIN: string;
+  MAILGUN_API_KEY: string;
+  MAILHOG_HOST: string;
+  MAILHOG_PORT: number;
 
   constructor() {
     this.ENV = ENV;
@@ -21,6 +25,10 @@ class Config {
     this.FIREBASE_STORAGE = process.env.FIREBASE_STORAGE || '';
     this.GOOGLE_PLACES_API_KEY = process.env.GOOGLE_PLACES_API_KEY || '';
     this.COOKIE_SIGNED_SECRET = process.env.COOKIE_SIGNED_SECRET || 'secr3t';
+    this.MAILGUN_DOMAIN = process.env.MAILGUN_DOMAIN || '';
+    this.MAILGUN_API_KEY = process.env.MAILGUN_API_KEY || '';
+    this.MAILHOG_HOST = 'localhost';
+    this.MAILHOG_PORT = 1025;
   }
 
   get appUrl(): string {
@@ -39,6 +47,10 @@ class Config {
 
   get isTest(): boolean {
     return this.ENV === 'test';
+  }
+
+  get isMailgunEnabled(): boolean {
+    return !!this.MAILGUN_API_KEY && !!this.MAILGUN_DOMAIN;
   }
 }
 

@@ -41,7 +41,7 @@ export function CampaignEmailList({ proposals, total }: Props) {
         <div className="flex flex-row items-center gap-2">
           <Form method="post">
             {selection.map((id) => (
-              <input key={id} type="hidden" name="selection[]" value={id} />
+              <input key={id} type="hidden" name="selection" value={id} />
             ))}
             <Button variant="secondary" size="s">
               {selection.length !== 0 ? `Send to ${selection.length} proposals` : 'Send to all proposals'}
