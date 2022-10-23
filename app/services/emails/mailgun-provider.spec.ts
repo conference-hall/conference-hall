@@ -49,7 +49,7 @@ describe('mailgun provider', () => {
 
   it('should send an custom email with all parameters', async () => {
     // when
-    await provider.sendCustomEmail(
+    await provider.sendBatchEmail(
       {
         from: 'from@example.net',
         to: ['to1@example.net', 'to2@example.net'],
@@ -58,8 +58,8 @@ describe('mailgun provider', () => {
         subject: 'subject',
         html: 'html',
       },
-      { 'v:var1': 'variable1', 'v:var2': 'variable2' },
-      { 'to1@example.net': { var1: 'user-variable1' } }
+      { 'to1@example.net': { var1: 'user-variable1' } },
+      { 'v:var1': 'variable1', 'v:var2': 'variable2' }
     );
 
     // then

@@ -43,7 +43,11 @@ export function Pagination({ pathname, current, total, className }: Props) {
             </Link>
           );
         } else if (showPageButton(page - 1, current, total)) {
-          return <Text className="inline-flex items-center px-4 pt-4 text-sm font-medium text-gray-500">...</Text>;
+          return (
+            <Text key="separator" className="inline-flex items-center px-4 pt-4 text-sm font-medium text-gray-500">
+              ...
+            </Text>
+          );
         }
         return null;
       })}
