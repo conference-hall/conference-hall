@@ -1,6 +1,6 @@
 import type { Email, IEmailProvider, ProviderVariables, RecipientVariables } from './provider';
 import FormData from 'form-data';
-import { config } from '../config';
+import { config } from '../../config';
 
 const KEY = config.MAILGUN_API_KEY;
 const DOMAIN = config.MAILGUN_DOMAIN;

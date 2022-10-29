@@ -1,5 +1,5 @@
 import type { Event } from '@prisma/client';
-import { BatchEmail } from '../batch-email';
+import { BatchEmail } from '../../emails/batch-email';
 
 type RejectionEmailVariables = { fullname: string; proposalTitle: string };
 

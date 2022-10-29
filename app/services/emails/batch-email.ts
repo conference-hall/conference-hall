@@ -1,6 +1,6 @@
 import type { Event } from '@prisma/client';
-import { emailProvider } from './provider';
-import { buildTemplate } from './templates/build-template';
+import { emailProvider } from './providers/provider';
+import { buildTemplate } from './template/build-template';
 
 export const MAILGUN_DELIBERATION_VARS = {
   'v:type': 'deliberation_email',
@@ -47,22 +47,24 @@ export abstract class BatchEmail<R extends Record<string, string>> {
     }
   }
 
-  send() {
-    this.batches.forEach((recipients) => {
-      const emails = Object.keys(recipients);
-      emailProvider.sendBatchEmail(
-        {
-          from: this.from,
-          to: emails,
-          subject: this.subject,
-          html: buildTemplate(this.subject, this.template, {
-            eventName: this.event.name,
-            eventSlug: this.event.slug,
-          }),
-        },
-        recipients,
-        this.options?.enableDeliberationVars ? MAILGUN_DELIBERATION_VARS : {}
-      );
-    });
+  async send() {
+    return Promise.all(
+      this.batches.map((recipients) => {
+        const emails = Object.keys(recipients);
+        return emailProvider.sendBatchEmail(
+          {
+            from: this.from,
+            to: emails,
+            subject: this.subject,
+            html: buildTemplate(this.subject, this.template, {
+              eventName: this.event.name,
+              eventSlug: this.event.slug,
+            }),
+          },
+          recipients,
+          this.options?.enableDeliberationVars ? MAILGUN_DELIBERATION_VARS : {}
+        );
+      })
+    );
   }
 }

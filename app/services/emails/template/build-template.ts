@@ -3,7 +3,7 @@ import xss from 'xss';
 import { marked } from 'marked';
 
 export function buildTemplate(subject: string, template: string, variables: Record<string, string> = {}) {
-  const base = fs.readFileSync(`./app/services/emails/templates/email-base.html`);
+  const base = fs.readFileSync(`./app/services/emails/template/email-base.html`);
 
   let md = template.toString();
   Object.entries(variables).forEach(([key, value]) => {

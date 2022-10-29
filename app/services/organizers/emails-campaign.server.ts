@@ -1,7 +1,7 @@
 import { checkOrganizerEventAccess } from './event.server';
-import { AcceptationEmailsBatch } from '../emails/templates/send-acceptation-emails-batch';
+import { AcceptationEmailsBatch } from './emails/send-acceptation-emails-batch';
+import { RejectionEmailsBatch } from './emails/send-rejection-emails-batch';
 import { db } from '../db';
-import { RejectionEmailsBatch } from '../emails/templates/send-rejection-emails-batch';
 
 export async function sendAllAcceptationCampaign(orgaSlug: string, eventSlug: string, uid: string) {
   await checkOrganizerEventAccess(orgaSlug, eventSlug, uid, ['OWNER', 'MEMBER']);
@@ -11,7 +11,7 @@ export async function sendAllAcceptationCampaign(orgaSlug: string, eventSlug: st
 
   const proposals = await db.proposal.findMany({
     include: { speakers: true },
-    where: { event: { slug: eventSlug }, status: { in: ['ACCEPTED'], not: 'DRAFT' } },
+    where: { event: { slug: eventSlug }, status: 'ACCEPTED' },
   });
 
   const emails = new AcceptationEmailsBatch(event);
@@ -27,7 +27,7 @@ export async function sendAllAcceptationCampaign(orgaSlug: string, eventSlug: st
     });
   });
 
-  emails.send();
+  await emails.send();
 }
 
 export async function sendAllRejectionCampaign(orgaSlug: string, eventSlug: string, uid: string) {
@@ -38,7 +38,7 @@ export async function sendAllRejectionCampaign(orgaSlug: string, eventSlug: stri
 
   const proposals = await db.proposal.findMany({
     include: { speakers: true },
-    where: { event: { slug: eventSlug }, status: { in: ['REJECTED'], not: 'DRAFT' } },
+    where: { event: { slug: eventSlug }, status: 'REJECTED' },
   });
 
   const emails = new RejectionEmailsBatch(event);
@@ -50,5 +50,5 @@ export async function sendAllRejectionCampaign(orgaSlug: string, eventSlug: stri
     });
   });
 
-  emails.send();
+  await emails.send();
 }
