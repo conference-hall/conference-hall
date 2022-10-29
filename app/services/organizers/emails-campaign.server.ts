@@ -2,6 +2,7 @@ import { checkOrganizerEventAccess } from './event.server';
 import { AcceptationEmailsBatch } from './emails/send-acceptation-emails-batch';
 import { RejectionEmailsBatch } from './emails/send-rejection-emails-batch';
 import { db } from '../db';
+import { EmailStatus } from '@prisma/client';
 
 export async function sendAllAcceptationCampaign(orgaSlug: string, eventSlug: string, uid: string) {
   await checkOrganizerEventAccess(orgaSlug, eventSlug, uid, ['OWNER', 'MEMBER']);
@@ -14,20 +15,12 @@ export async function sendAllAcceptationCampaign(orgaSlug: string, eventSlug: st
     where: { event: { slug: eventSlug }, status: 'ACCEPTED' },
   });
 
-  const emails = new AcceptationEmailsBatch(event);
+  await new AcceptationEmailsBatch(event, proposals).send();
 
-  proposals.forEach((proposal) => {
-    proposal.speakers.forEach((speaker) => {
-      if (!speaker.email) return;
-      emails.addRecipient(speaker.email, {
-        fullname: speaker.name || '',
-        proposalId: proposal.id,
-        proposalTitle: proposal.title,
-      });
-    });
+  await db.proposal.updateMany({
+    data: { emailAcceptedStatus: EmailStatus.SENT },
+    where: { event: { slug: eventSlug }, status: 'ACCEPTED' },
   });
-
-  await emails.send();
 }
 
 export async function sendAllRejectionCampaign(orgaSlug: string, eventSlug: string, uid: string) {
@@ -41,14 +34,10 @@ export async function sendAllRejectionCampaign(orgaSlug: string, eventSlug: stri
     where: { event: { slug: eventSlug }, status: 'REJECTED' },
   });
 
-  const emails = new RejectionEmailsBatch(event);
+  await new RejectionEmailsBatch(event, proposals).send();
 
-  proposals.forEach((proposal) => {
-    proposal.speakers.forEach((speaker) => {
-      if (!speaker.email) return;
-      emails.addRecipient(speaker.email, { fullname: speaker.name || '', proposalTitle: proposal.title });
-    });
+  await db.proposal.updateMany({
+    data: { emailRejectedStatus: EmailStatus.SENT },
+    where: { event: { slug: eventSlug }, status: 'REJECTED' },
   });
-
-  await emails.send();
 }

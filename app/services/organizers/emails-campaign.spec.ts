@@ -6,6 +6,7 @@ import { organizationFactory } from 'tests/factories/organization';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
+import { db } from '../db';
 import { ForbiddenOperationError } from '../errors';
 import { sendAllAcceptationCampaign, sendAllRejectionCampaign } from './emails-campaign.server';
 
@@ -68,6 +69,9 @@ describe('#sendAllAcceptationCampaign', () => {
         subject: `[${event.name}] Your talk has been accepted`,
       },
     ]);
+
+    const proposals = await db.proposal.findMany({ orderBy: { emailAcceptedStatus: 'asc' } });
+    expect(proposals.map((proposal) => proposal.emailAcceptedStatus)).toEqual(['SENT', 'SENT', null, null]);
   });
 
   it('can be sent by organization members', async () => {
@@ -148,6 +152,9 @@ describe('#sendAllRejectionCampaign', () => {
         subject: `[${event.name}] Your talk has been declined`,
       },
     ]);
+
+    const proposals = await db.proposal.findMany({ orderBy: { emailRejectedStatus: 'asc' } });
+    expect(proposals.map((proposal) => proposal.emailRejectedStatus)).toEqual(['SENT', 'SENT', null, null]);
   });
 
   it('can be sent by organization members', async () => {

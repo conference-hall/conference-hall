@@ -3,7 +3,7 @@ import { MailgunProvider } from './mailgun-provider';
 
 const fetchMock = vi.fn();
 vi.stubGlobal('fetch', fetchMock);
-vi.mock('../config', () => ({
+vi.mock('../../config', () => ({
   config: { MAILGUN_API_KEY: 'KEY', MAILGUN_DOMAIN: 'DOMAIN', isMailgunEnabled: true },
 }));
 
