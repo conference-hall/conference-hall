@@ -1,19 +1,21 @@
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
+import type { ProposalsFilters } from '~/schemas/proposal';
 import { json } from '@remix-run/node';
 import { useLoaderData, useLocation, useSearchParams } from '@remix-run/react';
 import { withZod } from '@remix-validated-form/with-zod';
 import { CampaignEmailFilters } from '~/components/campaign-email/CampaignEmailFilters';
-import { CampaignEmailList } from '~/components/campaign-email/CampaignEmailList';
+import { CampaignEmailList, CampaignType } from '~/components/campaign-email/CampaignEmailList';
 import { StatIndicator } from '~/design-system/charts/StatIndicator';
 import { Pagination } from '~/design-system/Pagination';
 import { H1, H2 } from '~/design-system/Typography';
 import { parsePage } from '~/schemas/pagination';
-import type { ProposalsFilters } from '~/schemas/proposal';
+import { ProposalSelectionSchema } from '~/schemas/proposal';
 import { ProposalsFiltersSchema } from '~/schemas/proposal';
 import { sessionRequired } from '~/services/auth/auth.server';
 import { mapErrorToResponse } from '~/services/errors';
-import { sendAllRejectionCampaign } from '~/services/organizers/emails-campaign.server';
+import { getRejectionCampaignStats, sendRejectionCampaign } from '~/services/organizers/emails-campaign.server';
 import { searchProposals } from '~/services/organizers/event.server';
+import { createToast } from '~/utils/toasts';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
@@ -24,22 +26,27 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const filters = { query: data?.query, status: ['REJECTED'] } as ProposalsFilters;
 
   try {
-    const results = await searchProposals(slug!, eventSlug!, uid, filters, page);
-    return json(results);
+    const proposals = await searchProposals(slug!, eventSlug!, uid, filters, page);
+    const stats = await getRejectionCampaignStats(slug!, eventSlug!, uid);
+    return json({ proposals, stats });
   } catch (err) {
     throw mapErrorToResponse(err);
   }
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
-  const { uid } = await sessionRequired(request);
+  const { uid, session } = await sessionRequired(request);
   const { slug, eventSlug } = params;
-  await sendAllRejectionCampaign(slug!, eventSlug!, uid);
-  return json(null);
+  const form = await request.formData();
+  const { data, error } = await withZod(ProposalSelectionSchema).validate(form);
+  if (error) return json(null);
+  await sendRejectionCampaign(slug!, eventSlug!, uid, data.selection);
+  return json(null, await createToast(session, 'Emails successfully sent.'));
 };
 
 export default function RejectedProposalEmails() {
-  const { results, pagination, total } = useLoaderData<typeof loader>();
+  const { proposals, stats } = useLoaderData<typeof loader>();
+  const { results, pagination, total } = proposals;
   const location = useLocation();
   const [searchParams] = useSearchParams();
 
@@ -47,14 +54,14 @@ export default function RejectedProposalEmails() {
     <>
       <H1 className="sr-only">Rejection emails campaign</H1>
       <dl className="grid grid-cols-1 gap-5 sm:grid-cols-3">
-        <StatIndicator label="Rejected proposals">{results.length}</StatIndicator>
-        <StatIndicator label="Emails sent">0</StatIndicator>
-        <StatIndicator label="Emails delivered">0</StatIndicator>
+        <StatIndicator label="Rejected proposals">{total}</StatIndicator>
+        <StatIndicator label="Emails sent">{stats.sent}</StatIndicator>
+        <StatIndicator label="Emails delivered">{stats.delivered}</StatIndicator>
       </dl>
       <div>
         <H2 className="mt-12">Select proposals to send rejection emails</H2>
         <CampaignEmailFilters pathname={location.pathname} query={searchParams.get('query')} />
-        <CampaignEmailList proposals={results} total={total} />
+        <CampaignEmailList type={CampaignType.REJECTION} proposals={results} total={total} />
         <Pagination
           pathname={location.pathname}
           current={pagination.current}

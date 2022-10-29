@@ -145,6 +145,8 @@ export async function searchProposals(
         id: proposal.id,
         title: proposal.title,
         status: proposal.status,
+        emailAcceptedStatus: proposal.emailAcceptedStatus,
+        emailRejectedStatus: proposal.emailRejectedStatus,
         speakers: proposal.speakers.map(({ name }) => name),
         ratings: {
           positives: ratings.positives,

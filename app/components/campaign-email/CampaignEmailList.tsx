@@ -1,22 +1,29 @@
+import type { EmailStatus } from '@prisma/client';
 import c from 'classnames';
 import { useMemo } from 'react';
 import { Text } from '~/design-system/Typography';
-import { Button } from '~/design-system/Buttons';
 import Badge from '~/design-system/Badges';
 import { useCheckboxSelection } from '~/design-system/useCheckboxSelection';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
-import { Form } from '@remix-run/react';
+import { SendEmailsButton } from './SendEmailsButton';
+
+export enum CampaignType {
+  ACCEPTATION = 'acceptation',
+  REJECTION = 'rejection',
+}
 
 type Proposal = {
   id: string;
   title: string;
   speakers: (string | null)[];
   status: string;
+  emailAcceptedStatus: EmailStatus | null;
+  emailRejectedStatus: EmailStatus | null;
 };
 
-type Props = { proposals: Array<Proposal>; total: number };
+type Props = { type: CampaignType; proposals: Array<Proposal>; total: number };
 
-export function CampaignEmailList({ proposals, total }: Props) {
+export function CampaignEmailList({ type, proposals, total }: Props) {
   const ids = useMemo(() => proposals.map(({ id }) => id), [proposals]);
 
   const { checkboxRef, selection, checked, isSelected, onSelect, toggleAll } = useCheckboxSelection(ids);
@@ -39,14 +46,7 @@ export function CampaignEmailList({ proposals, total }: Props) {
           </div>
         </div>
         <div className="flex flex-row items-center gap-2">
-          <Form method="post">
-            {selection.map((id) => (
-              <input key={id} type="hidden" name="selection" value={id} />
-            ))}
-            <Button variant="secondary" size="s">
-              {selection.length !== 0 ? `Send to ${selection.length} proposals` : 'Send to all proposals'}
-            </Button>
-          </Form>
+          <SendEmailsButton selection={selection} total={total} />
         </div>
       </div>
       <div className="divide-y divide-gray-200 bg-white">
@@ -67,7 +67,12 @@ export function CampaignEmailList({ proposals, total }: Props) {
                 </Text>
               </div>
               <div className="flex flex-row items-center gap-2">
-                <Badge>{proposal.status.toLowerCase()}</Badge>
+                {type === CampaignType.ACCEPTATION && proposal.emailAcceptedStatus && (
+                  <Badge color="green">{proposal.emailAcceptedStatus.toLowerCase()}</Badge>
+                )}
+                {type === CampaignType.REJECTION && proposal.emailRejectedStatus && (
+                  <Badge color="green">{proposal.emailRejectedStatus.toLowerCase()}</Badge>
+                )}
               </div>
             </div>
           </div>

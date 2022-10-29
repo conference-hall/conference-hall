@@ -8,9 +8,9 @@ import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
 import { db } from '../db';
 import { ForbiddenOperationError } from '../errors';
-import { sendAllAcceptationCampaign, sendAllRejectionCampaign } from './emails-campaign.server';
+import { sendAcceptationCampaign, sendRejectionCampaign } from './emails-campaign.server';
 
-describe('#sendAllAcceptationCampaign', () => {
+describe('#sendAcceptationCampaign', () => {
   let owner: User, member: User, reviewer: User, speaker1: User, speaker2: User;
   let organization: Organization;
   let event: Event, event2: Event;
@@ -44,7 +44,7 @@ describe('#sendAllAcceptationCampaign', () => {
       traits: ['accepted'],
     });
 
-    await sendAllAcceptationCampaign(organization.slug, event.slug, owner.id);
+    await sendAcceptationCampaign(organization.slug, event.slug, owner.id, []);
 
     const emails = await getEmails();
     expect(emails.total).toBe(3);
@@ -74,26 +74,54 @@ describe('#sendAllAcceptationCampaign', () => {
     expect(proposals.map((proposal) => proposal.emailAcceptedStatus)).toEqual(['SENT', 'SENT', null, null]);
   });
 
+  it('sends emails to selected proposals', async () => {
+    const proposal_accepted_1 = await proposalFactory({
+      event,
+      talk: await talkFactory({ speakers: [speaker1], attributes: { title: 'Talk-1' } }),
+      traits: ['accepted'],
+    });
+    await proposalFactory({
+      event,
+      talk: await talkFactory({ speakers: [speaker2], attributes: { title: 'Talk-2' } }),
+      traits: ['accepted'],
+    });
+
+    await sendAcceptationCampaign(organization.slug, event.slug, owner.id, [proposal_accepted_1.id]);
+
+    const emails = await getEmails();
+    expect(emails.total).toBe(1);
+    expect(emails.hasEmailWithContent(speaker1.email, proposal_accepted_1.title)).toBeTruthy();
+    expect(emails.to(speaker1.email)).toEqual([
+      {
+        from: `${event.name} <no-reply@conference-hall.io>`,
+        subject: `[${event.name}] Your talk has been accepted`,
+      },
+    ]);
+
+    const proposals = await db.proposal.findMany({ orderBy: { emailAcceptedStatus: 'asc' } });
+    expect(proposals.map((proposal) => proposal.emailAcceptedStatus)).toEqual(['SENT', null]);
+  });
+
   it('can be sent by organization members', async () => {
     await proposalFactory({
       event,
       talk: await talkFactory({ speakers: [speaker1] }),
       traits: ['accepted'],
     });
-    await sendAllAcceptationCampaign(organization.slug, event.slug, owner.id);
+    await sendAcceptationCampaign(organization.slug, event.slug, owner.id, []);
 
     const emails = await getEmails();
     expect(emails.total).toBe(1);
   });
 
   it('cannot be sent by organization reviewers', async () => {
-    await expect(sendAllAcceptationCampaign(organization.slug, event.slug, reviewer.id)).rejects.toThrowError(
+    await expect(sendAcceptationCampaign(organization.slug, event.slug, reviewer.id, [])).rejects.toThrowError(
       ForbiddenOperationError
     );
   });
 });
 
-describe('#sendAllRejectionCampaign', () => {
+describe('#sendRejectionCampaign', () => {
   let owner: User, member: User, reviewer: User, speaker1: User, speaker2: User;
   let organization: Organization;
   let event: Event, event2: Event;
@@ -127,7 +155,7 @@ describe('#sendAllRejectionCampaign', () => {
       traits: ['rejected'],
     });
 
-    await sendAllRejectionCampaign(organization.slug, event.slug, owner.id);
+    await sendRejectionCampaign(organization.slug, event.slug, owner.id, []);
 
     const emails = await getEmails();
     expect(emails.total).toBe(3);
@@ -157,20 +185,48 @@ describe('#sendAllRejectionCampaign', () => {
     expect(proposals.map((proposal) => proposal.emailRejectedStatus)).toEqual(['SENT', 'SENT', null, null]);
   });
 
+  it('sends emails to selected proposals', async () => {
+    const proposal_rejected_1 = await proposalFactory({
+      event,
+      talk: await talkFactory({ speakers: [speaker1], attributes: { title: 'Talk-1' } }),
+      traits: ['rejected'],
+    });
+    await proposalFactory({
+      event,
+      talk: await talkFactory({ speakers: [speaker2], attributes: { title: 'Talk-2' } }),
+      traits: ['rejected'],
+    });
+
+    await sendRejectionCampaign(organization.slug, event.slug, owner.id, [proposal_rejected_1.id]);
+
+    const emails = await getEmails();
+    expect(emails.total).toBe(1);
+    expect(emails.hasEmailWithContent(speaker1.email, proposal_rejected_1.title)).toBeTruthy();
+    expect(emails.to(speaker1.email)).toEqual([
+      {
+        from: `${event.name} <no-reply@conference-hall.io>`,
+        subject: `[${event.name}] Your talk has been declined`,
+      },
+    ]);
+
+    const proposals = await db.proposal.findMany({ orderBy: { emailRejectedStatus: 'asc' } });
+    expect(proposals.map((proposal) => proposal.emailRejectedStatus)).toEqual(['SENT', null]);
+  });
+
   it('can be sent by organization members', async () => {
     await proposalFactory({
       event,
       talk: await talkFactory({ speakers: [speaker1] }),
       traits: ['rejected'],
     });
-    await sendAllRejectionCampaign(organization.slug, event.slug, owner.id);
+    await sendRejectionCampaign(organization.slug, event.slug, owner.id, []);
 
     const emails = await getEmails();
     expect(emails.total).toBe(1);
   });
 
   it('cannot be sent by organization reviewers', async () => {
-    await expect(sendAllRejectionCampaign(organization.slug, event.slug, reviewer.id)).rejects.toThrowError(
+    await expect(sendRejectionCampaign(organization.slug, event.slug, reviewer.id, [])).rejects.toThrowError(
       ForbiddenOperationError
     );
   });
