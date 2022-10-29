@@ -10,7 +10,7 @@ import { MarkdownTextArea } from '~/design-system/forms/MarkdownTextArea';
 import type { OrganizerEventContext } from '../../$eventSlug';
 import { updateEvent } from '~/services/organizers/event.server';
 import { DateRangeInput } from '~/design-system/forms/DateRangeInput';
-import { EventInfoForm } from '~/components/event-forms/EventInfoForm';
+import { EventInfoForm } from '~/components/organizer-event/EventInfoForm';
 import { withZod } from '@remix-validated-form/with-zod';
 import { EventDetailsSettingsSchema, EventGeneralSettingsSchema } from '~/schemas/event';
 

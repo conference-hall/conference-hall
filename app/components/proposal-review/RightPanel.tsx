@@ -42,7 +42,7 @@ function OrganizerComments({ uid, messages }: { uid: string; messages: Array<Mes
     fetcher.submit(
       { _action: 'delete', messageId },
       {
-        action: `/organizer/${slug}/${eventSlug}/proposals/${proposalId}/comments`,
+        action: `/organizer/${slug}/${eventSlug}/review/${proposalId}/comments`,
         method: 'post',
       }
     );
@@ -86,7 +86,7 @@ function OrganizerComments({ uid, messages }: { uid: string; messages: Array<Mes
       </div>
       <fetcher.Form
         ref={formRef}
-        action={`/organizer/${slug}/${eventSlug}/proposals/${proposalId}/comments`}
+        action={`/organizer/${slug}/${eventSlug}/review/${proposalId}/comments`}
         method="post"
         className="flex gap-2 border-t border-gray-200 bg-white p-6"
       >

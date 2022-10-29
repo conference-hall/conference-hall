@@ -119,7 +119,7 @@ describe('Organizer event proposals', () => {
     });
   });
 
-  describe('Actions on proposals', () => {
+  describe.only('Actions on proposals', () => {
     it('marks selected proposals as accepted', () => {
       cy.login('Clark Kent');
       proposals.visit('orga-1', 'conference-1');

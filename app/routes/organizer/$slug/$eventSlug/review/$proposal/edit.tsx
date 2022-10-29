@@ -3,7 +3,7 @@ import { json } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 import type { OrganizerProposalContext } from '../$proposal';
 import { sessionRequired } from '~/services/auth/auth.server';
-import { Form, useActionData, useOutletContext, useParams, useSearchParams } from '@remix-run/react';
+import { Form, useActionData, useOutletContext, useSearchParams } from '@remix-run/react';
 import { TalkAbstractForm } from '~/components/TalkAbstractForm';
 import { Button, ButtonLink } from '~/design-system/Buttons';
 import { FormatsForm } from '~/components/FormatsForm';
@@ -27,7 +27,7 @@ export const action = async ({ request, params }: ActionArgs) => {
     if (result.error) return json(result.error.fieldErrors);
     await updateProposal(slug!, eventSlug!, params.proposal!, uid, result.data);
     const url = new URL(request.url);
-    throw redirect(`/organizer/${slug}/${eventSlug}/proposals/${proposal}${url.search}`);
+    throw redirect(`/organizer/${slug}/${eventSlug}/review/${proposal}${url.search}`);
   } catch (err) {
     throw mapErrorToResponse(err);
   }
@@ -35,7 +35,6 @@ export const action = async ({ request, params }: ActionArgs) => {
 
 export default function OrganizerProposalContentRoute() {
   const { event, proposalReview } = useOutletContext<OrganizerProposalContext>();
-  const { slug, eventSlug, proposal } = useParams();
   const [searchParams] = useSearchParams();
   const errors = useActionData<typeof action>();
 
@@ -51,13 +50,7 @@ export default function OrganizerProposalContentRoute() {
       </div>
 
       <div className="flex justify-end gap-2 border-t border-gray-200 bg-white p-6">
-        <ButtonLink
-          to={{
-            pathname: `/organizer/${slug}/${eventSlug}/proposals/${proposal}`,
-            search: searchParams.toString(),
-          }}
-          variant="secondary"
-        >
+        <ButtonLink to={{ pathname: '..', search: searchParams.toString() }} variant="secondary">
           Cancel
         </ButtonLink>
         <Button type="submit">Save proposal</Button>

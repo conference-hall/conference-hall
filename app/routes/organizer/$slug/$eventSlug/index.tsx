@@ -10,7 +10,7 @@ import { NoProposals } from '~/components/proposals-list/NoProposals';
 import { Container } from '~/design-system/Container';
 import { Pagination } from '~/design-system/Pagination';
 import { parsePage } from '~/schemas/pagination';
-import type { OrganizerEventContext } from '../../$eventSlug';
+import type { OrganizerEventContext } from '../$eventSlug';
 import { withZod } from '@remix-validated-form/with-zod';
 import { ProposalsStatusUpdateSchema, ProposalsFiltersSchema } from '~/schemas/proposal';
 import { createToast } from '~/utils/toasts';

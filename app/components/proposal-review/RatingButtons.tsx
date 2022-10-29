@@ -36,7 +36,7 @@ export function RatingButtons({ userRating }: Props) {
   const defaultIndex = findRatingOptionIndex(userRating, fetcher.submission?.formData);
   const [overIndex, setOverIndex] = useState<number>(-1);
 
-  const action = `/organizer/${slug}/${eventSlug}/proposals/${proposalId}/rate`;
+  const action = `/organizer/${slug}/${eventSlug}/review/${proposalId}/rate`;
 
   const iconStyles = useCallback(
     ({ option, index }: StyleProps) => {

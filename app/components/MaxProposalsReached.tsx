@@ -30,7 +30,7 @@ export function MaxProposalsReached({ maxProposals }: Props) {
         If you want to submit an other proposal, you can remove a submitted one.
       </p>
       <div className="mt-12">
-        <ButtonLink to="../proposals" variant="secondary">
+        <ButtonLink to="proposals" variant="secondary">
           Check my submitted proposals
         </ButtonLink>
       </div>

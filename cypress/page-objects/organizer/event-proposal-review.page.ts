@@ -10,7 +10,7 @@ type ProposalFormType = {
 
 class ProposalReviewPage {
   visit(orgaSlug: string, eventSlug: string, proposalId: string) {
-    cy.visit(`/organizer/${orgaSlug}/${eventSlug}/proposals/${proposalId}`);
+    cy.visit(`/organizer/${orgaSlug}/${eventSlug}/review/${proposalId}`);
     this.isPageVisible();
   }
 

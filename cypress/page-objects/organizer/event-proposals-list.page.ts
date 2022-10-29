@@ -1,6 +1,6 @@
 class OrganizationEventsProposalsPage {
   visit(orgaSlug: string, eventSlug: string) {
-    cy.visit(`/organizer/${orgaSlug}/${eventSlug}/proposals`);
+    cy.visit(`/organizer/${orgaSlug}/${eventSlug}`);
     this.isPageVisible();
   }
 
