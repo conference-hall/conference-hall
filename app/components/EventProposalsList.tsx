@@ -45,7 +45,7 @@ export function EventProposalsList({ proposals, cfpState }: Props) {
   return (
     <ul aria-label="Proposals list" className="grid grid-cols-1 gap-6 sm:grid-cols-2">
       {proposals.map((proposal) => (
-        <CardLink as="li" key={proposal.id} to={proposal.id}>
+        <CardLink as="li" key={proposal.id} to={`proposals/${proposal.id}`}>
           <div className="flex h-40 flex-col justify-between px-4 py-4 sm:px-6">
             <div>
               <p className="truncate text-base font-semibold text-indigo-600">{proposal.title}</p>

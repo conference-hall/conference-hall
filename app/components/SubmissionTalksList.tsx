@@ -30,7 +30,7 @@ export function SubmissionTalksList({ talks }: Props) {
   return (
     <ul aria-label="Talks list" className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2">
       {talks.map((talk) => (
-        <CardLink as="li" key={talk.id} to={talk.id}>
+        <CardLink as="li" key={talk.id} to={`submission/${talk.id}`}>
           <div className="flex h-40 flex-col justify-between px-4 py-4 sm:px-6">
             <div>
               <p className="truncate text-base font-semibold text-indigo-600">{talk.title}</p>

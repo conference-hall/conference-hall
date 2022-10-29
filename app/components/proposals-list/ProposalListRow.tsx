@@ -1,7 +1,7 @@
 import c from 'classnames';
 import { HeartIcon, StarIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import type { ChangeEventHandler } from 'react';
-import { Link, useLocation, useSearchParams } from '@remix-run/react';
+import { Link, useSearchParams } from '@remix-run/react';
 import Badge from '~/design-system/Badges';
 import { IconLabel } from '~/design-system/IconLabel';
 import type { Proposal } from './ProposalsList';
@@ -15,7 +15,6 @@ type ProposalRowProp = {
 };
 
 export function ProposaListRow({ proposal, isSelected, onSelect }: ProposalRowProp) {
-  const location = useLocation();
   const [searchParams] = useSearchParams();
 
   return (
@@ -32,7 +31,7 @@ export function ProposaListRow({ proposal, isSelected, onSelect }: ProposalRowPr
       </td>
       <td scope="row" className="w-full max-w-0 truncate py-6 px-4 sm:w-auto sm:max-w-none sm:p-0">
         <Link
-          to={{ pathname: `${location.pathname}/${proposal.id}`, search: searchParams.toString() }}
+          to={{ pathname: `review/${proposal.id}`, search: searchParams.toString() }}
           aria-label={`Open proposal "${proposal.title}"`}
           className="block after:absolute after:top-0 after:bottom-0 after:left-16 after:right-0 after:z-10 after:block"
         >

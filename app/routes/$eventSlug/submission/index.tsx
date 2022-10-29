@@ -47,7 +47,7 @@ export default function EventSubmitRoute() {
             Select or create a new proposal to submit.
           </Text>
         </div>
-        {data?.talks.length !== 0 && <ButtonLink to="new">Create a new proposal</ButtonLink>}
+        {data?.talks.length !== 0 && <ButtonLink to="submission/new">Create a new proposal</ButtonLink>}
       </div>
 
       {Boolean(max) && (

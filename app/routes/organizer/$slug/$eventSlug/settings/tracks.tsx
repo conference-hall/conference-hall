@@ -15,7 +15,7 @@ import {
   saveFormat,
   updateEvent,
 } from '~/services/organizers/event.server';
-import { EditTrackButton, NewTrackButton } from '~/components/event-forms/SaveTrackForm';
+import { EditTrackButton, NewTrackButton } from '~/components/organizer-event/SaveTrackForm';
 import { withZod } from '@remix-validated-form/with-zod';
 import { EventTrackSaveSchema, EventTracksSettingsSchema } from '~/schemas/event';
 

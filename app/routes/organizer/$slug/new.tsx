@@ -8,7 +8,7 @@ import { H1, H2, Text } from '~/design-system/Typography';
 import { Button, ButtonLink } from '~/design-system/Buttons';
 import { MegaphoneIcon } from '@heroicons/react/20/solid';
 import { UserGroupIcon } from '@heroicons/react/24/outline';
-import { EventInfoForm } from '~/components/event-forms/EventInfoForm';
+import { EventInfoForm } from '~/components/organizer-event/EventInfoForm';
 import { CardLink } from '~/design-system/Card';
 import { createEvent } from '~/services/organizers/event.server';
 import { getUserRole } from '~/services/organizers/organizations.server';

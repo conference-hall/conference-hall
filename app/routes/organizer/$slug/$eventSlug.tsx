@@ -2,7 +2,7 @@ import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Outlet, useLoaderData, useOutletContext } from '@remix-run/react';
 import { CfpElapsedTime } from '~/components/CfpInfo';
-import { EventTabs } from '~/components/event-forms/EventTabs';
+import { EventTabs } from '~/components/organizer-event/EventTabs';
 import OrganizationBreadcrumb from '~/components/organizations/OrganizationBreadcrumb';
 import { Container } from '~/design-system/Container';
 import { sessionRequired } from '~/services/auth/auth.server';
