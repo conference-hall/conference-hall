@@ -1,7 +1,7 @@
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import type { ProposalsFilters } from '~/schemas/proposal';
 import { json } from '@remix-run/node';
-import { useLoaderData, useLocation, useSearchParams } from '@remix-run/react';
+import { useLoaderData, useLocation } from '@remix-run/react';
 import { withZod } from '@remix-validated-form/with-zod';
 import { CampaignEmailFilters } from '~/components/campaign-email/CampaignEmailFilters';
 import { CampaignEmailList, CampaignType } from '~/components/campaign-email/CampaignEmailList';
@@ -23,7 +23,11 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const { data } = await withZod(ProposalsFiltersSchema).validate(url.searchParams);
   const page = await parsePage(url.searchParams);
   const { slug, eventSlug } = params;
-  const filters = { query: data?.query, status: ['REJECTED'] } as ProposalsFilters;
+  const filters = {
+    query: data?.query,
+    emailRejectedStatus: data?.emailRejectedStatus || 'not-sent',
+    status: ['REJECTED'],
+  } as ProposalsFilters;
 
   try {
     const proposals = await searchProposals(slug!, eventSlug!, uid, filters, page);
@@ -48,19 +52,18 @@ export default function RejectedProposalEmails() {
   const { proposals, stats } = useLoaderData<typeof loader>();
   const { results, pagination, total } = proposals;
   const location = useLocation();
-  const [searchParams] = useSearchParams();
 
   return (
     <>
       <H1 className="sr-only">Rejection emails campaign</H1>
       <dl className="grid grid-cols-1 gap-5 sm:grid-cols-3">
-        <StatIndicator label="Rejected proposals">{total}</StatIndicator>
+        <StatIndicator label="Rejected proposals">{stats.total}</StatIndicator>
         <StatIndicator label="Emails sent">{stats.sent}</StatIndicator>
         <StatIndicator label="Emails delivered">{stats.delivered}</StatIndicator>
       </dl>
       <div>
         <H2 className="mt-12">Select proposals to send rejection emails</H2>
-        <CampaignEmailFilters pathname={location.pathname} query={searchParams.get('query')} />
+        <CampaignEmailFilters type={CampaignType.REJECTION} />
         <CampaignEmailList type={CampaignType.REJECTION} proposals={results} total={total} />
         <Pagination
           pathname={location.pathname}

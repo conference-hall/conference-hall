@@ -7,6 +7,9 @@ import { EmailStatus } from '@prisma/client';
 export async function getAcceptationCampaignStats(orgaSlug: string, eventSlug: string, uid: string) {
   await checkOrganizerEventAccess(orgaSlug, eventSlug, uid, ['OWNER', 'MEMBER']);
 
+  const total = await db.proposal.count({
+    where: { event: { slug: eventSlug }, status: { in: ['ACCEPTED', 'CONFIRMED', 'DECLINED'] } },
+  });
   const sentStatusCount = await db.proposal.count({
     where: {
       event: { slug: eventSlug },
@@ -22,7 +25,7 @@ export async function getAcceptationCampaignStats(orgaSlug: string, eventSlug: s
     },
   });
 
-  return { sent: sentStatusCount + deliveredStatusCount, delivered: deliveredStatusCount };
+  return { total, sent: sentStatusCount + deliveredStatusCount, delivered: deliveredStatusCount };
 }
 
 export async function sendAcceptationCampaign(orgaSlug: string, eventSlug: string, uid: string, proposalIds: string[]) {
@@ -55,6 +58,9 @@ export async function sendAcceptationCampaign(orgaSlug: string, eventSlug: strin
 export async function getRejectionCampaignStats(orgaSlug: string, eventSlug: string, uid: string) {
   await checkOrganizerEventAccess(orgaSlug, eventSlug, uid, ['OWNER', 'MEMBER']);
 
+  const total = await db.proposal.count({
+    where: { event: { slug: eventSlug }, status: 'REJECTED' },
+  });
   const sentStatusCount = await db.proposal.count({
     where: { event: { slug: eventSlug }, status: 'REJECTED', emailRejectedStatus: 'SENT' },
   });
@@ -62,7 +68,7 @@ export async function getRejectionCampaignStats(orgaSlug: string, eventSlug: str
     where: { event: { slug: eventSlug }, status: 'REJECTED', emailRejectedStatus: 'DELIVERED' },
   });
 
-  return { sent: sentStatusCount + deliveredStatusCount, delivered: deliveredStatusCount };
+  return { total, sent: sentStatusCount + deliveredStatusCount, delivered: deliveredStatusCount };
 }
 
 export async function sendRejectionCampaign(orgaSlug: string, eventSlug: string, uid: string, proposalIds: string[]) {

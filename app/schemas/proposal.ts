@@ -17,6 +17,8 @@ export const ProposalSubmissionSchema = z.object({
   message: text(z.string().trim().max(1000).nullable().default(null)),
 });
 
+const EmailStatusSchema = text(z.enum(['not-sent', 'sent']).optional());
+
 export const ProposalsFiltersSchema = z.object({
   query: text(z.string().trim().optional()),
   sort: text(z.enum(['newest', 'oldest']).optional()),
@@ -24,6 +26,8 @@ export const ProposalsFiltersSchema = z.object({
   status: repeatable(z.array(ProposalStatusSchema)).optional(),
   formats: text(z.string().optional()),
   categories: text(z.string().optional()),
+  emailAcceptedStatus: EmailStatusSchema,
+  emailRejectedStatus: EmailStatusSchema,
 });
 
 export const ProposalRatingDataSchema = z.object({
@@ -51,3 +55,4 @@ export type ProposalUpdateData = z.infer<typeof ProposalUpdateSchema>;
 export type ProposalSubmissionData = z.infer<typeof ProposalSubmissionSchema>;
 export type ProposalsFilters = z.infer<typeof ProposalsFiltersSchema>;
 export type ProposalRatingData = z.infer<typeof ProposalRatingDataSchema>;
+export type EmailStatusData = z.infer<typeof EmailStatusSchema>;
