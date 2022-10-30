@@ -30,7 +30,7 @@ export function CampaignEmailList({ type, proposals, total }: Props) {
   const [searchParams] = useSearchParams();
   const ids = useMemo(() => proposals.map(({ id }) => id), [proposals]);
 
-  const { checkboxRef, selection, checked, isSelected, onSelect, toggleAll } = useCheckboxSelection(ids);
+  const { checkboxRef, selection, checked, isSelected, onSelect, toggleAll, reset } = useCheckboxSelection(ids);
 
   const emailStatus = type === CampaignType.ACCEPTATION ? 'emailAcceptedStatus' : 'emailRejectedStatus';
   const isSendEmailPage = searchParams.get(emailStatus) !== 'sent';
@@ -56,15 +56,15 @@ export function CampaignEmailList({ type, proposals, total }: Props) {
           </div>
         </div>
         <div className="flex flex-row items-center gap-2">
-          {isSendEmailPage && hasEmailToSend && <SendEmailsButton selection={selection} total={total} />}
+          {isSendEmailPage && hasEmailToSend && <SendEmailsButton selection={selection} total={total} onSend={reset} />}
         </div>
       </div>
       <div className="divide-y divide-gray-200 bg-white">
         {isSendEmailPage && !hasEmailToSend && (
           <div key="no-email-to-send" className="flex p-6">
             <Text>
-              No more email to send, you can check{' '}
-              <Link to={{ search: `${emailStatus}=sent` }}>already sent emails</Link> and resend them if necessary.
+              No email to send, you can check <Link to={{ search: `${emailStatus}=sent` }}>already sent emails</Link>{' '}
+              and resend them if necessary.
             </Text>
           </div>
         )}

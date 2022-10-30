@@ -4,9 +4,9 @@ import { Modal } from '~/design-system/dialogs/Modals';
 import { Button } from '~/design-system/Buttons';
 import { PaperAirplaneIcon } from '@heroicons/react/24/outline';
 
-type SendEmailsButtonProps = { total: number; selection: string[] };
+type SendEmailsButtonProps = { total: number; selection: string[]; onSend?: () => void };
 
-export function SendEmailsButton({ total, selection }: SendEmailsButtonProps) {
+export function SendEmailsButton({ total, selection, onSend }: SendEmailsButtonProps) {
   const transition = useTransition();
   const [isModalOpen, setModalOpen] = useState(false);
   const emailCount = selection.length > 0 ? selection.length : total;
@@ -23,6 +23,7 @@ export function SendEmailsButton({ total, selection }: SendEmailsButtonProps) {
         title={`You are going to send ${emailCount} emails.`}
         selection={selection}
         isOpen={isModalOpen}
+        onSend={onSend}
         onClose={() => setModalOpen(false)}
       />
     </>
@@ -59,12 +60,17 @@ type SendEmailsModalProps = {
   selection: string[];
   isOpen: boolean;
   onClose: () => void;
+  onSend?: () => void;
 };
 
-function SendEmailsModal({ title, selection, isOpen, onClose }: SendEmailsModalProps) {
+function SendEmailsModal({ title, selection, isOpen, onClose, onSend }: SendEmailsModalProps) {
+  const handleSubmit = () => {
+    if (onSend) onSend();
+    onClose();
+  };
   return (
     <Modal open={isOpen} onClose={onClose}>
-      <Form method="post" onSubmit={onClose}>
+      <Form method="post" onSubmit={handleSubmit}>
         <Modal.Title title={title} icon={PaperAirplaneIcon} iconColor="info" />
         {selection.map((id) => (
           <input key={id} type="hidden" name="selection" value={id} />

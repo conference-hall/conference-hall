@@ -5,7 +5,6 @@ import { useLoaderData, useLocation } from '@remix-run/react';
 import { withZod } from '@remix-validated-form/with-zod';
 import { CampaignEmailFilters } from '~/components/campaign-email/CampaignEmailFilters';
 import { CampaignEmailList, CampaignType } from '~/components/campaign-email/CampaignEmailList';
-import { StatIndicator } from '~/design-system/charts/StatIndicator';
 import { Pagination } from '~/design-system/Pagination';
 import { H1, H2 } from '~/design-system/Typography';
 import { parsePage } from '~/schemas/pagination';
@@ -16,6 +15,7 @@ import { mapErrorToResponse } from '~/services/errors';
 import { getRejectionCampaignStats, sendRejectionCampaign } from '~/services/organizers/emails-campaign.server';
 import { searchProposals } from '~/services/organizers/event.server';
 import { createToast } from '~/utils/toasts';
+import { CampaignEmailStats } from '~/components/campaign-email/CampaignEmailStats';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
@@ -55,12 +55,8 @@ export default function RejectedProposalEmails() {
 
   return (
     <>
-      <H1 className="sr-only">Rejection emails campaign</H1>
-      <dl className="grid grid-cols-1 gap-5 sm:grid-cols-3">
-        <StatIndicator label="Rejected proposals">{stats.total}</StatIndicator>
-        <StatIndicator label="Emails sent">{stats.sent}</StatIndicator>
-        <StatIndicator label="Emails delivered">{stats.delivered}</StatIndicator>
-      </dl>
+      <H1>Rejection emails campaign</H1>
+      <CampaignEmailStats stats={stats} />
       <div>
         <H2 className="mt-12">Select proposals to send rejection emails</H2>
         <CampaignEmailFilters type={CampaignType.REJECTION} />

@@ -21,6 +21,12 @@ export const useCheckboxSelection = (items: Array<string>) => {
     setIndeterminate(false);
   }, [items, checked, indeterminate]);
 
+  const reset = useCallback(() => {
+    setSelected([]);
+    setChecked(false);
+    setIndeterminate(false);
+  }, []);
+
   const onSelect = useCallback(
     (item: string, isSelected: boolean) => {
       if (isSelected) {
@@ -41,8 +47,9 @@ export const useCheckboxSelection = (items: Array<string>) => {
       isSelected,
       onSelect,
       toggleAll,
+      reset,
     }),
-    [checkboxRef, selection, checked, isSelected, onSelect, toggleAll]
+    [checkboxRef, selection, checked, isSelected, onSelect, toggleAll, reset]
   );
 
   return value;
