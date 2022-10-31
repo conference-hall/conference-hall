@@ -1,9 +1,8 @@
 import { StarIcon } from '@heroicons/react/20/solid';
 import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
-import { Form, useLoaderData, useOutletContext } from '@remix-run/react';
-import { Navbar } from '~/components/Navbar';
-import type { UserContext } from '~/root';
+import { Form, useLoaderData } from '@remix-run/react';
+import { Navbar } from '~/components/navbar/Navbar';
 import { inviteMemberToOrganization } from '~/services/organizers/organizations.server';
 import { Button } from '../../design-system/Buttons';
 import { Container } from '../../design-system/Container';
@@ -51,12 +50,11 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export default function InvitationRoute() {
-  const { user } = useOutletContext<UserContext>();
   const invitation = useLoaderData<typeof loader>();
 
   return (
     <>
-      <Navbar user={user} />
+      <Navbar />
       <Container className="m-24">
         <div className="flex flex-col items-center bg-white px-4 py-5 sm:rounded-lg sm:p-6">
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-indigo-100">

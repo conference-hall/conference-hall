@@ -22,7 +22,7 @@ export function SubmissionTalksList({ talks }: Props) {
   if (talks.length === 0) {
     return (
       <EmptyState icon={InboxIcon} label="Nothing to submit!" description="Get started by creating a new proposal.">
-        <ButtonLink to="new">Create a new proposal</ButtonLink>
+        <ButtonLink to="submission/new">Create a new proposal</ButtonLink>
       </EmptyState>
     );
   }

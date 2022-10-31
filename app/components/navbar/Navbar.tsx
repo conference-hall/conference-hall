@@ -1,10 +1,12 @@
-import { Link as RemixLink } from '@remix-run/react';
-import { Link } from '../design-system/Links';
+import { Link as RemixLink, useOutletContext } from '@remix-run/react';
+import type { UserContext } from '~/root';
+import { Link } from '../../design-system/Links';
+import { NotificationMenu } from './NotificationMenu';
 import { UserMenu } from './UserMenu';
 
-type Props = { user?: { email?: string | null; picture?: string | null } | null };
+export function Navbar() {
+  const { user, notifications } = useOutletContext<UserContext>();
 
-export function Navbar({ user }: Props) {
   return (
     <nav className="bg-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -21,9 +23,16 @@ export function Navbar({ user }: Props) {
               <RemixLink to="/">Conference Hall</RemixLink>
             </div>
           </div>
-          <div className="flex items-center gap-8 pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+          <div className="flex items-center gap-2 pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
             <Link to="/about">About</Link>
-            {user ? <UserMenu email={user.email} picture={user.picture} /> : <Link to="/login">Login</Link>}
+            {user ? (
+              <>
+                <NotificationMenu notifications={notifications} />
+                <UserMenu email={user.email} picture={user.photoURL} />
+              </>
+            ) : (
+              <Link to="/login">Login</Link>
+            )}
           </div>
         </div>
       </div>

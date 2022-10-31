@@ -5,7 +5,8 @@ import { json } from '@remix-run/node';
 import { Meta, LiveReload, Outlet, Links, Scripts, useCatch, useLoaderData, ScrollRestoration } from '@remix-run/react';
 import { initializeFirebase } from './services/auth/firebase';
 import { commitSession, getSession } from './services/auth/auth.server';
-import { getUser } from './services/auth/user.server';
+import { getUser } from './services/user/user.server';
+import { getUserNotifications } from './services/user/notification.server';
 import { Footer } from './components/Footer';
 import { H1, Text } from './design-system/Typography';
 import { Container } from './design-system/Container';
@@ -22,16 +23,26 @@ export const links: LinksFunction = () => {
   ];
 };
 
-export type UserContext = { user: Awaited<ReturnType<typeof getUser>> };
+export type UserContext = {
+  user: Awaited<ReturnType<typeof getUser>> | null;
+  notifications: Awaited<ReturnType<typeof getUserNotifications>> | null;
+};
 
 export const loader = async ({ request }: LoaderArgs) => {
   const { uid, session } = await getSession(request);
-  const user = uid ? await getUser(uid).catch(() => console.log('No user connected.')) : null;
   const toast = getToast(session);
+
+  let user = null;
+  let notifications = null;
+  if (uid) {
+    user = await getUser(uid).catch(() => console.log('No user connected.'));
+    notifications = await getUserNotifications(uid);
+  }
 
   return json(
     {
       user,
+      notifications,
       toast,
       firebase: {
         FIREBASE_API_KEY: config.FIREBASE_API_KEY,
@@ -46,13 +57,13 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 export default function App() {
-  const { user, firebase, toast } = useLoaderData<typeof loader>();
+  const { user, notifications, firebase, toast } = useLoaderData<typeof loader>();
 
   initializeFirebase(firebase);
 
   return (
     <Document title="Conference Hall" toast={toast}>
-      <Outlet context={{ user }} />
+      <Outlet context={{ user, notifications }} />
     </Document>
   );
 }

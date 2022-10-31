@@ -2,7 +2,7 @@ import * as admin from 'firebase-admin';
 import type { Session } from '@remix-run/node';
 import { createCookieSessionStorage, redirect } from '@remix-run/node';
 import { config } from '../config';
-import { createUser } from './user.server';
+import { createUser } from '../user/user.server';
 
 if (!admin.apps.length) {
   admin.initializeApp({

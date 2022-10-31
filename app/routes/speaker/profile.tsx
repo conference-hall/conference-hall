@@ -1,4 +1,3 @@
-import type { UserContext } from '~/root';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData, useOutletContext, useSubmit } from '@remix-run/react';
@@ -16,6 +15,7 @@ import { sessionRequired } from '../../services/auth/auth.server';
 import { NavMenu } from '~/design-system/NavMenu';
 import { withZod } from '@remix-validated-form/with-zod';
 import { AdditionalInfoSchema, DetailsSchema, PersonalInfoSchema } from '~/schemas/profile';
+import type { SpeakerContext } from '../speaker';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);
@@ -44,7 +44,7 @@ export const action = async ({ request }: ActionArgs) => {
 };
 
 export default function ProfileRoute() {
-  const { user } = useOutletContext<UserContext>();
+  const { user } = useOutletContext<SpeakerContext>();
   const errors = useActionData<typeof action>();
   const submit = useSubmit();
 
