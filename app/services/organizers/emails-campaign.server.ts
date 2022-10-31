@@ -1,36 +1,38 @@
 import { checkOrganizerEventAccess } from './event.server';
-import { AcceptationEmailsBatch } from '../emails/templates/send-acceptation-emails-batch';
+import { AcceptationEmailsBatch } from './emails/send-acceptation-emails-batch';
+import { RejectionEmailsBatch } from './emails/send-rejection-emails-batch';
 import { db } from '../db';
-import { RejectionEmailsBatch } from '../emails/templates/send-rejection-emails-batch';
+import { EmailStatus } from '@prisma/client';
 
-export async function sendAllAcceptationCampaign(orgaSlug: string, eventSlug: string, uid: string) {
+export async function getAcceptationCampaignStats(orgaSlug: string, eventSlug: string, uid: string) {
   await checkOrganizerEventAccess(orgaSlug, eventSlug, uid, ['OWNER', 'MEMBER']);
 
-  const event = await db.event.findUnique({ where: { slug: eventSlug } });
-  if (!event) return;
-
-  const proposals = await db.proposal.findMany({
-    include: { speakers: true },
-    where: { event: { slug: eventSlug }, status: { in: ['ACCEPTED'], not: 'DRAFT' } },
+  const toSend = await db.proposal.count({
+    where: {
+      event: { slug: eventSlug },
+      status: { in: ['ACCEPTED', 'CONFIRMED', 'DECLINED'] },
+      emailAcceptedStatus: null,
+    },
+  });
+  const sentStatusCount = await db.proposal.count({
+    where: {
+      event: { slug: eventSlug },
+      status: { in: ['ACCEPTED', 'CONFIRMED', 'DECLINED'] },
+      emailAcceptedStatus: 'SENT',
+    },
+  });
+  const deliveredStatusCount = await db.proposal.count({
+    where: {
+      event: { slug: eventSlug },
+      status: { in: ['ACCEPTED', 'CONFIRMED', 'DECLINED'] },
+      emailAcceptedStatus: 'DELIVERED',
+    },
   });
 
-  const emails = new AcceptationEmailsBatch(event);
-
-  proposals.forEach((proposal) => {
-    proposal.speakers.forEach((speaker) => {
-      if (!speaker.email) return;
-      emails.addRecipient(speaker.email, {
-        fullname: speaker.name || '',
-        proposalId: proposal.id,
-        proposalTitle: proposal.title,
-      });
-    });
-  });
-
-  emails.send();
+  return { toSend, sent: sentStatusCount + deliveredStatusCount, delivered: deliveredStatusCount };
 }
 
-export async function sendAllRejectionCampaign(orgaSlug: string, eventSlug: string, uid: string) {
+export async function sendAcceptationCampaign(orgaSlug: string, eventSlug: string, uid: string, proposalIds: string[]) {
   await checkOrganizerEventAccess(orgaSlug, eventSlug, uid, ['OWNER', 'MEMBER']);
 
   const event = await db.event.findUnique({ where: { slug: eventSlug } });
@@ -38,17 +40,64 @@ export async function sendAllRejectionCampaign(orgaSlug: string, eventSlug: stri
 
   const proposals = await db.proposal.findMany({
     include: { speakers: true },
-    where: { event: { slug: eventSlug }, status: { in: ['REJECTED'], not: 'DRAFT' } },
+    where: {
+      event: { slug: eventSlug },
+      id: { in: proposalIds?.length > 0 ? proposalIds : undefined },
+      status: 'ACCEPTED',
+    },
   });
 
-  const emails = new RejectionEmailsBatch(event);
+  await new AcceptationEmailsBatch(event, proposals).send();
 
-  proposals.forEach((proposal) => {
-    proposal.speakers.forEach((speaker) => {
-      if (!speaker.email) return;
-      emails.addRecipient(speaker.email, { fullname: speaker.name || '', proposalTitle: proposal.title });
-    });
+  await db.proposal.updateMany({
+    data: { emailAcceptedStatus: EmailStatus.SENT },
+    where: {
+      event: { slug: eventSlug },
+      id: { in: proposalIds?.length > 0 ? proposalIds : undefined },
+      status: 'ACCEPTED',
+    },
+  });
+}
+
+export async function getRejectionCampaignStats(orgaSlug: string, eventSlug: string, uid: string) {
+  await checkOrganizerEventAccess(orgaSlug, eventSlug, uid, ['OWNER', 'MEMBER']);
+
+  const toSend = await db.proposal.count({
+    where: { event: { slug: eventSlug }, status: 'REJECTED', emailRejectedStatus: null },
+  });
+  const sentStatusCount = await db.proposal.count({
+    where: { event: { slug: eventSlug }, status: 'REJECTED', emailRejectedStatus: 'SENT' },
+  });
+  const deliveredStatusCount = await db.proposal.count({
+    where: { event: { slug: eventSlug }, status: 'REJECTED', emailRejectedStatus: 'DELIVERED' },
   });
 
-  emails.send();
+  return { toSend, sent: sentStatusCount + deliveredStatusCount, delivered: deliveredStatusCount };
+}
+
+export async function sendRejectionCampaign(orgaSlug: string, eventSlug: string, uid: string, proposalIds: string[]) {
+  await checkOrganizerEventAccess(orgaSlug, eventSlug, uid, ['OWNER', 'MEMBER']);
+
+  const event = await db.event.findUnique({ where: { slug: eventSlug } });
+  if (!event) return;
+
+  const proposals = await db.proposal.findMany({
+    include: { speakers: true },
+    where: {
+      event: { slug: eventSlug },
+      id: { in: proposalIds?.length > 0 ? proposalIds : undefined },
+      status: 'REJECTED',
+    },
+  });
+
+  await new RejectionEmailsBatch(event, proposals).send();
+
+  await db.proposal.updateMany({
+    data: { emailRejectedStatus: EmailStatus.SENT },
+    where: {
+      event: { slug: eventSlug },
+      id: { in: proposalIds?.length > 0 ? proposalIds : undefined },
+      status: 'REJECTED',
+    },
+  });
 }

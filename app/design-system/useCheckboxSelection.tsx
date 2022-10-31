@@ -10,7 +10,9 @@ export const useCheckboxSelection = (items: Array<string>) => {
     const isIndeterminate = selection.length > 0 && selection.length < items.length;
     setChecked(items.length !== 0 && selection.length === items.length);
     setIndeterminate(isIndeterminate);
-    checkboxRef!.current!.indeterminate = isIndeterminate;
+    if (checkboxRef.current) {
+      checkboxRef.current.indeterminate = isIndeterminate;
+    }
   }, [selection, items]);
 
   const toggleAll = useCallback(() => {
@@ -18,6 +20,12 @@ export const useCheckboxSelection = (items: Array<string>) => {
     setChecked(!checked && !indeterminate);
     setIndeterminate(false);
   }, [items, checked, indeterminate]);
+
+  const reset = useCallback(() => {
+    setSelected([]);
+    setChecked(false);
+    setIndeterminate(false);
+  }, []);
 
   const onSelect = useCallback(
     (item: string, isSelected: boolean) => {
@@ -39,8 +47,9 @@ export const useCheckboxSelection = (items: Array<string>) => {
       isSelected,
       onSelect,
       toggleAll,
+      reset,
     }),
-    [checkboxRef, selection, checked, isSelected, onSelect, toggleAll]
+    [checkboxRef, selection, checked, isSelected, onSelect, toggleAll, reset]
   );
 
   return value;

@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["interactiveTransactions", "filteredRelationCount"]
 }
 
@@ -186,29 +186,34 @@ enum OrganizationRole {
 }
 
 model Proposal {
-  id              String          @id @default(uuid())
-  talkId          String?
-  talk            Talk?           @relation(fields: [talkId], references: [id])
-  eventId         String
-  event           Event           @relation(fields: [eventId], references: [id])
-  title           String
-  abstract        String
-  level           TalkLevel?
-  languages       Json?
-  references      String?
-  comments        String?
-  speakers        User[]          @relation("speakers_proposals")
-  formats         EventFormat[]   @relation("proposals_formats")
-  categories      EventCategory[] @relation("proposals_categories")
-  ratings         Rating[]
-  avgRateForSort  Float           @default(0)
-  status          ProposalStatus  @default(SUBMITTED)
-  emailStatus     EmailStatus?
-  speakerNotified Boolean         @default(false)
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
-  messages        Message[]
-  invitation      Invite?
+  id                  String          @id @default(uuid())
+  talkId              String?
+  talk                Talk?           @relation(fields: [talkId], references: [id])
+  eventId             String
+  event               Event           @relation(fields: [eventId], references: [id])
+  title               String
+  abstract            String
+  level               TalkLevel?
+  languages           Json?
+  references          String?
+  comments            String?
+  speakers            User[]          @relation("speakers_proposals")
+  formats             EventFormat[]   @relation("proposals_formats")
+  categories          EventCategory[] @relation("proposals_categories")
+  ratings             Rating[]
+  avgRateForSort      Float           @default(0)
+  status              ProposalStatus  @default(SUBMITTED)
+  emailAcceptedStatus EmailStatus?
+  emailRejectedStatus EmailStatus?
+  submittedAt         DateTime?
+  acceptedAt          DateTime?
+  rejectedAt          DateTime?
+  confirmedAt         DateTime?
+  declinedAt          DateTime?
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+  messages            Message[]
+  invitation          Invite?
 
   @@unique([talkId, eventId])
   @@map("proposals")

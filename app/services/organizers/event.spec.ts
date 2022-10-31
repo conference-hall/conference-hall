@@ -182,6 +182,8 @@ describe('#searchProposals', () => {
         id: proposal.id,
         title: proposal.title,
         status: proposal.status,
+        emailAcceptedStatus: null,
+        emailRejectedStatus: null,
         speakers: [speaker.name],
         ratings: { negatives: 0, positives: 0, you: null, total: null },
       },

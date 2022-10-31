@@ -14,7 +14,8 @@ class Config {
   MAILGUN_DOMAIN: string;
   MAILGUN_API_KEY: string;
   MAILHOG_HOST: string;
-  MAILHOG_PORT: number;
+  MAILHOG_SMTP_PORT: number;
+  MAILHOG_HTTP_PORT: number;
 
   constructor() {
     this.ENV = ENV;
@@ -28,7 +29,8 @@ class Config {
     this.MAILGUN_DOMAIN = process.env.MAILGUN_DOMAIN || '';
     this.MAILGUN_API_KEY = process.env.MAILGUN_API_KEY || '';
     this.MAILHOG_HOST = 'localhost';
-    this.MAILHOG_PORT = 1025;
+    this.MAILHOG_SMTP_PORT = 1025;
+    this.MAILHOG_HTTP_PORT = 8025;
   }
 
   get appUrl(): string {

@@ -1,10 +1,17 @@
 import { z } from 'zod';
 import type { Prisma } from '@prisma/client';
+import { EmailStatus } from '@prisma/client';
 import { OrganizationRole } from '@prisma/client';
 import { MessageChannel } from '@prisma/client';
 import { unstable_parseMultipartFormData } from '@remix-run/node';
 import type { EventCreateData, EventTrackSaveData } from '~/schemas/event';
-import type { ProposalRatingData, ProposalsFilters, ProposalStatusData, ProposalUpdateData } from '~/schemas/proposal';
+import type {
+  EmailStatusData,
+  ProposalRatingData,
+  ProposalsFilters,
+  ProposalStatusData,
+  ProposalUpdateData,
+} from '~/schemas/proposal';
 import { getCfpState } from '~/utils/event';
 import { jsonToArray } from '~/utils/prisma';
 import { db } from '../db';
@@ -145,6 +152,8 @@ export async function searchProposals(
         id: proposal.id,
         title: proposal.title,
         status: proposal.status,
+        emailAcceptedStatus: proposal.emailAcceptedStatus,
+        emailRejectedStatus: proposal.emailRejectedStatus,
         speakers: proposal.speakers.map(({ name }) => name),
         ratings: {
           positives: ratings.positives,
@@ -158,7 +167,7 @@ export async function searchProposals(
 }
 
 export function proposalWhereInput(slug: string, uid: string, filters: ProposalsFilters): Prisma.ProposalWhereInput {
-  const { query, ratings, formats, categories, status } = filters;
+  const { query, ratings, formats, categories, status, emailAcceptedStatus, emailRejectedStatus } = filters;
   const ratingClause = ratings === 'rated' ? { some: { userId: uid } } : { none: { userId: uid } };
 
   return {
@@ -167,11 +176,24 @@ export function proposalWhereInput(slug: string, uid: string, filters: Proposals
     formats: formats ? { some: { id: formats } } : {},
     categories: categories ? { some: { id: categories } } : {},
     ratings: ratings ? ratingClause : {},
+    emailAcceptedStatus: mapEmailStatus(emailAcceptedStatus),
+    emailRejectedStatus: mapEmailStatus(emailRejectedStatus),
     OR: [
       { title: { contains: query, mode: 'insensitive' } },
       { speakers: { some: { name: { contains: query, mode: 'insensitive' } } } },
     ],
   };
+}
+
+function mapEmailStatus(emailStatus: EmailStatusData) {
+  switch (emailStatus) {
+    case 'sent':
+      return { in: [EmailStatus.SENT, EmailStatus.DELIVERED] };
+    case 'not-sent':
+      return null;
+    default:
+      return undefined;
+  }
 }
 
 function proposalOrderBy(filters: ProposalsFilters): Prisma.ProposalOrderByWithRelationInput[] {

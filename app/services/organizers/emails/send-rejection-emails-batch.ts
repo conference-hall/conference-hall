@@ -1,15 +1,22 @@
-import type { Event } from '@prisma/client';
-import { BatchEmail } from '../batch-email';
+import type { Event, Proposal, User } from '@prisma/client';
+import { BatchEmail } from '../../emails/batch-email';
 
 type RejectionEmailVariables = { fullname: string; proposalTitle: string };
 
 export class RejectionEmailsBatch extends BatchEmail<RejectionEmailVariables> {
-  constructor(event: Event) {
+  constructor(event: Event, proposals: Array<Proposal & { speakers: User[] }>) {
     super({
       event,
       from: `${event.name} <no-reply@conference-hall.io>`,
       subject: `[${event.name}] Your talk has been declined`,
       template: TEMPLATE,
+    });
+
+    proposals.forEach((proposal) => {
+      proposal.speakers.forEach((speaker) => {
+        if (!speaker.email) return;
+        this.addRecipient(speaker.email, { fullname: speaker.name || '', proposalTitle: proposal.title });
+      });
     });
   }
 }

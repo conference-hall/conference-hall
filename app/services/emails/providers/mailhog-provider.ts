@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-import { config } from '../config';
+import { config } from '../../config';
 import type { Email, IEmailProvider, RecipientVariables } from './provider';
 
 export class MailhogProvider implements IEmailProvider {
@@ -8,7 +8,7 @@ export class MailhogProvider implements IEmailProvider {
   constructor() {
     this.transporter = nodemailer.createTransport({
       host: config.MAILHOG_HOST,
-      port: config.MAILHOG_PORT,
+      port: config.MAILHOG_SMTP_PORT,
     });
   }
 
