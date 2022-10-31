@@ -20,7 +20,7 @@ function NotificationItem({ notification }: NotificationItemProps) {
         <div className="mt-1 flex h-6 w-6 shrink-0">🎉</div>
         <div className="ml-4">
           <p className="text-sm font-medium text-gray-900">
-            Your proposal <strong>{proposal.title}</strong> has been accepted to <strong>{event.name}</strong>.
+            <strong>{proposal.title}</strong> has been accepted to <strong>{event.name}</strong>.
           </p>
           <p className="text-sm text-gray-500">Please confirm or decline your participation.</p>
         </div>
