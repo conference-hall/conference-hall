@@ -1,5 +1,6 @@
 import type { UserContext } from '~/root';
 import type { LoaderArgs } from '@remix-run/node';
+import type { getUser } from '~/services/user/user.server';
 import { json } from '@remix-run/node';
 import { Outlet, useCatch, useOutletContext } from '@remix-run/react';
 import { SpeakerTabs } from '~/components/SpeakerTabs';
@@ -8,7 +9,11 @@ import { ButtonLink } from '~/design-system/Buttons';
 import { Container } from '~/design-system/Container';
 import { H1, Text } from '~/design-system/Typography';
 import { sessionRequired } from '~/services/auth/auth.server';
-import { Navbar } from '~/components/Navbar';
+import { Navbar } from '~/components/navbar/Navbar';
+
+export type SpeakerContext = {
+  user: Awaited<ReturnType<typeof getUser>>;
+};
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);
@@ -19,21 +24,21 @@ export default function SpeakerRoute() {
   const { user } = useOutletContext<UserContext>();
   return (
     <>
-      <Navbar user={user} />
+      <Navbar />
       <Container className="my-4 hidden sm:flex sm:items-center sm:justify-between">
         <div className="sm:flex sm:items-center sm:space-x-5">
-          <Avatar photoURL={user.photoURL} size="m" ring />
+          <Avatar photoURL={user?.photoURL} size="m" ring />
           <div className="mt-4 text-center sm:mt-0 sm:pt-1 sm:text-left">
-            <H1>{user.name}</H1>
-            <Text variant="secondary">{user.email}</Text>
+            <H1>{user?.name}</H1>
+            <Text variant="secondary">{user?.email}</Text>
           </div>
         </div>
         <div className="mt-5 flex justify-center space-x-4 sm:mt-0">
           <ButtonLink to="/speaker/talks/new">New talk</ButtonLink>
         </div>
       </Container>
-      <SpeakerTabs hasOrganization={user.organizationsCount > 0} />
-      <Outlet context={{ user }} />
+      <SpeakerTabs hasOrganization={Boolean(user?.organizationsCount)} />
+      {user && <Outlet context={{ user }} />}
     </>
   );
 }

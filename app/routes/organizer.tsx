@@ -1,9 +1,8 @@
-import type { UserContext } from '~/root';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { Outlet, useOutletContext } from '@remix-run/react';
+import { Outlet } from '@remix-run/react';
 import { sessionRequired } from '~/services/auth/auth.server';
-import { Navbar } from '~/components/Navbar';
+import { Navbar } from '~/components/navbar/Navbar';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);
@@ -11,11 +10,10 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 export default function OrganizerRoute() {
-  const { user } = useOutletContext<UserContext>();
   return (
     <>
-      <Navbar user={user} />
-      <Outlet context={{ user }} />
+      <Navbar />
+      <Outlet />
     </>
   );
 }

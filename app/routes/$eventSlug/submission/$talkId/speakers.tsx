@@ -13,7 +13,7 @@ import { getEvent } from '../../../../services/events/event.server';
 import { removeCoSpeakerFromTalkAndEvent } from '../../../../services/events/proposals.server';
 import { getProposalSpeakers } from '../../../../services/events/speakers.server';
 import { updateSettings } from '../../../../services/speakers/profile.server';
-import { getUser } from '../../../../services/auth/user.server';
+import { getUser } from '../../../../services/user/user.server';
 import { DetailsSchema } from '~/schemas/profile';
 import { withZod } from '@remix-validated-form/with-zod';
 

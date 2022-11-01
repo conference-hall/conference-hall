@@ -1,4 +1,3 @@
-import type { UserContext } from '~/root';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData, useOutletContext } from '@remix-run/react';
@@ -12,6 +11,7 @@ import { SpeakerActivities } from '../../components/SpeakerActivities';
 import { mapErrorToResponse } from '../../services/errors';
 import { sessionRequired } from '../../services/auth/auth.server';
 import { getActivity } from '~/services/speakers/activity.server';
+import type { SpeakerContext } from '../speaker';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
@@ -25,7 +25,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 export default function ProfileRoute() {
   const activities = useLoaderData<typeof loader>();
-  const { user } = useOutletContext<UserContext>();
+  const { user } = useOutletContext<SpeakerContext>();
 
   return (
     <>
@@ -49,16 +49,12 @@ export default function ProfileRoute() {
             ) : (
               <Text className="mt-4">No references defined.</Text>
             )}
-            {user.address ? (
-              <div className="mt-6 grid grid-cols-1 gap-4">
-                {user.company && <IconLabel icon={HomeIcon}>{user.company}</IconLabel>}
-                {user.address && <IconLabel icon={MapPinIcon}>{user.address}</IconLabel>}
-                {user.twitter && <IconLabel icon={GlobeAltIcon}>{user.twitter}</IconLabel>}
-                {user.github && <IconLabel icon={GlobeAltIcon}>{user.github}</IconLabel>}
-              </div>
-            ) : (
-              <Text className="mt-4">Nothing defined.</Text>
-            )}
+            <div className="mt-6 grid grid-cols-1 gap-4">
+              {user.company && <IconLabel icon={HomeIcon}>{user.company}</IconLabel>}
+              {user.address && <IconLabel icon={MapPinIcon}>{user.address}</IconLabel>}
+              {user.twitter && <IconLabel icon={GlobeAltIcon}>{user.twitter}</IconLabel>}
+              {user.github && <IconLabel icon={GlobeAltIcon}>{user.github}</IconLabel>}
+            </div>
           </div>
           <div className="lg:col-span-2">
             {activities.length > 0 ? (
