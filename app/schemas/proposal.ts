@@ -1,3 +1,4 @@
+import { ProposalStatus } from '@prisma/client';
 import { z } from 'zod';
 import { numeric, repeatable, text } from 'zod-form-data';
 import { TalkSaveSchema } from './talks';
@@ -49,6 +50,10 @@ export const ProposalSelectionSchema = z.object({
   selection: repeatable(z.array(z.string())),
 });
 
+export const ProposalParticipationSchema = z.object({
+  participation: text(z.enum([ProposalStatus.CONFIRMED, ProposalStatus.DECLINED])),
+});
+
 export type ProposalStatusData = z.infer<typeof ProposalStatusSchema>;
 export type ProposalCreateData = z.infer<typeof ProposalCreateSchema>;
 export type ProposalUpdateData = z.infer<typeof ProposalUpdateSchema>;
@@ -56,3 +61,4 @@ export type ProposalSubmissionData = z.infer<typeof ProposalSubmissionSchema>;
 export type ProposalsFilters = z.infer<typeof ProposalsFiltersSchema>;
 export type ProposalRatingData = z.infer<typeof ProposalRatingDataSchema>;
 export type EmailStatusData = z.infer<typeof EmailStatusSchema>;
+export type ProposalParticipation = z.infer<typeof ProposalParticipationSchema>;

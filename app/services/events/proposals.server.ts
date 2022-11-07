@@ -1,3 +1,4 @@
+import { ProposalStatus } from '@prisma/client';
 import type { ProposalUpdateData } from '~/schemas/proposal';
 import { db } from '../../services/db';
 import { getCfpState } from '../../utils/event';
@@ -7,14 +8,7 @@ import { buildInvitationLink } from '../invitations/invitations.server';
 
 export async function fetchSpeakerProposals(slug: string, uid: string) {
   const proposals = await db.proposal.findMany({
-    select: {
-      id: true,
-      title: true,
-      talkId: true,
-      status: true,
-      createdAt: true,
-      speakers: true,
-    },
+    include: { speakers: true },
     where: {
       speakers: { some: { id: uid } },
       event: { slug },
@@ -26,7 +20,12 @@ export async function fetchSpeakerProposals(slug: string, uid: string) {
     id: proposal.id,
     title: proposal.title,
     talkId: proposal.talkId,
-    status: proposal.status,
+    isDraft: proposal.status === ProposalStatus.DRAFT,
+    isSubmitted: proposal.status === ProposalStatus.SUBMITTED,
+    isAccepted: proposal.status === ProposalStatus.ACCEPTED && proposal.emailAcceptedStatus !== null,
+    isRejected: proposal.status === ProposalStatus.REJECTED && proposal.emailRejectedStatus !== null,
+    isConfirmed: proposal.status === ProposalStatus.CONFIRMED,
+    isDeclined: proposal.status === ProposalStatus.DECLINED,
     createdAt: proposal.createdAt.toUTCString(),
     speakers: proposal.speakers.map((speaker) => ({
       id: speaker.id,
@@ -69,7 +68,12 @@ export async function getSpeakerProposal(proposalId: string, uid: string) {
     talkId: proposal.talkId,
     title: proposal.title,
     abstract: proposal.abstract,
-    status: proposal.status,
+    isDraft: proposal.status === ProposalStatus.DRAFT,
+    isSubmitted: proposal.status === ProposalStatus.SUBMITTED,
+    isAccepted: proposal.status === ProposalStatus.ACCEPTED && proposal.emailAcceptedStatus !== null,
+    isRejected: proposal.status === ProposalStatus.REJECTED && proposal.emailRejectedStatus !== null,
+    isConfirmed: proposal.status === ProposalStatus.CONFIRMED,
+    isDeclined: proposal.status === ProposalStatus.DECLINED,
     level: proposal.level,
     references: proposal.references,
     createdAt: proposal.createdAt.toUTCString(),
@@ -203,4 +207,22 @@ export async function removeCoSpeakerFromProposal(uid: string, proposalId: strin
     where: { id: proposalId },
     data: { speakers: { disconnect: { id: coSpeakerId } } },
   });
+}
+
+/**
+ * Send the speaker response for proposal participation to event
+ * @param uid Id of the speaker
+ * @param proposalId Id of the proposal
+ * @param participation confirmed or declined
+ */
+export async function sendProposalParticipation(
+  uid: string,
+  proposalId: string,
+  participation: 'CONFIRMED' | 'DECLINED'
+) {
+  const proposal = await db.proposal.findFirst({ where: { id: proposalId, speakers: { some: { id: uid } } } });
+
+  if (!proposal) throw new ProposalNotFoundError();
+
+  await db.proposal.update({ where: { id: proposalId }, data: { status: participation } });
 }

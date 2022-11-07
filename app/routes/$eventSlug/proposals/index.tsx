@@ -9,6 +9,8 @@ import { sessionRequired } from '~/services/auth/auth.server';
 import { mapErrorToResponse } from '~/services/errors';
 import { fetchSpeakerProposals } from '~/services/events/proposals.server';
 
+export type EventProposals = Awaited<ReturnType<typeof fetchSpeakerProposals>>;
+
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
   const slug = params.eventSlug!;
