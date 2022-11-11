@@ -224,5 +224,8 @@ export async function sendProposalParticipation(
 
   if (!proposal) throw new ProposalNotFoundError();
 
-  await db.proposal.update({ where: { id: proposalId }, data: { status: participation } });
+  await db.proposal.updateMany({
+    where: { id: proposalId, status: 'ACCEPTED' },
+    data: { status: participation },
+  });
 }

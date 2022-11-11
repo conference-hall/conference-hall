@@ -18,6 +18,7 @@ import {
   isTalkAlreadySubmitted,
   removeCoSpeakerFromProposal,
   removeCoSpeakerFromTalkAndEvent,
+  sendProposalParticipation,
   updateProposal,
 } from './proposals.server';
 
@@ -682,5 +683,62 @@ describe('#removeCoSpeakerFromProposal', () => {
     await expect(removeCoSpeakerFromProposal(speaker.id, 'XXX', cospeaker.id)).rejects.toThrowError(
       ProposalNotFoundError
     );
+  });
+});
+
+describe('#sendProposalParticipation', () => {
+  beforeEach(async () => {
+    await resetDB();
+  });
+  afterEach(disconnectDB);
+
+  it('confirms a proposal', async () => {
+    const event = await eventFactory();
+    const speaker = await userFactory();
+    const talk = await talkFactory({ speakers: [speaker] });
+    const proposal = await proposalFactory({ event, talk, traits: ['accepted'] });
+
+    await sendProposalParticipation(speaker.id, proposal.id, 'CONFIRMED');
+
+    const proposalUpdated = await db.proposal.findUnique({
+      where: { id: proposal.id },
+    });
+
+    expect(proposalUpdated?.status).toBe('CONFIRMED');
+  });
+
+  it('declines a proposal', async () => {
+    const event = await eventFactory();
+    const speaker = await userFactory();
+    const talk = await talkFactory({ speakers: [speaker] });
+    const proposal = await proposalFactory({ event, talk, traits: ['accepted'] });
+
+    await sendProposalParticipation(speaker.id, proposal.id, 'DECLINED');
+
+    const proposalUpdated = await db.proposal.findUnique({
+      where: { id: proposal.id },
+    });
+
+    expect(proposalUpdated?.status).toBe('DECLINED');
+  });
+
+  it('cannot confirm or declined a not accepted proposal', async () => {
+    const event = await eventFactory();
+    const speaker = await userFactory();
+    const talk = await talkFactory({ speakers: [speaker] });
+    const proposal = await proposalFactory({ event, talk, traits: ['submitted'] });
+
+    await sendProposalParticipation(speaker.id, proposal.id, 'CONFIRMED');
+
+    const proposalUpdated = await db.proposal.findUnique({
+      where: { id: proposal.id },
+    });
+
+    expect(proposalUpdated?.status).toBe('SUBMITTED');
+  });
+
+  it('throws an error when proposal not found', async () => {
+    const speaker = await userFactory();
+    await expect(sendProposalParticipation(speaker.id, 'XXX', 'CONFIRMED')).rejects.toThrowError(ProposalNotFoundError);
   });
 });
