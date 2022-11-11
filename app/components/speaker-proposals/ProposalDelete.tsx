@@ -4,21 +4,21 @@ import { Form } from '@remix-run/react';
 import { Button } from '~/design-system/Buttons';
 import { Modal } from '~/design-system/dialogs/Modals';
 
-export function EventProposalDeleteButton() {
+export function ProposalDeleteButton() {
   const [isModalOpen, setModalOpen] = useState(false);
   return (
     <>
       <Button variant="secondary" onClick={() => setModalOpen(true)}>
         Delete proposal
       </Button>
-      <EventProposalDeleteModal isOpen={isModalOpen} onClose={() => setModalOpen(false)} />
+      <ProposalDeleteModal isOpen={isModalOpen} onClose={() => setModalOpen(false)} />
     </>
   );
 }
 
 type DeleteProposalModalProps = { isOpen: boolean; onClose: () => void };
 
-function EventProposalDeleteModal({ isOpen, onClose }: DeleteProposalModalProps) {
+function ProposalDeleteModal({ isOpen, onClose }: DeleteProposalModalProps) {
   return (
     <Modal open={isOpen} onClose={onClose}>
       <Form action="edit" method="post" onSubmit={onClose}>

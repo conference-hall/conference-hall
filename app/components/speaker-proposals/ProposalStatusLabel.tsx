@@ -1,6 +1,4 @@
-import { ExclamationTriangleIcon, StarIcon } from '@heroicons/react/20/solid';
-import { CheckCircleIcon, ExclamationCircleIcon, XCircleIcon } from '@heroicons/react/24/outline';
-import { CheckCircleIcon as CheckCircleIconSolid } from '@heroicons/react/20/solid';
+import { CheckCircleIcon, XCircleIcon, ExclamationTriangleIcon, StarIcon } from '@heroicons/react/20/solid';
 import { IconLabel } from '~/design-system/IconLabel';
 
 type Props = {
@@ -36,7 +34,7 @@ export function ProposalStatusLabel(props: Props) {
 
 export function DraftLabel() {
   return (
-    <IconLabel icon={ExclamationTriangleIcon} iconClassName="text-orange-400" className="font-semibold text-gray-600">
+    <IconLabel icon={ExclamationTriangleIcon} iconClassName="text-orange-300" className="font-semibold text-gray-500">
       Draft proposal, don't forget to submit it.
     </IconLabel>
   );
@@ -44,7 +42,7 @@ export function DraftLabel() {
 
 function SubmittedLabel() {
   return (
-    <IconLabel icon={CheckCircleIcon} iconClassName="text-gray-400">
+    <IconLabel icon={CheckCircleIcon} iconClassName="text-gray-300" className="font-semibold text-gray-500">
       Submitted
     </IconLabel>
   );
@@ -52,7 +50,7 @@ function SubmittedLabel() {
 
 function AcceptedLabel() {
   return (
-    <IconLabel icon={StarIcon} iconClassName="text-yellow-400" className="font-semibold text-gray-600">
+    <IconLabel icon={StarIcon} iconClassName="text-yellow-300" className="font-semibold text-gray-500">
       Accepted! Please confirm or decline it.
     </IconLabel>
   );
@@ -60,15 +58,15 @@ function AcceptedLabel() {
 
 function RejectedLabel() {
   return (
-    <IconLabel icon={XCircleIcon} iconClassName="text-red-400">
-      Declined
+    <IconLabel icon={XCircleIcon} iconClassName="text-red-300" className="font-semibold text-gray-500">
+      Declined by organizers
     </IconLabel>
   );
 }
 
 function ConfirmedLabel() {
   return (
-    <IconLabel icon={CheckCircleIconSolid} iconClassName="text-green-400" className="font-semibold text-gray-600">
+    <IconLabel icon={CheckCircleIcon} iconClassName="text-green-300" className="font-semibold text-gray-500">
       Participation confirmed
     </IconLabel>
   );
@@ -76,8 +74,8 @@ function ConfirmedLabel() {
 
 function DeclinedLabel() {
   return (
-    <IconLabel icon={ExclamationCircleIcon} iconClassName="text-orange-400" className="font-semibold text-gray-600">
-      Participation declined
+    <IconLabel icon={XCircleIcon} iconClassName="text-red-300" className="font-semibold text-gray-500">
+      Declined by you
     </IconLabel>
   );
 }

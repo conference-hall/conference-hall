@@ -1,13 +1,7 @@
-import { StarIcon } from '@heroicons/react/20/solid';
-import {
-  CheckCircleIcon,
-  ExclamationCircleIcon,
-  ExclamationTriangleIcon,
-  XCircleIcon,
-} from '@heroicons/react/24/outline';
+import { StarIcon, CheckCircleIcon, ExclamationTriangleIcon, XCircleIcon } from '@heroicons/react/20/solid';
 import { useFetcher } from '@remix-run/react';
 import { Button, ButtonLink } from '~/design-system/Buttons';
-import { EventProposalDeleteButton } from '../EventProposalDelete';
+import { ProposalDeleteButton } from './ProposalDelete';
 
 type Props = {
   event: { name: string; isCfpOpen: boolean };
@@ -47,7 +41,7 @@ function DraftPanel({ event, proposal }: Props) {
   return (
     <div className="my-6 flex items-start gap-4 border border-gray-100 bg-white px-4 py-5 shadow sm:rounded-lg sm:p-6">
       <div className="flex-shrink-0">
-        <ExclamationTriangleIcon className="h-6 w-6 text-orange-400" aria-hidden="true" />
+        <ExclamationTriangleIcon className="h-6 w-6 text-orange-300" aria-hidden="true" />
       </div>
       <div>
         <h3 className="text-lg font-medium leading-6 text-gray-900">"{proposal.title}"" is in draft!</h3>
@@ -66,7 +60,7 @@ function SubmittedPanel({ event, proposal }: Props) {
   return (
     <div className="my-6 flex items-start gap-4 border border-gray-100 bg-white px-4 py-5 shadow sm:rounded-lg sm:p-6">
       <div className="flex-shrink-0">
-        <CheckCircleIcon className="h-6 w-6 text-gray-400" aria-hidden="true" />
+        <CheckCircleIcon className="h-6 w-6 text-gray-300" aria-hidden="true" />
       </div>
       <div>
         <h3 className="text-lg font-medium leading-6 text-gray-900">
@@ -85,7 +79,7 @@ function SubmittedPanel({ event, proposal }: Props) {
         {event.isCfpOpen && (
           <div className="mt-5 flex gap-4">
             <ButtonLink to="edit">Edit proposal</ButtonLink>
-            <EventProposalDeleteButton />
+            <ProposalDeleteButton />
           </div>
         )}
       </div>
@@ -99,7 +93,7 @@ function AcceptedPanel({ event, proposal }: Props) {
   return (
     <div className="my-6 flex items-start gap-4 border border-gray-100 bg-white px-4 py-5 shadow sm:rounded-lg sm:p-6">
       <div className="flex-shrink-0">
-        <StarIcon className="h-6 w-6 text-yellow-500" aria-hidden="true" />
+        <StarIcon className="h-6 w-6 text-yellow-300" aria-hidden="true" />
       </div>
       <div>
         <h3 className="text-lg font-medium leading-6 text-gray-900">
@@ -132,14 +126,14 @@ function RejectedPanel({ event, proposal }: Props) {
   return (
     <div className="my-6 flex items-start gap-4 border border-gray-100 bg-white px-4 py-5 shadow sm:rounded-lg sm:p-6">
       <div className="flex-shrink-0">
-        <XCircleIcon className="h-6 w-6 text-red-400" aria-hidden="true" />
+        <XCircleIcon className="h-6 w-6 text-red-300" aria-hidden="true" />
       </div>
       <div>
         <h3 className="text-lg font-medium leading-6 text-gray-900">
           Unfortunately, "{proposal.title}" has been declined by {event.name}.
         </h3>
         <div className="mt-2 text-sm text-gray-500">
-          <p>Thank you very much for your submission.</p>
+          <p>Thank you for your submission.</p>
         </div>
       </div>
     </div>
@@ -150,7 +144,7 @@ function ConfirmedPanel({ event }: Props) {
   return (
     <div className="my-6 flex items-start gap-4 border border-gray-100 bg-white px-4 py-5 shadow sm:rounded-lg sm:p-6">
       <div className="flex-shrink-0">
-        <CheckCircleIcon className="h-6 w-6 text-green-400" aria-hidden="true" />
+        <CheckCircleIcon className="h-6 w-6 text-green-300" aria-hidden="true" />
       </div>
       <div>
         <h3 className="text-lg font-medium leading-6 text-gray-900">
@@ -165,14 +159,14 @@ function DeclinedPanel({ event }: Props) {
   return (
     <div className="my-6 flex items-start gap-4 border border-gray-100 bg-white px-4 py-5 shadow sm:rounded-lg sm:p-6">
       <div className="flex-shrink-0">
-        <ExclamationCircleIcon className="h-6 w-6 text-orange-400" aria-hidden="true" />
+        <XCircleIcon className="h-6 w-6 text-red-300" aria-hidden="true" />
       </div>
       <div>
         <h3 className="text-lg font-medium leading-6 text-gray-900">
-          Your participation to {event.name} has been declined.
+          You have declined this proposal for {event.name}.
         </h3>
         <div className="mt-2 text-sm text-gray-500">
-          <p>{event.name} organizers will be notified. Thanks for the notice.</p>
+          <p>Organizers will be notified. Thanks for the notice.</p>
         </div>
       </div>
     </div>

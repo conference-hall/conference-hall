@@ -1,18 +1,18 @@
 import type { CfpState } from '~/schemas/event';
 import type { EventProposals } from '~/routes/$eventSlug/proposals';
 import { ExclamationCircleIcon, InboxIcon } from '@heroicons/react/24/outline';
-import { CfpLabel } from './CfpInfo';
+import { CfpLabel } from '../CfpInfo';
 import { CardLink } from '~/design-system/Card';
 import { AvatarGroup } from '~/design-system/Avatar';
 import { EmptyState } from '~/design-system/EmptyState';
-import { ProposalStatusLabel } from './speaker-proposals/ProposalStatusLabel';
+import { ProposalStatusLabel } from './ProposalStatusLabel';
 
 type Props = {
   proposals: EventProposals;
   cfpState: CfpState;
 };
 
-export function EventProposalsList({ proposals, cfpState }: Props) {
+export function ProposalsList({ proposals, cfpState }: Props) {
   if (cfpState !== 'OPENED' && proposals.length === 0) {
     return (
       <EmptyState icon={ExclamationCircleIcon}>
