@@ -236,7 +236,7 @@ describe('Submit a talk to event', () => {
       proposals.list().should('have.length', 1);
     });
 
-    it('cannot submit a talk when max proposal reached', () => {
+    it.only('cannot submit a talk when max proposal reached', () => {
       submission.visit('with-max-proposals');
       cy.assertText('You can submit a maximum of');
       cy.assertText('1 proposals.');
