@@ -8,7 +8,7 @@ export class ProposalDeclinedEmail extends SingleEmail<ProposalDeclinedEmailVari
     super({
       event,
       from: `${event.name} <no-reply@conference-hall.io>`,
-      subject: `[${event.name}] Talk declined by speaker 😔`,
+      subject: `[${event.name}] Talk declined by speaker`,
       template: TEMPLATE,
     });
   }

@@ -722,7 +722,7 @@ describe('#sendProposalParticipation', () => {
 
   it('declines a proposal', async () => {
     const event = await eventFactory({
-      attributes: { emailOrganizer: 'ben@email.com', emailNotifications: ['confirmed'] },
+      attributes: { emailOrganizer: 'ben@email.com', emailNotifications: ['declined'] },
     });
     const speaker = await userFactory();
     const talk = await talkFactory({ speakers: [speaker] });
