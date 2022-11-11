@@ -13,31 +13,30 @@ export class MailhogProvider implements IEmailProvider {
   }
 
   async sendEmail(data: Email, recipientVariables: RecipientVariables = {}) {
-    try {
-      await this.transporter.sendMail({
-        from: data.from,
-        to: data.to,
-        cc: data.cc,
-        bcc: data.bcc,
-        subject: data.subject,
-        html: replaceVariablesInTemplate(data.html, recipientVariables[data.to[0]]),
-      });
-    } catch (error) {
-      console.error(`Error sending email: ${error}`);
-    }
+    await this.transporter.sendMail({
+      from: data.from,
+      to: data.to,
+      cc: data.cc,
+      bcc: data.bcc,
+      subject: data.subject,
+      html: replaceVariablesInTemplate(data.html, recipientVariables[data.to[0]]),
+    });
   }
 
   async sendBatchEmail(data: Email, recipientVariables: RecipientVariables = {}) {
     await Promise.all(
       Object.keys(recipientVariables).map((email) =>
-        this.sendEmail({
-          from: data.from,
-          to: [email],
-          cc: data.cc,
-          bcc: data.bcc,
-          subject: data.subject,
-          html: data.html,
-        })
+        this.sendEmail(
+          {
+            from: data.from,
+            to: [email],
+            cc: data.cc,
+            bcc: data.bcc,
+            subject: data.subject,
+            html: data.html,
+          },
+          recipientVariables
+        )
       )
     );
   }
