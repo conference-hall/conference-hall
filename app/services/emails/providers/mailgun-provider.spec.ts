@@ -17,17 +17,14 @@ describe('mailgun provider', () => {
 
   it('should send an email with all parameters', async () => {
     // when
-    await provider.sendEmail(
-      {
-        from: 'from@example.net',
-        to: ['to1@example.net', 'to2@example.net'],
-        cc: ['cc1@example.net', 'cc2@example.net'],
-        bcc: ['bcc1@example.net', 'bcc2@example.net'],
-        subject: 'subject',
-        html: 'html',
-      },
-      { 'v:var1': 'variable1', 'v:var2': 'variable2' }
-    );
+    await provider.sendEmail({
+      from: 'from@example.net',
+      to: ['to1@example.net', 'to2@example.net'],
+      cc: ['cc1@example.net', 'cc2@example.net'],
+      bcc: ['bcc1@example.net', 'bcc2@example.net'],
+      subject: 'subject',
+      html: 'html',
+    });
 
     // then
     const url = fetchMock.mock.calls[0][0];
@@ -43,8 +40,6 @@ describe('mailgun provider', () => {
     expect(args.body._streams).toContain('bcc2@example.net');
     expect(args.body._streams).toContain('subject');
     expect(args.body._streams).toContain('html');
-    expect(args.body._streams).toContain('variable1');
-    expect(args.body._streams).toContain('variable2');
   });
 
   it('should send an custom email with all parameters', async () => {

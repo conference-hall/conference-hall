@@ -63,12 +63,6 @@ export class MaxSubmittedProposalsReachedError extends BadRequestError {
   }
 }
 
-export class ProposalSubmissionError extends BadRequestError {
-  constructor() {
-    super('Error while submitting proposal');
-  }
-}
-
 export class SurveyNotEnabledError extends BadRequestError {
   constructor() {
     super('Survey not enabled');

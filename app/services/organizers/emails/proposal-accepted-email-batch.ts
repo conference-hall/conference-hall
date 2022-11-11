@@ -1,32 +1,38 @@
 import type { Event, Proposal, User } from '@prisma/client';
 import { BatchEmail } from '../../emails/batch-email';
 
-type AcceptationEmailVariables = { fullname: string; proposalId: string; proposalTitle: string };
+type ProposalAcceptedEmailVariables = { fullname: string; proposalId: string; proposalTitle: string };
 
-export class AcceptationEmailsBatch extends BatchEmail<AcceptationEmailVariables> {
-  constructor(event: Event, proposals: Array<Proposal & { speakers: User[] }>) {
+export class ProposalAcceptedEmailsBatch extends BatchEmail<ProposalAcceptedEmailVariables> {
+  constructor(event: Event) {
     super({
       event,
       from: `${event.name} <no-reply@conference-hall.io>`,
       subject: `[${event.name}] Your talk has been accepted`,
       template: TEMPLATE,
     });
+  }
+
+  static send(event: Event, proposals: Array<Proposal & { speakers: User[] }>) {
+    const email = new ProposalAcceptedEmailsBatch(event);
 
     proposals.forEach((proposal) => {
       proposal.speakers.forEach((speaker) => {
         if (!speaker.email) return;
-        this.addRecipient(speaker.email, {
+        email.addRecipient(speaker.email, {
           fullname: speaker.name || '',
           proposalId: proposal.id,
           proposalTitle: proposal.title,
         });
       });
     });
+
+    return email.send();
   }
 }
 
 const TEMPLATE = `
-Dear %recipient.fullname%,
+Hi %recipient.fullname%,
 
 Your talk **%recipient.proposalTitle%** at **%eventName%** has been accepted.
 

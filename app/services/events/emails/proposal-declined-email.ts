@@ -1,27 +1,26 @@
 import type { Event, Prisma, Proposal } from '@prisma/client';
 import { SingleEmail } from '~/services/emails/single-email';
 
-type DeclinedEmailVariables = { proposalTitle: string };
+type ProposalDeclinedEmailVariables = { proposalTitle: string };
 
-export class ProposalDeclinedEmail extends SingleEmail<DeclinedEmailVariables> {
-  constructor(event: Event, proposal: Proposal) {
+export class ProposalDeclinedEmail extends SingleEmail<ProposalDeclinedEmailVariables> {
+  constructor(event: Event) {
     super({
       event,
       from: `${event.name} <no-reply@conference-hall.io>`,
       subject: `[${event.name}] Talk declined by speaker 😔`,
       template: TEMPLATE,
     });
-
-    if (!this.event.emailOrganizer) return;
-
-    this.addRecipient(this.event.emailOrganizer, { proposalTitle: proposal.title });
   }
 
   static send(event: Event, proposal: Proposal) {
     const notifications = (event.emailNotifications as Prisma.JsonArray) || [];
-    if (notifications.includes('declined') && event.emailOrganizer) {
-      return new ProposalDeclinedEmail(event, proposal).send();
-    }
+    if (!notifications.includes('declined')) return;
+    if (!event.emailOrganizer) return;
+
+    const email = new ProposalDeclinedEmail(event);
+    email.addRecipient(event.emailOrganizer, { proposalTitle: proposal.title });
+    return email.send();
   }
 }
 

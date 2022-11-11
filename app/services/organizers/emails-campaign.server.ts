@@ -1,6 +1,6 @@
 import { checkOrganizerEventAccess } from './event.server';
-import { AcceptationEmailsBatch } from './emails/send-acceptation-emails-batch';
-import { RejectionEmailsBatch } from './emails/send-rejection-emails-batch';
+import { ProposalAcceptedEmailsBatch } from './emails/proposal-accepted-email-batch';
+import { ProposalRejectedEmailsBatch } from './emails/proposal-rejected-email-batch';
 import { db } from '../db';
 import { EmailStatus } from '@prisma/client';
 
@@ -47,7 +47,7 @@ export async function sendAcceptationCampaign(orgaSlug: string, eventSlug: strin
     },
   });
 
-  await new AcceptationEmailsBatch(event, proposals).send();
+  await ProposalAcceptedEmailsBatch.send(event, proposals);
 
   await db.proposal.updateMany({
     data: { emailAcceptedStatus: EmailStatus.SENT },
@@ -90,7 +90,7 @@ export async function sendRejectionCampaign(orgaSlug: string, eventSlug: string,
     },
   });
 
-  await new RejectionEmailsBatch(event, proposals).send();
+  await ProposalRejectedEmailsBatch.send(event, proposals);
 
   await db.proposal.updateMany({
     data: { emailRejectedStatus: EmailStatus.SENT },

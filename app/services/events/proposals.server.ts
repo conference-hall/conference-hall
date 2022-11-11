@@ -5,8 +5,8 @@ import { getCfpState } from '../../utils/event';
 import { jsonToArray } from '../../utils/prisma';
 import { CfpNotOpenError, EventNotFoundError, InvitationNotFoundError, ProposalNotFoundError } from '../errors';
 import { buildInvitationLink } from '../invitations/invitations.server';
-import { ProposalConfirmedEmail } from '../speakers/emails/proposal-confirmed-email';
-import { ProposalDeclinedEmail } from '../speakers/emails/proposal-declined-email';
+import { ProposalConfirmedEmail } from './emails/proposal-confirmed-email';
+import { ProposalDeclinedEmail } from './emails/proposal-declined-email';
 
 export async function fetchSpeakerProposals(slug: string, uid: string) {
   const proposals = await db.proposal.findMany({
