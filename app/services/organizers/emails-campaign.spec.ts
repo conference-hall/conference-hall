@@ -24,8 +24,8 @@ describe('#sendAcceptationCampaign', () => {
     speaker1 = await userFactory({ attributes: { email: 'speaker1@example.com' } });
     speaker2 = await userFactory({ attributes: { email: 'speaker2@example.com' } });
     organization = await organizationFactory({ owners: [owner], members: [member], reviewers: [reviewer] });
-    event = await eventFactory({ organization });
-    event2 = await eventFactory();
+    event = await eventFactory({ organization, attributes: { name: 'Event 1' } });
+    event2 = await eventFactory({ attributes: { name: 'Event 2' } });
   });
   afterEach(disconnectDB);
 
@@ -135,8 +135,8 @@ describe('#sendRejectionCampaign', () => {
     speaker1 = await userFactory({ attributes: { email: 'speaker1@example.com' } });
     speaker2 = await userFactory({ attributes: { email: 'speaker2@example.com' } });
     organization = await organizationFactory({ owners: [owner], members: [member], reviewers: [reviewer] });
-    event = await eventFactory({ organization });
-    event2 = await eventFactory();
+    event = await eventFactory({ organization, attributes: { name: 'Event 1' } });
+    event2 = await eventFactory({ attributes: { name: 'Event 2' } });
   });
   afterEach(disconnectDB);
 
