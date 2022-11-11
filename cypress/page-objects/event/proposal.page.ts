@@ -1,11 +1,13 @@
-class EventProposalPage {
+import BasePage from 'page-objects/base.page';
+
+class EventProposalPage extends BasePage {
   visit(slug: string, proposalId: string) {
     cy.visit(`/${slug}/proposals/${proposalId}`);
     this.isPageVisible();
   }
 
   isPageVisible() {
-    cy.findByRole('heading', { name: 'Abstract' }).should('exist');
+    cy.findByRole('heading', { name: 'References' }).should('exist');
   }
 
   editProposal() {
@@ -13,7 +15,15 @@ class EventProposalPage {
   }
 
   submitProposal() {
-    return cy.findByRole('link', { name: 'Submit proposal' });
+    return cy.findByRole('link', { name: 'Continue submission' });
+  }
+
+  confirmProposal() {
+    return cy.findByRole('button', { name: 'Confirm your participation' });
+  }
+
+  declineProposal() {
+    return cy.findByRole('button', { name: 'Decline' });
   }
 
   deleteProposal() {

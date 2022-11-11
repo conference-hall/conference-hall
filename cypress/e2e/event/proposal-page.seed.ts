@@ -16,11 +16,6 @@ export const seed = async () => {
   const format = await eventFormatFactory({ event, attributes: { name: 'Quickie' } });
   const category = await eventCategoryFactory({ event, attributes: { name: 'Web' } });
 
-  const event2 = await eventFactory({
-    attributes: { slug: 'event-with-draft' },
-    traits: ['conference-cfp-open'],
-  });
-
   const talk = await talkFactory({
     attributes: {
       id: 'awesome-talk',
@@ -41,10 +36,40 @@ export const seed = async () => {
     attributes: { id: 'awesome-proposal' },
   });
 
+  const talk2 = await talkFactory({ speakers: [speaker1], attributes: { title: 'My talk 2' } });
+  const talk3 = await talkFactory({ speakers: [speaker1], attributes: { title: 'My talk 3' } });
+  const talk4 = await talkFactory({ speakers: [speaker1], attributes: { title: 'My talk 4' } });
+  const talk5 = await talkFactory({ speakers: [speaker1], attributes: { title: 'My talk 5' } });
+  const talk6 = await talkFactory({ speakers: [speaker1], attributes: { title: 'My talk 6' } });
+
   await proposalFactory({
-    event: event2,
-    talk,
+    event: event,
+    talk: talk2,
     attributes: { id: 'awesome-proposal2' },
     traits: ['draft'],
+  });
+  await proposalFactory({
+    event: event,
+    talk: talk3,
+    attributes: { id: 'awesome-proposal3' },
+    traits: ['acceptedAndNotified'],
+  });
+  await proposalFactory({
+    event: event,
+    talk: talk4,
+    attributes: { id: 'awesome-proposal4' },
+    traits: ['rejectedAndNotified'],
+  });
+  await proposalFactory({
+    event: event,
+    talk: talk5,
+    attributes: { id: 'awesome-proposal5' },
+    traits: ['declined'],
+  });
+  await proposalFactory({
+    event: event,
+    talk: talk6,
+    attributes: { id: 'awesome-proposal6' },
+    traits: ['confirmed'],
   });
 };

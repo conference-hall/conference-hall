@@ -1,4 +1,6 @@
-class EventPage {
+import BasePage from 'page-objects/base.page';
+
+class EventPage extends BasePage {
   visit(slug: string) {
     cy.visit(`/${slug}`, { failOnStatusCode: false });
     this.isPageVisible(slug);
