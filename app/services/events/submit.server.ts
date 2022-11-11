@@ -5,10 +5,11 @@ import {
   EventNotFoundError,
   MaxSubmittedProposalsReachedError,
   ProposalNotFoundError,
-  ProposalSubmissionError,
   TalkNotFoundError,
 } from '../errors';
 import type { ProposalCreateData, ProposalSubmissionData } from '~/schemas/proposal';
+import { ProposalSubmittedEmail } from './emails/proposal-submitted-email';
+import { ProposalReceivedEmail } from './emails/proposal-received-email';
 
 export async function fetchTalksToSubmitForEvent(uid: string, slug: string) {
   const event = await db.event.findUnique({
@@ -154,16 +155,7 @@ export async function getProposalInfo(talkId: string, eventId: string, uid: stri
 }
 
 export async function submitProposal(talkId: string, eventSlug: string, uid: string, data: ProposalSubmissionData) {
-  const event = await db.event.findUnique({
-    select: {
-      id: true,
-      type: true,
-      cfpStart: true,
-      cfpEnd: true,
-      maxProposals: true,
-    },
-    where: { slug: eventSlug },
-  });
+  const event = await db.event.findUnique({ where: { slug: eventSlug } });
   if (!event) throw new EventNotFoundError();
 
   const isCfpOpen = getCfpState(event.type, event.cfpStart, event.cfpEnd) === 'OPENED';
@@ -183,13 +175,18 @@ export async function submitProposal(talkId: string, eventSlug: string, uid: str
     }
   }
 
-  const result = await db.proposal.updateMany({
-    data: { status: 'SUBMITTED', comments: data.message },
-    where: { talkId, eventId: event.id, speakers: { some: { id: uid } } },
+  const proposal = await db.proposal.findFirst({
+    where: { eventId: event.id, talkId, speakers: { some: { id: uid } } },
+    include: { speakers: true },
   });
-  if (result.count === 0) throw new ProposalSubmissionError();
+  if (!proposal) throw new ProposalNotFoundError();
 
-  // TODO Email notification to speakers
-  // TODO Email notification to organizers
+  await db.proposal.update({
+    data: { status: 'SUBMITTED', comments: data.message },
+    where: { id: proposal.id },
+  });
+
+  await ProposalSubmittedEmail.send(event, proposal);
+  await ProposalReceivedEmail.send(event, proposal);
   // TODO Slack notification
 }

@@ -9,13 +9,13 @@ export class MailgunProvider implements IEmailProvider {
   endpoint = `https://api.mailgun.net/v3/${DOMAIN}/messages`;
   token = Buffer.from(`api:${KEY}`).toString('base64');
 
-  async sendEmail(data: Email, providerVariables?: ProviderVariables) {
-    const body = toFormData(data, providerVariables);
+  async sendEmail(data: Email, recipentVariables?: RecipientVariables) {
+    const body = toFormData(data, recipentVariables);
     return this._send(body);
   }
 
   async sendBatchEmail(data: Email, recipentVariables?: RecipientVariables, providerVariables?: ProviderVariables) {
-    const body = toFormData(data, providerVariables, recipentVariables);
+    const body = toFormData(data, recipentVariables, providerVariables);
     return this._send(body);
   }
 
@@ -46,8 +46,8 @@ function appendEmails(formData: FormData, name: string, emails?: string[]) {
 
 function toFormData(
   data: Email,
-  providerVariables: ProviderVariables = {},
-  recipentVariables: RecipientVariables = {}
+  recipentVariables: RecipientVariables = {},
+  providerVariables: ProviderVariables = {}
 ) {
   const formData = new FormData();
 

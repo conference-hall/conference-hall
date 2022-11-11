@@ -1,5 +1,6 @@
 import type { Event, User } from '@prisma/client';
 import { TalkLevel } from '@prisma/client';
+import { getEmails, resetEmails } from 'tests/email-helpers';
 import { resetDB, disconnectDB } from '../../../tests/db-helpers';
 import { eventCategoryFactory } from '../../../tests/factories/categories';
 import { eventFactory } from '../../../tests/factories/events';
@@ -688,12 +689,15 @@ describe('#removeCoSpeakerFromProposal', () => {
 
 describe('#sendProposalParticipation', () => {
   beforeEach(async () => {
+    await resetEmails();
     await resetDB();
   });
   afterEach(disconnectDB);
 
   it('confirms a proposal', async () => {
-    const event = await eventFactory();
+    const event = await eventFactory({
+      attributes: { emailOrganizer: 'ben@email.com', emailNotifications: ['confirmed'] },
+    });
     const speaker = await userFactory();
     const talk = await talkFactory({ speakers: [speaker] });
     const proposal = await proposalFactory({ event, talk, traits: ['accepted'] });
@@ -705,10 +709,21 @@ describe('#sendProposalParticipation', () => {
     });
 
     expect(proposalUpdated?.status).toBe('CONFIRMED');
+
+    const emails = await getEmails();
+    expect(emails.total).toBe(1);
+    expect(emails.to(event.emailOrganizer)).toEqual([
+      {
+        from: `${event.name} <no-reply@conference-hall.io>`,
+        subject: `[${event.name}] Talk confirmed by speaker`,
+      },
+    ]);
   });
 
   it('declines a proposal', async () => {
-    const event = await eventFactory();
+    const event = await eventFactory({
+      attributes: { emailOrganizer: 'ben@email.com', emailNotifications: ['declined'] },
+    });
     const speaker = await userFactory();
     const talk = await talkFactory({ speakers: [speaker] });
     const proposal = await proposalFactory({ event, talk, traits: ['accepted'] });
@@ -720,6 +735,15 @@ describe('#sendProposalParticipation', () => {
     });
 
     expect(proposalUpdated?.status).toBe('DECLINED');
+
+    const emails = await getEmails();
+    expect(emails.total).toBe(1);
+    expect(emails.to(event.emailOrganizer)).toEqual([
+      {
+        from: `${event.name} <no-reply@conference-hall.io>`,
+        subject: `[${event.name}] Talk declined by speaker`,
+      },
+    ]);
   });
 
   it('cannot confirm or declined a not accepted proposal', async () => {

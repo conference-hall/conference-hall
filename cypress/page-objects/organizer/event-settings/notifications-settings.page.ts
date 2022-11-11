@@ -10,7 +10,6 @@ class NotificationsSettings {
 
   saveForm(email: string) {
     cy.typeOn('Notification email', email);
-    cy.clickOn("Send notifications directly to organizer's emails");
     cy.clickOn('Save email notifications');
   }
 }

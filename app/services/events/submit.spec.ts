@@ -1,4 +1,5 @@
 import { TalkLevel } from '@prisma/client';
+import { getEmails, resetEmails } from 'tests/email-helpers';
 import { resetDB, disconnectDB } from '../../../tests/db-helpers';
 import { eventCategoryFactory } from '../../../tests/factories/categories';
 import { eventFactory } from '../../../tests/factories/events';
@@ -12,7 +13,6 @@ import {
   EventNotFoundError,
   MaxSubmittedProposalsReachedError,
   ProposalNotFoundError,
-  ProposalSubmissionError,
   TalkNotFoundError,
 } from '../errors';
 import {
@@ -288,12 +288,16 @@ describe('#getProposalInfo', () => {
 
 describe('#submitProposal', () => {
   beforeEach(async () => {
+    await resetEmails();
     await resetDB();
   });
   afterEach(disconnectDB);
 
   it('submit a proposal', async () => {
-    const event = await eventFactory({ traits: ['conference-cfp-open'] });
+    const event = await eventFactory({
+      traits: ['conference-cfp-open'],
+      attributes: { name: 'Event 1', emailOrganizer: 'ben@email.com', emailNotifications: ['submitted'] },
+    });
     const speaker = await userFactory();
     const talk = await talkFactory({ speakers: [speaker] });
     const proposal = await proposalFactory({ event, talk: talk, traits: ['draft'] });
@@ -304,6 +308,21 @@ describe('#submitProposal', () => {
     const result = await db.proposal.findUnique({ where: { id: proposal.id } });
     expect(result?.status).toEqual('SUBMITTED');
     expect(result?.comments).toEqual('User message');
+
+    const emails = await getEmails();
+    expect(emails.total).toBe(2);
+    expect(emails.to(speaker.email)).toEqual([
+      {
+        from: `${event.name} <no-reply@conference-hall.io>`,
+        subject: `[${event.name}] Submission confirmed`,
+      },
+    ]);
+    expect(emails.to(event.emailOrganizer)).toEqual([
+      {
+        from: `${event.name} <no-reply@conference-hall.io>`,
+        subject: `[${event.name}] New proposal received`,
+      },
+    ]);
   });
 
   it('can submit if more drafts than event max proposals', async () => {
@@ -344,7 +363,7 @@ describe('#submitProposal', () => {
     const data = { message: 'User message' };
 
     const user = await userFactory();
-    await expect(submitProposal(talk.id, event.slug, user.id, data)).rejects.toThrowError(ProposalSubmissionError);
+    await expect(submitProposal(talk.id, event.slug, user.id, data)).rejects.toThrowError(ProposalNotFoundError);
   });
 
   it('throws an error when CFP is not open', async () => {
