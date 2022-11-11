@@ -12,7 +12,7 @@ export class MailhogProvider implements IEmailProvider {
     });
   }
 
-  async sendEmail(data: Email) {
+  async sendEmail(data: Email, recipientVariables: RecipientVariables = {}) {
     try {
       await this.transporter.sendMail({
         from: data.from,
@@ -20,7 +20,7 @@ export class MailhogProvider implements IEmailProvider {
         cc: data.cc,
         bcc: data.bcc,
         subject: data.subject,
-        html: data.html,
+        html: replaceVariablesInTemplate(data.html, recipientVariables[data.to[0]]),
       });
     } catch (error) {
       console.error(`Error sending email: ${error}`);
@@ -36,7 +36,7 @@ export class MailhogProvider implements IEmailProvider {
           cc: data.cc,
           bcc: data.bcc,
           subject: data.subject,
-          html: replaceVariablesInTemplate(data.html, recipientVariables[email]),
+          html: data.html,
         })
       )
     );

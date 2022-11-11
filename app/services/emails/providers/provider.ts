@@ -22,7 +22,7 @@ export interface RecipientVariables {
 }
 
 export interface IEmailProvider {
-  sendEmail(email: Email, providerVariables?: ProviderVariables): Promise<void>;
+  sendEmail(email: Email, recipientVariables?: RecipientVariables): Promise<void>;
 
   sendBatchEmail(
     email: Email,

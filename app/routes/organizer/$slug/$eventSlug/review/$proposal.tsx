@@ -37,7 +37,7 @@ export default function OrganizerProposalRoute() {
   const { uid, proposal, pagination } = proposalReview;
 
   return (
-    <FullscreenDialog title="Proposal review" onClose={() => navigate(`../proposals?${searchParams.toString()}`)}>
+    <FullscreenDialog title="Proposal review" onClose={() => navigate(`..?${searchParams.toString()}`)}>
       <TopPanel className="h-28" proposal={proposal} current={pagination.current} total={pagination.total} />
       <div className="grid h-[calc(100%-224px)] grid-cols-8 items-stretch divide-x divide-gray-200">
         <LeftPanel className="col-span-2" proposal={proposal} />

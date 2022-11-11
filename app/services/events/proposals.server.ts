@@ -5,6 +5,8 @@ import { getCfpState } from '../../utils/event';
 import { jsonToArray } from '../../utils/prisma';
 import { CfpNotOpenError, EventNotFoundError, InvitationNotFoundError, ProposalNotFoundError } from '../errors';
 import { buildInvitationLink } from '../invitations/invitations.server';
+import { ProposalConfirmedEmail } from '../speakers/emails/proposal-confirmed-email';
+import { ProposalDeclinedEmail } from '../speakers/emails/proposal-declined-email';
 
 export async function fetchSpeakerProposals(slug: string, uid: string) {
   const proposals = await db.proposal.findMany({
@@ -220,12 +222,23 @@ export async function sendProposalParticipation(
   proposalId: string,
   participation: 'CONFIRMED' | 'DECLINED'
 ) {
-  const proposal = await db.proposal.findFirst({ where: { id: proposalId, speakers: { some: { id: uid } } } });
+  const proposal = await db.proposal.findFirst({
+    where: { id: proposalId, speakers: { some: { id: uid } } },
+    include: { event: true },
+  });
 
   if (!proposal) throw new ProposalNotFoundError();
 
-  await db.proposal.updateMany({
+  const result = await db.proposal.updateMany({
     where: { id: proposalId, status: 'ACCEPTED' },
     data: { status: participation },
   });
+
+  if (result.count <= 0) return;
+
+  if (participation === 'CONFIRMED') {
+    await ProposalConfirmedEmail.send(proposal.event, proposal);
+  } else if (participation === 'DECLINED') {
+    await ProposalDeclinedEmail.send(proposal.event, proposal);
+  }
 }

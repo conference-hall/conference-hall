@@ -60,13 +60,6 @@ export default function EventNotificationsSettingsRoute() {
             defaultValue={event.emailOrganizer || ''}
             error={errors?.emailOrganizer}
           />
-          <Checkbox
-            id="sendToOrganizers"
-            name="sendToOrganizers"
-            description="Sent emails will have organizer's email as BCC."
-          >
-            Send notifications directly to organizer's emails
-          </Checkbox>
           <input type="hidden" name="_action" value="save-email-notifications" />
           <Button type="submit">Save email notifications</Button>
         </Form>
