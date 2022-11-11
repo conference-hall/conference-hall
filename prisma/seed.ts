@@ -68,8 +68,6 @@ async function seed() {
     attributes: { name: 'Sunny Tech', slug: 'sunny-tech' },
   });
 
-  await Promise.all(Array.from({ length: 50 }).map(() => eventFactory({ traits: ['meetup-cfp-open'] })));
-
   const talk1 = await talkFactory({
     attributes: {
       title: 'Awesome talk',

@@ -8,15 +8,12 @@ import { proposalFactory } from '../../../tests/factories/proposals';
 export const seed = async () => {
   const user = await userFactory({ traits: ['clark-kent'], attributes: { bio: '' } });
 
-  const talk1 = await talkFactory({
-    speakers: [user],
-    attributes: { title: 'My talk 1' },
-  });
-
-  const talk2 = await talkFactory({
-    speakers: [user],
-    attributes: { title: 'My talk 2' },
-  });
+  const talk1 = await talkFactory({ speakers: [user], attributes: { title: 'My talk 1' } });
+  const talk2 = await talkFactory({ speakers: [user], attributes: { title: 'My talk 2' } });
+  const talk3 = await talkFactory({ speakers: [user], attributes: { title: 'My talk 3' } });
+  const talk4 = await talkFactory({ speakers: [user], attributes: { title: 'My talk 4' } });
+  const talk5 = await talkFactory({ speakers: [user], attributes: { title: 'My talk 5' } });
+  const talk6 = await talkFactory({ speakers: [user], attributes: { title: 'My talk 6' } });
 
   // Conference
   const event1 = await eventFactory({
@@ -28,6 +25,10 @@ export const seed = async () => {
 
   await proposalFactory({ event: event1, talk: talk1, formats: [format], categories: [category] });
   await proposalFactory({ event: event1, talk: talk2, traits: ['draft'] });
+  await proposalFactory({ event: event1, talk: talk3, traits: ['acceptedAndNotified'] });
+  await proposalFactory({ event: event1, talk: talk4, traits: ['rejectedAndNotified'] });
+  await proposalFactory({ event: event1, talk: talk5, traits: ['declined'] });
+  await proposalFactory({ event: event1, talk: talk6, traits: ['confirmed'] });
 
   // CFP closed
   const event2 = await eventFactory({

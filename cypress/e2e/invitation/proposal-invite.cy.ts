@@ -18,7 +18,7 @@ describe('Proposal invitation page', () => {
     cy.assertText('"Awesome talk"');
     invitation.acceptInvite().click();
     proposal.isPageVisible();
-    cy.assertText('Awesome talk');
+    cy.assertText('Proposal "Awesome talk"');
     cy.assertText('Clark Kent');
     cy.assertText('Bruce Wayne');
   });

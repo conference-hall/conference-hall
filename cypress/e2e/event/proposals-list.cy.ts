@@ -19,9 +19,13 @@ describe('Event proposals list', () => {
   it('displays user proposals for an open event', () => {
     cy.login();
     proposals.visit('devfest-nantes');
-    proposals.list().should('have.length', 2);
+    proposals.list().should('have.length', 6);
     proposals.proposal('My talk 1').should('contain.text', 'Submitted');
-    proposals.proposal('My talk 2').should('contain.text', 'Draft proposal');
+    proposals.proposal('My talk 2').should('contain.text', "Draft proposal, don't forget to submit it.");
+    proposals.proposal('My talk 3').should('contain.text', 'Accepted! Please confirm or decline it.');
+    proposals.proposal('My talk 4').should('contain.text', 'Declined by organizers');
+    proposals.proposal('My talk 5').should('contain.text', 'Declined by you');
+    proposals.proposal('My talk 6').should('contain.text', 'Participation confirmed');
   });
 
   it('can access to talk details', () => {

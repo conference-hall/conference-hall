@@ -3,11 +3,13 @@ import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { Container } from '~/design-system/Container';
 import { useEvent } from '../../$eventSlug';
-import { EventProposalsList } from '~/components/EventProposalsList';
+import { ProposalsList } from '~/components/speaker-proposals/ProposalsList';
 import { H2, Text } from '~/design-system/Typography';
 import { sessionRequired } from '~/services/auth/auth.server';
 import { mapErrorToResponse } from '~/services/errors';
 import { fetchSpeakerProposals } from '~/services/events/proposals.server';
+
+export type EventProposals = Awaited<ReturnType<typeof fetchSpeakerProposals>>;
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
@@ -29,7 +31,7 @@ export default function EventSpeakerProposalsRoute() {
         </Text>
       </div>
       <div className="my-8">
-        <EventProposalsList proposals={proposals} cfpState={event.cfpState} />
+        <ProposalsList proposals={proposals} cfpState={event.cfpState} />
       </div>
     </Container>
   );

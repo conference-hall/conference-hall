@@ -33,9 +33,10 @@ const sessionStorage = createCookieSessionStorage({
 export const getSession = async (request: Request) => {
   const session = await sessionStorage.getSession(request.headers.get('cookie'));
   try {
+    const tokenId = session.get('tokenId');
     // Verify the session cookie. In this case an additional check is added to detect
     // if the user's Firebase session was revoked, user deleted/disabled, etc.
-    const decodedTokenId = await admin.auth().verifySessionCookie(session.get('idToken'), true /** checkRevoked */);
+    const decodedTokenId = await admin.auth().verifySessionCookie(tokenId, true /** checkRevoked */);
     return { uid: decodedTokenId.uid, session };
   } catch (error) {
     return { uid: null, session };
@@ -68,7 +69,7 @@ export const sessionLogin = async (request: Request) => {
     await createUser({ uid, name, email, picture });
     // Set cookie policy for session cookie.
     const session = await sessionStorage.getSession(request.headers.get('cookie'));
-    session.set('idToken', sessionCookie);
+    session.set('tokenId', sessionCookie);
     return redirect(redirectTo, { headers: { 'Set-Cookie': await sessionStorage.commitSession(session) } });
   } catch (error) {
     console.error(error);
@@ -85,7 +86,7 @@ export const sessionLogout = async (request: Request) => {
 
   // Verify the session cookie. In this case an additional check is added to detect
   // if the user's Firebase session was revoked, user deleted/disabled, etc.
-  const decodedTokenId = await admin.auth().verifySessionCookie(session.get('idToken'), true /** checkRevoked */);
+  const decodedTokenId = await admin.auth().verifySessionCookie(session.get('tokenId'), true /** checkRevoked */);
   await admin.auth().revokeRefreshTokens(decodedTokenId?.sub);
   return redirect('/', { headers: { 'Set-Cookie': await sessionStorage.destroySession(session) } });
 };

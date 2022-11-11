@@ -1,9 +1,9 @@
-import { ExclamationCircleIcon, InboxIcon } from '@heroicons/react/24/outline';
+import { InboxIcon } from '@heroicons/react/24/outline';
 import { AvatarGroup } from '~/design-system/Avatar';
 import { ButtonLink } from '~/design-system/Buttons';
 import { CardLink } from '~/design-system/Card';
 import { EmptyState } from '~/design-system/EmptyState';
-import { IconLabel } from '~/design-system/IconLabel';
+import { DraftLabel } from './speaker-proposals/ProposalStatusLabel';
 
 type Props = {
   talks: Array<{
@@ -36,12 +36,7 @@ export function SubmissionTalksList({ talks }: Props) {
               <p className="truncate text-base font-semibold text-indigo-600">{talk.title}</p>
               <AvatarGroup avatars={talk.speakers} displayNames className="mt-2" />
             </div>
-
-            {talk.isDraft ? (
-              <IconLabel icon={ExclamationCircleIcon} className="text-sm text-yellow-600">
-                Draft proposal, don't forget to submit it.
-              </IconLabel>
-            ) : null}
+            {talk.isDraft && <DraftLabel />}
           </div>
         </CardLink>
       ))}

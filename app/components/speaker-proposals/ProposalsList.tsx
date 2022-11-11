@@ -1,29 +1,18 @@
 import type { CfpState } from '~/schemas/event';
-import formatRelative from 'date-fns/formatRelative';
-import { CalendarIcon, ExclamationCircleIcon, InboxIcon } from '@heroicons/react/24/outline';
-import { CfpLabel } from './CfpInfo';
+import type { EventProposals } from '~/routes/$eventSlug/proposals';
+import { ExclamationCircleIcon, InboxIcon } from '@heroicons/react/24/outline';
+import { CfpLabel } from '../CfpInfo';
 import { CardLink } from '~/design-system/Card';
-import { IconLabel } from '~/design-system/IconLabel';
 import { AvatarGroup } from '~/design-system/Avatar';
 import { EmptyState } from '~/design-system/EmptyState';
+import { ProposalStatusLabel } from './ProposalStatusLabel';
 
 type Props = {
-  proposals: Array<{
-    id: string;
-    title: string;
-    talkId: string | null;
-    status: string;
-    createdAt: string;
-    speakers: Array<{
-      id: string;
-      name: string | null;
-      photoURL?: string | null;
-    }>;
-  }>;
+  proposals: EventProposals;
   cfpState: CfpState;
 };
 
-export function EventProposalsList({ proposals, cfpState }: Props) {
+export function ProposalsList({ proposals, cfpState }: Props) {
   if (cfpState !== 'OPENED' && proposals.length === 0) {
     return (
       <EmptyState icon={ExclamationCircleIcon}>
@@ -52,18 +41,7 @@ export function EventProposalsList({ proposals, cfpState }: Props) {
               <AvatarGroup avatars={proposal.speakers} displayNames className="mt-2" />
             </div>
 
-            <div>
-              {proposal.status === 'DRAFT' ? (
-                <IconLabel icon={ExclamationCircleIcon} className="text-sm text-yellow-600">
-                  Draft proposal, don't forget to submit it.
-                </IconLabel>
-              ) : (
-                <IconLabel icon={CalendarIcon} className="text-sm text-gray-500" iconClassName="text-gray-400">
-                  Submitted&nbsp;
-                  <time dateTime={proposal.createdAt}>{formatRelative(new Date(proposal.createdAt), new Date())}</time>
-                </IconLabel>
-              )}
-            </div>
+            <ProposalStatusLabel proposal={proposal} isCfpOpen={cfpState === 'OPENED'} />
           </div>
         </CardLink>
       ))}

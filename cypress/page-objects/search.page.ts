@@ -1,4 +1,6 @@
-class SearchEventPage {
+import BasePage from './base.page';
+
+class SearchEventPage extends BasePage {
   visit(searchParams?: string) {
     cy.visit(`/${searchParams || ''}`);
     this.isPageVisible();
