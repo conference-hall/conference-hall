@@ -76,7 +76,7 @@
     "@vitejs/plugin-react": "^2.1.0",
     "cypress": "^10.10.0",
     "dotenv-cli": "^6.0.0",
-    "esbuild-register": "^3.3.3",
+    "esbuild-register": "^3.4.1",
     "eslint": "^8.27.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
