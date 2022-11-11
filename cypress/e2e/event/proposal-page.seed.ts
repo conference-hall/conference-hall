@@ -39,8 +39,6 @@ export const seed = async () => {
   const talk2 = await talkFactory({ speakers: [speaker1], attributes: { title: 'My talk 2' } });
   const talk3 = await talkFactory({ speakers: [speaker1], attributes: { title: 'My talk 3' } });
   const talk4 = await talkFactory({ speakers: [speaker1], attributes: { title: 'My talk 4' } });
-  const talk5 = await talkFactory({ speakers: [speaker1], attributes: { title: 'My talk 5' } });
-  const talk6 = await talkFactory({ speakers: [speaker1], attributes: { title: 'My talk 6' } });
 
   await proposalFactory({
     event: event,
@@ -59,17 +57,5 @@ export const seed = async () => {
     talk: talk4,
     attributes: { id: 'awesome-proposal4' },
     traits: ['rejectedAndNotified'],
-  });
-  await proposalFactory({
-    event: event,
-    talk: talk5,
-    attributes: { id: 'awesome-proposal5' },
-    traits: ['declined'],
-  });
-  await proposalFactory({
-    event: event,
-    talk: talk6,
-    attributes: { id: 'awesome-proposal6' },
-    traits: ['confirmed'],
   });
 };

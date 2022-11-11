@@ -32,7 +32,7 @@ describe('Speaker proposal edition page', () => {
     editProposal.saveAbstract().click();
 
     proposal.isPageVisible();
-    cy.assertText('New title');
+    cy.assertText('Proposal "New title"');
     cy.assertText('New abstract');
     cy.assertText('Beginner');
     cy.assertText('English');
