@@ -10,6 +10,7 @@ import {
 import type { ProposalCreateData, ProposalSubmissionData } from '~/schemas/proposal';
 import { ProposalSubmittedEmail } from './emails/proposal-submitted-email';
 import { ProposalReceivedEmail } from './emails/proposal-received-email';
+import { sendSubmittedTalkSlackMessage } from '../slack/slack.services';
 
 export async function fetchTalksToSubmitForEvent(uid: string, slug: string) {
   const event = await db.event.findUnique({
@@ -188,5 +189,8 @@ export async function submitProposal(talkId: string, eventSlug: string, uid: str
 
   await ProposalSubmittedEmail.send(event, proposal);
   await ProposalReceivedEmail.send(event, proposal);
-  // TODO Slack notification
+
+  if (event.slackWebhookUrl) {
+    await sendSubmittedTalkSlackMessage(event.id, proposal.id);
+  }
 }
