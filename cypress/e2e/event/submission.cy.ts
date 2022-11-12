@@ -253,6 +253,7 @@ describe('Submit a talk to event', () => {
       submission.isConfirmationStepVisible();
       submission.fillConfirmationForm({ cod: true });
       submission.submitConfirmation();
+      proposals.isPageVisible();
 
       cy.clickOn('Submit a proposal');
       cy.assertText('You have submitted the maximum of proposals for the event. Thanks!');

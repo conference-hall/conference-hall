@@ -38,10 +38,10 @@ export const action: ActionFunction = async ({ request, params }) => {
   const result = await withZod(ProposalSubmissionSchema).validate(form);
   try {
     if (result?.data) await submitProposal(talkId, eventSlug, uid, result?.data);
-    return redirect(`/${eventSlug}/proposals`);
   } catch (err) {
     throw mapErrorToResponse(err);
   }
+  return redirect(`/${eventSlug}/proposals`);
 };
 
 export default function SubmissionSubmitRoute() {

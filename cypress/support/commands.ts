@@ -127,12 +127,13 @@ Cypress.Commands.add('assertRadioChecked', (name) => {
 });
 
 Cypress.Commands.add('login', (username = 'Clark Kent') => {
-  cy.session([username], () => {
+  cy.session(username, () => {
     cy.visit('/login');
     cy.findByRole('heading', { name: 'Log in to Conference Hall' }).should('exist');
     cy.clickOn('Continue with Google');
     cy.assertText('Please select an existing account in the Auth Emulator or add a new one:');
     cy.findByText(username).click();
+    cy.assertNoText('Please select an existing account in the Auth Emulator or add a new one:');
   });
 });
 
