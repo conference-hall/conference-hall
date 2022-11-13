@@ -2,19 +2,18 @@ import { Form, useActionData, useCatch, useLoaderData } from '@remix-run/react';
 import { Container } from '~/design-system/Container';
 import { Button, ButtonLink } from '../../../design-system/Buttons';
 import { CategoriesForm } from '../../../components/CategoriesForm';
-import type { ActionArgs, ActionFunction, LoaderArgs } from '@remix-run/node';
+import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { sessionRequired } from '../../../services/auth/auth.server';
-import { updateProposal } from '../../../services/events/proposals.server';
-import { fromErrors, mapErrorToResponse } from '../../../services/errors';
+import { fromErrors } from '../../../services/errors';
 import { TalkAbstractForm } from '../../../components/TalkAbstractForm';
 import { FormatsForm } from '../../../components/FormatsForm';
 import { useEvent } from '../../$eventSlug';
 import { H2 } from '../../../design-system/Typography';
-import { ProposalUpdateSchema } from '~/schemas/proposal';
-import { withZod } from '@remix-validated-form/with-zod';
 import { getSpeakerProposal } from '~/services/events/proposals/get-speaker-proposal.server';
 import { deleteSpeakerProposal } from '~/services/events/proposals/delete-speaker-proposal.server';
+import { toErrors, updateSpeakerProposal } from '~/services/events/proposals/update-speaker-proposal.server';
+import { inputFromForm } from 'domain-functions';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
@@ -23,24 +22,22 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   return json(result.data);
 };
 
-export const action: ActionFunction = async ({ request, params }: ActionArgs) => {
+export const action = async ({ request, params }: ActionArgs) => {
   const { uid } = await sessionRequired(request);
   const eventSlug = params.eventSlug!;
   const proposalId = params.id!;
   const form = await request.formData();
-  try {
-    const method = form.get('_method');
-    if (method === 'DELETE') {
-      await deleteSpeakerProposal({ proposalId: params.id, speakerId: uid });
-      throw redirect(`/${eventSlug}/proposals`);
-    } else {
-      const result = await withZod(ProposalUpdateSchema).validate(form);
-      if (result.error) return json(result.error.fieldErrors);
-      await updateProposal(eventSlug, proposalId, uid, result.data);
-      throw redirect(`/${eventSlug}/proposals/${proposalId}`);
+  const method = form.get('_method');
+  if (method === 'DELETE') {
+    await deleteSpeakerProposal({ proposalId: params.id, speakerId: uid });
+    throw redirect(`/${eventSlug}/proposals`);
+  } else {
+    const data = await inputFromForm(request);
+    const result = await updateSpeakerProposal({ eventSlug, proposalId, speakerId: uid, ...data });
+    if (!result.success) {
+      return json(toErrors(result));
     }
-  } catch (err) {
-    mapErrorToResponse(err);
+    throw redirect(`/${eventSlug}/proposals/${proposalId}`);
   }
 };
 
