@@ -4,7 +4,7 @@ import { useLoaderData, useSearchParams } from '@remix-run/react';
 import { Container } from '../design-system/Container';
 import { H1 } from '../design-system/Typography';
 import { SearchEventsList } from '../components/SearchEventsList';
-import { searchEvents } from '../services/events/search.server';
+import { parseFilters, searchEvents } from '../services/events/search.server';
 import { SearchEventsForm } from '../components/SearchEventsForm';
 import { Pagination } from '../design-system/Pagination';
 import { EmptyState } from '~/design-system/EmptyState';
@@ -14,11 +14,10 @@ import { fromSuccess, inputFromSearch } from 'domain-functions';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const url = new URL(request.url);
-  let result = await searchEvents(inputFromSearch(url.searchParams));
-
-  if (result.success) return json(result.data);
-
-  return json(await fromSuccess(searchEvents)({}));
+  const params = inputFromSearch(url.searchParams);
+  const filters = parseFilters(params);
+  const result = await fromSuccess(searchEvents)(filters);
+  return json(result);
 };
 
 export default function IndexRoute() {

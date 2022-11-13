@@ -17,6 +17,11 @@ const Schema = z.object({
   page: numeric(z.number().default(1)),
 });
 
+export function parseFilters(data: Record<string, unknown>) {
+  const result = Schema.safeParse(data);
+  return result.success ? result.data : {};
+}
+
 export const searchEvents = makeDomainFunction(Schema)(async ({ query, type, cfp, talkId, page }) => {
   const eventsWhereInput: Prisma.EventWhereInput = {
     visibility: EventVisibility.PUBLIC,
