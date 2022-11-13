@@ -6,19 +6,20 @@ import { H2, H3 } from '../../../design-system/Typography';
 import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { sessionRequired } from '../../../services/auth/auth.server';
-import { getSpeakerProposal, removeCoSpeakerFromProposal } from '../../../services/events/proposals.server';
-import { mapErrorToResponse } from '../../../services/errors';
+import { removeCoSpeakerFromProposal } from '../../../services/events/proposals.server';
+import { fromErrors, mapErrorToResponse } from '../../../services/errors';
 import Badge from '../../../design-system/Badges';
 import { getLevel } from '../../../utils/levels';
 import { getLanguage } from '../../../utils/languages';
 import { CoSpeakersList, InviteCoSpeakerButton } from '../../../components/CoSpeaker';
 import { ProposalStatusPanel } from '~/components/speaker-proposals/ProposalStatusPanel';
+import { getSpeakerProposal } from '~/services/events/proposals/get-speaker-proposal.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
-  const proposalId = params.id!;
-  const proposal = await getSpeakerProposal(proposalId, uid).catch(mapErrorToResponse);
-  return json(proposal);
+  const result = await getSpeakerProposal({ speakerId: uid, proposalId: params.id });
+  if (!result.success) throw fromErrors(result);
+  return json(result.data);
 };
 
 export const action: ActionFunction = async ({ request, params }) => {

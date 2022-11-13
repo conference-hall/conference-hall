@@ -12,7 +12,7 @@ export default defineConfig({
     mochaFile: './test-results/e2e-[hash].xml',
   },
   retries: {
-    runMode: 2,
+    runMode: 5,
     openMode: 0,
   },
   e2e: {
