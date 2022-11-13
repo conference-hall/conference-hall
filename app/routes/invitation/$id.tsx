@@ -4,7 +4,7 @@ import { json, redirect } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
 import { fromSuccess } from 'domain-functions';
 import { Navbar } from '~/components/navbar/Navbar';
-import { addCoSpeakerToProposal } from '~/services/events/proposals-co-speakers/add-co-speaker-to-proposal.server';
+import { addCoSpeakerToProposal } from '~/services/events/proposals/add-co-speaker-to-proposal.server';
 import { inviteMemberToOrganization } from '~/services/organizers/organizations.server';
 import { Button } from '../../design-system/Buttons';
 import { Container } from '../../design-system/Container';

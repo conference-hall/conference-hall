@@ -16,7 +16,7 @@ import { getUser } from '../../../../services/user/user.server';
 import { DetailsSchema } from '~/schemas/profile';
 import { withZod } from '@remix-validated-form/with-zod';
 import { fromSuccess } from 'domain-functions';
-import { removeCoSpeakerFromSubmission } from '~/services/events/proposals-co-speakers/remove-co-speaker-from-proposal.server';
+import { removeCoSpeakerFromSubmission } from '~/services/events/proposals/remove-co-speaker-from-proposal.server';
 
 export const handle = { step: 'speakers' };
 
