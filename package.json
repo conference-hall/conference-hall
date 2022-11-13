@@ -44,6 +44,7 @@
     "@sindresorhus/slugify": "^2.1.1",
     "classnames": "^2.3.2",
     "date-fns": "^2.29.3",
+    "domain-functions": "^1.4.0",
     "dotenv": "^16.0.3",
     "firebase": "^9.14.0",
     "firebase-admin": "^11.2.1",
