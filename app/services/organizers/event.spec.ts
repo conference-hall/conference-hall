@@ -1109,7 +1109,7 @@ describe('#updateProposalsStatus', () => {
   });
 });
 
-describe.only('#exportProposalsFromFilters', () => {
+describe('#exportProposalsFromFilters', () => {
   let owner: User, reviewer: User, speaker: User;
   let organization: Organization;
   let event: Event;
