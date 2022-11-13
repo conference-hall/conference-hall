@@ -8,6 +8,8 @@ class ForbiddenError extends Error {}
 class BadRequestError extends Error {}
 
 export function fromErrors(result: ErrorResult) {
+  if (result.errors.length <= 0) return;
+
   const { message, exception } = result.errors[0] || {};
 
   if (exception instanceof NotFoundError) {
