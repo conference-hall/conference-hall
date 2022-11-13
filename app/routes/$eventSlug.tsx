@@ -1,6 +1,7 @@
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Outlet, useCatch, useLoaderData, useOutletContext } from '@remix-run/react';
+import type { UnpackData } from 'domain-functions';
 import { EventHeader } from '~/components/EventHeader';
 import { EventTabs } from '~/components/EventTabs';
 import { Navbar } from '~/components/navbar/Navbar';
@@ -35,7 +36,7 @@ export default function EventRoute() {
 }
 
 export function useEvent() {
-  return useOutletContext<Awaited<ReturnType<typeof getEvent>>>();
+  return useOutletContext<UnpackData<typeof getEvent>>();
 }
 
 export function CatchBoundary() {

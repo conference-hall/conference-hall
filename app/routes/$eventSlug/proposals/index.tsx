@@ -6,16 +6,19 @@ import { useEvent } from '../../$eventSlug';
 import { ProposalsList } from '~/components/speaker-proposals/ProposalsList';
 import { H2, Text } from '~/design-system/Typography';
 import { sessionRequired } from '~/services/auth/auth.server';
-import { mapErrorToResponse } from '~/services/errors';
-import { fetchSpeakerProposals } from '~/services/events/proposals.server';
+import { listSpeakerProposals } from '~/services/events/proposals/list-speaker-proposals.server';
+import type { UnpackData } from 'domain-functions';
+import { fromErrors } from '~/services/errors';
 
-export type EventProposals = Awaited<ReturnType<typeof fetchSpeakerProposals>>;
+export type EventProposals = UnpackData<typeof listSpeakerProposals>;
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
-  const slug = params.eventSlug!;
-  const proposals = await fetchSpeakerProposals(slug, uid).catch(mapErrorToResponse);
-  return json(proposals);
+  const result = await listSpeakerProposals({ userId: uid, ...params });
+  if (!result.success) {
+    throw fromErrors(result);
+  }
+  return json(result.data);
 };
 
 export default function EventSpeakerProposalsRoute() {
