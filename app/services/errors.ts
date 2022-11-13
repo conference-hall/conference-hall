@@ -1,10 +1,37 @@
 import { Response } from '@remix-run/node';
+import type { ErrorResult } from 'domain-functions';
 
 class NotFoundError extends Error {}
 
 class ForbiddenError extends Error {}
 
 class BadRequestError extends Error {}
+
+export function fromErrors(result: ErrorResult) {
+  const { message, exception } = result.errors[0] || {};
+
+  if (exception instanceof NotFoundError) {
+    throw new Response(message, {
+      status: 404,
+      statusText: message,
+    });
+  }
+  if (exception instanceof BadRequestError) {
+    throw new Response(message, {
+      status: 400,
+      statusText: message,
+    });
+  }
+  if (exception instanceof ForbiddenError) {
+    throw new Response(message, {
+      status: 403,
+      statusText: message,
+    });
+  }
+  if (exception instanceof Error) {
+    throw new Response(message, { status: 500, statusText: message });
+  }
+}
 
 export function mapErrorToResponse(error: unknown) {
   if (error instanceof Response) {
@@ -102,5 +129,11 @@ export class OrganizationNotFoundError extends NotFoundError {
 export class ForbiddenOperationError extends ForbiddenError {
   constructor() {
     super('Forbidden operation');
+  }
+}
+
+export class ApiKeyInvalidError extends BadRequestError {
+  constructor() {
+    super('API key invalid');
   }
 }
