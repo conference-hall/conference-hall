@@ -25,7 +25,7 @@ describe('#listSpeakerProposals', () => {
     const otherTalk = await talkFactory({ speakers: [otherSpeaker] });
     await proposalFactory({ event, talk: otherTalk });
 
-    const result = await listSpeakerProposals({ eventSlug: event.slug, userId: speaker.id });
+    const result = await listSpeakerProposals({ eventSlug: event.slug, speakerId: speaker.id });
 
     expect(result.success && result.data).toEqual([
       {
@@ -62,7 +62,7 @@ describe('#listSpeakerProposals', () => {
     it('returns draft proposal', async () => {
       const talk = await talkFactory({ speakers: [speaker] });
       await proposalFactory({ event, talk, traits: ['draft'] });
-      const result = await listSpeakerProposals({ eventSlug: event.slug, userId: speaker.id });
+      const result = await listSpeakerProposals({ eventSlug: event.slug, speakerId: speaker.id });
       expect(result.success && result.data[0]).toContain({
         isAccepted: false,
         isConfirmed: false,
@@ -76,7 +76,7 @@ describe('#listSpeakerProposals', () => {
     it('returns accepted proposal but not notified', async () => {
       const talk = await talkFactory({ speakers: [speaker] });
       await proposalFactory({ event, talk, traits: ['accepted'] });
-      const result = await listSpeakerProposals({ eventSlug: event.slug, userId: speaker.id });
+      const result = await listSpeakerProposals({ eventSlug: event.slug, speakerId: speaker.id });
       expect(result.success && result.data[0]).toContain({
         isAccepted: false,
         isConfirmed: false,
@@ -90,7 +90,7 @@ describe('#listSpeakerProposals', () => {
     it('returns accepted proposal and notified', async () => {
       const talk = await talkFactory({ speakers: [speaker] });
       await proposalFactory({ event, talk, traits: ['acceptedAndNotified'] });
-      const result = await listSpeakerProposals({ eventSlug: event.slug, userId: speaker.id });
+      const result = await listSpeakerProposals({ eventSlug: event.slug, speakerId: speaker.id });
       expect(result.success && result.data[0]).toContain({
         isAccepted: true,
         isConfirmed: false,
@@ -104,7 +104,7 @@ describe('#listSpeakerProposals', () => {
     it('returns rejected proposal but not notified', async () => {
       const talk = await talkFactory({ speakers: [speaker] });
       await proposalFactory({ event, talk, traits: ['rejected'] });
-      const result = await listSpeakerProposals({ eventSlug: event.slug, userId: speaker.id });
+      const result = await listSpeakerProposals({ eventSlug: event.slug, speakerId: speaker.id });
       expect(result.success && result.data[0]).toContain({
         isAccepted: false,
         isConfirmed: false,
@@ -118,7 +118,7 @@ describe('#listSpeakerProposals', () => {
     it('returns rejected proposal and notified', async () => {
       const talk = await talkFactory({ speakers: [speaker] });
       await proposalFactory({ event, talk, traits: ['rejectedAndNotified'] });
-      const result = await listSpeakerProposals({ eventSlug: event.slug, userId: speaker.id });
+      const result = await listSpeakerProposals({ eventSlug: event.slug, speakerId: speaker.id });
       expect(result.success && result.data[0]).toContain({
         isAccepted: false,
         isConfirmed: false,
@@ -132,7 +132,7 @@ describe('#listSpeakerProposals', () => {
     it('returns confirmed proposal', async () => {
       const talk = await talkFactory({ speakers: [speaker] });
       await proposalFactory({ event, talk, traits: ['confirmed'] });
-      const result = await listSpeakerProposals({ eventSlug: event.slug, userId: speaker.id });
+      const result = await listSpeakerProposals({ eventSlug: event.slug, speakerId: speaker.id });
       expect(result.success && result.data[0]).toContain({
         isAccepted: false,
         isConfirmed: true,
@@ -146,7 +146,7 @@ describe('#listSpeakerProposals', () => {
     it('returns declined proposal', async () => {
       const talk = await talkFactory({ speakers: [speaker] });
       await proposalFactory({ event, talk, traits: ['declined'] });
-      const result = await listSpeakerProposals({ eventSlug: event.slug, userId: speaker.id });
+      const result = await listSpeakerProposals({ eventSlug: event.slug, speakerId: speaker.id });
       expect(result.success && result.data[0]).toContain({
         isAccepted: false,
         isConfirmed: false,

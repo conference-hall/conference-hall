@@ -2,7 +2,6 @@ import { resetDB, disconnectDB } from '../../../tests/db-helpers';
 import { eventCategoryFactory } from '../../../tests/factories/categories';
 import { eventFactory } from '../../../tests/factories/events';
 import { eventFormatFactory } from '../../../tests/factories/formats';
-import { EventNotFoundError } from '../errors';
 import { getEvent } from './get-event.server';
 
 describe('#getEvent', () => {
@@ -20,7 +19,7 @@ describe('#getEvent', () => {
 
     const result = await getEvent(event.slug);
 
-    expect(result).toEqual({
+    expect(result.success && result.data).toEqual({
       id: event.id,
       slug: event.slug,
       type: event.type,
@@ -51,6 +50,7 @@ describe('#getEvent', () => {
   });
 
   it('throws an error when event not found', async () => {
-    await expect(getEvent('XXX')).rejects.toThrowError(EventNotFoundError);
+    const result = await getEvent('XXX');
+    expect(result.errors[0].message).toEqual('Event not found');
   });
 });

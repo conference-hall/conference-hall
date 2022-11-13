@@ -4,16 +4,16 @@ import { z } from 'zod';
 import { db } from '~/services/db';
 
 const Schema = z.object({
-  userId: z.string().min(1),
+  speakerId: z.string().min(1),
   eventSlug: z.string().min(1),
 });
 
-export const listSpeakerProposals = makeDomainFunction(Schema)(async ({ userId, eventSlug }) => {
+export const listSpeakerProposals = makeDomainFunction(Schema)(async ({ speakerId, eventSlug }) => {
   const proposals = await db.proposal.findMany({
     include: { speakers: true },
     where: {
       event: { slug: eventSlug },
-      speakers: { some: { id: userId } },
+      speakers: { some: { id: speakerId } },
     },
     orderBy: { createdAt: 'desc' },
   });

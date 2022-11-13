@@ -14,7 +14,7 @@ export type EventProposals = UnpackData<typeof listSpeakerProposals>;
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
-  const result = await listSpeakerProposals({ userId: uid, ...params });
+  const result = await listSpeakerProposals({ speakerId: uid, ...params });
   if (!result.success) {
     throw fromErrors(result);
   }
