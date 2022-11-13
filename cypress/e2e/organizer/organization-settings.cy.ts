@@ -35,7 +35,7 @@ describe('Organization settings', () => {
     beforeEach(() => cy.login('Bruce Wayne'));
 
     it('cannot access to the organization settings page', () => {
-      cy.visit('/organizer/awesome-orga/settings');
+      cy.visit('/organizer/awesome-orga/settings', { failOnStatusCode: false });
       cy.assertText('Forbidden');
     });
   });
@@ -44,7 +44,7 @@ describe('Organization settings', () => {
     beforeEach(() => cy.login('Peter Parker'));
 
     it('cannot access to the organization settings page', () => {
-      cy.visit('/organizer/awesome-orga/settings');
+      cy.visit('/organizer/awesome-orga/settings', { failOnStatusCode: false });
       cy.assertText('Forbidden');
     });
   });
