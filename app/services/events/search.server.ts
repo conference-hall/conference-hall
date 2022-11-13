@@ -1,16 +1,23 @@
 import type { Prisma } from '@prisma/client';
 import { EventVisibility } from '@prisma/client';
 import { getCfpState } from '~/utils/event';
-import { db } from '../../services/db';
+import { db } from '../db';
 import { getPagination } from '../utils/pagination.server';
-import type { SearchFilters } from '~/schemas/search';
-import type { Pagination } from '~/schemas/pagination';
+import { z } from 'zod';
+import { makeDomainFunction } from 'domain-functions';
+import { numeric, text } from 'zod-form-data';
 
 const RESULTS_BY_PAGE = 12;
 
-export async function searchEvents(filters: SearchFilters, page: Pagination = 1) {
-  const { query, type, cfp } = filters;
+const Schema = z.object({
+  query: text(z.string().trim().optional()),
+  type: text(z.enum(['all', 'conference', 'meetup']).optional()),
+  cfp: text(z.enum(['incoming', 'past']).optional()),
+  talkId: text(z.string().trim().optional()),
+  page: numeric(z.number().default(1)),
+});
 
+export const searchEvents = makeDomainFunction(Schema)(async ({ query, type, cfp, talkId, page }) => {
   const eventsWhereInput: Prisma.EventWhereInput = {
     visibility: EventVisibility.PUBLIC,
     archived: false,
@@ -30,7 +37,7 @@ export async function searchEvents(filters: SearchFilters, page: Pagination = 1)
   });
 
   return {
-    filters,
+    filters: { query, type, cfp, talkId },
     pagination: {
       current: pagination.currentPage,
       total: pagination.totalPages,
@@ -45,7 +52,7 @@ export async function searchEvents(filters: SearchFilters, page: Pagination = 1)
       cfpEnd: event.cfpEnd?.toUTCString(),
     })),
   };
-}
+});
 
 function mapFiltersQuery(type?: string, cfp?: string): Prisma.EventWhereInput {
   const PAST_CFP = { cfpEnd: { lt: new Date() } };

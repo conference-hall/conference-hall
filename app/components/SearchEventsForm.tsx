@@ -3,10 +3,14 @@ import { Input } from '../design-system/forms/Input';
 import { Button } from '../design-system/Buttons';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import Select from '~/design-system/forms/Select';
-import type { SearchFilters } from '~/schemas/search';
 
 type Props = {
-  filters: SearchFilters;
+  filters: {
+    query?: string;
+    type?: 'all' | 'conference' | 'meetup';
+    cfp?: 'incoming' | 'past';
+    talkId?: string;
+  };
   className?: string;
 };
 

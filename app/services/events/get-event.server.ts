@@ -4,9 +4,9 @@ import { getCfpState } from '~/utils/event';
 import { db } from '../db';
 import { EventNotFoundError } from '../errors';
 
-const EventSlugSchema = z.string().min(1);
+const Schema = z.string().min(1);
 
-export const getEvent = makeDomainFunction(EventSlugSchema)(async (slug) => {
+export const getEvent = makeDomainFunction(Schema)(async (slug) => {
   const event = await db.event.findUnique({ where: { slug }, include: { formats: true, categories: true } });
 
   if (!event) throw new EventNotFoundError();

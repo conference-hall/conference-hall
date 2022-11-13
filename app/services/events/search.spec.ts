@@ -16,7 +16,7 @@ describe('#searchEvents', () => {
 
     const result = await searchEvents({ type: 'conference', cfp: 'incoming' });
 
-    expect(result).toEqual({
+    expect(result.success && result.data).toEqual({
       filters: { type: 'conference', cfp: 'incoming' },
       pagination: { current: 1, total: 1 },
       results: [
@@ -50,15 +50,16 @@ describe('#searchEvents', () => {
     await eventFactory({ traits: ['conference-cfp-past'] });
 
     const result = await searchEvents({});
+    if (!result.success) throw Error('Search error');
 
-    expect(result.pagination.current).toBe(1);
-    expect(result.pagination.total).toBe(1);
-    expect(result.results.length).toBe(3);
+    expect(result.data.pagination.current).toBe(1);
+    expect(result.data.pagination.total).toBe(1);
+    expect(result.data.results.length).toBe(3);
 
-    const names = result.results.map((e) => e.name).sort();
+    const names = result.data.results.map((e) => e.name).sort();
     expect(names).toEqual(['conf-1', 'conf-2', 'conf-3']);
 
-    const cfpStates = result.results.map((e) => e.cfpState).sort();
+    const cfpStates = result.data.results.map((e) => e.cfpState).sort();
     expect(cfpStates).toEqual(['CLOSED', 'OPENED', 'OPENED']);
   });
 
@@ -70,9 +71,10 @@ describe('#searchEvents', () => {
     await eventFactory({ traits: ['conference-cfp-open', 'private'] });
 
     const result = await searchEvents({});
+    if (!result.success) throw Error('Search error');
 
-    expect(result.results.length).toBe(1);
-    expect(result.results[0].name).toBe('conf-1');
+    expect(result.data.results.length).toBe(1);
+    expect(result.data.results[0].name).toBe('conf-1');
   });
 
   it('doesnt returns archived events', async () => {
@@ -83,9 +85,10 @@ describe('#searchEvents', () => {
     await eventFactory({ traits: ['conference-cfp-open', 'archived'] });
 
     const result = await searchEvents({});
+    if (!result.success) throw Error('Search error');
 
-    expect(result.results.length).toBe(1);
-    expect(result.results[0].name).toBe('conf-1');
+    expect(result.data.results.length).toBe(1);
+    expect(result.data.results[0].name).toBe('conf-1');
   });
 
   it('sorts events by cfp start date and name', async () => {
@@ -103,10 +106,11 @@ describe('#searchEvents', () => {
     });
 
     const result = await searchEvents({});
+    if (!result.success) throw Error('Search error');
 
-    expect(result.results.length).toBe(3);
+    expect(result.data.results.length).toBe(3);
 
-    const names = result.results.map((e) => e.name);
+    const names = result.data.results.map((e) => e.name);
     expect(names).toEqual(['conf-2', 'conf-3', 'conf-1']);
   });
 
@@ -121,10 +125,11 @@ describe('#searchEvents', () => {
     });
 
     const result = await searchEvents({ query: 'ExpEctEd' });
+    if (!result.success) throw Error('Search error');
 
-    expect(result.results.length).toBe(1);
-    expect(result.results[0].name).toBe('expected-conf');
-    expect(result.filters.query).toBe('ExpEctEd');
+    expect(result.data.results.length).toBe(1);
+    expect(result.data.results[0].name).toBe('expected-conf');
+    expect(result.data.filters.query).toBe('ExpEctEd');
   });
 
   it('filters by past CFP only', async () => {
@@ -138,10 +143,11 @@ describe('#searchEvents', () => {
     });
 
     const result = await searchEvents({ cfp: 'past' });
+    if (!result.success) throw Error('Search error');
 
-    expect(result.results.length).toBe(1);
-    expect(result.results[0].name).toBe('conf-2');
-    expect(result.filters.cfp).toBe('past');
+    expect(result.data.results.length).toBe(1);
+    expect(result.data.results[0].name).toBe('conf-2');
+    expect(result.data.filters.cfp).toBe('past');
   });
 
   it('filters by incoming CFP only', async () => {
@@ -155,10 +161,11 @@ describe('#searchEvents', () => {
     });
 
     const result = await searchEvents({ cfp: 'incoming' });
+    if (!result.success) throw Error('Search error');
 
-    expect(result.results.length).toBe(1);
-    expect(result.results[0].name).toBe('conf-1');
-    expect(result.filters.cfp).toBe('incoming');
+    expect(result.data.results.length).toBe(1);
+    expect(result.data.results[0].name).toBe('conf-1');
+    expect(result.data.filters.cfp).toBe('incoming');
   });
 
   it('filters by conference type', async () => {
@@ -172,10 +179,11 @@ describe('#searchEvents', () => {
     });
 
     const result = await searchEvents({ type: 'conference' });
+    if (!result.success) throw Error('Search error');
 
-    expect(result.results.length).toBe(1);
-    expect(result.results[0].name).toBe('conf-1');
-    expect(result.filters.type).toBe('conference');
+    expect(result.data.results.length).toBe(1);
+    expect(result.data.results[0].name).toBe('conf-1');
+    expect(result.data.filters.type).toBe('conference');
   });
 
   it('filters by meetup type', async () => {
@@ -189,26 +197,33 @@ describe('#searchEvents', () => {
     });
 
     const result = await searchEvents({ type: 'meetup' });
+    if (!result.success) throw Error('Search error');
 
-    expect(result.results.length).toBe(1);
-    expect(result.results[0].name).toBe('conf-2');
-    expect(result.filters.type).toBe('meetup');
+    expect(result.data.results.length).toBe(1);
+    expect(result.data.results[0].name).toBe('conf-2');
+    expect(result.data.filters.type).toBe('meetup');
   });
 
   it('returns the given page', async () => {
     await Promise.all(Array.from({ length: 36 }).map(() => eventFactory({ traits: ['meetup-cfp-open'] })));
 
-    const result = await searchEvents({}, 2);
-    expect(result.results.length).toBe(12);
-    expect(result.pagination.current).toBe(2);
-    expect(result.pagination.total).toBe(3);
+    const result = await searchEvents({ page: 2 });
+    if (!result.success) throw Error('Search error 1');
 
-    const result2 = await searchEvents({}, -1);
-    expect(result2.results.length).toBe(12);
-    expect(result2.pagination.current).toBe(1);
+    expect(result.data.results.length).toBe(12);
+    expect(result.data.pagination.current).toBe(2);
+    expect(result.data.pagination.total).toBe(3);
 
-    const result3 = await searchEvents({}, 10);
-    expect(result3.results.length).toBe(12);
-    expect(result3.pagination.current).toBe(3);
+    const result2 = await searchEvents({ page: -1 });
+    if (!result2.success) throw Error('Search error 2');
+
+    expect(result2.data.results.length).toBe(12);
+    expect(result2.data.pagination.current).toBe(1);
+
+    const result3 = await searchEvents({ page: 10 });
+    if (!result3.success) throw Error('Search error 3');
+
+    expect(result3.data.results.length).toBe(12);
+    expect(result3.data.pagination.current).toBe(3);
   });
 });

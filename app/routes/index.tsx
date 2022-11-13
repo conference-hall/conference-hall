@@ -5,26 +5,20 @@ import { Container } from '../design-system/Container';
 import { H1 } from '../design-system/Typography';
 import { SearchEventsList } from '../components/SearchEventsList';
 import { searchEvents } from '../services/events/search.server';
-import { mapErrorToResponse } from '../services/errors';
 import { SearchEventsForm } from '../components/SearchEventsForm';
 import { Pagination } from '../design-system/Pagination';
 import { EmptyState } from '~/design-system/EmptyState';
 import { FaceFrownIcon } from '@heroicons/react/24/outline';
-import { parsePage } from '~/schemas/pagination';
-import { parseFilters } from '~/schemas/search';
 import { Navbar } from '~/components/navbar/Navbar';
+import { fromSuccess, inputFromSearch } from 'domain-functions';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const url = new URL(request.url);
-  const filters = await parseFilters(url.searchParams);
-  const page = await parsePage(url.searchParams);
-
-  try {
-    const results = await searchEvents(filters, page);
-    return json(results);
-  } catch (err) {
-    throw mapErrorToResponse(err);
+  let result = await searchEvents(inputFromSearch(url.searchParams));
+  if (result.success) {
+    return json(result.data);
   }
+  return json(await fromSuccess(searchEvents)({}));
 };
 
 export default function IndexRoute() {
