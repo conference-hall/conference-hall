@@ -7,13 +7,14 @@ import { H1, Text } from '../../../../design-system/Typography';
 import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { sessionRequired } from '../../../../services/auth/auth.server';
-import { getEvent } from '../../../../services/events/event.server';
+import { getEvent } from '../../../../services/events/get-event.server';
 import { getProposalInfo, submitProposal } from '../../../../services/events/submit.server';
 import { mapErrorToResponse } from '../../../../services/errors';
 import { TextArea } from '../../../../design-system/forms/TextArea';
 import { AvatarGroup } from '~/design-system/Avatar';
 import { withZod } from '@remix-validated-form/with-zod';
 import { ProposalSubmissionSchema } from '~/schemas/proposal';
+import { fromSuccess } from 'domain-functions';
 
 export const handle = { step: 'submission' };
 
@@ -22,7 +23,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const eventSlug = params.eventSlug!;
   const talkId = params.talkId!;
   try {
-    const event = await getEvent(eventSlug);
+    const event = await fromSuccess(getEvent)(eventSlug);
     const proposal = await getProposalInfo(talkId, event.id, uid);
     return json({ ...proposal, codeOfConductUrl: event.codeOfConductUrl });
   } catch (err) {

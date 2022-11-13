@@ -6,19 +6,13 @@ import { EventTabs } from '~/components/EventTabs';
 import { Navbar } from '~/components/navbar/Navbar';
 import { ButtonLink } from '~/design-system/Buttons';
 import { Container } from '~/design-system/Container';
-import { mapErrorToResponse } from '~/services/errors';
-import { getEvent } from '~/services/events/event.server';
+import { fromErrors } from '~/services/errors';
+import { getEvent } from '~/services/events/get-event.server';
 
 export const loader = async ({ params }: LoaderArgs) => {
-  const slug = params.eventSlug;
-  if (!slug) throw new Response('Event not found', { status: 404 });
-
-  try {
-    const event = await getEvent(slug);
-    return json(event);
-  } catch (err) {
-    throw mapErrorToResponse(err);
-  }
+  const result = await getEvent(params.eventSlug);
+  if (!result.success) throw fromErrors(result);
+  return json(result.data);
 };
 
 export default function EventRoute() {

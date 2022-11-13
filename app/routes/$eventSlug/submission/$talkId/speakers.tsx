@@ -9,13 +9,14 @@ import { ExternalLink } from '../../../../design-system/Links';
 import { H2, Text } from '../../../../design-system/Typography';
 import { sessionRequired } from '../../../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../../../services/errors';
-import { getEvent } from '../../../../services/events/event.server';
+import { getEvent } from '../../../../services/events/get-event.server';
 import { removeCoSpeakerFromTalkAndEvent } from '../../../../services/events/proposals.server';
 import { getProposalSpeakers } from '../../../../services/events/speakers.server';
 import { updateSettings } from '../../../../services/speakers/profile.server';
 import { getUser } from '../../../../services/user/user.server';
 import { DetailsSchema } from '~/schemas/profile';
 import { withZod } from '@remix-validated-form/with-zod';
+import { fromSuccess } from 'domain-functions';
 
 export const handle = { step: 'speakers' };
 
@@ -54,7 +55,7 @@ export const action = async ({ request, params }: ActionArgs) => {
       if (result.error) return json(result.error.fieldErrors);
 
       await updateSettings(uid, result.data);
-      const event = await getEvent(eventSlug);
+      const event = await fromSuccess(getEvent)(eventSlug);
       if (event.hasTracks) {
         return redirect(`/${eventSlug}/submission/${talkId}/tracks`);
       } else if (event.surveyEnabled) {

@@ -1,16 +1,15 @@
+import { makeDomainFunction } from 'domain-functions';
+import { z } from 'zod';
 import { getCfpState } from '~/utils/event';
 import { db } from '../db';
 import { EventNotFoundError } from '../errors';
 
-export async function getEvent(slug: string) {
-  const event = await db.event.findUnique({
-    where: { slug: slug },
-    include: { formats: true, categories: true },
-  });
+const EventSlugSchema = z.string().min(1);
 
-  if (!event) {
-    throw new EventNotFoundError();
-  }
+export const getEvent = makeDomainFunction(EventSlugSchema)(async (slug) => {
+  const event = await db.event.findUnique({ where: { slug }, include: { formats: true, categories: true } });
+
+  if (!event) throw new EventNotFoundError();
 
   return {
     id: event.id,
@@ -42,4 +41,4 @@ export async function getEvent(slug: string) {
       description: c.description,
     })),
   };
-}
+});

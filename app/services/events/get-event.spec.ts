@@ -3,7 +3,7 @@ import { eventCategoryFactory } from '../../../tests/factories/categories';
 import { eventFactory } from '../../../tests/factories/events';
 import { eventFormatFactory } from '../../../tests/factories/formats';
 import { EventNotFoundError } from '../errors';
-import { getEvent } from './event.server';
+import { getEvent } from './get-event.server';
 
 describe('#getEvent', () => {
   beforeEach(async () => {

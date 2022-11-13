@@ -2,11 +2,12 @@ import { Outlet, useCatch, useLoaderData, useMatches } from '@remix-run/react';
 import type { LoaderFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { sessionRequired } from '~/services/auth/auth.server';
-import { getEvent } from '~/services/events/event.server';
+import { getEvent } from '~/services/events/get-event.server';
 import { isTalkAlreadySubmitted } from '~/services/events/proposals.server';
 import { mapErrorToResponse } from '~/services/errors';
 import { Container } from '~/design-system/Container';
 import { SubmissionSteps } from '~/components/SubmissionSteps';
+import { fromSuccess } from 'domain-functions';
 
 export type SubmitSteps = Array<{
   key: string;
@@ -19,12 +20,13 @@ export const handle = { step: 'root' };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const { uid } = await sessionRequired(request);
-  const slug = params.eventSlug!;
   const talkId = params.talkId!;
 
   try {
-    const event = await getEvent(slug);
-    if (!event.isCfpOpen) throw new Response('CFP is not opened!', { status: 403 });
+    const event = await fromSuccess(getEvent)(params.eventSlug);
+    const { slug, isCfpOpen, hasTracks, surveyEnabled } = event;
+
+    if (!isCfpOpen) throw new Response('CFP is not opened!', { status: 403 });
 
     const isAlreadySubmitted = await isTalkAlreadySubmitted(slug, talkId, uid);
     if (isAlreadySubmitted) throw new Response('Talk proposal already submitted.', { status: 400 });
@@ -46,13 +48,13 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         key: 'tracks',
         name: 'Tracks',
         path: `/${slug}/submission/${talkId}/tracks`,
-        enabled: event.hasTracks,
+        enabled: hasTracks,
       },
       {
         key: 'survey',
         name: 'Survey',
         path: `/${slug}/submission/${talkId}/survey`,
-        enabled: event.surveyEnabled,
+        enabled: surveyEnabled,
       },
       {
         key: 'submission',

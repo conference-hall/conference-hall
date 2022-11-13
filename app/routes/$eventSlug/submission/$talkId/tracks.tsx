@@ -5,12 +5,13 @@ import { Button, ButtonLink } from '~/design-system/Buttons';
 import { CategoriesForm } from '~/components/CategoriesForm';
 import { sessionRequired } from '../../../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../../../services/errors';
-import { getEvent } from '../../../../services/events/event.server';
+import { getEvent } from '../../../../services/events/get-event.server';
 import { getProposalTracks, saveTracks } from '../../../../services/events/tracks.server';
 import { useSubmissionStep } from '../../../../components/useSubmissionStep';
 import { FormatsForm } from '../../../../components/FormatsForm';
 import { withZod } from '@remix-validated-form/with-zod';
 import { TracksUpdateSchema } from '~/schemas/tracks';
+import { fromSuccess } from 'domain-functions';
 
 export const handle = { step: 'tracks' };
 
@@ -19,7 +20,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const eventSlug = params.eventSlug!;
   const talkId = params.talkId!;
   try {
-    const event = await getEvent(eventSlug);
+    const event = await fromSuccess(getEvent)(eventSlug);
     const proposalTracks = await getProposalTracks(talkId, event.id, uid);
 
     return json({
@@ -41,7 +42,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   if (result.error) return result.error?.fieldErrors;
 
   try {
-    const event = await getEvent(eventSlug);
+    const event = await fromSuccess(getEvent)(eventSlug);
     await saveTracks(talkId, event.id, uid, result.data);
     if (event.surveyEnabled) {
       return redirect(`/${eventSlug}/submission/${talkId}/survey`);
