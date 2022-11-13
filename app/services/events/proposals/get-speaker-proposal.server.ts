@@ -14,8 +14,8 @@ const Schema = z.object({
 export const getSpeakerProposal = makeDomainFunction(Schema)(async ({ speakerId, proposalId }) => {
   const proposal = await db.proposal.findFirst({
     where: {
-      speakers: { some: { id: speakerId } },
       id: proposalId,
+      speakers: { some: { id: speakerId } },
     },
     include: {
       speakers: true,

@@ -17,12 +17,6 @@ export async function isTalkAlreadySubmitted(slug: string, talkId: string, uid: 
   return Boolean(proposal);
 }
 
-export async function deleteProposal(proposalId: string, uid: string) {
-  await db.proposal.deleteMany({
-    where: { id: proposalId, speakers: { some: { id: uid } } },
-  });
-}
-
 export async function updateProposal(slug: string, proposalId: string, uid: string, data: ProposalUpdateData) {
   const event = await db.event.findUnique({
     select: { id: true, type: true, cfpStart: true, cfpEnd: true },
