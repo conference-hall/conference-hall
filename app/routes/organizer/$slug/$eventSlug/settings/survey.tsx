@@ -3,12 +3,12 @@ import { sessionRequired } from '~/services/auth/auth.server';
 import { H2, Text } from '~/design-system/Typography';
 import { Button } from '~/design-system/Buttons';
 import { Form, useLoaderData, useOutletContext } from '@remix-run/react';
-import { QUESTIONS } from '~/services/events/survey.server';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
 import type { OrganizerEventContext } from '../../$eventSlug';
 import { updateEvent } from '~/services/organizers/event.server';
 import { withZod } from '@remix-validated-form/with-zod';
 import { EventSurveySettingsSchema } from '~/schemas/event';
+import { QUESTIONS } from '~/services/events/survey/questions';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);

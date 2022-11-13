@@ -2,43 +2,35 @@ import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
-import { withZod } from '@remix-validated-form/with-zod';
+import { all, inputFromForm } from 'domain-functions';
 import { Button, ButtonLink } from '~/design-system/Buttons';
-import { SurveySchema } from '~/schemas/survey';
+import { getSurveyAnswers } from '~/services/events/survey/get-answers.server';
+import { getSurveyQuestions } from '~/services/events/survey/get-questions.server';
+import { saveSurvey } from '~/services/events/survey/save-survey.server';
 import { EventSurveyForm } from '../../../../components/EventSurveyForm';
 import { useSubmissionStep } from '../../../../components/useSubmissionStep';
 import { H2, Text } from '../../../../design-system/Typography';
 import { sessionRequired } from '../../../../services/auth/auth.server';
-import { mapErrorToResponse } from '../../../../services/errors';
-import { getSurveyAnswers, getSurveyQuestions, saveSurvey } from '../../../../services/events/survey.server';
+import { fromErrors } from '../../../../services/errors';
 
 export const handle = { step: 'survey' };
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
-  const slug = params.eventSlug!;
-  try {
-    const questions = await getSurveyQuestions(slug);
-    const answers = await getSurveyAnswers(slug, uid);
-    return json({ questions, answers });
-  } catch (err) {
-    throw mapErrorToResponse(err);
-  }
+  const { eventSlug } = params;
+  const result = await all(getSurveyQuestions, getSurveyAnswers)({ eventSlug, speakerId: uid });
+  if (!result.success) throw fromErrors(result);
+  const [questions, answers] = result.data;
+  return json({ questions, answers });
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
   const { uid } = await sessionRequired(request);
-  const slug = params.eventSlug!;
-  const talkId = params.talkId!;
-  const form = await request.formData();
-  const result = await withZod(SurveySchema).validate(form);
-  if (result.error) throw new Response('Bad survey values', { status: 400 });
-  try {
-    await saveSurvey(uid, slug, result.data);
-    return redirect(`/${slug}/submission/${talkId}/submit`);
-  } catch (err) {
-    mapErrorToResponse(err);
-  }
+  const { eventSlug, talkId } = params;
+  const data = await inputFromForm(request);
+  const result = await saveSurvey({ speakerId: uid, eventSlug, data });
+  if (!result.success) throw fromErrors(result);
+  return redirect(`/${eventSlug}/submission/${talkId}/submit`);
 };
 
 export default function SubmissionSurveyRoute() {
