@@ -15,9 +15,9 @@ import { fromSuccess, inputFromSearch } from 'domain-functions';
 export const loader = async ({ request }: LoaderArgs) => {
   const url = new URL(request.url);
   let result = await searchEvents(inputFromSearch(url.searchParams));
-  if (result.success) {
-    return json(result.data);
-  }
+
+  if (result.success) return json(result.data);
+
   return json(await fromSuccess(searchEvents)({}));
 };
 
@@ -31,7 +31,7 @@ export default function IndexRoute() {
       <Navbar />
       <Container className="py-0 sm:py-24">
         <H1 className="hidden sm:block">Conferences and meetups.</H1>
-        <SearchEventsForm filters={filters} className="mt-4" />
+        <SearchEventsForm className="mt-4" filters={filters} />
       </Container>
       <Container className="pb-8">
         {results?.length === 0 ? (

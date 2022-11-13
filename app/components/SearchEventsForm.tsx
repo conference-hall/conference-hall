@@ -5,19 +5,13 @@ import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import Select from '~/design-system/forms/Select';
 
 type Props = {
-  filters: {
-    query?: string;
-    type?: 'all' | 'conference' | 'meetup';
-    cfp?: 'incoming' | 'past';
-    talkId?: string;
-  };
+  filters: { query?: string; type?: string; cfp?: string; talkId?: string };
   className?: string;
 };
 
 export function SearchEventsForm({ filters, className }: Props) {
-  const { query, type, cfp } = filters;
+  const { query, type, cfp, talkId } = filters;
   const [searchParams] = useSearchParams();
-  const talkId = searchParams.get('talkId');
   const submit = useSubmit();
 
   function handleChange(name: string, id: string) {
