@@ -6,14 +6,14 @@ import { H2, H3 } from '../../../design-system/Typography';
 import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { sessionRequired } from '../../../services/auth/auth.server';
-import { removeCoSpeakerFromProposal } from '../../../services/events/proposals.server';
-import { fromErrors, mapErrorToResponse } from '../../../services/errors';
+import { fromErrors } from '../../../services/errors';
 import Badge from '../../../design-system/Badges';
 import { getLevel } from '../../../utils/levels';
 import { getLanguage } from '../../../utils/languages';
 import { CoSpeakersList, InviteCoSpeakerButton } from '../../../components/CoSpeaker';
 import { ProposalStatusPanel } from '~/components/speaker-proposals/ProposalStatusPanel';
 import { getSpeakerProposal } from '~/services/events/proposals/get-speaker-proposal.server';
+import { removeCoSpeakerFromProposal } from '~/services/events/proposals-co-speakers/remove-co-speaker-from-proposal.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
@@ -24,18 +24,10 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
 export const action: ActionFunction = async ({ request, params }) => {
   const { uid } = await sessionRequired(request);
-  const proposalId = params.id!;
   const form = await request.formData();
-  try {
-    const action = form.get('_action');
-    if (action === 'remove-speaker') {
-      const speakerId = form.get('_speakerId')?.toString() as string;
-      await removeCoSpeakerFromProposal(uid, proposalId, speakerId);
-      return null;
-    }
-  } catch (err) {
-    mapErrorToResponse(err);
-  }
+  const coSpeakerId = form.get('_speakerId');
+  await removeCoSpeakerFromProposal({ speakerId: uid, proposalId: params.id, coSpeakerId });
+  return null;
 };
 
 export default function EventSpeakerProposalRoute() {
