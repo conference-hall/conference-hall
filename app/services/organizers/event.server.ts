@@ -598,7 +598,7 @@ export async function exportProposalsFromFilters(
   const whereClause = proposalWhereInput(eventSlug, uid, filters);
   const orderByClause = proposalOrderBy(filters);
   const proposals = await db.proposal.findMany({
-    include: { speakers: true, ratings: true },
+    include: { speakers: true, ratings: true, categories: true, formats: true },
     where: whereClause,
     orderBy: orderByClause,
   });
@@ -608,11 +608,24 @@ export async function exportProposalsFromFilters(
     return {
       id: proposal.id,
       title: proposal.title,
+      abstract: proposal.abstract,
       status: proposal.status,
+      level: proposal.level,
+      comments: proposal.comments,
+      references: proposal.references,
+      formats: proposal.formats,
+      categories: proposal.categories,
+      languages: proposal.languages,
       speakers: proposal.speakers.map((speaker) => ({
         name: speaker.name,
         bio: speaker.bio,
         company: speaker.company,
+        references: speaker.references,
+        photoURL: speaker.photoURL,
+        github: speaker.github,
+        twitter: speaker.twitter,
+        address: speaker.address,
+        email: speaker.email,
       })),
       ratings: {
         positives: ratings.positives,
