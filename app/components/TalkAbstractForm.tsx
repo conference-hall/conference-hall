@@ -25,7 +25,7 @@ export function TalkAbstractForm({ initialValues, errors }: Props) {
         label="Title"
         required
         defaultValue={initialValues?.title}
-        error={errors?.title[0]}
+        error={errors?.title?.[0]}
       />
       <MarkdownTextArea
         name="abstract"
@@ -34,7 +34,7 @@ export function TalkAbstractForm({ initialValues, errors }: Props) {
         required
         rows={8}
         defaultValue={initialValues?.abstract}
-        error={errors?.abstract[0]}
+        error={errors?.abstract?.[0]}
       />
       <RadioGroup label="Level" inline>
         {LEVELS.map(({ key, label }) => (
@@ -56,7 +56,7 @@ export function TalkAbstractForm({ initialValues, errors }: Props) {
         description="Give more info about your talk: slides, workshop pre-requities, github repo, video, summary, steps of the talk, which conference or meetup where it has been already given?"
         rows={4}
         defaultValue={initialValues?.references ?? ''}
-        error={errors?.references[0]}
+        error={errors?.references?.[0]}
       />
     </div>
   );
