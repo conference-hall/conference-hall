@@ -13,7 +13,7 @@ import { H2 } from '../../../design-system/Typography';
 import { getSpeakerProposal } from '~/services/events/proposals/get-speaker-proposal.server';
 import { deleteSpeakerProposal } from '~/services/events/proposals/delete-speaker-proposal.server';
 import { toErrors, updateSpeakerProposal } from '~/services/events/proposals/update-speaker-proposal.server';
-import { inputFromForm } from 'domain-functions';
+import { inputFromFormData } from 'domain-functions';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
@@ -32,7 +32,7 @@ export const action = async ({ request, params }: ActionArgs) => {
     await deleteSpeakerProposal({ proposalId: params.id, speakerId: uid });
     throw redirect(`/${eventSlug}/proposals`);
   } else {
-    const data = await inputFromForm(request);
+    const data = inputFromFormData(form);
     const result = await updateSpeakerProposal({ eventSlug, proposalId, speakerId: uid, ...data });
     if (!result.success) {
       return json(toErrors(result));
