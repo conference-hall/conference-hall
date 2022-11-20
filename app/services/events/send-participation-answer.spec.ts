@@ -17,7 +17,7 @@ describe('#sendParticipationAnswer', () => {
 
   it('confirms a proposal', async () => {
     const event = await eventFactory({
-      attributes: { emailOrganizer: 'ben@email.com', emailNotifications: ['confirmed'] },
+      attributes: { name: 'Event 1', emailOrganizer: 'ben@email.com', emailNotifications: ['confirmed'] },
     });
     const speaker = await userFactory();
     const talk = await talkFactory({ speakers: [speaker] });
@@ -43,7 +43,7 @@ describe('#sendParticipationAnswer', () => {
 
   it('declines a proposal', async () => {
     const event = await eventFactory({
-      attributes: { emailOrganizer: 'ben@email.com', emailNotifications: ['declined'] },
+      attributes: { name: 'Event 1', emailOrganizer: 'ben@email.com', emailNotifications: ['declined'] },
     });
     const speaker = await userFactory();
     const talk = await talkFactory({ speakers: [speaker] });
