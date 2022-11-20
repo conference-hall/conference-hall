@@ -5,42 +5,6 @@ import { jsonToArray } from '../../utils/prisma';
 import { InvitationNotFoundError, TalkNotFoundError } from '../errors';
 import { buildInvitationLink } from '../invitations/build-link.server';
 
-type TalksListOptions = { archived?: boolean };
-
-/**
- * List all talks for a speaker
- * @param uid Id of the connected user
- * @returns speaker talks
- */
-export async function findTalks(uid: string, options?: TalksListOptions) {
-  const talks = await db.talk.findMany({
-    select: {
-      id: true,
-      title: true,
-      archived: true,
-      createdAt: true,
-      speakers: true,
-    },
-    where: {
-      speakers: { some: { id: uid } },
-      archived: options?.archived ?? false,
-    },
-    orderBy: { updatedAt: 'desc' },
-  });
-
-  return talks.map((talk) => ({
-    id: talk.id,
-    title: talk.title,
-    archived: talk.archived,
-    createdAt: talk.createdAt.toUTCString(),
-    speakers: talk.speakers.map((speaker) => ({
-      id: speaker.id,
-      name: speaker.name,
-      photoURL: speaker.photoURL,
-    })),
-  }));
-}
-
 /**
  * Get a talk for a speaker
  * @param uid Id of the connected user
