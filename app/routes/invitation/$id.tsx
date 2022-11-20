@@ -3,6 +3,7 @@ import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
 import { Navbar } from '~/components/navbar/Navbar';
+import { addCoSpeakerToProposal } from '~/services/events/add-co-speaker-to-proposal.server';
 import { inviteMemberToOrganization } from '~/services/organizers/organizations.server';
 import { Button } from '../../design-system/Buttons';
 import { Container } from '../../design-system/Container';
@@ -10,7 +11,6 @@ import { Link } from '../../design-system/Links';
 import { H1, H2, Text } from '../../design-system/Typography';
 import { sessionRequired } from '../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../services/errors';
-import { inviteCoSpeakerToProposal } from '../../services/events/proposals.server';
 import { getInvitation } from '../../services/invitations/invitations.server';
 import { inviteCoSpeakerToTalk } from '../../services/speakers/talks.server';
 
@@ -38,7 +38,7 @@ export const action: ActionFunction = async ({ request, params }) => {
       const talk = await inviteCoSpeakerToTalk(invitationId, uid);
       return redirect(`/speaker/talks/${talk.id}`);
     } else if (type === 'PROPOSAL') {
-      const proposal = await inviteCoSpeakerToProposal(invitationId, uid);
+      const proposal = await addCoSpeakerToProposal(invitationId, uid);
       return redirect(`/${proposal.eventSlug}/proposals/${proposal.proposalId}`);
     } else if (type === 'ORGANIZATION') {
       const organization = await inviteMemberToOrganization(invitationId, uid);
