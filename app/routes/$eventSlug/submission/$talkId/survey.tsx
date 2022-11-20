@@ -5,13 +5,14 @@ import { Form, useLoaderData } from '@remix-run/react';
 import { withZod } from '@remix-validated-form/with-zod';
 import { Button, ButtonLink } from '~/design-system/Buttons';
 import { SurveySchema } from '~/schemas/survey';
+import { getAnswers } from '~/services/event-survey/get-answers.server';
 import { getQuestions } from '~/services/event-survey/get-questions.server';
 import { EventSurveyForm } from '../../../../components/EventSurveyForm';
 import { useSubmissionStep } from '../../../../components/useSubmissionStep';
 import { H2, Text } from '../../../../design-system/Typography';
 import { sessionRequired } from '../../../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../../../services/errors';
-import { getSurveyAnswers, saveSurvey } from '../../../../services/events/survey.server';
+import { saveSurvey } from '../../../../services/events/survey.server';
 
 export const handle = { step: 'survey' };
 
@@ -20,7 +21,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const slug = params.eventSlug!;
   try {
     const questions = await getQuestions(slug);
-    const answers = await getSurveyAnswers(slug, uid);
+    const answers = await getAnswers(slug, uid);
     return json({ questions, answers });
   } catch (err) {
     throw mapErrorToResponse(err);

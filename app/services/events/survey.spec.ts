@@ -3,47 +3,8 @@ import { eventFactory } from '../../../tests/factories/events';
 import { surveyFactory } from '../../../tests/factories/surveys';
 import { userFactory } from '../../../tests/factories/users';
 import { EventNotFoundError } from '../errors';
-import { getSurveyAnswers, saveSurvey } from './survey.server';
-
-describe('#getSurveyAnswers', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterEach(disconnectDB);
-
-  it('returns the user answers for an event', async () => {
-    const event = await eventFactory({ traits: ['withSurvey'] });
-    const user1 = await userFactory();
-    await surveyFactory({
-      user: user1,
-      event,
-      attributes: { answers: { gender: 'male' } },
-    });
-    const user2 = await userFactory();
-    await surveyFactory({
-      user: user2,
-      event,
-      attributes: { answers: { gender: 'female' } },
-    });
-
-    const answers = await getSurveyAnswers(event.slug, user2.id);
-
-    expect(answers).toEqual({ gender: 'female' });
-  });
-
-  it('returns nothing when user hasnt respond any questions', async () => {
-    const event = await eventFactory({ traits: ['withSurvey'] });
-    const user = await userFactory();
-    const answers = await getSurveyAnswers(event.slug, user.id);
-    expect(answers).toEqual({});
-  });
-
-  it('returns nothing when event doesnt exist', async () => {
-    const user = await userFactory();
-    const answers = await getSurveyAnswers('XXX', user.id);
-    expect(answers).toEqual({});
-  });
-});
+import { getAnswers } from '../event-survey/get-answers.server';
+import { saveSurvey } from './survey.server';
 
 describe('#saveSurvey', () => {
   beforeEach(async () => {
@@ -64,7 +25,7 @@ describe('#saveSurvey', () => {
       info: 'Hello',
     });
 
-    const survey = await getSurveyAnswers(event.slug, user.id);
+    const survey = await getAnswers(event.slug, user.id);
 
     expect(survey).toEqual({
       gender: 'male',
@@ -103,7 +64,7 @@ describe('#saveSurvey', () => {
       info: 'World',
     });
 
-    const survey = await getSurveyAnswers(event.slug, user.id);
+    const survey = await getAnswers(event.slug, user.id);
 
     expect(survey).toEqual({
       gender: 'female',
