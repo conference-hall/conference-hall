@@ -19,25 +19,6 @@ export async function getInvitationLink(slug: string, uid: string) {
 }
 
 /**
- * Change member role
- * @param slug organization slug
- * @param uid Id of the user
- * @param memberId Id of the member to update
- * @param memberRole Role to set to the member
- */
-export async function changeMemberRole(slug: string, uid: string, memberId: string, memberRole: OrganizationRole) {
-  if (uid === memberId) throw new ForbiddenOperationError();
-
-  const role = await getUserRole(slug, uid);
-  if (role !== OrganizationRole.OWNER) throw new ForbiddenOperationError();
-
-  await db.organizationMember.updateMany({
-    data: { role: memberRole },
-    where: { organization: { slug }, memberId },
-  });
-}
-
-/**
  * Remove member
  * @param slug organization slug
  * @param uid Id of the user
