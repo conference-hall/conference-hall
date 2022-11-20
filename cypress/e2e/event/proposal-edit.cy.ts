@@ -53,7 +53,7 @@ describe('Speaker proposal edition page', () => {
   });
 
   it('cannot edit a proposal not found', () => {
-    cy.visit('/devfest-nantes/proposals/not-found/edit');
+    cy.visit('/devfest-nantes/proposals/not-found/edit', { failOnStatusCode: false });
     cy.assertText('Proposal not found');
   });
 });

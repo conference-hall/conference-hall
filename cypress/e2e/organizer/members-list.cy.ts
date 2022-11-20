@@ -67,7 +67,7 @@ describe('Organization members list', () => {
     beforeEach(() => cy.login('Peter Parker'));
 
     it('cannot access to the list', () => {
-      cy.visit('/organizer/awesome-orga/members');
+      cy.visit('/organizer/awesome-orga/members', { failOnStatusCode: false });
       cy.assertText('Forbidden');
     });
   });
