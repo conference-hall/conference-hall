@@ -8,9 +8,9 @@ import { talkFactory } from '../../../tests/factories/talks';
 import { userFactory } from '../../../tests/factories/users';
 import { db } from '../db';
 import { OrganizationNotFoundError, ProposalNotFoundError, TalkNotFoundError } from '../errors';
-import { generateInvitationLink } from './invitations.server';
+import { generateLink } from './generate-link.server';
 
-describe('#generateInvitationLink', () => {
+describe('#generateLink', () => {
   beforeEach(async () => {
     await resetDB();
   });
@@ -21,7 +21,7 @@ describe('#generateInvitationLink', () => {
       const speaker = await userFactory();
       const talk = await talkFactory({ speakers: [speaker] });
 
-      const link = await generateInvitationLink(InviteType.TALK, talk.id, speaker.id);
+      const link = await generateLink(InviteType.TALK, talk.id, speaker.id);
 
       const invite = await db.invite.findFirst();
 
@@ -36,7 +36,7 @@ describe('#generateInvitationLink', () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const invite = await inviteFactory({ talk, user: speaker });
 
-      const link = await generateInvitationLink(InviteType.TALK, talk.id, speaker.id);
+      const link = await generateLink(InviteType.TALK, talk.id, speaker.id);
 
       expect(invite?.talkId).toEqual(talk.id);
       expect(invite?.type).toEqual(InviteType.TALK);
@@ -48,12 +48,12 @@ describe('#generateInvitationLink', () => {
       const speaker = await userFactory();
       const talk = await talkFactory({ speakers: [speaker] });
       const user = await userFactory();
-      await expect(generateInvitationLink(InviteType.TALK, talk.id, user.id)).rejects.toThrowError(TalkNotFoundError);
+      await expect(generateLink(InviteType.TALK, talk.id, user.id)).rejects.toThrowError(TalkNotFoundError);
     });
 
     it('throws an error when talk is not found', async () => {
       const speaker = await userFactory();
-      await expect(generateInvitationLink(InviteType.TALK, 'XXX', speaker.id)).rejects.toThrowError(TalkNotFoundError);
+      await expect(generateLink(InviteType.TALK, 'XXX', speaker.id)).rejects.toThrowError(TalkNotFoundError);
     });
   });
 
@@ -64,7 +64,7 @@ describe('#generateInvitationLink', () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk });
 
-      const link = await generateInvitationLink(InviteType.PROPOSAL, proposal.id, speaker.id);
+      const link = await generateLink(InviteType.PROPOSAL, proposal.id, speaker.id);
 
       const invite = await db.invite.findFirst();
 
@@ -81,7 +81,7 @@ describe('#generateInvitationLink', () => {
       const proposal = await proposalFactory({ event, talk });
       const invite = await inviteFactory({ proposal, user: speaker });
 
-      const link = await generateInvitationLink(InviteType.PROPOSAL, proposal.id, speaker.id);
+      const link = await generateLink(InviteType.PROPOSAL, proposal.id, speaker.id);
 
       expect(invite?.proposalId).toEqual(proposal.id);
       expect(invite?.type).toEqual(InviteType.PROPOSAL);
@@ -95,16 +95,12 @@ describe('#generateInvitationLink', () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk });
       const user = await userFactory();
-      await expect(generateInvitationLink(InviteType.PROPOSAL, proposal.id, user.id)).rejects.toThrowError(
-        ProposalNotFoundError
-      );
+      await expect(generateLink(InviteType.PROPOSAL, proposal.id, user.id)).rejects.toThrowError(ProposalNotFoundError);
     });
 
     it('throws an error when talk is not found', async () => {
       const speaker = await userFactory();
-      await expect(generateInvitationLink(InviteType.PROPOSAL, 'XXX', speaker.id)).rejects.toThrowError(
-        ProposalNotFoundError
-      );
+      await expect(generateLink(InviteType.PROPOSAL, 'XXX', speaker.id)).rejects.toThrowError(ProposalNotFoundError);
     });
   });
 
@@ -113,7 +109,7 @@ describe('#generateInvitationLink', () => {
       const owner = await userFactory();
       const organization = await organizationFactory({ owners: [owner] });
 
-      const link = await generateInvitationLink(InviteType.ORGANIZATION, organization.id, owner.id);
+      const link = await generateLink(InviteType.ORGANIZATION, organization.id, owner.id);
 
       const invite = await db.invite.findFirst();
 
@@ -128,7 +124,7 @@ describe('#generateInvitationLink', () => {
       const organization = await organizationFactory({ owners: [owner] });
       const invite = await inviteFactory({ organization, user: owner });
 
-      const link = await generateInvitationLink(InviteType.ORGANIZATION, organization.id, owner.id);
+      const link = await generateLink(InviteType.ORGANIZATION, organization.id, owner.id);
 
       expect(invite?.organizationId).toEqual(organization.id);
       expect(invite?.type).toEqual(InviteType.ORGANIZATION);
@@ -139,14 +135,14 @@ describe('#generateInvitationLink', () => {
     it('throws an error when organization does not belong to user', async () => {
       const organization = await organizationFactory();
       const user = await userFactory();
-      await expect(generateInvitationLink(InviteType.ORGANIZATION, organization.id, user.id)).rejects.toThrowError(
+      await expect(generateLink(InviteType.ORGANIZATION, organization.id, user.id)).rejects.toThrowError(
         OrganizationNotFoundError
       );
     });
 
     it('throws an error when talk is not found', async () => {
       const user = await userFactory();
-      await expect(generateInvitationLink(InviteType.ORGANIZATION, 'XXX', user.id)).rejects.toThrowError(
+      await expect(generateLink(InviteType.ORGANIZATION, 'XXX', user.id)).rejects.toThrowError(
         OrganizationNotFoundError
       );
     });

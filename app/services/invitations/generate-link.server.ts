@@ -8,14 +8,7 @@ import {
 } from '../errors';
 import { buildInvitationLink } from './build-link.server';
 
-/**
- * Generate an invitation link
- * @param type Type of the invitation
- * @param entityId Id of the entity to invite
- * @param uid Id of the user who is inviting
- * @returns Invitation link
- */
-export async function generateInvitationLink(type: InviteType, entityId: string, uid: string) {
+export async function generateLink(type: InviteType, entityId: string, uid: string) {
   let invitationKey: string | undefined;
   if (type === 'TALK') {
     invitationKey = await generateTalkInvitationKey(entityId, uid);
