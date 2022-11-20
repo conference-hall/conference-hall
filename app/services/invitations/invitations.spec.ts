@@ -8,7 +8,7 @@ import { talkFactory } from '../../../tests/factories/talks';
 import { userFactory } from '../../../tests/factories/users';
 import { db } from '../db';
 import { OrganizationNotFoundError, ProposalNotFoundError, TalkNotFoundError } from '../errors';
-import { buildInvitationLink, generateInvitationLink, revokeInvitationLink } from './invitations.server';
+import { buildInvitationLink, generateInvitationLink } from './invitations.server';
 
 describe('#buildInvitationLink', () => {
   it('generates the invitation link from the invitation token', () => {
@@ -161,98 +161,6 @@ describe('#generateInvitationLink', () => {
       await expect(generateInvitationLink(InviteType.ORGANIZATION, 'XXX', user.id)).rejects.toThrowError(
         OrganizationNotFoundError
       );
-    });
-  });
-});
-
-describe('#revokeInvitationLink', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterEach(disconnectDB);
-
-  describe('for talk invitation', () => {
-    it('revokes an invitation for a talk', async () => {
-      const speaker = await userFactory();
-      const talk = await talkFactory({ speakers: [speaker] });
-      const invite = await inviteFactory({ talk });
-
-      await revokeInvitationLink(InviteType.TALK, talk.id, speaker.id);
-
-      const count = await db.invite.count({ where: { id: invite?.id } });
-
-      expect(count).toEqual(0);
-    });
-
-    it('does nothing if invitation not created by user', async () => {
-      const speaker = await userFactory();
-      const talk = await talkFactory({ speakers: [speaker] });
-      const invite = await inviteFactory({ talk, user: speaker });
-
-      const user = await userFactory();
-      await revokeInvitationLink(InviteType.TALK, talk.id, user.id);
-
-      const count = await db.invite.count({ where: { id: invite?.id } });
-
-      expect(count).toEqual(1);
-    });
-  });
-
-  describe('for proposal invitation', () => {
-    it('revokes an invitation for a proposal', async () => {
-      const event = await eventFactory();
-      const speaker = await userFactory();
-      const talk = await talkFactory({ speakers: [speaker] });
-      const proposal = await proposalFactory({ event, talk });
-      const invite = await inviteFactory({ proposal });
-
-      await revokeInvitationLink(InviteType.PROPOSAL, proposal.id, speaker.id);
-
-      const count = await db.invite.count({ where: { id: invite?.id } });
-
-      expect(count).toEqual(0);
-    });
-
-    it('does nothing if invitation not created by user', async () => {
-      const event = await eventFactory();
-      const speaker = await userFactory();
-      const talk = await talkFactory({ speakers: [speaker] });
-      const proposal = await proposalFactory({ event, talk });
-      const invite = await inviteFactory({ proposal, user: speaker });
-
-      const user = await userFactory();
-      await revokeInvitationLink(InviteType.PROPOSAL, proposal.id, user.id);
-
-      const count = await db.invite.count({ where: { id: invite?.id } });
-
-      expect(count).toEqual(1);
-    });
-  });
-
-  describe('for organization invitation', () => {
-    it('revokes an invitation for a organization', async () => {
-      const owner = await userFactory();
-      const organization = await organizationFactory({ owners: [owner] });
-      const invite = await inviteFactory({ organization, user: owner });
-
-      await revokeInvitationLink(InviteType.ORGANIZATION, organization.id, owner.id);
-
-      const count = await db.invite.count({ where: { id: invite?.id } });
-
-      expect(count).toEqual(0);
-    });
-
-    it('does nothing if invitation not created by user', async () => {
-      const owner = await userFactory();
-      const organization = await organizationFactory({ owners: [owner] });
-      const invite = await inviteFactory({ organization, user: owner });
-
-      const user = await userFactory();
-      await revokeInvitationLink(InviteType.ORGANIZATION, organization.id, user.id);
-
-      const count = await db.invite.count({ where: { id: invite?.id } });
-
-      expect(count).toEqual(1);
     });
   });
 });
