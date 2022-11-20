@@ -9,7 +9,7 @@ import { ExternalLink } from '../../../../design-system/Links';
 import { H2, Text } from '../../../../design-system/Typography';
 import { sessionRequired } from '../../../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../../../services/errors';
-import { getEvent } from '../../../../services/events/event.server';
+import { getEvent } from '../../../../services/events/get-event.server';
 import { removeCoSpeakerFromTalkAndEvent } from '../../../../services/events/proposals.server';
 import { getProposalSpeakers } from '../../../../services/events/speakers.server';
 import { updateSettings } from '../../../../services/speakers/profile.server';

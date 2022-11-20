@@ -8,9 +8,7 @@ export async function getEvent(slug: string) {
     include: { formats: true, categories: true },
   });
 
-  if (!event) {
-    throw new EventNotFoundError();
-  }
+  if (!event) throw new EventNotFoundError();
 
   return {
     id: event.id,

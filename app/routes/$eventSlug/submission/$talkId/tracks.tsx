@@ -5,7 +5,7 @@ import { Button, ButtonLink } from '~/design-system/Buttons';
 import { CategoriesForm } from '~/components/CategoriesForm';
 import { sessionRequired } from '../../../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../../../services/errors';
-import { getEvent } from '../../../../services/events/event.server';
+import { getEvent } from '../../../../services/events/get-event.server';
 import { getProposalTracks, saveTracks } from '../../../../services/events/tracks.server';
 import { useSubmissionStep } from '../../../../components/useSubmissionStep';
 import { FormatsForm } from '../../../../components/FormatsForm';
