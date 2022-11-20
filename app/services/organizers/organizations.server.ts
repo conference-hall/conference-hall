@@ -1,9 +1,8 @@
 import { OrganizationRole } from '@prisma/client';
 import type { OrganizationSaveData } from '~/schemas/organization';
 import { db } from '../db';
-import { ForbiddenOperationError, InvitationNotFoundError, OrganizationNotFoundError } from '../errors';
+import { InvitationNotFoundError, OrganizationNotFoundError } from '../errors';
 import { buildInvitationLink } from '../invitations/build-link.server';
-import { getUserRole } from '../organization/get-user-role.server';
 
 /**
  * Returns invitation link of an organization
@@ -16,21 +15,6 @@ export async function getInvitationLink(slug: string, uid: string) {
     where: { organization: { slug, members: { some: { memberId: uid } } } },
   });
   return buildInvitationLink(invite?.id);
-}
-
-/**
- * Remove member
- * @param slug organization slug
- * @param uid Id of the user
- * @param memberId Id of the member to remove
- */
-export async function removeMember(slug: string, uid: string, memberId: string) {
-  if (uid === memberId) throw new ForbiddenOperationError();
-
-  const role = await getUserRole(slug, uid);
-  if (role !== OrganizationRole.OWNER) throw new ForbiddenOperationError();
-
-  await db.organizationMember.deleteMany({ where: { organization: { slug }, memberId } });
 }
 
 /**

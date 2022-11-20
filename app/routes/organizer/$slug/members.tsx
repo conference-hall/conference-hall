@@ -3,7 +3,7 @@ import type { OrganizationRole } from '@prisma/client';
 import { json } from '@remix-run/node';
 import { Container } from '~/design-system/Container';
 import { sessionRequired } from '~/services/auth/auth.server';
-import { getInvitationLink, removeMember } from '~/services/organizers/organizations.server';
+import { getInvitationLink } from '~/services/organizers/organizations.server';
 import { useLoaderData, useOutletContext } from '@remix-run/react';
 import { AvatarName } from '~/design-system/Avatar';
 import { ChangeRoleButton, InviteMemberButton, RemoveButton } from '~/components/MemberActions';
@@ -13,6 +13,7 @@ import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { getUserRole } from '~/services/organization/get-user-role.server';
 import { listMembers } from '~/services/organization-members/list-members.server';
 import { changeMemberRole } from '~/services/organization-members/change-role.server';
+import { removeMember } from '~/services/organization-members/remove-member.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
