@@ -10,10 +10,10 @@ import { MegaphoneIcon } from '@heroicons/react/20/solid';
 import { UserGroupIcon } from '@heroicons/react/24/outline';
 import { EventInfoForm } from '~/components/organizer-event/EventInfoForm';
 import { CardLink } from '~/design-system/Card';
-import { createEvent } from '~/services/organizers/event.server';
 import { withZod } from '@remix-validated-form/with-zod';
 import { EventCreateSchema } from '~/schemas/event';
 import { getUserRole } from '~/services/organization/get-user-role.server';
+import { createEvent } from '~/services/organizer-event/create-event.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);

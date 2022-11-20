@@ -12,7 +12,6 @@ import type {
   ProposalStatusData,
   ProposalUpdateData,
 } from '~/schemas/proposal';
-import { getCfpState } from '~/utils/event';
 import { jsonToArray } from '~/utils/prisma';
 import { db } from '../db';
 import { EventNotFoundError, ForbiddenOperationError, ProposalNotFoundError } from '../errors';
@@ -23,53 +22,6 @@ import { uploadToStorageHandler } from '../utils/storage.server';
 import type { Pagination } from '~/schemas/pagination';
 import { getUserRole } from '../organization/get-user-role.server';
 import { checkAccess } from '../organizer-event/check-access.server';
-
-/**
- * Get event for user
- * @param slug event's slug
- * @param uid Id of the user (member of the event's organization)
- * @returns event
- */
-export async function getEvent(slug: string, uid: string) {
-  const event = await db.event.findFirst({
-    include: { formats: true, categories: true },
-    where: { slug, organization: { members: { some: { memberId: uid } } } },
-  });
-  if (!event) throw new EventNotFoundError();
-  return {
-    id: event.id,
-    name: event.name,
-    slug: event.slug,
-    type: event.type,
-    address: event.address,
-    conferenceStart: event.conferenceStart?.toUTCString(),
-    conferenceEnd: event.conferenceEnd?.toUTCString(),
-    description: event.description,
-    visibility: event.visibility,
-    websiteUrl: event.websiteUrl,
-    codeOfConductUrl: event.codeOfConductUrl,
-    contactEmail: event.contactEmail,
-    bannerUrl: event.bannerUrl,
-    maxProposals: event.maxProposals,
-    surveyEnabled: event.surveyEnabled,
-    surveyQuestions: jsonToArray(event.surveyQuestions),
-    deliberationEnabled: event.deliberationEnabled,
-    displayOrganizersRatings: event.displayOrganizersRatings,
-    displayProposalsRatings: event.displayProposalsRatings,
-    displayProposalsSpeakers: event.displayProposalsSpeakers,
-    formatsRequired: event.formatsRequired,
-    categoriesRequired: event.categoriesRequired,
-    emailOrganizer: event.emailOrganizer,
-    emailNotifications: jsonToArray(event.emailNotifications),
-    slackWebhookUrl: event.slackWebhookUrl,
-    apiKey: event.apiKey,
-    cfpStart: event.cfpStart?.toUTCString(),
-    cfpEnd: event.cfpEnd?.toUTCString(),
-    cfpState: getCfpState(event.type, event.cfpStart, event.cfpEnd),
-    formats: event.formats.map(({ id, name, description }) => ({ id, name, description })),
-    categories: event.categories.map(({ id, name, description }) => ({ id, name, description })),
-  };
-}
 
 const RESULTS_BY_PAGE = 25;
 
@@ -363,33 +315,6 @@ export async function updateProposal(
       formats: { set: [], connect: formats?.map((id) => ({ id })) },
       categories: { set: [], connect: categories?.map((id) => ({ id })) },
     },
-  });
-}
-
-/**
- * Create an event
- * @param orgaSlug Organization slug
- * @param uid User id
- * @param data Event data
- */
-export async function createEvent(orgaSlug: string, uid: string, data: EventCreateData) {
-  const role = await getUserRole(orgaSlug, uid);
-  if (role !== OrganizationRole.OWNER) throw new ForbiddenOperationError();
-
-  return await db.$transaction(async (trx) => {
-    const existSlug = await trx.event.findFirst({ where: { slug: data.slug } });
-    if (existSlug) {
-      return { error: { fieldErrors: { slug: 'Slug already exists, please try another one.' } } };
-    }
-
-    await trx.event.create({
-      data: {
-        ...data,
-        creator: { connect: { id: uid } },
-        organization: { connect: { slug: orgaSlug } },
-      },
-    });
-    return { slug: data.slug };
   });
 }
 

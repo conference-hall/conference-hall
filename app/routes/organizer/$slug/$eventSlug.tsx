@@ -7,7 +7,7 @@ import OrganizationBreadcrumb from '~/components/organizations/OrganizationBread
 import { Container } from '~/design-system/Container';
 import { sessionRequired } from '~/services/auth/auth.server';
 import { mapErrorToResponse } from '~/services/errors';
-import { getEvent } from '~/services/organizers/event.server';
+import { getEvent } from '~/services/organizer-event/get-event.server';
 import type { OrganizationContext } from '../$slug';
 
 export type OrganizerEventContext = {

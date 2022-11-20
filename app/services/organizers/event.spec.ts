@@ -16,14 +16,12 @@ import { ratingFactory } from 'tests/factories/ratings';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
 import { getProposalReview } from './event.server';
-import { EventNotFoundError, ForbiddenOperationError } from '../errors';
+import { ForbiddenOperationError } from '../errors';
 import { db } from '../db';
 import { messageFactory } from 'tests/factories/messages';
 import {
-  getEvent,
   searchProposals,
   rateProposal,
-  createEvent,
   deleteCategory,
   deleteFormat,
   saveCategory,
@@ -32,69 +30,6 @@ import {
   updateProposal,
 } from './event.server';
 import type { ProposalsFilters } from '~/schemas/proposal';
-
-describe('#getEvent', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterEach(disconnectDB);
-
-  it('returns the event for organizer', async () => {
-    const user = await userFactory();
-    const organization = await organizationFactory({ owners: [user] });
-    const event = await eventFactory({
-      attributes: {
-        name: 'Awesome event',
-        slug: 'event',
-        visibility: 'PUBLIC',
-      },
-      traits: ['conference-cfp-open'],
-      organization,
-    });
-
-    const result = await getEvent(event.slug, user.id);
-
-    expect(result).toEqual({
-      id: event.id,
-      name: event.name,
-      slug: event.slug,
-      type: event.type,
-      address: event.address,
-      conferenceStart: event.conferenceStart?.toUTCString(),
-      conferenceEnd: event.conferenceEnd?.toUTCString(),
-      description: event.description,
-      visibility: event.visibility,
-      websiteUrl: event.websiteUrl,
-      codeOfConductUrl: event.codeOfConductUrl,
-      contactEmail: event.contactEmail,
-      bannerUrl: event.bannerUrl,
-      maxProposals: event.maxProposals,
-      surveyEnabled: event.surveyEnabled,
-      surveyQuestions: [],
-      deliberationEnabled: event.deliberationEnabled,
-      displayOrganizersRatings: event.displayOrganizersRatings,
-      displayProposalsRatings: event.displayProposalsRatings,
-      displayProposalsSpeakers: event.displayProposalsSpeakers,
-      formatsRequired: event.formatsRequired,
-      categoriesRequired: event.categoriesRequired,
-      emailOrganizer: event.emailOrganizer,
-      emailNotifications: [],
-      slackWebhookUrl: event.slackWebhookUrl,
-      apiKey: event.apiKey,
-      cfpStart: event.cfpStart?.toUTCString(),
-      cfpEnd: event.cfpEnd?.toUTCString(),
-      cfpState: 'OPENED',
-      formats: [],
-      categories: [],
-    });
-  });
-
-  it('throws an error if user does not belong to event orga', async () => {
-    const user = await userFactory();
-    const event = await eventFactory();
-    await expect(getEvent(event.slug, user.id)).rejects.toThrowError(EventNotFoundError);
-  });
-});
 
 describe('#searchProposals', () => {
   let owner: User, speaker: User;
@@ -681,74 +616,6 @@ describe('#updateProposal', () => {
         level: null,
         references: null,
         languages: [],
-      })
-    ).rejects.toThrowError(ForbiddenOperationError);
-  });
-});
-
-describe('#createEvent', () => {
-  let owner: User, reviewer: User;
-  let organization: Organization;
-
-  beforeEach(async () => {
-    await resetDB();
-    owner = await userFactory();
-    reviewer = await userFactory();
-    organization = await organizationFactory({ owners: [owner], reviewers: [reviewer] });
-  });
-  afterEach(disconnectDB);
-
-  it('creates a new event into the organization', async () => {
-    const created = await createEvent(organization.slug, owner.id, {
-      type: 'CONFERENCE',
-      name: 'Hello world',
-      slug: 'hello-world',
-      visibility: 'PUBLIC',
-    });
-
-    expect(created.slug).toBe('hello-world');
-
-    const event = await db.event.findUnique({ where: { slug: created.slug } });
-    expect(event?.type).toBe('CONFERENCE');
-    expect(event?.name).toBe('Hello world');
-    expect(event?.slug).toBe('hello-world');
-    expect(event?.visibility).toBe('PUBLIC');
-    expect(event?.organizationId).toBe(organization.id);
-    expect(event?.creatorId).toBe(owner.id);
-  });
-
-  it('returns an error message when slug already exists', async () => {
-    await eventFactory({ organization, attributes: { slug: 'hello-world' } });
-
-    const created = await createEvent(organization.slug, owner.id, {
-      type: 'CONFERENCE',
-      name: 'Hello world',
-      slug: 'hello-world',
-      visibility: 'PUBLIC',
-    });
-
-    expect(created?.error?.fieldErrors?.slug).toEqual('Slug already exists, please try another one.');
-  });
-
-  it('throws an error if user is not owner', async () => {
-    await expect(
-      createEvent(organization.slug, reviewer.id, {
-        type: 'CONFERENCE',
-        name: 'Hello world',
-        slug: 'hello-world',
-        visibility: 'PUBLIC',
-      })
-    ).rejects.toThrowError(ForbiddenOperationError);
-  });
-
-  it('throws an error if user does not belong to event orga', async () => {
-    const user = await userFactory();
-    await expect(
-      createEvent(organization.slug, user.id, {
-        type: 'CONFERENCE',
-        name: 'Hello world',
-        slug: 'hello-world',
-        visibility: 'PUBLIC',
       })
     ).rejects.toThrowError(ForbiddenOperationError);
   });
