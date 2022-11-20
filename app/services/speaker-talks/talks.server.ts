@@ -1,24 +1,5 @@
-import { ProposalStatus } from '@prisma/client';
-import type { TalkSaveData } from '~/schemas/talks';
 import { db } from '../db';
 import { InvitationNotFoundError, TalkNotFoundError } from '../errors';
-
-/**
- * Delete a talk for a speaker
- * @param uid Id of the connected user
- * @param talkId Id of the talk
- */
-export async function deleteTalk(uid: string, talkId: string) {
-  const talk = await db.talk.findFirst({
-    where: { id: talkId, speakers: { some: { id: uid } } },
-  });
-  if (!talk) throw new TalkNotFoundError();
-
-  await db.$transaction([
-    db.proposal.deleteMany({ where: { talkId, status: ProposalStatus.DRAFT } }),
-    db.talk.delete({ where: { id: talkId } }),
-  ]);
-}
 
 /**
  * Invite a co-speaker to a talk
