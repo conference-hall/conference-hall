@@ -9,7 +9,7 @@ import { Input } from '~/design-system/forms/Input';
 import { Button } from '~/design-system/Buttons';
 import { ExternalLink } from '~/design-system/Links';
 import { Card } from '~/design-system/Card';
-import { validateOrganizerAccess } from '~/services/organizers/access.server';
+import { checkAccess } from '~/services/organization-access/check-access.server';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);
@@ -19,7 +19,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 export const action = async ({ request }: ActionArgs) => {
   const { uid } = await sessionRequired(request);
   const form = await request.formData();
-  const result = await validateOrganizerAccess(uid, String(form.get('key')));
+  const result = await checkAccess(uid, String(form.get('key')));
   if (result?.fieldErrors) return json(result);
   return redirect('/organizer');
 };
