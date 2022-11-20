@@ -8,10 +8,11 @@ import { Container } from '~/design-system/Container';
 import { H2, Text } from '~/design-system/Typography';
 import { sessionRequired } from '~/services/auth/auth.server';
 import { mapErrorToResponse } from '~/services/errors';
-import { getSurveyAnswers, getSurveyQuestions, saveSurvey } from '~/services/events/survey.server';
+import { getSurveyAnswers, saveSurvey } from '~/services/events/survey.server';
 import type { SurveyQuestions } from '~/schemas/survey';
 import { SurveySchema } from '~/schemas/survey';
 import { withZod } from '@remix-validated-form/with-zod';
+import { getQuestions } from '~/services/event-survey/get-questions.server';
 
 type SurveyQuestionsForm = {
   questions: SurveyQuestions;
@@ -22,7 +23,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const { uid } = await sessionRequired(request);
   const slug = params.eventSlug!;
   try {
-    const questions = await getSurveyQuestions(slug);
+    const questions = await getQuestions(slug);
     const answers = await getSurveyAnswers(slug, uid);
     return json<SurveyQuestionsForm>({ questions, answers });
   } catch (err) {
