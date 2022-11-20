@@ -1,8 +1,8 @@
+import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { organizationFactory } from 'tests/factories/organization';
-import { resetDB, disconnectDB } from '../../../tests/db-helpers';
-import { userFactory } from '../../../tests/factories/users';
+import { userFactory } from 'tests/factories/users';
 import { UserNotFoundError } from '../errors';
-import { getUser } from './user.server';
+import { getUser } from './get-user.server';
 
 describe('#getUser', () => {
   beforeEach(async () => {

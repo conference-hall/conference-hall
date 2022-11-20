@@ -12,7 +12,7 @@ import { mapErrorToResponse } from '../../../../services/errors';
 import { getEvent } from '../../../../services/event-page/get-event.server';
 import { getProposalSpeakers } from '../../../../services/events/speakers.server';
 import { updateSettings } from '../../../../services/speakers/profile.server';
-import { getUser } from '../../../../services/user/user.server';
+import { getUser } from '../../../../services/user/get-user.server';
 import { DetailsSchema } from '~/schemas/profile';
 import { withZod } from '@remix-validated-form/with-zod';
 import { removeCoSpeakerFromSubmission } from '~/services/event-proposals/remove-co-speaker.server';

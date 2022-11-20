@@ -3,9 +3,9 @@ import { eventFactory } from 'tests/factories/events';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
-import { getUserNotifications, NOTIFICATION_TYPE } from './notification.server';
+import { listNotifications, NOTIFICATION_TYPE } from './list-notifications.server';
 
-describe('#getUserNotifications', () => {
+describe('#listNotifications', () => {
   beforeEach(async () => {
     await resetDB();
   });
@@ -27,7 +27,7 @@ describe('#getUserNotifications', () => {
       attributes: { emailAcceptedStatus: 'SENT' },
     });
 
-    const notifications = await getUserNotifications(speaker1.id);
+    const notifications = await listNotifications(speaker1.id);
 
     expect(notifications).toEqual([
       {

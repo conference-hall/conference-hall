@@ -1,6 +1,6 @@
 import type { UserContext } from '~/root';
 import type { LoaderArgs } from '@remix-run/node';
-import type { getUser } from '~/services/user/user.server';
+import type { getUser } from '~/services/user/get-user.server';
 import { json } from '@remix-run/node';
 import { Outlet, useCatch, useOutletContext } from '@remix-run/react';
 import { SpeakerTabs } from '~/components/SpeakerTabs';

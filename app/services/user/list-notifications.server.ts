@@ -4,7 +4,7 @@ export enum NOTIFICATION_TYPE {
   ACCEPTED_PROPOSAL = 'ACCEPTED_PROPOSAL',
 }
 
-export async function getUserNotifications(userId: string) {
+export async function listNotifications(userId: string) {
   const acceptedProposals = await db.proposal.findMany({
     include: { event: true },
     where: {

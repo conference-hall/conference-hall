@@ -1,11 +1,6 @@
 import { db } from '../db';
 import { UserNotFoundError } from '../errors';
 
-/**
- * Get a user data
- * @param userId Id of the user
- * @returns user data
- */
 export async function getUser(userId: string) {
   const user = await db.user.findUnique({
     where: { id: userId },
