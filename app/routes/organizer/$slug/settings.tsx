@@ -2,7 +2,7 @@ import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { redirect, json } from '@remix-run/node';
 import { Form, useActionData, useOutletContext } from '@remix-run/react';
 import { withZod } from '@remix-validated-form/with-zod';
-import { getUserRole, updateOrganization } from '~/services/organizers/organizations.server';
+import { updateOrganization } from '~/services/organizers/organizations.server';
 import { sessionRequired } from '~/services/auth/auth.server';
 import { Container } from '~/design-system/Container';
 import { H2 } from '~/design-system/Typography';
@@ -10,6 +10,7 @@ import { Button } from '~/design-system/Buttons';
 import { OrganizationNewForm } from '~/components/organizations/OrganizationNew';
 import { OrganizationSaveSchema } from '~/schemas/organization';
 import type { OrganizationContext } from '../$slug';
+import { getUserRole } from '~/services/organization/get-user-role.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);

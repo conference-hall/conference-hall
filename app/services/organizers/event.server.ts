@@ -20,8 +20,8 @@ import { geocode } from '../utils/geocode.server';
 import { getPagination } from '../utils/pagination.server';
 import { RatingsDetails } from '../utils/ratings.server';
 import { uploadToStorageHandler } from '../utils/storage.server';
-import { getUserRole } from './organizations.server';
 import type { Pagination } from '~/schemas/pagination';
+import { getUserRole } from '../organization/get-user-role.server';
 
 /**
  * Check the organizer role to an event.

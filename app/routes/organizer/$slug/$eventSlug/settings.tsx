@@ -16,7 +16,7 @@ import {
   SwatchIcon,
 } from '@heroicons/react/24/outline';
 import type { OrganizerEventContext } from '../$eventSlug';
-import { getUserRole } from '~/services/organizers/organizations.server';
+import { getUserRole } from '~/services/organization/get-user-role.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);

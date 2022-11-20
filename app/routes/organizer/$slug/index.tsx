@@ -7,15 +7,15 @@ import { H2, Text } from '~/design-system/Typography';
 import { Link, Outlet, useLoaderData, useOutletContext } from '@remix-run/react';
 import { EmptyState } from '~/design-system/EmptyState';
 import { ChevronRightIcon, StarIcon } from '@heroicons/react/24/outline';
-import { getOrganizationEvents } from '~/services/organizers/organizations.server';
 import { Input } from '~/design-system/forms/Input';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { ButtonLink } from '~/design-system/Buttons';
+import { listEvents } from '~/services/organization/list-events.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
   const slug = params.slug!;
-  const events = await getOrganizationEvents(slug, uid);
+  const events = await listEvents(slug, uid);
   return json(events);
 };
 

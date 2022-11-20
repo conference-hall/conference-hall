@@ -7,7 +7,6 @@ import {
   changeMemberRole,
   getInvitationLink,
   getOrganizationMembers,
-  getUserRole,
   removeMember,
 } from '~/services/organizers/organizations.server';
 import { useLoaderData, useOutletContext } from '@remix-run/react';
@@ -16,6 +15,7 @@ import { ChangeRoleButton, InviteMemberButton, RemoveButton } from '~/components
 import { Input } from '~/design-system/forms/Input';
 import type { OrganizationContext } from '../$slug';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
+import { getUserRole } from '~/services/organization/get-user-role.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);

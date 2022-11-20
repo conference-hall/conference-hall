@@ -1,6 +1,5 @@
 import { OrganizationRole } from '@prisma/client';
 import { disconnectDB, resetDB } from 'tests/db-helpers';
-import { eventFactory } from 'tests/factories/events';
 import { inviteFactory } from 'tests/factories/invite';
 import { organizationFactory } from 'tests/factories/organization';
 import { userFactory } from 'tests/factories/users';
@@ -10,66 +9,11 @@ import {
   changeMemberRole,
   createOrganization,
   getInvitationLink,
-  getOrganizationEvents,
   getOrganizationMembers,
-  getUserRole,
   inviteMemberToOrganization,
   removeMember,
   updateOrganization,
 } from './organizations.server';
-
-describe('#getUserRole', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterEach(disconnectDB);
-
-  it('returns the role of the user in the organization', async () => {
-    const user = await userFactory();
-    const orga = await organizationFactory({ members: [user] });
-    const role = await getUserRole(orga.slug, user.id);
-    expect(role).toEqual('MEMBER');
-  });
-
-  it('returns null if user does not belong to the organization', async () => {
-    const user = await userFactory();
-    const orga = await organizationFactory();
-    const role = await getUserRole(orga.slug, user.id);
-    expect(role).toBeNull();
-  });
-});
-
-describe('#getOrganizationEvents', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterEach(disconnectDB);
-
-  it('returns organization events', async () => {
-    const user = await userFactory();
-    const organization = await organizationFactory({ owners: [user], attributes: { slug: 'my-orga' } });
-    await eventFactory({ attributes: { name: 'Event 1', slug: 'event1' }, organization, traits: ['conference'] });
-    await eventFactory({ attributes: { name: 'Event 2', slug: 'event2' }, organization, traits: ['meetup'] });
-
-    const organization2 = await organizationFactory({ owners: [user] });
-    await eventFactory({ traits: ['conference-cfp-open'], organization: organization2 });
-
-    const events = await getOrganizationEvents('my-orga', user.id);
-    expect(events).toEqual([
-      { name: 'Event 1', slug: 'event1', type: 'CONFERENCE' },
-      { name: 'Event 2', slug: 'event2', type: 'MEETUP' },
-    ]);
-  });
-
-  it('returns nothing when user is not member of the organization', async () => {
-    const user = await userFactory();
-    const organization = await organizationFactory({ attributes: { slug: 'my-orga' } });
-    await eventFactory({ organization });
-
-    const events = await getOrganizationEvents('my-orga', user.id);
-    expect(events).toEqual([]);
-  });
-});
 
 describe('#getOrganizationMembers', () => {
   beforeEach(async () => {

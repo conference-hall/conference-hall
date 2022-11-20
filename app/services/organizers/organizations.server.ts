@@ -3,18 +3,7 @@ import type { OrganizationSaveData } from '~/schemas/organization';
 import { db } from '../db';
 import { ForbiddenOperationError, InvitationNotFoundError, OrganizationNotFoundError } from '../errors';
 import { buildInvitationLink } from '../invitations/build-link.server';
-
-/**
- * Returns role user of an organization
- * @param slug organization slug
- * @param uid Id of the user
- * @returns user role, null does not belong to it
- */
-export async function getUserRole(slug: string, uid: string) {
-  const orgaMember = await db.organizationMember.findFirst({ where: { memberId: uid, organization: { slug } } });
-  if (!orgaMember) return null;
-  return orgaMember.role;
-}
+import { getUserRole } from '../organization/get-user-role.server';
 
 /**
  * Returns invitation link of an organization
@@ -27,27 +16,6 @@ export async function getInvitationLink(slug: string, uid: string) {
     where: { organization: { slug, members: { some: { memberId: uid } } } },
   });
   return buildInvitationLink(invite?.id);
-}
-
-/**
- * Get organization events
- * @param slug organization slug
- * @param uid Id of the user
- * @returns organization events
- */
-export async function getOrganizationEvents(slug: string, uid: string) {
-  const role = await getUserRole(slug, uid);
-  if (!role) return [];
-
-  const events = await db.event.findMany({
-    where: { organization: { slug } },
-    orderBy: { name: 'asc' },
-  });
-  return events.map((event) => ({
-    slug: event.slug,
-    name: event.name,
-    type: event.type,
-  }));
 }
 
 /**
