@@ -30,29 +30,6 @@ export async function getInvitationLink(slug: string, uid: string) {
 }
 
 /**
- * Get organization for user
- * @param slug organization slug
- * @param uid Id of the user
- * @returns organization
- */
-export async function getOrganization(slug: string, uid: string) {
-  const orgaMember = await db.organizationMember.findFirst({
-    where: { memberId: uid, organization: { slug } },
-    orderBy: { organization: { name: 'asc' } },
-    include: { organization: true },
-  });
-
-  if (!orgaMember) throw new OrganizationNotFoundError();
-
-  return {
-    id: orgaMember.organization.id,
-    name: orgaMember.organization.name,
-    slug: orgaMember.organization.slug,
-    role: orgaMember.role,
-  };
-}
-
-/**
  * Get organization events
  * @param slug organization slug
  * @param uid Id of the user

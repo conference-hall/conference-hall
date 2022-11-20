@@ -2,12 +2,12 @@ import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Container } from '~/design-system/Container';
 import { sessionRequired } from '~/services/auth/auth.server';
-import { getOrganization } from '~/services/organizers/organizations.server';
 import { Outlet, useCatch, useLoaderData, useMatches } from '@remix-run/react';
 import { ButtonLink } from '~/design-system/Buttons';
 import { mapErrorToResponse } from '~/services/errors';
 import { OrganizationTabs } from '~/components/organizations/OrganizationTabs';
 import OrganizationBreadcrumb from '~/components/organizations/OrganizationBreadcrumb';
+import { getOrganization } from '~/services/organization/get-organization.server';
 
 export type OrganizationContext = {
   organization: Awaited<ReturnType<typeof getOrganization>>;
