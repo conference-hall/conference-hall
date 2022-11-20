@@ -13,13 +13,13 @@ import { getLevel } from '../../../utils/levels';
 import {
   archiveTalk,
   deleteTalk,
-  getTalk,
   removeCoSpeakerFromTalk,
   restoreTalk,
 } from '../../../services/speaker-talks/talks.server';
 import { mapErrorToResponse } from '../../../services/errors';
 import { TalkActionsMenu } from '../../../components/TalkActionsMenu';
 import { InviteCoSpeakerButton, CoSpeakersList } from '../../../components/CoSpeaker';
+import { getTalk } from '~/services/speaker-talks/get-talk.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);

@@ -4,12 +4,12 @@ import { H2, Text } from '../../../../design-system/Typography';
 import { sessionRequired } from '../../../../services/auth/auth.server';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
-import { getTalk } from '../../../../services/speaker-talks/talks.server';
 import { mapErrorToResponse } from '../../../../services/errors';
 import { TalkAbstractForm } from '../../../../components/TalkAbstractForm';
 import { ProposalCreateSchema } from '~/schemas/proposal';
 import { withZod } from '@remix-validated-form/with-zod';
 import { saveDraftProposal } from '~/services/event-submission/save-draft-proposal.server';
+import { getTalk } from '~/services/speaker-talks/get-talk.server';
 
 export const handle = { step: 'proposal' };
 
