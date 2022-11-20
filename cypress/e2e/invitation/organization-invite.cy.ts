@@ -30,7 +30,7 @@ describe('Organization invitation page', () => {
 
   it('display error page when invitation not found', () => {
     cy.login('Bruce Wayne');
-    cy.visit('/invitation/invitation-X');
+    cy.visit('/invitation/invitation-X', { failOnStatusCode: false });
     cy.assertText('Invitation not found');
   });
 });
