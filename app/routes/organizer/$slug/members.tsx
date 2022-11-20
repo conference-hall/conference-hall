@@ -3,12 +3,7 @@ import type { OrganizationRole } from '@prisma/client';
 import { json } from '@remix-run/node';
 import { Container } from '~/design-system/Container';
 import { sessionRequired } from '~/services/auth/auth.server';
-import {
-  changeMemberRole,
-  getInvitationLink,
-  getOrganizationMembers,
-  removeMember,
-} from '~/services/organizers/organizations.server';
+import { changeMemberRole, getInvitationLink, removeMember } from '~/services/organizers/organizations.server';
 import { useLoaderData, useOutletContext } from '@remix-run/react';
 import { AvatarName } from '~/design-system/Avatar';
 import { ChangeRoleButton, InviteMemberButton, RemoveButton } from '~/components/MemberActions';
@@ -16,6 +11,7 @@ import { Input } from '~/design-system/forms/Input';
 import type { OrganizationContext } from '../$slug';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { getUserRole } from '~/services/organization/get-user-role.server';
+import { listMembers } from '~/services/organization-members/list-members.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
@@ -24,7 +20,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   if (role === 'REVIEWER') throw new Response('Forbidden', { status: 403 });
 
   const invitationLink = await getInvitationLink(slug, uid);
-  const members = await getOrganizationMembers(slug, uid);
+  const members = await listMembers(slug, uid);
   return json({ userId: uid, userRole: role, invitationLink, members });
 };
 

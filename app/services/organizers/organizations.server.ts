@@ -19,30 +19,6 @@ export async function getInvitationLink(slug: string, uid: string) {
 }
 
 /**
- * Get organization members
- * @param slug organization slug
- * @param uid Id of the user
- * @returns organization members
- */
-export async function getOrganizationMembers(slug: string, uid: string) {
-  const role = await getUserRole(slug, uid);
-  if (!role) return [];
-
-  const members = await db.organizationMember.findMany({
-    where: { organization: { slug } },
-    orderBy: { member: { name: 'asc' } },
-    include: { member: true },
-  });
-
-  return members.map(({ member, role }) => ({
-    role,
-    id: member.id,
-    name: member.name,
-    photoURL: member.photoURL,
-  }));
-}
-
-/**
  * Change member role
  * @param slug organization slug
  * @param uid Id of the user
