@@ -10,12 +10,13 @@ import { EventActivity } from '../../../components/SpeakerActivities';
 import { sessionRequired } from '../../../services/auth/auth.server';
 import { getLanguage } from '../../../utils/languages';
 import { getLevel } from '../../../utils/levels';
-import { archiveTalk, removeCoSpeakerFromTalk, restoreTalk } from '../../../services/speaker-talks/talks.server';
+import { removeCoSpeakerFromTalk } from '../../../services/speaker-talks/talks.server';
 import { mapErrorToResponse } from '../../../services/errors';
 import { TalkActionsMenu } from '../../../components/TalkActionsMenu';
 import { InviteCoSpeakerButton, CoSpeakersList } from '../../../components/CoSpeaker';
 import { getTalk } from '~/services/speaker-talks/get-talk.server';
 import { deleteTalk } from '~/services/speaker-talks/delete-talk.server';
+import { archiveTalk, restoreTalk } from '~/services/speaker-talks/archive-talk.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);

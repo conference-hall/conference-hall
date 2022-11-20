@@ -39,31 +39,3 @@ export async function removeCoSpeakerFromTalk(uid: string, talkId: string, coSpe
     data: { speakers: { disconnect: { id: coSpeakerId } } },
   });
 }
-
-/**
- * Archive a talk
- * @param uid Id of the connected user
- * @param talkId Id of the talk
- */
-export async function archiveTalk(uid: string, talkId: string) {
-  const talk = await db.talk.findFirst({
-    where: { id: talkId, speakers: { some: { id: uid } } },
-  });
-  if (!talk) throw new TalkNotFoundError();
-
-  await db.talk.update({ where: { id: talkId }, data: { archived: true } });
-}
-
-/**
- * Restore an archived talk
- * @param uid Id of the connected user
- * @param talkId Id of the talk
- */
-export async function restoreTalk(uid: string, talkId: string) {
-  const talk = await db.talk.findFirst({
-    where: { id: talkId, speakers: { some: { id: uid } } },
-  });
-  if (!talk) throw new TalkNotFoundError();
-
-  await db.talk.update({ where: { id: talkId }, data: { archived: false } });
-}
