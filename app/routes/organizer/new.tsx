@@ -3,12 +3,12 @@ import { Form, useActionData } from '@remix-run/react';
 import { json, redirect } from '@remix-run/node';
 import { withZod } from '@remix-validated-form/with-zod';
 import { sessionRequired } from '~/services/auth/auth.server';
-import { createOrganization } from '~/services/organizers/organizations.server';
 import { OrganizationNewForm } from '~/components/organizations/OrganizationNew';
 import { Container } from '~/design-system/Container';
 import { Button } from '~/design-system/Buttons';
 import { H1, Text } from '~/design-system/Typography';
 import { OrganizationSaveSchema } from '~/schemas/organization';
+import { createOrganization } from '~/services/organization/create-organization.server';
 
 export const loader: LoaderFunction = async ({ request }) => {
   await sessionRequired(request);
