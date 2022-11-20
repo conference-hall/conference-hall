@@ -2,7 +2,7 @@ import { OrganizationRole } from '@prisma/client';
 import type { OrganizationSaveData } from '~/schemas/organization';
 import { db } from '../db';
 import { ForbiddenOperationError, InvitationNotFoundError, OrganizationNotFoundError } from '../errors';
-import { buildInvitationLink } from '../invitations/invitations.server';
+import { buildInvitationLink } from '../invitations/build-link.server';
 
 /**
  * Get user organizations

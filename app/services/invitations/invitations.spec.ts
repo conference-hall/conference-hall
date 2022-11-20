@@ -8,19 +8,7 @@ import { talkFactory } from '../../../tests/factories/talks';
 import { userFactory } from '../../../tests/factories/users';
 import { db } from '../db';
 import { OrganizationNotFoundError, ProposalNotFoundError, TalkNotFoundError } from '../errors';
-import { buildInvitationLink, generateInvitationLink } from './invitations.server';
-
-describe('#buildInvitationLink', () => {
-  it('generates the invitation link from the invitation token', () => {
-    const link = buildInvitationLink('CODE_INVITE');
-    expect(link).toEqual('http://localhost:3001/invitation/CODE_INVITE');
-  });
-
-  it('returns undefined if no invitation token given', () => {
-    const link = buildInvitationLink();
-    expect(link).toBeUndefined();
-  });
-});
+import { generateInvitationLink } from './invitations.server';
 
 describe('#generateInvitationLink', () => {
   beforeEach(async () => {

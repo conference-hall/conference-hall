@@ -1,5 +1,4 @@
 import { type InviteType } from '@prisma/client';
-import { config } from '../config';
 import { db } from '../db';
 import {
   InvitationGenerateError,
@@ -7,6 +6,7 @@ import {
   TalkNotFoundError,
   OrganizationNotFoundError,
 } from '../errors';
+import { buildInvitationLink } from './build-link.server';
 
 /**
  * Generate an invitation link
@@ -27,11 +27,6 @@ export async function generateInvitationLink(type: InviteType, entityId: string,
 
   if (!invitationKey) throw new InvitationGenerateError();
   return buildInvitationLink(invitationKey);
-}
-
-export function buildInvitationLink(invitationId?: string) {
-  if (!invitationId) return;
-  return `${config.appUrl}/invitation/${invitationId}`;
 }
 
 async function generateTalkInvitationKey(talkId: string, uid: string) {

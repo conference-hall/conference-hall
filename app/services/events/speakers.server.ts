@@ -1,6 +1,6 @@
 import { db } from '../db';
 import { ProposalNotFoundError } from '../errors';
-import { buildInvitationLink } from '../invitations/invitations.server';
+import { buildInvitationLink } from '../invitations/build-link.server';
 
 /**
  * Get speakers of a proposal for an event

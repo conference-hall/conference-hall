@@ -2,7 +2,7 @@ import { ProposalStatus } from '@prisma/client';
 import { jsonToArray } from '~/utils/prisma';
 import { db } from '../db';
 import { ProposalNotFoundError } from '../errors';
-import { buildInvitationLink } from '../invitations/invitations.server';
+import { buildInvitationLink } from '../invitations/build-link.server';
 
 export async function getSpeakerProposal(proposalId: string, uid: string) {
   const proposal = await db.proposal.findFirst({
