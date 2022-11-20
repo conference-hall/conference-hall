@@ -12,7 +12,7 @@ import { useSubmissionStep } from '../../../../components/useSubmissionStep';
 import { H2, Text } from '../../../../design-system/Typography';
 import { sessionRequired } from '../../../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../../../services/errors';
-import { saveSurvey } from '../../../../services/events/survey.server';
+import { saveSurvey } from '../../../../services/event-survey/save-survey.server';
 
 export const handle = { step: 'survey' };
 

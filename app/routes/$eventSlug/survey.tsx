@@ -8,7 +8,7 @@ import { Container } from '~/design-system/Container';
 import { H2, Text } from '~/design-system/Typography';
 import { sessionRequired } from '~/services/auth/auth.server';
 import { mapErrorToResponse } from '~/services/errors';
-import { saveSurvey } from '~/services/events/survey.server';
+import { saveSurvey } from '~/services/event-survey/save-survey.server';
 import type { SurveyQuestions } from '~/schemas/survey';
 import { SurveySchema } from '~/schemas/survey';
 import { withZod } from '@remix-validated-form/with-zod';

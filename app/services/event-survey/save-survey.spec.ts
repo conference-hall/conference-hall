@@ -3,8 +3,8 @@ import { eventFactory } from '../../../tests/factories/events';
 import { surveyFactory } from '../../../tests/factories/surveys';
 import { userFactory } from '../../../tests/factories/users';
 import { EventNotFoundError } from '../errors';
-import { getAnswers } from '../event-survey/get-answers.server';
-import { saveSurvey } from './survey.server';
+import { getAnswers } from './get-answers.server';
+import { saveSurvey } from './save-survey.server';
 
 describe('#saveSurvey', () => {
   beforeEach(async () => {
