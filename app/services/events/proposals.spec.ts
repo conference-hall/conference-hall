@@ -12,7 +12,6 @@ import { db } from '../db';
 import { CfpNotOpenError, EventNotFoundError, InvitationNotFoundError, ProposalNotFoundError } from '../errors';
 import { getSpeakerProposal } from './get-speaker-proposal.server';
 import {
-  deleteProposal,
   inviteCoSpeakerToProposal,
   isTalkAlreadySubmitted,
   removeCoSpeakerFromProposal,
@@ -69,40 +68,6 @@ describe('#isTalkAlreadySubmitted', () => {
     const result = await isTalkAlreadySubmitted(event.slug, talk.id, speaker.id);
 
     expect(result).toBeFalsy();
-  });
-});
-
-describe('#deleteProposal', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterEach(disconnectDB);
-
-  it('deletes a proposal', async () => {
-    const event = await eventFactory();
-    const speaker = await userFactory();
-    const talk = await talkFactory({ speakers: [speaker] });
-    const proposal = await proposalFactory({ event, talk });
-
-    await deleteProposal(proposal.id, speaker.id);
-
-    const deleted = await db.proposal.findUnique({ where: { id: proposal.id } });
-
-    expect(deleted).toBe(null);
-  });
-
-  it('does not delete a proposal if not belonging to user', async () => {
-    const event = await eventFactory();
-    const speaker = await userFactory();
-    const otherSpeaker = await userFactory();
-    const talk = await talkFactory({ speakers: [otherSpeaker] });
-    const proposal = await proposalFactory({ event, talk });
-
-    await deleteProposal(proposal.id, speaker.id);
-
-    const deleted = await db.proposal.findUnique({ where: { id: proposal.id } });
-
-    expect(deleted).not.toBe(1);
   });
 });
 
