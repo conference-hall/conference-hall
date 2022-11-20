@@ -1,11 +1,11 @@
-import { checkOrganizerEventAccess } from './event.server';
 import { ProposalAcceptedEmailsBatch } from './emails/proposal-accepted-email-batch';
 import { ProposalRejectedEmailsBatch } from './emails/proposal-rejected-email-batch';
 import { db } from '../db';
 import { EmailStatus } from '@prisma/client';
+import { checkAccess } from '../organizer-event/check-access.server';
 
 export async function getAcceptationCampaignStats(orgaSlug: string, eventSlug: string, uid: string) {
-  await checkOrganizerEventAccess(orgaSlug, eventSlug, uid, ['OWNER', 'MEMBER']);
+  await checkAccess(orgaSlug, eventSlug, uid, ['OWNER', 'MEMBER']);
 
   const toSend = await db.proposal.count({
     where: {
@@ -33,7 +33,7 @@ export async function getAcceptationCampaignStats(orgaSlug: string, eventSlug: s
 }
 
 export async function sendAcceptationCampaign(orgaSlug: string, eventSlug: string, uid: string, proposalIds: string[]) {
-  await checkOrganizerEventAccess(orgaSlug, eventSlug, uid, ['OWNER', 'MEMBER']);
+  await checkAccess(orgaSlug, eventSlug, uid, ['OWNER', 'MEMBER']);
 
   const event = await db.event.findUnique({ where: { slug: eventSlug } });
   if (!event) return;
@@ -60,7 +60,7 @@ export async function sendAcceptationCampaign(orgaSlug: string, eventSlug: strin
 }
 
 export async function getRejectionCampaignStats(orgaSlug: string, eventSlug: string, uid: string) {
-  await checkOrganizerEventAccess(orgaSlug, eventSlug, uid, ['OWNER', 'MEMBER']);
+  await checkAccess(orgaSlug, eventSlug, uid, ['OWNER', 'MEMBER']);
 
   const toSend = await db.proposal.count({
     where: { event: { slug: eventSlug }, status: 'REJECTED', emailRejectedStatus: null },
@@ -76,7 +76,7 @@ export async function getRejectionCampaignStats(orgaSlug: string, eventSlug: str
 }
 
 export async function sendRejectionCampaign(orgaSlug: string, eventSlug: string, uid: string, proposalIds: string[]) {
-  await checkOrganizerEventAccess(orgaSlug, eventSlug, uid, ['OWNER', 'MEMBER']);
+  await checkAccess(orgaSlug, eventSlug, uid, ['OWNER', 'MEMBER']);
 
   const event = await db.event.findUnique({ where: { slug: eventSlug } });
   if (!event) return;

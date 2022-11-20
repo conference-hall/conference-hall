@@ -22,42 +22,7 @@ import { RatingsDetails } from '../utils/ratings.server';
 import { uploadToStorageHandler } from '../utils/storage.server';
 import type { Pagination } from '~/schemas/pagination';
 import { getUserRole } from '../organization/get-user-role.server';
-
-/**
- * Check the organizer role to an event.
- * Returns the user role or throws an error when user not member or does not have the correct role.
- *
- * @param orgaSlug organization slug
- * @param eventSlug event slug
- * @param uid Id of the user to check
- * @param roles list of checked roles (all if no roles given)
- * @returns user role else throw a forbidden error
- */
-export async function checkOrganizerEventAccess(
-  orgaSlug: string,
-  eventSlug: string,
-  uid: string,
-  roles?: OrganizationRole[]
-) {
-  if (!orgaSlug || !eventSlug) throw new ForbiddenOperationError();
-
-  const rolesToCheck = roles || [OrganizationRole.MEMBER, OrganizationRole.REVIEWER, OrganizationRole.OWNER];
-
-  const member = await db.organizationMember.findFirst({
-    where: {
-      memberId: uid,
-      organization: {
-        slug: orgaSlug,
-        events: { some: { slug: eventSlug } },
-      },
-    },
-  });
-
-  if (!member || !rolesToCheck.includes(member.role)) {
-    throw new ForbiddenOperationError();
-  }
-  return member.role;
-}
+import { checkAccess } from '../organizer-event/check-access.server';
 
 /**
  * Get event for user
@@ -123,7 +88,7 @@ export async function searchProposals(
   filters: ProposalsFilters,
   page: Pagination = 1
 ) {
-  await checkOrganizerEventAccess(orgaSlug, eventSlug, uid);
+  await checkAccess(orgaSlug, eventSlug, uid);
 
   const whereClause = proposalWhereInput(eventSlug, uid, filters);
   const orderByClause = proposalOrderBy(filters);
@@ -216,7 +181,7 @@ export async function getProposalReview(
   uid: string,
   filters: ProposalsFilters
 ) {
-  await checkOrganizerEventAccess(orgaSlug, eventSlug, uid);
+  await checkAccess(orgaSlug, eventSlug, uid);
 
   const whereClause = proposalWhereInput(eventSlug, uid, filters);
   const orderByClause = proposalOrderBy(filters);
@@ -321,7 +286,7 @@ export async function rateProposal(
   uid: string,
   data: ProposalRatingData
 ) {
-  await checkOrganizerEventAccess(orgaSlug, eventSlug, uid);
+  await checkAccess(orgaSlug, eventSlug, uid);
 
   await db.rating.upsert({
     where: { userId_proposalId: { userId: uid, proposalId } },
@@ -345,7 +310,7 @@ export async function addProposalComment(
   uid: string,
   message: string
 ) {
-  await checkOrganizerEventAccess(orgaSlug, eventSlug, uid);
+  await checkAccess(orgaSlug, eventSlug, uid);
 
   await db.message.create({
     data: { userId: uid, proposalId, message, channel: MessageChannel.ORGANIZER },
@@ -367,7 +332,7 @@ export async function removeProposalComment(
   uid: string,
   messageId: string
 ) {
-  await checkOrganizerEventAccess(orgaSlug, eventSlug, uid);
+  await checkAccess(orgaSlug, eventSlug, uid);
 
   await db.message.deleteMany({ where: { id: messageId, userId: uid, proposalId } });
 }
@@ -387,7 +352,7 @@ export async function updateProposal(
   uid: string,
   data: ProposalUpdateData
 ) {
-  await checkOrganizerEventAccess(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER, OrganizationRole.MEMBER]);
+  await checkAccess(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER, OrganizationRole.MEMBER]);
 
   const { formats, categories, ...talk } = data;
 
@@ -441,7 +406,7 @@ export async function updateEvent(
   uid: string,
   data: Partial<Prisma.EventCreateInput>
 ) {
-  await checkOrganizerEventAccess(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER]);
+  await checkAccess(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER]);
 
   const event = await db.event.findFirst({ where: { slug: eventSlug } });
   if (!event) throw new EventNotFoundError();
@@ -473,7 +438,7 @@ export async function updateEvent(
  * @param data event data
  */
 export async function uploadAndSaveEventBanner(orgaSlug: string, eventSlug: string, uid: string, request: Request) {
-  await checkOrganizerEventAccess(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER]);
+  await checkAccess(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER]);
 
   const event = await db.event.findFirst({ where: { slug: eventSlug } });
   if (!event) throw new EventNotFoundError();
@@ -497,7 +462,7 @@ export async function uploadAndSaveEventBanner(orgaSlug: string, eventSlug: stri
  * @param data Track format data
  */
 export async function saveFormat(orgaSlug: string, eventSlug: string, uid: string, data: EventTrackSaveData) {
-  await checkOrganizerEventAccess(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER]);
+  await checkAccess(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER]);
 
   if (data.id) {
     await db.eventFormat.update({
@@ -519,7 +484,7 @@ export async function saveFormat(orgaSlug: string, eventSlug: string, uid: strin
  * @param data Track category data
  */
 export async function saveCategory(orgaSlug: string, eventSlug: string, uid: string, data: EventTrackSaveData) {
-  await checkOrganizerEventAccess(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER]);
+  await checkAccess(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER]);
 
   if (data.id) {
     await db.eventCategory.update({
@@ -541,7 +506,7 @@ export async function saveCategory(orgaSlug: string, eventSlug: string, uid: str
  * @param formatId Format id to remove
  */
 export async function deleteFormat(orgaSlug: string, eventSlug: string, uid: string, formatId: string) {
-  await checkOrganizerEventAccess(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER]);
+  await checkAccess(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER]);
 
   await db.eventFormat.delete({ where: { id: formatId } });
 }
@@ -554,7 +519,7 @@ export async function deleteFormat(orgaSlug: string, eventSlug: string, uid: str
  * @param categoryId Category id to remove
  */
 export async function deleteCategory(orgaSlug: string, eventSlug: string, uid: string, categoryId: string) {
-  await checkOrganizerEventAccess(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER]);
+  await checkAccess(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER]);
 
   await db.eventCategory.delete({ where: { id: categoryId } });
 }
@@ -574,7 +539,7 @@ export async function updateProposalsStatus(
   proposalIds: string[],
   status: ProposalStatusData
 ) {
-  await checkOrganizerEventAccess(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER, OrganizationRole.MEMBER]);
+  await checkAccess(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER, OrganizationRole.MEMBER]);
 
   const result = await db.proposal.updateMany({ where: { id: { in: proposalIds } }, data: { status } });
   return result.count;
@@ -593,7 +558,7 @@ export async function exportProposalsFromFilters(
   uid: string,
   filters: ProposalsFilters
 ) {
-  await checkOrganizerEventAccess(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER, OrganizationRole.MEMBER]);
+  await checkAccess(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER, OrganizationRole.MEMBER]);
 
   const whereClause = proposalWhereInput(eventSlug, uid, filters);
   const orderByClause = proposalOrderBy(filters);
