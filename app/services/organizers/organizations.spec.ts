@@ -4,13 +4,8 @@ import { inviteFactory } from 'tests/factories/invite';
 import { organizationFactory } from 'tests/factories/organization';
 import { userFactory } from 'tests/factories/users';
 import { db } from '../db';
-import { InvitationNotFoundError, OrganizationNotFoundError } from '../errors';
-import {
-  createOrganization,
-  getInvitationLink,
-  inviteMemberToOrganization,
-  updateOrganization,
-} from './organizations.server';
+import { OrganizationNotFoundError } from '../errors';
+import { createOrganization, getInvitationLink, updateOrganization } from './organizations.server';
 
 describe('#getInvitationLink', () => {
   beforeEach(async () => {
@@ -31,32 +26,6 @@ describe('#getInvitationLink', () => {
     const organization = await organizationFactory({ members: [user] });
     const link = await getInvitationLink(organization.slug, user.id);
     expect(link).toBeUndefined();
-  });
-});
-
-describe('#inviteMemberToOrganization', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterEach(disconnectDB);
-
-  it('adds the member as reviewer to the organization', async () => {
-    const owner = await userFactory();
-    const member = await userFactory();
-    const organization = await organizationFactory({ owners: [owner] });
-    const invite = await inviteFactory({ organization, user: owner });
-
-    await inviteMemberToOrganization(invite?.id!, member.id);
-
-    const orgaMember = await db.organizationMember.findUnique({
-      where: { memberId_organizationId: { memberId: member.id, organizationId: organization.id } },
-    });
-    expect(orgaMember?.role).toBe(OrganizationRole.REVIEWER);
-  });
-
-  it('throws an error when invitation not found', async () => {
-    const user = await userFactory();
-    await expect(inviteMemberToOrganization('XXX', user.id)).rejects.toThrowError(InvitationNotFoundError);
   });
 });
 

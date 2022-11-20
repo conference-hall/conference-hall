@@ -1,7 +1,7 @@
 import { OrganizationRole } from '@prisma/client';
 import type { OrganizationSaveData } from '~/schemas/organization';
 import { db } from '../db';
-import { InvitationNotFoundError, OrganizationNotFoundError } from '../errors';
+import { OrganizationNotFoundError } from '../errors';
 import { buildInvitationLink } from '../invitations/build-link.server';
 
 /**
@@ -15,27 +15,6 @@ export async function getInvitationLink(slug: string, uid: string) {
     where: { organization: { slug, members: { some: { memberId: uid } } } },
   });
   return buildInvitationLink(invite?.id);
-}
-
-/**
- * Invite a member to a organization
- * @param invitationId Id of the invitation
- * @param memberId Id of the member to add
- */
-export async function inviteMemberToOrganization(invitationId: string, memberId: string) {
-  const invitation = await db.invite.findUnique({
-    select: { type: true, organization: true, invitedBy: true },
-    where: { id: invitationId },
-  });
-  if (!invitation || invitation.type !== 'ORGANIZATION' || !invitation.organization) {
-    throw new InvitationNotFoundError();
-  }
-
-  await db.organizationMember.create({
-    data: { memberId, organizationId: invitation.organization.id },
-  });
-
-  return { slug: invitation.organization.slug };
 }
 
 /**

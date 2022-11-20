@@ -5,7 +5,7 @@ import { Form, useLoaderData } from '@remix-run/react';
 import { Navbar } from '~/components/navbar/Navbar';
 import { addCoSpeakerToProposal } from '~/services/event-proposals/add-co-speaker.server';
 import { getInvitation } from '~/services/invitations/get-invitation.server';
-import { inviteMemberToOrganization } from '~/services/organizers/organizations.server';
+import { addMember } from '~/services/organization-members/add-member.server';
 import { Button } from '../../design-system/Buttons';
 import { Container } from '../../design-system/Container';
 import { Link } from '../../design-system/Links';
@@ -41,7 +41,7 @@ export const action: ActionFunction = async ({ request, params }) => {
       const proposal = await addCoSpeakerToProposal(invitationId, uid);
       return redirect(`/${proposal.eventSlug}/proposals/${proposal.proposalId}`);
     } else if (type === 'ORGANIZATION') {
-      const organization = await inviteMemberToOrganization(invitationId, uid);
+      const organization = await addMember(invitationId, uid);
       return redirect(`/organizer/${organization.slug}`);
     }
   } catch (err) {
