@@ -1,19 +1,5 @@
-import type { UserCreateInput } from '~/schemas/user';
 import { db } from '../db';
 import { UserNotFoundError } from '../errors';
-
-/**
- * Create a new user
- * @param input Input data to create a user
- * @returns The created user id
- */
-export async function createUser(input: UserCreateInput) {
-  const { uid, name, email, picture } = input;
-  const user = await db.user.findUnique({ where: { id: uid } });
-  if (user) return user.id;
-  const created = await db.user.create({ data: { id: uid, name, email, photoURL: picture } });
-  return created.id;
-}
 
 /**
  * Get a user data
