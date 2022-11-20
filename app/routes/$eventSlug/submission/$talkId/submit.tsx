@@ -8,12 +8,13 @@ import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { sessionRequired } from '../../../../services/auth/auth.server';
 import { getEvent } from '../../../../services/event-page/get-event.server';
-import { getProposalInfo, submitProposal } from '../../../../services/events/submit.server';
+import { submitProposal } from '../../../../services/events/submit.server';
 import { mapErrorToResponse } from '../../../../services/errors';
 import { TextArea } from '../../../../design-system/forms/TextArea';
 import { AvatarGroup } from '~/design-system/Avatar';
 import { withZod } from '@remix-validated-form/with-zod';
 import { ProposalSubmissionSchema } from '~/schemas/proposal';
+import { getSubmittedProposal } from '~/services/event-submission/get-submitted-proposal.server';
 
 export const handle = { step: 'submission' };
 
@@ -23,7 +24,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const talkId = params.talkId!;
   try {
     const event = await getEvent(eventSlug);
-    const proposal = await getProposalInfo(talkId, event.id, uid);
+    const proposal = await getSubmittedProposal(talkId, event.id, uid);
     return json({ ...proposal, codeOfConductUrl: event.codeOfConductUrl });
   } catch (err) {
     throw mapErrorToResponse(err);
