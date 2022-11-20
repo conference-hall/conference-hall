@@ -8,7 +8,7 @@ import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
 import { ProposalNotFoundError } from '../errors';
-import { getSpeakerProposal } from './get-speaker-proposal.server';
+import { getSpeakerProposal } from './get.server';
 
 describe('#getSpeakerProposal', () => {
   beforeEach(async () => {

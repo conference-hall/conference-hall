@@ -4,7 +4,7 @@ import { eventFactory } from '../../../tests/factories/events';
 import { proposalFactory } from '../../../tests/factories/proposals';
 import { talkFactory } from '../../../tests/factories/talks';
 import { userFactory } from '../../../tests/factories/users';
-import { listSpeakerProposals } from './list-speaker-proposals.server';
+import { listSpeakerProposals } from './list.server';
 
 describe('#listSpeakerProposals', () => {
   beforeEach(async () => {

@@ -12,9 +12,9 @@ import { useEvent } from '../../$eventSlug';
 import { H2 } from '../../../design-system/Typography';
 import { ProposalUpdateSchema } from '~/schemas/proposal';
 import { withZod } from '@remix-validated-form/with-zod';
-import { getSpeakerProposal } from '~/services/events/get-speaker-proposal.server';
-import { deleteSpeakerProposalProposal } from '~/services/events/delete-speaker-proposal.server';
-import { updateSpeakerProposal } from '~/services/events/update-speaker-proposal.server';
+import { getSpeakerProposal } from '~/services/event-proposals/get.server';
+import { deleteSpeakerProposalProposal } from '~/services/event-proposals/delete.server';
+import { updateSpeakerProposal } from '~/services/event-proposals/update.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);

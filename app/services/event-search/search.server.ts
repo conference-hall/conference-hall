@@ -1,7 +1,7 @@
 import type { Prisma } from '@prisma/client';
 import { EventVisibility } from '@prisma/client';
 import { getCfpState } from '~/utils/event';
-import { db } from '../../services/db';
+import { db } from '../db';
 import { getPagination } from '../utils/pagination.server';
 import type { SearchFilters } from '~/schemas/search';
 import type { Pagination } from '~/schemas/pagination';

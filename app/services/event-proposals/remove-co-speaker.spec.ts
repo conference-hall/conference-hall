@@ -5,7 +5,7 @@ import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
 import { db } from '../db';
 import { ProposalNotFoundError } from '../errors';
-import { removeCoSpeakerFromProposal, removeCoSpeakerFromSubmission } from './remove-co-speaker-from-proposal.server';
+import { removeCoSpeakerFromProposal, removeCoSpeakerFromSubmission } from './remove-co-speaker.server';
 
 describe('#removeCoSpeakerFromSubmission', () => {
   beforeEach(async () => {

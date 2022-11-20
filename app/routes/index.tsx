@@ -4,7 +4,7 @@ import { useLoaderData, useSearchParams } from '@remix-run/react';
 import { Container } from '../design-system/Container';
 import { H1 } from '../design-system/Typography';
 import { SearchEventsList } from '../components/SearchEventsList';
-import { searchEvents } from '../services/events/search.server';
+import { searchEvents } from '../services/event-search/search.server';
 import { mapErrorToResponse } from '../services/errors';
 import { SearchEventsForm } from '../components/SearchEventsForm';
 import { Pagination } from '../design-system/Pagination';

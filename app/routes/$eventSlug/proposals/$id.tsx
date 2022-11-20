@@ -12,8 +12,8 @@ import { getLevel } from '../../../utils/levels';
 import { getLanguage } from '../../../utils/languages';
 import { CoSpeakersList, InviteCoSpeakerButton } from '../../../components/CoSpeaker';
 import { ProposalStatusPanel } from '~/components/speaker-proposals/ProposalStatusPanel';
-import { getSpeakerProposal } from '~/services/events/get-speaker-proposal.server';
-import { removeCoSpeakerFromProposal } from '~/services/events/remove-co-speaker-from-proposal.server';
+import { getSpeakerProposal } from '~/services/event-proposals/get.server';
+import { removeCoSpeakerFromProposal } from '~/services/event-proposals/remove-co-speaker.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);

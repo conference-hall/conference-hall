@@ -2,7 +2,7 @@ import { Outlet, useCatch, useLoaderData, useMatches } from '@remix-run/react';
 import type { LoaderFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { sessionRequired } from '~/services/auth/auth.server';
-import { getEvent } from '~/services/events/get-event.server';
+import { getEvent } from '~/services/event-page/get-event.server';
 import { isTalkAlreadySubmitted } from '~/services/events/proposals.server';
 import { mapErrorToResponse } from '~/services/errors';
 import { Container } from '~/design-system/Container';

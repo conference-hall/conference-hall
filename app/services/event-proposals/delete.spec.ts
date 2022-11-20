@@ -4,7 +4,7 @@ import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
 import { db } from '../db';
-import { deleteSpeakerProposalProposal } from './delete-speaker-proposal.server';
+import { deleteSpeakerProposalProposal } from './delete.server';
 
 describe('#deleteSpeakerProposalProposal', () => {
   beforeEach(async () => {

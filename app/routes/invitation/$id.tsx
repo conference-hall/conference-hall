@@ -3,7 +3,7 @@ import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
 import { Navbar } from '~/components/navbar/Navbar';
-import { addCoSpeakerToProposal } from '~/services/events/add-co-speaker-to-proposal.server';
+import { addCoSpeakerToProposal } from '~/services/event-proposals/add-co-speaker.server';
 import { inviteMemberToOrganization } from '~/services/organizers/organizations.server';
 import { Button } from '../../design-system/Buttons';
 import { Container } from '../../design-system/Container';

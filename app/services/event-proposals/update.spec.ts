@@ -7,8 +7,8 @@ import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
 import { CfpNotOpenError, EventNotFoundError, ProposalNotFoundError } from '../errors';
-import { getSpeakerProposal } from './get-speaker-proposal.server';
-import { updateSpeakerProposal } from './update-speaker-proposal.server';
+import { getSpeakerProposal } from './get.server';
+import { updateSpeakerProposal } from './update.server';
 
 describe('#updateSpeakerProposal', () => {
   beforeEach(async () => {

@@ -6,7 +6,7 @@ import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
 import { db } from '../db';
 import { InvitationNotFoundError } from '../errors';
-import { addCoSpeakerToProposal } from './add-co-speaker-to-proposal.server';
+import { addCoSpeakerToProposal } from './add-co-speaker.server';
 
 describe('#addCoSpeakerToProposal', () => {
   beforeEach(async () => {
