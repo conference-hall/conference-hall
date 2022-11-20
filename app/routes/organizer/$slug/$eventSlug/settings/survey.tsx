@@ -5,10 +5,10 @@ import { Button } from '~/design-system/Buttons';
 import { Form, useLoaderData, useOutletContext } from '@remix-run/react';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
 import type { OrganizerEventContext } from '../../$eventSlug';
-import { updateEvent } from '~/services/organizers/event.server';
 import { withZod } from '@remix-validated-form/with-zod';
 import { EventSurveySettingsSchema } from '~/schemas/event';
 import { QUESTIONS } from '~/services/event-survey/get-questions.server';
+import { updateEvent } from '~/services/organizer-event/update-event.server';
 
 // TODO why not using event-survey#getQuestions?
 export const loader = async ({ request }: LoaderArgs) => {
