@@ -5,20 +5,20 @@ import { Container } from '~/design-system/Container';
 import { sessionRequired } from '~/services/auth/auth.server';
 import { H1, Text } from '~/design-system/Typography';
 import { hasOrganizerAccess } from '~/services/organizers/access.server';
-import { getOrganizations } from '~/services/organizers/organizations.server';
 import { useLoaderData } from '@remix-run/react';
 import { CardLink } from '~/design-system/Card';
 import Badge from '~/design-system/Badges';
 import { IconLabel } from '~/design-system/IconLabel';
 import { MegaphoneIcon, UsersIcon } from '@heroicons/react/24/outline';
 import { ButtonLink } from '~/design-system/Buttons';
+import { listOrganizations } from '~/services/organization/list-organizations.server';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
   const hasAccess = await hasOrganizerAccess(uid);
   if (!hasAccess) return redirect('/organizer/request');
 
-  const organizations = await getOrganizations(uid);
+  const organizations = await listOrganizations(uid);
   if (organizations.length === 0) return redirect('/organizer/new');
 
   return json(organizations);

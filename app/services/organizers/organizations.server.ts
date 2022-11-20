@@ -5,30 +5,6 @@ import { ForbiddenOperationError, InvitationNotFoundError, OrganizationNotFoundE
 import { buildInvitationLink } from '../invitations/build-link.server';
 
 /**
- * Get user organizations
- * @param uid Id of the user
- * @returns user organizations
- */
-export async function getOrganizations(uid: string) {
-  const organizations = await db.organizationMember.findMany({
-    select: {
-      role: true,
-      organization: { include: { _count: { select: { members: true, events: { where: { archived: false } } } } } },
-    },
-    where: { memberId: uid },
-    orderBy: { organization: { name: 'asc' } },
-  });
-
-  return organizations.map((member) => ({
-    name: member.organization.name,
-    slug: member.organization.slug,
-    role: member.role,
-    membersCount: member.organization._count.members,
-    eventsCount: member.organization._count.events,
-  }));
-}
-
-/**
  * Returns role user of an organization
  * @param slug organization slug
  * @param uid Id of the user
