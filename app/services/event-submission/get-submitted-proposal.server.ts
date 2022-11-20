@@ -14,7 +14,7 @@ export async function getSubmittedProposal(talkId: string, eventId: string, uid:
       name: s.name,
       photoURL: s.photoURL,
     })),
-    formats: proposal.formats.map((f) => f.name),
-    categories: proposal.categories.map((c) => c.name),
+    formats: proposal.formats.map((f) => ({ id: f.id, name: f.name })),
+    categories: proposal.categories.map((c) => ({ id: c.id, name: c.name })),
   };
 }

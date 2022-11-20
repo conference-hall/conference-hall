@@ -27,8 +27,8 @@ describe('#getSubmittedProposal', () => {
     expect(result).toEqual({
       title: proposal.title,
       speakers: [{ name: speaker.name, photoURL: speaker.photoURL }],
-      formats: [format.name],
-      categories: [category.name],
+      formats: [{ id: format.id, name: format.name }],
+      categories: [{ id: category.id, name: category.name }],
     });
   });
 

@@ -1,59 +1,13 @@
-import { resetDB, disconnectDB } from '../../../tests/db-helpers';
-import { eventCategoryFactory } from '../../../tests/factories/categories';
-import { eventFactory } from '../../../tests/factories/events';
-import { eventFormatFactory } from '../../../tests/factories/formats';
-import { proposalFactory } from '../../../tests/factories/proposals';
-import { talkFactory } from '../../../tests/factories/talks';
-import { userFactory } from '../../../tests/factories/users';
+import { userFactory } from 'tests/factories/users';
+import { eventCategoryFactory } from 'tests/factories/categories';
+import { eventFactory } from 'tests/factories/events';
+import { eventFormatFactory } from 'tests/factories/formats';
+import { proposalFactory } from 'tests/factories/proposals';
+import { talkFactory } from 'tests/factories/talks';
+import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { db } from '../db';
 import { ProposalNotFoundError } from '../errors';
-import { getProposalTracks, saveTracks } from './tracks.server';
-
-describe('#getProposalTracks', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterEach(disconnectDB);
-
-  it('returns the default response', async () => {
-    const event = await eventFactory({ traits: ['conference-cfp-open'] });
-    const format = await eventFormatFactory({ event });
-    const category = await eventCategoryFactory({ event });
-    const speaker = await userFactory();
-    const talk = await talkFactory({ speakers: [speaker] });
-    await proposalFactory({
-      event,
-      talk,
-      attributes: {
-        formats: { connect: [{ id: format.id }] },
-        categories: { connect: [{ id: category.id }] },
-      },
-    });
-
-    const tracks = await getProposalTracks(talk.id, event.id, speaker.id);
-
-    expect(tracks).toEqual({
-      formats: [format.id],
-      categories: [category.id],
-    });
-  });
-
-  it('throws an error when proposal doesnt belongs to user', async () => {
-    const event = await eventFactory({ traits: ['conference-cfp-open'] });
-    const speaker = await userFactory();
-    const talk = await talkFactory({ speakers: [speaker] });
-    await proposalFactory({ event, talk });
-
-    const user = await userFactory();
-    await expect(getProposalTracks(talk.id, event.id, user.id)).rejects.toThrowError(ProposalNotFoundError);
-  });
-
-  it('throws an error when proposal not found', async () => {
-    const event = await eventFactory({ traits: ['conference-cfp-open'] });
-    const speaker = await userFactory();
-    await expect(getProposalTracks('XXX', event.id, speaker.id)).rejects.toThrowError(ProposalNotFoundError);
-  });
-});
+import { saveTracks } from './save-tracks.server';
 
 describe('#saveTracks', () => {
   beforeEach(async () => {

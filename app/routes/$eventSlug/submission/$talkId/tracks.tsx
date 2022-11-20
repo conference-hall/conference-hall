@@ -6,11 +6,12 @@ import { CategoriesForm } from '~/components/CategoriesForm';
 import { sessionRequired } from '../../../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../../../services/errors';
 import { getEvent } from '../../../../services/event-page/get-event.server';
-import { getProposalTracks, saveTracks } from '../../../../services/events/tracks.server';
+import { saveTracks } from '../../../../services/event-submission/save-tracks.server';
 import { useSubmissionStep } from '../../../../components/useSubmissionStep';
 import { FormatsForm } from '../../../../components/FormatsForm';
 import { withZod } from '@remix-validated-form/with-zod';
 import { TracksUpdateSchema } from '~/schemas/tracks';
+import { getSubmittedProposal } from '~/services/event-submission/get-submitted-proposal.server';
 
 export const handle = { step: 'tracks' };
 
@@ -20,11 +21,11 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const talkId = params.talkId!;
   try {
     const event = await getEvent(eventSlug);
-    const proposalTracks = await getProposalTracks(talkId, event.id, uid);
+    const proposal = await getSubmittedProposal(talkId, event.id, uid);
 
     return json({
       event: { formats: event.formats, categories: event.categories },
-      proposal: proposalTracks,
+      proposal: { formats: proposal.formats.map(({ id }) => id), categories: proposal.categories.map(({ id }) => id) },
     });
   } catch (err) {
     throw mapErrorToResponse(err);
