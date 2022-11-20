@@ -7,9 +7,9 @@ import { H2, Text } from '../../../design-system/Typography';
 import { sessionRequired } from '../../../services/auth/auth.server';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { fetchTalksToSubmitForEvent, getProposalCountsForEvent } from '../../../services/events/submit.server';
 import { mapErrorToResponse } from '../../../services/errors';
 import { SubmissionTalksList } from '../../../components/SubmissionTalksList';
+import { getProposalCountsForEvent, listTalksToSubmit } from '~/services/event-submission/list-talks-to-submit.server';
 
 export const handle = { step: 'selection' };
 
@@ -18,7 +18,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const slug = params.eventSlug!;
 
   try {
-    const talks = await fetchTalksToSubmitForEvent(uid, slug);
+    const talks = await listTalksToSubmit(uid, slug);
     const proposalsCount = await getProposalCountsForEvent(uid, slug);
     return json({ talks, proposalsCount });
   } catch (err) {
