@@ -10,12 +10,12 @@ import { H2, Text } from '../../../../design-system/Typography';
 import { sessionRequired } from '../../../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../../../services/errors';
 import { getEvent } from '../../../../services/events/get-event.server';
-import { removeCoSpeakerFromTalkAndEvent } from '../../../../services/events/proposals.server';
 import { getProposalSpeakers } from '../../../../services/events/speakers.server';
 import { updateSettings } from '../../../../services/speakers/profile.server';
 import { getUser } from '../../../../services/user/user.server';
 import { DetailsSchema } from '~/schemas/profile';
 import { withZod } from '@remix-validated-form/with-zod';
+import { removeCoSpeakerFromSubmission } from '~/services/events/remove-co-speaker-from-proposal.server';
 
 export const handle = { step: 'speakers' };
 
@@ -47,7 +47,7 @@ export const action = async ({ request, params }: ActionArgs) => {
     const action = form.get('_action');
     if (action === 'remove-speaker') {
       const speakerId = form.get('_speakerId')?.toString() as string;
-      await removeCoSpeakerFromTalkAndEvent(uid, talkId, eventSlug, speakerId);
+      await removeCoSpeakerFromSubmission(uid, talkId, eventSlug, speakerId);
       return json(null);
     } else {
       const result = await withZod(DetailsSchema).validate(form);
