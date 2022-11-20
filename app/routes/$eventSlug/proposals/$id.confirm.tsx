@@ -4,7 +4,7 @@ import { withZod } from '@remix-validated-form/with-zod';
 import { ProposalParticipationSchema } from '~/schemas/proposal';
 import { sessionRequired } from '~/services/auth/auth.server';
 import { mapErrorToResponse } from '~/services/errors';
-import { sendParticipationAnswer } from '~/services/events/send-participation-answer.server';
+import { sendParticipationAnswer } from '~/services/event-submission/send-participation-answer.server';
 import { createToast } from '~/utils/toasts';
 
 export const action: ActionFunction = async ({ request, params }: ActionArgs) => {

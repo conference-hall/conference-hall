@@ -16,7 +16,7 @@ import {
   getTalk,
   removeCoSpeakerFromTalk,
   restoreTalk,
-} from '../../../services/speakers/talks.server';
+} from '../../../services/speaker-talks/talks.server';
 import { mapErrorToResponse } from '../../../services/errors';
 import { TalkActionsMenu } from '../../../components/TalkActionsMenu';
 import { InviteCoSpeakerButton, CoSpeakersList } from '../../../components/CoSpeaker';

@@ -1,11 +1,6 @@
-import { db } from '../../services/db';
+import { db } from '../db';
 import { SpeakerNotFoundError } from '../errors';
 
-/**
- * Get a speaker activity
- * @param speakerId Id of the speaker
- * @returns SpeakerActivity
- */
 export async function getActivity(speakerId: string) {
   const speaker = await db.user.findUnique({ where: { id: speakerId } });
   if (!speaker) throw new SpeakerNotFoundError();

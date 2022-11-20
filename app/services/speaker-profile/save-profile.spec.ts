@@ -2,9 +2,9 @@ import { resetDB, disconnectDB } from '../../../tests/db-helpers';
 import { userFactory } from '../../../tests/factories/users';
 import { db } from '../db';
 import { UserNotFoundError } from '../errors';
-import { updateSettings } from './profile.server';
+import { saveProfile } from './save-profile.server';
 
-describe('#updateSettings', () => {
+describe('#saveProfile', () => {
   beforeEach(async () => {
     await resetDB();
   });
@@ -19,7 +19,7 @@ describe('#updateSettings', () => {
       photoURL: 'https://example.com/photo.jpg',
     };
 
-    await updateSettings(user.id, data);
+    await saveProfile(user.id, data);
 
     const updated = await db.user.findUnique({ where: { id: user.id } });
     expect(updated?.name).toEqual(data.name);
@@ -35,7 +35,7 @@ describe('#updateSettings', () => {
       references: 'impedit quidem quisquam',
     };
 
-    await updateSettings(user.id, data);
+    await saveProfile(user.id, data);
 
     const updated = await db.user.findUnique({ where: { id: user.id } });
     expect(updated?.bio).toEqual(data.bio);
@@ -52,7 +52,7 @@ describe('#updateSettings', () => {
       github: 'github',
     };
 
-    await updateSettings(user.id, data);
+    await saveProfile(user.id, data);
 
     const updated = await db.user.findUnique({ where: { id: user.id } });
     expect(updated?.company).toEqual(data.company);
@@ -63,6 +63,6 @@ describe('#updateSettings', () => {
 
   it('throws an error when user not found', async () => {
     const data = { bio: '', references: '' };
-    await expect(updateSettings('XXX', data)).rejects.toThrowError(UserNotFoundError);
+    await expect(saveProfile('XXX', data)).rejects.toThrowError(UserNotFoundError);
   });
 });

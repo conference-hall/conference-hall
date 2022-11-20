@@ -7,9 +7,9 @@ import {
   ProposalNotFoundError,
 } from '../errors';
 import type { ProposalSubmissionData } from '~/schemas/proposal';
-import { ProposalSubmittedEmail } from '../events/emails/proposal-submitted-email';
-import { ProposalReceivedEmail } from '../events/emails/proposal-received-email';
-import { sendSubmittedTalkSlackMessage } from '../slack/slack.services';
+import { ProposalSubmittedEmail } from './emails/proposal-submitted-email';
+import { ProposalReceivedEmail } from './emails/proposal-received-email';
+import { sendSubmittedTalkSlackMessage } from './slack/slack.services';
 
 export async function submitProposal(talkId: string, eventSlug: string, uid: string, data: ProposalSubmissionData) {
   const event = await db.event.findUnique({ where: { slug: eventSlug } });

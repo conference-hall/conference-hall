@@ -11,7 +11,7 @@ import { sessionRequired } from '../../../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../../../services/errors';
 import { getEvent } from '../../../../services/event-page/get-event.server';
 import { getProposalSpeakers } from '../../../../services/events/speakers.server';
-import { updateSettings } from '../../../../services/speakers/profile.server';
+import { saveProfile } from '../../../../services/speaker-profile/save-profile.server';
 import { getUser } from '../../../../services/user/get-user.server';
 import { DetailsSchema } from '~/schemas/profile';
 import { withZod } from '@remix-validated-form/with-zod';
@@ -53,7 +53,7 @@ export const action = async ({ request, params }: ActionArgs) => {
       const result = await withZod(DetailsSchema).validate(form);
       if (result.error) return json(result.error.fieldErrors);
 
-      await updateSettings(uid, result.data);
+      await saveProfile(uid, result.data);
       const event = await getEvent(eventSlug);
       if (event.hasTracks) {
         return redirect(`/${eventSlug}/submission/${talkId}/tracks`);

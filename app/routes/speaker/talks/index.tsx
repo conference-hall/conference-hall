@@ -4,7 +4,7 @@ import { useLoaderData, useSearchParams, useNavigate } from '@remix-run/react';
 import { Container } from '../../../design-system/Container';
 import { H2, Text } from '../../../design-system/Typography';
 import { sessionRequired } from '../../../services/auth/auth.server';
-import { findTalks } from '../../../services/speakers/talks.server';
+import { findTalks } from '../../../services/speaker-talks/talks.server';
 import { mapErrorToResponse } from '../../../services/errors';
 import { SpeakerTalksList } from '../../../components/SpeakerTalksList';
 import Select from '~/design-system/forms/Select';

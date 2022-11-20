@@ -1,6 +1,6 @@
 import { ProposalStatus } from '@prisma/client';
 import type { TalkSaveData } from '~/schemas/talks';
-import { db } from '../../services/db';
+import { db } from '../db';
 import { jsonToArray } from '../../utils/prisma';
 import { InvitationNotFoundError, TalkNotFoundError } from '../errors';
 import { buildInvitationLink } from '../invitations/build-link.server';

@@ -14,7 +14,7 @@ import { Toast } from './design-system/Toast';
 import type { ToastData } from './utils/toasts';
 import { getToast } from './utils/toasts';
 import tailwind from './tailwind.css';
-import { listNotifications } from './services/user/list-notifications.server';
+import { listNotifications } from './services/user-notifications/list-notifications.server';
 
 export const links: LinksFunction = () => {
   return [

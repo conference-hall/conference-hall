@@ -9,7 +9,7 @@ import { Button } from '../../design-system/Buttons';
 import { H2, Text } from '../../design-system/Typography';
 import { useCallback } from 'react';
 import { getAuth } from 'firebase/auth';
-import { updateSettings } from '../../services/speakers/profile.server';
+import { saveProfile } from '../../services/speaker-profile/save-profile.server';
 import { mapErrorToResponse } from '../../services/errors';
 import { sessionRequired } from '../../services/auth/auth.server';
 import { NavMenu } from '~/design-system/NavMenu';
@@ -36,7 +36,7 @@ export const action = async ({ request }: ActionArgs) => {
       result = await withZod(AdditionalInfoSchema).validate(form);
     }
     if (result.error) return json(result.error.fieldErrors);
-    await updateSettings(uid, result.data);
+    await saveProfile(uid, result.data);
     return redirect('/speaker/profile');
   } catch (err) {
     throw mapErrorToResponse(err);

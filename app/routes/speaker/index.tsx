@@ -10,7 +10,7 @@ import { Link } from '../../design-system/Links';
 import { SpeakerActivities } from '../../components/SpeakerActivities';
 import { mapErrorToResponse } from '../../services/errors';
 import { sessionRequired } from '../../services/auth/auth.server';
-import { getActivity } from '~/services/speakers/activity.server';
+import { getActivity } from '~/services/speaker-activity/get-activity.server';
 import type { SpeakerContext } from '../speaker';
 
 export const loader = async ({ request }: LoaderArgs) => {
