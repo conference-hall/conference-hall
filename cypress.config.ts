@@ -11,10 +11,6 @@ export default defineConfig({
   reporterOptions: {
     mochaFile: './test-results/e2e-[hash].xml',
   },
-  retries: {
-    runMode: 2,
-    openMode: 0,
-  },
   e2e: {
     baseUrl: config.appUrl,
     experimentalSessionAndOrigin: true,

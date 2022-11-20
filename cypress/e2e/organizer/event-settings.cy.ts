@@ -294,7 +294,7 @@ describe('Event settings', () => {
     beforeEach(() => cy.login('Bruce Wayne'));
 
     it('cannot create new event as a organization member', () => {
-      cy.visit(`/organizer/orga-1/conference-1/settings`);
+      cy.visit(`/organizer/orga-1/conference-1/settings`, { failOnStatusCode: false });
       cy.assertUrl(`/organizer/orga-1/conference-1/proposals`);
     });
   });
@@ -303,7 +303,7 @@ describe('Event settings', () => {
     beforeEach(() => cy.login('Peter Parker'));
 
     it('cannot create new event as a organization reviewer', () => {
-      cy.visit(`/organizer/orga-1/conference-1/settings`);
+      cy.visit(`/organizer/orga-1/conference-1/settings`, { failOnStatusCode: false });
       cy.assertUrl(`/organizer/orga-1/conference-1/proposals`);
     });
   });
