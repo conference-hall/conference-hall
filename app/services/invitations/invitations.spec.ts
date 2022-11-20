@@ -7,68 +7,8 @@ import { proposalFactory } from '../../../tests/factories/proposals';
 import { talkFactory } from '../../../tests/factories/talks';
 import { userFactory } from '../../../tests/factories/users';
 import { db } from '../db';
-import {
-  InvitationNotFoundError,
-  OrganizationNotFoundError,
-  ProposalNotFoundError,
-  TalkNotFoundError,
-} from '../errors';
-import { buildInvitationLink, generateInvitationLink, getInvitation, revokeInvitationLink } from './invitations.server';
-
-describe('#getInvitation', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterEach(disconnectDB);
-
-  it('returns invite for a proposal', async () => {
-    const event = await eventFactory();
-    const speaker = await userFactory();
-    const talk = await talkFactory({ speakers: [speaker] });
-    const proposal = await proposalFactory({ event, talk });
-    const invite = await inviteFactory({ proposal, user: speaker });
-
-    const result = await getInvitation(invite?.id!);
-
-    expect(result).toEqual({
-      type: InviteType.PROPOSAL,
-      title: proposal.title,
-      invitedBy: speaker.name,
-    });
-  });
-
-  it('returns invite for a talk', async () => {
-    const speaker = await userFactory();
-    const talk = await talkFactory({ speakers: [speaker] });
-    const invite = await inviteFactory({ talk, user: speaker });
-
-    const result = await getInvitation(invite?.id!);
-
-    expect(result).toEqual({
-      type: InviteType.TALK,
-      title: talk.title,
-      invitedBy: speaker.name,
-    });
-  });
-
-  it('returns invite for an organization', async () => {
-    const owner = await userFactory();
-    const organization = await organizationFactory({ owners: [owner] });
-    const invite = await inviteFactory({ organization, user: owner });
-
-    const result = await getInvitation(invite?.id!);
-
-    expect(result).toEqual({
-      type: InviteType.ORGANIZATION,
-      title: organization.name,
-      invitedBy: owner.name,
-    });
-  });
-
-  it('throws an error when invite is not found', async () => {
-    await expect(getInvitation('XXX')).rejects.toThrowError(InvitationNotFoundError);
-  });
-});
+import { OrganizationNotFoundError, ProposalNotFoundError, TalkNotFoundError } from '../errors';
+import { buildInvitationLink, generateInvitationLink, revokeInvitationLink } from './invitations.server';
 
 describe('#buildInvitationLink', () => {
   it('generates the invitation link from the invitation token', () => {

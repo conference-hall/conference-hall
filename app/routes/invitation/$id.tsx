@@ -4,6 +4,7 @@ import { json, redirect } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
 import { Navbar } from '~/components/navbar/Navbar';
 import { addCoSpeakerToProposal } from '~/services/event-proposals/add-co-speaker.server';
+import { getInvitation } from '~/services/invitations/get-invitation.server';
 import { inviteMemberToOrganization } from '~/services/organizers/organizations.server';
 import { Button } from '../../design-system/Buttons';
 import { Container } from '../../design-system/Container';
@@ -11,7 +12,6 @@ import { Link } from '../../design-system/Links';
 import { H1, H2, Text } from '../../design-system/Typography';
 import { sessionRequired } from '../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../services/errors';
-import { getInvitation } from '../../services/invitations/invitations.server';
 import { inviteCoSpeakerToTalk } from '../../services/speakers/talks.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
