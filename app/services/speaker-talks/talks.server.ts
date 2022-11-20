@@ -21,40 +21,6 @@ export async function deleteTalk(uid: string, talkId: string) {
 }
 
 /**
- * Create a new talk for a speaker
- * @param uid Id of the connected user
- * @param data Talk data
- */
-export async function createTalk(uid: string, data: TalkSaveData) {
-  const result = await db.talk.create({
-    data: {
-      ...data,
-      creator: { connect: { id: uid } },
-      speakers: { connect: [{ id: uid }] },
-    },
-  });
-  return result.id;
-}
-
-/**
- * Update a talk for a speaker
- * @param uid Id of the connected user
- * @param talkId Id of the talk
- * @param data Talk data
- */
-export async function updateTalk(uid: string, talkId?: string, data?: TalkSaveData) {
-  const talk = await db.talk.findFirst({
-    where: { id: talkId, speakers: { some: { id: uid } } },
-  });
-  if (!talk || !data) throw new TalkNotFoundError();
-
-  await db.talk.update({
-    where: { id: talkId },
-    data,
-  });
-}
-
-/**
  * Invite a co-speaker to a talk
  * @param invitationId Id of the invitation
  * @param coSpeakerId Id of the co-speaker to add

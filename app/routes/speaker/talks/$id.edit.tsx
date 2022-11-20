@@ -5,13 +5,13 @@ import { withZod } from '@remix-validated-form/with-zod';
 import { Container } from '~/design-system/Container';
 import { TalkSaveSchema } from '~/schemas/talks';
 import { getTalk } from '~/services/speaker-talks/get-talk.server';
+import { updateTalk } from '~/services/speaker-talks/save-talk.server';
 import { createToast } from '~/utils/toasts';
 import { TalkAbstractForm } from '../../../components/TalkAbstractForm';
 import { Button, ButtonLink } from '../../../design-system/Buttons';
 import { H2 } from '../../../design-system/Typography';
 import { sessionRequired } from '../../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../../services/errors';
-import { updateTalk } from '../../../services/speaker-talks/talks.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
