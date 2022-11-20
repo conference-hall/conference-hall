@@ -10,7 +10,7 @@ import { EventActivity } from '../../../components/SpeakerActivities';
 import { sessionRequired } from '../../../services/auth/auth.server';
 import { getLanguage } from '../../../utils/languages';
 import { getLevel } from '../../../utils/levels';
-import { removeCoSpeakerFromTalk } from '../../../services/speaker-talks/talks.server';
+import { removeCoSpeakerFromTalk } from '../../../services/speaker-talks/co-speaker.server';
 import { mapErrorToResponse } from '../../../services/errors';
 import { TalkActionsMenu } from '../../../components/TalkActionsMenu';
 import { InviteCoSpeakerButton, CoSpeakersList } from '../../../components/CoSpeaker';

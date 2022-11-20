@@ -12,7 +12,7 @@ import { Link } from '../../design-system/Links';
 import { H1, H2, Text } from '../../design-system/Typography';
 import { sessionRequired } from '../../services/auth/auth.server';
 import { mapErrorToResponse } from '../../services/errors';
-import { inviteCoSpeakerToTalk } from '../../services/speaker-talks/talks.server';
+import { inviteCoSpeakerToTalk } from '../../services/speaker-talks/co-speaker.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   await sessionRequired(request);

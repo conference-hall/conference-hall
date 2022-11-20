@@ -4,7 +4,7 @@ import { talkFactory } from '../../../tests/factories/talks';
 import { userFactory } from '../../../tests/factories/users';
 import { db } from '../db';
 import { InvitationNotFoundError, TalkNotFoundError } from '../errors';
-import { inviteCoSpeakerToTalk, removeCoSpeakerFromTalk } from './talks.server';
+import { inviteCoSpeakerToTalk, removeCoSpeakerFromTalk } from './co-speaker.server';
 
 describe('#inviteCoSpeakerToTalk', () => {
   beforeEach(async () => {
