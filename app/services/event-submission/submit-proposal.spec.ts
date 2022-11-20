@@ -11,7 +11,7 @@ import {
   MaxSubmittedProposalsReachedError,
   ProposalNotFoundError,
 } from '../errors';
-import { submitProposal } from './submit.server';
+import { submitProposal } from './submit-proposal.server';
 
 describe('#submitProposal', () => {
   beforeEach(async () => {

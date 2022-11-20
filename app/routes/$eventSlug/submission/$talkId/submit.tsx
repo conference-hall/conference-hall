@@ -8,7 +8,7 @@ import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { sessionRequired } from '../../../../services/auth/auth.server';
 import { getEvent } from '../../../../services/event-page/get-event.server';
-import { submitProposal } from '../../../../services/events/submit.server';
+import { submitProposal } from '../../../../services/event-submission/submit-proposal.server';
 import { mapErrorToResponse } from '../../../../services/errors';
 import { TextArea } from '../../../../design-system/forms/TextArea';
 import { AvatarGroup } from '~/design-system/Avatar';
