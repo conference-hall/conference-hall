@@ -7,7 +7,7 @@ import { organizationFactory } from 'tests/factories/organization';
 import { userFactory } from 'tests/factories/users';
 import { ForbiddenOperationError } from '../errors';
 import { db } from '../db';
-import { deleteCategory, deleteFormat, saveCategory, saveFormat } from './event.server';
+import { deleteCategory, deleteFormat, saveCategory, saveFormat } from './update-tracks.server';
 
 describe('#saveFormat', () => {
   let owner: User, reviewer: User;

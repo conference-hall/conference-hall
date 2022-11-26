@@ -8,7 +8,12 @@ import { Form, useFetcher, useOutletContext } from '@remix-run/react';
 import type { OrganizerEventContext } from '../../$eventSlug';
 import { IconButton } from '~/design-system/IconButtons';
 import { TrashIcon } from '@heroicons/react/24/outline';
-import { deleteCategory, deleteFormat, saveCategory, saveFormat } from '~/services/organizers/event.server';
+import {
+  deleteCategory,
+  deleteFormat,
+  saveCategory,
+  saveFormat,
+} from '~/services/organizer-event/update-tracks.server';
 import { EditTrackButton, NewTrackButton } from '~/components/organizer-event/SaveTrackForm';
 import { withZod } from '@remix-validated-form/with-zod';
 import { EventTrackSaveSchema, EventTracksSettingsSchema } from '~/schemas/event';

@@ -1,7 +1,7 @@
 import { OrganizationRole } from '@prisma/client';
 import type { EventTrackSaveData } from '~/schemas/event';
 import { db } from '../db';
-import { checkAccess } from '../organizer-event/check-access.server';
+import { checkAccess } from './check-access.server';
 
 export async function saveFormat(orgaSlug: string, eventSlug: string, uid: string, data: EventTrackSaveData) {
   await checkAccess(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER]);
