@@ -2,7 +2,7 @@ import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { inviteFactory } from 'tests/factories/invite';
 import { organizationFactory } from 'tests/factories/organization';
 import { userFactory } from 'tests/factories/users';
-import { getInvitationLink } from './organizations.server';
+import { getInvitationLink } from './get-invitation-link.server';
 
 describe('#getInvitationLink', () => {
   beforeEach(async () => {

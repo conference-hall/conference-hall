@@ -2,13 +2,6 @@ import { db } from '../db';
 import { ProposalNotFoundError } from '../errors';
 import { buildInvitationLink } from '../invitations/build-link.server';
 
-/**
- * Get speakers of a proposal for an event
- * @param talkId Id of the talk
- * @param eventSlug Slig of the event
- * @param uid Id of the connected user
- * @returns Speakers
- */
 export async function getProposalSpeakers(talkId: string, eventSlug: string, uid: string) {
   const proposal = await db.proposal.findFirst({
     select: {
