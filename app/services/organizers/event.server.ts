@@ -1,6 +1,5 @@
 import { z } from 'zod';
 import { OrganizationRole } from '@prisma/client';
-import { MessageChannel } from '@prisma/client';
 import { unstable_parseMultipartFormData } from '@remix-run/node';
 import type { EventTrackSaveData } from '~/schemas/event';
 import type { ProposalsFilters, ProposalStatusData, ProposalUpdateData } from '~/schemas/proposal';
@@ -10,32 +9,6 @@ import { RatingsDetails } from '../utils/ratings.server';
 import { uploadToStorageHandler } from '../utils/storage.server';
 import { checkAccess } from '../organizer-event/check-access.server';
 import { proposalOrderBy, proposalWhereInput } from '../organizer-review/search-proposals.server';
-
-export async function addProposalComment(
-  orgaSlug: string,
-  eventSlug: string,
-  proposalId: string,
-  uid: string,
-  message: string
-) {
-  await checkAccess(orgaSlug, eventSlug, uid);
-
-  await db.message.create({
-    data: { userId: uid, proposalId, message, channel: MessageChannel.ORGANIZER },
-  });
-}
-
-export async function removeProposalComment(
-  orgaSlug: string,
-  eventSlug: string,
-  proposalId: string,
-  uid: string,
-  messageId: string
-) {
-  await checkAccess(orgaSlug, eventSlug, uid);
-
-  await db.message.deleteMany({ where: { id: messageId, userId: uid, proposalId } });
-}
 
 export async function updateProposal(
   orgaSlug: string,
