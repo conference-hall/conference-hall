@@ -6,14 +6,15 @@ import { ExternalLink } from '../../../../design-system/Links';
 import { H1, Text } from '../../../../design-system/Typography';
 import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
-import { sessionRequired } from '../../../../services/auth/auth.server';
-import { getEvent } from '../../../../services/events/event.server';
-import { getProposalInfo, submitProposal } from '../../../../services/events/submit.server';
-import { mapErrorToResponse } from '../../../../services/errors';
+import { sessionRequired } from '../../../../libs/auth/auth.server';
+import { submitProposal } from '../../../../services/event-submission/submit-proposal.server';
+import { mapErrorToResponse } from '../../../../libs/errors';
 import { TextArea } from '../../../../design-system/forms/TextArea';
 import { AvatarGroup } from '~/design-system/Avatar';
 import { withZod } from '@remix-validated-form/with-zod';
 import { ProposalSubmissionSchema } from '~/schemas/proposal';
+import { getSubmittedProposal } from '~/services/event-submission/get-submitted-proposal.server';
+import { useEvent } from '~/routes/$eventSlug';
 
 export const handle = { step: 'submission' };
 
@@ -22,9 +23,8 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const eventSlug = params.eventSlug!;
   const talkId = params.talkId!;
   try {
-    const event = await getEvent(eventSlug);
-    const proposal = await getProposalInfo(talkId, event.id, uid);
-    return json({ ...proposal, codeOfConductUrl: event.codeOfConductUrl });
+    const proposal = await getSubmittedProposal(talkId, eventSlug, uid);
+    return json(proposal);
   } catch (err) {
     throw mapErrorToResponse(err);
   }
@@ -45,8 +45,9 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export default function SubmissionSubmitRoute() {
+  const event = useEvent();
   const data = useLoaderData<typeof loader>();
-  const [acceptedCod, setAcceptCod] = useState(!data.codeOfConductUrl);
+  const [acceptedCod, setAcceptCod] = useState(!event.codeOfConductUrl);
 
   return (
     <Form method="post" className="py-6 sm:px-8 sm:py-10">
@@ -57,19 +58,19 @@ export default function SubmissionSubmitRoute() {
       <div className="mt-8 space-y-4">
         {data.formats.length > 0 && (
           <Text variant="secondary">
-            <b>Formats:</b> {data.formats.join(', ')}
+            <b>Formats:</b> {data.formats.map((f) => f.name).join(', ')}
           </Text>
         )}
         {data.categories.length > 0 && (
           <Text variant="secondary">
-            <b>Categories:</b> {data.categories.join(', ')}
+            <b>Categories:</b> {data.categories.map((c) => c.name).join(', ')}
           </Text>
         )}
       </div>
 
       <TextArea name="message" label="Message to organizers" className="mt-8 " rows={4} />
 
-      {data.codeOfConductUrl && (
+      {event.codeOfConductUrl && (
         <Checkbox
           className="mt-8 font-medium"
           id="cod-agreement"
@@ -78,7 +79,7 @@ export default function SubmissionSubmitRoute() {
           onChange={() => setAcceptCod(!acceptedCod)}
         >
           Please agree with the{' '}
-          <ExternalLink href={data.codeOfConductUrl} className="inline-flex">
+          <ExternalLink href={event.codeOfConductUrl} className="inline-flex">
             code of conduct
           </ExternalLink>{' '}
           of the event.

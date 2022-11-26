@@ -1,5 +1,5 @@
 import { defineConfig } from 'cypress';
-import { config } from './app/services/config';
+import { config } from './app/libs/config';
 import { resetDB, disconnectDB } from './tests/db-helpers';
 
 const isCI = Boolean(process.env.CI);

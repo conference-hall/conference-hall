@@ -1,5 +1,5 @@
 import type { Event, Prisma, User } from '@prisma/client';
-import { db } from '../../app/services/db';
+import { db } from '../../app/libs/db';
 
 type FactoryOptions = {
   user: User;

@@ -2,20 +2,18 @@ import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import type { OrganizationRole } from '@prisma/client';
 import { json } from '@remix-run/node';
 import { Container } from '~/design-system/Container';
-import { sessionRequired } from '~/services/auth/auth.server';
-import {
-  changeMemberRole,
-  getInvitationLink,
-  getOrganizationMembers,
-  getUserRole,
-  removeMember,
-} from '~/services/organizers/organizations.server';
+import { sessionRequired } from '~/libs/auth/auth.server';
+import { getInvitationLink } from '~/services/organization-members/get-invitation-link.server';
 import { useLoaderData, useOutletContext } from '@remix-run/react';
 import { AvatarName } from '~/design-system/Avatar';
 import { ChangeRoleButton, InviteMemberButton, RemoveButton } from '~/components/MemberActions';
 import { Input } from '~/design-system/forms/Input';
 import type { OrganizationContext } from '../$slug';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
+import { getUserRole } from '~/services/organization/get-user-role.server';
+import { listMembers } from '~/services/organization-members/list-members.server';
+import { changeMemberRole } from '~/services/organization-members/change-role.server';
+import { removeMember } from '~/services/organization-members/remove-member.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
@@ -24,7 +22,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   if (role === 'REVIEWER') throw new Response('Forbidden', { status: 403 });
 
   const invitationLink = await getInvitationLink(slug, uid);
-  const members = await getOrganizationMembers(slug, uid);
+  const members = await listMembers(slug, uid);
   return json({ userId: uid, userRole: role, invitationLink, members });
 };
 

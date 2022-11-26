@@ -5,16 +5,16 @@ import { Container } from '~/design-system/Container';
 import { useEvent } from '../../$eventSlug';
 import { ProposalsList } from '~/components/speaker-proposals/ProposalsList';
 import { H2, Text } from '~/design-system/Typography';
-import { sessionRequired } from '~/services/auth/auth.server';
-import { mapErrorToResponse } from '~/services/errors';
-import { fetchSpeakerProposals } from '~/services/events/proposals.server';
+import { sessionRequired } from '~/libs/auth/auth.server';
+import { mapErrorToResponse } from '~/libs/errors';
+import { listSpeakerProposals } from '~/services/event-proposals/list.server';
 
-export type EventProposals = Awaited<ReturnType<typeof fetchSpeakerProposals>>;
+export type EventProposals = Awaited<ReturnType<typeof listSpeakerProposals>>;
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
   const slug = params.eventSlug!;
-  const proposals = await fetchSpeakerProposals(slug, uid).catch(mapErrorToResponse);
+  const proposals = await listSpeakerProposals(slug, uid).catch(mapErrorToResponse);
   return json(proposals);
 };
 

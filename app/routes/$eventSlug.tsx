@@ -6,8 +6,8 @@ import { EventTabs } from '~/components/EventTabs';
 import { Navbar } from '~/components/navbar/Navbar';
 import { ButtonLink } from '~/design-system/Buttons';
 import { Container } from '~/design-system/Container';
-import { mapErrorToResponse } from '~/services/errors';
-import { getEvent } from '~/services/events/event.server';
+import { mapErrorToResponse } from '~/libs/errors';
+import { getEvent } from '~/services/event-page/get-event.server';
 
 export const loader = async ({ params }: LoaderArgs) => {
   const slug = params.eventSlug;

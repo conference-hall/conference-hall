@@ -1,7 +1,7 @@
 import * as fake from '@ngneat/falso';
 import type { Prisma, User } from '@prisma/client';
 import { OrganizationRole } from '@prisma/client';
-import { db } from '../../app/services/db';
+import { db } from '../../app/libs/db';
 import { applyTraits } from './helpers/traits';
 
 const { OWNER, MEMBER, REVIEWER } = OrganizationRole;

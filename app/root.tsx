@@ -1,12 +1,11 @@
 import type { ReactNode } from 'react';
 import type { LinksFunction, LoaderArgs } from '@remix-run/node';
-import { config } from './services/config';
+import { config } from './libs/config';
 import { json } from '@remix-run/node';
 import { Meta, LiveReload, Outlet, Links, Scripts, useCatch, useLoaderData, ScrollRestoration } from '@remix-run/react';
-import { initializeFirebase } from './services/auth/firebase';
-import { commitSession, getSession } from './services/auth/auth.server';
-import { getUser } from './services/user/user.server';
-import { getUserNotifications } from './services/user/notification.server';
+import { initializeFirebase } from './libs/auth/firebase';
+import { commitSession, getSession } from './libs/auth/auth.server';
+import { getUser } from './services/user/get-user.server';
 import { Footer } from './components/Footer';
 import { H1, Text } from './design-system/Typography';
 import { Container } from './design-system/Container';
@@ -15,6 +14,7 @@ import { Toast } from './design-system/Toast';
 import type { ToastData } from './utils/toasts';
 import { getToast } from './utils/toasts';
 import tailwind from './tailwind.css';
+import { listNotifications } from './services/user-notifications/list-notifications.server';
 
 export const links: LinksFunction = () => {
   return [
@@ -25,7 +25,7 @@ export const links: LinksFunction = () => {
 
 export type UserContext = {
   user: Awaited<ReturnType<typeof getUser>> | null;
-  notifications: Awaited<ReturnType<typeof getUserNotifications>> | null;
+  notifications: Awaited<ReturnType<typeof listNotifications>> | null;
 };
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -36,7 +36,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   let notifications = null;
   if (uid) {
     user = await getUser(uid).catch(() => console.log('No user connected.'));
-    notifications = await getUserNotifications(uid);
+    notifications = await listNotifications(uid);
   }
 
   return json(

@@ -4,15 +4,17 @@ import { Button, ButtonLink } from '../../../design-system/Buttons';
 import { CategoriesForm } from '../../../components/CategoriesForm';
 import type { ActionArgs, ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
-import { sessionRequired } from '../../../services/auth/auth.server';
-import { deleteProposal, getSpeakerProposal, updateProposal } from '../../../services/events/proposals.server';
-import { mapErrorToResponse } from '../../../services/errors';
+import { sessionRequired } from '../../../libs/auth/auth.server';
+import { mapErrorToResponse } from '../../../libs/errors';
 import { TalkAbstractForm } from '../../../components/TalkAbstractForm';
 import { FormatsForm } from '../../../components/FormatsForm';
 import { useEvent } from '../../$eventSlug';
 import { H2 } from '../../../design-system/Typography';
 import { ProposalUpdateSchema } from '~/schemas/proposal';
 import { withZod } from '@remix-validated-form/with-zod';
+import { getSpeakerProposal } from '~/services/event-proposals/get.server';
+import { deleteSpeakerProposalProposal } from '~/services/event-proposals/delete.server';
+import { updateSpeakerProposal } from '~/services/event-proposals/update.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
@@ -33,12 +35,12 @@ export const action: ActionFunction = async ({ request, params }: ActionArgs) =>
   try {
     const method = form.get('_method');
     if (method === 'DELETE') {
-      await deleteProposal(proposalId, uid);
+      await deleteSpeakerProposalProposal(proposalId, uid);
       throw redirect(`/${eventSlug}/proposals`);
     } else {
       const result = await withZod(ProposalUpdateSchema).validate(form);
       if (result.error) return json(result.error.fieldErrors);
-      await updateProposal(eventSlug, proposalId, uid, result.data);
+      await updateSpeakerProposal(eventSlug, proposalId, uid, result.data);
       throw redirect(`/${eventSlug}/proposals/${proposalId}`);
     }
   } catch (err) {

@@ -3,16 +3,16 @@ import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
 import { Navbar } from '~/components/navbar/Navbar';
-import { inviteMemberToOrganization } from '~/services/organizers/organizations.server';
+import { addCoSpeakerToProposal } from '~/services/event-proposals/add-co-speaker.server';
+import { getInvitation } from '~/services/invitations/get-invitation.server';
+import { addMember } from '~/services/organization-members/add-member.server';
 import { Button } from '../../design-system/Buttons';
 import { Container } from '../../design-system/Container';
 import { Link } from '../../design-system/Links';
 import { H1, H2, Text } from '../../design-system/Typography';
-import { sessionRequired } from '../../services/auth/auth.server';
-import { mapErrorToResponse } from '../../services/errors';
-import { inviteCoSpeakerToProposal } from '../../services/events/proposals.server';
-import { getInvitation } from '../../services/invitations/invitations.server';
-import { inviteCoSpeakerToTalk } from '../../services/speakers/talks.server';
+import { sessionRequired } from '../../libs/auth/auth.server';
+import { mapErrorToResponse } from '../../libs/errors';
+import { inviteCoSpeakerToTalk } from '../../services/speaker-talks/co-speaker.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   await sessionRequired(request);
@@ -38,10 +38,10 @@ export const action: ActionFunction = async ({ request, params }) => {
       const talk = await inviteCoSpeakerToTalk(invitationId, uid);
       return redirect(`/speaker/talks/${talk.id}`);
     } else if (type === 'PROPOSAL') {
-      const proposal = await inviteCoSpeakerToProposal(invitationId, uid);
+      const proposal = await addCoSpeakerToProposal(invitationId, uid);
       return redirect(`/${proposal.eventSlug}/proposals/${proposal.proposalId}`);
     } else if (type === 'ORGANIZATION') {
-      const organization = await inviteMemberToOrganization(invitationId, uid);
+      const organization = await addMember(invitationId, uid);
       return redirect(`/organizer/${organization.slug}`);
     }
   } catch (err) {

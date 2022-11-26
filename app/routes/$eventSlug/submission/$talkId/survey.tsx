@@ -5,12 +5,14 @@ import { Form, useLoaderData } from '@remix-run/react';
 import { withZod } from '@remix-validated-form/with-zod';
 import { Button, ButtonLink } from '~/design-system/Buttons';
 import { SurveySchema } from '~/schemas/survey';
+import { getAnswers } from '~/services/event-survey/get-answers.server';
+import { getQuestions } from '~/services/event-survey/get-questions.server';
 import { EventSurveyForm } from '../../../../components/EventSurveyForm';
 import { useSubmissionStep } from '../../../../components/useSubmissionStep';
 import { H2, Text } from '../../../../design-system/Typography';
-import { sessionRequired } from '../../../../services/auth/auth.server';
-import { mapErrorToResponse } from '../../../../services/errors';
-import { getSurveyAnswers, getSurveyQuestions, saveSurvey } from '../../../../services/events/survey.server';
+import { sessionRequired } from '../../../../libs/auth/auth.server';
+import { mapErrorToResponse } from '../../../../libs/errors';
+import { saveSurvey } from '../../../../services/event-survey/save-survey.server';
 
 export const handle = { step: 'survey' };
 
@@ -18,8 +20,8 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
   const slug = params.eventSlug!;
   try {
-    const questions = await getSurveyQuestions(slug);
-    const answers = await getSurveyAnswers(slug, uid);
+    const questions = await getQuestions(slug);
+    const answers = await getAnswers(slug, uid);
     return json({ questions, answers });
   } catch (err) {
     throw mapErrorToResponse(err);

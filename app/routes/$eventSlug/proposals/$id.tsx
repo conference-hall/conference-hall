@@ -5,14 +5,15 @@ import { Markdown } from '../../../design-system/Markdown';
 import { H2, H3 } from '../../../design-system/Typography';
 import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { sessionRequired } from '../../../services/auth/auth.server';
-import { getSpeakerProposal, removeCoSpeakerFromProposal } from '../../../services/events/proposals.server';
-import { mapErrorToResponse } from '../../../services/errors';
+import { sessionRequired } from '../../../libs/auth/auth.server';
+import { mapErrorToResponse } from '../../../libs/errors';
 import Badge from '../../../design-system/Badges';
 import { getLevel } from '../../../utils/levels';
 import { getLanguage } from '../../../utils/languages';
 import { CoSpeakersList, InviteCoSpeakerButton } from '../../../components/CoSpeaker';
 import { ProposalStatusPanel } from '~/components/speaker-proposals/ProposalStatusPanel';
+import { getSpeakerProposal } from '~/services/event-proposals/get.server';
+import { removeCoSpeakerFromProposal } from '~/services/event-proposals/remove-co-speaker.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);

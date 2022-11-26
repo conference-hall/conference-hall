@@ -1,15 +1,15 @@
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { sessionRequired } from '~/services/auth/auth.server';
+import { sessionRequired } from '~/libs/auth/auth.server';
 import { H2, Text } from '~/design-system/Typography';
 import { Form, useActionData, useOutletContext } from '@remix-run/react';
 import { ExternalLink } from '~/design-system/Links';
 import { Button } from '~/design-system/Buttons';
 import { Input } from '~/design-system/forms/Input';
 import type { OrganizerEventContext } from '../../$eventSlug';
-import { updateEvent } from '~/services/organizers/event.server';
 import { EventSlackSettingsSchema } from '~/schemas/event';
 import { withZod } from '@remix-validated-form/with-zod';
+import { updateEvent } from '~/services/organizer-event/update-event.server';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);

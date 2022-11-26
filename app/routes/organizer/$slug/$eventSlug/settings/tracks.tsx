@@ -1,7 +1,7 @@
 import type { ChangeEvent } from 'react';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { sessionRequired } from '~/services/auth/auth.server';
+import { sessionRequired } from '~/libs/auth/auth.server';
 import { H2, Text } from '~/design-system/Typography';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
 import { Form, useFetcher, useOutletContext } from '@remix-run/react';
@@ -13,11 +13,11 @@ import {
   deleteFormat,
   saveCategory,
   saveFormat,
-  updateEvent,
-} from '~/services/organizers/event.server';
+} from '~/services/organizer-event/update-tracks.server';
 import { EditTrackButton, NewTrackButton } from '~/components/organizer-event/SaveTrackForm';
 import { withZod } from '@remix-validated-form/with-zod';
 import { EventTrackSaveSchema, EventTracksSettingsSchema } from '~/schemas/event';
+import { updateEvent } from '~/services/organizer-event/update-event.server';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);

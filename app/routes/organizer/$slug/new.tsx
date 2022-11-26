@@ -2,7 +2,7 @@ import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 import { Container } from '~/design-system/Container';
-import { sessionRequired } from '~/services/auth/auth.server';
+import { sessionRequired } from '~/libs/auth/auth.server';
 import { Form, useActionData, useSearchParams } from '@remix-run/react';
 import { H1, H2, Text } from '~/design-system/Typography';
 import { Button, ButtonLink } from '~/design-system/Buttons';
@@ -10,10 +10,10 @@ import { MegaphoneIcon } from '@heroicons/react/20/solid';
 import { UserGroupIcon } from '@heroicons/react/24/outline';
 import { EventInfoForm } from '~/components/organizer-event/EventInfoForm';
 import { CardLink } from '~/design-system/Card';
-import { createEvent } from '~/services/organizers/event.server';
-import { getUserRole } from '~/services/organizers/organizations.server';
 import { withZod } from '@remix-validated-form/with-zod';
 import { EventCreateSchema } from '~/schemas/event';
+import { getUserRole } from '~/services/organization/get-user-role.server';
+import { createEvent } from '~/services/organizer-event/create-event.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);

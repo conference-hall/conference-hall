@@ -3,18 +3,18 @@ import { json } from '@remix-run/node';
 import { useLoaderData, useSearchParams, useNavigate } from '@remix-run/react';
 import { Container } from '../../../design-system/Container';
 import { H2, Text } from '../../../design-system/Typography';
-import { sessionRequired } from '../../../services/auth/auth.server';
-import { findTalks } from '../../../services/speakers/talks.server';
-import { mapErrorToResponse } from '../../../services/errors';
+import { sessionRequired } from '../../../libs/auth/auth.server';
+import { mapErrorToResponse } from '../../../libs/errors';
 import { SpeakerTalksList } from '../../../components/SpeakerTalksList';
 import Select from '~/design-system/forms/Select';
+import { listTalks } from '~/services/speaker-talks/list-talks.server';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
   const { searchParams } = new URL(request.url);
   const archived = Boolean(searchParams.get('archived'));
   try {
-    const talks = await findTalks(uid, { archived });
+    const talks = await listTalks(uid, { archived });
     return json(talks);
   } catch (err) {
     throw mapErrorToResponse(err);

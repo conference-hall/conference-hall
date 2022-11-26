@@ -1,7 +1,7 @@
 import type { ActionArgs } from '@remix-run/node';
-import { sessionRequired } from '~/services/auth/auth.server';
-import { mapErrorToResponse } from '~/services/errors';
-import { addProposalComment, removeProposalComment } from '~/services/organizers/event.server';
+import { sessionRequired } from '~/libs/auth/auth.server';
+import { mapErrorToResponse } from '~/libs/errors';
+import { addProposalComment, removeProposalComment } from '~/services/organizer-review/comments.server';
 
 export const action = async ({ request, params }: ActionArgs) => {
   const { uid } = await sessionRequired(request);

@@ -7,15 +7,15 @@ import { useSubmissionStep } from '../../../../components/useSubmissionStep';
 import { MarkdownTextArea } from '../../../../design-system/forms/MarkdownTextArea';
 import { ExternalLink } from '../../../../design-system/Links';
 import { H2, Text } from '../../../../design-system/Typography';
-import { sessionRequired } from '../../../../services/auth/auth.server';
-import { mapErrorToResponse } from '../../../../services/errors';
-import { getEvent } from '../../../../services/events/event.server';
-import { removeCoSpeakerFromTalkAndEvent } from '../../../../services/events/proposals.server';
-import { getProposalSpeakers } from '../../../../services/events/speakers.server';
-import { updateSettings } from '../../../../services/speakers/profile.server';
-import { getUser } from '../../../../services/user/user.server';
+import { sessionRequired } from '../../../../libs/auth/auth.server';
+import { mapErrorToResponse } from '../../../../libs/errors';
+import { getEvent } from '../../../../services/event-page/get-event.server';
+import { saveProfile } from '../../../../services/speaker-profile/save-profile.server';
+import { getUser } from '../../../../services/user/get-user.server';
 import { DetailsSchema } from '~/schemas/profile';
 import { withZod } from '@remix-validated-form/with-zod';
+import { removeCoSpeakerFromSubmission } from '~/services/event-proposals/remove-co-speaker.server';
+import { getSubmittedProposal } from '~/services/event-submission/get-submitted-proposal.server';
 
 export const handle = { step: 'speakers' };
 
@@ -25,7 +25,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const eventSlug = params.eventSlug!;
   const talkId = params.talkId!;
   try {
-    const proposal = await getProposalSpeakers(talkId, eventSlug, user.id);
+    const proposal = await getSubmittedProposal(talkId, eventSlug, user.id);
     return json({
       proposalId: proposal.id,
       invitationLink: proposal.invitationLink,
@@ -47,13 +47,13 @@ export const action = async ({ request, params }: ActionArgs) => {
     const action = form.get('_action');
     if (action === 'remove-speaker') {
       const speakerId = form.get('_speakerId')?.toString() as string;
-      await removeCoSpeakerFromTalkAndEvent(uid, talkId, eventSlug, speakerId);
+      await removeCoSpeakerFromSubmission(uid, talkId, eventSlug, speakerId);
       return json(null);
     } else {
       const result = await withZod(DetailsSchema).validate(form);
       if (result.error) return json(result.error.fieldErrors);
 
-      await updateSettings(uid, result.data);
+      await saveProfile(uid, result.data);
       const event = await getEvent(eventSlug);
       if (event.hasTracks) {
         return redirect(`/${eventSlug}/submission/${talkId}/tracks`);

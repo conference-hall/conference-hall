@@ -1,5 +1,5 @@
 import type { Organization, Prisma, Proposal, Talk, User } from '@prisma/client';
-import { db } from '../../app/services/db';
+import { db } from '../../app/libs/db';
 import { userFactory } from './users';
 
 type FactoryOptions = {

@@ -3,7 +3,7 @@ import { redirect } from '@remix-run/node';
 import { Outlet, useOutletContext, useParams } from '@remix-run/react';
 import { Container } from '~/design-system/Container';
 import { NavMenu } from '~/design-system/NavMenu';
-import { sessionRequired } from '~/services/auth/auth.server';
+import { sessionRequired } from '~/libs/auth/auth.server';
 import {
   CodeBracketIcon,
   Cog6ToothIcon,
@@ -16,7 +16,7 @@ import {
   SwatchIcon,
 } from '@heroicons/react/24/outline';
 import type { OrganizerEventContext } from '../$eventSlug';
-import { getUserRole } from '~/services/organizers/organizations.server';
+import { getUserRole } from '~/services/organization/get-user-role.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);

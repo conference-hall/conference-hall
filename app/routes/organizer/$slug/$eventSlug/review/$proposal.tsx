@@ -1,17 +1,17 @@
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import FullscreenDialog from '~/design-system/dialogs/FullscreenDialog';
-import { sessionRequired } from '~/services/auth/auth.server';
+import { sessionRequired } from '~/libs/auth/auth.server';
 import { TopPanel } from '~/components/proposal-review/TopPanel';
 import { LeftPanel } from '~/components/proposal-review/LeftPanel';
 import { RightPanel } from '~/components/proposal-review/RightPanel';
 import { BottomPanel } from '~/components/proposal-review/BottomPanel';
-import { getProposalReview } from '~/services/organizers/event.server';
-import { mapErrorToResponse } from '~/services/errors';
+import { mapErrorToResponse } from '~/libs/errors';
 import { Outlet, useLoaderData, useNavigate, useOutletContext, useSearchParams } from '@remix-run/react';
 import type { OrganizerEventContext } from '../../$eventSlug';
 import { withZod } from '@remix-validated-form/with-zod';
 import { ProposalsFiltersSchema } from '~/schemas/proposal';
+import { getProposalReview } from '~/services/organizer-review/get-proposal-review.server';
 
 export type OrganizerProposalContext = {
   proposalReview: Awaited<ReturnType<typeof getProposalReview>>;

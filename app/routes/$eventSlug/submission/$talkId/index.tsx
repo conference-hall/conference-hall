@@ -1,15 +1,15 @@
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import { Button } from '~/design-system/Buttons';
 import { H2, Text } from '../../../../design-system/Typography';
-import { sessionRequired } from '../../../../services/auth/auth.server';
+import { sessionRequired } from '../../../../libs/auth/auth.server';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
-import { getTalk } from '../../../../services/speakers/talks.server';
-import { saveDraftProposalForEvent } from '../../../../services/events/submit.server';
-import { mapErrorToResponse } from '../../../../services/errors';
+import { mapErrorToResponse } from '../../../../libs/errors';
 import { TalkAbstractForm } from '../../../../components/TalkAbstractForm';
 import { ProposalCreateSchema } from '~/schemas/proposal';
 import { withZod } from '@remix-validated-form/with-zod';
+import { saveDraftProposal } from '~/services/event-submission/save-draft-proposal.server';
+import { getTalk } from '~/services/speaker-talks/get-talk.server';
 
 export const handle = { step: 'proposal' };
 
@@ -38,8 +38,8 @@ export const action = async ({ request, params }: ActionArgs) => {
   if (result.error) return json(result.error.fieldErrors);
 
   try {
-    const savedProposal = await saveDraftProposalForEvent(talkId, eventSlug, uid, result.data);
-    return redirect(`/${eventSlug}/submission/${savedProposal.talkId}/speakers`);
+    const proposal = await saveDraftProposal(talkId, eventSlug, uid, result.data);
+    return redirect(`/${eventSlug}/submission/${proposal.talkId}/speakers`);
   } catch (err) {
     throw mapErrorToResponse(err);
   }

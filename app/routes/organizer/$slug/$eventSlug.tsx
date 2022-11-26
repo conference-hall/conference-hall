@@ -5,9 +5,9 @@ import { CfpElapsedTime } from '~/components/CfpInfo';
 import { EventTabs } from '~/components/organizer-event/EventTabs';
 import OrganizationBreadcrumb from '~/components/organizations/OrganizationBreadcrumb';
 import { Container } from '~/design-system/Container';
-import { sessionRequired } from '~/services/auth/auth.server';
-import { mapErrorToResponse } from '~/services/errors';
-import { getEvent } from '~/services/organizers/event.server';
+import { sessionRequired } from '~/libs/auth/auth.server';
+import { mapErrorToResponse } from '~/libs/errors';
+import { getEvent } from '~/services/organizer-event/get-event.server';
 import type { OrganizationContext } from '../$slug';
 
 export type OrganizerEventContext = {

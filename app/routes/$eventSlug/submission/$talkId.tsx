@@ -1,12 +1,13 @@
 import { Outlet, useCatch, useLoaderData, useMatches } from '@remix-run/react';
 import type { LoaderFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { sessionRequired } from '~/services/auth/auth.server';
-import { getEvent } from '~/services/events/event.server';
-import { isTalkAlreadySubmitted } from '~/services/events/proposals.server';
-import { mapErrorToResponse } from '~/services/errors';
+import { sessionRequired } from '~/libs/auth/auth.server';
+import { getEvent } from '~/services/event-page/get-event.server';
+import { isTalkAlreadySubmitted } from '~/services/event-submission/is-talk-already-submitted.server';
+import { mapErrorToResponse } from '~/libs/errors';
 import { Container } from '~/design-system/Container';
 import { SubmissionSteps } from '~/components/SubmissionSteps';
+import { useEvent } from '~/routes/$eventSlug';
 
 export type SubmitSteps = Array<{
   key: string;
@@ -68,6 +69,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export default function EventSubmitRoute() {
+  const event = useEvent();
   const steps = useLoaderData<SubmitSteps>();
   const matches = useMatches();
   const currentStep = matches[matches.length - 1].handle?.step;
@@ -79,7 +81,7 @@ export default function EventSubmitRoute() {
           Talk submission
         </h2>
         <SubmissionSteps steps={steps} currentStep={currentStep} />
-        <Outlet />
+        <Outlet context={event} />
       </section>
     </Container>
   );

@@ -1,6 +1,6 @@
 import type { LoaderArgs } from '@remix-run/node';
 import type { OrganizerProposalContext } from '../$proposal';
-import { sessionRequired } from '~/services/auth/auth.server';
+import { sessionRequired } from '~/libs/auth/auth.server';
 import { useOutletContext } from '@remix-run/react';
 import { Text } from '~/design-system/Typography';
 import Badge from '~/design-system/Badges';
