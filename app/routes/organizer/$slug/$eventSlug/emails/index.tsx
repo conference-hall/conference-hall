@@ -12,10 +12,11 @@ import { ProposalSelectionSchema } from '~/schemas/proposal';
 import { ProposalsFiltersSchema } from '~/schemas/proposal';
 import { sessionRequired } from '~/services/auth/auth.server';
 import { mapErrorToResponse } from '~/services/errors';
-import { getAcceptationCampaignStats, sendAcceptationCampaign } from '~/services/organizers/emails-campaign.server';
 import { createToast } from '~/utils/toasts';
 import { CampaignEmailStats } from '~/components/campaign-email/CampaignEmailStats';
 import { searchProposals } from '~/services/organizer-review/search-proposals.server';
+import { getAcceptationCampaignStats } from '~/services/organizer-email-campaigns/get-acceptation-campaign-stats.server';
+import { sendAcceptationCampaign } from '~/services/organizer-email-campaigns/send-acceptation-campaign.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
