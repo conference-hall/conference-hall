@@ -13,9 +13,9 @@ import { ProposalsFiltersSchema } from '~/schemas/proposal';
 import { sessionRequired } from '~/services/auth/auth.server';
 import { mapErrorToResponse } from '~/services/errors';
 import { getRejectionCampaignStats, sendRejectionCampaign } from '~/services/organizers/emails-campaign.server';
-import { searchProposals } from '~/services/organizers/event.server';
 import { createToast } from '~/utils/toasts';
 import { CampaignEmailStats } from '~/components/campaign-email/CampaignEmailStats';
+import { searchProposals } from '~/services/organizer-review/search-proposals.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);

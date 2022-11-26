@@ -1,131 +1,17 @@
 import { z } from 'zod';
-import type { Prisma } from '@prisma/client';
-import { EmailStatus } from '@prisma/client';
 import { OrganizationRole } from '@prisma/client';
 import { MessageChannel } from '@prisma/client';
 import { unstable_parseMultipartFormData } from '@remix-run/node';
-import type { EventCreateData, EventTrackSaveData } from '~/schemas/event';
-import type {
-  EmailStatusData,
-  ProposalRatingData,
-  ProposalsFilters,
-  ProposalStatusData,
-  ProposalUpdateData,
-} from '~/schemas/proposal';
+import type { EventTrackSaveData } from '~/schemas/event';
+import type { ProposalRatingData, ProposalsFilters, ProposalStatusData, ProposalUpdateData } from '~/schemas/proposal';
 import { jsonToArray } from '~/utils/prisma';
 import { db } from '../db';
-import { EventNotFoundError, ForbiddenOperationError, ProposalNotFoundError } from '../errors';
-import { geocode } from '../utils/geocode.server';
-import { getPagination } from '../utils/pagination.server';
+import { EventNotFoundError, ProposalNotFoundError } from '../errors';
 import { RatingsDetails } from '../utils/ratings.server';
 import { uploadToStorageHandler } from '../utils/storage.server';
-import type { Pagination } from '~/schemas/pagination';
-import { getUserRole } from '../organization/get-user-role.server';
 import { checkAccess } from '../organizer-event/check-access.server';
+import { proposalOrderBy, proposalWhereInput } from '../organizer-review/search-proposals.server';
 
-const RESULTS_BY_PAGE = 25;
-
-/**
- * Search for event proposals
- * @param eventSlug event's slug
- * @param uid Id of the user (member of the event's organization)
- * @param filters Filters to apply to the search
- * @param page Results page number
- * @returns results of the search with filters, pagination and total results
- */
-export async function searchProposals(
-  orgaSlug: string,
-  eventSlug: string,
-  uid: string,
-  filters: ProposalsFilters,
-  page: Pagination = 1
-) {
-  await checkAccess(orgaSlug, eventSlug, uid);
-
-  const whereClause = proposalWhereInput(eventSlug, uid, filters);
-  const orderByClause = proposalOrderBy(filters);
-
-  const proposalsCount = await db.proposal.count({ where: whereClause });
-  const pagination = getPagination(page, proposalsCount, RESULTS_BY_PAGE);
-
-  const proposals = await db.proposal.findMany({
-    include: { speakers: true, ratings: true },
-    where: whereClause,
-    orderBy: orderByClause,
-    skip: pagination.pageIndex * RESULTS_BY_PAGE,
-    take: RESULTS_BY_PAGE,
-  });
-
-  return {
-    filters,
-    total: proposalsCount,
-    pagination: {
-      current: pagination.currentPage,
-      total: pagination.totalPages,
-    },
-    results: proposals.map((proposal) => {
-      const ratings = new RatingsDetails(proposal.ratings);
-      return {
-        id: proposal.id,
-        title: proposal.title,
-        status: proposal.status,
-        emailAcceptedStatus: proposal.emailAcceptedStatus,
-        emailRejectedStatus: proposal.emailRejectedStatus,
-        speakers: proposal.speakers.map(({ name }) => name),
-        ratings: {
-          positives: ratings.positives,
-          negatives: ratings.negatives,
-          you: ratings.fromUser(uid)?.rating ?? null,
-          total: ratings.average,
-        },
-      };
-    }),
-  };
-}
-
-export function proposalWhereInput(slug: string, uid: string, filters: ProposalsFilters): Prisma.ProposalWhereInput {
-  const { query, ratings, formats, categories, status, emailAcceptedStatus, emailRejectedStatus } = filters;
-  const ratingClause = ratings === 'rated' ? { some: { userId: uid } } : { none: { userId: uid } };
-
-  return {
-    event: { slug },
-    status: { in: status, not: 'DRAFT' },
-    formats: formats ? { some: { id: formats } } : {},
-    categories: categories ? { some: { id: categories } } : {},
-    ratings: ratings ? ratingClause : {},
-    emailAcceptedStatus: mapEmailStatus(emailAcceptedStatus),
-    emailRejectedStatus: mapEmailStatus(emailRejectedStatus),
-    OR: [
-      { title: { contains: query, mode: 'insensitive' } },
-      { speakers: { some: { name: { contains: query, mode: 'insensitive' } } } },
-    ],
-  };
-}
-
-function mapEmailStatus(emailStatus: EmailStatusData) {
-  switch (emailStatus) {
-    case 'sent':
-      return { in: [EmailStatus.SENT, EmailStatus.DELIVERED] };
-    case 'not-sent':
-      return null;
-    default:
-      return undefined;
-  }
-}
-
-function proposalOrderBy(filters: ProposalsFilters): Prisma.ProposalOrderByWithRelationInput[] {
-  if (filters.sort === 'oldest') return [{ createdAt: 'asc' }, { title: 'asc' }];
-  return [{ createdAt: 'desc' }, { title: 'asc' }];
-}
-
-/**
- * Retrieve proposal informations
- * @param orgaSlug organizer slug
- * @param eventSlug event slug
- * @param proposalId Proposal id
- * @param uid User id
- * @param filters Search filters
- */
 export async function getProposalReview(
   orgaSlug: string,
   eventSlug: string,
@@ -223,14 +109,6 @@ export async function getProposalReview(
   };
 }
 
-/**
- * Rate a proposal by a speaker
- * @param orgaSlug organization slug
- * @param eventSlug event slug
- * @param proposalId Proposal id
- * @param uid User id
- * @param data Rating data
- */
 export async function rateProposal(
   orgaSlug: string,
   eventSlug: string,
@@ -247,14 +125,6 @@ export async function rateProposal(
   });
 }
 
-/**
- * Add an organizer comment to a proposal
- * @param orgaSlug organization slug
- * @param eventSlug event slug
- * @param proposalId Proposal id
- * @param uid User id
- * @param message User message
- */
 export async function addProposalComment(
   orgaSlug: string,
   eventSlug: string,
@@ -269,14 +139,6 @@ export async function addProposalComment(
   });
 }
 
-/**
- * Remove an organizer comment to a proposal
- * @param orgaSlug organization slug
- * @param eventSlug Event slug
- * @param proposalId Proposal id
- * @param uid User id
- * @param messageId Message id
- */
 export async function removeProposalComment(
   orgaSlug: string,
   eventSlug: string,
@@ -289,14 +151,6 @@ export async function removeProposalComment(
   await db.message.deleteMany({ where: { id: messageId, userId: uid, proposalId } });
 }
 
-/**
- * Update proposal data from organizer page
- * @param orgaSlug Organization slug
- * @param eventSlug Event slug
- * @param proposalId Proposal Id
- * @param uid User id
- * @param data Data to update
- */
 export async function updateProposal(
   orgaSlug: string,
   eventSlug: string,
@@ -318,13 +172,6 @@ export async function updateProposal(
   });
 }
 
-/**
- * Update an event
- * @param orgaSlug Organization slug
- * @param eventSlug Event slug
- * @param uid User id
- * @param data event data
- */
 export async function uploadAndSaveEventBanner(orgaSlug: string, eventSlug: string, uid: string, request: Request) {
   await checkAccess(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER]);
 
@@ -342,13 +189,6 @@ export async function uploadAndSaveEventBanner(orgaSlug: string, eventSlug: stri
   }
 }
 
-/**
- * Create or update a track format to an event
- * @param orgaSlug Organization slug
- * @param eventSlug Event slug
- * @param uid User id
- * @param data Track format data
- */
 export async function saveFormat(orgaSlug: string, eventSlug: string, uid: string, data: EventTrackSaveData) {
   await checkAccess(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER]);
 
@@ -364,13 +204,6 @@ export async function saveFormat(orgaSlug: string, eventSlug: string, uid: strin
   }
 }
 
-/**
- * Create or update a track category to an event
- * @param orgaSlug Organization slug
- * @param eventSlug Event slug
- * @param uid User id
- * @param data Track category data
- */
 export async function saveCategory(orgaSlug: string, eventSlug: string, uid: string, data: EventTrackSaveData) {
   await checkAccess(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER]);
 
@@ -386,40 +219,18 @@ export async function saveCategory(orgaSlug: string, eventSlug: string, uid: str
   }
 }
 
-/**
- * Delete a track format from an event
- * @param orgaSlug Organization slug
- * @param eventSlug Event slug
- * @param uid User id
- * @param formatId Format id to remove
- */
 export async function deleteFormat(orgaSlug: string, eventSlug: string, uid: string, formatId: string) {
   await checkAccess(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER]);
 
   await db.eventFormat.delete({ where: { id: formatId } });
 }
 
-/**
- * Delete a track category from an event
- * @param orgaSlug Organization slug
- * @param eventSlug Event slug
- * @param uid User id
- * @param categoryId Category id to remove
- */
 export async function deleteCategory(orgaSlug: string, eventSlug: string, uid: string, categoryId: string) {
   await checkAccess(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER]);
 
   await db.eventCategory.delete({ where: { id: categoryId } });
 }
 
-/**
- * Update proposals status
- * @param orgaSlug Organization slug
- * @param eventSlug Event slug
- * @param uid User id
- * @param proposalIds Proposal Ids
- * @param status Status to update
- */
 export async function updateProposalsStatus(
   orgaSlug: string,
   eventSlug: string,
@@ -433,13 +244,6 @@ export async function updateProposalsStatus(
   return result.count;
 }
 
-/**
- * Export proposals
- * @param orgaSlug Organization slug
- * @param eventSlug Event slug
- * @param uid User id
- * @param filters Filters criterias
- */
 export async function exportProposalsFromFilters(
   orgaSlug: string,
   eventSlug: string,
