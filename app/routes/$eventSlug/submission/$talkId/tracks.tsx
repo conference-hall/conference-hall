@@ -12,6 +12,7 @@ import { FormatsForm } from '../../../../components/FormatsForm';
 import { withZod } from '@remix-validated-form/with-zod';
 import { TracksUpdateSchema } from '~/schemas/tracks';
 import { getSubmittedProposal } from '~/services/event-submission/get-submitted-proposal.server';
+import { useEvent } from '~/routes/$eventSlug';
 
 export const handle = { step: 'tracks' };
 
@@ -20,13 +21,9 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const eventSlug = params.eventSlug!;
   const talkId = params.talkId!;
   try {
-    const event = await getEvent(eventSlug);
     const proposal = await getSubmittedProposal(talkId, eventSlug, uid);
 
-    return json({
-      event: { formats: event.formats, categories: event.categories },
-      proposal: { formats: proposal.formats.map(({ id }) => id), categories: proposal.categories.map(({ id }) => id) },
-    });
+    return json({ formats: proposal.formats.map(({ id }) => id), categories: proposal.categories.map(({ id }) => id) });
   } catch (err) {
     throw mapErrorToResponse(err);
   }
@@ -54,7 +51,8 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export default function SubmissionTracksRoute() {
-  const { event, proposal } = useLoaderData<typeof loader>();
+  const event = useEvent();
+  const proposal = useLoaderData<typeof loader>();
   const { previousPath } = useSubmissionStep();
 
   return (
