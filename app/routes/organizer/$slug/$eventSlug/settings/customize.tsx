@@ -9,8 +9,8 @@ import { ExternalLink } from '~/design-system/Links';
 import type { OrganizerEventContext } from '../../$eventSlug';
 import { UploadingError } from '~/services/utils/storage.server';
 import { ButtonFileUpload } from '~/design-system/forms/FileUploadButton';
-import { uploadAndSaveEventBanner } from '~/services/organizers/event.server';
 import { mapErrorToResponse } from '~/services/errors';
+import { uploadEventBanner } from '~/services/organizer-event/upload-event-banner.server';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);
@@ -21,7 +21,7 @@ export const action = async ({ request, params }: ActionArgs) => {
   const { uid } = await sessionRequired(request);
   try {
     const { slug, eventSlug } = params;
-    await uploadAndSaveEventBanner(slug!, eventSlug!, uid, request);
+    await uploadEventBanner(slug!, eventSlug!, uid, request);
     return json(null);
   } catch (error) {
     if (error instanceof UploadingError) {

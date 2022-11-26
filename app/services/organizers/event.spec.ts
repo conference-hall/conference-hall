@@ -9,8 +9,6 @@ import { ForbiddenOperationError } from '../errors';
 import { db } from '../db';
 import { deleteCategory, deleteFormat, saveCategory, saveFormat } from './event.server';
 
-it.todo('#uploadAndSaveEventBanner');
-
 describe('#saveFormat', () => {
   let owner: User, reviewer: User;
   let organization: Organization;
