@@ -3,29 +3,13 @@ import { OrganizationRole } from '@prisma/client';
 import { MessageChannel } from '@prisma/client';
 import { unstable_parseMultipartFormData } from '@remix-run/node';
 import type { EventTrackSaveData } from '~/schemas/event';
-import type { ProposalRatingData, ProposalsFilters, ProposalStatusData, ProposalUpdateData } from '~/schemas/proposal';
+import type { ProposalsFilters, ProposalStatusData, ProposalUpdateData } from '~/schemas/proposal';
 import { db } from '../db';
 import { EventNotFoundError } from '../errors';
 import { RatingsDetails } from '../utils/ratings.server';
 import { uploadToStorageHandler } from '../utils/storage.server';
 import { checkAccess } from '../organizer-event/check-access.server';
 import { proposalOrderBy, proposalWhereInput } from '../organizer-review/search-proposals.server';
-
-export async function rateProposal(
-  orgaSlug: string,
-  eventSlug: string,
-  proposalId: string,
-  uid: string,
-  data: ProposalRatingData
-) {
-  await checkAccess(orgaSlug, eventSlug, uid);
-
-  await db.rating.upsert({
-    where: { userId_proposalId: { userId: uid, proposalId } },
-    update: data,
-    create: { userId: uid, proposalId, ...data },
-  });
-}
 
 export async function addProposalComment(
   orgaSlug: string,
