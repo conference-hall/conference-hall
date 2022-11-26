@@ -4,7 +4,7 @@ import { withZod } from '@remix-validated-form/with-zod';
 import { ProposalsExportFiltersSchema } from '~/schemas/proposal';
 import { sessionRequired } from '~/services/auth/auth.server';
 import { mapErrorToResponse } from '~/services/errors';
-import { exportProposalsFromFilters } from '~/services/organizers/event.server';
+import { exportProposals } from '~/services/organizer-review/export-proposals.server';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
@@ -15,7 +15,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 
   const { orga, event, ...filters } = result.data;
   try {
-    const results = await exportProposalsFromFilters(orga, event, uid, filters ?? {});
+    const results = await exportProposals(orga, event, uid, filters ?? {});
     return json(results);
   } catch (err) {
     throw mapErrorToResponse(err);

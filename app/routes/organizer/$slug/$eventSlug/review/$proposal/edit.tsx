@@ -9,9 +9,9 @@ import { Button, ButtonLink } from '~/design-system/Buttons';
 import { FormatsForm } from '~/components/FormatsForm';
 import { CategoriesForm } from '~/components/CategoriesForm';
 import { mapErrorToResponse } from '~/services/errors';
-import { updateProposal } from '~/services/organizers/event.server';
 import { withZod } from '@remix-validated-form/with-zod';
 import { ProposalUpdateSchema } from '~/schemas/proposal';
+import { updateProposal } from '~/services/organizer-review/update-proposal.server';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);
