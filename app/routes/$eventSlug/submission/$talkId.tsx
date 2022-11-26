@@ -3,7 +3,7 @@ import type { LoaderFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { getEvent } from '~/services/event-page/get-event.server';
-import { isTalkAlreadySubmitted } from '~/services/todo/proposals.server';
+import { isTalkAlreadySubmitted } from '~/services/event-submission/is-talk-already-submitted.server';
 import { mapErrorToResponse } from '~/libs/errors';
 import { Container } from '~/design-system/Container';
 import { SubmissionSteps } from '~/components/SubmissionSteps';

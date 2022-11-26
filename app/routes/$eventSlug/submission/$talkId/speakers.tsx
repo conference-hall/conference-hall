@@ -15,7 +15,7 @@ import { getUser } from '../../../../services/user/get-user.server';
 import { DetailsSchema } from '~/schemas/profile';
 import { withZod } from '@remix-validated-form/with-zod';
 import { removeCoSpeakerFromSubmission } from '~/services/event-proposals/remove-co-speaker.server';
-import { getProposalSpeakers } from '~/services/todo/speakers.server';
+import { getSubmittedProposal } from '~/services/event-submission/get-submitted-proposal.server';
 
 export const handle = { step: 'speakers' };
 
@@ -25,7 +25,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const eventSlug = params.eventSlug!;
   const talkId = params.talkId!;
   try {
-    const proposal = await getProposalSpeakers(talkId, eventSlug, user.id);
+    const proposal = await getSubmittedProposal(talkId, eventSlug, user.id);
     return json({
       proposalId: proposal.id,
       invitationLink: proposal.invitationLink,

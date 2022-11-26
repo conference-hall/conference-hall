@@ -21,7 +21,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const talkId = params.talkId!;
   try {
     const event = await getEvent(eventSlug);
-    const proposal = await getSubmittedProposal(talkId, event.id, uid);
+    const proposal = await getSubmittedProposal(talkId, eventSlug, uid);
 
     return json({
       event: { formats: event.formats, categories: event.categories },

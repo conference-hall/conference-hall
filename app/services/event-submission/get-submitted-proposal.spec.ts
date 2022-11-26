@@ -2,6 +2,7 @@ import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventCategoryFactory } from 'tests/factories/categories';
 import { eventFactory } from 'tests/factories/events';
 import { eventFormatFactory } from 'tests/factories/formats';
+import { inviteFactory } from 'tests/factories/invite';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
@@ -19,14 +20,22 @@ describe('#getSubmittedProposal', () => {
     const format = await eventFormatFactory({ event });
     const category = await eventCategoryFactory({ event });
     const speaker = await userFactory();
-    const talk = await talkFactory({ speakers: [speaker] });
+    const speaker2 = await userFactory();
+    const talk = await talkFactory({ speakers: [speaker, speaker2] });
     const proposal = await proposalFactory({ event, talk, formats: [format], categories: [category] });
+    const invite = await inviteFactory({ proposal });
 
-    const result = await getSubmittedProposal(talk.id, event.id, speaker.id);
+    const result = await getSubmittedProposal(talk.id, event.slug, speaker.id);
 
     expect(result).toEqual({
+      id: proposal.id,
       title: proposal.title,
-      speakers: [{ name: speaker.name, photoURL: speaker.photoURL }],
+      invitationLink: `http://localhost:3001/invitation/${invite?.id}`,
+      isOwner: true,
+      speakers: [
+        { id: speaker.id, isOwner: true, name: speaker.name, photoURL: speaker.photoURL },
+        { id: speaker2.id, name: speaker2.name, photoURL: speaker2.photoURL, isOwner: false },
+      ],
       formats: [{ id: format.id, name: format.name }],
       categories: [{ id: category.id, name: category.name }],
     });
@@ -37,7 +46,7 @@ describe('#getSubmittedProposal', () => {
     const speaker = await userFactory();
     const talk = await talkFactory({ speakers: [speaker] });
 
-    await expect(getSubmittedProposal(talk.id, event.id, speaker.id)).rejects.toThrowError(ProposalNotFoundError);
+    await expect(getSubmittedProposal(talk.id, event.slug, speaker.id)).rejects.toThrowError(ProposalNotFoundError);
   });
 
   it('throws an error if proposal does not belong to user', async () => {
@@ -47,6 +56,6 @@ describe('#getSubmittedProposal', () => {
     await proposalFactory({ event, talk });
 
     const user = await userFactory();
-    await expect(getSubmittedProposal(talk.id, event.id, user.id)).rejects.toThrowError(ProposalNotFoundError);
+    await expect(getSubmittedProposal(talk.id, event.slug, user.id)).rejects.toThrowError(ProposalNotFoundError);
   });
 });
