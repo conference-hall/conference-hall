@@ -1,4 +1,4 @@
-import { db } from '../db';
+import { db } from '../../libs/db';
 
 export async function getAnswers(slug: string, uid: string) {
   const userSurvey = await db.survey.findFirst({

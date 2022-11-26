@@ -1,5 +1,5 @@
-import { db } from '../db';
-import { ProposalNotFoundError } from '../errors';
+import { db } from '../../libs/db';
+import { ProposalNotFoundError } from '../../libs/errors';
 import { buildInvitationLink } from '../invitations/build-link.server';
 
 export async function getProposalSpeakers(talkId: string, eventSlug: string, uid: string) {

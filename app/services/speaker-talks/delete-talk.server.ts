@@ -1,6 +1,6 @@
 import { ProposalStatus } from '@prisma/client';
-import { db } from '../db';
-import { TalkNotFoundError } from '../errors';
+import { db } from '../../libs/db';
+import { TalkNotFoundError } from '../../libs/errors';
 
 export async function deleteTalk(uid: string, talkId: string) {
   const talk = await db.talk.findFirst({

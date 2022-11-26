@@ -1,4 +1,4 @@
-import { db } from '../db';
+import { db } from '../../libs/db';
 
 export async function checkAccess(uid: string, key: string) {
   const access = await db.organizerKeyAccess.findFirst({ where: { id: key, revokedAt: { equals: null } } });

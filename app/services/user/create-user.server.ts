@@ -1,5 +1,5 @@
 import type { UserCreateInput } from '~/schemas/user';
-import { db } from '../db';
+import { db } from '../../libs/db';
 
 export async function createUser(input: UserCreateInput) {
   const { uid, name, email, picture } = input;

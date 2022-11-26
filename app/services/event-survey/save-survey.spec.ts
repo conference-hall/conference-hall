@@ -2,7 +2,7 @@ import { resetDB, disconnectDB } from '../../../tests/db-helpers';
 import { eventFactory } from '../../../tests/factories/events';
 import { surveyFactory } from '../../../tests/factories/surveys';
 import { userFactory } from '../../../tests/factories/users';
-import { EventNotFoundError } from '../errors';
+import { EventNotFoundError } from '../../libs/errors';
 import { getAnswers } from './get-answers.server';
 import { saveSurvey } from './save-survey.server';
 

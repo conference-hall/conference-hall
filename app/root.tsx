@@ -1,10 +1,10 @@
 import type { ReactNode } from 'react';
 import type { LinksFunction, LoaderArgs } from '@remix-run/node';
-import { config } from './services/config';
+import { config } from './libs/config';
 import { json } from '@remix-run/node';
 import { Meta, LiveReload, Outlet, Links, Scripts, useCatch, useLoaderData, ScrollRestoration } from '@remix-run/react';
-import { initializeFirebase } from './services/auth/firebase';
-import { commitSession, getSession } from './services/auth/auth.server';
+import { initializeFirebase } from './libs/auth/firebase';
+import { commitSession, getSession } from './libs/auth/auth.server';
 import { getUser } from './services/user/get-user.server';
 import { Footer } from './components/Footer';
 import { H1, Text } from './design-system/Typography';

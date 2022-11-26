@@ -1,6 +1,6 @@
 import type { Session } from '@remix-run/node';
 import { v4 as uuid } from 'uuid';
-import { commitSession } from '~/services/auth/auth.server';
+import { commitSession } from '~/libs/auth/auth.server';
 
 export type ToastData = { id: string; message: string; description?: string };
 

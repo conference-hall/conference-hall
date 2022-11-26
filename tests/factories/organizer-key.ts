@@ -1,5 +1,5 @@
 import type { Prisma } from '@prisma/client';
-import { db } from '../../app/services/db';
+import { db } from '../../app/libs/db';
 
 type FactoryOptions = {
   attributes?: Partial<Prisma.OrganizerKeyAccessCreateInput>;

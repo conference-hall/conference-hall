@@ -1,4 +1,4 @@
-import { db } from '../db';
+import { db } from '../../libs/db';
 import { getUserRole } from '../organization/get-user-role.server';
 
 export async function listMembers(slug: string, uid: string) {

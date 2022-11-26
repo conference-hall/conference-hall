@@ -1,6 +1,6 @@
 import type { TrackUpdateData } from '~/schemas/tracks';
-import { db } from '../db';
-import { ProposalNotFoundError } from '../errors';
+import { db } from '../../libs/db';
+import { ProposalNotFoundError } from '../../libs/errors';
 
 export async function saveTracks(talkId: string, eventId: string, uid: string, data: TrackUpdateData) {
   const proposal = await db.proposal.findFirst({

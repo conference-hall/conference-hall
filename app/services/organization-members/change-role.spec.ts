@@ -1,8 +1,8 @@
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { organizationFactory } from 'tests/factories/organization';
 import { userFactory } from 'tests/factories/users';
-import { db } from '../db';
-import { ForbiddenOperationError } from '../errors';
+import { db } from '../../libs/db';
+import { ForbiddenOperationError } from '../../libs/errors';
 import { changeMemberRole } from './change-role.server';
 
 describe('#changeMemberRole', () => {

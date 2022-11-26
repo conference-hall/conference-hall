@@ -4,7 +4,7 @@ import { inviteFactory } from '../../../tests/factories/invite';
 import { proposalFactory } from '../../../tests/factories/proposals';
 import { talkFactory } from '../../../tests/factories/talks';
 import { userFactory } from '../../../tests/factories/users';
-import { ProposalNotFoundError } from '../errors';
+import { ProposalNotFoundError } from '../../libs/errors';
 import { getProposalSpeakers } from './speakers.server';
 
 describe('#getProposalSpeakers', () => {

@@ -1,5 +1,5 @@
 import { ProposalStatus } from '@prisma/client';
-import { db } from '../db';
+import { db } from '../../libs/db';
 
 export async function listSpeakerProposals(slug: string, uid: string) {
   const proposals = await db.proposal.findMany({

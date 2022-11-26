@@ -5,8 +5,8 @@ import { organizationFactory } from 'tests/factories/organization';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
-import { db } from '../db';
-import { ForbiddenOperationError } from '../errors';
+import { db } from '../../libs/db';
+import { ForbiddenOperationError } from '../../libs/errors';
 import { rateProposal } from './rate-proposal.server';
 
 describe('#rateProposal', () => {

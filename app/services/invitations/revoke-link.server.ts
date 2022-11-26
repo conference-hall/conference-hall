@@ -1,5 +1,5 @@
 import { InviteType } from '@prisma/client';
-import { db } from '../db';
+import { db } from '../../libs/db';
 
 export async function revokeLink(type: InviteType, entityId: string, uid: string) {
   switch (type) {

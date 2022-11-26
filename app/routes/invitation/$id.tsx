@@ -10,8 +10,8 @@ import { Button } from '../../design-system/Buttons';
 import { Container } from '../../design-system/Container';
 import { Link } from '../../design-system/Links';
 import { H1, H2, Text } from '../../design-system/Typography';
-import { sessionRequired } from '../../services/auth/auth.server';
-import { mapErrorToResponse } from '../../services/errors';
+import { sessionRequired } from '../../libs/auth/auth.server';
+import { mapErrorToResponse } from '../../libs/errors';
 import { inviteCoSpeakerToTalk } from '../../services/speaker-talks/co-speaker.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {

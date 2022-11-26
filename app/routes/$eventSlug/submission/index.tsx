@@ -4,10 +4,10 @@ import { Container } from '../../../design-system/Container';
 import { AlertInfo } from '../../../design-system/Alerts';
 import { MaxProposalsReached } from '../../../components/MaxProposalsReached';
 import { H2, Text } from '../../../design-system/Typography';
-import { sessionRequired } from '../../../services/auth/auth.server';
+import { sessionRequired } from '../../../libs/auth/auth.server';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { mapErrorToResponse } from '../../../services/errors';
+import { mapErrorToResponse } from '../../../libs/errors';
 import { SubmissionTalksList } from '../../../components/SubmissionTalksList';
 import { getProposalCountsForEvent, listTalksToSubmit } from '~/services/event-submission/list-talks-to-submit.server';
 

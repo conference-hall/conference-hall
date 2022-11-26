@@ -2,7 +2,7 @@ import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventFactory } from 'tests/factories/events';
 import { organizationFactory } from 'tests/factories/organization';
 import { userFactory } from 'tests/factories/users';
-import { ForbiddenOperationError } from '../errors';
+import { ForbiddenOperationError } from '../../libs/errors';
 import { checkAccess } from './check-access.server';
 
 describe('#checkAccess', () => {

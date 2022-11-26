@@ -1,7 +1,7 @@
 import { OrganizationRole } from '@prisma/client';
 import type { EventCreateData } from '~/schemas/event';
-import { db } from '../db';
-import { ForbiddenOperationError } from '../errors';
+import { db } from '../../libs/db';
+import { ForbiddenOperationError } from '../../libs/errors';
 import { getUserRole } from '../organization/get-user-role.server';
 
 export async function createEvent(orgaSlug: string, uid: string, data: EventCreateData) {

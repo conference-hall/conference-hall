@@ -1,4 +1,4 @@
-import { db } from '../db';
+import { db } from '../../libs/db';
 
 export async function isTalkAlreadySubmitted(slug: string, talkId: string, uid: string) {
   const proposal = await db.proposal.findFirst({

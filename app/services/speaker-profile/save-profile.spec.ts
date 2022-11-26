@@ -1,7 +1,7 @@
 import { resetDB, disconnectDB } from '../../../tests/db-helpers';
 import { userFactory } from '../../../tests/factories/users';
-import { db } from '../db';
-import { UserNotFoundError } from '../errors';
+import { db } from '../../libs/db';
+import { UserNotFoundError } from '../../libs/errors';
 import { saveProfile } from './save-profile.server';
 
 describe('#saveProfile', () => {

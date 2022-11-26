@@ -2,7 +2,7 @@ import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { errorMessagesForSchema, inputFromUrl } from 'domain-functions';
 import { EventProposalsApiSchema, getEventProposals } from '~/services/api/get-event-proposals.server';
-import { fromErrors } from '~/services/errors';
+import { fromErrors } from '~/libs/errors';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const result = await getEventProposals({

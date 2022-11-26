@@ -1,4 +1,4 @@
-import { db } from '../db';
+import { db } from '../../libs/db';
 
 export async function listOrganizations(uid: string) {
   const organizations = await db.organizationMember.findMany({

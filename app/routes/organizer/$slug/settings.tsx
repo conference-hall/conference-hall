@@ -2,7 +2,7 @@ import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { redirect, json } from '@remix-run/node';
 import { Form, useActionData, useOutletContext } from '@remix-run/react';
 import { withZod } from '@remix-validated-form/with-zod';
-import { sessionRequired } from '~/services/auth/auth.server';
+import { sessionRequired } from '~/libs/auth/auth.server';
 import { Container } from '~/design-system/Container';
 import { H2 } from '~/design-system/Typography';
 import { Button } from '~/design-system/Buttons';

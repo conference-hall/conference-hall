@@ -1,7 +1,7 @@
 import { RatingFeeling } from '@prisma/client';
-import { RatingsDetails } from './ratings.server';
+import { RatingsDetails } from './ratings-details';
 
-describe('#RatingsInfo', () => {
+describe('#RatingsDetails', () => {
   it('computes ratings info from user ratings', () => {
     const common = { id: '1', proposalId: 'p1', createdAt: new Date(), updatedAt: new Date() };
 

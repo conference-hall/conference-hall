@@ -1,11 +1,11 @@
 import { type InviteType } from '@prisma/client';
-import { db } from '../db';
+import { db } from '../../libs/db';
 import {
   InvitationGenerateError,
   ProposalNotFoundError,
   TalkNotFoundError,
   OrganizationNotFoundError,
-} from '../errors';
+} from '../../libs/errors';
 import { buildInvitationLink } from './build-link.server';
 
 export async function generateLink(type: InviteType, entityId: string, uid: string) {

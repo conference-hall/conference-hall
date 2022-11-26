@@ -3,8 +3,8 @@ import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { inviteFactory } from 'tests/factories/invite';
 import { organizationFactory } from 'tests/factories/organization';
 import { userFactory } from 'tests/factories/users';
-import { db } from '../db';
-import { InvitationNotFoundError } from '../errors';
+import { db } from '../../libs/db';
+import { InvitationNotFoundError } from '../../libs/errors';
 import { addMember } from './add-member.server';
 
 describe('#addMember', () => {

@@ -2,10 +2,10 @@ import type { Prisma } from '@prisma/client';
 import { EmailStatus } from '@prisma/client';
 import type { Pagination } from '~/schemas/pagination';
 import type { EmailStatusData, ProposalsFilters } from '~/schemas/proposal';
-import { db } from '../db';
+import { db } from '../../libs/db';
 import { checkAccess } from '../organizer-event/check-access.server';
-import { getPagination } from '../utils/pagination.server';
-import { RatingsDetails } from '../utils/ratings.server';
+import { getPagination } from '../shared/pagination.server';
+import { RatingsDetails } from './models/ratings-details';
 
 const RESULTS_BY_PAGE = 25;
 

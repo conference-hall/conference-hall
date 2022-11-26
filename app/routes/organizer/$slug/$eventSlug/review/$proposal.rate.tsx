@@ -1,8 +1,8 @@
 import type { ActionArgs } from '@remix-run/node';
 import { withZod } from '@remix-validated-form/with-zod';
 import { ProposalRatingDataSchema } from '~/schemas/proposal';
-import { sessionRequired } from '~/services/auth/auth.server';
-import { mapErrorToResponse } from '~/services/errors';
+import { sessionRequired } from '~/libs/auth/auth.server';
+import { mapErrorToResponse } from '~/libs/errors';
 import { rateProposal } from '~/services/organizer-review/rate-proposal.server';
 
 export const action = async ({ request, params }: ActionArgs) => {

@@ -4,8 +4,8 @@ import { inviteFactory } from 'tests/factories/invite';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
-import { config } from '../config';
-import { TalkNotFoundError } from '../errors';
+import { config } from '../../libs/config';
+import { TalkNotFoundError } from '../../libs/errors';
 import { getTalk } from './get-talk.server';
 
 describe('#getTalk', () => {

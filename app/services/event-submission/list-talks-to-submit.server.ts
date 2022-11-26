@@ -1,6 +1,6 @@
 import { getCfpState } from '~/utils/event';
-import { db } from '../db';
-import { CfpNotOpenError, EventNotFoundError } from '../errors';
+import { db } from '../../libs/db';
+import { CfpNotOpenError, EventNotFoundError } from '../../libs/errors';
 
 export async function listTalksToSubmit(uid: string, slug: string) {
   const event = await db.event.findUnique({

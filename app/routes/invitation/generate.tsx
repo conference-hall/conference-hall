@@ -1,8 +1,8 @@
 import { type InviteType } from '@prisma/client';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { sessionRequired } from '../../services/auth/auth.server';
-import { mapErrorToResponse } from '../../services/errors';
+import { sessionRequired } from '../../libs/auth/auth.server';
+import { mapErrorToResponse } from '../../libs/errors';
 import { generateLink } from '../../services/invitations/generate-link.server';
 
 export const action = async ({ request }: LoaderArgs) => {

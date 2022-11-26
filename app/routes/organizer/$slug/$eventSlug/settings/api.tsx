@@ -1,6 +1,6 @@
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { v4 as uuid } from 'uuid';
-import { sessionRequired } from '~/services/auth/auth.server';
+import { sessionRequired } from '~/libs/auth/auth.server';
 import { H2, Text } from '~/design-system/Typography';
 import { Form, useOutletContext } from '@remix-run/react';
 import { ExternalLink } from '~/design-system/Links';

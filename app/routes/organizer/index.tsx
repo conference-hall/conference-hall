@@ -2,7 +2,7 @@ import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 import { Container } from '~/design-system/Container';
-import { sessionRequired } from '~/services/auth/auth.server';
+import { sessionRequired } from '~/libs/auth/auth.server';
 import { H1, Text } from '~/design-system/Typography';
 import { useLoaderData } from '@remix-run/react';
 import { CardLink } from '~/design-system/Card';

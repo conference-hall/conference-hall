@@ -1,6 +1,6 @@
 import { getCfpState } from '~/utils/event';
-import { db } from '../db';
-import { EventNotFoundError } from '../errors';
+import { db } from '../../libs/db';
+import { EventNotFoundError } from '../../libs/errors';
 
 export async function getEvent(slug: string) {
   const event = await db.event.findUnique({

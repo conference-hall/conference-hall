@@ -1,4 +1,4 @@
-import { db } from '../db';
+import { db } from '../../libs/db';
 
 // TODO use directly user role from user object
 export async function getUserRole(slug: string, uid: string) {

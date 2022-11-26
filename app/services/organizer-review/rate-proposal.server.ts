@@ -1,5 +1,5 @@
 import type { ProposalRatingData } from '~/schemas/proposal';
-import { db } from '../db';
+import { db } from '../../libs/db';
 import { checkAccess } from '../organizer-event/check-access.server';
 
 export async function rateProposal(

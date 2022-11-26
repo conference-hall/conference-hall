@@ -1,11 +1,11 @@
-import { db } from '../db';
+import { db } from '../../libs/db';
 import { getCfpState } from '../../utils/event';
 import {
   CfpNotOpenError,
   EventNotFoundError,
   MaxSubmittedProposalsReachedError,
   ProposalNotFoundError,
-} from '../errors';
+} from '../../libs/errors';
 import type { ProposalSubmissionData } from '~/schemas/proposal';
 import { ProposalSubmittedEmail } from './emails/proposal-submitted-email';
 import { ProposalReceivedEmail } from './emails/proposal-received-email';

@@ -5,8 +5,8 @@ import { eventFactory } from 'tests/factories/events';
 import { eventFormatFactory } from 'tests/factories/formats';
 import { organizationFactory } from 'tests/factories/organization';
 import { userFactory } from 'tests/factories/users';
-import { ForbiddenOperationError } from '../errors';
-import { db } from '../db';
+import { ForbiddenOperationError } from '../../libs/errors';
+import { db } from '../../libs/db';
 import { deleteCategory, deleteFormat, saveCategory, saveFormat } from './update-tracks.server';
 
 describe('#saveFormat', () => {

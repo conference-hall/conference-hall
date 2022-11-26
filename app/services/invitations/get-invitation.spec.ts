@@ -6,7 +6,7 @@ import { organizationFactory } from 'tests/factories/organization';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
-import { InvitationNotFoundError } from '../errors';
+import { InvitationNotFoundError } from '../../libs/errors';
 import { getInvitation } from './get-invitation.server';
 
 describe('#getInvitation', () => {

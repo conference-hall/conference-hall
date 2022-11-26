@@ -1,6 +1,6 @@
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventFactory } from 'tests/factories/events';
-import { EventNotFoundError, SurveyNotEnabledError } from '../errors';
+import { EventNotFoundError, SurveyNotEnabledError } from '../../libs/errors';
 import { getQuestions } from './get-questions.server';
 
 describe('#getQuestions', () => {

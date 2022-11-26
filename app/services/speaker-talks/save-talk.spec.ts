@@ -2,8 +2,8 @@ import { TalkLevel } from '@prisma/client';
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
-import { db } from '../db';
-import { TalkNotFoundError } from '../errors';
+import { db } from '../../libs/db';
+import { TalkNotFoundError } from '../../libs/errors';
 import { createTalk, updateTalk } from './save-talk.server';
 
 describe('#createTalk', () => {

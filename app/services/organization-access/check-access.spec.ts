@@ -1,7 +1,7 @@
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { organizerKeyFactory } from 'tests/factories/organizer-key';
 import { userFactory } from 'tests/factories/users';
-import { db } from '../db';
+import { db } from '../../libs/db';
 import { checkAccess } from './check-access.server';
 
 describe('#checkAccess', () => {

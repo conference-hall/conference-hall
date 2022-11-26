@@ -1,6 +1,6 @@
 import type { ChangeEvent } from 'react';
 import type { LoaderArgs } from '@remix-run/node';
-import { sessionRequired } from '~/services/auth/auth.server';
+import { sessionRequired } from '~/libs/auth/auth.server';
 import { H2, Text } from '~/design-system/Typography';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
 import { Form, useOutletContext, useSubmit } from '@remix-run/react';

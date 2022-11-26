@@ -1,5 +1,5 @@
-import { db } from '../db';
-import { InvitationNotFoundError, TalkNotFoundError } from '../errors';
+import { db } from '../../libs/db';
+import { InvitationNotFoundError, TalkNotFoundError } from '../../libs/errors';
 
 /**
  * Invite a co-speaker to a talk

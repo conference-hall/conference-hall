@@ -1,4 +1,4 @@
-import { db } from '../db';
+import { db } from '../../libs/db';
 import { getUserRole } from './get-user-role.server';
 
 export async function listEvents(slug: string, uid: string) {

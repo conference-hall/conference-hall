@@ -1,7 +1,7 @@
 import { getCfpState } from '~/utils/event';
-import { jsonToArray } from '~/utils/prisma';
-import { db } from '../db';
-import { EventNotFoundError } from '../errors';
+import { jsonToArray } from '~/libs/prisma';
+import { db } from '../../libs/db';
+import { EventNotFoundError } from '../../libs/errors';
 
 export async function getEvent(slug: string, uid: string) {
   const event = await db.event.findFirst({

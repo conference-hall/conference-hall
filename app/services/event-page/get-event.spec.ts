@@ -2,7 +2,7 @@ import { resetDB, disconnectDB } from '../../../tests/db-helpers';
 import { eventCategoryFactory } from '../../../tests/factories/categories';
 import { eventFactory } from '../../../tests/factories/events';
 import { eventFormatFactory } from '../../../tests/factories/formats';
-import { EventNotFoundError } from '../errors';
+import { EventNotFoundError } from '../../libs/errors';
 import { getEvent } from './get-event.server';
 
 describe('#getEvent', () => {

@@ -1,9 +1,9 @@
 import { OrganizationRole } from '@prisma/client';
 import { unstable_parseMultipartFormData } from '@remix-run/node';
 import { z } from 'zod';
-import { db } from '../db';
-import { EventNotFoundError } from '../errors';
-import { uploadToStorageHandler } from '../utils/storage.server';
+import { db } from '../../libs/db';
+import { EventNotFoundError } from '../../libs/errors';
+import { uploadToStorageHandler } from '../../libs/storage/storage.server';
 import { checkAccess } from './check-access.server';
 
 export async function uploadEventBanner(orgaSlug: string, eventSlug: string, uid: string, request: Request) {

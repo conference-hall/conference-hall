@@ -1,6 +1,6 @@
 import * as fake from '@ngneat/falso';
 import type { Event, Prisma } from '@prisma/client';
-import { db } from '../../app/services/db';
+import { db } from '../../app/libs/db';
 
 type FactoryOptions = {
   event: Event;

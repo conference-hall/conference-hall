@@ -1,8 +1,8 @@
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData, useLocation, useOutletContext } from '@remix-run/react';
-import { mapErrorToResponse } from '~/services/errors';
-import { sessionRequired } from '~/services/auth/auth.server';
+import { mapErrorToResponse } from '~/libs/errors';
+import { sessionRequired } from '~/libs/auth/auth.server';
 import { ProposalsList } from '~/components/proposals-list/ProposalsList';
 import ProposalsFilters from '~/components/proposals-list/ProposalsFilters';
 import { NoProposals } from '~/components/proposals-list/NoProposals';

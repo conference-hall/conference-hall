@@ -1,4 +1,4 @@
-import { db } from '../db';
+import { db } from '../../libs/db';
 
 type TalksListOptions = { archived?: boolean };
 

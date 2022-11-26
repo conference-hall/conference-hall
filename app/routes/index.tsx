@@ -5,7 +5,7 @@ import { Container } from '../design-system/Container';
 import { H1 } from '../design-system/Typography';
 import { SearchEventsList } from '../components/SearchEventsList';
 import { searchEvents } from '../services/event-search/search.server';
-import { mapErrorToResponse } from '../services/errors';
+import { mapErrorToResponse } from '../libs/errors';
 import { SearchEventsForm } from '../components/SearchEventsForm';
 import { Pagination } from '../design-system/Pagination';
 import { EmptyState } from '~/design-system/EmptyState';

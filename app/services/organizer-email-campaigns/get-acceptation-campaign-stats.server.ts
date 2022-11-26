@@ -1,4 +1,4 @@
-import { db } from '../db';
+import { db } from '../../libs/db';
 import { checkAccess } from '../organizer-event/check-access.server';
 
 export async function getAcceptationCampaignStats(orgaSlug: string, eventSlug: string, uid: string) {

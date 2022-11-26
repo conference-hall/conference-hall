@@ -2,7 +2,7 @@ import type { LoaderArgs } from '@remix-run/node';
 import type { OrganizationContext } from '../$slug';
 import { json } from '@remix-run/node';
 import { Container } from '~/design-system/Container';
-import { sessionRequired } from '~/services/auth/auth.server';
+import { sessionRequired } from '~/libs/auth/auth.server';
 import { H2, Text } from '~/design-system/Typography';
 import { Link, Outlet, useLoaderData, useOutletContext } from '@remix-run/react';
 import { EmptyState } from '~/design-system/EmptyState';

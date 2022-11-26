@@ -1,8 +1,8 @@
 import type { Prisma } from '@prisma/client';
 import { OrganizationRole } from '@prisma/client';
-import { db } from '../db';
-import { EventNotFoundError } from '../errors';
-import { geocode } from '../utils/geocode.server';
+import { geocode } from '~/libs/geocode/geocode';
+import { db } from '../../libs/db';
+import { EventNotFoundError } from '../../libs/errors';
 import { checkAccess } from './check-access.server';
 
 /**

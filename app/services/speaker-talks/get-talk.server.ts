@@ -1,6 +1,6 @@
-import { jsonToArray } from '~/utils/prisma';
-import { db } from '../db';
-import { TalkNotFoundError } from '../errors';
+import { jsonToArray } from '~/libs/prisma';
+import { db } from '../../libs/db';
+import { TalkNotFoundError } from '../../libs/errors';
 import { buildInvitationLink } from '../invitations/build-link.server';
 
 export async function getTalk(uid: string, talkId: string) {

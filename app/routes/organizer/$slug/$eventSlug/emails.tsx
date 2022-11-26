@@ -4,7 +4,7 @@ import { redirect } from '@remix-run/node';
 import { Outlet, useParams } from '@remix-run/react';
 import { Container } from '~/design-system/Container';
 import { NavMenu } from '~/design-system/NavMenu';
-import { sessionRequired } from '~/services/auth/auth.server';
+import { sessionRequired } from '~/libs/auth/auth.server';
 import { getUserRole } from '~/services/organization/get-user-role.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {

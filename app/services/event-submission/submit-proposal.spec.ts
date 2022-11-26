@@ -4,13 +4,13 @@ import { eventFactory } from '../../../tests/factories/events';
 import { proposalFactory } from '../../../tests/factories/proposals';
 import { talkFactory } from '../../../tests/factories/talks';
 import { userFactory } from '../../../tests/factories/users';
-import { db } from '../db';
+import { db } from '../../libs/db';
 import {
   CfpNotOpenError,
   EventNotFoundError,
   MaxSubmittedProposalsReachedError,
   ProposalNotFoundError,
-} from '../errors';
+} from '../../libs/errors';
 import { submitProposal } from './submit-proposal.server';
 
 describe('#submitProposal', () => {

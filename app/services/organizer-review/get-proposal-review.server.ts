@@ -1,9 +1,9 @@
 import type { ProposalsFilters } from '~/schemas/proposal';
-import { jsonToArray } from '~/utils/prisma';
-import { db } from '../db';
-import { ProposalNotFoundError } from '../errors';
+import { jsonToArray } from '~/libs/prisma';
+import { db } from '../../libs/db';
+import { ProposalNotFoundError } from '../../libs/errors';
 import { checkAccess } from '../organizer-event/check-access.server';
-import { RatingsDetails } from '../utils/ratings.server';
+import { RatingsDetails } from './models/ratings-details';
 import { proposalOrderBy, proposalWhereInput } from './search-proposals.server';
 
 export async function getProposalReview(

@@ -1,5 +1,5 @@
 import { MessageChannel } from '@prisma/client';
-import { db } from '../db';
+import { db } from '../../libs/db';
 import { checkAccess } from '../organizer-event/check-access.server';
 
 export async function addProposalComment(

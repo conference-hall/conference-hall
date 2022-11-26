@@ -10,8 +10,8 @@ import { getQuestions } from '~/services/event-survey/get-questions.server';
 import { EventSurveyForm } from '../../../../components/EventSurveyForm';
 import { useSubmissionStep } from '../../../../components/useSubmissionStep';
 import { H2, Text } from '../../../../design-system/Typography';
-import { sessionRequired } from '../../../../services/auth/auth.server';
-import { mapErrorToResponse } from '../../../../services/errors';
+import { sessionRequired } from '../../../../libs/auth/auth.server';
+import { mapErrorToResponse } from '../../../../libs/errors';
 import { saveSurvey } from '../../../../services/event-survey/save-survey.server';
 
 export const handle = { step: 'survey' };

@@ -3,8 +3,8 @@ import { eventFactory } from 'tests/factories/events';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
-import { db } from '../db';
-import { ProposalNotFoundError } from '../errors';
+import { db } from '../../libs/db';
+import { ProposalNotFoundError } from '../../libs/errors';
 import { removeCoSpeakerFromProposal, removeCoSpeakerFromSubmission } from './remove-co-speaker.server';
 
 describe('#removeCoSpeakerFromSubmission', () => {

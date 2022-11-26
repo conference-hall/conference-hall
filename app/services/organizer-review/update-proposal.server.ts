@@ -1,6 +1,6 @@
 import { OrganizationRole } from '@prisma/client';
 import type { ProposalStatusData, ProposalUpdateData } from '~/schemas/proposal';
-import { db } from '../db';
+import { db } from '../../libs/db';
 import { checkAccess } from '../organizer-event/check-access.server';
 
 export async function updateProposal(

@@ -1,6 +1,6 @@
 import type { Event, User, EventCategory, EventFormat, Proposal, Organization } from '@prisma/client';
-import { config } from '../../config';
-import { db } from '../../db';
+import { config } from '../../../libs/config';
+import { db } from '../../../libs/db';
 
 function buildPayload(
   event: Event & { organization: Organization },

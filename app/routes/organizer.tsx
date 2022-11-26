@@ -1,7 +1,7 @@
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Outlet } from '@remix-run/react';
-import { sessionRequired } from '~/services/auth/auth.server';
+import { sessionRequired } from '~/libs/auth/auth.server';
 import { Navbar } from '~/components/navbar/Navbar';
 
 export const loader = async ({ request }: LoaderArgs) => {

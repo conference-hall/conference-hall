@@ -1,5 +1,5 @@
-import { db } from '../db';
-import { UserNotFoundError } from '../errors';
+import { db } from '../../libs/db';
+import { UserNotFoundError } from '../../libs/errors';
 
 export async function getUser(userId: string) {
   const user = await db.user.findUnique({

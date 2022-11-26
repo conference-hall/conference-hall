@@ -1,4 +1,4 @@
-import { db } from '../db';
+import { db } from '../../libs/db';
 
 export enum NOTIFICATION_TYPE {
   ACCEPTED_PROPOSAL = 'ACCEPTED_PROPOSAL',

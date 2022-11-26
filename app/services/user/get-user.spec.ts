@@ -1,7 +1,7 @@
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { organizationFactory } from 'tests/factories/organization';
 import { userFactory } from 'tests/factories/users';
-import { UserNotFoundError } from '../errors';
+import { UserNotFoundError } from '../../libs/errors';
 import { getUser } from './get-user.server';
 
 describe('#getUser', () => {

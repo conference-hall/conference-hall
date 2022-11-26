@@ -1,7 +1,7 @@
 import { makeDomainFunction } from 'domain-functions';
 import { z } from 'zod';
-import { db } from '../db';
-import { ApiKeyInvalidError, EventNotFoundError } from '../errors';
+import { db } from '../../libs/db';
+import { ApiKeyInvalidError, EventNotFoundError } from '../../libs/errors';
 
 export const EventProposalsApiSchema = z.object({
   eventSlug: z.string().min(1),

@@ -2,8 +2,8 @@ import type { ActionArgs, ActionFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { withZod } from '@remix-validated-form/with-zod';
 import { ProposalParticipationSchema } from '~/schemas/proposal';
-import { sessionRequired } from '~/services/auth/auth.server';
-import { mapErrorToResponse } from '~/services/errors';
+import { sessionRequired } from '~/libs/auth/auth.server';
+import { mapErrorToResponse } from '~/libs/errors';
 import { sendParticipationAnswer } from '~/services/event-submission/send-participation-answer.server';
 import { createToast } from '~/utils/toasts';
 

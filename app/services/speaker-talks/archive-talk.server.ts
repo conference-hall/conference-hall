@@ -1,5 +1,5 @@
-import { db } from '../db';
-import { TalkNotFoundError } from '../errors';
+import { db } from '../../libs/db';
+import { TalkNotFoundError } from '../../libs/errors';
 
 export async function archiveTalk(uid: string, talkId: string) {
   const talk = await db.talk.findFirst({

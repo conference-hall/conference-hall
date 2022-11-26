@@ -1,10 +1,10 @@
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import { Button } from '~/design-system/Buttons';
 import { H2, Text } from '../../../../design-system/Typography';
-import { sessionRequired } from '../../../../services/auth/auth.server';
+import { sessionRequired } from '../../../../libs/auth/auth.server';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
-import { mapErrorToResponse } from '../../../../services/errors';
+import { mapErrorToResponse } from '../../../../libs/errors';
 import { TalkAbstractForm } from '../../../../components/TalkAbstractForm';
 import { ProposalCreateSchema } from '~/schemas/proposal';
 import { withZod } from '@remix-validated-form/with-zod';

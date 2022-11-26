@@ -1,5 +1,5 @@
-import { db } from '../db';
-import { InvitationNotFoundError } from '../errors';
+import { db } from '../../libs/db';
+import { InvitationNotFoundError } from '../../libs/errors';
 
 export const getInvitation = async (invitationId: string) => {
   const invitation = await db.invite.findUnique({

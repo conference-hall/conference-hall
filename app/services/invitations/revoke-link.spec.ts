@@ -6,7 +6,7 @@ import { organizationFactory } from 'tests/factories/organization';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
-import { db } from '../db';
+import { db } from '../../libs/db';
 import { revokeLink } from './revoke-link.server';
 
 describe('#revokeLink', () => {

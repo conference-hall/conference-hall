@@ -9,8 +9,8 @@ import { createTalk } from '~/services/speaker-talks/save-talk.server';
 import { TalkAbstractForm } from '../../../components/TalkAbstractForm';
 import { Button } from '../../../design-system/Buttons';
 import { H1 } from '../../../design-system/Typography';
-import { sessionRequired } from '../../../services/auth/auth.server';
-import { mapErrorToResponse } from '../../../services/errors';
+import { sessionRequired } from '../../../libs/auth/auth.server';
+import { mapErrorToResponse } from '../../../libs/errors';
 
 export const action = async ({ request }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);

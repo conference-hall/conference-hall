@@ -1,6 +1,6 @@
 import type { TalkSaveData } from '~/schemas/talks';
-import { db } from '../db';
-import { TalkNotFoundError } from '../errors';
+import { db } from '../../libs/db';
+import { TalkNotFoundError } from '../../libs/errors';
 
 // TODO merge create and update talk?
 export async function createTalk(uid: string, data: TalkSaveData) {

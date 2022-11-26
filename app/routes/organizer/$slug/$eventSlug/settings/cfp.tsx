@@ -1,6 +1,6 @@
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { sessionRequired } from '~/services/auth/auth.server';
+import { sessionRequired } from '~/libs/auth/auth.server';
 import { H2, Text } from '~/design-system/Typography';
 import { Form, useActionData, useOutletContext } from '@remix-run/react';
 import { Button } from '~/design-system/Buttons';

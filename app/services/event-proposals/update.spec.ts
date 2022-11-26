@@ -6,7 +6,7 @@ import { eventFormatFactory } from 'tests/factories/formats';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
-import { CfpNotOpenError, EventNotFoundError, ProposalNotFoundError } from '../errors';
+import { CfpNotOpenError, EventNotFoundError, ProposalNotFoundError } from '../../libs/errors';
 import { getSpeakerProposal } from './get.server';
 import { updateSpeakerProposal } from './update.server';
 

@@ -1,6 +1,6 @@
 import { OrganizationRole } from '@prisma/client';
 import type { EventTrackSaveData } from '~/schemas/event';
-import { db } from '../db';
+import { db } from '../../libs/db';
 import { checkAccess } from './check-access.server';
 
 export async function saveFormat(orgaSlug: string, eventSlug: string, uid: string, data: EventTrackSaveData) {

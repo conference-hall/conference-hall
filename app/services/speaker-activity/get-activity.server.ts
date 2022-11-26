@@ -1,5 +1,5 @@
-import { db } from '../db';
-import { SpeakerNotFoundError } from '../errors';
+import { db } from '../../libs/db';
+import { SpeakerNotFoundError } from '../../libs/errors';
 
 export async function getActivity(speakerId: string) {
   const speaker = await db.user.findUnique({ where: { id: speakerId } });

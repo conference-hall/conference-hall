@@ -1,4 +1,4 @@
-import { db } from '../db';
+import { db } from '../../libs/db';
 import { buildInvitationLink } from '../invitations/build-link.server';
 
 /**

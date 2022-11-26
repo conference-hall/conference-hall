@@ -1,5 +1,5 @@
 import { ProposalAcceptedEmailsBatch } from './emails/proposal-accepted-email-batch';
-import { db } from '../db';
+import { db } from '../../libs/db';
 import { EmailStatus } from '@prisma/client';
 import { checkAccess } from '../organizer-event/check-access.server';
 

@@ -1,7 +1,7 @@
 import { ProposalStatus } from '@prisma/client';
-import { jsonToArray } from '~/utils/prisma';
-import { db } from '../db';
-import { ProposalNotFoundError } from '../errors';
+import { jsonToArray } from '~/libs/prisma';
+import { db } from '../../libs/db';
+import { ProposalNotFoundError } from '../../libs/errors';
 import { buildInvitationLink } from '../invitations/build-link.server';
 
 export async function getSpeakerProposal(proposalId: string, uid: string) {

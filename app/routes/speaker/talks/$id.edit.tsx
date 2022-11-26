@@ -10,8 +10,8 @@ import { createToast } from '~/utils/toasts';
 import { TalkAbstractForm } from '../../../components/TalkAbstractForm';
 import { Button, ButtonLink } from '../../../design-system/Buttons';
 import { H2 } from '../../../design-system/Typography';
-import { sessionRequired } from '../../../services/auth/auth.server';
-import { mapErrorToResponse } from '../../../services/errors';
+import { sessionRequired } from '../../../libs/auth/auth.server';
+import { mapErrorToResponse } from '../../../libs/errors';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);

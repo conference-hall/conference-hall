@@ -5,8 +5,8 @@ import { eventFormatFactory } from 'tests/factories/formats';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { disconnectDB, resetDB } from 'tests/db-helpers';
-import { db } from '../db';
-import { ProposalNotFoundError } from '../errors';
+import { db } from '../../libs/db';
+import { ProposalNotFoundError } from '../../libs/errors';
 import { saveTracks } from './save-tracks.server';
 
 describe('#saveTracks', () => {

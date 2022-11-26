@@ -2,7 +2,7 @@ import { OrganizationRole } from '@prisma/client';
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { organizationFactory } from 'tests/factories/organization';
 import { userFactory } from 'tests/factories/users';
-import { db } from '../db';
+import { db } from '../../libs/db';
 import { createOrganization } from './create-organization.server';
 
 describe('#createOrganization', () => {

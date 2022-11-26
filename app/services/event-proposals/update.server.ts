@@ -1,7 +1,7 @@
 import type { ProposalUpdateData } from '~/schemas/proposal';
 import { getCfpState } from '~/utils/event';
-import { db } from '../db';
-import { CfpNotOpenError, EventNotFoundError, ProposalNotFoundError } from '../errors';
+import { db } from '../../libs/db';
+import { CfpNotOpenError, EventNotFoundError, ProposalNotFoundError } from '../../libs/errors';
 
 export async function updateSpeakerProposal(slug: string, proposalId: string, uid: string, data: ProposalUpdateData) {
   const event = await db.event.findUnique({

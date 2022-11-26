@@ -1,6 +1,6 @@
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { userFactory } from 'tests/factories/users';
-import { db } from '../db';
+import { db } from '../../libs/db';
 import { createUser } from './create-user.server';
 
 describe('#createUser', () => {

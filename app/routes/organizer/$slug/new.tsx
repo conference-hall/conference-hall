@@ -2,7 +2,7 @@ import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 import { Container } from '~/design-system/Container';
-import { sessionRequired } from '~/services/auth/auth.server';
+import { sessionRequired } from '~/libs/auth/auth.server';
 import { Form, useActionData, useSearchParams } from '@remix-run/react';
 import { H1, H2, Text } from '~/design-system/Typography';
 import { Button, ButtonLink } from '~/design-system/Buttons';

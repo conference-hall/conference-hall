@@ -4,8 +4,8 @@ import { inviteFactory } from 'tests/factories/invite';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
-import { db } from '../db';
-import { InvitationNotFoundError } from '../errors';
+import { db } from '../../libs/db';
+import { InvitationNotFoundError } from '../../libs/errors';
 import { addCoSpeakerToProposal } from './add-co-speaker.server';
 
 describe('#addCoSpeakerToProposal', () => {

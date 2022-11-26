@@ -2,8 +2,8 @@ import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { withZod } from '@remix-validated-form/with-zod';
 import { ProposalsExportFiltersSchema } from '~/schemas/proposal';
-import { sessionRequired } from '~/services/auth/auth.server';
-import { mapErrorToResponse } from '~/services/errors';
+import { sessionRequired } from '~/libs/auth/auth.server';
+import { mapErrorToResponse } from '~/libs/errors';
 import { exportProposals } from '~/services/organizer-review/export-proposals.server';
 
 export const loader = async ({ request }: LoaderArgs) => {

@@ -9,7 +9,7 @@ import { proposalFactory } from 'tests/factories/proposals';
 import { ratingFactory } from 'tests/factories/ratings';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
-import { ForbiddenOperationError } from '../errors';
+import { ForbiddenOperationError } from '../../libs/errors';
 import { getProposalReview } from './get-proposal-review.server';
 
 describe('#getProposalReview', () => {
