@@ -91,7 +91,9 @@ Cypress.Commands.add('selectOn', (label, value, exit = true) => {
 });
 
 Cypress.Commands.add('typeOn', (label: string | RegExp, text: string) => {
-  return cy.findByLabelText(label).clear().type(text);
+  cy.findByLabelText(label).as('input');
+  cy.get('@input').clear();
+  return cy.get('@input').type(text);
 });
 
 Cypress.Commands.add('assertText', (text) => {
