@@ -47,8 +47,8 @@ class Config {
     return this.ENV === 'development';
   }
 
-  get isTest(): boolean {
-    return this.ENV === 'test';
+  get useStubs(): boolean {
+    return Boolean(process.env.STUB_ENV);
   }
 
   get isMailgunEnabled(): boolean {

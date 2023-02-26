@@ -32,10 +32,10 @@ export interface IEmailProvider {
 }
 
 function getEmailProvider(): IEmailProvider {
-  if (config.isProduction) {
-    return new MailgunProvider();
+  if (config.useStubs) {
+    return new MailhogProvider();
   }
-  return new MailhogProvider();
+  return new MailgunProvider();
 }
 
 export const emailProvider = getEmailProvider();

@@ -49,7 +49,7 @@ export const loader = async ({ request }: LoaderArgs) => {
         FIREBASE_AUTH_DOMAIN: config.FIREBASE_AUTH_DOMAIN,
         FIREBASE_PROJECT_ID: config.FIREBASE_PROJECT_ID,
         FIREBASE_AUTH_EMULATOR_HOST: config.FIREBASE_AUTH_EMULATOR_HOST,
-        isProduction: config.isProduction,
+        useFirebaseEmulators: config.useStubs,
       },
     },
     { headers: { 'Set-Cookie': await commitSession(session) } }

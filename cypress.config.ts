@@ -13,7 +13,6 @@ export default defineConfig({
   },
   e2e: {
     baseUrl: config.appUrl,
-    experimentalSessionAndOrigin: true,
     scrollBehavior: 'center',
     setupNodeEvents(on) {
       // setup custom task
