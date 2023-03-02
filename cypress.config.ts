@@ -15,15 +15,6 @@ export default defineConfig({
     baseUrl: config.appUrl,
     scrollBehavior: 'center',
     setupNodeEvents(on) {
-      on('before:browser:launch', (browser, launchOptions) => {
-        console.log(launchOptions.args);
-
-        if (browser.name == 'chrome') {
-          launchOptions.args.push('--disable-gpu');
-        }
-
-        return launchOptions;
-      });
       // setup custom task
       on('task', {
         disconnectDB,
