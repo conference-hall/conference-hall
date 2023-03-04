@@ -12,9 +12,6 @@ node_modules
 # prisma
 /prisma/factories
 
-# tailwind
-tailwind.css
-
 # firebase
 .firebaserc
 
