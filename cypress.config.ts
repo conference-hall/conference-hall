@@ -13,11 +13,10 @@ export default defineConfig({
   },
   e2e: {
     baseUrl: config.appUrl,
-    experimentalSessionAndOrigin: true,
     scrollBehavior: 'center',
     setupNodeEvents(on) {
       // setup custom task
-      return on('task', {
+      on('task', {
         disconnectDB,
         seedDB: async (name: string) => {
           try {

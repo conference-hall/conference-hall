@@ -47,8 +47,8 @@ class Config {
     return this.ENV === 'development';
   }
 
-  get isTest(): boolean {
-    return this.ENV === 'test';
+  get useEmulators(): boolean {
+    return Boolean(process.env.USE_EMULATORS);
   }
 
   get isMailgunEnabled(): boolean {
