@@ -8,4 +8,7 @@ module.exports = {
   serverBuildDirectory: 'build',
   devServerPort: 8002,
   serverDependenciesToBundle: [/^marked.*/, '@sindresorhus/slugify', '@sindresorhus/transliterate'],
+  future: {
+    unstable_tailwind: true,
+  },
 };
