@@ -34,7 +34,7 @@ export function SpeakerTalksList({ talks }: Props) {
   return (
     <ul aria-label="Talks list" className="grid grid-cols-1 gap-6 sm:grid-cols-2">
       {talks.map((talk) => (
-        <CardLink as="li" key={talk.id} to={`talks/${talk.id}`}>
+        <CardLink as="li" key={talk.id} to={talk.id}>
           <div className="flex h-40 flex-col justify-between px-4 py-4 sm:px-6">
             <div>
               <div className="flex justify-between">

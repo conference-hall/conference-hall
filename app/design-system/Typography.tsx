@@ -8,7 +8,7 @@ const titleSize = {
 };
 
 const titleColors = {
-  primary: 'text-gray-900 dark:text-white',
+  primary: 'text-gray-900',
 };
 
 type TitleProps = {
@@ -45,8 +45,8 @@ const textSize = {
 };
 
 const textColors = {
-  primary: 'text-gray-900 dark:text-white',
-  secondary: 'text-gray-500 dark:text-blueGray-500',
+  primary: 'text-gray-900',
+  secondary: 'text-gray-500',
   link: 'text-indigo-600',
   warning: 'text-yellow-600',
   error: 'text-red-600',
