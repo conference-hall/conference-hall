@@ -1,9 +1,11 @@
 const ENV = process.env.NODE_ENV || 'development';
+const USE_EMULATORS = Boolean(process.env.USE_EMULATORS) || false;
 
 export let config: Config;
 
 class Config {
   ENV: string;
+  USE_EMULATORS: boolean;
   FIREBASE_PROJECT_ID: string;
   FIREBASE_API_KEY: string;
   FIREBASE_AUTH_DOMAIN: string;
@@ -19,6 +21,7 @@ class Config {
 
   constructor() {
     this.ENV = ENV;
+    this.USE_EMULATORS = USE_EMULATORS;
     this.FIREBASE_PROJECT_ID = process.env.FIREBASE_PROJECT_ID || '';
     this.FIREBASE_API_KEY = process.env.FIREBASE_API_KEY || '';
     this.FIREBASE_AUTH_DOMAIN = process.env.FIREBASE_AUTH_DOMAIN || '';
@@ -48,7 +51,7 @@ class Config {
   }
 
   get useEmulators(): boolean {
-    return Boolean(process.env.USE_EMULATORS);
+    return this.USE_EMULATORS;
   }
 
   get isMailgunEnabled(): boolean {
@@ -64,7 +67,7 @@ declare global {
   var __config: Config | undefined;
 }
 
-if (ENV === 'production') {
+if (ENV === 'production' && !USE_EMULATORS) {
   config = new Config();
 } else {
   if (!global.__config) {
