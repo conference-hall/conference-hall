@@ -56,7 +56,7 @@
     "remix": "1.6.8",
     "use-debounce": "^9.0.3",
     "xss": "^1.0.14",
-    "zod": "^3.20.6",
+    "zod": "^3.21.0",
     "zod-form-data": "^2.0.0"
   },
   "devDependencies": {
