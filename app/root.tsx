@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import type { LinksFunction, LoaderArgs } from '@remix-run/node';
+import type { LinksFunction, LoaderArgs, MetaFunction } from '@remix-run/node';
 import { config } from './libs/config';
 import { json } from '@remix-run/node';
 import { Meta, LiveReload, Outlet, Links, Scripts, useCatch, useLoaderData, ScrollRestoration } from '@remix-run/react';
@@ -15,6 +15,12 @@ import type { ToastData } from './utils/toasts';
 import { getToast } from './utils/toasts';
 import tailwind from './tailwind.css';
 import { listNotifications } from './services/user-notifications/list-notifications.server';
+
+export const meta: MetaFunction = () => ({
+  charset: 'utf-8',
+  title: 'Conference Hall',
+  viewport: 'width=device-width,initial-scale=1',
+});
 
 export const links: LinksFunction = () => {
   return [
@@ -49,7 +55,7 @@ export const loader = async ({ request }: LoaderArgs) => {
         FIREBASE_AUTH_DOMAIN: config.FIREBASE_AUTH_DOMAIN,
         FIREBASE_PROJECT_ID: config.FIREBASE_PROJECT_ID,
         FIREBASE_AUTH_EMULATOR_HOST: config.FIREBASE_AUTH_EMULATOR_HOST,
-        isProduction: config.isProduction,
+        useFirebaseEmulators: config.useEmulators,
       },
     },
     { headers: { 'Set-Cookie': await commitSession(session) } }
@@ -62,22 +68,19 @@ export default function App() {
   initializeFirebase(firebase);
 
   return (
-    <Document title="Conference Hall" toast={toast}>
+    <Document toast={toast}>
       <Outlet context={{ user, notifications }} />
     </Document>
   );
 }
 
-type DocumentProps = { children: ReactNode; title?: string; toast?: ToastData | null };
+type DocumentProps = { children: ReactNode; toast?: ToastData | null };
 
-function Document({ children, title, toast }: DocumentProps) {
+function Document({ children, toast }: DocumentProps) {
   return (
     <html lang="en" className="scroll-smooth">
       <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <Meta />
-        {title ? <title>{title}</title> : null}
         <Links />
       </head>
       <body className="bg-white font-sans text-gray-600 antialiased">
@@ -97,7 +100,7 @@ export function CatchBoundary() {
   const caught = useCatch();
 
   return (
-    <Document title={`${caught.status} ${caught.statusText}`}>
+    <Document>
       <Container className="my-4 sm:my-8">
         <H1>
           {caught.status} {caught.statusText}
@@ -114,7 +117,7 @@ export function ErrorBoundary({ error }: { error: Error }) {
   }
 
   return (
-    <Document title="Oops!">
+    <Document>
       <Container className="my-4 sm:my-8">
         <H1>App Error</H1>
         <Text>{error.message}</Text>

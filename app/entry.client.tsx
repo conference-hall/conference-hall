@@ -1,9 +1,27 @@
-import * as ReactDOMClient from 'react-dom/client';
 import { RemixBrowser } from '@remix-run/react';
 
-if (process.env.NODE_ENV === 'production') {
-  ReactDOMClient.hydrateRoot(document, <RemixBrowser />);
-} else {
-  // Bug in Cypress with hydration of the DOM: https://github.com/remix-run/remix/issues/2570
-  require('react-dom').hydrate(<RemixBrowser />, document);
-}
+require('react-dom').hydrate(<RemixBrowser />, document);
+
+// HYDRATATION ISSUES !!!!!!!!!
+// import { RemixBrowser } from "@remix-run/react";
+// import { startTransition, StrictMode } from "react";
+// import { hydrateRoot } from "react-dom/client";
+
+// function hydrate() {
+//   startTransition(() => {
+//     hydrateRoot(
+//       document,
+//       <StrictMode>
+//         <RemixBrowser />
+//       </StrictMode>
+//     );
+//   });
+// }
+
+// if (typeof requestIdleCallback === "function") {
+//   requestIdleCallback(hydrate);
+// } else {
+//   // Safari doesn't support requestIdleCallback
+//   // https://caniuse.com/requestidlecallback
+//   setTimeout(hydrate, 1);
+// }

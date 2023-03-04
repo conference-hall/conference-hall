@@ -7,7 +7,7 @@ export async function disconnectDB() {
 }
 
 export async function resetDB() {
-  if (config.isProduction) return '🚨 Reset DB cannot be executed in production.';
+  if (config.isProduction && !config.useEmulators) return '🚨 Reset DB cannot be executed in production.';
 
   await db.$transaction([
     db.invite.deleteMany(),

@@ -14,7 +14,7 @@ export function TopPanel({ proposal, current, total, className }: Props) {
       <div>
         <IconButtonLink
           aria-label="Back to list"
-          to={{ pathname: `..`, search: searchParams.toString() }}
+          to={`..?${searchParams.toString()}`}
           variant="secondary"
           size="l"
           icon={XMarkIcon}
