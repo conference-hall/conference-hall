@@ -11,7 +11,7 @@ describe('Authentication', () => {
   const speakers = new SpeakerTalksPage();
   const userMenu = new UserMenuPage();
 
-  it.only('login', () => {
+  it('login', () => {
     login.visit();
     login.signinWithGoogle('Clark Kent');
 
