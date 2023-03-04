@@ -18,7 +18,7 @@ export const initializeFirebase = (config?: FirebaseConfig) => {
     projectId: config.FIREBASE_PROJECT_ID,
   });
 
-  if (!config.useFirebaseEmulators) {
+  if (config.useFirebaseEmulators) {
     const auth = getAuth(app);
     connectAuthEmulator(auth, `http://${config.FIREBASE_AUTH_EMULATOR_HOST}`, { disableWarnings: true });
   }

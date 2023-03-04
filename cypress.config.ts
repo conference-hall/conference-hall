@@ -16,7 +16,7 @@ export default defineConfig({
     scrollBehavior: 'center',
     setupNodeEvents(on) {
       // setup custom task
-      on('task', {
+      return on('task', {
         disconnectDB,
         seedDB: async (name: string) => {
           try {
