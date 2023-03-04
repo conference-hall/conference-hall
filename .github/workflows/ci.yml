@@ -41,9 +41,6 @@ jobs:
       - name: Execute tests
         run: npm test
 
-      - name: Execute e2e tests
-        run: npm run cy:run
-
       - name: Stop database and firebase emulators
         if: always()
         run: docker compose down
@@ -54,3 +51,37 @@ jobs:
         with:
           check_name: 'Test report'
           report_paths: './test-results/*.xml'
+
+  e2e:
+    name: E2E tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Start database and firebase emulators
+        run: docker compose up -d --build
+
+      - name: Wait for database start...
+        run: ./docker/wait-for-db.sh
+
+      - uses: cypress-io/github-action@v5
+        with:
+          build: npm run e2e:ci:build
+          start: npm run e2e:ci:start
+          wait-on: 'http://localhost:3001'
+          command: npm run e2e:ci:run
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Stop database and firebase emulators
+        if: always()
+        run: docker compose down
