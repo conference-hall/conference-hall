@@ -1,23 +1,18 @@
 import { defineConfig } from 'cypress';
-import { config } from './app/libs/config';
 import { resetDB, disconnectDB } from './tests/db-helpers';
 
-const isCI = Boolean(process.env.CI);
+const { PROTOCOL, DOMAIN, PORT } = process.env;
+const APP_URL = `${PROTOCOL}://${DOMAIN}:${PORT}`;
 
 export default defineConfig({
   screenshotOnRunFailure: false,
   video: false,
-  reporter: isCI ? 'junit' : 'spec',
-  reporterOptions: {
-    mochaFile: './test-results/e2e-[hash].xml',
-  },
   e2e: {
-    baseUrl: config.appUrl,
-    experimentalSessionAndOrigin: true,
+    baseUrl: APP_URL,
     scrollBehavior: 'center',
-    setupNodeEvents(on) {
+    setupNodeEvents(on, config) {
       // setup custom task
-      return on('task', {
+      on('task', {
         disconnectDB,
         seedDB: async (name: string) => {
           try {
@@ -31,6 +26,8 @@ export default defineConfig({
           return 'loaded';
         },
       });
+
+      return config;
     },
   },
 });
