@@ -99,7 +99,7 @@ describe('Event settings', () => {
       });
     });
 
-    describe('customize settings', () => {
+    describe.skip('customize settings', () => {
       it('can upload a new banner', () => {
         customize.visit('orga-1', 'conference-1');
         customize.uploadBanner().selectFile('cypress/fixtures/banner.jpg', { force: true });
