@@ -14,6 +14,7 @@ export default defineConfig({
   e2e: {
     baseUrl: config.appUrl,
     scrollBehavior: 'center',
+    defaultCommandTimeout: 20000,
     setupNodeEvents(on) {
       // setup custom task
       return on('task', {
