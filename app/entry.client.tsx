@@ -3,9 +3,9 @@ import { RemixBrowser } from '@remix-run/react';
 require('react-dom').hydrate(<RemixBrowser />, document);
 
 // HYDRATATION ISSUES !!!!!!!!!
-// import { RemixBrowser } from "@remix-run/react";
-// import { startTransition, StrictMode } from "react";
-// import { hydrateRoot } from "react-dom/client";
+// import { RemixBrowser } from '@remix-run/react';
+// import { startTransition, StrictMode } from 'react';
+// import { hydrateRoot } from 'react-dom/client';
 
 // function hydrate() {
 //   startTransition(() => {
@@ -18,7 +18,7 @@ require('react-dom').hydrate(<RemixBrowser />, document);
 //   });
 // }
 
-// if (typeof requestIdleCallback === "function") {
+// if (typeof requestIdleCallback === 'function') {
 //   requestIdleCallback(hydrate);
 // } else {
 //   // Safari doesn't support requestIdleCallback

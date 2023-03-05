@@ -1,3 +1,4 @@
+import { ClientOnly } from 'remix-utils';
 import { CalendarIcon, MapPinIcon } from '@heroicons/react/20/solid';
 import { Container } from '~/design-system/Container';
 import { H1 } from '~/design-system/Typography';
@@ -18,7 +19,7 @@ export function EventHeader({ name, type, address, conferenceStart, conferenceEn
       <H1>{name}</H1>
       <div className="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:gap-x-6">
         <IconLabel icon={CalendarIcon} className="mt-2 text-gray-500" truncate>
-          {formatConferenceDates(type, conferenceStart, conferenceEnd)}
+          <ClientOnly>{() => formatConferenceDates(type, conferenceStart, conferenceEnd)}</ClientOnly>
         </IconLabel>
         {address && (
           <IconLabel icon={MapPinIcon} className="mt-2 text-gray-500" truncate>

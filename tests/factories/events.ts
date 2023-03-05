@@ -71,7 +71,7 @@ export const eventFactory = async (options: FactoryOptions = {}) => {
     slug: `slug-${fake.randUuid()}`,
     description: fake.randParagraph(),
     address: fake.randFullAddress(),
-    bannerUrl: fake.randImg({ width: 1200, height: 300 }),
+    bannerUrl: 'http://via.placeholder.com/1500x500',
     websiteUrl: fake.randUrl(),
     contactEmail: fake.randEmail(),
     codeOfConductUrl: fake.randUrl(),

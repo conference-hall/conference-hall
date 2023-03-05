@@ -1,5 +1,6 @@
 import { CalendarIcon, InboxIcon } from '@heroicons/react/24/outline';
 import { formatRelative } from 'date-fns';
+import { ClientOnly } from 'remix-utils';
 import { AvatarGroup } from '~/design-system/Avatar';
 import Badge from '~/design-system/Badges';
 import { CardLink } from '~/design-system/Card';
@@ -46,7 +47,9 @@ export function SpeakerTalksList({ talks }: Props) {
             <div>
               <IconLabel icon={CalendarIcon} className="text-sm text-gray-500" iconClassName="text-gray-400">
                 Created&nbsp;
-                <time dateTime={talk.createdAt}>{formatRelative(new Date(talk.createdAt), new Date())}</time>
+                <ClientOnly>
+                  {() => <time dateTime={talk.createdAt}>{formatRelative(new Date(talk.createdAt), new Date())}</time>}
+                </ClientOnly>
               </IconLabel>
             </div>
           </div>

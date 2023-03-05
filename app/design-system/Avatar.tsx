@@ -24,7 +24,7 @@ export function Avatar({ photoURL, alt, size = 's', ring = false, ringColor = 'p
   return (
     <img
       className={styles}
-      src={photoURL || 'http://placekitten.com/100/100'}
+      src={photoURL || 'http://via.placeholder.com/100x100'}
       alt={alt || ''}
       aria-hidden={!alt}
       loading="lazy"
