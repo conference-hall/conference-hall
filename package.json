@@ -20,6 +20,7 @@
     "format": "prettier -l --write .",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
     "tsc": "tsc -b && tsc -b cypress",
+    "ladle": "ladle serve",
     "prepare": "husky install"
   },
   "lint-staged": {
@@ -58,6 +59,7 @@
     "zod-form-data": "^2.0.0"
   },
   "devDependencies": {
+    "@ladle/react": "^2.9.0",
     "@ngneat/falso": "^6.4.0",
     "@remix-run/dev": "1.14.0",
     "@remix-run/eslint-config": "1.14.0",
@@ -75,6 +77,7 @@
     "@types/react-dom": "^18.0.11",
     "@types/uuid": "^9.0.1",
     "@vitejs/plugin-react": "^3.1.0",
+    "autoprefixer": "^10.4.13",
     "cypress": "^12.7.0",
     "dotenv-cli": "^7.0.0",
     "esbuild-register": "^3.4.2",
