@@ -4,6 +4,8 @@ import { Response } from '@remix-run/node';
 import { RemixServer } from '@remix-run/react';
 import isbot from 'isbot';
 import { renderToPipeableStream } from 'react-dom/server';
+import { renderHeadToString } from 'remix-island';
+import { Head } from './root';
 
 const ABORT_DELAY = 5000;
 
@@ -29,6 +31,7 @@ function handleBotRequest(
       <RemixServer context={remixContext} url={request.url} abortDelay={ABORT_DELAY} />,
       {
         onAllReady() {
+          const head = renderHeadToString({ request, remixContext, Head });
           const body = new PassThrough();
 
           responseHeaders.set('Content-Type', 'text/html');
@@ -40,7 +43,11 @@ function handleBotRequest(
             })
           );
 
+          body.write(
+            `<!DOCTYPE html><html lang="en" className="scroll-smooth"><head>${head}</head><body class="bg-white font-sans text-gray-600 antialiased"><div id="root">`
+          );
           pipe(body);
+          body.write(`</div></body></html>`);
         },
         onShellError(error: unknown) {
           reject(error);
@@ -67,6 +74,7 @@ function handleBrowserRequest(
       <RemixServer context={remixContext} url={request.url} abortDelay={ABORT_DELAY} />,
       {
         onShellReady() {
+          const head = renderHeadToString({ request, remixContext, Head });
           const body = new PassThrough();
 
           responseHeaders.set('Content-Type', 'text/html');
@@ -78,7 +86,11 @@ function handleBrowserRequest(
             })
           );
 
+          body.write(
+            `<!DOCTYPE html><html lang="en" className="scroll-smooth"><head>${head}</head><body class="bg-white font-sans text-gray-600 antialiased"><div id="root">`
+          );
           pipe(body);
+          body.write(`</div></body></html>`);
         },
         onShellError(error: unknown) {
           reject(error);

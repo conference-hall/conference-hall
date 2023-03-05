@@ -1,17 +1,14 @@
-import type { ReactNode } from 'react';
 import type { LinksFunction, LoaderArgs, MetaFunction } from '@remix-run/node';
 import { config } from './libs/config';
 import { json } from '@remix-run/node';
-import { Meta, LiveReload, Outlet, Links, Scripts, useCatch, useLoaderData, ScrollRestoration } from '@remix-run/react';
+import { createHead } from 'remix-island';
+import { Meta, LiveReload, Outlet, Links, Scripts, useLoaderData, ScrollRestoration } from '@remix-run/react';
 import { initializeFirebase } from './libs/auth/firebase';
 import { commitSession, getSession } from './libs/auth/auth.server';
 import { getUser } from './services/user/get-user.server';
 import { Footer } from './components/Footer';
-import { H1, Text } from './design-system/Typography';
-import { Container } from './design-system/Container';
 import { GlobalLoading } from './components/GlobalLoading';
 import { Toast } from './design-system/Toast';
-import type { ToastData } from './utils/toasts';
 import { getToast } from './utils/toasts';
 import tailwind from './tailwind.css';
 import { listNotifications } from './services/user-notifications/list-notifications.server';
@@ -28,6 +25,13 @@ export const links: LinksFunction = () => {
     { rel: 'stylesheet', href: tailwind },
   ];
 };
+
+export const Head = createHead(() => (
+  <>
+    <Meta />
+    <Links />
+  </>
+));
 
 export type UserContext = {
   user: Awaited<ReturnType<typeof getUser>> | null;
@@ -68,60 +72,15 @@ export default function App() {
   initializeFirebase(firebase);
 
   return (
-    <Document toast={toast}>
+    <>
+      <Head />
       <Outlet context={{ user, notifications }} />
-    </Document>
-  );
-}
-
-type DocumentProps = { children: ReactNode; toast?: ToastData | null };
-
-function Document({ children, toast }: DocumentProps) {
-  return (
-    <html lang="en" className="scroll-smooth">
-      <head>
-        <Meta />
-        <Links />
-      </head>
-      <body className="bg-white font-sans text-gray-600 antialiased">
-        <GlobalLoading />
-        {children}
-        <Footer />
-        <Scripts />
-        <ScrollRestoration />
-        <LiveReload />
-        <Toast toast={toast} />
-      </body>
-    </html>
-  );
-}
-
-export function CatchBoundary() {
-  const caught = useCatch();
-
-  return (
-    <Document>
-      <Container className="my-4 sm:my-8">
-        <H1>
-          {caught.status} {caught.statusText}
-        </H1>
-        <Text>{caught.data}</Text>
-      </Container>
-    </Document>
-  );
-}
-
-export function ErrorBoundary({ error }: { error: Error }) {
-  if (process.env.NODE_ENV === 'development') {
-    console.error(error);
-  }
-
-  return (
-    <Document>
-      <Container className="my-4 sm:my-8">
-        <H1>App Error</H1>
-        <Text>{error.message}</Text>
-      </Container>
-    </Document>
+      <Footer />
+      <ScrollRestoration />
+      <Scripts />
+      <LiveReload />
+      <Toast toast={toast} />
+      <GlobalLoading />
+    </>
   );
 }
