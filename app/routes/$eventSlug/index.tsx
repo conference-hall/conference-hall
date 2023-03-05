@@ -13,7 +13,7 @@ export default function EventRoute() {
   return (
     <>
       <img
-        src={event.bannerUrl || 'https://placekitten.com/1200/300'}
+        src={event.bannerUrl || 'http://via.placeholder.com/1500x500'}
         className="hidden h-64 w-full bg-gray-100 object-cover sm:block"
         height="256px"
         aria-hidden="true"

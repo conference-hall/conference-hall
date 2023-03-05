@@ -11,6 +11,7 @@ import { UploadingError } from '~/libs/storage/storage.server';
 import { ButtonFileUpload } from '~/design-system/forms/FileUploadButton';
 import { mapErrorToResponse } from '~/libs/errors';
 import { uploadEventBanner } from '~/services/organizer-event/upload-event-banner.server';
+import { ClientOnly } from 'remix-utils';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);
@@ -56,11 +57,15 @@ export default function EventGeneralSettingsRoute() {
             100kB max (optimize it with <ExternalLink href="https://squoosh.app">squoosh.app</ExternalLink>)
           </AlertInfo>
           {event.bannerUrl && (
-            <img
-              src={`${event.bannerUrl}?${Math.random()}`}
-              alt="Event banner"
-              className="h-64 w-full rounded object-cover"
-            />
+            <ClientOnly>
+              {() => (
+                <img
+                  src={`${event.bannerUrl}?${Math.random()}`}
+                  alt="Event banner"
+                  className="h-64 w-full rounded object-cover"
+                />
+              )}
+            </ClientOnly>
           )}
           <div className="space-x-4">
             <Form method="post" encType="multipart/form-data" onChange={handleSubmit}>

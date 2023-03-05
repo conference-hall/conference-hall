@@ -3,6 +3,7 @@ import { MicrophoneIcon, PlusIcon, XMarkIcon, CheckIcon } from '@heroicons/react
 import { ExclamationCircleIcon, EllipsisHorizontalIcon } from '@heroicons/react/24/outline';
 import { IconLabel } from '../design-system/IconLabel';
 import { Link } from '../design-system/Links';
+import { ClientOnly } from 'remix-utils';
 
 interface Props {
   activities: Array<{
@@ -86,7 +87,10 @@ function TalkActivity({ talkId, talkTitle, date, noSubmission, showTimeline = fa
               <Link to={`talks/${talkId}`} className="font-medium text-gray-900 hover:text-gray-900">
                 {talkTitle}
               </Link>{' '}
-              updated <span className="whitespace-nowrap">{formatRelative(new Date(date), new Date())}</span>
+              updated{' '}
+              <span className="whitespace-nowrap">
+                <ClientOnly>{() => formatRelative(new Date(date), new Date())}</ClientOnly>
+              </span>
             </div>
             <p className="mt-0.5 text-sm text-gray-500">by Clark Kent</p>
             {noSubmission && (
@@ -134,7 +138,9 @@ export function EventActivity({ eventName, eventSlug, date, showTimeline = false
             <Link to={`/${eventSlug}/proposals`} className="font-medium text-gray-900 hover:text-gray-900">
               {eventName}
             </Link>{' '}
-            <span className="whitespace-nowrap">{formatRelative(new Date(date), new Date())}</span>
+            <span className="whitespace-nowrap">
+              <ClientOnly>{() => formatRelative(new Date(date), new Date())}</ClientOnly>
+            </span>
           </div>
         </div>
       </div>

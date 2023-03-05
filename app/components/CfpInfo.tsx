@@ -1,3 +1,5 @@
+import { ClientOnly } from 'remix-utils';
+
 import type { CfpState } from '~/schemas/event';
 import cn from 'classnames';
 import { formatCFPDate, formatCFPState, formatCFPElapsedTime } from '../utils/event';
@@ -26,11 +28,17 @@ export function CfpInfo({ cfpState, cfpStart, cfpEnd }: CfpInfoProps) {
     <div>
       <H2 className="inline-flex items-center space-x-3">
         <CfpIcon cfpState={cfpState} />
-        <span className="block">{formatCFPElapsedTime(cfpState, cfpStart, cfpEnd)}</span>
+        <ClientOnly>
+          {() => <span className="block">{formatCFPElapsedTime(cfpState, cfpStart, cfpEnd)}</span>}
+        </ClientOnly>
       </H2>
-      <Text variant="secondary" className="mt-1">
-        {formatCFPDate(cfpState, cfpStart, cfpEnd)}
-      </Text>
+      <ClientOnly>
+        {() => (
+          <Text variant="secondary" className="mt-1">
+            {formatCFPDate(cfpState, cfpStart, cfpEnd)}
+          </Text>
+        )}
+      </ClientOnly>
     </div>
   );
 }
@@ -39,7 +47,9 @@ export function CfpElapsedTime({ cfpState, cfpStart, cfpEnd, className }: CfpInf
   return (
     <div className={cn('flex items-center space-x-3', className)}>
       <CfpIcon cfpState={cfpState} />
-      <span className="block text-sm font-semibold">{formatCFPElapsedTime(cfpState, cfpStart, cfpEnd)}</span>
+      <ClientOnly>
+        {() => <span className="block text-sm font-semibold">{formatCFPElapsedTime(cfpState, cfpStart, cfpEnd)}</span>}
+      </ClientOnly>
     </div>
   );
 }
