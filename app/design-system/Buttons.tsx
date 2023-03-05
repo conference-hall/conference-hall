@@ -3,7 +3,7 @@ import type { LinkProps } from '@remix-run/react';
 import { Link } from '@remix-run/react';
 import cn from 'classnames';
 
-type ButtonProps = ButtonStylesProps & React.ButtonHTMLAttributes<HTMLButtonElement>;
+export type ButtonProps = ButtonStylesProps & React.ButtonHTMLAttributes<HTMLButtonElement>;
 
 export function Button({
   children,
@@ -28,7 +28,7 @@ export function Button({
   );
 }
 
-type ButtonLinkProps = ButtonStylesProps & LinkProps;
+export type ButtonLinkProps = ButtonStylesProps & LinkProps;
 
 export function ButtonLink({
   children,
