@@ -3,7 +3,11 @@ import { Link } from '@remix-run/react';
 import { MenuTransition } from '~/design-system/Transitions';
 import { BellIcon } from '@heroicons/react/24/outline';
 
-type Notification = { type: string; proposal: { id: string; title: string }; event: { slug: string; name: string } };
+export type Notification = {
+  type: string;
+  proposal: { id: string; title: string };
+  event: { slug: string; name: string };
+};
 
 type Props = { notifications: Array<Notification> | null };
 
