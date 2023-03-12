@@ -10,5 +10,6 @@ module.exports = {
   serverDependenciesToBundle: [/^marked.*/, '@sindresorhus/slugify', '@sindresorhus/transliterate'],
   future: {
     unstable_tailwind: true,
+    v2_routeConvention: true,
   },
 };
