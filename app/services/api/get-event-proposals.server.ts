@@ -1,14 +1,7 @@
-import { makeDomainFunction } from 'domain-functions';
-import { z } from 'zod';
 import { db } from '../../libs/db';
 import { ApiKeyInvalidError, EventNotFoundError } from '../../libs/errors';
 
-export const EventProposalsApiSchema = z.object({
-  eventSlug: z.string().min(1),
-  apiKey: z.string().min(1),
-});
-
-export const getEventProposals = makeDomainFunction(EventProposalsApiSchema)(async ({ eventSlug, apiKey }) => {
+export const getEventProposals = async (eventSlug: string, apiKey: string) => {
   const event = await db.event.findFirst({ where: { slug: eventSlug } });
 
   if (!event) throw new EventNotFoundError();
@@ -37,4 +30,4 @@ export const getEventProposals = makeDomainFunction(EventProposalsApiSchema)(asy
       })),
     };
   });
-});
+};
