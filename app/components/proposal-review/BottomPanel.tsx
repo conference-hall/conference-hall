@@ -12,7 +12,7 @@ type Props = {
 };
 
 export function BottomPanel({ nextId, previousId, userRating, className }: Props) {
-  const { slug, eventSlug } = useParams();
+  const params = useParams();
   const [searchParams] = useSearchParams();
 
   return (
@@ -22,7 +22,10 @@ export function BottomPanel({ nextId, previousId, userRating, className }: Props
     >
       <div className="w-24">
         <ButtonLink
-          to={{ pathname: `/organizer/${slug}/${eventSlug}/review/${previousId}`, search: searchParams.toString() }}
+          to={{
+            pathname: `/organizer/${params.orga}/${params.event}/review/${previousId}`,
+            search: searchParams.toString(),
+          }}
           variant="secondary"
           iconLeft={ChevronLeftIcon}
           disabled={!previousId}
@@ -33,7 +36,10 @@ export function BottomPanel({ nextId, previousId, userRating, className }: Props
       <RatingButtons userRating={userRating} />
       <div className="w-24">
         <ButtonLink
-          to={{ pathname: `/organizer/${slug}/${eventSlug}/review/${nextId}`, search: searchParams.toString() }}
+          to={{
+            pathname: `/organizer/${params.orga}/${params.event}/review/${nextId}`,
+            search: searchParams.toString(),
+          }}
           variant="secondary"
           iconRight={ChevronRightIcon}
           disabled={!nextId}
