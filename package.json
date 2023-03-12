@@ -53,6 +53,7 @@
     "react-dom": "^18.2.0",
     "remix": "1.14.1",
     "remix-utils": "^6.0.0",
+    "tiny-invariant": "^1.3.1",
     "use-debounce": "^9.0.3",
     "xss": "^1.0.14",
     "zod": "^3.21.4",

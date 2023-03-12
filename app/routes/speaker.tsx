@@ -21,10 +21,11 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 export default function SpeakerRoute() {
-  const { user } = useOutletContext<UserContext>();
+  const { user, notifications } = useOutletContext<UserContext>();
+
   return (
     <>
-      <Navbar />
+      <Navbar user={user} notifications={notifications} />
       <Container className="my-4 hidden sm:flex sm:items-center sm:justify-between">
         <div className="sm:flex sm:items-center sm:space-x-5">
           <Avatar photoURL={user?.photoURL} size="m" ring />

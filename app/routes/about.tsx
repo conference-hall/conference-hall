@@ -2,11 +2,15 @@ import { Navbar } from '~/components/navbar/Navbar';
 import { ButtonLink } from '../design-system/Buttons';
 import { Container } from '../design-system/Container';
 import { H1, H2 } from '../design-system/Typography';
+import { useOutletContext } from '@remix-run/react';
+import type { UserContext } from '~/root';
 
 export default function AboutRoute() {
+  const { user, notifications } = useOutletContext<UserContext>();
+
   return (
     <>
-      <Navbar />
+      <Navbar user={user} notifications={notifications} />
       <Container as="section" className="py-8 sm:py-16">
         <H1>Welcome to Conference Hall.</H1>
         <H2 className="mt-2 text-gray-500">All-in-one call for paper platform.</H2>

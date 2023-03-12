@@ -1,4 +1,6 @@
+import invariant from 'tiny-invariant';
 import type { LoaderArgs } from '@remix-run/node';
+import type { UserContext } from '~/root';
 import { json } from '@remix-run/node';
 import { Outlet, useCatch, useLoaderData, useOutletContext } from '@remix-run/react';
 import { EventHeader } from '~/components/EventHeader';
@@ -10,11 +12,10 @@ import { mapErrorToResponse } from '~/libs/errors';
 import { getEvent } from '~/services/event-page/get-event.server';
 
 export const loader = async ({ params }: LoaderArgs) => {
-  const slug = params.eventSlug;
-  if (!slug) throw new Response('Event not found', { status: 404 });
+  invariant(params.eventSlug, 'Invalid event slug');
 
   try {
-    const event = await getEvent(slug);
+    const event = await getEvent(params.eventSlug);
     return json(event);
   } catch (err) {
     throw mapErrorToResponse(err);
@@ -23,10 +24,11 @@ export const loader = async ({ params }: LoaderArgs) => {
 
 export default function EventRoute() {
   const event = useLoaderData<typeof loader>();
+  const { user, notifications } = useOutletContext<UserContext>();
 
   return (
     <>
-      <Navbar />
+      <Navbar user={user} notifications={notifications} />
       <EventHeader
         type={event.type}
         name={event.name}

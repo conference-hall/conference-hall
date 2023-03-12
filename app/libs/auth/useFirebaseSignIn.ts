@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import type { SubmitFunction } from '@remix-run/react';
-import { useSearchParams, useTransition } from '@remix-run/react';
+import { useSearchParams, useNavigation } from '@remix-run/react';
 import {
   getAuth,
   getRedirectResult,
@@ -13,7 +13,7 @@ import {
 type FirebaseSignReturn = [boolean, () => Promise<void>];
 
 export function useFirebaseSignIn(onSubmit: SubmitFunction): FirebaseSignReturn {
-  const transition = useTransition();
+  const { state } = useNavigation();
   const [searchParams, setSearchParams] = useSearchParams();
   const isRedirecting = Boolean(searchParams.get('redirecting'));
   const redirectTo = searchParams.get('redirectTo') || '/';
@@ -43,5 +43,5 @@ export function useFirebaseSignIn(onSubmit: SubmitFunction): FirebaseSignReturn 
     });
   };
 
-  return [isRedirecting || transition.state === 'submitting', signin];
+  return [isRedirecting || state === 'submitting', signin];
 }

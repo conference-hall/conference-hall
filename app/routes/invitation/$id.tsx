@@ -1,7 +1,8 @@
+import invariant from 'tiny-invariant';
 import { StarIcon } from '@heroicons/react/20/solid';
 import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
-import { Form, useLoaderData } from '@remix-run/react';
+import { Form, useLoaderData, useOutletContext } from '@remix-run/react';
 import { Navbar } from '~/components/navbar/Navbar';
 import { addCoSpeakerToProposal } from '~/services/event-proposals/add-co-speaker.server';
 import { getInvitation } from '~/services/invitations/get-invitation.server';
@@ -13,15 +14,14 @@ import { H1, H2, Text } from '../../design-system/Typography';
 import { sessionRequired } from '../../libs/auth/auth.server';
 import { mapErrorToResponse } from '../../libs/errors';
 import { inviteCoSpeakerToTalk } from '../../services/speaker-talks/co-speaker.server';
+import type { UserContext } from '~/root';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   await sessionRequired(request);
-  const invitationId = params.id;
-  if (!invitationId) {
-    throw new Response('Invite not found', { status: 404 });
-  }
+  invariant(params.id, 'Invalid invite');
+
   try {
-    const invitation = await getInvitation(invitationId);
+    const invitation = await getInvitation(params.id);
     return json(invitation);
   } catch (err) {
     throw mapErrorToResponse(err);
@@ -30,18 +30,18 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
 export const action: ActionFunction = async ({ request, params }) => {
   const { uid } = await sessionRequired(request);
-  const invitationId = params.id!;
+  invariant(params.id, 'Invalid invite');
   const form = await request.formData();
   const type = form.get('_type');
   try {
     if (type === 'TALK') {
-      const talk = await inviteCoSpeakerToTalk(invitationId, uid);
+      const talk = await inviteCoSpeakerToTalk(params.id, uid);
       return redirect(`/speaker/talks/${talk.id}`);
     } else if (type === 'PROPOSAL') {
-      const proposal = await addCoSpeakerToProposal(invitationId, uid);
+      const proposal = await addCoSpeakerToProposal(params.id, uid);
       return redirect(`/${proposal.eventSlug}/proposals/${proposal.proposalId}`);
     } else if (type === 'ORGANIZATION') {
-      const organization = await addMember(invitationId, uid);
+      const organization = await addMember(params.id, uid);
       return redirect(`/organizer/${organization.slug}`);
     }
   } catch (err) {
@@ -51,10 +51,11 @@ export const action: ActionFunction = async ({ request, params }) => {
 
 export default function InvitationRoute() {
   const invitation = useLoaderData<typeof loader>();
+  const { user, notifications } = useOutletContext<UserContext>();
 
   return (
     <>
-      <Navbar />
+      <Navbar user={user} notifications={notifications} />
       <Container className="m-24">
         <div className="flex flex-col items-center bg-white px-4 py-5 sm:rounded-lg sm:p-6">
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-indigo-100">

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Form, useTransition } from '@remix-run/react';
+import { Form, useNavigation } from '@remix-run/react';
 import { Modal } from '~/design-system/dialogs/Modals';
 import { Button } from '~/design-system/Buttons';
 import { PaperAirplaneIcon } from '@heroicons/react/24/outline';
@@ -7,16 +7,12 @@ import { PaperAirplaneIcon } from '@heroicons/react/24/outline';
 type SendEmailsButtonProps = { total: number; selection: string[]; onSend?: () => void };
 
 export function SendEmailsButton({ total, selection, onSend }: SendEmailsButtonProps) {
-  const transition = useTransition();
+  const { state } = useNavigation();
   const [isModalOpen, setModalOpen] = useState(false);
   const emailCount = selection.length > 0 ? selection.length : total;
   return (
     <>
-      <Button
-        onClick={() => setModalOpen(true)}
-        size="s"
-        loading={transition.state === 'submitting' || transition.state === 'loading'}
-      >
+      <Button onClick={() => setModalOpen(true)} size="s" loading={state === 'submitting' || state === 'loading'}>
         {selection.length > 0 ? `Send ${selection.length} emails` : 'Send all emails'}
       </Button>
       <SendEmailsModal
@@ -33,7 +29,7 @@ export function SendEmailsButton({ total, selection, onSend }: SendEmailsButtonP
 type ResendEmailButtonProps = { id: string; title: string };
 
 export function ResendEmailButton({ id, title }: ResendEmailButtonProps) {
-  const transition = useTransition();
+  const { state } = useNavigation();
   const [isModalOpen, setModalOpen] = useState(false);
   return (
     <>
@@ -41,7 +37,7 @@ export function ResendEmailButton({ id, title }: ResendEmailButtonProps) {
         onClick={() => setModalOpen(true)}
         variant="secondary"
         size="s"
-        loading={transition.state === 'submitting' || transition.state === 'loading'}
+        loading={state === 'submitting' || state === 'loading'}
       >
         Resend
       </Button>
