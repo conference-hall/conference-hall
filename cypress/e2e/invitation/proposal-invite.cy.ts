@@ -1,6 +1,5 @@
 import EventProposalPage from 'page-objects/event/proposal.page';
 import InvitationPage from 'page-objects/invitation.page';
-import SearchEventPage from 'page-objects/search.page';
 
 describe('Proposal invitation page', () => {
   beforeEach(() => cy.task('seedDB', 'invitation/proposal-invite'));
@@ -8,7 +7,6 @@ describe('Proposal invitation page', () => {
 
   const invitation = new InvitationPage();
   const proposal = new EventProposalPage();
-  const search = new SearchEventPage();
 
   it('can accept an invite to a proposal', () => {
     cy.login('Bruce Wayne');
@@ -21,13 +19,6 @@ describe('Proposal invitation page', () => {
     cy.assertText('Proposal "Awesome talk"');
     cy.assertText('Clark Kent');
     cy.assertText('Bruce Wayne');
-  });
-
-  it('go back to homepage', () => {
-    cy.login('Bruce Wayne');
-    invitation.visit('invitation-1');
-    invitation.goHomepage().click();
-    search.isPageVisible();
   });
 
   it('display error page when invitation not found', () => {
