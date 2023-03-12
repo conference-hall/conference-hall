@@ -1,3 +1,4 @@
+import invariant from 'tiny-invariant';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import type { ProposalsFilters } from '~/schemas/proposal';
 import { json } from '@remix-run/node';
@@ -15,24 +16,26 @@ import { mapErrorToResponse } from '~/libs/errors';
 import { createToast } from '~/utils/toasts';
 import { CampaignEmailStats } from '~/components/campaign-email/CampaignEmailStats';
 import { searchProposals } from '~/services/organizer-review/search-proposals.server';
-import { getAcceptationCampaignStats } from '~/services/organizer-email-campaigns/get-acceptation-campaign-stats.server';
-import { sendAcceptationCampaign } from '~/services/organizer-email-campaigns/send-acceptation-campaign.server';
+import { getRejectionCampaignStats } from '~/services/organizer-email-campaigns/get-rejection-campaign-stats.server';
+import { sendRejectionCampaign } from '~/services/organizer-email-campaigns/send-rejection-campaign.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
+  invariant(params.orga, 'Invalid organization slug');
+  invariant(params.event, 'Invalid event slug');
+
   const url = new URL(request.url);
   const { data } = await withZod(ProposalsFiltersSchema).validate(url.searchParams);
   const page = await parsePage(url.searchParams);
-  const { slug, eventSlug } = params;
   const filters = {
     query: data?.query,
-    emailAcceptedStatus: data?.emailAcceptedStatus || 'not-sent',
-    status: ['ACCEPTED', 'CONFIRMED', 'DECLINED'],
+    emailRejectedStatus: data?.emailRejectedStatus || 'not-sent',
+    status: ['REJECTED'],
   } as ProposalsFilters;
 
   try {
-    const proposals = await searchProposals(slug!, eventSlug!, uid, filters, page);
-    const stats = await getAcceptationCampaignStats(slug!, eventSlug!, uid);
+    const proposals = await searchProposals(params.orga, params.event, uid, filters, page);
+    const stats = await getRejectionCampaignStats(params.orga, params.event, uid);
     return json({ proposals, stats });
   } catch (err) {
     throw mapErrorToResponse(err);
@@ -41,27 +44,29 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
 export const action = async ({ request, params }: ActionArgs) => {
   const { uid, session } = await sessionRequired(request);
-  const { slug, eventSlug } = params;
+  invariant(params.orga, 'Invalid organization slug');
+  invariant(params.event, 'Invalid event slug');
+
   const form = await request.formData();
   const { data, error } = await withZod(ProposalSelectionSchema).validate(form);
   if (error) return json(null);
-  await sendAcceptationCampaign(slug!, eventSlug!, uid, data.selection);
+  await sendRejectionCampaign(params.orga, params.event, uid, data.selection);
   return json(null, await createToast(session, 'Emails successfully sent.'));
 };
 
-export default function AcceptedProposalEmails() {
+export default function RejectedProposalEmails() {
   const { proposals, stats } = useLoaderData<typeof loader>();
   const { results, pagination, total } = proposals;
   const location = useLocation();
 
   return (
     <>
-      <H1>Acceptation emails campaign</H1>
+      <H1>Rejection emails campaign</H1>
       <CampaignEmailStats stats={stats} />
       <div>
-        <H2 className="mt-12">Select proposals to send acceptation emails</H2>
-        <CampaignEmailFilters type={CampaignType.ACCEPTATION} />
-        <CampaignEmailList type={CampaignType.ACCEPTATION} proposals={results} total={total} />
+        <H2 className="mt-12">Select proposals to send rejection emails</H2>
+        <CampaignEmailFilters type={CampaignType.REJECTION} />
+        <CampaignEmailList type={CampaignType.REJECTION} proposals={results} total={total} />
         <Pagination
           pathname={location.pathname}
           current={pagination.current}

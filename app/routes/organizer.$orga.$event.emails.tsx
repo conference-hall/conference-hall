@@ -1,3 +1,4 @@
+import invariant from 'tiny-invariant';
 import { ShieldCheckIcon, ShieldExclamationIcon } from '@heroicons/react/24/outline';
 import type { LoaderArgs } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
@@ -9,20 +10,22 @@ import { getUserRole } from '~/services/organization/get-user-role.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
-  const { slug, eventSlug } = params;
-  const role = await getUserRole(slug!, uid);
-  if (role !== 'OWNER') throw redirect(`/organizer/${slug}/${eventSlug}/proposals`);
+  invariant(params.orga, 'Invalid organization slug');
+  invariant(params.event, 'Invalid event slug');
+
+  const role = await getUserRole(params.orga, uid);
+  if (role !== 'OWNER') throw redirect(`/organizer/${params.orga}/${params.event}/proposals`);
   return null;
 };
 
-const getMenuItems = (orga: string, event: string) => [
+const getMenuItems = (orga?: string, event?: string) => [
   { to: `/organizer/${orga}/${event}/emails`, icon: ShieldCheckIcon, label: 'Acceptation campaign' },
   { to: `/organizer/${orga}/${event}/emails/rejected`, icon: ShieldExclamationIcon, label: 'Rejection campaign' },
 ];
 
 export default function EventProposalEmails() {
-  const { slug, eventSlug } = useParams();
-  const menus = getMenuItems(slug!, eventSlug!);
+  const params = useParams();
+  const menus = getMenuItems(params.orga, params.event);
 
   return (
     <Container className="my-4 flex flex-col gap-8 sm:my-12">

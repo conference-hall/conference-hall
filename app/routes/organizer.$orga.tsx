@@ -1,3 +1,4 @@
+import invariant from 'tiny-invariant';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Container } from '~/design-system/Container';
@@ -15,9 +16,10 @@ export type OrganizationContext = {
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
+  invariant(params.orga, 'Invalid organization slug');
+
   try {
-    const slug = params.slug!;
-    const organization = await getOrganization(slug, uid);
+    const organization = await getOrganization(params.orga, uid);
     return json(organization);
   } catch (e) {
     throw mapErrorToResponse(e);

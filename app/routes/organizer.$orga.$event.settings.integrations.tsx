@@ -1,3 +1,4 @@
+import invariant from 'tiny-invariant';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { sessionRequired } from '~/libs/auth/auth.server';
@@ -6,7 +7,7 @@ import { Form, useActionData, useOutletContext } from '@remix-run/react';
 import { ExternalLink } from '~/design-system/Links';
 import { Button } from '~/design-system/Buttons';
 import { Input } from '~/design-system/forms/Input';
-import type { OrganizerEventContext } from './organizer.$slug.$eventSlug';
+import type { OrganizerEventContext } from './organizer.$orga.$event';
 import { EventSlackSettingsSchema } from '~/schemas/event';
 import { withZod } from '@remix-validated-form/with-zod';
 import { updateEvent } from '~/services/organizer-event/update-event.server';
@@ -18,11 +19,13 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 export const action = async ({ request, params }: ActionArgs) => {
   const { uid } = await sessionRequired(request);
-  const { slug, eventSlug } = params;
+  invariant(params.orga, 'Invalid organization slug');
+  invariant(params.event, 'Invalid event slug');
   const form = await request.formData();
+
   const result = await withZod(EventSlackSettingsSchema).validate(form);
   if (result.error) return json(result.error.fieldErrors);
-  await updateEvent(slug!, eventSlug!, uid, result.data);
+  await updateEvent(params.orga, params.event, uid, result.data);
   return json(null);
 };
 

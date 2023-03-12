@@ -1,3 +1,4 @@
+import invariant from 'tiny-invariant';
 import type { ChangeEvent } from 'react';
 import { json } from '@remix-run/node';
 import type { LoaderArgs } from '@remix-run/node';
@@ -9,7 +10,7 @@ import { Input } from '~/design-system/forms/Input';
 import { Button } from '~/design-system/Buttons';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { EventEmailNotificationsSettingsSchema, EventNotificationsSettingsSchema } from '~/schemas/event';
-import type { OrganizerEventContext } from './organizer.$slug.$eventSlug';
+import type { OrganizerEventContext } from './organizer.$orga.$event';
 import { updateEvent } from '~/services/organizer-event/update-event.server';
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -19,7 +20,8 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 export const action = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
-  const { slug, eventSlug } = params;
+  invariant(params.orga, 'Invalid organization slug');
+  invariant(params.event, 'Invalid event slug');
   const form = await request.formData();
   const action = form.get('_action');
 
@@ -27,12 +29,12 @@ export const action = async ({ request, params }: LoaderArgs) => {
     case 'save-email-notifications': {
       const result = await withZod(EventEmailNotificationsSettingsSchema).validate(form);
       if (result.error) return json(result.error.fieldErrors);
-      await updateEvent(slug!, eventSlug!, uid, result.data);
+      await updateEvent(params.orga, params.event, uid, result.data);
       break;
     }
     case 'save-notifications': {
       const result = await withZod(EventNotificationsSettingsSchema).validate(form);
-      if (!result.error) await updateEvent(slug!, eventSlug!, uid, result.data);
+      if (!result.error) await updateEvent(params.orga, params.event, uid, result.data);
       break;
     }
   }

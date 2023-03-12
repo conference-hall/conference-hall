@@ -1,3 +1,4 @@
+import invariant from 'tiny-invariant';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 import { json } from '@remix-run/node';
@@ -7,7 +8,7 @@ import { Form, useActionData, useOutletContext } from '@remix-run/react';
 import { Button } from '~/design-system/Buttons';
 import { Input } from '~/design-system/forms/Input';
 import { MarkdownTextArea } from '~/design-system/forms/MarkdownTextArea';
-import type { OrganizerEventContext } from './organizer.$slug.$eventSlug';
+import type { OrganizerEventContext } from './organizer.$orga.$event';
 import { DateRangeInput } from '~/design-system/forms/DateRangeInput';
 import { EventInfoForm } from '~/components/organizer-event/EventInfoForm';
 import { withZod } from '@remix-validated-form/with-zod';
@@ -21,20 +22,21 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 export const action = async ({ request, params }: ActionArgs) => {
   const { uid } = await sessionRequired(request);
-  const { slug, eventSlug } = params;
+  invariant(params.orga, 'Invalid organization slug');
+  invariant(params.event, 'Invalid event slug');
   const form = await request.formData();
   const action = form.get('_action');
 
   if (action === 'general') {
     const result = await withZod(EventGeneralSettingsSchema).validate(form);
     if (result.error) return json(result.error.fieldErrors);
-    const updated = await updateEvent(slug!, eventSlug!, uid, result.data);
-    if (updated.slug) throw redirect(`/organizer/${slug}/${updated.slug}/settings`);
+    const updated = await updateEvent(params.orga, params.event, uid, result.data);
+    if (updated.slug) throw redirect(`/organizer/${params.orga}/${updated.slug}/settings`);
     return json(updated?.error?.fieldErrors);
   } else if (action === 'details') {
     const result = await withZod(EventDetailsSettingsSchema).validate(form);
     if (result.error) return json(result.error?.fieldErrors);
-    await updateEvent(slug!, eventSlug!, uid, result.data);
+    await updateEvent(params.orga, params.event, uid, result.data);
   }
   return json(null);
 };

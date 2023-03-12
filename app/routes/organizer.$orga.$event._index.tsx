@@ -1,3 +1,4 @@
+import invariant from 'tiny-invariant';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData, useLocation, useOutletContext } from '@remix-run/react';
@@ -9,7 +10,7 @@ import { NoProposals } from '~/components/proposals-list/NoProposals';
 import { Container } from '~/design-system/Container';
 import { Pagination } from '~/design-system/Pagination';
 import { parsePage } from '~/schemas/pagination';
-import type { OrganizerEventContext } from './organizer.$slug.$eventSlug';
+import type { OrganizerEventContext } from './organizer.$orga.$event';
 import { withZod } from '@remix-validated-form/with-zod';
 import { ProposalsStatusUpdateSchema, ProposalsFiltersSchema } from '~/schemas/proposal';
 import { createToast } from '~/utils/toasts';
@@ -18,12 +19,15 @@ import { updateProposalsStatus } from '~/services/organizer-review/update-propos
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
+  invariant(params.orga, 'Invalid organization slug');
+  invariant(params.event, 'Invalid event slug');
+
   const url = new URL(request.url);
   const filters = await withZod(ProposalsFiltersSchema).validate(url.searchParams);
   const page = await parsePage(url.searchParams);
 
   try {
-    const results = await searchProposals(params.slug!, params.eventSlug!, uid, filters.data ?? {}, page);
+    const results = await searchProposals(params.orga, params.event, uid, filters.data ?? {}, page);
     return json(results);
   } catch (err) {
     throw mapErrorToResponse(err);
@@ -32,11 +36,13 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
 export const action = async ({ request, params }: ActionArgs) => {
   const { uid, session } = await sessionRequired(request);
-  const { slug, eventSlug } = params;
+  invariant(params.orga, 'Invalid organization slug');
+  invariant(params.event, 'Invalid event slug');
   const form = await request.formData();
+
   const { data, error } = await withZod(ProposalsStatusUpdateSchema).validate(form);
   if (error) return json(null);
-  const result = await updateProposalsStatus(slug!, eventSlug!, uid, data.selection, data.status);
+  const result = await updateProposalsStatus(params.orga, params.event, uid, data.selection, data.status);
   return json(null, await createToast(session, `${result} proposals marked as "${data.status.toLowerCase()}".`));
 };
 

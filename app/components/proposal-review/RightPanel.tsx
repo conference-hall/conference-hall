@@ -31,7 +31,7 @@ export function RightPanel({ uid, messages, className }: Props) {
 }
 
 function OrganizerComments({ uid, messages }: { uid: string; messages: Array<Message> }) {
-  const { slug, eventSlug, proposal: proposalId } = useParams();
+  const params = useParams();
   const fetcher = useFetcher();
 
   const isAdding = fetcher.state === 'submitting';
@@ -42,7 +42,7 @@ function OrganizerComments({ uid, messages }: { uid: string; messages: Array<Mes
     fetcher.submit(
       { _action: 'delete', messageId },
       {
-        action: `/organizer/${slug}/${eventSlug}/review/${proposalId}/comments`,
+        action: `/organizer/${params.orga}/${params.event}/review/${params.proposal}/comments`,
         method: 'post',
       }
     );
@@ -86,7 +86,7 @@ function OrganizerComments({ uid, messages }: { uid: string; messages: Array<Mes
       </div>
       <fetcher.Form
         ref={formRef}
-        action={`/organizer/${slug}/${eventSlug}/review/${proposalId}/comments`}
+        action={`/organizer/${params.orga}/${params.event}/review/${params.proposal}/comments`}
         method="post"
         className="flex gap-2 border-t border-gray-200 bg-white p-6"
       >

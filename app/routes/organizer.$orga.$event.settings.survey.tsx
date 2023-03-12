@@ -1,10 +1,11 @@
+import invariant from 'tiny-invariant';
 import type { LoaderArgs } from '@remix-run/node';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { H2, Text } from '~/design-system/Typography';
 import { Button } from '~/design-system/Buttons';
 import { Form, useLoaderData, useOutletContext } from '@remix-run/react';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
-import type { OrganizerEventContext } from './organizer.$slug.$eventSlug';
+import type { OrganizerEventContext } from './organizer.$orga.$event';
 import { withZod } from '@remix-validated-form/with-zod';
 import { EventSurveySettingsSchema } from '~/schemas/event';
 import { QUESTIONS } from '~/services/event-survey/get-questions.server';
@@ -18,18 +19,19 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 export const action = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
-  const { slug, eventSlug } = params;
+  invariant(params.orga, 'Invalid organization slug');
+  invariant(params.event, 'Invalid event slug');
   const form = await request.formData();
   const action = form.get('_action');
 
   switch (action) {
     case 'enable-survey': {
-      await updateEvent(slug!, eventSlug!, uid, { surveyEnabled: form.get('surveyEnabled') === 'true' });
+      await updateEvent(params.orga, params.event, uid, { surveyEnabled: form.get('surveyEnabled') === 'true' });
       break;
     }
     case 'save-questions': {
       const result = await withZod(EventSurveySettingsSchema).validate(form);
-      if (!result.error) await updateEvent(slug!, eventSlug!, uid, result.data);
+      if (!result.error) await updateEvent(params.orga, params.event, uid, result.data);
       break;
     }
   }

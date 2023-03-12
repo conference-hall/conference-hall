@@ -1,7 +1,8 @@
+import invariant from 'tiny-invariant';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
-import type { OrganizerProposalContext } from './organizer.$slug.$eventSlug.review.$proposal';
+import type { OrganizerProposalContext } from './organizer.$orga.$event.review.$proposal';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { Form, useActionData, useOutletContext, useSearchParams } from '@remix-run/react';
 import { TalkAbstractForm } from '~/components/TalkAbstractForm';
@@ -20,14 +21,17 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 export const action = async ({ request, params }: ActionArgs) => {
   const { uid } = await sessionRequired(request);
+  const form = await request.formData();
+  invariant(params.orga, 'Invalid organization slug');
+  invariant(params.event, 'Invalid event slug');
+  invariant(params.proposal, 'Invalid proposal id');
+
   try {
-    const { slug, eventSlug, proposal } = params;
-    const form = await request.formData();
     const result = await withZod(ProposalUpdateSchema).validate(form);
     if (result.error) return json(result.error.fieldErrors);
-    await updateProposal(slug!, eventSlug!, params.proposal!, uid, result.data);
+    await updateProposal(params.orga, params.event, params.proposal, uid, result.data);
     const url = new URL(request.url);
-    throw redirect(`/organizer/${slug}/${eventSlug}/review/${proposal}${url.search}`);
+    throw redirect(`/organizer/${params.orga}/${params.event}/review/${params.proposal}${url.search}`);
   } catch (err) {
     throw mapErrorToResponse(err);
   }

@@ -1,3 +1,4 @@
+import invariant from 'tiny-invariant';
 import type { ActionArgs } from '@remix-run/node';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { mapErrorToResponse } from '~/libs/errors';
@@ -5,16 +6,19 @@ import { addProposalComment, removeProposalComment } from '~/services/organizer-
 
 export const action = async ({ request, params }: ActionArgs) => {
   const { uid } = await sessionRequired(request);
+  invariant(params.orga, 'Invalid organization slug');
+  invariant(params.event, 'Invalid event slug');
+  invariant(params.proposal, 'Invalid proposal id');
+  const form = await request.formData();
+
   try {
-    const { slug, eventSlug, proposal } = params;
-    const form = await request.formData();
     const action = form.get('_action')?.toString();
     if (action === 'delete') {
       const messageId = form.get('messageId')?.toString();
-      if (messageId) await removeProposalComment(slug!, eventSlug!, proposal!, uid, messageId);
+      if (messageId) await removeProposalComment(params.orga, params.event, params.proposal, uid, messageId);
     } else {
       const comment = form.get('comment')?.toString();
-      if (comment) await addProposalComment(slug!, eventSlug!, proposal!, uid, comment);
+      if (comment) await addProposalComment(params.orga, params.event, params.proposal, uid, comment);
     }
     return null;
   } catch (e) {

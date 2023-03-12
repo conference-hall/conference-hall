@@ -1,3 +1,4 @@
+import invariant from 'tiny-invariant';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import type { OrganizationRole } from '@prisma/client';
 import { json } from '@remix-run/node';
@@ -8,7 +9,7 @@ import { useLoaderData, useOutletContext } from '@remix-run/react';
 import { AvatarName } from '~/design-system/Avatar';
 import { ChangeRoleButton, InviteMemberButton, RemoveButton } from '~/components/MemberActions';
 import { Input } from '~/design-system/forms/Input';
-import type { OrganizationContext } from './organizer.$slug';
+import type { OrganizationContext } from './organizer.$orga';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { getUserRole } from '~/services/organization/get-user-role.server';
 import { listMembers } from '~/services/organization-members/list-members.server';
@@ -17,27 +18,29 @@ import { removeMember } from '~/services/organization-members/remove-member.serv
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
-  const slug = params.slug!;
-  const role = await getUserRole(slug, uid);
+  invariant(params.orga, 'Invalid organization slug');
+
+  const role = await getUserRole(params.orga, uid);
   if (role === 'REVIEWER') throw new Response('Forbidden', { status: 403 });
 
-  const invitationLink = await getInvitationLink(slug, uid);
-  const members = await listMembers(slug, uid);
+  const invitationLink = await getInvitationLink(params.orga, uid);
+  const members = await listMembers(params.orga, uid);
   return json({ userId: uid, userRole: role, invitationLink, members });
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
   const { uid } = await sessionRequired(request);
-  const slug = params.id!;
+  invariant(params.orga, 'Invalid organization slug');
+
   const form = await request.formData();
   const action = form.get('_action')!;
   const memberId = String(form.get('_memberId'))!;
 
   if (action === 'remove-member') {
-    await removeMember(slug, uid, memberId);
+    await removeMember(params.orga, uid, memberId);
   } else if (action === 'change-role') {
     const memberRole = form.get('memberRole') as OrganizationRole;
-    await changeMemberRole(slug, uid, memberId, memberRole);
+    await changeMemberRole(params.orga, uid, memberId, memberRole);
   }
   return null;
 };

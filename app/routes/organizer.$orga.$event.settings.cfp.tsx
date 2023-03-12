@@ -1,3 +1,4 @@
+import invariant from 'tiny-invariant';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { sessionRequired } from '~/libs/auth/auth.server';
@@ -5,7 +6,7 @@ import { H2, Text } from '~/design-system/Typography';
 import { Form, useActionData, useOutletContext } from '@remix-run/react';
 import { Button } from '~/design-system/Buttons';
 import { Input } from '~/design-system/forms/Input';
-import type { OrganizerEventContext } from './organizer.$slug.$eventSlug';
+import type { OrganizerEventContext } from './organizer.$orga.$event';
 import { DateRangeInput } from '~/design-system/forms/DateRangeInput';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
 import { withZod } from '@remix-validated-form/with-zod';
@@ -19,13 +20,15 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 export const action = async ({ request, params }: ActionArgs) => {
   const { uid } = await sessionRequired(request);
-  const { slug, eventSlug } = params;
+  invariant(params.orga, 'Invalid organization slug');
+  invariant(params.event, 'Invalid event slug');
   const form = await request.formData();
+
   const result = await withZod(EventCfpSettingsSchema).validate(form);
   if (result.error) {
     return json(result.error.fieldErrors);
   }
-  await updateEvent(slug!, eventSlug!, uid, result.data);
+  await updateEvent(params.orga, params.event, uid, result.data);
   return json(null);
 };
 

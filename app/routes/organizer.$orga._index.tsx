@@ -1,5 +1,6 @@
+import invariant from 'tiny-invariant';
 import type { LoaderArgs } from '@remix-run/node';
-import type { OrganizationContext } from './organizer.$slug';
+import type { OrganizationContext } from './organizer.$orga';
 import { json } from '@remix-run/node';
 import { Container } from '~/design-system/Container';
 import { sessionRequired } from '~/libs/auth/auth.server';
@@ -14,8 +15,9 @@ import { listEvents } from '~/services/organization/list-events.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
-  const slug = params.slug!;
-  const events = await listEvents(slug, uid);
+  invariant(params.orga, 'Invalid organization slug');
+
+  const events = await listEvents(params.orga, uid);
   return json(events);
 };
 

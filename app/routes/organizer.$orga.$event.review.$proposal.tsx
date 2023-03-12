@@ -1,3 +1,4 @@
+import invariant from 'tiny-invariant';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import FullscreenDialog from '~/design-system/dialogs/FullscreenDialog';
@@ -8,7 +9,7 @@ import { RightPanel } from '~/components/proposal-review/RightPanel';
 import { BottomPanel } from '~/components/proposal-review/BottomPanel';
 import { mapErrorToResponse } from '~/libs/errors';
 import { Outlet, useLoaderData, useNavigate, useOutletContext, useSearchParams } from '@remix-run/react';
-import type { OrganizerEventContext } from './organizer.$slug.$eventSlug';
+import type { OrganizerEventContext } from './organizer.$orga.$event';
 import { withZod } from '@remix-validated-form/with-zod';
 import { ProposalsFiltersSchema } from '~/schemas/proposal';
 import { getProposalReview } from '~/services/organizer-review/get-proposal-review.server';
@@ -19,10 +20,14 @@ export type OrganizerProposalContext = {
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
+  invariant(params.orga, 'Invalid organization slug');
+  invariant(params.event, 'Invalid event slug');
+  invariant(params.proposal, 'Invalid proposal id');
+
   try {
     const url = new URL(request.url);
     const filters = await withZod(ProposalsFiltersSchema).validate(url.searchParams);
-    const result = await getProposalReview(params.slug!, params.eventSlug!, params.proposal!, uid, filters.data ?? {});
+    const result = await getProposalReview(params.orga, params.event, params.proposal, uid, filters.data ?? {});
     return json({ uid, ...result });
   } catch (e) {
     throw mapErrorToResponse(e);

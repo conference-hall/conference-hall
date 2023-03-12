@@ -1,3 +1,4 @@
+import invariant from 'tiny-invariant';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { v4 as uuid } from 'uuid';
 import { sessionRequired } from '~/libs/auth/auth.server';
@@ -6,7 +7,7 @@ import { Form, useOutletContext } from '@remix-run/react';
 import { ExternalLink } from '~/design-system/Links';
 import { Button } from '~/design-system/Buttons';
 import { Input } from '~/design-system/forms/Input';
-import type { OrganizerEventContext } from './organizer.$slug.$eventSlug';
+import type { OrganizerEventContext } from './organizer.$orga.$event';
 import { updateEvent } from '~/services/organizer-event/update-event.server';
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -16,17 +17,18 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 export const action = async ({ request, params }: ActionArgs) => {
   const { uid } = await sessionRequired(request);
-  const { slug, eventSlug } = params;
+  invariant(params.orga, 'Invalid organization slug');
+  invariant(params.event, 'Invalid event slug');
   const form = await request.formData();
   const action = form.get('_action');
 
   switch (action) {
     case 'revoke-api-key': {
-      await updateEvent(slug!, eventSlug!, uid, { apiKey: null });
+      await updateEvent(params.orga, params.event, uid, { apiKey: null });
       break;
     }
     case 'generate-api-key': {
-      await updateEvent(slug!, eventSlug!, uid, { apiKey: uuid() });
+      await updateEvent(params.orga, params.event, uid, { apiKey: uuid() });
       break;
     }
   }

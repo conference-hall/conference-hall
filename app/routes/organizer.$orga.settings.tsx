@@ -1,3 +1,4 @@
+import invariant from 'tiny-invariant';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { redirect, json } from '@remix-run/node';
 import { Form, useActionData, useOutletContext } from '@remix-run/react';
@@ -8,14 +9,15 @@ import { H2 } from '~/design-system/Typography';
 import { Button } from '~/design-system/Buttons';
 import { OrganizationNewForm } from '~/components/organizations/OrganizationNew';
 import { OrganizationSaveSchema } from '~/schemas/organization';
-import type { OrganizationContext } from './organizer.$slug';
+import type { OrganizationContext } from './organizer.$orga';
 import { getUserRole } from '~/services/organization/get-user-role.server';
 import { updateOrganization } from '~/services/organization/update-organization.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
-  const slug = params.slug!;
-  const role = await getUserRole(slug, uid);
+  invariant(params.orga, 'Invalid organization slug');
+
+  const role = await getUserRole(params.orga, uid);
   if (role !== 'OWNER') throw new Response('Forbidden', { status: 403 });
   return null;
 };
@@ -23,11 +25,13 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 export const action = async ({ request, params }: ActionArgs) => {
   const { uid } = await sessionRequired(request);
   const form = await request.formData();
+  invariant(params.orga, 'Invalid organization slug');
+
   const result = await withZod(OrganizationSaveSchema).validate(form);
   if (result.error) {
     return json(result.error.fieldErrors);
   } else {
-    const updated = await updateOrganization(params.slug!, uid, result.data);
+    const updated = await updateOrganization(params.orga, uid, result.data);
     if (updated?.fieldErrors) return json(updated.fieldErrors);
     throw redirect(`/organizer/${updated.slug}/settings`);
   }

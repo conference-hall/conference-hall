@@ -1,3 +1,4 @@
+import invariant from 'tiny-invariant';
 import type { LoaderArgs } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 import { Outlet, useOutletContext, useParams } from '@remix-run/react';
@@ -15,18 +16,20 @@ import {
   StarIcon,
   SwatchIcon,
 } from '@heroicons/react/24/outline';
-import type { OrganizerEventContext } from './organizer.$slug.$eventSlug';
+import type { OrganizerEventContext } from './organizer.$orga.$event';
 import { getUserRole } from '~/services/organization/get-user-role.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
-  const { slug, eventSlug } = params;
-  const role = await getUserRole(slug!, uid);
-  if (role !== 'OWNER') throw redirect(`/organizer/${slug}/${eventSlug}/proposals`);
+  invariant(params.orga, 'Invalid organization slug');
+  invariant(params.event, 'Invalid event slug');
+
+  const role = await getUserRole(params.orga, uid);
+  if (role !== 'OWNER') throw redirect(`/organizer/${params.orga}/${params.event}/proposals`);
   return null;
 };
 
-const getMenuItems = (orga: string, event: string) => [
+const getMenuItems = (orga?: string, event?: string) => [
   { to: `/organizer/${orga}/${event}/settings`, icon: Cog6ToothIcon, label: 'General' },
   { to: `/organizer/${orga}/${event}/settings/customize`, icon: PaintBrushIcon, label: 'Customize' },
   { to: `/organizer/${orga}/${event}/settings/tracks`, icon: SwatchIcon, label: 'Tracks' },
@@ -39,8 +42,8 @@ const getMenuItems = (orga: string, event: string) => [
 ];
 
 export default function OrganizationSettingsRoute() {
-  const { slug, eventSlug } = useParams();
-  const menus = getMenuItems(slug!, eventSlug!);
+  const params = useParams();
+  const menus = getMenuItems(params.orga, params.event);
   const { event } = useOutletContext<OrganizerEventContext>();
 
   return (

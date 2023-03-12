@@ -1,3 +1,4 @@
+import invariant from 'tiny-invariant';
 import type { ChangeEvent } from 'react';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
@@ -6,7 +7,7 @@ import { H2, Text } from '~/design-system/Typography';
 import { Form, useActionData, useOutletContext, useSubmit } from '@remix-run/react';
 import { AlertInfo } from '~/design-system/Alerts';
 import { ExternalLink } from '~/design-system/Links';
-import type { OrganizerEventContext } from './organizer.$slug.$eventSlug';
+import type { OrganizerEventContext } from './organizer.$orga.$event';
 import { UploadingError } from '~/libs/storage/storage.server';
 import { ButtonFileUpload } from '~/design-system/forms/FileUploadButton';
 import { mapErrorToResponse } from '~/libs/errors';
@@ -20,9 +21,11 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 export const action = async ({ request, params }: ActionArgs) => {
   const { uid } = await sessionRequired(request);
+  invariant(params.orga, 'Invalid organization slug');
+  invariant(params.event, 'Invalid event slug');
+
   try {
-    const { slug, eventSlug } = params;
-    await uploadEventBanner(slug!, eventSlug!, uid, request);
+    await uploadEventBanner(params.orga, params.event, uid, request);
     return json(null);
   } catch (error) {
     if (error instanceof UploadingError) {

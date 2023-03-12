@@ -1,5 +1,5 @@
 import type { LoaderArgs } from '@remix-run/node';
-import type { OrganizerProposalContext } from './organizer.$slug.$eventSlug.review.$proposal';
+import type { OrganizerProposalContext } from './organizer.$orga.$event.review.$proposal';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { useOutletContext } from '@remix-run/react';
 import { Text } from '~/design-system/Typography';

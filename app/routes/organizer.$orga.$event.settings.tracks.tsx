@@ -1,3 +1,4 @@
+import invariant from 'tiny-invariant';
 import type { ChangeEvent } from 'react';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
@@ -5,7 +6,7 @@ import { sessionRequired } from '~/libs/auth/auth.server';
 import { H2, Text } from '~/design-system/Typography';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
 import { Form, useFetcher, useOutletContext } from '@remix-run/react';
-import type { OrganizerEventContext } from './organizer.$slug.$eventSlug';
+import type { OrganizerEventContext } from './organizer.$orga.$event';
 import { IconButton } from '~/design-system/IconButtons';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import {
@@ -26,7 +27,8 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 export const action = async ({ request, params }: ActionArgs) => {
   const { uid } = await sessionRequired(request);
-  const { slug, eventSlug } = params;
+  invariant(params.orga, 'Invalid organization slug');
+  invariant(params.event, 'Invalid event slug');
   const formData = await request.formData();
 
   const action = formData.get('_action');
@@ -34,30 +36,30 @@ export const action = async ({ request, params }: ActionArgs) => {
   switch (action) {
     case 'delete-formats': {
       const trackId = String(formData.get('trackId'));
-      await deleteFormat(slug!, eventSlug!, uid, trackId);
+      await deleteFormat(params.orga, params.event, uid, trackId);
       break;
     }
     case 'delete-categories': {
       const trackId = String(formData.get('trackId'));
-      await deleteCategory(slug!, eventSlug!, uid, trackId);
+      await deleteCategory(params.orga, params.event, uid, trackId);
       break;
     }
     case 'save-formats': {
       const results = await withZod(EventTrackSaveSchema).validate(formData);
       if (results.error) return json(results.error.fieldErrors);
-      await saveFormat(slug!, eventSlug!, uid, results.data);
+      await saveFormat(params.orga, params.event, uid, results.data);
       break;
     }
     case 'save-categories': {
       const results = await withZod(EventTrackSaveSchema).validate(formData);
       if (results.error) return json(results.error.fieldErrors);
-      await saveCategory(slug!, eventSlug!, uid, results.data);
+      await saveCategory(params.orga, params.event, uid, results.data);
       break;
     }
     case 'update-track-settings': {
       const results = await withZod(EventTracksSettingsSchema).validate(formData);
       if (results.error) return json(results.error.fieldErrors);
-      await updateEvent(slug!, eventSlug!, uid, results.data);
+      await updateEvent(params.orga, params.event, uid, results.data);
       break;
     }
   }

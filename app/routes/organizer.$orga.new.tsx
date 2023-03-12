@@ -1,3 +1,4 @@
+import invariant from 'tiny-invariant';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
@@ -17,21 +18,24 @@ import { createEvent } from '~/services/organizer-event/create-event.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
-  const role = await getUserRole(params.slug!, uid);
-  if (role !== 'OWNER') throw redirect(`/organizer/${params.slug}`);
+  invariant(params.orga, 'Invalid organization slug');
+
+  const role = await getUserRole(params.orga, uid);
+  if (role !== 'OWNER') throw redirect(`/organizer/${params.orga}`);
   return null;
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
   const { uid } = await sessionRequired(request);
-  const { slug } = params;
+  invariant(params.orga, 'Invalid organization slug');
   const form = await request.formData();
+
   const result = await withZod(EventCreateSchema).validate(form);
   if (result.error) {
     return json(result.error.fieldErrors);
   } else {
-    const updated = await createEvent(slug!, uid, result.data);
-    if (updated.slug) throw redirect(`/organizer/${slug}/${updated.slug}/settings`);
+    const updated = await createEvent(params.orga, uid, result.data);
+    if (updated.slug) throw redirect(`/organizer/${params.orga}/${updated.slug}/settings`);
     return json(updated.error?.fieldErrors);
   }
 };

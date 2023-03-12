@@ -31,12 +31,12 @@ type Rating = { rating?: number | null; feeling?: string | null };
 type Props = { userRating: Rating };
 
 export function RatingButtons({ userRating }: Props) {
-  const { slug, eventSlug, proposal: proposalId } = useParams();
+  const params = useParams();
   const fetcher = useFetcher();
   const defaultIndex = findRatingOptionIndex(userRating, fetcher.submission?.formData);
   const [overIndex, setOverIndex] = useState<number>(-1);
 
-  const action = `/organizer/${slug}/${eventSlug}/review/${proposalId}/rate`;
+  const action = `/organizer/${params.orga}/${params.event}/review/${params.proposal}/rate`;
 
   const iconStyles = useCallback(
     ({ option, index }: StyleProps) => {
