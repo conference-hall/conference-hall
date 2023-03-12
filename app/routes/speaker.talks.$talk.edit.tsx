@@ -37,7 +37,7 @@ export const action = async ({ request, params }: ActionArgs) => {
     if (result.error) {
       return json(result.error.fieldErrors);
     } else {
-      await updateTalk(uid!, params.talk, result.data);
+      await updateTalk(uid, params.talk, result.data);
       const toast = await createToast(session, 'Talk successfully saved.');
       return redirect(`/speaker/talks/${params.talk}`, toast);
     }
