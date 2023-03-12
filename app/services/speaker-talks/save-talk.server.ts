@@ -14,7 +14,7 @@ export async function createTalk(uid: string, data: TalkSaveData) {
   return result.id;
 }
 
-export async function updateTalk(uid: string, talkId?: string, data?: TalkSaveData) {
+export async function updateTalk(uid: string, talkId: string, data?: TalkSaveData) {
   const talk = await db.talk.findFirst({
     where: { id: talkId, speakers: { some: { id: uid } } },
   });

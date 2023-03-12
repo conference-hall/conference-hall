@@ -1,3 +1,4 @@
+import invariant from 'tiny-invariant';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
@@ -15,11 +16,11 @@ import { mapErrorToResponse } from '../libs/errors';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
+  invariant(params.talk, 'Invalid talk id');
+
   try {
-    const talk = await getTalk(uid, params.id!);
-    if (talk.archived) {
-      throw new Response('Talk archived.', { status: 403 });
-    }
+    const talk = await getTalk(uid, params.talk);
+    if (talk.archived) throw new Response('Talk archived.', { status: 403 });
     return json(talk);
   } catch (err) {
     throw mapErrorToResponse(err);
@@ -29,14 +30,16 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 export const action = async ({ request, params }: ActionArgs) => {
   const { uid, session } = await sessionRequired(request);
   const form = await request.formData();
+  invariant(params.talk, 'Invalid talk id');
+
   try {
     const result = await withZod(TalkSaveSchema).validate(form);
     if (result.error) {
       return json(result.error.fieldErrors);
     } else {
-      await updateTalk(uid!, params.id, result.data);
+      await updateTalk(uid!, params.talk, result.data);
       const toast = await createToast(session, 'Talk successfully saved.');
-      return redirect(`/speaker/talks/${params.id}`, toast);
+      return redirect(`/speaker/talks/${params.talk}`, toast);
     }
   } catch (err) {
     throw mapErrorToResponse(err);

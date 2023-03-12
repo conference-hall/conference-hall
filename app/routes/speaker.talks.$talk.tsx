@@ -1,3 +1,4 @@
+import invariant from 'tiny-invariant';
 import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
@@ -20,8 +21,10 @@ import { archiveTalk, restoreTalk } from '~/services/speaker-talks/archive-talk.
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
+  invariant(params.talk, 'Invalid talk id');
+
   try {
-    const talk = await getTalk(uid, params.id!);
+    const talk = await getTalk(uid, params.talk);
     return json(talk);
   } catch (err) {
     throw mapErrorToResponse(err);
@@ -30,18 +33,19 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
 export const action: ActionFunction = async ({ request, params }) => {
   const { uid } = await sessionRequired(request);
-  const talkId = params.id!;
+  invariant(params.talk, 'Invalid talk id');
   const form = await request.formData();
   const action = form.get('_action');
+
   if (action === 'remove-speaker') {
     const speakerId = form.get('_speakerId')?.toString();
-    if (speakerId) await removeCoSpeakerFromTalk(uid, talkId, speakerId);
+    if (speakerId) await removeCoSpeakerFromTalk(uid, params.talk, speakerId);
   } else if (action === 'archive-talk') {
-    await archiveTalk(uid, talkId);
+    await archiveTalk(uid, params.talk);
   } else if (action === 'restore-talk') {
-    await restoreTalk(uid, talkId);
+    await restoreTalk(uid, params.talk);
   } else if (action === 'delete-talk') {
-    await deleteTalk(uid, talkId);
+    await deleteTalk(uid, params.talk);
     return redirect('/speaker/talks');
   }
   return null;

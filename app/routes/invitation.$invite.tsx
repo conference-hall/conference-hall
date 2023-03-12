@@ -18,10 +18,10 @@ import type { UserContext } from '~/root';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   await sessionRequired(request);
-  invariant(params.id, 'Invalid invite');
+  invariant(params.invite, 'Invalid invite');
 
   try {
-    const invitation = await getInvitation(params.id);
+    const invitation = await getInvitation(params.invite);
     return json(invitation);
   } catch (err) {
     throw mapErrorToResponse(err);
@@ -30,18 +30,19 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
 export const action: ActionFunction = async ({ request, params }) => {
   const { uid } = await sessionRequired(request);
-  invariant(params.id, 'Invalid invite');
+  invariant(params.invite, 'Invalid invite');
   const form = await request.formData();
   const type = form.get('_type');
+
   try {
     if (type === 'TALK') {
-      const talk = await inviteCoSpeakerToTalk(params.id, uid);
+      const talk = await inviteCoSpeakerToTalk(params.invite, uid);
       return redirect(`/speaker/talks/${talk.id}`);
     } else if (type === 'PROPOSAL') {
-      const proposal = await addCoSpeakerToProposal(params.id, uid);
+      const proposal = await addCoSpeakerToProposal(params.invite, uid);
       return redirect(`/${proposal.eventSlug}/proposals/${proposal.proposalId}`);
     } else if (type === 'ORGANIZATION') {
-      const organization = await addMember(params.id, uid);
+      const organization = await addMember(params.invite, uid);
       return redirect(`/organizer/${organization.slug}`);
     }
   } catch (err) {
