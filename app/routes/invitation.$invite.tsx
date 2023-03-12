@@ -9,7 +9,6 @@ import { getInvitation } from '~/services/invitations/get-invitation.server';
 import { addMember } from '~/services/organization-members/add-member.server';
 import { Button } from '../design-system/Buttons';
 import { Container } from '../design-system/Container';
-import { Link } from '../design-system/Links';
 import { H1, H2, Text } from '../design-system/Typography';
 import { sessionRequired } from '../libs/auth/auth.server';
 import { mapErrorToResponse } from '../libs/errors';
@@ -74,9 +73,6 @@ export default function InvitationRoute() {
             <input type="hidden" name="_type" value={invitation.type} />
             <Button type="submit">Accept invitation</Button>
           </Form>
-          <Link to="/" className="mt-2 text-xs">
-            Go to homepage
-          </Link>
         </div>
       </Container>
     </>
