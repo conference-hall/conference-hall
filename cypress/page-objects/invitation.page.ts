@@ -6,6 +6,7 @@ class InvitationPage {
 
   isPageVisible() {
     cy.findByRole('button', { name: 'Accept invitation' }).should('exist');
+    cy.findByRole('link', { name: 'Go to homepage' }).should('exist');
   }
 
   acceptInvite() {
