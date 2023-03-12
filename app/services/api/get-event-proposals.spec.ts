@@ -16,9 +16,9 @@ describe('#getEventProposals', () => {
     const event = await eventFactory({ attributes: { apiKey: '123' } });
     const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
-    const result = await getEventProposals({ eventSlug: event.slug, apiKey: event.apiKey });
+    const proposals = await getEventProposals(event.slug, event.apiKey!);
 
-    expect(result.success && result.data).toEqual([
+    expect(proposals).toEqual([
       {
         id: proposal.id,
         title: proposal.title,
