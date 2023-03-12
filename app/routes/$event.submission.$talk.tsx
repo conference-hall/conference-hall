@@ -1,3 +1,4 @@
+import invariant from 'tiny-invariant';
 import { Outlet, useCatch, useLoaderData, useMatches } from '@remix-run/react';
 import type { LoaderFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
@@ -7,7 +8,7 @@ import { isTalkAlreadySubmitted } from '~/services/event-submission/is-talk-alre
 import { mapErrorToResponse } from '~/libs/errors';
 import { Container } from '~/design-system/Container';
 import { SubmissionSteps } from '~/components/SubmissionSteps';
-import { useEvent } from '~/routes/$eventSlug';
+import { useEvent } from '~/routes/$event';
 
 export type SubmitSteps = Array<{
   key: string;
@@ -20,45 +21,45 @@ export const handle = { step: 'root' };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const { uid } = await sessionRequired(request);
-  const slug = params.eventSlug!;
-  const talkId = params.talkId!;
+  invariant(params.event, 'Invalid event slug');
+  invariant(params.talk, 'Invalid talk id');
 
   try {
-    const event = await getEvent(slug);
+    const event = await getEvent(params.event);
     if (!event.isCfpOpen) throw new Response('CFP is not opened!', { status: 403 });
 
-    const isAlreadySubmitted = await isTalkAlreadySubmitted(slug, talkId, uid);
+    const isAlreadySubmitted = await isTalkAlreadySubmitted(params.event, params.talk, uid);
     if (isAlreadySubmitted) throw new Response('Talk proposal already submitted.', { status: 400 });
 
     const steps = [
       {
         key: 'proposal',
         name: 'Proposal',
-        path: `/${slug}/submission/${talkId}`,
+        path: `/${params.event}/submission/${params.talk}`,
         enabled: true,
       },
       {
         key: 'speakers',
         name: 'Speakers',
-        path: `/${slug}/submission/${talkId}/speakers`,
+        path: `/${params.event}/submission/${params.talk}/speakers`,
         enabled: true,
       },
       {
         key: 'tracks',
         name: 'Tracks',
-        path: `/${slug}/submission/${talkId}/tracks`,
+        path: `/${params.event}/submission/${params.talk}/tracks`,
         enabled: event.hasTracks,
       },
       {
         key: 'survey',
         name: 'Survey',
-        path: `/${slug}/submission/${talkId}/survey`,
+        path: `/${params.event}/submission/${params.talk}/survey`,
         enabled: event.surveyEnabled,
       },
       {
         key: 'submission',
         name: 'Submission',
-        path: `/${slug}/submission/${talkId}/submit`,
+        path: `/${params.event}/submission/${params.talk}/submit`,
         enabled: true,
       },
     ];

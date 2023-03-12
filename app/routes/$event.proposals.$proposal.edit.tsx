@@ -1,3 +1,4 @@
+import invariant from 'tiny-invariant';
 import { Form, useActionData, useCatch, useLoaderData } from '@remix-run/react';
 import { Container } from '~/design-system/Container';
 import { Button, ButtonLink } from '../design-system/Buttons';
@@ -8,7 +9,7 @@ import { sessionRequired } from '../libs/auth/auth.server';
 import { mapErrorToResponse } from '../libs/errors';
 import { TalkAbstractForm } from '../components/TalkAbstractForm';
 import { FormatsForm } from '../components/FormatsForm';
-import { useEvent } from './$eventSlug';
+import { useEvent } from './$event';
 import { H2 } from '../design-system/Typography';
 import { ProposalUpdateSchema } from '~/schemas/proposal';
 import { withZod } from '@remix-validated-form/with-zod';
@@ -18,9 +19,10 @@ import { updateSpeakerProposal } from '~/services/event-proposals/update.server'
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
-  const proposalId = params.id!;
+  invariant(params.proposal, 'Invalid proposal id');
+
   try {
-    const proposal = await getSpeakerProposal(proposalId, uid);
+    const proposal = await getSpeakerProposal(params.proposal, uid);
     return json(proposal);
   } catch (e) {
     throw mapErrorToResponse(e);
@@ -29,19 +31,20 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
 export const action: ActionFunction = async ({ request, params }: ActionArgs) => {
   const { uid } = await sessionRequired(request);
-  const eventSlug = params.eventSlug!;
-  const proposalId = params.id!;
   const form = await request.formData();
+  invariant(params.event, 'Invalid event slug');
+  invariant(params.proposal, 'Invalid proposal id');
+
   try {
     const method = form.get('_method');
     if (method === 'DELETE') {
-      await deleteSpeakerProposalProposal(proposalId, uid);
-      throw redirect(`/${eventSlug}/proposals`);
+      await deleteSpeakerProposalProposal(params.proposal, uid);
+      throw redirect(`/${params.event}/proposals`);
     } else {
       const result = await withZod(ProposalUpdateSchema).validate(form);
       if (result.error) return json(result.error.fieldErrors);
-      await updateSpeakerProposal(eventSlug, proposalId, uid, result.data);
-      throw redirect(`/${eventSlug}/proposals/${proposalId}`);
+      await updateSpeakerProposal(params.event, params.proposal, uid, result.data);
+      throw redirect(`/${params.event}/proposals/${params.proposal}`);
     }
   } catch (err) {
     mapErrorToResponse(err);

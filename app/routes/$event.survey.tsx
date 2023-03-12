@@ -1,3 +1,4 @@
+import invariant from 'tiny-invariant';
 import type { ActionArgs, LoaderFunction } from '@remix-run/node';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import { json } from '@remix-run/node';
@@ -22,10 +23,11 @@ type SurveyQuestionsForm = {
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const { uid } = await sessionRequired(request);
-  const slug = params.eventSlug!;
+  invariant(params.event, 'Invalid event slug');
+
   try {
-    const questions = await getQuestions(slug);
-    const answers = await getAnswers(slug, uid);
+    const questions = await getQuestions(params.event);
+    const answers = await getAnswers(params.event, uid);
     return json<SurveyQuestionsForm>({ questions, answers });
   } catch (err) {
     mapErrorToResponse(err);
@@ -34,12 +36,13 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
 export const action = async ({ request, params }: ActionArgs) => {
   const { uid } = await sessionRequired(request);
-  const slug = params.eventSlug!;
+  invariant(params.event, 'Invalid event slug');
   const form = await request.formData();
+
   const result = await withZod(SurveySchema).validate(form);
   if (result.error) throw new Response('Bad survey values', { status: 400 });
   try {
-    await saveSurvey(uid, slug, result.data);
+    await saveSurvey(uid, params.event, result.data);
     return json({ message: 'Survey saved, thank you!' });
   } catch (err) {
     throw mapErrorToResponse(err);

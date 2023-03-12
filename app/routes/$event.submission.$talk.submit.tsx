@@ -1,3 +1,4 @@
+import invariant from 'tiny-invariant';
 import { useState } from 'react';
 import { Form, useLoaderData } from '@remix-run/react';
 import { Button } from '~/design-system/Buttons';
@@ -14,16 +15,17 @@ import { AvatarGroup } from '~/design-system/Avatar';
 import { withZod } from '@remix-validated-form/with-zod';
 import { ProposalSubmissionSchema } from '~/schemas/proposal';
 import { getSubmittedProposal } from '~/services/event-submission/get-submitted-proposal.server';
-import { useEvent } from '~/routes/$eventSlug';
+import { useEvent } from '~/routes/$event';
 
 export const handle = { step: 'submission' };
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
-  const eventSlug = params.eventSlug!;
-  const talkId = params.talkId!;
+  invariant(params.event, 'Invalid event slug');
+  invariant(params.talk, 'Invalid talk id');
+
   try {
-    const proposal = await getSubmittedProposal(talkId, eventSlug, uid);
+    const proposal = await getSubmittedProposal(params.talk, params.event, uid);
     return json(proposal);
   } catch (err) {
     throw mapErrorToResponse(err);
@@ -32,16 +34,17 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
 export const action: ActionFunction = async ({ request, params }) => {
   const { uid } = await sessionRequired(request);
-  const eventSlug = params.eventSlug!;
-  const talkId = params.talkId!;
   const form = await request.formData();
+  invariant(params.event, 'Invalid event slug');
+  invariant(params.talk, 'Invalid talk id');
+
   const result = await withZod(ProposalSubmissionSchema).validate(form);
   try {
-    if (result?.data) await submitProposal(talkId, eventSlug, uid, result?.data);
+    if (result?.data) await submitProposal(params.talk, params.event, uid, result?.data);
   } catch (err) {
     throw mapErrorToResponse(err);
   }
-  return redirect(`/${eventSlug}/proposals`);
+  return redirect(`/${params.event}/proposals`);
 };
 
 export default function SubmissionSubmitRoute() {

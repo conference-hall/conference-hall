@@ -1,7 +1,7 @@
 import { GlobeEuropeAfricaIcon, HeartIcon, EnvelopeIcon } from '@heroicons/react/20/solid';
 import { useCatch } from '@remix-run/react';
 import { Container } from '~/design-system/Container';
-import { useEvent } from './$eventSlug';
+import { useEvent } from './$event';
 import { ButtonLink } from '../design-system/Buttons';
 import { CfpInfo } from '../components/CfpInfo';
 import { ExternalLink } from '../design-system/Links';

@@ -1,3 +1,4 @@
+import invariant from 'tiny-invariant';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
@@ -22,10 +23,11 @@ export const handle = { step: 'speakers' };
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
   const user = await getUser(uid);
-  const eventSlug = params.eventSlug!;
-  const talkId = params.talkId!;
+  invariant(params.event, 'Invalid event slug');
+  invariant(params.talk, 'Invalid talk id');
+
   try {
-    const proposal = await getSubmittedProposal(talkId, eventSlug, user.id);
+    const proposal = await getSubmittedProposal(params.talk, params.event, user.id);
     return json({
       proposalId: proposal.id,
       invitationLink: proposal.invitationLink,
@@ -39,28 +41,28 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
 export const action = async ({ request, params }: ActionArgs) => {
   const { uid } = await sessionRequired(request);
-  const talkId = params.talkId!;
-  const eventSlug = params.eventSlug!;
   const form = await request.formData();
+  invariant(params.event, 'Invalid event slug');
+  invariant(params.talk, 'Invalid talk id');
 
   try {
     const action = form.get('_action');
     if (action === 'remove-speaker') {
       const speakerId = form.get('_speakerId')?.toString() as string;
-      await removeCoSpeakerFromSubmission(uid, talkId, eventSlug, speakerId);
+      await removeCoSpeakerFromSubmission(uid, params.talk, params.event, speakerId);
       return json(null);
     } else {
       const result = await withZod(DetailsSchema).validate(form);
       if (result.error) return json(result.error.fieldErrors);
 
       await saveProfile(uid, result.data);
-      const event = await getEvent(eventSlug);
+      const event = await getEvent(params.event);
       if (event.hasTracks) {
-        return redirect(`/${eventSlug}/submission/${talkId}/tracks`);
+        return redirect(`/${params.event}/submission/${params.talk}/tracks`);
       } else if (event.surveyEnabled) {
-        return redirect(`/${eventSlug}/submission/${talkId}/survey`);
+        return redirect(`/${params.event}/submission/${params.talk}/survey`);
       } else {
-        return redirect(`/${eventSlug}/submission/${talkId}/submit`);
+        return redirect(`/${params.event}/submission/${params.talk}/submit`);
       }
     }
   } catch (err) {

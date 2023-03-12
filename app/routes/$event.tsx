@@ -12,10 +12,10 @@ import { mapErrorToResponse } from '~/libs/errors';
 import { getEvent } from '~/services/event-page/get-event.server';
 
 export const loader = async ({ params }: LoaderArgs) => {
-  invariant(params.eventSlug, 'Invalid event slug');
+  invariant(params.event, 'Invalid event slug');
 
   try {
-    const event = await getEvent(params.eventSlug);
+    const event = await getEvent(params.event);
     return json(event);
   } catch (err) {
     throw mapErrorToResponse(err);

@@ -1,3 +1,4 @@
+import invariant from 'tiny-invariant';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import { Button } from '~/design-system/Buttons';
 import { H2, Text } from '../design-system/Typography';
@@ -15,12 +16,13 @@ export const handle = { step: 'proposal' };
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
-  const talkId = params.talkId!;
+  invariant(params.talk, 'Invalid talk id');
+
   try {
-    if (talkId === 'new') {
+    if (params.talk === 'new') {
       return json(null);
     } else {
-      const talk = await getTalk(uid, talkId);
+      const talk = await getTalk(uid, params.talk);
       return json(talk);
     }
   } catch (err) {
@@ -30,16 +32,16 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
 export const action = async ({ request, params }: ActionArgs) => {
   const { uid } = await sessionRequired(request);
-  const eventSlug = params.eventSlug!;
-  const talkId = params.talkId!;
+  invariant(params.event, 'Invalid event slug');
+  invariant(params.talk, 'Invalid talk id');
 
   const form = await request.formData();
   const result = await withZod(ProposalCreateSchema).validate(form);
   if (result.error) return json(result.error.fieldErrors);
 
   try {
-    const proposal = await saveDraftProposal(talkId, eventSlug, uid, result.data);
-    return redirect(`/${eventSlug}/submission/${proposal.talkId}/speakers`);
+    const proposal = await saveDraftProposal(params.talk, params.event, uid, result.data);
+    return redirect(`/${params.event}/submission/${proposal.talkId}/speakers`);
   } catch (err) {
     throw mapErrorToResponse(err);
   }

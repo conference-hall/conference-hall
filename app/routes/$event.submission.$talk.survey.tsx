@@ -1,3 +1,4 @@
+import invariant from 'tiny-invariant';
 import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
@@ -18,10 +19,12 @@ export const handle = { step: 'survey' };
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
-  const slug = params.eventSlug!;
+  invariant(params.event, 'Invalid event slug');
+  invariant(params.talk, 'Invalid talk id');
+
   try {
-    const questions = await getQuestions(slug);
-    const answers = await getAnswers(slug, uid);
+    const questions = await getQuestions(params.event);
+    const answers = await getAnswers(params.event, uid);
     return json({ questions, answers });
   } catch (err) {
     throw mapErrorToResponse(err);
@@ -30,14 +33,15 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
 export const action: ActionFunction = async ({ request, params }) => {
   const { uid } = await sessionRequired(request);
-  const slug = params.eventSlug!;
-  const talkId = params.talkId!;
   const form = await request.formData();
+  invariant(params.event, 'Invalid event slug');
+  invariant(params.talk, 'Invalid talk id');
+
   const result = await withZod(SurveySchema).validate(form);
   if (result.error) throw new Response('Bad survey values', { status: 400 });
   try {
-    await saveSurvey(uid, slug, result.data);
-    return redirect(`/${slug}/submission/${talkId}/submit`);
+    await saveSurvey(uid, params.event, result.data);
+    return redirect(`/${params.event}/submission/${params.talk}/submit`);
   } catch (err) {
     mapErrorToResponse(err);
   }

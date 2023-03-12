@@ -1,6 +1,7 @@
+import invariant from 'tiny-invariant';
 import { useCatch, useLoaderData } from '@remix-run/react';
 import { Container } from '~/design-system/Container';
-import { useEvent } from './$eventSlug';
+import { useEvent } from './$event';
 import { Markdown } from '../design-system/Markdown';
 import { H2, H3 } from '../design-system/Typography';
 import type { ActionFunction, LoaderArgs } from '@remix-run/node';
@@ -17,20 +18,22 @@ import { removeCoSpeakerFromProposal } from '~/services/event-proposals/remove-c
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
-  const proposalId = params.id!;
-  const proposal = await getSpeakerProposal(proposalId, uid).catch(mapErrorToResponse);
+  invariant(params.proposal, 'Invalid proposal id');
+
+  const proposal = await getSpeakerProposal(params.proposal, uid).catch(mapErrorToResponse);
   return json(proposal);
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
   const { uid } = await sessionRequired(request);
-  const proposalId = params.id!;
+  invariant(params.proposal, 'Invalid proposal id');
   const form = await request.formData();
+
   try {
     const action = form.get('_action');
     if (action === 'remove-speaker') {
       const speakerId = form.get('_speakerId')?.toString() as string;
-      await removeCoSpeakerFromProposal(uid, proposalId, speakerId);
+      await removeCoSpeakerFromProposal(uid, params.proposal, speakerId);
       return null;
     }
   } catch (err) {

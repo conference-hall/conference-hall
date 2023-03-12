@@ -1,3 +1,4 @@
+import invariant from 'tiny-invariant';
 import { useCatch, useLoaderData } from '@remix-run/react';
 import { ButtonLink } from '~/design-system/Buttons';
 import { Container } from '../design-system/Container';
@@ -15,11 +16,11 @@ export const handle = { step: 'selection' };
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
-  const slug = params.eventSlug!;
+  invariant(params.event, 'Invalid event slug');
 
   try {
-    const talks = await listTalksToSubmit(uid, slug);
-    const proposalsCount = await getProposalCountsForEvent(uid, slug);
+    const talks = await listTalksToSubmit(uid, params.event);
+    const proposalsCount = await getProposalCountsForEvent(uid, params.event);
     return json({ talks, proposalsCount });
   } catch (err) {
     throw mapErrorToResponse(err);

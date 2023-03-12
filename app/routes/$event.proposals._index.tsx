@@ -1,8 +1,9 @@
+import invariant from 'tiny-invariant';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { Container } from '~/design-system/Container';
-import { useEvent } from './$eventSlug';
+import { useEvent } from './$event';
 import { ProposalsList } from '~/components/speaker-proposals/ProposalsList';
 import { H2, Text } from '~/design-system/Typography';
 import { sessionRequired } from '~/libs/auth/auth.server';
@@ -13,8 +14,9 @@ export type EventProposals = Awaited<ReturnType<typeof listSpeakerProposals>>;
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
-  const slug = params.eventSlug!;
-  const proposals = await listSpeakerProposals(slug, uid).catch(mapErrorToResponse);
+  invariant(params.event, 'Invalid event slug');
+
+  const proposals = await listSpeakerProposals(params.event, uid).catch(mapErrorToResponse);
   return json(proposals);
 };
 
