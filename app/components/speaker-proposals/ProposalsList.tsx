@@ -1,5 +1,5 @@
 import type { CfpState } from '~/schemas/event';
-import type { EventProposals } from '~/routes/$event.proposals._index';
+import type { EventProposals } from '~/routes/$event.proposals._index/route';
 import { ExclamationCircleIcon, InboxIcon } from '@heroicons/react/24/outline';
 import { CfpLabel } from '../CfpInfo';
 import { CardLink } from '~/design-system/Card';

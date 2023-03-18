@@ -1,5 +1,5 @@
 import { useMatches } from '@remix-run/react';
-import type { SubmitSteps } from '../routes/$event.submission.$talk';
+import type { SubmitSteps } from '../routes/$event.submission.$talk/route';
 
 type SubmissionStepHook = {
   previousPath: string;
