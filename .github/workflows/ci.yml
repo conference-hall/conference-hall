@@ -44,6 +44,7 @@ jobs:
   e2e-tests:
     name: E2E tests
     runs-on: ubuntu-latest
+    timeout-minutes: 20
 
     steps:
       - name: Checkout
@@ -72,6 +73,12 @@ jobs:
             npx dotenv -e .env.test -- npm run serve
           command-prefix: 'dotenv -e .env.test --'
           wait-on: 'http://localhost:3001'
+
+      - uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
 
       - name: Stop database and firebase emulators
         if: always()
