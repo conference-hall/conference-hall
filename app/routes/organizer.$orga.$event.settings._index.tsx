@@ -32,7 +32,7 @@ export const action = async ({ request, params }: ActionArgs) => {
     if (result.error) return json(result.error.fieldErrors);
     const updated = await updateEvent(params.orga, params.event, uid, result.data);
     if (updated.slug) throw redirect(`/organizer/${params.orga}/${updated.slug}/settings`);
-    return json(updated?.error?.fieldErrors);
+    return json({ slug: updated.error });
   } else if (action === 'details') {
     const result = await withZod(EventDetailsSettingsSchema).validate(form);
     if (result.error) return json(result.error?.fieldErrors);
@@ -43,7 +43,7 @@ export const action = async ({ request, params }: ActionArgs) => {
 
 export default function EventGeneralSettingsRoute() {
   const { event } = useOutletContext<OrganizerEventContext>();
-  const errors = useActionData<typeof action>();
+  const errors = useActionData<typeof action>() as Record<string, string>;
 
   return (
     <>
