@@ -10,7 +10,7 @@
     "serve": "remix-serve build",
     "test": "run-s db:migrate:test test:unit",
     "test:unit": "dotenv -e .env.test -- vitest --config ./vitest.config.ts",
-    "cypress": "start-server-and-test --expect 200 dev http://localhost:3000 'dotenv -e .env.dev -- cypress open --e2e -b electron'",
+    "cypress": "dotenv -e .env.dev -- cypress open --e2e -b electron",
     "db:studio": "dotenv -e .env.dev -- prisma studio",
     "db:reset": "dotenv -e .env.dev -- prisma migrate reset",
     "db:migrate:dev": "dotenv -e .env.dev -- prisma migrate dev",
