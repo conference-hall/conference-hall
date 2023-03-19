@@ -5,8 +5,8 @@ import { withZod } from '@remix-validated-form/with-zod';
 import { ProposalParticipationSchema } from '~/schemas/proposal';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { mapErrorToResponse } from '~/libs/errors';
-import { sendParticipationAnswer } from '~/services/event-submission/send-participation-answer.server';
 import { createToast } from '~/utils/toasts';
+import { sendParticipationAnswer } from './send-participation-answer.server';
 
 export const action: ActionFunction = async ({ request, params }: ActionArgs) => {
   const { uid, session } = await sessionRequired(request);

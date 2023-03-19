@@ -5,7 +5,7 @@ import { json } from '@remix-run/node';
 import { Meta, LiveReload, Outlet, Links, Scripts, useCatch, useLoaderData, ScrollRestoration } from '@remix-run/react';
 import { initializeFirebase } from './libs/auth/firebase';
 import { commitSession, getSession } from './libs/auth/auth.server';
-import { getUser } from './services/user/get-user.server';
+import { getUser } from './shared/users/get-user.server';
 import { Footer } from './components/Footer';
 import { H1, Text } from './design-system/Typography';
 import { Container } from './design-system/Container';
@@ -14,7 +14,7 @@ import { Toast } from './design-system/Toast';
 import type { ToastData } from './utils/toasts';
 import { getToast } from './utils/toasts';
 import tailwind from './tailwind.css';
-import { listNotifications } from './services/user-notifications/list-notifications.server';
+import { listNotifications } from './shared/notifications/list-notifications.server';
 
 export const meta: MetaFunction = () => ({
   charset: 'utf-8',

@@ -8,8 +8,8 @@ import OrganizationBreadcrumb from '~/components/organizations/OrganizationBread
 import { Container } from '~/design-system/Container';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { mapErrorToResponse } from '~/libs/errors';
-import { getEvent } from '~/services/organizer-event/get-event.server';
 import type { OrganizationContext } from '../organizer.$orga/route';
+import { getEvent } from './get-event.server';
 
 export type OrganizerEventContext = {
   event: Awaited<ReturnType<typeof getEvent>>;

@@ -9,8 +9,8 @@ import { mapErrorToResponse } from '../../libs/errors';
 import { TalkAbstractForm } from '../../components/TalkAbstractForm';
 import { ProposalCreateSchema } from '~/schemas/proposal';
 import { withZod } from '@remix-validated-form/with-zod';
-import { saveDraftProposal } from '~/services/event-submission/save-draft-proposal.server';
-import { getTalk } from '~/services/speaker-talks/get-talk.server';
+import { getTalk } from '~/shared/talks/get-talk.server';
+import { saveDraftProposal } from './save-draft-proposal.server';
 
 export const handle = { step: 'proposal' };
 

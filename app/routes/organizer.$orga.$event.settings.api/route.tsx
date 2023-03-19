@@ -8,7 +8,7 @@ import { ExternalLink } from '~/design-system/Links';
 import { Button } from '~/design-system/Buttons';
 import { Input } from '~/design-system/forms/Input';
 import type { OrganizerEventContext } from '../organizer.$orga.$event/route';
-import { updateEvent } from '~/services/organizer-event/update-event.server';
+import { updateEvent } from '~/shared/organizations/update-event.server';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);

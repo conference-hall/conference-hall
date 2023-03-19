@@ -13,9 +13,9 @@ import { useEvent } from '../$event/route';
 import { H2 } from '../../design-system/Typography';
 import { ProposalUpdateSchema } from '~/schemas/proposal';
 import { withZod } from '@remix-validated-form/with-zod';
-import { getSpeakerProposal } from '~/services/event-proposals/get.server';
-import { deleteSpeakerProposalProposal } from '~/services/event-proposals/delete.server';
-import { updateSpeakerProposal } from '~/services/event-proposals/update.server';
+import { getSpeakerProposal } from '~/shared/proposals/get-speaker-proposal.server';
+import { deleteProposal } from './delete-proposal.server';
+import { updateProposal } from './update-proposal.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
@@ -38,12 +38,12 @@ export const action: ActionFunction = async ({ request, params }: ActionArgs) =>
   try {
     const method = form.get('_method');
     if (method === 'DELETE') {
-      await deleteSpeakerProposalProposal(params.proposal, uid);
+      await deleteProposal(params.proposal, uid);
       throw redirect(`/${params.event}/proposals`);
     } else {
       const result = await withZod(ProposalUpdateSchema).validate(form);
       if (result.error) return json(result.error.fieldErrors);
-      await updateSpeakerProposal(params.event, params.proposal, uid, result.data);
+      await updateProposal(params.event, params.proposal, uid, result.data);
       throw redirect(`/${params.event}/proposals/${params.proposal}`);
     }
   } catch (err) {

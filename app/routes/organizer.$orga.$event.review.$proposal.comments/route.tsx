@@ -2,7 +2,7 @@ import invariant from 'tiny-invariant';
 import type { ActionArgs } from '@remix-run/node';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { mapErrorToResponse } from '~/libs/errors';
-import { addProposalComment, removeProposalComment } from '~/services/organizer-review/comments.server';
+import { addProposalComment, removeProposalComment } from './comments.server';
 
 export const action = async ({ request, params }: ActionArgs) => {
   const { uid } = await sessionRequired(request);

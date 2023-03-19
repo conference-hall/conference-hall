@@ -9,7 +9,7 @@ import { Navbar } from '~/components/navbar/Navbar';
 import { ButtonLink } from '~/design-system/Buttons';
 import { Container } from '~/design-system/Container';
 import { mapErrorToResponse } from '~/libs/errors';
-import { getEvent } from '~/services/event-page/get-event.server';
+import { getEvent } from '~/shared/events/get-event.server';
 
 export const loader = async ({ params }: LoaderArgs) => {
   invariant(params.event, 'Invalid event slug');

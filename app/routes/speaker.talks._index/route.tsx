@@ -7,7 +7,7 @@ import { sessionRequired } from '../../libs/auth/auth.server';
 import { mapErrorToResponse } from '../../libs/errors';
 import { SpeakerTalksList } from '../../components/SpeakerTalksList';
 import Select from '~/design-system/forms/Select';
-import { listTalks } from '~/services/speaker-talks/list-talks.server';
+import { listTalks } from '~/routes/speaker.talks._index/list-talks.server';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);

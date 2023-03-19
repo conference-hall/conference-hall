@@ -9,12 +9,12 @@ import { Container } from '~/design-system/Container';
 import { H2, Text } from '~/design-system/Typography';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { mapErrorToResponse } from '~/libs/errors';
-import { saveSurvey } from '~/services/event-survey/save-survey.server';
 import type { SurveyQuestions } from '~/schemas/survey';
 import { SurveySchema } from '~/schemas/survey';
 import { withZod } from '@remix-validated-form/with-zod';
-import { getQuestions } from '~/services/event-survey/get-questions.server';
-import { getAnswers } from '~/services/event-survey/get-answers.server';
+import { getAnswers } from '~/shared/survey/get-answers.server';
+import { getQuestions } from '~/shared/survey/get-questions.server';
+import { saveSurvey } from '~/shared/survey/save-survey.server';
 
 type SurveyQuestionsForm = {
   questions: SurveyQuestions;

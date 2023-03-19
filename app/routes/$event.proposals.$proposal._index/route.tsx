@@ -13,8 +13,8 @@ import { getLevel } from '../../utils/levels';
 import { getLanguage } from '../../utils/languages';
 import { CoSpeakersList, InviteCoSpeakerButton } from '../../components/CoSpeaker';
 import { ProposalStatusPanel } from '~/components/speaker-proposals/ProposalStatusPanel';
-import { getSpeakerProposal } from '~/services/event-proposals/get.server';
-import { removeCoSpeakerFromProposal } from '~/services/event-proposals/remove-co-speaker.server';
+import { getSpeakerProposal } from '~/shared/proposals/get-speaker-proposal.server';
+import { removeCoSpeakerFromProposal } from '~/shared/proposals/remove-co-speaker.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);

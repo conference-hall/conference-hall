@@ -1,8 +1,8 @@
 import invariant from 'tiny-invariant';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { getEventProposals } from '~/services/api/get-event-proposals.server';
 import { mapErrorToResponse } from '~/libs/errors';
+import { getEventProposals } from './get-event-proposals.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const url = new URL(request.url);

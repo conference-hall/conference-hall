@@ -6,14 +6,14 @@ import { Form, useLoaderData } from '@remix-run/react';
 import { withZod } from '@remix-validated-form/with-zod';
 import { Button, ButtonLink } from '~/design-system/Buttons';
 import { SurveySchema } from '~/schemas/survey';
-import { getAnswers } from '~/services/event-survey/get-answers.server';
-import { getQuestions } from '~/services/event-survey/get-questions.server';
+import { getAnswers } from '~/shared/survey/get-answers.server';
 import { EventSurveyForm } from '../../components/EventSurveyForm';
 import { useSubmissionStep } from '../../components/useSubmissionStep';
 import { H2, Text } from '../../design-system/Typography';
 import { sessionRequired } from '../../libs/auth/auth.server';
 import { mapErrorToResponse } from '../../libs/errors';
-import { saveSurvey } from '../../services/event-survey/save-survey.server';
+import { getQuestions } from '~/shared/survey/get-questions.server';
+import { saveSurvey } from '~/shared/survey/save-survey.server';
 
 export const handle = { step: 'survey' };
 

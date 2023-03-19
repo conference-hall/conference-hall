@@ -13,7 +13,7 @@ import { DateRangeInput } from '~/design-system/forms/DateRangeInput';
 import { EventInfoForm } from '~/components/organizer-event/EventInfoForm';
 import { withZod } from '@remix-validated-form/with-zod';
 import { EventDetailsSettingsSchema, EventGeneralSettingsSchema } from '~/schemas/event';
-import { updateEvent } from '~/services/organizer-event/update-event.server';
+import { updateEvent } from '~/shared/organizations/update-event.server';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);

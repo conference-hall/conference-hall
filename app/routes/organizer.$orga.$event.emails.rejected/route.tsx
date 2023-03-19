@@ -15,9 +15,9 @@ import { sessionRequired } from '~/libs/auth/auth.server';
 import { mapErrorToResponse } from '~/libs/errors';
 import { createToast } from '~/utils/toasts';
 import { CampaignEmailStats } from '~/components/campaign-email/CampaignEmailStats';
-import { searchProposals } from '~/services/organizer-review/search-proposals.server';
-import { getRejectionCampaignStats } from '~/services/organizer-email-campaigns/get-rejection-campaign-stats.server';
-import { sendRejectionCampaign } from '~/services/organizer-email-campaigns/send-rejection-campaign.server';
+import { searchProposals } from '~/routes/organizer.$orga.$event._index/search-proposals.server';
+import { getRejectionCampaignStats } from './get-rejection-campaign-stats.server';
+import { sendRejectionCampaign } from './send-rejection-campaign.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);

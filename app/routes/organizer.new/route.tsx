@@ -8,7 +8,7 @@ import { Container } from '~/design-system/Container';
 import { Button } from '~/design-system/Buttons';
 import { H1, Text } from '~/design-system/Typography';
 import { OrganizationSaveSchema } from '~/schemas/organization';
-import { createOrganization } from '~/services/organization/create-organization.server';
+import { createOrganization } from './create-organization.server';
 
 export const loader: LoaderFunction = async ({ request }) => {
   await sessionRequired(request);

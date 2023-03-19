@@ -9,13 +9,13 @@ import { Button } from '../../design-system/Buttons';
 import { H2, Text } from '../../design-system/Typography';
 import { useCallback } from 'react';
 import { getAuth } from 'firebase/auth';
-import { saveProfile } from '../../services/speaker-profile/save-profile.server';
 import { mapErrorToResponse } from '../../libs/errors';
 import { sessionRequired } from '../../libs/auth/auth.server';
 import { NavMenu } from '~/design-system/NavMenu';
 import { withZod } from '@remix-validated-form/with-zod';
 import { AdditionalInfoSchema, DetailsSchema, PersonalInfoSchema } from '~/schemas/profile';
 import type { SpeakerContext } from '../speaker';
+import { saveProfile } from '~/shared/profile/save-profile.server';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);

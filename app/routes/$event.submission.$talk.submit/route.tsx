@@ -8,14 +8,14 @@ import { H1, Text } from '../../design-system/Typography';
 import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { sessionRequired } from '../../libs/auth/auth.server';
-import { submitProposal } from '../../services/event-submission/submit-proposal.server';
+import { submitProposal } from './submit-proposal.server';
 import { mapErrorToResponse } from '../../libs/errors';
 import { TextArea } from '../../design-system/forms/TextArea';
 import { AvatarGroup } from '~/design-system/Avatar';
 import { withZod } from '@remix-validated-form/with-zod';
 import { ProposalSubmissionSchema } from '~/schemas/proposal';
-import { getSubmittedProposal } from '~/services/event-submission/get-submitted-proposal.server';
 import { useEvent } from '~/routes/$event/route';
+import { getSubmittedProposal } from '../../shared/proposals/get-submitted-proposal.server';
 
 export const handle = { step: 'submission' };
 

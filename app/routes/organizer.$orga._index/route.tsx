@@ -11,7 +11,7 @@ import { ChevronRightIcon, StarIcon } from '@heroicons/react/24/outline';
 import { Input } from '~/design-system/forms/Input';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { ButtonLink } from '~/design-system/Buttons';
-import { listEvents } from '~/services/organization/list-events.server';
+import { listEvents } from './list-events.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);

@@ -6,14 +6,14 @@ import { Button, ButtonLink } from '~/design-system/Buttons';
 import { CategoriesForm } from '~/components/CategoriesForm';
 import { sessionRequired } from '../../libs/auth/auth.server';
 import { mapErrorToResponse } from '../../libs/errors';
-import { getEvent } from '../../services/event-page/get-event.server';
-import { saveTracks } from '../../services/event-submission/save-tracks.server';
+import { getEvent } from '../../shared/events/get-event.server';
+import { saveTracks } from './save-tracks.server';
 import { useSubmissionStep } from '../../components/useSubmissionStep';
 import { FormatsForm } from '../../components/FormatsForm';
 import { withZod } from '@remix-validated-form/with-zod';
 import { TracksUpdateSchema } from '~/schemas/tracks';
-import { getSubmittedProposal } from '~/services/event-submission/get-submitted-proposal.server';
 import { useEvent } from '~/routes/$event/route';
+import { getSubmittedProposal } from '~/shared/proposals/get-submitted-proposal.server';
 
 export const handle = { step: 'tracks' };
 

@@ -10,8 +10,8 @@ import { Link } from '../../design-system/Links';
 import { SpeakerActivities } from '../../components/SpeakerActivities';
 import { mapErrorToResponse } from '../../libs/errors';
 import { sessionRequired } from '../../libs/auth/auth.server';
-import { getActivity } from '~/services/speaker-activity/get-activity.server';
 import type { SpeakerContext } from '../speaker';
+import { getActivity } from './get-activity.server';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);

@@ -12,7 +12,7 @@ import { CategoriesForm } from '~/components/CategoriesForm';
 import { mapErrorToResponse } from '~/libs/errors';
 import { withZod } from '@remix-validated-form/with-zod';
 import { ProposalUpdateSchema } from '~/schemas/proposal';
-import { updateProposal } from '~/services/organizer-review/update-proposal.server';
+import { updateProposal } from '~/routes/organizer.$orga.$event._index/update-proposal.server';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);

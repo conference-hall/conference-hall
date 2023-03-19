@@ -11,8 +11,8 @@ import type { OrganizerEventContext } from '../organizer.$orga.$event/route';
 import { UploadingError } from '~/libs/storage/storage.server';
 import { ButtonFileUpload } from '~/design-system/forms/FileUploadButton';
 import { mapErrorToResponse } from '~/libs/errors';
-import { uploadEventBanner } from '~/services/organizer-event/upload-event-banner.server';
 import { ClientOnly } from 'remix-utils';
+import { uploadEventBanner } from './upload-event-banner.server';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);

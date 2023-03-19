@@ -10,8 +10,8 @@ import Badge from '~/design-system/Badges';
 import { IconLabel } from '~/design-system/IconLabel';
 import { MegaphoneIcon, UsersIcon } from '@heroicons/react/24/outline';
 import { ButtonLink } from '~/design-system/Buttons';
-import { listOrganizations } from '~/services/organization/list-organizations.server';
-import { hasAccess } from '~/services/organization-access/has-access.server';
+import { hasAccess } from './has-access.server';
+import { listOrganizations } from './list-organizations.server';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
