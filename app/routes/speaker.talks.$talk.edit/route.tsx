@@ -7,7 +7,7 @@ import { Container } from '~/design-system/Container';
 import { TalkSaveSchema } from '~/schemas/talks';
 import { getTalk } from '~/shared-server/talks/get-talk.server';
 import { updateTalk } from '~/routes/speaker.talks.$talk.edit/server/update-talk.server';
-import { createToast } from '~/utils/toasts';
+import { createToast } from '~/libs/toasts/toasts';
 import { TalkForm } from '../../shared-components/proposal-forms/TalkForm';
 import { Button, ButtonLink } from '../../design-system/Buttons';
 import { H2 } from '../../design-system/Typography';

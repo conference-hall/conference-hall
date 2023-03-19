@@ -1,6 +1,6 @@
 import { CheckCircleIcon, XMarkIcon } from '@heroicons/react/20/solid';
 import { useEffect, useRef, useState } from 'react';
-import type { ToastData } from '~/utils/toasts';
+import type { ToastData } from '~/libs/toasts/toasts';
 import { ToastTransition } from './Transitions';
 
 type Props = { toast?: ToastData | null };

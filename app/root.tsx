@@ -11,8 +11,8 @@ import { H1, Text } from './design-system/Typography';
 import { Container } from './design-system/Container';
 import { GlobalLoading } from './shared-components/GlobalLoading';
 import { Toast } from './design-system/Toast';
-import type { ToastData } from './utils/toasts';
-import { getToast } from './utils/toasts';
+import type { ToastData } from './libs/toasts/toasts';
+import { getToast } from './libs/toasts/toasts';
 import tailwind from './tailwind.css';
 import { listNotifications } from './shared-server/notifications/list-notifications.server';
 

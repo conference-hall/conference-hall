@@ -13,7 +13,7 @@ import { ProposalSelectionSchema } from '~/schemas/proposal';
 import { ProposalsFiltersSchema } from '~/schemas/proposal';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { mapErrorToResponse } from '~/libs/errors';
-import { createToast } from '~/utils/toasts';
+import { createToast } from '~/libs/toasts/toasts';
 import { CampaignEmailStats } from '~/shared-components/events/campaign-email/CampaignEmailStats';
 import { searchProposals } from '~/routes/organizer.$orga.$event._index/server/search-proposals.server';
 import { getRejectionCampaignStats } from './server/get-rejection-campaign-stats.server';

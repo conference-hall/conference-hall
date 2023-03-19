@@ -10,7 +10,7 @@ import { parsePage } from '~/schemas/pagination';
 import type { OrganizerEventContext } from '../organizer.$orga.$event/route';
 import { withZod } from '@remix-validated-form/with-zod';
 import { ProposalsStatusUpdateSchema, ProposalsFiltersSchema } from '~/schemas/proposal';
-import { createToast } from '~/utils/toasts';
+import { createToast } from '~/libs/toasts/toasts';
 import { updateProposalsStatus } from '~/routes/organizer.$orga.$event._index/server/update-proposal.server';
 import { searchProposals } from './server/search-proposals.server';
 import { NoProposals } from './components/NoProposals';
