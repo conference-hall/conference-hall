@@ -11,10 +11,10 @@ import { mapErrorToResponse } from '../../libs/errors';
 import Badge from '../../design-system/Badges';
 import { getLevel } from '../../utils/levels';
 import { getLanguage } from '../../utils/languages';
-import { CoSpeakersList, InviteCoSpeakerButton } from '../../components/CoSpeaker';
-import { ProposalStatusPanel } from '~/components/speaker-proposals/ProposalStatusPanel';
-import { getSpeakerProposal } from '~/shared/proposals/get-speaker-proposal.server';
-import { removeCoSpeakerFromProposal } from '~/shared/proposals/remove-co-speaker.server';
+import { CoSpeakersList, InviteCoSpeakerButton } from '../../shared-components/proposal-forms/CoSpeaker';
+import { ProposalStatusPanel } from '~/routes/$event.proposals.$proposal._index/components/ProposalStatusPanel';
+import { getSpeakerProposal } from '~/shared-server/proposals/get-speaker-proposal.server';
+import { removeCoSpeakerFromProposal } from '~/shared-server/proposals/remove-co-speaker.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);

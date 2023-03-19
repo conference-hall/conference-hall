@@ -3,9 +3,9 @@ import { EmailStatus } from '@prisma/client';
 import type { Pagination } from '~/schemas/pagination';
 import type { EmailStatusData, ProposalsFilters } from '~/schemas/proposal';
 import { db } from '../../../libs/db';
-import { checkUserRole } from '../../../shared/organizations/check-user-role.server';
-import { getPagination } from '../../../shared/pagination/pagination.server';
-import { RatingsDetails } from '~/shared/ratings/ratings-details';
+import { checkUserRole } from '../../../shared-server/organizations/check-user-role.server';
+import { getPagination } from '../../../shared-server/pagination/pagination.server';
+import { RatingsDetails } from '~/shared-server/ratings/ratings-details';
 
 const RESULTS_BY_PAGE = 25;
 

@@ -5,7 +5,7 @@ import { Form, useActionData } from '@remix-run/react';
 import { withZod } from '@remix-validated-form/with-zod';
 import { Container } from '~/design-system/Container';
 import { TalkSaveSchema } from '~/schemas/talks';
-import { TalkAbstractForm } from '../../components/TalkAbstractForm';
+import { TalkForm } from '../../shared-components/proposal-forms/TalkForm';
 import { Button } from '../../design-system/Buttons';
 import { H1 } from '../../design-system/Typography';
 import { sessionRequired } from '../../libs/auth/auth.server';
@@ -35,7 +35,7 @@ export default function NewSpeakerTalkRoute() {
 
       <Form method="post" className="mt-4 border border-gray-200 bg-white sm:rounded-lg">
         <div className="px-4 py-8 sm:px-6">
-          <TalkAbstractForm errors={errors} />
+          <TalkForm errors={errors} />
         </div>
 
         <div className="space-x-4 bg-gray-50 px-4 py-3 text-right sm:px-6">

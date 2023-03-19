@@ -4,7 +4,7 @@ import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { Container } from '~/design-system/Container';
 import { useEvent } from '../$event/route';
-import { ProposalsList } from '~/components/speaker-proposals/ProposalsList';
+import { ProposalsList } from '~/routes/$event.proposals._index/components/ProposalsList';
 import { H2, Text } from '~/design-system/Typography';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { mapErrorToResponse } from '~/libs/errors';

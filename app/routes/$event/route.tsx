@@ -3,13 +3,13 @@ import type { LoaderArgs } from '@remix-run/node';
 import type { UserContext } from '~/root';
 import { json } from '@remix-run/node';
 import { Outlet, useCatch, useLoaderData, useOutletContext } from '@remix-run/react';
-import { EventHeader } from '~/components/EventHeader';
-import { EventTabs } from '~/components/EventTabs';
-import { Navbar } from '~/components/navbar/Navbar';
+import { Navbar } from '~/shared-components/navbar/Navbar';
 import { ButtonLink } from '~/design-system/Buttons';
 import { Container } from '~/design-system/Container';
 import { mapErrorToResponse } from '~/libs/errors';
-import { getEvent } from '~/shared/events/get-event.server';
+import { getEvent } from '~/shared-server/events/get-event.server';
+import { EventHeader } from './components/EventHeader';
+import { EventTabs } from './components/EventTabs';
 
 export const loader = async ({ params }: LoaderArgs) => {
   invariant(params.event, 'Invalid event slug');

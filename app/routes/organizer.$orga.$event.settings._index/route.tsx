@@ -10,10 +10,10 @@ import { Input } from '~/design-system/forms/Input';
 import { MarkdownTextArea } from '~/design-system/forms/MarkdownTextArea';
 import type { OrganizerEventContext } from '../organizer.$orga.$event/route';
 import { DateRangeInput } from '~/design-system/forms/DateRangeInput';
-import { EventInfoForm } from '~/components/organizer-event/EventInfoForm';
+import { EventForm } from '~/shared-components/events/EventForm';
 import { withZod } from '@remix-validated-form/with-zod';
 import { EventDetailsSettingsSchema, EventGeneralSettingsSchema } from '~/schemas/event';
-import { updateEvent } from '~/shared/organizations/update-event.server';
+import { updateEvent } from '~/shared-server/organizations/update-event.server';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);
@@ -51,7 +51,7 @@ export default function EventGeneralSettingsRoute() {
         <H2 className="border-b border-gray-200 pb-3">General</H2>
         <Form method="post" className="mt-6 space-y-4">
           <input type="hidden" name="_action" value="general" />
-          <EventInfoForm initialValues={event} errors={errors} />
+          <EventForm initialValues={event} errors={errors} />
           <Button type="submit">Update event</Button>
         </Form>
       </section>

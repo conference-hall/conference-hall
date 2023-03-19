@@ -6,7 +6,7 @@ import { Outlet, useParams } from '@remix-run/react';
 import { Container } from '~/design-system/Container';
 import { NavMenu } from '~/design-system/NavMenu';
 import { sessionRequired } from '~/libs/auth/auth.server';
-import { getUserRole } from '~/shared/organizations/get-user-role.server';
+import { getUserRole } from '~/shared-server/organizations/get-user-role.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);

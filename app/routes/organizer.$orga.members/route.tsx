@@ -6,15 +6,15 @@ import { Container } from '~/design-system/Container';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { useLoaderData, useOutletContext } from '@remix-run/react';
 import { AvatarName } from '~/design-system/Avatar';
-import { ChangeRoleButton, InviteMemberButton, RemoveButton } from '~/components/MemberActions';
 import { Input } from '~/design-system/forms/Input';
 import type { OrganizationContext } from '../organizer.$orga/route';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
-import { getUserRole } from '~/shared/organizations/get-user-role.server';
+import { getUserRole } from '~/shared-server/organizations/get-user-role.server';
 import { removeMember } from './server/remove-member.server';
 import { changeMemberRole } from './server/change-role.server';
 import { listMembers } from './server/list-members.server';
 import { getInvitationLink } from './server/get-invitation-link.server';
+import { ChangeRoleButton, InviteMemberButton, RemoveButton } from './components/MemberActions';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);

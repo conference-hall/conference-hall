@@ -1,7 +1,7 @@
 import { EmailStatus } from '@prisma/client';
 import { db } from '../../../libs/db';
 import { ProposalRejectedEmailsBatch } from './emails/proposal-rejected-email-batch';
-import { checkUserRole } from '~/shared/organizations/check-user-role.server';
+import { checkUserRole } from '~/shared-server/organizations/check-user-role.server';
 
 export async function sendRejectionCampaign(orgaSlug: string, eventSlug: string, uid: string, proposalIds: string[]) {
   await checkUserRole(orgaSlug, eventSlug, uid, ['OWNER', 'MEMBER']);

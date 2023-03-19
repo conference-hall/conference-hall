@@ -1,7 +1,7 @@
 import { OrganizationRole } from '@prisma/client';
 import { db } from '../../../libs/db';
 import { ForbiddenOperationError } from '../../../libs/errors';
-import { getUserRole } from '../../../shared/organizations/get-user-role.server';
+import { getUserRole } from '../../../shared-server/organizations/get-user-role.server';
 
 export async function removeMember(slug: string, uid: string, memberId: string) {
   if (uid === memberId) throw new ForbiddenOperationError();

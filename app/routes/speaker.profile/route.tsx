@@ -14,8 +14,8 @@ import { sessionRequired } from '../../libs/auth/auth.server';
 import { NavMenu } from '~/design-system/NavMenu';
 import { withZod } from '@remix-validated-form/with-zod';
 import { AdditionalInfoSchema, DetailsSchema, PersonalInfoSchema } from '~/schemas/profile';
-import type { SpeakerContext } from '../speaker';
-import { saveProfile } from '~/shared/profile/save-profile.server';
+import type { SpeakerContext } from '../speaker/route';
+import { saveProfile } from '~/shared-server/profile/save-profile.server';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);

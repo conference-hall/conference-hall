@@ -1,5 +1,5 @@
 import { db } from '../../../libs/db';
-import { buildInvitationLink } from '../../../shared/invitations/build-link.server';
+import { buildInvitationLink } from '../../../shared-server/invitations/build-link.server';
 
 /**
  * Returns invitation link of an organization

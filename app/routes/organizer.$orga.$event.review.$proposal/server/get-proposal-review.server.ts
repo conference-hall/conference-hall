@@ -6,8 +6,8 @@ import {
   proposalOrderBy,
   proposalWhereInput,
 } from '~/routes/organizer.$orga.$event._index/server/search-proposals.server';
-import { checkUserRole } from '~/shared/organizations/check-user-role.server';
-import { RatingsDetails } from '~/shared/ratings/ratings-details';
+import { checkUserRole } from '~/shared-server/organizations/check-user-role.server';
+import { RatingsDetails } from '~/shared-server/ratings/ratings-details';
 
 export async function getProposalReview(
   orgaSlug: string,

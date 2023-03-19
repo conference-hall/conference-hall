@@ -2,7 +2,7 @@ import invariant from 'tiny-invariant';
 import type { ActionArgs, LoaderFunction } from '@remix-run/node';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import { json } from '@remix-run/node';
-import { EventSurveyForm } from '~/components/EventSurveyForm';
+import { SurveyForm } from '~/shared-components/proposal-forms/SurveyForm';
 import { AlertSuccess } from '~/design-system/Alerts';
 import { Button } from '~/design-system/Buttons';
 import { Container } from '~/design-system/Container';
@@ -12,9 +12,9 @@ import { mapErrorToResponse } from '~/libs/errors';
 import type { SurveyQuestions } from '~/schemas/survey';
 import { SurveySchema } from '~/schemas/survey';
 import { withZod } from '@remix-validated-form/with-zod';
-import { getAnswers } from '~/shared/survey/get-answers.server';
-import { getQuestions } from '~/shared/survey/get-questions.server';
-import { saveSurvey } from '~/shared/survey/save-survey.server';
+import { getAnswers } from '~/shared-server/survey/get-answers.server';
+import { getQuestions } from '~/shared-server/survey/get-questions.server';
+import { saveSurvey } from '~/shared-server/survey/save-survey.server';
 
 type SurveyQuestionsForm = {
   questions: SurveyQuestions;
@@ -68,7 +68,7 @@ export default function EventSurveyRoute() {
         method="post"
       >
         <div className="bg-white sm:p-6">
-          <EventSurveyForm questions={questions} initialValues={answers} />
+          <SurveyForm questions={questions} initialValues={answers} />
         </div>
         <div className="space-x-4 py-8 sm:bg-gray-50 sm:py-3 sm:px-6 sm:text-right">
           <Button type="submit" className="w-full sm:w-fit">

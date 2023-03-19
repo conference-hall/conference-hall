@@ -7,10 +7,10 @@ import { H3, Text } from '../../design-system/Typography';
 import { Markdown } from '../../design-system/Markdown';
 import { IconLabel } from '../../design-system/IconLabel';
 import { Link } from '../../design-system/Links';
-import { SpeakerActivities } from '../../components/SpeakerActivities';
+import { SpeakerActivities } from './components/SpeakerActivities';
 import { mapErrorToResponse } from '../../libs/errors';
 import { sessionRequired } from '../../libs/auth/auth.server';
-import type { SpeakerContext } from '../speaker';
+import type { SpeakerContext } from '../speaker/route';
 import { getActivity } from './server/get-activity.server';
 
 export const loader = async ({ request }: LoaderArgs) => {

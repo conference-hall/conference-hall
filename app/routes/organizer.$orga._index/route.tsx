@@ -4,14 +4,14 @@ import type { OrganizationContext } from '../organizer.$orga/route';
 import { json } from '@remix-run/node';
 import { Container } from '~/design-system/Container';
 import { sessionRequired } from '~/libs/auth/auth.server';
-import { H2, Text } from '~/design-system/Typography';
+import { Text } from '~/design-system/Typography';
 import { Link, Outlet, useLoaderData, useOutletContext } from '@remix-run/react';
-import { EmptyState } from '~/design-system/EmptyState';
-import { ChevronRightIcon, StarIcon } from '@heroicons/react/24/outline';
+import { ChevronRightIcon } from '@heroicons/react/24/outline';
 import { Input } from '~/design-system/forms/Input';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { ButtonLink } from '~/design-system/Buttons';
 import { listEvents } from './server/list-events.server';
+import { OrganizationEventsEmpty } from './components/OrganizationEventsEmpty';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
@@ -72,22 +72,3 @@ export default function OrganizationEventsRoute() {
     </Container>
   );
 }
-
-const OrganizationEventsEmpty = ({ organization }: OrganizationContext) => (
-  <Container className="my-4 sm:my-16">
-    <EmptyState icon={StarIcon} className="flex flex-col items-center gap-2">
-      <h2 className="sr-only">Organization events</h2>
-      <H2>{`Welcome to "${organization.name}"`}</H2>
-
-      {organization.role === 'OWNER' ? (
-        <>
-          <Text variant="secondary">Get started by creating your first event.</Text>
-          <ButtonLink to="new">New event</ButtonLink>
-        </>
-      ) : (
-        <Text variant="secondary">No event created yet.</Text>
-      )}
-    </EmptyState>
-    <Outlet />
-  </Container>
-);

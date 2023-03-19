@@ -1,15 +1,15 @@
 import invariant from 'tiny-invariant';
-import { useCatch, useLoaderData } from '@remix-run/react';
-import { ButtonLink } from '~/design-system/Buttons';
-import { Container } from '../../design-system/Container';
-import { AlertInfo } from '../../design-system/Alerts';
-import { MaxProposalsReached } from '../../components/MaxProposalsReached';
-import { H2, Text } from '../../design-system/Typography';
-import { sessionRequired } from '../../libs/auth/auth.server';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { mapErrorToResponse } from '../../libs/errors';
-import { SubmissionTalksList } from '../../components/SubmissionTalksList';
+import { useCatch, useLoaderData } from '@remix-run/react';
+import { sessionRequired } from '~/libs/auth/auth.server';
+import { mapErrorToResponse } from '~/libs/errors';
+import { Container } from '~/design-system/Container';
+import { H2, Text } from '~/design-system/Typography';
+import { AlertInfo } from '~/design-system/Alerts';
+import { ButtonLink } from '~/design-system/Buttons';
+import { MaxProposalsReached } from './components/MaxProposalsReached';
+import { SubmissionTalksList } from './components/SubmissionTalksList';
 import { getProposalCountsForEvent, listTalksToSubmit } from './server/list-talks-to-submit.server';
 
 export const handle = { step: 'selection' };

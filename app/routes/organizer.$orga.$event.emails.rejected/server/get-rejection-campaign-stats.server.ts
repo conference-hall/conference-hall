@@ -1,4 +1,4 @@
-import { checkUserRole } from '~/shared/organizations/check-user-role.server';
+import { checkUserRole } from '~/shared-server/organizations/check-user-role.server';
 import { db } from '../../../libs/db';
 
 export async function getRejectionCampaignStats(orgaSlug: string, eventSlug: string, uid: string) {

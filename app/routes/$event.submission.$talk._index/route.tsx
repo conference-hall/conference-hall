@@ -6,10 +6,10 @@ import { sessionRequired } from '../../libs/auth/auth.server';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { mapErrorToResponse } from '../../libs/errors';
-import { TalkAbstractForm } from '../../components/TalkAbstractForm';
+import { TalkForm } from '../../shared-components/proposal-forms/TalkForm';
 import { ProposalCreateSchema } from '~/schemas/proposal';
 import { withZod } from '@remix-validated-form/with-zod';
-import { getTalk } from '~/shared/talks/get-talk.server';
+import { getTalk } from '~/shared-server/talks/get-talk.server';
 import { saveDraftProposal } from './server/save-draft-proposal.server';
 
 export const handle = { step: 'proposal' };
@@ -60,7 +60,7 @@ export default function SubmissionProposalRoute() {
             This information will be displayed publicly so be careful what you share.
           </Text>
         </div>
-        <TalkAbstractForm initialValues={talk} errors={errors} />
+        <TalkForm initialValues={talk} errors={errors} />
       </div>
 
       <div className="py-5 text-right sm:px-6">

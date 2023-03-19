@@ -1,7 +1,7 @@
 import { db } from '../../../libs/db';
 import { EmailStatus } from '@prisma/client';
 import { ProposalAcceptedEmailsBatch } from './emails/proposal-accepted-email-batch';
-import { checkUserRole } from '~/shared/organizations/check-user-role.server';
+import { checkUserRole } from '~/shared-server/organizations/check-user-role.server';
 
 export async function sendAcceptationCampaign(orgaSlug: string, eventSlug: string, uid: string, proposalIds: string[]) {
   await checkUserRole(orgaSlug, eventSlug, uid, ['OWNER', 'MEMBER']);

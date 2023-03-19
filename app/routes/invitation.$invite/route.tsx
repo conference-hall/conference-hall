@@ -3,7 +3,7 @@ import { StarIcon } from '@heroicons/react/20/solid';
 import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useLoaderData, useOutletContext } from '@remix-run/react';
-import { Navbar } from '~/components/navbar/Navbar';
+import { Navbar } from '~/shared-components/navbar/Navbar';
 import { getInvitation } from '~/routes/invitation.$invite/server/get-invitation.server';
 import { Button } from '../../design-system/Buttons';
 import { Container } from '../../design-system/Container';

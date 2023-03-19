@@ -3,7 +3,7 @@ import { Form, useActionData } from '@remix-run/react';
 import { json, redirect } from '@remix-run/node';
 import { withZod } from '@remix-validated-form/with-zod';
 import { sessionRequired } from '~/libs/auth/auth.server';
-import { OrganizationNewForm } from '~/components/organizations/OrganizationNew';
+import { OrganizationForm } from '~/shared-components/organizations/OrganizationForm';
 import { Container } from '~/design-system/Container';
 import { Button } from '~/design-system/Buttons';
 import { H1, Text } from '~/design-system/Typography';
@@ -44,7 +44,7 @@ export default function NewOrganizationRoute() {
         method="post"
         className="space-y-8 border border-gray-200 bg-white p-8 shadow sm:overflow-hidden sm:rounded-md"
       >
-        <OrganizationNewForm errors={errors} />
+        <OrganizationForm errors={errors} />
         <Button type="submit" className="mt-4">
           New organization
         </Button>

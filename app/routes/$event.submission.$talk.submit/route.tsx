@@ -15,7 +15,7 @@ import { AvatarGroup } from '~/design-system/Avatar';
 import { withZod } from '@remix-validated-form/with-zod';
 import { ProposalSubmissionSchema } from '~/schemas/proposal';
 import { useEvent } from '~/routes/$event/route';
-import { getSubmittedProposal } from '../../shared/proposals/get-submitted-proposal.server';
+import { getSubmittedProposal } from '../../shared-server/proposals/get-submitted-proposal.server';
 
 export const handle = { step: 'submission' };
 

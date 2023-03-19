@@ -6,14 +6,14 @@ import { Form, useLoaderData } from '@remix-run/react';
 import { withZod } from '@remix-validated-form/with-zod';
 import { Button, ButtonLink } from '~/design-system/Buttons';
 import { SurveySchema } from '~/schemas/survey';
-import { getAnswers } from '~/shared/survey/get-answers.server';
-import { EventSurveyForm } from '../../components/EventSurveyForm';
-import { useSubmissionStep } from '../../components/useSubmissionStep';
+import { getAnswers } from '~/shared-server/survey/get-answers.server';
+import { SurveyForm } from '../../shared-components/proposal-forms/SurveyForm';
+import { useSubmissionStep } from '../../shared-components/useSubmissionStep';
 import { H2, Text } from '../../design-system/Typography';
 import { sessionRequired } from '../../libs/auth/auth.server';
 import { mapErrorToResponse } from '../../libs/errors';
-import { getQuestions } from '~/shared/survey/get-questions.server';
-import { saveSurvey } from '~/shared/survey/save-survey.server';
+import { getQuestions } from '~/shared-server/survey/get-questions.server';
+import { saveSurvey } from '~/shared-server/survey/save-survey.server';
 
 export const handle = { step: 'survey' };
 
@@ -60,7 +60,7 @@ export default function SubmissionSurveyRoute() {
         </Text>
       </div>
       <div className="mt-6">
-        <EventSurveyForm questions={questions} initialValues={answers} />
+        <SurveyForm questions={questions} initialValues={answers} />
       </div>
       <div className="my-4 flex justify-between gap-4 sm:flex-row sm:justify-end sm:px-8 sm:pb-4">
         <ButtonLink to={previousPath} variant="secondary">

@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { db } from '../../../libs/db';
 import { EventNotFoundError } from '../../../libs/errors';
 import { uploadToStorageHandler } from '../../../libs/storage/storage.server';
-import { checkUserRole } from '~/shared/organizations/check-user-role.server';
+import { checkUserRole } from '~/shared-server/organizations/check-user-role.server';
 
 export async function uploadEventBanner(orgaSlug: string, eventSlug: string, uid: string, request: Request) {
   await checkUserRole(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER]);

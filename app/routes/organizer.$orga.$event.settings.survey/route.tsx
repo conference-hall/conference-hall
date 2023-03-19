@@ -8,8 +8,8 @@ import { Checkbox } from '~/design-system/forms/Checkboxes';
 import type { OrganizerEventContext } from '../organizer.$orga.$event/route';
 import { withZod } from '@remix-validated-form/with-zod';
 import { EventSurveySettingsSchema } from '~/schemas/event';
-import { updateEvent } from '~/shared/organizations/update-event.server';
-import { QUESTIONS } from '~/shared/survey/get-questions.server';
+import { updateEvent } from '~/shared-server/organizations/update-event.server';
+import { QUESTIONS } from '~/shared-server/survey/get-questions.server';
 
 // TODO why not using event-survey#getQuestions?
 export const loader = async ({ request }: LoaderArgs) => {

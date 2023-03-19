@@ -2,18 +2,18 @@ import invariant from 'tiny-invariant';
 import { Form, useActionData, useCatch, useLoaderData } from '@remix-run/react';
 import { Container } from '~/design-system/Container';
 import { Button, ButtonLink } from '../../design-system/Buttons';
-import { CategoriesForm } from '../../components/CategoriesForm';
+import { CategoriesForm } from '../../shared-components/proposal-forms/CategoriesForm';
 import type { ActionArgs, ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { sessionRequired } from '../../libs/auth/auth.server';
 import { mapErrorToResponse } from '../../libs/errors';
-import { TalkAbstractForm } from '../../components/TalkAbstractForm';
-import { FormatsForm } from '../../components/FormatsForm';
+import { TalkForm } from '../../shared-components/proposal-forms/TalkForm';
+import { FormatsForm } from '../../shared-components/proposal-forms/FormatsForm';
 import { useEvent } from '../$event/route';
 import { H2 } from '../../design-system/Typography';
 import { ProposalUpdateSchema } from '~/schemas/proposal';
 import { withZod } from '@remix-validated-form/with-zod';
-import { getSpeakerProposal } from '~/shared/proposals/get-speaker-proposal.server';
+import { getSpeakerProposal } from '~/shared-server/proposals/get-speaker-proposal.server';
 import { deleteProposal } from './server/delete-proposal.server';
 import { updateProposal } from './server/update-proposal.server';
 
@@ -67,7 +67,7 @@ export default function EditProposalRoute() {
 
       <Form method="post" className="sm:mt-4 sm:rounded-lg sm:border sm:border-gray-200">
         <div className="py-8 sm:px-6">
-          <TalkAbstractForm initialValues={proposal} errors={errors} />
+          <TalkForm initialValues={proposal} errors={errors} />
 
           {event.formats?.length > 0 ? (
             <div className="pt-10">

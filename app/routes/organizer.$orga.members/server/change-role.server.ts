@@ -1,7 +1,7 @@
 import { OrganizationRole } from '@prisma/client';
 import { db } from '../../../libs/db';
 import { ForbiddenOperationError } from '../../../libs/errors';
-import { getUserRole } from '../../../shared/organizations/get-user-role.server';
+import { getUserRole } from '../../../shared-server/organizations/get-user-role.server';
 
 export async function changeMemberRole(slug: string, uid: string, memberId: string, memberRole: OrganizationRole) {
   if (uid === memberId) throw new ForbiddenOperationError();

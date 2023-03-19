@@ -2,14 +2,14 @@ import invariant from 'tiny-invariant';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Outlet, useLoaderData, useOutletContext } from '@remix-run/react';
-import { CfpElapsedTime } from '~/components/CfpInfo';
-import { EventTabs } from '~/components/organizer-event/EventTabs';
-import OrganizationBreadcrumb from '~/components/organizations/OrganizationBreadcrumb';
+import OrganizationBreadcrumb from '~/shared-components/organizations/OrganizationBreadcrumb';
 import { Container } from '~/design-system/Container';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { mapErrorToResponse } from '~/libs/errors';
 import type { OrganizationContext } from '../organizer.$orga/route';
 import { getEvent } from './server/get-event.server';
+import { EventTabs } from './components/EventTabs';
+import { CfpElapsedTime } from '~/shared-components/cfp/CfpElapsedTime';
 
 export type OrganizerEventContext = {
   event: Awaited<ReturnType<typeof getEvent>>;

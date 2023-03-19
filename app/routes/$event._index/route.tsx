@@ -3,7 +3,7 @@ import { useCatch } from '@remix-run/react';
 import { Container } from '~/design-system/Container';
 import { useEvent } from '../$event/route';
 import { ButtonLink } from '../../design-system/Buttons';
-import { CfpInfo } from '../../components/CfpInfo';
+import { CfpInfo } from './components/CfpInfo';
 import { ExternalLink } from '../../design-system/Links';
 import { Markdown } from '../../design-system/Markdown';
 import { H2, Text } from '../../design-system/Typography';

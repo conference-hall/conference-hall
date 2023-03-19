@@ -1,5 +1,5 @@
 import { db } from '../../../libs/db';
-import { getUserRole } from '../../../shared/organizations/get-user-role.server';
+import { getUserRole } from '../../../shared-server/organizations/get-user-role.server';
 
 export async function listMembers(slug: string, uid: string) {
   const role = await getUserRole(slug, uid);

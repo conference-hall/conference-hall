@@ -3,12 +3,12 @@ import { Outlet, useCatch, useLoaderData, useMatches } from '@remix-run/react';
 import type { LoaderFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { sessionRequired } from '~/libs/auth/auth.server';
-import { getEvent } from '~/shared/events/get-event.server';
+import { getEvent } from '~/shared-server/events/get-event.server';
 import { mapErrorToResponse } from '~/libs/errors';
 import { Container } from '~/design-system/Container';
-import { SubmissionSteps } from '~/components/SubmissionSteps';
 import { useEvent } from '~/routes/$event/route';
 import { isTalkAlreadySubmitted } from './server/is-talk-already-submitted.server';
+import { SubmissionSteps } from './components/SubmissionSteps';
 
 export type SubmitSteps = Array<{
   key: string;

@@ -6,9 +6,9 @@ import { sessionRequired } from '~/libs/auth/auth.server';
 import { Outlet, useCatch, useLoaderData, useMatches } from '@remix-run/react';
 import { ButtonLink } from '~/design-system/Buttons';
 import { mapErrorToResponse } from '~/libs/errors';
-import { OrganizationTabs } from '~/components/organizations/OrganizationTabs';
-import OrganizationBreadcrumb from '~/components/organizations/OrganizationBreadcrumb';
+import OrganizationBreadcrumb from '~/shared-components/organizations/OrganizationBreadcrumb';
 import { getOrganization } from './server/get-organization.server';
+import { OrganizationTabs } from './components/OrganizationTabs';
 
 export type OrganizationContext = {
   organization: Awaited<ReturnType<typeof getOrganization>>;

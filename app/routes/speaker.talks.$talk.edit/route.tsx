@@ -5,10 +5,10 @@ import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import { withZod } from '@remix-validated-form/with-zod';
 import { Container } from '~/design-system/Container';
 import { TalkSaveSchema } from '~/schemas/talks';
-import { getTalk } from '~/shared/talks/get-talk.server';
+import { getTalk } from '~/shared-server/talks/get-talk.server';
 import { updateTalk } from '~/routes/speaker.talks.$talk.edit/server/update-talk.server';
 import { createToast } from '~/utils/toasts';
-import { TalkAbstractForm } from '../../components/TalkAbstractForm';
+import { TalkForm } from '../../shared-components/proposal-forms/TalkForm';
 import { Button, ButtonLink } from '../../design-system/Buttons';
 import { H2 } from '../../design-system/Typography';
 import { sessionRequired } from '../../libs/auth/auth.server';
@@ -61,7 +61,7 @@ export default function SpeakerTalkRoute() {
 
       <Form method="post" className="sm:mt-4 sm:rounded-lg sm:border sm:border-gray-200">
         <div className="py-8 sm:px-6">
-          <TalkAbstractForm initialValues={talk} errors={errors} />
+          <TalkForm initialValues={talk} errors={errors} />
         </div>
 
         <div className="flex flex-col gap-4 py-3 sm:flex-row sm:justify-end sm:bg-gray-50 sm:px-6">

@@ -1,6 +1,6 @@
 import type { ProposalRatingData } from '~/schemas/proposal';
 import { db } from '../../../libs/db';
-import { checkUserRole } from '~/shared/organizations/check-user-role.server';
+import { checkUserRole } from '~/shared-server/organizations/check-user-role.server';
 
 export async function rateProposal(
   orgaSlug: string,

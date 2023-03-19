@@ -1,6 +1,6 @@
 import { MessageChannel } from '@prisma/client';
 import { db } from '../../../libs/db';
-import { checkUserRole } from '~/shared/organizations/check-user-role.server';
+import { checkUserRole } from '~/shared-server/organizations/check-user-role.server';
 
 export async function addProposalComment(
   orgaSlug: string,

@@ -3,20 +3,20 @@ import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import { Button, ButtonLink } from '~/design-system/Buttons';
-import { InviteCoSpeakerButton, CoSpeakersList } from '../../components/CoSpeaker';
-import { useSubmissionStep } from '../../components/useSubmissionStep';
+import { InviteCoSpeakerButton, CoSpeakersList } from '../../shared-components/proposal-forms/CoSpeaker';
+import { useSubmissionStep } from '../../shared-components/useSubmissionStep';
 import { MarkdownTextArea } from '../../design-system/forms/MarkdownTextArea';
 import { ExternalLink } from '../../design-system/Links';
 import { H2, Text } from '../../design-system/Typography';
 import { sessionRequired } from '../../libs/auth/auth.server';
 import { mapErrorToResponse } from '../../libs/errors';
-import { getEvent } from '../../shared/events/get-event.server';
-import { saveProfile } from '../../shared/profile/save-profile.server';
-import { getUser } from '../../shared/users/get-user.server';
+import { getEvent } from '../../shared-server/events/get-event.server';
+import { saveProfile } from '../../shared-server/profile/save-profile.server';
+import { getUser } from '../../shared-server/users/get-user.server';
 import { DetailsSchema } from '~/schemas/profile';
 import { withZod } from '@remix-validated-form/with-zod';
-import { removeCoSpeakerFromSubmission } from '~/shared/proposals/remove-co-speaker.server';
-import { getSubmittedProposal } from '../../shared/proposals/get-submitted-proposal.server';
+import { removeCoSpeakerFromSubmission } from '~/shared-server/proposals/remove-co-speaker.server';
+import { getSubmittedProposal } from '../../shared-server/proposals/get-submitted-proposal.server';
 
 export const handle = { step: 'speakers' };
 

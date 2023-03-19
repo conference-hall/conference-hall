@@ -5,9 +5,9 @@ import { Container } from '../../design-system/Container';
 import { H2, Text } from '../../design-system/Typography';
 import { sessionRequired } from '../../libs/auth/auth.server';
 import { mapErrorToResponse } from '../../libs/errors';
-import { SpeakerTalksList } from '../../components/SpeakerTalksList';
+import { SpeakerTalksList } from './components/SpeakerTalksList';
 import Select from '~/design-system/forms/Select';
-import { listTalks } from '~/routes/speaker.talks._index/server/list-talks.server';
+import { listTalks } from './server/list-talks.server';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);

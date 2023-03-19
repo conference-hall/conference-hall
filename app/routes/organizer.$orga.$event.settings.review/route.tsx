@@ -9,7 +9,7 @@ import { Button } from '~/design-system/Buttons';
 import type { OrganizerEventContext } from '../organizer.$orga.$event/route';
 import { withZod } from '@remix-validated-form/with-zod';
 import { EventReviewSettingsSchema } from '~/schemas/event';
-import { updateEvent } from '~/shared/organizations/update-event.server';
+import { updateEvent } from '~/shared-server/organizations/update-event.server';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);

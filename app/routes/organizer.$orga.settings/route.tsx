@@ -7,10 +7,10 @@ import { sessionRequired } from '~/libs/auth/auth.server';
 import { Container } from '~/design-system/Container';
 import { H2 } from '~/design-system/Typography';
 import { Button } from '~/design-system/Buttons';
-import { OrganizationNewForm } from '~/components/organizations/OrganizationNew';
+import { OrganizationForm } from '~/shared-components/organizations/OrganizationForm';
 import { OrganizationSaveSchema } from '~/schemas/organization';
 import type { OrganizationContext } from '../organizer.$orga/route';
-import { getUserRole } from '~/shared/organizations/get-user-role.server';
+import { getUserRole } from '~/shared-server/organizations/get-user-role.server';
 import { updateOrganization } from './server/update-organization.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
@@ -47,7 +47,7 @@ export default function OrganizationSettingsRoute() {
         <div className="overflow-hidden border border-gray-200 sm:rounded-md">
           <div className="space-y-6 bg-white py-6 px-4 sm:p-6">
             <H2>Organization settings</H2>
-            <OrganizationNewForm initialValues={organization} errors={errors} />
+            <OrganizationForm initialValues={organization} errors={errors} />
           </div>
           <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
             <Button type="submit">Save</Button>

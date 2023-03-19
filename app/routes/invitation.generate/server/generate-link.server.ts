@@ -6,7 +6,7 @@ import {
   TalkNotFoundError,
   OrganizationNotFoundError,
 } from '../../../libs/errors';
-import { buildInvitationLink } from '~/shared/invitations/build-link.server';
+import { buildInvitationLink } from '~/shared-server/invitations/build-link.server';
 
 export async function generateLink(type: InviteType, entityId: string, uid: string) {
   let invitationKey: string | undefined;

@@ -4,9 +4,6 @@ import { json } from '@remix-run/node';
 import { useLoaderData, useLocation, useOutletContext } from '@remix-run/react';
 import { mapErrorToResponse } from '~/libs/errors';
 import { sessionRequired } from '~/libs/auth/auth.server';
-import { ProposalsList } from '~/components/proposals-list/ProposalsList';
-import ProposalsFilters from '~/components/proposals-list/ProposalsFilters';
-import { NoProposals } from '~/components/proposals-list/NoProposals';
 import { Container } from '~/design-system/Container';
 import { Pagination } from '~/design-system/Pagination';
 import { parsePage } from '~/schemas/pagination';
@@ -16,6 +13,9 @@ import { ProposalsStatusUpdateSchema, ProposalsFiltersSchema } from '~/schemas/p
 import { createToast } from '~/utils/toasts';
 import { updateProposalsStatus } from '~/routes/organizer.$orga.$event._index/server/update-proposal.server';
 import { searchProposals } from './server/search-proposals.server';
+import { NoProposals } from './components/NoProposals';
+import ProposalsFilters from './components/ProposalsFilters';
+import { ProposalsList } from './components/ProposalsList';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);

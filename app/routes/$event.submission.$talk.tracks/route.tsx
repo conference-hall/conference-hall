@@ -3,17 +3,17 @@ import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
 import { Button, ButtonLink } from '~/design-system/Buttons';
-import { CategoriesForm } from '~/components/CategoriesForm';
+import { CategoriesForm } from '~/shared-components/proposal-forms/CategoriesForm';
 import { sessionRequired } from '../../libs/auth/auth.server';
 import { mapErrorToResponse } from '../../libs/errors';
-import { getEvent } from '../../shared/events/get-event.server';
+import { getEvent } from '../../shared-server/events/get-event.server';
 import { saveTracks } from './server/save-tracks.server';
-import { useSubmissionStep } from '../../components/useSubmissionStep';
-import { FormatsForm } from '../../components/FormatsForm';
+import { useSubmissionStep } from '../../shared-components/useSubmissionStep';
+import { FormatsForm } from '../../shared-components/proposal-forms/FormatsForm';
 import { withZod } from '@remix-validated-form/with-zod';
 import { TracksUpdateSchema } from '~/schemas/tracks';
 import { useEvent } from '~/routes/$event/route';
-import { getSubmittedProposal } from '~/shared/proposals/get-submitted-proposal.server';
+import { getSubmittedProposal } from '~/shared-server/proposals/get-submitted-proposal.server';
 
 export const handle = { step: 'tracks' };
 

@@ -1,8 +1,8 @@
 import { OrganizationRole } from '@prisma/client';
 import type { ProposalsFilters } from '~/schemas/proposal';
 import { db } from '../../../libs/db';
-import { checkUserRole } from '~/shared/organizations/check-user-role.server';
-import { RatingsDetails } from '~/shared/ratings/ratings-details';
+import { checkUserRole } from '~/shared-server/organizations/check-user-role.server';
+import { RatingsDetails } from '~/shared-server/ratings/ratings-details';
 import {
   proposalOrderBy,
   proposalWhereInput,
