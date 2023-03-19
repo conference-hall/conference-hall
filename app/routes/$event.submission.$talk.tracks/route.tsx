@@ -7,7 +7,7 @@ import { CategoriesForm } from '~/components/CategoriesForm';
 import { sessionRequired } from '../../libs/auth/auth.server';
 import { mapErrorToResponse } from '../../libs/errors';
 import { getEvent } from '../../shared/events/get-event.server';
-import { saveTracks } from './save-tracks.server';
+import { saveTracks } from './server/save-tracks.server';
 import { useSubmissionStep } from '../../components/useSubmissionStep';
 import { FormatsForm } from '../../components/FormatsForm';
 import { withZod } from '@remix-validated-form/with-zod';

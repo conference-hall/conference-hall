@@ -12,7 +12,7 @@ import { Outlet, useLoaderData, useNavigate, useOutletContext, useSearchParams }
 import type { OrganizerEventContext } from '../organizer.$orga.$event/route';
 import { withZod } from '@remix-validated-form/with-zod';
 import { ProposalsFiltersSchema } from '~/schemas/proposal';
-import { getProposalReview } from './get-proposal-review.server';
+import { getProposalReview } from './server/get-proposal-review.server';
 
 export type OrganizerProposalContext = {
   proposalReview: Awaited<ReturnType<typeof getProposalReview>>;

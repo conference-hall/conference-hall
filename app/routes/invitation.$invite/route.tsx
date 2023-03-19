@@ -4,16 +4,16 @@ import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useLoaderData, useOutletContext } from '@remix-run/react';
 import { Navbar } from '~/components/navbar/Navbar';
-import { getInvitation } from '~/routes/invitation.$invite/get-invitation.server';
+import { getInvitation } from '~/routes/invitation.$invite/server/get-invitation.server';
 import { Button } from '../../design-system/Buttons';
 import { Container } from '../../design-system/Container';
 import { H1, H2, Text } from '../../design-system/Typography';
 import { sessionRequired } from '../../libs/auth/auth.server';
 import { mapErrorToResponse } from '../../libs/errors';
 import type { UserContext } from '~/root';
-import { addMember } from './add-member.server';
-import { addCoSpeakerToProposal } from './add-co-speaker-to-proposal.server';
-import { addCoSpeakerToTalk } from './add-co-speaker-to-talk.server';
+import { addMember } from './server/add-member.server';
+import { addCoSpeakerToProposal } from './server/add-co-speaker-to-proposal.server';
+import { addCoSpeakerToTalk } from './server/add-co-speaker-to-talk.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   await sessionRequired(request);

@@ -10,7 +10,7 @@ import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { mapErrorToResponse } from '../../libs/errors';
 import { SubmissionTalksList } from '../../components/SubmissionTalksList';
-import { getProposalCountsForEvent, listTalksToSubmit } from './list-talks-to-submit.server';
+import { getProposalCountsForEvent, listTalksToSubmit } from './server/list-talks-to-submit.server';
 
 export const handle = { step: 'selection' };
 

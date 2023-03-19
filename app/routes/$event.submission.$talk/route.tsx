@@ -8,7 +8,7 @@ import { mapErrorToResponse } from '~/libs/errors';
 import { Container } from '~/design-system/Container';
 import { SubmissionSteps } from '~/components/SubmissionSteps';
 import { useEvent } from '~/routes/$event/route';
-import { isTalkAlreadySubmitted } from './is-talk-already-submitted.server';
+import { isTalkAlreadySubmitted } from './server/is-talk-already-submitted.server';
 
 export type SubmitSteps = Array<{
   key: string;

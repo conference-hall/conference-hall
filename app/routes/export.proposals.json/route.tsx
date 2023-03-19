@@ -4,7 +4,7 @@ import { withZod } from '@remix-validated-form/with-zod';
 import { ProposalsExportFiltersSchema } from '~/schemas/proposal';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { mapErrorToResponse } from '~/libs/errors';
-import { exportProposals } from './export-proposals.server';
+import { exportProposals } from './server/export-proposals.server';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);

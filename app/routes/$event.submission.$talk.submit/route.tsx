@@ -8,7 +8,7 @@ import { H1, Text } from '../../design-system/Typography';
 import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { sessionRequired } from '../../libs/auth/auth.server';
-import { submitProposal } from './submit-proposal.server';
+import { submitProposal } from './server/submit-proposal.server';
 import { mapErrorToResponse } from '../../libs/errors';
 import { TextArea } from '../../design-system/forms/TextArea';
 import { AvatarGroup } from '~/design-system/Avatar';

@@ -14,7 +14,7 @@ import { CardLink } from '~/design-system/Card';
 import { withZod } from '@remix-validated-form/with-zod';
 import { EventCreateSchema } from '~/schemas/event';
 import { getUserRole } from '~/shared/organizations/get-user-role.server';
-import { createEvent } from './create-event.server';
+import { createEvent } from './server/create-event.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);

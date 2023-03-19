@@ -8,7 +8,7 @@ import { ButtonLink } from '~/design-system/Buttons';
 import { mapErrorToResponse } from '~/libs/errors';
 import { OrganizationTabs } from '~/components/organizations/OrganizationTabs';
 import OrganizationBreadcrumb from '~/components/organizations/OrganizationBreadcrumb';
-import { getOrganization } from './get-organization.server';
+import { getOrganization } from './server/get-organization.server';
 
 export type OrganizationContext = {
   organization: Awaited<ReturnType<typeof getOrganization>>;

@@ -13,7 +13,7 @@ import { EditTrackButton, NewTrackButton } from '~/components/organizer-event/Sa
 import { withZod } from '@remix-validated-form/with-zod';
 import { EventTrackSaveSchema, EventTracksSettingsSchema } from '~/schemas/event';
 import { updateEvent } from '~/shared/organizations/update-event.server';
-import { deleteCategory, deleteFormat, saveCategory, saveFormat } from './update-tracks.server';
+import { deleteCategory, deleteFormat, saveCategory, saveFormat } from './server/update-tracks.server';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);

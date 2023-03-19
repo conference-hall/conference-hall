@@ -4,7 +4,7 @@ import { withZod } from '@remix-validated-form/with-zod';
 import { ProposalRatingDataSchema } from '~/schemas/proposal';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { mapErrorToResponse } from '~/libs/errors';
-import { rateProposal } from '~/routes/organizer.$orga.$event.review.$proposal.rate/rate-proposal.server';
+import { rateProposal } from '~/routes/organizer.$orga.$event.review.$proposal.rate/server/rate-proposal.server';
 
 export const action = async ({ request, params }: ActionArgs) => {
   const { uid } = await sessionRequired(request);

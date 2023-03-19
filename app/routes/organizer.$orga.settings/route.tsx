@@ -11,7 +11,7 @@ import { OrganizationNewForm } from '~/components/organizations/OrganizationNew'
 import { OrganizationSaveSchema } from '~/schemas/organization';
 import type { OrganizationContext } from '../organizer.$orga/route';
 import { getUserRole } from '~/shared/organizations/get-user-role.server';
-import { updateOrganization } from './update-organization.server';
+import { updateOrganization } from './server/update-organization.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);

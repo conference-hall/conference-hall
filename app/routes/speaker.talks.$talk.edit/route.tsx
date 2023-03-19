@@ -6,7 +6,7 @@ import { withZod } from '@remix-validated-form/with-zod';
 import { Container } from '~/design-system/Container';
 import { TalkSaveSchema } from '~/schemas/talks';
 import { getTalk } from '~/shared/talks/get-talk.server';
-import { updateTalk } from '~/routes/speaker.talks.$talk.edit/update-talk.server';
+import { updateTalk } from '~/routes/speaker.talks.$talk.edit/server/update-talk.server';
 import { createToast } from '~/utils/toasts';
 import { TalkAbstractForm } from '../../components/TalkAbstractForm';
 import { Button, ButtonLink } from '../../design-system/Buttons';

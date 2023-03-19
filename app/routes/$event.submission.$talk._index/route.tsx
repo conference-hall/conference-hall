@@ -10,7 +10,7 @@ import { TalkAbstractForm } from '../../components/TalkAbstractForm';
 import { ProposalCreateSchema } from '~/schemas/proposal';
 import { withZod } from '@remix-validated-form/with-zod';
 import { getTalk } from '~/shared/talks/get-talk.server';
-import { saveDraftProposal } from './save-draft-proposal.server';
+import { saveDraftProposal } from './server/save-draft-proposal.server';
 
 export const handle = { step: 'proposal' };
 

@@ -1,6 +1,6 @@
 import { type InviteType } from '@prisma/client';
 import type { ActionFunction } from '@remix-run/node';
-import { revokeLink } from '~/routes/invitation.revoke/revoke-link.server';
+import { revokeLink } from '~/routes/invitation.revoke/server/revoke-link.server';
 import { sessionRequired } from '../../libs/auth/auth.server';
 import { mapErrorToResponse } from '../../libs/errors';
 

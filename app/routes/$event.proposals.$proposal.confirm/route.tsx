@@ -6,7 +6,7 @@ import { ProposalParticipationSchema } from '~/schemas/proposal';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { mapErrorToResponse } from '~/libs/errors';
 import { createToast } from '~/utils/toasts';
-import { sendParticipationAnswer } from './send-participation-answer.server';
+import { sendParticipationAnswer } from './server/send-participation-answer.server';
 
 export const action: ActionFunction = async ({ request, params }: ActionArgs) => {
   const { uid, session } = await sessionRequired(request);

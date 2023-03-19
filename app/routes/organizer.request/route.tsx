@@ -9,7 +9,7 @@ import { Input } from '~/design-system/forms/Input';
 import { Button } from '~/design-system/Buttons';
 import { ExternalLink } from '~/design-system/Links';
 import { Card } from '~/design-system/Card';
-import { checkAccessKey } from './check-access-key.server';
+import { checkAccessKey } from './server/check-access-key.server';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);

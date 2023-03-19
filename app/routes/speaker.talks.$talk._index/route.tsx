@@ -16,8 +16,8 @@ import { mapErrorToResponse } from '../../libs/errors';
 import { TalkActionsMenu } from '../../components/TalkActionsMenu';
 import { InviteCoSpeakerButton, CoSpeakersList } from '../../components/CoSpeaker';
 import { getTalk } from '~/shared/talks/get-talk.server';
-import { archiveTalk, restoreTalk } from './archive-talk.server';
-import { deleteTalk } from './delete-talk.server';
+import { archiveTalk, restoreTalk } from './server/archive-talk.server';
+import { deleteTalk } from './server/delete-talk.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);

@@ -14,8 +14,8 @@ import { H2 } from '../../design-system/Typography';
 import { ProposalUpdateSchema } from '~/schemas/proposal';
 import { withZod } from '@remix-validated-form/with-zod';
 import { getSpeakerProposal } from '~/shared/proposals/get-speaker-proposal.server';
-import { deleteProposal } from './delete-proposal.server';
-import { updateProposal } from './update-proposal.server';
+import { deleteProposal } from './server/delete-proposal.server';
+import { updateProposal } from './server/update-proposal.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);

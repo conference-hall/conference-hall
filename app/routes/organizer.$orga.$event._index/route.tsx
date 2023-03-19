@@ -14,8 +14,8 @@ import type { OrganizerEventContext } from '../organizer.$orga.$event/route';
 import { withZod } from '@remix-validated-form/with-zod';
 import { ProposalsStatusUpdateSchema, ProposalsFiltersSchema } from '~/schemas/proposal';
 import { createToast } from '~/utils/toasts';
-import { updateProposalsStatus } from '~/routes/organizer.$orga.$event._index/update-proposal.server';
-import { searchProposals } from './search-proposals.server';
+import { updateProposalsStatus } from '~/routes/organizer.$orga.$event._index/server/update-proposal.server';
+import { searchProposals } from './server/search-proposals.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);

@@ -8,7 +8,7 @@ import { ProposalsList } from '~/components/speaker-proposals/ProposalsList';
 import { H2, Text } from '~/design-system/Typography';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { mapErrorToResponse } from '~/libs/errors';
-import { listSpeakerProposals } from './list-speaker-proposals.server';
+import { listSpeakerProposals } from './server/list-speaker-proposals.server';
 
 export type EventProposals = Awaited<ReturnType<typeof listSpeakerProposals>>;
 

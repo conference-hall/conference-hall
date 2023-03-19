@@ -10,7 +10,7 @@ import { Button } from '../../design-system/Buttons';
 import { H1 } from '../../design-system/Typography';
 import { sessionRequired } from '../../libs/auth/auth.server';
 import { mapErrorToResponse } from '../../libs/errors';
-import { createTalk } from './create-talk.server';
+import { createTalk } from './server/create-talk.server';
 
 export const action = async ({ request }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);

@@ -9,7 +9,7 @@ import { Container } from '~/design-system/Container';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { mapErrorToResponse } from '~/libs/errors';
 import type { OrganizationContext } from '../organizer.$orga/route';
-import { getEvent } from './get-event.server';
+import { getEvent } from './server/get-event.server';
 
 export type OrganizerEventContext = {
   event: Awaited<ReturnType<typeof getEvent>>;

@@ -12,7 +12,7 @@ import { UploadingError } from '~/libs/storage/storage.server';
 import { ButtonFileUpload } from '~/design-system/forms/FileUploadButton';
 import { mapErrorToResponse } from '~/libs/errors';
 import { ClientOnly } from 'remix-utils';
-import { uploadEventBanner } from './upload-event-banner.server';
+import { uploadEventBanner } from './server/upload-event-banner.server';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);
