@@ -6,10 +6,10 @@ import { H2, Text } from '~/design-system/Typography';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
 import { Form, useOutletContext, useSubmit } from '@remix-run/react';
 import { Button } from '~/design-system/Buttons';
-import type { OrganizerEventContext } from '../organizer.$orga.$event/route';
 import { withZod } from '@remix-validated-form/with-zod';
-import { EventReviewSettingsSchema } from '~/schemas/event';
 import { updateEvent } from '~/shared-server/organizations/update-event.server';
+import type { OrganizerEventContext } from '../organizer.$orga.$event/route';
+import { EventReviewSettingsSchema } from './types/event-review-settings.schema';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);

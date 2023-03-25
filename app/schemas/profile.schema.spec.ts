@@ -1,5 +1,5 @@
 import { withZod } from '@remix-validated-form/with-zod';
-import { AdditionalInfoSchema, DetailsSchema, PersonalInfoSchema } from './profile';
+import { AdditionalInfoSchema, DetailsSchema, PersonalInfoSchema } from './profile.schema';
 
 describe('Validate PersonalInfoSchema', () => {
   it('validates personal information', async () => {

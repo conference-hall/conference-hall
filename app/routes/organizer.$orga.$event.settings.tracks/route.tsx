@@ -10,10 +10,11 @@ import type { OrganizerEventContext } from '../organizer.$orga.$event/route';
 import { IconButton } from '~/design-system/IconButtons';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { withZod } from '@remix-validated-form/with-zod';
-import { EventTrackSaveSchema, EventTracksSettingsSchema } from '~/schemas/event';
 import { updateEvent } from '~/shared-server/organizations/update-event.server';
 import { deleteCategory, deleteFormat, saveCategory, saveFormat } from './server/update-tracks.server';
 import { EditTrackButton, NewTrackButton } from './components/SaveTrackForm';
+import { EventTrackSaveSchema } from './types/event-track-save.schema';
+import { EventTracksSettingsSchema } from './types/event-track-settings.schema';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);

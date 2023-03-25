@@ -1,7 +1,7 @@
 import { OrganizationRole } from '@prisma/client';
-import type { EventTrackSaveData } from '~/schemas/event';
-import { db } from '../../../libs/db';
+import { db } from '~/libs/db';
 import { checkUserRole } from '~/shared-server/organizations/check-user-role.server';
+import type { EventTrackSaveData } from '../types/event-track-save.schema';
 
 export async function saveFormat(orgaSlug: string, eventSlug: string, uid: string, data: EventTrackSaveData) {
   await checkUserRole(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER]);

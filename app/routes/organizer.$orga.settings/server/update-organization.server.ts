@@ -1,6 +1,6 @@
-import type { OrganizationSaveData } from '~/schemas/organization';
 import { db } from '../../../libs/db';
 import { OrganizationNotFoundError } from '../../../libs/errors';
+import type { OrganizationSaveData } from '../types/organization-save.schema';
 
 export async function updateOrganization(slug: string, uid: string, data: OrganizationSaveData) {
   let organization = await db.organization.findFirst({

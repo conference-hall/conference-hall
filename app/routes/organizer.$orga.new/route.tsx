@@ -6,11 +6,11 @@ import { Container } from '~/design-system/Container';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { useActionData, useSearchParams } from '@remix-run/react';
 import { withZod } from '@remix-validated-form/with-zod';
-import { EventCreateSchema } from '~/schemas/event';
 import { getUserRole } from '~/shared-server/organizations/get-user-role.server';
 import { createEvent } from './server/create-event.server';
 import { CreateEventForm } from './components/CreateEventForm';
 import { EventTypeSelection } from './components/EventTypeSelection';
+import { EventCreateSchema } from './types/event-create.schema';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);

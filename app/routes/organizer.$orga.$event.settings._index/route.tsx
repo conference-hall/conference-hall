@@ -12,8 +12,9 @@ import type { OrganizerEventContext } from '../organizer.$orga.$event/route';
 import { DateRangeInput } from '~/design-system/forms/DateRangeInput';
 import { EventForm } from '~/shared-components/events/EventForm';
 import { withZod } from '@remix-validated-form/with-zod';
-import { EventDetailsSettingsSchema, EventGeneralSettingsSchema } from '~/schemas/event';
 import { updateEvent } from '~/shared-server/organizations/update-event.server';
+import { EventDetailsSettingsSchema } from './types/event-details-settings.schema';
+import { EventGeneralSettingsSchema } from './types/event-general-settings.schema';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);

@@ -1,6 +1,7 @@
 import invariant from 'tiny-invariant';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
+import { withZod } from '@remix-validated-form/with-zod';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { H2, Text } from '~/design-system/Typography';
 import { Form, useActionData, useOutletContext } from '@remix-run/react';
@@ -9,9 +10,8 @@ import { Input } from '~/design-system/forms/Input';
 import type { OrganizerEventContext } from '../organizer.$orga.$event/route';
 import { DateRangeInput } from '~/design-system/forms/DateRangeInput';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
-import { withZod } from '@remix-validated-form/with-zod';
-import { EventCfpSettingsSchema } from '~/schemas/event';
 import { updateEvent } from '~/shared-server/organizations/update-event.server';
+import { EventCfpSettingsSchema } from './types/event-cfp-settings.schema';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);

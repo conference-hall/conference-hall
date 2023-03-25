@@ -1,5 +1,5 @@
 import { withZod } from '@remix-validated-form/with-zod';
-import { OrganizationSaveSchema } from './organization';
+import { OrganizationSaveSchema } from './organization-save.schema';
 
 describe('Validate OrganizationSaveSchema', () => {
   it('validates the organization data', async () => {

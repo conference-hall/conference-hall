@@ -13,10 +13,10 @@ import { mapErrorToResponse } from '../../libs/errors';
 import { getEvent } from '../../shared-server/events/get-event.server';
 import { saveProfile } from '../../shared-server/profile/save-profile.server';
 import { getUser } from '../../shared-server/users/get-user.server';
-import { DetailsSchema } from '~/schemas/profile';
 import { withZod } from '@remix-validated-form/with-zod';
 import { removeCoSpeakerFromSubmission } from '~/shared-server/proposals/remove-co-speaker.server';
 import { getSubmittedProposal } from '../../shared-server/proposals/get-submitted-proposal.server';
+import { DetailsSchema } from '~/schemas/profile.schema';
 
 export const handle = { step: 'speakers' };
 

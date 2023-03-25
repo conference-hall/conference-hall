@@ -7,9 +7,9 @@ import { Form, useLoaderData, useOutletContext } from '@remix-run/react';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
 import type { OrganizerEventContext } from '../organizer.$orga.$event/route';
 import { withZod } from '@remix-validated-form/with-zod';
-import { EventSurveySettingsSchema } from '~/schemas/event';
 import { updateEvent } from '~/shared-server/organizations/update-event.server';
 import { QUESTIONS } from '~/shared-server/survey/get-questions.server';
+import { EventSurveySettingsSchema } from './types/event-survey-settings.schema';
 
 // TODO why not using event-survey#getQuestions?
 export const loader = async ({ request }: LoaderArgs) => {

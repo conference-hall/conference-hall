@@ -13,9 +13,9 @@ import { mapErrorToResponse } from '../../libs/errors';
 import { sessionRequired } from '../../libs/auth/auth.server';
 import { NavMenu } from '~/design-system/NavMenu';
 import { withZod } from '@remix-validated-form/with-zod';
-import { AdditionalInfoSchema, DetailsSchema, PersonalInfoSchema } from '~/schemas/profile';
 import type { SpeakerContext } from '../speaker/route';
 import { saveProfile } from '~/shared-server/profile/save-profile.server';
+import { AdditionalInfoSchema, DetailsSchema, PersonalInfoSchema } from '~/schemas/profile.schema';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);
@@ -28,13 +28,18 @@ export const action = async ({ request }: ActionArgs) => {
   const type = form.get('_type') as string;
   try {
     let result;
-    if (type === 'INFO') {
-      result = await withZod(PersonalInfoSchema).validate(form);
-    } else if (type === 'DETAILS') {
-      result = await withZod(DetailsSchema).validate(form);
-    } else {
-      result = await withZod(AdditionalInfoSchema).validate(form);
+
+    switch (type) {
+      case 'INFO':
+        result = await withZod(PersonalInfoSchema).validate(form);
+        break;
+      case 'DETAILS':
+        result = await withZod(DetailsSchema).validate(form);
+        break;
+      default:
+        result = await withZod(AdditionalInfoSchema).validate(form);
     }
+
     if (result.error) return json(result.error.fieldErrors);
     await saveProfile(uid, result.data);
     return redirect('/speaker/profile');

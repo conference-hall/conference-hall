@@ -1,6 +1,6 @@
 import { OrganizationRole } from '@prisma/client';
-import type { OrganizationSaveData } from '~/schemas/organization';
-import { db } from '../../../libs/db';
+import { db } from '~/libs/db';
+import type { OrganizationSaveData } from '../types/organization-save.schema';
 
 export async function createOrganization(uid: string, data: OrganizationSaveData) {
   return await db.$transaction(async (trx) => {

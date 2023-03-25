@@ -8,10 +8,10 @@ import { Container } from '~/design-system/Container';
 import { H2 } from '~/design-system/Typography';
 import { Button } from '~/design-system/Buttons';
 import { OrganizationForm } from '~/shared-components/organizations/OrganizationForm';
-import { OrganizationSaveSchema } from '~/schemas/organization';
 import type { OrganizationContext } from '../organizer.$orga/route';
 import { getUserRole } from '~/shared-server/organizations/get-user-role.server';
 import { updateOrganization } from './server/update-organization.server';
+import { OrganizationSaveSchema } from './types/organization-save.schema';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);

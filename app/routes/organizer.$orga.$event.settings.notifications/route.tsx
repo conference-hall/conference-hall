@@ -9,9 +9,10 @@ import { Checkbox } from '~/design-system/forms/Checkboxes';
 import { Input } from '~/design-system/forms/Input';
 import { Button } from '~/design-system/Buttons';
 import { sessionRequired } from '~/libs/auth/auth.server';
-import { EventEmailNotificationsSettingsSchema, EventNotificationsSettingsSchema } from '~/schemas/event';
-import type { OrganizerEventContext } from '../organizer.$orga.$event/route';
 import { updateEvent } from '~/shared-server/organizations/update-event.server';
+import type { OrganizerEventContext } from '../organizer.$orga.$event/route';
+import { EventEmailNotificationsSettingsSchema } from './types/event-email-notifications-settings.schema';
+import { EventNotificationsSettingsSchema } from './types/event-notifications-settings.schema';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);
