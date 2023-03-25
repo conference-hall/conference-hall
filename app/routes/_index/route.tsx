@@ -1,19 +1,19 @@
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData, useOutletContext, useSearchParams } from '@remix-run/react';
-import { Container } from '../../design-system/Container';
-import { H1 } from '../../design-system/Typography';
-import { mapErrorToResponse } from '../../libs/errors';
-import { SearchEventsForm } from './components/SearchEventsForm';
-import { EmptyState } from '~/design-system/EmptyState';
 import { FaceFrownIcon } from '@heroicons/react/24/outline';
-import { parsePage } from '~/schemas/pagination';
-import { parseFilters } from '~/schemas/search';
-import { Navbar } from '~/shared-components/navbar/Navbar';
 import type { UserContext } from '~/root';
-import { searchEvents } from './server/search.server';
+import { mapErrorToResponse } from '~/libs/errors';
+import { EmptyState } from '~/design-system/EmptyState';
+import { Container } from '~/design-system/Container';
+import { H1 } from '~/design-system/Typography';
 import { Pagination } from '~/design-system/Pagination';
+import { Navbar } from '~/shared-components/navbar/Navbar';
+import { parsePage } from '~/schemas/pagination';
+import { searchEvents } from './server/search.server';
+import { SearchEventsForm } from './components/SearchEventsForm';
 import { SearchEventsList } from './components/SearchEventsList';
+import { parseFilters } from './types/search';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const url = new URL(request.url);
