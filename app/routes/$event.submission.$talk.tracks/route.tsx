@@ -4,16 +4,16 @@ import { json, redirect } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
 import { Button, ButtonLink } from '~/design-system/Buttons';
 import { CategoriesForm } from '~/shared-components/proposal-forms/CategoriesForm';
-import { sessionRequired } from '../../libs/auth/auth.server';
-import { mapErrorToResponse } from '../../libs/errors';
-import { getEvent } from '../../shared-server/events/get-event.server';
 import { saveTracks } from './server/save-tracks.server';
-import { useSubmissionStep } from '../../shared-components/useSubmissionStep';
-import { FormatsForm } from '../../shared-components/proposal-forms/FormatsForm';
 import { withZod } from '@remix-validated-form/with-zod';
-import { TracksUpdateSchema } from '~/schemas/tracks';
 import { useEvent } from '~/routes/$event/route';
 import { getSubmittedProposal } from '~/shared-server/proposals/get-submitted-proposal.server';
+import { sessionRequired } from '~/libs/auth/auth.server';
+import { mapErrorToResponse } from '~/libs/errors';
+import { TracksUpdateSchema } from './types/tracks';
+import { useSubmissionStep } from '~/shared-components/useSubmissionStep';
+import { FormatsForm } from '~/shared-components/proposal-forms/FormatsForm';
+import { getEvent } from '~/shared-server/events/get-event.server';
 
 export const handle = { step: 'tracks' };
 
