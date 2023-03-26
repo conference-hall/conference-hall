@@ -1,4 +1,4 @@
-import { Navbar } from '~/components/navbar/Navbar';
+import { Navbar } from '~/shared-components/navbar/Navbar';
 import { ButtonLink } from '../design-system/Buttons';
 import { Container } from '../design-system/Container';
 import { H1, H2 } from '../design-system/Typography';
