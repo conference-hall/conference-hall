@@ -2,9 +2,9 @@ import type { Prisma } from '@prisma/client';
 import { EventVisibility } from '@prisma/client';
 import { db } from '~/libs/db';
 import { getCfpState } from '~/utils/event';
-import type { SearchFilters } from '~/schemas/search';
 import type { Pagination } from '~/schemas/pagination';
 import { getPagination } from '~/shared-server/pagination/pagination.server';
+import type { SearchFilters } from '../types/search';
 
 const RESULTS_BY_PAGE = 12;
 

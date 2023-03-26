@@ -3,7 +3,7 @@ import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import Select from '~/design-system/forms/Select';
 import { Input } from '~/design-system/forms/Input';
 import { Button } from '~/design-system/Buttons';
-import type { SearchFilters } from '~/schemas/search';
+import type { SearchFilters } from '../types/search';
 
 type Props = {
   filters: SearchFilters;
