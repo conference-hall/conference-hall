@@ -12,7 +12,7 @@ import { getAuth } from 'firebase/auth';
 import { Avatar } from '~/design-system/Avatar';
 import { MenuTransition } from '~/design-system/Transitions';
 
-type Props = { email?: string | null; picture?: string | null };
+type Props = { name: string | null; email?: string | null; picture?: string | null };
 
 type MenuItemProps = { to: string; label: string; icon: React.ComponentType<{ className?: string }> };
 
@@ -34,13 +34,13 @@ function MenuItem({ to, icon: Icon, label }: MenuItemProps) {
   );
 }
 
-export function UserMenuDesktop({ email, picture }: Props) {
+export function UserMenuDesktop({ name, email, picture }: Props) {
   return (
     <Menu as="div" className="relative z-30 ml-3">
       <div>
         <Menu.Button className="flex rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
           <span className="sr-only">Open user menu</span>
-          <Avatar photoURL={picture} size="xs" />
+          <Avatar photoURL={picture} name={name} size="xs" />
         </Menu.Button>
       </div>
       <MenuTransition>

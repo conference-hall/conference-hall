@@ -34,7 +34,7 @@ export function SubmissionTalksList({ talks }: Props) {
           <div className="flex h-40 flex-col justify-between px-4 py-4 sm:px-6">
             <div>
               <p className="truncate text-base font-semibold text-indigo-600">{talk.title}</p>
-              <AvatarGroup avatars={talk.speakers} displayNames className="mt-2" />
+              <AvatarGroup avatars={talk.speakers} displayNames />
             </div>
             {talk.isDraft && <DraftLabel />}
           </div>

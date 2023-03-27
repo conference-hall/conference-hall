@@ -29,7 +29,7 @@ export default function SpeakerRoute() {
       <header className="bg-gray-800">
         <Container className="hidden sm:flex sm:items-center sm:justify-between">
           <div className="py-4 sm:flex sm:items-center sm:space-x-5">
-            <Avatar photoURL={user?.photoURL} size="m" ring ringColor="white" />
+            <Avatar photoURL={user?.photoURL} name={user?.name} size="m" ring ringColor="white" />
             <div className="mt-4 text-center sm:mt-0 sm:pt-1 sm:text-left">
               <H2 as="h1" type="light" mb={0}>
                 {user?.name}

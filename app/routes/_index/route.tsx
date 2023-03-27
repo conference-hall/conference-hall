@@ -12,7 +12,7 @@ import { Navbar } from '~/shared-components/navbar/Navbar';
 import { parsePage } from '~/schemas/pagination';
 import { searchEvents } from './server/search.server';
 import { SearchEventsForm } from './components/SearchEventsForm';
-import { SearchEventsList } from './components/SearchEventsList';
+import { EventsList } from './components/EventsList';
 import { parseFilters } from './types/search';
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -52,7 +52,7 @@ export default function IndexRoute() {
         ) : (
           <>
             <H2 mb={8}>Incoming call for papers</H2>
-            <SearchEventsList events={results} forTalkId={searchParams.get('talkId')} />
+            <EventsList events={results} forTalkId={searchParams.get('talkId')} />
           </>
         )}
         {pagination.total > 1 && <Pagination pathname="/" {...pagination} className="mt-8" />}

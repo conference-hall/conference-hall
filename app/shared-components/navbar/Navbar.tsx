@@ -37,7 +37,7 @@ export function Navbar({ user, notifications, withSearch }: Props) {
                 {user && (
                   <div className="flex items-center gap-2">
                     <NotificationMenu notifications={notifications} />
-                    <UserMenuDesktop email={user.email} picture={user.photoURL} />
+                    <UserMenuDesktop name={user.name} email={user.email} picture={user.photoURL} />
                   </div>
                 )}
               </div>

@@ -32,6 +32,7 @@ export default function EventRoute() {
       <EventHeader
         type={event.type}
         name={event.name}
+        bannerUrl={event.bannerUrl}
         address={event.address}
         conferenceStart={event.conferenceStart}
         conferenceEnd={event.conferenceEnd}
