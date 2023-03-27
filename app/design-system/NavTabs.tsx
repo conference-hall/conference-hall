@@ -53,7 +53,7 @@ const tabMobileStyle = (isActive: boolean) => {
 
 function DesktopNavTabs({ tabs, currentTab, className }: NavTabsProps) {
   return (
-    <div className={cn('sticky top-0 z-20 border-b border-gray-200 bg-white pt-4', className)}>
+    <div className={cn('sticky top-0 z-20 border-b border-gray-800 bg-gray-800 pt-4', className)}>
       <Container>
         <nav className="-mb-px flex space-x-8" aria-label="Tabs">
           {tabs.map((tab) => (

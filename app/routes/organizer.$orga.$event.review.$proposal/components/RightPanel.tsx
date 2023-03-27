@@ -63,7 +63,7 @@ function OrganizerComments({ uid, messages }: { uid: string; messages: Array<Mes
             <Avatar photoURL={message.photoURL} />
             <div className="min-w-0 grow">
               <div className="relative">
-                <Text size="xs" variant="secondary" className="truncate pl-4">
+                <Text size="xs" type="secondary">
                   {message.name}
                 </Text>
                 {uid === message.userId && (
@@ -77,9 +77,9 @@ function OrganizerComments({ uid, messages }: { uid: string; messages: Array<Mes
                   />
                 )}
               </div>
-              <Text as="div" className="mt-1 break-all rounded-r-md rounded-tl-md bg-gray-100 px-4 py-4">
-                {message.message}
-              </Text>
+              <div className="mt-1 break-all rounded-r-md rounded-tl-md bg-gray-100 px-4 py-4">
+                <Text>{message.message}</Text>
+              </div>
             </div>
           </div>
         ))}

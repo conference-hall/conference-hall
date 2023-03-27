@@ -10,19 +10,13 @@ type CfpInfoProps = { cfpState: CfpState; cfpStart?: string; cfpEnd?: string; cl
 export function CfpInfo({ cfpState, cfpStart, cfpEnd }: CfpInfoProps) {
   return (
     <div>
-      <H2 className="inline-flex items-center space-x-3">
+      <H2>
         <CfpIcon cfpState={cfpState} />
         <ClientOnly>
           {() => <span className="block">{formatCFPElapsedTime(cfpState, cfpStart, cfpEnd)}</span>}
         </ClientOnly>
       </H2>
-      <ClientOnly>
-        {() => (
-          <Text variant="secondary" className="mt-1">
-            {formatCFPDate(cfpState, cfpStart, cfpEnd)}
-          </Text>
-        )}
-      </ClientOnly>
+      <ClientOnly>{() => <Text type="secondary">{formatCFPDate(cfpState, cfpStart, cfpEnd)}</Text>}</ClientOnly>
     </div>
   );
 }

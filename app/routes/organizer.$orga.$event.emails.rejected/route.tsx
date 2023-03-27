@@ -64,7 +64,7 @@ export default function RejectedProposalEmails() {
       <H1>Rejection emails campaign</H1>
       <CampaignEmailStats stats={stats} />
       <div>
-        <H2 className="mt-12">Select proposals to send rejection emails</H2>
+        <H2>Select proposals to send rejection emails</H2>
         <CampaignEmailFilters type={CampaignType.REJECTION} />
         <CampaignEmailList type={CampaignType.REJECTION} proposals={results} total={total} />
         <Pagination

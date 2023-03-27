@@ -60,12 +60,12 @@ export default function SubmissionSubmitRoute() {
 
       <div className="mt-8 space-y-4">
         {data.formats.length > 0 && (
-          <Text variant="secondary">
+          <Text type="secondary">
             <b>Formats:</b> {data.formats.map((f) => f.name).join(', ')}
           </Text>
         )}
         {data.categories.length > 0 && (
-          <Text variant="secondary">
+          <Text type="secondary">
             <b>Categories:</b> {data.categories.map((c) => c.name).join(', ')}
           </Text>
         )}

@@ -61,7 +61,7 @@ export default function EventSpeakerProposalRoute() {
           <Markdown source={proposal.abstract} className="mt-3" />
           {proposal.references && (
             <>
-              <H3 className="mt-8">References</H3>
+              <H3>References</H3>
               <Markdown source={proposal.references} className="mt-2" />
             </>
           )}
@@ -77,9 +77,7 @@ export default function EventSpeakerProposalRoute() {
           <dl className="mt-4 rounded-lg border border-gray-200 p-4">
             <H3 as="dt">Formats</H3>
             <dd className="mt-4 text-sm text-gray-900">{proposal.formats.map(({ name }) => name).join(', ') || '—'}</dd>
-            <H3 as="dt" className="mt-8">
-              Categories
-            </H3>
+            <H3 as="dt">Categories</H3>
             <dd className="mt-4 text-sm text-gray-900">
               {proposal.categories.map(({ name }) => name).join(', ') || '—'}
             </dd>

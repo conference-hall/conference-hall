@@ -49,7 +49,7 @@ export default function EventGeneralSettingsRoute() {
   return (
     <>
       <section>
-        <H2 className="border-b border-gray-200 pb-3">General</H2>
+        <H2>General</H2>
         <Form method="post" className="mt-6 space-y-4">
           <input type="hidden" name="_action" value="general" />
           <EventForm initialValues={event} errors={errors} />
@@ -57,8 +57,8 @@ export default function EventGeneralSettingsRoute() {
         </Form>
       </section>
       <section>
-        <H2 className="border-b border-gray-200 pb-4">Event details</H2>
-        <Text variant="secondary" className="mt-4">
+        <H2>Event details</H2>
+        <Text type="secondary">
           Provide details about the event, like address, dates and description to generate the event page.
         </Text>
         <Form method="post" className="mt-6 space-y-4">

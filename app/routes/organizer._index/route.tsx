@@ -38,7 +38,7 @@ export default function OrganizerIndexRoute() {
           <CardLink as="li" key={orga.slug} to={orga.slug}>
             <div className="flex h-40 flex-col justify-between px-4 py-4 sm:px-6">
               <div className="flex items-center justify-between gap-1">
-                <Text as="p" size="l" variant="link" className="truncate font-medium">
+                <Text type="link" size="l">
                   {orga.name}
                 </Text>
                 <Badge>{orga.role.toLowerCase()}</Badge>

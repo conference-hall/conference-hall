@@ -23,7 +23,7 @@ export default function Login() {
 
   return (
     <Container className="flex flex-col items-center justify-center py-16 sm:py-64">
-      <H1 className="text-center text-4xl font-black">Log in to Conference Hall</H1>
+      <H1>Log in to Conference Hall</H1>
       {isSigning ? (
         <p className="mt-12 space-y-4 p-8">Singing...</p>
       ) : (

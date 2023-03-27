@@ -12,13 +12,6 @@ export default function EventRoute() {
   const event = useEvent();
   return (
     <>
-      <img
-        src={event.bannerUrl || 'http://via.placeholder.com/1500x500'}
-        className="hidden h-64 w-full bg-gray-100 object-cover sm:block"
-        height="256px"
-        aria-hidden="true"
-        alt=""
-      />
       <Container
         as="section"
         className="mt-4 flex flex-col gap-4 sm:mt-8 sm:flex-row sm:items-center sm:justify-between"
@@ -62,18 +55,12 @@ export default function EventRoute() {
           {event.formats.length > 0 ? (
             <div>
               <H2>Formats</H2>
-              <Text variant="secondary" className="mt-1">
-                Talks formats proposed by the conference.
-              </Text>
+              <Text type="secondary">Talks formats proposed by the conference.</Text>
               <dl role="list" className="mt-4 space-y-6">
                 {event.formats.map((f) => (
                   <div key={f.name}>
-                    <Text as="dt" className="font-medium">
-                      {f.name}
-                    </Text>
-                    <Text as="dd" className="mt-1">
-                      {f.description}
-                    </Text>
+                    <Text as="dt">{f.name}</Text>
+                    <Text as="dd">{f.description}</Text>
                   </div>
                 ))}
               </dl>
@@ -83,18 +70,12 @@ export default function EventRoute() {
           {event.categories.length > 0 ? (
             <div>
               <H2>Categories</H2>
-              <Text variant="secondary" className="mt-1">
-                Different categories and tracks proposed by the conference.
-              </Text>
+              <Text type="secondary">Different categories and tracks proposed by the conference.</Text>
               <dl role="list" className="mt-4 space-y-6">
                 {event.categories.map((c) => (
                   <div key={c.name}>
-                    <Text as="dt" className="font-medium">
-                      {c.name}
-                    </Text>
-                    <Text as="dd" className="mt-1">
-                      {c.description}
-                    </Text>
+                    <Text as="dt">{c.name}</Text>
+                    <Text as="dd">{c.description}</Text>
                   </div>
                 ))}
               </dl>

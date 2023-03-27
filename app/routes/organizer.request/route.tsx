@@ -30,10 +30,8 @@ export default function RequestAccessRoute() {
     <Container className="my-4 flex justify-center sm:my-8">
       <Card className="my-16 max-w-2xl p-8">
         <H1>Limited access</H1>
-        <Text variant="secondary" className="mt-6">
-          The organizer hall is in closed-beta access, you need a key to access it.
-        </Text>
-        <Text variant="secondary">
+        <Text type="secondary">The organizer hall is in closed-beta access, you need a key to access it.</Text>
+        <Text type="secondary">
           You can request a beta key by filling{' '}
           <ExternalLink href="https://forms.gle/AnArRCSHibmG59zw7">this form.</ExternalLink>
         </Text>

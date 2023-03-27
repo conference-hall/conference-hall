@@ -8,9 +8,7 @@ export function CreateEventForm({ type, errors }: { type: string; errors?: Recor
     <>
       <div className="mt-12 mb-12 space-y-6 text-center">
         <H1>{`Create a new ${type?.toLowerCase()}`}</H1>
-        <Text variant="secondary">
-          Provide main information about your event and it's visibility in Conference Hall.
-        </Text>
+        <Text type="secondary">Provide main information about your event and it's visibility in Conference Hall.</Text>
       </div>
       <Form
         method="post"

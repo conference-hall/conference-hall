@@ -56,9 +56,7 @@ export default function SubmissionProposalRoute() {
       <div className="py-6 sm:px-8 sm:py-10">
         <div className="mb-6">
           <H2>Your proposal</H2>
-          <Text variant="secondary" className="mt-1">
-            This information will be displayed publicly so be careful what you share.
-          </Text>
+          <Text type="secondary">This information will be displayed publicly so be careful what you share.</Text>
         </div>
         <TalkForm initialValues={talk} errors={errors} />
       </div>

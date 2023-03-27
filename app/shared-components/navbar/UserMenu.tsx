@@ -39,7 +39,7 @@ export function UserMenu({ email, picture }: Props) {
   return (
     <Menu as="div" className="relative z-30 ml-3">
       <div>
-        <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+        <Menu.Button className="flex rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
           <span className="sr-only">Open user menu</span>
           <Avatar photoURL={picture} />
         </Menu.Button>

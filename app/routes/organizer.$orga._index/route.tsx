@@ -51,10 +51,10 @@ export default function OrganizationEventsRoute() {
                 <div className="flex px-4 py-4 sm:px-6">
                   <div className="min-w-0 flex-1 truncate sm:flex sm:items-center sm:justify-between">
                     <div className="flex items-baseline text-sm">
-                      <Text as="p" variant="link" className="truncate font-medium">
+                      <Text type="link" truncate>
                         {event.name}
                       </Text>
-                      <Text as="p" variant="secondary" size="xs" className="ml-1 truncate font-normal">
+                      <Text type="secondary" size="xs" truncate>
                         {event.type.toLowerCase()}
                       </Text>
                     </div>

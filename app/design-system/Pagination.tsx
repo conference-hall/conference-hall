@@ -1,7 +1,6 @@
 import c from 'classnames';
 import { Link, useSearchParams } from '@remix-run/react';
 import { useMemo } from 'react';
-import { Text } from './Typography';
 
 type Props = {
   pathname: string;
@@ -44,9 +43,9 @@ export function Pagination({ pathname, current, total, className }: Props) {
           );
         } else if (showPageButton(page - 1, current, total)) {
           return (
-            <Text key="separator" className="inline-flex items-center px-4 pt-4 text-sm font-medium text-gray-500">
+            <div key="separator" className="inline-flex items-center px-4 pt-4 text-sm font-medium text-gray-500">
               ...
-            </Text>
+            </div>
           );
         }
         return null;

@@ -31,7 +31,7 @@ export default function SpeakerRoute() {
           <Avatar photoURL={user?.photoURL} size="m" ring />
           <div className="mt-4 text-center sm:mt-0 sm:pt-1 sm:text-left">
             <H1>{user?.name}</H1>
-            <Text variant="secondary">{user?.email}</Text>
+            <Text type="secondary">{user?.email}</Text>
           </div>
         </div>
         <div className="mt-5 flex justify-center space-x-4 sm:mt-0">

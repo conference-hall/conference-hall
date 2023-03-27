@@ -57,9 +57,7 @@ export default function EventSurveyRoute() {
     <Container className="mt-4 sm:my-8">
       <div>
         <H2 id="survey-form-label">We have some questions for you.</H2>
-        <Text variant="secondary" className="mt-1">
-          This information will be displayed publicly so be careful what you share.
-        </Text>
+        <Text type="secondary">This information will be displayed publicly so be careful what you share.</Text>
       </div>
       {result?.message && <AlertSuccess className="mt-8">{result?.message}</AlertSuccess>}
       <Form

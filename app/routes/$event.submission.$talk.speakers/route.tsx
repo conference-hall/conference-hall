@@ -81,7 +81,7 @@ export default function SubmissionSpeakerRoute() {
         <Form id="speaker-form" method="post">
           <div>
             <H2>Speaker details</H2>
-            <Text variant="secondary" className="mt-1">
+            <Text type="secondary">
               Give more information about you, these information will be visible by organizers when you submit a talk.
             </Text>
           </div>
@@ -94,16 +94,14 @@ export default function SubmissionSpeakerRoute() {
             className="mt-6"
           />
           <input type="hidden" name="references" value={data.currentSpeaker.references || ''} />
-          <Text className="mt-2">
+          <Text>
             You can give more information about you from{' '}
             <ExternalLink href="/speaker/settings">the profile page.</ExternalLink>
           </Text>
         </Form>
         <div className="mt-12">
           <H2>Co-speakers</H2>
-          <Text variant="secondary" className="mt-1">
-            This information will be displayed publicly so be careful what you share.
-          </Text>
+          <Text type="secondary">This information will be displayed publicly so be careful what you share.</Text>
           {data.speakers.length > 1 && (
             <CoSpeakersList speakers={data.speakers} showRemoveAction className="max-w-md py-4" />
           )}

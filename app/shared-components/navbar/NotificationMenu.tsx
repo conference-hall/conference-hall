@@ -39,14 +39,11 @@ export function NotificationMenu({ notifications }: Props) {
   return (
     <Menu as="div" className="relative z-30 ml-3">
       <div>
-        <Menu.Button
-          disabled={!hasNotifications}
-          className="rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-        >
+        <Menu.Button className="rounded-full p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
           <span className="sr-only">View notifications</span>
           <BellIcon className="h-6 w-6" aria-hidden="true" />
           {hasNotifications && (
-            <span className="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-400 ring-2 ring-white" />
+            <span className="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-400 ring-1 ring-white" />
           )}
         </Menu.Button>
       </div>

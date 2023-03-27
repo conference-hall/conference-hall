@@ -1,20 +1,20 @@
 import { StoryBlock } from './StoryBlock';
-import { H1, H2, H3, Text } from './Typography';
+import { H1, H2, H3, Subtitle, Text } from './Typography';
 
 export const Documentation = () => (
   <>
-    <StoryBlock title="Headings" vertical>
+    <StoryBlock title="Typography" vertical>
       <H1>Heading level 1</H1>
       <H2>Heading level 2</H2>
       <H3>Heading level 3</H3>
-    </StoryBlock>
-
-    <StoryBlock title="Text variants" vertical>
-      <Text>Text primary</Text>
-      <Text variant="secondary">Text secondary</Text>
-      <Text variant="link">Text link</Text>
-      <Text variant="warning">Text warning</Text>
-      <Text variant="error">Text error</Text>
+      <Text type="primary">Text primary</Text>
+      <Text type="secondary">Text secondary</Text>
+      <Text type="link">Text link</Text>
+      <Text type="warning">Text warning</Text>
+      <Text type="error">Text error</Text>
+      <Text strong>Text strong</Text>
+      <Text italic>Text italic</Text>
+      <Subtitle>Subtitle</Subtitle>
     </StoryBlock>
 
     <StoryBlock title="Text sizes" vertical>

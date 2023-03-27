@@ -28,9 +28,7 @@ export default function EventSpeakerProposalsRoute() {
     <Container className="mt-4 sm:my-8">
       <div>
         <H2>Your proposals</H2>
-        <Text variant="secondary" className="mt-1">
-          All your draft and submitted proposals for the event
-        </Text>
+        <Text type="secondary">All your draft and submitted proposals for the event</Text>
       </div>
       <div className="my-8">
         <ProposalsList proposals={proposals} cfpState={event.cfpState} />

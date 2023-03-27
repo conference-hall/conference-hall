@@ -35,8 +35,8 @@ export function ProposaListRow({ proposal, isSelected, onSelect }: ProposalRowPr
           aria-label={`Open proposal "${proposal.title}"`}
           className="block after:absolute after:top-0 after:bottom-0 after:left-16 after:right-0 after:z-10 after:block"
         >
-          <Text className="truncate font-medium">{proposal.title}</Text>
-          <Text className="truncate font-normal text-gray-700" size="xs">
+          <Text truncate>{proposal.title}</Text>
+          <Text size="xs" type="secondary">
             by {proposal.speakers.join(', ')}
           </Text>
         </Link>
@@ -62,9 +62,7 @@ export function ProposaListRow({ proposal, isSelected, onSelect }: ProposalRowPr
         </div>
       </td>
       <td className="w-0 px-3 py-6 pr-4 text-right sm:pr-6">
-        <Text variant="secondary" className="ml-2 text-base font-semibold">
-          {formatRating(proposal.ratings.total)}
-        </Text>
+        <Text type="secondary">{formatRating(proposal.ratings.total)}</Text>
       </td>
     </tr>
   );

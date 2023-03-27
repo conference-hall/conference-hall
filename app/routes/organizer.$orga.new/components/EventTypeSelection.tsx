@@ -8,7 +8,7 @@ import { H1, H2, Text } from '~/design-system/Typography';
 export function EventTypeSelection() {
   return (
     <Container className="mt-16 flex flex-col items-center gap-16">
-      <H1 className="text-center">Select an event type</H1>
+      <H1>Select an event type</H1>
       <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
         <CardLink to={{ pathname: '.', search: '?type=CONFERENCE' }} className="flex gap-8 p-8 text-left">
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-indigo-100">
@@ -16,7 +16,7 @@ export function EventTypeSelection() {
           </div>
           <span className="flex flex-col gap-2">
             <H2>New conference</H2>
-            <Text variant="secondary">
+            <Text type="secondary">
               Conferences are open to proposals for a time limited period. You can also make the conference public or
               private.
             </Text>
@@ -28,7 +28,7 @@ export function EventTypeSelection() {
           </div>
           <span className="flex flex-col gap-2">
             <H2>New meetup</H2>
-            <Text variant="secondary">
+            <Text type="secondary">
               Meetup are open to proposals all the year. You can manually open or close the call for paper. You can also
               make the meetup public or private.
             </Text>

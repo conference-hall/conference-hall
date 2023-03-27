@@ -24,7 +24,8 @@ export const meta: MetaFunction = () => ({
 
 export const links: LinksFunction = () => {
   return [
-    { rel: 'stylesheet', href: 'https://rsms.me/inter/inter.css' },
+    { rel: 'stylesheet', href: 'https://fonts.cdnfonts.com/css/inter' },
+    { rel: 'stylesheet', href: 'https://fonts.cdnfonts.com/css/ubuntu' },
     { rel: 'stylesheet', href: tailwind },
   ];
 };
@@ -83,7 +84,7 @@ function Document({ children, toast }: DocumentProps) {
         <Meta />
         <Links />
       </head>
-      <body className="bg-white font-sans text-gray-600 antialiased">
+      <body className="bg-gray-100 text-gray-900 antialiased">
         <GlobalLoading />
         {children}
         <Footer />

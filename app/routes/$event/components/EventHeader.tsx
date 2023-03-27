@@ -15,18 +15,22 @@ type Props = {
 
 export function EventHeader({ name, type, address, conferenceStart, conferenceEnd }: Props) {
   return (
-    <Container as="header" className="bg-white py-4 sm:pt-8 sm:pb-4">
-      <H1>{name}</H1>
-      <div className="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:gap-x-6">
-        <IconLabel icon={CalendarIcon} className="mt-2 text-gray-500" truncate>
-          <ClientOnly>{() => formatConferenceDates(type, conferenceStart, conferenceEnd)}</ClientOnly>
-        </IconLabel>
-        {address && (
-          <IconLabel icon={MapPinIcon} className="mt-2 text-gray-500" truncate>
-            {address}
+    <header className="bg-gray-800 sm:pb-4">
+      <Container>
+        <H1 type="light" mb={4}>
+          {name}
+        </H1>
+        <div className="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:gap-x-6">
+          <IconLabel icon={CalendarIcon} className="mt-2 text-gray-500" truncate>
+            <ClientOnly>{() => formatConferenceDates(type, conferenceStart, conferenceEnd)}</ClientOnly>
           </IconLabel>
-        )}
-      </div>
-    </Container>
+          {address && (
+            <IconLabel icon={MapPinIcon} className="mt-2 text-gray-500" truncate>
+              {address}
+            </IconLabel>
+          )}
+        </div>
+      </Container>
+    </header>
   );
 }

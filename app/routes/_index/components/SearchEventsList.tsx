@@ -4,6 +4,7 @@ import { CardLink } from '~/design-system/Card';
 import { IconLabel } from '~/design-system/IconLabel';
 import { formatEventType } from '~/utils/event';
 import { CfpElapsedTime } from '~/shared-components/cfp/CfpElapsedTime';
+import { H2 } from '~/design-system/Typography';
 
 type Props = {
   events: Array<{
@@ -20,26 +21,29 @@ type Props = {
 
 export function SearchEventsList({ events, forTalkId }: Props) {
   return (
-    <ul aria-label="Search results" className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {events.map((event) => (
-        <CardLink
-          as="li"
-          key={event.slug}
-          to={forTalkId ? `/${event.slug}/submission/${forTalkId}` : `/${event.slug}`}
-          className="flex h-40 flex-col justify-between p-4"
-        >
-          <div>
-            <p className="truncate">
-              <span className="text-base font-semibold text-indigo-600">{event.name}</span>
-              <span className="text-xs text-gray-500"> · {formatEventType(event.type)}</span>
-            </p>
-            <IconLabel icon={MapPinIcon} className="mt-2 text-gray-500" iconClassName="text-gray-400" lineCamp>
-              {event.address}
-            </IconLabel>
-          </div>
-          <CfpElapsedTime cfpState={event.cfpState} cfpStart={event.cfpStart} cfpEnd={event.cfpEnd} />
-        </CardLink>
-      ))}
-    </ul>
+    <>
+      <H2>Incoming call for papers</H2>
+      <ul aria-label="Search results" className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {events.map((event) => (
+          <CardLink
+            as="li"
+            key={event.slug}
+            to={forTalkId ? `/${event.slug}/submission/${forTalkId}` : `/${event.slug}`}
+            className="flex h-40 flex-col justify-between p-4"
+          >
+            <div>
+              <p className="truncate">
+                <span className="text-base font-semibold text-indigo-600">{event.name}</span>
+                <span className="text-xs text-gray-500"> · {formatEventType(event.type)}</span>
+              </p>
+              <IconLabel icon={MapPinIcon} className="mt-2 text-gray-500" iconClassName="text-gray-400" lineCamp>
+                {event.address}
+              </IconLabel>
+            </div>
+            <CfpElapsedTime cfpState={event.cfpState} cfpStart={event.cfpStart} cfpEnd={event.cfpEnd} />
+          </CardLink>
+        ))}
+      </ul>
+    </>
   );
 }

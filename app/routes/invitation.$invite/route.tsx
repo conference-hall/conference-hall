@@ -7,7 +7,7 @@ import { Navbar } from '~/shared-components/navbar/Navbar';
 import { getInvitation } from '~/routes/invitation.$invite/server/get-invitation.server';
 import { Button } from '../../design-system/Buttons';
 import { Container } from '../../design-system/Container';
-import { H1, H2, Text } from '../../design-system/Typography';
+import { H1, Text } from '../../design-system/Typography';
 import { sessionRequired } from '../../libs/auth/auth.server';
 import { mapErrorToResponse } from '../../libs/errors';
 import type { UserContext } from '~/root';
@@ -61,13 +61,9 @@ export default function InvitationRoute() {
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-indigo-100">
             <StarIcon className="h-6 w-6 text-indigo-600" aria-hidden="true" />
           </div>
-          <H2 as="h1" className="mt-8 text-center">
-            You have been invited to
-          </H2>
-          <H1 as="p" className="mt-6">
-            "{invitation.title}"
-          </H1>
-          <Text className="mt-2">Invitation sent by {invitation.invitedBy}</Text>
+          <H1>You have been invited to</H1>
+          <Text size="l">"{invitation.title}"</Text>
+          <Text>Invitation sent by {invitation.invitedBy}</Text>
 
           <Form method="post" className="mt-8 flex w-full flex-col justify-center sm:w-auto">
             <input type="hidden" name="_type" value={invitation.type} />

@@ -19,8 +19,8 @@ type Props = {
 export default function OrganizationBreadcrumb({ title, organization, event }: Props) {
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:gap-6">
-      <H1 className="sr-only">{title}</H1>
-      <H2 className="flex items-center gap-4">
+      <H1 srOnly>{title}</H1>
+      <H2>
         <Link to="/organizer" className="truncate hover:underline">
           <HomeIcon className="h-5 w-5 text-gray-400 hover:text-gray-600" />
         </Link>

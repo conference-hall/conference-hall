@@ -42,12 +42,12 @@ export default function ProfileRoute() {
             {user.bio ? (
               <Markdown className="mt-4 line-clamp-5" source={user.bio} />
             ) : (
-              <Text className="mt-4">No biography defined.</Text>
+              <Text>No biography defined.</Text>
             )}
             {user.references ? (
               <Markdown className="mt-4 line-clamp-5" source={user.references} />
             ) : (
-              <Text className="mt-4">No references defined.</Text>
+              <Text>No references defined.</Text>
             )}
             <div className="mt-6 grid grid-cols-1 gap-4">
               {user.company && <IconLabel icon={HomeIcon}>{user.company}</IconLabel>}
@@ -60,7 +60,7 @@ export default function ProfileRoute() {
             {activities.length > 0 ? (
               <SpeakerActivities activities={activities} />
             ) : (
-              <Text className="mt-4">No submitted proposals yet!.</Text>
+              <Text>No submitted proposals yet!.</Text>
             )}
           </div>
         </div>

@@ -55,9 +55,7 @@ export default function SubmissionSurveyRoute() {
     <Form method="post" className="pt-6 sm:px-8 sm:py-10">
       <div>
         <H2>We have some questions for you.</H2>
-        <Text variant="secondary" className="mt-1">
-          This information will be displayed publicly so be careful what you share.
-        </Text>
+        <Text type="secondary">This information will be displayed publicly so be careful what you share.</Text>
       </div>
       <div className="mt-6">
         <SurveyForm questions={questions} initialValues={answers} />

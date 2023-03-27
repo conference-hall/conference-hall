@@ -89,7 +89,7 @@ export default function SpeakerTalkRoute() {
           <Markdown source={talk.abstract} className="mt-2" />
           {talk.references && (
             <>
-              <H3 className="mt-8">References</H3>
+              <H3>References</H3>
               <Markdown source={talk.references} className="mt-2" />
             </>
           )}

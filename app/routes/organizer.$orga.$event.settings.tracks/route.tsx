@@ -76,7 +76,7 @@ export default function EventTracksSettingsRoute() {
   return (
     <>
       <section>
-        <H2 className="border-b border-gray-200 pb-3">Formats</H2>
+        <H2>Formats</H2>
         <Checkbox
           id="formatsRequired"
           name="formatsRequired"
@@ -93,7 +93,7 @@ export default function EventTracksSettingsRoute() {
         </div>
       </section>
       <section>
-        <H2 className="border-b border-gray-200 pb-3">Categories</H2>
+        <H2>Categories</H2>
         <Checkbox
           id="categoriesRequired"
           name="categoriesRequired"
@@ -124,8 +124,8 @@ function TrackList({ type, tracks }: TrackListProps) {
       {tracks.map((track) => (
         <li key={track.id} className="flex items-center justify-between py-3 pl-3 pr-4 text-sm">
           <div className="truncate">
-            <Text className="truncate">{track.name}</Text>
-            <Text className="truncate" variant="secondary">
+            <Text truncate>{track.name}</Text>
+            <Text type="secondary" truncate>
               {track.description}
             </Text>
           </div>
