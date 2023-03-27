@@ -35,9 +35,11 @@ export default function OrganizationRoute() {
     <>
       {!isEventPage && (
         <>
-          <Container as="header" className="my-4">
-            <OrganizationBreadcrumb title="Organization page" organization={organization} />
-          </Container>
+          <header className="bg-gray-800">
+            <Container>
+              <OrganizationBreadcrumb title="Organization page" organization={organization} />
+            </Container>
+          </header>
           <OrganizationTabs slug={organization.slug} role={organization.role} />
         </>
       )}
