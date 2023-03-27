@@ -137,7 +137,7 @@ Cypress.Commands.add('login', (username = 'Clark Kent') => {
       cy.clickOn('Continue with Google');
       cy.assertText('Please select an existing account in the Auth Emulator or add a new one:');
       cy.findByText(username).click();
-      cy.assertText('Conferences and meetups.');
+      cy.findByRole('searchbox', { name: 'Search conferences and meetups.' }).should('exist');
     },
     { cacheAcrossSpecs: true }
   );

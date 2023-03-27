@@ -11,8 +11,8 @@ export function SearchEventsForm({ filters }: Props) {
 
   return (
     <Form action="/" method="get" className="mt-10 flex flex-1 justify-center lg:justify-center">
-      <input type="hidden" name="type" value={type} />
-      <input type="hidden" name="cfp" value={cfp} />
+      {type && <input type="hidden" name="type" value={type} />}
+      {cfp && <input type="hidden" name="cfp" value={cfp} />}
       {talkId && <input type="hidden" name="talkId" value={talkId} />}
 
       <InputSearch
