@@ -25,7 +25,7 @@ export default function SpeakerRoute() {
 
   return (
     <>
-      <Navbar user={user} notifications={notifications} />
+      <Navbar user={user} notifications={notifications} withSearch />
       <Container className="my-4 hidden sm:flex sm:items-center sm:justify-between">
         <div className="sm:flex sm:items-center sm:space-x-5">
           <Avatar photoURL={user?.photoURL} size="m" ring />

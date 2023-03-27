@@ -28,7 +28,7 @@ export default function EventRoute() {
 
   return (
     <>
-      <Navbar user={user} notifications={notifications} />
+      <Navbar user={user} notifications={notifications} withSearch />
       <EventHeader
         type={event.type}
         name={event.name}

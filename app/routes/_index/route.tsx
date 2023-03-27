@@ -11,7 +11,7 @@ import { Pagination } from '~/design-system/Pagination';
 import { Navbar } from '~/shared-components/navbar/Navbar';
 import { parsePage } from '~/schemas/pagination';
 import { searchEvents } from './server/search.server';
-import { SearchEventsFilters } from './components/SearchEventsFilters';
+import { SearchEventsForm } from './components/SearchEventsForm';
 import { SearchEventsList } from './components/SearchEventsList';
 import { parseFilters } from './types/search';
 
@@ -32,17 +32,17 @@ export default function IndexRoute() {
     <>
       <Navbar user={user} notifications={notifications} />
       <div className="bg-gray-800 shadow">
-        <Container className="py-0 sm:pt-10 sm:pb-16">
+        <Container className="pb-8 sm:pt-10 sm:pb-16">
           <H1 type="light" align="center">
             Conference Hall
           </H1>
-          <H4 as="p" type="light" align="center" mb={10}>
+          <H4 as="p" type="light" align="center">
             Call for papers for conferences and meetups.
           </H4>
-          <SearchEventsFilters filters={filters} />
+          <SearchEventsForm filters={filters} />
         </Container>
       </div>
-      <Container className="py-0 sm:py-16">
+      <Container className="py-8 sm:py-16">
         {results?.length === 0 ? (
           <EmptyState
             icon={FaceFrownIcon}

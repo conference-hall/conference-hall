@@ -55,7 +55,7 @@ export default function InvitationRoute() {
 
   return (
     <>
-      <Navbar user={user} notifications={notifications} />
+      <Navbar user={user} notifications={notifications} withSearch />
       <Container className="m-24">
         <div className="flex flex-col items-center bg-white px-4 py-5 sm:rounded-lg sm:p-6">
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-indigo-100">

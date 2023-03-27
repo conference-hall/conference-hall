@@ -15,7 +15,7 @@ export default function OrganizerRoute() {
 
   return (
     <>
-      <Navbar user={user} notifications={notifications} />
+      <Navbar user={user} notifications={notifications} withSearch />
       <Outlet />
     </>
   );
