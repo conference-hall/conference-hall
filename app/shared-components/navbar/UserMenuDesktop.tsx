@@ -34,7 +34,7 @@ function MenuItem({ to, icon: Icon, label }: MenuItemProps) {
   );
 }
 
-export function UserMenu({ email, picture }: Props) {
+export function UserMenuDesktop({ email, picture }: Props) {
   return (
     <Menu as="div" className="relative z-30 ml-3">
       <div>

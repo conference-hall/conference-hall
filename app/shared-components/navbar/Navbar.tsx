@@ -1,6 +1,6 @@
 import { Link as RemixLink } from '@remix-run/react';
 import { type Notification, NotificationMenu } from './NotificationMenu';
-import { UserMenu } from './UserMenu';
+import { UserMenuDesktop } from './UserMenuDesktop';
 import { ButtonLink } from '~/design-system/Buttons';
 import { SearchEventsInput } from './SearchEventsInput';
 import { Disclosure } from '@headlessui/react';
@@ -37,7 +37,7 @@ export function Navbar({ user, notifications, withSearch }: Props) {
                 {user && (
                   <div className="flex items-center gap-2">
                     <NotificationMenu notifications={notifications} />
-                    <UserMenu email={user.email} picture={user.photoURL} />
+                    <UserMenuDesktop email={user.email} picture={user.photoURL} />
                   </div>
                 )}
               </div>
