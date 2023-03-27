@@ -6,7 +6,7 @@ import type { UserContext } from '~/root';
 import { mapErrorToResponse } from '~/libs/errors';
 import { EmptyState } from '~/design-system/EmptyState';
 import { Container } from '~/design-system/Container';
-import { H1, H4 } from '~/design-system/Typography';
+import { H1, H2, H4 } from '~/design-system/Typography';
 import { Pagination } from '~/design-system/Pagination';
 import { Navbar } from '~/shared-components/navbar/Navbar';
 import { parsePage } from '~/schemas/pagination';
@@ -50,7 +50,10 @@ export default function IndexRoute() {
             description="Adjust the filters to find your results."
           />
         ) : (
-          <SearchEventsList events={results} forTalkId={searchParams.get('talkId')} />
+          <>
+            <H2 mb={8}>Incoming call for papers</H2>
+            <SearchEventsList events={results} forTalkId={searchParams.get('talkId')} />
+          </>
         )}
         {pagination.total > 1 && <Pagination pathname="/" {...pagination} className="mt-8" />}
       </Container>

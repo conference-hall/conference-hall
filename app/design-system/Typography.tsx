@@ -17,6 +17,12 @@ const SIZES = {
   xs: 'text-xs',
 };
 
+const ALIGNMENTS = {
+  left: 'text-left',
+  center: 'text-center',
+  right: 'text-right',
+};
+
 const COLORS = {
   primary: 'text-gray-900',
   secondary: 'text-gray-500',
@@ -26,10 +32,12 @@ const COLORS = {
   light: 'text-gray-50',
 };
 
-const ALIGNMENTS = {
-  left: 'text-left',
-  center: 'text-center',
-  right: 'text-right',
+const MARGINS = {
+  0: 'mb-0',
+  4: 'mb-4',
+  8: 'mb-8',
+  10: 'mb-10',
+  16: 'mb-16',
 };
 
 type TypographyProps = {
@@ -39,7 +47,7 @@ type TypographyProps = {
   type?: keyof typeof COLORS;
   align?: keyof typeof ALIGNMENTS;
   size?: keyof typeof SIZES;
-  mb?: number;
+  mb?: keyof typeof MARGINS;
   strong?: boolean;
   italic?: boolean;
   srOnly?: boolean;
@@ -67,7 +75,7 @@ function Typography({
   const colorStyle = type ? COLORS[type] : undefined;
   const alignStyle = align ? ALIGNMENTS[align] : undefined;
   const sizeStyle = size ? SIZES[size] : undefined;
-  const marginStyle = mb !== undefined ? `mb-${mb}` : margin;
+  const marginStyle = mb !== undefined ? MARGINS[mb] : margin;
 
   return (
     <Tag

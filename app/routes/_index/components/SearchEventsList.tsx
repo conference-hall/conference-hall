@@ -1,6 +1,6 @@
 import type { CfpState } from '~/schemas/event';
 import { CardLink } from '~/design-system/Card';
-import { H2, H3, Text } from '~/design-system/Typography';
+import { H3, Text } from '~/design-system/Typography';
 import { CfpElapsedTime } from '~/shared-components/cfp/CfpElapsedTime';
 
 type Props = {
@@ -18,14 +18,11 @@ type Props = {
 
 export function SearchEventsList({ events, forTalkId }: Props) {
   return (
-    <>
-      <H2 mb={8}>Incoming call for papers</H2>
-      <ul aria-label="Search results" className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-        {events.map((event) => (
-          <EventItem key={event.slug} {...event} forTalkId={forTalkId} />
-        ))}
-      </ul>
-    </>
+    <ul aria-label="Search results" className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+      {events.map((event) => (
+        <EventItem key={event.slug} {...event} forTalkId={forTalkId} />
+      ))}
+    </ul>
   );
 }
 
