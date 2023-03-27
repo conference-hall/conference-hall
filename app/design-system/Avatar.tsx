@@ -1,6 +1,7 @@
 import c from 'classnames';
+import { Text } from './Typography';
 
-const sizes = { xs: 'h-6 w-6', s: 'h-8 w-8', m: 'h-12 w-12', l: 'h-16 w-16', xl: 'h-20 w-20' };
+const sizes = { xs: 'h-8 w-8', s: 'h-10 w-10', m: 'h-12 w-12', l: 'h-16 w-16', xl: 'h-20 w-20' };
 const rings = { xs: 'ring-2', s: 'ring-2', m: 'ring-2', l: 'ring-4', xl: 'ring-4' };
 const ringsColor = { white: 'ring-white', primary: 'ring-indigo-500' };
 
@@ -62,15 +63,23 @@ export function AvatarGroup({ avatars, displayNames = false, className }: Avatar
   );
 }
 
-type AvatarNameProps = { name?: string | null; subtitle?: string | null } & AvatarProps;
+type AvatarNameProps = {
+  name?: string | null;
+  subtitle?: string | null;
+  variant?: 'primary' | 'secondary';
+} & AvatarProps;
 
-export function AvatarName({ name, subtitle, className, ...rest }: AvatarNameProps) {
+export function AvatarName({ name, subtitle, variant = 'primary', className, ...rest }: AvatarNameProps) {
   return (
     <div className="flex items-center">
       <Avatar {...rest} />
       <div className="ml-3 text-left">
-        <p className="text-sm font-medium text-gray-700 group-hover:text-gray-900">{name || 'Unknown'}</p>
-        <p className="text-xs font-medium text-gray-500 group-hover:text-gray-700">{subtitle}</p>
+        <Text type={variant === 'primary' ? 'primary' : 'light'} size="s" strong>
+          {name || 'Unknown'}
+        </Text>
+        <Text type={variant === 'primary' ? 'secondary' : 'light'} size="xs">
+          {subtitle}
+        </Text>
       </div>
     </div>
   );

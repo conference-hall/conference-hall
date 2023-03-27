@@ -40,17 +40,17 @@ describe('#formatConferenceDates', () => {
 describe('#formatCFPState', () => {
   it('return closed cfp message', () => {
     const message = formatCFPState('CLOSED');
-    expect(message).toBe('Call for paper is not open yet');
+    expect(message).toBe('Not open yet');
   });
 
   it('return opened cfp message', () => {
     const message = formatCFPState('OPENED');
-    expect(message).toBe('Call for paper is open');
+    expect(message).toBe('Open');
   });
 
   it('return finished cfp message', () => {
     const message = formatCFPState('FINISHED');
-    expect(message).toBe('Call for paper is closed');
+    expect(message).toBe('Closed');
   });
 });
 
@@ -65,7 +65,7 @@ describe('#formatCFPElapsedTime', () => {
 
   it('return "CFP not open" if no dates', () => {
     const message = formatCFPElapsedTime('CLOSED');
-    expect(message).toBe('Call for paper is not open yet');
+    expect(message).toBe('Not open yet');
   });
 
   it('returns closed CFP', () => {
@@ -73,7 +73,7 @@ describe('#formatCFPElapsedTime', () => {
     const start = '2020-02-27T00:00:00.000Z';
     const end = '2020-02-28T23:59:59.000Z';
     const message = formatCFPElapsedTime('CLOSED', start, end);
-    expect(message).toBe('Call for paper will be open in 1 day');
+    expect(message).toBe('Open in 1 day');
   });
 
   it('returns opened CFP', () => {
@@ -81,7 +81,7 @@ describe('#formatCFPElapsedTime', () => {
     const start = '2020-02-27T00:00:00.000Z';
     const end = '2020-02-28T23:59:59.000Z';
     const message = formatCFPElapsedTime('OPENED', start, end);
-    expect(message).toBe('Call for paper is open for 1 day');
+    expect(message).toBe('Open for 1 day');
   });
 
   it('returns finished CFP', () => {
@@ -89,7 +89,7 @@ describe('#formatCFPElapsedTime', () => {
     const start = '2020-02-27T00:00:00.000Z';
     const end = '2020-02-28T23:59:59.000Z';
     const message = formatCFPElapsedTime('FINISHED', start, end);
-    expect(message).toBe('Call for paper closed since 1 day');
+    expect(message).toBe('Closed since 1 day');
   });
 });
 

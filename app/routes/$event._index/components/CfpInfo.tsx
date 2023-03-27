@@ -1,5 +1,5 @@
 import { ClientOnly } from 'remix-utils';
-import { H2, Text } from '~/design-system/Typography';
+import { H3, Text } from '~/design-system/Typography';
 
 import type { CfpState } from '~/schemas/event';
 import { CfpIcon } from '../../../shared-components/cfp/CfpIcon';
@@ -10,13 +10,23 @@ type CfpInfoProps = { cfpState: CfpState; cfpStart?: string; cfpEnd?: string; cl
 export function CfpInfo({ cfpState, cfpStart, cfpEnd }: CfpInfoProps) {
   return (
     <div>
-      <H2>
+      <div className="flex items-center gap-2">
         <CfpIcon cfpState={cfpState} />
         <ClientOnly>
-          {() => <span className="block">{formatCFPElapsedTime(cfpState, cfpStart, cfpEnd)}</span>}
+          {() => (
+            <H3 as="p" mb={0}>
+              {formatCFPElapsedTime(cfpState, cfpStart, cfpEnd)}
+            </H3>
+          )}
         </ClientOnly>
-      </H2>
-      <ClientOnly>{() => <Text type="secondary">{formatCFPDate(cfpState, cfpStart, cfpEnd)}</Text>}</ClientOnly>
+      </div>
+      <ClientOnly>
+        {() => (
+          <Text type="secondary" size="s">
+            {formatCFPDate(cfpState, cfpStart, cfpEnd)}
+          </Text>
+        )}
+      </ClientOnly>
     </div>
   );
 }

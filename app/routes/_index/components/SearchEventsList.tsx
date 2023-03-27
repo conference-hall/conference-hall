@@ -1,10 +1,7 @@
 import type { CfpState } from '~/schemas/event';
-import { MapPinIcon } from '@heroicons/react/20/solid';
 import { CardLink } from '~/design-system/Card';
-import { IconLabel } from '~/design-system/IconLabel';
-import { formatEventType } from '~/utils/event';
+import { H2, H3, Text } from '~/design-system/Typography';
 import { CfpElapsedTime } from '~/shared-components/cfp/CfpElapsedTime';
-import { H2 } from '~/design-system/Typography';
 
 type Props = {
   events: Array<{
@@ -23,27 +20,39 @@ export function SearchEventsList({ events, forTalkId }: Props) {
   return (
     <>
       <H2 mb={8}>Incoming call for papers</H2>
-      <ul aria-label="Search results" className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <ul aria-label="Search results" className="grid grid-cols-1 gap-8 lg:grid-cols-2">
         {events.map((event) => (
-          <CardLink
-            as="li"
-            key={event.slug}
-            to={forTalkId ? `/${event.slug}/submission/${forTalkId}` : `/${event.slug}`}
-            className="flex h-40 flex-col justify-between p-4"
-          >
-            <div>
-              <p className="truncate">
-                <span className="text-base font-semibold text-indigo-600">{event.name}</span>
-                <span className="text-xs text-gray-500"> · {formatEventType(event.type)}</span>
-              </p>
-              <IconLabel icon={MapPinIcon} className="mt-2 text-gray-500" iconClassName="text-gray-400" lineCamp>
-                {event.address}
-              </IconLabel>
-            </div>
-            <CfpElapsedTime cfpState={event.cfpState} cfpStart={event.cfpStart} cfpEnd={event.cfpEnd} />
-          </CardLink>
+          <EventItem key={event.slug} {...event} forTalkId={forTalkId} />
         ))}
       </ul>
     </>
+  );
+}
+
+type EventProps = {
+  slug: string;
+  name: string;
+  type: 'CONFERENCE' | 'MEETUP';
+  cfpState: CfpState;
+  cfpStart?: string;
+  cfpEnd?: string;
+  forTalkId: string | null;
+};
+
+function EventItem({ name, slug, type, cfpState, cfpStart, cfpEnd, forTalkId }: EventProps) {
+  const path = forTalkId ? `/${slug}/submission/${forTalkId}` : `/${slug}`;
+  return (
+    <CardLink as="li" to={path} className="flex h-32 justify-between">
+      <img src="https://placehold.co/128" className="h-32 w-32 rounded-l-md" aria-hidden alt="" />
+      <div className="flex flex-1 flex-col justify-between truncate p-4">
+        <div>
+          <H3 truncate>{name}</H3>
+          <Text size="s" strong>
+            {type === 'CONFERENCE' ? 'Conference' : 'Meetup'}
+          </Text>
+        </div>
+        <CfpElapsedTime cfpState={cfpState} cfpStart={cfpStart} cfpEnd={cfpEnd} />
+      </div>
+    </CardLink>
   );
 }

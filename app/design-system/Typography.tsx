@@ -3,7 +3,7 @@ import c from 'classnames';
 
 const VARIANTS = {
   body: { tag: 'p', style: 'text-base', margin: 'mb-0' },
-  h1: { tag: 'h1', style: 'font-heading font-medium leading-tight text-4xl', margin: 'mb-8' },
+  h1: { tag: 'h1', style: 'font-heading font-medium leading-tight text-4xl', margin: 'mb-4' },
   h2: { tag: 'h2', style: 'font-heading font-medium leading-tight text-2xl', margin: 'mb-4' },
   h3: { tag: 'h3', style: 'font-heading font-medium leading-tight text-xl', margin: 'mb-2' },
   h4: { tag: 'h4', style: 'font-heading font-medium leading-tight text-lg', margin: 'mb-1' },

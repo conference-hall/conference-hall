@@ -5,7 +5,6 @@ import {
   FireIcon,
   ArrowRightOnRectangleIcon,
   MicrophoneIcon,
-  MagnifyingGlassIcon,
   BuildingOfficeIcon,
   UserCircleIcon,
 } from '@heroicons/react/20/solid';
@@ -41,7 +40,7 @@ export function UserMenu({ email, picture }: Props) {
       <div>
         <Menu.Button className="flex rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
           <span className="sr-only">Open user menu</span>
-          <Avatar photoURL={picture} />
+          <Avatar photoURL={picture} size="xs" />
         </Menu.Button>
       </div>
       <MenuTransition>
@@ -49,9 +48,6 @@ export function UserMenu({ email, picture }: Props) {
           <div className="px-4 py-3">
             <p className="text-sm">Signed in as</p>
             <p className="truncate text-sm font-medium text-gray-900">{email}</p>
-          </div>
-          <div className="py-1">
-            <MenuItem to="/" label="Search events" icon={MagnifyingGlassIcon} />
           </div>
           <div className="py-1">
             <MenuItem to="/speaker" label="Activity" icon={FireIcon} />
