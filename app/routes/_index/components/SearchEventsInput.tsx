@@ -4,7 +4,7 @@ import { InputSearch } from '~/design-system/forms/InputSearch';
 
 type Props = { filters: SearchFilters };
 
-export function SearchEventsForm({ filters }: Props) {
+export function SearchEventsInput({ filters }: Props) {
   const { query, type, cfp } = filters;
   const [searchParams] = useSearchParams();
   const talkId = searchParams.get('talkId');

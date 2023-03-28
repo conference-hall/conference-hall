@@ -17,8 +17,10 @@ export const Documentation = () => (
       <Button size="l">Large</Button>
     </StoryBlock>
 
-    <StoryBlock title="Disabled">
+    <StoryBlock title="Other states">
       <Button disabled>Disabled</Button>
+      <Button rounded>Rounded</Button>
+      <Button loading>Loading</Button>
     </StoryBlock>
 
     <StoryBlock title="Icons">

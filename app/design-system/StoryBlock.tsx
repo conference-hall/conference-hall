@@ -10,7 +10,7 @@ type Props = {
 
 export const StoryBlock = ({ title, children, vertical = false }: Props) => (
   <section>
-    {title && <H1>{title}</H1>}
+    {title && <H1 size="xl">{title}</H1>}
     <div className={c('my-8 flex items-start gap-4', { 'flex-col': vertical })}>{children}</div>
   </section>
 );

@@ -11,9 +11,10 @@ import { Pagination } from '~/design-system/Pagination';
 import { Navbar } from '~/shared-components/navbar/Navbar';
 import { parsePage } from '~/schemas/pagination';
 import { searchEvents } from './server/search.server';
-import { SearchEventsForm } from './components/SearchEventsForm';
+import { SearchEventsInput } from './components/SearchEventsInput';
 import { EventsList } from './components/EventsList';
 import { parseFilters } from './types/search';
+import { SearchEventsFilters } from './components/SearchEventsFilters';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const url = new URL(request.url);
@@ -39,10 +40,14 @@ export default function IndexRoute() {
           <Text size="l" heading variant="light" align="center">
             Call for papers for conferences and meetups.
           </Text>
-          <SearchEventsForm filters={filters} />
+          <SearchEventsInput filters={filters} />
         </Container>
       </div>
-      <Container className="py-8 sm:py-16">
+      <Container className="pt-8 sm:pt-16">
+        <div className="mb-10 flex items-center justify-between">
+          <H2 mb={0}>Incoming call for papers</H2>
+          <SearchEventsFilters filters={filters} />
+        </div>
         {results?.length === 0 ? (
           <EmptyState
             icon={FaceFrownIcon}
@@ -50,10 +55,7 @@ export default function IndexRoute() {
             description="Adjust the filters to find your results."
           />
         ) : (
-          <>
-            <H2 mb={8}>Incoming call for papers</H2>
-            <EventsList events={results} forTalkId={searchParams.get('talkId')} />
-          </>
+          <EventsList events={results} forTalkId={searchParams.get('talkId')} />
         )}
         {pagination.total > 1 && <Pagination pathname="/" {...pagination} className="mt-8" />}
       </Container>
