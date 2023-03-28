@@ -36,7 +36,7 @@ export default function EventIntegrationsSettingsRoute() {
     <>
       <section>
         <H2>Slack integration</H2>
-        <Text type="secondary">
+        <Text variant="secondary">
           With Slack integration you will be able to received notifications about speakers in a dedicated Slack channel.
           Follow the 3 steps of the{' '}
           <ExternalLink href="https://api.slack.com/incoming-webhooks">Slack documentation</ExternalLink> to get the

@@ -13,7 +13,7 @@ export function CfpElapsedTime({ cfpState, cfpStart, cfpEnd, className }: Props)
       <CfpIcon cfpState={cfpState} />
       <ClientOnly>
         {() => (
-          <Text type="secondary" size="s" truncate>
+          <Text variant="secondary" size="s" truncate>
             {formatCFPElapsedTime(cfpState, cfpStart, cfpEnd)}
           </Text>
         )}

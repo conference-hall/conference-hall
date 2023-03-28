@@ -79,7 +79,7 @@ type DocumentProps = { children: ReactNode; toast?: ToastData | null };
 
 function Document({ children, toast }: DocumentProps) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en">
       <head>
         <Meta />
         <Links />

@@ -37,6 +37,7 @@ export function Pagination({ pathname, current, total, className }: Props) {
               to={{ pathname, search: getPageSearchParams(page, searchParams) }}
               aria-current={page === current ? 'page' : undefined}
               className={styles}
+              preventScrollReset
             >
               {page}
             </Link>

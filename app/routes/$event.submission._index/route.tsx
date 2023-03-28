@@ -44,7 +44,7 @@ export default function EventSubmitRoute() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <H2>Proposal selection</H2>
-          <Text type="secondary">Select or create a new proposal to submit.</Text>
+          <Text variant="secondary">Select or create a new proposal to submit.</Text>
         </div>
         {data?.talks.length !== 0 && <ButtonLink to="new">Create a new proposal</ButtonLink>}
       </div>

@@ -14,11 +14,11 @@ export const OrganizationEventsEmpty = ({ organization }: OrganizationContext) =
 
       {organization.role === 'OWNER' ? (
         <>
-          <Text type="secondary">Get started by creating your first event.</Text>
+          <Text variant="secondary">Get started by creating your first event.</Text>
           <ButtonLink to="new">New event</ButtonLink>
         </>
       ) : (
-        <Text type="secondary">No event created yet.</Text>
+        <Text variant="secondary">No event created yet.</Text>
       )}
     </EmptyState>
     <Outlet />

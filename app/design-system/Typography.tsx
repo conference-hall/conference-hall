@@ -1,18 +1,12 @@
 import React from 'react';
 import c from 'classnames';
 
-const VARIANTS = {
-  body: { tag: 'p', style: 'text-base', margin: 'mb-0' },
-  h1: { tag: 'h1', style: 'font-heading font-medium leading-tight text-4xl', margin: 'mb-4' },
-  h2: { tag: 'h2', style: 'font-heading font-medium leading-tight text-2xl', margin: 'mb-4' },
-  h3: { tag: 'h3', style: 'font-heading font-medium leading-tight text-xl', margin: 'mb-2' },
-  h4: { tag: 'h4', style: 'font-heading font-medium leading-tight text-lg', margin: 'mb-1' },
-};
-
 const SIZES = {
+  '4xl': 'text-4xl',
+  '2xl': 'text-2xl',
   xl: 'text-xl',
   l: 'text-lg',
-  m: 'text-base',
+  base: 'text-base',
   s: 'text-sm',
   xs: 'text-xs',
 };
@@ -23,18 +17,22 @@ const ALIGNMENTS = {
   right: 'text-right',
 };
 
-const COLORS = {
+const VARIANTS = {
   primary: 'text-gray-900',
   secondary: 'text-gray-500',
   link: 'text-indigo-600',
   warning: 'text-yellow-700',
   error: 'text-red-600',
   light: 'text-gray-50',
+  'secondary-light': 'text-gray-300',
 };
 
 const MARGINS = {
   0: 'mb-0',
+  1: 'mb-1',
+  2: 'mb-2',
   4: 'mb-4',
+  6: 'mb-6',
   8: 'mb-8',
   10: 'mb-10',
   16: 'mb-16',
@@ -44,10 +42,10 @@ type TypographyProps = {
   id?: string;
   as?: React.ElementType;
   variant?: keyof typeof VARIANTS;
-  type?: keyof typeof COLORS;
   align?: keyof typeof ALIGNMENTS;
   size?: keyof typeof SIZES;
   mb?: keyof typeof MARGINS;
+  heading?: boolean;
   strong?: boolean;
   italic?: boolean;
   srOnly?: boolean;
@@ -57,30 +55,28 @@ type TypographyProps = {
 
 function Typography({
   id,
-  as,
-  variant = 'body',
-  type = 'primary',
+  as: Tag = 'p',
+  variant = 'primary',
   align = 'left',
   mb,
   size,
+  heading,
   strong,
   italic,
   srOnly,
   truncate,
   children,
 }: TypographyProps) {
-  const { tag, style, margin } = VARIANTS[variant];
-  const Tag = as || tag;
-
-  const colorStyle = type ? COLORS[type] : undefined;
+  const variantStyle = variant ? VARIANTS[variant] : undefined;
   const alignStyle = align ? ALIGNMENTS[align] : undefined;
   const sizeStyle = size ? SIZES[size] : undefined;
-  const marginStyle = mb !== undefined ? MARGINS[mb] : margin;
+  const marginStyle = mb !== undefined ? MARGINS[mb] : 0;
 
   return (
     <Tag
       id={id}
-      className={c(style, colorStyle, alignStyle, sizeStyle, marginStyle, {
+      className={c(variantStyle, alignStyle, sizeStyle, marginStyle, {
+        'font-heading': heading,
         'font-medium': strong,
         'sr-only': srOnly,
         truncate,
@@ -93,25 +89,25 @@ function Typography({
 }
 
 export function H1(props: TypographyProps) {
-  return <Typography {...props} variant="h1" />;
+  return <Typography as="h1" size="4xl" mb={4} heading strong {...props} />;
 }
 
 export function H2(props: TypographyProps) {
-  return <Typography {...props} variant="h2" />;
+  return <Typography as="h2" size="2xl" mb={4} heading strong {...props} />;
 }
 
 export function H3(props: TypographyProps) {
-  return <Typography {...props} variant="h3" />;
+  return <Typography as="h3" size="xl" mb={2} heading strong {...props} />;
 }
 
 export function H4(props: TypographyProps) {
-  return <Typography {...props} variant="h4" />;
+  return <Typography as="h4" size="base" mb={0} heading strong {...props} />;
 }
 
 export function Text(props: TypographyProps) {
-  return <Typography {...props} variant="body" />;
+  return <Typography as="p" size="base" mb={0} {...props} />;
 }
 
 export function Subtitle(props: TypographyProps) {
-  return <Text {...props} size="s" type="secondary" />;
+  return <Text as="p" size="s" mb={0} variant="secondary" {...props} />;
 }

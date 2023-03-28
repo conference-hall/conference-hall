@@ -36,7 +36,7 @@ export function ProposaListRow({ proposal, isSelected, onSelect }: ProposalRowPr
           className="block after:absolute after:top-0 after:bottom-0 after:left-16 after:right-0 after:z-10 after:block"
         >
           <Text truncate>{proposal.title}</Text>
-          <Text size="xs" type="secondary">
+          <Text size="xs" variant="secondary">
             by {proposal.speakers.join(', ')}
           </Text>
         </Link>
@@ -62,7 +62,7 @@ export function ProposaListRow({ proposal, isSelected, onSelect }: ProposalRowPr
         </div>
       </td>
       <td className="w-0 px-3 py-6 pr-4 text-right sm:pr-6">
-        <Text type="secondary">{formatRating(proposal.ratings.total)}</Text>
+        <Text variant="secondary">{formatRating(proposal.ratings.total)}</Text>
       </td>
     </tr>
   );

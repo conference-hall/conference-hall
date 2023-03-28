@@ -34,7 +34,7 @@ export default function MultiSelect({ name, label, placeholder, options, default
                   {getOptionLabel(selected, options)}
                 </Text>
               ) : (
-                <Text type="secondary" as="div" truncate>
+                <Text variant="secondary" as="div" truncate>
                   {placeholder}
                 </Text>
               )}

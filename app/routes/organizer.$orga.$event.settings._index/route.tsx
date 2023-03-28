@@ -58,7 +58,7 @@ export default function EventGeneralSettingsRoute() {
       </section>
       <section>
         <H2>Event details</H2>
-        <Text type="secondary">
+        <Text variant="secondary">
           Provide details about the event, like address, dates and description to generate the event page.
         </Text>
         <Form method="post" className="mt-6 space-y-4">

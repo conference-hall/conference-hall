@@ -3,7 +3,7 @@ import { json } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 import { Container } from '~/design-system/Container';
 import { sessionRequired } from '~/libs/auth/auth.server';
-import { H2, Text } from '~/design-system/Typography';
+import { H1, Text } from '~/design-system/Typography';
 import { useLoaderData } from '@remix-run/react';
 import { CardLink } from '~/design-system/Card';
 import Badge from '~/design-system/Badges';
@@ -31,31 +31,29 @@ export default function OrganizerIndexRoute() {
     <>
       <div className="bg-gray-800">
         <Container className="pt-8 pb-10 sm:flex sm:items-center sm:justify-between">
-          <H2 as="h1" type="light" mb={0}>
-            Select an organization
-          </H2>
+          <H1 variant="light" mb={0}>
+            Your organizations
+          </H1>
           <ButtonLink to="/organizer/new">New organization</ButtonLink>
         </Container>
       </div>
       <Container className="my-4 sm:my-8">
         <ul aria-label="Organizations list" className="my-8 grid grid-cols-1 gap-6 sm:grid-cols-2">
           {data.map((orga) => (
-            <CardLink as="li" key={orga.slug} to={orga.slug}>
-              <div className="flex h-40 flex-col justify-between px-4 py-4 sm:px-6">
-                <div className="flex items-center justify-between gap-1">
-                  <Text type="link" size="l">
-                    {orga.name}
-                  </Text>
-                  <Badge>{orga.role.toLowerCase()}</Badge>
-                </div>
-                <div className="space-y-2">
-                  <IconLabel icon={MegaphoneIcon} truncate>
-                    {`${orga.eventsCount} events`}
-                  </IconLabel>
-                  <IconLabel icon={UsersIcon} truncate>
-                    {`${orga.membersCount} members`}
-                  </IconLabel>
-                </div>
+            <CardLink as="li" key={orga.slug} to={orga.slug} rounded="lg" p={4}>
+              <div className="mb-8 flex items-center justify-between gap-1">
+                <Text size="xl" heading strong truncate>
+                  {orga.name}
+                </Text>
+                <Badge>{orga.role.toLowerCase()}</Badge>
+              </div>
+              <div className="flex gap-4">
+                <IconLabel icon={MegaphoneIcon} truncate>
+                  {`${orga.eventsCount} events`}
+                </IconLabel>
+                <IconLabel icon={UsersIcon} truncate>
+                  {`${orga.membersCount} members`}
+                </IconLabel>
               </div>
             </CardLink>
           ))}

@@ -31,10 +31,10 @@ export default function SpeakerRoute() {
           <div className="py-4 sm:flex sm:items-center sm:space-x-5">
             <Avatar photoURL={user?.photoURL} name={user?.name} size="m" ring ringColor="white" />
             <div className="mt-4 text-center sm:mt-0 sm:pt-1 sm:text-left">
-              <H2 as="h1" type="light" mb={0}>
+              <H2 as="h1" variant="light" mb={0}>
                 {user?.name}
               </H2>
-              <Text type="secondary">{user?.email}</Text>
+              <Text variant="secondary">{user?.email}</Text>
             </div>
           </div>
           <div className="mt-5 flex justify-center space-x-4 sm:mt-0">

@@ -1,89 +1,38 @@
-import { GlobeEuropeAfricaIcon, HeartIcon, EnvelopeIcon } from '@heroicons/react/20/solid';
 import { useCatch } from '@remix-run/react';
 import { Container } from '~/design-system/Container';
 import { useEvent } from '../$event/route';
-import { ButtonLink } from '../../design-system/Buttons';
-import { CfpInfo } from './components/CfpInfo';
-import { ExternalLink } from '../../design-system/Links';
-import { Markdown } from '../../design-system/Markdown';
-import { H2, Text } from '../../design-system/Typography';
+import { CfpSection } from './components/CfpSection';
+import { TrackSection } from './components/TrackSection';
+import { DetailsSection } from './components/DetailsSection';
 
 export default function EventRoute() {
   const event = useEvent();
+
+  const hasTracks = event.formats.length > 0 || event.categories.length > 0;
+
   return (
-    <>
-      <Container
-        as="section"
-        className="mt-4 flex flex-col gap-4 sm:mt-8 sm:flex-row sm:items-center sm:justify-between"
-      >
-        <CfpInfo cfpState={event.cfpState} cfpStart={event.cfpStart} cfpEnd={event.cfpEnd} />
-        {event.cfpState === 'OPENED' && (
-          <div className="flex-shrink-0">
-            <ButtonLink to="submission" block>
-              Submit a proposal
-            </ButtonLink>
-          </div>
-        )}
-      </Container>
+    <Container>
+      <CfpSection cfpState={event.cfpState} cfpStart={event.cfpStart} cfpEnd={event.cfpEnd} />
 
-      <Container as="section" className="mt-8">
-        <Markdown source={event.description} />
-      </Container>
+      <DetailsSection
+        description={event.description}
+        websiteUrl={event.websiteUrl}
+        contactEmail={event.contactEmail}
+        codeOfConductUrl={event.codeOfConductUrl}
+      />
 
-      {event.websiteUrl || event.contactEmail || event.codeOfConductUrl ? (
-        <Container as="section" className="mt-8 flex flex-col gap-4 sm:mt-12 sm:flex-row sm:gap-16">
-          {event.websiteUrl && (
-            <ExternalLink href={event.websiteUrl} icon={GlobeEuropeAfricaIcon}>
-              Website
-            </ExternalLink>
-          )}
-          {event.contactEmail && (
-            <ExternalLink href={`mailto:${event.contactEmail}`} icon={EnvelopeIcon}>
-              Contacts
-            </ExternalLink>
-          )}
-          {event.codeOfConductUrl && (
-            <ExternalLink href={event.codeOfConductUrl} icon={HeartIcon}>
-              Code of conduct
-            </ExternalLink>
-          )}
-        </Container>
-      ) : null}
+      {hasTracks && (
+        <div className="mt-8 grid grid-cols-1 gap-8 sm:mt-8 sm:grid-cols-2 sm:gap-8">
+          <TrackSection title="Formats" subtitle="Talks formats proposed by the conference." tracks={event.formats} />
 
-      {event.formats.length > 0 || event.categories.length > 0 ? (
-        <Container className="mt-8 grid grid-cols-1 gap-8 sm:mt-16 sm:grid-cols-2 sm:gap-24">
-          {event.formats.length > 0 ? (
-            <div>
-              <H2>Formats</H2>
-              <Text type="secondary">Talks formats proposed by the conference.</Text>
-              <dl role="list" className="mt-4 space-y-6">
-                {event.formats.map((f) => (
-                  <div key={f.name}>
-                    <Text as="dt">{f.name}</Text>
-                    <Text as="dd">{f.description}</Text>
-                  </div>
-                ))}
-              </dl>
-            </div>
-          ) : null}
-
-          {event.categories.length > 0 ? (
-            <div>
-              <H2>Categories</H2>
-              <Text type="secondary">Different categories and tracks proposed by the conference.</Text>
-              <dl role="list" className="mt-4 space-y-6">
-                {event.categories.map((c) => (
-                  <div key={c.name}>
-                    <Text as="dt">{c.name}</Text>
-                    <Text as="dd">{c.description}</Text>
-                  </div>
-                ))}
-              </dl>
-            </div>
-          ) : null}
-        </Container>
-      ) : null}
-    </>
+          <TrackSection
+            title="Categories"
+            subtitle="Different categories and tracks proposed by the conference."
+            tracks={event.categories}
+          />
+        </div>
+      )}
+    </Container>
   );
 }
 

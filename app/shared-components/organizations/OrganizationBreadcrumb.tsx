@@ -25,7 +25,7 @@ export default function OrganizationBreadcrumb({ title, organization, event }: P
           <HomeIcon className="h-5 w-5 text-gray-300 hover:text-gray-400" />
         </Link>
         <ChevronRightIcon className="h-4 w-4 text-gray-400" />
-        <Link to={`/organizer/${organization.slug}`} className="text-white hover:underline">
+        <Link to={`/organizer/${organization.slug}`} className="font-heading text-white hover:underline">
           {organization.name}
         </Link>
         {event && (
@@ -34,7 +34,7 @@ export default function OrganizationBreadcrumb({ title, organization, event }: P
             <Link
               to={`/${event.slug}`}
               target="_blank"
-              className="flex items-center truncate text-white hover:underline"
+              className="flex items-center truncate font-heading text-white hover:underline"
             >
               {event.name}
               <ArrowTopRightOnSquareIcon className="ml-2 h-4 w-4" />

@@ -53,7 +53,7 @@ export default function EventReviewSettingsRoute() {
       <section>
         <H2>Proposals review</H2>
         <Form method="post" className="mt-6 space-y-4">
-          <Text type="secondary">
+          <Text variant="secondary">
             Enable or disabled proposal review. When disabled, reviewers won't be able to review proposals anymore.
           </Text>
           <input type="hidden" name="_action" value="enable-review" />

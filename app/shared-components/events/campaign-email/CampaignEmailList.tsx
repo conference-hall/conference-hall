@@ -82,7 +82,7 @@ export function CampaignEmailList({ type, proposals, total }: Props) {
             <div className="mx-6 flex grow justify-between py-4">
               <div>
                 <Text truncate>{proposal.title}</Text>
-                <Text type="secondary" size="xs">
+                <Text variant="secondary" size="xs">
                   by {proposal.speakers.join(', ')}
                 </Text>
               </div>

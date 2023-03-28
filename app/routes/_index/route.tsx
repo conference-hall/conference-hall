@@ -6,7 +6,7 @@ import type { UserContext } from '~/root';
 import { mapErrorToResponse } from '~/libs/errors';
 import { EmptyState } from '~/design-system/EmptyState';
 import { Container } from '~/design-system/Container';
-import { H1, H2, H4 } from '~/design-system/Typography';
+import { H1, H2, Text } from '~/design-system/Typography';
 import { Pagination } from '~/design-system/Pagination';
 import { Navbar } from '~/shared-components/navbar/Navbar';
 import { parsePage } from '~/schemas/pagination';
@@ -33,12 +33,12 @@ export default function IndexRoute() {
       <Navbar user={user} notifications={notifications} />
       <div className="bg-gray-800 shadow">
         <Container className="pb-8 sm:pt-10 sm:pb-16">
-          <H1 type="light" align="center">
+          <H1 variant="light" align="center">
             Conference Hall
           </H1>
-          <H4 as="p" type="light" align="center">
+          <Text size="l" heading variant="light" align="center">
             Call for papers for conferences and meetups.
-          </H4>
+          </Text>
           <SearchEventsForm filters={filters} />
         </Container>
       </div>

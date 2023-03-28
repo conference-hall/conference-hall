@@ -77,7 +77,7 @@ export function RatingButtons({ userRating }: Props) {
           ))}
         </div>
       </RadioGroup>
-      <Text size="m" type="secondary">
+      <Text size="base" variant="secondary">
         {options[overIndex]?.label ?? options[defaultIndex]?.label ?? 'Not rated yet!'}
       </Text>
     </fetcher.Form>

@@ -1,6 +1,5 @@
 import format from 'date-fns/format';
 import isSameDay from 'date-fns/isSameDay';
-import differenceInCalendarDays from 'date-fns/differenceInCalendarDays';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import type { CfpState, EventType } from '~/schemas/event';
 
@@ -48,13 +47,12 @@ export function formatConferenceDates(type: EventType, start?: string, end?: str
   const endDate = new Date(end);
 
   if (isSameDay(startDate, endDate)) {
-    return `1 day conference - ${format(startDate, 'PPP')}`;
+    return format(startDate, 'PPP');
   }
 
-  const numberOfDays = differenceInCalendarDays(endDate, startDate) + 1;
   const startFormatted = format(startDate, 'MMMM do');
   const endFormatted = format(endDate, 'PPP');
-  return `${numberOfDays} days conference · ${startFormatted} — ${endFormatted}`;
+  return `${startFormatted} to ${endFormatted}`;
 }
 
 export function formatCFPState(state: CfpState) {

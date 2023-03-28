@@ -41,7 +41,7 @@ export default function EventApiSettingsRoute() {
     <>
       <section>
         <H2>Web API</H2>
-        <Text type="secondary">
+        <Text variant="secondary">
           Use the HTTP API if you want to connect a service to some Conference Hall event. Have a look at the Conference
           Hall <ExternalLink href="https://contribute-conference-hall.netlify.com/">API documentation</ExternalLink>.
         </Text>

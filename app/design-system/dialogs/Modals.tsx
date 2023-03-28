@@ -91,7 +91,7 @@ function Title({ icon: Icon, title, description, iconColor = 'info' }: ModalTitl
         <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900">
           {title}
         </Dialog.Title>
-        {description && <Text type="secondary">{description}</Text>}
+        {description && <Text variant="secondary">{description}</Text>}
       </div>
     </div>
   );

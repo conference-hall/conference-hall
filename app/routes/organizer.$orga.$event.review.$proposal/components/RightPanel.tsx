@@ -63,7 +63,7 @@ function OrganizerComments({ uid, messages }: { uid: string; messages: Array<Mes
             <Avatar photoURL={message.photoURL} name={message.name} />
             <div className="min-w-0 grow">
               <div className="relative">
-                <Text size="xs" type="secondary">
+                <Text size="xs" variant="secondary">
                   {message.name}
                 </Text>
                 {uid === message.userId && (

@@ -125,7 +125,7 @@ function TrackList({ type, tracks }: TrackListProps) {
         <li key={track.id} className="flex items-center justify-between py-3 pl-3 pr-4 text-sm">
           <div className="truncate">
             <Text truncate>{track.name}</Text>
-            <Text type="secondary" truncate>
+            <Text variant="secondary" truncate>
               {track.description}
             </Text>
           </div>

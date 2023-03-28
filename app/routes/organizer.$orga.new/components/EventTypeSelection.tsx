@@ -16,7 +16,7 @@ export function EventTypeSelection() {
           </div>
           <span className="flex flex-col gap-2">
             <H2>New conference</H2>
-            <Text type="secondary">
+            <Text variant="secondary">
               Conferences are open to proposals for a time limited period. You can also make the conference public or
               private.
             </Text>
@@ -28,7 +28,7 @@ export function EventTypeSelection() {
           </div>
           <span className="flex flex-col gap-2">
             <H2>New meetup</H2>
-            <Text type="secondary">
+            <Text variant="secondary">
               Meetup are open to proposals all the year. You can manually open or close the call for paper. You can also
               make the meetup public or private.
             </Text>

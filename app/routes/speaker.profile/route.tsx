@@ -85,7 +85,7 @@ export default function ProfileRoute() {
               <div className="space-y-6 bg-white py-6 px-4 sm:p-6">
                 <div>
                   <H2 id="personal-info-label">Personal information</H2>
-                  <Text type="secondary">Use a permanent address where you can receive email.</Text>
+                  <Text variant="secondary">Use a permanent address where you can receive email.</Text>
                 </div>
 
                 <div className="grid grid-cols-1 gap-6">
@@ -128,7 +128,7 @@ export default function ProfileRoute() {
               <div className="space-y-6 bg-white py-6 px-4 sm:p-6">
                 <div>
                   <H2 id="speaker-details-label">Speaker details</H2>
-                  <Text type="secondary">
+                  <Text variant="secondary">
                     Give more information about you, these information will be visible by organizers when you submit a
                     talk.
                   </Text>
@@ -166,7 +166,7 @@ export default function ProfileRoute() {
               <div className="space-y-6 bg-white py-6 px-4 sm:p-6">
                 <div>
                   <H2 id="additional-info-label">Additional information</H2>
-                  <Text type="secondary">Helps organizers to know more about you.</Text>
+                  <Text variant="secondary">Helps organizers to know more about you.</Text>
                 </div>
 
                 <div className="grid grid-cols-1 gap-6">
