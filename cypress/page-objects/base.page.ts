@@ -1,18 +1,26 @@
 class BasePage {
-  openUserMenu() {
-    return new UserMenu().open();
+  userMenu() {
+    return new UserMenu();
   }
 
-  openNotifications() {
-    return new NotificationsMenu().open();
+  notificationsMenu() {
+    return new NotificationsMenu();
   }
 }
 
 class UserMenu {
+  menu() {
+    return cy.findByRole('button', { name: /^Open user menu/i });
+  }
+
   open() {
-    cy.clickOn('Open user menu');
+    this.menu().click();
     cy.assertText('Signed in as');
     return this;
+  }
+
+  isOpen(email: string) {
+    cy.assertText('Signed in as');
   }
 
   searchEvents() {
