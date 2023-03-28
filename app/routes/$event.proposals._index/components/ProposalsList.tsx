@@ -22,13 +22,7 @@ export function ProposalsList({ proposals, cfpState }: Props) {
   }
 
   if (proposals.length === 0) {
-    return (
-      <EmptyState
-        icon={InboxIcon}
-        label="No submitted proposals yet!"
-        description="Get started by submitting your first proposal."
-      />
-    );
+    return <EmptyState icon={InboxIcon} label="No submitted proposals yet!" />;
   }
 
   return (

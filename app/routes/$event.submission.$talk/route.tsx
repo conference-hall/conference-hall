@@ -9,6 +9,7 @@ import { Container } from '~/design-system/Container';
 import { useEvent } from '~/routes/$event/route';
 import { isTalkAlreadySubmitted } from './server/is-talk-already-submitted.server';
 import { SubmissionSteps } from './components/SubmissionSteps';
+import { Card } from '~/design-system/Card';
 
 export type SubmitSteps = Array<{
   key: string;
@@ -77,13 +78,10 @@ export default function EventSubmitRoute() {
 
   return (
     <Container className="md:my-8">
-      <section aria-labelledby="talk-submission" className="bg-white sm:rounded-lg md:border md:border-gray-200">
-        <h2 className="sr-only" id="talk-submission">
-          Talk submission
-        </h2>
+      <Card as="section" rounded="2xl">
         <SubmissionSteps steps={steps} currentStep={currentStep} />
         <Outlet context={event} />
-      </section>
+      </Card>
     </Container>
   );
 }

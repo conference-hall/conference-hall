@@ -20,7 +20,7 @@ export function EventHeader({ name, type, bannerUrl, address, conferenceStart, c
         <div className="flex items-center gap-4">
           <Avatar photoURL={bannerUrl} name={name} size="l" square />
           <div className="flex-shrink-0">
-            <H1 variant="light" size="2xl" mb={0}>
+            <H1 variant="light" mb={0}>
               {name}
             </H1>
             <Text variant="secondary-light" size="s" heading>

@@ -6,7 +6,7 @@ import { Button } from './Buttons';
 export const Documentation = () => (
   <>
     <StoryBlock title="Default">
-      <EmptyState label="It's empty!" description="You can say why?" icon={FireIcon}>
+      <EmptyState label="It's empty!" icon={FireIcon}>
         <Button size="s">Create</Button>
       </EmptyState>
     </StoryBlock>

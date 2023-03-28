@@ -7,7 +7,7 @@ import { InviteCoSpeakerButton, CoSpeakersList } from '../../shared-components/p
 import { useSubmissionStep } from '../../shared-components/useSubmissionStep';
 import { MarkdownTextArea } from '../../design-system/forms/MarkdownTextArea';
 import { ExternalLink } from '../../design-system/Links';
-import { H2, Text } from '../../design-system/Typography';
+import { H2, Subtitle, Text } from '../../design-system/Typography';
 import { sessionRequired } from '../../libs/auth/auth.server';
 import { mapErrorToResponse } from '../../libs/errors';
 import { getEvent } from '../../shared-server/events/get-event.server';
@@ -80,10 +80,10 @@ export default function SubmissionSpeakerRoute() {
       <div className="py-6 sm:px-8 sm:py-10">
         <Form id="speaker-form" method="post">
           <div>
-            <H2>Speaker details</H2>
-            <Text variant="secondary">
+            <H2 mb={1}>Speaker details</H2>
+            <Subtitle>
               Give more information about you, these information will be visible by organizers when you submit a talk.
-            </Text>
+            </Subtitle>
           </div>
           <MarkdownTextArea
             name="bio"

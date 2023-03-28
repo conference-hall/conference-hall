@@ -34,7 +34,7 @@ export default function IndexRoute() {
       <Navbar user={user} notifications={notifications} />
       <div className="bg-gray-800 shadow">
         <Container className="pb-8 sm:pt-10 sm:pb-16">
-          <H1 variant="light" align="center">
+          <H1 variant="light" align="center" size="4xl">
             Conference Hall
           </H1>
           <Text size="l" heading variant="light" align="center">
@@ -43,17 +43,14 @@ export default function IndexRoute() {
           <SearchEventsInput filters={filters} />
         </Container>
       </div>
+
       <Container className="pt-8 sm:pt-16">
         <div className="mb-10 flex items-center justify-between">
           <H2 mb={0}>Incoming call for papers</H2>
           <SearchEventsFilters filters={filters} />
         </div>
         {results?.length === 0 ? (
-          <EmptyState
-            icon={FaceFrownIcon}
-            label="No results found!"
-            description="Adjust the filters to find your results."
-          />
+          <EmptyState icon={FaceFrownIcon} label="No results found!" />
         ) : (
           <EventsList events={results} forTalkId={searchParams.get('talkId')} />
         )}

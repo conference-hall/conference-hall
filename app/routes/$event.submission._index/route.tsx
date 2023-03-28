@@ -5,7 +5,7 @@ import { useCatch, useLoaderData } from '@remix-run/react';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { mapErrorToResponse } from '~/libs/errors';
 import { Container } from '~/design-system/Container';
-import { H2, Text } from '~/design-system/Typography';
+import { H2, Subtitle, Text } from '~/design-system/Typography';
 import { AlertInfo } from '~/design-system/Alerts';
 import { ButtonLink } from '~/design-system/Buttons';
 import { MaxProposalsReached } from './components/MaxProposalsReached';
@@ -41,12 +41,12 @@ export default function EventSubmitRoute() {
 
   return (
     <Container className="my-4 sm:my-8">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <H2>Proposal selection</H2>
-          <Text variant="secondary">Select or create a new proposal to submit.</Text>
+          <H2 mb={1}>Proposal selection</H2>
+          <Subtitle>Select or create a new proposal to submit.</Subtitle>
         </div>
-        {data?.talks.length !== 0 && <ButtonLink to="new">Create a new proposal</ButtonLink>}
+        <ButtonLink to="new">Create a new proposal</ButtonLink>
       </div>
 
       {Boolean(max) && (

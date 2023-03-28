@@ -23,13 +23,7 @@ type Props = {
 
 export function SpeakerTalksList({ talks }: Props) {
   if (talks.length === 0) {
-    return (
-      <EmptyState
-        icon={InboxIcon}
-        label="No talk abstracts yet!"
-        description="Get started by creating your first talk abstract."
-      />
-    );
+    return <EmptyState icon={InboxIcon} label="No talk abstracts yet!" />;
   }
 
   return (

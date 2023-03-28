@@ -3,6 +3,7 @@ import c from 'classnames';
 
 const SIZES = {
   '4xl': 'text-4xl',
+  '3xl': 'text-3xl',
   '2xl': 'text-2xl',
   xl: 'text-xl',
   l: 'text-lg',
@@ -19,7 +20,7 @@ const ALIGNMENTS = {
 
 const VARIANTS = {
   primary: 'text-gray-900',
-  secondary: 'text-gray-500',
+  secondary: 'text-gray-600',
   link: 'text-indigo-600',
   warning: 'text-yellow-700',
   error: 'text-red-600',
@@ -89,7 +90,7 @@ function Typography({
 }
 
 export function H1(props: TypographyProps) {
-  return <Typography as="h1" size="4xl" mb={4} heading strong {...props} />;
+  return <Typography as="h1" size="3xl" mb={4} heading strong {...props} />;
 }
 
 export function H2(props: TypographyProps) {
