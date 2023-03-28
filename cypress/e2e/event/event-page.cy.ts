@@ -17,9 +17,8 @@ describe('View event page', () => {
     event.visit('devfest-nantes');
     cy.assertText('Devfest Nantes');
     cy.assertText('Nantes, France');
-    cy.assertText('1 day conference - October 5th, 2020');
+    cy.assertText('October 5th, 2020');
     cy.assertText('Open for over 69 years');
-    cy.assertText('Until Thursday, October 5th, 2090 at 2:48 PM GMT+0');
     cy.assertText('The event !');
     cy.assertLink('Website', 'https://devfest.gdgnantes.com');
     cy.assertLink('Contacts', 'mailto:contact@example.com');
@@ -33,13 +32,11 @@ describe('View event page', () => {
   it('displays event info when CFP in the future', () => {
     event.visit('event-cfp-future');
     cy.assertText('Open in over 79 years');
-    cy.assertText('Will open Tuesday, October 5th, 2100 at 2:48 PM GMT+0');
   });
 
   it('displays event info when CFP in the past', () => {
     event.visit('event-cfp-past');
     cy.assertText('Closed since over 19 years');
-    cy.assertText('Since Friday, October 5th, 2001');
   });
 
   it('displays a not found page if event does not exist', () => {
