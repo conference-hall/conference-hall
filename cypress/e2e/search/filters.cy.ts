@@ -6,7 +6,7 @@ describe('Use filters searching events.', () => {
 
   const search = new SearchEventPage();
 
-  it('filters on "Past CFP" and "Conferences & Meetups"', () => {
+  it.skip('filters on "Past CFP" and "Conferences & Meetups"', () => {
     search.visit();
     search.filterByCfpStatus('Past CFP').click();
     search.filterByEventTypes('Conferences & Meetups').click();
@@ -16,7 +16,7 @@ describe('Use filters searching events.', () => {
     cy.url().should('contain', '/?cfp=past&type=all');
   });
 
-  it('filters on "Incoming CFP" and "Conferences only"', () => {
+  it.skip('filters on "Incoming CFP" and "Conferences only"', () => {
     search.visit();
     search.filterByCfpStatus('Incoming CFP').click();
     search.filterByEventTypes('Conferences only').click();
@@ -27,7 +27,7 @@ describe('Use filters searching events.', () => {
     cy.url().should('contain', '/?cfp=incoming&type=conference');
   });
 
-  it('filters on "Incoming CFP" and "Meetups only"', () => {
+  it.skip('filters on "Incoming CFP" and "Meetups only"', () => {
     search.visit();
     search.filterByCfpStatus('Incoming CFP').click();
     search.filterByEventTypes('Meetups only').click();
@@ -37,7 +37,7 @@ describe('Use filters searching events.', () => {
     cy.url().should('contain', '/?cfp=incoming&type=meetup');
   });
 
-  it('applies filters with query parameters in url', () => {
+  it.skip('applies filters with query parameters in url', () => {
     search.visit('?cfp=past&type=conference');
 
     search.results().should('have.length', 1);

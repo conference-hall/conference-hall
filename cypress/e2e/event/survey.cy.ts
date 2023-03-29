@@ -32,9 +32,8 @@ describe('Submit a talk to event', () => {
     survey.meal('Halal').click();
     survey.message().clear().type('World');
 
-    survey.form().submit();
+    survey.submit().click();
 
-    cy.assertText('Survey saved, thank you!');
     cy.assertRadioChecked('Female');
     cy.assertRadioChecked('XXL');
     cy.assertRadioChecked('No');

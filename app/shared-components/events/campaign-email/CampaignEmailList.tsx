@@ -50,9 +50,7 @@ export function CampaignEmailList({ type, proposals, total }: Props) {
             />
           )}
           <div className="flex items-baseline">
-            <Text className="font-medium">
-              {selection.length === 0 ? `${total} proposals` : `${selection.length} selected`}
-            </Text>
+            <Text>{selection.length === 0 ? `${total} proposals` : `${selection.length} selected`}</Text>
           </div>
         </div>
         <div className="flex flex-row items-center gap-2">
@@ -83,8 +81,8 @@ export function CampaignEmailList({ type, proposals, total }: Props) {
             )}
             <div className="mx-6 flex grow justify-between py-4">
               <div>
-                <Text className="truncate font-medium">{proposal.title}</Text>
-                <Text className="truncate font-normal text-gray-700" size="xs">
+                <Text truncate>{proposal.title}</Text>
+                <Text variant="secondary" size="xs">
                   by {proposal.speakers.join(', ')}
                 </Text>
               </div>

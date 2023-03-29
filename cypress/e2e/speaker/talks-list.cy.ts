@@ -49,6 +49,5 @@ describe('Speaker talks page', () => {
     cy.login('Bruce Wayne');
     talks.visit();
     cy.assertText('No talk abstracts yet!');
-    cy.assertText('Get started by creating your first talk abstract.');
   });
 });

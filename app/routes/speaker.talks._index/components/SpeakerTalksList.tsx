@@ -23,13 +23,7 @@ type Props = {
 
 export function SpeakerTalksList({ talks }: Props) {
   if (talks.length === 0) {
-    return (
-      <EmptyState
-        icon={InboxIcon}
-        label="No talk abstracts yet!"
-        description="Get started by creating your first talk abstract."
-      />
-    );
+    return <EmptyState icon={InboxIcon} label="No talk abstracts yet!" />;
   }
 
   return (
@@ -42,7 +36,7 @@ export function SpeakerTalksList({ talks }: Props) {
                 <p className="truncate text-base font-semibold text-indigo-600">{talk.title}</p>
                 {talk.archived && <Badge rounded={false}>Archived</Badge>}
               </div>
-              <AvatarGroup avatars={talk.speakers} displayNames className="mt-2" />
+              <AvatarGroup avatars={talk.speakers} displayNames />
             </div>
             <div>
               <IconLabel icon={CalendarIcon} className="text-sm text-gray-500" iconClassName="text-gray-400">

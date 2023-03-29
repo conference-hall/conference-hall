@@ -1,6 +1,5 @@
 import format from 'date-fns/format';
 import isSameDay from 'date-fns/isSameDay';
-import differenceInCalendarDays from 'date-fns/differenceInCalendarDays';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import type { CfpState, EventType } from '~/schemas/event';
 
@@ -48,23 +47,22 @@ export function formatConferenceDates(type: EventType, start?: string, end?: str
   const endDate = new Date(end);
 
   if (isSameDay(startDate, endDate)) {
-    return `1 day conference - ${format(startDate, 'PPP')}`;
+    return format(startDate, 'PPP');
   }
 
-  const numberOfDays = differenceInCalendarDays(endDate, startDate) + 1;
   const startFormatted = format(startDate, 'MMMM do');
   const endFormatted = format(endDate, 'PPP');
-  return `${numberOfDays} days conference · ${startFormatted} — ${endFormatted}`;
+  return `${startFormatted} to ${endFormatted}`;
 }
 
 export function formatCFPState(state: CfpState) {
   switch (state) {
     case 'CLOSED':
-      return 'Call for paper is not open yet';
+      return 'Not open yet';
     case 'OPENED':
-      return 'Call for paper is open';
+      return 'Open';
     case 'FINISHED':
-      return 'Call for paper is closed';
+      return 'Closed';
   }
 }
 
@@ -75,11 +73,11 @@ export function formatCFPElapsedTime(state: CfpState, start?: string | null, end
 
   switch (state) {
     case 'CLOSED':
-      return `Call for paper will be open in ${formatDistanceToNow(startDate)}`;
+      return `Open in ${formatDistanceToNow(startDate)}`;
     case 'OPENED':
-      return `Call for paper is open for ${formatDistanceToNow(endDate)}`;
+      return `Open for ${formatDistanceToNow(endDate)}`;
     case 'FINISHED':
-      return `Call for paper closed since ${formatDistanceToNow(endDate)}`;
+      return `Closed since ${formatDistanceToNow(endDate)}`;
   }
 }
 

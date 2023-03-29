@@ -34,15 +34,17 @@ export default function OrganizationEventRoute() {
   const { organization } = useOutletContext<OrganizationContext>();
   return (
     <>
-      <Container as="header" className="my-4 flex flex-col sm:flex-row sm:justify-between">
-        <OrganizationBreadcrumb title="Event page" organization={organization} event={event} />
-        <CfpElapsedTime
-          cfpState={event.cfpState}
-          cfpStart={event.cfpStart}
-          cfpEnd={event.cfpEnd}
-          className="hidden sm:flex"
-        />
-      </Container>
+      <header className="bg-gray-800">
+        <Container className="flex flex-col sm:flex-row sm:justify-between">
+          <OrganizationBreadcrumb title="Event page" organization={organization} event={event} />
+          <CfpElapsedTime
+            cfpState={event.cfpState}
+            cfpStart={event.cfpStart}
+            cfpEnd={event.cfpEnd}
+            className="hidden sm:flex"
+          />
+        </Container>
+      </header>
       <EventTabs orgaSlug={organization.slug} eventSlug={event.slug} role={organization.role} />
       <Outlet context={{ event }} />
     </>

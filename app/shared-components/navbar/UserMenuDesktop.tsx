@@ -5,7 +5,6 @@ import {
   FireIcon,
   ArrowRightOnRectangleIcon,
   MicrophoneIcon,
-  MagnifyingGlassIcon,
   BuildingOfficeIcon,
   UserCircleIcon,
 } from '@heroicons/react/20/solid';
@@ -13,7 +12,7 @@ import { getAuth } from 'firebase/auth';
 import { Avatar } from '~/design-system/Avatar';
 import { MenuTransition } from '~/design-system/Transitions';
 
-type Props = { email?: string | null; picture?: string | null };
+type Props = { name: string | null; email?: string | null; picture?: string | null };
 
 type MenuItemProps = { to: string; label: string; icon: React.ComponentType<{ className?: string }> };
 
@@ -35,13 +34,13 @@ function MenuItem({ to, icon: Icon, label }: MenuItemProps) {
   );
 }
 
-export function UserMenu({ email, picture }: Props) {
+export function UserMenuDesktop({ name, email, picture }: Props) {
   return (
     <Menu as="div" className="relative z-30 ml-3">
       <div>
-        <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+        <Menu.Button className="flex rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
           <span className="sr-only">Open user menu</span>
-          <Avatar photoURL={picture} />
+          <Avatar photoURL={picture} name={name} size="xs" />
         </Menu.Button>
       </div>
       <MenuTransition>
@@ -49,9 +48,6 @@ export function UserMenu({ email, picture }: Props) {
           <div className="px-4 py-3">
             <p className="text-sm">Signed in as</p>
             <p className="truncate text-sm font-medium text-gray-900">{email}</p>
-          </div>
-          <div className="py-1">
-            <MenuItem to="/" label="Search events" icon={MagnifyingGlassIcon} />
           </div>
           <div className="py-1">
             <MenuItem to="/speaker" label="Activity" icon={FireIcon} />

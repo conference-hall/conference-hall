@@ -27,11 +27,11 @@ export default function OrganizerProposalContentRoute() {
             <IconLabel icon={LanguageIcon}>{proposal.languages.map(getLanguage).join(', ')}</IconLabel>
           )}
         </div>
-        <Text className="mt-8">{proposal.abstract}</Text>
+        <Text>{proposal.abstract}</Text>
       </div>
       {proposal.formats.length > 0 && (
         <div>
-          <Text className="text-sm font-semibold">Formats</Text>
+          <Text size="s">Formats</Text>
           <div className="mt-2 flex flex-wrap gap-2">
             {proposal.formats.map(({ id, name }) => (
               <Badge key={id}>{name}</Badge>
@@ -41,7 +41,7 @@ export default function OrganizerProposalContentRoute() {
       )}
       {proposal.categories.length > 0 && (
         <div>
-          <Text className="text-sm font-semibold">Categories</Text>
+          <Text size="s">Categories</Text>
           <div className="mt-2 flex flex-wrap gap-2">
             {proposal.categories.map(({ id, name }) => (
               <Badge key={id}>{name}</Badge>
@@ -51,14 +51,14 @@ export default function OrganizerProposalContentRoute() {
       )}
       {proposal.references && (
         <div>
-          <Text className="text-sm font-semibold">References</Text>
-          <Text className="mt-2">{proposal.references}</Text>
+          <Text size="s">References</Text>
+          <Text>{proposal.references}</Text>
         </div>
       )}
       {proposal.comments && (
         <div>
-          <Text className="text-sm font-semibold">Message to organizers</Text>
-          <Text className="mt-2">{proposal.comments}</Text>
+          <Text size="s">Message to organizers</Text>
+          <Text>{proposal.comments}</Text>
         </div>
       )}
     </section>

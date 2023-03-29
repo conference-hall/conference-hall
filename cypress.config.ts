@@ -9,6 +9,8 @@ export default defineConfig({
   video: false,
   e2e: {
     baseUrl: APP_URL,
+    viewportWidth: 1440,
+    viewportHeight: 800,
     scrollBehavior: 'center',
     setupNodeEvents(on, config) {
       // setup custom task

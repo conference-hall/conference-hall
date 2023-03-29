@@ -27,11 +27,7 @@ export function ProposalsList({ proposals, total }: Props) {
         <div className="flex flex-row items-center">
           <Checkbox ref={checkboxRef} checked={checked} onChange={toggleAll} className="mr-6" />
           <div className="flex items-baseline">
-            {selection.length === 0 ? (
-              <Text className="font-medium">{total} proposals</Text>
-            ) : (
-              <Text className="font-medium">{selection.length} selected</Text>
-            )}
+            {selection.length === 0 ? <Text>{total} proposals</Text> : <Text>{selection.length} selected</Text>}
           </div>
         </div>
         <div className="flex flex-row items-center gap-2">

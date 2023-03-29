@@ -22,13 +22,7 @@ export function ProposalsList({ proposals, cfpState }: Props) {
   }
 
   if (proposals.length === 0) {
-    return (
-      <EmptyState
-        icon={InboxIcon}
-        label="No submitted proposals yet!"
-        description="Get started by submitting your first proposal."
-      />
-    );
+    return <EmptyState icon={InboxIcon} label="No submitted proposals yet!" />;
   }
 
   return (
@@ -38,7 +32,7 @@ export function ProposalsList({ proposals, cfpState }: Props) {
           <div className="flex h-40 flex-col justify-between px-4 py-4 sm:px-6">
             <div>
               <p className="truncate text-base font-semibold text-indigo-600">{proposal.title}</p>
-              <AvatarGroup avatars={proposal.speakers} displayNames className="mt-2" />
+              <AvatarGroup avatars={proposal.speakers} displayNames />
             </div>
 
             <ProposalStatusLabel proposal={proposal} isCfpOpen={cfpState === 'OPENED'} />

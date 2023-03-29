@@ -49,11 +49,9 @@ export default function EventGeneralSettingsRoute() {
   return (
     <>
       <section>
-        <H2 className="border-b border-gray-200 pb-4">Customize event banner</H2>
+        <H2>Customize event banner</H2>
         <div className="mt-6 space-y-4">
-          <Text variant="secondary" className="mt-4">
-            Upload your event banner to give a fancy style to your event page.
-          </Text>
+          <Text variant="secondary">Upload your event banner to give a fancy style to your event page.</Text>
           <AlertInfo>
             JPEG format with optimal resolution of 1500x500.
             <br />

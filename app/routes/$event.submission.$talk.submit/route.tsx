@@ -56,7 +56,7 @@ export default function SubmissionSubmitRoute() {
     <Form method="post" className="py-6 sm:px-8 sm:py-10">
       <H1>{data.title}</H1>
 
-      <AvatarGroup avatars={data.speakers} displayNames className="mt-2" />
+      <AvatarGroup avatars={data.speakers} displayNames />
 
       <div className="mt-8 space-y-4">
         {data.formats.length > 0 && (

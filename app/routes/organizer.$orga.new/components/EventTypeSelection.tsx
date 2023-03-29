@@ -8,7 +8,7 @@ import { H1, H2, Text } from '~/design-system/Typography';
 export function EventTypeSelection() {
   return (
     <Container className="mt-16 flex flex-col items-center gap-16">
-      <H1 className="text-center">Select an event type</H1>
+      <H1>Select an event type</H1>
       <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
         <CardLink to={{ pathname: '.', search: '?type=CONFERENCE' }} className="flex gap-8 p-8 text-left">
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-indigo-100">

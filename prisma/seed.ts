@@ -129,6 +129,14 @@ async function seed() {
       return proposalFactory({ event: meetup, talk });
     })
   );
+
+  await Promise.all(
+    Array.from({ length: 26 }).map(async () => {
+      await eventFactory({
+        traits: ['meetup-cfp-open'],
+      });
+    })
+  );
 }
 
 seed();

@@ -6,50 +6,53 @@ import type { UserContext } from '~/root';
 import { mapErrorToResponse } from '~/libs/errors';
 import { EmptyState } from '~/design-system/EmptyState';
 import { Container } from '~/design-system/Container';
-import { H1 } from '~/design-system/Typography';
+import { H1, H2, Text } from '~/design-system/Typography';
 import { Pagination } from '~/design-system/Pagination';
 import { Navbar } from '~/shared-components/navbar/Navbar';
 import { parsePage } from '~/schemas/pagination';
 import { searchEvents } from './server/search.server';
-import { SearchEventsForm } from './components/SearchEventsForm';
-import { SearchEventsList } from './components/SearchEventsList';
+import { SearchEventsInput } from './components/SearchEventsInput';
+import { EventsList } from './components/EventsList';
 import { parseFilters } from './types/search';
+import { SearchEventsFilters } from './components/SearchEventsFilters';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const url = new URL(request.url);
   const filters = await parseFilters(url.searchParams);
   const page = await parsePage(url.searchParams);
-
-  try {
-    const results = await searchEvents(filters, page);
-    return json(results);
-  } catch (err) {
-    throw mapErrorToResponse(err);
-  }
+  const results = await searchEvents(filters, page).catch(mapErrorToResponse);
+  return json(results);
 };
 
 export default function IndexRoute() {
   const { user, notifications } = useOutletContext<UserContext>();
   const { filters, results, pagination } = useLoaderData<typeof loader>();
   const [searchParams] = useSearchParams();
-  const talkId = searchParams.get('talkId');
 
   return (
     <>
       <Navbar user={user} notifications={notifications} />
-      <Container className="py-0 sm:py-24">
-        <H1 className="hidden sm:block">Conferences and meetups.</H1>
-        <SearchEventsForm filters={filters} className="mt-4" />
-      </Container>
-      <Container className="pb-8">
+      <div className="bg-gray-800 shadow">
+        <Container className="pb-8 sm:pt-10 sm:pb-16">
+          <H1 variant="light" align="center" size="4xl">
+            Conference Hall
+          </H1>
+          <Text size="l" heading variant="light" align="center">
+            Call for papers for conferences and meetups.
+          </Text>
+          <SearchEventsInput filters={filters} />
+        </Container>
+      </div>
+
+      <Container className="pt-8 sm:pt-16">
+        <div className="mb-10 flex items-center justify-between">
+          <H2 mb={0}>Incoming call for papers</H2>
+          <SearchEventsFilters filters={filters} />
+        </div>
         {results?.length === 0 ? (
-          <EmptyState
-            icon={FaceFrownIcon}
-            label="No results found!"
-            description="Adjust the filters to find your results."
-          />
+          <EmptyState icon={FaceFrownIcon} label="No results found!" />
         ) : (
-          <SearchEventsList events={results} forTalkId={talkId} />
+          <EventsList events={results} forTalkId={searchParams.get('talkId')} />
         )}
         {pagination.total > 1 && <Pagination pathname="/" {...pagination} className="mt-8" />}
       </Container>

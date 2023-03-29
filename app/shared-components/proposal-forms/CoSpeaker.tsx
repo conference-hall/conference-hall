@@ -25,7 +25,6 @@ export function CoSpeakersList({ speakers, showRemoveAction = false, className }
         <div key={speaker.id} className="mt-4 flex items-center justify-between">
           <AvatarName
             photoURL={speaker.photoURL}
-            alt={speaker.name}
             name={speaker.name || 'Unknown'}
             subtitle={speaker.isOwner ? 'Owner' : 'Co-speaker'}
           />

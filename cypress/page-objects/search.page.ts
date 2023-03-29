@@ -7,7 +7,7 @@ class SearchEventPage extends BasePage {
   }
 
   isPageVisible() {
-    cy.findByRole('heading', { name: 'Conferences and meetups.' }).should('exist');
+    cy.findByRole('searchbox', { name: 'Search conferences and meetups.' }).should('exist');
   }
 
   search(text: string) {

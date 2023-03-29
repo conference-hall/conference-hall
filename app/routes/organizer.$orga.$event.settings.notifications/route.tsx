@@ -55,7 +55,7 @@ export default function EventNotificationsSettingsRoute() {
   return (
     <>
       <section>
-        <H2 className="border-b border-gray-200 pb-3">Email notifications</H2>
+        <H2>Email notifications</H2>
         <Form method="post" className="mt-6 space-y-4">
           <Input
             name="emailOrganizer"
@@ -68,7 +68,7 @@ export default function EventNotificationsSettingsRoute() {
         </Form>
       </section>
       <section>
-        <H2 className="border-b border-gray-200 pb-3">Notifications</H2>
+        <H2>Notifications</H2>
         <Form method="post" onChange={handleChange} className="mt-6 space-y-4">
           <input type="hidden" name="_action" value="save-notifications" />
           <Checkbox

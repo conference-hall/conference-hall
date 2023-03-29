@@ -45,7 +45,7 @@ export default function EventSurveySettingsRoute() {
   return (
     <>
       <section>
-        <H2 className="border-b border-gray-200 pb-3">Speaker survey</H2>
+        <H2>Speaker survey</H2>
         <Form method="post" className="mt-6 space-y-4">
           <Text variant="secondary">
             When enabled a short survey will be asked to speakers when they submit a proposal. It will provide some
@@ -61,10 +61,8 @@ export default function EventSurveySettingsRoute() {
         </Form>
       </section>
       <section>
-        <H2 className="border-b border-gray-200 pb-3">Questions</H2>
-        <Text variant="secondary" className="mt-6">
-          Select questions that you want to ask to speakers.
-        </Text>
+        <H2>Questions</H2>
+        <Text variant="secondary">Select questions that you want to ask to speakers.</Text>
         <Form method="post" className="mt-6 space-y-4">
           <input type="hidden" name="_action" value="save-questions" />
           {questions.map((question) => (

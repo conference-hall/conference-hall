@@ -22,7 +22,7 @@ export function TopPanel({ proposal, current, total, className }: Props) {
       </div>
       <div className="text-center">
         <H1>{proposal.title}</H1>
-        <Text size="xs" className="mt-2">
+        <Text size="xs">
           {current} / {total}
         </Text>
       </div>

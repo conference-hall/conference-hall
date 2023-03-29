@@ -12,13 +12,14 @@ export function Button({
   block,
   disabled,
   loading,
+  rounded,
   className,
   iconClassName,
   iconLeft: IconLeft,
   iconRight: IconRight,
   ...rest
 }: ButtonProps) {
-  const styles = getStyles({ variant, size, block, disabled, loading, className });
+  const styles = getStyles({ variant, size, block, disabled, loading, rounded, className });
   return (
     <button className={styles} disabled={disabled} aria-disabled={disabled} {...rest}>
       {IconLeft && <IconLeft className={getIconStyle({ size, dir: 'left', iconClassName })} aria-hidden="true" />}
@@ -37,13 +38,14 @@ export function ButtonLink({
   block,
   disabled,
   loading,
+  rounded,
   className,
   iconClassName,
   iconLeft: IconLeft,
   iconRight: IconRight,
   ...rest
 }: ButtonLinkProps) {
-  const styles = getStyles({ variant, size, block, disabled, loading, className });
+  const styles = getStyles({ variant, size, block, disabled, loading, rounded, className });
   return (
     <Link className={styles} {...rest}>
       {IconLeft && <IconLeft className={getIconStyle({ size, dir: 'left', iconClassName })} aria-hidden="true" />}
@@ -58,6 +60,7 @@ export type ButtonStylesProps = {
   size?: 's' | 'm' | 'l';
   block?: boolean;
   loading?: boolean;
+  rounded?: boolean;
   className?: string;
   iconClassName?: string;
   disabled?: boolean;
@@ -71,13 +74,14 @@ export const getStyles = ({
   block,
   disabled,
   loading,
+  rounded,
   className,
 }: ButtonStylesProps) =>
   cn(
     [
       'relative inline-flex justify-center items-center whitespace-nowrap',
       'w-full sm:w-auto',
-      'border rounded-md shadow-sm',
+      'border shadow-sm',
       'font-medium',
       'focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500',
     ],
@@ -89,6 +93,8 @@ export const getStyles = ({
       'px-4 py-2 text-sm': size === 'm',
       'px-6 py-3 text-base': size === 'l',
       'sm:w-full': block,
+      'rounded-md': !rounded,
+      'rounded-full': rounded,
     },
     className
   );

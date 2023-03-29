@@ -28,15 +28,16 @@ export default function EventRoute() {
 
   return (
     <>
-      <Navbar user={user} notifications={notifications} />
+      <Navbar user={user} notifications={notifications} withSearch />
       <EventHeader
         type={event.type}
         name={event.name}
+        bannerUrl={event.bannerUrl}
         address={event.address}
         conferenceStart={event.conferenceStart}
         conferenceEnd={event.conferenceEnd}
       />
-      <EventTabs slug={event.slug} type={event.type} cfpState={event.cfpState} surveyEnabled={event.surveyEnabled} />
+      <EventTabs slug={event.slug} type={event.type} surveyEnabled={event.surveyEnabled} />
       <Outlet context={event} />
     </>
   );

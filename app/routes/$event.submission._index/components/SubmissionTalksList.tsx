@@ -21,7 +21,7 @@ type Props = {
 export function SubmissionTalksList({ talks }: Props) {
   if (talks.length === 0) {
     return (
-      <EmptyState icon={InboxIcon} label="Nothing to submit!" description="Get started by creating a new proposal.">
+      <EmptyState icon={InboxIcon} label="Nothing to submit!">
         <ButtonLink to="new">Create a new proposal</ButtonLink>
       </EmptyState>
     );
@@ -34,7 +34,7 @@ export function SubmissionTalksList({ talks }: Props) {
           <div className="flex h-40 flex-col justify-between px-4 py-4 sm:px-6">
             <div>
               <p className="truncate text-base font-semibold text-indigo-600">{talk.title}</p>
-              <AvatarGroup avatars={talk.speakers} displayNames className="mt-2" />
+              <AvatarGroup avatars={talk.speakers} displayNames />
             </div>
             {talk.isDraft && <DraftLabel />}
           </div>

@@ -64,7 +64,7 @@ export default function AcceptedProposalEmails() {
       <H1>Acceptation emails campaign</H1>
       <CampaignEmailStats stats={stats} />
       <div>
-        <H2 className="mt-12">Select proposals to send acceptation emails</H2>
+        <H2>Select proposals to send acceptation emails</H2>
         <CampaignEmailFilters type={CampaignType.ACCEPTATION} />
         <CampaignEmailList type={CampaignType.ACCEPTATION} proposals={results} total={total} />
         <Pagination

@@ -38,12 +38,12 @@ export default function EventCfpSettingsRoute() {
   return (
     <>
       <section>
-        <H2 className="border-b border-gray-200 pb-3">Call for paper</H2>
+        <H2>Call for paper</H2>
         <Form method="post" className="mt-6 space-y-4">
           <input type="hidden" name="type" value={event.type} />
           {event.type === 'CONFERENCE' ? (
             <>
-              <Text variant="secondary" className="mt-6">
+              <Text variant="secondary">
                 Define the period during which the call for papers should be open. The opening and closing of the CFP
                 will be done automatically according to these dates and times.
               </Text>

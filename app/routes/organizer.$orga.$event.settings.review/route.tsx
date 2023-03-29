@@ -51,7 +51,7 @@ export default function EventReviewSettingsRoute() {
   return (
     <>
       <section>
-        <H2 className="border-b border-gray-200 pb-3">Proposals review</H2>
+        <H2>Proposals review</H2>
         <Form method="post" className="mt-6 space-y-4">
           <Text variant="secondary">
             Enable or disabled proposal review. When disabled, reviewers won't be able to review proposals anymore.
@@ -66,7 +66,7 @@ export default function EventReviewSettingsRoute() {
         </Form>
       </section>
       <section>
-        <H2 className="border-b border-gray-200 pb-3">Review settings</H2>
+        <H2>Review settings</H2>
         <Form method="post" onChange={handleChange} className="mt-6 space-y-4">
           <input type="hidden" name="_action" value="save-review-settings" />
           <Checkbox

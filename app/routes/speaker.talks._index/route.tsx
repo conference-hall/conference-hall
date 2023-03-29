@@ -37,9 +37,7 @@ export default function SpeakerTalksRoute() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
         <div className="hidden sm:block">
           <H2>Your talks</H2>
-          <Text variant="secondary" className="mt-1">
-            All your talk abstracts.
-          </Text>
+          <Text variant="secondary">All your talk abstracts.</Text>
         </div>
         <div className="flex flex-col gap-4 sm:mt-0 sm:flex-row">
           <Select

@@ -7,7 +7,7 @@ import { InviteCoSpeakerButton, CoSpeakersList } from '../../shared-components/p
 import { useSubmissionStep } from '../../shared-components/useSubmissionStep';
 import { MarkdownTextArea } from '../../design-system/forms/MarkdownTextArea';
 import { ExternalLink } from '../../design-system/Links';
-import { H2, Text } from '../../design-system/Typography';
+import { H2, Subtitle, Text } from '../../design-system/Typography';
 import { sessionRequired } from '../../libs/auth/auth.server';
 import { mapErrorToResponse } from '../../libs/errors';
 import { getEvent } from '../../shared-server/events/get-event.server';
@@ -80,10 +80,10 @@ export default function SubmissionSpeakerRoute() {
       <div className="py-6 sm:px-8 sm:py-10">
         <Form id="speaker-form" method="post">
           <div>
-            <H2>Speaker details</H2>
-            <Text variant="secondary" className="mt-1">
+            <H2 mb={1}>Speaker details</H2>
+            <Subtitle>
               Give more information about you, these information will be visible by organizers when you submit a talk.
-            </Text>
+            </Subtitle>
           </div>
           <MarkdownTextArea
             name="bio"
@@ -94,16 +94,14 @@ export default function SubmissionSpeakerRoute() {
             className="mt-6"
           />
           <input type="hidden" name="references" value={data.currentSpeaker.references || ''} />
-          <Text className="mt-2">
+          <Text>
             You can give more information about you from{' '}
             <ExternalLink href="/speaker/settings">the profile page.</ExternalLink>
           </Text>
         </Form>
         <div className="mt-12">
           <H2>Co-speakers</H2>
-          <Text variant="secondary" className="mt-1">
-            This information will be displayed publicly so be careful what you share.
-          </Text>
+          <Text variant="secondary">This information will be displayed publicly so be careful what you share.</Text>
           {data.speakers.length > 1 && (
             <CoSpeakersList speakers={data.speakers} showRemoveAction className="max-w-md py-4" />
           )}

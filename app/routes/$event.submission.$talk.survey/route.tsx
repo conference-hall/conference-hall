@@ -9,7 +9,7 @@ import { SurveySchema } from '~/schemas/survey';
 import { getAnswers } from '~/shared-server/survey/get-answers.server';
 import { SurveyForm } from '../../shared-components/proposal-forms/SurveyForm';
 import { useSubmissionStep } from '../../shared-components/useSubmissionStep';
-import { H2, Text } from '../../design-system/Typography';
+import { H2, Subtitle } from '../../design-system/Typography';
 import { sessionRequired } from '../../libs/auth/auth.server';
 import { mapErrorToResponse } from '../../libs/errors';
 import { getQuestions } from '~/shared-server/survey/get-questions.server';
@@ -54,10 +54,8 @@ export default function SubmissionSurveyRoute() {
   return (
     <Form method="post" className="pt-6 sm:px-8 sm:py-10">
       <div>
-        <H2>We have some questions for you.</H2>
-        <Text variant="secondary" className="mt-1">
-          This information will be displayed publicly so be careful what you share.
-        </Text>
+        <H2 mb={1}>We have some questions for you.</H2>
+        <Subtitle>This information are asked by the event organizers to give a better experience.</Subtitle>
       </div>
       <div className="mt-6">
         <SurveyForm questions={questions} initialValues={answers} />

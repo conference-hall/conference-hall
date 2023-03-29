@@ -28,22 +28,26 @@ export default function OrganizerIndexRoute() {
   const data = useLoaderData<typeof loader>();
 
   return (
-    <Container className="my-4 sm:my-8">
-      <div className="sm:flex sm:items-center sm:justify-between">
-        <H1>Select an organization</H1>
-        <ButtonLink to="/organizer/new">New organization</ButtonLink>
+    <>
+      <div className="bg-gray-800">
+        <Container className="pt-8 pb-10 sm:flex sm:items-center sm:justify-between">
+          <H1 variant="light" mb={0}>
+            Your organizations
+          </H1>
+          <ButtonLink to="/organizer/new">New organization</ButtonLink>
+        </Container>
       </div>
-      <ul aria-label="Organizations list" className="my-8 grid grid-cols-1 gap-6 sm:grid-cols-2">
-        {data.map((orga) => (
-          <CardLink as="li" key={orga.slug} to={orga.slug}>
-            <div className="flex h-40 flex-col justify-between px-4 py-4 sm:px-6">
-              <div className="flex items-center justify-between gap-1">
-                <Text as="p" size="l" variant="link" className="truncate font-medium">
+      <Container className="my-4 sm:my-8">
+        <ul aria-label="Organizations list" className="my-8 grid grid-cols-1 gap-6 sm:grid-cols-2">
+          {data.map((orga) => (
+            <CardLink as="li" key={orga.slug} to={orga.slug} rounded="lg" p={4}>
+              <div className="mb-8 flex items-center justify-between gap-1">
+                <Text size="xl" heading strong truncate>
                   {orga.name}
                 </Text>
                 <Badge>{orga.role.toLowerCase()}</Badge>
               </div>
-              <div className="space-y-2">
+              <div className="flex gap-4">
                 <IconLabel icon={MegaphoneIcon} truncate>
                   {`${orga.eventsCount} events`}
                 </IconLabel>
@@ -51,10 +55,10 @@ export default function OrganizerIndexRoute() {
                   {`${orga.membersCount} members`}
                 </IconLabel>
               </div>
-            </div>
-          </CardLink>
-        ))}
-      </ul>
-    </Container>
+            </CardLink>
+          ))}
+        </ul>
+      </Container>
+    </>
   );
 }

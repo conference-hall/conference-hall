@@ -144,7 +144,7 @@ function SpeakerInfos({ speaker, defaultOpen }: { speaker: Speaker; defaultOpen:
               )}
             </div>
             {speaker.bio && <Text>{speaker.bio}</Text>}
-            {speaker.references && <Text className="mt-1">{speaker.references}</Text>}
+            {speaker.references && <Text>{speaker.references}</Text>}
           </Disclosure.Panel>
         </>
       )}

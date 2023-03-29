@@ -18,7 +18,7 @@
     "format": "prettier -l --write .",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
     "tsc": "tsc -b && tsc -b cypress",
-    "ladle": "ladle serve",
+    "story": "ladle serve",
     "prepare": "husky install"
   },
   "lint-staged": {

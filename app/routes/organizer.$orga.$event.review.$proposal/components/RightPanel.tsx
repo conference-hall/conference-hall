@@ -60,10 +60,10 @@ function OrganizerComments({ uid, messages }: { uid: string; messages: Array<Mes
       <div className="flex flex-col-reverse gap-4 overflow-auto px-6 py-4">
         {messages.map((message) => (
           <div key={message.id} className="group flex items-end gap-4">
-            <Avatar photoURL={message.photoURL} />
+            <Avatar photoURL={message.photoURL} name={message.name} />
             <div className="min-w-0 grow">
               <div className="relative">
-                <Text size="xs" variant="secondary" className="truncate pl-4">
+                <Text size="xs" variant="secondary">
                   {message.name}
                 </Text>
                 {uid === message.userId && (
@@ -77,9 +77,9 @@ function OrganizerComments({ uid, messages }: { uid: string; messages: Array<Mes
                   />
                 )}
               </div>
-              <Text as="div" className="mt-1 break-all rounded-r-md rounded-tl-md bg-gray-100 px-4 py-4">
-                {message.message}
-              </Text>
+              <div className="mt-1 break-all rounded-r-md rounded-tl-md bg-gray-100 px-4 py-4">
+                <Text>{message.message}</Text>
+              </div>
             </div>
           </div>
         ))}
