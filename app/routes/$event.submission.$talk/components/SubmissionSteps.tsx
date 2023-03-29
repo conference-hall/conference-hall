@@ -87,7 +87,7 @@ function SubmissionStepsDesktop({ steps, currentStep }: Props) {
             {stepIdx !== steps.length - 1 ? (
               <>
                 {/* Arrow separator for lg screens and up */}
-                <div className="absolute top-0 right-0 hidden h-full w-5 md:block" aria-hidden="true">
+                <div className="absolute right-0 top-0 hidden h-full w-5 md:block" aria-hidden="true">
                   <svg
                     className="h-full w-full text-gray-200"
                     viewBox="0 0 22 80"

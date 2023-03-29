@@ -6,7 +6,7 @@ import { H1, Text } from '~/design-system/Typography';
 export function CreateEventForm({ type, errors }: { type: string; errors?: Record<string, string> }) {
   return (
     <>
-      <div className="mt-12 mb-12 space-y-6 text-center">
+      <div className="mb-12 mt-12 space-y-6 text-center">
         <H1>{`Create a new ${type?.toLowerCase()}`}</H1>
         <Text variant="secondary">
           Provide main information about your event and it's visibility in Conference Hall.

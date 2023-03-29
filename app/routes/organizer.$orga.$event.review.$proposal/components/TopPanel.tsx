@@ -10,7 +10,7 @@ export function TopPanel({ proposal, current, total, className }: Props) {
   const [searchParams] = useSearchParams();
 
   return (
-    <div className={c('flex items-center justify-between border-b border-gray-200 bg-gray-50 py-8 px-8', className)}>
+    <div className={c('flex items-center justify-between border-b border-gray-200 bg-gray-50 px-8 py-8', className)}>
       <div>
         <IconButtonLink
           aria-label="Back to list"

@@ -43,7 +43,7 @@ export function NotificationMenu({ notifications }: Props) {
           <span className="sr-only">View notifications</span>
           <BellIcon className="h-6 w-6" aria-hidden="true" />
           {hasNotifications && (
-            <span className="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-400 ring-1 ring-white" />
+            <span className="absolute right-0 top-0 block h-2 w-2 rounded-full bg-red-400 ring-1 ring-white" />
           )}
         </Menu.Button>
       </div>

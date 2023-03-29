@@ -33,7 +33,7 @@ export default function IndexRoute() {
     <>
       <Navbar user={user} notifications={notifications} />
       <div className="bg-gray-800 shadow">
-        <Container className="pb-8 sm:pt-10 sm:pb-16">
+        <Container className="pb-8 sm:pb-16 sm:pt-10">
           <H1 variant="light" align="center" size="4xl">
             Conference Hall
           </H1>

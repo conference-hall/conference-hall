@@ -33,7 +33,7 @@ export default function NewOrganizationRoute() {
 
   return (
     <Container className="max-w-5xl">
-      <div className="mt-12 mb-12 space-y-6 text-center">
+      <div className="mb-12 mt-12 space-y-6 text-center">
         <H1>Create a new organization</H1>
         <Text variant="secondary">
           Give a cool name to your organization. You will be able to invite members and create your first event.
