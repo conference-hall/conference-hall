@@ -46,6 +46,5 @@ describe('Event proposals list', () => {
     cy.login();
     proposals.visit('event-without-talks');
     cy.assertText('No submitted proposals yet!');
-    cy.assertText('Get started by submitting your first proposal.');
   });
 });

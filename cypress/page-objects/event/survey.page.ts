@@ -8,8 +8,8 @@ class EventSurveyPage {
     cy.findByRole('heading', { name: 'We have some questions for you.' }).should('exist');
   }
 
-  form() {
-    return cy.findByRole('form', { name: 'We have some questions for you.' });
+  submit() {
+    return cy.findByRole('button', { name: 'Save survey' });
   }
 
   gender(value: string) {
