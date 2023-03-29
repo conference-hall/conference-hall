@@ -30,7 +30,7 @@ export default function OrganizerIndexRoute() {
   return (
     <>
       <div className="bg-gray-800">
-        <Container className="pt-8 pb-10 sm:flex sm:items-center sm:justify-between">
+        <Container className="pb-10 pt-8 sm:flex sm:items-center sm:justify-between">
           <H1 variant="light" mb={0}>
             Your organizations
           </H1>

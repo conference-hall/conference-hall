@@ -29,7 +29,7 @@ export function EventHeader({ name, type, bannerUrl, address, conferenceStart, c
           </div>
         </div>
 
-        <div className="mt-6 mb-4 flex flex-col items-center gap-1 truncate sm:items-end">
+        <div className="mb-4 mt-6 flex flex-col items-center gap-1 truncate sm:items-end">
           <Text variant="light" size="base" heading strong truncate>
             <ClientOnly>{() => formatConferenceDates(type, conferenceStart, conferenceEnd)}</ClientOnly>
           </Text>

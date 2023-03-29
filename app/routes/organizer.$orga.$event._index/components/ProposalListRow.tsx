@@ -29,11 +29,11 @@ export function ProposaListRow({ proposal, isSelected, onSelect }: ProposalRowPr
           className="absolute left-2 top-1/2"
         />
       </td>
-      <td scope="row" className="w-full max-w-0 truncate py-6 px-4 sm:w-auto sm:max-w-none sm:p-0">
+      <td scope="row" className="w-full max-w-0 truncate px-4 py-6 sm:w-auto sm:max-w-none sm:p-0">
         <Link
           to={{ pathname: `review/${proposal.id}`, search: searchParams.toString() }}
           aria-label={`Open proposal "${proposal.title}"`}
-          className="block after:absolute after:top-0 after:bottom-0 after:left-16 after:right-0 after:z-10 after:block"
+          className="block after:absolute after:bottom-0 after:left-16 after:right-0 after:top-0 after:z-10 after:block"
         >
           <Text truncate>{proposal.title}</Text>
           <Text size="xs" variant="secondary">

@@ -47,11 +47,11 @@ export function Modal({ open, onClose, children, size = 'm', position = 'center'
             >
               <Dialog.Panel
                 className={c(
-                  'relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full  sm:p-6',
+                  'relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full  sm:p-6',
                   { 'sm:max-w-lg': size === 'm', 'sm:max-w-4xl': size === 'l' }
                 )}
               >
-                <div className="absolute top-0 right-0 hidden pt-4 pr-4 sm:block">
+                <div className="absolute right-0 top-0 hidden pr-4 pt-4 sm:block">
                   <button
                     type="button"
                     className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"

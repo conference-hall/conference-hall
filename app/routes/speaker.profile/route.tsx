@@ -76,13 +76,13 @@ export default function ProfileRoute() {
     <Container className="my-4 sm:my-8">
       <h1 className="sr-only">Profile</h1>
       <div className="lg:grid lg:grid-cols-12 lg:gap-x-5">
-        <NavMenu items={MENU_ITEMS} className="hidden py-6 px-2 sm:block sm:px-6 lg:col-span-3 lg:py-0 lg:px-0" />
+        <NavMenu items={MENU_ITEMS} className="hidden px-2 py-6 sm:block sm:px-6 lg:col-span-3 lg:px-0 lg:py-0" />
 
         <div className="space-y-6 sm:px-6 lg:col-span-9 lg:px-0">
           <Form method="post" aria-labelledby="personal-info-label">
             <div className="overflow-hidden border border-gray-200 sm:rounded-md">
               <a id="personal-info" href="#personal-info" className="scroll-mt-16" aria-hidden={true} />
-              <div className="space-y-6 bg-white py-6 px-4 sm:p-6">
+              <div className="space-y-6 bg-white px-4 py-6 sm:p-6">
                 <div>
                   <H2 id="personal-info-label">Personal information</H2>
                   <Text variant="secondary">Use a permanent address where you can receive email.</Text>
@@ -125,7 +125,7 @@ export default function ProfileRoute() {
           <Form method="post" aria-labelledby="speaker-details-label">
             <div className="overflow-hidden border border-gray-200 sm:rounded-md">
               <a id="speaker-details" href="#speaker-details" className="scroll-mt-16" />
-              <div className="space-y-6 bg-white py-6 px-4 sm:p-6">
+              <div className="space-y-6 bg-white px-4 py-6 sm:p-6">
                 <div>
                   <H2 id="speaker-details-label">Speaker details</H2>
                   <Text variant="secondary">
@@ -163,7 +163,7 @@ export default function ProfileRoute() {
           <Form method="post" aria-labelledby="additional-info-label">
             <div className="overflow-hidden border border-gray-200 sm:rounded-md">
               <a id="additional-info" href="#additional-info" className="scroll-mt-16" />
-              <div className="space-y-6 bg-white py-6 px-4 sm:p-6">
+              <div className="space-y-6 bg-white px-4 py-6 sm:p-6">
                 <div>
                   <H2 id="additional-info-label">Additional information</H2>
                   <Text variant="secondary">Helps organizers to know more about you.</Text>

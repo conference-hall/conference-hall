@@ -72,7 +72,7 @@ function OrganizerComments({ uid, messages }: { uid: string; messages: Array<Mes
                     icon={TrashIcon}
                     variant="secondary"
                     size="xs"
-                    className="absolute right-0 bottom-0 hidden group-hover:block"
+                    className="absolute bottom-0 right-0 hidden group-hover:block"
                     onClick={() => handleDelete(message.id)}
                   />
                 )}

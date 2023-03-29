@@ -31,7 +31,7 @@ export default function EventProposalEmails() {
     <Container className="my-4 flex flex-col gap-8 sm:my-12">
       <h1 className="sr-only">Emails campaign</h1>
       <div className="sm:grid sm:grid-cols-12 sm:gap-x-12">
-        <NavMenu aria-label="Emails campaign menu" items={menus} className="py-6 px-2 sm:col-span-3 sm:py-0 sm:px-0" />
+        <NavMenu aria-label="Emails campaign menu" items={menus} className="px-2 py-6 sm:col-span-3 sm:px-0 sm:py-0" />
 
         <div className="sm:col-span-9 sm:px-0">
           <Outlet />

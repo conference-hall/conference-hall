@@ -45,7 +45,7 @@ export default function OrganizationSettingsRoute() {
     <Container className="my-4 sm:my-8">
       <Form method="post">
         <div className="overflow-hidden border border-gray-200 sm:rounded-md">
-          <div className="space-y-6 bg-white py-6 px-4 sm:p-6">
+          <div className="space-y-6 bg-white px-4 py-6 sm:p-6">
             <H2>Organization settings</H2>
             <OrganizationForm initialValues={organization} errors={errors} />
           </div>

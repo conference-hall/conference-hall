@@ -26,7 +26,7 @@ type MobileMenuProps = {
 export function MobileMenuPanel({ user, notifications }: MobileMenuProps) {
   return (
     <Disclosure.Panel className="lg:hidden">
-      <div className="border-b border-gray-700 pt-4 pb-3">
+      <div className="border-b border-gray-700 pb-3 pt-4">
         <div className="flex items-center px-5">
           <AvatarName name={user.name} photoURL={user.photoURL} subtitle={user.email} size="s" variant="secondary" />
           <div className="ml-auto flex-shrink-0">

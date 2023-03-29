@@ -5,7 +5,7 @@ import { useCatch, useLoaderData } from '@remix-run/react';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { mapErrorToResponse } from '~/libs/errors';
 import { Container } from '~/design-system/Container';
-import { H2, Subtitle, Text } from '~/design-system/Typography';
+import { H2, Subtitle } from '~/design-system/Typography';
 import { AlertInfo } from '~/design-system/Alerts';
 import { ButtonLink } from '~/design-system/Buttons';
 import { MaxProposalsReached } from './components/MaxProposalsReached';

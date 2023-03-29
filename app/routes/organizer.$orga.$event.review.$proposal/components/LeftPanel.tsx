@@ -86,7 +86,7 @@ function TotalRating({ rating }: { rating: Rating }) {
           </Disclosure.Button>
           <Disclosure.Panel
             aria-label="Organizer ratings details"
-            className="grow space-y-4 overflow-auto px-6 pt-4 pb-8"
+            className="grow space-y-4 overflow-auto px-6 pb-8 pt-4"
           >
             {rating.membersRatings.length === 0 && <Text>No rated yet.</Text>}
             {rating.membersRatings.map((member) => (
@@ -120,7 +120,7 @@ function SpeakerInfos({ speaker, defaultOpen }: { speaker: Speaker; defaultOpen:
               className={c('h-6 w-6 shrink-0 transition-transform', { 'rotate-0': !open, 'rotate-90': open })}
             />
           </Disclosure.Button>
-          <Disclosure.Panel aria-label={`Speaker ${speaker.name} details`} className="space-y-4 px-6 pt-4 pb-8">
+          <Disclosure.Panel aria-label={`Speaker ${speaker.name} details`} className="space-y-4 px-6 pb-8 pt-4">
             <div className="grid grid-cols-2 gap-4">
               {speaker.company && (
                 <IconLabel truncate icon={BuildingOffice2Icon}>

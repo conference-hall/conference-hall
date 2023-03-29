@@ -25,7 +25,7 @@ export function GlobalLoading() {
       role="progressbar"
       aria-hidden={!active}
       aria-valuetext={active ? 'Loading' : undefined}
-      className="fixed inset-x-0 top-0 left-0 z-50 h-0.5 animate-pulse"
+      className="fixed inset-x-0 left-0 top-0 z-50 h-0.5 animate-pulse"
     >
       <div
         ref={ref}
