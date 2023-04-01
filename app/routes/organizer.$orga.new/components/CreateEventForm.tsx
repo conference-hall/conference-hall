@@ -13,7 +13,7 @@ export function CreateEventForm({ type, errors }: { type: string; errors?: Recor
         </Text>
       </div>
       <Form
-        method="post"
+        method="POST"
         className="space-y-8 border border-gray-200 bg-white p-8 shadow sm:overflow-hidden sm:rounded-md"
       >
         <EventForm errors={errors} />

@@ -78,7 +78,7 @@ export default function SubmissionSpeakerRoute() {
   return (
     <>
       <div className="py-6 sm:px-8 sm:py-10">
-        <Form id="speaker-form" method="post">
+        <Form id="speaker-form" method="POST">
           <div>
             <H2 mb={1}>Speaker details</H2>
             <Subtitle>

@@ -17,11 +17,11 @@ export function CampaignEmailFilters({ type }: Props) {
 
   function handleChange(value: string) {
     const params = Object.fromEntries(searchParams);
-    submit({ ...params, [emailStatus]: value }, { method: 'get', action: pathname });
+    submit({ ...params, [emailStatus]: value }, { method: 'GET', action: pathname });
   }
 
   return (
-    <Form action={pathname} method="get" className="mt-4 flex justify-between gap-2">
+    <Form action={pathname} method="GET" className="mt-4 flex justify-between gap-2">
       <Input
         name="query"
         type="search"

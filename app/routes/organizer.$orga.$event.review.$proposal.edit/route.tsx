@@ -46,7 +46,7 @@ export default function OrganizerProposalContentRoute() {
   const categoriesIds = proposalReview.proposal.categories.map(({ id }) => id);
 
   return (
-    <Form method="post" className="flex h-full flex-1 flex-col justify-between overflow-hidden">
+    <Form method="POST" className="flex h-full flex-1 flex-col justify-between overflow-hidden">
       <div className="flex flex-col gap-8 overflow-auto py-8 sm:px-8">
         <TalkForm initialValues={proposalReview.proposal} errors={errors} />
         {event.formats.length > 0 && <FormatsForm formats={event.formats} initialValues={formatsIds} />}

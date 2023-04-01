@@ -39,7 +39,7 @@ export default function EventCfpSettingsRoute() {
     <>
       <section>
         <H2>Call for paper</H2>
-        <Form method="post" className="mt-6 space-y-4">
+        <Form method="POST" className="mt-6 space-y-4">
           <input type="hidden" name="type" value={event.type} />
           {event.type === 'CONFERENCE' ? (
             <>

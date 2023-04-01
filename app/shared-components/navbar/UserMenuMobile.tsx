@@ -18,7 +18,7 @@ export function UserMenuMobile() {
       <MenuLink to="/speaker/talks">Your talk</MenuLink>
       <MenuLink to="/speaker/profile">Your profile</MenuLink>
       <MenuLink to="/organizer">Your organizations</MenuLink>
-      <Form action="/logout" method="post">
+      <Form action="/logout" method="POST">
         <button type="submit" onClick={() => getAuth().signOut()} className={`${STYLE} w-full text-left`}>
           Sign out
         </button>

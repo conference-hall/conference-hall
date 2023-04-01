@@ -60,7 +60,7 @@ export function UserMenuDesktop({ name, email, picture }: Props) {
           <div className="py-1">
             <Menu.Item>
               {({ active }) => (
-                <Form action="/logout" method="post">
+                <Form action="/logout" method="POST">
                   <button
                     type="submit"
                     onClick={() => getAuth().signOut()}

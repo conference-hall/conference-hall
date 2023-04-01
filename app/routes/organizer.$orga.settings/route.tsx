@@ -43,7 +43,7 @@ export default function OrganizationSettingsRoute() {
 
   return (
     <Container className="my-4 sm:my-8">
-      <Form method="post">
+      <Form method="POST">
         <div className="overflow-hidden border border-gray-200 sm:rounded-md">
           <div className="space-y-6 bg-white px-4 py-6 sm:p-6">
             <H2>Organization settings</H2>

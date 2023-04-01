@@ -41,7 +41,7 @@ export default function NewOrganizationRoute() {
       </div>
       <Form
         action="/organizer/new"
-        method="post"
+        method="POST"
         className="space-y-8 border border-gray-200 bg-white p-8 shadow sm:overflow-hidden sm:rounded-md"
       >
         <OrganizationForm errors={errors} />

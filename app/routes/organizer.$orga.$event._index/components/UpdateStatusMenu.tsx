@@ -20,7 +20,7 @@ export function UpdateStatusMenu({ selection, ...rest }: Props) {
       <MenuTransition>
         <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <Menu.Item>
-            <Form method="post">
+            <Form method="POST">
               <input type="hidden" name="status" value="ACCEPTED" />
               {selection.map((id) => (
                 <input key={id} type="hidden" name="selection" value={id} />
@@ -34,7 +34,7 @@ export function UpdateStatusMenu({ selection, ...rest }: Props) {
             </Form>
           </Menu.Item>
           <Menu.Item>
-            <Form method="post">
+            <Form method="POST">
               <input type="hidden" name="status" value="REJECTED" />
               {selection.map((id) => (
                 <input key={id} type="hidden" name="selection" value={id} />

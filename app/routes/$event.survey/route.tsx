@@ -60,7 +60,7 @@ export default function EventSurveyRoute() {
       </div>
 
       <Card rounded="2xl" p={8}>
-        <Form aria-labelledby="survey-form-label" method="post">
+        <Form aria-labelledby="survey-form-label" method="POST">
           <SurveyForm questions={questions} initialValues={answers} />
           <div className="mt-8 text-right">
             <Button type="submit" className="w-full sm:w-fit">

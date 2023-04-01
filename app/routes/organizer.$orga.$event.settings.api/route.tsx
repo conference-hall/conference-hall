@@ -46,7 +46,7 @@ export default function EventApiSettingsRoute() {
           Hall <ExternalLink href="https://contribute-conference-hall.netlify.com/">API documentation</ExternalLink>.
         </Text>
 
-        <Form method="post" className="mt-6 space-y-4">
+        <Form method="POST" className="mt-6 space-y-4">
           <Input name="apiKey" label="API key" disabled value={event.apiKey || ''} />
           {event.apiKey ? (
             <input type="hidden" name="_action" value="revoke-api-key" />

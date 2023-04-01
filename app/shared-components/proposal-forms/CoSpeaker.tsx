@@ -41,7 +41,7 @@ type RemoveCoSpeakerButtonProps = { speakerId: string; speakerName: string | nul
 
 function RemoveCoSpeakerButton({ speakerId, speakerName }: RemoveCoSpeakerButtonProps) {
   return (
-    <Form method="post">
+    <Form method="POST">
       <input type="hidden" name="_action" value="remove-speaker" />
       <input type="hidden" name="_speakerId" value={speakerId} />
       <button

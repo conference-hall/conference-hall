@@ -35,7 +35,7 @@ export default function RequestAccessRoute() {
           You can request a beta key by filling{' '}
           <ExternalLink href="https://forms.gle/AnArRCSHibmG59zw7">this form.</ExternalLink>
         </Text>
-        <Form method="post" className="mt-4 space-y-4">
+        <Form method="POST" className="mt-4 space-y-4">
           <Input
             name="key"
             aria-label="Beta access key"

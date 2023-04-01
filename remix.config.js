@@ -3,13 +3,16 @@
  */
 module.exports = {
   appDirectory: 'app',
-  browserBuildDirectory: 'public/build',
   publicPath: '/build/',
-  serverBuildDirectory: 'build',
+  serverBuildPath: './build/index.js',
+  assetsBuildDirectory: './public/build',
   devServerPort: 8002,
   serverDependenciesToBundle: [/^marked.*/, '@sindresorhus/slugify', '@sindresorhus/transliterate'],
   future: {
     unstable_tailwind: true,
     v2_routeConvention: true,
+    v2_meta: true,
+    v2_normalizeFormMethod: true,
+    v2_errorBoundary: true,
   },
 };

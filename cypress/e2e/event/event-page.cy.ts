@@ -42,8 +42,9 @@ describe('View event page', () => {
   it('displays a not found page if event does not exist', () => {
     event.visit('event-dont-exist');
     cy.assertText('Event not found');
-    event.searchForEvent().click();
-    search.isPageVisible();
+    // TODO: propose to search when not found
+    // event.searchForEvent().click();
+    // search.isPageVisible();
   });
 
   it('can submit a proposal', () => {

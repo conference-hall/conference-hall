@@ -51,7 +51,7 @@ type SaveTrackFormModalProps = { type: TrackType; initialValues?: TrackData; isO
 function SaveTrackFormModal({ type, initialValues, isOpen, onClose }: SaveTrackFormModalProps) {
   return (
     <Modal open={isOpen} onClose={onClose}>
-      <Form method="post" onSubmit={onClose}>
+      <Form method="POST" onSubmit={onClose}>
         <Modal.Title
           title={type === 'formats' ? 'Format track' : 'Category track'}
           description="Provide a name and description."

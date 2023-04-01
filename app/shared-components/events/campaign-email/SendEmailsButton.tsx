@@ -66,7 +66,7 @@ function SendEmailsModal({ title, selection, isOpen, onClose, onSend }: SendEmai
   };
   return (
     <Modal open={isOpen} onClose={onClose}>
-      <Form method="post" onSubmit={handleSubmit}>
+      <Form method="POST" onSubmit={handleSubmit}>
         <Modal.Title title={title} icon={PaperAirplaneIcon} iconColor="info" />
         {selection.map((id) => (
           <input key={id} type="hidden" name="selection" value={id} />

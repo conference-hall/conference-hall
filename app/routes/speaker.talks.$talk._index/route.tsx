@@ -73,7 +73,7 @@ export default function SpeakerTalkRoute() {
           {!talk.archived && <TalkActionsMenu />}
           {!talk.archived && <ButtonLink to={`/?talkId=${talk.id}`}>Submit</ButtonLink>}
           {talk.archived && (
-            <Form method="post">
+            <Form method="POST">
               <input type="hidden" name="_action" value="restore-talk" />
               <Button type="submit" variant="secondary">
                 Restore

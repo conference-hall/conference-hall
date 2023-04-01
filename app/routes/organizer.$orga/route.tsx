@@ -3,8 +3,7 @@ import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Container } from '~/design-system/Container';
 import { sessionRequired } from '~/libs/auth/auth.server';
-import { Outlet, useCatch, useLoaderData, useMatches } from '@remix-run/react';
-import { ButtonLink } from '~/design-system/Buttons';
+import { Outlet, useLoaderData, useMatches } from '@remix-run/react';
 import { mapErrorToResponse } from '~/libs/errors';
 import OrganizationBreadcrumb from '~/shared-components/organizations/OrganizationBreadcrumb';
 import { getOrganization } from './server/get-organization.server';
@@ -45,18 +44,5 @@ export default function OrganizationRoute() {
       )}
       <Outlet context={{ organization }} />
     </>
-  );
-}
-
-export function CatchBoundary() {
-  const caught = useCatch();
-  return (
-    <Container className="mt-8 px-8 py-32 text-center">
-      <h1 className="text-8xl font-black text-indigo-400">{caught.status}</h1>
-      <p className="mt-10 text-4xl font-bold text-gray-600">{caught.data}</p>
-      <ButtonLink to="/organizer" variant="secondary" className="mt-16">
-        Your organizations
-      </ButtonLink>
-    </Container>
   );
 }

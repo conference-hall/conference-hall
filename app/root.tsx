@@ -1,8 +1,18 @@
 import type { ReactNode } from 'react';
-import type { LinksFunction, LoaderArgs, MetaFunction } from '@remix-run/node';
+import type { LinksFunction, LoaderArgs } from '@remix-run/node';
 import { config } from './libs/config';
 import { json } from '@remix-run/node';
-import { Meta, LiveReload, Outlet, Links, Scripts, useCatch, useLoaderData, ScrollRestoration } from '@remix-run/react';
+import {
+  Meta,
+  LiveReload,
+  Outlet,
+  Links,
+  Scripts,
+  useLoaderData,
+  ScrollRestoration,
+  useRouteError,
+  isRouteErrorResponse,
+} from '@remix-run/react';
 import { initializeFirebase } from './libs/auth/firebase';
 import { commitSession, getSession } from './libs/auth/auth.server';
 import { getUser } from './shared-server/users/get-user.server';
@@ -16,11 +26,9 @@ import { getToast } from './libs/toasts/toasts';
 import tailwind from './tailwind.css';
 import { listNotifications } from './shared-server/notifications/list-notifications.server';
 
-export const meta: MetaFunction = () => ({
-  charset: 'utf-8',
-  title: 'Conference Hall',
-  viewport: 'width=device-width,initial-scale=1',
-});
+export function meta() {
+  return [{ charset: 'utf-8' }, { title: 'Conference Hall' }, { viewport: 'width=device-width,initial-scale=1' }];
+}
 
 export const links: LinksFunction = () => {
   return [
@@ -97,22 +105,20 @@ function Document({ children, toast }: DocumentProps) {
   );
 }
 
-export function CatchBoundary() {
-  const caught = useCatch();
+export function ErrorBoundary() {
+  const error = useRouteError();
 
-  return (
-    <Document>
-      <Container className="my-4 sm:my-8">
-        <H1>
-          {caught.status} {caught.statusText}
-        </H1>
-        <Text>{caught.data}</Text>
-      </Container>
-    </Document>
-  );
-}
+  if (isRouteErrorResponse(error)) {
+    return (
+      <Document>
+        <Container className="my-4 sm:my-8">
+          <H1>{error.status}</H1>
+          <Text>{error.data}</Text>
+        </Container>
+      </Document>
+    );
+  }
 
-export function ErrorBoundary({ error }: { error: Error }) {
   if (process.env.NODE_ENV === 'development') {
     console.error(error);
   }
@@ -120,8 +126,7 @@ export function ErrorBoundary({ error }: { error: Error }) {
   return (
     <Document>
       <Container className="my-4 sm:my-8">
-        <H1>App Error</H1>
-        <Text>{error.message}</Text>
+        <H1>Something went wrong.</H1>
       </Container>
     </Document>
   );

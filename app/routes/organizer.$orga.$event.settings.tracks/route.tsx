@@ -68,7 +68,7 @@ export default function EventTracksSettingsRoute() {
   const handleUpdateSettings = (e: ChangeEvent<HTMLInputElement>) => {
     fetcher.submit(
       { _action: 'update-track-settings', [e.currentTarget.name]: String(e.currentTarget.checked) },
-      { method: 'post' }
+      { method: 'POST' }
     );
   };
 
@@ -131,7 +131,7 @@ function TrackList({ type, tracks }: TrackListProps) {
           </div>
           <div className="ml-4 flex flex-shrink-0 gap-2">
             <EditTrackButton type={type} initialValues={track} />
-            <Form method="post">
+            <Form method="POST">
               <input type="hidden" name="_action" value={`delete-${type}`} />
               <input type="hidden" name="trackId" value={track.id} />
               <IconButton icon={TrashIcon} size="xs" variant="secondary" aria-label={`Remove ${track.name}`} />
