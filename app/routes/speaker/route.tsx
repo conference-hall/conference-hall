@@ -2,7 +2,7 @@ import type { UserContext } from '~/root';
 import type { LoaderArgs } from '@remix-run/node';
 import type { getUser } from '~/shared-server/users/get-user.server';
 import { json } from '@remix-run/node';
-import { Outlet, useCatch, useOutletContext } from '@remix-run/react';
+import { Outlet, useOutletContext } from '@remix-run/react';
 import { SpeakerTabs } from '~/routes/speaker/components/SpeakerTabs';
 import { Avatar } from '~/design-system/Avatar';
 import { ButtonLink } from '~/design-system/Buttons';
@@ -45,15 +45,5 @@ export default function SpeakerRoute() {
       <SpeakerTabs hasOrganization={Boolean(user?.organizationsCount)} />
       {user && <Outlet context={{ user }} />}
     </>
-  );
-}
-
-export function CatchBoundary() {
-  const caught = useCatch();
-  return (
-    <Container className="mt-8 px-8 py-32 text-center">
-      <h1 className="text-8xl font-black text-indigo-400">{caught.status}</h1>
-      <p className="mt-10 text-4xl font-bold text-gray-600">{caught.data}</p>
-    </Container>
   );
 }

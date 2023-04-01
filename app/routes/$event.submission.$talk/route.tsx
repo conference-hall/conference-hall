@@ -1,5 +1,5 @@
 import invariant from 'tiny-invariant';
-import { Outlet, useCatch, useLoaderData, useMatches } from '@remix-run/react';
+import { Outlet, useLoaderData, useMatches } from '@remix-run/react';
 import type { LoaderFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { sessionRequired } from '~/libs/auth/auth.server';
@@ -82,16 +82,6 @@ export default function EventSubmitRoute() {
         <SubmissionSteps steps={steps} currentStep={currentStep} />
         <Outlet context={event} />
       </Card>
-    </Container>
-  );
-}
-
-export function CatchBoundary() {
-  const caught = useCatch();
-  return (
-    <Container className="my-8 px-8 py-32 text-center">
-      <h1 className="text-8xl font-black text-indigo-400">{caught.status}</h1>
-      <p className="mt-10 text-4xl font-bold text-gray-600">{caught.data}</p>
     </Container>
   );
 }
