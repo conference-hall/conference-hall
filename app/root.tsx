@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import type { LinksFunction, LoaderArgs, MetaFunction } from '@remix-run/node';
+import type { LinksFunction, LoaderArgs } from '@remix-run/node';
 import { config } from './libs/config';
 import { json } from '@remix-run/node';
 import { Meta, LiveReload, Outlet, Links, Scripts, useCatch, useLoaderData, ScrollRestoration } from '@remix-run/react';
@@ -16,11 +16,9 @@ import { getToast } from './libs/toasts/toasts';
 import tailwind from './tailwind.css';
 import { listNotifications } from './shared-server/notifications/list-notifications.server';
 
-export const meta: MetaFunction = () => ({
-  charset: 'utf-8',
-  title: 'Conference Hall',
-  viewport: 'width=device-width,initial-scale=1',
-});
+export function meta() {
+  return [{ charset: 'utf-8' }, { title: 'Conference Hall' }, { viewport: 'width=device-width,initial-scale=1' }];
+}
 
 export const links: LinksFunction = () => {
   return [
