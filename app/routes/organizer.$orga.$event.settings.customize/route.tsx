@@ -69,7 +69,7 @@ export default function EventGeneralSettingsRoute() {
             </ClientOnly>
           )}
           <div className="space-x-4">
-            <Form method="post" encType="multipart/form-data" onChange={handleSubmit}>
+            <Form method="POST" encType="multipart/form-data" onChange={handleSubmit}>
               <ButtonFileUpload name="bannerUrl" accept="image/jpeg" error={result?.error}>
                 Change banner
               </ButtonFileUpload>

@@ -41,7 +41,7 @@ type RemoveModalProps = {
 function RemoveRoleModal({ memberId, memberName, isOpen, onClose }: RemoveModalProps) {
   return (
     <Modal open={isOpen} onClose={onClose}>
-      <Form method="post" onSubmit={onClose}>
+      <Form method="POST" onSubmit={onClose}>
         <Modal.Title
           title={`Remove ${memberName} from the organization?`}
           description="The member will be removed from the organization and won't be able to access it anymore."
@@ -105,7 +105,7 @@ function ChangeRoleModal({ memberId, memberName, memberRole, isOpen, onClose }: 
 
   return (
     <Modal open={isOpen} onClose={onClose}>
-      <Form method="post" onSubmit={onClose}>
+      <Form method="POST" onSubmit={onClose}>
         <Modal.Title title={`Change the role of ${memberName}?`} icon={ShieldExclamationIcon} />
         <RadioGroup className="mt-4 sm:mt-8">
           {roles.map((role) => (

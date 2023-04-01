@@ -12,5 +12,6 @@ module.exports = {
     unstable_tailwind: true,
     v2_routeConvention: true,
     v2_meta: true,
+    v2_normalizeFormMethod: true,
   },
 };

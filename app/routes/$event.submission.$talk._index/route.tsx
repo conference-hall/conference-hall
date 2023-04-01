@@ -52,7 +52,7 @@ export default function SubmissionProposalRoute() {
   const errors = useActionData<typeof action>();
 
   return (
-    <Form method="post">
+    <Form method="POST">
       <div className="py-6 sm:px-8 sm:py-10">
         <div className="mb-6">
           <H2 mb={1}>Your proposal</H2>

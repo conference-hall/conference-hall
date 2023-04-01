@@ -23,7 +23,7 @@ export function useFirebaseSignIn(onSubmit: SubmitFunction): FirebaseSignReturn 
       .then(async (credentials) => {
         if (!credentials) return;
         const tokenId = await credentials.user.getIdToken();
-        onSubmit({ tokenId, redirectTo }, { method: 'post', replace: true });
+        onSubmit({ tokenId, redirectTo }, { method: 'POST', replace: true });
       })
       .catch((error) => {
         setSearchParams(new URLSearchParams({ redirectTo }));

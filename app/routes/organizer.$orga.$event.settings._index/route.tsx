@@ -50,7 +50,7 @@ export default function EventGeneralSettingsRoute() {
     <>
       <section>
         <H2>General</H2>
-        <Form method="post" className="mt-6 space-y-4">
+        <Form method="POST" className="mt-6 space-y-4">
           <input type="hidden" name="_action" value="general" />
           <EventForm initialValues={event} errors={errors} />
           <Button type="submit">Update event</Button>
@@ -61,7 +61,7 @@ export default function EventGeneralSettingsRoute() {
         <Text variant="secondary">
           Provide details about the event, like address, dates and description to generate the event page.
         </Text>
-        <Form method="post" className="mt-6 space-y-4">
+        <Form method="POST" className="mt-6 space-y-4">
           <input type="hidden" name="_action" value="details" />
           {event.type === 'CONFERENCE' && (
             <DateRangeInput

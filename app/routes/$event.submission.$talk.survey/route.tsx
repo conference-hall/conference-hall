@@ -52,7 +52,7 @@ export default function SubmissionSurveyRoute() {
   const { previousPath } = useSubmissionStep();
 
   return (
-    <Form method="post" className="pt-6 sm:px-8 sm:py-10">
+    <Form method="POST" className="pt-6 sm:px-8 sm:py-10">
       <div>
         <H2 mb={1}>We have some questions for you.</H2>
         <Subtitle>This information are asked by the event organizers to give a better experience.</Subtitle>

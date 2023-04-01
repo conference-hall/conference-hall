@@ -53,7 +53,7 @@ export default function SubmissionSubmitRoute() {
   const [acceptedCod, setAcceptCod] = useState(!event.codeOfConductUrl);
 
   return (
-    <Form method="post" className="py-6 sm:px-8 sm:py-10">
+    <Form method="POST" className="py-6 sm:px-8 sm:py-10">
       <H1>{data.title}</H1>
 
       <AvatarGroup avatars={data.speakers} displayNames />

@@ -106,11 +106,11 @@ function AcceptedPanel({ event, proposal }: Props) {
           </p>
         </div>
         <div className="mt-5 flex gap-4">
-          <fetcher.Form action={`/${event.name}/proposals/${proposal.id}/confirm`} method="post">
+          <fetcher.Form action={`/${event.name}/proposals/${proposal.id}/confirm`} method="POST">
             <input type="hidden" name="participation" value="CONFIRMED" />
             <Button type="submit">Confirm your participation</Button>
           </fetcher.Form>
-          <fetcher.Form action={`/${event.name}/proposals/${proposal.id}/confirm`} method="post">
+          <fetcher.Form action={`/${event.name}/proposals/${proposal.id}/confirm`} method="POST">
             <input type="hidden" name="participation" value="DECLINED" />
             <Button type="submit" variant="secondary">
               Decline

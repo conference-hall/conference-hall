@@ -42,7 +42,7 @@ export default function ProposalsFilters({ filters, formats, categories }: Props
 
   function handleChange(name: string, id: string) {
     const params = Object.fromEntries(searchParams);
-    submit({ ...params, [name]: id }, { method: 'get', action: location.pathname });
+    submit({ ...params, [name]: id }, { method: 'GET', action: location.pathname });
   }
 
   const debounceHandleChange = useDebouncedCallback(handleChange, 500);

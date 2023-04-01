@@ -29,7 +29,7 @@ type TalkDeleteModalProps = { isOpen: boolean; onClose: () => void };
 function TalkDeleteModal({ isOpen, onClose }: TalkDeleteModalProps) {
   return (
     <Modal open={isOpen} onClose={onClose}>
-      <Form method="post" onSubmit={onClose}>
+      <Form method="POST" onSubmit={onClose}>
         <Modal.Title
           title="Are you sure you want to delete your talk?"
           description="Be careful, it's a definitive action. You can't undo it."

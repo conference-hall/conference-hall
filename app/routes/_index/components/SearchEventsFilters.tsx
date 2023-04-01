@@ -10,7 +10,7 @@ export function SearchEventsFilters({ filters }: Props) {
   const talkId = searchParams.get('talkId');
 
   return (
-    <Form action="/" method="get" className="space-x-4">
+    <Form action="/" method="GET" className="space-x-4">
       {query && <input type="hidden" name="query" value={query} />}
       {cfp && <input type="hidden" name="cfp" value={cfp} />}
       {talkId && <input type="hidden" name="talkId" value={talkId} />}

@@ -65,7 +65,7 @@ export default function EditProposalRoute() {
         </div>
       </div>
 
-      <Form method="post" className="sm:mt-4 sm:rounded-lg sm:border sm:border-gray-200">
+      <Form method="POST" className="sm:mt-4 sm:rounded-lg sm:border sm:border-gray-200">
         <div className="py-8 sm:px-6">
           <TalkForm initialValues={proposal} errors={errors} />
 

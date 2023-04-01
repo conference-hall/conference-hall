@@ -57,7 +57,7 @@ export default function SubmissionTracksRoute() {
   const { previousPath } = useSubmissionStep();
 
   return (
-    <Form method="post">
+    <Form method="POST">
       <div className="space-y-12 py-6 sm:px-8 sm:py-10">
         {event.formats?.length > 0 ? <FormatsForm formats={event.formats} initialValues={proposal.formats} /> : null}
 

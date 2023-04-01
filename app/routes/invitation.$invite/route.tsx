@@ -65,7 +65,7 @@ export default function InvitationRoute() {
           <Text size="l">"{invitation.title}"</Text>
           <Text>Invitation sent by {invitation.invitedBy}</Text>
 
-          <Form method="post" className="mt-8 flex w-full flex-col justify-center sm:w-auto">
+          <Form method="POST" className="mt-8 flex w-full flex-col justify-center sm:w-auto">
             <input type="hidden" name="_type" value={invitation.type} />
             <Button type="submit">Accept invitation</Button>
           </Form>

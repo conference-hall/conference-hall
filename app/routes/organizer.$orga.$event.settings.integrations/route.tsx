@@ -43,7 +43,7 @@ export default function EventIntegrationsSettingsRoute() {
           Incoming Web Hook URL and choose the channel.
         </Text>
 
-        <Form method="post" className="mt-6 space-y-4">
+        <Form method="POST" className="mt-6 space-y-4">
           <Input
             name="slackWebhookUrl"
             label="Web hook URL"

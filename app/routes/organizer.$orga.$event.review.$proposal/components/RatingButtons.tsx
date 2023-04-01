@@ -56,7 +56,7 @@ export function RatingButtons({ userRating }: Props) {
       if (!option) return;
       fetcher.submit(
         { rating: option.value === null ? '' : String(option.value), feeling: option.feeling },
-        { action, method: 'post' }
+        { action, method: 'POST' }
       );
     },
     [fetcher, action]
