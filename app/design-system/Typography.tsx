@@ -39,7 +39,7 @@ const MARGINS = {
   16: 'mb-16',
 };
 
-type TypographyProps = {
+export type TypographyProps = {
   id?: string;
   as?: React.ElementType;
   variant?: keyof typeof VARIANTS;

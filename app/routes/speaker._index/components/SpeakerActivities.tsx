@@ -94,9 +94,7 @@ function TalkActivity({ talkId, talkTitle, date, noSubmission, showTimeline = fa
             </div>
             <p className="mt-0.5 text-sm text-gray-500">by Clark Kent</p>
             {noSubmission && (
-              <IconLabel icon={ExclamationCircleIcon} className="mt-2 text-sm text-yellow-600">
-                Not submitted yet. Search for great event.
-              </IconLabel>
+              <IconLabel icon={ExclamationCircleIcon}>Not submitted yet. Search for great event.</IconLabel>
             )}
           </div>
           <div className="flex gap-4 text-sm text-gray-700">

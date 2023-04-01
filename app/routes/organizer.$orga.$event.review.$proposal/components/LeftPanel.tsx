@@ -70,13 +70,13 @@ function TotalRating({ rating }: { rating: Rating }) {
             className="flex w-full items-center justify-between px-6 py-8 hover:bg-gray-50"
           >
             <div className="flex items-center justify-around gap-4 font-medium">
-              <IconLabel icon={StarIcon} srOnly={`Rating total ${rating.average} out of 5`}>
+              <IconLabel icon={StarIcon} alt={`Rating total ${rating.average} out of 5`}>
                 {rating.average ?? '-'}
               </IconLabel>
-              <IconLabel icon={HeartIcon} srOnly={`${rating.positives} loves ratings`}>
+              <IconLabel icon={HeartIcon} alt={`${rating.positives} loves ratings`}>
                 {rating.positives}
               </IconLabel>
-              <IconLabel icon={XCircleIcon} srOnly={`${rating.negatives} negatives ratings`}>
+              <IconLabel icon={XCircleIcon} alt={`${rating.negatives} negatives ratings`}>
                 {rating.negatives}
               </IconLabel>
             </div>
@@ -93,9 +93,7 @@ function TotalRating({ rating }: { rating: Rating }) {
               <div key={member.id} className="flex justify-between">
                 <AvatarName photoURL={member.photoURL} size="xs" name={member.name} />
                 <div className="flex items-center justify-around gap-4">
-                  <IconLabel icon={StarIcon} iconClassName="text-gray-400">
-                    {member.rating ?? '-'}
-                  </IconLabel>
+                  <IconLabel icon={StarIcon}>{member.rating ?? '-'}</IconLabel>
                 </div>
               </div>
             ))}

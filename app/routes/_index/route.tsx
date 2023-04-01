@@ -12,9 +12,9 @@ import { Navbar } from '~/shared-components/navbar/Navbar';
 import { parsePage } from '~/schemas/pagination';
 import { searchEvents } from './server/search.server';
 import { SearchEventsInput } from './components/SearchEventsInput';
-import { EventsList } from './components/EventsList';
 import { parseFilters } from './types/search';
 import { SearchEventsFilters } from './components/SearchEventsFilters';
+import { EventCard } from '~/shared-components/EventCard';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const url = new URL(request.url);
@@ -52,7 +52,11 @@ export default function IndexRoute() {
         {results?.length === 0 ? (
           <EmptyState icon={FaceFrownIcon} label="No results found!" />
         ) : (
-          <EventsList events={results} forTalkId={searchParams.get('talkId')} />
+          <ul aria-label="Search results" className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+            {results.map((event) => (
+              <EventCard key={event.slug} {...event} forTalkId={searchParams.get('talkId')} />
+            ))}
+          </ul>
         )}
         {pagination.total > 1 && <Pagination pathname="/" {...pagination} className="mt-8" />}
       </Container>

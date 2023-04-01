@@ -1,9 +1,7 @@
 import { InboxIcon } from '@heroicons/react/24/outline';
-import { AvatarGroup } from '~/design-system/Avatar';
 import { ButtonLink } from '~/design-system/Buttons';
-import { CardLink } from '~/design-system/Card';
 import { EmptyState } from '~/design-system/EmptyState';
-import { DraftLabel } from '../../$event.proposals._index/components/ProposalStatusLabel';
+import { TalkCard } from '~/shared-components/TalkCard';
 
 type Props = {
   talks: Array<{
@@ -28,17 +26,9 @@ export function SubmissionTalksList({ talks }: Props) {
   }
 
   return (
-    <ul aria-label="Talks list" className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2">
+    <ul aria-label="Talks list" className="grid grid-cols-1 gap-6 sm:grid-cols-2">
       {talks.map((talk) => (
-        <CardLink as="li" key={talk.id} to={talk.id}>
-          <div className="flex h-40 flex-col justify-between px-4 py-4 sm:px-6">
-            <div>
-              <p className="truncate text-base font-semibold text-indigo-600">{talk.title}</p>
-              <AvatarGroup avatars={talk.speakers} displayNames />
-            </div>
-            {talk.isDraft && <DraftLabel />}
-          </div>
-        </CardLink>
+        <TalkCard key={talk.id} {...talk} isCfpOpen />
       ))}
     </ul>
   );

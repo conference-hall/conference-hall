@@ -40,7 +40,7 @@ export function UserMenuDesktop({ name, email, picture }: Props) {
       <div>
         <Menu.Button className="flex rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
           <span className="sr-only">Open user menu</span>
-          <Avatar photoURL={picture} name={name} size="xs" />
+          <Avatar photoURL={picture} name={name} size="s" />
         </Menu.Button>
       </div>
       <MenuTransition>

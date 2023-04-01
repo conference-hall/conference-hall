@@ -50,15 +50,9 @@ export function ProposaListRow({ proposal, isSelected, onSelect }: ProposalRowPr
       </td>
       <td className="hidden w-0 px-3 py-6 lg:table-cell">
         <div className="flex items-center justify-around gap-4">
-          <IconLabel icon={XCircleIcon} iconClassName="text-gray-400">
-            {proposal.ratings.negatives}
-          </IconLabel>
-          <IconLabel icon={HeartIcon} iconClassName="text-gray-400">
-            {proposal.ratings.positives}
-          </IconLabel>
-          <IconLabel icon={StarIcon} iconClassName="text-gray-400">
-            {formatRating(proposal.ratings.you)}
-          </IconLabel>
+          <IconLabel icon={XCircleIcon}>{proposal.ratings.negatives}</IconLabel>
+          <IconLabel icon={HeartIcon}>{proposal.ratings.positives}</IconLabel>
+          <IconLabel icon={StarIcon}>{formatRating(proposal.ratings.you)}</IconLabel>
         </div>
       </td>
       <td className="w-0 px-3 py-6 pr-4 text-right sm:pr-6">

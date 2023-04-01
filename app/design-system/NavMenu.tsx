@@ -12,9 +12,7 @@ export function NavMenu({ items, className, ...rest }: Props) {
       <nav className="space-y-1" {...rest}>
         {items.map((item) => (
           <NavLink key={item.to} to={item.to} className={menuStyles} end>
-            <IconLabel icon={item.icon} iconClassName="text-gray-400 group-hover:text-gray-500">
-              {item.label}
-            </IconLabel>
+            <IconLabel icon={item.icon}>{item.label}</IconLabel>
           </NavLink>
         ))}
       </nav>
