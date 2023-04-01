@@ -1,6 +1,5 @@
 import EventPage from 'page-objects/event/event.page';
 import EventSubmissionPage from 'page-objects/event/submission.page';
-import SearchEventPage from 'page-objects/search.page';
 
 describe('View event page', () => {
   beforeEach(() => {
@@ -11,7 +10,6 @@ describe('View event page', () => {
 
   const event = new EventPage();
   const submission = new EventSubmissionPage();
-  const search = new SearchEventPage();
 
   it('displays event info when CFP open', () => {
     event.visit('devfest-nantes');

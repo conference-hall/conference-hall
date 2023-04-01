@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "npm run db:migrate:dev && run-p dev:*",
-    "dev:remix": "dotenv -e .env.dev -- remix dev",
+    "dev:remix": "dotenv -e .env.dev -- npx --quiet remix dev",
     "build": "remix build",
     "serve": "remix-serve build",
     "test": "run-s db:migrate:test test:unit",
