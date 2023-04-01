@@ -84,7 +84,7 @@ jobs:
           build: npx dotenv -e .env.test -- npm run build
           start: |
             npm run db:migrate:test
-            npx dotenv -e .env.test -- npm run serve
+            npx dotenv -e .env.test -- npm run serve:ci
           command-prefix: 'dotenv -e .env.test --'
           wait-on: 'http://localhost:3001'
 

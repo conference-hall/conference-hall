@@ -8,6 +8,7 @@
     "dev:remix": "dotenv -e .env.dev -- remix dev",
     "build": "remix build",
     "serve": "remix-serve build",
+    "serve:ci": "remix-serve build > /dev/null",
     "test": "run-s db:migrate:test test:unit",
     "test:unit": "dotenv -e .env.test -- vitest --config ./vitest.config.ts",
     "cypress": "dotenv -e .env.dev -- cypress open --e2e -b electron",
