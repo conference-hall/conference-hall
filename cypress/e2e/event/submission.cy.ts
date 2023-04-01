@@ -238,8 +238,7 @@ describe('Submit a talk to event', () => {
 
     it('cannot submit a talk when max proposal reached', () => {
       submission.visit('with-max-proposals');
-      cy.assertText('You can submit a maximum of');
-      cy.assertText('1 proposals.');
+      cy.assertText('You can submit a maximum of 1 proposals. (0 out of 1)');
 
       submission.talk('My existing talk').click();
       submission.isTalkStepVisible();
