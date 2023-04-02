@@ -16,7 +16,6 @@ import {
 import { initializeFirebase } from './libs/auth/firebase';
 import { commitSession, getSession } from './libs/auth/auth.server';
 import { getUser } from './shared-server/users/get-user.server';
-import { Footer } from './shared-components/Footer';
 import { H1, Text } from './design-system/Typography';
 import { Container } from './design-system/Container';
 import { GlobalLoading } from './shared-components/GlobalLoading';
@@ -95,7 +94,6 @@ function Document({ children, toast }: DocumentProps) {
       <body className="bg-gray-100 text-gray-900 antialiased">
         <GlobalLoading />
         {children}
-        <Footer />
         <Scripts />
         <ScrollRestoration />
         <LiveReload />

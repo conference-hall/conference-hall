@@ -14,6 +14,7 @@ import { sessionRequired } from '../../libs/auth/auth.server';
 import { mapErrorToResponse } from '../../libs/errors';
 import { getQuestions } from '~/shared-server/survey/get-questions.server';
 import { saveSurvey } from '~/shared-server/survey/save-survey.server';
+import { Card } from '~/design-system/Card';
 
 export const handle = { step: 'survey' };
 
@@ -52,20 +53,23 @@ export default function SubmissionSurveyRoute() {
   const { previousPath } = useSubmissionStep();
 
   return (
-    <Form method="POST" className="pt-6 sm:px-8 sm:py-10">
+    <>
       <div>
-        <H2 mb={1}>We have some questions for you.</H2>
+        <H2 mb={0}>We have some questions for you.</H2>
         <Subtitle>This information are asked by the event organizers to give a better experience.</Subtitle>
       </div>
-      <div className="mt-6">
-        <SurveyForm questions={questions} initialValues={answers} />
-      </div>
-      <div className="my-4 flex justify-between gap-4 sm:flex-row sm:justify-end sm:px-8 sm:pb-4">
-        <ButtonLink to={previousPath} variant="secondary">
-          Back
-        </ButtonLink>
-        <Button type="submit">Next</Button>
-      </div>
-    </Form>
+
+      <Card p={8} rounded="xl">
+        <Form method="POST">
+          <SurveyForm questions={questions} initialValues={answers} />
+          <div className="flex justify-between gap-4 sm:flex-row sm:justify-end">
+            <ButtonLink to={previousPath} variant="secondary">
+              Back
+            </ButtonLink>
+            <Button type="submit">Next</Button>
+          </div>
+        </Form>
+      </Card>
+    </>
   );
 }

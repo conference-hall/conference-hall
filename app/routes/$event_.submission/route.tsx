@@ -1,38 +1,30 @@
-import invariant from 'tiny-invariant';
 import { Outlet, useLoaderData, useMatches } from '@remix-run/react';
-import type { LoaderFunction } from '@remix-run/node';
+import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { sessionRequired } from '~/libs/auth/auth.server';
-import { getEvent } from '~/shared-server/events/get-event.server';
+import invariant from 'tiny-invariant';
 import { mapErrorToResponse } from '~/libs/errors';
-import { Container } from '~/design-system/Container';
-import { useEvent } from '~/routes/$event/route';
-import { isTalkAlreadySubmitted } from './server/is-talk-already-submitted.server';
+import { getEvent } from '~/shared-server/events/get-event.server';
 import { SubmissionSteps } from './components/SubmissionSteps';
-import { Card } from '~/design-system/Card';
-
-export type SubmitSteps = Array<{
-  key: string;
-  name: string;
-  path: string;
-  enabled: boolean;
-}>;
+import { Container } from '~/design-system/Container';
 
 export const handle = { step: 'root' };
 
-export const loader: LoaderFunction = async ({ request, params }) => {
-  const { uid } = await sessionRequired(request);
+export const loader = async ({ request, params }: LoaderArgs) => {
+  await sessionRequired(request);
   invariant(params.event, 'Invalid event slug');
-  invariant(params.talk, 'Invalid talk id');
 
   try {
     const event = await getEvent(params.event);
     if (!event.isCfpOpen) throw new Response('CFP is not opened!', { status: 403 });
 
-    const isAlreadySubmitted = await isTalkAlreadySubmitted(params.event, params.talk, uid);
-    if (isAlreadySubmitted) throw new Response('Talk proposal already submitted.', { status: 400 });
-
     const steps = [
+      {
+        key: 'selection',
+        name: 'Selection',
+        path: `/${params.event}/submission`,
+        enabled: true,
+      },
       {
         key: 'proposal',
         name: 'Proposal',
@@ -64,24 +56,28 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         enabled: true,
       },
     ];
-    return json<SubmitSteps>(steps.filter((step) => step.enabled));
+    return json({ event, steps });
   } catch (err) {
-    mapErrorToResponse(err);
+    throw mapErrorToResponse(err);
   }
 };
 
-export default function EventSubmitRoute() {
-  const event = useEvent();
-  const steps = useLoaderData<SubmitSteps>();
+export default function EventSubmissionRoute() {
+  const { event, steps } = useLoaderData<typeof loader>();
   const matches = useMatches();
   const currentStep = matches[matches.length - 1].handle?.step;
 
   return (
-    <Container className="md:my-8">
-      <Card as="section" rounded="2xl">
+    <div className="bg-gray-100">
+      <div className="sticky top-0 z-10 h-24 w-full">
         <SubmissionSteps steps={steps} currentStep={currentStep} />
-        <Outlet context={event} />
-      </Card>
-    </Container>
+      </div>
+
+      <div className="h-full bg-gray-100">
+        <Container className="space-y-8">
+          <Outlet context={event} />
+        </Container>
+      </div>
+    </div>
   );
 }

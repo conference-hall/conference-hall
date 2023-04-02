@@ -8,6 +8,7 @@ import { mapErrorToResponse } from '~/libs/errors';
 import { getEvent } from '~/shared-server/events/get-event.server';
 import { EventHeader } from './components/EventHeader';
 import { EventTabs } from './components/EventTabs';
+import { Footer } from '~/shared-components/Footer';
 
 export const loader = async ({ params }: LoaderArgs) => {
   invariant(params.event, 'Invalid event slug');
@@ -27,6 +28,7 @@ export default function EventRoute() {
   return (
     <>
       <Navbar user={user} notifications={notifications} withSearch />
+
       <EventHeader
         type={event.type}
         name={event.name}
@@ -37,6 +39,8 @@ export default function EventRoute() {
       />
       <EventTabs slug={event.slug} type={event.type} surveyEnabled={event.surveyEnabled} />
       <Outlet context={event} />
+
+      <Footer />
     </>
   );
 }

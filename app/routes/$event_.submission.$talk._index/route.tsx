@@ -11,6 +11,7 @@ import { ProposalCreateSchema } from '~/schemas/proposal';
 import { withZod } from '@remix-validated-form/with-zod';
 import { getTalk } from '~/shared-server/talks/get-talk.server';
 import { saveDraftProposal } from './server/save-draft-proposal.server';
+import { Card } from '~/design-system/Card';
 
 export const handle = { step: 'proposal' };
 
@@ -52,18 +53,21 @@ export default function SubmissionProposalRoute() {
   const errors = useActionData<typeof action>();
 
   return (
-    <Form method="POST">
-      <div className="py-6 sm:px-8 sm:py-10">
-        <div className="mb-6">
-          <H2 mb={1}>Your proposal</H2>
-          <Subtitle>This information will be displayed publicly so be careful what you share.</Subtitle>
-        </div>
-        <TalkForm initialValues={talk} errors={errors} />
+    <>
+      <div className="mb-6">
+        <H2 mb={0}>Your proposal</H2>
+        <Subtitle>This information will be displayed publicly so be careful what you share.</Subtitle>
       </div>
 
-      <div className="py-5 text-right sm:px-6">
-        <Button type="submit">Save as draft and continue</Button>
-      </div>
-    </Form>
+      <Card p={8} rounded="xl">
+        <Form method="POST">
+          <TalkForm initialValues={talk} errors={errors} />
+
+          <div className="py-5 text-right sm:px-6">
+            <Button type="submit">Save as draft and continue</Button>
+          </div>
+        </Form>
+      </Card>
+    </>
   );
 }

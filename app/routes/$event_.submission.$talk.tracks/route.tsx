@@ -14,6 +14,8 @@ import { TracksUpdateSchema } from './types/tracks';
 import { useSubmissionStep } from '~/shared-components/useSubmissionStep';
 import { FormatsForm } from '~/shared-components/proposal-forms/FormatsForm';
 import { getEvent } from '~/shared-server/events/get-event.server';
+import { Card } from '~/design-system/Card';
+import { H2, Subtitle } from '~/design-system/Typography';
 
 export const handle = { step: 'tracks' };
 
@@ -57,21 +59,33 @@ export default function SubmissionTracksRoute() {
   const { previousPath } = useSubmissionStep();
 
   return (
-    <Form method="POST">
-      <div className="space-y-12 py-6 sm:px-8 sm:py-10">
-        {event.formats?.length > 0 ? <FormatsForm formats={event.formats} initialValues={proposal.formats} /> : null}
-
-        {event.categories?.length > 0 ? (
-          <CategoriesForm categories={event.categories} initialValues={proposal.categories} />
-        ) : null}
+    <>
+      <div>
+        <H2 mb={0}>Proposal tracks</H2>
+        <Subtitle>
+          Give more information about you, these information will be visible by organizers when you submit a talk.
+        </Subtitle>
       </div>
+      <Card p={8} rounded="xl">
+        <Form method="POST">
+          <div className="space-y-12">
+            {event.formats?.length > 0 ? (
+              <FormatsForm formats={event.formats} initialValues={proposal.formats} />
+            ) : null}
 
-      <div className="my-4 flex justify-between gap-4 sm:flex-row sm:justify-end sm:px-8 sm:pb-4">
-        <ButtonLink to={previousPath} variant="secondary">
-          Back
-        </ButtonLink>
-        <Button type="submit">Next</Button>
-      </div>
-    </Form>
+            {event.categories?.length > 0 ? (
+              <CategoriesForm categories={event.categories} initialValues={proposal.categories} />
+            ) : null}
+          </div>
+
+          <div className="flex justify-between gap-4 sm:flex-row sm:justify-end">
+            <ButtonLink to={previousPath} variant="secondary">
+              Back
+            </ButtonLink>
+            <Button type="submit">Next</Button>
+          </div>
+        </Form>
+      </Card>
+    </>
   );
 }

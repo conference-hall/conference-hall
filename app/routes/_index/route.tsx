@@ -15,6 +15,7 @@ import { SearchEventsInput } from './components/SearchEventsInput';
 import { parseFilters } from './types/search';
 import { SearchEventsFilters } from './components/SearchEventsFilters';
 import { EventCard } from '~/shared-components/EventCard';
+import { Footer } from '~/shared-components/Footer';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const url = new URL(request.url);
@@ -32,6 +33,7 @@ export default function IndexRoute() {
   return (
     <>
       <Navbar user={user} notifications={notifications} />
+
       <div className="bg-gray-800 shadow">
         <Container className="pb-8 sm:pb-16 sm:pt-10">
           <H1 variant="light" align="center" size="4xl">
@@ -60,6 +62,8 @@ export default function IndexRoute() {
         )}
         {pagination.total > 1 && <Pagination pathname="/" {...pagination} className="mt-8" />}
       </Container>
+
+      <Footer />
     </>
   );
 }

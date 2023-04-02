@@ -49,7 +49,7 @@ function SubmissionStepsDesktop({ steps, currentStep }: Props) {
   const currentStepIdx = steps.findIndex((step) => step.key === currentStep);
 
   return (
-    <nav aria-label="Progress" className="hidden md:block">
+    <nav aria-label="Progress" className="hidden bg-white md:block">
       <ol className="divide-y divide-gray-200 border-b border-gray-200 md:flex md:divide-y-0">
         {steps.map((step, stepIdx) => (
           <li

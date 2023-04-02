@@ -17,6 +17,7 @@ import { withZod } from '@remix-validated-form/with-zod';
 import { removeCoSpeakerFromSubmission } from '~/shared-server/proposals/remove-co-speaker.server';
 import { getSubmittedProposal } from '../../shared-server/proposals/get-submitted-proposal.server';
 import { DetailsSchema } from '~/schemas/profile.schema';
+import { Card } from '~/design-system/Card';
 
 export const handle = { step: 'speakers' };
 
@@ -77,24 +78,23 @@ export default function SubmissionSpeakerRoute() {
 
   return (
     <>
-      <div className="py-6 sm:px-8 sm:py-10">
+      <div>
+        <H2 mb={0}>Speaker details</H2>
+        <Subtitle>
+          Give more information about you, these information will be visible by organizers when you submit a talk.
+        </Subtitle>
+      </div>
+      <Card p={8} rounded="xl">
         <Form id="speaker-form" method="POST">
-          <div>
-            <H2 mb={1}>Speaker details</H2>
-            <Subtitle>
-              Give more information about you, these information will be visible by organizers when you submit a talk.
-            </Subtitle>
-          </div>
           <MarkdownTextArea
             name="bio"
             label="Biography"
             rows={5}
             error={errors?.bio}
             defaultValue={data.currentSpeaker.bio || ''}
-            className="mt-6"
           />
           <input type="hidden" name="references" value={data.currentSpeaker.references || ''} />
-          <Text>
+          <Text size="s">
             You can give more information about you from{' '}
             <ExternalLink href="/speaker/settings">the profile page.</ExternalLink>
           </Text>
@@ -107,13 +107,13 @@ export default function SubmissionSpeakerRoute() {
           )}
           <InviteCoSpeakerButton to="PROPOSAL" id={data.proposalId} invitationLink={data.invitationLink} />
         </div>
-      </div>
-      <div className="my-4 flex justify-between gap-4 sm:flex-row sm:justify-end sm:px-8 sm:pb-4">
-        <ButtonLink to={previousPath} variant="secondary">
-          Back
-        </ButtonLink>
-        <Button form="speaker-form">Next</Button>
-      </div>
+        <div className="flex justify-between gap-4 sm:flex-row sm:justify-end">
+          <ButtonLink to={previousPath} variant="secondary">
+            Back
+          </ButtonLink>
+          <Button form="speaker-form">Next</Button>
+        </div>
+      </Card>
     </>
   );
 }

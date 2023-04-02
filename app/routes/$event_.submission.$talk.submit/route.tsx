@@ -4,7 +4,7 @@ import { Form, useLoaderData } from '@remix-run/react';
 import { Button } from '~/design-system/Buttons';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
 import { ExternalLink } from '../../design-system/Links';
-import { H1, Text } from '../../design-system/Typography';
+import { H2, Subtitle, Text } from '../../design-system/Typography';
 import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { sessionRequired } from '../../libs/auth/auth.server';
@@ -16,6 +16,7 @@ import { withZod } from '@remix-validated-form/with-zod';
 import { ProposalSubmissionSchema } from '~/schemas/proposal';
 import { useEvent } from '~/routes/$event/route';
 import { getSubmittedProposal } from '../../shared-server/proposals/get-submitted-proposal.server';
+import { Card } from '~/design-system/Card';
 
 export const handle = { step: 'submission' };
 
@@ -53,46 +54,56 @@ export default function SubmissionSubmitRoute() {
   const [acceptedCod, setAcceptCod] = useState(!event.codeOfConductUrl);
 
   return (
-    <Form method="POST" className="py-6 sm:px-8 sm:py-10">
-      <H1>{data.title}</H1>
-
-      <AvatarGroup avatars={data.speakers} displayNames />
-
-      <div className="mt-8 space-y-4">
-        {data.formats.length > 0 && (
-          <Text variant="secondary">
-            <b>Formats:</b> {data.formats.map((f) => f.name).join(', ')}
-          </Text>
-        )}
-        {data.categories.length > 0 && (
-          <Text variant="secondary">
-            <b>Categories:</b> {data.categories.map((c) => c.name).join(', ')}
-          </Text>
-        )}
+    <>
+      <div>
+        <H2 mb={0}>Finish your submission</H2>
+        <Subtitle>This information are asked by the event organizers to give a better experience.</Subtitle>
       </div>
 
-      <TextArea name="message" label="Message to organizers" className="mt-8 " rows={4} />
+      <Card p={8} rounded="xl">
+        <Form method="POST">
+          <div>
+            <H2>{data.title}</H2>
+            <AvatarGroup avatars={data.speakers} displayNames />
+          </div>
 
-      {event.codeOfConductUrl && (
-        <Checkbox
-          className="mt-8 font-medium"
-          id="cod-agreement"
-          name="cod-agreement"
-          value="agree"
-          onChange={() => setAcceptCod(!acceptedCod)}
-        >
-          Please agree with the{' '}
-          <ExternalLink href={event.codeOfConductUrl} className="inline-flex">
-            code of conduct
-          </ExternalLink>{' '}
-          of the event.
-        </Checkbox>
-      )}
-      <div className="mt-6">
-        <Button type="submit" disabled={!acceptedCod}>
-          Submit proposal
-        </Button>
-      </div>
-    </Form>
+          <div className="mt-8 space-y-4">
+            {data.formats.length > 0 && (
+              <Text variant="secondary">
+                <b>Formats:</b> {data.formats.map((f) => f.name).join(', ')}
+              </Text>
+            )}
+            {data.categories.length > 0 && (
+              <Text variant="secondary">
+                <b>Categories:</b> {data.categories.map((c) => c.name).join(', ')}
+              </Text>
+            )}
+          </div>
+
+          <TextArea name="message" label="Message to organizers" className="mt-8 " rows={4} />
+
+          {event.codeOfConductUrl && (
+            <Checkbox
+              className="mt-8 font-medium"
+              id="cod-agreement"
+              name="cod-agreement"
+              value="agree"
+              onChange={() => setAcceptCod(!acceptedCod)}
+            >
+              Please agree with the{' '}
+              <ExternalLink href={event.codeOfConductUrl} className="inline-flex">
+                code of conduct
+              </ExternalLink>{' '}
+              of the event.
+            </Checkbox>
+          )}
+          <div className="mt-6">
+            <Button type="submit" disabled={!acceptedCod}>
+              Submit proposal
+            </Button>
+          </div>
+        </Form>
+      </Card>
+    </>
   );
 }
