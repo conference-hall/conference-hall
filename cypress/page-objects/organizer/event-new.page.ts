@@ -36,7 +36,7 @@ class OrganizerEventNewPage {
   }
 
   newEvent() {
-    return cy.findByRole('button', { name: 'Create and configure event' });
+    cy.findByRole('button', { name: 'Create and configure event' }).click();
   }
 
   error(label: string) {

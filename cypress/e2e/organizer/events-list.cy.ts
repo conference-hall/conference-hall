@@ -28,14 +28,14 @@ describe('Organization event list', () => {
 
     it('can create a new event', () => {
       organization.visit('awesome-orga');
-      organization.newEvent().click();
+      organization.newEvent();
       eventNew.isPageVisible();
     });
 
     it('displayed empty state when no event and can create a new one', () => {
       organization.visit('awesome-orga-2');
       cy.assertText('Welcome to "Awesome orga 2"');
-      organization.newEvent().should('exist');
+      cy.findByRole('button', { name: 'Create and configure event' }).should('exist');
     });
   });
 
@@ -47,7 +47,7 @@ describe('Organization event list', () => {
       organization.eventsTab().should('exist');
       organization.membersTab().should('exist');
       organization.settingsTab().should('not.exist');
-      organization.newEvent().should('not.exist');
+      cy.findByRole('button', { name: 'Create and configure event' }).should('not.exist');
     });
   });
 
@@ -59,7 +59,7 @@ describe('Organization event list', () => {
       organization.eventsTab().should('exist');
       organization.membersTab().should('not.exist');
       organization.settingsTab().should('not.exist');
-      organization.newEvent().should('not.exist');
+      cy.findByRole('button', { name: 'Create and configure event' }).should('not.exist');
     });
   });
 });

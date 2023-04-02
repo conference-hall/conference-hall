@@ -18,11 +18,11 @@ describe('Organizer event creation', () => {
 
     it('can create a new conference', () => {
       eventNew.visit('awesome-orga');
-      eventNew.newConference().click();
+      eventNew.newConference();
       eventNew.isConferenceStepVisible();
       eventNew.fillForm({ name: 'Hello world' });
       cy.assertInputText('Event URL', 'hello-world');
-      eventNew.newEvent().click();
+      eventNew.newEvent();
       eventSettings.isPageVisible();
       cy.assertText('conference');
       cy.assertInputText('Name', 'Hello world');
@@ -31,11 +31,11 @@ describe('Organizer event creation', () => {
 
     it('can create a new meetup', () => {
       eventNew.visit('awesome-orga');
-      eventNew.newMeetup().click();
+      eventNew.newMeetup();
       eventNew.isMeetupStepVisible();
       eventNew.fillForm({ name: 'Hello world' });
       cy.assertInputText('Event URL', 'hello-world');
-      eventNew.newEvent().click();
+      eventNew.newEvent();
       eventSettings.isPageVisible();
       cy.assertText('meetup');
       cy.assertInputText('Name', 'Hello world');
@@ -44,10 +44,10 @@ describe('Organizer event creation', () => {
 
     it('cannot create an event with an existing slug', () => {
       eventNew.visit('awesome-orga');
-      eventNew.newConference().click();
+      eventNew.newConference();
       eventNew.isConferenceStepVisible();
       eventNew.fillForm({ name: 'Hello world', slug: 'event-1' });
-      eventNew.newEvent().click();
+      eventNew.newEvent();
       eventNew.error('Event URL').should('contain.text', 'Slug already exists, please try another one.');
     });
   });

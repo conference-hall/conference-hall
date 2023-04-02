@@ -21,7 +21,7 @@ class OrganizationEventsPage {
   }
 
   newEvent() {
-    return cy.findByRole('link', { name: 'New event' });
+    cy.findByRole('link', { name: 'New event' }).click();
   }
 
   list() {
