@@ -22,11 +22,11 @@ class OrganizerEventNewPage {
   }
 
   newConference() {
-    return cy.findByLabelText('Create a new conference').click();
+    cy.findByLabelText('Create a new conference').click();
   }
 
   newMeetup() {
-    return cy.findByLabelText('Create a new meetup').click();
+    cy.findByLabelText('Create a new meetup').click();
   }
 
   fillForm(data: EventNewType) {
