@@ -1,11 +1,9 @@
 import type { CfpState } from '~/schemas/event';
 import type { EventProposals } from '~/routes/$event.proposals._index/route';
-import { ExclamationCircleIcon, InboxIcon } from '@heroicons/react/24/outline';
-import { CardLink } from '~/design-system/Card';
-import { AvatarGroup } from '~/design-system/Avatar';
+import { InboxIcon } from '@heroicons/react/24/outline';
 import { EmptyState } from '~/design-system/EmptyState';
-import { ProposalStatusLabel } from './ProposalStatusLabel';
 import { CfpLabel } from '~/routes/$event.proposals._index/components/CfpLabel';
+import { TalkCard } from '~/shared-components/TalkCard';
 
 type Props = {
   proposals: EventProposals;
@@ -13,31 +11,18 @@ type Props = {
 };
 
 export function ProposalsList({ proposals, cfpState }: Props) {
-  if (cfpState !== 'OPENED' && proposals.length === 0) {
+  if (proposals.length === 0) {
     return (
-      <EmptyState icon={ExclamationCircleIcon}>
+      <EmptyState icon={InboxIcon} label="No proposals submitted!">
         <CfpLabel cfpState={cfpState} />
       </EmptyState>
     );
   }
 
-  if (proposals.length === 0) {
-    return <EmptyState icon={InboxIcon} label="No submitted proposals yet!" />;
-  }
-
   return (
     <ul aria-label="Proposals list" className="grid grid-cols-1 gap-6 sm:grid-cols-2">
       {proposals.map((proposal) => (
-        <CardLink as="li" key={proposal.id} to={proposal.id}>
-          <div className="flex h-40 flex-col justify-between px-4 py-4 sm:px-6">
-            <div>
-              <p className="truncate text-base font-semibold text-indigo-600">{proposal.title}</p>
-              <AvatarGroup avatars={proposal.speakers} displayNames />
-            </div>
-
-            <ProposalStatusLabel proposal={proposal} isCfpOpen={cfpState === 'OPENED'} />
-          </div>
-        </CardLink>
+        <TalkCard key={proposal.id} {...proposal} isCfpOpen={cfpState === 'OPENED'} />
       ))}
     </ul>
   );

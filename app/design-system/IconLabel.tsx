@@ -1,29 +1,20 @@
-import cn from 'classnames';
+import type { TypographyProps } from './Typography';
+import { Text } from './Typography';
 
 type Props = {
   children: React.ReactNode;
+  alt?: string;
   icon: React.ComponentType<{ className?: string }>;
-  lineCamp?: boolean;
-  truncate?: boolean;
-  className?: string;
-  iconClassName?: string;
-  srOnly?: string;
-};
+} & TypographyProps;
 
-export function IconLabel({
-  children,
-  icon: Icon,
-  className,
-  truncate,
-  lineCamp = false,
-  iconClassName,
-  srOnly,
-}: Props) {
+export function IconLabel({ children, icon: Icon, size = 's', alt, ...rest }: Props) {
   return (
-    <div className={cn('flex items-center text-sm', className)}>
-      <Icon className={cn('mr-1.5 h-5 w-5 flex-shrink-0 self-start text-gray-500', iconClassName)} aria-hidden="true" />
-      <span className={cn({ truncate, 'line-clamp-2': lineCamp })}>{children}</span>
-      {srOnly && <span className="sr-only">{srOnly}</span>}
+    <div className="flex items-center">
+      <Icon className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-500" aria-hidden="true" />
+      <Text size={size} {...rest}>
+        {children}
+      </Text>
+      {alt && <span className="sr-only">{alt}</span>}
     </div>
   );
 }

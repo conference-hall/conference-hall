@@ -1,9 +1,28 @@
 import c from 'classnames';
 import { Text } from './Typography';
 
-const sizes = { xs: 'h-8 w-8', s: 'h-10 w-10', m: 'h-12 w-12', l: 'h-16 w-16', xl: 'h-20 w-20', '4xl': 'h-32 w-32' };
-const text_sizes = { xs: 'text-sm', s: 'text-lg', m: 'text-xl', l: 'text-3xl', xl: 'text-4xl', '4xl': 'text-6xl' };
-const rings = { xs: 'ring-2', s: 'ring-2', m: 'ring-2', l: 'ring-2', xl: 'ring-2', '4xl': 'ring-4' };
+const sizes = {
+  xs: 'h-6 w-6',
+  s: 'h-8 w-8',
+  m: 'h-10 w-10',
+  l: 'h-12 w-12',
+  xl: 'h-16 w-16',
+  '2xl': 'h-20 w-20',
+  '4xl': 'h-32 w-32',
+};
+
+const text_sizes = {
+  xs: 'text-sm',
+  s: 'text-lg',
+  m: 'text-xl',
+  l: 'text-3xl',
+  xl: 'text-4xl',
+  '2xl': 'text-5xl',
+  '4xl': 'text-6xl',
+};
+
+const rings = { xs: 'ring-2', s: 'ring-2', m: 'ring-2', l: 'ring-2', xl: 'ring-2', '2xl': 'ring-3', '4xl': 'ring-4' };
+
 const ringsColor = { white: 'ring-white', primary: 'ring-indigo-500' };
 
 const colors = [
@@ -23,6 +42,7 @@ const square_sizes = {
   m: 'rounded',
   l: 'rounded-md',
   xl: 'rounded-md',
+  '2xl': 'rounded-md',
   '4xl': 'rounded-md',
 };
 
@@ -83,7 +103,11 @@ export function AvatarGroup({ avatars, displayNames = false }: AvatarGroupProps)
         />
       ))}
       {displayNames && (
-        <span className="test-gray-500 truncate pl-3 text-sm">by {avatars.map((a) => a.name).join(', ')}</span>
+        <span className="pl-3">
+          <Text as="span" variant="secondary" size="s" truncate>
+            by {avatars.map((a) => a.name).join(', ')}
+          </Text>
+        </span>
       )}
     </div>
   );

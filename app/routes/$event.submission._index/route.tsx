@@ -6,11 +6,12 @@ import { sessionRequired } from '~/libs/auth/auth.server';
 import { mapErrorToResponse } from '~/libs/errors';
 import { Container } from '~/design-system/Container';
 import { H2, Subtitle } from '~/design-system/Typography';
-import { AlertInfo } from '~/design-system/Alerts';
 import { ButtonLink } from '~/design-system/Buttons';
 import { MaxProposalsReached } from './components/MaxProposalsReached';
 import { SubmissionTalksList } from './components/SubmissionTalksList';
 import { getProposalCountsForEvent, listTalksToSubmit } from './server/list-talks-to-submit.server';
+import { IconLabel } from '~/design-system/IconLabel';
+import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 
 export const handle = { step: 'selection' };
 
@@ -40,7 +41,7 @@ export default function EventSubmitRoute() {
   }
 
   return (
-    <Container className="my-4 sm:my-8">
+    <Container className="my-4 space-y-8 sm:my-8">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
         <div>
           <H2 mb={1}>Proposal selection</H2>
@@ -50,10 +51,9 @@ export default function EventSubmitRoute() {
       </div>
 
       {Boolean(max) && (
-        <AlertInfo className="my-4">
-          You can submit a maximum of <span className="font-semibold">{max} proposals.</span>{' '}
-          {submitted > 0 ? `You have already submitted ${submitted} proposals out of ${max}.` : null}
-        </AlertInfo>
+        <IconLabel icon={ExclamationTriangleIcon} strong>
+          You can submit a maximum of {max} proposals. ({submitted} out of {max})
+        </IconLabel>
       )}
 
       <SubmissionTalksList talks={data?.talks} />
