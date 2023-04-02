@@ -20,7 +20,7 @@ class CfpSettings {
     if (data.cfpEnd) cy.typeOn('Closing date', data.cfpEnd);
     if (data.maxProposals) cy.typeOn('Maximum of proposals per speaker', data.maxProposals);
     if (data.codeOfConductUrl) cy.typeOn('Code of conduct URL', data.codeOfConductUrl);
-    cy.clickOn('Update CFP preferences');
+    cy.findByRole('button', { name: 'Update CFP preferences' });
   }
 }
 

@@ -35,7 +35,7 @@ class EventSubmissionPage {
    */
 
   createNewProposal() {
-    return cy.clickOn('Create a new proposal');
+    return cy.findByRole('link', { name: 'Create a new proposal' }).click();
   }
 
   talks() {
@@ -57,13 +57,13 @@ class EventSubmissionPage {
   fillTalkForm(data: TalkFormType) {
     cy.typeOn('Title', data.title);
     cy.typeOn('Abstract', data.abstract);
-    if (data.level) cy.clickOn(data.level);
+    if (data.level) cy.findByRole('radio', { name: data.level }).click();
     if (data.language) cy.selectOn('Languages', data.language);
     if (data.references) cy.typeOn('References', data.references);
   }
 
   submitTalkForm() {
-    return cy.clickOn('Save as draft and continue');
+    return cy.findByRole('button', { name: 'Save as draft and continue' }).click();
   }
 
   /**
@@ -79,17 +79,17 @@ class EventSubmissionPage {
   }
 
   submitSpeakerForm() {
-    return cy.clickOn('Next');
+    return cy.findByRole('button', { name: 'Next' }).click();
   }
 
   generateCoSpeakerInvite() {
-    cy.clickOn('Invite a co-speaker');
-    cy.clickOn('Generate invitation link');
+    cy.findByRole('button', { name: 'Invite a co-speaker' }).click();
+    cy.findByRole('button', { name: 'Generate invitation link' }).click();
     return cy.findByLabelText('Copy invitation link');
   }
 
   closeCoSpeakerModal() {
-    return cy.clickOn('Close');
+    return cy.findByRole('button', { name: 'Close' }).click();
   }
 
   /**
@@ -101,15 +101,15 @@ class EventSubmissionPage {
   }
 
   selectFormatTrack(format: string) {
-    cy.clickOn(format);
+    cy.findByRole('checkbox', { name: format }).click();
   }
 
   selectCategoryTrack(category: string) {
-    cy.clickOn(category);
+    cy.findByRole('checkbox', { name: category }).click();
   }
 
   submitTracksForm() {
-    return cy.clickOn('Next');
+    cy.findByRole('button', { name: 'Next' }).click();
   }
 
   /**
@@ -121,16 +121,16 @@ class EventSubmissionPage {
   }
 
   fillSurveyForm(data: SurveyFormType) {
-    if (data.gender) cy.clickOn(data.gender);
-    if (data.tshirt) cy.clickOn(data.tshirt);
-    if (data.accomodation) cy.clickOn(data.accomodation);
-    if (data.transport) cy.clickOn(data.transport);
-    if (data.meal) cy.clickOn(data.meal);
+    if (data.gender) cy.findByRole('radio', { name: data.gender }).click();
+    if (data.tshirt) cy.findByRole('radio', { name: data.tshirt }).click();
+    if (data.accomodation) cy.findByRole('radio', { name: data.accomodation }).click();
+    if (data.transport) cy.findByRole('checkbox', { name: data.transport }).click();
+    if (data.meal) cy.findByRole('checkbox', { name: data.meal }).click();
     if (data.message) cy.typeOn('Do you have specific information to share?', data.message);
   }
 
   submitSurveyForm() {
-    return cy.clickOn('Next');
+    cy.findByRole('button', { name: 'Next' }).click();
   }
 
   /**
@@ -142,18 +142,18 @@ class EventSubmissionPage {
 
   fillConfirmationForm(data: ConfirmationFormType) {
     if (data.message) cy.typeOn('Message to organizers', data.message);
-    if (data.cod) cy.clickOn('Please agree with the code of conduct of the event.');
+    if (data.cod) cy.findByRole('checkbox', { name: 'Please agree with the code of conduct of the event.' }).click();
   }
 
   submitConfirmation() {
-    return cy.clickOn('Submit proposal');
+    return cy.findByRole('button', { name: 'Submit proposal' }).click();
   }
 
   /**
    * Max proposals
    */
   checkMyProposalsButton() {
-    return cy.clickOn('Check my submitted proposals');
+    return cy.findByRole('link', { name: 'Check my submitted proposals' }).click();
   }
 }
 

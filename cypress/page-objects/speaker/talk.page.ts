@@ -12,23 +12,27 @@ class SpeakerTalkPage {
     return cy.findByRole('link', { name: 'Submit' });
   }
 
+  openActions() {
+    cy.findByRole('button', { name: 'Actions' }).click();
+  }
+
   editTalk() {
-    cy.clickOn('Actions');
-    return cy.findByRole('menuitem', { name: 'Edit' });
+    this.openActions();
+    cy.findByRole('menuitem', { name: 'Edit' }).click();
   }
 
   deleteTalk() {
-    cy.clickOn('Actions');
-    return cy.findByRole('menuitem', { name: 'Delete' });
+    this.openActions();
+    cy.findByRole('menuitem', { name: 'Delete' }).click();
   }
 
   archiveTalk() {
-    cy.clickOn('Actions');
-    return cy.findByRole('menuitem', { name: 'Archive' });
+    this.openActions();
+    cy.findByRole('menuitem', { name: 'Archive' }).click();
   }
 
   restoreTalk() {
-    return cy.findByRole('button', { name: 'Restore' });
+    cy.findByRole('button', { name: 'Restore' }).click();
   }
 
   deleteConfirmDialog() {
@@ -36,11 +40,11 @@ class SpeakerTalkPage {
   }
 
   cancelDelete() {
-    return this.deleteConfirmDialog().findByRole('button', { name: 'Cancel' });
+    this.deleteConfirmDialog().findByRole('button', { name: 'Cancel' }).click();
   }
 
   confirmDelete() {
-    return this.deleteConfirmDialog().findByRole('button', { name: 'Delete talk' });
+    this.deleteConfirmDialog().findByRole('button', { name: 'Delete talk' }).click();
   }
 
   speakersBlock() {
@@ -48,13 +52,13 @@ class SpeakerTalkPage {
   }
 
   generateCoSpeakerInvite() {
-    cy.clickOn('Invite a co-speaker');
-    cy.clickOn('Generate invitation link');
+    cy.findByRole('button', { name: 'Invite a co-speaker' }).click();
+    cy.findByRole('button', { name: 'Generate invitation link' }).click();
     return cy.findByLabelText('Copy invitation link');
   }
 
   closeCoSpeakerModal() {
-    return cy.clickOn('Close');
+    return cy.findByRole('button', { name: 'Close' }).click();
   }
 
   removeCoSpeaker(speakerName: string) {

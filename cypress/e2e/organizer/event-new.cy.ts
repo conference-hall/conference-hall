@@ -18,7 +18,7 @@ describe('Organizer event creation', () => {
 
     it('can create a new conference', () => {
       eventNew.visit('awesome-orga');
-      eventNew.newConference();
+      eventNew.newConference().click();
       eventNew.isConferenceStepVisible();
       eventNew.fillForm({ name: 'Hello world' });
       cy.assertInputText('Event URL', 'hello-world');
@@ -31,7 +31,7 @@ describe('Organizer event creation', () => {
 
     it('can create a new meetup', () => {
       eventNew.visit('awesome-orga');
-      eventNew.newMeetup();
+      eventNew.newMeetup().click();
       eventNew.isMeetupStepVisible();
       eventNew.fillForm({ name: 'Hello world' });
       cy.assertInputText('Event URL', 'hello-world');
@@ -44,7 +44,7 @@ describe('Organizer event creation', () => {
 
     it('cannot create an event with an existing slug', () => {
       eventNew.visit('awesome-orga');
-      eventNew.newConference();
+      eventNew.newConference().click();
       eventNew.isConferenceStepVisible();
       eventNew.fillForm({ name: 'Hello world', slug: 'event-1' });
       eventNew.newEvent().click();

@@ -43,13 +43,13 @@ class EventProposalPage extends BasePage {
   }
 
   generateCoSpeakerInvite() {
-    cy.clickOn('Invite a co-speaker');
-    cy.clickOn('Generate invitation link');
+    cy.findByRole('button', { name: 'Invite a co-speaker' }).click();
+    cy.findByRole('button', { name: 'Generate invitation link' }).click();
     return cy.findByLabelText('Copy invitation link');
   }
 
   closeCoSpeakerModal() {
-    return cy.clickOn('Close');
+    return cy.findByRole('button', { name: 'Close' }).click();
   }
 
   removeCoSpeaker(speakerName: string) {

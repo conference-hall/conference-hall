@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import cn from 'classnames';
+import { Text } from '../Typography';
 
 type RadioGroupProps = {
   label?: string;
@@ -42,14 +43,17 @@ export function Radio({ id, name, description, children, ...rest }: RadioProps) 
           {...rest}
         />
       </div>
-      <label htmlFor={id} className="block pl-3 text-sm text-gray-900">
-        {children}
+      <div className="pl-3">
+        <label htmlFor={id} className="block text-sm text-gray-900">
+          {children}
+        </label>
+
         {description && (
-          <p id={`${id}-description`} className="text-gray-500">
+          <Text id={`${id}-description`} size="s" variant="secondary">
             {description}
-          </p>
+          </Text>
         )}
-      </label>
+      </div>
     </div>
   );
 }

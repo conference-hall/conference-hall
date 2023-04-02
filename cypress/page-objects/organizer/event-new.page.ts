@@ -22,17 +22,17 @@ class OrganizerEventNewPage {
   }
 
   newConference() {
-    return cy.clickOn('New conference');
+    return cy.findByLabelText('Create a new conference').click();
   }
 
   newMeetup() {
-    return cy.clickOn('New meetup');
+    return cy.findByLabelText('Create a new meetup').click();
   }
 
   fillForm(data: EventNewType) {
     if (data.name) cy.typeOn('Name', data.name);
     if (data.slug) cy.typeOn('Event URL', data.slug);
-    cy.clickOn('Public');
+    cy.findByRole('radio', { name: 'Public' }).click();
   }
 
   newEvent() {

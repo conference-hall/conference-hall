@@ -21,8 +21,8 @@ class OrganizationEventsProposalsPage {
   }
 
   markAs(name: string) {
-    cy.clickOn('Mark as...');
-    return cy.findByRole('button', { name }).click();
+    cy.findByRole('button', { name: 'Mark as...' }).click();
+    cy.findByRole('button', { name }).click();
   }
 
   filterSearch() {
@@ -30,11 +30,11 @@ class OrganizationEventsProposalsPage {
   }
 
   openFilters() {
-    return cy.clickOn('Filters');
+    cy.findByRole('button', { name: 'Filters' }).click();
   }
 
   clearFilters() {
-    return cy.clickOn('Clear');
+    cy.findByRole('link', { name: 'Clear' }).click();
   }
 
   filterRatings(name: string) {

@@ -7,12 +7,6 @@ declare global {
   namespace Cypress {
     interface Chainable {
       /**
-       * Click on button, link or checkbox by its name
-       * @example cy.clickOn('search')
-       */
-      clickOn(name: string | RegExp): Chainable<JQuery<HTMLElement>>;
-
-      /**
        * Select a value on a list box
        * @example cy.selectOn('Sex', 'Female')
        */
@@ -80,10 +74,6 @@ declare global {
   }
 }
 
-Cypress.Commands.add('clickOn', (name) => {
-  return cy.findByRole(/button|link|checkbox|radio/, { name: RegExp(`.*${name}.*`) }).click();
-});
-
 Cypress.Commands.add('selectOn', (label, value, exit = true) => {
   cy.findByLabelText(label).click();
   const select = cy.findByRole('option', { name: value }).click();
@@ -134,7 +124,7 @@ Cypress.Commands.add('login', (username = 'Clark Kent') => {
     () => {
       cy.visit('/login');
       cy.findByRole('heading', { name: 'Log in to Conference Hall' }).should('exist');
-      cy.clickOn('Continue with Google');
+      cy.findByRole('button', { name: 'Continue with Google' }).click();
       cy.assertText('Please select an existing account in the Auth Emulator or add a new one:');
       cy.findByText(username).click();
       cy.findByRole('searchbox', { name: 'Search conferences and meetups.' }).should('exist');

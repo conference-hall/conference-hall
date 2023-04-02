@@ -19,7 +19,7 @@ class ProposalReviewPage {
   }
 
   closePage() {
-    return cy.clickOn('Back to list');
+    return cy.findByRole('link', { name: 'Back to list' }).click();
   }
 
   title(name: string) {
@@ -27,15 +27,15 @@ class ProposalReviewPage {
   }
 
   nextProposal() {
-    return cy.clickOn('Next');
+    cy.findByRole('link', { name: 'Next' }).click();
   }
 
   previousProposal() {
-    return cy.clickOn('Previous');
+    cy.findByRole('link', { name: 'Previous' }).click();
   }
 
   toggleOrganizerRatings() {
-    return cy.clickOn('Toggle organizer ratings details');
+    cy.findByRole('button', { name: 'Toggle organizer ratings details' }).click();
   }
 
   organizerRatingsSection() {
@@ -43,7 +43,7 @@ class ProposalReviewPage {
   }
 
   toggleSpeakerDetails(speakerName: string) {
-    return cy.clickOn(`Toggle speaker ${speakerName} details`);
+    cy.findByRole('button', { name: `Toggle speaker ${speakerName} details` }).click();
   }
 
   speakerDetailsSection(speakerName: string) {
@@ -59,12 +59,12 @@ class ProposalReviewPage {
   }
 
   rate(rating: string) {
-    return cy.clickOn(rating);
+    return cy.findByRole('radio', { name: rating }).click();
   }
 
   writeComment(comment: string) {
     cy.typeOn('Write a comment to other organizers', comment);
-    return cy.clickOn('Send');
+    cy.findByRole('button', { name: 'Send' }).click();
   }
 
   deleteComment() {
@@ -72,22 +72,22 @@ class ProposalReviewPage {
   }
 
   editProposal() {
-    return cy.clickOn('Edit proposal');
+    cy.findByRole('link', { name: 'Edit proposal' }).click();
   }
 
   fillProposalForm(data: ProposalFormType) {
     cy.typeOn('Title', data.title);
     cy.typeOn('Abstract', data.abstract);
-    cy.clickOn(data.level);
+    cy.findByRole('radio', { name: data.level }).click();
     cy.selectOn('Languages', data.language);
     cy.typeOn('References', data.references);
-    cy.clickOn(data.format);
-    cy.clickOn(data.category);
-    return cy.clickOn('Save proposal');
+    cy.findByRole('checkbox', { name: data.format }).click();
+    cy.findByRole('checkbox', { name: data.category }).click();
+    cy.findByRole('button', { name: 'Save proposal' }).click();
   }
 
   cancelUpdateProposal() {
-    return cy.clickOn('Cancel');
+    return cy.findByRole('link', { name: 'Cancel' }).click();
   }
 }
 
