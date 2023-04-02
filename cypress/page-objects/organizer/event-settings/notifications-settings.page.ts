@@ -10,7 +10,7 @@ class NotificationsSettings {
 
   saveForm(email: string) {
     cy.typeOn('Notification email', email);
-    cy.clickOn('Save email notifications');
+    cy.findByRole('button', { name: 'Save email notifications' }).click();
   }
 }
 

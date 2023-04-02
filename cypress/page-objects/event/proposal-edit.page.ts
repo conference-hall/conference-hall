@@ -19,17 +19,17 @@ class EventEditProposalPage {
   fillProposalForm(data: ProposalFormType) {
     if (data.title) cy.typeOn('Title', data.title);
     if (data.abstract) cy.typeOn('Abstract', data.abstract);
-    if (data.level) cy.clickOn(data.level);
+    if (data.level) cy.findByRole('radio', { name: data.level }).click();
     if (data.language) cy.selectOn('Languages', data.language);
     if (data.references) cy.typeOn('References', data.references);
   }
 
   selectFormatTrack(format: string) {
-    cy.clickOn(format);
+    cy.findByRole('checkbox', { name: format }).click();
   }
 
   selectCategoryTrack(category: string) {
-    cy.clickOn(category);
+    cy.findByRole('checkbox', { name: category }).click();
   }
 
   saveAbstract() {

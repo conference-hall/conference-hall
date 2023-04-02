@@ -32,28 +32,28 @@ describe('Event settings', () => {
 
     it('navigates through settings nav bar', () => {
       settings.visit('orga-1', 'conference-1');
-      settings.nav().within(() => cy.clickOn('General'));
+      settings.openSetting('General');
       general.isPageVisible();
 
-      settings.nav().within(() => cy.clickOn('Customize'));
+      settings.openSetting('Customize');
       customize.isPageVisible();
 
-      settings.nav().within(() => cy.clickOn('Tracks'));
+      settings.openSetting('Tracks');
       tracks.isPageVisible();
 
-      settings.nav().within(() => cy.clickOn('Speaker survey'));
+      settings.openSetting('Speaker survey');
       survey.isPageVisible();
 
-      settings.nav().within(() => cy.clickOn('Proposals review'));
+      settings.openSetting('Proposals review');
       review.isPageVisible();
 
-      settings.nav().within(() => cy.clickOn('Email notifications'));
+      settings.openSetting('Email notifications');
       notifications.isPageVisible();
 
-      settings.nav().within(() => cy.clickOn('Slack integration'));
+      settings.openSetting('Slack integration');
       slack.isPageVisible();
 
-      settings.nav().within(() => cy.clickOn('Web API'));
+      settings.openSetting('Web API');
       api.isPageVisible();
     });
 
@@ -118,13 +118,13 @@ describe('Event settings', () => {
         tracks.newFormatModal().within(() => {
           cy.typeOn('Name', 'Quickie');
           cy.typeOn('Description', 'Small talk');
-          cy.clickOn('Save format');
+          cy.findByRole('button', { name: 'Save format' }).click();
         });
 
         tracks.formatsBlock().within(() => {
           cy.assertText('Quickie');
           cy.assertText('Small talk');
-          cy.clickOn('Edit Quickie');
+          cy.findByRole('button', { name: 'Edit Quickie' }).click();
         });
 
         tracks.newFormatModal().within(() => {
@@ -132,13 +132,13 @@ describe('Event settings', () => {
           cy.assertInputText('Description', 'Small talk');
           cy.typeOn('Name', 'Conf');
           cy.typeOn('Description', 'Long talk');
-          cy.clickOn('Save format');
+          cy.findByRole('button', { name: 'Save format' }).click();
         });
 
         tracks.formatsBlock().within(() => {
           cy.assertText('Conf');
           cy.assertText('Long talk');
-          cy.clickOn('Remove Conf');
+          cy.findByRole('button', { name: 'Remove Conf' }).click();
           cy.assertNoText('Conf');
           cy.assertNoText('Long talk');
         });
@@ -153,13 +153,13 @@ describe('Event settings', () => {
         tracks.newCategoryModal().within(() => {
           cy.typeOn('Name', 'Web');
           cy.typeOn('Description', 'This is the web');
-          cy.clickOn('Save category');
+          cy.findByRole('button', { name: 'Save category' }).click();
         });
 
         tracks.categoriesBlock().within(() => {
           cy.assertText('Web');
           cy.assertText('This is the web');
-          cy.clickOn('Edit Web');
+          cy.findByRole('button', { name: 'Edit Web' }).click();
         });
 
         tracks.newCategoryModal().within(() => {
@@ -167,13 +167,13 @@ describe('Event settings', () => {
           cy.assertInputText('Description', 'This is the web');
           cy.typeOn('Name', 'Cloud');
           cy.typeOn('Description', 'This is the cloud');
-          cy.clickOn('Save category');
+          cy.findByRole('button', { name: 'Save category' }).click();
         });
 
         tracks.categoriesBlock().within(() => {
           cy.assertText('Cloud');
           cy.assertText('This is the cloud');
-          cy.clickOn('Remove Cloud');
+          cy.findByRole('button', { name: 'Remove Cloud' }).click();
           cy.assertNoText('Cloud');
           cy.assertNoText('This is the cloud');
         });
@@ -237,9 +237,9 @@ describe('Event settings', () => {
       it('save proposal review settings', () => {
         review.visit('orga-1', 'conference-1');
 
-        cy.clickOn('Display organizers ratings');
-        cy.clickOn('Display ratings in proposal list');
-        cy.clickOn('Display speakers in proposal page');
+        cy.findByLabelText('Display organizers ratings').click();
+        cy.findByLabelText('Display ratings in proposal list').click();
+        cy.findByLabelText('Display speakers in proposal page').click();
       });
     });
 
@@ -255,11 +255,11 @@ describe('Event settings', () => {
       it('save notifications', () => {
         notifications.visit('orga-1', 'conference-1');
 
-        cy.clickOn('Submitted proposals');
-        cy.clickOn('Confirmed proposals');
-        cy.clickOn('Declined proposals');
-        cy.clickOn('Accepted proposals');
-        cy.clickOn('Rejected proposals');
+        cy.findByLabelText('Submitted proposals').click();
+        cy.findByLabelText('Confirmed proposals').click();
+        cy.findByLabelText('Declined proposals').click();
+        cy.findByLabelText('Accepted proposals').click();
+        cy.findByLabelText('Rejected proposals').click();
       });
     });
 

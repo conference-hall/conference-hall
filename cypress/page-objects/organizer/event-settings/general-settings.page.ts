@@ -31,8 +31,8 @@ class GeneralSettings {
     this.generalBlock().within(() => {
       if (data.name) cy.typeOn('Name', data.name);
       if (data.slug) cy.typeOn('Event URL', data.slug);
-      if (data.visibility) cy.clickOn(data.visibility);
-      cy.clickOn('Update event');
+      if (data.visibility) cy.findByRole('radio', { name: data.visibility }).click();
+      cy.findByRole('button', { name: 'Update event' }).click();
     });
   }
 
@@ -48,7 +48,7 @@ class GeneralSettings {
       if (data.description) cy.typeOn('Description', data.description);
       if (data.websiteUrl) cy.typeOn('Website URL', data.websiteUrl);
       if (data.contactEmail) cy.typeOn('Contact email', data.contactEmail);
-      cy.clickOn('Update event details');
+      cy.findByRole('button', { name: 'Update event details' }).click();
     });
   }
 }

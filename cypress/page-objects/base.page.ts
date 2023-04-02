@@ -44,13 +44,13 @@ class UserMenu {
   }
 
   signOut() {
-    cy.clickOn('Sign out');
+    cy.findByRole('button', { name: 'Sign out' }).click();
   }
 }
 
 class NotificationsMenu {
   open() {
-    cy.clickOn('View notifications');
+    cy.findByRole('link', { name: 'View notifications' }).click();
     return this;
   }
 

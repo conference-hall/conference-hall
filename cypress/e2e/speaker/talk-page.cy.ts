@@ -36,16 +36,16 @@ describe('Speaker talk page', () => {
 
   it('can edit a talk', () => {
     talk.visit('awesome-talk');
-    talk.editTalk().click();
+    talk.editTalk();
     editTalk.isPageVisible();
     cy.assertText('Awesome talk');
   });
 
   it('can delete a talk', () => {
     talk.visit('awesome-talk');
-    talk.deleteTalk().click();
+    talk.deleteTalk();
     talk.deleteConfirmDialog().should('exist');
-    talk.confirmDelete().click();
+    talk.confirmDelete();
 
     talks.isPageVisible();
     cy.assertText('No talk abstracts yet!');
@@ -53,18 +53,18 @@ describe('Speaker talk page', () => {
 
   it('can cancel talk delete', () => {
     talk.visit('awesome-talk');
-    talk.deleteTalk().click();
+    talk.deleteTalk();
     talk.deleteConfirmDialog().should('exist');
-    talk.cancelDelete().click();
+    talk.cancelDelete();
     cy.assertText('Awesome talk');
   });
 
   it('can archive and restore a talk', () => {
     talk.visit('awesome-talk');
-    talk.archiveTalk().click();
-    talk.restoreTalk().should('exist');
-    talk.restoreTalk().click();
-    talk.archiveTalk().should('exist');
+    talk.archiveTalk();
+    cy.findByRole('button', { name: 'Restore' }).should('exist');
+    talk.restoreTalk();
+    cy.findByRole('button', { name: 'Restore' }).should('not.exist');
   });
 
   it('can submit a talk', () => {
@@ -101,7 +101,7 @@ describe('Speaker talk page', () => {
   it('can see a submitted proposal of a talk', () => {
     talk.visit('awesome-talk');
     cy.assertText('Submissions');
-    cy.clickOn('Devfest Nantes');
+    cy.findByRole('link', { name: 'Devfest Nantes' }).click();
     proposals.isPageVisible();
     proposals.list().should('have.length', 1);
     proposals.proposal('Awesome talk').should('exist');

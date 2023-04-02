@@ -17,8 +17,8 @@ class OrganizationMembersPage {
   }
 
   generateInvite() {
-    cy.clickOn('Invite member');
-    cy.clickOn('Generate invitation link');
+    cy.findByRole('button', { name: 'Invite member' }).click();
+    cy.findByRole('button', { name: 'Generate invitation link' }).click();
     return cy.findByLabelText('Copy invitation link');
   }
 
@@ -27,11 +27,15 @@ class OrganizationMembersPage {
   }
 
   selectRoleToChange(name: string, role: string) {
-    return cy.findByRole('dialog', { name: `Change the role of ${name}?` }).clickOn(role);
+    cy.findByRole('dialog', { name: `Change the role of ${name}?` })
+      .findByRole('radio', { name: role })
+      .click();
   }
 
   confirmChangeRole(name: string) {
-    return cy.findByRole('dialog', { name: `Change the role of ${name}?` }).clickOn(`Change ${name}'s role`);
+    cy.findByRole('dialog', { name: `Change the role of ${name}?` })
+      .findByRole('button', { name: `Change ${name}'s role` })
+      .click();
   }
 
   removeMemberButton(name: string) {

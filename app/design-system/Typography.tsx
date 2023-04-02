@@ -51,6 +51,7 @@ export type TypographyProps = {
   italic?: boolean;
   srOnly?: boolean;
   truncate?: boolean;
+  htmlFor?: string;
   children: React.ReactNode;
 };
 
@@ -66,6 +67,7 @@ function Typography({
   italic,
   srOnly,
   truncate,
+  htmlFor,
   children,
 }: TypographyProps) {
   const variantStyle = variant ? VARIANTS[variant] : undefined;
@@ -76,6 +78,7 @@ function Typography({
   return (
     <Tag
       id={id}
+      htmlFor={htmlFor}
       className={c(variantStyle, alignStyle, sizeStyle, marginStyle, {
         'font-heading': heading,
         'font-medium': strong,

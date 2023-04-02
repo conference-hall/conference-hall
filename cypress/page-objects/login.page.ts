@@ -13,7 +13,7 @@ class LoginPage {
   }
 
   signinWithGoogle(username: string) {
-    cy.clickOn('Continue with Google');
+    cy.findByRole('button', { name: 'Continue with Google' }).click();
     cy.url().should('contain', '/emulator');
     cy.findByText(username).click();
   }

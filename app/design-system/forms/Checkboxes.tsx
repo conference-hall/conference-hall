@@ -1,6 +1,7 @@
 import type { ReactNode, Ref } from 'react';
 import { forwardRef } from 'react';
 import cn from 'classnames';
+import { Text } from '../Typography';
 
 type CheckboxGroupProps = {
   label: string;
@@ -55,7 +56,7 @@ export function CheckboxField(
 ) {
   return (
     <div className={cn('relative flex items-start', className)}>
-      <div className="flex h-5 items-center">
+      <div className="mt-1 flex h-5 items-center">
         <input
           ref={ref}
           id={id}
@@ -69,14 +70,17 @@ export function CheckboxField(
         />
       </div>
       {children && (
-        <label htmlFor={id} className="pl-3 text-sm text-gray-900">
-          {children}
+        <div className="pl-3">
+          <Text as="label" htmlFor={id} size="s">
+            {children}
+          </Text>
+
           {description && (
-            <p id={`${id}-description`} className="text-gray-500">
+            <Text id={`${id}-description`} size="s" variant="secondary">
               {description}
-            </p>
+            </Text>
           )}
-        </label>
+        </div>
       )}
     </div>
   );

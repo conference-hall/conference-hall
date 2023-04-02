@@ -10,7 +10,7 @@ class SlackSettings {
 
   saveSlackWebhook(url: string) {
     cy.typeOn('Web hook URL', url);
-    cy.clickOn('Save Web hook URL');
+    cy.findByRole('button', { name: 'Save Web hook URL' }).click();
   }
 }
 
