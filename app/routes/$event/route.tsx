@@ -37,7 +37,9 @@ export default function EventRoute() {
         conferenceStart={event.conferenceStart}
         conferenceEnd={event.conferenceEnd}
       />
+
       <EventTabs slug={event.slug} type={event.type} surveyEnabled={event.surveyEnabled} />
+
       <Outlet context={event} />
 
       <Footer />

@@ -5,7 +5,7 @@ import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { mapErrorToResponse } from '~/libs/errors';
-import { H2, Subtitle } from '~/design-system/Typography';
+import { H2 } from '~/design-system/Typography';
 import { ButtonLink } from '~/design-system/Buttons';
 import { MaxProposalsReached } from './components/MaxProposalsReached';
 import { SubmissionTalksList } from './components/SubmissionTalksList';
@@ -38,10 +38,7 @@ export default function EventSubmitRoute() {
   return (
     <>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <H2 mb={0}>Proposal selection</H2>
-          <Subtitle>Select or create a new proposal to submit.</Subtitle>
-        </div>
+        <H2 mb={0}>Proposal selection</H2>
         <ButtonLink to="new">Create a new proposal</ButtonLink>
       </div>
 

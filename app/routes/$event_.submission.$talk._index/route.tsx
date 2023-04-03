@@ -1,7 +1,6 @@
 import invariant from 'tiny-invariant';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
-import { Button } from '~/design-system/Buttons';
-import { H2, Subtitle } from '../../design-system/Typography';
+import { H2 } from '../../design-system/Typography';
 import { sessionRequired } from '../../libs/auth/auth.server';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
@@ -54,18 +53,11 @@ export default function SubmissionProposalRoute() {
 
   return (
     <>
-      <div className="mb-6">
-        <H2 mb={0}>Your proposal</H2>
-        <Subtitle>This information will be displayed publicly so be careful what you share.</Subtitle>
-      </div>
+      <H2 mb={0}>Your proposal</H2>
 
       <Card p={8} rounded="xl">
-        <Form method="POST">
+        <Form id="proposal-form" method="POST">
           <TalkForm initialValues={talk} errors={errors} />
-
-          <div className="py-5 text-right sm:px-6">
-            <Button type="submit">Save as draft and continue</Button>
-          </div>
         </Form>
       </Card>
     </>

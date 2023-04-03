@@ -1,10 +1,10 @@
 import invariant from 'tiny-invariant';
 import { useState } from 'react';
 import { Form, useLoaderData } from '@remix-run/react';
-import { Button } from '~/design-system/Buttons';
+import { Button, ButtonLink } from '~/design-system/Buttons';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
 import { ExternalLink } from '../../design-system/Links';
-import { H2, Subtitle, Text } from '../../design-system/Typography';
+import { H2, Text } from '../../design-system/Typography';
 import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { sessionRequired } from '../../libs/auth/auth.server';
@@ -55,10 +55,7 @@ export default function SubmissionSubmitRoute() {
 
   return (
     <>
-      <div>
-        <H2 mb={0}>Finish your submission</H2>
-        <Subtitle>This information are asked by the event organizers to give a better experience.</Subtitle>
-      </div>
+      <H2>Finish your submission</H2>
 
       <Card p={8} rounded="xl">
         <Form method="POST">
@@ -97,10 +94,13 @@ export default function SubmissionSubmitRoute() {
               of the event.
             </Checkbox>
           )}
-          <div className="mt-6">
+          <div className="mt-6 space-x-4">
             <Button type="submit" disabled={!acceptedCod}>
               Submit proposal
             </Button>
+            <ButtonLink to={`/${event.slug}`} variant="secondary">
+              Cancel submission
+            </ButtonLink>
           </div>
         </Form>
       </Card>

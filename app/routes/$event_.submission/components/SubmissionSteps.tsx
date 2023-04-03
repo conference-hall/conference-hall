@@ -7,14 +7,14 @@ type Props = {
     path: string;
     name: string;
   }>;
-  currentStep: string;
+  currentStep?: string;
 };
 
 function SubmissionStepsMobile({ steps, currentStep }: Props) {
   const currentStepIdx = steps.findIndex((step) => step.key === currentStep);
 
   return (
-    <nav className="mt-6 flex items-center md:hidden" aria-label="Progress">
+    <nav className="flex items-center xl:hidden" aria-label="Progress">
       <p className="text-sm font-bold">
         Step {currentStepIdx + 1} of {steps.length}
       </p>
@@ -49,8 +49,8 @@ function SubmissionStepsDesktop({ steps, currentStep }: Props) {
   const currentStepIdx = steps.findIndex((step) => step.key === currentStep);
 
   return (
-    <nav aria-label="Progress" className="hidden bg-white md:block">
-      <ol className="divide-y divide-gray-200 border-b border-gray-200 md:flex md:divide-y-0">
+    <nav aria-label="Progress" className="hidden xl:block">
+      <ol className="divide-y divide-gray-200 rounded-full border  border-gray-200 md:flex md:divide-y-0">
         {steps.map((step, stepIdx) => (
           <li
             key={step.key}
@@ -59,27 +59,27 @@ function SubmissionStepsDesktop({ steps, currentStep }: Props) {
           >
             {stepIdx < currentStepIdx ? (
               <Link to={step.path} className="group flex w-full items-center">
-                <span className="flex items-center px-6 py-4 text-sm font-medium">
-                  <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-indigo-600 group-hover:bg-indigo-800">
-                    <CheckIcon className="h-6 w-6 text-white" aria-hidden="true" />
+                <span className="flex items-center px-6 py-2 text-sm font-medium">
+                  <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-indigo-600 group-hover:bg-indigo-800">
+                    <CheckIcon className="h-4 w-4 text-white" aria-hidden="true" />
                   </span>
-                  <span className="ml-4 text-sm font-medium text-gray-900">{step.name}</span>
+                  <span className="mx-4 text-sm font-medium text-gray-900">{step.name}</span>
                 </span>
               </Link>
             ) : stepIdx === currentStepIdx ? (
-              <span className="flex items-center px-6 py-4 text-sm font-medium">
-                <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border-2 border-indigo-600">
+              <span className="flex items-center px-6 py-2 text-sm font-medium">
+                <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full border border-indigo-600">
                   <span className="text-indigo-600">{stepIdx + 1}</span>
                 </span>
-                <span className="ml-4 text-sm font-medium text-indigo-600">{step.name}</span>
+                <span className="mx-4 text-sm font-medium text-indigo-600">{step.name}</span>
               </span>
             ) : (
               <span className="flex items-center">
-                <span className="flex items-center px-6 py-4 text-sm font-medium">
-                  <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border-2 border-gray-200">
+                <span className="flex items-center px-6 py-2 text-sm font-medium">
+                  <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full border border-gray-200">
                     <span className="text-gray-500">{stepIdx + 1}</span>
                   </span>
-                  <span className="ml-4 text-sm font-medium text-gray-500">{step.name}</span>
+                  <span className="mx-4 text-sm font-medium text-gray-500">{step.name}</span>
                 </span>
               </span>
             )}

@@ -4,12 +4,10 @@ import { json } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
 import { withZod } from '@remix-validated-form/with-zod';
-import { Button, ButtonLink } from '~/design-system/Buttons';
 import { SurveySchema } from '~/schemas/survey';
 import { getAnswers } from '~/shared-server/survey/get-answers.server';
 import { SurveyForm } from '../../shared-components/proposal-forms/SurveyForm';
-import { useSubmissionStep } from '../../shared-components/useSubmissionStep';
-import { H2, Subtitle } from '../../design-system/Typography';
+import { H2 } from '../../design-system/Typography';
 import { sessionRequired } from '../../libs/auth/auth.server';
 import { mapErrorToResponse } from '../../libs/errors';
 import { getQuestions } from '~/shared-server/survey/get-questions.server';
@@ -50,24 +48,14 @@ export const action: ActionFunction = async ({ request, params }) => {
 
 export default function SubmissionSurveyRoute() {
   const { questions, answers } = useLoaderData<typeof loader>();
-  const { previousPath } = useSubmissionStep();
 
   return (
     <>
-      <div>
-        <H2 mb={0}>We have some questions for you.</H2>
-        <Subtitle>This information are asked by the event organizers to give a better experience.</Subtitle>
-      </div>
+      <H2>We have some questions for you.</H2>
 
       <Card p={8} rounded="xl">
-        <Form method="POST">
+        <Form id="survey-form" method="POST">
           <SurveyForm questions={questions} initialValues={answers} />
-          <div className="flex justify-between gap-4 sm:flex-row sm:justify-end">
-            <ButtonLink to={previousPath} variant="secondary">
-              Back
-            </ButtonLink>
-            <Button type="submit">Next</Button>
-          </div>
         </Form>
       </Card>
     </>
