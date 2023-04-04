@@ -4,6 +4,7 @@ import { Listbox } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
 import { Text } from '../Typography';
 import { SelectTransition } from '../Transitions';
+import Badge from '../Badges';
 
 type Option = { value: string; label: string };
 
@@ -16,8 +17,20 @@ type Props = {
   className?: string;
 };
 
-function getOptionLabel(selectedValues: string[], options: Array<Option>) {
-  return selectedValues.map((current) => options.find(({ value }) => value === current)?.label).join(', ');
+type SelectedOptionsProps = {
+  selectedValues: string[];
+  options: Array<Option>;
+};
+
+function SelectedOptions({ selectedValues, options }: SelectedOptionsProps) {
+  const selected = selectedValues.map((current) => options.find(({ value }) => value === current));
+  return (
+    <>
+      {selected.map((option) => (
+        <Badge key={option?.value}>{option?.label}</Badge>
+      ))}
+    </>
+  );
 }
 
 export default function MultiSelect({ name, label, placeholder, options, defaultValues, className }: Props) {
@@ -30,11 +43,11 @@ export default function MultiSelect({ name, label, placeholder, options, default
           <div className="relative mt-1">
             <Listbox.Button className="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
               {selected.length > 0 ? (
-                <Text as="div" truncate>
-                  {getOptionLabel(selected, options)}
-                </Text>
+                <div className="space-x-2">
+                  <SelectedOptions selectedValues={selected} options={options} />
+                </div>
               ) : (
-                <Text variant="secondary" as="div" truncate>
+                <Text variant="secondary" size="s" as="div" truncate>
                   {placeholder}
                 </Text>
               )}
