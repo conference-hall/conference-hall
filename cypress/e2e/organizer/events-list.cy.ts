@@ -14,20 +14,13 @@ describe('Organization event list', () => {
   describe('as a organization owner', () => {
     beforeEach(() => cy.login('Clark Kent'));
 
-    it('displays tabs', () => {
+    it('displays events list and can create a new event', () => {
       organization.visit('awesome-orga');
       organization.eventsTab().should('exist');
       organization.membersTab().should('exist');
       organization.settingsTab().should('exist');
-    });
 
-    it('displays organization events list', () => {
-      organization.visit('awesome-orga');
       organization.list().should('have.length', 2);
-    });
-
-    it('can create a new event', () => {
-      organization.visit('awesome-orga');
       organization.newEvent();
       eventNew.isPageVisible();
     });
@@ -35,7 +28,7 @@ describe('Organization event list', () => {
     it('displayed empty state when no event and can create a new one', () => {
       organization.visit('awesome-orga-2');
       cy.assertText('Welcome to "Awesome orga 2"');
-      cy.findByRole('button', { name: 'Create and configure event' }).should('exist');
+      cy.findByRole('link', { name: 'New event' }).should('exist');
     });
   });
 
@@ -47,7 +40,7 @@ describe('Organization event list', () => {
       organization.eventsTab().should('exist');
       organization.membersTab().should('exist');
       organization.settingsTab().should('not.exist');
-      cy.findByRole('button', { name: 'Create and configure event' }).should('not.exist');
+      cy.findByRole('button', { name: 'New event' }).should('not.exist');
     });
   });
 
@@ -59,7 +52,7 @@ describe('Organization event list', () => {
       organization.eventsTab().should('exist');
       organization.membersTab().should('not.exist');
       organization.settingsTab().should('not.exist');
-      cy.findByRole('button', { name: 'Create and configure event' }).should('not.exist');
+      cy.findByRole('button', { name: 'New event' }).should('not.exist');
     });
   });
 });

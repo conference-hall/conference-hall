@@ -44,7 +44,7 @@ export default function EventSubmitRoute() {
 
       {Boolean(max) && (
         <IconLabel icon={ExclamationTriangleIcon} strong>
-          You can submit a maximum of {max} proposals. ({submitted} out of {max})
+          You can submit a maximum of {max} proposals. {submitted} already submitted.
         </IconLabel>
       )}
 

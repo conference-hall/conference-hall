@@ -82,7 +82,7 @@ describe('Speaker talk page', () => {
     search.isPageVisible();
     cy.assertUrl('?talkId=awesome-talk');
     search.result('Devfest Nantes').click();
-    cy.assertText('Talk proposal already submitted.');
+    cy.assertText('Talk already submitted.');
   });
 
   it('can invite a co-speaker', () => {

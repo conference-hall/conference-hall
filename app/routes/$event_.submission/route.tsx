@@ -7,11 +7,12 @@ import { mapErrorToResponse } from '~/libs/errors';
 import { getEvent } from '~/shared-server/events/get-event.server';
 import { SubmissionSteps } from './components/SubmissionSteps';
 import { Container } from '~/design-system/Container';
-import { Button, ButtonLink } from '~/design-system/Buttons';
+import { Button } from '~/design-system/Buttons';
 import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { EventHeader } from '../$event/components/EventHeader';
 import { useSubmissionStep } from './hooks/useSubmissionStep';
+import { IconButtonLink } from '~/design-system/IconButtons';
 
 type Step = {
   key: string;
@@ -29,7 +30,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
   try {
     const event = await getEvent(params.event);
-    if (!event.isCfpOpen) throw new Response('CFP is not opened!', { status: 403 });
+    if (!event.isCfpOpen) throw new Response('CFP is not open!', { status: 403 });
 
     const steps: Array<Step> = [
       {
@@ -99,8 +100,8 @@ export default function EventSubmissionRoute() {
 
       <div className="sticky top-0 z-10 border-b border-gray-200 bg-white py-2 shadow">
         <Container className="flex w-full items-center justify-between gap-4 py-2">
-          <div className="flex gap-4">
-            <ButtonLink rounded iconLeft={ArrowLeftIcon} variant="secondary" to={previousPath || `/${event.slug}`} />
+          <div className="flex items-center space-x-4">
+            <IconButtonLink to={previousPath || `/${event.slug}`} variant="secondary" icon={ArrowLeftIcon} />
             <SubmissionSteps steps={steps} currentStep={currentStepKey} />
           </div>
           {currentStep?.form && (
