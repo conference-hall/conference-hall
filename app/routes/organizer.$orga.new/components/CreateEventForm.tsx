@@ -22,7 +22,7 @@ export function CreateEventForm({ type, errors }: { type: string; errors?: Recor
           <ButtonLink to="." variant="secondary">
             Cancel
           </ButtonLink>
-          <Button>Create and configure event</Button>
+          <Button type="submit">Create event</Button>
         </div>
       </Form>
     </>
