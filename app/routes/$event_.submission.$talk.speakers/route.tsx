@@ -2,12 +2,10 @@ import invariant from 'tiny-invariant';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
-import { Button, ButtonLink } from '~/design-system/Buttons';
 import { InviteCoSpeakerButton, CoSpeakersList } from '../../shared-components/proposal-forms/CoSpeaker';
-import { useSubmissionStep } from '../../shared-components/useSubmissionStep';
 import { MarkdownTextArea } from '../../design-system/forms/MarkdownTextArea';
 import { ExternalLink } from '../../design-system/Links';
-import { H2, Subtitle, Text } from '../../design-system/Typography';
+import { H2, H3, Text } from '../../design-system/Typography';
 import { sessionRequired } from '../../libs/auth/auth.server';
 import { mapErrorToResponse } from '../../libs/errors';
 import { getEvent } from '../../shared-server/events/get-event.server';
@@ -17,6 +15,7 @@ import { withZod } from '@remix-validated-form/with-zod';
 import { removeCoSpeakerFromSubmission } from '~/shared-server/proposals/remove-co-speaker.server';
 import { getSubmittedProposal } from '../../shared-server/proposals/get-submitted-proposal.server';
 import { DetailsSchema } from '~/schemas/profile.schema';
+import { Card } from '~/design-system/Card';
 
 export const handle = { step: 'speakers' };
 
@@ -73,47 +72,36 @@ export const action = async ({ request, params }: ActionArgs) => {
 export default function SubmissionSpeakerRoute() {
   const data = useLoaderData<typeof loader>();
   const errors = useActionData<typeof action>();
-  const { previousPath } = useSubmissionStep();
 
   return (
     <>
-      <div className="py-6 sm:px-8 sm:py-10">
-        <Form id="speaker-form" method="POST">
-          <div>
-            <H2 mb={1}>Speaker details</H2>
-            <Subtitle>
-              Give more information about you, these information will be visible by organizers when you submit a talk.
-            </Subtitle>
-          </div>
+      <H2>Speaker details</H2>
+      <Card p={8} rounded="xl">
+        <Form id="speakers-form" method="POST">
           <MarkdownTextArea
             name="bio"
             label="Biography"
             rows={5}
             error={errors?.bio}
             defaultValue={data.currentSpeaker.bio || ''}
-            className="mt-6"
           />
-          <input type="hidden" name="references" value={data.currentSpeaker.references || ''} />
-          <Text>
+          <Text size="s" variant="secondary">
             You can give more information about you from{' '}
             <ExternalLink href="/speaker/settings">the profile page.</ExternalLink>
           </Text>
+          <input type="hidden" name="references" value={data.currentSpeaker.references || ''} />
         </Form>
         <div className="mt-12">
-          <H2>Co-speakers</H2>
-          <Text variant="secondary">This information will be displayed publicly so be careful what you share.</Text>
+          <H3 mb={0}>Co-speakers</H3>
+          <Text size="s" variant="secondary">
+            When co-speaker accepts the invite, he/she will be automatically added to the proposal.
+          </Text>
           {data.speakers.length > 1 && (
             <CoSpeakersList speakers={data.speakers} showRemoveAction className="max-w-md py-4" />
           )}
           <InviteCoSpeakerButton to="PROPOSAL" id={data.proposalId} invitationLink={data.invitationLink} />
         </div>
-      </div>
-      <div className="my-4 flex justify-between gap-4 sm:flex-row sm:justify-end sm:px-8 sm:pb-4">
-        <ButtonLink to={previousPath} variant="secondary">
-          Back
-        </ButtonLink>
-        <Button form="speaker-form">Next</Button>
-      </div>
+      </Card>
     </>
   );
 }

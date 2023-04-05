@@ -1,27 +1,33 @@
 import invariant from 'tiny-invariant';
-import { Form, useActionData, useLoaderData } from '@remix-run/react';
-import { Button } from '~/design-system/Buttons';
-import { H2, Subtitle } from '../../design-system/Typography';
-import { sessionRequired } from '../../libs/auth/auth.server';
-import type { ActionArgs, LoaderArgs } from '@remix-run/node';
-import { json, redirect } from '@remix-run/node';
-import { mapErrorToResponse } from '../../libs/errors';
-import { TalkForm } from '../../shared-components/proposal-forms/TalkForm';
-import { ProposalCreateSchema } from '~/schemas/proposal';
 import { withZod } from '@remix-validated-form/with-zod';
+import { Form, useActionData, useLoaderData } from '@remix-run/react';
+import type { ActionArgs, LoaderArgs } from '@remix-run/node';
+import { Response } from '@remix-run/node';
+import { json, redirect } from '@remix-run/node';
+import { ProposalCreateSchema } from '~/schemas/proposal';
 import { getTalk } from '~/shared-server/talks/get-talk.server';
 import { saveDraftProposal } from './server/save-draft-proposal.server';
+import { Card } from '~/design-system/Card';
+import { sessionRequired } from '~/libs/auth/auth.server';
+import { mapErrorToResponse } from '~/libs/errors';
+import { H2 } from '~/design-system/Typography';
+import { TalkForm } from '~/shared-components/proposal-forms/TalkForm';
+import { isTalkAlreadySubmitted } from './server/is-talk-already-submitted.server';
 
 export const handle = { step: 'proposal' };
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
+  invariant(params.event, 'Invalid event slug');
   invariant(params.talk, 'Invalid talk id');
 
   try {
     if (params.talk === 'new') {
       return json(null);
     } else {
+      const alreadySubmitted = await isTalkAlreadySubmitted(params.event, params.talk, uid);
+      if (alreadySubmitted) throw new Response('Talk already submitted.', { status: 400 });
+
       const talk = await getTalk(uid, params.talk);
       return json(talk);
     }
@@ -52,18 +58,14 @@ export default function SubmissionProposalRoute() {
   const errors = useActionData<typeof action>();
 
   return (
-    <Form method="POST">
-      <div className="py-6 sm:px-8 sm:py-10">
-        <div className="mb-6">
-          <H2 mb={1}>Your proposal</H2>
-          <Subtitle>This information will be displayed publicly so be careful what you share.</Subtitle>
-        </div>
-        <TalkForm initialValues={talk} errors={errors} />
-      </div>
+    <>
+      <H2 mb={0}>Your proposal</H2>
 
-      <div className="py-5 text-right sm:px-6">
-        <Button type="submit">Save as draft and continue</Button>
-      </div>
-    </Form>
+      <Card p={8} rounded="xl">
+        <Form id="proposal-form" method="POST">
+          <TalkForm initialValues={talk} errors={errors} />
+        </Form>
+      </Card>
+    </>
   );
 }

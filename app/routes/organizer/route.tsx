@@ -4,6 +4,7 @@ import { Outlet, useOutletContext } from '@remix-run/react';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { Navbar } from '~/shared-components/navbar/Navbar';
 import type { UserContext } from '~/root';
+import { Footer } from '~/shared-components/Footer';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);
@@ -17,6 +18,7 @@ export default function OrganizerRoute() {
     <>
       <Navbar user={user} notifications={notifications} withSearch />
       <Outlet />
+      <Footer />
     </>
   );
 }

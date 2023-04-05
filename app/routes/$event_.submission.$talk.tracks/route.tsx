@@ -2,7 +2,6 @@ import invariant from 'tiny-invariant';
 import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
-import { Button, ButtonLink } from '~/design-system/Buttons';
 import { CategoriesForm } from '~/shared-components/proposal-forms/CategoriesForm';
 import { saveTracks } from './server/save-tracks.server';
 import { withZod } from '@remix-validated-form/with-zod';
@@ -11,9 +10,10 @@ import { getSubmittedProposal } from '~/shared-server/proposals/get-submitted-pr
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { mapErrorToResponse } from '~/libs/errors';
 import { TracksUpdateSchema } from './types/tracks';
-import { useSubmissionStep } from '~/shared-components/useSubmissionStep';
 import { FormatsForm } from '~/shared-components/proposal-forms/FormatsForm';
 import { getEvent } from '~/shared-server/events/get-event.server';
+import { Card } from '~/design-system/Card';
+import { H2, H3 } from '~/design-system/Typography';
 
 export const handle = { step: 'tracks' };
 
@@ -54,24 +54,30 @@ export const action: ActionFunction = async ({ request, params }) => {
 export default function SubmissionTracksRoute() {
   const event = useEvent();
   const proposal = useLoaderData<typeof loader>();
-  const { previousPath } = useSubmissionStep();
 
   return (
-    <Form method="POST">
-      <div className="space-y-12 py-6 sm:px-8 sm:py-10">
-        {event.formats?.length > 0 ? <FormatsForm formats={event.formats} initialValues={proposal.formats} /> : null}
+    <>
+      <H2>Proposal tracks</H2>
 
-        {event.categories?.length > 0 ? (
-          <CategoriesForm categories={event.categories} initialValues={proposal.categories} />
-        ) : null}
-      </div>
+      <Card p={8} rounded="xl">
+        <Form id="tracks-form" method="POST">
+          <div className="space-y-12">
+            {event.formats?.length > 0 && (
+              <section>
+                <H3>Formats</H3>
+                <FormatsForm formats={event.formats} initialValues={proposal.formats} />
+              </section>
+            )}
 
-      <div className="my-4 flex justify-between gap-4 sm:flex-row sm:justify-end sm:px-8 sm:pb-4">
-        <ButtonLink to={previousPath} variant="secondary">
-          Back
-        </ButtonLink>
-        <Button type="submit">Next</Button>
-      </div>
-    </Form>
+            {event.categories?.length > 0 && (
+              <section>
+                <H3>Categories</H3>
+                <CategoriesForm categories={event.categories} initialValues={proposal.categories} />
+              </section>
+            )}
+          </div>
+        </Form>
+      </Card>
+    </>
   );
 }

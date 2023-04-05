@@ -60,7 +60,7 @@ export function CheckboxField(
         <input
           ref={ref}
           id={id}
-          aria-describedby={id ? `${id}-description` : undefined}
+          aria-describedby={description ? `${id}-description` : undefined}
           name={name}
           type="checkbox"
           className={cn('h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500', {

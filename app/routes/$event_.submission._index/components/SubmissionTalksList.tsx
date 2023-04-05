@@ -26,7 +26,7 @@ export function SubmissionTalksList({ talks }: Props) {
   }
 
   return (
-    <ul aria-label="Talks list" className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+    <ul aria-label="Talks list" className="grid grid-cols-1 gap-6 pb-2 sm:grid-cols-2">
       {talks.map((talk) => (
         <TalkCard key={talk.id} {...talk} isCfpOpen />
       ))}

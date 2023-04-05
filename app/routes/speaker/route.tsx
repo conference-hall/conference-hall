@@ -10,6 +10,7 @@ import { Container } from '~/design-system/Container';
 import { H2, Text } from '~/design-system/Typography';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { Navbar } from '~/shared-components/navbar/Navbar';
+import { Footer } from '~/shared-components/Footer';
 
 export type SpeakerContext = {
   user: Awaited<ReturnType<typeof getUser>>;
@@ -44,6 +45,7 @@ export default function SpeakerRoute() {
       </header>
       <SpeakerTabs hasOrganization={Boolean(user?.organizationsCount)} />
       {user && <Outlet context={{ user }} />}
+      <Footer />
     </>
   );
 }

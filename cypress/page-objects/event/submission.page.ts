@@ -62,8 +62,8 @@ class EventSubmissionPage {
     if (data.references) cy.typeOn('References', data.references);
   }
 
-  submitTalkForm() {
-    return cy.findByRole('button', { name: 'Save as draft and continue' }).click();
+  continue() {
+    return cy.findByRole('button', { name: 'Continue' }).click();
   }
 
   /**
@@ -76,10 +76,6 @@ class EventSubmissionPage {
 
   fillSpeakerForm({ bio }: { bio: string }) {
     cy.typeOn('Biography', bio);
-  }
-
-  submitSpeakerForm() {
-    return cy.findByRole('button', { name: 'Next' }).click();
   }
 
   generateCoSpeakerInvite() {
@@ -108,10 +104,6 @@ class EventSubmissionPage {
     cy.findByRole('checkbox', { name: category }).click();
   }
 
-  submitTracksForm() {
-    cy.findByRole('button', { name: 'Next' }).click();
-  }
-
   /**
    * Survey step
    */
@@ -129,10 +121,6 @@ class EventSubmissionPage {
     if (data.message) cy.typeOn('Do you have specific information to share?', data.message);
   }
 
-  submitSurveyForm() {
-    cy.findByRole('button', { name: 'Next' }).click();
-  }
-
   /**
    * Confirmation step
    */
@@ -145,7 +133,7 @@ class EventSubmissionPage {
     if (data.cod) cy.findByRole('checkbox', { name: 'Please agree with the code of conduct of the event.' }).click();
   }
 
-  submitConfirmation() {
+  submit() {
     return cy.findByRole('button', { name: 'Submit proposal' }).click();
   }
 
@@ -153,7 +141,7 @@ class EventSubmissionPage {
    * Max proposals
    */
   checkMyProposalsButton() {
-    return cy.findByRole('link', { name: 'Check my submitted proposals' }).click();
+    return cy.findByRole('link', { name: 'Check submitted proposals' }).click();
   }
 }
 

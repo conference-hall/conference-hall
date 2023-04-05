@@ -38,18 +38,18 @@ describe('Submit a talk to event', () => {
         language: 'English',
         references: 'Best talk ever!',
       });
-      submission.submitTalkForm();
+      submission.continue();
 
       // Step: speaker
       submission.isSpeakerStepVisible();
       submission.fillSpeakerForm({ bio: 'I am the best!' });
-      submission.submitSpeakerForm();
+      submission.continue();
 
       // Step: tracks
       submission.isTracksStepVisible();
       submission.selectFormatTrack('Quickie');
       submission.selectCategoryTrack('Web');
-      submission.submitTracksForm();
+      submission.continue();
 
       // Step: survey
       submission.isSurveyStepVisible();
@@ -61,14 +61,14 @@ describe('Submit a talk to event', () => {
         meal: 'Vegetarian',
         message: 'Thanks!',
       });
-      submission.submitSurveyForm();
+      submission.continue();
 
       // Step: confirmation
       submission.isConfirmationStepVisible();
       cy.assertText('The amazing talk');
       cy.assertText('by Clark Kent');
       submission.fillConfirmationForm({ message: 'You rock!', cod: true });
-      submission.submitConfirmation();
+      submission.submit();
 
       // Check proposal list
       proposals.isPageVisible();
@@ -115,24 +115,24 @@ describe('Submit a talk to event', () => {
         language: 'English',
         references: 'References UPDATED',
       });
-      submission.submitTalkForm();
+      submission.continue();
 
       // Step: speaker
       submission.isSpeakerStepVisible();
-      submission.submitSpeakerForm();
+      submission.continue();
 
       // Step: tracks
       submission.isTracksStepVisible();
-      submission.submitTracksForm();
+      submission.continue();
 
       // Step: survey
       submission.isSurveyStepVisible();
-      submission.submitSurveyForm();
+      submission.continue();
 
       // Step: confirmation
       submission.isConfirmationStepVisible();
       submission.fillConfirmationForm({ cod: true });
-      submission.submitConfirmation();
+      submission.submit();
 
       // Check proposal list
       proposals.isPageVisible();
@@ -158,22 +158,22 @@ describe('Submit a talk to event', () => {
         title: 'The amazing talk',
         abstract: 'An amazing abstract for an amazing talk.',
       });
-      submission.submitTalkForm();
+      submission.continue();
 
       // Step: speaker
       submission.isSpeakerStepVisible();
-      submission.submitSpeakerForm();
+      submission.continue();
 
       // Step: tracks
       submission.isTracksStepVisible();
       submission.selectFormatTrack('Quickie');
       submission.selectCategoryTrack('Web');
-      submission.submitTracksForm();
+      submission.continue();
 
       // Step: confirmation
       submission.isConfirmationStepVisible();
       submission.fillConfirmationForm({ message: 'You rock!', cod: true });
-      submission.submitConfirmation();
+      submission.submit();
 
       // Check proposal list
       proposals.isPageVisible();
@@ -190,21 +190,21 @@ describe('Submit a talk to event', () => {
         title: 'The amazing talk',
         abstract: 'An amazing abstract for an amazing talk.',
       });
-      submission.submitTalkForm();
+      submission.continue();
 
       // Step: speaker
       submission.isSpeakerStepVisible();
-      submission.submitSpeakerForm();
+      submission.continue();
 
       // Step: survey
       submission.isSurveyStepVisible();
       submission.fillSurveyForm({ gender: 'Male' });
-      submission.submitSurveyForm();
+      submission.continue();
 
       // Step: confirmation
       submission.isConfirmationStepVisible();
       submission.fillConfirmationForm({ message: 'You rock!', cod: true });
-      submission.submitConfirmation();
+      submission.submit();
 
       // Check proposal list
       proposals.isPageVisible();
@@ -221,15 +221,15 @@ describe('Submit a talk to event', () => {
         title: 'The amazing talk',
         abstract: 'An amazing abstract for an amazing talk.',
       });
-      submission.submitTalkForm();
+      submission.continue();
 
       // Step: speaker
       submission.isSpeakerStepVisible();
-      submission.submitSpeakerForm();
+      submission.continue();
 
       // Step: confirmation
       submission.isConfirmationStepVisible();
-      submission.submitConfirmation();
+      submission.submit();
 
       // Check proposal list
       proposals.isPageVisible();
@@ -238,36 +238,37 @@ describe('Submit a talk to event', () => {
 
     it('cannot submit a talk when max proposal reached', () => {
       submission.visit('with-max-proposals');
-      cy.assertText('You can submit a maximum of 1 proposals. (0 out of 1)');
+      cy.assertText('You can submit a maximum of 1 proposals. 0 already submitted.');
 
       submission.talk('My existing talk').click();
       submission.isTalkStepVisible();
-      submission.submitTalkForm();
+      submission.continue();
 
       // Step: speaker
       submission.isSpeakerStepVisible();
-      submission.submitSpeakerForm();
+      submission.continue();
 
       // Step: confirmation
       submission.isConfirmationStepVisible();
       submission.fillConfirmationForm({ cod: true });
-      submission.submitConfirmation();
+      submission.submit();
+
       proposals.isPageVisible();
       proposals.submitProposal();
 
-      cy.assertText('You have submitted the maximum of proposals for the event. Thanks!');
+      cy.assertText('You have reached the maximum of submitted proposals for the event (1 max)');
       submission.checkMyProposalsButton();
       proposals.isPageVisible();
     });
 
     it('cannot submit a talk to an event with a cfp not open yet', () => {
       cy.visit('/conference-cfp-future/submission', { failOnStatusCode: false });
-      cy.assertText('CFP not open');
+      cy.assertText('CFP is not open!');
     });
 
     it('cannot submit a talk to an event with a cfp already closed', () => {
       cy.visit('/conference-cfp-past/submission', { failOnStatusCode: false });
-      cy.assertText('CFP not open');
+      cy.assertText('CFP is not open!');
     });
   });
 });
