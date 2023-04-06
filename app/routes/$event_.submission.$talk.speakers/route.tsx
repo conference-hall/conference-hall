@@ -5,7 +5,7 @@ import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import { InviteCoSpeakerButton, CoSpeakersList } from '../../shared-components/proposal-forms/CoSpeaker';
 import { MarkdownTextArea } from '../../design-system/forms/MarkdownTextArea';
 import { ExternalLink } from '../../design-system/Links';
-import { H2, H3, Text } from '../../design-system/Typography';
+import { H2, H3, Subtitle, Text } from '../../design-system/Typography';
 import { sessionRequired } from '../../libs/auth/auth.server';
 import { mapErrorToResponse } from '../../libs/errors';
 import { getEvent } from '../../shared-server/events/get-event.server';
@@ -93,13 +93,13 @@ export default function SubmissionSpeakerRoute() {
         </Form>
         <div className="mt-12">
           <H3 mb={0}>Co-speakers</H3>
-          <Text size="s" variant="secondary">
-            When co-speaker accepts the invite, he/she will be automatically added to the proposal.
-          </Text>
-          {data.speakers.length > 1 && (
-            <CoSpeakersList speakers={data.speakers} showRemoveAction className="max-w-md py-4" />
-          )}
-          <InviteCoSpeakerButton to="PROPOSAL" id={data.proposalId} invitationLink={data.invitationLink} />
+          <Subtitle>When co-speaker accepts the invite, he/she will be automatically added to the proposal.</Subtitle>
+          <div className="mt-6 space-y-6">
+            {data.speakers.length > 1 && (
+              <CoSpeakersList speakers={data.speakers} showRemoveAction className="max-w-md py-4" />
+            )}
+            <InviteCoSpeakerButton to="PROPOSAL" id={data.proposalId} invitationLink={data.invitationLink} />
+          </div>
         </div>
       </Card>
     </>

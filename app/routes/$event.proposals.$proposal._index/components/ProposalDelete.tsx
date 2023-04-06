@@ -4,11 +4,13 @@ import { Form } from '@remix-run/react';
 import { Button } from '~/design-system/Buttons';
 import { Modal } from '~/design-system/dialogs/Modals';
 
-export function ProposalDeleteButton() {
+type Props = { className?: string };
+
+export function ProposalDeleteButton({ className }: Props) {
   const [isModalOpen, setModalOpen] = useState(false);
   return (
     <>
-      <Button variant="secondary" onClick={() => setModalOpen(true)}>
+      <Button variant="secondary" onClick={() => setModalOpen(true)} className={className}>
         Delete proposal
       </Button>
       <ProposalDeleteModal isOpen={isModalOpen} onClose={() => setModalOpen(false)} />

@@ -61,12 +61,7 @@ export function InviteCoSpeakerButton({ to, id, invitationLink }: InviteProps) {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <Button
-        variant="secondary"
-        onClick={() => setOpen(true)}
-        iconLeft={UserPlusIcon}
-        className="group mt-4 flex items-center"
-      >
+      <Button variant="secondary" onClick={() => setOpen(true)} iconLeft={UserPlusIcon}>
         Invite a co-speaker
       </Button>
       <InvitationModal
