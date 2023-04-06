@@ -35,10 +35,7 @@ export default function SpeakerTalksRoute() {
   return (
     <Container className="my-4 sm:my-8">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-        <div className="hidden sm:block">
-          <H2>Your talks</H2>
-          <Text variant="secondary">All your talk abstracts.</Text>
-        </div>
+        <H2 mb={0}>Your talks</H2>
         <div className="flex flex-col gap-4 sm:mt-0 sm:flex-row">
           <Select
             name="status"
