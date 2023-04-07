@@ -3,6 +3,7 @@ import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import { json, redirect } from '@remix-run/node';
 import type { ActionArgs, ActionFunction, LoaderArgs } from '@remix-run/node';
 import { withZod } from '@remix-validated-form/with-zod';
+import { createToast } from '~/libs/toasts/toasts';
 import { Container } from '~/design-system/Container';
 import { H2, H3, Subtitle } from '~/design-system/Typography';
 import { TalkForm } from '~/shared-components/proposal-forms/TalkForm';
@@ -34,7 +35,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const action: ActionFunction = async ({ request, params }: ActionArgs) => {
-  const { uid } = await sessionRequired(request);
+  const { uid, session } = await sessionRequired(request);
   const form = await request.formData();
   invariant(params.event, 'Invalid event slug');
   invariant(params.proposal, 'Invalid proposal id');
@@ -43,12 +44,14 @@ export const action: ActionFunction = async ({ request, params }: ActionArgs) =>
     const method = form.get('_method');
     if (method === 'DELETE') {
       await deleteProposal(params.proposal, uid);
-      throw redirect(`/${params.event}/proposals`);
+      const toast = await createToast(session, 'Proposal successfully deleted.');
+      throw redirect(`/${params.event}/proposals`, toast);
     } else {
       const result = await withZod(ProposalUpdateSchema).validate(form);
       if (result.error) return json(result.error.fieldErrors);
       await updateProposal(params.event, params.proposal, uid, result.data);
-      throw redirect(`/${params.event}/proposals/${params.proposal}`);
+      const toast = await createToast(session, 'Proposal successfully updated.');
+      throw redirect(`/${params.event}/proposals/${params.proposal}`, toast);
     }
   } catch (err) {
     mapErrorToResponse(err);

@@ -1,12 +1,13 @@
 import invariant from 'tiny-invariant';
 import { useState } from 'react';
 import { Form, useLoaderData } from '@remix-run/react';
+import { json, redirect } from '@remix-run/node';
+import { createToast } from '~/libs/toasts/toasts';
 import { Button, ButtonLink } from '~/design-system/Buttons';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
 import { ExternalLink } from '../../design-system/Links';
 import { H2, Text } from '../../design-system/Typography';
 import type { ActionFunction, LoaderArgs } from '@remix-run/node';
-import { json, redirect } from '@remix-run/node';
 import { sessionRequired } from '../../libs/auth/auth.server';
 import { submitProposal } from './server/submit-proposal.server';
 import { mapErrorToResponse } from '../../libs/errors';
@@ -34,7 +35,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const { uid } = await sessionRequired(request);
+  const { uid, session } = await sessionRequired(request);
   const form = await request.formData();
   invariant(params.event, 'Invalid event slug');
   invariant(params.talk, 'Invalid talk id');
@@ -45,7 +46,8 @@ export const action: ActionFunction = async ({ request, params }) => {
   } catch (err) {
     throw mapErrorToResponse(err);
   }
-  return redirect(`/${params.event}/proposals`);
+  const toast = await createToast(session, 'Congratulation! Proposal submitted!');
+  return redirect(`/${params.event}/proposals`, toast);
 };
 
 export default function SubmissionSubmitRoute() {
