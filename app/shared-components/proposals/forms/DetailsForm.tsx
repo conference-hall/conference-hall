@@ -1,7 +1,7 @@
 import { Input } from '~/design-system/forms/Input';
 import { Radio, RadioGroup } from '~/design-system/forms/RadioGroup';
 import { MarkdownTextArea } from '~/design-system/forms/MarkdownTextArea';
-import { LEVELS } from '../../utils/levels';
+import { LEVELS } from '../../../utils/levels';
 import MultiSelect from '~/design-system/forms/MultiSelect';
 import { LANGUAGES } from '~/utils/languages';
 
@@ -16,7 +16,7 @@ type Props = {
   errors?: Record<string, string>;
 };
 
-export function TalkForm({ initialValues, errors }: Props) {
+export function DetailsForm({ initialValues, errors }: Props) {
   return (
     <div className="space-y-10">
       <Input

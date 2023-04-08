@@ -1,7 +1,7 @@
 import type { SurveyQuestions } from '~/schemas/survey';
-import { Checkbox, CheckboxGroup } from '../../design-system/forms/Checkboxes';
-import { Radio, RadioGroup } from '../../design-system/forms/RadioGroup';
-import { TextArea } from '../../design-system/forms/TextArea';
+import { Checkbox, CheckboxGroup } from '../../../design-system/forms/Checkboxes';
+import { Radio, RadioGroup } from '../../../design-system/forms/RadioGroup';
+import { TextArea } from '../../../design-system/forms/TextArea';
 
 export type Props = {
   questions: SurveyQuestions;

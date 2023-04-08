@@ -2,7 +2,7 @@ import invariant from 'tiny-invariant';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
-import { InviteCoSpeakerButton, CoSpeakersList } from '../../shared-components/proposal-forms/CoSpeaker';
+import { InviteCoSpeakerButton, CoSpeakersList } from '../../shared-components/proposals/forms/CoSpeaker';
 import { MarkdownTextArea } from '../../design-system/forms/MarkdownTextArea';
 import { ExternalLink } from '../../design-system/Links';
 import { H2, H3, Subtitle, Text } from '../../design-system/Typography';

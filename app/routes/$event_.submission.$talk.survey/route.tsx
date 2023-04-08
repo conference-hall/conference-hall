@@ -6,7 +6,7 @@ import { Form, useLoaderData } from '@remix-run/react';
 import { withZod } from '@remix-validated-form/with-zod';
 import { SurveySchema } from '~/schemas/survey';
 import { getAnswers } from '~/shared-server/survey/get-answers.server';
-import { SurveyForm } from '../../shared-components/proposal-forms/SurveyForm';
+import { SurveyForm } from '../../shared-components/proposals/forms/SurveyForm';
 import { H2 } from '../../design-system/Typography';
 import { sessionRequired } from '../../libs/auth/auth.server';
 import { mapErrorToResponse } from '../../libs/errors';

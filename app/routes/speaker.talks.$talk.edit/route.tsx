@@ -8,7 +8,7 @@ import { TalkSaveSchema } from '~/schemas/talks';
 import { getTalk } from '~/shared-server/talks/get-talk.server';
 import { updateTalk } from '~/routes/speaker.talks.$talk.edit/server/update-talk.server';
 import { createToast } from '~/libs/toasts/toasts';
-import { TalkForm } from '../../shared-components/proposal-forms/TalkForm';
+import { DetailsForm } from '../../shared-components/proposals/forms/DetailsForm';
 import { Button, ButtonLink } from '../../design-system/Buttons';
 import { H2 } from '../../design-system/Typography';
 import { sessionRequired } from '../../libs/auth/auth.server';
@@ -61,7 +61,7 @@ export default function SpeakerTalkRoute() {
 
       <Form method="POST" className="sm:mt-4 sm:rounded-lg sm:border sm:border-gray-200">
         <div className="py-8 sm:px-6">
-          <TalkForm initialValues={talk} errors={errors} />
+          <DetailsForm initialValues={talk} errors={errors} />
         </div>
 
         <div className="flex flex-col gap-4 py-3 sm:flex-row sm:justify-end sm:bg-gray-50 sm:px-6">

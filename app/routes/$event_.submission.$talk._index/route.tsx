@@ -11,7 +11,7 @@ import { Card } from '~/design-system/Card';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { mapErrorToResponse } from '~/libs/errors';
 import { H2 } from '~/design-system/Typography';
-import { TalkForm } from '~/shared-components/proposal-forms/TalkForm';
+import { DetailsForm } from '~/shared-components/proposals/forms/DetailsForm';
 import { isTalkAlreadySubmitted } from './server/is-talk-already-submitted.server';
 
 export const handle = { step: 'proposal' };
@@ -63,7 +63,7 @@ export default function SubmissionProposalRoute() {
 
       <Card p={8} rounded="xl">
         <Form id="proposal-form" method="POST">
-          <TalkForm initialValues={talk} errors={errors} />
+          <DetailsForm initialValues={talk} errors={errors} />
         </Form>
       </Card>
     </>

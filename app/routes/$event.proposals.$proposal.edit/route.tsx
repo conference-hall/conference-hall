@@ -6,9 +6,9 @@ import { withZod } from '@remix-validated-form/with-zod';
 import { createToast } from '~/libs/toasts/toasts';
 import { Container } from '~/design-system/Container';
 import { H2, H3, Subtitle } from '~/design-system/Typography';
-import { TalkForm } from '~/shared-components/proposal-forms/TalkForm';
-import { FormatsForm } from '~/shared-components/proposal-forms/FormatsForm';
-import { CategoriesForm } from '~/shared-components/proposal-forms/CategoriesForm';
+import { DetailsForm } from '~/shared-components/proposals/forms/DetailsForm';
+import { FormatsForm } from '~/shared-components/proposals/forms/FormatsForm';
+import { CategoriesForm } from '~/shared-components/proposals/forms/CategoriesForm';
 import { Button, ButtonLink } from '~/design-system/Buttons';
 import { mapErrorToResponse } from '~/libs/errors';
 import { sessionRequired } from '~/libs/auth/auth.server';
@@ -20,7 +20,7 @@ import { useEvent } from '../$event/route';
 import { IconButtonLink } from '~/design-system/IconButtons';
 import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 import { Card } from '~/design-system/Card';
-import { CoSpeakersList, InviteCoSpeakerButton } from '~/shared-components/proposal-forms/CoSpeaker';
+import { CoSpeakersList, InviteCoSpeakerButton } from '~/shared-components/proposals/forms/CoSpeaker';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
@@ -74,7 +74,7 @@ export default function EditProposalRoute() {
         <div className="lg:col-span-2 lg:col-start-1">
           <Card rounded="xl" p={8} className="space-y-8">
             <Form method="POST">
-              <TalkForm initialValues={proposal} errors={errors} />
+              <DetailsForm initialValues={proposal} errors={errors} />
 
               {event.formats?.length > 0 ? (
                 <div className="pt-10">
