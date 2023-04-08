@@ -9,7 +9,7 @@ class SpeakerTalkPage {
   }
 
   submitTalk() {
-    return cy.findByRole('link', { name: 'Submit' });
+    cy.findByRole('link', { name: 'Submit' }).click();
   }
 
   openActions() {

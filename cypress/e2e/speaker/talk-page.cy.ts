@@ -69,7 +69,7 @@ describe('Speaker talk page', () => {
 
   it('can submit a talk', () => {
     talk.visit('awesome-talk');
-    talk.submitTalk().click();
+    talk.submitTalk();
     search.isPageVisible();
     cy.assertUrl('?talkId=awesome-talk');
     search.result('GDG Nantes').click();
@@ -78,7 +78,7 @@ describe('Speaker talk page', () => {
 
   it('cannot submit a talk already submitted', () => {
     talk.visit('awesome-talk');
-    talk.submitTalk().click();
+    talk.submitTalk();
     search.isPageVisible();
     cy.assertUrl('?talkId=awesome-talk');
     search.result('Devfest Nantes').click();
