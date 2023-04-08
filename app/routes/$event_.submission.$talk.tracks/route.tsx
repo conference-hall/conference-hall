@@ -2,7 +2,7 @@ import invariant from 'tiny-invariant';
 import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
-import { CategoriesForm } from '~/shared-components/proposal-forms/CategoriesForm';
+import { CategoriesForm } from '~/shared-components/proposals/forms/CategoriesForm';
 import { saveTracks } from './server/save-tracks.server';
 import { withZod } from '@remix-validated-form/with-zod';
 import { useEvent } from '~/routes/$event/route';
@@ -10,7 +10,7 @@ import { getSubmittedProposal } from '~/shared-server/proposals/get-submitted-pr
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { mapErrorToResponse } from '~/libs/errors';
 import { TracksUpdateSchema } from './types/tracks';
-import { FormatsForm } from '~/shared-components/proposal-forms/FormatsForm';
+import { FormatsForm } from '~/shared-components/proposals/forms/FormatsForm';
 import { getEvent } from '~/shared-server/events/get-event.server';
 import { Card } from '~/design-system/Card';
 import { H2, H3 } from '~/design-system/Typography';

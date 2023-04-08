@@ -1,4 +1,3 @@
-import type { Event, User } from '@prisma/client';
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventCategoryFactory } from 'tests/factories/categories';
 import { eventFactory } from 'tests/factories/events';
@@ -9,6 +8,7 @@ import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
 import { ProposalNotFoundError } from '../../libs/errors';
 import { getSpeakerProposal } from './get-speaker-proposal.server';
+import { SpeakerProposalStatus } from './get-speaker-proposal-status';
 
 describe('#getSpeakerProposal', () => {
   beforeEach(async () => {
@@ -17,7 +17,7 @@ describe('#getSpeakerProposal', () => {
   afterEach(disconnectDB);
 
   it('returns event proposals of the speaker', async () => {
-    const event = await eventFactory();
+    const event = await eventFactory({ traits: ['conference-cfp-open'] });
     const format = await eventFormatFactory({ event });
     const category = await eventCategoryFactory({ event });
 
@@ -38,12 +38,7 @@ describe('#getSpeakerProposal', () => {
       createdAt: proposal.createdAt.toUTCString(),
       languages: proposal.languages,
       invitationLink: `http://localhost:3001/invitation/${invite?.id}`,
-      isAccepted: false,
-      isConfirmed: false,
-      isDeclined: false,
-      isDraft: false,
-      isRejected: false,
-      isSubmitted: true,
+      status: SpeakerProposalStatus.Submitted,
       formats: [{ id: format.id, name: format.name }],
       categories: [{ id: category.id, name: category.name }],
       speakers: [
@@ -54,114 +49,6 @@ describe('#getSpeakerProposal', () => {
           isOwner: true,
         },
       ],
-    });
-  });
-
-  describe('return proposal statuses', () => {
-    let event: Event;
-    let speaker: User;
-
-    beforeEach(async () => {
-      event = await eventFactory();
-      speaker = await userFactory();
-    });
-
-    it('returns draft proposal', async () => {
-      const talk = await talkFactory({ speakers: [speaker] });
-      const proposal = await proposalFactory({ event, talk, traits: ['draft'] });
-      const result = await getSpeakerProposal(proposal.id, speaker.id);
-      expect(result).toContain({
-        isAccepted: false,
-        isConfirmed: false,
-        isDeclined: false,
-        isDraft: true,
-        isRejected: false,
-        isSubmitted: false,
-      });
-    });
-
-    it('returns accepted proposal but not notified', async () => {
-      const talk = await talkFactory({ speakers: [speaker] });
-      const proposal = await proposalFactory({ event, talk, traits: ['accepted'] });
-      const result = await getSpeakerProposal(proposal.id, speaker.id);
-      expect(result).toContain({
-        isAccepted: false,
-        isConfirmed: false,
-        isDeclined: false,
-        isDraft: false,
-        isRejected: false,
-        isSubmitted: false,
-      });
-    });
-
-    it('returns accepted proposal and notified', async () => {
-      const talk = await talkFactory({ speakers: [speaker] });
-      const proposal = await proposalFactory({ event, talk, traits: ['acceptedAndNotified'] });
-      const result = await getSpeakerProposal(proposal.id, speaker.id);
-      expect(result).toContain({
-        isAccepted: true,
-        isConfirmed: false,
-        isDeclined: false,
-        isDraft: false,
-        isRejected: false,
-        isSubmitted: false,
-      });
-    });
-
-    it('returns rejected proposal but not notified', async () => {
-      const talk = await talkFactory({ speakers: [speaker] });
-      const proposal = await proposalFactory({ event, talk, traits: ['rejected'] });
-      const result = await getSpeakerProposal(proposal.id, speaker.id);
-      expect(result).toContain({
-        isAccepted: false,
-        isConfirmed: false,
-        isDeclined: false,
-        isDraft: false,
-        isRejected: false,
-        isSubmitted: false,
-      });
-    });
-
-    it('returns rejected proposal and notified', async () => {
-      const talk = await talkFactory({ speakers: [speaker] });
-      const proposal = await proposalFactory({ event, talk, traits: ['rejectedAndNotified'] });
-      const result = await getSpeakerProposal(proposal.id, speaker.id);
-      expect(result).toContain({
-        isAccepted: false,
-        isConfirmed: false,
-        isDeclined: false,
-        isDraft: false,
-        isRejected: true,
-        isSubmitted: false,
-      });
-    });
-
-    it('returns confirmed proposal', async () => {
-      const talk = await talkFactory({ speakers: [speaker] });
-      const proposal = await proposalFactory({ event, talk, traits: ['confirmed'] });
-      const result = await getSpeakerProposal(proposal.id, speaker.id);
-      expect(result).toContain({
-        isAccepted: false,
-        isConfirmed: true,
-        isDeclined: false,
-        isDraft: false,
-        isRejected: false,
-        isSubmitted: false,
-      });
-    });
-
-    it('returns declined proposal', async () => {
-      const talk = await talkFactory({ speakers: [speaker] });
-      const proposal = await proposalFactory({ event, talk, traits: ['declined'] });
-      const result = await getSpeakerProposal(proposal.id, speaker.id);
-      expect(result).toContain({
-        isAccepted: false,
-        isConfirmed: false,
-        isDeclined: true,
-        isDraft: false,
-        isRejected: false,
-        isSubmitted: false,
-      });
     });
   });
 

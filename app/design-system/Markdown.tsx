@@ -14,7 +14,7 @@ export function Markdown({ component: Component = 'div', source, size = 's', cla
   const html = marked.parse(source || '');
   return (
     <Component
-      className={cn('prose max-w-none', { 'prose-sm': size === 's' }, className)}
+      className={cn('prose max-w-none text-gray-900', { 'prose-sm': size === 's' }, className)}
       dangerouslySetInnerHTML={{ __html: xss(html) }}
     />
   );

@@ -1,13 +1,13 @@
-import { ProposalStatus } from '@prisma/client';
-import { db } from '../../../libs/db';
+import { db } from '~/libs/db';
+import { getSpeakerProposalStatus } from '~/shared-server/proposals/get-speaker-proposal-status';
 
 export async function listSpeakerProposals(slug: string, uid: string) {
   const proposals = await db.proposal.findMany({
-    include: { speakers: true },
     where: {
       speakers: { some: { id: uid } },
       event: { slug },
     },
+    include: { speakers: true, event: true },
     orderBy: { createdAt: 'desc' },
   });
 
@@ -15,12 +15,7 @@ export async function listSpeakerProposals(slug: string, uid: string) {
     id: proposal.id,
     title: proposal.title,
     talkId: proposal.talkId,
-    isDraft: proposal.status === ProposalStatus.DRAFT,
-    isSubmitted: proposal.status === ProposalStatus.SUBMITTED,
-    isAccepted: proposal.status === ProposalStatus.ACCEPTED && proposal.emailAcceptedStatus !== null,
-    isRejected: proposal.status === ProposalStatus.REJECTED && proposal.emailRejectedStatus !== null,
-    isConfirmed: proposal.status === ProposalStatus.CONFIRMED,
-    isDeclined: proposal.status === ProposalStatus.DECLINED,
+    status: getSpeakerProposalStatus(proposal, proposal.event),
     createdAt: proposal.createdAt.toUTCString(),
     speakers: proposal.speakers.map((speaker) => ({
       id: speaker.id,

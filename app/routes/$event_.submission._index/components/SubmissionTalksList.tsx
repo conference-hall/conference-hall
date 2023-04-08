@@ -1,13 +1,12 @@
 import { InboxIcon } from '@heroicons/react/24/outline';
 import { ButtonLink } from '~/design-system/Buttons';
 import { EmptyState } from '~/design-system/EmptyState';
-import { TalkCard } from '~/shared-components/TalkCard';
+import { ProposalCard } from '~/shared-components/proposals/ProposalCard';
 
 type Props = {
   talks: Array<{
     id: string;
     title: string;
-    isDraft: boolean;
     speakers: Array<{
       id: string;
       name: string | null;
@@ -28,7 +27,7 @@ export function SubmissionTalksList({ talks }: Props) {
   return (
     <ul aria-label="Talks list" className="grid grid-cols-1 gap-6 pb-2 sm:grid-cols-2">
       {talks.map((talk) => (
-        <TalkCard key={talk.id} {...talk} isCfpOpen />
+        <ProposalCard key={talk.id} {...talk} />
       ))}
     </ul>
   );

@@ -2,8 +2,8 @@ import { TrashIcon, UserPlusIcon } from '@heroicons/react/20/solid';
 import { Form } from '@remix-run/react';
 import { useState } from 'react';
 import { AvatarName } from '~/design-system/Avatar';
-import { Button } from '../../design-system/Buttons';
-import { InvitationModal } from '../InvitationModal';
+import { Button } from '../../../design-system/Buttons';
+import { InvitationModal } from '../../InvitationModal';
 
 type InviteType = 'TALK' | 'PROPOSAL';
 
@@ -61,12 +61,7 @@ export function InviteCoSpeakerButton({ to, id, invitationLink }: InviteProps) {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <Button
-        variant="secondary"
-        onClick={() => setOpen(true)}
-        iconLeft={UserPlusIcon}
-        className="group mt-4 flex items-center"
-      >
+      <Button variant="secondary" onClick={() => setOpen(true)} iconLeft={UserPlusIcon}>
         Invite a co-speaker
       </Button>
       <InvitationModal

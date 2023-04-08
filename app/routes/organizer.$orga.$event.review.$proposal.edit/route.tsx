@@ -5,10 +5,10 @@ import { redirect } from '@remix-run/node';
 import type { OrganizerProposalContext } from '../organizer.$orga.$event.review.$proposal/route';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { Form, useActionData, useOutletContext, useSearchParams } from '@remix-run/react';
-import { TalkForm } from '~/shared-components/proposal-forms/TalkForm';
+import { DetailsForm } from '~/shared-components/proposals/forms/DetailsForm';
 import { Button, ButtonLink } from '~/design-system/Buttons';
-import { FormatsForm } from '~/shared-components/proposal-forms/FormatsForm';
-import { CategoriesForm } from '~/shared-components/proposal-forms/CategoriesForm';
+import { FormatsForm } from '~/shared-components/proposals/forms/FormatsForm';
+import { CategoriesForm } from '~/shared-components/proposals/forms/CategoriesForm';
 import { mapErrorToResponse } from '~/libs/errors';
 import { withZod } from '@remix-validated-form/with-zod';
 import { ProposalUpdateSchema } from '~/schemas/proposal';
@@ -48,7 +48,7 @@ export default function OrganizerProposalContentRoute() {
   return (
     <Form method="POST" className="flex h-full flex-1 flex-col justify-between overflow-hidden">
       <div className="flex flex-col gap-8 overflow-auto py-8 sm:px-8">
-        <TalkForm initialValues={proposalReview.proposal} errors={errors} />
+        <DetailsForm initialValues={proposalReview.proposal} errors={errors} />
         {event.formats.length > 0 && <FormatsForm formats={event.formats} initialValues={formatsIds} />}
         {event.categories.length > 0 && <CategoriesForm categories={event.categories} initialValues={categoriesIds} />}
       </div>

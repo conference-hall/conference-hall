@@ -9,9 +9,9 @@ type Props = {
 
 export function IconLabel({ children, icon: Icon, size = 's', alt, ...rest }: Props) {
   return (
-    <div className="flex items-center">
+    <div className="flex items-center truncate">
       <Icon className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-500" aria-hidden="true" />
-      <Text size={size} {...rest}>
+      <Text size={size} truncate {...rest}>
         {children}
       </Text>
       {alt && <span className="sr-only">{alt}</span>}

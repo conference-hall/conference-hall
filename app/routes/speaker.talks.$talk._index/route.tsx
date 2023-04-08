@@ -14,7 +14,7 @@ import { getLevel } from '../../utils/levels';
 import { removeCoSpeakerFromTalk } from '../../shared-server/talks/remove-co-speaker.server';
 import { mapErrorToResponse } from '../../libs/errors';
 import { TalkActionsMenu } from './components/TalkActionsMenu';
-import { InviteCoSpeakerButton, CoSpeakersList } from '../../shared-components/proposal-forms/CoSpeaker';
+import { InviteCoSpeakerButton, CoSpeakersList } from '../../shared-components/proposals/forms/CoSpeaker';
 import { getTalk } from '~/shared-server/talks/get-talk.server';
 import { archiveTalk, restoreTalk } from './server/archive-talk.server';
 import { deleteTalk } from './server/delete-talk.server';

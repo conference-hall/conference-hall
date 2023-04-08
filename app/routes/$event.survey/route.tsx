@@ -2,7 +2,7 @@ import invariant from 'tiny-invariant';
 import type { ActionArgs, LoaderFunction } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
 import { json } from '@remix-run/node';
-import { SurveyForm } from '~/shared-components/proposal-forms/SurveyForm';
+import { SurveyForm } from '~/shared-components/proposals/forms/SurveyForm';
 import { Button } from '~/design-system/Buttons';
 import { Container } from '~/design-system/Container';
 import { H2, Subtitle } from '~/design-system/Typography';

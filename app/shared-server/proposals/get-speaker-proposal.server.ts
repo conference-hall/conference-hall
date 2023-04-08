@@ -1,8 +1,8 @@
-import { ProposalStatus } from '@prisma/client';
 import { jsonToArray } from '~/libs/prisma';
 import { db } from '../../libs/db';
 import { ProposalNotFoundError } from '../../libs/errors';
 import { buildInvitationLink } from '../invitations/build-link.server';
+import { getSpeakerProposalStatus } from '~/shared-server/proposals/get-speaker-proposal-status';
 
 export async function getSpeakerProposal(proposalId: string, uid: string) {
   const proposal = await db.proposal.findFirst({
@@ -11,6 +11,7 @@ export async function getSpeakerProposal(proposalId: string, uid: string) {
       id: proposalId,
     },
     include: {
+      event: true,
       speakers: true,
       formats: true,
       categories: true,
@@ -18,6 +19,7 @@ export async function getSpeakerProposal(proposalId: string, uid: string) {
       invitation: true,
     },
   });
+
   if (!proposal) throw new ProposalNotFoundError();
 
   return {
@@ -25,14 +27,9 @@ export async function getSpeakerProposal(proposalId: string, uid: string) {
     talkId: proposal.talkId,
     title: proposal.title,
     abstract: proposal.abstract,
-    isDraft: proposal.status === ProposalStatus.DRAFT,
-    isSubmitted: proposal.status === ProposalStatus.SUBMITTED,
-    isAccepted: proposal.status === ProposalStatus.ACCEPTED && proposal.emailAcceptedStatus !== null,
-    isRejected: proposal.status === ProposalStatus.REJECTED && proposal.emailRejectedStatus !== null,
-    isConfirmed: proposal.status === ProposalStatus.CONFIRMED,
-    isDeclined: proposal.status === ProposalStatus.DECLINED,
     level: proposal.level,
     references: proposal.references,
+    status: getSpeakerProposalStatus(proposal, proposal.event),
     createdAt: proposal.createdAt.toUTCString(),
     languages: jsonToArray(proposal.languages),
     formats: proposal.formats.map(({ id, name }) => ({ id, name })),

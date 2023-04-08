@@ -1,21 +1,27 @@
 import invariant from 'tiny-invariant';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
-import { Container } from '~/design-system/Container';
-import { Button, ButtonLink } from '../../design-system/Buttons';
-import { CategoriesForm } from '../../shared-components/proposal-forms/CategoriesForm';
-import type { ActionArgs, ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
-import { sessionRequired } from '../../libs/auth/auth.server';
-import { mapErrorToResponse } from '../../libs/errors';
-import { TalkForm } from '../../shared-components/proposal-forms/TalkForm';
-import { FormatsForm } from '../../shared-components/proposal-forms/FormatsForm';
-import { useEvent } from '../$event/route';
-import { H2 } from '../../design-system/Typography';
-import { ProposalUpdateSchema } from '~/schemas/proposal';
+import type { ActionArgs, ActionFunction, LoaderArgs } from '@remix-run/node';
 import { withZod } from '@remix-validated-form/with-zod';
+import { createToast } from '~/libs/toasts/toasts';
+import { Container } from '~/design-system/Container';
+import { H2, H3, Subtitle } from '~/design-system/Typography';
+import { DetailsForm } from '~/shared-components/proposals/forms/DetailsForm';
+import { FormatsForm } from '~/shared-components/proposals/forms/FormatsForm';
+import { CategoriesForm } from '~/shared-components/proposals/forms/CategoriesForm';
+import { Button, ButtonLink } from '~/design-system/Buttons';
+import { mapErrorToResponse } from '~/libs/errors';
+import { sessionRequired } from '~/libs/auth/auth.server';
+import { ProposalUpdateSchema } from '~/schemas/proposal';
 import { getSpeakerProposal } from '~/shared-server/proposals/get-speaker-proposal.server';
 import { deleteProposal } from './server/delete-proposal.server';
 import { updateProposal } from './server/update-proposal.server';
+import { useEvent } from '../$event/route';
+import { IconButtonLink } from '~/design-system/IconButtons';
+import { ArrowLeftIcon } from '@heroicons/react/24/outline';
+import { Card } from '~/design-system/Card';
+import { CoSpeakersList, InviteCoSpeakerButton } from '~/shared-components/proposals/forms/CoSpeaker';
+import { removeCoSpeakerFromProposal } from '~/shared-server/proposals/remove-co-speaker.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
@@ -30,21 +36,27 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const action: ActionFunction = async ({ request, params }: ActionArgs) => {
-  const { uid } = await sessionRequired(request);
+  const { uid, session } = await sessionRequired(request);
   const form = await request.formData();
   invariant(params.event, 'Invalid event slug');
   invariant(params.proposal, 'Invalid proposal id');
 
   try {
-    const method = form.get('_method');
-    if (method === 'DELETE') {
+    const action = form.get('_action');
+    if (action === 'delete') {
       await deleteProposal(params.proposal, uid);
-      throw redirect(`/${params.event}/proposals`);
+      const toast = await createToast(session, 'Proposal successfully deleted.');
+      throw redirect(`/${params.event}/proposals`, toast);
+    } else if (action === 'remove-speaker') {
+      const speakerId = form.get('_speakerId')?.toString() as string;
+      await removeCoSpeakerFromProposal(uid, params.proposal, speakerId);
+      return null;
     } else {
       const result = await withZod(ProposalUpdateSchema).validate(form);
       if (result.error) return json(result.error.fieldErrors);
       await updateProposal(params.event, params.proposal, uid, result.data);
-      throw redirect(`/${params.event}/proposals/${params.proposal}`);
+      const toast = await createToast(session, 'Proposal successfully updated.');
+      throw redirect(`/${params.event}/proposals/${params.proposal}`, toast);
     }
   } catch (err) {
     mapErrorToResponse(err);
@@ -57,38 +69,56 @@ export default function EditProposalRoute() {
   const errors = useActionData<typeof action>();
 
   return (
-    <Container className="my-4 sm:my-8">
-      <div className="flex flex-wrap items-center justify-between sm:flex-nowrap">
-        <div>
-          <H2>{proposal.title}</H2>
-          <span className="test-gray-500 truncate text-sm">by {proposal.speakers.map((s) => s.name).join(', ')}</span>
-        </div>
+    <Container className="my-4 space-y-8 sm:my-8">
+      <div className="flex items-start gap-4">
+        <IconButtonLink icon={ArrowLeftIcon} variant="secondary" to=".." relative="path" />
+        <H2 mb={0}>{proposal.title}</H2>
       </div>
 
-      <Form method="POST" className="sm:mt-4 sm:rounded-lg sm:border sm:border-gray-200">
-        <div className="py-8 sm:px-6">
-          <TalkForm initialValues={proposal} errors={errors} />
+      <div className="grid grid-cols-1 gap-6 lg:grid-flow-col-dense lg:grid-cols-3">
+        <div className="lg:col-span-2 lg:col-start-1">
+          <Card rounded="xl" p={8} className="space-y-8">
+            <Form method="POST">
+              <DetailsForm initialValues={proposal} errors={errors} />
 
-          {event.formats?.length > 0 ? (
-            <div className="pt-10">
-              <FormatsForm formats={event.formats} initialValues={proposal.formats.map(({ id }) => id)} />
-            </div>
-          ) : null}
+              {event.formats?.length > 0 ? (
+                <div className="pt-10">
+                  <FormatsForm formats={event.formats} initialValues={proposal.formats.map(({ id }) => id)} />
+                </div>
+              ) : null}
 
-          {event.categories?.length > 0 ? (
-            <div className="pt-10">
-              <CategoriesForm categories={event.categories} initialValues={proposal.categories.map(({ id }) => id)} />
-            </div>
-          ) : null}
+              {event.categories?.length > 0 ? (
+                <div className="pt-10">
+                  <CategoriesForm
+                    categories={event.categories}
+                    initialValues={proposal.categories.map(({ id }) => id)}
+                  />
+                </div>
+              ) : null}
+
+              <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:justify-end sm:px-6">
+                <ButtonLink to={`/${event.slug}/proposals/${proposal.id}`} variant="secondary">
+                  Cancel
+                </ButtonLink>
+                <Button type="submit">Save proposal</Button>
+              </div>
+            </Form>
+          </Card>
         </div>
 
-        <div className="flex flex-col gap-4 py-3 sm:flex-row sm:justify-end sm:bg-gray-50 sm:px-6">
-          <ButtonLink to={`/${event.slug}/proposals/${proposal.id}`} variant="secondary">
-            Cancel
-          </ButtonLink>
-          <Button type="submit">Save proposal</Button>
+        <div className="lg:col-span-1 lg:col-start-3">
+          <Card rounded="xl" p={8} className="space-y-6">
+            <div>
+              <H3>Speakers</H3>
+              <Subtitle>
+                When co-speaker accepts the invite, he/she will be automatically added to the proposal.
+              </Subtitle>
+            </div>
+            <CoSpeakersList speakers={proposal.speakers} showRemoveAction />
+            <InviteCoSpeakerButton to="PROPOSAL" id={proposal.id} invitationLink={proposal.invitationLink} />
+          </Card>
         </div>
-      </Form>
+      </div>
     </Container>
   );
 }

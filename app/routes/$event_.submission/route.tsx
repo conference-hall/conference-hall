@@ -1,18 +1,18 @@
 import { Outlet, useLoaderData } from '@remix-run/react';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { sessionRequired } from '~/libs/auth/auth.server';
 import invariant from 'tiny-invariant';
+import { ArrowLeftIcon } from '@heroicons/react/24/outline';
+import { ArrowRightIcon } from '@heroicons/react/20/solid';
+import { sessionRequired } from '~/libs/auth/auth.server';
 import { mapErrorToResponse } from '~/libs/errors';
 import { getEvent } from '~/shared-server/events/get-event.server';
 import { SubmissionSteps } from './components/SubmissionSteps';
 import { Container } from '~/design-system/Container';
 import { Button } from '~/design-system/Buttons';
-import { ArrowLeftIcon } from '@heroicons/react/24/outline';
-import { ArrowRightIcon } from '@heroicons/react/20/solid';
+import { IconButtonLink } from '~/design-system/IconButtons';
 import { EventHeader } from '../$event/components/EventHeader';
 import { useSubmissionStep } from './hooks/useSubmissionStep';
-import { IconButtonLink } from '~/design-system/IconButtons';
 
 type Step = {
   key: string;
@@ -92,6 +92,7 @@ export default function EventSubmissionRoute() {
       <EventHeader
         type={event.type}
         name={event.name}
+        slug={event.slug}
         bannerUrl={event.bannerUrl}
         address={event.address}
         conferenceStart={event.conferenceStart}
@@ -101,7 +102,7 @@ export default function EventSubmissionRoute() {
       <div className="sticky top-0 z-10 border-b border-gray-200 bg-white py-2 shadow">
         <Container className="flex w-full items-center justify-between gap-4 py-2">
           <div className="flex items-center space-x-4">
-            <IconButtonLink to={previousPath || `/${event.slug}`} variant="secondary" icon={ArrowLeftIcon} />
+            <IconButtonLink to={previousPath || `/${event.slug}/proposals`} variant="secondary" icon={ArrowLeftIcon} />
             <SubmissionSteps steps={steps} currentStep={currentStepKey} />
           </div>
           {currentStep?.form && (

@@ -4,11 +4,13 @@ import { Form } from '@remix-run/react';
 import { Button } from '~/design-system/Buttons';
 import { Modal } from '~/design-system/dialogs/Modals';
 
-export function ProposalDeleteButton() {
+type Props = { className?: string };
+
+export function ProposalDeleteButton({ className }: Props) {
   const [isModalOpen, setModalOpen] = useState(false);
   return (
     <>
-      <Button variant="secondary" onClick={() => setModalOpen(true)}>
+      <Button variant="secondary" onClick={() => setModalOpen(true)} className={className}>
         Delete proposal
       </Button>
       <ProposalDeleteModal isOpen={isModalOpen} onClose={() => setModalOpen(false)} />
@@ -28,7 +30,7 @@ function ProposalDeleteModal({ isOpen, onClose }: DeleteProposalModalProps) {
           icon={ExclamationTriangleIcon}
           iconColor="danger"
         />
-        <input type="hidden" name="_method" value="DELETE" />
+        <input type="hidden" name="_action" value="delete" />
         <Modal.Actions>
           <Button onClick={onClose} type="button" variant="secondary">
             Cancel

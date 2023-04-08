@@ -1,6 +1,6 @@
 import { InboxIcon } from '@heroicons/react/24/outline';
 import { EmptyState } from '~/design-system/EmptyState';
-import { TalkCard } from '~/shared-components/TalkCard';
+import { ProposalCard } from '~/shared-components/proposals/ProposalCard';
 
 type Props = {
   talks: Array<{
@@ -23,7 +23,7 @@ export function SpeakerTalksList({ talks }: Props) {
   return (
     <ul aria-label="Talks list" className="grid grid-cols-1 gap-6 sm:grid-cols-2">
       {talks.map((talk) => (
-        <TalkCard key={talk.id} id={talk.id} title={talk.title} speakers={talk.speakers} isArchived={talk.archived} />
+        <ProposalCard key={talk.id} id={talk.id} title={talk.title} speakers={talk.speakers} />
       ))}
     </ul>
   );

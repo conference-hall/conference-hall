@@ -32,13 +32,27 @@ describe('Speaker proposal edition page', () => {
     editProposal.saveAbstract().click();
 
     proposal.isPageVisible();
-    cy.assertText('Proposal "New title"');
+    cy.assertText('New title');
     cy.assertText('New abstract');
     cy.assertText('Beginner');
     cy.assertText('English');
     cy.assertText('New references');
     cy.assertText('Quickie, Quickie 2');
     cy.assertText('Web, Web 2');
+  });
+
+  it('can invite a co-speaker', () => {
+    editProposal.visit('devfest-nantes', 'awesome-proposal');
+    editProposal.generateCoSpeakerInvite().should('exist');
+    editProposal.closeCoSpeakerModal();
+  });
+
+  it('can remove a co-speaker', () => {
+    editProposal.visit('devfest-nantes', 'awesome-proposal');
+    cy.assertText('Bruce Wayne');
+    editProposal.removeCoSpeaker('Bruce Wayne').click();
+    editProposal.isPageVisible();
+    cy.assertNoText('Bruce Wayne');
   });
 
   it('display errors on mandatory fields', () => {

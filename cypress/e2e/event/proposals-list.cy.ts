@@ -39,7 +39,7 @@ describe('Event proposals list', () => {
     cy.login();
     proposals.visit('conference-cfp-past');
     proposals.list().should('have.length', 1);
-    proposals.proposal('My talk 1').should('contain.text', 'Submitted');
+    proposals.proposal('My talk 1').should('contain.text', 'Deliberation pending');
   });
 
   it('displays empty state when no proposals', () => {
