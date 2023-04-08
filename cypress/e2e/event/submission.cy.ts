@@ -77,12 +77,12 @@ describe('Submit a talk to event', () => {
 
       // Check proposal info
       proposal.isPageVisible();
-      cy.assertText('Proposal "The amazing talk"');
+      cy.assertText('The amazing talk');
       cy.assertText('Intermediate');
       cy.assertText('English');
       cy.assertText('An amazing abstract for an amazing talk.');
       cy.assertText('Best talk ever!');
-      cy.assertText('Clark Kent');
+      cy.assertText('by Clark Kent');
       cy.assertText('Quickie');
       cy.assertText('Web');
 
@@ -141,7 +141,7 @@ describe('Submit a talk to event', () => {
 
       // Check proposal info
       proposal.isPageVisible();
-      cy.assertText('Proposal "Title UPDATED"');
+      cy.assertText('Title UPDATED');
       cy.assertText('Intermediate');
       cy.assertText('English');
       cy.assertText('Abstract UPDATED');

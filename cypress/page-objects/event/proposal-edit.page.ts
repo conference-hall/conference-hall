@@ -36,6 +36,20 @@ class EventEditProposalPage {
     return cy.findByRole('button', { name: 'Save proposal' });
   }
 
+  generateCoSpeakerInvite() {
+    cy.findByRole('button', { name: 'Invite a co-speaker' }).click();
+    cy.findByRole('button', { name: 'Generate invitation link' }).click();
+    return cy.findByLabelText('Copy invitation link');
+  }
+
+  closeCoSpeakerModal() {
+    return cy.findByRole('button', { name: 'Close' }).click();
+  }
+
+  removeCoSpeaker(speakerName: string) {
+    return cy.findByLabelText(`Remove speaker ${speakerName}`);
+  }
+
   error(label: string) {
     return cy
       .findByLabelText(label)

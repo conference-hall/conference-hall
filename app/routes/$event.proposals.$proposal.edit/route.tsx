@@ -21,6 +21,7 @@ import { IconButtonLink } from '~/design-system/IconButtons';
 import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 import { Card } from '~/design-system/Card';
 import { CoSpeakersList, InviteCoSpeakerButton } from '~/shared-components/proposals/forms/CoSpeaker';
+import { removeCoSpeakerFromProposal } from '~/shared-server/proposals/remove-co-speaker.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
@@ -41,11 +42,15 @@ export const action: ActionFunction = async ({ request, params }: ActionArgs) =>
   invariant(params.proposal, 'Invalid proposal id');
 
   try {
-    const method = form.get('_method');
-    if (method === 'DELETE') {
+    const action = form.get('_action');
+    if (action === 'delete') {
       await deleteProposal(params.proposal, uid);
       const toast = await createToast(session, 'Proposal successfully deleted.');
       throw redirect(`/${params.event}/proposals`, toast);
+    } else if (action === 'remove-speaker') {
+      const speakerId = form.get('_speakerId')?.toString() as string;
+      await removeCoSpeakerFromProposal(uid, params.proposal, speakerId);
+      return null;
     } else {
       const result = await withZod(ProposalUpdateSchema).validate(form);
       if (result.error) return json(result.error.fieldErrors);

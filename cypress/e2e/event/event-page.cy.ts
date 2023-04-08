@@ -47,7 +47,7 @@ describe('View event page', () => {
 
   it('can submit a proposal', () => {
     cy.login();
-    cy.visit('devfest-nantes');
+    event.visit('devfest-nantes');
     event.submitButton().click();
     submission.isPageVisible();
   });

@@ -19,7 +19,7 @@ class EventProposalPage extends BasePage {
   }
 
   confirmProposal() {
-    return cy.findByRole('button', { name: 'Confirm your participation' });
+    return cy.findByRole('button', { name: 'Confirm' });
   }
 
   declineProposal() {
@@ -40,20 +40,6 @@ class EventProposalPage extends BasePage {
 
   confirmDelete() {
     return this.deleteConfirmDialog().findByRole('button', { name: 'Delete proposal' });
-  }
-
-  generateCoSpeakerInvite() {
-    cy.findByRole('button', { name: 'Invite a co-speaker' }).click();
-    cy.findByRole('button', { name: 'Generate invitation link' }).click();
-    return cy.findByLabelText('Copy invitation link');
-  }
-
-  closeCoSpeakerModal() {
-    return cy.findByRole('button', { name: 'Close' }).click();
-  }
-
-  removeCoSpeaker(speakerName: string) {
-    return cy.findByLabelText(`Remove speaker ${speakerName}`);
   }
 }
 

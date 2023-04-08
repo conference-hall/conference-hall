@@ -17,13 +17,12 @@ describe('Event proposal page details', () => {
   it('displays talk data', () => {
     proposal.visit('devfest-nantes', 'awesome-proposal');
 
-    cy.assertText('Proposal "Awesome talk"');
+    cy.assertText('Awesome talk');
     cy.assertText('Awesome abstract');
     cy.assertText('Awesome references');
     cy.assertText('Advanced');
     cy.assertText('French');
-    cy.assertText('Clark Kent');
-    cy.assertText('Bruce Wayne');
+    cy.assertText('by Clark Kent, Bruce Wayne');
     cy.assertText('Quickie');
     cy.assertText('Web');
   });
@@ -49,41 +48,27 @@ describe('Event proposal page details', () => {
     proposal.deleteProposal().click();
     proposal.deleteConfirmDialog().should('exist');
     proposal.cancelDelete().click();
-    cy.assertText('Proposal "Awesome talk"');
-  });
-
-  it('can invite a co-speaker', () => {
-    proposal.visit('devfest-nantes', 'awesome-proposal');
-    proposal.generateCoSpeakerInvite().should('exist');
-    proposal.closeCoSpeakerModal();
-  });
-
-  it('can remove a co-speaker', () => {
-    proposal.visit('devfest-nantes', 'awesome-proposal');
-    cy.assertText('Bruce Wayne');
-    proposal.removeCoSpeaker('Bruce Wayne').click();
-    proposal.isPageVisible();
-    cy.assertNoText('Bruce Wayne');
+    cy.assertText('Awesome talk');
   });
 
   describe('displays different proposal status panels', () => {
     it('can submit a draft proposal', () => {
       proposal.visit('devfest-nantes', 'awesome-proposal2');
-      cy.assertText('"My talk 2"" is in draft!');
+      cy.assertText('Draft proposal!');
       proposal.submitProposal().click();
       submission.isTalkStepVisible();
     });
 
     it('can confirm an accepted proposal', () => {
       proposal.visit('devfest-nantes', 'awesome-proposal3');
-      cy.assertText('Congrats! "My talk 3" proposal has been accepted to Devfest Nantes!');
+      cy.assertText('Proposal has been accepted to Devfest Nantes!');
       proposal.confirmProposal().click();
       cy.assertText('Your participation to Devfest Nantes is confirmed, Thanks!');
     });
 
     it('can decline an accepted proposal', () => {
       proposal.visit('devfest-nantes', 'awesome-proposal3');
-      cy.assertText('Congrats! "My talk 3" proposal has been accepted to Devfest Nantes!');
+      cy.assertText('Proposal has been accepted to Devfest Nantes!');
       proposal.declineProposal().click();
       cy.assertText('You have declined this proposal for Devfest Nantes.');
     });

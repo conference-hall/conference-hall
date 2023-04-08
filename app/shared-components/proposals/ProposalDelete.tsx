@@ -30,7 +30,7 @@ function ProposalDeleteModal({ isOpen, onClose }: DeleteProposalModalProps) {
           icon={ExclamationTriangleIcon}
           iconColor="danger"
         />
-        <input type="hidden" name="_method" value="DELETE" />
+        <input type="hidden" name="_action" value="delete" />
         <Modal.Actions>
           <Button onClick={onClose} type="button" variant="secondary">
             Cancel
