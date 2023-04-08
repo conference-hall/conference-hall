@@ -90,7 +90,7 @@ type AvatarGroupProps = {
 
 export function AvatarGroup({ avatars, displayNames = false }: AvatarGroupProps) {
   return (
-    <div className="-space-x-1 overflow-hidden">
+    <div className="-space-x-1 overflow-hidden truncate">
       {avatars.map((avatar) => (
         <Avatar
           key={avatar.name}
@@ -104,7 +104,7 @@ export function AvatarGroup({ avatars, displayNames = false }: AvatarGroupProps)
       ))}
       {displayNames && (
         <span className="pl-3">
-          <Text as="span" variant="secondary" size="s" truncate>
+          <Text as="span" variant="secondary" size="s">
             by {avatars.map((a) => a.name).join(', ')}
           </Text>
         </span>

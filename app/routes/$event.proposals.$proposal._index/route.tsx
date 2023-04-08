@@ -1,23 +1,23 @@
 import invariant from 'tiny-invariant';
 import { useLoaderData } from '@remix-run/react';
 import { Container } from '~/design-system/Container';
-import { useEvent } from '../$event/route';
-import { Markdown } from '../../design-system/Markdown';
-import { H2, H3, Text } from '../../design-system/Typography';
 import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { sessionRequired } from '../../libs/auth/auth.server';
-import { mapErrorToResponse } from '../../libs/errors';
-import Badge from '../../design-system/Badges';
-import { getLevel } from '../../utils/levels';
-import { getLanguage } from '../../utils/languages';
-import { ProposalStatusPanel } from '~/routes/$event.proposals.$proposal._index/components/ProposalStatusPanel';
 import { getSpeakerProposal } from '~/shared-server/proposals/get-speaker-proposal.server';
 import { removeCoSpeakerFromProposal } from '~/shared-server/proposals/remove-co-speaker.server';
 import { Card } from '~/design-system/Card';
 import { AvatarGroup } from '~/design-system/Avatar';
 import { IconButtonLink } from '~/design-system/IconButtons';
 import { ArrowLeftIcon } from '@heroicons/react/24/outline';
+import { ProposalStatusPanel } from '~/shared-components/proposals/ProposalStatusPanel';
+import { sessionRequired } from '~/libs/auth/auth.server';
+import { mapErrorToResponse } from '~/libs/errors';
+import { useEvent } from '../$event/route';
+import { H2, H3, Text } from '~/design-system/Typography';
+import { Markdown } from '~/design-system/Markdown';
+import Badge from '~/design-system/Badges';
+import { getLevel } from '~/utils/levels';
+import { getLanguage } from '~/utils/languages';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);

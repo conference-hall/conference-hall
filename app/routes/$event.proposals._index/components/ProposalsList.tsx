@@ -3,7 +3,7 @@ import type { EventProposals } from '~/routes/$event.proposals._index/route';
 import { InboxIcon } from '@heroicons/react/24/outline';
 import { EmptyState } from '~/design-system/EmptyState';
 import { CfpLabel } from '~/routes/$event.proposals._index/components/CfpLabel';
-import { TalkCard } from '~/shared-components/TalkCard';
+import { ProposalCard } from '~/shared-components/proposals/ProposalCard';
 
 type Props = {
   proposals: EventProposals;
@@ -22,7 +22,7 @@ export function ProposalsList({ proposals, cfpState }: Props) {
   return (
     <ul aria-label="Proposals list" className="grid grid-cols-1 gap-6 sm:grid-cols-2">
       {proposals.map((proposal) => (
-        <TalkCard key={proposal.id} {...proposal} isCfpOpen={cfpState === 'OPENED'} />
+        <ProposalCard key={proposal.id} {...proposal} />
       ))}
     </ul>
   );

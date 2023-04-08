@@ -3,58 +3,64 @@ import { Button, ButtonLink } from '~/design-system/Buttons';
 import { ProposalDeleteButton } from './ProposalDelete';
 import { Card } from '~/design-system/Card';
 import { H3, Subtitle, Text } from '~/design-system/Typography';
+import { SpeakerProposalStatus } from '~/shared-server/proposals/get-speaker-proposal-status';
 
 type Props = {
-  event: { name: string; isCfpOpen: boolean };
-  proposal: {
-    id: string;
-    title: string;
-    talkId: string | null;
-    isDraft: boolean;
-    isSubmitted: boolean;
-    isAccepted: boolean;
-    isRejected: boolean;
-    isConfirmed: boolean;
-    isDeclined: boolean;
-  };
+  proposal: { id: string; talkId: string | null; status: SpeakerProposalStatus };
+  event: { name: string; slug: string; isCfpOpen: boolean };
 };
 
 export function ProposalStatusPanel(props: Props) {
-  const { event, proposal } = props;
+  const { proposal } = props;
 
-  if (proposal.isDraft && event.isCfpOpen) {
-    return <DraftPanel {...props} />;
-  } else if (proposal.isSubmitted) {
-    return <SubmittedPanel {...props} />;
-  } else if (proposal.isAccepted) {
-    return <AcceptedPanel {...props} />;
-  } else if (proposal.isRejected) {
-    return <RejectedPanel {...props} />;
-  } else if (proposal.isConfirmed) {
-    return <ConfirmedPanel {...props} />;
-  } else if (proposal.isDeclined) {
-    return <DeclinedPanel {...props} />;
+  switch (proposal.status) {
+    case SpeakerProposalStatus.Draft:
+      return <Draft {...props} />;
+    case SpeakerProposalStatus.Submitted:
+      return <Submitted {...props} />;
+    case SpeakerProposalStatus.DeliberationPending:
+      return <DeliberationPending />;
+    case SpeakerProposalStatus.AcceptedByOrganizers:
+      return <AcceptedByOrganizers {...props} />;
+    case SpeakerProposalStatus.RejectedByOrganizers:
+      return <RejectedByOrganizers {...props} />;
+    case SpeakerProposalStatus.ConfirmedBySpeaker:
+      return <ConfirmedBySpeaker {...props} />;
+    case SpeakerProposalStatus.DeclinedBySpeaker:
+      return <DeclinedBySpeaker {...props} />;
+    default:
+      return null;
   }
-  return null;
 }
 
-function DraftPanel({ event, proposal }: Props) {
+function Draft({ proposal, event }: Props) {
   return (
     <Card rounded="xl" p={8} className="space-y-8">
       <div>
         <H3>Draft proposal!</H3>
-        <Subtitle>The proposal is not yet submitted to {event.name}. Do it before the CFP closes.</Subtitle>
+        {event.isCfpOpen ? (
+          <Subtitle>The proposal is not yet submitted to {event.name}. Do it before the CFP closes.</Subtitle>
+        ) : (
+          <Subtitle>The CFP is closed, sorry but you miss the submission timeframe 😔</Subtitle>
+        )}
       </div>
       <div className="mt-5 flex gap-4">
-        <ButtonLink to={`../submission/${proposal.talkId}`} block>
-          Continue submission
-        </ButtonLink>
+        {event.isCfpOpen ? (
+          <>
+            <ButtonLink to={`../submission/${proposal.talkId}`} block>
+              Continue submission
+            </ButtonLink>
+            <ProposalDeleteButton className="flex-1" />
+          </>
+        ) : (
+          <ProposalDeleteButton className="flex-1" />
+        )}
       </div>
     </Card>
   );
 }
 
-function SubmittedPanel({ event, proposal }: Props) {
+function Submitted({ event }: Props) {
   return (
     <Card rounded="xl" p={8} className="space-y-8">
       <div>
@@ -80,7 +86,19 @@ function SubmittedPanel({ event, proposal }: Props) {
   );
 }
 
-function AcceptedPanel({ event, proposal }: Props) {
+function DeliberationPending() {
+  return (
+    <Card rounded="xl" p={8}>
+      <H3>Deliberation pending</H3>
+      <Subtitle>
+        The organizers are currently deliberating, you will be notified by email when the proposal is accepted or
+        declined.
+      </Subtitle>
+    </Card>
+  );
+}
+
+function AcceptedByOrganizers({ event, proposal }: Props) {
   const fetcher = useFetcher();
 
   return (
@@ -93,13 +111,13 @@ function AcceptedPanel({ event, proposal }: Props) {
         </Text>
       </div>
       <div className="flex gap-4">
-        <fetcher.Form action={`/${event.name}/proposals/${proposal.id}/confirm`} method="POST" className="flex-1">
+        <fetcher.Form action={`/${event.slug}/proposals/${proposal.id}/confirm`} method="POST" className="flex-1">
           <input type="hidden" name="participation" value="CONFIRMED" />
           <Button type="submit" block>
             Confirm
           </Button>
         </fetcher.Form>
-        <fetcher.Form action={`/${event.name}/proposals/${proposal.id}/confirm`} method="POST" className="flex-1">
+        <fetcher.Form action={`/${event.slug}/proposals/${proposal.id}/confirm`} method="POST" className="flex-1">
           <input type="hidden" name="participation" value="DECLINED" />
           <Button type="submit" variant="secondary" block>
             Decline
@@ -110,7 +128,7 @@ function AcceptedPanel({ event, proposal }: Props) {
   );
 }
 
-function RejectedPanel({ event, proposal }: Props) {
+function RejectedByOrganizers({ event, proposal }: Props) {
   return (
     <Card rounded="xl" p={8} className="space-y-8">
       <div>
@@ -126,7 +144,7 @@ function RejectedPanel({ event, proposal }: Props) {
   );
 }
 
-function ConfirmedPanel({ event }: Props) {
+function ConfirmedBySpeaker({ event }: Props) {
   return (
     <Card rounded="xl" p={8}>
       <H3>Your participation to {event.name} is confirmed, Thanks!</H3>
@@ -137,7 +155,7 @@ function ConfirmedPanel({ event }: Props) {
   );
 }
 
-function DeclinedPanel({ event }: Props) {
+function DeclinedBySpeaker({ event }: Props) {
   return (
     <Card rounded="xl" p={8}>
       <H3>You have declined this proposal for {event.name}.</H3>
