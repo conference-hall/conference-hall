@@ -15,6 +15,7 @@ import { getAnswers } from '~/shared-server/survey/get-answers.server';
 import { getQuestions } from '~/shared-server/survey/get-questions.server';
 import { saveSurvey } from '~/shared-server/survey/save-survey.server';
 import { Card } from '~/design-system/Card';
+import { createToast } from '~/libs/toasts/toasts';
 
 type SurveyQuestionsForm = {
   questions: SurveyQuestions;
@@ -35,7 +36,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
-  const { uid } = await sessionRequired(request);
+  const { uid, session } = await sessionRequired(request);
   invariant(params.event, 'Invalid event slug');
   const form = await request.formData();
 
@@ -43,7 +44,8 @@ export const action = async ({ request, params }: ActionArgs) => {
   if (result.error) throw new Response('Bad survey values', { status: 400 });
   try {
     await saveSurvey(uid, params.event, result.data);
-    return json({ message: 'Survey saved, thank you!' });
+    const toast = await createToast(session, 'Survey successfully saved.');
+    return json(null, toast);
   } catch (err) {
     throw mapErrorToResponse(err);
   }
@@ -53,10 +55,10 @@ export default function EventSurveyRoute() {
   const { questions, answers } = useLoaderData<SurveyQuestionsForm>();
 
   return (
-    <Container className="mt-4 sm:my-8">
+    <Container className="mt-4 space-y-8 sm:mt-8">
       <div>
         <H2 mb={1}>We have some questions for you.</H2>
-        <Subtitle mb={8}>This information are asked by the organizers to give a better experience.</Subtitle>
+        <Subtitle>This information are asked by the organizers to give you a better speaker experience.</Subtitle>
       </div>
 
       <Card rounded="2xl" p={8}>

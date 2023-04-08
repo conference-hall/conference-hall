@@ -48,7 +48,7 @@ describe('Speaker talk page', () => {
     talk.confirmDelete();
 
     talks.isPageVisible();
-    cy.assertText('No talk abstracts yet!');
+    cy.assertText("You don't have talk abstracts yet.");
   });
 
   it('can cancel talk delete', () => {

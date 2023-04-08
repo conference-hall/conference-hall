@@ -1,4 +1,5 @@
 import { InboxIcon } from '@heroicons/react/24/outline';
+import { ButtonLink } from '~/design-system/Buttons';
 import { EmptyState } from '~/design-system/EmptyState';
 import { ProposalCard } from '~/shared-components/proposals/ProposalCard';
 
@@ -17,7 +18,13 @@ type Props = {
 
 export function SpeakerTalksList({ talks }: Props) {
   if (talks.length === 0) {
-    return <EmptyState icon={InboxIcon} label="No talk abstracts yet!" />;
+    return (
+      <EmptyState icon={InboxIcon} label="You don't have talk abstracts yet.">
+        <ButtonLink to="new" variant="secondary" size="s">
+          Create a new talk
+        </ButtonLink>
+      </EmptyState>
+    );
   }
 
   return (

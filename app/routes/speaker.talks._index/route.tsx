@@ -1,13 +1,13 @@
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData, useSearchParams, useNavigate } from '@remix-run/react';
-import { Container } from '../../design-system/Container';
-import { H2, Text } from '../../design-system/Typography';
-import { sessionRequired } from '../../libs/auth/auth.server';
-import { mapErrorToResponse } from '../../libs/errors';
 import { SpeakerTalksList } from './components/SpeakerTalksList';
 import Select from '~/design-system/forms/Select';
 import { listTalks } from './server/list-talks.server';
+import { Container } from '~/design-system/Container';
+import { H2 } from '~/design-system/Typography';
+import { sessionRequired } from '~/libs/auth/auth.server';
+import { mapErrorToResponse } from '~/libs/errors';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
