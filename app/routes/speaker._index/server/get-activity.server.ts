@@ -1,37 +1,43 @@
-import { db } from '../../../libs/db';
-import { SpeakerNotFoundError } from '../../../libs/errors';
+import { db } from '~/libs/db';
+import { SpeakerNotFoundError } from '~/libs/errors';
+import { getSpeakerProposalStatus } from '~/shared-server/proposals/get-speaker-proposal-status';
 
-export async function getActivity(speakerId: string) {
+const DEFAULT_RESULTS_COUNT = 10;
+const MORE_RESULTS = 5;
+
+export async function getActivity(speakerId: string, page: number = 1) {
   const speaker = await db.user.findUnique({ where: { id: speakerId } });
+
   if (!speaker) throw new SpeakerNotFoundError();
 
-  const talksActivity = await db.talk.findMany({
-    where: { archived: false, speakers: { some: { id: speakerId } } },
-    include: {
-      speakers: { select: { name: true } },
-      proposals: {
-        select: {
-          title: true,
-          status: true,
-          updatedAt: true,
-          event: { select: { slug: true, name: true } },
-        },
-        orderBy: { updatedAt: 'desc' },
-      },
-    },
+  const count = await db.proposal.count({ where: { speakers: { some: { id: speakerId } } } });
+
+  const activities = await db.proposal.findMany({
+    where: { speakers: { some: { id: speakerId } } },
+    include: { speakers: true, event: true },
     orderBy: { updatedAt: 'desc' },
+    take: DEFAULT_RESULTS_COUNT + page * MORE_RESULTS,
   });
 
-  return talksActivity.map((talk) => ({
-    id: talk.id,
-    title: talk.title,
-    date: talk.updatedAt.toUTCString(),
-    speakers: talk.speakers.map((speaker) => speaker.name || ''),
-    proposals: talk.proposals.map((proposal) => ({
-      eventName: proposal.event.name,
-      eventSlug: proposal.event.slug,
-      date: proposal.updatedAt.toUTCString(),
-      status: proposal.status,
+  const hasNextPage = activities.length < count;
+
+  return {
+    activities: activities.map((proposal) => ({
+      id: proposal.id,
+      title: proposal.title,
+      updatedAt: proposal.updatedAt.toUTCString(),
+      status: getSpeakerProposalStatus(proposal, proposal.event),
+      speakers: proposal.speakers.map((speaker) => ({
+        id: speaker.id,
+        name: speaker.name,
+        photoURL: speaker.photoURL,
+      })),
+      event: {
+        slug: proposal.event.slug,
+        name: proposal.event.name,
+      },
     })),
-  }));
+    hasNextPage,
+    nextPage: page + 1,
+  };
 }

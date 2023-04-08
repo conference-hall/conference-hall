@@ -26,29 +26,57 @@ export function ProposalStatusLabel({ status }: Props) {
 }
 
 export function Draft() {
-  return <IconLabel icon={ExclamationTriangleIcon}>Draft proposal</IconLabel>;
+  return (
+    <IconLabel icon={ExclamationTriangleIcon} variant="secondary">
+      Draft proposal
+    </IconLabel>
+  );
 }
 
 function Submitted() {
-  return <IconLabel icon={CheckCircleIcon}>Submitted</IconLabel>;
+  return (
+    <IconLabel icon={CheckCircleIcon} variant="secondary">
+      Submitted
+    </IconLabel>
+  );
 }
 
 function DeliberationPending() {
-  return <IconLabel icon={ClockIcon}>Deliberation pending</IconLabel>;
+  return (
+    <IconLabel icon={ClockIcon} variant="secondary">
+      Deliberation pending
+    </IconLabel>
+  );
 }
 
 function AcceptedByOrganizers() {
-  return <IconLabel icon={StarIcon}>Accepted</IconLabel>;
+  return (
+    <IconLabel icon={StarIcon} variant="secondary">
+      Accepted
+    </IconLabel>
+  );
 }
 
 function RejectedByOrganizers() {
-  return <IconLabel icon={XCircleIcon}>Declined by organizers</IconLabel>;
+  return (
+    <IconLabel icon={XCircleIcon} variant="secondary">
+      Declined by organizers
+    </IconLabel>
+  );
 }
 
 function ConfirmedBySpeaker() {
-  return <IconLabel icon={CheckCircleIcon}>Participation confirmed</IconLabel>;
+  return (
+    <IconLabel icon={CheckCircleIcon} variant="secondary">
+      Participation confirmed
+    </IconLabel>
+  );
 }
 
 function DeclinedBySpeaker() {
-  return <IconLabel icon={XCircleIcon}>Declined by you</IconLabel>;
+  return (
+    <IconLabel icon={XCircleIcon} variant="secondary">
+      Declined by you
+    </IconLabel>
+  );
 }

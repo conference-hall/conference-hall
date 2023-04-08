@@ -1,6 +1,7 @@
 import SpeakerActivityPage from 'page-objects/speaker/activity.page';
 import SpeakerProfilePage from 'page-objects/speaker/profile.page';
 import SpeakerNewTalkPage from 'page-objects/speaker/talk-new.page';
+import EventProposalPage from 'page-objects/event/proposal.page';
 
 describe('Speaker activity page', () => {
   beforeEach(() => {
@@ -13,6 +14,7 @@ describe('Speaker activity page', () => {
   const activity = new SpeakerActivityPage();
   const profile = new SpeakerProfilePage();
   const newTalk = new SpeakerNewTalkPage();
+  const eventProposal = new EventProposalPage();
 
   it('displays the speaker activity page', () => {
     activity.visit();
@@ -21,11 +23,15 @@ describe('Speaker activity page', () => {
     cy.assertText('superman@example.com');
     cy.assertText("Clark Kent's profile");
     cy.assertText('Clark kent biography');
-    cy.assertText('Clark kent is superman');
     cy.assertText('Metropolis');
     cy.assertText('Daily planet');
     cy.assertText('ckent-github');
     cy.assertText('ckent-twitter');
+
+    activity.activities().should('have.length', 4);
+    activity.activity('My talk 2').click();
+
+    eventProposal.isPageVisible();
   });
 
   it('can edit the profile', () => {

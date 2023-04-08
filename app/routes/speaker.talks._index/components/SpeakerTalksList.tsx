@@ -20,7 +20,7 @@ export function SpeakerTalksList({ talks }: Props) {
   if (talks.length === 0) {
     return (
       <EmptyState icon={InboxIcon} label="You don't have talk abstracts yet.">
-        <ButtonLink to="new" variant="secondary" size="s">
+        <ButtonLink to="new" variant="secondary">
           Create a new talk
         </ButtonLink>
       </EmptyState>

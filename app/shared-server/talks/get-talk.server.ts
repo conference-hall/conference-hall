@@ -2,6 +2,7 @@ import { jsonToArray } from '~/libs/prisma';
 import { db } from '../../libs/db';
 import { TalkNotFoundError } from '../../libs/errors';
 import { buildInvitationLink } from '../invitations/build-link.server';
+import { getSpeakerProposalStatus } from '../proposals/get-speaker-proposal-status';
 
 export async function getTalk(uid: string, talkId: string) {
   const talk = await db.talk.findFirst({
@@ -36,11 +37,10 @@ export async function getTalk(uid: string, talkId: string) {
         isCurrentUser: speaker.id === uid,
       }))
       .sort((a, b) => (a.isOwner ? -1 : 0) - (b.isOwner ? -1 : 0)),
-    proposals: talk.proposals.map((proposal) => ({
-      eventSlug: proposal.event.slug,
-      eventName: proposal.event.name,
-      status: proposal.status,
-      date: proposal.updatedAt.toUTCString(),
+    events: talk.proposals.map((proposal) => ({
+      slug: proposal.event.slug,
+      name: proposal.event.name,
+      status: getSpeakerProposalStatus(proposal, proposal.event),
     })),
     invitationLink: buildInvitationLink(talk.invitation?.id),
   };
