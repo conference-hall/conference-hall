@@ -1,26 +1,25 @@
 import invariant from 'tiny-invariant';
 import type { ActionFunction, LoaderArgs } from '@remix-run/node';
-import { json, redirect } from '@remix-run/node';
-import { Form, useLoaderData } from '@remix-run/react';
+import { json } from '@remix-run/node';
+import { useLoaderData } from '@remix-run/react';
 import { getTalk } from '~/shared-server/talks/get-talk.server';
 import { archiveTalk, restoreTalk } from './server/archive-talk.server';
-import { deleteTalk } from './server/delete-talk.server';
 import { ProposalStatusLabel } from '~/shared-components/proposals/ProposalStatusLabel';
 import { Link } from '~/design-system/Links';
 import { Card } from '~/design-system/Card';
 import { AvatarGroup } from '~/design-system/Avatar';
 import { IconButtonLink } from '~/design-system/IconButtons';
-import { ArchiveBoxXMarkIcon, ArrowLeftIcon, PencilSquareIcon, ArchiveBoxIcon } from '@heroicons/react/24/outline';
+import { ArrowLeftIcon, PencilSquareIcon } from '@heroicons/react/24/outline';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { mapErrorToResponse } from '~/libs/errors';
-import { removeCoSpeakerFromTalk } from '~/shared-server/talks/remove-co-speaker.server';
 import { Container } from '~/design-system/Container';
 import { H2, H3, Text } from '~/design-system/Typography';
 import { Markdown } from '~/design-system/Markdown';
 import Badge from '~/design-system/Badges';
 import { getLevel } from '~/utils/levels';
 import { getLanguage } from '~/utils/languages';
-import { Button, ButtonLink } from '~/design-system/Buttons';
+import { ButtonLink } from '~/design-system/Buttons';
+import { ArchiveOrRestoreTalkButton } from './components/TalkDelete';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
@@ -40,16 +39,10 @@ export const action: ActionFunction = async ({ request, params }) => {
   const form = await request.formData();
   const action = form.get('_action');
 
-  if (action === 'remove-speaker') {
-    const speakerId = form.get('_speakerId')?.toString();
-    if (speakerId) await removeCoSpeakerFromTalk(uid, params.talk, speakerId);
-  } else if (action === 'archive-talk') {
+  if (action === 'archive-talk') {
     await archiveTalk(uid, params.talk);
   } else if (action === 'restore-talk') {
     await restoreTalk(uid, params.talk);
-  } else if (action === 'delete-talk') {
-    await deleteTalk(uid, params.talk);
-    return redirect('/speaker/talks');
   }
   return null;
 };
@@ -138,20 +131,5 @@ export default function SpeakerTalkRoute() {
         </div>
       </div>
     </Container>
-  );
-}
-
-function ArchiveOrRestoreTalkButton({ archived }: { archived: boolean }) {
-  const action = archived ? 'restore-talk' : 'archive-talk';
-  const label = archived ? 'Restore' : 'Archive';
-  const icon = archived ? ArchiveBoxXMarkIcon : ArchiveBoxIcon;
-
-  return (
-    <Form method="POST">
-      <input type="hidden" name="_action" value={action} />
-      <Button type="submit" iconLeft={icon} aria-label={label} variant="secondary">
-        {label}
-      </Button>
-    </Form>
   );
 }

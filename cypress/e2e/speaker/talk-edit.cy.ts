@@ -27,7 +27,7 @@ describe('Speaker talk edition page', () => {
       language: 'English',
       references: 'New references',
     });
-    editTalk.saveAbstract().click();
+    editTalk.saveAbstract();
 
     talk.isPageVisible();
     cy.assertText('New title');
@@ -37,13 +37,26 @@ describe('Speaker talk edition page', () => {
     cy.assertText('New references');
   });
 
+  it('can invite a co-speaker', () => {
+    editTalk.visit('awesome-talk');
+    editTalk.generateCoSpeakerInvite().should('exist');
+    editTalk.closeCoSpeakerModal();
+  });
+
+  it('can remove a co-speaker', () => {
+    editTalk.visit('awesome-talk');
+    cy.assertText('Bruce Wayne');
+    editTalk.removeCoSpeaker('Bruce Wayne').click();
+    cy.assertNoText('Bruce Wayne');
+  });
+
   it('display errors on mandatory fields', () => {
     editTalk.visit('awesome-talk');
     editTalk.fillTalkForm({
       title: ' ',
       abstract: ' ',
     });
-    editTalk.saveAbstract().click();
+    editTalk.saveAbstract();
     editTalk.error('Title').should('contain.text', 'String must contain at least 1 character(s)');
     editTalk.error('Abstract').should('contain.text', 'String must contain at least 1 character(s)');
   });

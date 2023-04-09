@@ -13,7 +13,7 @@ class SpeakerEditTalkPage {
   }
 
   isPageVisible() {
-    cy.findByRole('button', { name: 'Save abstract' }).should('exist');
+    cy.findByRole('button', { name: 'Save talk' }).should('exist');
   }
 
   fillTalkForm(data: TalkFormType) {
@@ -25,7 +25,7 @@ class SpeakerEditTalkPage {
   }
 
   saveAbstract() {
-    return cy.findByRole('button', { name: 'Save abstract' });
+    cy.findByRole('button', { name: 'Save talk' }).click();
   }
 
   error(label: string) {
@@ -35,6 +35,20 @@ class SpeakerEditTalkPage {
       .then((id) => {
         return cy.get(`#${id}-description`);
       });
+  }
+
+  generateCoSpeakerInvite() {
+    cy.findByRole('button', { name: 'Invite a co-speaker' }).click();
+    cy.findByRole('button', { name: 'Generate invitation link' }).click();
+    return cy.findByLabelText('Copy invitation link');
+  }
+
+  closeCoSpeakerModal() {
+    return cy.findByRole('button', { name: 'Close' }).click();
+  }
+
+  removeCoSpeaker(speakerName: string) {
+    return cy.findByLabelText(`Remove speaker ${speakerName}`);
   }
 }
 

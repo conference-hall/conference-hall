@@ -10,6 +10,8 @@ import type { SpeakerContext } from '../speaker/route';
 import { SpeakerDetailsSection } from './components/SpeakerDetailsSection';
 import { parsePage } from '~/schemas/pagination';
 import { SpeakerActivitiesSection } from './components/SpeakerActivitiesSection';
+import { ButtonLink } from '~/design-system/Buttons';
+import { PlusIcon } from '@heroicons/react/20/solid';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
@@ -30,7 +32,12 @@ export default function ProfileRoute() {
   return (
     <>
       <Container className="mt-8">
-        <H2 mb={0}>Activity</H2>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+          <H2 mb={0}>Activity</H2>
+          <ButtonLink iconLeft={PlusIcon} to="/speaker/talks/new">
+            New talk
+          </ButtonLink>
+        </div>
         <div className="mt-8 grid grid-cols-1 items-start gap-4 lg:grid-cols-3 lg:gap-8">
           <SpeakerActivitiesSection
             activities={activities}

@@ -1,5 +1,5 @@
 import invariant from 'tiny-invariant';
-import type { ActionArgs, LoaderArgs } from '@remix-run/node';
+import type { ActionArgs, ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData, useLoaderData, useNavigate } from '@remix-run/react';
 import { withZod } from '@remix-validated-form/with-zod';
@@ -17,6 +17,7 @@ import { IconButton } from '~/design-system/IconButtons';
 import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 import { Card } from '~/design-system/Card';
 import { CoSpeakersList, InviteCoSpeakerButton } from '~/shared-components/proposals/forms/CoSpeaker';
+import { removeCoSpeakerFromTalk } from '~/shared-server/talks/remove-co-speaker.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
@@ -31,16 +32,20 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   }
 };
 
-export const action = async ({ request, params }: ActionArgs) => {
+export const action: ActionFunction = async ({ request, params }: ActionArgs) => {
   const { uid, session } = await sessionRequired(request);
   const form = await request.formData();
   invariant(params.talk, 'Invalid talk id');
 
   try {
-    const result = await withZod(TalkSaveSchema).validate(form);
-    if (result.error) {
-      return json(result.error.fieldErrors);
+    const action = form.get('_action');
+    if (action === 'remove-speaker') {
+      const speakerId = form.get('_speakerId')?.toString() as string;
+      await removeCoSpeakerFromTalk(uid, params.talk, speakerId);
+      return json(null);
     } else {
+      const result = await withZod(TalkSaveSchema).validate(form);
+      if (result.error) return json(result.error.fieldErrors);
       await updateTalk(uid, params.talk, result.data);
       const toast = await createToast(session, 'Talk successfully saved.');
       return redirect(`/speaker/talks/${params.talk}`, toast);

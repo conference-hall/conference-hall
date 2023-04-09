@@ -13,7 +13,7 @@ class SpeakerNewTalkPage {
   }
 
   isPageVisible() {
-    cy.findByRole('heading', { name: 'New talk abstract' }).should('exist');
+    cy.findByRole('heading', { name: 'Create a new talk' }).should('exist');
   }
 
   fillTalkForm(data: TalkFormType) {
@@ -25,7 +25,7 @@ class SpeakerNewTalkPage {
   }
 
   createAbstract() {
-    return cy.findByRole('button', { name: 'Create abstract' });
+    return cy.findByRole('button', { name: 'Create new talk' });
   }
 
   titleInput() {

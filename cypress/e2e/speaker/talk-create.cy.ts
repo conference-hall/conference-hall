@@ -29,11 +29,7 @@ describe('Speaker talk creation page', () => {
     cy.assertText('Intermediate');
     cy.assertText('English');
     cy.assertText('Best talk ever!');
-
-    talk.speakersBlock().within(() => {
-      cy.assertText('Clark Kent');
-      cy.assertText('Owner');
-    });
+    cy.assertText('by Clark Kent');
   });
 
   it('display errors on mandatory fields', () => {
