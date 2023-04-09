@@ -7,6 +7,7 @@ import { userFactory } from 'tests/factories/users';
 import { config } from '../../libs/config';
 import { TalkNotFoundError } from '../../libs/errors';
 import { getTalk } from './get-talk.server';
+import { SpeakerProposalStatus } from '../proposals/get-speaker-proposal-status';
 
 describe('#getTalk', () => {
   beforeEach(async () => {
@@ -39,7 +40,7 @@ describe('#getTalk', () => {
           isCurrentUser: true,
         },
       ],
-      proposals: [],
+      events: [],
     });
   });
 
@@ -90,12 +91,11 @@ describe('#getTalk', () => {
 
     const result = await getTalk(speaker.id, talk.id);
 
-    expect(result.proposals).toEqual([
+    expect(result.events).toEqual([
       {
-        date: proposal.updatedAt.toUTCString(),
-        eventName: proposal.event.name,
-        eventSlug: proposal.event.slug,
-        status: 'SUBMITTED',
+        name: proposal.event.name,
+        slug: proposal.event.slug,
+        status: SpeakerProposalStatus.DeliberationPending,
       },
     ]);
   });

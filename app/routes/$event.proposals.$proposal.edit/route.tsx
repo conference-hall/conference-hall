@@ -1,5 +1,5 @@
 import invariant from 'tiny-invariant';
-import { Form, useActionData, useLoaderData } from '@remix-run/react';
+import { Form, useActionData, useLoaderData, useNavigate } from '@remix-run/react';
 import { json, redirect } from '@remix-run/node';
 import type { ActionArgs, ActionFunction, LoaderArgs } from '@remix-run/node';
 import { withZod } from '@remix-validated-form/with-zod';
@@ -17,7 +17,7 @@ import { getSpeakerProposal } from '~/shared-server/proposals/get-speaker-propos
 import { deleteProposal } from './server/delete-proposal.server';
 import { updateProposal } from './server/update-proposal.server';
 import { useEvent } from '../$event/route';
-import { IconButtonLink } from '~/design-system/IconButtons';
+import { IconButton } from '~/design-system/IconButtons';
 import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 import { Card } from '~/design-system/Card';
 import { CoSpeakersList, InviteCoSpeakerButton } from '~/shared-components/proposals/forms/CoSpeaker';
@@ -67,11 +67,12 @@ export default function EditProposalRoute() {
   const event = useEvent();
   const proposal = useLoaderData<typeof loader>();
   const errors = useActionData<typeof action>();
+  const navigate = useNavigate();
 
   return (
     <Container className="my-4 space-y-8 sm:my-8">
       <div className="flex items-start gap-4">
-        <IconButtonLink icon={ArrowLeftIcon} variant="secondary" to=".." relative="path" />
+        <IconButton icon={ArrowLeftIcon} variant="secondary" onClick={() => navigate(-1)} aria-label="Go back" />
         <H2 mb={0}>{proposal.title}</H2>
       </div>
 

@@ -22,7 +22,7 @@ export function EventHeader({ name, slug, type, bannerUrl, address, conferenceSt
         <Link to={`/${slug}`} className="flex items-center gap-4">
           <Avatar photoURL={bannerUrl} name={name} size="l" square />
           <div className="flex-shrink-0">
-            <H1 variant="light" mb={0}>
+            <H1 size="2xl" variant="light" mb={0}>
               {name}
             </H1>
             <Text variant="secondary-light" size="s" heading>
@@ -31,7 +31,7 @@ export function EventHeader({ name, slug, type, bannerUrl, address, conferenceSt
           </div>
         </Link>
 
-        <div className="mb-4 mt-6 flex flex-col items-center gap-1 truncate sm:items-end">
+        <div className="flex flex-col items-center gap-1 truncate sm:items-end">
           <Text variant="light" size="base" heading strong truncate>
             <ClientOnly>{() => formatConferenceDates(type, conferenceStart, conferenceEnd)}</ClientOnly>
           </Text>

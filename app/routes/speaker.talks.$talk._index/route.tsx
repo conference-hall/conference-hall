@@ -6,8 +6,7 @@ import { Container } from '../../design-system/Container';
 import Badge from '../../design-system/Badges';
 import { Button, ButtonLink } from '../../design-system/Buttons';
 import { Markdown } from '../../design-system/Markdown';
-import { H2, H3 } from '../../design-system/Typography';
-import { EventActivity } from '../speaker._index/components/SpeakerActivities';
+import { H2, H3, Text } from '../../design-system/Typography';
 import { sessionRequired } from '../../libs/auth/auth.server';
 import { getLanguage } from '../../utils/languages';
 import { getLevel } from '../../utils/levels';
@@ -18,6 +17,8 @@ import { InviteCoSpeakerButton, CoSpeakersList } from '../../shared-components/p
 import { getTalk } from '~/shared-server/talks/get-talk.server';
 import { archiveTalk, restoreTalk } from './server/archive-talk.server';
 import { deleteTalk } from './server/delete-talk.server';
+import { ProposalStatusLabel } from '~/shared-components/proposals/ProposalStatusLabel';
+import { Link } from '~/design-system/Links';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
@@ -103,14 +104,18 @@ export default function SpeakerTalkRoute() {
           <div className="mt-4 rounded-lg border border-gray-200 p-4">
             <H3>Submissions</H3>
             <div className="mt-4">
-              {talk.proposals.map((proposal) => (
-                <EventActivity
-                  key={proposal.eventSlug}
-                  eventSlug={proposal.eventSlug}
-                  eventName={proposal.eventName}
-                  date={proposal.date}
-                  status={proposal.status}
-                />
+              {talk.events.map((event) => (
+                <div key={event.slug} className="flex items-center gap-2">
+                  <ProposalStatusLabel status={event.status} />
+                  <Text size="s" variant="secondary">
+                    —
+                  </Text>
+                  <Link to={`/${event.slug}/proposals`}>
+                    <Text size="s" variant="link" strong truncate>
+                      {event.name}
+                    </Text>
+                  </Link>
+                </div>
               ))}
             </div>
           </div>

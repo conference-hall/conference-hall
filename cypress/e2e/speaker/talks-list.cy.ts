@@ -48,6 +48,6 @@ describe('Speaker talks page', () => {
   it('displays empty state when no talks', () => {
     cy.login('Bruce Wayne');
     talks.visit();
-    cy.assertText('No talk abstracts yet!');
+    cy.assertText("You don't have talk abstracts yet.");
   });
 });
