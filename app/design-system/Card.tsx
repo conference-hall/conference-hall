@@ -17,6 +17,7 @@ const PADDING = {
   8: 'p-8',
   10: 'p-10',
   16: 'p-16',
+  24: 'p-24',
 };
 
 type CardProps = {
@@ -28,12 +29,7 @@ type CardProps = {
 };
 
 export function Card({ as: Tag = 'div', rounded = 'base', p = 0, className, ...rest }: CardProps) {
-  return (
-    <Tag
-      className={c('border border-gray-300 bg-white shadow-sm', ROUNDED[rounded], PADDING[p], className)}
-      {...rest}
-    />
-  );
+  return <Tag className={c('bg-white shadow', ROUNDED[rounded], PADDING[p], className)} {...rest} />;
 }
 
 type CardLinkProps = LinkProps & CardProps;

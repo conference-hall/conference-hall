@@ -16,6 +16,7 @@ import { withZod } from '@remix-validated-form/with-zod';
 import type { SpeakerContext } from '../speaker/route';
 import { saveProfile } from '~/shared-server/profile/save-profile.server';
 import { AdditionalInfoSchema, DetailsSchema, PersonalInfoSchema } from '~/schemas/profile.schema';
+import { Header } from '~/shared-components/Header';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);
@@ -73,9 +74,10 @@ export default function ProfileRoute() {
   ];
 
   return (
-    <Container className="my-4 sm:my-8">
-      <h1 className="sr-only">Profile</h1>
-      <div className="lg:grid lg:grid-cols-12 lg:gap-x-5">
+    <>
+      <Header title="Your profile" subtitle="Share your biography and references to event organizers." />
+
+      <Container className="mt-4 sm:mt-8 lg:grid lg:grid-cols-12 lg:gap-x-5">
         <NavMenu items={MENU_ITEMS} className="hidden px-2 py-6 sm:block sm:px-6 lg:col-span-3 lg:px-0 lg:py-0" />
 
         <div className="space-y-6 sm:px-6 lg:col-span-9 lg:px-0">
@@ -198,7 +200,7 @@ export default function ProfileRoute() {
             </div>
           </Form>
         </div>
-      </div>
-    </Container>
+      </Container>
+    </>
   );
 }

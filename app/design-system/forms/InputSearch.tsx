@@ -2,7 +2,7 @@ import c from 'classnames';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 
 const SIZES = {
-  m: { container: 'max-w-lg lg:max-w-xs', icon: 'h-5 w-5', input: 'py-1.5 pl-10 sm:text-sm' },
+  m: { container: 'max-w-lg lg:max-w-xs', icon: 'h-5 w-5', input: 'py-1.5 pl-10 text-sm' },
   l: { container: 'max-w-lg lg:max-w-2xl', icon: 'h-5 w-5', input: 'py-3 pl-10' },
 };
 

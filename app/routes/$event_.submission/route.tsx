@@ -1,4 +1,4 @@
-import { Outlet, useLoaderData } from '@remix-run/react';
+import { Outlet, useLoaderData, useOutletContext } from '@remix-run/react';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import invariant from 'tiny-invariant';
@@ -13,6 +13,9 @@ import { Button } from '~/design-system/Buttons';
 import { IconButtonLink } from '~/design-system/IconButtons';
 import { EventHeader } from '../$event/components/EventHeader';
 import { useSubmissionStep } from './hooks/useSubmissionStep';
+import { Navbar } from '~/shared-components/navbar/Navbar';
+import { NavLink } from '~/shared-components/navbar/NavLink';
+import type { UserContext } from '~/root';
 
 type Step = {
   key: string;
@@ -85,10 +88,21 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 export default function EventSubmissionRoute() {
   const { event, steps } = useLoaderData<typeof loader>();
   const { currentStepKey, previousPath } = useSubmissionStep();
+  const { user, notifications } = useOutletContext<UserContext>();
+  const hasOrganization = Boolean(user?.organizationsCount);
   const currentStep = steps.find((step) => step.key === currentStepKey);
 
   return (
-    <div>
+    <>
+      <Navbar user={user} notifications={notifications} withSearch>
+        <NavLink to="/speaker" end>
+          Activity
+        </NavLink>
+        <NavLink to="/speaker/talks">Talks</NavLink>
+        <NavLink to="/speaker/profile">Profile</NavLink>
+        {hasOrganization && <NavLink to="/organizer">Organizations</NavLink>}
+      </Navbar>
+
       <EventHeader
         type={event.type}
         name={event.name}
@@ -118,6 +132,6 @@ export default function EventSubmissionRoute() {
           <Outlet context={event} />
         </Container>
       </div>
-    </div>
+    </>
   );
 }

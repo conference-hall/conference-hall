@@ -10,14 +10,13 @@ import { updateTalk } from '~/routes/speaker.talks.$talk.edit/server/update-talk
 import { createToast } from '~/libs/toasts/toasts';
 import { DetailsForm } from '~/shared-components/proposals/forms/DetailsForm';
 import { Button, ButtonLink } from '~/design-system/Buttons';
-import { H2, H3, Subtitle } from '~/design-system/Typography';
+import { H3, Subtitle } from '~/design-system/Typography';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { mapErrorToResponse } from '~/libs/errors';
-import { IconButton } from '~/design-system/IconButtons';
-import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 import { Card } from '~/design-system/Card';
 import { CoSpeakersList, InviteCoSpeakerButton } from '~/shared-components/proposals/forms/CoSpeaker';
 import { removeCoSpeakerFromTalk } from '~/shared-server/talks/remove-co-speaker.server';
+import { Header } from '~/shared-components/Header';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
@@ -61,39 +60,38 @@ export default function SpeakerTalkRoute() {
   const navigate = useNavigate();
 
   return (
-    <Container className="my-4 space-y-8 sm:my-8">
-      <div className="flex items-start gap-4">
-        <IconButton icon={ArrowLeftIcon} variant="secondary" onClick={() => navigate(-1)} aria-label="Go back" />
-        <H2 mb={0}>{talk.title}</H2>
-      </div>
+    <>
+      <Header title={talk.title} backOnClick={() => navigate(-1)} />
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-flow-col-dense lg:grid-cols-3">
-        <div className="lg:col-span-2 lg:col-start-1">
-          <Card rounded="xl" p={8} className="space-y-8">
-            <Form method="POST">
-              <DetailsForm initialValues={talk} errors={errors} />
+      <Container className="mt-4 space-y-8 sm:mt-8">
+        <div className="grid grid-cols-1 gap-6 lg:grid-flow-col-dense lg:grid-cols-3">
+          <div className="lg:col-span-2 lg:col-start-1">
+            <Card rounded="xl" p={8} className="space-y-8">
+              <Form method="POST">
+                <DetailsForm initialValues={talk} errors={errors} />
 
-              <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:justify-end">
-                <ButtonLink to={`/speaker/talks/${talk.id}`} variant="secondary">
-                  Cancel
-                </ButtonLink>
-                <Button type="submit">Save talk</Button>
+                <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:justify-end">
+                  <ButtonLink to={`/speaker/talks/${talk.id}`} variant="secondary">
+                    Cancel
+                  </ButtonLink>
+                  <Button type="submit">Save talk</Button>
+                </div>
+              </Form>
+            </Card>
+          </div>
+
+          <div className="lg:col-span-1 lg:col-start-3">
+            <Card rounded="xl" p={8} className="space-y-6">
+              <div>
+                <H3>Speakers</H3>
+                <Subtitle>When co-speaker accepts the invite, he/she will be automatically added to the talk.</Subtitle>
               </div>
-            </Form>
-          </Card>
+              <CoSpeakersList speakers={talk.speakers} showRemoveAction />
+              <InviteCoSpeakerButton to="TALK" id={talk.id} invitationLink={talk.invitationLink} />
+            </Card>
+          </div>
         </div>
-
-        <div className="lg:col-span-1 lg:col-start-3">
-          <Card rounded="xl" p={8} className="space-y-6">
-            <div>
-              <H3>Speakers</H3>
-              <Subtitle>When co-speaker accepts the invite, he/she will be automatically added to the talk.</Subtitle>
-            </div>
-            <CoSpeakersList speakers={talk.speakers} showRemoveAction />
-            <InviteCoSpeakerButton to="TALK" id={talk.id} invitationLink={talk.invitationLink} />
-          </Card>
-        </div>
-      </div>
-    </Container>
+      </Container>
+    </>
   );
 }

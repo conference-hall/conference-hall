@@ -3,6 +3,19 @@ import type { LinkProps } from '@remix-run/react';
 import { Link } from '@remix-run/react';
 import cn from 'classnames';
 
+export type ButtonStylesProps = {
+  variant?: 'primary' | 'secondary';
+  size?: 's' | 'm' | 'l';
+  block?: boolean;
+  loading?: boolean;
+  rounded?: boolean;
+  className?: string;
+  iconClassName?: string;
+  disabled?: boolean;
+  iconLeft?: React.ComponentType<{ className?: string }>;
+  iconRight?: React.ComponentType<{ className?: string }>;
+};
+
 export type ButtonProps = ButtonStylesProps & React.ButtonHTMLAttributes<HTMLButtonElement>;
 
 export function Button({
@@ -22,9 +35,13 @@ export function Button({
   const styles = getStyles({ variant, size, block, disabled, loading, rounded, className });
   return (
     <button className={styles} disabled={disabled} aria-disabled={disabled} {...rest}>
-      {IconLeft && <IconLeft className={getIconStyle({ size, dir: 'left', iconClassName })} aria-hidden="true" />}
+      {IconLeft && (
+        <IconLeft className={getIconStyle({ size, variant, dir: 'left', iconClassName })} aria-hidden="true" />
+      )}
       {children}
-      {IconRight && <IconRight className={getIconStyle({ size, dir: 'right', iconClassName })} aria-hidden="true" />}
+      {IconRight && (
+        <IconRight className={getIconStyle({ size, variant, dir: 'right', iconClassName })} aria-hidden="true" />
+      )}
     </button>
   );
 }
@@ -48,25 +65,16 @@ export function ButtonLink({
   const styles = getStyles({ variant, size, block, disabled, loading, rounded, className });
   return (
     <Link className={styles} {...rest}>
-      {IconLeft && <IconLeft className={getIconStyle({ size, dir: 'left', iconClassName })} aria-hidden="true" />}
+      {IconLeft && (
+        <IconLeft className={getIconStyle({ size, dir: 'left', variant, iconClassName })} aria-hidden="true" />
+      )}
       {children}
-      {IconRight && <IconRight className={getIconStyle({ size, dir: 'right', iconClassName })} aria-hidden="true" />}
+      {IconRight && (
+        <IconRight className={getIconStyle({ size, dir: 'right', variant, iconClassName })} aria-hidden="true" />
+      )}
     </Link>
   );
 }
-
-export type ButtonStylesProps = {
-  variant?: 'primary' | 'secondary';
-  size?: 's' | 'm' | 'l';
-  block?: boolean;
-  loading?: boolean;
-  rounded?: boolean;
-  className?: string;
-  iconClassName?: string;
-  disabled?: boolean;
-  iconLeft?: React.ComponentType<{ className?: string }>;
-  iconRight?: React.ComponentType<{ className?: string }>;
-};
 
 export const getStyles = ({
   variant = 'primary',
@@ -82,7 +90,7 @@ export const getStyles = ({
       'relative inline-flex justify-center items-center whitespace-nowrap',
       'w-full sm:w-auto',
       'border shadow-sm',
-      'font-medium',
+      'group font-medium',
       'focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500',
     ],
     {
@@ -101,11 +109,12 @@ export const getStyles = ({
 
 type IconStylesProps = {
   size?: 's' | 'm' | 'l';
+  variant?: 'primary' | 'secondary';
   dir?: 'right' | 'left';
   iconClassName?: string;
 };
 
-const getIconStyle = ({ size = 'm', dir, iconClassName }: IconStylesProps) =>
+const getIconStyle = ({ size = 'm', variant, dir, iconClassName }: IconStylesProps) =>
   cn(
     {
       '-ml-0.5 mr-2 h-4 w-4': size === 's' && dir === 'left',
@@ -114,6 +123,7 @@ const getIconStyle = ({ size = 'm', dir, iconClassName }: IconStylesProps) =>
       'ml-2 -mr-0.5 h-4 w-4': size === 's' && dir === 'right',
       'ml-2 -mr-1 h-5 w-5': size === 'm' && dir === 'right',
       'ml-3 -mr-1 h-5 w-5': size === 'l' && dir === 'right',
+      'text-gray-400 group-hover:text-gray-500': variant === 'secondary',
     },
     iconClassName
   );
