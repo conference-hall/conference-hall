@@ -7,8 +7,6 @@ import { sessionRequired } from '~/libs/auth/auth.server';
 import { Form, useActionData, useOutletContext, useSearchParams } from '@remix-run/react';
 import { DetailsForm } from '~/shared-components/proposals/forms/DetailsForm';
 import { Button, ButtonLink } from '~/design-system/Buttons';
-import { FormatsForm } from '~/shared-components/proposals/forms/FormatsForm';
-import { CategoriesForm } from '~/shared-components/proposals/forms/CategoriesForm';
 import { mapErrorToResponse } from '~/libs/errors';
 import { withZod } from '@remix-validated-form/with-zod';
 import { ProposalUpdateSchema } from '~/schemas/proposal';
@@ -42,15 +40,15 @@ export default function OrganizerProposalContentRoute() {
   const [searchParams] = useSearchParams();
   const errors = useActionData<typeof action>();
 
-  const formatsIds = proposalReview.proposal.formats.map(({ id }) => id);
-  const categoriesIds = proposalReview.proposal.categories.map(({ id }) => id);
-
   return (
     <Form method="POST" className="flex h-full flex-1 flex-col justify-between overflow-hidden">
       <div className="flex flex-col gap-8 overflow-auto py-8 sm:px-8">
-        <DetailsForm initialValues={proposalReview.proposal} errors={errors} />
-        {event.formats.length > 0 && <FormatsForm formats={event.formats} initialValues={formatsIds} />}
-        {event.categories.length > 0 && <CategoriesForm categories={event.categories} initialValues={categoriesIds} />}
+        <DetailsForm
+          initialValues={proposalReview.proposal}
+          errors={errors}
+          formats={event.formats}
+          categories={event.categories}
+        />
       </div>
 
       <div className="flex justify-end gap-2 border-t border-gray-200 bg-white p-6">

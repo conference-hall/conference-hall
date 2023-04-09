@@ -37,10 +37,10 @@ export async function getTalk(uid: string, talkId: string) {
         isCurrentUser: speaker.id === uid,
       }))
       .sort((a, b) => (a.isOwner ? -1 : 0) - (b.isOwner ? -1 : 0)),
-    events: talk.proposals.map((proposal) => ({
+    submissions: talk.proposals.map((proposal) => ({
       slug: proposal.event.slug,
       name: proposal.event.name,
-      status: getSpeakerProposalStatus(proposal, proposal.event),
+      proposalStatus: getSpeakerProposalStatus(proposal, proposal.event),
     })),
     invitationLink: buildInvitationLink(talk.invitation?.id),
   };
