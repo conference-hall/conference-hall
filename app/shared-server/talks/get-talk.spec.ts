@@ -40,7 +40,7 @@ describe('#getTalk', () => {
           isCurrentUser: true,
         },
       ],
-      events: [],
+      submissions: [],
     });
   });
 
@@ -91,11 +91,11 @@ describe('#getTalk', () => {
 
     const result = await getTalk(speaker.id, talk.id);
 
-    expect(result.events).toEqual([
+    expect(result.submissions).toEqual([
       {
         name: proposal.event.name,
         slug: proposal.event.slug,
-        status: SpeakerProposalStatus.DeliberationPending,
+        proposalStatus: SpeakerProposalStatus.DeliberationPending,
       },
     ]);
   });

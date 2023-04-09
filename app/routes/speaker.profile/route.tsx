@@ -79,7 +79,7 @@ export default function ProfileRoute() {
         <NavMenu items={MENU_ITEMS} className="hidden px-2 py-6 sm:block sm:px-6 lg:col-span-3 lg:px-0 lg:py-0" />
 
         <div className="space-y-6 sm:px-6 lg:col-span-9 lg:px-0">
-          <Form method="POST" aria-labelledby="personal-info-label">
+          <Form method="POST" aria-labelledby="personal-info-label" preventScrollReset>
             <div className="overflow-hidden border border-gray-200 sm:rounded-md">
               <a id="personal-info" href="#personal-info" className="scroll-mt-16" aria-hidden={true} />
               <div className="space-y-6 bg-white px-4 py-6 sm:p-6">
@@ -122,7 +122,7 @@ export default function ProfileRoute() {
             </div>
           </Form>
 
-          <Form method="POST" aria-labelledby="speaker-details-label">
+          <Form method="POST" aria-labelledby="speaker-details-label" preventScrollReset>
             <div className="overflow-hidden border border-gray-200 sm:rounded-md">
               <a id="speaker-details" href="#speaker-details" className="scroll-mt-16" />
               <div className="space-y-6 bg-white px-4 py-6 sm:p-6">
@@ -160,7 +160,7 @@ export default function ProfileRoute() {
             </div>
           </Form>
 
-          <Form method="POST" aria-labelledby="additional-info-label">
+          <Form method="POST" aria-labelledby="additional-info-label" preventScrollReset>
             <div className="overflow-hidden border border-gray-200 sm:rounded-md">
               <a id="additional-info" href="#additional-info" className="scroll-mt-16" />
               <div className="space-y-6 bg-white px-4 py-6 sm:p-6">

@@ -7,7 +7,7 @@ class EventProposalPage extends BasePage {
   }
 
   isPageVisible() {
-    cy.findByRole('heading', { name: 'References' }).should('exist');
+    cy.findByRole('heading', { name: 'Abstract' }).should('exist');
   }
 
   editProposal() {

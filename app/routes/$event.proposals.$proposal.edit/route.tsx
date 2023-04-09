@@ -7,8 +7,6 @@ import { createToast } from '~/libs/toasts/toasts';
 import { Container } from '~/design-system/Container';
 import { H2, H3, Subtitle } from '~/design-system/Typography';
 import { DetailsForm } from '~/shared-components/proposals/forms/DetailsForm';
-import { FormatsForm } from '~/shared-components/proposals/forms/FormatsForm';
-import { CategoriesForm } from '~/shared-components/proposals/forms/CategoriesForm';
 import { Button, ButtonLink } from '~/design-system/Buttons';
 import { mapErrorToResponse } from '~/libs/errors';
 import { sessionRequired } from '~/libs/auth/auth.server';
@@ -80,22 +78,12 @@ export default function EditProposalRoute() {
         <div className="lg:col-span-2 lg:col-start-1">
           <Card rounded="xl" p={8} className="space-y-8">
             <Form method="POST">
-              <DetailsForm initialValues={proposal} errors={errors} />
-
-              {event.formats?.length > 0 ? (
-                <div className="pt-10">
-                  <FormatsForm formats={event.formats} initialValues={proposal.formats.map(({ id }) => id)} />
-                </div>
-              ) : null}
-
-              {event.categories?.length > 0 ? (
-                <div className="pt-10">
-                  <CategoriesForm
-                    categories={event.categories}
-                    initialValues={proposal.categories.map(({ id }) => id)}
-                  />
-                </div>
-              ) : null}
+              <DetailsForm
+                initialValues={proposal}
+                errors={errors}
+                formats={event.formats}
+                categories={event.categories}
+              />
 
               <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:justify-end sm:px-6">
                 <ButtonLink to={`/${event.slug}/proposals/${proposal.id}`} variant="secondary">

@@ -17,10 +17,7 @@ describe('Talk invitation page', () => {
     invitation.acceptInvite().click();
     talk.isPageVisible();
     cy.assertText('Awesome talk');
-    talk.speakersBlock().within(() => {
-      cy.assertText('Clark Kent');
-      cy.assertText('Bruce Wayne');
-    });
+    cy.assertText('by Clark Kent, Bruce Wayne');
   });
 
   it('display error page when invitation not found', () => {

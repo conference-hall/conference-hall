@@ -8,6 +8,8 @@ import { Container } from '~/design-system/Container';
 import { H2 } from '~/design-system/Typography';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { mapErrorToResponse } from '~/libs/errors';
+import { ButtonLink } from '~/design-system/Buttons';
+import { PlusIcon } from '@heroicons/react/20/solid';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
@@ -49,6 +51,9 @@ export default function SpeakerTalksRoute() {
               { id: 'archived', label: 'Archived talks' },
             ]}
           />
+          <ButtonLink iconLeft={PlusIcon} to="/speaker/talks/new">
+            New talk
+          </ButtonLink>
         </div>
       </div>
       <div className="my-8">

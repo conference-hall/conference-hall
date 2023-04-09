@@ -3,7 +3,6 @@ import EventSubmissionPage from 'page-objects/event/submission.page';
 import SearchEventPage from 'page-objects/search.page';
 import SpeakerEditTalkPage from 'page-objects/speaker/talk-edit.page';
 import SpeakerTalkPage from 'page-objects/speaker/talk.page';
-import SpeakerTalksPage from 'page-objects/speaker/talks-list.page';
 
 describe('Speaker talk page', () => {
   beforeEach(() => {
@@ -15,7 +14,6 @@ describe('Speaker talk page', () => {
 
   const talk = new SpeakerTalkPage();
   const editTalk = new SpeakerEditTalkPage();
-  const talks = new SpeakerTalksPage();
   const search = new SearchEventPage();
   const submission = new EventSubmissionPage();
   const proposals = new EventProposalsPage();
@@ -28,34 +26,13 @@ describe('Speaker talk page', () => {
     cy.assertText('Awesome references');
     cy.assertText('Advanced');
     cy.assertText('French');
-    talk.speakersBlock().within(() => {
-      cy.assertText('Clark Kent');
-      cy.assertText('Bruce Wayne');
-    });
+    cy.assertText('by Clark Kent, Bruce Wayne');
   });
 
   it('can edit a talk', () => {
     talk.visit('awesome-talk');
     talk.editTalk();
     editTalk.isPageVisible();
-    cy.assertText('Awesome talk');
-  });
-
-  it('can delete a talk', () => {
-    talk.visit('awesome-talk');
-    talk.deleteTalk();
-    talk.deleteConfirmDialog().should('exist');
-    talk.confirmDelete();
-
-    talks.isPageVisible();
-    cy.assertText("You don't have talk abstracts yet.");
-  });
-
-  it('can cancel talk delete', () => {
-    talk.visit('awesome-talk');
-    talk.deleteTalk();
-    talk.deleteConfirmDialog().should('exist');
-    talk.cancelDelete();
     cy.assertText('Awesome talk');
   });
 
@@ -83,19 +60,6 @@ describe('Speaker talk page', () => {
     cy.assertUrl('?talkId=awesome-talk');
     search.result('Devfest Nantes').click();
     cy.assertText('Talk already submitted.');
-  });
-
-  it('can invite a co-speaker', () => {
-    talk.visit('awesome-talk');
-    talk.generateCoSpeakerInvite().should('exist');
-    talk.closeCoSpeakerModal();
-  });
-
-  it('can remove a co-speaker', () => {
-    talk.visit('awesome-talk');
-    cy.assertText('Bruce Wayne');
-    talk.removeCoSpeaker('Bruce Wayne').click();
-    cy.assertNoText('Bruce Wayne');
   });
 
   it('can see a submitted proposal of a talk', () => {
