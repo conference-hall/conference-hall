@@ -27,7 +27,7 @@ export function SpeakerDetailsSection({ name, email, photoURL, bio, address, com
         <Avatar photoURL={photoURL} size="l" />
         <div className="truncate">
           <H3 mb={0} truncate>
-            {name}'s profile
+            {name}
           </H3>
           <Subtitle size="xs" truncate>
             {email}

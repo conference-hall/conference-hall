@@ -9,18 +9,18 @@ type Props = { title: string; subtitle?: string; children?: ReactNode } & BackBu
 export function Header({ title, subtitle, backTo, backOnClick, children }: Props) {
   return (
     <header className="bg-white shadow">
-      <Container className="flex h-24 flex-col px-4 py-6 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
-        <div className="flex items-center gap-4">
+      <Container className="flex h-full flex-col gap-4 px-4 py-6 sm:h-24 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
+        <div className="flex items-center gap-2 sm:gap-4">
           <BackButton backTo={backTo} backOnClick={backOnClick} />
-          <div>
-            <H2 size="xl" mb={0}>
+          <div className="truncate">
+            <H2 size="xl" mb={0} truncate>
               {title}
             </H2>
-            {subtitle && <Subtitle>{subtitle}</Subtitle>}
+            {subtitle && <Subtitle truncate>{subtitle}</Subtitle>}
           </div>
         </div>
 
-        {children && <div className="flex flex-col gap-4 sm:mt-0 sm:flex-row">{children}</div>}
+        {children && <div className="flex flex-col-reverse gap-4 sm:mt-0 sm:flex-row">{children}</div>}
       </Container>
     </header>
   );

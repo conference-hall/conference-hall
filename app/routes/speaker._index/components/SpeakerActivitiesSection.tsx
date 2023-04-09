@@ -68,7 +68,7 @@ export function SpeakerActivitiesSection({ activities, nextPage, hasNextPage, cl
         ))}
       </ul>
       {hasNextPage && (
-        <ButtonLink to={{ pathname: '/speaker', search: `page=${nextPage}` }} variant="secondary">
+        <ButtonLink to={{ pathname: '/speaker', search: `page=${nextPage}` }} variant="secondary" preventScrollReset>
           More...
         </ButtonLink>
       )}

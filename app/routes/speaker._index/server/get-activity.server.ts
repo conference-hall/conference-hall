@@ -2,8 +2,7 @@ import { db } from '~/libs/db';
 import { SpeakerNotFoundError } from '~/libs/errors';
 import { getSpeakerProposalStatus } from '~/shared-server/proposals/get-speaker-proposal-status';
 
-const DEFAULT_RESULTS_COUNT = 10;
-const MORE_RESULTS = 5;
+const RESULTS_BATCH = 6;
 
 export async function getActivity(speakerId: string, page: number = 1) {
   const speaker = await db.user.findUnique({ where: { id: speakerId } });
@@ -16,7 +15,7 @@ export async function getActivity(speakerId: string, page: number = 1) {
     where: { speakers: { some: { id: speakerId } } },
     include: { speakers: true, event: true },
     orderBy: { updatedAt: 'desc' },
-    take: DEFAULT_RESULTS_COUNT + page * MORE_RESULTS,
+    take: page * RESULTS_BATCH,
   });
 
   const hasNextPage = activities.length < count;

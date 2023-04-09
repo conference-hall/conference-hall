@@ -40,7 +40,7 @@ export function CardLink({ as, rounded, p, className, children, ...rest }: CardL
       as={as}
       p={p}
       rounded={rounded}
-      className="focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
+      className="focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:shadow-md"
     >
       <Link {...rest} className={c('focus:outline-none', className)}>
         {children}
