@@ -59,37 +59,46 @@ export default function ProposalRoute() {
       <div className="grid grid-cols-1 gap-6 lg:grid-flow-col-dense lg:grid-cols-3">
         <div className="lg:col-span-2 lg:col-start-1">
           <Card as="section" rounded="xl" p={8} className="space-y-8">
-            <AvatarGroup avatars={proposal.speakers} displayNames />
-
-            <div>
-              <H3 size="base">Abstract</H3>
-              <Markdown source={proposal.abstract} className="mt-3" />
+            <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
+              <AvatarGroup avatars={proposal.speakers} displayNames />
+              <div className="space-x-4">
+                {proposal.level && <Badge color="indigo">{getLevel(proposal.level)}</Badge>}
+                {proposal.languages.map((language) => (
+                  <Badge key={language}>{getLanguage(language)}</Badge>
+                ))}
+              </div>
             </div>
 
-            <div className="space-x-4">
-              {proposal.level && <Badge color="indigo">{getLevel(proposal.level)}</Badge>}
-              {proposal.languages.map((language) => (
-                <Badge key={language}>{getLanguage(language)}</Badge>
-              ))}
+            <div>
+              <H3 size="base" mb={2}>
+                Abstract
+              </H3>
+              <Markdown source={proposal.abstract} />
             </div>
 
             {proposal.formats.length > 0 && (
               <div>
-                <H3 size="base">Formats</H3>
+                <H3 size="base" mb={2}>
+                  Formats
+                </H3>
                 <Text size="s">{proposal.formats.map(({ name }) => name).join(', ') || '—'}</Text>
               </div>
             )}
 
             {proposal.categories.length > 0 && (
               <div>
-                <H3 size="base">Categories</H3>
+                <H3 size="base" mb={2}>
+                  Categories
+                </H3>
                 <Text size="s">{proposal.categories.map(({ name }) => name).join(', ') || '—'}</Text>
               </div>
             )}
 
             {proposal.references && (
               <div>
-                <H3 size="base">References</H3>
+                <H3 size="base" mb={2}>
+                  References
+                </H3>
                 <Markdown source={proposal.references} className="mt-2" />
               </div>
             )}

@@ -2,23 +2,25 @@ import invariant from 'tiny-invariant';
 import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
-import { Container } from '../../design-system/Container';
-import Badge from '../../design-system/Badges';
-import { Button, ButtonLink } from '../../design-system/Buttons';
-import { Markdown } from '../../design-system/Markdown';
-import { H2, H3, Text } from '../../design-system/Typography';
-import { sessionRequired } from '../../libs/auth/auth.server';
-import { getLanguage } from '../../utils/languages';
-import { getLevel } from '../../utils/levels';
-import { removeCoSpeakerFromTalk } from '../../shared-server/talks/remove-co-speaker.server';
-import { mapErrorToResponse } from '../../libs/errors';
-import { TalkActionsMenu } from './components/TalkActionsMenu';
-import { InviteCoSpeakerButton, CoSpeakersList } from '../../shared-components/proposals/forms/CoSpeaker';
 import { getTalk } from '~/shared-server/talks/get-talk.server';
 import { archiveTalk, restoreTalk } from './server/archive-talk.server';
 import { deleteTalk } from './server/delete-talk.server';
 import { ProposalStatusLabel } from '~/shared-components/proposals/ProposalStatusLabel';
 import { Link } from '~/design-system/Links';
+import { Card } from '~/design-system/Card';
+import { AvatarGroup } from '~/design-system/Avatar';
+import { IconButtonLink } from '~/design-system/IconButtons';
+import { ArchiveBoxXMarkIcon, ArrowLeftIcon, PencilSquareIcon, ArchiveBoxIcon } from '@heroicons/react/24/outline';
+import { sessionRequired } from '~/libs/auth/auth.server';
+import { mapErrorToResponse } from '~/libs/errors';
+import { removeCoSpeakerFromTalk } from '~/shared-server/talks/remove-co-speaker.server';
+import { Container } from '~/design-system/Container';
+import { H2, H3, Text } from '~/design-system/Typography';
+import { Markdown } from '~/design-system/Markdown';
+import Badge from '~/design-system/Badges';
+import { getLevel } from '~/utils/levels';
+import { getLanguage } from '~/utils/languages';
+import { Button, ButtonLink } from '~/design-system/Buttons';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
@@ -56,71 +58,100 @@ export default function SpeakerTalkRoute() {
   const talk = useLoaderData<typeof loader>();
 
   return (
-    <Container className="my-4 sm:my-8">
+    <Container className="my-4 space-y-8 sm:my-8">
       <div className="flex flex-col flex-wrap sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <H2>{talk.title}</H2>
-          <div className="mt-2 flex gap-2">
-            {talk.level && <Badge color="indigo">{getLevel(talk.level)}</Badge>}
-            {talk.languages.map((language) => (
-              <Badge key={language} color="indigo">
-                {getLanguage(language)}
-              </Badge>
-            ))}
-          </div>
+        <div className="flex items-start gap-4">
+          <IconButtonLink icon={ArrowLeftIcon} variant="secondary" to="/speaker/talks" aria-label="Go back" />
+          <H2 mb={0}>{talk.title}</H2>
         </div>
 
-        <div className="mt-4 flex flex-col justify-between gap-4 sm:mt-0 sm:flex-shrink-0 sm:flex-row">
-          {!talk.archived && <TalkActionsMenu />}
-          {!talk.archived && <ButtonLink to={`/?talkId=${talk.id}`}>Submit</ButtonLink>}
-          {talk.archived && (
-            <Form method="POST">
-              <input type="hidden" name="_action" value="restore-talk" />
-              <Button type="submit" variant="secondary">
-                Restore
-              </Button>
-            </Form>
-          )}
+        <div className="flex items-center gap-4">
+          <ArchiveOrRestoreTalkButton archived={talk.archived} />
+          <ButtonLink iconLeft={PencilSquareIcon} to="edit" variant="secondary">
+            Edit
+          </ButtonLink>
         </div>
       </div>
 
-      <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-        <div className="rounded-lg border border-gray-200 p-4 sm:w-2/3">
-          <H3>Abstract</H3>
-          <Markdown source={talk.abstract} className="mt-2" />
-          {talk.references && (
-            <>
-              <H3>References</H3>
-              <Markdown source={talk.references} className="mt-2" />
-            </>
-          )}
-        </div>
-        <div className="sm:w-1/3">
-          <div className="rounded-lg border border-gray-200 p-4">
-            <H3>Speakers</H3>
-            <CoSpeakersList speakers={talk.speakers} showRemoveAction={!talk.archived} />
-            {!talk.archived && <InviteCoSpeakerButton to="TALK" id={talk.id} invitationLink={talk.invitationLink} />}
-          </div>
-          <div className="mt-4 rounded-lg border border-gray-200 p-4">
-            <H3>Submissions</H3>
-            <div className="mt-4">
-              {talk.events.map((event) => (
-                <div key={event.slug} className="flex items-center gap-2">
-                  <ProposalStatusLabel status={event.status} />
-                  <Text size="s" variant="secondary">
-                    —
-                  </Text>
-                  <Link to={`/${event.slug}/proposals`}>
-                    <Text size="s" variant="link" strong truncate>
-                      {event.name}
-                    </Text>
-                  </Link>
-                </div>
-              ))}
+      <div className="grid grid-cols-1 gap-6 lg:grid-flow-col-dense lg:grid-cols-3">
+        <div className="lg:col-span-2 lg:col-start-1">
+          <Card as="section" rounded="xl" p={8} className="space-y-8">
+            <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
+              <AvatarGroup avatars={talk.speakers} displayNames />
+              <div className="space-x-4">
+                {talk.level && <Badge color="indigo">{getLevel(talk.level)}</Badge>}
+                {talk.languages.map((language) => (
+                  <Badge key={language}>{getLanguage(language)}</Badge>
+                ))}
+              </div>
             </div>
-          </div>
+
+            <div>
+              <H3 size="base" mb={2}>
+                Abstract
+              </H3>
+              <Markdown source={talk.abstract} />
+            </div>
+
+            {talk.references && (
+              <div>
+                <H3 size="base" mb={2}>
+                  References
+                </H3>
+                <Markdown source={talk.references} />
+              </div>
+            )}
+          </Card>
+        </div>
+
+        <div className="lg:col-span-1 lg:col-start-3">
+          <Card as="section" rounded="xl" p={8} className="space-y-6">
+            <H3 mb={0}>Submissions</H3>
+            {talk.events.length > 0 ? (
+              <ul className="mt-4 space-y-4">
+                {talk.events.map((event) => (
+                  <li key={event.slug} className="flex items-center gap-2">
+                    <ProposalStatusLabel status={event.status} />
+                    <Text size="s" variant="secondary">
+                      —
+                    </Text>
+                    <Link to={`/${event.slug}/proposals`}>
+                      <Text size="s" variant="link" strong truncate>
+                        {event.name}
+                      </Text>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <Text size="s" variant="secondary">
+                No submissions yet.
+              </Text>
+            )}
+
+            {!talk.archived && (
+              <ButtonLink to={`/?talkId=${talk.id}`} block>
+                Submit talk
+              </ButtonLink>
+            )}
+          </Card>
         </div>
       </div>
     </Container>
+  );
+}
+
+function ArchiveOrRestoreTalkButton({ archived }: { archived: boolean }) {
+  const action = archived ? 'restore-talk' : 'archive-talk';
+  const label = archived ? 'Restore' : 'Archive';
+  const icon = archived ? ArchiveBoxXMarkIcon : ArchiveBoxIcon;
+
+  return (
+    <Form method="POST">
+      <input type="hidden" name="_action" value={action} />
+      <Button type="submit" iconLeft={icon} aria-label={label} variant="secondary">
+        {label}
+      </Button>
+    </Form>
   );
 }

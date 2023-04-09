@@ -5,12 +5,15 @@ import { Form, useActionData } from '@remix-run/react';
 import { withZod } from '@remix-validated-form/with-zod';
 import { Container } from '~/design-system/Container';
 import { TalkSaveSchema } from '~/schemas/talks';
-import { DetailsForm } from '../../shared-components/proposals/forms/DetailsForm';
-import { Button } from '../../design-system/Buttons';
-import { H1 } from '../../design-system/Typography';
-import { sessionRequired } from '../../libs/auth/auth.server';
-import { mapErrorToResponse } from '../../libs/errors';
 import { createTalk } from './server/create-talk.server';
+import { sessionRequired } from '~/libs/auth/auth.server';
+import { mapErrorToResponse } from '~/libs/errors';
+import { H2 } from '~/design-system/Typography';
+import { DetailsForm } from '~/shared-components/proposals/forms/DetailsForm';
+import { Button } from '~/design-system/Buttons';
+import { Card } from '~/design-system/Card';
+import { IconButtonLink } from '~/design-system/IconButtons';
+import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 
 export const action = async ({ request }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
@@ -26,24 +29,22 @@ export const action = async ({ request }: LoaderArgs) => {
   }
 };
 
-export default function NewSpeakerTalkRoute() {
+export default function NewTalkRoute() {
   const errors = useActionData<typeof action>();
 
   return (
-    <Container className="my-4 sm:my-8">
-      <H1>New talk abstract</H1>
+    <Container className="my-4 space-y-8 sm:my-8">
+      <div className="flex items-start gap-4">
+        <IconButtonLink icon={ArrowLeftIcon} variant="secondary" to="/speaker/talks" aria-label="Go back" />
+        <H2 mb={0}>Create a new talk</H2>
+      </div>
 
-      <Form method="POST" className="mt-4 border border-gray-200 bg-white sm:rounded-lg">
-        <div className="px-4 py-8 sm:px-6">
+      <Card p={8} rounded="xl">
+        <Form method="POST" className="space-y-8">
           <DetailsForm errors={errors} />
-        </div>
-
-        <div className="space-x-4 bg-gray-50 px-4 py-3 text-right sm:px-6">
-          <Button type="submit" className="ml-4">
-            Create abstract
-          </Button>
-        </div>
-      </Form>
+          <Button type="submit">Create new talk</Button>
+        </Form>
+      </Card>
     </Container>
   );
 }

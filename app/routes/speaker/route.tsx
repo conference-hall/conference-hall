@@ -5,7 +5,6 @@ import { json } from '@remix-run/node';
 import { Link, Outlet, useOutletContext } from '@remix-run/react';
 import { SpeakerTabs } from '~/routes/speaker/components/SpeakerTabs';
 import { Avatar } from '~/design-system/Avatar';
-import { ButtonLink } from '~/design-system/Buttons';
 import { Container } from '~/design-system/Container';
 import { H1, Text } from '~/design-system/Typography';
 import { sessionRequired } from '~/libs/auth/auth.server';
@@ -41,9 +40,6 @@ export default function SpeakerRoute() {
               </Text>
             </div>
           </Link>
-          <div className="flex justify-center">
-            <ButtonLink to="/speaker/talks/new">New talk</ButtonLink>
-          </div>
         </Container>
       </header>
 
