@@ -28,7 +28,7 @@ describe('Speaker home page', () => {
     cy.assertText('ckent-github');
     cy.assertText('ckent-twitter');
 
-    home.activities().should('have.length', 4);
+    home.activities().should('have.length', 2);
     home.activity('My talk 2').click();
 
     eventProposal.isPageVisible();

@@ -11,23 +11,23 @@ class EventProposalPage extends BasePage {
   }
 
   editProposal() {
-    return cy.findByRole('link', { name: 'Edit proposal' });
+    cy.findByRole('link', { name: 'Edit proposal' }).click();
   }
 
   submitProposal() {
-    return cy.findByRole('link', { name: 'Continue submission' });
+    cy.findByRole('link', { name: 'Continue submission' }).click();
   }
 
   confirmProposal() {
-    return cy.findByRole('button', { name: 'Confirm' });
+    cy.findByRole('button', { name: 'Confirm' }).click();
   }
 
   declineProposal() {
-    return cy.findByRole('button', { name: 'Decline' });
+    cy.findByRole('button', { name: 'Decline' }).click();
   }
 
   deleteProposal() {
-    return cy.findByRole('button', { name: 'Delete proposal' });
+    cy.findByRole('button', { name: 'Delete proposal' }).click();
   }
 
   deleteConfirmDialog() {
@@ -35,11 +35,11 @@ class EventProposalPage extends BasePage {
   }
 
   cancelDelete() {
-    return this.deleteConfirmDialog().findByRole('button', { name: 'Cancel' });
+    this.deleteConfirmDialog().findByRole('button', { name: 'Cancel' }).click();
   }
 
   confirmDelete() {
-    return this.deleteConfirmDialog().findByRole('button', { name: 'Delete proposal' });
+    this.deleteConfirmDialog().findByRole('button', { name: 'Delete proposal' }).click();
   }
 }
 

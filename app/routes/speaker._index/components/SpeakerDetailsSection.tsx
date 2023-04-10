@@ -1,11 +1,12 @@
-import { PencilSquareIcon } from '@heroicons/react/20/solid';
-import { HeartIcon, HomeIcon, MapPinIcon } from '@heroicons/react/24/outline';
+import { BuildingLibraryIcon, MapPinIcon, PencilSquareIcon } from '@heroicons/react/20/solid';
 import { Avatar } from '~/design-system/Avatar';
 import { ButtonLink } from '~/design-system/Buttons';
 import { Card } from '~/design-system/Card';
 import { IconLabel } from '~/design-system/IconLabel';
 import { Markdown } from '~/design-system/Markdown';
 import { H3, Subtitle } from '~/design-system/Typography';
+import { GitHubIcon } from '~/design-system/icons/GitHubIcon';
+import { TwitterIcon } from '~/design-system/icons/TwitterIcon';
 
 type Props = {
   name: string | null;
@@ -40,9 +41,9 @@ export function SpeakerDetailsSection({ name, email, photoURL, bio, address, com
       {displayInfo && (
         <div className="space-y-4">
           {address && <IconLabel icon={MapPinIcon}>{address}</IconLabel>}
-          {company && <IconLabel icon={HomeIcon}>{company}</IconLabel>}
-          {twitter && <IconLabel icon={HeartIcon}>{twitter}</IconLabel>}
-          {github && <IconLabel icon={HeartIcon}>{github}</IconLabel>}
+          {company && <IconLabel icon={BuildingLibraryIcon}>{company}</IconLabel>}
+          {twitter && <IconLabel icon={TwitterIcon}>{twitter}</IconLabel>}
+          {github && <IconLabel icon={GitHubIcon}>{github}</IconLabel>}
         </div>
       )}
 
