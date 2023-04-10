@@ -2,7 +2,7 @@ import { FireIcon } from '@heroicons/react/24/outline';
 import type { CfpState } from '~/schemas/event';
 import type { SpeakerProposalStatus } from '~/shared-server/proposals/get-speaker-proposal-status';
 import { Card } from '~/design-system/Card';
-import { Text } from '~/design-system/Typography';
+import { Subtitle, Text } from '~/design-system/Typography';
 import { Avatar, AvatarGroup } from '~/design-system/Avatar';
 import { ProposalStatusLabel } from '~/shared-components/proposals/ProposalStatusLabel';
 import { EmptyState } from '~/design-system/EmptyState';
@@ -10,7 +10,6 @@ import { Link } from '~/design-system/Links';
 import { ButtonLink } from '~/design-system/Buttons';
 import { IconButtonLink } from '~/design-system/IconButtons';
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/20/solid';
-import { CfpIcon } from '~/shared-components/cfp/CfpIcon';
 
 interface Props {
   activities: Array<{
@@ -41,13 +40,15 @@ export function SpeakerActivitiesSection({ activities, nextPage, hasNextPage, cl
       <ul aria-label="Activities list" className="space-y-8">
         {activities.map((event) => (
           <Card key={event.slug} as="li" rounded="lg" className="flex flex-col">
-            <div className="flex items-center justify-between border-b border-b-gray-200 px-6 py-4">
+            <div className="flex items-center justify-between border-b border-b-gray-200 p-6">
               <div className="flex items-center gap-4">
-                <Avatar photoURL={event.bannerUrl} name={event.name} square />
-                <Text size="l" strong heading truncate>
-                  {event.name}
-                </Text>
-                <CfpIcon cfpState={event.cfpState} />
+                <Avatar photoURL={event.bannerUrl} name={event.name} square size="l" />
+                <div className="truncate">
+                  <Text size="xl" strong heading truncate>
+                    {event.name}
+                  </Text>
+                  <Subtitle size="xs">{`${event.submissions.length} proposals`}</Subtitle>
+                </div>
               </div>
               <IconButtonLink
                 to={`/${event.slug}`}
