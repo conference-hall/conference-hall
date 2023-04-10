@@ -2,7 +2,7 @@ import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData, useOutletContext } from '@remix-run/react';
 import { sessionRequired } from '~/libs/auth/auth.server';
-import { getActivity } from './server/get-activity.server';
+import { getActivities } from './server/get-activities.server';
 import { mapErrorToResponse } from '~/libs/errors';
 import { Container } from '~/design-system/Container';
 import type { SpeakerContext } from '../speaker/route';
@@ -18,7 +18,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   try {
     const url = new URL(request.url);
     const page = await parsePage(url.searchParams);
-    const activities = await getActivity(uid, page);
+    const activities = await getActivities(uid, page);
     return json(activities);
   } catch (err) {
     throw mapErrorToResponse(err);
@@ -31,7 +31,7 @@ export default function ProfileRoute() {
 
   return (
     <>
-      <Header title="Activity" subtitle="Your last submissions to conferences and meetups.">
+      <Header title="Welcome to Conference Hall" subtitle="Your last submissions to conferences and meetups.">
         <ButtonLink iconLeft={PlusIcon} to="/speaker/talks/new">
           New talk
         </ButtonLink>

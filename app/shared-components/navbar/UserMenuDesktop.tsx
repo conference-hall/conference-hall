@@ -50,12 +50,12 @@ export function UserMenuDesktop({ name, email, picture }: Props) {
             <p className="truncate text-sm font-medium text-gray-900">{email}</p>
           </div>
           <div className="py-1">
-            <MenuItem to="/speaker" label="Activity" icon={FireIcon} />
-            <MenuItem to="/speaker/talks" label="Your talks" icon={MicrophoneIcon} />
-            <MenuItem to="/speaker/profile" label="Your profile" icon={UserCircleIcon} />
+            <MenuItem to="/speaker" label="Home" icon={FireIcon} />
+            <MenuItem to="/speaker/talks" label="Talks" icon={MicrophoneIcon} />
+            <MenuItem to="/speaker/profile" label="Profile" icon={UserCircleIcon} />
           </div>
           <div className="py-1">
-            <MenuItem to="/organizer" label="Your organizations" icon={BuildingOfficeIcon} />
+            <MenuItem to="/organizer" label="Organizations" icon={BuildingOfficeIcon} />
           </div>
           <div className="py-1">
             <Menu.Item>

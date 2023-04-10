@@ -1,5 +1,5 @@
 import { PencilSquareIcon } from '@heroicons/react/20/solid';
-import { GlobeAltIcon, HeartIcon, HomeIcon, MapPinIcon } from '@heroicons/react/24/solid';
+import { HeartIcon, HomeIcon, MapPinIcon } from '@heroicons/react/24/outline';
 import { Avatar } from '~/design-system/Avatar';
 import { ButtonLink } from '~/design-system/Buttons';
 import { Card } from '~/design-system/Card';
@@ -22,7 +22,7 @@ export function SpeakerDetailsSection({ name, email, photoURL, bio, address, com
   const displayInfo = address || company || twitter || github;
 
   return (
-    <Card as="section" rounded="2xl" p={8} className="space-y-6">
+    <Card as="section" rounded="lg" p={8} className="space-y-6">
       <div className="flex gap-4">
         <Avatar photoURL={photoURL} size="l" />
         <div className="truncate">
@@ -42,7 +42,7 @@ export function SpeakerDetailsSection({ name, email, photoURL, bio, address, com
           {address && <IconLabel icon={MapPinIcon}>{address}</IconLabel>}
           {company && <IconLabel icon={HomeIcon}>{company}</IconLabel>}
           {twitter && <IconLabel icon={HeartIcon}>{twitter}</IconLabel>}
-          {github && <IconLabel icon={GlobeAltIcon}>{github}</IconLabel>}
+          {github && <IconLabel icon={HeartIcon}>{github}</IconLabel>}
         </div>
       )}
 

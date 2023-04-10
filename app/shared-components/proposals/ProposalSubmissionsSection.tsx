@@ -12,7 +12,7 @@ type Props = {
 
 export function ProposalSubmissionsSection({ talkId, submissions }: Props) {
   return (
-    <Card as="section" rounded="xl" p={8} className="space-y-6">
+    <Card as="section" rounded="lg" p={8} className="space-y-6">
       <H3 mb={0}>Submissions</H3>
       {submissions.length > 0 ? (
         <ul className="mt-4 space-y-4">

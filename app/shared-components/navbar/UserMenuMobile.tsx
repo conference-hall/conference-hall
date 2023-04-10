@@ -14,10 +14,10 @@ function MenuLink({ to, children }: { to: string; children: string }) {
 export function UserMenuMobile() {
   return (
     <div className="mt-3 space-y-1 px-2">
-      <MenuLink to="/speaker">Activity</MenuLink>
-      <MenuLink to="/speaker/talks">Your talk</MenuLink>
-      <MenuLink to="/speaker/profile">Your profile</MenuLink>
-      <MenuLink to="/organizer">Your organizations</MenuLink>
+      <MenuLink to="/speaker">Home</MenuLink>
+      <MenuLink to="/speaker/talks">Talks</MenuLink>
+      <MenuLink to="/speaker/profile">Profile</MenuLink>
+      <MenuLink to="/organizer">Organizations</MenuLink>
       <Form action="/logout" method="POST">
         <button type="submit" onClick={() => getAuth().signOut()} className={`${STYLE} w-full text-left`}>
           Sign out

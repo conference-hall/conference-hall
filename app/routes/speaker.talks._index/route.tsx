@@ -36,7 +36,7 @@ export default function SpeakerTalksRoute() {
 
   return (
     <>
-      <Header title="Your talks" subtitle="This is your talks library.">
+      <Header title="Your talks library" subtitle="This is your talks library.">
         <Select
           name="status"
           label="Talk status"

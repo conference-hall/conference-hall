@@ -1,23 +1,30 @@
-import { intlFormatDistance } from 'date-fns';
-import { ClientOnly } from 'remix-utils';
 import { FireIcon } from '@heroicons/react/24/outline';
+import type { CfpState } from '~/schemas/event';
 import type { SpeakerProposalStatus } from '~/shared-server/proposals/get-speaker-proposal-status';
 import { Card } from '~/design-system/Card';
 import { Text } from '~/design-system/Typography';
-import { AvatarGroup } from '~/design-system/Avatar';
+import { Avatar, AvatarGroup } from '~/design-system/Avatar';
 import { ProposalStatusLabel } from '~/shared-components/proposals/ProposalStatusLabel';
 import { EmptyState } from '~/design-system/EmptyState';
 import { Link } from '~/design-system/Links';
 import { ButtonLink } from '~/design-system/Buttons';
+import { IconButtonLink } from '~/design-system/IconButtons';
+import { ArrowTopRightOnSquareIcon } from '@heroicons/react/20/solid';
+import { CfpIcon } from '~/shared-components/cfp/CfpIcon';
 
 interface Props {
   activities: Array<{
-    id: string;
-    title: string;
-    updatedAt: string;
-    status: SpeakerProposalStatus;
-    speakers: Array<{ name: string | null; photoURL: string | null }>;
-    event: { slug: string; name: string };
+    slug: string;
+    name: string;
+    bannerUrl: string | null;
+    cfpState: CfpState;
+    submissions: Array<{
+      id: string;
+      title: string;
+      updatedAt: string;
+      status: SpeakerProposalStatus;
+      speakers: Array<{ name: string | null; photoURL: string | null }>;
+    }>;
   }>;
   nextPage: number;
   hasNextPage: boolean;
@@ -31,38 +38,38 @@ export function SpeakerActivitiesSection({ activities, nextPage, hasNextPage, cl
 
   return (
     <section className={className}>
-      <ul aria-label="Activities list" className="space-y-4">
-        {activities.map((activity) => (
-          <Card key={activity.id} as="li" rounded="lg">
-            <div className="flex flex-col gap-3 px-4 py-4 sm:px-6">
-              <div className="flex items-center justify-between">
-                <Link to={`/${activity.event.slug}/proposals/${activity.id}`}>
-                  <Text size="base" strong heading truncate>
-                    {activity.title}
-                  </Text>
-                </Link>
-                <AvatarGroup avatars={activity.speakers} />
+      <ul aria-label="Activities list" className="space-y-8">
+        {activities.map((event) => (
+          <Card key={event.slug} as="li" rounded="lg" className="flex flex-col">
+            <div className="flex items-center justify-between border-b border-b-gray-200 px-6 py-4">
+              <div className="flex items-center gap-4">
+                <Avatar photoURL={event.bannerUrl} name={event.name} square />
+                <Text size="l" strong heading truncate>
+                  {event.name}
+                </Text>
+                <CfpIcon cfpState={event.cfpState} />
               </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <ProposalStatusLabel status={activity.status} />
-                  <Text size="s" variant="secondary">
-                    —
-                  </Text>
-                  <Link to={`/${activity.event.slug}`}>
-                    <Text size="s" variant="link" strong truncate>
-                      {activity.event.name}
-                    </Text>
-                  </Link>
+              <IconButtonLink
+                to={`/${event.slug}`}
+                icon={ArrowTopRightOnSquareIcon}
+                variant="secondary"
+                target="_blank"
+              />
+            </div>
+            <div className="divide-y">
+              {event.submissions.map((submission) => (
+                <div key={submission.id} className="flex flex-col gap-1 px-6 py-4">
+                  <div className="flex items-center justify-between">
+                    <Link to={`/${event.slug}/proposals/${submission.id}`}>
+                      <Text variant="link" strong heading truncate>
+                        {submission.title}
+                      </Text>
+                    </Link>
+                    <AvatarGroup avatars={submission.speakers} />
+                  </div>
+                  <ProposalStatusLabel status={submission.status} />
                 </div>
-                <ClientOnly>
-                  {() => (
-                    <Text variant="secondary" size="xs">
-                      {intlFormatDistance(new Date(activity.updatedAt), new Date(), { locale: navigator.language })}
-                    </Text>
-                  )}
-                </ClientOnly>
-              </div>
+              ))}
             </div>
           </Card>
         ))}

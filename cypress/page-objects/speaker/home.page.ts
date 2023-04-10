@@ -1,11 +1,11 @@
-class SpeakerActivityPage {
+class SpeakerHomePage {
   visit() {
     cy.visit('/speaker');
     this.isPageVisible();
   }
 
   isPageVisible() {
-    cy.findByRole('heading', { name: 'Activity' }).should('exist');
+    cy.findByRole('heading', { name: 'Welcome to Conference Hall' }).should('exist');
   }
 
   editProfile() {
@@ -25,4 +25,4 @@ class SpeakerActivityPage {
   }
 }
 
-export default SpeakerActivityPage;
+export default SpeakerHomePage;

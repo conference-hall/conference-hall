@@ -6,7 +6,7 @@ export function SpeakerLinks({ hasOrganization }: Props) {
   return (
     <>
       <NavLink to="/speaker" end>
-        Activity
+        Home
       </NavLink>
       <NavLink to="/speaker/talks">Talks</NavLink>
       <NavLink to="/speaker/profile">Profile</NavLink>
