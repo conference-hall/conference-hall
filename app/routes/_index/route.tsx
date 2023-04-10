@@ -16,7 +16,7 @@ import { parseFilters } from './types/search';
 import { SearchEventsFilters } from './components/SearchEventsFilters';
 import { EventCard } from '~/shared-components/EventCard';
 import { Footer } from '~/shared-components/Footer';
-import { NavLink } from '~/shared-components/navbar/NavLink';
+import { SpeakerLinks } from '~/shared-components/navbar/SpeakerLinks';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const url = new URL(request.url);
@@ -30,17 +30,11 @@ export default function IndexRoute() {
   const { user, notifications } = useOutletContext<UserContext>();
   const { filters, results, pagination } = useLoaderData<typeof loader>();
   const [searchParams] = useSearchParams();
-  const hasOrganization = Boolean(user?.organizationsCount);
 
   return (
     <>
       <Navbar user={user} notifications={notifications}>
-        <NavLink to="/speaker" end>
-          Activity
-        </NavLink>
-        <NavLink to="/speaker/talks">Talks</NavLink>
-        <NavLink to="/speaker/profile">Profile</NavLink>
-        {hasOrganization && <NavLink to="/organizer">Organizations</NavLink>}
+        <SpeakerLinks hasOrganization={Boolean(user?.organizationsCount)} />
       </Navbar>
 
       <div className="bg-gray-800 shadow">

@@ -14,8 +14,8 @@ import { IconButtonLink } from '~/design-system/IconButtons';
 import { EventHeader } from '../$event/components/EventHeader';
 import { useSubmissionStep } from './hooks/useSubmissionStep';
 import { Navbar } from '~/shared-components/navbar/Navbar';
-import { NavLink } from '~/shared-components/navbar/NavLink';
 import type { UserContext } from '~/root';
+import { SpeakerLinks } from '~/shared-components/navbar/SpeakerLinks';
 
 type Step = {
   key: string;
@@ -89,18 +89,12 @@ export default function EventSubmissionRoute() {
   const { event, steps } = useLoaderData<typeof loader>();
   const { currentStepKey, previousPath } = useSubmissionStep();
   const { user, notifications } = useOutletContext<UserContext>();
-  const hasOrganization = Boolean(user?.organizationsCount);
   const currentStep = steps.find((step) => step.key === currentStepKey);
 
   return (
     <>
       <Navbar user={user} notifications={notifications} withSearch>
-        <NavLink to="/speaker" end>
-          Activity
-        </NavLink>
-        <NavLink to="/speaker/talks">Talks</NavLink>
-        <NavLink to="/speaker/profile">Profile</NavLink>
-        {hasOrganization && <NavLink to="/organizer">Organizations</NavLink>}
+        <SpeakerLinks hasOrganization={Boolean(user?.organizationsCount)} />
       </Navbar>
 
       <EventHeader

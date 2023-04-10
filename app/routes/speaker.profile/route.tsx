@@ -6,7 +6,7 @@ import { Container } from '../../design-system/Container';
 import { Input } from '../../design-system/forms/Input';
 import { MarkdownTextArea } from '../../design-system/forms/MarkdownTextArea';
 import { Button } from '../../design-system/Buttons';
-import { H2, Text } from '../../design-system/Typography';
+import { H2, Subtitle } from '../../design-system/Typography';
 import { useCallback } from 'react';
 import { getAuth } from 'firebase/auth';
 import { mapErrorToResponse } from '../../libs/errors';
@@ -17,6 +17,9 @@ import type { SpeakerContext } from '../speaker/route';
 import { saveProfile } from '~/shared-server/profile/save-profile.server';
 import { AdditionalInfoSchema, DetailsSchema, PersonalInfoSchema } from '~/schemas/profile.schema';
 import { Header } from '~/shared-components/Header';
+import { Card } from '~/design-system/Card';
+import { Avatar } from '~/design-system/Avatar';
+import { createToast } from '~/libs/toasts/toasts';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);
@@ -24,7 +27,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 export const action = async ({ request }: ActionArgs) => {
-  const { uid } = await sessionRequired(request);
+  const { uid, session } = await sessionRequired(request);
   const form = await request.formData();
   const type = form.get('_type') as string;
   try {
@@ -43,7 +46,8 @@ export const action = async ({ request }: ActionArgs) => {
 
     if (result.error) return json(result.error.fieldErrors);
     await saveProfile(uid, result.data);
-    return redirect('/speaker/profile');
+    const toast = await createToast(session, 'Profile successfully saved.');
+    return redirect('/speaker/profile', toast);
   } catch (err) {
     throw mapErrorToResponse(err);
   }
@@ -77,128 +81,131 @@ export default function ProfileRoute() {
     <>
       <Header title="Your profile" subtitle="Share your biography and references to event organizers." />
 
-      <Container className="mt-4 sm:mt-8 lg:grid lg:grid-cols-12 lg:gap-x-5">
-        <NavMenu items={MENU_ITEMS} className="hidden px-2 py-6 sm:block sm:px-6 lg:col-span-3 lg:px-0 lg:py-0" />
+      <Container className="mt-4 h-full sm:mt-8 lg:grid lg:grid-cols-12 lg:gap-x-5">
+        <NavMenu
+          items={MENU_ITEMS}
+          className="sticky top-0 hidden px-2 py-6 sm:block sm:px-6 lg:col-span-3 lg:px-0 lg:py-0"
+          noActive
+        />
 
         <div className="space-y-6 sm:px-6 lg:col-span-9 lg:px-0">
-          <Form method="POST" aria-labelledby="personal-info-label" preventScrollReset>
-            <div className="overflow-hidden border border-gray-200 sm:rounded-md">
-              <a id="personal-info" href="#personal-info" className="scroll-mt-16" aria-hidden={true} />
-              <div className="space-y-6 bg-white px-4 py-6 sm:p-6">
-                <div>
-                  <H2 id="personal-info-label">Personal information</H2>
-                  <Text variant="secondary">Use a permanent address where you can receive email.</Text>
-                </div>
+          <Card rounded="xl">
+            <Form method="POST" aria-labelledby="personal-info-label" preventScrollReset>
+              <div className="px-8 pt-8">
+                <H2 size="xl" mb={0} id="personal-info-label">
+                  Personal information
+                </H2>
+                <Subtitle>Use a permanent address where you can receive email.</Subtitle>
+                <a id="personal-info" href="#personal-info" className="scroll-mt-24" aria-hidden={true} />
+              </div>
 
-                <div className="grid grid-cols-1 gap-6">
-                  <input type="hidden" name="_type" value="INFO" />
-                  <Input
-                    name="name"
-                    label="Full name"
-                    defaultValue={user.name || ''}
-                    key={user.name}
-                    error={errors?.name}
-                  />
-                  <Input
-                    name="email"
-                    label="Email address"
-                    defaultValue={user.email || ''}
-                    key={user.email}
-                    error={errors?.email}
-                  />
+              <div className="grid grid-cols-1 gap-6 p-8">
+                <input type="hidden" name="_type" value="INFO" />
+                <Input
+                  name="name"
+                  label="Full name"
+                  defaultValue={user.name || ''}
+                  key={user.name}
+                  error={errors?.name}
+                />
+                <Input
+                  name="email"
+                  label="Email address"
+                  defaultValue={user.email || ''}
+                  key={user.email}
+                  error={errors?.email}
+                />
+                <div className="flex justify-between gap-8">
                   <Input
                     name="photoURL"
                     label="Avatar picture URL"
                     defaultValue={user.photoURL || ''}
                     key={user.photoURL}
                     error={errors?.photoURL}
+                    className="flex-1"
                   />
+                  <Avatar photoURL={user.photoURL} size="xl" square />
                 </div>
               </div>
-              <div className="space-x-4 bg-gray-50 px-4 py-3 text-right sm:px-6">
+              <div className="flex justify-end gap-4 border-t border-t-gray-200 px-8 py-4">
                 <Button type="button" onClick={resetCurrentUser} variant="secondary">
                   Reset default
                 </Button>
                 <Button type="submit">Save</Button>
               </div>
-            </div>
-          </Form>
+            </Form>
+          </Card>
 
-          <Form method="POST" aria-labelledby="speaker-details-label" preventScrollReset>
-            <div className="overflow-hidden border border-gray-200 sm:rounded-md">
-              <a id="speaker-details" href="#speaker-details" className="scroll-mt-16" />
-              <div className="space-y-6 bg-white px-4 py-6 sm:p-6">
-                <div>
-                  <H2 id="speaker-details-label">Speaker details</H2>
-                  <Text variant="secondary">
-                    Give more information about you, these information will be visible by organizers when you submit a
-                    talk.
-                  </Text>
-                </div>
-
-                <div className="grid grid-cols-1 gap-6">
-                  <input type="hidden" name="_type" value="DETAILS" />
-                  <MarkdownTextArea
-                    name="bio"
-                    label="Biography"
-                    description="Brief description for your profile."
-                    rows={5}
-                    error={errors?.bio}
-                    defaultValue={user.bio || ''}
-                  />
-                  <MarkdownTextArea
-                    name="references"
-                    label="Speaker references"
-                    description="Give some information about your speaker experience: your already-given talks, conferences or meetups as speaker, video links..."
-                    rows={5}
-                    error={errors?.references}
-                    defaultValue={user.references || ''}
-                  />
-                </div>
+          <Card rounded="xl">
+            <Form method="POST" aria-labelledby="speaker-details-label" preventScrollReset>
+              <div className="px-8 pt-8">
+                <H2 size="xl" mb={0} id="speaker-details-label">
+                  Speaker details
+                </H2>
+                <Subtitle>
+                  Give more information about you, these information will be visible by organizers when you submit a
+                  talk.
+                </Subtitle>
+                <a id="speaker-details" href="#speaker-details" className="scroll-mt-24" />
               </div>
-              <div className="space-x-4 bg-gray-50 px-4 py-3 text-right sm:px-6">
+
+              <div className="grid grid-cols-1 gap-6 p-8">
+                <input type="hidden" name="_type" value="DETAILS" />
+                <MarkdownTextArea
+                  name="bio"
+                  label="Biography"
+                  description="Brief description for your profile."
+                  rows={5}
+                  error={errors?.bio}
+                  defaultValue={user.bio || ''}
+                />
+                <MarkdownTextArea
+                  name="references"
+                  label="Speaker references"
+                  description="Give some information about your speaker experience: your already-given talks, conferences or meetups as speaker, video links..."
+                  rows={5}
+                  error={errors?.references}
+                  defaultValue={user.references || ''}
+                />
+              </div>
+              <div className="border-t border-t-gray-200 px-8 py-4 text-right">
                 <Button type="submit">Save</Button>
               </div>
-            </div>
-          </Form>
+            </Form>
+          </Card>
 
-          <Form method="POST" aria-labelledby="additional-info-label" preventScrollReset>
-            <div className="overflow-hidden border border-gray-200 sm:rounded-md">
-              <a id="additional-info" href="#additional-info" className="scroll-mt-16" />
-              <div className="space-y-6 bg-white px-4 py-6 sm:p-6">
-                <div>
-                  <H2 id="additional-info-label">Additional information</H2>
-                  <Text variant="secondary">Helps organizers to know more about you.</Text>
-                </div>
-
-                <div className="grid grid-cols-1 gap-6">
-                  <input type="hidden" name="_type" value="ADDITIONAL" />
-                  <Input name="company" label="Company" defaultValue={user.company || ''} error={errors?.company} />
-                  <Input
-                    name="address"
-                    label="Location (city, country)"
-                    defaultValue={user.address || ''}
-                    error={errors?.address}
-                  />
-                  <Input
-                    name="twitter"
-                    label="Twitter username"
-                    defaultValue={user.twitter || ''}
-                    error={errors?.twitter}
-                  />
-                  <Input
-                    name="github"
-                    label="GitHub username"
-                    defaultValue={user.github || ''}
-                    error={errors?.github}
-                  />
-                </div>
+          <Card rounded="xl">
+            <Form method="POST" aria-labelledby="additional-info-label" preventScrollReset>
+              <div className="px-8 pt-8">
+                <H2 size="xl" mb={0} id="additional-info-label">
+                  Additional information
+                </H2>
+                <Subtitle>Helps organizers to know more about you.</Subtitle>
+                <a id="additional-info" href="#additional-info" className="scroll-mt-24" />
               </div>
-              <div className="space-x-4 bg-gray-50 px-4 py-3 text-right sm:px-6">
+
+              <div className="grid grid-cols-1 gap-6 p-8">
+                <input type="hidden" name="_type" value="ADDITIONAL" />
+                <Input name="company" label="Company" defaultValue={user.company || ''} error={errors?.company} />
+                <Input
+                  name="address"
+                  label="Location (city, country)"
+                  defaultValue={user.address || ''}
+                  error={errors?.address}
+                />
+                <Input
+                  name="twitter"
+                  label="Twitter username"
+                  defaultValue={user.twitter || ''}
+                  error={errors?.twitter}
+                />
+                <Input name="github" label="GitHub username" defaultValue={user.github || ''} error={errors?.github} />
+              </div>
+              <div className="border-t border-t-gray-200 px-8 py-4 text-right">
                 <Button type="submit">Save</Button>
               </div>
-            </div>
-          </Form>
+            </Form>
+          </Card>
         </div>
       </Container>
     </>

@@ -1,28 +1,29 @@
 import c from 'classnames';
 import { NavLink } from '@remix-run/react';
 import { IconLabel } from './IconLabel';
+import { Card } from './Card';
 
 type NavItem = { to: string; icon: React.ComponentType<{ className?: string }>; label: string };
 
-type Props = { items: Array<NavItem>; className?: string };
+type Props = { items: Array<NavItem>; noActive?: boolean; className?: string };
 
-export function NavMenu({ items, className, ...rest }: Props) {
+export function NavMenu({ items, noActive, className, ...rest }: Props) {
   return (
     <aside className={className}>
-      <nav className="space-y-1" {...rest}>
+      <Card rounded="xl" p={4} as="nav" className="space-y-1" {...rest}>
         {items.map((item) => (
-          <NavLink key={item.to} to={item.to} className={menuStyles} end>
+          <NavLink key={item.to} to={item.to} className={({ isActive }) => menuStyles(isActive, noActive)} end>
             <IconLabel icon={item.icon}>{item.label}</IconLabel>
           </NavLink>
         ))}
-      </nav>
+      </Card>
     </aside>
   );
 }
 
-function menuStyles({ isActive }: { isActive: boolean }) {
+function menuStyles(isActive: boolean, noActive?: boolean) {
   return c(
-    'group relative flex items-center rounded-md px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-gray-900',
-    { 'bg-gray-100 font-bold': isActive }
+    'group relative flex items-center rounded-md px-3 py-2 text-sm text-gray-900 hover:bg-gray-100 hover:text-gray-900',
+    { 'bg-gray-100 font-medium': isActive && !noActive }
   );
 }

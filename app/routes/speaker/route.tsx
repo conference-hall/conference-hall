@@ -6,7 +6,7 @@ import { Outlet, useOutletContext } from '@remix-run/react';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { Navbar } from '~/shared-components/navbar/Navbar';
 import { Footer } from '~/shared-components/Footer';
-import { NavLink } from '~/shared-components/navbar/NavLink';
+import { SpeakerLinks } from '~/shared-components/navbar/SpeakerLinks';
 
 export type SpeakerContext = {
   user: Awaited<ReturnType<typeof getUser>>;
@@ -19,17 +19,11 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 export default function SpeakerRoute() {
   const { user, notifications } = useOutletContext<UserContext>();
-  const hasOrganization = Boolean(user?.organizationsCount);
 
   return (
     <>
       <Navbar user={user} notifications={notifications} withSearch>
-        <NavLink to="/speaker" end>
-          Activity
-        </NavLink>
-        <NavLink to="/speaker/talks">Talks</NavLink>
-        <NavLink to="/speaker/profile">Profile</NavLink>
-        {hasOrganization && <NavLink to="/organizer">Organizations</NavLink>}
+        <SpeakerLinks hasOrganization={Boolean(user?.organizationsCount)} />
       </Navbar>
 
       {user && <Outlet context={{ user }} />}
