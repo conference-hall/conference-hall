@@ -21,9 +21,15 @@ const text_sizes = {
   '4xl': 'text-6xl',
 };
 
-const rings = { xs: 'ring-2', s: 'ring-2', m: 'ring-2', l: 'ring-2', xl: 'ring-2', '2xl': 'ring-3', '4xl': 'ring-4' };
-
-const ringsColor = { white: 'ring-white', primary: 'ring-indigo-500' };
+const square_sizes = {
+  xs: 'rounded',
+  s: 'rounded',
+  m: 'rounded',
+  l: 'rounded-md',
+  xl: 'rounded-md',
+  '2xl': 'rounded-md',
+  '4xl': 'rounded-md',
+};
 
 const colors = [
   'bg-red-200',
@@ -36,15 +42,9 @@ const colors = [
   'bg-indigo-200',
 ];
 
-const square_sizes = {
-  xs: 'rounded',
-  s: 'rounded',
-  m: 'rounded',
-  l: 'rounded-md',
-  xl: 'rounded-md',
-  '2xl': 'rounded-md',
-  '4xl': 'rounded-md',
-};
+const rings = { xs: 'ring-2', s: 'ring-2', m: 'ring-2', l: 'ring-2', xl: 'ring-2', '2xl': 'ring-3', '4xl': 'ring-4' };
+
+const ringsColor = { white: 'ring-white', primary: 'ring-indigo-500' };
 
 type AvatarProps = {
   photoURL?: string | null;
@@ -53,6 +53,7 @@ type AvatarProps = {
   square?: boolean;
   ring?: boolean;
   ringColor?: keyof typeof ringsColor;
+  'aria-hidden'?: boolean;
   className?: string;
 };
 
@@ -63,6 +64,7 @@ export function Avatar({
   square = false,
   ring = false,
   ringColor = 'primary',
+  'aria-hidden': ariaHidden,
   className,
 }: AvatarProps) {
   const styles = c(
@@ -75,7 +77,7 @@ export function Avatar({
   );
 
   if (photoURL) {
-    return <AvatarImage name={name} photoURL={photoURL} className={styles} />;
+    return <AvatarImage name={name} photoURL={photoURL} className={styles} aria-hidden={ariaHidden} />;
   }
   return <AvatarColor name={name} size={size} className={styles} />;
 }
@@ -100,6 +102,7 @@ export function AvatarGroup({ avatars, displayNames = false }: AvatarGroupProps)
           ring
           ringColor="white"
           className="inline-block"
+          aria-hidden
         />
       ))}
       {displayNames && (
@@ -122,7 +125,7 @@ type AvatarNameProps = {
 export function AvatarName({ name, subtitle, variant = 'primary', ...rest }: AvatarNameProps) {
   return (
     <div className="flex items-center">
-      <Avatar {...rest} />
+      <Avatar {...rest} aria-hidden />
       <div className="ml-3 text-left">
         <Text variant={variant === 'primary' ? 'primary' : 'light'} size="s" strong>
           {name || 'Unknown'}
@@ -144,8 +147,18 @@ const getColor = (name: string) => {
   return colors[colorIndex];
 };
 
-function AvatarImage({ photoURL, name, className }: { photoURL: string; name?: string | null; className: string }) {
-  return <img className={className} src={photoURL} alt={name || ''} aria-hidden={!name} loading="lazy" />;
+type AvatarImageProps = { photoURL: string; name?: string | null; 'aria-hidden'?: boolean; className: string };
+
+function AvatarImage({ photoURL, name, 'aria-hidden': ariaHidden, className }: AvatarImageProps) {
+  return (
+    <img
+      className={className}
+      src={photoURL}
+      alt={!ariaHidden && name ? name : ''}
+      aria-hidden={ariaHidden}
+      loading="lazy"
+    />
+  );
 }
 
 function AvatarColor({
