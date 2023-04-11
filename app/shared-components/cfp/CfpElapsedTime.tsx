@@ -9,11 +9,11 @@ type Props = { cfpState: CfpState; cfpStart?: string; cfpEnd?: string; className
 
 export function CfpElapsedTime({ cfpState, cfpStart, cfpEnd, className }: Props) {
   return (
-    <div className={cn('flex items-center space-x-3', className)}>
+    <div className={cn('flex items-center space-x-2', className)}>
       <CfpIcon cfpState={cfpState} />
       <ClientOnly>
         {() => (
-          <Text variant="secondary" size="s" truncate>
+          <Text variant="secondary" size="s" strong truncate>
             {formatCFPElapsedTime(cfpState, cfpStart, cfpEnd)}
           </Text>
         )}

@@ -28,7 +28,7 @@ type CardProps = {
   children: React.ReactNode;
 };
 
-export function Card({ as: Tag = 'div', rounded = 'base', p = 0, className, ...rest }: CardProps) {
+export function Card({ as: Tag = 'div', rounded = 'lg', p = 0, className, ...rest }: CardProps) {
   return <Tag className={c('bg-white shadow', ROUNDED[rounded], PADDING[p], className)} {...rest} />;
 }
 

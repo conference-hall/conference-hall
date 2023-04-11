@@ -59,7 +59,7 @@ export default function SubmissionTracksRoute() {
     <>
       <H2>Proposal tracks</H2>
 
-      <Card p={8} rounded="xl">
+      <Card p={8}>
         <Form id="tracks-form" method="POST">
           <div className="space-y-12">
             {event.formats?.length > 0 && (

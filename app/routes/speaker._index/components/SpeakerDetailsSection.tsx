@@ -23,7 +23,7 @@ export function SpeakerDetailsSection({ name, email, photoURL, bio, address, com
   const displayInfo = address || company || twitter || github;
 
   return (
-    <Card as="section" rounded="lg" p={8} className="space-y-6">
+    <Card as="section" p={8} className="space-y-6">
       <div className="flex gap-4">
         <Avatar photoURL={photoURL} size="l" />
         <div className="truncate">

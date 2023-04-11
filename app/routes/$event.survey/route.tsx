@@ -62,7 +62,7 @@ export default function EventSurveyRoute() {
       />
 
       <Container className="mt-4 space-y-8 sm:mt-8">
-        <Card rounded="2xl" p={8}>
+        <Card p={8}>
           <Form aria-labelledby="survey-form-label" method="POST">
             <SurveyForm questions={questions} initialValues={answers} />
             <div className="mt-8 text-right">

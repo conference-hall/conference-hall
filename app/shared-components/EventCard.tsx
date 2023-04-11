@@ -20,7 +20,7 @@ export function EventCard({ name, slug, type, bannerUrl, cfpState, cfpStart, cfp
   const path = forTalkId ? `/${slug}/submission/${forTalkId}` : `/${slug}`;
 
   return (
-    <CardLink as="li" to={path} rounded="lg" className="flex h-32 justify-between">
+    <CardLink as="li" to={path} className="flex h-32 justify-between">
       <Avatar photoURL={bannerUrl} name={name} size="4xl" square className="rounded-r-none" />
       <div className="flex flex-1 flex-col justify-between truncate p-4">
         <div>

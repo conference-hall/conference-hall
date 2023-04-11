@@ -53,7 +53,7 @@ export default function SubmissionSurveyRoute() {
     <>
       <H2>We have some questions for you.</H2>
 
-      <Card p={8} rounded="xl">
+      <Card p={8}>
         <Form id="survey-form" method="POST">
           <SurveyForm questions={questions} initialValues={answers} />
         </Form>

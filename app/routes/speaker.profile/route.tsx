@@ -68,15 +68,15 @@ export default function ProfileRoute() {
         <NavMenu items={MENU_ITEMS} className="hidden lg:col-span-3 lg:block" noActive />
 
         <div className="space-y-6 sm:px-6 lg:col-span-9 lg:px-0">
-          <Card as="section" rounded="lg">
+          <Card as="section">
             <SpeakerDetailsForm name={user.name} email={user.email} photoURL={user.photoURL} errors={errors} />
           </Card>
 
-          <Card as="section" rounded="lg">
+          <Card as="section">
             <PersonalInfoForm bio={user.bio} references={user.references} errors={errors} />
           </Card>
 
-          <Card as="section" rounded="lg">
+          <Card as="section">
             <AdditionalInfoForm
               company={user.company}
               address={user.address}

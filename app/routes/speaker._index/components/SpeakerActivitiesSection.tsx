@@ -39,7 +39,7 @@ export function SpeakerActivitiesSection({ activities, nextPage, hasNextPage, cl
     <section className={className}>
       <ul aria-label="Activities list" className="space-y-8">
         {activities.map((event) => (
-          <Card key={event.slug} as="li" rounded="lg" className="flex flex-col">
+          <Card key={event.slug} as="li" className="flex flex-col">
             <div className="flex items-center justify-between border-b border-b-gray-200 p-6">
               <div className="flex items-center gap-4">
                 <Avatar photoURL={event.bannerUrl} name={event.name} square size="l" />

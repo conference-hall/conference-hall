@@ -73,7 +73,7 @@ export default function EditProposalRoute() {
       <Container className="my-4 space-y-8 sm:my-8">
         <div className="grid grid-cols-1 gap-6 lg:grid-flow-col-dense lg:grid-cols-3">
           <div className="lg:col-span-2 lg:col-start-1">
-            <Card rounded="xl" p={8} className="space-y-8">
+            <Card p={8} className="space-y-8">
               <Form method="POST">
                 <DetailsForm
                   initialValues={proposal}
@@ -93,7 +93,7 @@ export default function EditProposalRoute() {
           </div>
 
           <div className="lg:col-span-1 lg:col-start-3">
-            <Card rounded="xl" p={8} className="space-y-6">
+            <Card p={8} className="space-y-6">
               <div>
                 <H3>Speakers</H3>
                 <Subtitle>

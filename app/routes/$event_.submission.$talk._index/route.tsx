@@ -61,7 +61,7 @@ export default function SubmissionProposalRoute() {
     <>
       <H2 mb={0}>Your proposal</H2>
 
-      <Card p={8} rounded="xl">
+      <Card p={8}>
         <Form id="proposal-form" method="POST">
           <DetailsForm initialValues={talk} errors={errors} />
         </Form>

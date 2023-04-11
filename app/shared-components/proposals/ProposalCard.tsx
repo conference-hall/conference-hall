@@ -13,7 +13,7 @@ type Props = {
 
 export function ProposalCard({ id, title, speakers, status }: Props) {
   return (
-    <CardLink as="li" rounded="lg" to={id}>
+    <CardLink as="li" to={id}>
       <div className="flex flex-col px-4 py-4 sm:px-6">
         <Text size="l" mb={2} strong heading truncate>
           {title}

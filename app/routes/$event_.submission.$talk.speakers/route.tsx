@@ -76,7 +76,7 @@ export default function SubmissionSpeakerRoute() {
   return (
     <>
       <H2>Speaker details</H2>
-      <Card p={8} rounded="xl">
+      <Card p={8}>
         <Form id="speakers-form" method="POST">
           <MarkdownTextArea
             name="bio"

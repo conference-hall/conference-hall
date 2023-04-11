@@ -35,7 +35,7 @@ export default function NewTalkRoute() {
       <Header title="Create a new talk" backTo="/speaker/talks" />
 
       <Container className="mt-4 space-y-8 sm:mt-8">
-        <Card p={8} rounded="xl">
+        <Card p={8}>
           <Form method="POST" className="space-y-8">
             <DetailsForm errors={errors} />
             <Button type="submit">Create new talk</Button>

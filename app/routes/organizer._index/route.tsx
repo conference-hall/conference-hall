@@ -40,7 +40,7 @@ export default function OrganizerIndexRoute() {
       <Container className="my-4 sm:my-8">
         <ul aria-label="Organizations list" className="my-8 grid grid-cols-1 gap-6 sm:grid-cols-2">
           {data.map((orga) => (
-            <CardLink as="li" key={orga.slug} to={orga.slug} rounded="lg" p={4}>
+            <CardLink as="li" key={orga.slug} to={orga.slug} p={4}>
               <div className="mb-8 flex items-center justify-between gap-1">
                 <Text size="xl" heading strong truncate>
                   {orga.name}

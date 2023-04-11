@@ -21,7 +21,7 @@ export function ProposalDetailsSection(props: Props) {
   const hasCategories = props.categories && props.categories.length > 0;
 
   return (
-    <Card as="section" rounded="lg" p={8} className="space-y-8">
+    <Card as="section" p={8} className="space-y-8">
       <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
         <AvatarGroup avatars={props.speakers} displayNames />
         <div className="space-x-4">

@@ -14,7 +14,7 @@ type Props = {
 export function DetailsSection({ description, websiteUrl, contactEmail, codeOfConductUrl }: Props) {
   const hasDetails = websiteUrl || contactEmail || codeOfConductUrl;
   return (
-    <Card as="section" rounded="2xl" p={8}>
+    <Card as="section" p={8}>
       <H2 size="xl">Conference</H2>
       <Markdown source={description} />
 
