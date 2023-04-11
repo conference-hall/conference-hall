@@ -5,11 +5,11 @@ import { SpeakerTalksList } from './components/SpeakerTalksList';
 import Select from '~/design-system/forms/Select';
 import { listTalks } from './server/list-talks.server';
 import { Container } from '~/design-system/Container';
-import { H2 } from '~/design-system/Typography';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { mapErrorToResponse } from '~/libs/errors';
 import { ButtonLink } from '~/design-system/Buttons';
 import { PlusIcon } from '@heroicons/react/20/solid';
+import { Header } from '~/shared-components/Header';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
@@ -35,30 +35,28 @@ export default function SpeakerTalksRoute() {
   };
 
   return (
-    <Container className="my-4 sm:my-8">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-        <H2 mb={0}>Your talks</H2>
-        <div className="flex flex-col gap-4 sm:mt-0 sm:flex-row">
-          <Select
-            name="status"
-            label="Talk status"
-            value={archived ? 'archived' : 'active'}
-            onChange={handleStatus}
-            className="sm:w-40"
-            srOnly
-            options={[
-              { id: 'active', label: 'Active talks' },
-              { id: 'archived', label: 'Archived talks' },
-            ]}
-          />
-          <ButtonLink iconLeft={PlusIcon} to="/speaker/talks/new">
-            New talk
-          </ButtonLink>
-        </div>
-      </div>
-      <div className="my-8">
+    <>
+      <Header title="Your talks library" subtitle="This is your talks library.">
+        <Select
+          name="status"
+          label="Talk status"
+          value={archived ? 'archived' : 'active'}
+          onChange={handleStatus}
+          className="sm:w-40"
+          srOnly
+          options={[
+            { id: 'active', label: 'Active talks' },
+            { id: 'archived', label: 'Archived talks' },
+          ]}
+        />
+        <ButtonLink iconLeft={PlusIcon} to="/speaker/talks/new">
+          New talk
+        </ButtonLink>
+      </Header>
+
+      <Container className="mt-4 sm:mt-8">
         <SpeakerTalksList talks={talks} />
-      </div>
-    </Container>
+      </Container>
+    </>
   );
 }

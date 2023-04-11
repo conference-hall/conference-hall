@@ -1,48 +1,48 @@
-import SpeakerActivityPage from 'page-objects/speaker/activity.page';
+import SpeakerHomePage from 'page-objects/speaker/home.page';
 import SpeakerProfilePage from 'page-objects/speaker/profile.page';
 import SpeakerNewTalkPage from 'page-objects/speaker/talk-new.page';
 import EventProposalPage from 'page-objects/event/proposal.page';
 
-describe('Speaker activity page', () => {
+describe('Speaker home page', () => {
   beforeEach(() => {
-    cy.task('seedDB', 'speaker/activity');
+    cy.task('seedDB', 'speaker/home');
     cy.login();
   });
 
   afterEach(() => cy.task('disconnectDB'));
 
-  const activity = new SpeakerActivityPage();
+  const home = new SpeakerHomePage();
   const profile = new SpeakerProfilePage();
   const newTalk = new SpeakerNewTalkPage();
   const eventProposal = new EventProposalPage();
 
-  it('displays the speaker activity page', () => {
-    activity.visit();
+  it('displays the speaker home page', () => {
+    home.visit();
 
     cy.assertText('Clark Kent');
     cy.assertText('superman@example.com');
-    cy.assertText("Clark Kent's profile");
+    cy.assertText('Clark Kent');
     cy.assertText('Clark kent biography');
     cy.assertText('Metropolis');
     cy.assertText('Daily planet');
     cy.assertText('ckent-github');
     cy.assertText('ckent-twitter');
 
-    activity.activities().should('have.length', 4);
-    activity.activity('My talk 2').click();
+    home.activities().should('have.length', 2);
+    home.activity('My talk 2').click();
 
     eventProposal.isPageVisible();
   });
 
   it('can edit the profile', () => {
-    activity.visit();
-    activity.editProfile().click();
+    home.visit();
+    home.editProfile().click();
     profile.isPageVisible();
   });
 
   it('can create a new talk', () => {
-    activity.visit();
-    activity.newTalk().click();
+    home.visit();
+    home.newTalk().click();
     newTalk.isPageVisible();
   });
 });

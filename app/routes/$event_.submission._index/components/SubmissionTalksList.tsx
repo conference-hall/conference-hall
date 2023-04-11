@@ -1,5 +1,4 @@
 import { InboxIcon } from '@heroicons/react/24/outline';
-import { ButtonLink } from '~/design-system/Buttons';
 import { EmptyState } from '~/design-system/EmptyState';
 import { ProposalCard } from '~/shared-components/proposals/ProposalCard';
 
@@ -17,11 +16,7 @@ type Props = {
 
 export function SubmissionTalksList({ talks }: Props) {
   if (talks.length === 0) {
-    return (
-      <EmptyState icon={InboxIcon} label="Nothing to submit!">
-        <ButtonLink to="new">Create a new proposal</ButtonLink>
-      </EmptyState>
-    );
+    return <EmptyState icon={InboxIcon} label="Nothing to submit!" />;
   }
 
   return (

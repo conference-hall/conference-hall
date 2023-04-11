@@ -26,7 +26,6 @@ describe('Validate PersonalInfoSchema', () => {
     expect(result?.error?.fieldErrors).toEqual({
       name: 'Required',
       email: 'Required',
-      photoURL: 'Required',
     });
   });
 });

@@ -17,6 +17,7 @@ const PADDING = {
   8: 'p-8',
   10: 'p-10',
   16: 'p-16',
+  24: 'p-24',
 };
 
 type CardProps = {
@@ -28,12 +29,7 @@ type CardProps = {
 };
 
 export function Card({ as: Tag = 'div', rounded = 'base', p = 0, className, ...rest }: CardProps) {
-  return (
-    <Tag
-      className={c('border border-gray-300 bg-white shadow-sm', ROUNDED[rounded], PADDING[p], className)}
-      {...rest}
-    />
-  );
+  return <Tag className={c('bg-white shadow', ROUNDED[rounded], PADDING[p], className)} {...rest} />;
 }
 
 type CardLinkProps = LinkProps & CardProps;
@@ -44,7 +40,7 @@ export function CardLink({ as, rounded, p, className, children, ...rest }: CardL
       as={as}
       p={p}
       rounded={rounded}
-      className="focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
+      className="focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:shadow-md"
     >
       <Link {...rest} className={c('focus:outline-none', className)}>
         {children}

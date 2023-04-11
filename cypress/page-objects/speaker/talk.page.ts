@@ -6,6 +6,7 @@ class SpeakerTalkPage {
 
   isPageVisible() {
     cy.findByRole('heading', { name: 'Abstract' }).should('exist');
+    cy.findByRole('heading', { name: 'Submissions' }).should('exist');
   }
 
   submitTalk() {

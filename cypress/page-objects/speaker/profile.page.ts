@@ -23,7 +23,7 @@ class SpeakerProfilePage {
   }
 
   isPageVisible() {
-    cy.findByRole('heading', { name: 'Profile' }).should('exist');
+    cy.findByRole('heading', { name: 'Your profile' }).should('exist');
   }
 
   fillPersonalInfoForm(data: PersonalInfoType) {

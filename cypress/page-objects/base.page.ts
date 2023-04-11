@@ -28,19 +28,19 @@ class UserMenu {
   }
 
   openActivity() {
-    cy.findByRole('menuitem', { name: 'Activity' }).click();
+    cy.findByRole('menuitem', { name: 'Home' }).click();
   }
 
   openTalks() {
-    cy.findByRole('menuitem', { name: 'Your talks' }).click();
+    cy.findByRole('menuitem', { name: 'Talks' }).click();
   }
 
   openProfile() {
-    cy.findByRole('menuitem', { name: 'Your profile' }).click();
+    cy.findByRole('menuitem', { name: 'Profile' }).click();
   }
 
   openOrganizations() {
-    cy.findByRole('menuitem', { name: 'Your organizations' }).click();
+    cy.findByRole('menuitem', { name: 'Organizations' }).click();
   }
 
   signOut() {

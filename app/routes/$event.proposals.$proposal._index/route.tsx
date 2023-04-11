@@ -5,14 +5,12 @@ import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { getSpeakerProposal } from '~/shared-server/proposals/get-speaker-proposal.server';
 import { removeCoSpeakerFromProposal } from '~/shared-server/proposals/remove-co-speaker.server';
-import { IconButton } from '~/design-system/IconButtons';
-import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 import { ProposalStatusSection } from '~/shared-components/proposals/ProposalStatusSection';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { mapErrorToResponse } from '~/libs/errors';
 import { useEvent } from '../$event/route';
-import { H2 } from '~/design-system/Typography';
 import { ProposalDetailsSection } from '~/shared-components/proposals/ProposalDetailsSection';
+import { Header } from '~/shared-components/Header';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
@@ -45,29 +43,27 @@ export default function ProposalRoute() {
   const navigate = useNavigate();
 
   return (
-    <Container className="my-4 space-y-8 sm:my-8">
-      <div className="flex items-start gap-4">
-        <IconButton icon={ArrowLeftIcon} variant="secondary" onClick={() => navigate(-1)} aria-label="Go back" />
-        <H2 mb={0}>{proposal.title}</H2>
-      </div>
+    <>
+      <Header title={proposal.title} backOnClick={() => navigate(-1)} />
+      <Container className="my-4 space-y-8 sm:my-8">
+        <div className="grid grid-cols-1 gap-6 lg:grid-flow-col-dense lg:grid-cols-3">
+          <div className="lg:col-span-2 lg:col-start-1">
+            <ProposalDetailsSection
+              abstract={proposal.abstract}
+              references={proposal.references}
+              formats={proposal.formats}
+              categories={proposal.categories}
+              level={proposal.level}
+              languages={proposal.languages}
+              speakers={proposal.speakers}
+            />
+          </div>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-flow-col-dense lg:grid-cols-3">
-        <div className="lg:col-span-2 lg:col-start-1">
-          <ProposalDetailsSection
-            abstract={proposal.abstract}
-            references={proposal.references}
-            formats={proposal.formats}
-            categories={proposal.categories}
-            level={proposal.level}
-            languages={proposal.languages}
-            speakers={proposal.speakers}
-          />
+          <div className="lg:col-span-1 lg:col-start-3">
+            <ProposalStatusSection proposal={proposal} event={event} />
+          </div>
         </div>
-
-        <div className="lg:col-span-1 lg:col-start-3">
-          <ProposalStatusSection proposal={proposal} event={event} />
-        </div>
-      </div>
-    </Container>
+      </Container>
+    </>
   );
 }

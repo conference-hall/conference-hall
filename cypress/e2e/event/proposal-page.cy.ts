@@ -29,15 +29,15 @@ describe('Event proposal page details', () => {
 
   it('can edit a proposal', () => {
     proposal.visit('devfest-nantes', 'awesome-proposal');
-    proposal.editProposal().click();
+    proposal.editProposal();
     cy.assertText('Awesome talk');
   });
 
   it('can delete a proposal', () => {
     proposal.visit('devfest-nantes', 'awesome-proposal');
-    proposal.deleteProposal().click();
+    proposal.deleteProposal();
     proposal.deleteConfirmDialog().should('exist');
-    proposal.confirmDelete().click();
+    proposal.confirmDelete();
 
     proposals.isPageVisible();
     proposals.proposal('Awesome talk').should('not.exist');
@@ -45,9 +45,9 @@ describe('Event proposal page details', () => {
 
   it('can cancel proposal delete', () => {
     proposal.visit('devfest-nantes', 'awesome-proposal');
-    proposal.deleteProposal().click();
+    proposal.deleteProposal();
     proposal.deleteConfirmDialog().should('exist');
-    proposal.cancelDelete().click();
+    proposal.cancelDelete();
     cy.assertText('Awesome talk');
   });
 
@@ -55,21 +55,21 @@ describe('Event proposal page details', () => {
     it('can submit a draft proposal', () => {
       proposal.visit('devfest-nantes', 'awesome-proposal2');
       cy.assertText('Draft proposal!');
-      proposal.submitProposal().click();
+      proposal.submitProposal();
       submission.isTalkStepVisible();
     });
 
     it('can confirm an accepted proposal', () => {
       proposal.visit('devfest-nantes', 'awesome-proposal3');
       cy.assertText('Proposal has been accepted to Devfest Nantes!');
-      proposal.confirmProposal().click();
+      proposal.confirmProposal();
       cy.assertText('Your participation to Devfest Nantes is confirmed, Thanks!');
     });
 
     it('can decline an accepted proposal', () => {
       proposal.visit('devfest-nantes', 'awesome-proposal3');
       cy.assertText('Proposal has been accepted to Devfest Nantes!');
-      proposal.declineProposal().click();
+      proposal.declineProposal();
       cy.assertText('You have declined this proposal for Devfest Nantes.');
     });
   });

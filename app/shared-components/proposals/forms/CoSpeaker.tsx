@@ -55,13 +55,13 @@ function RemoveCoSpeakerButton({ speakerId, speakerName }: RemoveCoSpeakerButton
   );
 }
 
-type InviteProps = { to: InviteType; id: string; invitationLink?: string };
+type InviteProps = { to: InviteType; id: string; invitationLink?: string; block?: boolean };
 
-export function InviteCoSpeakerButton({ to, id, invitationLink }: InviteProps) {
+export function InviteCoSpeakerButton({ to, id, invitationLink, block }: InviteProps) {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <Button variant="secondary" onClick={() => setOpen(true)} iconLeft={UserPlusIcon}>
+      <Button variant="secondary" onClick={() => setOpen(true)} iconLeft={UserPlusIcon} block={block}>
         Invite a co-speaker
       </Button>
       <InvitationModal

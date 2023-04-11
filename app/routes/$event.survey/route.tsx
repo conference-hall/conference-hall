@@ -5,7 +5,6 @@ import { json } from '@remix-run/node';
 import { SurveyForm } from '~/shared-components/proposals/forms/SurveyForm';
 import { Button } from '~/design-system/Buttons';
 import { Container } from '~/design-system/Container';
-import { H2, Subtitle } from '~/design-system/Typography';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { mapErrorToResponse } from '~/libs/errors';
 import type { SurveyQuestions } from '~/schemas/survey';
@@ -16,6 +15,7 @@ import { getQuestions } from '~/shared-server/survey/get-questions.server';
 import { saveSurvey } from '~/shared-server/survey/save-survey.server';
 import { Card } from '~/design-system/Card';
 import { createToast } from '~/libs/toasts/toasts';
+import { Header } from '~/shared-components/Header';
 
 type SurveyQuestionsForm = {
   questions: SurveyQuestions;
@@ -55,22 +55,24 @@ export default function EventSurveyRoute() {
   const { questions, answers } = useLoaderData<SurveyQuestionsForm>();
 
   return (
-    <Container className="mt-4 space-y-8 sm:mt-8">
-      <div>
-        <H2 mb={1}>We have some questions for you.</H2>
-        <Subtitle>This information are asked by the organizers to give you a better speaker experience.</Subtitle>
-      </div>
+    <>
+      <Header
+        title="We have some questions for you."
+        subtitle="This information are asked by the organizers to give you a better speaker experience."
+      />
 
-      <Card rounded="2xl" p={8}>
-        <Form aria-labelledby="survey-form-label" method="POST">
-          <SurveyForm questions={questions} initialValues={answers} />
-          <div className="mt-8 text-right">
-            <Button type="submit" className="w-full sm:w-fit">
-              Save survey
-            </Button>
-          </div>
-        </Form>
-      </Card>
-    </Container>
+      <Container className="mt-4 space-y-8 sm:mt-8">
+        <Card rounded="2xl" p={8}>
+          <Form aria-labelledby="survey-form-label" method="POST">
+            <SurveyForm questions={questions} initialValues={answers} />
+            <div className="mt-8 text-right">
+              <Button type="submit" className="w-full sm:w-fit">
+                Save survey
+              </Button>
+            </div>
+          </Form>
+        </Card>
+      </Container>
+    </>
   );
 }
