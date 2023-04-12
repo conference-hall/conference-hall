@@ -7,6 +7,7 @@ import { Container } from '~/design-system/Container';
 import { NavMenu } from '~/design-system/NavMenu';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { getUserRole } from '~/shared-server/organizations/get-user-role.server';
+import { Header } from '~/shared-components/Header';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
@@ -28,15 +29,15 @@ export default function EventProposalEmails() {
   const menus = getMenuItems(params.orga, params.event);
 
   return (
-    <Container className="my-4 flex flex-col gap-8 sm:my-12">
-      <h1 className="sr-only">Emails campaign</h1>
-      <div className="sm:grid sm:grid-cols-12 sm:gap-x-12">
-        <NavMenu aria-label="Emails campaign menu" items={menus} className="px-2 py-6 sm:col-span-3 sm:px-0 sm:py-0" />
+    <>
+      <Header title="Emails campaign" />
+      <Container className="mt-4 flex gap-8 sm:mt-8">
+        <NavMenu aria-label="Emails campaign menu" items={menus} className="sticky top-4 w-72 self-start" />
 
-        <div className="sm:col-span-9 sm:px-0">
+        <div className="min-w-0 flex-1 space-y-6 sm:px-6 lg:px-0">
           <Outlet />
         </div>
-      </div>
-    </Container>
+      </Container>
+    </>
   );
 }

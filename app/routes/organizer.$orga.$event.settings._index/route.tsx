@@ -3,7 +3,7 @@ import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { sessionRequired } from '~/libs/auth/auth.server';
-import { H2, Text } from '~/design-system/Typography';
+import { H2, Subtitle } from '~/design-system/Typography';
 import { Form, useActionData, useOutletContext } from '@remix-run/react';
 import { Button } from '~/design-system/Buttons';
 import { Input } from '~/design-system/forms/Input';
@@ -15,6 +15,7 @@ import { withZod } from '@remix-validated-form/with-zod';
 import { updateEvent } from '~/shared-server/organizations/update-event.server';
 import { EventDetailsSettingsSchema } from './types/event-details-settings.schema';
 import { EventGeneralSettingsSchema } from './types/event-general-settings.schema';
+import { Card } from '~/design-system/Card';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);
@@ -48,19 +49,24 @@ export default function EventGeneralSettingsRoute() {
 
   return (
     <>
-      <section>
-        <H2>General</H2>
+      <Card as="section" p={8}>
+        <H2 size="xl" mb={0}>
+          General
+        </H2>
         <Form method="POST" className="mt-6 space-y-4">
           <input type="hidden" name="_action" value="general" />
           <EventForm initialValues={event} errors={errors} />
           <Button type="submit">Update event</Button>
         </Form>
-      </section>
-      <section>
-        <H2>Event details</H2>
-        <Text variant="secondary">
+      </Card>
+
+      <Card as="section" p={8}>
+        <H2 size="xl" mb={0}>
+          Event details
+        </H2>
+        <Subtitle>
           Provide details about the event, like address, dates and description to generate the event page.
-        </Text>
+        </Subtitle>
         <Form method="POST" className="mt-6 space-y-4">
           <input type="hidden" name="_action" value="details" />
           {event.type === 'CONFERENCE' && (
@@ -99,7 +105,7 @@ export default function EventGeneralSettingsRoute() {
           />
           <Button type="submit">Update event details</Button>
         </Form>
-      </section>
+      </Card>
     </>
   );
 }
