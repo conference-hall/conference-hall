@@ -64,10 +64,10 @@ export default function ProfileRoute() {
     <>
       <Header title="Your profile" subtitle="Share your biography and references to event organizers." />
 
-      <Container className="mt-4 h-full sm:mt-8 lg:grid lg:grid-cols-12 lg:gap-x-5">
-        <NavMenu items={MENU_ITEMS} className="hidden lg:col-span-3 lg:block" noActive />
+      <Container className="mt-4 flex gap-8 sm:mt-8">
+        <NavMenu items={MENU_ITEMS} className="sticky top-4 hidden self-start lg:block" noActive />
 
-        <div className="space-y-6 sm:px-6 lg:col-span-9 lg:px-0">
+        <div className="min-w-0 flex-1 space-y-6 sm:px-6 lg:px-0">
           <Card as="section">
             <SpeakerDetailsForm name={user.name} email={user.email} photoURL={user.photoURL} errors={errors} />
           </Card>
