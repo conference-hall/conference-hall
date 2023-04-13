@@ -9,7 +9,7 @@ import { sessionRequired } from '~/libs/auth/auth.server';
 import { mapErrorToResponse } from '~/libs/errors';
 import { listSpeakerProposals } from './server/list-speaker-proposals.server';
 import { ButtonLink } from '~/design-system/Buttons';
-import { Header } from '~/shared-components/Header';
+import { PageHeaderTitle } from '~/design-system/PageHeaderTitle';
 
 export type EventProposals = Awaited<ReturnType<typeof listSpeakerProposals>>;
 
@@ -27,9 +27,9 @@ export default function EventSpeakerProposalsRoute() {
 
   return (
     <>
-      <Header title="Your proposals" subtitle="All your draft and submitted proposals for the event.">
+      <PageHeaderTitle title="Your proposals" subtitle="All your draft and submitted proposals for the event.">
         {event.cfpState === 'OPENED' && <ButtonLink to="../submission">Submit a proposal</ButtonLink>}
-      </Header>
+      </PageHeaderTitle>
 
       <Container className="mt-4 sm:my-8">
         <ProposalsList proposals={proposals} cfpState={event.cfpState} />

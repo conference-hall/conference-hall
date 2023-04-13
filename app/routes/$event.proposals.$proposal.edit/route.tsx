@@ -18,7 +18,7 @@ import { useEvent } from '../$event/route';
 import { Card } from '~/design-system/Card';
 import { CoSpeakersList, InviteCoSpeakerButton } from '~/shared-components/proposals/forms/CoSpeaker';
 import { removeCoSpeakerFromProposal } from '~/shared-server/proposals/remove-co-speaker.server';
-import { Header } from '~/shared-components/Header';
+import { PageHeaderTitle } from '~/design-system/PageHeaderTitle';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
@@ -68,7 +68,7 @@ export default function EditProposalRoute() {
 
   return (
     <>
-      <Header title={proposal.title} backOnClick={() => navigate(-1)} />
+      <PageHeaderTitle title={proposal.title} backOnClick={() => navigate(-1)} />
 
       <Container className="my-4 space-y-8 sm:my-8">
         <div className="grid grid-cols-1 gap-6 lg:grid-flow-col-dense lg:grid-cols-3">

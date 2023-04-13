@@ -11,7 +11,7 @@ import { mapErrorToResponse } from '~/libs/errors';
 import { DetailsForm } from '~/shared-components/proposals/forms/DetailsForm';
 import { Button } from '~/design-system/Buttons';
 import { Card } from '~/design-system/Card';
-import { Header } from '~/shared-components/Header';
+import { PageHeaderTitle } from '~/design-system/PageHeaderTitle';
 
 export const action = async ({ request }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
@@ -32,7 +32,7 @@ export default function NewTalkRoute() {
 
   return (
     <>
-      <Header title="Create a new talk" backTo="/speaker/talks" />
+      <PageHeaderTitle title="Create a new talk" backTo="/speaker/talks" />
 
       <Container className="mt-4 space-y-8 sm:mt-8">
         <Card p={8}>

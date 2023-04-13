@@ -15,7 +15,7 @@ import { getQuestions } from '~/shared-server/survey/get-questions.server';
 import { saveSurvey } from '~/shared-server/survey/save-survey.server';
 import { Card } from '~/design-system/Card';
 import { createToast } from '~/libs/toasts/toasts';
-import { Header } from '~/shared-components/Header';
+import { PageHeaderTitle } from '~/design-system/PageHeaderTitle';
 
 type SurveyQuestionsForm = {
   questions: SurveyQuestions;
@@ -56,7 +56,7 @@ export default function EventSurveyRoute() {
 
   return (
     <>
-      <Header
+      <PageHeaderTitle
         title="We have some questions for you."
         subtitle="This information are asked by the organizers to give you a better speaker experience."
       />

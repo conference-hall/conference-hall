@@ -1,17 +1,20 @@
 import invariant from 'tiny-invariant';
-import type { LoaderArgs } from '@remix-run/node';
+import type { LoaderArgs, SerializeFrom } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Container } from '~/design-system/Container';
 import { sessionRequired } from '~/libs/auth/auth.server';
-import { Outlet, useLoaderData, useMatches } from '@remix-run/react';
+import { Outlet, useLoaderData, useRouteLoaderData } from '@remix-run/react';
 import { mapErrorToResponse } from '~/libs/errors';
 import OrganizationBreadcrumb from '~/shared-components/organizations/OrganizationBreadcrumb';
 import { getOrganization } from './server/get-organization.server';
 import { OrganizationTabs } from './components/OrganizationTabs';
+import { PageHeader } from '~/design-system/PageHeader';
+import { EventTabs } from './components/EventTabs';
+import type { OrganizerEventRouteData } from '../organizer.$orga.$event/route';
 
-export type OrganizationContext = {
-  organization: Awaited<ReturnType<typeof getOrganization>>;
-};
+export type OrganizerRouteData = SerializeFrom<typeof loader>;
+
+export type OrganizationContext = { organization: OrganizerRouteData };
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
@@ -27,21 +30,21 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
 export default function OrganizationRoute() {
   const organization = useLoaderData<typeof loader>();
-  const matches = useMatches();
-  const isEventPage = matches.filter((m) => m.handle?.isEventPage).length > 0;
+  const event = useRouteLoaderData('routes/organizer.$orga.$event') as OrganizerEventRouteData;
 
   return (
     <>
-      {!isEventPage && (
-        <>
-          <header className="bg-gray-800">
-            <Container>
-              <OrganizationBreadcrumb title="Organization page" organization={organization} />
-            </Container>
-          </header>
-          <OrganizationTabs slug={organization.slug} role={organization.role} />
-        </>
-      )}
+      <PageHeader>
+        <Container>
+          <OrganizationBreadcrumb organization={organization} event={event} />
+          {event ? (
+            <EventTabs orgaSlug={organization.slug} eventSlug={event.slug} role={organization.role} />
+          ) : (
+            <OrganizationTabs slug={organization.slug} role={organization.role} />
+          )}
+        </Container>
+      </PageHeader>
+
       <Outlet context={{ organization }} />
     </>
   );

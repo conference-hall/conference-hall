@@ -105,7 +105,6 @@ export default function EventSubmissionRoute() {
         address={event.address}
         conferenceStart={event.conferenceStart}
         conferenceEnd={event.conferenceEnd}
-        className="pb-4"
       />
 
       <div className="sticky top-0 z-10 border-b border-gray-200 bg-white py-2 shadow">

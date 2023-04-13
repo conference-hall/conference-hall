@@ -9,7 +9,7 @@ import { sessionRequired } from '~/libs/auth/auth.server';
 import { mapErrorToResponse } from '~/libs/errors';
 import { ButtonLink } from '~/design-system/Buttons';
 import { PlusIcon } from '@heroicons/react/20/solid';
-import { Header } from '~/shared-components/Header';
+import { PageHeaderTitle } from '~/design-system/PageHeaderTitle';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
@@ -36,7 +36,7 @@ export default function SpeakerTalksRoute() {
 
   return (
     <>
-      <Header title="Your talks library" subtitle="This is your talks library.">
+      <PageHeaderTitle title="Your talks library" subtitle="This is your talks library.">
         <Select
           name="status"
           label="Talk status"
@@ -52,7 +52,7 @@ export default function SpeakerTalksRoute() {
         <ButtonLink iconLeft={PlusIcon} to="/speaker/talks/new">
           New talk
         </ButtonLink>
-      </Header>
+      </PageHeaderTitle>
 
       <Container className="mt-4 sm:mt-8">
         <SpeakerTalksList talks={talks} />

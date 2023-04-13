@@ -18,7 +18,7 @@ import {
 } from '@heroicons/react/24/outline';
 import type { OrganizerEventContext } from '../organizer.$orga.$event/route';
 import { getUserRole } from '~/shared-server/organizations/get-user-role.server';
-import { Header } from '~/shared-components/Header';
+import { H2 } from '~/design-system/Typography';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
@@ -48,15 +48,14 @@ export default function OrganizationSettingsRoute() {
   const { event } = useOutletContext<OrganizerEventContext>();
 
   return (
-    <>
-      <Header title="Event settings" />
-      <Container className="mt-4 flex gap-8 sm:mt-8">
-        <NavMenu aria-label="Event settings menu" items={menus} className="sticky top-4 w-60 self-start" />
+    <Container className="mt-4 flex gap-8 sm:mt-8">
+      <H2 srOnly>Event settings</H2>
 
-        <div className="min-w-0 flex-1 space-y-6 sm:px-6 lg:px-0">
-          <Outlet context={{ event }} />
-        </div>
-      </Container>
-    </>
+      <NavMenu aria-label="Event settings menu" items={menus} className="sticky top-4 w-60 self-start" />
+
+      <div className="min-w-0 flex-1 space-y-6 sm:px-6 lg:px-0">
+        <Outlet context={{ event }} />
+      </div>
+    </Container>
   );
 }
