@@ -1,6 +1,7 @@
 import type { EventType } from '~/schemas/event';
 import { useMemo } from 'react';
-import { NavTabs } from '~/design-system/NavTabs';
+import { Container } from '~/design-system/layouts/Container';
+import { NavTabs } from '~/design-system/navigation/NavTabs';
 
 type Props = { slug: string; type: EventType; surveyEnabled: boolean };
 
@@ -14,5 +15,11 @@ export function EventTabs({ slug, type, surveyEnabled }: Props) {
     [slug, type, surveyEnabled]
   );
 
-  return <NavTabs tabs={eventTabs} />;
+  return (
+    <div className="bg-gray-800">
+      <Container>
+        <NavTabs tabs={eventTabs} />
+      </Container>
+    </div>
+  );
 }

@@ -17,13 +17,13 @@ import { initializeFirebase } from './libs/auth/firebase';
 import { commitSession, getSession } from './libs/auth/auth.server';
 import { getUser } from './shared-server/users/get-user.server';
 import { H1, Text } from './design-system/Typography';
-import { Container } from './design-system/Container';
 import { GlobalLoading } from './shared-components/GlobalLoading';
 import { Toast } from './design-system/Toast';
 import type { ToastData } from './libs/toasts/toasts';
 import { getToast } from './libs/toasts/toasts';
 import tailwind from './tailwind.css';
 import { listNotifications } from './shared-server/notifications/list-notifications.server';
+import { Container } from './design-system/layouts/Container';
 
 export function meta() {
   return [{ charset: 'utf-8' }, { title: 'Conference Hall' }, { viewport: 'width=device-width,initial-scale=1' }];
@@ -91,7 +91,7 @@ function Document({ children, toast }: DocumentProps) {
         <Meta />
         <Links />
       </head>
-      <body className="bg-gray-100 text-gray-900 antialiased">
+      <body className="w-full overflow-x-hidden overflow-y-scroll bg-gray-100 text-gray-900 antialiased">
         <GlobalLoading />
         {children}
         <Scripts />

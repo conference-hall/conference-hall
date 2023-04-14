@@ -4,7 +4,7 @@ import { json } from '@remix-run/node';
 import { useLoaderData, useLocation, useOutletContext } from '@remix-run/react';
 import { mapErrorToResponse } from '~/libs/errors';
 import { sessionRequired } from '~/libs/auth/auth.server';
-import { Container } from '~/design-system/Container';
+import { Container } from '~/design-system/layouts/Container';
 import { Pagination } from '~/design-system/Pagination';
 import { parsePage } from '~/schemas/pagination';
 import type { OrganizerEventContext } from '../organizer.$orga.$event/route';

@@ -1,5 +1,5 @@
-import { Card } from '~/design-system/Card';
 import { H2, H4, Subtitle, Text } from '~/design-system/Typography';
+import { Card } from '~/design-system/layouts/Card';
 
 type Props = {
   title: string;
@@ -11,7 +11,7 @@ export function TrackSection({ title, subtitle, tracks }: Props) {
   if (tracks.length === 0) return null;
 
   return (
-    <Card as="section" rounded="2xl" p={8}>
+    <Card as="section" p={8}>
       <H2 size="xl" mb={0}>
         {title}
       </H2>

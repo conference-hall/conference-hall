@@ -2,7 +2,7 @@ import invariant from 'tiny-invariant';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import type { OrganizationRole } from '@prisma/client';
 import { json } from '@remix-run/node';
-import { Container } from '~/design-system/Container';
+import { Container } from '~/design-system/layouts/Container';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { useLoaderData, useOutletContext } from '@remix-run/react';
 import { AvatarName } from '~/design-system/Avatar';

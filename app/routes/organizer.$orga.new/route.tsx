@@ -2,7 +2,7 @@ import invariant from 'tiny-invariant';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
-import { Container } from '~/design-system/Container';
+import { Container } from '~/design-system/layouts/Container';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { useActionData, useSearchParams } from '@remix-run/react';
 import { withZod } from '@remix-validated-form/with-zod';

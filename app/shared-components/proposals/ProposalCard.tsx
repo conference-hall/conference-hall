@@ -1,5 +1,5 @@
 import { AvatarGroup } from '~/design-system/Avatar';
-import { CardLink } from '~/design-system/Card';
+import { CardLink } from '~/design-system/layouts/Card';
 import { Text } from '~/design-system/Typography';
 import type { SpeakerProposalStatus } from '~/shared-server/proposals/get-speaker-proposal-status';
 import { ProposalStatusLabel } from './ProposalStatusLabel';
@@ -13,7 +13,7 @@ type Props = {
 
 export function ProposalCard({ id, title, speakers, status }: Props) {
   return (
-    <CardLink as="li" rounded="lg" to={id}>
+    <CardLink as="li" to={id}>
       <div className="flex flex-col px-4 py-4 sm:px-6">
         <Text size="l" mb={2} strong heading truncate>
           {title}

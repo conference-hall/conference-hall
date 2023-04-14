@@ -1,7 +1,7 @@
 import c from 'classnames';
 import { NavLink } from '@remix-run/react';
-import { IconLabel } from './IconLabel';
-import { Card } from './Card';
+import { IconLabel } from '../IconLabel';
+import { Card } from '../layouts/Card';
 
 type NavItem = { to: string; icon: React.ComponentType<{ className?: string }>; label: string };
 
@@ -10,7 +10,7 @@ type Props = { items: Array<NavItem>; noActive?: boolean; className?: string };
 export function NavMenu({ items, noActive, className, ...rest }: Props) {
   return (
     <aside className={className}>
-      <Card rounded="xl" p={4} as="nav" className="space-y-1" {...rest}>
+      <Card p={4} as="nav" className="space-y-1" {...rest}>
         {items.map((item) => (
           <NavLink key={item.to} to={item.to} className={({ isActive }) => menuStyles(isActive, noActive)} end>
             <IconLabel icon={item.icon}>{item.label}</IconLabel>

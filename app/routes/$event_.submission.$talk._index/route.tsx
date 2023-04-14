@@ -7,7 +7,7 @@ import { json, redirect } from '@remix-run/node';
 import { ProposalCreateSchema } from '~/schemas/proposal';
 import { getTalk } from '~/shared-server/talks/get-talk.server';
 import { saveDraftProposal } from './server/save-draft-proposal.server';
-import { Card } from '~/design-system/Card';
+import { Card } from '~/design-system/layouts/Card';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { mapErrorToResponse } from '~/libs/errors';
 import { H2 } from '~/design-system/Typography';
@@ -61,7 +61,7 @@ export default function SubmissionProposalRoute() {
     <>
       <H2 mb={0}>Your proposal</H2>
 
-      <Card p={8} rounded="xl">
+      <Card p={8}>
         <Form id="proposal-form" method="POST">
           <DetailsForm initialValues={talk} errors={errors} />
         </Form>

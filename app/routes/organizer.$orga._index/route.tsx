@@ -2,7 +2,7 @@ import invariant from 'tiny-invariant';
 import type { LoaderArgs } from '@remix-run/node';
 import type { OrganizationContext } from '../organizer.$orga/route';
 import { json } from '@remix-run/node';
-import { Container } from '~/design-system/Container';
+import { Container } from '~/design-system/layouts/Container';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { Text } from '~/design-system/Typography';
 import { Link, Outlet, useLoaderData, useOutletContext } from '@remix-run/react';

@@ -4,7 +4,7 @@ import { redirect, json } from '@remix-run/node';
 import { Form, useActionData, useOutletContext } from '@remix-run/react';
 import { withZod } from '@remix-validated-form/with-zod';
 import { sessionRequired } from '~/libs/auth/auth.server';
-import { Container } from '~/design-system/Container';
+import { Container } from '~/design-system/layouts/Container';
 import { H2 } from '~/design-system/Typography';
 import { Button } from '~/design-system/Buttons';
 import { OrganizationForm } from '~/shared-components/organizations/OrganizationForm';

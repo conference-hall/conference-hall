@@ -1,8 +1,8 @@
 import { StarIcon } from '@heroicons/react/20/solid';
 import { Outlet } from '@remix-run/react';
 import { ButtonLink } from '~/design-system/Buttons';
-import { Container } from '~/design-system/Container';
-import { EmptyState } from '~/design-system/EmptyState';
+import { Container } from '~/design-system/layouts/Container';
+import { EmptyState } from '~/design-system/layouts/EmptyState';
 import { H2, Text } from '~/design-system/Typography';
 import type { OrganizationContext } from '~/routes/organizer.$orga/route';
 

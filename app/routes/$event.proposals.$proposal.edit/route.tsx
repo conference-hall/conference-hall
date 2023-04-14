@@ -4,7 +4,6 @@ import { json, redirect } from '@remix-run/node';
 import type { ActionArgs, ActionFunction, LoaderArgs } from '@remix-run/node';
 import { withZod } from '@remix-validated-form/with-zod';
 import { createToast } from '~/libs/toasts/toasts';
-import { Container } from '~/design-system/Container';
 import { H3, Subtitle } from '~/design-system/Typography';
 import { DetailsForm } from '~/shared-components/proposals/forms/DetailsForm';
 import { Button, ButtonLink } from '~/design-system/Buttons';
@@ -15,10 +14,11 @@ import { getSpeakerProposal } from '~/shared-server/proposals/get-speaker-propos
 import { deleteProposal } from './server/delete-proposal.server';
 import { updateProposal } from './server/update-proposal.server';
 import { useEvent } from '../$event/route';
-import { Card } from '~/design-system/Card';
 import { CoSpeakersList, InviteCoSpeakerButton } from '~/shared-components/proposals/forms/CoSpeaker';
 import { removeCoSpeakerFromProposal } from '~/shared-server/proposals/remove-co-speaker.server';
-import { Header } from '~/shared-components/Header';
+import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
+import { Container } from '~/design-system/layouts/Container';
+import { Card } from '~/design-system/layouts/Card';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
@@ -68,12 +68,12 @@ export default function EditProposalRoute() {
 
   return (
     <>
-      <Header title={proposal.title} backOnClick={() => navigate(-1)} />
+      <PageHeaderTitle title={proposal.title} backOnClick={() => navigate(-1)} />
 
       <Container className="my-4 space-y-8 sm:my-8">
         <div className="grid grid-cols-1 gap-6 lg:grid-flow-col-dense lg:grid-cols-3">
           <div className="lg:col-span-2 lg:col-start-1">
-            <Card rounded="xl" p={8} className="space-y-8">
+            <Card p={8} className="space-y-8">
               <Form method="POST">
                 <DetailsForm
                   initialValues={proposal}
@@ -93,7 +93,7 @@ export default function EditProposalRoute() {
           </div>
 
           <div className="lg:col-span-1 lg:col-start-3">
-            <Card rounded="xl" p={8} className="space-y-6">
+            <Card p={8} className="space-y-6">
               <div>
                 <H3>Speakers</H3>
                 <Subtitle>

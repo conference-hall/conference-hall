@@ -1,7 +1,7 @@
 import { useFetcher } from '@remix-run/react';
 import { Button, ButtonLink } from '~/design-system/Buttons';
 import { ProposalDeleteButton } from './ProposalDelete';
-import { Card } from '~/design-system/Card';
+import { Card } from '~/design-system/layouts/Card';
 import { H3, Subtitle, Text } from '~/design-system/Typography';
 import { SpeakerProposalStatus } from '~/shared-server/proposals/get-speaker-proposal-status';
 
@@ -35,7 +35,7 @@ export function ProposalStatusSection(props: Props) {
 
 function Draft({ proposal, event }: Props) {
   return (
-    <Card as="section" rounded="lg" p={8} className="space-y-8">
+    <Card as="section" p={8} className="space-y-8">
       <div>
         <H3>Draft proposal!</H3>
         {event.isCfpOpen ? (
@@ -62,7 +62,7 @@ function Draft({ proposal, event }: Props) {
 
 function Submitted({ event }: Props) {
   return (
-    <Card as="section" rounded="lg" p={8} className="space-y-8">
+    <Card as="section" p={8} className="space-y-8">
       <div>
         <H3>Submitted to {event.name}!</H3>
         {event.isCfpOpen ? (
@@ -88,7 +88,7 @@ function Submitted({ event }: Props) {
 
 function DeliberationPending() {
   return (
-    <Card as="section" rounded="lg" p={8}>
+    <Card as="section" p={8}>
       <H3>Deliberation pending</H3>
       <Subtitle>
         The organizers are currently deliberating, you will be notified by email when the proposal is accepted or
@@ -102,7 +102,7 @@ function AcceptedByOrganizers({ event, proposal }: Props) {
   const fetcher = useFetcher();
 
   return (
-    <Card as="section" rounded="lg" p={8} className="space-y-8">
+    <Card as="section" p={8} className="space-y-8">
       <div>
         <H3>Proposal has been accepted to {event.name}!</H3>
         <Text variant="secondary" size="s">
@@ -130,7 +130,7 @@ function AcceptedByOrganizers({ event, proposal }: Props) {
 
 function RejectedByOrganizers({ event, proposal }: Props) {
   return (
-    <Card as="section" rounded="lg" p={8} className="space-y-8">
+    <Card as="section" p={8} className="space-y-8">
       <div>
         <H3>Proposal has been declined by {event.name}.</H3>
         <Text variant="secondary" size="s">
@@ -146,7 +146,7 @@ function RejectedByOrganizers({ event, proposal }: Props) {
 
 function ConfirmedBySpeaker({ event }: Props) {
   return (
-    <Card as="section" rounded="lg" p={8}>
+    <Card as="section" p={8}>
       <H3>Your participation to {event.name} is confirmed, Thanks!</H3>
       <Text variant="secondary" size="s">
         We are happy to see you there.
@@ -157,7 +157,7 @@ function ConfirmedBySpeaker({ event }: Props) {
 
 function DeclinedBySpeaker({ event }: Props) {
   return (
-    <Card as="section" rounded="lg" p={8}>
+    <Card as="section" p={8}>
       <H3>You have declined this proposal for {event.name}.</H3>
       <Text variant="secondary" size="s">
         Organizers will be notified. Thanks for the notice.

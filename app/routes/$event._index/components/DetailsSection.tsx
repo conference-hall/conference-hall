@@ -1,8 +1,8 @@
 import { EnvelopeIcon, GlobeEuropeAfricaIcon, HeartIcon } from '@heroicons/react/20/solid';
-import { Card } from '~/design-system/Card';
 import { ExternalLink } from '~/design-system/Links';
 import { Markdown } from '~/design-system/Markdown';
 import { H2 } from '~/design-system/Typography';
+import { Card } from '~/design-system/layouts/Card';
 
 type Props = {
   description: string | null;
@@ -14,7 +14,7 @@ type Props = {
 export function DetailsSection({ description, websiteUrl, contactEmail, codeOfConductUrl }: Props) {
   const hasDetails = websiteUrl || contactEmail || codeOfConductUrl;
   return (
-    <Card as="section" rounded="2xl" p={8}>
+    <Card as="section" p={8}>
       <H2 size="xl">Conference</H2>
       <Markdown source={description} />
 

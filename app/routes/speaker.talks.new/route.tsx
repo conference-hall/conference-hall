@@ -3,15 +3,15 @@ import { json } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
 import { withZod } from '@remix-validated-form/with-zod';
-import { Container } from '~/design-system/Container';
 import { TalkSaveSchema } from '~/schemas/talks';
 import { createTalk } from './server/create-talk.server';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { mapErrorToResponse } from '~/libs/errors';
 import { DetailsForm } from '~/shared-components/proposals/forms/DetailsForm';
 import { Button } from '~/design-system/Buttons';
-import { Card } from '~/design-system/Card';
-import { Header } from '~/shared-components/Header';
+import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
+import { Container } from '~/design-system/layouts/Container';
+import { Card } from '~/design-system/layouts/Card';
 
 export const action = async ({ request }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
@@ -32,10 +32,10 @@ export default function NewTalkRoute() {
 
   return (
     <>
-      <Header title="Create a new talk" backTo="/speaker/talks" />
+      <PageHeaderTitle title="Create a new talk" backTo="/speaker/talks" />
 
       <Container className="mt-4 space-y-8 sm:mt-8">
-        <Card p={8} rounded="xl">
+        <Card p={8}>
           <Form method="POST" className="space-y-8">
             <DetailsForm errors={errors} />
             <Button type="submit">Create new talk</Button>

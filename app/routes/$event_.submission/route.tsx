@@ -8,7 +8,7 @@ import { sessionRequired } from '~/libs/auth/auth.server';
 import { mapErrorToResponse } from '~/libs/errors';
 import { getEvent } from '~/shared-server/events/get-event.server';
 import { SubmissionSteps } from './components/SubmissionSteps';
-import { Container } from '~/design-system/Container';
+import { Container } from '~/design-system/layouts/Container';
 import { Button } from '~/design-system/Buttons';
 import { IconButtonLink } from '~/design-system/IconButtons';
 import { EventHeader } from '../$event/components/EventHeader';

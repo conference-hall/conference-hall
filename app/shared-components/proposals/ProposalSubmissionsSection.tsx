@@ -1,4 +1,4 @@
-import { Card } from '~/design-system/Card';
+import { Card } from '~/design-system/layouts/Card';
 import { H3, Text } from '~/design-system/Typography';
 import { ProposalStatusLabel } from './ProposalStatusLabel';
 import { Link } from '~/design-system/Links';
@@ -18,7 +18,7 @@ type Props = {
 
 export function ProposalSubmissionsSection({ talkId, submissions }: Props) {
   return (
-    <Card as="section" rounded="lg" p={8} className="space-y-6">
+    <Card as="section" p={8} className="space-y-6">
       <H3 mb={0}>Submissions</H3>
       {submissions.length > 0 ? (
         <ul className="mt-4 space-y-4">

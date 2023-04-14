@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { NavTabs } from '~/design-system/NavTabs';
+import { NavTabs } from '~/design-system/navigation/NavTabs';
 
 type Props = { orgaSlug: string; eventSlug: string; role: string };
 
@@ -13,5 +13,5 @@ export function EventTabs({ orgaSlug, eventSlug, role }: Props) {
     [orgaSlug, eventSlug, role]
   );
 
-  return <NavTabs tabs={tabs} />;
+  return <NavTabs tabs={tabs} light />;
 }

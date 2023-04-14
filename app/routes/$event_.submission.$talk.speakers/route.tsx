@@ -15,7 +15,7 @@ import { withZod } from '@remix-validated-form/with-zod';
 import { removeCoSpeakerFromSubmission } from '~/shared-server/proposals/remove-co-speaker.server';
 import { getSubmittedProposal } from '../../shared-server/proposals/get-submitted-proposal.server';
 import { DetailsSchema } from '~/schemas/profile.schema';
-import { Card } from '~/design-system/Card';
+import { Card } from '~/design-system/layouts/Card';
 
 export const handle = { step: 'speakers' };
 
@@ -76,7 +76,7 @@ export default function SubmissionSpeakerRoute() {
   return (
     <>
       <H2>Speaker details</H2>
-      <Card p={8} rounded="xl">
+      <Card p={8}>
         <Form id="speakers-form" method="POST">
           <MarkdownTextArea
             name="bio"

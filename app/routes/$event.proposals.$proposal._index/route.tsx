@@ -1,6 +1,5 @@
 import invariant from 'tiny-invariant';
 import { useLoaderData, useNavigate } from '@remix-run/react';
-import { Container } from '~/design-system/Container';
 import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { getSpeakerProposal } from '~/shared-server/proposals/get-speaker-proposal.server';
@@ -10,7 +9,8 @@ import { sessionRequired } from '~/libs/auth/auth.server';
 import { mapErrorToResponse } from '~/libs/errors';
 import { useEvent } from '../$event/route';
 import { ProposalDetailsSection } from '~/shared-components/proposals/ProposalDetailsSection';
-import { Header } from '~/shared-components/Header';
+import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
+import { Container } from '~/design-system/layouts/Container';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
@@ -44,7 +44,8 @@ export default function ProposalRoute() {
 
   return (
     <>
-      <Header title={proposal.title} backOnClick={() => navigate(-1)} />
+      <PageHeaderTitle title={proposal.title} backOnClick={() => navigate(-1)} />
+
       <Container className="my-4 space-y-8 sm:my-8">
         <div className="grid grid-cols-1 gap-6 lg:grid-flow-col-dense lg:grid-cols-3">
           <div className="lg:col-span-2 lg:col-start-1">

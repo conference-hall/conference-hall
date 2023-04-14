@@ -58,11 +58,11 @@ export function formatConferenceDates(type: EventType, start?: string, end?: str
 export function formatCFPState(state: CfpState) {
   switch (state) {
     case 'CLOSED':
-      return 'Not open yet';
+      return 'Call for paper not open yet';
     case 'OPENED':
-      return 'Open';
+      return 'Call for paper open';
     case 'FINISHED':
-      return 'Closed';
+      return 'Call for paper closed';
   }
 }
 
@@ -73,11 +73,11 @@ export function formatCFPElapsedTime(state: CfpState, start?: string | null, end
 
   switch (state) {
     case 'CLOSED':
-      return `Open in ${formatDistanceToNow(startDate)}`;
+      return `Call for paper open in ${formatDistanceToNow(startDate)}`;
     case 'OPENED':
-      return `Open for ${formatDistanceToNow(endDate)}`;
+      return `Call for paper open for ${formatDistanceToNow(endDate)}`;
     case 'FINISHED':
-      return `Closed since ${formatDistanceToNow(endDate)}`;
+      return `Call for paper closed since ${formatDistanceToNow(endDate)}`;
   }
 }
 
@@ -85,10 +85,10 @@ export function formatCFPDate(state: CfpState, start?: string, end?: string) {
   if (!start || !end) return;
   switch (state) {
     case 'CLOSED':
-      return `Will open ${format(new Date(start), 'PPPPp O')}`;
+      return `Open on ${format(new Date(start), 'PPPPp O')}`;
     case 'OPENED':
-      return `Until ${format(new Date(end), 'PPPPp O')}`;
+      return `Open until ${format(new Date(end), 'PPPPp O')}`;
     case 'FINISHED':
-      return `Since ${format(new Date(end), 'PPPP')}`;
+      return `Closed since ${format(new Date(end), 'PPPP')}`;
   }
 }

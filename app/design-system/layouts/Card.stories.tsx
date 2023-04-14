@@ -1,5 +1,5 @@
 import { Card, CardLink } from './Card';
-import { StoryBlock } from './StoryBlock';
+import { StoryBlock } from '../StoryBlock';
 
 export const Documentation = () => (
   <>

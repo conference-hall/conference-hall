@@ -51,6 +51,7 @@ class EventSubmissionPage {
    */
 
   isTalkStepVisible() {
+    cy.findByRole('heading', { name: 'Your proposal' }).should('exist');
     cy.findByRole('listitem', { current: 'step' }).should('contain', 'Proposal');
   }
 

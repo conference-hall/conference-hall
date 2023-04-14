@@ -12,7 +12,7 @@ import { sessionRequired } from '../../libs/auth/auth.server';
 import { mapErrorToResponse } from '../../libs/errors';
 import { getQuestions } from '~/shared-server/survey/get-questions.server';
 import { saveSurvey } from '~/shared-server/survey/save-survey.server';
-import { Card } from '~/design-system/Card';
+import { Card } from '~/design-system/layouts/Card';
 
 export const handle = { step: 'survey' };
 
@@ -53,7 +53,7 @@ export default function SubmissionSurveyRoute() {
     <>
       <H2>We have some questions for you.</H2>
 
-      <Card p={8} rounded="xl">
+      <Card p={8}>
         <Form id="survey-form" method="POST">
           <SurveyForm questions={questions} initialValues={answers} />
         </Form>

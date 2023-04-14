@@ -4,7 +4,7 @@ import { Form, useLoaderData } from '@remix-run/react';
 import { json } from '@remix-run/node';
 import { SurveyForm } from '~/shared-components/proposals/forms/SurveyForm';
 import { Button } from '~/design-system/Buttons';
-import { Container } from '~/design-system/Container';
+import { Container } from '~/design-system/layouts/Container';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { mapErrorToResponse } from '~/libs/errors';
 import type { SurveyQuestions } from '~/schemas/survey';
@@ -13,9 +13,9 @@ import { withZod } from '@remix-validated-form/with-zod';
 import { getAnswers } from '~/shared-server/survey/get-answers.server';
 import { getQuestions } from '~/shared-server/survey/get-questions.server';
 import { saveSurvey } from '~/shared-server/survey/save-survey.server';
-import { Card } from '~/design-system/Card';
+import { Card } from '~/design-system/layouts/Card';
 import { createToast } from '~/libs/toasts/toasts';
-import { Header } from '~/shared-components/Header';
+import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 
 type SurveyQuestionsForm = {
   questions: SurveyQuestions;
@@ -56,13 +56,13 @@ export default function EventSurveyRoute() {
 
   return (
     <>
-      <Header
+      <PageHeaderTitle
         title="We have some questions for you."
         subtitle="This information are asked by the organizers to give you a better speaker experience."
       />
 
       <Container className="mt-4 space-y-8 sm:mt-8">
-        <Card rounded="2xl" p={8}>
+        <Card p={8}>
           <Form aria-labelledby="survey-form-label" method="POST">
             <SurveyForm questions={questions} initialValues={answers} />
             <div className="mt-8 text-right">

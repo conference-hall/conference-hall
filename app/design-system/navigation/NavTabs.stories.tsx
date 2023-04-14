@@ -1,5 +1,5 @@
 import { NavTabs } from './NavTabs';
-import { StoryBlock } from './StoryBlock';
+import { StoryBlock } from '../StoryBlock';
 
 export const Documentation = () => (
   <>

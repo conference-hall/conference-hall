@@ -4,14 +4,14 @@ import { useLoaderData, useOutletContext } from '@remix-run/react';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { getActivities } from './server/get-activities.server';
 import { mapErrorToResponse } from '~/libs/errors';
-import { Container } from '~/design-system/Container';
+import { Container } from '~/design-system/layouts/Container';
 import type { SpeakerContext } from '../speaker/route';
 import { SpeakerDetailsSection } from './components/SpeakerDetailsSection';
 import { parsePage } from '~/schemas/pagination';
 import { SpeakerActivitiesSection } from './components/SpeakerActivitiesSection';
 import { ButtonLink } from '~/design-system/Buttons';
 import { PlusIcon } from '@heroicons/react/20/solid';
-import { Header } from '~/shared-components/Header';
+import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
@@ -31,11 +31,11 @@ export default function ProfileRoute() {
 
   return (
     <>
-      <Header title="Welcome to Conference Hall" subtitle="Your last submissions to conferences and meetups.">
+      <PageHeaderTitle title="Welcome to Conference Hall" subtitle="Your last submissions to conferences and meetups.">
         <ButtonLink iconLeft={PlusIcon} to="/speaker/talks/new">
           New talk
         </ButtonLink>
-      </Header>
+      </PageHeaderTitle>
 
       <Container className="mt-8 grid grid-cols-1 items-start gap-4 lg:grid-cols-3 lg:gap-8">
         <SpeakerDetailsSection
