@@ -5,7 +5,7 @@ class OrganizerEventSettingsPage {
   }
 
   isPageVisible() {
-    cy.findByRole('heading', { name: 'Settings' }).should('exist');
+    cy.findByRole('heading', { name: 'Event settings' }).should('exist');
   }
 
   nav() {

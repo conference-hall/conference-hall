@@ -60,7 +60,7 @@ export function formatCFPState(state: CfpState) {
     case 'CLOSED':
       return 'Call for paper not open yet';
     case 'OPENED':
-      return 'Call for paper  open';
+      return 'Call for paper open';
     case 'FINISHED':
       return 'Call for paper closed';
   }

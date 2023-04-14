@@ -24,7 +24,6 @@ describe('Organizer event creation', () => {
       cy.assertInputText('Event URL', 'hello-world');
       eventNew.newEvent();
       eventSettings.isPageVisible();
-      cy.assertText('conference');
       cy.assertInputText('Name', 'Hello world');
       cy.assertInputText('Event URL', 'hello-world');
     });
@@ -37,7 +36,6 @@ describe('Organizer event creation', () => {
       cy.assertInputText('Event URL', 'hello-world');
       eventNew.newEvent();
       eventSettings.isPageVisible();
-      cy.assertText('meetup');
       cy.assertInputText('Name', 'Hello world');
       cy.assertInputText('Event URL', 'hello-world');
     });

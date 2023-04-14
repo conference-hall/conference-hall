@@ -21,7 +21,7 @@ describe('Search conferences and meetups.', () => {
 
     cy.url().should('include', '/?query=devfest');
     search.results().should('have.length', 1);
-    search.result('Devfest Nantes').and('contain', 'Open');
+    search.result('Devfest Nantes').and('contain', 'Call for paper open');
   });
 
   it('search meetup events', () => {
@@ -30,7 +30,7 @@ describe('Search conferences and meetups.', () => {
 
     cy.url().should('include', '/?query=gdg');
     search.results().should('have.length', 1);
-    search.result('GDG Nantes').and('contain', 'Open');
+    search.result('GDG Nantes').and('contain', 'Call for paper open');
   });
 
   it('opens event page on click', () => {
