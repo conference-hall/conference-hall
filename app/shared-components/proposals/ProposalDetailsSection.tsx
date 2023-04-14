@@ -1,6 +1,6 @@
 import { AvatarGroup } from '~/design-system/Avatar';
 import Badge from '~/design-system/Badges';
-import { Card } from '~/design-system/Card';
+import { Card } from '~/design-system/layouts/Card';
 import { Markdown } from '~/design-system/Markdown';
 import { H3, Text } from '~/design-system/Typography';
 import { getLanguage } from '~/utils/languages';

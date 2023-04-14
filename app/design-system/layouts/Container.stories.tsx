@@ -1,5 +1,5 @@
 import { Container } from './Container';
-import { StoryBlock } from './StoryBlock';
+import { StoryBlock } from '../StoryBlock';
 
 export const Documentation = () => (
   <>

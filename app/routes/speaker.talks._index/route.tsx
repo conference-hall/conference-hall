@@ -4,12 +4,12 @@ import { useLoaderData, useSearchParams, useNavigate } from '@remix-run/react';
 import { SpeakerTalksList } from './components/SpeakerTalksList';
 import Select from '~/design-system/forms/Select';
 import { listTalks } from './server/list-talks.server';
-import { Container } from '~/design-system/Container';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { mapErrorToResponse } from '~/libs/errors';
 import { ButtonLink } from '~/design-system/Buttons';
 import { PlusIcon } from '@heroicons/react/20/solid';
-import { PageHeaderTitle } from '~/design-system/PageHeaderTitle';
+import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
+import { Container } from '~/design-system/layouts/Container';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);

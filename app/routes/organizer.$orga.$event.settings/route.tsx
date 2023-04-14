@@ -2,8 +2,8 @@ import invariant from 'tiny-invariant';
 import type { LoaderArgs } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 import { Outlet, useOutletContext, useParams } from '@remix-run/react';
-import { Container } from '~/design-system/Container';
-import { NavMenu } from '~/design-system/NavMenu';
+import { Container } from '~/design-system/layouts/Container';
+import { NavMenu } from '~/design-system/navigation/NavMenu';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import {
   CodeBracketIcon,

@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { NavTabs } from '~/design-system/NavTabs';
+import { NavTabs } from '~/design-system/navigation/NavTabs';
 
 type Props = { orgaSlug: string; eventSlug: string; role: string };
 

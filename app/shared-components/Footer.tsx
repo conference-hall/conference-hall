@@ -1,4 +1,4 @@
-import { Container } from '~/design-system/Container';
+import { Container } from '~/design-system/layouts/Container';
 
 export function Footer() {
   return (

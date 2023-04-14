@@ -1,15 +1,15 @@
 import { FireIcon } from '@heroicons/react/24/outline';
 import type { CfpState } from '~/schemas/event';
 import type { SpeakerProposalStatus } from '~/shared-server/proposals/get-speaker-proposal-status';
-import { Card } from '~/design-system/Card';
 import { Subtitle, Text } from '~/design-system/Typography';
 import { Avatar, AvatarGroup } from '~/design-system/Avatar';
 import { ProposalStatusLabel } from '~/shared-components/proposals/ProposalStatusLabel';
-import { EmptyState } from '~/design-system/EmptyState';
 import { Link } from '~/design-system/Links';
 import { ButtonLink } from '~/design-system/Buttons';
 import { IconButtonLink } from '~/design-system/IconButtons';
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/20/solid';
+import { EmptyState } from '~/design-system/layouts/EmptyState';
+import { Card } from '~/design-system/layouts/Card';
 
 interface Props {
   activities: Array<{

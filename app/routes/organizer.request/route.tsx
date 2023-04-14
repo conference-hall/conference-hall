@@ -1,15 +1,15 @@
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { Container } from '~/design-system/Container';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { H1, Text } from '~/design-system/Typography';
 import { Form, useActionData } from '@remix-run/react';
 import { Input } from '~/design-system/forms/Input';
 import { Button } from '~/design-system/Buttons';
 import { ExternalLink } from '~/design-system/Links';
-import { Card } from '~/design-system/Card';
 import { checkAccessKey } from './server/check-access-key.server';
+import { Container } from '~/design-system/layouts/Container';
+import { Card } from '~/design-system/layouts/Card';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);

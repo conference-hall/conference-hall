@@ -1,7 +1,7 @@
 import c from 'classnames';
 import { NavLink } from '@remix-run/react';
-import { IconLabel } from './IconLabel';
-import { Card } from './Card';
+import { IconLabel } from '../IconLabel';
+import { Card } from '../layouts/Card';
 
 type NavItem = { to: string; icon: React.ComponentType<{ className?: string }>; label: string };
 

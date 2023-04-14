@@ -4,14 +4,14 @@ import { useLoaderData, useOutletContext } from '@remix-run/react';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { getActivities } from './server/get-activities.server';
 import { mapErrorToResponse } from '~/libs/errors';
-import { Container } from '~/design-system/Container';
+import { Container } from '~/design-system/layouts/Container';
 import type { SpeakerContext } from '../speaker/route';
 import { SpeakerDetailsSection } from './components/SpeakerDetailsSection';
 import { parsePage } from '~/schemas/pagination';
 import { SpeakerActivitiesSection } from './components/SpeakerActivitiesSection';
 import { ButtonLink } from '~/design-system/Buttons';
 import { PlusIcon } from '@heroicons/react/20/solid';
-import { PageHeaderTitle } from '~/design-system/PageHeaderTitle';
+import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);

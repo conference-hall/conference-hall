@@ -1,4 +1,4 @@
-import { EmptyState } from '~/design-system/EmptyState';
+import { EmptyState } from '~/design-system/layouts/EmptyState';
 import { ButtonLink } from '../../../design-system/Buttons';
 import { FireIcon } from '@heroicons/react/24/outline';
 

@@ -1,11 +1,11 @@
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
-import { Container } from '~/design-system/Container';
+import { Container } from '~/design-system/layouts/Container';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { H1, Text } from '~/design-system/Typography';
 import { useLoaderData } from '@remix-run/react';
-import { CardLink } from '~/design-system/Card';
+import { CardLink } from '~/design-system/layouts/Card';
 import Badge from '~/design-system/Badges';
 import { IconLabel } from '~/design-system/IconLabel';
 import { MegaphoneIcon, UsersIcon } from '@heroicons/react/24/outline';

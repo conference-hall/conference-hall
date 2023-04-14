@@ -1,9 +1,9 @@
 import { MegaphoneIcon } from '@heroicons/react/20/solid';
 import { UserGroupIcon } from '@heroicons/react/24/outline';
 import { ButtonLink } from '~/design-system/Buttons';
-import { CardLink } from '~/design-system/Card';
-import { Container } from '~/design-system/Container';
 import { H1, H2, Text } from '~/design-system/Typography';
+import { CardLink } from '~/design-system/layouts/Card';
+import { Container } from '~/design-system/layouts/Container';
 
 export function EventTypeSelection() {
   return (

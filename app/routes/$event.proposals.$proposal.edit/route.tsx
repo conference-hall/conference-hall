@@ -4,7 +4,6 @@ import { json, redirect } from '@remix-run/node';
 import type { ActionArgs, ActionFunction, LoaderArgs } from '@remix-run/node';
 import { withZod } from '@remix-validated-form/with-zod';
 import { createToast } from '~/libs/toasts/toasts';
-import { Container } from '~/design-system/Container';
 import { H3, Subtitle } from '~/design-system/Typography';
 import { DetailsForm } from '~/shared-components/proposals/forms/DetailsForm';
 import { Button, ButtonLink } from '~/design-system/Buttons';
@@ -15,10 +14,11 @@ import { getSpeakerProposal } from '~/shared-server/proposals/get-speaker-propos
 import { deleteProposal } from './server/delete-proposal.server';
 import { updateProposal } from './server/update-proposal.server';
 import { useEvent } from '../$event/route';
-import { Card } from '~/design-system/Card';
 import { CoSpeakersList, InviteCoSpeakerButton } from '~/shared-components/proposals/forms/CoSpeaker';
 import { removeCoSpeakerFromProposal } from '~/shared-server/proposals/remove-co-speaker.server';
-import { PageHeaderTitle } from '~/design-system/PageHeaderTitle';
+import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
+import { Container } from '~/design-system/layouts/Container';
+import { Card } from '~/design-system/layouts/Card';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);

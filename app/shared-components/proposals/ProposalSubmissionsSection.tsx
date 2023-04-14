@@ -1,4 +1,4 @@
-import { Card } from '~/design-system/Card';
+import { Card } from '~/design-system/layouts/Card';
 import { H3, Text } from '~/design-system/Typography';
 import { ProposalStatusLabel } from './ProposalStatusLabel';
 import { Link } from '~/design-system/Links';

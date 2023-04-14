@@ -17,7 +17,7 @@ import { withZod } from '@remix-validated-form/with-zod';
 import { ProposalSubmissionSchema } from '~/schemas/proposal';
 import { useEvent } from '~/routes/$event/route';
 import { getSubmittedProposal } from '../../shared-server/proposals/get-submitted-proposal.server';
-import { Card } from '~/design-system/Card';
+import { Card } from '~/design-system/layouts/Card';
 
 export const handle = { step: 'submission' };
 

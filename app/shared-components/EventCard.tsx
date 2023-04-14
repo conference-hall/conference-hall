@@ -1,5 +1,5 @@
 import { Avatar } from '~/design-system/Avatar';
-import { CardLink } from '~/design-system/Card';
+import { CardLink } from '~/design-system/layouts/Card';
 import { H3, Text } from '~/design-system/Typography';
 import type { CfpState } from '~/schemas/event';
 import { CfpElapsedTime } from './cfp/CfpElapsedTime';

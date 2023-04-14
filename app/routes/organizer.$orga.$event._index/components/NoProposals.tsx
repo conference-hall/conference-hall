@@ -1,6 +1,6 @@
 import { InboxIcon } from '@heroicons/react/24/outline';
-import { Container } from '~/design-system/Container';
-import { EmptyState } from '~/design-system/EmptyState';
+import { Container } from '~/design-system/layouts/Container';
+import { EmptyState } from '~/design-system/layouts/EmptyState';
 
 export function NoProposals() {
   return (

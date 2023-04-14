@@ -4,8 +4,8 @@ import { useSubmit } from '@remix-run/react';
 import { Button } from '../design-system/Buttons';
 import { useFirebaseSignIn } from '../libs/auth/useFirebaseSignIn';
 import { getSession, sessionLogin } from '../libs/auth/auth.server';
-import { Container } from '../design-system/Container';
 import { H1 } from '../design-system/Typography';
+import { Container } from '~/design-system/layouts/Container';
 
 export const action: ActionFunction = async ({ request }) => {
   return sessionLogin(request);

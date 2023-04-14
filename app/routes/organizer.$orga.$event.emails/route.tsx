@@ -3,8 +3,8 @@ import { ShieldCheckIcon, ShieldExclamationIcon } from '@heroicons/react/24/outl
 import type { LoaderArgs } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 import { Outlet, useParams } from '@remix-run/react';
-import { Container } from '~/design-system/Container';
-import { NavMenu } from '~/design-system/NavMenu';
+import { Container } from '~/design-system/layouts/Container';
+import { NavMenu } from '~/design-system/navigation/NavMenu';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { getUserRole } from '~/shared-server/organizations/get-user-role.server';
 import { H2 } from '~/design-system/Typography';

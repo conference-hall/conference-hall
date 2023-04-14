@@ -1,10 +1,10 @@
 import c from 'classnames';
 import { ClientOnly } from 'remix-utils';
-import { Container } from '~/design-system/Container';
 import { H1, Text } from '~/design-system/Typography';
 import { formatConferenceDates } from '../../../utils/event';
 import { Avatar } from '~/design-system/Avatar';
 import { Link } from '@remix-run/react';
+import { Container } from '~/design-system/layouts/Container';
 
 type Props = {
   type: 'CONFERENCE' | 'MEETUP';

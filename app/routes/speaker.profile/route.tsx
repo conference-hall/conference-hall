@@ -2,20 +2,20 @@ import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { useActionData, useOutletContext } from '@remix-run/react';
 import { CreditCardIcon, KeyIcon, UserCircleIcon } from '@heroicons/react/20/solid';
-import { NavMenu } from '~/design-system/NavMenu';
 import { withZod } from '@remix-validated-form/with-zod';
 import { saveProfile } from '~/shared-server/profile/save-profile.server';
 import { AdditionalInfoSchema, DetailsSchema, PersonalInfoSchema } from '~/schemas/profile.schema';
-import { PageHeaderTitle } from '~/design-system/PageHeaderTitle';
-import { Card } from '~/design-system/Card';
 import { createToast } from '~/libs/toasts/toasts';
 import { mapErrorToResponse } from '~/libs/errors';
 import { AdditionalInfoForm } from './components/AdditionalInfoForm';
 import { PersonalInfoForm } from './components/PersonalInfoForm';
 import { SpeakerDetailsForm } from './components/SpeakerDetailsForm';
 import { sessionRequired } from '~/libs/auth/auth.server';
-import { Container } from '~/design-system/Container';
 import type { SpeakerContext } from '../speaker/route';
+import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
+import { Container } from '~/design-system/layouts/Container';
+import { NavMenu } from '~/design-system/navigation/NavMenu';
+import { Card } from '~/design-system/layouts/Card';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);

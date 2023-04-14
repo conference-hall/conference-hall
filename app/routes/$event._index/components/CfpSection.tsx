@@ -5,7 +5,7 @@ import type { CfpState } from '~/schemas/event';
 import { CfpIcon } from '../../../shared-components/cfp/CfpIcon';
 import { formatCFPDate, formatCFPElapsedTime } from '~/utils/event';
 import { ButtonLink } from '~/design-system/Buttons';
-import { Container } from '~/design-system/Container';
+import { Container } from '~/design-system/layouts/Container';
 
 type Props = { cfpState: CfpState; cfpStart?: string; cfpEnd?: string; className?: string };
 

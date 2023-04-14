@@ -1,8 +1,8 @@
-import { Container } from '~/design-system/Container';
 import { useEvent } from '../$event/route';
 import { CfpSection } from './components/CfpSection';
 import { TrackSection } from './components/TrackSection';
 import { DetailsSection } from './components/DetailsSection';
+import { Container } from '~/design-system/layouts/Container';
 
 export default function EventRoute() {
   const event = useEvent();

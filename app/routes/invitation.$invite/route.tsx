@@ -5,15 +5,15 @@ import { json, redirect } from '@remix-run/node';
 import { Form, useLoaderData, useOutletContext } from '@remix-run/react';
 import { Navbar } from '~/shared-components/navbar/Navbar';
 import { getInvitation } from '~/routes/invitation.$invite/server/get-invitation.server';
-import { Button } from '../../design-system/Buttons';
-import { Container } from '../../design-system/Container';
-import { H1, Text } from '../../design-system/Typography';
-import { sessionRequired } from '../../libs/auth/auth.server';
-import { mapErrorToResponse } from '../../libs/errors';
 import type { UserContext } from '~/root';
 import { addMember } from './server/add-member.server';
 import { addCoSpeakerToProposal } from './server/add-co-speaker-to-proposal.server';
 import { addCoSpeakerToTalk } from './server/add-co-speaker-to-talk.server';
+import { sessionRequired } from '~/libs/auth/auth.server';
+import { mapErrorToResponse } from '~/libs/errors';
+import { Container } from '~/design-system/layouts/Container';
+import { H1, Text } from '~/design-system/Typography';
+import { Button } from '~/design-system/Buttons';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   await sessionRequired(request);
@@ -56,6 +56,7 @@ export default function InvitationRoute() {
   return (
     <>
       <Navbar user={user} notifications={notifications} withSearch />
+
       <Container className="m-24">
         <div className="flex flex-col items-center bg-white px-4 py-5 sm:rounded-lg sm:p-6">
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-indigo-100">

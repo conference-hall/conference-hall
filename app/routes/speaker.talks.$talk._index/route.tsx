@@ -7,12 +7,12 @@ import { archiveTalk, restoreTalk } from './server/archive-talk.server';
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { mapErrorToResponse } from '~/libs/errors';
-import { Container } from '~/design-system/Container';
+import { Container } from '~/design-system/layouts/Container';
 import { ButtonLink } from '~/design-system/Buttons';
 import { ArchiveOrRestoreTalkButton } from './components/ArchiveOrRestoreTalkButton';
 import { ProposalDetailsSection } from '~/shared-components/proposals/ProposalDetailsSection';
 import { ProposalSubmissionsSection } from '~/shared-components/proposals/ProposalSubmissionsSection';
-import { PageHeaderTitle } from '~/design-system/PageHeaderTitle';
+import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);

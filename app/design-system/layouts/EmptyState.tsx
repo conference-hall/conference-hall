@@ -1,4 +1,4 @@
-import { Text } from './Typography';
+import { Text } from '../Typography';
 import { Card } from './Card';
 
 type Icon = React.ComponentType<{ className?: string }>;

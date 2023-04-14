@@ -4,11 +4,11 @@ import { json, redirect } from '@remix-run/node';
 import { withZod } from '@remix-validated-form/with-zod';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { OrganizationForm } from '~/shared-components/organizations/OrganizationForm';
-import { Container } from '~/design-system/Container';
 import { Button } from '~/design-system/Buttons';
 import { H1, Text } from '~/design-system/Typography';
 import { createOrganization } from './server/create-organization.server';
 import { OrganizationSaveSchema } from './types/organization-save.schema';
+import { Container } from '~/design-system/layouts/Container';
 
 export const loader: LoaderFunction = async ({ request }) => {
   await sessionRequired(request);

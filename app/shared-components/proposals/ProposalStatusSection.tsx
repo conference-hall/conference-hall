@@ -1,7 +1,7 @@
 import { useFetcher } from '@remix-run/react';
 import { Button, ButtonLink } from '~/design-system/Buttons';
 import { ProposalDeleteButton } from './ProposalDelete';
-import { Card } from '~/design-system/Card';
+import { Card } from '~/design-system/layouts/Card';
 import { H3, Subtitle, Text } from '~/design-system/Typography';
 import { SpeakerProposalStatus } from '~/shared-server/proposals/get-speaker-proposal-status';
 

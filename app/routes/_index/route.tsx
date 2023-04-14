@@ -4,8 +4,6 @@ import { useLoaderData, useOutletContext, useSearchParams } from '@remix-run/rea
 import { FaceFrownIcon } from '@heroicons/react/24/outline';
 import type { UserContext } from '~/root';
 import { mapErrorToResponse } from '~/libs/errors';
-import { EmptyState } from '~/design-system/EmptyState';
-import { Container } from '~/design-system/Container';
 import { H1, H2, Text } from '~/design-system/Typography';
 import { Pagination } from '~/design-system/Pagination';
 import { Navbar } from '~/shared-components/navbar/Navbar';
@@ -17,6 +15,8 @@ import { SearchEventsFilters } from './components/SearchEventsFilters';
 import { EventCard } from '~/shared-components/EventCard';
 import { Footer } from '~/shared-components/Footer';
 import { SpeakerLinks } from '~/shared-components/navbar/SpeakerLinks';
+import { Container } from '~/design-system/layouts/Container';
+import { EmptyState } from '~/design-system/layouts/EmptyState';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const url = new URL(request.url);

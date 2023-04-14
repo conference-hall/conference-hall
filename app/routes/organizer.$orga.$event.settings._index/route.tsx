@@ -15,7 +15,7 @@ import { withZod } from '@remix-validated-form/with-zod';
 import { updateEvent } from '~/shared-server/organizations/update-event.server';
 import { EventDetailsSettingsSchema } from './types/event-details-settings.schema';
 import { EventGeneralSettingsSchema } from './types/event-general-settings.schema';
-import { Card } from '~/design-system/Card';
+import { Card } from '~/design-system/layouts/Card';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);

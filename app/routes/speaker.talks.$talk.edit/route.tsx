@@ -3,7 +3,6 @@ import type { ActionArgs, ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData, useLoaderData, useNavigate } from '@remix-run/react';
 import { withZod } from '@remix-validated-form/with-zod';
-import { Container } from '~/design-system/Container';
 import { TalkSaveSchema } from '~/schemas/talks';
 import { getTalk } from '~/shared-server/talks/get-talk.server';
 import { updateTalk } from '~/routes/speaker.talks.$talk.edit/server/update-talk.server';
@@ -13,10 +12,11 @@ import { Button, ButtonLink } from '~/design-system/Buttons';
 import { H3, Subtitle } from '~/design-system/Typography';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { mapErrorToResponse } from '~/libs/errors';
-import { Card } from '~/design-system/Card';
 import { CoSpeakersList, InviteCoSpeakerButton } from '~/shared-components/proposals/forms/CoSpeaker';
 import { removeCoSpeakerFromTalk } from '~/shared-server/talks/remove-co-speaker.server';
-import { PageHeaderTitle } from '~/design-system/PageHeaderTitle';
+import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
+import { Container } from '~/design-system/layouts/Container';
+import { Card } from '~/design-system/layouts/Card';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
