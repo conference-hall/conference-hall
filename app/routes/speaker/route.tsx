@@ -5,7 +5,6 @@ import { Outlet } from '@remix-run/react';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { Navbar } from '~/shared-components/navbar/Navbar';
 import { Footer } from '~/shared-components/Footer';
-import { SpeakerNavLinks } from '~/shared-components/navbar/SpeakerNavLinks';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);
@@ -17,9 +16,7 @@ export default function SpeakerRoute() {
 
   return (
     <>
-      <Navbar user={user} withSearch>
-        <SpeakerNavLinks organizations={user?.organizations} />
-      </Navbar>
+      <Navbar user={user} withSearch />
 
       <Outlet context={{ user }} />
 

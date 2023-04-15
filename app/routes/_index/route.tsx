@@ -14,7 +14,6 @@ import { parseFilters } from './types/search';
 import { SearchEventsFilters } from './components/SearchEventsFilters';
 import { EventCard } from '~/shared-components/EventCard';
 import { Footer } from '~/shared-components/Footer';
-import { SpeakerNavLinks } from '~/shared-components/navbar/SpeakerNavLinks';
 import { Container } from '~/design-system/layouts/Container';
 import { EmptyState } from '~/design-system/layouts/EmptyState';
 
@@ -33,9 +32,7 @@ export default function IndexRoute() {
 
   return (
     <>
-      <Navbar user={user}>
-        <SpeakerNavLinks organizations={user?.organizations} />
-      </Navbar>
+      <Navbar user={user} />
 
       <div className="bg-gray-800 shadow">
         <Container className="pb-8 sm:pb-16 sm:pt-10">

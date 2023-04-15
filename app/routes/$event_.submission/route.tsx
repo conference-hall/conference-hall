@@ -14,16 +14,9 @@ import { IconButtonLink } from '~/design-system/IconButtons';
 import { EventHeader } from '../$event/components/EventHeader';
 import { useSubmissionStep } from './hooks/useSubmissionStep';
 import { Navbar } from '~/shared-components/navbar/Navbar';
-import { SpeakerNavLinks } from '~/shared-components/navbar/SpeakerNavLinks';
 import { useUser } from '~/root';
 
-type Step = {
-  key: string;
-  name: string;
-  path: string;
-  form?: string;
-  enabled: boolean;
-};
+type Step = { key: string; name: string; path: string; form?: string; enabled: boolean };
 
 export const handle = { step: 'root' };
 
@@ -93,9 +86,7 @@ export default function EventSubmissionRoute() {
 
   return (
     <>
-      <Navbar user={user} withSearch>
-        <SpeakerNavLinks organizations={user?.organizations} />
-      </Navbar>
+      <Navbar user={user} withSearch />
 
       <EventHeader
         type={event.type}

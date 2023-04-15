@@ -17,7 +17,9 @@ export default function OrganizerRoute() {
   return (
     <>
       <Navbar user={user} withSearch />
+
       <Outlet />
+
       <Footer />
     </>
   );

@@ -3,11 +3,16 @@ import { useMemo } from 'react';
 import { NavTabs } from '~/design-system/navigation/NavTabs';
 
 type Props = {
+  authenticated: boolean;
   organizations?: Array<{ slug: string; name: string; role: string }>;
 };
 
-export function SpeakerNavLinks({ organizations = [] }: Props) {
+export function Navigation({ authenticated, organizations = [] }: Props) {
   const tabs = useMemo(() => {
+    if (!authenticated) {
+      return [{ label: 'Login', to: '/login', enabled: true }];
+    }
+
     const hasOrganizations = Boolean(organizations && organizations.length > 0);
 
     const organizationLinks = organizations.map((organization) => ({
@@ -26,7 +31,7 @@ export function SpeakerNavLinks({ organizations = [] }: Props) {
         links: [...organizationLinks, { to: '/organizer/new', label: 'New organization', icon: PlusIcon }],
       },
     ];
-  }, [organizations]);
+  }, [authenticated, organizations]);
 
   return <NavTabs tabs={tabs} variant="dark" />;
 }

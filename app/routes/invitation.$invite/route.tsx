@@ -13,7 +13,6 @@ import { mapErrorToResponse } from '~/libs/errors';
 import { Container } from '~/design-system/layouts/Container';
 import { H1, Text } from '~/design-system/Typography';
 import { Button } from '~/design-system/Buttons';
-import { SpeakerNavLinks } from '~/shared-components/navbar/SpeakerNavLinks';
 import { useUser } from '~/root';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
@@ -56,9 +55,7 @@ export default function InvitationRoute() {
 
   return (
     <>
-      <Navbar user={user}>
-        <SpeakerNavLinks organizations={user?.organizations} />
-      </Navbar>
+      <Navbar user={user} />
 
       <Container className="m-24">
         <div className="flex flex-col items-center bg-white px-4 py-5 sm:rounded-lg sm:p-6">
