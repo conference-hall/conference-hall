@@ -6,6 +6,7 @@ import { organizationFactory } from 'tests/factories/organization';
 import { talkFactory } from 'tests/factories/talks';
 import { proposalFactory } from 'tests/factories/proposals';
 import { ratingFactory } from 'tests/factories/ratings';
+import { organizerKeyFactory } from 'tests/factories/organizer-key';
 
 async function seed() {
   const user = await userFactory({ traits: ['clark-kent'] });
@@ -137,6 +138,8 @@ async function seed() {
       });
     })
   );
+
+  await organizerKeyFactory({ attributes: { id: '123456' } });
 }
 
 seed();
