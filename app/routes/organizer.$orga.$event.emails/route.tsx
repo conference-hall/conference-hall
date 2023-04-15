@@ -4,7 +4,7 @@ import type { LoaderArgs } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 import { Outlet, useParams } from '@remix-run/react';
 import { Container } from '~/design-system/layouts/Container';
-import { NavMenu } from '~/design-system/navigation/NavMenu';
+import { NavSideMenu } from '~/design-system/navigation/NavSideMenu';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { getUserRole } from '~/shared-server/organizations/get-user-role.server';
 import { H2 } from '~/design-system/Typography';
@@ -32,7 +32,7 @@ export default function EventProposalEmails() {
     <Container className="mt-4 flex gap-8 sm:mt-8">
       <H2 srOnly>Event settings</H2>
 
-      <NavMenu aria-label="Emails campaign menu" items={menus} className="sticky top-4 w-72 self-start" />
+      <NavSideMenu aria-label="Emails campaign menu" items={menus} className="sticky top-4 w-72 self-start" />
 
       <div className="min-w-0 flex-1 space-y-6 sm:px-6 lg:px-0">
         <Outlet />

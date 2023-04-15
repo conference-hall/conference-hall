@@ -6,7 +6,7 @@ import { Outlet, useOutletContext } from '@remix-run/react';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { Navbar } from '~/shared-components/navbar/Navbar';
 import { Footer } from '~/shared-components/Footer';
-import { SpeakerLinks } from '~/shared-components/navbar/SpeakerLinks';
+import { SpeakerNavLinks } from '~/shared-components/navbar/SpeakerNavLinks';
 
 export type SpeakerContext = {
   user: Awaited<ReturnType<typeof getUser>>;
@@ -23,7 +23,7 @@ export default function SpeakerRoute() {
   return (
     <>
       <Navbar user={user} notifications={notifications} withSearch>
-        <SpeakerLinks hasOrganization={Boolean(user?.organizationsCount)} />
+        <SpeakerNavLinks hasOrganization={Boolean(user?.organizationsCount)} />
       </Navbar>
 
       {user && <Outlet context={{ user }} />}

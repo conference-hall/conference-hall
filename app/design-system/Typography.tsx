@@ -93,25 +93,25 @@ function Typography({
 }
 
 export function H1(props: TypographyProps) {
-  return <Typography as="h1" size="3xl" mb={4} heading strong {...props} />;
+  return <Typography as="h1" size="3xl" heading strong {...props} />;
 }
 
 export function H2(props: TypographyProps) {
-  return <Typography as="h2" size="2xl" mb={4} heading strong {...props} />;
+  return <Typography as="h2" size="2xl" heading strong {...props} />;
 }
 
 export function H3(props: TypographyProps) {
-  return <Typography as="h3" size="xl" mb={2} heading strong {...props} />;
+  return <Typography as="h3" size="xl" heading strong {...props} />;
 }
 
 export function H4(props: TypographyProps) {
-  return <Typography as="h4" size="base" mb={0} heading strong {...props} />;
+  return <Typography as="h4" size="base" heading strong {...props} />;
 }
 
 export function Text(props: TypographyProps) {
-  return <Typography as="p" size="base" mb={0} {...props} />;
+  return <Typography as="p" size="base" {...props} />;
 }
 
 export function Subtitle(props: TypographyProps) {
-  return <Text as="p" size="s" mb={0} variant="secondary" {...props} />;
+  return <Text as="p" size="s" variant="secondary" {...props} />;
 }

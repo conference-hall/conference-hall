@@ -13,5 +13,5 @@ export function EventTabs({ orgaSlug, eventSlug, role }: Props) {
     [orgaSlug, eventSlug, role]
   );
 
-  return <NavTabs tabs={tabs} light />;
+  return <NavTabs tabs={tabs} py={4} />;
 }

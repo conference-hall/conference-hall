@@ -6,6 +6,7 @@ import { ButtonLink } from '~/design-system/Buttons';
 import { SearchEventsInput } from './SearchEventsInput';
 import { Disclosure } from '@headlessui/react';
 import { MobileMenuButton, MobileMenuPanel } from './NavbarMobileMenu';
+import { NavTabs } from '~/design-system/navigation/NavTabs';
 
 type Props = {
   user: { name: string | null; email: string | null; photoURL: string | null } | null;
@@ -16,7 +17,7 @@ type Props = {
 
 export function Navbar({ user, notifications, children, withSearch }: Props) {
   return (
-    <Disclosure as="nav" className="bg-gray-800">
+    <Disclosure as="div" className="bg-gray-800">
       {({ open }) => (
         <>
           <div className="flex h-16 items-center justify-between px-8">
@@ -30,30 +31,36 @@ export function Navbar({ user, notifications, children, withSearch }: Props) {
                   alt=""
                 />
               </RemixLink>
+
               {/* Search */}
               {withSearch && <SearchEventsInput />}
             </div>
-            {/* Desktop menu */}
+
             <div className="hidden w-full items-center justify-end gap-2 pr-2 sm:pr-0 lg:flex">
-              {!user && (
-                <ButtonLink to="/login" size="s">
-                  Login
-                </ButtonLink>
-              )}
+              {/* Non authenticated menu */}
+              {!user && <NavTabs tabs={[{ label: 'Login', to: '/login', enabled: true }]} variant="dark" />}
+
+              {/* Authenticated menu */}
               {user && children && (
                 <div className="hidden sm:ml-6 sm:block">
                   <div className="flex space-x-4">{children}</div>
                 </div>
               )}
+
+              {/* Notifications menu */}
               {user && <NotificationMenu notifications={notifications} />}
+
+              {/* User menu */}
               {user && <UserMenuDesktop name={user.name} email={user.email} picture={user.photoURL} />}
             </div>
+
             {/* Mobile menu */}
             <div className="flex lg:hidden">
               {!user && <ButtonLink to="/login">Login</ButtonLink>}
               {user && <MobileMenuButton open={open} />}
             </div>
           </div>
+
           {/* Mobile panel */}
           {user && <MobileMenuPanel user={user} notifications={notifications} />}
         </>

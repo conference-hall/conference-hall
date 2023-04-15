@@ -7,7 +7,7 @@ type NavItem = { to: string; icon: React.ComponentType<{ className?: string }>; 
 
 type Props = { items: Array<NavItem>; noActive?: boolean; className?: string };
 
-export function NavMenu({ items, noActive, className, ...rest }: Props) {
+export function NavSideMenu({ items, noActive, className, ...rest }: Props) {
   return (
     <aside className={className}>
       <Card p={4} as="nav" className="space-y-1" {...rest}>

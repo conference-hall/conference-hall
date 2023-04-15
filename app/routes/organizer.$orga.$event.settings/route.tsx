@@ -3,7 +3,7 @@ import type { LoaderArgs } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 import { Outlet, useOutletContext, useParams } from '@remix-run/react';
 import { Container } from '~/design-system/layouts/Container';
-import { NavMenu } from '~/design-system/navigation/NavMenu';
+import { NavSideMenu } from '~/design-system/navigation/NavSideMenu';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import {
   CodeBracketIcon,
@@ -51,7 +51,7 @@ export default function OrganizationSettingsRoute() {
     <Container className="mt-4 flex gap-8 sm:mt-8">
       <H2 srOnly>Event settings</H2>
 
-      <NavMenu aria-label="Event settings menu" items={menus} className="sticky top-4 w-60 self-start" />
+      <NavSideMenu aria-label="Event settings menu" items={menus} className="sticky top-4 w-60 self-start" />
 
       <div className="min-w-0 flex-1 space-y-6 sm:px-6 lg:px-0">
         <Outlet context={{ event }} />
