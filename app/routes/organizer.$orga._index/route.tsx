@@ -7,8 +7,6 @@ import { sessionRequired } from '~/libs/auth/auth.server';
 import { H2 } from '~/design-system/Typography';
 import { Outlet, useLoaderData, useOutletContext, useParams } from '@remix-run/react';
 import { Square3Stack3DIcon } from '@heroicons/react/24/outline';
-import { PlusIcon } from '@heroicons/react/20/solid';
-import { ButtonLink } from '~/design-system/Buttons';
 import { listEvents } from './server/list-events.server';
 import { EmptyState } from '~/design-system/layouts/EmptyState';
 import { EventCard } from '~/shared-components/EventCard';
@@ -30,14 +28,7 @@ export default function OrganizationEventsRoute() {
 
   return (
     <Container className="my-4 space-y-8 sm:my-8">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <H2>Events</H2>
-        {organization.role === 'OWNER' && (
-          <ButtonLink to="new" iconLeft={PlusIcon}>
-            New event
-          </ButtonLink>
-        )}
-      </div>
+      <H2 srOnly>Events</H2>
 
       {hasEvent ? (
         <ul aria-label="Events list" className="grid grid-cols-1 gap-8 lg:grid-cols-2">
