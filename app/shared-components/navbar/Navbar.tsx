@@ -9,13 +9,17 @@ import { MobileMenuButton, MobileMenuPanel } from './NavbarMobileMenu';
 import { NavTabs } from '~/design-system/navigation/NavTabs';
 
 type Props = {
-  user: { name: string | null; email: string | null; photoURL: string | null } | null;
-  notifications: Array<Notification> | null;
+  user: {
+    name: string | null;
+    email: string | null;
+    photoURL: string | null;
+    notifications: Array<Notification>;
+  } | null;
   children?: ReactNode;
   withSearch?: boolean;
 };
 
-export function Navbar({ user, notifications, children, withSearch }: Props) {
+export function Navbar({ user, children, withSearch }: Props) {
   return (
     <Disclosure as="div" className="bg-gray-800">
       {({ open }) => (
@@ -48,7 +52,7 @@ export function Navbar({ user, notifications, children, withSearch }: Props) {
               )}
 
               {/* Notifications menu */}
-              {user && <NotificationMenu notifications={notifications} />}
+              {user && <NotificationMenu notifications={user.notifications} />}
 
               {/* User menu */}
               {user && <UserMenuDesktop name={user.name} email={user.email} picture={user.photoURL} />}
@@ -62,7 +66,7 @@ export function Navbar({ user, notifications, children, withSearch }: Props) {
           </div>
 
           {/* Mobile panel */}
-          {user && <MobileMenuPanel user={user} notifications={notifications} />}
+          {user && <MobileMenuPanel user={user} notifications={user.notifications} />}
         </>
       )}
     </Disclosure>

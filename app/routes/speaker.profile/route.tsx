@@ -1,6 +1,6 @@
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
-import { useActionData, useOutletContext } from '@remix-run/react';
+import { useActionData } from '@remix-run/react';
 import { CreditCardIcon, KeyIcon, UserCircleIcon } from '@heroicons/react/20/solid';
 import { withZod } from '@remix-validated-form/with-zod';
 import { saveProfile } from '~/shared-server/profile/save-profile.server';
@@ -11,11 +11,11 @@ import { AdditionalInfoForm } from './components/AdditionalInfoForm';
 import { PersonalInfoForm } from './components/PersonalInfoForm';
 import { SpeakerDetailsForm } from './components/SpeakerDetailsForm';
 import { sessionRequired } from '~/libs/auth/auth.server';
-import type { SpeakerContext } from '../speaker/route';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 import { Container } from '~/design-system/layouts/Container';
 import { NavSideMenu } from '~/design-system/navigation/NavSideMenu';
 import { Card } from '~/design-system/layouts/Card';
+import { useUser } from '~/root';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);
@@ -57,8 +57,10 @@ const MENU_ITEMS = [
 ];
 
 export default function ProfileRoute() {
-  const { user } = useOutletContext<SpeakerContext>();
+  const { user } = useUser();
   const errors = useActionData<typeof action>();
+
+  if (!user) return null;
 
   return (
     <>

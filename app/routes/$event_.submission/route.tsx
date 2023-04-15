@@ -1,4 +1,4 @@
-import { Outlet, useLoaderData, useOutletContext } from '@remix-run/react';
+import { Outlet, useLoaderData } from '@remix-run/react';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import invariant from 'tiny-invariant';
@@ -14,8 +14,8 @@ import { IconButtonLink } from '~/design-system/IconButtons';
 import { EventHeader } from '../$event/components/EventHeader';
 import { useSubmissionStep } from './hooks/useSubmissionStep';
 import { Navbar } from '~/shared-components/navbar/Navbar';
-import type { UserContext } from '~/root';
 import { SpeakerNavLinks } from '~/shared-components/navbar/SpeakerNavLinks';
+import { useUser } from '~/root';
 
 type Step = {
   key: string;
@@ -86,15 +86,15 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export default function EventSubmissionRoute() {
+  const { user } = useUser();
   const { event, steps } = useLoaderData<typeof loader>();
   const { currentStepKey, previousPath } = useSubmissionStep();
-  const { user, notifications } = useOutletContext<UserContext>();
   const currentStep = steps.find((step) => step.key === currentStepKey);
 
   return (
     <>
-      <Navbar user={user} notifications={notifications} withSearch>
-        <SpeakerNavLinks hasOrganization={Boolean(user?.organizationsCount)} />
+      <Navbar user={user} withSearch>
+        <SpeakerNavLinks organizations={user?.organizations} />
       </Navbar>
 
       <EventHeader

@@ -1,6 +1,6 @@
 import invariant from 'tiny-invariant';
 import type { LoaderArgs } from '@remix-run/node';
-import type { UserContext } from '~/root';
+import { useUser } from '~/root';
 import { json } from '@remix-run/node';
 import { Outlet, useLoaderData, useOutletContext } from '@remix-run/react';
 import { Navbar } from '~/shared-components/navbar/Navbar';
@@ -24,12 +24,12 @@ export const loader = async ({ params }: LoaderArgs) => {
 
 export default function EventRoute() {
   const event = useLoaderData<typeof loader>();
-  const { user, notifications } = useOutletContext<UserContext>();
+  const { user } = useUser();
 
   return (
     <>
-      <Navbar user={user} notifications={notifications} withSearch>
-        <SpeakerNavLinks hasOrganization={Boolean(user?.organizationsCount)} />
+      <Navbar user={user} withSearch>
+        <SpeakerNavLinks organizations={user?.organizations} />
       </Navbar>
 
       <EventHeader

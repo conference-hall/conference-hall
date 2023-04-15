@@ -1,8 +1,11 @@
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { organizationFactory } from 'tests/factories/organization';
 import { userFactory } from 'tests/factories/users';
-import { UserNotFoundError } from '../../libs/errors';
 import { getUser } from './get-user.server';
+import { OrganizationRole } from '@prisma/client';
+import { eventFactory } from 'tests/factories/events';
+import { proposalFactory } from 'tests/factories/proposals';
+import { talkFactory } from 'tests/factories/talks';
 
 describe('#getUser', () => {
   beforeEach(async () => {
@@ -25,21 +28,61 @@ describe('#getUser', () => {
       address: user.address,
       twitter: user.twitter,
       github: user.github,
-      organizationsCount: 0,
+      organizations: [],
+      notifications: [],
     });
   });
 
-  it('returns a profile with organizations count', async () => {
+  it("returns user's organizations", async () => {
     const user = await userFactory();
-    await organizationFactory({ owners: [user] });
-    await organizationFactory({ reviewers: [user] });
-    await organizationFactory({ members: [user] });
+    const orga1 = await organizationFactory({ attributes: { name: 'A' }, owners: [user] });
+    const orga2 = await organizationFactory({ attributes: { name: 'B' }, reviewers: [user] });
+    const orga3 = await organizationFactory({ attributes: { name: 'C' }, members: [user] });
 
     const response = await getUser(user.id);
-    expect(response.organizationsCount).toBe(3);
+
+    expect(response?.organizations).toEqual([
+      { slug: orga1.slug, name: 'A', role: OrganizationRole.OWNER },
+      { slug: orga2.slug, name: 'B', role: OrganizationRole.REVIEWER },
+      { slug: orga3.slug, name: 'C', role: OrganizationRole.MEMBER },
+    ]);
   });
 
-  it('throws an error when user not found', async () => {
-    await expect(getUser('XXX')).rejects.toThrowError(UserNotFoundError);
+  it("returns  accepted proposals as user's notifications", async () => {
+    const speaker1 = await userFactory();
+    const speaker2 = await userFactory();
+    const event = await eventFactory();
+    await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker2] }), traits: ['accepted'] });
+    await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker2] }), traits: ['accepted'] });
+    await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker1] }), traits: ['draft'] });
+
+    const proposal = await proposalFactory({
+      event,
+      talk: await talkFactory({ speakers: [speaker1] }),
+      traits: ['accepted'],
+      attributes: { emailAcceptedStatus: 'SENT' },
+    });
+
+    const response = await getUser(speaker1.id);
+
+    expect(response?.notifications).toEqual([
+      {
+        type: 'ACCEPTED_PROPOSAL',
+        proposal: {
+          id: proposal.id,
+          title: proposal.title,
+        },
+        event: {
+          slug: proposal.event.slug,
+          name: proposal.event.name,
+        },
+        date: proposal.updatedAt.toUTCString(),
+      },
+    ]);
+  });
+
+  it('returns null when user is not found', async () => {
+    const response = await getUser('XXX');
+    expect(response).toBeNull();
   });
 });

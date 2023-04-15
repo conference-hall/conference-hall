@@ -1,8 +1,8 @@
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { useLoaderData, useOutletContext, useSearchParams } from '@remix-run/react';
+import { useLoaderData, useSearchParams } from '@remix-run/react';
 import { FaceFrownIcon } from '@heroicons/react/24/outline';
-import type { UserContext } from '~/root';
+import { useUser } from '~/root';
 import { mapErrorToResponse } from '~/libs/errors';
 import { H1, H2, Text } from '~/design-system/Typography';
 import { Pagination } from '~/design-system/Pagination';
@@ -27,14 +27,14 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 export default function IndexRoute() {
-  const { user, notifications } = useOutletContext<UserContext>();
+  const { user } = useUser();
   const { filters, results, pagination } = useLoaderData<typeof loader>();
   const [searchParams] = useSearchParams();
 
   return (
     <>
-      <Navbar user={user} notifications={notifications}>
-        <SpeakerNavLinks hasOrganization={Boolean(user?.organizationsCount)} />
+      <Navbar user={user}>
+        <SpeakerNavLinks organizations={user?.organizations} />
       </Navbar>
 
       <div className="bg-gray-800 shadow">
