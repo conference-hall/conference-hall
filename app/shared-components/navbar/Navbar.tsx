@@ -1,4 +1,3 @@
-import { Link as RemixLink } from '@remix-run/react';
 import { type Notification, NotificationMenu } from './NotificationMenu';
 import { UserMenuDesktop } from './UserMenuDesktop';
 import { ButtonLink } from '~/design-system/Buttons';
@@ -6,6 +5,7 @@ import { SearchEventsInput } from './SearchEventsInput';
 import { Disclosure } from '@headlessui/react';
 import { MobileMenuButton, MobileMenuPanel } from './NavbarMobileMenu';
 import { Navigation } from './Navigation';
+import { Logo } from './Logo';
 
 type Props = {
   user: {
@@ -26,22 +26,15 @@ export function Navbar({ user, withSearch }: Props) {
           <div className="flex h-16 items-center justify-between px-4 sm:px-8">
             <div className="flex w-full items-center">
               {/* Logo */}
-              <RemixLink to="/" className="flex-shrink-0">
-                <img
-                  className="h-8 w-8"
-                  src="https://tailwindui.com/img/logos/workflow-mark-indigo-300.svg"
-                  aria-hidden
-                  alt=""
-                />
-              </RemixLink>
+              <Logo />
 
               {/* Search */}
               {withSearch && <SearchEventsInput />}
             </div>
 
-            <div className="hidden w-full items-center justify-end gap-2 pr-2 sm:pr-0 lg:flex">
+            <div className="hidden gap-2 lg:flex lg:items-center lg:justify-end">
               {/* Navigation links */}
-              <Navigation authenticated={!!user} organizations={user?.organizations} />
+              <Navigation authenticated={Boolean(user)} organizations={user?.organizations} />
 
               {/* Notifications */}
               {user && <NotificationMenu notifications={user.notifications} />}
