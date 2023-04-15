@@ -15,7 +15,7 @@ import { EventHeader } from '../$event/components/EventHeader';
 import { useSubmissionStep } from './hooks/useSubmissionStep';
 import { Navbar } from '~/shared-components/navbar/Navbar';
 import type { UserContext } from '~/root';
-import { SpeakerLinks } from '~/shared-components/navbar/SpeakerLinks';
+import { SpeakerNavLinks } from '~/shared-components/navbar/SpeakerNavLinks';
 
 type Step = {
   key: string;
@@ -94,7 +94,7 @@ export default function EventSubmissionRoute() {
   return (
     <>
       <Navbar user={user} notifications={notifications} withSearch>
-        <SpeakerLinks hasOrganization={Boolean(user?.organizationsCount)} />
+        <SpeakerNavLinks hasOrganization={Boolean(user?.organizationsCount)} />
       </Navbar>
 
       <EventHeader

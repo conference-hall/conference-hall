@@ -1,30 +1,49 @@
+import c from 'classnames';
 import { useMemo } from 'react';
-import { NavLink, useLocation } from '@remix-run/react';
-import cn from 'classnames';
+import { NavLink } from '@remix-run/react';
 
-type Tab = { to: string; label: string; enabled: boolean; end?: boolean };
+type Props = {
+  tabs: Array<{ to: string; label: string; enabled: boolean; end?: boolean }>;
+  variant?: keyof typeof BACKGROUND;
+  py?: keyof typeof PADDING_Y;
+};
 
-type Props = { tabs: Array<Tab>; light?: boolean };
+const BACKGROUND = {
+  light: 'bg-white',
+  dark: 'bg-gray-800',
+};
 
-function useTabs(tabs: Array<Tab>) {
-  const { pathname } = useLocation();
+const DEFAULT_LINKS = {
+  light: 'text-gray-500 hover:bg-gray-100 hover:text-gray-900',
+  dark: 'text-gray-300 hover:bg-gray-700 hover:text-white',
+};
+
+const ACTIVE_LINKS = {
+  light: 'bg-gray-100 text-gray-900 font-medium',
+  dark: 'bg-gray-900 text-white font-medium',
+};
+
+const PADDING_Y = {
+  0: 'py-0',
+  4: 'py-4',
+};
+
+export function NavTabs({ tabs, py = 0, variant = 'light' }: Props) {
   const enabledTabs = useMemo(() => tabs.filter((tab) => tab.enabled), [tabs]);
-  const currentTab = enabledTabs.filter((tab) => tab.to === pathname || pathname.startsWith(tab.to)).at(-1);
-  return { enabledTabs, currentTab: currentTab || enabledTabs[0] };
-}
-
-export function NavTabs({ tabs, light = false }: Props) {
-  const { enabledTabs, currentTab } = useTabs(tabs);
 
   return (
-    <nav className={cn('flex space-x-4 pb-4', { 'bg-gray-800': !light, 'bg-white': light })} aria-label="Tabs">
+    <nav className={c('flex space-x-4', PADDING_Y[py], BACKGROUND[variant])} aria-label="Tabs">
       {enabledTabs.map((tab) => (
         <NavLink
           key={tab.to}
           to={tab.to}
-          aria-current={currentTab.to === tab.to ? 'page' : undefined}
           end={tab.end}
-          className={(tab) => tabDesktopStyle({ ...tab, light })}
+          className={(tab) =>
+            c('rounded-md px-3 py-2 text-sm font-medium', {
+              [DEFAULT_LINKS[variant]]: !tab.isActive,
+              [ACTIVE_LINKS[variant]]: tab.isActive,
+            })
+          }
         >
           {tab.label}
         </NavLink>
@@ -32,12 +51,3 @@ export function NavTabs({ tabs, light = false }: Props) {
     </nav>
   );
 }
-
-const tabDesktopStyle = ({ isActive, light }: { isActive: boolean; light?: boolean }) => {
-  return cn('rounded-md px-3 py-2 text-sm', {
-    'bg-gray-900 text-white font-medium': !light && isActive,
-    'text-gray-300 hover:bg-gray-700 hover:text-white font-medium': !light && !isActive,
-    'bg-gray-100 font-medium text-gray-900': light && isActive,
-    'text-gray-600 font-medium hover:bg-gray-100 hover:text-gray-900': light && !isActive,
-  });
-};

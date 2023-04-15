@@ -14,7 +14,7 @@ import { sessionRequired } from '~/libs/auth/auth.server';
 import type { SpeakerContext } from '../speaker/route';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 import { Container } from '~/design-system/layouts/Container';
-import { NavMenu } from '~/design-system/navigation/NavMenu';
+import { NavSideMenu } from '~/design-system/navigation/NavSideMenu';
 import { Card } from '~/design-system/layouts/Card';
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -65,7 +65,7 @@ export default function ProfileRoute() {
       <PageHeaderTitle title="Your profile" subtitle="Share your biography and references to event organizers." />
 
       <Container className="mt-4 flex gap-8 sm:mt-8">
-        <NavMenu
+        <NavSideMenu
           aria-label="Profile edition menu"
           items={MENU_ITEMS}
           className="sticky top-4 hidden w-60 self-start lg:block"

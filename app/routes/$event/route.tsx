@@ -9,7 +9,7 @@ import { getEvent } from '~/shared-server/events/get-event.server';
 import { EventHeader } from './components/EventHeader';
 import { EventTabs } from './components/EventTabs';
 import { Footer } from '~/shared-components/Footer';
-import { SpeakerLinks } from '~/shared-components/navbar/SpeakerLinks';
+import { SpeakerNavLinks } from '~/shared-components/navbar/SpeakerNavLinks';
 
 export const loader = async ({ params }: LoaderArgs) => {
   invariant(params.event, 'Invalid event slug');
@@ -29,7 +29,7 @@ export default function EventRoute() {
   return (
     <>
       <Navbar user={user} notifications={notifications} withSearch>
-        <SpeakerLinks hasOrganization={Boolean(user?.organizationsCount)} />
+        <SpeakerNavLinks hasOrganization={Boolean(user?.organizationsCount)} />
       </Navbar>
 
       <EventHeader

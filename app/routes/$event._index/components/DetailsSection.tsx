@@ -15,7 +15,10 @@ export function DetailsSection({ description, websiteUrl, contactEmail, codeOfCo
   const hasDetails = websiteUrl || contactEmail || codeOfConductUrl;
   return (
     <Card as="section" p={8}>
-      <H2 size="xl">Conference</H2>
+      <H2 size="xl" mb={4}>
+        Conference
+      </H2>
+
       <Markdown source={description} />
 
       {hasDetails && (

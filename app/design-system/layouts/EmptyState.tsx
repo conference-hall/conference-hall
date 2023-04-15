@@ -1,3 +1,4 @@
+import c from 'classnames';
 import { Text } from '../Typography';
 import { Card } from './Card';
 
@@ -12,7 +13,7 @@ type Props = {
 
 export function EmptyState({ label, children, icon: Icon, className }: Props) {
   return (
-    <Card p={24} className={className}>
+    <Card p={24} className={c('w-full', className)}>
       <div className="flex flex-col items-center text-center">
         <Icon className="mx-auto mb-4 h-24 w-24 text-gray-400" aria-hidden={true} />
         {label && (

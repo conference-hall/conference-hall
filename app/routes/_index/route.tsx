@@ -14,7 +14,7 @@ import { parseFilters } from './types/search';
 import { SearchEventsFilters } from './components/SearchEventsFilters';
 import { EventCard } from '~/shared-components/EventCard';
 import { Footer } from '~/shared-components/Footer';
-import { SpeakerLinks } from '~/shared-components/navbar/SpeakerLinks';
+import { SpeakerNavLinks } from '~/shared-components/navbar/SpeakerNavLinks';
 import { Container } from '~/design-system/layouts/Container';
 import { EmptyState } from '~/design-system/layouts/EmptyState';
 
@@ -34,7 +34,7 @@ export default function IndexRoute() {
   return (
     <>
       <Navbar user={user} notifications={notifications}>
-        <SpeakerLinks hasOrganization={Boolean(user?.organizationsCount)} />
+        <SpeakerNavLinks hasOrganization={Boolean(user?.organizationsCount)} />
       </Navbar>
 
       <div className="bg-gray-800 shadow">

@@ -13,5 +13,5 @@ export function OrganizationTabs({ slug, role }: Props) {
     [slug, role]
   );
 
-  return <NavTabs tabs={tabs} light />;
+  return <NavTabs tabs={tabs} py={4} />;
 }
