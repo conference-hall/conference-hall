@@ -2,12 +2,12 @@ import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { sessionRequired } from '~/libs/auth/auth.server';
-import { H1, Text } from '~/design-system/Typography';
+import { H1, Subtitle } from '~/design-system/Typography';
 import { Form, useActionData } from '@remix-run/react';
 import { Input } from '~/design-system/forms/Input';
 import { Button } from '~/design-system/Buttons';
 import { ExternalLink } from '~/design-system/Links';
-import { checkAccessKey } from './server/check-access-key.server';
+import { validAccessKey } from './server/valid-access-key.server';
 import { Container } from '~/design-system/layouts/Container';
 import { Card } from '~/design-system/layouts/Card';
 
@@ -19,29 +19,31 @@ export const loader = async ({ request }: LoaderArgs) => {
 export const action = async ({ request }: ActionArgs) => {
   const { uid } = await sessionRequired(request);
   const form = await request.formData();
-  const result = await checkAccessKey(uid, String(form.get('key')));
-  if (result?.fieldErrors) return json(result);
+  const result = await validAccessKey(uid, String(form.get('key')));
+
+  if (result?.errors) return json(result?.errors);
   return redirect('/organizer');
 };
 
 export default function RequestAccessRoute() {
-  const result = useActionData<typeof action>();
+  const errors = useActionData<typeof action>();
+
   return (
     <Container className="my-4 flex justify-center sm:my-8">
       <Card className="my-16 max-w-2xl p-8">
-        <H1>Limited access</H1>
-        <Text variant="secondary">The organizer hall is in closed-beta access, you need a key to access it.</Text>
-        <Text variant="secondary">
+        <H1 mb={4}>Limited access</H1>
+        <Subtitle>The organizer hall is in closed-beta access, you need a key to access it.</Subtitle>
+        <Subtitle>
           You can request a beta key by filling{' '}
           <ExternalLink href="https://forms.gle/AnArRCSHibmG59zw7">this form.</ExternalLink>
-        </Text>
+        </Subtitle>
         <Form method="POST" className="mt-4 space-y-4">
           <Input
             name="key"
             aria-label="Beta access key"
             placeholder="Paste your beta access key here..."
             required
-            error={result?.fieldErrors?.key?.[0]}
+            error={errors?.key}
           />
           <Button type="submit" className="float-right">
             Get access

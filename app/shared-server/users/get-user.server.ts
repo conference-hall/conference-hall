@@ -35,6 +35,7 @@ export async function getUser(uid: string | null) {
       'name'
     ),
     notifications,
+    isOrganizer: Boolean(user.organizerKey || user.organizations.length > 0),
   };
 }
 

@@ -10,7 +10,7 @@ type NavTabProps = { to: string; label: string; enabled?: boolean; end?: boolean
 
 type NavTabDropdownProps = {
   label: string;
-  enabled: boolean;
+  enabled?: boolean;
   links: Array<{ to: string; label: string; icon: React.ComponentType<{ className?: string }> }>;
 };
 

@@ -28,6 +28,7 @@ describe('#getUser', () => {
       address: user.address,
       twitter: user.twitter,
       github: user.github,
+      isOrganizer: false,
       organizations: [],
       notifications: [],
     });
@@ -79,6 +80,25 @@ describe('#getUser', () => {
         date: proposal.updatedAt.toUTCString(),
       },
     ]);
+  });
+
+  it('is marked as organizer if user has an organizer key', async () => {
+    const user = await userFactory({ isOrganizer: true });
+    const result = await getUser(user.id);
+    expect(result?.isOrganizer).toBe(true);
+  });
+
+  it('is marked as organizer if user belongs to an organization', async () => {
+    const user = await userFactory();
+    await organizationFactory({ members: [user] });
+    const result = await getUser(user.id);
+    expect(result?.isOrganizer).toBe(true);
+  });
+
+  it('is not marked as organizer if user does not have organizer key or organizations', async () => {
+    const user = await userFactory();
+    const result = await getUser(user.id);
+    expect(result?.isOrganizer).toBe(false);
   });
 
   it('returns null when user is not found', async () => {

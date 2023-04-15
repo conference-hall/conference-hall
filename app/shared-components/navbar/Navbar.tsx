@@ -13,6 +13,7 @@ type Props = {
     email: string | null;
     photoURL: string | null;
     notifications: Array<Notification>;
+    isOrganizer: boolean;
     organizations: Array<{ slug: string; name: string; role: string }>;
   } | null;
   withSearch?: boolean;
@@ -34,7 +35,11 @@ export function Navbar({ user, withSearch }: Props) {
 
             <div className="hidden gap-2 lg:flex lg:items-center lg:justify-end">
               {/* Navigation links */}
-              <Navigation authenticated={Boolean(user)} organizations={user?.organizations} />
+              <Navigation
+                authenticated={Boolean(user)}
+                isOrganizer={user?.isOrganizer}
+                organizations={user?.organizations}
+              />
 
               {/* Notifications */}
               {user && <NotificationMenu notifications={user.notifications} />}

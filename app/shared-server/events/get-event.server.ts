@@ -5,7 +5,7 @@ import { EventNotFoundError } from '../../libs/errors';
 export async function getEvent(slug: string) {
   const event = await db.event.findUnique({
     where: { slug: slug },
-    include: { formats: true, categories: true },
+    include: { formats: true, categories: true, organization: true },
   });
 
   if (!event) throw new EventNotFoundError();
@@ -15,6 +15,7 @@ export async function getEvent(slug: string) {
     slug: event.slug,
     type: event.type,
     name: event.name,
+    organizationName: event.organization.name,
     description: event.description,
     address: event.address,
     conferenceStart: event.conferenceStart?.toUTCString(),

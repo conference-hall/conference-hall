@@ -1,3 +1,4 @@
+import { organizationFactory } from 'tests/factories/organization';
 import { resetDB, disconnectDB } from '../../../tests/db-helpers';
 import { eventCategoryFactory } from '../../../tests/factories/categories';
 import { eventFactory } from '../../../tests/factories/events';
@@ -12,7 +13,9 @@ describe('#getEvent', () => {
   afterEach(disconnectDB);
 
   it('returns the default response', async () => {
+    const organization = await organizationFactory();
     const event = await eventFactory({
+      organization,
       traits: ['conference-cfp-open', 'withSurvey'],
     });
     const format = await eventFormatFactory({ event });
@@ -25,6 +28,7 @@ describe('#getEvent', () => {
       slug: event.slug,
       type: event.type,
       name: event.name,
+      organizationName: organization.name,
       address: event.address,
       conferenceStart: event.conferenceStart?.toUTCString(),
       conferenceEnd: event.conferenceEnd?.toUTCString(),

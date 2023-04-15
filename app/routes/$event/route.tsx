@@ -30,9 +30,10 @@ export default function EventRoute() {
       <Navbar user={user} withSearch />
 
       <EventHeader
-        type={event.type}
         name={event.name}
         slug={event.slug}
+        type={event.type}
+        organizationName={event.organizationName}
         bannerUrl={event.bannerUrl}
         address={event.address}
         conferenceStart={event.conferenceStart}

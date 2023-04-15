@@ -5,7 +5,7 @@ type OrganizationNewType = {
 
 class OrganizationNewPage {
   visit() {
-    cy.visit(`/organizer/new`);
+    cy.visit(`/organizer`);
     this.isPageVisible();
   }
 
