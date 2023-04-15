@@ -29,6 +29,7 @@ export default function IndexRoute() {
   const { user } = useUser();
   const { filters, results, pagination } = useLoaderData<typeof loader>();
   const [searchParams] = useSearchParams();
+  const talkId = searchParams.get('talkId');
 
   return (
     <>
@@ -56,7 +57,16 @@ export default function IndexRoute() {
         ) : (
           <ul aria-label="Search results" className="grid grid-cols-1 gap-8 lg:grid-cols-2">
             {results.map((event) => (
-              <EventCard key={event.slug} {...event} forTalkId={searchParams.get('talkId')} />
+              <EventCard
+                key={event.slug}
+                to={talkId ? `/${event.slug}/submission/${talkId}` : `/${event.slug}`}
+                name={event.name}
+                type={event.type}
+                bannerUrl={event.bannerUrl}
+                cfpState={event.cfpState}
+                cfpStart={event.cfpStart}
+                cfpEnd={event.cfpEnd}
+              />
             ))}
           </ul>
         )}

@@ -12,6 +12,7 @@ export type ButtonStylesProps = {
   className?: string;
   iconClassName?: string;
   disabled?: boolean;
+  defaultOutline?: boolean;
   iconLeft?: React.ComponentType<{ className?: string }>;
   iconRight?: React.ComponentType<{ className?: string }>;
 };
@@ -26,13 +27,14 @@ export function Button({
   disabled,
   loading,
   rounded,
+  defaultOutline,
   className,
   iconClassName,
   iconLeft: IconLeft,
   iconRight: IconRight,
   ...rest
 }: ButtonProps) {
-  const styles = getStyles({ variant, size, block, disabled, loading, rounded, className });
+  const styles = getStyles({ variant, size, block, disabled, loading, rounded, defaultOutline, className });
   return (
     <button className={styles} disabled={disabled} aria-disabled={disabled} {...rest}>
       {IconLeft && (
@@ -56,13 +58,14 @@ export function ButtonLink({
   disabled,
   loading,
   rounded,
+  defaultOutline,
   className,
   iconClassName,
   iconLeft: IconLeft,
   iconRight: IconRight,
   ...rest
 }: ButtonLinkProps) {
-  const styles = getStyles({ variant, size, block, disabled, loading, rounded, className });
+  const styles = getStyles({ variant, size, block, disabled, loading, rounded, defaultOutline, className });
   return (
     <Link className={styles} {...rest}>
       {IconLeft && (
@@ -83,6 +86,7 @@ export const getStyles = ({
   disabled,
   loading,
   rounded,
+  defaultOutline,
   className,
 }: ButtonStylesProps) =>
   cn(
@@ -91,9 +95,9 @@ export const getStyles = ({
       'w-full sm:w-auto',
       'border shadow-sm',
       'group font-medium',
-      'focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500',
     ],
     {
+      'focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500': !defaultOutline,
       'text-white bg-indigo-600 hover:bg-indigo-700 border border-transparent': variant === 'primary',
       'text-gray-700 bg-white hover:bg-gray-50 border-gray-300': variant === 'secondary',
       'opacity-50 cursor-not-allowed': disabled || loading,
