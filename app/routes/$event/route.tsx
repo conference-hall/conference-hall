@@ -1,6 +1,6 @@
 import invariant from 'tiny-invariant';
 import type { LoaderArgs } from '@remix-run/node';
-import type { UserContext } from '~/root';
+import { useUser } from '~/root';
 import { json } from '@remix-run/node';
 import { Outlet, useLoaderData, useOutletContext } from '@remix-run/react';
 import { Navbar } from '~/shared-components/navbar/Navbar';
@@ -9,7 +9,6 @@ import { getEvent } from '~/shared-server/events/get-event.server';
 import { EventHeader } from './components/EventHeader';
 import { EventTabs } from './components/EventTabs';
 import { Footer } from '~/shared-components/Footer';
-import { SpeakerNavLinks } from '~/shared-components/navbar/SpeakerNavLinks';
 
 export const loader = async ({ params }: LoaderArgs) => {
   invariant(params.event, 'Invalid event slug');
@@ -24,18 +23,17 @@ export const loader = async ({ params }: LoaderArgs) => {
 
 export default function EventRoute() {
   const event = useLoaderData<typeof loader>();
-  const { user, notifications } = useOutletContext<UserContext>();
+  const { user } = useUser();
 
   return (
     <>
-      <Navbar user={user} notifications={notifications} withSearch>
-        <SpeakerNavLinks hasOrganization={Boolean(user?.organizationsCount)} />
-      </Navbar>
+      <Navbar user={user} withSearch />
 
       <EventHeader
-        type={event.type}
         name={event.name}
         slug={event.slug}
+        type={event.type}
+        organizationName={event.organizationName}
         bannerUrl={event.bannerUrl}
         address={event.address}
         conferenceStart={event.conferenceStart}

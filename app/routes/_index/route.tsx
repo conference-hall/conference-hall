@@ -1,8 +1,8 @@
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { useLoaderData, useOutletContext, useSearchParams } from '@remix-run/react';
+import { useLoaderData, useSearchParams } from '@remix-run/react';
 import { FaceFrownIcon } from '@heroicons/react/24/outline';
-import type { UserContext } from '~/root';
+import { useUser } from '~/root';
 import { mapErrorToResponse } from '~/libs/errors';
 import { H1, H2, Text } from '~/design-system/Typography';
 import { Pagination } from '~/design-system/Pagination';
@@ -14,7 +14,6 @@ import { parseFilters } from './types/search';
 import { SearchEventsFilters } from './components/SearchEventsFilters';
 import { EventCard } from '~/shared-components/EventCard';
 import { Footer } from '~/shared-components/Footer';
-import { SpeakerNavLinks } from '~/shared-components/navbar/SpeakerNavLinks';
 import { Container } from '~/design-system/layouts/Container';
 import { EmptyState } from '~/design-system/layouts/EmptyState';
 
@@ -27,15 +26,13 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 export default function IndexRoute() {
-  const { user, notifications } = useOutletContext<UserContext>();
+  const { user } = useUser();
   const { filters, results, pagination } = useLoaderData<typeof loader>();
   const [searchParams] = useSearchParams();
 
   return (
     <>
-      <Navbar user={user} notifications={notifications}>
-        <SpeakerNavLinks hasOrganization={Boolean(user?.organizationsCount)} />
-      </Navbar>
+      <Navbar user={user} />
 
       <div className="bg-gray-800 shadow">
         <Container className="pb-8 sm:pb-16 sm:pt-10">

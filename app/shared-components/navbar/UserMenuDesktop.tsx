@@ -1,22 +1,16 @@
 import { Menu } from '@headlessui/react';
 import cn from 'classnames';
 import { Form, Link } from '@remix-run/react';
-import {
-  FireIcon,
-  ArrowRightOnRectangleIcon,
-  MicrophoneIcon,
-  BuildingOfficeIcon,
-  UserCircleIcon,
-} from '@heroicons/react/20/solid';
+import { ArrowRightOnRectangleIcon, StarIcon } from '@heroicons/react/20/solid';
 import { getAuth } from 'firebase/auth';
 import { Avatar } from '~/design-system/Avatar';
 import { MenuTransition } from '~/design-system/Transitions';
 
-type Props = { name: string | null; email?: string | null; picture?: string | null };
+type Props = { name: string | null; email?: string | null; picture?: string | null; isOrganizer?: boolean };
 
 type MenuItemProps = { to: string; label: string; icon: React.ComponentType<{ className?: string }> };
 
-function MenuItem({ to, icon: Icon, label }: MenuItemProps) {
+export function MenuItem({ to, icon: Icon, label }: MenuItemProps) {
   return (
     <Menu.Item>
       {({ active }) => (
@@ -34,29 +28,24 @@ function MenuItem({ to, icon: Icon, label }: MenuItemProps) {
   );
 }
 
-export function UserMenuDesktop({ name, email, picture }: Props) {
+export function UserMenuDesktop({ name, email, picture, isOrganizer }: Props) {
   return (
-    <Menu as="div" className="relative z-30 ml-3">
-      <div>
-        <Menu.Button className="flex rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-          <span className="sr-only">Open user menu</span>
-          <Avatar photoURL={picture} name={name} size="s" />
-        </Menu.Button>
-      </div>
+    <Menu as="div" className="relative z-30 ml-3 shrink-0">
+      <Menu.Button className="flex flex-shrink-0 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+        <span className="sr-only">Open user menu</span>
+        <Avatar photoURL={picture} name={name} size="s" />
+      </Menu.Button>
       <MenuTransition>
         <Menu.Items className="absolute right-0 mt-4 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="px-4 py-3">
             <p className="text-sm">Signed in as</p>
             <p className="truncate text-sm font-medium text-gray-900">{email}</p>
           </div>
-          <div className="py-1">
-            <MenuItem to="/speaker" label="Home" icon={FireIcon} />
-            <MenuItem to="/speaker/talks" label="Talks" icon={MicrophoneIcon} />
-            <MenuItem to="/speaker/profile" label="Profile" icon={UserCircleIcon} />
-          </div>
-          <div className="py-1">
-            <MenuItem to="/organizer" label="Organizations" icon={BuildingOfficeIcon} />
-          </div>
+          {!isOrganizer && (
+            <div className="py-1">
+              <MenuItem to="/organizer" label="Become organizer" icon={StarIcon} />
+            </div>
+          )}
           <div className="py-1">
             <Menu.Item>
               {({ active }) => (

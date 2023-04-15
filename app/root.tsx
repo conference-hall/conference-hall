@@ -12,9 +12,11 @@ import {
   ScrollRestoration,
   useRouteError,
   isRouteErrorResponse,
+  useOutletContext,
 } from '@remix-run/react';
 import { initializeFirebase } from './libs/auth/firebase';
 import { commitSession, getSession } from './libs/auth/auth.server';
+import type { User } from './shared-server/users/get-user.server';
 import { getUser } from './shared-server/users/get-user.server';
 import { H1, Text } from './design-system/Typography';
 import { GlobalLoading } from './shared-components/GlobalLoading';
@@ -22,7 +24,6 @@ import { Toast } from './design-system/Toast';
 import type { ToastData } from './libs/toasts/toasts';
 import { getToast } from './libs/toasts/toasts';
 import tailwind from './tailwind.css';
-import { listNotifications } from './shared-server/notifications/list-notifications.server';
 import { Container } from './design-system/layouts/Container';
 
 export function meta() {
@@ -37,26 +38,16 @@ export const links: LinksFunction = () => {
   ];
 };
 
-export type UserContext = {
-  user: Awaited<ReturnType<typeof getUser>> | null;
-  notifications: Awaited<ReturnType<typeof listNotifications>> | null;
-};
-
 export const loader = async ({ request }: LoaderArgs) => {
   const { uid, session } = await getSession(request);
+
   const toast = getToast(session);
 
-  let user = null;
-  let notifications = null;
-  if (uid) {
-    user = await getUser(uid).catch(() => console.log('No user connected.'));
-    notifications = await listNotifications(uid);
-  }
+  const user = await getUser(uid);
 
   return json(
     {
       user,
-      notifications,
       toast,
       firebase: {
         FIREBASE_API_KEY: config.FIREBASE_API_KEY,
@@ -71,15 +62,21 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 export default function App() {
-  const { user, notifications, firebase, toast } = useLoaderData<typeof loader>();
+  const { user, firebase, toast } = useLoaderData<typeof loader>();
 
   initializeFirebase(firebase);
 
   return (
     <Document toast={toast}>
-      <Outlet context={{ user, notifications }} />
+      <Outlet context={{ user }} />
     </Document>
   );
+}
+
+type RootContext = { user: User };
+
+export function useUser() {
+  return useOutletContext<RootContext>();
 }
 
 type DocumentProps = { children: ReactNode; toast?: ToastData | null };

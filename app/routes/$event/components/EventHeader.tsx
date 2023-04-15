@@ -1,34 +1,33 @@
-import c from 'classnames';
 import { ClientOnly } from 'remix-utils';
 import { H1, Text } from '~/design-system/Typography';
-import { formatConferenceDates } from '../../../utils/event';
 import { Avatar } from '~/design-system/Avatar';
 import { Link } from '@remix-run/react';
 import { Container } from '~/design-system/layouts/Container';
+import { formatConferenceDates } from '~/utils/event';
 
 type Props = {
-  type: 'CONFERENCE' | 'MEETUP';
   name: string;
   slug: string;
-  address: string | null;
+  type: 'CONFERENCE' | 'MEETUP';
+  organizationName: string;
   bannerUrl: string | null;
+  address: string | null;
   conferenceStart?: string;
   conferenceEnd?: string;
-  className?: string;
 };
 
 export function EventHeader({
   name,
   slug,
   type,
+  organizationName,
   bannerUrl,
   address,
   conferenceStart,
   conferenceEnd,
-  className,
 }: Props) {
   return (
-    <header className={c('bg-gray-800', className)}>
+    <header className="bg-gray-800">
       <Container className="flex flex-col items-center justify-between py-4 sm:flex-row">
         <Link to={`/${slug}`} className="flex items-center gap-4">
           <Avatar photoURL={bannerUrl} name={name} size="l" square />
@@ -37,7 +36,7 @@ export function EventHeader({
               {name}
             </H1>
             <Text variant="secondary-light" size="s" heading>
-              by GDG Nantes
+              {`by ${organizationName}`}
             </Text>
           </div>
         </Link>

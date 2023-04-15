@@ -5,7 +5,7 @@ class OrganizationEventsPage {
   }
 
   isPageVisible() {
-    cy.findByRole('heading', { name: 'Organization events' }).should('exist');
+    cy.findByRole('heading', { name: 'Events' }).should('exist');
   }
 
   eventsTab() {

@@ -10,28 +10,26 @@ import { sessionRequired } from '../../libs/auth/auth.server';
 import { mapErrorToResponse } from '../../libs/errors';
 import { getEvent } from '../../shared-server/events/get-event.server';
 import { saveProfile } from '../../shared-server/profile/save-profile.server';
-import { getUser } from '../../shared-server/users/get-user.server';
 import { withZod } from '@remix-validated-form/with-zod';
 import { removeCoSpeakerFromSubmission } from '~/shared-server/proposals/remove-co-speaker.server';
 import { getSubmittedProposal } from '../../shared-server/proposals/get-submitted-proposal.server';
 import { DetailsSchema } from '~/schemas/profile.schema';
 import { Card } from '~/design-system/layouts/Card';
+import { useUser } from '~/root';
 
 export const handle = { step: 'speakers' };
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
-  const user = await getUser(uid);
   invariant(params.event, 'Invalid event slug');
   invariant(params.talk, 'Invalid talk id');
 
   try {
-    const proposal = await getSubmittedProposal(params.talk, params.event, user.id);
+    const proposal = await getSubmittedProposal(params.talk, params.event, uid);
     return json({
       proposalId: proposal.id,
       invitationLink: proposal.invitationLink,
-      currentSpeaker: { bio: user.bio, references: user.references },
-      speakers: proposal.speakers.filter((speaker) => speaker.id !== user.id),
+      speakers: proposal.speakers.filter((speaker) => speaker.id !== uid),
     });
   } catch (err) {
     throw mapErrorToResponse(err);
@@ -70,7 +68,8 @@ export const action = async ({ request, params }: ActionArgs) => {
 };
 
 export default function SubmissionSpeakerRoute() {
-  const data = useLoaderData<typeof loader>();
+  const { user } = useUser();
+  const { proposalId, invitationLink, speakers } = useLoaderData<typeof loader>();
   const errors = useActionData<typeof action>();
 
   return (
@@ -78,27 +77,19 @@ export default function SubmissionSpeakerRoute() {
       <H2>Speaker details</H2>
       <Card p={8}>
         <Form id="speakers-form" method="POST">
-          <MarkdownTextArea
-            name="bio"
-            label="Biography"
-            rows={5}
-            error={errors?.bio}
-            defaultValue={data.currentSpeaker.bio || ''}
-          />
+          <MarkdownTextArea name="bio" label="Biography" rows={5} error={errors?.bio} defaultValue={user?.bio || ''} />
           <Text size="s" variant="secondary">
             You can give more information about you from{' '}
             <ExternalLink href="/speaker/settings">the profile page.</ExternalLink>
           </Text>
-          <input type="hidden" name="references" value={data.currentSpeaker.references || ''} />
+          <input type="hidden" name="references" value={user?.references || ''} />
         </Form>
         <div className="mt-12">
           <H3 mb={0}>Co-speakers</H3>
           <Subtitle>When co-speaker accepts the invite, he/she will be automatically added to the proposal.</Subtitle>
           <div className="mt-6 space-y-6">
-            {data.speakers.length > 1 && (
-              <CoSpeakersList speakers={data.speakers} showRemoveAction className="max-w-md py-4" />
-            )}
-            <InviteCoSpeakerButton to="PROPOSAL" id={data.proposalId} invitationLink={data.invitationLink} />
+            {speakers.length > 1 && <CoSpeakersList speakers={speakers} showRemoveAction className="max-w-md py-4" />}
+            <InviteCoSpeakerButton to="PROPOSAL" id={proposalId} invitationLink={invitationLink} />
           </div>
         </div>
       </Card>

@@ -1,32 +1,19 @@
 import OrganizationEventsPage from 'page-objects/organizer/events-list.page';
 import OrganizationNewPage from 'page-objects/organizer/organization-new.page';
-import OrganizationsPage from 'page-objects/organizer/organizations-list.page';
 
-describe('Organizations page list', () => {
+describe('Organization create', () => {
   beforeEach(() => {
-    cy.task('seedDB', 'organizer/organizations-list');
+    cy.task('seedDB', 'organizer/organizations-new');
   });
 
   afterEach(() => cy.task('disconnectDB'));
 
-  const organizations = new OrganizationsPage();
-  const organization = new OrganizationEventsPage();
   const organizationNew = new OrganizationNewPage();
-
-  it('displays organization list when user has severals organizations', () => {
-    cy.login();
-    organizations.visit();
-    organizations.list().should('have.length', 3);
-    organizations.newOrganization().should('exist');
-    organizations.organization('Awesome orga 2').click();
-    organization.isPageVisible();
-    cy.assertText('Awesome orga 2');
-  });
+  const organization = new OrganizationEventsPage();
 
   it('can create a new organization', () => {
     cy.login();
-    organizations.visit();
-    organizations.newOrganization().click();
+    organizationNew.visit();
     organizationNew.isPageVisible();
 
     organizationNew.fillForm({ name: 'Hello world' });
@@ -39,8 +26,7 @@ describe('Organizations page list', () => {
 
   it('cannot create an organization when slug already exists', () => {
     cy.login();
-    organizations.visit();
-    organizations.newOrganization().click();
+    organizationNew.visit();
     organizationNew.isPageVisible();
 
     organizationNew.fillForm({ name: 'orga 1' });

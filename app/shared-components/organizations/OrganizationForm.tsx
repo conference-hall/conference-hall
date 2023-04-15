@@ -24,7 +24,6 @@ export function OrganizationForm({ initialValues, errors }: OrganizationFormProp
           setSlug(slugify(e.target.value.toLowerCase()));
         }}
         error={errors?.name}
-        className="mt-8"
       />
       <Input
         name="slug"
@@ -36,7 +35,6 @@ export function OrganizationForm({ initialValues, errors }: OrganizationFormProp
           setSlug(e.target.value);
         }}
         error={errors?.slug}
-        className="mt-4"
       />
     </>
   );
