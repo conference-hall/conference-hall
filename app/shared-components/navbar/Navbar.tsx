@@ -45,7 +45,14 @@ export function Navbar({ user, withSearch }: Props) {
               {user && <NotificationMenu notifications={user.notifications} />}
 
               {/* Avatar */}
-              {user && <UserMenuDesktop name={user.name} email={user.email} picture={user.photoURL} />}
+              {user && (
+                <UserMenuDesktop
+                  name={user.name}
+                  email={user.email}
+                  picture={user.photoURL}
+                  isOrganizer={user?.isOrganizer}
+                />
+              )}
             </div>
 
             {/* Mobile menu */}

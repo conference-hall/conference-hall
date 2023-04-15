@@ -1,12 +1,12 @@
 import { Menu } from '@headlessui/react';
 import cn from 'classnames';
 import { Form, Link } from '@remix-run/react';
-import { ArrowRightOnRectangleIcon } from '@heroicons/react/20/solid';
+import { ArrowRightOnRectangleIcon, StarIcon } from '@heroicons/react/20/solid';
 import { getAuth } from 'firebase/auth';
 import { Avatar } from '~/design-system/Avatar';
 import { MenuTransition } from '~/design-system/Transitions';
 
-type Props = { name: string | null; email?: string | null; picture?: string | null };
+type Props = { name: string | null; email?: string | null; picture?: string | null; isOrganizer?: boolean };
 
 type MenuItemProps = { to: string; label: string; icon: React.ComponentType<{ className?: string }> };
 
@@ -28,7 +28,7 @@ export function MenuItem({ to, icon: Icon, label }: MenuItemProps) {
   );
 }
 
-export function UserMenuDesktop({ name, email, picture }: Props) {
+export function UserMenuDesktop({ name, email, picture, isOrganizer }: Props) {
   return (
     <Menu as="div" className="relative z-30 ml-3 shrink-0">
       <Menu.Button className="flex flex-shrink-0 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
@@ -41,6 +41,11 @@ export function UserMenuDesktop({ name, email, picture }: Props) {
             <p className="text-sm">Signed in as</p>
             <p className="truncate text-sm font-medium text-gray-900">{email}</p>
           </div>
+          {!isOrganizer && (
+            <div className="py-1">
+              <MenuItem to="/organizer" label="Become organizer" icon={StarIcon} />
+            </div>
+          )}
           <div className="py-1">
             <Menu.Item>
               {({ active }) => (
