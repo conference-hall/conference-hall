@@ -1,3 +1,4 @@
+import { PlusIcon, Square3Stack3DIcon } from '@heroicons/react/20/solid';
 import { useMemo } from 'react';
 import { NavTabs } from '~/design-system/navigation/NavTabs';
 
@@ -6,17 +7,26 @@ type Props = {
 };
 
 export function SpeakerNavLinks({ organizations = [] }: Props) {
-  const hasOrganizations = Boolean(organizations && organizations.length > 0);
+  const tabs = useMemo(() => {
+    const hasOrganizations = Boolean(organizations && organizations.length > 0);
 
-  const tabs = useMemo(
-    () => [
+    const organizationLinks = organizations.map((organization) => ({
+      to: `/organizer/${organization.slug}`,
+      label: organization.name,
+      icon: Square3Stack3DIcon,
+    }));
+
+    return [
       { to: `/speaker`, label: 'Home', enabled: true, end: true },
       { to: `/speaker/talks`, label: 'Talks', enabled: true },
       { to: `/speaker/profile`, label: 'Profile', enabled: true },
-      { to: `/organizer`, label: 'Organizations', enabled: hasOrganizations },
-    ],
-    [hasOrganizations]
-  );
+      {
+        label: 'Organizations',
+        enabled: hasOrganizations,
+        links: [...organizationLinks, { to: '/organizer/new', label: 'New organization', icon: PlusIcon }],
+      },
+    ];
+  }, [organizations]);
 
   return <NavTabs tabs={tabs} variant="dark" />;
 }

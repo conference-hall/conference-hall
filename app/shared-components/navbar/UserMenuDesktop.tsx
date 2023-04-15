@@ -16,7 +16,7 @@ type Props = { name: string | null; email?: string | null; picture?: string | nu
 
 type MenuItemProps = { to: string; label: string; icon: React.ComponentType<{ className?: string }> };
 
-function MenuItem({ to, icon: Icon, label }: MenuItemProps) {
+export function MenuItem({ to, icon: Icon, label }: MenuItemProps) {
   return (
     <Menu.Item>
       {({ active }) => (
