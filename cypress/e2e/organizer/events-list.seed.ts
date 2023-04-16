@@ -15,8 +15,17 @@ export const seed = async () => {
     reviewers: [organizer3],
   });
 
-  await eventFactory({ organization, traits: ['conference-cfp-open'], attributes: { name: 'Awesome event 1' } });
-  await eventFactory({ organization, traits: ['meetup-cfp-open'], attributes: { name: 'Awesome event 2' } });
+  await eventFactory({
+    organization,
+    traits: ['conference-cfp-open'],
+    attributes: { name: 'Awesome event 1', slug: 'event-1' },
+  });
+
+  await eventFactory({
+    organization,
+    traits: ['meetup-cfp-open'],
+    attributes: { name: 'Awesome event 2', slug: 'event-2' },
+  });
 
   // organization without events
   await organizationFactory({
