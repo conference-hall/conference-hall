@@ -1,72 +1,35 @@
-import { Menu } from '@headlessui/react';
-import cn from 'classnames';
-import { Form, Link } from '@remix-run/react';
 import { ArrowRightOnRectangleIcon, StarIcon } from '@heroicons/react/20/solid';
 import { getAuth } from 'firebase/auth';
+import { Menu } from '~/design-system/menus/Menu';
 import { Avatar } from '~/design-system/Avatar';
-import { MenuTransition } from '~/design-system/Transitions';
 
 type Props = { name: string | null; email?: string | null; picture?: string | null; isOrganizer?: boolean };
 
-type MenuItemProps = { to: string; label: string; icon: React.ComponentType<{ className?: string }> };
-
-export function MenuItem({ to, icon: Icon, label }: MenuItemProps) {
-  return (
-    <Menu.Item>
-      {({ active }) => (
-        <Link
-          to={to}
-          className={cn('group flex items-center px-4 py-2 text-sm text-gray-700', {
-            'bg-gray-100 text-gray-900': active,
-          })}
-        >
-          <Icon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
-          {label}
-        </Link>
-      )}
-    </Menu.Item>
-  );
-}
-
 export function UserMenuDesktop({ name, email, picture, isOrganizer }: Props) {
+  const UserAvatar = () => <Avatar photoURL={picture} name={name} size="s" />;
+
   return (
-    <Menu as="div" className="relative z-30 ml-3 shrink-0">
-      <Menu.Button className="flex flex-shrink-0 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-        <span className="sr-only">Open user menu</span>
-        <Avatar photoURL={picture} name={name} size="s" />
-      </Menu.Button>
-      <MenuTransition>
-        <Menu.Items className="absolute right-0 mt-4 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-          <div className="px-4 py-3">
-            <p className="text-sm">Signed in as</p>
-            <p className="truncate text-sm font-medium text-gray-900">{email}</p>
-          </div>
-          {!isOrganizer && (
-            <div className="py-1">
-              <MenuItem to="/organizer" label="Become organizer" icon={StarIcon} />
-            </div>
-          )}
-          <div className="py-1">
-            <Menu.Item>
-              {({ active }) => (
-                <Form action="/logout" method="POST">
-                  <button
-                    type="submit"
-                    onClick={() => getAuth().signOut()}
-                    className={cn('block w-full px-4 py-2 text-left text-sm text-gray-700', { 'bg-gray-100': active })}
-                  >
-                    <ArrowRightOnRectangleIcon
-                      className="mr-3 inline h-5 w-5 text-gray-400 group-hover:text-gray-500"
-                      aria-hidden="true"
-                    />
-                    Sign out
-                  </button>
-                </Form>
-              )}
-            </Menu.Item>
-          </div>
-        </Menu.Items>
-      </MenuTransition>
+    <Menu
+      trigger={UserAvatar}
+      triggerLabel="Open user menu"
+      triggerClassname="flex flex-shrink-0 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+    >
+      <div className="px-4 py-3">
+        <p className="text-sm">Signed in as</p>
+        <p className="truncate text-sm font-medium text-gray-900">{email}</p>
+      </div>
+
+      {!isOrganizer && (
+        <Menu.ItemLink to="/organizer" icon={StarIcon}>
+          Become organizer
+        </Menu.ItemLink>
+      )}
+
+      <Menu.ItemForm action="/logout" method="POST" icon={ArrowRightOnRectangleIcon}>
+        <button type="submit" className="h-full w-full text-left" onClick={() => getAuth().signOut()}>
+          Sign out
+        </button>
+      </Menu.ItemForm>
     </Menu>
   );
 }
