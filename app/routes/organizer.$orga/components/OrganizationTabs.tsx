@@ -1,7 +1,6 @@
-import { PlusIcon } from '@heroicons/react/20/solid';
 import { useMemo } from 'react';
-import { ButtonLink } from '~/design-system/Buttons';
 import { NavTabs } from '~/design-system/navigation/NavTabs';
+import { NewEventButton } from './NewEventModal/NewEventModal';
 
 type Props = { slug: string; role: string };
 
@@ -18,13 +17,7 @@ export function OrganizationTabs({ slug, role }: Props) {
   return (
     <div className="flex items-center justify-between">
       <NavTabs tabs={tabs} py={4} />
-      <div>
-        {role === 'OWNER' && (
-          <ButtonLink to="new" iconLeft={PlusIcon}>
-            New event
-          </ButtonLink>
-        )}
-      </div>
+      {role === 'OWNER' && <NewEventButton slug={slug} />}
     </div>
   );
 }

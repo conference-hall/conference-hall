@@ -5,15 +5,24 @@ import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { Text } from '../Typography';
 
+const PADDING = {
+  0: 'p-0',
+  4: 'p-4',
+  8: 'p-8',
+  10: 'p-10',
+  16: 'p-16',
+};
+
 type Props = {
   open: boolean;
   onClose: () => void;
   children: React.ReactNode;
-  size?: 'm' | 'l';
+  size?: 'm' | 'l' | 'xl';
   position?: 'top' | 'center';
+  p?: keyof typeof PADDING;
 };
 
-export function Modal({ open, onClose, children, size = 'm', position = 'center' }: Props) {
+export function Modal({ open, onClose, children, size = 'm', p = 8, position = 'center' }: Props) {
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-40" onClose={onClose}>
@@ -47,8 +56,9 @@ export function Modal({ open, onClose, children, size = 'm', position = 'center'
             >
               <Dialog.Panel
                 className={c(
-                  'relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full  sm:p-6',
-                  { 'sm:max-w-lg': size === 'm', 'sm:max-w-4xl': size === 'l' }
+                  'relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full',
+                  PADDING[p],
+                  { 'sm:max-w-lg': size === 'm', 'sm:max-w-4xl': size === 'l', 'sm:max-w-6xl': size === 'xl' }
                 )}
               >
                 <div className="absolute right-0 top-0 hidden pr-4 pt-4 sm:block">
