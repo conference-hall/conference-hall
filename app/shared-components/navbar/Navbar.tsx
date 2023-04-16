@@ -1,4 +1,4 @@
-import { type Notification, NotificationMenu } from './NotificationMenu';
+import { type Notification, NotificationsLink } from './NotificationsLink';
 import { UserMenuDesktop } from './UserMenuDesktop';
 import { ButtonLink } from '~/design-system/Buttons';
 import { SearchEventsInput } from './SearchEventsInput';
@@ -42,7 +42,7 @@ export function Navbar({ user, withSearch }: Props) {
               />
 
               {/* Notifications */}
-              {user && <NotificationMenu notifications={user.notifications} />}
+              {user && <NotificationsLink notifications={user.notifications} />}
 
               {/* Avatar */}
               {user && (
