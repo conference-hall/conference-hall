@@ -17,7 +17,6 @@ describe('Organization event list', () => {
     it('displays events list', () => {
       organization.visit('awesome-orga');
       organization.eventsTab().should('exist');
-      organization.membersTab().should('exist');
       organization.settingsTab().should('exist');
 
       organization.list().should('have.length', 2);
@@ -66,7 +65,6 @@ describe('Organization event list', () => {
     it('displays limited tabs and actions', () => {
       organization.visit('awesome-orga');
       organization.eventsTab().should('exist');
-      organization.membersTab().should('exist');
       organization.settingsTab().should('not.exist');
       cy.findByRole('button', { name: 'New event' }).should('not.exist');
     });
@@ -78,7 +76,6 @@ describe('Organization event list', () => {
     it('displays limited tabs and actions', () => {
       organization.visit('awesome-orga');
       organization.eventsTab().should('exist');
-      organization.membersTab().should('not.exist');
       organization.settingsTab().should('not.exist');
       cy.findByRole('button', { name: 'New event' }).should('not.exist');
     });

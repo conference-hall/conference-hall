@@ -14,11 +14,7 @@ class OrganizationEventsPage {
   }
 
   eventsTab() {
-    return cy.findByRole('link', { name: 'Organization events' });
-  }
-
-  membersTab() {
-    return cy.findByRole('link', { name: 'Members' });
+    return cy.findByRole('link', { name: 'Events' });
   }
 
   settingsTab() {

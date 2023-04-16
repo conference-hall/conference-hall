@@ -1,13 +1,15 @@
+import OrganizationEventsPage from 'page-objects/organizer/events-list.page';
 import OrganizationMembersPage from 'page-objects/organizer/members-list.page';
 
 describe('Organization members list', () => {
   beforeEach(() => {
-    cy.task('seedDB', 'organizer/members-list');
+    cy.task('seedDB', 'organizer/organization-settings-members');
   });
 
   afterEach(() => cy.task('disconnectDB'));
 
   const members = new OrganizationMembersPage();
+  const events = new OrganizationEventsPage();
 
   describe('as a organization owner', () => {
     beforeEach(() => cy.login('Clark Kent'));
@@ -49,26 +51,18 @@ describe('Organization members list', () => {
   describe('as a organization member', () => {
     beforeEach(() => cy.login('Bruce Wayne'));
 
-    it('can access to the member list but cannot update them', () => {
-      members.visit('awesome-orga');
-      members.list().should('have.length', 3);
-
-      members.changeRoleButton('Clark Kent').should('not.exist');
-      members.changeRoleButton('Peter Parker').should('not.exist');
-      members.changeRoleButton('Bruce Wayne').should('not.exist');
-
-      members.removeMemberButton('Clark Kent').should('not.exist');
-      members.removeMemberButton('Peter Parker').should('not.exist');
-      members.removeMemberButton('Bruce Wayne').should('not.exist');
+    it('cannot access to members settings and is redirected to event page', () => {
+      cy.visit('/organizer/awesome-orga/settings/members');
+      events.isPageVisible();
     });
   });
 
   describe('as a organization reviewer', () => {
     beforeEach(() => cy.login('Peter Parker'));
 
-    it('cannot access to the list', () => {
-      cy.visit('/organizer/awesome-orga/members', { failOnStatusCode: false });
-      cy.assertText('Forbidden');
+    it('cannot access to members settings and is redirected to event page', () => {
+      cy.visit('/organizer/awesome-orga/settings/members');
+      events.isPageVisible();
     });
   });
 });

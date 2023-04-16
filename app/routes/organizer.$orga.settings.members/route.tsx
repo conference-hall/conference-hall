@@ -63,12 +63,11 @@ export default function OrganizationSettingsRoute() {
           <H3 size="xl" mb={0}>
             Organization members
           </H3>
-          <Subtitle>Change name and URL.</Subtitle>
+          <Subtitle>Invite, remove or change role of organization members.</Subtitle>
         </div>
 
         <div className="grid grid-cols-1 gap-6 p-8">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <h2 className="sr-only">Organization members</h2>
             {role === 'OWNER' && <InviteMemberButton id={organization.id} invitationLink={invitationLink} />}
           </div>
 
