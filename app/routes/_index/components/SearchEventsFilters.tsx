@@ -10,20 +10,43 @@ export function SearchEventsFilters({ filters }: Props) {
   const talkId = searchParams.get('talkId');
 
   return (
-    <Form action="/" method="GET" className="space-x-4">
+    <Form action="/" method="GET">
       {query && <input type="hidden" name="query" value={query} />}
       {cfp && <input type="hidden" name="cfp" value={cfp} />}
       {talkId && <input type="hidden" name="talkId" value={talkId} />}
 
-      <Button name="type" value="all" variant={!type || type === 'all' ? 'primary' : 'secondary'} size="s" rounded>
-        All events
-      </Button>
-      <Button name="type" value="conference" variant={type === 'conference' ? 'primary' : 'secondary'} size="s" rounded>
-        Conferences only
-      </Button>
-      <Button name="type" value="meetup" variant={type === 'meetup' ? 'primary' : 'secondary'} size="s" rounded>
-        Meetups only
-      </Button>
+      <div className="isolate inline-flex">
+        <Button
+          name="type"
+          value="all"
+          variant={!type || type === 'all' ? 'primary' : 'secondary'}
+          size="s"
+          defaultOutline
+          className="rounded-r-none border-r-0"
+        >
+          All
+        </Button>
+        <Button
+          name="type"
+          value="conference"
+          variant={type === 'conference' ? 'primary' : 'secondary'}
+          size="s"
+          defaultOutline
+          className="rounded-none"
+        >
+          Conferences
+        </Button>
+        <Button
+          name="type"
+          value="meetup"
+          variant={type === 'meetup' ? 'primary' : 'secondary'}
+          size="s"
+          defaultOutline
+          className="rounded-l-none border-l-0"
+        >
+          Meetups
+        </Button>
+      </div>
     </Form>
   );
 }

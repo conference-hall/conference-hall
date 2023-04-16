@@ -1,5 +1,6 @@
-import { db } from '../../../libs/db';
-import { getUserRole } from '../../../shared-server/organizations/get-user-role.server';
+import { db } from '~/libs/db';
+import { getUserRole } from '~/shared-server/organizations/get-user-role.server';
+import { getCfpState } from '~/utils/event';
 
 export async function listEvents(slug: string, uid: string) {
   const role = await getUserRole(slug, uid);
@@ -9,9 +10,14 @@ export async function listEvents(slug: string, uid: string) {
     where: { organization: { slug } },
     orderBy: { name: 'asc' },
   });
+
   return events.map((event) => ({
     slug: event.slug,
     name: event.name,
     type: event.type,
+    bannerUrl: event.bannerUrl,
+    cfpStart: event.cfpStart?.toUTCString(),
+    cfpEnd: event.cfpEnd?.toUTCString(),
+    cfpState: getCfpState(event.type, event.cfpStart, event.cfpEnd),
   }));
 }

@@ -1,5 +1,6 @@
 import invariant from 'tiny-invariant';
-import type { LoaderArgs, SerializeFrom } from '@remix-run/node';
+import type { ActionArgs, LoaderArgs, SerializeFrom } from '@remix-run/node';
+import { redirect } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { Outlet, useLoaderData, useRouteLoaderData } from '@remix-run/react';
@@ -11,6 +12,9 @@ import { PageHeader } from '~/design-system/layouts/PageHeader';
 import { EventTabs } from './components/EventTabs';
 import type { OrganizerEventRouteData } from '../organizer.$orga.$event/route';
 import { Container } from '~/design-system/layouts/Container';
+import { EventCreateSchema } from './types/event-create.schema';
+import { withZod } from '@remix-validated-form/with-zod';
+import { createEvent } from './server/create-event.server';
 
 export type OrganizerRouteData = SerializeFrom<typeof loader>;
 
@@ -26,6 +30,20 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   } catch (e) {
     throw mapErrorToResponse(e);
   }
+};
+
+export const action = async ({ request, params }: ActionArgs) => {
+  const { uid } = await sessionRequired(request);
+  invariant(params.orga, 'Invalid organization slug');
+  const form = await request.formData();
+
+  const result = await withZod(EventCreateSchema).validate(form);
+  if (result.error) return json(result.error.fieldErrors);
+
+  const event = await createEvent(params.orga, uid, result.data);
+  if (event.error) return json(event.error?.fieldErrors);
+
+  return redirect(`/organizer/${params.orga}/${event.slug}/settings`);
 };
 
 export default function OrganizationRoute() {

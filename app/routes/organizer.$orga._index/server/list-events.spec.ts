@@ -13,16 +13,32 @@ describe('#listEvents', () => {
   it('returns organization events', async () => {
     const user = await userFactory();
     const organization = await organizationFactory({ owners: [user], attributes: { slug: 'my-orga' } });
-    await eventFactory({ attributes: { name: 'Event 1', slug: 'event1' }, organization, traits: ['conference'] });
-    await eventFactory({ attributes: { name: 'Event 2', slug: 'event2' }, organization, traits: ['meetup'] });
+    const event1 = await eventFactory({ attributes: { name: 'A' }, organization, traits: ['conference'] });
+    const event2 = await eventFactory({ attributes: { name: 'B' }, organization, traits: ['meetup'] });
 
     const organization2 = await organizationFactory({ owners: [user] });
     await eventFactory({ traits: ['conference-cfp-open'], organization: organization2 });
 
     const events = await listEvents('my-orga', user.id);
     expect(events).toEqual([
-      { name: 'Event 1', slug: 'event1', type: 'CONFERENCE' },
-      { name: 'Event 2', slug: 'event2', type: 'MEETUP' },
+      {
+        name: event1.name,
+        slug: event1.slug,
+        type: event1.type,
+        bannerUrl: event1.bannerUrl,
+        cfpStart: event1.cfpStart?.toUTCString(),
+        cfpEnd: event1.cfpEnd?.toUTCString(),
+        cfpState: 'CLOSED',
+      },
+      {
+        name: event2.name,
+        slug: event2.slug,
+        type: event2.type,
+        bannerUrl: event2.bannerUrl,
+        cfpStart: event2.cfpStart?.toUTCString(),
+        cfpEnd: event2.cfpEnd?.toUTCString(),
+        cfpState: 'CLOSED',
+      },
     ]);
   });
 
