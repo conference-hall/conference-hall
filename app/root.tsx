@@ -88,7 +88,7 @@ function Document({ children, toast }: DocumentProps) {
         <Meta />
         <Links />
       </head>
-      <body className="bg-gray-100 text-gray-900 antialiased">
+      <body className="overflow-x-hidden bg-gray-100 text-gray-900 antialiased">
         <GlobalLoading />
         {children}
         <Scripts />

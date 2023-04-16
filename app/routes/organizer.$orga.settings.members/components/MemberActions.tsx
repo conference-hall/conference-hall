@@ -1,7 +1,7 @@
 import { UserPlusIcon } from '@heroicons/react/20/solid';
 import { ShieldExclamationIcon, UserMinusIcon } from '@heroicons/react/24/outline';
 import { Form } from '@remix-run/react';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { Button } from '~/design-system/Buttons';
 import { Modal } from '~/design-system/dialogs/Modals';
 import { Radio, RadioGroup } from '~/design-system/forms/RadioGroup';
@@ -101,20 +101,19 @@ const ALL_ROLES = [
 ];
 
 function ChangeRoleModal({ memberId, memberName, memberRole, isOpen, onClose }: ChangeRoleModalProps) {
-  const roles = useMemo(() => ALL_ROLES.filter((role) => role.value !== memberRole), [memberRole]);
-
   return (
     <Modal open={isOpen} onClose={onClose}>
       <Form method="POST" onSubmit={onClose}>
         <Modal.Title title={`Change the role of ${memberName}?`} icon={ShieldExclamationIcon} />
         <RadioGroup className="mt-4 sm:mt-8">
-          {roles.map((role) => (
+          {ALL_ROLES.map((role) => (
             <Radio
               key={role.value}
               id={role.value}
               name="memberRole"
               value={role.value}
               description={role.description}
+              defaultChecked={memberRole === role.value}
               required
             >
               {role.label}
@@ -140,7 +139,7 @@ export function InviteMemberButton({ id, invitationLink }: InviteProps) {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <Button onClick={() => setOpen(true)} iconLeft={UserPlusIcon}>
+      <Button onClick={() => setOpen(true)} iconLeft={UserPlusIcon} variant="secondary">
         Invite member
       </Button>
       <InvitationModal
