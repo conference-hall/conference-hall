@@ -16,7 +16,7 @@ type MenuProps = {
 
 export function Menu({ trigger: Trigger, triggerLabel, triggerClassname, children }: MenuProps) {
   return (
-    <MenuDropdown as="div" className="relative z-30 ml-3 shrink-0">
+    <MenuDropdown as="div" className="relative z-20 ml-3 shrink-0">
       <MenuDropdown.Button className={triggerClassname}>
         {triggerLabel && <span className="sr-only">{triggerLabel}</span>}
         <Trigger />
