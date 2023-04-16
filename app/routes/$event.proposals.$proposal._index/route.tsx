@@ -38,7 +38,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export default function ProposalRoute() {
-  const event = useEvent();
+  const { event } = useEvent();
   const proposal = useLoaderData<typeof loader>();
   const navigate = useNavigate();
 

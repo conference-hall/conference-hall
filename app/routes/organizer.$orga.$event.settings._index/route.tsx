@@ -4,11 +4,10 @@ import { redirect } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { H2, Subtitle } from '~/design-system/Typography';
-import { Form, useActionData, useOutletContext } from '@remix-run/react';
+import { Form, useActionData } from '@remix-run/react';
 import { Button } from '~/design-system/Buttons';
 import { Input } from '~/design-system/forms/Input';
 import { MarkdownTextArea } from '~/design-system/forms/MarkdownTextArea';
-import type { OrganizerEventContext } from '../organizer.$orga.$event/route';
 import { DateRangeInput } from '~/design-system/forms/DateRangeInput';
 import { EventForm } from '~/shared-components/events/EventForm';
 import { withZod } from '@remix-validated-form/with-zod';
@@ -16,6 +15,7 @@ import { updateEvent } from '~/shared-server/organizations/update-event.server';
 import { EventDetailsSettingsSchema } from './types/event-details-settings.schema';
 import { EventGeneralSettingsSchema } from './types/event-general-settings.schema';
 import { Card } from '~/design-system/layouts/Card';
+import { useOrganizerEvent } from '../organizer.$orga.$event/route';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);
@@ -44,7 +44,7 @@ export const action = async ({ request, params }: ActionArgs) => {
 };
 
 export default function EventGeneralSettingsRoute() {
-  const { event } = useOutletContext<OrganizerEventContext>();
+  const { event } = useOrganizerEvent();
   const errors = useActionData<typeof action>() as Record<string, string>;
 
   return (

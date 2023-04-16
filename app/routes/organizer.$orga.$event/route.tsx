@@ -1,21 +1,19 @@
 import invariant from 'tiny-invariant';
-import type { LoaderArgs, SerializeFrom } from '@remix-run/node';
+import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Outlet, useLoaderData, useOutletContext } from '@remix-run/react';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { mapErrorToResponse } from '~/libs/errors';
-import type { OrganizationContext } from '../organizer.$orga/route';
-import { getEvent } from './server/get-event.server';
-
-export type OrganizerEventRouteData = SerializeFrom<typeof loader>;
-
-export type OrganizerEventContext = { event: OrganizerEventRouteData };
+import type { OrganizerEvent } from './server/get-organizer-event.server';
+import { getOrganizerEvent } from './server/get-organizer-event.server';
+import { useOrganization } from '../organizer.$orga/route';
+import { useUser } from '~/root';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
   invariant(params.event, 'Invalid event slug');
   try {
-    const event = await getEvent(params.event, uid);
+    const event = await getOrganizerEvent(params.event, uid);
     return json(event);
   } catch (e) {
     throw mapErrorToResponse(e);
@@ -23,8 +21,14 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export default function OrganizationEventRoute() {
-  const event = useLoaderData<typeof loader>();
-  const { organization } = useOutletContext<OrganizationContext>();
+  const { user } = useUser();
+  const { organization } = useOrganization();
 
-  return <Outlet context={{ organization, event }} />;
+  const event = useLoaderData<typeof loader>();
+
+  return <Outlet context={{ user, organization, event }} />;
+}
+
+export function useOrganizerEvent() {
+  return useOutletContext<{ event: OrganizerEvent }>();
 }

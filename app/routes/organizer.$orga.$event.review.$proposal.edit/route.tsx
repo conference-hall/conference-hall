@@ -2,15 +2,16 @@ import invariant from 'tiny-invariant';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
-import type { OrganizerProposalContext } from '../organizer.$orga.$event.review.$proposal/route';
+import { useProposalReview } from '../organizer.$orga.$event.review.$proposal/route';
 import { sessionRequired } from '~/libs/auth/auth.server';
-import { Form, useActionData, useOutletContext, useSearchParams } from '@remix-run/react';
+import { Form, useActionData, useSearchParams } from '@remix-run/react';
 import { DetailsForm } from '~/shared-components/proposals/forms/DetailsForm';
 import { Button, ButtonLink } from '~/design-system/Buttons';
 import { mapErrorToResponse } from '~/libs/errors';
 import { withZod } from '@remix-validated-form/with-zod';
 import { ProposalUpdateSchema } from '~/schemas/proposal';
 import { updateProposal } from '~/routes/organizer.$orga.$event._index/server/update-proposal.server';
+import { useOrganizerEvent } from '../organizer.$orga.$event/route';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);
@@ -36,7 +37,8 @@ export const action = async ({ request, params }: ActionArgs) => {
 };
 
 export default function OrganizerProposalContentRoute() {
-  const { event, proposalReview } = useOutletContext<OrganizerProposalContext>();
+  const { event } = useOrganizerEvent();
+  const { proposalReview } = useProposalReview();
   const [searchParams] = useSearchParams();
   const errors = useActionData<typeof action>();
 

@@ -5,8 +5,7 @@ import { json } from '@remix-run/node';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { H2, Text } from '~/design-system/Typography';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
-import { Form, useFetcher, useOutletContext } from '@remix-run/react';
-import type { OrganizerEventContext } from '../organizer.$orga.$event/route';
+import { Form, useFetcher } from '@remix-run/react';
 import { IconButton } from '~/design-system/IconButtons';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { withZod } from '@remix-validated-form/with-zod';
@@ -15,6 +14,7 @@ import { deleteCategory, deleteFormat, saveCategory, saveFormat } from './server
 import { EditTrackButton, NewTrackButton } from './components/SaveTrackForm';
 import { EventTrackSaveSchema } from './types/event-track-save.schema';
 import { EventTracksSettingsSchema } from './types/event-track-settings.schema';
+import { useOrganizerEvent } from '../organizer.$orga.$event/route';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);
@@ -63,8 +63,9 @@ export const action = async ({ request, params }: ActionArgs) => {
 };
 
 export default function EventTracksSettingsRoute() {
-  const fetcher = useFetcher();
+  const { event } = useOrganizerEvent();
 
+  const fetcher = useFetcher();
   const handleUpdateSettings = (e: ChangeEvent<HTMLInputElement>) => {
     fetcher.submit(
       { _action: 'update-track-settings', [e.currentTarget.name]: String(e.currentTarget.checked) },
@@ -72,7 +73,6 @@ export default function EventTracksSettingsRoute() {
     );
   };
 
-  const { event } = useOutletContext<OrganizerEventContext>();
   return (
     <>
       <section>

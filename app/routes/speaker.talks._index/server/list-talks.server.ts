@@ -3,7 +3,6 @@ import { db } from '~/libs/db';
 type TalksListOptions = { archived?: boolean };
 
 export async function listTalks(uid: string, options?: TalksListOptions) {
-  console.log({ options });
   const talks = await db.talk.findMany({
     select: {
       id: true,

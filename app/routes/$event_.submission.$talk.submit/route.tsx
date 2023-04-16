@@ -51,7 +51,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export default function SubmissionSubmitRoute() {
-  const event = useEvent();
+  const { event } = useEvent();
   const data = useLoaderData<typeof loader>();
   const [acceptedCod, setAcceptCod] = useState(!event.codeOfConductUrl);
 

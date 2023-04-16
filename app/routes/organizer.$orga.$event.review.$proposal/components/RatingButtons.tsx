@@ -3,7 +3,7 @@ import { useCallback, useState } from 'react';
 import { RadioGroup } from '@headlessui/react';
 import { HeartIcon, NoSymbolIcon, StarIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import { Text } from '~/design-system/Typography';
-import { useFetcher, useParams } from '@remix-run/react';
+import { useFetcher, useNavigation, useParams } from '@remix-run/react';
 
 type Option = {
   label: string;
@@ -33,7 +33,8 @@ type Props = { userRating: Rating };
 export function RatingButtons({ userRating }: Props) {
   const params = useParams();
   const fetcher = useFetcher();
-  const defaultIndex = findRatingOptionIndex(userRating, fetcher.submission?.formData);
+  const submission = useNavigation();
+  const defaultIndex = findRatingOptionIndex(userRating, submission?.formData);
   const [overIndex, setOverIndex] = useState<number>(-1);
 
   const action = `/organizer/${params.orga}/${params.event}/review/${params.proposal}/rate`;

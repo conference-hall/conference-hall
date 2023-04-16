@@ -5,7 +5,7 @@ import { DetailsSection } from './components/DetailsSection';
 import { Container } from '~/design-system/layouts/Container';
 
 export default function EventRoute() {
-  const event = useEvent();
+  const { event } = useEvent();
 
   const hasTracks = event.formats.length > 0 || event.categories.length > 0;
 

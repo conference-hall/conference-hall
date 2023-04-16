@@ -1,16 +1,16 @@
 import invariant from 'tiny-invariant';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { Form, useActionData, useOutletContext } from '@remix-run/react';
+import { Form, useActionData } from '@remix-run/react';
 import { withZod } from '@remix-validated-form/with-zod';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { H2, Text } from '~/design-system/Typography';
 import { ExternalLink } from '~/design-system/Links';
 import { Button } from '~/design-system/Buttons';
 import { Input } from '~/design-system/forms/Input';
-import type { OrganizerEventContext } from '../organizer.$orga.$event/route';
 import { updateEvent } from '~/shared-server/organizations/update-event.server';
 import { EventSlackSettingsSchema } from './types/event-slack-settings.schema';
+import { useOrganizerEvent } from '../organizer.$orga.$event/route';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);
@@ -30,8 +30,9 @@ export const action = async ({ request, params }: ActionArgs) => {
 };
 
 export default function EventIntegrationsSettingsRoute() {
-  const { event } = useOutletContext<OrganizerEventContext>();
+  const { event } = useOrganizerEvent();
   const errors = useActionData<typeof action>();
+
   return (
     <>
       <section>

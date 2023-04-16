@@ -73,10 +73,8 @@ export default function App() {
   );
 }
 
-type RootContext = { user: User };
-
 export function useUser() {
-  return useOutletContext<RootContext>();
+  return useOutletContext<{ user: User }>();
 }
 
 type DocumentProps = { children: ReactNode; toast?: ToastData | null };

@@ -3,9 +3,9 @@ import type { LoaderArgs } from '@remix-run/node';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { H2, Text } from '~/design-system/Typography';
 import { Button } from '~/design-system/Buttons';
-import { Form, useLoaderData, useOutletContext } from '@remix-run/react';
+import { Form, useLoaderData } from '@remix-run/react';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
-import type { OrganizerEventContext } from '../organizer.$orga.$event/route';
+import { useOrganizerEvent } from '../organizer.$orga.$event/route';
 import { withZod } from '@remix-validated-form/with-zod';
 import { updateEvent } from '~/shared-server/organizations/update-event.server';
 import { QUESTIONS } from '~/shared-server/survey/get-questions.server';
@@ -39,7 +39,7 @@ export const action = async ({ request, params }: LoaderArgs) => {
 };
 
 export default function EventSurveySettingsRoute() {
-  const { event } = useOutletContext<OrganizerEventContext>();
+  const { event } = useOrganizerEvent();
   const { questions } = useLoaderData<typeof loader>();
 
   return (

@@ -11,12 +11,12 @@ import { getOrganization } from './server/get-organization.server';
 import { OrganizationTabs } from './components/OrganizationTabs';
 import { PageHeader } from '~/design-system/layouts/PageHeader';
 import { EventTabs } from './components/EventTabs';
-import type { OrganizerEventRouteData } from '../organizer.$orga.$event/route';
 import { Container } from '~/design-system/layouts/Container';
 import { EventCreateSchema } from './types/event-create.schema';
 import { withZod } from '@remix-validated-form/with-zod';
 import { createEvent } from './server/create-event.server';
 import { useUser } from '~/root';
+import type { OrganizerEvent } from '../organizer.$orga.$event/server/get-organizer-event.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
@@ -47,7 +47,7 @@ export const action = async ({ request, params }: ActionArgs) => {
 export default function OrganizationRoute() {
   const { user } = useUser();
   const organization = useLoaderData<typeof loader>();
-  const event = useRouteLoaderData('routes/organizer.$orga.$event') as OrganizerEventRouteData;
+  const event = useRouteLoaderData('routes/organizer.$orga.$event') as OrganizerEvent;
 
   return (
     <>
@@ -67,8 +67,6 @@ export default function OrganizationRoute() {
   );
 }
 
-type OrganizationContext = { organization: Organization };
-
 export function useOrganization() {
-  return useOutletContext<OrganizationContext>();
+  return useOutletContext<{ organization: Organization }>();
 }

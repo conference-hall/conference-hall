@@ -3,7 +3,7 @@ import { eventFactory } from 'tests/factories/events';
 import { organizationFactory } from 'tests/factories/organization';
 import { userFactory } from 'tests/factories/users';
 import { EventNotFoundError } from '../../../libs/errors';
-import { getEvent } from './get-event.server';
+import { getOrganizerEvent } from './get-organizer-event.server';
 
 describe('#getEvent', () => {
   beforeEach(async () => {
@@ -24,7 +24,7 @@ describe('#getEvent', () => {
       organization,
     });
 
-    const result = await getEvent(event.slug, user.id);
+    const result = await getOrganizerEvent(event.slug, user.id);
 
     expect(result).toEqual({
       id: event.id,
@@ -64,6 +64,6 @@ describe('#getEvent', () => {
   it('throws an error if user does not belong to event orga', async () => {
     const user = await userFactory();
     const event = await eventFactory();
-    await expect(getEvent(event.slug, user.id)).rejects.toThrowError(EventNotFoundError);
+    await expect(getOrganizerEvent(event.slug, user.id)).rejects.toThrowError(EventNotFoundError);
   });
 });

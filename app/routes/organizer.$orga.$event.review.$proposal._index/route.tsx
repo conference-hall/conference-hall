@@ -1,13 +1,12 @@
 import type { LoaderArgs } from '@remix-run/node';
-import type { OrganizerProposalContext } from '../organizer.$orga.$event.review.$proposal/route';
 import { sessionRequired } from '~/libs/auth/auth.server';
-import { useOutletContext } from '@remix-run/react';
 import { Text } from '~/design-system/Typography';
 import Badge from '~/design-system/Badges';
 import { getLevel } from '~/utils/levels';
 import { getLanguage } from '~/utils/languages';
 import { IconLabel } from '~/design-system/IconLabel';
 import { AcademicCapIcon, LanguageIcon } from '@heroicons/react/24/outline';
+import { useProposalReview } from '../organizer.$orga.$event.review.$proposal/route';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);
@@ -15,7 +14,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 export default function OrganizerProposalContentRoute() {
-  const { proposalReview } = useOutletContext<OrganizerProposalContext>();
+  const { proposalReview } = useProposalReview();
   const { proposal } = proposalReview;
 
   return (
