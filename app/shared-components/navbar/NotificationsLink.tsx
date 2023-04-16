@@ -20,7 +20,9 @@ export function NotificationsLink({ notifications }: Props) {
       >
         <span className="sr-only">View notifications</span>
         <BellIcon className="h-6 w-6" aria-hidden="true" />
-        {hasNotifications && <span className="absolute right-1 top-1 block h-2 w-2 rounded-full bg-red-400" />}
+        {hasNotifications && (
+          <span className="absolute right-1 top-1 block h-2 w-2 rounded-full bg-red-400 ring-1 ring-gray-800" />
+        )}
       </Link>
     </div>
   );
