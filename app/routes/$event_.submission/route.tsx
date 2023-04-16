@@ -115,7 +115,7 @@ export default function EventSubmissionRoute() {
 
       <div className="h-full bg-gray-100">
         <Container className="space-y-8 pb-16 pt-8">
-          <Outlet context={event} />
+          <Outlet context={{ user, event }} />
         </Container>
       </div>
     </>

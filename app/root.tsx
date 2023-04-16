@@ -73,10 +73,8 @@ export default function App() {
   );
 }
 
-type RootContext = { user: User };
-
 export function useUser() {
-  return useOutletContext<RootContext>();
+  return useOutletContext<{ user: User }>();
 }
 
 type DocumentProps = { children: ReactNode; toast?: ToastData | null };
@@ -88,7 +86,7 @@ function Document({ children, toast }: DocumentProps) {
         <Meta />
         <Links />
       </head>
-      <body className="bg-gray-100 text-gray-900 antialiased">
+      <body className="overflow-x-hidden bg-gray-100 text-gray-900 antialiased">
         <GlobalLoading />
         {children}
         <Scripts />

@@ -1,5 +1,7 @@
-import { db } from '../../../libs/db';
-import { OrganizationNotFoundError } from '../../../libs/errors';
+import { db } from '~/libs/db';
+import { OrganizationNotFoundError } from '~/libs/errors';
+
+export type Organization = Awaited<ReturnType<typeof getOrganization>>;
 
 export async function getOrganization(slug: string, uid: string) {
   const orgaMember = await db.organizationMember.findFirst({

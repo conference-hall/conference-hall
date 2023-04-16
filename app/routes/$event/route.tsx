@@ -5,6 +5,7 @@ import { json } from '@remix-run/node';
 import { Outlet, useLoaderData, useOutletContext } from '@remix-run/react';
 import { Navbar } from '~/shared-components/navbar/Navbar';
 import { mapErrorToResponse } from '~/libs/errors';
+import type { Event } from '~/shared-server/events/get-event.server';
 import { getEvent } from '~/shared-server/events/get-event.server';
 import { EventHeader } from './components/EventHeader';
 import { EventTabs } from './components/EventTabs';
@@ -22,8 +23,8 @@ export const loader = async ({ params }: LoaderArgs) => {
 };
 
 export default function EventRoute() {
-  const event = useLoaderData<typeof loader>();
   const { user } = useUser();
+  const event = useLoaderData<typeof loader>();
 
   return (
     <>
@@ -42,7 +43,7 @@ export default function EventRoute() {
 
       <EventTabs slug={event.slug} type={event.type} surveyEnabled={event.surveyEnabled} />
 
-      <Outlet context={event} />
+      <Outlet context={{ user, event }} />
 
       <Footer />
     </>
@@ -50,5 +51,5 @@ export default function EventRoute() {
 }
 
 export function useEvent() {
-  return useOutletContext<Awaited<ReturnType<typeof getEvent>>>();
+  return useOutletContext<{ event: Event }>();
 }

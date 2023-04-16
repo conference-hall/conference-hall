@@ -1,24 +1,22 @@
 import invariant from 'tiny-invariant';
-import type { ActionArgs, LoaderArgs, SerializeFrom } from '@remix-run/node';
+import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { sessionRequired } from '~/libs/auth/auth.server';
-import { Outlet, useLoaderData, useRouteLoaderData } from '@remix-run/react';
+import { Outlet, useLoaderData, useOutletContext, useRouteLoaderData } from '@remix-run/react';
 import { mapErrorToResponse } from '~/libs/errors';
 import OrganizationBreadcrumb from '~/shared-components/organizations/OrganizationBreadcrumb';
+import type { Organization } from './server/get-organization.server';
 import { getOrganization } from './server/get-organization.server';
 import { OrganizationTabs } from './components/OrganizationTabs';
 import { PageHeader } from '~/design-system/layouts/PageHeader';
 import { EventTabs } from './components/EventTabs';
-import type { OrganizerEventRouteData } from '../organizer.$orga.$event/route';
 import { Container } from '~/design-system/layouts/Container';
 import { EventCreateSchema } from './types/event-create.schema';
 import { withZod } from '@remix-validated-form/with-zod';
 import { createEvent } from './server/create-event.server';
-
-export type OrganizerRouteData = SerializeFrom<typeof loader>;
-
-export type OrganizationContext = { organization: OrganizerRouteData };
+import { useUser } from '~/root';
+import type { OrganizerEvent } from '../organizer.$orga.$event/server/get-organizer-event.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
@@ -47,8 +45,9 @@ export const action = async ({ request, params }: ActionArgs) => {
 };
 
 export default function OrganizationRoute() {
+  const { user } = useUser();
   const organization = useLoaderData<typeof loader>();
-  const event = useRouteLoaderData('routes/organizer.$orga.$event') as OrganizerEventRouteData;
+  const event = useRouteLoaderData('routes/organizer.$orga.$event') as OrganizerEvent;
 
   return (
     <>
@@ -63,7 +62,11 @@ export default function OrganizationRoute() {
         </Container>
       </PageHeader>
 
-      <Outlet context={{ organization }} />
+      <Outlet context={{ user, organization }} />
     </>
   );
+}
+
+export function useOrganization() {
+  return useOutletContext<{ organization: Organization }>();
 }

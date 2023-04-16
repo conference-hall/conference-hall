@@ -4,10 +4,10 @@ import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { H2, Text } from '~/design-system/Typography';
-import { Form, useActionData, useOutletContext, useSubmit } from '@remix-run/react';
+import { Form, useActionData, useSubmit } from '@remix-run/react';
 import { AlertInfo } from '~/design-system/Alerts';
 import { ExternalLink } from '~/design-system/Links';
-import type { OrganizerEventContext } from '../organizer.$orga.$event/route';
+import { useOrganizerEvent } from '../organizer.$orga.$event/route';
 import { UploadingError } from '~/libs/storage/storage.server';
 import { ButtonFileUpload } from '~/design-system/forms/FileUploadButton';
 import { mapErrorToResponse } from '~/libs/errors';
@@ -36,7 +36,7 @@ export const action = async ({ request, params }: ActionArgs) => {
 };
 
 export default function EventGeneralSettingsRoute() {
-  const { event } = useOutletContext<OrganizerEventContext>();
+  const { event } = useOrganizerEvent();
   const submit = useSubmit();
   const result = useActionData<typeof action>();
 

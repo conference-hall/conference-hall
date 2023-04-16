@@ -1,9 +1,11 @@
 import { getCfpState } from '~/utils/event';
 import { jsonToArray } from '~/libs/prisma';
-import { db } from '../../../libs/db';
-import { EventNotFoundError } from '../../../libs/errors';
+import { db } from '~/libs/db';
+import { EventNotFoundError } from '~/libs/errors';
 
-export async function getEvent(slug: string, uid: string) {
+export type OrganizerEvent = Awaited<ReturnType<typeof getOrganizerEvent>>;
+
+export async function getOrganizerEvent(slug: string, uid: string) {
   const event = await db.event.findFirst({
     include: { formats: true, categories: true },
     where: { slug, organization: { members: { some: { memberId: uid } } } },

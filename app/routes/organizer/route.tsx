@@ -24,7 +24,7 @@ export default function OrganizerRoute() {
     <>
       <Navbar user={user} withSearch />
 
-      <Outlet />
+      <Outlet context={{ user }} />
 
       <Footer />
     </>

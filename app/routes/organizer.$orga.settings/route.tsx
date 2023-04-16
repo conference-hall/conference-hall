@@ -1,59 +1,45 @@
 import invariant from 'tiny-invariant';
-import type { ActionArgs, LoaderArgs } from '@remix-run/node';
-import { redirect, json } from '@remix-run/node';
-import { Form, useActionData, useOutletContext } from '@remix-run/react';
-import { withZod } from '@remix-validated-form/with-zod';
-import { sessionRequired } from '~/libs/auth/auth.server';
+import type { LoaderArgs } from '@remix-run/node';
+import { redirect } from '@remix-run/node';
+import { Outlet } from '@remix-run/react';
 import { Container } from '~/design-system/layouts/Container';
-import { H2 } from '~/design-system/Typography';
-import { Button } from '~/design-system/Buttons';
-import { OrganizationForm } from '~/shared-components/organizations/OrganizationForm';
-import type { OrganizationContext } from '../organizer.$orga/route';
+import { NavSideMenu } from '~/design-system/navigation/NavSideMenu';
+import { sessionRequired } from '~/libs/auth/auth.server';
+import { Cog6ToothIcon, UserGroupIcon } from '@heroicons/react/24/outline';
 import { getUserRole } from '~/shared-server/organizations/get-user-role.server';
-import { updateOrganization } from './server/update-organization.server';
-import { OrganizationSaveSchema } from './types/organization-save.schema';
+import { H2 } from '~/design-system/Typography';
+import { useUser } from '~/root';
+import { useOrganization } from '../organizer.$orga/route';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
   invariant(params.orga, 'Invalid organization slug');
 
   const role = await getUserRole(params.orga, uid);
-  if (role !== 'OWNER') throw new Response('Forbidden', { status: 403 });
+  if (role !== 'OWNER') throw redirect(`/organizer/${params.orga}`);
   return null;
 };
 
-export const action = async ({ request, params }: ActionArgs) => {
-  const { uid } = await sessionRequired(request);
-  const form = await request.formData();
-  invariant(params.orga, 'Invalid organization slug');
-
-  const result = await withZod(OrganizationSaveSchema).validate(form);
-  if (result.error) {
-    return json(result.error.fieldErrors);
-  } else {
-    const updated = await updateOrganization(params.orga, uid, result.data);
-    if (updated?.fieldErrors) return json(updated.fieldErrors);
-    throw redirect(`/organizer/${updated.slug}/settings`);
-  }
-};
+const getMenuItems = (orga?: string) => [
+  { to: `/organizer/${orga}/settings`, icon: Cog6ToothIcon, label: 'General' },
+  { to: `/organizer/${orga}/settings/members`, icon: UserGroupIcon, label: 'Members' },
+];
 
 export default function OrganizationSettingsRoute() {
-  const { organization } = useOutletContext<OrganizationContext>();
-  const errors = useActionData<typeof action>();
+  const { user } = useUser();
+  const { organization } = useOrganization();
+
+  const menus = getMenuItems(organization.slug);
 
   return (
-    <Container className="my-4 sm:my-8">
-      <Form method="POST">
-        <div className="overflow-hidden border border-gray-200 sm:rounded-md">
-          <div className="space-y-6 bg-white px-4 py-6 sm:p-6">
-            <H2>Organization settings</H2>
-            <OrganizationForm initialValues={organization} errors={errors} />
-          </div>
-          <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
-            <Button type="submit">Save</Button>
-          </div>
-        </div>
-      </Form>
+    <Container className="mt-4 flex gap-8 sm:mt-8">
+      <H2 srOnly>Organization settings</H2>
+
+      <NavSideMenu aria-label="Organization settings menu" items={menus} className="sticky top-4 w-60 self-start" />
+
+      <div className="min-w-0 flex-1 space-y-6 sm:px-6 lg:px-0">
+        <Outlet context={{ user, organization }} />
+      </div>
     </Container>
   );
 }

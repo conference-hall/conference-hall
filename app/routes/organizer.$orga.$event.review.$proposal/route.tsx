@@ -6,17 +6,16 @@ import { sessionRequired } from '~/libs/auth/auth.server';
 import { BottomPanel } from '~/routes/organizer.$orga.$event.review.$proposal/components/BottomPanel';
 import { mapErrorToResponse } from '~/libs/errors';
 import { Outlet, useLoaderData, useNavigate, useOutletContext, useSearchParams } from '@remix-run/react';
-import type { OrganizerEventContext } from '../organizer.$orga.$event/route';
 import { withZod } from '@remix-validated-form/with-zod';
 import { ProposalsFiltersSchema } from '~/schemas/proposal';
+import type { ProposalReview } from './server/get-proposal-review.server';
 import { getProposalReview } from './server/get-proposal-review.server';
 import { TopPanel } from './components/TopPanel';
 import { LeftPanel } from './components/LeftPanel';
 import { RightPanel } from './components/RightPanel';
-
-export type OrganizerProposalContext = {
-  proposalReview: Awaited<ReturnType<typeof getProposalReview>>;
-} & OrganizerEventContext;
+import { useOrganizerEvent } from '../organizer.$orga.$event/route';
+import { useUser } from '~/root';
+import { useOrganization } from '../organizer.$orga/route';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
@@ -27,19 +26,22 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   try {
     const url = new URL(request.url);
     const filters = await withZod(ProposalsFiltersSchema).validate(url.searchParams);
-    const result = await getProposalReview(params.orga, params.event, params.proposal, uid, filters.data ?? {});
-    return json({ uid, ...result });
+    const proposal = await getProposalReview(params.orga, params.event, params.proposal, uid, filters.data ?? {});
+    return json(proposal);
   } catch (e) {
     throw mapErrorToResponse(e);
   }
 };
 
 export default function OrganizerProposalRoute() {
+  const { user } = useUser();
+  const { organization } = useOrganization();
+  const { event } = useOrganizerEvent();
+
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { event } = useOutletContext<OrganizerEventContext>();
   const proposalReview = useLoaderData<typeof loader>();
-  const { uid, proposal, pagination } = proposalReview;
+  const { proposal, pagination } = proposalReview;
 
   return (
     <FullscreenDialog title="Proposal review" onClose={() => navigate(`..?${searchParams.toString()}`)}>
@@ -47,9 +49,9 @@ export default function OrganizerProposalRoute() {
       <div className="grid h-[calc(100%-224px)] grid-cols-8 items-stretch divide-x divide-gray-200">
         <LeftPanel className="col-span-2" proposal={proposal} />
         <section aria-label="Proposal details section" className="col-span-4 overflow-hidden">
-          <Outlet context={{ event, proposalReview }} />
+          <Outlet context={{ user, organization, event, proposalReview }} />
         </section>
-        <RightPanel className="col-span-2" uid={uid} messages={proposal.messages} />
+        <RightPanel className="col-span-2" uid={user?.id!} messages={proposal.messages} />
       </div>
       <BottomPanel
         className="h-28"
@@ -59,4 +61,8 @@ export default function OrganizerProposalRoute() {
       />
     </FullscreenDialog>
   );
+}
+
+export function useProposalReview() {
+  return useOutletContext<{ proposalReview: ProposalReview }>();
 }

@@ -4,14 +4,14 @@ import { json } from '@remix-run/node';
 import { withZod } from '@remix-validated-form/with-zod';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { H2, Text } from '~/design-system/Typography';
-import { Form, useActionData, useOutletContext } from '@remix-run/react';
+import { Form, useActionData } from '@remix-run/react';
 import { Button } from '~/design-system/Buttons';
 import { Input } from '~/design-system/forms/Input';
-import type { OrganizerEventContext } from '../organizer.$orga.$event/route';
 import { DateRangeInput } from '~/design-system/forms/DateRangeInput';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
 import { updateEvent } from '~/shared-server/organizations/update-event.server';
 import { EventCfpSettingsSchema } from './types/event-cfp-settings.schema';
+import { useOrganizerEvent } from '../organizer.$orga.$event/route';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);
@@ -33,8 +33,9 @@ export const action = async ({ request, params }: ActionArgs) => {
 };
 
 export default function EventCfpSettingsRoute() {
-  const { event } = useOutletContext<OrganizerEventContext>();
+  const { event } = useOrganizerEvent();
   const errors = useActionData<typeof action>();
+
   return (
     <>
       <section>

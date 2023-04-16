@@ -1,13 +1,12 @@
 import invariant from 'tiny-invariant';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { useLoaderData, useLocation, useOutletContext } from '@remix-run/react';
+import { useLoaderData, useLocation } from '@remix-run/react';
 import { mapErrorToResponse } from '~/libs/errors';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { Container } from '~/design-system/layouts/Container';
 import { Pagination } from '~/design-system/Pagination';
 import { parsePage } from '~/schemas/pagination';
-import type { OrganizerEventContext } from '../organizer.$orga.$event/route';
 import { withZod } from '@remix-validated-form/with-zod';
 import { ProposalsStatusUpdateSchema, ProposalsFiltersSchema } from '~/schemas/proposal';
 import { createToast } from '~/libs/toasts/toasts';
@@ -16,6 +15,7 @@ import { searchProposals } from './server/search-proposals.server';
 import { NoProposals } from './components/NoProposals';
 import ProposalsFilters from './components/ProposalsFilters';
 import { ProposalsList } from './components/ProposalsList';
+import { useOrganizerEvent } from '../organizer.$orga.$event/route';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
@@ -47,8 +47,8 @@ export const action = async ({ request, params }: ActionArgs) => {
 };
 
 export default function OrganizerEventProposalsRoute() {
+  const { event } = useOrganizerEvent();
   const { results, filters, pagination, total } = useLoaderData<typeof loader>();
-  const { event } = useOutletContext<OrganizerEventContext>();
   const location = useLocation();
 
   const hasFilters = Object.values(filters).filter(Boolean).length !== 0;

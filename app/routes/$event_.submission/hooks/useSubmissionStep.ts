@@ -12,8 +12,6 @@ export function useSubmissionStep(): SubmissionStepHook {
   const currentStepKey = matches[matches.length - 1].handle?.step;
   const { steps } = stepsRoute?.data as any;
 
-  console.log(matches);
-
   if (!steps || !currentStepKey) {
     return { currentStepKey: undefined, previousPath: '', nextPath: '' };
   }

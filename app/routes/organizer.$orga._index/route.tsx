@@ -1,15 +1,16 @@
 import invariant from 'tiny-invariant';
 import type { LoaderArgs } from '@remix-run/node';
-import type { OrganizationContext } from '../organizer.$orga/route';
 import { json } from '@remix-run/node';
 import { Container } from '~/design-system/layouts/Container';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { H2 } from '~/design-system/Typography';
-import { Outlet, useLoaderData, useOutletContext, useParams } from '@remix-run/react';
+import { Outlet, useLoaderData } from '@remix-run/react';
 import { Square3Stack3DIcon } from '@heroicons/react/24/outline';
 import { listEvents } from './server/list-events.server';
 import { EmptyState } from '~/design-system/layouts/EmptyState';
 import { EventCard } from '~/shared-components/EventCard';
+import { useOrganization } from '../organizer.$orga/route';
+import { useUser } from '~/root';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
@@ -20,9 +21,9 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export default function OrganizationEventsRoute() {
-  const { organization } = useOutletContext<OrganizationContext>();
+  const { user } = useUser();
+  const { organization } = useOrganization();
   const events = useLoaderData<typeof loader>();
-  const { orga } = useParams();
 
   const hasEvent = events.length > 0;
 
@@ -35,7 +36,7 @@ export default function OrganizationEventsRoute() {
           {events.map((event) => (
             <EventCard
               key={event.slug}
-              to={`/organizer/${orga}/${event.slug}`}
+              to={`/organizer/${organization.slug}/${event.slug}`}
               name={event.name}
               type={event.type}
               bannerUrl={event.bannerUrl}
@@ -52,7 +53,7 @@ export default function OrganizationEventsRoute() {
           className="flex flex-col items-center gap-2"
         />
       )}
-      <Outlet />
+      <Outlet context={{ user, organization }} />
     </Container>
   );
 }

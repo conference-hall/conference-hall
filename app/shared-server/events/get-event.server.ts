@@ -1,6 +1,8 @@
+import { db } from '~/libs/db';
+import { EventNotFoundError } from '~/libs/errors';
 import { getCfpState } from '~/utils/event';
-import { db } from '../../libs/db';
-import { EventNotFoundError } from '../../libs/errors';
+
+export type Event = Awaited<ReturnType<typeof getEvent>>;
 
 export async function getEvent(slug: string) {
   const event = await db.event.findUnique({

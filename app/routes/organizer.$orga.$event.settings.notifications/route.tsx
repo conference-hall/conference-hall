@@ -2,7 +2,7 @@ import invariant from 'tiny-invariant';
 import type { ChangeEvent } from 'react';
 import { json } from '@remix-run/node';
 import type { LoaderArgs } from '@remix-run/node';
-import { Form, useActionData, useOutletContext, useSubmit } from '@remix-run/react';
+import { Form, useActionData, useSubmit } from '@remix-run/react';
 import { withZod } from '@remix-validated-form/with-zod';
 import { H2 } from '~/design-system/Typography';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
@@ -10,7 +10,7 @@ import { Input } from '~/design-system/forms/Input';
 import { Button } from '~/design-system/Buttons';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { updateEvent } from '~/shared-server/organizations/update-event.server';
-import type { OrganizerEventContext } from '../organizer.$orga.$event/route';
+import { useOrganizerEvent } from '../organizer.$orga.$event/route';
 import { EventEmailNotificationsSettingsSchema } from './types/event-email-notifications-settings.schema';
 import { EventNotificationsSettingsSchema } from './types/event-notifications-settings.schema';
 
@@ -43,7 +43,7 @@ export const action = async ({ request, params }: LoaderArgs) => {
 };
 
 export default function EventNotificationsSettingsRoute() {
-  const { event } = useOutletContext<OrganizerEventContext>();
+  const { event } = useOrganizerEvent();
   const errors = useActionData<typeof action>();
 
   const submit = useSubmit();

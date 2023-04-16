@@ -52,7 +52,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export default function SubmissionTracksRoute() {
-  const event = useEvent();
+  const { event } = useEvent();
   const proposal = useLoaderData<typeof loader>();
 
   return (

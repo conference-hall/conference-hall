@@ -61,7 +61,7 @@ export const action: ActionFunction = async ({ request, params }: ActionArgs) =>
 };
 
 export default function EditProposalRoute() {
-  const event = useEvent();
+  const { event } = useEvent();
   const proposal = useLoaderData<typeof loader>();
   const errors = useActionData<typeof action>();
   const navigate = useNavigate();

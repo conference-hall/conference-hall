@@ -3,12 +3,12 @@ import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { v4 as uuid } from 'uuid';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { H2, Text } from '~/design-system/Typography';
-import { Form, useOutletContext } from '@remix-run/react';
+import { Form } from '@remix-run/react';
 import { ExternalLink } from '~/design-system/Links';
 import { Button } from '~/design-system/Buttons';
 import { Input } from '~/design-system/forms/Input';
-import type { OrganizerEventContext } from '../organizer.$orga.$event/route';
 import { updateEvent } from '~/shared-server/organizations/update-event.server';
+import { useOrganizerEvent } from '../organizer.$orga.$event/route';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await sessionRequired(request);
@@ -36,7 +36,8 @@ export const action = async ({ request, params }: ActionArgs) => {
 };
 
 export default function EventApiSettingsRoute() {
-  const { event } = useOutletContext<OrganizerEventContext>();
+  const { event } = useOrganizerEvent();
+
   return (
     <>
       <section>

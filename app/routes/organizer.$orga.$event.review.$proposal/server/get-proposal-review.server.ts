@@ -9,6 +9,8 @@ import {
 import { checkUserRole } from '~/shared-server/organizations/check-user-role.server';
 import { RatingsDetails } from '~/shared-server/ratings/ratings-details';
 
+export type ProposalReview = Awaited<ReturnType<typeof getProposalReview>>;
+
 export async function getProposalReview(
   orgaSlug: string,
   eventSlug: string,

@@ -22,7 +22,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export default function EventSpeakerProposalsRoute() {
-  const event = useEvent();
+  const { event } = useEvent();
   const proposals = useLoaderData<typeof loader>();
 
   return (

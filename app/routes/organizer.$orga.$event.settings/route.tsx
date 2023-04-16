@@ -1,7 +1,7 @@
 import invariant from 'tiny-invariant';
 import type { LoaderArgs } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
-import { Outlet, useOutletContext, useParams } from '@remix-run/react';
+import { Outlet } from '@remix-run/react';
 import { Container } from '~/design-system/layouts/Container';
 import { NavSideMenu } from '~/design-system/navigation/NavSideMenu';
 import { sessionRequired } from '~/libs/auth/auth.server';
@@ -16,9 +16,11 @@ import {
   StarIcon,
   SwatchIcon,
 } from '@heroicons/react/24/outline';
-import type { OrganizerEventContext } from '../organizer.$orga.$event/route';
 import { getUserRole } from '~/shared-server/organizations/get-user-role.server';
 import { H2 } from '~/design-system/Typography';
+import { useOrganizerEvent } from '../organizer.$orga.$event/route';
+import { useUser } from '~/root';
+import { useOrganization } from '../organizer.$orga/route';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
@@ -43,9 +45,11 @@ const getMenuItems = (orga?: string, event?: string) => [
 ];
 
 export default function OrganizationSettingsRoute() {
-  const params = useParams();
-  const menus = getMenuItems(params.orga, params.event);
-  const { event } = useOutletContext<OrganizerEventContext>();
+  const { user } = useUser();
+  const { organization } = useOrganization();
+  const { event } = useOrganizerEvent();
+
+  const menus = getMenuItems(organization.slug, event.slug);
 
   return (
     <Container className="mt-4 flex gap-8 sm:mt-8">
@@ -54,7 +58,7 @@ export default function OrganizationSettingsRoute() {
       <NavSideMenu aria-label="Event settings menu" items={menus} className="sticky top-4 w-60 self-start" />
 
       <div className="min-w-0 flex-1 space-y-6 sm:px-6 lg:px-0">
-        <Outlet context={{ event }} />
+        <Outlet context={{ user, organization, event }} />
       </div>
     </Container>
   );
