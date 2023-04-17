@@ -2,7 +2,7 @@ import { Disclosure } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { AvatarName } from '~/design-system/Avatar';
 import { Text } from '~/design-system/Typography';
-import { type Notification, NotificationMenu } from './NotificationMenu';
+import { type Notification, NotificationsLink } from './NotificationsLink';
 import { UserMenuMobile } from './UserMenuMobile';
 
 export function MobileMenuButton({ open }: { open: boolean }) {
@@ -30,7 +30,7 @@ export function MobileMenuPanel({ user, notifications }: MobileMenuProps) {
         <div className="flex items-center px-5">
           <AvatarName name={user.name} photoURL={user.photoURL} subtitle={user.email} size="s" variant="secondary" />
           <div className="ml-auto flex-shrink-0">
-            <NotificationMenu notifications={notifications} />
+            <NotificationsLink notifications={notifications} />
           </div>
         </div>
         <UserMenuMobile />

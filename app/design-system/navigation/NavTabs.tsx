@@ -1,10 +1,8 @@
 import c from 'classnames';
 import { useMemo } from 'react';
 import { NavLink } from '@remix-run/react';
-import { Menu } from '@headlessui/react';
-import { MenuTransition } from '../Transitions';
-import { MenuItem } from '~/shared-components/navbar/UserMenuDesktop';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
+import { Menu } from '../menus/Menu';
 
 type NavTabProps = { to: string; label: string; enabled?: boolean; end?: boolean };
 
@@ -69,24 +67,24 @@ export function NavTabs({ tabs, py = 0, variant = 'light' }: Props) {
 }
 
 function NavTabDropdown({ variant, tab }: { variant: keyof typeof BACKGROUND; tab: NavTabDropdownProps }) {
+  const Trigger = () => (
+    <>
+      {tab.label}
+      <ChevronDownIcon className="ml-2 h-4 w-4" />
+    </>
+  );
+
   return (
-    <Menu as="div" className="relative z-30 ml-3">
-      <div>
-        <Menu.Button
-          className={c('flex items-center rounded-md px-3 py-2 text-sm font-medium', DEFAULT_LINKS[variant])}
-        >
-          <span className="sr-only">Open {tab.label} menu</span>
-          {tab.label}
-          <ChevronDownIcon className="ml-2 h-4 w-4" />
-        </Menu.Button>
-      </div>
-      <MenuTransition>
-        <Menu.Items className="absolute right-0 mt-4 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-          {tab.links.map(({ to, label, icon }) => (
-            <MenuItem key={to} to={to} label={label} icon={icon} />
-          ))}
-        </Menu.Items>
-      </MenuTransition>
+    <Menu
+      trigger={Trigger}
+      triggerLabel={`Open ${tab.label} menu`}
+      triggerClassname={c('flex items-center rounded-md px-3 py-2 text-sm font-medium', DEFAULT_LINKS[variant])}
+    >
+      {tab.links.map(({ to, label, icon }) => (
+        <Menu.ItemLink key={to} to={to} icon={icon}>
+          {label}
+        </Menu.ItemLink>
+      ))}
     </Menu>
   );
 }
