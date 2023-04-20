@@ -55,7 +55,7 @@ describe('Speaker talk page', () => {
 
   it('cannot submit a talk already submitted', () => {
     talk.visit('awesome-talk');
-    talk.submitTalk();
+    talk.submitTalk(); // FLAKY
     search.isPageVisible();
     cy.assertUrl('?talkId=awesome-talk');
     search.result('Devfest Nantes').click();

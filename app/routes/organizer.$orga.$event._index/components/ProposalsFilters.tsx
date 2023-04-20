@@ -1,12 +1,12 @@
-import c from 'classnames';
-import { Button, ButtonLink } from '~/design-system/Buttons';
 import { Input } from '~/design-system/forms/Input';
-import { AdjustmentsVerticalIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid';
-import { useState } from 'react';
+import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import Select from '~/design-system/forms/Select';
 import { useLocation, useSearchParams, useSubmit } from '@remix-run/react';
 import type { ProposalsFilters as ProposalsFiltersType } from '~/schemas/proposal';
 import { useDebouncedCallback } from 'use-debounce';
+import { Card } from '~/design-system/layouts/Card';
+import { Text } from '~/design-system/Typography';
+import { Link } from '~/design-system/Links';
 
 type Props = {
   filters: ProposalsFiltersType;
@@ -35,7 +35,6 @@ const sortOptions = [
 ];
 
 export default function ProposalsFilters({ filters, formats, categories }: Props) {
-  const { query, ...others } = filters;
   const submit = useSubmit();
   const location = useLocation();
   const [searchParams] = useSearchParams();
@@ -47,44 +46,43 @@ export default function ProposalsFilters({ filters, formats, categories }: Props
 
   const debounceHandleChange = useDebouncedCallback(handleChange, 500);
 
-  const defaultOpened = Object.values(others).filter(Boolean).length !== 0;
-  const [filtersOpen, setFiltersOpen] = useState(defaultOpened);
-  const hasFilters = defaultOpened || Boolean(query);
-
   return (
-    <>
-      <div className="flex flex-col gap-4 pb-4 sm:flex-row sm:items-center sm:justify-between">
-        <Input
-          name="query"
-          type="search"
-          aria-label="Find a proposal"
-          placeholder="Find a proposal"
-          className="w-full sm:w-80"
-          autoComplete="off"
-          defaultValue={query}
-          icon={MagnifyingGlassIcon}
-          onChange={(e) => debounceHandleChange('query', e.target.value)}
-        />
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-          {hasFilters && (
-            <ButtonLink to={location.pathname} type="button" variant="secondary">
-              Clear
-            </ButtonLink>
-          )}
-          <Button
-            type="button"
-            onClick={() => setFiltersOpen(!filtersOpen)}
-            variant="secondary"
-            className="group flex items-center"
-            iconLeft={AdjustmentsVerticalIcon}
-            iconClassName={c('text-gray-400 group-hover:text-gray-500', { 'rotate-180 text-indigo-400': filtersOpen })}
-          >
-            Filters
-          </Button>
+    <section className="w-1/4">
+      <Card className="divide-y divide-gray-200">
+        <div className="p-6">
+          <Text strong heading>
+            3 proposals submitted
+          </Text>
         </div>
-      </div>
-      {filtersOpen && (
-        <div className="flex flex-col gap-4 pb-4 sm:flex-row">
+
+        <div className="p-6">
+          <Text size="s" mb={1}>
+            1 / 50 proposals reviewed
+          </Text>
+          <div className="h-1.5 w-full rounded-full bg-gray-200" aria-hidden>
+            <div className="h-1.5 rounded-full bg-blue-600 dark:bg-blue-500" style={{ width: '45%' }}></div>
+          </div>
+        </div>
+
+        <div className="space-y-4 p-6">
+          <div className="flex items-center justify-between">
+            <Text size="s" variant="secondary" strong>
+              Filters
+            </Text>
+            <Link to={location.pathname}>Clear</Link>
+          </div>
+
+          <Input
+            name="query"
+            type="search"
+            aria-label="Find a proposal"
+            placeholder="Find a proposal"
+            autoComplete="off"
+            defaultValue={filters.query}
+            icon={MagnifyingGlassIcon}
+            onChange={(e) => debounceHandleChange('query', e.target.value)}
+          />
+
           <Select
             name="ratings"
             label="Rated by you"
@@ -94,6 +92,7 @@ export default function ProposalsFilters({ filters, formats, categories }: Props
             className="flex-1"
             srOnly
           />
+
           {formats.length > 0 && (
             <Select
               name="formats"
@@ -105,6 +104,7 @@ export default function ProposalsFilters({ filters, formats, categories }: Props
               srOnly
             />
           )}
+
           {categories.length > 0 && (
             <Select
               name="categories"
@@ -119,6 +119,7 @@ export default function ProposalsFilters({ filters, formats, categories }: Props
               srOnly
             />
           )}
+
           <Select
             name="status"
             label="Status"
@@ -128,17 +129,23 @@ export default function ProposalsFilters({ filters, formats, categories }: Props
             className="flex-1"
             srOnly
           />
-          <Select
-            name="sort"
-            label="Sort"
-            onChange={handleChange}
-            options={sortOptions}
-            value={filters.sort || 'newest'}
-            className="flex-1"
-            srOnly
-          />
         </div>
-      )}
-    </>
+
+        {/* <div className="p-6">
+        <Text size="base" variant="secondary" strong mb={2}>
+          Sort
+        </Text>
+        <Select
+          name="sort"
+          label="Sort"
+          onChange={handleChange}
+          options={sortOptions}
+          value={filters.sort || 'newest'}
+          className="flex-1"
+          srOnly
+        />
+      </div> */}
+      </Card>
+    </section>
   );
 }

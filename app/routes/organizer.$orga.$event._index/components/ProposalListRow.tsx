@@ -19,7 +19,7 @@ export function ProposaListRow({ proposal, isSelected, onSelect }: ProposalRowPr
 
   return (
     <tr key={proposal.id} className={c('relative hover:bg-gray-50', { 'bg-gray-50': isSelected })}>
-      <td className="relative hidden w-12 px-4 sm:table-cell sm:w-16 sm:px-4">
+      <td className="relative hidden w-12 rounded-lg px-4 sm:table-cell sm:w-16  sm:px-4">
         {isSelected && <div className="absolute inset-y-0 left-0 w-0.5 bg-indigo-600" />}
         <Checkbox
           aria-label={`Select proposal "${proposal.title}"`}
@@ -55,7 +55,7 @@ export function ProposaListRow({ proposal, isSelected, onSelect }: ProposalRowPr
           <IconLabel icon={StarIcon}>{formatRating(proposal.ratings.you)}</IconLabel>
         </div>
       </td>
-      <td className="w-0 px-3 py-6 pr-4 text-right sm:pr-6">
+      <td className="w-0 rounded-lg px-3 py-6 pr-4 text-right  sm:pr-6">
         <Text variant="secondary">{formatRating(proposal.ratings.total)}</Text>
       </td>
     </tr>

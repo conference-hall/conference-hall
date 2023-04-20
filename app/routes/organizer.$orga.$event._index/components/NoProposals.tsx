@@ -4,7 +4,7 @@ import { EmptyState } from '~/design-system/layouts/EmptyState';
 
 export function NoProposals() {
   return (
-    <Container className="my-4 sm:my-16">
+    <Container className="my-4 sm:my-8">
       <EmptyState icon={InboxIcon} label="No proposals yet!">
         <h2 className="sr-only">Event proposals</h2>
       </EmptyState>

@@ -1,10 +1,10 @@
 import type { Prisma } from '@prisma/client';
 import { EmailStatus } from '@prisma/client';
+import { db } from '~/libs/db';
 import type { Pagination } from '~/schemas/pagination';
 import type { EmailStatusData, ProposalsFilters } from '~/schemas/proposal';
-import { db } from '../../../libs/db';
-import { checkUserRole } from '../../../shared-server/organizations/check-user-role.server';
-import { getPagination } from '../../../shared-server/pagination/pagination.server';
+import { checkUserRole } from '~/shared-server/organizations/check-user-role.server';
+import { getPagination } from '~/shared-server/pagination/pagination.server';
 import { RatingsDetails } from '~/shared-server/ratings/ratings-details';
 
 const RESULTS_BY_PAGE = 25;
@@ -21,7 +21,21 @@ export async function searchProposals(
   const whereClause = proposalWhereInput(eventSlug, uid, filters);
   const orderByClause = proposalOrderBy(filters);
 
-  const proposalsCount = await db.proposal.count({ where: whereClause });
+  const proposalsCountByStatus = await db.proposal.groupBy({
+    _count: { status: true },
+    by: ['status'],
+    where: whereClause,
+    orderBy: { _count: { status: 'desc' } },
+  });
+
+  const proposalReviewed = await db.rating.count({
+    where: { proposal: whereClause, userId: uid },
+  });
+
+  console.log(proposalReviewed);
+
+  const proposalsCount = proposalsCountByStatus.reduce((acc, next) => acc + next._count.status, 0);
+
   const pagination = getPagination(page, proposalsCount, RESULTS_BY_PAGE);
 
   const proposals = await db.proposal.findMany({

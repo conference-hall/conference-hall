@@ -1,10 +1,12 @@
-import { Text } from '~/design-system/Typography';
 import { UpdateStatusMenu } from './UpdateStatusMenu';
 import { ExportProposalsStatus } from './ExportProposalsMenu';
 import { useCheckboxSelection } from '~/design-system/useCheckboxSelection';
 import { ProposaListRow } from './ProposalListRow';
 import { useMemo } from 'react';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
+import { Card } from '~/design-system/layouts/Card';
+import { EmptyState } from '~/design-system/layouts/EmptyState';
+import { InboxIcon } from '@heroicons/react/20/solid';
 
 export type Proposal = {
   id: string;
@@ -22,48 +24,52 @@ export function ProposalsList({ proposals, total }: Props) {
   const { checkboxRef, selection, checked, isSelected, onSelect, toggleAll } = useCheckboxSelection(ids);
 
   return (
-    <div className="-mx-4 mt-4 overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:-mx-6 md:mx-0 md:rounded-lg">
-      <div className="flex flex-row items-center justify-between border-b border-gray-200 bg-gray-100 px-4 py-2 sm:px-6">
-        <div className="flex flex-row items-center">
-          <Checkbox ref={checkboxRef} checked={checked} onChange={toggleAll} className="mr-6" />
-          <div className="flex items-baseline">
-            {selection.length === 0 ? <Text>{total} proposals</Text> : <Text>{selection.length} selected</Text>}
-          </div>
-        </div>
+    <div className="flex-1 space-y-4">
+      <Card p={4} className="flex items-center justify-between">
+        <Checkbox ref={checkboxRef} checked={checked} onChange={toggleAll} className="ml-2">
+          {selection.length === 0 ? `${total} proposals` : `${selection.length} selected`}
+        </Checkbox>
         <div className="flex flex-row items-center gap-2">
           <UpdateStatusMenu variant="secondary" size="s" selection={selection} />
           <ExportProposalsStatus variant="secondary" size="s" selection={selection} total={total} />
         </div>
-      </div>
-      <table className="min-w-full">
-        <thead className="sr-only">
-          <tr>
-            <th scope="col" className="hidden sm:table-cell">
-              Select a proposal
-            </th>
-            <th scope="col">Proposal details</th>
-            <th scope="col" className="hidden sm:table-cell">
-              Status
-            </th>
-            <th scope="col" className="hidden lg:table-cell">
-              Rating details
-            </th>
-            <th scope="col" className="hidden sm:table-cell">
-              Final rating
-            </th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-gray-200 bg-white">
-          {proposals.map((proposal) => (
-            <ProposaListRow
-              key={proposal.id}
-              proposal={proposal}
-              isSelected={isSelected(proposal.id)}
-              onSelect={(e) => onSelect(proposal.id, e.target.checked)}
-            />
-          ))}
-        </tbody>
-      </table>
+      </Card>
+
+      {total > 0 ? (
+        <Card>
+          <table className="min-w-full">
+            <thead className="sr-only">
+              <tr>
+                <th scope="col" className="hidden sm:table-cell">
+                  Select a proposal
+                </th>
+                <th scope="col">Proposal details</th>
+                <th scope="col" className="hidden sm:table-cell">
+                  Status
+                </th>
+                <th scope="col" className="hidden lg:table-cell">
+                  Rating details
+                </th>
+                <th scope="col" className="hidden sm:table-cell">
+                  Final rating
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200">
+              {proposals.map((proposal) => (
+                <ProposaListRow
+                  key={proposal.id}
+                  proposal={proposal}
+                  isSelected={isSelected(proposal.id)}
+                  onSelect={(e) => onSelect(proposal.id, e.target.checked)}
+                />
+              ))}
+            </tbody>
+          </table>
+        </Card>
+      ) : (
+        <EmptyState icon={InboxIcon} label="No proposals found!" className="flex-1" />
+      )}
     </div>
   );
 }

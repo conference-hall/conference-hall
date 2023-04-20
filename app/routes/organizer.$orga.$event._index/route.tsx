@@ -12,7 +12,6 @@ import { ProposalsStatusUpdateSchema, ProposalsFiltersSchema } from '~/schemas/p
 import { createToast } from '~/libs/toasts/toasts';
 import { updateProposalsStatus } from '~/routes/organizer.$orga.$event._index/server/update-proposal.server';
 import { searchProposals } from './server/search-proposals.server';
-import { NoProposals } from './components/NoProposals';
 import ProposalsFilters from './components/ProposalsFilters';
 import { ProposalsList } from './components/ProposalsList';
 import { useOrganizerEvent } from '../organizer.$orga.$event/route';
@@ -51,15 +50,13 @@ export default function OrganizerEventProposalsRoute() {
   const { results, filters, pagination, total } = useLoaderData<typeof loader>();
   const location = useLocation();
 
-  const hasFilters = Object.values(filters).filter(Boolean).length !== 0;
-
-  if (results.length === 0 && !hasFilters) return <NoProposals />;
-
   return (
-    <Container className="my-4 sm:my-12">
+    <Container className="my-4 sm:my-8">
       <h2 className="sr-only">Event proposals</h2>
-      <ProposalsFilters filters={filters} formats={event.formats} categories={event.categories} />
-      <ProposalsList proposals={results} total={total} />
+      <div className=" flex gap-8">
+        <ProposalsList proposals={results} total={total} />
+        <ProposalsFilters filters={filters} formats={event.formats} categories={event.categories} />
+      </div>
       <Pagination pathname={location.pathname} current={pagination.current} total={pagination.total} className="mt-8" />
     </Container>
   );
