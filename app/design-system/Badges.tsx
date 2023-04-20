@@ -1,36 +1,56 @@
 import c from 'classnames';
 
-const badgeSizes = {
-  base: 'text-xs px-2.5 py-0.5',
-  large: 'text-sm px-3 py-0.5',
+const BORDER_VARIANT = {
+  gray: 'bg-gray-50 text-gray-600 ring-1 ring-inset ring-gray-500/10',
+  red: 'bg-red-50 text-red-700 ring-1 ring-inset ring-red-600/10',
+  yellow: 'bg-yellow-50 text-yellow-800 ring-1 ring-inset ring-yellow-600/20',
+  green: 'bg-green-50 text-green-700 ring-1 ring-inset ring-green-600/20',
+  blue: 'bg-blue-50 text-blue-700 ring-1 ring-inset ring-blue-700/10',
+  indigo: 'bg-indigo-50 text-indigo-700 ring-1 ring-inset ring-indigo-700/10',
+  purple: 'bg-purple-50 text-purple-700 ring-1 ring-inset ring-purple-700/10',
+  pink: 'bg-pink-50 text-pink-700 ring-1 ring-inset ring-pink-700/10',
 };
 
-const badgeColors = {
-  gray: 'bg-gray-100 text-gray-800',
-  red: 'bg-red-100 text-red-800',
-  yellow: 'bg-yellow-100 text-yellow-800',
-  green: 'bg-green-100 text-green-800',
-  blue: 'bg-blue-100 text-blue-800',
-  indigo: 'bg-indigo-100 text-indigo-800',
-  purple: 'bg-purple-100 text-purple-800',
-  pink: 'bg-pink-100 text-pink-800',
+const DOT_VARIANT = 'gap-x-1.5 text-gray-900 ring-1 ring-inset ring-gray-200';
+
+const DOT_COLORS = {
+  gray: 'fill-gray-500',
+  red: 'fill-red-500',
+  yellow: 'fill-yellow-500',
+  green: 'fill-green-500',
+  blue: 'fill-blue-500',
+  indigo: 'fill-indigo-500',
+  purple: 'fill-purple-500',
+  pink: 'fill-pink-500',
 };
 
 type Props = {
-  size?: keyof typeof badgeSizes;
-  color?: keyof typeof badgeColors;
-  rounded?: boolean;
+  variant?: 'border' | 'dot';
+  color?: keyof typeof BORDER_VARIANT;
+  pill?: boolean;
   children: React.ReactNode;
-  className?: string;
 };
 
-export default function Badge({ size = 'base', color = 'gray', rounded = true, children, className }: Props) {
-  const style = c(
-    'inline-flex items-center font-medium whitespace-nowrap',
-    badgeSizes[size],
-    badgeColors[color],
-    rounded ? 'rounded-full' : 'rounded',
-    className
+export default function Badge({ variant = 'border', color = 'gray', pill = false, children }: Props) {
+  return (
+    <span
+      className={c(
+        'inline-flex items-center px-2 py-1 text-xs font-medium',
+        pill ? 'rounded-full' : 'rounded-md',
+        { [BORDER_VARIANT[color]]: variant === 'border' },
+        { [DOT_VARIANT]: variant === 'dot' }
+      )}
+    >
+      {variant === 'dot' && <Dot color={color} />}
+      {children}
+    </span>
   );
-  return <span className={style}>{children}</span>;
+}
+
+export function Dot({ color }: { color: keyof typeof DOT_COLORS }) {
+  return (
+    <svg className={c('h-1.5 w-1.5', DOT_COLORS[color])} viewBox="0 0 6 6" aria-hidden="true">
+      <circle cx={3} cy={3} r={3} />
+    </svg>
+  );
 }

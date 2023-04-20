@@ -1,11 +1,10 @@
 import invariant from 'tiny-invariant';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { useLoaderData, useLocation } from '@remix-run/react';
+import { useLoaderData } from '@remix-run/react';
 import { mapErrorToResponse } from '~/libs/errors';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { Container } from '~/design-system/layouts/Container';
-import { Pagination } from '~/design-system/Pagination';
 import { parsePage } from '~/schemas/pagination';
 import { withZod } from '@remix-validated-form/with-zod';
 import { ProposalsStatusUpdateSchema, ProposalsFiltersSchema } from '~/schemas/proposal';
@@ -47,17 +46,24 @@ export const action = async ({ request, params }: ActionArgs) => {
 
 export default function OrganizerEventProposalsRoute() {
   const { event } = useOrganizerEvent();
-  const { results, filters, pagination, total } = useLoaderData<typeof loader>();
-  const location = useLocation();
+  const { results, filters, pagination, statistics } = useLoaderData<typeof loader>();
+  const { total } = statistics;
 
   return (
     <Container className="my-4 sm:my-8">
       <h2 className="sr-only">Event proposals</h2>
-      <div className=" flex gap-8">
-        <ProposalsList proposals={results} total={total} />
-        <ProposalsFilters filters={filters} formats={event.formats} categories={event.categories} />
+      <div className="flex gap-8">
+        <ProposalsList proposals={results} total={total} pagination={pagination} />
+
+        <section className="w-1/4">
+          <ProposalsFilters
+            filters={filters}
+            statistics={statistics}
+            formats={event.formats}
+            categories={event.categories}
+          />
+        </section>
       </div>
-      <Pagination pathname={location.pathname} current={pagination.current} total={pagination.total} className="mt-8" />
     </Container>
   );
 }

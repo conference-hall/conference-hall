@@ -7,6 +7,8 @@ import { Checkbox } from '~/design-system/forms/Checkboxes';
 import { Card } from '~/design-system/layouts/Card';
 import { EmptyState } from '~/design-system/layouts/EmptyState';
 import { InboxIcon } from '@heroicons/react/20/solid';
+import { Pagination } from '~/design-system/Pagination';
+import { useLocation } from '@remix-run/react';
 
 export type Proposal = {
   id: string;
@@ -16,9 +18,15 @@ export type Proposal = {
   ratings: { negatives: number; positives: number; you: number | null; total: number | null };
 };
 
-type Props = { proposals: Array<Proposal>; total: number };
+type Props = {
+  proposals: Array<Proposal>;
+  total: number;
+  pagination: { current: number; total: number };
+};
 
-export function ProposalsList({ proposals, total }: Props) {
+export function ProposalsList({ proposals, pagination, total }: Props) {
+  const location = useLocation();
+
   const ids = useMemo(() => proposals.map(({ id }) => id), [proposals]);
 
   const { checkboxRef, selection, checked, isSelected, onSelect, toggleAll } = useCheckboxSelection(ids);
@@ -70,6 +78,8 @@ export function ProposalsList({ proposals, total }: Props) {
       ) : (
         <EmptyState icon={InboxIcon} label="No proposals found!" className="flex-1" />
       )}
+
+      <Pagination pathname={location.pathname} current={pagination.current} total={pagination.total} />
     </div>
   );
 }

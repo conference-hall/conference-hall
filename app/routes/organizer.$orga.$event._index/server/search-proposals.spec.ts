@@ -167,7 +167,7 @@ describe('#searchProposals', () => {
     );
 
     const result = await searchProposals(organization.slug, event.slug, owner.id, {}, 1);
-    expect(result.total).toBe(26);
+    expect(result.statistics.total).toBe(26);
     expect(result.results.length).toBe(25);
     expect(result.pagination.current).toBe(1);
     expect(result.pagination.total).toBe(2);
@@ -200,7 +200,7 @@ describe('#searchProposals', () => {
 
     const proposals = await searchProposals(organization.slug, event.slug, owner.id, {});
 
-    expect(proposals.total).toBe(0);
+    expect(proposals.statistics.total).toBe(0);
     expect(proposals.results).toEqual([]);
   });
 
@@ -212,7 +212,7 @@ describe('#searchProposals', () => {
 
     const proposals = await searchProposals(organization.slug, event.slug, owner.id, {});
 
-    expect(proposals.total).toBe(1);
+    expect(proposals.statistics.total).toBe(1);
     expect(proposals.results[0].ratings).toEqual({ negatives: 1, positives: 1, you: 5, total: 2.5 });
   });
 

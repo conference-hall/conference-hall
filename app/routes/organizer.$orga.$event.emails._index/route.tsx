@@ -56,7 +56,7 @@ export const action = async ({ request, params }: ActionArgs) => {
 
 export default function AcceptedProposalEmails() {
   const { proposals, stats } = useLoaderData<typeof loader>();
-  const { results, pagination, total } = proposals;
+  const { results, pagination, statistics } = proposals;
   const location = useLocation();
 
   return (
@@ -66,7 +66,7 @@ export default function AcceptedProposalEmails() {
       <div>
         <H2>Select proposals to send acceptation emails</H2>
         <CampaignEmailFilters type={CampaignType.ACCEPTATION} />
-        <CampaignEmailList type={CampaignType.ACCEPTATION} proposals={results} total={total} />
+        <CampaignEmailList type={CampaignType.ACCEPTATION} proposals={results} total={statistics.total} />
         <Pagination
           pathname={location.pathname}
           current={pagination.current}

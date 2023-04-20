@@ -42,7 +42,13 @@ export default function OrganizationBreadcrumb({ organization, event }: Props) {
             </Link>
           </>
         )}
-        {event ? <Badge>{event.visibility.toLowerCase()}</Badge> : <Badge>{organization.role.toLowerCase()}</Badge>}
+        {event ? (
+          <Badge variant="dot" color={event.visibility === 'PRIVATE' ? 'red' : 'green'}>
+            {event.visibility.toLowerCase()}
+          </Badge>
+        ) : (
+          <Badge>{organization.role.toLowerCase()}</Badge>
+        )}
       </nav>
       {event && (
         <CfpElapsedTime
