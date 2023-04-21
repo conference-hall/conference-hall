@@ -1,7 +1,7 @@
 import type { LoaderArgs } from '@remix-run/node';
 import { sessionRequired } from '~/libs/auth/auth.server';
 import { Text } from '~/design-system/Typography';
-import Badge from '~/design-system/Badges';
+import Badge from '~/design-system/badges/Badges';
 import { getLevel } from '~/utils/levels';
 import { getLanguage } from '~/utils/languages';
 import { IconLabel } from '~/design-system/IconLabel';

@@ -1,4 +1,7 @@
 import c from 'classnames';
+import type { ReactNode } from 'react';
+
+const BADGE = 'px-2 py-1 text-xs font-medium';
 
 const BORDER_VARIANT = {
   gray: 'bg-gray-50 text-gray-600 ring-1 ring-inset ring-gray-500/10',
@@ -11,7 +14,7 @@ const BORDER_VARIANT = {
   pink: 'bg-pink-50 text-pink-700 ring-1 ring-inset ring-pink-700/10',
 };
 
-const DOT_VARIANT = 'gap-x-1.5 text-gray-900 ring-1 ring-inset ring-gray-200';
+const DOT_VARIANT = 'text-gray-900 ring-1 ring-inset ring-gray-200';
 
 const DOT_COLORS = {
   gray: 'fill-gray-500',
@@ -32,25 +35,32 @@ type Props = {
 };
 
 export default function Badge({ variant = 'border', color = 'gray', pill = false, children }: Props) {
-  return (
-    <span
-      className={c(
-        'inline-flex items-center px-2 py-1 text-xs font-medium',
-        pill ? 'rounded-full' : 'rounded-md',
-        { [BORDER_VARIANT[color]]: variant === 'border' },
-        { [DOT_VARIANT]: variant === 'dot' }
-      )}
-    >
-      {variant === 'dot' && <Dot color={color} />}
-      {children}
-    </span>
-  );
+  const COMMON_STYLE = c(BADGE, pill ? 'rounded-full' : 'rounded-md');
+
+  if (variant === 'dot') {
+    return (
+      <Dotted color={color} className={c(COMMON_STYLE, DOT_VARIANT)}>
+        {children}
+      </Dotted>
+    );
+  }
+
+  return <span className={c('inline-flex items-center', COMMON_STYLE, BORDER_VARIANT[color])}>{children}</span>;
 }
 
-export function Dot({ color }: { color: keyof typeof DOT_COLORS }) {
+type DottedProps = {
+  color: keyof typeof DOT_COLORS;
+  children?: ReactNode;
+  className?: string;
+};
+
+export function Dotted({ color, children, className }: DottedProps) {
   return (
-    <svg className={c('h-1.5 w-1.5', DOT_COLORS[color])} viewBox="0 0 6 6" aria-hidden="true">
-      <circle cx={3} cy={3} r={3} />
-    </svg>
+    <span className={c('inline-flex items-center gap-x-1.5', className)}>
+      <svg className={c('h-1.5 w-1.5', DOT_COLORS[color])} viewBox="0 0 6 6" aria-hidden="true">
+        <circle cx={3} cy={3} r={3} />
+      </svg>
+      {children}
+    </span>
   );
 }

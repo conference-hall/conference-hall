@@ -1,9 +1,8 @@
 import c from 'classnames';
-import { Link, useSearchParams } from '@remix-run/react';
+import { Link, useLocation, useSearchParams } from '@remix-run/react';
 import { useMemo } from 'react';
 
 type Props = {
-  pathname: string;
   current: number;
   total: number;
   className?: string;
@@ -15,7 +14,8 @@ function getPageSearchParams(page: number, searchParams: URLSearchParams) {
   return searchParams.toString();
 }
 
-export function Pagination({ pathname, current, total, className }: Props) {
+export function Pagination({ current, total, className }: Props) {
+  const location = useLocation();
   const [searchParams] = useSearchParams();
 
   const pages = useMemo(() => Array.from({ length: total }, (_, i) => i + 1), [total]);
@@ -34,7 +34,7 @@ export function Pagination({ pathname, current, total, className }: Props) {
           return (
             <Link
               key={page}
-              to={{ pathname, search: getPageSearchParams(page, searchParams) }}
+              to={{ pathname: location.pathname, search: getPageSearchParams(page, searchParams) }}
               aria-current={page === current ? 'page' : undefined}
               className={styles}
               preventScrollReset

@@ -70,7 +70,7 @@ export default function IndexRoute() {
             ))}
           </ul>
         )}
-        {pagination.total > 1 && <Pagination pathname="/" {...pagination} className="mt-8" />}
+        <Pagination {...pagination} className="mt-8" />
       </Container>
 
       <Footer />

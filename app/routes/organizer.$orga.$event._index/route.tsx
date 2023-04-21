@@ -11,9 +11,15 @@ import { ProposalsStatusUpdateSchema, ProposalsFiltersSchema } from '~/schemas/p
 import { createToast } from '~/libs/toasts/toasts';
 import { updateProposalsStatus } from '~/routes/organizer.$orga.$event._index/server/update-proposal.server';
 import { searchProposals } from './server/search-proposals.server';
-import ProposalsFilters from './components/ProposalsFilters';
-import { ProposalsList } from './components/ProposalsList';
+import { ProposalsList } from './components/ProposalsList/ProposalsList';
 import { useOrganizerEvent } from '../organizer.$orga.$event/route';
+import { Pagination } from '~/design-system/Pagination';
+import { EmptyState } from '~/design-system/layouts/EmptyState';
+import { InboxIcon } from '@heroicons/react/24/outline';
+import { useCheckboxSelection } from '~/design-system/useCheckboxSelection';
+import { useMemo } from 'react';
+import { ProposalsActionBar } from './components/ProposalsActionBar/ProposalsActionBar';
+import { ProposalsFilters } from './components/ProposalsFilters/ProposalsFilters';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await sessionRequired(request);
@@ -36,10 +42,11 @@ export const action = async ({ request, params }: ActionArgs) => {
   const { uid, session } = await sessionRequired(request);
   invariant(params.orga, 'Invalid organization slug');
   invariant(params.event, 'Invalid event slug');
-  const form = await request.formData();
 
+  const form = await request.formData();
   const { data, error } = await withZod(ProposalsStatusUpdateSchema).validate(form);
   if (error) return json(null);
+
   const result = await updateProposalsStatus(params.orga, params.event, uid, data.selection, data.status);
   return json(null, await createToast(session, `${result} proposals marked as "${data.status.toLowerCase()}".`));
 };
@@ -47,20 +54,39 @@ export const action = async ({ request, params }: ActionArgs) => {
 export default function OrganizerEventProposalsRoute() {
   const { event } = useOrganizerEvent();
   const { results, filters, pagination, statistics } = useLoaderData<typeof loader>();
-  const { total } = statistics;
+
+  const ids = useMemo(() => results.map(({ id }) => id), [results]);
+  const { checkboxRef, selection, checked, isSelected, onSelect, toggleAll } = useCheckboxSelection(ids);
 
   return (
     <Container className="my-4 sm:my-8">
       <h2 className="sr-only">Event proposals</h2>
+
       <div className="flex gap-8">
-        <ProposalsList proposals={results} total={total} pagination={pagination} />
+        <section className="flex-1 space-y-4">
+          <ProposalsActionBar
+            total={statistics.total}
+            selection={selection}
+            checked={checked}
+            onToggleAll={toggleAll}
+            checkboxRef={checkboxRef}
+          />
+
+          {statistics.total > 0 ? (
+            <ProposalsList proposals={results} isSelected={isSelected} onSelect={onSelect} />
+          ) : (
+            <EmptyState icon={InboxIcon} label="No proposals found!" />
+          )}
+
+          <Pagination {...pagination} />
+        </section>
 
         <section className="w-1/4">
           <ProposalsFilters
             filters={filters}
             statistics={statistics}
-            formats={event.formats}
-            categories={event.categories}
+            eventFormats={event.formats}
+            eventCategories={event.categories}
           />
         </section>
       </div>

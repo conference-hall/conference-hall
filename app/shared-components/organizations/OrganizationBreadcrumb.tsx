@@ -1,7 +1,7 @@
 import type { CfpState, EventType, EventVisibility } from '~/schemas/event';
 import { ArrowTopRightOnSquareIcon, ChevronRightIcon, Square3Stack3DIcon } from '@heroicons/react/24/outline';
 import { Link } from '@remix-run/react';
-import Badge from '~/design-system/Badges';
+import Badge from '~/design-system/badges/Badges';
 import { Text } from '~/design-system/Typography';
 import { Avatar } from '~/design-system/Avatar';
 import { CfpElapsedTime } from '../cfp/CfpElapsedTime';

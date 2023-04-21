@@ -2,14 +2,20 @@ import c from 'classnames';
 import { HeartIcon, StarIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import type { ChangeEventHandler } from 'react';
 import { Link, useSearchParams } from '@remix-run/react';
-import Badge from '~/design-system/Badges';
 import { IconLabel } from '~/design-system/IconLabel';
-import type { Proposal } from './ProposalsList';
 import { Text } from '~/design-system/Typography';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
+import { ProposalStatusBadge } from '~/shared-components/proposals/ProposalStatusBadges';
+import type { ProposalStatus } from '@prisma/client';
 
 type ProposalRowProp = {
-  proposal: Proposal;
+  proposal: {
+    id: string;
+    title: string;
+    status: ProposalStatus;
+    speakers: (string | null)[];
+    ratings: { negatives: number; positives: number; you: number | null; total: number | null };
+  };
   isSelected: boolean;
   onSelect: ChangeEventHandler<HTMLInputElement>;
 };
@@ -46,9 +52,7 @@ export function ProposaListRow({ proposal, isSelected, onSelect }: ProposalRowPr
       <td className="hidden w-0 px-3 py-6 text-center sm:table-cell">
         {proposal.status && (
           <div className="flex items-center justify-end gap-2">
-            <Badge variant="dot" color="gray" pill>
-              {proposal.status?.toLowerCase()}
-            </Badge>
+            <ProposalStatusBadge status={proposal.status} />
           </div>
         )}
       </td>

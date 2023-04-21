@@ -1,4 +1,4 @@
-import { StoryBlock } from './StoryBlock';
+import { StoryBlock } from '../StoryBlock';
 import Badge from './Badges';
 
 export const Documentation = () => (
