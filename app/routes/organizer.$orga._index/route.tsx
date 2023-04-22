@@ -2,7 +2,7 @@ import invariant from 'tiny-invariant';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Container } from '~/design-system/layouts/Container';
-import { sessionRequired } from '~/libs/auth/auth.server';
+import { requireSession } from '~/libs/auth/cookies';
 import { H2 } from '~/design-system/Typography';
 import { Outlet, useLoaderData } from '@remix-run/react';
 import { Square3Stack3DIcon } from '@heroicons/react/24/outline';
@@ -13,7 +13,7 @@ import { useOrganization } from '../organizer.$orga/route';
 import { useUser } from '~/root';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const { uid } = await sessionRequired(request);
+  const { uid } = await requireSession(request);
   invariant(params.orga, 'Invalid organization slug');
 
   const events = await listEvents(params.orga, uid);

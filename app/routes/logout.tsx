@@ -1,11 +1,6 @@
-import type { ActionFunction, LoaderFunction } from '@remix-run/node';
-import { redirect } from '@remix-run/node';
-import { sessionLogout } from '../libs/auth/auth.server';
+import type { LoaderFunction } from '@remix-run/node';
+import { killSession } from '~/libs/auth/cookies';
 
-export const action: ActionFunction = async ({ request }) => {
-  return sessionLogout(request);
-};
-
-export const loader: LoaderFunction = async () => {
-  return redirect('/');
+export const loader: LoaderFunction = async ({ request }) => {
+  return killSession(request);
 };

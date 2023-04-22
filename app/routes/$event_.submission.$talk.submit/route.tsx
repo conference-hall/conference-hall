@@ -8,7 +8,6 @@ import { Checkbox } from '~/design-system/forms/Checkboxes';
 import { ExternalLink } from '../../design-system/Links';
 import { H2, Text } from '../../design-system/Typography';
 import type { ActionFunction, LoaderArgs } from '@remix-run/node';
-import { sessionRequired } from '../../libs/auth/auth.server';
 import { submitProposal } from './server/submit-proposal.server';
 import { mapErrorToResponse } from '../../libs/errors';
 import { TextArea } from '../../design-system/forms/TextArea';
@@ -18,11 +17,12 @@ import { ProposalSubmissionSchema } from '~/schemas/proposal';
 import { useEvent } from '~/routes/$event/route';
 import { getSubmittedProposal } from '../../shared-server/proposals/get-submitted-proposal.server';
 import { Card } from '~/design-system/layouts/Card';
+import { requireSession } from '~/libs/auth/cookies';
 
 export const handle = { step: 'submission' };
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const { uid } = await sessionRequired(request);
+  const { uid } = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
   invariant(params.talk, 'Invalid talk id');
 
@@ -35,7 +35,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const { uid, session } = await sessionRequired(request);
+  const { uid } = await requireSession(request);
   const form = await request.formData();
   invariant(params.event, 'Invalid event slug');
   invariant(params.talk, 'Invalid talk id');
@@ -46,7 +46,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   } catch (err) {
     throw mapErrorToResponse(err);
   }
-  const toast = await createToast(session, 'Congratulation! Proposal submitted!');
+  const toast = await createToast(request, 'Congratulation! Proposal submitted!');
   return redirect(`/${params.event}/proposals`, toast);
 };
 

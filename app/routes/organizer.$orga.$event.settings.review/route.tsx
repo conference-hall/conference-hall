@@ -1,7 +1,7 @@
 import invariant from 'tiny-invariant';
 import type { ChangeEvent } from 'react';
 import type { LoaderArgs } from '@remix-run/node';
-import { sessionRequired } from '~/libs/auth/auth.server';
+import { requireSession } from '~/libs/auth/cookies';
 import { H2, Text } from '~/design-system/Typography';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
 import { Form, useSubmit } from '@remix-run/react';
@@ -12,12 +12,12 @@ import { EventReviewSettingsSchema } from './types/event-review-settings.schema'
 import { useOrganizerEvent } from '../organizer.$orga.$event/route';
 
 export const loader = async ({ request }: LoaderArgs) => {
-  await sessionRequired(request);
+  await requireSession(request);
   return null;
 };
 
 export const action = async ({ request, params }: LoaderArgs) => {
-  const { uid } = await sessionRequired(request);
+  const { uid } = await requireSession(request);
   invariant(params.orga, 'Invalid organization slug');
   invariant(params.event, 'Invalid event slug');
   const form = await request.formData();

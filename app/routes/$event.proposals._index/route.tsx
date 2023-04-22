@@ -4,7 +4,7 @@ import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { useEvent } from '../$event/route';
 import { ProposalsList } from '~/routes/$event.proposals._index/components/ProposalsList';
-import { sessionRequired } from '~/libs/auth/auth.server';
+import { requireSession } from '~/libs/auth/cookies';
 import { mapErrorToResponse } from '~/libs/errors';
 import { listSpeakerProposals } from './server/list-speaker-proposals.server';
 import { ButtonLink } from '~/design-system/Buttons';
@@ -14,7 +14,7 @@ import { Container } from '~/design-system/layouts/Container';
 export type EventProposals = Awaited<ReturnType<typeof listSpeakerProposals>>;
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const { uid } = await sessionRequired(request);
+  const { uid } = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
 
   const proposals = await listSpeakerProposals(params.event, uid).catch(mapErrorToResponse);

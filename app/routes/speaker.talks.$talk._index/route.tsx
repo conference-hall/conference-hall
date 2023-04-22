@@ -5,7 +5,7 @@ import { useLoaderData } from '@remix-run/react';
 import { getTalk } from '~/shared-server/talks/get-talk.server';
 import { archiveTalk, restoreTalk } from './server/archive-talk.server';
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
-import { sessionRequired } from '~/libs/auth/auth.server';
+import { requireSession } from '~/libs/auth/cookies';
 import { mapErrorToResponse } from '~/libs/errors';
 import { Container } from '~/design-system/layouts/Container';
 import { ButtonLink } from '~/design-system/Buttons';
@@ -15,7 +15,7 @@ import { ProposalSubmissionsSection } from '~/shared-components/proposals/Propos
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const { uid } = await sessionRequired(request);
+  const { uid } = await requireSession(request);
   invariant(params.talk, 'Invalid talk id');
 
   try {
@@ -27,7 +27,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const { uid } = await sessionRequired(request);
+  const { uid } = await requireSession(request);
   invariant(params.talk, 'Invalid talk id');
 
   const form = await request.formData();

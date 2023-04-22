@@ -1,5 +1,4 @@
-import { Form, Link } from '@remix-run/react';
-import { getAuth } from 'firebase/auth';
+import { Link } from '@remix-run/react';
 
 const STYLE = 'block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white';
 
@@ -18,11 +17,7 @@ export function UserMenuMobile() {
       <MenuLink to="/speaker/talks">Talks</MenuLink>
       <MenuLink to="/speaker/profile">Profile</MenuLink>
       <MenuLink to="/organizer">Organizations</MenuLink>
-      <Form action="/logout" method="POST">
-        <button type="submit" onClick={() => getAuth().signOut()} className={`${STYLE} w-full text-left`}>
-          Sign out
-        </button>
-      </Form>
+      <MenuLink to="/logout">Sign out</MenuLink>
     </div>
   );
 }

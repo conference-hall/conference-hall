@@ -8,16 +8,16 @@ import { SurveySchema } from '~/schemas/survey';
 import { getAnswers } from '~/shared-server/survey/get-answers.server';
 import { SurveyForm } from '../../shared-components/proposals/forms/SurveyForm';
 import { H2 } from '../../design-system/Typography';
-import { sessionRequired } from '../../libs/auth/auth.server';
 import { mapErrorToResponse } from '../../libs/errors';
 import { getQuestions } from '~/shared-server/survey/get-questions.server';
 import { saveSurvey } from '~/shared-server/survey/save-survey.server';
 import { Card } from '~/design-system/layouts/Card';
+import { requireSession } from '~/libs/auth/cookies';
 
 export const handle = { step: 'survey' };
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const { uid } = await sessionRequired(request);
+  const { uid } = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
   invariant(params.talk, 'Invalid talk id');
 
@@ -31,7 +31,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const { uid } = await sessionRequired(request);
+  const { uid } = await requireSession(request);
   const form = await request.formData();
   invariant(params.event, 'Invalid event slug');
   invariant(params.talk, 'Invalid talk id');

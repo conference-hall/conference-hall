@@ -11,7 +11,7 @@ import { H1, H2 } from '~/design-system/Typography';
 import { parsePage } from '~/schemas/pagination';
 import { ProposalSelectionSchema } from '~/schemas/proposal';
 import { ProposalsFiltersSchema } from '~/schemas/proposal';
-import { sessionRequired } from '~/libs/auth/auth.server';
+import { requireSession } from '~/libs/auth/cookies';
 import { mapErrorToResponse } from '~/libs/errors';
 import { createToast } from '~/libs/toasts/toasts';
 import { CampaignEmailStats } from '~/shared-components/events/campaign-email/CampaignEmailStats';
@@ -20,7 +20,7 @@ import { sendAcceptationCampaign } from './server/send-acceptation-campaign.serv
 import { getAcceptationCampaignStats } from './server/get-acceptation-campaign-stats.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const { uid } = await sessionRequired(request);
+  const { uid } = await requireSession(request);
   invariant(params.orga, 'Invalid organization slug');
   invariant(params.event, 'Invalid event slug');
 
@@ -43,7 +43,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
-  const { uid, session } = await sessionRequired(request);
+  const { uid } = await requireSession(request);
   invariant(params.orga, 'Invalid organization slug');
   invariant(params.event, 'Invalid event slug');
   const form = await request.formData();
@@ -51,7 +51,7 @@ export const action = async ({ request, params }: ActionArgs) => {
   const { data, error } = await withZod(ProposalSelectionSchema).validate(form);
   if (error) return json(null);
   await sendAcceptationCampaign(params.orga, params.event, uid, data.selection);
-  return json(null, await createToast(session, 'Emails successfully sent.'));
+  return json(null, await createToast(request, 'Emails successfully sent.'));
 };
 
 export default function AcceptedProposalEmails() {

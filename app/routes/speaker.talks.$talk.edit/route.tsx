@@ -10,7 +10,7 @@ import { createToast } from '~/libs/toasts/toasts';
 import { DetailsForm } from '~/shared-components/proposals/forms/DetailsForm';
 import { Button, ButtonLink } from '~/design-system/Buttons';
 import { H3, Subtitle } from '~/design-system/Typography';
-import { sessionRequired } from '~/libs/auth/auth.server';
+import { requireSession } from '~/libs/auth/cookies';
 import { mapErrorToResponse } from '~/libs/errors';
 import { CoSpeakersList, InviteCoSpeakerButton } from '~/shared-components/proposals/forms/CoSpeaker';
 import { removeCoSpeakerFromTalk } from '~/shared-server/talks/remove-co-speaker.server';
@@ -19,7 +19,7 @@ import { Container } from '~/design-system/layouts/Container';
 import { Card } from '~/design-system/layouts/Card';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const { uid } = await sessionRequired(request);
+  const { uid } = await requireSession(request);
   invariant(params.talk, 'Invalid talk id');
 
   try {
@@ -32,7 +32,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const action: ActionFunction = async ({ request, params }: ActionArgs) => {
-  const { uid, session } = await sessionRequired(request);
+  const { uid } = await requireSession(request);
   const form = await request.formData();
   invariant(params.talk, 'Invalid talk id');
 
@@ -46,7 +46,7 @@ export const action: ActionFunction = async ({ request, params }: ActionArgs) =>
       const result = await withZod(TalkSaveSchema).validate(form);
       if (result.error) return json(result.error.fieldErrors);
       await updateTalk(uid, params.talk, result.data);
-      const toast = await createToast(session, 'Talk successfully saved.');
+      const toast = await createToast(request, 'Talk successfully saved.');
       return redirect(`/speaker/talks/${params.talk}`, toast);
     }
   } catch (err) {

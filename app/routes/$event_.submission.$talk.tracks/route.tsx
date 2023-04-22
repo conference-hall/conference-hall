@@ -7,7 +7,7 @@ import { saveTracks } from './server/save-tracks.server';
 import { withZod } from '@remix-validated-form/with-zod';
 import { useEvent } from '~/routes/$event/route';
 import { getSubmittedProposal } from '~/shared-server/proposals/get-submitted-proposal.server';
-import { sessionRequired } from '~/libs/auth/auth.server';
+import { requireSession } from '~/libs/auth/cookies';
 import { mapErrorToResponse } from '~/libs/errors';
 import { TracksUpdateSchema } from './types/tracks';
 import { FormatsForm } from '~/shared-components/proposals/forms/FormatsForm';
@@ -18,7 +18,7 @@ import { H2, H3 } from '~/design-system/Typography';
 export const handle = { step: 'tracks' };
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const { uid } = await sessionRequired(request);
+  const { uid } = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
   invariant(params.talk, 'Invalid talk id');
 
@@ -31,7 +31,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const { uid } = await sessionRequired(request);
+  const { uid } = await requireSession(request);
   const form = await request.formData();
   invariant(params.event, 'Invalid event slug');
   invariant(params.talk, 'Invalid talk id');

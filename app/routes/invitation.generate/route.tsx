@@ -1,12 +1,12 @@
 import { type InviteType } from '@prisma/client';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { sessionRequired } from '../../libs/auth/auth.server';
 import { mapErrorToResponse } from '../../libs/errors';
 import { generateLink } from './server/generate-link.server';
+import { requireSession } from '~/libs/auth/cookies';
 
 export const action = async ({ request }: LoaderArgs) => {
-  const { uid } = await sessionRequired(request);
+  const { uid } = await requireSession(request);
   const form = await request.formData();
   const type = form.get('_type') as InviteType;
   const id = form.get('_id') as string;

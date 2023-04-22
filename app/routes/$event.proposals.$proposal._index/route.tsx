@@ -5,7 +5,7 @@ import { json } from '@remix-run/node';
 import { getSpeakerProposal } from '~/shared-server/proposals/get-speaker-proposal.server';
 import { removeCoSpeakerFromProposal } from '~/shared-server/proposals/remove-co-speaker.server';
 import { ProposalStatusSection } from '~/shared-components/proposals/ProposalStatusSection';
-import { sessionRequired } from '~/libs/auth/auth.server';
+import { requireSession } from '~/libs/auth/cookies';
 import { mapErrorToResponse } from '~/libs/errors';
 import { useEvent } from '../$event/route';
 import { ProposalDetailsSection } from '~/shared-components/proposals/ProposalDetailsSection';
@@ -13,7 +13,7 @@ import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 import { Container } from '~/design-system/layouts/Container';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const { uid } = await sessionRequired(request);
+  const { uid } = await requireSession(request);
   invariant(params.proposal, 'Invalid proposal id');
 
   const proposal = await getSpeakerProposal(params.proposal, uid).catch(mapErrorToResponse);
@@ -21,7 +21,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const { uid } = await sessionRequired(request);
+  const { uid } = await requireSession(request);
   invariant(params.proposal, 'Invalid proposal id');
 
   try {

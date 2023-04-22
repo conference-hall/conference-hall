@@ -3,7 +3,7 @@ import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { mapErrorToResponse } from '~/libs/errors';
-import { sessionRequired } from '~/libs/auth/auth.server';
+import { requireSession } from '~/libs/auth/cookies';
 import { Container } from '~/design-system/layouts/Container';
 import { parsePage } from '~/schemas/pagination';
 import { withZod } from '@remix-validated-form/with-zod';
@@ -22,7 +22,7 @@ import { ProposalsActionBar } from './components/ProposalsActionBar/ProposalsAct
 import { ProposalsFilters } from './components/ProposalsFilters/ProposalsFilters';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const { uid } = await sessionRequired(request);
+  const { uid } = await requireSession(request);
   invariant(params.orga, 'Invalid organization slug');
   invariant(params.event, 'Invalid event slug');
 
@@ -39,7 +39,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
-  const { uid, session } = await sessionRequired(request);
+  const { uid } = await requireSession(request);
   invariant(params.orga, 'Invalid organization slug');
   invariant(params.event, 'Invalid event slug');
 
@@ -48,7 +48,7 @@ export const action = async ({ request, params }: ActionArgs) => {
   if (error) return json(null);
 
   const result = await updateProposalsStatus(params.orga, params.event, uid, data.selection, data.status);
-  return json(null, await createToast(session, `${result} proposals marked as "${data.status.toLowerCase()}".`));
+  return json(null, await createToast(request, `${result} proposals marked as "${data.status.toLowerCase()}".`));
 };
 
 export default function OrganizerEventProposalsRoute() {

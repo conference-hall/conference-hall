@@ -8,7 +8,7 @@ import { H3, Subtitle } from '~/design-system/Typography';
 import { DetailsForm } from '~/shared-components/proposals/forms/DetailsForm';
 import { Button, ButtonLink } from '~/design-system/Buttons';
 import { mapErrorToResponse } from '~/libs/errors';
-import { sessionRequired } from '~/libs/auth/auth.server';
+import { requireSession } from '~/libs/auth/cookies';
 import { ProposalUpdateSchema } from '~/schemas/proposal';
 import { getSpeakerProposal } from '~/shared-server/proposals/get-speaker-proposal.server';
 import { deleteProposal } from './server/delete-proposal.server';
@@ -21,7 +21,7 @@ import { Container } from '~/design-system/layouts/Container';
 import { Card } from '~/design-system/layouts/Card';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const { uid } = await sessionRequired(request);
+  const { uid } = await requireSession(request);
   invariant(params.proposal, 'Invalid proposal id');
 
   try {
@@ -33,7 +33,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const action: ActionFunction = async ({ request, params }: ActionArgs) => {
-  const { uid, session } = await sessionRequired(request);
+  const { uid } = await requireSession(request);
   const form = await request.formData();
   invariant(params.event, 'Invalid event slug');
   invariant(params.proposal, 'Invalid proposal id');
@@ -42,7 +42,7 @@ export const action: ActionFunction = async ({ request, params }: ActionArgs) =>
     const action = form.get('_action');
     if (action === 'delete') {
       await deleteProposal(params.proposal, uid);
-      const toast = await createToast(session, 'Proposal successfully deleted.');
+      const toast = await createToast(request, 'Proposal successfully deleted.');
       throw redirect(`/${params.event}/proposals`, toast);
     } else if (action === 'remove-speaker') {
       const speakerId = form.get('_speakerId')?.toString() as string;
@@ -52,7 +52,7 @@ export const action: ActionFunction = async ({ request, params }: ActionArgs) =>
       const result = await withZod(ProposalUpdateSchema).validate(form);
       if (result.error) return json(result.error.fieldErrors);
       await updateProposal(params.event, params.proposal, uid, result.data);
-      const toast = await createToast(session, 'Proposal successfully updated.');
+      const toast = await createToast(request, 'Proposal successfully updated.');
       throw redirect(`/${params.event}/proposals/${params.proposal}`, toast);
     }
   } catch (err) {

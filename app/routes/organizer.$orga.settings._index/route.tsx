@@ -4,7 +4,7 @@ import { redirect } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
 import { withZod } from '@remix-validated-form/with-zod';
-import { sessionRequired } from '~/libs/auth/auth.server';
+import { requireSession } from '~/libs/auth/cookies';
 import { H3, Subtitle } from '~/design-system/Typography';
 import { Button } from '~/design-system/Buttons';
 import { OrganizationForm } from '~/shared-components/organizations/OrganizationForm';
@@ -15,12 +15,12 @@ import { useOrganization } from '../organizer.$orga/route';
 import { createToast } from '~/libs/toasts/toasts';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  await sessionRequired(request);
+  await requireSession(request);
   return null;
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
-  const { uid, session } = await sessionRequired(request);
+  const { uid } = await requireSession(request);
   const form = await request.formData();
   invariant(params.orga, 'Invalid organization slug');
 
@@ -30,7 +30,7 @@ export const action = async ({ request, params }: ActionArgs) => {
   const organization = await updateOrganization(params.orga, uid, result.data);
   if (organization?.fieldErrors) return json(organization.fieldErrors);
 
-  const toast = await createToast(session, 'Organization successfully updated');
+  const toast = await createToast(request, 'Organization successfully updated');
   return redirect(`/organizer/${organization.slug}/settings`, toast);
 };
 

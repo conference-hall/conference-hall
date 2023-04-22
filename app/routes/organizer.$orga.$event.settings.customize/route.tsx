@@ -2,7 +2,7 @@ import invariant from 'tiny-invariant';
 import type { ChangeEvent } from 'react';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { sessionRequired } from '~/libs/auth/auth.server';
+import { requireSession } from '~/libs/auth/cookies';
 import { H2, Text } from '~/design-system/Typography';
 import { Form, useActionData, useSubmit } from '@remix-run/react';
 import { AlertInfo } from '~/design-system/Alerts';
@@ -15,12 +15,12 @@ import { ClientOnly } from 'remix-utils';
 import { uploadEventBanner } from './server/upload-event-banner.server';
 
 export const loader = async ({ request }: LoaderArgs) => {
-  await sessionRequired(request);
+  await requireSession(request);
   return null;
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
-  const { uid } = await sessionRequired(request);
+  const { uid } = await requireSession(request);
   invariant(params.orga, 'Invalid organization slug');
   invariant(params.event, 'Invalid event slug');
 

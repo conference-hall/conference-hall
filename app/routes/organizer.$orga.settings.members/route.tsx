@@ -1,7 +1,7 @@
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
-import { sessionRequired } from '~/libs/auth/auth.server';
+import { requireSession } from '~/libs/auth/cookies';
 import { H3, Subtitle } from '~/design-system/Typography';
 import { Card } from '~/design-system/layouts/Card';
 import { getInvitationLink } from './server/get-invitation-link.server';
@@ -17,7 +17,7 @@ import { AvatarName } from '~/design-system/Avatar';
 import { createToast } from '~/libs/toasts/toasts';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const { uid } = await sessionRequired(request);
+  const { uid } = await requireSession(request);
   invariant(params.orga, 'Invalid organization slug');
 
   const invitationLink = await getInvitationLink(params.orga, uid);
@@ -26,7 +26,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
-  const { uid, session } = await sessionRequired(request);
+  const { uid } = await requireSession(request);
   invariant(params.orga, 'Invalid organization slug');
 
   const form = await request.formData();
@@ -37,12 +37,12 @@ export const action = async ({ request, params }: ActionArgs) => {
     case 'change-role': {
       const memberRole = form.get('memberRole') as OrganizationRole;
       await changeMemberRole(params.orga, uid, memberId, memberRole);
-      const toast = await createToast(session, 'Member role changed');
+      const toast = await createToast(request, 'Member role changed');
       return json(null, toast);
     }
     case 'remove-member': {
       await removeMember(params.orga, uid, memberId);
-      const toast = await createToast(session, 'Member removed from organization');
+      const toast = await createToast(request, 'Member removed from organization');
       return json(null, toast);
     }
   }

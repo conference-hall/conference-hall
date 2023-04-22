@@ -6,7 +6,6 @@ import { InviteCoSpeakerButton, CoSpeakersList } from '../../shared-components/p
 import { MarkdownTextArea } from '../../design-system/forms/MarkdownTextArea';
 import { ExternalLink } from '../../design-system/Links';
 import { H2, H3, Subtitle, Text } from '../../design-system/Typography';
-import { sessionRequired } from '../../libs/auth/auth.server';
 import { mapErrorToResponse } from '../../libs/errors';
 import { getEvent } from '../../shared-server/events/get-event.server';
 import { saveProfile } from '../../shared-server/profile/save-profile.server';
@@ -16,11 +15,12 @@ import { getSubmittedProposal } from '../../shared-server/proposals/get-submitte
 import { DetailsSchema } from '~/schemas/profile.schema';
 import { Card } from '~/design-system/layouts/Card';
 import { useUser } from '~/root';
+import { requireSession } from '~/libs/auth/cookies';
 
 export const handle = { step: 'speakers' };
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const { uid } = await sessionRequired(request);
+  const { uid } = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
   invariant(params.talk, 'Invalid talk id');
 
@@ -37,7 +37,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
-  const { uid } = await sessionRequired(request);
+  const { uid } = await requireSession(request);
   const form = await request.formData();
   invariant(params.event, 'Invalid event slug');
   invariant(params.talk, 'Invalid talk id');

@@ -2,12 +2,12 @@ import invariant from 'tiny-invariant';
 import type { ActionArgs } from '@remix-run/node';
 import { withZod } from '@remix-validated-form/with-zod';
 import { ProposalRatingDataSchema } from '~/schemas/proposal';
-import { sessionRequired } from '~/libs/auth/auth.server';
+import { requireSession } from '~/libs/auth/cookies';
 import { mapErrorToResponse } from '~/libs/errors';
 import { rateProposal } from '~/routes/organizer.$orga.$event.review.$proposal.rate/server/rate-proposal.server';
 
 export const action = async ({ request, params }: ActionArgs) => {
-  const { uid } = await sessionRequired(request);
+  const { uid } = await requireSession(request);
   invariant(params.orga, 'Invalid organization slug');
   invariant(params.event, 'Invalid event slug');
   invariant(params.proposal, 'Invalid proposal id');

@@ -2,7 +2,7 @@ import invariant from 'tiny-invariant';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import FullscreenDialog from '~/design-system/dialogs/FullscreenDialog';
-import { sessionRequired } from '~/libs/auth/auth.server';
+import { requireSession } from '~/libs/auth/cookies';
 import { BottomPanel } from '~/routes/organizer.$orga.$event.review.$proposal/components/BottomPanel';
 import { mapErrorToResponse } from '~/libs/errors';
 import { Outlet, useLoaderData, useNavigate, useOutletContext, useSearchParams } from '@remix-run/react';
@@ -18,7 +18,7 @@ import { useUser } from '~/root';
 import { useOrganization } from '../organizer.$orga/route';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const { uid } = await sessionRequired(request);
+  const { uid } = await requireSession(request);
   invariant(params.orga, 'Invalid organization slug');
   invariant(params.event, 'Invalid event slug');
   invariant(params.proposal, 'Invalid proposal id');
