@@ -10,7 +10,6 @@ const sessionStorage = createCookieSessionStorage({
   cookie: {
     name: '__session',
     path: '/',
-    expires: new Date(Date.now() + EXPIRATION),
     httpOnly: true,
     secure: true,
     secrets: [config.COOKIE_SIGNED_SECRET],
@@ -40,7 +39,11 @@ export async function createSession(request: Request) {
   session.set('jwt', jwt);
   session.set('userId', userId);
 
-  return redirect(redirectTo, { headers: { 'Set-Cookie': await sessionStorage.commitSession(session) } });
+  return redirect(redirectTo, {
+    headers: {
+      'Set-Cookie': await sessionStorage.commitSession(session, { expires: new Date(Date.now() + EXPIRATION) }),
+    },
+  });
 }
 
 export async function killSession(request: Request) {
