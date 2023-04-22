@@ -27,7 +27,13 @@ app.use(express.static('public', { maxAge: '1h' }));
 app.use(morgan('tiny'));
 
 // Proxy Firebase auth
-app.use('/__/auth', createProxyMiddleware({ target: `https://${FIREBASE_PROJECT_ID}.firebaseapp.com/__/auth` }));
+app.use(
+  '/__/auth',
+  createProxyMiddleware({
+    target: `https://${FIREBASE_PROJECT_ID}.firebaseapp.com`,
+    changeOrigin: true,
+  })
+);
 
 // Remix requests
 app.all(
