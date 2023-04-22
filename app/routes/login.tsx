@@ -11,7 +11,7 @@ import { getClientAuth } from '~/libs/auth/firebase';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const uid = await getSessionUid(request);
-  if (uid) throw redirect('/');
+  if (uid) return redirect('/');
   return null;
 };
 

@@ -1,13 +1,12 @@
 import invariant from 'tiny-invariant';
 import { Form, useActionData, useLoaderData, useNavigate } from '@remix-run/react';
 import { json, redirect } from '@remix-run/node';
-import type { ActionArgs, ActionFunction, LoaderArgs } from '@remix-run/node';
+import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { withZod } from '@remix-validated-form/with-zod';
 import { createToast } from '~/libs/toasts/toasts';
 import { H3, Subtitle } from '~/design-system/Typography';
 import { DetailsForm } from '~/shared-components/proposals/forms/DetailsForm';
 import { Button, ButtonLink } from '~/design-system/Buttons';
-import { mapErrorToResponse } from '~/libs/errors';
 import { requireSession } from '~/libs/auth/cookies';
 import { ProposalUpdateSchema } from '~/schemas/proposal';
 import { getSpeakerProposal } from '~/shared-server/proposals/get-speaker-proposal.server';
@@ -19,44 +18,42 @@ import { removeCoSpeakerFromProposal } from '~/shared-server/proposals/remove-co
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 import { Container } from '~/design-system/layouts/Container';
 import { Card } from '~/design-system/layouts/Card';
+import { mapErrorToResponse } from '~/libs/errors';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await requireSession(request);
   invariant(params.proposal, 'Invalid proposal id');
 
-  try {
-    const proposal = await getSpeakerProposal(params.proposal, uid);
-    return json(proposal);
-  } catch (e) {
-    throw mapErrorToResponse(e);
-  }
+  const proposal = await getSpeakerProposal(params.proposal, uid).catch(mapErrorToResponse);
+  return json(proposal);
 };
 
-export const action: ActionFunction = async ({ request, params }: ActionArgs) => {
+export const action = async ({ request, params }: ActionArgs) => {
   const { uid } = await requireSession(request);
   const form = await request.formData();
   invariant(params.event, 'Invalid event slug');
   invariant(params.proposal, 'Invalid proposal id');
 
-  try {
-    const action = form.get('_action');
-    if (action === 'delete') {
+  const action = form.get('_action');
+
+  switch (action) {
+    case 'delete': {
       await deleteProposal(params.proposal, uid);
       const toast = await createToast(request, 'Proposal successfully deleted.');
-      throw redirect(`/${params.event}/proposals`, toast);
-    } else if (action === 'remove-speaker') {
+      return redirect(`/${params.event}/proposals`, toast);
+    }
+    case 'remove-speaker': {
       const speakerId = form.get('_speakerId')?.toString() as string;
       await removeCoSpeakerFromProposal(uid, params.proposal, speakerId);
-      return null;
-    } else {
+      return json(null);
+    }
+    default: {
       const result = await withZod(ProposalUpdateSchema).validate(form);
       if (result.error) return json(result.error.fieldErrors);
       await updateProposal(params.event, params.proposal, uid, result.data);
       const toast = await createToast(request, 'Proposal successfully updated.');
-      throw redirect(`/${params.event}/proposals/${params.proposal}`, toast);
+      return redirect(`/${params.event}/proposals/${params.proposal}`, toast);
     }
-  } catch (err) {
-    mapErrorToResponse(err);
   }
 };
 

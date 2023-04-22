@@ -3,6 +3,12 @@ import express from 'express';
 import compression from 'compression';
 import morgan from 'morgan';
 import { createRequestHandler } from '@remix-run/express';
+import { createProxyMiddleware } from 'http-proxy-middleware';
+
+const BUILD_DIR = path.join(process.cwd(), 'build');
+const MODE = process.env.NODE_ENV;
+const PORT = process.env.PORT || 3000;
+const FIREBASE_PROJECT_ID = process.env.FIREBASE_PROJECT_ID;
 
 const app = express();
 
@@ -20,8 +26,10 @@ app.use(express.static('public', { maxAge: '1h' }));
 
 app.use(morgan('tiny'));
 
-const BUILD_DIR = path.join(process.cwd(), 'build');
-const MODE = process.env.NODE_ENV;
+// Proxy Firebase auth
+app.use('/__/auth', createProxyMiddleware({ target: `https://${FIREBASE_PROJECT_ID}.firebaseapp.com` }));
+
+// Remix requests
 app.all(
   '*',
   MODE === 'production'
@@ -36,17 +44,13 @@ app.all(
       }
 );
 
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-  console.log(`✅ App started on http://localhost:${port}`);
+app.listen(PORT, () => {
+  console.log(`✅ App started on http://localhost:${PORT}`);
 });
 
 function purgeRequireCache() {
   // purge require cache on requests for "server side HMR" this won't let
   // you have in-memory objects between requests in development,
-  // alternatively you can set up nodemon/pm2-dev to restart the server on
-  // file changes, we prefer the DX of this though, so we've included it
-  // for you by default
   for (const key in require.cache) {
     if (key.startsWith(BUILD_DIR)) {
       delete require.cache[key];

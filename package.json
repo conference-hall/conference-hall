@@ -48,6 +48,7 @@
     "firebase": "^9.20.0",
     "firebase-admin": "^11.7.0",
     "form-data": "^4.0.0",
+    "http-proxy-middleware": "^2.0.6",
     "isbot": "^3.6.10",
     "marked": "^4.3.0",
     "morgan": "^1.10.0",

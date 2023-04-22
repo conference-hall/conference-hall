@@ -30,7 +30,7 @@ export const action = async ({ request, params }: ActionArgs) => {
     if (result.error) return json(result.error.fieldErrors);
     await updateProposal(params.orga, params.event, params.proposal, uid, result.data);
     const url = new URL(request.url);
-    throw redirect(`/organizer/${params.orga}/${params.event}/review/${params.proposal}${url.search}`);
+    return redirect(`/organizer/${params.orga}/${params.event}/review/${params.proposal}${url.search}`);
   } catch (err) {
     throw mapErrorToResponse(err);
   }

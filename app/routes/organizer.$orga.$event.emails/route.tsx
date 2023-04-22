@@ -18,7 +18,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   invariant(params.event, 'Invalid event slug');
 
   const role = await getUserRole(params.orga, uid);
-  if (role !== 'OWNER') throw redirect(`/organizer/${params.orga}/${params.event}/proposals`);
+  if (role !== 'OWNER') return redirect(`/organizer/${params.orga}/${params.event}/proposals`);
   return null;
 };
 
