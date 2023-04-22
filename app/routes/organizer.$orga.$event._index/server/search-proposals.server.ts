@@ -2,7 +2,7 @@ import type { Pagination } from '~/schemas/pagination';
 import type { ProposalsFilters } from '~/schemas/proposal';
 import { checkUserRole } from '~/shared-server/organizations/check-user-role.server';
 import { getPagination } from '~/shared-server/pagination/pagination.server';
-import { EventProposalsSearch } from '~/shared-server/proposals/EventProposalsSearch';
+import { OrganizerProposalsSearch } from '~/shared-server/proposals/OrganizerProposalsSearch';
 import { RatingsDetails } from '~/shared-server/ratings/ratings-details';
 
 const RESULTS_BY_PAGE = 25;
@@ -16,7 +16,7 @@ export async function searchProposals(
 ) {
   await checkUserRole(orgaSlug, eventSlug, uid);
 
-  const search = new EventProposalsSearch(eventSlug, uid, filters);
+  const search = new OrganizerProposalsSearch(eventSlug, uid, filters);
 
   const statistics = await search.statistics();
 

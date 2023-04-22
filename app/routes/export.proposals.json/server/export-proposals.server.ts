@@ -2,12 +2,12 @@ import { OrganizationRole } from '@prisma/client';
 import type { ProposalsFilters } from '~/schemas/proposal';
 import { checkUserRole } from '~/shared-server/organizations/check-user-role.server';
 import { RatingsDetails } from '~/shared-server/ratings/ratings-details';
-import { EventProposalsSearch } from '~/shared-server/proposals/EventProposalsSearch';
+import { OrganizerProposalsSearch } from '~/shared-server/proposals/OrganizerProposalsSearch';
 
 export async function exportProposals(orgaSlug: string, eventSlug: string, uid: string, filters: ProposalsFilters) {
   await checkUserRole(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER, OrganizationRole.MEMBER]);
 
-  const search = new EventProposalsSearch(eventSlug, uid, filters);
+  const search = new OrganizerProposalsSearch(eventSlug, uid, filters);
 
   const proposals = await search.proposals();
 

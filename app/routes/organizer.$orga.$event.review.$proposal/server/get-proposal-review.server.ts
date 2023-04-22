@@ -2,7 +2,7 @@ import type { ProposalsFilters } from '~/schemas/proposal';
 import { jsonToArray } from '~/libs/prisma';
 import { checkUserRole } from '~/shared-server/organizations/check-user-role.server';
 import { RatingsDetails } from '~/shared-server/ratings/ratings-details';
-import { EventProposalsSearch } from '~/shared-server/proposals/EventProposalsSearch';
+import { OrganizerProposalsSearch } from '~/shared-server/proposals/OrganizerProposalsSearch';
 import { db } from '~/libs/db';
 import { ProposalNotFoundError } from '~/libs/errors';
 
@@ -17,7 +17,7 @@ export async function getProposalReview(
 ) {
   await checkUserRole(orgaSlug, eventSlug, uid);
 
-  const search = new EventProposalsSearch(eventSlug, uid, filters);
+  const search = new OrganizerProposalsSearch(eventSlug, uid, filters);
   const proposalIds = await search.proposalsIds();
 
   const totalProposals = proposalIds.length;

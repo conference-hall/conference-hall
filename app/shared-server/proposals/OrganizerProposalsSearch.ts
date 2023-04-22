@@ -3,9 +3,9 @@ import { EmailStatus } from '@prisma/client';
 import { db } from '~/libs/db';
 import type { EmailStatusData, ProposalsFilters } from '~/schemas/proposal';
 
-const RESULTS_BY_PAGE = 25;
+const RESULTS_BY_PAGE = 20;
 
-export class EventProposalsSearch {
+export class OrganizerProposalsSearch {
   eventSlug: string;
   userId: string;
   filters: ProposalsFilters;
