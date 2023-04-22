@@ -11,7 +11,7 @@ import { getClientAuth } from '~/libs/auth/firebase';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const uid = await getSessionUid(request);
-  if (uid) throw redirect('/');
+  if (uid) return redirect('/');
   return null;
 };
 
@@ -27,10 +27,8 @@ export default function Login() {
 
   useEffect(() => {
     const clientAuth = getClientAuth();
-    console.log(clientAuth);
     getRedirectResult(clientAuth)
       .then(async (credentials) => {
-        console.log({ credentials, redirectTo });
         if (!credentials) return;
         const token = await credentials.user.getIdToken();
         submit({ token, redirectTo }, { method: 'post', action: '/login' });

@@ -16,7 +16,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   invariant(params.orga, 'Invalid organization slug');
 
   const role = await getUserRole(params.orga, uid);
-  if (role !== 'OWNER') throw redirect(`/organizer/${params.orga}`);
+  if (role !== 'OWNER') return redirect(`/organizer/${params.orga}`);
   return null;
 };
 

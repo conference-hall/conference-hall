@@ -19,7 +19,7 @@ type Props = {
   } | null;
   formats?: Array<{ id: string; name: string; description: string | null }>;
   categories?: Array<{ id: string; name: string; description: string | null }>;
-  errors?: Record<string, string>;
+  errors?: Record<string, string> | null;
 };
 
 export function DetailsForm({ initialValues, formats, categories, errors }: Props) {
