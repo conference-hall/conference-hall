@@ -29,16 +29,16 @@ class OrganizationEventsProposalsPage {
     return cy.findByLabelText('Find a proposal');
   }
 
-  openFilters() {
-    cy.findByRole('button', { name: 'Filters' }).click();
-  }
-
   clearFilters() {
-    cy.findByRole('link', { name: 'Clear' }).click();
+    cy.findByRole('link', { name: 'Reset filters' }).click();
   }
 
-  filterRatings(name: string) {
-    return cy.selectOn('Rated by you', name, false);
+  filterReviews(name: string) {
+    cy.findByRole('button', { name }).click();
+  }
+
+  filterStatus(name: string) {
+    cy.findByRole('button', { name }).click();
   }
 
   filterFormat(name: string) {
@@ -49,12 +49,9 @@ class OrganizationEventsProposalsPage {
     return cy.selectOn('Categories', name, false);
   }
 
-  filterStatus(name: string) {
-    return cy.selectOn('Status', name, false);
-  }
-
   sortBy(sort: string) {
-    return cy.selectOn('Sort', sort, false);
+    cy.findByRole('button', { name: 'Sort by...' }).click();
+    cy.findByRole('menuitem', { name: sort }).click();
   }
 }
 

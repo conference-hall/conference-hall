@@ -2,7 +2,7 @@ import invariant from 'tiny-invariant';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import type { ProposalsFilters } from '~/schemas/proposal';
 import { json } from '@remix-run/node';
-import { useLoaderData, useLocation } from '@remix-run/react';
+import { useLoaderData } from '@remix-run/react';
 import { withZod } from '@remix-validated-form/with-zod';
 import { CampaignEmailFilters } from '~/shared-components/events/campaign-email/CampaignEmailFilters';
 import { CampaignEmailList, CampaignType } from '~/shared-components/events/campaign-email/CampaignEmailList';
@@ -56,23 +56,21 @@ export const action = async ({ request, params }: ActionArgs) => {
 
 export default function AcceptedProposalEmails() {
   const { proposals, stats } = useLoaderData<typeof loader>();
-  const { results, pagination, total } = proposals;
-  const location = useLocation();
+  const { results, pagination, statistics } = proposals;
 
   return (
     <>
       <H1>Acceptation emails campaign</H1>
       <CampaignEmailStats stats={stats} />
+
       <div>
         <H2>Select proposals to send acceptation emails</H2>
+
         <CampaignEmailFilters type={CampaignType.ACCEPTATION} />
-        <CampaignEmailList type={CampaignType.ACCEPTATION} proposals={results} total={total} />
-        <Pagination
-          pathname={location.pathname}
-          current={pagination.current}
-          total={pagination.total}
-          className="mt-8"
-        />
+
+        <CampaignEmailList type={CampaignType.ACCEPTATION} proposals={results} total={statistics.total} />
+
+        <Pagination {...pagination} className="mt-8" />
       </div>
     </>
   );

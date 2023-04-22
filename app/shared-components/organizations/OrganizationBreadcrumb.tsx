@@ -1,7 +1,7 @@
 import type { CfpState, EventType, EventVisibility } from '~/schemas/event';
 import { ArrowTopRightOnSquareIcon, ChevronRightIcon, Square3Stack3DIcon } from '@heroicons/react/24/outline';
 import { Link } from '@remix-run/react';
-import Badge from '~/design-system/Badges';
+import Badge from '~/design-system/badges/Badges';
 import { Text } from '~/design-system/Typography';
 import { Avatar } from '~/design-system/Avatar';
 import { CfpElapsedTime } from '../cfp/CfpElapsedTime';
@@ -42,7 +42,13 @@ export default function OrganizationBreadcrumb({ organization, event }: Props) {
             </Link>
           </>
         )}
-        {event ? <Badge>{event.visibility.toLowerCase()}</Badge> : <Badge>{organization.role.toLowerCase()}</Badge>}
+        {event ? (
+          <Badge variant="dot" color={event.visibility === 'PRIVATE' ? 'red' : 'green'}>
+            {event.visibility.toLowerCase()}
+          </Badge>
+        ) : (
+          <Badge>{organization.role.toLowerCase()}</Badge>
+        )}
       </nav>
       {event && (
         <CfpElapsedTime

@@ -3,6 +3,7 @@ import { eventFactory } from '../../../tests/factories/events';
 import { eventFormatFactory } from '../../../tests/factories/formats';
 import { organizationFactory } from '../../../tests/factories/organization';
 import { proposalFactory } from '../../../tests/factories/proposals';
+import { ratingFactory } from '../../../tests/factories/ratings';
 import { talkFactory } from '../../../tests/factories/talks';
 import { userFactory } from '../../../tests/factories/users';
 
@@ -31,7 +32,7 @@ export const seed = async () => {
   const category1 = await eventCategoryFactory({ event, attributes: { name: 'Category 1' } });
   const category2 = await eventCategoryFactory({ event, attributes: { name: 'Category 2' } });
 
-  await proposalFactory({
+  const proposal = await proposalFactory({
     event,
     traits: ['submitted'],
     formats: [format1],
@@ -52,4 +53,6 @@ export const seed = async () => {
     traits: ['submitted'],
     talk: await talkFactory({ attributes: { title: 'Talk 3' }, speakers: [speaker1, speaker2] }),
   });
+
+  await ratingFactory({ proposal, user: organizer1 });
 };

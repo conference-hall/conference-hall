@@ -69,10 +69,32 @@ describe('Organizer event proposals', () => {
       proposals.proposal('Talk 3').should('exist');
     });
 
+    it('filters by reviews', () => {
+      cy.login('Clark Kent');
+      proposals.visit('orga-1', 'conference-1');
+      proposals.filterReviews('Reviewed');
+
+      cy.assertText('1 proposals');
+      proposals.proposal('Talk 1').should('exist');
+      proposals.proposal('Talk 2').should('not.exist');
+      proposals.proposal('Talk 3').should('not.exist');
+    });
+
+    it('filters by statuses', () => {
+      cy.login('Clark Kent');
+      proposals.visit('orga-1', 'conference-1');
+      proposals.filterStatus('Accepted proposal');
+
+      cy.assertText('1 proposals');
+      cy.assertUrl('status=ACCEPTED');
+      proposals.proposal('Talk 1').should('not.exist');
+      proposals.proposal('Talk 2').should('exist');
+      proposals.proposal('Talk 3').should('not.exist');
+    });
+
     it('filters by formats', () => {
       cy.login('Clark Kent');
       proposals.visit('orga-1', 'conference-1');
-      proposals.openFilters();
       proposals.filterFormat('Format 1');
 
       cy.assertText('1 proposals');
@@ -85,7 +107,6 @@ describe('Organizer event proposals', () => {
     it('filters by categories', () => {
       cy.login('Clark Kent');
       proposals.visit('orga-1', 'conference-1');
-      proposals.openFilters();
       proposals.filterCategory('Category 1');
 
       cy.assertText('1 proposals');
@@ -95,24 +116,10 @@ describe('Organizer event proposals', () => {
       proposals.proposal('Talk 3').should('not.exist');
     });
 
-    it('filters by statuses', () => {
-      cy.login('Clark Kent');
-      proposals.visit('orga-1', 'conference-1');
-      proposals.openFilters();
-      proposals.filterStatus('Accepted');
-
-      cy.assertText('1 proposals');
-      cy.assertUrl('status=ACCEPTED');
-      proposals.proposal('Talk 1').should('not.exist');
-      proposals.proposal('Talk 2').should('exist');
-      proposals.proposal('Talk 3').should('not.exist');
-    });
-
     it('sorts by oldest', () => {
       cy.login('Clark Kent');
       proposals.visit('orga-1', 'conference-1');
-      proposals.openFilters();
-      proposals.sortBy('Sort by oldest');
+      proposals.sortBy('Oldest');
 
       cy.assertText('3 proposals');
       cy.assertUrl('sort=oldest');

@@ -55,8 +55,8 @@ export function CheckboxField(
   ref: Ref<HTMLInputElement>
 ) {
   return (
-    <div className={cn('relative flex items-start', className)}>
-      <div className="mt-1 flex h-5 items-center">
+    <div className={cn('relative flex items-center', className)}>
+      <div className="flex h-5 items-center">
         <input
           ref={ref}
           id={id}

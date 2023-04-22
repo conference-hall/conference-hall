@@ -4,7 +4,7 @@ import { Listbox } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
 import { Text } from '../Typography';
 import { SelectTransition } from '../Transitions';
-import Badge from '../Badges';
+import Badge from '../badges/Badges';
 
 type Option = { value: string; label: string };
 

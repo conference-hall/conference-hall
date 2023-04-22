@@ -2,14 +2,20 @@ import c from 'classnames';
 import { HeartIcon, StarIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import type { ChangeEventHandler } from 'react';
 import { Link, useSearchParams } from '@remix-run/react';
-import Badge from '~/design-system/Badges';
 import { IconLabel } from '~/design-system/IconLabel';
-import type { Proposal } from './ProposalsList';
 import { Text } from '~/design-system/Typography';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
+import { ProposalStatusBadge } from '~/shared-components/proposals/ProposalStatusBadges';
+import type { ProposalStatus } from '@prisma/client';
 
 type ProposalRowProp = {
-  proposal: Proposal;
+  proposal: {
+    id: string;
+    title: string;
+    status: ProposalStatus;
+    speakers: (string | null)[];
+    ratings: { negatives: number; positives: number; you: number | null; total: number | null };
+  };
   isSelected: boolean;
   onSelect: ChangeEventHandler<HTMLInputElement>;
 };
@@ -19,7 +25,7 @@ export function ProposaListRow({ proposal, isSelected, onSelect }: ProposalRowPr
 
   return (
     <tr key={proposal.id} className={c('relative hover:bg-gray-50', { 'bg-gray-50': isSelected })}>
-      <td className="relative hidden w-12 px-4 sm:table-cell sm:w-16 sm:px-4">
+      <td className="relative hidden w-12 rounded-lg px-4 sm:table-cell sm:w-16  sm:px-4">
         {isSelected && <div className="absolute inset-y-0 left-0 w-0.5 bg-indigo-600" />}
         <Checkbox
           aria-label={`Select proposal "${proposal.title}"`}
@@ -35,7 +41,9 @@ export function ProposaListRow({ proposal, isSelected, onSelect }: ProposalRowPr
           aria-label={`Open proposal "${proposal.title}"`}
           className="block after:absolute after:bottom-0 after:left-16 after:right-0 after:top-0 after:z-10 after:block"
         >
-          <Text truncate>{proposal.title}</Text>
+          <Text size="s" strong truncate>
+            {proposal.title}
+          </Text>
           <Text size="xs" variant="secondary">
             by {proposal.speakers.join(', ')}
           </Text>
@@ -44,7 +52,7 @@ export function ProposaListRow({ proposal, isSelected, onSelect }: ProposalRowPr
       <td className="hidden w-0 px-3 py-6 text-center sm:table-cell">
         {proposal.status && (
           <div className="flex items-center justify-end gap-2">
-            <Badge>{proposal.status?.toLowerCase()}</Badge>
+            <ProposalStatusBadge status={proposal.status} />
           </div>
         )}
       </td>
@@ -55,7 +63,7 @@ export function ProposaListRow({ proposal, isSelected, onSelect }: ProposalRowPr
           <IconLabel icon={StarIcon}>{formatRating(proposal.ratings.you)}</IconLabel>
         </div>
       </td>
-      <td className="w-0 px-3 py-6 pr-4 text-right sm:pr-6">
+      <td className="w-0 rounded-lg px-3 py-6 pr-4 text-right  sm:pr-6">
         <Text variant="secondary">{formatRating(proposal.ratings.total)}</Text>
       </td>
     </tr>

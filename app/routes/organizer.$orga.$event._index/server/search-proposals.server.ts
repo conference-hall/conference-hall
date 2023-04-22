@@ -1,10 +1,8 @@
-import type { Prisma } from '@prisma/client';
-import { EmailStatus } from '@prisma/client';
 import type { Pagination } from '~/schemas/pagination';
-import type { EmailStatusData, ProposalsFilters } from '~/schemas/proposal';
-import { db } from '../../../libs/db';
-import { checkUserRole } from '../../../shared-server/organizations/check-user-role.server';
-import { getPagination } from '../../../shared-server/pagination/pagination.server';
+import type { ProposalsFilters } from '~/schemas/proposal';
+import { checkUserRole } from '~/shared-server/organizations/check-user-role.server';
+import { getPagination } from '~/shared-server/pagination/pagination.server';
+import { OrganizerProposalsSearch } from '~/shared-server/proposals/OrganizerProposalsSearch';
 import { RatingsDetails } from '~/shared-server/ratings/ratings-details';
 
 const RESULTS_BY_PAGE = 25;
@@ -18,29 +16,21 @@ export async function searchProposals(
 ) {
   await checkUserRole(orgaSlug, eventSlug, uid);
 
-  const whereClause = proposalWhereInput(eventSlug, uid, filters);
-  const orderByClause = proposalOrderBy(filters);
+  const search = new OrganizerProposalsSearch(eventSlug, uid, filters);
 
-  const proposalsCount = await db.proposal.count({ where: whereClause });
-  const pagination = getPagination(page, proposalsCount, RESULTS_BY_PAGE);
+  const statistics = await search.statistics();
 
-  const proposals = await db.proposal.findMany({
-    include: { speakers: true, ratings: true },
-    where: whereClause,
-    orderBy: orderByClause,
-    skip: pagination.pageIndex * RESULTS_BY_PAGE,
-    take: RESULTS_BY_PAGE,
-  });
+  const { pageIndex, currentPage, totalPages } = getPagination(page, statistics.total, RESULTS_BY_PAGE);
+
+  const proposals = await search.proposalsByPage(pageIndex);
 
   return {
     filters,
-    total: proposalsCount,
-    pagination: {
-      current: pagination.currentPage,
-      total: pagination.totalPages,
-    },
+    statistics,
+    pagination: { current: currentPage, total: totalPages },
     results: proposals.map((proposal) => {
       const ratings = new RatingsDetails(proposal.ratings);
+
       return {
         id: proposal.id,
         title: proposal.title,
@@ -57,39 +47,4 @@ export async function searchProposals(
       };
     }),
   };
-}
-
-export function proposalWhereInput(slug: string, uid: string, filters: ProposalsFilters): Prisma.ProposalWhereInput {
-  const { query, ratings, formats, categories, status, emailAcceptedStatus, emailRejectedStatus } = filters;
-  const ratingClause = ratings === 'rated' ? { some: { userId: uid } } : { none: { userId: uid } };
-
-  return {
-    event: { slug },
-    status: { in: status, not: 'DRAFT' },
-    formats: formats ? { some: { id: formats } } : {},
-    categories: categories ? { some: { id: categories } } : {},
-    ratings: ratings ? ratingClause : {},
-    emailAcceptedStatus: mapEmailStatus(emailAcceptedStatus),
-    emailRejectedStatus: mapEmailStatus(emailRejectedStatus),
-    OR: [
-      { title: { contains: query, mode: 'insensitive' } },
-      { speakers: { some: { name: { contains: query, mode: 'insensitive' } } } },
-    ],
-  };
-}
-
-export function proposalOrderBy(filters: ProposalsFilters): Prisma.ProposalOrderByWithRelationInput[] {
-  if (filters.sort === 'oldest') return [{ createdAt: 'asc' }, { title: 'asc' }];
-  return [{ createdAt: 'desc' }, { title: 'asc' }];
-}
-
-function mapEmailStatus(emailStatus: EmailStatusData) {
-  switch (emailStatus) {
-    case 'sent':
-      return { in: [EmailStatus.SENT, EmailStatus.DELIVERED] };
-    case 'not-sent':
-      return null;
-    default:
-      return undefined;
-  }
 }

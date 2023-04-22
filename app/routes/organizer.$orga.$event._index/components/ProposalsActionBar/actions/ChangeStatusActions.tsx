@@ -9,17 +9,14 @@ function TriggerButton() {
   return (
     <>
       Mark as...
-      <ChevronDownIcon className="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
+      <ChevronDownIcon className="-mr-1 ml-2 h-4 w-4" aria-hidden="true" />
     </>
   );
 }
 
-export function UpdateStatusMenu({ selection, ...rest }: Props) {
-  const disabled = selection.length === 0;
-  const styles = getStyles({ disabled, ...rest });
-
+export function ChangeStatusAction({ selection, ...rest }: Props) {
   return (
-    <Menu trigger={TriggerButton} triggerClassname={styles}>
+    <Menu trigger={TriggerButton} triggerClassname={getStyles(rest)}>
       <Menu.ItemForm method="POST">
         <input type="hidden" name="status" value="ACCEPTED" />
         {selection.map((id) => (

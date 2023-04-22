@@ -1,13 +1,10 @@
 import type { ProposalsFilters } from '~/schemas/proposal';
 import { jsonToArray } from '~/libs/prisma';
-import { db } from '../../../libs/db';
-import { ProposalNotFoundError } from '../../../libs/errors';
-import {
-  proposalOrderBy,
-  proposalWhereInput,
-} from '~/routes/organizer.$orga.$event._index/server/search-proposals.server';
 import { checkUserRole } from '~/shared-server/organizations/check-user-role.server';
 import { RatingsDetails } from '~/shared-server/ratings/ratings-details';
+import { OrganizerProposalsSearch } from '~/shared-server/proposals/OrganizerProposalsSearch';
+import { db } from '~/libs/db';
+import { ProposalNotFoundError } from '~/libs/errors';
 
 export type ProposalReview = Awaited<ReturnType<typeof getProposalReview>>;
 
@@ -20,16 +17,8 @@ export async function getProposalReview(
 ) {
   await checkUserRole(orgaSlug, eventSlug, uid);
 
-  const whereClause = proposalWhereInput(eventSlug, uid, filters);
-  const orderByClause = proposalOrderBy(filters);
-
-  const proposalIds = (
-    await db.proposal.findMany({
-      select: { id: true },
-      where: whereClause,
-      orderBy: orderByClause,
-    })
-  ).map(({ id }) => id);
+  const search = new OrganizerProposalsSearch(eventSlug, uid, filters);
+  const proposalIds = await search.proposalsIds();
 
   const totalProposals = proposalIds.length;
   const curIndex = proposalIds.findIndex((id) => id === proposalId);
