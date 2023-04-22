@@ -27,7 +27,12 @@ import { initializeFirebaseClient } from './libs/auth/firebase';
 import { getSessionUid } from './libs/auth/cookies';
 
 export function meta() {
-  return [{ charset: 'utf-8' }, { title: 'Conference Hall' }, { viewport: 'width=device-width,initial-scale=1' }];
+  return [
+    { charset: 'utf-8' },
+    { title: 'Conference Hall' },
+    { viewport: 'width=device-width,initial-scale=1' },
+    { name: 'robots', content: 'noindex' },
+  ];
 }
 
 export const links: LinksFunction = () => {

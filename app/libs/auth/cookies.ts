@@ -4,7 +4,7 @@ import { auth as serverAuth } from './firebase.server';
 import { config } from '../config';
 import { createUser } from '~/shared-server/users/create-user.server';
 
-const EXPIRATION = 60 * 5 * 1000; // 5 days
+const EXPIRATION = 60 * 60 * 24 * 5 * 1000; // 5 days
 
 const sessionStorage = createCookieSessionStorage({
   cookie: {
