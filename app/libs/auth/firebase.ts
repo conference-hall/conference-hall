@@ -1,5 +1,5 @@
 import { initializeApp, getApps } from 'firebase/app';
-import { getAuth, connectAuthEmulator } from 'firebase/auth';
+import { getAuth, connectAuthEmulator, setPersistence, inMemoryPersistence } from 'firebase/auth';
 
 type FirebaseConfig = {
   FIREBASE_API_KEY: string;
@@ -9,7 +9,7 @@ type FirebaseConfig = {
   useFirebaseEmulators: boolean;
 };
 
-export const initializeFirebase = (config?: FirebaseConfig) => {
+export function initializeFirebaseClient(config?: FirebaseConfig) {
   if (!config || getApps().length) return;
 
   const app = initializeApp({
@@ -18,10 +18,15 @@ export const initializeFirebase = (config?: FirebaseConfig) => {
     projectId: config.FIREBASE_PROJECT_ID,
   });
 
+  const auth = getAuth(app);
+  setPersistence(auth, inMemoryPersistence);
+
   if (config.useFirebaseEmulators) {
-    const auth = getAuth(app);
     connectAuthEmulator(auth, `http://${config.FIREBASE_AUTH_EMULATOR_HOST}`, { disableWarnings: true });
   }
+}
 
-  return app;
-};
+export function getClientAuth() {
+  const app = getApps()[0];
+  return getAuth(app);
+}

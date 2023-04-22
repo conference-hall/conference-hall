@@ -4,7 +4,7 @@ import { redirect } from '@remix-run/node';
 import { Outlet } from '@remix-run/react';
 import { Container } from '~/design-system/layouts/Container';
 import { NavSideMenu } from '~/design-system/navigation/NavSideMenu';
-import { sessionRequired } from '~/libs/auth/auth.server';
+import { requireSession } from '~/libs/auth/cookies';
 import {
   CodeBracketIcon,
   Cog6ToothIcon,
@@ -23,7 +23,7 @@ import { useUser } from '~/root';
 import { useOrganization } from '../organizer.$orga/route';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const { uid } = await sessionRequired(request);
+  const { uid } = await requireSession(request);
   invariant(params.orga, 'Invalid organization slug');
   invariant(params.event, 'Invalid event slug');
 

@@ -3,7 +3,7 @@ import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
 import { withZod } from '@remix-validated-form/with-zod';
-import { sessionRequired } from '~/libs/auth/auth.server';
+import { requireSession } from '~/libs/auth/cookies';
 import { H2, Text } from '~/design-system/Typography';
 import { ExternalLink } from '~/design-system/Links';
 import { Button } from '~/design-system/Buttons';
@@ -13,12 +13,12 @@ import { EventSlackSettingsSchema } from './types/event-slack-settings.schema';
 import { useOrganizerEvent } from '../organizer.$orga.$event/route';
 
 export const loader = async ({ request }: LoaderArgs) => {
-  await sessionRequired(request);
+  await requireSession(request);
   return null;
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
-  const { uid } = await sessionRequired(request);
+  const { uid } = await requireSession(request);
   invariant(params.orga, 'Invalid organization slug');
   invariant(params.event, 'Invalid event slug');
   const form = await request.formData();

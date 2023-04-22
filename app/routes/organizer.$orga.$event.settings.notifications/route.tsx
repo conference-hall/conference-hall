@@ -8,19 +8,19 @@ import { H2 } from '~/design-system/Typography';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
 import { Input } from '~/design-system/forms/Input';
 import { Button } from '~/design-system/Buttons';
-import { sessionRequired } from '~/libs/auth/auth.server';
+import { requireSession } from '~/libs/auth/cookies';
 import { updateEvent } from '~/shared-server/organizations/update-event.server';
 import { useOrganizerEvent } from '../organizer.$orga.$event/route';
 import { EventEmailNotificationsSettingsSchema } from './types/event-email-notifications-settings.schema';
 import { EventNotificationsSettingsSchema } from './types/event-notifications-settings.schema';
 
 export const loader = async ({ request }: LoaderArgs) => {
-  await sessionRequired(request);
+  await requireSession(request);
   return null;
 };
 
 export const action = async ({ request, params }: LoaderArgs) => {
-  const { uid } = await sessionRequired(request);
+  const { uid } = await requireSession(request);
   invariant(params.orga, 'Invalid organization slug');
   invariant(params.event, 'Invalid event slug');
   const form = await request.formData();

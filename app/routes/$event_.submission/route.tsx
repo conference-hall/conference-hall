@@ -4,7 +4,7 @@ import { json } from '@remix-run/node';
 import invariant from 'tiny-invariant';
 import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
-import { sessionRequired } from '~/libs/auth/auth.server';
+import { requireSession } from '~/libs/auth/cookies';
 import { mapErrorToResponse } from '~/libs/errors';
 import { getEvent } from '~/shared-server/events/get-event.server';
 import { SubmissionSteps } from './components/SubmissionSteps';
@@ -21,7 +21,7 @@ type Step = { key: string; name: string; path: string; form?: string; enabled: b
 export const handle = { step: 'root' };
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  await sessionRequired(request);
+  await requireSession(request);
   invariant(params.event, 'Invalid event slug');
 
   try {

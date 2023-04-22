@@ -1,6 +1,6 @@
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { sessionRequired } from '~/libs/auth/auth.server';
+import { requireSession } from '~/libs/auth/cookies';
 import { Navbar } from '~/shared-components/navbar/Navbar';
 import { Footer } from '~/shared-components/Footer';
 import { useUser } from '~/root';
@@ -12,7 +12,7 @@ import { CardLink } from '~/design-system/layouts/Card';
 import { H2 } from '~/design-system/Typography';
 
 export const loader = async ({ request }: LoaderArgs) => {
-  await sessionRequired(request);
+  await requireSession(request);
   return json(null);
 };
 

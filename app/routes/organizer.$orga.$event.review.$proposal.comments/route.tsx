@@ -1,11 +1,11 @@
 import invariant from 'tiny-invariant';
 import type { ActionArgs } from '@remix-run/node';
-import { sessionRequired } from '~/libs/auth/auth.server';
+import { requireSession } from '~/libs/auth/cookies';
 import { mapErrorToResponse } from '~/libs/errors';
 import { addProposalComment, removeProposalComment } from './server/comments.server';
 
 export const action = async ({ request, params }: ActionArgs) => {
-  const { uid } = await sessionRequired(request);
+  const { uid } = await requireSession(request);
   invariant(params.orga, 'Invalid organization slug');
   invariant(params.event, 'Invalid event slug');
   invariant(params.proposal, 'Invalid proposal id');

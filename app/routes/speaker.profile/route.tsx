@@ -10,7 +10,7 @@ import { mapErrorToResponse } from '~/libs/errors';
 import { AdditionalInfoForm } from './components/AdditionalInfoForm';
 import { PersonalInfoForm } from './components/PersonalInfoForm';
 import { SpeakerDetailsForm } from './components/SpeakerDetailsForm';
-import { sessionRequired } from '~/libs/auth/auth.server';
+import { requireSession } from '~/libs/auth/cookies';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 import { Container } from '~/design-system/layouts/Container';
 import { NavSideMenu } from '~/design-system/navigation/NavSideMenu';
@@ -18,12 +18,12 @@ import { Card } from '~/design-system/layouts/Card';
 import { useUser } from '~/root';
 
 export const loader = async ({ request }: LoaderArgs) => {
-  await sessionRequired(request);
+  await requireSession(request);
   return null;
 };
 
 export const action = async ({ request }: ActionArgs) => {
-  const { uid, session } = await sessionRequired(request);
+  const { uid } = await requireSession(request);
   const form = await request.formData();
   const type = form.get('_type') as string;
   try {
@@ -43,7 +43,7 @@ export const action = async ({ request }: ActionArgs) => {
     if (result.error) return json(result.error.fieldErrors);
     await saveProfile(uid, result.data);
 
-    const toast = await createToast(session, 'Profile successfully saved.');
+    const toast = await createToast(request, 'Profile successfully saved.');
     return redirect('/speaker/profile', toast);
   } catch (err) {
     throw mapErrorToResponse(err);

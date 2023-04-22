@@ -2,12 +2,12 @@ import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { withZod } from '@remix-validated-form/with-zod';
 import { ProposalsExportFiltersSchema } from '~/schemas/proposal';
-import { sessionRequired } from '~/libs/auth/auth.server';
+import { requireSession } from '~/libs/auth/cookies';
 import { mapErrorToResponse } from '~/libs/errors';
 import { exportProposals } from './server/export-proposals.server';
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const { uid } = await sessionRequired(request);
+  const { uid } = await requireSession(request);
   const url = new URL(request.url);
 
   const result = await withZod(ProposalsExportFiltersSchema).validate(url.searchParams);

@@ -3,7 +3,7 @@ import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
-import { sessionRequired } from '~/libs/auth/auth.server';
+import { requireSession } from '~/libs/auth/cookies';
 import { mapErrorToResponse } from '~/libs/errors';
 import { H2 } from '~/design-system/Typography';
 import { ButtonLink } from '~/design-system/Buttons';
@@ -15,7 +15,7 @@ import { IconLabel } from '~/design-system/IconLabel';
 export const handle = { step: 'selection' };
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const { uid } = await sessionRequired(request);
+  const { uid } = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
 
   try {

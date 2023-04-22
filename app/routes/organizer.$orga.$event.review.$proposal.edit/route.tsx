@@ -3,7 +3,7 @@ import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 import { useProposalReview } from '../organizer.$orga.$event.review.$proposal/route';
-import { sessionRequired } from '~/libs/auth/auth.server';
+import { requireSession } from '~/libs/auth/cookies';
 import { Form, useActionData, useSearchParams } from '@remix-run/react';
 import { DetailsForm } from '~/shared-components/proposals/forms/DetailsForm';
 import { Button, ButtonLink } from '~/design-system/Buttons';
@@ -14,12 +14,12 @@ import { updateProposal } from '~/routes/organizer.$orga.$event._index/server/up
 import { useOrganizerEvent } from '../organizer.$orga.$event/route';
 
 export const loader = async ({ request }: LoaderArgs) => {
-  await sessionRequired(request);
+  await requireSession(request);
   return null;
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
-  const { uid } = await sessionRequired(request);
+  const { uid } = await requireSession(request);
   const form = await request.formData();
   invariant(params.orga, 'Invalid organization slug');
   invariant(params.event, 'Invalid event slug');

@@ -1,5 +1,5 @@
 import type { LoaderArgs } from '@remix-run/node';
-import { sessionRequired } from '~/libs/auth/auth.server';
+import { requireSession } from '~/libs/auth/cookies';
 import { Text } from '~/design-system/Typography';
 import Badge from '~/design-system/badges/Badges';
 import { getLevel } from '~/utils/levels';
@@ -9,7 +9,7 @@ import { AcademicCapIcon, LanguageIcon } from '@heroicons/react/24/outline';
 import { useProposalReview } from '../organizer.$orga.$event.review.$proposal/route';
 
 export const loader = async ({ request }: LoaderArgs) => {
-  await sessionRequired(request);
+  await requireSession(request);
   return null;
 };
 

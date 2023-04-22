@@ -2,7 +2,7 @@ import type { ActionArgs, LoaderFunction } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
 import { json, redirect } from '@remix-run/node';
 import { withZod } from '@remix-validated-form/with-zod';
-import { sessionRequired } from '~/libs/auth/auth.server';
+import { requireSession } from '~/libs/auth/cookies';
 import { OrganizationForm } from '~/shared-components/organizations/OrganizationForm';
 import { Button } from '~/design-system/Buttons';
 import { createOrganization } from './server/create-organization.server';
@@ -12,12 +12,12 @@ import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 import { Card } from '~/design-system/layouts/Card';
 
 export const loader: LoaderFunction = async ({ request }) => {
-  await sessionRequired(request);
+  await requireSession(request);
   return null;
 };
 
 export const action = async ({ request }: ActionArgs) => {
-  const { uid } = await sessionRequired(request);
+  const { uid } = await requireSession(request);
   const form = await request.formData();
   const result = await withZod(OrganizationSaveSchema).validate(form);
   if (result.error) {

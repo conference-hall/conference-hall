@@ -1,7 +1,7 @@
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
-import { sessionRequired } from '~/libs/auth/auth.server';
+import { requireSession } from '~/libs/auth/cookies';
 import { getActivities } from './server/get-activities.server';
 import { mapErrorToResponse } from '~/libs/errors';
 import { Container } from '~/design-system/layouts/Container';
@@ -14,7 +14,7 @@ import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 import { useUser } from '~/root';
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const { uid } = await sessionRequired(request);
+  const { uid } = await requireSession(request);
   try {
     const url = new URL(request.url);
     const page = await parsePage(url.searchParams);

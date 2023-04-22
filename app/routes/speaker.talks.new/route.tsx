@@ -5,7 +5,7 @@ import { Form, useActionData } from '@remix-run/react';
 import { withZod } from '@remix-validated-form/with-zod';
 import { TalkSaveSchema } from '~/schemas/talks';
 import { createTalk } from './server/create-talk.server';
-import { sessionRequired } from '~/libs/auth/auth.server';
+import { requireSession } from '~/libs/auth/cookies';
 import { mapErrorToResponse } from '~/libs/errors';
 import { DetailsForm } from '~/shared-components/proposals/forms/DetailsForm';
 import { Button } from '~/design-system/Buttons';
@@ -14,7 +14,7 @@ import { Container } from '~/design-system/layouts/Container';
 import { Card } from '~/design-system/layouts/Card';
 
 export const action = async ({ request }: LoaderArgs) => {
-  const { uid } = await sessionRequired(request);
+  const { uid } = await requireSession(request);
   const form = await request.formData();
 
   const result = await withZod(TalkSaveSchema).validate(form);

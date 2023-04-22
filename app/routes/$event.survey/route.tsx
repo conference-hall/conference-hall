@@ -5,7 +5,7 @@ import { json } from '@remix-run/node';
 import { SurveyForm } from '~/shared-components/proposals/forms/SurveyForm';
 import { Button } from '~/design-system/Buttons';
 import { Container } from '~/design-system/layouts/Container';
-import { sessionRequired } from '~/libs/auth/auth.server';
+import { requireSession } from '~/libs/auth/cookies';
 import { mapErrorToResponse } from '~/libs/errors';
 import type { SurveyQuestions } from '~/schemas/survey';
 import { SurveySchema } from '~/schemas/survey';
@@ -23,7 +23,7 @@ type SurveyQuestionsForm = {
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const { uid } = await sessionRequired(request);
+  const { uid } = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
 
   try {
@@ -36,7 +36,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
-  const { uid, session } = await sessionRequired(request);
+  const { uid } = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
   const form = await request.formData();
 
@@ -44,7 +44,7 @@ export const action = async ({ request, params }: ActionArgs) => {
   if (result.error) throw new Response('Bad survey values', { status: 400 });
   try {
     await saveSurvey(uid, params.event, result.data);
-    const toast = await createToast(session, 'Survey successfully saved.');
+    const toast = await createToast(request, 'Survey successfully saved.');
     return json(null, toast);
   } catch (err) {
     throw mapErrorToResponse(err);

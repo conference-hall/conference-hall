@@ -1,5 +1,4 @@
 import { ArrowRightOnRectangleIcon, StarIcon } from '@heroicons/react/20/solid';
-import { getAuth } from 'firebase/auth';
 import { Menu } from '~/design-system/menus/Menu';
 import { Avatar } from '~/design-system/Avatar';
 
@@ -25,11 +24,9 @@ export function UserMenuDesktop({ name, email, picture, isOrganizer }: Props) {
         </Menu.ItemLink>
       )}
 
-      <Menu.ItemForm action="/logout" method="POST" icon={ArrowRightOnRectangleIcon}>
-        <button type="submit" className="h-full w-full text-left" onClick={() => getAuth().signOut()}>
-          Sign out
-        </button>
-      </Menu.ItemForm>
+      <Menu.ItemLink to="/logout" icon={ArrowRightOnRectangleIcon}>
+        Sign out
+      </Menu.ItemLink>
     </Menu>
   );
 }

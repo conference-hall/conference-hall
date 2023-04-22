@@ -8,7 +8,7 @@ import { getInvitation } from '~/routes/invitation.$invite/server/get-invitation
 import { addMember } from './server/add-member.server';
 import { addCoSpeakerToProposal } from './server/add-co-speaker-to-proposal.server';
 import { addCoSpeakerToTalk } from './server/add-co-speaker-to-talk.server';
-import { sessionRequired } from '~/libs/auth/auth.server';
+import { requireSession } from '~/libs/auth/cookies';
 import { mapErrorToResponse } from '~/libs/errors';
 import { Container } from '~/design-system/layouts/Container';
 import { H1, Text } from '~/design-system/Typography';
@@ -16,7 +16,7 @@ import { Button } from '~/design-system/Buttons';
 import { useUser } from '~/root';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  await sessionRequired(request);
+  await requireSession(request);
   invariant(params.invite, 'Invalid invite');
 
   try {
@@ -28,7 +28,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const { uid } = await sessionRequired(request);
+  const { uid } = await requireSession(request);
   invariant(params.invite, 'Invalid invite');
   const form = await request.formData();
   const type = form.get('_type');
