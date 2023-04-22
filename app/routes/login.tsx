@@ -1,8 +1,8 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 import { useFetcher, useSearchParams } from '@remix-run/react';
-import { signInWithRedirect, getRedirectResult, GoogleAuthProvider } from 'firebase/auth';
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { Container } from '~/design-system/layouts/Container';
 import { H1 } from '~/design-system/Typography';
 import { Button } from '~/design-system/Buttons';
@@ -25,11 +25,10 @@ export default function Login() {
 
   const { submit } = useFetcher();
 
-  useEffect(() => {
+  const signIn = useCallback(() => {
     const clientAuth = getClientAuth();
-    getRedirectResult(clientAuth)
+    signInWithPopup(clientAuth, new GoogleAuthProvider())
       .then(async (credentials) => {
-        if (!credentials) return;
         const token = await credentials.user.getIdToken();
         submit({ token, redirectTo }, { method: 'post', action: '/login' });
       })
@@ -38,11 +37,6 @@ export default function Login() {
         console.error(error);
       });
   }, [submit, redirectTo]);
-
-  const signIn = useCallback(() => {
-    const clientAuth = getClientAuth();
-    signInWithRedirect(clientAuth, new GoogleAuthProvider());
-  }, []);
 
   return (
     <Container className="flex flex-col items-center justify-center py-16 sm:py-64">
