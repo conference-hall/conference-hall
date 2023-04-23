@@ -34,6 +34,8 @@ describe('Speaker home page', () => {
     eventProposal.isPageVisible();
   });
 
+  it.skip('displays speaker activities');
+
   it('can edit the profile', () => {
     home.visit();
     home.editProfile().click();

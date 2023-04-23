@@ -1,6 +1,6 @@
 import invariant from 'tiny-invariant';
 import type { LoaderArgs } from '@remix-run/node';
-import { requireSession } from '~/libs/auth/cookies';
+import { requireSession } from '~/libs/auth/session';
 import { H2, Subtitle } from '~/design-system/Typography';
 import { Button } from '~/design-system/Buttons';
 import { Form, useLoaderData } from '@remix-run/react';

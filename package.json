@@ -17,7 +17,7 @@
     "start": "run-s start:*",
     "start:db": "prisma migrate deploy",
     "start:server": "node ./build/server.js",
-    "db:migrate": "prisma migrate dev",
+    "db:migrate": "dotenv -e .env.dev -- prisma migrate dev",
     "db:reset": "dotenv -e .env.dev -- prisma migrate reset",
     "format": "prettier -l --write .",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",

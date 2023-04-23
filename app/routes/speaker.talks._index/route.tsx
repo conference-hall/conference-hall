@@ -4,7 +4,7 @@ import { useLoaderData, useSearchParams, useNavigate } from '@remix-run/react';
 import { SpeakerTalksList } from './components/SpeakerTalksList';
 import Select from '~/design-system/forms/Select';
 import { listTalks } from './server/list-talks.server';
-import { requireSession } from '~/libs/auth/cookies';
+import { requireSession } from '~/libs/auth/session';
 import { mapErrorToResponse } from '~/libs/errors';
 import { ButtonLink } from '~/design-system/Buttons';
 import { PlusIcon } from '@heroicons/react/20/solid';

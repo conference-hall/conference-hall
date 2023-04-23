@@ -5,7 +5,7 @@ import { Form, useActionData } from '@remix-run/react';
 import { withZod } from '@remix-validated-form/with-zod';
 import { TalkSaveSchema } from '~/schemas/talks';
 import { createTalk } from './server/create-talk.server';
-import { requireSession } from '~/libs/auth/cookies';
+import { requireSession } from '~/libs/auth/session';
 import { mapErrorToResponse } from '~/libs/errors';
 import { DetailsForm } from '~/shared-components/proposals/forms/DetailsForm';
 import { Button } from '~/design-system/Buttons';

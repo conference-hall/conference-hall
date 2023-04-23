@@ -4,7 +4,7 @@ import { redirect } from '@remix-run/node';
 import { Outlet } from '@remix-run/react';
 import { Container } from '~/design-system/layouts/Container';
 import { NavSideMenu } from '~/design-system/navigation/NavSideMenu';
-import { requireSession } from '~/libs/auth/cookies';
+import { requireSession } from '~/libs/auth/session';
 import {
   CodeBracketIcon,
   Cog6ToothIcon,

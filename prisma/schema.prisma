@@ -14,7 +14,6 @@ model User {
   name               String?
   bio                String?
   photoURL           String?
-  betaAccess         String?
   github             String?
   company            String?
   references         String?

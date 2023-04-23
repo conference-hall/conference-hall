@@ -249,8 +249,6 @@ describe('Event settings', () => {
         cy.findByLabelText('Submitted proposals').click();
         cy.findByLabelText('Confirmed proposals').click();
         cy.findByLabelText('Declined proposals').click();
-        cy.findByLabelText('Accepted proposals').click();
-        cy.findByLabelText('Rejected proposals').click();
       });
     });
 

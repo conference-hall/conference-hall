@@ -5,7 +5,7 @@ import { json } from '@remix-run/node';
 import { SurveyForm } from '~/shared-components/proposals/forms/SurveyForm';
 import { Button } from '~/design-system/Buttons';
 import { Container } from '~/design-system/layouts/Container';
-import { requireSession } from '~/libs/auth/cookies';
+import { requireSession } from '~/libs/auth/session';
 import { mapErrorToResponse } from '~/libs/errors';
 import type { SurveyQuestions } from '~/schemas/survey';
 import { SurveySchema } from '~/schemas/survey';

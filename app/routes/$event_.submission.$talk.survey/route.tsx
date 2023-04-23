@@ -12,7 +12,7 @@ import { mapErrorToResponse } from '../../libs/errors';
 import { getQuestions } from '~/shared-server/survey/get-questions.server';
 import { saveSurvey } from '~/shared-server/survey/save-survey.server';
 import { Card } from '~/design-system/layouts/Card';
-import { requireSession } from '~/libs/auth/cookies';
+import { requireSession } from '~/libs/auth/session';
 
 export const handle = { step: 'survey' };
 

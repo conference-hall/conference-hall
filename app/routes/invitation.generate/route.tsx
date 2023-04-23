@@ -3,7 +3,7 @@ import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { mapErrorToResponse } from '../../libs/errors';
 import { generateLink } from './server/generate-link.server';
-import { requireSession } from '~/libs/auth/cookies';
+import { requireSession } from '~/libs/auth/session';
 
 export const action = async ({ request }: LoaderArgs) => {
   const { uid } = await requireSession(request);

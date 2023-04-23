@@ -5,7 +5,7 @@ import { useLoaderData } from '@remix-run/react';
 import { getTalk } from '~/shared-server/talks/get-talk.server';
 import { archiveTalk, restoreTalk } from './server/archive-talk.server';
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
-import { requireSession } from '~/libs/auth/cookies';
+import { requireSession } from '~/libs/auth/session';
 import { mapErrorToResponse } from '~/libs/errors';
 import { Container } from '~/design-system/layouts/Container';
 import { ButtonLink } from '~/design-system/Buttons';

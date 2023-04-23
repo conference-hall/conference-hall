@@ -19,12 +19,10 @@ import { getUser } from './shared-server/users/get-user.server';
 import { H1, Text } from './design-system/Typography';
 import { GlobalLoading } from './shared-components/GlobalLoading';
 import { Toast } from './design-system/Toast';
-import type { ToastData } from './libs/toasts/toasts';
-import { getToast } from './libs/toasts/toasts';
 import tailwind from './tailwind.css';
 import { Container } from './design-system/layouts/Container';
 import { initializeFirebaseClient } from './libs/auth/firebase';
-import { getSessionUid } from './libs/auth/cookies';
+import { commitSession, getSession, getSessionUid } from './libs/auth/session';
 
 export function meta() {
   return [
@@ -44,21 +42,26 @@ export const links: LinksFunction = () => {
 };
 
 export const loader = async ({ request }: LoaderArgs) => {
+  const session = await getSession(request);
+  const toast = session.get('toast');
+
   const uid = await getSessionUid(request);
   const user = await getUser(uid);
-  const toast = await getToast(request);
 
-  return json({
-    user,
-    toast,
-    firebase: {
-      FIREBASE_API_KEY: config.FIREBASE_API_KEY,
-      FIREBASE_AUTH_DOMAIN: config.FIREBASE_AUTH_DOMAIN,
-      FIREBASE_PROJECT_ID: config.FIREBASE_PROJECT_ID,
-      FIREBASE_AUTH_EMULATOR_HOST: config.FIREBASE_AUTH_EMULATOR_HOST,
-      useFirebaseEmulators: config.useEmulators,
+  return json(
+    {
+      user,
+      toast,
+      firebase: {
+        FIREBASE_API_KEY: config.FIREBASE_API_KEY,
+        FIREBASE_AUTH_DOMAIN: config.FIREBASE_AUTH_DOMAIN,
+        FIREBASE_PROJECT_ID: config.FIREBASE_PROJECT_ID,
+        FIREBASE_AUTH_EMULATOR_HOST: config.FIREBASE_AUTH_EMULATOR_HOST,
+        useFirebaseEmulators: config.useEmulators,
+      },
     },
-  });
+    { headers: { 'Set-Cookie': await commitSession(session) } }
+  );
 };
 
 export default function App() {
@@ -77,7 +80,7 @@ export function useUser() {
   return useOutletContext<{ user: User }>();
 }
 
-type DocumentProps = { children: ReactNode; toast?: ToastData | null };
+type DocumentProps = { children: ReactNode; toast?: string };
 
 function Document({ children, toast }: DocumentProps) {
   return (

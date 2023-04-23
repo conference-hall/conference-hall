@@ -2,7 +2,7 @@ import invariant from 'tiny-invariant';
 import type { ActionArgs } from '@remix-run/node';
 import { withZod } from '@remix-validated-form/with-zod';
 import { ProposalRatingDataSchema } from '~/schemas/proposal';
-import { requireSession } from '~/libs/auth/cookies';
+import { requireSession } from '~/libs/auth/session';
 import { mapErrorToResponse } from '~/libs/errors';
 import { rateProposal } from '~/routes/organizer.$orga.$event.review.$proposal.rate/server/rate-proposal.server';
 

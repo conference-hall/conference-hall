@@ -8,7 +8,7 @@ import { getInvitation } from '~/routes/invitation.$invite/server/get-invitation
 import { addMember } from './server/add-member.server';
 import { addCoSpeakerToProposal } from './server/add-co-speaker-to-proposal.server';
 import { addCoSpeakerToTalk } from './server/add-co-speaker-to-talk.server';
-import { requireSession } from '~/libs/auth/cookies';
+import { requireSession } from '~/libs/auth/session';
 import { mapErrorToResponse } from '~/libs/errors';
 import { Container } from '~/design-system/layouts/Container';
 import { H1, Text } from '~/design-system/Typography';

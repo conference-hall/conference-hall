@@ -1,60 +1,47 @@
 import { CheckCircleIcon, XMarkIcon } from '@heroicons/react/20/solid';
-import { useEffect, useRef, useState } from 'react';
-import type { ToastData } from '~/libs/toasts/toasts';
+import { useEffect, useState } from 'react';
 import { ToastTransition } from './Transitions';
 import { IconButton } from './IconButtons';
 import { Text } from './Typography';
 
-type Props = { toast?: ToastData | null };
-
-type Timeout = ReturnType<typeof setTimeout>;
+type Props = { toast?: string };
 
 const TOAST_TIME = 10000;
 
 export function Toast({ toast }: Props) {
-  const timerRef = useRef<Timeout | null>(null);
   const [show, setShow] = useState(false);
-  const { id, message } = toast || {};
 
   useEffect(() => {
-    if (!id) return;
+    if (!toast) return;
     setShow(true);
-    timerRef.current = setTimeout(() => setShow(false), TOAST_TIME);
-  }, [id]);
+    const timeout = setTimeout(() => setShow(false), TOAST_TIME);
 
-  useEffect(() => {
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-    };
-  }, []);
+    return () => clearTimeout(timeout);
+  }, [toast]);
 
   return (
     <>
       <div aria-live="assertive" className="pointer-events-none fixed inset-0 z-30 flex items-end px-4 py-6 sm:p-6">
         <div className="flex w-full flex-col items-center space-y-4 sm:items-end">
           <ToastTransition show={show}>
-            {id ? (
-              <div
-                id="toast"
-                className="pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5"
-              >
-                <div className="flex items-center justify-between p-4">
-                  <div className="flex flex-1 items-center">
-                    <CheckCircleIcon className="h-6 w-6 flex-shrink-0 text-green-400" aria-hidden="true" />
-                    <div className="ml-3">
-                      <Text size="s" strong>
-                        {message}
-                      </Text>
-                    </div>
-                  </div>
-                  <div className="ml-4">
-                    <IconButton variant="secondary" size="s" onClick={() => setShow(false)} icon={XMarkIcon} />
+            <div
+              id="toast"
+              className="pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5"
+            >
+              <div className="flex items-center justify-between p-4">
+                <div className="flex flex-1 items-center">
+                  <CheckCircleIcon className="h-6 w-6 flex-shrink-0 text-green-400" aria-hidden="true" />
+                  <div className="ml-3">
+                    <Text size="s" strong>
+                      {toast}
+                    </Text>
                   </div>
                 </div>
+                <div className="ml-4">
+                  <IconButton variant="secondary" size="s" onClick={() => setShow(false)} icon={XMarkIcon} />
+                </div>
               </div>
-            ) : (
-              <div />
-            )}
+            </div>
           </ToastTransition>
         </div>
       </div>

@@ -15,7 +15,7 @@ import { getSubmittedProposal } from '../../shared-server/proposals/get-submitte
 import { DetailsSchema } from '~/schemas/profile.schema';
 import { Card } from '~/design-system/layouts/Card';
 import { useUser } from '~/root';
-import { requireSession } from '~/libs/auth/cookies';
+import { requireSession } from '~/libs/auth/session';
 
 export const handle = { step: 'speakers' };
 

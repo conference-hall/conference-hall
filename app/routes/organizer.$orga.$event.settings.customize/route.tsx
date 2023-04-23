@@ -2,7 +2,7 @@ import invariant from 'tiny-invariant';
 import type { ChangeEvent } from 'react';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { requireSession } from '~/libs/auth/cookies';
+import { requireSession } from '~/libs/auth/session';
 import { H2, Subtitle } from '~/design-system/Typography';
 import { Form, useActionData, useSubmit } from '@remix-run/react';
 import { AlertInfo } from '~/design-system/Alerts';

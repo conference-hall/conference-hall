@@ -3,7 +3,7 @@ import type { ActionArgs, ActionFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { withZod } from '@remix-validated-form/with-zod';
 import { ProposalParticipationSchema } from '~/schemas/proposal';
-import { requireSession } from '~/libs/auth/cookies';
+import { requireSession } from '~/libs/auth/session';
 import { mapErrorToResponse } from '~/libs/errors';
 import { createToast } from '~/libs/toasts/toasts';
 import { sendParticipationAnswer } from './server/send-participation-answer.server';

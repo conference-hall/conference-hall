@@ -7,7 +7,7 @@ import { saveTracks } from './server/save-tracks.server';
 import { withZod } from '@remix-validated-form/with-zod';
 import { useEvent } from '~/routes/$event/route';
 import { getSubmittedProposal } from '~/shared-server/proposals/get-submitted-proposal.server';
-import { requireSession } from '~/libs/auth/cookies';
+import { requireSession } from '~/libs/auth/session';
 import { mapErrorToResponse } from '~/libs/errors';
 import { TracksUpdateSchema } from './types/tracks';
 import { FormatsForm } from '~/shared-components/proposals/forms/FormatsForm';

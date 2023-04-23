@@ -8,7 +8,7 @@ import { H2 } from '~/design-system/Typography';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
 import { Input } from '~/design-system/forms/Input';
 import { Button } from '~/design-system/Buttons';
-import { requireSession } from '~/libs/auth/cookies';
+import { requireSession } from '~/libs/auth/session';
 import { updateEvent } from '~/shared-server/organizations/update-event.server';
 import { useOrganizerEvent } from '../organizer.$orga.$event/route';
 import { EventEmailNotificationsSettingsSchema } from './types/event-email-notifications-settings.schema';
@@ -100,24 +100,6 @@ export default function EventNotificationsSettingsRoute() {
               defaultChecked={event.emailNotifications?.includes('declined')}
             >
               Declined proposals
-            </Checkbox>
-            <Checkbox
-              id="accepted"
-              name="emailNotifications"
-              description="Have a copy of acceptation emails sent to speakers."
-              value="accepted"
-              defaultChecked={event.emailNotifications?.includes('accepted')}
-            >
-              Accepted proposals
-            </Checkbox>
-            <Checkbox
-              id="rejected"
-              name="emailNotifications"
-              description="Have a copy of rejection emails sent to speakers."
-              value="rejected"
-              defaultChecked={event.emailNotifications?.includes('rejected')}
-            >
-              Rejected proposals
             </Checkbox>
           </Form>
         </Card.Content>
