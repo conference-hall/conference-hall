@@ -9,8 +9,8 @@ class SlackSettings {
   }
 
   saveSlackWebhook(url: string) {
-    cy.typeOn('Web hook URL', url);
-    cy.findByRole('button', { name: 'Save Web hook URL' }).click();
+    cy.typeOn('Slack web hook URL', url);
+    cy.findByRole('button', { name: 'Save Slack integration' }).click();
   }
 }
 

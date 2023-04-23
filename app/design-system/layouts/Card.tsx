@@ -25,6 +25,8 @@ const BACKGROUND = {
   dark: 'bg-gray-800',
 };
 
+// <Card /> component
+
 type CardProps = {
   as?: React.ElementType;
   rounded?: keyof typeof ROUNDED;
@@ -37,6 +39,8 @@ type CardProps = {
 export function Card({ as: Tag = 'div', rounded = 'lg', p = 0, variant = 'light', className, ...rest }: CardProps) {
   return <Tag className={c('shadow', BACKGROUND[variant], ROUNDED[rounded], PADDING[p], className)} {...rest} />;
 }
+
+// <CardLink /> component
 
 type CardLinkProps = LinkProps & CardProps;
 
@@ -55,3 +59,27 @@ export function CardLink({ as, rounded, p, variant, className, children, ...rest
     </Card>
   );
 }
+
+// <Card.Title /> component
+
+function Title({ children }: { children: React.ReactNode }) {
+  return <div className="px-8 pb-6 pt-8">{children}</div>;
+}
+
+Card.Title = Title;
+
+// <Card.Content /> component
+
+function Content({ children }: { children: React.ReactNode }) {
+  return <div className="flex flex-col gap-6 px-8 pb-8">{children}</div>;
+}
+
+Card.Content = Content;
+
+// <Card.Actions /> component
+
+function Actions({ children }: { children: React.ReactNode }) {
+  return <div className="flex justify-end gap-4 border-t border-t-gray-200 px-8 py-4">{children}</div>;
+}
+
+Card.Actions = Actions;

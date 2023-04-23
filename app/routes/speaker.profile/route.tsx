@@ -14,7 +14,6 @@ import { requireSession } from '~/libs/auth/cookies';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 import { Container } from '~/design-system/layouts/Container';
 import { NavSideMenu } from '~/design-system/navigation/NavSideMenu';
-import { Card } from '~/design-system/layouts/Card';
 import { useUser } from '~/root';
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -70,28 +69,22 @@ export default function ProfileRoute() {
         <NavSideMenu
           aria-label="Profile edition menu"
           items={MENU_ITEMS}
-          className="sticky top-4 hidden w-60 self-start lg:block"
+          className="sticky top-4 hidden self-start lg:block"
           noActive
         />
 
         <div className="min-w-0 flex-1 space-y-6 sm:px-6 lg:px-0">
-          <Card as="section">
-            <SpeakerDetailsForm name={user.name} email={user.email} photoURL={user.photoURL} errors={errors} />
-          </Card>
+          <SpeakerDetailsForm name={user.name} email={user.email} photoURL={user.photoURL} errors={errors} />
 
-          <Card as="section">
-            <PersonalInfoForm bio={user.bio} references={user.references} errors={errors} />
-          </Card>
+          <PersonalInfoForm bio={user.bio} references={user.references} errors={errors} />
 
-          <Card as="section">
-            <AdditionalInfoForm
-              company={user.company}
-              address={user.address}
-              twitter={user.twitter}
-              github={user.github}
-              errors={errors}
-            />
-          </Card>
+          <AdditionalInfoForm
+            company={user.company}
+            address={user.address}
+            twitter={user.twitter}
+            github={user.github}
+            errors={errors}
+          />
         </div>
       </Container>
     </>

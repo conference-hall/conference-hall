@@ -6,7 +6,7 @@ import { Card } from './layouts/Card';
 type Props = {
   title?: string;
   children: ReactNode;
-  variant?: 'light' | 'dark';
+  variant?: 'light' | 'dark' | 'none';
   vertical?: boolean;
 };
 
@@ -17,8 +17,12 @@ export const StoryBlock = ({ title, children, variant = 'light', vertical = fals
         {title}
       </H1>
     )}
-    <Card p={8} variant={variant}>
-      <div className={c('flex items-start gap-4', { 'flex-col': vertical })}>{children}</div>
-    </Card>
+    {variant === 'none' ? (
+      children
+    ) : (
+      <Card p={8} variant={variant}>
+        <div className={c('flex items-start gap-4', { 'flex-col': vertical })}>{children}</div>
+      </Card>
+    )}
   </section>
 );

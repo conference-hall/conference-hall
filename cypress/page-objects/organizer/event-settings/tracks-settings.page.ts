@@ -8,10 +8,6 @@ class TracksSettings {
     cy.findByRole('heading', { name: 'Formats' }).should('exist');
   }
 
-  formatsBlock() {
-    return cy.findByRole('heading', { name: 'Formats' }).parent();
-  }
-
   formatsRequired() {
     cy.findByRole('checkbox', { name: 'Format selection required' }).click();
   }
@@ -22,10 +18,6 @@ class TracksSettings {
 
   newFormatModal() {
     return cy.findByRole('dialog', { name: 'Format track' });
-  }
-
-  categoriesBlock() {
-    return cy.findByRole('heading', { name: 'Categories' }).parent();
   }
 
   categoriesRequired() {

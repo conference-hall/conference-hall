@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Form } from '@remix-run/react';
 import { Modal } from '~/design-system/dialogs/Modals';
 import { Button } from '~/design-system/Buttons';
-import { ExclamationTriangleIcon, PencilIcon, PlusIcon } from '@heroicons/react/24/outline';
+import { ExclamationTriangleIcon, PencilIcon, PlusIcon } from '@heroicons/react/20/solid';
 import { Input } from '~/design-system/forms/Input';
 import { TextArea } from '~/design-system/forms/TextArea';
 import { IconButton } from '~/design-system/IconButtons';
@@ -15,7 +15,7 @@ export function NewTrackButton({ type }: NewTrackButtonProps) {
   const [isModalOpen, setModalOpen] = useState(false);
   return (
     <>
-      <Button iconLeft={PlusIcon} onClick={() => setModalOpen(true)} variant="secondary">
+      <Button iconLeft={PlusIcon} onClick={() => setModalOpen(true)}>
         {type === 'formats' ? 'New format' : 'New category'}
       </Button>
       <SaveTrackFormModal type={type} isOpen={isModalOpen} onClose={() => setModalOpen(false)} />

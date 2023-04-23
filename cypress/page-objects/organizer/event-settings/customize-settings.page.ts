@@ -5,11 +5,11 @@ class CustomizeSettings {
   }
 
   isPageVisible() {
-    cy.findByRole('heading', { name: 'Customize event banner' }).should('exist');
+    cy.findByRole('heading', { name: 'Customize event logo' }).should('exist');
   }
 
   uploadBanner() {
-    return cy.findByLabelText('Change banner');
+    return cy.findByLabelText('Change logo');
   }
 }
 

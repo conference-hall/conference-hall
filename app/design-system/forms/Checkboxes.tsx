@@ -1,6 +1,6 @@
 import type { ReactNode, Ref } from 'react';
 import { forwardRef } from 'react';
-import cn from 'classnames';
+import c from 'classnames';
 import { Text } from '../Typography';
 
 type CheckboxGroupProps = {
@@ -12,7 +12,7 @@ type CheckboxGroupProps = {
 };
 
 export function CheckboxGroup({ label, description, inline, className, children }: CheckboxGroupProps) {
-  const layoutStyle = cn('space-y-4', {
+  const layoutStyle = c('space-y-4', {
     'sm:flex sm:items-center sm:space-y-0 sm:space-x-10': inline,
   });
 
@@ -29,7 +29,7 @@ export function CheckboxGroup({ label, description, inline, className, children 
 }
 
 export function CheckboxHeadingGroup({ label, description, inline, className, children }: CheckboxGroupProps) {
-  const layoutStyle = cn('space-y-4', {
+  const layoutStyle = c('space-y-4', {
     'sm:flex sm:items-center sm:space-y-0 sm:space-x-10': inline,
   });
 
@@ -55,7 +55,7 @@ export function CheckboxField(
   ref: Ref<HTMLInputElement>
 ) {
   return (
-    <div className={cn('relative flex items-center', className)}>
+    <div className={c('relative flex ', { 'items-start': description, 'items-center': !description }, className)}>
       <div className="flex h-5 items-center">
         <input
           ref={ref}
@@ -63,15 +63,16 @@ export function CheckboxField(
           aria-describedby={description ? `${id}-description` : undefined}
           name={name}
           type="checkbox"
-          className={cn('h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500', {
+          className={c('h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500', {
             'cursor-not-allowed opacity-50': rest?.disabled,
+            'mt-1.5': description,
           })}
           {...rest}
         />
       </div>
       {children && (
         <div className="pl-3">
-          <Text as="label" htmlFor={id} size="s">
+          <Text as="label" strong htmlFor={id} size="s">
             {children}
           </Text>
 

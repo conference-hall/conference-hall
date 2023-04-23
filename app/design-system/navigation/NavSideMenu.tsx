@@ -9,7 +9,7 @@ type Props = { items: Array<NavItem>; noActive?: boolean; className?: string };
 
 export function NavSideMenu({ items, noActive, className, ...rest }: Props) {
   return (
-    <aside className={className}>
+    <aside className={c('w-1/5', className)}>
       <Card p={4} as="nav" className="space-y-1" {...rest}>
         {items.map((item) => (
           <NavLink key={item.to} to={item.to} className={({ isActive }) => menuStyles(isActive, noActive)} end>

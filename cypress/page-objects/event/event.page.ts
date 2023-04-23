@@ -11,11 +11,11 @@ class EventPage extends BasePage {
   }
 
   submitButton() {
-    return cy.findAllByRole('link', { name: 'Submit a proposal' }).first();
+    cy.findAllByRole('link', { name: 'Submit a proposal' }).click();
   }
 
   searchForEvent() {
-    return cy.findAllByRole('link', { name: 'Search for event' }).first();
+    cy.findAllByRole('link', { name: 'Search for event' }).click();
   }
 }
 
