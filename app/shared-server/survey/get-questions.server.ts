@@ -1,7 +1,7 @@
 import type { SurveyQuestions } from '~/schemas/survey';
 import { jsonToArray } from '~/libs/prisma';
-import { db } from '../../libs/db';
-import { EventNotFoundError, SurveyNotEnabledError } from '../../libs/errors';
+import { db } from '~/libs/db';
+import { EventNotFoundError, SurveyNotEnabledError } from '~/libs/errors';
 
 export async function getQuestions(slug: string) {
   const event = await db.event.findUnique({
@@ -10,11 +10,9 @@ export async function getQuestions(slug: string) {
   });
   if (!event) throw new EventNotFoundError();
 
-  const enabledQuestions = jsonToArray(event.surveyQuestions);
-  if (!event.surveyEnabled || !enabledQuestions?.length) {
-    throw new SurveyNotEnabledError();
-  }
+  if (!event.surveyEnabled) throw new SurveyNotEnabledError();
 
+  const enabledQuestions = jsonToArray(event.surveyQuestions);
   return QUESTIONS.filter((question) => enabledQuestions.includes(question.name));
 }
 

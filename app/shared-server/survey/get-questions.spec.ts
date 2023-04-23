@@ -38,9 +38,4 @@ describe('#getQuestions', () => {
     const event = await eventFactory();
     await expect(getQuestions(event.slug)).rejects.toThrowError(SurveyNotEnabledError);
   });
-
-  it('throws an error when no question selected on survey', async () => {
-    const event = await eventFactory({ attributes: { surveyEnabled: true } });
-    await expect(getQuestions(event.slug)).rejects.toThrowError(SurveyNotEnabledError);
-  });
 });

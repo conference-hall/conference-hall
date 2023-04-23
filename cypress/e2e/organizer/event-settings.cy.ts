@@ -223,6 +223,7 @@ describe('Event settings', () => {
         cy.findByLabelText('Do you have any special diet restrictions?').click();
         cy.findByLabelText('Do you have specific information to share?').click();
         survey.saveQuestion().click();
+        // TODO: check it has been saved
       });
     });
 
