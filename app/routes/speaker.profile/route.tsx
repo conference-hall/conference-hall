@@ -69,7 +69,7 @@ export default function ProfileRoute() {
         <NavSideMenu
           aria-label="Profile edition menu"
           items={MENU_ITEMS}
-          className="sticky top-4 hidden w-60 self-start lg:block"
+          className="sticky top-4 hidden self-start lg:block"
           noActive
         />
 
