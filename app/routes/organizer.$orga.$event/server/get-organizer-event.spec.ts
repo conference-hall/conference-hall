@@ -58,6 +58,7 @@ describe('#getEvent', () => {
       cfpState: 'OPENED',
       formats: [],
       categories: [],
+      archived: false,
     });
   });
 

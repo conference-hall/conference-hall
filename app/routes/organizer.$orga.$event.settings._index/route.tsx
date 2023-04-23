@@ -16,6 +16,9 @@ import { EventDetailsSettingsSchema } from './types/event-details-settings.schem
 import { EventGeneralSettingsSchema } from './types/event-general-settings.schema';
 import { Card } from '~/design-system/layouts/Card';
 import { useOrganizerEvent } from '../organizer.$orga.$event/route';
+import { AlertInfo } from '~/design-system/Alerts';
+import { createToast } from '~/libs/toasts/toasts';
+import { ArchiveBoxArrowDownIcon, ArchiveBoxXMarkIcon } from '@heroicons/react/24/outline';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await requireSession(request);
@@ -29,23 +32,36 @@ export const action = async ({ request, params }: ActionArgs) => {
   const form = await request.formData();
   const action = form.get('_action');
 
-  if (action === 'general') {
-    const result = await withZod(EventGeneralSettingsSchema).validate(form);
-    if (result.error) return json(result.error.fieldErrors);
-    const updated = await updateEvent(params.orga, params.event, uid, result.data);
-    if (updated.slug) return redirect(`/organizer/${params.orga}/${updated.slug}/settings`);
-    return json({ slug: updated.error });
-  } else if (action === 'details') {
-    const result = await withZod(EventDetailsSettingsSchema).validate(form);
-    if (result.error) return json(result.error?.fieldErrors);
-    await updateEvent(params.orga, params.event, uid, result.data);
+  switch (action) {
+    case 'general': {
+      const result = await withZod(EventGeneralSettingsSchema).validate(form);
+      if (result.error) return json(result.error.fieldErrors);
+
+      const updated = await updateEvent(params.orga, params.event, uid, result.data);
+      if (!updated.slug) return json({ slug: updated.error });
+
+      return redirect(
+        `/organizer/${params.orga}/${updated.slug}/settings`,
+        await createToast(request, 'Event successfully updated')
+      );
+    }
+    case 'details': {
+      const result = await withZod(EventDetailsSettingsSchema).validate(form);
+      if (result.error) return json(result.error.fieldErrors);
+
+      await updateEvent(params.orga, params.event, uid, result.data);
+      return json(null, await createToast(request, 'Event successfully updated'));
+    }
+    case 'archive': {
+      await updateEvent(params.orga, params.event, uid, { archived: Boolean(form.get('archived')) });
+      return json(null, await createToast(request, 'Event successfully updated'));
+    }
   }
-  return json(null);
 };
 
 export default function EventGeneralSettingsRoute() {
   const { event } = useOrganizerEvent();
-  const errors = useActionData<typeof action>() as Record<string, string>;
+  const errors = useActionData();
 
   return (
     <>
@@ -116,6 +132,33 @@ export default function EventGeneralSettingsRoute() {
             <Button type="submit">Update event details</Button>
           </Card.Actions>
         </Form>
+      </Card>
+
+      <Card as="section">
+        <Card.Title>
+          <H2 size="xl">{event.archived ? 'Restore event' : 'Archive event'}</H2>
+        </Card.Title>
+
+        <Card.Content>
+          <AlertInfo>
+            Archived events are not displayed anymore in the organization list and in the Conference Hall search.
+            Nothing is deleted, you can restore them when you want.
+          </AlertInfo>
+        </Card.Content>
+
+        <Card.Actions>
+          <Form method="POST">
+            <input type="hidden" name="_action" value="archive" />
+            <input type="hidden" name="archived" value={event.archived ? '' : 'true'} />
+            <Button
+              type="submit"
+              variant="secondary"
+              iconLeft={event.archived ? ArchiveBoxXMarkIcon : ArchiveBoxArrowDownIcon}
+            >
+              {event.archived ? 'Restore event' : 'Archive event'}
+            </Button>
+          </Form>
+        </Card.Actions>
       </Card>
     </>
   );

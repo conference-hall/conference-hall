@@ -19,7 +19,7 @@ describe('#listEvents', () => {
     const organization2 = await organizationFactory({ owners: [user] });
     await eventFactory({ traits: ['conference-cfp-open'], organization: organization2 });
 
-    const events = await listEvents('my-orga', user.id);
+    const events = await listEvents('my-orga', user.id, false);
     expect(events).toEqual([
       {
         name: event1.name,
@@ -42,12 +42,32 @@ describe('#listEvents', () => {
     ]);
   });
 
+  it('returns organization archived events', async () => {
+    const user = await userFactory();
+    const organization = await organizationFactory({ owners: [user], attributes: { slug: 'my-orga' } });
+    const event = await eventFactory({ attributes: { name: 'B' }, organization, traits: ['meetup', 'archived'] });
+    await eventFactory({ attributes: { name: 'A' }, organization, traits: ['conference'] });
+
+    const events = await listEvents('my-orga', user.id, true);
+    expect(events).toEqual([
+      {
+        name: event.name,
+        slug: event.slug,
+        type: event.type,
+        bannerUrl: event.bannerUrl,
+        cfpStart: event.cfpStart?.toUTCString(),
+        cfpEnd: event.cfpEnd?.toUTCString(),
+        cfpState: 'CLOSED',
+      },
+    ]);
+  });
+
   it('returns nothing when user is not member of the organization', async () => {
     const user = await userFactory();
     const organization = await organizationFactory({ attributes: { slug: 'my-orga' } });
     await eventFactory({ organization });
 
-    const events = await listEvents('my-orga', user.id);
+    const events = await listEvents('my-orga', user.id, false);
     expect(events).toEqual([]);
   });
 });

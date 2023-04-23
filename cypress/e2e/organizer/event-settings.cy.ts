@@ -93,6 +93,18 @@ describe('Event settings', () => {
         cy.assertInputText('Website URL', 'https://website.com');
         cy.assertInputText('Contact email', 'contact@email.com');
       });
+
+      it('archive an event', () => {
+        general.visit('orga-1', 'conference-1');
+
+        cy.findByRole('heading', { name: 'Archive event' }).should('exist');
+        general.archive();
+
+        cy.findByRole('heading', { name: 'Restore event' }).should('exist');
+        general.restore();
+
+        cy.findByRole('heading', { name: 'Archive event' }).should('exist');
+      });
     });
 
     describe.skip('customize settings', () => {

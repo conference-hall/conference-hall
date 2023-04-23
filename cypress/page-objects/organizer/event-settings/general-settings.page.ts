@@ -39,6 +39,14 @@ class GeneralSettings {
     if (data.contactEmail) cy.typeOn('Contact email', data.contactEmail);
     cy.findByRole('button', { name: 'Update event details' }).click();
   }
+
+  archive() {
+    cy.findByRole('button', { name: 'Archive event' }).click();
+  }
+
+  restore() {
+    cy.findByRole('button', { name: 'Restore event' }).click();
+  }
 }
 
 export default GeneralSettings;

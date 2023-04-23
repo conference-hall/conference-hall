@@ -1,10 +1,12 @@
 import { CheckCircleIcon, XMarkIcon } from '@heroicons/react/20/solid';
 import { useEffect, useState } from 'react';
-import { ToastTransition } from './Transitions';
-import { IconButton } from './IconButtons';
-import { Text } from './Typography';
+import { IconButton } from '~/design-system/IconButtons';
+import { ToastTransition } from '~/design-system/Transitions';
+import { Text } from '~/design-system/Typography';
 
-type Props = { toast?: string };
+type ToastData = { id: string; message: string };
+
+type Props = { toast: ToastData };
 
 const TOAST_TIME = 10000;
 
@@ -12,12 +14,10 @@ export function Toast({ toast }: Props) {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
-    if (!toast) return;
     setShow(true);
     const timeout = setTimeout(() => setShow(false), TOAST_TIME);
-
     return () => clearTimeout(timeout);
-  }, [toast]);
+  }, [toast.id]);
 
   return (
     <>
@@ -33,7 +33,7 @@ export function Toast({ toast }: Props) {
                   <CheckCircleIcon className="h-6 w-6 flex-shrink-0 text-green-400" aria-hidden="true" />
                   <div className="ml-3">
                     <Text size="s" strong>
-                      {toast}
+                      {toast.message}
                     </Text>
                   </div>
                 </div>

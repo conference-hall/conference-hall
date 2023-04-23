@@ -22,6 +22,13 @@ describe('Organization event list', () => {
       organization.list().should('have.length', 2);
     });
 
+    it('displays archived events list', () => {
+      organization.visit('awesome-orga');
+      organization.archivedEvents();
+      organization.list().should('have.length', 1);
+      organization.event('Awesome event archived');
+    });
+
     it('displayed empty state when no event', () => {
       organization.visit('awesome-orga-2');
       cy.assertText('Welcome to "Awesome orga 2"');

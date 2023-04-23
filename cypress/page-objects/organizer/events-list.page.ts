@@ -10,7 +10,7 @@ class OrganizationEventsPage {
   }
 
   isPageVisible() {
-    cy.findByRole('heading', { name: 'Events' }).should('exist');
+    cy.findByRole('heading', { name: 'Organization events' }).should('exist');
   }
 
   eventsTab() {
@@ -23,6 +23,10 @@ class OrganizationEventsPage {
 
   list() {
     return cy.findByRole('list', { name: 'Events list' }).children();
+  }
+
+  archivedEvents() {
+    return cy.findByRole('link', { name: 'Archived' }).click();
   }
 
   event(name: string) {

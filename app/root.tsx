@@ -18,11 +18,12 @@ import type { User } from './shared-server/users/get-user.server';
 import { getUser } from './shared-server/users/get-user.server';
 import { H1, Text } from './design-system/Typography';
 import { GlobalLoading } from './shared-components/GlobalLoading';
-import { Toast } from './design-system/Toast';
+import { Toast } from './libs/toasts/Toast';
 import tailwind from './tailwind.css';
 import { Container } from './design-system/layouts/Container';
 import { initializeFirebaseClient } from './libs/auth/firebase';
 import { commitSession, getSession, getSessionUid } from './libs/auth/session';
+import type { ToastData } from './libs/toasts/toasts';
 
 export function meta() {
   return [
@@ -80,7 +81,7 @@ export function useUser() {
   return useOutletContext<{ user: User }>();
 }
 
-type DocumentProps = { children: ReactNode; toast?: string };
+type DocumentProps = { children: ReactNode; toast?: ToastData };
 
 function Document({ children, toast }: DocumentProps) {
   return (
@@ -95,7 +96,7 @@ function Document({ children, toast }: DocumentProps) {
         <Scripts />
         <ScrollRestoration />
         <LiveReload />
-        <Toast toast={toast} />
+        {toast && <Toast toast={toast} />}
       </body>
     </html>
   );
