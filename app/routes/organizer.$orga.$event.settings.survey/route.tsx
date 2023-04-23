@@ -1,7 +1,7 @@
 import invariant from 'tiny-invariant';
 import type { LoaderArgs } from '@remix-run/node';
 import { requireSession } from '~/libs/auth/cookies';
-import { H2, Text } from '~/design-system/Typography';
+import { H2, Subtitle } from '~/design-system/Typography';
 import { Button } from '~/design-system/Buttons';
 import { Form, useLoaderData } from '@remix-run/react';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
@@ -10,6 +10,8 @@ import { withZod } from '@remix-validated-form/with-zod';
 import { updateEvent } from '~/shared-server/organizations/update-event.server';
 import { QUESTIONS } from '~/shared-server/survey/get-questions.server';
 import { EventSurveySettingsSchema } from './types/event-survey-settings.schema';
+import { Card } from '~/design-system/layouts/Card';
+import { AlertInfo } from '~/design-system/Alerts';
 
 // TODO why not using event-survey#getQuestions?
 export const loader = async ({ request }: LoaderArgs) => {
@@ -44,44 +46,61 @@ export default function EventSurveySettingsRoute() {
 
   return (
     <>
-      <section>
-        <H2>Speaker survey</H2>
-        <Form method="POST" className="mt-6 space-y-4">
-          <Text variant="secondary">
+      <Card as="section">
+        <Card.Title>
+          <H2 size="xl">Speaker survey</H2>
+        </Card.Title>
+
+        <Card.Content>
+          <AlertInfo>
             When enabled a short survey will be asked to speakers when they submit a proposal. It will provide some
             information about gender, transport or accommodation needs.
-          </Text>
-          <input type="hidden" name="_action" value="enable-survey" />
-          <input type="hidden" name="surveyEnabled" value={String(!event.surveyEnabled)} />
-          {event.surveyEnabled ? (
-            <Button type="submit">Disable survey</Button>
-          ) : (
-            <Button type="submit">Enable survey</Button>
-          )}
-        </Form>
-      </section>
-      <section>
-        <H2>Questions</H2>
-        <Text variant="secondary">Select questions that you want to ask to speakers.</Text>
-        <Form method="POST" className="mt-6 space-y-4">
-          <input type="hidden" name="_action" value="save-questions" />
-          {questions.map((question) => (
-            <Checkbox
-              key={question.name}
-              id={question.name}
-              name="surveyQuestions"
-              value={question.name}
-              defaultChecked={event.surveyQuestions.includes(question.name)}
-              disabled={!event.surveyEnabled}
-            >
-              {question.label}
-            </Checkbox>
-          ))}
+          </AlertInfo>
+        </Card.Content>
+
+        <Card.Actions>
+          <Form method="POST">
+            <input type="hidden" name="_action" value="enable-survey" />
+            <input type="hidden" name="surveyEnabled" value={String(!event.surveyEnabled)} />
+            {event.surveyEnabled ? (
+              <Button type="submit">Disable survey</Button>
+            ) : (
+              <Button type="submit">Enable survey</Button>
+            )}
+          </Form>
+        </Card.Actions>
+      </Card>
+
+      <Card as="section">
+        <Card.Title>
+          <H2 size="xl">Survey questions</H2>
+          <Subtitle>Select questions that you want to ask to speakers.</Subtitle>
+        </Card.Title>
+
+        <Card.Content>
+          <Form method="POST" className="space-y-4">
+            {questions.map((question) => (
+              <Checkbox
+                key={question.name}
+                id={question.name}
+                name="surveyQuestions"
+                value={question.name}
+                defaultChecked={event.surveyQuestions.includes(question.name)}
+                disabled={!event.surveyEnabled}
+              >
+                {question.label}
+              </Checkbox>
+            ))}
+            <input type="hidden" name="_action" value="save-questions" />
+          </Form>
+        </Card.Content>
+
+        <Card.Actions>
           <Button type="submit" disabled={!event.surveyEnabled}>
             Save questions
           </Button>
-        </Form>
-      </section>
+        </Card.Actions>
+      </Card>
     </>
   );
 }

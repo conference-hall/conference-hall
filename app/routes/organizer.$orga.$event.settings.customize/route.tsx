@@ -3,7 +3,7 @@ import type { ChangeEvent } from 'react';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { requireSession } from '~/libs/auth/cookies';
-import { H2, Text } from '~/design-system/Typography';
+import { H2, Subtitle } from '~/design-system/Typography';
 import { Form, useActionData, useSubmit } from '@remix-run/react';
 import { AlertInfo } from '~/design-system/Alerts';
 import { ExternalLink } from '~/design-system/Links';
@@ -13,6 +13,9 @@ import { ButtonFileUpload } from '~/design-system/forms/FileUploadButton';
 import { mapErrorToResponse } from '~/libs/errors';
 import { ClientOnly } from 'remix-utils';
 import { uploadEventBanner } from './server/upload-event-banner.server';
+import { Card } from '~/design-system/layouts/Card';
+import { Avatar } from '~/design-system/Avatar';
+import { Button } from '~/design-system/Buttons';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await requireSession(request);
@@ -46,37 +49,36 @@ export default function EventGeneralSettingsRoute() {
     }
   };
 
+  const picture = event.bannerUrl ? `${event.bannerUrl}?${Math.random()}` : undefined;
+
   return (
-    <>
-      <section>
-        <H2>Customize event banner</H2>
-        <div className="mt-6 space-y-4">
-          <Text variant="secondary">Upload your event banner to give a fancy style to your event page.</Text>
-          <AlertInfo>
-            JPEG format with optimal resolution of 1500x500.
-            <br />
-            100kB max (optimize it with <ExternalLink href="https://squoosh.app">squoosh.app</ExternalLink>)
-          </AlertInfo>
-          {event.bannerUrl && (
-            <ClientOnly>
-              {() => (
-                <img
-                  src={`${event.bannerUrl}?${Math.random()}`}
-                  alt="Event banner"
-                  className="h-64 w-full rounded object-cover"
-                />
-              )}
-            </ClientOnly>
-          )}
-          <div className="space-x-4">
-            <Form method="POST" encType="multipart/form-data" onChange={handleSubmit}>
-              <ButtonFileUpload name="bannerUrl" accept="image/jpeg" error={result?.error}>
-                Change banner
-              </ButtonFileUpload>
-            </Form>
-          </div>
-        </div>
-      </section>
-    </>
+    <Card as="section">
+      <Card.Title>
+        <H2 size="xl">Customize event logo</H2>
+        <Subtitle>Upload a beautiful logo for your event.</Subtitle>
+      </Card.Title>
+
+      <Card.Content>
+        <ClientOnly>{() => <Avatar photoURL={picture} name={event.name} square size="4xl" />}</ClientOnly>
+        <AlertInfo>
+          JPEG format with optimal resolution of 500x500.
+          <br />
+          100kB max (optimize it with{' '}
+          <ExternalLink href="https://squoosh.app" className="underline">
+            squoosh.app
+          </ExternalLink>
+          )
+        </AlertInfo>
+      </Card.Content>
+
+      <Card.Actions>
+        <Button variant="secondary">Remove logo</Button>
+        <Form method="POST" encType="multipart/form-data" onChange={handleSubmit}>
+          <ButtonFileUpload name="bannerUrl" accept="image/jpeg" error={result?.error}>
+            Change logo
+          </ButtonFileUpload>
+        </Form>
+      </Card.Actions>
+    </Card>
   );
 }

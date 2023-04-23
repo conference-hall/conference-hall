@@ -3,11 +3,11 @@ import type { ChangeEvent } from 'react';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { requireSession } from '~/libs/auth/cookies';
-import { H2, Text } from '~/design-system/Typography';
+import { H2, Subtitle, Text } from '~/design-system/Typography';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
 import { Form, useFetcher } from '@remix-run/react';
 import { IconButton } from '~/design-system/IconButtons';
-import { TrashIcon } from '@heroicons/react/24/outline';
+import { TrashIcon } from '@heroicons/react/20/solid';
 import { withZod } from '@remix-validated-form/with-zod';
 import { updateEvent } from '~/shared-server/organizations/update-event.server';
 import { deleteCategory, deleteFormat, saveCategory, saveFormat } from './server/update-tracks.server';
@@ -15,6 +15,7 @@ import { EditTrackButton, NewTrackButton } from './components/SaveTrackForm';
 import { EventTrackSaveSchema } from './types/event-track-save.schema';
 import { EventTracksSettingsSchema } from './types/event-track-settings.schema';
 import { useOrganizerEvent } from '../organizer.$orga.$event/route';
+import { Card } from '~/design-system/layouts/Card';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await requireSession(request);
@@ -75,40 +76,49 @@ export default function EventTracksSettingsRoute() {
 
   return (
     <>
-      <section>
-        <H2>Formats</H2>
-        <Checkbox
-          id="formatsRequired"
-          name="formatsRequired"
-          defaultChecked={event.formatsRequired}
-          onChange={handleUpdateSettings}
-          description="When a speaker submit a proposal, the format selection is mandatory."
-          className="mt-6"
-        >
-          Format selection required
-        </Checkbox>
-        <div className="mt-6 space-y-3">
+      <Card as="section">
+        <Card.Title>
+          <H2 size="xl">Formats</H2>
+        </Card.Title>
+        <Card.Content>
+          <Checkbox
+            id="formatsRequired"
+            name="formatsRequired"
+            defaultChecked={event.formatsRequired}
+            onChange={handleUpdateSettings}
+            description="When a speaker submit a proposal, the format selection is mandatory."
+            disabled={event.formats.length === 0}
+          >
+            Format selection required
+          </Checkbox>
           {event.formats.length > 0 && <TrackList type="formats" tracks={event.formats} />}
+        </Card.Content>
+        <Card.Actions>
           <NewTrackButton type="formats" />
-        </div>
-      </section>
-      <section>
-        <H2>Categories</H2>
-        <Checkbox
-          id="categoriesRequired"
-          name="categoriesRequired"
-          defaultChecked={event.categoriesRequired}
-          onChange={handleUpdateSettings}
-          description="When a speaker submit a proposal, the category selection is mandatory."
-          className="mt-6"
-        >
-          Category selection required
-        </Checkbox>
-        <div className="mt-6 space-y-3">
+        </Card.Actions>
+      </Card>
+
+      <Card as="section">
+        <Card.Title>
+          <H2 size="xl">Categories</H2>
+        </Card.Title>
+        <Card.Content>
+          <Checkbox
+            id="categoriesRequired"
+            name="categoriesRequired"
+            defaultChecked={event.categoriesRequired}
+            onChange={handleUpdateSettings}
+            description="When a speaker submit a proposal, the category selection is mandatory."
+            disabled={event.categories.length === 0}
+          >
+            Category selection required
+          </Checkbox>
           {event.categories.length > 0 && <TrackList type="categories" tracks={event.categories} />}
+        </Card.Content>
+        <Card.Actions>
           <NewTrackButton type="categories" />
-        </div>
-      </section>
+        </Card.Actions>
+      </Card>
     </>
   );
 }
@@ -122,12 +132,12 @@ function TrackList({ type, tracks }: TrackListProps) {
   return (
     <ul className="divide-y divide-gray-200 rounded-md border border-gray-200">
       {tracks.map((track) => (
-        <li key={track.id} className="flex items-center justify-between py-3 pl-3 pr-4 text-sm">
+        <li key={track.id} className="flex items-center justify-between py-3 pl-3 pr-4">
           <div className="truncate">
-            <Text truncate>{track.name}</Text>
-            <Text variant="secondary" truncate>
-              {track.description}
+            <Text size="s" strong truncate>
+              {track.name}
             </Text>
+            <Subtitle truncate>{track.description}</Subtitle>
           </div>
           <div className="ml-4 flex flex-shrink-0 gap-2">
             <EditTrackButton type={type} initialValues={track} />

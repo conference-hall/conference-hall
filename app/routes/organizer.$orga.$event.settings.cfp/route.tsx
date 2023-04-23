@@ -3,7 +3,7 @@ import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { withZod } from '@remix-validated-form/with-zod';
 import { requireSession } from '~/libs/auth/cookies';
-import { H2, Text } from '~/design-system/Typography';
+import { H2 } from '~/design-system/Typography';
 import { Form, useActionData } from '@remix-run/react';
 import { Button } from '~/design-system/Buttons';
 import { Input } from '~/design-system/forms/Input';
@@ -12,6 +12,8 @@ import { Checkbox } from '~/design-system/forms/Checkboxes';
 import { updateEvent } from '~/shared-server/organizations/update-event.server';
 import { EventCfpSettingsSchema } from './types/event-cfp-settings.schema';
 import { useOrganizerEvent } from '../organizer.$orga.$event/route';
+import { Card } from '~/design-system/layouts/Card';
+import { AlertInfo } from '~/design-system/Alerts';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await requireSession(request);
@@ -37,23 +39,26 @@ export default function EventCfpSettingsRoute() {
   const errors = useActionData<typeof action>();
 
   return (
-    <>
-      <section>
-        <H2>Call for paper</H2>
-        <Form method="POST" className="mt-6 space-y-4">
+    <Card as="section">
+      <Card.Title>
+        <H2 size="xl">Call for paper</H2>
+      </Card.Title>
+
+      <Form method="POST">
+        <Card.Content>
           <input type="hidden" name="type" value={event.type} />
           {event.type === 'CONFERENCE' ? (
-            <>
-              <Text variant="secondary">
-                Define the period during which the call for papers should be open. The opening and closing of the CFP
-                will be done automatically according to these dates and times.
-              </Text>
+            <div className="space-y-4">
               <DateRangeInput
                 start={{ name: 'cfpStart', label: 'Opening date', value: event.cfpStart }}
                 end={{ name: 'cfpEnd', label: 'Closing date', value: event.cfpEnd }}
                 error={errors?.cfpStart}
               />
-            </>
+              <AlertInfo>
+                Define the period during which the call for papers should be open. The opening and closing of the CFP
+                will be done automatically according to these dates and times.
+              </AlertInfo>
+            </div>
           ) : (
             <Checkbox
               id="cfpStart"
@@ -81,9 +86,12 @@ export default function EventCfpSettingsRoute() {
             description="Optional. Speakers will be required to agree to the code of conduct before submitting their proposal."
             error={errors?.codeOfConductUrl}
           />
+        </Card.Content>
+
+        <Card.Actions>
           <Button>Update CFP preferences</Button>
-        </Form>
-      </section>
-    </>
+        </Card.Actions>
+      </Form>
+    </Card>
   );
 }

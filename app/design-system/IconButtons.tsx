@@ -39,7 +39,7 @@ type IconButtonStylesProps = {
 const getStyles = ({ variant = 'primary', size = 'm', disabled, className }: IconButtonStylesProps) =>
   cn(
     [
-      'inline-flex items-center rounded-full flex-shrink-0',
+      'flex items-center rounded-full flex-shrink-0 shrink-0',
       'border border-transparent',
       'focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500',
     ],
@@ -47,9 +47,8 @@ const getStyles = ({ variant = 'primary', size = 'm', disabled, className }: Ico
       'text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 border border-transparent': variant === 'primary',
       'text-gray-700 bg-transparent hover:bg-gray-200': variant === 'secondary',
       'opacity-50 cursor-not-allowed': disabled,
-      'p-0.5': size === 'xs',
-      'p-1': size === 's',
-      'p-1.5': size === 'm',
+      'p-1': size === 'xs',
+      'p-1.5': size === 's' || size === 'm',
       'p-2': size === 'l',
     },
     className

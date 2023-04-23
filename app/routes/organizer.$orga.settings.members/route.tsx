@@ -59,14 +59,12 @@ export default function OrganizationSettingsRoute() {
   return (
     <Card as="section">
       <Form method="POST" preventScrollReset>
-        <div className="px-8 pt-8">
-          <H3 size="xl" mb={0}>
-            Organization members
-          </H3>
+        <Card.Title>
+          <H3 size="xl">Organization members</H3>
           <Subtitle>Invite, remove or change role of organization members.</Subtitle>
-        </div>
+        </Card.Title>
 
-        <div className="grid grid-cols-1 gap-6 p-8">
+        <Card.Content>
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             {role === 'OWNER' && <InviteMemberButton id={organization.id} invitationLink={invitationLink} />}
           </div>
@@ -92,7 +90,7 @@ export default function OrganizationSettingsRoute() {
               ))}
             </ul>
           </div>
-        </div>
+        </Card.Content>
       </Form>
     </Card>
   );

@@ -23,33 +23,21 @@ class GeneralSettings {
     cy.findByRole('heading', { name: 'General' }).should('exist');
   }
 
-  generalBlock() {
-    return cy.findByRole('heading', { name: 'General' }).parent();
-  }
-
   saveGeneralForm(data: GeneralFormType) {
-    this.generalBlock().within(() => {
-      if (data.name) cy.typeOn('Name', data.name);
-      if (data.slug) cy.typeOn('Event URL', data.slug);
-      if (data.visibility) cy.findByRole('radio', { name: data.visibility }).click();
-      cy.findByRole('button', { name: 'Update event' }).click();
-    });
-  }
-
-  detailsBlock() {
-    return cy.findByRole('heading', { name: 'Event details' }).parent();
+    if (data.name) cy.typeOn('Name', data.name);
+    if (data.slug) cy.typeOn('Event URL', data.slug);
+    if (data.visibility) cy.findByRole('radio', { name: data.visibility }).click();
+    cy.findByRole('button', { name: 'Update event' }).click();
   }
 
   saveDetailsForm(data: DetailFormType) {
-    this.detailsBlock().within(() => {
-      if (data.startDate) cy.typeOn('Start date', data.startDate);
-      if (data.endDate) cy.typeOn('End date', data.endDate);
-      if (data.address) cy.typeOn('Venue address or city', data.address);
-      if (data.description) cy.typeOn('Description', data.description);
-      if (data.websiteUrl) cy.typeOn('Website URL', data.websiteUrl);
-      if (data.contactEmail) cy.typeOn('Contact email', data.contactEmail);
-      cy.findByRole('button', { name: 'Update event details' }).click();
-    });
+    if (data.startDate) cy.typeOn('Start date', data.startDate);
+    if (data.endDate) cy.typeOn('End date', data.endDate);
+    if (data.address) cy.typeOn('Venue address or city', data.address);
+    if (data.description) cy.typeOn('Description', data.description);
+    if (data.websiteUrl) cy.typeOn('Website URL', data.websiteUrl);
+    if (data.contactEmail) cy.typeOn('Contact email', data.contactEmail);
+    cy.findByRole('button', { name: 'Update event details' }).click();
   }
 }
 

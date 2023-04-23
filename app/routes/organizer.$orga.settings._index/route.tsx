@@ -41,20 +41,18 @@ export default function OrganizationSettingsRoute() {
   return (
     <Card as="section">
       <Form method="POST" preventScrollReset>
-        <div className="px-8 pt-8">
-          <H3 size="xl" mb={0}>
-            General
-          </H3>
+        <Card.Title>
+          <H3 size="xl">General</H3>
           <Subtitle>Change organization name and URL.</Subtitle>
-        </div>
+        </Card.Title>
 
-        <div className="grid grid-cols-1 gap-6 p-8">
+        <Card.Content>
           <OrganizationForm initialValues={organization} errors={errors ?? undefined} />
-        </div>
+        </Card.Content>
 
-        <div className="flex justify-end gap-4 border-t border-t-gray-200 px-8 py-4">
+        <Card.Actions>
           <Button type="submit">Save</Button>
-        </div>
+        </Card.Actions>
       </Form>
     </Card>
   );

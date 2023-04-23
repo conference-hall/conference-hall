@@ -2,13 +2,15 @@ import invariant from 'tiny-invariant';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { v4 as uuid } from 'uuid';
 import { requireSession } from '~/libs/auth/cookies';
-import { H2, Text } from '~/design-system/Typography';
+import { H2 } from '~/design-system/Typography';
 import { Form } from '@remix-run/react';
 import { ExternalLink } from '~/design-system/Links';
 import { Button } from '~/design-system/Buttons';
 import { Input } from '~/design-system/forms/Input';
 import { updateEvent } from '~/shared-server/organizations/update-event.server';
 import { useOrganizerEvent } from '../organizer.$orga.$event/route';
+import { Card } from '~/design-system/layouts/Card';
+import { AlertInfo } from '~/design-system/Alerts';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await requireSession(request);
@@ -39,26 +41,42 @@ export default function EventApiSettingsRoute() {
   const { event } = useOrganizerEvent();
 
   return (
-    <>
-      <section>
-        <H2>Web API</H2>
-        <Text variant="secondary">
-          Use the HTTP API if you want to connect a service to some Conference Hall event. Have a look at the Conference
-          Hall <ExternalLink href="https://contribute-conference-hall.netlify.com/">API documentation</ExternalLink>.
-        </Text>
+    <Card as="section">
+      <Card.Title>
+        <H2 size="xl">Web API</H2>
+      </Card.Title>
 
-        <Form method="POST" className="mt-6 space-y-4">
-          <Input name="apiKey" label="API key" disabled value={event.apiKey || ''} />
+      <Card.Content>
+        <Form method="POST" id="api-integration-form">
           {event.apiKey ? (
             <input type="hidden" name="_action" value="revoke-api-key" />
           ) : (
             <input type="hidden" name="_action" value="generate-api-key" />
           )}
-          <Button type="submit" variant="secondary">
-            {event.apiKey ? 'Revoke API key' : 'Generate API key'}
-          </Button>
+          <Input
+            name="apiKey"
+            label="API key"
+            disabled
+            value={event.apiKey || ''}
+            placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+          />
         </Form>
-      </section>
-    </>
+
+        <AlertInfo>
+          Use the HTTP API if you want to connect a service to some Conference Hall event. Have a look at the Conference
+          Hall{' '}
+          <ExternalLink href="https://contribute-conference-hall.netlify.com/" className="underline">
+            API documentation
+          </ExternalLink>
+          .
+        </AlertInfo>
+      </Card.Content>
+
+      <Card.Actions>
+        <Button type="submit" form="api-integration-form">
+          {event.apiKey ? 'Revoke API key' : 'Generate API key'}
+        </Button>
+      </Card.Actions>
+    </Card>
   );
 }

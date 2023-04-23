@@ -69,11 +69,9 @@ describe('Event settings', () => {
         cy.assertUrl('/organizer/orga-1/conference-2/settings');
         cy.reload();
 
-        general.generalBlock().within(() => {
-          cy.assertInputText('Name', 'Conference 2');
-          cy.assertInputText('Event URL', 'conference-2');
-          cy.assertRadioChecked('Private');
-        });
+        cy.assertInputText('Name', 'Conference 2');
+        cy.assertInputText('Event URL', 'conference-2');
+        cy.assertRadioChecked('Private');
       });
 
       it('can update event details', () => {
@@ -88,14 +86,12 @@ describe('Event settings', () => {
           contactEmail: 'contact@email.com',
         });
 
-        general.detailsBlock().within(() => {
-          cy.assertInputText('Start date', '2022-12-12');
-          cy.assertInputText('End date', '2022-12-13');
-          cy.assertInputText('Venue address or city', 'Nantes, France');
-          cy.assertInputText('Description', 'Hello world!');
-          cy.assertInputText('Website URL', 'https://website.com');
-          cy.assertInputText('Contact email', 'contact@email.com');
-        });
+        cy.assertInputText('Start date', '2022-12-12');
+        cy.assertInputText('End date', '2022-12-13');
+        cy.assertInputText('Venue address or city', 'Nantes, France');
+        cy.assertInputText('Description', 'Hello world!');
+        cy.assertInputText('Website URL', 'https://website.com');
+        cy.assertInputText('Contact email', 'contact@email.com');
       });
     });
 
@@ -112,21 +108,17 @@ describe('Event settings', () => {
       it('add, edit and remove a format', () => {
         tracks.visit('orga-1', 'conference-1');
 
-        tracks.formatsRequired();
         tracks.newFormat().click();
-
         tracks.newFormatModal().within(() => {
           cy.typeOn('Name', 'Quickie');
           cy.typeOn('Description', 'Small talk');
           cy.findByRole('button', { name: 'Save format' }).click();
         });
 
-        tracks.formatsBlock().within(() => {
-          cy.assertText('Quickie');
-          cy.assertText('Small talk');
-          cy.findByRole('button', { name: 'Edit Quickie' }).click();
-        });
+        cy.assertText('Quickie');
+        cy.assertText('Small talk');
 
+        cy.findByRole('button', { name: 'Edit Quickie' }).click();
         tracks.newFormatModal().within(() => {
           cy.assertInputText('Name', 'Quickie');
           cy.assertInputText('Description', 'Small talk');
@@ -135,19 +127,19 @@ describe('Event settings', () => {
           cy.findByRole('button', { name: 'Save format' }).click();
         });
 
-        tracks.formatsBlock().within(() => {
-          cy.assertText('Conf');
-          cy.assertText('Long talk');
-          cy.findByRole('button', { name: 'Remove Conf' }).click();
-          cy.assertNoText('Conf');
-          cy.assertNoText('Long talk');
-        });
+        cy.assertText('Conf');
+        cy.assertText('Long talk');
+
+        tracks.formatsRequired();
+
+        cy.findByRole('button', { name: 'Remove Conf' }).click();
+        cy.assertNoText('Conf');
+        cy.assertNoText('Long talk');
       });
 
       it('add, edit and remove a category', () => {
         tracks.visit('orga-1', 'conference-1');
 
-        tracks.categoriesRequired();
         tracks.newCategory().click();
 
         tracks.newCategoryModal().within(() => {
@@ -156,11 +148,9 @@ describe('Event settings', () => {
           cy.findByRole('button', { name: 'Save category' }).click();
         });
 
-        tracks.categoriesBlock().within(() => {
-          cy.assertText('Web');
-          cy.assertText('This is the web');
-          cy.findByRole('button', { name: 'Edit Web' }).click();
-        });
+        cy.assertText('Web');
+        cy.assertText('This is the web');
+        cy.findByRole('button', { name: 'Edit Web' }).click();
 
         tracks.newCategoryModal().within(() => {
           cy.assertInputText('Name', 'Web');
@@ -170,13 +160,14 @@ describe('Event settings', () => {
           cy.findByRole('button', { name: 'Save category' }).click();
         });
 
-        tracks.categoriesBlock().within(() => {
-          cy.assertText('Cloud');
-          cy.assertText('This is the cloud');
-          cy.findByRole('button', { name: 'Remove Cloud' }).click();
-          cy.assertNoText('Cloud');
-          cy.assertNoText('This is the cloud');
-        });
+        cy.assertText('Cloud');
+        cy.assertText('This is the cloud');
+
+        tracks.categoriesRequired();
+
+        cy.findByRole('button', { name: 'Remove Cloud' }).click();
+        cy.assertNoText('Cloud');
+        cy.assertNoText('This is the cloud');
       });
     });
 
