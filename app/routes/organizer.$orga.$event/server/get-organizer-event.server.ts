@@ -44,5 +44,6 @@ export async function getOrganizerEvent(slug: string, uid: string) {
     cfpState: getCfpState(event.type, event.cfpStart, event.cfpEnd),
     formats: event.formats.map(({ id, name, description }) => ({ id, name, description })),
     categories: event.categories.map(({ id, name, description }) => ({ id, name, description })),
+    archived: event.archived,
   };
 }

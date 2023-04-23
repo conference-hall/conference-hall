@@ -11,7 +11,7 @@ type EventValues = {
 
 type Props = {
   initialValues?: EventValues;
-  errors?: { name?: string; slug?: string } | null;
+  errors?: Record<string, string> | null;
 };
 
 export function EventForm({ initialValues, errors }: Props) {

@@ -11,12 +11,17 @@ import { EmptyState } from '~/design-system/layouts/EmptyState';
 import { EventCard } from '~/shared-components/EventCard';
 import { useOrganization } from '../organizer.$orga/route';
 import { useUser } from '~/root';
+import { ArchivedFilters } from './components/ArchivedFilter';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { uid } = await requireSession(request);
   invariant(params.orga, 'Invalid organization slug');
 
-  const events = await listEvents(params.orga, uid);
+  const url = new URL(request.url);
+  const archived = Boolean(url.searchParams.get('archived'));
+
+  const events = await listEvents(params.orga, uid, archived);
+
   return json(events);
 };
 
@@ -29,7 +34,10 @@ export default function OrganizationEventsRoute() {
 
   return (
     <Container className="my-4 space-y-8 sm:my-8">
-      <H2 srOnly>Events</H2>
+      <div className="flex items-center justify-between">
+        <H2>Organization events</H2>
+        <ArchivedFilters />
+      </div>
 
       {hasEvent ? (
         <ul aria-label="Events list" className="grid grid-cols-1 gap-8 lg:grid-cols-2">

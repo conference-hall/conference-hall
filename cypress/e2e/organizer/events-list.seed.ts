@@ -27,6 +27,12 @@ export const seed = async () => {
     attributes: { name: 'Awesome event 2', slug: 'event-2' },
   });
 
+  await eventFactory({
+    organization,
+    traits: ['conference-cfp-past', 'archived'],
+    attributes: { name: 'Awesome event archived', slug: 'event-3' },
+  });
+
   // organization without events
   await organizationFactory({
     attributes: { name: 'Awesome orga 2', slug: 'awesome-orga-2' },
