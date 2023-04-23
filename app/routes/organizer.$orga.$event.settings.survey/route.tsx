@@ -78,7 +78,7 @@ export default function EventSurveySettingsRoute() {
         </Card.Title>
 
         <Card.Content>
-          <Form method="POST" className="space-y-4">
+          <Form method="POST" id="questions-form" className="space-y-4">
             {questions.map((question) => (
               <Checkbox
                 key={question.name}
@@ -96,7 +96,7 @@ export default function EventSurveySettingsRoute() {
         </Card.Content>
 
         <Card.Actions>
-          <Button type="submit" disabled={!event.surveyEnabled}>
+          <Button type="submit" form="questions-form" disabled={!event.surveyEnabled}>
             Save questions
           </Button>
         </Card.Actions>
