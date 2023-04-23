@@ -101,24 +101,6 @@ export default function EventNotificationsSettingsRoute() {
             >
               Declined proposals
             </Checkbox>
-            <Checkbox
-              id="accepted"
-              name="emailNotifications"
-              description="Have a copy of acceptation emails sent to speakers."
-              value="accepted"
-              defaultChecked={event.emailNotifications?.includes('accepted')}
-            >
-              Accepted proposals
-            </Checkbox>
-            <Checkbox
-              id="rejected"
-              name="emailNotifications"
-              description="Have a copy of rejection emails sent to speakers."
-              value="rejected"
-              defaultChecked={event.emailNotifications?.includes('rejected')}
-            >
-              Rejected proposals
-            </Checkbox>
           </Form>
         </Card.Content>
 
