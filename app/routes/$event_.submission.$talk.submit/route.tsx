@@ -17,7 +17,7 @@ import { ProposalSubmissionSchema } from '~/schemas/proposal';
 import { useEvent } from '~/routes/$event/route';
 import { getSubmittedProposal } from '../../shared-server/proposals/get-submitted-proposal.server';
 import { Card } from '~/design-system/layouts/Card';
-import { requireSession } from '~/libs/auth/cookies';
+import { requireSession } from '~/libs/auth/session';
 
 export const handle = { step: 'submission' };
 

@@ -1,6 +1,6 @@
 import type { LoaderFunction } from '@remix-run/node';
-import { killSession } from '~/libs/auth/cookies';
+import { destroySession } from '~/libs/auth/session';
 
 export const loader: LoaderFunction = async ({ request }) => {
-  return killSession(request);
+  return destroySession(request);
 };

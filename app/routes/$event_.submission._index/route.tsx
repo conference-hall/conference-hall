@@ -3,7 +3,7 @@ import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
-import { requireSession } from '~/libs/auth/cookies';
+import { requireSession } from '~/libs/auth/session';
 import { mapErrorToResponse } from '~/libs/errors';
 import { H2 } from '~/design-system/Typography';
 import { ButtonLink } from '~/design-system/Buttons';

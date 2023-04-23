@@ -2,7 +2,7 @@ import invariant from 'tiny-invariant';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { requireSession } from '~/libs/auth/cookies';
+import { requireSession } from '~/libs/auth/session';
 import { Outlet, useLoaderData, useOutletContext, useRouteLoaderData } from '@remix-run/react';
 import { mapErrorToResponse } from '~/libs/errors';
 import OrganizationBreadcrumb from '~/shared-components/organizations/OrganizationBreadcrumb';

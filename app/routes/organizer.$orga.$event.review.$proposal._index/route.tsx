@@ -1,5 +1,5 @@
 import type { LoaderArgs } from '@remix-run/node';
-import { requireSession } from '~/libs/auth/cookies';
+import { requireSession } from '~/libs/auth/session';
 import { Text } from '~/design-system/Typography';
 import Badge from '~/design-system/badges/Badges';
 import { getLevel } from '~/utils/levels';

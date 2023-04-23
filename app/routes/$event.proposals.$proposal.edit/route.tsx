@@ -7,7 +7,7 @@ import { createToast } from '~/libs/toasts/toasts';
 import { H3, Subtitle } from '~/design-system/Typography';
 import { DetailsForm } from '~/shared-components/proposals/forms/DetailsForm';
 import { Button, ButtonLink } from '~/design-system/Buttons';
-import { requireSession } from '~/libs/auth/cookies';
+import { requireSession } from '~/libs/auth/session';
 import { ProposalUpdateSchema } from '~/schemas/proposal';
 import { getSpeakerProposal } from '~/shared-server/proposals/get-speaker-proposal.server';
 import { deleteProposal } from './server/delete-proposal.server';

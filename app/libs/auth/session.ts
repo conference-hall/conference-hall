@@ -4,7 +4,8 @@ import { auth as serverAuth } from './firebase.server';
 import { config } from '../config';
 import { createUser } from '~/shared-server/users/create-user.server';
 
-const EXPIRATION = 60 * 60 * 24 * 5 * 1000; // 5 days
+const MAX_AGE_SEC = 60 * 60 * 24 * 10; // 10 days
+const MAX_AGE_MS = MAX_AGE_SEC * 1000;
 
 const sessionStorage = createCookieSessionStorage({
   cookie: {
@@ -22,7 +23,7 @@ export async function getSession(request: Request) {
 }
 
 export async function commitSession(session: Session) {
-  return sessionStorage.commitSession(session);
+  return sessionStorage.commitSession(session, { maxAge: MAX_AGE_SEC });
 }
 
 export async function createSession(request: Request) {
@@ -32,21 +33,17 @@ export async function createSession(request: Request) {
 
   const { uid, name, email, picture } = await serverAuth.verifyIdToken(token, true);
 
-  const jwt = await serverAuth.createSessionCookie(token, { expiresIn: EXPIRATION });
+  const jwt = await serverAuth.createSessionCookie(token, { expiresIn: MAX_AGE_MS });
   const userId = await createUser({ uid, name, email, picture });
 
   const session = await getSession(request);
   session.set('jwt', jwt);
   session.set('userId', userId);
 
-  return redirect(redirectTo, {
-    headers: {
-      'Set-Cookie': await sessionStorage.commitSession(session, { expires: new Date(Date.now() + EXPIRATION) }),
-    },
-  });
+  return redirect(redirectTo, { headers: { 'Set-Cookie': await commitSession(session) } });
 }
 
-export async function killSession(request: Request) {
+export async function destroySession(request: Request) {
   const session = await getSession(request);
   return redirect('/', { headers: { 'Set-Cookie': await sessionStorage.destroySession(session) } });
 }
@@ -54,6 +51,7 @@ export async function killSession(request: Request) {
 export async function requireSession(request: Request) {
   const session = await getSession(request);
   const jwt = session.get('jwt');
+  const userId = session.get('jwt');
 
   if (!jwt) {
     const redirectTo = new URL(request.url).pathname;
@@ -62,8 +60,8 @@ export async function requireSession(request: Request) {
   }
 
   try {
-    const { uid } = await serverAuth.verifySessionCookie(jwt);
-    return { uid };
+    const token = await serverAuth.verifySessionCookie(jwt);
+    return { uid: token.uid, userId };
   } catch (e) {
     throw redirect('/logout');
   }

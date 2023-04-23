@@ -2,7 +2,7 @@ import { type InviteType } from '@prisma/client';
 import type { ActionFunction } from '@remix-run/node';
 import { revokeLink } from '~/routes/invitation.revoke/server/revoke-link.server';
 import { mapErrorToResponse } from '../../libs/errors';
-import { requireSession } from '~/libs/auth/cookies';
+import { requireSession } from '~/libs/auth/session';
 
 export const action: ActionFunction = async ({ request }) => {
   const { uid } = await requireSession(request);

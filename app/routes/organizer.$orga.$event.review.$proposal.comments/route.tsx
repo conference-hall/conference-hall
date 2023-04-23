@@ -1,6 +1,6 @@
 import invariant from 'tiny-invariant';
 import type { ActionArgs } from '@remix-run/node';
-import { requireSession } from '~/libs/auth/cookies';
+import { requireSession } from '~/libs/auth/session';
 import { mapErrorToResponse } from '~/libs/errors';
 import { addProposalComment, removeProposalComment } from './server/comments.server';
 

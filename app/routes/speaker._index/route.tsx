@@ -1,7 +1,7 @@
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
-import { requireSession } from '~/libs/auth/cookies';
+import { requireSession } from '~/libs/auth/session';
 import { getActivities } from './server/get-activities.server';
 import { mapErrorToResponse } from '~/libs/errors';
 import { Container } from '~/design-system/layouts/Container';

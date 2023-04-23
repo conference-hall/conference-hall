@@ -2,7 +2,7 @@ import invariant from 'tiny-invariant';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Outlet, useLoaderData, useOutletContext } from '@remix-run/react';
-import { requireSession } from '~/libs/auth/cookies';
+import { requireSession } from '~/libs/auth/session';
 import { mapErrorToResponse } from '~/libs/errors';
 import type { OrganizerEvent } from './server/get-organizer-event.server';
 import { getOrganizerEvent } from './server/get-organizer-event.server';

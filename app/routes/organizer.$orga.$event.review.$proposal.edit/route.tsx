@@ -3,7 +3,7 @@ import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 import { useProposalReview } from '../organizer.$orga.$event.review.$proposal/route';
-import { requireSession } from '~/libs/auth/cookies';
+import { requireSession } from '~/libs/auth/session';
 import { Form, useActionData, useSearchParams } from '@remix-run/react';
 import { DetailsForm } from '~/shared-components/proposals/forms/DetailsForm';
 import { Button, ButtonLink } from '~/design-system/Buttons';

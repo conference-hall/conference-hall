@@ -5,7 +5,7 @@ import { json } from '@remix-run/node';
 import { getSpeakerProposal } from '~/shared-server/proposals/get-speaker-proposal.server';
 import { removeCoSpeakerFromProposal } from '~/shared-server/proposals/remove-co-speaker.server';
 import { ProposalStatusSection } from '~/shared-components/proposals/ProposalStatusSection';
-import { requireSession } from '~/libs/auth/cookies';
+import { requireSession } from '~/libs/auth/session';
 import { mapErrorToResponse } from '~/libs/errors';
 import { useEvent } from '../$event/route';
 import { ProposalDetailsSection } from '~/shared-components/proposals/ProposalDetailsSection';

@@ -1,7 +1,7 @@
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
-import { requireSession } from '~/libs/auth/cookies';
+import { requireSession } from '~/libs/auth/session';
 import { H3, Subtitle } from '~/design-system/Typography';
 import { Card } from '~/design-system/layouts/Card';
 import { getInvitationLink } from './server/get-invitation-link.server';

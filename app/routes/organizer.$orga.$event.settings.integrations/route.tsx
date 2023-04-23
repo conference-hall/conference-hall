@@ -3,7 +3,7 @@ import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
 import { withZod } from '@remix-validated-form/with-zod';
-import { requireSession } from '~/libs/auth/cookies';
+import { requireSession } from '~/libs/auth/session';
 import { H2 } from '~/design-system/Typography';
 import { ExternalLink } from '~/design-system/Links';
 import { Button } from '~/design-system/Buttons';

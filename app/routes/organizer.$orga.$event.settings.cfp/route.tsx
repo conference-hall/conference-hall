@@ -2,7 +2,7 @@ import invariant from 'tiny-invariant';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { withZod } from '@remix-validated-form/with-zod';
-import { requireSession } from '~/libs/auth/cookies';
+import { requireSession } from '~/libs/auth/session';
 import { H2 } from '~/design-system/Typography';
 import { Form, useActionData } from '@remix-run/react';
 import { Button } from '~/design-system/Buttons';

@@ -2,7 +2,7 @@ import type { ActionArgs, LoaderFunction } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
 import { json, redirect } from '@remix-run/node';
 import { withZod } from '@remix-validated-form/with-zod';
-import { requireSession } from '~/libs/auth/cookies';
+import { requireSession } from '~/libs/auth/session';
 import { OrganizationForm } from '~/shared-components/organizations/OrganizationForm';
 import { Button } from '~/design-system/Buttons';
 import { createOrganization } from './server/create-organization.server';

@@ -10,7 +10,7 @@ import { mapErrorToResponse } from '~/libs/errors';
 import { AdditionalInfoForm } from './components/AdditionalInfoForm';
 import { PersonalInfoForm } from './components/PersonalInfoForm';
 import { SpeakerDetailsForm } from './components/SpeakerDetailsForm';
-import { requireSession } from '~/libs/auth/cookies';
+import { requireSession } from '~/libs/auth/session';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 import { Container } from '~/design-system/layouts/Container';
 import { NavSideMenu } from '~/design-system/navigation/NavSideMenu';

@@ -1,7 +1,7 @@
 import invariant from 'tiny-invariant';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { v4 as uuid } from 'uuid';
-import { requireSession } from '~/libs/auth/cookies';
+import { requireSession } from '~/libs/auth/session';
 import { H2 } from '~/design-system/Typography';
 import { Form } from '@remix-run/react';
 import { ExternalLink } from '~/design-system/Links';

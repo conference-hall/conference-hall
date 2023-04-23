@@ -1,7 +1,7 @@
 import invariant from 'tiny-invariant';
 import type { ChangeEvent } from 'react';
 import type { LoaderArgs } from '@remix-run/node';
-import { requireSession } from '~/libs/auth/cookies';
+import { requireSession } from '~/libs/auth/session';
 import { H2 } from '~/design-system/Typography';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
 import { Form, useSubmit } from '@remix-run/react';

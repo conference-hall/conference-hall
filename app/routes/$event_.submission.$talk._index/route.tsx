@@ -8,7 +8,7 @@ import { ProposalCreateSchema } from '~/schemas/proposal';
 import { getTalk } from '~/shared-server/talks/get-talk.server';
 import { saveDraftProposal } from './server/save-draft-proposal.server';
 import { Card } from '~/design-system/layouts/Card';
-import { requireSession } from '~/libs/auth/cookies';
+import { requireSession } from '~/libs/auth/session';
 import { mapErrorToResponse } from '~/libs/errors';
 import { H2 } from '~/design-system/Typography';
 import { DetailsForm } from '~/shared-components/proposals/forms/DetailsForm';

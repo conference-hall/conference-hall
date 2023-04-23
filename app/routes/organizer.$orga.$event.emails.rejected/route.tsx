@@ -11,7 +11,7 @@ import { H1, H2 } from '~/design-system/Typography';
 import { parsePage } from '~/schemas/pagination';
 import { ProposalSelectionSchema } from '~/schemas/proposal';
 import { ProposalsFiltersSchema } from '~/schemas/proposal';
-import { requireSession } from '~/libs/auth/cookies';
+import { requireSession } from '~/libs/auth/session';
 import { mapErrorToResponse } from '~/libs/errors';
 import { createToast } from '~/libs/toasts/toasts';
 import { CampaignEmailStats } from '~/shared-components/events/campaign-email/CampaignEmailStats';

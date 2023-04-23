@@ -2,7 +2,7 @@ import invariant from 'tiny-invariant';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import FullscreenDialog from '~/design-system/dialogs/FullscreenDialog';
-import { requireSession } from '~/libs/auth/cookies';
+import { requireSession } from '~/libs/auth/session';
 import { BottomPanel } from '~/routes/organizer.$orga.$event.review.$proposal/components/BottomPanel';
 import { mapErrorToResponse } from '~/libs/errors';
 import { Outlet, useLoaderData, useNavigate, useOutletContext, useSearchParams } from '@remix-run/react';

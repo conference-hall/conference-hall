@@ -10,7 +10,7 @@ import { createToast } from '~/libs/toasts/toasts';
 import { DetailsForm } from '~/shared-components/proposals/forms/DetailsForm';
 import { Button, ButtonLink } from '~/design-system/Buttons';
 import { H3, Subtitle } from '~/design-system/Typography';
-import { requireSession } from '~/libs/auth/cookies';
+import { requireSession } from '~/libs/auth/session';
 import { mapErrorToResponse } from '~/libs/errors';
 import { CoSpeakersList, InviteCoSpeakerButton } from '~/shared-components/proposals/forms/CoSpeaker';
 import { removeCoSpeakerFromTalk } from '~/shared-server/talks/remove-co-speaker.server';

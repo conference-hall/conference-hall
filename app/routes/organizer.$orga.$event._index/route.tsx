@@ -3,7 +3,7 @@ import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { mapErrorToResponse } from '~/libs/errors';
-import { requireSession } from '~/libs/auth/cookies';
+import { requireSession } from '~/libs/auth/session';
 import { Container } from '~/design-system/layouts/Container';
 import { parsePage } from '~/schemas/pagination';
 import { withZod } from '@remix-validated-form/with-zod';
