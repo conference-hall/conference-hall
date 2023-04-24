@@ -34,10 +34,10 @@ type BackButtonProps = {
 
 function BackButton({ backTo, backOnClick }: BackButtonProps) {
   if (backTo) {
-    return <IconButtonLink icon={ArrowLeftIcon} variant="secondary" to={backTo} aria-label="Go back" />;
+    return <IconButtonLink icon={ArrowLeftIcon} variant="secondary" to={backTo} label="Go back" />;
   }
   if (backOnClick) {
-    return <IconButton icon={ArrowLeftIcon} variant="secondary" onClick={backOnClick} aria-label="Go back" />;
+    return <IconButton icon={ArrowLeftIcon} variant="secondary" onClick={backOnClick} label="Go back" />;
   }
   return null;
 }

@@ -38,7 +38,13 @@ export function Toast({ toast }: Props) {
                   </div>
                 </div>
                 <div className="ml-4">
-                  <IconButton variant="secondary" size="s" onClick={() => setShow(false)} icon={XMarkIcon} />
+                  <IconButton
+                    icon={XMarkIcon}
+                    label="Close message"
+                    variant="secondary"
+                    size="s"
+                    onClick={() => setShow(false)}
+                  />
                 </div>
               </div>
             </div>

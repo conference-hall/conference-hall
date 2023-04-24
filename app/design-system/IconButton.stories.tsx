@@ -5,19 +5,15 @@ import { StoryBlock } from './StoryBlock';
 export const Documentation = () => (
   <>
     <StoryBlock title="Variants">
-      <IconButton icon={MagnifyingGlassIcon} variant="primary" />
-      <IconButton icon={MagnifyingGlassIcon} variant="secondary" />
+      <IconButton label="Button label" icon={MagnifyingGlassIcon} variant="primary" />
+      <IconButton label="Button label" icon={MagnifyingGlassIcon} variant="secondary" />
     </StoryBlock>
 
     <StoryBlock title="Sizes">
-      <IconButton icon={MagnifyingGlassIcon} size="xs" />
-      <IconButton icon={MagnifyingGlassIcon} size="s" />
-      <IconButton icon={MagnifyingGlassIcon} size="m" />
-      <IconButton icon={MagnifyingGlassIcon} size="l" />
-    </StoryBlock>
-
-    <StoryBlock title="Disabled">
-      <IconButton icon={MagnifyingGlassIcon} disabled />
+      <IconButton label="Button label" icon={MagnifyingGlassIcon} size="xs" />
+      <IconButton label="Button label" icon={MagnifyingGlassIcon} size="s" />
+      <IconButton label="Button label" icon={MagnifyingGlassIcon} size="m" />
+      <IconButton label="Button label" icon={MagnifyingGlassIcon} size="l" />
     </StoryBlock>
   </>
 );

@@ -13,7 +13,7 @@ export function TopPanel({ proposal, current, total, className }: Props) {
     <div className={c('flex items-center justify-between border-b border-gray-200 bg-gray-50 px-8 py-8', className)}>
       <div>
         <IconButtonLink
-          aria-label="Back to list"
+          label="Back to list"
           to={`..?${searchParams.toString()}`}
           variant="secondary"
           size="l"
@@ -28,7 +28,7 @@ export function TopPanel({ proposal, current, total, className }: Props) {
       </div>
       <div>
         <IconButtonLink
-          aria-label="Edit proposal"
+          label="Edit proposal"
           to={{ pathname: `edit`, search: searchParams.toString() }}
           variant="secondary"
           size="l"

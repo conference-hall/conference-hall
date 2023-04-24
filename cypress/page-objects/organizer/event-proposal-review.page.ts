@@ -68,7 +68,7 @@ class ProposalReviewPage {
   }
 
   deleteComment() {
-    return cy.findByRole('button', { name: '', hidden: true }).click({ force: true });
+    return cy.findByLabelText('Delete comment').click({ force: true });
   }
 
   editProposal() {

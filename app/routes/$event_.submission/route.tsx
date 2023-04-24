@@ -102,7 +102,12 @@ export default function EventSubmissionRoute() {
       <div className="sticky top-0 z-10 border-b border-gray-200 bg-white py-2 shadow">
         <Container className="flex w-full items-center justify-between gap-4 py-2">
           <div className="flex items-center space-x-4">
-            <IconButtonLink to={previousPath || `/${event.slug}/proposals`} variant="secondary" icon={ArrowLeftIcon} />
+            <IconButtonLink
+              label="Go back"
+              to={previousPath || `/${event.slug}/proposals`}
+              variant="secondary"
+              icon={ArrowLeftIcon}
+            />
             <SubmissionSteps steps={steps} currentStep={currentStepKey} />
           </div>
           {currentStep?.form && (

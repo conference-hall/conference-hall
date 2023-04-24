@@ -9,7 +9,7 @@ class TracksSettings {
   }
 
   formatsRequired() {
-    cy.findByRole('checkbox', { name: 'Format selection required' }).click();
+    cy.findByRole('checkbox', { name: 'Make format selection required' }).click();
   }
 
   newFormat() {
@@ -21,7 +21,7 @@ class TracksSettings {
   }
 
   categoriesRequired() {
-    cy.findByRole('checkbox', { name: 'Category selection required' }).click();
+    cy.findByRole('checkbox', { name: 'Make category selection required' }).click();
   }
 
   newCategory() {
