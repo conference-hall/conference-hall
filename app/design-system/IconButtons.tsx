@@ -34,7 +34,12 @@ export function IconButton({
   ...rest
 }: IconButtonProps) {
   return (
-    <button className={c(DEFAULT_STYLE, VARIANTS[variant], PADDINGS[size])} aria-label={label} title={label} {...rest}>
+    <button
+      className={c(DEFAULT_STYLE, VARIANTS[variant], PADDINGS[size], className)}
+      aria-label={label}
+      title={label}
+      {...rest}
+    >
       <Icon className={ICON_SIZES[size]} aria-hidden="true" />
     </button>
   );
@@ -51,7 +56,12 @@ export function IconButtonLink({
   ...rest
 }: IconButtonLinkProps) {
   return (
-    <Link className={c(DEFAULT_STYLE, VARIANTS[variant], PADDINGS[size])} aria-label={label} title={label} {...rest}>
+    <Link
+      className={c(DEFAULT_STYLE, VARIANTS[variant], PADDINGS[size], className)}
+      aria-label={label}
+      title={label}
+      {...rest}
+    >
       <Icon className={ICON_SIZES[size]} aria-hidden="true" />
     </Link>
   );
