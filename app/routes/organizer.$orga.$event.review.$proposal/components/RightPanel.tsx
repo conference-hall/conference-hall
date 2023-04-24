@@ -68,7 +68,7 @@ function OrganizerComments({ uid, messages }: { uid: string; messages: Array<Mes
                 </Text>
                 {uid === message.userId && (
                   <IconButton
-                    aria-label="Delete comment"
+                    label="Delete comment"
                     icon={TrashIcon}
                     variant="secondary"
                     size="xs"

@@ -2,7 +2,7 @@ import c from 'classnames';
 import type { ReactNode } from 'react';
 import { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import { XMarkIcon } from '@heroicons/react/24/outline';
+import { XMarkIcon } from '@heroicons/react/20/solid';
 import { Text } from '../Typography';
 import { IconButton } from '../IconButtons';
 
@@ -119,7 +119,7 @@ function Layout({ position = 'center', p = 8, size = 'm', onClose, children }: L
             )}
           >
             <div className="absolute right-0 top-0 hidden pr-4 pt-4 sm:block">
-              <IconButton icon={XMarkIcon} onClick={onClose} aria-label="Close" variant="secondary" />
+              <IconButton icon={XMarkIcon} onClick={onClose} label="Close" variant="secondary" />
             </div>
             {children}
           </Dialog.Panel>

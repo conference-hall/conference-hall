@@ -79,20 +79,23 @@ export default function EventTracksSettingsRoute() {
       <Card as="section">
         <Card.Title>
           <H2 size="xl">Formats</H2>
+          <Subtitle>Define talk formats available for your event proposals.</Subtitle>
         </Card.Title>
-        <Card.Content>
-          <Checkbox
-            id="formatsRequired"
-            name="formatsRequired"
-            defaultChecked={event.formatsRequired}
-            onChange={handleUpdateSettings}
-            description="When a speaker submit a proposal, the format selection is mandatory."
-            disabled={event.formats.length === 0}
-          >
-            Format selection required
-          </Checkbox>
-          {event.formats.length > 0 && <TrackList type="formats" tracks={event.formats} />}
-        </Card.Content>
+        {event.formats.length > 0 && (
+          <Card.Content>
+            <TrackList type="formats" tracks={event.formats} />
+            <Checkbox
+              id="formatsRequired"
+              name="formatsRequired"
+              defaultChecked={event.formatsRequired}
+              onChange={handleUpdateSettings}
+              description="When a speaker submit a proposal, the format selection is mandatory."
+              disabled={event.formats.length === 0}
+            >
+              Make format selection required
+            </Checkbox>
+          </Card.Content>
+        )}
         <Card.Actions>
           <NewTrackButton type="formats" />
         </Card.Actions>
@@ -101,20 +104,23 @@ export default function EventTracksSettingsRoute() {
       <Card as="section">
         <Card.Title>
           <H2 size="xl">Categories</H2>
+          <Subtitle>Define talk categories available for your event proposals.</Subtitle>
         </Card.Title>
-        <Card.Content>
-          <Checkbox
-            id="categoriesRequired"
-            name="categoriesRequired"
-            defaultChecked={event.categoriesRequired}
-            onChange={handleUpdateSettings}
-            description="When a speaker submit a proposal, the category selection is mandatory."
-            disabled={event.categories.length === 0}
-          >
-            Category selection required
-          </Checkbox>
-          {event.categories.length > 0 && <TrackList type="categories" tracks={event.categories} />}
-        </Card.Content>
+        {event.categories.length > 0 && (
+          <Card.Content>
+            <TrackList type="categories" tracks={event.categories} />
+            <Checkbox
+              id="categoriesRequired"
+              name="categoriesRequired"
+              defaultChecked={event.categoriesRequired}
+              onChange={handleUpdateSettings}
+              description="When a speaker submit a proposal, the category selection is mandatory."
+              disabled={event.categories.length === 0}
+            >
+              Make category selection required
+            </Checkbox>
+          </Card.Content>
+        )}
         <Card.Actions>
           <NewTrackButton type="categories" />
         </Card.Actions>
@@ -144,7 +150,7 @@ function TrackList({ type, tracks }: TrackListProps) {
             <Form method="POST">
               <input type="hidden" name="_action" value={`delete-${type}`} />
               <input type="hidden" name="trackId" value={track.id} />
-              <IconButton icon={TrashIcon} size="xs" variant="secondary" aria-label={`Remove ${track.name}`} />
+              <IconButton icon={TrashIcon} size="xs" variant="secondary" label={`Remove ${track.name}`} />
             </Form>
           </div>
         </li>

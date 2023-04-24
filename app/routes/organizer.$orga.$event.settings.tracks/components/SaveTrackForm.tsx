@@ -34,7 +34,7 @@ export function EditTrackButton({ type, initialValues }: EditTrackButtonProps) {
         onClick={() => setModalOpen(true)}
         size="xs"
         variant="secondary"
-        aria-label={`Edit ${initialValues.name}`}
+        label={`Edit ${initialValues.name}`}
       />
       <SaveTrackFormModal
         type={type}

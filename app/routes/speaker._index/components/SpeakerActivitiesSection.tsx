@@ -51,6 +51,7 @@ export function SpeakerActivitiesSection({ activities, nextPage, hasNextPage, cl
                 </div>
               </div>
               <IconButtonLink
+                label={`Open ${event.name} page`}
                 to={`/${event.slug}`}
                 icon={ArrowTopRightOnSquareIcon}
                 variant="secondary"
