@@ -1,16 +1,15 @@
 import invariant from 'tiny-invariant';
-import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
+import { SquaresPlusIcon } from '@heroicons/react/24/outline';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
+import { Link, useLoaderData } from '@remix-run/react';
 import { requireSession } from '~/libs/auth/session';
 import { mapErrorToResponse } from '~/libs/errors';
-import { H2 } from '~/design-system/Typography';
-import { ButtonLink } from '~/design-system/Buttons';
+import { H2, H3, Text } from '~/design-system/Typography';
 import { MaxProposalsReached } from './components/MaxProposalsReached';
 import { SubmissionTalksList } from './components/SubmissionTalksList';
 import { getProposalCountsForEvent, listTalksToSubmit } from './server/list-talks-to-submit.server';
-import { IconLabel } from '~/design-system/IconLabel';
+import { ProgressBar } from '~/design-system/ProgressBar';
 
 export const handle = { step: 'selection' };
 
@@ -38,17 +37,46 @@ export default function EventSubmitRoute() {
   return (
     <>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-        <H2 mb={0}>Proposal selection</H2>
-        <ButtonLink to="new">Create a new proposal</ButtonLink>
+        <H2 size="xl">Select or create a proposal</H2>
+        {max && (
+          <div>
+            <Text size="xs" mb={1} strong>
+              {submitted} / {max} proposals submitted.
+            </Text>
+            <ProgressBar value={submitted} max={max} />
+          </div>
+        )}
       </div>
 
-      {Boolean(max) && (
-        <IconLabel icon={ExclamationTriangleIcon} strong>
-          You can submit a maximum of {max} proposals. {submitted} already submitted.
-        </IconLabel>
-      )}
+      <NewProposal />
 
-      <SubmissionTalksList talks={data?.talks} />
+      <section>
+        <H3 size="base" mb={4}>
+          Draft proposals
+        </H3>
+        <SubmissionTalksList talks={data?.talks} />
+      </section>
+
+      <section>
+        <H3 size="base" mb={4}>
+          From your talks library
+        </H3>
+        <SubmissionTalksList talks={data?.talks} />
+      </section>
     </>
+  );
+}
+
+function NewProposal() {
+  return (
+    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+      <Link
+        to="new"
+        className="flex w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-400 p-3 hover:border-gray-500 hover:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+      >
+        <SquaresPlusIcon className="mx-auto h-8 w-8 text-gray-400" aria-hidden />
+        <span className="mt-2 block text-sm font-semibold text-gray-900">Create a new proposal</span>
+      </Link>
+    </div>
   );
 }

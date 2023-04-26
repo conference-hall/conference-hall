@@ -1,3 +1,4 @@
+import c from 'classnames';
 import { ClientOnly } from 'remix-utils';
 import { H1, Text } from '~/design-system/Typography';
 import { Avatar } from '~/design-system/Avatar';
@@ -14,6 +15,7 @@ type Props = {
   address: string | null;
   conferenceStart?: string;
   conferenceEnd?: string;
+  className?: string;
 };
 
 export function EventHeader({
@@ -25,9 +27,10 @@ export function EventHeader({
   address,
   conferenceStart,
   conferenceEnd,
+  className,
 }: Props) {
   return (
-    <header className="bg-gray-800">
+    <header className={c('bg-gray-800', className)}>
       <Container className="flex flex-col items-center justify-between py-4 sm:flex-row">
         <Link to={`/${slug}`} className="flex items-center gap-4">
           <Avatar photoURL={bannerUrl} name={name} size="l" square />

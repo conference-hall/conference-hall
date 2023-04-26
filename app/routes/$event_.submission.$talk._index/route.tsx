@@ -13,6 +13,9 @@ import { mapErrorToResponse } from '~/libs/errors';
 import { H2 } from '~/design-system/Typography';
 import { DetailsForm } from '~/shared-components/proposals/forms/DetailsForm';
 import { isTalkAlreadySubmitted } from './server/is-talk-already-submitted.server';
+import { Button, ButtonLink } from '~/design-system/Buttons';
+import { ArrowRightIcon } from '@heroicons/react/20/solid';
+import { useSubmissionStep } from '../$event_.submission/hooks/useSubmissionStep';
 
 export const handle = { step: 'proposal' };
 
@@ -56,16 +59,26 @@ export const action = async ({ request, params }: ActionArgs) => {
 export default function SubmissionProposalRoute() {
   const talk = useLoaderData<typeof loader>();
   const errors = useActionData<typeof action>();
+  const { previousPath } = useSubmissionStep();
 
   return (
-    <>
-      <H2 mb={0}>Your proposal</H2>
-
-      <Card p={8}>
+    <Card>
+      <Card.Title>
+        <H2 size="l">Your proposal</H2>
+      </Card.Title>
+      <Card.Content>
         <Form id="proposal-form" method="POST">
           <DetailsForm initialValues={talk} errors={errors} />
         </Form>
-      </Card>
-    </>
+      </Card.Content>
+      <Card.Actions>
+        <ButtonLink to={previousPath} variant="secondary">
+          Go back
+        </ButtonLink>
+        <Button type="submit" form="proposal-form" iconRight={ArrowRightIcon}>
+          Continue
+        </Button>
+      </Card.Actions>
+    </Card>
   );
 }

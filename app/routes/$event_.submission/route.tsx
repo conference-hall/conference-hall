@@ -2,19 +2,15 @@ import { Outlet, useLoaderData } from '@remix-run/react';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import invariant from 'tiny-invariant';
-import { ArrowLeftIcon } from '@heroicons/react/24/outline';
-import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { requireSession } from '~/libs/auth/session';
 import { mapErrorToResponse } from '~/libs/errors';
 import { getEvent } from '~/shared-server/events/get-event.server';
 import { SubmissionSteps } from './components/SubmissionSteps';
 import { Container } from '~/design-system/layouts/Container';
-import { Button } from '~/design-system/Buttons';
-import { IconButtonLink } from '~/design-system/IconButtons';
-import { EventHeader } from '../$event/components/EventHeader';
 import { useSubmissionStep } from './hooks/useSubmissionStep';
-import { Navbar } from '~/shared-components/navbar/Navbar';
 import { useUser } from '~/root';
+import { IconButtonLink } from '~/design-system/IconButtons';
+import { XMarkIcon } from '@heroicons/react/24/outline';
 
 type Step = { key: string; name: string; path: string; form?: string; enabled: boolean };
 
@@ -81,40 +77,14 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 export default function EventSubmissionRoute() {
   const { user } = useUser();
   const { event, steps } = useLoaderData<typeof loader>();
-  const { currentStepKey, previousPath } = useSubmissionStep();
-  const currentStep = steps.find((step) => step.key === currentStepKey);
+  const { currentStepKey } = useSubmissionStep();
 
   return (
     <>
-      <Navbar user={user} withSearch />
-
-      <EventHeader
-        name={event.name}
-        slug={event.slug}
-        type={event.type}
-        organizationName={event.organizationName}
-        bannerUrl={event.bannerUrl}
-        address={event.address}
-        conferenceStart={event.conferenceStart}
-        conferenceEnd={event.conferenceEnd}
-      />
-
       <div className="sticky top-0 z-10 border-b border-gray-200 bg-white py-2 shadow">
-        <Container className="flex w-full items-center justify-between gap-4 py-2">
-          <div className="flex items-center space-x-4">
-            <IconButtonLink
-              label="Go back"
-              to={previousPath || `/${event.slug}/proposals`}
-              variant="secondary"
-              icon={ArrowLeftIcon}
-            />
-            <SubmissionSteps steps={steps} currentStep={currentStepKey} />
-          </div>
-          {currentStep?.form && (
-            <Button type="submit" rounded iconRight={ArrowRightIcon} form={currentStep.form}>
-              Continue
-            </Button>
-          )}
+        <Container className="flex w-full items-center justify-between gap-4 py-4">
+          <SubmissionSteps steps={steps} currentStep={currentStepKey} />
+          <IconButtonLink label="Cancel submission" to={`/${event.slug}`} icon={XMarkIcon} variant="secondary" />
         </Container>
       </div>
 

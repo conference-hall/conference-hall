@@ -62,15 +62,17 @@ export default function EventSurveyRoute() {
       />
 
       <Container className="mt-4 space-y-8 sm:mt-8">
-        <Card p={8}>
-          <Form aria-labelledby="survey-form-label" method="POST">
-            <SurveyForm questions={questions} initialValues={answers} />
-            <div className="mt-8 text-right">
-              <Button type="submit" className="w-full sm:w-fit">
-                Save survey
-              </Button>
-            </div>
-          </Form>
+        <Card>
+          <Card.Content>
+            <Form id="survey-form" method="POST">
+              <SurveyForm questions={questions} initialValues={answers} />
+            </Form>
+          </Card.Content>
+          <Card.Actions>
+            <Button type="submit" form="survey-form">
+              Save survey
+            </Button>
+          </Card.Actions>
         </Card>
       </Container>
     </>
