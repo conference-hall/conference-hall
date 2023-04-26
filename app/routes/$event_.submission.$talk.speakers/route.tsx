@@ -79,11 +79,18 @@ export default function SubmissionSpeakerRoute() {
   return (
     <Card>
       <Card.Title>
-        <H2 size="l">Speaker details</H2>
+        <H2 size="base">Speaker details</H2>
       </Card.Title>
       <Card.Content>
         <Form id="speakers-form" method="POST">
-          <MarkdownTextArea name="bio" label="Biography" rows={5} error={errors?.bio} defaultValue={user?.bio || ''} />
+          <MarkdownTextArea
+            name="bio"
+            label="Biography"
+            rows={5}
+            error={errors?.bio}
+            defaultValue={user?.bio || ''}
+            className="mb-3"
+          />
           <Text size="s" variant="secondary">
             You can give more information about you from{' '}
             <ExternalLink href="/speaker/settings">the profile page.</ExternalLink>
@@ -91,7 +98,7 @@ export default function SubmissionSpeakerRoute() {
           <input type="hidden" name="references" value={user?.references || ''} />
         </Form>
         <div className="mt-4">
-          <H2 size="l">Co-speakers</H2>
+          <H2 size="base">Co-speakers</H2>
           <Subtitle>When co-speaker accepts the invite, he/she will be automatically added to the proposal.</Subtitle>
           <div className="mt-6 space-y-6">
             {speakers.length > 1 && <CoSpeakersList speakers={speakers} showRemoveAction className="max-w-md py-4" />}

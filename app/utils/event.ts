@@ -85,9 +85,9 @@ export function formatCFPDate(state: CfpState, start?: string, end?: string) {
   if (!start || !end) return;
   switch (state) {
     case 'CLOSED':
-      return `Open on ${format(new Date(start), 'PPPPp O')}`;
+      return `Open on ${format(new Date(start), 'PPPPp')}`;
     case 'OPENED':
-      return `Open until ${format(new Date(end), 'PPPPp O')}`;
+      return `Open until ${format(new Date(end), 'PPPPp')}`;
     case 'FINISHED':
       return `Closed since ${format(new Date(end), 'PPPP')}`;
   }

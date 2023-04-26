@@ -5,18 +5,19 @@ import { H2 } from '~/design-system/Typography';
 import { Card } from '~/design-system/layouts/Card';
 
 type Props = {
+  type: 'CONFERENCE' | 'MEETUP';
   description: string | null;
   websiteUrl: string | null;
   contactEmail: string | null;
   codeOfConductUrl: string | null;
 };
 
-export function DetailsSection({ description, websiteUrl, contactEmail, codeOfConductUrl }: Props) {
+export function DetailsSection({ type, description, websiteUrl, contactEmail, codeOfConductUrl }: Props) {
   const hasDetails = websiteUrl || contactEmail || codeOfConductUrl;
   return (
     <Card as="section" p={8}>
-      <H2 size="xl" mb={4}>
-        Conference
+      <H2 size="base" mb={4}>
+        {type === 'CONFERENCE' ? 'Conference' : 'Meetup'}
       </H2>
 
       <Markdown source={description} />

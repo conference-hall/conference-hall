@@ -39,8 +39,8 @@ export default function MultiSelect({ name, label, placeholder, options, default
     <Listbox name={name} value={selected} onChange={setSelected} multiple>
       {({ open }) => (
         <div className={className}>
-          <Listbox.Label className="block text-sm font-medium text-gray-900">{label}</Listbox.Label>
-          <div className="relative mt-1">
+          <Listbox.Label className="block text-sm font-medium leading-6 text-gray-900">{label}</Listbox.Label>
+          <div className="relative mt-2">
             <Listbox.Button className="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
               {selected.length > 0 ? (
                 <div className="space-x-2">

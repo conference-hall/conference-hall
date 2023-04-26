@@ -37,7 +37,7 @@ export default function EventSubmitRoute() {
   return (
     <>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-        <H2 size="xl">Select or create a proposal</H2>
+        <H2 size="l">Select or create a proposal</H2>
         {max && (
           <div>
             <Text size="xs" mb={1} strong>

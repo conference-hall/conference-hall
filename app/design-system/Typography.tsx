@@ -104,10 +104,6 @@ export function H3(props: TypographyProps) {
   return <Typography as="h3" size="xl" heading strong {...props} />;
 }
 
-export function H4(props: TypographyProps) {
-  return <Typography as="h4" size="base" heading strong {...props} />;
-}
-
 export function Text(props: TypographyProps) {
   return <Typography as="p" size="base" {...props} />;
 }

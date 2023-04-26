@@ -64,7 +64,7 @@ export default function SubmissionProposalRoute() {
   return (
     <Card>
       <Card.Title>
-        <H2 size="l">Your proposal</H2>
+        <H2 size="base">Your proposal</H2>
       </Card.Title>
       <Card.Content>
         <Form id="proposal-form" method="POST">

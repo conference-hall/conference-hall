@@ -27,10 +27,10 @@ export default function Select({ name, label, options, value, onChange, classNam
     <Listbox name={name} value={value} onChange={handleChange}>
       {({ open }) => (
         <div className={className}>
-          <Listbox.Label className={c('block text-sm font-medium text-gray-900', { 'sr-only': srOnly })}>
+          <Listbox.Label className={c('block text-sm font-medium leading-6 text-gray-900', { 'sr-only': srOnly })}>
             {label}
           </Listbox.Label>
-          <div className={c('relative', { 'mt-1': !srOnly })}>
+          <div className={c('relative', { 'mt-2': !srOnly })}>
             <Listbox.Button className="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
               <Text as="div" size="s" truncate>
                 {options.find((o) => o.id === value)?.label}

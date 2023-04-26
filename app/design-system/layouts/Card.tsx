@@ -21,7 +21,7 @@ const PADDING = {
 };
 
 const BACKGROUND = {
-  light: 'bg-white',
+  light: 'bg-white shadow-sm ring-1 ring-gray-900/5',
   dark: 'bg-gray-800',
 };
 
@@ -37,7 +37,7 @@ type CardProps = {
 };
 
 export function Card({ as: Tag = 'div', rounded = 'lg', p = 0, variant = 'light', className, ...rest }: CardProps) {
-  return <Tag className={c('shadow', BACKGROUND[variant], ROUNDED[rounded], PADDING[p], className)} {...rest} />;
+  return <Tag className={c(BACKGROUND[variant], ROUNDED[rounded], PADDING[p], className)} {...rest} />;
 }
 
 // <CardLink /> component
