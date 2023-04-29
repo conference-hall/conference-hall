@@ -32,7 +32,7 @@ export async function getTalk(userId: string, talkId: string) {
       .map((speaker) => ({
         id: speaker.id,
         name: speaker.name,
-        photoURL: speaker.photoURL,
+        picture: speaker.picture,
         isOwner: speaker.id === talk.creatorId,
         isCurrentUser: speaker.id === userId,
       }))

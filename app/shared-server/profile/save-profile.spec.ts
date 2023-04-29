@@ -16,7 +16,7 @@ describe('#saveProfile', () => {
     const data = {
       name: 'John Doe',
       email: 'john.doe@email.com',
-      photoURL: 'https://example.com/photo.jpg',
+      picture: 'https://example.com/photo.jpg',
     };
 
     await saveProfile(user.id, data);
@@ -24,7 +24,7 @@ describe('#saveProfile', () => {
     const updated = await db.user.findUnique({ where: { id: user.id } });
     expect(updated?.name).toEqual(data.name);
     expect(updated?.email).toEqual(data.email);
-    expect(updated?.photoURL).toEqual(data.photoURL);
+    expect(updated?.picture).toEqual(data.picture);
   });
 
   it('updates user details', async () => {

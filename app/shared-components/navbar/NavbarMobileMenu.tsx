@@ -19,7 +19,7 @@ export function MobileMenuButton({ open }: { open: boolean }) {
 }
 
 type MobileMenuProps = {
-  user: { name: string | null; email: string | null; photoURL: string | null };
+  user: { name: string | null; email: string | null; picture: string | null };
   notifications: Array<Notification> | null;
 };
 
@@ -28,7 +28,7 @@ export function MobileMenuPanel({ user, notifications }: MobileMenuProps) {
     <Disclosure.Panel className="lg:hidden">
       <div className="border-b border-gray-700 pb-3 pt-4">
         <div className="flex items-center px-5">
-          <AvatarName name={user.name} photoURL={user.photoURL} subtitle={user.email} size="s" variant="secondary" />
+          <AvatarName name={user.name} picture={user.picture} subtitle={user.email} size="s" variant="secondary" />
           <div className="ml-auto flex-shrink-0">
             <NotificationsLink notifications={notifications} />
           </div>

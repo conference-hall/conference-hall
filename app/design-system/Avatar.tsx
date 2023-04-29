@@ -47,7 +47,7 @@ const rings = { xs: 'ring-2', s: 'ring-2', m: 'ring-2', l: 'ring-2', xl: 'ring-2
 const ringsColor = { white: 'ring-white', primary: 'ring-indigo-500' };
 
 type AvatarProps = {
-  photoURL?: string | null;
+  picture?: string | null;
   name?: string | null;
   size?: keyof typeof sizes;
   square?: boolean;
@@ -58,7 +58,7 @@ type AvatarProps = {
 };
 
 export function Avatar({
-  photoURL,
+  picture,
   name,
   size = 's',
   square = false,
@@ -76,14 +76,14 @@ export function Avatar({
     className
   );
 
-  if (photoURL) {
-    return <AvatarImage name={name} photoURL={photoURL} className={styles} aria-hidden={ariaHidden} />;
+  if (picture) {
+    return <AvatarImage name={name} picture={picture} className={styles} aria-hidden={ariaHidden} />;
   }
   return <AvatarColor name={name} size={size} className={styles} />;
 }
 
 type AvatarGroupProps = {
-  avatars: Array<{ photoURL?: string | null; name?: string | null }>;
+  avatars: Array<{ picture?: string | null; name?: string | null }>;
   size?: keyof typeof sizes;
   ring?: boolean;
   ringColor?: keyof typeof ringsColor;
@@ -96,7 +96,7 @@ export function AvatarGroup({ avatars, displayNames = false }: AvatarGroupProps)
       {avatars.map((avatar) => (
         <Avatar
           key={avatar.name}
-          photoURL={avatar.photoURL}
+          picture={avatar.picture}
           name={avatar.name}
           size="xs"
           ring
@@ -147,13 +147,13 @@ const getColor = (name: string) => {
   return colors[colorIndex];
 };
 
-type AvatarImageProps = { photoURL: string; name?: string | null; 'aria-hidden'?: boolean; className: string };
+type AvatarImageProps = { picture: string; name?: string | null; 'aria-hidden'?: boolean; className: string };
 
-function AvatarImage({ photoURL, name, 'aria-hidden': ariaHidden, className }: AvatarImageProps) {
+function AvatarImage({ picture, name, 'aria-hidden': ariaHidden, className }: AvatarImageProps) {
   return (
     <img
       className={className}
-      src={photoURL}
+      src={picture}
       alt={!ariaHidden && name ? name : ''}
       aria-hidden={ariaHidden}
       loading="lazy"

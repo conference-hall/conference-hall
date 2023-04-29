@@ -38,7 +38,7 @@ export async function getSpeakerProposal(proposalId: string, userId: string) {
     speakers: proposal.speakers.map((speaker) => ({
       id: speaker.id,
       name: speaker.name,
-      photoURL: speaker.photoURL,
+      picture: speaker.picture,
       isOwner: speaker.id === proposal?.talk?.creatorId,
     })),
   };

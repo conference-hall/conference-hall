@@ -11,7 +11,7 @@ import { TwitterIcon } from '~/design-system/icons/TwitterIcon';
 type Props = {
   name: string | null;
   email: string | null;
-  photoURL: string | null;
+  picture: string | null;
   bio: string | null;
   address: string | null;
   company: string | null;
@@ -19,13 +19,13 @@ type Props = {
   github: string | null;
 };
 
-export function SpeakerDetailsSection({ name, email, photoURL, bio, address, company, twitter, github }: Props) {
+export function SpeakerDetailsSection({ name, email, picture, bio, address, company, twitter, github }: Props) {
   const displayInfo = address || company || twitter || github;
 
   return (
     <Card as="section" p={8} className="space-y-6">
       <div className="flex gap-4">
-        <Avatar photoURL={photoURL} size="l" />
+        <Avatar picture={picture} size="l" />
         <div className="truncate">
           <H3 mb={0} truncate>
             {name}

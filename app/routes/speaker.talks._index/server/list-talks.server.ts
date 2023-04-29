@@ -26,7 +26,7 @@ export async function listTalks(userId: string, options?: TalksListOptions) {
     speakers: talk.speakers.map((speaker) => ({
       id: speaker.id,
       name: speaker.name,
-      photoURL: speaker.photoURL,
+      picture: speaker.picture,
     })),
   }));
 }

@@ -1,17 +1,17 @@
 import { StoryBlock } from './StoryBlock';
 import { Avatar, AvatarGroup, AvatarName } from './Avatar';
 
-const photoURL = 'https://i.pravatar.cc/100?u=1';
+const picture = 'https://i.pravatar.cc/100?u=1';
 
 export const Documentation = () => (
   <>
     <StoryBlock title="Avatar">
-      <Avatar photoURL={photoURL} size="4xl" />
-      <Avatar photoURL={photoURL} size="xl" />
-      <Avatar photoURL={photoURL} size="l" />
-      <Avatar photoURL={photoURL} size="m" />
-      <Avatar photoURL={photoURL} size="s" />
-      <Avatar photoURL={photoURL} size="xs" />
+      <Avatar picture={picture} size="4xl" />
+      <Avatar picture={picture} size="xl" />
+      <Avatar picture={picture} size="l" />
+      <Avatar picture={picture} size="m" />
+      <Avatar picture={picture} size="s" />
+      <Avatar picture={picture} size="xs" />
     </StoryBlock>
 
     <StoryBlock title="Avatar square">
@@ -21,20 +21,20 @@ export const Documentation = () => (
     </StoryBlock>
 
     <StoryBlock title="Avatar with a ring">
-      <Avatar photoURL={photoURL} size="m" ring ringColor="primary" />
+      <Avatar picture={picture} size="m" ring ringColor="primary" />
       <Avatar name="Ben" size="m" square ring ringColor="primary" />
     </StoryBlock>
 
     <StoryBlock title="AvatarName">
-      <AvatarName photoURL={photoURL} name="Bobby" subtitle="bobby@example.com" />
+      <AvatarName picture={picture} name="Bobby" subtitle="bobby@example.com" />
     </StoryBlock>
 
     <StoryBlock title="AvatarGroup">
       <AvatarGroup
         avatars={[
-          { photoURL: 'https://i.pravatar.cc/100?u=1', name: 'Bobby' },
-          { photoURL: 'https://i.pravatar.cc/100?u=2', name: 'Johnny' },
-          { photoURL: 'https://i.pravatar.cc/100?u=3', name: 'Rosy' },
+          { picture: 'https://i.pravatar.cc/100?u=1', name: 'Bobby' },
+          { picture: 'https://i.pravatar.cc/100?u=2', name: 'Johnny' },
+          { picture: 'https://i.pravatar.cc/100?u=3', name: 'Rosy' },
         ]}
       />
     </StoryBlock>
@@ -42,9 +42,9 @@ export const Documentation = () => (
     <StoryBlock title="AvatarGroup with names">
       <AvatarGroup
         avatars={[
-          { photoURL: 'https://i.pravatar.cc/100?u=1', name: 'Bobby' },
-          { photoURL: 'https://i.pravatar.cc/100?u=2', name: 'Johnny' },
-          { photoURL: 'https://i.pravatar.cc/100?u=3', name: 'Rosy' },
+          { picture: 'https://i.pravatar.cc/100?u=1', name: 'Bobby' },
+          { picture: 'https://i.pravatar.cc/100?u=2', name: 'Johnny' },
+          { picture: 'https://i.pravatar.cc/100?u=3', name: 'Rosy' },
         ]}
         displayNames
       />

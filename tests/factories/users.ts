@@ -9,20 +9,19 @@ const TRAITS = {
     id: '9licQdPND0UtBhShJ7vveJ703sJs',
     name: 'Clark Kent',
     email: 'superman@example.com',
-    photoURL: 'https://s3.amazonaws.com/comicgeeks/characters/avatars/19.jpg',
+    picture: 'https://s3.amazonaws.com/comicgeeks/characters/avatars/19.jpg',
   },
   'bruce-wayne': {
     id: 'e9HDr773xNpXbOy2H0C7FDhGD2fc',
     name: 'Bruce Wayne',
     email: 'batman@example.com',
-    photoURL:
-      'http://multiversitystatic.s3.amazonaws.com/uploads/2013/02/Bruce-Wayne-Jordan-Gibson-Art-Of-The-Week.png',
+    picture: 'http://multiversitystatic.s3.amazonaws.com/uploads/2013/02/Bruce-Wayne-Jordan-Gibson-Art-Of-The-Week.png',
   },
   'peter-parker': {
     id: 'tpSmd3FehZIM3Wp4HYSBnfnQmXLb',
     name: 'Peter Parker',
     email: 'spiderman@example.com',
-    photoURL: 'https://www.mdcu-comics.fr/uploads/news/2020/09/news_illustre_1600620975_30.jpg',
+    picture: 'https://www.mdcu-comics.fr/uploads/news/2020/09/news_illustre_1600620975_30.jpg',
   },
 };
 
@@ -40,7 +39,7 @@ export const userFactory = async (options: FactoryOptions = {}) => {
   const defaultAttributes: Prisma.UserCreateInput = {
     name: fake.randFullName(),
     email: fake.randEmail(),
-    photoURL: fake.randAvatar(),
+    picture: fake.randAvatar(),
     address: fake.randCity(),
     bio: fake.randParagraph(),
     references: fake.randParagraph(),
@@ -67,7 +66,7 @@ export const userFactory = async (options: FactoryOptions = {}) => {
       uid: user.id,
       name: user.name,
       email: user.email,
-      picture: user.photoURL,
+      picture: user.picture,
       provider: 'google',
       userId: user.id,
     },

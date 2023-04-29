@@ -43,7 +43,7 @@ export default function ProfileRoute() {
         <SpeakerDetailsSection
           name={user.name}
           email={user.email}
-          photoURL={user.photoURL}
+          picture={user.picture}
           bio={user.bio}
           address={user.address}
           company={user.company}

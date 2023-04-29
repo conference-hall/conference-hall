@@ -74,7 +74,7 @@ export default function ProfileRoute() {
         />
 
         <div className="min-w-0 flex-1 space-y-6 sm:px-6 lg:px-0">
-          <SpeakerDetailsForm name={user.name} email={user.email} photoURL={user.photoURL} errors={errors} />
+          <SpeakerDetailsForm name={user.name} email={user.email} picture={user.picture} errors={errors} />
 
           <PersonalInfoForm bio={user.bio} references={user.references} errors={errors} />
 

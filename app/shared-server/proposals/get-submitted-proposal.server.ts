@@ -26,7 +26,7 @@ export async function getSubmittedProposal(talkId: string, eventSlug: string, us
       .map((speaker) => ({
         id: speaker.id,
         name: speaker.name,
-        photoURL: speaker.photoURL,
+        picture: speaker.picture,
         isOwner: speaker.id === proposal?.talk?.creatorId,
       }))
       .sort((a, b) => (a.isOwner ? -1 : 0) - (b.isOwner ? -1 : 0)),

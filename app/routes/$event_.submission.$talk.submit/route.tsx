@@ -61,7 +61,7 @@ export default function SubmissionSubmitRoute() {
     <Card>
       <Card.Title>
         <div className="mb-8 flex items-center gap-4">
-          <Avatar photoURL={event.bannerUrl} name={event.name} size="l" square />
+          <Avatar picture={event.bannerUrl} name={event.name} size="l" square />
           <div className="flex-shrink-0">
             <H1 size="2xl">{event.name}</H1>
             <Subtitle heading>{`by ${event.organizationName}`}</Subtitle>

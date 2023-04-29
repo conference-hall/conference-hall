@@ -6,13 +6,13 @@ describe('Validate PersonalInfoSchema', () => {
     const formData = new FormData();
     formData.append('name', 'John Doe');
     formData.append('email', 'john.doe@email.com');
-    formData.append('photoURL', 'https://example.com/photo.jpg');
+    formData.append('picture', 'https://example.com/photo.jpg');
 
     const result = await withZod(PersonalInfoSchema).validate(formData);
     expect(result.data).toEqual({
       name: 'John Doe',
       email: 'john.doe@email.com',
-      photoURL: 'https://example.com/photo.jpg',
+      picture: 'https://example.com/photo.jpg',
     });
   });
 
@@ -20,7 +20,7 @@ describe('Validate PersonalInfoSchema', () => {
     const formData = new FormData();
     formData.append('name', '');
     formData.append('email', '');
-    formData.append('photoURL', '');
+    formData.append('picture', '');
 
     const result = await withZod(PersonalInfoSchema).validate(formData);
     expect(result?.error?.fieldErrors).toEqual({

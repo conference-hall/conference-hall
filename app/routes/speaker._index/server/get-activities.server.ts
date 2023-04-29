@@ -44,7 +44,7 @@ export async function getActivities(speakerId: string, page: number = 1) {
           speakers: proposal.speakers.map((speaker) => ({
             id: speaker.id,
             name: speaker.name,
-            photoURL: speaker.photoURL,
+            picture: speaker.picture,
           })),
         })),
       };

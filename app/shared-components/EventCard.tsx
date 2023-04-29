@@ -17,7 +17,7 @@ type Props = {
 export function EventCard({ to, name, type, bannerUrl, cfpState, cfpStart, cfpEnd }: Props) {
   return (
     <CardLink as="li" to={to} className="flex h-32 justify-between">
-      <Avatar photoURL={bannerUrl} name={name} size="4xl" square className="rounded-r-none" />
+      <Avatar picture={bannerUrl} name={name} size="4xl" square className="rounded-r-none" />
       <div className="flex flex-1 flex-col justify-between truncate p-4">
         <div>
           <H3 mb={1} truncate>

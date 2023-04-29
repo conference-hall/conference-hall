@@ -20,7 +20,7 @@ export async function listSpeakerProposals(slug: string, userId: string) {
     speakers: proposal.speakers.map((speaker) => ({
       id: speaker.id,
       name: speaker.name,
-      photoURL: speaker.photoURL,
+      picture: speaker.picture,
     })),
   }));
 }

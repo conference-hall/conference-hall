@@ -59,7 +59,7 @@ export async function getProposalReview(
       speakers: proposal.speakers.map((speaker) => ({
         id: speaker.id,
         name: speaker.name,
-        photoURL: speaker.photoURL,
+        picture: speaker.picture,
         bio: speaker.bio,
         references: speaker.references,
         email: speaker.email,
@@ -79,7 +79,7 @@ export async function getProposalReview(
         membersRatings: proposal.ratings.map((rating) => ({
           id: rating.user.id,
           name: rating.user.name,
-          photoURL: rating.user.photoURL,
+          picture: rating.user.picture,
           rating: rating.rating,
           feeling: rating.feeling,
         })),
@@ -90,7 +90,7 @@ export async function getProposalReview(
           id: message.id,
           userId: message.userId,
           name: message.user.name,
-          photoURL: message.user.photoURL,
+          picture: message.user.picture,
           message: message.message,
         })),
     },

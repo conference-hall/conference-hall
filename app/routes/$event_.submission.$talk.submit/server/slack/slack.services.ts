@@ -13,7 +13,7 @@ function buildPayload(
     title: proposal.title,
     text: proposal.abstract,
     title_link: `${config.appUrl}/organizer/${event.organization.slug}/${event.slug}/review/${proposal.id}`,
-    thumb_url: proposal.speakers[0].photoURL,
+    thumb_url: proposal.speakers[0].picture,
     color: '#ffab00',
     fields: [] as unknown[],
   };

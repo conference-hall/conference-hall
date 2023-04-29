@@ -10,11 +10,11 @@ import { Card } from '~/design-system/layouts/Card';
 type Props = {
   name: string | null;
   email: string | null;
-  photoURL: string | null;
+  picture: string | null;
   errors?: Record<string, string>;
 };
 
-export function SpeakerDetailsForm({ name, email, photoURL, errors }: Props) {
+export function SpeakerDetailsForm({ name, email, picture, errors }: Props) {
   const submit = useSubmit();
 
   const resetCurrentUser = useCallback(() => {
@@ -24,7 +24,7 @@ export function SpeakerDetailsForm({ name, email, photoURL, errors }: Props) {
         _type: 'INFO',
         name: currentUser?.displayName ?? '',
         email: currentUser?.email ?? '',
-        photoURL: currentUser?.photoURL ?? '',
+        picture: currentUser?.photoURL ?? '',
       },
       { method: 'POST' }
     );
@@ -48,14 +48,14 @@ export function SpeakerDetailsForm({ name, email, photoURL, errors }: Props) {
 
           <div className="flex justify-between gap-8">
             <Input
-              name="photoURL"
+              name="picture"
               label="Avatar picture URL"
-              defaultValue={photoURL || ''}
-              key={photoURL}
-              error={errors?.photoURL}
+              defaultValue={picture || ''}
+              key={picture}
+              error={errors?.picture}
               className="flex-1"
             />
-            <Avatar photoURL={photoURL} name={name} size="xl" square />
+            <Avatar picture={picture} name={name} size="xl" square />
           </div>
         </Card.Content>
 

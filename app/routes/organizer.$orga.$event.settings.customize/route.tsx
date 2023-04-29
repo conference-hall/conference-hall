@@ -59,7 +59,7 @@ export default function EventGeneralSettingsRoute() {
       </Card.Title>
 
       <Card.Content>
-        <ClientOnly>{() => <Avatar photoURL={picture} name={event.name} square size="4xl" />}</ClientOnly>
+        <ClientOnly>{() => <Avatar picture={picture} name={event.name} square size="4xl" />}</ClientOnly>
         <AlertInfo>
           JPEG format with optimal resolution of 500x500.
           <br />

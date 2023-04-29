@@ -5,7 +5,7 @@ import { Avatar } from '~/design-system/Avatar';
 type Props = { name: string | null; email?: string | null; picture?: string | null; isOrganizer?: boolean };
 
 export function UserMenuDesktop({ name, email, picture, isOrganizer }: Props) {
-  const UserAvatar = () => <Avatar photoURL={picture} name={name} size="s" />;
+  const UserAvatar = () => <Avatar picture={picture} name={name} size="s" />;
 
   return (
     <Menu

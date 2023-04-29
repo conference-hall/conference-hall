@@ -29,7 +29,7 @@ export async function exportProposals(orgaSlug: string, eventSlug: string, userI
         bio: speaker.bio,
         company: speaker.company,
         references: speaker.references,
-        photoURL: speaker.photoURL,
+        picture: speaker.picture,
         github: speaker.github,
         twitter: speaker.twitter,
         address: speaker.address,

@@ -38,7 +38,7 @@ describe('#listSpeakerProposals', () => {
           {
             id: speaker.id,
             name: speaker.name,
-            photoURL: speaker.photoURL,
+            picture: speaker.picture,
           },
         ],
       },

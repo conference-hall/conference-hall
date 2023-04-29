@@ -26,7 +26,7 @@ describe('#createUser', () => {
     expect(userId).toEqual(created?.user?.id);
     expect(created?.user?.name).toEqual('Bob');
     expect(created?.user?.email).toEqual('bob@example.com');
-    expect(created?.user?.photoURL).toEqual('https://image.com/image.png');
+    expect(created?.user?.picture).toEqual('https://image.com/image.png');
   });
 
   it('returns existing user if already exists', async () => {

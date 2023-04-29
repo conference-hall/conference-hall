@@ -15,6 +15,6 @@ export async function listMembers(slug: string, userId: string) {
     role,
     id: member.id,
     name: member.name,
-    photoURL: member.photoURL,
+    picture: member.picture,
   }));
 }

@@ -4,7 +4,7 @@ import { text } from 'zod-form-data';
 export const PersonalInfoSchema = z.object({
   name: text(z.string().trim().min(1)),
   email: text(z.string().email().trim().min(1)),
-  photoURL: text(z.string().url().trim().nullable().default(null)),
+  picture: text(z.string().url().trim().nullable().default(null)),
 });
 
 export const DetailsSchema = z.object({

@@ -22,7 +22,7 @@ interface Props {
       title: string;
       updatedAt: string;
       status: SpeakerProposalStatus;
-      speakers: Array<{ name: string | null; photoURL: string | null }>;
+      speakers: Array<{ name: string | null; picture: string | null }>;
     }>;
   }>;
   nextPage: number;
@@ -42,7 +42,7 @@ export function SpeakerActivitiesSection({ activities, nextPage, hasNextPage, cl
           <Card key={event.slug} as="li" className="flex flex-col">
             <div className="flex items-center justify-between border-b border-b-gray-200 p-6">
               <div className="flex items-center gap-4">
-                <Avatar photoURL={event.bannerUrl} name={event.name} square size="l" />
+                <Avatar picture={event.bannerUrl} name={event.name} square size="l" />
                 <div className="truncate">
                   <Text size="xl" strong heading truncate>
                     {event.name}

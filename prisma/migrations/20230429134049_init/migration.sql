@@ -31,7 +31,7 @@ CREATE TABLE "users" (
     "email" TEXT NOT NULL,
     "name" TEXT,
     "bio" TEXT,
-    "photoURL" TEXT,
+    "picture" TEXT,
     "github" TEXT,
     "company" TEXT,
     "references" TEXT,

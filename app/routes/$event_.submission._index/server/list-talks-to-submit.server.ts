@@ -33,7 +33,7 @@ export async function listTalksToSubmit(userId: string, slug: string) {
       speakers: draft.speakers.map((speaker) => ({
         id: speaker.id,
         name: speaker.name,
-        photoURL: speaker.photoURL,
+        picture: speaker.picture,
       })),
     })),
     talks: talks.map((talk) => ({
@@ -42,7 +42,7 @@ export async function listTalksToSubmit(userId: string, slug: string) {
       speakers: talk.speakers.map((speaker) => ({
         id: speaker.id,
         name: speaker.name,
-        photoURL: speaker.photoURL,
+        picture: speaker.picture,
       })),
     })),
   };

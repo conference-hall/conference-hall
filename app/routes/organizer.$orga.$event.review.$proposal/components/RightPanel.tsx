@@ -12,7 +12,7 @@ type Message = {
   id: string;
   userId: string;
   name: string | null;
-  photoURL: string | null;
+  picture: string | null;
   message: string;
 };
 
@@ -60,7 +60,7 @@ function OrganizerComments({ userId, messages }: { userId: string; messages: Arr
       <div className="flex flex-col-reverse gap-4 overflow-auto px-6 py-4">
         {messages.map((message) => (
           <div key={message.id} className="group flex items-end gap-4">
-            <Avatar photoURL={message.photoURL} name={message.name} />
+            <Avatar picture={message.picture} name={message.name} />
             <div className="min-w-0 grow">
               <div className="relative">
                 <Text size="xs" variant="secondary">

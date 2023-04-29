@@ -13,7 +13,7 @@ model User {
   email              String
   name               String?
   bio                String?
-  photoURL           String?
+  picture            String?
   github             String?
   company            String?
   references         String?

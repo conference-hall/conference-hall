@@ -15,7 +15,7 @@ export async function createUserAccount(input: UserCreateInput) {
       email,
       picture,
       provider,
-      user: { create: { name, email, photoURL: picture } },
+      user: { create: { name, email, picture: picture } },
     },
   });
 
