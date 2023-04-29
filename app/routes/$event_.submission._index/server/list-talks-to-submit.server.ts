@@ -28,7 +28,7 @@ export async function listTalksToSubmit(uid: string, slug: string) {
   return {
     proposalsCount,
     drafts: drafts.map((draft) => ({
-      id: draft.id,
+      id: draft.talkId!,
       title: draft.title,
       speakers: draft.speakers.map((speaker) => ({
         id: speaker.id,

@@ -28,7 +28,7 @@ describe('#listTalksToSubmit', () => {
     const talk2 = await talkFactory({ speakers: [speaker] });
     // talk submitted as draft (expected)
     const talk3 = await talkFactory({ speakers: [speaker] });
-    const proposal3 = await proposalFactory({ event, talk: talk3, traits: ['draft'] });
+    await proposalFactory({ event, talk: talk3, traits: ['draft'] });
 
     const result = await listTalksToSubmit(speaker.id, event.slug);
 
@@ -36,8 +36,8 @@ describe('#listTalksToSubmit', () => {
       proposalsCount: 1,
       drafts: [
         {
-          id: proposal3.id,
-          title: proposal3.title,
+          id: talk3.id,
+          title: talk3.title,
           speakers: [{ id: speaker.id, name: speaker.name, photoURL: speaker.photoURL }],
         },
       ],
