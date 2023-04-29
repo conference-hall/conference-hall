@@ -3,7 +3,7 @@ import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import invariant from 'tiny-invariant';
 import { requireSession } from '~/libs/auth/session';
-import { mapErrorToResponse } from '~/libs/errors';
+import { CfpNotOpenError, mapErrorToResponse } from '~/libs/errors';
 import { getEvent } from '~/shared-server/events/get-event.server';
 import { SubmissionSteps } from './components/SubmissionSteps';
 import { Container } from '~/design-system/layouts/Container';
@@ -22,7 +22,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
   try {
     const event = await getEvent(params.event);
-    if (!event.isCfpOpen) throw new Response('CFP is not open!', { status: 403 });
+    if (!event.isCfpOpen) throw new CfpNotOpenError();
 
     const steps: Array<Step> = [
       {

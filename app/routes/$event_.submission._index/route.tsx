@@ -54,14 +54,14 @@ export default function EventSubmitRoute() {
       {drafts.length > 0 && (
         <section className="space-y-4">
           <H3 size="base">Draft proposals</H3>
-          <SubmissionTalksList talks={drafts} />
+          <SubmissionTalksList label="Draft proposals list" talks={drafts} />
         </section>
       )}
 
       {talks.length > 0 && (
         <section className="space-y-4">
           <H3 size="base">From your talks library</H3>
-          <SubmissionTalksList talks={talks} />
+          <SubmissionTalksList label="Talks list" talks={talks} />
         </section>
       )}
     </>

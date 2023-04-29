@@ -148,6 +148,38 @@ describe('Submit a talk to event', () => {
       cy.assertText('References UPDATED');
     });
 
+    it('save a proposal as draft', () => {
+      submission.visit('devfest-nantes');
+
+      submission.talks().should('have.length', 1);
+      submission.talk('My existing talk').click();
+
+      submission.isTalkStepVisible();
+      cy.assertInputText('Title', 'My existing talk');
+      cy.assertInputText('Abstract', 'My existing abstract');
+      cy.assertRadioChecked('Advanced');
+      cy.assertInputText('References', 'My existing references');
+
+      submission.fillTalkForm({
+        title: 'My draft proposal',
+        abstract: 'Abstract draft',
+        level: 'Intermediate',
+        language: 'English',
+        references: 'References draft',
+      });
+
+      submission.continue();
+      submission.isSpeakerStepVisible();
+
+      // Check proposal list
+      submission.visit('devfest-nantes');
+      submission.drafts().should('have.length', 1);
+      submission.draft('My draft proposal').should('exist').click();
+
+      submission.isTalkStepVisible();
+      cy.assertInputText('Title', 'My draft proposal');
+    });
+
     it('submit a new talk for a conference (w/o survey)', () => {
       submission.visit('without-survey');
       submission.createNewProposal();
@@ -238,7 +270,7 @@ describe('Submit a talk to event', () => {
 
     it('cannot submit a talk when max proposal reached', () => {
       submission.visit('with-max-proposals');
-      cy.assertText('You can submit a maximum of 1 proposals. 0 already submitted.');
+      cy.assertText('0 / 1 proposals submitted.');
 
       submission.talk('My existing talk').click();
       submission.isTalkStepVisible();

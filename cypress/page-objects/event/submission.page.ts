@@ -27,7 +27,7 @@ class EventSubmissionPage {
   }
 
   isPageVisible() {
-    cy.findByRole('heading', { name: 'Proposal selection' }).should('exist');
+    cy.findByRole('heading', { name: 'Select or create a proposal' }).should('exist');
   }
 
   /**
@@ -36,6 +36,14 @@ class EventSubmissionPage {
 
   createNewProposal() {
     return cy.findByRole('link', { name: 'Create a new proposal' }).click();
+  }
+
+  drafts() {
+    return cy.findByRole('list', { name: 'Draft proposals list' }).children();
+  }
+
+  draft(name: string) {
+    return this.drafts().contains(name);
   }
 
   talks() {
