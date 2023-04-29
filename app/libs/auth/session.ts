@@ -31,10 +31,10 @@ export async function createSession(request: Request) {
   const token = form.get('token') as string;
   const redirectTo = form.get('redirectTo')?.toString() || '/';
 
-  const { uid, name, email, picture } = await serverAuth.verifyIdToken(token, true);
+  const { uid, name, email, picture, firebase } = await serverAuth.verifyIdToken(token, true);
 
   const jwt = await serverAuth.createSessionCookie(token, { expiresIn: MAX_AGE_MS });
-  const userId = await createUserAccount({ uid, name, email, picture });
+  const userId = await createUserAccount({ uid, name, email, picture, provider: firebase.sign_in_provider });
 
   const session = await getSession(request);
   session.set('jwt', jwt);
