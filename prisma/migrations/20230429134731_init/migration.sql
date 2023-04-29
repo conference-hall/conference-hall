@@ -102,7 +102,7 @@ CREATE TABLE "events" (
     "contactEmail" TEXT,
     "websiteUrl" TEXT,
     "codeOfConductUrl" TEXT,
-    "bannerUrl" TEXT,
+    "logo" TEXT,
     "conferenceStart" TIMESTAMP(3),
     "conferenceEnd" TIMESTAMP(3),
     "cfpStart" TIMESTAMP(3),

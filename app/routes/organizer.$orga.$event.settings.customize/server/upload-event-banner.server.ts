@@ -14,11 +14,11 @@ export async function uploadEventBanner(orgaSlug: string, eventSlug: string, use
 
   const formData = await unstable_parseMultipartFormData(
     request,
-    uploadToStorageHandler({ name: 'bannerUrl', path: event.id, maxFileSize: 300_000 })
+    uploadToStorageHandler({ name: 'logo', path: event.id, maxFileSize: 300_000 })
   );
 
-  const result = z.string().url().safeParse(formData.get('bannerUrl'));
+  const result = z.string().url().safeParse(formData.get('logo'));
   if (result.success) {
-    await db.event.update({ where: { slug: eventSlug }, data: { bannerUrl: result.data } });
+    await db.event.update({ where: { slug: eventSlug }, data: { logo: result.data } });
   }
 }

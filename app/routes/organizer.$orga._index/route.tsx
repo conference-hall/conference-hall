@@ -47,7 +47,7 @@ export default function OrganizationEventsRoute() {
               to={`/organizer/${organization.slug}/${event.slug}`}
               name={event.name}
               type={event.type}
-              bannerUrl={event.bannerUrl}
+              logo={event.logo}
               cfpState={event.cfpState}
               cfpStart={event.cfpStart}
               cfpEnd={event.cfpEnd}

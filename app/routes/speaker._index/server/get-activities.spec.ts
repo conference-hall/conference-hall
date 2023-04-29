@@ -28,7 +28,7 @@ describe('#getActivities', () => {
         {
           slug: event2.slug,
           name: event2.name,
-          bannerUrl: event2.bannerUrl,
+          logo: event2.logo,
           cfpState: 'CLOSED',
           submissions: [
             {
@@ -43,7 +43,7 @@ describe('#getActivities', () => {
         {
           slug: event.slug,
           name: event.name,
-          bannerUrl: event.bannerUrl,
+          logo: event.logo,
           cfpState: 'OPENED',
           submissions: [
             {

@@ -11,7 +11,7 @@ type Props = {
   submissions: Array<{
     slug: string;
     name: string;
-    bannerUrl: string | null;
+    logo: string | null;
     proposalStatus: SpeakerProposalStatus;
   }>;
 };
@@ -25,7 +25,7 @@ export function ProposalSubmissionsSection({ talkId, submissions }: Props) {
           {submissions.map((submission) => (
             <li key={submission.slug} className="flex items-center justify-between gap-2">
               <Link to={`/${submission.slug}/proposals`} className="flex gap-2">
-                <Avatar picture={submission.bannerUrl} name={submission.name} square size="xs" aria-hidden />
+                <Avatar picture={submission.logo} name={submission.name} square size="xs" aria-hidden />
                 <Text size="s" variant="link" strong heading truncate>
                   {submission.name}
                 </Text>

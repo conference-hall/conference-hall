@@ -28,7 +28,7 @@ describe('#searchEvents', () => {
           cfpState: 'OPENED',
           cfpStart: event.cfpStart?.toUTCString(),
           cfpEnd: event.cfpEnd?.toUTCString(),
-          bannerUrl: event.bannerUrl,
+          logo: event.logo,
         },
       ],
     });

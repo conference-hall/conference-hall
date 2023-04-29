@@ -95,7 +95,7 @@ describe('#getTalk', () => {
       {
         name: proposal.event.name,
         slug: proposal.event.slug,
-        bannerUrl: proposal.event.bannerUrl,
+        logo: proposal.event.logo,
         proposalStatus: SpeakerProposalStatus.DeliberationPending,
       },
     ]);

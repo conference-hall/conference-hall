@@ -40,7 +40,7 @@ export async function getTalk(userId: string, talkId: string) {
     submissions: talk.proposals.map((proposal) => ({
       slug: proposal.event.slug,
       name: proposal.event.name,
-      bannerUrl: proposal.event.bannerUrl,
+      logo: proposal.event.logo,
       proposalStatus: getSpeakerProposalStatus(proposal, proposal.event),
     })),
     invitationLink: buildInvitationLink(talk.invitation?.id),

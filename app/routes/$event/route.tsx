@@ -35,7 +35,7 @@ export default function EventRoute() {
         slug={event.slug}
         type={event.type}
         organizationName={event.organizationName}
-        bannerUrl={event.bannerUrl}
+        logo={event.logo}
         address={event.address}
         conferenceStart={event.conferenceStart}
         conferenceEnd={event.conferenceEnd}

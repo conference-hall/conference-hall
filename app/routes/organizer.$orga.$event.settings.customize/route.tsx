@@ -49,7 +49,7 @@ export default function EventGeneralSettingsRoute() {
     }
   };
 
-  const picture = event.bannerUrl ? `${event.bannerUrl}?${Math.random()}` : undefined;
+  const picture = event.logo ? `${event.logo}?${Math.random()}` : undefined;
 
   return (
     <Card as="section">
@@ -74,7 +74,7 @@ export default function EventGeneralSettingsRoute() {
       <Card.Actions>
         <Button variant="secondary">Remove logo</Button>
         <Form method="POST" encType="multipart/form-data" onChange={handleSubmit}>
-          <ButtonFileUpload name="bannerUrl" accept="image/jpeg" error={result?.error}>
+          <ButtonFileUpload name="logo" accept="image/jpeg" error={result?.error}>
             Change logo
           </ButtonFileUpload>
         </Form>

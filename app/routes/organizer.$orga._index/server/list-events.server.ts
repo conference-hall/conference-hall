@@ -15,7 +15,7 @@ export async function listEvents(slug: string, userId: string, archived: boolean
     slug: event.slug,
     name: event.name,
     type: event.type,
-    bannerUrl: event.bannerUrl,
+    logo: event.logo,
     cfpStart: event.cfpStart?.toUTCString(),
     cfpEnd: event.cfpEnd?.toUTCString(),
     cfpState: getCfpState(event.type, event.cfpStart, event.cfpEnd),

@@ -34,7 +34,7 @@ export async function getActivities(speakerId: string, page: number = 1) {
       return {
         slug: event.slug,
         name: event.name,
-        bannerUrl: event.bannerUrl,
+        logo: event.logo,
         cfpState: getCfpState(event.type, event.cfpStart, event.cfpEnd),
         submissions: event.proposals.map((proposal) => ({
           id: proposal.id,
