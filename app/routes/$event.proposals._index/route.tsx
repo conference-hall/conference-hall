@@ -14,10 +14,10 @@ import { Container } from '~/design-system/layouts/Container';
 export type EventProposals = Awaited<ReturnType<typeof listSpeakerProposals>>;
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
 
-  const proposals = await listSpeakerProposals(params.event, uid).catch(mapErrorToResponse);
+  const proposals = await listSpeakerProposals(params.event, userId).catch(mapErrorToResponse);
   return json(proposals);
 };
 

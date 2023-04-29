@@ -6,14 +6,14 @@ export async function rateProposal(
   orgaSlug: string,
   eventSlug: string,
   proposalId: string,
-  uid: string,
+  userId: string,
   data: ProposalRatingData
 ) {
-  await checkUserRole(orgaSlug, eventSlug, uid);
+  await checkUserRole(orgaSlug, eventSlug, userId);
 
   await db.rating.upsert({
-    where: { userId_proposalId: { userId: uid, proposalId } },
+    where: { userId_proposalId: { userId: userId, proposalId } },
     update: data,
-    create: { userId: uid, proposalId, ...data },
+    create: { userId: userId, proposalId, ...data },
   });
 }

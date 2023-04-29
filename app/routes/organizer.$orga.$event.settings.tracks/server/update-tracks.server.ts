@@ -3,8 +3,8 @@ import { db } from '~/libs/db';
 import { checkUserRole } from '~/shared-server/organizations/check-user-role.server';
 import type { EventTrackSaveData } from '../types/event-track-save.schema';
 
-export async function saveFormat(orgaSlug: string, eventSlug: string, uid: string, data: EventTrackSaveData) {
-  await checkUserRole(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER]);
+export async function saveFormat(orgaSlug: string, eventSlug: string, userId: string, data: EventTrackSaveData) {
+  await checkUserRole(orgaSlug, eventSlug, userId, [OrganizationRole.OWNER]);
 
   if (data.id) {
     await db.eventFormat.update({
@@ -18,8 +18,8 @@ export async function saveFormat(orgaSlug: string, eventSlug: string, uid: strin
   }
 }
 
-export async function saveCategory(orgaSlug: string, eventSlug: string, uid: string, data: EventTrackSaveData) {
-  await checkUserRole(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER]);
+export async function saveCategory(orgaSlug: string, eventSlug: string, userId: string, data: EventTrackSaveData) {
+  await checkUserRole(orgaSlug, eventSlug, userId, [OrganizationRole.OWNER]);
 
   if (data.id) {
     await db.eventCategory.update({
@@ -33,14 +33,14 @@ export async function saveCategory(orgaSlug: string, eventSlug: string, uid: str
   }
 }
 
-export async function deleteFormat(orgaSlug: string, eventSlug: string, uid: string, formatId: string) {
-  await checkUserRole(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER]);
+export async function deleteFormat(orgaSlug: string, eventSlug: string, userId: string, formatId: string) {
+  await checkUserRole(orgaSlug, eventSlug, userId, [OrganizationRole.OWNER]);
 
   await db.eventFormat.delete({ where: { id: formatId } });
 }
 
-export async function deleteCategory(orgaSlug: string, eventSlug: string, uid: string, categoryId: string) {
-  await checkUserRole(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER]);
+export async function deleteCategory(orgaSlug: string, eventSlug: string, userId: string, categoryId: string) {
+  await checkUserRole(orgaSlug, eventSlug, userId, [OrganizationRole.OWNER]);
 
   await db.eventCategory.delete({ where: { id: categoryId } });
 }

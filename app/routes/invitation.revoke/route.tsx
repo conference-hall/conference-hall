@@ -5,13 +5,13 @@ import { mapErrorToResponse } from '../../libs/errors';
 import { requireSession } from '~/libs/auth/session';
 
 export const action: ActionFunction = async ({ request }) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   const form = await request.formData();
   const type = form.get('_type') as InviteType;
   const id = form.get('_id') as string;
 
   try {
-    await revokeLink(type, id, uid);
+    await revokeLink(type, id, userId);
   } catch (err) {
     mapErrorToResponse(err);
   }

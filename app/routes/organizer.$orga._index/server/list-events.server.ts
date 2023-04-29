@@ -2,8 +2,8 @@ import { db } from '~/libs/db';
 import { getUserRole } from '~/shared-server/organizations/get-user-role.server';
 import { getCfpState } from '~/utils/event';
 
-export async function listEvents(slug: string, uid: string, archived: boolean) {
-  const role = await getUserRole(slug, uid);
+export async function listEvents(slug: string, userId: string, archived: boolean) {
+  const role = await getUserRole(slug, userId);
   if (!role) return [];
 
   const events = await db.event.findMany({

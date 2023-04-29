@@ -13,11 +13,11 @@ import { useOrganization } from '../organizer.$orga/route';
 import { useOrganizerEvent } from '../organizer.$orga.$event/route';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   invariant(params.orga, 'Invalid organization slug');
   invariant(params.event, 'Invalid event slug');
 
-  const role = await getUserRole(params.orga, uid);
+  const role = await getUserRole(params.orga, userId);
   if (role !== 'OWNER') return redirect(`/organizer/${params.orga}/${params.event}/proposals`);
   return null;
 };

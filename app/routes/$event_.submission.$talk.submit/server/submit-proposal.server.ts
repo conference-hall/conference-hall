@@ -11,7 +11,7 @@ import { sendSubmittedTalkSlackMessage } from './slack/slack.services';
 import { ProposalSubmittedEmail } from './emails/proposal-submitted-email';
 import { ProposalReceivedEmail } from './emails/proposal-received-email';
 
-export async function submitProposal(talkId: string, eventSlug: string, uid: string, data: ProposalSubmissionData) {
+export async function submitProposal(talkId: string, eventSlug: string, userId: string, data: ProposalSubmissionData) {
   const event = await db.event.findUnique({ where: { slug: eventSlug } });
   if (!event) throw new EventNotFoundError();
 
@@ -22,7 +22,7 @@ export async function submitProposal(talkId: string, eventSlug: string, uid: str
     const nbProposals = await db.proposal.count({
       where: {
         eventId: event.id,
-        speakers: { some: { id: uid } },
+        speakers: { some: { id: userId } },
         status: { not: { equals: 'DRAFT' } },
         id: { not: { equals: talkId } },
       },
@@ -33,7 +33,7 @@ export async function submitProposal(talkId: string, eventSlug: string, uid: str
   }
 
   const proposal = await db.proposal.findFirst({
-    where: { eventId: event.id, talkId, speakers: { some: { id: uid } } },
+    where: { eventId: event.id, talkId, speakers: { some: { id: userId } } },
     include: { speakers: true },
   });
   if (!proposal) throw new ProposalNotFoundError();

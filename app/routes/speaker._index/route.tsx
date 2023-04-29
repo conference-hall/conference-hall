@@ -14,11 +14,11 @@ import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 import { useUser } from '~/root';
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   try {
     const url = new URL(request.url);
     const page = await parsePage(url.searchParams);
-    const activities = await getActivities(uid, page);
+    const activities = await getActivities(userId, page);
     return json(activities);
   } catch (err) {
     throw mapErrorToResponse(err);

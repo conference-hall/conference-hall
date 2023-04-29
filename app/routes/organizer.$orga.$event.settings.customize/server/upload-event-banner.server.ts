@@ -6,8 +6,8 @@ import { EventNotFoundError } from '../../../libs/errors';
 import { uploadToStorageHandler } from '../../../libs/storage/storage.server';
 import { checkUserRole } from '~/shared-server/organizations/check-user-role.server';
 
-export async function uploadEventBanner(orgaSlug: string, eventSlug: string, uid: string, request: Request) {
-  await checkUserRole(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER]);
+export async function uploadEventBanner(orgaSlug: string, eventSlug: string, userId: string, request: Request) {
+  await checkUserRole(orgaSlug, eventSlug, userId, [OrganizationRole.OWNER]);
 
   const event = await db.event.findFirst({ where: { slug: eventSlug } });
   if (!event) throw new EventNotFoundError();

@@ -4,12 +4,12 @@ import { ProposalConfirmedEmail } from './emails/proposal-confirmed-email';
 import { ProposalDeclinedEmail } from './emails/proposal-declined-email';
 
 export async function sendParticipationAnswer(
-  uid: string,
+  userId: string,
   proposalId: string,
   participation: 'CONFIRMED' | 'DECLINED'
 ) {
   const proposal = await db.proposal.findFirst({
-    where: { id: proposalId, speakers: { some: { id: uid } } },
+    where: { id: proposalId, speakers: { some: { id: userId } } },
     include: { event: true },
   });
 

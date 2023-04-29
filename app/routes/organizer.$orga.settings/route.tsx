@@ -12,10 +12,10 @@ import { useUser } from '~/root';
 import { useOrganization } from '../organizer.$orga/route';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   invariant(params.orga, 'Invalid organization slug');
 
-  const role = await getUserRole(params.orga, uid);
+  const role = await getUserRole(params.orga, userId);
   if (role !== 'OWNER') return redirect(`/organizer/${params.orga}`);
   return null;
 };

@@ -3,11 +3,11 @@ import { sortBy } from '~/utils/arrays';
 
 export type User = Awaited<ReturnType<typeof getUser>>;
 
-export async function getUser(uid: string | null) {
-  if (uid === null) return null;
+export async function getUser(userId: string | null) {
+  if (userId === null) return null;
 
   const user = await db.user.findUnique({
-    where: { id: uid },
+    where: { id: userId },
     include: { organizations: { include: { organization: true } } },
   });
 
@@ -39,15 +39,15 @@ export async function getUser(uid: string | null) {
   };
 }
 
-async function listNotifications(uid: string) {
-  if (uid === null) return [];
+async function listNotifications(userId: string) {
+  if (userId === null) return [];
 
   const acceptedProposals = await db.proposal.findMany({
     include: { event: true },
     where: {
       status: 'ACCEPTED',
       emailAcceptedStatus: { not: null },
-      speakers: { some: { id: uid } },
+      speakers: { some: { id: userId } },
     },
     orderBy: { updatedAt: 'desc' },
   });

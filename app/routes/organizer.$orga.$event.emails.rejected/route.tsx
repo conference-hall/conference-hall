@@ -20,7 +20,7 @@ import { getRejectionCampaignStats } from './server/get-rejection-campaign-stats
 import { sendRejectionCampaign } from './server/send-rejection-campaign.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   invariant(params.orga, 'Invalid organization slug');
   invariant(params.event, 'Invalid event slug');
 
@@ -34,8 +34,8 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   } as ProposalsFilters;
 
   try {
-    const proposals = await searchProposals(params.orga, params.event, uid, filters, page);
-    const stats = await getRejectionCampaignStats(params.orga, params.event, uid);
+    const proposals = await searchProposals(params.orga, params.event, userId, filters, page);
+    const stats = await getRejectionCampaignStats(params.orga, params.event, userId);
     return json({ proposals, stats });
   } catch (err) {
     throw mapErrorToResponse(err);
@@ -43,14 +43,14 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   invariant(params.orga, 'Invalid organization slug');
   invariant(params.event, 'Invalid event slug');
 
   const form = await request.formData();
   const { data, error } = await withZod(ProposalSelectionSchema).validate(form);
   if (error) return json(null);
-  await sendRejectionCampaign(params.orga, params.event, uid, data.selection);
+  await sendRejectionCampaign(params.orga, params.event, userId, data.selection);
   return json(null, await createToast(request, 'Emails successfully sent.'));
 };
 

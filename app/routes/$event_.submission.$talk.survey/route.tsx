@@ -20,13 +20,13 @@ import { SurveyForm } from '~/shared-components/proposals/forms/SurveyForm';
 export const handle = { step: 'survey' };
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
   invariant(params.talk, 'Invalid talk id');
 
   try {
     const questions = await getQuestions(params.event);
-    const answers = await getAnswers(params.event, uid);
+    const answers = await getAnswers(params.event, userId);
     return json({ questions, answers });
   } catch (err) {
     throw mapErrorToResponse(err);
@@ -34,7 +34,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   const form = await request.formData();
   invariant(params.event, 'Invalid event slug');
   invariant(params.talk, 'Invalid talk id');
@@ -42,7 +42,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   const result = await withZod(SurveySchema).validate(form);
   if (result.error) throw new Response('Bad survey values', { status: 400 });
   try {
-    await saveSurvey(uid, params.event, result.data);
+    await saveSurvey(userId, params.event, result.data);
     return redirect(`/${params.event}/submission/${params.talk}/submit`);
   } catch (err) {
     mapErrorToResponse(err);

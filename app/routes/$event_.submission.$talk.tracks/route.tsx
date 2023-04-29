@@ -21,12 +21,12 @@ import { ArrowRightIcon } from '@heroicons/react/20/solid';
 export const handle = { step: 'tracks' };
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
   invariant(params.talk, 'Invalid talk id');
 
   try {
-    const proposal = await getSubmittedProposal(params.talk, params.event, uid);
+    const proposal = await getSubmittedProposal(params.talk, params.event, userId);
     return json({ formats: proposal.formats.map(({ id }) => id), categories: proposal.categories.map(({ id }) => id) });
   } catch (err) {
     throw mapErrorToResponse(err);
@@ -34,7 +34,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   const form = await request.formData();
   invariant(params.event, 'Invalid event slug');
   invariant(params.talk, 'Invalid talk id');
@@ -44,7 +44,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   try {
     const event = await getEvent(params.event);
-    await saveTracks(params.talk, event.id, uid, result.data);
+    await saveTracks(params.talk, event.id, userId, result.data);
     if (event.surveyEnabled) {
       return redirect(`/${params.event}/submission/${params.talk}/survey`);
     }

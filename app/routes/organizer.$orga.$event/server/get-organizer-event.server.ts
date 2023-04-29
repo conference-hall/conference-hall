@@ -5,10 +5,10 @@ import { EventNotFoundError } from '~/libs/errors';
 
 export type OrganizerEvent = Awaited<ReturnType<typeof getOrganizerEvent>>;
 
-export async function getOrganizerEvent(slug: string, uid: string) {
+export async function getOrganizerEvent(slug: string, userId: string) {
   const event = await db.event.findFirst({
     include: { formats: true, categories: true },
-    where: { slug, organization: { members: { some: { memberId: uid } } } },
+    where: { slug, organization: { members: { some: { memberId: userId } } } },
   });
   if (!event) throw new EventNotFoundError();
 

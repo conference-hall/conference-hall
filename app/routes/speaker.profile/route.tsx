@@ -22,7 +22,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 export const action = async ({ request }: ActionArgs) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   const form = await request.formData();
   const type = form.get('_type') as string;
   try {
@@ -40,7 +40,7 @@ export const action = async ({ request }: ActionArgs) => {
     }
 
     if (result.error) return json(result.error.fieldErrors);
-    await saveProfile(uid, result.data);
+    await saveProfile(userId, result.data);
 
     const toast = await createToast(request, 'Profile successfully saved.');
     return redirect('/speaker/profile', toast);

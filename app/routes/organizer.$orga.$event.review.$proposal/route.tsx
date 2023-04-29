@@ -18,7 +18,7 @@ import { useUser } from '~/root';
 import { useOrganization } from '../organizer.$orga/route';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   invariant(params.orga, 'Invalid organization slug');
   invariant(params.event, 'Invalid event slug');
   invariant(params.proposal, 'Invalid proposal id');
@@ -26,7 +26,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   try {
     const url = new URL(request.url);
     const filters = await withZod(ProposalsFiltersSchema).validate(url.searchParams);
-    const proposal = await getProposalReview(params.orga, params.event, params.proposal, uid, filters.data ?? {});
+    const proposal = await getProposalReview(params.orga, params.event, params.proposal, userId, filters.data ?? {});
     return json(proposal);
   } catch (e) {
     throw mapErrorToResponse(e);
@@ -51,7 +51,7 @@ export default function OrganizerProposalRoute() {
         <section aria-label="Proposal details section" className="col-span-4 overflow-hidden">
           <Outlet context={{ user, organization, event, proposalReview }} />
         </section>
-        <RightPanel className="col-span-2" uid={user?.id!} messages={proposal.messages} />
+        <RightPanel className="col-span-2" userId={user?.id!} messages={proposal.messages} />
       </div>
       <BottomPanel
         className="h-28"

@@ -28,11 +28,10 @@ CREATE TYPE "InviteType" AS ENUM ('ORGANIZATION', 'TALK', 'PROPOSAL');
 -- CreateTable
 CREATE TABLE "users" (
     "id" TEXT NOT NULL,
-    "email" TEXT,
+    "email" TEXT NOT NULL,
     "name" TEXT,
     "bio" TEXT,
     "photoURL" TEXT,
-    "betaAccess" TEXT,
     "github" TEXT,
     "company" TEXT,
     "references" TEXT,
@@ -46,6 +45,20 @@ CREATE TABLE "users" (
     "organizerKey" TEXT,
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "accounts" (
+    "uid" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "name" TEXT,
+    "picture" TEXT,
+    "provider" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "userId" TEXT NOT NULL,
+
+    CONSTRAINT "accounts_pkey" PRIMARY KEY ("uid")
 );
 
 -- CreateTable
@@ -309,6 +322,9 @@ CREATE INDEX "_speakers_proposals_B_index" ON "_speakers_proposals"("B");
 
 -- AddForeignKey
 ALTER TABLE "users" ADD CONSTRAINT "users_organizerKey_fkey" FOREIGN KEY ("organizerKey") REFERENCES "organizer_key_access"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "accounts" ADD CONSTRAINT "accounts_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "talks" ADD CONSTRAINT "talks_creatorId_fkey" FOREIGN KEY ("creatorId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

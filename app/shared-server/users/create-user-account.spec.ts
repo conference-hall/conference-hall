@@ -1,7 +1,7 @@
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { userFactory } from 'tests/factories/users';
 import { db } from '../../libs/db';
-import { createUser } from './create-user.server';
+import { createUserAccount } from './create-user-account.server';
 
 describe('#createUser', () => {
   beforeEach(async () => {
@@ -10,35 +10,36 @@ describe('#createUser', () => {
   afterEach(disconnectDB);
 
   it('creates a new user', async () => {
-    const result = await createUser({
+    const userId = await createUserAccount({
       uid: '123',
       name: 'Bob',
       email: 'bob@example.com',
       picture: 'https://image.com/image.png',
     });
 
-    const created = await db.user.findFirst({ where: { id: '123' } });
-    expect(result).toEqual('123');
-    expect(created?.id).toEqual('123');
+    const created = await db.account.findFirst({ where: { uid: '123' }, include: { user: true } });
+    expect(created?.uid).toEqual('123');
     expect(created?.name).toEqual('Bob');
     expect(created?.email).toEqual('bob@example.com');
-    expect(created?.photoURL).toEqual('https://image.com/image.png');
+    expect(created?.picture).toEqual('https://image.com/image.png');
+
+    expect(userId).toEqual(created?.user?.id);
+    expect(created?.user?.name).toEqual('Bob');
+    expect(created?.user?.email).toEqual('bob@example.com');
+    expect(created?.user?.photoURL).toEqual('https://image.com/image.png');
   });
 
   it('returns existing user if already exists', async () => {
     const user = await userFactory();
-    const result = await createUser({
-      uid: user.id,
+    const account = await db.account.findFirst({ where: { userId: user.id } });
+
+    const userId = await createUserAccount({
+      uid: account?.uid!,
       name: 'Bob',
       email: 'bob@example.com',
       picture: 'https://image.com/image.png',
     });
 
-    const created = await db.user.findFirst({ where: { id: user.id } });
-    expect(result).toEqual(user.id);
-    expect(created?.id).toEqual(user.id);
-    expect(created?.name).toEqual(user.name);
-    expect(created?.email).toEqual(user.email);
-    expect(created?.photoURL).toEqual(user.photoURL);
+    expect(userId).toEqual(user.id);
   });
 });

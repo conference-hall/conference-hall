@@ -23,7 +23,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   invariant(params.orga, 'Invalid organization slug');
   invariant(params.event, 'Invalid event slug');
   const formData = await request.formData();
@@ -33,30 +33,30 @@ export const action = async ({ request, params }: ActionArgs) => {
   switch (action) {
     case 'delete-formats': {
       const trackId = String(formData.get('trackId'));
-      await deleteFormat(params.orga, params.event, uid, trackId);
+      await deleteFormat(params.orga, params.event, userId, trackId);
       break;
     }
     case 'delete-categories': {
       const trackId = String(formData.get('trackId'));
-      await deleteCategory(params.orga, params.event, uid, trackId);
+      await deleteCategory(params.orga, params.event, userId, trackId);
       break;
     }
     case 'save-formats': {
       const results = await withZod(EventTrackSaveSchema).validate(formData);
       if (results.error) return json(results.error.fieldErrors);
-      await saveFormat(params.orga, params.event, uid, results.data);
+      await saveFormat(params.orga, params.event, userId, results.data);
       break;
     }
     case 'save-categories': {
       const results = await withZod(EventTrackSaveSchema).validate(formData);
       if (results.error) return json(results.error.fieldErrors);
-      await saveCategory(params.orga, params.event, uid, results.data);
+      await saveCategory(params.orga, params.event, userId, results.data);
       break;
     }
     case 'update-track-settings': {
       const results = await withZod(EventTracksSettingsSchema).validate(formData);
       if (results.error) return json(results.error.fieldErrors);
-      await updateEvent(params.orga, params.event, uid, results.data);
+      await updateEvent(params.orga, params.event, userId, results.data);
       break;
     }
   }

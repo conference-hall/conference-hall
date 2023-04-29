@@ -4,12 +4,12 @@ import { buildInvitationLink } from '../../../shared-server/invitations/build-li
 /**
  * Returns invitation link of an organization
  * @param slug organization slug
- * @param uid Id of the user
+ * @param userId Id of the user
  * @returns invitation link
  */
-export async function getInvitationLink(slug: string, uid: string) {
+export async function getInvitationLink(slug: string, userId: string) {
   const invite = await db.invite.findFirst({
-    where: { organization: { slug, members: { some: { memberId: uid } } } },
+    where: { organization: { slug, members: { some: { memberId: userId } } } },
   });
   return buildInvitationLink(invite?.id);
 }

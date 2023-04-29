@@ -19,11 +19,11 @@ import { useUser } from '~/root';
 import type { OrganizerEvent } from '../organizer.$orga.$event/server/get-organizer-event.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   invariant(params.orga, 'Invalid organization slug');
 
   try {
-    const organization = await getOrganization(params.orga, uid);
+    const organization = await getOrganization(params.orga, userId);
     return json(organization);
   } catch (e) {
     throw mapErrorToResponse(e);
@@ -31,14 +31,14 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   invariant(params.orga, 'Invalid organization slug');
   const form = await request.formData();
 
   const result = await withZod(EventCreateSchema).validate(form);
   if (result.error) return json(result.error.fieldErrors);
 
-  const event = await createEvent(params.orga, uid, result.data);
+  const event = await createEvent(params.orga, userId, result.data);
   if (event.error) return json(event.error?.fieldErrors);
 
   return redirect(`/organizer/${params.orga}/${event.slug}/settings`);

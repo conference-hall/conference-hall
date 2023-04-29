@@ -7,7 +7,7 @@ import { mapErrorToResponse } from '~/libs/errors';
 import { exportProposals } from './server/export-proposals.server';
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   const url = new URL(request.url);
 
   const result = await withZod(ProposalsExportFiltersSchema).validate(url.searchParams);
@@ -15,7 +15,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 
   const { orga, event, ...filters } = result.data;
   try {
-    const results = await exportProposals(orga, event, uid, filters ?? {});
+    const results = await exportProposals(orga, event, userId, filters ?? {});
     return json(results);
   } catch (err) {
     throw mapErrorToResponse(err);

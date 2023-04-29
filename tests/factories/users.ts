@@ -35,7 +35,7 @@ type FactoryOptions = {
 };
 
 export const userFactory = async (options: FactoryOptions = {}) => {
-  const { attributes = {}, traits = [], isOrganizer = false } = options;
+  const { attributes = {}, traits = [], isOrganizer } = options;
 
   const defaultAttributes: Prisma.UserCreateInput = {
     name: fake.randFullName(),
@@ -60,5 +60,18 @@ export const userFactory = async (options: FactoryOptions = {}) => {
     ...attributes,
   };
 
-  return db.user.create({ data });
+  const user = await db.user.create({ data });
+
+  await db.account.create({
+    data: {
+      uid: user.id,
+      name: user.name,
+      email: user.email,
+      picture: user.photoURL,
+      provider: 'google',
+      userId: user.id,
+    },
+  });
+
+  return user;
 };

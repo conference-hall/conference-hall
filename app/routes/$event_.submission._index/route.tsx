@@ -15,11 +15,11 @@ import { NewProposal } from './components/NewProposal';
 export const handle = { step: 'selection' };
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
 
   try {
-    const results = await listTalksToSubmit(uid, params.event);
+    const results = await listTalksToSubmit(userId, params.event);
     return json(results);
   } catch (err) {
     throw mapErrorToResponse(err);

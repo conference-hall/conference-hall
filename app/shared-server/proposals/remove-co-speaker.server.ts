@@ -2,7 +2,7 @@ import { db } from '../../libs/db';
 import { ProposalNotFoundError } from '../../libs/errors';
 
 export async function removeCoSpeakerFromSubmission(
-  uid: string,
+  userId: string,
   talkId: string,
   eventSlug: string,
   coSpeakerId: string
@@ -11,7 +11,7 @@ export async function removeCoSpeakerFromSubmission(
     where: {
       talkId,
       event: { slug: eventSlug },
-      speakers: { some: { id: uid } },
+      speakers: { some: { id: userId } },
     },
   });
   if (!proposal) throw new ProposalNotFoundError();
@@ -19,11 +19,11 @@ export async function removeCoSpeakerFromSubmission(
   await removeCoSpeaker(proposal.id, coSpeakerId);
 }
 
-export async function removeCoSpeakerFromProposal(uid: string, proposalId: string, coSpeakerId: string) {
+export async function removeCoSpeakerFromProposal(userId: string, proposalId: string, coSpeakerId: string) {
   const proposal = await db.proposal.findFirst({
     where: {
       id: proposalId,
-      speakers: { some: { id: uid } },
+      speakers: { some: { id: userId } },
     },
   });
   if (!proposal) throw new ProposalNotFoundError();

@@ -17,20 +17,20 @@ type Message = {
 };
 
 type Props = {
-  uid: string;
+  userId: string;
   messages: Array<Message>;
   className?: string;
 };
 
-export function RightPanel({ uid, messages, className }: Props) {
+export function RightPanel({ userId, messages, className }: Props) {
   return (
     <section className={c('relative flex min-h-full flex-col', className)}>
-      <OrganizerComments uid={uid} messages={messages} />
+      <OrganizerComments userId={userId} messages={messages} />
     </section>
   );
 }
 
-function OrganizerComments({ uid, messages }: { uid: string; messages: Array<Message> }) {
+function OrganizerComments({ userId, messages }: { userId: string; messages: Array<Message> }) {
   const params = useParams();
   const fetcher = useFetcher();
 
@@ -66,7 +66,7 @@ function OrganizerComments({ uid, messages }: { uid: string; messages: Array<Mes
                 <Text size="xs" variant="secondary">
                   {message.name}
                 </Text>
-                {uid === message.userId && (
+                {userId === message.userId && (
                   <IconButton
                     label="Delete comment"
                     icon={TrashIcon}

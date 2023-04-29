@@ -3,10 +3,10 @@ import { db } from '../../../libs/db';
 import { ForbiddenOperationError } from '../../../libs/errors';
 import { getUserRole } from '../../../shared-server/organizations/get-user-role.server';
 
-export async function changeMemberRole(slug: string, uid: string, memberId: string, memberRole: OrganizationRole) {
-  if (uid === memberId) throw new ForbiddenOperationError();
+export async function changeMemberRole(slug: string, userId: string, memberId: string, memberRole: OrganizationRole) {
+  if (userId === memberId) throw new ForbiddenOperationError();
 
-  const role = await getUserRole(slug, uid);
+  const role = await getUserRole(slug, userId);
   if (role !== OrganizationRole.OWNER) throw new ForbiddenOperationError();
 
   await db.organizationMember.updateMany({

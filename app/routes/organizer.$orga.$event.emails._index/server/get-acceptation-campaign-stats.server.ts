@@ -1,8 +1,8 @@
 import { db } from '../../../libs/db';
 import { checkUserRole } from '../../../shared-server/organizations/check-user-role.server';
 
-export async function getAcceptationCampaignStats(orgaSlug: string, eventSlug: string, uid: string) {
-  await checkUserRole(orgaSlug, eventSlug, uid, ['OWNER', 'MEMBER']);
+export async function getAcceptationCampaignStats(orgaSlug: string, eventSlug: string, userId: string) {
+  await checkUserRole(orgaSlug, eventSlug, userId, ['OWNER', 'MEMBER']);
 
   const toSend = await db.proposal.count({
     where: {

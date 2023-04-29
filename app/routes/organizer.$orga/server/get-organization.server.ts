@@ -3,9 +3,9 @@ import { OrganizationNotFoundError } from '~/libs/errors';
 
 export type Organization = Awaited<ReturnType<typeof getOrganization>>;
 
-export async function getOrganization(slug: string, uid: string) {
+export async function getOrganization(slug: string, userId: string) {
   const orgaMember = await db.organizationMember.findFirst({
-    where: { memberId: uid, organization: { slug } },
+    where: { memberId: userId, organization: { slug } },
     orderBy: { organization: { name: 'asc' } },
     include: { organization: true },
   });

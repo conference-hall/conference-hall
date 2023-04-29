@@ -10,10 +10,10 @@ import { useOrganization } from '../organizer.$orga/route';
 import { useUser } from '~/root';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
   try {
-    const event = await getOrganizerEvent(params.event, uid);
+    const event = await getOrganizerEvent(params.event, userId);
     return json(event);
   } catch (e) {
     throw mapErrorToResponse(e);

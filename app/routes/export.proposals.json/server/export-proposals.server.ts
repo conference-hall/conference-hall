@@ -4,10 +4,10 @@ import { checkUserRole } from '~/shared-server/organizations/check-user-role.ser
 import { RatingsDetails } from '~/shared-server/ratings/ratings-details';
 import { OrganizerProposalsSearch } from '~/shared-server/proposals/OrganizerProposalsSearch';
 
-export async function exportProposals(orgaSlug: string, eventSlug: string, uid: string, filters: ProposalsFilters) {
-  await checkUserRole(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER, OrganizationRole.MEMBER]);
+export async function exportProposals(orgaSlug: string, eventSlug: string, userId: string, filters: ProposalsFilters) {
+  await checkUserRole(orgaSlug, eventSlug, userId, [OrganizationRole.OWNER, OrganizationRole.MEMBER]);
 
-  const search = new OrganizerProposalsSearch(eventSlug, uid, filters);
+  const search = new OrganizerProposalsSearch(eventSlug, userId, filters);
 
   const proposals = await search.proposals();
 

@@ -19,7 +19,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   const form = await request.formData();
   invariant(params.orga, 'Invalid organization slug');
   invariant(params.event, 'Invalid event slug');
@@ -28,7 +28,7 @@ export const action = async ({ request, params }: ActionArgs) => {
   try {
     const result = await withZod(ProposalUpdateSchema).validate(form);
     if (result.error) return json(result.error.fieldErrors);
-    await updateProposal(params.orga, params.event, params.proposal, uid, result.data);
+    await updateProposal(params.orga, params.event, params.proposal, userId, result.data);
     const url = new URL(request.url);
     return redirect(`/organizer/${params.orga}/${params.event}/review/${params.proposal}${url.search}`);
   } catch (err) {

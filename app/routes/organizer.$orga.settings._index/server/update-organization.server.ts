@@ -2,9 +2,9 @@ import { db } from '../../../libs/db';
 import { OrganizationNotFoundError } from '../../../libs/errors';
 import type { OrganizationSaveData } from '../types/organization-save.schema';
 
-export async function updateOrganization(slug: string, uid: string, data: OrganizationSaveData) {
+export async function updateOrganization(slug: string, userId: string, data: OrganizationSaveData) {
   let organization = await db.organization.findFirst({
-    where: { slug, members: { some: { memberId: uid, role: 'OWNER' } } },
+    where: { slug, members: { some: { memberId: userId, role: 'OWNER' } } },
   });
   if (!organization) throw new OrganizationNotFoundError();
 

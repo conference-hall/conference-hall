@@ -12,11 +12,11 @@ import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 import { Container } from '~/design-system/layouts/Container';
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   const { searchParams } = new URL(request.url);
   const archived = Boolean(searchParams.get('archived'));
   try {
-    const talks = await listTalks(uid, { archived });
+    const talks = await listTalks(userId, { archived });
     return json(talks);
   } catch (err) {
     throw mapErrorToResponse(err);

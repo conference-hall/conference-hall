@@ -3,7 +3,7 @@ import { CfpNotOpenError, EventNotFoundError, ProposalNotFoundError } from '~/li
 import type { ProposalUpdateData } from '~/schemas/proposal';
 import { getCfpState } from '~/utils/event';
 
-export async function updateProposal(slug: string, proposalId: string, uid: string, data: ProposalUpdateData) {
+export async function updateProposal(slug: string, proposalId: string, userId: string, data: ProposalUpdateData) {
   const event = await db.event.findUnique({
     select: { id: true, type: true, cfpStart: true, cfpEnd: true },
     where: { slug },
@@ -14,7 +14,7 @@ export async function updateProposal(slug: string, proposalId: string, uid: stri
   if (!isCfpOpen) throw new CfpNotOpenError();
 
   const proposal = await db.proposal.findFirst({
-    where: { id: proposalId, speakers: { some: { id: uid } } },
+    where: { id: proposalId, speakers: { some: { id: userId } } },
   });
   if (!proposal) throw new ProposalNotFoundError();
 
@@ -24,7 +24,7 @@ export async function updateProposal(slug: string, proposalId: string, uid: stri
     where: { id: proposalId },
     data: {
       ...talk,
-      speakers: { set: [], connect: [{ id: uid }] },
+      speakers: { set: [], connect: [{ id: userId }] },
       formats: { set: [], connect: formats?.map((id) => ({ id })) },
       categories: { set: [], connect: categories?.map((id) => ({ id })) },
     },

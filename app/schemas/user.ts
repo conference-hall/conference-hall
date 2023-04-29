@@ -3,4 +3,5 @@ export type UserCreateInput = {
   name: string;
   email?: string;
   picture?: string;
+  provider?: string;
 };

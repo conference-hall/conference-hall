@@ -20,7 +20,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 export const action = async ({ request, params }: LoaderArgs) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   invariant(params.orga, 'Invalid organization slug');
   invariant(params.event, 'Invalid event slug');
   const form = await request.formData();
@@ -28,12 +28,12 @@ export const action = async ({ request, params }: LoaderArgs) => {
 
   switch (action) {
     case 'enable-survey': {
-      await updateEvent(params.orga, params.event, uid, { surveyEnabled: form.get('surveyEnabled') === 'true' });
+      await updateEvent(params.orga, params.event, userId, { surveyEnabled: form.get('surveyEnabled') === 'true' });
       break;
     }
     case 'save-questions': {
       const result = await withZod(EventSurveySettingsSchema).validate(form);
-      if (!result.error) await updateEvent(params.orga, params.event, uid, result.data);
+      if (!result.error) await updateEvent(params.orga, params.event, userId, result.data);
       break;
     }
   }

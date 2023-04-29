@@ -26,7 +26,7 @@ export class RatingsDetails {
     return rates.reduce((acc, next) => acc + next, 0) / rates.length;
   }
 
-  fromUser(uid: string) {
-    return this.ratings.find((r) => r.userId === uid);
+  fromUser(userId: string) {
+    return this.ratings.find((r) => r.userId === userId);
   }
 }

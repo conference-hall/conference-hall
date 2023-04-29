@@ -17,13 +17,13 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export const action = async ({ request }: ActionArgs) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   const form = await request.formData();
   const result = await withZod(OrganizationSaveSchema).validate(form);
   if (result.error) {
     return json(result.error.fieldErrors);
   } else {
-    const updated = await createOrganization(uid, result.data);
+    const updated = await createOrganization(userId, result.data);
     if (updated?.fieldErrors) return json(updated.fieldErrors);
     return redirect(`/organizer/${updated.slug}`);
   }

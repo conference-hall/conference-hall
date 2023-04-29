@@ -17,16 +17,16 @@ import { AvatarName } from '~/design-system/Avatar';
 import { createToast } from '~/libs/toasts/toasts';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   invariant(params.orga, 'Invalid organization slug');
 
-  const invitationLink = await getInvitationLink(params.orga, uid);
-  const members = await listMembers(params.orga, uid);
+  const invitationLink = await getInvitationLink(params.orga, userId);
+  const members = await listMembers(params.orga, userId);
   return json({ invitationLink, members });
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   invariant(params.orga, 'Invalid organization slug');
 
   const form = await request.formData();
@@ -36,12 +36,12 @@ export const action = async ({ request, params }: ActionArgs) => {
   switch (action) {
     case 'change-role': {
       const memberRole = form.get('memberRole') as OrganizationRole;
-      await changeMemberRole(params.orga, uid, memberId, memberRole);
+      await changeMemberRole(params.orga, userId, memberId, memberRole);
       const toast = await createToast(request, 'Member role changed');
       return json(null, toast);
     }
     case 'remove-member': {
-      await removeMember(params.orga, uid, memberId);
+      await removeMember(params.orga, userId, memberId);
       const toast = await createToast(request, 'Member removed from organization');
       return json(null, toast);
     }

@@ -12,12 +12,12 @@ export async function getProposalReview(
   orgaSlug: string,
   eventSlug: string,
   proposalId: string,
-  uid: string,
+  userId: string,
   filters: ProposalsFilters
 ) {
-  await checkUserRole(orgaSlug, eventSlug, uid);
+  await checkUserRole(orgaSlug, eventSlug, userId);
 
-  const search = new OrganizerProposalsSearch(eventSlug, uid, filters);
+  const search = new OrganizerProposalsSearch(eventSlug, userId, filters);
   const proposalIds = await search.proposalsIds();
 
   const totalProposals = proposalIds.length;
@@ -38,7 +38,7 @@ export async function getProposalReview(
   if (!proposal) throw new ProposalNotFoundError();
 
   const ratingDetails = new RatingsDetails(proposal.ratings);
-  const userRating = ratingDetails.fromUser(uid);
+  const userRating = ratingDetails.fromUser(userId);
 
   return {
     pagination: {

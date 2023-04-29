@@ -2,10 +2,10 @@ import { ProposalNotFoundError } from '~/libs/errors';
 import type { TrackUpdateData } from '../types/tracks';
 import { db } from '~/libs/db';
 
-export async function saveTracks(talkId: string, eventId: string, uid: string, data: TrackUpdateData) {
+export async function saveTracks(talkId: string, eventId: string, userId: string, data: TrackUpdateData) {
   const proposal = await db.proposal.findFirst({
     select: { id: true },
-    where: { talkId, eventId, speakers: { some: { id: uid } } },
+    where: { talkId, eventId, speakers: { some: { id: userId } } },
   });
   if (!proposal) throw new ProposalNotFoundError();
 

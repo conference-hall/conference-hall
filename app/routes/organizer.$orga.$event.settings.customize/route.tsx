@@ -23,12 +23,12 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   invariant(params.orga, 'Invalid organization slug');
   invariant(params.event, 'Invalid event slug');
 
   try {
-    await uploadEventBanner(params.orga, params.event, uid, request);
+    await uploadEventBanner(params.orga, params.event, userId, request);
     return json(null);
   } catch (error) {
     if (error instanceof UploadingError) {

@@ -1,10 +1,10 @@
 import { db } from '~/libs/db';
 import { getSpeakerProposalStatus } from '~/shared-server/proposals/get-speaker-proposal-status';
 
-export async function listSpeakerProposals(slug: string, uid: string) {
+export async function listSpeakerProposals(slug: string, userId: string) {
   const proposals = await db.proposal.findMany({
     where: {
-      speakers: { some: { id: uid } },
+      speakers: { some: { id: userId } },
       event: { slug },
     },
     include: { speakers: true, event: true },

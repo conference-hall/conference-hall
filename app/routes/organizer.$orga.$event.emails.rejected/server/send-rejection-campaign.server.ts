@@ -3,8 +3,13 @@ import { db } from '../../../libs/db';
 import { ProposalRejectedEmailsBatch } from './emails/proposal-rejected-email-batch';
 import { checkUserRole } from '~/shared-server/organizations/check-user-role.server';
 
-export async function sendRejectionCampaign(orgaSlug: string, eventSlug: string, uid: string, proposalIds: string[]) {
-  await checkUserRole(orgaSlug, eventSlug, uid, ['OWNER', 'MEMBER']);
+export async function sendRejectionCampaign(
+  orgaSlug: string,
+  eventSlug: string,
+  userId: string,
+  proposalIds: string[]
+) {
+  await checkUserRole(orgaSlug, eventSlug, userId, ['OWNER', 'MEMBER']);
 
   const event = await db.event.findUnique({ where: { slug: eventSlug } });
   if (!event) return;

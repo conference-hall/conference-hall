@@ -2,7 +2,7 @@ import { db } from '~/libs/db';
 
 type TalksListOptions = { archived?: boolean };
 
-export async function listTalks(uid: string, options?: TalksListOptions) {
+export async function listTalks(userId: string, options?: TalksListOptions) {
   const talks = await db.talk.findMany({
     select: {
       id: true,
@@ -12,7 +12,7 @@ export async function listTalks(uid: string, options?: TalksListOptions) {
       speakers: true,
     },
     where: {
-      speakers: { some: { id: uid } },
+      speakers: { some: { id: userId } },
       archived: Boolean(options?.archived),
     },
     orderBy: { updatedAt: 'desc' },
