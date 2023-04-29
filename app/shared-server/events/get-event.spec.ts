@@ -37,6 +37,7 @@ describe('#getEvent', () => {
       contactEmail: event.contactEmail,
       codeOfConductUrl: event.codeOfConductUrl,
       bannerUrl: event.bannerUrl,
+      maxProposals: event.maxProposals,
       cfpStart: event.cfpStart?.toUTCString(),
       cfpEnd: event.cfpEnd?.toUTCString(),
       cfpState: 'OPENED',

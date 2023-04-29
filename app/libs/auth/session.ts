@@ -73,6 +73,10 @@ export async function getSessionUid(request: Request) {
 
   if (!jwt) return null;
 
-  const token = await serverAuth.verifySessionCookie(jwt);
-  return token?.uid;
+  try {
+    const token = await serverAuth.verifySessionCookie(jwt);
+    return token.uid;
+  } catch (e) {
+    return null;
+  }
 }

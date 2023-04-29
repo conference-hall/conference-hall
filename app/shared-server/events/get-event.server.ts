@@ -30,6 +30,7 @@ export async function getEvent(slug: string) {
     contactEmail: event.contactEmail,
     codeOfConductUrl: event.codeOfConductUrl,
     bannerUrl: event.bannerUrl,
+    maxProposals: event.maxProposals,
     isCfpOpen: getCfpState(event.type, event.cfpStart, event.cfpEnd) === 'OPENED',
     hasTracks: event.categories.length > 0 || event.formats.length > 0,
     formats: event.formats.map((f) => ({
