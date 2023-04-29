@@ -42,6 +42,6 @@ export async function getTalk(userId: string, talkId: string) {
       logo: proposal.event.logo,
       proposalStatus: getSpeakerProposalStatus(proposal, proposal.event),
     })),
-    invitationLink: buildInvitationLink(talk.invitationCode),
+    invitationLink: buildInvitationLink('talk', talk.invitationCode),
   };
 }

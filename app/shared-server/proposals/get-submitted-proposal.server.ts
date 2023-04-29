@@ -13,7 +13,7 @@ export async function getSubmittedProposal(talkId: string, eventSlug: string, us
     id: proposal.id,
     title: proposal.title,
     isOwner: userId === proposal?.talk?.creatorId,
-    invitationLink: buildInvitationLink(proposal.invitationCode),
+    invitationLink: buildInvitationLink('proposal', proposal.invitationCode),
     speakers: proposal.speakers
       .map((speaker) => ({
         id: speaker.id,

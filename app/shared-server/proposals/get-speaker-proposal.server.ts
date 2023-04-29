@@ -33,7 +33,7 @@ export async function getSpeakerProposal(proposalId: string, userId: string) {
     languages: jsonToArray(proposal.languages),
     formats: proposal.formats.map(({ id, name }) => ({ id, name })),
     categories: proposal.categories.map(({ id, name }) => ({ id, name })),
-    invitationLink: buildInvitationLink(proposal.invitationCode),
+    invitationLink: buildInvitationLink('proposal', proposal.invitationCode),
     speakers: proposal.speakers.map((speaker) => ({
       id: speaker.id,
       name: speaker.name,

@@ -10,6 +10,7 @@ import { ratingFactory } from 'tests/factories/ratings';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
 import { OrganizerProposalsSearch } from './OrganizerProposalsSearch';
+import { sortBy } from '~/utils/arrays';
 
 describe('#searchProposals', () => {
   let owner: User, speaker: User;
@@ -73,11 +74,16 @@ describe('#searchProposals', () => {
       const statistics = await search.statistics();
       expect(statistics.total).toEqual(3);
       expect(statistics.reviewed).toEqual(1);
-      expect(statistics.statuses).toEqual([
-        { name: 'SUBMITTED', count: 1 },
-        { name: 'ACCEPTED', count: 1 },
-        { name: 'REJECTED', count: 1 },
-      ]);
+      expect(sortBy(statistics.statuses, 'name')).toEqual(
+        sortBy(
+          [
+            { name: 'SUBMITTED', count: 1 },
+            { name: 'ACCEPTED', count: 1 },
+            { name: 'REJECTED', count: 1 },
+          ],
+          'name'
+        )
+      );
     });
   });
 

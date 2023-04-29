@@ -1,6 +1,7 @@
 import type { Event, User, EventCategory, EventFormat, Proposal, Organization } from '@prisma/client';
 import { config } from '../../../../libs/config';
 import { db } from '../../../../libs/db';
+import { sortBy } from '~/utils/arrays';
 
 function buildPayload(
   event: Event & { organization: Organization },
@@ -21,7 +22,9 @@ function buildPayload(
   if (proposal.categories.length > 0) {
     attachment.fields.push({
       title: 'Categories',
-      value: proposal.categories.map((c) => c.name).join(' & '),
+      value: sortBy(proposal.categories, 'name')
+        .map((c) => c.name)
+        .join(' & '),
       short: true,
     });
   }
@@ -29,7 +32,9 @@ function buildPayload(
   if (proposal.formats.length > 0) {
     attachment.fields.push({
       title: 'Formats',
-      value: proposal.formats.map((c) => c.name).join(' & '),
+      value: sortBy(proposal.formats, 'name')
+        .map((c) => c.name)
+        .join(' & '),
       short: true,
     });
   }

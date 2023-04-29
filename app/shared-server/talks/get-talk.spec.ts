@@ -29,7 +29,7 @@ describe('#getTalk', () => {
       references: talk.references,
       archived: talk.archived,
       createdAt: talk.createdAt.toUTCString(),
-      invitationLink: `${config.appUrl}/invitation/${talk.invitationCode}`,
+      invitationLink: `${config.appUrl}/invite/talk/${talk.invitationCode}`,
       isOwner: true,
       speakers: [
         {

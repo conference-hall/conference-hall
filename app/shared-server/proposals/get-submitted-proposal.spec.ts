@@ -28,7 +28,7 @@ describe('#getSubmittedProposal', () => {
     expect(result).toEqual({
       id: proposal.id,
       title: proposal.title,
-      invitationLink: `http://localhost:3001/invitation/${proposal.invitationCode}`,
+      invitationLink: `http://localhost:3001/invite/proposal/${proposal.invitationCode}`,
       isOwner: true,
       speakers: [
         { id: speaker.id, isOwner: true, name: speaker.name, picture: speaker.picture },

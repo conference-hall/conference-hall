@@ -23,7 +23,7 @@ describe('#getOrganization', () => {
       name: 'My orga 2',
       slug: 'my-orga2',
       role: 'MEMBER',
-      invitationLink: `${config.appUrl}/invitation/${orga.invitationCode}`,
+      invitationLink: `${config.appUrl}/invite/orga/${orga.invitationCode}`,
     });
   });
 

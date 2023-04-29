@@ -18,6 +18,6 @@ export async function getOrganization(slug: string, userId: string) {
     name: orgaMember.organization.name,
     slug: orgaMember.organization.slug,
     role: orgaMember.role,
-    invitationLink: buildInvitationLink(orgaMember.organization.invitationCode),
+    invitationLink: buildInvitationLink('orga', orgaMember.organization.invitationCode),
   };
 }
