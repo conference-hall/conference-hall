@@ -72,7 +72,7 @@ export const action = async ({ request, params }: ActionArgs) => {
 
 export default function SubmissionSpeakerRoute() {
   const { user } = useUser();
-  const { proposalId, invitationLink, speakers } = useLoaderData<typeof loader>();
+  const { invitationLink, speakers } = useLoaderData<typeof loader>();
   const errors = useActionData<typeof action>();
   const { previousPath } = useSubmissionStep();
 
@@ -102,7 +102,7 @@ export default function SubmissionSpeakerRoute() {
           <Subtitle>When co-speaker accepts the invite, he/she will be automatically added to the proposal.</Subtitle>
           <div className="mt-6 space-y-6">
             {speakers.length > 1 && <CoSpeakersList speakers={speakers} showRemoveAction className="max-w-md py-4" />}
-            <InviteCoSpeakerButton to="PROPOSAL" id={proposalId} invitationLink={invitationLink} />
+            <InviteCoSpeakerButton invitationLink={invitationLink} />
           </div>
         </div>
       </Card.Content>

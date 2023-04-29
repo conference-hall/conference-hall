@@ -13,7 +13,6 @@ export async function getTalk(userId: string, talkId: string) {
     include: {
       speakers: true,
       proposals: { include: { event: true } },
-      invitation: true,
     },
   });
   if (!talk) throw new TalkNotFoundError();
@@ -43,6 +42,6 @@ export async function getTalk(userId: string, talkId: string) {
       logo: proposal.event.logo,
       proposalStatus: getSpeakerProposalStatus(proposal, proposal.event),
     })),
-    invitationLink: buildInvitationLink(talk.invitation?.id),
+    invitationLink: buildInvitationLink(talk.invitationCode),
   };
 }

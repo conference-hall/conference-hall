@@ -87,9 +87,8 @@ class EventSubmissionPage {
     cy.typeOn('Biography', bio);
   }
 
-  generateCoSpeakerInvite() {
+  coSpeakerInvite() {
     cy.findByRole('button', { name: 'Invite a co-speaker' }).click();
-    cy.findByRole('button', { name: 'Generate invitation link' }).click();
     return cy.findByLabelText('Copy invitation link');
   }
 

@@ -22,9 +22,6 @@ CREATE TYPE "RatingFeeling" AS ENUM ('POSITIVE', 'NEGATIVE', 'NEUTRAL', 'NO_OPIN
 -- CreateEnum
 CREATE TYPE "MessageChannel" AS ENUM ('ORGANIZER', 'SPEAKER');
 
--- CreateEnum
-CREATE TYPE "InviteType" AS ENUM ('ORGANIZATION', 'TALK', 'PROPOSAL');
-
 -- CreateTable
 CREATE TABLE "users" (
     "id" TEXT NOT NULL,
@@ -80,6 +77,7 @@ CREATE TABLE "talks" (
     "references" TEXT,
     "creatorId" TEXT NOT NULL,
     "archived" BOOLEAN NOT NULL DEFAULT false,
+    "invitationCode" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -153,6 +151,7 @@ CREATE TABLE "organizations" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "slug" TEXT NOT NULL,
+    "invitationCode" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -189,6 +188,7 @@ CREATE TABLE "proposals" (
     "rejectedAt" TIMESTAMP(3),
     "confirmedAt" TIMESTAMP(3),
     "declinedAt" TIMESTAMP(3),
+    "invitationCode" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -232,20 +232,6 @@ CREATE TABLE "messages" (
 );
 
 -- CreateTable
-CREATE TABLE "invites" (
-    "id" TEXT NOT NULL,
-    "type" "InviteType" NOT NULL,
-    "userId" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-    "organizationId" TEXT,
-    "talkId" TEXT,
-    "proposalId" TEXT,
-
-    CONSTRAINT "invites_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "_speakers_talks" (
     "A" TEXT NOT NULL,
     "B" TEXT NOT NULL
@@ -270,10 +256,19 @@ CREATE TABLE "_speakers_proposals" (
 );
 
 -- CreateIndex
+CREATE UNIQUE INDEX "talks_invitationCode_key" ON "talks"("invitationCode");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "events_slug_key" ON "events"("slug");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "organizations_slug_key" ON "organizations"("slug");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "organizations_invitationCode_key" ON "organizations"("invitationCode");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "proposals_invitationCode_key" ON "proposals"("invitationCode");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "proposals_talkId_eventId_key" ON "proposals"("talkId", "eventId");
@@ -286,15 +281,6 @@ CREATE UNIQUE INDEX "surveys_userId_eventId_key" ON "surveys"("userId", "eventId
 
 -- CreateIndex
 CREATE UNIQUE INDEX "ratings_userId_proposalId_key" ON "ratings"("userId", "proposalId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "invites_organizationId_key" ON "invites"("organizationId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "invites_talkId_key" ON "invites"("talkId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "invites_proposalId_key" ON "invites"("proposalId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_speakers_talks_AB_unique" ON "_speakers_talks"("A", "B");
@@ -370,18 +356,6 @@ ALTER TABLE "messages" ADD CONSTRAINT "messages_userId_fkey" FOREIGN KEY ("userI
 
 -- AddForeignKey
 ALTER TABLE "messages" ADD CONSTRAINT "messages_proposalId_fkey" FOREIGN KEY ("proposalId") REFERENCES "proposals"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "invites" ADD CONSTRAINT "invites_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "invites" ADD CONSTRAINT "invites_organizationId_fkey" FOREIGN KEY ("organizationId") REFERENCES "organizations"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "invites" ADD CONSTRAINT "invites_talkId_fkey" FOREIGN KEY ("talkId") REFERENCES "talks"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "invites" ADD CONSTRAINT "invites_proposalId_fkey" FOREIGN KEY ("proposalId") REFERENCES "proposals"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_speakers_talks" ADD CONSTRAINT "_speakers_talks_A_fkey" FOREIGN KEY ("A") REFERENCES "talks"("id") ON DELETE CASCADE ON UPDATE CASCADE;

@@ -21,7 +21,7 @@ describe('Organization members list', () => {
 
     it('can invite a new member', () => {
       members.visit('awesome-orga');
-      members.generateInvite().should('exist');
+      members.memberInvite().should('exist');
     });
 
     it('can change a member role', () => {

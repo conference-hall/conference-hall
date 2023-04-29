@@ -98,7 +98,7 @@ export default function EditProposalRoute() {
                 </Subtitle>
               </div>
               <CoSpeakersList speakers={proposal.speakers} showRemoveAction />
-              <InviteCoSpeakerButton to="PROPOSAL" id={proposal.id} invitationLink={proposal.invitationLink} block />
+              <InviteCoSpeakerButton invitationLink={proposal.invitationLink} block />
             </Card>
           </div>
         </div>

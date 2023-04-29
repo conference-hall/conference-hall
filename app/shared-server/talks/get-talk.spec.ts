@@ -1,6 +1,5 @@
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventFactory } from 'tests/factories/events';
-import { inviteFactory } from 'tests/factories/invite';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
@@ -30,6 +29,7 @@ describe('#getTalk', () => {
       references: talk.references,
       archived: talk.archived,
       createdAt: talk.createdAt.toUTCString(),
+      invitationLink: `${config.appUrl}/invitation/${talk.invitationCode}`,
       isOwner: true,
       speakers: [
         {
@@ -70,17 +70,6 @@ describe('#getTalk', () => {
         isCurrentUser: true,
       },
     ]);
-  });
-
-  it('returns the talk invitation link when invitation generated', async () => {
-    const speaker = await userFactory();
-    const talk = await talkFactory({ speakers: [speaker] });
-    const invite = await inviteFactory({ talk });
-
-    const result = await getTalk(speaker.id, talk.id);
-
-    expect(result.id).toBe(talk.id);
-    expect(result.invitationLink).toBe(`${config.appUrl}/invitation/${invite?.id}`);
   });
 
   it('returns proposals when talk submitted', async () => {

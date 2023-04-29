@@ -3,6 +3,7 @@ import { organizationFactory } from 'tests/factories/organization';
 import { userFactory } from 'tests/factories/users';
 import { OrganizationNotFoundError } from '../../../libs/errors';
 import { getOrganization } from './get-organization.server';
+import { config } from '~/libs/config';
 
 describe('#getOrganization', () => {
   beforeEach(async () => {
@@ -17,7 +18,13 @@ describe('#getOrganization', () => {
 
     const organizations = await getOrganization('my-orga2', user.id);
 
-    expect(organizations).toEqual({ id: orga.id, name: 'My orga 2', slug: 'my-orga2', role: 'MEMBER' });
+    expect(organizations).toEqual({
+      id: orga.id,
+      name: 'My orga 2',
+      slug: 'my-orga2',
+      role: 'MEMBER',
+      invitationLink: `${config.appUrl}/invitation/${orga.invitationCode}`,
+    });
   });
 
   it('throws an error when user is not member of the organization', async () => {

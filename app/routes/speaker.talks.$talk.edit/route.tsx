@@ -87,7 +87,7 @@ export default function SpeakerTalkRoute() {
                 <Subtitle>When co-speaker accepts the invite, he/she will be automatically added to the talk.</Subtitle>
               </div>
               <CoSpeakersList speakers={talk.speakers} showRemoveAction />
-              <InviteCoSpeakerButton to="TALK" id={talk.id} invitationLink={talk.invitationLink} block />
+              <InviteCoSpeakerButton invitationLink={talk.invitationLink} block />
             </Card>
           </div>
         </div>

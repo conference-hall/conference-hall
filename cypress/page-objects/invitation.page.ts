@@ -1,6 +1,6 @@
 class InvitationPage {
-  visit(inviteId: string) {
-    cy.visit(`/invitation/${inviteId}`, { failOnStatusCode: false });
+  visit(inviteCode: string) {
+    cy.visit(`/invitation/${inviteCode}`, { failOnStatusCode: false });
     this.isPageVisible();
   }
 

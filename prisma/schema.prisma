@@ -9,7 +9,7 @@ datasource db {
 }
 
 model User {
-  id                 String               @id @default(uuid())
+  id                 String               @id @default(cuid())
   email              String
   name               String?
   bio                String?
@@ -34,7 +34,6 @@ model User {
   createdTalks       Talk[]
   createdEvents      Event[]
   messages           Message[]
-  invites            Invite[]
   accounts           Account[]
 
   @@map("users")
@@ -55,7 +54,7 @@ model Account {
 }
 
 model OrganizerKeyAccess {
-  id        String    @id @default(uuid())
+  id        String    @id @default(cuid())
   createdAt DateTime  @default(now())
   revokedAt DateTime?
   users     User[]
@@ -64,20 +63,20 @@ model OrganizerKeyAccess {
 }
 
 model Talk {
-  id         String     @id @default(uuid())
-  title      String
-  abstract   String
-  level      TalkLevel?
-  languages  Json?
-  references String?
-  creatorId  String
-  creator    User       @relation(fields: [creatorId], references: [id])
-  archived   Boolean    @default(false)
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
-  speakers   User[]     @relation("speakers_talks")
-  proposals  Proposal[]
-  invitation Invite?
+  id             String     @id @default(cuid())
+  title          String
+  abstract       String
+  level          TalkLevel?
+  languages      Json?
+  references     String?
+  creatorId      String
+  creator        User       @relation(fields: [creatorId], references: [id])
+  archived       Boolean    @default(false)
+  invitationCode String     @unique @default(cuid())
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  speakers       User[]     @relation("speakers_talks")
+  proposals      Proposal[]
 
   @@map("talks")
 }
@@ -89,7 +88,7 @@ enum TalkLevel {
 }
 
 model Event {
-  id                       String          @id @default(uuid())
+  id                       String          @id @default(cuid())
   slug                     String          @unique
   name                     String
   description              String?
@@ -104,7 +103,7 @@ model Event {
   contactEmail             String?
   websiteUrl               String?
   codeOfConductUrl         String?
-  logo                String?
+  logo                     String?
   conferenceStart          DateTime?
   conferenceEnd            DateTime?
   cfpStart                 DateTime?
@@ -136,7 +135,7 @@ model Event {
 }
 
 model EventFormat {
-  id          String     @id @default(uuid())
+  id          String     @id @default(cuid())
   name        String
   description String?
   event       Event      @relation(fields: [eventId], references: [id])
@@ -147,7 +146,7 @@ model EventFormat {
 }
 
 model EventCategory {
-  id          String     @id @default(uuid())
+  id          String     @id @default(cuid())
   name        String
   description String?
   event       Event      @relation(fields: [eventId], references: [id])
@@ -168,14 +167,14 @@ enum EventVisibility {
 }
 
 model Organization {
-  id         String               @id @default(uuid())
-  name       String
-  slug       String               @unique
-  createdAt  DateTime             @default(now())
-  updatedAt  DateTime             @updatedAt
-  members    OrganizationMember[]
-  events     Event[]
-  invitation Invite?
+  id             String               @id @default(cuid())
+  name           String
+  slug           String               @unique
+  invitationCode String               @unique @default(cuid())
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+  members        OrganizationMember[]
+  events         Event[]
 
   @@map("organizations")
 }
@@ -199,7 +198,7 @@ enum OrganizationRole {
 }
 
 model Proposal {
-  id                  String          @id @default(uuid())
+  id                  String          @id @default(cuid())
   talkId              String?
   talk                Talk?           @relation(fields: [talkId], references: [id])
   eventId             String
@@ -223,10 +222,10 @@ model Proposal {
   rejectedAt          DateTime?
   confirmedAt         DateTime?
   declinedAt          DateTime?
+  invitationCode      String          @unique @default(cuid())
   createdAt           DateTime        @default(now())
   updatedAt           DateTime        @updatedAt
   messages            Message[]
-  invitation          Invite?
 
   @@unique([talkId, eventId])
   @@map("proposals")
@@ -247,7 +246,7 @@ enum EmailStatus {
 }
 
 model Survey {
-  id        String   @unique @default(uuid())
+  id        String   @unique @default(cuid())
   userId    String
   user      User     @relation(fields: [userId], references: [id])
   eventId   String
@@ -261,7 +260,7 @@ model Survey {
 }
 
 model Rating {
-  id         String        @id @default(uuid())
+  id         String        @id @default(cuid())
   userId     String
   user       User          @relation(fields: [userId], references: [id])
   proposalId String
@@ -283,7 +282,7 @@ enum RatingFeeling {
 }
 
 model Message {
-  id         String         @id @default(uuid())
+  id         String         @id @default(cuid())
   userId     String
   user       User           @relation(fields: [userId], references: [id])
   proposalId String
@@ -299,30 +298,4 @@ model Message {
 enum MessageChannel {
   ORGANIZER
   SPEAKER
-}
-
-model Invite {
-  id        String     @id @default(uuid())
-  type      InviteType
-  userId    String
-  invitedBy User       @relation(fields: [userId], references: [id])
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-
-  organizationId String?       @unique
-  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-
-  talkId String? @unique
-  talk   Talk?   @relation(fields: [talkId], references: [id], onDelete: Cascade)
-
-  proposalId String?   @unique
-  proposal   Proposal? @relation(fields: [proposalId], references: [id], onDelete: Cascade)
-
-  @@map("invites")
-}
-
-enum InviteType {
-  ORGANIZATION
-  TALK
-  PROPOSAL
 }

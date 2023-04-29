@@ -43,7 +43,7 @@ describe('Speaker proposal edition page', () => {
 
   it('can invite a co-speaker', () => {
     editProposal.visit('devfest-nantes', 'awesome-proposal');
-    editProposal.generateCoSpeakerInvite().should('exist');
+    editProposal.coSpeakerInvite().should('exist');
     editProposal.closeCoSpeakerModal();
   });
 

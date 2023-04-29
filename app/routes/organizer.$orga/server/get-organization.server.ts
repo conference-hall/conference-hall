@@ -1,5 +1,6 @@
 import { db } from '~/libs/db';
 import { OrganizationNotFoundError } from '~/libs/errors';
+import { buildInvitationLink } from '~/shared-server/invitations/build-link.server';
 
 export type Organization = Awaited<ReturnType<typeof getOrganization>>;
 
@@ -17,5 +18,6 @@ export async function getOrganization(slug: string, userId: string) {
     name: orgaMember.organization.name,
     slug: orgaMember.organization.slug,
     role: orgaMember.role,
+    invitationLink: buildInvitationLink(orgaMember.organization.invitationCode),
   };
 }
