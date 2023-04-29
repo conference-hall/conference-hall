@@ -1,5 +1,5 @@
 import { StoryBlock } from './StoryBlock';
-import { H1, H2, H3, H4, Subtitle, Text } from './Typography';
+import { H1, H2, H3, Subtitle, Text } from './Typography';
 
 export const Documentation = () => (
   <>
@@ -7,7 +7,6 @@ export const Documentation = () => (
       <H1>Heading level 1</H1>
       <H2>Heading level 2</H2>
       <H3>Heading level 3</H3>
-      <H4>Heading level 4</H4>
       <Text variant="primary">Text primary</Text>
       <Text variant="secondary">Text secondary</Text>
       <Text variant="link">Text link</Text>

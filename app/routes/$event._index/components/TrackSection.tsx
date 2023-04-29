@@ -1,4 +1,4 @@
-import { H2, H4, Subtitle, Text } from '~/design-system/Typography';
+import { H2, Subtitle, Text } from '~/design-system/Typography';
 import { Card } from '~/design-system/layouts/Card';
 
 type Props = {
@@ -12,17 +12,17 @@ export function TrackSection({ title, subtitle, tracks }: Props) {
 
   return (
     <Card as="section" p={8}>
-      <H2 size="xl" mb={0}>
+      <H2 size="base" mb={1}>
         {title}
       </H2>
       <Subtitle mb={6}>{subtitle}</Subtitle>
       <dl role="list" className="mt-4 space-y-8">
         {tracks.map((track) => (
           <div key={track.name}>
-            <H4 as="dt" mb={1} strong>
+            <Text as="dt" size="s" mb={1} strong>
               {track.name}
-            </H4>
-            <Text as="dd" size="s">
+            </Text>
+            <Text as="dd" size="s" variant="secondary">
               {track.description}
             </Text>
           </div>

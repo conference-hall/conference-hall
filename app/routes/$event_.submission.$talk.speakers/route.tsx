@@ -5,7 +5,7 @@ import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import { InviteCoSpeakerButton, CoSpeakersList } from '../../shared-components/proposals/forms/CoSpeaker';
 import { MarkdownTextArea } from '../../design-system/forms/MarkdownTextArea';
 import { ExternalLink } from '../../design-system/Links';
-import { H2, H3, Subtitle, Text } from '../../design-system/Typography';
+import { H2, Subtitle, Text } from '../../design-system/Typography';
 import { mapErrorToResponse } from '../../libs/errors';
 import { getEvent } from '../../shared-server/events/get-event.server';
 import { saveProfile } from '../../shared-server/profile/save-profile.server';
@@ -16,6 +16,9 @@ import { DetailsSchema } from '~/schemas/profile.schema';
 import { Card } from '~/design-system/layouts/Card';
 import { useUser } from '~/root';
 import { requireSession } from '~/libs/auth/session';
+import { Button, ButtonLink } from '~/design-system/Buttons';
+import { useSubmissionStep } from '../$event_.submission/hooks/useSubmissionStep';
+import { ArrowRightIcon } from '@heroicons/react/20/solid';
 
 export const handle = { step: 'speakers' };
 
@@ -71,28 +74,46 @@ export default function SubmissionSpeakerRoute() {
   const { user } = useUser();
   const { proposalId, invitationLink, speakers } = useLoaderData<typeof loader>();
   const errors = useActionData<typeof action>();
+  const { previousPath } = useSubmissionStep();
 
   return (
-    <>
-      <H2>Speaker details</H2>
-      <Card p={8}>
+    <Card>
+      <Card.Title>
+        <H2 size="base">Speaker details</H2>
+      </Card.Title>
+      <Card.Content>
         <Form id="speakers-form" method="POST">
-          <MarkdownTextArea name="bio" label="Biography" rows={5} error={errors?.bio} defaultValue={user?.bio || ''} />
+          <MarkdownTextArea
+            name="bio"
+            label="Biography"
+            rows={5}
+            error={errors?.bio}
+            defaultValue={user?.bio || ''}
+            className="mb-3"
+          />
           <Text size="s" variant="secondary">
             You can give more information about you from{' '}
             <ExternalLink href="/speaker/settings">the profile page.</ExternalLink>
           </Text>
           <input type="hidden" name="references" value={user?.references || ''} />
         </Form>
-        <div className="mt-12">
-          <H3 mb={0}>Co-speakers</H3>
+        <div className="mt-4">
+          <H2 size="base">Co-speakers</H2>
           <Subtitle>When co-speaker accepts the invite, he/she will be automatically added to the proposal.</Subtitle>
           <div className="mt-6 space-y-6">
             {speakers.length > 1 && <CoSpeakersList speakers={speakers} showRemoveAction className="max-w-md py-4" />}
             <InviteCoSpeakerButton to="PROPOSAL" id={proposalId} invitationLink={invitationLink} />
           </div>
         </div>
-      </Card>
-    </>
+      </Card.Content>
+      <Card.Actions>
+        <ButtonLink to={previousPath} variant="secondary">
+          Go back
+        </ButtonLink>
+        <Button type="submit" form="speakers-form" iconRight={ArrowRightIcon}>
+          Continue
+        </Button>
+      </Card.Actions>
+    </Card>
   );
 }

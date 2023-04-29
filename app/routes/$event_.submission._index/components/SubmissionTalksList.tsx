@@ -1,8 +1,7 @@
-import { InboxIcon } from '@heroicons/react/24/outline';
-import { EmptyState } from '~/design-system/layouts/EmptyState';
 import { ProposalCard } from '~/shared-components/proposals/ProposalCard';
 
 type Props = {
+  label: string;
   talks: Array<{
     id: string;
     title: string;
@@ -14,13 +13,9 @@ type Props = {
   }>;
 };
 
-export function SubmissionTalksList({ talks }: Props) {
-  if (talks.length === 0) {
-    return <EmptyState icon={InboxIcon} label="Nothing to submit!" />;
-  }
-
+export function SubmissionTalksList({ label, talks }: Props) {
   return (
-    <ul aria-label="Talks list" className="grid grid-cols-1 gap-6 pb-2 sm:grid-cols-2">
+    <ul aria-label={label} className="grid grid-cols-1 gap-6 sm:grid-cols-2">
       {talks.map((talk) => (
         <ProposalCard key={talk.id} {...talk} />
       ))}

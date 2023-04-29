@@ -39,7 +39,7 @@ export function MarkdownTextArea({
 
   return (
     <div className={className}>
-      <label htmlFor={name} className="block text-sm font-medium text-gray-900">
+      <label htmlFor={name} className="mb-2 block text-sm font-medium leading-6 text-gray-900">
         {label}
       </label>
       <div className="relative">
@@ -73,8 +73,8 @@ export function MarkdownTextArea({
         </div>
       </div>
       <div id={`${name}-description`}>
-        {description && <p className="mt-1 text-sm text-gray-500">{description}</p>}
-        {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
+        {description && <p className="mt-3 text-sm text-gray-600">{description}</p>}
+        {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
       </div>
     </div>
   );

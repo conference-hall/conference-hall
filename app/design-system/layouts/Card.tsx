@@ -21,7 +21,7 @@ const PADDING = {
 };
 
 const BACKGROUND = {
-  light: 'bg-white',
+  light: 'bg-white shadow-sm ring-1 ring-gray-900/5',
   dark: 'bg-gray-800',
 };
 
@@ -37,7 +37,7 @@ type CardProps = {
 };
 
 export function Card({ as: Tag = 'div', rounded = 'lg', p = 0, variant = 'light', className, ...rest }: CardProps) {
-  return <Tag className={c('shadow', BACKGROUND[variant], ROUNDED[rounded], PADDING[p], className)} {...rest} />;
+  return <Tag className={c(BACKGROUND[variant], ROUNDED[rounded], PADDING[p], className)} {...rest} />;
 }
 
 // <CardLink /> component
@@ -63,7 +63,7 @@ export function CardLink({ as, rounded, p, variant, className, children, ...rest
 // <Card.Title /> component
 
 function Title({ children }: { children: React.ReactNode }) {
-  return <div className="px-8 pb-6 pt-8">{children}</div>;
+  return <div className="px-8 pt-8">{children}</div>;
 }
 
 Card.Title = Title;
@@ -71,7 +71,7 @@ Card.Title = Title;
 // <Card.Content /> component
 
 function Content({ children }: { children: React.ReactNode }) {
-  return <div className="flex flex-col gap-6 px-8 pb-8">{children}</div>;
+  return <div className="flex flex-col gap-6 p-8">{children}</div>;
 }
 
 Card.Content = Content;

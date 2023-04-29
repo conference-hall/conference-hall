@@ -13,7 +13,10 @@ import { TracksUpdateSchema } from './types/tracks';
 import { FormatsForm } from '~/shared-components/proposals/forms/FormatsForm';
 import { getEvent } from '~/shared-server/events/get-event.server';
 import { Card } from '~/design-system/layouts/Card';
-import { H2, H3 } from '~/design-system/Typography';
+import { H2 } from '~/design-system/Typography';
+import { useSubmissionStep } from '../$event_.submission/hooks/useSubmissionStep';
+import { Button, ButtonLink } from '~/design-system/Buttons';
+import { ArrowRightIcon } from '@heroicons/react/20/solid';
 
 export const handle = { step: 'tracks' };
 
@@ -54,30 +57,38 @@ export const action: ActionFunction = async ({ request, params }) => {
 export default function SubmissionTracksRoute() {
   const { event } = useEvent();
   const proposal = useLoaderData<typeof loader>();
+  const { previousPath } = useSubmissionStep();
 
   return (
-    <>
-      <H2>Proposal tracks</H2>
-
-      <Card p={8}>
+    <Card>
+      <Card.Title>
+        <H2 size="base">Proposal tracks</H2>
+      </Card.Title>
+      <Card.Content>
         <Form id="tracks-form" method="POST">
           <div className="space-y-12">
             {event.formats?.length > 0 && (
               <section>
-                <H3>Formats</H3>
                 <FormatsForm formats={event.formats} initialValues={proposal.formats} />
               </section>
             )}
 
             {event.categories?.length > 0 && (
               <section>
-                <H3>Categories</H3>
                 <CategoriesForm categories={event.categories} initialValues={proposal.categories} />
               </section>
             )}
           </div>
         </Form>
-      </Card>
-    </>
+      </Card.Content>
+      <Card.Actions>
+        <ButtonLink to={previousPath} variant="secondary">
+          Go back
+        </ButtonLink>
+        <Button type="submit" form="tracks-form" iconRight={ArrowRightIcon}>
+          Continue
+        </Button>
+      </Card.Actions>
+    </Card>
   );
 }

@@ -1,16 +1,16 @@
 import invariant from 'tiny-invariant';
-import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { requireSession } from '~/libs/auth/session';
 import { mapErrorToResponse } from '~/libs/errors';
-import { H2 } from '~/design-system/Typography';
-import { ButtonLink } from '~/design-system/Buttons';
+import { H2, H3, Text } from '~/design-system/Typography';
 import { MaxProposalsReached } from './components/MaxProposalsReached';
 import { SubmissionTalksList } from './components/SubmissionTalksList';
-import { getProposalCountsForEvent, listTalksToSubmit } from './server/list-talks-to-submit.server';
-import { IconLabel } from '~/design-system/IconLabel';
+import { listTalksToSubmit } from './server/list-talks-to-submit.server';
+import { ProgressBar } from '~/design-system/ProgressBar';
+import { useEvent } from '../$event/route';
+import { NewProposal } from './components/NewProposal';
 
 export const handle = { step: 'selection' };
 
@@ -19,36 +19,51 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   invariant(params.event, 'Invalid event slug');
 
   try {
-    const talks = await listTalksToSubmit(uid, params.event);
-    const proposalsCount = await getProposalCountsForEvent(uid, params.event);
-    return json({ talks, proposalsCount });
+    const results = await listTalksToSubmit(uid, params.event);
+    return json(results);
   } catch (err) {
     throw mapErrorToResponse(err);
   }
 };
 
 export default function EventSubmitRoute() {
-  const data = useLoaderData<typeof loader>();
-  const { max, submitted } = data.proposalsCount;
+  const { event } = useEvent();
+  const { proposalsCount, drafts, talks } = useLoaderData<typeof loader>();
+  const { maxProposals } = event;
 
-  if (max && submitted >= max) {
-    return <MaxProposalsReached maxProposals={max} />;
+  if (maxProposals && proposalsCount >= maxProposals) {
+    return <MaxProposalsReached maxProposals={maxProposals} />;
   }
 
   return (
     <>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-        <H2 mb={0}>Proposal selection</H2>
-        <ButtonLink to="new">Create a new proposal</ButtonLink>
+        <H2 size="l">Select or create a proposal</H2>
+        {maxProposals && (
+          <div>
+            <Text size="xs" mb={1} strong>
+              {proposalsCount} / {maxProposals} proposals submitted.
+            </Text>
+            <ProgressBar value={proposalsCount} max={maxProposals} />
+          </div>
+        )}
       </div>
 
-      {Boolean(max) && (
-        <IconLabel icon={ExclamationTriangleIcon} strong>
-          You can submit a maximum of {max} proposals. {submitted} already submitted.
-        </IconLabel>
+      <NewProposal />
+
+      {drafts.length > 0 && (
+        <section className="space-y-4">
+          <H3 size="base">Draft proposals</H3>
+          <SubmissionTalksList label="Draft proposals list" talks={drafts} />
+        </section>
       )}
 
-      <SubmissionTalksList talks={data?.talks} />
+      {talks.length > 0 && (
+        <section className="space-y-4">
+          <H3 size="base">From your talks library</H3>
+          <SubmissionTalksList label="Talks list" talks={talks} />
+        </section>
+      )}
     </>
   );
 }

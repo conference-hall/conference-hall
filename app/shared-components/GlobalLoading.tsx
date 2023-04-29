@@ -4,7 +4,7 @@ import { useNavigation } from '@remix-run/react';
 
 // Component copied from Gustavo Guichard
 // source: https://dev.to/gugaguichard/creating-a-github-like-progress-bar-for-your-remix-app-153l
-export function GlobalLoading() {
+function GlobalLoadingComponent() {
   const { state } = useNavigation();
   const active = state !== 'idle';
 
@@ -40,3 +40,5 @@ export function GlobalLoading() {
     </div>
   );
 }
+
+export const GlobalLoading = React.memo(GlobalLoadingComponent);

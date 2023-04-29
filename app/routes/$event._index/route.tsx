@@ -15,6 +15,7 @@ export default function EventRoute() {
 
       <Container>
         <DetailsSection
+          type={event.type}
           description={event.description}
           websiteUrl={event.websiteUrl}
           contactEmail={event.contactEmail}

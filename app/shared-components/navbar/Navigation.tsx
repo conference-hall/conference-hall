@@ -22,7 +22,7 @@ export function Navigation({ authenticated, isOrganizer, organizations = [] }: P
 
     return [
       { to: `/speaker`, label: 'Home', enabled: true, end: true },
-      { to: `/speaker/talks`, label: 'Talks', enabled: true },
+      { to: `/speaker/talks`, label: 'Talks library', enabled: true },
       { to: `/speaker/profile`, label: 'Profile', enabled: true },
       {
         label: 'Organizations',

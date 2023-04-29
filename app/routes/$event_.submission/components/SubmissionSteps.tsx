@@ -50,7 +50,7 @@ function SubmissionStepsDesktop({ steps, currentStep }: Props) {
 
   return (
     <nav aria-label="Progress" className="hidden xl:block">
-      <ol className="divide-y divide-gray-200 rounded-full border  border-gray-200 md:flex md:divide-y-0">
+      <ol className="divide-y divide-gray-300 rounded-full border  border-gray-300 md:flex md:divide-y-0">
         {steps.map((step, stepIdx) => (
           <li
             key={step.key}
@@ -76,7 +76,7 @@ function SubmissionStepsDesktop({ steps, currentStep }: Props) {
             ) : (
               <span className="flex items-center">
                 <span className="flex items-center px-6 py-2 text-sm font-medium">
-                  <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full border border-gray-200">
+                  <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full border border-gray-300">
                     <span className="text-gray-500">{stepIdx + 1}</span>
                   </span>
                   <span className="mx-4 text-sm font-medium text-gray-500">{step.name}</span>
@@ -89,7 +89,7 @@ function SubmissionStepsDesktop({ steps, currentStep }: Props) {
                 {/* Arrow separator for lg screens and up */}
                 <div className="absolute right-0 top-0 hidden h-full w-5 md:block" aria-hidden="true">
                   <svg
-                    className="h-full w-full text-gray-200"
+                    className="h-full w-full text-gray-300"
                     viewBox="0 0 22 80"
                     fill="none"
                     preserveAspectRatio="none"
