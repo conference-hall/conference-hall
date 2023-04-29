@@ -11,7 +11,11 @@ export async function addMember(code: string, userId: string) {
 
   if (!orga) return null;
 
-  await db.organizationMember.create({ data: { memberId: userId, organizationId: orga.id } });
+  try {
+    await db.organizationMember.create({ data: { memberId: userId, organizationId: orga.id } });
+  } catch (e) {
+    return null;
+  }
 
   return { slug: orga.slug };
 }

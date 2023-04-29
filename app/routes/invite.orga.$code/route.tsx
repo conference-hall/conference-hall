@@ -1,15 +1,15 @@
 import invariant from 'tiny-invariant';
-import { StarIcon } from '@heroicons/react/20/solid';
 import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
 import { Navbar } from '~/shared-components/navbar/Navbar';
 import { requireSession } from '~/libs/auth/session';
 import { Container } from '~/design-system/layouts/Container';
-import { H1, Text } from '~/design-system/Typography';
+import { H1, H2 } from '~/design-system/Typography';
 import { Button } from '~/design-system/Buttons';
 import { useUser } from '~/root';
 import { addMember, checkOrganizationInviteCode } from './server/invite-organization.server';
+import { Card } from '~/design-system/layouts/Card';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   await requireSession(request);
@@ -39,18 +39,20 @@ export default function InvitationRoute() {
     <>
       <Navbar user={user} />
 
-      <Container className="m-24">
-        <div className="flex flex-col items-center bg-white px-4 py-5 sm:rounded-lg sm:p-6">
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-indigo-100">
-            <StarIcon className="h-6 w-6 text-indigo-600" aria-hidden="true" />
-          </div>
-          <H1>You have been invited to organization</H1>
-          <Text size="l">"{organization.name}"</Text>
+      <Container className="m-8">
+        <Card p={16} className="flex flex-col items-center">
+          <H1 size="l" mb={4} variant="secondary">
+            You have been invited to organization
+          </H1>
 
-          <Form method="POST" className="mt-8 flex w-full flex-col justify-center sm:w-auto">
+          <H2 size="3xl" mb={8}>
+            {organization.name}
+          </H2>
+
+          <Form method="POST">
             <Button type="submit">Accept invitation</Button>
           </Form>
-        </div>
+        </Card>
       </Container>
     </>
   );
