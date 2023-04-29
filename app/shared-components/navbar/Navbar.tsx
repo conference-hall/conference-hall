@@ -11,7 +11,7 @@ type Props = {
   user: {
     name: string | null;
     email: string | null;
-    photoURL: string | null;
+    picture: string | null;
     notifications: Array<Notification>;
     isOrganizer: boolean;
     organizations: Array<{ slug: string; name: string; role: string }>;
@@ -49,7 +49,7 @@ export function Navbar({ user, withSearch }: Props) {
                 <UserMenuDesktop
                   name={user.name}
                   email={user.email}
-                  picture={user.photoURL}
+                  picture={user.picture}
                   isOrganizer={user?.isOrganizer}
                 />
               )}

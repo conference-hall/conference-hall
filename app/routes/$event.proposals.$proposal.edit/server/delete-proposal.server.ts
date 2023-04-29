@@ -1,7 +1,7 @@
 import { db } from '~/libs/db';
 
-export async function deleteProposal(proposalId: string, uid: string) {
+export async function deleteProposal(proposalId: string, userId: string) {
   await db.proposal.deleteMany({
-    where: { id: proposalId, speakers: { some: { id: uid } } },
+    where: { id: proposalId, speakers: { some: { id: userId } } },
   });
 }

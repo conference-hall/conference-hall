@@ -22,7 +22,7 @@ import { ProposalsActionBar } from './components/ProposalsActionBar/ProposalsAct
 import { ProposalsFilters } from './components/ProposalsFilters/ProposalsFilters';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   invariant(params.orga, 'Invalid organization slug');
   invariant(params.event, 'Invalid event slug');
 
@@ -31,7 +31,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const page = await parsePage(url.searchParams);
 
   try {
-    const results = await searchProposals(params.orga, params.event, uid, filters.data ?? {}, page);
+    const results = await searchProposals(params.orga, params.event, userId, filters.data ?? {}, page);
     return json(results);
   } catch (err) {
     throw mapErrorToResponse(err);
@@ -39,7 +39,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   invariant(params.orga, 'Invalid organization slug');
   invariant(params.event, 'Invalid event slug');
 
@@ -47,7 +47,7 @@ export const action = async ({ request, params }: ActionArgs) => {
   const { data, error } = await withZod(ProposalsStatusUpdateSchema).validate(form);
   if (error) return json(null);
 
-  const result = await updateProposalsStatus(params.orga, params.event, uid, data.selection, data.status);
+  const result = await updateProposalsStatus(params.orga, params.event, userId, data.selection, data.status);
   return json(null, await createToast(request, `${result} proposals marked as "${data.status.toLowerCase()}".`));
 };
 

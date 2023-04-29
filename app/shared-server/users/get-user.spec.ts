@@ -21,7 +21,7 @@ describe('#getUser', () => {
       id: user.id,
       name: user.name,
       email: user.email,
-      photoURL: user.photoURL,
+      picture: user.picture,
       bio: user.bio,
       references: user.references,
       company: user.company,

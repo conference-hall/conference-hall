@@ -19,11 +19,11 @@ import { Container } from '~/design-system/layouts/Container';
 import { Card } from '~/design-system/layouts/Card';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   invariant(params.talk, 'Invalid talk id');
 
   try {
-    const talk = await getTalk(uid, params.talk);
+    const talk = await getTalk(userId, params.talk);
     if (talk.archived) throw new Response('Talk archived.', { status: 403 });
     return json(talk);
   } catch (err) {
@@ -32,7 +32,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const action: ActionFunction = async ({ request, params }: ActionArgs) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   const form = await request.formData();
   invariant(params.talk, 'Invalid talk id');
 
@@ -40,12 +40,12 @@ export const action: ActionFunction = async ({ request, params }: ActionArgs) =>
     const action = form.get('_action');
     if (action === 'remove-speaker') {
       const speakerId = form.get('_speakerId')?.toString() as string;
-      await removeCoSpeakerFromTalk(uid, params.talk, speakerId);
+      await removeCoSpeakerFromTalk(userId, params.talk, speakerId);
       return json(null);
     } else {
       const result = await withZod(TalkSaveSchema).validate(form);
       if (result.error) return json(result.error.fieldErrors);
-      await updateTalk(uid, params.talk, result.data);
+      await updateTalk(userId, params.talk, result.data);
       const toast = await createToast(request, 'Talk successfully saved.');
       return redirect(`/speaker/talks/${params.talk}`, toast);
     }

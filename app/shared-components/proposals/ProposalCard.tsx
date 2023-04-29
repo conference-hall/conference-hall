@@ -8,7 +8,7 @@ type Props = {
   id: string;
   title: string;
   status?: SpeakerProposalStatus;
-  speakers: Array<{ photoURL?: string | null; name?: string | null }>;
+  speakers: Array<{ picture?: string | null; name?: string | null }>;
 };
 
 export function ProposalCard({ id, title, speakers, status }: Props) {

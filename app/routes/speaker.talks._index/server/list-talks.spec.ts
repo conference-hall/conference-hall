@@ -25,7 +25,7 @@ describe('#listTalks', () => {
         title: talk.title,
         archived: false,
         createdAt: talk.createdAt.toUTCString(),
-        speakers: [{ id: speaker.id, name: speaker.name, photoURL: speaker.photoURL }],
+        speakers: [{ id: speaker.id, name: speaker.name, picture: speaker.picture }],
       },
     ]);
   });

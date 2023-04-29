@@ -38,14 +38,14 @@ describe('#listTalksToSubmit', () => {
         {
           id: talk3.id,
           title: talk3.title,
-          speakers: [{ id: speaker.id, name: speaker.name, photoURL: speaker.photoURL }],
+          speakers: [{ id: speaker.id, name: speaker.name, picture: speaker.picture }],
         },
       ],
       talks: [
         {
           id: talk2.id,
           title: talk2.title,
-          speakers: [{ id: speaker.id, name: speaker.name, photoURL: speaker.photoURL }],
+          speakers: [{ id: speaker.id, name: speaker.name, picture: speaker.picture }],
         },
       ],
     });

@@ -23,12 +23,12 @@ import { useSubmissionStep } from '../$event_.submission/hooks/useSubmissionStep
 export const handle = { step: 'submission' };
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
   invariant(params.talk, 'Invalid talk id');
 
   try {
-    const proposal = await getSubmittedProposal(params.talk, params.event, uid);
+    const proposal = await getSubmittedProposal(params.talk, params.event, userId);
     return json(proposal);
   } catch (err) {
     throw mapErrorToResponse(err);
@@ -36,14 +36,14 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   const form = await request.formData();
   invariant(params.event, 'Invalid event slug');
   invariant(params.talk, 'Invalid talk id');
 
   const result = await withZod(ProposalSubmissionSchema).validate(form);
   try {
-    if (result?.data) await submitProposal(params.talk, params.event, uid, result?.data);
+    if (result?.data) await submitProposal(params.talk, params.event, userId, result?.data);
   } catch (err) {
     throw mapErrorToResponse(err);
   }
@@ -61,7 +61,7 @@ export default function SubmissionSubmitRoute() {
     <Card>
       <Card.Title>
         <div className="mb-8 flex items-center gap-4">
-          <Avatar photoURL={event.bannerUrl} name={event.name} size="l" square />
+          <Avatar picture={event.logo} name={event.name} size="l" square />
           <div className="flex-shrink-0">
             <H1 size="2xl">{event.name}</H1>
             <Subtitle heading>{`by ${event.organizationName}`}</Subtitle>

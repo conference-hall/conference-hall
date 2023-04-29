@@ -14,13 +14,13 @@ import { useUser } from '~/root';
 import { ArchivedFilters } from './components/ArchivedFilter';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   invariant(params.orga, 'Invalid organization slug');
 
   const url = new URL(request.url);
   const archived = Boolean(url.searchParams.get('archived'));
 
-  const events = await listEvents(params.orga, uid, archived);
+  const events = await listEvents(params.orga, userId, archived);
 
   return json(events);
 };
@@ -47,7 +47,7 @@ export default function OrganizationEventsRoute() {
               to={`/organizer/${organization.slug}/${event.slug}`}
               name={event.name}
               type={event.type}
-              bannerUrl={event.bannerUrl}
+              logo={event.logo}
               cfpState={event.cfpState}
               cfpStart={event.cfpStart}
               cfpEnd={event.cfpEnd}

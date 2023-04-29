@@ -3,10 +3,10 @@ import { getCfpState } from '~/utils/event';
 import { db } from '../../../libs/db';
 import { CfpNotOpenError, EventNotFoundError, TalkNotFoundError } from '../../../libs/errors';
 
-export async function saveDraftProposal(talkId: string, eventSlug: string, uid: string, data: ProposalCreateData) {
+export async function saveDraftProposal(talkId: string, eventSlug: string, userId: string, data: ProposalCreateData) {
   if (talkId !== 'new') {
     const talk = await db.talk.findFirst({
-      where: { id: talkId, speakers: { some: { id: uid } } },
+      where: { id: talkId, speakers: { some: { id: userId } } },
     });
     if (!talk) throw new TalkNotFoundError();
   }
@@ -25,8 +25,8 @@ export async function saveDraftProposal(talkId: string, eventSlug: string, uid: 
     update: { ...data },
     create: {
       ...data,
-      creator: { connect: { id: uid } },
-      speakers: { connect: [{ id: uid }] },
+      creator: { connect: { id: userId } },
+      speakers: { connect: [{ id: userId }] },
     },
     include: { speakers: true },
   });

@@ -20,7 +20,7 @@ import { useSubmissionStep } from '../$event_.submission/hooks/useSubmissionStep
 export const handle = { step: 'proposal' };
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
   invariant(params.talk, 'Invalid talk id');
 
@@ -28,10 +28,10 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     if (params.talk === 'new') {
       return json(null);
     } else {
-      const alreadySubmitted = await isTalkAlreadySubmitted(params.event, params.talk, uid);
+      const alreadySubmitted = await isTalkAlreadySubmitted(params.event, params.talk, userId);
       if (alreadySubmitted) throw new Response('Talk already submitted.', { status: 400 });
 
-      const talk = await getTalk(uid, params.talk);
+      const talk = await getTalk(userId, params.talk);
       return json(talk);
     }
   } catch (err) {
@@ -40,7 +40,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
   invariant(params.talk, 'Invalid talk id');
 
@@ -49,7 +49,7 @@ export const action = async ({ request, params }: ActionArgs) => {
   if (result.error) return json(result.error.fieldErrors);
 
   try {
-    const proposal = await saveDraftProposal(params.talk, params.event, uid, result.data);
+    const proposal = await saveDraftProposal(params.talk, params.event, userId, result.data);
     return redirect(`/${params.event}/submission/${proposal.talkId}/speakers`);
   } catch (err) {
     throw mapErrorToResponse(err);

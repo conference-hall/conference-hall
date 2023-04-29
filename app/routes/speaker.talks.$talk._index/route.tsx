@@ -15,11 +15,11 @@ import { ProposalSubmissionsSection } from '~/shared-components/proposals/Propos
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   invariant(params.talk, 'Invalid talk id');
 
   try {
-    const talk = await getTalk(uid, params.talk);
+    const talk = await getTalk(userId, params.talk);
     return json(talk);
   } catch (err) {
     throw mapErrorToResponse(err);
@@ -27,15 +27,15 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   invariant(params.talk, 'Invalid talk id');
 
   const form = await request.formData();
   const action = form.get('_action');
   if (action === 'archive-talk') {
-    await archiveTalk(uid, params.talk);
+    await archiveTalk(userId, params.talk);
   } else if (action === 'restore-talk') {
-    await restoreTalk(uid, params.talk);
+    await restoreTalk(userId, params.talk);
   }
   return null;
 };

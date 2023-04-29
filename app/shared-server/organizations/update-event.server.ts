@@ -8,10 +8,10 @@ import { checkUserRole } from './check-user-role.server';
 export async function updateEvent(
   orgaSlug: string,
   eventSlug: string,
-  uid: string,
+  userId: string,
   data: Partial<Prisma.EventCreateInput>
 ) {
-  await checkUserRole(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER]);
+  await checkUserRole(orgaSlug, eventSlug, userId, [OrganizationRole.OWNER]);
 
   const event = await db.event.findFirst({ where: { slug: eventSlug } });
   if (!event) throw new EventNotFoundError();

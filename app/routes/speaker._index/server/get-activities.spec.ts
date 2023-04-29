@@ -28,7 +28,7 @@ describe('#getActivities', () => {
         {
           slug: event2.slug,
           name: event2.name,
-          bannerUrl: event2.bannerUrl,
+          logo: event2.logo,
           cfpState: 'CLOSED',
           submissions: [
             {
@@ -36,14 +36,14 @@ describe('#getActivities', () => {
               title: proposal2.title,
               updatedAt: proposal2.createdAt.toUTCString(),
               status: SpeakerProposalStatus.DeliberationPending,
-              speakers: [{ id: speaker.id, name: speaker.name, photoURL: speaker.photoURL }],
+              speakers: [{ id: speaker.id, name: speaker.name, picture: speaker.picture }],
             },
           ],
         },
         {
           slug: event.slug,
           name: event.name,
-          bannerUrl: event.bannerUrl,
+          logo: event.logo,
           cfpState: 'OPENED',
           submissions: [
             {
@@ -51,7 +51,7 @@ describe('#getActivities', () => {
               title: proposal.title,
               updatedAt: proposal.createdAt.toUTCString(),
               status: SpeakerProposalStatus.Submitted,
-              speakers: [{ id: speaker.id, name: speaker.name, photoURL: speaker.photoURL }],
+              speakers: [{ id: speaker.id, name: speaker.name, picture: speaker.picture }],
             },
           ],
         },

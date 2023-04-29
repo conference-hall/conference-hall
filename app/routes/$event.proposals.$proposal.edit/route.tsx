@@ -21,15 +21,15 @@ import { Card } from '~/design-system/layouts/Card';
 import { mapErrorToResponse } from '~/libs/errors';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   invariant(params.proposal, 'Invalid proposal id');
 
-  const proposal = await getSpeakerProposal(params.proposal, uid).catch(mapErrorToResponse);
+  const proposal = await getSpeakerProposal(params.proposal, userId).catch(mapErrorToResponse);
   return json(proposal);
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   const form = await request.formData();
   invariant(params.event, 'Invalid event slug');
   invariant(params.proposal, 'Invalid proposal id');
@@ -38,19 +38,19 @@ export const action = async ({ request, params }: ActionArgs) => {
 
   switch (action) {
     case 'delete': {
-      await deleteProposal(params.proposal, uid);
+      await deleteProposal(params.proposal, userId);
       const toast = await createToast(request, 'Proposal successfully deleted.');
       return redirect(`/${params.event}/proposals`, toast);
     }
     case 'remove-speaker': {
       const speakerId = form.get('_speakerId')?.toString() as string;
-      await removeCoSpeakerFromProposal(uid, params.proposal, speakerId);
+      await removeCoSpeakerFromProposal(userId, params.proposal, speakerId);
       return json(null);
     }
     default: {
       const result = await withZod(ProposalUpdateSchema).validate(form);
       if (result.error) return json(result.error.fieldErrors);
-      await updateProposal(params.event, params.proposal, uid, result.data);
+      await updateProposal(params.event, params.proposal, userId, result.data);
       const toast = await createToast(request, 'Proposal successfully updated.');
       return redirect(`/${params.event}/proposals/${params.proposal}`, toast);
     }

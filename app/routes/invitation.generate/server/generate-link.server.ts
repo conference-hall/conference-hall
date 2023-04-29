@@ -8,25 +8,25 @@ import {
 } from '../../../libs/errors';
 import { buildInvitationLink } from '~/shared-server/invitations/build-link.server';
 
-export async function generateLink(type: InviteType, entityId: string, uid: string) {
+export async function generateLink(type: InviteType, entityId: string, userId: string) {
   let invitationKey: string | undefined;
   if (type === 'TALK') {
-    invitationKey = await generateTalkInvitationKey(entityId, uid);
+    invitationKey = await generateTalkInvitationKey(entityId, userId);
   } else if (type === 'PROPOSAL') {
-    invitationKey = await generateProposalInvitationKey(entityId, uid);
+    invitationKey = await generateProposalInvitationKey(entityId, userId);
   } else if (type === 'ORGANIZATION') {
-    invitationKey = await generateOrganizationInvitationKey(entityId, uid);
+    invitationKey = await generateOrganizationInvitationKey(entityId, userId);
   }
 
   if (!invitationKey) throw new InvitationGenerateError();
   return buildInvitationLink(invitationKey);
 }
 
-async function generateTalkInvitationKey(talkId: string, uid: string) {
+async function generateTalkInvitationKey(talkId: string, userId: string) {
   const talk = await db.talk.findFirst({
     select: { id: true, invitation: true },
     where: {
-      speakers: { some: { id: uid } },
+      speakers: { some: { id: userId } },
       id: talkId,
     },
   });
@@ -38,17 +38,17 @@ async function generateTalkInvitationKey(talkId: string, uid: string) {
     data: {
       type: 'TALK',
       talk: { connect: { id: talkId } },
-      invitedBy: { connect: { id: uid } },
+      invitedBy: { connect: { id: userId } },
     },
   });
   return invite.id;
 }
 
-async function generateProposalInvitationKey(proposalId: string, uid: string) {
+async function generateProposalInvitationKey(proposalId: string, userId: string) {
   const proposal = await db.proposal.findFirst({
     select: { id: true, invitation: true },
     where: {
-      speakers: { some: { id: uid } },
+      speakers: { some: { id: userId } },
       id: proposalId,
     },
   });
@@ -60,17 +60,17 @@ async function generateProposalInvitationKey(proposalId: string, uid: string) {
     data: {
       type: 'PROPOSAL',
       proposal: { connect: { id: proposalId } },
-      invitedBy: { connect: { id: uid } },
+      invitedBy: { connect: { id: userId } },
     },
   });
   return invite.id;
 }
 
-async function generateOrganizationInvitationKey(organizationId: string, uid: string) {
+async function generateOrganizationInvitationKey(organizationId: string, userId: string) {
   const organization = await db.organization.findFirst({
     select: { id: true, invitation: true },
     where: {
-      members: { some: { memberId: uid, role: 'OWNER' } },
+      members: { some: { memberId: userId, role: 'OWNER' } },
       id: organizationId,
     },
   });
@@ -83,7 +83,7 @@ async function generateOrganizationInvitationKey(organizationId: string, uid: st
     data: {
       type: 'ORGANIZATION',
       organization: { connect: { id: organizationId } },
-      invitedBy: { connect: { id: uid } },
+      invitedBy: { connect: { id: userId } },
     },
   });
   return invite.id;

@@ -24,7 +24,7 @@ export const getEventProposals = async (eventSlug: string, apiKey: string) => {
         name: speaker.name,
         bio: speaker.bio,
         company: speaker.company,
-        photoURL: speaker.photoURL,
+        picture: speaker.picture,
         github: speaker.github,
         twitter: speaker.twitter,
       })),

@@ -10,13 +10,13 @@ const RESULTS_BY_PAGE = 25;
 export async function searchProposals(
   orgaSlug: string,
   eventSlug: string,
-  uid: string,
+  userId: string,
   filters: ProposalsFilters,
   page: Pagination = 1
 ) {
-  await checkUserRole(orgaSlug, eventSlug, uid);
+  await checkUserRole(orgaSlug, eventSlug, userId);
 
-  const search = new OrganizerProposalsSearch(eventSlug, uid, filters);
+  const search = new OrganizerProposalsSearch(eventSlug, userId, filters);
 
   const statistics = await search.statistics();
 
@@ -41,7 +41,7 @@ export async function searchProposals(
         ratings: {
           positives: ratings.positives,
           negatives: ratings.negatives,
-          you: ratings.fromUser(uid)?.rating ?? null,
+          you: ratings.fromUser(userId)?.rating ?? null,
           total: ratings.average,
         },
       };

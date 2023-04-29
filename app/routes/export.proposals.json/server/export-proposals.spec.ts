@@ -49,7 +49,7 @@ describe('#exportProposals', () => {
             name: speaker.name,
             email: speaker.email,
             bio: speaker.bio,
-            photoURL: speaker.photoURL,
+            picture: speaker.picture,
             company: speaker.company,
             address: speaker.address,
             references: speaker.references,

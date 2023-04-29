@@ -6,12 +6,12 @@ import { signInWithRedirect, getRedirectResult, GoogleAuthProvider } from 'fireb
 import { Container } from '~/design-system/layouts/Container';
 import { H1 } from '~/design-system/Typography';
 import { Button } from '~/design-system/Buttons';
-import { createSession, getSessionUid } from '~/libs/auth/session';
+import { createSession, getSessionUserId } from '~/libs/auth/session';
 import { getClientAuth } from '~/libs/auth/firebase';
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const uid = await getSessionUid(request);
-  if (uid) return redirect('/');
+  const userId = await getSessionUserId(request);
+  if (userId) return redirect('/');
   return null;
 };
 

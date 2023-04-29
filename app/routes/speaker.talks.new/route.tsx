@@ -14,13 +14,13 @@ import { Container } from '~/design-system/layouts/Container';
 import { Card } from '~/design-system/layouts/Card';
 
 export const action = async ({ request }: LoaderArgs) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   const form = await request.formData();
 
   const result = await withZod(TalkSaveSchema).validate(form);
   if (result.error) return json(result.error.fieldErrors);
   try {
-    const talkId = await createTalk(uid, result.data);
+    const talkId = await createTalk(userId, result.data);
     return redirect(`/speaker/talks/${talkId}`);
   } catch (err) {
     throw mapErrorToResponse(err);

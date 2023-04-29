@@ -36,7 +36,7 @@ describe('#getEvent', () => {
       websiteUrl: event.websiteUrl,
       contactEmail: event.contactEmail,
       codeOfConductUrl: event.codeOfConductUrl,
-      bannerUrl: event.bannerUrl,
+      logo: event.logo,
       maxProposals: event.maxProposals,
       cfpStart: event.cfpStart?.toUTCString(),
       cfpEnd: event.cfpEnd?.toUTCString(),

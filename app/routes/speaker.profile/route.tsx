@@ -22,7 +22,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 export const action = async ({ request }: ActionArgs) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   const form = await request.formData();
   const type = form.get('_type') as string;
   try {
@@ -40,7 +40,7 @@ export const action = async ({ request }: ActionArgs) => {
     }
 
     if (result.error) return json(result.error.fieldErrors);
-    await saveProfile(uid, result.data);
+    await saveProfile(userId, result.data);
 
     const toast = await createToast(request, 'Profile successfully saved.');
     return redirect('/speaker/profile', toast);
@@ -74,7 +74,7 @@ export default function ProfileRoute() {
         />
 
         <div className="min-w-0 flex-1 space-y-6 sm:px-6 lg:px-0">
-          <SpeakerDetailsForm name={user.name} email={user.email} photoURL={user.photoURL} errors={errors} />
+          <SpeakerDetailsForm name={user.name} email={user.email} picture={user.picture} errors={errors} />
 
           <PersonalInfoForm bio={user.bio} references={user.references} errors={errors} />
 

@@ -39,7 +39,7 @@ describe('#getEvent', () => {
       websiteUrl: event.websiteUrl,
       codeOfConductUrl: event.codeOfConductUrl,
       contactEmail: event.contactEmail,
-      bannerUrl: event.bannerUrl,
+      logo: event.logo,
       maxProposals: event.maxProposals,
       surveyEnabled: event.surveyEnabled,
       surveyQuestions: [],

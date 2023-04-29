@@ -4,6 +4,7 @@ import { EventType, EventVisibility } from '@prisma/client';
 import { db } from '../../app/libs/db';
 import { applyTraits } from './helpers/traits';
 import { organizationFactory } from './organization';
+import { userFactory } from './users';
 
 const TRAITS = {
   conference: {
@@ -66,18 +67,20 @@ export const eventFactory = async (options: FactoryOptions = {}) => {
     options.organization = await organizationFactory();
   }
 
+  const creator = await userFactory();
+
   const defaultAttributes: Prisma.EventCreateInput = {
     name: fake.randSportsTeam(),
     slug: `slug-${fake.randUuid()}`,
     description: fake.randParagraph(),
     address: fake.randFullAddress(),
-    bannerUrl: `https://picsum.photos/seed/${fake.randUuid()}/128`,
+    logo: `https://picsum.photos/seed/${fake.randUuid()}/128`,
     websiteUrl: fake.randUrl(),
     contactEmail: fake.randEmail(),
     codeOfConductUrl: fake.randUrl(),
     type: fake.rand([EventType.CONFERENCE, EventType.MEETUP]),
     visibility: EventVisibility.PUBLIC,
-    creator: { create: { name: fake.randFullName() } },
+    creator: { connect: { id: creator.id } },
     organization: { connect: { id: options.organization.id } },
   };
 

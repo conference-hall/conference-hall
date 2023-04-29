@@ -7,10 +7,10 @@ export async function updateProposal(
   orgaSlug: string,
   eventSlug: string,
   proposalId: string,
-  uid: string,
+  userId: string,
   data: ProposalUpdateData
 ) {
-  await checkUserRole(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER, OrganizationRole.MEMBER]);
+  await checkUserRole(orgaSlug, eventSlug, userId, [OrganizationRole.OWNER, OrganizationRole.MEMBER]);
 
   const { formats, categories, ...talk } = data;
 
@@ -27,11 +27,11 @@ export async function updateProposal(
 export async function updateProposalsStatus(
   orgaSlug: string,
   eventSlug: string,
-  uid: string,
+  userId: string,
   proposalIds: string[],
   status: ProposalStatusData
 ) {
-  await checkUserRole(orgaSlug, eventSlug, uid, [OrganizationRole.OWNER, OrganizationRole.MEMBER]);
+  await checkUserRole(orgaSlug, eventSlug, userId, [OrganizationRole.OWNER, OrganizationRole.MEMBER]);
 
   const result = await db.proposal.updateMany({ where: { id: { in: proposalIds } }, data: { status } });
   return result.count;

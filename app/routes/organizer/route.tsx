@@ -9,8 +9,8 @@ import { useUser } from '~/root';
 import { checkOrganizerAccess } from './server/check-organizer-access.server';
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const { uid } = await requireSession(request);
-  const canAccess = await checkOrganizerAccess(uid);
+  const userId = await requireSession(request);
+  const canAccess = await checkOrganizerAccess(userId);
 
   if (!canAccess) return redirect('/request-access');
 

@@ -6,13 +6,13 @@ import { generateLink } from './server/generate-link.server';
 import { requireSession } from '~/libs/auth/session';
 
 export const action = async ({ request }: LoaderArgs) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   const form = await request.formData();
   const type = form.get('_type') as InviteType;
   const id = form.get('_id') as string;
 
   try {
-    const link = await generateLink(type, id, uid);
+    const link = await generateLink(type, id, userId);
     return json({ link });
   } catch (err) {
     throw mapErrorToResponse(err);

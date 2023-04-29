@@ -4,10 +4,10 @@ import { ProposalNotFoundError } from '../../libs/errors';
 import { buildInvitationLink } from '../invitations/build-link.server';
 import { getSpeakerProposalStatus } from '~/shared-server/proposals/get-speaker-proposal-status';
 
-export async function getSpeakerProposal(proposalId: string, uid: string) {
+export async function getSpeakerProposal(proposalId: string, userId: string) {
   const proposal = await db.proposal.findFirst({
     where: {
-      speakers: { some: { id: uid } },
+      speakers: { some: { id: userId } },
       id: proposalId,
     },
     include: {
@@ -38,7 +38,7 @@ export async function getSpeakerProposal(proposalId: string, uid: string) {
     speakers: proposal.speakers.map((speaker) => ({
       id: speaker.id,
       name: speaker.name,
-      photoURL: speaker.photoURL,
+      picture: speaker.picture,
       isOwner: speaker.id === proposal?.talk?.creatorId,
     })),
   };

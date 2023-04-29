@@ -39,7 +39,7 @@ describe('Slack services', () => {
     const format2 = await eventFormatFactory({ event, attributes: { name: 'Format 2' } });
     const category1 = await eventCategoryFactory({ event, attributes: { name: 'Category 1' } });
     const category2 = await eventCategoryFactory({ event, attributes: { name: 'Category 2' } });
-    const speaker1 = await userFactory({ attributes: { name: 'Speaker 1', photoURL: 'http://photo' } });
+    const speaker1 = await userFactory({ attributes: { name: 'Speaker 1', picture: 'http://photo' } });
     const speaker2 = await userFactory({ attributes: { name: 'Speaker 2' } });
 
     const proposal = await proposalFactory({

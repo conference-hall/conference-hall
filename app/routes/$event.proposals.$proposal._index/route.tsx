@@ -13,15 +13,15 @@ import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 import { Container } from '~/design-system/layouts/Container';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   invariant(params.proposal, 'Invalid proposal id');
 
-  const proposal = await getSpeakerProposal(params.proposal, uid).catch(mapErrorToResponse);
+  const proposal = await getSpeakerProposal(params.proposal, userId).catch(mapErrorToResponse);
   return json(proposal);
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   invariant(params.proposal, 'Invalid proposal id');
 
   try {
@@ -29,7 +29,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     const action = form.get('_action');
     if (action === 'remove-speaker') {
       const speakerId = form.get('_speakerId')?.toString() as string;
-      await removeCoSpeakerFromProposal(uid, params.proposal, speakerId);
+      await removeCoSpeakerFromProposal(userId, params.proposal, speakerId);
     }
   } catch (err) {
     mapErrorToResponse(err);

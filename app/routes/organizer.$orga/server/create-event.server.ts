@@ -4,8 +4,8 @@ import { ForbiddenOperationError } from '../../../libs/errors';
 import { getUserRole } from '../../../shared-server/organizations/get-user-role.server';
 import type { EventCreateData } from '../types/event-create.schema';
 
-export async function createEvent(orgaSlug: string, uid: string, data: EventCreateData) {
-  const role = await getUserRole(orgaSlug, uid);
+export async function createEvent(orgaSlug: string, userId: string, data: EventCreateData) {
+  const role = await getUserRole(orgaSlug, userId);
   if (role !== OrganizationRole.OWNER) throw new ForbiddenOperationError();
 
   return await db.$transaction(async (trx) => {
@@ -17,7 +17,7 @@ export async function createEvent(orgaSlug: string, uid: string, data: EventCrea
     await trx.event.create({
       data: {
         ...data,
-        creator: { connect: { id: uid } },
+        creator: { connect: { id: userId } },
         organization: { connect: { slug: orgaSlug } },
       },
     });

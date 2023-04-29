@@ -20,14 +20,14 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   const form = await request.formData();
   invariant(params.orga, 'Invalid organization slug');
 
   const result = await withZod(OrganizationSaveSchema).validate(form);
   if (result.error) return json(result.error.fieldErrors);
 
-  const organization = await updateOrganization(params.orga, uid, result.data);
+  const organization = await updateOrganization(params.orga, userId, result.data);
   if (organization?.fieldErrors) return json(organization.fieldErrors);
 
   const toast = await createToast(request, 'Organization successfully updated');

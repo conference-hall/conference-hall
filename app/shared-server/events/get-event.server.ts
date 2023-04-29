@@ -29,7 +29,7 @@ export async function getEvent(slug: string) {
     websiteUrl: event.websiteUrl,
     contactEmail: event.contactEmail,
     codeOfConductUrl: event.codeOfConductUrl,
-    bannerUrl: event.bannerUrl,
+    logo: event.logo,
     maxProposals: event.maxProposals,
     isCfpOpen: getCfpState(event.type, event.cfpStart, event.cfpEnd) === 'OPENED',
     hasTracks: event.categories.length > 0 || event.formats.length > 0,

@@ -4,10 +4,10 @@ import { TalkNotFoundError } from '../../libs/errors';
 import { buildInvitationLink } from '../invitations/build-link.server';
 import { getSpeakerProposalStatus } from '../proposals/get-speaker-proposal-status';
 
-export async function getTalk(uid: string, talkId: string) {
+export async function getTalk(userId: string, talkId: string) {
   const talk = await db.talk.findFirst({
     where: {
-      speakers: { some: { id: uid } },
+      speakers: { some: { id: userId } },
       id: talkId,
     },
     include: {
@@ -27,20 +27,20 @@ export async function getTalk(uid: string, talkId: string) {
     references: talk.references,
     archived: talk.archived,
     createdAt: talk.createdAt.toUTCString(),
-    isOwner: uid === talk.creatorId,
+    isOwner: userId === talk.creatorId,
     speakers: talk.speakers
       .map((speaker) => ({
         id: speaker.id,
         name: speaker.name,
-        photoURL: speaker.photoURL,
+        picture: speaker.picture,
         isOwner: speaker.id === talk.creatorId,
-        isCurrentUser: speaker.id === uid,
+        isCurrentUser: speaker.id === userId,
       }))
       .sort((a, b) => (a.isOwner ? -1 : 0) - (b.isOwner ? -1 : 0)),
     submissions: talk.proposals.map((proposal) => ({
       slug: proposal.event.slug,
       name: proposal.event.name,
-      bannerUrl: proposal.event.bannerUrl,
+      logo: proposal.event.logo,
       proposalStatus: getSpeakerProposalStatus(proposal, proposal.event),
     })),
     invitationLink: buildInvitationLink(talk.invitation?.id),

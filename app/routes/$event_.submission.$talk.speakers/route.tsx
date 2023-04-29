@@ -23,16 +23,16 @@ import { ArrowRightIcon } from '@heroicons/react/20/solid';
 export const handle = { step: 'speakers' };
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
   invariant(params.talk, 'Invalid talk id');
 
   try {
-    const proposal = await getSubmittedProposal(params.talk, params.event, uid);
+    const proposal = await getSubmittedProposal(params.talk, params.event, userId);
     return json({
       proposalId: proposal.id,
       invitationLink: proposal.invitationLink,
-      speakers: proposal.speakers.filter((speaker) => speaker.id !== uid),
+      speakers: proposal.speakers.filter((speaker) => speaker.id !== userId),
     });
   } catch (err) {
     throw mapErrorToResponse(err);
@@ -40,7 +40,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   const form = await request.formData();
   invariant(params.event, 'Invalid event slug');
   invariant(params.talk, 'Invalid talk id');
@@ -49,13 +49,13 @@ export const action = async ({ request, params }: ActionArgs) => {
     const action = form.get('_action');
     if (action === 'remove-speaker') {
       const speakerId = form.get('_speakerId')?.toString() as string;
-      await removeCoSpeakerFromSubmission(uid, params.talk, params.event, speakerId);
+      await removeCoSpeakerFromSubmission(userId, params.talk, params.event, speakerId);
       return json(null);
     } else {
       const result = await withZod(DetailsSchema).validate(form);
       if (result.error) return json(result.error.fieldErrors);
 
-      await saveProfile(uid, result.data);
+      await saveProfile(userId, result.data);
       const event = await getEvent(params.event);
       if (event.hasTracks) {
         return redirect(`/${params.event}/submission/${params.talk}/tracks`);

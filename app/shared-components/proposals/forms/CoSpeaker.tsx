@@ -11,7 +11,7 @@ type CoSpeakersListProps = {
   speakers: Array<{
     id: string;
     name: string | null;
-    photoURL: string | null;
+    picture: string | null;
     isOwner: boolean;
   }>;
   showRemoveAction?: boolean;
@@ -24,7 +24,7 @@ export function CoSpeakersList({ speakers, showRemoveAction = false, className }
       {speakers.map((speaker) => (
         <div key={speaker.id} className="mt-4 flex items-center justify-between">
           <AvatarName
-            photoURL={speaker.photoURL}
+            picture={speaker.picture}
             name={speaker.name || 'Unknown'}
             subtitle={speaker.isOwner ? 'Owner' : 'Co-speaker'}
           />

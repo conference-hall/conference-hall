@@ -11,7 +11,7 @@ type Props = {
   event?: {
     name: string;
     slug: string;
-    bannerUrl: string | null;
+    logo: string | null;
     type: EventType;
     visibility: EventVisibility;
     cfpState: CfpState;
@@ -34,7 +34,7 @@ export default function OrganizationBreadcrumb({ organization, event }: Props) {
           <>
             <ChevronRightIcon className="h-4 w-4 text-gray-900" />
             <Link to={`/${event.slug}`} target="_blank" className="flex items-center gap-2 truncate hover:underline">
-              <Avatar size="xs" photoURL={event.bannerUrl} name={event.name} square aria-hidden />
+              <Avatar size="xs" picture={event.logo} name={event.name} square aria-hidden />
               <Text as="span" size="l" heading strong={!!event}>
                 {event.name}
               </Text>

@@ -23,12 +23,12 @@ type SurveyQuestionsForm = {
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
 
   try {
     const questions = await getQuestions(params.event);
-    const answers = await getAnswers(params.event, uid);
+    const answers = await getAnswers(params.event, userId);
     return json<SurveyQuestionsForm>({ questions, answers });
   } catch (err) {
     mapErrorToResponse(err);
@@ -36,14 +36,14 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
   const form = await request.formData();
 
   const result = await withZod(SurveySchema).validate(form);
   if (result.error) throw new Response('Bad survey values', { status: 400 });
   try {
-    await saveSurvey(uid, params.event, result.data);
+    await saveSurvey(userId, params.event, result.data);
     const toast = await createToast(request, 'Survey successfully saved.');
     return json(null, toast);
   } catch (err) {

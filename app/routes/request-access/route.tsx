@@ -17,9 +17,9 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 export const action = async ({ request }: ActionArgs) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   const form = await request.formData();
-  const result = await validAccessKey(uid, String(form.get('key')));
+  const result = await validAccessKey(userId, String(form.get('key')));
 
   if (result?.errors) return json(result?.errors);
   return redirect('/organizer');

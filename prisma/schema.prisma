@@ -10,10 +10,10 @@ datasource db {
 
 model User {
   id                 String               @id @default(uuid())
-  email              String?
+  email              String
   name               String?
   bio                String?
-  photoURL           String?
+  picture            String?
   github             String?
   company            String?
   references         String?
@@ -35,8 +35,23 @@ model User {
   createdEvents      Event[]
   messages           Message[]
   invites            Invite[]
+  accounts           Account[]
 
   @@map("users")
+}
+
+model Account {
+  uid       String   @id
+  email     String
+  name      String?
+  picture   String?
+  provider  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("accounts")
 }
 
 model OrganizerKeyAccess {
@@ -89,7 +104,7 @@ model Event {
   contactEmail             String?
   websiteUrl               String?
   codeOfConductUrl         String?
-  bannerUrl                String?
+  logo                String?
   conferenceStart          DateTime?
   conferenceEnd            DateTime?
   cfpStart                 DateTime?

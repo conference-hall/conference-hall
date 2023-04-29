@@ -23,12 +23,12 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   invariant(params.orga, 'Invalid organization slug');
   invariant(params.event, 'Invalid event slug');
 
   try {
-    await uploadEventBanner(params.orga, params.event, uid, request);
+    await uploadEventBanner(params.orga, params.event, userId, request);
     return json(null);
   } catch (error) {
     if (error instanceof UploadingError) {
@@ -49,7 +49,7 @@ export default function EventGeneralSettingsRoute() {
     }
   };
 
-  const picture = event.bannerUrl ? `${event.bannerUrl}?${Math.random()}` : undefined;
+  const picture = event.logo ? `${event.logo}?${Math.random()}` : undefined;
 
   return (
     <Card as="section">
@@ -59,7 +59,7 @@ export default function EventGeneralSettingsRoute() {
       </Card.Title>
 
       <Card.Content>
-        <ClientOnly>{() => <Avatar photoURL={picture} name={event.name} square size="4xl" />}</ClientOnly>
+        <ClientOnly>{() => <Avatar picture={picture} name={event.name} square size="4xl" />}</ClientOnly>
         <AlertInfo>
           JPEG format with optimal resolution of 500x500.
           <br />
@@ -74,7 +74,7 @@ export default function EventGeneralSettingsRoute() {
       <Card.Actions>
         <Button variant="secondary">Remove logo</Button>
         <Form method="POST" encType="multipart/form-data" onChange={handleSubmit}>
-          <ButtonFileUpload name="bannerUrl" accept="image/jpeg" error={result?.error}>
+          <ButtonFileUpload name="logo" accept="image/jpeg" error={result?.error}>
             Change logo
           </ButtonFileUpload>
         </Form>

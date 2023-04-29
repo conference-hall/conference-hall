@@ -28,20 +28,20 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   invariant(params.invite, 'Invalid invite');
   const form = await request.formData();
   const type = form.get('_type');
 
   try {
     if (type === 'TALK') {
-      const talk = await addCoSpeakerToTalk(params.invite, uid);
+      const talk = await addCoSpeakerToTalk(params.invite, userId);
       return redirect(`/speaker/talks/${talk.id}`);
     } else if (type === 'PROPOSAL') {
-      const proposal = await addCoSpeakerToProposal(params.invite, uid);
+      const proposal = await addCoSpeakerToProposal(params.invite, userId);
       return redirect(`/${proposal.eventSlug}/proposals/${proposal.proposalId}`);
     } else if (type === 'ORGANIZATION') {
-      const organization = await addMember(params.invite, uid);
+      const organization = await addMember(params.invite, userId);
       return redirect(`/organizer/${organization.slug}`);
     }
   } catch (err) {

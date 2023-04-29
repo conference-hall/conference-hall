@@ -55,7 +55,7 @@ describe('#getProposalReview', () => {
         {
           id: speaker.id,
           name: speaker.name,
-          photoURL: speaker.photoURL,
+          picture: speaker.picture,
           bio: speaker.bio,
           references: speaker.references,
           email: speaker.email,
@@ -92,14 +92,14 @@ describe('#getProposalReview', () => {
         {
           id: owner.id,
           name: owner.name,
-          photoURL: owner.photoURL,
+          picture: owner.picture,
           feeling: 'NEGATIVE',
           rating: 0,
         },
         {
           id: member.id,
           name: member.name,
-          photoURL: member.photoURL,
+          picture: member.picture,
           feeling: 'POSITIVE',
           rating: 5,
         },
@@ -119,14 +119,14 @@ describe('#getProposalReview', () => {
         id: message2.id,
         userId: member.id,
         name: member.name,
-        photoURL: member.photoURL,
+        picture: member.picture,
         message: 'Message 2',
       },
       {
         id: message1.id,
         userId: owner.id,
         name: owner.name,
-        photoURL: owner.photoURL,
+        picture: owner.picture,
         message: 'Message 1',
       },
     ]);

@@ -2,7 +2,7 @@ import type { Session } from '@remix-run/node';
 import { createCookieSessionStorage, redirect } from '@remix-run/node';
 import { auth as serverAuth } from './firebase.server';
 import { config } from '../config';
-import { createUser } from '~/shared-server/users/create-user.server';
+import { createUserAccount } from '~/shared-server/users/create-user-account.server';
 
 const MAX_AGE_SEC = 60 * 60 * 24 * 10; // 10 days
 const MAX_AGE_MS = MAX_AGE_SEC * 1000;
@@ -31,13 +31,14 @@ export async function createSession(request: Request) {
   const token = form.get('token') as string;
   const redirectTo = form.get('redirectTo')?.toString() || '/';
 
-  const { uid, name, email, picture } = await serverAuth.verifyIdToken(token, true);
+  const { uid, name, email, picture, firebase } = await serverAuth.verifyIdToken(token, true);
 
   const jwt = await serverAuth.createSessionCookie(token, { expiresIn: MAX_AGE_MS });
-  const userId = await createUser({ uid, name, email, picture });
+  const userId = await createUserAccount({ uid, name, email, picture, provider: firebase.sign_in_provider });
 
   const session = await getSession(request);
   session.set('jwt', jwt);
+  session.set('uid', uid);
   session.set('userId', userId);
 
   return redirect(redirectTo, { headers: { 'Set-Cookie': await commitSession(session) } });
@@ -48,12 +49,13 @@ export async function destroySession(request: Request) {
   return redirect('/', { headers: { 'Set-Cookie': await sessionStorage.destroySession(session) } });
 }
 
-export async function requireSession(request: Request) {
+export async function requireSession(request: Request): Promise<string> {
   const session = await getSession(request);
   const jwt = session.get('jwt');
-  const userId = session.get('jwt');
+  const uid = session.get('uid');
+  const userId = session.get('userId');
 
-  if (!jwt) {
+  if (!jwt || !uid || !userId) {
     const redirectTo = new URL(request.url).pathname;
     const searchParams = new URLSearchParams([['redirectTo', redirectTo]]);
     throw redirect(`/login?${searchParams}`);
@@ -61,21 +63,27 @@ export async function requireSession(request: Request) {
 
   try {
     const token = await serverAuth.verifySessionCookie(jwt);
-    return { uid: token.uid, userId };
+    if (uid !== token.uid) {
+      throw redirect('/logout');
+    }
+    return userId;
   } catch (e) {
     throw redirect('/logout');
   }
 }
 
-export async function getSessionUid(request: Request) {
+export async function getSessionUserId(request: Request): Promise<string | null> {
   const session = await getSession(request);
   const jwt = session.get('jwt');
+  const uid = session.get('uid');
+  const userId = session.get('userId');
 
-  if (!jwt) return null;
+  if (!jwt || !uid || !userId) return null;
 
   try {
     const token = await serverAuth.verifySessionCookie(jwt);
-    return token.uid;
+    if (uid !== token.uid) return null;
+    return userId;
   } catch (e) {
     return null;
   }

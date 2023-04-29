@@ -32,7 +32,7 @@ describe('#updateEvent', () => {
       formatsRequired: true,
       codeOfConductUrl: 'codeOfConductUrl',
       emailNotifications: ['submitted'],
-      bannerUrl: 'Banner',
+      logo: 'Banner',
       apiKey: 'apiKey',
     });
 
@@ -46,7 +46,7 @@ describe('#updateEvent', () => {
     expect(updated?.categoriesRequired).toBe(true);
     expect(updated?.formatsRequired).toBe(true);
     expect(updated?.description).toBe('Updated');
-    expect(updated?.bannerUrl).toBe('Banner');
+    expect(updated?.logo).toBe('Banner');
     expect(updated?.codeOfConductUrl).toBe('codeOfConductUrl');
     expect(updated?.emailNotifications).toEqual(['submitted']);
     expect(updated?.apiKey).toBe('apiKey');

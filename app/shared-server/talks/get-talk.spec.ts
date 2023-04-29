@@ -35,7 +35,7 @@ describe('#getTalk', () => {
         {
           id: speaker.id,
           name: speaker.name,
-          photoURL: speaker.photoURL,
+          picture: speaker.picture,
           isOwner: true,
           isCurrentUser: true,
         },
@@ -58,14 +58,14 @@ describe('#getTalk', () => {
       {
         id: owner.id,
         name: owner.name,
-        photoURL: owner.photoURL,
+        picture: owner.picture,
         isOwner: true,
         isCurrentUser: false,
       },
       {
         id: cospeaker.id,
         name: cospeaker.name,
-        photoURL: cospeaker.photoURL,
+        picture: cospeaker.picture,
         isOwner: false,
         isCurrentUser: true,
       },
@@ -95,7 +95,7 @@ describe('#getTalk', () => {
       {
         name: proposal.event.name,
         slug: proposal.event.slug,
-        bannerUrl: proposal.event.bannerUrl,
+        logo: proposal.event.logo,
         proposalStatus: SpeakerProposalStatus.DeliberationPending,
       },
     ]);

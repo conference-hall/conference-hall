@@ -20,14 +20,14 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
-  const { uid } = await requireSession(request);
+  const userId = await requireSession(request);
   invariant(params.orga, 'Invalid organization slug');
   invariant(params.event, 'Invalid event slug');
   const form = await request.formData();
 
   const result = await withZod(EventSlackSettingsSchema).validate(form);
   if (result.error) return json(result.error.fieldErrors);
-  await updateEvent(params.orga, params.event, uid, result.data);
+  await updateEvent(params.orga, params.event, userId, result.data);
   return json(null);
 };
 

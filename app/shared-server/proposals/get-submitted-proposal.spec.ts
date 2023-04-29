@@ -33,8 +33,8 @@ describe('#getSubmittedProposal', () => {
       invitationLink: `http://localhost:3001/invitation/${invite?.id}`,
       isOwner: true,
       speakers: [
-        { id: speaker.id, isOwner: true, name: speaker.name, photoURL: speaker.photoURL },
-        { id: speaker2.id, name: speaker2.name, photoURL: speaker2.photoURL, isOwner: false },
+        { id: speaker.id, isOwner: true, name: speaker.name, picture: speaker.picture },
+        { id: speaker2.id, name: speaker2.name, picture: speaker2.picture, isOwner: false },
       ],
       formats: [{ id: format.id, name: format.name }],
       categories: [{ id: category.id, name: category.name }],

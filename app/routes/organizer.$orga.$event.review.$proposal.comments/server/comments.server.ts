@@ -6,13 +6,13 @@ export async function addProposalComment(
   orgaSlug: string,
   eventSlug: string,
   proposalId: string,
-  uid: string,
+  userId: string,
   message: string
 ) {
-  await checkUserRole(orgaSlug, eventSlug, uid);
+  await checkUserRole(orgaSlug, eventSlug, userId);
 
   await db.message.create({
-    data: { userId: uid, proposalId, message, channel: MessageChannel.ORGANIZER },
+    data: { userId: userId, proposalId, message, channel: MessageChannel.ORGANIZER },
   });
 }
 
@@ -20,10 +20,10 @@ export async function removeProposalComment(
   orgaSlug: string,
   eventSlug: string,
   proposalId: string,
-  uid: string,
+  userId: string,
   messageId: string
 ) {
-  await checkUserRole(orgaSlug, eventSlug, uid);
+  await checkUserRole(orgaSlug, eventSlug, userId);
 
-  await db.message.deleteMany({ where: { id: messageId, userId: uid, proposalId } });
+  await db.message.deleteMany({ where: { id: messageId, userId: userId, proposalId } });
 }

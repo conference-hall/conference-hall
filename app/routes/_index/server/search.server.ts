@@ -22,7 +22,7 @@ export async function searchEvents(filters: SearchFilters, page: Pagination = 1)
   const pagination = getPagination(page, eventsCount, RESULTS_BY_PAGE);
 
   const events = await db.event.findMany({
-    select: { slug: true, name: true, type: true, address: true, cfpStart: true, cfpEnd: true, bannerUrl: true },
+    select: { slug: true, name: true, type: true, address: true, cfpStart: true, cfpEnd: true, logo: true },
     where: eventsWhereInput,
     orderBy: [{ cfpStart: 'desc' }, { name: 'asc' }],
     skip: pagination.pageIndex * RESULTS_BY_PAGE,
@@ -40,7 +40,7 @@ export async function searchEvents(filters: SearchFilters, page: Pagination = 1)
       name: event.name,
       type: event.type,
       address: event.address,
-      bannerUrl: event.bannerUrl,
+      logo: event.logo,
       cfpState: getCfpState(event.type, event.cfpStart, event.cfpEnd),
       cfpStart: event.cfpStart?.toUTCString(),
       cfpEnd: event.cfpEnd?.toUTCString(),

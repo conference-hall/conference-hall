@@ -31,7 +31,7 @@ describe('#getEventProposals', () => {
           {
             name: speaker.name,
             bio: speaker.bio,
-            photoURL: speaker.photoURL,
+            picture: speaker.picture,
             company: speaker.company,
             github: speaker.github,
             twitter: speaker.twitter,

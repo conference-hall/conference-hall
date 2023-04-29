@@ -13,7 +13,7 @@ type Props = {
   categories?: Array<{ name: string }>;
   level: string | null;
   languages: Array<string>;
-  speakers: Array<{ photoURL?: string | null; name?: string | null }>;
+  speakers: Array<{ picture?: string | null; name?: string | null }>;
 };
 
 export function ProposalDetailsSection(props: Props) {

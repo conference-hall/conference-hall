@@ -11,7 +11,7 @@ type Props = {
   slug: string;
   type: 'CONFERENCE' | 'MEETUP';
   organizationName: string;
-  bannerUrl: string | null;
+  logo: string | null;
   address: string | null;
   conferenceStart?: string;
   conferenceEnd?: string;
@@ -23,7 +23,7 @@ export function EventHeader({
   slug,
   type,
   organizationName,
-  bannerUrl,
+  logo,
   address,
   conferenceStart,
   conferenceEnd,
@@ -33,7 +33,7 @@ export function EventHeader({
     <header className={c('bg-gray-800', className)}>
       <Container className="flex flex-col items-center justify-between py-4 sm:flex-row">
         <Link to={`/${slug}`} className="flex items-center gap-4">
-          <Avatar photoURL={bannerUrl} name={name} size="l" square />
+          <Avatar picture={logo} name={name} size="l" square />
           <div className="flex-shrink-0">
             <H1 size="2xl" variant="light" mb={0}>
               {name}

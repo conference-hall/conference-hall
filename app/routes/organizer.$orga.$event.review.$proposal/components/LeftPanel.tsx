@@ -20,7 +20,7 @@ type Rating = {
   membersRatings: Array<{
     id: string;
     name: string | null;
-    photoURL: string | null;
+    picture: string | null;
     rating: number | null;
     feeling: string | null;
   }>;
@@ -29,7 +29,7 @@ type Rating = {
 type Speaker = {
   id: string;
   name: string | null;
-  photoURL: string | null;
+  picture: string | null;
   bio: string | null;
   references: string | null;
   email: string | null;
@@ -91,7 +91,7 @@ function TotalRating({ rating }: { rating: Rating }) {
             {rating.membersRatings.length === 0 && <Text>No rated yet.</Text>}
             {rating.membersRatings.map((member) => (
               <div key={member.id} className="flex justify-between">
-                <AvatarName photoURL={member.photoURL} size="xs" name={member.name} />
+                <AvatarName picture={member.picture} size="xs" name={member.name} />
                 <div className="flex items-center justify-around gap-4">
                   <IconLabel icon={StarIcon}>{member.rating ?? '-'}</IconLabel>
                 </div>
@@ -113,7 +113,7 @@ function SpeakerInfos({ speaker, defaultOpen }: { speaker: Speaker; defaultOpen:
             aria-label={`Toggle speaker ${speaker.name} details`}
             className="flex w-full items-center justify-between px-6 py-8 hover:bg-gray-50"
           >
-            <AvatarName photoURL={speaker.photoURL} name={speaker.name} subtitle={speaker.email} />
+            <AvatarName picture={speaker.picture} name={speaker.name} subtitle={speaker.email} />
             <ChevronRightIcon
               className={c('h-6 w-6 shrink-0 transition-transform', { 'rotate-0': !open, 'rotate-90': open })}
             />

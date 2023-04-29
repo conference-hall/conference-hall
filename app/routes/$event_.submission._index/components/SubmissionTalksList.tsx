@@ -8,7 +8,7 @@ type Props = {
     speakers: Array<{
       id: string;
       name: string | null;
-      photoURL?: string | null;
+      picture?: string | null;
     }>;
   }>;
 };

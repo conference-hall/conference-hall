@@ -22,7 +22,7 @@ import { Toast } from './libs/toasts/Toast';
 import tailwind from './tailwind.css';
 import { Container } from './design-system/layouts/Container';
 import { initializeFirebaseClient } from './libs/auth/firebase';
-import { commitSession, getSession, getSessionUid } from './libs/auth/session';
+import { commitSession, getSession, getSessionUserId } from './libs/auth/session';
 import type { ToastData } from './libs/toasts/toasts';
 
 export function meta() {
@@ -46,8 +46,8 @@ export const loader = async ({ request }: LoaderArgs) => {
   const session = await getSession(request);
   const toast = session.get('toast');
 
-  const uid = await getSessionUid(request);
-  const user = await getUser(uid);
+  const userId = await getSessionUserId(request);
+  const user = await getUser(userId);
 
   return json(
     {

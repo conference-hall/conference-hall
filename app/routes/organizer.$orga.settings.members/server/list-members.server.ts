@@ -1,8 +1,8 @@
 import { db } from '../../../libs/db';
 import { getUserRole } from '../../../shared-server/organizations/get-user-role.server';
 
-export async function listMembers(slug: string, uid: string) {
-  const role = await getUserRole(slug, uid);
+export async function listMembers(slug: string, userId: string) {
+  const role = await getUserRole(slug, userId);
   if (!role) return [];
 
   const members = await db.organizationMember.findMany({
@@ -15,6 +15,6 @@ export async function listMembers(slug: string, uid: string) {
     role,
     id: member.id,
     name: member.name,
-    photoURL: member.photoURL,
+    picture: member.picture,
   }));
 }

@@ -12,25 +12,25 @@ type Message = {
   id: string;
   userId: string;
   name: string | null;
-  photoURL: string | null;
+  picture: string | null;
   message: string;
 };
 
 type Props = {
-  uid: string;
+  userId: string;
   messages: Array<Message>;
   className?: string;
 };
 
-export function RightPanel({ uid, messages, className }: Props) {
+export function RightPanel({ userId, messages, className }: Props) {
   return (
     <section className={c('relative flex min-h-full flex-col', className)}>
-      <OrganizerComments uid={uid} messages={messages} />
+      <OrganizerComments userId={userId} messages={messages} />
     </section>
   );
 }
 
-function OrganizerComments({ uid, messages }: { uid: string; messages: Array<Message> }) {
+function OrganizerComments({ userId, messages }: { userId: string; messages: Array<Message> }) {
   const params = useParams();
   const fetcher = useFetcher();
 
@@ -60,13 +60,13 @@ function OrganizerComments({ uid, messages }: { uid: string; messages: Array<Mes
       <div className="flex flex-col-reverse gap-4 overflow-auto px-6 py-4">
         {messages.map((message) => (
           <div key={message.id} className="group flex items-end gap-4">
-            <Avatar photoURL={message.photoURL} name={message.name} />
+            <Avatar picture={message.picture} name={message.name} />
             <div className="min-w-0 grow">
               <div className="relative">
                 <Text size="xs" variant="secondary">
                   {message.name}
                 </Text>
-                {uid === message.userId && (
+                {userId === message.userId && (
                   <IconButton
                     label="Delete comment"
                     icon={TrashIcon}
