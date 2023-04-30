@@ -62,8 +62,7 @@ describe('#getProposalReview', () => {
           email: speaker.email,
           company: speaker.company,
           address: speaker.address,
-          github: speaker.github,
-          twitter: speaker.twitter,
+          socials: speaker.socials,
         },
       ],
       rating: {

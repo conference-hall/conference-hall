@@ -7,10 +7,14 @@ export const PersonalInfoSchema = z.object({
   picture: text(z.string().url().trim().nullable().default(null)),
 });
 
+export type PersonalInfoData = z.infer<typeof PersonalInfoSchema>;
+
 export const DetailsSchema = z.object({
   bio: text(z.string().trim().nullable().default(null)),
   references: text(z.string().trim().nullable().default(null)),
 });
+
+export type DetailsData = z.infer<typeof DetailsSchema>;
 
 export const AdditionalInfoSchema = z.object({
   company: text(z.string().trim().nullable().default(null)),
@@ -19,6 +23,6 @@ export const AdditionalInfoSchema = z.object({
   github: text(z.string().trim().nullable().default(null)),
 });
 
-type ProfileSchema = typeof PersonalInfoSchema | typeof DetailsSchema | typeof AdditionalInfoSchema;
+export type AdditionalInfoData = z.infer<typeof AdditionalInfoSchema>;
 
-export type ProfileUpdateData = z.infer<ProfileSchema>;
+export type ProfileData = PersonalInfoData | DetailsData | AdditionalInfoData;

@@ -1,10 +1,12 @@
-import { db } from '../../../libs/db';
-import { ApiKeyInvalidError, EventNotFoundError } from '../../../libs/errors';
+import { db } from '~/libs/db';
+import { ApiKeyInvalidError, EventNotFoundError } from '~/libs/errors';
+import type { UserSocialLinks } from '~/schemas/user';
 
 export const getEventProposals = async (eventSlug: string, apiKey: string) => {
   const event = await db.event.findFirst({ where: { slug: eventSlug } });
 
   if (!event) throw new EventNotFoundError();
+
   if (event.apiKey !== apiKey) throw new ApiKeyInvalidError();
 
   const proposals = await db.proposal.findMany({
@@ -25,8 +27,7 @@ export const getEventProposals = async (eventSlug: string, apiKey: string) => {
         bio: speaker.bio,
         company: speaker.company,
         picture: speaker.picture,
-        github: speaker.github,
-        twitter: speaker.twitter,
+        socials: speaker.socials as UserSocialLinks,
       })),
     };
   });

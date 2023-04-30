@@ -1,4 +1,5 @@
 import { db } from '~/libs/db';
+import type { UserSocialLinks } from '~/schemas/user';
 import { sortBy } from '~/utils/arrays';
 
 export type User = Awaited<ReturnType<typeof getUser>>;
@@ -24,8 +25,7 @@ export async function getUser(userId: string | null) {
     references: user.references,
     company: user.company,
     address: user.address,
-    twitter: user.twitter,
-    github: user.github,
+    socials: user.socials as UserSocialLinks,
     organizations: sortBy(
       user.organizations.map((member) => ({
         slug: member.organization.slug,

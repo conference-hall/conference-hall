@@ -42,8 +42,7 @@ export default function ProfileRoute() {
           bio={user.bio}
           address={user.address}
           company={user.company}
-          github={user.github}
-          twitter={user.twitter}
+          socials={user.socials}
         />
 
         <SpeakerActivitiesSection
