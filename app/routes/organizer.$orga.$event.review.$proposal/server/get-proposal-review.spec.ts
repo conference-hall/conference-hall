@@ -9,9 +9,9 @@ import { proposalFactory } from 'tests/factories/proposals';
 import { ratingFactory } from 'tests/factories/ratings';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
-import { ForbiddenOperationError } from '../../../libs/errors';
 import { getProposalReview } from './get-proposal-review.server';
 import { sortBy } from '~/utils/arrays';
+import { ForbiddenOperationError } from '~/libs/errors';
 
 describe('#getProposalReview', () => {
   let owner: User, member: User, speaker: User;
@@ -40,7 +40,7 @@ describe('#getProposalReview', () => {
       talk: await talkFactory({ speakers: [speaker] }),
     });
 
-    const reviewInfo = await getProposalReview(organization.slug, event.slug, proposal.id, owner.id, {});
+    const reviewInfo = await getProposalReview(event.slug, proposal.id, owner.id, {});
 
     expect(reviewInfo.pagination).toEqual({ current: 1, total: 1, previousId: proposal.id, nextId: proposal.id });
     expect(reviewInfo.proposal).toEqual({
@@ -81,7 +81,7 @@ describe('#getProposalReview', () => {
     await ratingFactory({ proposal, user: owner, attributes: { feeling: 'NEGATIVE', rating: 0 } });
     await ratingFactory({ proposal, user: member, attributes: { feeling: 'POSITIVE', rating: 5 } });
 
-    const reviewInfo = await getProposalReview(organization.slug, event.slug, proposal.id, owner.id, {});
+    const reviewInfo = await getProposalReview(event.slug, proposal.id, owner.id, {});
 
     expect(reviewInfo.proposal.rating).toEqual({
       average: 2.5,
@@ -115,7 +115,7 @@ describe('#getProposalReview', () => {
     const message1 = await messageFactory({ proposal, user: owner, attributes: { message: 'Message 1' } });
     const message2 = await messageFactory({ proposal, user: member, attributes: { message: 'Message 2' } });
 
-    const reviewInfo = await getProposalReview(organization.slug, event.slug, proposal.id, owner.id, {});
+    const reviewInfo = await getProposalReview(event.slug, proposal.id, owner.id, {});
 
     expect(reviewInfo.proposal.messages).toEqual([
       {
@@ -140,7 +140,7 @@ describe('#getProposalReview', () => {
     const proposal2 = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
     const proposal3 = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
-    const reviewInfo = await getProposalReview(organization.slug, event.slug, proposal2.id, owner.id, {});
+    const reviewInfo = await getProposalReview(event.slug, proposal2.id, owner.id, {});
 
     expect(reviewInfo.pagination).toEqual({
       current: 2,
@@ -166,7 +166,7 @@ describe('#getProposalReview', () => {
       talk: await talkFactory({ speakers: [speaker], attributes: { title: 'foo' } }),
     });
 
-    const reviewInfo = await getProposalReview(organization.slug, event.slug, proposal3.id, owner.id, { query: 'foo' });
+    const reviewInfo = await getProposalReview(event.slug, proposal3.id, owner.id, { query: 'foo' });
 
     expect(reviewInfo.pagination).toEqual({
       current: 2,
@@ -180,8 +180,6 @@ describe('#getProposalReview', () => {
     const user = await userFactory();
     const event = await eventFactory();
     const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [user] }) });
-    await expect(getProposalReview(organization.slug, event.slug, proposal.id, user.id, {})).rejects.toThrowError(
-      ForbiddenOperationError
-    );
+    await expect(getProposalReview(event.slug, proposal.id, user.id, {})).rejects.toThrowError(ForbiddenOperationError);
   });
 });

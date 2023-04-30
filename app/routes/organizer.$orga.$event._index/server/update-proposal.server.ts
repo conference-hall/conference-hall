@@ -1,16 +1,10 @@
 import { OrganizationRole } from '@prisma/client';
+import { db } from '~/libs/db';
 import type { ProposalStatusData, ProposalUpdateData } from '~/schemas/proposal';
-import { db } from '../../../libs/db';
-import { checkUserRole } from '~/shared-server/organizations/check-user-role.server';
+import { allowedForEvent } from '~/shared-server/organizations/check-user-role.server';
 
-export async function updateProposal(
-  orgaSlug: string,
-  eventSlug: string,
-  proposalId: string,
-  userId: string,
-  data: ProposalUpdateData
-) {
-  await checkUserRole(orgaSlug, eventSlug, userId, [OrganizationRole.OWNER, OrganizationRole.MEMBER]);
+export async function updateProposal(eventSlug: string, proposalId: string, userId: string, data: ProposalUpdateData) {
+  await allowedForEvent(eventSlug, userId, [OrganizationRole.OWNER, OrganizationRole.MEMBER]);
 
   const { formats, categories, ...talk } = data;
 
@@ -25,13 +19,12 @@ export async function updateProposal(
 }
 
 export async function updateProposalsStatus(
-  orgaSlug: string,
   eventSlug: string,
   userId: string,
   proposalIds: string[],
   status: ProposalStatusData
 ) {
-  await checkUserRole(orgaSlug, eventSlug, userId, [OrganizationRole.OWNER, OrganizationRole.MEMBER]);
+  await allowedForEvent(eventSlug, userId, [OrganizationRole.OWNER, OrganizationRole.MEMBER]);
 
   const result = await db.proposal.updateMany({ where: { id: { in: proposalIds } }, data: { status } });
   return result.count;

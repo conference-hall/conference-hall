@@ -1,13 +1,13 @@
 import { OrganizationRole } from '@prisma/client';
 import { unstable_parseMultipartFormData } from '@remix-run/node';
 import { z } from 'zod';
-import { db } from '../../../libs/db';
-import { EventNotFoundError } from '../../../libs/errors';
-import { uploadToStorageHandler } from '../../../libs/storage/storage.server';
-import { checkUserRole } from '~/shared-server/organizations/check-user-role.server';
+import { db } from '~/libs/db';
+import { EventNotFoundError } from '~/libs/errors';
+import { uploadToStorageHandler } from '~/libs/storage/storage.server';
+import { allowedForEvent } from '~/shared-server/organizations/check-user-role.server';
 
-export async function uploadEventBanner(orgaSlug: string, eventSlug: string, userId: string, request: Request) {
-  await checkUserRole(orgaSlug, eventSlug, userId, [OrganizationRole.OWNER]);
+export async function uploadEventBanner(eventSlug: string, userId: string, request: Request) {
+  await allowedForEvent(eventSlug, userId, [OrganizationRole.OWNER]);
 
   const event = await db.event.findFirst({ where: { slug: eventSlug } });
   if (!event) throw new EventNotFoundError();

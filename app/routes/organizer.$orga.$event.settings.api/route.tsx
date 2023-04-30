@@ -19,18 +19,17 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 export const action = async ({ request, params }: ActionArgs) => {
   const userId = await requireSession(request);
-  invariant(params.orga, 'Invalid organization slug');
   invariant(params.event, 'Invalid event slug');
   const form = await request.formData();
   const action = form.get('_action');
 
   switch (action) {
     case 'revoke-api-key': {
-      await updateEvent(params.orga, params.event, userId, { apiKey: null });
+      await updateEvent(params.event, userId, { apiKey: null });
       break;
     }
     case 'generate-api-key': {
-      await updateEvent(params.orga, params.event, userId, { apiKey: uuid() });
+      await updateEvent(params.event, userId, { apiKey: uuid() });
       break;
     }
   }

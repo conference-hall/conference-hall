@@ -1,6 +1,6 @@
 import type { Pagination } from '~/schemas/pagination';
 import type { ProposalsFilters } from '~/schemas/proposal';
-import { checkUserRole } from '~/shared-server/organizations/check-user-role.server';
+import { allowedForEvent } from '~/shared-server/organizations/check-user-role.server';
 import { getPagination } from '~/shared-server/pagination/pagination.server';
 import { OrganizerProposalsSearch } from '~/shared-server/proposals/OrganizerProposalsSearch';
 import { RatingsDetails } from '~/shared-server/ratings/ratings-details';
@@ -8,13 +8,12 @@ import { RatingsDetails } from '~/shared-server/ratings/ratings-details';
 const RESULTS_BY_PAGE = 25;
 
 export async function searchProposals(
-  orgaSlug: string,
   eventSlug: string,
   userId: string,
   filters: ProposalsFilters,
   page: Pagination = 1
 ) {
-  await checkUserRole(orgaSlug, eventSlug, userId);
+  await allowedForEvent(eventSlug, userId);
 
   const search = new OrganizerProposalsSearch(eventSlug, userId, filters);
 

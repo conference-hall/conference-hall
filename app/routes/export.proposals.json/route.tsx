@@ -13,6 +13,6 @@ export const loader = async ({ request }: LoaderArgs) => {
   if (result.error) return json(null);
 
   const { orga, event, ...filters } = result.data;
-  const results = await exportProposals(orga, event, userId, filters ?? {});
+  const results = await exportProposals(event, userId, filters ?? {});
   return json(results);
 };

@@ -1,12 +1,12 @@
-import { db } from '../../../libs/db';
-import { getUserRole } from '../../../shared-server/organizations/get-user-role.server';
+import { OrganizationRole } from '@prisma/client';
+import { db } from '~/libs/db';
+import { allowedForOrga } from '~/shared-server/organizations/check-user-role.server';
 
-export async function listMembers(slug: string, userId: string) {
-  const role = await getUserRole(slug, userId);
-  if (!role) return [];
+export async function listMembers(orgaSlug: string, userId: string) {
+  await allowedForOrga(orgaSlug, userId, [OrganizationRole.OWNER]);
 
   const members = await db.organizationMember.findMany({
-    where: { organization: { slug } },
+    where: { organization: { slug: orgaSlug } },
     orderBy: { member: { name: 'asc' } },
     include: { member: true },
   });

@@ -7,9 +7,9 @@ import { organizationFactory } from 'tests/factories/organization';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
-import { db } from '../../../libs/db';
-import { ForbiddenOperationError } from '../../../libs/errors';
 import { updateProposal, updateProposalsStatus } from './update-proposal.server';
+import { db } from '~/libs/db';
+import { ForbiddenOperationError } from '~/libs/errors';
 
 describe('#updateProposal', () => {
   let owner: User, reviewer: User, speaker: User;
@@ -35,7 +35,7 @@ describe('#updateProposal', () => {
   it('updates the proposal', async () => {
     const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
-    const updated = await updateProposal(organization.slug, event.slug, proposal.id, owner.id, {
+    const updated = await updateProposal(event.slug, proposal.id, owner.id, {
       title: 'Updated',
       abstract: 'Updated',
       level: 'ADVANCED',
@@ -59,7 +59,7 @@ describe('#updateProposal', () => {
 
   it('throws an error if user has not a owner or member role in the organization', async () => {
     await expect(
-      updateProposal(organization.slug, event.slug, proposal.id, reviewer.id, {
+      updateProposal(event.slug, proposal.id, reviewer.id, {
         title: 'Updated',
         abstract: 'Updated',
         level: null,
@@ -73,7 +73,7 @@ describe('#updateProposal', () => {
     const user = await userFactory();
     const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
     await expect(
-      updateProposal(organization.slug, event.slug, proposal.id, user.id, {
+      updateProposal(event.slug, proposal.id, user.id, {
         title: 'Updated',
         abstract: 'Updated',
         level: null,
@@ -103,13 +103,7 @@ describe('#updateProposalsStatus', () => {
     const proposal1 = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
     const proposal2 = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
-    const updatedCount = await updateProposalsStatus(
-      organization.slug,
-      event.slug,
-      owner.id,
-      [proposal1.id, proposal2.id],
-      'ACCEPTED'
-    );
+    const updatedCount = await updateProposalsStatus(event.slug, owner.id, [proposal1.id, proposal2.id], 'ACCEPTED');
 
     expect(updatedCount).toBe(2);
     const proposals = await db.proposal.findMany();
@@ -118,16 +112,16 @@ describe('#updateProposalsStatus', () => {
   });
 
   it('throws an error if user has not a owner or member role in the organization', async () => {
-    await expect(
-      updateProposalsStatus(organization.slug, event.slug, reviewer.id, [], 'ACCEPTED')
-    ).rejects.toThrowError(ForbiddenOperationError);
+    await expect(updateProposalsStatus(event.slug, reviewer.id, [], 'ACCEPTED')).rejects.toThrowError(
+      ForbiddenOperationError
+    );
   });
 
   it('throws an error if user does not belong to event orga', async () => {
     const user = await userFactory();
     const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-    await expect(
-      updateProposalsStatus(organization.slug, event.slug, user.id, [proposal.id], 'ACCEPTED')
-    ).rejects.toThrowError(ForbiddenOperationError);
+    await expect(updateProposalsStatus(event.slug, user.id, [proposal.id], 'ACCEPTED')).rejects.toThrowError(
+      ForbiddenOperationError
+    );
   });
 });

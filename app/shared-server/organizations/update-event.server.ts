@@ -1,17 +1,12 @@
 import type { Prisma } from '@prisma/client';
 import { OrganizationRole } from '@prisma/client';
 import { geocode } from '~/libs/geocode/geocode';
-import { db } from '../../libs/db';
-import { EventNotFoundError } from '../../libs/errors';
-import { checkUserRole } from './check-user-role.server';
+import { allowedForEvent } from './check-user-role.server';
+import { db } from '~/libs/db';
+import { EventNotFoundError } from '~/libs/errors';
 
-export async function updateEvent(
-  orgaSlug: string,
-  eventSlug: string,
-  userId: string,
-  data: Partial<Prisma.EventCreateInput>
-) {
-  await checkUserRole(orgaSlug, eventSlug, userId, [OrganizationRole.OWNER]);
+export async function updateEvent(eventSlug: string, userId: string, data: Partial<Prisma.EventCreateInput>) {
+  await allowedForEvent(eventSlug, userId, [OrganizationRole.OWNER]);
 
   const event = await db.event.findFirst({ where: { slug: eventSlug } });
   if (!event) throw new EventNotFoundError();

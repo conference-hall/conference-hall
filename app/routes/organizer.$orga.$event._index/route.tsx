@@ -22,27 +22,25 @@ import { ProposalsFilters } from './components/ProposalsFilters/ProposalsFilters
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);
-  invariant(params.orga, 'Invalid organization slug');
   invariant(params.event, 'Invalid event slug');
 
   const url = new URL(request.url);
   const filters = await withZod(ProposalsFiltersSchema).validate(url.searchParams);
   const page = await parsePage(url.searchParams);
 
-  const results = await searchProposals(params.orga, params.event, userId, filters.data ?? {}, page);
+  const results = await searchProposals(params.event, userId, filters.data ?? {}, page);
   return json(results);
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
   const userId = await requireSession(request);
-  invariant(params.orga, 'Invalid organization slug');
   invariant(params.event, 'Invalid event slug');
 
   const form = await request.formData();
   const { data, error } = await withZod(ProposalsStatusUpdateSchema).validate(form);
   if (error) return json(null);
 
-  const result = await updateProposalsStatus(params.orga, params.event, userId, data.selection, data.status);
+  const result = await updateProposalsStatus(params.event, userId, data.selection, data.status);
   return json(null, await createToast(request, `${result} proposals marked as "${data.status.toLowerCase()}".`));
 };
 

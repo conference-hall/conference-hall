@@ -2,6 +2,7 @@ import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { organizationFactory } from 'tests/factories/organization';
 import { userFactory } from 'tests/factories/users';
 import { listMembers } from './list-members.server';
+import { ForbiddenOperationError } from '~/libs/errors';
 
 describe('#listMembers', () => {
   beforeEach(async () => {
@@ -39,12 +40,11 @@ describe('#listMembers', () => {
     ]);
   });
 
-  it('returns nothing when user is not member of the organization', async () => {
+  it('returns nothing when user is not owner of the organization', async () => {
     const user = await userFactory();
     const owner = await userFactory();
     const organization = await organizationFactory({ owners: [owner], attributes: { slug: 'my-orga' } });
 
-    const events = await listMembers(organization.slug, user.id);
-    expect(events).toEqual([]);
+    await expect(listMembers(organization.slug, user.id)).rejects.toThrowError(ForbiddenOperationError);
   });
 });

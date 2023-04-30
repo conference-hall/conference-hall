@@ -5,7 +5,6 @@ import { addProposalComment, removeProposalComment } from './server/comments.ser
 
 export const action = async ({ request, params }: ActionArgs) => {
   const userId = await requireSession(request);
-  invariant(params.orga, 'Invalid organization slug');
   invariant(params.event, 'Invalid event slug');
   invariant(params.proposal, 'Invalid proposal id');
   const form = await request.formData();
@@ -13,10 +12,10 @@ export const action = async ({ request, params }: ActionArgs) => {
   const action = form.get('_action')?.toString();
   if (action === 'delete') {
     const messageId = form.get('messageId')?.toString();
-    if (messageId) await removeProposalComment(params.orga, params.event, params.proposal, userId, messageId);
+    if (messageId) await removeProposalComment(params.event, params.proposal, userId, messageId);
   } else {
     const comment = form.get('comment')?.toString();
-    if (comment) await addProposalComment(params.orga, params.event, params.proposal, userId, comment);
+    if (comment) await addProposalComment(params.event, params.proposal, userId, comment);
   }
   return null;
 };

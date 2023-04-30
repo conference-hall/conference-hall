@@ -18,13 +18,12 @@ import { useOrganization } from '../organizer.$orga/route';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);
-  invariant(params.orga, 'Invalid organization slug');
   invariant(params.event, 'Invalid event slug');
   invariant(params.proposal, 'Invalid proposal id');
 
   const url = new URL(request.url);
   const filters = await withZod(ProposalsFiltersSchema).validate(url.searchParams);
-  const proposal = await getProposalReview(params.orga, params.event, params.proposal, userId, filters.data ?? {});
+  const proposal = await getProposalReview(params.event, params.proposal, userId, filters.data ?? {});
   return json(proposal);
 };
 

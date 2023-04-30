@@ -8,12 +8,12 @@ import invariant from 'tiny-invariant';
 import { listMembers } from './server/list-members.server';
 import { removeMember } from './server/remove-member.server';
 import { changeMemberRole } from './server/change-role.server';
-import type { OrganizationRole } from '@prisma/client';
 import { ChangeRoleButton, InviteMemberButton, RemoveButton } from './components/MemberActions';
 import { useOrganization } from '../organizer.$orga/route';
 import { useUser } from '~/root';
 import { AvatarName } from '~/design-system/Avatar';
 import { createToast } from '~/libs/toasts/toasts';
+import type { OrganizationRole } from '@prisma/client';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);
