@@ -20,7 +20,6 @@ import { getAcceptationCampaignStats } from './server/get-acceptation-campaign-s
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);
-  invariant(params.orga, 'Invalid organization slug');
   invariant(params.event, 'Invalid event slug');
 
   const url = new URL(request.url);
@@ -32,20 +31,19 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     status: ['ACCEPTED', 'CONFIRMED', 'DECLINED'],
   } as ProposalsFilters;
 
-  const proposals = await searchProposals(params.orga, params.event, userId, filters, page);
-  const stats = await getAcceptationCampaignStats(params.orga, params.event, userId);
+  const proposals = await searchProposals(params.event, userId, filters, page);
+  const stats = await getAcceptationCampaignStats(params.event, userId);
   return json({ proposals, stats });
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
   const userId = await requireSession(request);
-  invariant(params.orga, 'Invalid organization slug');
   invariant(params.event, 'Invalid event slug');
   const form = await request.formData();
 
   const { data, error } = await withZod(ProposalSelectionSchema).validate(form);
   if (error) return json(null);
-  await sendAcceptationCampaign(params.orga, params.event, userId, data.selection);
+  await sendAcceptationCampaign(params.event, userId, data.selection);
   return json(null, await createToast(request, 'Emails successfully sent.'));
 };
 

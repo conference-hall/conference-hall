@@ -297,7 +297,7 @@ describe('Event settings', () => {
 
     it('cannot create new event as a organization member', () => {
       cy.visit(`/organizer/orga-1/conference-1/settings`, { failOnStatusCode: false });
-      cy.assertUrl(`/organizer/orga-1/conference-1/proposals`);
+      cy.assertText('Forbidden operation');
     });
   });
 
@@ -306,7 +306,7 @@ describe('Event settings', () => {
 
     it('cannot create new event as a organization reviewer', () => {
       cy.visit(`/organizer/orga-1/conference-1/settings`, { failOnStatusCode: false });
-      cy.assertUrl(`/organizer/orga-1/conference-1/proposals`);
+      cy.assertText('Forbidden operation');
     });
   });
 });

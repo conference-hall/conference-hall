@@ -5,9 +5,9 @@ import { eventFactory } from 'tests/factories/events';
 import { eventFormatFactory } from 'tests/factories/formats';
 import { organizationFactory } from 'tests/factories/organization';
 import { userFactory } from 'tests/factories/users';
-import { ForbiddenOperationError } from '../../../libs/errors';
-import { db } from '../../../libs/db';
 import { deleteCategory, deleteFormat, saveCategory, saveFormat } from './update-tracks.server';
+import { db } from '~/libs/db';
+import { ForbiddenOperationError } from '~/libs/errors';
 
 describe('#saveFormat', () => {
   let owner: User, reviewer: User;
@@ -24,7 +24,7 @@ describe('#saveFormat', () => {
   afterEach(disconnectDB);
 
   it('adds a new format', async () => {
-    await saveFormat(organization.slug, event.slug, owner.id, {
+    await saveFormat(event.slug, owner.id, {
       name: 'Format 1',
       description: 'Format 1',
     });
@@ -38,7 +38,7 @@ describe('#saveFormat', () => {
 
   it('updates an event format', async () => {
     const format = await eventFormatFactory({ event, attributes: { name: 'name', description: 'desc' } });
-    await saveFormat(organization.slug, event.slug, owner.id, {
+    await saveFormat(event.slug, owner.id, {
       id: format.id,
       name: 'Format 1',
       description: 'Format 1',
@@ -52,16 +52,16 @@ describe('#saveFormat', () => {
   });
 
   it('throws an error if user is not owner', async () => {
-    await expect(
-      saveFormat(organization.slug, event.slug, reviewer.id, { name: 'Hello world', description: null })
-    ).rejects.toThrowError(ForbiddenOperationError);
+    await expect(saveFormat(event.slug, reviewer.id, { name: 'Hello world', description: null })).rejects.toThrowError(
+      ForbiddenOperationError
+    );
   });
 
   it('throws an error if user does not belong to event orga', async () => {
     const user = await userFactory();
-    await expect(
-      saveFormat(organization.slug, event.slug, user.id, { name: 'Hello world', description: null })
-    ).rejects.toThrowError(ForbiddenOperationError);
+    await expect(saveFormat(event.slug, user.id, { name: 'Hello world', description: null })).rejects.toThrowError(
+      ForbiddenOperationError
+    );
   });
 });
 
@@ -80,7 +80,7 @@ describe('#saveCategory', () => {
   afterEach(disconnectDB);
 
   it('adds a new category', async () => {
-    await saveCategory(organization.slug, event.slug, owner.id, {
+    await saveCategory(event.slug, owner.id, {
       name: 'Category 1',
       description: 'Category 1',
     });
@@ -94,7 +94,7 @@ describe('#saveCategory', () => {
 
   it('updates an event category', async () => {
     const category = await eventCategoryFactory({ event, attributes: { name: 'name', description: 'desc' } });
-    await saveCategory(organization.slug, event.slug, owner.id, {
+    await saveCategory(event.slug, owner.id, {
       id: category.id,
       name: 'Category 1',
       description: 'Category 1',
@@ -109,15 +109,15 @@ describe('#saveCategory', () => {
 
   it('throws an error if user is not owner', async () => {
     await expect(
-      saveCategory(organization.slug, event.slug, reviewer.id, { name: 'Hello world', description: null })
+      saveCategory(event.slug, reviewer.id, { name: 'Hello world', description: null })
     ).rejects.toThrowError(ForbiddenOperationError);
   });
 
   it('throws an error if user does not belong to event orga', async () => {
     const user = await userFactory();
-    await expect(
-      saveCategory(organization.slug, event.slug, user.id, { name: 'Hello world', description: null })
-    ).rejects.toThrowError(ForbiddenOperationError);
+    await expect(saveCategory(event.slug, user.id, { name: 'Hello world', description: null })).rejects.toThrowError(
+      ForbiddenOperationError
+    );
   });
 });
 
@@ -138,22 +138,18 @@ describe('#deleteFormat', () => {
   afterEach(disconnectDB);
 
   it('deletes an event format', async () => {
-    await deleteFormat(organization.slug, event.slug, owner.id, format.id);
+    await deleteFormat(event.slug, owner.id, format.id);
     const updated = await db.event.findUnique({ where: { slug: event.slug }, include: { formats: true } });
     expect(updated?.formats.length).toBe(0);
   });
 
   it('throws an error if user is not owner', async () => {
-    await expect(deleteFormat(organization.slug, event.slug, reviewer.id, format.id)).rejects.toThrowError(
-      ForbiddenOperationError
-    );
+    await expect(deleteFormat(event.slug, reviewer.id, format.id)).rejects.toThrowError(ForbiddenOperationError);
   });
 
   it('throws an error if user does not belong to event orga', async () => {
     const user = await userFactory();
-    await expect(deleteFormat(organization.slug, event.slug, user.id, format.id)).rejects.toThrowError(
-      ForbiddenOperationError
-    );
+    await expect(deleteFormat(event.slug, user.id, format.id)).rejects.toThrowError(ForbiddenOperationError);
   });
 });
 
@@ -174,21 +170,17 @@ describe('#deleteCategory', () => {
   afterEach(disconnectDB);
 
   it('deletes an event category', async () => {
-    await deleteCategory(organization.slug, event.slug, owner.id, category.id);
+    await deleteCategory(event.slug, owner.id, category.id);
     const updated = await db.event.findUnique({ where: { slug: event.slug }, include: { categories: true } });
     expect(updated?.categories.length).toBe(0);
   });
 
   it('throws an error if user is not owner', async () => {
-    await expect(deleteCategory(organization.slug, event.slug, reviewer.id, category.id)).rejects.toThrowError(
-      ForbiddenOperationError
-    );
+    await expect(deleteCategory(event.slug, reviewer.id, category.id)).rejects.toThrowError(ForbiddenOperationError);
   });
 
   it('throws an error if user does not belong to event orga', async () => {
     const user = await userFactory();
-    await expect(deleteCategory(organization.slug, event.slug, user.id, category.id)).rejects.toThrowError(
-      ForbiddenOperationError
-    );
+    await expect(deleteCategory(event.slug, user.id, category.id)).rejects.toThrowError(ForbiddenOperationError);
   });
 });

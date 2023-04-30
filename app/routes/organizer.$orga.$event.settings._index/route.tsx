@@ -27,7 +27,6 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 export const action = async ({ request, params }: ActionArgs) => {
   const userId = await requireSession(request);
-  invariant(params.orga, 'Invalid organization slug');
   invariant(params.event, 'Invalid event slug');
   const form = await request.formData();
   const action = form.get('_action');
@@ -37,7 +36,7 @@ export const action = async ({ request, params }: ActionArgs) => {
       const result = await withZod(EventGeneralSettingsSchema).validate(form);
       if (result.error) return json(result.error.fieldErrors);
 
-      const updated = await updateEvent(params.orga, params.event, userId, result.data);
+      const updated = await updateEvent(params.event, userId, result.data);
       if (!updated.slug) return json({ slug: updated.error });
 
       return redirect(
@@ -49,11 +48,11 @@ export const action = async ({ request, params }: ActionArgs) => {
       const result = await withZod(EventDetailsSettingsSchema).validate(form);
       if (result.error) return json(result.error.fieldErrors);
 
-      await updateEvent(params.orga, params.event, userId, result.data);
+      await updateEvent(params.event, userId, result.data);
       return json(null, await createToast(request, 'Event successfully updated'));
     }
     case 'archive': {
-      await updateEvent(params.orga, params.event, userId, { archived: Boolean(form.get('archived')) });
+      await updateEvent(params.event, userId, { archived: Boolean(form.get('archived')) });
       return json(null, await createToast(request, 'Event successfully updated'));
     }
   }

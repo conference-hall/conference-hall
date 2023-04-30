@@ -21,19 +21,18 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 export const action = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);
-  invariant(params.orga, 'Invalid organization slug');
   invariant(params.event, 'Invalid event slug');
   const form = await request.formData();
   const action = form.get('_action');
 
   switch (action) {
     case 'enable-survey': {
-      await updateEvent(params.orga, params.event, userId, { surveyEnabled: form.get('surveyEnabled') === 'true' });
+      await updateEvent(params.event, userId, { surveyEnabled: form.get('surveyEnabled') === 'true' });
       break;
     }
     case 'save-questions': {
       const result = await withZod(EventSurveySettingsSchema).validate(form);
-      if (!result.error) await updateEvent(params.orga, params.event, userId, result.data);
+      if (!result.error) await updateEvent(params.event, userId, result.data);
       break;
     }
   }

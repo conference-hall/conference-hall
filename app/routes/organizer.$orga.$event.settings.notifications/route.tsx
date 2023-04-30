@@ -22,7 +22,6 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 export const action = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);
-  invariant(params.orga, 'Invalid organization slug');
   invariant(params.event, 'Invalid event slug');
   const form = await request.formData();
   const action = form.get('_action');
@@ -31,12 +30,12 @@ export const action = async ({ request, params }: LoaderArgs) => {
     case 'save-email-notifications': {
       const result = await withZod(EventEmailNotificationsSettingsSchema).validate(form);
       if (result.error) return json(result.error.fieldErrors);
-      await updateEvent(params.orga, params.event, userId, result.data);
+      await updateEvent(params.event, userId, result.data);
       break;
     }
     case 'save-notifications': {
       const result = await withZod(EventNotificationsSettingsSchema).validate(form);
-      if (!result.error) await updateEvent(params.orga, params.event, userId, result.data);
+      if (!result.error) await updateEvent(params.event, userId, result.data);
       break;
     }
   }

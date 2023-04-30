@@ -1,15 +1,10 @@
-import { EmailStatus } from '@prisma/client';
-import { db } from '../../../libs/db';
+import { EmailStatus, OrganizationRole } from '@prisma/client';
 import { ProposalRejectedEmailsBatch } from './emails/proposal-rejected-email-batch';
-import { checkUserRole } from '~/shared-server/organizations/check-user-role.server';
+import { allowedForEvent } from '~/shared-server/organizations/check-user-role.server';
+import { db } from '~/libs/db';
 
-export async function sendRejectionCampaign(
-  orgaSlug: string,
-  eventSlug: string,
-  userId: string,
-  proposalIds: string[]
-) {
-  await checkUserRole(orgaSlug, eventSlug, userId, ['OWNER', 'MEMBER']);
+export async function sendRejectionCampaign(eventSlug: string, userId: string, proposalIds: string[]) {
+  await allowedForEvent(eventSlug, userId, [OrganizationRole.OWNER, OrganizationRole.MEMBER]);
 
   const event = await db.event.findUnique({ where: { slug: eventSlug } });
   if (!event) return;

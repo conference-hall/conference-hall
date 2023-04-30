@@ -1,10 +1,9 @@
 import { db } from '~/libs/db';
-import { getUserRole } from '~/shared-server/organizations/get-user-role.server';
+import { allowedForOrga } from '~/shared-server/organizations/check-user-role.server';
 import { getCfpState } from '~/utils/event';
 
 export async function listEvents(slug: string, userId: string, archived: boolean) {
-  const role = await getUserRole(slug, userId);
-  if (!role) return [];
+  await allowedForOrga(slug, userId);
 
   const events = await db.event.findMany({
     where: { organization: { slug }, archived },

@@ -2,6 +2,7 @@ import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { organizationFactory } from 'tests/factories/organization';
 import { userFactory } from 'tests/factories/users';
 import { listMembers } from './list-members.server';
+import { ForbiddenOperationError } from '~/libs/errors';
 
 describe('#listMembers', () => {
   beforeEach(async () => {
@@ -9,7 +10,7 @@ describe('#listMembers', () => {
   });
   afterEach(disconnectDB);
 
-  it('returns organization members', async () => {
+  it('returns organization members and filter them', async () => {
     const owner = await userFactory({
       traits: ['clark-kent'],
       attributes: { id: '1', picture: 'https://img.com/a.png' },
@@ -31,20 +32,26 @@ describe('#listMembers', () => {
     const other = await userFactory();
     await organizationFactory({ owners: [other] });
 
-    const members = await listMembers(organization.slug, owner.id);
-    expect(members).toEqual([
+    const members = await listMembers(organization.slug, owner.id, {}, 1);
+    expect(members.pagination).toEqual({ current: 1, total: 1 });
+
+    expect(members.results).toEqual([
       { id: '2', name: 'Bruce Wayne', role: 'MEMBER', picture: 'https://img.com/b.png' },
       { id: '1', name: 'Clark Kent', role: 'OWNER', picture: 'https://img.com/a.png' },
       { id: '3', name: 'Peter Parker', role: 'REVIEWER', picture: 'https://img.com/c.png' },
     ]);
+
+    const filtered = await listMembers(organization.slug, owner.id, { query: 'kent' }, 1);
+    expect(filtered.results).toEqual([
+      { id: '1', name: 'Clark Kent', role: 'OWNER', picture: 'https://img.com/a.png' },
+    ]);
   });
 
-  it('returns nothing when user is not member of the organization', async () => {
+  it('returns nothing when user is not owner of the organization', async () => {
     const user = await userFactory();
     const owner = await userFactory();
     const organization = await organizationFactory({ owners: [owner], attributes: { slug: 'my-orga' } });
 
-    const events = await listMembers(organization.slug, user.id);
-    expect(events).toEqual([]);
+    await expect(listMembers(organization.slug, user.id, {}, 1)).rejects.toThrowError(ForbiddenOperationError);
   });
 });

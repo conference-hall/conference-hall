@@ -1,6 +1,6 @@
 import type { ProposalsFilters } from '~/schemas/proposal';
 import { jsonToArray } from '~/libs/prisma';
-import { checkUserRole } from '~/shared-server/organizations/check-user-role.server';
+import { allowedForEvent } from '~/shared-server/organizations/check-user-role.server';
 import { RatingsDetails } from '~/shared-server/ratings/ratings-details';
 import { OrganizerProposalsSearch } from '~/shared-server/proposals/OrganizerProposalsSearch';
 import { db } from '~/libs/db';
@@ -11,13 +11,12 @@ import type { UserSocialLinks } from '~/schemas/user';
 export type ProposalReview = Awaited<ReturnType<typeof getProposalReview>>;
 
 export async function getProposalReview(
-  orgaSlug: string,
   eventSlug: string,
   proposalId: string,
   userId: string,
   filters: ProposalsFilters
 ) {
-  await checkUserRole(orgaSlug, eventSlug, userId);
+  await allowedForEvent(eventSlug, userId);
 
   const search = new OrganizerProposalsSearch(eventSlug, userId, filters);
   const proposalIds = await search.proposalsIds();

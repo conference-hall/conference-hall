@@ -22,10 +22,9 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 export const action = async ({ request, params }: ActionArgs) => {
   const userId = await requireSession(request);
-  invariant(params.orga, 'Invalid organization slug');
   invariant(params.event, 'Invalid event slug');
 
-  await uploadEventBanner(params.orga, params.event, userId, request);
+  await uploadEventBanner(params.event, userId, request);
   return json(null);
 };
 

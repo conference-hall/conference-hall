@@ -7,9 +7,9 @@ import { organizationFactory } from 'tests/factories/organization';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
-import { db } from '../../../libs/db';
-import { ForbiddenOperationError } from '../../../libs/errors';
 import { addProposalComment, removeProposalComment } from './comments.server';
+import { db } from '~/libs/db';
+import { ForbiddenOperationError } from '~/libs/errors';
 
 describe('#addProposalComment', () => {
   let owner: User, speaker: User;
@@ -28,7 +28,7 @@ describe('#addProposalComment', () => {
   it('adds message to a proposal', async () => {
     const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
-    await addProposalComment(organization.slug, event.slug, proposal.id, owner.id, 'My message');
+    await addProposalComment(event.slug, proposal.id, owner.id, 'My message');
 
     const messages = await db.message.findMany({ where: { userId: owner.id, proposalId: proposal.id } });
     expect(messages.length).toBe(1);
@@ -41,9 +41,9 @@ describe('#addProposalComment', () => {
   it('throws an error if user does not belong to event orga', async () => {
     const user = await userFactory();
     const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-    await expect(
-      addProposalComment(organization.slug, event.slug, proposal.id, user.id, 'My message')
-    ).rejects.toThrowError(ForbiddenOperationError);
+    await expect(addProposalComment(event.slug, proposal.id, user.id, 'My message')).rejects.toThrowError(
+      ForbiddenOperationError
+    );
   });
 });
 
@@ -66,7 +66,7 @@ describe('#removeProposalComment', () => {
     const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
     const message = await messageFactory({ user: owner, proposal });
 
-    await removeProposalComment(organization.slug, event.slug, proposal.id, owner.id, message.id);
+    await removeProposalComment(event.slug, proposal.id, owner.id, message.id);
 
     const messages = await db.message.findMany({ where: { userId: owner.id, proposalId: proposal.id } });
     expect(messages.length).toBe(0);
@@ -76,7 +76,7 @@ describe('#removeProposalComment', () => {
     const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
     const message = await messageFactory({ user: member, proposal });
 
-    await removeProposalComment(organization.slug, event.slug, proposal.id, owner.id, message.id);
+    await removeProposalComment(event.slug, proposal.id, owner.id, message.id);
 
     const messages = await db.message.findMany({ where: { userId: member.id, proposalId: proposal.id } });
     expect(messages.length).toBe(1);
@@ -86,8 +86,8 @@ describe('#removeProposalComment', () => {
     const user = await userFactory();
     const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
     const message = await messageFactory({ user, proposal });
-    await expect(
-      removeProposalComment(organization.slug, event.slug, proposal.id, user.id, message.id)
-    ).rejects.toThrowError(ForbiddenOperationError);
+    await expect(removeProposalComment(event.slug, proposal.id, user.id, message.id)).rejects.toThrowError(
+      ForbiddenOperationError
+    );
   });
 });

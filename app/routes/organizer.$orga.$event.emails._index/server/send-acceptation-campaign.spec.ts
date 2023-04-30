@@ -6,9 +6,9 @@ import { organizationFactory } from 'tests/factories/organization';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
-import { db } from '../../../libs/db';
-import { ForbiddenOperationError } from '../../../libs/errors';
 import { sendAcceptationCampaign } from './send-acceptation-campaign.server';
+import { db } from '~/libs/db';
+import { ForbiddenOperationError } from '~/libs/errors';
 
 describe('#sendAcceptationCampaign', () => {
   let owner: User, member: User, reviewer: User, speaker1: User, speaker2: User;
@@ -44,7 +44,7 @@ describe('#sendAcceptationCampaign', () => {
       traits: ['accepted'],
     });
 
-    await sendAcceptationCampaign(organization.slug, event.slug, owner.id, []);
+    await sendAcceptationCampaign(event.slug, owner.id, []);
 
     const emails = await getEmails();
     expect(emails.total).toBe(3);
@@ -86,7 +86,7 @@ describe('#sendAcceptationCampaign', () => {
       traits: ['accepted'],
     });
 
-    await sendAcceptationCampaign(organization.slug, event.slug, owner.id, [proposal_accepted_1.id]);
+    await sendAcceptationCampaign(event.slug, owner.id, [proposal_accepted_1.id]);
 
     const emails = await getEmails();
     expect(emails.total).toBe(1);
@@ -108,15 +108,13 @@ describe('#sendAcceptationCampaign', () => {
       talk: await talkFactory({ speakers: [speaker1] }),
       traits: ['accepted'],
     });
-    await sendAcceptationCampaign(organization.slug, event.slug, owner.id, []);
+    await sendAcceptationCampaign(event.slug, owner.id, []);
 
     const emails = await getEmails();
     expect(emails.total).toBe(1);
   });
 
   it('cannot be sent by organization reviewers', async () => {
-    await expect(sendAcceptationCampaign(organization.slug, event.slug, reviewer.id, [])).rejects.toThrowError(
-      ForbiddenOperationError
-    );
+    await expect(sendAcceptationCampaign(event.slug, reviewer.id, [])).rejects.toThrowError(ForbiddenOperationError);
   });
 });

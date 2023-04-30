@@ -22,7 +22,6 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 export const action = async ({ request, params }: ActionArgs) => {
   const userId = await requireSession(request);
-  invariant(params.orga, 'Invalid organization slug');
   invariant(params.event, 'Invalid event slug');
   const form = await request.formData();
 
@@ -30,7 +29,7 @@ export const action = async ({ request, params }: ActionArgs) => {
   if (result.error) {
     return json(result.error.fieldErrors);
   }
-  await updateEvent(params.orga, params.event, userId, result.data);
+  await updateEvent(params.event, userId, result.data);
   return json(null);
 };
 

@@ -1,6 +1,5 @@
 import invariant from 'tiny-invariant';
 import type { LoaderArgs } from '@remix-run/node';
-import { redirect } from '@remix-run/node';
 import { Outlet } from '@remix-run/react';
 import { Container } from '~/design-system/layouts/Container';
 import { NavSideMenu } from '~/design-system/navigation/NavSideMenu';
@@ -16,19 +15,17 @@ import {
   StarIcon,
   SwatchIcon,
 } from '@heroicons/react/24/outline';
-import { getUserRole } from '~/shared-server/organizations/get-user-role.server';
 import { H2 } from '~/design-system/Typography';
 import { useOrganizerEvent } from '../organizer.$orga.$event/route';
 import { useUser } from '~/root';
 import { useOrganization } from '../organizer.$orga/route';
+import { allowedForEvent } from '~/shared-server/organizations/check-user-role.server';
+import { OrganizationRole } from '@prisma/client';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);
-  invariant(params.orga, 'Invalid organization slug');
   invariant(params.event, 'Invalid event slug');
-
-  const role = await getUserRole(params.orga, userId);
-  if (role !== 'OWNER') return redirect(`/organizer/${params.orga}/${params.event}/proposals`);
+  await allowedForEvent(params.event, userId, [OrganizationRole.OWNER]);
   return null;
 };
 

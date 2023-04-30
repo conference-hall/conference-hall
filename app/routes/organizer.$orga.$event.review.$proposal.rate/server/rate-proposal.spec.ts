@@ -5,9 +5,9 @@ import { organizationFactory } from 'tests/factories/organization';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
-import { db } from '../../../libs/db';
-import { ForbiddenOperationError } from '../../../libs/errors';
 import { rateProposal } from './rate-proposal.server';
+import { db } from '~/libs/db';
+import { ForbiddenOperationError } from '~/libs/errors';
 
 describe('#rateProposal', () => {
   let owner: User, speaker: User;
@@ -26,10 +26,7 @@ describe('#rateProposal', () => {
   it('adds then updates a rating for a proposal', async () => {
     const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
-    await rateProposal(organization.slug, event.slug, proposal.id, owner.id, {
-      feeling: 'NEUTRAL',
-      rating: 2,
-    });
+    await rateProposal(event.slug, proposal.id, owner.id, { feeling: 'NEUTRAL', rating: 2 });
 
     const ratings = await db.rating.findMany({ where: { userId: owner.id } });
     expect(ratings.length).toBe(1);
@@ -38,10 +35,7 @@ describe('#rateProposal', () => {
     expect(rating.feeling).toBe('NEUTRAL');
     expect(rating.rating).toBe(2);
 
-    await rateProposal(organization.slug, event.slug, proposal.id, owner.id, {
-      feeling: 'POSITIVE',
-      rating: 5,
-    });
+    await rateProposal(event.slug, proposal.id, owner.id, { feeling: 'POSITIVE', rating: 5 });
 
     const updatedRatings = await db.rating.findMany({ where: { userId: owner.id } });
     expect(updatedRatings.length).toBe(1);
@@ -55,7 +49,7 @@ describe('#rateProposal', () => {
     const user = await userFactory();
     const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
     await expect(
-      rateProposal(organization.slug, event.slug, proposal.id, user.id, { feeling: 'NEUTRAL', rating: 2 })
+      rateProposal(event.slug, proposal.id, user.id, { feeling: 'NEUTRAL', rating: 2 })
     ).rejects.toThrowError(ForbiddenOperationError);
   });
 });

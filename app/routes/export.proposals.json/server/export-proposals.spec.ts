@@ -25,7 +25,7 @@ describe('#exportProposals', () => {
   it('export a proposal', async () => {
     const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
-    const result = await exportProposals(organization.slug, event.slug, owner.id, {});
+    const result = await exportProposals(event.slug, owner.id, {});
 
     expect(result).toEqual([
       {

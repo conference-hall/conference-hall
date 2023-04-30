@@ -1,4 +1,3 @@
-import OrganizationEventsPage from 'page-objects/organizer/events-list.page';
 import OrganizationSettingsPage from 'page-objects/organizer/organization-settings.page';
 
 describe('Organization settings', () => {
@@ -9,7 +8,6 @@ describe('Organization settings', () => {
   afterEach(() => cy.task('disconnectDB'));
 
   const settings = new OrganizationSettingsPage();
-  const events = new OrganizationEventsPage();
 
   describe('as a organization owner', () => {
     beforeEach(() => cy.login('Clark Kent'));
@@ -37,8 +35,8 @@ describe('Organization settings', () => {
     beforeEach(() => cy.login('Bruce Wayne'));
 
     it('cannot access to the organization settings page', () => {
-      cy.visit('/organizer/awesome-orga/settings/members');
-      events.isPageVisible();
+      cy.visit('/organizer/awesome-orga/settings/members', { failOnStatusCode: false });
+      cy.assertText('Forbidden operation');
     });
   });
 
@@ -46,8 +44,8 @@ describe('Organization settings', () => {
     beforeEach(() => cy.login('Peter Parker'));
 
     it('cannot access to the organization settings page', () => {
-      cy.visit('/organizer/awesome-orga/settings/members');
-      events.isPageVisible();
+      cy.visit('/organizer/awesome-orga/settings/members', { failOnStatusCode: false });
+      cy.assertText('Forbidden operation');
     });
   });
 });

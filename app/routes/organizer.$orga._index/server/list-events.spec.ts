@@ -3,6 +3,7 @@ import { eventFactory } from 'tests/factories/events';
 import { organizationFactory } from 'tests/factories/organization';
 import { userFactory } from 'tests/factories/users';
 import { listEvents } from './list-events.server';
+import { ForbiddenOperationError } from '~/libs/errors';
 
 describe('#listEvents', () => {
   beforeEach(async () => {
@@ -62,12 +63,11 @@ describe('#listEvents', () => {
     ]);
   });
 
-  it('returns nothing when user is not member of the organization', async () => {
+  it('throws an error when user not member of organization event', async () => {
     const user = await userFactory();
     const organization = await organizationFactory({ attributes: { slug: 'my-orga' } });
     await eventFactory({ organization });
 
-    const events = await listEvents('my-orga', user.id, false);
-    expect(events).toEqual([]);
+    await expect(listEvents('my-orga', user.id, false)).rejects.toThrowError(ForbiddenOperationError);
   });
 });

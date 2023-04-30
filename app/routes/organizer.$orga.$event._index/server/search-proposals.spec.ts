@@ -5,8 +5,8 @@ import { organizationFactory } from 'tests/factories/organization';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
-import { ForbiddenOperationError } from '../../../libs/errors';
 import { searchProposals } from './search-proposals.server';
+import { ForbiddenOperationError } from '~/libs/errors';
 
 describe('#searchProposals', () => {
   let owner: User, speaker: User;
@@ -25,7 +25,7 @@ describe('#searchProposals', () => {
 
   it('returns event proposals info', async () => {
     const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-    const proposals = await searchProposals(organization.slug, event.slug, owner.id, { status: ['SUBMITTED'] });
+    const proposals = await searchProposals(event.slug, owner.id, { status: ['SUBMITTED'] });
 
     expect(proposals.results).toEqual([
       {
@@ -45,7 +45,7 @@ describe('#searchProposals', () => {
   });
 
   it('returns empty results of an event without proposals', async () => {
-    const proposals = await searchProposals(organization.slug, event.slug, owner.id, {});
+    const proposals = await searchProposals(event.slug, owner.id, {});
 
     expect(proposals.results).toEqual([]);
 
@@ -58,8 +58,6 @@ describe('#searchProposals', () => {
     const user = await userFactory();
     const event = await eventFactory();
     await proposalFactory({ event, talk: await talkFactory({ speakers: [user] }) });
-    await expect(searchProposals(organization.slug, event.slug, user.id, {})).rejects.toThrowError(
-      ForbiddenOperationError
-    );
+    await expect(searchProposals(event.slug, user.id, {})).rejects.toThrowError(ForbiddenOperationError);
   });
 });

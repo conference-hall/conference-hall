@@ -6,9 +6,9 @@ import { organizationFactory } from 'tests/factories/organization';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
-import { db } from '../../../libs/db';
-import { ForbiddenOperationError } from '../../../libs/errors';
 import { sendRejectionCampaign } from './send-rejection-campaign.server';
+import { db } from '~/libs/db';
+import { ForbiddenOperationError } from '~/libs/errors';
 
 describe('#sendRejectionCampaign', () => {
   let owner: User, member: User, reviewer: User, speaker1: User, speaker2: User;
@@ -44,7 +44,7 @@ describe('#sendRejectionCampaign', () => {
       traits: ['rejected'],
     });
 
-    await sendRejectionCampaign(organization.slug, event.slug, owner.id, []);
+    await sendRejectionCampaign(event.slug, owner.id, []);
 
     const emails = await getEmails();
     expect(emails.total).toBe(3);
@@ -86,7 +86,7 @@ describe('#sendRejectionCampaign', () => {
       traits: ['rejected'],
     });
 
-    await sendRejectionCampaign(organization.slug, event.slug, owner.id, [proposal_rejected_1.id]);
+    await sendRejectionCampaign(event.slug, owner.id, [proposal_rejected_1.id]);
 
     const emails = await getEmails();
     expect(emails.total).toBe(1);
@@ -108,15 +108,13 @@ describe('#sendRejectionCampaign', () => {
       talk: await talkFactory({ speakers: [speaker1] }),
       traits: ['rejected'],
     });
-    await sendRejectionCampaign(organization.slug, event.slug, owner.id, []);
+    await sendRejectionCampaign(event.slug, owner.id, []);
 
     const emails = await getEmails();
     expect(emails.total).toBe(1);
   });
 
   it('cannot be sent by organization reviewers', async () => {
-    await expect(sendRejectionCampaign(organization.slug, event.slug, reviewer.id, [])).rejects.toThrowError(
-      ForbiddenOperationError
-    );
+    await expect(sendRejectionCampaign(event.slug, reviewer.id, [])).rejects.toThrowError(ForbiddenOperationError);
   });
 });
