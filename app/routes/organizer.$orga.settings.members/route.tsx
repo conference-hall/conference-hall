@@ -4,7 +4,6 @@ import { Form, useLoaderData } from '@remix-run/react';
 import { requireSession } from '~/libs/auth/session';
 import { H3, Subtitle } from '~/design-system/Typography';
 import { Card } from '~/design-system/layouts/Card';
-import { getInvitationLink } from './server/get-invitation-link.server';
 import invariant from 'tiny-invariant';
 import { listMembers } from './server/list-members.server';
 import { removeMember } from './server/remove-member.server';
@@ -20,9 +19,8 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);
   invariant(params.orga, 'Invalid organization slug');
 
-  const invitationLink = await getInvitationLink(params.orga, userId);
   const members = await listMembers(params.orga, userId);
-  return json({ invitationLink, members });
+  return json(members);
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
@@ -52,7 +50,7 @@ export const action = async ({ request, params }: ActionArgs) => {
 export default function OrganizationSettingsRoute() {
   const { user } = useUser();
   const { organization } = useOrganization();
-  const { invitationLink, members } = useLoaderData<typeof loader>();
+  const members = useLoaderData<typeof loader>();
 
   const role = user?.organizations.find((orga) => orga.slug === organization.slug)?.role;
 
@@ -66,7 +64,7 @@ export default function OrganizationSettingsRoute() {
 
         <Card.Content>
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            {role === 'OWNER' && <InviteMemberButton id={organization.id} invitationLink={invitationLink} />}
+            {role === 'OWNER' && <InviteMemberButton invitationLink={organization.invitationLink} />}
           </div>
 
           <div className="overflow-hidden bg-white sm:rounded-md sm:border sm:border-gray-200 sm:shadow-sm">

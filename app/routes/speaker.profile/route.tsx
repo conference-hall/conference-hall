@@ -6,7 +6,6 @@ import { withZod } from '@remix-validated-form/with-zod';
 import { saveProfile } from '~/shared-server/profile/save-profile.server';
 import { AdditionalInfoSchema, DetailsSchema, PersonalInfoSchema } from '~/schemas/profile.schema';
 import { createToast } from '~/libs/toasts/toasts';
-import { mapErrorToResponse } from '~/libs/errors';
 import { AdditionalInfoForm } from './components/AdditionalInfoForm';
 import { PersonalInfoForm } from './components/PersonalInfoForm';
 import { SpeakerDetailsForm } from './components/SpeakerDetailsForm';
@@ -25,28 +24,24 @@ export const action = async ({ request }: ActionArgs) => {
   const userId = await requireSession(request);
   const form = await request.formData();
   const type = form.get('_type') as string;
-  try {
-    let result;
+  let result;
 
-    switch (type) {
-      case 'INFO':
-        result = await withZod(PersonalInfoSchema).validate(form);
-        break;
-      case 'DETAILS':
-        result = await withZod(DetailsSchema).validate(form);
-        break;
-      default:
-        result = await withZod(AdditionalInfoSchema).validate(form);
-    }
-
-    if (result.error) return json(result.error.fieldErrors);
-    await saveProfile(userId, result.data);
-
-    const toast = await createToast(request, 'Profile successfully saved.');
-    return redirect('/speaker/profile', toast);
-  } catch (err) {
-    throw mapErrorToResponse(err);
+  switch (type) {
+    case 'INFO':
+      result = await withZod(PersonalInfoSchema).validate(form);
+      break;
+    case 'DETAILS':
+      result = await withZod(DetailsSchema).validate(form);
+      break;
+    default:
+      result = await withZod(AdditionalInfoSchema).validate(form);
   }
+
+  if (result.error) return json(result.error.fieldErrors);
+  await saveProfile(userId, result.data);
+
+  const toast = await createToast(request, 'Profile successfully saved.');
+  return redirect('/speaker/profile', toast);
 };
 
 const MENU_ITEMS = [

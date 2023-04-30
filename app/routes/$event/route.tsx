@@ -4,7 +4,6 @@ import { useUser } from '~/root';
 import { json } from '@remix-run/node';
 import { Outlet, useLoaderData, useOutletContext } from '@remix-run/react';
 import { Navbar } from '~/shared-components/navbar/Navbar';
-import { mapErrorToResponse } from '~/libs/errors';
 import type { Event } from '~/shared-server/events/get-event.server';
 import { getEvent } from '~/shared-server/events/get-event.server';
 import { EventHeader } from './components/EventHeader';
@@ -14,12 +13,8 @@ import { Footer } from '~/shared-components/Footer';
 export const loader = async ({ params }: LoaderArgs) => {
   invariant(params.event, 'Invalid event slug');
 
-  try {
-    const event = await getEvent(params.event);
-    return json(event);
-  } catch (err) {
-    throw mapErrorToResponse(err);
-  }
+  const event = await getEvent(params.event);
+  return json(event);
 };
 
 export default function EventRoute() {

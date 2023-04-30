@@ -3,7 +3,6 @@ import { json } from '@remix-run/node';
 import { useLoaderData, useSearchParams } from '@remix-run/react';
 import { FaceFrownIcon } from '@heroicons/react/24/outline';
 import { useUser } from '~/root';
-import { mapErrorToResponse } from '~/libs/errors';
 import { H1, H2, Text } from '~/design-system/Typography';
 import { Pagination } from '~/design-system/Pagination';
 import { Navbar } from '~/shared-components/navbar/Navbar';
@@ -21,7 +20,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   const url = new URL(request.url);
   const filters = await parseFilters(url.searchParams);
   const page = await parsePage(url.searchParams);
-  const results = await searchEvents(filters, page).catch(mapErrorToResponse);
+  const results = await searchEvents(filters, page);
   return json(results);
 };
 

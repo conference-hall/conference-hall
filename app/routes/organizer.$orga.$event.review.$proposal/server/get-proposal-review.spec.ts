@@ -11,6 +11,7 @@ import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
 import { ForbiddenOperationError } from '../../../libs/errors';
 import { getProposalReview } from './get-proposal-review.server';
+import { sortBy } from '~/utils/arrays';
 
 describe('#getProposalReview', () => {
   let owner: User, member: User, speaker: User;
@@ -88,22 +89,25 @@ describe('#getProposalReview', () => {
       positives: 1,
       negatives: 1,
       userRating: { rating: 0, feeling: 'NEGATIVE' },
-      membersRatings: [
-        {
-          id: owner.id,
-          name: owner.name,
-          picture: owner.picture,
-          feeling: 'NEGATIVE',
-          rating: 0,
-        },
-        {
-          id: member.id,
-          name: member.name,
-          picture: member.picture,
-          feeling: 'POSITIVE',
-          rating: 5,
-        },
-      ],
+      membersRatings: sortBy(
+        [
+          {
+            id: owner.id,
+            name: owner.name,
+            picture: owner.picture,
+            feeling: 'NEGATIVE',
+            rating: 0,
+          },
+          {
+            id: member.id,
+            name: member.name,
+            picture: member.picture,
+            feeling: 'POSITIVE',
+            rating: 5,
+          },
+        ],
+        'name'
+      ),
     });
   });
 

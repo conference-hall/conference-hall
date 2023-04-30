@@ -133,9 +133,9 @@ function ChangeRoleModal({ memberId, memberName, memberRole, isOpen, onClose }: 
   );
 }
 
-type InviteProps = { id: string; invitationLink?: string };
+type InviteProps = { invitationLink: string };
 
-export function InviteMemberButton({ id, invitationLink }: InviteProps) {
+export function InviteMemberButton({ invitationLink }: InviteProps) {
   const [open, setOpen] = useState(false);
   return (
     <>
@@ -144,8 +144,6 @@ export function InviteMemberButton({ id, invitationLink }: InviteProps) {
       </Button>
       <InvitationModal
         open={open}
-        type="ORGANIZATION"
-        id={id}
         invitationLink={invitationLink}
         onClose={() => setOpen(false)}
         title="Invite a member"

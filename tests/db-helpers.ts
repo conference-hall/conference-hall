@@ -10,7 +10,6 @@ export async function resetDB() {
   if (config.isProduction && !config.useEmulators) return '🚨 Reset DB cannot be executed in production.';
 
   await db.$transaction([
-    db.invite.deleteMany(),
     db.survey.deleteMany(),
     db.message.deleteMany(),
     db.rating.deleteMany(),

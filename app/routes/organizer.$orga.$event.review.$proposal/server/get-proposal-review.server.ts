@@ -5,6 +5,7 @@ import { RatingsDetails } from '~/shared-server/ratings/ratings-details';
 import { OrganizerProposalsSearch } from '~/shared-server/proposals/OrganizerProposalsSearch';
 import { db } from '~/libs/db';
 import { ProposalNotFoundError } from '~/libs/errors';
+import { sortBy } from '~/utils/arrays';
 
 export type ProposalReview = Awaited<ReturnType<typeof getProposalReview>>;
 
@@ -76,13 +77,16 @@ export async function getProposalReview(
           rating: userRating?.rating,
           feeling: userRating?.feeling,
         },
-        membersRatings: proposal.ratings.map((rating) => ({
-          id: rating.user.id,
-          name: rating.user.name,
-          picture: rating.user.picture,
-          rating: rating.rating,
-          feeling: rating.feeling,
-        })),
+        membersRatings: sortBy(
+          proposal.ratings.map((rating) => ({
+            id: rating.user.id,
+            name: rating.user.name,
+            picture: rating.user.picture,
+            rating: rating.rating,
+            feeling: rating.feeling,
+          })),
+          'name'
+        ),
       },
       messages: proposal.messages
         .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())

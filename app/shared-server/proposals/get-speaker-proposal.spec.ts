@@ -2,7 +2,6 @@ import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventCategoryFactory } from 'tests/factories/categories';
 import { eventFactory } from 'tests/factories/events';
 import { eventFormatFactory } from 'tests/factories/formats';
-import { inviteFactory } from 'tests/factories/invite';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
@@ -24,7 +23,6 @@ describe('#getSpeakerProposal', () => {
     const speaker = await userFactory();
     const talk = await talkFactory({ speakers: [speaker] });
     const proposal = await proposalFactory({ event, talk, formats: [format], categories: [category] });
-    const invite = await inviteFactory({ proposal });
 
     const result = await getSpeakerProposal(proposal.id, speaker.id);
 
@@ -37,7 +35,7 @@ describe('#getSpeakerProposal', () => {
       level: proposal.level,
       createdAt: proposal.createdAt.toUTCString(),
       languages: proposal.languages,
-      invitationLink: `http://localhost:3001/invitation/${invite?.id}`,
+      invitationLink: `http://localhost:3001/invite/proposal/${proposal.invitationCode}`,
       status: SpeakerProposalStatus.Submitted,
       formats: [{ id: format.id, name: format.name }],
       categories: [{ id: category.id, name: category.name }],

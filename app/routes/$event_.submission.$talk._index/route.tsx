@@ -9,7 +9,6 @@ import { getTalk } from '~/shared-server/talks/get-talk.server';
 import { saveDraftProposal } from './server/save-draft-proposal.server';
 import { Card } from '~/design-system/layouts/Card';
 import { requireSession } from '~/libs/auth/session';
-import { mapErrorToResponse } from '~/libs/errors';
 import { H2 } from '~/design-system/Typography';
 import { DetailsForm } from '~/shared-components/proposals/forms/DetailsForm';
 import { isTalkAlreadySubmitted } from './server/is-talk-already-submitted.server';
@@ -24,19 +23,13 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   invariant(params.event, 'Invalid event slug');
   invariant(params.talk, 'Invalid talk id');
 
-  try {
-    if (params.talk === 'new') {
-      return json(null);
-    } else {
-      const alreadySubmitted = await isTalkAlreadySubmitted(params.event, params.talk, userId);
-      if (alreadySubmitted) throw new Response('Talk already submitted.', { status: 400 });
+  if (params.talk === 'new') return json(null);
 
-      const talk = await getTalk(userId, params.talk);
-      return json(talk);
-    }
-  } catch (err) {
-    throw mapErrorToResponse(err);
-  }
+  const alreadySubmitted = await isTalkAlreadySubmitted(params.event, params.talk, userId);
+  if (alreadySubmitted) throw new Response('Talk already submitted.', { status: 400 });
+
+  const talk = await getTalk(userId, params.talk);
+  return json(talk);
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
@@ -48,12 +41,8 @@ export const action = async ({ request, params }: ActionArgs) => {
   const result = await withZod(ProposalCreateSchema).validate(form);
   if (result.error) return json(result.error.fieldErrors);
 
-  try {
-    const proposal = await saveDraftProposal(params.talk, params.event, userId, result.data);
-    return redirect(`/${params.event}/submission/${proposal.talkId}/speakers`);
-  } catch (err) {
-    throw mapErrorToResponse(err);
-  }
+  const proposal = await saveDraftProposal(params.talk, params.event, userId, result.data);
+  return redirect(`/${params.event}/submission/${proposal.talkId}/speakers`);
 };
 
 export default function SubmissionProposalRoute() {

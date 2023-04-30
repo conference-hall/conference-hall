@@ -4,7 +4,6 @@ import { json } from '@remix-run/node';
 import FullscreenDialog from '~/design-system/dialogs/FullscreenDialog';
 import { requireSession } from '~/libs/auth/session';
 import { BottomPanel } from '~/routes/organizer.$orga.$event.review.$proposal/components/BottomPanel';
-import { mapErrorToResponse } from '~/libs/errors';
 import { Outlet, useLoaderData, useNavigate, useOutletContext, useSearchParams } from '@remix-run/react';
 import { withZod } from '@remix-validated-form/with-zod';
 import { ProposalsFiltersSchema } from '~/schemas/proposal';
@@ -23,14 +22,10 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   invariant(params.event, 'Invalid event slug');
   invariant(params.proposal, 'Invalid proposal id');
 
-  try {
-    const url = new URL(request.url);
-    const filters = await withZod(ProposalsFiltersSchema).validate(url.searchParams);
-    const proposal = await getProposalReview(params.orga, params.event, params.proposal, userId, filters.data ?? {});
-    return json(proposal);
-  } catch (e) {
-    throw mapErrorToResponse(e);
-  }
+  const url = new URL(request.url);
+  const filters = await withZod(ProposalsFiltersSchema).validate(url.searchParams);
+  const proposal = await getProposalReview(params.orga, params.event, params.proposal, userId, filters.data ?? {});
+  return json(proposal);
 };
 
 export default function OrganizerProposalRoute() {

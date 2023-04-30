@@ -6,7 +6,6 @@ import { getSpeakerProposal } from '~/shared-server/proposals/get-speaker-propos
 import { removeCoSpeakerFromProposal } from '~/shared-server/proposals/remove-co-speaker.server';
 import { ProposalStatusSection } from '~/shared-components/proposals/ProposalStatusSection';
 import { requireSession } from '~/libs/auth/session';
-import { mapErrorToResponse } from '~/libs/errors';
 import { useEvent } from '../$event/route';
 import { ProposalDetailsSection } from '~/shared-components/proposals/ProposalDetailsSection';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
@@ -16,7 +15,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);
   invariant(params.proposal, 'Invalid proposal id');
 
-  const proposal = await getSpeakerProposal(params.proposal, userId).catch(mapErrorToResponse);
+  const proposal = await getSpeakerProposal(params.proposal, userId);
   return json(proposal);
 };
 
@@ -24,15 +23,11 @@ export const action: ActionFunction = async ({ request, params }) => {
   const userId = await requireSession(request);
   invariant(params.proposal, 'Invalid proposal id');
 
-  try {
-    const form = await request.formData();
-    const action = form.get('_action');
-    if (action === 'remove-speaker') {
-      const speakerId = form.get('_speakerId')?.toString() as string;
-      await removeCoSpeakerFromProposal(userId, params.proposal, speakerId);
-    }
-  } catch (err) {
-    mapErrorToResponse(err);
+  const form = await request.formData();
+  const action = form.get('_action');
+  if (action === 'remove-speaker') {
+    const speakerId = form.get('_speakerId')?.toString() as string;
+    await removeCoSpeakerFromProposal(userId, params.proposal, speakerId);
   }
   return null;
 };

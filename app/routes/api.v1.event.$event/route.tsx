@@ -1,7 +1,6 @@
 import invariant from 'tiny-invariant';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { mapErrorToResponse } from '~/libs/errors';
 import { getEventProposals } from './server/get-event-proposals.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
@@ -11,10 +10,6 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   invariant(params.event, 'Invalid event slug');
   invariant(key, 'Invalid api key');
 
-  try {
-    const proposals = await getEventProposals(params.event, key);
-    return json(proposals);
-  } catch (err) {
-    throw mapErrorToResponse(err);
-  }
+  const proposals = await getEventProposals(params.event, key);
+  return json(proposals);
 };

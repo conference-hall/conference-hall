@@ -1,8 +1,8 @@
+import { db } from '~/libs/db';
+import { TalkNotFoundError } from '~/libs/errors';
 import { jsonToArray } from '~/libs/prisma';
-import { db } from '../../libs/db';
-import { TalkNotFoundError } from '../../libs/errors';
-import { buildInvitationLink } from '../invitations/build-link.server';
 import { getSpeakerProposalStatus } from '../proposals/get-speaker-proposal-status';
+import { buildInvitationLink } from '../invitations/build-link.server';
 
 export async function getTalk(userId: string, talkId: string) {
   const talk = await db.talk.findFirst({
@@ -13,7 +13,6 @@ export async function getTalk(userId: string, talkId: string) {
     include: {
       speakers: true,
       proposals: { include: { event: true } },
-      invitation: true,
     },
   });
   if (!talk) throw new TalkNotFoundError();
@@ -43,6 +42,6 @@ export async function getTalk(userId: string, talkId: string) {
       logo: proposal.event.logo,
       proposalStatus: getSpeakerProposalStatus(proposal, proposal.event),
     })),
-    invitationLink: buildInvitationLink(talk.invitation?.id),
+    invitationLink: buildInvitationLink('talk', talk.invitationCode),
   };
 }

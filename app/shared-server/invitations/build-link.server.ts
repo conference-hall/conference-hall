@@ -1,6 +1,7 @@
-import { config } from '../../libs/config';
+import { config } from '~/libs/config';
 
-export function buildInvitationLink(invitationId?: string) {
-  if (!invitationId) return;
-  return `${config.appUrl}/invitation/${invitationId}`;
+type InvitationType = 'talk' | 'proposal' | 'orga';
+
+export function buildInvitationLink(type: InvitationType, code: string) {
+  return `${config.appUrl}/invite/${type}/${code}`;
 }

@@ -7,7 +7,6 @@ import { requireSession } from '~/libs/auth/session';
 import { Form, useActionData, useSearchParams } from '@remix-run/react';
 import { DetailsForm } from '~/shared-components/proposals/forms/DetailsForm';
 import { Button, ButtonLink } from '~/design-system/Buttons';
-import { mapErrorToResponse } from '~/libs/errors';
 import { withZod } from '@remix-validated-form/with-zod';
 import { ProposalUpdateSchema } from '~/schemas/proposal';
 import { updateProposal } from '~/routes/organizer.$orga.$event._index/server/update-proposal.server';
@@ -25,15 +24,13 @@ export const action = async ({ request, params }: ActionArgs) => {
   invariant(params.event, 'Invalid event slug');
   invariant(params.proposal, 'Invalid proposal id');
 
-  try {
-    const result = await withZod(ProposalUpdateSchema).validate(form);
-    if (result.error) return json(result.error.fieldErrors);
-    await updateProposal(params.orga, params.event, params.proposal, userId, result.data);
-    const url = new URL(request.url);
-    return redirect(`/organizer/${params.orga}/${params.event}/review/${params.proposal}${url.search}`);
-  } catch (err) {
-    throw mapErrorToResponse(err);
-  }
+  const result = await withZod(ProposalUpdateSchema).validate(form);
+  if (result.error) return json(result.error.fieldErrors);
+
+  await updateProposal(params.orga, params.event, params.proposal, userId, result.data);
+
+  const url = new URL(request.url);
+  return redirect(`/organizer/${params.orga}/${params.event}/review/${params.proposal}${url.search}`);
 };
 
 export default function OrganizerProposalContentRoute() {

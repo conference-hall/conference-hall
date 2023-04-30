@@ -2,7 +2,6 @@ import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventCategoryFactory } from 'tests/factories/categories';
 import { eventFactory } from 'tests/factories/events';
 import { eventFormatFactory } from 'tests/factories/formats';
-import { inviteFactory } from 'tests/factories/invite';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
@@ -23,14 +22,13 @@ describe('#getSubmittedProposal', () => {
     const speaker2 = await userFactory();
     const talk = await talkFactory({ speakers: [speaker, speaker2] });
     const proposal = await proposalFactory({ event, talk, formats: [format], categories: [category] });
-    const invite = await inviteFactory({ proposal });
 
     const result = await getSubmittedProposal(talk.id, event.slug, speaker.id);
 
     expect(result).toEqual({
       id: proposal.id,
       title: proposal.title,
-      invitationLink: `http://localhost:3001/invitation/${invite?.id}`,
+      invitationLink: `http://localhost:3001/invite/proposal/${proposal.invitationCode}`,
       isOwner: true,
       speakers: [
         { id: speaker.id, isOwner: true, name: speaker.name, picture: speaker.picture },

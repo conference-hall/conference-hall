@@ -3,7 +3,6 @@ import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { requireSession } from '~/libs/auth/session';
-import { mapErrorToResponse } from '~/libs/errors';
 import { H2, H3, Text } from '~/design-system/Typography';
 import { MaxProposalsReached } from './components/MaxProposalsReached';
 import { SubmissionTalksList } from './components/SubmissionTalksList';
@@ -18,12 +17,8 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
 
-  try {
-    const results = await listTalksToSubmit(userId, params.event);
-    return json(results);
-  } catch (err) {
-    throw mapErrorToResponse(err);
-  }
+  const results = await listTalksToSubmit(userId, params.event);
+  return json(results);
 };
 
 export default function EventSubmitRoute() {

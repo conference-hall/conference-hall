@@ -3,7 +3,7 @@ import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import invariant from 'tiny-invariant';
 import { requireSession } from '~/libs/auth/session';
-import { CfpNotOpenError, mapErrorToResponse } from '~/libs/errors';
+import { CfpNotOpenError } from '~/libs/errors';
 import { getEvent } from '~/shared-server/events/get-event.server';
 import { SubmissionSteps } from './components/SubmissionSteps';
 import { Container } from '~/design-system/layouts/Container';
@@ -20,58 +20,54 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   await requireSession(request);
   invariant(params.event, 'Invalid event slug');
 
-  try {
-    const event = await getEvent(params.event);
-    if (!event.isCfpOpen) throw new CfpNotOpenError();
+  const event = await getEvent(params.event);
+  if (!event.isCfpOpen) throw new CfpNotOpenError();
 
-    const steps: Array<Step> = [
-      {
-        key: 'selection',
-        name: 'Selection',
-        form: undefined,
-        path: `/${params.event}/submission`,
-        enabled: true,
-      },
-      {
-        key: 'proposal',
-        name: 'Proposal',
-        form: 'proposal-form',
-        path: `/${params.event}/submission/${params.talk}`,
-        enabled: true,
-      },
-      {
-        key: 'speakers',
-        name: 'Speakers',
-        form: 'speakers-form',
-        path: `/${params.event}/submission/${params.talk}/speakers`,
-        enabled: true,
-      },
-      {
-        key: 'tracks',
-        name: 'Tracks',
-        form: 'tracks-form',
-        path: `/${params.event}/submission/${params.talk}/tracks`,
-        enabled: event.hasTracks,
-      },
-      {
-        key: 'survey',
-        name: 'Survey',
-        form: 'survey-form',
-        path: `/${params.event}/submission/${params.talk}/survey`,
-        enabled: event.surveyEnabled,
-      },
-      {
-        key: 'submission',
-        name: 'Submission',
-        form: undefined,
-        path: `/${params.event}/submission/${params.talk}/submit`,
-        enabled: true,
-      },
-    ];
-    return json({ event, steps: steps.filter((step) => step.enabled) });
-  } catch (err) {
-    throw mapErrorToResponse(err);
-  }
+  const steps: Array<Step> = [
+    {
+      key: 'selection',
+      name: 'Selection',
+      form: undefined,
+      path: `/${params.event}/submission`,
+      enabled: true,
+    },
+    {
+      key: 'proposal',
+      name: 'Proposal',
+      form: 'proposal-form',
+      path: `/${params.event}/submission/${params.talk}`,
+      enabled: true,
+    },
+    {
+      key: 'speakers',
+      name: 'Speakers',
+      form: 'speakers-form',
+      path: `/${params.event}/submission/${params.talk}/speakers`,
+      enabled: true,
+    },
+    {
+      key: 'tracks',
+      name: 'Tracks',
+      form: 'tracks-form',
+      path: `/${params.event}/submission/${params.talk}/tracks`,
+      enabled: event.hasTracks,
+    },
+    {
+      key: 'survey',
+      name: 'Survey',
+      form: 'survey-form',
+      path: `/${params.event}/submission/${params.talk}/survey`,
+      enabled: event.surveyEnabled,
+    },
+    {
+      key: 'submission',
+      name: 'Submission',
+      form: undefined,
+      path: `/${params.event}/submission/${params.talk}/submit`,
+      enabled: true,
+    },
+  ];
+  return json({ event, steps: steps.filter((step) => step.enabled) });
 };
 
 export default function EventSubmissionRoute() {

@@ -39,7 +39,7 @@ describe('Speaker talk edition page', () => {
 
   it('can invite a co-speaker', () => {
     editTalk.visit('awesome-talk');
-    editTalk.generateCoSpeakerInvite().should('exist');
+    editTalk.coSpeakerInvite().should('exist');
     editTalk.closeCoSpeakerModal();
   });
 

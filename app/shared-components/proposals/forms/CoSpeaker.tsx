@@ -5,8 +5,6 @@ import { AvatarName } from '~/design-system/Avatar';
 import { Button } from '../../../design-system/Buttons';
 import { InvitationModal } from '../../InvitationModal';
 
-type InviteType = 'TALK' | 'PROPOSAL';
-
 type CoSpeakersListProps = {
   speakers: Array<{
     id: string;
@@ -55,9 +53,9 @@ function RemoveCoSpeakerButton({ speakerId, speakerName }: RemoveCoSpeakerButton
   );
 }
 
-type InviteProps = { to: InviteType; id: string; invitationLink?: string; block?: boolean };
+type InviteProps = { invitationLink: string; block?: boolean };
 
-export function InviteCoSpeakerButton({ to, id, invitationLink, block }: InviteProps) {
+export function InviteCoSpeakerButton({ invitationLink, block }: InviteProps) {
   const [open, setOpen] = useState(false);
   return (
     <>
@@ -66,8 +64,6 @@ export function InviteCoSpeakerButton({ to, id, invitationLink, block }: InviteP
       </Button>
       <InvitationModal
         open={open}
-        type={to}
-        id={id}
         invitationLink={invitationLink}
         onClose={() => setOpen(false)}
         title="Invite a co-speaker"

@@ -6,7 +6,6 @@ import { InviteCoSpeakerButton, CoSpeakersList } from '../../shared-components/p
 import { MarkdownTextArea } from '../../design-system/forms/MarkdownTextArea';
 import { ExternalLink } from '../../design-system/Links';
 import { H2, Subtitle, Text } from '../../design-system/Typography';
-import { mapErrorToResponse } from '../../libs/errors';
 import { getEvent } from '../../shared-server/events/get-event.server';
 import { saveProfile } from '../../shared-server/profile/save-profile.server';
 import { withZod } from '@remix-validated-form/with-zod';
@@ -27,16 +26,12 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   invariant(params.event, 'Invalid event slug');
   invariant(params.talk, 'Invalid talk id');
 
-  try {
-    const proposal = await getSubmittedProposal(params.talk, params.event, userId);
-    return json({
-      proposalId: proposal.id,
-      invitationLink: proposal.invitationLink,
-      speakers: proposal.speakers.filter((speaker) => speaker.id !== userId),
-    });
-  } catch (err) {
-    throw mapErrorToResponse(err);
-  }
+  const proposal = await getSubmittedProposal(params.talk, params.event, userId);
+  return json({
+    proposalId: proposal.id,
+    invitationLink: proposal.invitationLink,
+    speakers: proposal.speakers.filter((speaker) => speaker.id !== userId),
+  });
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
@@ -45,34 +40,30 @@ export const action = async ({ request, params }: ActionArgs) => {
   invariant(params.event, 'Invalid event slug');
   invariant(params.talk, 'Invalid talk id');
 
-  try {
-    const action = form.get('_action');
-    if (action === 'remove-speaker') {
-      const speakerId = form.get('_speakerId')?.toString() as string;
-      await removeCoSpeakerFromSubmission(userId, params.talk, params.event, speakerId);
-      return json(null);
-    } else {
-      const result = await withZod(DetailsSchema).validate(form);
-      if (result.error) return json(result.error.fieldErrors);
+  const action = form.get('_action');
+  if (action === 'remove-speaker') {
+    const speakerId = form.get('_speakerId')?.toString() as string;
+    await removeCoSpeakerFromSubmission(userId, params.talk, params.event, speakerId);
+    return json(null);
+  }
 
-      await saveProfile(userId, result.data);
-      const event = await getEvent(params.event);
-      if (event.hasTracks) {
-        return redirect(`/${params.event}/submission/${params.talk}/tracks`);
-      } else if (event.surveyEnabled) {
-        return redirect(`/${params.event}/submission/${params.talk}/survey`);
-      } else {
-        return redirect(`/${params.event}/submission/${params.talk}/submit`);
-      }
-    }
-  } catch (err) {
-    throw mapErrorToResponse(err);
+  const result = await withZod(DetailsSchema).validate(form);
+  if (result.error) return json(result.error.fieldErrors);
+
+  await saveProfile(userId, result.data);
+  const event = await getEvent(params.event);
+  if (event.hasTracks) {
+    return redirect(`/${params.event}/submission/${params.talk}/tracks`);
+  } else if (event.surveyEnabled) {
+    return redirect(`/${params.event}/submission/${params.talk}/survey`);
+  } else {
+    return redirect(`/${params.event}/submission/${params.talk}/submit`);
   }
 };
 
 export default function SubmissionSpeakerRoute() {
   const { user } = useUser();
-  const { proposalId, invitationLink, speakers } = useLoaderData<typeof loader>();
+  const { invitationLink, speakers } = useLoaderData<typeof loader>();
   const errors = useActionData<typeof action>();
   const { previousPath } = useSubmissionStep();
 
@@ -102,7 +93,7 @@ export default function SubmissionSpeakerRoute() {
           <Subtitle>When co-speaker accepts the invite, he/she will be automatically added to the proposal.</Subtitle>
           <div className="mt-6 space-y-6">
             {speakers.length > 1 && <CoSpeakersList speakers={speakers} showRemoveAction className="max-w-md py-4" />}
-            <InviteCoSpeakerButton to="PROPOSAL" id={proposalId} invitationLink={invitationLink} />
+            <InviteCoSpeakerButton invitationLink={invitationLink} />
           </div>
         </div>
       </Card.Content>

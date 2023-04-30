@@ -1,6 +1,6 @@
 class InvitationPage {
-  visit(inviteId: string) {
-    cy.visit(`/invitation/${inviteId}`, { failOnStatusCode: false });
+  visit(type: string, code: string) {
+    cy.visit(`/invite/${type}/${code}`, { failOnStatusCode: false });
     this.isPageVisible();
   }
 
@@ -9,7 +9,7 @@ class InvitationPage {
   }
 
   acceptInvite() {
-    return cy.findByRole('button', { name: 'Accept invitation' });
+    cy.findByRole('button', { name: 'Accept invitation' }).click();
   }
 }
 

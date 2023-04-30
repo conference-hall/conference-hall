@@ -18,13 +18,12 @@ import { removeCoSpeakerFromProposal } from '~/shared-server/proposals/remove-co
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 import { Container } from '~/design-system/layouts/Container';
 import { Card } from '~/design-system/layouts/Card';
-import { mapErrorToResponse } from '~/libs/errors';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);
   invariant(params.proposal, 'Invalid proposal id');
 
-  const proposal = await getSpeakerProposal(params.proposal, userId).catch(mapErrorToResponse);
+  const proposal = await getSpeakerProposal(params.proposal, userId);
   return json(proposal);
 };
 
@@ -98,7 +97,7 @@ export default function EditProposalRoute() {
                 </Subtitle>
               </div>
               <CoSpeakersList speakers={proposal.speakers} showRemoveAction />
-              <InviteCoSpeakerButton to="PROPOSAL" id={proposal.id} invitationLink={proposal.invitationLink} block />
+              <InviteCoSpeakerButton invitationLink={proposal.invitationLink} block />
             </Card>
           </div>
         </div>

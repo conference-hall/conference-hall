@@ -8,7 +8,6 @@ import { withZod } from '@remix-validated-form/with-zod';
 import { useEvent } from '~/routes/$event/route';
 import { getSubmittedProposal } from '~/shared-server/proposals/get-submitted-proposal.server';
 import { requireSession } from '~/libs/auth/session';
-import { mapErrorToResponse } from '~/libs/errors';
 import { TracksUpdateSchema } from './types/tracks';
 import { FormatsForm } from '~/shared-components/proposals/forms/FormatsForm';
 import { getEvent } from '~/shared-server/events/get-event.server';
@@ -25,12 +24,8 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   invariant(params.event, 'Invalid event slug');
   invariant(params.talk, 'Invalid talk id');
 
-  try {
-    const proposal = await getSubmittedProposal(params.talk, params.event, userId);
-    return json({ formats: proposal.formats.map(({ id }) => id), categories: proposal.categories.map(({ id }) => id) });
-  } catch (err) {
-    throw mapErrorToResponse(err);
-  }
+  const proposal = await getSubmittedProposal(params.talk, params.event, userId);
+  return json({ formats: proposal.formats.map(({ id }) => id), categories: proposal.categories.map(({ id }) => id) });
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
@@ -42,16 +37,12 @@ export const action: ActionFunction = async ({ request, params }) => {
   const result = await withZod(TracksUpdateSchema).validate(form);
   if (result.error) return result.error?.fieldErrors;
 
-  try {
-    const event = await getEvent(params.event);
-    await saveTracks(params.talk, event.id, userId, result.data);
-    if (event.surveyEnabled) {
-      return redirect(`/${params.event}/submission/${params.talk}/survey`);
-    }
-    return redirect(`/${params.event}/submission/${params.talk}/submit`);
-  } catch (err) {
-    mapErrorToResponse(err);
+  const event = await getEvent(params.event);
+  await saveTracks(params.talk, event.id, userId, result.data);
+  if (event.surveyEnabled) {
+    return redirect(`/${params.event}/submission/${params.talk}/survey`);
   }
+  return redirect(`/${params.event}/submission/${params.talk}/submit`);
 };
 
 export default function SubmissionTracksRoute() {
