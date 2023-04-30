@@ -8,8 +8,12 @@ class CustomizeSettings {
     cy.findByRole('heading', { name: 'Customize event logo' }).should('exist');
   }
 
-  uploadBanner() {
+  changeLogo() {
     return cy.findByLabelText('Change logo');
+  }
+
+  getLogoSrc() {
+    return cy.findByAltText('Logo of Conference 1').should('have.attr', 'src');
   }
 }
 
