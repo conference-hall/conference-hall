@@ -1,20 +1,29 @@
+import { v4 as uuid } from 'uuid';
 import stream from 'node:stream';
-import * as admin from 'firebase-admin';
+import { storage } from '../auth/firebase.server';
 import type { UploadHandler } from '@remix-run/node';
 
-type StorageUploaderOptions = { name: string; path: string; maxFileSize?: number };
+type StorageUploaderOptions = { name: string; maxFileSize?: number };
+
+const CONTENT_TYPES: Record<string, string> = {
+  'image/avif': 'avif',
+  'image/jpeg': 'jpg',
+  'image/png': 'png',
+  'image/webp': 'webp',
+};
 
 export function uploadToStorageHandler(options: StorageUploaderOptions): UploadHandler {
   return async ({ name, data, contentType }) => {
     if (name !== options.name) return;
-    if (contentType !== 'image/jpeg') return;
-    const filepath = `${options.path}/${name}.jpg`;
+    if (!Object.keys(CONTENT_TYPES).includes(contentType)) return;
+
+    const extension = CONTENT_TYPES[contentType];
+    const filepath = `${uuid()}.${extension}`;
     return await uploadToStorage(data, filepath, options.maxFileSize);
   };
 }
 
 async function uploadToStorage(data: AsyncIterable<Uint8Array>, filepath: string, maxFileSize: number = 1_000_000) {
-  const storage = admin.storage();
   const file = storage.bucket().file(filepath);
 
   const passthroughStream = new stream.PassThrough();
@@ -22,7 +31,8 @@ async function uploadToStorage(data: AsyncIterable<Uint8Array>, filepath: string
   for await (const chunk of data) {
     size += chunk.byteLength;
     if (size > maxFileSize) {
-      throw new MaxFileSizeExceededError();
+      passthroughStream.destroy();
+      return null;
     }
     passthroughStream.write(chunk);
   }
@@ -31,21 +41,8 @@ async function uploadToStorage(data: AsyncIterable<Uint8Array>, filepath: string
   try {
     passthroughStream.pipe(file.createWriteStream());
   } catch (e) {
-    throw new UploadingError();
+    passthroughStream.destroy();
+    return null;
   }
   return file.publicUrl();
-}
-
-export class UploadingError extends Error {
-  message: string;
-  constructor(message: string = 'An error occurred during file upload.') {
-    super();
-    this.message = message;
-  }
-}
-
-class MaxFileSizeExceededError extends UploadingError {
-  constructor() {
-    super('Max file size exceeded.');
-  }
 }

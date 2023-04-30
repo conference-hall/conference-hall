@@ -107,10 +107,11 @@ describe('Event settings', () => {
       });
     });
 
-    describe.skip('customize settings', () => {
-      it('can upload a new banner', () => {
+    describe('customize settings', () => {
+      it('can upload a new log', () => {
         customize.visit('orga-1', 'conference-1');
-        customize.uploadBanner().selectFile('cypress/fixtures/banner.jpg', { force: true });
+        customize.changeLogo().selectFile('cypress/fixtures/devfest.png', { force: true });
+        customize.getLogoSrc().should('include', '.png');
       });
     });
 
