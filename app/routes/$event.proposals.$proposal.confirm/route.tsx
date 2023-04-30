@@ -4,7 +4,6 @@ import { json } from '@remix-run/node';
 import { withZod } from '@remix-validated-form/with-zod';
 import { ProposalParticipationSchema } from '~/schemas/proposal';
 import { requireSession } from '~/libs/auth/session';
-import { mapErrorToResponse } from '~/libs/errors';
 import { createToast } from '~/libs/toasts/toasts';
 import { sendParticipationAnswer } from './server/send-participation-answer.server';
 
@@ -13,12 +12,10 @@ export const action: ActionFunction = async ({ request, params }: ActionArgs) =>
   const form = await request.formData();
   invariant(params.proposal, 'Invalid proposal id');
 
-  try {
-    const result = await withZod(ProposalParticipationSchema).validate(form);
-    if (result.error) return json(result.error.fieldErrors);
-    await sendParticipationAnswer(userId, params.proposal, result.data.participation);
-    return json(null, await createToast(request, 'Your response has been sent to organizers.'));
-  } catch (err) {
-    mapErrorToResponse(err);
-  }
+  const result = await withZod(ProposalParticipationSchema).validate(form);
+  if (result.error) return json(result.error.fieldErrors);
+
+  await sendParticipationAnswer(userId, params.proposal, result.data.participation);
+
+  return json(null, await createToast(request, 'Your response has been sent to organizers.'));
 };

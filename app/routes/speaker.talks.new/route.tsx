@@ -6,7 +6,6 @@ import { withZod } from '@remix-validated-form/with-zod';
 import { TalkSaveSchema } from '~/schemas/talks';
 import { createTalk } from './server/create-talk.server';
 import { requireSession } from '~/libs/auth/session';
-import { mapErrorToResponse } from '~/libs/errors';
 import { DetailsForm } from '~/shared-components/proposals/forms/DetailsForm';
 import { Button } from '~/design-system/Buttons';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
@@ -19,12 +18,9 @@ export const action = async ({ request }: LoaderArgs) => {
 
   const result = await withZod(TalkSaveSchema).validate(form);
   if (result.error) return json(result.error.fieldErrors);
-  try {
-    const talkId = await createTalk(userId, result.data);
-    return redirect(`/speaker/talks/${talkId}`);
-  } catch (err) {
-    throw mapErrorToResponse(err);
-  }
+
+  const talkId = await createTalk(userId, result.data);
+  return redirect(`/speaker/talks/${talkId}`);
 };
 
 export default function NewTalkRoute() {

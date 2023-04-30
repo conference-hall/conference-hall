@@ -5,7 +5,6 @@ import { useLoaderData } from '@remix-run/react';
 import { useEvent } from '../$event/route';
 import { ProposalsList } from '~/routes/$event.proposals._index/components/ProposalsList';
 import { requireSession } from '~/libs/auth/session';
-import { mapErrorToResponse } from '~/libs/errors';
 import { listSpeakerProposals } from './server/list-speaker-proposals.server';
 import { ButtonLink } from '~/design-system/Buttons';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
@@ -17,7 +16,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
 
-  const proposals = await listSpeakerProposals(params.event, userId).catch(mapErrorToResponse);
+  const proposals = await listSpeakerProposals(params.event, userId);
   return json(proposals);
 };
 

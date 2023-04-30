@@ -4,7 +4,6 @@ import { redirect } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { requireSession } from '~/libs/auth/session';
 import { Outlet, useLoaderData, useOutletContext, useRouteLoaderData } from '@remix-run/react';
-import { mapErrorToResponse } from '~/libs/errors';
 import OrganizationBreadcrumb from '~/shared-components/organizations/OrganizationBreadcrumb';
 import type { Organization } from './server/get-organization.server';
 import { getOrganization } from './server/get-organization.server';
@@ -22,12 +21,8 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);
   invariant(params.orga, 'Invalid organization slug');
 
-  try {
-    const organization = await getOrganization(params.orga, userId);
-    return json(organization);
-  } catch (e) {
-    throw mapErrorToResponse(e);
-  }
+  const organization = await getOrganization(params.orga, userId);
+  return json(organization);
 };
 
 export const action = async ({ request, params }: ActionArgs) => {

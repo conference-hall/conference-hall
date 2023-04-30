@@ -3,7 +3,6 @@ import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { requireSession } from '~/libs/auth/session';
 import { getActivities } from './server/get-activities.server';
-import { mapErrorToResponse } from '~/libs/errors';
 import { Container } from '~/design-system/layouts/Container';
 import { SpeakerDetailsSection } from './components/SpeakerDetailsSection';
 import { parsePage } from '~/schemas/pagination';
@@ -15,14 +14,10 @@ import { useUser } from '~/root';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const userId = await requireSession(request);
-  try {
-    const url = new URL(request.url);
-    const page = await parsePage(url.searchParams);
-    const activities = await getActivities(userId, page);
-    return json(activities);
-  } catch (err) {
-    throw mapErrorToResponse(err);
-  }
+  const url = new URL(request.url);
+  const page = await parsePage(url.searchParams);
+  const activities = await getActivities(userId, page);
+  return json(activities);
 };
 
 export default function ProfileRoute() {

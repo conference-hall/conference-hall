@@ -14,7 +14,6 @@ import { Button, ButtonLink } from '~/design-system/Buttons';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { useSubmissionStep } from '../$event_.submission/hooks/useSubmissionStep';
 import { H2 } from '~/design-system/Typography';
-import { mapErrorToResponse } from '~/libs/errors';
 import { SurveyForm } from '~/shared-components/proposals/forms/SurveyForm';
 
 export const handle = { step: 'survey' };
@@ -24,13 +23,9 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   invariant(params.event, 'Invalid event slug');
   invariant(params.talk, 'Invalid talk id');
 
-  try {
-    const questions = await getQuestions(params.event);
-    const answers = await getAnswers(params.event, userId);
-    return json({ questions, answers });
-  } catch (err) {
-    throw mapErrorToResponse(err);
-  }
+  const questions = await getQuestions(params.event);
+  const answers = await getAnswers(params.event, userId);
+  return json({ questions, answers });
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
@@ -41,12 +36,9 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   const result = await withZod(SurveySchema).validate(form);
   if (result.error) throw new Response('Bad survey values', { status: 400 });
-  try {
-    await saveSurvey(userId, params.event, result.data);
-    return redirect(`/${params.event}/submission/${params.talk}/submit`);
-  } catch (err) {
-    mapErrorToResponse(err);
-  }
+
+  await saveSurvey(userId, params.event, result.data);
+  return redirect(`/${params.event}/submission/${params.talk}/submit`);
 };
 
 export default function SubmissionSurveyRoute() {

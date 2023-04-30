@@ -1,35 +1,20 @@
 import { Response } from '@remix-run/node';
 
-class NotFoundError extends Error {}
+export class NotFoundError extends Response {
+  constructor(message: string) {
+    super(message, { status: 404, statusText: message });
+  }
+}
 
-class ForbiddenError extends Error {}
+export class ForbiddenError extends Response {
+  constructor(message: string) {
+    super(message, { status: 403, statusText: message });
+  }
+}
 
-class BadRequestError extends Error {}
-
-export function mapErrorToResponse(error: unknown) {
-  if (error instanceof Response) {
-    throw error;
-  }
-  if (error instanceof NotFoundError) {
-    throw new Response(error.message, {
-      status: 404,
-      statusText: error.message,
-    });
-  }
-  if (error instanceof BadRequestError) {
-    throw new Response(error.message, {
-      status: 400,
-      statusText: error.message,
-    });
-  }
-  if (error instanceof ForbiddenError) {
-    throw new Response(error.message, {
-      status: 403,
-      statusText: error.message,
-    });
-  }
-  if (error instanceof Error) {
-    throw new Response(error.message, { status: 500, statusText: error.message });
+export class BadRequestError extends Response {
+  constructor(message: string) {
+    super(message, { status: 400, statusText: message });
   }
 }
 
@@ -71,13 +56,13 @@ export class SurveyNotEnabledError extends BadRequestError {
 
 export class InvitationNotFoundError extends NotFoundError {
   constructor() {
-    super('Invitation not found');
+    super('Invitation invalid');
   }
 }
 
-export class InvitationGenerateError extends BadRequestError {
+export class InvitationInvalidOrAccepted extends BadRequestError {
   constructor() {
-    super('Could not generate invitation key');
+    super('Invitation invalid or already accepted');
   }
 }
 

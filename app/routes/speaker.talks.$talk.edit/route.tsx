@@ -11,7 +11,6 @@ import { DetailsForm } from '~/shared-components/proposals/forms/DetailsForm';
 import { Button, ButtonLink } from '~/design-system/Buttons';
 import { H3, Subtitle } from '~/design-system/Typography';
 import { requireSession } from '~/libs/auth/session';
-import { mapErrorToResponse } from '~/libs/errors';
 import { CoSpeakersList, InviteCoSpeakerButton } from '~/shared-components/proposals/forms/CoSpeaker';
 import { removeCoSpeakerFromTalk } from '~/shared-server/talks/remove-co-speaker.server';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
@@ -22,13 +21,9 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);
   invariant(params.talk, 'Invalid talk id');
 
-  try {
-    const talk = await getTalk(userId, params.talk);
-    if (talk.archived) throw new Response('Talk archived.', { status: 403 });
-    return json(talk);
-  } catch (err) {
-    throw mapErrorToResponse(err);
-  }
+  const talk = await getTalk(userId, params.talk);
+  if (talk.archived) throw new Response('Talk archived.', { status: 403 });
+  return json(talk);
 };
 
 export const action: ActionFunction = async ({ request, params }: ActionArgs) => {
@@ -36,21 +31,17 @@ export const action: ActionFunction = async ({ request, params }: ActionArgs) =>
   const form = await request.formData();
   invariant(params.talk, 'Invalid talk id');
 
-  try {
-    const action = form.get('_action');
-    if (action === 'remove-speaker') {
-      const speakerId = form.get('_speakerId')?.toString() as string;
-      await removeCoSpeakerFromTalk(userId, params.talk, speakerId);
-      return json(null);
-    } else {
-      const result = await withZod(TalkSaveSchema).validate(form);
-      if (result.error) return json(result.error.fieldErrors);
-      await updateTalk(userId, params.talk, result.data);
-      const toast = await createToast(request, 'Talk successfully saved.');
-      return redirect(`/speaker/talks/${params.talk}`, toast);
-    }
-  } catch (err) {
-    throw mapErrorToResponse(err);
+  const action = form.get('_action');
+  if (action === 'remove-speaker') {
+    const speakerId = form.get('_speakerId')?.toString() as string;
+    await removeCoSpeakerFromTalk(userId, params.talk, speakerId);
+    return json(null);
+  } else {
+    const result = await withZod(TalkSaveSchema).validate(form);
+    if (result.error) return json(result.error.fieldErrors);
+    await updateTalk(userId, params.talk, result.data);
+    const toast = await createToast(request, 'Talk successfully saved.');
+    return redirect(`/speaker/talks/${params.talk}`, toast);
   }
 };
 

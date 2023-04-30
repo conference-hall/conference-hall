@@ -12,7 +12,6 @@ import { parsePage } from '~/schemas/pagination';
 import { ProposalSelectionSchema } from '~/schemas/proposal';
 import { ProposalsFiltersSchema } from '~/schemas/proposal';
 import { requireSession } from '~/libs/auth/session';
-import { mapErrorToResponse } from '~/libs/errors';
 import { createToast } from '~/libs/toasts/toasts';
 import { CampaignEmailStats } from '~/shared-components/events/campaign-email/CampaignEmailStats';
 import { searchProposals } from '~/routes/organizer.$orga.$event._index/server/search-proposals.server';
@@ -33,13 +32,9 @@ export const loader = async ({ request, params }: LoaderArgs) => {
     status: ['REJECTED'],
   } as ProposalsFilters;
 
-  try {
-    const proposals = await searchProposals(params.orga, params.event, userId, filters, page);
-    const stats = await getRejectionCampaignStats(params.orga, params.event, userId);
-    return json({ proposals, stats });
-  } catch (err) {
-    throw mapErrorToResponse(err);
-  }
+  const proposals = await searchProposals(params.orga, params.event, userId, filters, page);
+  const stats = await getRejectionCampaignStats(params.orga, params.event, userId);
+  return json({ proposals, stats });
 };
 
 export const action = async ({ request, params }: ActionArgs) => {

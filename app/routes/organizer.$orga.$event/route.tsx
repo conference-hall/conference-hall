@@ -3,7 +3,6 @@ import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Outlet, useLoaderData, useOutletContext } from '@remix-run/react';
 import { requireSession } from '~/libs/auth/session';
-import { mapErrorToResponse } from '~/libs/errors';
 import type { OrganizerEvent } from './server/get-organizer-event.server';
 import { getOrganizerEvent } from './server/get-organizer-event.server';
 import { useOrganization } from '../organizer.$orga/route';
@@ -12,12 +11,9 @@ import { useUser } from '~/root';
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
-  try {
-    const event = await getOrganizerEvent(params.event, userId);
-    return json(event);
-  } catch (e) {
-    throw mapErrorToResponse(e);
-  }
+
+  const event = await getOrganizerEvent(params.event, userId);
+  return json(event);
 };
 
 export default function OrganizationEventRoute() {

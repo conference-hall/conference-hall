@@ -5,6 +5,7 @@ import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
 import { addCoSpeakerToProposal, checkProposalInviteCode } from './invite-proposal.server';
 import { db } from '~/libs/db';
+import { InvitationNotFoundError } from '~/libs/errors';
 
 describe('#addCoSpeakerToProposal', () => {
   beforeEach(async () => {
@@ -37,8 +38,7 @@ describe('#addCoSpeakerToProposal', () => {
 
   it('returns null when invitation code not found', async () => {
     const speaker = await userFactory();
-    const result = await addCoSpeakerToProposal('XXX', speaker.id);
-    expect(result).toBe(null);
+    await expect(addCoSpeakerToProposal('XXX', speaker.id)).rejects.toThrowError(InvitationNotFoundError);
   });
 });
 
@@ -60,7 +60,6 @@ describe('#checkProposalInviteCode', () => {
   });
 
   it('returns null when invitation code not found', async () => {
-    const result = await checkProposalInviteCode('XXX');
-    expect(result).toBe(null);
+    await expect(checkProposalInviteCode('XXX')).rejects.toThrowError(InvitationNotFoundError);
   });
 });

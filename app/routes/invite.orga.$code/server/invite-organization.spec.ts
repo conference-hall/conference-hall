@@ -4,6 +4,7 @@ import { organizationFactory } from 'tests/factories/organization';
 import { userFactory } from 'tests/factories/users';
 import { addMember, checkOrganizationInviteCode } from './invite-organization.server';
 import { db } from '~/libs/db';
+import { InvitationNotFoundError } from '~/libs/errors';
 
 describe('#addMember', () => {
   beforeEach(async () => {
@@ -28,8 +29,7 @@ describe('#addMember', () => {
 
   it('returns null when invitation code does not exist', async () => {
     const user = await userFactory();
-    const result = await addMember('XXX', user.id);
-    expect(result).toBe(null);
+    await expect(addMember('XXX', user.id)).rejects.toThrowError(InvitationNotFoundError);
   });
 });
 
@@ -53,7 +53,6 @@ describe('#checkOrganizationInviteCode', () => {
   });
 
   it('returns null when invitation code does not exist', async () => {
-    const result = await checkOrganizationInviteCode('XXX');
-    expect(result).toBeNull();
+    await expect(checkOrganizationInviteCode('XXX')).rejects.toThrowError(InvitationNotFoundError);
   });
 });

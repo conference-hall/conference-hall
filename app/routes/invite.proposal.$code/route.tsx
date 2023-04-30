@@ -16,8 +16,6 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   invariant(params.code, 'Invalid code');
 
   const proposal = await checkProposalInviteCode(params.code);
-  if (!proposal) throw new Response('Not found', { status: 404 });
-
   return json(proposal);
 };
 
@@ -26,8 +24,6 @@ export const action: ActionFunction = async ({ request, params }) => {
   invariant(params.code, 'Invalid code');
 
   const proposal = await addCoSpeakerToProposal(params.code, userId);
-  if (!proposal) throw new Response('Not found', { status: 404 });
-
   return redirect(`/${proposal.eventSlug}/proposals/${proposal.id}`);
 };
 

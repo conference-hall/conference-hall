@@ -6,7 +6,6 @@ import { getTalk } from '~/shared-server/talks/get-talk.server';
 import { archiveTalk, restoreTalk } from './server/archive-talk.server';
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import { requireSession } from '~/libs/auth/session';
-import { mapErrorToResponse } from '~/libs/errors';
 import { Container } from '~/design-system/layouts/Container';
 import { ButtonLink } from '~/design-system/Buttons';
 import { ArchiveOrRestoreTalkButton } from './components/ArchiveOrRestoreTalkButton';
@@ -18,12 +17,8 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);
   invariant(params.talk, 'Invalid talk id');
 
-  try {
-    const talk = await getTalk(userId, params.talk);
-    return json(talk);
-  } catch (err) {
-    throw mapErrorToResponse(err);
-  }
+  const talk = await getTalk(userId, params.talk);
+  return json(talk);
 };
 
 export const action: ActionFunction = async ({ request, params }) => {

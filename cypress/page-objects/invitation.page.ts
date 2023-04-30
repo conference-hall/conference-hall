@@ -9,7 +9,7 @@ class InvitationPage {
   }
 
   acceptInvite() {
-    return cy.findByRole('button', { name: 'Accept invitation' });
+    cy.findByRole('button', { name: 'Accept invitation' }).click();
   }
 }
 

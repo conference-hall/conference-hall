@@ -14,7 +14,6 @@ import { useEvent } from '~/routes/$event/route';
 import { Card } from '~/design-system/layouts/Card';
 import { requireSession } from '~/libs/auth/session';
 import { getSubmittedProposal } from '~/shared-server/proposals/get-submitted-proposal.server';
-import { mapErrorToResponse } from '~/libs/errors';
 import { H1, H2, Subtitle } from '~/design-system/Typography';
 import { TextArea } from '~/design-system/forms/TextArea';
 import { ExternalLink } from '~/design-system/Links';
@@ -27,12 +26,8 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   invariant(params.event, 'Invalid event slug');
   invariant(params.talk, 'Invalid talk id');
 
-  try {
-    const proposal = await getSubmittedProposal(params.talk, params.event, userId);
-    return json(proposal);
-  } catch (err) {
-    throw mapErrorToResponse(err);
-  }
+  const proposal = await getSubmittedProposal(params.talk, params.event, userId);
+  return json(proposal);
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
@@ -42,13 +37,9 @@ export const action: ActionFunction = async ({ request, params }) => {
   invariant(params.talk, 'Invalid talk id');
 
   const result = await withZod(ProposalSubmissionSchema).validate(form);
-  try {
-    if (result?.data) await submitProposal(params.talk, params.event, userId, result?.data);
-  } catch (err) {
-    throw mapErrorToResponse(err);
-  }
-  const toast = await createToast(request, 'Congratulation! Proposal submitted!');
-  return redirect(`/${params.event}/proposals`, toast);
+  if (result?.data) await submitProposal(params.talk, params.event, userId, result?.data);
+
+  return redirect(`/${params.event}/proposals`, await createToast(request, 'Congratulation! Proposal submitted!'));
 };
 
 export default function SubmissionSubmitRoute() {

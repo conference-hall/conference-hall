@@ -16,8 +16,6 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   invariant(params.code, 'Invalid code');
 
   const organization = await checkOrganizationInviteCode(params.code);
-  if (!organization) throw new Response('Not found', { status: 404 });
-
   return json(organization);
 };
 
@@ -26,8 +24,6 @@ export const action: ActionFunction = async ({ request, params }) => {
   invariant(params.code, 'Invalid code');
 
   const organization = await addMember(params.code, userId);
-  if (!organization) throw new Response('Not found', { status: 404 });
-
   return redirect(`/organizer/${organization.slug}`);
 };
 

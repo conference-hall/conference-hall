@@ -3,6 +3,7 @@ import { addCoSpeakerToTalk, checkTalkInviteCode } from './invite-talk.server';
 import { userFactory } from 'tests/factories/users';
 import { talkFactory } from 'tests/factories/talks';
 import { db } from '~/libs/db';
+import { InvitationNotFoundError } from '~/libs/errors';
 
 describe('#addCoSpeakerToTalk', () => {
   beforeEach(async () => {
@@ -29,8 +30,7 @@ describe('#addCoSpeakerToTalk', () => {
 
   it('returns null when invitation code not found', async () => {
     const speaker = await userFactory();
-    const result = await addCoSpeakerToTalk('XXX', speaker.id);
-    expect(result).toBe(null);
+    await expect(addCoSpeakerToTalk('XXX', speaker.id)).rejects.toThrowError(InvitationNotFoundError);
   });
 });
 
@@ -50,7 +50,6 @@ describe('#checkTalkInviteCode', () => {
   });
 
   it('returns null when invitation code not found', async () => {
-    const result = await checkTalkInviteCode('XXX');
-    expect(result).toBe(null);
+    await expect(checkTalkInviteCode('XXX')).rejects.toThrowError(InvitationNotFoundError);
   });
 });

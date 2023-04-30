@@ -5,7 +5,6 @@ import { SpeakerTalksList } from './components/SpeakerTalksList';
 import Select from '~/design-system/forms/Select';
 import { listTalks } from './server/list-talks.server';
 import { requireSession } from '~/libs/auth/session';
-import { mapErrorToResponse } from '~/libs/errors';
 import { ButtonLink } from '~/design-system/Buttons';
 import { PlusIcon } from '@heroicons/react/20/solid';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
@@ -15,12 +14,8 @@ export const loader = async ({ request }: LoaderArgs) => {
   const userId = await requireSession(request);
   const { searchParams } = new URL(request.url);
   const archived = Boolean(searchParams.get('archived'));
-  try {
-    const talks = await listTalks(userId, { archived });
-    return json(talks);
-  } catch (err) {
-    throw mapErrorToResponse(err);
-  }
+  const talks = await listTalks(userId, { archived });
+  return json(talks);
 };
 
 export default function SpeakerTalksRoute() {

@@ -4,13 +4,11 @@ import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { requireSession } from '~/libs/auth/session';
 import { H2, Subtitle } from '~/design-system/Typography';
-import { Form, useActionData, useSubmit } from '@remix-run/react';
+import { Form, useSubmit } from '@remix-run/react';
 import { AlertInfo } from '~/design-system/Alerts';
 import { ExternalLink } from '~/design-system/Links';
 import { useOrganizerEvent } from '../organizer.$orga.$event/route';
-import { UploadingError } from '~/libs/storage/storage.server';
 import { ButtonFileUpload } from '~/design-system/forms/FileUploadButton';
-import { mapErrorToResponse } from '~/libs/errors';
 import { ClientOnly } from 'remix-utils';
 import { uploadEventBanner } from './server/upload-event-banner.server';
 import { Card } from '~/design-system/layouts/Card';
@@ -27,21 +25,13 @@ export const action = async ({ request, params }: ActionArgs) => {
   invariant(params.orga, 'Invalid organization slug');
   invariant(params.event, 'Invalid event slug');
 
-  try {
-    await uploadEventBanner(params.orga, params.event, userId, request);
-    return json(null);
-  } catch (error) {
-    if (error instanceof UploadingError) {
-      return json({ error: error.message });
-    }
-    throw mapErrorToResponse(error);
-  }
+  await uploadEventBanner(params.orga, params.event, userId, request);
+  return json(null);
 };
 
 export default function EventGeneralSettingsRoute() {
   const { event } = useOrganizerEvent();
   const submit = useSubmit();
-  const result = useActionData<typeof action>();
 
   const handleSubmit = (e: ChangeEvent<HTMLFormElement>) => {
     if (e.currentTarget[0] && (e.currentTarget[0] as HTMLInputElement).value) {
@@ -74,7 +64,7 @@ export default function EventGeneralSettingsRoute() {
       <Card.Actions>
         <Button variant="secondary">Remove logo</Button>
         <Form method="POST" encType="multipart/form-data" onChange={handleSubmit}>
-          <ButtonFileUpload name="logo" accept="image/jpeg" error={result?.error}>
+          <ButtonFileUpload name="logo" accept="image/jpeg">
             Change logo
           </ButtonFileUpload>
         </Form>

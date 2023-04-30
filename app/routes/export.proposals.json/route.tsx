@@ -3,7 +3,6 @@ import { json } from '@remix-run/node';
 import { withZod } from '@remix-validated-form/with-zod';
 import { ProposalsExportFiltersSchema } from '~/schemas/proposal';
 import { requireSession } from '~/libs/auth/session';
-import { mapErrorToResponse } from '~/libs/errors';
 import { exportProposals } from './server/export-proposals.server';
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -14,10 +13,6 @@ export const loader = async ({ request }: LoaderArgs) => {
   if (result.error) return json(null);
 
   const { orga, event, ...filters } = result.data;
-  try {
-    const results = await exportProposals(orga, event, userId, filters ?? {});
-    return json(results);
-  } catch (err) {
-    throw mapErrorToResponse(err);
-  }
+  const results = await exportProposals(orga, event, userId, filters ?? {});
+  return json(results);
 };
