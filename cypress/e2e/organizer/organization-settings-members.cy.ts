@@ -1,4 +1,3 @@
-import OrganizationEventsPage from 'page-objects/organizer/events-list.page';
 import OrganizationMembersPage from 'page-objects/organizer/members-list.page';
 
 describe('Organization members list', () => {
@@ -9,7 +8,6 @@ describe('Organization members list', () => {
   afterEach(() => cy.task('disconnectDB'));
 
   const members = new OrganizationMembersPage();
-  const events = new OrganizationEventsPage();
 
   describe('as a organization owner', () => {
     beforeEach(() => cy.login('Clark Kent'));
@@ -17,6 +15,8 @@ describe('Organization members list', () => {
     it('displays organization members list', () => {
       members.visit('awesome-orga');
       members.list().should('have.length', 3);
+      members.findMember().type('bru{enter}');
+      members.list().should('have.length', 1);
     });
 
     it('can invite a new member', () => {
@@ -52,8 +52,8 @@ describe('Organization members list', () => {
     beforeEach(() => cy.login('Bruce Wayne'));
 
     it('cannot access to members settings and is redirected to event page', () => {
-      cy.visit('/organizer/awesome-orga/settings/members');
-      events.isPageVisible();
+      cy.visit('/organizer/awesome-orga/settings/members', { failOnStatusCode: false });
+      cy.assertText('Forbidden operation');
     });
   });
 
@@ -61,8 +61,8 @@ describe('Organization members list', () => {
     beforeEach(() => cy.login('Peter Parker'));
 
     it('cannot access to members settings and is redirected to event page', () => {
-      cy.visit('/organizer/awesome-orga/settings/members');
-      events.isPageVisible();
+      cy.visit('/organizer/awesome-orga/settings/members', { failOnStatusCode: false });
+      cy.assertText('Forbidden operation');
     });
   });
 });

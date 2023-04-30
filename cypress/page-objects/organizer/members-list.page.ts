@@ -5,11 +5,15 @@ class OrganizationMembersPage {
   }
 
   isPageVisible() {
-    cy.findByRole('heading', { name: 'Organization members' }).should('exist');
+    cy.findByRole('heading', { name: 'Members' }).should('exist');
   }
 
   list() {
     return cy.findByRole('list', { name: 'Members list' }).children();
+  }
+
+  findMember() {
+    return cy.findByLabelText('Find member');
   }
 
   member(name: string) {
