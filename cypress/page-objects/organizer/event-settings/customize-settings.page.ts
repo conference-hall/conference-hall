@@ -13,7 +13,7 @@ class CustomizeSettings {
   }
 
   getLogoSrc() {
-    return cy.findByAltText('Logo of Conference 1').should('have.attr', 'src');
+    return cy.findByAltText('Conference 1 logo').should('have.attr', 'src');
   }
 }
 

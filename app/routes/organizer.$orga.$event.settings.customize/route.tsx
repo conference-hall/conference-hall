@@ -46,7 +46,7 @@ export default function EventGeneralSettingsRoute() {
       </Card.Title>
 
       <Card.Content>
-        <Avatar picture={event.logo} name={`Logo of ${event.name}`} square size="4xl" />
+        <Avatar picture={event.logo} name={`${event.name} logo`} square size="4xl" />
         <AlertInfo>
           JPEG, PNG, WEBP or AVIF formats supported with optimal resolution of 500x500.
           <br />
