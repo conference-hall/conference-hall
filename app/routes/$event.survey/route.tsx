@@ -12,7 +12,7 @@ import { getAnswers } from '~/shared-server/survey/get-answers.server';
 import { getQuestions } from '~/shared-server/survey/get-questions.server';
 import { saveSurvey } from '~/shared-server/survey/save-survey.server';
 import { Card } from '~/design-system/layouts/Card';
-import { createToast } from '~/libs/toasts/toasts';
+import { addToast } from '~/libs/toasts/toasts';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
@@ -34,7 +34,7 @@ export const action = async ({ request, params }: ActionArgs) => {
 
   await saveSurvey(userId, params.event, result.data);
 
-  return json(null, await createToast(request, 'Survey successfully saved.'));
+  return json(null, await addToast(request, 'Survey successfully saved.'));
 };
 
 export default function EventSurveyRoute() {

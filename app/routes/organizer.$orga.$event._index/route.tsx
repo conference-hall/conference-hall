@@ -7,7 +7,7 @@ import { Container } from '~/design-system/layouts/Container';
 import { parsePage } from '~/schemas/pagination';
 import { withZod } from '@remix-validated-form/with-zod';
 import { ProposalsStatusUpdateSchema, ProposalsFiltersSchema } from '~/schemas/proposal';
-import { createToast } from '~/libs/toasts/toasts';
+import { addToast } from '~/libs/toasts/toasts';
 import { updateProposalsStatus } from '~/routes/organizer.$orga.$event._index/server/update-proposal.server';
 import { searchProposals } from './server/search-proposals.server';
 import { ProposalsList } from './components/ProposalsList/ProposalsList';
@@ -41,7 +41,7 @@ export const action = async ({ request, params }: ActionArgs) => {
   if (error) return json(null);
 
   const result = await updateProposalsStatus(params.event, userId, data.selection, data.status);
-  return json(null, await createToast(request, `${result} proposals marked as "${data.status.toLowerCase()}".`));
+  return json(null, await addToast(request, `${result} proposals marked as "${data.status.toLowerCase()}".`));
 };
 
 export default function OrganizerEventProposalsRoute() {

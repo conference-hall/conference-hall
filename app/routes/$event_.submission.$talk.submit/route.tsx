@@ -2,7 +2,7 @@ import invariant from 'tiny-invariant';
 import { useState } from 'react';
 import { Form, useLoaderData } from '@remix-run/react';
 import { json, redirect } from '@remix-run/node';
-import { createToast } from '~/libs/toasts/toasts';
+import { addToast } from '~/libs/toasts/toasts';
 import { Button, ButtonLink } from '~/design-system/Buttons';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
 import type { ActionFunction, LoaderArgs } from '@remix-run/node';
@@ -39,7 +39,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   const result = await withZod(ProposalSubmissionSchema).validate(form);
   if (result?.data) await submitProposal(params.talk, params.event, userId, result?.data);
 
-  return redirect(`/${params.event}/proposals`, await createToast(request, 'Congratulation! Proposal submitted!'));
+  return redirect(`/${params.event}/proposals`, await addToast(request, 'Congratulation! Proposal submitted!'));
 };
 
 export default function SubmissionSubmitRoute() {

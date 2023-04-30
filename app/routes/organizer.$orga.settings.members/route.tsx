@@ -12,7 +12,7 @@ import { ChangeRoleButton, InviteMemberButton, RemoveButton } from './components
 import { useOrganization } from '../organizer.$orga/route';
 import { useUser } from '~/root';
 import { AvatarName } from '~/design-system/Avatar';
-import { createToast } from '~/libs/toasts/toasts';
+import { addToast } from '~/libs/toasts/toasts';
 import type { OrganizationRole } from '@prisma/client';
 import { withZod } from '@remix-validated-form/with-zod';
 import { parsePage } from '~/schemas/pagination';
@@ -46,13 +46,11 @@ export const action = async ({ request, params }: ActionArgs) => {
     case 'change-role': {
       const memberRole = form.get('memberRole') as OrganizationRole;
       await changeMemberRole(params.orga, userId, memberId, memberRole);
-      const toast = await createToast(request, 'Member role changed');
-      return json(null, toast);
+      return json(null, await addToast(request, 'Member role changed'));
     }
     case 'remove-member': {
       await removeMember(params.orga, userId, memberId);
-      const toast = await createToast(request, 'Member removed from organization');
-      return json(null, toast);
+      return json(null, await addToast(request, 'Member removed from organization'));
     }
   }
   return null;

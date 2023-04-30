@@ -12,7 +12,7 @@ import { parsePage } from '~/schemas/pagination';
 import { ProposalSelectionSchema } from '~/schemas/proposal';
 import { ProposalsFiltersSchema } from '~/schemas/proposal';
 import { requireSession } from '~/libs/auth/session';
-import { createToast } from '~/libs/toasts/toasts';
+import { addToast } from '~/libs/toasts/toasts';
 import { CampaignEmailStats } from '~/shared-components/events/campaign-email/CampaignEmailStats';
 import { searchProposals } from '~/routes/organizer.$orga.$event._index/server/search-proposals.server';
 import { getRejectionCampaignStats } from './server/get-rejection-campaign-stats.server';
@@ -44,7 +44,7 @@ export const action = async ({ request, params }: ActionArgs) => {
   const { data, error } = await withZod(ProposalSelectionSchema).validate(form);
   if (error) return json(null);
   await sendRejectionCampaign(params.event, userId, data.selection);
-  return json(null, await createToast(request, 'Emails successfully sent.'));
+  return json(null, await addToast(request, 'Emails successfully sent.'));
 };
 
 export default function RejectedProposalEmails() {

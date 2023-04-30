@@ -74,7 +74,7 @@ export function MarkdownTextArea({
       </div>
       <div id={`${name}-description`}>
         {description && <p className="mt-3 text-sm text-gray-600">{description}</p>}
-        {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
+        {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
       </div>
     </div>
   );

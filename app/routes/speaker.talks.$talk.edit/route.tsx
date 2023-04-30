@@ -6,7 +6,7 @@ import { withZod } from '@remix-validated-form/with-zod';
 import { TalkSaveSchema } from '~/schemas/talks';
 import { getTalk } from '~/shared-server/talks/get-talk.server';
 import { updateTalk } from '~/routes/speaker.talks.$talk.edit/server/update-talk.server';
-import { createToast } from '~/libs/toasts/toasts';
+import { addToast } from '~/libs/toasts/toasts';
 import { DetailsForm } from '~/shared-components/proposals/forms/DetailsForm';
 import { Button, ButtonLink } from '~/design-system/Buttons';
 import { H3, Subtitle } from '~/design-system/Typography';
@@ -40,8 +40,7 @@ export const action: ActionFunction = async ({ request, params }: ActionArgs) =>
     const result = await withZod(TalkSaveSchema).validate(form);
     if (result.error) return json(result.error.fieldErrors);
     await updateTalk(userId, params.talk, result.data);
-    const toast = await createToast(request, 'Talk successfully saved.');
-    return redirect(`/speaker/talks/${params.talk}`, toast);
+    return redirect(`/speaker/talks/${params.talk}`, await addToast(request, 'Talk successfully saved.'));
   }
 };
 

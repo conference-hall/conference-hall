@@ -1,5 +1,4 @@
 import { Form, useSubmit } from '@remix-run/react';
-import { getAuth } from 'firebase/auth';
 import { useCallback } from 'react';
 import { Avatar } from '~/design-system/Avatar';
 import { Button } from '~/design-system/Buttons';
@@ -18,16 +17,7 @@ export function SpeakerDetailsForm({ name, email, picture, errors }: Props) {
   const submit = useSubmit();
 
   const resetCurrentUser = useCallback(() => {
-    const { currentUser } = getAuth();
-    submit(
-      {
-        _type: 'INFO',
-        name: currentUser?.displayName ?? '',
-        email: currentUser?.email ?? '',
-        picture: currentUser?.photoURL ?? '',
-      },
-      { method: 'POST' }
-    );
+    submit({ _type: 'RESET_AUTH_DEFAULT' }, { method: 'POST', preventScrollReset: true });
   }, [submit]);
 
   return (

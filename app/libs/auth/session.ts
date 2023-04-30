@@ -81,10 +81,16 @@ export async function getSessionUserId(request: Request): Promise<string | null>
   if (!jwt || !uid || !userId) return null;
 
   try {
-    const token = await serverAuth.verifySessionCookie(jwt);
+    const token = await serverAuth.verifySessionCookie(jwt, true);
     if (uid !== token.uid) return null;
     return userId;
   } catch (e) {
     return null;
   }
+}
+
+export async function getSessionToken(request: Request) {
+  const session = await getSession(request);
+  const jwt = session.get('jwt');
+  return serverAuth.verifySessionCookie(jwt, true);
 }

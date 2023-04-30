@@ -17,7 +17,7 @@ import { EventGeneralSettingsSchema } from './types/event-general-settings.schem
 import { Card } from '~/design-system/layouts/Card';
 import { useOrganizerEvent } from '../organizer.$orga.$event/route';
 import { AlertInfo } from '~/design-system/Alerts';
-import { createToast } from '~/libs/toasts/toasts';
+import { addToast } from '~/libs/toasts/toasts';
 import { ArchiveBoxArrowDownIcon, ArchiveBoxXMarkIcon } from '@heroicons/react/24/outline';
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -41,7 +41,7 @@ export const action = async ({ request, params }: ActionArgs) => {
 
       return redirect(
         `/organizer/${params.orga}/${updated.slug}/settings`,
-        await createToast(request, 'Event successfully updated')
+        await addToast(request, 'Event successfully updated')
       );
     }
     case 'details': {
@@ -49,11 +49,11 @@ export const action = async ({ request, params }: ActionArgs) => {
       if (result.error) return json(result.error.fieldErrors);
 
       await updateEvent(params.event, userId, result.data);
-      return json(null, await createToast(request, 'Event successfully updated'));
+      return json(null, await addToast(request, 'Event successfully updated'));
     }
     case 'archive': {
       await updateEvent(params.event, userId, { archived: Boolean(form.get('archived')) });
-      return json(null, await createToast(request, 'Event successfully updated'));
+      return json(null, await addToast(request, 'Event successfully updated'));
     }
   }
 };
