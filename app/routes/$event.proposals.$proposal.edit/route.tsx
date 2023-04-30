@@ -3,7 +3,7 @@ import { Form, useActionData, useLoaderData, useNavigate } from '@remix-run/reac
 import { json, redirect } from '@remix-run/node';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { withZod } from '@remix-validated-form/with-zod';
-import { createToast } from '~/libs/toasts/toasts';
+import { addToast } from '~/libs/toasts/toasts';
 import { H3, Subtitle } from '~/design-system/Typography';
 import { DetailsForm } from '~/shared-components/proposals/forms/DetailsForm';
 import { Button, ButtonLink } from '~/design-system/Buttons';
@@ -38,8 +38,7 @@ export const action = async ({ request, params }: ActionArgs) => {
   switch (action) {
     case 'delete': {
       await deleteProposal(params.proposal, userId);
-      const toast = await createToast(request, 'Proposal successfully deleted.');
-      return redirect(`/${params.event}/proposals`, toast);
+      return redirect(`/${params.event}/proposals`, await addToast(request, 'Proposal successfully deleted.'));
     }
     case 'remove-speaker': {
       const speakerId = form.get('_speakerId')?.toString() as string;
@@ -50,8 +49,10 @@ export const action = async ({ request, params }: ActionArgs) => {
       const result = await withZod(ProposalUpdateSchema).validate(form);
       if (result.error) return json(result.error.fieldErrors);
       await updateProposal(params.event, params.proposal, userId, result.data);
-      const toast = await createToast(request, 'Proposal successfully updated.');
-      return redirect(`/${params.event}/proposals/${params.proposal}`, toast);
+      return redirect(
+        `/${params.event}/proposals/${params.proposal}`,
+        await addToast(request, 'Proposal successfully updated.')
+      );
     }
   }
 };

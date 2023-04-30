@@ -4,7 +4,7 @@ import { json } from '@remix-run/node';
 import { withZod } from '@remix-validated-form/with-zod';
 import { ProposalParticipationSchema } from '~/schemas/proposal';
 import { requireSession } from '~/libs/auth/session';
-import { createToast } from '~/libs/toasts/toasts';
+import { addToast } from '~/libs/toasts/toasts';
 import { sendParticipationAnswer } from './server/send-participation-answer.server';
 
 export const action: ActionFunction = async ({ request, params }: ActionArgs) => {
@@ -17,5 +17,5 @@ export const action: ActionFunction = async ({ request, params }: ActionArgs) =>
 
   await sendParticipationAnswer(userId, params.proposal, result.data.participation);
 
-  return json(null, await createToast(request, 'Your response has been sent to organizers.'));
+  return json(null, await addToast(request, 'Your response has been sent to organizers.'));
 };

@@ -12,7 +12,7 @@ import { updateOrganization } from './server/update-organization.server';
 import { OrganizationSaveSchema } from './types/organization-save.schema';
 import { Card } from '~/design-system/layouts/Card';
 import { useOrganization } from '../organizer.$orga/route';
-import { createToast } from '~/libs/toasts/toasts';
+import { addToast } from '~/libs/toasts/toasts';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   await requireSession(request);
@@ -30,8 +30,10 @@ export const action = async ({ request, params }: ActionArgs) => {
   const organization = await updateOrganization(params.orga, userId, result.data);
   if (organization?.fieldErrors) return json(organization.fieldErrors);
 
-  const toast = await createToast(request, 'Organization successfully updated');
-  return redirect(`/organizer/${organization.slug}/settings`, toast);
+  return redirect(
+    `/organizer/${organization.slug}/settings`,
+    await addToast(request, 'Organization successfully updated')
+  );
 };
 
 export default function OrganizationSettingsRoute() {

@@ -22,8 +22,9 @@ import { Toast } from './libs/toasts/Toast';
 import tailwind from './tailwind.css';
 import { Container } from './design-system/layouts/Container';
 import { initializeFirebaseClient } from './libs/auth/firebase';
-import { commitSession, getSession, getSessionUserId } from './libs/auth/session';
+import { getSessionUserId } from './libs/auth/session';
 import type { ToastData } from './libs/toasts/toasts';
+import { commitToastSession, getToastSession } from './libs/toasts/toasts';
 
 export function meta() {
   return [
@@ -43,8 +44,7 @@ export const links: LinksFunction = () => {
 };
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const session = await getSession(request);
-  const toast = session.get('toast');
+  const toast = await getToastSession(request);
 
   const userId = await getSessionUserId(request);
   const user = await getUser(userId);
@@ -52,7 +52,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   return json(
     {
       user,
-      toast,
+      toast: toast.get('message'),
       firebase: {
         FIREBASE_API_KEY: config.FIREBASE_API_KEY,
         FIREBASE_AUTH_DOMAIN: config.FIREBASE_AUTH_DOMAIN,
@@ -61,7 +61,7 @@ export const loader = async ({ request }: LoaderArgs) => {
         useFirebaseEmulators: config.useEmulators,
       },
     },
-    { headers: { 'Set-Cookie': await commitSession(session) } }
+    { headers: { 'Set-Cookie': await commitToastSession(toast) } }
   );
 };
 

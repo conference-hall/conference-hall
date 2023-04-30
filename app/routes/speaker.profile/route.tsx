@@ -9,11 +9,11 @@ import {
   saveUserPersonalInfo,
 } from '~/shared-server/profile/save-profile.server';
 import { AdditionalInfoSchema, DetailsSchema, PersonalInfoSchema } from '~/schemas/profile.schema';
-import { createToast } from '~/libs/toasts/toasts';
+import { addToast } from '~/libs/toasts/toasts';
 import { AdditionalInfoForm } from './components/AdditionalInfoForm';
 import { PersonalInfoForm } from './components/PersonalInfoForm';
 import { SpeakerDetailsForm } from './components/SpeakerDetailsForm';
-import { requireSession } from '~/libs/auth/session';
+import { getSessionToken, requireSession } from '~/libs/auth/session';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 import { Container } from '~/design-system/layouts/Container';
 import { NavSideMenu } from '~/design-system/navigation/NavSideMenu';
@@ -31,24 +31,34 @@ export const action = async ({ request }: ActionArgs) => {
   let result;
 
   switch (type) {
-    case 'INFO':
+    case 'INFO': {
       result = await withZod(PersonalInfoSchema).validate(form);
       if (result.error) return json(result.error.fieldErrors);
       await saveUserPersonalInfo(userId, result.data);
       break;
-    case 'DETAILS':
+    }
+    case 'RESET_AUTH_DEFAULT': {
+      const authToken = await getSessionToken(request);
+      result = await withZod(PersonalInfoSchema).validate(authToken);
+      if (result.error) return json(result.error.fieldErrors);
+      await saveUserPersonalInfo(userId, result.data);
+      break;
+    }
+    case 'DETAILS': {
       result = await withZod(DetailsSchema).validate(form);
       if (result.error) return json(result.error.fieldErrors);
       await saveUserDetails(userId, result.data);
       break;
-    case 'ADDITIONAL':
+    }
+    case 'ADDITIONAL': {
       result = await withZod(AdditionalInfoSchema).validate(form);
       if (result.error) return json(result.error.fieldErrors);
       await saveUserAdditionalInfo(userId, result.data);
       break;
+    }
   }
 
-  return redirect('/speaker/profile', await createToast(request, 'Profile successfully saved.'));
+  return redirect('/speaker/profile', await addToast(request, 'Profile successfully saved.'));
 };
 
 const MENU_ITEMS = [
