@@ -14,11 +14,10 @@ model User {
   name               String?
   bio                String?
   picture            String?
-  github             String?
   company            String?
   references         String?
-  twitter            String?
   address            String?
+  socials            Json                 @default("{}")
   lat                Float?
   lng                Float?
   timezone           String?

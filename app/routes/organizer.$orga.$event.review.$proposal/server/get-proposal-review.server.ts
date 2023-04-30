@@ -6,6 +6,7 @@ import { OrganizerProposalsSearch } from '~/shared-server/proposals/OrganizerPro
 import { db } from '~/libs/db';
 import { ProposalNotFoundError } from '~/libs/errors';
 import { sortBy } from '~/utils/arrays';
+import type { UserSocialLinks } from '~/schemas/user';
 
 export type ProposalReview = Awaited<ReturnType<typeof getProposalReview>>;
 
@@ -66,8 +67,7 @@ export async function getProposalReview(
         email: speaker.email,
         company: speaker.company,
         address: speaker.address,
-        github: speaker.github,
-        twitter: speaker.twitter,
+        socials: speaker.socials as UserSocialLinks,
       })),
       rating: {
         average: ratingDetails.average,

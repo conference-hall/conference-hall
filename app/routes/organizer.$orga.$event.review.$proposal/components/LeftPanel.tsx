@@ -12,6 +12,7 @@ import {
 import { AvatarName } from '~/design-system/Avatar';
 import { Text } from '~/design-system/Typography';
 import { IconLabel } from '~/design-system/IconLabel';
+import type { UserSocialLinks } from '~/schemas/user';
 
 type Rating = {
   average: number | null;
@@ -35,8 +36,7 @@ type Speaker = {
   email: string | null;
   company: string | null;
   address: string | null;
-  github: string | null;
-  twitter: string | null;
+  socials: UserSocialLinks;
 };
 
 type Props = {
@@ -130,14 +130,14 @@ function SpeakerInfos({ speaker, defaultOpen }: { speaker: Speaker; defaultOpen:
                   {speaker.address}
                 </IconLabel>
               )}
-              {speaker.github && (
+              {speaker.socials?.github && (
                 <IconLabel truncate icon={GlobeEuropeAfricaIcon}>
-                  {speaker.github}
+                  {speaker.socials.github}
                 </IconLabel>
               )}
-              {speaker.twitter && (
+              {speaker.socials?.twitter && (
                 <IconLabel truncate icon={GlobeEuropeAfricaIcon}>
-                  {speaker.twitter}
+                  {speaker.socials.twitter}
                 </IconLabel>
               )}
             </div>

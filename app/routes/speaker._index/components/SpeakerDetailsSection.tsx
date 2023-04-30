@@ -7,6 +7,7 @@ import { Markdown } from '~/design-system/Markdown';
 import { H3, Subtitle } from '~/design-system/Typography';
 import { GitHubIcon } from '~/design-system/icons/GitHubIcon';
 import { TwitterIcon } from '~/design-system/icons/TwitterIcon';
+import type { UserSocialLinks } from '~/schemas/user';
 
 type Props = {
   name: string | null;
@@ -15,11 +16,11 @@ type Props = {
   bio: string | null;
   address: string | null;
   company: string | null;
-  twitter: string | null;
-  github: string | null;
+  socials: UserSocialLinks;
 };
 
-export function SpeakerDetailsSection({ name, email, picture, bio, address, company, twitter, github }: Props) {
+export function SpeakerDetailsSection({ name, email, picture, bio, address, company, socials }: Props) {
+  const { github, twitter } = socials;
   const displayInfo = address || company || twitter || github;
 
   return (

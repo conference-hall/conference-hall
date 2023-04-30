@@ -21,8 +21,10 @@ export const seed = async () => {
       references: 'MJ References',
       address: 'Nantes',
       company: 'MJ Corp',
-      github: 'https://github.com',
-      twitter: 'https://twitter.com',
+      socials: {
+        github: 'https://github.com',
+        twitter: 'https://twitter.com',
+      },
     },
   });
   const speaker2 = await userFactory({

@@ -5,3 +5,8 @@ export type UserCreateInput = {
   picture?: string;
   provider?: string;
 };
+
+export type UserSocialLinks = {
+  github?: string | null;
+  twitter?: string | null;
+};

@@ -3,7 +3,11 @@ import { json, redirect } from '@remix-run/node';
 import { useActionData } from '@remix-run/react';
 import { CreditCardIcon, KeyIcon, UserCircleIcon } from '@heroicons/react/20/solid';
 import { withZod } from '@remix-validated-form/with-zod';
-import { saveProfile } from '~/shared-server/profile/save-profile.server';
+import {
+  saveUserAdditionalInfo,
+  saveUserDetails,
+  saveUserPersonalInfo,
+} from '~/shared-server/profile/save-profile.server';
 import { AdditionalInfoSchema, DetailsSchema, PersonalInfoSchema } from '~/schemas/profile.schema';
 import { createToast } from '~/libs/toasts/toasts';
 import { AdditionalInfoForm } from './components/AdditionalInfoForm';
@@ -29,19 +33,22 @@ export const action = async ({ request }: ActionArgs) => {
   switch (type) {
     case 'INFO':
       result = await withZod(PersonalInfoSchema).validate(form);
+      if (result.error) return json(result.error.fieldErrors);
+      await saveUserPersonalInfo(userId, result.data);
       break;
     case 'DETAILS':
       result = await withZod(DetailsSchema).validate(form);
+      if (result.error) return json(result.error.fieldErrors);
+      await saveUserDetails(userId, result.data);
       break;
-    default:
+    case 'ADDITIONAL':
       result = await withZod(AdditionalInfoSchema).validate(form);
+      if (result.error) return json(result.error.fieldErrors);
+      await saveUserAdditionalInfo(userId, result.data);
+      break;
   }
 
-  if (result.error) return json(result.error.fieldErrors);
-  await saveProfile(userId, result.data);
-
-  const toast = await createToast(request, 'Profile successfully saved.');
-  return redirect('/speaker/profile', toast);
+  return redirect('/speaker/profile', await createToast(request, 'Profile successfully saved.'));
 };
 
 const MENU_ITEMS = [
@@ -73,13 +80,7 @@ export default function ProfileRoute() {
 
           <PersonalInfoForm bio={user.bio} references={user.references} errors={errors} />
 
-          <AdditionalInfoForm
-            company={user.company}
-            address={user.address}
-            twitter={user.twitter}
-            github={user.github}
-            errors={errors}
-          />
+          <AdditionalInfoForm company={user.company} address={user.address} socials={user.socials} errors={errors} />
         </div>
       </Container>
     </>

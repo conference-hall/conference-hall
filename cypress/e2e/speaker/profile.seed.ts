@@ -8,8 +8,10 @@ export const seed = async () => {
       references: 'Clark kent is superman',
       address: 'Metropolis',
       company: 'Daily planet',
-      github: 'ckent-github',
-      twitter: 'ckent-twitter',
+      socials: {
+        github: 'ckent-github',
+        twitter: 'ckent-twitter',
+      },
     },
   });
 };

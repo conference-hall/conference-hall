@@ -44,8 +44,10 @@ export const userFactory = async (options: FactoryOptions = {}) => {
     bio: fake.randParagraph(),
     references: fake.randParagraph(),
     company: fake.randCompanyName(),
-    github: fake.randUserName(),
-    twitter: fake.randUserName(),
+    socials: {
+      github: fake.randUserName(),
+      twitter: fake.randUserName(),
+    },
   };
 
   if (isOrganizer) {
