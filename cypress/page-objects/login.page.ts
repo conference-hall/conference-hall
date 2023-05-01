@@ -9,11 +9,11 @@ class LoginPage {
   }
 
   isPageVisible() {
-    cy.findByRole('heading', { name: 'Log in to Conference Hall' }).should('exist');
+    cy.findByRole('heading', { name: 'Sign in to your account' }).should('exist');
   }
 
   signinWithGoogle(username: string) {
-    cy.findByRole('button', { name: 'Continue with Google' }).click();
+    cy.findByRole('button', { name: 'Google' }).click();
     cy.url().should('contain', '/emulator');
     cy.findByText(username).click();
   }

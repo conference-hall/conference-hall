@@ -17,7 +17,7 @@ describe('Submit a talk to event', () => {
 
   it('redirects to signin, when user is not connected', () => {
     cy.visit('devfest-nantes/submission');
-    cy.assertText('Log in to Conference Hall');
+    cy.assertText('Sign in to your account');
   });
 
   describe('When user is connected', () => {

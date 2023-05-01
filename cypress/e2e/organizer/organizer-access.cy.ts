@@ -7,7 +7,7 @@ describe('Organizer page access and redirections', () => {
 
   it('redirects to signin, when user is not connected', () => {
     cy.visit('organizer');
-    cy.assertText('Log in to Conference Hall');
+    cy.assertText('Sign in to your account');
   });
 
   it('redirects to new organization page when user has no organization', () => {

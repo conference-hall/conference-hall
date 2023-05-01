@@ -13,7 +13,7 @@ describe('Event proposals list', () => {
 
   it('redirects to signin, when user is not connected', () => {
     cy.visit('devfest-nantes/proposals');
-    cy.assertText('Log in to Conference Hall');
+    cy.assertText('Sign in to your account');
   });
 
   it('displays user proposals for an open event', () => {
