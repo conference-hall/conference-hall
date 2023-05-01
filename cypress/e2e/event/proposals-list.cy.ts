@@ -1,5 +1,6 @@
 import EventProposalPage from 'page-objects/event/proposal.page';
 import EventProposalsPage from 'page-objects/event/proposals.page';
+import LoginPage from 'page-objects/login.page';
 
 describe('Event proposals list', () => {
   beforeEach(() => {
@@ -10,10 +11,11 @@ describe('Event proposals list', () => {
 
   const proposals = new EventProposalsPage();
   const proposal = new EventProposalPage();
+  const login = new LoginPage();
 
   it('redirects to signin, when user is not connected', () => {
     cy.visit('devfest-nantes/proposals');
-    cy.assertText('Log in to Conference Hall');
+    login.isPageVisible();
   });
 
   it('displays user proposals for an open event', () => {
