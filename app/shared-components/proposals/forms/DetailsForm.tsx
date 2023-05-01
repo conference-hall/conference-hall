@@ -6,6 +6,7 @@ import MultiSelect from '~/design-system/forms/MultiSelect';
 import { LANGUAGES } from '~/utils/languages';
 import { FormatsForm } from './FormatsForm';
 import { CategoriesForm } from './CategoriesForm';
+import { AlertError } from '~/design-system/Alerts';
 
 type Props = {
   initialValues?: {
@@ -18,11 +19,20 @@ type Props = {
     categories?: Array<{ id: string }>;
   } | null;
   formats?: Array<{ id: string; name: string; description: string | null }>;
+  formatsRequired?: boolean;
   categories?: Array<{ id: string; name: string; description: string | null }>;
+  categoriesRequired?: boolean;
   errors?: Record<string, string> | null;
 };
 
-export function DetailsForm({ initialValues, formats, categories, errors }: Props) {
+export function DetailsForm({
+  initialValues,
+  formats,
+  formatsRequired,
+  categories,
+  categoriesRequired,
+  errors,
+}: Props) {
   const hasFormats = formats && formats.length > 0;
   const hasCategories = categories && categories.length > 0;
 
@@ -63,11 +73,23 @@ export function DetailsForm({ initialValues, formats, categories, errors }: Prop
         defaultValues={initialValues?.languages ?? []}
       />
 
-      {hasFormats && <FormatsForm formats={formats} initialValues={initialValues?.formats?.map(({ id }) => id)} />}
+      {hasFormats && (
+        <FormatsForm
+          formats={formats}
+          required={formatsRequired}
+          initialValues={initialValues?.formats?.map(({ id }) => id)}
+        />
+      )}
+      {errors?.formats && <AlertError>You have to select at least one proposal format.</AlertError>}
 
       {hasCategories && (
-        <CategoriesForm categories={categories} initialValues={initialValues?.categories?.map(({ id }) => id)} />
+        <CategoriesForm
+          categories={categories}
+          required={categoriesRequired}
+          initialValues={initialValues?.categories?.map(({ id }) => id)}
+        />
       )}
+      {errors?.categories && <AlertError>You have to select at least one proposal category.</AlertError>}
 
       <MarkdownTextArea
         name="references"

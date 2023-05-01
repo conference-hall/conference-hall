@@ -8,7 +8,7 @@ import { H3, Subtitle } from '~/design-system/Typography';
 import { DetailsForm } from '~/shared-components/proposals/forms/DetailsForm';
 import { Button, ButtonLink } from '~/design-system/Buttons';
 import { requireSession } from '~/libs/auth/session';
-import { ProposalUpdateSchema } from '~/schemas/proposal';
+import { getProposalUpdateSchema } from '~/schemas/proposal';
 import { getSpeakerProposal } from '~/shared-server/proposals/get-speaker-proposal.server';
 import { deleteProposal } from './server/delete-proposal.server';
 import { updateProposal } from './server/update-proposal.server';
@@ -18,6 +18,7 @@ import { removeCoSpeakerFromProposal } from '~/shared-server/proposals/remove-co
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 import { Container } from '~/design-system/layouts/Container';
 import { Card } from '~/design-system/layouts/Card';
+import { getEvent } from '~/shared-server/events/get-event.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);
@@ -46,9 +47,13 @@ export const action = async ({ request, params }: ActionArgs) => {
       return json(null);
     }
     default: {
+      const event = await getEvent(params.event);
+      const ProposalUpdateSchema = getProposalUpdateSchema(event.formatsRequired, event.categoriesRequired);
       const result = await withZod(ProposalUpdateSchema).validate(form);
       if (result.error) return json(result.error.fieldErrors);
+
       await updateProposal(params.event, params.proposal, userId, result.data);
+
       return redirect(
         `/${params.event}/proposals/${params.proposal}`,
         await addToast(request, 'Proposal successfully updated.')
@@ -76,7 +81,9 @@ export default function EditProposalRoute() {
                   initialValues={proposal}
                   errors={errors}
                   formats={event.formats}
+                  formatsRequired={event.formatsRequired}
                   categories={event.categories}
+                  categoriesRequired={event.categoriesRequired}
                 />
 
                 <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:justify-end sm:px-6">
