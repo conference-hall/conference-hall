@@ -38,10 +38,12 @@ export async function getEvent(slug: string) {
       name: f.name,
       description: f.description,
     })),
+    formatsRequired: event.formatsRequired,
     categories: event.categories.map((c) => ({
       id: c.id,
       name: c.name,
       description: c.description,
     })),
+    categoriesRequired: event.categoriesRequired,
   };
 }

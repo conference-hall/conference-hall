@@ -63,8 +63,8 @@ export function CardLink({ as, rounded, p, variant, className, children, ...rest
 
 // <Card.Title /> component
 
-function Title({ children }: { children: React.ReactNode }) {
-  return <div className="px-8 pt-8">{children}</div>;
+function Title({ children, className }: { children: React.ReactNode; className?: string }) {
+  return <div className={c('px-8 pt-8', className)}>{children}</div>;
 }
 
 Card.Title = Title;
