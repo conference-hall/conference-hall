@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 import { useFetcher, useSearchParams } from '@remix-run/react';
@@ -14,10 +14,10 @@ import { getClientAuth } from '~/libs/auth/firebase';
 import { useHydrated } from 'remix-utils';
 import { LoadingIcon } from '~/design-system/icons/LoadingIcon';
 import { Logo } from '~/shared-components/navbar/Logo';
-import { TwitterIcon } from '~/design-system/icons/TwitterIcon';
-import { GitHubIcon } from '~/design-system/icons/GitHubIcon';
-import { GoogleIcon } from '~/design-system/icons/GoogleIcon';
 import { Card } from '~/design-system/layouts/Card';
+import { AuthProviderButton } from '~/shared-components/AuthProviderButton';
+import { AlertError } from '~/design-system/Alerts';
+import { Link } from '~/design-system/Links';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const userId = await getSessionUserId(request);
@@ -31,6 +31,7 @@ export const action = async ({ request }: ActionArgs) => {
 
 export default function Login() {
   const hydrated = useHydrated();
+  const [error, setError] = useState(null);
 
   const [searchParams] = useSearchParams();
   const loading = searchParams.get('loading');
@@ -46,16 +47,13 @@ export default function Login() {
         const token = await credentials.user.getIdToken();
         submit({ token, redirectTo }, { method: 'post', action: '/login' });
       })
-      .catch((error) => {
-        // TODO: Handle errors
-        console.error(error);
-      });
+      .catch((error) => setError(error.message));
   }, [submit, redirectTo]);
 
   const signIn = useCallback(
-    (provider: string) => {
+    async (provider: string) => {
+      // Set loading status in url to get it when redirected back from auth
       if (hydrated) {
-        // Set loading status in url to get it when redirected back from auth
         const { protocol, host, pathname } = window.location;
         const newurl = `${protocol}//${host}${pathname}?redirectTo=${redirectTo}&loading=true`;
         window.history.pushState({ path: newurl }, '', newurl);
@@ -64,11 +62,14 @@ export default function Login() {
       const clientAuth = getClientAuth();
       switch (provider) {
         case 'google':
-          return signInWithRedirect(clientAuth, new GoogleAuthProvider());
+          await signInWithRedirect(clientAuth, new GoogleAuthProvider());
+          break;
         case 'twitter':
-          return signInWithRedirect(clientAuth, new TwitterAuthProvider());
+          await signInWithRedirect(clientAuth, new TwitterAuthProvider());
+          break;
         case 'github':
-          return signInWithRedirect(clientAuth, new GithubAuthProvider());
+          await signInWithRedirect(clientAuth, new GithubAuthProvider());
+          break;
       }
     },
     [hydrated, redirectTo]
@@ -85,14 +86,17 @@ export default function Login() {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
-          {loading ? (
-            <div className="mt-2 flex justify-center">
+          {loading && !error ? (
+            <div className="mt-2 flex flex-col items-center gap-12">
               <LoadingIcon className="h-10 w-10" />
+              <Link to="/login">Go back to login</Link>
             </div>
           ) : (
             <>
               <Card p={12}>
                 <div>
+                  {error && <AlertError className="mb-8">{error}</AlertError>}
+
                   <div className="relative">
                     <div className="absolute inset-0 flex items-center" aria-hidden="true">
                       <div className="w-full border-t border-gray-200" />
@@ -102,33 +106,10 @@ export default function Login() {
                     </div>
                   </div>
 
-                  <div className="mt-8 flex flex-col gap-6">
-                    <button
-                      type="button"
-                      onClick={() => signIn('google')}
-                      className="flex w-full items-center justify-center gap-3 rounded-md bg-[#EA2533] px-3 py-1.5 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#EA2533]"
-                    >
-                      <GoogleIcon className="h-5 w-5" />
-                      <span className="text-sm font-semibold leading-6">Google</span>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => signIn('twitter')}
-                      className="flex w-full items-center justify-center gap-3 rounded-md bg-[#1D9BF0] px-3 py-1.5 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1D9BF0]"
-                    >
-                      <TwitterIcon className="h-5 w-5" />
-                      <span className="text-sm font-semibold leading-6">Twitter</span>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => signIn('github')}
-                      className="flex w-full items-center justify-center gap-3 rounded-md bg-[#24292F] px-3 py-1.5 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#24292F]"
-                    >
-                      <GitHubIcon className="h-5 w-5" />
-                      <span className="text-sm font-semibold leading-6">GitHub</span>
-                    </button>
+                  <div className="mt-8 flex flex-col gap-4">
+                    <AuthProviderButton provider="google" onClick={signIn} />
+                    <AuthProviderButton provider="twitter" onClick={signIn} />
+                    <AuthProviderButton provider="github" onClick={signIn} />
                   </div>
                 </div>
               </Card>
