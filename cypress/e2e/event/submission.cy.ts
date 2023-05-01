@@ -2,6 +2,7 @@ import EventProposalPage from 'page-objects/event/proposal.page';
 import EventProposalsPage from 'page-objects/event/proposals.page';
 import EventSubmissionPage from 'page-objects/event/submission.page';
 import EventSurveyPage from 'page-objects/event/survey.page';
+import LoginPage from 'page-objects/login.page';
 
 describe('Submit a talk to event', () => {
   beforeEach(() => {
@@ -14,10 +15,11 @@ describe('Submit a talk to event', () => {
   const proposals = new EventProposalsPage();
   const proposal = new EventProposalPage();
   const survey = new EventSurveyPage();
+  const login = new LoginPage();
 
   it('redirects to signin, when user is not connected', () => {
     cy.visit('devfest-nantes/submission');
-    cy.assertText('Sign in to your account');
+    login.isPageVisible();
   });
 
   describe('When user is connected', () => {

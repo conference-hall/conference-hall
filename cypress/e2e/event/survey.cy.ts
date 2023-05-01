@@ -1,4 +1,5 @@
 import EventSurveyPage from 'page-objects/event/survey.page';
+import LoginPage from 'page-objects/login.page';
 
 describe('Submit a talk to event', () => {
   beforeEach(() => {
@@ -8,10 +9,11 @@ describe('Submit a talk to event', () => {
   afterEach(() => cy.task('disconnectDB'));
 
   const survey = new EventSurveyPage();
+  const login = new LoginPage();
 
   it('redirects to signin, when user is not connected', () => {
     cy.visit('devfest-nantes/survey');
-    cy.assertText('Sign in to your account');
+    login.isPageVisible();
   });
 
   it('can fill the event survey when user is connected', () => {

@@ -1,3 +1,5 @@
+import LoginPage from 'page-objects/login.page';
+
 describe('Organizer page access and redirections', () => {
   beforeEach(() => {
     cy.task('seedDB', 'organizer/organizer-access');
@@ -5,9 +7,11 @@ describe('Organizer page access and redirections', () => {
 
   afterEach(() => cy.task('disconnectDB'));
 
+  const login = new LoginPage();
+
   it('redirects to signin, when user is not connected', () => {
     cy.visit('organizer');
-    cy.assertText('Sign in to your account');
+    login.isPageVisible();
   });
 
   it('redirects to new organization page when user has no organization', () => {
