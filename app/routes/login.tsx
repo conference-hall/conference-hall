@@ -59,18 +59,18 @@ export default function Login() {
         window.history.pushState({ path: newurl }, '', newurl);
       }
 
-      const clientAuth = getClientAuth();
-      switch (provider) {
-        case 'google':
-          await signInWithRedirect(clientAuth, new GoogleAuthProvider());
-          break;
-        case 'twitter':
-          await signInWithRedirect(clientAuth, new TwitterAuthProvider());
-          break;
-        case 'github':
-          await signInWithRedirect(clientAuth, new GithubAuthProvider());
-          break;
+      let authProvider;
+      if (provider === 'google') {
+        authProvider = new GoogleAuthProvider();
+        authProvider.setCustomParameters({ prompt: 'select_account' });
+      } else if (provider === 'twitter') {
+        authProvider = new TwitterAuthProvider();
+      } else if (provider === 'github') {
+        authProvider = new GithubAuthProvider();
       }
+
+      if (!authProvider) return;
+      await signInWithRedirect(getClientAuth(), authProvider);
     },
     [hydrated, redirectTo]
   );
