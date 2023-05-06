@@ -28,7 +28,7 @@ export const seed = async () => {
 
   // Without survey
   const event2 = await eventFactory({
-    attributes: { name: 'Devfest Nantes', slug: 'without-survey' },
+    attributes: { name: 'Devfest Nantes', slug: 'without-survey', formatsRequired: true, categoriesRequired: true },
     traits: ['conference-cfp-open'],
   });
   await eventFormatFactory({ event: event2, attributes: { name: 'Quickie' } });

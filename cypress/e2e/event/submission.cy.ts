@@ -182,7 +182,7 @@ describe('Submit a talk to event', () => {
       cy.assertInputText('Title', 'My draft proposal');
     });
 
-    it('submit a new talk for a conference (w/o survey)', () => {
+    it('submit a new talk for a conference (w/o survey and mandatory tracks)', () => {
       submission.visit('without-survey');
       submission.createNewProposal();
 
@@ -200,6 +200,9 @@ describe('Submit a talk to event', () => {
 
       // Step: tracks
       submission.isTracksStepVisible();
+      submission.continue();
+      cy.assertText('You must select at least one proposal format.');
+      cy.assertText('You must select at least one proposal category.');
       submission.selectFormatTrack('Quickie');
       submission.selectCategoryTrack('Web');
       submission.continue();

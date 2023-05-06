@@ -10,7 +10,7 @@ export const seed = async () => {
   const speaker2 = await userFactory({ traits: ['bruce-wayne'] });
 
   const event = await eventFactory({
-    attributes: { name: 'Devfest Nantes', slug: 'devfest-nantes' },
+    attributes: { name: 'Devfest Nantes', slug: 'devfest-nantes', formatsRequired: true, categoriesRequired: true },
     traits: ['conference-cfp-open', 'withSurvey'],
   });
   const format = await eventFormatFactory({ event, attributes: { name: 'Quickie' } });

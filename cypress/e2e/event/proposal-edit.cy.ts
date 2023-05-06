@@ -27,6 +27,13 @@ describe('Speaker proposal edition page', () => {
       language: 'English',
       references: 'New references',
     });
+    editProposal.selectFormatTrack('Quickie');
+    editProposal.selectCategoryTrack('Web');
+    editProposal.saveAbstract().click();
+
+    cy.assertText('You have to select at least one proposal format.');
+    cy.assertText('You have to select at least one proposal category.');
+
     editProposal.selectFormatTrack('Quickie 2');
     editProposal.selectCategoryTrack('Web 2');
     editProposal.saveAbstract().click();
@@ -37,8 +44,8 @@ describe('Speaker proposal edition page', () => {
     cy.assertText('Beginner');
     cy.assertText('English');
     cy.assertText('New references');
-    cy.assertText('Quickie, Quickie 2');
-    cy.assertText('Web, Web 2');
+    cy.assertText('Quickie 2');
+    cy.assertText('Web 2');
   });
 
   it('can invite a co-speaker', () => {
