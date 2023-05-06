@@ -28,13 +28,13 @@ export default function OrganizerRoute() {
 
       <Container className="mt-8">
         {hasNotifications ? (
-          <div className="space-y-4">
+          <ul aria-label="Notifications list" className="space-y-4">
             {user?.notifications.map(({ event, proposal }) => (
               <CardLink
                 key={`${event.slug}-${proposal.id}`}
+                as="li"
                 to={`/${event.slug}/proposals/${proposal.id}`}
                 className="flex"
-                rounded="xl"
                 p={4}
               >
                 <div className="mt-1 flex h-6 w-6 shrink-0">🎉</div>
@@ -46,7 +46,7 @@ export default function OrganizerRoute() {
                 </div>
               </CardLink>
             ))}
-          </div>
+          </ul>
         ) : (
           <EmptyState label="No notifications" icon={BellSlashIcon} />
         )}
