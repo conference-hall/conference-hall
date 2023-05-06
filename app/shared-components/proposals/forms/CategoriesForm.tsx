@@ -6,12 +6,13 @@ type Props = {
     name: string;
     description?: string | null;
   }>;
+  required?: boolean;
   initialValues?: string[];
 };
 
-export function CategoriesForm({ categories, initialValues }: Props) {
+export function CategoriesForm({ categories, required, initialValues }: Props) {
   return (
-    <CheckboxHeadingGroup label="Select proposal categories">
+    <CheckboxHeadingGroup label="Select proposal categories" description={required ? '(required)' : '(optional)'}>
       {categories.map((c) => (
         <Checkbox
           key={c.id}

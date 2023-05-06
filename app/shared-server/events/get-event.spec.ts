@@ -45,6 +45,7 @@ describe('#getEvent', () => {
       surveyEnabled: true,
       hasTracks: true,
       formats: [{ id: format.id, name: format.name, description: format.description }],
+      formatsRequired: false,
       categories: [
         {
           id: category.id,
@@ -52,6 +53,7 @@ describe('#getEvent', () => {
           description: category.description,
         },
       ],
+      categoriesRequired: false,
     });
   });
 
