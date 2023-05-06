@@ -2,9 +2,15 @@
  * @type {import('@remix-run/dev/config').AppConfig}
  */
 module.exports = {
-  serverDependenciesToBundle: [/^marked.*/, '@sindresorhus/slugify', '@sindresorhus/transliterate'],
+  serverModuleFormat: 'cjs',
+  serverDependenciesToBundle: [
+    /^marked.*/,
+    '@sindresorhus/slugify',
+    '@sindresorhus/transliterate',
+    'escape-string-regexp',
+  ],
+  tailwind: true,
   future: {
-    unstable_tailwind: true,
     v2_routeConvention: true,
     v2_meta: true,
     v2_normalizeFormMethod: true,

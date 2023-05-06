@@ -4,6 +4,9 @@ import compression from 'compression';
 import morgan from 'morgan';
 import { createRequestHandler } from '@remix-run/express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
+import { installGlobals } from '@remix-run/node';
+
+installGlobals();
 
 const BUILD_DIR = path.join(process.cwd(), 'build');
 const MODE = process.env.NODE_ENV;
@@ -26,7 +29,7 @@ app.use(express.static('public', { maxAge: '1h' }));
 
 app.use(morgan('tiny'));
 
-// Proxy Firebase auth
+// Proxy Firebase authentication
 app.use(
   '/__/auth',
   createProxyMiddleware({
