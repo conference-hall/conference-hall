@@ -2,10 +2,6 @@ class BasePage {
   userMenu() {
     return new UserMenu();
   }
-
-  notificationsMenu() {
-    return new NotificationsMenu();
-  }
 }
 
 class UserMenu {
@@ -45,19 +41,6 @@ class UserMenu {
 
   signOut() {
     cy.findByRole('button', { name: 'Sign out' }).click();
-  }
-}
-
-class NotificationsMenu {
-  open() {
-    cy.findByRole('link', { name: 'View notifications' }).click();
-    return this;
-  }
-
-  openAcceptedProposal(eventName: string, proposalName: string) {
-    cy.findByRole('menuitem', {
-      name: `🎉 ${proposalName} has been accepted to ${eventName}. Please confirm or decline your participation.`,
-    }).click();
   }
 }
 
