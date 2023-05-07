@@ -13,15 +13,17 @@ export async function searchProposals(
   filters: ProposalsFilters,
   page: Pagination = 1
 ) {
-  await allowedForEvent(eventSlug, userId);
+  const event = await allowedForEvent(eventSlug, userId);
 
-  const search = new OrganizerProposalsSearch(eventSlug, userId, filters);
+  const options = { searchBySpeakers: event.displayProposalsSpeakers };
+
+  const search = new OrganizerProposalsSearch(eventSlug, userId, filters, options);
 
   const statistics = await search.statistics();
 
   const { pageIndex, currentPage, totalPages } = getPagination(page, statistics.total, RESULTS_BY_PAGE);
 
-  const proposals = await search.proposalsByPage(pageIndex);
+  const proposals = await search.proposalsByPage(pageIndex, RESULTS_BY_PAGE);
 
   return {
     filters,
@@ -36,12 +38,10 @@ export async function searchProposals(
         status: proposal.status,
         emailAcceptedStatus: proposal.emailAcceptedStatus,
         emailRejectedStatus: proposal.emailRejectedStatus,
-        speakers: proposal.speakers.map(({ name }) => name),
+        speakers: event.displayProposalsSpeakers ? proposal.speakers.map(({ name }) => name) : [],
         ratings: {
-          positives: ratings.positives,
-          negatives: ratings.negatives,
-          you: ratings.fromUser(userId)?.rating ?? null,
-          total: ratings.average,
+          summary: event.displayProposalsRatings ? ratings.summary() : undefined,
+          you: ratings.ofUser(userId),
         },
       };
     }),

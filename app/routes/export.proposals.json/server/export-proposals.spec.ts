@@ -6,6 +6,7 @@ import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
 import { exportProposals } from './export-proposals.server';
+import { db } from '~/libs/db';
 
 describe('#exportProposals', () => {
   let owner: User, reviewer: User, speaker: User;
@@ -42,7 +43,7 @@ describe('#exportProposals', () => {
         ratings: {
           negatives: 0,
           positives: 0,
-          total: null,
+          average: null,
         },
         speakers: [
           {
@@ -58,5 +59,25 @@ describe('#exportProposals', () => {
         ],
       },
     ]);
+  });
+
+  it('does not export speakers when display speakers setting is false', async () => {
+    await db.event.update({ data: { displayProposalsSpeakers: false }, where: { id: event.id } });
+
+    await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+
+    const result = await exportProposals(event.slug, owner.id, {});
+
+    expect(result[0].speakers).toBeUndefined();
+  });
+
+  it('does not export ratings when display ratings setting is false', async () => {
+    await db.event.update({ data: { displayProposalsRatings: false }, where: { id: event.id } });
+
+    await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+
+    const result = await exportProposals(event.slug, owner.id, {});
+
+    expect(result[0].ratings).toBeUndefined();
   });
 });

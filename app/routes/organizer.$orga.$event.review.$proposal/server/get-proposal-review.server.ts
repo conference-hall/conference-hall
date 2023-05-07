@@ -5,7 +5,6 @@ import { RatingsDetails } from '~/shared-server/ratings/ratings-details';
 import { OrganizerProposalsSearch } from '~/shared-server/proposals/OrganizerProposalsSearch';
 import { db } from '~/libs/db';
 import { ProposalNotFoundError } from '~/libs/errors';
-import { sortBy } from '~/utils/arrays';
 import type { UserSocialLinks } from '~/schemas/user';
 
 export type ProposalReview = Awaited<ReturnType<typeof getProposalReview>>;
@@ -16,9 +15,11 @@ export async function getProposalReview(
   userId: string,
   filters: ProposalsFilters
 ) {
-  await allowedForEvent(eventSlug, userId);
+  const event = await allowedForEvent(eventSlug, userId);
 
-  const search = new OrganizerProposalsSearch(eventSlug, userId, filters);
+  const options = { searchBySpeakers: event.displayProposalsSpeakers };
+
+  const search = new OrganizerProposalsSearch(eventSlug, userId, filters, options);
   const proposalIds = await search.proposalsIds();
 
   const totalProposals = proposalIds.length;
@@ -28,7 +29,7 @@ export async function getProposalReview(
 
   const proposal = await db.proposal.findFirst({
     include: {
-      speakers: true,
+      speakers: event.displayProposalsSpeakers,
       formats: true,
       categories: true,
       ratings: { include: { user: true } },
@@ -38,8 +39,7 @@ export async function getProposalReview(
   });
   if (!proposal) throw new ProposalNotFoundError();
 
-  const ratingDetails = new RatingsDetails(proposal.ratings);
-  const userRating = ratingDetails.fromUser(userId);
+  const ratings = new RatingsDetails(proposal.ratings);
 
   return {
     pagination: {
@@ -57,35 +57,23 @@ export async function getProposalReview(
       languages: jsonToArray(proposal.languages),
       formats: proposal.formats.map(({ id, name }) => ({ id, name })),
       categories: proposal.categories.map(({ id, name }) => ({ id, name })),
-      speakers: proposal.speakers.map((speaker) => ({
-        id: speaker.id,
-        name: speaker.name,
-        picture: speaker.picture,
-        bio: speaker.bio,
-        references: speaker.references,
-        email: speaker.email,
-        company: speaker.company,
-        address: speaker.address,
-        socials: speaker.socials as UserSocialLinks,
-      })),
-      rating: {
-        average: ratingDetails.average,
-        positives: ratingDetails.positives,
-        negatives: ratingDetails.negatives,
-        userRating: {
-          rating: userRating?.rating,
-          feeling: userRating?.feeling,
-        },
-        membersRatings: sortBy(
-          proposal.ratings.map((rating) => ({
-            id: rating.user.id,
-            name: rating.user.name,
-            picture: rating.user.picture,
-            rating: rating.rating,
-            feeling: rating.feeling,
-          })),
-          'name'
-        ),
+      speakers: event.displayProposalsSpeakers
+        ? proposal.speakers.map((speaker) => ({
+            id: speaker.id,
+            name: speaker.name,
+            picture: speaker.picture,
+            bio: speaker.bio,
+            references: speaker.references,
+            email: speaker.email,
+            company: speaker.company,
+            address: speaker.address,
+            socials: speaker.socials as UserSocialLinks,
+          }))
+        : [],
+      ratings: {
+        you: ratings.ofUser(userId),
+        summary: event.displayProposalsRatings ? ratings.summary() : undefined,
+        members: event.displayProposalsRatings ? ratings.ofMembers() : [],
       },
       messages: proposal.messages
         .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())

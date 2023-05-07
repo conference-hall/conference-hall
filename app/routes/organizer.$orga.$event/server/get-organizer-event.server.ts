@@ -30,7 +30,6 @@ export async function getOrganizerEvent(slug: string, userId: string) {
     surveyEnabled: event.surveyEnabled,
     surveyQuestions: jsonToArray(event.surveyQuestions),
     deliberationEnabled: event.deliberationEnabled,
-    displayOrganizersRatings: event.displayOrganizersRatings,
     displayProposalsRatings: event.displayProposalsRatings,
     displayProposalsSpeakers: event.displayProposalsSpeakers,
     formatsRequired: event.formatsRequired,

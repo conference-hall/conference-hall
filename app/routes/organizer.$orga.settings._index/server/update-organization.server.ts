@@ -1,12 +1,10 @@
-import { db } from '../../../libs/db';
-import { OrganizationNotFoundError } from '../../../libs/errors';
+import { allowedForOrga } from '~/shared-server/organizations/check-user-role.server';
 import type { OrganizationSaveData } from '../types/organization-save.schema';
+import { OrganizationRole } from '@prisma/client';
+import { db } from '~/libs/db';
 
 export async function updateOrganization(slug: string, userId: string, data: OrganizationSaveData) {
-  let organization = await db.organization.findFirst({
-    where: { slug, members: { some: { memberId: userId, role: 'OWNER' } } },
-  });
-  if (!organization) throw new OrganizationNotFoundError();
+  const organization = await allowedForOrga(slug, userId, [OrganizationRole.OWNER]);
 
   return await db.$transaction(async (trx) => {
     const existSlug = await trx.organization.findFirst({ where: { slug: data.slug } });

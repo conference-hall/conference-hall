@@ -7,6 +7,7 @@ import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
 import { searchProposals } from './search-proposals.server';
 import { ForbiddenOperationError } from '~/libs/errors';
+import { db } from '~/libs/db';
 
 describe('#searchProposals', () => {
   let owner: User, speaker: User;
@@ -35,13 +36,35 @@ describe('#searchProposals', () => {
         emailAcceptedStatus: null,
         emailRejectedStatus: null,
         speakers: [speaker.name],
-        ratings: { negatives: 0, positives: 0, you: null, total: null },
+        ratings: {
+          summary: { negatives: 0, positives: 0, average: null },
+          you: { rating: null, feeling: null },
+        },
       },
     ]);
 
     expect(proposals.filters).toEqual({ status: ['SUBMITTED'] });
     expect(proposals.statistics).toEqual({ reviewed: 0, statuses: [{ name: 'SUBMITTED', count: 1 }], total: 1 });
     expect(proposals.pagination).toEqual({ current: 1, total: 1 });
+  });
+
+  it('does not return speakers when display proposal speakers is false', async () => {
+    await db.event.update({ data: { displayProposalsSpeakers: false }, where: { id: event.id } });
+    await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+
+    let proposals = await searchProposals(event.slug, owner.id, {});
+    expect(proposals.results[0]?.speakers).toEqual([]);
+
+    proposals = await searchProposals(event.slug, owner.id, { query: 'parker' });
+    expect(proposals.results.length).toEqual(0);
+  });
+
+  it('does not return ratings when display proposal ratings is false', async () => {
+    await db.event.update({ data: { displayProposalsRatings: false }, where: { id: event.id } });
+    await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+
+    let proposals = await searchProposals(event.slug, owner.id, {});
+    expect(proposals.results[0].ratings.summary).toBeUndefined();
   });
 
   it('returns empty results of an event without proposals', async () => {

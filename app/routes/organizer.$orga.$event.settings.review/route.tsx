@@ -79,20 +79,12 @@ export default function EventReviewSettingsRoute() {
         <Card.Content>
           <Form method="POST" onChange={handleChange} className="space-y-4">
             <Checkbox
-              id="displayOrganizersRatings"
-              name="displayOrganizersRatings"
-              defaultChecked={event.displayOrganizersRatings}
-              description="When disabled, organizer ratings won't be visible in the review page."
-            >
-              Display organizers ratings
-            </Checkbox>
-            <Checkbox
               id="displayProposalsRatings"
               name="displayProposalsRatings"
               defaultChecked={event.displayProposalsRatings}
-              description="When disabled, proposal global ratings won't be visible in the proposals list."
+              description="When disabled, ratings of other reviewers and total rate won't be visible."
             >
-              Display ratings in proposal list
+              Display ratings of other reviewers
             </Checkbox>
             <Checkbox
               id="displayProposalsSpeakers"

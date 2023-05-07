@@ -84,6 +84,12 @@ export class OrganizationNotFoundError extends NotFoundError {
   }
 }
 
+export class DeliberationDisabledError extends ForbiddenError {
+  constructor() {
+    super('Event deliberation is disabled');
+  }
+}
+
 export class ForbiddenOperationError extends ForbiddenError {
   constructor() {
     super('Forbidden operation');

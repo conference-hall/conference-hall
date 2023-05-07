@@ -3,17 +3,19 @@ import { EmailStatus } from '@prisma/client';
 import { db } from '~/libs/db';
 import type { EmailStatusData, ProposalsFilters } from '~/schemas/proposal';
 
-const RESULTS_BY_PAGE = 20;
+type SearchOptions = { searchBySpeakers: boolean };
 
 export class OrganizerProposalsSearch {
   eventSlug: string;
   userId: string;
   filters: ProposalsFilters;
+  options: SearchOptions;
 
-  constructor(eventSlug: string, userId: string, filters: ProposalsFilters) {
+  constructor(eventSlug: string, userId: string, filters: ProposalsFilters, options?: SearchOptions) {
     this.eventSlug = eventSlug;
     this.userId = userId;
     this.filters = filters;
+    this.options = options || { searchBySpeakers: true };
   }
 
   async statistics() {
@@ -25,19 +27,19 @@ export class OrganizerProposalsSearch {
     return { total, reviewed, statuses };
   }
 
-  async proposalsByPage(pageIndex: number = 0) {
+  async proposalsByPage(pageIndex: number = 0, pageSize: number) {
     return db.proposal.findMany({
-      include: { speakers: true, ratings: true },
+      include: { speakers: this.options.searchBySpeakers, ratings: true },
       where: this.whereClause(),
       orderBy: this.orderByClause(),
-      skip: pageIndex * RESULTS_BY_PAGE,
-      take: RESULTS_BY_PAGE,
+      skip: pageIndex * pageSize,
+      take: pageSize,
     });
   }
 
   async proposals() {
     return db.proposal.findMany({
-      include: { speakers: true, ratings: true, formats: true, categories: true },
+      include: { speakers: this.options.searchBySpeakers, ratings: true, formats: true, categories: true },
       where: this.whereClause(),
       orderBy: this.orderByClause(),
     });
@@ -71,21 +73,32 @@ export class OrganizerProposalsSearch {
 
   private whereClause(): Prisma.ProposalWhereInput {
     const { query, ratings, formats, categories, status, emailAcceptedStatus, emailRejectedStatus } = this.filters;
+
     const ratingClause = ratings === 'rated' ? { some: { userId: this.userId } } : { none: { userId: this.userId } };
 
     return {
       event: { slug: this.eventSlug },
       status: { in: status, not: 'DRAFT' },
-      formats: formats ? { some: { id: formats } } : {},
-      categories: categories ? { some: { id: categories } } : {},
-      ratings: ratings ? ratingClause : {},
+      formats: formats ? { some: { id: formats } } : undefined,
+      categories: categories ? { some: { id: categories } } : undefined,
+      ratings: ratings ? ratingClause : undefined,
       emailAcceptedStatus: this.mapEmailStatus(emailAcceptedStatus),
       emailRejectedStatus: this.mapEmailStatus(emailRejectedStatus),
-      OR: [
-        { title: { contains: query, mode: 'insensitive' } },
-        { speakers: { some: { name: { contains: query, mode: 'insensitive' } } } },
-      ],
+      OR: this.whereQueryClause(query),
     };
+  }
+
+  private whereQueryClause(query?: string) {
+    if (!query) return undefined;
+
+    const byTitle: Prisma.ProposalWhereInput = { title: { contains: query, mode: 'insensitive' } };
+    const bySpeakers: Prisma.ProposalWhereInput = {
+      speakers: { some: { name: { contains: query, mode: 'insensitive' } } },
+    };
+
+    if (this.options.searchBySpeakers) return [byTitle, bySpeakers];
+
+    return [byTitle];
   }
 
   private orderByClause(): Prisma.ProposalOrderByWithRelationInput[] {

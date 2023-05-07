@@ -233,17 +233,16 @@ describe('Event settings', () => {
 
       it('enables or disables proposal reviews', () => {
         review.visit('orga-1', 'conference-1');
-        review.enableProposalReview().click();
-        review.disableProposalReview().should('exist');
         review.disableProposalReview().click();
         review.enableProposalReview().should('exist');
+        review.enableProposalReview().click();
+        review.disableProposalReview().should('exist');
       });
 
       it('save proposal review settings', () => {
         review.visit('orga-1', 'conference-1');
 
-        cy.findByLabelText('Display organizers ratings').click();
-        cy.findByLabelText('Display ratings in proposal list').click();
+        cy.findByLabelText('Display ratings of other reviewers').click();
         cy.findByLabelText('Display speakers in proposal page').click();
       });
     });

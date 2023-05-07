@@ -6,9 +6,11 @@ import { OrganizerProposalsSearch } from '~/shared-server/proposals/OrganizerPro
 import type { UserSocialLinks } from '~/schemas/user';
 
 export async function exportProposals(eventSlug: string, userId: string, filters: ProposalsFilters) {
-  await allowedForEvent(eventSlug, userId, [OrganizationRole.OWNER, OrganizationRole.MEMBER]);
+  const event = await allowedForEvent(eventSlug, userId, [OrganizationRole.OWNER, OrganizationRole.MEMBER]);
 
-  const search = new OrganizerProposalsSearch(eventSlug, userId, filters);
+  const options = { searchBySpeakers: event.displayProposalsSpeakers };
+
+  const search = new OrganizerProposalsSearch(eventSlug, userId, filters, options);
 
   const proposals = await search.proposals();
 
@@ -25,21 +27,19 @@ export async function exportProposals(eventSlug: string, userId: string, filters
       formats: proposal.formats,
       categories: proposal.categories,
       languages: proposal.languages,
-      speakers: proposal.speakers.map((speaker) => ({
-        name: speaker.name,
-        bio: speaker.bio,
-        company: speaker.company,
-        references: speaker.references,
-        picture: speaker.picture,
-        address: speaker.address,
-        email: speaker.email,
-        socials: speaker.socials as UserSocialLinks,
-      })),
-      ratings: {
-        positives: ratings.positives,
-        negatives: ratings.negatives,
-        total: ratings.average,
-      },
+      speakers: event.displayProposalsSpeakers
+        ? proposal.speakers.map((speaker) => ({
+            name: speaker.name,
+            bio: speaker.bio,
+            company: speaker.company,
+            references: speaker.references,
+            picture: speaker.picture,
+            address: speaker.address,
+            email: speaker.email,
+            socials: speaker.socials as UserSocialLinks,
+          }))
+        : undefined,
+      ratings: event.displayProposalsRatings ? ratings.summary() : undefined,
     };
   });
 }

@@ -12,6 +12,7 @@ import { userFactory } from 'tests/factories/users';
 import { getProposalReview } from './get-proposal-review.server';
 import { sortBy } from '~/utils/arrays';
 import { ForbiddenOperationError } from '~/libs/errors';
+import { db } from '~/libs/db';
 
 describe('#getProposalReview', () => {
   let owner: User, member: User, speaker: User;
@@ -65,15 +66,23 @@ describe('#getProposalReview', () => {
           socials: speaker.socials,
         },
       ],
-      rating: {
-        average: null,
-        positives: 0,
-        negatives: 0,
-        userRating: { rating: undefined, feeling: undefined },
-        membersRatings: [],
+      ratings: {
+        summary: { average: null, negatives: 0, positives: 0 },
+        you: { feeling: null, rating: null },
+        members: [],
       },
       messages: [],
     });
+  });
+
+  it('does not returns speakers when display proposals speaker setting is false', async () => {
+    await db.event.update({ data: { displayProposalsSpeakers: false }, where: { id: event.id } });
+
+    const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+
+    const reviewInfo = await getProposalReview(event.slug, proposal.id, owner.id, {});
+
+    expect(reviewInfo.proposal.speakers).toEqual([]);
   });
 
   it('returns organizers ratings', async () => {
@@ -83,12 +92,10 @@ describe('#getProposalReview', () => {
 
     const reviewInfo = await getProposalReview(event.slug, proposal.id, owner.id, {});
 
-    expect(reviewInfo.proposal.rating).toEqual({
-      average: 2.5,
-      positives: 1,
-      negatives: 1,
-      userRating: { rating: 0, feeling: 'NEGATIVE' },
-      membersRatings: sortBy(
+    expect(reviewInfo.proposal.ratings).toEqual({
+      summary: { average: 2.5, positives: 1, negatives: 1 },
+      you: { rating: 0, feeling: 'NEGATIVE' },
+      members: sortBy(
         [
           {
             id: owner.id,

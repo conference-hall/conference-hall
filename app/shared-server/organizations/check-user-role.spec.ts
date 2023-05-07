@@ -11,20 +11,20 @@ describe('#allowedForOrga', () => {
   });
   afterEach(disconnectDB);
 
-  it('returns true if user has access to the organization', async () => {
+  it('returns the organization if user has access to the organization', async () => {
     const user = await userFactory();
     const organization = await organizationFactory({ owners: [user] });
 
-    const allowed = await allowedForOrga(organization.slug, user.id);
-    expect(allowed).toBeTruthy();
+    const result = await allowedForOrga(organization.slug, user.id);
+    expect(result.id).toEqual(organization.id);
   });
 
-  it('returns true if user role part of accepted ones', async () => {
+  it('returns the organization if user role part of accepted ones', async () => {
     const user = await userFactory();
     const organization = await organizationFactory({ owners: [user] });
 
-    const allowed = await allowedForOrga(organization.slug, user.id, ['OWNER']);
-    expect(allowed).toBeTruthy();
+    const result = await allowedForOrga(organization.slug, user.id, ['OWNER']);
+    expect(result.id).toEqual(organization.id);
   });
 
   it('throws an error if user role is not in the accepted role list', async () => {
@@ -51,22 +51,22 @@ describe('#allowedForEvent', () => {
   });
   afterEach(disconnectDB);
 
-  it('returns true if user has access to the event', async () => {
+  it('returns the event if user has access to the event', async () => {
     const user = await userFactory();
     const organization = await organizationFactory({ owners: [user] });
     const event = await eventFactory({ organization });
 
-    const allowed = await allowedForEvent(event.slug, user.id);
-    expect(allowed).toBeTruthy();
+    const result = await allowedForEvent(event.slug, user.id);
+    expect(result.id).toEqual(event.id);
   });
 
-  it('returns true if user role part of accepted ones', async () => {
+  it('returns the event if user role part of accepted ones', async () => {
     const user = await userFactory();
     const organization = await organizationFactory({ owners: [user] });
     const event = await eventFactory({ organization });
 
-    const allowed = await allowedForEvent(event.slug, user.id, ['OWNER']);
-    expect(allowed).toBeTruthy();
+    const result = await allowedForEvent(event.slug, user.id, ['OWNER']);
+    expect(result.id).toEqual(event.id);
   });
 
   it('throws an error if user role is not in the accepted role list', async () => {

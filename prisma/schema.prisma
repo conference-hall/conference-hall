@@ -115,8 +115,7 @@ model Event {
   creatorId                String
   creator                  User            @relation(fields: [creatorId], references: [id])
   archived                 Boolean         @default(false)
-  deliberationEnabled      Boolean         @default(false)
-  displayOrganizersRatings Boolean         @default(true)
+  deliberationEnabled      Boolean         @default(true)
   displayProposalsRatings  Boolean         @default(true)
   displayProposalsSpeakers Boolean         @default(true)
   surveyEnabled            Boolean         @default(false)

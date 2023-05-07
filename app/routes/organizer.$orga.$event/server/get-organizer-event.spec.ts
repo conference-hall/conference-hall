@@ -44,7 +44,6 @@ describe('#getEvent', () => {
       surveyEnabled: event.surveyEnabled,
       surveyQuestions: [],
       deliberationEnabled: event.deliberationEnabled,
-      displayOrganizersRatings: event.displayOrganizersRatings,
       displayProposalsRatings: event.displayProposalsRatings,
       displayProposalsSpeakers: event.displayProposalsSpeakers,
       formatsRequired: event.formatsRequired,
