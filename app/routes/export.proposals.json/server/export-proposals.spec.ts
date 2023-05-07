@@ -6,6 +6,7 @@ import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
 import { exportProposals } from './export-proposals.server';
+import { db } from '~/libs/db';
 
 describe('#exportProposals', () => {
   let owner: User, reviewer: User, speaker: User;
@@ -58,5 +59,15 @@ describe('#exportProposals', () => {
         ],
       },
     ]);
+  });
+
+  it('does not export speakers when display speakers setting is false', async () => {
+    await db.event.update({ data: { displayProposalsSpeakers: false }, where: { id: event.id } });
+
+    await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+
+    const result = await exportProposals(event.slug, owner.id, {});
+
+    expect(result[0].speakers).toEqual([]);
   });
 });
