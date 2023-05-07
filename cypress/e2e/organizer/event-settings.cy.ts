@@ -242,7 +242,6 @@ describe('Event settings', () => {
       it('save proposal review settings', () => {
         review.visit('orga-1', 'conference-1');
 
-        cy.findByLabelText('Display other organizers ratings').click();
         cy.findByLabelText('Display ratings in proposal list').click();
         cy.findByLabelText('Display speakers in proposal page').click();
       });
