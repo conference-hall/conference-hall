@@ -1,7 +1,7 @@
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { organizationFactory } from 'tests/factories/organization';
 import { userFactory } from 'tests/factories/users';
-import { OrganizationNotFoundError } from '../../../libs/errors';
+import { ForbiddenOperationError } from '../../../libs/errors';
 import { updateOrganization } from './update-organization.server';
 
 describe('#updateOrganization', () => {
@@ -28,7 +28,7 @@ describe('#updateOrganization', () => {
     const organization = await organizationFactory({ members: [user] });
 
     await expect(updateOrganization(organization.slug, user.id, { name: 'name', slug: 'slug' })).rejects.toThrowError(
-      OrganizationNotFoundError
+      ForbiddenOperationError
     );
   });
 
