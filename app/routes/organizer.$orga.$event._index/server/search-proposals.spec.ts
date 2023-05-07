@@ -36,7 +36,10 @@ describe('#searchProposals', () => {
         emailAcceptedStatus: null,
         emailRejectedStatus: null,
         speakers: [speaker.name],
-        ratings: { negatives: 0, positives: 0, you: null, total: null },
+        ratings: {
+          summary: { negatives: 0, positives: 0, average: null },
+          you: { rating: null, feeling: null },
+        },
       },
     ]);
 

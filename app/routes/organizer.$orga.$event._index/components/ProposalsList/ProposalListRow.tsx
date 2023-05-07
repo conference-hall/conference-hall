@@ -8,14 +8,19 @@ import { Checkbox } from '~/design-system/forms/Checkboxes';
 import { ProposalStatusBadge } from '~/shared-components/proposals/ProposalStatusBadges';
 import type { ProposalStatus } from '@prisma/client';
 
-type ProposalRowProp = {
-  proposal: {
-    id: string;
-    title: string;
-    status: ProposalStatus;
-    speakers: (string | null)[];
-    ratings: { negatives: number; positives: number; you: number | null; total: number | null };
+export type ProposalData = {
+  id: string;
+  title: string;
+  status: ProposalStatus;
+  speakers: (string | null)[];
+  ratings: {
+    summary: { negatives: number; positives: number; average: number | null };
+    you: { rating: number | null };
   };
+};
+
+type ProposalRowProp = {
+  proposal: ProposalData;
   isSelected: boolean;
   onSelect: ChangeEventHandler<HTMLInputElement>;
 };
@@ -60,13 +65,13 @@ export function ProposaListRow({ proposal, isSelected, onSelect }: ProposalRowPr
       </td>
       <td className="hidden w-0 px-3 py-6 lg:table-cell">
         <div className="flex items-center justify-around gap-4">
-          <IconLabel icon={XCircleIcon}>{proposal.ratings.negatives}</IconLabel>
-          <IconLabel icon={HeartIcon}>{proposal.ratings.positives}</IconLabel>
-          <IconLabel icon={StarIcon}>{formatRating(proposal.ratings.you)}</IconLabel>
+          <IconLabel icon={XCircleIcon}>{proposal.ratings.summary.negatives}</IconLabel>
+          <IconLabel icon={HeartIcon}>{proposal.ratings.summary.positives}</IconLabel>
+          <IconLabel icon={StarIcon}>{formatRating(proposal.ratings.you.rating)}</IconLabel>
         </div>
       </td>
       <td className="w-0 rounded-lg px-3 py-6 pr-4 text-right  sm:pr-6">
-        <Text variant="secondary">{formatRating(proposal.ratings.total)}</Text>
+        <Text variant="secondary">{formatRating(proposal.ratings.summary.average)}</Text>
       </td>
     </tr>
   );

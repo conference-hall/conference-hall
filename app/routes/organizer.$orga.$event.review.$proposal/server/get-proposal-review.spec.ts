@@ -66,12 +66,10 @@ describe('#getProposalReview', () => {
           socials: speaker.socials,
         },
       ],
-      rating: {
-        average: null,
-        positives: 0,
-        negatives: 0,
-        userRating: { rating: undefined, feeling: undefined },
-        membersRatings: [],
+      ratings: {
+        summary: { average: null, negatives: 0, positives: 0 },
+        you: { feeling: null, rating: null },
+        members: [],
       },
       messages: [],
     });
@@ -94,12 +92,10 @@ describe('#getProposalReview', () => {
 
     const reviewInfo = await getProposalReview(event.slug, proposal.id, owner.id, {});
 
-    expect(reviewInfo.proposal.rating).toEqual({
-      average: 2.5,
-      positives: 1,
-      negatives: 1,
-      userRating: { rating: 0, feeling: 'NEGATIVE' },
-      membersRatings: sortBy(
+    expect(reviewInfo.proposal.ratings).toEqual({
+      summary: { average: 2.5, positives: 1, negatives: 1 },
+      you: { rating: 0, feeling: 'NEGATIVE' },
+      members: sortBy(
         [
           {
             id: owner.id,

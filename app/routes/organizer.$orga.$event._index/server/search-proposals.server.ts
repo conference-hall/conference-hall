@@ -40,10 +40,8 @@ export async function searchProposals(
         emailRejectedStatus: proposal.emailRejectedStatus,
         speakers: event.displayProposalsSpeakers ? proposal.speakers.map(({ name }) => name) : [],
         ratings: {
-          you: ratings.fromUser(userId)?.rating ?? null,
-          positives: ratings.positives,
-          negatives: ratings.negatives,
-          total: ratings.average,
+          summary: ratings.summary(),
+          you: ratings.ofUser(userId),
         },
       };
     }),

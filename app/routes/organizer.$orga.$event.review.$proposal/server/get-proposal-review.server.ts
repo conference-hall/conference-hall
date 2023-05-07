@@ -5,7 +5,6 @@ import { RatingsDetails } from '~/shared-server/ratings/ratings-details';
 import { OrganizerProposalsSearch } from '~/shared-server/proposals/OrganizerProposalsSearch';
 import { db } from '~/libs/db';
 import { ProposalNotFoundError } from '~/libs/errors';
-import { sortBy } from '~/utils/arrays';
 import type { UserSocialLinks } from '~/schemas/user';
 
 export type ProposalReview = Awaited<ReturnType<typeof getProposalReview>>;
@@ -40,8 +39,7 @@ export async function getProposalReview(
   });
   if (!proposal) throw new ProposalNotFoundError();
 
-  const ratingDetails = new RatingsDetails(proposal.ratings);
-  const userRating = ratingDetails.fromUser(userId);
+  const ratings = new RatingsDetails(proposal.ratings);
 
   return {
     pagination: {
@@ -72,24 +70,10 @@ export async function getProposalReview(
             socials: speaker.socials as UserSocialLinks,
           }))
         : [],
-      rating: {
-        average: ratingDetails.average,
-        positives: ratingDetails.positives,
-        negatives: ratingDetails.negatives,
-        userRating: {
-          rating: userRating?.rating,
-          feeling: userRating?.feeling,
-        },
-        membersRatings: sortBy(
-          proposal.ratings.map((rating) => ({
-            id: rating.user.id,
-            name: rating.user.name,
-            picture: rating.user.picture,
-            rating: rating.rating,
-            feeling: rating.feeling,
-          })),
-          'name'
-        ),
+      ratings: {
+        summary: ratings.summary(),
+        you: ratings.ofUser(userId),
+        members: ratings.ofMembers(),
       },
       messages: proposal.messages
         .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())

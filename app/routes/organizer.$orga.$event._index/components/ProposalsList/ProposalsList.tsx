@@ -1,15 +1,9 @@
-import type { ProposalStatus } from '@prisma/client';
+import type { ProposalData } from './ProposalListRow';
 import { ProposaListRow } from './ProposalListRow';
 import { Card } from '~/design-system/layouts/Card';
 
 type Props = {
-  proposals: Array<{
-    id: string;
-    title: string;
-    status: ProposalStatus;
-    speakers: (string | null)[];
-    ratings: { negatives: number; positives: number; you: number | null; total: number | null };
-  }>;
+  proposals: Array<ProposalData>;
   isSelected: (id: string) => boolean;
   onSelect: (id: string, checked: boolean) => void;
 };

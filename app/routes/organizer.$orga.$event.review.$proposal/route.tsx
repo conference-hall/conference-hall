@@ -49,7 +49,7 @@ export default function OrganizerProposalRoute() {
       </div>
       <BottomPanel
         className="h-28"
-        userRating={proposal.rating.userRating}
+        userRating={proposal.ratings.you}
         nextId={pagination.nextId}
         previousId={pagination.previousId}
       />

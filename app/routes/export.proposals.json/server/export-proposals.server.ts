@@ -39,11 +39,7 @@ export async function exportProposals(eventSlug: string, userId: string, filters
             socials: speaker.socials as UserSocialLinks,
           }))
         : [],
-      ratings: {
-        positives: ratings.positives,
-        negatives: ratings.negatives,
-        total: ratings.average,
-      },
+      ratings: ratings.summary(),
     };
   });
 }

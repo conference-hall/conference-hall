@@ -43,7 +43,7 @@ describe('#exportProposals', () => {
         ratings: {
           negatives: 0,
           positives: 0,
-          total: null,
+          average: null,
         },
         speakers: [
           {

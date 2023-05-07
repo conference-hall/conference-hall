@@ -14,14 +14,16 @@ import { Text } from '~/design-system/Typography';
 import { IconLabel } from '~/design-system/IconLabel';
 import type { UserSocialLinks } from '~/schemas/user';
 
-type Rating = {
-  average: number | null;
-  positives: number;
-  negatives: number;
-  membersRatings: Array<{
-    id: string;
-    name: string | null;
-    picture: string | null;
+type Ratings = {
+  summary: {
+    average: number | null;
+    positives: number;
+    negatives: number;
+  };
+  members: Array<{
+    id?: string;
+    name?: string | null;
+    picture?: string | null;
     rating: number | null;
     feeling: string | null;
   }>;
@@ -42,7 +44,7 @@ type Speaker = {
 type Props = {
   proposal: {
     speakers: Array<Speaker>;
-    rating: Rating;
+    ratings: Ratings;
   };
   className?: string;
 };
@@ -51,7 +53,7 @@ export function LeftPanel({ proposal, className }: Props) {
   return (
     <section className={c('space-y-8 overflow-auto', className)}>
       <div className="divide-y divide-gray-200 border-b border-gray-200">
-        <TotalRating rating={proposal.rating} />
+        <TotalRating ratings={proposal.ratings} />
         {proposal.speakers.map((speaker, index) => (
           <SpeakerInfos key={speaker.id} speaker={speaker} defaultOpen={index === 0} />
         ))}
@@ -60,7 +62,9 @@ export function LeftPanel({ proposal, className }: Props) {
   );
 }
 
-function TotalRating({ rating }: { rating: Rating }) {
+function TotalRating({ ratings }: { ratings: Ratings }) {
+  const { summary, members } = ratings;
+
   return (
     <Disclosure as="section" className="flex flex-col overflow-hidden">
       {({ open }) => (
@@ -70,14 +74,14 @@ function TotalRating({ rating }: { rating: Rating }) {
             className="flex w-full items-center justify-between px-6 py-8 hover:bg-gray-50"
           >
             <div className="flex items-center justify-around gap-4 font-medium">
-              <IconLabel icon={StarIcon} alt={`Rating total ${rating.average} out of 5`}>
-                {rating.average ?? '-'}
+              <IconLabel icon={StarIcon} alt={`Rating total ${summary.average} out of 5`}>
+                {summary.average ?? '-'}
               </IconLabel>
-              <IconLabel icon={HeartIcon} alt={`${rating.positives} loves ratings`}>
-                {rating.positives}
+              <IconLabel icon={HeartIcon} alt={`${summary.positives} loves ratings`}>
+                {summary.positives}
               </IconLabel>
-              <IconLabel icon={XCircleIcon} alt={`${rating.negatives} negatives ratings`}>
-                {rating.negatives}
+              <IconLabel icon={XCircleIcon} alt={`${summary.negatives} negatives ratings`}>
+                {summary.negatives}
               </IconLabel>
             </div>
             <ChevronRightIcon
@@ -88,8 +92,8 @@ function TotalRating({ rating }: { rating: Rating }) {
             aria-label="Organizer ratings details"
             className="grow space-y-4 overflow-auto px-6 pb-8 pt-4"
           >
-            {rating.membersRatings.length === 0 && <Text>No rated yet.</Text>}
-            {rating.membersRatings.map((member) => (
+            {members.length === 0 && <Text>No rated yet.</Text>}
+            {members.map((member) => (
               <div key={member.id} className="flex justify-between">
                 <AvatarName picture={member.picture} size="xs" name={member.name} />
                 <div className="flex items-center justify-around gap-4">
