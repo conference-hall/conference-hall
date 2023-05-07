@@ -23,7 +23,7 @@ export async function searchProposals(
 
   const { pageIndex, currentPage, totalPages } = getPagination(page, statistics.total, RESULTS_BY_PAGE);
 
-  const proposals = await search.proposalsByPage(pageIndex);
+  const proposals = await search.proposalsByPage(pageIndex, RESULTS_BY_PAGE);
 
   return {
     filters,

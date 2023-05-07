@@ -5,8 +5,6 @@ import type { EmailStatusData, ProposalsFilters } from '~/schemas/proposal';
 
 type SearchOptions = { searchBySpeakers: boolean };
 
-const RESULTS_BY_PAGE = 20;
-
 export class OrganizerProposalsSearch {
   eventSlug: string;
   userId: string;
@@ -29,13 +27,13 @@ export class OrganizerProposalsSearch {
     return { total, reviewed, statuses };
   }
 
-  async proposalsByPage(pageIndex: number = 0) {
+  async proposalsByPage(pageIndex: number = 0, pageSize: number) {
     return db.proposal.findMany({
       include: { speakers: this.options.searchBySpeakers, ratings: true },
       where: this.whereClause(),
       orderBy: this.orderByClause(),
-      skip: pageIndex * RESULTS_BY_PAGE,
-      take: RESULTS_BY_PAGE,
+      skip: pageIndex * pageSize,
+      take: pageSize,
     });
   }
 

@@ -89,23 +89,16 @@ describe('#searchProposals', () => {
 
   describe('#search.proposalsByPage', () => {
     it('returns proposals according the page index', async () => {
-      await Promise.all(
-        Array.from({ length: 21 }).map(async () => {
-          const talk = await talkFactory({ speakers: [speaker] });
-          return proposalFactory({ event, talk });
-        })
-      );
-
       const search = new OrganizerProposalsSearch(event.slug, owner.id, {});
 
       const statistics = await search.statistics();
-      expect(statistics.total).toEqual(24);
+      expect(statistics.total).toEqual(3);
 
-      const proposalsPage1 = await search.proposalsByPage(0);
-      expect(proposalsPage1.length).toEqual(20);
+      const proposalsPage1 = await search.proposalsByPage(0, 2);
+      expect(proposalsPage1.length).toEqual(2);
 
-      const proposalsPage2 = await search.proposalsByPage(1);
-      expect(proposalsPage2.length).toEqual(4);
+      const proposalsPage2 = await search.proposalsByPage(1, 2);
+      expect(proposalsPage2.length).toEqual(1);
     });
   });
 
