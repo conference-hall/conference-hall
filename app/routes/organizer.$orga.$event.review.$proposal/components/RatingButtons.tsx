@@ -93,7 +93,7 @@ function isSelected(currentIdx: number, selectedIdx?: number) {
   return false;
 }
 
-function findRatingOptionIndex(userRating: Rating, submissionData: FormData | undefined) {
+function findRatingOptionIndex(userRating: Rating, submissionData?: FormData) {
   let ratings = userRating;
   // optimistic ui
   if (submissionData) {
@@ -102,4 +102,9 @@ function findRatingOptionIndex(userRating: Rating, submissionData: FormData | un
     ratings = { rating: rating !== '' ? parseInt(rating, 10) : null, feeling };
   }
   return options.findIndex((option) => option.value === ratings.rating && option.feeling === ratings.feeling);
+}
+
+export function findRatingOption(userRating: Rating) {
+  const optionIndex = findRatingOptionIndex(userRating);
+  return options[optionIndex];
 }

@@ -7,7 +7,7 @@ import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
 import { rateProposal } from './rate-proposal.server';
 import { db } from '~/libs/db';
-import { ForbiddenOperationError } from '~/libs/errors';
+import { DeliberationDisabledError, ForbiddenOperationError } from '~/libs/errors';
 
 describe('#rateProposal', () => {
   let owner: User, speaker: User;
@@ -43,6 +43,16 @@ describe('#rateProposal', () => {
     const updatedRating = updatedRatings[0];
     expect(updatedRating.feeling).toBe('POSITIVE');
     expect(updatedRating.rating).toBe(5);
+  });
+
+  it('throws an error if event deliberation is disabled', async () => {
+    await db.event.update({ data: { deliberationEnabled: false }, where: { id: event.id } });
+
+    const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+
+    await expect(
+      rateProposal(event.slug, proposal.id, owner.id, { feeling: 'NEUTRAL', rating: 2 })
+    ).rejects.toThrowError(DeliberationDisabledError);
   });
 
   it('throws an error if user does not belong to event orga', async () => {

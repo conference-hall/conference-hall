@@ -1,17 +1,19 @@
 import c from 'classnames';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
 import { ButtonLink } from '~/design-system/Buttons';
-import { RatingButtons } from './RatingButtons';
+import { RatingButtons, findRatingOption } from './RatingButtons';
 import { useParams, useSearchParams } from '@remix-run/react';
+import { Text } from '~/design-system/Typography';
 
 type Props = {
   nextId?: string;
   previousId?: string;
+  deliberationEnabled: boolean;
   userRating: { rating?: number | null; feeling?: string | null };
   className?: string;
 };
 
-export function BottomPanel({ nextId, previousId, userRating, className }: Props) {
+export function BottomPanel({ nextId, previousId, deliberationEnabled, userRating, className }: Props) {
   const params = useParams();
   const [searchParams] = useSearchParams();
 
@@ -33,7 +35,13 @@ export function BottomPanel({ nextId, previousId, userRating, className }: Props
           Previous
         </ButtonLink>
       </div>
-      <RatingButtons userRating={userRating} />
+      {deliberationEnabled ? (
+        <RatingButtons userRating={userRating} />
+      ) : (
+        <Text size="l" strong>
+          {findRatingOption(userRating)?.label}
+        </Text>
+      )}
       <div className="w-24">
         <ButtonLink
           to={{

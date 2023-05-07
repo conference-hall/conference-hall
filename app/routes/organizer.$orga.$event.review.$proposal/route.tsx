@@ -37,6 +37,8 @@ export default function OrganizerProposalRoute() {
   const proposalReview = useLoaderData<typeof loader>();
   const { proposal, pagination } = proposalReview;
 
+  console.log({ deliberationEnabled: event.deliberationEnabled });
+
   return (
     <FullscreenDialog title="Proposal review" onClose={() => navigate(`..?${searchParams.toString()}`)}>
       <TopPanel className="h-28" proposal={proposal} current={pagination.current} total={pagination.total} />
@@ -49,6 +51,7 @@ export default function OrganizerProposalRoute() {
       </div>
       <BottomPanel
         className="h-28"
+        deliberationEnabled={event.deliberationEnabled}
         userRating={proposal.ratings.you}
         nextId={pagination.nextId}
         previousId={pagination.previousId}
