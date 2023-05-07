@@ -71,9 +71,9 @@ export async function getProposalReview(
           }))
         : [],
       ratings: {
-        summary: ratings.summary(),
         you: ratings.ofUser(userId),
-        members: ratings.ofMembers(),
+        summary: event.displayProposalsRatings ? ratings.summary() : undefined,
+        members: event.displayProposalsRatings ? ratings.ofMembers() : [],
       },
       messages: proposal.messages
         .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())

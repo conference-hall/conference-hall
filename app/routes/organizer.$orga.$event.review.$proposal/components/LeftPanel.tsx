@@ -15,7 +15,7 @@ import { IconLabel } from '~/design-system/IconLabel';
 import type { UserSocialLinks } from '~/schemas/user';
 
 type Ratings = {
-  summary: {
+  summary?: {
     average: number | null;
     positives: number;
     negatives: number;
@@ -46,14 +46,15 @@ type Props = {
     speakers: Array<Speaker>;
     ratings: Ratings;
   };
+  displayRatings: boolean;
   className?: string;
 };
 
-export function LeftPanel({ proposal, className }: Props) {
+export function LeftPanel({ proposal, displayRatings, className }: Props) {
   return (
     <section className={c('space-y-8 overflow-auto', className)}>
       <div className="divide-y divide-gray-200 border-b border-gray-200">
-        <TotalRating ratings={proposal.ratings} />
+        {displayRatings && <TotalRating ratings={proposal.ratings} />}
         {proposal.speakers.map((speaker, index) => (
           <SpeakerInfos key={speaker.id} speaker={speaker} defaultOpen={index === 0} />
         ))}
@@ -74,14 +75,14 @@ function TotalRating({ ratings }: { ratings: Ratings }) {
             className="flex w-full items-center justify-between px-6 py-8 hover:bg-gray-50"
           >
             <div className="flex items-center justify-around gap-4 font-medium">
-              <IconLabel icon={StarIcon} alt={`Rating total ${summary.average} out of 5`}>
-                {summary.average ?? '-'}
+              <IconLabel icon={StarIcon} alt={`Rating total ${summary?.average} out of 5`}>
+                {summary?.average ?? '-'}
               </IconLabel>
-              <IconLabel icon={HeartIcon} alt={`${summary.positives} loves ratings`}>
-                {summary.positives}
+              <IconLabel icon={HeartIcon} alt={`${summary?.positives} loves ratings`}>
+                {summary?.positives}
               </IconLabel>
-              <IconLabel icon={XCircleIcon} alt={`${summary.negatives} negatives ratings`}>
-                {summary.negatives}
+              <IconLabel icon={XCircleIcon} alt={`${summary?.negatives} negatives ratings`}>
+                {summary?.negatives}
               </IconLabel>
             </div>
             <ChevronRightIcon

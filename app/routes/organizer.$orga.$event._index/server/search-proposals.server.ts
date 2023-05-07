@@ -40,7 +40,7 @@ export async function searchProposals(
         emailRejectedStatus: proposal.emailRejectedStatus,
         speakers: event.displayProposalsSpeakers ? proposal.speakers.map(({ name }) => name) : [],
         ratings: {
-          summary: ratings.summary(),
+          summary: event.displayProposalsRatings ? ratings.summary() : undefined,
           you: ratings.ofUser(userId),
         },
       };

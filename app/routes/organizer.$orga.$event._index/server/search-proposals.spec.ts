@@ -59,6 +59,14 @@ describe('#searchProposals', () => {
     expect(proposals.results.length).toEqual(0);
   });
 
+  it('does not return ratings when display proposal ratings is false', async () => {
+    await db.event.update({ data: { displayProposalsRatings: false }, where: { id: event.id } });
+    await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+
+    let proposals = await searchProposals(event.slug, owner.id, {});
+    expect(proposals.results[0].ratings.summary).toBeUndefined();
+  });
+
   it('returns empty results of an event without proposals', async () => {
     const proposals = await searchProposals(event.slug, owner.id, {});
 

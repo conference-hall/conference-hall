@@ -38,8 +38,8 @@ export async function exportProposals(eventSlug: string, userId: string, filters
             email: speaker.email,
             socials: speaker.socials as UserSocialLinks,
           }))
-        : [],
-      ratings: ratings.summary(),
+        : undefined,
+      ratings: event.displayProposalsRatings ? ratings.summary() : undefined,
     };
   });
 }
