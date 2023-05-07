@@ -13,9 +13,11 @@ export async function searchProposals(
   filters: ProposalsFilters,
   page: Pagination = 1
 ) {
-  await allowedForEvent(eventSlug, userId);
+  const event = await allowedForEvent(eventSlug, userId);
 
-  const search = new OrganizerProposalsSearch(eventSlug, userId, filters);
+  const options = { searchBySpeakers: event.displayProposalsSpeakers };
+
+  const search = new OrganizerProposalsSearch(eventSlug, userId, filters, options);
 
   const statistics = await search.statistics();
 
@@ -36,11 +38,11 @@ export async function searchProposals(
         status: proposal.status,
         emailAcceptedStatus: proposal.emailAcceptedStatus,
         emailRejectedStatus: proposal.emailRejectedStatus,
-        speakers: proposal.speakers.map(({ name }) => name),
+        speakers: event.displayProposalsSpeakers ? proposal.speakers.map(({ name }) => name) : [],
         ratings: {
+          you: ratings.fromUser(userId)?.rating ?? null,
           positives: ratings.positives,
           negatives: ratings.negatives,
-          you: ratings.fromUser(userId)?.rating ?? null,
           total: ratings.average,
         },
       };

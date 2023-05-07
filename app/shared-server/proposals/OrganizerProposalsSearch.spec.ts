@@ -129,6 +129,13 @@ describe('#searchProposals', () => {
       expect(proposals[1].id).toBe(proposal1.id);
     });
 
+    it('does not filter proposals by speaker name when searchBySpeakers option is false', async () => {
+      const filters = { query: 'parker' };
+      const search = new OrganizerProposalsSearch(event.slug, owner.id, filters, { searchBySpeakers: false });
+      const proposals = await search.proposals();
+      expect(proposals.length).toBe(0);
+    });
+
     it('filters proposals by formats', async () => {
       const filters = { formats: format.id };
       const search = new OrganizerProposalsSearch(event.slug, owner.id, filters);

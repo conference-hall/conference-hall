@@ -2,31 +2,38 @@ import { OrganizationRole } from '@prisma/client';
 import { db } from '~/libs/db';
 import { ForbiddenOperationError } from '~/libs/errors';
 
-export async function allowedForOrga(orga: string, userId: string, roles?: OrganizationRole[]) {
+export async function allowedForOrga(slug: string, userId: string, roles?: OrganizationRole[]) {
   const rolesToCheck = roles || [OrganizationRole.MEMBER, OrganizationRole.REVIEWER, OrganizationRole.OWNER];
 
-  const allowed = await db.organizationMember.count({
+  const orga = await db.organization.findFirst({
     where: {
-      memberId: userId,
-      organization: { slug: orga },
-      role: { in: rolesToCheck },
+      slug,
+      members: {
+        some: { memberId: userId, role: { in: rolesToCheck } },
+      },
     },
   });
-  if (!allowed) throw new ForbiddenOperationError();
-  return true;
+
+  if (!orga) throw new ForbiddenOperationError();
+
+  return orga;
 }
 
-export async function allowedForEvent(event: string, userId: string, roles?: OrganizationRole[]) {
+export async function allowedForEvent(slug: string, userId: string, roles?: OrganizationRole[]) {
   const rolesToCheck = roles || [OrganizationRole.MEMBER, OrganizationRole.REVIEWER, OrganizationRole.OWNER];
 
-  const allowed = await db.organizationMember.count({
+  const event = await db.event.findFirst({
     where: {
-      memberId: userId,
-      organization: { events: { some: { slug: event } } },
-      role: { in: rolesToCheck },
+      slug,
+      organization: {
+        members: {
+          some: { memberId: userId, role: { in: rolesToCheck } },
+        },
+      },
     },
   });
 
-  if (!allowed) throw new ForbiddenOperationError();
-  return true;
+  if (!event) throw new ForbiddenOperationError();
+
+  return event;
 }

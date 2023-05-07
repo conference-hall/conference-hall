@@ -28,7 +28,7 @@ export function QueryFilter({ defaultValue, hasFilters }: Props) {
         name="query"
         type="search"
         aria-label="Find a proposal"
-        placeholder="Find by title and speakers"
+        placeholder="Find a proposal…"
         autoComplete="off"
         defaultValue={defaultValue}
         icon={MagnifyingGlassIcon}

@@ -44,9 +44,11 @@ export function ProposaListRow({ proposal, isSelected, onSelect }: ProposalRowPr
           <Text size="s" strong truncate>
             {proposal.title}
           </Text>
-          <Text size="xs" variant="secondary">
-            by {proposal.speakers.join(', ')}
-          </Text>
+          {proposal.speakers.length > 0 && (
+            <Text size="xs" variant="secondary">
+              by {proposal.speakers.join(', ')}
+            </Text>
+          )}
         </Link>
       </td>
       <td className="hidden w-0 px-3 py-6 text-center sm:table-cell">

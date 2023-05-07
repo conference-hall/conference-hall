@@ -84,7 +84,7 @@ export default function EventReviewSettingsRoute() {
               defaultChecked={event.displayOrganizersRatings}
               description="When disabled, organizer ratings won't be visible in the review page."
             >
-              Display organizers ratings
+              Display other organizers ratings
             </Checkbox>
             <Checkbox
               id="displayProposalsRatings"
