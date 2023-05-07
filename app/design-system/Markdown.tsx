@@ -3,6 +3,8 @@ import cn from 'classnames';
 import xss from 'xss';
 import { marked } from 'marked';
 
+marked.use({ mangle: false, headerIds: false });
+
 type Props = {
   source: string | null;
   size?: 'm' | 's';
