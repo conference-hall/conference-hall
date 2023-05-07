@@ -12,6 +12,7 @@ import { userFactory } from 'tests/factories/users';
 import { getProposalReview } from './get-proposal-review.server';
 import { sortBy } from '~/utils/arrays';
 import { ForbiddenOperationError } from '~/libs/errors';
+import { db } from '~/libs/db';
 
 describe('#getProposalReview', () => {
   let owner: User, member: User, speaker: User;
@@ -74,6 +75,16 @@ describe('#getProposalReview', () => {
       },
       messages: [],
     });
+  });
+
+  it('does not returns speakers when display proposals speaker setting is false', async () => {
+    await db.event.update({ data: { displayProposalsSpeakers: false }, where: { id: event.id } });
+
+    const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+
+    const reviewInfo = await getProposalReview(event.slug, proposal.id, owner.id, {});
+
+    expect(reviewInfo.proposal.speakers).toEqual([]);
   });
 
   it('returns organizers ratings', async () => {

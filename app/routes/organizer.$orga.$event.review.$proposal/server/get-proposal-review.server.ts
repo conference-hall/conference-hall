@@ -16,9 +16,11 @@ export async function getProposalReview(
   userId: string,
   filters: ProposalsFilters
 ) {
-  await allowedForEvent(eventSlug, userId);
+  const event = await allowedForEvent(eventSlug, userId);
 
-  const search = new OrganizerProposalsSearch(eventSlug, userId, filters);
+  const options = { searchBySpeakers: event.displayProposalsSpeakers };
+
+  const search = new OrganizerProposalsSearch(eventSlug, userId, filters, options);
   const proposalIds = await search.proposalsIds();
 
   const totalProposals = proposalIds.length;
@@ -28,7 +30,7 @@ export async function getProposalReview(
 
   const proposal = await db.proposal.findFirst({
     include: {
-      speakers: true,
+      speakers: event.displayProposalsSpeakers,
       formats: true,
       categories: true,
       ratings: { include: { user: true } },
@@ -57,17 +59,19 @@ export async function getProposalReview(
       languages: jsonToArray(proposal.languages),
       formats: proposal.formats.map(({ id, name }) => ({ id, name })),
       categories: proposal.categories.map(({ id, name }) => ({ id, name })),
-      speakers: proposal.speakers.map((speaker) => ({
-        id: speaker.id,
-        name: speaker.name,
-        picture: speaker.picture,
-        bio: speaker.bio,
-        references: speaker.references,
-        email: speaker.email,
-        company: speaker.company,
-        address: speaker.address,
-        socials: speaker.socials as UserSocialLinks,
-      })),
+      speakers: event.displayProposalsSpeakers
+        ? proposal.speakers.map((speaker) => ({
+            id: speaker.id,
+            name: speaker.name,
+            picture: speaker.picture,
+            bio: speaker.bio,
+            references: speaker.references,
+            email: speaker.email,
+            company: speaker.company,
+            address: speaker.address,
+            socials: speaker.socials as UserSocialLinks,
+          }))
+        : [],
       rating: {
         average: ratingDetails.average,
         positives: ratingDetails.positives,
