@@ -12,7 +12,7 @@ export async function exportProposals(eventSlug: string, userId: string, filters
 
   const search = new OrganizerProposalsSearch(eventSlug, userId, filters, options);
 
-  const proposals = await search.proposals();
+  const proposals = await search.proposals({ ratings: event.displayProposalsRatings });
 
   return proposals.map((proposal) => {
     const ratings = new RatingsDetails(proposal.ratings);

@@ -28,7 +28,7 @@ describe('#addCoSpeakerToTalk', () => {
     expect(speakers).toContain(cospeaker.id);
   });
 
-  it('returns null when invitation code not found', async () => {
+  it('returns throws an error when invitation code not found', async () => {
     const speaker = await userFactory();
     await expect(addCoSpeakerToTalk('XXX', speaker.id)).rejects.toThrowError(InvitationNotFoundError);
   });
@@ -49,7 +49,7 @@ describe('#checkTalkInviteCode', () => {
     expect(result).toEqual({ id: talk?.id, title: talk?.title });
   });
 
-  it('returns null when invitation code not found', async () => {
+  it('returns throws an error when invitation code not found', async () => {
     await expect(checkTalkInviteCode('XXX')).rejects.toThrowError(InvitationNotFoundError);
   });
 });
