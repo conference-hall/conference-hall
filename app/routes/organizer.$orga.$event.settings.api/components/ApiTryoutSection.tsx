@@ -42,7 +42,7 @@ export function ApiTryoutSection({ slug, apiKey }: Props) {
             { id: '', label: 'All (by default)' },
             { id: 'SUBMITTED', label: 'Submitted' },
             { id: 'ACCEPTED', label: 'Accepted by organizers' },
-            { id: 'REJECTED', label: 'Rejectecd by organizers' },
+            { id: 'REJECTED', label: 'Rejected by organizers' },
             { id: 'CONFIRMED', label: 'Confirmed by speaker' },
             { id: 'DECLINED', label: 'Declined by speaker' },
           ]}
