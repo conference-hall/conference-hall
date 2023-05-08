@@ -7,6 +7,7 @@ import { Text } from '~/design-system/Typography';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
 import { ProposalStatusBadge } from '~/shared-components/proposals/ProposalStatusBadges';
 import type { ProposalStatus } from '@prisma/client';
+import { formatRating } from '~/utils/ratings';
 
 export type ProposalData = {
   id: string;
@@ -77,14 +78,4 @@ export function ProposaListRow({ proposal, isSelected, onSelect }: ProposalRowPr
       </td>
     </tr>
   );
-}
-
-function formatRating(rating: number | null) {
-  if (rating === null) return '-';
-  return (Math.round(rating * 10) / 10)
-    .toLocaleString(undefined, {
-      minimumFractionDigits: 1,
-      maximumFractionDigits: 1,
-    })
-    .replace(/\.0$/, '');
 }

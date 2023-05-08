@@ -16,9 +16,15 @@ export function ExportActions(props: Props) {
         href={`/export/proposals/json?orga=${params.orga}&event=${params.event}&${searchParams.toString()}`}
         target="_blank"
         rel="noreferrer"
-        className="w-full"
       >
         As JSON
+      </Menu.ItemExternalLink>
+      <Menu.ItemExternalLink
+        href={`/export/proposals/cards?orga=${params.orga}&event=${params.event}&${searchParams.toString()}`}
+        target="_blank"
+        rel="noreferrer"
+      >
+        As printable cards
       </Menu.ItemExternalLink>
     </Menu>
   );

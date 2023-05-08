@@ -1,0 +1,27 @@
+html,
+body {
+  width: 210mm;
+  height: 297mm;
+  margin: 0;
+}
+
+@page {
+  size: A4;
+  margin: 0;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+}
+
+.card {
+  height: 74.25mm;
+  overflow: hidden;
+  border-bottom: 1px dotted black;
+  border-right: 1px dotted black;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
