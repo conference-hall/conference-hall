@@ -4,6 +4,9 @@ import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
 import { getEventProposals } from './get-event-proposals.server';
+import { ApiKeyInvalidError, EventNotFoundError } from '~/libs/errors';
+import { eventFormatFactory } from 'tests/factories/formats';
+import { eventCategoryFactory } from 'tests/factories/categories';
 
 describe('#getEventProposals', () => {
   beforeEach(async () => {
@@ -14,29 +17,71 @@ describe('#getEventProposals', () => {
   it('return proposals from api', async () => {
     const speaker = await userFactory();
     const event = await eventFactory({ attributes: { apiKey: '123' } });
-    const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+    const format = await eventFormatFactory({ event });
+    const category = await eventCategoryFactory({ event });
 
-    const proposals = await getEventProposals(event.slug, event.apiKey!);
+    const proposal = await proposalFactory({
+      event,
+      formats: [format],
+      categories: [category],
+      talk: await talkFactory({ speakers: [speaker], attributes: { level: 'BEGINNER', languages: ['fr'] } }),
+    });
 
-    expect(proposals).toEqual([
-      {
-        id: proposal.id,
-        title: proposal.title,
-        abstract: proposal.abstract,
-        languages: proposal.languages,
-        level: proposal.level,
-        categories: [],
-        formats: [],
-        speakers: [
-          {
-            name: speaker.name,
-            bio: speaker.bio,
-            picture: speaker.picture,
-            company: speaker.company,
-            socials: speaker.socials,
-          },
-        ],
-      },
-    ]);
+    const result = await getEventProposals(event.slug, '123', {});
+
+    expect(result).toEqual({
+      name: event.name,
+      proposals: [
+        {
+          title: proposal.title,
+          abstract: proposal.abstract,
+          level: 'Beginner',
+          formats: [format.name],
+          categories: [category.name],
+          languages: ['French'],
+          speakers: [
+            {
+              name: speaker.name,
+              bio: speaker.bio,
+              company: speaker.company,
+              picture: speaker.picture,
+              socials: speaker.socials,
+            },
+          ],
+        },
+      ],
+    });
+  });
+
+  it('can filters proposals like in the proposals search', async () => {
+    const speaker = await userFactory();
+    const event = await eventFactory({ attributes: { apiKey: '123' } });
+
+    const proposal = await proposalFactory({
+      event,
+      traits: ['accepted'],
+      talk: await talkFactory({ speakers: [speaker] }),
+    });
+
+    await proposalFactory({
+      event,
+      traits: ['submitted'],
+      talk: await talkFactory({ speakers: [speaker] }),
+    });
+
+    const result = await getEventProposals(event.slug, '123', { status: ['ACCEPTED'] });
+
+    expect(result.proposals.length).toBe(1);
+    expect(result.proposals[0].title).toBe(proposal.title);
+  });
+
+  it('returns an error when event not found', async () => {
+    await eventFactory({ attributes: { apiKey: '123' } });
+    await expect(getEventProposals('xxx', '123', {})).rejects.toThrowError(EventNotFoundError);
+  });
+
+  it('returns an error when Api key mismatch', async () => {
+    const event = await eventFactory({ attributes: { apiKey: '123' } });
+    await expect(getEventProposals(event.slug, '456', {})).rejects.toThrowError(ApiKeyInvalidError);
   });
 });

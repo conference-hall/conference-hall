@@ -27,7 +27,7 @@ describe('#addMember', () => {
     expect(result?.slug).toBe(organization.slug);
   });
 
-  it('returns null when invitation code does not exist', async () => {
+  it('returns throws an error when invitation code does not exist', async () => {
     const user = await userFactory();
     await expect(addMember('XXX', user.id)).rejects.toThrowError(InvitationNotFoundError);
   });
@@ -52,7 +52,7 @@ describe('#checkOrganizationInviteCode', () => {
     });
   });
 
-  it('returns null when invitation code does not exist', async () => {
+  it('returns throws an error when invitation code does not exist', async () => {
     await expect(checkOrganizationInviteCode('XXX')).rejects.toThrowError(InvitationNotFoundError);
   });
 });

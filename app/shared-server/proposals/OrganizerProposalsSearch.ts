@@ -37,9 +37,14 @@ export class OrganizerProposalsSearch {
     });
   }
 
-  async proposals() {
+  async proposals(select: { ratings: boolean } = { ratings: true }) {
     return db.proposal.findMany({
-      include: { speakers: this.options.searchBySpeakers, ratings: true, formats: true, categories: true },
+      include: {
+        speakers: this.options.searchBySpeakers,
+        ratings: select.ratings,
+        formats: true,
+        categories: true,
+      },
       where: this.whereClause(),
       orderBy: this.orderByClause(),
     });
