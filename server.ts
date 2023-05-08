@@ -5,6 +5,7 @@ import morgan from 'morgan';
 import { createRequestHandler } from '@remix-run/express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import { installGlobals } from '@remix-run/node';
+import rateLimit from 'express-rate-limit';
 
 installGlobals();
 
@@ -37,6 +38,15 @@ app.use(
     changeOrigin: true,
   })
 );
+
+// Rate limits
+const apiLimiter = rateLimit({
+  max: 5,
+  windowMs: 60 * 60 * 1000,
+  standardHeaders: true,
+  message: 'You can only make 5 requests every hour.',
+});
+app.use('/api', apiLimiter);
 
 // Remix requests
 app.all(
