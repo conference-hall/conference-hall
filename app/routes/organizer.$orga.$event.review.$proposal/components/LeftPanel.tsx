@@ -13,6 +13,7 @@ import { AvatarName } from '~/design-system/Avatar';
 import { Text } from '~/design-system/Typography';
 import { IconLabel } from '~/design-system/IconLabel';
 import type { UserSocialLinks } from '~/schemas/user';
+import { formatRating } from '~/utils/ratings';
 
 type Ratings = {
   summary?: {
@@ -75,8 +76,8 @@ function TotalRating({ ratings }: { ratings: Ratings }) {
             className="flex w-full items-center justify-between px-6 py-8 hover:bg-gray-50"
           >
             <div className="flex items-center justify-around gap-4 font-medium">
-              <IconLabel icon={StarIcon} alt={`Rating total ${summary?.average} out of 5`}>
-                {summary?.average ?? '-'}
+              <IconLabel icon={StarIcon} alt={`Rating total ${formatRating(summary?.average)} out of 5`}>
+                {formatRating(summary?.average) ?? '-'}
               </IconLabel>
               <IconLabel icon={HeartIcon} alt={`${summary?.positives} loves ratings`}>
                 {summary?.positives}
