@@ -2,8 +2,7 @@ import c from 'classnames';
 import { useCallback, useState } from 'react';
 import { RadioGroup } from '@headlessui/react';
 import { HeartIcon, NoSymbolIcon, StarIcon, XCircleIcon } from '@heroicons/react/24/outline';
-import { Text } from '~/design-system/Typography';
-import { useFetcher, useNavigation, useParams } from '@remix-run/react';
+import { useFetcher, useNavigation } from '@remix-run/react';
 
 type Option = {
   label: string;
@@ -31,19 +30,16 @@ type Rating = { rating?: number | null; feeling?: string | null };
 type Props = { userRating: Rating };
 
 export function RatingButtons({ userRating }: Props) {
-  const params = useParams();
   const fetcher = useFetcher();
   const submission = useNavigation();
   const defaultIndex = findRatingOptionIndex(userRating, submission?.formData);
   const [overIndex, setOverIndex] = useState<number>(-1);
 
-  const action = `/organizer/${params.orga}/${params.event}/review/${params.proposal}/rate`;
-
   const iconStyles = useCallback(
     ({ option, index }: StyleProps) => {
       const currentSelected = isSelected(index, defaultIndex);
       const currentOver = isSelected(index, overIndex);
-      return c('h-8 w-8 sm:h-10 sm:w-10', {
+      return c('h-8 w-8', {
         'stroke-indigo-500': !currentSelected && currentOver,
         [option.fill]: currentSelected,
       });
@@ -57,20 +53,20 @@ export function RatingButtons({ userRating }: Props) {
       if (!option) return;
       fetcher.submit(
         { rating: option.value === null ? '' : String(option.value), feeling: option.feeling },
-        { action, method: 'POST' }
+        { method: 'POST' }
       );
     },
-    [fetcher, action]
+    [fetcher]
   );
 
   return (
     <fetcher.Form className="text-center font-medium">
       <RadioGroup value={String(defaultIndex)} onChange={handleSubmit}>
         <RadioGroup.Label className="sr-only"> Choose a rating value </RadioGroup.Label>
-        <div className="flex items-center" onMouseOut={() => setOverIndex(-1)}>
+        <div className="flex items-center justify-between" onMouseOut={() => setOverIndex(-1)}>
           {options.map((option, index) => (
-            <RadioGroup.Option key={index} value={String(index)}>
-              <div className="cursor-pointer px-1 sm:px-3" onMouseOver={() => setOverIndex(index)}>
+            <RadioGroup.Option key={index} value={String(index)} title={option.label}>
+              <div className="cursor-pointer" onMouseOver={() => setOverIndex(index)}>
                 <option.Icon className={iconStyles({ option, index })} />
                 <RadioGroup.Label className="sr-only">{option.label}</RadioGroup.Label>
               </div>
@@ -78,9 +74,6 @@ export function RatingButtons({ userRating }: Props) {
           ))}
         </div>
       </RadioGroup>
-      <Text size="base" variant="secondary">
-        {options[overIndex]?.label ?? options[defaultIndex]?.label ?? 'Not rated yet!'}
-      </Text>
     </fetcher.Form>
   );
 }
