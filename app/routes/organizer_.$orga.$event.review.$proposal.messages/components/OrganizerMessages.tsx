@@ -31,40 +31,48 @@ export function OrganizerMessages({ userId, messages }: Props) {
       aria-label="Organizer messages section"
       className="flex flex-1 flex-col justify-between overflow-hidden"
     >
-      <div className="flex flex-col-reverse gap-4 overflow-auto p-8">
-        {messages.map((message) => (
-          <div key={message.id} className="group flex items-end gap-4">
-            <Avatar picture={message.picture} name={message.name} />
-            <div className="min-w-0 grow">
-              <div className="relative">
-                <Text size="xs" variant="secondary">
-                  {message.name}
-                </Text>
-                {userId === message.userId && (
-                  <IconButton
-                    label="Delete comment"
-                    icon={TrashIcon}
-                    variant="secondary"
-                    size="xs"
-                    className="absolute bottom-0 right-0 hidden group-hover:block"
-                    onClick={() => handleDelete(message.id)}
-                  />
-                )}
+      {messages.length === 0 ? (
+        <div className="p-8">
+          <Text size="s" variant="secondary" strong>
+            No conversation about the proposal.
+          </Text>
+        </div>
+      ) : (
+        <ul className="flex flex-col-reverse gap-4 p-8">
+          {messages.map((message) => (
+            <li key={message.id} className="group flex items-end gap-4">
+              <Avatar picture={message.picture} name={message.name} />
+              <div className="min-w-0 grow">
+                <div className="relative">
+                  <Text size="xs" variant="secondary">
+                    {message.name}
+                  </Text>
+                  {userId === message.userId && (
+                    <IconButton
+                      label="Delete comment"
+                      icon={TrashIcon}
+                      variant="secondary"
+                      size="xs"
+                      className="absolute bottom-0 right-0 hidden group-hover:block"
+                      onClick={() => handleDelete(message.id)}
+                    />
+                  )}
+                </div>
+                <div className="mt-1 break-all rounded-r-md rounded-tl-md border border-gray-200 bg-gray-50 px-4 py-4">
+                  <Text size="s">{message.message}</Text>
+                </div>
               </div>
-              <div className="mt-1 break-all rounded-r-md rounded-tl-md border border-gray-200 bg-gray-50 px-4 py-4">
-                <Text size="s">{message.message}</Text>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+            </li>
+          ))}
+        </ul>
+      )}
 
       <Form method="POST" className="flex gap-2 border-t border-gray-200 p-6">
         <Input
           type="text"
           name="comment"
-          aria-label="Write a comment to other organizers"
-          placeholder="Write a comment..."
+          aria-label="Write a message to other organizers"
+          placeholder="Write a message to other organizers..."
           className="grow"
           autoComplete="off"
           required

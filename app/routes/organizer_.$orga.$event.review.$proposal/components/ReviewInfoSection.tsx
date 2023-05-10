@@ -2,6 +2,8 @@ import { PencilSquareIcon } from '@heroicons/react/20/solid';
 import { HeartIcon, StarIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import type { ProposalStatus } from '@prisma/client';
 import { useParams, useSearchParams } from '@remix-run/react';
+import format from 'date-fns/format';
+import { ClientOnly } from 'remix-utils';
 import { ButtonLink } from '~/design-system/Buttons';
 import { H2, Text } from '~/design-system/Typography';
 import { Card } from '~/design-system/layouts/Card';
@@ -16,9 +18,10 @@ type Props = {
   };
   status: ProposalStatus;
   comments: string | null;
+  submittedAt: string;
 };
 
-export function ReviewInfoSection({ review, status, comments }: Props) {
+export function ReviewInfoSection({ review, status, comments, submittedAt }: Props) {
   const params = useParams();
   const [searchParams] = useSearchParams();
 
@@ -56,24 +59,26 @@ export function ReviewInfoSection({ review, status, comments }: Props) {
 
       <div className="flex justify-between gap-2">
         <Text size="s" strong>
-          Submission date
-        </Text>
-        <Text size="s">10/02/2023</Text>
-      </div>
-
-      <div className="flex justify-between gap-2">
-        <Text size="s" strong>
           Proposal status
         </Text>
         <ProposalStatusBadge status={status} />
       </div>
 
+      <div className="flex justify-between gap-2">
+        <Text size="s" strong>
+          Submission date
+        </Text>
+        <ClientOnly>{() => <Text size="s">{format(new Date(submittedAt), 'PPP')}</Text>}</ClientOnly>
+      </div>
+
       {comments && (
         <div className="flex flex-col gap-2">
           <Text size="s" strong>
-            Speaker message
+            Submission message
           </Text>
-          <Text size="s">{comments}</Text>
+          <div className="rounded bg-gray-50 p-2 italic">
+            <Text size="xs">{comments}</Text>
+          </div>
         </div>
       )}
 

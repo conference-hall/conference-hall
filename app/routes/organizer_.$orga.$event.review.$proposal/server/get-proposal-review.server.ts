@@ -55,6 +55,7 @@ export async function getProposalReview(
       comments: proposal.comments,
       level: proposal.level,
       status: proposal.status,
+      createdAt: proposal.createdAt.toUTCString(),
       languages: jsonToArray(proposal.languages),
       formats: proposal.formats.map(({ id, name }) => ({ id, name })),
       categories: proposal.categories.map(({ id, name }) => ({ id, name })),

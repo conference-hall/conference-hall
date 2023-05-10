@@ -1,6 +1,6 @@
 import { json, type LoaderArgs } from '@remix-run/node';
 import { AvatarName } from '~/design-system/Avatar';
-import { HeartIcon, StarIcon, XCircleIcon } from '@heroicons/react/24/outline';
+import { EyeSlashIcon, HeartIcon, StarIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import { Text } from '~/design-system/Typography';
 import { formatRating } from '~/utils/ratings';
 import { Card } from '~/design-system/layouts/Card';
@@ -8,6 +8,7 @@ import { requireSession } from '~/libs/auth/session';
 import invariant from 'tiny-invariant';
 import { getReviews } from './server/get-reviews.server';
 import { useLoaderData } from '@remix-run/react';
+import { EmptyState } from '~/design-system/layouts/EmptyState';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);
@@ -22,12 +23,16 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 export default function ProposalReviewRoute() {
   const reviews = useLoaderData<typeof loader>();
 
+  if (reviews.length === 0) {
+    return <EmptyState icon={EyeSlashIcon} label="No reviews yet." />;
+  }
+
   return (
     <Card as="ul" className="divide-y divide-gray-200">
       {reviews.map((review) => (
         <li key={review.id} className="flex items-center justify-between p-4">
           <AvatarName picture={review.picture} name={review.name} />
-          <div className="flex w-16 items-center justify-between rounded bg-gray-100 px-3 py-1">
+          <div className="flex w-14 items-center justify-between rounded bg-gray-100 px-3 py-1">
             {review.feeling === 'POSITIVE' ? (
               <HeartIcon className="h-4 w-4" />
             ) : review.feeling === 'NEGATIVE' ? (
