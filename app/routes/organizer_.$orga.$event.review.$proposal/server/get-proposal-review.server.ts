@@ -32,8 +32,8 @@ export async function getProposalReview(
       speakers: event.displayProposalsSpeakers,
       formats: true,
       categories: true,
-      ratings: { include: { user: true } },
-      messages: { include: { user: true } },
+      ratings: true,
+      _count: { select: { ratings: true, messages: true } },
     },
     where: { id: proposalId },
   });
@@ -48,7 +48,6 @@ export async function getProposalReview(
       previousId,
       nextId,
     },
-    event,
     proposal: {
       title: proposal.title,
       abstract: proposal.abstract,
@@ -72,20 +71,12 @@ export async function getProposalReview(
             socials: speaker.socials as UserSocialLinks,
           }))
         : [],
-      ratings: {
+      reviews: {
         you: ratings.ofUser(userId),
         summary: event.displayProposalsRatings ? ratings.summary() : undefined,
-        members: event.displayProposalsRatings ? ratings.ofMembers() : [],
       },
-      messages: proposal.messages
-        .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
-        .map((message) => ({
-          id: message.id,
-          userId: message.userId,
-          name: message.user.name,
-          picture: message.user.picture,
-          message: message.message,
-        })),
+      reviewsCount: proposal._count.ratings,
+      messagesCount: proposal._count.messages,
     },
   };
 }

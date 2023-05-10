@@ -10,7 +10,6 @@ import { ratingFactory } from 'tests/factories/ratings';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
 import { getProposalReview } from './get-proposal-review.server';
-import { sortBy } from '~/utils/arrays';
 import { ForbiddenOperationError } from '~/libs/errors';
 import { db } from '~/libs/db';
 
@@ -50,6 +49,7 @@ describe('#getProposalReview', () => {
       references: proposal.references,
       comments: proposal.comments,
       level: proposal.level,
+      status: proposal.status,
       languages: ['en'],
       formats: [{ id: format.id, name: format.name }],
       categories: [{ id: category.id, name: category.name }],
@@ -66,12 +66,12 @@ describe('#getProposalReview', () => {
           socials: speaker.socials,
         },
       ],
-      ratings: {
+      reviews: {
         summary: { average: null, negatives: 0, positives: 0 },
         you: { feeling: null, rating: null },
-        members: [],
       },
-      messages: [],
+      reviewsCount: 0,
+      messagesCount: 0,
     });
   });
 
@@ -85,61 +85,41 @@ describe('#getProposalReview', () => {
     expect(reviewInfo.proposal.speakers).toEqual([]);
   });
 
-  it('returns organizers ratings', async () => {
+  it('returns organizers reviews', async () => {
     const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
     await ratingFactory({ proposal, user: owner, attributes: { feeling: 'NEGATIVE', rating: 0 } });
     await ratingFactory({ proposal, user: member, attributes: { feeling: 'POSITIVE', rating: 5 } });
 
     const reviewInfo = await getProposalReview(event.slug, proposal.id, owner.id, {});
 
-    expect(reviewInfo.proposal.ratings).toEqual({
+    expect(reviewInfo.proposal.reviews).toEqual({
       summary: { average: 2.5, positives: 1, negatives: 1 },
       you: { rating: 0, feeling: 'NEGATIVE' },
-      members: sortBy(
-        [
-          {
-            id: owner.id,
-            name: owner.name,
-            picture: owner.picture,
-            feeling: 'NEGATIVE',
-            rating: 0,
-          },
-          {
-            id: member.id,
-            name: member.name,
-            picture: member.picture,
-            feeling: 'POSITIVE',
-            rating: 5,
-          },
-        ],
-        'name'
-      ),
+    });
+  });
+
+  it('does not returns reviews summary when display proposals reviews setting is false', async () => {
+    await db.event.update({ data: { displayProposalsRatings: false }, where: { id: event.id } });
+
+    const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+    await ratingFactory({ proposal, user: owner, attributes: { feeling: 'NEGATIVE', rating: 0 } });
+
+    const reviewInfo = await getProposalReview(event.slug, proposal.id, owner.id, {});
+
+    expect(reviewInfo.proposal.reviews).toEqual({
+      summary: undefined,
+      you: { rating: 0, feeling: 'NEGATIVE' },
     });
   });
 
   it('returns organizers messages', async () => {
     const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-    const message1 = await messageFactory({ proposal, user: owner, attributes: { message: 'Message 1' } });
-    const message2 = await messageFactory({ proposal, user: member, attributes: { message: 'Message 2' } });
+    await messageFactory({ proposal, user: owner, attributes: { message: 'Message 1' } });
+    await messageFactory({ proposal, user: member, attributes: { message: 'Message 2' } });
 
     const reviewInfo = await getProposalReview(event.slug, proposal.id, owner.id, {});
 
-    expect(reviewInfo.proposal.messages).toEqual([
-      {
-        id: message2.id,
-        userId: member.id,
-        name: member.name,
-        picture: member.picture,
-        message: 'Message 2',
-      },
-      {
-        id: message1.id,
-        userId: owner.id,
-        name: owner.name,
-        picture: owner.picture,
-        message: 'Message 1',
-      },
-    ]);
+    expect(reviewInfo.proposal.messagesCount).toEqual(2);
   });
 
   it('returns pagination for next and previous proposals', async () => {
