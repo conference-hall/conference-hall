@@ -3,6 +3,7 @@ import { ForbiddenOperationError, ProposalNotFoundError } from '~/libs/errors';
 import type { SurveyData } from '~/schemas/survey';
 import type { UserSocialLinks } from '~/schemas/user';
 import { allowedForEvent } from '~/shared-server/organizations/check-user-role.server';
+import { sortBy } from '~/utils/arrays';
 
 export async function getSpeakers(eventSlug: string, proposalId: string, userId: string) {
   const event = await allowedForEvent(eventSlug, userId);
@@ -17,22 +18,23 @@ export async function getSpeakers(eventSlug: string, proposalId: string, userId:
     where: { eventId: event.id, userId: { in: proposal?.speakers.map(({ id }) => id) } },
   });
 
-  console.log(surveys);
+  return sortBy(
+    proposal.speakers.map((speaker) => {
+      const survey = surveys.find((survey) => survey.userId === speaker.id);
 
-  return proposal.speakers.map((speaker) => {
-    const survey = surveys.find((survey) => survey.userId === speaker.id);
-
-    return {
-      id: speaker.id,
-      name: speaker.name,
-      picture: speaker.picture,
-      bio: speaker.bio,
-      references: speaker.references,
-      email: speaker.email,
-      company: speaker.company,
-      address: speaker.address,
-      socials: speaker.socials as UserSocialLinks,
-      survey: survey?.answers as SurveyData | undefined,
-    };
-  });
+      return {
+        id: speaker.id,
+        name: speaker.name,
+        picture: speaker.picture,
+        bio: speaker.bio,
+        references: speaker.references,
+        email: speaker.email,
+        company: speaker.company,
+        address: speaker.address,
+        socials: speaker.socials as UserSocialLinks,
+        survey: survey?.answers as SurveyData | undefined,
+      };
+    }),
+    'name'
+  );
 }
