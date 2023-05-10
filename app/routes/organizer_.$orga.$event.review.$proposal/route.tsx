@@ -2,7 +2,7 @@ import invariant from 'tiny-invariant';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { requireSession } from '~/libs/auth/session';
-import { Outlet, useLoaderData, useOutletContext } from '@remix-run/react';
+import { Outlet, useLoaderData, useOutletContext, useParams } from '@remix-run/react';
 import { withZod } from '@remix-validated-form/with-zod';
 import { ProposalRatingDataSchema, ProposalsFiltersSchema } from '~/schemas/proposal';
 import type { ProposalReview } from './server/get-proposal-review.server';
@@ -13,6 +13,7 @@ import { ReviewHeader } from './components/Header';
 import { ReviewTabs } from './components/Tabs';
 import { rateProposal } from './server/rate-proposal.server';
 import { ReviewInfoSection } from './components/ReviewInfoSection';
+import { OrganizationRole } from '@prisma/client';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);
@@ -39,11 +40,15 @@ export const action = async ({ request, params }: ActionArgs) => {
 };
 
 export default function ProposalReviewRoute() {
+  const params = useParams();
   const { user } = useUser();
 
   const proposalReview = useLoaderData<typeof loader>();
   const { proposal, pagination } = proposalReview;
   const { you, summary } = proposal.reviews;
+
+  const role = user?.organizations.find((orga) => orga.slug === params.orga)?.role;
+  const canEditProposal = OrganizationRole.MEMBER === role || OrganizationRole.OWNER === role;
 
   return (
     <>
@@ -72,6 +77,7 @@ export default function ProposalReviewRoute() {
             comments={proposal.comments}
             submittedAt={proposal.createdAt}
             deliberationEnabled={proposalReview.deliberationEnabled}
+            canEditProposal={canEditProposal}
           />
         </div>
       </div>

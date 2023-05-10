@@ -23,6 +23,7 @@ type Props = {
   comments: string | null;
   submittedAt: string;
   deliberationEnabled: boolean;
+  canEditProposal: boolean;
 };
 
 export function ReviewInfoSection({
@@ -33,6 +34,7 @@ export function ReviewInfoSection({
   comments,
   submittedAt,
   deliberationEnabled,
+  canEditProposal,
 }: Props) {
   const params = useParams();
   const [searchParams] = useSearchParams();
@@ -47,25 +49,6 @@ export function ReviewInfoSection({
       )}
 
       <div className="space-y-8 p-6">
-        <div className="flex items-center justify-between">
-          <Text size="s" strong>
-            Your review
-          </Text>
-          <div className="flex items-center gap-1">
-            {feeling === 'POSITIVE' ? (
-              <HeartIcon className="h-4 w-4 fill-red-300" />
-            ) : feeling === 'NEGATIVE' ? (
-              <XCircleIcon className="h-4 w-4 fill-gray-100" />
-            ) : (
-              <StarIcon className="h-4 w-4 fill-yellow-300" />
-            )}
-
-            <Text size="s" strong>
-              {formatRating(rating)}
-            </Text>
-          </div>
-        </div>
-
         {review && (
           <div className="flex items-center justify-between">
             <Text size="s" strong>
@@ -94,6 +77,25 @@ export function ReviewInfoSection({
           </div>
         )}
 
+        <div className="flex items-center justify-between">
+          <Text size="s" strong>
+            Your review
+          </Text>
+          <div className="flex items-center gap-1">
+            {feeling === 'POSITIVE' ? (
+              <HeartIcon className="h-4 w-4 fill-red-300" />
+            ) : feeling === 'NEGATIVE' ? (
+              <XCircleIcon className="h-4 w-4 fill-gray-100" />
+            ) : (
+              <StarIcon className="h-4 w-4 fill-yellow-300" />
+            )}
+
+            <Text size="s" strong>
+              {formatRating(rating)}
+            </Text>
+          </div>
+        </div>
+
         <div className="flex justify-between gap-2">
           <Text size="s" strong>
             Proposal status
@@ -119,17 +121,19 @@ export function ReviewInfoSection({
           </div>
         )}
 
-        <ButtonLink
-          to={{
-            pathname: `/organizer/${params.orga}/${params.event}/review/${params.proposal}/edit`,
-            search: searchParams.toString(),
-          }}
-          variant="secondary"
-          iconLeft={PencilSquareIcon}
-          block
-        >
-          Edit proposal
-        </ButtonLink>
+        {canEditProposal && (
+          <ButtonLink
+            to={{
+              pathname: `/organizer/${params.orga}/${params.event}/review/${params.proposal}/edit`,
+              search: searchParams.toString(),
+            }}
+            variant="secondary"
+            iconLeft={PencilSquareIcon}
+            block
+          >
+            Edit proposal
+          </ButtonLink>
+        )}
       </div>
     </Card>
   );

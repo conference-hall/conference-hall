@@ -28,24 +28,25 @@ export default function ProposalReviewRoute() {
   }
 
   return (
-    <Card as="ul" className="divide-y divide-gray-200">
+    <ul aria-label="Organizers reviews" className="grid grid-cols-1 gap-4 md:grid-cols-3">
       {reviews.map((review) => (
-        <li key={review.id} className="flex items-center justify-between p-4">
-          <AvatarName picture={review.picture} name={review.name} />
-          <div className="flex w-14 items-center justify-between rounded bg-gray-100 px-3 py-1">
+        <Card as="li" key={review.id} className="flex items-center justify-between p-4">
+          <AvatarName size="xs" picture={review.picture} name={review.name} />
+          <div className="flex items-center gap-1">
             {review.feeling === 'POSITIVE' ? (
-              <HeartIcon className="h-4 w-4" />
+              <HeartIcon className="h-4 w-4 fill-red-300" />
             ) : review.feeling === 'NEGATIVE' ? (
-              <XCircleIcon className="h-4 w-4" />
+              <XCircleIcon className="h-4 w-4 fill-gray-100" />
             ) : (
-              <StarIcon className="h-4 w-4" />
+              <StarIcon className="h-4 w-4 fill-yellow-300" />
             )}
-            <Text size="base" heading strong>
+
+            <Text size="s" strong>
               {formatRating(review.rating)}
             </Text>
           </div>
-        </li>
+        </Card>
       ))}
-    </Card>
+    </ul>
   );
 }

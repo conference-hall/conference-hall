@@ -4,15 +4,18 @@ import { requireSession } from '~/libs/auth/session';
 import invariant from 'tiny-invariant';
 import { ProposalUpdateSchema } from '~/schemas/proposal';
 import { updateProposal } from '../organizer.$orga.$event._index/server/update-proposal.server';
-import { Form, useActionData, useSearchParams } from '@remix-run/react';
+import { Form, useActionData, useLoaderData, useSearchParams } from '@remix-run/react';
 import { DetailsForm } from '~/shared-components/proposals/forms/DetailsForm';
 import { Button, ButtonLink } from '~/design-system/Buttons';
 import { Card } from '~/design-system/layouts/Card';
 import { withZod } from '@remix-validated-form/with-zod';
+import { getEvent } from '~/shared-server/events/get-event.server';
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   await requireSession(request);
-  return null;
+  invariant(params.event, 'Invalid event slug');
+  const event = await getEvent(params.event);
+  return json(event);
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
@@ -33,13 +36,19 @@ export const action = async ({ request, params }: ActionArgs) => {
 export default function OrganizerProposalEditRoute() {
   const { proposalReview } = useProposalReview();
   const [searchParams] = useSearchParams();
+  const event = useLoaderData<typeof loader>();
   const errors = useActionData<typeof action>();
 
   return (
     <Card>
       <Card.Content>
         <Form id="edit-proposal-form" method="POST">
-          <DetailsForm initialValues={proposalReview.proposal} errors={errors} />
+          <DetailsForm
+            initialValues={proposalReview.proposal}
+            formats={event.formats}
+            categories={event.categories}
+            errors={errors}
+          />
         </Form>
       </Card.Content>
       <Card.Actions>

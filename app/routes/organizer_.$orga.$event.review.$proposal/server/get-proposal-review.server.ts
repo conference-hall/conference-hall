@@ -5,7 +5,6 @@ import { RatingsDetails } from '~/shared-server/ratings/ratings-details';
 import { OrganizerProposalsSearch } from '~/shared-server/proposals/OrganizerProposalsSearch';
 import { db } from '~/libs/db';
 import { ProposalNotFoundError } from '~/libs/errors';
-import type { UserSocialLinks } from '~/schemas/user';
 
 export type ProposalReview = Awaited<ReturnType<typeof getProposalReview>>;
 
@@ -58,12 +57,6 @@ export async function getProposalReview(
             id: speaker.id,
             name: speaker.name,
             picture: speaker.picture,
-            bio: speaker.bio,
-            references: speaker.references,
-            email: speaker.email,
-            company: speaker.company,
-            address: speaker.address,
-            socials: speaker.socials as UserSocialLinks,
           }))
         : [],
       reviews: {
