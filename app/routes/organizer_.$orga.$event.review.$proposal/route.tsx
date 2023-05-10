@@ -71,6 +71,7 @@ export default function ProposalReviewRoute() {
             status={proposal.status}
             comments={proposal.comments}
             submittedAt={proposal.createdAt}
+            deliberationEnabled={proposalReview.deliberationEnabled}
           />
         </div>
       </div>

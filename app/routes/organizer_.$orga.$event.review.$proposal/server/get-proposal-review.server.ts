@@ -42,12 +42,6 @@ export async function getProposalReview(
   const ratings = new RatingsDetails(proposal.ratings);
 
   return {
-    pagination: {
-      total: totalProposals,
-      current: curIndex + 1,
-      previousId,
-      nextId,
-    },
     proposal: {
       title: proposal.title,
       abstract: proposal.abstract,
@@ -78,6 +72,13 @@ export async function getProposalReview(
       },
       reviewsCount: proposal._count.ratings,
       messagesCount: proposal._count.messages,
+    },
+    deliberationEnabled: event.deliberationEnabled,
+    pagination: {
+      total: totalProposals,
+      current: curIndex + 1,
+      previousId,
+      nextId,
     },
   };
 }

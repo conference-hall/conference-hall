@@ -73,6 +73,7 @@ describe('#getProposalReview', () => {
       reviewsCount: 0,
       messagesCount: 0,
     });
+    expect(reviewInfo.deliberationEnabled).toBeTruthy();
   });
 
   it('does not returns speakers when display proposals speaker setting is false', async () => {

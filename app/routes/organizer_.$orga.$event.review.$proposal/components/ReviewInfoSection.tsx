@@ -22,20 +22,31 @@ type Props = {
   status: ProposalStatus;
   comments: string | null;
   submittedAt: string;
+  deliberationEnabled: boolean;
 };
 
-export function ReviewInfoSection({ rating, feeling, review, status, comments, submittedAt }: Props) {
+export function ReviewInfoSection({
+  rating,
+  feeling,
+  review,
+  status,
+  comments,
+  submittedAt,
+  deliberationEnabled,
+}: Props) {
   const params = useParams();
   const [searchParams] = useSearchParams();
 
   return (
     <Card as="section" className="divide-y divide-gray-200">
-      <div className="p-6">
-        <H2 srOnly>Proposal review</H2>
-        <RatingButtons userRating={{ rating, feeling }} />
-      </div>
+      {deliberationEnabled && (
+        <div className="p-6">
+          <H2 srOnly>Proposal review</H2>
+          <RatingButtons userRating={{ rating, feeling }} />
+        </div>
+      )}
 
-      <div className="space-y-8 px-4 pb-4 pt-8">
+      <div className="space-y-8 p-6">
         <div className="flex items-center justify-between">
           <Text size="s" strong>
             Your review
