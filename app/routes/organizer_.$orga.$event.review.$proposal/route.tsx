@@ -12,7 +12,6 @@ import { useUser } from '~/root';
 import { ReviewHeader } from './components/Header';
 import { ReviewTabs } from './components/Tabs';
 import { rateProposal } from './server/rate-proposal.server';
-import { YourReviewSection } from './components/YourReviewSection';
 import { ReviewInfoSection } from './components/ReviewInfoSection';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
@@ -65,9 +64,9 @@ export default function ProposalReviewRoute() {
         </div>
 
         <div className="w-1/4 space-y-4">
-          <YourReviewSection rating={you.rating} feeling={you.feeling} />
-
           <ReviewInfoSection
+            rating={you.rating}
+            feeling={you.feeling}
             review={summary}
             status={proposal.status}
             comments={proposal.comments}
