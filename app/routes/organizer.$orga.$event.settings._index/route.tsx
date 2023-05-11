@@ -66,7 +66,7 @@ export default function EventGeneralSettingsRoute() {
     <>
       <Card as="section">
         <Card.Title>
-          <H2 size="xl">General</H2>
+          <H2 size="base">General</H2>
         </Card.Title>
 
         <Form method="POST">
@@ -82,7 +82,7 @@ export default function EventGeneralSettingsRoute() {
 
       <Card as="section">
         <Card.Title>
-          <H2 size="xl">Event details</H2>
+          <H2 size="base">Event details</H2>
           <Subtitle>
             Provide details about the event, like address, dates and description to generate the event page.
           </Subtitle>
@@ -135,7 +135,7 @@ export default function EventGeneralSettingsRoute() {
 
       <Card as="section">
         <Card.Title>
-          <H2 size="xl">{event.archived ? 'Restore event' : 'Archive event'}</H2>
+          <H2 size="base">{event.archived ? 'Restore event' : 'Archive event'}</H2>
         </Card.Title>
 
         <Card.Content>

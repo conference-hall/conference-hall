@@ -37,7 +37,7 @@ export default function EventIntegrationsSettingsRoute() {
   return (
     <Card as="section">
       <Card.Title>
-        <H2 size="xl">Slack integration</H2>
+        <H2 size="base">Slack integration</H2>
       </Card.Title>
 
       <Card.Content>

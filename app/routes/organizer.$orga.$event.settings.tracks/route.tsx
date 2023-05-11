@@ -1,10 +1,8 @@
 import invariant from 'tiny-invariant';
-import type { ChangeEvent } from 'react';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { requireSession } from '~/libs/auth/session';
 import { H2, Subtitle } from '~/design-system/Typography';
-import { Checkbox } from '~/design-system/forms/Checkboxes';
 import { useFetcher } from '@remix-run/react';
 import { withZod } from '@remix-validated-form/with-zod';
 import { updateEvent } from '~/shared-server/organizations/update-event.server';
@@ -15,6 +13,7 @@ import { EventTracksSettingsSchema } from './types/event-track-settings.schema';
 import { useOrganizerEvent } from '../organizer.$orga.$event/route';
 import { Card } from '~/design-system/layouts/Card';
 import { TrackList } from './components/TrackList';
+import { ToggleGroup } from '~/design-system/forms/Toggles';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await requireSession(request);
@@ -65,34 +64,27 @@ export default function EventTracksSettingsRoute() {
   const { event } = useOrganizerEvent();
 
   const fetcher = useFetcher();
-  const handleUpdateSettings = (e: ChangeEvent<HTMLInputElement>) => {
-    fetcher.submit(
-      { _action: 'update-track-settings', [e.currentTarget.name]: String(e.currentTarget.checked) },
-      { method: 'POST' }
-    );
+  const handleUpdateSettings = (name: string, checked: boolean) => {
+    fetcher.submit({ _action: 'update-track-settings', [name]: String(checked) }, { method: 'POST' });
   };
 
   return (
     <>
       <Card as="section">
         <Card.Title>
-          <H2 size="xl">Formats</H2>
+          <H2 size="base">Formats</H2>
           <Subtitle>Define talk formats available for your event proposals.</Subtitle>
         </Card.Title>
         <Card.Content>
           {event.formats.length > 0 && (
             <>
               <TrackList type="formats" tracks={event.formats} />
-              <Checkbox
-                id="formatsRequired"
-                name="formatsRequired"
-                defaultChecked={event.formatsRequired}
-                onChange={handleUpdateSettings}
+              <ToggleGroup
+                label="Format selection required"
                 description="When a speaker submit a proposal, the format selection is mandatory."
-                disabled={event.formats.length === 0}
-              >
-                Make format selection required
-              </Checkbox>
+                value={event.formatsRequired}
+                onChange={(checked) => handleUpdateSettings('formatsRequired', checked)}
+              />
             </>
           )}
         </Card.Content>
@@ -103,23 +95,19 @@ export default function EventTracksSettingsRoute() {
 
       <Card as="section">
         <Card.Title>
-          <H2 size="xl">Categories</H2>
+          <H2 size="base">Categories</H2>
           <Subtitle>Define talk categories available for your event proposals.</Subtitle>
         </Card.Title>
         <Card.Content>
           {event.categories.length > 0 && (
             <>
               <TrackList type="categories" tracks={event.categories} />
-              <Checkbox
-                id="categoriesRequired"
-                name="categoriesRequired"
-                defaultChecked={event.categoriesRequired}
-                onChange={handleUpdateSettings}
+              <ToggleGroup
+                label="Category selection required"
                 description="When a speaker submit a proposal, the category selection is mandatory."
-                disabled={event.categories.length === 0}
-              >
-                Make category selection required
-              </Checkbox>
+                value={event.categoriesRequired}
+                onChange={(checked) => handleUpdateSettings('categoriesRequired', checked)}
+              />
             </>
           )}
         </Card.Content>
