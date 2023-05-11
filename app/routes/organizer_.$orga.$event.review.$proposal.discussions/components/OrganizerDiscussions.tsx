@@ -1,4 +1,4 @@
-import { TrashIcon } from '@heroicons/react/20/solid';
+import { TrashIcon } from '@heroicons/react/24/outline';
 import { Form, useSubmit } from '@remix-run/react';
 import { Avatar } from '~/design-system/Avatar';
 import { Button } from '~/design-system/Buttons';
@@ -18,7 +18,7 @@ type Props = {
   }>;
 };
 
-export function OrganizerMessages({ userId, messages }: Props) {
+export function OrganizerDiscussions({ userId, messages }: Props) {
   const submit = useSubmit();
 
   const handleDelete = (messageId: string) => {
@@ -38,28 +38,28 @@ export function OrganizerMessages({ userId, messages }: Props) {
           </Text>
         </div>
       ) : (
-        <ul className="flex flex-col-reverse gap-4 p-8">
+        <ul aria-label="Organizers messages" className="flex flex-col-reverse gap-4 p-8">
           {messages.map((message) => (
             <li key={message.id} className="group flex items-end gap-4">
               <Avatar picture={message.picture} name={message.name} />
-              <div className="min-w-0 grow">
-                <div className="relative">
-                  <Text size="xs" variant="secondary">
-                    {message.name}
-                  </Text>
+              <div className="grow">
+                <Text size="xs" mb={1} variant="secondary">
+                  {message.name}
+                </Text>
+                <div className="flex items-center justify-between break-all rounded border border-gray-200 bg-gray-50 px-4 py-4">
+                  <div className="grow">
+                    <Text size="s">{message.message}</Text>
+                  </div>
                   {userId === message.userId && (
                     <IconButton
-                      label="Delete comment"
+                      label="Delete message"
                       icon={TrashIcon}
                       variant="secondary"
                       size="xs"
-                      className="absolute bottom-0 right-0 hidden group-hover:block"
+                      className="ml-8"
                       onClick={() => handleDelete(message.id)}
                     />
                   )}
-                </div>
-                <div className="mt-1 break-all rounded-r-md rounded-tl-md border border-gray-200 bg-gray-50 px-4 py-4">
-                  <Text size="s">{message.message}</Text>
                 </div>
               </div>
             </li>

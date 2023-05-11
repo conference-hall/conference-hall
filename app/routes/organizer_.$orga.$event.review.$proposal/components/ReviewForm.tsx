@@ -43,6 +43,7 @@ export function ReviewForm({ initialValues }: Props) {
 
       <TextArea
         name="comment"
+        aria-label="Review comment"
         defaultValue={initialValues.comment || ''}
         placeholder="Leave a comment"
         rows={3}

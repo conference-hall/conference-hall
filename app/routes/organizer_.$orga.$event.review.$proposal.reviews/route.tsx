@@ -15,9 +15,9 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   invariant(params.event, 'Invalid event slug');
   invariant(params.proposal, 'Invalid proposal id');
 
-  const result = await getReviews(params.event, params.proposal, userId);
+  const reviews = await getReviews(params.event, params.proposal, userId);
 
-  return json(result.reviews);
+  return json(reviews);
 };
 
 export default function ProposalReviewRoute() {

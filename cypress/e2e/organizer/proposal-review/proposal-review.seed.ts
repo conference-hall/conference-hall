@@ -7,6 +7,7 @@ import { proposalFactory } from '../../../../tests/factories/proposals';
 import { talkFactory } from '../../../../tests/factories/talks';
 import { userFactory } from '../../../../tests/factories/users';
 import { messageFactory } from '../../../../tests/factories/messages';
+import { surveyFactory } from '../../../../tests/factories/surveys';
 
 export const seed = async () => {
   const organizer1 = await userFactory({ traits: ['clark-kent'] });
@@ -71,6 +72,21 @@ export const seed = async () => {
     }),
   });
 
+  await surveyFactory({
+    event,
+    user: speaker1,
+    attributes: {
+      answers: {
+        gender: 'male',
+        tshirt: 'XL',
+        accomodation: 'yes',
+        transports: ['taxi', 'train'],
+        diet: ['vegan'],
+        info: 'Hello',
+      },
+    },
+  });
+
   await ratingFactory({ proposal, user: organizer2, attributes: { rating: 3, feeling: 'NEUTRAL' } });
 
   await messageFactory({ proposal, user: organizer2, attributes: { channel: 'ORGANIZER', message: 'Hello world' } });
@@ -81,5 +97,24 @@ export const seed = async () => {
     formats: [format2],
     categories: [category2],
     talk: await talkFactory({ attributes: { title: 'Talk 2' }, speakers: [speaker2] }),
+  });
+
+  const event2 = await eventFactory({
+    organization,
+    traits: ['conference-cfp-open'],
+    attributes: {
+      name: 'Conference 2',
+      slug: 'conference-2',
+      displayProposalsRatings: false,
+      displayProposalsSpeakers: false,
+      deliberationEnabled: false,
+    },
+  });
+
+  await proposalFactory({
+    attributes: { id: 'proposal-2' },
+    event: event2,
+    traits: ['accepted'],
+    talk: await talkFactory({ attributes: { title: 'Talk 3' }, speakers: [speaker1, speaker2] }),
   });
 };
