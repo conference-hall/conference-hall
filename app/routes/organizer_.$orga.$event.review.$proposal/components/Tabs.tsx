@@ -27,7 +27,7 @@ export function ReviewTabs({ speakersCount, reviewsCount, messagesCount, display
       },
       {
         to: `/organizer/${orga}/${event}/review/${proposal}/messages?${search}`,
-        label: 'Messages',
+        label: 'Discussions',
         count: messagesCount,
         enabled: true,
       },

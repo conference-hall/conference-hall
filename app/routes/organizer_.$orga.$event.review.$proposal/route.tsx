@@ -54,7 +54,7 @@ export default function ProposalReviewRoute() {
     <>
       <Navbar user={user} withSearch />
 
-      <ReviewHeader title={proposal.title} pagination={pagination} />
+      <ReviewHeader title={proposal.title} pagination={pagination} canEditProposal={canEditProposal} />
 
       <div className="flex gap-8 px-8 py-8">
         <div className="flex-1 space-y-4">
@@ -77,7 +77,6 @@ export default function ProposalReviewRoute() {
             comments={proposal.comments}
             submittedAt={proposal.createdAt}
             deliberationEnabled={proposalReview.deliberationEnabled}
-            canEditProposal={canEditProposal}
           />
         </div>
       </div>

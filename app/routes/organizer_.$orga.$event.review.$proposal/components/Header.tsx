@@ -1,5 +1,7 @@
+import { PencilSquareIcon } from '@heroicons/react/20/solid';
 import { ChevronLeftIcon, ChevronRightIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { useParams, useSearchParams } from '@remix-run/react';
+import { ButtonLink } from '~/design-system/Buttons';
 import { IconButtonLink } from '~/design-system/IconButtons';
 import { H1, Text } from '~/design-system/Typography';
 import { PageHeader } from '~/design-system/layouts/PageHeader';
@@ -7,9 +9,10 @@ import { PageHeader } from '~/design-system/layouts/PageHeader';
 type Props = {
   title: string;
   pagination: { current: number; total: number; nextId?: string; previousId?: string };
+  canEditProposal: boolean;
 };
 
-export function ReviewHeader({ title, pagination }: Props) {
+export function ReviewHeader({ title, pagination, canEditProposal }: Props) {
   const params = useParams();
   const [searchParams] = useSearchParams();
   const { current, total, nextId, previousId } = pagination;
@@ -18,6 +21,7 @@ export function ReviewHeader({ title, pagination }: Props) {
   const previousPath = `/organizer/${params.orga}/${params.event}/review/${previousId}`;
   const nextPath = `/organizer/${params.orga}/${params.event}/review/${nextId}`;
   const closePath = `/organizer/${params.orga}/${params.event}`;
+  const editPath = `/organizer/${params.orga}/${params.event}/review/${params.proposal}/edit`;
 
   return (
     <PageHeader as="header" className="flex items-center gap-8 px-8 py-8">
@@ -45,7 +49,20 @@ export function ReviewHeader({ title, pagination }: Props) {
         </H1>
       </div>
 
-      <IconButtonLink to={{ pathname: closePath, search }} icon={XMarkIcon} label="Close review" variant="secondary" />
+      <div className="flex items-center gap-8">
+        {canEditProposal && (
+          <ButtonLink to={{ pathname: editPath, search }} variant="secondary" iconLeft={PencilSquareIcon}>
+            Edit
+          </ButtonLink>
+        )}
+
+        <IconButtonLink
+          to={{ pathname: closePath, search }}
+          icon={XMarkIcon}
+          label="Close review"
+          variant="secondary"
+        />
+      </div>
     </PageHeader>
   );
 }
