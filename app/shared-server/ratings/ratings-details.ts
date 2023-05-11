@@ -20,8 +20,8 @@ export class RatingsDetails {
 
   ofUser(userId: string) {
     const user = this.ratings.find((r) => r.userId === userId);
-    if (!user) return { rating: null, feeling: null };
-    return { rating: user.rating, feeling: user.feeling };
+    if (!user) return { rating: null, feeling: null, comment: null };
+    return { rating: user.rating, feeling: user.feeling, comment: user.comment };
   }
 
   ofMembers() {
@@ -32,6 +32,7 @@ export class RatingsDetails {
         picture: rating.user?.picture,
         rating: rating.rating,
         feeling: rating.feeling,
+        comment: rating.comment,
       })),
       'name'
     );

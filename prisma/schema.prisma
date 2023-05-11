@@ -265,6 +265,7 @@ model Rating {
   proposal   Proposal      @relation(fields: [proposalId], references: [id])
   feeling    RatingFeeling @default(NEUTRAL)
   rating     Int?
+  comment    String?
   createdAt  DateTime      @default(now())
   updatedAt  DateTime      @updatedAt
 

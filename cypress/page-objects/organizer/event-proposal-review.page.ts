@@ -15,64 +15,78 @@ class ProposalReviewPage {
   }
 
   isPageVisible() {
-    cy.findByRole('heading', { name: 'Proposal review' }).should('exist');
-  }
-
-  closePage() {
-    return cy.findByRole('link', { name: 'Back to list' }).click();
+    cy.findByRole('heading', { name: 'Review information' }).should('exist');
   }
 
   title(name: string) {
     return cy.findByRole('heading', { name });
   }
 
+  // Navigation
+
   nextProposal() {
-    cy.findByRole('link', { name: 'Next' }).click();
+    cy.findByRole('link', { name: 'Next proposal' }).click();
   }
 
   previousProposal() {
-    cy.findByRole('link', { name: 'Previous' }).click();
+    cy.findByRole('link', { name: 'Previous proposal' }).click();
   }
 
-  toggleOrganizerRatings() {
-    cy.findByRole('button', { name: 'Toggle organizer ratings details' }).click();
+  close() {
+    cy.findByRole('link', { name: 'Close review' }).click();
   }
 
-  organizerRatingsSection() {
-    return cy.findByLabelText('Organizer ratings details');
+  // Speakers
+
+  speakersTab() {
+    cy.findByRole('link', { name: /Speakers/ }).click();
   }
 
-  toggleSpeakerDetails(speakerName: string) {
-    cy.findByRole('button', { name: `Toggle speaker ${speakerName} details` }).click();
+  speakersList() {
+    return cy.findByRole('list', { name: 'Speakers list' }).children();
   }
 
-  speakerDetailsSection(speakerName: string) {
-    return cy.findByLabelText(`Speaker ${speakerName} details`);
+  // Reviews
+
+  reviewsTab() {
+    cy.findByRole('link', { name: /Reviews/ }).click();
   }
 
-  organizerCommentsSection() {
-    return cy.findByLabelText('Organizer messages section');
+  reviewsList() {
+    return cy.findByRole('list', { name: 'Organizers reviews' }).children();
   }
 
-  bottomActionSection() {
-    return cy.findByLabelText('Review proposal actions section');
+  // Discussions
+
+  discussionsTab() {
+    cy.findByRole('link', { name: /Discussions/ }).click();
   }
 
-  rate(rating: string) {
-    return cy.findByRole('radio', { name: rating }).click();
+  discussionMessages() {
+    return cy.findByRole('list', { name: 'Organizers messages' }).children();
   }
 
-  writeComment(comment: string) {
-    cy.typeOn('Write a comment to other organizers', comment);
+  writeMessage(comment: string) {
+    cy.typeOn('Write a message to other organizers', comment);
     cy.findByRole('button', { name: 'Send' }).click();
   }
 
-  deleteComment() {
-    return cy.findByLabelText('Delete comment').click({ force: true });
+  deleteMessage() {
+    return cy.findByLabelText('Delete message').click({ force: true });
   }
 
+  // Review proposal
+
+  fillReview(rating: string, comment: string) {
+    cy.findByRole('radio', { name: rating }).click();
+    cy.typeOn('Review comment', comment);
+    cy.findByRole('button', { name: 'Save review' }).click();
+  }
+
+  // Edit proposal
+
   editProposal() {
-    cy.findByRole('link', { name: 'Edit proposal' }).click();
+    cy.findByRole('link', { name: 'Edit' }).click();
   }
 
   fillProposalForm(data: ProposalFormType) {

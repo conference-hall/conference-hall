@@ -23,7 +23,7 @@ export function ProposalDetailsSection(props: Props) {
   return (
     <Card as="section" p={8} className="space-y-8">
       <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
-        <AvatarGroup avatars={props.speakers} displayNames />
+        {props.speakers.length > 0 && <AvatarGroup avatars={props.speakers} displayNames />}
         <div className="space-x-4">
           {props.level && <Badge color="indigo">{getLevel(props.level)}</Badge>}
           {props.languages.map((language) => (
@@ -33,9 +33,7 @@ export function ProposalDetailsSection(props: Props) {
       </div>
 
       <div>
-        <H3 size="base" mb={2}>
-          Abstract
-        </H3>
+        <H3 srOnly>Abstract</H3>
         <Markdown source={props.abstract} />
       </div>
 

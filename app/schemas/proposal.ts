@@ -45,6 +45,7 @@ export const ProposalsFiltersSchema = z.object({
 
 export const ProposalRatingDataSchema = z.object({
   rating: numeric(z.number().min(0).max(5).nullable().default(null)),
+  comment: text(z.string().trim().nullable().default(null)),
   feeling: ProposalRatingsSchema,
 });
 

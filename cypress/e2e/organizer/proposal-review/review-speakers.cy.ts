@@ -14,24 +14,33 @@ describe('Organizer speakers in proposal review page', () => {
   it('displays speakers info', () => {
     review.visit('orga-1', 'conference-1', 'proposal-1');
 
-    cy.assertText('Marie Jane');
-    cy.assertText('marie@example.com');
+    review.speakersTab();
 
-    review.speakerDetailsSection('Marie Jane').within(() => {
-      cy.assertText('MJ Bio');
-      cy.assertText('MJ References');
-      cy.assertText('Nantes');
-      cy.assertText('MJ Corp');
-      cy.assertText('https://github.com');
-      cy.assertText('https://twitter.com');
-    });
+    review.speakersList().should('have.length', 2);
 
-    cy.assertText('Robin');
-    cy.assertText('robin@example.com');
+    review
+      .speakersList()
+      .first()
+      .within(() => {
+        cy.assertText('Marie Jane - marie@example.com');
+        cy.assertText('MJ Corp - Nantes');
+        cy.assertText('MJ Bio');
+        cy.assertText('MJ References');
+        cy.assertText('https://github.com');
+        cy.assertText('https://twitter.com');
+        cy.assertText('male');
+        cy.assertText('Tshirt size: XL');
+        cy.assertText('vegan');
+        cy.assertText('Need accommodation fees');
+        cy.assertText('Need transport fees: taxi, train');
+        cy.assertText('Hello');
+      });
 
-    review.toggleSpeakerDetails('Robin');
-    review.speakerDetailsSection('Robin').within(() => {
-      cy.assertText('Robin Bio');
-    });
+    review
+      .speakersList()
+      .last()
+      .within(() => {
+        cy.assertText('Robin - robin@example.com');
+      });
   });
 });

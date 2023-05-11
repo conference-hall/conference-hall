@@ -4,7 +4,7 @@ import { NavLink } from '@remix-run/react';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import { Menu } from '../menus/Menu';
 
-type NavTabProps = { to: string; label: string; enabled?: boolean; end?: boolean };
+type NavTabProps = { to: string; label: string; count?: number; enabled?: boolean; end?: boolean };
 
 type NavTabDropdownProps = {
   label: string;
@@ -57,6 +57,11 @@ export function NavTabs({ tabs, py = 0, variant = 'light' }: Props) {
             }
           >
             {tab.label}
+            {tab.count ? (
+              <span className="ml-3 hidden rounded-full bg-gray-200 px-2.5 py-0.5 text-xs font-medium text-gray-900 md:inline-block">
+                {tab.count}
+              </span>
+            ) : null}
           </NavLink>
         ) : (
           <NavTabDropdown key={tab.label} variant={variant} tab={tab} />

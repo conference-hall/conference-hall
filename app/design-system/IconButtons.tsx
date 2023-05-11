@@ -3,8 +3,7 @@ import type { LinkProps } from '@remix-run/react';
 import { Link } from '@remix-run/react';
 import c from 'classnames';
 
-const DEFAULT_STYLE =
-  'flex items-center rounded-full flex-shrink-0 shrink-0 focus:outline-none focus:ring-2 focus:ring-indigo-500';
+const DEFAULT_STYLE = 'flex items-center rounded-full shrink-0 focus:outline-none focus:ring-2 focus:ring-indigo-500';
 
 const ICON_SIZES = { xs: 'h-4 w-4', s: 'h-5 w-5', m: 'h-5 w-5', l: 'h-6 w-6' };
 

@@ -1,13 +1,11 @@
 import c from 'classnames';
-import { HeartIcon, StarIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import type { ChangeEventHandler } from 'react';
 import { Link, useSearchParams } from '@remix-run/react';
-import { IconLabel } from '~/design-system/IconLabel';
 import { Text } from '~/design-system/Typography';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
 import { ProposalStatusBadge } from '~/shared-components/proposals/ProposalStatusBadges';
-import type { ProposalStatus } from '@prisma/client';
-import { formatRating } from '~/utils/ratings';
+import type { ProposalStatus, RatingFeeling } from '@prisma/client';
+import { ReviewNote } from '~/shared-components/reviews/ReviewNote';
 
 export type ProposalData = {
   id: string;
@@ -16,7 +14,7 @@ export type ProposalData = {
   speakers: (string | null)[];
   ratings: {
     summary?: { negatives: number; positives: number; average: number | null };
-    you: { rating: number | null };
+    you: { feeling: RatingFeeling | null; rating: number | null };
   };
 };
 
@@ -68,13 +66,13 @@ export function ProposaListRow({ proposal, isSelected, onSelect }: ProposalRowPr
       </td>
       <td className="hidden w-0 px-3 py-6 lg:table-cell">
         <div className="flex items-center justify-around gap-4">
-          {summary && <IconLabel icon={XCircleIcon}>{summary.negatives}</IconLabel>}
-          {summary && <IconLabel icon={HeartIcon}>{summary.positives}</IconLabel>}
-          <IconLabel icon={StarIcon}>{formatRating(you.rating)}</IconLabel>
+          {summary && <ReviewNote feeling="NEGATIVE" rating={summary.negatives} />}
+          {summary && <ReviewNote feeling="POSITIVE" rating={summary.positives} />}
+          <ReviewNote feeling="USER" rating={you.rating} />
         </div>
       </td>
       <td className="w-0 rounded-lg px-3 py-6 pr-4 text-right  sm:pr-6">
-        {summary && <Text variant="secondary">{formatRating(summary.average)}</Text>}
+        {summary && <ReviewNote feeling="NEUTRAL" rating={summary.average} />}
       </td>
     </tr>
   );

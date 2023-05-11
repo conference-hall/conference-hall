@@ -176,6 +176,7 @@ describe('Validate ProposalRatingDataSchema', () => {
     expect(result.data).toEqual({
       feeling: 'NEUTRAL',
       rating: 1,
+      comment: null,
     });
   });
 

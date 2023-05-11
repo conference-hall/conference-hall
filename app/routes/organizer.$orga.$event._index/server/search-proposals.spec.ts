@@ -38,7 +38,7 @@ describe('#searchProposals', () => {
         speakers: [speaker.name],
         ratings: {
           summary: { negatives: 0, positives: 0, average: null },
-          you: { rating: null, feeling: null },
+          you: { rating: null, feeling: null, comment: null },
         },
       },
     ]);
