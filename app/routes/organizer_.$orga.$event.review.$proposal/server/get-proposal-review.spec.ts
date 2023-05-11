@@ -44,6 +44,7 @@ describe('#getProposalReview', () => {
 
     expect(reviewInfo.pagination).toEqual({ current: 1, total: 1, previousId: proposal.id, nextId: proposal.id });
     expect(reviewInfo.proposal).toEqual({
+      id: proposal.id,
       title: proposal.title,
       abstract: proposal.abstract,
       references: proposal.references,
@@ -57,7 +58,7 @@ describe('#getProposalReview', () => {
       speakers: [{ id: speaker.id, name: speaker.name, picture: speaker.picture }],
       reviews: {
         summary: { average: null, negatives: 0, positives: 0 },
-        you: { feeling: null, rating: null },
+        you: { feeling: null, rating: null, comment: null },
       },
       reviewsCount: 0,
       messagesCount: 0,
@@ -77,14 +78,14 @@ describe('#getProposalReview', () => {
 
   it('returns organizers reviews', async () => {
     const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-    await ratingFactory({ proposal, user: owner, attributes: { feeling: 'NEGATIVE', rating: 0 } });
+    await ratingFactory({ proposal, user: owner, attributes: { feeling: 'NEGATIVE', rating: 0, comment: 'Booo' } });
     await ratingFactory({ proposal, user: member, attributes: { feeling: 'POSITIVE', rating: 5 } });
 
     const reviewInfo = await getProposalReview(event.slug, proposal.id, owner.id, {});
 
     expect(reviewInfo.proposal.reviews).toEqual({
       summary: { average: 2.5, positives: 1, negatives: 1 },
-      you: { rating: 0, feeling: 'NEGATIVE' },
+      you: { rating: 0, feeling: 'NEGATIVE', comment: 'Booo' },
     });
   });
 
@@ -92,13 +93,13 @@ describe('#getProposalReview', () => {
     await db.event.update({ data: { displayProposalsRatings: false }, where: { id: event.id } });
 
     const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-    await ratingFactory({ proposal, user: owner, attributes: { feeling: 'NEGATIVE', rating: 0 } });
+    await ratingFactory({ proposal, user: owner, attributes: { feeling: 'NEGATIVE', rating: 0, comment: 'Booo' } });
 
     const reviewInfo = await getProposalReview(event.slug, proposal.id, owner.id, {});
 
     expect(reviewInfo.proposal.reviews).toEqual({
       summary: undefined,
-      you: { rating: 0, feeling: 'NEGATIVE' },
+      you: { rating: 0, feeling: 'NEGATIVE', comment: 'Booo' },
     });
   });
 

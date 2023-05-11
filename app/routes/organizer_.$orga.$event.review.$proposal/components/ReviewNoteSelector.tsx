@@ -2,17 +2,17 @@ import c from 'classnames';
 import { useCallback, useState } from 'react';
 import { RadioGroup } from '@headlessui/react';
 import { HeartIcon, NoSymbolIcon, StarIcon, XCircleIcon } from '@heroicons/react/24/outline';
-import { useFetcher, useNavigation } from '@remix-run/react';
+import type { RatingFeeling } from '@prisma/client';
 
-type Option = {
+export type Option = {
   label: string;
   value: number | null;
   Icon: React.ComponentType<{ className?: string }>;
-  feeling: string;
+  feeling: RatingFeeling;
   fill: string;
 };
 
-const options: Array<Option> = [
+export const options: Array<Option> = [
   { label: 'No opinion', Icon: NoSymbolIcon, value: null, feeling: 'NO_OPINION', fill: 'fill-red-100' },
   { label: 'Nope, 0 star', Icon: XCircleIcon, value: 0, feeling: 'NEGATIVE', fill: 'fill-gray-300' },
   { label: '1 star', Icon: StarIcon, value: 1, feeling: 'NEUTRAL', fill: 'fill-yellow-300' },
@@ -25,43 +25,36 @@ const options: Array<Option> = [
 
 type StyleProps = { option: Option; index: number };
 
-type Rating = { rating?: number | null; feeling?: string | null };
+type Review = { rating?: number | null; feeling?: string | null };
 
-type Props = { userRating: Rating };
+type Props = { value: Review; onChange: (index: number) => void };
 
-export function RatingButtons({ userRating }: Props) {
-  const fetcher = useFetcher();
-  const submission = useNavigation();
-  const defaultIndex = findRatingOptionIndex(userRating, submission?.formData);
+export function ReviewNoteSelector({ value, onChange }: Props) {
+  const [selectedIndex, setSelectedIndex] = useState<number | undefined>(
+    options.findIndex((option) => option.value === value.rating && option.feeling === value.feeling)
+  );
   const [overIndex, setOverIndex] = useState<number>(-1);
 
   const iconStyles = useCallback(
     ({ option, index }: StyleProps) => {
-      const currentSelected = isSelected(index, defaultIndex);
+      const currentSelected = isSelected(index, selectedIndex);
       const currentOver = isSelected(index, overIndex);
       return c('h-8 w-8 stroke-gray-600', {
         'stroke-indigo-500': !currentSelected && currentOver,
         [option.fill]: currentSelected,
       });
     },
-    [defaultIndex, overIndex]
+    [selectedIndex, overIndex]
   );
 
-  const handleSubmit = useCallback(
-    (index: string) => {
-      const option = options[parseInt(index, 10)];
-      if (!option) return;
-      fetcher.submit(
-        { rating: option.value === null ? '' : String(option.value), feeling: option.feeling },
-        { method: 'POST' }
-      );
-    },
-    [fetcher]
-  );
+  const handleChange = (index: string) => {
+    setSelectedIndex(parseInt(index, 10));
+    onChange(parseInt(index, 10));
+  };
 
   return (
-    <fetcher.Form className="text-center font-medium">
-      <RadioGroup value={String(defaultIndex)} onChange={handleSubmit}>
+    <>
+      <RadioGroup name="review" value={String(selectedIndex)} onChange={handleChange}>
         <RadioGroup.Label className="sr-only"> Choose a rating value </RadioGroup.Label>
         <div className="flex items-center justify-between" onMouseOut={() => setOverIndex(-1)}>
           {options.map((option, index) => (
@@ -74,7 +67,7 @@ export function RatingButtons({ userRating }: Props) {
           ))}
         </div>
       </RadioGroup>
-    </fetcher.Form>
+    </>
   );
 }
 
@@ -84,20 +77,4 @@ function isSelected(currentIdx: number, selectedIdx?: number) {
   if (selectedIdx === 1 && currentIdx === selectedIdx) return true;
   if (currentIdx > 1 && selectedIdx >= currentIdx) return true;
   return false;
-}
-
-function findRatingOptionIndex(userRating: Rating, submissionData?: FormData) {
-  let ratings = userRating;
-  // optimistic ui
-  if (submissionData) {
-    const rating = String(submissionData.get('rating'));
-    const feeling = String(submissionData.get('feeling'));
-    ratings = { rating: rating !== '' ? parseInt(rating, 10) : null, feeling };
-  }
-  return options.findIndex((option) => option.value === ratings.rating && option.feeling === ratings.feeling);
-}
-
-export function findRatingOption(userRating: Rating) {
-  const optionIndex = findRatingOptionIndex(userRating);
-  return options[optionIndex];
 }

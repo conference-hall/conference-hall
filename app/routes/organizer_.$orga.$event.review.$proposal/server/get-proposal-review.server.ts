@@ -42,6 +42,7 @@ export async function getProposalReview(
 
   return {
     proposal: {
+      id: proposal.id,
       title: proposal.title,
       abstract: proposal.abstract,
       references: proposal.references,

@@ -8,7 +8,7 @@ type ToastData = { id: string; message: string };
 
 type Props = { toast: ToastData };
 
-const TOAST_TIME = 10000;
+const TOAST_TIME = 5000;
 
 export function Toast({ toast }: Props) {
   const [show, setShow] = useState(false);

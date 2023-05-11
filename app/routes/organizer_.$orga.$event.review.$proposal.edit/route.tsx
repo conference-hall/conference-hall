@@ -10,6 +10,7 @@ import { Button, ButtonLink } from '~/design-system/Buttons';
 import { Card } from '~/design-system/layouts/Card';
 import { withZod } from '@remix-validated-form/with-zod';
 import { getEvent } from '~/shared-server/events/get-event.server';
+import { addToast } from '~/libs/toasts/toasts';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   await requireSession(request);
@@ -30,7 +31,10 @@ export const action = async ({ request, params }: ActionArgs) => {
   await updateProposal(params.event, params.proposal, userId, result.data);
 
   const url = new URL(request.url);
-  throw redirect(`/organizer/${params.orga}/${params.event}/review/${params.proposal}${url.search}`);
+  throw redirect(
+    `/organizer/${params.orga}/${params.event}/review/${params.proposal}${url.search}`,
+    await addToast(request, 'Proposal saved.')
+  );
 };
 
 export default function OrganizerProposalEditRoute() {

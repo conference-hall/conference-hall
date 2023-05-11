@@ -210,6 +210,7 @@ CREATE TABLE "ratings" (
     "proposalId" TEXT NOT NULL,
     "feeling" "RatingFeeling" NOT NULL DEFAULT 'NEUTRAL',
     "rating" INTEGER,
+    "comment" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 

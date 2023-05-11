@@ -28,14 +28,14 @@ describe('#getReviews', () => {
   it('returns proposal reviews', async () => {
     const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
     await ratingFactory({ proposal, user: owner, attributes: { feeling: 'NEGATIVE', rating: 0 } });
-    await ratingFactory({ proposal, user: member, attributes: { feeling: 'POSITIVE', rating: 5 } });
+    await ratingFactory({ proposal, user: member, attributes: { feeling: 'POSITIVE', rating: 5, comment: 'Yeah!' } });
 
     const result = await getReviews(event.slug, proposal.id, owner.id);
 
     expect(result.summary).toEqual({ average: 2.5, negatives: 1, positives: 1 });
     expect(result.reviews).toEqual([
-      { feeling: 'POSITIVE', id: member.id, name: member.name, picture: member.picture, rating: 5 },
-      { feeling: 'NEGATIVE', id: owner.id, name: owner.name, picture: owner.picture, rating: 0 },
+      { feeling: 'POSITIVE', id: member.id, name: member.name, picture: member.picture, rating: 5, comment: 'Yeah!' },
+      { feeling: 'NEGATIVE', id: owner.id, name: owner.name, picture: owner.picture, rating: 0, comment: null },
     ]);
   });
 

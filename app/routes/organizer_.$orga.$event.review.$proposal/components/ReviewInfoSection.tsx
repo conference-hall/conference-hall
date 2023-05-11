@@ -1,18 +1,19 @@
-import { CheckCircleIcon } from '@heroicons/react/20/solid';
 import type { ProposalStatus, RatingFeeling } from '@prisma/client';
 import format from 'date-fns/format';
 import { ClientOnly } from 'remix-utils';
-import { Button } from '~/design-system/Buttons';
 import { H2, Text } from '~/design-system/Typography';
 import { Card } from '~/design-system/layouts/Card';
 import { ProposalStatusBadge } from '~/shared-components/proposals/ProposalStatusBadges';
-import { RatingButtons } from './RatingButtons';
 import { ReviewNote } from '~/shared-components/reviews/ReviewNote';
-import { TextArea } from '~/design-system/forms/TextArea';
+import { ReviewForm } from './ReviewForm';
 
 type Props = {
-  rating: number | null;
-  feeling: RatingFeeling | null;
+  proposalId: string;
+  userReview: {
+    rating: number | null;
+    feeling: RatingFeeling | null;
+    comment: string | null;
+  };
   review?: {
     average: number | null;
     positives: number;
@@ -25,8 +26,8 @@ type Props = {
 };
 
 export function ReviewInfoSection({
-  rating,
-  feeling,
+  proposalId,
+  userReview,
   review,
   status,
   comments,
@@ -38,11 +39,7 @@ export function ReviewInfoSection({
       {deliberationEnabled && (
         <div className="space-y-4 p-6">
           <H2 size="base">Your review</H2>
-          <RatingButtons userRating={{ rating, feeling }} />
-          <TextArea name="comment" placeholder="Leave a comment" rows={3} />
-          <Button variant="secondary" iconLeft={CheckCircleIcon} block disabled={!feeling}>
-            Review proposal
-          </Button>
+          <ReviewForm key={proposalId} initialValues={userReview} />
         </div>
       )}
 
@@ -65,7 +62,7 @@ export function ReviewInfoSection({
           <Text size="s" strong>
             Your review
           </Text>
-          <ReviewNote feeling={feeling} rating={rating} />
+          <ReviewNote feeling={userReview.feeling} rating={userReview.rating} />
         </div>
 
         <div className="flex justify-between gap-2">

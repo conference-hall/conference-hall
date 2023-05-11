@@ -8,6 +8,7 @@ import { getReviews } from './server/get-reviews.server';
 import { useLoaderData } from '@remix-run/react';
 import { EmptyState } from '~/design-system/layouts/EmptyState';
 import { ReviewNote } from '~/shared-components/reviews/ReviewNote';
+import { Subtitle } from '~/design-system/Typography';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);
@@ -27,11 +28,14 @@ export default function ProposalReviewRoute() {
   }
 
   return (
-    <ul aria-label="Organizers reviews" className="grid grid-cols-1 gap-4 md:grid-cols-3">
+    <ul aria-label="Organizers reviews" className="grid grid-cols-1 gap-4 md:grid-cols-2">
       {reviews.map((review) => (
-        <Card as="li" key={review.id} className="flex items-center justify-between p-4">
-          <AvatarName size="xs" picture={review.picture} name={review.name} />
-          <ReviewNote feeling={review.feeling} rating={review.rating} />
+        <Card as="li" key={review.id} className="space-y-4 p-4">
+          <div className="flex items-center justify-between">
+            <AvatarName size="xs" picture={review.picture} name={review.name} />
+            <ReviewNote feeling={review.feeling} rating={review.rating} />
+          </div>
+          <Subtitle>{review.comment ?? 'No comment.'}</Subtitle>
         </Card>
       ))}
     </ul>

@@ -14,6 +14,7 @@ import { ReviewTabs } from './components/Tabs';
 import { rateProposal } from './server/rate-proposal.server';
 import { ReviewInfoSection } from './components/ReviewInfoSection';
 import { OrganizationRole } from '@prisma/client';
+import { addToast } from '~/libs/toasts/toasts';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);
@@ -30,11 +31,12 @@ export const action = async ({ request, params }: ActionArgs) => {
   const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
   invariant(params.proposal, 'Invalid proposal id');
-
   const form = await request.formData();
+
   const result = await withZod(ProposalRatingDataSchema).validate(form);
   if (result.data) {
     await rateProposal(params.event, params.proposal, userId, result.data);
+    return json(null, await addToast(request, 'Review saved.'));
   }
   return null;
 };
@@ -70,8 +72,8 @@ export default function ProposalReviewRoute() {
 
         <div className="w-1/4 space-y-4">
           <ReviewInfoSection
-            rating={you.rating}
-            feeling={you.feeling}
+            proposalId={proposal.id}
+            userReview={you}
             review={summary}
             status={proposal.status}
             comments={proposal.comments}
