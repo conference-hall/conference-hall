@@ -203,18 +203,15 @@ describe('Event settings', () => {
 
       it('enables or disables survey', () => {
         survey.visit('orga-1', 'conference-1');
-        survey.enableSurvey().click();
-        survey.disableSurvey().should('exist');
+        survey.toggleSurvey().click();
         survey.saveQuestion().should('not.be.disabled');
-        survey.disableSurvey().click();
-        survey.enableSurvey().should('exist');
+        survey.toggleSurvey().click();
         survey.saveQuestion().should('be.disabled');
       });
 
       it('save survey questions', () => {
         survey.visit('orga-1', 'conference-1');
-        survey.enableSurvey().click();
-        survey.disableSurvey().should('exist');
+        survey.toggleSurvey().click();
         survey.saveQuestion().should('not.be.disabled');
 
         cy.findByLabelText("What's your gender?").click();
@@ -229,39 +226,69 @@ describe('Event settings', () => {
     });
 
     describe('proposal review settings', () => {
-      it.skip('initial values');
-
-      it('enables or disables proposal reviews', () => {
+      it('toggles proposal reviews', () => {
         review.visit('orga-1', 'conference-1');
-        review.disableProposalReview().click();
-        review.enableProposalReview().should('exist');
-        review.enableProposalReview().click();
-        review.disableProposalReview().should('exist');
+
+        review.toggleReview(true).click();
+        cy.assertText('Review setting saved.');
+
+        cy.reload();
+        review.toggleReview(false).should('exist');
       });
 
-      it('save proposal review settings', () => {
+      it('toggles reviews display', () => {
         review.visit('orga-1', 'conference-1');
 
-        cy.findByLabelText('Display ratings of other reviewers').click();
-        cy.findByLabelText('Display speakers in proposal page').click();
+        review.toggleDisplayReviews(true).click();
+        cy.assertText('Review setting saved.');
+
+        cy.reload();
+        review.toggleDisplayReviews(false).should('exist');
+      });
+
+      it('toggles speakers display', () => {
+        review.visit('orga-1', 'conference-1');
+
+        review.toggleDisplaySpeakers(true).click();
+        cy.assertText('Review setting saved.');
+
+        cy.reload();
+        review.toggleDisplaySpeakers(false).should('exist');
       });
     });
 
     describe('notifications settings', () => {
-      it.skip('initial values');
-      it.skip('display form errors');
-
       it('fills notification settings', () => {
         notifications.visit('orga-1', 'conference-1');
+        notifications.saveForm('blablabla');
+        cy.assertText('Invalid email');
+
         notifications.saveForm('test@example.com');
+        cy.assertText('Notification email saved');
       });
 
-      it('save notifications', () => {
+      it('save submitted notifications', () => {
         notifications.visit('orga-1', 'conference-1');
 
-        cy.findByLabelText('Submitted proposals').click();
-        cy.findByLabelText('Confirmed proposals').click();
-        cy.findByLabelText('Declined proposals').click();
+        cy.findByRole('switch', { name: 'Submitted proposals', checked: false }).click();
+        cy.assertText('Notification setting saved');
+        cy.findByRole('switch', { name: 'Submitted proposals', checked: true }).click();
+      });
+
+      it('save confirmed notifications', () => {
+        notifications.visit('orga-1', 'conference-1');
+
+        cy.findByRole('switch', { name: 'Confirmed proposals', checked: false }).click();
+        cy.assertText('Notification setting saved');
+        cy.findByRole('switch', { name: 'Confirmed proposals', checked: true }).click();
+      });
+
+      it('save declined notifications', () => {
+        notifications.visit('orga-1', 'conference-1');
+
+        cy.findByRole('switch', { name: 'Declined proposals', checked: false }).click();
+        cy.assertText('Notification setting saved');
+        cy.findByRole('switch', { name: 'Declined proposals', checked: true }).click();
       });
     });
 
@@ -277,6 +304,7 @@ describe('Event settings', () => {
 
     describe('API integration settings', () => {
       it.skip('initial values');
+      it.skip('tryouts');
 
       it('generate and revoke API key', () => {
         api.visit('orga-1', 'conference-1');

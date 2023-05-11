@@ -70,50 +70,48 @@ export default function EventTracksSettingsRoute() {
 
   return (
     <>
-      <Card as="section">
-        <Card.Title>
-          <H2 size="base">Formats</H2>
-          <Subtitle>Define talk formats available for your event proposals.</Subtitle>
-        </Card.Title>
-        <Card.Content>
-          {event.formats.length > 0 && (
-            <>
-              <TrackList type="formats" tracks={event.formats} />
-              <ToggleGroup
-                label="Format selection required"
-                description="When a speaker submit a proposal, the format selection is mandatory."
-                value={event.formatsRequired}
-                onChange={(checked) => handleUpdateSettings('formatsRequired', checked)}
-              />
-            </>
-          )}
-        </Card.Content>
-        <Card.Actions>
+      <Card as="section" p={8} className="space-y-8">
+        <div className="flex items-center justify-between">
+          <div>
+            <H2 size="base">Formats</H2>
+            <Subtitle>Define talk formats available for your event proposals.</Subtitle>
+          </div>
           <NewTrackButton type="formats" />
-        </Card.Actions>
+        </div>
+
+        {event.formats.length > 0 && (
+          <>
+            <TrackList type="formats" tracks={event.formats} />
+            <ToggleGroup
+              label="Format selection required"
+              description="When a speaker submit a proposal, the format selection is mandatory."
+              value={event.formatsRequired}
+              onChange={(checked) => handleUpdateSettings('formatsRequired', checked)}
+            />
+          </>
+        )}
       </Card>
 
-      <Card as="section">
-        <Card.Title>
-          <H2 size="base">Categories</H2>
-          <Subtitle>Define talk categories available for your event proposals.</Subtitle>
-        </Card.Title>
-        <Card.Content>
-          {event.categories.length > 0 && (
-            <>
-              <TrackList type="categories" tracks={event.categories} />
-              <ToggleGroup
-                label="Category selection required"
-                description="When a speaker submit a proposal, the category selection is mandatory."
-                value={event.categoriesRequired}
-                onChange={(checked) => handleUpdateSettings('categoriesRequired', checked)}
-              />
-            </>
-          )}
-        </Card.Content>
-        <Card.Actions>
+      <Card as="section" p={8} className="space-y-8">
+        <div className="flex items-center justify-between">
+          <div>
+            <H2 size="base">Categories</H2>
+            <Subtitle>Define talk categories available for your event proposals.</Subtitle>
+          </div>
           <NewTrackButton type="categories" />
-        </Card.Actions>
+        </div>
+
+        {event.categories.length > 0 && (
+          <>
+            <TrackList type="categories" tracks={event.categories} />
+            <ToggleGroup
+              label="Category selection required"
+              description="When a speaker submit a proposal, the category selection is mandatory."
+              value={event.categoriesRequired}
+              onChange={(checked) => handleUpdateSettings('categoriesRequired', checked)}
+            />
+          </>
+        )}
       </Card>
     </>
   );

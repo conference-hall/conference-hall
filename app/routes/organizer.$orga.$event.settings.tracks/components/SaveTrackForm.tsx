@@ -15,7 +15,7 @@ export function NewTrackButton({ type }: NewTrackButtonProps) {
   const [isModalOpen, setModalOpen] = useState(false);
   return (
     <>
-      <Button iconLeft={PlusIcon} onClick={() => setModalOpen(true)}>
+      <Button iconLeft={PlusIcon} onClick={() => setModalOpen(true)} variant="secondary">
         {type === 'formats' ? 'New format' : 'New category'}
       </Button>
       <SaveTrackFormModal type={type} isOpen={isModalOpen} onClose={() => setModalOpen(false)} />

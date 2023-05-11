@@ -8,12 +8,16 @@ class ProposalReviewSettings {
     cy.findByRole('heading', { name: 'Proposals review' }).should('exist');
   }
 
-  enableProposalReview() {
-    return cy.findByRole('button', { name: 'Enable proposal review' });
+  toggleReview(checked: boolean) {
+    return cy.findByRole('switch', { name: 'Proposals review activation', checked });
   }
 
-  disableProposalReview() {
-    return cy.findByRole('button', { name: 'Disable proposal review' });
+  toggleDisplayReviews(checked: boolean) {
+    return cy.findByRole('switch', { name: 'Display ratings of other reviewers', checked });
+  }
+
+  toggleDisplaySpeakers(checked: boolean) {
+    return cy.findByRole('switch', { name: 'Display speakers in proposal page', checked });
   }
 }
 
