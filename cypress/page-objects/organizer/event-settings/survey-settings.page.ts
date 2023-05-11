@@ -8,12 +8,8 @@ class SurveySettings {
     cy.findByRole('heading', { name: 'Speaker survey' }).should('exist');
   }
 
-  enableSurvey() {
-    return cy.findByRole('button', { name: 'Enable survey' });
-  }
-
-  disableSurvey() {
-    return cy.findByRole('button', { name: 'Disable survey' });
+  toggleSurvey() {
+    return cy.findByLabelText('Speaker survey activation');
   }
 
   saveQuestion() {

@@ -14,6 +14,7 @@ import { EventCfpSettingsSchema } from './types/event-cfp-settings.schema';
 import { useOrganizerEvent } from '../organizer.$orga.$event/route';
 import { Card } from '~/design-system/layouts/Card';
 import { AlertInfo } from '~/design-system/Alerts';
+import { addToast } from '~/libs/toasts/toasts';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await requireSession(request);
@@ -30,7 +31,7 @@ export const action = async ({ request, params }: ActionArgs) => {
     return json(result.error.fieldErrors);
   }
   await updateEvent(params.event, userId, result.data);
-  return json(null);
+  return json(null, await addToast(request, 'Call for paper successfully updated.'));
 };
 
 export default function EventCfpSettingsRoute() {
@@ -40,7 +41,7 @@ export default function EventCfpSettingsRoute() {
   return (
     <Card as="section">
       <Card.Title>
-        <H2 size="xl">Call for paper</H2>
+        <H2 size="base">Call for paper</H2>
       </Card.Title>
 
       <Form method="POST">

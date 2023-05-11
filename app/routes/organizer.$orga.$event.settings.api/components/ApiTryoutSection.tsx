@@ -1,6 +1,5 @@
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { useState } from 'react';
-import { AlertInfo } from '~/design-system/Alerts';
 import { ExternalLink } from '~/design-system/Links';
 import { H2, Subtitle } from '~/design-system/Typography';
 import { Input } from '~/design-system/forms/Input';
@@ -49,7 +48,6 @@ export function ApiTryoutSection({ slug, apiKey }: Props) {
           value={status}
           onChange={(name, value) => setStatus(value)}
         />
-        <AlertInfo className="mt-4">The API is limited to 5 requests every hour.</AlertInfo>
       </Card.Content>
 
       <Card.Actions>

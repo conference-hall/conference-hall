@@ -12,7 +12,6 @@ import { ButtonFileUpload } from '~/design-system/forms/FileUploadButton';
 import { uploadEventLogo } from './server/upload-event-logo.server';
 import { Card } from '~/design-system/layouts/Card';
 import { Avatar } from '~/design-system/Avatar';
-import { Button } from '~/design-system/Buttons';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await requireSession(request);
@@ -41,7 +40,7 @@ export default function EventGeneralSettingsRoute() {
   return (
     <Card as="section">
       <Card.Title>
-        <H2 size="xl">Customize event logo</H2>
+        <H2 size="base">Customize event logo</H2>
         <Subtitle>Upload a beautiful logo for your event.</Subtitle>
       </Card.Title>
 
@@ -59,7 +58,6 @@ export default function EventGeneralSettingsRoute() {
       </Card.Content>
 
       <Card.Actions>
-        <Button variant="secondary">Remove logo</Button>
         <Form method="POST" encType="multipart/form-data" onChange={handleSubmit}>
           <ButtonFileUpload name="logo" accept="image/jpeg,image/png,image/webp,image/avif">
             Change logo
