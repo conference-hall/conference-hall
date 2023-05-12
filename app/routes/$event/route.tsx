@@ -9,6 +9,8 @@ import { getEvent } from '~/shared-server/events/get-event.server';
 import { EventHeader } from './components/EventHeader';
 import { EventTabs } from './components/EventTabs';
 import { Footer } from '~/shared-components/Footer';
+import { mergeMeta } from '~/libs/meta/merge-meta';
+import { eventSocialCard } from '~/libs/meta/social-cards';
 
 export const loader = async ({ params }: LoaderArgs) => {
   invariant(params.event, 'Invalid event slug');
@@ -16,6 +18,11 @@ export const loader = async ({ params }: LoaderArgs) => {
   const event = await getEvent(params.event);
   return json(event);
 };
+
+export const meta = mergeMeta<typeof loader>(
+  ({ data }) => [{ title: `${data.name} | Conference Hall` }],
+  ({ data }) => eventSocialCard({ name: data.name, logo: data.logo, websiteUrl: data.websiteUrl })
+);
 
 export default function EventRoute() {
   const { user } = useUser();
