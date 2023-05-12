@@ -19,7 +19,7 @@ export function UserMenuDesktop({ name, email, picture, isOrganizer }: Props) {
       </div>
 
       {!isOrganizer && (
-        <Menu.ItemLink to="/organizer" icon={StarIcon}>
+        <Menu.ItemLink to="/team" icon={StarIcon}>
           Become organizer
         </Menu.ItemLink>
       )}

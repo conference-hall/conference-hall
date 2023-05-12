@@ -21,7 +21,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   const result = await withZod(ProposalsExportFiltersSchema).validate(url.searchParams);
   if (result.error) return json(null);
 
-  const { orga, event, ...filters } = result.data;
+  const { team, event, ...filters } = result.data;
   const results = await exportProposals(event, userId, filters ?? {});
   return json(results);
 };

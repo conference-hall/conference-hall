@@ -27,7 +27,7 @@ model User {
   organizerKeyAccess OrganizerKeyAccess?  @relation(fields: [organizerKey], references: [id])
   talks              Talk[]               @relation("speakers_talks")
   proposals          Proposal[]           @relation("speakers_proposals")
-  organizations      OrganizationMember[]
+  teams      TeamMember[]
   ratings            Rating[]
   surveys            Survey[]
   createdTalks       Talk[]
@@ -93,8 +93,8 @@ model Event {
   description              String?
   type                     EventType       @default(CONFERENCE)
   visibility               EventVisibility @default(PRIVATE)
-  organizationId           String
-  organization             Organization    @relation(fields: [organizationId], references: [id])
+  teamId           String
+  team             Team    @relation(fields: [teamId], references: [id])
   address                  String?
   lat                      Float?
   lng                      Float?
@@ -164,32 +164,32 @@ enum EventVisibility {
   PRIVATE
 }
 
-model Organization {
+model Team {
   id             String               @id @default(cuid())
   name           String
   slug           String               @unique
   invitationCode String               @unique @default(cuid())
   createdAt      DateTime             @default(now())
   updatedAt      DateTime             @updatedAt
-  members        OrganizationMember[]
+  members        TeamMember[]
   events         Event[]
 
-  @@map("organizations")
+  @@map("teams")
 }
 
-model OrganizationMember {
+model TeamMember {
   member         User             @relation(fields: [memberId], references: [id])
   memberId       String
-  organization   Organization     @relation(fields: [organizationId], references: [id])
-  organizationId String
-  role           OrganizationRole @default(REVIEWER)
+  team   Team     @relation(fields: [teamId], references: [id])
+  teamId String
+  role           TeamRole @default(REVIEWER)
   createdAt      DateTime         @default(now())
 
-  @@id([memberId, organizationId])
-  @@map("organizations_members")
+  @@id([memberId, teamId])
+  @@map("teams_members")
 }
 
-enum OrganizationRole {
+enum TeamRole {
   OWNER
   MEMBER
   REVIEWER

@@ -1,9 +1,9 @@
 import * as fake from '@ngneat/falso';
-import type { Organization, Prisma } from '@prisma/client';
+import type { Team, Prisma } from '@prisma/client';
 import { EventType, EventVisibility } from '@prisma/client';
 import { db } from '../../app/libs/db';
 import { applyTraits } from './helpers/traits';
-import { organizationFactory } from './organization';
+import { teamFactory } from './team';
 import { userFactory } from './users';
 
 const TRAITS = {
@@ -57,14 +57,14 @@ type Trait = keyof typeof TRAITS;
 type FactoryOptions = {
   attributes?: Partial<Prisma.EventCreateInput>;
   traits?: Trait[];
-  organization?: Organization;
+  team?: Team;
 };
 
 export const eventFactory = async (options: FactoryOptions = {}) => {
   const { attributes = {}, traits = [] } = options;
 
-  if (!options.organization) {
-    options.organization = await organizationFactory();
+  if (!options.team) {
+    options.team = await teamFactory();
   }
 
   const creator = await userFactory();
@@ -81,7 +81,7 @@ export const eventFactory = async (options: FactoryOptions = {}) => {
     type: fake.rand([EventType.CONFERENCE, EventType.MEETUP]),
     visibility: EventVisibility.PUBLIC,
     creator: { connect: { id: creator.id } },
-    organization: { connect: { id: options.organization.id } },
+    team: { connect: { id: options.team.id } },
   };
 
   const data = {

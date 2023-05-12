@@ -55,7 +55,7 @@ export const ProposalsStatusUpdateSchema = z.object({
 });
 
 export const ProposalsExportFiltersSchema = ProposalsFiltersSchema.extend({
-  orga: text(z.string()),
+  team: text(z.string()),
   event: text(z.string()),
 });
 
