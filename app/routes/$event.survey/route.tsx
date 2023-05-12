@@ -34,7 +34,7 @@ export const action = async ({ request, params }: ActionArgs) => {
 
   await saveSurvey(userId, params.event, result.data);
 
-  return json(null, await addToast(request, 'Survey successfully saved.'));
+  return json(null, await addToast(request, 'Survey saved.'));
 };
 
 export default function EventSurveyRoute() {

@@ -1,4 +1,6 @@
-class SpeakerTalkPage {
+import BasePage from 'page-objects/base.page';
+
+class SpeakerTalkPage extends BasePage {
   visit(talkId: string) {
     cy.visit(`/speaker/talks/${talkId}`);
     this.isPageVisible();

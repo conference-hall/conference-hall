@@ -1,15 +1,19 @@
 import invariant from 'tiny-invariant';
 import { useLoaderData, useNavigate } from '@remix-run/react';
 import type { ActionFunction, LoaderArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
+import { json, redirect } from '@remix-run/node';
 import { getSpeakerProposal } from '~/shared-server/proposals/get-speaker-proposal.server';
-import { removeCoSpeakerFromProposal } from '~/shared-server/proposals/remove-co-speaker.server';
 import { ProposalStatusSection } from '~/shared-components/proposals/ProposalStatusSection';
 import { requireSession } from '~/libs/auth/session';
 import { useEvent } from '../$event/route';
 import { ProposalDetailsSection } from '~/shared-components/proposals/ProposalDetailsSection';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 import { Container } from '~/design-system/layouts/Container';
+import { deleteProposal } from './server/delete-proposal.server';
+import { addToast } from '~/libs/toasts/toasts';
+import { withZod } from '@remix-validated-form/with-zod';
+import { ProposalParticipationSchema } from '~/schemas/proposal';
+import { sendParticipationAnswer } from './server/send-participation-answer.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);
@@ -25,11 +29,21 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   const form = await request.formData();
   const action = form.get('_action');
-  if (action === 'remove-speaker') {
-    const speakerId = form.get('_speakerId')?.toString() as string;
-    await removeCoSpeakerFromProposal(userId, params.proposal, speakerId);
+
+  switch (action) {
+    case 'delete': {
+      await deleteProposal(params.proposal, userId);
+      return redirect(`/${params.event}/proposals`, await addToast(request, 'Proposal submission removed.'));
+    }
+    case 'confirm': {
+      const result = await withZod(ProposalParticipationSchema).validate(form);
+      if (result.error) return null;
+      await sendParticipationAnswer(userId, params.proposal, result.data.participation);
+      return json(null, await addToast(request, 'Your response has been sent to organizers.'));
+    }
+    default:
+      return null;
   }
-  return null;
 };
 
 export default function ProposalRoute() {

@@ -1,9 +1,8 @@
-type SettingsFormType = {
-  name?: string;
-  slug?: string;
-};
+import BasePage from 'page-objects/base.page';
 
-class OrganizationSettingsPage {
+type SettingsFormType = { name?: string; slug?: string };
+
+class OrganizationSettingsPage extends BasePage {
   visit(slug: string) {
     cy.visit(`/organizer/${slug}/settings`);
     this.isPageVisible();

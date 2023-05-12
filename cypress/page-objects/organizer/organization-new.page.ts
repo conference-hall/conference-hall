@@ -1,9 +1,11 @@
+import BasePage from 'page-objects/base.page';
+
 type OrganizationNewType = {
   name?: string;
   slug?: string;
 };
 
-class OrganizationNewPage {
+class OrganizationNewPage extends BasePage {
   visit() {
     cy.visit(`/organizer`);
     this.isPageVisible();

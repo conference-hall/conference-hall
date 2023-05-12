@@ -35,11 +35,14 @@ describe('Event settings', () => {
       settings.openSetting('General');
       general.isPageVisible();
 
-      settings.openSetting('Customize');
-      customize.isPageVisible();
+      settings.openSetting('Call for paper');
+      cfp.isPageVisible();
 
       settings.openSetting('Tracks');
       tracks.isPageVisible();
+
+      settings.openSetting('Customize');
+      customize.isPageVisible();
 
       settings.openSetting('Speaker survey');
       survey.isPageVisible();
@@ -58,13 +61,11 @@ describe('Event settings', () => {
     });
 
     describe('general settings', () => {
-      it.skip('initial values');
-      it.skip('check error fields');
-
       it('can update general event info', () => {
         general.visit('orga-1', 'conference-1');
 
         general.saveGeneralForm({ name: 'Conference 2', visibility: 'Private' });
+        cy.assertToast('Event saved.');
 
         cy.assertUrl('/organizer/orga-1/conference-2/settings');
         cy.reload();
@@ -85,7 +86,16 @@ describe('Event settings', () => {
           websiteUrl: 'https://website.com',
           contactEmail: 'contact@email.com',
         });
+        cy.assertToast('Event details saved.');
 
+        cy.assertInputText('Start date', '2022-12-12');
+        cy.assertInputText('End date', '2022-12-13');
+        cy.assertInputText('Venue address or city', 'Nantes, France');
+        cy.assertInputText('Description', 'Hello world!');
+        cy.assertInputText('Website URL', 'https://website.com');
+        cy.assertInputText('Contact email', 'contact@email.com');
+
+        cy.reload();
         cy.assertInputText('Start date', '2022-12-12');
         cy.assertInputText('End date', '2022-12-13');
         cy.assertInputText('Venue address or city', 'Nantes, France');
@@ -97,13 +107,12 @@ describe('Event settings', () => {
       it('archive an event', () => {
         general.visit('orga-1', 'conference-1');
 
-        cy.findByRole('heading', { name: 'Archive event' }).should('exist');
+        cy.findByRole('heading', { name: 'Archiving' }).should('exist');
         general.archive();
+        cy.assertText('Event archived.');
 
-        cy.findByRole('heading', { name: 'Restore event' }).should('exist');
         general.restore();
-
-        cy.findByRole('heading', { name: 'Archive event' }).should('exist');
+        cy.assertText('Event restored.');
       });
     });
 
@@ -111,13 +120,12 @@ describe('Event settings', () => {
       it('can upload a new log', () => {
         customize.visit('orga-1', 'conference-1');
         customize.changeLogo().selectFile('cypress/fixtures/devfest.png', { force: true });
+        cy.assertText('Logo updated.');
         customize.getLogoSrc().should('include', '.png');
       });
     });
 
     describe('tracks settings', () => {
-      it.skip('initial values');
-
       it('add, edit and remove a format', () => {
         tracks.visit('orga-1', 'conference-1');
 
@@ -144,6 +152,12 @@ describe('Event settings', () => {
         cy.assertText('Long talk');
 
         tracks.formatsRequired();
+        cy.assertToast('Track setting updated.');
+
+        cy.reload();
+        cy.assertText('Conf');
+        cy.assertText('Long talk');
+        cy.findByRole('switch', { name: 'Format selection required', checked: true }).should('exist');
 
         cy.findByRole('button', { name: 'Remove Conf' }).click();
         cy.assertNoText('Conf');
@@ -177,6 +191,12 @@ describe('Event settings', () => {
         cy.assertText('This is the cloud');
 
         tracks.categoriesRequired();
+        cy.assertToast('Track setting updated.');
+
+        cy.reload();
+        cy.assertText('Cloud');
+        cy.assertText('This is the cloud');
+        cy.findByRole('switch', { name: 'Category selection required', checked: true }).should('exist');
 
         cy.findByRole('button', { name: 'Remove Cloud' }).click();
         cy.assertNoText('Cloud');
@@ -185,8 +205,6 @@ describe('Event settings', () => {
     });
 
     describe('cfp settings', () => {
-      it.skip('initial values');
-
       it('updates CFP settings', () => {
         cfp.visit('orga-1', 'conference-1');
         cfp.saveForm({
@@ -195,24 +213,24 @@ describe('Event settings', () => {
           maxProposals: '12',
           codeOfConductUrl: 'https://website.com',
         });
+        cy.assertToast('Call for paper updated.');
+
+        cy.reload();
+        cy.assertInputText('Opening date', '2022-12-12');
+        cy.assertInputText('Closing date', '2022-12-13');
+        cy.assertInputText('Maximum of proposals per speaker', '12');
+        cy.assertInputText('Code of conduct URL', 'https://website.com');
       });
     });
 
     describe('survey settings', () => {
-      it.skip('initial values');
-
       it('enables or disables survey', () => {
         survey.visit('orga-1', 'conference-1');
-        survey.toggleSurvey().click();
-        survey.saveQuestion().should('not.be.disabled');
-        survey.toggleSurvey().click();
         survey.saveQuestion().should('be.disabled');
-      });
 
-      it('save survey questions', () => {
-        survey.visit('orga-1', 'conference-1');
         survey.toggleSurvey().click();
         survey.saveQuestion().should('not.be.disabled');
+        cy.assertToast('Speaker survey enabled');
 
         cy.findByLabelText("What's your gender?").click();
         cy.findByLabelText("What's your Tshirt size?").click();
@@ -221,7 +239,16 @@ describe('Event settings', () => {
         cy.findByLabelText('Do you have any special diet restrictions?').click();
         cy.findByLabelText('Do you have specific information to share?').click();
         survey.saveQuestion().click();
-        // TODO: check it has been saved
+        cy.assertToast('Survey questions saved.');
+
+        cy.reload();
+        survey.saveQuestion().should('not.be.disabled');
+        cy.findByLabelText("What's your gender?").should('be.checked');
+        cy.findByLabelText("What's your Tshirt size?").should('be.checked');
+        cy.findByLabelText('Do you need accommodation funding? (Hotel, AirBnB...)').should('be.checked');
+        cy.findByLabelText('Do you need transports funding?').should('be.checked');
+        cy.findByLabelText('Do you have any special diet restrictions?').should('be.checked');
+        cy.findByLabelText('Do you have specific information to share?').should('be.checked');
       });
     });
 
@@ -230,7 +257,7 @@ describe('Event settings', () => {
         review.visit('orga-1', 'conference-1');
 
         review.toggleReview(true).click();
-        cy.assertText('Review setting saved.');
+        cy.assertToast('Review setting saved.');
 
         cy.reload();
         review.toggleReview(false).should('exist');
@@ -240,7 +267,7 @@ describe('Event settings', () => {
         review.visit('orga-1', 'conference-1');
 
         review.toggleDisplayReviews(true).click();
-        cy.assertText('Review setting saved.');
+        cy.assertToast('Review setting saved.');
 
         cy.reload();
         review.toggleDisplayReviews(false).should('exist');
@@ -250,7 +277,7 @@ describe('Event settings', () => {
         review.visit('orga-1', 'conference-1');
 
         review.toggleDisplaySpeakers(true).click();
-        cy.assertText('Review setting saved.');
+        cy.assertToast('Review setting saved.');
 
         cy.reload();
         review.toggleDisplaySpeakers(false).should('exist');
@@ -264,14 +291,17 @@ describe('Event settings', () => {
         cy.assertText('Invalid email');
 
         notifications.saveForm('test@example.com');
-        cy.assertText('Notification email saved');
+        cy.assertText('Notification email saved.');
+
+        cy.reload();
+        cy.assertInputText('Email receiving notifications', 'test@example.com');
       });
 
       it('save submitted notifications', () => {
         notifications.visit('orga-1', 'conference-1');
 
         cy.findByRole('switch', { name: 'Submitted proposals', checked: false }).click();
-        cy.assertText('Notification setting saved');
+        cy.assertText('Notification setting saved.');
         cy.findByRole('switch', { name: 'Submitted proposals', checked: true }).click();
       });
 
@@ -279,7 +309,7 @@ describe('Event settings', () => {
         notifications.visit('orga-1', 'conference-1');
 
         cy.findByRole('switch', { name: 'Confirmed proposals', checked: false }).click();
-        cy.assertText('Notification setting saved');
+        cy.assertText('Notification setting saved.');
         cy.findByRole('switch', { name: 'Confirmed proposals', checked: true }).click();
       });
 
@@ -287,25 +317,25 @@ describe('Event settings', () => {
         notifications.visit('orga-1', 'conference-1');
 
         cy.findByRole('switch', { name: 'Declined proposals', checked: false }).click();
-        cy.assertText('Notification setting saved');
+        cy.assertText('Notification setting saved.');
         cy.findByRole('switch', { name: 'Declined proposals', checked: true }).click();
       });
     });
 
     describe('slack integration settings', () => {
-      it.skip('initial values');
-      it.skip('display form errors');
-
       it('fills slack web hook url', () => {
         slack.visit('orga-1', 'conference-1');
+        slack.saveSlackWebhook('foo');
+        cy.assertText('Invalid url');
+
         slack.saveSlackWebhook('https://slack.com/webhook/test');
+
+        cy.reload();
+        cy.assertInputText('Slack web hook URL', 'https://slack.com/webhook/test');
       });
     });
 
     describe('API integration settings', () => {
-      it.skip('initial values');
-      it.skip('tryouts');
-
       it('generate and revoke API key', () => {
         api.visit('orga-1', 'conference-1');
 
@@ -313,9 +343,13 @@ describe('Event settings', () => {
         api.revokeAPIKey().should('exist');
         api.apiKey().should('not.have.value', '');
 
+        cy.findByRole('heading', { name: 'Event proposals API' }).should('exist');
+
         api.revokeAPIKey().click();
         api.generateAPIKey().should('exist');
         api.apiKey().should('have.value', '');
+
+        cy.findByRole('heading', { name: 'Event proposals API' }).should('not.exist');
       });
     });
   });

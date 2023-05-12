@@ -1,4 +1,6 @@
-class SurveySettings {
+import BasePage from 'page-objects/base.page';
+
+class SurveySettings extends BasePage {
   visit(slug: string, eventSlug: string) {
     cy.visit(`/organizer/${slug}/${eventSlug}/settings/survey`);
     this.isPageVisible();

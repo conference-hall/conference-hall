@@ -1,3 +1,5 @@
+import BasePage from 'page-objects/base.page';
+
 type CfpFormType = {
   cfpStart?: string;
   cfpEnd?: string;
@@ -5,7 +7,7 @@ type CfpFormType = {
   codeOfConductUrl?: string;
 };
 
-class CfpSettings {
+class CfpSettings extends BasePage {
   visit(slug: string, eventSlug: string) {
     cy.visit(`/organizer/${slug}/${eventSlug}/settings/cfp`);
     this.isPageVisible();
@@ -20,7 +22,7 @@ class CfpSettings {
     if (data.cfpEnd) cy.typeOn('Closing date', data.cfpEnd);
     if (data.maxProposals) cy.typeOn('Maximum of proposals per speaker', data.maxProposals);
     if (data.codeOfConductUrl) cy.typeOn('Code of conduct URL', data.codeOfConductUrl);
-    cy.findByRole('button', { name: 'Update CFP preferences' });
+    cy.findByRole('button', { name: 'Update CFP preferences' }).click();
   }
 }
 

@@ -1,4 +1,6 @@
-class ApiSettings {
+import BasePage from 'page-objects/base.page';
+
+class ApiSettings extends BasePage {
   visit(slug: string, eventSlug: string) {
     cy.visit(`/organizer/${slug}/${eventSlug}/settings/api`);
     this.isPageVisible();

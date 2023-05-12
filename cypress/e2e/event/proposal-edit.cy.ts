@@ -37,6 +37,7 @@ describe('Speaker proposal edition page', () => {
     editProposal.selectFormatTrack('Quickie 2');
     editProposal.selectCategoryTrack('Web 2');
     editProposal.saveAbstract().click();
+    cy.assertToast('Proposal saved.');
 
     proposal.isPageVisible();
     cy.assertText('New title');
@@ -59,6 +60,7 @@ describe('Speaker proposal edition page', () => {
     cy.assertText('Bruce Wayne');
     editProposal.removeCoSpeaker('Bruce Wayne').click();
     editProposal.isPageVisible();
+    cy.assertToast('Co-speaker removed from proposal.');
     cy.assertNoText('Bruce Wayne');
   });
 

@@ -1,4 +1,4 @@
-import { useFetcher } from '@remix-run/react';
+import { Form } from '@remix-run/react';
 import { Button, ButtonLink } from '~/design-system/Buttons';
 import { ProposalDeleteButton } from './ProposalDelete';
 import { Card } from '~/design-system/layouts/Card';
@@ -99,8 +99,6 @@ function DeliberationPending() {
 }
 
 function AcceptedByOrganizers({ event, proposal }: Props) {
-  const fetcher = useFetcher();
-
   return (
     <Card as="section" p={8} className="space-y-8">
       <div>
@@ -111,18 +109,20 @@ function AcceptedByOrganizers({ event, proposal }: Props) {
         </Text>
       </div>
       <div className="flex gap-4">
-        <fetcher.Form action={`/${event.slug}/proposals/${proposal.id}/confirm`} method="POST" className="flex-1">
+        <Form method="POST" className="flex-1">
+          <input type="hidden" name="_action" value="confirm" />
           <input type="hidden" name="participation" value="CONFIRMED" />
           <Button type="submit" block>
             Confirm
           </Button>
-        </fetcher.Form>
-        <fetcher.Form action={`/${event.slug}/proposals/${proposal.id}/confirm`} method="POST" className="flex-1">
+        </Form>
+        <Form method="POST" className="flex-1">
+          <input type="hidden" name="_action" value="confirm" />
           <input type="hidden" name="participation" value="DECLINED" />
           <Button type="submit" variant="secondary" block>
             Decline
           </Button>
-        </fetcher.Form>
+        </Form>
       </div>
     </Card>
   );

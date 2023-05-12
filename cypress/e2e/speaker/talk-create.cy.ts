@@ -22,6 +22,7 @@ describe('Speaker talk creation page', () => {
       references: 'Best talk ever!',
     });
     newTalk.createAbstract().click();
+    cy.assertToast('New talk created.');
 
     talk.isPageVisible();
     cy.assertText('Awesome title');

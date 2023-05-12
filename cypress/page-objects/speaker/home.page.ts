@@ -1,4 +1,6 @@
-class SpeakerHomePage {
+import BasePage from 'page-objects/base.page';
+
+class SpeakerHomePage extends BasePage {
   visit() {
     cy.visit('/speaker');
     this.isPageVisible();
@@ -22,6 +24,10 @@ class SpeakerHomePage {
 
   activity(name: string) {
     return this.activities().contains(name);
+  }
+
+  eventActivities(name: string) {
+    return cy.findByRole('list', { name: `${name} activities` }).children();
   }
 }
 

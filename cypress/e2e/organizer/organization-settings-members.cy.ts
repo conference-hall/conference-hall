@@ -33,6 +33,7 @@ describe('Organization members list', () => {
       members.changeRoleButton('Bruce Wayne').click();
       members.selectRoleToChange('Bruce Wayne', 'Owner');
       members.confirmChangeRole('Bruce Wayne');
+      cy.assertToast('Member role changed.');
       members.member('Bruce Wayne').parent().should('contain.text', 'owner');
     });
 
@@ -44,6 +45,7 @@ describe('Organization members list', () => {
       members.member('Bruce Wayne').should('exist');
       members.removeMemberButton('Bruce Wayne').click();
       members.confirmRemoveMember('Bruce Wayne');
+      cy.assertToast('Member removed from organization.');
       members.member('Bruce Wayne').should('not.exist');
     });
   });

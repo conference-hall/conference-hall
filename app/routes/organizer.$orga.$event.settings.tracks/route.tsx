@@ -14,6 +14,7 @@ import { useOrganizerEvent } from '../organizer.$orga.$event/route';
 import { Card } from '~/design-system/layouts/Card';
 import { TrackList } from './components/TrackList';
 import { ToggleGroup } from '~/design-system/forms/Toggles';
+import { addToast } from '~/libs/toasts/toasts';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await requireSession(request);
@@ -54,7 +55,7 @@ export const action = async ({ request, params }: ActionArgs) => {
       const results = await withZod(EventTracksSettingsSchema).validate(formData);
       if (results.error) return json(results.error.fieldErrors);
       await updateEvent(params.event, userId, results.data);
-      break;
+      return json(null, await addToast(request, 'Track setting updated.'));
     }
   }
   return null;

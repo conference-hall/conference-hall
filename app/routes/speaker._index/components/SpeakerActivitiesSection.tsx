@@ -58,9 +58,9 @@ export function SpeakerActivitiesSection({ activities, nextPage, hasNextPage, cl
                 target="_blank"
               />
             </div>
-            <div className="divide-y">
+            <ul aria-label={`${event.name} activities`} className="divide-y">
               {event.submissions.map((submission) => (
-                <div key={submission.id} className="flex flex-col gap-1 px-6 py-4">
+                <li key={submission.id} className="flex flex-col gap-1 px-6 py-4">
                   <div className="flex items-center justify-between">
                     <Link to={`/${event.slug}/proposals/${submission.id}`}>
                       <Text variant="link" strong heading truncate>
@@ -70,9 +70,9 @@ export function SpeakerActivitiesSection({ activities, nextPage, hasNextPage, cl
                     <AvatarGroup avatars={submission.speakers} />
                   </div>
                   <ProposalStatusLabel status={submission.status} />
-                </div>
+                </li>
               ))}
-            </div>
+            </ul>
           </Card>
         ))}
       </ul>

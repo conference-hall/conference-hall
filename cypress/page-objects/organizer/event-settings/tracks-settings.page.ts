@@ -1,4 +1,6 @@
-class TracksSettings {
+import BasePage from 'page-objects/base.page';
+
+class TracksSettings extends BasePage {
   visit(slug: string, eventSlug: string) {
     cy.visit(`/organizer/${slug}/${eventSlug}/settings/tracks`);
     this.isPageVisible();

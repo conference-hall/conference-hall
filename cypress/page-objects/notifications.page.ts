@@ -1,4 +1,6 @@
-class NotificationsPage {
+import BasePage from './base.page';
+
+class NotificationsPage extends BasePage {
   visit() {
     cy.visit('/notifications');
     this.isPageVisible();

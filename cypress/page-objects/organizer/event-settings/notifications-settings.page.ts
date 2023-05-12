@@ -1,4 +1,6 @@
-class NotificationsSettings {
+import BasePage from 'page-objects/base.page';
+
+class NotificationsSettings extends BasePage {
   visit(slug: string, eventSlug: string) {
     cy.visit(`/organizer/${slug}/${eventSlug}/settings/notifications`);
     this.isPageVisible();

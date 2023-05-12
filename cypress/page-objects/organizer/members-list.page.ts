@@ -1,4 +1,6 @@
-class OrganizationMembersPage {
+import BasePage from 'page-objects/base.page';
+
+class OrganizationMembersPage extends BasePage {
   visit(slug: string) {
     cy.visit(`/organizer/${slug}/settings/members`);
     this.isPageVisible();

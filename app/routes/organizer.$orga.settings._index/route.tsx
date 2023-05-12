@@ -30,10 +30,7 @@ export const action = async ({ request, params }: ActionArgs) => {
   const organization = await updateOrganization(params.orga, userId, result.data);
   if (organization?.fieldErrors) return json(organization.fieldErrors);
 
-  return redirect(
-    `/organizer/${organization.slug}/settings`,
-    await addToast(request, 'Organization successfully updated')
-  );
+  return redirect(`/organizer/${organization.slug}/settings`, await addToast(request, 'Organization saved.'));
 };
 
 export default function OrganizationSettingsRoute() {

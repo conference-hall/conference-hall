@@ -1,4 +1,6 @@
-class SlackSettings {
+import BasePage from 'page-objects/base.page';
+
+class SlackSettings extends BasePage {
   visit(slug: string, eventSlug: string) {
     cy.visit(`/organizer/${slug}/${eventSlug}/settings/integrations`);
     this.isPageVisible();

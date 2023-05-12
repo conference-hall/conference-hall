@@ -1,3 +1,5 @@
+import BasePage from 'page-objects/base.page';
+
 type PersonalInfoType = {
   name?: string;
   email?: string;
@@ -16,7 +18,7 @@ type AdditionalInfoType = {
   github?: string;
 };
 
-class SpeakerProfilePage {
+class SpeakerProfilePage extends BasePage {
   visit() {
     cy.visit('/speaker/profile');
     this.isPageVisible();
@@ -63,6 +65,10 @@ class SpeakerProfilePage {
 
   saveAdditionalInfo() {
     return cy.findByLabelText('Additional information').submit();
+  }
+
+  assertSaved() {
+    cy.assertToast('Profile updated.');
   }
 }
 
