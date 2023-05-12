@@ -18,6 +18,7 @@ describe('Speaker profile page', () => {
       avatarUrl: 'https://superman.com/photo.jpg',
     });
     profile.savePersonalInfo();
+    profile.assertSaved();
   });
 
   it('display errors on mandatory fields for personal information', () => {
@@ -38,6 +39,7 @@ describe('Speaker profile page', () => {
       references: 'Speaker references',
     });
     profile.saveSpeakerDetails();
+    profile.assertSaved();
   });
 
   it('edit additional information', () => {
@@ -49,5 +51,6 @@ describe('Speaker profile page', () => {
       github: 'New github',
     });
     profile.saveAdditionalInfo();
+    profile.assertSaved();
   });
 });

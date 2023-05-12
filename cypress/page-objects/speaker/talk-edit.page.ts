@@ -1,3 +1,5 @@
+import BasePage from 'page-objects/base.page';
+
 type TalkFormType = {
   title?: string;
   abstract?: string;
@@ -6,7 +8,7 @@ type TalkFormType = {
   references?: string;
 };
 
-class SpeakerEditTalkPage {
+class SpeakerEditTalkPage extends BasePage {
   visit(talkId: string) {
     cy.visit(`/speaker/talks/${talkId}/edit`);
     this.isPageVisible();

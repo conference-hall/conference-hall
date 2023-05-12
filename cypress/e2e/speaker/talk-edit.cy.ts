@@ -28,6 +28,7 @@ describe('Speaker talk edition page', () => {
       references: 'New references',
     });
     editTalk.saveAbstract();
+    editTalk.assertToast('Talk updated.');
 
     talk.isPageVisible();
     cy.assertText('New title');
@@ -47,6 +48,7 @@ describe('Speaker talk edition page', () => {
     editTalk.visit('awesome-talk');
     cy.assertText('Bruce Wayne');
     editTalk.removeCoSpeaker('Bruce Wayne').click();
+    editTalk.assertToast('Co-speaker removed from talk.');
     cy.assertNoText('Bruce Wayne');
   });
 

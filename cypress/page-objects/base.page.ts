@@ -1,6 +1,26 @@
 class BasePage {
+  home() {
+    cy.findByRole('link', { name: 'Home' }).click();
+  }
+
+  talksLibrary() {
+    cy.findByRole('link', { name: 'Talks library' }).click();
+  }
+
+  profile() {
+    cy.findByRole('link', { name: 'Profile' }).click();
+  }
+
+  organizations() {
+    cy.findByRole('link', { name: 'Organizations' }).click();
+  }
+
   userMenu() {
     return new UserMenu();
+  }
+
+  assertToast(text: string) {
+    cy.findByText(text).should('exist');
   }
 }
 
@@ -17,26 +37,6 @@ class UserMenu {
 
   isOpen(email: string) {
     cy.assertText('Signed in as');
-  }
-
-  searchEvents() {
-    cy.findByRole('menuitem', { name: 'Search events' }).click();
-  }
-
-  openActivity() {
-    cy.findByRole('menuitem', { name: 'Home' }).click();
-  }
-
-  openTalks() {
-    cy.findByRole('menuitem', { name: 'Talks' }).click();
-  }
-
-  openProfile() {
-    cy.findByRole('menuitem', { name: 'Profile' }).click();
-  }
-
-  openOrganizations() {
-    cy.findByRole('menuitem', { name: 'Organizations' }).click();
   }
 
   signOut() {

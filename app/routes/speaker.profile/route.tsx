@@ -58,7 +58,7 @@ export const action = async ({ request }: ActionArgs) => {
     }
   }
 
-  return redirect('/speaker/profile', await addToast(request, 'Profile successfully saved.'));
+  return redirect('/speaker/profile', await addToast(request, 'Profile updated.'));
 };
 
 const MENU_ITEMS = [

@@ -39,9 +39,12 @@ describe('Speaker talk page', () => {
   it('can archive and restore a talk', () => {
     talk.visit('awesome-talk');
     talk.archiveTalk();
+    talk.assertToast('Talk archived.');
     cy.findByRole('button', { name: 'Restore' }).should('exist');
+
     talk.restoreTalk();
     cy.findByRole('button', { name: 'Restore' }).should('not.exist');
+    talk.assertToast('Talk restored.');
   });
 
   it('can submit a talk', () => {

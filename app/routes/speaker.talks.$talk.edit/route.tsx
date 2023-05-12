@@ -35,12 +35,12 @@ export const action: ActionFunction = async ({ request, params }: ActionArgs) =>
   if (action === 'remove-speaker') {
     const speakerId = form.get('_speakerId')?.toString() as string;
     await removeCoSpeakerFromTalk(userId, params.talk, speakerId);
-    return json(null);
+    return json(null, await addToast(request, 'Co-speaker removed from talk.'));
   } else {
     const result = await withZod(TalkSaveSchema).validate(form);
     if (result.error) return json(result.error.fieldErrors);
     await updateTalk(userId, params.talk, result.data);
-    return redirect(`/speaker/talks/${params.talk}`, await addToast(request, 'Talk successfully saved.'));
+    return redirect(`/speaker/talks/${params.talk}`, await addToast(request, 'Talk updated.'));
   }
 };
 
@@ -55,20 +55,21 @@ export default function SpeakerTalkRoute() {
 
       <Container className="mt-4 space-y-8 sm:mt-8">
         <div className="grid grid-cols-1 gap-6 lg:grid-flow-col-dense lg:grid-cols-3">
-          <div className="lg:col-span-2 lg:col-start-1">
-            <Card p={8} className="space-y-8">
-              <Form method="POST">
+          <Card className="lg:col-span-2 lg:col-start-1">
+            <Card.Content>
+              <Form method="POST" id="edit-talk-form">
                 <DetailsForm initialValues={talk} errors={errors} />
-
-                <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:justify-end">
-                  <ButtonLink to={`/speaker/talks/${talk.id}`} variant="secondary">
-                    Cancel
-                  </ButtonLink>
-                  <Button type="submit">Save talk</Button>
-                </div>
               </Form>
-            </Card>
-          </div>
+            </Card.Content>
+            <Card.Actions>
+              <ButtonLink to={`/speaker/talks/${talk.id}`} variant="secondary">
+                Cancel
+              </ButtonLink>
+              <Button type="submit" form="edit-talk-form">
+                Save talk
+              </Button>
+            </Card.Actions>
+          </Card>
 
           <div className="lg:col-span-1 lg:col-start-3">
             <Card p={8} className="space-y-6">

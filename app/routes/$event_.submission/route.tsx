@@ -11,6 +11,7 @@ import { useSubmissionStep } from './hooks/useSubmissionStep';
 import { useUser } from '~/root';
 import { IconButtonLink } from '~/design-system/IconButtons';
 import { XMarkIcon } from '@heroicons/react/24/outline';
+import { Navbar } from '~/shared-components/navbar/Navbar';
 
 type Step = { key: string; name: string; path: string; form?: string; enabled: boolean };
 
@@ -77,6 +78,8 @@ export default function EventSubmissionRoute() {
 
   return (
     <>
+      <Navbar user={user} withSearch />
+
       <div className="sticky top-0 z-10 border-b border-gray-200 bg-white py-2 shadow">
         <Container className="flex w-full items-center justify-between gap-4 py-4">
           <SubmissionSteps steps={steps} currentStep={currentStepKey} />

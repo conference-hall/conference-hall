@@ -12,6 +12,7 @@ import { ArchiveOrRestoreTalkButton } from './components/ArchiveOrRestoreTalkBut
 import { ProposalDetailsSection } from '~/shared-components/proposals/ProposalDetailsSection';
 import { ProposalSubmissionsSection } from '~/shared-components/proposals/ProposalSubmissionsSection';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
+import { addToast } from '~/libs/toasts/toasts';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);
@@ -27,10 +28,15 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   const form = await request.formData();
   const action = form.get('_action');
-  if (action === 'archive-talk') {
-    await archiveTalk(userId, params.talk);
-  } else if (action === 'restore-talk') {
-    await restoreTalk(userId, params.talk);
+
+  switch (action) {
+    case 'archive-talk':
+      await archiveTalk(userId, params.talk);
+      return json(null, await addToast(request, 'Talk archived.'));
+
+    case 'restore-talk':
+      await restoreTalk(userId, params.talk);
+      return json(null, await addToast(request, 'Talk restored.'));
   }
   return null;
 };
