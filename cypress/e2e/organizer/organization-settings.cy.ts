@@ -17,7 +17,7 @@ describe('Organization settings', () => {
       settings.fillSettingsForm({ name: 'Awesome orga updated', slug: 'awesome-orga-updated' });
       settings.saveAbstract().click();
       cy.assertInputText('Organization name', 'Awesome orga updated');
-      cy.assertInputText('Organization slug', 'awesome-orga-updated');
+      cy.assertInputText('Organization URL', 'awesome-orga-updated');
       cy.assertUrl('/organizer/awesome-orga-updated/settings');
     });
 
@@ -26,7 +26,7 @@ describe('Organization settings', () => {
       settings.fillSettingsForm({ name: 'Awesome orga updated', slug: '!@#$%^' });
       settings.saveAbstract().click();
       settings
-        .error('Organization slug')
+        .error('Organization URL')
         .should('contain.text', 'Must only contain lower case alphanumeric and dashes (-).');
     });
   });

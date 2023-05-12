@@ -29,6 +29,6 @@ describe('#createOrganization', () => {
     const user = await userFactory();
     await organizationFactory({ attributes: { slug: 'hello-world' }, owners: [user] });
     const result = await createOrganization(user.id, { name: 'Hello world', slug: 'hello-world' });
-    expect(result?.fieldErrors?.slug).toEqual('Slug already exists, please try another one.');
+    expect(result?.fieldErrors?.slug).toEqual('This URL already exists, please try another one.');
   });
 });

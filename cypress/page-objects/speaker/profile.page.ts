@@ -57,8 +57,8 @@ class SpeakerProfilePage {
   fillAdditionalInfo(data: AdditionalInfoType) {
     if (data.company) cy.typeOn('Company', data.company);
     if (data.location) cy.typeOn('Location (city, country)', data.location);
-    if (data.twitter) cy.typeOn('Twitter username', data.twitter);
-    if (data.github) cy.typeOn('GitHub username', data.github);
+    if (data.twitter) cy.typeOn('Twitter', data.twitter);
+    if (data.github) cy.typeOn('GitHub', data.github);
   }
 
   saveAdditionalInfo() {

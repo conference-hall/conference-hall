@@ -62,7 +62,7 @@ describe('Organization event list', () => {
       organization.selectConference();
       organization.fillNewEventForm({ name: 'Hello world', slug: 'event-1' });
       organization.createEvent();
-      organization.error('Event URL').should('contain.text', 'Slug already exists, please try another one.');
+      organization.error('Event URL').should('contain.text', 'This URL already exists, please try another one.');
     });
   });
 

@@ -15,7 +15,7 @@ export function PersonalInfoForm({ bio, references, errors }: Props) {
     <Card as="section">
       <Form method="POST" aria-labelledby="speaker-details-label" preventScrollReset>
         <Card.Title>
-          <H2 size="xl" id="speaker-details-label">
+          <H2 size="base" id="speaker-details-label">
             Speaker details
           </H2>
           <Subtitle>

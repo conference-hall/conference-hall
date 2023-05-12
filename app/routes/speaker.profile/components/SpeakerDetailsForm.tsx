@@ -24,7 +24,7 @@ export function SpeakerDetailsForm({ name, email, picture, errors }: Props) {
     <Card as="section">
       <Form method="POST" aria-labelledby="personal-info-label" preventScrollReset>
         <Card.Title>
-          <H2 size="xl" id="personal-info-label">
+          <H2 size="base" id="personal-info-label">
             Personal information
           </H2>
           <Subtitle>Use a permanent address where you can receive email.</Subtitle>

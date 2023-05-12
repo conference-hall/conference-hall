@@ -22,7 +22,7 @@ export function Menu({ trigger: Trigger, triggerLabel, triggerClassname, childre
         <Trigger />
       </MenuDropdown.Button>
       <MenuTransition>
-        <MenuDropdown.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <MenuDropdown.Items className="absolute right-0 mt-2 w-56 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           {children}
         </MenuDropdown.Items>
       </MenuTransition>

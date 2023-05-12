@@ -9,7 +9,7 @@ export async function updateOrganization(slug: string, userId: string, data: Org
   return await db.$transaction(async (trx) => {
     const existSlug = await trx.organization.findFirst({ where: { slug: data.slug } });
     if (existSlug && existSlug.id !== organization?.id) {
-      return { fieldErrors: { slug: 'Slug already exists, please try another one.' } };
+      return { fieldErrors: { slug: 'This URL already exists, please try another one.' } };
     }
 
     await trx.organization.update({ select: { id: true }, where: { slug }, data });
