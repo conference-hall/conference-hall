@@ -38,6 +38,7 @@ describe('Event proposal page details', () => {
     proposal.deleteProposal();
     proposal.deleteConfirmDialog().should('exist');
     proposal.confirmDelete();
+    proposal.assertToast('Proposal submission removed.');
 
     proposals.isPageVisible();
     proposals.proposal('Awesome talk').should('not.exist');
@@ -63,14 +64,14 @@ describe('Event proposal page details', () => {
       proposal.visit('devfest-nantes', 'awesome-proposal3');
       cy.assertText('Proposal has been accepted to Devfest Nantes!');
       proposal.confirmProposal();
-      cy.assertText('Your participation to Devfest Nantes is confirmed, Thanks!');
+      proposal.assertToast('Your participation to Devfest Nantes is confirmed, Thanks!');
     });
 
     it('can decline an accepted proposal', () => {
       proposal.visit('devfest-nantes', 'awesome-proposal3');
       cy.assertText('Proposal has been accepted to Devfest Nantes!');
       proposal.declineProposal();
-      cy.assertText('You have declined this proposal for Devfest Nantes.');
+      proposal.assertToast('You have declined this proposal for Devfest Nantes.');
     });
   });
 });

@@ -1,3 +1,5 @@
+import BasePage from 'page-objects/base.page';
+
 type ProposalFormType = {
   title?: string;
   abstract?: string;
@@ -6,7 +8,7 @@ type ProposalFormType = {
   references?: string;
 };
 
-class EventEditProposalPage {
+class EventEditProposalPage extends BasePage {
   visit(eventSlug: string, proposalId: string) {
     cy.visit(`/${eventSlug}/proposals/${proposalId}/edit`);
     this.isPageVisible();

@@ -10,7 +10,6 @@ import { Button, ButtonLink } from '~/design-system/Buttons';
 import { requireSession } from '~/libs/auth/session';
 import { getProposalUpdateSchema } from '~/schemas/proposal';
 import { getSpeakerProposal } from '~/shared-server/proposals/get-speaker-proposal.server';
-import { deleteProposal } from './server/delete-proposal.server';
 import { updateProposal } from './server/update-proposal.server';
 import { useEvent } from '../$event/route';
 import { CoSpeakersList, InviteCoSpeakerButton } from '~/shared-components/proposals/forms/CoSpeaker';
@@ -37,14 +36,10 @@ export const action = async ({ request, params }: ActionArgs) => {
   const action = form.get('_action');
 
   switch (action) {
-    case 'delete': {
-      await deleteProposal(params.proposal, userId);
-      return redirect(`/${params.event}/proposals`, await addToast(request, 'Proposal successfully deleted.'));
-    }
     case 'remove-speaker': {
       const speakerId = form.get('_speakerId')?.toString() as string;
       await removeCoSpeakerFromProposal(userId, params.proposal, speakerId);
-      return json(null);
+      return json(null, await addToast(request, 'Co-speaker removed from proposal.'));
     }
     default: {
       const event = await getEvent(params.event);
@@ -54,10 +49,7 @@ export const action = async ({ request, params }: ActionArgs) => {
 
       await updateProposal(params.event, params.proposal, userId, result.data);
 
-      return redirect(
-        `/${params.event}/proposals/${params.proposal}`,
-        await addToast(request, 'Proposal successfully updated.')
-      );
+      return redirect(`/${params.event}/proposals/${params.proposal}`, await addToast(request, 'Proposal saved.'));
     }
   }
 };
@@ -74,9 +66,9 @@ export default function EditProposalRoute() {
 
       <Container className="my-4 space-y-8 sm:my-8">
         <div className="grid grid-cols-1 gap-6 lg:grid-flow-col-dense lg:grid-cols-3">
-          <div className="lg:col-span-2 lg:col-start-1">
-            <Card p={8} className="space-y-8">
-              <Form method="POST">
+          <Card className="lg:col-span-2 lg:col-start-1">
+            <Card.Content>
+              <Form method="POST" id="edit-proposal-form">
                 <DetailsForm
                   initialValues={proposal}
                   errors={errors}
@@ -85,16 +77,17 @@ export default function EditProposalRoute() {
                   categories={event.categories}
                   categoriesRequired={event.categoriesRequired}
                 />
-
-                <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:justify-end sm:px-6">
-                  <ButtonLink to={`/${event.slug}/proposals/${proposal.id}`} variant="secondary">
-                    Cancel
-                  </ButtonLink>
-                  <Button type="submit">Save proposal</Button>
-                </div>
               </Form>
-            </Card>
-          </div>
+            </Card.Content>
+            <Card.Actions>
+              <ButtonLink to={`/${event.slug}/proposals/${proposal.id}`} variant="secondary">
+                Cancel
+              </ButtonLink>
+              <Button type="submit" form="edit-proposal-form">
+                Save proposal
+              </Button>
+            </Card.Actions>
+          </Card>
 
           <div className="lg:col-span-1 lg:col-start-3">
             <Card p={8} className="space-y-6">
