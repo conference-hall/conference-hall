@@ -27,7 +27,8 @@ export function OrganizationForm({ initialValues, errors }: OrganizationFormProp
       />
       <Input
         name="slug"
-        label="Organization slug"
+        label="Organization URL"
+        addon="https://conference-hall.io/organizer/"
         required
         autoComplete="off"
         value={slug}

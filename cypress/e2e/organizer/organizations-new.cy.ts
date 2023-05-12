@@ -17,7 +17,7 @@ describe('Organization create', () => {
     organizationNew.isPageVisible();
 
     organizationNew.fillForm({ name: 'Hello world' });
-    cy.assertInputText('Organization slug', 'hello-world');
+    cy.assertInputText('Organization URL', 'hello-world');
     organizationNew.newOrganization().click();
 
     organization.isPageVisible();
@@ -30,8 +30,10 @@ describe('Organization create', () => {
     organizationNew.isPageVisible();
 
     organizationNew.fillForm({ name: 'orga 1' });
-    cy.assertInputText('Organization slug', 'orga-1');
+    cy.assertInputText('Organization URL', 'orga-1');
     organizationNew.newOrganization().click();
-    organizationNew.error('Organization slug').should('contains.text', 'Slug already exists, please try another one.');
+    organizationNew
+      .error('Organization URL')
+      .should('contains.text', 'This URL already exists, please try another one.');
   });
 });

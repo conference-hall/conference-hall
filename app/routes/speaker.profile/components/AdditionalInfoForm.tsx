@@ -19,7 +19,7 @@ export function AdditionalInfoForm({ company, address, socials, errors }: Props)
     <Card as="section">
       <Form method="POST" aria-labelledby="additional-info-label" preventScrollReset>
         <Card.Title>
-          <H2 size="xl" id="additional-info-label">
+          <H2 size="base" id="additional-info-label">
             Additional information
           </H2>
           <Subtitle>Helps organizers to know more about you.</Subtitle>
@@ -30,8 +30,20 @@ export function AdditionalInfoForm({ company, address, socials, errors }: Props)
           <input type="hidden" name="_type" value="ADDITIONAL" />
           <Input name="company" label="Company" defaultValue={company || ''} error={errors?.company} />
           <Input name="address" label="Location (city, country)" defaultValue={address || ''} error={errors?.address} />
-          <Input name="twitter" label="Twitter username" defaultValue={twitter || ''} error={errors?.twitter} />
-          <Input name="github" label="GitHub username" defaultValue={github || ''} error={errors?.github} />
+          <Input
+            name="twitter"
+            label="Twitter"
+            addon="https://twitter.com/"
+            defaultValue={twitter || ''}
+            error={errors?.twitter}
+          />
+          <Input
+            name="github"
+            label="GitHub"
+            addon="https://github.com/"
+            defaultValue={github || ''}
+            error={errors?.github}
+          />
         </Card.Content>
 
         <Card.Actions>

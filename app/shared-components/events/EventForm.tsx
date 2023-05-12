@@ -35,6 +35,7 @@ export function EventForm({ initialValues, errors }: Props) {
       <Input
         name="slug"
         label="Event URL"
+        addon="https://conference-hall.io/"
         value={slug}
         onChange={(e) => {
           setSlug(e.target.value);

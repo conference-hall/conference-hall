@@ -15,7 +15,7 @@ class OrganizationSettingsPage {
 
   fillSettingsForm(data: SettingsFormType) {
     if (data.name) cy.typeOn('Organization name', data.name);
-    if (data.slug) cy.typeOn('Organization slug', data.slug);
+    if (data.slug) cy.typeOn('Organization URL', data.slug);
   }
 
   saveAbstract() {

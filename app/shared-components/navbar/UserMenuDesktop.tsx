@@ -13,7 +13,7 @@ export function UserMenuDesktop({ name, email, picture, isOrganizer }: Props) {
       triggerLabel="Open user menu"
       triggerClassname="flex flex-shrink-0 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
     >
-      <div className="px-4 py-3">
+      <div className="border-b border-gray-200 px-4 py-3">
         <p className="text-sm">Signed in as</p>
         <p className="truncate text-sm font-medium text-gray-900">{email}</p>
       </div>

@@ -44,9 +44,7 @@ export default function OrganizationSettingsRoute() {
     <Card as="section">
       <Form method="POST" preventScrollReset>
         <Card.Title>
-          <H3 size="l" mb={1}>
-            General
-          </H3>
+          <H3 size="base">General</H3>
           <Subtitle>Change organization name and URL.</Subtitle>
         </Card.Title>
 

@@ -57,7 +57,7 @@ describe('#updateEvent', () => {
   it('returns an error message when slug already exists', async () => {
     await eventFactory({ organization, attributes: { slug: 'hello-world' } });
     const created = await updateEvent(event.slug, owner.id, { slug: 'hello-world' });
-    expect(created.error).toEqual('Slug already exists, please try another one.');
+    expect(created.error).toEqual('This URL already exists, please try another one.');
   });
 
   it('throws an error if user is not owner', async () => {

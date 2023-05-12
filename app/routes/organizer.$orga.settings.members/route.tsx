@@ -65,9 +65,7 @@ export default function OrganizationSettingsRoute() {
   return (
     <Card as="section">
       <Card.Title>
-        <H3 size="l" mb={1}>
-          Members
-        </H3>
+        <H3 size="base">Members</H3>
         <Subtitle>Invite, remove or change role of organization members.</Subtitle>
       </Card.Title>
 

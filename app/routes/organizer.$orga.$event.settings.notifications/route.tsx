@@ -68,7 +68,7 @@ export default function EventNotificationsSettingsRoute() {
         </Card.Title>
 
         <Card.Content>
-          <Form method="POST" className="flex items-end gap-4">
+          <Form method="POST" id="email-notifications-form" className="flex items-end gap-4">
             <input type="hidden" name="_action" value="save-email-notifications" />
             <Input
               name="emailOrganizer"
@@ -78,9 +78,14 @@ export default function EventNotificationsSettingsRoute() {
               error={errors?.emailOrganizer}
               className="grow"
             />
-            <Button type="submit">Save email</Button>
           </Form>
         </Card.Content>
+
+        <Card.Actions>
+          <Button type="submit" form="email-notifications-form">
+            Save email
+          </Button>
+        </Card.Actions>
       </Card>
 
       <Card as="section">
