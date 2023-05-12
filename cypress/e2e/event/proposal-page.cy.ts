@@ -64,14 +64,14 @@ describe('Event proposal page details', () => {
       proposal.visit('devfest-nantes', 'awesome-proposal3');
       cy.assertText('Proposal has been accepted to Devfest Nantes!');
       proposal.confirmProposal();
-      cy.assertToast('Your participation to Devfest Nantes is confirmed, Thanks!');
+      cy.assertToast('Your response has been sent to organizers.');
     });
 
     it('can decline an accepted proposal', () => {
       proposal.visit('devfest-nantes', 'awesome-proposal3');
       cy.assertText('Proposal has been accepted to Devfest Nantes!');
       proposal.declineProposal();
-      cy.assertToast('You have declined this proposal for Devfest Nantes.');
+      cy.assertToast('Your response has been sent to organizers.');
     });
   });
 });
