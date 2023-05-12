@@ -1,3 +1,5 @@
+import BasePage from 'page-objects/base.page';
+
 type TalkFormType = {
   title: string;
   abstract: string;
@@ -20,7 +22,7 @@ type ConfirmationFormType = {
   cod?: boolean;
 };
 
-class EventSubmissionPage {
+class EventSubmissionPage extends BasePage {
   visit(slug: string) {
     cy.visit(`/${slug}/submission`);
     this.isPageVisible();
