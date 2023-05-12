@@ -1,22 +1,22 @@
 import { db } from '~/libs/db';
 import { InvitationInvalidOrAccepted, InvitationNotFoundError } from '~/libs/errors';
 
-export async function checkOrganizationInviteCode(code: string) {
-  const organization = await db.organization.findUnique({ where: { invitationCode: code } });
+export async function checkTeamInviteCode(code: string) {
+  const team = await db.team.findUnique({ where: { invitationCode: code } });
 
-  if (!organization) throw new InvitationNotFoundError();
+  if (!team) throw new InvitationNotFoundError();
 
-  return { id: organization.id, name: organization.name, slug: organization.slug };
+  return { id: team.id, name: team.name, slug: team.slug };
 }
 
 export async function addMember(code: string, userId: string) {
-  const orga = await checkOrganizationInviteCode(code);
+  const team = await checkTeamInviteCode(code);
 
   try {
-    await db.organizationMember.create({ data: { memberId: userId, organizationId: orga.id } });
+    await db.teamMember.create({ data: { memberId: userId, teamId: team.id } });
   } catch (e) {
     throw new InvitationInvalidOrAccepted();
   }
 
-  return { slug: orga.slug };
+  return { slug: team.slug };
 }

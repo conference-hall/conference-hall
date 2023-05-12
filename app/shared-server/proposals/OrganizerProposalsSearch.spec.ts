@@ -1,10 +1,10 @@
-import type { Event, EventCategory, EventFormat, Organization, Proposal, User } from '@prisma/client';
+import type { Event, EventCategory, EventFormat, Team, Proposal, User } from '@prisma/client';
 import type { ProposalsFilters } from '~/schemas/proposal';
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventCategoryFactory } from 'tests/factories/categories';
 import { eventFactory } from 'tests/factories/events';
 import { eventFormatFactory } from 'tests/factories/formats';
-import { organizationFactory } from 'tests/factories/organization';
+import { teamFactory } from 'tests/factories/team';
 import { proposalFactory } from 'tests/factories/proposals';
 import { ratingFactory } from 'tests/factories/ratings';
 import { talkFactory } from 'tests/factories/talks';
@@ -14,7 +14,7 @@ import { sortBy } from '~/utils/arrays';
 
 describe('#searchProposals', () => {
   let owner: User, speaker: User;
-  let organization: Organization;
+  let team: Team;
   let event: Event, event2: Event;
   let format: EventFormat;
   let category: EventCategory;
@@ -25,8 +25,8 @@ describe('#searchProposals', () => {
 
     owner = await userFactory({ traits: ['clark-kent'] });
     speaker = await userFactory({ traits: ['peter-parker'] });
-    organization = await organizationFactory({ owners: [owner] });
-    event = await eventFactory({ organization });
+    team = await teamFactory({ owners: [owner] });
+    event = await eventFactory({ team });
     format = await eventFormatFactory({ event });
     category = await eventCategoryFactory({ event });
     event2 = await eventFactory();

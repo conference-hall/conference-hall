@@ -9,7 +9,7 @@ export async function getUser(userId: string | null) {
 
   const user = await db.user.findUnique({
     where: { id: userId },
-    include: { organizations: { include: { organization: true } } },
+    include: { teams: { include: { team: true } } },
   });
 
   if (!user) return null;
@@ -26,16 +26,16 @@ export async function getUser(userId: string | null) {
     company: user.company,
     address: user.address,
     socials: user.socials as UserSocialLinks,
-    organizations: sortBy(
-      user.organizations.map((member) => ({
-        slug: member.organization.slug,
-        name: member.organization.name,
+    teams: sortBy(
+      user.teams.map((member) => ({
+        slug: member.team.slug,
+        name: member.team.name,
         role: member.role,
       })),
       'name'
     ),
     notifications,
-    isOrganizer: Boolean(user.organizerKey || user.organizations.length > 0),
+    isOrganizer: Boolean(user.organizerKey || user.teams.length > 0),
   };
 }
 

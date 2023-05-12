@@ -5,16 +5,16 @@ import { NavTabs } from '~/design-system/navigation/NavTabs';
 type Props = {
   authenticated: boolean;
   isOrganizer?: boolean;
-  organizations?: Array<{ slug: string; name: string; role: string }>;
+  teams?: Array<{ slug: string; name: string; role: string }>;
 };
 
-export function Navigation({ authenticated, isOrganizer, organizations = [] }: Props) {
+export function Navigation({ authenticated, isOrganizer, teams = [] }: Props) {
   const tabs = useMemo(() => {
     if (!authenticated) {
       return [{ label: 'Login', to: '/login', enabled: true }];
     }
 
-    const organizationLinks = organizations.map((organization) => ({
+    const organizationLinks = teams.map((organization) => ({
       to: `/organizer/${organization.slug}`,
       label: organization.name,
       icon: Square3Stack3DIcon,
@@ -30,7 +30,7 @@ export function Navigation({ authenticated, isOrganizer, organizations = [] }: P
         links: [...organizationLinks, { to: '/organizer', label: 'New organization', icon: PlusIcon }],
       },
     ];
-  }, [authenticated, isOrganizer, organizations]);
+  }, [authenticated, isOrganizer, teams]);
 
   return <NavTabs tabs={tabs} variant="dark" />;
 }

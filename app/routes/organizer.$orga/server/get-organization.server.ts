@@ -1,23 +1,23 @@
 import { db } from '~/libs/db';
-import { OrganizationNotFoundError } from '~/libs/errors';
+import { OrganizationNotFoundError as TeamNotFoundError } from '~/libs/errors';
 import { buildInvitationLink } from '~/shared-server/invitations/build-link.server';
 
-export type Organization = Awaited<ReturnType<typeof getOrganization>>;
+export type Team = Awaited<ReturnType<typeof getTeam>>;
 
-export async function getOrganization(slug: string, userId: string) {
-  const orgaMember = await db.organizationMember.findFirst({
-    where: { memberId: userId, organization: { slug } },
-    orderBy: { organization: { name: 'asc' } },
-    include: { organization: true },
+export async function getTeam(slug: string, userId: string) {
+  const orgaMember = await db.teamMember.findFirst({
+    where: { memberId: userId, team: { slug } },
+    orderBy: { team: { name: 'asc' } },
+    include: { team: true },
   });
 
-  if (!orgaMember) throw new OrganizationNotFoundError();
+  if (!orgaMember) throw new TeamNotFoundError();
 
   return {
-    id: orgaMember.organization.id,
-    name: orgaMember.organization.name,
-    slug: orgaMember.organization.slug,
+    id: orgaMember.team.id,
+    name: orgaMember.team.name,
+    slug: orgaMember.team.slug,
     role: orgaMember.role,
-    invitationLink: buildInvitationLink('orga', orgaMember.organization.invitationCode),
+    invitationLink: buildInvitationLink('orga', orgaMember.team.invitationCode),
   };
 }

@@ -13,7 +13,7 @@ import { ReviewHeader } from './components/Header';
 import { ReviewTabs } from './components/Tabs';
 import { rateProposal } from './server/rate-proposal.server';
 import { ReviewInfoSection } from './components/ReviewInfoSection';
-import { OrganizationRole } from '@prisma/client';
+import { TeamRole } from '@prisma/client';
 import { addToast } from '~/libs/toasts/toasts';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
@@ -49,8 +49,8 @@ export default function ProposalReviewRoute() {
   const { proposal, pagination } = proposalReview;
   const { you, summary } = proposal.reviews;
 
-  const role = user?.organizations.find((orga) => orga.slug === params.orga)?.role;
-  const canEditProposal = OrganizationRole.MEMBER === role || OrganizationRole.OWNER === role;
+  const role = user?.teams.find((team) => team.slug === params.orga)?.role;
+  const canEditProposal = TeamRole.MEMBER === role || TeamRole.OWNER === role;
 
   return (
     <>

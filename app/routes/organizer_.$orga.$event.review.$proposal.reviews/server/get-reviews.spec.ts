@@ -1,7 +1,7 @@
-import type { Event, Organization, User } from '@prisma/client';
+import type { Event, Team, User } from '@prisma/client';
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventFactory } from 'tests/factories/events';
-import { organizationFactory } from 'tests/factories/organization';
+import { teamFactory } from 'tests/factories/team';
 import { proposalFactory } from 'tests/factories/proposals';
 import { ratingFactory } from 'tests/factories/ratings';
 import { talkFactory } from 'tests/factories/talks';
@@ -12,7 +12,7 @@ import { getReviews } from './get-reviews.server';
 
 describe('#getReviews', () => {
   let owner: User, member: User, speaker: User;
-  let organization: Organization;
+  let team: Team;
   let event: Event;
 
   beforeEach(async () => {
@@ -20,8 +20,8 @@ describe('#getReviews', () => {
     owner = await userFactory({ traits: ['clark-kent'] });
     member = await userFactory({ traits: ['bruce-wayne'] });
     speaker = await userFactory({ traits: ['peter-parker'] });
-    organization = await organizationFactory({ owners: [owner, member] });
-    event = await eventFactory({ organization });
+    team = await teamFactory({ owners: [owner, member] });
+    event = await eventFactory({ team });
   });
   afterEach(disconnectDB);
 

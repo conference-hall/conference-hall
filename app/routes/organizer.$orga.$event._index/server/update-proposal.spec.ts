@@ -1,9 +1,9 @@
-import type { Event, EventCategory, EventFormat, Organization, Proposal, User } from '@prisma/client';
+import type { Event, EventCategory, EventFormat, Team, Proposal, User } from '@prisma/client';
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventCategoryFactory } from 'tests/factories/categories';
 import { eventFactory } from 'tests/factories/events';
 import { eventFormatFactory } from 'tests/factories/formats';
-import { organizationFactory } from 'tests/factories/organization';
+import { teamFactory } from 'tests/factories/team';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
@@ -13,7 +13,7 @@ import { ForbiddenOperationError } from '~/libs/errors';
 
 describe('#updateProposal', () => {
   let owner: User, reviewer: User, speaker: User;
-  let organization: Organization;
+  let team: Team;
   let event: Event;
   let format: EventFormat;
   let category: EventCategory;
@@ -24,8 +24,8 @@ describe('#updateProposal', () => {
     owner = await userFactory();
     reviewer = await userFactory();
     speaker = await userFactory();
-    organization = await organizationFactory({ owners: [owner], reviewers: [reviewer] });
-    event = await eventFactory({ organization });
+    team = await teamFactory({ owners: [owner], reviewers: [reviewer] });
+    event = await eventFactory({ team });
     format = await eventFormatFactory({ event });
     category = await eventCategoryFactory({ event });
     proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
@@ -57,7 +57,7 @@ describe('#updateProposal', () => {
     expect(categoryCount).toBe(1);
   });
 
-  it('throws an error if user has not a owner or member role in the organization', async () => {
+  it('throws an error if user has not a owner or member role in the team', async () => {
     await expect(
       updateProposal(event.slug, proposal.id, reviewer.id, {
         title: 'Updated',
@@ -86,7 +86,7 @@ describe('#updateProposal', () => {
 
 describe('#updateProposalsStatus', () => {
   let owner: User, reviewer: User, speaker: User;
-  let organization: Organization;
+  let team: Team;
   let event: Event;
 
   beforeEach(async () => {
@@ -94,8 +94,8 @@ describe('#updateProposalsStatus', () => {
     owner = await userFactory();
     reviewer = await userFactory();
     speaker = await userFactory();
-    organization = await organizationFactory({ owners: [owner], reviewers: [reviewer] });
-    event = await eventFactory({ organization });
+    team = await teamFactory({ owners: [owner], reviewers: [reviewer] });
+    event = await eventFactory({ team });
   });
   afterEach(disconnectDB);
 
@@ -111,7 +111,7 @@ describe('#updateProposalsStatus', () => {
     expect(proposals[1].status).toBe('ACCEPTED');
   });
 
-  it('throws an error if user has not a owner or member role in the organization', async () => {
+  it('throws an error if user has not a owner or member role in the team', async () => {
     await expect(updateProposalsStatus(event.slug, reviewer.id, [], 'ACCEPTED')).rejects.toThrowError(
       ForbiddenOperationError
     );

@@ -1,12 +1,12 @@
 import { db } from '~/libs/db';
-import { allowedForOrga } from '~/shared-server/organizations/check-user-role.server';
+import { allowedForTeam } from '~/shared-server/organizations/check-user-role.server';
 import { getCfpState } from '~/utils/event';
 
 export async function listEvents(slug: string, userId: string, archived: boolean) {
-  await allowedForOrga(slug, userId);
+  await allowedForTeam(slug, userId);
 
   const events = await db.event.findMany({
-    where: { organization: { slug }, archived },
+    where: { team: { slug }, archived },
     orderBy: { name: 'asc' },
   });
 

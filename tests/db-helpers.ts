@@ -18,8 +18,8 @@ export async function resetDB() {
     db.eventFormat.deleteMany(),
     db.eventCategory.deleteMany(),
     db.event.deleteMany(),
-    db.organizationMember.deleteMany(),
-    db.organization.deleteMany(),
+    db.teamMember.deleteMany(),
+    db.team.deleteMany(),
     db.organizerKeyAccess.deleteMany(),
     db.user.deleteMany(),
   ]);

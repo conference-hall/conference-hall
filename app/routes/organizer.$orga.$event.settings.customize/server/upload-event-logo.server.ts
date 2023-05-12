@@ -1,4 +1,4 @@
-import { OrganizationRole } from '@prisma/client';
+import { TeamRole } from '@prisma/client';
 import { unstable_parseMultipartFormData } from '@remix-run/node';
 import { z } from 'zod';
 import { db } from '~/libs/db';
@@ -11,7 +11,7 @@ type UploadLogoResult = {
 };
 
 export async function uploadEventLogo(eventSlug: string, userId: string, request: Request): Promise<UploadLogoResult> {
-  await allowedForEvent(eventSlug, userId, [OrganizationRole.OWNER]);
+  await allowedForEvent(eventSlug, userId, [TeamRole.OWNER]);
 
   const formData = await unstable_parseMultipartFormData(
     request,

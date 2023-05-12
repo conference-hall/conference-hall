@@ -5,8 +5,8 @@ import { json } from '@remix-run/node';
 import { requireSession } from '~/libs/auth/session';
 import { Outlet, useLoaderData, useOutletContext, useRouteLoaderData } from '@remix-run/react';
 import OrganizationBreadcrumb from '~/shared-components/organizations/OrganizationBreadcrumb';
-import type { Organization } from './server/get-organization.server';
-import { getOrganization } from './server/get-organization.server';
+import type { Team } from './server/get-organization.server';
+import { getTeam } from './server/get-organization.server';
 import { OrganizationTabs } from './components/OrganizationTabs';
 import { PageHeader } from '~/design-system/layouts/PageHeader';
 import { EventTabs } from './components/EventTabs';
@@ -21,7 +21,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);
   invariant(params.orga, 'Invalid organization slug');
 
-  const organization = await getOrganization(params.orga, userId);
+  const organization = await getTeam(params.orga, userId);
   return json(organization);
 };
 
@@ -41,27 +41,27 @@ export const action = async ({ request, params }: ActionArgs) => {
 
 export default function OrganizationRoute() {
   const { user } = useUser();
-  const organization = useLoaderData<typeof loader>();
+  const team = useLoaderData<typeof loader>();
   const event = useRouteLoaderData('routes/organizer.$orga.$event') as OrganizerEvent;
 
   return (
     <>
       <PageHeader>
         <Container>
-          <OrganizationBreadcrumb organization={organization} event={event} />
+          <OrganizationBreadcrumb team={team} event={event} />
           {event ? (
-            <EventTabs orgaSlug={organization.slug} eventSlug={event.slug} role={organization.role} />
+            <EventTabs orgaSlug={team.slug} eventSlug={event.slug} role={team.role} />
           ) : (
-            <OrganizationTabs slug={organization.slug} role={organization.role} />
+            <OrganizationTabs slug={team.slug} role={team.role} />
           )}
         </Container>
       </PageHeader>
 
-      <Outlet context={{ user, organization }} />
+      <Outlet context={{ user, team }} />
     </>
   );
 }
 
-export function useOrganization() {
-  return useOutletContext<{ organization: Organization }>();
+export function useTeam() {
+  return useOutletContext<{ team: Team }>();
 }

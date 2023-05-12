@@ -1,7 +1,7 @@
-import type { Organization, User } from '@prisma/client';
+import type { Team, User } from '@prisma/client';
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventFactory } from 'tests/factories/events';
-import { organizationFactory } from 'tests/factories/organization';
+import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
 import { db } from '../../../libs/db';
 import { ForbiddenOperationError } from '../../../libs/errors';
@@ -9,18 +9,18 @@ import { createEvent } from './create-event.server';
 
 describe('#createEvent', () => {
   let owner: User, reviewer: User;
-  let organization: Organization;
+  let team: Team;
 
   beforeEach(async () => {
     await resetDB();
     owner = await userFactory();
     reviewer = await userFactory();
-    organization = await organizationFactory({ owners: [owner], reviewers: [reviewer] });
+    team = await teamFactory({ owners: [owner], reviewers: [reviewer] });
   });
   afterEach(disconnectDB);
 
-  it('creates a new event into the organization', async () => {
-    const created = await createEvent(organization.slug, owner.id, {
+  it('creates a new event into the team', async () => {
+    const created = await createEvent(team.slug, owner.id, {
       type: 'CONFERENCE',
       name: 'Hello world',
       slug: 'hello-world',
@@ -34,14 +34,14 @@ describe('#createEvent', () => {
     expect(event?.name).toBe('Hello world');
     expect(event?.slug).toBe('hello-world');
     expect(event?.visibility).toBe('PUBLIC');
-    expect(event?.organizationId).toBe(organization.id);
+    expect(event?.teamId).toBe(team.id);
     expect(event?.creatorId).toBe(owner.id);
   });
 
   it('returns an error message when slug already exists', async () => {
-    await eventFactory({ organization, attributes: { slug: 'hello-world' } });
+    await eventFactory({ team, attributes: { slug: 'hello-world' } });
 
-    const created = await createEvent(organization.slug, owner.id, {
+    const created = await createEvent(team.slug, owner.id, {
       type: 'CONFERENCE',
       name: 'Hello world',
       slug: 'hello-world',
@@ -53,7 +53,7 @@ describe('#createEvent', () => {
 
   it('throws an error if user is not owner', async () => {
     await expect(
-      createEvent(organization.slug, reviewer.id, {
+      createEvent(team.slug, reviewer.id, {
         type: 'CONFERENCE',
         name: 'Hello world',
         slug: 'hello-world',
@@ -65,7 +65,7 @@ describe('#createEvent', () => {
   it('throws an error if user does not belong to event orga', async () => {
     const user = await userFactory();
     await expect(
-      createEvent(organization.slug, user.id, {
+      createEvent(team.slug, user.id, {
         type: 'CONFERENCE',
         name: 'Hello world',
         slug: 'hello-world',

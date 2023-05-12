@@ -1,24 +1,24 @@
 import * as fake from '@ngneat/falso';
 import type { Prisma, User } from '@prisma/client';
-import { OrganizationRole } from '@prisma/client';
+import { TeamRole } from '@prisma/client';
 import { db } from '../../app/libs/db';
 import { applyTraits } from './helpers/traits';
 
-const { OWNER, MEMBER, REVIEWER } = OrganizationRole;
+const { OWNER, MEMBER, REVIEWER } = TeamRole;
 
 const TRAITS = {};
 
 type Trait = keyof typeof TRAITS;
 
 type FactoryOptions = {
-  attributes?: Partial<Prisma.OrganizationCreateInput>;
+  attributes?: Partial<Prisma.TeamCreateInput>;
   traits?: Trait[];
   owners?: Array<User>;
   members?: Array<User>;
   reviewers?: Array<User>;
 };
 
-function createOrgaMembers({ owners = [], members = [], reviewers = [] }: FactoryOptions) {
+function createTeamMembers({ owners = [], members = [], reviewers = [] }: FactoryOptions) {
   return [
     ...owners.map((u) => ({ role: OWNER, member: { connect: { id: u.id } } })),
     ...members.map((u) => ({ role: MEMBER, member: { connect: { id: u.id } } })),
@@ -26,10 +26,10 @@ function createOrgaMembers({ owners = [], members = [], reviewers = [] }: Factor
   ];
 }
 
-export const organizationFactory = async (options: FactoryOptions = {}) => {
+export const teamFactory = async (options: FactoryOptions = {}) => {
   const { attributes = {}, traits = [] } = options;
 
-  const defaultAttributes: Prisma.OrganizationCreateInput = {
+  const defaultAttributes: Prisma.TeamCreateInput = {
     name: fake.randSportsTeam(),
     slug: `slug-${fake.randUuid()}`,
   };
@@ -40,10 +40,10 @@ export const organizationFactory = async (options: FactoryOptions = {}) => {
     ...attributes,
   };
 
-  const members = createOrgaMembers(options);
+  const members = createTeamMembers(options);
   if (members.length > 0) {
     data.members = { create: members };
   }
 
-  return db.organization.create({ data });
+  return db.team.create({ data });
 };

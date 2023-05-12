@@ -1,8 +1,8 @@
-import type { Event, Organization, User } from '@prisma/client';
+import type { Event, Team, User } from '@prisma/client';
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { getEmails, resetEmails } from 'tests/email-helpers';
 import { eventFactory } from 'tests/factories/events';
-import { organizationFactory } from 'tests/factories/organization';
+import { teamFactory } from 'tests/factories/team';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
@@ -12,7 +12,7 @@ import { ForbiddenOperationError } from '~/libs/errors';
 
 describe('#sendAcceptationCampaign', () => {
   let owner: User, member: User, reviewer: User, speaker1: User, speaker2: User;
-  let organization: Organization;
+  let team: Team;
   let event: Event, event2: Event;
 
   beforeEach(async () => {
@@ -23,8 +23,8 @@ describe('#sendAcceptationCampaign', () => {
     reviewer = await userFactory();
     speaker1 = await userFactory({ attributes: { email: 'speaker1@example.com' } });
     speaker2 = await userFactory({ attributes: { email: 'speaker2@example.com' } });
-    organization = await organizationFactory({ owners: [owner], members: [member], reviewers: [reviewer] });
-    event = await eventFactory({ organization, attributes: { name: 'Event 1' } });
+    team = await teamFactory({ owners: [owner], members: [member], reviewers: [reviewer] });
+    event = await eventFactory({ team, attributes: { name: 'Event 1' } });
     event2 = await eventFactory({ attributes: { name: 'Event 2' } });
   });
   afterEach(disconnectDB);
@@ -102,7 +102,7 @@ describe('#sendAcceptationCampaign', () => {
     expect(proposals.map((proposal) => proposal.emailAcceptedStatus)).toEqual(['SENT', null]);
   });
 
-  it('can be sent by organization members', async () => {
+  it('can be sent by team members', async () => {
     await proposalFactory({
       event,
       talk: await talkFactory({ speakers: [speaker1] }),
@@ -114,7 +114,7 @@ describe('#sendAcceptationCampaign', () => {
     expect(emails.total).toBe(1);
   });
 
-  it('cannot be sent by organization reviewers', async () => {
+  it('cannot be sent by team reviewers', async () => {
     await expect(sendAcceptationCampaign(event.slug, reviewer.id, [])).rejects.toThrowError(ForbiddenOperationError);
   });
 });

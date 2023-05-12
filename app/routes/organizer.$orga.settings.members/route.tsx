@@ -9,11 +9,11 @@ import { MembersFilterSchema, listMembers } from './server/list-members.server';
 import { removeMember } from './server/remove-member.server';
 import { changeMemberRole } from './server/change-role.server';
 import { ChangeRoleButton, InviteMemberButton, RemoveButton } from './components/MemberActions';
-import { useOrganization } from '../organizer.$orga/route';
+import { useTeam } from '../organizer.$orga/route';
 import { useUser } from '~/root';
 import { AvatarName } from '~/design-system/Avatar';
 import { addToast } from '~/libs/toasts/toasts';
-import type { OrganizationRole } from '@prisma/client';
+import type { TeamRole } from '@prisma/client';
 import { withZod } from '@remix-validated-form/with-zod';
 import { parsePage } from '~/schemas/pagination';
 import { Pagination } from '~/design-system/Pagination';
@@ -44,7 +44,7 @@ export const action = async ({ request, params }: ActionArgs) => {
 
   switch (action) {
     case 'change-role': {
-      const memberRole = form.get('memberRole') as OrganizationRole;
+      const memberRole = form.get('memberRole') as TeamRole;
       await changeMemberRole(params.orga, userId, memberId, memberRole);
       return json(null, await addToast(request, 'Member role changed.'));
     }
@@ -59,7 +59,7 @@ export const action = async ({ request, params }: ActionArgs) => {
 export default function OrganizationSettingsRoute() {
   const { user } = useUser();
   const [searchParams] = useSearchParams();
-  const { organization } = useOrganization();
+  const { team } = useTeam();
   const { results, pagination } = useLoaderData<typeof loader>();
 
   return (
@@ -81,7 +81,7 @@ export default function OrganizationSettingsRoute() {
               icon={MagnifyingGlassIcon}
             />
           </Form>
-          <InviteMemberButton invitationLink={organization.invitationLink} />
+          <InviteMemberButton invitationLink={team.invitationLink} />
         </div>
 
         {results.length > 0 ? (

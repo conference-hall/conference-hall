@@ -5,7 +5,7 @@ import { Outlet, useLoaderData, useOutletContext } from '@remix-run/react';
 import { requireSession } from '~/libs/auth/session';
 import type { OrganizerEvent } from './server/get-organizer-event.server';
 import { getOrganizerEvent } from './server/get-organizer-event.server';
-import { useOrganization } from '../organizer.$orga/route';
+import { useTeam } from '../organizer.$orga/route';
 import { useUser } from '~/root';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
@@ -18,11 +18,11 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
 export default function OrganizationEventRoute() {
   const { user } = useUser();
-  const { organization } = useOrganization();
+  const { team } = useTeam();
 
   const event = useLoaderData<typeof loader>();
 
-  return <Outlet context={{ user, organization, event }} />;
+  return <Outlet context={{ user, team, event }} />;
 }
 
 export function useOrganizerEvent() {

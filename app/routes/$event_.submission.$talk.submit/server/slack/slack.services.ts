@@ -1,10 +1,10 @@
-import type { Event, User, EventCategory, EventFormat, Proposal, Organization } from '@prisma/client';
+import type { Event, User, EventCategory, EventFormat, Proposal, Team } from '@prisma/client';
 import { config } from '../../../../libs/config';
 import { db } from '../../../../libs/db';
 import { sortBy } from '~/utils/arrays';
 
 function buildPayload(
-  event: Event & { organization: Organization },
+  event: Event & { team: Team },
   proposal: Proposal & { speakers: User[]; categories: EventCategory[]; formats: EventFormat[] }
 ) {
   const attachment = {
@@ -13,7 +13,7 @@ function buildPayload(
     author_name: `by ${proposal.speakers.map((s) => s.name).join(' & ')}`,
     title: proposal.title,
     text: proposal.abstract,
-    title_link: `${config.appUrl}/organizer/${event.organization.slug}/${event.slug}/review/${proposal.id}`,
+    title_link: `${config.appUrl}/organizer/${event.team.slug}/${event.slug}/review/${proposal.id}`,
     thumb_url: proposal.speakers[0].picture,
     color: '#ffab00',
     fields: [] as unknown[],
@@ -47,7 +47,7 @@ function buildPayload(
 export async function sendSubmittedTalkSlackMessage(eventId: string, proposalId: string) {
   const event = await db.event.findUnique({
     where: { id: eventId },
-    include: { organization: true },
+    include: { team: true },
   });
 
   if (!event || !event.slackWebhookUrl) return;

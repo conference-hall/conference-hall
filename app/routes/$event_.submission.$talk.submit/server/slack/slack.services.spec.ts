@@ -2,7 +2,7 @@ import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventCategoryFactory } from 'tests/factories/categories';
 import { eventFactory } from 'tests/factories/events';
 import { eventFormatFactory } from 'tests/factories/formats';
-import { organizationFactory } from 'tests/factories/organization';
+import { teamFactory } from 'tests/factories/team';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
@@ -30,9 +30,9 @@ describe('Slack services', () => {
   });
 
   it('should send a Slack message for submitted talk', async () => {
-    const organization = await organizationFactory({ attributes: { slug: 'my-orga' } });
+    const team = await teamFactory({ attributes: { slug: 'my-orga' } });
     const event = await eventFactory({
-      organization,
+      team,
       attributes: { slug: 'event-1', name: 'Event', slackWebhookUrl: 'http://webhook.slack' },
     });
     const format1 = await eventFormatFactory({ event, attributes: { name: 'Format 1' } });
@@ -55,7 +55,7 @@ describe('Slack services', () => {
     await sendSubmittedTalkSlackMessage(event.id, proposal.id);
 
     expect(fetchMock).toHaveBeenCalledWith('http://webhook.slack', {
-      body: `{"attachments":[{"fallback":"New Talk submitted to Event","pretext":"*New talk submitted to Event*","author_name":"by Speaker 1 & Speaker 2","title":"Title","text":"Abstract","title_link":"http://localhost:3001/organizer/${organization.slug}/${event.slug}/review/${proposal.id}","thumb_url":"http://photo","color":"#ffab00","fields":[{"title":"Categories","value":"Category 1 & Category 2","short":true},{"title":"Formats","value":"Format 1 & Format 2","short":true}]}]}`,
+      body: `{"attachments":[{"fallback":"New Talk submitted to Event","pretext":"*New talk submitted to Event*","author_name":"by Speaker 1 & Speaker 2","title":"Title","text":"Abstract","title_link":"http://localhost:3001/organizer/${team.slug}/${event.slug}/review/${proposal.id}","thumb_url":"http://photo","color":"#ffab00","fields":[{"title":"Categories","value":"Category 1 & Category 2","short":true},{"title":"Formats","value":"Format 1 & Format 2","short":true}]}]}`,
       headers: { 'Content-Type': 'application/json' },
       method: 'POST',
     });

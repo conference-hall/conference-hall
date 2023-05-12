@@ -1,9 +1,9 @@
-import type { Event, EventCategory, EventFormat, Organization, User } from '@prisma/client';
+import type { Event, EventCategory, EventFormat, Team, User } from '@prisma/client';
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventCategoryFactory } from 'tests/factories/categories';
 import { eventFactory } from 'tests/factories/events';
 import { eventFormatFactory } from 'tests/factories/formats';
-import { organizationFactory } from 'tests/factories/organization';
+import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
 import { deleteCategory, deleteFormat, saveCategory, saveFormat } from './update-tracks.server';
 import { db } from '~/libs/db';
@@ -11,15 +11,15 @@ import { ForbiddenOperationError } from '~/libs/errors';
 
 describe('#saveFormat', () => {
   let owner: User, reviewer: User;
-  let organization: Organization;
+  let team: Team;
   let event: Event;
 
   beforeEach(async () => {
     await resetDB();
     owner = await userFactory();
     reviewer = await userFactory();
-    organization = await organizationFactory({ owners: [owner], reviewers: [reviewer] });
-    event = await eventFactory({ organization });
+    team = await teamFactory({ owners: [owner], reviewers: [reviewer] });
+    event = await eventFactory({ team });
   });
   afterEach(disconnectDB);
 
@@ -67,15 +67,15 @@ describe('#saveFormat', () => {
 
 describe('#saveCategory', () => {
   let owner: User, reviewer: User;
-  let organization: Organization;
+  let team: Team;
   let event: Event;
 
   beforeEach(async () => {
     await resetDB();
     owner = await userFactory();
     reviewer = await userFactory();
-    organization = await organizationFactory({ owners: [owner], reviewers: [reviewer] });
-    event = await eventFactory({ organization });
+    team = await teamFactory({ owners: [owner], reviewers: [reviewer] });
+    event = await eventFactory({ team });
   });
   afterEach(disconnectDB);
 
@@ -123,7 +123,7 @@ describe('#saveCategory', () => {
 
 describe('#deleteFormat', () => {
   let owner: User, reviewer: User;
-  let organization: Organization;
+  let team: Team;
   let event: Event;
   let format: EventFormat;
 
@@ -131,8 +131,8 @@ describe('#deleteFormat', () => {
     await resetDB();
     owner = await userFactory();
     reviewer = await userFactory();
-    organization = await organizationFactory({ owners: [owner], reviewers: [reviewer] });
-    event = await eventFactory({ organization });
+    team = await teamFactory({ owners: [owner], reviewers: [reviewer] });
+    event = await eventFactory({ team });
     format = await eventFormatFactory({ event });
   });
   afterEach(disconnectDB);
@@ -155,7 +155,7 @@ describe('#deleteFormat', () => {
 
 describe('#deleteCategory', () => {
   let owner: User, reviewer: User;
-  let organization: Organization;
+  let team: Team;
   let event: Event;
   let category: EventCategory;
 
@@ -163,8 +163,8 @@ describe('#deleteCategory', () => {
     await resetDB();
     owner = await userFactory();
     reviewer = await userFactory();
-    organization = await organizationFactory({ owners: [owner], reviewers: [reviewer] });
-    event = await eventFactory({ organization });
+    team = await teamFactory({ owners: [owner], reviewers: [reviewer] });
+    event = await eventFactory({ team });
     category = await eventCategoryFactory({ event });
   });
   afterEach(disconnectDB);

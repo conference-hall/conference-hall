@@ -1,7 +1,7 @@
-import type { Event, Organization, User } from '@prisma/client';
+import type { Event, Team, User } from '@prisma/client';
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventFactory } from 'tests/factories/events';
-import { organizationFactory } from 'tests/factories/organization';
+import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
 import { db } from '../../libs/db';
 import { ForbiddenOperationError } from '../../libs/errors';
@@ -9,19 +9,19 @@ import { updateEvent } from './update-event.server';
 
 describe('#updateEvent', () => {
   let owner: User, reviewer: User;
-  let organization: Organization;
+  let team: Team;
   let event: Event;
 
   beforeEach(async () => {
     await resetDB();
     owner = await userFactory();
     reviewer = await userFactory();
-    organization = await organizationFactory({ owners: [owner], reviewers: [reviewer] });
-    event = await eventFactory({ organization });
+    team = await teamFactory({ owners: [owner], reviewers: [reviewer] });
+    event = await eventFactory({ team });
   });
   afterEach(disconnectDB);
 
-  it('creates a new event into the organization', async () => {
+  it('creates a new event into the team', async () => {
     const created = await updateEvent(event.slug, owner.id, {
       name: 'Updated',
       slug: 'updated',
@@ -55,7 +55,7 @@ describe('#updateEvent', () => {
   it.todo('test address geocoding');
 
   it('returns an error message when slug already exists', async () => {
-    await eventFactory({ organization, attributes: { slug: 'hello-world' } });
+    await eventFactory({ team, attributes: { slug: 'hello-world' } });
     const created = await updateEvent(event.slug, owner.id, { slug: 'hello-world' });
     expect(created.error).toEqual('This URL already exists, please try another one.');
   });

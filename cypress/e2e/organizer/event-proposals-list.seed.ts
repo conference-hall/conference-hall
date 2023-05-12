@@ -1,10 +1,10 @@
 import { eventCategoryFactory } from '../../../tests/factories/categories';
 import { eventFactory } from '../../../tests/factories/events';
 import { eventFormatFactory } from '../../../tests/factories/formats';
-import { organizationFactory } from '../../../tests/factories/organization';
 import { proposalFactory } from '../../../tests/factories/proposals';
 import { ratingFactory } from '../../../tests/factories/ratings';
 import { talkFactory } from '../../../tests/factories/talks';
+import { teamFactory } from '../../../tests/factories/team';
 import { userFactory } from '../../../tests/factories/users';
 
 export const seed = async () => {
@@ -14,7 +14,7 @@ export const seed = async () => {
   const speaker1 = await userFactory({ attributes: { name: 'Marie Jane' } });
   const speaker2 = await userFactory({ attributes: { name: 'Robin' } });
 
-  const organization = await organizationFactory({
+  const team = await teamFactory({
     attributes: { name: 'Awesome orga', slug: 'orga-1' },
     owners: [organizer1],
     members: [organizer2],
@@ -22,7 +22,7 @@ export const seed = async () => {
   });
 
   const event = await eventFactory({
-    organization,
+    team,
     traits: ['conference-cfp-open'],
     attributes: { name: 'Conference 1', slug: 'conference-1' },
   });

@@ -1,5 +1,5 @@
 import { withZod } from '@remix-validated-form/with-zod';
-import { OrganizationSaveSchema } from './organization-save.schema';
+import { TeamSaveSchema } from './organization-save.schema';
 
 describe('Validate OrganizationSaveSchema', () => {
   it('validates the organization data', async () => {
@@ -7,7 +7,7 @@ describe('Validate OrganizationSaveSchema', () => {
     formData.append('name', 'Hello world');
     formData.append('slug', 'hello-world-1');
 
-    const result = await withZod(OrganizationSaveSchema).validate(formData);
+    const result = await withZod(TeamSaveSchema).validate(formData);
     expect(result.data).toEqual({ name: 'Hello world', slug: 'hello-world-1' });
   });
 
@@ -16,7 +16,7 @@ describe('Validate OrganizationSaveSchema', () => {
     formData.append('name', 'H');
     formData.append('slug', 'h');
 
-    const result = await withZod(OrganizationSaveSchema).validate(formData);
+    const result = await withZod(TeamSaveSchema).validate(formData);
     expect(result?.error?.fieldErrors.name).toBe('String must contain at least 3 character(s)');
     expect(result?.error?.fieldErrors.slug).toBe('String must contain at least 3 character(s)');
   });
@@ -26,7 +26,7 @@ describe('Validate OrganizationSaveSchema', () => {
     formData.append('name', 'Hello world');
     formData.append('slug', 'Hello world/');
 
-    const result = await withZod(OrganizationSaveSchema).validate(formData);
+    const result = await withZod(TeamSaveSchema).validate(formData);
     expect(result?.error?.fieldErrors.slug).toEqual('Must only contain lower case alphanumeric and dashes (-).');
   });
 });

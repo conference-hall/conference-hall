@@ -1,10 +1,10 @@
-import { OrganizationRole } from '@prisma/client';
+import { TeamRole } from '@prisma/client';
 import { db } from '~/libs/db';
 import { allowedForEvent } from '~/shared-server/organizations/check-user-role.server';
 import type { EventTrackSaveData } from '../types/event-track-save.schema';
 
 export async function saveFormat(eventSlug: string, userId: string, data: EventTrackSaveData) {
-  await allowedForEvent(eventSlug, userId, [OrganizationRole.OWNER]);
+  await allowedForEvent(eventSlug, userId, [TeamRole.OWNER]);
 
   if (data.id) {
     await db.eventFormat.update({
@@ -19,7 +19,7 @@ export async function saveFormat(eventSlug: string, userId: string, data: EventT
 }
 
 export async function saveCategory(eventSlug: string, userId: string, data: EventTrackSaveData) {
-  await allowedForEvent(eventSlug, userId, [OrganizationRole.OWNER]);
+  await allowedForEvent(eventSlug, userId, [TeamRole.OWNER]);
 
   if (data.id) {
     await db.eventCategory.update({
@@ -34,13 +34,13 @@ export async function saveCategory(eventSlug: string, userId: string, data: Even
 }
 
 export async function deleteFormat(eventSlug: string, userId: string, formatId: string) {
-  await allowedForEvent(eventSlug, userId, [OrganizationRole.OWNER]);
+  await allowedForEvent(eventSlug, userId, [TeamRole.OWNER]);
 
   await db.eventFormat.delete({ where: { id: formatId } });
 }
 
 export async function deleteCategory(eventSlug: string, userId: string, categoryId: string) {
-  await allowedForEvent(eventSlug, userId, [OrganizationRole.OWNER]);
+  await allowedForEvent(eventSlug, userId, [TeamRole.OWNER]);
 
   await db.eventCategory.delete({ where: { id: categoryId } });
 }

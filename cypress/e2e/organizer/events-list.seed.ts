@@ -1,5 +1,5 @@
 import { eventFactory } from '../../../tests/factories/events';
-import { organizationFactory } from '../../../tests/factories/organization';
+import { teamFactory } from '../../../tests/factories/team';
 import { userFactory } from '../../../tests/factories/users';
 
 export const seed = async () => {
@@ -7,8 +7,8 @@ export const seed = async () => {
   const organizer2 = await userFactory({ traits: ['bruce-wayne'] });
   const organizer3 = await userFactory({ traits: ['peter-parker'] });
 
-  // organization with event
-  const organization = await organizationFactory({
+  // team with event
+  const team = await teamFactory({
     attributes: { name: 'Awesome orga', slug: 'awesome-orga' },
     owners: [organizer1],
     members: [organizer2],
@@ -16,25 +16,25 @@ export const seed = async () => {
   });
 
   await eventFactory({
-    organization,
+    team,
     traits: ['conference-cfp-open'],
     attributes: { name: 'Awesome event 1', slug: 'event-1' },
   });
 
   await eventFactory({
-    organization,
+    team,
     traits: ['meetup-cfp-open'],
     attributes: { name: 'Awesome event 2', slug: 'event-2' },
   });
 
   await eventFactory({
-    organization,
+    team,
     traits: ['conference-cfp-past', 'archived'],
     attributes: { name: 'Awesome event archived', slug: 'event-3' },
   });
 
-  // organization without events
-  await organizationFactory({
+  // team without events
+  await teamFactory({
     attributes: { name: 'Awesome orga 2', slug: 'awesome-orga-2' },
     owners: [organizer1],
   });

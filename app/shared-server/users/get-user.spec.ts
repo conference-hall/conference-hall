@@ -1,8 +1,8 @@
 import { disconnectDB, resetDB } from 'tests/db-helpers';
-import { organizationFactory } from 'tests/factories/organization';
+import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
 import { getUser } from './get-user.server';
-import { OrganizationRole } from '@prisma/client';
+import { TeamRole } from '@prisma/client';
 import { eventFactory } from 'tests/factories/events';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
@@ -28,23 +28,23 @@ describe('#getUser', () => {
       address: user.address,
       socials: user.socials,
       isOrganizer: false,
-      organizations: [],
+      teams: [],
       notifications: [],
     });
   });
 
-  it("returns user's organizations", async () => {
+  it("returns user's teams", async () => {
     const user = await userFactory();
-    const orga1 = await organizationFactory({ attributes: { name: 'A' }, owners: [user] });
-    const orga2 = await organizationFactory({ attributes: { name: 'B' }, reviewers: [user] });
-    const orga3 = await organizationFactory({ attributes: { name: 'C' }, members: [user] });
+    const orga1 = await teamFactory({ attributes: { name: 'A' }, owners: [user] });
+    const orga2 = await teamFactory({ attributes: { name: 'B' }, reviewers: [user] });
+    const orga3 = await teamFactory({ attributes: { name: 'C' }, members: [user] });
 
     const response = await getUser(user.id);
 
-    expect(response?.organizations).toEqual([
-      { slug: orga1.slug, name: 'A', role: OrganizationRole.OWNER },
-      { slug: orga2.slug, name: 'B', role: OrganizationRole.REVIEWER },
-      { slug: orga3.slug, name: 'C', role: OrganizationRole.MEMBER },
+    expect(response?.teams).toEqual([
+      { slug: orga1.slug, name: 'A', role: TeamRole.OWNER },
+      { slug: orga2.slug, name: 'B', role: TeamRole.REVIEWER },
+      { slug: orga3.slug, name: 'C', role: TeamRole.MEMBER },
     ]);
   });
 
@@ -87,14 +87,14 @@ describe('#getUser', () => {
     expect(result?.isOrganizer).toBe(true);
   });
 
-  it('is marked as organizer if user belongs to an organization', async () => {
+  it('is marked as organizer if user belongs to an team', async () => {
     const user = await userFactory();
-    await organizationFactory({ members: [user] });
+    await teamFactory({ members: [user] });
     const result = await getUser(user.id);
     expect(result?.isOrganizer).toBe(true);
   });
 
-  it('is not marked as organizer if user does not have organizer key or organizations', async () => {
+  it('is not marked as organizer if user does not have organizer key or teams', async () => {
     const user = await userFactory();
     const result = await getUser(user.id);
     expect(result?.isOrganizer).toBe(false);

@@ -8,14 +8,14 @@ import { Container } from '~/design-system/layouts/Container';
 import { H1, H2 } from '~/design-system/Typography';
 import { Button } from '~/design-system/Buttons';
 import { useUser } from '~/root';
-import { addMember, checkOrganizationInviteCode } from './server/invite-organization.server';
+import { addMember, checkTeamInviteCode } from './server/invite-organization.server';
 import { Card } from '~/design-system/layouts/Card';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   await requireSession(request);
   invariant(params.code, 'Invalid code');
 
-  const organization = await checkOrganizationInviteCode(params.code);
+  const organization = await checkTeamInviteCode(params.code);
   return json(organization);
 };
 

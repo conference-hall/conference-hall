@@ -2,12 +2,12 @@ import { eventCategoryFactory } from '../../../../tests/factories/categories';
 import { eventFactory } from '../../../../tests/factories/events';
 import { ratingFactory } from '../../../../tests/factories/ratings';
 import { eventFormatFactory } from '../../../../tests/factories/formats';
-import { organizationFactory } from '../../../../tests/factories/organization';
 import { proposalFactory } from '../../../../tests/factories/proposals';
 import { talkFactory } from '../../../../tests/factories/talks';
 import { userFactory } from '../../../../tests/factories/users';
 import { messageFactory } from '../../../../tests/factories/messages';
 import { surveyFactory } from '../../../../tests/factories/surveys';
+import { teamFactory } from '../../../../tests/factories/team';
 
 export const seed = async () => {
   const organizer1 = await userFactory({ traits: ['clark-kent'] });
@@ -36,7 +36,7 @@ export const seed = async () => {
     },
   });
 
-  const organization = await organizationFactory({
+  const team = await teamFactory({
     attributes: { name: 'Awesome orga', slug: 'orga-1' },
     owners: [organizer1],
     members: [organizer2],
@@ -44,7 +44,7 @@ export const seed = async () => {
   });
 
   const event = await eventFactory({
-    organization,
+    team,
     traits: ['conference-cfp-open'],
     attributes: { name: 'Conference 1', slug: 'conference-1' },
   });
@@ -100,7 +100,7 @@ export const seed = async () => {
   });
 
   const event2 = await eventFactory({
-    organization,
+    team,
     traits: ['conference-cfp-open'],
     attributes: {
       name: 'Conference 2',

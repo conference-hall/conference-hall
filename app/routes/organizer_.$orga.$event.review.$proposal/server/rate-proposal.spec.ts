@@ -1,7 +1,7 @@
-import type { Event, Organization, User } from '@prisma/client';
+import type { Event, Team, User } from '@prisma/client';
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventFactory } from 'tests/factories/events';
-import { organizationFactory } from 'tests/factories/organization';
+import { teamFactory } from 'tests/factories/team';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
@@ -11,15 +11,15 @@ import { DeliberationDisabledError, ForbiddenOperationError } from '~/libs/error
 
 describe('#rateProposal', () => {
   let owner: User, speaker: User;
-  let organization: Organization;
+  let team: Team;
   let event: Event;
 
   beforeEach(async () => {
     await resetDB();
     owner = await userFactory();
     speaker = await userFactory();
-    organization = await organizationFactory({ owners: [owner] });
-    event = await eventFactory({ organization });
+    team = await teamFactory({ owners: [owner] });
+    event = await eventFactory({ team });
   });
   afterEach(disconnectDB);
 

@@ -1,8 +1,8 @@
-import { OrganizationRole } from '@prisma/client';
+import { TeamRole } from '@prisma/client';
 import { disconnectDB, resetDB } from 'tests/db-helpers';
-import { organizationFactory } from 'tests/factories/organization';
+import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
-import { addMember, checkOrganizationInviteCode } from './invite-organization.server';
+import { addMember, checkTeamInviteCode } from './invite-organization.server';
 import { db } from '~/libs/db';
 import { InvitationNotFoundError } from '~/libs/errors';
 
@@ -15,15 +15,15 @@ describe('#addMember', () => {
   it('adds the member as reviewer to the organization', async () => {
     const owner = await userFactory();
     const member = await userFactory();
-    const organization = await organizationFactory({ owners: [owner] });
+    const organization = await teamFactory({ owners: [owner] });
 
     const result = await addMember(organization.invitationCode, member.id);
 
-    const orgaMember = await db.organizationMember.findUnique({
-      where: { memberId_organizationId: { memberId: member.id, organizationId: organization.id } },
+    const orgaMember = await db.teamMember.findUnique({
+      where: { memberId_teamId: { memberId: member.id, teamId: organization.id } },
     });
 
-    expect(orgaMember?.role).toBe(OrganizationRole.REVIEWER);
+    expect(orgaMember?.role).toBe(TeamRole.REVIEWER);
     expect(result?.slug).toBe(organization.slug);
   });
 
@@ -41,9 +41,9 @@ describe('#checkOrganizationInviteCode', () => {
 
   it('returns the organization for an invitation code', async () => {
     const owner = await userFactory();
-    const organization = await organizationFactory({ owners: [owner] });
+    const organization = await teamFactory({ owners: [owner] });
 
-    const result = await checkOrganizationInviteCode(organization.invitationCode);
+    const result = await checkTeamInviteCode(organization.invitationCode);
 
     expect(result).toEqual({
       id: organization.id,
@@ -53,6 +53,6 @@ describe('#checkOrganizationInviteCode', () => {
   });
 
   it('returns throws an error when invitation code does not exist', async () => {
-    await expect(checkOrganizationInviteCode('XXX')).rejects.toThrowError(InvitationNotFoundError);
+    await expect(checkTeamInviteCode('XXX')).rejects.toThrowError(InvitationNotFoundError);
   });
 });

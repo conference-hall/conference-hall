@@ -1,10 +1,10 @@
-import type { Event, EventCategory, EventFormat, Organization, User } from '@prisma/client';
+import type { Event, EventCategory, EventFormat, Team, User } from '@prisma/client';
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventCategoryFactory } from 'tests/factories/categories';
 import { eventFactory } from 'tests/factories/events';
 import { eventFormatFactory } from 'tests/factories/formats';
 import { messageFactory } from 'tests/factories/messages';
-import { organizationFactory } from 'tests/factories/organization';
+import { teamFactory } from 'tests/factories/team';
 import { proposalFactory } from 'tests/factories/proposals';
 import { ratingFactory } from 'tests/factories/ratings';
 import { talkFactory } from 'tests/factories/talks';
@@ -15,7 +15,7 @@ import { db } from '~/libs/db';
 
 describe('#getProposalReview', () => {
   let owner: User, member: User, speaker: User;
-  let organization: Organization;
+  let team: Team;
   let event: Event;
   let format: EventFormat;
   let category: EventCategory;
@@ -25,8 +25,8 @@ describe('#getProposalReview', () => {
     owner = await userFactory({ traits: ['clark-kent'] });
     member = await userFactory({ traits: ['bruce-wayne'] });
     speaker = await userFactory({ traits: ['peter-parker'] });
-    organization = await organizationFactory({ owners: [owner, member] });
-    event = await eventFactory({ organization });
+    team = await teamFactory({ owners: [owner, member] });
+    event = await eventFactory({ team });
     format = await eventFormatFactory({ event });
     category = await eventCategoryFactory({ event });
   });

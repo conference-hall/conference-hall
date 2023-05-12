@@ -1,9 +1,9 @@
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventFactory } from 'tests/factories/events';
-import { organizationFactory } from 'tests/factories/organization';
+import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
 import { ForbiddenOperationError } from '../../libs/errors';
-import { allowedForEvent, allowedForOrga } from './check-user-role.server';
+import { allowedForEvent, allowedForTeam } from './check-user-role.server';
 
 describe('#allowedForOrga', () => {
   beforeEach(async () => {
@@ -13,35 +13,35 @@ describe('#allowedForOrga', () => {
 
   it('returns the organization if user has access to the organization', async () => {
     const user = await userFactory();
-    const organization = await organizationFactory({ owners: [user] });
+    const organization = await teamFactory({ owners: [user] });
 
-    const result = await allowedForOrga(organization.slug, user.id);
+    const result = await allowedForTeam(organization.slug, user.id);
     expect(result.id).toEqual(organization.id);
   });
 
   it('returns the organization if user role part of accepted ones', async () => {
     const user = await userFactory();
-    const organization = await organizationFactory({ owners: [user] });
+    const organization = await teamFactory({ owners: [user] });
 
-    const result = await allowedForOrga(organization.slug, user.id, ['OWNER']);
+    const result = await allowedForTeam(organization.slug, user.id, ['OWNER']);
     expect(result.id).toEqual(organization.id);
   });
 
   it('throws an error if user role is not in the accepted role list', async () => {
     const user = await userFactory();
-    const organization = await organizationFactory({ owners: [user] });
-    await expect(allowedForOrga(organization.slug, user.id, ['MEMBER'])).rejects.toThrowError(ForbiddenOperationError);
+    const organization = await teamFactory({ owners: [user] });
+    await expect(allowedForTeam(organization.slug, user.id, ['MEMBER'])).rejects.toThrowError(ForbiddenOperationError);
   });
 
   it('throws an error if user role is not part of the organization', async () => {
     const user = await userFactory();
-    const organization = await organizationFactory();
-    await expect(allowedForOrga(organization.slug, user.id)).rejects.toThrowError(ForbiddenOperationError);
+    const organization = await teamFactory();
+    await expect(allowedForTeam(organization.slug, user.id)).rejects.toThrowError(ForbiddenOperationError);
   });
 
   it('throws an error if event does not exist', async () => {
     const user = await userFactory();
-    await expect(allowedForOrga('AAAA', user.id)).rejects.toThrowError(ForbiddenOperationError);
+    await expect(allowedForTeam('AAAA', user.id)).rejects.toThrowError(ForbiddenOperationError);
   });
 });
 
@@ -53,8 +53,8 @@ describe('#allowedForEvent', () => {
 
   it('returns the event if user has access to the event', async () => {
     const user = await userFactory();
-    const organization = await organizationFactory({ owners: [user] });
-    const event = await eventFactory({ organization });
+    const team = await teamFactory({ owners: [user] });
+    const event = await eventFactory({ team });
 
     const result = await allowedForEvent(event.slug, user.id);
     expect(result.id).toEqual(event.id);
@@ -62,8 +62,8 @@ describe('#allowedForEvent', () => {
 
   it('returns the event if user role part of accepted ones', async () => {
     const user = await userFactory();
-    const organization = await organizationFactory({ owners: [user] });
-    const event = await eventFactory({ organization });
+    const team = await teamFactory({ owners: [user] });
+    const event = await eventFactory({ team });
 
     const result = await allowedForEvent(event.slug, user.id, ['OWNER']);
     expect(result.id).toEqual(event.id);
@@ -71,15 +71,15 @@ describe('#allowedForEvent', () => {
 
   it('throws an error if user role is not in the accepted role list', async () => {
     const user = await userFactory();
-    const organization = await organizationFactory({ owners: [user] });
-    const event = await eventFactory({ organization });
+    const team = await teamFactory({ owners: [user] });
+    const event = await eventFactory({ team });
     await expect(allowedForEvent(event.slug, user.id, ['MEMBER'])).rejects.toThrowError(ForbiddenOperationError);
   });
 
-  it('throws an error if user role is not part of the organization event', async () => {
+  it('throws an error if user role is not part of the team event', async () => {
     const user = await userFactory();
-    const organization = await organizationFactory();
-    const event = await eventFactory({ organization });
+    const team = await teamFactory();
+    const event = await eventFactory({ team });
     await expect(allowedForEvent(event.slug, user.id)).rejects.toThrowError(ForbiddenOperationError);
   });
 

@@ -9,7 +9,7 @@ import { Square3Stack3DIcon } from '@heroicons/react/24/outline';
 import { listEvents } from './server/list-events.server';
 import { EmptyState } from '~/design-system/layouts/EmptyState';
 import { EventCard } from '~/shared-components/EventCard';
-import { useOrganization } from '../organizer.$orga/route';
+import { useTeam } from '../organizer.$orga/route';
 import { useUser } from '~/root';
 import { ArchivedFilters } from './components/ArchivedFilter';
 
@@ -27,7 +27,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
 export default function OrganizationEventsRoute() {
   const { user } = useUser();
-  const { organization } = useOrganization();
+  const { team } = useTeam();
   const events = useLoaderData<typeof loader>();
 
   const hasEvent = events.length > 0;
@@ -44,7 +44,7 @@ export default function OrganizationEventsRoute() {
           {events.map((event) => (
             <EventCard
               key={event.slug}
-              to={`/organizer/${organization.slug}/${event.slug}`}
+              to={`/organizer/${team.slug}/${event.slug}`}
               name={event.name}
               type={event.type}
               logo={event.logo}
@@ -57,11 +57,11 @@ export default function OrganizationEventsRoute() {
       ) : (
         <EmptyState
           icon={Square3Stack3DIcon}
-          label={`Welcome to "${organization.name}"`}
+          label={`Welcome to "${team.name}"`}
           className="flex flex-col items-center gap-2"
         />
       )}
-      <Outlet context={{ user, organization }} />
+      <Outlet context={{ user, team }} />
     </Container>
   );
 }

@@ -7,16 +7,16 @@ import { NavSideMenu } from '~/design-system/navigation/NavSideMenu';
 import { requireSession } from '~/libs/auth/session';
 import { H2 } from '~/design-system/Typography';
 import { useUser } from '~/root';
-import { useOrganization } from '../organizer.$orga/route';
+import { useTeam } from '../organizer.$orga/route';
 import { useOrganizerEvent } from '../organizer.$orga.$event/route';
 import { allowedForEvent } from '~/shared-server/organizations/check-user-role.server';
-import { OrganizationRole } from '@prisma/client';
+import { TeamRole } from '@prisma/client';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
 
-  await allowedForEvent(params.event, userId, [OrganizationRole.OWNER, OrganizationRole.MEMBER]);
+  await allowedForEvent(params.event, userId, [TeamRole.OWNER, TeamRole.MEMBER]);
   return null;
 };
 
@@ -27,10 +27,10 @@ const getMenuItems = (orga?: string, event?: string) => [
 
 export default function EventProposalEmails() {
   const { user } = useUser();
-  const { organization } = useOrganization();
+  const { team } = useTeam();
   const { event } = useOrganizerEvent();
 
-  const menus = getMenuItems(organization.slug, event.slug);
+  const menus = getMenuItems(team.slug, event.slug);
 
   return (
     <Container className="mt-4 flex gap-8 sm:mt-8">
@@ -39,7 +39,7 @@ export default function EventProposalEmails() {
       <NavSideMenu aria-label="Emails campaign menu" items={menus} className="sticky top-4 self-start" />
 
       <div className="min-w-0 flex-1 space-y-6 sm:px-6 lg:px-0">
-        <Outlet context={{ user, organization, event }} />
+        <Outlet context={{ user, team, event }} />
       </div>
     </Container>
   );

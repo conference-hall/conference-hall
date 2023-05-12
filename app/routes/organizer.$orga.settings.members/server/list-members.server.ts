@@ -1,8 +1,8 @@
-import { OrganizationRole } from '@prisma/client';
+import { TeamRole } from '@prisma/client';
 import { z } from 'zod';
 import { text } from 'zod-form-data';
 import { db } from '~/libs/db';
-import { allowedForOrga } from '~/shared-server/organizations/check-user-role.server';
+import { allowedForTeam } from '~/shared-server/organizations/check-user-role.server';
 import { getPagination } from '~/shared-server/pagination/pagination.server';
 
 export const MembersFilterSchema = z.object({ query: text(z.string().trim().optional()) });
@@ -12,15 +12,15 @@ type MembersFilters = z.infer<typeof MembersFilterSchema>;
 const RESULTS_BY_PAGE = 15;
 
 export async function listMembers(orgaSlug: string, userId: string, filters: MembersFilters, page: number) {
-  await allowedForOrga(orgaSlug, userId, [OrganizationRole.OWNER]);
+  await allowedForTeam(orgaSlug, userId, [TeamRole.OWNER]);
 
-  const total = await db.organizationMember.count({ where: { organization: { slug: orgaSlug } } });
+  const total = await db.teamMember.count({ where: { team: { slug: orgaSlug } } });
 
   const { pageIndex, currentPage, totalPages } = getPagination(page, total, RESULTS_BY_PAGE);
 
-  const members = await db.organizationMember.findMany({
+  const members = await db.teamMember.findMany({
     where: {
-      organization: { slug: orgaSlug },
+      team: { slug: orgaSlug },
       member: { name: { contains: filters?.query, mode: 'insensitive' } },
     },
     orderBy: { member: { name: 'asc' } },

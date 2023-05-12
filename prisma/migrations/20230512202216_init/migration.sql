@@ -8,7 +8,7 @@ CREATE TYPE "EventType" AS ENUM ('MEETUP', 'CONFERENCE');
 CREATE TYPE "EventVisibility" AS ENUM ('PUBLIC', 'PRIVATE');
 
 -- CreateEnum
-CREATE TYPE "OrganizationRole" AS ENUM ('OWNER', 'MEMBER', 'REVIEWER');
+CREATE TYPE "TeamRole" AS ENUM ('OWNER', 'MEMBER', 'REVIEWER');
 
 -- CreateEnum
 CREATE TYPE "ProposalStatus" AS ENUM ('DRAFT', 'SUBMITTED', 'ACCEPTED', 'REJECTED', 'CONFIRMED', 'DECLINED');
@@ -91,7 +91,7 @@ CREATE TABLE "events" (
     "description" TEXT,
     "type" "EventType" NOT NULL DEFAULT 'CONFERENCE',
     "visibility" "EventVisibility" NOT NULL DEFAULT 'PRIVATE',
-    "organizationId" TEXT NOT NULL,
+    "teamId" TEXT NOT NULL,
     "address" TEXT,
     "lat" DOUBLE PRECISION,
     "lng" DOUBLE PRECISION,
@@ -145,7 +145,7 @@ CREATE TABLE "event_categories" (
 );
 
 -- CreateTable
-CREATE TABLE "organizations" (
+CREATE TABLE "teams" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "slug" TEXT NOT NULL,
@@ -153,17 +153,17 @@ CREATE TABLE "organizations" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "organizations_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "teams_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "organizations_members" (
+CREATE TABLE "teams_members" (
     "memberId" TEXT NOT NULL,
-    "organizationId" TEXT NOT NULL,
-    "role" "OrganizationRole" NOT NULL DEFAULT 'REVIEWER',
+    "teamId" TEXT NOT NULL,
+    "role" "TeamRole" NOT NULL DEFAULT 'REVIEWER',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "organizations_members_pkey" PRIMARY KEY ("memberId","organizationId")
+    CONSTRAINT "teams_members_pkey" PRIMARY KEY ("memberId","teamId")
 );
 
 -- CreateTable
@@ -261,10 +261,10 @@ CREATE UNIQUE INDEX "talks_invitationCode_key" ON "talks"("invitationCode");
 CREATE UNIQUE INDEX "events_slug_key" ON "events"("slug");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "organizations_slug_key" ON "organizations"("slug");
+CREATE UNIQUE INDEX "teams_slug_key" ON "teams"("slug");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "organizations_invitationCode_key" ON "organizations"("invitationCode");
+CREATE UNIQUE INDEX "teams_invitationCode_key" ON "teams"("invitationCode");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "proposals_invitationCode_key" ON "proposals"("invitationCode");
@@ -315,7 +315,7 @@ ALTER TABLE "accounts" ADD CONSTRAINT "accounts_userId_fkey" FOREIGN KEY ("userI
 ALTER TABLE "talks" ADD CONSTRAINT "talks_creatorId_fkey" FOREIGN KEY ("creatorId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "events" ADD CONSTRAINT "events_organizationId_fkey" FOREIGN KEY ("organizationId") REFERENCES "organizations"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "events" ADD CONSTRAINT "events_teamId_fkey" FOREIGN KEY ("teamId") REFERENCES "teams"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "events" ADD CONSTRAINT "events_creatorId_fkey" FOREIGN KEY ("creatorId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -327,10 +327,10 @@ ALTER TABLE "event_formats" ADD CONSTRAINT "event_formats_eventId_fkey" FOREIGN 
 ALTER TABLE "event_categories" ADD CONSTRAINT "event_categories_eventId_fkey" FOREIGN KEY ("eventId") REFERENCES "events"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "organizations_members" ADD CONSTRAINT "organizations_members_memberId_fkey" FOREIGN KEY ("memberId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "teams_members" ADD CONSTRAINT "teams_members_memberId_fkey" FOREIGN KEY ("memberId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "organizations_members" ADD CONSTRAINT "organizations_members_organizationId_fkey" FOREIGN KEY ("organizationId") REFERENCES "organizations"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "teams_members" ADD CONSTRAINT "teams_members_teamId_fkey" FOREIGN KEY ("teamId") REFERENCES "teams"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "proposals" ADD CONSTRAINT "proposals_talkId_fkey" FOREIGN KEY ("talkId") REFERENCES "talks"("id") ON DELETE SET NULL ON UPDATE CASCADE;

@@ -1,5 +1,5 @@
 import { disconnectDB, resetDB } from 'tests/db-helpers';
-import { organizationFactory } from 'tests/factories/organization';
+import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
 import { ForbiddenOperationError } from '../../../libs/errors';
 import { updateOrganization } from './update-organization.server';
@@ -12,7 +12,7 @@ describe('#updateOrganization', () => {
 
   it('updates the organization', async () => {
     const user = await userFactory();
-    const organization = await organizationFactory({
+    const organization = await teamFactory({
       attributes: { name: 'Hello world', slug: 'hello-world' },
       owners: [user],
     });
@@ -25,7 +25,7 @@ describe('#updateOrganization', () => {
 
   it('throws an error if user is not owner', async () => {
     const user = await userFactory();
-    const organization = await organizationFactory({ members: [user] });
+    const organization = await teamFactory({ members: [user] });
 
     await expect(updateOrganization(organization.slug, user.id, { name: 'name', slug: 'slug' })).rejects.toThrowError(
       ForbiddenOperationError
@@ -34,8 +34,8 @@ describe('#updateOrganization', () => {
 
   it('returns an error if the slug already exists', async () => {
     const user = await userFactory();
-    const organization = await organizationFactory({ attributes: { slug: 'hello-world-1' }, owners: [user] });
-    await organizationFactory({ attributes: { slug: 'hello-world-2' }, owners: [user] });
+    const organization = await teamFactory({ attributes: { slug: 'hello-world-1' }, owners: [user] });
+    await teamFactory({ attributes: { slug: 'hello-world-2' }, owners: [user] });
     const result = await updateOrganization(organization.slug, user.id, {
       name: 'Hello world',
       slug: 'hello-world-2',

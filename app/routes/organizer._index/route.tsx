@@ -6,7 +6,7 @@ import { requireSession } from '~/libs/auth/session';
 import { OrganizationForm } from '~/shared-components/organizations/OrganizationForm';
 import { Button } from '~/design-system/Buttons';
 import { createOrganization } from './server/create-organization.server';
-import { OrganizationSaveSchema } from './types/organization-save.schema';
+import { TeamSaveSchema } from './types/organization-save.schema';
 import { Container } from '~/design-system/layouts/Container';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 import { Card } from '~/design-system/layouts/Card';
@@ -19,7 +19,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 export const action = async ({ request }: ActionArgs) => {
   const userId = await requireSession(request);
   const form = await request.formData();
-  const result = await withZod(OrganizationSaveSchema).validate(form);
+  const result = await withZod(TeamSaveSchema).validate(form);
   if (result.error) {
     return json(result.error.fieldErrors);
   } else {

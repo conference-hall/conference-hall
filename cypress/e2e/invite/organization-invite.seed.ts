@@ -1,4 +1,4 @@
-import { organizationFactory } from '../../../tests/factories/organization';
+import { teamFactory } from '../../../tests/factories/team';
 import { userFactory } from '../../../tests/factories/users';
 
 export const seed = async () => {
@@ -6,7 +6,7 @@ export const seed = async () => {
 
   await userFactory({ traits: ['bruce-wayne'] });
 
-  await organizationFactory({
+  await teamFactory({
     attributes: { name: 'Awesome orga', slug: 'awesome-orga', invitationCode: '123' },
     owners: [organizer1],
   });

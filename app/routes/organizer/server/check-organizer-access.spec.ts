@@ -1,5 +1,5 @@
 import { disconnectDB, resetDB } from 'tests/db-helpers';
-import { organizationFactory } from 'tests/factories/organization';
+import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
 import { checkOrganizerAccess } from './check-organizer-access.server';
 
@@ -17,7 +17,7 @@ describe('#checkOrganizerAccess', () => {
 
   it('can access if user belongs to an organization', async () => {
     const user = await userFactory();
-    await organizationFactory({ members: [user] });
+    await teamFactory({ members: [user] });
     const canAccess = await checkOrganizerAccess(user.id);
     expect(canAccess).toBe(true);
   });

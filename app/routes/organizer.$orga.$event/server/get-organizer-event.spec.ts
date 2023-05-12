@@ -1,6 +1,6 @@
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventFactory } from 'tests/factories/events';
-import { organizationFactory } from 'tests/factories/organization';
+import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
 import { EventNotFoundError } from '../../../libs/errors';
 import { getOrganizerEvent } from './get-organizer-event.server';
@@ -13,7 +13,7 @@ describe('#getEvent', () => {
 
   it('returns the event for organizer', async () => {
     const user = await userFactory();
-    const organization = await organizationFactory({ owners: [user] });
+    const team = await teamFactory({ owners: [user] });
     const event = await eventFactory({
       attributes: {
         name: 'Awesome event',
@@ -21,7 +21,7 @@ describe('#getEvent', () => {
         visibility: 'PUBLIC',
       },
       traits: ['conference-cfp-open'],
-      organization,
+      team,
     });
 
     const result = await getOrganizerEvent(event.slug, user.id);

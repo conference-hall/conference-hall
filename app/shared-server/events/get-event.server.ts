@@ -7,7 +7,7 @@ export type Event = Awaited<ReturnType<typeof getEvent>>;
 export async function getEvent(slug: string) {
   const event = await db.event.findUnique({
     where: { slug: slug },
-    include: { formats: true, categories: true, organization: true },
+    include: { formats: true, categories: true, team: true },
   });
 
   if (!event) throw new EventNotFoundError();
@@ -17,7 +17,7 @@ export async function getEvent(slug: string) {
     slug: event.slug,
     type: event.type,
     name: event.name,
-    organizationName: event.organization.name,
+    organizationName: event.team.name,
     description: event.description,
     address: event.address,
     conferenceStart: event.conferenceStart?.toUTCString(),

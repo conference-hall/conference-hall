@@ -7,7 +7,7 @@ import { Avatar } from '~/design-system/Avatar';
 import { CfpElapsedTime } from '../cfp/CfpElapsedTime';
 
 type Props = {
-  organization: { name: string; slug: string; role: string };
+  team: { name: string; slug: string; role: string };
   event?: {
     name: string;
     slug: string;
@@ -20,14 +20,14 @@ type Props = {
   };
 };
 
-export default function OrganizationBreadcrumb({ organization, event }: Props) {
+export default function OrganizationBreadcrumb({ team, event }: Props) {
   return (
     <div className="flex flex-col items-center justify-between gap-4 pt-4 sm:flex-row sm:gap-8">
       <nav className="flex items-center gap-4">
-        <Link to={`/organizer/${organization.slug}`} className="flex items-center gap-2 truncate hover:underline">
+        <Link to={`/organizer/${team.slug}`} className="flex items-center gap-2 truncate hover:underline">
           <Square3Stack3DIcon className="h-6 w-6 text-gray-600" />
           <Text as="span" size="l" heading strong={!event}>
-            {organization.name}
+            {team.name}
           </Text>
         </Link>
         {event && (
@@ -47,7 +47,7 @@ export default function OrganizationBreadcrumb({ organization, event }: Props) {
             {event.visibility.toLowerCase()}
           </Badge>
         ) : (
-          <Badge>{organization.role.toLowerCase()}</Badge>
+          <Badge>{team.role.toLowerCase()}</Badge>
         )}
       </nav>
       {event && (

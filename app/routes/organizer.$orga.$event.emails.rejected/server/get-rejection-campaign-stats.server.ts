@@ -1,9 +1,9 @@
 import { allowedForEvent } from '~/shared-server/organizations/check-user-role.server';
-import { OrganizationRole } from '@prisma/client';
+import { TeamRole } from '@prisma/client';
 import { db } from '~/libs/db';
 
 export async function getRejectionCampaignStats(eventSlug: string, userId: string) {
-  await allowedForEvent(eventSlug, userId, [OrganizationRole.OWNER, OrganizationRole.MEMBER]);
+  await allowedForEvent(eventSlug, userId, [TeamRole.OWNER, TeamRole.MEMBER]);
 
   const toSend = await db.proposal.count({
     where: { event: { slug: eventSlug }, status: 'REJECTED', emailRejectedStatus: null },

@@ -1,5 +1,5 @@
 import { disconnectDB, resetDB } from 'tests/db-helpers';
-import { organizationFactory } from 'tests/factories/organization';
+import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
 import { listMembers } from './list-members.server';
 import { ForbiddenOperationError } from '~/libs/errors';
@@ -23,14 +23,14 @@ describe('#listMembers', () => {
       traits: ['peter-parker'],
       attributes: { id: '3', picture: 'https://img.com/c.png' },
     });
-    const organization = await organizationFactory({
+    const organization = await teamFactory({
       owners: [owner],
       members: [member],
       reviewers: [reviewer],
       attributes: { slug: 'my-orga' },
     });
     const other = await userFactory();
-    await organizationFactory({ owners: [other] });
+    await teamFactory({ owners: [other] });
 
     const members = await listMembers(organization.slug, owner.id, {}, 1);
     expect(members.pagination).toEqual({ current: 1, total: 1 });
@@ -50,7 +50,7 @@ describe('#listMembers', () => {
   it('returns nothing when user is not owner of the organization', async () => {
     const user = await userFactory();
     const owner = await userFactory();
-    const organization = await organizationFactory({ owners: [owner], attributes: { slug: 'my-orga' } });
+    const organization = await teamFactory({ owners: [owner], attributes: { slug: 'my-orga' } });
 
     await expect(listMembers(organization.slug, user.id, {}, 1)).rejects.toThrowError(ForbiddenOperationError);
   });

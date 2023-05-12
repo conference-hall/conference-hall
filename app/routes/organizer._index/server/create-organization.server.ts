@@ -1,15 +1,15 @@
-import { OrganizationRole } from '@prisma/client';
+import { TeamRole } from '@prisma/client';
 import { db } from '~/libs/db';
-import type { OrganizationSaveData } from '../types/organization-save.schema';
+import type { TeamSaveData } from '../types/organization-save.schema';
 
-export async function createOrganization(userId: string, data: OrganizationSaveData) {
+export async function createOrganization(userId: string, data: TeamSaveData) {
   return await db.$transaction(async (trx) => {
-    const existSlug = await trx.organization.findFirst({ where: { slug: data.slug } });
+    const existSlug = await trx.team.findFirst({ where: { slug: data.slug } });
     if (existSlug) return { fieldErrors: { slug: 'This URL already exists, please try another one.' } };
 
-    const updated = await trx.organization.create({ select: { id: true }, data });
-    await trx.organizationMember.create({
-      data: { memberId: userId, organizationId: updated.id, role: OrganizationRole.OWNER },
+    const updated = await trx.team.create({ select: { id: true }, data });
+    await trx.teamMember.create({
+      data: { memberId: userId, teamId: updated.id, role: TeamRole.OWNER },
     });
     return { slug: data.slug };
   });

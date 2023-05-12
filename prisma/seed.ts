@@ -2,7 +2,7 @@ import { eventFormatFactory } from '../tests/factories/formats';
 import { eventCategoryFactory } from '../tests/factories/categories';
 import { eventFactory } from '../tests/factories/events';
 import { userFactory } from 'tests/factories/users';
-import { organizationFactory } from 'tests/factories/organization';
+import { teamFactory } from 'tests/factories/team';
 import { talkFactory } from 'tests/factories/talks';
 import { proposalFactory } from 'tests/factories/proposals';
 import { ratingFactory } from 'tests/factories/ratings';
@@ -13,7 +13,7 @@ async function seed() {
   const user2 = await userFactory({ traits: ['bruce-wayne'] });
   const user3 = await userFactory({ traits: ['peter-parker'] });
 
-  const organization = await organizationFactory({
+  const team = await teamFactory({
     owners: [user],
     members: [user2],
     attributes: { name: 'GDG Nantes', slug: 'gdg-nantes' },
@@ -21,7 +21,7 @@ async function seed() {
 
   const event = await eventFactory({
     traits: ['conference', 'conference-cfp-open', 'withSurvey'],
-    organization,
+    team,
     attributes: {
       name: 'Devfest Nantes',
       slug: 'devfest-nantes',
@@ -37,17 +37,17 @@ async function seed() {
 
   const meetup = await eventFactory({
     traits: ['meetup-cfp-open'],
-    organization,
+    team,
     attributes: { name: 'GDG Nantes', slug: 'gdg-nantes' },
   });
 
   await eventFactory({
     traits: ['conference', 'private'],
-    organization,
+    team,
     attributes: { name: 'VIP event', slug: 'vip-event' },
   });
 
-  const organization2 = await organizationFactory({
+  const team2 = await teamFactory({
     owners: [user2],
     members: [user],
     attributes: { name: 'Devoxx', slug: 'devoxx' },
@@ -56,7 +56,7 @@ async function seed() {
   await eventFactory({
     traits: ['conference-cfp-past'],
     attributes: { name: 'Devoxx France', slug: 'devoxx-france' },
-    organization: organization2,
+    team: team2,
   });
 
   await eventFactory({

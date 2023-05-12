@@ -1,4 +1,4 @@
-import { OrganizationRole } from '@prisma/client';
+import { TeamRole } from '@prisma/client';
 import type { ProposalsFilters } from '~/schemas/proposal';
 import { allowedForEvent } from '~/shared-server/organizations/check-user-role.server';
 import { RatingsDetails } from '~/shared-server/ratings/ratings-details';
@@ -6,7 +6,7 @@ import { OrganizerProposalsSearch } from '~/shared-server/proposals/OrganizerPro
 import { jsonToArray } from '~/libs/prisma';
 
 export async function exportProposals(eventSlug: string, userId: string, filters: ProposalsFilters) {
-  const event = await allowedForEvent(eventSlug, userId, [OrganizationRole.OWNER, OrganizationRole.MEMBER]);
+  const event = await allowedForEvent(eventSlug, userId, [TeamRole.OWNER, TeamRole.MEMBER]);
 
   const options = { searchBySpeakers: event.displayProposalsSpeakers };
 

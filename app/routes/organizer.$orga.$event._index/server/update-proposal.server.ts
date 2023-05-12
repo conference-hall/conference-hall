@@ -1,10 +1,10 @@
-import { OrganizationRole } from '@prisma/client';
+import { TeamRole } from '@prisma/client';
 import { db } from '~/libs/db';
 import type { ProposalStatusData, ProposalUpdateData } from '~/schemas/proposal';
 import { allowedForEvent } from '~/shared-server/organizations/check-user-role.server';
 
 export async function updateProposal(eventSlug: string, proposalId: string, userId: string, data: ProposalUpdateData) {
-  await allowedForEvent(eventSlug, userId, [OrganizationRole.OWNER, OrganizationRole.MEMBER]);
+  await allowedForEvent(eventSlug, userId, [TeamRole.OWNER, TeamRole.MEMBER]);
 
   const { formats, categories, ...talk } = data;
 
@@ -24,7 +24,7 @@ export async function updateProposalsStatus(
   proposalIds: string[],
   status: ProposalStatusData
 ) {
-  await allowedForEvent(eventSlug, userId, [OrganizationRole.OWNER, OrganizationRole.MEMBER]);
+  await allowedForEvent(eventSlug, userId, [TeamRole.OWNER, TeamRole.MEMBER]);
 
   const result = await db.proposal.updateMany({ where: { id: { in: proposalIds } }, data: { status } });
   return result.count;

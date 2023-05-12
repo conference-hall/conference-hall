@@ -1,11 +1,11 @@
-import { OrganizationRole } from '@prisma/client';
+import { TeamRole } from '@prisma/client';
 import { db } from '~/libs/db';
 import { ForbiddenOperationError } from '~/libs/errors';
 
-export async function allowedForOrga(slug: string, userId: string, roles?: OrganizationRole[]) {
-  const rolesToCheck = roles || [OrganizationRole.MEMBER, OrganizationRole.REVIEWER, OrganizationRole.OWNER];
+export async function allowedForTeam(slug: string, userId: string, roles?: TeamRole[]) {
+  const rolesToCheck = roles || [TeamRole.MEMBER, TeamRole.REVIEWER, TeamRole.OWNER];
 
-  const orga = await db.organization.findFirst({
+  const orga = await db.team.findFirst({
     where: {
       slug,
       members: {
@@ -19,13 +19,13 @@ export async function allowedForOrga(slug: string, userId: string, roles?: Organ
   return orga;
 }
 
-export async function allowedForEvent(slug: string, userId: string, roles?: OrganizationRole[]) {
-  const rolesToCheck = roles || [OrganizationRole.MEMBER, OrganizationRole.REVIEWER, OrganizationRole.OWNER];
+export async function allowedForEvent(slug: string, userId: string, roles?: TeamRole[]) {
+  const rolesToCheck = roles || [TeamRole.MEMBER, TeamRole.REVIEWER, TeamRole.OWNER];
 
   const event = await db.event.findFirst({
     where: {
       slug,
-      organization: {
+      team: {
         members: {
           some: { memberId: userId, role: { in: rolesToCheck } },
         },

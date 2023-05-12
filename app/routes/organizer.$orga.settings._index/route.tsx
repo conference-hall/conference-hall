@@ -11,7 +11,7 @@ import { OrganizationForm } from '~/shared-components/organizations/Organization
 import { updateOrganization } from './server/update-organization.server';
 import { OrganizationSaveSchema } from './types/organization-save.schema';
 import { Card } from '~/design-system/layouts/Card';
-import { useOrganization } from '../organizer.$orga/route';
+import { useTeam } from '../organizer.$orga/route';
 import { addToast } from '~/libs/toasts/toasts';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
@@ -34,7 +34,7 @@ export const action = async ({ request, params }: ActionArgs) => {
 };
 
 export default function OrganizationSettingsRoute() {
-  const { organization } = useOrganization();
+  const { team } = useTeam();
   const errors = useActionData<typeof action>();
 
   return (
@@ -42,11 +42,11 @@ export default function OrganizationSettingsRoute() {
       <Form method="POST" preventScrollReset>
         <Card.Title>
           <H3 size="base">General</H3>
-          <Subtitle>Change organization name and URL.</Subtitle>
+          <Subtitle>Change team name and URL.</Subtitle>
         </Card.Title>
 
         <Card.Content>
-          <OrganizationForm initialValues={organization} errors={errors ?? undefined} />
+          <OrganizationForm initialValues={team} errors={errors ?? undefined} />
         </Card.Content>
 
         <Card.Actions>
