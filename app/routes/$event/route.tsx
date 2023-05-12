@@ -21,7 +21,7 @@ export const loader = async ({ params }: LoaderArgs) => {
 
 export const meta = mergeMeta<typeof loader>(
   ({ data }) => [{ title: `${data.name} | Conference Hall` }],
-  ({ data }) => eventSocialCard({ name: data.name, logo: data.logo, websiteUrl: data.websiteUrl })
+  ({ data }) => eventSocialCard({ name: data.name, slug: data.slug, logo: data.logo })
 );
 
 export default function EventRoute() {
