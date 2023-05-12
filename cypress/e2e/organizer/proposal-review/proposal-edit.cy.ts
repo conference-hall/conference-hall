@@ -34,6 +34,8 @@ describe('Organizer proposal edit page', () => {
         category: 'Category 2',
       });
 
+      cy.assertToast('Proposal saved.');
+
       cy.assertText('Talk 1 updated');
       cy.assertText('Talk description updated');
       cy.assertText('Talk references updated');

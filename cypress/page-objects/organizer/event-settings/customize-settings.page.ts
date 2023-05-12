@@ -1,4 +1,6 @@
-class CustomizeSettings {
+import BasePage from 'page-objects/base.page';
+
+class CustomizeSettings extends BasePage {
   visit(slug: string, eventSlug: string) {
     cy.visit(`/organizer/${slug}/${eventSlug}/settings/customize`);
     this.isPageVisible();

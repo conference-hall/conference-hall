@@ -1,4 +1,6 @@
-class OrganizationEventsProposalsPage {
+import BasePage from 'page-objects/base.page';
+
+class OrganizationEventsProposalsPage extends BasePage {
   visit(orgaSlug: string, eventSlug: string) {
     cy.visit(`/organizer/${orgaSlug}/${eventSlug}`);
     this.isPageVisible();

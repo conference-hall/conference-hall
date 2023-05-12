@@ -1,3 +1,5 @@
+import BasePage from 'page-objects/base.page';
+
 type GeneralFormType = {
   name?: string;
   slug?: string;
@@ -13,7 +15,7 @@ type DetailFormType = {
   contactEmail?: string;
 };
 
-class GeneralSettings {
+class GeneralSettings extends BasePage {
   visit(slug: string, eventSlug: string) {
     cy.visit(`/organizer/${slug}/${eventSlug}/settings`);
     this.isPageVisible();

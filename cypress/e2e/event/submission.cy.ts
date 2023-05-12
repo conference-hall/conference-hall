@@ -71,7 +71,7 @@ describe('Submit a talk to event', () => {
       cy.assertText('by Clark Kent');
       submission.fillConfirmationForm({ message: 'You rock!', cod: true });
       submission.submit();
-      submission.assertToast('Congratulation! Proposal submitted!');
+      cy.assertToast('Congratulation! Proposal submitted!');
 
       // Check proposal list
       proposals.isPageVisible();

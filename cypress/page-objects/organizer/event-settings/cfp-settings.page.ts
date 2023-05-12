@@ -1,3 +1,5 @@
+import BasePage from 'page-objects/base.page';
+
 type CfpFormType = {
   cfpStart?: string;
   cfpEnd?: string;
@@ -5,7 +7,7 @@ type CfpFormType = {
   codeOfConductUrl?: string;
 };
 
-class CfpSettings {
+class CfpSettings extends BasePage {
   visit(slug: string, eventSlug: string) {
     cy.visit(`/organizer/${slug}/${eventSlug}/settings/cfp`);
     this.isPageVisible();

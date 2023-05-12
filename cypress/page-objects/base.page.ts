@@ -18,10 +18,6 @@ class BasePage {
   userMenu() {
     return new UserMenu();
   }
-
-  assertToast(text: string) {
-    cy.findByText(text).should('exist');
-  }
 }
 
 class UserMenu {

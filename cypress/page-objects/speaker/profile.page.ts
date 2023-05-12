@@ -68,7 +68,7 @@ class SpeakerProfilePage extends BasePage {
   }
 
   assertSaved() {
-    this.assertToast('Profile updated.');
+    cy.assertToast('Profile updated.');
   }
 }
 

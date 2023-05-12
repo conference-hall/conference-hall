@@ -1,4 +1,6 @@
-class LoginPage {
+import BasePage from './base.page';
+
+class LoginPage extends BasePage {
   visit(redirectTo?: string) {
     if (redirectTo) {
       cy.visit(`/login?redirectTo=${redirectTo}`);

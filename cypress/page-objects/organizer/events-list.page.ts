@@ -1,9 +1,11 @@
+import BasePage from 'page-objects/base.page';
+
 type EventNewType = {
   name?: string;
   slug?: string;
 };
 
-class OrganizationEventsPage {
+class OrganizationEventsPage extends BasePage {
   visit(slug: string) {
     cy.visit(`/organizer/${slug}`);
     this.isPageVisible();

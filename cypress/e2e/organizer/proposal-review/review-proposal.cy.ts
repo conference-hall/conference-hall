@@ -33,7 +33,7 @@ describe('Organizer proposal review page', () => {
       cy.assertText('Submitted');
 
       review.fillReview('Love it, 5 stars', 'Best talk');
-      cy.assertText('Review saved.');
+      cy.assertToast('Review saved.');
 
       cy.findByLabelText('Love it: 1').should('exist');
       cy.findByLabelText('Score: 4').should('exist');
