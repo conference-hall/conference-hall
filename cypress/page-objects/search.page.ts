@@ -15,12 +15,16 @@ class SearchEventPage extends BasePage {
     return cy.typeOn('Search conferences and meetups.', `${text}{enter}`);
   }
 
-  filterByCfpStatus(status: string) {
-    return cy.findByLabelText('Filter by CFP status').click().parent().findByRole('option', { name: status });
+  filterByAllTypes() {
+    return cy.findByRole('button', { name: 'All' }).click();
   }
 
-  filterByEventTypes(status: string) {
-    return cy.findByLabelText('Filter by event types').click().parent().findByRole('option', { name: status });
+  filterByConferences() {
+    return cy.findByRole('button', { name: 'Conferences' }).click();
+  }
+
+  filterByMeetups() {
+    return cy.findByRole('button', { name: 'Meetups' }).click();
   }
 
   results() {

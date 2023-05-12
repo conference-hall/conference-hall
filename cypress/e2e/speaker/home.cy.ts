@@ -29,12 +29,20 @@ describe('Speaker home page', () => {
     cy.assertText('ckent-twitter');
 
     home.activities().should('have.length', 2);
-    home.activity('My talk 2').click();
 
+    home
+      .activities()
+      .last()
+      .within(() => {
+        cy.assertText('Devfest Nantes');
+        cy.assertText('3 proposals');
+      });
+
+    home.eventActivities('Devfest Nantes').should('have.length', 3);
+
+    home.activity('My talk 2').click();
     eventProposal.isPageVisible();
   });
-
-  it.skip('displays speaker activities');
 
   it('can edit the profile', () => {
     home.visit();

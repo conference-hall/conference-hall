@@ -25,6 +25,10 @@ class SpeakerHomePage extends BasePage {
   activity(name: string) {
     return this.activities().contains(name);
   }
+
+  eventActivities(name: string) {
+    return cy.findByRole('list', { name: `${name} activities` }).children();
+  }
 }
 
 export default SpeakerHomePage;
