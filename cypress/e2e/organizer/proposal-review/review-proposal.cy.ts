@@ -72,7 +72,7 @@ describe('Organizer proposal review page', () => {
       proposals.isPageVisible();
     });
 
-    it.only('hides reviews, speakers, review panel following event settings', () => {
+    it('hides reviews, speakers, review panel following event settings', () => {
       review.visit('orga-1', 'conference-2', 'proposal-2');
       review.title('Talk 3').should('exist');
 
