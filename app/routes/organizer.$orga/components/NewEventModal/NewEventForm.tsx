@@ -16,9 +16,7 @@ export function NewEventForm({ type, slug, onCancel }: Props) {
   return (
     <div className="flex flex-col gap-8">
       <div>
-        <H1 size="2xl" mb={1}>
-          Create a new event
-        </H1>
+        <H1 size="base">Create a new event</H1>
         <Subtitle>You can make it public or private.</Subtitle>
       </div>
 

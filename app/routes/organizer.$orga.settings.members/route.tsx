@@ -46,11 +46,11 @@ export const action = async ({ request, params }: ActionArgs) => {
     case 'change-role': {
       const memberRole = form.get('memberRole') as OrganizationRole;
       await changeMemberRole(params.orga, userId, memberId, memberRole);
-      return json(null, await addToast(request, 'Member role changed'));
+      return json(null, await addToast(request, 'Member role changed.'));
     }
     case 'remove-member': {
       await removeMember(params.orga, userId, memberId);
-      return json(null, await addToast(request, 'Member removed from organization'));
+      return json(null, await addToast(request, 'Member removed from organization.'));
     }
   }
   return null;

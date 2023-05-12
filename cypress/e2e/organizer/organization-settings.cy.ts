@@ -16,6 +16,8 @@ describe('Organization settings', () => {
       settings.visit('awesome-orga');
       settings.fillSettingsForm({ name: 'Awesome orga updated', slug: 'awesome-orga-updated' });
       settings.saveAbstract().click();
+      settings.assertToast('Organization saved.');
+
       cy.assertInputText('Organization name', 'Awesome orga updated');
       cy.assertInputText('Organization URL', 'awesome-orga-updated');
       cy.assertUrl('/organizer/awesome-orga-updated/settings');
