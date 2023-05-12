@@ -16,7 +16,7 @@ export function UserMenuMobile() {
       <MenuLink to="/speaker">Home</MenuLink>
       <MenuLink to="/speaker/talks">Talks</MenuLink>
       <MenuLink to="/speaker/profile">Profile</MenuLink>
-      <MenuLink to="/organizer">Organizations</MenuLink>
+      <MenuLink to="/team">Teams</MenuLink>
       <MenuLink to="/logout">Sign out</MenuLink>
     </div>
   );

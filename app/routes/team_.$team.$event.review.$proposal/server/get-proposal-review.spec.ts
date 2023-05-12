@@ -76,7 +76,7 @@ describe('#getProposalReview', () => {
     expect(reviewInfo.proposal.speakers).toEqual([]);
   });
 
-  it('returns organizers reviews', async () => {
+  it('returns teams reviews', async () => {
     const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
     await ratingFactory({ proposal, user: owner, attributes: { feeling: 'NEGATIVE', rating: 0, comment: 'Booo' } });
     await ratingFactory({ proposal, user: member, attributes: { feeling: 'POSITIVE', rating: 5 } });
@@ -103,7 +103,7 @@ describe('#getProposalReview', () => {
     });
   });
 
-  it('returns organizers messages', async () => {
+  it('returns teams messages', async () => {
     const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
     await messageFactory({ proposal, user: owner, attributes: { message: 'Message 1' } });
     await messageFactory({ proposal, user: member, attributes: { message: 'Message 2' } });
@@ -154,7 +154,7 @@ describe('#getProposalReview', () => {
     });
   });
 
-  it('throws an error if user does not belong to event orga', async () => {
+  it('throws an error if user does not belong to event team', async () => {
     const user = await userFactory();
     const event = await eventFactory();
     const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [user] }) });

@@ -9,7 +9,7 @@ import { Button } from '~/design-system/Buttons';
 import { Input } from '~/design-system/forms/Input';
 import { DateRangeInput } from '~/design-system/forms/DateRangeInput';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
-import { updateEvent } from '~/shared-server/organizations/update-event.server';
+import { updateEvent } from '~/shared-server/teams/update-event.server';
 import { EventCfpSettingsSchema } from './types/event-cfp-settings.schema';
 import { useOrganizerEvent } from '../team.$team.$event/route';
 import { Card } from '~/design-system/layouts/Card';

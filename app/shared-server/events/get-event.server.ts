@@ -17,7 +17,7 @@ export async function getEvent(slug: string) {
     slug: event.slug,
     type: event.type,
     name: event.name,
-    organizationName: event.team.name,
+    teamName: event.team.name,
     description: event.description,
     address: event.address,
     conferenceStart: event.conferenceStart?.toUTCString(),

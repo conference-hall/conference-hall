@@ -45,7 +45,7 @@ describe('#getReviews', () => {
     await expect(getReviews(event.slug, proposal.id, owner.id)).rejects.toThrowError(ForbiddenOperationError);
   });
 
-  it('throws an error if user does not belong to event orga', async () => {
+  it('throws an error if user does not belong to event team', async () => {
     const user = await userFactory();
     const event = await eventFactory();
     const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [user] }) });

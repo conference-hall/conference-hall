@@ -51,7 +51,7 @@ describe('#getProposalMessages', () => {
     ]);
   });
 
-  it('throws an error if user does not belong to event orga', async () => {
+  it('throws an error if user does not belong to event team', async () => {
     const user = await userFactory();
     const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
     await expect(getProposalMessages(event.slug, proposal.id, user.id)).rejects.toThrowError(ForbiddenOperationError);
@@ -85,7 +85,7 @@ describe('#addProposalMessage', () => {
     expect(message.channel).toBe(MessageChannel.ORGANIZER);
   });
 
-  it('throws an error if user does not belong to event orga', async () => {
+  it('throws an error if user does not belong to event team', async () => {
     const user = await userFactory();
     const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
     await expect(addProposalMessage(event.slug, proposal.id, user.id, 'My message')).rejects.toThrowError(
@@ -129,7 +129,7 @@ describe('#removeProposalMessage', () => {
     expect(messages.length).toBe(1);
   });
 
-  it('throws an error if user does not belong to event orga', async () => {
+  it('throws an error if user does not belong to event team', async () => {
     const user = await userFactory();
     const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
     const message = await messageFactory({ user, proposal });

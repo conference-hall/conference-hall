@@ -4,7 +4,7 @@ import invariant from 'tiny-invariant';
 import { addProposalMessage, getProposalMessages, removeProposalMessage } from './server/messages.server';
 import { useUser } from '~/root';
 import { useLoaderData } from '@remix-run/react';
-import { OrganizerDiscussions } from './components/OrganizerDiscussions';
+import { Discussions } from './components/Discussions';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);
@@ -37,5 +37,5 @@ export default function ProposaDiscussionsRoute() {
   const { user } = useUser();
   const messages = useLoaderData<typeof loader>();
 
-  return <OrganizerDiscussions userId={user?.id} messages={messages} />;
+  return <Discussions userId={user?.id} messages={messages} />;
 }

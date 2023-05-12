@@ -78,9 +78,9 @@ export class SpeakerNotFoundError extends NotFoundError {
   }
 }
 
-export class OrganizationNotFoundError extends NotFoundError {
+export class TeamNotFoundError extends NotFoundError {
   constructor() {
-    super('Organization not found');
+    super('Team not found');
   }
 }
 

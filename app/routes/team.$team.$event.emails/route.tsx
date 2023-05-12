@@ -9,7 +9,7 @@ import { H2 } from '~/design-system/Typography';
 import { useUser } from '~/root';
 import { useTeam } from '../team.$team/route';
 import { useOrganizerEvent } from '../team.$team.$event/route';
-import { allowedForEvent } from '~/shared-server/organizations/check-user-role.server';
+import { allowedForEvent } from '~/shared-server/teams/check-user-role.server';
 import { TeamRole } from '@prisma/client';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
@@ -20,9 +20,9 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   return null;
 };
 
-const getMenuItems = (orga?: string, event?: string) => [
-  { to: `/organizer/${orga}/${event}/emails`, icon: ShieldCheckIcon, label: 'Acceptation campaign' },
-  { to: `/organizer/${orga}/${event}/emails/rejected`, icon: ShieldExclamationIcon, label: 'Rejection campaign' },
+const getMenuItems = (team?: string, event?: string) => [
+  { to: `/team/${team}/${event}/emails`, icon: ShieldCheckIcon, label: 'Acceptation campaign' },
+  { to: `/team/${team}/${event}/emails/rejected`, icon: ShieldExclamationIcon, label: 'Rejection campaign' },
 ];
 
 export default function EventProposalEmails() {

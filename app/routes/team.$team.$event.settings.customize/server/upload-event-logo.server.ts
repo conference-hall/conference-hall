@@ -3,7 +3,7 @@ import { unstable_parseMultipartFormData } from '@remix-run/node';
 import { z } from 'zod';
 import { db } from '~/libs/db';
 import { uploadToStorageHandler } from '~/libs/storage/storage.server';
-import { allowedForEvent } from '~/shared-server/organizations/check-user-role.server';
+import { allowedForEvent } from '~/shared-server/teams/check-user-role.server';
 
 type UploadLogoResult = {
   status: 'success' | 'error';

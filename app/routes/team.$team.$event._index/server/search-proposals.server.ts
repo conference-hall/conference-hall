@@ -1,8 +1,8 @@
 import type { Pagination } from '~/schemas/pagination';
 import type { ProposalsFilters } from '~/schemas/proposal';
-import { allowedForEvent } from '~/shared-server/organizations/check-user-role.server';
+import { allowedForEvent } from '~/shared-server/teams/check-user-role.server';
 import { getPagination } from '~/shared-server/pagination/pagination.server';
-import { OrganizerProposalsSearch } from '~/shared-server/proposals/OrganizerProposalsSearch';
+import { EventProposalsSearch } from '~/shared-server/proposals/EventProposalsSearch';
 import { RatingsDetails } from '~/shared-server/ratings/ratings-details';
 
 const RESULTS_BY_PAGE = 25;
@@ -17,7 +17,7 @@ export async function searchProposals(
 
   const options = { searchBySpeakers: event.displayProposalsSpeakers };
 
-  const search = new OrganizerProposalsSearch(eventSlug, userId, filters, options);
+  const search = new EventProposalsSearch(eventSlug, userId, filters, options);
 
   const statistics = await search.statistics();
 

@@ -2,7 +2,7 @@ import invariant from 'tiny-invariant';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { v4 as uuid } from 'uuid';
 import { requireSession } from '~/libs/auth/session';
-import { updateEvent } from '~/shared-server/organizations/update-event.server';
+import { updateEvent } from '~/shared-server/teams/update-event.server';
 import { useOrganizerEvent } from '../team.$team.$event/route';
 import { EnableApiSection } from './components/EnableApiSection';
 import { ApiTryoutSection } from './components/ApiTryoutSection';

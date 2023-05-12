@@ -7,7 +7,7 @@ import { Form, useFetcher, useLoaderData } from '@remix-run/react';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
 import { useOrganizerEvent } from '../team.$team.$event/route';
 import { withZod } from '@remix-validated-form/with-zod';
-import { updateEvent } from '~/shared-server/organizations/update-event.server';
+import { updateEvent } from '~/shared-server/teams/update-event.server';
 import { QUESTIONS } from '~/shared-server/survey/get-questions.server';
 import { EventSurveySettingsSchema } from './types/event-survey-settings.schema';
 import { Card } from '~/design-system/layouts/Card';

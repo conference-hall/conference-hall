@@ -25,7 +25,7 @@ describe('#getEvent', () => {
       slug: event.slug,
       type: event.type,
       name: event.name,
-      organizationName: team.name,
+      teamName: team.name,
       address: event.address,
       conferenceStart: event.conferenceStart?.toUTCString(),
       conferenceEnd: event.conferenceEnd?.toUTCString(),

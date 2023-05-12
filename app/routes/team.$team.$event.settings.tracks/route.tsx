@@ -5,7 +5,7 @@ import { requireSession } from '~/libs/auth/session';
 import { H2, Subtitle } from '~/design-system/Typography';
 import { useFetcher } from '@remix-run/react';
 import { withZod } from '@remix-validated-form/with-zod';
-import { updateEvent } from '~/shared-server/organizations/update-event.server';
+import { updateEvent } from '~/shared-server/teams/update-event.server';
 import { deleteCategory, deleteFormat, saveCategory, saveFormat } from './server/update-tracks.server';
 import { NewTrackButton } from './components/SaveTrackForm';
 import { EventTrackSaveSchema } from './types/event-track-save.schema';

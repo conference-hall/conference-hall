@@ -15,12 +15,12 @@ import { ArchivedFilters } from './components/ArchivedFilter';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);
-  invariant(params.orga, 'Invalid organization slug');
+  invariant(params.team, 'Invalid team slug');
 
   const url = new URL(request.url);
   const archived = Boolean(url.searchParams.get('archived'));
 
-  const events = await listEvents(params.orga, userId, archived);
+  const events = await listEvents(params.team, userId, archived);
 
   return json(events);
 };
@@ -35,7 +35,7 @@ export default function OrganizationEventsRoute() {
   return (
     <Container className="my-4 space-y-8 sm:my-8">
       <div className="flex items-center justify-between">
-        <H2>Organization events</H2>
+        <H2>Team events</H2>
         <ArchivedFilters />
       </div>
 
@@ -44,7 +44,7 @@ export default function OrganizationEventsRoute() {
           {events.map((event) => (
             <EventCard
               key={event.slug}
-              to={`/organizer/${team.slug}/${event.slug}`}
+              to={`/team/${team.slug}/${event.slug}`}
               name={event.name}
               type={event.type}
               logo={event.logo}

@@ -24,19 +24,19 @@ import { CubeTransparentIcon } from '@heroicons/react/24/outline';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);
-  invariant(params.orga, 'Invalid organization slug');
+  invariant(params.team, 'Invalid team slug');
 
   const url = new URL(request.url);
   const filters = await withZod(MembersFilterSchema).validate(url.searchParams);
   const page = await parsePage(url.searchParams);
 
-  const members = await listMembers(params.orga, userId, filters.data ?? {}, page);
+  const members = await listMembers(params.team, userId, filters.data ?? {}, page);
   return json(members);
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
   const userId = await requireSession(request);
-  invariant(params.orga, 'Invalid organization slug');
+  invariant(params.team, 'Invalid team slug');
 
   const form = await request.formData();
   const action = form.get('_action')!;
@@ -45,12 +45,12 @@ export const action = async ({ request, params }: ActionArgs) => {
   switch (action) {
     case 'change-role': {
       const memberRole = form.get('memberRole') as TeamRole;
-      await changeMemberRole(params.orga, userId, memberId, memberRole);
+      await changeMemberRole(params.team, userId, memberId, memberRole);
       return json(null, await addToast(request, 'Member role changed.'));
     }
     case 'remove-member': {
-      await removeMember(params.orga, userId, memberId);
-      return json(null, await addToast(request, 'Member removed from organization.'));
+      await removeMember(params.team, userId, memberId);
+      return json(null, await addToast(request, 'Member removed from team.'));
     }
   }
   return null;
@@ -66,7 +66,7 @@ export default function OrganizationSettingsRoute() {
     <Card as="section">
       <Card.Title>
         <H3 size="base">Members</H3>
-        <Subtitle>Invite, remove or change role of organization members.</Subtitle>
+        <Subtitle>Invite, remove or change role of team members.</Subtitle>
       </Card.Title>
 
       <Card.Content>

@@ -1,5 +1,5 @@
 import { db } from '~/libs/db';
-import { allowedForTeam } from '~/shared-server/organizations/check-user-role.server';
+import { allowedForTeam } from '~/shared-server/teams/check-user-role.server';
 import { getCfpState } from '~/utils/event';
 
 export async function listEvents(slug: string, userId: string, archived: boolean) {

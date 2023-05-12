@@ -1,6 +1,6 @@
 import { TeamRole } from '@prisma/client';
 import { db } from '~/libs/db';
-import { allowedForEvent } from '~/shared-server/organizations/check-user-role.server';
+import { allowedForEvent } from '~/shared-server/teams/check-user-role.server';
 
 export async function getAcceptationCampaignStats(eventSlug: string, userId: string) {
   await allowedForEvent(eventSlug, userId, [TeamRole.OWNER, TeamRole.MEMBER]);

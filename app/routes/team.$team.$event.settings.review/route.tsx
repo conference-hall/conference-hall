@@ -3,7 +3,7 @@ import { json, type LoaderArgs } from '@remix-run/node';
 import { requireSession } from '~/libs/auth/session';
 import { H2 } from '~/design-system/Typography';
 import { useFetcher } from '@remix-run/react';
-import { updateEvent } from '~/shared-server/organizations/update-event.server';
+import { updateEvent } from '~/shared-server/teams/update-event.server';
 import { useOrganizerEvent } from '../team.$team.$event/route';
 import { Card } from '~/design-system/layouts/Card';
 import { ToggleGroup } from '~/design-system/forms/Toggles';

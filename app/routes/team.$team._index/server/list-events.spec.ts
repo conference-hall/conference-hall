@@ -13,14 +13,14 @@ describe('#listEvents', () => {
 
   it('returns team events', async () => {
     const user = await userFactory();
-    const team = await teamFactory({ owners: [user], attributes: { slug: 'my-orga' } });
+    const team = await teamFactory({ owners: [user], attributes: { slug: 'my-team' } });
     const event1 = await eventFactory({ attributes: { name: 'A' }, team, traits: ['conference'] });
     const event2 = await eventFactory({ attributes: { name: 'B' }, team, traits: ['meetup'] });
 
     const team2 = await teamFactory({ owners: [user] });
     await eventFactory({ traits: ['conference-cfp-open'], team: team2 });
 
-    const events = await listEvents('my-orga', user.id, false);
+    const events = await listEvents('my-team', user.id, false);
     expect(events).toEqual([
       {
         name: event1.name,
@@ -45,11 +45,11 @@ describe('#listEvents', () => {
 
   it('returns team archived events', async () => {
     const user = await userFactory();
-    const team = await teamFactory({ owners: [user], attributes: { slug: 'my-orga' } });
+    const team = await teamFactory({ owners: [user], attributes: { slug: 'my-team' } });
     const event = await eventFactory({ attributes: { name: 'B' }, team, traits: ['meetup', 'archived'] });
     await eventFactory({ attributes: { name: 'A' }, team, traits: ['conference'] });
 
-    const events = await listEvents('my-orga', user.id, true);
+    const events = await listEvents('my-team', user.id, true);
     expect(events).toEqual([
       {
         name: event.name,
@@ -65,9 +65,9 @@ describe('#listEvents', () => {
 
   it('throws an error when user not member of team event', async () => {
     const user = await userFactory();
-    const team = await teamFactory({ attributes: { slug: 'my-orga' } });
+    const team = await teamFactory({ attributes: { slug: 'my-team' } });
     await eventFactory({ team });
 
-    await expect(listEvents('my-orga', user.id, false)).rejects.toThrowError(ForbiddenOperationError);
+    await expect(listEvents('my-team', user.id, false)).rejects.toThrowError(ForbiddenOperationError);
   });
 });

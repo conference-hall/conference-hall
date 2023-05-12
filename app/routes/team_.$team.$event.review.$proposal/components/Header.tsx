@@ -18,10 +18,10 @@ export function ReviewHeader({ title, pagination, canEditProposal }: Props) {
   const { current, total, nextId, previousId } = pagination;
 
   const search = searchParams.toString();
-  const previousPath = `/organizer/${params.orga}/${params.event}/review/${previousId}`;
-  const nextPath = `/organizer/${params.orga}/${params.event}/review/${nextId}`;
-  const closePath = `/organizer/${params.orga}/${params.event}`;
-  const editPath = `/organizer/${params.orga}/${params.event}/review/${params.proposal}/edit`;
+  const previousPath = `/team/${params.team}/${params.event}/review/${previousId}`;
+  const nextPath = `/team/${params.team}/${params.event}/review/${nextId}`;
+  const closePath = `/team/${params.team}/${params.event}`;
+  const editPath = `/team/${params.team}/${params.event}/review/${params.proposal}/edit`;
 
   return (
     <PageHeader as="header" className="flex items-center gap-8 px-8 py-8">

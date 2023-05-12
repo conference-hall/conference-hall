@@ -11,7 +11,7 @@ import { MarkdownTextArea } from '~/design-system/forms/MarkdownTextArea';
 import { DateRangeInput } from '~/design-system/forms/DateRangeInput';
 import { EventForm } from '~/shared-components/events/EventForm';
 import { withZod } from '@remix-validated-form/with-zod';
-import { updateEvent } from '~/shared-server/organizations/update-event.server';
+import { updateEvent } from '~/shared-server/teams/update-event.server';
 import { EventDetailsSettingsSchema } from './types/event-details-settings.schema';
 import { EventGeneralSettingsSchema } from './types/event-general-settings.schema';
 import { Card } from '~/design-system/layouts/Card';
@@ -39,7 +39,7 @@ export const action = async ({ request, params }: ActionArgs) => {
       const updated = await updateEvent(params.event, userId, result.data);
       if (!updated.slug) return json({ slug: updated.error });
 
-      return redirect(`/organizer/${params.orga}/${updated.slug}/settings`, await addToast(request, 'Event saved.'));
+      return redirect(`/team/${params.team}/${updated.slug}/settings`, await addToast(request, 'Event saved.'));
     }
     case 'details': {
       const result = await withZod(EventDetailsSettingsSchema).validate(form);
@@ -138,8 +138,8 @@ export default function EventGeneralSettingsRoute() {
 
         <Card.Content>
           <AlertInfo>
-            Archived events are not displayed anymore in the organization list and in the Conference Hall search.
-            Nothing is deleted, you can restore them when you want.
+            Archived events are not displayed anymore in the team list and in the Conference Hall search. Nothing is
+            deleted, you can restore them when you want.
           </AlertInfo>
         </Card.Content>
 

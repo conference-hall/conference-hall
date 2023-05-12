@@ -49,7 +49,7 @@ export default function ProposalReviewRoute() {
   const { proposal, pagination } = proposalReview;
   const { you, summary } = proposal.reviews;
 
-  const role = user?.teams.find((team) => team.slug === params.orga)?.role;
+  const role = user?.teams.find((team) => team.slug === params.team)?.role;
   const canEditProposal = TeamRole.MEMBER === role || TeamRole.OWNER === role;
 
   return (

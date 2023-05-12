@@ -57,7 +57,7 @@ describe('#saveFormat', () => {
     );
   });
 
-  it('throws an error if user does not belong to event orga', async () => {
+  it('throws an error if user does not belong to event team', async () => {
     const user = await userFactory();
     await expect(saveFormat(event.slug, user.id, { name: 'Hello world', description: null })).rejects.toThrowError(
       ForbiddenOperationError
@@ -113,7 +113,7 @@ describe('#saveCategory', () => {
     ).rejects.toThrowError(ForbiddenOperationError);
   });
 
-  it('throws an error if user does not belong to event orga', async () => {
+  it('throws an error if user does not belong to event team', async () => {
     const user = await userFactory();
     await expect(saveCategory(event.slug, user.id, { name: 'Hello world', description: null })).rejects.toThrowError(
       ForbiddenOperationError
@@ -147,7 +147,7 @@ describe('#deleteFormat', () => {
     await expect(deleteFormat(event.slug, reviewer.id, format.id)).rejects.toThrowError(ForbiddenOperationError);
   });
 
-  it('throws an error if user does not belong to event orga', async () => {
+  it('throws an error if user does not belong to event team', async () => {
     const user = await userFactory();
     await expect(deleteFormat(event.slug, user.id, format.id)).rejects.toThrowError(ForbiddenOperationError);
   });
@@ -179,7 +179,7 @@ describe('#deleteCategory', () => {
     await expect(deleteCategory(event.slug, reviewer.id, category.id)).rejects.toThrowError(ForbiddenOperationError);
   });
 
-  it('throws an error if user does not belong to event orga', async () => {
+  it('throws an error if user does not belong to event team', async () => {
     const user = await userFactory();
     await expect(deleteCategory(event.slug, user.id, category.id)).rejects.toThrowError(ForbiddenOperationError);
   });

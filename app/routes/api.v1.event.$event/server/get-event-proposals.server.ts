@@ -3,7 +3,7 @@ import { ApiKeyInvalidError, EventNotFoundError } from '~/libs/errors';
 import { jsonToArray } from '~/libs/prisma';
 import type { ProposalsFilters } from '~/schemas/proposal';
 import type { UserSocialLinks } from '~/schemas/user';
-import { OrganizerProposalsSearch } from '~/shared-server/proposals/OrganizerProposalsSearch';
+import { EventProposalsSearch } from '~/shared-server/proposals/EventProposalsSearch';
 import { getLanguage } from '~/utils/languages';
 import { getLevel } from '~/utils/levels';
 
@@ -14,7 +14,7 @@ export const getEventProposals = async (eventSlug: string, apiKey: string, filte
 
   if (event.apiKey !== apiKey) throw new ApiKeyInvalidError();
 
-  const search = new OrganizerProposalsSearch(eventSlug, 'no-user', filters);
+  const search = new EventProposalsSearch(eventSlug, 'no-user', filters);
 
   const proposals = await search.proposals({ ratings: false });
 

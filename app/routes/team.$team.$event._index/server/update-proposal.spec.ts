@@ -69,7 +69,7 @@ describe('#updateProposal', () => {
     ).rejects.toThrowError(ForbiddenOperationError);
   });
 
-  it('throws an error if user does not belong to event orga', async () => {
+  it('throws an error if user does not belong to event team', async () => {
     const user = await userFactory();
     const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
     await expect(
@@ -117,7 +117,7 @@ describe('#updateProposalsStatus', () => {
     );
   });
 
-  it('throws an error if user does not belong to event orga', async () => {
+  it('throws an error if user does not belong to event team', async () => {
     const user = await userFactory();
     const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
     await expect(updateProposalsStatus(event.slug, user.id, [proposal.id], 'ACCEPTED')).rejects.toThrowError(

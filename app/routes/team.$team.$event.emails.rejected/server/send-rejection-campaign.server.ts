@@ -1,6 +1,6 @@
 import { EmailStatus, TeamRole } from '@prisma/client';
 import { ProposalRejectedEmailsBatch } from './emails/proposal-rejected-email-batch';
-import { allowedForEvent } from '~/shared-server/organizations/check-user-role.server';
+import { allowedForEvent } from '~/shared-server/teams/check-user-role.server';
 import { db } from '~/libs/db';
 
 export async function sendRejectionCampaign(eventSlug: string, userId: string, proposalIds: string[]) {

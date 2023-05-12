@@ -1,10 +1,10 @@
 import { TeamRole } from '@prisma/client';
-import { allowedForTeam } from '~/shared-server/organizations/check-user-role.server';
+import { allowedForTeam } from '~/shared-server/teams/check-user-role.server';
 import type { EventCreateData } from '../types/event-create.schema';
 import { db } from '~/libs/db';
 
-export async function createEvent(orgaSlug: string, userId: string, data: EventCreateData) {
-  await allowedForTeam(orgaSlug, userId, [TeamRole.OWNER]);
+export async function createEvent(teamSlug: string, userId: string, data: EventCreateData) {
+  await allowedForTeam(teamSlug, userId, [TeamRole.OWNER]);
 
   return await db.$transaction(async (trx) => {
     const existSlug = await trx.event.findFirst({ where: { slug: data.slug } });
@@ -16,7 +16,7 @@ export async function createEvent(orgaSlug: string, userId: string, data: EventC
       data: {
         ...data,
         creator: { connect: { id: userId } },
-        team: { connect: { slug: orgaSlug } },
+        team: { connect: { slug: teamSlug } },
       },
     });
     return { slug: data.slug };

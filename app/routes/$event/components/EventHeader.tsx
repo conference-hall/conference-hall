@@ -10,7 +10,7 @@ type Props = {
   name: string;
   slug: string;
   type: 'CONFERENCE' | 'MEETUP';
-  organizationName: string;
+  teamName: string;
   logo: string | null;
   address: string | null;
   conferenceStart?: string;
@@ -22,7 +22,7 @@ export function EventHeader({
   name,
   slug,
   type,
-  organizationName,
+  teamName,
   logo,
   address,
   conferenceStart,
@@ -39,7 +39,7 @@ export function EventHeader({
               {name}
             </H1>
             <Text variant="secondary-light" size="s" heading>
-              {`by ${organizationName}`}
+              {`by ${teamName}`}
             </Text>
           </div>
         </Link>

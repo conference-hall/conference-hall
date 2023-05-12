@@ -11,8 +11,8 @@ class BasePage {
     cy.findByRole('link', { name: 'Profile' }).click();
   }
 
-  organizations() {
-    cy.findByRole('link', { name: 'Organizations' }).click();
+  teams() {
+    cy.findByRole('link', { name: 'Teams' }).click();
   }
 
   userMenu() {

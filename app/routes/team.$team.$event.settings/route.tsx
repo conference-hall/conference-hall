@@ -19,7 +19,7 @@ import { H2 } from '~/design-system/Typography';
 import { useOrganizerEvent } from '../team.$team.$event/route';
 import { useUser } from '~/root';
 import { useTeam } from '../team.$team/route';
-import { allowedForEvent } from '~/shared-server/organizations/check-user-role.server';
+import { allowedForEvent } from '~/shared-server/teams/check-user-role.server';
 import { TeamRole } from '@prisma/client';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
@@ -29,16 +29,16 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   return null;
 };
 
-const getMenuItems = (orga?: string, event?: string) => [
-  { to: `/organizer/${orga}/${event}/settings`, icon: Cog6ToothIcon, label: 'General' },
-  { to: `/organizer/${orga}/${event}/settings/cfp`, icon: PaperAirplaneIcon, label: 'Call for paper' },
-  { to: `/organizer/${orga}/${event}/settings/tracks`, icon: SwatchIcon, label: 'Tracks' },
-  { to: `/organizer/${orga}/${event}/settings/customize`, icon: PaintBrushIcon, label: 'Customize' },
-  { to: `/organizer/${orga}/${event}/settings/survey`, icon: QuestionMarkCircleIcon, label: 'Speaker survey' },
-  { to: `/organizer/${orga}/${event}/settings/review`, icon: StarIcon, label: 'Proposals review' },
-  { to: `/organizer/${orga}/${event}/settings/notifications`, icon: EnvelopeIcon, label: 'Email notifications' },
-  { to: `/organizer/${orga}/${event}/settings/integrations`, icon: CpuChipIcon, label: 'Slack integration' },
-  { to: `/organizer/${orga}/${event}/settings/api`, icon: CodeBracketIcon, label: 'Web API' },
+const getMenuItems = (team?: string, event?: string) => [
+  { to: `/team/${team}/${event}/settings`, icon: Cog6ToothIcon, label: 'General' },
+  { to: `/team/${team}/${event}/settings/cfp`, icon: PaperAirplaneIcon, label: 'Call for paper' },
+  { to: `/team/${team}/${event}/settings/tracks`, icon: SwatchIcon, label: 'Tracks' },
+  { to: `/team/${team}/${event}/settings/customize`, icon: PaintBrushIcon, label: 'Customize' },
+  { to: `/team/${team}/${event}/settings/survey`, icon: QuestionMarkCircleIcon, label: 'Speaker survey' },
+  { to: `/team/${team}/${event}/settings/review`, icon: StarIcon, label: 'Proposals review' },
+  { to: `/team/${team}/${event}/settings/notifications`, icon: EnvelopeIcon, label: 'Email notifications' },
+  { to: `/team/${team}/${event}/settings/integrations`, icon: CpuChipIcon, label: 'Slack integration' },
+  { to: `/team/${team}/${event}/settings/api`, icon: CodeBracketIcon, label: 'Web API' },
 ];
 
 export default function OrganizationSettingsRoute() {

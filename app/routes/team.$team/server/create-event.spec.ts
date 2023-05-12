@@ -62,7 +62,7 @@ describe('#createEvent', () => {
     ).rejects.toThrowError(ForbiddenOperationError);
   });
 
-  it('throws an error if user does not belong to event orga', async () => {
+  it('throws an error if user does not belong to event team', async () => {
     const user = await userFactory();
     await expect(
       createEvent(team.slug, user.id, {

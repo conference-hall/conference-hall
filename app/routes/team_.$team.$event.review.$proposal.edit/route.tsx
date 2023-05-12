@@ -32,7 +32,7 @@ export const action = async ({ request, params }: ActionArgs) => {
 
   const url = new URL(request.url);
   throw redirect(
-    `/organizer/${params.orga}/${params.event}/review/${params.proposal}${url.search}`,
+    `/team/${params.team}/${params.event}/review/${params.proposal}${url.search}`,
     await addToast(request, 'Proposal saved.')
   );
 };

@@ -1,6 +1,6 @@
 import { db } from '~/libs/db';
 import { ForbiddenOperationError } from '~/libs/errors';
-import { allowedForEvent } from '~/shared-server/organizations/check-user-role.server';
+import { allowedForEvent } from '~/shared-server/teams/check-user-role.server';
 import { RatingsDetails } from '~/shared-server/ratings/ratings-details';
 
 export async function getReviews(eventSlug: string, proposalId: string, userId: string) {

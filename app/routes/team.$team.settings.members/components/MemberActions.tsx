@@ -14,7 +14,7 @@ export function RemoveButton({ memberId, memberName }: RemoveButtonProps) {
   return (
     <>
       <Button
-        aria-label={`Remove ${memberName} from organization`}
+        aria-label={`Remove ${memberName} from team`}
         variant="secondary"
         size="s"
         onClick={() => setModalOpen(true)}
@@ -43,8 +43,8 @@ function RemoveRoleModal({ memberId, memberName, isOpen, onClose }: RemoveModalP
     <Modal open={isOpen} onClose={onClose}>
       <Form method="POST" onSubmit={onClose}>
         <Modal.Title
-          title={`Remove ${memberName} from the organization?`}
-          description="The member will be removed from the organization and won't be able to access it anymore."
+          title={`Remove ${memberName} from the team?`}
+          description="The member will be removed from the team and won't be able to access it anymore."
           icon={UserMinusIcon}
           iconColor="danger"
         />
@@ -95,9 +95,9 @@ type ChangeRoleModalProps = {
 };
 
 const ALL_ROLES = [
-  { label: 'Owner', value: 'OWNER', description: 'Has full administrative access to the entire organization.' },
-  { label: 'Member', value: 'MEMBER', description: 'Can see every in the organization, and can create new events.' },
-  { label: 'Reviewer', value: 'REVIEWER', description: 'Can only review events proposals in the organization.' },
+  { label: 'Owner', value: 'OWNER', description: 'Has full administrative access to the entire team.' },
+  { label: 'Member', value: 'MEMBER', description: 'Can see every in the team, and can create new events.' },
+  { label: 'Reviewer', value: 'REVIEWER', description: 'Can only review events proposals in the team.' },
 ];
 
 function ChangeRoleModal({ memberId, memberName, memberRole, isOpen, onClose }: ChangeRoleModalProps) {
@@ -147,7 +147,7 @@ export function InviteMemberButton({ invitationLink }: InviteProps) {
         invitationLink={invitationLink}
         onClose={() => setOpen(false)}
         title="Invite a member"
-        description="You can invite a member to join your organization by sharing an invitation link. Copy it and send it by email.
+        description="You can invite a member to join your team by sharing an invitation link. Copy it and send it by email.
             The member will be automatically added once the invitation has been accepted."
       />
     </>

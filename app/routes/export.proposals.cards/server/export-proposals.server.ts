@@ -1,8 +1,8 @@
 import { TeamRole } from '@prisma/client';
 import type { ProposalsFilters } from '~/schemas/proposal';
-import { allowedForEvent } from '~/shared-server/organizations/check-user-role.server';
+import { allowedForEvent } from '~/shared-server/teams/check-user-role.server';
 import { RatingsDetails } from '~/shared-server/ratings/ratings-details';
-import { OrganizerProposalsSearch } from '~/shared-server/proposals/OrganizerProposalsSearch';
+import { EventProposalsSearch } from '~/shared-server/proposals/EventProposalsSearch';
 import { jsonToArray } from '~/libs/prisma';
 
 export async function exportProposals(eventSlug: string, userId: string, filters: ProposalsFilters) {
@@ -10,7 +10,7 @@ export async function exportProposals(eventSlug: string, userId: string, filters
 
   const options = { searchBySpeakers: event.displayProposalsSpeakers };
 
-  const search = new OrganizerProposalsSearch(eventSlug, userId, filters, options);
+  const search = new EventProposalsSearch(eventSlug, userId, filters, options);
 
   const proposals = await search.proposals({ ratings: event.displayProposalsRatings });
 

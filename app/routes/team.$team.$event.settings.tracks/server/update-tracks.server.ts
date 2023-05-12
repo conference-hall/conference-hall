@@ -1,6 +1,6 @@
 import { TeamRole } from '@prisma/client';
 import { db } from '~/libs/db';
-import { allowedForEvent } from '~/shared-server/organizations/check-user-role.server';
+import { allowedForEvent } from '~/shared-server/teams/check-user-role.server';
 import type { EventTrackSaveData } from '../types/event-track-save.schema';
 
 export async function saveFormat(eventSlug: string, userId: string, data: EventTrackSaveData) {

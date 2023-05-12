@@ -13,7 +13,7 @@ function buildPayload(
     author_name: `by ${proposal.speakers.map((s) => s.name).join(' & ')}`,
     title: proposal.title,
     text: proposal.abstract,
-    title_link: `${config.appUrl}/organizer/${event.team.slug}/${event.slug}/review/${proposal.id}`,
+    title_link: `${config.appUrl}/team/${event.team.slug}/${event.slug}/review/${proposal.id}`,
     thumb_url: proposal.speakers[0].picture,
     color: '#ffab00',
     fields: [] as unknown[],

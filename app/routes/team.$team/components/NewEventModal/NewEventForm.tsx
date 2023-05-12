@@ -20,7 +20,7 @@ export function NewEventForm({ type, slug, onCancel }: Props) {
         <Subtitle>You can make it public or private.</Subtitle>
       </div>
 
-      <fetcher.Form action={`/organizer/${slug}`} method="POST" className="space-y-8">
+      <fetcher.Form action={`/team/${slug}`} method="POST" className="space-y-8">
         <EventForm errors={errors} />
 
         <div className="flex justify-end gap-4">

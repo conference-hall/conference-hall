@@ -1,4 +1,4 @@
-import { allowedForEvent } from '~/shared-server/organizations/check-user-role.server';
+import { allowedForEvent } from '~/shared-server/teams/check-user-role.server';
 import { TeamRole } from '@prisma/client';
 import { db } from '~/libs/db';
 

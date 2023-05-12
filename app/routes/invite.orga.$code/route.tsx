@@ -8,27 +8,27 @@ import { Container } from '~/design-system/layouts/Container';
 import { H1, H2 } from '~/design-system/Typography';
 import { Button } from '~/design-system/Buttons';
 import { useUser } from '~/root';
-import { addMember, checkTeamInviteCode } from './server/invite-organization.server';
+import { addMember, checkTeamInviteCode } from './server/invite-team.server';
 import { Card } from '~/design-system/layouts/Card';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   await requireSession(request);
   invariant(params.code, 'Invalid code');
 
-  const organization = await checkTeamInviteCode(params.code);
-  return json(organization);
+  const team = await checkTeamInviteCode(params.code);
+  return json(team);
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
   const userId = await requireSession(request);
   invariant(params.code, 'Invalid code');
 
-  const organization = await addMember(params.code, userId);
-  return redirect(`/organizer/${organization.slug}`);
+  const team = await addMember(params.code, userId);
+  return redirect(`/team/${team.slug}`);
 };
 
 export default function InvitationRoute() {
-  const organization = useLoaderData<typeof loader>();
+  const team = useLoaderData<typeof loader>();
   const { user } = useUser();
 
   return (
@@ -38,11 +38,11 @@ export default function InvitationRoute() {
       <Container className="m-8">
         <Card p={16} className="flex flex-col items-center">
           <H1 size="l" mb={4} variant="secondary">
-            You have been invited to organization
+            You have been invited to the team
           </H1>
 
           <H2 size="3xl" mb={8}>
-            {organization.name}
+            {team.name}
           </H2>
 
           <Form method="POST">

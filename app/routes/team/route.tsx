@@ -6,11 +6,11 @@ import { requireSession } from '~/libs/auth/session';
 import { Navbar } from '~/shared-components/navbar/Navbar';
 import { Footer } from '~/shared-components/Footer';
 import { useUser } from '~/root';
-import { checkOrganizerAccess } from './server/check-organizer-access.server';
+import { checkTeamAccess } from './server/check-team-access.server';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const userId = await requireSession(request);
-  const canAccess = await checkOrganizerAccess(userId);
+  const canAccess = await checkTeamAccess(userId);
 
   if (!canAccess) return redirect('/request-access');
 

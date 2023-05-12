@@ -13,14 +13,14 @@ export function ExportActions(props: Props) {
   return (
     <Menu trigger={ExportMenuButton} triggerClassname={getStyles(props)}>
       <Menu.ItemExternalLink
-        href={`/export/proposals/json?orga=${params.orga}&event=${params.event}&${searchParams.toString()}`}
+        href={`/export/proposals/json?team=${params.team}&event=${params.event}&${searchParams.toString()}`}
         target="_blank"
         rel="noreferrer"
       >
         As JSON
       </Menu.ItemExternalLink>
       <Menu.ItemExternalLink
-        href={`/export/proposals/cards?orga=${params.orga}&event=${params.event}&${searchParams.toString()}`}
+        href={`/export/proposals/cards?team=${params.team}&event=${params.event}&${searchParams.toString()}`}
         target="_blank"
         rel="noreferrer"
       >

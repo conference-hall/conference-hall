@@ -32,7 +32,7 @@ export function ReviewForm({ initialValues }: Props) {
 
     fetcher.submit(
       { rating, feeling, comment },
-      { method: 'POST', action: `/organizer/${params.orga}/${params.event}/review/${params.proposal}` }
+      { method: 'POST', action: `/team/${params.team}/${params.event}/review/${params.proposal}` }
     );
     setChanged(false);
   };

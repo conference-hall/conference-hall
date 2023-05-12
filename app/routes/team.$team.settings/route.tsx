@@ -8,19 +8,19 @@ import { Cog6ToothIcon, UserGroupIcon } from '@heroicons/react/24/outline';
 import { H2 } from '~/design-system/Typography';
 import { useUser } from '~/root';
 import { useTeam } from '../team.$team/route';
-import { allowedForTeam } from '~/shared-server/organizations/check-user-role.server';
+import { allowedForTeam } from '~/shared-server/teams/check-user-role.server';
 import { TeamRole } from '@prisma/client';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);
-  invariant(params.orga, 'Invalid organization slug');
-  await allowedForTeam(params.orga, userId, [TeamRole.OWNER]);
+  invariant(params.team, 'Invalid team slug');
+  await allowedForTeam(params.team, userId, [TeamRole.OWNER]);
   return null;
 };
 
-const getMenuItems = (orga?: string) => [
-  { to: `/organizer/${orga}/settings`, icon: Cog6ToothIcon, label: 'General' },
-  { to: `/organizer/${orga}/settings/members`, icon: UserGroupIcon, label: 'Members' },
+const getMenuItems = (team?: string) => [
+  { to: `/team/${team}/settings`, icon: Cog6ToothIcon, label: 'General' },
+  { to: `/team/${team}/settings/members`, icon: UserGroupIcon, label: 'Members' },
 ];
 
 export default function OrganizationSettingsRoute() {
@@ -33,7 +33,7 @@ export default function OrganizationSettingsRoute() {
     <Container className="mt-4 flex gap-8 sm:mt-8">
       <H2 srOnly>Team settings</H2>
 
-      <NavSideMenu aria-label="Organization settings menu" items={menus} className="sticky top-4 self-start" />
+      <NavSideMenu aria-label="Team settings menu" items={menus} className="sticky top-4 self-start" />
 
       <div className="min-w-0 flex-1 space-y-6 sm:px-6 lg:px-0">
         <Outlet context={{ user, team }} />

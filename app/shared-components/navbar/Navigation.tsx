@@ -14,9 +14,9 @@ export function Navigation({ authenticated, isOrganizer, teams = [] }: Props) {
       return [{ label: 'Login', to: '/login', enabled: true }];
     }
 
-    const organizationLinks = teams.map((organization) => ({
-      to: `/organizer/${organization.slug}`,
-      label: organization.name,
+    const teamLinks = teams.map((team) => ({
+      to: `/team/${team.slug}`,
+      label: team.name,
       icon: Square3Stack3DIcon,
     }));
 
@@ -25,9 +25,9 @@ export function Navigation({ authenticated, isOrganizer, teams = [] }: Props) {
       { to: `/speaker/talks`, label: 'Talks library', enabled: true },
       { to: `/speaker/profile`, label: 'Profile', enabled: true },
       {
-        label: 'Organizations',
+        label: 'Teams',
         enabled: isOrganizer,
-        links: [...organizationLinks, { to: '/organizer', label: 'New organization', icon: PlusIcon }],
+        links: [...teamLinks, { to: '/team', label: 'New team', icon: PlusIcon }],
       },
     ];
   }, [authenticated, isOrganizer, teams]);

@@ -22,7 +22,7 @@ export const action = async ({ request }: ActionArgs) => {
   const result = await validAccessKey(userId, String(form.get('key')));
 
   if (result?.errors) return json(result?.errors);
-  return redirect('/organizer');
+  return redirect('/team');
 };
 
 export default function RequestAccessRoute() {
@@ -32,7 +32,7 @@ export default function RequestAccessRoute() {
     <Container className="my-4 flex justify-center sm:my-8">
       <Card className="my-16 max-w-2xl p-8">
         <H1 mb={4}>Limited access</H1>
-        <Subtitle>The organizer hall is in closed-beta access, you need a key to access it.</Subtitle>
+        <Subtitle>Conference Hall for event organizers is in closed-beta access, you need a key to access it.</Subtitle>
         <Subtitle>
           You can request a beta key by filling{' '}
           <ExternalLink href="https://forms.gle/AnArRCSHibmG59zw7">this form.</ExternalLink>

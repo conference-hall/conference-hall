@@ -57,7 +57,7 @@ describe('#rateProposal', () => {
     ).rejects.toThrowError(DeliberationDisabledError);
   });
 
-  it('throws an error if user does not belong to event orga', async () => {
+  it('throws an error if user does not belong to event team', async () => {
     const user = await userFactory();
     const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
     await expect(
