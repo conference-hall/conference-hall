@@ -9,17 +9,17 @@ export function eventSocialCard({ name, slug, logo }: SocialCard) {
     { property: 'og:description', content: `Submit your proposal to ${name} call for paper on Conference Hall.` },
     { property: 'og:type', content: 'event' },
     { property: 'og:url', content: `https://conference-hall.io/${slug}` },
-    { property: 'twitter:title', content: `${name} call for paper` },
+    { name: 'twitter:title', content: `${name} call for paper` },
   ];
 
   if (logo) {
     meta.push({ property: 'og:image', content: logo });
     meta.push({ property: 'og:image:width', content: IMAGE_WIDTH });
     meta.push({ property: 'og:image:height', content: IMAGE_HEIGHT });
-    meta.push({ property: 'twitter:image', content: logo });
-    meta.push({ property: 'twitter:card', content: 'summary_large_image' });
+    meta.push({ name: 'twitter:image', content: logo });
+    meta.push({ name: 'twitter:card', content: 'summary_large_image' });
   } else {
-    meta.push({ property: 'twitter:card', content: 'summary' });
+    meta.push({ name: 'twitter:card', content: 'summary' });
   }
 
   return meta;
