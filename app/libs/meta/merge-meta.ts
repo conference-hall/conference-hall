@@ -1,7 +1,7 @@
 import type { V2_HtmlMetaDescriptor, V2_MetaFunction } from '@remix-run/node';
 
 // source: https://gist.github.com/ryanflorence/ec1849c6d690cfbffcb408ecd633e069
-export function mergeMeta<T>(overrideFn: V2_MetaFunction<T>, appendFn?: V2_MetaFunction<T>): V2_MetaFunction {
+export function mergeMeta<T>(overrideFn: V2_MetaFunction<T>, appendFn?: V2_MetaFunction<T>): V2_MetaFunction<T> {
   return (arg) => {
     // get meta from parent routes
     let mergedMeta = arg.matches.reduce((acc, match: any) => {
