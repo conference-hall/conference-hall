@@ -22,7 +22,7 @@ class CfpSettings extends BasePage {
     if (data.cfpEnd) cy.typeOn('Closing date', data.cfpEnd);
     if (data.maxProposals) cy.typeOn('Maximum of proposals per speaker', data.maxProposals);
     if (data.codeOfConductUrl) cy.typeOn('Code of conduct URL', data.codeOfConductUrl);
-    cy.findByRole('button', { name: 'Update CFP preferences' });
+    cy.findByRole('button', { name: 'Update CFP preferences' }).click();
   }
 }
 

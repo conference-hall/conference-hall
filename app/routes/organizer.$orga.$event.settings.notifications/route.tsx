@@ -31,12 +31,12 @@ export const action = async ({ request, params }: LoaderArgs) => {
       const result = await withZod(EventEmailNotificationsSettingsSchema).validate(form);
       if (result.error) return json(result.error.fieldErrors);
       await updateEvent(params.event, userId, result.data);
-      return json(null, await addToast(request, 'Notification email saved'));
+      return json(null, await addToast(request, 'Notification email saved.'));
     }
     case 'save-notifications': {
       const result = await withZod(EventNotificationsSettingsSchema).validate(form);
       if (!result.error) await updateEvent(params.event, userId, result.data);
-      return json(null, await addToast(request, 'Notification setting saved'));
+      return json(null, await addToast(request, 'Notification setting saved.'));
     }
   }
   return json(null);

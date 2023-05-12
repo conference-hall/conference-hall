@@ -31,7 +31,7 @@ export const action = async ({ request, params }: ActionArgs) => {
     return json(result.error.fieldErrors);
   }
   await updateEvent(params.event, userId, result.data);
-  return json(null, await addToast(request, 'Call for paper successfully updated.'));
+  return json(null, await addToast(request, 'Call for paper updated.'));
 };
 
 export default function EventCfpSettingsRoute() {

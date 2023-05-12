@@ -39,21 +39,19 @@ export const action = async ({ request, params }: ActionArgs) => {
       const updated = await updateEvent(params.event, userId, result.data);
       if (!updated.slug) return json({ slug: updated.error });
 
-      return redirect(
-        `/organizer/${params.orga}/${updated.slug}/settings`,
-        await addToast(request, 'Event successfully updated')
-      );
+      return redirect(`/organizer/${params.orga}/${updated.slug}/settings`, await addToast(request, 'Event saved.'));
     }
     case 'details': {
       const result = await withZod(EventDetailsSettingsSchema).validate(form);
       if (result.error) return json(result.error.fieldErrors);
 
       await updateEvent(params.event, userId, result.data);
-      return json(null, await addToast(request, 'Event successfully updated'));
+      return json(null, await addToast(request, 'Event details saved.'));
     }
     case 'archive': {
-      await updateEvent(params.event, userId, { archived: Boolean(form.get('archived')) });
-      return json(null, await addToast(request, 'Event successfully updated'));
+      const archived = Boolean(form.get('archived'));
+      await updateEvent(params.event, userId, { archived });
+      return json(null, await addToast(request, `Event ${archived ? 'archived' : 'restored'}.`));
     }
   }
 };
@@ -135,7 +133,7 @@ export default function EventGeneralSettingsRoute() {
 
       <Card as="section">
         <Card.Title>
-          <H2 size="base">{event.archived ? 'Restore event' : 'Archive event'}</H2>
+          <H2 size="base">Archiving</H2>
         </Card.Title>
 
         <Card.Content>

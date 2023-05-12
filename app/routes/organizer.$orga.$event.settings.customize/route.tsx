@@ -12,6 +12,7 @@ import { ButtonFileUpload } from '~/design-system/forms/FileUploadButton';
 import { uploadEventLogo } from './server/upload-event-logo.server';
 import { Card } from '~/design-system/layouts/Card';
 import { Avatar } from '~/design-system/Avatar';
+import { addToast } from '~/libs/toasts/toasts';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await requireSession(request);
@@ -23,7 +24,7 @@ export const action = async ({ request, params }: ActionArgs) => {
   invariant(params.event, 'Invalid event slug');
 
   const result = await uploadEventLogo(params.event, userId, request);
-  return json(result);
+  return json(result, await addToast(request, 'Logo updated.'));
 };
 
 export default function EventGeneralSettingsRoute() {
