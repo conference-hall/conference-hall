@@ -1,5 +1,6 @@
-import { TalkSaveSchema } from './talks';
 import { parse } from '@conform-to/zod';
+
+import { TalkSaveSchema } from './talks';
 
 describe('Validate TalkSaveSchema', () => {
   it('validates talk form data', async () => {

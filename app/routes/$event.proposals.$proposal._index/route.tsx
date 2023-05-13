@@ -1,19 +1,21 @@
-import invariant from 'tiny-invariant';
-import { useLoaderData, useNavigate } from '@remix-run/react';
+import { parse } from '@conform-to/zod';
 import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
-import { getSpeakerProposal } from '~/server/proposals/get-speaker-proposal.server';
-import { ProposalStatusSection } from '~/components/proposals/ProposalStatusSection';
-import { requireSession } from '~/libs/auth/session';
-import { useEvent } from '../$event/route';
+import { useLoaderData, useNavigate } from '@remix-run/react';
+import invariant from 'tiny-invariant';
+
 import { ProposalDetailsSection } from '~/components/proposals/ProposalDetailsSection';
-import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
+import { ProposalStatusSection } from '~/components/proposals/ProposalStatusSection';
 import { Container } from '~/design-system/layouts/Container';
-import { deleteProposal } from './server/delete-proposal.server';
+import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
+import { requireSession } from '~/libs/auth/session';
 import { addToast } from '~/libs/toasts/toasts';
 import { ProposalParticipationSchema } from '~/schemas/proposal';
+import { getSpeakerProposal } from '~/server/proposals/get-speaker-proposal.server';
+
+import { useEvent } from '../$event/route';
+import { deleteProposal } from './server/delete-proposal.server';
 import { sendParticipationAnswer } from './server/send-participation-answer.server';
-import { parse } from '@conform-to/zod';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);

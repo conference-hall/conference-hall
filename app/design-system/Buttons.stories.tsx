@@ -1,7 +1,7 @@
+import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { action, type Story } from '@ladle/react';
 
 import { Button, type ButtonProps } from './Buttons';
-import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { StoryBlock } from './StoryBlock';
 
 export const Documentation = () => (

@@ -1,10 +1,11 @@
+import { Dialog, Transition } from '@headlessui/react';
+import { XMarkIcon } from '@heroicons/react/20/solid';
 import c from 'classnames';
 import type { ReactNode } from 'react';
 import { Fragment } from 'react';
-import { Dialog, Transition } from '@headlessui/react';
-import { XMarkIcon } from '@heroicons/react/20/solid';
-import { Text } from '../Typography';
+
 import { IconButton } from '../IconButtons';
+import { Text } from '../Typography';
 
 const PADDING = {
   0: 'p-0',

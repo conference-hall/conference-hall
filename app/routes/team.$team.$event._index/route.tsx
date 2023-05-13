@@ -1,24 +1,26 @@
-import invariant from 'tiny-invariant';
+import { parse } from '@conform-to/zod';
+import { InboxIcon } from '@heroicons/react/24/outline';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
-import { requireSession } from '~/libs/auth/session';
+import { useMemo } from 'react';
+import invariant from 'tiny-invariant';
+
 import { Container } from '~/design-system/layouts/Container';
-import { parsePage } from '~/schemas/pagination';
-import { ProposalsStatusUpdateSchema, parseProposalsFilters } from '~/schemas/proposal';
+import { EmptyState } from '~/design-system/layouts/EmptyState';
+import { Pagination } from '~/design-system/Pagination';
+import { useCheckboxSelection } from '~/design-system/useCheckboxSelection';
+import { requireSession } from '~/libs/auth/session';
 import { addToast } from '~/libs/toasts/toasts';
 import { updateProposalsStatus } from '~/routes/team.$team.$event._index/server/update-proposal.server';
-import { searchProposals } from './server/search-proposals.server';
-import { ProposalsList } from './components/ProposalsList/ProposalsList';
+import { parsePage } from '~/schemas/pagination';
+import { parseProposalsFilters, ProposalsStatusUpdateSchema } from '~/schemas/proposal';
+
 import { useOrganizerEvent } from '../team.$team.$event/route';
-import { Pagination } from '~/design-system/Pagination';
-import { EmptyState } from '~/design-system/layouts/EmptyState';
-import { InboxIcon } from '@heroicons/react/24/outline';
-import { useCheckboxSelection } from '~/design-system/useCheckboxSelection';
-import { useMemo } from 'react';
 import { ProposalsActionBar } from './components/ProposalsActionBar/ProposalsActionBar';
 import { ProposalsFilters } from './components/ProposalsFilters/ProposalsFilters';
-import { parse } from '@conform-to/zod';
+import { ProposalsList } from './components/ProposalsList/ProposalsList';
+import { searchProposals } from './server/search-proposals.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);

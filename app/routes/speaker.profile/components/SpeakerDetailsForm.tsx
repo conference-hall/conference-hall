@@ -1,8 +1,9 @@
 import { Form } from '@remix-run/react';
+
 import { Button } from '~/design-system/Buttons';
-import { H2, Subtitle } from '~/design-system/Typography';
 import { MarkdownTextArea } from '~/design-system/forms/MarkdownTextArea';
 import { Card } from '~/design-system/layouts/Card';
+import { H2, Subtitle } from '~/design-system/Typography';
 
 type Props = {
   bio: string | null;

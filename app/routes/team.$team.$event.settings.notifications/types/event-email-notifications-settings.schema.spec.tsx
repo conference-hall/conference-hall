@@ -1,5 +1,6 @@
-import { EventEmailNotificationsSettingsSchema } from './event-email-notifications-settings.schema';
 import { parse } from '@conform-to/zod';
+
+import { EventEmailNotificationsSettingsSchema } from './event-email-notifications-settings.schema';
 
 describe('Validate EventEmailNotificationsSettingsSchema', () => {
   it('validates valid inputs', async () => {

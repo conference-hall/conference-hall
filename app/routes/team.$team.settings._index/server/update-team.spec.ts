@@ -1,6 +1,7 @@
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
+
 import { ForbiddenOperationError } from '../../../libs/errors';
 import { updateTeam } from './update-team.server';
 

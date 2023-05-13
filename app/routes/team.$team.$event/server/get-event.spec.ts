@@ -2,6 +2,7 @@ import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventFactory } from 'tests/factories/events';
 import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
+
 import { EventNotFoundError } from '../../../libs/errors';
 import { getTeamEvent } from './get-event.server';
 

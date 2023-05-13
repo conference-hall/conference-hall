@@ -1,6 +1,7 @@
-import { ProposalNotFoundError } from '~/libs/errors';
-import { db } from '~/libs/db';
 import { z } from 'zod';
+
+import { db } from '~/libs/db';
+import { ProposalNotFoundError } from '~/libs/errors';
 import { repeatable } from '~/schemas/utils';
 
 const TracksMandatorySchema = repeatable(z.array(z.string()).nonempty());

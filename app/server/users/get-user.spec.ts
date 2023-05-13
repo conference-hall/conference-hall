@@ -1,11 +1,12 @@
-import { disconnectDB, resetDB } from 'tests/db-helpers';
-import { teamFactory } from 'tests/factories/team';
-import { userFactory } from 'tests/factories/users';
-import { getUser } from './get-user.server';
 import { TeamRole } from '@prisma/client';
+import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventFactory } from 'tests/factories/events';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
+import { teamFactory } from 'tests/factories/team';
+import { userFactory } from 'tests/factories/users';
+
+import { getUser } from './get-user.server';
 
 describe('#getUser', () => {
   beforeEach(async () => {

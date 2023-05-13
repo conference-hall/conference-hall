@@ -1,17 +1,19 @@
-import { Outlet, useLoaderData } from '@remix-run/react';
+import { XMarkIcon } from '@heroicons/react/24/outline';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
+import { Outlet, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
+
+import { Navbar } from '~/components/navbar/Navbar';
+import { IconButtonLink } from '~/design-system/IconButtons';
+import { Container } from '~/design-system/layouts/Container';
 import { requireSession } from '~/libs/auth/session';
 import { CfpNotOpenError } from '~/libs/errors';
-import { getEvent } from '~/server/events/get-event.server';
-import { SubmissionSteps } from './components/SubmissionSteps';
-import { Container } from '~/design-system/layouts/Container';
-import { useSubmissionStep } from './components/useSubmissionStep';
 import { useUser } from '~/root';
-import { IconButtonLink } from '~/design-system/IconButtons';
-import { XMarkIcon } from '@heroicons/react/24/outline';
-import { Navbar } from '~/components/navbar/Navbar';
+import { getEvent } from '~/server/events/get-event.server';
+
+import { SubmissionSteps } from './components/SubmissionSteps';
+import { useSubmissionStep } from './components/useSubmissionStep';
 
 type Step = { key: string; name: string; path: string; form?: string; enabled: boolean };
 

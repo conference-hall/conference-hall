@@ -1,13 +1,13 @@
 import { eventCategoryFactory } from '../../../../tests/factories/categories';
 import { eventFactory } from '../../../../tests/factories/events';
-import { reviewFactory } from '../../../../tests/factories/reviews';
 import { eventFormatFactory } from '../../../../tests/factories/formats';
-import { proposalFactory } from '../../../../tests/factories/proposals';
-import { talkFactory } from '../../../../tests/factories/talks';
-import { userFactory } from '../../../../tests/factories/users';
 import { messageFactory } from '../../../../tests/factories/messages';
+import { proposalFactory } from '../../../../tests/factories/proposals';
+import { reviewFactory } from '../../../../tests/factories/reviews';
 import { surveyFactory } from '../../../../tests/factories/surveys';
+import { talkFactory } from '../../../../tests/factories/talks';
 import { teamFactory } from '../../../../tests/factories/team';
+import { userFactory } from '../../../../tests/factories/users';
 
 export const seed = async () => {
   const organizer1 = await userFactory({ traits: ['clark-kent'] });

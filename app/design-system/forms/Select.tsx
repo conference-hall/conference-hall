@@ -1,7 +1,8 @@
-import c from 'classnames';
-import { useCallback } from 'react';
 import { Listbox } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
+import c from 'classnames';
+import { useCallback } from 'react';
+
 import { SelectTransition } from '../Transitions';
 import { Text } from '../Typography';
 

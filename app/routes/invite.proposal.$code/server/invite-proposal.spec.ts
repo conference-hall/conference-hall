@@ -3,9 +3,11 @@ import { eventFactory } from 'tests/factories/events';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
-import { addCoSpeakerToProposal, checkProposalInviteCode } from './invite-proposal.server';
+
 import { db } from '~/libs/db';
 import { InvitationNotFoundError } from '~/libs/errors';
+
+import { addCoSpeakerToProposal, checkProposalInviteCode } from './invite-proposal.server';
 
 describe('#addCoSpeakerToProposal', () => {
   beforeEach(async () => {

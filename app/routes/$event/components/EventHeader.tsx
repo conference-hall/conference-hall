@@ -1,9 +1,10 @@
+import { Link } from '@remix-run/react';
 import c from 'classnames';
 import { ClientOnly } from 'remix-utils';
-import { H1, Text } from '~/design-system/Typography';
+
 import { Avatar } from '~/design-system/Avatar';
-import { Link } from '@remix-run/react';
 import { Container } from '~/design-system/layouts/Container';
+import { H1, Text } from '~/design-system/Typography';
 import { formatConferenceDates } from '~/utils/event';
 
 type Props = {

@@ -1,21 +1,22 @@
-import invariant from 'tiny-invariant';
+import { parse } from '@conform-to/zod';
 import type { ActionArgs, ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData, useLoaderData, useNavigate } from '@remix-run/react';
-import { TalkSaveSchema } from '~/schemas/talks';
-import { getTalk } from '~/server/talks/get-talk.server';
-import { updateTalk } from '~/routes/speaker.talks.$talk.edit/server/update-talk.server';
-import { addToast } from '~/libs/toasts/toasts';
+import invariant from 'tiny-invariant';
+
+import { CoSpeakersList, InviteCoSpeakerButton } from '~/components/proposals/forms/CoSpeaker';
 import { DetailsForm } from '~/components/proposals/forms/DetailsForm';
 import { Button, ButtonLink } from '~/design-system/Buttons';
+import { Card } from '~/design-system/layouts/Card';
+import { Container } from '~/design-system/layouts/Container';
+import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 import { H3, Subtitle } from '~/design-system/Typography';
 import { requireSession } from '~/libs/auth/session';
-import { CoSpeakersList, InviteCoSpeakerButton } from '~/components/proposals/forms/CoSpeaker';
+import { addToast } from '~/libs/toasts/toasts';
+import { updateTalk } from '~/routes/speaker.talks.$talk.edit/server/update-talk.server';
+import { TalkSaveSchema } from '~/schemas/talks';
+import { getTalk } from '~/server/talks/get-talk.server';
 import { removeCoSpeakerFromTalk } from '~/server/talks/remove-co-speaker.server';
-import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
-import { Container } from '~/design-system/layouts/Container';
-import { Card } from '~/design-system/layouts/Card';
-import { parse } from '@conform-to/zod';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);

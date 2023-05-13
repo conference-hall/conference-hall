@@ -1,5 +1,5 @@
-import c from 'classnames';
 import { Switch } from '@headlessui/react';
+import c from 'classnames';
 import { useCallback, useState } from 'react';
 
 type ToggleProps = {

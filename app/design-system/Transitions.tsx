@@ -1,6 +1,6 @@
+import { Transition } from '@headlessui/react';
 import type { ReactNode } from 'react';
 import { Fragment } from 'react';
-import { Transition } from '@headlessui/react';
 
 type TransitionProps = { show?: boolean; children: ReactNode };
 

@@ -1,7 +1,9 @@
 import { TrashIcon, UserPlusIcon } from '@heroicons/react/20/solid';
 import { Form } from '@remix-run/react';
 import { useState } from 'react';
+
 import { AvatarName } from '~/design-system/Avatar';
+
 import { Button } from '../../../design-system/Buttons';
 import { InvitationModal } from '../../InvitationModal';
 

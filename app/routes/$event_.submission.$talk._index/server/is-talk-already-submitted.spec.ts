@@ -1,4 +1,4 @@
-import { resetDB, disconnectDB } from '../../../../tests/db-helpers';
+import { disconnectDB, resetDB } from '../../../../tests/db-helpers';
 import { eventFactory } from '../../../../tests/factories/events';
 import { proposalFactory } from '../../../../tests/factories/proposals';
 import { talkFactory } from '../../../../tests/factories/talks';

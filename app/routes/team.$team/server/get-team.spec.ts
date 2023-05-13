@@ -1,9 +1,11 @@
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
+
+import { config } from '~/libs/config';
+
 import { TeamNotFoundError } from '../../../libs/errors';
 import { getTeam } from './get-team.server';
-import { config } from '~/libs/config';
 
 describe('#getOrganization', () => {
   beforeEach(async () => {

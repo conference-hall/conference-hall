@@ -1,6 +1,7 @@
 import * as fake from '@ngneat/falso';
-import type { Team, Prisma } from '@prisma/client';
+import type { Prisma, Team } from '@prisma/client';
 import { EventType, EventVisibility } from '@prisma/client';
+
 import { db } from '../../app/libs/db';
 import { applyTraits } from './helpers/traits';
 import { teamFactory } from './team';

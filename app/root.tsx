@@ -1,30 +1,31 @@
-import type { ReactNode } from 'react';
 import type { LinksFunction, LoaderArgs } from '@remix-run/node';
-import { config } from './libs/config';
 import { json } from '@remix-run/node';
 import {
-  Meta,
-  LiveReload,
-  Outlet,
-  Links,
-  Scripts,
-  useLoaderData,
-  ScrollRestoration,
-  useRouteError,
   isRouteErrorResponse,
+  Links,
+  LiveReload,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+  useLoaderData,
   useOutletContext,
+  useRouteError,
 } from '@remix-run/react';
-import type { User } from './server/users/get-user.server';
-import { getUser } from './server/users/get-user.server';
-import { H1, Text } from './design-system/Typography';
+import type { ReactNode } from 'react';
+
 import { GlobalLoading } from './components/GlobalLoading';
-import { Toast } from './libs/toasts/Toast';
-import tailwind from './tailwind.css';
 import { Container } from './design-system/layouts/Container';
+import { H1, Text } from './design-system/Typography';
 import { initializeFirebaseClient } from './libs/auth/firebase';
 import { getSessionUserId } from './libs/auth/session';
+import { config } from './libs/config';
+import { Toast } from './libs/toasts/Toast';
 import type { ToastData } from './libs/toasts/toasts';
 import { commitToastSession, getToastSession } from './libs/toasts/toasts';
+import type { User } from './server/users/get-user.server';
+import { getUser } from './server/users/get-user.server';
+import tailwind from './tailwind.css';
 
 export function meta() {
   return [

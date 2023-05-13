@@ -2,9 +2,11 @@ import { UserPlusIcon } from '@heroicons/react/20/solid';
 import { ShieldExclamationIcon, UserMinusIcon } from '@heroicons/react/24/outline';
 import { Form } from '@remix-run/react';
 import { useState } from 'react';
+
 import { Button } from '~/design-system/Buttons';
 import { Modal } from '~/design-system/dialogs/Modals';
 import { Radio, RadioGroup } from '~/design-system/forms/RadioGroup';
+
 import { InvitationModal } from '../../../components/InvitationModal';
 
 type RemoveButtonProps = { memberId: string; memberName: string | null };

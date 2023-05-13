@@ -1,5 +1,6 @@
 import { ProposalStatus } from '@prisma/client';
 import { z } from 'zod';
+
 import { TalkSaveSchema } from './talks';
 import { numeric, repeatable, text } from './utils';
 

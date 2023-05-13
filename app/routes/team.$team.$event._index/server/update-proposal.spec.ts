@@ -1,15 +1,17 @@
-import type { Event, EventCategory, EventFormat, Team, Proposal, User } from '@prisma/client';
+import type { Event, EventCategory, EventFormat, Proposal, Team, User } from '@prisma/client';
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventCategoryFactory } from 'tests/factories/categories';
 import { eventFactory } from 'tests/factories/events';
 import { eventFormatFactory } from 'tests/factories/formats';
-import { teamFactory } from 'tests/factories/team';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
+import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
-import { updateProposal, updateProposalsStatus } from './update-proposal.server';
+
 import { db } from '~/libs/db';
 import { ForbiddenOperationError } from '~/libs/errors';
+
+import { updateProposal, updateProposalsStatus } from './update-proposal.server';
 
 describe('#updateProposal', () => {
   let owner: User, reviewer: User, speaker: User;

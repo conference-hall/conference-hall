@@ -1,21 +1,23 @@
-import invariant from 'tiny-invariant';
+import { parse } from '@conform-to/zod';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
-import type { ProposalsFilters } from '~/schemas/proposal';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
+import invariant from 'tiny-invariant';
+
 import { CampaignEmailFilters } from '~/components/events/campaign-email/CampaignEmailFilters';
 import { CampaignEmailList, CampaignType } from '~/components/events/campaign-email/CampaignEmailList';
+import { CampaignEmailStats } from '~/components/events/campaign-email/CampaignEmailStats';
 import { Pagination } from '~/design-system/Pagination';
 import { H1, H2 } from '~/design-system/Typography';
-import { parsePage } from '~/schemas/pagination';
-import { ProposalSelectionSchema, parseProposalsFilters } from '~/schemas/proposal';
 import { requireSession } from '~/libs/auth/session';
 import { addToast } from '~/libs/toasts/toasts';
-import { CampaignEmailStats } from '~/components/events/campaign-email/CampaignEmailStats';
 import { searchProposals } from '~/routes/team.$team.$event._index/server/search-proposals.server';
-import { sendAcceptationCampaign } from './server/send-acceptation-campaign.server';
+import { parsePage } from '~/schemas/pagination';
+import type { ProposalsFilters } from '~/schemas/proposal';
+import { parseProposalsFilters, ProposalSelectionSchema } from '~/schemas/proposal';
+
 import { getAcceptationCampaignStats } from './server/get-acceptation-campaign-stats.server';
-import { parse } from '@conform-to/zod';
+import { sendAcceptationCampaign } from './server/send-acceptation-campaign.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);

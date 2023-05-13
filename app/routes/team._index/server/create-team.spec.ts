@@ -1,10 +1,11 @@
+import { parse } from '@conform-to/zod';
 import { TeamRole } from '@prisma/client';
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
+
 import { db } from '../../../libs/db';
-import { TeamSaveSchema, createTeam } from './create-team.server';
-import { parse } from '@conform-to/zod';
+import { createTeam, TeamSaveSchema } from './create-team.server';
 
 describe('#createOrganization', () => {
   beforeEach(async () => {

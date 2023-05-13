@@ -2,6 +2,7 @@ import * as fake from '@ngneat/falso';
 import type { Event, EventCategory, EventFormat, Prisma, Talk, User } from '@prisma/client';
 import { EmailStatus } from '@prisma/client';
 import { ProposalStatus, TalkLevel } from '@prisma/client';
+
 import { db } from '../../app/libs/db';
 import { applyTraits } from './helpers/traits';
 

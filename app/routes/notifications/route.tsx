@@ -1,15 +1,16 @@
+import { BellSlashIcon } from '@heroicons/react/24/outline';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { requireSession } from '~/libs/auth/session';
-import { Navbar } from '~/components/navbar/Navbar';
+
 import { Footer } from '~/components/Footer';
-import { useUser } from '~/root';
-import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
-import { EmptyState } from '~/design-system/layouts/EmptyState';
-import { BellSlashIcon } from '@heroicons/react/24/outline';
-import { Container } from '~/design-system/layouts/Container';
+import { Navbar } from '~/components/navbar/Navbar';
 import { CardLink } from '~/design-system/layouts/Card';
+import { Container } from '~/design-system/layouts/Container';
+import { EmptyState } from '~/design-system/layouts/EmptyState';
+import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 import { H2 } from '~/design-system/Typography';
+import { requireSession } from '~/libs/auth/session';
+import { useUser } from '~/root';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await requireSession(request);

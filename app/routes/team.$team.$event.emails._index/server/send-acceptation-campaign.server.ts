@@ -1,7 +1,9 @@
 import { EmailStatus, TeamRole } from '@prisma/client';
-import { ProposalAcceptedEmailsBatch } from './emails/proposal-accepted-email-batch';
-import { allowedForEvent } from '~/server/teams/check-user-role.server';
+
 import { db } from '~/libs/db';
+import { allowedForEvent } from '~/server/teams/check-user-role.server';
+
+import { ProposalAcceptedEmailsBatch } from './emails/proposal-accepted-email-batch';
 
 export async function sendAcceptationCampaign(eventSlug: string, userId: string, proposalIds: string[]) {
   await allowedForEvent(eventSlug, userId, [TeamRole.OWNER, TeamRole.MEMBER]);

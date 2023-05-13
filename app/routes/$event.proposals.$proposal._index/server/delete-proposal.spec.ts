@@ -3,6 +3,7 @@ import { eventFactory } from 'tests/factories/events';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
+
 import { db } from '../../../libs/db';
 import { deleteProposal } from './delete-proposal.server';
 

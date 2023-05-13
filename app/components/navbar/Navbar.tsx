@@ -1,11 +1,13 @@
-import { type Notification, NotificationsLink } from './NotificationsLink';
-import { UserMenuDesktop } from './UserMenuDesktop';
-import { ButtonLink } from '~/design-system/Buttons';
-import { SearchEventsInput } from './SearchEventsInput';
 import { Disclosure } from '@headlessui/react';
+
+import { ButtonLink } from '~/design-system/Buttons';
+
+import { Logo } from './Logo';
 import { MobileMenuButton, MobileMenuPanel } from './NavbarMobileMenu';
 import { Navigation } from './Navigation';
-import { Logo } from './Logo';
+import { type Notification, NotificationsLink } from './NotificationsLink';
+import { SearchEventsInput } from './SearchEventsInput';
+import { UserMenuDesktop } from './UserMenuDesktop';
 
 type Props = {
   user: {

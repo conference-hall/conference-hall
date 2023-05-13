@@ -1,10 +1,11 @@
-import c from 'classnames';
-import { useState } from 'react';
 import { Listbox } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
-import { Text } from '../Typography';
-import { SelectTransition } from '../Transitions';
+import c from 'classnames';
+import { useState } from 'react';
+
 import Badge from '../badges/Badges';
+import { SelectTransition } from '../Transitions';
+import { Text } from '../Typography';
 
 type Option = { value: string; label: string };
 

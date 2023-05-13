@@ -1,14 +1,16 @@
+import { PlusIcon } from '@heroicons/react/20/solid';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { useLoaderData, useSearchParams, useNavigate } from '@remix-run/react';
-import { SpeakerTalksList } from './components/SpeakerTalksList';
-import Select from '~/design-system/forms/Select';
-import { listTalks } from './server/list-talks.server';
-import { requireSession } from '~/libs/auth/session';
+import { useLoaderData, useNavigate, useSearchParams } from '@remix-run/react';
+
 import { ButtonLink } from '~/design-system/Buttons';
-import { PlusIcon } from '@heroicons/react/20/solid';
-import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
+import Select from '~/design-system/forms/Select';
 import { Container } from '~/design-system/layouts/Container';
+import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
+import { requireSession } from '~/libs/auth/session';
+
+import { SpeakerTalksList } from './components/SpeakerTalksList';
+import { listTalks } from './server/list-talks.server';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const userId = await requireSession(request);

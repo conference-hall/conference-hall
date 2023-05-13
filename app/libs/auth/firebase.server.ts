@@ -1,10 +1,11 @@
 import { credential } from 'firebase-admin';
 import type { App } from 'firebase-admin/app';
-import { initializeApp, getApps, getApp } from 'firebase-admin/app';
-import type { Storage } from 'firebase-admin/storage';
-import { getStorage } from 'firebase-admin/storage';
+import { getApp, getApps, initializeApp } from 'firebase-admin/app';
 import type { Auth } from 'firebase-admin/auth';
 import { getAuth } from 'firebase-admin/auth';
+import type { Storage } from 'firebase-admin/storage';
+import { getStorage } from 'firebase-admin/storage';
+
 import { config } from '../config';
 
 let app: App;

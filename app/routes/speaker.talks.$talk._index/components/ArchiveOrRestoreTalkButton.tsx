@@ -1,5 +1,6 @@
 import { ArchiveBoxIcon, ArchiveBoxXMarkIcon } from '@heroicons/react/20/solid';
 import { Form } from '@remix-run/react';
+
 import { Button } from '~/design-system/Buttons';
 
 type Props = { archived: boolean };

@@ -1,6 +1,7 @@
+import c from 'classnames';
 import type { ReactNode, Ref } from 'react';
 import { forwardRef } from 'react';
-import c from 'classnames';
+
 import { Text } from '../Typography';
 
 type CheckboxGroupProps = {

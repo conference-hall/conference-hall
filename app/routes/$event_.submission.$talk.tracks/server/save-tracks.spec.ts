@@ -1,14 +1,15 @@
-import { userFactory } from 'tests/factories/users';
+import { parse } from '@conform-to/zod';
+import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventCategoryFactory } from 'tests/factories/categories';
 import { eventFactory } from 'tests/factories/events';
 import { eventFormatFactory } from 'tests/factories/formats';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
-import { disconnectDB, resetDB } from 'tests/db-helpers';
+import { userFactory } from 'tests/factories/users';
+
 import { db } from '../../../libs/db';
 import { ProposalNotFoundError } from '../../../libs/errors';
 import { getTracksSchema, saveTracks } from './save-tracks.server';
-import { parse } from '@conform-to/zod';
 
 describe('#saveTracks', () => {
   beforeEach(async () => {

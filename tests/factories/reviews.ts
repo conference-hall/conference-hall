@@ -1,4 +1,5 @@
 import type { Prisma, Proposal, User } from '@prisma/client';
+
 import { db } from '~/libs/db';
 
 type FactoryOptions = {

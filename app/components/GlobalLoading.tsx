@@ -1,6 +1,6 @@
-import * as React from 'react';
-import c from 'classnames';
 import { useNavigation } from '@remix-run/react';
+import c from 'classnames';
+import * as React from 'react';
 
 // Component copied from Gustavo Guichard
 // source: https://dev.to/gugaguichard/creating-a-github-like-progress-bar-for-your-remix-app-153l

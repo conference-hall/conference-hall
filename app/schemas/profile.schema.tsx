@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import { text } from './utils';
 
 export const PersonalInfoSchema = z.object({

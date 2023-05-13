@@ -1,23 +1,24 @@
-import { useCallback, useEffect, useState } from 'react';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 import { useFetcher, useSearchParams } from '@remix-run/react';
 import {
-  signInWithRedirect,
   getRedirectResult,
-  GoogleAuthProvider,
-  TwitterAuthProvider,
   GithubAuthProvider,
+  GoogleAuthProvider,
+  signInWithRedirect,
+  TwitterAuthProvider,
 } from 'firebase/auth';
-import { createSession, getSessionUserId } from '~/libs/auth/session';
-import { getClientAuth } from '~/libs/auth/firebase';
+import { useCallback, useEffect, useState } from 'react';
 import { useHydrated } from 'remix-utils';
-import { LoadingIcon } from '~/design-system/icons/LoadingIcon';
-import { Logo } from '~/components/navbar/Logo';
-import { Card } from '~/design-system/layouts/Card';
+
 import { AuthProviderButton } from '~/components/AuthProviderButton';
+import { Logo } from '~/components/navbar/Logo';
 import { AlertError } from '~/design-system/Alerts';
+import { LoadingIcon } from '~/design-system/icons/LoadingIcon';
+import { Card } from '~/design-system/layouts/Card';
 import { Link } from '~/design-system/Links';
+import { getClientAuth } from '~/libs/auth/firebase';
+import { createSession, getSessionUserId } from '~/libs/auth/session';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const userId = await getSessionUserId(request);

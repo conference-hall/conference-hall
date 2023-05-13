@@ -1,11 +1,12 @@
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Form, useSubmit } from '@remix-run/react';
+
 import { Avatar } from '~/design-system/Avatar';
 import { Button } from '~/design-system/Buttons';
-import { IconButton } from '~/design-system/IconButtons';
-import { Text } from '~/design-system/Typography';
 import { Input } from '~/design-system/forms/Input';
+import { IconButton } from '~/design-system/IconButtons';
 import { Card } from '~/design-system/layouts/Card';
+import { Text } from '~/design-system/Typography';
 
 type Props = {
   userId?: string;

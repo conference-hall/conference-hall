@@ -1,16 +1,18 @@
+import { PlusIcon } from '@heroicons/react/20/solid';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
-import { requireSession } from '~/libs/auth/session';
-import { getActivities } from './server/get-activities.server';
-import { Container } from '~/design-system/layouts/Container';
-import { SpeakerDetailsSection } from './components/SpeakerDetailsSection';
-import { parsePage } from '~/schemas/pagination';
-import { SpeakerActivitiesSection } from './components/SpeakerActivitiesSection';
+
 import { ButtonLink } from '~/design-system/Buttons';
-import { PlusIcon } from '@heroicons/react/20/solid';
+import { Container } from '~/design-system/layouts/Container';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
+import { requireSession } from '~/libs/auth/session';
 import { useUser } from '~/root';
+import { parsePage } from '~/schemas/pagination';
+
+import { SpeakerActivitiesSection } from './components/SpeakerActivitiesSection';
+import { SpeakerDetailsSection } from './components/SpeakerDetailsSection';
+import { getActivities } from './server/get-activities.server';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const userId = await requireSession(request);

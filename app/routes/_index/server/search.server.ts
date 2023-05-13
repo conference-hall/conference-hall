@@ -1,11 +1,12 @@
 import type { Prisma } from '@prisma/client';
 import { EventVisibility } from '@prisma/client';
-import { db } from '~/libs/db';
-import { getCfpState } from '~/utils/event';
-import type { Pagination } from '~/schemas/pagination';
-import { getPagination } from '~/server/pagination/pagination.server';
 import { z } from 'zod';
+
+import { db } from '~/libs/db';
+import type { Pagination } from '~/schemas/pagination';
 import { text } from '~/schemas/utils';
+import { getPagination } from '~/server/pagination/pagination.server';
+import { getCfpState } from '~/utils/event';
 
 const SearchFiltersSchema = z.object({
   query: text().optional(),

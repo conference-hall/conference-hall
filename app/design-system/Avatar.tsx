@@ -1,4 +1,5 @@
 import c from 'classnames';
+
 import { Text } from './Typography';
 
 const sizes = {

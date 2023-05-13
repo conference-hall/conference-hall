@@ -1,4 +1,5 @@
 import c from 'classnames';
+
 import type { ButtonStylesProps } from '../Buttons';
 import { getStyles } from '../Buttons';
 import type { InputProps } from './Input';

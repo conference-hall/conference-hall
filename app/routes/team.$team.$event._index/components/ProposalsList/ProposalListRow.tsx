@@ -1,11 +1,12 @@
+import type { ProposalStatus, ReviewFeeling } from '@prisma/client';
+import { Link, useSearchParams } from '@remix-run/react';
 import c from 'classnames';
 import type { ChangeEventHandler } from 'react';
-import { Link, useSearchParams } from '@remix-run/react';
-import { Text } from '~/design-system/Typography';
-import { Checkbox } from '~/design-system/forms/Checkboxes';
+
 import { ProposalStatusBadge } from '~/components/proposals/ProposalStatusBadges';
-import type { ProposalStatus, ReviewFeeling } from '@prisma/client';
 import { ReviewNote } from '~/components/reviews/ReviewNote';
+import { Checkbox } from '~/design-system/forms/Checkboxes';
+import { Text } from '~/design-system/Typography';
 
 export type ProposalData = {
   id: string;

@@ -1,14 +1,16 @@
-import type { Event, Team, Proposal, User } from '@prisma/client';
+import type { Event, Proposal, Team, User } from '@prisma/client';
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventFactory } from 'tests/factories/events';
-import { teamFactory } from 'tests/factories/team';
 import { proposalFactory } from 'tests/factories/proposals';
-import { talkFactory } from 'tests/factories/talks';
-import { userFactory } from 'tests/factories/users';
-import { ForbiddenOperationError } from '~/libs/errors';
-import { db } from '~/libs/db';
-import { getSpeakers } from './get-speakers.server';
 import { surveyFactory } from 'tests/factories/surveys';
+import { talkFactory } from 'tests/factories/talks';
+import { teamFactory } from 'tests/factories/team';
+import { userFactory } from 'tests/factories/users';
+
+import { db } from '~/libs/db';
+import { ForbiddenOperationError } from '~/libs/errors';
+
+import { getSpeakers } from './get-speakers.server';
 
 describe('#getSpeakers', () => {
   let owner: User, speaker1: User, speaker2: User;

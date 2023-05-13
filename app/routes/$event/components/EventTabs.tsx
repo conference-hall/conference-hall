@@ -1,7 +1,8 @@
-import type { EventType } from '~/schemas/event';
 import { useMemo } from 'react';
+
 import { Container } from '~/design-system/layouts/Container';
 import { NavTabs } from '~/design-system/navigation/NavTabs';
+import type { EventType } from '~/schemas/event';
 
 type Props = { slug: string; type: EventType; surveyEnabled: boolean };
 

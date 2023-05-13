@@ -1,16 +1,18 @@
-import { redirect, type ActionArgs, type LoaderArgs, json } from '@remix-run/node';
-import { useProposalReview } from '../team_.$team.$event.review.$proposal/route';
-import { requireSession } from '~/libs/auth/session';
-import invariant from 'tiny-invariant';
-import { ProposalUpdateSchema } from '~/schemas/proposal';
+import { parse } from '@conform-to/zod';
+import { type ActionArgs, json, type LoaderArgs, redirect } from '@remix-run/node';
 import { Form, useActionData, useLoaderData, useSearchParams } from '@remix-run/react';
+import invariant from 'tiny-invariant';
+
 import { DetailsForm } from '~/components/proposals/forms/DetailsForm';
 import { Button, ButtonLink } from '~/design-system/Buttons';
 import { Card } from '~/design-system/layouts/Card';
-import { getEvent } from '~/server/events/get-event.server';
+import { requireSession } from '~/libs/auth/session';
 import { addToast } from '~/libs/toasts/toasts';
+import { ProposalUpdateSchema } from '~/schemas/proposal';
+import { getEvent } from '~/server/events/get-event.server';
+
 import { updateProposal } from '../team.$team.$event._index/server/update-proposal.server';
-import { parse } from '@conform-to/zod';
+import { useProposalReview } from '../team_.$team.$event.review.$proposal/route';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   await requireSession(request);

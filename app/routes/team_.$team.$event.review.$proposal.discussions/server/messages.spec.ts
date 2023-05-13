@@ -3,13 +3,15 @@ import { MessageChannel } from '@prisma/client';
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventFactory } from 'tests/factories/events';
 import { messageFactory } from 'tests/factories/messages';
-import { teamFactory } from 'tests/factories/team';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
+import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
-import { addProposalMessage, getProposalMessages, removeProposalMessage } from './messages.server';
+
 import { db } from '~/libs/db';
 import { ForbiddenOperationError } from '~/libs/errors';
+
+import { addProposalMessage, getProposalMessages, removeProposalMessage } from './messages.server';
 
 describe('#getProposalMessages', () => {
   let owner: User, member: User, speaker: User;

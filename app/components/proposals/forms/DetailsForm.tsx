@@ -1,12 +1,13 @@
-import { Input } from '~/design-system/forms/Input';
-import { Radio, RadioGroup } from '~/design-system/forms/RadioGroup';
-import { MarkdownTextArea } from '~/design-system/forms/MarkdownTextArea';
-import { LEVELS } from '../../../utils/levels';
-import MultiSelect from '~/design-system/forms/MultiSelect';
-import { LANGUAGES } from '~/utils/languages';
-import { FormatsForm } from './FormatsForm';
-import { CategoriesForm } from './CategoriesForm';
 import { AlertError } from '~/design-system/Alerts';
+import { Input } from '~/design-system/forms/Input';
+import { MarkdownTextArea } from '~/design-system/forms/MarkdownTextArea';
+import MultiSelect from '~/design-system/forms/MultiSelect';
+import { Radio, RadioGroup } from '~/design-system/forms/RadioGroup';
+import { LANGUAGES } from '~/utils/languages';
+
+import { LEVELS } from '../../../utils/levels';
+import { CategoriesForm } from './CategoriesForm';
+import { FormatsForm } from './FormatsForm';
 
 type Props = {
   initialValues?: {

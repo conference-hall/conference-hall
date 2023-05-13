@@ -1,9 +1,3 @@
-import invariant from 'tiny-invariant';
-import type { LoaderArgs } from '@remix-run/node';
-import { Outlet } from '@remix-run/react';
-import { Container } from '~/design-system/layouts/Container';
-import { NavSideMenu } from '~/design-system/navigation/NavSideMenu';
-import { requireSession } from '~/libs/auth/session';
 import {
   CodeBracketIcon,
   Cog6ToothIcon,
@@ -15,12 +9,20 @@ import {
   StarIcon,
   SwatchIcon,
 } from '@heroicons/react/24/outline';
-import { H2 } from '~/design-system/Typography';
-import { useOrganizerEvent } from '../team.$team.$event/route';
-import { useUser } from '~/root';
-import { useTeam } from '../team.$team/route';
-import { allowedForEvent } from '~/server/teams/check-user-role.server';
 import { TeamRole } from '@prisma/client';
+import type { LoaderArgs } from '@remix-run/node';
+import { Outlet } from '@remix-run/react';
+import invariant from 'tiny-invariant';
+
+import { Container } from '~/design-system/layouts/Container';
+import { NavSideMenu } from '~/design-system/navigation/NavSideMenu';
+import { H2 } from '~/design-system/Typography';
+import { requireSession } from '~/libs/auth/session';
+import { useUser } from '~/root';
+import { allowedForEvent } from '~/server/teams/check-user-role.server';
+
+import { useOrganizerEvent } from '../team.$team.$event/route';
+import { useTeam } from '../team.$team/route';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);

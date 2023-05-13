@@ -1,7 +1,7 @@
-import { getCfpState } from '~/utils/event';
-import { jsonToArray } from '~/libs/prisma';
 import { db } from '~/libs/db';
 import { EventNotFoundError } from '~/libs/errors';
+import { jsonToArray } from '~/libs/prisma';
+import { getCfpState } from '~/utils/event';
 
 export type OrganizerEvent = Awaited<ReturnType<typeof getTeamEvent>>;
 

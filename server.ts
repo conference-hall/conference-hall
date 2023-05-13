@@ -1,11 +1,11 @@
-import path from 'path';
-import express from 'express';
-import compression from 'compression';
-import morgan from 'morgan';
 import { createRequestHandler } from '@remix-run/express';
-import { createProxyMiddleware } from 'http-proxy-middleware';
 import { installGlobals } from '@remix-run/node';
+import compression from 'compression';
+import express from 'express';
 import rateLimit from 'express-rate-limit';
+import { createProxyMiddleware } from 'http-proxy-middleware';
+import morgan from 'morgan';
+import path from 'path';
 
 installGlobals();
 

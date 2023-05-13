@@ -1,6 +1,7 @@
 import { z } from 'zod';
-import { text } from '~/schemas/utils';
+
 import { EventVisibilitySchema } from '~/schemas/event';
+import { text } from '~/schemas/utils';
 import { slugValidator } from '~/schemas/validators';
 
 export const EventGeneralSettingsSchema = z.object({

@@ -1,21 +1,23 @@
-import invariant from 'tiny-invariant';
+import { parse } from '@conform-to/zod';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { requireSession } from '~/libs/auth/session';
 import { Outlet, useLoaderData, useOutletContext, useRouteLoaderData } from '@remix-run/react';
+import invariant from 'tiny-invariant';
+
 import TeamBreadcrumb from '~/components/teams/TeamBreadcrumb';
+import { Container } from '~/design-system/layouts/Container';
+import { PageHeader } from '~/design-system/layouts/PageHeader';
+import { requireSession } from '~/libs/auth/session';
+import { useUser } from '~/root';
+
+import type { OrganizerEvent } from '../team.$team.$event/server/get-event.server';
+import { EventTabs } from './components/EventTabs';
+import { TeamTabs } from './components/TeamTabs';
+import { createEvent } from './server/create-event.server';
 import type { Team } from './server/get-team.server';
 import { getTeam } from './server/get-team.server';
-import { TeamTabs } from './components/TeamTabs';
-import { PageHeader } from '~/design-system/layouts/PageHeader';
-import { EventTabs } from './components/EventTabs';
-import { Container } from '~/design-system/layouts/Container';
 import { EventCreateSchema } from './types/event-create.schema';
-import { createEvent } from './server/create-event.server';
-import { useUser } from '~/root';
-import type { OrganizerEvent } from '../team.$team.$event/server/get-event.server';
-import { parse } from '@conform-to/zod';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);

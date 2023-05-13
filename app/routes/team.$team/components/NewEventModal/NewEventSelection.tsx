@@ -1,10 +1,11 @@
-import c from 'classnames';
 import { RadioGroup } from '@headlessui/react';
 import { CheckCircleIcon } from '@heroicons/react/20/solid';
-import { H1, Subtitle, Text } from '~/design-system/Typography';
-import { useState } from 'react';
-import { Button } from '~/design-system/Buttons';
 import { MegaphoneIcon, UserGroupIcon } from '@heroicons/react/24/outline';
+import c from 'classnames';
+import { useState } from 'react';
+
+import { Button } from '~/design-system/Buttons';
+import { H1, Subtitle, Text } from '~/design-system/Typography';
 
 type Props = {
   onSubmit: (type: 'MEETUP' | 'CONFERENCE') => void;

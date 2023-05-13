@@ -1,8 +1,9 @@
 import { Form } from '@remix-run/react';
+
 import { Button } from '~/design-system/Buttons';
-import { H2, Subtitle } from '~/design-system/Typography';
 import { Input } from '~/design-system/forms/Input';
 import { Card } from '~/design-system/layouts/Card';
+import { H2, Subtitle } from '~/design-system/Typography';
 import type { UserSocialLinks } from '~/schemas/user';
 
 type Props = {

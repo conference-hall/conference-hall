@@ -1,4 +1,5 @@
 import { vi } from 'vitest';
+
 import { MailgunProvider } from './mailgun-provider';
 
 const fetchMock = vi.fn();

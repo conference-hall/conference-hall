@@ -1,14 +1,16 @@
-import { json, type LoaderArgs } from '@remix-run/node';
-import { AvatarName } from '~/design-system/Avatar';
 import { EyeSlashIcon } from '@heroicons/react/24/outline';
-import { Card } from '~/design-system/layouts/Card';
-import { requireSession } from '~/libs/auth/session';
-import invariant from 'tiny-invariant';
-import { getReviews } from './server/get-reviews.server';
+import { json, type LoaderArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
-import { EmptyState } from '~/design-system/layouts/EmptyState';
+import invariant from 'tiny-invariant';
+
 import { ReviewNote } from '~/components/reviews/ReviewNote';
+import { AvatarName } from '~/design-system/Avatar';
+import { Card } from '~/design-system/layouts/Card';
+import { EmptyState } from '~/design-system/layouts/EmptyState';
 import { Subtitle } from '~/design-system/Typography';
+import { requireSession } from '~/libs/auth/session';
+
+import { getReviews } from './server/get-reviews.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);

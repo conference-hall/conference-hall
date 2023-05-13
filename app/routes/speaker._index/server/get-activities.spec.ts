@@ -3,8 +3,10 @@ import { eventFactory } from 'tests/factories/events';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
-import { getActivities } from './get-activities.server';
+
 import { SpeakerProposalStatus } from '~/server/proposals/get-speaker-proposal-status';
+
+import { getActivities } from './get-activities.server';
 
 describe('#getActivities', () => {
   beforeEach(async () => {

@@ -1,9 +1,11 @@
-import { ClientOnly } from 'remix-utils';
 import cn from 'classnames';
-import type { CfpState } from '~/schemas/event';
-import { CfpIcon } from './CfpIcon';
-import { formatCFPElapsedTime } from '~/utils/event';
+import { ClientOnly } from 'remix-utils';
+
 import { Text } from '~/design-system/Typography';
+import type { CfpState } from '~/schemas/event';
+import { formatCFPElapsedTime } from '~/utils/event';
+
+import { CfpIcon } from './CfpIcon';
 
 type Props = { cfpState: CfpState; cfpStart?: string; cfpEnd?: string; className?: string };
 

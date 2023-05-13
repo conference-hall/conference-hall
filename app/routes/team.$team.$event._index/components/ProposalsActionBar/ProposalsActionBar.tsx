@@ -1,6 +1,8 @@
 import c from 'classnames';
-import { Card } from '~/design-system/layouts/Card';
+
 import { Checkbox } from '~/design-system/forms/Checkboxes';
+import { Card } from '~/design-system/layouts/Card';
+
 import { ChangeStatusAction } from './actions/ChangeStatusActions';
 import { ExportActions } from './actions/ExportActions';
 import { SortActions } from './actions/SortActions';

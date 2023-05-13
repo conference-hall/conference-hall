@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import { numeric } from './utils';
 
 const PageSchema = numeric().default(1);

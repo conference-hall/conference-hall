@@ -1,7 +1,7 @@
+import EventProposalPage from 'page-objects/event/proposal.page';
 import SpeakerHomePage from 'page-objects/speaker/home.page';
 import SpeakerProfilePage from 'page-objects/speaker/profile.page';
 import SpeakerNewTalkPage from 'page-objects/speaker/talk-new.page';
-import EventProposalPage from 'page-objects/event/proposal.page';
 
 describe('Speaker home page', () => {
   beforeEach(() => {

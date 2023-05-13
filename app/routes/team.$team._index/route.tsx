@@ -1,17 +1,19 @@
-import invariant from 'tiny-invariant';
+import { Square3Stack3DIcon } from '@heroicons/react/24/outline';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { Container } from '~/design-system/layouts/Container';
-import { requireSession } from '~/libs/auth/session';
-import { H2 } from '~/design-system/Typography';
 import { Outlet, useLoaderData } from '@remix-run/react';
-import { Square3Stack3DIcon } from '@heroicons/react/24/outline';
-import { listEvents } from './server/list-events.server';
-import { EmptyState } from '~/design-system/layouts/EmptyState';
+import invariant from 'tiny-invariant';
+
 import { EventCard } from '~/components/EventCard';
-import { useTeam } from '../team.$team/route';
+import { Container } from '~/design-system/layouts/Container';
+import { EmptyState } from '~/design-system/layouts/EmptyState';
+import { H2 } from '~/design-system/Typography';
+import { requireSession } from '~/libs/auth/session';
 import { useUser } from '~/root';
+
+import { useTeam } from '../team.$team/route';
 import { ArchivedFilters } from './components/ArchivedFilter';
+import { listEvents } from './server/list-events.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);

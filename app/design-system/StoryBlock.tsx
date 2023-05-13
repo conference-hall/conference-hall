@@ -1,7 +1,8 @@
-import { type ReactNode } from 'react';
 import c from 'classnames';
-import { H1 } from './Typography';
+import { type ReactNode } from 'react';
+
 import { Card } from './layouts/Card';
+import { H1 } from './Typography';
 
 type Props = {
   title?: string;

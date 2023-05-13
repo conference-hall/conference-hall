@@ -1,15 +1,17 @@
-import invariant from 'tiny-invariant';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
-import { requireSession } from '~/libs/auth/session';
+import invariant from 'tiny-invariant';
+
+import { ProgressBar } from '~/design-system/ProgressBar';
 import { H2, H3, Text } from '~/design-system/Typography';
+import { requireSession } from '~/libs/auth/session';
+
+import { useEvent } from '../$event/route';
 import { MaxProposalsReached } from './components/MaxProposalsReached';
+import { NewProposal } from './components/NewProposal';
 import { SubmissionTalksList } from './components/SubmissionTalksList';
 import { listTalksToSubmit } from './server/list-talks-to-submit.server';
-import { ProgressBar } from '~/design-system/ProgressBar';
-import { useEvent } from '../$event/route';
-import { NewProposal } from './components/NewProposal';
 
 export const handle = { step: 'selection' };
 

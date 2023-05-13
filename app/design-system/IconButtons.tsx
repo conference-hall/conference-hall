@@ -1,7 +1,7 @@
-import React from 'react';
 import type { LinkProps } from '@remix-run/react';
 import { Link } from '@remix-run/react';
 import c from 'classnames';
+import React from 'react';
 
 const DEFAULT_STYLE = 'flex items-center rounded-full shrink-0 focus:outline-none focus:ring-2 focus:ring-indigo-500';
 

@@ -1,6 +1,7 @@
+import { Dotted } from '~/design-system/badges/Badges';
 import { ProgressBar } from '~/design-system/ProgressBar';
 import { Text } from '~/design-system/Typography';
-import { Dotted } from '~/design-system/badges/Badges';
+
 import { useProposalsSearchFilter } from '../../useProposalsSearchFilter';
 
 type Props = {

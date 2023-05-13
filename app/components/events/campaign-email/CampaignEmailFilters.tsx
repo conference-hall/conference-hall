@@ -1,8 +1,10 @@
-import c from 'classnames';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { Form, useLocation, useSearchParams, useSubmit } from '@remix-run/react';
+import c from 'classnames';
+
 import { Button } from '~/design-system/Buttons';
 import { Input } from '~/design-system/forms/Input';
+
 import { CampaignType } from './CampaignEmailList';
 
 type Props = { type: CampaignType };

@@ -1,10 +1,11 @@
-import { useUser } from '~/root';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Outlet } from '@remix-run/react';
-import { requireSession } from '~/libs/auth/session';
-import { Navbar } from '~/components/navbar/Navbar';
+
 import { Footer } from '~/components/Footer';
+import { Navbar } from '~/components/navbar/Navbar';
+import { requireSession } from '~/libs/auth/session';
+import { useUser } from '~/root';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await requireSession(request);

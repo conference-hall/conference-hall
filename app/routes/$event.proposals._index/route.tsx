@@ -1,14 +1,16 @@
-import invariant from 'tiny-invariant';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
-import { useEvent } from '../$event/route';
-import { ProposalsList } from '~/routes/$event.proposals._index/components/ProposalsList';
-import { requireSession } from '~/libs/auth/session';
-import { listSpeakerProposals } from './server/list-speaker-proposals.server';
+import invariant from 'tiny-invariant';
+
 import { ButtonLink } from '~/design-system/Buttons';
-import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 import { Container } from '~/design-system/layouts/Container';
+import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
+import { requireSession } from '~/libs/auth/session';
+import { ProposalsList } from '~/routes/$event.proposals._index/components/ProposalsList';
+
+import { useEvent } from '../$event/route';
+import { listSpeakerProposals } from './server/list-speaker-proposals.server';
 
 export type EventProposals = Awaited<ReturnType<typeof listSpeakerProposals>>;
 

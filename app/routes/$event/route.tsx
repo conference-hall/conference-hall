@@ -1,16 +1,18 @@
-import invariant from 'tiny-invariant';
 import type { LoaderArgs } from '@remix-run/node';
-import { useUser } from '~/root';
 import { json } from '@remix-run/node';
 import { Outlet, useLoaderData, useOutletContext } from '@remix-run/react';
-import { Navbar } from '~/components/navbar/Navbar';
-import type { Event } from '~/server/events/get-event.server';
-import { getEvent } from '~/server/events/get-event.server';
-import { EventHeader } from './components/EventHeader';
-import { EventTabs } from './components/EventTabs';
+import invariant from 'tiny-invariant';
+
 import { Footer } from '~/components/Footer';
+import { Navbar } from '~/components/navbar/Navbar';
 import { mergeMeta } from '~/libs/meta/merge-meta';
 import { eventSocialCard } from '~/libs/meta/social-cards';
+import { useUser } from '~/root';
+import type { Event } from '~/server/events/get-event.server';
+import { getEvent } from '~/server/events/get-event.server';
+
+import { EventHeader } from './components/EventHeader';
+import { EventTabs } from './components/EventTabs';
 
 export const loader = async ({ params }: LoaderArgs) => {
   invariant(params.event, 'Invalid event slug');

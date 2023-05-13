@@ -1,7 +1,7 @@
-import React from 'react';
 import type { LinkProps } from '@remix-run/react';
 import { Link } from '@remix-run/react';
 import cn from 'classnames';
+import React from 'react';
 
 export type ButtonStylesProps = {
   variant?: 'primary' | 'secondary';

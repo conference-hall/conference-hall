@@ -1,20 +1,22 @@
-import invariant from 'tiny-invariant';
-import { Form, useActionData, useLoaderData } from '@remix-run/react';
+import { parse } from '@conform-to/zod';
+import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { Response } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
+import { Form, useActionData, useLoaderData } from '@remix-run/react';
+import invariant from 'tiny-invariant';
+
+import { DetailsForm } from '~/components/proposals/forms/DetailsForm';
+import { Button, ButtonLink } from '~/design-system/Buttons';
+import { Card } from '~/design-system/layouts/Card';
+import { H2 } from '~/design-system/Typography';
+import { requireSession } from '~/libs/auth/session';
 import { ProposalCreateSchema } from '~/schemas/proposal';
 import { getTalk } from '~/server/talks/get-talk.server';
-import { saveDraftProposal } from './server/save-draft-proposal.server';
-import { Card } from '~/design-system/layouts/Card';
-import { requireSession } from '~/libs/auth/session';
-import { H2 } from '~/design-system/Typography';
-import { DetailsForm } from '~/components/proposals/forms/DetailsForm';
-import { isTalkAlreadySubmitted } from './server/is-talk-already-submitted.server';
-import { Button, ButtonLink } from '~/design-system/Buttons';
-import { ArrowRightIcon } from '@heroicons/react/20/solid';
+
 import { useSubmissionStep } from '../$event_.submission/components/useSubmissionStep';
-import { parse } from '@conform-to/zod';
+import { isTalkAlreadySubmitted } from './server/is-talk-already-submitted.server';
+import { saveDraftProposal } from './server/save-draft-proposal.server';
 
 export const handle = { step: 'proposal' };
 

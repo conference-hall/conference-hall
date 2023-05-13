@@ -1,15 +1,16 @@
+import type { ProposalSubmissionData } from '~/schemas/proposal';
+
 import { db } from '../../../libs/db';
-import { getCfpState } from '../../../utils/event';
 import {
   CfpNotOpenError,
   EventNotFoundError,
   MaxSubmittedProposalsReachedError,
   ProposalNotFoundError,
 } from '../../../libs/errors';
-import type { ProposalSubmissionData } from '~/schemas/proposal';
-import { sendSubmittedTalkSlackMessage } from './slack/slack.services';
-import { ProposalSubmittedEmail } from './emails/proposal-submitted-email';
+import { getCfpState } from '../../../utils/event';
 import { ProposalReceivedEmail } from './emails/proposal-received-email';
+import { ProposalSubmittedEmail } from './emails/proposal-submitted-email';
+import { sendSubmittedTalkSlackMessage } from './slack/slack.services';
 
 export async function submitProposal(talkId: string, eventSlug: string, userId: string, data: ProposalSubmissionData) {
   const event = await db.event.findUnique({ where: { slug: eventSlug } });

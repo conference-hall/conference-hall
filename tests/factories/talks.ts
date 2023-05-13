@@ -1,6 +1,7 @@
 import * as fake from '@ngneat/falso';
 import type { Prisma, User } from '@prisma/client';
 import { TalkLevel } from '@prisma/client';
+
 import { db } from '../../app/libs/db';
 import { applyTraits } from './helpers/traits';
 

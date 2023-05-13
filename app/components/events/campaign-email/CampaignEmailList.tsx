@@ -1,13 +1,15 @@
-import { useMemo } from 'react';
-import c from 'classnames';
+import { CheckIcon } from '@heroicons/react/20/solid';
 import type { EmailStatus } from '@prisma/client';
 import { useSearchParams } from '@remix-run/react';
-import { CheckIcon } from '@heroicons/react/20/solid';
-import { Text } from '~/design-system/Typography';
+import c from 'classnames';
+import { useMemo } from 'react';
+
 import Badge from '~/design-system/badges/Badges';
-import { useCheckboxSelection } from '~/design-system/useCheckboxSelection';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
 import { Link } from '~/design-system/Links';
+import { Text } from '~/design-system/Typography';
+import { useCheckboxSelection } from '~/design-system/useCheckboxSelection';
+
 import { ResendEmailButton, SendEmailsButton } from './SendEmailsButton';
 
 export enum CampaignType {

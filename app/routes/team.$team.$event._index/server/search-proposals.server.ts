@@ -1,9 +1,9 @@
 import type { Pagination } from '~/schemas/pagination';
 import type { ProposalsFilters } from '~/schemas/proposal';
-import { allowedForEvent } from '~/server/teams/check-user-role.server';
 import { getPagination } from '~/server/pagination/pagination.server';
 import { EventProposalsSearch } from '~/server/proposals/EventProposalsSearch';
 import { ReviewsDetails } from '~/server/reviews/reviews-details';
+import { allowedForEvent } from '~/server/teams/check-user-role.server';
 
 const RESULTS_BY_PAGE = 25;
 

@@ -1,14 +1,16 @@
+import { parse } from '@conform-to/zod';
 import type { ActionArgs, LoaderFunction } from '@remix-run/node';
-import { Form, useActionData } from '@remix-run/react';
 import { json, redirect } from '@remix-run/node';
-import { requireSession } from '~/libs/auth/session';
+import { Form, useActionData } from '@remix-run/react';
+
 import { TeamForm } from '~/components/teams/TeamForm';
 import { Button } from '~/design-system/Buttons';
-import { TeamSaveSchema, createTeam } from './server/create-team.server';
+import { Card } from '~/design-system/layouts/Card';
 import { Container } from '~/design-system/layouts/Container';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
-import { Card } from '~/design-system/layouts/Card';
-import { parse } from '@conform-to/zod';
+import { requireSession } from '~/libs/auth/session';
+
+import { createTeam, TeamSaveSchema } from './server/create-team.server';
 
 export const loader: LoaderFunction = async ({ request }) => {
   await requireSession(request);

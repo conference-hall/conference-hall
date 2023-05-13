@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+
 import { config } from '../../config';
 import type { Email, IEmailProvider, RecipientVariables } from './provider';
 

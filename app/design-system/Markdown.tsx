@@ -1,7 +1,7 @@
-import React from 'react';
 import cn from 'classnames';
-import xss from 'xss';
 import { marked } from 'marked';
+import React from 'react';
+import xss from 'xss';
 
 marked.use({ mangle: false, headerIds: false });
 

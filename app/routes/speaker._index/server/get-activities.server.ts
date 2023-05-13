@@ -1,4 +1,5 @@
 import { Prisma } from '@prisma/client';
+
 import { db } from '~/libs/db';
 import { SpeakerNotFoundError } from '~/libs/errors';
 import { getSpeakerProposalStatus } from '~/server/proposals/get-speaker-proposal-status';

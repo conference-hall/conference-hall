@@ -1,4 +1,5 @@
 import cn from 'classnames';
+
 import { CfpIcon } from '~/components/cfp/CfpIcon';
 import type { CfpState } from '~/schemas/event';
 import { formatCFPState } from '~/utils/event';

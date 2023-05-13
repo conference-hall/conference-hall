@@ -1,19 +1,21 @@
-import invariant from 'tiny-invariant';
-import { json } from '@remix-run/node';
+import { parse } from '@conform-to/zod';
 import type { LoaderArgs } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import { Form, useActionData, useFetcher } from '@remix-run/react';
-import { H2 } from '~/design-system/Typography';
-import { Input } from '~/design-system/forms/Input';
+import invariant from 'tiny-invariant';
+
 import { Button } from '~/design-system/Buttons';
+import { Input } from '~/design-system/forms/Input';
+import { ToggleGroup } from '~/design-system/forms/Toggles';
+import { Card } from '~/design-system/layouts/Card';
+import { H2 } from '~/design-system/Typography';
 import { requireSession } from '~/libs/auth/session';
+import { addToast } from '~/libs/toasts/toasts';
 import { updateEvent } from '~/server/teams/update-event.server';
+
 import { useOrganizerEvent } from '../team.$team.$event/route';
 import { EventEmailNotificationsSettingsSchema } from './types/event-email-notifications-settings.schema';
 import { EventNotificationsSettingsSchema } from './types/event-notifications-settings.schema';
-import { Card } from '~/design-system/layouts/Card';
-import { ToggleGroup } from '~/design-system/forms/Toggles';
-import { addToast } from '~/libs/toasts/toasts';
-import { parse } from '@conform-to/zod';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await requireSession(request);

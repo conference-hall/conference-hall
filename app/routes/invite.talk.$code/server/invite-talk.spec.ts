@@ -1,9 +1,11 @@
 import { disconnectDB, resetDB } from 'tests/db-helpers';
-import { addCoSpeakerToTalk, checkTalkInviteCode } from './invite-talk.server';
-import { userFactory } from 'tests/factories/users';
 import { talkFactory } from 'tests/factories/talks';
+import { userFactory } from 'tests/factories/users';
+
 import { db } from '~/libs/db';
 import { InvitationNotFoundError } from '~/libs/errors';
+
+import { addCoSpeakerToTalk, checkTalkInviteCode } from './invite-talk.server';
 
 describe('#addCoSpeakerToTalk', () => {
   beforeEach(async () => {

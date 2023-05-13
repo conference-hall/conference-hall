@@ -1,19 +1,21 @@
+import { parse } from '@conform-to/zod';
+import { CreditCardIcon, KeyIcon, UserCircleIcon } from '@heroicons/react/20/solid';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useActionData } from '@remix-run/react';
-import { CreditCardIcon, KeyIcon, UserCircleIcon } from '@heroicons/react/20/solid';
-import { saveUserAdditionalInfo, saveUserDetails, saveUserPersonalInfo } from '~/server/profile/save-profile.server';
-import { AdditionalInfoSchema, DetailsSchema, PersonalInfoSchema } from '~/schemas/profile.schema';
-import { addToast } from '~/libs/toasts/toasts';
-import { AdditionalInfoForm } from './components/AdditionalInfoForm';
-import { SpeakerDetailsForm } from './components/SpeakerDetailsForm';
-import { PersonalInfoForm } from './components/PersonalInfoForm';
-import { requireSession } from '~/libs/auth/session';
-import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
+
 import { Container } from '~/design-system/layouts/Container';
+import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 import { NavSideMenu } from '~/design-system/navigation/NavSideMenu';
+import { requireSession } from '~/libs/auth/session';
+import { addToast } from '~/libs/toasts/toasts';
 import { useUser } from '~/root';
-import { parse } from '@conform-to/zod';
+import { AdditionalInfoSchema, DetailsSchema, PersonalInfoSchema } from '~/schemas/profile.schema';
+import { saveUserAdditionalInfo, saveUserDetails, saveUserPersonalInfo } from '~/server/profile/save-profile.server';
+
+import { AdditionalInfoForm } from './components/AdditionalInfoForm';
+import { PersonalInfoForm } from './components/PersonalInfoForm';
+import { SpeakerDetailsForm } from './components/SpeakerDetailsForm';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await requireSession(request);

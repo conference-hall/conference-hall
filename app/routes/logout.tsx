@@ -1,4 +1,5 @@
 import type { LoaderFunction } from '@remix-run/node';
+
 import { destroySession } from '~/libs/auth/session';
 
 export const loader: LoaderFunction = async ({ request }) => {

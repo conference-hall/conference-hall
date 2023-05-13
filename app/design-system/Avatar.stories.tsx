@@ -1,5 +1,5 @@
-import { StoryBlock } from './StoryBlock';
 import { Avatar, AvatarGroup, AvatarName } from './Avatar';
+import { StoryBlock } from './StoryBlock';
 
 const picture = 'https://i.pravatar.cc/100?u=1';
 

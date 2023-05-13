@@ -1,21 +1,23 @@
-import invariant from 'tiny-invariant';
+import { parse } from '@conform-to/zod';
+import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
+import invariant from 'tiny-invariant';
+
 import { CategoriesForm } from '~/components/proposals/forms/CategoriesForm';
-import { getTracksSchema, saveTracks } from './server/save-tracks.server';
-import { useEvent } from '~/routes/$event/route';
-import { getSubmittedProposal } from '~/server/proposals/get-submitted-proposal.server';
-import { requireSession } from '~/libs/auth/session';
 import { FormatsForm } from '~/components/proposals/forms/FormatsForm';
-import { getEvent } from '~/server/events/get-event.server';
+import { AlertError } from '~/design-system/Alerts';
+import { Button, ButtonLink } from '~/design-system/Buttons';
 import { Card } from '~/design-system/layouts/Card';
 import { H2 } from '~/design-system/Typography';
+import { requireSession } from '~/libs/auth/session';
+import { useEvent } from '~/routes/$event/route';
+import { getEvent } from '~/server/events/get-event.server';
+import { getSubmittedProposal } from '~/server/proposals/get-submitted-proposal.server';
+
 import { useSubmissionStep } from '../$event_.submission/components/useSubmissionStep';
-import { Button, ButtonLink } from '~/design-system/Buttons';
-import { ArrowRightIcon } from '@heroicons/react/20/solid';
-import { AlertError } from '~/design-system/Alerts';
-import { parse } from '@conform-to/zod';
+import { getTracksSchema, saveTracks } from './server/save-tracks.server';
 
 export const handle = { step: 'tracks' };
 

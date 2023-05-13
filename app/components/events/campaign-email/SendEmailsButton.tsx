@@ -1,8 +1,9 @@
-import { useState } from 'react';
-import { Form, useNavigation } from '@remix-run/react';
-import { Modal } from '~/design-system/dialogs/Modals';
-import { Button } from '~/design-system/Buttons';
 import { PaperAirplaneIcon } from '@heroicons/react/24/outline';
+import { Form, useNavigation } from '@remix-run/react';
+import { useState } from 'react';
+
+import { Button } from '~/design-system/Buttons';
+import { Modal } from '~/design-system/dialogs/Modals';
 
 type SendEmailsButtonProps = { total: number; selection: string[]; onSend?: () => void };
 

@@ -1,5 +1,6 @@
-import { IconButton } from './IconButtons';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
+
+import { IconButton } from './IconButtons';
 import { StoryBlock } from './StoryBlock';
 
 export const Documentation = () => (
