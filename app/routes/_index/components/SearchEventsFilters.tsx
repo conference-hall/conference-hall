@@ -1,5 +1,5 @@
+import type { SearchFilters } from '../server/search.server';
 import { Form, useSearchParams } from '@remix-run/react';
-import type { SearchFilters } from '../types/search';
 import { Button } from '~/design-system/Buttons';
 
 type Props = { filters: SearchFilters };

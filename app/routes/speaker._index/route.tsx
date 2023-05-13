@@ -15,7 +15,7 @@ import { useUser } from '~/root';
 export const loader = async ({ request }: LoaderArgs) => {
   const userId = await requireSession(request);
   const url = new URL(request.url);
-  const page = await parsePage(url.searchParams);
+  const page = parsePage(url.searchParams);
   const activities = await getActivities(userId, page);
   return json(activities);
 };

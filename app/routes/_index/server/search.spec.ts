@@ -1,6 +1,6 @@
 import { resetDB, disconnectDB } from '../../../../tests/db-helpers';
 import { eventFactory } from '../../../../tests/factories/events';
-import { searchEvents } from './search.server';
+import { parseFilters, searchEvents } from './search.server';
 
 describe('#searchEvents', () => {
   beforeEach(async () => {
@@ -193,5 +193,32 @@ describe('#searchEvents', () => {
     const result3 = await searchEvents({}, 10);
     expect(result3.results.length).toBe(12);
     expect(result3.pagination.current).toBe(3);
+  });
+});
+
+describe('#parseFilters', () => {
+  it('returns valid filters', async () => {
+    const params = new URLSearchParams({ query: 'foo', type: 'all' });
+    const result = parseFilters(params);
+    expect(result).toEqual({ query: 'foo', type: 'all' });
+  });
+
+  it('trims "query" filter', async () => {
+    const params = new URLSearchParams({ query: '  foo  ' });
+    const result = parseFilters(params);
+    expect(result.query).toBe('foo');
+  });
+
+  it('returns undefined when incorrect "type" filter', async () => {
+    const params = new URLSearchParams({ type: 'XXX' });
+    const result = parseFilters(params);
+    expect(result.type).toBe(undefined);
+  });
+
+  it('reset filters', async () => {
+    const params = new URLSearchParams({ query: '', type: '' });
+    const result = parseFilters(params);
+    expect(result.query).toBe(undefined);
+    expect(result.type).toBe(undefined);
   });
 });

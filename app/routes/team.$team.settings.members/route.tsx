@@ -27,7 +27,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
   const url = new URL(request.url);
   const filters = MembersFilterSchema.safeParse(Object.fromEntries(url.searchParams));
-  const page = await parsePage(url.searchParams);
+  const page = parsePage(url.searchParams);
 
   const members = await listMembers(params.team, userId, filters.success ? filters.data : {}, page);
   return json(members);

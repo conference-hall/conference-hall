@@ -7,9 +7,8 @@ import { H1, H2, Text } from '~/design-system/Typography';
 import { Pagination } from '~/design-system/Pagination';
 import { Navbar } from '~/shared-components/navbar/Navbar';
 import { parsePage } from '~/schemas/pagination';
-import { searchEvents } from './server/search.server';
+import { parseFilters, searchEvents } from './server/search.server';
 import { SearchEventsInput } from './components/SearchEventsInput';
-import { parseFilters } from './types/search';
 import { SearchEventsFilters } from './components/SearchEventsFilters';
 import { EventCard } from '~/shared-components/EventCard';
 import { Footer } from '~/shared-components/Footer';
@@ -18,8 +17,8 @@ import { EmptyState } from '~/design-system/layouts/EmptyState';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const url = new URL(request.url);
-  const filters = await parseFilters(url.searchParams);
-  const page = await parsePage(url.searchParams);
+  const filters = parseFilters(url.searchParams);
+  const page = parsePage(url.searchParams);
   const results = await searchEvents(filters, page);
   return json(results);
 };
