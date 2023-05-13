@@ -6,7 +6,7 @@ export type InputProps = {
   label?: string;
   description?: string;
   addon?: string;
-  error?: string;
+  error?: string | string[];
   icon?: React.ComponentType<{ className?: string }>;
 } & React.InputHTMLAttributes<HTMLInputElement>;
 

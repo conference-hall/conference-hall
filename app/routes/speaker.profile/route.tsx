@@ -1,8 +1,7 @@
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
-import { json, redirect } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import { useActionData } from '@remix-run/react';
 import { CreditCardIcon, KeyIcon, UserCircleIcon } from '@heroicons/react/20/solid';
-import { withZod } from '@remix-validated-form/with-zod';
 import {
   saveUserAdditionalInfo,
   saveUserDetails,
@@ -11,13 +10,14 @@ import {
 import { AdditionalInfoSchema, DetailsSchema, PersonalInfoSchema } from '~/schemas/profile.schema';
 import { addToast } from '~/libs/toasts/toasts';
 import { AdditionalInfoForm } from './components/AdditionalInfoForm';
-import { PersonalInfoForm } from './components/PersonalInfoForm';
 import { SpeakerDetailsForm } from './components/SpeakerDetailsForm';
-import { getSessionToken, requireSession } from '~/libs/auth/session';
+import { PersonalInfoForm } from './components/PersonalInfoForm';
+import { requireSession } from '~/libs/auth/session';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 import { Container } from '~/design-system/layouts/Container';
 import { NavSideMenu } from '~/design-system/navigation/NavSideMenu';
 import { useUser } from '~/root';
+import { parse } from '@conform-to/zod';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await requireSession(request);
@@ -27,38 +27,29 @@ export const loader = async ({ request }: LoaderArgs) => {
 export const action = async ({ request }: ActionArgs) => {
   const userId = await requireSession(request);
   const form = await request.formData();
-  const type = form.get('_type') as string;
-  let result;
+  const type = form.get('intent') as string;
 
   switch (type) {
-    case 'INFO': {
-      result = await withZod(PersonalInfoSchema).validate(form);
-      if (result.error) return json(result.error.fieldErrors);
-      await saveUserPersonalInfo(userId, result.data);
+    case 'personal-info': {
+      const result = parse(form, { schema: PersonalInfoSchema });
+      if (!result.value) return json(result.error);
+      await saveUserPersonalInfo(userId, result.value);
       break;
     }
-    case 'RESET_AUTH_DEFAULT': {
-      const authToken = await getSessionToken(request);
-      result = await withZod(PersonalInfoSchema).validate(authToken);
-      if (result.error) return json(result.error.fieldErrors);
-      await saveUserPersonalInfo(userId, result.data);
+    case 'speaker-details': {
+      const result = parse(form, { schema: DetailsSchema });
+      if (!result.value) return json(result.error);
+      await saveUserDetails(userId, result.value);
       break;
     }
-    case 'DETAILS': {
-      result = await withZod(DetailsSchema).validate(form);
-      if (result.error) return json(result.error.fieldErrors);
-      await saveUserDetails(userId, result.data);
-      break;
-    }
-    case 'ADDITIONAL': {
-      result = await withZod(AdditionalInfoSchema).validate(form);
-      if (result.error) return json(result.error.fieldErrors);
-      await saveUserAdditionalInfo(userId, result.data);
+    case 'additional-info': {
+      const result = parse(form, { schema: AdditionalInfoSchema });
+      if (!result.value) return json(result.error);
+      await saveUserAdditionalInfo(userId, result.value);
       break;
     }
   }
-
-  return redirect('/speaker/profile', await addToast(request, 'Profile updated.'));
+  return json(null, await addToast(request, 'Profile updated.'));
 };
 
 const MENU_ITEMS = [
@@ -86,9 +77,9 @@ export default function ProfileRoute() {
         />
 
         <div className="min-w-0 flex-1 space-y-6 sm:px-6 lg:px-0">
-          <SpeakerDetailsForm name={user.name} email={user.email} picture={user.picture} errors={errors} />
+          <PersonalInfoForm name={user.name} email={user.email} picture={user.picture} errors={errors} />
 
-          <PersonalInfoForm bio={user.bio} references={user.references} errors={errors} />
+          <SpeakerDetailsForm bio={user.bio} references={user.references} errors={errors} />
 
           <AdditionalInfoForm company={user.company} address={user.address} socials={user.socials} errors={errors} />
         </div>

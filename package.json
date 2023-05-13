@@ -33,6 +33,7 @@
     "seed": "node --require esbuild-register prisma/seed.ts"
   },
   "dependencies": {
+    "@conform-to/zod": "^0.6.1",
     "@headlessui/react": "^1.7.14",
     "@heroicons/react": "^2.0.18",
     "@prisma/client": "^4.14.0",
