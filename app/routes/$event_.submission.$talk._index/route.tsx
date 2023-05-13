@@ -13,7 +13,7 @@ import { DetailsForm } from '~/shared-components/proposals/forms/DetailsForm';
 import { isTalkAlreadySubmitted } from './server/is-talk-already-submitted.server';
 import { Button, ButtonLink } from '~/design-system/Buttons';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
-import { useSubmissionStep } from '../$event_.submission/hooks/useSubmissionStep';
+import { useSubmissionStep } from '../$event_.submission/components/useSubmissionStep';
 import { parse } from '@conform-to/zod';
 
 export const handle = { step: 'proposal' };

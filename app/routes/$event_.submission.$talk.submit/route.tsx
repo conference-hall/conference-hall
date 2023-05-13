@@ -16,7 +16,7 @@ import { getSubmittedProposal } from '~/shared-server/proposals/get-submitted-pr
 import { H1, H2, Subtitle } from '~/design-system/Typography';
 import { TextArea } from '~/design-system/forms/TextArea';
 import { ExternalLink } from '~/design-system/Links';
-import { useSubmissionStep } from '../$event_.submission/hooks/useSubmissionStep';
+import { useSubmissionStep } from '../$event_.submission/components/useSubmissionStep';
 import { parse } from '@conform-to/zod';
 
 export const handle = { step: 'submission' };

@@ -12,7 +12,7 @@ import { FormatsForm } from '~/shared-components/proposals/forms/FormatsForm';
 import { getEvent } from '~/shared-server/events/get-event.server';
 import { Card } from '~/design-system/layouts/Card';
 import { H2 } from '~/design-system/Typography';
-import { useSubmissionStep } from '../$event_.submission/hooks/useSubmissionStep';
+import { useSubmissionStep } from '../$event_.submission/components/useSubmissionStep';
 import { Button, ButtonLink } from '~/design-system/Buttons';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { AlertError } from '~/design-system/Alerts';

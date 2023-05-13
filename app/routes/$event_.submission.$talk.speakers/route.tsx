@@ -8,7 +8,7 @@ import { Card } from '~/design-system/layouts/Card';
 import { useUser } from '~/root';
 import { requireSession } from '~/libs/auth/session';
 import { Button, ButtonLink } from '~/design-system/Buttons';
-import { useSubmissionStep } from '../$event_.submission/hooks/useSubmissionStep';
+import { useSubmissionStep } from '../$event_.submission/components/useSubmissionStep';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { getSubmittedProposal } from '~/shared-server/proposals/get-submitted-proposal.server';
 import { saveUserDetails } from '~/shared-server/profile/save-profile.server';

@@ -7,7 +7,7 @@ import { CfpNotOpenError } from '~/libs/errors';
 import { getEvent } from '~/shared-server/events/get-event.server';
 import { SubmissionSteps } from './components/SubmissionSteps';
 import { Container } from '~/design-system/layouts/Container';
-import { useSubmissionStep } from './hooks/useSubmissionStep';
+import { useSubmissionStep } from './components/useSubmissionStep';
 import { useUser } from '~/root';
 import { IconButtonLink } from '~/design-system/IconButtons';
 import { XMarkIcon } from '@heroicons/react/24/outline';
