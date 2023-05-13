@@ -4,8 +4,7 @@ import { json, redirect } from '@remix-run/node';
 import { requireSession } from '~/libs/auth/session';
 import { TeamForm } from '~/shared-components/teams/TeamForm';
 import { Button } from '~/design-system/Buttons';
-import { createTeam } from './server/create-team.server';
-import { TeamSaveSchema } from './types/team-save.schema';
+import { TeamSaveSchema, createTeam } from './server/create-team.server';
 import { Container } from '~/design-system/layouts/Container';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 import { Card } from '~/design-system/layouts/Card';
@@ -20,11 +19,10 @@ export const action = async ({ request }: ActionArgs) => {
   const userId = await requireSession(request);
 
   const form = await request.formData();
-  const result = parse(form, { schema: TeamSaveSchema });
+  const result = await parse(form, { schema: TeamSaveSchema, async: true });
 
   if (result.value) {
     const updated = await createTeam(userId, result.value);
-    if (updated?.fieldErrors) return json(updated.fieldErrors);
     return redirect(`/team/${updated.slug}`);
   }
   return json(result.error);
