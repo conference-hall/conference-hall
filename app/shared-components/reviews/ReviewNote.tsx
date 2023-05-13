@@ -1,7 +1,7 @@
 import c from 'classnames';
 import { HeartIcon, NoSymbolIcon, StarIcon, UserIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import { Text } from '~/design-system/Typography';
-import { formatRating } from '~/utils/ratings';
+import { formatReviewNote } from '~/utils/reviews';
 
 const REVIEWS = {
   NO_OPINION: { icon: NoSymbolIcon, color: 'fill-red-100', label: 'No opinion' },
@@ -11,16 +11,16 @@ const REVIEWS = {
   USER: { icon: UserIcon, color: 'fill-gray-300', label: 'Your review' },
 };
 
-type Props = { feeling: keyof typeof REVIEWS | null; rating: number | null };
+type Props = { feeling: keyof typeof REVIEWS | null; note: number | null };
 
-export function ReviewNote({ feeling, rating }: Props) {
+export function ReviewNote({ feeling, note }: Props) {
   const { icon: Icon, color, label } = REVIEWS[feeling || 'NEUTRAL'];
-  const rate = formatRating(rating);
+  const formattedNote = formatReviewNote(note);
   return (
     <div className="flex items-center gap-1">
-      <Icon className={c('h-4 w-4', color)} aria-label={`${label}: ${rate}`} />
+      <Icon className={c('h-4 w-4', color)} aria-label={`${label}: ${formattedNote}`} />
       <Text size="s" strong>
-        {rate}
+        {formattedNote}
       </Text>
     </div>
   );

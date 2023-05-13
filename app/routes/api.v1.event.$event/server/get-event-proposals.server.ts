@@ -16,7 +16,7 @@ export const getEventProposals = async (eventSlug: string, apiKey: string, filte
 
   const search = new EventProposalsSearch(eventSlug, 'no-user', filters);
 
-  const proposals = await search.proposals({ ratings: false });
+  const proposals = await search.proposals({ reviews: false });
 
   return {
     name: event.name,

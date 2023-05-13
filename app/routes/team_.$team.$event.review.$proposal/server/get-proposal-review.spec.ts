@@ -6,7 +6,7 @@ import { eventFormatFactory } from 'tests/factories/formats';
 import { messageFactory } from 'tests/factories/messages';
 import { teamFactory } from 'tests/factories/team';
 import { proposalFactory } from 'tests/factories/proposals';
-import { ratingFactory } from 'tests/factories/ratings';
+import { reviewFactory } from 'tests/factories/reviews';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
 import { getProposalReview } from './get-proposal-review.server';
@@ -58,12 +58,12 @@ describe('#getProposalReview', () => {
       speakers: [{ id: speaker.id, name: speaker.name, picture: speaker.picture }],
       reviews: {
         summary: { average: null, negatives: 0, positives: 0 },
-        you: { feeling: null, rating: null, comment: null },
+        you: { feeling: null, note: null, comment: null },
       },
       reviewsCount: 0,
       messagesCount: 0,
     });
-    expect(reviewInfo.deliberationEnabled).toBeTruthy();
+    expect(reviewInfo.reviewEnabled).toBeTruthy();
   });
 
   it('does not returns speakers when display proposals speaker setting is false', async () => {
@@ -78,28 +78,28 @@ describe('#getProposalReview', () => {
 
   it('returns teams reviews', async () => {
     const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-    await ratingFactory({ proposal, user: owner, attributes: { feeling: 'NEGATIVE', rating: 0, comment: 'Booo' } });
-    await ratingFactory({ proposal, user: member, attributes: { feeling: 'POSITIVE', rating: 5 } });
+    await reviewFactory({ proposal, user: owner, attributes: { feeling: 'NEGATIVE', note: 0, comment: 'Booo' } });
+    await reviewFactory({ proposal, user: member, attributes: { feeling: 'POSITIVE', note: 5 } });
 
     const reviewInfo = await getProposalReview(event.slug, proposal.id, owner.id, {});
 
     expect(reviewInfo.proposal.reviews).toEqual({
       summary: { average: 2.5, positives: 1, negatives: 1 },
-      you: { rating: 0, feeling: 'NEGATIVE', comment: 'Booo' },
+      you: { note: 0, feeling: 'NEGATIVE', comment: 'Booo' },
     });
   });
 
   it('does not returns reviews summary when display proposals reviews setting is false', async () => {
-    await db.event.update({ data: { displayProposalsRatings: false }, where: { id: event.id } });
+    await db.event.update({ data: { displayProposalsReviews: false }, where: { id: event.id } });
 
     const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-    await ratingFactory({ proposal, user: owner, attributes: { feeling: 'NEGATIVE', rating: 0, comment: 'Booo' } });
+    await reviewFactory({ proposal, user: owner, attributes: { feeling: 'NEGATIVE', note: 0, comment: 'Booo' } });
 
     const reviewInfo = await getProposalReview(event.slug, proposal.id, owner.id, {});
 
     expect(reviewInfo.proposal.reviews).toEqual({
       summary: undefined,
-      you: { rating: 0, feeling: 'NEGATIVE', comment: 'Booo' },
+      you: { note: 0, feeling: 'NEGATIVE', comment: 'Booo' },
     });
   });
 

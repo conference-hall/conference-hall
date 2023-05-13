@@ -5,7 +5,7 @@ import { userFactory } from 'tests/factories/users';
 import { teamFactory } from 'tests/factories/team';
 import { talkFactory } from 'tests/factories/talks';
 import { proposalFactory } from 'tests/factories/proposals';
-import { ratingFactory } from 'tests/factories/ratings';
+import { reviewFactory } from 'tests/factories/reviews';
 import { organizerKeyFactory } from 'tests/factories/organizer-key';
 
 async function seed() {
@@ -87,8 +87,8 @@ async function seed() {
     formats: [format1],
     traits: ['submitted'],
   });
-  await ratingFactory({ proposal: proposal1, user: user, attributes: { feeling: 'POSITIVE', rating: 5 } });
-  await ratingFactory({ proposal: proposal1, user: user2, attributes: { feeling: 'NEGATIVE', rating: 0 } });
+  await reviewFactory({ proposal: proposal1, user: user, attributes: { feeling: 'POSITIVE', note: 5 } });
+  await reviewFactory({ proposal: proposal1, user: user2, attributes: { feeling: 'NEGATIVE', note: 0 } });
 
   const talk2 = await talkFactory({
     attributes: {
@@ -108,8 +108,8 @@ async function seed() {
     formats: [format1, format2],
     traits: ['accepted'],
   });
-  await ratingFactory({ proposal: proposal2, user: user, attributes: { feeling: 'NO_OPINION', rating: null } });
-  await ratingFactory({ proposal: proposal2, user: user2, attributes: { feeling: 'NEUTRAL', rating: 3 } });
+  await reviewFactory({ proposal: proposal2, user: user, attributes: { feeling: 'NO_OPINION', note: null } });
+  await reviewFactory({ proposal: proposal2, user: user2, attributes: { feeling: 'NEUTRAL', note: 3 } });
 
   const talk3 = await talkFactory({
     attributes: {

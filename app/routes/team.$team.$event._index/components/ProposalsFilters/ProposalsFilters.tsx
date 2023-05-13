@@ -15,15 +15,15 @@ type Props = {
 
 export function ProposalsFilters({ filters, statistics, eventFormats, eventCategories }: Props) {
   const { total, reviewed, statuses } = statistics;
-  const { query, ratings, status, formats, categories } = filters;
+  const { query, reviews, status, formats, categories } = filters;
 
-  const hasFilters = Boolean(query || ratings || status || formats || categories);
+  const hasFilters = Boolean(query || reviews || status || formats || categories);
 
   return (
     <Card className="divide-y divide-gray-200">
       <QueryFilter defaultValue={query} hasFilters={hasFilters} />
 
-      <ReviewsFilter defaultValue={ratings} reviewed={reviewed} total={total} />
+      <ReviewsFilter defaultValue={reviews} reviewed={reviewed} total={total} />
 
       <StatusFilter defaultValue={status?.[0]} statuses={statuses} />
 

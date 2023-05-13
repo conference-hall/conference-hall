@@ -33,7 +33,7 @@ export default function ProposalReviewRoute() {
         <Card as="li" key={review.id} className="space-y-4 p-4">
           <div className="flex items-center justify-between">
             <AvatarName size="xs" picture={review.picture} name={review.name} />
-            <ReviewNote feeling={review.feeling} rating={review.rating} />
+            <ReviewNote feeling={review.feeling} note={review.note} />
           </div>
           <Subtitle>{review.comment ?? 'No comment.'}</Subtitle>
         </Card>

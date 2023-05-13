@@ -79,8 +79,8 @@ class ProposalReviewPage extends BasePage {
 
   // Review proposal
 
-  fillReview(rating: string, comment: string) {
-    cy.findByRole('radio', { name: rating }).click();
+  fillReview(review: string, comment: string) {
+    cy.findByRole('radio', { name: review }).click();
     cy.typeOn('Review comment', comment);
     cy.findByRole('button', { name: 'Save review' }).click();
   }

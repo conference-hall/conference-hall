@@ -1,22 +1,22 @@
 import type { Prisma, Proposal, User } from '@prisma/client';
-import { db } from '../../app/libs/db';
+import { db } from '~/libs/db';
 
 type FactoryOptions = {
   user: User;
   proposal: Proposal;
-  attributes?: Partial<Prisma.RatingCreateInput>;
+  attributes?: Partial<Prisma.ReviewCreateInput>;
 };
 
-export const ratingFactory = (options: FactoryOptions) => {
+export const reviewFactory = (options: FactoryOptions) => {
   const { attributes = {}, user, proposal } = options;
 
-  const defaultAttributes: Prisma.RatingCreateInput = {
+  const defaultAttributes: Prisma.ReviewCreateInput = {
     user: { connect: { id: user.id } },
     proposal: { connect: { id: proposal.id } },
-    rating: 3,
+    note: 3,
     feeling: 'NEUTRAL',
   };
 
   const data = { ...defaultAttributes, ...attributes };
-  return db.rating.create({ data });
+  return db.review.create({ data });
 };

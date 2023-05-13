@@ -21,10 +21,10 @@ export function ProposalsList({ proposals, isSelected, onSelect }: Props) {
             Status
           </th>
           <th scope="col" className="hidden lg:table-cell">
-            Rating details
+            Reviews details
           </th>
           <th scope="col" className="hidden sm:table-cell">
-            Final rating
+            Global note
           </th>
         </tr>
       </thead>

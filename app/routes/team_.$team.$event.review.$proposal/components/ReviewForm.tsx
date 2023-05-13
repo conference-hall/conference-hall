@@ -2,11 +2,11 @@ import { ReviewNoteSelector, options } from './ReviewNoteSelector';
 import { TextArea } from '~/design-system/forms/TextArea';
 import { Button } from '~/design-system/Buttons';
 import { CheckCircleIcon } from '@heroicons/react/20/solid';
-import type { RatingFeeling } from '@prisma/client';
+import type { ReviewFeeling } from '@prisma/client';
 import { useFetcher, useParams } from '@remix-run/react';
 import { useRef, useState } from 'react';
 
-type FormValues = { rating: number | null; feeling: RatingFeeling | null; comment: string | null };
+type FormValues = { note: number | null; feeling: ReviewFeeling | null; comment: string | null };
 
 type Props = { initialValues: FormValues };
 
@@ -25,13 +25,13 @@ export function ReviewForm({ initialValues }: Props) {
     const comment = form.current?.elements.comment.value;
 
     const review = options[reviewIndex];
-    const rating = String(review.value ?? '');
+    const note = String(review.value ?? '');
     const feeling = review.feeling;
 
     if (!feeling) return;
 
     fetcher.submit(
-      { rating, feeling, comment },
+      { note, feeling, comment },
       { method: 'POST', action: `/team/${params.team}/${params.event}/review/${params.proposal}` }
     );
     setChanged(false);

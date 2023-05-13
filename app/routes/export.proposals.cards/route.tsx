@@ -10,7 +10,7 @@ import styles from './styles.css';
 import { Subtitle, Text } from '~/design-system/Typography';
 import { getLanguage } from '~/utils/languages';
 import { getLevel } from '~/utils/levels';
-import { formatRating } from '~/utils/ratings';
+import { formatReviewNote } from '~/utils/reviews';
 
 export const links: LinksFunction = () => [{ rel: 'stylesheet', href: styles }];
 
@@ -57,11 +57,11 @@ export default function ExportProposalsCards() {
               </div>
               <div className="flex items-center justify-between pt-4">
                 <div className="flex items-center gap-4">
-                  <Text>❤️ {proposal.ratings?.positives}</Text>
-                  <Text>💀 {proposal.ratings?.negatives}</Text>
+                  <Text>❤️ {proposal.reviews?.positives}</Text>
+                  <Text>💀 {proposal.reviews?.negatives}</Text>
                 </div>
                 <Text size="3xl" strong>
-                  {formatRating(proposal.ratings?.average)}
+                  {formatReviewNote(proposal.reviews?.average)}
                 </Text>
               </div>
             </div>

@@ -15,7 +15,7 @@ class ProposalReviewSettings extends BasePage {
   }
 
   toggleDisplayReviews(checked: boolean) {
-    return cy.findByRole('switch', { name: 'Display ratings of other reviewers', checked });
+    return cy.findByRole('switch', { name: 'Display reviews of all team members', checked });
   }
 
   toggleDisplaySpeakers(checked: boolean) {

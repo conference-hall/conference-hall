@@ -5,7 +5,7 @@ import { TalkSaveSchema } from './talks';
 
 const ProposalStatusSchema = text(z.enum(['SUBMITTED', 'ACCEPTED', 'REJECTED', 'CONFIRMED', 'DECLINED']));
 
-const ProposalRatingsSchema = text(z.enum(['NEUTRAL', 'POSITIVE', 'NEGATIVE', 'NO_OPINION']));
+const ReviewFeelingsSchema = text(z.enum(['NEUTRAL', 'POSITIVE', 'NEGATIVE', 'NO_OPINION']));
 
 export const ProposalCreateSchema = TalkSaveSchema;
 
@@ -35,7 +35,7 @@ const EmailStatusSchema = text(z.enum(['not-sent', 'sent']).optional());
 export const ProposalsFiltersSchema = z.object({
   query: text(z.string().trim().optional()),
   sort: text(z.enum(['newest', 'oldest']).optional()),
-  ratings: text(z.enum(['rated', 'not-rated']).optional()),
+  reviews: text(z.enum(['reviewed', 'not-reviewed']).optional()),
   status: repeatable(z.array(ProposalStatusSchema)).optional(),
   formats: text(z.string().optional()),
   categories: text(z.string().optional()),
@@ -43,10 +43,10 @@ export const ProposalsFiltersSchema = z.object({
   emailRejectedStatus: EmailStatusSchema,
 });
 
-export const ProposalRatingDataSchema = z.object({
-  rating: numeric(z.number().min(0).max(5).nullable().default(null)),
+export const ProposalReviewDataSchema = z.object({
+  note: numeric(z.number().min(0).max(5).nullable().default(null)),
   comment: text(z.string().trim().nullable().default(null)),
-  feeling: ProposalRatingsSchema,
+  feeling: ReviewFeelingsSchema,
 });
 
 export const ProposalsStatusUpdateSchema = z.object({
@@ -72,6 +72,6 @@ export type ProposalCreateData = z.infer<typeof ProposalCreateSchema>;
 export type ProposalUpdateData = z.infer<typeof ProposalUpdateSchema>;
 export type ProposalSubmissionData = z.infer<typeof ProposalSubmissionSchema>;
 export type ProposalsFilters = z.infer<typeof ProposalsFiltersSchema>;
-export type ProposalRatingData = z.infer<typeof ProposalRatingDataSchema>;
+export type ProposalReviewData = z.infer<typeof ProposalReviewDataSchema>;
 export type EmailStatusData = z.infer<typeof EmailStatusSchema>;
 export type ProposalParticipation = z.infer<typeof ProposalParticipationSchema>;

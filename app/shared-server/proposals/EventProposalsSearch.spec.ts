@@ -6,7 +6,7 @@ import { eventFactory } from 'tests/factories/events';
 import { eventFormatFactory } from 'tests/factories/formats';
 import { teamFactory } from 'tests/factories/team';
 import { proposalFactory } from 'tests/factories/proposals';
-import { ratingFactory } from 'tests/factories/ratings';
+import { reviewFactory } from 'tests/factories/reviews';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
 import { EventProposalsSearch } from './EventProposalsSearch';
@@ -61,8 +61,8 @@ describe('#searchProposals', () => {
       traits: ['submitted'],
     });
 
-    await ratingFactory({ user: speaker, proposal: proposal1, attributes: { feeling: 'NEGATIVE', rating: 0 } });
-    await ratingFactory({ user: owner, proposal: proposal1, attributes: { feeling: 'POSITIVE', rating: 5 } });
+    await reviewFactory({ user: speaker, proposal: proposal1, attributes: { feeling: 'NEGATIVE', note: 0 } });
+    await reviewFactory({ user: owner, proposal: proposal1, attributes: { feeling: 'POSITIVE', note: 5 } });
   });
 
   afterEach(disconnectDB);
@@ -153,16 +153,16 @@ describe('#searchProposals', () => {
       expect(proposals[0].id).toBe(proposal2.id);
     });
 
-    it('filters proposals by user rated only', async () => {
-      const filters: ProposalsFilters = { ratings: 'rated' };
+    it('filters proposals by user reviewed only', async () => {
+      const filters: ProposalsFilters = { reviews: 'reviewed' };
       const search = new EventProposalsSearch(event.slug, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(1);
       expect(proposals[0].id).toBe(proposal1.id);
     });
 
-    it('filters proposals by user not rated only', async () => {
-      const filters: ProposalsFilters = { ratings: 'not-rated' };
+    it('filters proposals by user not reviewed only', async () => {
+      const filters: ProposalsFilters = { reviews: 'not-reviewed' };
       const search = new EventProposalsSearch(event.slug, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(2);
@@ -189,8 +189,8 @@ describe('#searchProposals', () => {
       expect(proposals[2].id).toBe(proposal3.id);
     });
 
-    it.todo('sort by lowest ratings');
-    it.todo('sort by highest ratings');
+    it.todo('sort by lowest reviews');
+    it.todo('sort by highest reviews');
   });
 
   it('should not return draft proposals', async () => {

@@ -29,7 +29,7 @@ export class EventProposalsSearch {
 
   async proposalsByPage(pageIndex: number = 0, pageSize: number) {
     return db.proposal.findMany({
-      include: { speakers: this.options.searchBySpeakers, ratings: true },
+      include: { speakers: this.options.searchBySpeakers, reviews: true },
       where: this.whereClause(),
       orderBy: this.orderByClause(),
       skip: pageIndex * pageSize,
@@ -37,11 +37,11 @@ export class EventProposalsSearch {
     });
   }
 
-  async proposals(select: { ratings: boolean } = { ratings: true }) {
+  async proposals(select: { reviews: boolean } = { reviews: true }) {
     return db.proposal.findMany({
       include: {
         speakers: this.options.searchBySpeakers,
-        ratings: select.ratings,
+        reviews: select.reviews,
         formats: true,
         categories: true,
       },
@@ -71,22 +71,22 @@ export class EventProposalsSearch {
   }
 
   private countUserReviews() {
-    return db.rating.count({
+    return db.review.count({
       where: { proposal: this.whereClause(), userId: this.userId },
     });
   }
 
   private whereClause(): Prisma.ProposalWhereInput {
-    const { query, ratings, formats, categories, status, emailAcceptedStatus, emailRejectedStatus } = this.filters;
+    const { query, reviews, formats, categories, status, emailAcceptedStatus, emailRejectedStatus } = this.filters;
 
-    const ratingClause = ratings === 'rated' ? { some: { userId: this.userId } } : { none: { userId: this.userId } };
+    const reviewClause = reviews === 'reviewed' ? { some: { userId: this.userId } } : { none: { userId: this.userId } };
 
     return {
       event: { slug: this.eventSlug },
       status: { in: status, not: 'DRAFT' },
       formats: formats ? { some: { id: formats } } : undefined,
       categories: categories ? { some: { id: categories } } : undefined,
-      ratings: ratings ? ratingClause : undefined,
+      reviews: reviews ? reviewClause : undefined,
       emailAcceptedStatus: this.mapEmailStatus(emailAcceptedStatus),
       emailRejectedStatus: this.mapEmailStatus(emailRejectedStatus),
       OR: this.whereQueryClause(query),

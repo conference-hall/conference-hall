@@ -4,7 +4,7 @@ import { Dotted } from '~/design-system/badges/Badges';
 import { useProposalsSearchFilter } from '../../useProposalsSearchFilter';
 
 type Props = {
-  defaultValue?: 'rated' | 'not-rated';
+  defaultValue?: 'reviewed' | 'not-reviewed';
   reviewed: number;
   total: number;
 };
@@ -27,17 +27,17 @@ export function ReviewsFilter({ defaultValue, reviewed, total }: Props) {
       {total > 0 && (
         <div className="space-y-2">
           <ReviewFilterItem
-            name="rated"
+            name="reviewed"
             label="Reviewed"
             count={reviewed}
-            isSelected={defaultValue === 'rated'}
+            isSelected={defaultValue === 'reviewed'}
             color="green"
           />
           <ReviewFilterItem
-            name="not-rated"
+            name="not-reviewed"
             label="Not reviewed"
             count={total - reviewed}
-            isSelected={defaultValue === 'not-rated'}
+            isSelected={defaultValue === 'not-reviewed'}
             color="red"
           />
         </div>
@@ -49,7 +49,7 @@ export function ReviewsFilter({ defaultValue, reviewed, total }: Props) {
 type ReviewFilterItemProps = {
   label: string;
   count: number;
-  name: 'rated' | 'not-rated';
+  name: 'reviewed' | 'not-reviewed';
   isSelected: boolean;
   color: 'green' | 'red';
 };
@@ -60,7 +60,7 @@ function ReviewFilterItem({ label, count, name, isSelected, color }: ReviewFilte
   if (count === 0) return null;
 
   const handleFilter = () => {
-    isSelected ? addFilterFor('ratings', '') : addFilterFor('ratings', name);
+    isSelected ? addFilterFor('reviews', '') : addFilterFor('reviews', name);
   };
 
   return (
