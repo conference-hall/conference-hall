@@ -40,10 +40,11 @@ type RemoveCoSpeakerButtonProps = { speakerId: string; speakerName: string | nul
 function RemoveCoSpeakerButton({ speakerId, speakerName }: RemoveCoSpeakerButtonProps) {
   return (
     <Form method="POST">
-      <input type="hidden" name="_action" value="remove-speaker" />
       <input type="hidden" name="_speakerId" value={speakerId} />
       <button
         type="submit"
+        name="intent"
+        value="remove-speaker"
         aria-label={`Remove speaker ${speakerName}`}
         className="inline-flex items-center rounded-full border border-transparent bg-white p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
       >

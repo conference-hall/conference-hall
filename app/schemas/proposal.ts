@@ -10,13 +10,8 @@ const ReviewFeelingsSchema = text(z.enum(['NEUTRAL', 'POSITIVE', 'NEGATIVE', 'NO
 export const ProposalCreateSchema = TalkSaveSchema;
 
 export function getProposalUpdateSchema(formatsRequired: boolean, categoriesRequired: boolean) {
-  const FormatsSchema = formatsRequired
-    ? repeatable(z.array(z.string()).nonempty())
-    : repeatable(z.array(z.string())).optional();
-
-  const CategoriesSchema = categoriesRequired
-    ? repeatable(z.array(z.string()).nonempty())
-    : repeatable(z.array(z.string())).optional();
+  const FormatsSchema = formatsRequired ? repeatable(z.array(z.string()).nonempty()) : repeatable().optional();
+  const CategoriesSchema = categoriesRequired ? repeatable(z.array(z.string()).nonempty()) : repeatable().optional();
 
   return TalkSaveSchema.extend({ formats: FormatsSchema, categories: CategoriesSchema });
 }
