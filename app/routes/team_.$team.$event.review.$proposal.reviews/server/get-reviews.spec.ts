@@ -3,7 +3,7 @@ import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventFactory } from 'tests/factories/events';
 import { teamFactory } from 'tests/factories/team';
 import { proposalFactory } from 'tests/factories/proposals';
-import { ratingFactory } from 'tests/factories/ratings';
+import { reviewFactory } from 'tests/factories/reviews';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
 import { ForbiddenOperationError } from '~/libs/errors';
@@ -27,19 +27,19 @@ describe('#getReviews', () => {
 
   it('returns proposal reviews', async () => {
     const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-    await ratingFactory({ proposal, user: owner, attributes: { feeling: 'NEGATIVE', rating: 0 } });
-    await ratingFactory({ proposal, user: member, attributes: { feeling: 'POSITIVE', rating: 5, comment: 'Yeah!' } });
+    await reviewFactory({ proposal, user: owner, attributes: { feeling: 'NEGATIVE', note: 0 } });
+    await reviewFactory({ proposal, user: member, attributes: { feeling: 'POSITIVE', note: 5, comment: 'Yeah!' } });
 
     const reviews = await getReviews(event.slug, proposal.id, owner.id);
 
     expect(reviews).toEqual([
-      { feeling: 'POSITIVE', id: member.id, name: member.name, picture: member.picture, rating: 5, comment: 'Yeah!' },
-      { feeling: 'NEGATIVE', id: owner.id, name: owner.name, picture: owner.picture, rating: 0, comment: null },
+      { feeling: 'POSITIVE', id: member.id, name: member.name, picture: member.picture, note: 5, comment: 'Yeah!' },
+      { feeling: 'NEGATIVE', id: owner.id, name: owner.name, picture: owner.picture, note: 0, comment: null },
     ]);
   });
 
   it('throws an error if display of reviews is disabled for the event', async () => {
-    await db.event.update({ data: { displayProposalsRatings: false }, where: { id: event.id } });
+    await db.event.update({ data: { displayProposalsReviews: false }, where: { id: event.id } });
     const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
     await expect(getReviews(event.slug, proposal.id, owner.id)).rejects.toThrowError(ForbiddenOperationError);

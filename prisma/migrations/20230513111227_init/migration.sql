@@ -17,7 +17,7 @@ CREATE TYPE "ProposalStatus" AS ENUM ('DRAFT', 'SUBMITTED', 'ACCEPTED', 'REJECTE
 CREATE TYPE "EmailStatus" AS ENUM ('SENT', 'DELIVERED');
 
 -- CreateEnum
-CREATE TYPE "RatingFeeling" AS ENUM ('POSITIVE', 'NEGATIVE', 'NEUTRAL', 'NO_OPINION');
+CREATE TYPE "ReviewFeeling" AS ENUM ('POSITIVE', 'NEGATIVE', 'NEUTRAL', 'NO_OPINION');
 
 -- CreateEnum
 CREATE TYPE "MessageChannel" AS ENUM ('ORGANIZER', 'SPEAKER');
@@ -109,8 +109,8 @@ CREATE TABLE "events" (
     "maxProposals" INTEGER,
     "creatorId" TEXT NOT NULL,
     "archived" BOOLEAN NOT NULL DEFAULT false,
-    "deliberationEnabled" BOOLEAN NOT NULL DEFAULT true,
-    "displayProposalsRatings" BOOLEAN NOT NULL DEFAULT true,
+    "reviewEnabled" BOOLEAN NOT NULL DEFAULT true,
+    "displayProposalsReviews" BOOLEAN NOT NULL DEFAULT true,
     "displayProposalsSpeakers" BOOLEAN NOT NULL DEFAULT true,
     "surveyEnabled" BOOLEAN NOT NULL DEFAULT false,
     "surveyQuestions" JSONB,
@@ -204,17 +204,17 @@ CREATE TABLE "surveys" (
 );
 
 -- CreateTable
-CREATE TABLE "ratings" (
+CREATE TABLE "reviews" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "proposalId" TEXT NOT NULL,
-    "feeling" "RatingFeeling" NOT NULL DEFAULT 'NEUTRAL',
-    "rating" INTEGER,
+    "feeling" "ReviewFeeling" NOT NULL DEFAULT 'NEUTRAL',
+    "note" INTEGER,
     "comment" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "ratings_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "reviews_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -279,7 +279,7 @@ CREATE UNIQUE INDEX "surveys_id_key" ON "surveys"("id");
 CREATE UNIQUE INDEX "surveys_userId_eventId_key" ON "surveys"("userId", "eventId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "ratings_userId_proposalId_key" ON "ratings"("userId", "proposalId");
+CREATE UNIQUE INDEX "reviews_userId_proposalId_key" ON "reviews"("userId", "proposalId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_speakers_talks_AB_unique" ON "_speakers_talks"("A", "B");
@@ -345,10 +345,10 @@ ALTER TABLE "surveys" ADD CONSTRAINT "surveys_userId_fkey" FOREIGN KEY ("userId"
 ALTER TABLE "surveys" ADD CONSTRAINT "surveys_eventId_fkey" FOREIGN KEY ("eventId") REFERENCES "events"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ratings" ADD CONSTRAINT "ratings_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "reviews" ADD CONSTRAINT "reviews_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ratings" ADD CONSTRAINT "ratings_proposalId_fkey" FOREIGN KEY ("proposalId") REFERENCES "proposals"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "reviews" ADD CONSTRAINT "reviews_proposalId_fkey" FOREIGN KEY ("proposalId") REFERENCES "proposals"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "messages" ADD CONSTRAINT "messages_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

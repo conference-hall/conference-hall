@@ -2,13 +2,13 @@ import c from 'classnames';
 import { useCallback, useState } from 'react';
 import { RadioGroup } from '@headlessui/react';
 import { HeartIcon, NoSymbolIcon, StarIcon, XCircleIcon } from '@heroicons/react/24/outline';
-import type { RatingFeeling } from '@prisma/client';
+import type { ReviewFeeling } from '@prisma/client';
 
 export type Option = {
   label: string;
   value: number | null;
   Icon: React.ComponentType<{ className?: string }>;
-  feeling: RatingFeeling;
+  feeling: ReviewFeeling;
   fill: string;
 };
 
@@ -25,13 +25,13 @@ export const options: Array<Option> = [
 
 type StyleProps = { option: Option; index: number };
 
-type Review = { rating?: number | null; feeling?: string | null };
+type Review = { note?: number | null; feeling?: string | null };
 
 type Props = { value: Review; onChange: (index: number) => void };
 
 export function ReviewNoteSelector({ value, onChange }: Props) {
   const [selectedIndex, setSelectedIndex] = useState<number | undefined>(
-    options.findIndex((option) => option.value === value.rating && option.feeling === value.feeling)
+    options.findIndex((option) => option.value === value.note && option.feeling === value.feeling)
   );
   const [overIndex, setOverIndex] = useState<number>(-1);
 
@@ -55,7 +55,7 @@ export function ReviewNoteSelector({ value, onChange }: Props) {
   return (
     <>
       <RadioGroup name="review" value={String(selectedIndex)} onChange={handleChange}>
-        <RadioGroup.Label className="sr-only"> Choose a rating value </RadioGroup.Label>
+        <RadioGroup.Label className="sr-only"> Choose a note</RadioGroup.Label>
         <div className="flex items-center justify-between" onMouseOut={() => setOverIndex(-1)}>
           {options.map((option, index) => (
             <RadioGroup.Option key={index} value={String(index)} title={option.label}>

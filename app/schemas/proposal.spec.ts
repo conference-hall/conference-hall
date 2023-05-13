@@ -2,7 +2,7 @@ import { withZod } from '@remix-validated-form/with-zod';
 import {
   ProposalCreateSchema,
   ProposalsStatusUpdateSchema,
-  ProposalRatingDataSchema,
+  ProposalReviewDataSchema,
   ProposalsFiltersSchema,
   ProposalSubmissionSchema,
   ProposalUpdateSchema,
@@ -166,29 +166,25 @@ describe('Validate ProposalsFiltersSchema', () => {
   });
 });
 
-describe('Validate ProposalRatingDataSchema', () => {
+describe('Validate ProposalReviewDataSchema', () => {
   it('validates submission message', async () => {
     const formData = new FormData();
-    formData.append('rating', '1');
+    formData.append('note', '1');
     formData.append('feeling', 'NEUTRAL');
 
-    const result = await withZod(ProposalRatingDataSchema).validate(formData);
-    expect(result.data).toEqual({
-      feeling: 'NEUTRAL',
-      rating: 1,
-      comment: null,
-    });
+    const result = await withZod(ProposalReviewDataSchema).validate(formData);
+    expect(result.data).toEqual({ feeling: 'NEUTRAL', note: 1, comment: null });
   });
 
   it('returns errors on invalid data', async () => {
     const formData = new FormData();
-    formData.append('rating', 'toto');
+    formData.append('note', 'toto');
     formData.append('feeling', 'toto');
 
-    const result = await withZod(ProposalRatingDataSchema).validate(formData);
+    const result = await withZod(ProposalReviewDataSchema).validate(formData);
     expect(result.error?.fieldErrors).toEqual({
       feeling: "Invalid enum value. Expected 'NEUTRAL' | 'POSITIVE' | 'NEGATIVE' | 'NO_OPINION', received 'toto'",
-      rating: 'Expected number, received string',
+      note: 'Expected number, received string',
     });
   });
 });

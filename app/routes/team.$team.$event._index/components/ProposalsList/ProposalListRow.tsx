@@ -4,7 +4,7 @@ import { Link, useSearchParams } from '@remix-run/react';
 import { Text } from '~/design-system/Typography';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
 import { ProposalStatusBadge } from '~/shared-components/proposals/ProposalStatusBadges';
-import type { ProposalStatus, RatingFeeling } from '@prisma/client';
+import type { ProposalStatus, ReviewFeeling } from '@prisma/client';
 import { ReviewNote } from '~/shared-components/reviews/ReviewNote';
 
 export type ProposalData = {
@@ -12,9 +12,9 @@ export type ProposalData = {
   title: string;
   status: ProposalStatus;
   speakers: (string | null)[];
-  ratings: {
+  reviews: {
     summary?: { negatives: number; positives: number; average: number | null };
-    you: { feeling: RatingFeeling | null; rating: number | null };
+    you: { feeling: ReviewFeeling | null; note: number | null };
   };
 };
 
@@ -27,7 +27,7 @@ type ProposalRowProp = {
 export function ProposaListRow({ proposal, isSelected, onSelect }: ProposalRowProp) {
   const [searchParams] = useSearchParams();
 
-  const { you, summary } = proposal.ratings;
+  const { you, summary } = proposal.reviews;
 
   return (
     <tr key={proposal.id} className={c('relative hover:bg-gray-50', { 'bg-gray-50': isSelected })}>
@@ -66,13 +66,13 @@ export function ProposaListRow({ proposal, isSelected, onSelect }: ProposalRowPr
       </td>
       <td className="hidden w-0 px-3 py-6 lg:table-cell">
         <div className="flex items-center justify-around gap-4">
-          {summary && <ReviewNote feeling="NEGATIVE" rating={summary.negatives} />}
-          {summary && <ReviewNote feeling="POSITIVE" rating={summary.positives} />}
-          <ReviewNote feeling="USER" rating={you.rating} />
+          {summary && <ReviewNote feeling="NEGATIVE" note={summary.negatives} />}
+          {summary && <ReviewNote feeling="POSITIVE" note={summary.positives} />}
+          <ReviewNote feeling="USER" note={you.note} />
         </div>
       </td>
       <td className="w-0 rounded-lg px-3 py-6 pr-4 text-right  sm:pr-6">
-        {summary && <ReviewNote feeling="NEUTRAL" rating={summary.average} />}
+        {summary && <ReviewNote feeling="NEUTRAL" note={summary.average} />}
       </td>
     </tr>
   );

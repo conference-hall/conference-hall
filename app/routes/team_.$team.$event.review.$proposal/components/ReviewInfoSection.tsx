@@ -1,4 +1,4 @@
-import type { ProposalStatus, RatingFeeling } from '@prisma/client';
+import type { ProposalStatus, ReviewFeeling } from '@prisma/client';
 import format from 'date-fns/format';
 import { ClientOnly } from 'remix-utils';
 import { H2, Text } from '~/design-system/Typography';
@@ -10,8 +10,8 @@ import { ReviewForm } from './ReviewForm';
 type Props = {
   proposalId: string;
   userReview: {
-    rating: number | null;
-    feeling: RatingFeeling | null;
+    note: number | null;
+    feeling: ReviewFeeling | null;
     comment: string | null;
   };
   review?: {
@@ -22,7 +22,7 @@ type Props = {
   status: ProposalStatus;
   comments: string | null;
   submittedAt: string;
-  deliberationEnabled: boolean;
+  reviewEnabled: boolean;
 };
 
 export function ReviewInfoSection({
@@ -32,11 +32,11 @@ export function ReviewInfoSection({
   status,
   comments,
   submittedAt,
-  deliberationEnabled,
+  reviewEnabled,
 }: Props) {
   return (
     <Card as="section" className="divide-y divide-gray-200">
-      {deliberationEnabled && (
+      {reviewEnabled && (
         <div className="space-y-4 p-6">
           <H2 size="base">Your review</H2>
           <ReviewForm key={proposalId} initialValues={userReview} />
@@ -51,9 +51,9 @@ export function ReviewInfoSection({
               Global review
             </Text>
             <div className="flex gap-4">
-              <ReviewNote feeling="NEGATIVE" rating={review?.negatives} />
-              <ReviewNote feeling="POSITIVE" rating={review?.positives} />
-              <ReviewNote feeling="NEUTRAL" rating={review?.average} />
+              <ReviewNote feeling="NEGATIVE" note={review?.negatives} />
+              <ReviewNote feeling="POSITIVE" note={review?.positives} />
+              <ReviewNote feeling="NEUTRAL" note={review?.average} />
             </div>
           </div>
         )}
@@ -62,7 +62,7 @@ export function ReviewInfoSection({
           <Text size="s" strong>
             Your review
           </Text>
-          <ReviewNote feeling={userReview.feeling} rating={userReview.rating} />
+          <ReviewNote feeling={userReview.feeling} note={userReview.note} />
         </div>
 
         <div className="flex justify-between gap-2">

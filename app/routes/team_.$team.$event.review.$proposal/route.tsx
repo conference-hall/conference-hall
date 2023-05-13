@@ -4,14 +4,14 @@ import { json } from '@remix-run/node';
 import { requireSession } from '~/libs/auth/session';
 import { Outlet, useLoaderData, useOutletContext, useParams } from '@remix-run/react';
 import { withZod } from '@remix-validated-form/with-zod';
-import { ProposalRatingDataSchema, ProposalsFiltersSchema } from '~/schemas/proposal';
+import { ProposalReviewDataSchema, ProposalsFiltersSchema } from '~/schemas/proposal';
 import type { ProposalReview } from './server/get-proposal-review.server';
 import { getProposalReview } from './server/get-proposal-review.server';
 import { Navbar } from '~/shared-components/navbar/Navbar';
 import { useUser } from '~/root';
 import { ReviewHeader } from './components/Header';
 import { ReviewTabs } from './components/Tabs';
-import { rateProposal } from './server/rate-proposal.server';
+import { rateProposal } from './server/review-proposal.server';
 import { ReviewInfoSection } from './components/ReviewInfoSection';
 import { TeamRole } from '@prisma/client';
 import { addToast } from '~/libs/toasts/toasts';
@@ -33,7 +33,7 @@ export const action = async ({ request, params }: ActionArgs) => {
   invariant(params.proposal, 'Invalid proposal id');
   const form = await request.formData();
 
-  const result = await withZod(ProposalRatingDataSchema).validate(form);
+  const result = await withZod(ProposalReviewDataSchema).validate(form);
   if (result.data) {
     await rateProposal(params.event, params.proposal, userId, result.data);
     return json(null, await addToast(request, 'Review saved.'));
@@ -78,7 +78,7 @@ export default function ProposalReviewRoute() {
             status={proposal.status}
             comments={proposal.comments}
             submittedAt={proposal.createdAt}
-            deliberationEnabled={proposalReview.deliberationEnabled}
+            reviewEnabled={proposalReview.reviewEnabled}
           />
         </div>
       </div>

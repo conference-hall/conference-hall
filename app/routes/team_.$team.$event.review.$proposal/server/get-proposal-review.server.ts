@@ -1,7 +1,7 @@
 import type { ProposalsFilters } from '~/schemas/proposal';
 import { jsonToArray } from '~/libs/prisma';
 import { allowedForEvent } from '~/shared-server/teams/check-user-role.server';
-import { RatingsDetails } from '~/shared-server/ratings/ratings-details';
+import { ReviewsDetails } from '~/shared-server/reviews/reviews-details';
 import { EventProposalsSearch } from '~/shared-server/proposals/EventProposalsSearch';
 import { db } from '~/libs/db';
 import { ProposalNotFoundError } from '~/libs/errors';
@@ -31,14 +31,14 @@ export async function getProposalReview(
       speakers: event.displayProposalsSpeakers,
       formats: true,
       categories: true,
-      ratings: true,
-      _count: { select: { ratings: true, messages: true } },
+      reviews: true,
+      _count: { select: { reviews: true, messages: true } },
     },
     where: { id: proposalId },
   });
   if (!proposal) throw new ProposalNotFoundError();
 
-  const ratings = new RatingsDetails(proposal.ratings);
+  const reviews = new ReviewsDetails(proposal.reviews);
 
   return {
     proposal: {
@@ -61,13 +61,13 @@ export async function getProposalReview(
           }))
         : [],
       reviews: {
-        you: ratings.ofUser(userId),
-        summary: event.displayProposalsRatings ? ratings.summary() : undefined,
+        you: reviews.ofUser(userId),
+        summary: event.displayProposalsReviews ? reviews.summary() : undefined,
       },
-      reviewsCount: proposal._count.ratings,
+      reviewsCount: proposal._count.reviews,
       messagesCount: proposal._count.messages,
     },
-    deliberationEnabled: event.deliberationEnabled,
+    reviewEnabled: event.reviewEnabled,
     pagination: {
       total: totalProposals,
       current: curIndex + 1,

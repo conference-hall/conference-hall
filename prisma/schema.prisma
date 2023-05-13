@@ -9,7 +9,7 @@ datasource db {
 }
 
 model User {
-  id                 String               @id @default(cuid())
+  id                 String              @id @default(cuid())
   email              String
   name               String?
   bio                String?
@@ -17,18 +17,18 @@ model User {
   company            String?
   references         String?
   address            String?
-  socials            Json                 @default("{}")
+  socials            Json                @default("{}")
   lat                Float?
   lng                Float?
   timezone           String?
-  createdAt          DateTime             @default(now())
-  updatedAt          DateTime             @updatedAt
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
   organizerKey       String?
-  organizerKeyAccess OrganizerKeyAccess?  @relation(fields: [organizerKey], references: [id])
-  talks              Talk[]               @relation("speakers_talks")
-  proposals          Proposal[]           @relation("speakers_proposals")
-  teams      TeamMember[]
-  ratings            Rating[]
+  organizerKeyAccess OrganizerKeyAccess? @relation(fields: [organizerKey], references: [id])
+  talks              Talk[]              @relation("speakers_talks")
+  proposals          Proposal[]          @relation("speakers_proposals")
+  teams              TeamMember[]
+  reviews            Review[]
   surveys            Survey[]
   createdTalks       Talk[]
   createdEvents      Event[]
@@ -93,8 +93,8 @@ model Event {
   description              String?
   type                     EventType       @default(CONFERENCE)
   visibility               EventVisibility @default(PRIVATE)
-  teamId           String
-  team             Team    @relation(fields: [teamId], references: [id])
+  teamId                   String
+  team                     Team            @relation(fields: [teamId], references: [id])
   address                  String?
   lat                      Float?
   lng                      Float?
@@ -115,8 +115,8 @@ model Event {
   creatorId                String
   creator                  User            @relation(fields: [creatorId], references: [id])
   archived                 Boolean         @default(false)
-  deliberationEnabled      Boolean         @default(true)
-  displayProposalsRatings  Boolean         @default(true)
+  reviewEnabled            Boolean         @default(true)
+  displayProposalsReviews  Boolean         @default(true)
   displayProposalsSpeakers Boolean         @default(true)
   surveyEnabled            Boolean         @default(false)
   surveyQuestions          Json?
@@ -165,12 +165,12 @@ enum EventVisibility {
 }
 
 model Team {
-  id             String               @id @default(cuid())
+  id             String       @id @default(cuid())
   name           String
-  slug           String               @unique
-  invitationCode String               @unique @default(cuid())
-  createdAt      DateTime             @default(now())
-  updatedAt      DateTime             @updatedAt
+  slug           String       @unique
+  invitationCode String       @unique @default(cuid())
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
   members        TeamMember[]
   events         Event[]
 
@@ -178,12 +178,12 @@ model Team {
 }
 
 model TeamMember {
-  member         User             @relation(fields: [memberId], references: [id])
-  memberId       String
-  team   Team     @relation(fields: [teamId], references: [id])
-  teamId String
-  role           TeamRole @default(REVIEWER)
-  createdAt      DateTime         @default(now())
+  member    User     @relation(fields: [memberId], references: [id])
+  memberId  String
+  team      Team     @relation(fields: [teamId], references: [id])
+  teamId    String
+  role      TeamRole @default(REVIEWER)
+  createdAt DateTime @default(now())
 
   @@id([memberId, teamId])
   @@map("teams_members")
@@ -210,7 +210,7 @@ model Proposal {
   speakers            User[]          @relation("speakers_proposals")
   formats             EventFormat[]   @relation("proposals_formats")
   categories          EventCategory[] @relation("proposals_categories")
-  ratings             Rating[]
+  reviews             Review[]
   avgRateForSort      Float           @default(0)
   status              ProposalStatus  @default(SUBMITTED)
   emailAcceptedStatus EmailStatus?
@@ -257,23 +257,23 @@ model Survey {
   @@map("surveys")
 }
 
-model Rating {
+model Review {
   id         String        @id @default(cuid())
   userId     String
   user       User          @relation(fields: [userId], references: [id])
   proposalId String
   proposal   Proposal      @relation(fields: [proposalId], references: [id])
-  feeling    RatingFeeling @default(NEUTRAL)
-  rating     Int?
+  feeling    ReviewFeeling @default(NEUTRAL)
+  note       Int?
   comment    String?
   createdAt  DateTime      @default(now())
   updatedAt  DateTime      @updatedAt
 
   @@unique([userId, proposalId])
-  @@map("ratings")
+  @@map("reviews")
 }
 
-enum RatingFeeling {
+enum ReviewFeeling {
   POSITIVE
   NEGATIVE
   NEUTRAL

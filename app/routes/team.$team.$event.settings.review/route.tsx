@@ -35,12 +35,9 @@ export default function EventReviewSettingsRoute() {
         <ToggleGroup
           label="Proposals review activation"
           description="When disabled, reviewers won't be able to review proposals anymore."
-          value={event.deliberationEnabled}
+          value={event.reviewEnabled}
           onChange={(checked) =>
-            fetcher.submit(
-              { _setting: 'deliberationEnabled', deliberationEnabled: String(checked) },
-              { method: 'POST' }
-            )
+            fetcher.submit({ _setting: 'reviewEnabled', reviewEnabled: String(checked) }, { method: 'POST' })
           }
         />
       </Card>
@@ -52,12 +49,12 @@ export default function EventReviewSettingsRoute() {
 
         <Card.Content>
           <ToggleGroup
-            label="Display ratings of other reviewers"
-            description="When disabled, ratings of other reviewers and total rate won't be visible."
-            value={event.displayProposalsRatings}
+            label="Display reviews of all team members"
+            description="When disabled, reviews of all team members and global note won't be visible."
+            value={event.displayProposalsReviews}
             onChange={(checked) =>
               fetcher.submit(
-                { _setting: 'displayProposalsRatings', displayProposalsRatings: String(checked) },
+                { _setting: 'displayProposalsReviews', displayProposalsReviews: String(checked) },
                 { method: 'POST' }
               )
             }

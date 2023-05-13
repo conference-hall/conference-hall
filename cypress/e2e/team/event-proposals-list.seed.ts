@@ -2,7 +2,7 @@ import { eventCategoryFactory } from '../../../tests/factories/categories';
 import { eventFactory } from '../../../tests/factories/events';
 import { eventFormatFactory } from '../../../tests/factories/formats';
 import { proposalFactory } from '../../../tests/factories/proposals';
-import { ratingFactory } from '../../../tests/factories/ratings';
+import { reviewFactory } from '../../../tests/factories/reviews';
 import { talkFactory } from '../../../tests/factories/talks';
 import { teamFactory } from '../../../tests/factories/team';
 import { userFactory } from '../../../tests/factories/users';
@@ -54,5 +54,5 @@ export const seed = async () => {
     talk: await talkFactory({ attributes: { title: 'Talk 3' }, speakers: [speaker1, speaker2] }),
   });
 
-  await ratingFactory({ proposal, user: organizer1 });
+  await reviewFactory({ proposal, user: organizer1 });
 };

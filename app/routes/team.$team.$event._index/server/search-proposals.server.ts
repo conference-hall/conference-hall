@@ -3,7 +3,7 @@ import type { ProposalsFilters } from '~/schemas/proposal';
 import { allowedForEvent } from '~/shared-server/teams/check-user-role.server';
 import { getPagination } from '~/shared-server/pagination/pagination.server';
 import { EventProposalsSearch } from '~/shared-server/proposals/EventProposalsSearch';
-import { RatingsDetails } from '~/shared-server/ratings/ratings-details';
+import { ReviewsDetails } from '~/shared-server/reviews/reviews-details';
 
 const RESULTS_BY_PAGE = 25;
 
@@ -30,7 +30,7 @@ export async function searchProposals(
     statistics,
     pagination: { current: currentPage, total: totalPages },
     results: proposals.map((proposal) => {
-      const ratings = new RatingsDetails(proposal.ratings);
+      const reviews = new ReviewsDetails(proposal.reviews);
 
       return {
         id: proposal.id,
@@ -39,9 +39,9 @@ export async function searchProposals(
         emailAcceptedStatus: proposal.emailAcceptedStatus,
         emailRejectedStatus: proposal.emailRejectedStatus,
         speakers: event.displayProposalsSpeakers ? proposal.speakers.map(({ name }) => name) : [],
-        ratings: {
-          summary: event.displayProposalsRatings ? ratings.summary() : undefined,
-          you: ratings.ofUser(userId),
+        reviews: {
+          summary: event.displayProposalsReviews ? reviews.summary() : undefined,
+          you: reviews.ofUser(userId),
         },
       };
     }),

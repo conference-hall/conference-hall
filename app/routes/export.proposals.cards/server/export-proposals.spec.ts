@@ -36,7 +36,7 @@ describe('#exportProposals', () => {
         level: proposal.level,
         categories: [],
         formats: [],
-        ratings: {
+        reviews: {
           negatives: 0,
           positives: 0,
           average: null,
@@ -56,13 +56,13 @@ describe('#exportProposals', () => {
     expect(result[0].speakers).toBeUndefined();
   });
 
-  it('does not export ratings when display ratings setting is false', async () => {
-    await db.event.update({ data: { displayProposalsRatings: false }, where: { id: event.id } });
+  it('does not export reviews when display reviews setting is false', async () => {
+    await db.event.update({ data: { displayProposalsReviews: false }, where: { id: event.id } });
 
     await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
     const result = await exportProposals(event.slug, owner.id, {});
 
-    expect(result[0].ratings).toBeUndefined();
+    expect(result[0].reviews).toBeUndefined();
   });
 });

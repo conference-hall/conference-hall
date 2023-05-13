@@ -1,6 +1,6 @@
 import { eventCategoryFactory } from '../../../../tests/factories/categories';
 import { eventFactory } from '../../../../tests/factories/events';
-import { ratingFactory } from '../../../../tests/factories/ratings';
+import { reviewFactory } from '../../../../tests/factories/reviews';
 import { eventFormatFactory } from '../../../../tests/factories/formats';
 import { proposalFactory } from '../../../../tests/factories/proposals';
 import { talkFactory } from '../../../../tests/factories/talks';
@@ -87,7 +87,7 @@ export const seed = async () => {
     },
   });
 
-  await ratingFactory({ proposal, user: organizer2, attributes: { rating: 3, feeling: 'NEUTRAL' } });
+  await reviewFactory({ proposal, user: organizer2, attributes: { note: 3, feeling: 'NEUTRAL' } });
 
   await messageFactory({ proposal, user: organizer2, attributes: { channel: 'ORGANIZER', message: 'Hello world' } });
 
@@ -105,9 +105,9 @@ export const seed = async () => {
     attributes: {
       name: 'Conference 2',
       slug: 'conference-2',
-      displayProposalsRatings: false,
+      displayProposalsReviews: false,
       displayProposalsSpeakers: false,
-      deliberationEnabled: false,
+      reviewEnabled: false,
     },
   });
 
