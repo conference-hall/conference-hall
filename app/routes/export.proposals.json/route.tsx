@@ -8,7 +8,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   const userId = await requireSession(request);
   const url = new URL(request.url);
 
-  const result = ProposalsExportFiltersSchema.safeParse(url.searchParams);
+  const result = ProposalsExportFiltersSchema.safeParse(Object.fromEntries(url.searchParams));
   if (!result.success) return json(null);
 
   const { team, event, ...filters } = result.data;

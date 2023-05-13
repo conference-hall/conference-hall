@@ -31,8 +31,8 @@ export const action: ActionFunction = async ({ request, params }: ActionArgs) =>
   const form = await request.formData();
   invariant(params.talk, 'Invalid talk id');
 
-  const action = form.get('_action');
-  if (action === 'remove-speaker') {
+  const intent = form.get('intent');
+  if (intent === 'remove-speaker') {
     const speakerId = form.get('_speakerId')?.toString() as string;
     await removeCoSpeakerFromTalk(userId, params.talk, speakerId);
     return json(null, await addToast(request, 'Co-speaker removed from talk.'));
@@ -65,7 +65,7 @@ export default function SpeakerTalkRoute() {
               <ButtonLink to={`/speaker/talks/${talk.id}`} variant="secondary">
                 Cancel
               </ButtonLink>
-              <Button type="submit" form="edit-talk-form">
+              <Button type="submit" name="intent" value="talk-edit" form="edit-talk-form">
                 Save talk
               </Button>
             </Card.Actions>

@@ -23,7 +23,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   invariant(params.event, 'Invalid event slug');
 
   const url = new URL(request.url);
-  const result = ProposalsFiltersSchema.safeParse(url.searchParams);
+  const result = ProposalsFiltersSchema.safeParse(Object.fromEntries(url.searchParams));
   const page = await parsePage(url.searchParams);
   const currentFilters = result.success ? result.data : {};
   const filters = {

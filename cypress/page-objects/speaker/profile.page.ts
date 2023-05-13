@@ -35,7 +35,9 @@ class SpeakerProfilePage extends BasePage {
   }
 
   savePersonalInfo() {
-    return cy.findByLabelText('Personal information').submit();
+    cy.findByLabelText('Personal information').within(() => {
+      cy.findByRole('button', { name: 'Save' }).click();
+    });
   }
 
   error(label: string) {
@@ -53,7 +55,9 @@ class SpeakerProfilePage extends BasePage {
   }
 
   saveSpeakerDetails() {
-    return cy.findByLabelText('Speaker details').submit();
+    cy.findByLabelText('Speaker details').within(() => {
+      cy.findByRole('button', { name: 'Save' }).click();
+    });
   }
 
   fillAdditionalInfo(data: AdditionalInfoType) {
@@ -64,7 +68,9 @@ class SpeakerProfilePage extends BasePage {
   }
 
   saveAdditionalInfo() {
-    return cy.findByLabelText('Additional information').submit();
+    cy.findByLabelText('Additional information').within(() => {
+      cy.findByRole('button', { name: 'Save' }).click();
+    });
   }
 
   assertSaved() {

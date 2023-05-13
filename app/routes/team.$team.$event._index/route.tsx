@@ -25,9 +25,9 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   invariant(params.event, 'Invalid event slug');
 
   const url = new URL(request.url);
-  const filters = ProposalsFiltersSchema.safeParse(url.searchParams);
+  const filters = ProposalsFiltersSchema.safeParse(Object.fromEntries(url.searchParams));
   const page = await parsePage(url.searchParams);
-
+  console.log(filters.success ? filters.data : filters.error);
   const results = await searchProposals(params.event, userId, filters.success ? filters.data : {}, page);
   return json(results);
 };
