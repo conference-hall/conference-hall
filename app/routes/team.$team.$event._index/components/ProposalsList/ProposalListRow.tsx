@@ -3,9 +3,9 @@ import type { ChangeEventHandler } from 'react';
 import { Link, useSearchParams } from '@remix-run/react';
 import { Text } from '~/design-system/Typography';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
-import { ProposalStatusBadge } from '~/shared-components/proposals/ProposalStatusBadges';
+import { ProposalStatusBadge } from '~/components/proposals/ProposalStatusBadges';
 import type { ProposalStatus, ReviewFeeling } from '@prisma/client';
-import { ReviewNote } from '~/shared-components/reviews/ReviewNote';
+import { ReviewNote } from '~/components/reviews/ReviewNote';
 
 export type ProposalData = {
   id: string;

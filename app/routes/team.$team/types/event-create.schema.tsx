@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { text } from 'zod-form-data';
 import { EventTypeSchema, EventVisibilitySchema } from '~/schemas/event';
+import { text } from '~/schemas/utils';
 import { slugValidator } from '~/schemas/validators';
 
 export const EventCreateSchema = z.object({

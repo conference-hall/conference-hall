@@ -14,10 +14,10 @@ import {
   isRouteErrorResponse,
   useOutletContext,
 } from '@remix-run/react';
-import type { User } from './shared-server/users/get-user.server';
-import { getUser } from './shared-server/users/get-user.server';
+import type { User } from './server/users/get-user.server';
+import { getUser } from './server/users/get-user.server';
 import { H1, Text } from './design-system/Typography';
-import { GlobalLoading } from './shared-components/GlobalLoading';
+import { GlobalLoading } from './components/GlobalLoading';
 import { Toast } from './libs/toasts/Toast';
 import tailwind from './tailwind.css';
 import { Container } from './design-system/layouts/Container';

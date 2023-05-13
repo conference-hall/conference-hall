@@ -9,9 +9,8 @@ import { Button } from '~/design-system/Buttons';
 import { Input } from '~/design-system/forms/Input';
 import { MarkdownTextArea } from '~/design-system/forms/MarkdownTextArea';
 import { DateRangeInput } from '~/design-system/forms/DateRangeInput';
-import { EventForm } from '~/shared-components/events/EventForm';
-import { withZod } from '@remix-validated-form/with-zod';
-import { updateEvent } from '~/shared-server/teams/update-event.server';
+import { EventForm } from '~/components/events/EventForm';
+import { updateEvent } from '~/server/teams/update-event.server';
 import { EventDetailsSettingsSchema } from './types/event-details-settings.schema';
 import { EventGeneralSettingsSchema } from './types/event-general-settings.schema';
 import { Card } from '~/design-system/layouts/Card';
@@ -19,6 +18,7 @@ import { useOrganizerEvent } from '../team.$team.$event/route';
 import { AlertInfo } from '~/design-system/Alerts';
 import { addToast } from '~/libs/toasts/toasts';
 import { ArchiveBoxArrowDownIcon, ArchiveBoxXMarkIcon } from '@heroicons/react/24/outline';
+import { parse } from '@conform-to/zod';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await requireSession(request);
@@ -33,19 +33,19 @@ export const action = async ({ request, params }: ActionArgs) => {
 
   switch (action) {
     case 'general': {
-      const result = await withZod(EventGeneralSettingsSchema).validate(form);
-      if (result.error) return json(result.error.fieldErrors);
+      const result = parse(form, { schema: EventGeneralSettingsSchema });
+      if (!result.value) return json(result.error);
 
-      const updated = await updateEvent(params.event, userId, result.data);
+      const updated = await updateEvent(params.event, userId, result.value);
       if (!updated.slug) return json({ slug: updated.error });
 
       return redirect(`/team/${params.team}/${updated.slug}/settings`, await addToast(request, 'Event saved.'));
     }
     case 'details': {
-      const result = await withZod(EventDetailsSettingsSchema).validate(form);
-      if (result.error) return json(result.error.fieldErrors);
+      const result = parse(form, { schema: EventDetailsSettingsSchema });
+      if (!result.value) return json(result.error);
 
-      await updateEvent(params.event, userId, result.data);
+      await updateEvent(params.event, userId, result.value);
       return json(null, await addToast(request, 'Event details saved.'));
     }
     case 'archive': {

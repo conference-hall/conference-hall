@@ -4,7 +4,7 @@ import { redirect } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { requireSession } from '~/libs/auth/session';
 import { Outlet, useLoaderData, useOutletContext, useRouteLoaderData } from '@remix-run/react';
-import TeamBreadcrumb from '~/shared-components/teams/TeamBreadcrumb';
+import TeamBreadcrumb from '~/components/teams/TeamBreadcrumb';
 import type { Team } from './server/get-team.server';
 import { getTeam } from './server/get-team.server';
 import { TeamTabs } from './components/TeamTabs';
@@ -12,10 +12,10 @@ import { PageHeader } from '~/design-system/layouts/PageHeader';
 import { EventTabs } from './components/EventTabs';
 import { Container } from '~/design-system/layouts/Container';
 import { EventCreateSchema } from './types/event-create.schema';
-import { withZod } from '@remix-validated-form/with-zod';
 import { createEvent } from './server/create-event.server';
 import { useUser } from '~/root';
 import type { OrganizerEvent } from '../team.$team.$event/server/get-event.server';
+import { parse } from '@conform-to/zod';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);
@@ -30,10 +30,10 @@ export const action = async ({ request, params }: ActionArgs) => {
   invariant(params.team, 'Invalid team slug');
   const form = await request.formData();
 
-  const result = await withZod(EventCreateSchema).validate(form);
-  if (result.error) return json(result.error.fieldErrors);
+  const result = parse(form, { schema: EventCreateSchema });
+  if (!result.value) return json(result.error);
 
-  const event = await createEvent(params.team, userId, result.data);
+  const event = await createEvent(params.team, userId, result.value);
   if (event.error) return json(event.error?.fieldErrors);
 
   return redirect(`/team/${params.team}/${event.slug}/settings`);

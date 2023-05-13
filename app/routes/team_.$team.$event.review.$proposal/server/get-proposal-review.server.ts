@@ -1,8 +1,8 @@
 import type { ProposalsFilters } from '~/schemas/proposal';
 import { jsonToArray } from '~/libs/prisma';
-import { allowedForEvent } from '~/shared-server/teams/check-user-role.server';
-import { ReviewsDetails } from '~/shared-server/reviews/reviews-details';
-import { EventProposalsSearch } from '~/shared-server/proposals/EventProposalsSearch';
+import { allowedForEvent } from '~/server/teams/check-user-role.server';
+import { ReviewsDetails } from '~/server/reviews/reviews-details';
+import { EventProposalsSearch } from '~/server/proposals/EventProposalsSearch';
 import { db } from '~/libs/db';
 import { ProposalNotFoundError } from '~/libs/errors';
 

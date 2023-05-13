@@ -1,9 +1,9 @@
 import { TeamRole } from '@prisma/client';
 import { z } from 'zod';
-import { text } from 'zod-form-data';
+import { text } from '~/schemas/utils';
 import { db } from '~/libs/db';
-import { allowedForTeam } from '~/shared-server/teams/check-user-role.server';
-import { getPagination } from '~/shared-server/pagination/pagination.server';
+import { allowedForTeam } from '~/server/teams/check-user-role.server';
+import { getPagination } from '~/server/pagination/pagination.server';
 
 export const MembersFilterSchema = z.object({ query: text(z.string().trim().optional()) });
 

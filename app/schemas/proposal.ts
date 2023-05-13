@@ -1,7 +1,7 @@
 import { ProposalStatus } from '@prisma/client';
 import { z } from 'zod';
-import { numeric, repeatable, text } from 'zod-form-data';
 import { TalkSaveSchema } from './talks';
+import { numeric, repeatable, text } from './utils';
 
 const ProposalStatusSchema = text(z.enum(['SUBMITTED', 'ACCEPTED', 'REJECTED', 'CONFIRMED', 'DECLINED']));
 
@@ -10,13 +10,8 @@ const ReviewFeelingsSchema = text(z.enum(['NEUTRAL', 'POSITIVE', 'NEGATIVE', 'NO
 export const ProposalCreateSchema = TalkSaveSchema;
 
 export function getProposalUpdateSchema(formatsRequired: boolean, categoriesRequired: boolean) {
-  const FormatsSchema = formatsRequired
-    ? repeatable(z.array(z.string()).nonempty())
-    : repeatable(z.array(z.string())).optional();
-
-  const CategoriesSchema = categoriesRequired
-    ? repeatable(z.array(z.string()).nonempty())
-    : repeatable(z.array(z.string())).optional();
+  const FormatsSchema = formatsRequired ? repeatable(z.array(z.string()).nonempty()) : repeatable().optional();
+  const CategoriesSchema = categoriesRequired ? repeatable(z.array(z.string()).nonempty()) : repeatable().optional();
 
   return TalkSaveSchema.extend({ formats: FormatsSchema, categories: CategoriesSchema });
 }
@@ -32,7 +27,7 @@ export const ProposalSubmissionSchema = z.object({
 
 const EmailStatusSchema = text(z.enum(['not-sent', 'sent']).optional());
 
-export const ProposalsFiltersSchema = z.object({
+const ProposalsFiltersSchema = z.object({
   query: text(z.string().trim().optional()),
   sort: text(z.enum(['newest', 'oldest']).optional()),
   reviews: text(z.enum(['reviewed', 'not-reviewed']).optional()),
@@ -42,6 +37,11 @@ export const ProposalsFiltersSchema = z.object({
   emailAcceptedStatus: EmailStatusSchema,
   emailRejectedStatus: EmailStatusSchema,
 });
+
+export function parseProposalsFilters(params: URLSearchParams) {
+  const result = ProposalsFiltersSchema.safeParse(Object.fromEntries(params));
+  return result.success ? result.data : {};
+}
 
 export const ProposalReviewDataSchema = z.object({
   note: numeric(z.number().min(0).max(5).nullable().default(null)),

@@ -1,22 +1,22 @@
-import { withZod } from '@remix-validated-form/with-zod';
 import { EventTracksSettingsSchema } from './event-track-settings.schema';
+import { parse } from '@conform-to/zod';
 
 describe('Validate EventTracksSettingsSchema', () => {
   it('validates valid inputs', async () => {
-    const formData = new FormData();
-    formData.append('formatsRequired', 'true');
-    formData.append('categoriesRequired', 'false');
+    const form = new FormData();
+    form.append('formatsRequired', 'true');
+    form.append('categoriesRequired', 'false');
 
-    const result = await withZod(EventTracksSettingsSchema).validate(formData);
-    expect(result.data).toEqual({ formatsRequired: true, categoriesRequired: false });
+    const result = parse(form, { schema: EventTracksSettingsSchema });
+    expect(result.value).toEqual({ formatsRequired: true, categoriesRequired: false });
   });
 
   it('returns falsy values on other values', async () => {
-    const formData = new FormData();
-    formData.append('formatsRequired', 'foo');
-    formData.append('categoriesRequired', 'foo');
+    const form = new FormData();
+    form.append('formatsRequired', 'foo');
+    form.append('categoriesRequired', 'foo');
 
-    const result = await withZod(EventTracksSettingsSchema).validate(formData);
-    expect(result.data).toEqual({ formatsRequired: false, categoriesRequired: false });
+    const result = parse(form, { schema: EventTracksSettingsSchema });
+    expect(result.value).toEqual({ formatsRequired: false, categoriesRequired: false });
   });
 });

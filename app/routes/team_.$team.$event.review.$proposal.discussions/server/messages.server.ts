@@ -1,6 +1,6 @@
 import { MessageChannel } from '@prisma/client';
 import { db } from '~/libs/db';
-import { allowedForEvent } from '~/shared-server/teams/check-user-role.server';
+import { allowedForEvent } from '~/server/teams/check-user-role.server';
 
 export async function getProposalMessages(eventSlug: string, proposalId: string, userId: string) {
   await allowedForEvent(eventSlug, userId);

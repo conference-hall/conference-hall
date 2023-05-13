@@ -1,7 +1,6 @@
 import invariant from 'tiny-invariant';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { withZod } from '@remix-validated-form/with-zod';
 import { requireSession } from '~/libs/auth/session';
 import { H2 } from '~/design-system/Typography';
 import { Form, useActionData } from '@remix-run/react';
@@ -9,12 +8,13 @@ import { Button } from '~/design-system/Buttons';
 import { Input } from '~/design-system/forms/Input';
 import { DateRangeInput } from '~/design-system/forms/DateRangeInput';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
-import { updateEvent } from '~/shared-server/teams/update-event.server';
+import { updateEvent } from '~/server/teams/update-event.server';
 import { EventCfpSettingsSchema } from './types/event-cfp-settings.schema';
 import { useOrganizerEvent } from '../team.$team.$event/route';
 import { Card } from '~/design-system/layouts/Card';
 import { AlertInfo } from '~/design-system/Alerts';
 import { addToast } from '~/libs/toasts/toasts';
+import { parse } from '@conform-to/zod';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await requireSession(request);
@@ -26,11 +26,10 @@ export const action = async ({ request, params }: ActionArgs) => {
   invariant(params.event, 'Invalid event slug');
   const form = await request.formData();
 
-  const result = await withZod(EventCfpSettingsSchema).validate(form);
-  if (result.error) {
-    return json(result.error.fieldErrors);
-  }
-  await updateEvent(params.event, userId, result.data);
+  const result = parse(form, { schema: EventCfpSettingsSchema });
+  if (!result.value) return json(result.error);
+
+  await updateEvent(params.event, userId, result.value);
   return json(null, await addToast(request, 'Call for paper updated.'));
 };
 

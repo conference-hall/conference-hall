@@ -3,11 +3,10 @@ import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { requireSession } from '~/libs/auth/session';
 import { Outlet, useLoaderData, useOutletContext, useParams } from '@remix-run/react';
-import { withZod } from '@remix-validated-form/with-zod';
-import { ProposalReviewDataSchema, ProposalsFiltersSchema } from '~/schemas/proposal';
+import { ProposalReviewDataSchema, parseProposalsFilters } from '~/schemas/proposal';
 import type { ProposalReview } from './server/get-proposal-review.server';
 import { getProposalReview } from './server/get-proposal-review.server';
-import { Navbar } from '~/shared-components/navbar/Navbar';
+import { Navbar } from '~/components/navbar/Navbar';
 import { useUser } from '~/root';
 import { ReviewHeader } from './components/Header';
 import { ReviewTabs } from './components/Tabs';
@@ -15,6 +14,7 @@ import { rateProposal } from './server/review-proposal.server';
 import { ReviewInfoSection } from './components/ReviewInfoSection';
 import { TeamRole } from '@prisma/client';
 import { addToast } from '~/libs/toasts/toasts';
+import { parse } from '@conform-to/zod';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);
@@ -22,8 +22,8 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   invariant(params.proposal, 'Invalid proposal id');
 
   const url = new URL(request.url);
-  const filters = await withZod(ProposalsFiltersSchema).validate(url.searchParams);
-  const proposal = await getProposalReview(params.event, params.proposal, userId, filters.data ?? {});
+  const filters = parseProposalsFilters(url.searchParams);
+  const proposal = await getProposalReview(params.event, params.proposal, userId, filters);
   return json(proposal);
 };
 
@@ -33,9 +33,9 @@ export const action = async ({ request, params }: ActionArgs) => {
   invariant(params.proposal, 'Invalid proposal id');
   const form = await request.formData();
 
-  const result = await withZod(ProposalReviewDataSchema).validate(form);
-  if (result.data) {
-    await rateProposal(params.event, params.proposal, userId, result.data);
+  const result = parse(form, { schema: ProposalReviewDataSchema });
+  if (result.value) {
+    await rateProposal(params.event, params.proposal, userId, result.value);
     return json(null, await addToast(request, 'Review saved.'));
   }
   return null;

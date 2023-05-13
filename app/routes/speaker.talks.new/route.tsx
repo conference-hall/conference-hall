@@ -2,25 +2,25 @@ import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
-import { withZod } from '@remix-validated-form/with-zod';
 import { TalkSaveSchema } from '~/schemas/talks';
 import { createTalk } from './server/create-talk.server';
 import { requireSession } from '~/libs/auth/session';
-import { DetailsForm } from '~/shared-components/proposals/forms/DetailsForm';
+import { DetailsForm } from '~/components/proposals/forms/DetailsForm';
 import { Button } from '~/design-system/Buttons';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 import { Container } from '~/design-system/layouts/Container';
 import { Card } from '~/design-system/layouts/Card';
 import { addToast } from '~/libs/toasts/toasts';
+import { parse } from '@conform-to/zod';
 
 export const action = async ({ request }: LoaderArgs) => {
   const userId = await requireSession(request);
   const form = await request.formData();
 
-  const result = await withZod(TalkSaveSchema).validate(form);
-  if (result.error) return json(result.error.fieldErrors);
+  const result = parse(form, { schema: TalkSaveSchema });
+  if (!result.value) return json(result.error);
 
-  const talkId = await createTalk(userId, result.data);
+  const talkId = await createTalk(userId, result.value);
   return redirect(`/speaker/talks/${talkId}`, await addToast(request, 'New talk created.'));
 };
 

@@ -2,18 +2,18 @@ import invariant from 'tiny-invariant';
 import { json } from '@remix-run/node';
 import type { LoaderArgs } from '@remix-run/node';
 import { Form, useActionData, useFetcher } from '@remix-run/react';
-import { withZod } from '@remix-validated-form/with-zod';
 import { H2 } from '~/design-system/Typography';
 import { Input } from '~/design-system/forms/Input';
 import { Button } from '~/design-system/Buttons';
 import { requireSession } from '~/libs/auth/session';
-import { updateEvent } from '~/shared-server/teams/update-event.server';
+import { updateEvent } from '~/server/teams/update-event.server';
 import { useOrganizerEvent } from '../team.$team.$event/route';
 import { EventEmailNotificationsSettingsSchema } from './types/event-email-notifications-settings.schema';
 import { EventNotificationsSettingsSchema } from './types/event-notifications-settings.schema';
 import { Card } from '~/design-system/layouts/Card';
 import { ToggleGroup } from '~/design-system/forms/Toggles';
 import { addToast } from '~/libs/toasts/toasts';
+import { parse } from '@conform-to/zod';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await requireSession(request);
@@ -28,14 +28,15 @@ export const action = async ({ request, params }: LoaderArgs) => {
 
   switch (action) {
     case 'save-email-notifications': {
-      const result = await withZod(EventEmailNotificationsSettingsSchema).validate(form);
-      if (result.error) return json(result.error.fieldErrors);
-      await updateEvent(params.event, userId, result.data);
+      const result = parse(form, { schema: EventEmailNotificationsSettingsSchema });
+      if (!result.value) return json(result.error);
+      await updateEvent(params.event, userId, result.value);
       return json(null, await addToast(request, 'Notification email saved.'));
     }
     case 'save-notifications': {
-      const result = await withZod(EventNotificationsSettingsSchema).validate(form);
-      if (!result.error) await updateEvent(params.event, userId, result.data);
+      const result = parse(form, { schema: EventNotificationsSettingsSchema });
+      if (!result.value) return json(result.error);
+      await updateEvent(params.event, userId, result.value);
       return json(null, await addToast(request, 'Notification setting saved.'));
     }
   }

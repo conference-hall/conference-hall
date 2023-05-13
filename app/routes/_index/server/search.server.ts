@@ -3,19 +3,28 @@ import { EventVisibility } from '@prisma/client';
 import { db } from '~/libs/db';
 import { getCfpState } from '~/utils/event';
 import type { Pagination } from '~/schemas/pagination';
-import { getPagination } from '~/shared-server/pagination/pagination.server';
-import type { SearchFilters } from '../types/search';
+import { getPagination } from '~/server/pagination/pagination.server';
+import { z } from 'zod';
+import { text } from '~/schemas/utils';
+
+const SearchFiltersSchema = z.object({
+  query: text().optional(),
+  type: text(z.enum(['all', 'conference', 'meetup'])).optional(),
+  talkId: text().optional(),
+});
+
+export type SearchFilters = z.infer<typeof SearchFiltersSchema>;
 
 const RESULTS_BY_PAGE = 12;
 
 export async function searchEvents(filters: SearchFilters, page: Pagination = 1) {
-  const { query, type, cfp } = filters;
+  const { query, type } = filters;
 
   const eventsWhereInput: Prisma.EventWhereInput = {
     visibility: EventVisibility.PUBLIC,
     archived: false,
     name: { contains: query, mode: 'insensitive' },
-    ...mapFiltersQuery(type, cfp),
+    ...mapFiltersQuery(type),
   };
 
   const eventsCount = await db.event.count({ where: eventsWhereInput });
@@ -48,20 +57,23 @@ export async function searchEvents(filters: SearchFilters, page: Pagination = 1)
   };
 }
 
-function mapFiltersQuery(type?: string, cfp?: string): Prisma.EventWhereInput {
-  const PAST_CFP = { cfpEnd: { lt: new Date() } };
+export function parseFilters(params: URLSearchParams) {
+  const result = SearchFiltersSchema.safeParse(Object.fromEntries(params));
+  return result.success ? result.data : {};
+}
+
+function mapFiltersQuery(type?: string): Prisma.EventWhereInput {
   const INCOMING_CFP = {
     cfpStart: { not: null },
     OR: [{ cfpEnd: null }, { cfpEnd: { gt: new Date() } }],
   };
-  const cfpFilter = cfp === 'past' ? PAST_CFP : INCOMING_CFP;
 
   switch (type) {
     case 'conference':
-      return { type: 'CONFERENCE', ...cfpFilter };
+      return { type: 'CONFERENCE', ...INCOMING_CFP };
     case 'meetup':
       return { type: 'MEETUP', cfpStart: { not: null } };
     default:
-      return { type: undefined, ...cfpFilter };
+      return { type: undefined, ...INCOMING_CFP };
   }
 }

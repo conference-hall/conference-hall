@@ -2,7 +2,7 @@ import { db } from '~/libs/db';
 import { ForbiddenOperationError, ProposalNotFoundError } from '~/libs/errors';
 import type { SurveyData } from '~/schemas/survey';
 import type { UserSocialLinks } from '~/schemas/user';
-import { allowedForEvent } from '~/shared-server/teams/check-user-role.server';
+import { allowedForEvent } from '~/server/teams/check-user-role.server';
 import { sortBy } from '~/utils/arrays';
 
 export async function getSpeakers(eventSlug: string, proposalId: string, userId: string) {

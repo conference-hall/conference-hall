@@ -2,22 +2,22 @@ import invariant from 'tiny-invariant';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
-import { withZod } from '@remix-validated-form/with-zod';
-import { removeCoSpeakerFromSubmission } from '~/shared-server/proposals/remove-co-speaker.server';
+import { removeCoSpeakerFromSubmission } from '~/server/proposals/remove-co-speaker.server';
 import { DetailsSchema } from '~/schemas/profile.schema';
 import { Card } from '~/design-system/layouts/Card';
 import { useUser } from '~/root';
 import { requireSession } from '~/libs/auth/session';
 import { Button, ButtonLink } from '~/design-system/Buttons';
-import { useSubmissionStep } from '../$event_.submission/hooks/useSubmissionStep';
+import { useSubmissionStep } from '../$event_.submission/components/useSubmissionStep';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
-import { getSubmittedProposal } from '~/shared-server/proposals/get-submitted-proposal.server';
-import { saveUserDetails } from '~/shared-server/profile/save-profile.server';
-import { getEvent } from '~/shared-server/events/get-event.server';
+import { getSubmittedProposal } from '~/server/proposals/get-submitted-proposal.server';
+import { saveUserDetails } from '~/server/profile/save-profile.server';
+import { getEvent } from '~/server/events/get-event.server';
 import { H2, Subtitle, Text } from '~/design-system/Typography';
 import { MarkdownTextArea } from '~/design-system/forms/MarkdownTextArea';
 import { ExternalLink } from '~/design-system/Links';
-import { CoSpeakersList, InviteCoSpeakerButton } from '~/shared-components/proposals/forms/CoSpeaker';
+import { CoSpeakersList, InviteCoSpeakerButton } from '~/components/proposals/forms/CoSpeaker';
+import { parse } from '@conform-to/zod';
 
 export const handle = { step: 'speakers' };
 
@@ -47,10 +47,10 @@ export const action = async ({ request, params }: ActionArgs) => {
     return json(null);
   }
 
-  const result = await withZod(DetailsSchema).validate(form);
-  if (result.error) return json(result.error.fieldErrors);
+  const result = parse(form, { schema: DetailsSchema });
+  if (!result.value) return json(result.error);
+  await saveUserDetails(userId, result.value);
 
-  await saveUserDetails(userId, result.data);
   const event = await getEvent(params.event);
   if (event.hasTracks) {
     return redirect(`/${params.event}/submission/${params.talk}/tracks`);

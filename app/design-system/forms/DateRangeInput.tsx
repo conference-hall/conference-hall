@@ -10,7 +10,7 @@ import { Input } from './Input';
 type Props = {
   start: { value?: string | null } & InputProps;
   end: { value?: string | null } & InputProps;
-  error?: string;
+  error?: string | string[];
   className?: string;
 };
 

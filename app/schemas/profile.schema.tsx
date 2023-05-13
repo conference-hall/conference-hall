@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { text } from 'zod-form-data';
+import { text } from './utils';
 
 export const PersonalInfoSchema = z.object({
   name: text(z.string().trim().min(1)),

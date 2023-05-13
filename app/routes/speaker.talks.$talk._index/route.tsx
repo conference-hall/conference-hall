@@ -2,15 +2,15 @@ import invariant from 'tiny-invariant';
 import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
-import { getTalk } from '~/shared-server/talks/get-talk.server';
+import { getTalk } from '~/server/talks/get-talk.server';
 import { archiveTalk, restoreTalk } from './server/archive-talk.server';
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import { requireSession } from '~/libs/auth/session';
 import { Container } from '~/design-system/layouts/Container';
 import { ButtonLink } from '~/design-system/Buttons';
 import { ArchiveOrRestoreTalkButton } from './components/ArchiveOrRestoreTalkButton';
-import { ProposalDetailsSection } from '~/shared-components/proposals/ProposalDetailsSection';
-import { ProposalSubmissionsSection } from '~/shared-components/proposals/ProposalSubmissionsSection';
+import { ProposalDetailsSection } from '~/components/proposals/ProposalDetailsSection';
+import { ProposalSubmissionsSection } from '~/components/proposals/ProposalSubmissionsSection';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 import { addToast } from '~/libs/toasts/toasts';
 

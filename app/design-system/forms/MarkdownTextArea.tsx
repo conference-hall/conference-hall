@@ -10,7 +10,7 @@ type MarkdownTextAreaProps = {
   label: string;
   description?: string;
   defaultValue?: string | null;
-  error?: string;
+  error?: string | string[];
 } & React.TextareaHTMLAttributes<HTMLTextAreaElement>;
 
 const baseStyles = 'border-gray-300 focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500';

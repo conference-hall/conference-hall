@@ -1,7 +1,16 @@
 import { TeamRole } from '@prisma/client';
+import { z } from 'zod';
 import { db } from '~/libs/db';
-import { allowedForEvent } from '~/shared-server/teams/check-user-role.server';
-import type { EventTrackSaveData } from '../types/event-track-save.schema';
+import { text } from '~/schemas/utils';
+import { allowedForEvent } from '~/server/teams/check-user-role.server';
+
+export const EventTrackSaveSchema = z.object({
+  id: text(z.string().trim().optional()),
+  name: text(z.string().trim().min(1)),
+  description: text(z.string().trim().nullable().default(null)),
+});
+
+type EventTrackSaveData = z.infer<typeof EventTrackSaveSchema>;
 
 export async function saveFormat(eventSlug: string, userId: string, data: EventTrackSaveData) {
   await allowedForEvent(eventSlug, userId, [TeamRole.OWNER]);

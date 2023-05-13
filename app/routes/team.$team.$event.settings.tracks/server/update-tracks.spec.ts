@@ -5,9 +5,10 @@ import { eventFactory } from 'tests/factories/events';
 import { eventFormatFactory } from 'tests/factories/formats';
 import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
-import { deleteCategory, deleteFormat, saveCategory, saveFormat } from './update-tracks.server';
+import { EventTrackSaveSchema, deleteCategory, deleteFormat, saveCategory, saveFormat } from './update-tracks.server';
 import { db } from '~/libs/db';
 import { ForbiddenOperationError } from '~/libs/errors';
+import { parse } from '@conform-to/zod';
 
 describe('#saveFormat', () => {
   let owner: User, reviewer: User;
@@ -182,5 +183,44 @@ describe('#deleteCategory', () => {
   it('throws an error if user does not belong to event team', async () => {
     const user = await userFactory();
     await expect(deleteCategory(event.slug, user.id, category.id)).rejects.toThrowError(ForbiddenOperationError);
+  });
+});
+
+describe('Validate EventTrackSaveSchema', () => {
+  it('validates valid inputs', async () => {
+    const form = new FormData();
+    form.append('id', '123');
+    form.append('name', 'Track 1');
+    form.append('description', 'Track description');
+
+    const result = parse(form, { schema: EventTrackSaveSchema });
+    expect(result.value).toEqual({
+      id: '123',
+      name: 'Track 1',
+      description: 'Track description',
+    });
+  });
+
+  it('validates valid inputs without id', async () => {
+    const form = new FormData();
+    form.append('name', 'Track 1');
+    form.append('description', 'Track description');
+
+    const result = parse(form, { schema: EventTrackSaveSchema });
+    expect(result.value).toEqual({
+      name: 'Track 1',
+      description: 'Track description',
+    });
+  });
+
+  it('returns validation errors', async () => {
+    const form = new FormData();
+    form.append('name', '');
+    form.append('description', '');
+
+    const result = parse(form, { schema: EventTrackSaveSchema });
+    expect(result.error).toEqual({
+      name: 'Required',
+    });
   });
 });

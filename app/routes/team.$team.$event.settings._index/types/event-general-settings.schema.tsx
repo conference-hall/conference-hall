@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { text } from 'zod-form-data';
+import { text } from '~/schemas/utils';
 import { EventVisibilitySchema } from '~/schemas/event';
 import { slugValidator } from '~/schemas/validators';
 

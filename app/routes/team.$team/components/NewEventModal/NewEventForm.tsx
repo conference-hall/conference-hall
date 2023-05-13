@@ -1,5 +1,5 @@
 import { useFetcher } from '@remix-run/react';
-import { EventForm } from '~/shared-components/events/EventForm';
+import { EventForm } from '~/components/events/EventForm';
 import { Button } from '~/design-system/Buttons';
 import { H1, Subtitle } from '~/design-system/Typography';
 

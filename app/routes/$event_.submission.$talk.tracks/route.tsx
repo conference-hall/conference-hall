@@ -2,22 +2,20 @@ import invariant from 'tiny-invariant';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
-import { CategoriesForm } from '~/shared-components/proposals/forms/CategoriesForm';
-import { saveTracks } from './server/save-tracks.server';
+import { CategoriesForm } from '~/components/proposals/forms/CategoriesForm';
+import { getTracksSchema, saveTracks } from './server/save-tracks.server';
 import { useEvent } from '~/routes/$event/route';
-import { getSubmittedProposal } from '~/shared-server/proposals/get-submitted-proposal.server';
+import { getSubmittedProposal } from '~/server/proposals/get-submitted-proposal.server';
 import { requireSession } from '~/libs/auth/session';
-import { TracksMandatorySchema, TracksSchema } from './types/tracks';
-import { FormatsForm } from '~/shared-components/proposals/forms/FormatsForm';
-import { getEvent } from '~/shared-server/events/get-event.server';
+import { FormatsForm } from '~/components/proposals/forms/FormatsForm';
+import { getEvent } from '~/server/events/get-event.server';
 import { Card } from '~/design-system/layouts/Card';
 import { H2 } from '~/design-system/Typography';
-import { useSubmissionStep } from '../$event_.submission/hooks/useSubmissionStep';
+import { useSubmissionStep } from '../$event_.submission/components/useSubmissionStep';
 import { Button, ButtonLink } from '~/design-system/Buttons';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { AlertError } from '~/design-system/Alerts';
-import { withZod } from '@remix-validated-form/with-zod';
-import { z } from 'zod';
+import { parse } from '@conform-to/zod';
 
 export const handle = { step: 'tracks' };
 
@@ -36,16 +34,14 @@ export const action = async ({ request, params }: ActionArgs) => {
   invariant(params.event, 'Invalid event slug');
   invariant(params.talk, 'Invalid talk id');
 
-  const event = await getEvent(params.event);
+  const { id, surveyEnabled, formatsRequired, categoriesRequired } = await getEvent(params.event);
 
-  const FormatsSchema = event.formatsRequired ? TracksMandatorySchema : TracksSchema;
-  const CategoriesSchema = event.categoriesRequired ? TracksMandatorySchema : TracksSchema;
-  const tracks = await withZod(z.object({ formats: FormatsSchema, categories: CategoriesSchema })).validate(form);
-  if (tracks.error) return json(tracks.error.fieldErrors);
+  const result = parse(form, { schema: getTracksSchema(formatsRequired, categoriesRequired) });
+  if (!result.value) return json(result.error);
 
-  await saveTracks(params.talk, event.id, userId, tracks.data);
+  await saveTracks(params.talk, id, userId, result.value);
 
-  if (event.surveyEnabled) return redirect(`/${params.event}/submission/${params.talk}/survey`);
+  if (surveyEnabled) return redirect(`/${params.event}/submission/${params.talk}/survey`);
 
   return redirect(`/${params.event}/submission/${params.talk}/submit`);
 };

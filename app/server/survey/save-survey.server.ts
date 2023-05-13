@@ -1,5 +1,5 @@
-import { db } from '../../libs/db';
-import { EventNotFoundError } from '../../libs/errors';
+import { db } from '~/libs/db';
+import { EventNotFoundError } from '~/libs/errors';
 import type { SurveyData } from '~/schemas/survey';
 
 export async function saveSurvey(userId: string, slug: string, answers: SurveyData) {

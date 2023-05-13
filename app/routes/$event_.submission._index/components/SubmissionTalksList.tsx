@@ -1,4 +1,4 @@
-import { ProposalCard } from '~/shared-components/proposals/ProposalCard';
+import { ProposalCard } from '~/components/proposals/ProposalCard';
 
 type Props = {
   label: string;

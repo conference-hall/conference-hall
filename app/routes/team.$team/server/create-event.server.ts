@@ -1,5 +1,5 @@
 import { TeamRole } from '@prisma/client';
-import { allowedForTeam } from '~/shared-server/teams/check-user-role.server';
+import { allowedForTeam } from '~/server/teams/check-user-role.server';
 import type { EventCreateData } from '../types/event-create.schema';
 import { db } from '~/libs/db';
 

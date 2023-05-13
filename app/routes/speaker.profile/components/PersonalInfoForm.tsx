@@ -1,51 +1,50 @@
 import { Form } from '@remix-run/react';
+import { Avatar } from '~/design-system/Avatar';
 import { Button } from '~/design-system/Buttons';
 import { H2, Subtitle } from '~/design-system/Typography';
-import { MarkdownTextArea } from '~/design-system/forms/MarkdownTextArea';
+import { Input } from '~/design-system/forms/Input';
 import { Card } from '~/design-system/layouts/Card';
 
 type Props = {
-  bio: string | null;
-  references: string | null;
-  errors?: Record<string, string>;
+  name: string | null;
+  email: string | null;
+  picture: string | null;
+  errors?: Record<string, string | string[]> | null;
 };
 
-export function PersonalInfoForm({ bio, references, errors }: Props) {
+export function PersonalInfoForm({ name, email, picture, errors }: Props) {
   return (
     <Card as="section">
-      <Form method="POST" aria-labelledby="speaker-details-label" preventScrollReset>
+      <Form method="POST" aria-labelledby="personal-info-label" preventScrollReset>
         <Card.Title>
-          <H2 size="base" id="speaker-details-label">
-            Speaker details
+          <H2 size="base" id="personal-info-label">
+            Personal information
           </H2>
-          <Subtitle>
-            Give more information about you, these information will be visible by organizers when you submit a talk.
-          </Subtitle>
-          <a id="speaker-details" href="#speaker-details" className="scroll-mt-24" />
+          <Subtitle>Use a permanent address where you can receive email.</Subtitle>
+          <a id="personal-info" href="#personal-info" className="scroll-mt-24" aria-hidden={true} />
         </Card.Title>
 
         <Card.Content>
-          <input type="hidden" name="_type" value="DETAILS" />
-          <MarkdownTextArea
-            name="bio"
-            label="Biography"
-            description="Brief description for your profile."
-            rows={5}
-            error={errors?.bio}
-            defaultValue={bio || ''}
-          />
-          <MarkdownTextArea
-            name="references"
-            label="Speaker references"
-            description="Give some information about your speaker experience: your already-given talks, conferences or meetups as speaker, video links..."
-            rows={5}
-            error={errors?.references}
-            defaultValue={references || ''}
-          />
+          <Input name="name" label="Full name" defaultValue={name || ''} key={name} error={errors?.name} />
+          <Input name="email" label="Email address" defaultValue={email || ''} key={email} error={errors?.email} />
+
+          <div className="flex justify-between gap-8">
+            <Input
+              name="picture"
+              label="Avatar picture URL"
+              defaultValue={picture || ''}
+              key={picture}
+              error={errors?.picture}
+              className="flex-1"
+            />
+            <Avatar picture={picture} name={name} size="xl" square />
+          </div>
         </Card.Content>
 
         <Card.Actions>
-          <Button type="submit">Save</Button>
+          <Button type="submit" name="intent" value="personal-info">
+            Save
+          </Button>
         </Card.Actions>
       </Form>
     </Card>

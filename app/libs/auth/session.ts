@@ -2,7 +2,7 @@ import type { Session } from '@remix-run/node';
 import { createCookieSessionStorage, redirect } from '@remix-run/node';
 import { auth as serverAuth } from './firebase.server';
 import { config } from '../config';
-import { createUserAccount } from '~/shared-server/users/create-user-account.server';
+import { createUserAccount } from '~/server/users/create-user-account.server';
 
 const MAX_AGE_SEC = 60 * 60 * 24 * 10; // 10 days
 const MAX_AGE_MS = MAX_AGE_SEC * 1000;

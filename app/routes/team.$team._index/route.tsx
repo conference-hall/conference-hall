@@ -8,7 +8,7 @@ import { Outlet, useLoaderData } from '@remix-run/react';
 import { Square3Stack3DIcon } from '@heroicons/react/24/outline';
 import { listEvents } from './server/list-events.server';
 import { EmptyState } from '~/design-system/layouts/EmptyState';
-import { EventCard } from '~/shared-components/EventCard';
+import { EventCard } from '~/components/EventCard';
 import { useTeam } from '../team.$team/route';
 import { useUser } from '~/root';
 import { ArchivedFilters } from './components/ArchivedFilter';

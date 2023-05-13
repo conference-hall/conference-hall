@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { numeric, text } from 'zod-form-data';
 import { EventTypeSchema } from '~/schemas/event';
+import { numeric, text } from '~/schemas/utils';
 import { dateValidator } from '~/schemas/validators';
 
 export const EventCfpSettingsSchema = z

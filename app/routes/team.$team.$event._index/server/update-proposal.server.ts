@@ -1,7 +1,7 @@
 import { TeamRole } from '@prisma/client';
 import { db } from '~/libs/db';
 import type { ProposalStatusData, ProposalUpdateData } from '~/schemas/proposal';
-import { allowedForEvent } from '~/shared-server/teams/check-user-role.server';
+import { allowedForEvent } from '~/server/teams/check-user-role.server';
 
 export async function updateProposal(eventSlug: string, proposalId: string, userId: string, data: ProposalUpdateData) {
   await allowedForEvent(eventSlug, userId, [TeamRole.OWNER, TeamRole.MEMBER]);

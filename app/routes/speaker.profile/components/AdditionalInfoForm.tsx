@@ -9,7 +9,7 @@ type Props = {
   company: string | null;
   address: string | null;
   socials: UserSocialLinks;
-  errors?: Record<string, string>;
+  errors?: Record<string, string | string[]> | null;
 };
 
 export function AdditionalInfoForm({ company, address, socials, errors }: Props) {
@@ -27,7 +27,6 @@ export function AdditionalInfoForm({ company, address, socials, errors }: Props)
         </Card.Title>
 
         <Card.Content>
-          <input type="hidden" name="_type" value="ADDITIONAL" />
           <Input name="company" label="Company" defaultValue={company || ''} error={errors?.company} />
           <Input name="address" label="Location (city, country)" defaultValue={address || ''} error={errors?.address} />
           <Input
@@ -47,7 +46,9 @@ export function AdditionalInfoForm({ company, address, socials, errors }: Props)
         </Card.Content>
 
         <Card.Actions>
-          <Button type="submit">Save</Button>
+          <Button type="submit" name="intent" value="additional-info">
+            Save
+          </Button>
         </Card.Actions>
       </Form>
     </Card>

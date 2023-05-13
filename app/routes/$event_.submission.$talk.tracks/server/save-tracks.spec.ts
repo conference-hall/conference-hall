@@ -7,7 +7,8 @@ import { talkFactory } from 'tests/factories/talks';
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { db } from '../../../libs/db';
 import { ProposalNotFoundError } from '../../../libs/errors';
-import { saveTracks } from './save-tracks.server';
+import { getTracksSchema, saveTracks } from './save-tracks.server';
+import { parse } from '@conform-to/zod';
 
 describe('#saveTracks', () => {
   beforeEach(async () => {
@@ -75,4 +76,24 @@ describe('#saveTracks', () => {
       ProposalNotFoundError
     );
   });
+});
+
+describe('#getTracksSchema', () => {
+  it('validates tracks form inputs', async () => {
+    const form = new FormData();
+    form.append('formats', 'format 1');
+    form.append('formats', 'format 2');
+    form.append('categories', 'category 1');
+    form.append('categories', 'category 2');
+
+    const TrackSchema = getTracksSchema(true, true);
+
+    const result = parse(form, { schema: TrackSchema });
+    expect(result.value).toEqual({
+      formats: ['format 1', 'format 2'],
+      categories: ['category 1', 'category 2'],
+    });
+  });
+
+  it.todo('returns errors when tracks are mandatory');
 });

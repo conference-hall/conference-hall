@@ -22,7 +22,7 @@ type Props = {
   formatsRequired?: boolean;
   categories?: Array<{ id: string; name: string; description: string | null }>;
   categoriesRequired?: boolean;
-  errors?: Record<string, string> | null;
+  errors?: Record<string, string | string[]> | null;
 };
 
 export function DetailsForm({

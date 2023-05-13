@@ -1,6 +1,14 @@
 import { ProposalNotFoundError } from '~/libs/errors';
-import type { TrackUpdateData } from '../types/tracks';
 import { db } from '~/libs/db';
+import { z } from 'zod';
+import { repeatable } from '~/schemas/utils';
+
+const TracksMandatorySchema = repeatable(z.array(z.string()).nonempty());
+const TracksSchema = repeatable().optional();
+
+const TracksUpdateSchema = z.object({ formats: TracksSchema, categories: TracksSchema });
+
+type TrackUpdateData = z.infer<typeof TracksUpdateSchema>;
 
 export async function saveTracks(talkId: string, eventId: string, userId: string, data: TrackUpdateData) {
   const proposal = await db.proposal.findFirst({
@@ -19,4 +27,10 @@ export async function saveTracks(talkId: string, eventId: string, userId: string
       },
     },
   });
+}
+
+export function getTracksSchema(formatsRequired: boolean, categoriesRequired: boolean) {
+  const FormatsSchema = formatsRequired ? TracksMandatorySchema : TracksSchema;
+  const CategoriesSchema = categoriesRequired ? TracksMandatorySchema : TracksSchema;
+  return z.object({ formats: FormatsSchema, categories: CategoriesSchema });
 }

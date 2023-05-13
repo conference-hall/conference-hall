@@ -2,7 +2,7 @@ import c from 'classnames';
 import type { ProposalStatus } from '@prisma/client';
 import { Text } from '~/design-system/Typography';
 import { useProposalsSearchFilter } from '../../useProposalsSearchFilter';
-import { ProposalStatusBadge } from '~/shared-components/proposals/ProposalStatusBadges';
+import { ProposalStatusBadge } from '~/components/proposals/ProposalStatusBadges';
 
 type Props = {
   defaultValue?: ProposalStatus;

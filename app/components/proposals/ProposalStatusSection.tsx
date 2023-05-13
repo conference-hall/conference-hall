@@ -3,7 +3,7 @@ import { Button, ButtonLink } from '~/design-system/Buttons';
 import { ProposalDeleteButton } from './ProposalDelete';
 import { Card } from '~/design-system/layouts/Card';
 import { H3, Subtitle, Text } from '~/design-system/Typography';
-import { SpeakerProposalStatus } from '~/shared-server/proposals/get-speaker-proposal-status';
+import { SpeakerProposalStatus } from '~/server/proposals/get-speaker-proposal-status';
 
 type Props = {
   proposal: { id: string; talkId: string | null; status: SpeakerProposalStatus };

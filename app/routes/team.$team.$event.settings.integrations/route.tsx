@@ -2,17 +2,17 @@ import invariant from 'tiny-invariant';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
-import { withZod } from '@remix-validated-form/with-zod';
 import { requireSession } from '~/libs/auth/session';
 import { H2 } from '~/design-system/Typography';
 import { ExternalLink } from '~/design-system/Links';
 import { Button } from '~/design-system/Buttons';
 import { Input } from '~/design-system/forms/Input';
-import { updateEvent } from '~/shared-server/teams/update-event.server';
+import { updateEvent } from '~/server/teams/update-event.server';
 import { EventSlackSettingsSchema } from './types/event-slack-settings.schema';
 import { useOrganizerEvent } from '../team.$team.$event/route';
 import { Card } from '~/design-system/layouts/Card';
 import { AlertInfo } from '~/design-system/Alerts';
+import { parse } from '@conform-to/zod';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await requireSession(request);
@@ -24,9 +24,10 @@ export const action = async ({ request, params }: ActionArgs) => {
   invariant(params.event, 'Invalid event slug');
   const form = await request.formData();
 
-  const result = await withZod(EventSlackSettingsSchema).validate(form);
-  if (result.error) return json(result.error.fieldErrors);
-  await updateEvent(params.event, userId, result.data);
+  const result = parse(form, { schema: EventSlackSettingsSchema });
+  if (!result.value) return json(result.error);
+
+  await updateEvent(params.event, userId, result.value);
   return json(null);
 };
 

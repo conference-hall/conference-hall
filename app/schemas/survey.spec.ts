@@ -1,20 +1,20 @@
-import { withZod } from '@remix-validated-form/with-zod';
 import { SurveySchema } from './survey';
+import { parse } from '@conform-to/zod';
 
 describe('Validate SurveySchema', () => {
   it('validates survey form inputs', async () => {
-    const formData = new FormData();
-    formData.append('gender', 'male');
-    formData.append('tshirt', 'XL');
-    formData.append('accomodation', 'true');
-    formData.append('transports', 'taxi');
-    formData.append('transports', 'train');
-    formData.append('diet', 'vegan');
-    formData.append('diet', 'vegetarian');
-    formData.append('info', 'Hello');
+    const form = new FormData();
+    form.append('gender', 'male');
+    form.append('tshirt', 'XL');
+    form.append('accomodation', 'true');
+    form.append('transports', 'taxi');
+    form.append('transports', 'train');
+    form.append('diet', 'vegan');
+    form.append('diet', 'vegetarian');
+    form.append('info', 'Hello');
 
-    const result = await withZod(SurveySchema).validate(formData);
-    expect(result.data).toEqual({
+    const result = parse(form, { schema: SurveySchema });
+    expect(result.value).toEqual({
       gender: 'male',
       tshirt: 'XL',
       accomodation: 'true',
@@ -25,14 +25,14 @@ describe('Validate SurveySchema', () => {
   });
 
   it('reset survey form inputs', async () => {
-    const formData = new FormData();
-    formData.append('gender', '');
-    formData.append('tshirt', '');
-    formData.append('accomodation', '');
-    formData.append('info', '');
+    const form = new FormData();
+    form.append('gender', '');
+    form.append('tshirt', '');
+    form.append('accomodation', '');
+    form.append('info', '');
 
-    const result = await withZod(SurveySchema).validate(formData);
-    expect(result.data).toEqual({
+    const result = parse(form, { schema: SurveySchema });
+    expect(result.value).toEqual({
       gender: null,
       tshirt: null,
       accomodation: null,

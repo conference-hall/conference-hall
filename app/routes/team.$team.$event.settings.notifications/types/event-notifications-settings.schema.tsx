@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { repeatable } from 'zod-form-data';
+import { repeatable } from '~/schemas/utils';
 
 export const EventNotificationsSettingsSchema = z.object({
-  emailNotifications: repeatable(z.array(z.string())),
+  emailNotifications: repeatable(),
 });

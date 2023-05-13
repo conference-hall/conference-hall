@@ -1,7 +1,7 @@
 import { AvatarGroup } from '~/design-system/Avatar';
 import { CardLink } from '~/design-system/layouts/Card';
 import { Text } from '~/design-system/Typography';
-import type { SpeakerProposalStatus } from '~/shared-server/proposals/get-speaker-proposal-status';
+import type { SpeakerProposalStatus } from '~/server/proposals/get-speaker-proposal-status';
 import { ProposalStatusLabel } from './ProposalStatusLabel';
 
 type Props = {

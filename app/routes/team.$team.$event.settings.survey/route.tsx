@@ -6,13 +6,13 @@ import { Button } from '~/design-system/Buttons';
 import { Form, useFetcher, useLoaderData } from '@remix-run/react';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
 import { useOrganizerEvent } from '../team.$team.$event/route';
-import { withZod } from '@remix-validated-form/with-zod';
-import { updateEvent } from '~/shared-server/teams/update-event.server';
-import { QUESTIONS } from '~/shared-server/survey/get-questions.server';
+import { updateEvent } from '~/server/teams/update-event.server';
+import { QUESTIONS } from '~/server/survey/get-questions.server';
 import { EventSurveySettingsSchema } from './types/event-survey-settings.schema';
 import { Card } from '~/design-system/layouts/Card';
 import { ToggleGroup } from '~/design-system/forms/Toggles';
 import { addToast } from '~/libs/toasts/toasts';
+import { parse } from '@conform-to/zod';
 
 // TODO why not using event-survey#getQuestions?
 export const loader = async ({ request }: LoaderArgs) => {
@@ -33,8 +33,9 @@ export const action = async ({ request, params }: LoaderArgs) => {
       return json(null, await addToast(request, `Speaker survey ${surveyEnabled ? 'enabled' : 'disabled'}`));
     }
     case 'save-questions': {
-      const result = await withZod(EventSurveySettingsSchema).validate(form);
-      if (!result.error) await updateEvent(params.event, userId, result.data);
+      const result = parse(form, { schema: EventSurveySettingsSchema });
+      if (!result.value) return json(null);
+      await updateEvent(params.event, userId, result.value);
       return json(null, await addToast(request, 'Survey questions saved.'));
     }
   }

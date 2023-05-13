@@ -1,8 +1,8 @@
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { requireSession } from '~/libs/auth/session';
-import { Navbar } from '~/shared-components/navbar/Navbar';
-import { Footer } from '~/shared-components/Footer';
+import { Navbar } from '~/components/navbar/Navbar';
+import { Footer } from '~/components/Footer';
 import { useUser } from '~/root';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 import { EmptyState } from '~/design-system/layouts/EmptyState';
