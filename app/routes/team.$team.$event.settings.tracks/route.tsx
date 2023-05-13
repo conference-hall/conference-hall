@@ -4,10 +4,7 @@ import { json } from '@remix-run/node';
 import { requireSession } from '~/libs/auth/session';
 import { H2, Subtitle } from '~/design-system/Typography';
 import { useFetcher } from '@remix-run/react';
-import { updateEvent } from '~/shared-server/teams/update-event.server';
-import { deleteCategory, deleteFormat, saveCategory, saveFormat } from './server/update-tracks.server';
 import { NewTrackButton } from './components/SaveTrackForm';
-import { EventTrackSaveSchema } from './types/event-track-save.schema';
 import { EventTracksSettingsSchema } from './types/event-track-settings.schema';
 import { useOrganizerEvent } from '../team.$team.$event/route';
 import { Card } from '~/design-system/layouts/Card';
@@ -15,6 +12,14 @@ import { TrackList } from './components/TrackList';
 import { ToggleGroup } from '~/design-system/forms/Toggles';
 import { addToast } from '~/libs/toasts/toasts';
 import { parse } from '@conform-to/zod';
+import { updateEvent } from '~/shared-server/teams/update-event.server';
+import {
+  EventTrackSaveSchema,
+  deleteCategory,
+  deleteFormat,
+  saveCategory,
+  saveFormat,
+} from './server/update-tracks.server';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await requireSession(request);
