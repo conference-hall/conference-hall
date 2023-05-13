@@ -1,7 +1,7 @@
-import { userFactory } from '../../../tests/factories/users';
 import { eventFactory } from '../../../tests/factories/events';
-import { talkFactory } from '../../../tests/factories/talks';
 import { proposalFactory } from '../../../tests/factories/proposals';
+import { talkFactory } from '../../../tests/factories/talks';
+import { userFactory } from '../../../tests/factories/users';
 
 export const seed = async () => {
   const speaker1 = await userFactory({ traits: ['clark-kent'] });

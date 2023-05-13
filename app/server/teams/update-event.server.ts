@@ -1,9 +1,11 @@
 import type { Prisma } from '@prisma/client';
 import { TeamRole } from '@prisma/client';
-import { geocode } from '~/libs/geocode/geocode';
-import { allowedForEvent } from './check-user-role.server';
+
 import { db } from '~/libs/db';
 import { EventNotFoundError } from '~/libs/errors';
+import { geocode } from '~/libs/geocode/geocode';
+
+import { allowedForEvent } from './check-user-role.server';
 
 export async function updateEvent(eventSlug: string, userId: string, data: Partial<Prisma.EventCreateInput>) {
   await allowedForEvent(eventSlug, userId, [TeamRole.OWNER]);

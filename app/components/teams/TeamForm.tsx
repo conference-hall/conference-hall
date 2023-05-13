@@ -1,5 +1,6 @@
 import slugify from '@sindresorhus/slugify';
 import { useState } from 'react';
+
 import { Input } from '~/design-system/forms/Input';
 
 type TeamFormProps = {

@@ -1,3 +1,4 @@
+import { parse } from '@conform-to/zod';
 import type { Event, EventCategory, EventFormat, Team, User } from '@prisma/client';
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventCategoryFactory } from 'tests/factories/categories';
@@ -5,10 +6,11 @@ import { eventFactory } from 'tests/factories/events';
 import { eventFormatFactory } from 'tests/factories/formats';
 import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
-import { EventTrackSaveSchema, deleteCategory, deleteFormat, saveCategory, saveFormat } from './update-tracks.server';
+
 import { db } from '~/libs/db';
 import { ForbiddenOperationError } from '~/libs/errors';
-import { parse } from '@conform-to/zod';
+
+import { deleteCategory, deleteFormat, EventTrackSaveSchema, saveCategory, saveFormat } from './update-tracks.server';
 
 describe('#saveFormat', () => {
   let owner: User, reviewer: User;

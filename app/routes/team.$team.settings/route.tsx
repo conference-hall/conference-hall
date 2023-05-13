@@ -1,15 +1,17 @@
-import invariant from 'tiny-invariant';
+import { Cog6ToothIcon, UserGroupIcon } from '@heroicons/react/24/outline';
+import { TeamRole } from '@prisma/client';
 import type { LoaderArgs } from '@remix-run/node';
 import { Outlet } from '@remix-run/react';
+import invariant from 'tiny-invariant';
+
 import { Container } from '~/design-system/layouts/Container';
 import { NavSideMenu } from '~/design-system/navigation/NavSideMenu';
-import { requireSession } from '~/libs/auth/session';
-import { Cog6ToothIcon, UserGroupIcon } from '@heroicons/react/24/outline';
 import { H2 } from '~/design-system/Typography';
+import { requireSession } from '~/libs/auth/session';
 import { useUser } from '~/root';
-import { useTeam } from '../team.$team/route';
 import { allowedForTeam } from '~/server/teams/check-user-role.server';
-import { TeamRole } from '@prisma/client';
+
+import { useTeam } from '../team.$team/route';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);

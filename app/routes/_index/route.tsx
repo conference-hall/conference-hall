@@ -1,19 +1,21 @@
+import { FaceFrownIcon } from '@heroicons/react/24/outline';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData, useSearchParams } from '@remix-run/react';
-import { FaceFrownIcon } from '@heroicons/react/24/outline';
-import { useUser } from '~/root';
-import { H1, H2, Text } from '~/design-system/Typography';
-import { Pagination } from '~/design-system/Pagination';
-import { Navbar } from '~/components/navbar/Navbar';
-import { parsePage } from '~/schemas/pagination';
-import { parseFilters, searchEvents } from './server/search.server';
-import { SearchEventsInput } from './components/SearchEventsInput';
-import { SearchEventsFilters } from './components/SearchEventsFilters';
+
 import { EventCard } from '~/components/EventCard';
 import { Footer } from '~/components/Footer';
+import { Navbar } from '~/components/navbar/Navbar';
 import { Container } from '~/design-system/layouts/Container';
 import { EmptyState } from '~/design-system/layouts/EmptyState';
+import { Pagination } from '~/design-system/Pagination';
+import { H1, H2, Text } from '~/design-system/Typography';
+import { useUser } from '~/root';
+import { parsePage } from '~/schemas/pagination';
+
+import { SearchEventsFilters } from './components/SearchEventsFilters';
+import { SearchEventsInput } from './components/SearchEventsInput';
+import { parseFilters, searchEvents } from './server/search.server';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const url = new URL(request.url);

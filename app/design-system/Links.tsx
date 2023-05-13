@@ -1,7 +1,7 @@
-import React from 'react';
-import cn from 'classnames';
 import type { LinkProps as RemixLinkProps } from '@remix-run/react';
 import { Link as RemixLink } from '@remix-run/react';
+import cn from 'classnames';
+import React from 'react';
 
 const linkStyle = 'inline-flex text-sm text-indigo-600 hover:text-indigo-500 items-center';
 

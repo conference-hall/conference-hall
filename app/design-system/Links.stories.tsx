@@ -1,5 +1,6 @@
-import { ExternalLink, Link } from './Links';
 import { SunIcon } from '@heroicons/react/20/solid';
+
+import { ExternalLink, Link } from './Links';
 import { StoryBlock } from './StoryBlock';
 
 export const Documentation = () => (

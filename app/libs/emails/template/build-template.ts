@@ -1,6 +1,7 @@
 import fs from 'node:fs';
-import xss from 'xss';
+
 import { marked } from 'marked';
+import xss from 'xss';
 
 marked.use({ mangle: false, headerIds: false });
 

@@ -1,18 +1,20 @@
-import invariant from 'tiny-invariant';
+import { parse } from '@conform-to/zod';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
-import { requireSession } from '~/libs/auth/session';
-import { H2 } from '~/design-system/Typography';
-import { ExternalLink } from '~/design-system/Links';
+import invariant from 'tiny-invariant';
+
+import { AlertInfo } from '~/design-system/Alerts';
 import { Button } from '~/design-system/Buttons';
 import { Input } from '~/design-system/forms/Input';
-import { updateEvent } from '~/server/teams/update-event.server';
-import { EventSlackSettingsSchema } from './types/event-slack-settings.schema';
-import { useOrganizerEvent } from '../team.$team.$event/route';
 import { Card } from '~/design-system/layouts/Card';
-import { AlertInfo } from '~/design-system/Alerts';
-import { parse } from '@conform-to/zod';
+import { ExternalLink } from '~/design-system/Links';
+import { H2 } from '~/design-system/Typography';
+import { requireSession } from '~/libs/auth/session';
+import { updateEvent } from '~/server/teams/update-event.server';
+
+import { useOrganizerEvent } from '../team.$team.$event/route';
+import { EventSlackSettingsSchema } from './types/event-slack-settings.schema';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await requireSession(request);

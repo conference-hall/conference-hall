@@ -1,4 +1,5 @@
-import { CheckCircleIcon, XCircleIcon, ExclamationTriangleIcon, StarIcon, ClockIcon } from '@heroicons/react/20/solid';
+import { CheckCircleIcon, ClockIcon, ExclamationTriangleIcon, StarIcon, XCircleIcon } from '@heroicons/react/20/solid';
+
 import { IconLabel } from '~/design-system/IconLabel';
 import { SpeakerProposalStatus } from '~/server/proposals/get-speaker-proposal-status';
 

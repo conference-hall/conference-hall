@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import c from 'classnames';
 import { RadioGroup } from '@headlessui/react';
+import c from 'classnames';
+import { useState } from 'react';
 
 const settings = [
   { name: 'Private', value: 'PRIVATE', description: 'This event would be available to anyone who has the link.' },

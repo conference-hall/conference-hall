@@ -1,23 +1,25 @@
-import invariant from 'tiny-invariant';
-import { Form, useActionData, useLoaderData, useNavigate } from '@remix-run/react';
-import { json, redirect } from '@remix-run/node';
+import { parse } from '@conform-to/zod';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
-import { addToast } from '~/libs/toasts/toasts';
-import { H3, Subtitle } from '~/design-system/Typography';
+import { json, redirect } from '@remix-run/node';
+import { Form, useActionData, useLoaderData, useNavigate } from '@remix-run/react';
+import invariant from 'tiny-invariant';
+
+import { CoSpeakersList, InviteCoSpeakerButton } from '~/components/proposals/forms/CoSpeaker';
 import { DetailsForm } from '~/components/proposals/forms/DetailsForm';
 import { Button, ButtonLink } from '~/design-system/Buttons';
-import { requireSession } from '~/libs/auth/session';
-import { getProposalUpdateSchema } from '~/schemas/proposal';
-import { getSpeakerProposal } from '~/server/proposals/get-speaker-proposal.server';
-import { updateProposal } from './server/update-proposal.server';
-import { useEvent } from '../$event/route';
-import { CoSpeakersList, InviteCoSpeakerButton } from '~/components/proposals/forms/CoSpeaker';
-import { removeCoSpeakerFromProposal } from '~/server/proposals/remove-co-speaker.server';
-import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
-import { Container } from '~/design-system/layouts/Container';
 import { Card } from '~/design-system/layouts/Card';
+import { Container } from '~/design-system/layouts/Container';
+import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
+import { H3, Subtitle } from '~/design-system/Typography';
+import { requireSession } from '~/libs/auth/session';
+import { addToast } from '~/libs/toasts/toasts';
+import { getProposalUpdateSchema } from '~/schemas/proposal';
 import { getEvent } from '~/server/events/get-event.server';
-import { parse } from '@conform-to/zod';
+import { getSpeakerProposal } from '~/server/proposals/get-speaker-proposal.server';
+import { removeCoSpeakerFromProposal } from '~/server/proposals/remove-co-speaker.server';
+
+import { useEvent } from '../$event/route';
+import { updateProposal } from './server/update-proposal.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);

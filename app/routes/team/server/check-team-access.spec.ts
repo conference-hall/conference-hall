@@ -1,6 +1,7 @@
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
+
 import { checkTeamAccess } from './check-team-access.server';
 
 describe('#checkOrganizerAccess', () => {

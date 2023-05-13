@@ -1,10 +1,12 @@
-import { json, type ActionArgs, type LoaderArgs } from '@remix-run/node';
-import { requireSession } from '~/libs/auth/session';
-import invariant from 'tiny-invariant';
-import { addProposalMessage, getProposalMessages, removeProposalMessage } from './server/messages.server';
-import { useUser } from '~/root';
+import { type ActionArgs, json, type LoaderArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
+import invariant from 'tiny-invariant';
+
+import { requireSession } from '~/libs/auth/session';
+import { useUser } from '~/root';
+
 import { Discussions } from './components/Discussions';
+import { addProposalMessage, getProposalMessages, removeProposalMessage } from './server/messages.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);

@@ -4,9 +4,11 @@ import { eventFactory } from 'tests/factories/events';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
-import { sendParticipationAnswer } from './send-participation-answer.server';
+
 import { db } from '~/libs/db';
 import { ProposalNotFoundError } from '~/libs/errors';
+
+import { sendParticipationAnswer } from './send-participation-answer.server';
 
 describe('#sendParticipationAnswer', () => {
   beforeEach(async () => {

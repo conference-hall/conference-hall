@@ -3,10 +3,11 @@ import { eventFactory } from 'tests/factories/events';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
+
 import { config } from '../../libs/config';
 import { TalkNotFoundError } from '../../libs/errors';
-import { getTalk } from './get-talk.server';
 import { SpeakerProposalStatus } from '../proposals/get-speaker-proposal-status';
+import { getTalk } from './get-talk.server';
 
 describe('#getTalk', () => {
   beforeEach(async () => {

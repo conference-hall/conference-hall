@@ -1,5 +1,6 @@
-import c from 'classnames';
 import { HeartIcon, NoSymbolIcon, StarIcon, UserIcon, XCircleIcon } from '@heroicons/react/24/outline';
+import c from 'classnames';
+
 import { Text } from '~/design-system/Typography';
 import { formatReviewNote } from '~/utils/reviews';
 

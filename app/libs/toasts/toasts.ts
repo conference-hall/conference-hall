@@ -1,6 +1,7 @@
-import { v4 as uuid } from 'uuid';
 import type { Session } from '@remix-run/node';
 import { createCookieSessionStorage } from '@remix-run/node';
+import { v4 as uuid } from 'uuid';
+
 import { config } from '../config';
 
 export type ToastData = { id: string; message: string };

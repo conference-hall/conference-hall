@@ -1,5 +1,6 @@
-import { EventCfpSettingsSchema } from './event-cfp-settings.schema';
 import { parse } from '@conform-to/zod';
+
+import { EventCfpSettingsSchema } from './event-cfp-settings.schema';
 
 describe('Validate EventCfpSettingsSchema', () => {
   it('validates valid inputs', async () => {

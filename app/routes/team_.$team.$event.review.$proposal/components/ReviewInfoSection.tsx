@@ -1,10 +1,12 @@
 import type { ProposalStatus, ReviewFeeling } from '@prisma/client';
 import format from 'date-fns/format';
 import { ClientOnly } from 'remix-utils';
-import { H2, Text } from '~/design-system/Typography';
-import { Card } from '~/design-system/layouts/Card';
+
 import { ProposalStatusBadge } from '~/components/proposals/ProposalStatusBadges';
 import { ReviewNote } from '~/components/reviews/ReviewNote';
+import { Card } from '~/design-system/layouts/Card';
+import { H2, Text } from '~/design-system/Typography';
+
 import { ReviewForm } from './ReviewForm';
 
 type Props = {

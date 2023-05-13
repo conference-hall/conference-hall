@@ -1,13 +1,15 @@
-import invariant from 'tiny-invariant';
 import { json, type LoaderArgs } from '@remix-run/node';
-import { requireSession } from '~/libs/auth/session';
-import { H2 } from '~/design-system/Typography';
 import { useFetcher } from '@remix-run/react';
-import { updateEvent } from '~/server/teams/update-event.server';
-import { useOrganizerEvent } from '../team.$team.$event/route';
-import { Card } from '~/design-system/layouts/Card';
+import invariant from 'tiny-invariant';
+
 import { ToggleGroup } from '~/design-system/forms/Toggles';
+import { Card } from '~/design-system/layouts/Card';
+import { H2 } from '~/design-system/Typography';
+import { requireSession } from '~/libs/auth/session';
 import { addToast } from '~/libs/toasts/toasts';
+import { updateEvent } from '~/server/teams/update-event.server';
+
+import { useOrganizerEvent } from '../team.$team.$event/route';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await requireSession(request);

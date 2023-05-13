@@ -1,12 +1,13 @@
 import { BuildingLibraryIcon, MapPinIcon, PencilSquareIcon } from '@heroicons/react/20/solid';
+
 import { Avatar } from '~/design-system/Avatar';
 import { ButtonLink } from '~/design-system/Buttons';
-import { Card } from '~/design-system/layouts/Card';
 import { IconLabel } from '~/design-system/IconLabel';
-import { Markdown } from '~/design-system/Markdown';
-import { H3, Subtitle } from '~/design-system/Typography';
 import { GitHubIcon } from '~/design-system/icons/GitHubIcon';
 import { TwitterIcon } from '~/design-system/icons/TwitterIcon';
+import { Card } from '~/design-system/layouts/Card';
+import { Markdown } from '~/design-system/Markdown';
+import { H3, Subtitle } from '~/design-system/Typography';
 import type { UserSocialLinks } from '~/schemas/user';
 
 type Props = {

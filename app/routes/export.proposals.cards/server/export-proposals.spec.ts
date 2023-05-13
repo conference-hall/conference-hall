@@ -1,12 +1,14 @@
 import type { Event, Team, User } from '@prisma/client';
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventFactory } from 'tests/factories/events';
-import { teamFactory } from 'tests/factories/team';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
+import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
-import { exportProposals } from './export-proposals.server';
+
 import { db } from '~/libs/db';
+
+import { exportProposals } from './export-proposals.server';
 
 describe('#exportProposals', () => {
   let owner: User, reviewer: User, speaker: User;

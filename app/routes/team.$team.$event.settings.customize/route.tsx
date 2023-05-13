@@ -1,18 +1,20 @@
-import invariant from 'tiny-invariant';
-import type { ChangeEvent } from 'react';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { requireSession } from '~/libs/auth/session';
-import { H2, Subtitle } from '~/design-system/Typography';
 import { Form, useActionData, useSubmit } from '@remix-run/react';
+import type { ChangeEvent } from 'react';
+import invariant from 'tiny-invariant';
+
 import { AlertInfo } from '~/design-system/Alerts';
-import { ExternalLink } from '~/design-system/Links';
-import { useOrganizerEvent } from '../team.$team.$event/route';
-import { ButtonFileUpload } from '~/design-system/forms/FileUploadButton';
-import { uploadEventLogo } from './server/upload-event-logo.server';
-import { Card } from '~/design-system/layouts/Card';
 import { Avatar } from '~/design-system/Avatar';
+import { ButtonFileUpload } from '~/design-system/forms/FileUploadButton';
+import { Card } from '~/design-system/layouts/Card';
+import { ExternalLink } from '~/design-system/Links';
+import { H2, Subtitle } from '~/design-system/Typography';
+import { requireSession } from '~/libs/auth/session';
 import { addToast } from '~/libs/toasts/toasts';
+
+import { useOrganizerEvent } from '../team.$team.$event/route';
+import { uploadEventLogo } from './server/upload-event-logo.server';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await requireSession(request);

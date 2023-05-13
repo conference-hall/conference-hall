@@ -1,12 +1,13 @@
-import { eventFormatFactory } from '../tests/factories/formats';
-import { eventCategoryFactory } from '../tests/factories/categories';
-import { eventFactory } from '../tests/factories/events';
-import { userFactory } from 'tests/factories/users';
-import { teamFactory } from 'tests/factories/team';
-import { talkFactory } from 'tests/factories/talks';
+import { organizerKeyFactory } from 'tests/factories/organizer-key';
 import { proposalFactory } from 'tests/factories/proposals';
 import { reviewFactory } from 'tests/factories/reviews';
-import { organizerKeyFactory } from 'tests/factories/organizer-key';
+import { talkFactory } from 'tests/factories/talks';
+import { teamFactory } from 'tests/factories/team';
+import { userFactory } from 'tests/factories/users';
+
+import { eventCategoryFactory } from '../tests/factories/categories';
+import { eventFactory } from '../tests/factories/events';
+import { eventFormatFactory } from '../tests/factories/formats';
 
 async function seed() {
   const user = await userFactory({ traits: ['clark-kent'] });

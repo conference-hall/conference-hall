@@ -1,8 +1,10 @@
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
-import { listMembers } from './list-members.server';
+
 import { ForbiddenOperationError } from '~/libs/errors';
+
+import { listMembers } from './list-members.server';
 
 describe('#listMembers', () => {
   beforeEach(async () => {

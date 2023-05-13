@@ -1,6 +1,7 @@
 import { TalkLevel } from '@prisma/client';
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { userFactory } from 'tests/factories/users';
+
 import { db } from '../../../libs/db';
 import { createTalk } from './create-talk.server';
 

@@ -1,12 +1,13 @@
+import { parse } from '@conform-to/zod';
+
 import {
+  parseProposalsFilters,
   ProposalCreateSchema,
-  ProposalsStatusUpdateSchema,
   ProposalReviewDataSchema,
+  ProposalsStatusUpdateSchema,
   ProposalSubmissionSchema,
   ProposalUpdateSchema,
-  parseProposalsFilters,
 } from './proposal';
-import { parse } from '@conform-to/zod';
 
 describe('Validate ProposalCreateSchema', () => {
   it('validates proposal form data', async () => {

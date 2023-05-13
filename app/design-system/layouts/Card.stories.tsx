@@ -1,7 +1,7 @@
-import { Card, CardLink } from './Card';
+import { Button } from '../Buttons';
 import { StoryBlock } from '../StoryBlock';
 import { H2, Text } from '../Typography';
-import { Button } from '../Buttons';
+import { Card, CardLink } from './Card';
 
 export const Documentation = () => (
   <>

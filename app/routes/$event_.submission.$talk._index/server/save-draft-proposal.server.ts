@@ -1,5 +1,6 @@
 import type { ProposalCreateData } from '~/schemas/proposal';
 import { getCfpState } from '~/utils/event';
+
 import { db } from '../../../libs/db';
 import { CfpNotOpenError, EventNotFoundError, TalkNotFoundError } from '../../../libs/errors';
 

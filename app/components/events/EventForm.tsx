@@ -1,6 +1,8 @@
-import { useState } from 'react';
 import slugify from '@sindresorhus/slugify';
+import { useState } from 'react';
+
 import { Input } from '~/design-system/forms/Input';
+
 import EventVisibilityRadioGroup from './EventVisibilityRadioGroup';
 
 type EventValues = {

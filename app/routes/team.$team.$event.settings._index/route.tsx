@@ -1,24 +1,26 @@
-import invariant from 'tiny-invariant';
+import { parse } from '@conform-to/zod';
+import { ArchiveBoxArrowDownIcon, ArchiveBoxXMarkIcon } from '@heroicons/react/24/outline';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { requireSession } from '~/libs/auth/session';
-import { H2, Subtitle } from '~/design-system/Typography';
 import { Form, useActionData } from '@remix-run/react';
+import invariant from 'tiny-invariant';
+
+import { EventForm } from '~/components/events/EventForm';
+import { AlertInfo } from '~/design-system/Alerts';
 import { Button } from '~/design-system/Buttons';
+import { DateRangeInput } from '~/design-system/forms/DateRangeInput';
 import { Input } from '~/design-system/forms/Input';
 import { MarkdownTextArea } from '~/design-system/forms/MarkdownTextArea';
-import { DateRangeInput } from '~/design-system/forms/DateRangeInput';
-import { EventForm } from '~/components/events/EventForm';
+import { Card } from '~/design-system/layouts/Card';
+import { H2, Subtitle } from '~/design-system/Typography';
+import { requireSession } from '~/libs/auth/session';
+import { addToast } from '~/libs/toasts/toasts';
 import { updateEvent } from '~/server/teams/update-event.server';
+
+import { useOrganizerEvent } from '../team.$team.$event/route';
 import { EventDetailsSettingsSchema } from './types/event-details-settings.schema';
 import { EventGeneralSettingsSchema } from './types/event-general-settings.schema';
-import { Card } from '~/design-system/layouts/Card';
-import { useOrganizerEvent } from '../team.$team.$event/route';
-import { AlertInfo } from '~/design-system/Alerts';
-import { addToast } from '~/libs/toasts/toasts';
-import { ArchiveBoxArrowDownIcon, ArchiveBoxXMarkIcon } from '@heroicons/react/24/outline';
-import { parse } from '@conform-to/zod';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await requireSession(request);

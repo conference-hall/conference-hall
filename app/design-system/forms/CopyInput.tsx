@@ -1,5 +1,5 @@
-import { ClipboardDocumentIcon } from '@heroicons/react/24/outline';
 import { CheckIcon } from '@heroicons/react/20/solid';
+import { ClipboardDocumentIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
 
 type Props = {

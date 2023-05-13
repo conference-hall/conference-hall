@@ -1,25 +1,27 @@
+import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
+import { CubeTransparentIcon } from '@heroicons/react/24/outline';
+import type { TeamRole } from '@prisma/client';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Form, useLoaderData, useSearchParams } from '@remix-run/react';
-import { requireSession } from '~/libs/auth/session';
-import { H3, Subtitle } from '~/design-system/Typography';
-import { Card } from '~/design-system/layouts/Card';
 import invariant from 'tiny-invariant';
-import { MembersFilterSchema, listMembers } from './server/list-members.server';
-import { removeMember } from './server/remove-member.server';
-import { changeMemberRole } from './server/change-role.server';
-import { ChangeRoleButton, InviteMemberButton, RemoveButton } from './components/MemberActions';
-import { useTeam } from '../team.$team/route';
-import { useUser } from '~/root';
+
 import { AvatarName } from '~/design-system/Avatar';
-import { addToast } from '~/libs/toasts/toasts';
-import type { TeamRole } from '@prisma/client';
-import { parsePage } from '~/schemas/pagination';
-import { Pagination } from '~/design-system/Pagination';
 import { Input } from '~/design-system/forms/Input';
-import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
+import { Card } from '~/design-system/layouts/Card';
 import { EmptyState } from '~/design-system/layouts/EmptyState';
-import { CubeTransparentIcon } from '@heroicons/react/24/outline';
+import { Pagination } from '~/design-system/Pagination';
+import { H3, Subtitle } from '~/design-system/Typography';
+import { requireSession } from '~/libs/auth/session';
+import { addToast } from '~/libs/toasts/toasts';
+import { useUser } from '~/root';
+import { parsePage } from '~/schemas/pagination';
+
+import { useTeam } from '../team.$team/route';
+import { ChangeRoleButton, InviteMemberButton, RemoveButton } from './components/MemberActions';
+import { changeMemberRole } from './server/change-role.server';
+import { listMembers, MembersFilterSchema } from './server/list-members.server';
+import { removeMember } from './server/remove-member.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);

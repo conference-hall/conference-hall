@@ -1,5 +1,6 @@
-import { EventSurveySettingsSchema } from './event-survey-settings.schema';
 import { parse } from '@conform-to/zod';
+
+import { EventSurveySettingsSchema } from './event-survey-settings.schema';
 
 describe('Validate EventSurveySettingsSchema', () => {
   it('validates valid inputs', async () => {

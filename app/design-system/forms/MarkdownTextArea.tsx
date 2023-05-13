@@ -1,10 +1,11 @@
+import { Dialog } from '@headlessui/react';
+import { XMarkIcon } from '@heroicons/react/20/solid';
+import cn from 'classnames';
 import type { ChangeEventHandler } from 'react';
 import { useState } from 'react';
-import cn from 'classnames';
-import { Dialog } from '@headlessui/react';
+
 import { Button } from '../Buttons';
 import { Markdown } from '../Markdown';
-import { XMarkIcon } from '@heroicons/react/20/solid';
 
 type MarkdownTextAreaProps = {
   label: string;

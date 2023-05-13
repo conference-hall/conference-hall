@@ -1,9 +1,10 @@
 import { Form } from '@remix-run/react';
+
 import { Avatar } from '~/design-system/Avatar';
 import { Button } from '~/design-system/Buttons';
-import { H2, Subtitle } from '~/design-system/Typography';
 import { Input } from '~/design-system/forms/Input';
 import { Card } from '~/design-system/layouts/Card';
+import { H2, Subtitle } from '~/design-system/Typography';
 
 type Props = {
   name: string | null;

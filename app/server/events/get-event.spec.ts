@@ -1,5 +1,6 @@
 import { teamFactory } from 'tests/factories/team';
-import { resetDB, disconnectDB } from '../../../tests/db-helpers';
+
+import { disconnectDB, resetDB } from '../../../tests/db-helpers';
 import { eventCategoryFactory } from '../../../tests/factories/categories';
 import { eventFactory } from '../../../tests/factories/events';
 import { eventFormatFactory } from '../../../tests/factories/formats';

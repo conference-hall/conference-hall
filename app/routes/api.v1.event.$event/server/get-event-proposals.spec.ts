@@ -1,12 +1,14 @@
 import { disconnectDB, resetDB } from 'tests/db-helpers';
+import { eventCategoryFactory } from 'tests/factories/categories';
 import { eventFactory } from 'tests/factories/events';
+import { eventFormatFactory } from 'tests/factories/formats';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
-import { getEventProposals } from './get-event-proposals.server';
+
 import { ApiKeyInvalidError, EventNotFoundError } from '~/libs/errors';
-import { eventFormatFactory } from 'tests/factories/formats';
-import { eventCategoryFactory } from 'tests/factories/categories';
+
+import { getEventProposals } from './get-event-proposals.server';
 
 describe('#getEventProposals', () => {
   beforeEach(async () => {

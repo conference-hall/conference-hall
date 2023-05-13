@@ -1,10 +1,12 @@
-import { listSpeakerProposals } from './list-speaker-proposals.server';
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventFactory } from 'tests/factories/events';
-import { userFactory } from 'tests/factories/users';
-import { talkFactory } from 'tests/factories/talks';
 import { proposalFactory } from 'tests/factories/proposals';
+import { talkFactory } from 'tests/factories/talks';
+import { userFactory } from 'tests/factories/users';
+
 import { SpeakerProposalStatus } from '~/server/proposals/get-speaker-proposal-status';
+
+import { listSpeakerProposals } from './list-speaker-proposals.server';
 
 describe('#listSpeakerProposals', () => {
   beforeEach(async () => {

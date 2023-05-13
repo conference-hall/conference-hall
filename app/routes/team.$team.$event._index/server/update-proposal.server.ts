@@ -1,4 +1,5 @@
 import { TeamRole } from '@prisma/client';
+
 import { db } from '~/libs/db';
 import type { ProposalStatusData, ProposalUpdateData } from '~/schemas/proposal';
 import { allowedForEvent } from '~/server/teams/check-user-role.server';

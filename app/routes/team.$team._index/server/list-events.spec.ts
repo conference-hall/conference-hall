@@ -2,8 +2,10 @@ import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventFactory } from 'tests/factories/events';
 import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
-import { listEvents } from './list-events.server';
+
 import { ForbiddenOperationError } from '~/libs/errors';
+
+import { listEvents } from './list-events.server';
 
 describe('#listEvents', () => {
   beforeEach(async () => {

@@ -1,10 +1,11 @@
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { useState } from 'react';
-import { ExternalLink } from '~/design-system/Links';
-import { H2, Subtitle } from '~/design-system/Typography';
+
 import { Input } from '~/design-system/forms/Input';
 import Select from '~/design-system/forms/Select';
 import { Card } from '~/design-system/layouts/Card';
+import { ExternalLink } from '~/design-system/Links';
+import { H2, Subtitle } from '~/design-system/Typography';
 
 type Props = { slug: string; apiKey: string };
 

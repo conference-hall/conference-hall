@@ -2,13 +2,15 @@ import type { Event, Team, User } from '@prisma/client';
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { getEmails, resetEmails } from 'tests/email-helpers';
 import { eventFactory } from 'tests/factories/events';
-import { teamFactory } from 'tests/factories/team';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
+import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
-import { sendRejectionCampaign } from './send-rejection-campaign.server';
+
 import { db } from '~/libs/db';
 import { ForbiddenOperationError } from '~/libs/errors';
+
+import { sendRejectionCampaign } from './send-rejection-campaign.server';
 
 describe('#sendRejectionCampaign', () => {
   let owner: User, member: User, reviewer: User, speaker1: User, speaker2: User;

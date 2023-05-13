@@ -1,7 +1,9 @@
-import type { Event, User, EventCategory, EventFormat, Proposal, Team } from '@prisma/client';
+import type { Event, EventCategory, EventFormat, Proposal, Team, User } from '@prisma/client';
+
+import { sortBy } from '~/utils/arrays';
+
 import { config } from '../../../../libs/config';
 import { db } from '../../../../libs/db';
-import { sortBy } from '~/utils/arrays';
 
 function buildPayload(
   event: Event & { team: Team },

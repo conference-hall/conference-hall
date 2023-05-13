@@ -1,5 +1,5 @@
-import React from 'react';
 import c from 'classnames';
+import React from 'react';
 
 const SIZES = {
   '4xl': 'text-4xl',

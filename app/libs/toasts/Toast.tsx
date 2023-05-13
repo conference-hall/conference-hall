@@ -1,5 +1,6 @@
 import { CheckCircleIcon, XMarkIcon } from '@heroicons/react/20/solid';
 import { useEffect, useState } from 'react';
+
 import { IconButton } from '~/design-system/IconButtons';
 import { ToastTransition } from '~/design-system/Transitions';
 import { Text } from '~/design-system/Typography';

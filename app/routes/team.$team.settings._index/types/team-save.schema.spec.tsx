@@ -1,5 +1,6 @@
-import { TeamSaveSchema } from './team-save.schema';
 import { parse } from '@conform-to/zod';
+
+import { TeamSaveSchema } from './team-save.schema';
 
 describe('Validate TeamSaveSchema', () => {
   it('validates the team data', async () => {

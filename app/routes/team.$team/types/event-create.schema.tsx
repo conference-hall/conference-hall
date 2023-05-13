@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import { EventTypeSchema, EventVisibilitySchema } from '~/schemas/event';
 import { text } from '~/schemas/utils';
 import { slugValidator } from '~/schemas/validators';

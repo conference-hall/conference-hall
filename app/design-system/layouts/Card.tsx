@@ -1,6 +1,6 @@
-import c from 'classnames';
 import type { LinkProps } from '@remix-run/react';
 import { Link } from '@remix-run/react';
+import c from 'classnames';
 
 const ROUNDED = {
   sm: 'rounded-sm',

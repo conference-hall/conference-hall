@@ -1,4 +1,5 @@
 import type { TalkSaveData } from '~/schemas/talks';
+
 import { db } from '../../../libs/db';
 
 export async function createTalk(userId: string, data: TalkSaveData) {

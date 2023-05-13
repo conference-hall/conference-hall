@@ -1,6 +1,6 @@
-import type { ReactNode } from 'react';
-import c from 'classnames';
 import { Dialog } from '@headlessui/react';
+import c from 'classnames';
+import type { ReactNode } from 'react';
 
 type Props = {
   title: string;

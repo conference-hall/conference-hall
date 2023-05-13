@@ -1,9 +1,9 @@
-import { eventFactory } from '../../../tests/factories/events';
-import { userFactory } from '../../../tests/factories/users';
-import { talkFactory } from '../../../tests/factories/talks';
-import { eventFormatFactory } from '../../../tests/factories/formats';
 import { eventCategoryFactory } from '../../../tests/factories/categories';
+import { eventFactory } from '../../../tests/factories/events';
+import { eventFormatFactory } from '../../../tests/factories/formats';
 import { proposalFactory } from '../../../tests/factories/proposals';
+import { talkFactory } from '../../../tests/factories/talks';
+import { userFactory } from '../../../tests/factories/users';
 
 export const seed = async () => {
   const user = await userFactory({ traits: ['clark-kent'], attributes: { bio: '' } });

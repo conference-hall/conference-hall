@@ -1,5 +1,6 @@
-import { EventCreateSchema } from './event-create.schema';
 import { parse } from '@conform-to/zod';
+
+import { EventCreateSchema } from './event-create.schema';
 
 describe('Validate EventCreateSchema', () => {
   it('validates valid inputs', async () => {

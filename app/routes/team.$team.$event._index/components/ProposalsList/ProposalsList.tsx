@@ -1,6 +1,7 @@
+import { Card } from '~/design-system/layouts/Card';
+
 import type { ProposalData } from './ProposalListRow';
 import { ProposaListRow } from './ProposalListRow';
-import { Card } from '~/design-system/layouts/Card';
 
 type Props = {
   proposals: Array<ProposalData>;

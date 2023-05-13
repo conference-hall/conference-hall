@@ -1,15 +1,17 @@
-import invariant from 'tiny-invariant';
 import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
+import invariant from 'tiny-invariant';
+
 import { Navbar } from '~/components/navbar/Navbar';
-import { requireSession } from '~/libs/auth/session';
+import { Button } from '~/design-system/Buttons';
+import { Card } from '~/design-system/layouts/Card';
 import { Container } from '~/design-system/layouts/Container';
 import { H1, H2 } from '~/design-system/Typography';
-import { Button } from '~/design-system/Buttons';
+import { requireSession } from '~/libs/auth/session';
 import { useUser } from '~/root';
+
 import { addCoSpeakerToTalk, checkTalkInviteCode } from './server/invite-talk.server';
-import { Card } from '~/design-system/layouts/Card';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   await requireSession(request);

@@ -1,4 +1,5 @@
 import type { Event } from '@prisma/client';
+
 import { emailProvider } from './providers/provider';
 import { buildTemplate } from './template/build-template';
 

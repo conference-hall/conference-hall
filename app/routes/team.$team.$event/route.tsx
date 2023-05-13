@@ -1,12 +1,14 @@
-import invariant from 'tiny-invariant';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Outlet, useLoaderData, useOutletContext } from '@remix-run/react';
+import invariant from 'tiny-invariant';
+
 import { requireSession } from '~/libs/auth/session';
+import { useUser } from '~/root';
+
+import { useTeam } from '../team.$team/route';
 import type { OrganizerEvent } from './server/get-event.server';
 import { getTeamEvent } from './server/get-event.server';
-import { useTeam } from '../team.$team/route';
-import { useUser } from '~/root';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);

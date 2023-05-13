@@ -1,5 +1,5 @@
-import EventEditProposalPage from 'page-objects/event/proposal-edit.page';
 import EventProposalPage from 'page-objects/event/proposal.page';
+import EventEditProposalPage from 'page-objects/event/proposal-edit.page';
 
 describe('Speaker proposal edition page', () => {
   beforeEach(() => {

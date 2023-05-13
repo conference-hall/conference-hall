@@ -1,10 +1,10 @@
-import type { ProposalsFilters } from '~/schemas/proposal';
-import { jsonToArray } from '~/libs/prisma';
-import { allowedForEvent } from '~/server/teams/check-user-role.server';
-import { ReviewsDetails } from '~/server/reviews/reviews-details';
-import { EventProposalsSearch } from '~/server/proposals/EventProposalsSearch';
 import { db } from '~/libs/db';
 import { ProposalNotFoundError } from '~/libs/errors';
+import { jsonToArray } from '~/libs/prisma';
+import type { ProposalsFilters } from '~/schemas/proposal';
+import { EventProposalsSearch } from '~/server/proposals/EventProposalsSearch';
+import { ReviewsDetails } from '~/server/reviews/reviews-details';
+import { allowedForEvent } from '~/server/teams/check-user-role.server';
 
 export type ProposalReview = Awaited<ReturnType<typeof getProposalReview>>;
 

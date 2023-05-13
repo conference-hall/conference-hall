@@ -1,10 +1,11 @@
 import { PencilSquareIcon, XMarkIcon } from '@heroicons/react/20/solid';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { useParams, useSearchParams } from '@remix-run/react';
+
 import { ButtonLink } from '~/design-system/Buttons';
 import { IconButtonLink } from '~/design-system/IconButtons';
-import { H1, Text } from '~/design-system/Typography';
 import { PageHeader } from '~/design-system/layouts/PageHeader';
+import { H1, Text } from '~/design-system/Typography';
 
 type Props = {
   title: string;

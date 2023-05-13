@@ -1,5 +1,6 @@
 import { defineConfig } from 'cypress';
-import { resetDB, disconnectDB } from './tests/db-helpers';
+
+import { disconnectDB, resetDB } from './tests/db-helpers';
 
 const { PROTOCOL, DOMAIN, PORT } = process.env;
 const APP_URL = `${PROTOCOL}://${DOMAIN}:${PORT}`;

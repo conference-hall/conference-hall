@@ -1,6 +1,7 @@
 import { URL } from 'node:url';
-import { vi } from 'vitest';
+
 import { installGlobals } from '@remix-run/node';
+import { vi } from 'vitest';
 
 // Fix: happy-dom has a bug when parsing URL
 // See https://github.com/capricorn86/happy-dom/issues/569

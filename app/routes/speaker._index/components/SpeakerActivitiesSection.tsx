@@ -1,15 +1,16 @@
+import { ArrowTopRightOnSquareIcon } from '@heroicons/react/20/solid';
 import { FireIcon } from '@heroicons/react/24/outline';
-import type { CfpState } from '~/schemas/event';
-import type { SpeakerProposalStatus } from '~/server/proposals/get-speaker-proposal-status';
-import { Subtitle, Text } from '~/design-system/Typography';
-import { Avatar, AvatarGroup } from '~/design-system/Avatar';
+
 import { ProposalStatusLabel } from '~/components/proposals/ProposalStatusLabel';
-import { Link } from '~/design-system/Links';
+import { Avatar, AvatarGroup } from '~/design-system/Avatar';
 import { ButtonLink } from '~/design-system/Buttons';
 import { IconButtonLink } from '~/design-system/IconButtons';
-import { ArrowTopRightOnSquareIcon } from '@heroicons/react/20/solid';
-import { EmptyState } from '~/design-system/layouts/EmptyState';
 import { Card } from '~/design-system/layouts/Card';
+import { EmptyState } from '~/design-system/layouts/EmptyState';
+import { Link } from '~/design-system/Links';
+import { Subtitle, Text } from '~/design-system/Typography';
+import type { CfpState } from '~/schemas/event';
+import type { SpeakerProposalStatus } from '~/server/proposals/get-speaker-proposal-status';
 
 interface Props {
   activities: Array<{

@@ -1,9 +1,10 @@
 import { TeamRole } from '@prisma/client';
-import type { ProposalsFilters } from '~/schemas/proposal';
-import { allowedForEvent } from '~/server/teams/check-user-role.server';
-import { ReviewsDetails } from '~/server/reviews/reviews-details';
-import { EventProposalsSearch } from '~/server/proposals/EventProposalsSearch';
+
 import { jsonToArray } from '~/libs/prisma';
+import type { ProposalsFilters } from '~/schemas/proposal';
+import { EventProposalsSearch } from '~/server/proposals/EventProposalsSearch';
+import { ReviewsDetails } from '~/server/reviews/reviews-details';
+import { allowedForEvent } from '~/server/teams/check-user-role.server';
 
 export async function exportProposals(eventSlug: string, userId: string, filters: ProposalsFilters) {
   const event = await allowedForEvent(eventSlug, userId, [TeamRole.OWNER, TeamRole.MEMBER]);

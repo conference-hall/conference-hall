@@ -1,5 +1,5 @@
-import { initializeApp, getApps } from 'firebase/app';
-import { getAuth, connectAuthEmulator, setPersistence, inMemoryPersistence } from 'firebase/auth';
+import { getApps, initializeApp } from 'firebase/app';
+import { connectAuthEmulator, getAuth, inMemoryPersistence, setPersistence } from 'firebase/auth';
 
 type FirebaseConfig = {
   FIREBASE_API_KEY: string;

@@ -1,4 +1,5 @@
 import type { TalkSaveData } from '~/schemas/talks';
+
 import { db } from '../../../libs/db';
 import { TalkNotFoundError } from '../../../libs/errors';
 

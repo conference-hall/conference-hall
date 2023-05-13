@@ -1,7 +1,8 @@
+import { ChevronDownIcon } from '@heroicons/react/20/solid';
+import { NavLink } from '@remix-run/react';
 import c from 'classnames';
 import { useMemo } from 'react';
-import { NavLink } from '@remix-run/react';
-import { ChevronDownIcon } from '@heroicons/react/20/solid';
+
 import { Menu } from '../menus/Menu';
 
 type NavTabProps = { to: string; label: string; count?: number; enabled?: boolean; end?: boolean };

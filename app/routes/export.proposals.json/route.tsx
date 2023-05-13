@@ -1,7 +1,9 @@
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { ProposalsExportFiltersSchema } from '~/schemas/proposal';
+
 import { requireSession } from '~/libs/auth/session';
+import { ProposalsExportFiltersSchema } from '~/schemas/proposal';
+
 import { exportProposals } from './server/export-proposals.server';
 
 export const loader = async ({ request }: LoaderArgs) => {

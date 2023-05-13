@@ -1,6 +1,8 @@
 import type { ProposalStatus } from '@prisma/client';
-import type { ProposalsFilters as ProposalsFiltersType } from '~/schemas/proposal';
+
 import { Card } from '~/design-system/layouts/Card';
+import type { ProposalsFilters as ProposalsFiltersType } from '~/schemas/proposal';
+
 import { QueryFilter } from './filters/QueryFilter';
 import { ReviewsFilter } from './filters/ReviewsFilter';
 import { StatusFilter } from './filters/StatusFilter';

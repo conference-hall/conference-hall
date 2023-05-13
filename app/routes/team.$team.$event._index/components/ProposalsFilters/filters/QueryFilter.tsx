@@ -1,9 +1,11 @@
-import { Input } from '~/design-system/forms/Input';
-import { useProposalsSearchFilter } from '../../useProposalsSearchFilter';
-import { useDebouncedCallback } from 'use-debounce';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
-import { Text } from '~/design-system/Typography';
+import { useDebouncedCallback } from 'use-debounce';
+
+import { Input } from '~/design-system/forms/Input';
 import { Link } from '~/design-system/Links';
+import { Text } from '~/design-system/Typography';
+
+import { useProposalsSearchFilter } from '../../useProposalsSearchFilter';
 
 type Props = { defaultValue?: string; hasFilters: boolean };
 

@@ -1,5 +1,5 @@
-import { Text } from '~/design-system/Typography';
 import Badge, { Dotted } from '~/design-system/badges/Badges';
+import { Text } from '~/design-system/Typography';
 
 const STATUSES = {
   DRAFT: { color: 'gray', label: 'Draft', longLabel: 'Draft' },

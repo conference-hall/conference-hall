@@ -1,23 +1,25 @@
-import invariant from 'tiny-invariant';
-import { useState } from 'react';
-import { Form, useLoaderData } from '@remix-run/react';
+import { parse } from '@conform-to/zod';
+import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
-import { addToast } from '~/libs/toasts/toasts';
+import { Form, useLoaderData } from '@remix-run/react';
+import { useState } from 'react';
+import invariant from 'tiny-invariant';
+
+import { Avatar, AvatarGroup } from '~/design-system/Avatar';
 import { Button, ButtonLink } from '~/design-system/Buttons';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
-import type { ActionFunction, LoaderArgs } from '@remix-run/node';
-import { submitProposal } from './server/submit-proposal.server';
-import { Avatar, AvatarGroup } from '~/design-system/Avatar';
-import { ProposalSubmissionSchema } from '~/schemas/proposal';
-import { useEvent } from '~/routes/$event/route';
-import { Card } from '~/design-system/layouts/Card';
-import { requireSession } from '~/libs/auth/session';
-import { getSubmittedProposal } from '~/server/proposals/get-submitted-proposal.server';
-import { H1, H2, Subtitle } from '~/design-system/Typography';
 import { TextArea } from '~/design-system/forms/TextArea';
+import { Card } from '~/design-system/layouts/Card';
 import { ExternalLink } from '~/design-system/Links';
+import { H1, H2, Subtitle } from '~/design-system/Typography';
+import { requireSession } from '~/libs/auth/session';
+import { addToast } from '~/libs/toasts/toasts';
+import { useEvent } from '~/routes/$event/route';
+import { ProposalSubmissionSchema } from '~/schemas/proposal';
+import { getSubmittedProposal } from '~/server/proposals/get-submitted-proposal.server';
+
 import { useSubmissionStep } from '../$event_.submission/components/useSubmissionStep';
-import { parse } from '@conform-to/zod';
+import { submitProposal } from './server/submit-proposal.server';
 
 export const handle = { step: 'submission' };
 

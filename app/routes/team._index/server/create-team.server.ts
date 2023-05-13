@@ -1,6 +1,7 @@
 import { TeamRole } from '@prisma/client';
-import { db } from '~/libs/db';
 import { z } from 'zod';
+
+import { db } from '~/libs/db';
 import { text } from '~/schemas/utils';
 import { slugValidator } from '~/schemas/validators';
 

@@ -1,5 +1,6 @@
 import type { Prisma, Proposal, User } from '@prisma/client';
 import { MessageChannel } from '@prisma/client';
+
 import { db } from '../../app/libs/db';
 
 type FactoryOptions = {

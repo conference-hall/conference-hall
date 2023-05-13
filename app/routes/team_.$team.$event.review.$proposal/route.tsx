@@ -1,20 +1,22 @@
-import invariant from 'tiny-invariant';
+import { parse } from '@conform-to/zod';
+import { TeamRole } from '@prisma/client';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { requireSession } from '~/libs/auth/session';
 import { Outlet, useLoaderData, useOutletContext, useParams } from '@remix-run/react';
-import { ProposalReviewDataSchema, parseProposalsFilters } from '~/schemas/proposal';
+import invariant from 'tiny-invariant';
+
+import { Navbar } from '~/components/navbar/Navbar';
+import { requireSession } from '~/libs/auth/session';
+import { addToast } from '~/libs/toasts/toasts';
+import { useUser } from '~/root';
+import { parseProposalsFilters, ProposalReviewDataSchema } from '~/schemas/proposal';
+
+import { ReviewHeader } from './components/Header';
+import { ReviewInfoSection } from './components/ReviewInfoSection';
+import { ReviewTabs } from './components/Tabs';
 import type { ProposalReview } from './server/get-proposal-review.server';
 import { getProposalReview } from './server/get-proposal-review.server';
-import { Navbar } from '~/components/navbar/Navbar';
-import { useUser } from '~/root';
-import { ReviewHeader } from './components/Header';
-import { ReviewTabs } from './components/Tabs';
 import { rateProposal } from './server/review-proposal.server';
-import { ReviewInfoSection } from './components/ReviewInfoSection';
-import { TeamRole } from '@prisma/client';
-import { addToast } from '~/libs/toasts/toasts';
-import { parse } from '@conform-to/zod';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);

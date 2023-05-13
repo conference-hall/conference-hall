@@ -1,18 +1,20 @@
-import invariant from 'tiny-invariant';
-import { json, type LoaderArgs } from '@remix-run/node';
-import { requireSession } from '~/libs/auth/session';
-import { H2, Subtitle } from '~/design-system/Typography';
-import { Button } from '~/design-system/Buttons';
-import { Form, useFetcher, useLoaderData } from '@remix-run/react';
-import { Checkbox } from '~/design-system/forms/Checkboxes';
-import { useOrganizerEvent } from '../team.$team.$event/route';
-import { updateEvent } from '~/server/teams/update-event.server';
-import { QUESTIONS } from '~/server/survey/get-questions.server';
-import { EventSurveySettingsSchema } from './types/event-survey-settings.schema';
-import { Card } from '~/design-system/layouts/Card';
-import { ToggleGroup } from '~/design-system/forms/Toggles';
-import { addToast } from '~/libs/toasts/toasts';
 import { parse } from '@conform-to/zod';
+import { json, type LoaderArgs } from '@remix-run/node';
+import { Form, useFetcher, useLoaderData } from '@remix-run/react';
+import invariant from 'tiny-invariant';
+
+import { Button } from '~/design-system/Buttons';
+import { Checkbox } from '~/design-system/forms/Checkboxes';
+import { ToggleGroup } from '~/design-system/forms/Toggles';
+import { Card } from '~/design-system/layouts/Card';
+import { H2, Subtitle } from '~/design-system/Typography';
+import { requireSession } from '~/libs/auth/session';
+import { addToast } from '~/libs/toasts/toasts';
+import { QUESTIONS } from '~/server/survey/get-questions.server';
+import { updateEvent } from '~/server/teams/update-event.server';
+
+import { useOrganizerEvent } from '../team.$team.$event/route';
+import { EventSurveySettingsSchema } from './types/event-survey-settings.schema';
 
 // TODO why not using event-survey#getQuestions?
 export const loader = async ({ request }: LoaderArgs) => {

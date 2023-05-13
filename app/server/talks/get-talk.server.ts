@@ -1,8 +1,9 @@
 import { db } from '~/libs/db';
 import { TalkNotFoundError } from '~/libs/errors';
 import { jsonToArray } from '~/libs/prisma';
-import { getSpeakerProposalStatus } from '../proposals/get-speaker-proposal-status';
+
 import { buildInvitationLink } from '../invitations/build-link.server';
+import { getSpeakerProposalStatus } from '../proposals/get-speaker-proposal-status';
 
 export async function getTalk(userId: string, talkId: string) {
   const talk = await db.talk.findFirst({

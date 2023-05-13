@@ -1,7 +1,7 @@
-import type { SurveyQuestions } from '~/schemas/survey';
-import { jsonToArray } from '~/libs/prisma';
 import { db } from '~/libs/db';
 import { EventNotFoundError, SurveyNotEnabledError } from '~/libs/errors';
+import { jsonToArray } from '~/libs/prisma';
+import type { SurveyQuestions } from '~/schemas/survey';
 
 export async function getQuestions(slug: string) {
   const event = await db.event.findUnique({

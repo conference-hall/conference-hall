@@ -1,16 +1,18 @@
-import type { Event, EventCategory, EventFormat, Team, Proposal, User } from '@prisma/client';
-import type { ProposalsFilters } from '~/schemas/proposal';
+import type { Event, EventCategory, EventFormat, Proposal, Team, User } from '@prisma/client';
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventCategoryFactory } from 'tests/factories/categories';
 import { eventFactory } from 'tests/factories/events';
 import { eventFormatFactory } from 'tests/factories/formats';
-import { teamFactory } from 'tests/factories/team';
 import { proposalFactory } from 'tests/factories/proposals';
 import { reviewFactory } from 'tests/factories/reviews';
 import { talkFactory } from 'tests/factories/talks';
+import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
-import { EventProposalsSearch } from './EventProposalsSearch';
+
+import type { ProposalsFilters } from '~/schemas/proposal';
 import { sortBy } from '~/utils/arrays';
+
+import { EventProposalsSearch } from './EventProposalsSearch';
 
 describe('#searchProposals', () => {
   let owner: User, speaker: User;

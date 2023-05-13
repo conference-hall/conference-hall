@@ -1,8 +1,8 @@
-import { resetDB, disconnectDB } from '../../../tests/db-helpers';
+import { disconnectDB, resetDB } from '../../../tests/db-helpers';
 import { userFactory } from '../../../tests/factories/users';
 import { db } from '../../libs/db';
 import { UserNotFoundError } from '../../libs/errors';
-import { saveUserPersonalInfo, saveUserDetails, saveUserAdditionalInfo } from './save-profile.server';
+import { saveUserAdditionalInfo, saveUserDetails, saveUserPersonalInfo } from './save-profile.server';
 
 describe('#saveUserPersonalInfo', () => {
   beforeEach(async () => {

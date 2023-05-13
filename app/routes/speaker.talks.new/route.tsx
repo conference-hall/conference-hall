@@ -1,17 +1,19 @@
+import { parse } from '@conform-to/zod';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
-import { TalkSaveSchema } from '~/schemas/talks';
-import { createTalk } from './server/create-talk.server';
-import { requireSession } from '~/libs/auth/session';
+
 import { DetailsForm } from '~/components/proposals/forms/DetailsForm';
 import { Button } from '~/design-system/Buttons';
-import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
-import { Container } from '~/design-system/layouts/Container';
 import { Card } from '~/design-system/layouts/Card';
+import { Container } from '~/design-system/layouts/Container';
+import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
+import { requireSession } from '~/libs/auth/session';
 import { addToast } from '~/libs/toasts/toasts';
-import { parse } from '@conform-to/zod';
+import { TalkSaveSchema } from '~/schemas/talks';
+
+import { createTalk } from './server/create-talk.server';
 
 export const action = async ({ request }: LoaderArgs) => {
   const userId = await requireSession(request);

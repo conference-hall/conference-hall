@@ -1,5 +1,6 @@
 import type { Prisma } from '@prisma/client';
 import { EmailStatus } from '@prisma/client';
+
 import { db } from '~/libs/db';
 import type { EmailStatusData, ProposalsFilters } from '~/schemas/proposal';
 

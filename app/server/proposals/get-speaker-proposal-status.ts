@@ -1,5 +1,6 @@
 import type { EmailStatus, EventType } from '@prisma/client';
 import { ProposalStatus } from '@prisma/client';
+
 import { getCfpState } from '~/utils/event';
 
 export enum SpeakerProposalStatus {

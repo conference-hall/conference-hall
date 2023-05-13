@@ -1,5 +1,5 @@
-import { H2, Subtitle, Text } from '~/design-system/Typography';
 import { Card } from '~/design-system/layouts/Card';
+import { H2, Subtitle, Text } from '~/design-system/Typography';
 
 type Props = {
   title: string;

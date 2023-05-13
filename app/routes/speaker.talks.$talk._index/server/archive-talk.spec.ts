@@ -1,6 +1,7 @@
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
+
 import { db } from '../../../libs/db';
 import { TalkNotFoundError } from '../../../libs/errors';
 import { archiveTalk, restoreTalk } from './archive-talk.server';

@@ -4,14 +4,16 @@ import { eventCategoryFactory } from 'tests/factories/categories';
 import { eventFactory } from 'tests/factories/events';
 import { eventFormatFactory } from 'tests/factories/formats';
 import { messageFactory } from 'tests/factories/messages';
-import { teamFactory } from 'tests/factories/team';
 import { proposalFactory } from 'tests/factories/proposals';
 import { reviewFactory } from 'tests/factories/reviews';
 import { talkFactory } from 'tests/factories/talks';
+import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
-import { getProposalReview } from './get-proposal-review.server';
-import { ForbiddenOperationError } from '~/libs/errors';
+
 import { db } from '~/libs/db';
+import { ForbiddenOperationError } from '~/libs/errors';
+
+import { getProposalReview } from './get-proposal-review.server';
 
 describe('#getProposalReview', () => {
   let owner: User, member: User, speaker: User;

@@ -1,5 +1,6 @@
-import c from 'classnames';
 import { NavLink } from '@remix-run/react';
+import c from 'classnames';
+
 import { IconLabel } from '../IconLabel';
 import { Card } from '../layouts/Card';
 

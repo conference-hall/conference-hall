@@ -1,5 +1,6 @@
 import { vi } from 'vitest';
-import { SpeakerProposalStatus, getSpeakerProposalStatus } from './get-speaker-proposal-status';
+
+import { getSpeakerProposalStatus, SpeakerProposalStatus } from './get-speaker-proposal-status';
 
 describe('getSpeakerProposalStatus', () => {
   beforeEach(() => {
