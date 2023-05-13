@@ -1,5 +1,4 @@
 import invariant from 'tiny-invariant';
-import { withZod } from '@remix-validated-form/with-zod';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { Response } from '@remix-run/node';
@@ -15,6 +14,7 @@ import { isTalkAlreadySubmitted } from './server/is-talk-already-submitted.serve
 import { Button, ButtonLink } from '~/design-system/Buttons';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { useSubmissionStep } from '../$event_.submission/hooks/useSubmissionStep';
+import { parse } from '@conform-to/zod';
 
 export const handle = { step: 'proposal' };
 
@@ -38,10 +38,10 @@ export const action = async ({ request, params }: ActionArgs) => {
   invariant(params.talk, 'Invalid talk id');
 
   const form = await request.formData();
-  const result = await withZod(ProposalCreateSchema).validate(form);
-  if (result.error) return json(result.error.fieldErrors);
+  const result = parse(form, { schema: ProposalCreateSchema });
+  if (!result.value) return json(result.error);
 
-  const proposal = await saveDraftProposal(params.talk, params.event, userId, result.data);
+  const proposal = await saveDraftProposal(params.talk, params.event, userId, result.value);
   return redirect(`/${params.event}/submission/${proposal.talkId}/speakers`);
 };
 

@@ -3,7 +3,6 @@ import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
-import { withZod } from '@remix-validated-form/with-zod';
 import { requireSession } from '~/libs/auth/session';
 import { H3, Subtitle } from '~/design-system/Typography';
 import { Button } from '~/design-system/Buttons';
@@ -13,6 +12,7 @@ import { TeamSaveSchema } from './types/team-save.schema';
 import { Card } from '~/design-system/layouts/Card';
 import { useTeam } from '../team.$team/route';
 import { addToast } from '~/libs/toasts/toasts';
+import { parse } from '@conform-to/zod';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await requireSession(request);
@@ -24,10 +24,10 @@ export const action = async ({ request, params }: ActionArgs) => {
   const form = await request.formData();
   invariant(params.team, 'Invalid team slug');
 
-  const result = await withZod(TeamSaveSchema).validate(form);
-  if (result.error) return json(result.error.fieldErrors);
+  const result = parse(form, { schema: TeamSaveSchema });
+  if (!result.value) return json(result.error);
 
-  const team = await updateTeam(params.team, userId, result.data);
+  const team = await updateTeam(params.team, userId, result.value);
   if (team?.fieldErrors) return json(team.fieldErrors);
 
   return redirect(`/team/${team.slug}/settings`, await addToast(request, 'Team settings saved.'));

@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { repeatable } from 'zod-form-data';
+import { text } from './utils';
 
 export type SurveyQuestions = Array<{
   name: string;
@@ -9,12 +10,12 @@ export type SurveyQuestions = Array<{
 }>;
 
 export const SurveySchema = z.object({
-  gender: z.string().trim().nullable().default(null),
-  tshirt: z.string().trim().nullable().default(null),
-  accomodation: z.string().trim().nullable().default(null),
+  gender: text(z.string().trim().nullable().default(null)),
+  tshirt: text(z.string().trim().nullable().default(null)),
+  accomodation: text(z.string().trim().nullable().default(null)),
   transports: repeatable(z.array(z.string().trim()).nullable()).optional(),
   diet: repeatable(z.array(z.string().trim()).nullable()).optional(),
-  info: z.string().trim().nullable().default(null),
+  info: text(z.string().trim().nullable().default(null)),
 });
 
 export type SurveyData = z.infer<typeof SurveySchema>;

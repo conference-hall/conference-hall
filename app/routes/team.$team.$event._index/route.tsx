@@ -5,7 +5,6 @@ import { useLoaderData } from '@remix-run/react';
 import { requireSession } from '~/libs/auth/session';
 import { Container } from '~/design-system/layouts/Container';
 import { parsePage } from '~/schemas/pagination';
-import { withZod } from '@remix-validated-form/with-zod';
 import { ProposalsStatusUpdateSchema, ProposalsFiltersSchema } from '~/schemas/proposal';
 import { addToast } from '~/libs/toasts/toasts';
 import { updateProposalsStatus } from '~/routes/team.$team.$event._index/server/update-proposal.server';
@@ -19,16 +18,17 @@ import { useCheckboxSelection } from '~/design-system/useCheckboxSelection';
 import { useMemo } from 'react';
 import { ProposalsActionBar } from './components/ProposalsActionBar/ProposalsActionBar';
 import { ProposalsFilters } from './components/ProposalsFilters/ProposalsFilters';
+import { parse } from '@conform-to/zod';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
 
   const url = new URL(request.url);
-  const filters = await withZod(ProposalsFiltersSchema).validate(url.searchParams);
+  const filters = ProposalsFiltersSchema.safeParse(url.searchParams);
   const page = await parsePage(url.searchParams);
 
-  const results = await searchProposals(params.event, userId, filters.data ?? {}, page);
+  const results = await searchProposals(params.event, userId, filters.success ? filters.data : {}, page);
   return json(results);
 };
 
@@ -37,11 +37,11 @@ export const action = async ({ request, params }: ActionArgs) => {
   invariant(params.event, 'Invalid event slug');
 
   const form = await request.formData();
-  const { data, error } = await withZod(ProposalsStatusUpdateSchema).validate(form);
-  if (error) return json(null);
+  const result = parse(form, { schema: ProposalsStatusUpdateSchema });
+  if (!result.value) return json(null);
 
-  const result = await updateProposalsStatus(params.event, userId, data.selection, data.status);
-  return json(null, await addToast(request, `${result} proposals marked as "${data.status.toLowerCase()}".`));
+  const updated = await updateProposalsStatus(params.event, userId, result.value.selection, result.value.status);
+  return json(null, await addToast(request, `${updated} proposals marked as "${result.value.status.toLowerCase()}".`));
 };
 
 export default function OrganizerEventProposalsRoute() {

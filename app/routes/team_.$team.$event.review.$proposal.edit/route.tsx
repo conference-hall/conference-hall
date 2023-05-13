@@ -7,10 +7,10 @@ import { Form, useActionData, useLoaderData, useSearchParams } from '@remix-run/
 import { DetailsForm } from '~/shared-components/proposals/forms/DetailsForm';
 import { Button, ButtonLink } from '~/design-system/Buttons';
 import { Card } from '~/design-system/layouts/Card';
-import { withZod } from '@remix-validated-form/with-zod';
 import { getEvent } from '~/shared-server/events/get-event.server';
 import { addToast } from '~/libs/toasts/toasts';
 import { updateProposal } from '../team.$team.$event._index/server/update-proposal.server';
+import { parse } from '@conform-to/zod';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   await requireSession(request);
@@ -25,10 +25,10 @@ export const action = async ({ request, params }: ActionArgs) => {
   invariant(params.proposal, 'Invalid proposal id');
   const form = await request.formData();
 
-  const result = await withZod(ProposalUpdateSchema).validate(form);
-  if (result.error) return json(result.error.fieldErrors);
+  const result = parse(form, { schema: ProposalUpdateSchema });
+  if (!result.value) return json(result.error);
 
-  await updateProposal(params.event, params.proposal, userId, result.data);
+  await updateProposal(params.event, params.proposal, userId, result.value);
 
   const url = new URL(request.url);
   throw redirect(

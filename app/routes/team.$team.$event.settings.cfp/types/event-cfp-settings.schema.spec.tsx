@@ -1,17 +1,17 @@
-import { withZod } from '@remix-validated-form/with-zod';
 import { EventCfpSettingsSchema } from './event-cfp-settings.schema';
+import { parse } from '@conform-to/zod';
 
 describe('Validate EventCfpSettingsSchema', () => {
   it('validates valid inputs', async () => {
-    const formData = new FormData();
-    formData.append('type', 'CONFERENCE');
-    formData.append('cfpStart', '2022-01-01');
-    formData.append('cfpEnd', '2022-01-02');
-    formData.append('codeOfConductUrl', 'https://cod.com');
-    formData.append('maxProposals', '3');
+    const form = new FormData();
+    form.append('type', 'CONFERENCE');
+    form.append('cfpStart', '2022-01-01');
+    form.append('cfpEnd', '2022-01-02');
+    form.append('codeOfConductUrl', 'https://cod.com');
+    form.append('maxProposals', '3');
 
-    const result = await withZod(EventCfpSettingsSchema).validate(formData);
-    expect(result.data).toEqual({
+    const result = parse(form, { schema: EventCfpSettingsSchema });
+    expect(result.value).toEqual({
       type: 'CONFERENCE',
       cfpStart: new Date('2022-01-01'),
       cfpEnd: new Date('2022-01-02'),
@@ -21,15 +21,15 @@ describe('Validate EventCfpSettingsSchema', () => {
   });
 
   it('resets data', async () => {
-    const formData = new FormData();
-    formData.append('type', 'CONFERENCE');
-    formData.append('cfpStart', '');
-    formData.append('cfpEnd', '');
-    formData.append('codeOfConductUrl', '');
-    formData.append('maxProposals', '');
+    const form = new FormData();
+    form.append('type', 'CONFERENCE');
+    form.append('cfpStart', '');
+    form.append('cfpEnd', '');
+    form.append('codeOfConductUrl', '');
+    form.append('maxProposals', '');
 
-    const result = await withZod(EventCfpSettingsSchema).validate(formData);
-    expect(result.data).toEqual({
+    const result = parse(form, { schema: EventCfpSettingsSchema });
+    expect(result.value).toEqual({
       type: 'CONFERENCE',
       cfpStart: null,
       cfpEnd: null,
@@ -39,15 +39,15 @@ describe('Validate EventCfpSettingsSchema', () => {
   });
 
   it('returns validation errors', async () => {
-    const formData = new FormData();
-    formData.append('type', 'foo');
-    formData.append('cfpStart', 'foo');
-    formData.append('cfpEnd', 'foo');
-    formData.append('codeOfConductUrl', 'foo');
-    formData.append('maxProposals', 'foo');
+    const form = new FormData();
+    form.append('type', 'foo');
+    form.append('cfpStart', 'foo');
+    form.append('cfpEnd', 'foo');
+    form.append('codeOfConductUrl', 'foo');
+    form.append('maxProposals', 'foo');
 
-    const result = await withZod(EventCfpSettingsSchema).validate(formData);
-    expect(result.error?.fieldErrors).toEqual({
+    const result = parse(form, { schema: EventCfpSettingsSchema });
+    expect(result.error).toEqual({
       cfpEnd: 'Invalid date',
       cfpStart: 'Invalid date',
       codeOfConductUrl: 'Invalid url',
@@ -57,45 +57,45 @@ describe('Validate EventCfpSettingsSchema', () => {
   });
 
   it('returns errors if dates are not a valid range', async () => {
-    const formData = new FormData();
-    formData.append('type', 'CONFERENCE');
-    formData.append('cfpStart', '2022-01-02');
-    formData.append('cfpEnd', '2022-01-01');
+    const form = new FormData();
+    form.append('type', 'CONFERENCE');
+    form.append('cfpStart', '2022-01-02');
+    form.append('cfpEnd', '2022-01-01');
 
-    const result = await withZod(EventCfpSettingsSchema).validate(formData);
-    expect(result.error?.fieldErrors).toEqual({
+    const result = parse(form, { schema: EventCfpSettingsSchema });
+    expect(result.error).toEqual({
       cfpStart: 'Call for paper start date must be after the end date.',
     });
   });
 
   it('returns valid if dates are not a valid range but a meetup', async () => {
-    const formData = new FormData();
-    formData.append('type', 'MEETUP');
-    formData.append('cfpStart', '2022-01-02');
-    formData.append('cfpEnd', '2022-01-01');
+    const form = new FormData();
+    form.append('type', 'MEETUP');
+    form.append('cfpStart', '2022-01-02');
+    form.append('cfpEnd', '2022-01-01');
 
-    const result = await withZod(EventCfpSettingsSchema).validate(formData);
-    expect(result.error?.fieldErrors).toBeUndefined();
+    const result = parse(form, { schema: EventCfpSettingsSchema });
+    expect(result.error).toEqual({});
   });
 
   it('returns errors if start date missing', async () => {
-    const formData = new FormData();
-    formData.append('type', 'CONFERENCE');
-    formData.append('cfpEnd', '2022-01-01');
+    const form = new FormData();
+    form.append('type', 'CONFERENCE');
+    form.append('cfpEnd', '2022-01-01');
 
-    const result = await withZod(EventCfpSettingsSchema).validate(formData);
-    expect(result.error?.fieldErrors).toEqual({
+    const result = parse(form, { schema: EventCfpSettingsSchema });
+    expect(result.error).toEqual({
       cfpStart: 'Call for paper start date must be after the end date.',
     });
   });
 
   it('returns errors if end date missing', async () => {
-    const formData = new FormData();
-    formData.append('type', 'CONFERENCE');
-    formData.append('cfpStart', '2022-01-01');
+    const form = new FormData();
+    form.append('type', 'CONFERENCE');
+    form.append('cfpStart', '2022-01-01');
 
-    const result = await withZod(EventCfpSettingsSchema).validate(formData);
-    expect(result.error?.fieldErrors).toEqual({
+    const result = parse(form, { schema: EventCfpSettingsSchema });
+    expect(result.error).toEqual({
       cfpStart: 'Call for paper start date must be after the end date.',
     });
   });

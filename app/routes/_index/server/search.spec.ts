@@ -14,10 +14,10 @@ describe('#searchEvents', () => {
       attributes: { name: 'conf-1', slug: 'conf-1', address: 'address-1' },
     });
 
-    const result = await searchEvents({ type: 'conference', cfp: 'incoming' });
+    const result = await searchEvents({ type: 'conference' });
 
     expect(result).toEqual({
-      filters: { type: 'conference', cfp: 'incoming' },
+      filters: { type: 'conference' },
       pagination: { current: 1, total: 1 },
       results: [
         {
@@ -128,23 +128,6 @@ describe('#searchEvents', () => {
     expect(result.filters.query).toBe('ExpEctEd');
   });
 
-  it('filters by past CFP only', async () => {
-    await eventFactory({
-      traits: ['conference-cfp-open'],
-      attributes: { name: 'conf-1' },
-    });
-    await eventFactory({
-      traits: ['conference-cfp-past'],
-      attributes: { name: 'conf-2' },
-    });
-
-    const result = await searchEvents({ cfp: 'past' });
-
-    expect(result.results.length).toBe(1);
-    expect(result.results[0].name).toBe('conf-2');
-    expect(result.filters.cfp).toBe('past');
-  });
-
   it('filters by incoming CFP only', async () => {
     await eventFactory({
       traits: ['conference-cfp-open'],
@@ -155,11 +138,10 @@ describe('#searchEvents', () => {
       attributes: { name: 'conf-2' },
     });
 
-    const result = await searchEvents({ cfp: 'incoming' });
+    const result = await searchEvents({});
 
     expect(result.results.length).toBe(1);
     expect(result.results[0].name).toBe('conf-1');
-    expect(result.filters.cfp).toBe('incoming');
   });
 
   it('filters by conference type', async () => {

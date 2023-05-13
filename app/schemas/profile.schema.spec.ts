@@ -1,15 +1,15 @@
-import { withZod } from '@remix-validated-form/with-zod';
 import { AdditionalInfoSchema, DetailsSchema, PersonalInfoSchema } from './profile.schema';
+import { parse } from '@conform-to/zod';
 
 describe('Validate PersonalInfoSchema', () => {
   it('validates personal information', async () => {
-    const formData = new FormData();
-    formData.append('name', 'John Doe');
-    formData.append('email', 'john.doe@email.com');
-    formData.append('picture', 'https://example.com/photo.jpg');
+    const form = new FormData();
+    form.append('name', 'John Doe');
+    form.append('email', 'john.doe@email.com');
+    form.append('picture', 'https://example.com/photo.jpg');
 
-    const result = await withZod(PersonalInfoSchema).validate(formData);
-    expect(result.data).toEqual({
+    const result = parse(form, { schema: PersonalInfoSchema });
+    expect(result.value).toEqual({
       name: 'John Doe',
       email: 'john.doe@email.com',
       picture: 'https://example.com/photo.jpg',
@@ -17,13 +17,13 @@ describe('Validate PersonalInfoSchema', () => {
   });
 
   it('validates mandatory and format for personal information', async () => {
-    const formData = new FormData();
-    formData.append('name', '');
-    formData.append('email', '');
-    formData.append('picture', '');
+    const form = new FormData();
+    form.append('name', '');
+    form.append('email', '');
+    form.append('picture', '');
 
-    const result = await withZod(PersonalInfoSchema).validate(formData);
-    expect(result?.error?.fieldErrors).toEqual({
+    const result = parse(form, { schema: PersonalInfoSchema });
+    expect(result?.error).toEqual({
       name: 'Required',
       email: 'Required',
     });
@@ -32,37 +32,37 @@ describe('Validate PersonalInfoSchema', () => {
 
 describe('Validate DetailsSchema', () => {
   it('validates user details', async () => {
-    const formData = new FormData();
-    formData.append('bio', 'lorem ipsum');
-    formData.append('references', 'impedit quidem quisquam');
+    const form = new FormData();
+    form.append('bio', 'lorem ipsum');
+    form.append('references', 'impedit quidem quisquam');
 
-    const result = await withZod(DetailsSchema).validate(formData);
-    expect(result.data).toEqual({
+    const result = parse(form, { schema: DetailsSchema });
+    expect(result.value).toEqual({
       bio: 'lorem ipsum',
       references: 'impedit quidem quisquam',
     });
   });
 
   it('reset user details', async () => {
-    const formData = new FormData();
-    formData.append('bio', '');
-    formData.append('references', '');
+    const form = new FormData();
+    form.append('bio', '');
+    form.append('references', '');
 
-    const result = await withZod(DetailsSchema).validate(formData);
-    expect(result.data).toEqual({ bio: null, references: null });
+    const result = parse(form, { schema: DetailsSchema });
+    expect(result.value).toEqual({ bio: null, references: null });
   });
 });
 
 describe('Validate AdditionalInfoSchema', () => {
   it('validates additional indormation', async () => {
-    const formData = new FormData();
-    formData.append('company', 'company');
-    formData.append('address', 'address');
-    formData.append('twitter', 'twitter');
-    formData.append('github', 'github');
+    const form = new FormData();
+    form.append('company', 'company');
+    form.append('address', 'address');
+    form.append('twitter', 'twitter');
+    form.append('github', 'github');
 
-    const result = await withZod(AdditionalInfoSchema).validate(formData);
-    expect(result.data).toEqual({
+    const result = parse(form, { schema: AdditionalInfoSchema });
+    expect(result.value).toEqual({
       company: 'company',
       address: 'address',
       twitter: 'twitter',
@@ -71,13 +71,13 @@ describe('Validate AdditionalInfoSchema', () => {
   });
 
   it('reset additional indormation', async () => {
-    const formData = new FormData();
-    formData.append('company', '');
-    formData.append('address', '');
-    formData.append('twitter', '');
-    formData.append('github', '');
+    const form = new FormData();
+    form.append('company', '');
+    form.append('address', '');
+    form.append('twitter', '');
+    form.append('github', '');
 
-    const result = await withZod(AdditionalInfoSchema).validate(formData);
-    expect(result.data).toEqual({ company: null, address: null, twitter: null, github: null });
+    const result = parse(form, { schema: AdditionalInfoSchema });
+    expect(result.value).toEqual({ company: null, address: null, twitter: null, github: null });
   });
 });

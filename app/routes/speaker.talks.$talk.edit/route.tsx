@@ -2,7 +2,6 @@ import invariant from 'tiny-invariant';
 import type { ActionArgs, ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData, useLoaderData, useNavigate } from '@remix-run/react';
-import { withZod } from '@remix-validated-form/with-zod';
 import { TalkSaveSchema } from '~/schemas/talks';
 import { getTalk } from '~/shared-server/talks/get-talk.server';
 import { updateTalk } from '~/routes/speaker.talks.$talk.edit/server/update-talk.server';
@@ -16,6 +15,7 @@ import { removeCoSpeakerFromTalk } from '~/shared-server/talks/remove-co-speaker
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 import { Container } from '~/design-system/layouts/Container';
 import { Card } from '~/design-system/layouts/Card';
+import { parse } from '@conform-to/zod';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);
@@ -37,9 +37,9 @@ export const action: ActionFunction = async ({ request, params }: ActionArgs) =>
     await removeCoSpeakerFromTalk(userId, params.talk, speakerId);
     return json(null, await addToast(request, 'Co-speaker removed from talk.'));
   } else {
-    const result = await withZod(TalkSaveSchema).validate(form);
-    if (result.error) return json(result.error.fieldErrors);
-    await updateTalk(userId, params.talk, result.data);
+    const result = parse(form, { schema: TalkSaveSchema });
+    if (!result.value) return json(result.error);
+    await updateTalk(userId, params.talk, result.value);
     return redirect(`/speaker/talks/${params.talk}`, await addToast(request, 'Talk updated.'));
   }
 };

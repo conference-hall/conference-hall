@@ -5,14 +5,13 @@ import { Button } from '~/design-system/Buttons';
 type Props = { filters: SearchFilters };
 
 export function SearchEventsFilters({ filters }: Props) {
-  const { query, type, cfp } = filters;
+  const { query, type } = filters;
   const [searchParams] = useSearchParams();
   const talkId = searchParams.get('talkId');
 
   return (
     <Form action="/" method="GET">
       {query && <input type="hidden" name="query" value={query} />}
-      {cfp && <input type="hidden" name="cfp" value={cfp} />}
       {talkId && <input type="hidden" name="talkId" value={talkId} />}
 
       <div className="isolate inline-flex">

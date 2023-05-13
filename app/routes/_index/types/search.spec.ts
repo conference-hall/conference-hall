@@ -2,9 +2,9 @@ import { parseFilters } from './search';
 
 describe('#parseFilters', () => {
   it('returns valid filters', async () => {
-    const params = new URLSearchParams({ query: 'foo', type: 'all', cfp: 'incoming' });
+    const params = new URLSearchParams({ query: 'foo', type: 'all' });
     const result = await parseFilters(params);
-    expect(result).toEqual({ query: 'foo', type: 'all', cfp: 'incoming' });
+    expect(result).toEqual({ query: 'foo', type: 'all' });
   });
 
   it('trims "query" filter', async () => {
@@ -19,17 +19,10 @@ describe('#parseFilters', () => {
     expect(result.type).toBe(undefined);
   });
 
-  it('returns undefined when incorrect "cfp" filter', async () => {
-    const params = new URLSearchParams({ cfp: 'XXX' });
-    const result = await parseFilters(params);
-    expect(result.cfp).toBe(undefined);
-  });
-
   it('reset filters', async () => {
-    const params = new URLSearchParams({ query: '', type: '', cfp: '' });
+    const params = new URLSearchParams({ query: '', type: '' });
     const result = await parseFilters(params);
     expect(result.query).toBe(undefined);
     expect(result.type).toBe(undefined);
-    expect(result.cfp).toBe(undefined);
   });
 });

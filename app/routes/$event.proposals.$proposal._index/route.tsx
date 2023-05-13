@@ -11,9 +11,9 @@ import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 import { Container } from '~/design-system/layouts/Container';
 import { deleteProposal } from './server/delete-proposal.server';
 import { addToast } from '~/libs/toasts/toasts';
-import { withZod } from '@remix-validated-form/with-zod';
 import { ProposalParticipationSchema } from '~/schemas/proposal';
 import { sendParticipationAnswer } from './server/send-participation-answer.server';
+import { parse } from '@conform-to/zod';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);
@@ -36,9 +36,9 @@ export const action: ActionFunction = async ({ request, params }) => {
       return redirect(`/${params.event}/proposals`, await addToast(request, 'Proposal submission removed.'));
     }
     case 'confirm': {
-      const result = await withZod(ProposalParticipationSchema).validate(form);
-      if (result.error) return null;
-      await sendParticipationAnswer(userId, params.proposal, result.data.participation);
+      const result = parse(form, { schema: ProposalParticipationSchema });
+      if (!result.value) return null;
+      await sendParticipationAnswer(userId, params.proposal, result.value.participation);
       return json(null, await addToast(request, 'Your response has been sent to organizers.'));
     }
     default:

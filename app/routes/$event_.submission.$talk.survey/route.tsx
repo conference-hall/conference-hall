@@ -3,7 +3,6 @@ import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
-import { withZod } from '@remix-validated-form/with-zod';
 import { SurveySchema } from '~/schemas/survey';
 import { getAnswers } from '~/shared-server/survey/get-answers.server';
 import { getQuestions } from '~/shared-server/survey/get-questions.server';
@@ -15,6 +14,7 @@ import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { useSubmissionStep } from '../$event_.submission/hooks/useSubmissionStep';
 import { H2 } from '~/design-system/Typography';
 import { SurveyForm } from '~/shared-components/proposals/forms/SurveyForm';
+import { parse } from '@conform-to/zod';
 
 export const handle = { step: 'survey' };
 
@@ -34,10 +34,10 @@ export const action: ActionFunction = async ({ request, params }) => {
   invariant(params.event, 'Invalid event slug');
   invariant(params.talk, 'Invalid talk id');
 
-  const result = await withZod(SurveySchema).validate(form);
-  if (result.error) throw new Response('Bad survey values', { status: 400 });
+  const result = parse(form, { schema: SurveySchema });
+  if (!result.value) return json(null);
 
-  await saveSurvey(userId, params.event, result.data);
+  await saveSurvey(userId, params.event, result.value);
   return redirect(`/${params.event}/submission/${params.talk}/submit`);
 };
 

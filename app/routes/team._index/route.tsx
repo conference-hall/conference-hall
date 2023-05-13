@@ -1,7 +1,6 @@
 import type { ActionArgs, LoaderFunction } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
 import { json, redirect } from '@remix-run/node';
-import { withZod } from '@remix-validated-form/with-zod';
 import { requireSession } from '~/libs/auth/session';
 import { TeamForm } from '~/shared-components/teams/TeamForm';
 import { Button } from '~/design-system/Buttons';
@@ -10,6 +9,7 @@ import { TeamSaveSchema } from './types/team-save.schema';
 import { Container } from '~/design-system/layouts/Container';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 import { Card } from '~/design-system/layouts/Card';
+import { parse } from '@conform-to/zod';
 
 export const loader: LoaderFunction = async ({ request }) => {
   await requireSession(request);
@@ -18,15 +18,16 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export const action = async ({ request }: ActionArgs) => {
   const userId = await requireSession(request);
+
   const form = await request.formData();
-  const result = await withZod(TeamSaveSchema).validate(form);
-  if (result.error) {
-    return json(result.error.fieldErrors);
-  } else {
-    const updated = await createTeam(userId, result.data);
+  const result = parse(form, { schema: TeamSaveSchema });
+
+  if (result.value) {
+    const updated = await createTeam(userId, result.value);
     if (updated?.fieldErrors) return json(updated.fieldErrors);
     return redirect(`/team/${updated.slug}`);
   }
+  return json(result.error);
 };
 
 export default function NewOrganizationRoute() {

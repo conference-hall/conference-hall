@@ -14,7 +14,6 @@ import { useUser } from '~/root';
 import { AvatarName } from '~/design-system/Avatar';
 import { addToast } from '~/libs/toasts/toasts';
 import type { TeamRole } from '@prisma/client';
-import { withZod } from '@remix-validated-form/with-zod';
 import { parsePage } from '~/schemas/pagination';
 import { Pagination } from '~/design-system/Pagination';
 import { Input } from '~/design-system/forms/Input';
@@ -27,10 +26,10 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   invariant(params.team, 'Invalid team slug');
 
   const url = new URL(request.url);
-  const filters = await withZod(MembersFilterSchema).validate(url.searchParams);
+  const filters = MembersFilterSchema.safeParse(Object.fromEntries(url.searchParams));
   const page = await parsePage(url.searchParams);
 
-  const members = await listMembers(params.team, userId, filters.data ?? {}, page);
+  const members = await listMembers(params.team, userId, filters.success ? filters.data : {}, page);
   return json(members);
 };
 

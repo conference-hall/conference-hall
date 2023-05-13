@@ -8,7 +8,6 @@ import { Checkbox } from '~/design-system/forms/Checkboxes';
 import type { ActionFunction, LoaderArgs } from '@remix-run/node';
 import { submitProposal } from './server/submit-proposal.server';
 import { Avatar, AvatarGroup } from '~/design-system/Avatar';
-import { withZod } from '@remix-validated-form/with-zod';
 import { ProposalSubmissionSchema } from '~/schemas/proposal';
 import { useEvent } from '~/routes/$event/route';
 import { Card } from '~/design-system/layouts/Card';
@@ -18,6 +17,7 @@ import { H1, H2, Subtitle } from '~/design-system/Typography';
 import { TextArea } from '~/design-system/forms/TextArea';
 import { ExternalLink } from '~/design-system/Links';
 import { useSubmissionStep } from '../$event_.submission/hooks/useSubmissionStep';
+import { parse } from '@conform-to/zod';
 
 export const handle = { step: 'submission' };
 
@@ -36,8 +36,8 @@ export const action: ActionFunction = async ({ request, params }) => {
   invariant(params.event, 'Invalid event slug');
   invariant(params.talk, 'Invalid talk id');
 
-  const result = await withZod(ProposalSubmissionSchema).validate(form);
-  if (result?.data) await submitProposal(params.talk, params.event, userId, result?.data);
+  const result = parse(form, { schema: ProposalSubmissionSchema });
+  if (result.value) await submitProposal(params.talk, params.event, userId, result.value);
 
   return redirect(`/${params.event}/proposals`, await addToast(request, 'Congratulation! Proposal submitted!'));
 };

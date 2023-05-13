@@ -4,7 +4,7 @@ import { Input } from '~/design-system/forms/Input';
 
 type TeamFormProps = {
   initialValues?: { name: string; slug: string };
-  errors?: Record<string, string>;
+  errors?: Record<string, string | string[]>;
 };
 
 export function TeamForm({ initialValues, errors }: TeamFormProps) {

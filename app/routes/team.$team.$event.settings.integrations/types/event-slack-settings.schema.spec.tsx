@@ -1,21 +1,21 @@
-import { withZod } from '@remix-validated-form/with-zod';
 import { EventSlackSettingsSchema } from './event-slack-settings.schema';
+import { parse } from '@conform-to/zod';
 
 describe('Validate EventSlackSettingsSchema', () => {
   it('validates valid inputs', async () => {
-    const formData = new FormData();
-    formData.append('slackWebhookUrl', 'https://webhook.com');
+    const form = new FormData();
+    form.append('slackWebhookUrl', 'https://webhook.com');
 
-    const result = await withZod(EventSlackSettingsSchema).validate(formData);
-    expect(result.data).toEqual({ slackWebhookUrl: 'https://webhook.com' });
+    const result = parse(form, { schema: EventSlackSettingsSchema });
+    expect(result.value).toEqual({ slackWebhookUrl: 'https://webhook.com' });
   });
 
   it('returns validation errors', async () => {
-    const formData = new FormData();
-    formData.append('slackWebhookUrl', 'foo');
+    const form = new FormData();
+    form.append('slackWebhookUrl', 'foo');
 
-    const result = await withZod(EventSlackSettingsSchema).validate(formData);
-    expect(result.error?.fieldErrors).toEqual({
+    const result = parse(form, { schema: EventSlackSettingsSchema });
+    expect(result.error).toEqual({
       slackWebhookUrl: 'Invalid url',
     });
   });

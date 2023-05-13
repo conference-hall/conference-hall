@@ -3,7 +3,6 @@ import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import type { ProposalsFilters } from '~/schemas/proposal';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
-import { withZod } from '@remix-validated-form/with-zod';
 import { CampaignEmailFilters } from '~/shared-components/events/campaign-email/CampaignEmailFilters';
 import { CampaignEmailList, CampaignType } from '~/shared-components/events/campaign-email/CampaignEmailList';
 import { Pagination } from '~/design-system/Pagination';
@@ -17,17 +16,19 @@ import { CampaignEmailStats } from '~/shared-components/events/campaign-email/Ca
 import { searchProposals } from '~/routes/team.$team.$event._index/server/search-proposals.server';
 import { getRejectionCampaignStats } from './server/get-rejection-campaign-stats.server';
 import { sendRejectionCampaign } from './server/send-rejection-campaign.server';
+import { parse } from '@conform-to/zod';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
 
   const url = new URL(request.url);
-  const { data } = await withZod(ProposalsFiltersSchema).validate(url.searchParams);
+  const result = ProposalsFiltersSchema.safeParse(url.searchParams);
   const page = await parsePage(url.searchParams);
+  const currentFilters = result.success ? result.data : {};
   const filters = {
-    query: data?.query,
-    emailRejectedStatus: data?.emailRejectedStatus || 'not-sent',
+    query: currentFilters.query,
+    emailRejectedStatus: currentFilters.emailRejectedStatus || 'not-sent',
     status: ['REJECTED'],
   } as ProposalsFilters;
 
@@ -41,9 +42,9 @@ export const action = async ({ request, params }: ActionArgs) => {
   invariant(params.event, 'Invalid event slug');
 
   const form = await request.formData();
-  const { data, error } = await withZod(ProposalSelectionSchema).validate(form);
-  if (error) return json(null);
-  await sendRejectionCampaign(params.event, userId, data.selection);
+  const result = parse(form, { schema: ProposalSelectionSchema });
+  if (!result.value) return json(null);
+  await sendRejectionCampaign(params.event, userId, result.value.selection);
   return json(null, await addToast(request, 'Emails successfully sent.'));
 };
 

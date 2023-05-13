@@ -16,8 +16,8 @@ import { useSubmissionStep } from '../$event_.submission/hooks/useSubmissionStep
 import { Button, ButtonLink } from '~/design-system/Buttons';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { AlertError } from '~/design-system/Alerts';
-import { withZod } from '@remix-validated-form/with-zod';
 import { z } from 'zod';
+import { parse } from '@conform-to/zod';
 
 export const handle = { step: 'tracks' };
 
@@ -40,10 +40,11 @@ export const action = async ({ request, params }: ActionArgs) => {
 
   const FormatsSchema = event.formatsRequired ? TracksMandatorySchema : TracksSchema;
   const CategoriesSchema = event.categoriesRequired ? TracksMandatorySchema : TracksSchema;
-  const tracks = await withZod(z.object({ formats: FormatsSchema, categories: CategoriesSchema })).validate(form);
-  if (tracks.error) return json(tracks.error.fieldErrors);
 
-  await saveTracks(params.talk, event.id, userId, tracks.data);
+  const result = parse(form, { schema: z.object({ formats: FormatsSchema, categories: CategoriesSchema }) });
+  if (!result.value) return json(result.error);
+
+  await saveTracks(params.talk, event.id, userId, result.value);
 
   if (event.surveyEnabled) return redirect(`/${params.event}/submission/${params.talk}/survey`);
 

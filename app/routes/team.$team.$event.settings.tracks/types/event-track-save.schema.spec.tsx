@@ -1,15 +1,15 @@
-import { withZod } from '@remix-validated-form/with-zod';
 import { EventTrackSaveSchema } from './event-track-save.schema';
+import { parse } from '@conform-to/zod';
 
 describe('Validate EventTrackSaveSchema', () => {
   it('validates valid inputs', async () => {
-    const formData = new FormData();
-    formData.append('id', '123');
-    formData.append('name', 'Track 1');
-    formData.append('description', 'Track description');
+    const form = new FormData();
+    form.append('id', '123');
+    form.append('name', 'Track 1');
+    form.append('description', 'Track description');
 
-    const result = await withZod(EventTrackSaveSchema).validate(formData);
-    expect(result.data).toEqual({
+    const result = parse(form, { schema: EventTrackSaveSchema });
+    expect(result.value).toEqual({
       id: '123',
       name: 'Track 1',
       description: 'Track description',
@@ -17,24 +17,24 @@ describe('Validate EventTrackSaveSchema', () => {
   });
 
   it('validates valid inputs without id', async () => {
-    const formData = new FormData();
-    formData.append('name', 'Track 1');
-    formData.append('description', 'Track description');
+    const form = new FormData();
+    form.append('name', 'Track 1');
+    form.append('description', 'Track description');
 
-    const result = await withZod(EventTrackSaveSchema).validate(formData);
-    expect(result.data).toEqual({
+    const result = parse(form, { schema: EventTrackSaveSchema });
+    expect(result.value).toEqual({
       name: 'Track 1',
       description: 'Track description',
     });
   });
 
   it('returns validation errors', async () => {
-    const formData = new FormData();
-    formData.append('name', '');
-    formData.append('description', '');
+    const form = new FormData();
+    form.append('name', '');
+    form.append('description', '');
 
-    const result = await withZod(EventTrackSaveSchema).validate(formData);
-    expect(result.error?.fieldErrors).toEqual({
+    const result = parse(form, { schema: EventTrackSaveSchema });
+    expect(result.error).toEqual({
       name: 'Required',
     });
   });

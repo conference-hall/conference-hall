@@ -4,7 +4,6 @@ import { json } from '@remix-run/node';
 import { requireSession } from '~/libs/auth/session';
 import { H2, Subtitle } from '~/design-system/Typography';
 import { useFetcher } from '@remix-run/react';
-import { withZod } from '@remix-validated-form/with-zod';
 import { updateEvent } from '~/shared-server/teams/update-event.server';
 import { deleteCategory, deleteFormat, saveCategory, saveFormat } from './server/update-tracks.server';
 import { NewTrackButton } from './components/SaveTrackForm';
@@ -15,6 +14,7 @@ import { Card } from '~/design-system/layouts/Card';
 import { TrackList } from './components/TrackList';
 import { ToggleGroup } from '~/design-system/forms/Toggles';
 import { addToast } from '~/libs/toasts/toasts';
+import { parse } from '@conform-to/zod';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await requireSession(request);
@@ -24,37 +24,37 @@ export const loader = async ({ request }: LoaderArgs) => {
 export const action = async ({ request, params }: ActionArgs) => {
   const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
-  const formData = await request.formData();
+  const form = await request.formData();
 
-  const action = formData.get('_action');
+  const action = form.get('_action');
 
   switch (action) {
     case 'delete-formats': {
-      const trackId = String(formData.get('trackId'));
+      const trackId = String(form.get('trackId'));
       await deleteFormat(params.event, userId, trackId);
       break;
     }
     case 'delete-categories': {
-      const trackId = String(formData.get('trackId'));
+      const trackId = String(form.get('trackId'));
       await deleteCategory(params.event, userId, trackId);
       break;
     }
     case 'save-formats': {
-      const results = await withZod(EventTrackSaveSchema).validate(formData);
-      if (results.error) return json(results.error.fieldErrors);
-      await saveFormat(params.event, userId, results.data);
+      const result = parse(form, { schema: EventTrackSaveSchema });
+      if (!result.value) return json(result.error);
+      await saveFormat(params.event, userId, result.value);
       break;
     }
     case 'save-categories': {
-      const results = await withZod(EventTrackSaveSchema).validate(formData);
-      if (results.error) return json(results.error.fieldErrors);
-      await saveCategory(params.event, userId, results.data);
+      const result = parse(form, { schema: EventTrackSaveSchema });
+      if (!result.value) return json(result.error);
+      await saveCategory(params.event, userId, result.value);
       break;
     }
     case 'update-track-settings': {
-      const results = await withZod(EventTracksSettingsSchema).validate(formData);
-      if (results.error) return json(results.error.fieldErrors);
-      await updateEvent(params.event, userId, results.data);
+      const result = parse(form, { schema: EventTracksSettingsSchema });
+      if (!result.value) return json(result.error);
+      await updateEvent(params.event, userId, result.value);
       return json(null, await addToast(request, 'Track setting updated.'));
     }
   }

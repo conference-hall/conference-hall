@@ -1,7 +1,7 @@
 import { ProposalStatus } from '@prisma/client';
 import { z } from 'zod';
-import { numeric, repeatable, text } from 'zod-form-data';
 import { TalkSaveSchema } from './talks';
+import { numeric, repeatable, text } from './utils';
 
 const ProposalStatusSchema = text(z.enum(['SUBMITTED', 'ACCEPTED', 'REJECTED', 'CONFIRMED', 'DECLINED']));
 
@@ -27,6 +27,7 @@ export const ProposalSubmissionSchema = z.object({
 
 const EmailStatusSchema = text(z.enum(['not-sent', 'sent']).optional());
 
+// TODO: do a parseFilters like the search
 export const ProposalsFiltersSchema = z.object({
   query: text(z.string().trim().optional()),
   sort: text(z.enum(['newest', 'oldest']).optional()),
