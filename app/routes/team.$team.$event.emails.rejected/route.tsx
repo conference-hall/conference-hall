@@ -8,8 +8,7 @@ import { CampaignEmailList, CampaignType } from '~/components/events/campaign-em
 import { Pagination } from '~/design-system/Pagination';
 import { H1, H2 } from '~/design-system/Typography';
 import { parsePage } from '~/schemas/pagination';
-import { ProposalSelectionSchema } from '~/schemas/proposal';
-import { ProposalsFiltersSchema } from '~/schemas/proposal';
+import { ProposalSelectionSchema, parseProposalsFilters } from '~/schemas/proposal';
 import { requireSession } from '~/libs/auth/session';
 import { addToast } from '~/libs/toasts/toasts';
 import { CampaignEmailStats } from '~/components/events/campaign-email/CampaignEmailStats';
@@ -23,12 +22,11 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   invariant(params.event, 'Invalid event slug');
 
   const url = new URL(request.url);
-  const result = ProposalsFiltersSchema.safeParse(Object.fromEntries(url.searchParams));
+  const proposalsFilters = parseProposalsFilters(url.searchParams);
   const page = parsePage(url.searchParams);
-  const currentFilters = result.success ? result.data : {};
   const filters = {
-    query: currentFilters.query,
-    emailRejectedStatus: currentFilters.emailRejectedStatus || 'not-sent',
+    query: proposalsFilters.query,
+    emailRejectedStatus: proposalsFilters.emailRejectedStatus || 'not-sent',
     status: ['REJECTED'],
   } as ProposalsFilters;
 

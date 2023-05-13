@@ -2,9 +2,9 @@ import {
   ProposalCreateSchema,
   ProposalsStatusUpdateSchema,
   ProposalReviewDataSchema,
-  ProposalsFiltersSchema,
   ProposalSubmissionSchema,
   ProposalUpdateSchema,
+  parseProposalsFilters,
 } from './proposal';
 import { parse } from '@conform-to/zod';
 
@@ -130,7 +130,7 @@ describe('Validate ProposalSubmissionSchema', () => {
   });
 });
 
-describe('Validate ProposalsFiltersSchema', () => {
+describe('#parseProposalsFilters', () => {
   it('returns valid filters', async () => {
     const params = new URLSearchParams({
       query: 'foo',
@@ -140,8 +140,8 @@ describe('Validate ProposalsFiltersSchema', () => {
       categories: 'Category 1',
     });
 
-    const result = ProposalsFiltersSchema.safeParse(Object.fromEntries(params));
-    expect(result.success && result.data).toEqual({
+    const filters = parseProposalsFilters(params);
+    expect(filters).toEqual({
       query: 'foo',
       sort: 'newest',
       status: ['ACCEPTED'],
@@ -150,19 +150,14 @@ describe('Validate ProposalsFiltersSchema', () => {
     });
   });
 
-  it('returns errors on invalid filters', async () => {
+  it('returns empty object on invalid filters', async () => {
     const params = new URLSearchParams({
       sort: 'toto',
       status: 'toto',
     });
 
-    const result = ProposalsFiltersSchema.safeParse(Object.fromEntries(params));
-    expect(!result.success && result.error.flatten().fieldErrors).toEqual({
-      sort: ["Invalid enum value. Expected 'newest' | 'oldest', received 'toto'"],
-      status: [
-        "Invalid enum value. Expected 'SUBMITTED' | 'ACCEPTED' | 'REJECTED' | 'CONFIRMED' | 'DECLINED', received 'toto'",
-      ],
-    });
+    const filters = parseProposalsFilters(params);
+    expect(filters).toEqual({});
   });
 });
 

@@ -3,7 +3,7 @@ import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { requireSession } from '~/libs/auth/session';
 import { Outlet, useLoaderData, useOutletContext, useParams } from '@remix-run/react';
-import { ProposalReviewDataSchema, ProposalsFiltersSchema } from '~/schemas/proposal';
+import { ProposalReviewDataSchema, parseProposalsFilters } from '~/schemas/proposal';
 import type { ProposalReview } from './server/get-proposal-review.server';
 import { getProposalReview } from './server/get-proposal-review.server';
 import { Navbar } from '~/components/navbar/Navbar';
@@ -22,8 +22,8 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   invariant(params.proposal, 'Invalid proposal id');
 
   const url = new URL(request.url);
-  const filters = ProposalsFiltersSchema.safeParse(Object.fromEntries(url.searchParams));
-  const proposal = await getProposalReview(params.event, params.proposal, userId, filters.success ? filters.data : {});
+  const filters = parseProposalsFilters(url.searchParams);
+  const proposal = await getProposalReview(params.event, params.proposal, userId, filters);
   return json(proposal);
 };
 

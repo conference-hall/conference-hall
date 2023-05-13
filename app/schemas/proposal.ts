@@ -27,8 +27,7 @@ export const ProposalSubmissionSchema = z.object({
 
 const EmailStatusSchema = text(z.enum(['not-sent', 'sent']).optional());
 
-// TODO: do a parseFilters like the search
-export const ProposalsFiltersSchema = z.object({
+const ProposalsFiltersSchema = z.object({
   query: text(z.string().trim().optional()),
   sort: text(z.enum(['newest', 'oldest']).optional()),
   reviews: text(z.enum(['reviewed', 'not-reviewed']).optional()),
@@ -38,6 +37,11 @@ export const ProposalsFiltersSchema = z.object({
   emailAcceptedStatus: EmailStatusSchema,
   emailRejectedStatus: EmailStatusSchema,
 });
+
+export function parseProposalsFilters(params: URLSearchParams) {
+  const result = ProposalsFiltersSchema.safeParse(Object.fromEntries(params));
+  return result.success ? result.data : {};
+}
 
 export const ProposalReviewDataSchema = z.object({
   note: numeric(z.number().min(0).max(5).nullable().default(null)),

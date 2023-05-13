@@ -5,7 +5,7 @@ import { useLoaderData } from '@remix-run/react';
 import { requireSession } from '~/libs/auth/session';
 import { Container } from '~/design-system/layouts/Container';
 import { parsePage } from '~/schemas/pagination';
-import { ProposalsStatusUpdateSchema, ProposalsFiltersSchema } from '~/schemas/proposal';
+import { ProposalsStatusUpdateSchema, parseProposalsFilters } from '~/schemas/proposal';
 import { addToast } from '~/libs/toasts/toasts';
 import { updateProposalsStatus } from '~/routes/team.$team.$event._index/server/update-proposal.server';
 import { searchProposals } from './server/search-proposals.server';
@@ -25,9 +25,9 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   invariant(params.event, 'Invalid event slug');
 
   const url = new URL(request.url);
-  const filters = ProposalsFiltersSchema.safeParse(Object.fromEntries(url.searchParams));
+  const filters = parseProposalsFilters(url.searchParams);
   const page = parsePage(url.searchParams);
-  const results = await searchProposals(params.event, userId, filters.success ? filters.data : {}, page);
+  const results = await searchProposals(params.event, userId, filters, page);
   return json(results);
 };
 
