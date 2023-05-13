@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { repeatable } from 'zod-form-data';
+import { repeatable } from '~/schemas/utils';
 
 export const EventSurveySettingsSchema = z.object({
-  surveyQuestions: repeatable(z.array(z.string())),
+  surveyQuestions: repeatable(),
 });

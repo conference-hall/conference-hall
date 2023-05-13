@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { text } from 'zod-form-data';
+import { text } from '~/schemas/utils';
 import { dateValidator } from '~/schemas/validators';
 
 export const EventDetailsSettingsSchema = z

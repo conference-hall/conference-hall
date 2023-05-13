@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { text } from 'zod-form-data';
+import { text } from '~/schemas/utils';
 
 export const EventTrackSaveSchema = z.object({
   id: text(z.string().trim().optional()),

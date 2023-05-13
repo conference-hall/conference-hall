@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { repeatable } from 'zod-form-data';
+import { repeatable } from '~/schemas/utils';
 
 export const TracksMandatorySchema = repeatable(z.array(z.string().trim()).nonempty());
 

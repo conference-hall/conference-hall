@@ -1,6 +1,5 @@
 import { z } from 'zod';
-import { repeatable } from 'zod-form-data';
-import { text } from './utils';
+import { repeatable, text } from './utils';
 
 export const TalkSaveSchema = z.object({
   title: text(z.string().trim().min(1)),
