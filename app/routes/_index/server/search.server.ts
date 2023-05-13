@@ -3,7 +3,7 @@ import { EventVisibility } from '@prisma/client';
 import { db } from '~/libs/db';
 import { getCfpState } from '~/utils/event';
 import type { Pagination } from '~/schemas/pagination';
-import { getPagination } from '~/shared-server/pagination/pagination.server';
+import { getPagination } from '~/server/pagination/pagination.server';
 import { z } from 'zod';
 import { text } from '~/schemas/utils';
 

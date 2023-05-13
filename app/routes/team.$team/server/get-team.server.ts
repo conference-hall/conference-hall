@@ -1,6 +1,6 @@
 import { db } from '~/libs/db';
 import { TeamNotFoundError } from '~/libs/errors';
-import { buildInvitationLink } from '~/shared-server/invitations/build-link.server';
+import { buildInvitationLink } from '~/server/invitations/build-link.server';
 
 export type Team = Awaited<ReturnType<typeof getTeam>>;
 

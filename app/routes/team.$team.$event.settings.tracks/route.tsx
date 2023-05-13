@@ -12,7 +12,7 @@ import { TrackList } from './components/TrackList';
 import { ToggleGroup } from '~/design-system/forms/Toggles';
 import { addToast } from '~/libs/toasts/toasts';
 import { parse } from '@conform-to/zod';
-import { updateEvent } from '~/shared-server/teams/update-event.server';
+import { updateEvent } from '~/server/teams/update-event.server';
 import {
   EventTrackSaveSchema,
   deleteCategory,

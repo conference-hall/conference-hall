@@ -12,7 +12,7 @@ import { ProposalSubmissionSchema } from '~/schemas/proposal';
 import { useEvent } from '~/routes/$event/route';
 import { Card } from '~/design-system/layouts/Card';
 import { requireSession } from '~/libs/auth/session';
-import { getSubmittedProposal } from '~/shared-server/proposals/get-submitted-proposal.server';
+import { getSubmittedProposal } from '~/server/proposals/get-submitted-proposal.server';
 import { H1, H2, Subtitle } from '~/design-system/Typography';
 import { TextArea } from '~/design-system/forms/TextArea';
 import { ExternalLink } from '~/design-system/Links';

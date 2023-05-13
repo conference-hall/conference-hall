@@ -2,7 +2,7 @@ import type { CfpState } from '~/schemas/event';
 import type { EventProposals } from '~/routes/$event.proposals._index/route';
 import { InboxIcon } from '@heroicons/react/24/outline';
 import { CfpLabel } from '~/routes/$event.proposals._index/components/CfpLabel';
-import { ProposalCard } from '~/shared-components/proposals/ProposalCard';
+import { ProposalCard } from '~/components/proposals/ProposalCard';
 import { EmptyState } from '~/design-system/layouts/EmptyState';
 
 type Props = {

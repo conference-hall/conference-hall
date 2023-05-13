@@ -2,11 +2,7 @@ import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useActionData } from '@remix-run/react';
 import { CreditCardIcon, KeyIcon, UserCircleIcon } from '@heroicons/react/20/solid';
-import {
-  saveUserAdditionalInfo,
-  saveUserDetails,
-  saveUserPersonalInfo,
-} from '~/shared-server/profile/save-profile.server';
+import { saveUserAdditionalInfo, saveUserDetails, saveUserPersonalInfo } from '~/server/profile/save-profile.server';
 import { AdditionalInfoSchema, DetailsSchema, PersonalInfoSchema } from '~/schemas/profile.schema';
 import { addToast } from '~/libs/toasts/toasts';
 import { AdditionalInfoForm } from './components/AdditionalInfoForm';

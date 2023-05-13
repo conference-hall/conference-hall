@@ -7,7 +7,7 @@ import invariant from 'tiny-invariant';
 import { getReviews } from './server/get-reviews.server';
 import { useLoaderData } from '@remix-run/react';
 import { EmptyState } from '~/design-system/layouts/EmptyState';
-import { ReviewNote } from '~/shared-components/reviews/ReviewNote';
+import { ReviewNote } from '~/components/reviews/ReviewNote';
 import { Subtitle } from '~/design-system/Typography';
 
 export const loader = async ({ request, params }: LoaderArgs) => {

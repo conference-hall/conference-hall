@@ -7,7 +7,7 @@ import { H2 } from '~/design-system/Typography';
 import { ExternalLink } from '~/design-system/Links';
 import { Button } from '~/design-system/Buttons';
 import { Input } from '~/design-system/forms/Input';
-import { updateEvent } from '~/shared-server/teams/update-event.server';
+import { updateEvent } from '~/server/teams/update-event.server';
 import { EventSlackSettingsSchema } from './types/event-slack-settings.schema';
 import { useOrganizerEvent } from '../team.$team.$event/route';
 import { Card } from '~/design-system/layouts/Card';

@@ -4,19 +4,19 @@ import { json, redirect } from '@remix-run/node';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { addToast } from '~/libs/toasts/toasts';
 import { H3, Subtitle } from '~/design-system/Typography';
-import { DetailsForm } from '~/shared-components/proposals/forms/DetailsForm';
+import { DetailsForm } from '~/components/proposals/forms/DetailsForm';
 import { Button, ButtonLink } from '~/design-system/Buttons';
 import { requireSession } from '~/libs/auth/session';
 import { getProposalUpdateSchema } from '~/schemas/proposal';
-import { getSpeakerProposal } from '~/shared-server/proposals/get-speaker-proposal.server';
+import { getSpeakerProposal } from '~/server/proposals/get-speaker-proposal.server';
 import { updateProposal } from './server/update-proposal.server';
 import { useEvent } from '../$event/route';
-import { CoSpeakersList, InviteCoSpeakerButton } from '~/shared-components/proposals/forms/CoSpeaker';
-import { removeCoSpeakerFromProposal } from '~/shared-server/proposals/remove-co-speaker.server';
+import { CoSpeakersList, InviteCoSpeakerButton } from '~/components/proposals/forms/CoSpeaker';
+import { removeCoSpeakerFromProposal } from '~/server/proposals/remove-co-speaker.server';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 import { Container } from '~/design-system/layouts/Container';
 import { Card } from '~/design-system/layouts/Card';
-import { getEvent } from '~/shared-server/events/get-event.server';
+import { getEvent } from '~/server/events/get-event.server';
 import { parse } from '@conform-to/zod';
 
 export const loader = async ({ request, params }: LoaderArgs) => {

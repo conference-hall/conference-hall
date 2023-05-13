@@ -4,7 +4,7 @@ import { redirect } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { requireSession } from '~/libs/auth/session';
 import { Outlet, useLoaderData, useOutletContext, useRouteLoaderData } from '@remix-run/react';
-import TeamBreadcrumb from '~/shared-components/teams/TeamBreadcrumb';
+import TeamBreadcrumb from '~/components/teams/TeamBreadcrumb';
 import type { Team } from './server/get-team.server';
 import { getTeam } from './server/get-team.server';
 import { TeamTabs } from './components/TeamTabs';

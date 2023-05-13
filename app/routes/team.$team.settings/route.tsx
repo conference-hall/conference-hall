@@ -8,7 +8,7 @@ import { Cog6ToothIcon, UserGroupIcon } from '@heroicons/react/24/outline';
 import { H2 } from '~/design-system/Typography';
 import { useUser } from '~/root';
 import { useTeam } from '../team.$team/route';
-import { allowedForTeam } from '~/shared-server/teams/check-user-role.server';
+import { allowedForTeam } from '~/server/teams/check-user-role.server';
 import { TeamRole } from '@prisma/client';
 
 export const loader = async ({ request, params }: LoaderArgs) => {

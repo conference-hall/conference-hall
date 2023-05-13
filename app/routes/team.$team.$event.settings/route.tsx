@@ -19,7 +19,7 @@ import { H2 } from '~/design-system/Typography';
 import { useOrganizerEvent } from '../team.$team.$event/route';
 import { useUser } from '~/root';
 import { useTeam } from '../team.$team/route';
-import { allowedForEvent } from '~/shared-server/teams/check-user-role.server';
+import { allowedForEvent } from '~/server/teams/check-user-role.server';
 import { TeamRole } from '@prisma/client';
 
 export const loader = async ({ request, params }: LoaderArgs) => {

@@ -3,7 +3,7 @@ import { H3, Text } from '~/design-system/Typography';
 import { ProposalStatusLabel } from './ProposalStatusLabel';
 import { Link } from '~/design-system/Links';
 import { ButtonLink } from '~/design-system/Buttons';
-import type { SpeakerProposalStatus } from '~/shared-server/proposals/get-speaker-proposal-status';
+import type { SpeakerProposalStatus } from '~/server/proposals/get-speaker-proposal-status';
 import { Avatar } from '~/design-system/Avatar';
 
 type Props = {

@@ -6,7 +6,7 @@ import { Outlet, useLoaderData, useOutletContext, useParams } from '@remix-run/r
 import { ProposalReviewDataSchema, ProposalsFiltersSchema } from '~/schemas/proposal';
 import type { ProposalReview } from './server/get-proposal-review.server';
 import { getProposalReview } from './server/get-proposal-review.server';
-import { Navbar } from '~/shared-components/navbar/Navbar';
+import { Navbar } from '~/components/navbar/Navbar';
 import { useUser } from '~/root';
 import { ReviewHeader } from './components/Header';
 import { ReviewTabs } from './components/Tabs';

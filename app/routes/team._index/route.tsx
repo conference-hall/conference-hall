@@ -2,7 +2,7 @@ import type { ActionArgs, LoaderFunction } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
 import { json, redirect } from '@remix-run/node';
 import { requireSession } from '~/libs/auth/session';
-import { TeamForm } from '~/shared-components/teams/TeamForm';
+import { TeamForm } from '~/components/teams/TeamForm';
 import { Button } from '~/design-system/Buttons';
 import { TeamSaveSchema, createTeam } from './server/create-team.server';
 import { Container } from '~/design-system/layouts/Container';

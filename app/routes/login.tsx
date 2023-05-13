@@ -13,9 +13,9 @@ import { createSession, getSessionUserId } from '~/libs/auth/session';
 import { getClientAuth } from '~/libs/auth/firebase';
 import { useHydrated } from 'remix-utils';
 import { LoadingIcon } from '~/design-system/icons/LoadingIcon';
-import { Logo } from '~/shared-components/navbar/Logo';
+import { Logo } from '~/components/navbar/Logo';
 import { Card } from '~/design-system/layouts/Card';
-import { AuthProviderButton } from '~/shared-components/AuthProviderButton';
+import { AuthProviderButton } from '~/components/AuthProviderButton';
 import { AlertError } from '~/design-system/Alerts';
 import { Link } from '~/design-system/Links';
 

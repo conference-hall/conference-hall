@@ -1,8 +1,8 @@
 import { TeamRole } from '@prisma/client';
 import type { ProposalsFilters } from '~/schemas/proposal';
-import { allowedForEvent } from '~/shared-server/teams/check-user-role.server';
-import { ReviewsDetails } from '~/shared-server/reviews/reviews-details';
-import { EventProposalsSearch } from '~/shared-server/proposals/EventProposalsSearch';
+import { allowedForEvent } from '~/server/teams/check-user-role.server';
+import { ReviewsDetails } from '~/server/reviews/reviews-details';
+import { EventProposalsSearch } from '~/server/proposals/EventProposalsSearch';
 import type { UserSocialLinks } from '~/schemas/user';
 
 export async function exportProposals(eventSlug: string, userId: string, filters: ProposalsFilters) {

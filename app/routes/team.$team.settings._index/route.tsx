@@ -6,7 +6,7 @@ import { Form, useActionData } from '@remix-run/react';
 import { requireSession } from '~/libs/auth/session';
 import { H3, Subtitle } from '~/design-system/Typography';
 import { Button } from '~/design-system/Buttons';
-import { TeamForm } from '~/shared-components/teams/TeamForm';
+import { TeamForm } from '~/components/teams/TeamForm';
 import { updateTeam } from './server/update-team.server';
 import { TeamSaveSchema } from './types/team-save.schema';
 import { Card } from '~/design-system/layouts/Card';

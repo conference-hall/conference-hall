@@ -5,7 +5,7 @@ import { Form, useActionData } from '@remix-run/react';
 import { TalkSaveSchema } from '~/schemas/talks';
 import { createTalk } from './server/create-talk.server';
 import { requireSession } from '~/libs/auth/session';
-import { DetailsForm } from '~/shared-components/proposals/forms/DetailsForm';
+import { DetailsForm } from '~/components/proposals/forms/DetailsForm';
 import { Button } from '~/design-system/Buttons';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 import { Container } from '~/design-system/layouts/Container';

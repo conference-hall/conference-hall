@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { Button } from '~/design-system/Buttons';
 import { Modal } from '~/design-system/dialogs/Modals';
 import { Radio, RadioGroup } from '~/design-system/forms/RadioGroup';
-import { InvitationModal } from '../../../shared-components/InvitationModal';
+import { InvitationModal } from '../../../components/InvitationModal';
 
 type RemoveButtonProps = { memberId: string; memberName: string | null };
 

@@ -1,7 +1,7 @@
 import { TeamRole } from '@prisma/client';
 import { db } from '~/libs/db';
 import { ForbiddenOperationError } from '~/libs/errors';
-import { allowedForTeam } from '~/shared-server/teams/check-user-role.server';
+import { allowedForTeam } from '~/server/teams/check-user-role.server';
 
 export async function changeMemberRole(slug: string, userId: string, memberId: string, memberRole: TeamRole) {
   await allowedForTeam(slug, userId, [TeamRole.OWNER]);

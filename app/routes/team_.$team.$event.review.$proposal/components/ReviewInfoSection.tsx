@@ -3,8 +3,8 @@ import format from 'date-fns/format';
 import { ClientOnly } from 'remix-utils';
 import { H2, Text } from '~/design-system/Typography';
 import { Card } from '~/design-system/layouts/Card';
-import { ProposalStatusBadge } from '~/shared-components/proposals/ProposalStatusBadges';
-import { ReviewNote } from '~/shared-components/reviews/ReviewNote';
+import { ProposalStatusBadge } from '~/components/proposals/ProposalStatusBadges';
+import { ReviewNote } from '~/components/reviews/ReviewNote';
 import { ReviewForm } from './ReviewForm';
 
 type Props = {

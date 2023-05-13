@@ -1,9 +1,9 @@
 import { FireIcon } from '@heroicons/react/24/outline';
 import type { CfpState } from '~/schemas/event';
-import type { SpeakerProposalStatus } from '~/shared-server/proposals/get-speaker-proposal-status';
+import type { SpeakerProposalStatus } from '~/server/proposals/get-speaker-proposal-status';
 import { Subtitle, Text } from '~/design-system/Typography';
 import { Avatar, AvatarGroup } from '~/design-system/Avatar';
-import { ProposalStatusLabel } from '~/shared-components/proposals/ProposalStatusLabel';
+import { ProposalStatusLabel } from '~/components/proposals/ProposalStatusLabel';
 import { Link } from '~/design-system/Links';
 import { ButtonLink } from '~/design-system/Buttons';
 import { IconButtonLink } from '~/design-system/IconButtons';

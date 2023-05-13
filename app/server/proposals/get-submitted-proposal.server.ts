@@ -1,4 +1,4 @@
-import { buildInvitationLink } from '~/shared-server/invitations/build-link.server';
+import { buildInvitationLink } from '~/server/invitations/build-link.server';
 import { db } from '../../libs/db';
 import { ProposalNotFoundError } from '../../libs/errors';
 

@@ -3,8 +3,8 @@ import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Outlet } from '@remix-run/react';
 import { requireSession } from '~/libs/auth/session';
-import { Navbar } from '~/shared-components/navbar/Navbar';
-import { Footer } from '~/shared-components/Footer';
+import { Navbar } from '~/components/navbar/Navbar';
+import { Footer } from '~/components/Footer';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await requireSession(request);

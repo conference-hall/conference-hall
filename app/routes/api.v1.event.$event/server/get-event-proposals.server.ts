@@ -3,7 +3,7 @@ import { ApiKeyInvalidError, EventNotFoundError } from '~/libs/errors';
 import { jsonToArray } from '~/libs/prisma';
 import type { ProposalsFilters } from '~/schemas/proposal';
 import type { UserSocialLinks } from '~/schemas/user';
-import { EventProposalsSearch } from '~/shared-server/proposals/EventProposalsSearch';
+import { EventProposalsSearch } from '~/server/proposals/EventProposalsSearch';
 import { getLanguage } from '~/utils/languages';
 import { getLevel } from '~/utils/levels';
 

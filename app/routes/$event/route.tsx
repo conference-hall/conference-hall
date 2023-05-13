@@ -3,12 +3,12 @@ import type { LoaderArgs } from '@remix-run/node';
 import { useUser } from '~/root';
 import { json } from '@remix-run/node';
 import { Outlet, useLoaderData, useOutletContext } from '@remix-run/react';
-import { Navbar } from '~/shared-components/navbar/Navbar';
-import type { Event } from '~/shared-server/events/get-event.server';
-import { getEvent } from '~/shared-server/events/get-event.server';
+import { Navbar } from '~/components/navbar/Navbar';
+import type { Event } from '~/server/events/get-event.server';
+import { getEvent } from '~/server/events/get-event.server';
 import { EventHeader } from './components/EventHeader';
 import { EventTabs } from './components/EventTabs';
-import { Footer } from '~/shared-components/Footer';
+import { Footer } from '~/components/Footer';
 import { mergeMeta } from '~/libs/meta/merge-meta';
 import { eventSocialCard } from '~/libs/meta/social-cards';
 

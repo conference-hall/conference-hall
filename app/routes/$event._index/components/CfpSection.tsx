@@ -2,7 +2,7 @@ import { ClientOnly } from 'remix-utils';
 import { H2, Subtitle } from '~/design-system/Typography';
 
 import type { CfpState } from '~/schemas/event';
-import { CfpIcon } from '../../../shared-components/cfp/CfpIcon';
+import { CfpIcon } from '../../../components/cfp/CfpIcon';
 import { formatCFPDate, formatCFPElapsedTime } from '~/utils/event';
 import { ButtonLink } from '~/design-system/Buttons';
 import { Container } from '~/design-system/layouts/Container';
