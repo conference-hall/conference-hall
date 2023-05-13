@@ -7,13 +7,13 @@ import { Button } from '~/design-system/Buttons';
 import { Container } from '~/design-system/layouts/Container';
 import { requireSession } from '~/libs/auth/session';
 import { SurveySchema } from '~/schemas/survey';
-import { withZod } from '@remix-validated-form/with-zod';
 import { getAnswers } from '~/shared-server/survey/get-answers.server';
 import { getQuestions } from '~/shared-server/survey/get-questions.server';
 import { saveSurvey } from '~/shared-server/survey/save-survey.server';
 import { Card } from '~/design-system/layouts/Card';
 import { addToast } from '~/libs/toasts/toasts';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
+import { parse } from '@conform-to/zod';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);
@@ -29,11 +29,10 @@ export const action = async ({ request, params }: ActionArgs) => {
   invariant(params.event, 'Invalid event slug');
 
   const form = await request.formData();
-  const result = await withZod(SurveySchema).validate(form);
-  if (result.error) throw new Response('Bad survey values', { status: 400 });
+  const result = parse(form, { schema: SurveySchema });
+  if (!result.value) return json(null);
 
-  await saveSurvey(userId, params.event, result.data);
-
+  await saveSurvey(userId, params.event, result.value);
   return json(null, await addToast(request, 'Survey saved.'));
 };
 
