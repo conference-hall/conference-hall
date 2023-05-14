@@ -1,10 +1,11 @@
 import type { LinksFunction, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
+import invariant from 'tiny-invariant';
 
 import { Subtitle, Text } from '~/design-system/Typography';
 import { requireSession } from '~/libs/auth/session';
-import { ProposalsExportFiltersSchema } from '~/schemas/proposal';
+import { parseProposalsFilters } from '~/schemas/proposal';
 import { getLanguage } from '~/utils/languages';
 import { getLevel } from '~/utils/levels';
 import { formatReviewNote } from '~/utils/reviews';
@@ -14,15 +15,14 @@ import styles from './styles.css';
 
 export const links: LinksFunction = () => [{ rel: 'stylesheet', href: styles }];
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);
+  invariant(params.event, 'Invalid event slug');
+
   const url = new URL(request.url);
+  const filters = parseProposalsFilters(url.searchParams);
 
-  const result = ProposalsExportFiltersSchema.safeParse(Object.fromEntries(url.searchParams));
-  if (!result.success) return json(null);
-
-  const { team, event, ...filters } = result.data;
-  const results = await exportProposals(event, userId, filters ?? {});
+  const results = await exportProposals(params.event, userId, filters ?? {});
   return json(results);
 };
 
