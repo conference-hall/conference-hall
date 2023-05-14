@@ -55,11 +55,6 @@ export const ProposalsStatusUpdateSchema = z.object({
   selection: repeatable(z.array(z.string())),
 });
 
-export const ProposalsExportFiltersSchema = ProposalsFiltersSchema.extend({
-  team: text(z.string()),
-  event: text(z.string()),
-});
-
 export const ProposalSelectionSchema = z.object({
   selection: repeatable(z.array(z.string())),
 });
