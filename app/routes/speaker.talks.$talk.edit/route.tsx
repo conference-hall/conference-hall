@@ -12,11 +12,16 @@ import { Container } from '~/design-system/layouts/Container';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 import { H3, Subtitle } from '~/design-system/Typography';
 import { requireSession } from '~/libs/auth/session';
+import { mergeMeta } from '~/libs/meta/merge-meta';
 import { addToast } from '~/libs/toasts/toasts';
 import { updateTalk } from '~/routes/speaker.talks.$talk.edit/server/update-talk.server';
 import { TalkSaveSchema } from '~/schemas/talks';
 import { getTalk } from '~/server/talks/get-talk.server';
 import { removeCoSpeakerFromTalk } from '~/server/talks/remove-co-speaker.server';
+
+export const meta = mergeMeta<typeof loader>(({ data }) =>
+  data ? [{ title: `Edit | ${data?.title} | Conference Hall` }] : []
+);
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);

@@ -7,12 +7,15 @@ import { ButtonLink } from '~/design-system/Buttons';
 import { Container } from '~/design-system/layouts/Container';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 import { requireSession } from '~/libs/auth/session';
+import { mergeMeta } from '~/libs/meta/merge-meta';
 import { useUser } from '~/root';
 import { parsePage } from '~/schemas/pagination';
 
 import { SpeakerActivitiesSection } from './components/SpeakerActivitiesSection';
 import { SpeakerDetailsSection } from './components/SpeakerDetailsSection';
 import { getActivities } from './server/get-activities.server';
+
+export const meta = mergeMeta(() => [{ title: 'Home speaker | Conference Hall' }]);
 
 export const loader = async ({ request }: LoaderArgs) => {
   const userId = await requireSession(request);

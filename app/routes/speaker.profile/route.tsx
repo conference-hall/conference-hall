@@ -8,6 +8,7 @@ import { Container } from '~/design-system/layouts/Container';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 import { NavSideMenu } from '~/design-system/navigation/NavSideMenu';
 import { requireSession } from '~/libs/auth/session';
+import { mergeMeta } from '~/libs/meta/merge-meta';
 import { addToast } from '~/libs/toasts/toasts';
 import { useUser } from '~/root';
 import { AdditionalInfoSchema, DetailsSchema, PersonalInfoSchema } from '~/schemas/profile.schema';
@@ -16,6 +17,8 @@ import { saveUserAdditionalInfo, saveUserDetails, saveUserPersonalInfo } from '~
 import { AdditionalInfoForm } from './components/AdditionalInfoForm';
 import { PersonalInfoForm } from './components/PersonalInfoForm';
 import { SpeakerDetailsForm } from './components/SpeakerDetailsForm';
+
+export const meta = mergeMeta(() => [{ title: 'Profile | Conference Hall' }]);
 
 export const loader = async ({ request }: LoaderArgs) => {
   await requireSession(request);

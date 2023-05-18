@@ -7,6 +7,7 @@ import invariant from 'tiny-invariant';
 
 import { Navbar } from '~/components/navbar/Navbar';
 import { requireSession } from '~/libs/auth/session';
+import { mergeMeta } from '~/libs/meta/merge-meta';
 import { addToast } from '~/libs/toasts/toasts';
 import { useUser } from '~/root';
 import { parseProposalsFilters, ProposalReviewDataSchema } from '~/schemas/proposal';
@@ -17,6 +18,8 @@ import { ReviewTabs } from './components/Tabs';
 import type { ProposalReview } from './server/get-proposal-review.server';
 import { getProposalReview } from './server/get-proposal-review.server';
 import { rateProposal } from './server/review-proposal.server';
+
+export const meta = mergeMeta(() => [{ title: `Review proposal | Conference Hall` }]);
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);
