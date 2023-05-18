@@ -1,5 +1,5 @@
 import { AvatarGroup } from '~/design-system/Avatar';
-import { Badge } from '~/design-system/badges/Badges';
+import { Badge } from '~/design-system/Badges';
 import { Card } from '~/design-system/layouts/Card';
 import { Markdown } from '~/design-system/Markdown';
 import { H3, Text } from '~/design-system/Typography';

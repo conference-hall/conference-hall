@@ -1,4 +1,4 @@
-import { BadgeDot } from '~/design-system/badges/Badges';
+import { BadgeDot } from '~/design-system/Badges';
 import { ProgressBar } from '~/design-system/ProgressBar';
 import { Text } from '~/design-system/Typography';
 

@@ -1,7 +1,7 @@
 import { ArrowTopRightOnSquareIcon, ChevronRightIcon, Square3Stack3DIcon } from '@heroicons/react/24/outline';
 
 import { Avatar } from '~/design-system/Avatar';
-import { Badge, BadgeDot } from '~/design-system/badges/Badges';
+import { Badge, BadgeDot } from '~/design-system/Badges';
 import { Link } from '~/design-system/Links';
 import type { CfpState, EventType, EventVisibility } from '~/schemas/event';
 

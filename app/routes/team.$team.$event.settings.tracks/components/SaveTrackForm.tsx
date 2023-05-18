@@ -3,10 +3,10 @@ import { Form } from '@remix-run/react';
 import { useState } from 'react';
 
 import { Button } from '~/design-system/Buttons';
-import { Modal } from '~/design-system/dialogs/Modals';
 import { Input } from '~/design-system/forms/Input';
 import { TextArea } from '~/design-system/forms/TextArea';
 import { IconButton } from '~/design-system/IconButtons';
+import { Modal } from '~/design-system/Modals';
 
 type TrackType = 'formats' | 'categories';
 type TrackData = { id: string; name: string; description?: string | null };

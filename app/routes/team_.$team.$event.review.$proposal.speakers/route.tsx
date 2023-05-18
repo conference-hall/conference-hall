@@ -4,7 +4,7 @@ import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { AvatarName } from '~/design-system/Avatar';
-import { Badge } from '~/design-system/badges/Badges';
+import { Badge } from '~/design-system/Badges';
 import { IconLabel } from '~/design-system/IconLabel';
 import { GitHubIcon } from '~/design-system/icons/GitHubIcon';
 import { TwitterIcon } from '~/design-system/icons/TwitterIcon';
