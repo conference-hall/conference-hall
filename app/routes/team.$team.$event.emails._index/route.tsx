@@ -64,7 +64,7 @@ export default function AcceptedProposalEmails() {
 
         <CampaignEmailList type={CampaignType.ACCEPTATION} proposals={results} total={statistics.total} />
 
-        <Pagination {...pagination} className="mt-8" />
+        <Pagination {...pagination} />
       </div>
     </>
   );

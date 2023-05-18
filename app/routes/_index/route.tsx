@@ -55,22 +55,24 @@ export default function IndexRoute() {
         {results?.length === 0 ? (
           <EmptyState icon={FaceFrownIcon} label="No results found!" />
         ) : (
-          <ul aria-label="Search results" className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-            {results.map((event) => (
-              <EventCard
-                key={event.slug}
-                to={talkId ? `/${event.slug}/submission/${talkId}` : `/${event.slug}`}
-                name={event.name}
-                type={event.type}
-                logo={event.logo}
-                cfpState={event.cfpState}
-                cfpStart={event.cfpStart}
-                cfpEnd={event.cfpEnd}
-              />
-            ))}
-          </ul>
+          <div className="space-y-8">
+            <ul aria-label="Search results" className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+              {results.map((event) => (
+                <EventCard
+                  key={event.slug}
+                  to={talkId ? `/${event.slug}/submission/${talkId}` : `/${event.slug}`}
+                  name={event.name}
+                  type={event.type}
+                  logo={event.logo}
+                  cfpState={event.cfpState}
+                  cfpStart={event.cfpStart}
+                  cfpEnd={event.cfpEnd}
+                />
+              ))}
+            </ul>
+            <Pagination {...pagination} />
+          </div>
         )}
-        <Pagination {...pagination} className="mt-8" />
       </Container>
 
       <Footer />
