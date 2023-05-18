@@ -1,7 +1,7 @@
 import c from 'classnames';
 
 import type { ButtonStylesProps } from '../Buttons';
-import { getStyles } from '../Buttons';
+import { button } from '../Buttons';
 import type { InputProps } from './Input';
 import { Input } from './Input';
 
@@ -17,12 +17,11 @@ export function ButtonFileUpload({
   disabled,
   loading,
   className,
-  iconClassName,
   iconLeft: IconLeft,
   iconRight: IconRight,
   ...rest
 }: ButtonFileUploadProps) {
-  const styles = getStyles({ variant, size, block, disabled, loading, className });
+  const styles = button({ variant, size, block, disabled, loading, className });
   return (
     <>
       <label htmlFor={name} role="button" tabIndex={0} className={c(styles, 'cursor-pointer')}>

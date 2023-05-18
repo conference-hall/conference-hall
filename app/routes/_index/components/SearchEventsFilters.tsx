@@ -22,7 +22,6 @@ export function SearchEventsFilters({ filters }: Props) {
           value="all"
           variant={!type || type === 'all' ? 'primary' : 'secondary'}
           size="s"
-          defaultOutline
           className="rounded-r-none border-r-0"
         >
           All
@@ -32,7 +31,6 @@ export function SearchEventsFilters({ filters }: Props) {
           value="conference"
           variant={type === 'conference' ? 'primary' : 'secondary'}
           size="s"
-          defaultOutline
           className="rounded-none"
         >
           Conferences
@@ -42,7 +40,6 @@ export function SearchEventsFilters({ filters }: Props) {
           value="meetup"
           variant={type === 'meetup' ? 'primary' : 'secondary'}
           size="s"
-          defaultOutline
           className="rounded-l-none border-l-0"
         >
           Meetups

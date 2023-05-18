@@ -2,7 +2,7 @@ import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import { useParams, useSearchParams } from '@remix-run/react';
 
 import type { ButtonStylesProps } from '~/design-system/Buttons';
-import { getStyles } from '~/design-system/Buttons';
+import { button } from '~/design-system/Buttons';
 import { Menu } from '~/design-system/menus/Menu';
 
 type Props = ButtonStylesProps;
@@ -12,7 +12,7 @@ export function ExportActions(props: Props) {
   const [searchParams] = useSearchParams();
 
   return (
-    <Menu trigger={ExportMenuButton} triggerClassname={getStyles(props)}>
+    <Menu trigger={ExportMenuButton} triggerClassname={button(props)}>
       <Menu.ItemExternalLink
         href={`/team/${params.team}/${params.event}/export/json?${searchParams.toString()}`}
         target="_blank"

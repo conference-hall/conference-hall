@@ -1,7 +1,7 @@
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
 
 import type { ButtonStylesProps } from '~/design-system/Buttons';
-import { getStyles } from '~/design-system/Buttons';
+import { button } from '~/design-system/Buttons';
 import { Menu } from '~/design-system/menus/Menu';
 
 type Props = { selection: Array<string> } & ButtonStylesProps;
@@ -17,7 +17,7 @@ function TriggerButton() {
 
 export function ChangeStatusAction({ selection, ...rest }: Props) {
   return (
-    <Menu trigger={TriggerButton} triggerClassname={getStyles(rest)}>
+    <Menu trigger={TriggerButton} triggerClassname={button(rest)}>
       <Menu.ItemForm method="POST">
         <input type="hidden" name="status" value="ACCEPTED" />
         {selection.map((id) => (
