@@ -27,7 +27,7 @@ export function TrackList({ type, tracks }: TrackListProps) {
             <Form method="POST">
               <input type="hidden" name="_action" value={`delete-${type}`} />
               <input type="hidden" name="trackId" value={track.id} />
-              <IconButton icon={TrashIcon} size="xs" variant="secondary" label={`Remove ${track.name}`} />
+              <IconButton icon={TrashIcon} size="s" variant="secondary" label={`Remove ${track.name}`} />
             </Form>
           </div>
         </li>

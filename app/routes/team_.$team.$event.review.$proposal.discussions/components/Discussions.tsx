@@ -47,7 +47,7 @@ export function Discussions({ userId, messages }: Props) {
                 <Text size="xs" mb={1} variant="secondary">
                   {message.name}
                 </Text>
-                <div className="flex items-center justify-between break-all rounded border border-gray-200 bg-gray-50 px-4 py-4">
+                <div className="flex items-center justify-between gap-4 break-all rounded border border-gray-200 bg-gray-50 px-4 py-4">
                   <div className="grow">
                     <Text size="s">{message.message}</Text>
                   </div>
@@ -56,8 +56,7 @@ export function Discussions({ userId, messages }: Props) {
                       label="Delete message"
                       icon={TrashIcon}
                       variant="secondary"
-                      size="xs"
-                      className="ml-8"
+                      size="s"
                       onClick={() => handleDelete(message.id)}
                     />
                   )}

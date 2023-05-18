@@ -33,7 +33,7 @@ export function EditTrackButton({ type, initialValues }: EditTrackButtonProps) {
       <IconButton
         icon={PencilIcon}
         onClick={() => setModalOpen(true)}
-        size="xs"
+        size="s"
         variant="secondary"
         label={`Edit ${initialValues.name}`}
       />
