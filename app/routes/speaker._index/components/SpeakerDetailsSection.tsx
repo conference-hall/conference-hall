@@ -36,7 +36,7 @@ export function SpeakerDetailsSection({ name, email, picture, bio, address, comp
         </div>
       </div>
 
-      {bio && <Markdown className="line-clamp-5" source={bio} />}
+      {bio && <Markdown className="line-clamp-5">{bio}</Markdown>}
 
       {displayInfo && (
         <div className="space-y-4">

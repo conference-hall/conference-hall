@@ -12,11 +12,11 @@ It is rendered with **Marked**.
 export const Documentation = () => (
   <>
     <StoryBlock title="Default">
-      <Markdown source={TEXT} />
+      <Markdown>{TEXT}</Markdown>
     </StoryBlock>
 
     <StoryBlock title="Medium sized text">
-      <Markdown source={TEXT} size="m" />
+      <Markdown size="m">{TEXT}</Markdown>
     </StoryBlock>
   </>
 );

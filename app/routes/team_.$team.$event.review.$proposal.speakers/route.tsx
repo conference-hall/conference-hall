@@ -49,14 +49,14 @@ export default function ProposalSpeakersRoute() {
               </div>
             </div>
 
-            {speaker.bio && <Markdown source={speaker.bio} />}
+            {speaker.bio && <Markdown>{speaker.bio}</Markdown>}
 
             {speaker.references && (
               <div className="space-y-2">
                 <Text strong mb={2}>
                   References
                 </Text>
-                <Markdown source={speaker.references} />
+                <Markdown>{speaker.references}</Markdown>
               </div>
             )}
 

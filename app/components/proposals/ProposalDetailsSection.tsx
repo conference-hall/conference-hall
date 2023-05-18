@@ -34,7 +34,7 @@ export function ProposalDetailsSection(props: Props) {
 
       <div>
         <H3 srOnly>Abstract</H3>
-        <Markdown source={props.abstract} />
+        <Markdown>{props.abstract}</Markdown>
       </div>
 
       {hasFormats && (
@@ -54,7 +54,7 @@ export function ProposalDetailsSection(props: Props) {
       {props.references && (
         <div>
           <H3 mb={2}>References</H3>
-          <Markdown source={props.references} className="mt-2" />
+          <Markdown>{props.references}</Markdown>
         </div>
       )}
     </Card>

@@ -104,7 +104,7 @@ function MardownPreviewModal({ markdown, isOpen, onClose }: MardownPreviewModalP
           </button>
         </div>
         <div className="inline-block w-full transform rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl sm:my-8 sm:p-6 sm:align-middle md:max-w-5xl">
-          {markdown ? <Markdown source={markdown} /> : <p>Nothing to preview.</p>}
+          {markdown ? <Markdown>{markdown}</Markdown> : <p>Nothing to preview.</p>}
         </div>
       </div>
     </Dialog>
