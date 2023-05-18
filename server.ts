@@ -1,5 +1,5 @@
 import { createRequestHandler } from '@remix-run/express';
-import { installGlobals } from '@remix-run/node';
+import { broadcastDevReady, installGlobals } from '@remix-run/node';
 import compression from 'compression';
 import express from 'express';
 import rateLimit from 'express-rate-limit';
@@ -65,6 +65,11 @@ app.all(
 
 app.listen(PORT, () => {
   console.log(`✅ App started on http://localhost:${PORT}`);
+
+  if (process.env.NODE_ENV === 'development') {
+    const build = require(BUILD_DIR);
+    broadcastDevReady(build);
+  }
 });
 
 function purgeRequireCache() {
