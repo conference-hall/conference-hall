@@ -10,7 +10,10 @@ import { EmptyState } from '~/design-system/layouts/EmptyState';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 import { H2 } from '~/design-system/Typography';
 import { requireSession } from '~/libs/auth/session';
+import { mergeMeta } from '~/libs/meta/merge-meta';
 import { useUser } from '~/root';
+
+export const meta = mergeMeta(() => [{ title: 'Notifications | Conference Hall' }]);
 
 export const loader = async ({ request }: LoaderArgs) => {
   await requireSession(request);

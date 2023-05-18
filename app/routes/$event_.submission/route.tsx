@@ -9,6 +9,8 @@ import { IconButtonLink } from '~/design-system/IconButtons';
 import { Container } from '~/design-system/layouts/Container';
 import { requireSession } from '~/libs/auth/session';
 import { CfpNotOpenError } from '~/libs/errors';
+import { mergeMeta } from '~/libs/meta/merge-meta';
+import { eventSocialCard } from '~/libs/meta/social-cards';
 import { useUser } from '~/root';
 import { getEvent } from '~/server/events/get-event.server';
 
@@ -18,6 +20,11 @@ import { useSubmissionStep } from './components/useSubmissionStep';
 type Step = { key: string; name: string; path: string; form?: string; enabled: boolean };
 
 export const handle = { step: 'root' };
+
+export const meta = mergeMeta<typeof loader>(
+  ({ data }) => (data ? [{ title: `${data.event.name} submission | Conference Hall` }] : []),
+  ({ data }) => (data ? eventSocialCard({ name: data.event.name, slug: data.event.slug, logo: data.event.logo }) : [])
+);
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   await requireSession(request);

@@ -15,7 +15,7 @@ import { EventHeader } from './components/EventHeader';
 import { EventTabs } from './components/EventTabs';
 
 export const meta = mergeMeta<typeof loader>(
-  ({ data }) => (data ? [{ title: `${data?.name} | Conference Hall` }] : []),
+  ({ data }) => (data ? [{ title: `${data.name} | Conference Hall` }] : []),
   ({ data }) => (data ? eventSocialCard({ name: data.name, slug: data.slug, logo: data.logo }) : [])
 );
 

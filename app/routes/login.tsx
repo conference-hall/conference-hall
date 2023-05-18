@@ -19,6 +19,9 @@ import { Card } from '~/design-system/layouts/Card';
 import { Link } from '~/design-system/Links';
 import { getClientAuth } from '~/libs/auth/firebase';
 import { createSession, getSessionUserId } from '~/libs/auth/session';
+import { mergeMeta } from '~/libs/meta/merge-meta';
+
+export const meta = mergeMeta(() => [{ title: 'Login | Conference Hall' }]);
 
 export const loader = async ({ request }: LoaderArgs) => {
   const userId = await getSessionUserId(request);

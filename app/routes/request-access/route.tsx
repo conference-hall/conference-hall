@@ -10,8 +10,11 @@ import { Container } from '~/design-system/layouts/Container';
 import { ExternalLink } from '~/design-system/Links';
 import { H1, Subtitle } from '~/design-system/Typography';
 import { requireSession } from '~/libs/auth/session';
+import { mergeMeta } from '~/libs/meta/merge-meta';
 
 import { validAccessKey } from './server/valid-access-key.server';
+
+export const meta = mergeMeta(() => [{ title: 'Request access | Conference Hall' }]);
 
 export const loader = async ({ request }: LoaderArgs) => {
   await requireSession(request);

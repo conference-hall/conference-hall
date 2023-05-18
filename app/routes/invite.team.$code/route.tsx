@@ -9,9 +9,12 @@ import { Card } from '~/design-system/layouts/Card';
 import { Container } from '~/design-system/layouts/Container';
 import { H1, H2 } from '~/design-system/Typography';
 import { requireSession } from '~/libs/auth/session';
+import { mergeMeta } from '~/libs/meta/merge-meta';
 import { useUser } from '~/root';
 
 import { addMember, checkTeamInviteCode } from './server/invite-team.server';
+
+export const meta = mergeMeta(() => [{ title: 'Team invitation | Conference Hall' }]);
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   await requireSession(request);
