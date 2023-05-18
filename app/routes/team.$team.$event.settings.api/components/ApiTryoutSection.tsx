@@ -52,7 +52,7 @@ export function ApiTryoutSection({ slug, apiKey }: Props) {
       </Card.Content>
 
       <Card.Actions>
-        <ExternalLink href={url} target="_blank" icon={ArrowRightIcon} className="font-semibold">
+        <ExternalLink href={url} target="_blank" icon={ArrowRightIcon} strong>
           Try out
         </ExternalLink>
       </Card.Actions>

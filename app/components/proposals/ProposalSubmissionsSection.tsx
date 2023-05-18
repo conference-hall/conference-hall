@@ -25,12 +25,12 @@ export function ProposalSubmissionsSection({ talkId, submissions }: Props) {
         <ul className="mt-4 space-y-4">
           {submissions.map((submission) => (
             <li key={submission.slug} className="flex items-center justify-between gap-2">
-              <Link to={`/${submission.slug}/proposals`} className="flex gap-2">
+              <div className="flex gap-2">
                 <Avatar picture={submission.logo} name={submission.name} square size="xs" aria-hidden />
-                <Text variant="link" strong heading truncate>
+                <Link to={`/${submission.slug}/proposals`} strong heading truncate>
                   {submission.name}
-                </Text>
-              </Link>
+                </Link>
+              </div>
               <ProposalStatusLabel status={submission.proposalStatus} />
             </li>
           ))}

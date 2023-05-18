@@ -1,4 +1,3 @@
-import { Link } from '@remix-run/react';
 import c from 'classnames';
 import { ClientOnly } from 'remix-utils';
 
@@ -33,7 +32,7 @@ export function EventHeader({
   return (
     <header className={c('bg-gray-800', className)}>
       <Container className="flex flex-col items-center justify-between py-4 sm:flex-row">
-        <Link to={`/${slug}`} className="flex items-center gap-4">
+        <div className="flex items-center gap-4">
           <Avatar picture={logo} name={name} size="l" square />
           <div className="flex-shrink-0">
             <H1 size="2xl" variant="light">
@@ -43,7 +42,7 @@ export function EventHeader({
               {`by ${teamName}`}
             </Text>
           </div>
-        </Link>
+        </div>
 
         <div className="flex flex-col items-center gap-1 truncate sm:items-end">
           <Text variant="light" size="base" heading strong truncate>

@@ -87,11 +87,8 @@ export default function SubmissionSubmitRoute() {
 
           {event.codeOfConductUrl && (
             <Checkbox id="cod-agreement" name="cod-agreement" value="agree" onChange={() => setAcceptCod(!acceptedCod)}>
-              Please agree with the{' '}
-              <ExternalLink href={event.codeOfConductUrl} className="inline-flex">
-                code of conduct
-              </ExternalLink>{' '}
-              of the event.
+              Please agree with the <ExternalLink href={event.codeOfConductUrl}>code of conduct</ExternalLink> of the
+              event.
             </Checkbox>
           )}
         </Form>

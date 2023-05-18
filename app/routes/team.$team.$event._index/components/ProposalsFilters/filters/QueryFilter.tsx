@@ -20,7 +20,7 @@ export function QueryFilter({ defaultValue, hasFilters }: Props) {
           Search
         </Text>
         {hasFilters && (
-          <Link to={resetPath} className="text-xs font-medium">
+          <Link to={resetPath} size="xs" strong>
             Reset filters
           </Link>
         )}

@@ -2,7 +2,7 @@ import type { VariantProps } from 'class-variance-authority';
 import { cva, cx } from 'class-variance-authority';
 import React from 'react';
 
-const typography = cva('', {
+export const typography = cva('', {
   variants: {
     variant: {
       primary: 'text-gray-900',
