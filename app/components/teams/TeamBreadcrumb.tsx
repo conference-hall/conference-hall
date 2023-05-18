@@ -1,7 +1,7 @@
 import { ArrowTopRightOnSquareIcon, ChevronRightIcon, Square3Stack3DIcon } from '@heroicons/react/24/outline';
 
 import { Avatar } from '~/design-system/Avatar';
-import Badge from '~/design-system/badges/Badges';
+import { Badge, BadgeDot } from '~/design-system/badges/Badges';
 import { Link } from '~/design-system/Links';
 import type { CfpState, EventType, EventVisibility } from '~/schemas/event';
 
@@ -48,9 +48,7 @@ export default function TeamBreadcrumb({ team, event }: Props) {
           </>
         )}
         {event ? (
-          <Badge variant="dot" color={event.visibility === 'PRIVATE' ? 'red' : 'green'}>
-            {event.visibility.toLowerCase()}
-          </Badge>
+          <BadgeDot color={event.visibility === 'PRIVATE' ? 'red' : 'green'}>{event.visibility.toLowerCase()}</BadgeDot>
         ) : (
           <Badge>{team.role.toLowerCase()}</Badge>
         )}

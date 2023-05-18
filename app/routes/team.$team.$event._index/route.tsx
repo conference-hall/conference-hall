@@ -6,10 +6,10 @@ import { useLoaderData } from '@remix-run/react';
 import { useMemo } from 'react';
 import invariant from 'tiny-invariant';
 
+import { useCheckboxSelection } from '~/design-system/forms/useCheckboxSelection';
 import { Container } from '~/design-system/layouts/Container';
 import { EmptyState } from '~/design-system/layouts/EmptyState';
 import { Pagination } from '~/design-system/Pagination';
-import { useCheckboxSelection } from '~/design-system/useCheckboxSelection';
 import { requireSession } from '~/libs/auth/session';
 import { addToast } from '~/libs/toasts/toasts';
 import { updateProposalsStatus } from '~/routes/team.$team.$event._index/server/update-proposal.server';

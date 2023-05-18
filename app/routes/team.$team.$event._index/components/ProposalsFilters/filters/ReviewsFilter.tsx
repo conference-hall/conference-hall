@@ -1,4 +1,4 @@
-import { Dotted } from '~/design-system/badges/Badges';
+import { BadgeDot } from '~/design-system/badges/Badges';
 import { ProgressBar } from '~/design-system/ProgressBar';
 import { Text } from '~/design-system/Typography';
 
@@ -67,11 +67,11 @@ function ReviewFilterItem({ label, count, name, isSelected, color }: ReviewFilte
   return (
     <div className="flex items-center justify-between">
       <button onClick={handleFilter} className="flex items-center">
-        <Dotted color={color} className="hover:underline">
+        <BadgeDot color={color}>
           <Text as="span" size="xs" strong={isSelected}>
             {label}
           </Text>
-        </Dotted>
+        </BadgeDot>
       </button>
       <Text size="xs" variant="secondary" strong>
         {count}

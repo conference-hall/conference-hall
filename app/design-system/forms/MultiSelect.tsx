@@ -3,7 +3,7 @@ import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
 import c from 'classnames';
 import { useState } from 'react';
 
-import Badge from '../badges/Badges';
+import { Badge } from '../badges/Badges';
 import { SelectTransition } from '../Transitions';
 import { Text } from '../Typography';
 

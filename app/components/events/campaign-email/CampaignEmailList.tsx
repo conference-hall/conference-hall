@@ -4,11 +4,11 @@ import { useSearchParams } from '@remix-run/react';
 import c from 'classnames';
 import { useMemo } from 'react';
 
-import Badge from '~/design-system/badges/Badges';
+import { Badge } from '~/design-system/badges/Badges';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
+import { useCheckboxSelection } from '~/design-system/forms/useCheckboxSelection';
 import { Link } from '~/design-system/Links';
 import { Text } from '~/design-system/Typography';
-import { useCheckboxSelection } from '~/design-system/useCheckboxSelection';
 
 import { ResendEmailButton, SendEmailsButton } from './SendEmailsButton';
 
