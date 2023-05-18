@@ -53,7 +53,7 @@ export default function ProposalSpeakersRoute() {
 
             {speaker.references && (
               <div className="space-y-2">
-                <Text size="s" strong mb={2}>
+                <Text strong mb={2}>
                   References
                 </Text>
                 <Markdown source={speaker.references} />
@@ -62,9 +62,7 @@ export default function ProposalSpeakersRoute() {
 
             {survey && (
               <div className="space-y-2">
-                <Text size="s" strong>
-                  Survey
-                </Text>
+                <Text strong>Survey</Text>
                 <div className="space-x-4">
                   {survey.gender && <Badge>{survey.gender}</Badge>}
                   {survey.tshirt && <Badge>Tshirt size: {survey.tshirt}</Badge>}
@@ -79,10 +77,8 @@ export default function ProposalSpeakersRoute() {
 
             {survey?.info && (
               <div className="space-y-2">
-                <Text size="s" strong>
-                  Additional information
-                </Text>
-                <Text size="s">{survey.info}</Text>
+                <Text strong>Additional information</Text>
+                <Text>{survey.info}</Text>
               </div>
             )}
           </Card>

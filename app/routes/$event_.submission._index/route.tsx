@@ -4,7 +4,7 @@ import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { ProgressBar } from '~/design-system/ProgressBar';
-import { H2, H3, Text } from '~/design-system/Typography';
+import { H2, Text } from '~/design-system/Typography';
 import { requireSession } from '~/libs/auth/session';
 
 import { useEvent } from '../$event/route';
@@ -35,7 +35,7 @@ export default function EventSubmitRoute() {
   return (
     <>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-        <H2 size="l">Select or create a proposal</H2>
+        <H2>Select or create a proposal</H2>
         {maxProposals && (
           <div>
             <Text size="xs" mb={1} strong>
@@ -50,14 +50,14 @@ export default function EventSubmitRoute() {
 
       {drafts.length > 0 && (
         <section className="space-y-4">
-          <H3 size="base">Draft proposals</H3>
+          <H2>Draft proposals</H2>
           <SubmissionTalksList label="Draft proposals list" talks={drafts} />
         </section>
       )}
 
       {talks.length > 0 && (
         <section className="space-y-4">
-          <H3 size="base">From your talks library</H3>
+          <H2>From your talks library</H2>
           <SubmissionTalksList label="Talks list" talks={talks} />
         </section>
       )}

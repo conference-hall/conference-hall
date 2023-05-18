@@ -128,7 +128,7 @@ export function AvatarName({ name, subtitle, variant = 'primary', ...rest }: Ava
     <div className="flex items-center">
       <Avatar {...rest} aria-hidden />
       <div className="ml-3 text-left">
-        <Text variant={variant === 'primary' ? 'primary' : 'light'} size="s" strong>
+        <Text variant={variant === 'primary' ? 'primary' : 'light'} strong>
           {name || 'Unknown'}
         </Text>
         <Text variant={variant === 'primary' ? 'secondary' : 'light'} size="xs">

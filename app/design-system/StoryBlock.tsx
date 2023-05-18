@@ -13,11 +13,7 @@ type Props = {
 
 export const StoryBlock = ({ title, children, variant = 'light', vertical = false }: Props) => (
   <section className="mb-8">
-    {title && (
-      <H1 size="xl" mb={4}>
-        {title}
-      </H1>
-    )}
+    {title && <H1 mb={4}>{title}</H1>}
     {variant === 'none' ? (
       children
     ) : (

@@ -50,7 +50,7 @@ export default function SubmissionSurveyRoute() {
   return (
     <Card>
       <Card.Title>
-        <H2 size="base">We have some questions for you</H2>
+        <H2>We have some questions for you</H2>
       </Card.Title>
       <Card.Content>
         <Form id="survey-form" method="POST">

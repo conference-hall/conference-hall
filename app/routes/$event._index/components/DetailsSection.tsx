@@ -17,9 +17,7 @@ export function DetailsSection({ type, description, websiteUrl, contactEmail, co
   const hasDetails = websiteUrl || contactEmail || codeOfConductUrl;
   return (
     <Card as="section" p={8}>
-      <H2 size="base" mb={4}>
-        {type === 'CONFERENCE' ? 'Conference' : 'Meetup'}
-      </H2>
+      <H2 mb={4}>{type === 'CONFERENCE' ? 'Conference' : 'Meetup'}</H2>
 
       <Markdown source={description} />
 

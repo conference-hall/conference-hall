@@ -57,7 +57,7 @@ export default function SubmissionTracksRoute() {
   return (
     <Card>
       <Card.Title>
-        <H2 size="base">Proposal tracks</H2>
+        <H2>Proposal tracks</H2>
       </Card.Title>
       <Card.Content>
         <Form id="tracks-form" method="POST">

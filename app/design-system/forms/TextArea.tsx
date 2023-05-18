@@ -1,5 +1,7 @@
 import cn from 'classnames';
 
+import { Label } from '../Typography';
+
 type Props = {
   name: string;
   label?: string;
@@ -20,9 +22,9 @@ export function TextArea({ name, label, description, className, error, ...rest }
   return (
     <div className={className}>
       {label && (
-        <label htmlFor={name} className="mb-2 block text-sm font-medium leading-6 text-gray-900">
+        <Label htmlFor={name} mb={1}>
           {label}
-        </label>
+        </Label>
       )}
       <textarea
         id={name}

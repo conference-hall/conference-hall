@@ -6,6 +6,7 @@ import { useState } from 'react';
 
 import { Button } from '../Buttons';
 import { Markdown } from '../Markdown';
+import { Label } from '../Typography';
 
 type MarkdownTextAreaProps = {
   label: string;
@@ -40,9 +41,9 @@ export function MarkdownTextArea({
 
   return (
     <div className={className}>
-      <label htmlFor={name} className="mb-2 block text-sm font-medium leading-6 text-gray-900">
+      <Label htmlFor={name} mb={1}>
         {label}
-      </label>
+      </Label>
       <div className="relative">
         <div className={styles}>
           <textarea

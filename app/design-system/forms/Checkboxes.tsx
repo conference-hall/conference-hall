@@ -2,7 +2,7 @@ import c from 'classnames';
 import type { ReactNode, Ref } from 'react';
 import { forwardRef } from 'react';
 
-import { Text } from '../Typography';
+import { Label, Text } from '../Typography';
 
 type CheckboxGroupProps = {
   label: string;
@@ -19,7 +19,7 @@ export function CheckboxGroup({ label, description, inline, className, children 
 
   return (
     <div className={className}>
-      <label className="text-sm font-medium text-gray-900">{label}</label>
+      <Label>{label}</Label>
       {description && <p className="text-sm leading-5 text-gray-500">{description}</p>}
       <fieldset className="mt-2">
         <legend className="sr-only">{label}</legend>
@@ -36,7 +36,7 @@ export function CheckboxHeadingGroup({ label, description, inline, className, ch
 
   return (
     <div className={className}>
-      <label className="text-sm font-medium text-gray-900">{label}</label>
+      <Label>{label}</Label>
       {description && <p className="mt-1 text-sm text-gray-500">{description}</p>}
       <fieldset className="mt-4">
         <legend className="sr-only">{label}</legend>
@@ -73,12 +73,10 @@ export function CheckboxField(
       </div>
       {children && (
         <div className="pl-3">
-          <Text as="label" strong htmlFor={id} size="s">
-            {children}
-          </Text>
+          <Label htmlFor={id}>{children}</Label>
 
           {description && (
-            <Text id={`${id}-description`} size="s" variant="secondary">
+            <Text id={`${id}-description`} variant="secondary">
               {description}
             </Text>
           )}

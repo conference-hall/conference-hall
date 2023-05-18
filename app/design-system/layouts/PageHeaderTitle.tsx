@@ -2,7 +2,7 @@ import { ArrowLeftIcon } from '@heroicons/react/20/solid';
 import type { MouseEventHandler, ReactNode } from 'react';
 
 import { IconButton, IconButtonLink } from '~/design-system/IconButtons';
-import { H2, Subtitle } from '~/design-system/Typography';
+import { H1, Subtitle } from '~/design-system/Typography';
 
 import { Container } from './Container';
 import { PageHeader } from './PageHeader';
@@ -16,9 +16,7 @@ export function PageHeaderTitle({ title, subtitle, backTo, backOnClick, children
         <div className="flex items-center gap-2 sm:gap-4">
           <BackButton backTo={backTo} backOnClick={backOnClick} />
           <div className="truncate">
-            <H2 size="xl" mb={0} truncate>
-              {title}
-            </H2>
+            <H1 truncate>{title}</H1>
             {subtitle && <Subtitle truncate>{subtitle}</Subtitle>}
           </div>
         </div>

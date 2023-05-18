@@ -48,7 +48,7 @@ export default function MultiSelect({ name, label, placeholder, options, default
                   <SelectedOptions selectedValues={selected} options={options} />
                 </div>
               ) : (
-                <Text variant="secondary" size="s" as="div" truncate>
+                <Text variant="secondary" as="div" truncate>
                   {placeholder}
                 </Text>
               )}

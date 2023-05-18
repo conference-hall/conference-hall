@@ -48,7 +48,7 @@ export function ProposaListRow({ proposal, isSelected, onSelect }: ProposalRowPr
           aria-label={`Open proposal "${proposal.title}"`}
           className="block after:absolute after:bottom-0 after:left-16 after:right-0 after:top-0 after:z-10 after:block"
         >
-          <Text size="s" strong truncate>
+          <Text strong truncate>
             {proposal.title}
           </Text>
           {proposal.speakers.length > 0 && (

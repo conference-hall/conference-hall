@@ -39,27 +39,21 @@ export function ProposalDetailsSection(props: Props) {
 
       {hasFormats && (
         <div>
-          <H3 size="base" mb={2}>
-            Formats
-          </H3>
-          <Text size="s">{props.formats?.map(({ name }) => name).join(', ') || '—'}</Text>
+          <H3 mb={2}>Formats</H3>
+          <Text>{props.formats?.map(({ name }) => name).join(', ') || '—'}</Text>
         </div>
       )}
 
       {hasCategories && (
         <div>
-          <H3 size="base" mb={2}>
-            Categories
-          </H3>
-          <Text size="s">{props.categories?.map(({ name }) => name).join(', ') || '—'}</Text>
+          <H3 mb={2}>Categories</H3>
+          <Text>{props.categories?.map(({ name }) => name).join(', ') || '—'}</Text>
         </div>
       )}
 
       {props.references && (
         <div>
-          <H3 size="base" mb={2}>
-            References
-          </H3>
+          <H3 mb={2}>References</H3>
           <Markdown source={props.references} className="mt-2" />
         </div>
       )}

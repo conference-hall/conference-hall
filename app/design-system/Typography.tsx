@@ -1,113 +1,88 @@
-import c from 'classnames';
+import type { VariantProps } from 'class-variance-authority';
+import { cva, cx } from 'class-variance-authority';
 import React from 'react';
 
-const SIZES = {
-  '4xl': 'text-4xl',
-  '3xl': 'text-3xl',
-  '2xl': 'text-2xl',
-  xl: 'text-xl',
-  l: 'text-lg',
-  base: 'text-base',
-  s: 'text-sm',
-  xs: 'text-xs',
-};
+const typography = cva('', {
+  variants: {
+    variant: {
+      primary: 'text-gray-900',
+      secondary: 'text-gray-600',
+      link: 'text-indigo-600',
+      warning: 'text-yellow-700',
+      error: 'text-red-600',
+      light: 'text-gray-50',
+      'secondary-light': 'text-gray-300',
+    },
+    size: {
+      '4xl': 'text-4xl',
+      '3xl': 'text-3xl',
+      '2xl': 'text-2xl',
+      xl: 'text-xl',
+      l: 'text-lg',
+      base: 'text-base',
+      s: 'text-sm',
+      xs: 'text-xs',
+    },
+    mb: { 1: 'mb-1', 2: 'mb-2', 4: 'mb-4', 6: 'mb-6', 8: 'mb-8' },
+    align: { center: 'text-center' },
+    heading: { true: 'font-heading' },
+    strong: { true: 'font-medium' },
+    srOnly: { true: 'sr-only' },
+    truncate: { true: 'truncate' },
+  },
+  defaultVariants: { variant: 'primary', size: 's' },
+});
 
-const ALIGNMENTS = {
-  left: 'text-left',
-  center: 'text-center',
-  right: 'text-right',
-};
+export type TypographyVariantProps = VariantProps<typeof typography>;
 
-const VARIANTS = {
-  primary: 'text-gray-900',
-  secondary: 'text-gray-600',
-  link: 'text-indigo-600',
-  warning: 'text-yellow-700',
-  error: 'text-red-600',
-  light: 'text-gray-50',
-  'secondary-light': 'text-gray-300',
-};
-
-const MARGINS = {
-  0: 'mb-0',
-  1: 'mb-1',
-  2: 'mb-2',
-  4: 'mb-4',
-  6: 'mb-6',
-  8: 'mb-8',
-  10: 'mb-10',
-  16: 'mb-16',
-};
-
-export type TypographyProps = {
+type TypographyProps = {
   id?: string;
   as?: React.ElementType;
-  variant?: keyof typeof VARIANTS;
-  align?: keyof typeof ALIGNMENTS;
-  size?: keyof typeof SIZES;
-  mb?: keyof typeof MARGINS;
-  heading?: boolean;
-  strong?: boolean;
-  italic?: boolean;
-  srOnly?: boolean;
-  truncate?: boolean;
-  htmlFor?: string;
   children: React.ReactNode;
-};
+} & TypographyVariantProps;
 
-function Typography({
-  id,
-  as: Tag = 'p',
-  variant = 'primary',
-  align = 'left',
-  mb,
-  size,
-  heading,
-  strong,
-  italic,
-  srOnly,
-  truncate,
-  htmlFor,
-  children,
-}: TypographyProps) {
-  const variantStyle = variant ? VARIANTS[variant] : undefined;
-  const alignStyle = align ? ALIGNMENTS[align] : undefined;
-  const sizeStyle = size ? SIZES[size] : undefined;
-  const marginStyle = mb !== undefined ? MARGINS[mb] : 0;
-
+function Typography({ id, as: Tag = 'p', children, ...rest }: TypographyProps) {
   return (
-    <Tag
-      id={id}
-      htmlFor={htmlFor}
-      className={c(variantStyle, alignStyle, sizeStyle, marginStyle, {
-        'font-heading': heading,
-        'font-medium': strong,
-        'sr-only': srOnly,
-        truncate,
-        italic,
-      })}
-    >
+    <Tag id={id} className={typography(rest)}>
       {children}
     </Tag>
   );
 }
 
 export function H1(props: TypographyProps) {
-  return <Typography as="h1" size="3xl" heading strong {...props} />;
+  return <Typography as="h1" size="xl" heading strong {...props} />;
 }
 
 export function H2(props: TypographyProps) {
-  return <Typography as="h2" size="2xl" heading strong {...props} />;
+  return <Typography as="h2" size="base" heading strong {...props} />;
 }
 
 export function H3(props: TypographyProps) {
-  return <Typography as="h3" size="xl" heading strong {...props} />;
+  return <Typography as="h3" size="s" heading strong {...props} />;
 }
 
 export function Text(props: TypographyProps) {
-  return <Typography as="p" size="base" {...props} />;
+  return <Typography as="p" {...props} />;
 }
 
 export function Subtitle(props: TypographyProps) {
-  return <Text as="p" size="s" variant="secondary" {...props} />;
+  return <Text as="p" variant="secondary" {...props} />;
+}
+
+export function Label({
+  id,
+  children,
+  htmlFor,
+  className,
+  ...rest
+}: TypographyVariantProps & React.LabelHTMLAttributes<HTMLLabelElement>) {
+  return (
+    <label
+      id={id}
+      htmlFor={htmlFor}
+      className={typography({ size: 's', strong: true, ...rest, className: cx(['block leading-6', className]) })}
+    >
+      {children}
+    </label>
+  );
 }

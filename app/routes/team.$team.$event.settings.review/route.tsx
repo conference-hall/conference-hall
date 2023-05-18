@@ -32,7 +32,7 @@ export default function EventReviewSettingsRoute() {
   return (
     <>
       <Card as="section" p={8} className="space-y-6">
-        <H2 size="base">Proposals review</H2>
+        <H2>Proposals review</H2>
 
         <ToggleGroup
           label="Proposals review activation"
@@ -46,7 +46,7 @@ export default function EventReviewSettingsRoute() {
 
       <Card as="section">
         <Card.Title>
-          <H2 size="base">Review settings</H2>
+          <H2>Review settings</H2>
         </Card.Title>
 
         <Card.Content>

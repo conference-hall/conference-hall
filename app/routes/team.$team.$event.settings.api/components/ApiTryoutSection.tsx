@@ -23,7 +23,7 @@ export function ApiTryoutSection({ slug, apiKey }: Props) {
   return (
     <Card as="section">
       <Card.Title>
-        <H2 size="base">Event proposals API</H2>
+        <H2>Event proposals API</H2>
         <Subtitle>List event proposals, you can filters them around different criterias.</Subtitle>
       </Card.Title>
 

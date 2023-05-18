@@ -34,7 +34,7 @@ export function Discussions({ userId, messages }: Props) {
     >
       {messages.length === 0 ? (
         <div className="p-8">
-          <Text size="s" variant="secondary" strong>
+          <Text variant="secondary" strong>
             No conversation about the proposal.
           </Text>
         </div>
@@ -49,14 +49,13 @@ export function Discussions({ userId, messages }: Props) {
                 </Text>
                 <div className="flex items-center justify-between gap-4 break-all rounded border border-gray-200 bg-gray-50 px-4 py-4">
                   <div className="grow">
-                    <Text size="s">{message.message}</Text>
+                    <Text>{message.message}</Text>
                   </div>
                   {userId === message.userId && (
                     <IconButton
                       label="Delete message"
                       icon={TrashIcon}
                       variant="secondary"
-                      size="s"
                       onClick={() => handleDelete(message.id)}
                     />
                   )}

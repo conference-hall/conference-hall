@@ -43,7 +43,7 @@ export default function EventGeneralSettingsRoute() {
   return (
     <Card as="section">
       <Card.Title>
-        <H2 size="base">Customize event logo</H2>
+        <H2>Customize event logo</H2>
         <Subtitle>Upload a beautiful logo for your event.</Subtitle>
       </Card.Title>
 

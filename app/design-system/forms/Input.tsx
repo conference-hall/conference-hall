@@ -2,6 +2,8 @@ import cn from 'classnames';
 import type { Ref } from 'react';
 import { forwardRef } from 'react';
 
+import { Label } from '../Typography';
+
 export type InputProps = {
   label?: string;
   description?: string;
@@ -29,9 +31,9 @@ function InputField(
   return (
     <div className={className}>
       {label && (
-        <label htmlFor={name} className="mb-2 block text-sm font-medium leading-6 text-gray-900">
+        <Label htmlFor={name} mb={1}>
           {label}
-        </label>
+        </Label>
       )}
       <div className={wrapperStyles}>
         {Icon && (

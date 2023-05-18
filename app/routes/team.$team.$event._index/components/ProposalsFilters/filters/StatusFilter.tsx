@@ -16,7 +16,7 @@ export function StatusFilter({ defaultValue, statuses }: Props) {
 
   return (
     <div className="space-y-2 p-4">
-      <Text size="s" variant="secondary" strong>
+      <Text variant="secondary" strong>
         Proposal statuses
       </Text>
 

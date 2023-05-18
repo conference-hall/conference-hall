@@ -29,9 +29,7 @@ export function SpeakerDetailsSection({ name, email, picture, bio, address, comp
       <div className="flex gap-4">
         <Avatar picture={picture} size="l" />
         <div className="truncate">
-          <H3 mb={0} truncate>
-            {name}
-          </H3>
+          <H3 truncate>{name}</H3>
           <Subtitle size="xs" truncate>
             {email}
           </Subtitle>

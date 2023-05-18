@@ -8,7 +8,7 @@ import invariant from 'tiny-invariant';
 import { TeamForm } from '~/components/teams/TeamForm';
 import { Button } from '~/design-system/Buttons';
 import { Card } from '~/design-system/layouts/Card';
-import { H3, Subtitle } from '~/design-system/Typography';
+import { H2, Subtitle } from '~/design-system/Typography';
 import { requireSession } from '~/libs/auth/session';
 import { addToast } from '~/libs/toasts/toasts';
 
@@ -43,7 +43,7 @@ export default function OrganizationSettingsRoute() {
     <Card as="section">
       <Form method="POST" preventScrollReset>
         <Card.Title>
-          <H3 size="base">General</H3>
+          <H2>General</H2>
           <Subtitle>Change team name and URL.</Subtitle>
         </Card.Title>
 

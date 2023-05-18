@@ -1,6 +1,8 @@
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import c from 'classnames';
 
+import { Label } from '../Typography';
+
 const SIZES = {
   m: { container: 'max-w-lg lg:max-w-xs', icon: 'h-5 w-5', input: 'py-1.5 pl-10 text-sm' },
   l: { container: 'max-w-lg lg:max-w-2xl', icon: 'h-5 w-5', input: 'py-3 pl-10' },
@@ -28,9 +30,9 @@ export function InputSearch({ name, label = 'Search', placeholder, defaultValue,
 
   return (
     <div className={c('w-full', sizeStyles.container)}>
-      <label htmlFor="search" className="sr-only">
+      <Label htmlFor="search" srOnly>
         {label}
-      </label>
+      </Label>
       <div className="relative">
         <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
           <MagnifyingGlassIcon className={c('text-gray-400', sizeStyles.icon)} aria-hidden="true" />

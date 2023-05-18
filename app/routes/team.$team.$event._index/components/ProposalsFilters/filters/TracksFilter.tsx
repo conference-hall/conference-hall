@@ -20,7 +20,7 @@ export function TracksFilter({ defaultFormatValue = '', defaultCategorytValue = 
 
   return (
     <div className="space-y-2 p-4">
-      <Text size="s" variant="secondary" strong>
+      <Text variant="secondary" strong>
         More filters
       </Text>
 

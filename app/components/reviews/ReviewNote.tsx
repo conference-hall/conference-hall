@@ -20,9 +20,7 @@ export function ReviewNote({ feeling, note }: Props) {
   return (
     <div className="flex items-center gap-1">
       <Icon className={c('h-4 w-4', color)} aria-label={`${label}: ${formattedNote}`} />
-      <Text size="s" strong>
-        {formattedNote}
-      </Text>
+      <Text strong>{formattedNote}</Text>
     </div>
   );
 }

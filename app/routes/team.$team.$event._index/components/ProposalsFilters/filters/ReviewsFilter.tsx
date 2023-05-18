@@ -17,7 +17,7 @@ export function ReviewsFilter({ defaultValue, reviewed, total }: Props) {
     <div className="space-y-4 p-4">
       <div className="space-y-1">
         <div className="flex items-center justify-between">
-          <Text size="s" variant="secondary" strong>
+          <Text variant="secondary" strong>
             Reviews
           </Text>
           <Text size="xs" variant="secondary" strong>{`${progress}%`}</Text>

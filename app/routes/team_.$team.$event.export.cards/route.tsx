@@ -57,8 +57,8 @@ export default function ExportProposalsCards() {
               </div>
               <div className="flex items-center justify-between pt-4">
                 <div className="flex items-center gap-4">
-                  <Text>❤️ {proposal.reviews?.positives}</Text>
-                  <Text>💀 {proposal.reviews?.negatives}</Text>
+                  <Text size="base">❤️ {proposal.reviews?.positives}</Text>
+                  <Text size="base">💀 {proposal.reviews?.negatives}</Text>
                 </div>
                 <Text size="3xl" strong>
                   {formatReviewNote(proposal.reviews?.average)}
