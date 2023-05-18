@@ -14,17 +14,17 @@ import { getEvent } from '~/server/events/get-event.server';
 import { EventHeader } from './components/EventHeader';
 import { EventTabs } from './components/EventTabs';
 
+export const meta = mergeMeta<typeof loader>(
+  ({ data }) => (data ? [{ title: `${data?.name} | Conference Hall` }] : []),
+  ({ data }) => (data ? eventSocialCard({ name: data.name, slug: data.slug, logo: data.logo }) : [])
+);
+
 export const loader = async ({ params }: LoaderArgs) => {
   invariant(params.event, 'Invalid event slug');
 
   const event = await getEvent(params.event);
   return json(event);
 };
-
-export const meta = mergeMeta<typeof loader>(
-  ({ data }) => (data ? [{ title: `${data?.name} | Conference Hall` }] : []),
-  ({ data }) => (data ? eventSocialCard({ name: data.name, slug: data.slug, logo: data.logo }) : [])
-);
 
 export default function EventRoute() {
   const { user } = useUser();

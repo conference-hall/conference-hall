@@ -8,9 +8,12 @@ import Select from '~/design-system/forms/Select';
 import { Container } from '~/design-system/layouts/Container';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 import { requireSession } from '~/libs/auth/session';
+import { mergeMeta } from '~/libs/meta/merge-meta';
 
 import { SpeakerTalksList } from './components/SpeakerTalksList';
 import { listTalks } from './server/list-talks.server';
+
+export const meta = mergeMeta(() => [{ title: 'Talks library | Conference Hall' }]);
 
 export const loader = async ({ request }: LoaderArgs) => {
   const userId = await requireSession(request);

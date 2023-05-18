@@ -10,10 +10,13 @@ import { Card } from '~/design-system/layouts/Card';
 import { Container } from '~/design-system/layouts/Container';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 import { requireSession } from '~/libs/auth/session';
+import { mergeMeta } from '~/libs/meta/merge-meta';
 import { addToast } from '~/libs/toasts/toasts';
 import { TalkSaveSchema } from '~/schemas/talks';
 
 import { createTalk } from './server/create-talk.server';
+
+export const meta = mergeMeta(() => [{ title: 'New talk | Conference Hall' }]);
 
 export const action = async ({ request }: LoaderArgs) => {
   const userId = await requireSession(request);
