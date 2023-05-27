@@ -63,7 +63,7 @@ function InputField(
 }
 
 const baseStyles =
-  'flex rounded-md shadow-sm ring-1 ring-inset focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 ';
+  'flex rounded-md bg-white shadow-sm ring-1 ring-inset focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 ';
 
 const defaultStyles = 'ring-gray-300 focus:ring-indigo-500 focus:border-indigo-500';
 

@@ -23,12 +23,12 @@ describe('Team page access and redirections', () => {
   it('redirects to request page when user has no access', () => {
     cy.login('Bruce Wayne');
     cy.visit('team');
-    cy.assertText('Limited access');
+    cy.assertText('Become event organizer');
   });
 
   it('redirects to request page when user has no access', () => {
     cy.login('Bruce Wayne');
     cy.visit('team');
-    cy.assertText('Limited access');
+    cy.assertText('Become event organizer');
   });
 });
