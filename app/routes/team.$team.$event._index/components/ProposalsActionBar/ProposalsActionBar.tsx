@@ -1,4 +1,4 @@
-import c from 'classnames';
+import { cx } from 'class-variance-authority';
 
 import { Checkbox } from '~/design-system/forms/Checkboxes';
 import { Card } from '~/design-system/layouts/Card';
@@ -24,7 +24,7 @@ export function ProposalsActionBar({ total, selection, checked, onToggleAll, che
         ref={checkboxRef}
         checked={checked}
         onChange={onToggleAll}
-        className={c('ml-2', { 'font-medium': hasSelectedItems })}
+        className={cx('ml-2', { 'font-medium': hasSelectedItems })}
       >
         {hasSelectedItems ? `${selection.length} selected` : `${total} proposals`}
       </Checkbox>

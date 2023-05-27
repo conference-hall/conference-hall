@@ -45,9 +45,7 @@ export function ReviewHeader({ title, pagination, canEditProposal }: Props) {
       </nav>
 
       <div className="grow truncate">
-        <H1 size="xl" truncate>
-          {title}
-        </H1>
+        <H1 truncate>{title}</H1>
       </div>
 
       <div className="flex items-center gap-8">

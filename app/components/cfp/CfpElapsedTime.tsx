@@ -1,4 +1,4 @@
-import cn from 'classnames';
+import { cx } from 'class-variance-authority';
 import { ClientOnly } from 'remix-utils';
 
 import { Text } from '~/design-system/Typography';
@@ -11,11 +11,11 @@ type Props = { cfpState: CfpState; cfpStart?: string; cfpEnd?: string; className
 
 export function CfpElapsedTime({ cfpState, cfpStart, cfpEnd, className }: Props) {
   return (
-    <div className={cn('flex items-center space-x-2', className)}>
+    <div className={cx('flex items-center space-x-2', className)}>
       <CfpIcon cfpState={cfpState} />
       <ClientOnly>
         {() => (
-          <Text variant="secondary" size="s" strong truncate>
+          <Text variant="secondary" strong truncate>
             {formatCFPElapsedTime(cfpState, cfpStart, cfpEnd)}
           </Text>
         )}

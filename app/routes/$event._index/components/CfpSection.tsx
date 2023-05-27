@@ -21,9 +21,7 @@ export function CfpSection({ cfpState, cfpStart, cfpEnd }: Props) {
                 <div className="flex items-center gap-4">
                   <CfpIcon cfpState={cfpState} />
                   <div>
-                    <H2 size="base" truncate>
-                      {formatCFPElapsedTime(cfpState, cfpStart, cfpEnd)}
-                    </H2>
+                    <H2 truncate>{formatCFPElapsedTime(cfpState, cfpStart, cfpEnd)}</H2>
                     <Subtitle truncate>{formatCFPDate(cfpState, cfpStart, cfpEnd)}</Subtitle>
                   </div>
                 </div>

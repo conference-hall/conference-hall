@@ -1,5 +1,5 @@
-import { StoryBlock } from '../StoryBlock';
-import Badge from './Badges';
+import { Badge, BadgeDot } from './Badges';
+import { StoryBlock } from './StoryBlock';
 
 export const Documentation = () => (
   <>
@@ -42,57 +42,41 @@ export const Documentation = () => (
     </StoryBlock>
 
     <StoryBlock title="Badges with dot">
-      <Badge variant="dot" color="gray">
-        gray
-      </Badge>
-      <Badge variant="dot" color="red">
-        red
-      </Badge>
-      <Badge variant="dot" color="yellow">
-        yellow
-      </Badge>
-      <Badge variant="dot" color="green">
-        green
-      </Badge>
-      <Badge variant="dot" color="blue">
-        blue
-      </Badge>
-      <Badge variant="dot" color="indigo">
-        indigo
-      </Badge>
-      <Badge variant="dot" color="purple">
-        purple
-      </Badge>
-      <Badge variant="dot" color="pink">
-        pink
-      </Badge>
+      <BadgeDot color="gray">gray</BadgeDot>
+      <BadgeDot color="red">red</BadgeDot>
+      <BadgeDot color="yellow">yellow</BadgeDot>
+      <BadgeDot color="green">green</BadgeDot>
+      <BadgeDot color="blue">blue</BadgeDot>
+      <BadgeDot color="indigo">indigo</BadgeDot>
+      <BadgeDot color="purple">purple</BadgeDot>
+      <BadgeDot color="pink">pink</BadgeDot>
     </StoryBlock>
 
     <StoryBlock title="Badges pill with dot">
-      <Badge pill variant="dot" color="gray">
+      <BadgeDot pill color="gray">
         gray
-      </Badge>
-      <Badge pill variant="dot" color="red">
+      </BadgeDot>
+      <BadgeDot pill color="red">
         red
-      </Badge>
-      <Badge pill variant="dot" color="yellow">
+      </BadgeDot>
+      <BadgeDot pill color="yellow">
         yellow
-      </Badge>
-      <Badge pill variant="dot" color="green">
+      </BadgeDot>
+      <BadgeDot pill color="green">
         green
-      </Badge>
-      <Badge pill variant="dot" color="blue">
+      </BadgeDot>
+      <BadgeDot pill color="blue">
         blue
-      </Badge>
-      <Badge pill variant="dot" color="indigo">
+      </BadgeDot>
+      <BadgeDot pill color="indigo">
         indigo
-      </Badge>
-      <Badge pill variant="dot" color="purple">
+      </BadgeDot>
+      <BadgeDot pill color="purple">
         purple
-      </Badge>
-      <Badge pill variant="dot" color="pink">
+      </BadgeDot>
+      <BadgeDot pill color="pink">
         pink
-      </Badge>
+      </BadgeDot>
     </StoryBlock>
   </>
 );

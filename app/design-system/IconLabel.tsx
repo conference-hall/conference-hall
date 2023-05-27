@@ -1,11 +1,11 @@
-import type { TypographyProps } from './Typography';
+import type { TypographyVariantProps } from './Typography';
 import { Text } from './Typography';
 
 type Props = {
   children: React.ReactNode;
   alt?: string;
   icon: React.ComponentType<{ className?: string }>;
-} & TypographyProps;
+} & TypographyVariantProps;
 
 export function IconLabel({ children, icon: Icon, size = 's', alt, ...rest }: Props) {
   return (

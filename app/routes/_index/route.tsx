@@ -37,7 +37,7 @@ export default function IndexRoute() {
 
       <div className="bg-gray-800 shadow">
         <Container className="pb-8 sm:pb-16 sm:pt-10">
-          <H1 variant="light" align="center" size="4xl">
+          <H1 size="4xl" variant="light" align="center">
             Conference Hall
           </H1>
           <Text size="l" heading variant="light" align="center">
@@ -49,28 +49,30 @@ export default function IndexRoute() {
 
       <Container className="pt-8 sm:pt-16">
         <div className="mb-10 flex items-center justify-between">
-          <H2 mb={0}>Incoming call for papers</H2>
+          <H2 size="xl">Incoming call for papers</H2>
           <SearchEventsFilters filters={filters} />
         </div>
         {results?.length === 0 ? (
           <EmptyState icon={FaceFrownIcon} label="No results found!" />
         ) : (
-          <ul aria-label="Search results" className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-            {results.map((event) => (
-              <EventCard
-                key={event.slug}
-                to={talkId ? `/${event.slug}/submission/${talkId}` : `/${event.slug}`}
-                name={event.name}
-                type={event.type}
-                logo={event.logo}
-                cfpState={event.cfpState}
-                cfpStart={event.cfpStart}
-                cfpEnd={event.cfpEnd}
-              />
-            ))}
-          </ul>
+          <div className="space-y-8">
+            <ul aria-label="Search results" className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+              {results.map((event) => (
+                <EventCard
+                  key={event.slug}
+                  to={talkId ? `/${event.slug}/submission/${talkId}` : `/${event.slug}`}
+                  name={event.name}
+                  type={event.type}
+                  logo={event.logo}
+                  cfpState={event.cfpState}
+                  cfpStart={event.cfpStart}
+                  cfpEnd={event.cfpEnd}
+                />
+              ))}
+            </ul>
+            <Pagination {...pagination} />
+          </div>
         )}
-        <Pagination {...pagination} className="mt-8" />
       </Container>
 
       <Footer />

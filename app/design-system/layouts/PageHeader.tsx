@@ -1,4 +1,4 @@
-import c from 'classnames';
+import { cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
 
 type Props = {
@@ -8,5 +8,5 @@ type Props = {
 };
 
 export function PageHeader({ as: Tag = 'header', className, children }: Props) {
-  return <Tag className={c('bg-white shadow', className)}>{children}</Tag>;
+  return <Tag className={cx('bg-white shadow', className)}>{children}</Tag>;
 }

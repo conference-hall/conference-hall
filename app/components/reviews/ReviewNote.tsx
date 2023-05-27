@@ -1,5 +1,5 @@
 import { HeartIcon, NoSymbolIcon, StarIcon, UserIcon, XCircleIcon } from '@heroicons/react/24/outline';
-import c from 'classnames';
+import { cx } from 'class-variance-authority';
 
 import { Text } from '~/design-system/Typography';
 import { formatReviewNote } from '~/utils/reviews';
@@ -19,10 +19,8 @@ export function ReviewNote({ feeling, note }: Props) {
   const formattedNote = formatReviewNote(note);
   return (
     <div className="flex items-center gap-1">
-      <Icon className={c('h-4 w-4', color)} aria-label={`${label}: ${formattedNote}`} />
-      <Text size="s" strong>
-        {formattedNote}
-      </Text>
+      <Icon className={cx('h-4 w-4', color)} aria-label={`${label}: ${formattedNote}`} />
+      <Text strong>{formattedNote}</Text>
     </div>
   );
 }

@@ -4,8 +4,8 @@ import { Form } from '@remix-run/react';
 import { useState } from 'react';
 
 import { Button } from '~/design-system/Buttons';
-import { Modal } from '~/design-system/dialogs/Modals';
 import { Radio, RadioGroup } from '~/design-system/forms/RadioGroup';
+import { Modal } from '~/design-system/Modals';
 
 import { InvitationModal } from '../../../components/InvitationModal';
 

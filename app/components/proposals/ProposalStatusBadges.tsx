@@ -1,33 +1,17 @@
-import Badge, { Dotted } from '~/design-system/badges/Badges';
-import { Text } from '~/design-system/Typography';
+import { BadgeDot } from '~/design-system/Badges';
 
 const STATUSES = {
-  DRAFT: { color: 'gray', label: 'Draft', longLabel: 'Draft' },
-  SUBMITTED: { color: 'gray', label: 'Submitted', longLabel: 'Submitted' },
-  ACCEPTED: { color: 'blue', label: 'Accepted', longLabel: 'Accepted proposal' },
-  REJECTED: { color: 'yellow', label: 'Rejected', longLabel: 'Rejected proposal' },
-  CONFIRMED: { color: 'green', label: 'Confirmed', longLabel: 'Confirmed by speaker' },
-  DECLINED: { color: 'red', label: 'Declined', longLabel: 'Declined by speaker' },
+  DRAFT: { color: 'gray', label: 'Draft' },
+  SUBMITTED: { color: 'gray', label: 'Submitted' },
+  ACCEPTED: { color: 'blue', label: 'Accepted' },
+  REJECTED: { color: 'yellow', label: 'Rejected' },
+  CONFIRMED: { color: 'green', label: 'Confirmed' },
+  DECLINED: { color: 'red', label: 'Declined' },
 } as const;
 
-type Props = { status: keyof typeof STATUSES; variant?: 'badge' | 'label'; className?: string };
+type Props = { status: keyof typeof STATUSES };
 
-export function ProposalStatusBadge({ status, variant = 'badge', className }: Props) {
-  const values = STATUSES[status];
-
-  if (variant === 'label') {
-    return (
-      <Dotted color={values.color} className={className}>
-        <Text as="span" size="xs">
-          {values.longLabel}
-        </Text>
-      </Dotted>
-    );
-  }
-
-  return (
-    <Badge variant="dot" color={values.color} pill>
-      {values.label}
-    </Badge>
-  );
+export function ProposalStatusBadge({ status }: Props) {
+  const { color, label } = STATUSES[status];
+  return <BadgeDot color={color}>{label}</BadgeDot>;
 }

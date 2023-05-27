@@ -81,7 +81,7 @@ export default function EventTracksSettingsRoute() {
       <Card as="section" p={8} className="space-y-8">
         <div className="flex items-center justify-between">
           <div>
-            <H2 size="base">Formats</H2>
+            <H2>Formats</H2>
             <Subtitle>Define talk formats available for your event proposals.</Subtitle>
           </div>
           <NewTrackButton type="formats" />
@@ -103,7 +103,7 @@ export default function EventTracksSettingsRoute() {
       <Card as="section" p={8} className="space-y-8">
         <div className="flex items-center justify-between">
           <div>
-            <H2 size="base">Categories</H2>
+            <H2>Categories</H2>
             <Subtitle>Define talk categories available for your event proposals.</Subtitle>
           </div>
           <NewTrackButton type="categories" />

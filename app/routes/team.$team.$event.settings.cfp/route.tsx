@@ -42,7 +42,7 @@ export default function EventCfpSettingsRoute() {
   return (
     <Card as="section">
       <Card.Title>
-        <H2 size="base">Call for paper</H2>
+        <H2>Call for paper</H2>
       </Card.Title>
 
       <Form method="POST">

@@ -1,29 +1,74 @@
 import type { LinkProps as RemixLinkProps } from '@remix-run/react';
 import { Link as RemixLink } from '@remix-run/react';
-import cn from 'classnames';
+import type { VariantProps } from 'class-variance-authority';
+import { cva, cx } from 'class-variance-authority';
 import React from 'react';
 
-const linkStyle = 'inline-flex text-sm text-indigo-600 hover:text-indigo-500 items-center';
+import type { TypographyVariantProps } from './Typography';
+import { typography } from './Typography';
+
+const link = cva('inline-flex items-center hover:underline', {
+  variants: {
+    variant: {
+      primary: 'text-indigo-600',
+      secondary: 'text-gray-900',
+    },
+  },
+  defaultVariants: { variant: 'primary' },
+});
+
+type LinkVariants = VariantProps<typeof link> & Omit<TypographyVariantProps, 'variant'>;
 
 type Icon = React.ComponentType<{ className?: string }>;
-type LinkProps = { icon?: Icon } & RemixLinkProps;
 
-export function Link({ to, children, icon: Icon, className, ...rest }: LinkProps) {
+type LinkProps = { icon?: Icon } & LinkVariants & RemixLinkProps;
+
+export function Link({
+  to,
+  children,
+  icon: Icon,
+  variant,
+  size,
+  mb,
+  align,
+  heading,
+  strong,
+  truncate,
+  className,
+  ...rest
+}: LinkProps) {
+  const defaultStyle = typography({ size, mb, align, heading, strong, truncate, className });
+  const linkStyle = link({ variant });
+
   return (
-    <RemixLink to={to} className={cn(linkStyle, className)} {...rest}>
+    <RemixLink to={to} className={cx(defaultStyle, linkStyle)} {...rest}>
       {Icon && <Icon className="mr-2 h-5 w-5" aria-hidden="true" />}
       {children}
     </RemixLink>
   );
 }
 
-type ExternalLinkProps = {
-  icon?: Icon;
-} & React.AnchorHTMLAttributes<HTMLAnchorElement>;
+type ExternalLinkProps = { icon?: Icon } & LinkVariants & React.AnchorHTMLAttributes<HTMLAnchorElement>;
 
-export function ExternalLink({ href, children, icon: Icon, className, ...rest }: ExternalLinkProps) {
+export function ExternalLink({
+  href,
+  children,
+  icon: Icon,
+  variant,
+  size,
+  mb,
+  align,
+  heading,
+  strong,
+  truncate,
+  className,
+  ...rest
+}: ExternalLinkProps) {
+  const defaultStyle = typography({ size, mb, align, heading, strong, truncate, className });
+  const linkStyle = link({ variant });
+
   return (
-    <a href={href} target="_blank" rel="noreferrer" className={cn(linkStyle, className)} {...rest}>
+    <a href={href} target="_blank" rel="noreferrer" className={cx(defaultStyle, linkStyle)} {...rest}>
       {Icon && <Icon className="mr-2 h-5 w-5" aria-hidden="true" />}
       {children}
     </a>

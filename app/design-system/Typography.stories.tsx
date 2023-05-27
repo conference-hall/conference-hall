@@ -13,12 +13,14 @@ export const Documentation = () => (
       <Text variant="warning">Text warning</Text>
       <Text variant="error">Text error</Text>
       <Text strong>Text strong</Text>
-      <Text italic>Text italic</Text>
       <Subtitle>Subtitle</Subtitle>
     </StoryBlock>
 
     <StoryBlock title="Text sizes" vertical>
-      <Text size="xl">Text extra large</Text>
+      <Text size="4xl">Text 4XL</Text>
+      <Text size="3xl">Text 3XL</Text>
+      <Text size="2xl">Text 2XL</Text>
+      <Text size="xl">Text XL</Text>
       <Text size="l">Text large</Text>
       <Text size="base">Text medium</Text>
       <Text size="s">Text small</Text>

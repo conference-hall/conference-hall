@@ -1,9 +1,8 @@
 import { ArrowTopRightOnSquareIcon, ChevronRightIcon, Square3Stack3DIcon } from '@heroicons/react/24/outline';
-import { Link } from '@remix-run/react';
 
 import { Avatar } from '~/design-system/Avatar';
-import Badge from '~/design-system/badges/Badges';
-import { Text } from '~/design-system/Typography';
+import { Badge, BadgeDot } from '~/design-system/Badges';
+import { Link } from '~/design-system/Links';
 import type { CfpState, EventType, EventVisibility } from '~/schemas/event';
 
 import { CfpElapsedTime } from '../cfp/CfpElapsedTime';
@@ -26,28 +25,30 @@ export default function TeamBreadcrumb({ team, event }: Props) {
   return (
     <div className="flex flex-col items-center justify-between gap-4 pt-4 sm:flex-row sm:gap-8">
       <nav className="flex items-center gap-4">
-        <Link to={`/team/${team.slug}`} className="flex items-center gap-2 truncate hover:underline">
+        <Link to={`/team/${team.slug}`} variant="secondary" size="l" heading strong={!event} className="gap-2">
           <Square3Stack3DIcon className="h-6 w-6 text-gray-600" />
-          <Text as="span" size="l" heading strong={!event}>
-            {team.name}
-          </Text>
+          {team.name}
         </Link>
         {event && (
           <>
             <ChevronRightIcon className="h-4 w-4 text-gray-900" />
-            <Link to={`/${event.slug}`} target="_blank" className="flex items-center gap-2 truncate hover:underline">
+            <Link
+              to={`/team/${team.slug}`}
+              target="_blank"
+              variant="secondary"
+              size="l"
+              heading
+              strong={!!event}
+              className="gap-2"
+            >
               <Avatar size="xs" picture={event.logo} name={event.name} square aria-hidden />
-              <Text as="span" size="l" heading strong={!!event}>
-                {event.name}
-              </Text>
+              {event.name}
               <ArrowTopRightOnSquareIcon className="h-4 w-4" />
             </Link>
           </>
         )}
         {event ? (
-          <Badge variant="dot" color={event.visibility === 'PRIVATE' ? 'red' : 'green'}>
-            {event.visibility.toLowerCase()}
-          </Badge>
+          <BadgeDot color={event.visibility === 'PRIVATE' ? 'red' : 'green'}>{event.visibility.toLowerCase()}</BadgeDot>
         ) : (
           <Badge>{team.role.toLowerCase()}</Badge>
         )}

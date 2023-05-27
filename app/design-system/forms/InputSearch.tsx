@@ -1,5 +1,7 @@
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
-import c from 'classnames';
+import { cx } from 'class-variance-authority';
+
+import { Label } from '../Typography';
 
 const SIZES = {
   m: { container: 'max-w-lg lg:max-w-xs', icon: 'h-5 w-5', input: 'py-1.5 pl-10 text-sm' },
@@ -27,13 +29,13 @@ export function InputSearch({ name, label = 'Search', placeholder, defaultValue,
   const sizeStyles = SIZES[size || 'm'];
 
   return (
-    <div className={c('w-full', sizeStyles.container)}>
-      <label htmlFor="search" className="sr-only">
+    <div className={cx('w-full', sizeStyles.container)}>
+      <Label htmlFor="search" srOnly>
         {label}
-      </label>
+      </Label>
       <div className="relative">
         <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-          <MagnifyingGlassIcon className={c('text-gray-400', sizeStyles.icon)} aria-hidden="true" />
+          <MagnifyingGlassIcon className={cx('text-gray-400', sizeStyles.icon)} aria-hidden="true" />
         </div>
         <input
           id="search"
@@ -42,7 +44,7 @@ export function InputSearch({ name, label = 'Search', placeholder, defaultValue,
           placeholder={placeholder}
           defaultValue={defaultValue}
           autoComplete="off"
-          className={c('block w-full rounded-md', sizeStyles.input, variantStyles)}
+          className={cx('block w-full rounded-md', sizeStyles.input, variantStyles)}
         />
       </div>
     </div>

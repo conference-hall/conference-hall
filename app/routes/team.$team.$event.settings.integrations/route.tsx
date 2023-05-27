@@ -40,7 +40,7 @@ export default function EventIntegrationsSettingsRoute() {
   return (
     <Card as="section">
       <Card.Title>
-        <H2 size="base">Slack integration</H2>
+        <H2>Slack integration</H2>
       </Card.Title>
 
       <Card.Content>
@@ -56,7 +56,7 @@ export default function EventIntegrationsSettingsRoute() {
         <AlertInfo>
           With Slack integration you will be able to received notifications about speakers in a dedicated Slack channel.
           Follow the 3 steps of the{' '}
-          <ExternalLink href="https://api.slack.com/incoming-webhooks" className="underline">
+          <ExternalLink href="https://api.slack.com/incoming-webhooks" variant="secondary">
             Slack documentation
           </ExternalLink>{' '}
           to get the Incoming Web Hook URL and choose the channel.

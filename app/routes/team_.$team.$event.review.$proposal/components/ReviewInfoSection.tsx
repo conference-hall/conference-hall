@@ -40,18 +40,16 @@ export function ReviewInfoSection({
     <Card as="section" className="divide-y divide-gray-200">
       {reviewEnabled && (
         <div className="space-y-4 p-6">
-          <H2 size="base">Your review</H2>
+          <H2>Your review</H2>
           <ReviewForm key={proposalId} initialValues={userReview} />
         </div>
       )}
 
       <div className="space-y-8 p-6">
-        <H2 size="base">Review information</H2>
+        <H2>Review information</H2>
         {review && (
           <div className="flex items-center justify-between">
-            <Text size="s" strong>
-              Global review
-            </Text>
+            <Text strong>Global review</Text>
             <div className="flex gap-4">
               <ReviewNote feeling="NEGATIVE" note={review?.negatives} />
               <ReviewNote feeling="POSITIVE" note={review?.positives} />
@@ -61,33 +59,25 @@ export function ReviewInfoSection({
         )}
 
         <div className="flex items-center justify-between">
-          <Text size="s" strong>
-            Your review
-          </Text>
+          <Text strong>Your review</Text>
           <ReviewNote feeling={userReview.feeling} note={userReview.note} />
         </div>
 
         <div className="flex justify-between gap-2">
-          <Text size="s" strong>
-            Proposal status
-          </Text>
+          <Text strong>Proposal status</Text>
           <ProposalStatusBadge status={status} />
         </div>
 
         <div className="flex justify-between gap-2">
-          <Text size="s" strong>
-            Submission date
-          </Text>
+          <Text strong>Submission date</Text>
           <ClientOnly>{() => <Text size="s">{format(new Date(submittedAt), 'PPP')}</Text>}</ClientOnly>
         </div>
 
         {comments && (
           <div className="flex flex-col gap-2">
-            <Text size="s" strong>
-              Submission message
-            </Text>
+            <Text strong>Submission message</Text>
             <div className="rounded bg-gray-50 p-4">
-              <Text size="s">{comments}</Text>
+              <Text>{comments}</Text>
             </div>
           </div>
         )}

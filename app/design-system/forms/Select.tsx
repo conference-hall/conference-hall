@@ -1,6 +1,6 @@
 import { Listbox } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
-import c from 'classnames';
+import { cx } from 'class-variance-authority';
 import { useCallback } from 'react';
 
 import { SelectTransition } from '../Transitions';
@@ -28,12 +28,12 @@ export default function Select({ name, label, options, value, onChange, classNam
     <Listbox name={name} value={value} onChange={handleChange}>
       {({ open }) => (
         <div className={className}>
-          <Listbox.Label className={c('block text-sm font-medium leading-6 text-gray-900', { 'sr-only': srOnly })}>
+          <Listbox.Label className={cx('block text-sm font-medium leading-6 text-gray-900', { 'sr-only': srOnly })}>
             {label}
           </Listbox.Label>
-          <div className={c('relative', { 'mt-2': !srOnly })}>
+          <div className={cx('relative', { 'mt-2': !srOnly })}>
             <Listbox.Button className="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
-              <Text as="div" size="s" truncate>
+              <Text as="div" truncate>
                 {options.find((o) => o.id === value)?.label}
               </Text>
               <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
@@ -47,7 +47,7 @@ export default function Select({ name, label, options, value, onChange, classNam
                   <Listbox.Option
                     key={option.id}
                     className={({ active }) =>
-                      c(
+                      cx(
                         active ? 'bg-indigo-600 text-white' : 'text-gray-900',
                         'relative cursor-default select-none py-2 pl-8 pr-4'
                       )
@@ -56,13 +56,13 @@ export default function Select({ name, label, options, value, onChange, classNam
                   >
                     {({ selected, active }) => (
                       <>
-                        <span className={c(selected ? 'font-semibold' : 'font-normal', 'block truncate')}>
+                        <span className={cx(selected ? 'font-semibold' : 'font-normal', 'block truncate')}>
                           {option.label}
                         </span>
 
                         {selected ? (
                           <span
-                            className={c(
+                            className={cx(
                               active ? 'text-white' : 'text-indigo-600',
                               'absolute inset-y-0 left-0 flex items-center pl-1.5'
                             )}

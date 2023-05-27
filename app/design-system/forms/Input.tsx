@@ -1,6 +1,8 @@
-import cn from 'classnames';
+import { cx } from 'class-variance-authority';
 import type { Ref } from 'react';
 import { forwardRef } from 'react';
+
+import { Label } from '../Typography';
 
 export type InputProps = {
   label?: string;
@@ -14,12 +16,12 @@ function InputField(
   { name, label, description, type = 'text', addon, className, icon: Icon, error, ...rest }: InputProps,
   ref: Ref<HTMLInputElement>
 ) {
-  const wrapperStyles = cn(baseStyles, {
+  const wrapperStyles = cx(baseStyles, {
     [defaultStyles]: !error,
     [errorStyles]: !!error,
   });
 
-  const inputStyles = cn('block flex-1 border-0 bg-transparent py-1.5 focus:ring-0 sm:text-sm sm:leading-6', {
+  const inputStyles = cx('block flex-1 border-0 bg-transparent py-1.5 focus:ring-0 sm:text-sm sm:leading-6', {
     'text-gray-900 placeholder:text-gray-400': !error,
     'text-red-900 placeholder-red-300': Boolean(error),
     'pl-2': Boolean(Icon),
@@ -29,9 +31,9 @@ function InputField(
   return (
     <div className={className}>
       {label && (
-        <label htmlFor={name} className="mb-2 block text-sm font-medium leading-6 text-gray-900">
+        <Label htmlFor={name} mb={1}>
           {label}
-        </label>
+        </Label>
       )}
       <div className={wrapperStyles}>
         {Icon && (
@@ -61,7 +63,7 @@ function InputField(
 }
 
 const baseStyles =
-  'flex rounded-md shadow-sm ring-1 ring-inset focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 ';
+  'flex rounded-md bg-white shadow-sm ring-1 ring-inset focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 ';
 
 const defaultStyles = 'ring-gray-300 focus:ring-indigo-500 focus:border-indigo-500';
 

@@ -12,7 +12,7 @@ export function EnableApiSection({ apiKey }: Props) {
   return (
     <Card as="section">
       <Card.Title>
-        <H2 size="base">Web API</H2>
+        <H2>Web API</H2>
         <Subtitle>Use the HTTP API if you want to connect a service to some Conference Hall event.</Subtitle>
       </Card.Title>
 

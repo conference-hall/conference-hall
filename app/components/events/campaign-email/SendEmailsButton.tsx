@@ -3,7 +3,7 @@ import { Form, useNavigation } from '@remix-run/react';
 import { useState } from 'react';
 
 import { Button } from '~/design-system/Buttons';
-import { Modal } from '~/design-system/dialogs/Modals';
+import { Modal } from '~/design-system/Modals';
 
 type SendEmailsButtonProps = { total: number; selection: string[]; onSend?: () => void };
 

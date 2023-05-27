@@ -3,7 +3,7 @@ import { Form } from '@remix-run/react';
 import { useState } from 'react';
 
 import { Button } from '~/design-system/Buttons';
-import { Modal } from '~/design-system/dialogs/Modals';
+import { Modal } from '~/design-system/Modals';
 
 type Props = { className?: string };
 

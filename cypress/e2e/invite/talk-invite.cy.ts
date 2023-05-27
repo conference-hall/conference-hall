@@ -14,7 +14,7 @@ describe('Invite to talk', () => {
   it('accepts talk invite', () => {
     cy.login('Bruce Wayne');
     invite.visit('talk', '123');
-    cy.findByRole('heading', { name: 'Awesome talk' }).should('exist');
+    cy.findByText('Awesome talk').should('exist');
 
     invite.acceptInvite();
     talk.isPageVisible();

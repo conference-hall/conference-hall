@@ -2,7 +2,7 @@ import { PlusIcon } from '@heroicons/react/20/solid';
 import { useState } from 'react';
 
 import { Button } from '~/design-system/Buttons';
-import { Modal } from '~/design-system/dialogs/Modals';
+import { Modal } from '~/design-system/Modals';
 
 import { NewEventForm } from './NewEventForm';
 import { NewEventSelection } from './NewEventSelection';

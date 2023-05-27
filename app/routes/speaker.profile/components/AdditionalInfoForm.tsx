@@ -20,9 +20,7 @@ export function AdditionalInfoForm({ company, address, socials, errors }: Props)
     <Card as="section">
       <Form method="POST" aria-labelledby="additional-info-label" preventScrollReset>
         <Card.Title>
-          <H2 size="base" id="additional-info-label">
-            Additional information
-          </H2>
+          <H2 id="additional-info-label">Additional information</H2>
           <Subtitle>Helps organizers to know more about you.</Subtitle>
           <a id="additional-info" href="#additional-info" className="scroll-mt-24" />
         </Card.Title>

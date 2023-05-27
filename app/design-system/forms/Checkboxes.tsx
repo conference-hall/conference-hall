@@ -1,8 +1,8 @@
-import c from 'classnames';
+import { cx } from 'class-variance-authority';
 import type { ReactNode, Ref } from 'react';
 import { forwardRef } from 'react';
 
-import { Text } from '../Typography';
+import { Label, Text } from '../Typography';
 
 type CheckboxGroupProps = {
   label: string;
@@ -13,13 +13,13 @@ type CheckboxGroupProps = {
 };
 
 export function CheckboxGroup({ label, description, inline, className, children }: CheckboxGroupProps) {
-  const layoutStyle = c('space-y-4', {
+  const layoutStyle = cx('space-y-4', {
     'sm:flex sm:items-center sm:space-y-0 sm:space-x-10': inline,
   });
 
   return (
     <div className={className}>
-      <label className="text-sm font-medium text-gray-900">{label}</label>
+      <Label>{label}</Label>
       {description && <p className="text-sm leading-5 text-gray-500">{description}</p>}
       <fieldset className="mt-2">
         <legend className="sr-only">{label}</legend>
@@ -30,13 +30,13 @@ export function CheckboxGroup({ label, description, inline, className, children 
 }
 
 export function CheckboxHeadingGroup({ label, description, inline, className, children }: CheckboxGroupProps) {
-  const layoutStyle = c('space-y-4', {
+  const layoutStyle = cx('space-y-4', {
     'sm:flex sm:items-center sm:space-y-0 sm:space-x-10': inline,
   });
 
   return (
     <div className={className}>
-      <label className="text-sm font-medium text-gray-900">{label}</label>
+      <Label>{label}</Label>
       {description && <p className="mt-1 text-sm text-gray-500">{description}</p>}
       <fieldset className="mt-4">
         <legend className="sr-only">{label}</legend>
@@ -56,7 +56,7 @@ export function CheckboxField(
   ref: Ref<HTMLInputElement>
 ) {
   return (
-    <div className={c('relative flex ', { 'items-start': description, 'items-center': !description }, className)}>
+    <div className={cx('relative flex ', { 'items-start': description, 'items-center': !description }, className)}>
       <div className="flex h-5 items-center">
         <input
           ref={ref}
@@ -64,7 +64,7 @@ export function CheckboxField(
           aria-describedby={description ? `${id}-description` : undefined}
           name={name}
           type="checkbox"
-          className={c('h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500', {
+          className={cx('h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500', {
             'cursor-not-allowed opacity-50': rest?.disabled,
             'mt-1.5': description,
           })}
@@ -73,12 +73,10 @@ export function CheckboxField(
       </div>
       {children && (
         <div className="pl-3">
-          <Text as="label" strong htmlFor={id} size="s">
-            {children}
-          </Text>
+          <Label htmlFor={id}>{children}</Label>
 
           {description && (
-            <Text id={`${id}-description`} size="s" variant="secondary">
+            <Text id={`${id}-description`} variant="secondary">
               {description}
             </Text>
           )}

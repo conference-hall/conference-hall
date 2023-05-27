@@ -1,14 +1,14 @@
 import { CheckIcon } from '@heroicons/react/20/solid';
 import type { EmailStatus } from '@prisma/client';
 import { useSearchParams } from '@remix-run/react';
-import c from 'classnames';
+import { cx } from 'class-variance-authority';
 import { useMemo } from 'react';
 
-import Badge from '~/design-system/badges/Badges';
+import { Badge } from '~/design-system/Badges';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
+import { useCheckboxSelection } from '~/design-system/forms/useCheckboxSelection';
 import { Link } from '~/design-system/Links';
 import { Text } from '~/design-system/Typography';
-import { useCheckboxSelection } from '~/design-system/useCheckboxSelection';
 
 import { ResendEmailButton, SendEmailsButton } from './SendEmailsButton';
 
@@ -69,7 +69,7 @@ export function CampaignEmailList({ type, proposals, total }: Props) {
           </div>
         )}
         {proposals.map((proposal) => (
-          <div key={proposal.id} className={c('relative flex', { 'bg-gray-50': isSelected(proposal.id) })}>
+          <div key={proposal.id} className={cx('relative flex', { 'bg-gray-50': isSelected(proposal.id) })}>
             {isSendEmailPage && (
               <>
                 {isSelected(proposal.id) && <div className="absolute inset-y-0 left-0 w-0.5 bg-indigo-600" />}

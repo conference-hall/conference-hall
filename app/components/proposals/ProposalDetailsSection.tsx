@@ -1,5 +1,5 @@
 import { AvatarGroup } from '~/design-system/Avatar';
-import Badge from '~/design-system/badges/Badges';
+import { Badge } from '~/design-system/Badges';
 import { Card } from '~/design-system/layouts/Card';
 import { Markdown } from '~/design-system/Markdown';
 import { H3, Text } from '~/design-system/Typography';
@@ -34,33 +34,27 @@ export function ProposalDetailsSection(props: Props) {
 
       <div>
         <H3 srOnly>Abstract</H3>
-        <Markdown source={props.abstract} />
+        <Markdown>{props.abstract}</Markdown>
       </div>
 
       {hasFormats && (
         <div>
-          <H3 size="base" mb={2}>
-            Formats
-          </H3>
-          <Text size="s">{props.formats?.map(({ name }) => name).join(', ') || '—'}</Text>
+          <H3 mb={2}>Formats</H3>
+          <Text>{props.formats?.map(({ name }) => name).join(', ') || '—'}</Text>
         </div>
       )}
 
       {hasCategories && (
         <div>
-          <H3 size="base" mb={2}>
-            Categories
-          </H3>
-          <Text size="s">{props.categories?.map(({ name }) => name).join(', ') || '—'}</Text>
+          <H3 mb={2}>Categories</H3>
+          <Text>{props.categories?.map(({ name }) => name).join(', ') || '—'}</Text>
         </div>
       )}
 
       {props.references && (
         <div>
-          <H3 size="base" mb={2}>
-            References
-          </H3>
-          <Markdown source={props.references} className="mt-2" />
+          <H3 mb={2}>References</H3>
+          <Markdown>{props.references}</Markdown>
         </div>
       )}
     </Card>

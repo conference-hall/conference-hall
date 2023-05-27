@@ -1,11 +1,12 @@
 import { Dialog } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/20/solid';
-import cn from 'classnames';
+import { cx } from 'class-variance-authority';
 import type { ChangeEventHandler } from 'react';
 import { useState } from 'react';
 
 import { Button } from '../Buttons';
 import { Markdown } from '../Markdown';
+import { Label } from '../Typography';
 
 type MarkdownTextAreaProps = {
   label: string;
@@ -33,16 +34,16 @@ export function MarkdownTextArea({
   const handleOpenPreview = () => setPreviewOpen(true);
   const handleChangeText: ChangeEventHandler<HTMLTextAreaElement> = (e) => setMarkdown(e.target.value);
 
-  const styles = cn('shadow-sm block w-full text-gray-900 sm:text-sm rounded-md overflow-hidden border mt-1', {
+  const styles = cx('shadow-sm block w-full text-gray-900 sm:text-sm rounded-md overflow-hidden border mt-1', {
     [baseStyles]: !error,
     [errorStyles]: !!error,
   });
 
   return (
     <div className={className}>
-      <label htmlFor={name} className="mb-2 block text-sm font-medium leading-6 text-gray-900">
+      <Label htmlFor={name} mb={1}>
         {label}
-      </label>
+      </Label>
       <div className="relative">
         <div className={styles}>
           <textarea
@@ -103,7 +104,7 @@ function MardownPreviewModal({ markdown, isOpen, onClose }: MardownPreviewModalP
           </button>
         </div>
         <div className="inline-block w-full transform rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl sm:my-8 sm:p-6 sm:align-middle md:max-w-5xl">
-          {markdown ? <Markdown source={markdown} /> : <p>Nothing to preview.</p>}
+          {markdown ? <Markdown>{markdown}</Markdown> : <p>Nothing to preview.</p>}
         </div>
       </div>
     </Dialog>

@@ -63,10 +63,8 @@ export function SpeakerActivitiesSection({ activities, nextPage, hasNextPage, cl
               {event.submissions.map((submission) => (
                 <li key={submission.id} className="flex flex-col gap-1 px-6 py-4">
                   <div className="flex items-center justify-between">
-                    <Link to={`/${event.slug}/proposals/${submission.id}`}>
-                      <Text variant="link" strong heading truncate>
-                        {submission.title}
-                      </Text>
+                    <Link to={`/${event.slug}/proposals/${submission.id}`} size="base" strong heading truncate>
+                      {submission.title}
                     </Link>
                     <AvatarGroup avatars={submission.speakers} />
                   </div>

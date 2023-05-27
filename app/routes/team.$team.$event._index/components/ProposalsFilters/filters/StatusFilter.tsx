@@ -1,5 +1,4 @@
 import type { ProposalStatus } from '@prisma/client';
-import c from 'classnames';
 
 import { ProposalStatusBadge } from '~/components/proposals/ProposalStatusBadges';
 import { Text } from '~/design-system/Typography';
@@ -16,7 +15,7 @@ export function StatusFilter({ defaultValue, statuses }: Props) {
 
   return (
     <div className="space-y-2 p-4">
-      <Text size="s" variant="secondary" strong>
+      <Text variant="secondary" strong>
         Proposal statuses
       </Text>
 
@@ -50,11 +49,7 @@ function StatusFilterItem({ name, count, isSelected }: StatusFilterItemProps) {
   return (
     <div className="flex items-center justify-between">
       <button onClick={handleFilter} className="flex items-center">
-        <ProposalStatusBadge
-          status={name}
-          variant="label"
-          className={c('hover:underline', { 'font-medium': isSelected })}
-        />
+        <ProposalStatusBadge status={name} />
       </button>
       <Text size="xs" variant="secondary" strong>
         {count}

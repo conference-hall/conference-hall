@@ -15,7 +15,6 @@ export function ArchivedFilters() {
           variant={!archived ? 'primary' : 'secondary'}
           size="s"
           className="rounded-r-none border-r-0"
-          defaultOutline
         >
           Active
         </ButtonLink>
@@ -24,7 +23,6 @@ export function ArchivedFilters() {
           variant={archived ? 'primary' : 'secondary'}
           size="s"
           className="rounded-l-none border-l-0"
-          defaultOutline
         >
           Archived
         </ButtonLink>

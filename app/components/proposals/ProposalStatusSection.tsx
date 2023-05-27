@@ -2,7 +2,7 @@ import { Form } from '@remix-run/react';
 
 import { Button, ButtonLink } from '~/design-system/Buttons';
 import { Card } from '~/design-system/layouts/Card';
-import { H3, Subtitle, Text } from '~/design-system/Typography';
+import { H2, Subtitle, Text } from '~/design-system/Typography';
 import { SpeakerProposalStatus } from '~/server/proposals/get-speaker-proposal-status';
 
 import { ProposalDeleteButton } from './ProposalDelete';
@@ -39,7 +39,7 @@ function Draft({ proposal, event }: Props) {
   return (
     <Card as="section" p={8} className="space-y-8">
       <div>
-        <H3>Draft proposal!</H3>
+        <H2 mb={1}>Draft proposal!</H2>
         {event.isCfpOpen ? (
           <Subtitle>The proposal is not yet submitted to {event.name}. Do it before the CFP closes.</Subtitle>
         ) : (
@@ -66,7 +66,7 @@ function Submitted({ event }: Props) {
   return (
     <Card as="section" p={8} className="space-y-8">
       <div>
-        <H3>Submitted to {event.name}!</H3>
+        <H2 mb={1}>Submitted to {event.name}!</H2>
         {event.isCfpOpen ? (
           <Subtitle>You can edit or delete your proposal as long as the CFP is open.</Subtitle>
         ) : (
@@ -91,7 +91,7 @@ function Submitted({ event }: Props) {
 function DeliberationPending() {
   return (
     <Card as="section" p={8}>
-      <H3>Deliberation pending</H3>
+      <H2 mb={1}>Deliberation pending</H2>
       <Subtitle>
         The organizers are currently deliberating, you will be notified by email when the proposal is accepted or
         declined.
@@ -104,8 +104,8 @@ function AcceptedByOrganizers({ event, proposal }: Props) {
   return (
     <Card as="section" p={8} className="space-y-8">
       <div>
-        <H3>Proposal has been accepted to {event.name}!</H3>
-        <Text variant="secondary" size="s">
+        <H2 mb={1}>Proposal has been accepted to {event.name}!</H2>
+        <Text variant="secondary">
           Please confirm or decline your participation to the event. Don't forget to check the event location and dates
           before.
         </Text>
@@ -134,10 +134,8 @@ function RejectedByOrganizers({ event, proposal }: Props) {
   return (
     <Card as="section" p={8} className="space-y-8">
       <div>
-        <H3>Proposal has been declined by {event.name}.</H3>
-        <Text variant="secondary" size="s">
-          Thank you for your submission.
-        </Text>
+        <H2 mb={1}>Proposal has been declined by {event.name}.</H2>
+        <Text variant="secondary">Thank you for your submission.</Text>
       </div>
       <ButtonLink to={{ pathname: '/', search: `talkId=${proposal.talkId}` }} variant="secondary" block>
         Submit it to an other event
@@ -149,10 +147,8 @@ function RejectedByOrganizers({ event, proposal }: Props) {
 function ConfirmedBySpeaker({ event }: Props) {
   return (
     <Card as="section" p={8}>
-      <H3>Your participation to {event.name} is confirmed, Thanks!</H3>
-      <Text variant="secondary" size="s">
-        We are happy to see you there.
-      </Text>
+      <H2 mb={1}>Your participation to {event.name} is confirmed, Thanks!</H2>
+      <Text variant="secondary">We are happy to see you there.</Text>
     </Card>
   );
 }
@@ -160,10 +156,8 @@ function ConfirmedBySpeaker({ event }: Props) {
 function DeclinedBySpeaker({ event }: Props) {
   return (
     <Card as="section" p={8}>
-      <H3>You have declined this proposal for {event.name}.</H3>
-      <Text variant="secondary" size="s">
-        Organizers will be notified. Thanks for the notice.
-      </Text>
+      <H2 mb={1}>You have declined this proposal for {event.name}.</H2>
+      <Text variant="secondary">Organizers will be notified. Thanks for the notice.</Text>
     </Card>
   );
 }

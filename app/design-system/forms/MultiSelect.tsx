@@ -1,9 +1,9 @@
 import { Listbox } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
-import c from 'classnames';
+import { cx } from 'class-variance-authority';
 import { useState } from 'react';
 
-import Badge from '../badges/Badges';
+import { Badge } from '../Badges';
 import { SelectTransition } from '../Transitions';
 import { Text } from '../Typography';
 
@@ -48,7 +48,7 @@ export default function MultiSelect({ name, label, placeholder, options, default
                   <SelectedOptions selectedValues={selected} options={options} />
                 </div>
               ) : (
-                <Text variant="secondary" size="s" as="div" truncate>
+                <Text variant="secondary" as="div" truncate>
                   {placeholder}
                 </Text>
               )}
@@ -64,7 +64,7 @@ export default function MultiSelect({ name, label, placeholder, options, default
                     key={option.value}
                     value={option.value}
                     className={({ active }) =>
-                      c(
+                      cx(
                         active ? 'bg-indigo-600 text-white' : 'text-gray-900',
                         'relative cursor-default select-none py-2 pl-3 pr-9'
                       )
@@ -72,13 +72,13 @@ export default function MultiSelect({ name, label, placeholder, options, default
                   >
                     {({ selected, active }) => (
                       <>
-                        <span className={c(selected ? 'font-semibold' : 'font-normal', 'block truncate')}>
+                        <span className={cx(selected ? 'font-semibold' : 'font-normal', 'block truncate')}>
                           {option.label}
                         </span>
 
                         {selected ? (
                           <span
-                            className={c(
+                            className={cx(
                               active ? 'text-white' : 'text-indigo-600',
                               'absolute inset-y-0 right-0 flex items-center pr-4'
                             )}

@@ -6,7 +6,7 @@ import { EmptyState } from './EmptyState';
 
 export const Documentation = () => (
   <>
-    <StoryBlock title="Default">
+    <StoryBlock title="Default" variant="none">
       <EmptyState label="It's empty!" icon={FireIcon}>
         <Button size="s">Create</Button>
       </EmptyState>

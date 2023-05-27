@@ -1,7 +1,7 @@
-import cn from 'classnames';
+import { cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
 
-import { Text } from '../Typography';
+import { Label, Text } from '../Typography';
 
 type RadioGroupProps = {
   label?: string;
@@ -12,13 +12,13 @@ type RadioGroupProps = {
 };
 
 export function RadioGroup({ label, description, inline, className, children }: RadioGroupProps) {
-  const layoutStyle = cn('space-y-4', {
+  const layoutStyle = cx('space-y-4', {
     'sm:flex sm:items-center sm:space-y-0 sm:space-x-10': inline,
   });
 
   return (
     <div className={className}>
-      {label && <label className="text-sm font-medium text-gray-900">{label}</label>}
+      {label && <Label>{label}</Label>}
       {description && <p className="text-sm leading-5 text-gray-500">{description}</p>}
       <fieldset className="mt-2">
         <legend className="sr-only">{label}</legend>
@@ -45,12 +45,10 @@ export function Radio({ id, name, description, children, ...rest }: RadioProps) 
         />
       </div>
       <div className="pl-3">
-        <label htmlFor={id} className="block text-sm text-gray-900">
-          {children}
-        </label>
+        <Label htmlFor={id}>{children}</Label>
 
         {description && (
-          <Text id={`${id}-description`} size="s" variant="secondary">
+          <Text id={`${id}-description`} variant="secondary">
             {description}
           </Text>
         )}

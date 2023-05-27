@@ -67,7 +67,7 @@ export default function EventNotificationsSettingsRoute() {
     <>
       <Card as="section">
         <Card.Title>
-          <H2 size="base">Email notifications</H2>
+          <H2>Email notifications</H2>
         </Card.Title>
 
         <Card.Content>
@@ -93,7 +93,7 @@ export default function EventNotificationsSettingsRoute() {
 
       <Card as="section">
         <Card.Title>
-          <H2 size="base">Notifications</H2>
+          <H2>Notifications</H2>
         </Card.Title>
 
         <Card.Content>

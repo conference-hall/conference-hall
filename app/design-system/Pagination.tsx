@@ -1,13 +1,18 @@
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
 import { Link, useLocation, useSearchParams } from '@remix-run/react';
-import c from 'classnames';
+import { cva } from 'class-variance-authority';
 import { useMemo } from 'react';
 
-type Props = {
-  current: number;
-  total: number;
-  className?: string;
-};
+const pageStyle = cva('relative inline-flex items-center px-4 py-2 text-sm font-semibold focus:z-2', {
+  variants: {
+    active: {
+      true: 'z-10 bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600',
+      false: 'text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0',
+    },
+  },
+});
+
+type Props = { current: number; total: number };
 
 function getPageSearchParams(page: number, searchParams: URLSearchParams) {
   searchParams.delete('page');
@@ -15,7 +20,7 @@ function getPageSearchParams(page: number, searchParams: URLSearchParams) {
   return searchParams.toString();
 }
 
-export function Pagination({ current, total, className }: Props) {
+export function Pagination({ current, total }: Props) {
   const location = useLocation();
   const [searchParams] = useSearchParams();
 
@@ -27,10 +32,7 @@ export function Pagination({ current, total, className }: Props) {
   if (total <= 1) return null;
 
   return (
-    <nav
-      className={c('isolate inline-flex -space-x-px rounded-md bg-white shadow-sm', className)}
-      aria-label="Pagination"
-    >
+    <nav className="isolate inline-flex -space-x-px rounded-md bg-white shadow-sm" aria-label="Pagination">
       <Link
         key="previous"
         to={{ pathname: location.pathname, search: getPageSearchParams(previous, searchParams) }}
@@ -41,19 +43,13 @@ export function Pagination({ current, total, className }: Props) {
         <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
       </Link>
       {pages.map((page) => {
-        const styles = c('relative inline-flex items-center px-4 py-2 text-sm font-semibold focus:z-2', {
-          'z-10 bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600':
-            page === current,
-          'text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0': page !== current,
-        });
-
         if (showPageButton(page, current, total)) {
           return (
             <Link
               key={page}
               to={{ pathname: location.pathname, search: getPageSearchParams(page, searchParams) }}
               aria-current={page === current ? 'page' : undefined}
-              className={styles}
+              className={pageStyle({ active: page === current })}
               preventScrollReset
             >
               {page}
@@ -61,7 +57,7 @@ export function Pagination({ current, total, className }: Props) {
           );
         } else if (showPageButton(page - 1, current, total)) {
           return (
-            <div key="separator" className={styles}>
+            <div key="separator" className={pageStyle({ active: page === current })}>
               ...
             </div>
           );

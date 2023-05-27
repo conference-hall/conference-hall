@@ -43,7 +43,7 @@ export default function EventGeneralSettingsRoute() {
   return (
     <Card as="section">
       <Card.Title>
-        <H2 size="base">Customize event logo</H2>
+        <H2>Customize event logo</H2>
         <Subtitle>Upload a beautiful logo for your event.</Subtitle>
       </Card.Title>
 
@@ -53,7 +53,7 @@ export default function EventGeneralSettingsRoute() {
           JPEG, PNG, WEBP or AVIF formats supported with optimal resolution of 500x500.
           <br />
           300kB max. You can optimize your logo with{' '}
-          <ExternalLink href="https://squoosh.app" className="underline">
+          <ExternalLink href="https://squoosh.app" variant="secondary">
             squoosh.app
           </ExternalLink>
         </AlertInfo>

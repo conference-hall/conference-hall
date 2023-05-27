@@ -52,7 +52,7 @@ export default function EventSurveySettingsRoute() {
   return (
     <>
       <Card as="section" p={8} className="space-y-6">
-        <H2 size="base">Speaker survey</H2>
+        <H2>Speaker survey</H2>
 
         <ToggleGroup
           label="Speaker survey activation"
@@ -66,7 +66,7 @@ export default function EventSurveySettingsRoute() {
 
       <Card as="section">
         <Card.Title>
-          <H2 size="base">Survey questions</H2>
+          <H2>Survey questions</H2>
           <Subtitle>Select questions that you want to ask to speakers.</Subtitle>
         </Card.Title>
 

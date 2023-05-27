@@ -16,9 +16,7 @@ export function SpeakerDetailsForm({ bio, references, errors }: Props) {
     <Card as="section">
       <Form method="POST" aria-labelledby="speaker-details-label" preventScrollReset>
         <Card.Title>
-          <H2 size="base" id="speaker-details-label">
-            Speaker details
-          </H2>
+          <H2 id="speaker-details-label">Speaker details</H2>
           <Subtitle>
             Give more information about you, these information will be visible by organizers when you submit a talk.
           </Subtitle>

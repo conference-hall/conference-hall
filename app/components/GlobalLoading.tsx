@@ -1,5 +1,5 @@
 import { useNavigation } from '@remix-run/react';
-import c from 'classnames';
+import { cx } from 'class-variance-authority';
 import * as React from 'react';
 
 // Component copied from Gustavo Guichard
@@ -29,7 +29,7 @@ function GlobalLoadingComponent() {
     >
       <div
         ref={ref}
-        className={c(
+        className={cx(
           'h-full bg-gradient-to-r from-blue-500 to-cyan-500 transition-all duration-500 ease-in-out',
           state === 'idle' && animationComplete && 'w-0 opacity-0 transition-none',
           state === 'submitting' && 'w-4/12',

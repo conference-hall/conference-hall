@@ -1,6 +1,6 @@
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import { NavLink } from '@remix-run/react';
-import c from 'classnames';
+import { cx } from 'class-variance-authority';
 import { useMemo } from 'react';
 
 import { Menu } from '../menus/Menu';
@@ -43,7 +43,7 @@ export function NavTabs({ tabs, py = 0, variant = 'light' }: Props) {
   const enabledTabs = useMemo(() => tabs.filter((tab) => tab.enabled), [tabs]);
 
   return (
-    <nav className={c('flex space-x-4', PADDING_Y[py], BACKGROUND[variant])} aria-label="Tabs">
+    <nav className={cx('flex space-x-4', PADDING_Y[py], BACKGROUND[variant])} aria-label="Tabs">
       {enabledTabs.map((tab) =>
         'to' in tab ? (
           <NavLink
@@ -51,7 +51,7 @@ export function NavTabs({ tabs, py = 0, variant = 'light' }: Props) {
             to={tab.to}
             end={tab.end}
             className={(tab) =>
-              c('rounded-md px-3 py-2 text-sm font-medium', {
+              cx('rounded-md px-3 py-2 text-sm font-medium', {
                 [DEFAULT_LINKS[variant]]: !tab.isActive,
                 [ACTIVE_LINKS[variant]]: tab.isActive,
               })
@@ -84,7 +84,7 @@ function NavTabDropdown({ variant, tab }: { variant: keyof typeof BACKGROUND; ta
     <Menu
       trigger={Trigger}
       triggerLabel={`Open ${tab.label} menu`}
-      triggerClassname={c('flex items-center rounded-md px-3 py-2 text-sm font-medium', DEFAULT_LINKS[variant])}
+      triggerClassname={cx('flex items-center rounded-md px-3 py-2 text-sm font-medium', DEFAULT_LINKS[variant])}
     >
       {tab.links.map(({ to, label, icon }) => (
         <Menu.ItemLink key={to} to={to} icon={icon}>

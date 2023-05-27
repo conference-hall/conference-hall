@@ -17,11 +17,9 @@ export function DetailsSection({ type, description, websiteUrl, contactEmail, co
   const hasDetails = websiteUrl || contactEmail || codeOfConductUrl;
   return (
     <Card as="section" p={8}>
-      <H2 size="base" mb={4}>
-        {type === 'CONFERENCE' ? 'Conference' : 'Meetup'}
-      </H2>
+      <H2 mb={4}>{type === 'CONFERENCE' ? 'Conference' : 'Meetup'}</H2>
 
-      <Markdown source={description} />
+      <Markdown>{description}</Markdown>
 
       {hasDetails && (
         <div className="mt-8 flex flex-col gap-4 sm:mt-12 sm:flex-row sm:gap-16">

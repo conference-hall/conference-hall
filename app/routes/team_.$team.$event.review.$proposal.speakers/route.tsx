@@ -4,7 +4,7 @@ import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { AvatarName } from '~/design-system/Avatar';
-import Badge from '~/design-system/badges/Badges';
+import { Badge } from '~/design-system/Badges';
 import { IconLabel } from '~/design-system/IconLabel';
 import { GitHubIcon } from '~/design-system/icons/GitHubIcon';
 import { TwitterIcon } from '~/design-system/icons/TwitterIcon';
@@ -49,22 +49,20 @@ export default function ProposalSpeakersRoute() {
               </div>
             </div>
 
-            {speaker.bio && <Markdown source={speaker.bio} />}
+            {speaker.bio && <Markdown>{speaker.bio}</Markdown>}
 
             {speaker.references && (
               <div className="space-y-2">
-                <Text size="s" strong mb={2}>
+                <Text strong mb={2}>
                   References
                 </Text>
-                <Markdown source={speaker.references} />
+                <Markdown>{speaker.references}</Markdown>
               </div>
             )}
 
             {survey && (
               <div className="space-y-2">
-                <Text size="s" strong>
-                  Survey
-                </Text>
+                <Text strong>Survey</Text>
                 <div className="space-x-4">
                   {survey.gender && <Badge>{survey.gender}</Badge>}
                   {survey.tshirt && <Badge>Tshirt size: {survey.tshirt}</Badge>}
@@ -79,10 +77,8 @@ export default function ProposalSpeakersRoute() {
 
             {survey?.info && (
               <div className="space-y-2">
-                <Text size="s" strong>
-                  Additional information
-                </Text>
-                <Text size="s">{survey.info}</Text>
+                <Text strong>Additional information</Text>
+                <Text>{survey.info}</Text>
               </div>
             )}
           </Card>

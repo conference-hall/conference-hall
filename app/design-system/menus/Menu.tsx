@@ -2,7 +2,7 @@ import { Menu as MenuDropdown } from '@headlessui/react';
 import type { FormProps, LinkProps } from '@remix-run/react';
 import { Form } from '@remix-run/react';
 import { Link } from '@remix-run/react';
-import cn from 'classnames';
+import { cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
 import { Fragment } from 'react';
 
@@ -34,7 +34,7 @@ export function Menu({ trigger: Trigger, triggerLabel, triggerClassname, childre
 type MenuItemBase = { icon?: React.ComponentType<{ className?: string }> };
 
 const itemStyles = (active: boolean, className?: string) =>
-  cn('group flex w-full items-center px-4 py-2 text-sm text-gray-700', {
+  cx('group flex w-full items-center px-4 py-2 text-sm text-gray-700', {
     'bg-gray-100 text-gray-900': active,
     className,
   });

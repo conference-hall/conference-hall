@@ -15,7 +15,7 @@ type Props = {
 export function ProposalCard({ id, title, speakers, status }: Props) {
   return (
     <CardLink as="li" to={id} className="flex flex-col px-4 py-4 sm:px-6">
-      <Text mb={2} strong truncate>
+      <Text size="base" mb={2} heading strong truncate>
         {title}
       </Text>
       <div className="flex items-center justify-between">

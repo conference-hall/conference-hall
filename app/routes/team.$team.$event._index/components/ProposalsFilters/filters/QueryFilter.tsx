@@ -16,11 +16,11 @@ export function QueryFilter({ defaultValue, hasFilters }: Props) {
   return (
     <div className="space-y-2 p-4">
       <div className="flex items-center justify-between">
-        <Text size="s" variant="secondary" strong>
+        <Text variant="secondary" strong>
           Search
         </Text>
         {hasFilters && (
-          <Link to={resetPath} className="text-xs font-medium">
+          <Link to={resetPath} size="xs" strong>
             Reset filters
           </Link>
         )}

@@ -1,4 +1,6 @@
-import cn from 'classnames';
+import { cx } from 'class-variance-authority';
+
+import { Label } from '../Typography';
 
 type Props = {
   name: string;
@@ -12,7 +14,7 @@ const errorStyles =
   'border-red-300 text-red-900 placeholder-red-300 focus:outline-none focus:ring-red-500 focus:border-red-500';
 
 export function TextArea({ name, label, description, className, error, ...rest }: Props) {
-  const styles = cn('shadow-sm block w-full text-gray-900 sm:text-sm rounded-md', {
+  const styles = cx('shadow-sm block w-full text-gray-900 sm:text-sm rounded-md', {
     [baseStyles]: !error,
     [errorStyles]: !!error,
   });
@@ -20,9 +22,9 @@ export function TextArea({ name, label, description, className, error, ...rest }
   return (
     <div className={className}>
       {label && (
-        <label htmlFor={name} className="mb-2 block text-sm font-medium leading-6 text-gray-900">
+        <Label htmlFor={name} mb={1}>
           {label}
-        </label>
+        </Label>
       )}
       <textarea
         id={name}

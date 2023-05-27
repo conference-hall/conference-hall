@@ -1,6 +1,6 @@
 import type { LinkProps } from '@remix-run/react';
 import { Link } from '@remix-run/react';
-import c from 'classnames';
+import { cx } from 'class-variance-authority';
 
 const ROUNDED = {
   sm: 'rounded-sm',
@@ -38,7 +38,7 @@ type CardProps = {
 };
 
 export function Card({ as: Tag = 'div', rounded = 'lg', p = 0, variant = 'light', className, ...rest }: CardProps) {
-  return <Tag className={c(BACKGROUND[variant], ROUNDED[rounded], PADDING[p], className)} {...rest} />;
+  return <Tag className={cx(BACKGROUND[variant], ROUNDED[rounded], PADDING[p], className)} {...rest} />;
 }
 
 // <CardLink /> component
@@ -54,7 +54,7 @@ export function CardLink({ as, rounded, p, variant, className, children, ...rest
       rounded={rounded}
       className="focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:shadow-md"
     >
-      <Link {...rest} className={c('focus:outline-none', className)}>
+      <Link {...rest} className={cx('focus:outline-none', className)}>
         {children}
       </Link>
     </Card>
@@ -64,7 +64,7 @@ export function CardLink({ as, rounded, p, variant, className, children, ...rest
 // <Card.Title /> component
 
 function Title({ children, className }: { children: React.ReactNode; className?: string }) {
-  return <div className={c('px-8 pt-8', className)}>{children}</div>;
+  return <div className={cx('px-8 pt-8', className)}>{children}</div>;
 }
 
 Card.Title = Title;

@@ -7,7 +7,7 @@ import { Navbar } from '~/components/navbar/Navbar';
 import { Button } from '~/design-system/Buttons';
 import { Card } from '~/design-system/layouts/Card';
 import { Container } from '~/design-system/layouts/Container';
-import { H1, H2 } from '~/design-system/Typography';
+import { H1, Text } from '~/design-system/Typography';
 import { requireSession } from '~/libs/auth/session';
 import { mergeMeta } from '~/libs/meta/merge-meta';
 import { useUser } from '~/root';
@@ -42,13 +42,13 @@ export default function InvitationRoute() {
 
       <Container className="m-8">
         <Card p={16} className="flex flex-col items-center">
-          <H1 size="l" mb={4} variant="secondary">
+          <H1 mb={4} variant="secondary">
             You have been invited to the team
           </H1>
 
-          <H2 size="3xl" mb={8}>
+          <Text size="3xl" heading strong mb={8}>
             {team.name}
-          </H2>
+          </Text>
 
           <Form method="POST">
             <Button type="submit">Accept invitation</Button>

@@ -1,6 +1,6 @@
 import type { ProposalStatus, ReviewFeeling } from '@prisma/client';
 import { Link, useSearchParams } from '@remix-run/react';
-import c from 'classnames';
+import { cx } from 'class-variance-authority';
 import type { ChangeEventHandler } from 'react';
 
 import { ProposalStatusBadge } from '~/components/proposals/ProposalStatusBadges';
@@ -31,7 +31,7 @@ export function ProposaListRow({ proposal, isSelected, onSelect }: ProposalRowPr
   const { you, summary } = proposal.reviews;
 
   return (
-    <tr key={proposal.id} className={c('relative hover:bg-gray-50', { 'bg-gray-50': isSelected })}>
+    <tr key={proposal.id} className={cx('relative hover:bg-gray-50', { 'bg-gray-50': isSelected })}>
       <td className="relative hidden w-12 rounded-lg px-4 sm:table-cell sm:w-16  sm:px-4">
         {isSelected && <div className="absolute inset-y-0 left-0 w-0.5 bg-indigo-600" />}
         <Checkbox
@@ -48,7 +48,7 @@ export function ProposaListRow({ proposal, isSelected, onSelect }: ProposalRowPr
           aria-label={`Open proposal "${proposal.title}"`}
           className="block after:absolute after:bottom-0 after:left-16 after:right-0 after:top-0 after:z-10 after:block"
         >
-          <Text size="s" strong truncate>
+          <Text strong truncate>
             {proposal.title}
           </Text>
           {proposal.speakers.length > 0 && (

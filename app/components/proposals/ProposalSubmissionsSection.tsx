@@ -20,25 +20,23 @@ type Props = {
 export function ProposalSubmissionsSection({ talkId, submissions }: Props) {
   return (
     <Card as="section" p={8} className="space-y-6">
-      <H3 mb={0}>Submissions</H3>
+      <H3>Submissions</H3>
       {submissions.length > 0 ? (
         <ul className="mt-4 space-y-4">
           {submissions.map((submission) => (
             <li key={submission.slug} className="flex items-center justify-between gap-2">
-              <Link to={`/${submission.slug}/proposals`} className="flex gap-2">
+              <div className="flex gap-2">
                 <Avatar picture={submission.logo} name={submission.name} square size="xs" aria-hidden />
-                <Text size="s" variant="link" strong heading truncate>
+                <Link to={`/${submission.slug}/proposals`} strong heading truncate>
                   {submission.name}
-                </Text>
-              </Link>
+                </Link>
+              </div>
               <ProposalStatusLabel status={submission.proposalStatus} />
             </li>
           ))}
         </ul>
       ) : (
-        <Text size="s" variant="secondary">
-          No submissions yet.
-        </Text>
+        <Text variant="secondary">No submissions yet.</Text>
       )}
 
       <ButtonLink to={`/?talkId=${talkId}`} block>

@@ -7,7 +7,7 @@ import invariant from 'tiny-invariant';
 import { EventCard } from '~/components/EventCard';
 import { Container } from '~/design-system/layouts/Container';
 import { EmptyState } from '~/design-system/layouts/EmptyState';
-import { H2 } from '~/design-system/Typography';
+import { H1 } from '~/design-system/Typography';
 import { requireSession } from '~/libs/auth/session';
 import { useUser } from '~/root';
 
@@ -37,7 +37,7 @@ export default function OrganizationEventsRoute() {
   return (
     <Container className="my-4 space-y-8 sm:my-8">
       <div className="flex items-center justify-between">
-        <H2>Team events</H2>
+        <H1>Team events</H1>
         <ArchivedFilters />
       </div>
 

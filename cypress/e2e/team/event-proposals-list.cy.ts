@@ -83,7 +83,7 @@ describe('Event proposals list', () => {
     it('filters by statuses', () => {
       cy.login('Clark Kent');
       proposals.visit('team-1', 'conference-1');
-      proposals.filterStatus('Accepted proposal');
+      proposals.filterStatus('Accepted');
 
       cy.assertText('1 proposals');
       cy.assertUrl('status=ACCEPTED');
