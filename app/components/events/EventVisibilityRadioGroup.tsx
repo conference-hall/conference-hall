@@ -1,5 +1,5 @@
 import { RadioGroup } from '@headlessui/react';
-import c from 'classnames';
+import { cx } from 'class-variance-authority';
 import { useState } from 'react';
 
 const settings = [
@@ -27,7 +27,7 @@ export default function EventVisibilityRadioGroup({
             key={setting.name}
             value={setting.value}
             className={({ checked }) =>
-              c(
+              cx(
                 settingIdx === 0 ? 'rounded-tl-md rounded-tr-md' : '',
                 settingIdx === settings.length - 1 ? 'rounded-bl-md rounded-br-md' : '',
                 checked ? 'z-10 border-indigo-200 bg-indigo-50' : 'border-gray-200',
@@ -38,7 +38,7 @@ export default function EventVisibilityRadioGroup({
             {({ active, checked }) => (
               <>
                 <span
-                  className={c(
+                  className={cx(
                     checked ? 'border-transparent bg-indigo-600' : 'border-gray-300 bg-white',
                     active ? 'ring-2 ring-indigo-500 ring-offset-2' : '',
                     'mt-0.5 flex h-4 w-4 shrink-0 cursor-pointer items-center justify-center rounded-full border'
@@ -50,13 +50,13 @@ export default function EventVisibilityRadioGroup({
                 <span className="ml-3 flex flex-col">
                   <RadioGroup.Label
                     as="span"
-                    className={c(checked ? 'text-indigo-900' : 'text-gray-900', 'block text-sm font-medium')}
+                    className={cx(checked ? 'text-indigo-900' : 'text-gray-900', 'block text-sm font-medium')}
                   >
                     {setting.name}
                   </RadioGroup.Label>
                   <RadioGroup.Description
                     as="span"
-                    className={c(checked ? 'text-indigo-700' : 'text-gray-500', 'block text-sm')}
+                    className={cx(checked ? 'text-indigo-700' : 'text-gray-500', 'block text-sm')}
                   >
                     {setting.description}
                   </RadioGroup.Description>

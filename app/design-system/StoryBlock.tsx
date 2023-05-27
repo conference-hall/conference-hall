@@ -1,4 +1,4 @@
-import c from 'classnames';
+import { cx } from 'class-variance-authority';
 import { type ReactNode } from 'react';
 
 import { Card } from './layouts/Card';
@@ -18,7 +18,7 @@ export const StoryBlock = ({ title, children, variant = 'light', vertical = fals
       children
     ) : (
       <Card p={8} variant={variant}>
-        <div className={c('flex items-start gap-4', { 'flex-col': vertical })}>{children}</div>
+        <div className={cx('flex items-start gap-4', { 'flex-col': vertical })}>{children}</div>
       </Card>
     )}
   </section>

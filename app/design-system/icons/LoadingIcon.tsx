@@ -1,4 +1,4 @@
-import c from 'classnames';
+import { cx } from 'class-variance-authority';
 
 type Props = { className?: string };
 
@@ -6,7 +6,7 @@ type Props = { className?: string };
 export function LoadingIcon({ className }: Props) {
   return (
     <svg
-      className={c('animate-spin', className)}
+      className={cx('animate-spin', className)}
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"

@@ -1,7 +1,7 @@
 import { RadioGroup } from '@headlessui/react';
 import { CheckCircleIcon } from '@heroicons/react/20/solid';
 import { MegaphoneIcon, UserGroupIcon } from '@heroicons/react/24/outline';
-import c from 'classnames';
+import { cx } from 'class-variance-authority';
 import { useState } from 'react';
 
 import { Button } from '~/design-system/Buttons';
@@ -63,7 +63,7 @@ function EventTypeOption({ value, label, description, icon: Icon }: EventTypeOpt
     <RadioGroup.Option
       value={value}
       className={({ checked, active }) =>
-        c(
+        cx(
           checked ? 'border-transparent' : 'border-gray-300',
           active ? 'border-indigo-600 ring-2 ring-indigo-600' : '',
           'relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none'
@@ -83,9 +83,9 @@ function EventTypeOption({ value, label, description, icon: Icon }: EventTypeOpt
               </RadioGroup.Description>
             </span>
           </span>
-          <CheckCircleIcon className={c(!checked ? 'invisible' : '', 'h-5 w-5 text-indigo-600')} aria-hidden="true" />
+          <CheckCircleIcon className={cx(!checked ? 'invisible' : '', 'h-5 w-5 text-indigo-600')} aria-hidden="true" />
           <span
-            className={c(
+            className={cx(
               active ? 'border' : 'border-2',
               checked ? 'border-indigo-600' : 'border-transparent',
               'pointer-events-none absolute -inset-px rounded-lg'

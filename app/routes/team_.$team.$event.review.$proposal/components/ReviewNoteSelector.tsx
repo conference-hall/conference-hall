@@ -1,7 +1,7 @@
 import { RadioGroup } from '@headlessui/react';
 import { HeartIcon, NoSymbolIcon, StarIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import type { ReviewFeeling } from '@prisma/client';
-import c from 'classnames';
+import { cx } from 'class-variance-authority';
 import { useCallback, useState } from 'react';
 
 export type Option = {
@@ -39,7 +39,7 @@ export function ReviewNoteSelector({ value, onChange }: Props) {
     ({ option, index }: StyleProps) => {
       const currentSelected = isSelected(index, selectedIndex);
       const currentOver = isSelected(index, overIndex);
-      return c('h-8 w-8 stroke-gray-600', {
+      return cx('h-8 w-8 stroke-gray-600', {
         'stroke-indigo-500': !currentSelected && currentOver,
         [option.fill]: currentSelected,
       });

@@ -1,4 +1,4 @@
-import cn from 'classnames';
+import { cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
 
 import { Label, Text } from '../Typography';
@@ -12,7 +12,7 @@ type RadioGroupProps = {
 };
 
 export function RadioGroup({ label, description, inline, className, children }: RadioGroupProps) {
-  const layoutStyle = cn('space-y-4', {
+  const layoutStyle = cx('space-y-4', {
     'sm:flex sm:items-center sm:space-y-0 sm:space-x-10': inline,
   });
 

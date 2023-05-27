@@ -1,4 +1,4 @@
-import cn from 'classnames';
+import { cx } from 'class-variance-authority';
 import type { Ref } from 'react';
 import { forwardRef } from 'react';
 
@@ -16,12 +16,12 @@ function InputField(
   { name, label, description, type = 'text', addon, className, icon: Icon, error, ...rest }: InputProps,
   ref: Ref<HTMLInputElement>
 ) {
-  const wrapperStyles = cn(baseStyles, {
+  const wrapperStyles = cx(baseStyles, {
     [defaultStyles]: !error,
     [errorStyles]: !!error,
   });
 
-  const inputStyles = cn('block flex-1 border-0 bg-transparent py-1.5 focus:ring-0 sm:text-sm sm:leading-6', {
+  const inputStyles = cx('block flex-1 border-0 bg-transparent py-1.5 focus:ring-0 sm:text-sm sm:leading-6', {
     'text-gray-900 placeholder:text-gray-400': !error,
     'text-red-900 placeholder-red-300': Boolean(error),
     'pl-2': Boolean(Icon),

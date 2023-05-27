@@ -2,7 +2,7 @@ import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/20/solid';
 import type { VariantProps } from 'class-variance-authority';
 import { cva } from 'class-variance-authority';
-import c from 'classnames';
+import { cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
 import { Fragment } from 'react';
 
@@ -41,8 +41,8 @@ type ModalTitleProps = {
 function Title({ icon: Icon, title, description, iconColor = 'info' }: ModalTitleProps) {
   return (
     <div>
-      <div className={c('mx-auto flex h-12 w-12 items-center justify-center rounded-full', iconBgColors[iconColor])}>
-        <Icon className={c('h-6 w-6', iconTextColors[iconColor])} aria-hidden="true" />
+      <div className={cx('mx-auto flex h-12 w-12 items-center justify-center rounded-full', iconBgColors[iconColor])}>
+        <Icon className={cx('h-6 w-6', iconTextColors[iconColor])} aria-hidden="true" />
       </div>
       <div className="mt-3 text-center sm:mt-5">
         <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900">
@@ -88,7 +88,7 @@ type LayoutProps = {
 function Layout({ position = 'center', p, size, onClose, children }: LayoutProps) {
   return (
     <div className="fixed inset-0 z-40 overflow-y-auto">
-      <div className={c('flex min-h-full items-end justify-center p-4 text-center sm:p-0', POSITION[position])}>
+      <div className={cx('flex min-h-full items-end justify-center p-4 text-center sm:p-0', POSITION[position])}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"

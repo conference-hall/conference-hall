@@ -1,4 +1,4 @@
-import c from 'classnames';
+import { cx } from 'class-variance-authority';
 import { ClientOnly } from 'remix-utils';
 
 import { Avatar } from '~/design-system/Avatar';
@@ -30,7 +30,7 @@ export function EventHeader({
   className,
 }: Props) {
   return (
-    <header className={c('bg-gray-800', className)}>
+    <header className={cx('bg-gray-800', className)}>
       <Container className="flex flex-col items-center justify-between py-4 sm:flex-row">
         <div className="flex items-center gap-4">
           <Avatar picture={logo} name={name} size="l" square />

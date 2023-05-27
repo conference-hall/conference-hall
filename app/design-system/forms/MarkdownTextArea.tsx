@@ -1,6 +1,6 @@
 import { Dialog } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/20/solid';
-import cn from 'classnames';
+import { cx } from 'class-variance-authority';
 import type { ChangeEventHandler } from 'react';
 import { useState } from 'react';
 
@@ -34,7 +34,7 @@ export function MarkdownTextArea({
   const handleOpenPreview = () => setPreviewOpen(true);
   const handleChangeText: ChangeEventHandler<HTMLTextAreaElement> = (e) => setMarkdown(e.target.value);
 
-  const styles = cn('shadow-sm block w-full text-gray-900 sm:text-sm rounded-md overflow-hidden border mt-1', {
+  const styles = cx('shadow-sm block w-full text-gray-900 sm:text-sm rounded-md overflow-hidden border mt-1', {
     [baseStyles]: !error,
     [errorStyles]: !!error,
   });

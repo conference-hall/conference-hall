@@ -1,4 +1,4 @@
-import c from 'classnames';
+import { cx } from 'class-variance-authority';
 
 import { GitHubIcon } from '~/design-system/icons/GitHubIcon';
 import { GoogleIcon } from '~/design-system/icons/GoogleIcon';
@@ -22,7 +22,7 @@ export function AuthProviderButton({ provider, onClick }: Props) {
     <button
       type="button"
       onClick={() => onClick(provider)}
-      className={c(
+      className={cx(
         'flex w-full items-center justify-center gap-3 rounded-md px-3 py-1.5 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2',
         PROVIDERS[provider].style
       )}

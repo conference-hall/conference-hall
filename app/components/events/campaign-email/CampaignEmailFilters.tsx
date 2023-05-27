@@ -1,6 +1,6 @@
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { Form, useLocation, useSearchParams, useSubmit } from '@remix-run/react';
-import c from 'classnames';
+import { cx } from 'class-variance-authority';
 
 import { Button } from '~/design-system/Buttons';
 import { Input } from '~/design-system/forms/Input';
@@ -39,7 +39,7 @@ export function CampaignEmailFilters({ type }: Props) {
           type="button"
           variant="secondary"
           onClick={() => handleChange('not-sent')}
-          className={c('rounded-none rounded-l-md focus:z-10 focus:ring-offset-0', {
+          className={cx('rounded-none rounded-l-md focus:z-10 focus:ring-offset-0', {
             'bg-gray-100': isSendEmailPage,
           })}
         >
@@ -49,7 +49,7 @@ export function CampaignEmailFilters({ type }: Props) {
           type="button"
           variant="secondary"
           onClick={() => handleChange('sent')}
-          className={c('rounded-none rounded-r-md border-l-0 focus:z-10 focus:ring-offset-0', {
+          className={cx('rounded-none rounded-r-md border-l-0 focus:z-10 focus:ring-offset-0', {
             'bg-gray-100': !isSendEmailPage,
           })}
         >

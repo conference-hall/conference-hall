@@ -1,4 +1,4 @@
-import c from 'classnames';
+import { cx } from 'class-variance-authority';
 
 import { Text } from './Typography';
 
@@ -68,7 +68,7 @@ export function Avatar({
   'aria-hidden': ariaHidden,
   className,
 }: AvatarProps) {
-  const styles = c(
+  const styles = cx(
     'shrink-0',
     sizes[size],
     ring ? rings[size] : null,
@@ -177,7 +177,7 @@ function AvatarColor({
 
   return (
     <div
-      className={c(
+      className={cx(
         'flex items-center justify-center font-heading font-medium text-gray-900/60',
         className,
         color,

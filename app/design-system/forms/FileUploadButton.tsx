@@ -1,4 +1,4 @@
-import c from 'classnames';
+import { cx } from 'class-variance-authority';
 
 import type { ButtonStylesProps } from '../Buttons';
 import { button } from '../Buttons';
@@ -25,7 +25,7 @@ export function ButtonFileUpload({
   const styles = button({ variant, size, block, disabled, loading, className });
   return (
     <>
-      <Label htmlFor={name} role="button" tabIndex={0} className={c(styles, 'cursor-pointer')}>
+      <Label htmlFor={name} role="button" tabIndex={0} className={cx(styles, 'cursor-pointer')}>
         <Input id={name} name={name} type="file" className="sr-only" {...rest} />
         {children}
       </Label>
