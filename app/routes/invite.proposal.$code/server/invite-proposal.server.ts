@@ -15,9 +15,18 @@ export async function addCoSpeakerToProposal(code: string, coSpeakerId: string) 
   const proposal = await checkProposalInviteCode(code);
 
   try {
-    await db.proposal.update({
-      where: { id: proposal.id },
-      data: { speakers: { connect: { id: coSpeakerId } } },
+    await db.$transaction(async (trx) => {
+      const updated = await trx.proposal.update({
+        where: { id: proposal.id },
+        data: { speakers: { connect: { id: coSpeakerId } } },
+      });
+
+      if (updated.talkId) {
+        await trx.talk.update({
+          where: { id: updated.talkId },
+          data: { speakers: { connect: { id: coSpeakerId } } },
+        });
+      }
     });
   } catch (e) {
     throw new InvitationInvalidOrAccepted();
