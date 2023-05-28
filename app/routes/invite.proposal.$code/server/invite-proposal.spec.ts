@@ -26,7 +26,7 @@ describe('#addCoSpeakerToProposal', () => {
 
     const resultProposal = await db.proposal.findUnique({
       where: { id: proposal.id },
-      include: { speakers: true },
+      include: { speakers: true, talk: { include: { speakers: true } } },
     });
 
     expect(result?.eventSlug).toEqual(event.slug);
@@ -36,6 +36,11 @@ describe('#addCoSpeakerToProposal', () => {
     expect(speakersProposal?.length).toBe(2);
     expect(speakersProposal).toContain(speaker.id);
     expect(speakersProposal).toContain(cospeaker.id);
+
+    const speakersTalk = resultProposal?.talk?.speakers.map(({ id }) => id);
+    expect(speakersTalk?.length).toBe(2);
+    expect(speakersTalk).toContain(speaker.id);
+    expect(speakersTalk).toContain(cospeaker.id);
   });
 
   it('returns throws an error when invitation code not found', async () => {
