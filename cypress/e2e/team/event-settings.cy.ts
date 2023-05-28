@@ -205,14 +205,12 @@ describe('Event settings', () => {
     });
 
     describe('cfp settings', () => {
-      it('updates CFP settings', () => {
+      it('updates conference CFP settings', () => {
         cfp.visit('team-1', 'conference-1');
-        cfp.saveForm({
-          cfpStart: '2022-12-12',
-          cfpEnd: '2022-12-13',
-          maxProposals: '12',
-          codeOfConductUrl: 'https://website.com',
-        });
+        cfp.saveConferenceOpenings({ cfpStart: '2022-12-12', cfpEnd: '2022-12-13' });
+        cy.assertToast('Call for paper updated.');
+
+        cfp.saveCfpPreferences({ maxProposals: '12', codeOfConductUrl: 'https://website.com' });
         cy.assertToast('Call for paper updated.');
 
         cy.reload();
@@ -220,6 +218,15 @@ describe('Event settings', () => {
         cy.assertInputText('Closing date', '2022-12-13');
         cy.assertInputText('Maximum of proposals per speaker', '12');
         cy.assertInputText('Code of conduct URL', 'https://website.com');
+      });
+
+      it('updates meetup CFP settings', () => {
+        cfp.visit('team-1', 'meetup-1');
+        cfp.toggleCfpMeetup(true).click();
+        cy.assertToast('Call for paper updated.');
+
+        cy.reload();
+        cfp.toggleCfpMeetup(false).should('be.visible');
       });
     });
 
