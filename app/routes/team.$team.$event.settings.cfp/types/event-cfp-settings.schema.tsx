@@ -1,20 +1,24 @@
 import { z } from 'zod';
 
-import { EventTypeSchema } from '~/schemas/event';
 import { numeric, text } from '~/schemas/utils';
 import { dateValidator } from '~/schemas/validators';
 
-export const EventCfpSettingsSchema = z
+export const CfpPreferencesSchema = z.object({
+  codeOfConductUrl: text(z.string().url().trim().nullable().default(null)),
+  maxProposals: numeric(z.number().nullable().default(null)),
+});
+
+export const CfpMeetupOpeningSchema = z.object({
+  cfpStart: text(dateValidator),
+});
+
+export const CfpConferenceOpeningSchema = z
   .object({
-    type: text(EventTypeSchema),
     cfpStart: text(dateValidator),
     cfpEnd: text(dateValidator),
-    codeOfConductUrl: text(z.string().url().trim().nullable().default(null)),
-    maxProposals: numeric(z.number().nullable().default(null)),
   })
   .refine(
-    ({ type, cfpStart, cfpEnd }) => {
-      if (type === 'MEETUP') return true;
+    ({ cfpStart, cfpEnd }) => {
       if (cfpStart && !cfpEnd) return false;
       if (cfpEnd && !cfpStart) return false;
       if (cfpStart && cfpEnd && cfpStart > cfpEnd) return false;

@@ -1,22 +1,18 @@
 import { parse } from '@conform-to/zod';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { Form, useActionData } from '@remix-run/react';
+import { useActionData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { AlertInfo } from '~/design-system/Alerts';
-import { Button } from '~/design-system/Buttons';
-import { Checkbox } from '~/design-system/forms/Checkboxes';
-import { DateRangeInput } from '~/design-system/forms/DateRangeInput';
-import { Input } from '~/design-system/forms/Input';
-import { Card } from '~/design-system/layouts/Card';
-import { H2 } from '~/design-system/Typography';
 import { requireSession } from '~/libs/auth/session';
 import { addToast } from '~/libs/toasts/toasts';
 import { updateEvent } from '~/server/teams/update-event.server';
 
 import { useOrganizerEvent } from '../team.$team.$event/route';
-import { EventCfpSettingsSchema } from './types/event-cfp-settings.schema';
+import { CommonCfpSetting } from './components/CommonCfpSetting';
+import { ConferenceCfpOpening } from './components/ConferenceCfpOpening';
+import { MeetupCfpOpening } from './components/MeetupCfpOpening';
+import * as schemas from './types/event-cfp-settings.schema';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await requireSession(request);
@@ -27,11 +23,29 @@ export const action = async ({ request, params }: ActionArgs) => {
   const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
   const form = await request.formData();
+  const intent = form.get('intent');
 
-  const result = parse(form, { schema: EventCfpSettingsSchema });
-  if (!result.value) return json(result.error);
+  switch (intent) {
+    case 'save-cfp-preferences': {
+      const result = parse(form, { schema: schemas.CfpPreferencesSchema });
+      if (!result.value) return json(result.error);
+      await updateEvent(params.event, userId, result.value);
+      break;
+    }
+    case 'save-cfp-conference-opening': {
+      const result = parse(form, { schema: schemas.CfpConferenceOpeningSchema });
+      if (!result.value) return json(result.error);
+      await updateEvent(params.event, userId, result.value);
+      break;
+    }
+    case 'save-cfp-meetup-opening': {
+      const result = parse(form, { schema: schemas.CfpMeetupOpeningSchema });
+      if (!result.value) return json(result.error);
+      await updateEvent(params.event, userId, result.value);
+      break;
+    }
+  }
 
-  await updateEvent(params.event, userId, result.value);
   return json(null, await addToast(request, 'Call for paper updated.'));
 };
 
@@ -40,59 +54,14 @@ export default function EventCfpSettingsRoute() {
   const errors = useActionData<typeof action>();
 
   return (
-    <Card as="section">
-      <Card.Title>
-        <H2>Call for paper</H2>
-      </Card.Title>
+    <>
+      {event.type === 'CONFERENCE' ? (
+        <ConferenceCfpOpening cfpStart={event.cfpStart} cfpEnd={event.cfpEnd} errors={errors} />
+      ) : (
+        <MeetupCfpOpening cfpStart={event.cfpStart} />
+      )}
 
-      <Form method="POST">
-        <Card.Content>
-          <input type="hidden" name="type" value={event.type} />
-          {event.type === 'CONFERENCE' ? (
-            <div className="space-y-4">
-              <DateRangeInput
-                start={{ name: 'cfpStart', label: 'Opening date', value: event.cfpStart }}
-                end={{ name: 'cfpEnd', label: 'Closing date', value: event.cfpEnd }}
-                error={errors?.cfpStart}
-              />
-              <AlertInfo>
-                Define the period during which the call for papers should be open. The opening and closing of the CFP
-                will be done automatically according to these dates and times.
-              </AlertInfo>
-            </div>
-          ) : (
-            <Checkbox
-              id="cfpStart"
-              name="cfpStart"
-              description="The call for paper will be opened until this checkbox is checked."
-              value={new Date().toISOString()}
-              defaultChecked={Boolean(event.cfpStart)}
-            >
-              Call for paper opened
-            </Checkbox>
-          )}
-          <Input
-            name="maxProposals"
-            label="Maximum of proposals per speaker"
-            type="number"
-            defaultValue={event.maxProposals || ''}
-            autoComplete="off"
-            description="Optional. Limits the number of proposals a speaker can submit to the event."
-            error={errors?.maxProposals}
-          />
-          <Input
-            name="codeOfConductUrl"
-            label="Code of conduct URL"
-            defaultValue={event.codeOfConductUrl || ''}
-            description="Optional. Speakers will be required to agree to the code of conduct before submitting their proposal."
-            error={errors?.codeOfConductUrl}
-          />
-        </Card.Content>
-
-        <Card.Actions>
-          <Button>Update CFP preferences</Button>
-        </Card.Actions>
-      </Form>
-    </Card>
+      <CommonCfpSetting maxProposals={event.maxProposals} codeOfConductUrl={event.codeOfConductUrl} errors={errors} />
+    </>
   );
 }
