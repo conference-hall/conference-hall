@@ -53,7 +53,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   return json(
     {
       user,
-      toast: toast.get('message'),
+      toast: toast.get('message') as ToastData,
       firebase: {
         FIREBASE_API_KEY: config.FIREBASE_API_KEY,
         FIREBASE_AUTH_DOMAIN: config.FIREBASE_AUTH_DOMAIN,
