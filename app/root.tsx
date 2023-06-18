@@ -31,7 +31,7 @@ export function meta() {
   return [
     { charset: 'utf-8' },
     { title: 'Conference Hall' },
-    { viewport: 'width=device-width,initial-scale=1' },
+    { name: 'viewport', content: 'width=device-width, initial-scale=1' },
     { name: 'robots', content: 'noindex' },
   ];
 }
