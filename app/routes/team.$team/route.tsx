@@ -1,7 +1,6 @@
 import { parse } from '@conform-to/zod';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
-import { redirect } from '@remix-run/node';
-import { json } from '@remix-run/node';
+import { json, redirect } from '@remix-run/node';
 import { Outlet, useLoaderData, useOutletContext, useRouteLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 

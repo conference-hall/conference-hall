@@ -1,7 +1,6 @@
 import { parse } from '@conform-to/zod';
 import type { LoaderArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
-import { redirect } from '@remix-run/node';
+import { json, redirect } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
 
 import { DetailsForm } from '~/components/proposals/forms/DetailsForm';

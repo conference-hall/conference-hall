@@ -1,7 +1,7 @@
 {
-  "private": true,
   "name": "conference-hall-remix",
-  "description": "",
+  "private": true,
+  "sideEffects": false,
   "license": "MIT",
   "scripts": {
     "build": "run-s build:*",
@@ -106,6 +106,5 @@
   },
   "engines": {
     "node": ">=18"
-  },
-  "sideEffects": false
+  }
 }

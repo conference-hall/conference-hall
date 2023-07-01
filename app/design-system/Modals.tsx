@@ -1,8 +1,7 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/20/solid';
 import type { VariantProps } from 'class-variance-authority';
-import { cva } from 'class-variance-authority';
-import { cx } from 'class-variance-authority';
+import { cva, cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
 import { Fragment } from 'react';
 
