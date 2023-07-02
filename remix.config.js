@@ -2,6 +2,7 @@
  * @type {import('@remix-run/dev/config').AppConfig}
  */
 module.exports = {
+  cacheDirectory: './node_modules/.cache/remix',
   serverModuleFormat: 'cjs',
   serverDependenciesToBundle: [
     /^marked.*/,
@@ -10,6 +11,7 @@ module.exports = {
     'escape-string-regexp',
   ],
   tailwind: true,
+  watchPaths: ['./tailwind.config.js'],
   future: {
     v2_dev: true,
     v2_routeConvention: true,
