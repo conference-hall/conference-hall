@@ -1,5 +1,9 @@
 # Conference Hall Remix
 
+## Stack
+
+Remix / Tailwind / HeadlessUI / Conform / Zod / Prisma / Firebase Auth / Mailgun / Express / Typescript / Postgresql
+
 ## Prerequisites
 
 - Docker
@@ -13,13 +17,13 @@ Install dependencies:
 npm install
 ```
 
-Start Docker image for Postgres DB and Firebase Auth emulator:
+Start Docker image for Postgres DB, Firebase emulators and MailHog:
 
 ```sh
 docker compose up -d
 ```
 
-Start the app in development mode, rebuilding assets on file changes.
+Start the development server:
 
 ```sh
 npm run dev
@@ -33,16 +37,9 @@ npm run dev
 npm run db:reset
 ```
 
-### Export emulators data
-
-```
-docker exec -it ch_firebase_emulators sh
-firebase --project=conference-hall emulators:export fixtures
-```
-
 ### Execute tests
 
-The docker image for Postgres DB and Firebase Auth emulator MUST be running.
+The docker image for Postgres DB and Firebase emulators MUST be running.
 
 Execute unit and integration tests:
 
@@ -50,8 +47,33 @@ Execute unit and integration tests:
 npm run test
 ```
 
-Execute end-to-end tests:
+Execute end-to-end tests (Dev server MUST be running):
 
 ```
-npm run cy:run
+npm run cypress
+```
+
+### Execute linting
+
+```
+npm run lint
+```
+
+### Execute typecript check
+
+```
+npm run tsc
+```
+
+### Components stories with Ladle
+
+```
+npm run story
+```
+
+### Export emulators data
+
+```
+docker exec -it ch_firebase_emulators sh
+firebase --project=conference-hall emulators:export fixtures
 ```

@@ -21,8 +21,10 @@ describe('#createOrganization', () => {
     expect(team?.name).toBe('Hello world');
     expect(team?.slug).toBe('hello-world');
 
+    if (!team) throw new Error('Team not found');
+
     const orgaMember = await db.teamMember.findUnique({
-      where: { memberId_teamId: { memberId: user.id, teamId: team?.id! } },
+      where: { memberId_teamId: { memberId: user.id, teamId: team.id } },
     });
     expect(orgaMember?.role).toBe(TeamRole.OWNER);
   });

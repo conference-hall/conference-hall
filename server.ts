@@ -1,5 +1,7 @@
 import { createRequestHandler } from '@remix-run/express';
 import { broadcastDevReady, installGlobals } from '@remix-run/node';
+import chokidar from 'chokidar';
+import closeWithGrace from 'close-with-grace';
 import compression from 'compression';
 import express from 'express';
 import rateLimit from 'express-rate-limit';
@@ -24,8 +26,7 @@ app.disable('x-powered-by');
 // Remix fingerprints its assets so we can cache forever.
 app.use('/build', express.static('public/build', { immutable: true, maxAge: '1y' }));
 
-// Everything else (like favicon.ico) is cached for an hour. You may want to be
-// more aggressive with this caching.
+// Everything else (like favicon.ico) is cached for an hour.
 app.use(express.static('public', { maxAge: '1h' }));
 
 app.use(morgan('tiny'));
@@ -52,32 +53,46 @@ app.use('/api', apiLimiter);
 app.all(
   '*',
   MODE === 'production'
-    ? createRequestHandler({ build: require(BUILD_DIR), mode: MODE })
-    : (...args) => {
-        purgeRequireCache();
-
-        return createRequestHandler({
-          build: require(BUILD_DIR),
-          mode: MODE,
-        })(...args);
+    ? (req, res, next) => {
+        try {
+          return createRequestHandler({
+            build: require(BUILD_DIR),
+            mode: MODE,
+          })(req, res, next);
+        } catch (error) {
+          next(error);
+        }
       }
+    : createRequestHandler({ build: require(BUILD_DIR), mode: MODE })
 );
 
-app.listen(PORT, () => {
-  console.log(`✅ App started on http://localhost:${PORT}`);
+// Start the express server
+const server = app.listen(PORT, () => {
+  console.log(`🚀 App started on http://localhost:${PORT}`);
 
   if (process.env.NODE_ENV === 'development') {
-    const build = require(BUILD_DIR);
-    broadcastDevReady(build);
+    broadcastDevReady(require(BUILD_DIR));
   }
 });
 
-function purgeRequireCache() {
-  // purge require cache on requests for "server side HMR" this won't let
-  // you have in-memory objects between requests in development,
-  for (const key in require.cache) {
-    if (key.startsWith(BUILD_DIR)) {
-      delete require.cache[key];
+// Close the express server gracefully
+closeWithGrace(async () => {
+  await new Promise((resolve, reject) => {
+    server.close((e) => (e ? reject(e) : resolve('ok')));
+  });
+});
+
+// during dev, we'll keep the build module up to date with the changes
+if (process.env.NODE_ENV === 'development') {
+  const watcher = chokidar.watch(BUILD_DIR, {
+    ignored: ['**/**.map'],
+  });
+  watcher.on('all', () => {
+    for (const key in require.cache) {
+      if (key.startsWith(BUILD_DIR)) {
+        delete require.cache[key];
+      }
     }
-  }
+    broadcastDevReady(require(BUILD_DIR));
+  });
 }

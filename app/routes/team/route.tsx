@@ -1,6 +1,5 @@
 import type { LoaderArgs } from '@remix-run/node';
-import { redirect } from '@remix-run/node';
-import { json } from '@remix-run/node';
+import { json, redirect } from '@remix-run/node';
 import { Outlet } from '@remix-run/react';
 
 import { Footer } from '~/components/Footer';

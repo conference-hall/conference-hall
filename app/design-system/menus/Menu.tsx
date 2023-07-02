@@ -1,7 +1,6 @@
 import { Menu as MenuDropdown } from '@headlessui/react';
 import type { FormProps, LinkProps } from '@remix-run/react';
-import { Form } from '@remix-run/react';
-import { Link } from '@remix-run/react';
+import { Form, Link } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
 import { Fragment } from 'react';
