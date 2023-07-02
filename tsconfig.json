@@ -19,5 +19,8 @@
     "allowJs": true,
     "isolatedModules": true,
     "skipLibCheck": true
+  },
+  "ts-node": {
+    "swc": true
   }
 }
