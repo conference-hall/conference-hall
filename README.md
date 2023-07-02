@@ -1,5 +1,9 @@
 # Conference Hall Remix
 
+## Stack
+
+Remix / Tailwind / HeadlessUI / Conform / Zod / Prisma / Firebase Auth / Mailgun / Express / Typescript / Postgresql
+
 ## Prerequisites
 
 - Docker
@@ -13,7 +17,7 @@ Install dependencies:
 npm install
 ```
 
-Start Docker image for Postgres DB and Firebase emulators:
+Start Docker image for Postgres DB, Firebase emulators and MailHog:
 
 ```sh
 docker compose up -d
@@ -59,6 +63,12 @@ npm run lint
 
 ```
 npm run tsc
+```
+
+### Components stories with Ladle
+
+```
+npm run story
 ```
 
 ### Export emulators data
