@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "dotenv -e .env.dev -- npm-run-all db:migrate dev:remix",
-    "dev:remix": "remix dev -c \"npm run start:server\" --no-restart",
+    "dev:remix": "remix dev -c \"npm run dev:server\" --no-restart",
+    "dev:server": "tsx watch ./server.ts",
     "build": "remix build",
     "start": "run-s start:*",
     "start:db": "prisma migrate deploy",
