@@ -34,7 +34,7 @@ export const useCheckboxSelection = (items: Array<string>) => {
       }
       return setSelected(selection.filter((id) => id !== item));
     },
-    [selection]
+    [selection],
   );
 
   const isSelected = useCallback((item: string) => selection.includes(item), [selection]);
@@ -49,7 +49,7 @@ export const useCheckboxSelection = (items: Array<string>) => {
       toggleAll,
       reset,
     }),
-    [checkboxRef, selection, checked, isSelected, onSelect, toggleAll, reset]
+    [checkboxRef, selection, checked, isSelected, onSelect, toggleAll, reset],
   );
 
   return value;

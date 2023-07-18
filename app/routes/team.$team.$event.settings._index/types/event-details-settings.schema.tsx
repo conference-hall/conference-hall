@@ -19,5 +19,5 @@ export const EventDetailsSettingsSchema = z
       if (conferenceStart && conferenceEnd && conferenceStart > conferenceEnd) return false;
       return true;
     },
-    { path: ['conferenceStart'], message: 'Conference start date must be after the conference end date.' }
+    { path: ['conferenceStart'], message: 'Conference start date must be after the conference end date.' },
   );

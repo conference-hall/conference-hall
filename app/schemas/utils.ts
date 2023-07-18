@@ -35,7 +35,7 @@ export const numeric: InputType<z.ZodNumber> = (schema = z.number()) =>
           .trim()
           .transform((val) => Number(val))
           .refine((val) => !Number.isNaN(val)),
-      ])
+      ]),
     ),
-    schema
+    schema,
   ) as any;

@@ -62,7 +62,7 @@ export const loader = async ({ request }: LoaderArgs) => {
         useFirebaseEmulators: config.useEmulators,
       },
     },
-    { headers: { 'Set-Cookie': await commitToastSession(toast) } }
+    { headers: { 'Set-Cookie': await commitToastSession(toast) } },
   );
 };
 

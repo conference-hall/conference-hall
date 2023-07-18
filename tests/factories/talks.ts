@@ -1,4 +1,4 @@
-import * as fake from '@ngneat/falso';
+import { randParagraph, randPost } from '@ngneat/falso';
 import type { Prisma, User } from '@prisma/client';
 import { TalkLevel } from '@prisma/client';
 
@@ -23,9 +23,9 @@ export const talkFactory = (options: FactoryOptions) => {
   const { attributes = {}, traits = [], speakers } = options;
 
   const defaultAttributes: Prisma.TalkCreateInput = {
-    title: fake.randPost().title,
-    abstract: fake.randParagraph(),
-    references: fake.randParagraph(),
+    title: randPost().title,
+    abstract: randParagraph(),
+    references: randParagraph(),
     languages: ['en'],
     level: TalkLevel.INTERMEDIATE,
     creator: { connect: { id: speakers[0].id } },

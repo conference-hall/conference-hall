@@ -91,7 +91,7 @@ describe('#addProposalMessage', () => {
     const user = await userFactory();
     const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
     await expect(addProposalMessage(event.slug, proposal.id, user.id, 'My message')).rejects.toThrowError(
-      ForbiddenOperationError
+      ForbiddenOperationError,
     );
   });
 });
@@ -136,7 +136,7 @@ describe('#removeProposalMessage', () => {
     const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
     const message = await messageFactory({ user, proposal });
     await expect(removeProposalMessage(event.slug, proposal.id, user.id, message.id)).rejects.toThrowError(
-      ForbiddenOperationError
+      ForbiddenOperationError,
     );
   });
 });

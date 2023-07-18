@@ -36,9 +36,9 @@ export class MailhogProvider implements IEmailProvider {
             subject: data.subject,
             html: data.html,
           },
-          recipientVariables
-        )
-      )
+          recipientVariables,
+        ),
+      ),
     );
   }
 }

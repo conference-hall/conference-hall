@@ -73,7 +73,7 @@ const layout = cva(
       size: { m: 'sm:max-w-lg', l: 'sm:max-w-4xl', xl: 'sm:max-w-6xl' },
     },
     defaultVariants: { p: 8, size: 'm' },
-  }
+  },
 );
 
 type LayoutVariantProps = VariantProps<typeof layout>;

@@ -24,5 +24,5 @@ export const CfpConferenceOpeningSchema = z
       if (cfpStart && cfpEnd && cfpStart > cfpEnd) return false;
       return true;
     },
-    { path: ['cfpStart'], message: 'Call for paper start date must be after the end date.' }
+    { path: ['cfpStart'], message: 'Call for paper start date must be after the end date.' },
   );

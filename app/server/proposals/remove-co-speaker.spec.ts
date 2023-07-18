@@ -42,7 +42,7 @@ describe('#removeCoSpeakerFromSubmission', () => {
 
     const updater = await userFactory();
     await expect(removeCoSpeakerFromSubmission(updater.id, talk.id, event.slug, cospeaker.id)).rejects.toThrowError(
-      ProposalNotFoundError
+      ProposalNotFoundError,
     );
   });
 
@@ -52,7 +52,7 @@ describe('#removeCoSpeakerFromSubmission', () => {
 
     const cospeaker = await userFactory();
     await expect(removeCoSpeakerFromSubmission(speaker.id, 'XXX', event.slug, cospeaker.id)).rejects.toThrowError(
-      ProposalNotFoundError
+      ProposalNotFoundError,
     );
   });
 });
@@ -91,7 +91,7 @@ describe('#removeCoSpeakerFromProposal', () => {
 
     const updater = await userFactory();
     await expect(removeCoSpeakerFromProposal(updater.id, proposal.id, cospeaker.id)).rejects.toThrowError(
-      ProposalNotFoundError
+      ProposalNotFoundError,
     );
   });
 
@@ -100,7 +100,7 @@ describe('#removeCoSpeakerFromProposal', () => {
 
     const cospeaker = await userFactory();
     await expect(removeCoSpeakerFromProposal(speaker.id, 'XXX', cospeaker.id)).rejects.toThrowError(
-      ProposalNotFoundError
+      ProposalNotFoundError,
     );
   });
 });

@@ -15,7 +15,7 @@ const button = cva(
       size: { s: 'p-1', m: 'p-1.5' },
     },
     defaultVariants: { variant: 'primary', size: 'm' },
-  }
+  },
 );
 
 const icon = cva('', {

@@ -37,7 +37,7 @@ app.use(
   createProxyMiddleware({
     target: `https://${FIREBASE_PROJECT_ID}.firebaseapp.com`,
     changeOrigin: true,
-  })
+  }),
 );
 
 // Rate limits
@@ -63,7 +63,7 @@ app.all(
           next(error);
         }
       }
-    : createRequestHandler({ build: require(BUILD_DIR), mode: MODE })
+    : createRequestHandler({ build: require(BUILD_DIR), mode: MODE }),
 );
 
 // Start the express server

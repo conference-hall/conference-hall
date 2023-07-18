@@ -23,7 +23,7 @@ export const handle = { step: 'root' };
 
 export const meta = mergeMeta<typeof loader>(
   ({ data }) => (data ? [{ title: `${data.event.name} submission | Conference Hall` }] : []),
-  ({ data }) => (data ? eventSocialCard({ name: data.event.name, slug: data.event.slug, logo: data.event.logo }) : [])
+  ({ data }) => (data ? eventSocialCard({ name: data.event.name, slug: data.event.slug, logo: data.event.logo }) : []),
 );
 
 export const loader = async ({ request, params }: LoaderArgs) => {

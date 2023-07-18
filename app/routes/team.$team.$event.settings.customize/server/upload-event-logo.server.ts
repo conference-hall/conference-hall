@@ -16,7 +16,7 @@ export async function uploadEventLogo(eventSlug: string, userId: string, request
 
   const formData = await unstable_parseMultipartFormData(
     request,
-    uploadToStorageHandler({ name: 'logo', maxFileSize: 300_000 })
+    uploadToStorageHandler({ name: 'logo', maxFileSize: 300_000 }),
   );
 
   const result = z.string().url().safeParse(formData.get('logo'));

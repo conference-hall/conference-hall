@@ -48,7 +48,7 @@ function appendEmails(formData: FormData, name: string, emails?: string[]) {
 function toFormData(
   data: Email,
   recipentVariables: RecipientVariables = {},
-  providerVariables: ProviderVariables = {}
+  providerVariables: ProviderVariables = {},
 ) {
   const formData = new FormData();
 

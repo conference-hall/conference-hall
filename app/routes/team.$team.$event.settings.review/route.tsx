@@ -57,7 +57,7 @@ export default function EventReviewSettingsRoute() {
             onChange={(checked) =>
               fetcher.submit(
                 { _setting: 'displayProposalsReviews', displayProposalsReviews: String(checked) },
-                { method: 'POST' }
+                { method: 'POST' },
               )
             }
           />
@@ -68,7 +68,7 @@ export default function EventReviewSettingsRoute() {
             onChange={(checked) =>
               fetcher.submit(
                 { _setting: 'displayProposalsSpeakers', displayProposalsSpeakers: String(checked) },
-                { method: 'POST' }
+                { method: 'POST' },
               )
             }
           />

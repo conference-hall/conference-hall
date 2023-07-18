@@ -12,7 +12,7 @@ export function TeamTabs({ slug, role }: Props) {
       { to: `/team/${slug}`, label: 'Events', enabled: true, end: true },
       { to: `/team/${slug}/settings`, label: 'Settings', enabled: role === 'OWNER' },
     ],
-    [slug, role]
+    [slug, role],
   );
 
   return (

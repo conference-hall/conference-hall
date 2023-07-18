@@ -67,7 +67,7 @@ describe('#updateProposal', () => {
         level: null,
         references: null,
         languages: [],
-      })
+      }),
     ).rejects.toThrowError(ForbiddenOperationError);
   });
 
@@ -81,7 +81,7 @@ describe('#updateProposal', () => {
         level: null,
         references: null,
         languages: [],
-      })
+      }),
     ).rejects.toThrowError(ForbiddenOperationError);
   });
 });
@@ -115,7 +115,7 @@ describe('#updateProposalsStatus', () => {
 
   it('throws an error if user has not a owner or member role in the team', async () => {
     await expect(updateProposalsStatus(event.slug, reviewer.id, [], 'ACCEPTED')).rejects.toThrowError(
-      ForbiddenOperationError
+      ForbiddenOperationError,
     );
   });
 
@@ -123,7 +123,7 @@ describe('#updateProposalsStatus', () => {
     const user = await userFactory();
     const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
     await expect(updateProposalsStatus(event.slug, user.id, [proposal.id], 'ACCEPTED')).rejects.toThrowError(
-      ForbiddenOperationError
+      ForbiddenOperationError,
     );
   });
 });

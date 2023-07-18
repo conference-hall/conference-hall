@@ -1,4 +1,12 @@
-import * as fake from '@ngneat/falso';
+import {
+  randAvatar,
+  randCity,
+  randCompanyName,
+  randEmail,
+  randFullName,
+  randParagraph,
+  randUserName,
+} from '@ngneat/falso';
 import type { Prisma } from '@prisma/client';
 
 import { db } from '../../app/libs/db';
@@ -38,16 +46,16 @@ export const userFactory = async (options: FactoryOptions = {}) => {
   const { attributes = {}, traits = [], isOrganizer } = options;
 
   const defaultAttributes: Prisma.UserCreateInput = {
-    name: fake.randFullName(),
-    email: fake.randEmail(),
-    picture: fake.randAvatar(),
-    address: fake.randCity(),
-    bio: fake.randParagraph(),
-    references: fake.randParagraph(),
-    company: fake.randCompanyName(),
+    name: randFullName(),
+    email: randEmail(),
+    picture: randAvatar(),
+    address: randCity(),
+    bio: randParagraph(),
+    references: randParagraph(),
+    company: randCompanyName(),
     socials: {
-      github: fake.randUserName(),
-      twitter: fake.randUserName(),
+      github: randUserName(),
+      twitter: randUserName(),
     },
   };
 

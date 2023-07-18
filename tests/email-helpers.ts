@@ -43,7 +43,7 @@ export async function getEmails() {
     hasEmailWithContent(to: string | null, content: string) {
       if (!to) return {};
       const results = emails.filter(
-        (email) => email.Content.Headers.To.includes(to) && email.Content.Body.includes(content)
+        (email) => email.Content.Headers.To.includes(to) && email.Content.Body.includes(content),
       );
       return results.length > 0;
     },

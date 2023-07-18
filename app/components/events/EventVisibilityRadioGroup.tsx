@@ -31,7 +31,7 @@ export default function EventVisibilityRadioGroup({
                 settingIdx === 0 ? 'rounded-tl-md rounded-tr-md' : '',
                 settingIdx === settings.length - 1 ? 'rounded-bl-md rounded-br-md' : '',
                 checked ? 'z-10 border-indigo-200 bg-indigo-50' : 'border-gray-200',
-                'relative flex cursor-pointer border p-4 focus:outline-none'
+                'relative flex cursor-pointer border p-4 focus:outline-none',
               )
             }
           >
@@ -41,7 +41,7 @@ export default function EventVisibilityRadioGroup({
                   className={cx(
                     checked ? 'border-transparent bg-indigo-600' : 'border-gray-300 bg-white',
                     active ? 'ring-2 ring-indigo-500 ring-offset-2' : '',
-                    'mt-0.5 flex h-4 w-4 shrink-0 cursor-pointer items-center justify-center rounded-full border'
+                    'mt-0.5 flex h-4 w-4 shrink-0 cursor-pointer items-center justify-center rounded-full border',
                   )}
                   aria-hidden="true"
                 >

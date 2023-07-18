@@ -35,7 +35,7 @@ export class ReviewsDetails {
         feeling: review.feeling,
         comment: review.comment,
       })),
-      'name'
+      'name',
     );
   }
 

@@ -9,6 +9,7 @@ module.exports = {
     '@sindresorhus/slugify',
     '@sindresorhus/transliterate',
     'escape-string-regexp',
+    '@ngneat/falso',
   ],
   tailwind: true,
   watchPaths: ['./tailwind.config.js'],

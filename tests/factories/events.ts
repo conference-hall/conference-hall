@@ -1,4 +1,4 @@
-import * as fake from '@ngneat/falso';
+import { rand, randEmail, randFullAddress, randParagraph, randSportsTeam, randUrl, randUuid } from '@ngneat/falso';
 import type { Prisma, Team } from '@prisma/client';
 import { EventType, EventVisibility } from '@prisma/client';
 
@@ -71,15 +71,15 @@ export const eventFactory = async (options: FactoryOptions = {}) => {
   const creator = await userFactory();
 
   const defaultAttributes: Prisma.EventCreateInput = {
-    name: fake.randSportsTeam(),
-    slug: `slug-${fake.randUuid()}`,
-    description: fake.randParagraph(),
-    address: fake.randFullAddress(),
-    logo: `https://picsum.photos/seed/${fake.randUuid()}/128`,
-    websiteUrl: fake.randUrl(),
-    contactEmail: fake.randEmail(),
-    codeOfConductUrl: fake.randUrl(),
-    type: fake.rand([EventType.CONFERENCE, EventType.MEETUP]),
+    name: randSportsTeam(),
+    slug: `slug-${randUuid()}`,
+    description: randParagraph(),
+    address: randFullAddress(),
+    logo: `https://picsum.photos/seed/${randUuid()}/128`,
+    websiteUrl: randUrl(),
+    contactEmail: randEmail(),
+    codeOfConductUrl: randUrl(),
+    type: rand([EventType.CONFERENCE, EventType.MEETUP]),
     visibility: EventVisibility.PUBLIC,
     creator: { connect: { id: creator.id } },
     team: { connect: { id: options.team.id } },

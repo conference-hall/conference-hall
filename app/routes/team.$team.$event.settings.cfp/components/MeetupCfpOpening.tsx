@@ -12,7 +12,7 @@ export function MeetupCfpOpening({ cfpStart }: Props) {
   const handleChange = (checked: boolean) => {
     fetcher.submit(
       { intent: 'save-cfp-meetup-opening', cfpStart: checked ? new Date().toISOString() : '' },
-      { method: 'POST' }
+      { method: 'POST' },
     );
   };
 

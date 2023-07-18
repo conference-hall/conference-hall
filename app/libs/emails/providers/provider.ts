@@ -27,7 +27,7 @@ export interface IEmailProvider {
   sendBatchEmail(
     email: Email,
     recipientVariables?: RecipientVariables,
-    providerVariables?: ProviderVariables
+    providerVariables?: ProviderVariables,
   ): Promise<void>;
 }
 

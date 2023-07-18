@@ -11,7 +11,7 @@ export async function searchProposals(
   eventSlug: string,
   userId: string,
   filters: ProposalsFilters,
-  page: Pagination = 1
+  page: Pagination = 1,
 ) {
   const event = await allowedForEvent(eventSlug, userId);
 

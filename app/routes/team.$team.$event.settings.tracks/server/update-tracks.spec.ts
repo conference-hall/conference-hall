@@ -56,14 +56,14 @@ describe('#saveFormat', () => {
 
   it('throws an error if user is not owner', async () => {
     await expect(saveFormat(event.slug, reviewer.id, { name: 'Hello world', description: null })).rejects.toThrowError(
-      ForbiddenOperationError
+      ForbiddenOperationError,
     );
   });
 
   it('throws an error if user does not belong to event team', async () => {
     const user = await userFactory();
     await expect(saveFormat(event.slug, user.id, { name: 'Hello world', description: null })).rejects.toThrowError(
-      ForbiddenOperationError
+      ForbiddenOperationError,
     );
   });
 });
@@ -112,14 +112,14 @@ describe('#saveCategory', () => {
 
   it('throws an error if user is not owner', async () => {
     await expect(
-      saveCategory(event.slug, reviewer.id, { name: 'Hello world', description: null })
+      saveCategory(event.slug, reviewer.id, { name: 'Hello world', description: null }),
     ).rejects.toThrowError(ForbiddenOperationError);
   });
 
   it('throws an error if user does not belong to event team', async () => {
     const user = await userFactory();
     await expect(saveCategory(event.slug, user.id, { name: 'Hello world', description: null })).rejects.toThrowError(
-      ForbiddenOperationError
+      ForbiddenOperationError,
     );
   });
 });

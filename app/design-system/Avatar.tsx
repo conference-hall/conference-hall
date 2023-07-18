@@ -74,7 +74,7 @@ export function Avatar({
     ring ? rings[size] : null,
     ring ? ringsColor[ringColor] : null,
     square ? square_sizes[size] : 'rounded-full',
-    className
+    className,
   );
 
   if (picture) {
@@ -181,7 +181,7 @@ function AvatarColor({
         'flex items-center justify-center font-heading font-medium text-gray-900/60',
         className,
         color,
-        text_sizes[size]
+        text_sizes[size],
       )}
     >
       {initial}

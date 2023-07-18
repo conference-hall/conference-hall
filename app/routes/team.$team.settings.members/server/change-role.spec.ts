@@ -30,7 +30,7 @@ describe('#changeMemberRole', () => {
     const team = await teamFactory({ owners: [owner] });
 
     await expect(changeMemberRole(team.slug, owner.id, owner.id, 'REVIEWER')).rejects.toThrowError(
-      ForbiddenOperationError
+      ForbiddenOperationError,
     );
   });
 
@@ -40,7 +40,7 @@ describe('#changeMemberRole', () => {
     const team = await teamFactory({ owners: [owner], members: [member] });
 
     await expect(changeMemberRole(team.slug, member.id, owner.id, 'REVIEWER')).rejects.toThrowError(
-      ForbiddenOperationError
+      ForbiddenOperationError,
     );
   });
 });

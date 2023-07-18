@@ -1,4 +1,4 @@
-import * as fake from '@ngneat/falso';
+import { randSportsTeam, randUuid } from '@ngneat/falso';
 import type { Prisma, User } from '@prisma/client';
 import { TeamRole } from '@prisma/client';
 
@@ -31,8 +31,8 @@ export const teamFactory = async (options: FactoryOptions = {}) => {
   const { attributes = {}, traits = [] } = options;
 
   const defaultAttributes: Prisma.TeamCreateInput = {
-    name: fake.randSportsTeam(),
-    slug: `slug-${fake.randUuid()}`,
+    name: randSportsTeam(),
+    slug: `slug-${randUuid()}`,
   };
 
   const data = {

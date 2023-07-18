@@ -35,6 +35,6 @@ export async function getSpeakers(eventSlug: string, proposalId: string, userId:
         survey: survey?.answers as SurveyData | undefined,
       };
     }),
-    'name'
+    'name',
   );
 }

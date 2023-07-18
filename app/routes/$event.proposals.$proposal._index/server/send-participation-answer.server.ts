@@ -7,7 +7,7 @@ import { ProposalDeclinedEmail } from './emails/proposal-declined-email';
 export async function sendParticipationAnswer(
   userId: string,
   proposalId: string,
-  participation: 'CONFIRMED' | 'DECLINED'
+  participation: 'CONFIRMED' | 'DECLINED',
 ) {
   const proposal = await db.proposal.findFirst({
     where: { id: proposalId, speakers: { some: { id: userId } } },

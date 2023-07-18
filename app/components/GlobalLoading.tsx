@@ -16,7 +16,7 @@ function GlobalLoadingComponent() {
     if (active) setAnimationComplete(false);
 
     Promise.allSettled(ref.current.getAnimations().map(({ finished }) => finished)).then(
-      () => !active && setAnimationComplete(true)
+      () => !active && setAnimationComplete(true),
     );
   }, [active]);
 
@@ -34,7 +34,7 @@ function GlobalLoadingComponent() {
           state === 'idle' && animationComplete && 'w-0 opacity-0 transition-none',
           state === 'submitting' && 'w-4/12',
           state === 'loading' && 'w-10/12',
-          state === 'idle' && !animationComplete && 'w-full'
+          state === 'idle' && !animationComplete && 'w-full',
         )}
       />
     </div>

@@ -86,7 +86,7 @@ describe('#saveSurvey', () => {
         transports: null,
         diet: ['vegetarian'],
         info: 'World',
-      })
+      }),
     ).rejects.toThrowError(EventNotFoundError);
   });
 });
