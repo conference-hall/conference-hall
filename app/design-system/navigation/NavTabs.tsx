@@ -66,7 +66,7 @@ export function NavTabs({ tabs, py = 0, variant = 'light' }: Props) {
           </NavLink>
         ) : (
           <NavTabDropdown key={tab.label} variant={variant} tab={tab} />
-        )
+        ),
       )}
     </nav>
   );

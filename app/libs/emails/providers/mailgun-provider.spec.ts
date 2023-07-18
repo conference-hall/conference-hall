@@ -55,7 +55,7 @@ describe('mailgun provider', () => {
         html: 'html',
       },
       { 'to1@example.net': { var1: 'user-variable1' } },
-      { 'v:var1': 'variable1', 'v:var2': 'variable2' }
+      { 'v:var1': 'variable1', 'v:var2': 'variable2' },
     );
 
     // then

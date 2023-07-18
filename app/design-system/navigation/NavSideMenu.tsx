@@ -25,6 +25,6 @@ export function NavSideMenu({ items, noActive, className, ...rest }: Props) {
 function menuStyles(isActive: boolean, noActive?: boolean) {
   return cx(
     'group relative flex items-center rounded-md px-3 py-2 text-sm text-gray-900 hover:bg-gray-100 hover:text-gray-900',
-    { 'bg-gray-100 font-medium': isActive && !noActive }
+    { 'bg-gray-100 font-medium': isActive && !noActive },
   );
 }

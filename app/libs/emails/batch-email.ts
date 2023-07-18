@@ -63,9 +63,9 @@ export abstract class BatchEmail<R extends Record<string, string>> {
             }),
           },
           recipients,
-          this.options?.enableDeliberationVars ? MAILGUN_DELIBERATION_VARS : {}
+          this.options?.enableDeliberationVars ? MAILGUN_DELIBERATION_VARS : {},
         );
-      })
+      }),
     );
   }
 }

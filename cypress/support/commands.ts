@@ -129,7 +129,7 @@ Cypress.Commands.add('login', (username = 'Clark Kent') => {
       cy.findByText(username).click();
       cy.findByRole('searchbox', { name: 'Search conferences and meetups.' }).should('exist');
     },
-    { cacheAcrossSpecs: true }
+    { cacheAcrossSpecs: true },
   );
 });
 

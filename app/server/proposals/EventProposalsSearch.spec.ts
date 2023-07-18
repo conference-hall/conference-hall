@@ -83,8 +83,8 @@ describe('#searchProposals', () => {
             { name: 'ACCEPTED', count: 1 },
             { name: 'REJECTED', count: 1 },
           ],
-          'name'
-        )
+          'name',
+        ),
       );
     });
   });

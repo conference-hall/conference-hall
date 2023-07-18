@@ -35,7 +35,7 @@ const dotBadge = cva(
       pill: { true: 'rounded-full', false: 'rounded-md' },
     },
     defaultVariants: { color: 'gray', pill: false },
-  }
+  },
 );
 
 type BadgeProps = { children: React.ReactNode } & VariantProps<typeof defaultBadge>;

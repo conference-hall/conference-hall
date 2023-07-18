@@ -76,7 +76,7 @@ export default function Login() {
       if (!authProvider) return;
       await signInWithRedirect(getClientAuth(), authProvider);
     },
-    [hydrated, redirectTo]
+    [hydrated, redirectTo],
   );
 
   return (

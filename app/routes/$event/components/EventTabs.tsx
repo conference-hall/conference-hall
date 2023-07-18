@@ -13,7 +13,7 @@ export function EventTabs({ slug, type, surveyEnabled }: Props) {
       { to: `/${slug}/proposals`, label: 'Your proposals', enabled: true },
       { to: `/${slug}/survey`, label: 'Survey', enabled: surveyEnabled },
     ],
-    [slug, type, surveyEnabled]
+    [slug, type, surveyEnabled],
   );
 
   return (

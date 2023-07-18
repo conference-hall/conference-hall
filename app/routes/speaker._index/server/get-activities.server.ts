@@ -64,7 +64,7 @@ async function lastEventsSubmitted(speakerId: string) {
       JOIN _speakers_proposals ON _speakers_proposals."A" = proposals.id AND _speakers_proposals."B" = ${speakerId}
       GROUP BY 1
       ORDER BY lastUpdate DESC
-    `
+    `,
   );
   return results.map(({ id }) => id);
 }

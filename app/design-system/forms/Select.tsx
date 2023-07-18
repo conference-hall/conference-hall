@@ -21,7 +21,7 @@ export default function Select({ name, label, options, value, onChange, classNam
     (id: string) => {
       if (onChange) onChange(name, id);
     },
-    [name, onChange]
+    [name, onChange],
   );
 
   return (
@@ -49,7 +49,7 @@ export default function Select({ name, label, options, value, onChange, classNam
                     className={({ active }) =>
                       cx(
                         active ? 'bg-indigo-600 text-white' : 'text-gray-900',
-                        'relative cursor-default select-none py-2 pl-8 pr-4'
+                        'relative cursor-default select-none py-2 pl-8 pr-4',
                       )
                     }
                     value={option.id}
@@ -64,7 +64,7 @@ export default function Select({ name, label, options, value, onChange, classNam
                           <span
                             className={cx(
                               active ? 'text-white' : 'text-indigo-600',
-                              'absolute inset-y-0 left-0 flex items-center pl-1.5'
+                              'absolute inset-y-0 left-0 flex items-center pl-1.5',
                             )}
                           >
                             <CheckIcon className="h-5 w-5" aria-hidden="true" />

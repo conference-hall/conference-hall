@@ -11,5 +11,5 @@ export const dateValidator = z.preprocess((d: any) => (d ? new Date(d) : null), 
 
 export const checkboxValidator = z.preprocess(
   (b) => (b === undefined ? undefined : b === 'true'),
-  z.boolean().optional()
+  z.boolean().optional(),
 );

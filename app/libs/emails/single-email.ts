@@ -41,7 +41,7 @@ export abstract class SingleEmail<R extends Record<string, string>> {
           eventSlug: this.event.slug,
         }),
       },
-      this.recipients
+      this.recipients,
     );
   }
 }

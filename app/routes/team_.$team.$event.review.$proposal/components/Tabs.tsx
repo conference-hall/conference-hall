@@ -33,7 +33,7 @@ export function ReviewTabs({ speakersCount, reviewsCount, messagesCount, display
         enabled: true,
       },
     ],
-    [team, event, proposal, search, speakersCount, reviewsCount, messagesCount, displayReviews]
+    [team, event, proposal, search, speakersCount, reviewsCount, messagesCount, displayReviews],
   );
 
   return (

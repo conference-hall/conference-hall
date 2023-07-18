@@ -14,7 +14,7 @@ export type InputProps = {
 
 function InputField(
   { name, label, description, type = 'text', addon, className, icon: Icon, error, ...rest }: InputProps,
-  ref: Ref<HTMLInputElement>
+  ref: Ref<HTMLInputElement>,
 ) {
   const wrapperStyles = cx(baseStyles, {
     [defaultStyles]: !error,

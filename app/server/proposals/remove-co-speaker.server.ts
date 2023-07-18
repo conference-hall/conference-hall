@@ -5,7 +5,7 @@ export async function removeCoSpeakerFromSubmission(
   userId: string,
   talkId: string,
   eventSlug: string,
-  coSpeakerId: string
+  coSpeakerId: string,
 ) {
   const proposal = await db.proposal.findFirst({
     where: {

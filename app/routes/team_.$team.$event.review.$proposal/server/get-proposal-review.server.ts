@@ -12,7 +12,7 @@ export async function getProposalReview(
   eventSlug: string,
   proposalId: string,
   userId: string,
-  filters: ProposalsFilters
+  filters: ProposalsFilters,
 ) {
   const event = await allowedForEvent(eventSlug, userId);
 

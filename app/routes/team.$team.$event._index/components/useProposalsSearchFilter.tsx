@@ -15,14 +15,14 @@ export function useProposalsSearchFilter() {
       }
       return { pathname, search: searchParams.toString() };
     },
-    [pathname, searchParams]
+    [pathname, searchParams],
   );
 
   const addFilterFor = useCallback(
     (name: string, value: string) => {
       navigate(filterPathFor(name, value));
     },
-    [navigate, filterPathFor]
+    [navigate, filterPathFor],
   );
 
   return { resetPath: pathname, filterPathFor, addFilterFor };

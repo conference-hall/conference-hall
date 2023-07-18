@@ -7,7 +7,7 @@ import { db } from '../../../../libs/db';
 
 function buildPayload(
   event: Event & { team: Team },
-  proposal: Proposal & { speakers: User[]; categories: EventCategory[]; formats: EventFormat[] }
+  proposal: Proposal & { speakers: User[]; categories: EventCategory[]; formats: EventFormat[] },
 ) {
   const attachment = {
     fallback: `New Talk submitted to ${event.name}`,

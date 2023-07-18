@@ -20,7 +20,7 @@ import { getTalk } from '~/server/talks/get-talk.server';
 import { removeCoSpeakerFromTalk } from '~/server/talks/remove-co-speaker.server';
 
 export const meta = mergeMeta<typeof loader>(({ data }) =>
-  data ? [{ title: `Edit | ${data?.title} | Conference Hall` }] : []
+  data ? [{ title: `Edit | ${data?.title} | Conference Hall` }] : [],
 );
 
 export const loader = async ({ request, params }: LoaderArgs) => {

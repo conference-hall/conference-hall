@@ -29,7 +29,7 @@ describe('#updateTeam', () => {
     const team = await teamFactory({ members: [user] });
 
     await expect(updateTeam(team.slug, user.id, { name: 'name', slug: 'slug' })).rejects.toThrowError(
-      ForbiddenOperationError
+      ForbiddenOperationError,
     );
   });
 

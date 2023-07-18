@@ -32,7 +32,7 @@ export async function getUser(userId: string | null) {
         name: member.team.name,
         role: member.role,
       })),
-      'name'
+      'name',
     ),
     notifications,
     isOrganizer: Boolean(user.organizerKey || user.teams.length > 0),

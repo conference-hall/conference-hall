@@ -31,7 +31,7 @@ type Props = { value: Review; onChange: (index: number) => void };
 
 export function ReviewNoteSelector({ value, onChange }: Props) {
   const [selectedIndex, setSelectedIndex] = useState<number | undefined>(
-    options.findIndex((option) => option.value === value.note && option.feeling === value.feeling)
+    options.findIndex((option) => option.value === value.note && option.feeling === value.feeling),
   );
   const [overIndex, setOverIndex] = useState<number>(-1);
 
@@ -44,7 +44,7 @@ export function ReviewNoteSelector({ value, onChange }: Props) {
         [option.fill]: currentSelected,
       });
     },
-    [selectedIndex, overIndex]
+    [selectedIndex, overIndex],
   );
 
   const handleChange = (index: string) => {

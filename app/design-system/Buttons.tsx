@@ -25,7 +25,7 @@ export const button = cva(
       block: { true: 'sm:w-full' },
     },
     defaultVariants: { variant: 'primary', size: 'm' },
-  }
+  },
 );
 
 const icon = cva('', {

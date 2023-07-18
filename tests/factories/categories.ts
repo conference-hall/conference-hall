@@ -1,4 +1,4 @@
-import * as fake from '@ngneat/falso';
+import { randCatchPhrase, randParagraph } from '@ngneat/falso';
 import type { Event, Prisma } from '@prisma/client';
 
 import { db } from '../../app/libs/db';
@@ -12,8 +12,8 @@ export const eventCategoryFactory = (options: FactoryOptions) => {
   const { attributes = {}, event } = options;
 
   const defaultAttributes: Prisma.EventCategoryCreateInput = {
-    name: fake.randCatchPhrase(),
-    description: fake.randParagraph(),
+    name: randCatchPhrase(),
+    description: randParagraph(),
     event: { connect: { id: event.id } },
   };
 

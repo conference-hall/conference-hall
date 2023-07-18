@@ -11,7 +11,7 @@ export function EventTabs({ teamSlug, eventSlug, role }: Props) {
       { to: `/team/${teamSlug}/${eventSlug}/emails`, label: 'Email campaigns', enabled: true },
       { to: `/team/${teamSlug}/${eventSlug}/settings`, label: 'Settings', enabled: role === 'OWNER' },
     ],
-    [teamSlug, eventSlug, role]
+    [teamSlug, eventSlug, role],
   );
 
   return <NavTabs tabs={tabs} py={4} />;

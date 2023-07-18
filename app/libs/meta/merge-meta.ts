@@ -15,7 +15,7 @@ export function mergeMeta<T>(overrideFn: V2_MetaFunction<T>, appendFn?: V2_MetaF
         (meta) =>
           ('name' in meta && 'name' in override && meta.name === override.name) ||
           ('property' in meta && 'property' in override && meta.property === override.property) ||
-          ('title' in meta && 'title' in override)
+          ('title' in meta && 'title' in override),
       );
       if (index !== -1) {
         mergedMeta.splice(index, 1, override);

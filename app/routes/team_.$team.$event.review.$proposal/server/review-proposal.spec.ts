@@ -55,7 +55,7 @@ describe('#rateProposal', () => {
     const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
     await expect(
-      rateProposal(event.slug, proposal.id, owner.id, { feeling: 'NEUTRAL', note: 2, comment: null })
+      rateProposal(event.slug, proposal.id, owner.id, { feeling: 'NEUTRAL', note: 2, comment: null }),
     ).rejects.toThrowError(DeliberationDisabledError);
   });
 
@@ -63,7 +63,7 @@ describe('#rateProposal', () => {
     const user = await userFactory();
     const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
     await expect(
-      rateProposal(event.slug, proposal.id, user.id, { feeling: 'NEUTRAL', note: 2, comment: null })
+      rateProposal(event.slug, proposal.id, user.id, { feeling: 'NEUTRAL', note: 2, comment: null }),
     ).rejects.toThrowError(ForbiddenOperationError);
   });
 });

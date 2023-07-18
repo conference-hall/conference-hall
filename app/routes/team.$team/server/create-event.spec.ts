@@ -59,7 +59,7 @@ describe('#createEvent', () => {
         name: 'Hello world',
         slug: 'hello-world',
         visibility: 'PUBLIC',
-      })
+      }),
     ).rejects.toThrowError(ForbiddenOperationError);
   });
 
@@ -71,7 +71,7 @@ describe('#createEvent', () => {
         name: 'Hello world',
         slug: 'hello-world',
         visibility: 'PUBLIC',
-      })
+      }),
     ).rejects.toThrowError(ForbiddenOperationError);
   });
 });

@@ -23,7 +23,7 @@ export async function updateProposalsStatus(
   eventSlug: string,
   userId: string,
   proposalIds: string[],
-  status: ProposalStatusData
+  status: ProposalStatusData,
 ) {
   await allowedForEvent(eventSlug, userId, [TeamRole.OWNER, TeamRole.MEMBER]);
 

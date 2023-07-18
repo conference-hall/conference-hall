@@ -129,7 +129,7 @@ async function seed() {
     Array.from({ length: 26 }).map(async () => {
       const talk = await talkFactory({ speakers: [user3] });
       return proposalFactory({ event: meetup, talk });
-    })
+    }),
   );
 
   await Promise.all(
@@ -137,7 +137,7 @@ async function seed() {
       await eventFactory({
         traits: ['meetup-cfp-open'],
       });
-    })
+    }),
   );
 
   await organizerKeyFactory({ attributes: { id: '123456' } });

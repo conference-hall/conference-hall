@@ -27,7 +27,7 @@ export function DateRangeInput({ start, end, error, className }: Props) {
       if (!endDate) return setEndDate(newStartDate);
       if (newStartDate >= endDate) return setEndDate(newStartDate);
     },
-    [endDate]
+    [endDate],
   );
 
   const handleEndDate = useCallback(
@@ -36,7 +36,7 @@ export function DateRangeInput({ start, end, error, className }: Props) {
       setEndDate(newEndDate);
       if (!startDate) return setStartDate(newEndDate);
     },
-    [startDate]
+    [startDate],
   );
 
   return (

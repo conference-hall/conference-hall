@@ -18,7 +18,7 @@ import { ArchiveOrRestoreTalkButton } from './components/ArchiveOrRestoreTalkBut
 import { archiveTalk, restoreTalk } from './server/archive-talk.server';
 
 export const meta = mergeMeta<typeof loader>(({ data }) =>
-  data ? [{ title: `${data?.title} | Conference Hall` }] : []
+  data ? [{ title: `${data?.title} | Conference Hall` }] : [],
 );
 
 export const loader = async ({ request, params }: LoaderArgs) => {

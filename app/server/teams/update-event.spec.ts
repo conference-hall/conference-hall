@@ -63,14 +63,14 @@ describe('#updateEvent', () => {
 
   it('throws an error if user is not owner', async () => {
     await expect(updateEvent(event.slug, reviewer.id, { name: 'Hello world' })).rejects.toThrowError(
-      ForbiddenOperationError
+      ForbiddenOperationError,
     );
   });
 
   it('throws an error if user does not belong to event team', async () => {
     const user = await userFactory();
     await expect(updateEvent(event.slug, user.id, { name: 'Hello world' })).rejects.toThrowError(
-      ForbiddenOperationError
+      ForbiddenOperationError,
     );
   });
 });

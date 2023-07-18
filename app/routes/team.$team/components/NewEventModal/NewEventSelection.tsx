@@ -66,7 +66,7 @@ function EventTypeOption({ value, label, description, icon: Icon }: EventTypeOpt
         cx(
           checked ? 'border-transparent' : 'border-gray-300',
           active ? 'border-indigo-600 ring-2 ring-indigo-600' : '',
-          'relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none'
+          'relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none',
         )
       }
     >
@@ -88,7 +88,7 @@ function EventTypeOption({ value, label, description, icon: Icon }: EventTypeOpt
             className={cx(
               active ? 'border' : 'border-2',
               checked ? 'border-indigo-600' : 'border-transparent',
-              'pointer-events-none absolute -inset-px rounded-lg'
+              'pointer-events-none absolute -inset-px rounded-lg',
             )}
             aria-hidden="true"
           />

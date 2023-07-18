@@ -74,7 +74,7 @@ describe('#saveTracks', () => {
     const event = await eventFactory({ traits: ['conference-cfp-open'] });
     const speaker = await userFactory();
     await expect(saveTracks('XXX', event.id, speaker.id, { formats: [], categories: [] })).rejects.toThrowError(
-      ProposalNotFoundError
+      ProposalNotFoundError,
     );
   });
 });

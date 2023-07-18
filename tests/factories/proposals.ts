@@ -1,4 +1,4 @@
-import * as fake from '@ngneat/falso';
+import { randParagraph, randPost } from '@ngneat/falso';
 import type { Event, EventCategory, EventFormat, Prisma, Talk, User } from '@prisma/client';
 import { EmailStatus, ProposalStatus, TalkLevel } from '@prisma/client';
 
@@ -31,9 +31,9 @@ export const proposalFactory = (options: FactoryOptions) => {
   const { attributes = {}, traits = [], talk, event, formats, categories } = options;
 
   const defaultAttributes: Prisma.ProposalCreateInput = {
-    title: talk?.title || fake.randPost().title,
-    abstract: talk?.abstract || fake.randParagraph(),
-    references: talk?.references || fake.randParagraph(),
+    title: talk?.title || randPost().title,
+    abstract: talk?.abstract || randParagraph(),
+    references: talk?.references || randParagraph(),
     languages: talk?.languages || ['en'],
     level: talk?.level || TalkLevel.INTERMEDIATE,
     status: ProposalStatus.SUBMITTED,

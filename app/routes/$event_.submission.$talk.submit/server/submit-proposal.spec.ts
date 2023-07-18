@@ -79,7 +79,7 @@ describe('#submitProposal', () => {
     const data = { message: 'User message' };
 
     await expect(submitProposal(talk2.id, event.slug, speaker.id, data)).rejects.toThrowError(
-      MaxSubmittedProposalsReachedError
+      MaxSubmittedProposalsReachedError,
     );
   });
 

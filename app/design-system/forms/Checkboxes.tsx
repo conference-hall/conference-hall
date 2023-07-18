@@ -53,7 +53,7 @@ type CheckboxProps = {
 
 export function CheckboxField(
   { id, name, description, className, children, ...rest }: CheckboxProps,
-  ref: Ref<HTMLInputElement>
+  ref: Ref<HTMLInputElement>,
 ) {
   return (
     <div className={cx('relative flex ', { 'items-start': description, 'items-center': !description }, className)}>
