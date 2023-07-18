@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "dotenv -e .env.dev -- npm-run-all db:migrate dev:remix",
     "dev:remix": "remix dev -c \"npm run dev:server\" --no-restart",
-    "dev:server": "tsx watch ./server.ts",
+    "dev:server": "tsx watch --clear-screen=false --ignore 'app/**' --ignore 'build/**' --ignore 'node_modules/**' --inspect ./server.ts",
     "build": "remix build",
     "start": "run-s start:*",
     "start:db": "prisma migrate deploy",
