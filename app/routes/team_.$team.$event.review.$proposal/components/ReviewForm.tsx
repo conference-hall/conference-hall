@@ -1,6 +1,6 @@
-import { CheckCircleIcon } from '@heroicons/react/20/solid';
+import { ArrowRightCircleIcon } from '@heroicons/react/24/outline';
 import type { ReviewFeeling } from '@prisma/client';
-import { useFetcher, useParams } from '@remix-run/react';
+import { useFetcher, useParams, useSearchParams } from '@remix-run/react';
 import { useRef, useState } from 'react';
 
 import { Button } from '~/design-system/Buttons';
@@ -10,17 +10,20 @@ import { options, ReviewNoteSelector } from './ReviewNoteSelector';
 
 type FormValues = { note: number | null; feeling: ReviewFeeling | null; comment: string | null };
 
-type Props = { initialValues: FormValues };
+type Props = { initialValues: FormValues; nextId?: string };
 
-export function ReviewForm({ initialValues }: Props) {
+export function ReviewForm({ initialValues, nextId }: Props) {
   const [changed, setChanged] = useState<boolean>(false);
   const form = useRef<HTMLFormElement | null>(null);
   const params = useParams();
+  const [searchParams] = useSearchParams();
   const fetcher = useFetcher();
 
   const disabled = !changed || fetcher.state === 'submitting' || fetcher.state === 'loading';
 
-  const handleClick = () => {
+  const nextPath = nextId ? `/team/${params.team}/${params.event}/review/${nextId}?${searchParams.toString()}` : null;
+
+  const handleClick = (nextPath: string | null) => {
     // @ts-ignore
     const reviewIndex = form.current?.elements.review.value;
     // @ts-ignore
@@ -32,10 +35,12 @@ export function ReviewForm({ initialValues }: Props) {
 
     if (!feeling) return;
 
-    fetcher.submit(
-      { note, feeling, comment },
-      { method: 'POST', action: `/team/${params.team}/${params.event}/review/${params.proposal}` },
-    );
+    const data: FormData = new FormData();
+    data.append('note', note);
+    data.append('feeling', feeling);
+    data.append('comment', comment);
+    if (nextPath) data.append('nextPath', nextPath);
+    fetcher.submit(data, { method: 'POST', action: `/team/${params.team}/${params.event}/review/${params.proposal}` });
     setChanged(false);
   };
 
@@ -52,16 +57,29 @@ export function ReviewForm({ initialValues }: Props) {
         onChange={() => setChanged(true)}
       />
 
-      <Button
-        type="button"
-        onClick={handleClick}
-        variant="secondary"
-        iconLeft={CheckCircleIcon}
-        block
-        disabled={disabled}
-      >
-        Save review
-      </Button>
+      <div className="flex gap-2">
+        <Button
+          type="button"
+          onClick={() => handleClick(null)}
+          variant="secondary"
+          block
+          disabled={disabled}
+          className="basis-1/2"
+        >
+          Save review
+        </Button>
+        <Button
+          type="button"
+          onClick={() => handleClick(nextPath)}
+          variant="primary"
+          iconRight={ArrowRightCircleIcon}
+          block
+          disabled={disabled}
+          className="basis-1/2"
+        >
+          Save & Next
+        </Button>
+      </div>
     </fetcher.Form>
   );
 }
