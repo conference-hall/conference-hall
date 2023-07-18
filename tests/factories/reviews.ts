@@ -1,6 +1,7 @@
-import type { Prisma, Proposal, User } from '@prisma/client';
+import { type Prisma, type Proposal, ReviewFeeling, type User } from '@prisma/client';
 
 import { db } from '~/libs/db';
+import { ReviewsDetails } from '~/server/reviews/reviews-details';
 
 type FactoryOptions = {
   user: User;
@@ -8,7 +9,7 @@ type FactoryOptions = {
   attributes?: Partial<Prisma.ReviewCreateInput>;
 };
 
-export const reviewFactory = (options: FactoryOptions) => {
+export const reviewFactory = async (options: FactoryOptions) => {
   const { attributes = {}, user, proposal } = options;
 
   const defaultAttributes: Prisma.ReviewCreateInput = {
@@ -19,5 +20,16 @@ export const reviewFactory = (options: FactoryOptions) => {
   };
 
   const data = { ...defaultAttributes, ...attributes };
-  return db.review.create({ data });
+
+  const review = await db.review.create({ data });
+
+  // compute review average on proposal
+  const reviews = await db.review.findMany({
+    where: { proposalId: proposal.id, feeling: { not: ReviewFeeling.NO_OPINION } },
+  });
+  const reviewsDetails = new ReviewsDetails(reviews);
+  const average = reviewsDetails.summary().average ?? undefined;
+  await db.proposal.update({ where: { id: proposal.id }, data: { avgRateForSort: average } });
+
+  return review;
 };

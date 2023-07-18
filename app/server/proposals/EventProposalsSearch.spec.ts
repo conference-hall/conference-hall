@@ -65,6 +65,7 @@ describe('#searchProposals', () => {
 
     await reviewFactory({ user: speaker, proposal: proposal1, attributes: { feeling: 'NEGATIVE', note: 0 } });
     await reviewFactory({ user: owner, proposal: proposal1, attributes: { feeling: 'POSITIVE', note: 5 } });
+    await reviewFactory({ user: owner, proposal: proposal3, attributes: { feeling: 'POSITIVE', note: 1 } });
   });
 
   afterEach(disconnectDB);
@@ -75,7 +76,7 @@ describe('#searchProposals', () => {
 
       const statistics = await search.statistics();
       expect(statistics.total).toEqual(3);
-      expect(statistics.reviewed).toEqual(1);
+      expect(statistics.reviewed).toEqual(2);
       expect(sortBy(statistics.statuses, 'name')).toEqual(
         sortBy(
           [
@@ -105,8 +106,6 @@ describe('#searchProposals', () => {
   });
 
   describe('searchs with filters and sorting', () => {
-    beforeEach(async () => {});
-
     it('filters proposals by title', async () => {
       const filters = { query: 'world' };
       const search = new EventProposalsSearch(event.slug, owner.id, filters);
@@ -159,17 +158,17 @@ describe('#searchProposals', () => {
       const filters: ProposalsFilters = { reviews: 'reviewed' };
       const search = new EventProposalsSearch(event.slug, owner.id, filters);
       const proposals = await search.proposals();
-      expect(proposals.length).toBe(1);
-      expect(proposals[0].id).toBe(proposal1.id);
+      expect(proposals.length).toBe(2);
+      expect(proposals[0].id).toBe(proposal3.id);
+      expect(proposals[1].id).toBe(proposal1.id);
     });
 
     it('filters proposals by user not reviewed only', async () => {
       const filters: ProposalsFilters = { reviews: 'not-reviewed' };
       const search = new EventProposalsSearch(event.slug, owner.id, filters);
       const proposals = await search.proposals();
-      expect(proposals.length).toBe(2);
-      expect(proposals[0].id).toBe(proposal3.id);
-      expect(proposals[1].id).toBe(proposal2.id);
+      expect(proposals.length).toBe(1);
+      expect(proposals[0].id).toBe(proposal2.id);
     });
 
     it('sorts by newest (default)', async () => {
@@ -191,8 +190,25 @@ describe('#searchProposals', () => {
       expect(proposals[2].id).toBe(proposal3.id);
     });
 
-    it.todo('sort by lowest reviews');
-    it.todo('sort by highest reviews');
+    it('sort by highest reviews', async () => {
+      const filters: ProposalsFilters = { sort: 'highest' };
+      const search = new EventProposalsSearch(event.slug, owner.id, filters);
+      const proposals = await search.proposals();
+      expect(proposals.length).toBe(3);
+      expect(proposals[0].id).toBe(proposal1.id);
+      expect(proposals[1].id).toBe(proposal3.id);
+      expect(proposals[2].id).toBe(proposal2.id);
+    });
+
+    it('sort by lowest reviews', async () => {
+      const filters: ProposalsFilters = { sort: 'lowest' };
+      const search = new EventProposalsSearch(event.slug, owner.id, filters);
+      const proposals = await search.proposals();
+      expect(proposals.length).toBe(3);
+      expect(proposals[0].id).toBe(proposal2.id);
+      expect(proposals[1].id).toBe(proposal3.id);
+      expect(proposals[2].id).toBe(proposal1.id);
+    });
   });
 
   it('should not return draft proposals', async () => {

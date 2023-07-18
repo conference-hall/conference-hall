@@ -15,6 +15,8 @@ export function SortActions(props: Props) {
     <Menu trigger={SortByButton} triggerClassname={button(props)}>
       <Menu.ItemLink to={filterPathFor('sort', 'newest')}>Newest</Menu.ItemLink>
       <Menu.ItemLink to={filterPathFor('sort', 'oldest')}>Oldest</Menu.ItemLink>
+      <Menu.ItemLink to={filterPathFor('sort', 'highest')}>Highest review</Menu.ItemLink>
+      <Menu.ItemLink to={filterPathFor('sort', 'lowest')}>Lowest review</Menu.ItemLink>
     </Menu>
   );
 }

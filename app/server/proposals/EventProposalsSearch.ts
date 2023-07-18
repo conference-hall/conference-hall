@@ -108,10 +108,16 @@ export class EventProposalsSearch {
   }
 
   private orderByClause(): Prisma.ProposalOrderByWithRelationInput[] {
-    if (this.filters.sort === 'oldest') {
-      return [{ createdAt: 'asc' }, { title: 'asc' }];
+    switch (this.filters.sort) {
+      case 'highest':
+        return [{ avgRateForSort: 'desc' }, { title: 'asc' }];
+      case 'lowest':
+        return [{ avgRateForSort: 'asc' }, { title: 'asc' }];
+      case 'oldest':
+        return [{ createdAt: 'asc' }, { title: 'asc' }];
+      default:
+        return [{ createdAt: 'desc' }, { title: 'asc' }];
     }
-    return [{ createdAt: 'desc' }, { title: 'asc' }];
   }
 
   private mapEmailStatus(emailStatus: EmailStatusData) {
