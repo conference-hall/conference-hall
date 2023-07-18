@@ -30,7 +30,7 @@ const EmailStatusSchema = text(z.enum(['not-sent', 'sent']).optional());
 
 const ProposalsFiltersSchema = z.object({
   query: text(z.string().trim().optional()),
-  sort: text(z.enum(['newest', 'oldest']).optional()),
+  sort: text(z.enum(['newest', 'oldest', 'highest', 'lowest']).optional()),
   reviews: text(z.enum(['reviewed', 'not-reviewed']).optional()),
   status: repeatable(z.array(ProposalStatusSchema)).optional(),
   formats: text(z.string().optional()),

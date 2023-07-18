@@ -12,15 +12,16 @@ import { DeliberationDisabledError, ForbiddenOperationError } from '~/libs/error
 import { rateProposal } from './review-proposal.server';
 
 describe('#rateProposal', () => {
-  let owner: User, speaker: User;
+  let owner: User, owner2: User, speaker: User;
   let team: Team;
   let event: Event;
 
   beforeEach(async () => {
     await resetDB();
     owner = await userFactory();
+    owner2 = await userFactory();
     speaker = await userFactory();
-    team = await teamFactory({ owners: [owner] });
+    team = await teamFactory({ owners: [owner, owner2] });
     event = await eventFactory({ team });
   });
   afterEach(disconnectDB);
@@ -28,25 +29,36 @@ describe('#rateProposal', () => {
   it('adds then updates a review for a proposal', async () => {
     const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
+    // First review
     await rateProposal(event.slug, proposal.id, owner.id, { feeling: 'NEUTRAL', note: 2, comment: 'Why not' });
 
-    const reviews = await db.review.findMany({ where: { userId: owner.id } });
-    expect(reviews.length).toBe(1);
+    const reviews1 = await db.review.findMany({ where: { userId: owner.id }, include: { proposal: true } });
+    expect(reviews1.length).toBe(1);
 
-    const review = reviews[0];
+    const review = reviews1[0];
     expect(review.feeling).toBe('NEUTRAL');
     expect(review.note).toBe(2);
     expect(review.comment).toBe('Why not');
+    expect(review.proposal.avgRateForSort).toBe(2);
 
+    // Update first review
     await rateProposal(event.slug, proposal.id, owner.id, { feeling: 'POSITIVE', note: 5, comment: 'Too good!' });
 
-    const updatedReviews = await db.review.findMany({ where: { userId: owner.id } });
-    expect(updatedReviews.length).toBe(1);
+    const reviews2 = await db.review.findMany({ where: { userId: owner.id }, include: { proposal: true } });
+    expect(reviews2.length).toBe(1);
 
-    const updatedReview = updatedReviews[0];
+    const updatedReview = reviews2[0];
     expect(updatedReview.feeling).toBe('POSITIVE');
     expect(updatedReview.note).toBe(5);
     expect(updatedReview.comment).toBe('Too good!');
+    expect(updatedReview.proposal.avgRateForSort).toBe(5);
+
+    // Second review
+    await rateProposal(event.slug, proposal.id, owner2.id, { feeling: 'NEUTRAL', note: 0, comment: 'Too bad!' });
+
+    const reviews3 = await db.review.findMany({ where: { proposalId: proposal.id }, include: { proposal: true } });
+    expect(reviews3.length).toBe(2);
+    expect(reviews3[0].proposal.avgRateForSort).toBe(2.5);
   });
 
   it('throws an error if event deliberation is disabled', async () => {
