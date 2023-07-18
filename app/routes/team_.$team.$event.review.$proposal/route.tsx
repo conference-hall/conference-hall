@@ -1,7 +1,7 @@
 import { parse } from '@conform-to/zod';
 import { TeamRole } from '@prisma/client';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
+import { json, redirect } from '@remix-run/node';
 import { Outlet, useLoaderData, useOutletContext, useParams } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
@@ -37,10 +37,14 @@ export const action = async ({ request, params }: ActionArgs) => {
   invariant(params.event, 'Invalid event slug');
   invariant(params.proposal, 'Invalid proposal id');
   const form = await request.formData();
+  const nextPath = form.get('nextPath') as string;
 
   const result = parse(form, { schema: ProposalReviewDataSchema });
   if (result.value) {
     await rateProposal(params.event, params.proposal, userId, result.value);
+    if (nextPath) {
+      return redirect(nextPath, await addToast(request, 'Review saved.'));
+    }
     return json(null, await addToast(request, 'Review saved.'));
   }
   return null;
@@ -84,6 +88,7 @@ export default function ProposalReviewRoute() {
             comments={proposal.comments}
             submittedAt={proposal.createdAt}
             reviewEnabled={proposalReview.reviewEnabled}
+            nextId={pagination.nextId}
           />
         </div>
       </div>

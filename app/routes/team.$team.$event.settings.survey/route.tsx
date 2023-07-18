@@ -16,7 +16,6 @@ import { updateEvent } from '~/server/teams/update-event.server';
 import { useOrganizerEvent } from '../team.$team.$event/route';
 import { EventSurveySettingsSchema } from './types/event-survey-settings.schema';
 
-// TODO why not using event-survey#getQuestions?
 export const loader = async ({ request }: LoaderArgs) => {
   await requireSession(request);
   return { questions: QUESTIONS };

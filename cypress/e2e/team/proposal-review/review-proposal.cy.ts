@@ -48,6 +48,12 @@ describe('Proposal review page', () => {
           cy.findByLabelText('Love it: 5').should('exist');
           cy.findByText('Best talk').should('exist');
         });
+
+      review.proposalTab();
+
+      review.fillReviewAndGoToNext('Love it, 5 stars', 'Best talk ever!');
+      cy.assertToast('Review saved.');
+      review.title('Talk 2').should('exist');
     });
 
     it('navigates between proposals', () => {

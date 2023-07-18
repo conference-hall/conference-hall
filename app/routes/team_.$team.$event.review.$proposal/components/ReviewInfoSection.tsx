@@ -25,6 +25,7 @@ type Props = {
   comments: string | null;
   submittedAt: string;
   reviewEnabled: boolean;
+  nextId?: string;
 };
 
 export function ReviewInfoSection({
@@ -35,13 +36,14 @@ export function ReviewInfoSection({
   comments,
   submittedAt,
   reviewEnabled,
+  nextId,
 }: Props) {
   return (
     <Card as="section" className="divide-y divide-gray-200">
       {reviewEnabled && (
         <div className="space-y-4 p-6">
           <H2>Your review</H2>
-          <ReviewForm key={proposalId} initialValues={userReview} />
+          <ReviewForm key={proposalId} initialValues={userReview} nextId={nextId} />
         </div>
       )}
 

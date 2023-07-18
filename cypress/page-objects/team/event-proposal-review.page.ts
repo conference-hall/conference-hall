@@ -38,6 +38,12 @@ class ProposalReviewPage extends BasePage {
     cy.findByRole('link', { name: 'Close review' }).click();
   }
 
+  // Proposal
+
+  proposalTab() {
+    cy.findByRole('link', { name: 'Proposal' }).click();
+  }
+
   // Speakers
 
   speakersTab() {
@@ -83,6 +89,12 @@ class ProposalReviewPage extends BasePage {
     cy.findByRole('radio', { name: review }).click();
     cy.typeOn('Review comment', comment);
     cy.findByRole('button', { name: 'Save review' }).click();
+  }
+
+  fillReviewAndGoToNext(review: string, comment: string) {
+    cy.findByRole('radio', { name: review }).click();
+    cy.typeOn('Review comment', comment);
+    cy.findByRole('button', { name: 'Save & Next' }).click();
   }
 
   // Edit proposal
