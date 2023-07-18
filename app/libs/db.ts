@@ -23,7 +23,7 @@ if (config.isProduction && !config.useEmulators) {
 }
 
 function getClient() {
-  const log: Prisma.LogLevel[] = config.isDevelopment ? ['query', 'warn', 'error'] : [];
+  const log: Prisma.LogLevel[] = config.isDevelopment ? ['warn', 'error'] : [];
   const client = new PrismaClient({ log });
   client.$connect();
   return client;

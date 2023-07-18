@@ -29,6 +29,7 @@ app.use('/build', express.static('public/build', { immutable: true, maxAge: '1y'
 // Everything else (like favicon.ico) is cached for an hour.
 app.use(express.static('public', { maxAge: '1h' }));
 
+// Log requests
 app.use(morgan('tiny'));
 
 // Proxy Firebase authentication
