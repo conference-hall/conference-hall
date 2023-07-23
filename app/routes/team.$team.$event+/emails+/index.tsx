@@ -16,8 +16,8 @@ import type { ProposalsFilters } from '~/routes/__types/proposal';
 import { parseProposalsFilters, ProposalSelectionSchema } from '~/routes/__types/proposal';
 import { searchProposals } from '~/routes/team.$team.$event+/__server/search-proposals.server';
 
-import { getAcceptationCampaignStats } from './server/get-acceptation-campaign-stats.server';
-import { sendAcceptationCampaign } from './server/send-acceptation-campaign.server';
+import { getAcceptationCampaignStats } from './__server/get-acceptation-campaign-stats.server';
+import { sendAcceptationCampaign } from './__server/send-acceptation-campaign.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);

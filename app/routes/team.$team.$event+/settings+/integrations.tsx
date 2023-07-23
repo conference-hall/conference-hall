@@ -14,7 +14,7 @@ import { requireSession } from '~/libs/auth/session';
 import { updateEvent } from '~/routes/__server/teams/update-event.server';
 
 import { useOrganizerEvent } from '../_layout';
-import { EventSlackSettingsSchema } from './types/event-slack-settings.schema';
+import { EventSlackSettingsSchema } from './__types/event-slack-settings.schema';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await requireSession(request);

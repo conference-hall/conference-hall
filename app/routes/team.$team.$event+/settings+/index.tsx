@@ -18,8 +18,8 @@ import { EventForm } from '~/routes/__components/events/EventForm';
 import { updateEvent } from '~/routes/__server/teams/update-event.server';
 
 import { useOrganizerEvent } from '../_layout';
-import { EventDetailsSettingsSchema } from './types/event-details-settings.schema';
-import { EventGeneralSettingsSchema } from './types/event-general-settings.schema';
+import { EventDetailsSettingsSchema } from './__types/event-details-settings.schema';
+import { EventGeneralSettingsSchema } from './__types/event-general-settings.schema';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await requireSession(request);

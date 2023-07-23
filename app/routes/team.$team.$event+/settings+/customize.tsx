@@ -14,7 +14,7 @@ import { requireSession } from '~/libs/auth/session';
 import { addToast } from '~/libs/toasts/toasts';
 
 import { useOrganizerEvent } from '../_layout';
-import { uploadEventLogo } from './server/upload-event-logo.server';
+import { uploadEventLogo } from './__server/upload-event-logo.server';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await requireSession(request);

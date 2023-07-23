@@ -12,16 +12,16 @@ import { addToast } from '~/libs/toasts/toasts';
 import { updateEvent } from '~/routes/__server/teams/update-event.server';
 
 import { useOrganizerEvent } from '../_layout';
-import { NewTrackButton } from './components/SaveTrackForm';
-import { TrackList } from './components/TrackList';
+import { NewTrackButton } from './__components/SaveTrackForm';
+import { TrackList } from './__components/TrackList';
 import {
   deleteCategory,
   deleteFormat,
   EventTrackSaveSchema,
   saveCategory,
   saveFormat,
-} from './server/update-tracks.server';
-import { EventTracksSettingsSchema } from './types/event-track-settings.schema';
+} from './__server/update-tracks.server';
+import { EventTracksSettingsSchema } from './__types/event-track-settings.schema';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await requireSession(request);

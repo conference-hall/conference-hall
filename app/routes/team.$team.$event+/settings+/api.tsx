@@ -6,8 +6,8 @@ import { requireSession } from '~/libs/auth/session';
 import { updateEvent } from '~/routes/__server/teams/update-event.server';
 
 import { useOrganizerEvent } from '../_layout';
-import { ApiTryoutSection } from './components/ApiTryoutSection';
-import { EnableApiSection } from './components/EnableApiSection';
+import { ApiTryoutSection } from './__components/ApiTryoutSection';
+import { EnableApiSection } from './__components/EnableApiSection';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await requireSession(request);

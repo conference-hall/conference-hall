@@ -9,10 +9,10 @@ import { addToast } from '~/libs/toasts/toasts';
 import { updateEvent } from '~/routes/__server/teams/update-event.server';
 
 import { useOrganizerEvent } from '../_layout';
-import { CommonCfpSetting } from './components/CommonCfpSetting';
-import { ConferenceCfpOpening } from './components/ConferenceCfpOpening';
-import { MeetupCfpOpening } from './components/MeetupCfpOpening';
-import * as schemas from './types/event-cfp-settings.schema';
+import { CommonCfpSetting } from './__components/CommonCfpSetting';
+import { ConferenceCfpOpening } from './__components/ConferenceCfpOpening';
+import { MeetupCfpOpening } from './__components/MeetupCfpOpening';
+import * as schemas from './__types/event-cfp-settings.schema';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await requireSession(request);

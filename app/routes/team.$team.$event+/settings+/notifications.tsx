@@ -14,8 +14,8 @@ import { addToast } from '~/libs/toasts/toasts';
 import { updateEvent } from '~/routes/__server/teams/update-event.server';
 
 import { useOrganizerEvent } from '../_layout';
-import { EventEmailNotificationsSettingsSchema } from './types/event-email-notifications-settings.schema';
-import { EventNotificationsSettingsSchema } from './types/event-notifications-settings.schema';
+import { EventEmailNotificationsSettingsSchema } from './__types/event-email-notifications-settings.schema';
+import { EventNotificationsSettingsSchema } from './__types/event-notifications-settings.schema';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await requireSession(request);

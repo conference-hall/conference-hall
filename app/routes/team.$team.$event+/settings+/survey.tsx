@@ -14,7 +14,7 @@ import { QUESTIONS } from '~/routes/__server/survey/get-questions.server';
 import { updateEvent } from '~/routes/__server/teams/update-event.server';
 
 import { useOrganizerEvent } from '../_layout';
-import { EventSurveySettingsSchema } from './types/event-survey-settings.schema';
+import { EventSurveySettingsSchema } from './__types/event-survey-settings.schema';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await requireSession(request);
