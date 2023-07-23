@@ -64,7 +64,7 @@
   },
   "devDependencies": {
     "@ladle/react": "^2.16.1",
-    "@ngneat/falso": "^6.4.0",
+    "@ngneat/falso": "^7.0.1",
     "@remix-run/dev": "1.19.1",
     "@remix-run/eslint-config": "1.19.1",
     "@tailwindcss/forms": "^0.5.4",
