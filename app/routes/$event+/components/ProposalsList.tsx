@@ -4,7 +4,7 @@ import { ProposalCard } from '~/components/proposals/ProposalCard';
 import { EmptyState } from '~/design-system/layouts/EmptyState';
 import type { CfpState } from '~/schemas/event';
 
-import type { EventProposals } from '../proposals';
+import type { EventProposals } from '../proposals.index';
 import { CfpLabel } from './CfpLabel';
 
 type Props = {

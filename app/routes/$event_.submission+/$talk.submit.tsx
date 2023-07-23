@@ -18,7 +18,7 @@ import { useEvent } from '~/routes/$event+/_layout';
 import { ProposalSubmissionSchema } from '~/schemas/proposal';
 import { getSubmittedProposal } from '~/server/proposals/get-submitted-proposal.server';
 
-import { useSubmissionStep } from '../components/useSubmissionStep';
+import { useSubmissionStep } from './components/useSubmissionStep';
 import { submitProposal } from './server/submit-proposal.server';
 
 export const handle = { step: 'submission' };

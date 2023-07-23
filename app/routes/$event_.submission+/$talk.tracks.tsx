@@ -16,7 +16,7 @@ import { useEvent } from '~/routes/$event+/_layout';
 import { getEvent } from '~/server/events/get-event.server';
 import { getSubmittedProposal } from '~/server/proposals/get-submitted-proposal.server';
 
-import { useSubmissionStep } from '../components/useSubmissionStep';
+import { useSubmissionStep } from './components/useSubmissionStep';
 import { getTracksSchema, saveTracks } from './server/save-tracks.server';
 
 export const handle = { step: 'tracks' };
