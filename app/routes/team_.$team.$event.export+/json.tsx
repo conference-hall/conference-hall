@@ -5,7 +5,7 @@ import invariant from 'tiny-invariant';
 import { requireSession } from '~/libs/auth/session';
 import { parseProposalsFilters } from '~/schemas/proposal';
 
-import { exportProposals } from './server/export-proposals.server';
+import { exportProposals } from './server/export-json.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);

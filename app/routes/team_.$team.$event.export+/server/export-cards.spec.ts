@@ -8,7 +8,7 @@ import { userFactory } from 'tests/factories/users';
 
 import { db } from '~/libs/db';
 
-import { exportProposals } from './export-proposals.server';
+import { exportProposals } from './export-cards.server';
 
 describe('#exportProposals', () => {
   let owner: User, reviewer: User, speaker: User;
@@ -34,11 +34,7 @@ describe('#exportProposals', () => {
       {
         id: proposal.id,
         title: proposal.title,
-        status: proposal.status,
-        abstract: proposal.abstract,
-        comments: proposal.comments,
         languages: proposal.languages,
-        references: proposal.references,
         level: proposal.level,
         categories: [],
         formats: [],
@@ -47,18 +43,7 @@ describe('#exportProposals', () => {
           positives: 0,
           average: null,
         },
-        speakers: [
-          {
-            name: speaker.name,
-            email: speaker.email,
-            bio: speaker.bio,
-            picture: speaker.picture,
-            company: speaker.company,
-            address: speaker.address,
-            references: speaker.references,
-            socials: speaker.socials,
-          },
-        ],
+        speakers: [speaker.name],
       },
     ]);
   });

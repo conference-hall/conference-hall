@@ -10,8 +10,8 @@ import { getLanguage } from '~/utils/languages';
 import { getLevel } from '~/utils/levels';
 import { formatReviewNote } from '~/utils/reviews';
 
-import { exportProposals } from './server/export-proposals.server';
-import styles from './styles.css';
+import styles from './cards.css';
+import { exportProposals } from './server/export-cards.server';
 
 export const links: LinksFunction = () => [{ rel: 'stylesheet', href: styles }];
 
