@@ -11,8 +11,8 @@ import { useUser } from '~/root';
 import type { Event } from '~/server/events/get-event.server';
 import { getEvent } from '~/server/events/get-event.server';
 
-import { EventHeader } from './_index/components/EventHeader';
-import { EventTabs } from './_index/components/EventTabs';
+import { EventHeader } from './components/EventHeader';
+import { EventTabs } from './components/EventTabs';
 
 export const meta = mergeMeta<typeof loader>(
   ({ data }) => (data ? [{ title: `${data.name} | Conference Hall` }] : []),
