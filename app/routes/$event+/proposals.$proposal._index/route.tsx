@@ -13,7 +13,7 @@ import { addToast } from '~/libs/toasts/toasts';
 import { ProposalParticipationSchema } from '~/schemas/proposal';
 import { getSpeakerProposal } from '~/server/proposals/get-speaker-proposal.server';
 
-import { useEvent } from '../$event/route';
+import { useEvent } from '../_layout';
 import { deleteProposal } from './server/delete-proposal.server';
 import { sendParticipationAnswer } from './server/send-participation-answer.server';
 

@@ -18,7 +18,7 @@ import { getEvent } from '~/server/events/get-event.server';
 import { getSpeakerProposal } from '~/server/proposals/get-speaker-proposal.server';
 import { removeCoSpeakerFromProposal } from '~/server/proposals/remove-co-speaker.server';
 
-import { useEvent } from '../$event/route';
+import { useEvent } from '../_layout';
 import { updateProposal } from './server/update-proposal.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {

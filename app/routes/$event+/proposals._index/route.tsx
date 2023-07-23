@@ -7,9 +7,9 @@ import { ButtonLink } from '~/design-system/Buttons';
 import { Container } from '~/design-system/layouts/Container';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 import { requireSession } from '~/libs/auth/session';
-import { ProposalsList } from '~/routes/$event.proposals._index/components/ProposalsList';
 
-import { useEvent } from '../$event/route';
+import { useEvent } from '../_layout';
+import { ProposalsList } from './components/ProposalsList';
 import { listSpeakerProposals } from './server/list-speaker-proposals.server';
 
 export type EventProposals = Awaited<ReturnType<typeof listSpeakerProposals>>;

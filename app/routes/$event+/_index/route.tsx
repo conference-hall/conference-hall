@@ -1,6 +1,6 @@
 import { Container } from '~/design-system/layouts/Container';
 
-import { useEvent } from '../$event/route';
+import { useEvent } from '../_layout';
 import { CfpSection } from './components/CfpSection';
 import { DetailsSection } from './components/DetailsSection';
 import { TrackSection } from './components/TrackSection';

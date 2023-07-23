@@ -7,7 +7,7 @@ import { ProgressBar } from '~/design-system/ProgressBar';
 import { H2, Text } from '~/design-system/Typography';
 import { requireSession } from '~/libs/auth/session';
 
-import { useEvent } from '../$event/route';
+import { useEvent } from '../$event+/_layout';
 import { MaxProposalsReached } from './components/MaxProposalsReached';
 import { NewProposal } from './components/NewProposal';
 import { SubmissionTalksList } from './components/SubmissionTalksList';

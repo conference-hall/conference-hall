@@ -14,11 +14,11 @@ import { ExternalLink } from '~/design-system/Links';
 import { H1, H2, Subtitle } from '~/design-system/Typography';
 import { requireSession } from '~/libs/auth/session';
 import { addToast } from '~/libs/toasts/toasts';
-import { useEvent } from '~/routes/$event/route';
 import { ProposalSubmissionSchema } from '~/schemas/proposal';
 import { getSubmittedProposal } from '~/server/proposals/get-submitted-proposal.server';
 
 import { useSubmissionStep } from '../$event_.submission/components/useSubmissionStep';
+import { useEvent } from '../$event+/_layout';
 import { submitProposal } from './server/submit-proposal.server';
 
 export const handle = { step: 'submission' };

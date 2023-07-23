@@ -1,12 +1,11 @@
 import { ClientOnly } from 'remix-utils';
 
+import { CfpIcon } from '~/components/cfp/CfpIcon';
 import { ButtonLink } from '~/design-system/Buttons';
 import { Container } from '~/design-system/layouts/Container';
 import { H2, Subtitle } from '~/design-system/Typography';
 import type { CfpState } from '~/schemas/event';
 import { formatCFPDate, formatCFPElapsedTime } from '~/utils/event';
-
-import { CfpIcon } from '../../../components/cfp/CfpIcon';
 
 type Props = { cfpState: CfpState; cfpStart?: string; cfpEnd?: string; className?: string };
 
