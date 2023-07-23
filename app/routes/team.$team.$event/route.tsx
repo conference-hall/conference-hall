@@ -6,7 +6,7 @@ import invariant from 'tiny-invariant';
 import { requireSession } from '~/libs/auth/session';
 import { useUser } from '~/root';
 
-import { useTeam } from '../team.$team/route';
+import { useTeam } from '../team+/$team';
 import type { OrganizerEvent } from './server/get-event.server';
 import { getTeamEvent } from './server/get-event.server';
 

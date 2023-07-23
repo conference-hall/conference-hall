@@ -11,7 +11,7 @@ import { H2, Subtitle } from '~/design-system/Typography';
 import { requireSession } from '~/libs/auth/session';
 import { addToast } from '~/libs/toasts/toasts';
 
-import { useTeam } from '../team.$team/route';
+import { useTeam } from './$team';
 import { updateTeam } from './server/update-team.server';
 import { TeamSaveSchema } from './types/team-save.schema';
 

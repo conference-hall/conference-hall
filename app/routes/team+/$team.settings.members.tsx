@@ -17,7 +17,7 @@ import { addToast } from '~/libs/toasts/toasts';
 import { useUser } from '~/root';
 import { parsePage } from '~/schemas/pagination';
 
-import { useTeam } from '../team.$team/route';
+import { useTeam } from './$team';
 import { ChangeRoleButton, InviteMemberButton, RemoveButton } from './components/MemberActions';
 import { changeMemberRole } from './server/change-role.server';
 import { listMembers, MembersFilterSchema } from './server/list-members.server';

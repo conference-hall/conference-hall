@@ -25,7 +25,7 @@ module.exports = {
   },
   routes: async (defineRoutes) => {
     return flatRoutes('routes', defineRoutes, {
-      ignoredRouteFiles: ['.*', '**/components/*', '**/server/*', '**/*.test.{js,jsx,ts,tsx}'],
+      ignoredRouteFiles: ['.*', '**/components/*', '**/server/*', '**/types/*', '**/*.test.{js,jsx,ts,tsx}'],
     });
   },
 };

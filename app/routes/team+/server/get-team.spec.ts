@@ -3,8 +3,8 @@ import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
 
 import { config } from '~/libs/config';
+import { TeamNotFoundError } from '~/libs/errors';
 
-import { TeamNotFoundError } from '../../../libs/errors';
 import { getTeam } from './get-team.server';
 
 describe('#getOrganization', () => {

@@ -4,8 +4,9 @@ import { eventFactory } from 'tests/factories/events';
 import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
 
-import { db } from '../../../libs/db';
-import { ForbiddenOperationError } from '../../../libs/errors';
+import { db } from '~/libs/db';
+import { ForbiddenOperationError } from '~/libs/errors';
+
 import { createEvent } from './create-event.server';
 
 describe('#createEvent', () => {

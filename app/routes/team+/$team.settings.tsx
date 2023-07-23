@@ -11,7 +11,7 @@ import { requireSession } from '~/libs/auth/session';
 import { useUser } from '~/root';
 import { allowedForTeam } from '~/server/teams/check-user-role.server';
 
-import { useTeam } from '../team.$team/route';
+import { useTeam } from './$team';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);

@@ -11,7 +11,7 @@ import { H1 } from '~/design-system/Typography';
 import { requireSession } from '~/libs/auth/session';
 import { useUser } from '~/root';
 
-import { useTeam } from '../team.$team/route';
+import { useTeam } from './$team';
 import { ArchivedFilters } from './components/ArchivedFilter';
 import { listEvents } from './server/list-events.server';
 
