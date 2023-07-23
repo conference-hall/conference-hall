@@ -11,8 +11,6 @@ import {
 import { useCallback, useEffect, useState } from 'react';
 import { useHydrated } from 'remix-utils';
 
-import { AuthProviderButton } from '~/components/AuthProviderButton';
-import { Logo } from '~/components/navbar/Logo';
 import { AlertError } from '~/design-system/Alerts';
 import { LoadingIcon } from '~/design-system/icons/LoadingIcon';
 import { Card } from '~/design-system/layouts/Card';
@@ -20,6 +18,8 @@ import { Link } from '~/design-system/Links';
 import { getClientAuth } from '~/libs/auth/firebase';
 import { createSession, getSessionUserId } from '~/libs/auth/session';
 import { mergeMeta } from '~/libs/meta/merge-meta';
+import { AuthProviderButton } from '~/routes/__components/AuthProviderButton';
+import { Logo } from '~/routes/__components/navbar/Logo';
 
 export const meta = mergeMeta(() => [{ title: 'Login | Conference Hall' }]);
 

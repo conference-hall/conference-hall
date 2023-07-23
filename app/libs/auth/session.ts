@@ -1,7 +1,7 @@
 import type { Session } from '@remix-run/node';
 import { createCookieSessionStorage, redirect } from '@remix-run/node';
 
-import { createUserAccount } from '~/server/users/create-user-account.server';
+import { createUserAccount } from '~/routes/__server/users/create-user-account.server';
 
 import { config } from '../config';
 import { auth as serverAuth } from './firebase.server';
