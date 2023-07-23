@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
-import { text } from '~/schemas/utils';
-import { dateValidator } from '~/schemas/validators';
+import { text } from '~/routes/__types/utils';
+import { dateValidator } from '~/routes/__types/validators';
 
 export const EventDetailsSettingsSchema = z
   .object({

@@ -3,19 +3,19 @@ import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData, useSearchParams } from '@remix-run/react';
 
-import { EventCard } from '~/components/EventCard';
-import { Footer } from '~/components/Footer';
-import { Navbar } from '~/components/navbar/Navbar';
 import { Container } from '~/design-system/layouts/Container';
 import { EmptyState } from '~/design-system/layouts/EmptyState';
 import { Pagination } from '~/design-system/Pagination';
 import { H1, H2, Text } from '~/design-system/Typography';
 import { useUser } from '~/root';
-import { parsePage } from '~/schemas/pagination';
+import { EventCard } from '~/routes/__components/EventCard';
+import { Footer } from '~/routes/__components/Footer';
+import { Navbar } from '~/routes/__components/navbar/Navbar';
+import { parsePage } from '~/routes/__types/pagination';
 
-import { SearchEventsFilters } from '../components/search/SearchEventsFilters';
-import { SearchEventsInput } from '../components/search/SearchEventsInput';
-import { parseFilters, searchEvents } from '../server/search/search.server';
+import { SearchEventsFilters } from './__components/search/SearchEventsFilters';
+import { SearchEventsInput } from './__components/search/SearchEventsInput';
+import { parseFilters, searchEvents } from './__server/search/search.server';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const url = new URL(request.url);

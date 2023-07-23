@@ -5,17 +5,17 @@ import { json, redirect } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { SurveyForm } from '~/components/proposals/forms/SurveyForm';
 import { Button, ButtonLink } from '~/design-system/Buttons';
 import { Card } from '~/design-system/layouts/Card';
 import { H2 } from '~/design-system/Typography';
 import { requireSession } from '~/libs/auth/session';
-import { SurveySchema } from '~/schemas/survey';
-import { getAnswers } from '~/server/survey/get-answers.server';
-import { getQuestions } from '~/server/survey/get-questions.server';
-import { saveSurvey } from '~/server/survey/save-survey.server';
+import { SurveyForm } from '~/routes/__components/proposals/forms/SurveyForm';
+import { getAnswers } from '~/routes/__server/survey/get-answers.server';
+import { getQuestions } from '~/routes/__server/survey/get-questions.server';
+import { saveSurvey } from '~/routes/__server/survey/save-survey.server';
+import { SurveySchema } from '~/routes/__types/survey';
 
-import { useSubmissionStep } from './components/useSubmissionStep';
+import { useSubmissionStep } from './__components/useSubmissionStep';
 
 export const handle = { step: 'survey' };
 

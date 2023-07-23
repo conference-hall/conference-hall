@@ -3,16 +3,16 @@ import { json } from '@remix-run/node';
 import { Outlet, useLoaderData, useOutletContext } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { Footer } from '~/components/Footer';
-import { Navbar } from '~/components/navbar/Navbar';
 import { mergeMeta } from '~/libs/meta/merge-meta';
 import { eventSocialCard } from '~/libs/meta/social-cards';
 import { useUser } from '~/root';
-import type { Event } from '~/server/events/get-event.server';
-import { getEvent } from '~/server/events/get-event.server';
+import { Footer } from '~/routes/__components/Footer';
+import { Navbar } from '~/routes/__components/navbar/Navbar';
+import type { Event } from '~/routes/__server/events/get-event.server';
+import { getEvent } from '~/routes/__server/events/get-event.server';
 
-import { EventHeader } from './components/EventHeader';
-import { EventTabs } from './components/EventTabs';
+import { EventHeader } from './__components/EventHeader';
+import { EventTabs } from './__components/EventTabs';
 
 export const meta = mergeMeta<typeof loader>(
   ({ data }) => (data ? [{ title: `${data.name} | Conference Hall` }] : []),

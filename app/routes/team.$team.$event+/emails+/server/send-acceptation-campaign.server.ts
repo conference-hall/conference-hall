@@ -1,7 +1,7 @@
 import { EmailStatus, TeamRole } from '@prisma/client';
 
 import { db } from '~/libs/db';
-import { allowedForEvent } from '~/server/teams/check-user-role.server';
+import { allowedForEvent } from '~/routes/__server/teams/check-user-role.server';
 
 import { ProposalAcceptedEmailsBatch } from './emails/proposal-accepted-email-batch';
 

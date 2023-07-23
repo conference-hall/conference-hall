@@ -15,13 +15,13 @@ import { H3, Subtitle } from '~/design-system/Typography';
 import { requireSession } from '~/libs/auth/session';
 import { addToast } from '~/libs/toasts/toasts';
 import { useUser } from '~/root';
-import { parsePage } from '~/schemas/pagination';
+import { parsePage } from '~/routes/__types/pagination';
 
+import { ChangeRoleButton, InviteMemberButton, RemoveButton } from './__components/MemberActions';
+import { changeMemberRole } from './__server/change-role.server';
+import { listMembers, MembersFilterSchema } from './__server/list-members.server';
+import { removeMember } from './__server/remove-member.server';
 import { useTeam } from './$team';
-import { ChangeRoleButton, InviteMemberButton, RemoveButton } from './components/MemberActions';
-import { changeMemberRole } from './server/change-role.server';
-import { listMembers, MembersFilterSchema } from './server/list-members.server';
-import { removeMember } from './server/remove-member.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);

@@ -1,6 +1,6 @@
 import type { LoaderArgs } from '@remix-run/node';
 
-import { ProposalDetailsSection } from '~/components/proposals/ProposalDetailsSection';
+import { ProposalDetailsSection } from '~/routes/__components/proposals/ProposalDetailsSection';
 
 import { useProposalReview } from './_layout';
 

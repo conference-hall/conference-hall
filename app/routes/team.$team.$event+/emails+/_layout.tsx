@@ -9,7 +9,7 @@ import { NavSideMenu } from '~/design-system/navigation/NavSideMenu';
 import { H2 } from '~/design-system/Typography';
 import { requireSession } from '~/libs/auth/session';
 import { useUser } from '~/root';
-import { allowedForEvent } from '~/server/teams/check-user-role.server';
+import { allowedForEvent } from '~/routes/__server/teams/check-user-role.server';
 
 import { useTeam } from '../../team+/$team';
 import { useOrganizerEvent } from '../_layout';

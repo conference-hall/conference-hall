@@ -2,8 +2,6 @@ import { BellSlashIcon } from '@heroicons/react/24/outline';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 
-import { Footer } from '~/components/Footer';
-import { Navbar } from '~/components/navbar/Navbar';
 import { CardLink } from '~/design-system/layouts/Card';
 import { Container } from '~/design-system/layouts/Container';
 import { EmptyState } from '~/design-system/layouts/EmptyState';
@@ -12,6 +10,8 @@ import { H2 } from '~/design-system/Typography';
 import { requireSession } from '~/libs/auth/session';
 import { mergeMeta } from '~/libs/meta/merge-meta';
 import { useUser } from '~/root';
+import { Footer } from '~/routes/__components/Footer';
+import { Navbar } from '~/routes/__components/navbar/Navbar';
 
 export const meta = mergeMeta(() => [{ title: 'Notifications | Conference Hall' }]);
 

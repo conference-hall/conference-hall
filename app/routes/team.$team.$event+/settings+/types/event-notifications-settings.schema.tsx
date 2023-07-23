@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { repeatable } from '~/schemas/utils';
+import { repeatable } from '~/routes/__types/utils';
 
 export const EventNotificationsSettingsSchema = z.object({
   emailNotifications: repeatable(),

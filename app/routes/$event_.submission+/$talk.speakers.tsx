@@ -5,7 +5,6 @@ import { json, redirect } from '@remix-run/node';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { CoSpeakersList, InviteCoSpeakerButton } from '~/components/proposals/forms/CoSpeaker';
 import { Button, ButtonLink } from '~/design-system/Buttons';
 import { MarkdownTextArea } from '~/design-system/forms/MarkdownTextArea';
 import { Card } from '~/design-system/layouts/Card';
@@ -13,13 +12,14 @@ import { ExternalLink } from '~/design-system/Links';
 import { H2, Subtitle, Text } from '~/design-system/Typography';
 import { requireSession } from '~/libs/auth/session';
 import { useUser } from '~/root';
-import { DetailsSchema } from '~/schemas/profile.schema';
-import { getEvent } from '~/server/events/get-event.server';
-import { saveUserDetails } from '~/server/profile/save-profile.server';
-import { getSubmittedProposal } from '~/server/proposals/get-submitted-proposal.server';
-import { removeCoSpeakerFromSubmission } from '~/server/proposals/remove-co-speaker.server';
+import { CoSpeakersList, InviteCoSpeakerButton } from '~/routes/__components/proposals/forms/CoSpeaker';
+import { getEvent } from '~/routes/__server/events/get-event.server';
+import { saveUserDetails } from '~/routes/__server/profile/save-profile.server';
+import { getSubmittedProposal } from '~/routes/__server/proposals/get-submitted-proposal.server';
+import { removeCoSpeakerFromSubmission } from '~/routes/__server/proposals/remove-co-speaker.server';
+import { DetailsSchema } from '~/routes/__types/profile.schema';
 
-import { useSubmissionStep } from './components/useSubmissionStep';
+import { useSubmissionStep } from './__components/useSubmissionStep';
 
 export const handle = { step: 'speakers' };
 

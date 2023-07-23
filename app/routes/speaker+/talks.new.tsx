@@ -3,7 +3,6 @@ import type { LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
 
-import { DetailsForm } from '~/components/proposals/forms/DetailsForm';
 import { Button } from '~/design-system/Buttons';
 import { Card } from '~/design-system/layouts/Card';
 import { Container } from '~/design-system/layouts/Container';
@@ -11,9 +10,10 @@ import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 import { requireSession } from '~/libs/auth/session';
 import { mergeMeta } from '~/libs/meta/merge-meta';
 import { addToast } from '~/libs/toasts/toasts';
-import { TalkSaveSchema } from '~/schemas/talks';
+import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm';
+import { TalkSaveSchema } from '~/routes/__types/talks';
 
-import { createTalk } from './server/create-talk.server';
+import { createTalk } from './__server/create-talk.server';
 
 export const meta = mergeMeta(() => [{ title: 'New talk | Conference Hall' }]);
 

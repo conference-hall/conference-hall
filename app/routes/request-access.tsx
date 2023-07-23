@@ -2,7 +2,6 @@ import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
 
-import { Navbar } from '~/components/navbar/Navbar';
 import { Button } from '~/design-system/Buttons';
 import { Input } from '~/design-system/forms/Input';
 import { Container } from '~/design-system/layouts/Container';
@@ -11,8 +10,9 @@ import { H1, Subtitle } from '~/design-system/Typography';
 import { requireSession } from '~/libs/auth/session';
 import { mergeMeta } from '~/libs/meta/merge-meta';
 import { useUser } from '~/root';
+import { Navbar } from '~/routes/__components/navbar/Navbar';
 
-import { validAccessKey } from '../server/teams/valid-access-key.server';
+import { validAccessKey } from './__server/teams/valid-access-key.server';
 
 export const meta = mergeMeta(() => [{ title: 'Request access | Conference Hall' }]);
 

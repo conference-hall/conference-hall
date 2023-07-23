@@ -3,7 +3,6 @@ import { json, redirect } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { Navbar } from '~/components/navbar/Navbar';
 import { Button } from '~/design-system/Buttons';
 import { Card } from '~/design-system/layouts/Card';
 import { Container } from '~/design-system/layouts/Container';
@@ -11,8 +10,9 @@ import { H1, Text } from '~/design-system/Typography';
 import { requireSession } from '~/libs/auth/session';
 import { mergeMeta } from '~/libs/meta/merge-meta';
 import { useUser } from '~/root';
+import { Navbar } from '~/routes/__components/navbar/Navbar';
 
-import { addMember, checkTeamInviteCode } from './server/invite-team.server';
+import { addMember, checkTeamInviteCode } from './__server/invite-team.server';
 
 export const meta = mergeMeta(() => [{ title: 'Team invitation | Conference Hall' }]);
 

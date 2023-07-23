@@ -9,11 +9,11 @@ import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 import { requireSession } from '~/libs/auth/session';
 import { mergeMeta } from '~/libs/meta/merge-meta';
 import { useUser } from '~/root';
-import { parsePage } from '~/schemas/pagination';
+import { parsePage } from '~/routes/__types/pagination';
 
-import { SpeakerActivitiesSection } from './components/SpeakerActivitiesSection';
-import { SpeakerDetailsSection } from './components/SpeakerDetailsSection';
-import { getActivities } from './server/get-activities.server';
+import { SpeakerActivitiesSection } from './__components/SpeakerActivitiesSection';
+import { SpeakerDetailsSection } from './__components/SpeakerDetailsSection';
+import { getActivities } from './__server/get-activities.server';
 
 export const meta = mergeMeta(() => [{ title: 'Home speaker | Conference Hall' }]);
 

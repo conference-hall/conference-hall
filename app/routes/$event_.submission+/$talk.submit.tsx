@@ -14,12 +14,12 @@ import { ExternalLink } from '~/design-system/Links';
 import { H1, H2, Subtitle } from '~/design-system/Typography';
 import { requireSession } from '~/libs/auth/session';
 import { addToast } from '~/libs/toasts/toasts';
+import { getSubmittedProposal } from '~/routes/__server/proposals/get-submitted-proposal.server';
+import { ProposalSubmissionSchema } from '~/routes/__types/proposal';
 import { useEvent } from '~/routes/$event+/_layout';
-import { ProposalSubmissionSchema } from '~/schemas/proposal';
-import { getSubmittedProposal } from '~/server/proposals/get-submitted-proposal.server';
 
-import { useSubmissionStep } from './components/useSubmissionStep';
-import { submitProposal } from './server/submit-proposal.server';
+import { useSubmissionStep } from './__components/useSubmissionStep';
+import { submitProposal } from './__server/submit-proposal.server';
 
 export const handle = { step: 'submission' };
 

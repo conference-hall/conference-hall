@@ -4,20 +4,20 @@ import { json, redirect } from '@remix-run/node';
 import { Outlet, useLoaderData, useOutletContext, useRouteLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import TeamBreadcrumb from '~/components/teams/TeamBreadcrumb';
 import { Container } from '~/design-system/layouts/Container';
 import { PageHeader } from '~/design-system/layouts/PageHeader';
 import { requireSession } from '~/libs/auth/session';
 import { mergeMeta } from '~/libs/meta/merge-meta';
 import { useUser } from '~/root';
+import TeamBreadcrumb from '~/routes/__components/teams/TeamBreadcrumb';
 
-import type { OrganizerEvent } from '../team.$team.$event+/server/get-event.server';
-import { EventTabs } from './components/EventTabs';
-import { TeamTabs } from './components/TeamTabs';
-import { createEvent } from './server/create-event.server';
-import type { Team } from './server/get-team.server';
-import { getTeam } from './server/get-team.server';
-import { EventCreateSchema } from './types/event-create.schema';
+import type { OrganizerEvent } from '../team.$team.$event+/__server/get-event.server';
+import { EventTabs } from './__components/EventTabs';
+import { TeamTabs } from './__components/TeamTabs';
+import { createEvent } from './__server/create-event.server';
+import type { Team } from './__server/get-team.server';
+import { getTeam } from './__server/get-team.server';
+import { EventCreateSchema } from './__types/event-create.schema';
 
 export const meta = mergeMeta<typeof loader>(({ data }) => (data ? [{ title: `${data.name} | Conference Hall` }] : []));
 

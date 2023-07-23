@@ -2,8 +2,8 @@ import { TeamRole } from '@prisma/client';
 import { z } from 'zod';
 
 import { db } from '~/libs/db';
-import { text } from '~/schemas/utils';
-import { allowedForEvent } from '~/server/teams/check-user-role.server';
+import { allowedForEvent } from '~/routes/__server/teams/check-user-role.server';
+import { text } from '~/routes/__types/utils';
 
 export const EventTrackSaveSchema = z.object({
   id: text(z.string().trim().optional()),

@@ -5,8 +5,8 @@ import invariant from 'tiny-invariant';
 import { requireSession } from '~/libs/auth/session';
 import { useUser } from '~/root';
 
-import { Discussions } from './components/Discussions';
-import { addProposalMessage, getProposalMessages, removeProposalMessage } from './server/messages.server';
+import { Discussions } from './__components/Discussions';
+import { addProposalMessage, getProposalMessages, removeProposalMessage } from './__server/messages.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);

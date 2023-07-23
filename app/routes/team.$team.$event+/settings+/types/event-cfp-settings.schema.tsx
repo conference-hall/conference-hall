@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
-import { numeric, text } from '~/schemas/utils';
-import { dateValidator } from '~/schemas/validators';
+import { numeric, text } from '~/routes/__types/utils';
+import { dateValidator } from '~/routes/__types/validators';
 
 export const CfpPreferencesSchema = z.object({
   codeOfConductUrl: text(z.string().url().trim().nullable().default(null)),

@@ -11,7 +11,7 @@ import { Card } from '~/design-system/layouts/Card';
 import { H2 } from '~/design-system/Typography';
 import { requireSession } from '~/libs/auth/session';
 import { addToast } from '~/libs/toasts/toasts';
-import { updateEvent } from '~/server/teams/update-event.server';
+import { updateEvent } from '~/routes/__server/teams/update-event.server';
 
 import { useOrganizerEvent } from '../_layout';
 import { EventEmailNotificationsSettingsSchema } from './types/event-email-notifications-settings.schema';

@@ -3,14 +3,14 @@ import type { ActionArgs, LoaderFunction } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
 
-import { TeamForm } from '~/components/teams/TeamForm';
 import { Button } from '~/design-system/Buttons';
 import { Card } from '~/design-system/layouts/Card';
 import { Container } from '~/design-system/layouts/Container';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 import { requireSession } from '~/libs/auth/session';
+import { TeamForm } from '~/routes/__components/teams/TeamForm';
 
-import { createTeam, TeamSaveSchema } from './server/create-team.server';
+import { createTeam, TeamSaveSchema } from './__server/create-team.server';
 
 export const loader: LoaderFunction = async ({ request }) => {
   await requireSession(request);

@@ -4,8 +4,6 @@ import { json, redirect } from '@remix-run/node';
 import { Form, useActionData, useLoaderData, useNavigate } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { CoSpeakersList, InviteCoSpeakerButton } from '~/components/proposals/forms/CoSpeaker';
-import { DetailsForm } from '~/components/proposals/forms/DetailsForm';
 import { Button, ButtonLink } from '~/design-system/Buttons';
 import { Card } from '~/design-system/layouts/Card';
 import { Container } from '~/design-system/layouts/Container';
@@ -14,11 +12,13 @@ import { H3, Subtitle } from '~/design-system/Typography';
 import { requireSession } from '~/libs/auth/session';
 import { mergeMeta } from '~/libs/meta/merge-meta';
 import { addToast } from '~/libs/toasts/toasts';
-import { TalkSaveSchema } from '~/schemas/talks';
-import { getTalk } from '~/server/talks/get-talk.server';
-import { removeCoSpeakerFromTalk } from '~/server/talks/remove-co-speaker.server';
+import { CoSpeakersList, InviteCoSpeakerButton } from '~/routes/__components/proposals/forms/CoSpeaker';
+import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm';
+import { getTalk } from '~/routes/__server/talks/get-talk.server';
+import { removeCoSpeakerFromTalk } from '~/routes/__server/talks/remove-co-speaker.server';
+import { TalkSaveSchema } from '~/routes/__types/talks';
 
-import { updateTalk } from './server/update-talk.server';
+import { updateTalk } from './__server/update-talk.server';
 
 export const meta = mergeMeta<typeof loader>(({ data }) =>
   data ? [{ title: `Edit | ${data?.title} | Conference Hall` }] : [],

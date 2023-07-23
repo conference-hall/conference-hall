@@ -14,7 +14,6 @@ import {
 } from '@remix-run/react';
 import type { ReactNode } from 'react';
 
-import { GlobalLoading } from './components/GlobalLoading';
 import { Container } from './design-system/layouts/Container';
 import { H1, Text } from './design-system/Typography';
 import { initializeFirebaseClient } from './libs/auth/firebase';
@@ -23,8 +22,9 @@ import { config } from './libs/config';
 import { Toast } from './libs/toasts/Toast';
 import type { ToastData } from './libs/toasts/toasts';
 import { commitToastSession, getToastSession } from './libs/toasts/toasts';
-import type { User } from './server/users/get-user.server';
-import { getUser } from './server/users/get-user.server';
+import { GlobalLoading } from './routes/__components/GlobalLoading';
+import type { User } from './routes/__server/users/get-user.server';
+import { getUser } from './routes/__server/users/get-user.server';
 import tailwind from './tailwind.css';
 
 export function meta() {

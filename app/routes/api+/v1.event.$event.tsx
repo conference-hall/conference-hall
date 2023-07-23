@@ -2,9 +2,9 @@ import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import invariant from 'tiny-invariant';
 
-import { parseProposalsFilters } from '~/schemas/proposal';
+import { parseProposalsFilters } from '~/routes/__types/proposal';
 
-import { getEventProposals } from './server/get-event-proposals.server';
+import { getEventProposals } from './__server/get-event-proposals.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const url = new URL(request.url);

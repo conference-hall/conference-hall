@@ -10,8 +10,8 @@ import { Card } from '~/design-system/layouts/Card';
 import { H2, Subtitle } from '~/design-system/Typography';
 import { requireSession } from '~/libs/auth/session';
 import { addToast } from '~/libs/toasts/toasts';
-import { QUESTIONS } from '~/server/survey/get-questions.server';
-import { updateEvent } from '~/server/teams/update-event.server';
+import { QUESTIONS } from '~/routes/__server/survey/get-questions.server';
+import { updateEvent } from '~/routes/__server/teams/update-event.server';
 
 import { useOrganizerEvent } from '../_layout';
 import { EventSurveySettingsSchema } from './types/event-survey-settings.schema';

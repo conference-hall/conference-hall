@@ -4,18 +4,18 @@ import { json, redirect } from '@remix-run/node';
 import { useLoaderData, useNavigate } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { ProposalDetailsSection } from '~/components/proposals/ProposalDetailsSection';
-import { ProposalStatusSection } from '~/components/proposals/ProposalStatusSection';
 import { Container } from '~/design-system/layouts/Container';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 import { requireSession } from '~/libs/auth/session';
 import { addToast } from '~/libs/toasts/toasts';
-import { ProposalParticipationSchema } from '~/schemas/proposal';
-import { getSpeakerProposal } from '~/server/proposals/get-speaker-proposal.server';
+import { ProposalDetailsSection } from '~/routes/__components/proposals/ProposalDetailsSection';
+import { ProposalStatusSection } from '~/routes/__components/proposals/ProposalStatusSection';
+import { getSpeakerProposal } from '~/routes/__server/proposals/get-speaker-proposal.server';
+import { ProposalParticipationSchema } from '~/routes/__types/proposal';
 
+import { deleteProposal } from './__server/delete-proposal.server';
+import { sendParticipationAnswer } from './__server/send-participation-answer.server';
 import { useEvent } from './_layout';
-import { deleteProposal } from './server/delete-proposal.server';
-import { sendParticipationAnswer } from './server/send-participation-answer.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);

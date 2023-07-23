@@ -27,9 +27,9 @@ module.exports = {
     return flatRoutes('routes', defineRoutes, {
       ignoredRouteFiles: [
         '.*',
-        '**/components/*',
-        '**/server/*',
-        '**/types/*',
+        '**/__components/*',
+        '**/__server/*',
+        '**/__types/*',
         '**/*.css',
         '**/*.test.{js,jsx,ts,tsx}',
       ],

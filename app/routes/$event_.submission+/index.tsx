@@ -8,10 +8,10 @@ import { H2, Text } from '~/design-system/Typography';
 import { requireSession } from '~/libs/auth/session';
 import { useEvent } from '~/routes/$event+/_layout';
 
-import { MaxProposalsReached } from './components/MaxProposalsReached';
-import { NewProposal } from './components/NewProposal';
-import { SubmissionTalksList } from './components/SubmissionTalksList';
-import { listTalksToSubmit } from './server/list-talks-to-submit.server';
+import { MaxProposalsReached } from './__components/MaxProposalsReached';
+import { NewProposal } from './__components/NewProposal';
+import { SubmissionTalksList } from './__components/SubmissionTalksList';
+import { listTalksToSubmit } from './__server/list-talks-to-submit.server';
 
 export const handle = { step: 'selection' };
 

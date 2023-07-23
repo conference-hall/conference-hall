@@ -11,7 +11,7 @@ import { Card } from '~/design-system/layouts/Card';
 import { ExternalLink } from '~/design-system/Links';
 import { H2 } from '~/design-system/Typography';
 import { requireSession } from '~/libs/auth/session';
-import { updateEvent } from '~/server/teams/update-event.server';
+import { updateEvent } from '~/routes/__server/teams/update-event.server';
 
 import { useOrganizerEvent } from '../_layout';
 import { EventSlackSettingsSchema } from './types/event-slack-settings.schema';

@@ -5,7 +5,6 @@ import { json, redirect } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { EventForm } from '~/components/events/EventForm';
 import { AlertInfo } from '~/design-system/Alerts';
 import { Button } from '~/design-system/Buttons';
 import { DateRangeInput } from '~/design-system/forms/DateRangeInput';
@@ -15,7 +14,8 @@ import { Card } from '~/design-system/layouts/Card';
 import { H2, Subtitle } from '~/design-system/Typography';
 import { requireSession } from '~/libs/auth/session';
 import { addToast } from '~/libs/toasts/toasts';
-import { updateEvent } from '~/server/teams/update-event.server';
+import { EventForm } from '~/routes/__components/events/EventForm';
+import { updateEvent } from '~/routes/__server/teams/update-event.server';
 
 import { useOrganizerEvent } from '../_layout';
 import { EventDetailsSettingsSchema } from './types/event-details-settings.schema';

@@ -3,14 +3,14 @@ import { json, type LoaderArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { ReviewNote } from '~/components/reviews/ReviewNote';
 import { AvatarName } from '~/design-system/Avatar';
 import { Card } from '~/design-system/layouts/Card';
 import { EmptyState } from '~/design-system/layouts/EmptyState';
 import { Subtitle } from '~/design-system/Typography';
 import { requireSession } from '~/libs/auth/session';
+import { ReviewNote } from '~/routes/__components/reviews/ReviewNote';
 
-import { getReviews } from './server/get-reviews.server';
+import { getReviews } from './__server/get-reviews.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);

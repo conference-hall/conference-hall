@@ -7,8 +7,8 @@ import { requireSession } from '~/libs/auth/session';
 import { useUser } from '~/root';
 
 import { useTeam } from '../team+/$team';
-import type { OrganizerEvent } from './server/get-event.server';
-import { getTeamEvent } from './server/get-event.server';
+import type { OrganizerEvent } from './__server/get-event.server';
+import { getTeamEvent } from './__server/get-event.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);

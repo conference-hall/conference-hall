@@ -6,7 +6,7 @@ import invariant from 'tiny-invariant';
 
 import { requireSession } from '~/libs/auth/session';
 import { addToast } from '~/libs/toasts/toasts';
-import { updateEvent } from '~/server/teams/update-event.server';
+import { updateEvent } from '~/routes/__server/teams/update-event.server';
 
 import { useOrganizerEvent } from '../_layout';
 import { CommonCfpSetting } from './components/CommonCfpSetting';

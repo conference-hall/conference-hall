@@ -3,15 +3,15 @@ import { type ActionArgs, json, type LoaderArgs, redirect } from '@remix-run/nod
 import { Form, useActionData, useLoaderData, useSearchParams } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { DetailsForm } from '~/components/proposals/forms/DetailsForm';
 import { Button, ButtonLink } from '~/design-system/Buttons';
 import { Card } from '~/design-system/layouts/Card';
 import { requireSession } from '~/libs/auth/session';
 import { addToast } from '~/libs/toasts/toasts';
-import { ProposalUpdateSchema } from '~/schemas/proposal';
-import { getEvent } from '~/server/events/get-event.server';
+import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm';
+import { getEvent } from '~/routes/__server/events/get-event.server';
+import { ProposalUpdateSchema } from '~/routes/__types/proposal';
 
-import { updateProposal } from '../team.$team.$event+/server/update-proposal.server';
+import { updateProposal } from '../team.$team.$event+/__server/update-proposal.server';
 import { useProposalReview } from './_layout';
 
 export const loader = async ({ request, params }: LoaderArgs) => {

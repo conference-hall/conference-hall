@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
-import { text } from '~/schemas/utils';
-import { checkboxValidator } from '~/schemas/validators';
+import { text } from '~/routes/__types/utils';
+import { checkboxValidator } from '~/routes/__types/validators';
 
 export const EventTracksSettingsSchema = z.object({
   formatsRequired: text(checkboxValidator),

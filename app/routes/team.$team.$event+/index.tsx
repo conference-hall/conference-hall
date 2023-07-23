@@ -12,15 +12,15 @@ import { EmptyState } from '~/design-system/layouts/EmptyState';
 import { Pagination } from '~/design-system/Pagination';
 import { requireSession } from '~/libs/auth/session';
 import { addToast } from '~/libs/toasts/toasts';
-import { updateProposalsStatus } from '~/routes/team.$team.$event+/server/update-proposal.server';
-import { parsePage } from '~/schemas/pagination';
-import { parseProposalsFilters, ProposalsStatusUpdateSchema } from '~/schemas/proposal';
+import { parsePage } from '~/routes/__types/pagination';
+import { parseProposalsFilters, ProposalsStatusUpdateSchema } from '~/routes/__types/proposal';
+import { updateProposalsStatus } from '~/routes/team.$team.$event+/__server/update-proposal.server';
 
+import { ProposalsActionBar } from './__components/ProposalsActionBar/ProposalsActionBar';
+import { ProposalsFilters } from './__components/ProposalsFilters/ProposalsFilters';
+import { ProposalsList } from './__components/ProposalsList/ProposalsList';
+import { searchProposals } from './__server/search-proposals.server';
 import { useOrganizerEvent } from './_layout';
-import { ProposalsActionBar } from './components/ProposalsActionBar/ProposalsActionBar';
-import { ProposalsFilters } from './components/ProposalsFilters/ProposalsFilters';
-import { ProposalsList } from './components/ProposalsList/ProposalsList';
-import { searchProposals } from './server/search-proposals.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);

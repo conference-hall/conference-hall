@@ -4,8 +4,6 @@ import { json, redirect } from '@remix-run/node';
 import { Form, useActionData, useLoaderData, useNavigate } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { CoSpeakersList, InviteCoSpeakerButton } from '~/components/proposals/forms/CoSpeaker';
-import { DetailsForm } from '~/components/proposals/forms/DetailsForm';
 import { Button, ButtonLink } from '~/design-system/Buttons';
 import { Card } from '~/design-system/layouts/Card';
 import { Container } from '~/design-system/layouts/Container';
@@ -13,13 +11,15 @@ import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 import { H3, Subtitle } from '~/design-system/Typography';
 import { requireSession } from '~/libs/auth/session';
 import { addToast } from '~/libs/toasts/toasts';
-import { getProposalUpdateSchema } from '~/schemas/proposal';
-import { getEvent } from '~/server/events/get-event.server';
-import { getSpeakerProposal } from '~/server/proposals/get-speaker-proposal.server';
-import { removeCoSpeakerFromProposal } from '~/server/proposals/remove-co-speaker.server';
+import { CoSpeakersList, InviteCoSpeakerButton } from '~/routes/__components/proposals/forms/CoSpeaker';
+import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm';
+import { getEvent } from '~/routes/__server/events/get-event.server';
+import { getSpeakerProposal } from '~/routes/__server/proposals/get-speaker-proposal.server';
+import { removeCoSpeakerFromProposal } from '~/routes/__server/proposals/remove-co-speaker.server';
+import { getProposalUpdateSchema } from '~/routes/__types/proposal';
 
+import { updateProposal } from './__server/update-proposal.server';
 import { useEvent } from './_layout';
-import { updateProposal } from './server/update-proposal.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);

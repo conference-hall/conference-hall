@@ -4,18 +4,18 @@ import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { ProposalDetailsSection } from '~/components/proposals/ProposalDetailsSection';
-import { ProposalSubmissionsSection } from '~/components/proposals/ProposalSubmissionsSection';
 import { ButtonLink } from '~/design-system/Buttons';
 import { Container } from '~/design-system/layouts/Container';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 import { requireSession } from '~/libs/auth/session';
 import { mergeMeta } from '~/libs/meta/merge-meta';
 import { addToast } from '~/libs/toasts/toasts';
-import { getTalk } from '~/server/talks/get-talk.server';
+import { ProposalDetailsSection } from '~/routes/__components/proposals/ProposalDetailsSection';
+import { ProposalSubmissionsSection } from '~/routes/__components/proposals/ProposalSubmissionsSection';
+import { getTalk } from '~/routes/__server/talks/get-talk.server';
 
-import { ArchiveOrRestoreTalkButton } from './components/ArchiveOrRestoreTalkButton';
-import { archiveTalk, restoreTalk } from './server/archive-talk.server';
+import { ArchiveOrRestoreTalkButton } from './__components/ArchiveOrRestoreTalkButton';
+import { archiveTalk, restoreTalk } from './__server/archive-talk.server';
 
 export const meta = mergeMeta<typeof loader>(({ data }) =>
   data ? [{ title: `${data?.title} | Conference Hall` }] : [],

@@ -11,12 +11,16 @@ import { requireSession } from '~/libs/auth/session';
 import { mergeMeta } from '~/libs/meta/merge-meta';
 import { addToast } from '~/libs/toasts/toasts';
 import { useUser } from '~/root';
-import { AdditionalInfoSchema, DetailsSchema, PersonalInfoSchema } from '~/schemas/profile.schema';
-import { saveUserAdditionalInfo, saveUserDetails, saveUserPersonalInfo } from '~/server/profile/save-profile.server';
+import {
+  saveUserAdditionalInfo,
+  saveUserDetails,
+  saveUserPersonalInfo,
+} from '~/routes/__server/profile/save-profile.server';
+import { AdditionalInfoSchema, DetailsSchema, PersonalInfoSchema } from '~/routes/__types/profile.schema';
 
-import { AdditionalInfoForm } from './components/AdditionalInfoForm';
-import { PersonalInfoForm } from './components/PersonalInfoForm';
-import { SpeakerDetailsForm } from './components/SpeakerDetailsForm';
+import { AdditionalInfoForm } from './__components/AdditionalInfoForm';
+import { PersonalInfoForm } from './__components/PersonalInfoForm';
+import { SpeakerDetailsForm } from './__components/SpeakerDetailsForm';
 
 export const meta = mergeMeta(() => [{ title: 'Profile | Conference Hall' }]);
 

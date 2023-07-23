@@ -4,17 +4,17 @@ import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { CampaignEmailFilters } from '~/components/events/campaign-email/CampaignEmailFilters';
-import { CampaignEmailList, CampaignType } from '~/components/events/campaign-email/CampaignEmailList';
-import { CampaignEmailStats } from '~/components/events/campaign-email/CampaignEmailStats';
 import { Pagination } from '~/design-system/Pagination';
 import { H1, H2 } from '~/design-system/Typography';
 import { requireSession } from '~/libs/auth/session';
 import { addToast } from '~/libs/toasts/toasts';
-import { searchProposals } from '~/routes/team.$team.$event+/server/search-proposals.server';
-import { parsePage } from '~/schemas/pagination';
-import type { ProposalsFilters } from '~/schemas/proposal';
-import { parseProposalsFilters, ProposalSelectionSchema } from '~/schemas/proposal';
+import { CampaignEmailFilters } from '~/routes/__components/events/campaign-email/CampaignEmailFilters';
+import { CampaignEmailList, CampaignType } from '~/routes/__components/events/campaign-email/CampaignEmailList';
+import { CampaignEmailStats } from '~/routes/__components/events/campaign-email/CampaignEmailStats';
+import { parsePage } from '~/routes/__types/pagination';
+import type { ProposalsFilters } from '~/routes/__types/proposal';
+import { parseProposalsFilters, ProposalSelectionSchema } from '~/routes/__types/proposal';
+import { searchProposals } from '~/routes/team.$team.$event+/__server/search-proposals.server';
 
 import { getRejectionCampaignStats } from './server/get-rejection-campaign-stats.server';
 import { sendRejectionCampaign } from './server/send-rejection-campaign.server';

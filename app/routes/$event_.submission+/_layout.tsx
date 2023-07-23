@@ -4,7 +4,6 @@ import { json } from '@remix-run/node';
 import { Outlet, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { Navbar } from '~/components/navbar/Navbar';
 import { IconButtonLink } from '~/design-system/IconButtons';
 import { Container } from '~/design-system/layouts/Container';
 import { requireSession } from '~/libs/auth/session';
@@ -12,10 +11,11 @@ import { CfpNotOpenError } from '~/libs/errors';
 import { mergeMeta } from '~/libs/meta/merge-meta';
 import { eventSocialCard } from '~/libs/meta/social-cards';
 import { useUser } from '~/root';
-import { getEvent } from '~/server/events/get-event.server';
+import { Navbar } from '~/routes/__components/navbar/Navbar';
+import { getEvent } from '~/routes/__server/events/get-event.server';
 
-import { SubmissionSteps } from './components/SubmissionSteps';
-import { useSubmissionStep } from './components/useSubmissionStep';
+import { SubmissionSteps } from './__components/SubmissionSteps';
+import { useSubmissionStep } from './__components/useSubmissionStep';
 
 type Step = { key: string; name: string; path: string; form?: string; enabled: boolean };
 

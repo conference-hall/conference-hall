@@ -3,7 +3,7 @@ import invariant from 'tiny-invariant';
 import { v4 as uuid } from 'uuid';
 
 import { requireSession } from '~/libs/auth/session';
-import { updateEvent } from '~/server/teams/update-event.server';
+import { updateEvent } from '~/routes/__server/teams/update-event.server';
 
 import { useOrganizerEvent } from '../_layout';
 import { ApiTryoutSection } from './components/ApiTryoutSection';

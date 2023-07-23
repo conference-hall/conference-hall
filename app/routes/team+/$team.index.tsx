@@ -4,16 +4,16 @@ import { json } from '@remix-run/node';
 import { Outlet, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { EventCard } from '~/components/EventCard';
 import { Container } from '~/design-system/layouts/Container';
 import { EmptyState } from '~/design-system/layouts/EmptyState';
 import { H1 } from '~/design-system/Typography';
 import { requireSession } from '~/libs/auth/session';
 import { useUser } from '~/root';
+import { EventCard } from '~/routes/__components/EventCard';
 
+import { ArchivedFilters } from './__components/ArchivedFilter';
+import { listEvents } from './__server/list-events.server';
 import { useTeam } from './$team';
-import { ArchivedFilters } from './components/ArchivedFilter';
-import { listEvents } from './server/list-events.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);

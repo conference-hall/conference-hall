@@ -5,19 +5,19 @@ import { json, redirect } from '@remix-run/node';
 import { Outlet, useLoaderData, useOutletContext, useParams } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { Navbar } from '~/components/navbar/Navbar';
 import { requireSession } from '~/libs/auth/session';
 import { mergeMeta } from '~/libs/meta/merge-meta';
 import { addToast } from '~/libs/toasts/toasts';
 import { useUser } from '~/root';
-import { parseProposalsFilters, ProposalReviewDataSchema } from '~/schemas/proposal';
+import { Navbar } from '~/routes/__components/navbar/Navbar';
+import { parseProposalsFilters, ProposalReviewDataSchema } from '~/routes/__types/proposal';
 
-import { ReviewHeader } from './components/Header';
-import { ReviewInfoSection } from './components/ReviewInfoSection';
-import { ReviewTabs } from './components/Tabs';
-import type { ProposalReview } from './server/get-proposal-review.server';
-import { getProposalReview } from './server/get-proposal-review.server';
-import { rateProposal } from './server/review-proposal.server';
+import { ReviewHeader } from './__components/Header';
+import { ReviewInfoSection } from './__components/ReviewInfoSection';
+import { ReviewTabs } from './__components/Tabs';
+import type { ProposalReview } from './__server/get-proposal-review.server';
+import { getProposalReview } from './__server/get-proposal-review.server';
+import { rateProposal } from './__server/review-proposal.server';
 
 export const meta = mergeMeta(() => [{ title: `Review proposal | Conference Hall` }]);
 

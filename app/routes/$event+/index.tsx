@@ -1,9 +1,9 @@
 import { Container } from '~/design-system/layouts/Container';
 
+import { CfpSection } from './__components/CfpSection';
+import { DetailsSection } from './__components/DetailsSection';
+import { TrackSection } from './__components/TrackSection';
 import { useEvent } from './_layout';
-import { CfpSection } from './components/CfpSection';
-import { DetailsSection } from './components/DetailsSection';
-import { TrackSection } from './components/TrackSection';
 
 export default function EventRoute() {
   const { event } = useEvent();

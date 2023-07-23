@@ -5,13 +5,13 @@ import invariant from 'tiny-invariant';
 
 import { Subtitle, Text } from '~/design-system/Typography';
 import { requireSession } from '~/libs/auth/session';
-import { parseProposalsFilters } from '~/schemas/proposal';
+import { parseProposalsFilters } from '~/routes/__types/proposal';
 import { getLanguage } from '~/utils/languages';
 import { getLevel } from '~/utils/levels';
 import { formatReviewNote } from '~/utils/reviews';
 
+import { exportProposals } from './__server/export-cards.server';
 import styles from './cards.css';
-import { exportProposals } from './server/export-cards.server';
 
 export const links: LinksFunction = () => [{ rel: 'stylesheet', href: styles }];
 

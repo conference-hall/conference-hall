@@ -4,7 +4,7 @@ import { z } from 'zod';
 
 import { db } from '~/libs/db';
 import { uploadToStorageHandler } from '~/libs/storage/storage.server';
-import { allowedForEvent } from '~/server/teams/check-user-role.server';
+import { allowedForEvent } from '~/routes/__server/teams/check-user-role.server';
 
 type UploadLogoResult = {
   status: 'success' | 'error';

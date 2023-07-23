@@ -10,8 +10,8 @@ import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 import { requireSession } from '~/libs/auth/session';
 import { mergeMeta } from '~/libs/meta/merge-meta';
 
-import { SpeakerTalksList } from './components/SpeakerTalksList';
-import { listTalks } from './server/list-talks.server';
+import { SpeakerTalksList } from './__components/SpeakerTalksList';
+import { listTalks } from './__server/list-talks.server';
 
 export const meta = mergeMeta(() => [{ title: 'Talks library | Conference Hall' }]);
 

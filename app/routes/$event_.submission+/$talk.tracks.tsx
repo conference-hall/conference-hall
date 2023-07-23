@@ -5,19 +5,19 @@ import { json, redirect } from '@remix-run/node';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { CategoriesForm } from '~/components/proposals/forms/CategoriesForm';
-import { FormatsForm } from '~/components/proposals/forms/FormatsForm';
 import { AlertError } from '~/design-system/Alerts';
 import { Button, ButtonLink } from '~/design-system/Buttons';
 import { Card } from '~/design-system/layouts/Card';
 import { H2 } from '~/design-system/Typography';
 import { requireSession } from '~/libs/auth/session';
+import { CategoriesForm } from '~/routes/__components/proposals/forms/CategoriesForm';
+import { FormatsForm } from '~/routes/__components/proposals/forms/FormatsForm';
+import { getEvent } from '~/routes/__server/events/get-event.server';
+import { getSubmittedProposal } from '~/routes/__server/proposals/get-submitted-proposal.server';
 import { useEvent } from '~/routes/$event+/_layout';
-import { getEvent } from '~/server/events/get-event.server';
-import { getSubmittedProposal } from '~/server/proposals/get-submitted-proposal.server';
 
-import { useSubmissionStep } from './components/useSubmissionStep';
-import { getTracksSchema, saveTracks } from './server/save-tracks.server';
+import { useSubmissionStep } from './__components/useSubmissionStep';
+import { getTracksSchema, saveTracks } from './__server/save-tracks.server';
 
 export const handle = { step: 'tracks' };
 

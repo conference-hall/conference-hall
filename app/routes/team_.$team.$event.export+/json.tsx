@@ -3,9 +3,9 @@ import { json } from '@remix-run/node';
 import invariant from 'tiny-invariant';
 
 import { requireSession } from '~/libs/auth/session';
-import { parseProposalsFilters } from '~/schemas/proposal';
+import { parseProposalsFilters } from '~/routes/__types/proposal';
 
-import { exportProposals } from './server/export-json.server';
+import { exportProposals } from './__server/export-json.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);

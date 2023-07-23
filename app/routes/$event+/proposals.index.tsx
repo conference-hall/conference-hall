@@ -8,9 +8,9 @@ import { Container } from '~/design-system/layouts/Container';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
 import { requireSession } from '~/libs/auth/session';
 
+import { ProposalsList } from './__components/ProposalsList';
+import { listSpeakerProposals } from './__server/list-speaker-proposals.server';
 import { useEvent } from './_layout';
-import { ProposalsList } from './components/ProposalsList';
-import { listSpeakerProposals } from './server/list-speaker-proposals.server';
 
 export type EventProposals = Awaited<ReturnType<typeof listSpeakerProposals>>;
 

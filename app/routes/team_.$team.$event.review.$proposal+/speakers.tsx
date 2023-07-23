@@ -13,7 +13,7 @@ import { Markdown } from '~/design-system/Markdown';
 import { Text } from '~/design-system/Typography';
 import { requireSession } from '~/libs/auth/session';
 
-import { getSpeakers } from './server/get-speakers.server';
+import { getSpeakers } from './__server/get-speakers.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);

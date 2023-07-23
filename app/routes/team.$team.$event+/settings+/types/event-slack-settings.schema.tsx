@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { text } from '~/schemas/utils';
+import { text } from '~/routes/__types/utils';
 
 export const EventSlackSettingsSchema = z.object({
   slackWebhookUrl: text(z.string().url().nullable().default(null)),
