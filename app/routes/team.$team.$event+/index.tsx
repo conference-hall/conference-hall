@@ -12,11 +12,11 @@ import { EmptyState } from '~/design-system/layouts/EmptyState';
 import { Pagination } from '~/design-system/Pagination';
 import { requireSession } from '~/libs/auth/session';
 import { addToast } from '~/libs/toasts/toasts';
-import { updateProposalsStatus } from '~/routes/team.$team.$event._index/server/update-proposal.server';
+import { updateProposalsStatus } from '~/routes/team.$team.$event+/server/update-proposal.server';
 import { parsePage } from '~/schemas/pagination';
 import { parseProposalsFilters, ProposalsStatusUpdateSchema } from '~/schemas/proposal';
 
-import { useOrganizerEvent } from '../team.$team.$event/route';
+import { useOrganizerEvent } from './_layout';
 import { ProposalsActionBar } from './components/ProposalsActionBar/ProposalsActionBar';
 import { ProposalsFilters } from './components/ProposalsFilters/ProposalsFilters';
 import { ProposalsList } from './components/ProposalsList/ProposalsList';

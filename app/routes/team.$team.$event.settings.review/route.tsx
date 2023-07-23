@@ -9,7 +9,7 @@ import { requireSession } from '~/libs/auth/session';
 import { addToast } from '~/libs/toasts/toasts';
 import { updateEvent } from '~/server/teams/update-event.server';
 
-import { useOrganizerEvent } from '../team.$team.$event/route';
+import { useOrganizerEvent } from '../team.$team.$event+/_layout';
 
 export const loader = async ({ request }: LoaderArgs) => {
   await requireSession(request);

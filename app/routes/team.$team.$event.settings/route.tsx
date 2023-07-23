@@ -21,7 +21,7 @@ import { requireSession } from '~/libs/auth/session';
 import { useUser } from '~/root';
 import { allowedForEvent } from '~/server/teams/check-user-role.server';
 
-import { useOrganizerEvent } from '../team.$team.$event/route';
+import { useOrganizerEvent } from '../team.$team.$event+/_layout';
 import { useTeam } from '../team+/$team';
 
 export const loader = async ({ request, params }: LoaderArgs) => {

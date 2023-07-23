@@ -11,7 +11,7 @@ import { requireSession } from '~/libs/auth/session';
 import { mergeMeta } from '~/libs/meta/merge-meta';
 import { useUser } from '~/root';
 
-import type { OrganizerEvent } from '../team.$team.$event/server/get-event.server';
+import type { OrganizerEvent } from '../team.$team.$event+/server/get-event.server';
 import { EventTabs } from './components/EventTabs';
 import { TeamTabs } from './components/TeamTabs';
 import { createEvent } from './server/create-event.server';

@@ -5,7 +5,7 @@ import { v4 as uuid } from 'uuid';
 import { requireSession } from '~/libs/auth/session';
 import { updateEvent } from '~/server/teams/update-event.server';
 
-import { useOrganizerEvent } from '../team.$team.$event/route';
+import { useOrganizerEvent } from '../team.$team.$event+/_layout';
 import { ApiTryoutSection } from './components/ApiTryoutSection';
 import { EnableApiSection } from './components/EnableApiSection';
 

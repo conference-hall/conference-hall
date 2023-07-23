@@ -17,7 +17,7 @@ import { requireSession } from '~/libs/auth/session';
 import { addToast } from '~/libs/toasts/toasts';
 import { updateEvent } from '~/server/teams/update-event.server';
 
-import { useOrganizerEvent } from '../team.$team.$event/route';
+import { useOrganizerEvent } from '../team.$team.$event+/_layout';
 import { EventDetailsSettingsSchema } from './types/event-details-settings.schema';
 import { EventGeneralSettingsSchema } from './types/event-general-settings.schema';
 

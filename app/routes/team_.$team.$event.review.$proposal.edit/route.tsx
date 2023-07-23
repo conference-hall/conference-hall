@@ -11,7 +11,7 @@ import { addToast } from '~/libs/toasts/toasts';
 import { ProposalUpdateSchema } from '~/schemas/proposal';
 import { getEvent } from '~/server/events/get-event.server';
 
-import { updateProposal } from '../team.$team.$event._index/server/update-proposal.server';
+import { updateProposal } from '../team.$team.$event+/server/update-proposal.server';
 import { useProposalReview } from '../team_.$team.$event.review.$proposal/route';
 
 export const loader = async ({ request, params }: LoaderArgs) => {

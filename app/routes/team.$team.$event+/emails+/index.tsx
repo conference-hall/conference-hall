@@ -11,13 +11,13 @@ import { Pagination } from '~/design-system/Pagination';
 import { H1, H2 } from '~/design-system/Typography';
 import { requireSession } from '~/libs/auth/session';
 import { addToast } from '~/libs/toasts/toasts';
-import { searchProposals } from '~/routes/team.$team.$event._index/server/search-proposals.server';
+import { searchProposals } from '~/routes/team.$team.$event+/server/search-proposals.server';
 import { parsePage } from '~/schemas/pagination';
 import type { ProposalsFilters } from '~/schemas/proposal';
 import { parseProposalsFilters, ProposalSelectionSchema } from '~/schemas/proposal';
 
-import { getRejectionCampaignStats } from './server/get-rejection-campaign-stats.server';
-import { sendRejectionCampaign } from './server/send-rejection-campaign.server';
+import { getAcceptationCampaignStats } from './server/get-acceptation-campaign-stats.server';
+import { sendAcceptationCampaign } from './server/send-acceptation-campaign.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);
@@ -28,41 +28,41 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const page = parsePage(url.searchParams);
   const filters = {
     query: proposalsFilters.query,
-    emailRejectedStatus: proposalsFilters.emailRejectedStatus || 'not-sent',
-    status: ['REJECTED'],
+    emailAcceptedStatus: proposalsFilters.emailAcceptedStatus || 'not-sent',
+    status: ['ACCEPTED', 'CONFIRMED', 'DECLINED'],
   } as ProposalsFilters;
 
   const proposals = await searchProposals(params.event, userId, filters, page);
-  const stats = await getRejectionCampaignStats(params.event, userId);
+  const stats = await getAcceptationCampaignStats(params.event, userId);
   return json({ proposals, stats });
 };
 
 export const action = async ({ request, params }: ActionArgs) => {
   const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
-
   const form = await request.formData();
+
   const result = parse(form, { schema: ProposalSelectionSchema });
   if (!result.value) return json(null);
-  await sendRejectionCampaign(params.event, userId, result.value.selection);
+  await sendAcceptationCampaign(params.event, userId, result.value.selection);
   return json(null, await addToast(request, 'Emails successfully sent.'));
 };
 
-export default function RejectedProposalEmails() {
+export default function AcceptedProposalEmails() {
   const { proposals, stats } = useLoaderData<typeof loader>();
   const { results, pagination, statistics } = proposals;
 
   return (
     <>
-      <H1>Rejection emails campaign</H1>
+      <H1>Acceptation emails campaign</H1>
       <CampaignEmailStats stats={stats} />
 
       <div>
-        <H2>Select proposals to send rejection emails</H2>
+        <H2>Select proposals to send acceptation emails</H2>
 
-        <CampaignEmailFilters type={CampaignType.REJECTION} />
+        <CampaignEmailFilters type={CampaignType.ACCEPTATION} />
 
-        <CampaignEmailList type={CampaignType.REJECTION} proposals={results} total={statistics.total} />
+        <CampaignEmailList type={CampaignType.ACCEPTATION} proposals={results} total={statistics.total} />
 
         <Pagination {...pagination} />
       </div>
