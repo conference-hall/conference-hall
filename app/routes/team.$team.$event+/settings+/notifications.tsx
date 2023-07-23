@@ -13,7 +13,7 @@ import { requireSession } from '~/libs/auth/session';
 import { addToast } from '~/libs/toasts/toasts';
 import { updateEvent } from '~/server/teams/update-event.server';
 
-import { useOrganizerEvent } from '../team.$team.$event+/_layout';
+import { useOrganizerEvent } from '../_layout';
 import { EventEmailNotificationsSettingsSchema } from './types/event-email-notifications-settings.schema';
 import { EventNotificationsSettingsSchema } from './types/event-notifications-settings.schema';
 

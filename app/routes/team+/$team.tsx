@@ -46,7 +46,7 @@ export const action = async ({ request, params }: ActionArgs) => {
 export default function OrganizationRoute() {
   const { user } = useUser();
   const team = useLoaderData<typeof loader>();
-  const event = useRouteLoaderData('routes/team.$team.$event') as OrganizerEvent;
+  const event = useRouteLoaderData('routes/team.$team.$event+/_layout') as OrganizerEvent;
 
   return (
     <>

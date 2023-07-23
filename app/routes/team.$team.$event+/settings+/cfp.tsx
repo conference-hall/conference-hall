@@ -8,7 +8,7 @@ import { requireSession } from '~/libs/auth/session';
 import { addToast } from '~/libs/toasts/toasts';
 import { updateEvent } from '~/server/teams/update-event.server';
 
-import { useOrganizerEvent } from '../team.$team.$event+/_layout';
+import { useOrganizerEvent } from '../_layout';
 import { CommonCfpSetting } from './components/CommonCfpSetting';
 import { ConferenceCfpOpening } from './components/ConferenceCfpOpening';
 import { MeetupCfpOpening } from './components/MeetupCfpOpening';

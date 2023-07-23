@@ -21,8 +21,8 @@ import { requireSession } from '~/libs/auth/session';
 import { useUser } from '~/root';
 import { allowedForEvent } from '~/server/teams/check-user-role.server';
 
-import { useOrganizerEvent } from '../team.$team.$event+/_layout';
-import { useTeam } from '../team+/$team';
+import { useTeam } from '../../team+/$team';
+import { useOrganizerEvent } from '../_layout';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireSession(request);

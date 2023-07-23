@@ -13,7 +13,7 @@ import { H2, Subtitle } from '~/design-system/Typography';
 import { requireSession } from '~/libs/auth/session';
 import { addToast } from '~/libs/toasts/toasts';
 
-import { useOrganizerEvent } from '../team.$team.$event+/_layout';
+import { useOrganizerEvent } from '../_layout';
 import { uploadEventLogo } from './server/upload-event-logo.server';
 
 export const loader = async ({ request }: LoaderArgs) => {

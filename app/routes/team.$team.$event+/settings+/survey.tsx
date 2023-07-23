@@ -13,7 +13,7 @@ import { addToast } from '~/libs/toasts/toasts';
 import { QUESTIONS } from '~/server/survey/get-questions.server';
 import { updateEvent } from '~/server/teams/update-event.server';
 
-import { useOrganizerEvent } from '../team.$team.$event+/_layout';
+import { useOrganizerEvent } from '../_layout';
 import { EventSurveySettingsSchema } from './types/event-survey-settings.schema';
 
 export const loader = async ({ request }: LoaderArgs) => {

@@ -13,7 +13,7 @@ import { H2 } from '~/design-system/Typography';
 import { requireSession } from '~/libs/auth/session';
 import { updateEvent } from '~/server/teams/update-event.server';
 
-import { useOrganizerEvent } from '../team.$team.$event+/_layout';
+import { useOrganizerEvent } from '../_layout';
 import { EventSlackSettingsSchema } from './types/event-slack-settings.schema';
 
 export const loader = async ({ request }: LoaderArgs) => {
