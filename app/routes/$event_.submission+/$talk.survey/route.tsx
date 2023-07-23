@@ -15,7 +15,7 @@ import { getAnswers } from '~/server/survey/get-answers.server';
 import { getQuestions } from '~/server/survey/get-questions.server';
 import { saveSurvey } from '~/server/survey/save-survey.server';
 
-import { useSubmissionStep } from '../$event_.submission/components/useSubmissionStep';
+import { useSubmissionStep } from '../components/useSubmissionStep';
 
 export const handle = { step: 'survey' };
 

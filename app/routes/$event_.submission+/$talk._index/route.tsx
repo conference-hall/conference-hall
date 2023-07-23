@@ -13,7 +13,7 @@ import { requireSession } from '~/libs/auth/session';
 import { ProposalCreateSchema } from '~/schemas/proposal';
 import { getTalk } from '~/server/talks/get-talk.server';
 
-import { useSubmissionStep } from '../$event_.submission/components/useSubmissionStep';
+import { useSubmissionStep } from '../components/useSubmissionStep';
 import { isTalkAlreadySubmitted } from './server/is-talk-already-submitted.server';
 import { saveDraftProposal } from './server/save-draft-proposal.server';
 

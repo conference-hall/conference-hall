@@ -19,7 +19,7 @@ import { saveUserDetails } from '~/server/profile/save-profile.server';
 import { getSubmittedProposal } from '~/server/proposals/get-submitted-proposal.server';
 import { removeCoSpeakerFromSubmission } from '~/server/proposals/remove-co-speaker.server';
 
-import { useSubmissionStep } from '../$event_.submission/components/useSubmissionStep';
+import { useSubmissionStep } from '../components/useSubmissionStep';
 
 export const handle = { step: 'speakers' };
 

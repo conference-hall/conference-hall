@@ -1,13 +1,13 @@
-import type { ProposalSubmissionData } from '~/schemas/proposal';
-
-import { db } from '../../../libs/db';
+import { db } from '~/libs/db';
 import {
   CfpNotOpenError,
   EventNotFoundError,
   MaxSubmittedProposalsReachedError,
   ProposalNotFoundError,
-} from '../../../libs/errors';
-import { getCfpState } from '../../../utils/event';
+} from '~/libs/errors';
+import type { ProposalSubmissionData } from '~/schemas/proposal';
+import { getCfpState } from '~/utils/event';
+
 import { ProposalReceivedEmail } from './emails/proposal-received-email';
 import { ProposalSubmittedEmail } from './emails/proposal-submitted-email';
 import { sendSubmittedTalkSlackMessage } from './slack/slack.services';

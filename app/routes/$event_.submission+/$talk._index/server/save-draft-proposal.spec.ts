@@ -4,8 +4,9 @@ import { eventFactory } from 'tests/factories/events';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
 
-import { db } from '../../../libs/db';
-import { CfpNotOpenError, EventNotFoundError, TalkNotFoundError } from '../../../libs/errors';
+import { db } from '~/libs/db';
+import { CfpNotOpenError, EventNotFoundError, TalkNotFoundError } from '~/libs/errors';
+
 import { saveDraftProposal } from './save-draft-proposal.server';
 
 describe('#saveDraftProposal', () => {
