@@ -12,7 +12,7 @@ import path from 'path';
 installGlobals();
 
 const BUILD_DIR = path.join(process.cwd(), 'build');
-const MODE = process.env.NODE_ENV;
+const ENV = process.env.NODE_ENV;
 const PORT = process.env.PORT || 3000;
 const FIREBASE_PROJECT_ID = process.env.FIREBASE_PROJECT_ID;
 
@@ -64,25 +64,25 @@ app.use('/api', apiLimiter);
 // Remix requests
 app.all(
   '*',
-  MODE === 'production'
+  ENV === 'production'
     ? (req, res, next) => {
         try {
           return createRequestHandler({
             build: require(BUILD_DIR),
-            mode: MODE,
+            mode: ENV,
           })(req, res, next);
         } catch (error) {
           next(error);
         }
       }
-    : createRequestHandler({ build: require(BUILD_DIR), mode: MODE }),
+    : createRequestHandler({ build: require(BUILD_DIR), mode: ENV }),
 );
 
 // Start the express server
 const server = app.listen(PORT, () => {
   console.log(`🚀 App started on http://localhost:${PORT}`);
 
-  if (process.env.NODE_ENV === 'development') {
+  if (ENV === 'development') {
     broadcastDevReady(require(BUILD_DIR));
   }
 });
@@ -95,7 +95,7 @@ closeWithGrace(async () => {
 });
 
 // during dev, we'll keep the build module up to date with the changes
-if (process.env.NODE_ENV === 'development') {
+if (ENV === 'development') {
   const watcher = chokidar.watch(BUILD_DIR, {
     ignored: ['**/**.map'],
   });
