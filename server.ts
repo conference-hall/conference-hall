@@ -20,6 +20,17 @@ const app = express();
 
 app.use(compression());
 
+// No ending slashes for SEO reasons
+app.use((req, res, next) => {
+  if (req.path.endsWith('/') && req.path.length > 1) {
+    const query = req.url.slice(req.path.length);
+    const safepath = req.path.slice(0, -1).replace(/\/+/g, '/');
+    res.redirect(301, safepath + query);
+  } else {
+    next();
+  }
+});
+
 // http://expressjs.com/en/advanced/best-practice-security.html#at-a-minimum-disable-x-powered-by-header
 app.disable('x-powered-by');
 
