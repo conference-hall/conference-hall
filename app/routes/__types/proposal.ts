@@ -2,11 +2,11 @@ import { ProposalStatus } from '@prisma/client';
 import { z } from 'zod';
 
 import { TalkSaveSchema } from './talks';
-import { numeric, repeatable, text } from './utils';
+import { numeric, repeatable } from './utils';
 
-const ProposalStatusSchema = text(z.enum(['SUBMITTED', 'ACCEPTED', 'REJECTED', 'CONFIRMED', 'DECLINED']));
+const ProposalStatusSchema = z.enum(['SUBMITTED', 'ACCEPTED', 'REJECTED', 'CONFIRMED', 'DECLINED']);
 
-const ReviewFeelingsSchema = text(z.enum(['NEUTRAL', 'POSITIVE', 'NEGATIVE', 'NO_OPINION']));
+const ReviewFeelingsSchema = z.enum(['NEUTRAL', 'POSITIVE', 'NEGATIVE', 'NO_OPINION']);
 
 export const ProposalCreateSchema = TalkSaveSchema;
 
@@ -23,18 +23,18 @@ export const ProposalUpdateSchema = TalkSaveSchema.extend({
 });
 
 export const ProposalSubmissionSchema = z.object({
-  message: text(z.string().trim().max(1000).nullable().default(null)),
+  message: z.string().trim().max(1000).nullable().default(null),
 });
 
-const EmailStatusSchema = text(z.enum(['not-sent', 'sent']).optional());
+const EmailStatusSchema = z.enum(['not-sent', 'sent']).optional();
 
 const ProposalsFiltersSchema = z.object({
-  query: text(z.string().trim().optional()),
-  sort: text(z.enum(['newest', 'oldest', 'highest', 'lowest']).optional()),
-  reviews: text(z.enum(['reviewed', 'not-reviewed']).optional()),
+  query: z.string().trim().optional(),
+  sort: z.enum(['newest', 'oldest', 'highest', 'lowest']).optional(),
+  reviews: z.enum(['reviewed', 'not-reviewed']).optional(),
   status: repeatable(z.array(ProposalStatusSchema)).optional(),
-  formats: text(z.string().optional()),
-  categories: text(z.string().optional()),
+  formats: z.string().optional(),
+  categories: z.string().optional(),
   emailAcceptedStatus: EmailStatusSchema,
   emailRejectedStatus: EmailStatusSchema,
 });
@@ -46,7 +46,7 @@ export function parseProposalsFilters(params: URLSearchParams) {
 
 export const ProposalReviewDataSchema = z.object({
   note: numeric(z.number().min(0).max(5).nullable().default(null)),
-  comment: text(z.string().trim().nullable().default(null)),
+  comment: z.string().trim().nullable().default(null),
   feeling: ReviewFeelingsSchema,
 });
 
@@ -60,7 +60,7 @@ export const ProposalSelectionSchema = z.object({
 });
 
 export const ProposalParticipationSchema = z.object({
-  participation: text(z.enum([ProposalStatus.CONFIRMED, ProposalStatus.DECLINED])),
+  participation: z.enum([ProposalStatus.CONFIRMED, ProposalStatus.DECLINED]),
 });
 
 export type ProposalStatusData = z.infer<typeof ProposalStatusSchema>;

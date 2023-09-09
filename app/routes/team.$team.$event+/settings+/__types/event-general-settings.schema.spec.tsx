@@ -1,4 +1,5 @@
 import { parse } from '@conform-to/zod';
+import { describe, expect, it } from 'vitest';
 
 import { EventGeneralSettingsSchema } from './event-general-settings.schema';
 
@@ -25,9 +26,9 @@ describe('Validate EventGeneralSettingsSchema', () => {
 
     const result = parse(form, { schema: EventGeneralSettingsSchema });
     expect(result.error).toEqual({
-      name: 'Required',
-      slug: 'Must only contain lower case alphanumeric and dashes (-).',
-      visibility: "Invalid enum value. Expected 'PUBLIC' | 'PRIVATE', received 'toto'",
+      name: ['Required'],
+      slug: ['Must only contain lower case alphanumeric and dashes (-).'],
+      visibility: ["Invalid enum value. Expected 'PUBLIC' | 'PRIVATE', received 'toto'"],
     });
   });
 });

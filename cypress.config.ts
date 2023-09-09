@@ -8,12 +8,12 @@ const APP_URL = `${PROTOCOL}://${DOMAIN}:${PORT}`;
 export default defineConfig({
   experimentalMemoryManagement: true,
   screenshotOnRunFailure: false,
-  video: false,
   e2e: {
     baseUrl: APP_URL,
     viewportWidth: 1440,
     viewportHeight: 800,
     scrollBehavior: 'center',
+    supportFile: 'cypress/support/e2e.ts',
     setupNodeEvents(on, config) {
       // setup custom task
       on('task', {

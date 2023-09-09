@@ -7,6 +7,7 @@ import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { db } from '~/libs/db';
 import { ForbiddenOperationError } from '~/libs/errors';
@@ -26,7 +27,9 @@ describe('#getProposalMessages', () => {
     team = await teamFactory({ owners: [owner], members: [member] });
     event = await eventFactory({ team });
   });
-  afterEach(disconnectDB);
+  afterEach(async () => {
+    await disconnectDB();
+  });
 
   it('retrieve proposals messages', async () => {
     const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
@@ -72,7 +75,9 @@ describe('#addProposalMessage', () => {
     team = await teamFactory({ owners: [owner] });
     event = await eventFactory({ team });
   });
-  afterEach(disconnectDB);
+  afterEach(async () => {
+    await disconnectDB();
+  });
 
   it('adds message to a proposal', async () => {
     const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
@@ -109,7 +114,9 @@ describe('#removeProposalMessage', () => {
     team = await teamFactory({ owners: [owner], members: [member] });
     event = await eventFactory({ team });
   });
-  afterEach(disconnectDB);
+  afterEach(async () => {
+    await disconnectDB();
+  });
 
   it('removes a message from a proposal', async () => {
     const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });

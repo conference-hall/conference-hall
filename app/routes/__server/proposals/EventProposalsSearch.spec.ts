@@ -8,6 +8,7 @@ import { reviewFactory } from 'tests/factories/reviews';
 import { talkFactory } from 'tests/factories/talks';
 import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import type { ProposalsFilters } from '~/routes/__types/proposal';
 import { sortBy } from '~/utils/arrays';
@@ -68,7 +69,9 @@ describe('#searchProposals', () => {
     await reviewFactory({ user: owner, proposal: proposal3, attributes: { feeling: 'POSITIVE', note: 1 } });
   });
 
-  afterEach(disconnectDB);
+  afterEach(async () => {
+    await disconnectDB();
+  });
 
   describe('#search.statisics', () => {
     it('returns statistics search info', async () => {

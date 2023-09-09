@@ -3,6 +3,7 @@ import { eventFactory } from 'tests/factories/events';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { config } from '../../../libs/config';
 import { TalkNotFoundError } from '../../../libs/errors';
@@ -13,7 +14,9 @@ describe('#getTalk', () => {
   beforeEach(async () => {
     await resetDB();
   });
-  afterEach(disconnectDB);
+  afterEach(async () => {
+    await disconnectDB();
+  });
 
   it('returns speaker talk', async () => {
     const speaker = await userFactory();

@@ -1,4 +1,5 @@
 import { teamFactory } from 'tests/factories/team';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { disconnectDB, resetDB } from '../../../../tests/db-helpers';
 import { eventCategoryFactory } from '../../../../tests/factories/categories';
@@ -11,7 +12,9 @@ describe('#getEvent', () => {
   beforeEach(async () => {
     await resetDB();
   });
-  afterEach(disconnectDB);
+  afterEach(async () => {
+    await disconnectDB();
+  });
 
   it('returns the default response', async () => {
     const team = await teamFactory();

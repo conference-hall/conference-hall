@@ -9,6 +9,7 @@ import { reviewFactory } from 'tests/factories/reviews';
 import { talkFactory } from 'tests/factories/talks';
 import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { db } from '~/libs/db';
 import { ForbiddenOperationError } from '~/libs/errors';
@@ -32,7 +33,9 @@ describe('#getProposalReview', () => {
     format = await eventFormatFactory({ event });
     category = await eventCategoryFactory({ event });
   });
-  afterEach(disconnectDB);
+  afterEach(async () => {
+    await disconnectDB();
+  });
 
   it('returns proposal review data', async () => {
     const proposal = await proposalFactory({

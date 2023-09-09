@@ -1,4 +1,5 @@
 import { parse } from '@conform-to/zod';
+import { describe, expect, it } from 'vitest';
 
 import { CfpConferenceOpeningSchema, CfpMeetupOpeningSchema, CfpPreferencesSchema } from './event-cfp-settings.schema';
 
@@ -34,8 +35,8 @@ describe('Validate CfpPreferencesSchema', () => {
 
     const result = parse(form, { schema: CfpPreferencesSchema });
     expect(result.error).toEqual({
-      codeOfConductUrl: 'Invalid url',
-      maxProposals: 'Expected number, received string',
+      codeOfConductUrl: ['Invalid url'],
+      maxProposals: ['Expected number, received nan'],
     });
   });
 });
@@ -72,8 +73,7 @@ describe('Validate CfpConferenceOpeningSchema', () => {
 
     const result = parse(form, { schema: CfpConferenceOpeningSchema });
     expect(result.error).toEqual({
-      cfpEnd: 'Invalid date',
-      cfpStart: 'Invalid date',
+      cfpStart: ['Invalid date'],
     });
   });
 
@@ -84,7 +84,7 @@ describe('Validate CfpConferenceOpeningSchema', () => {
 
     const result = parse(form, { schema: CfpConferenceOpeningSchema });
     expect(result.error).toEqual({
-      cfpStart: 'Call for paper start date must be after the end date.',
+      cfpStart: ['Call for paper start date must be after the end date.'],
     });
   });
 
@@ -94,7 +94,7 @@ describe('Validate CfpConferenceOpeningSchema', () => {
 
     const result = parse(form, { schema: CfpConferenceOpeningSchema });
     expect(result.error).toEqual({
-      cfpStart: 'Call for paper start date must be after the end date.',
+      cfpStart: ['Call for paper start date must be after the end date.'],
     });
   });
 
@@ -104,7 +104,7 @@ describe('Validate CfpConferenceOpeningSchema', () => {
 
     const result = parse(form, { schema: CfpConferenceOpeningSchema });
     expect(result.error).toEqual({
-      cfpStart: 'Call for paper start date must be after the end date.',
+      cfpStart: ['Call for paper start date must be after the end date.'],
     });
   });
 });
@@ -136,7 +136,7 @@ describe('Validate CfpMeetupOpeningSchema', () => {
 
     const result = parse(form, { schema: CfpMeetupOpeningSchema });
     expect(result.error).toEqual({
-      cfpStart: 'Invalid date',
+      cfpStart: ['Invalid date'],
     });
   });
 });

@@ -5,13 +5,12 @@ import { z } from 'zod';
 import { db } from '~/libs/db';
 import { getPagination } from '~/routes/__server/pagination/pagination.server';
 import type { Pagination } from '~/routes/__types/pagination';
-import { text } from '~/routes/__types/utils';
 import { getCfpState } from '~/utils/event';
 
 const SearchFiltersSchema = z.object({
-  query: text().optional(),
-  type: text(z.enum(['all', 'conference', 'meetup'])).optional(),
-  talkId: text().optional(),
+  query: z.string().trim().optional(),
+  type: z.enum(['all', 'conference', 'meetup']).optional(),
+  talkId: z.string().optional(),
 });
 
 export type SearchFilters = z.infer<typeof SearchFiltersSchema>;

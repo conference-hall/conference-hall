@@ -1,6 +1,7 @@
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { db } from '../../../libs/db';
 import { ForbiddenOperationError } from '../../../libs/errors';
@@ -10,7 +11,9 @@ describe('#changeMemberRole', () => {
   beforeEach(async () => {
     await resetDB();
   });
-  afterEach(disconnectDB);
+  afterEach(async () => {
+    await disconnectDB();
+  });
 
   it('changes the role of a member when user has owner role', async () => {
     const owner = await userFactory({ traits: ['clark-kent'], attributes: { id: '1' } });

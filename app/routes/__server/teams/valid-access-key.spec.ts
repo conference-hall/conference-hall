@@ -1,6 +1,7 @@
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { organizerKeyFactory } from 'tests/factories/organizer-key';
 import { userFactory } from 'tests/factories/users';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { db } from '../../../libs/db';
 import { validAccessKey } from './valid-access-key.server';
@@ -9,7 +10,9 @@ describe('#validAccessKey', () => {
   beforeEach(async () => {
     await resetDB();
   });
-  afterEach(disconnectDB);
+  afterEach(async () => {
+    await disconnectDB();
+  });
 
   it('updates the user organizer key when key is valid', async () => {
     const key = await organizerKeyFactory();

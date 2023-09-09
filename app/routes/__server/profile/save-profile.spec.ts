@@ -1,3 +1,5 @@
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+
 import { disconnectDB, resetDB } from '../../../../tests/db-helpers';
 import { userFactory } from '../../../../tests/factories/users';
 import { db } from '../../../libs/db';
@@ -8,7 +10,9 @@ describe('#saveUserPersonalInfo', () => {
   beforeEach(async () => {
     await resetDB();
   });
-  afterEach(disconnectDB);
+  afterEach(async () => {
+    await disconnectDB();
+  });
 
   it('updates personal information', async () => {
     const user = await userFactory();
@@ -35,7 +39,9 @@ describe('#saveUserDetails', () => {
   beforeEach(async () => {
     await resetDB();
   });
-  afterEach(disconnectDB);
+  afterEach(async () => {
+    await disconnectDB();
+  });
 
   it('updates user details', async () => {
     const user = await userFactory();
@@ -60,7 +66,9 @@ describe('#saveUserAdditionalInfo', () => {
   beforeEach(async () => {
     await resetDB();
   });
-  afterEach(disconnectDB);
+  afterEach(async () => {
+    await disconnectDB();
+  });
 
   it('updates user additional information', async () => {
     const user = await userFactory();

@@ -6,6 +6,7 @@ import { reviewFactory } from 'tests/factories/reviews';
 import { talkFactory } from 'tests/factories/talks';
 import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { db } from '~/libs/db';
 import { ForbiddenOperationError } from '~/libs/errors';
@@ -25,7 +26,9 @@ describe('#getReviews', () => {
     team = await teamFactory({ owners: [owner, member] });
     event = await eventFactory({ team });
   });
-  afterEach(disconnectDB);
+  afterEach(async () => {
+    await disconnectDB();
+  });
 
   it('returns proposal reviews', async () => {
     const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });

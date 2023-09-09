@@ -2,6 +2,7 @@ import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventFactory } from 'tests/factories/events';
 import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { ForbiddenOperationError } from '../../../libs/errors';
 import { allowedForEvent, allowedForTeam } from './check-user-role.server';
@@ -10,7 +11,9 @@ describe('#allowedForOrga', () => {
   beforeEach(async () => {
     await resetDB();
   });
-  afterEach(disconnectDB);
+  afterEach(async () => {
+    await disconnectDB();
+  });
 
   it('returns the team if user has access to the team', async () => {
     const user = await userFactory();
@@ -50,7 +53,9 @@ describe('#allowedForEvent', () => {
   beforeEach(async () => {
     await resetDB();
   });
-  afterEach(disconnectDB);
+  afterEach(async () => {
+    await disconnectDB();
+  });
 
   it('returns the event if user has access to the event', async () => {
     const user = await userFactory();

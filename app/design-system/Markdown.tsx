@@ -4,8 +4,6 @@ import { marked } from 'marked';
 import React from 'react';
 import xss from 'xss';
 
-marked.use({ mangle: false, headerIds: false });
-
 const markdown = cva('max-w-none text-gray-900', {
   variants: { size: { s: 'prose prose-sm', m: 'prose' } },
   defaultVariants: { size: 's' },

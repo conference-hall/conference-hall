@@ -3,9 +3,9 @@ import { z } from 'zod';
 import { text } from './utils';
 
 export const PersonalInfoSchema = z.object({
-  name: text(z.string().trim().min(1)),
-  email: text(z.string().email().trim().min(1)),
-  picture: text(z.string().url().trim().nullable().default(null)),
+  name: z.string().trim(),
+  email: z.string().email().trim(),
+  picture: z.string().url().trim().nullable().default(null),
 });
 
 export type PersonalInfoData = z.infer<typeof PersonalInfoSchema>;

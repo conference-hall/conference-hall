@@ -5,6 +5,7 @@ import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { db } from '~/libs/db';
 import { DeliberationDisabledError, ForbiddenOperationError } from '~/libs/errors';
@@ -24,7 +25,9 @@ describe('#rateProposal', () => {
     team = await teamFactory({ owners: [owner, owner2] });
     event = await eventFactory({ team });
   });
-  afterEach(disconnectDB);
+  afterEach(async () => {
+    await disconnectDB();
+  });
 
   it('adds then updates a review for a proposal', async () => {
     const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });

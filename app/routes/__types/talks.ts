@@ -1,12 +1,12 @@
 import { z } from 'zod';
 
-import { repeatable, text } from './utils';
+import { repeatable } from './utils';
 
 export const TalkSaveSchema = z.object({
-  title: text(z.string().trim().min(1)),
-  abstract: text(z.string().trim().min(1)),
-  references: text(z.string().nullable().default(null)),
-  level: text(z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']).nullable().default(null)),
+  title: z.string().trim(),
+  abstract: z.string().trim(),
+  references: z.string().nullable().default(null),
+  level: z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']).nullable().default(null),
   languages: repeatable(),
 });
 

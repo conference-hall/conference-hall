@@ -1,3 +1,5 @@
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+
 import { disconnectDB, resetDB } from '../../../../tests/db-helpers';
 import { eventFactory } from '../../../../tests/factories/events';
 import { parseFilters, searchEvents } from './search.server';
@@ -6,7 +8,9 @@ describe('#searchEvents', () => {
   beforeEach(async () => {
     await resetDB();
   });
-  afterEach(disconnectDB);
+  afterEach(async () => {
+    await disconnectDB();
+  });
 
   it('returns the default response', async () => {
     const event = await eventFactory({

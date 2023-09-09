@@ -1,3 +1,5 @@
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+
 import { disconnectDB, resetDB } from '../../../../tests/db-helpers';
 import { talkFactory } from '../../../../tests/factories/talks';
 import { userFactory } from '../../../../tests/factories/users';
@@ -9,7 +11,9 @@ describe('#removeCoSpeakerFromTalk', () => {
   beforeEach(async () => {
     await resetDB();
   });
-  afterEach(disconnectDB);
+  afterEach(async () => {
+    await disconnectDB();
+  });
 
   it('removes a cospeaker from the talk', async () => {
     const speaker = await userFactory();

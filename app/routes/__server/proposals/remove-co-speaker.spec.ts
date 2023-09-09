@@ -3,6 +3,7 @@ import { eventFactory } from 'tests/factories/events';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { db } from '../../../libs/db';
 import { ProposalNotFoundError } from '../../../libs/errors';
@@ -12,7 +13,9 @@ describe('#removeCoSpeakerFromSubmission', () => {
   beforeEach(async () => {
     await resetDB();
   });
-  afterEach(disconnectDB);
+  afterEach(async () => {
+    await disconnectDB();
+  });
 
   it('removes a cospeaker from the proposal', async () => {
     const event = await eventFactory();
@@ -61,7 +64,9 @@ describe('#removeCoSpeakerFromProposal', () => {
   beforeEach(async () => {
     await resetDB();
   });
-  afterEach(disconnectDB);
+  afterEach(async () => {
+    await disconnectDB();
+  });
 
   it('removes a cospeaker from the proposal', async () => {
     const event = await eventFactory();

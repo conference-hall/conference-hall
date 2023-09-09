@@ -1,4 +1,5 @@
 import { parse } from '@conform-to/zod';
+import { describe, expect, it } from 'vitest';
 
 import { EventSlackSettingsSchema } from './event-slack-settings.schema';
 
@@ -17,7 +18,7 @@ describe('Validate EventSlackSettingsSchema', () => {
 
     const result = parse(form, { schema: EventSlackSettingsSchema });
     expect(result.error).toEqual({
-      slackWebhookUrl: 'Invalid url',
+      slackWebhookUrl: ['Invalid url'],
     });
   });
 });

@@ -5,6 +5,7 @@ import { eventFormatFactory } from 'tests/factories/formats';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { ApiKeyInvalidError, EventNotFoundError } from '~/libs/errors';
 
@@ -14,7 +15,9 @@ describe('#getEventProposals', () => {
   beforeEach(async () => {
     await resetDB();
   });
-  afterEach(disconnectDB);
+  afterEach(async () => {
+    await disconnectDB();
+  });
 
   it('return proposals from api', async () => {
     const speaker = await userFactory();

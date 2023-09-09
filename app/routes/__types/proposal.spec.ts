@@ -1,4 +1,5 @@
 import { parse } from '@conform-to/zod';
+import { describe, expect, it } from 'vitest';
 
 import {
   parseProposalsFilters,
@@ -37,9 +38,9 @@ describe('Validate ProposalCreateSchema', () => {
 
     const result = parse(form, { schema: ProposalCreateSchema });
     expect(result.error).toEqual({
-      title: 'Required',
-      abstract: 'Required',
-      level: "Invalid enum value. Expected 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED', received 'BAD_VALUE'",
+      title: ['Required'],
+      abstract: ['Required'],
+      level: ["Invalid enum value. Expected 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED', received 'BAD_VALUE'"],
     });
   });
 
@@ -92,7 +93,7 @@ describe('Validate ProposalUpdateSchema', () => {
     form.append('abstract', '');
 
     const result = parse(form, { schema: ProposalUpdateSchema });
-    expect(result?.error).toEqual({ abstract: 'Required', title: 'Required' });
+    expect(result?.error).toEqual({ abstract: ['Required'], title: ['Required'] });
   });
 
   it('reset fields', async () => {
@@ -179,8 +180,8 @@ describe('Validate ProposalReviewDataSchema', () => {
 
     const result = parse(form, { schema: ProposalReviewDataSchema });
     expect(result.error).toEqual({
-      feeling: "Invalid enum value. Expected 'NEUTRAL' | 'POSITIVE' | 'NEGATIVE' | 'NO_OPINION', received 'toto'",
-      note: 'Expected number, received string',
+      feeling: ["Invalid enum value. Expected 'NEUTRAL' | 'POSITIVE' | 'NEGATIVE' | 'NO_OPINION', received 'toto'"],
+      note: ['Expected number, received nan'],
     });
   });
 });
@@ -205,8 +206,9 @@ describe('Validate ProposalsStatusUpdateSchema', () => {
 
     const result = parse(form, { schema: ProposalsStatusUpdateSchema });
     expect(result.error).toEqual({
-      status:
+      status: [
         "Invalid enum value. Expected 'SUBMITTED' | 'ACCEPTED' | 'REJECTED' | 'CONFIRMED' | 'DECLINED', received 'foo'",
+      ],
     });
   });
 });

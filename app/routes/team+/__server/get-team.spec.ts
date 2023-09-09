@@ -1,6 +1,7 @@
 import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { config } from '~/libs/config';
 import { TeamNotFoundError } from '~/libs/errors';
@@ -11,7 +12,9 @@ describe('#getOrganization', () => {
   beforeEach(async () => {
     await resetDB();
   });
-  afterEach(disconnectDB);
+  afterEach(async () => {
+    await disconnectDB();
+  });
 
   it('returns team belonging to user', async () => {
     const user = await userFactory();

@@ -4,9 +4,8 @@ import { z } from 'zod';
 import { db } from '~/libs/db';
 import { getPagination } from '~/routes/__server/pagination/pagination.server';
 import { allowedForTeam } from '~/routes/__server/teams/check-user-role.server';
-import { text } from '~/routes/__types/utils';
 
-export const MembersFilterSchema = z.object({ query: text(z.string().trim().optional()) });
+export const MembersFilterSchema = z.object({ query: z.string().trim().optional() });
 
 type MembersFilters = z.infer<typeof MembersFilterSchema>;
 

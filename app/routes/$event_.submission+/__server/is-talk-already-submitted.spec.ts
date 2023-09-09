@@ -3,6 +3,7 @@ import { eventFactory } from 'tests/factories/events';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { isTalkAlreadySubmitted } from './is-talk-already-submitted.server';
 
@@ -10,7 +11,9 @@ describe('#isTalkAlreadySubmitted', () => {
   beforeEach(async () => {
     await resetDB();
   });
-  afterEach(disconnectDB);
+  afterEach(async () => {
+    await disconnectDB();
+  });
 
   it('returns true if the talk already submitted for the event', async () => {
     const event = await eventFactory();

@@ -2,12 +2,11 @@ import { TeamRole } from '@prisma/client';
 import { z } from 'zod';
 
 import { db } from '~/libs/db';
-import { text } from '~/routes/__types/utils';
 import { slugValidator } from '~/routes/__types/validators';
 
 export const TeamSaveSchema = z.object({
-  name: text(z.string().trim().min(3).max(50)),
-  slug: text(slugValidator).refine(checkSlugAlreadyExist, {
+  name: z.string().trim().min(3).max(50),
+  slug: slugValidator.refine(checkSlugAlreadyExist, {
     message: 'This URL already exists, please try another one.',
   }),
 });

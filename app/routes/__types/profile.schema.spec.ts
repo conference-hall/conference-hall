@@ -1,4 +1,5 @@
 import { parse } from '@conform-to/zod';
+import { describe, expect, it } from 'vitest';
 
 import { AdditionalInfoSchema, DetailsSchema, PersonalInfoSchema } from './profile.schema';
 
@@ -25,8 +26,8 @@ describe('Validate PersonalInfoSchema', () => {
 
     const result = parse(form, { schema: PersonalInfoSchema });
     expect(result?.error).toEqual({
-      name: 'Required',
-      email: 'Required',
+      name: ['Required'],
+      email: ['Required'],
     });
   });
 });

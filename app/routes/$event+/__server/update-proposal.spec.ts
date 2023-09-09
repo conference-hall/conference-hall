@@ -6,6 +6,7 @@ import { eventFormatFactory } from 'tests/factories/formats';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { CfpNotOpenError, EventNotFoundError, ProposalNotFoundError } from '~/libs/errors';
 import { getSpeakerProposal } from '~/routes/__server/proposals/get-speaker-proposal.server';
@@ -16,7 +17,9 @@ describe('#updateProposal', () => {
   beforeEach(async () => {
     await resetDB();
   });
-  afterEach(disconnectDB);
+  afterEach(async () => {
+    await disconnectDB();
+  });
 
   it('updates the proposal and the related talk', async () => {
     const event = await eventFactory({ traits: ['conference-cfp-open'] });

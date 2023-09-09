@@ -3,8 +3,6 @@ import fs from 'node:fs';
 import { marked } from 'marked';
 import xss from 'xss';
 
-marked.use({ mangle: false, headerIds: false });
-
 export function buildTemplate(subject: string, template: string, variables: Record<string, string> = {}) {
   const base = fs.readFileSync(`./app/libs/emails/template/email-base.html`);
 

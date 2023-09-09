@@ -1,4 +1,5 @@
 import { parse } from '@conform-to/zod';
+import { describe, expect, it } from 'vitest';
 
 import { TalkSaveSchema } from './talks';
 
@@ -30,9 +31,9 @@ describe('Validate TalkSaveSchema', () => {
 
     const result = parse(form, { schema: TalkSaveSchema });
     expect(result.error).toEqual({
-      title: 'Required',
-      abstract: 'Required',
-      level: "Invalid enum value. Expected 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED', received 'BAD_VALUE'",
+      title: ['Required'],
+      abstract: ['Required'],
+      level: ["Invalid enum value. Expected 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED', received 'BAD_VALUE'"],
     });
   });
 

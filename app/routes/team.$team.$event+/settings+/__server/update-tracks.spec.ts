@@ -6,6 +6,7 @@ import { eventFactory } from 'tests/factories/events';
 import { eventFormatFactory } from 'tests/factories/formats';
 import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { db } from '~/libs/db';
 import { ForbiddenOperationError } from '~/libs/errors';
@@ -24,7 +25,9 @@ describe('#saveFormat', () => {
     team = await teamFactory({ owners: [owner], reviewers: [reviewer] });
     event = await eventFactory({ team });
   });
-  afterEach(disconnectDB);
+  afterEach(async () => {
+    await disconnectDB();
+  });
 
   it('adds a new format', async () => {
     await saveFormat(event.slug, owner.id, {
@@ -80,7 +83,9 @@ describe('#saveCategory', () => {
     team = await teamFactory({ owners: [owner], reviewers: [reviewer] });
     event = await eventFactory({ team });
   });
-  afterEach(disconnectDB);
+  afterEach(async () => {
+    await disconnectDB();
+  });
 
   it('adds a new category', async () => {
     await saveCategory(event.slug, owner.id, {
@@ -138,7 +143,9 @@ describe('#deleteFormat', () => {
     event = await eventFactory({ team });
     format = await eventFormatFactory({ event });
   });
-  afterEach(disconnectDB);
+  afterEach(async () => {
+    await disconnectDB();
+  });
 
   it('deletes an event format', async () => {
     await deleteFormat(event.slug, owner.id, format.id);
@@ -170,7 +177,9 @@ describe('#deleteCategory', () => {
     event = await eventFactory({ team });
     category = await eventCategoryFactory({ event });
   });
-  afterEach(disconnectDB);
+  afterEach(async () => {
+    await disconnectDB();
+  });
 
   it('deletes an event category', async () => {
     await deleteCategory(event.slug, owner.id, category.id);
@@ -222,7 +231,7 @@ describe('Validate EventTrackSaveSchema', () => {
 
     const result = parse(form, { schema: EventTrackSaveSchema });
     expect(result.error).toEqual({
-      name: 'Required',
+      name: ['Required'],
     });
   });
 });

@@ -6,7 +6,7 @@ import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
-import { vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { sendSubmittedTalkSlackMessage } from './slack.services';
 
@@ -18,7 +18,9 @@ describe('Slack services', () => {
     fetchMock.mockReset();
     await resetDB();
   });
-  afterEach(disconnectDB);
+  afterEach(async () => {
+    await disconnectDB();
+  });
 
   it('should not send a Slack message if Slack integration not enabled for event', async () => {
     const event = await eventFactory();
