@@ -1,8 +1,8 @@
+import { parse } from '@conform-to/zod';
 import { ProposalStatus } from '@prisma/client';
 import { z } from 'zod';
 
 import { TalkSaveSchema } from './talks';
-import { numeric, repeatable } from './utils';
 
 const ProposalStatusSchema = z.enum(['SUBMITTED', 'ACCEPTED', 'REJECTED', 'CONFIRMED', 'DECLINED']);
 
@@ -11,15 +11,15 @@ const ReviewFeelingsSchema = z.enum(['NEUTRAL', 'POSITIVE', 'NEGATIVE', 'NO_OPIN
 export const ProposalCreateSchema = TalkSaveSchema;
 
 export function getProposalUpdateSchema(formatsRequired: boolean, categoriesRequired: boolean) {
-  const FormatsSchema = formatsRequired ? repeatable(z.array(z.string()).nonempty()) : repeatable().optional();
-  const CategoriesSchema = categoriesRequired ? repeatable(z.array(z.string()).nonempty()) : repeatable().optional();
+  const FormatsSchema = formatsRequired ? z.array(z.string()).nonempty() : z.array(z.string()).optional();
+  const CategoriesSchema = categoriesRequired ? z.array(z.string()).nonempty() : z.array(z.string()).optional();
 
   return TalkSaveSchema.extend({ formats: FormatsSchema, categories: CategoriesSchema });
 }
 
 export const ProposalUpdateSchema = TalkSaveSchema.extend({
-  formats: repeatable(z.array(z.string())).optional(),
-  categories: repeatable(z.array(z.string())).optional(),
+  formats: z.array(z.string()).optional(),
+  categories: z.array(z.string()).optional(),
 });
 
 export const ProposalSubmissionSchema = z.object({
@@ -32,7 +32,7 @@ const ProposalsFiltersSchema = z.object({
   query: z.string().trim().optional(),
   sort: z.enum(['newest', 'oldest', 'highest', 'lowest']).optional(),
   reviews: z.enum(['reviewed', 'not-reviewed']).optional(),
-  status: repeatable(z.array(ProposalStatusSchema)).optional(),
+  status: z.array(ProposalStatusSchema).optional(),
   formats: z.string().optional(),
   categories: z.string().optional(),
   emailAcceptedStatus: EmailStatusSchema,
@@ -40,23 +40,23 @@ const ProposalsFiltersSchema = z.object({
 });
 
 export function parseProposalsFilters(params: URLSearchParams) {
-  const result = ProposalsFiltersSchema.safeParse(Object.fromEntries(params));
-  return result.success ? result.data : {};
+  const result = parse(params, { schema: ProposalsFiltersSchema });
+  return result.value || {};
 }
 
 export const ProposalReviewDataSchema = z.object({
-  note: numeric(z.number().min(0).max(5).nullable().default(null)),
+  note: z.number().min(0).max(5).nullable().default(null),
   comment: z.string().trim().nullable().default(null),
   feeling: ReviewFeelingsSchema,
 });
 
 export const ProposalsStatusUpdateSchema = z.object({
   status: ProposalStatusSchema,
-  selection: repeatable(z.array(z.string())),
+  selection: z.array(z.string()),
 });
 
 export const ProposalSelectionSchema = z.object({
-  selection: repeatable(z.array(z.string())),
+  selection: z.array(z.string()),
 });
 
 export const ProposalParticipationSchema = z.object({

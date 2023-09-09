@@ -1,3 +1,4 @@
+import { parse } from '@conform-to/zod';
 import type { Prisma } from '@prisma/client';
 import { EventVisibility } from '@prisma/client';
 import { z } from 'zod';
@@ -58,8 +59,8 @@ export async function searchEvents(filters: SearchFilters, page: Pagination = 1)
 }
 
 export function parseFilters(params: URLSearchParams) {
-  const result = SearchFiltersSchema.safeParse(Object.fromEntries(params));
-  return result.success ? result.data : {};
+  const result = parse(params, { schema: SearchFiltersSchema });
+  return result.value || {};
 }
 
 function mapFiltersQuery(type?: string): Prisma.EventWhereInput {

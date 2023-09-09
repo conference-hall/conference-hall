@@ -2,10 +2,9 @@ import { z } from 'zod';
 
 import { db } from '~/libs/db';
 import { ProposalNotFoundError } from '~/libs/errors';
-import { repeatable } from '~/routes/__types/utils';
 
-const TracksMandatorySchema = repeatable(z.array(z.string()).nonempty());
-const TracksSchema = repeatable().optional();
+const TracksMandatorySchema = z.array(z.string()).nonempty();
+const TracksSchema = z.array(z.string()).optional();
 
 const TracksUpdateSchema = z.object({ formats: TracksSchema, categories: TracksSchema });
 

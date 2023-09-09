@@ -1,3 +1,4 @@
+import { parse } from '@conform-to/zod';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { CubeTransparentIcon } from '@heroicons/react/24/outline';
 import type { TeamRole } from '@prisma/client';
@@ -28,10 +29,10 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   invariant(params.team, 'Invalid team slug');
 
   const url = new URL(request.url);
-  const filters = MembersFilterSchema.safeParse(Object.fromEntries(url.searchParams));
+  const filters = parse(url.searchParams, { schema: MembersFilterSchema });
   const page = parsePage(url.searchParams);
 
-  const members = await listMembers(params.team, userId, filters.success ? filters.data : {}, page);
+  const members = await listMembers(params.team, userId, filters.value || {}, page);
   return json(members);
 };
 
