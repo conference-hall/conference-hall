@@ -1,20 +1,18 @@
 import { z } from 'zod';
 
-import { dateValidator } from '~/routes/__types/validators';
-
 export const CfpPreferencesSchema = z.object({
   codeOfConductUrl: z.string().url().trim().nullable().default(null),
   maxProposals: z.number().nullable().default(null),
 });
 
 export const CfpMeetupOpeningSchema = z.object({
-  cfpStart: dateValidator,
+  cfpStart: z.coerce.date().nullable().default(null),
 });
 
 export const CfpConferenceOpeningSchema = z
   .object({
-    cfpStart: dateValidator,
-    cfpEnd: dateValidator,
+    cfpStart: z.coerce.date().nullable().default(null),
+    cfpEnd: z.coerce.date().nullable().default(null),
   })
   .refine(
     ({ cfpStart, cfpEnd }) => {

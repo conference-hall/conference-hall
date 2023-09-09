@@ -74,6 +74,7 @@ describe('Validate CfpConferenceOpeningSchema', () => {
     const result = parse(form, { schema: CfpConferenceOpeningSchema });
     expect(result.error).toEqual({
       cfpStart: ['Invalid date'],
+      cfpEnd: ['Invalid date'],
     });
   });
 

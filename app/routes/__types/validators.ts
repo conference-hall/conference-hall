@@ -6,10 +6,3 @@ export const slugValidator = z
   .trim()
   .min(3)
   .max(50);
-
-export const dateValidator = z.preprocess((d: any) => (d ? new Date(d) : null), z.date().nullable().default(null));
-
-export const checkboxValidator = z.preprocess(
-  (b) => (b === undefined ? undefined : b === 'true'),
-  z.boolean().optional(),
-);

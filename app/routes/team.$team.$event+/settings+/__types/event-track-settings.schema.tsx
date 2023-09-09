@@ -1,8 +1,12 @@
 import { z } from 'zod';
 
-import { checkboxValidator } from '~/routes/__types/validators';
-
 export const EventTracksSettingsSchema = z.object({
-  formatsRequired: checkboxValidator,
-  categoriesRequired: checkboxValidator,
+  formatsRequired: z
+    .string()
+    .transform((value) => value === 'true')
+    .catch(false),
+  categoriesRequired: z
+    .string()
+    .transform((value) => value === 'true')
+    .catch(false),
 });

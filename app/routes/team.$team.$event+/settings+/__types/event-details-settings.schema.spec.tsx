@@ -54,6 +54,7 @@ describe('Validate EventDetailsSettingsSchema', () => {
     const result = parse(form, { schema: EventDetailsSettingsSchema });
     expect(result.error).toEqual({
       conferenceStart: ['Invalid date'],
+      conferenceEnd: ['Invalid date'],
       contactEmail: ['Invalid email'],
       websiteUrl: ['Invalid url'],
     });

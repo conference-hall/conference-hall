@@ -1,13 +1,11 @@
 import { z } from 'zod';
 
-import { dateValidator } from '~/routes/__types/validators';
-
 export const EventDetailsSettingsSchema = z
   .object({
     address: z.string().trim().nullable().default(null),
     description: z.string().trim().nullable().default(null),
-    conferenceStart: dateValidator,
-    conferenceEnd: dateValidator,
+    conferenceStart: z.coerce.date().nullable().default(null),
+    conferenceEnd: z.coerce.date().nullable().default(null),
     websiteUrl: z.string().url().trim().nullable().default(null),
     contactEmail: z.string().email().trim().nullable().default(null),
   })
