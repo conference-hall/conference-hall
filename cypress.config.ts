@@ -6,6 +6,7 @@ const { PROTOCOL, DOMAIN, PORT } = process.env;
 const APP_URL = `${PROTOCOL}://${DOMAIN}:${PORT}`;
 
 export default defineConfig({
+  experimentalMemoryManagement: true,
   screenshotOnRunFailure: false,
   video: false,
   e2e: {
