@@ -6,7 +6,7 @@ import { allowedForEvent } from '~/routes/__server/teams/check-user-role.server'
 
 export const EventTrackSaveSchema = z.object({
   id: z.string().trim().optional(),
-  name: z.string().trim(),
+  name: z.string().trim().min(1),
   description: z.string().trim().nullable().default(null),
 });
 

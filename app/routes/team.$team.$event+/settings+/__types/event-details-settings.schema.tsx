@@ -3,7 +3,7 @@ import { z } from 'zod';
 export const EventDetailsSettingsSchema = z
   .object({
     address: z.string().trim().nullable().default(null),
-    description: z.string().trim().nullable().default(null),
+    description: z.string().trim().min(1).nullable().default(null),
     conferenceStart: z.coerce.date().nullable().default(null),
     conferenceEnd: z.coerce.date().nullable().default(null),
     websiteUrl: z.string().url().trim().nullable().default(null),
