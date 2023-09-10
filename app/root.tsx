@@ -37,7 +37,16 @@ export function meta() {
 }
 
 export const links: LinksFunction = () => {
-  return [{ rel: 'stylesheet', href: tailwind }];
+  return [
+    // Preload to avoid render blocking
+    { rel: 'preload', href: 'https://fonts.cdnfonts.com/css/inter', as: 'style' },
+    { rel: 'preload', href: 'https://fonts.cdnfonts.com/css/ubuntu', as: 'style' },
+    { rel: 'preload', href: tailwind, as: 'style' },
+    // Stylesheets
+    { rel: 'stylesheet', href: 'https://fonts.cdnfonts.com/css/inter' },
+    { rel: 'stylesheet', href: 'https://fonts.cdnfonts.com/css/ubuntu' },
+    { rel: 'stylesheet', href: tailwind },
+  ];
 };
 
 export const loader = async ({ request }: LoaderArgs) => {
