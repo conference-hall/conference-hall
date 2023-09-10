@@ -153,7 +153,7 @@ Cypress.Commands.add('assertToast', (label) => {
 // https://github.com/cypress-io/cypress/issues/7306#issuecomment-1152752612
 function visitAndCheck(url: string, options?: Partial<Cypress.VisitOptions>) {
   cy.visit(url, options);
-  cy.location('pathname').should('contain', url).wait(1000);
+  cy.location('pathname').should('contain', url).wait(500);
 }
 
 Cypress.Commands.add('visitAndCheck', visitAndCheck);
