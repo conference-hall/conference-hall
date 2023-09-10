@@ -12,7 +12,7 @@ describe('Submit a talk to event', () => {
   const login = new LoginPage();
 
   it('redirects to signin, when user is not connected', () => {
-    cy.visitAndCheck('devfest-nantes/survey');
+    cy.visit('devfest-nantes/survey');
     login.isPageVisible();
   });
 

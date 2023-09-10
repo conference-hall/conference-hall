@@ -152,7 +152,7 @@ Cypress.Commands.add('assertToast', (label) => {
 // Also added custom types to avoid getting detached
 // https://github.com/cypress-io/cypress/issues/7306#issuecomment-1152752612
 function visitAndCheck(url: string, options?: Partial<Cypress.VisitOptions>) {
-  cy.visitAndCheck(url, options);
+  cy.visit(url, options);
   cy.location('pathname').should('contain', url).wait(1000);
 }
 
@@ -162,12 +162,11 @@ Cypress.on('uncaught:exception', (err) => {
   // Cypress and React Hydrating the document don't get along
   // for some unknown reason. Hopefully we figure out why eventually
   // so we can remove this.
-  // if (
-  //   /hydrat/i.test(err.message) ||
-  //   /Minified React error #418/.test(err.message) ||
-  //   /Minified React error #423/.test(err.message)
-  // ) {
-  //   return false;
-  // }
-  return false;
+  if (
+    /hydrat/i.test(err.message) ||
+    /Minified React error #418/.test(err.message) ||
+    /Minified React error #423/.test(err.message)
+  ) {
+    return false;
+  }
 });
