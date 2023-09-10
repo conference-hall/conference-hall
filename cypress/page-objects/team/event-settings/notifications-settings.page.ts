@@ -2,7 +2,7 @@ import BasePage from 'page-objects/base.page';
 
 class NotificationsSettings extends BasePage {
   visit(slug: string, eventSlug: string) {
-    cy.visit(`/team/${slug}/${eventSlug}/settings/notifications`);
+    cy.visitAndCheck(`/team/${slug}/${eventSlug}/settings/notifications`);
     this.isPageVisible();
   }
 

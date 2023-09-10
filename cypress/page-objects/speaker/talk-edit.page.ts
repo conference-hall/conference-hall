@@ -10,7 +10,7 @@ type TalkFormType = {
 
 class SpeakerEditTalkPage extends BasePage {
   visit(talkId: string) {
-    cy.visit(`/speaker/talks/${talkId}/edit`);
+    cy.visitAndCheck(`/speaker/talks/${talkId}/edit`);
     this.isPageVisible();
   }
 

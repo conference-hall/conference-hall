@@ -1,5 +1,3 @@
-import { describe, expect, it } from 'vitest';
-
 import { userFactory } from '../../../../tests/factories/users';
 import { db } from '../../../libs/db';
 import { UserNotFoundError } from '../../../libs/errors';

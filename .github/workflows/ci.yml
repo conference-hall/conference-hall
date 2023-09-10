@@ -79,12 +79,10 @@ jobs:
         run: ./docker/wait-for-db.sh
 
       - name: Cypress run
-        uses: cypress-io/github-action@v5
+        uses: cypress-io/github-action@v6
         with:
           build: npx dotenv -e .env.test -- npm run build
-          start: |
-            npx dotenv -e .env.test -- npm run test:db
-            npx dotenv -e .env.test -- npm run start:server
+          start: npx dotenv -e .env.test -- npm start
           command-prefix: 'dotenv -e .env.test --'
           wait-on: 'http://localhost:3001'
 

@@ -7,7 +7,7 @@ type EventNewType = {
 
 class TeamEventsPage extends BasePage {
   visit(slug: string) {
-    cy.visit(`/team/${slug}`);
+    cy.visitAndCheck(`/team/${slug}`);
     this.isPageVisible();
   }
 

@@ -2,7 +2,7 @@ import BasePage from 'page-objects/base.page';
 
 class ApiSettings extends BasePage {
   visit(slug: string, eventSlug: string) {
-    cy.visit(`/team/${slug}/${eventSlug}/settings/api`);
+    cy.visitAndCheck(`/team/${slug}/${eventSlug}/settings/api`);
     this.isPageVisible();
   }
 

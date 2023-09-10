@@ -5,7 +5,7 @@ class LoginPage extends BasePage {
     if (redirectTo) {
       cy.visit(`/login?redirectTo=${redirectTo}`);
     } else {
-      cy.visit('/login');
+      cy.visitAndCheck('/login');
     }
     this.isPageVisible();
   }
@@ -15,8 +15,10 @@ class LoginPage extends BasePage {
   }
 
   signinWithGoogle(username: string) {
+    cy.location('pathname').should('contain', '/login').wait(1000);
+    cy.findByRole('heading', { name: 'Sign in to your account' }).should('exist');
     cy.findByRole('button', { name: 'Google' }).click();
-    cy.url().should('contain', '/emulator');
+    cy.assertText('Please select an existing account in the Auth Emulator or add a new one:');
     cy.findByText(username).click();
   }
 }

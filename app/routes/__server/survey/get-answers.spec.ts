@@ -1,7 +1,6 @@
 import { eventFactory } from 'tests/factories/events';
 import { surveyFactory } from 'tests/factories/surveys';
 import { userFactory } from 'tests/factories/users';
-import { describe, expect, it } from 'vitest';
 
 import { getAnswers } from './get-answers.server';
 

@@ -86,10 +86,10 @@ describe('Proposal review page', () => {
       cy.findByRole('link', { name: /Speakers/ }).should('not.exist');
       cy.findByRole('link', { name: /Reviews/ }).should('not.exist');
 
-      cy.visit(`/team/team-1/conference-2/review/proposal-2/speakers`, { failOnStatusCode: false });
+      cy.visitAndCheck(`/team/team-1/conference-2/review/proposal-2/speakers`, { failOnStatusCode: false });
       cy.assertText('Forbidden operation');
 
-      cy.visit(`/team/team-1/conference-2/review/proposal-2/reviews`, { failOnStatusCode: false });
+      cy.visitAndCheck(`/team/team-1/conference-2/review/proposal-2/reviews`, { failOnStatusCode: false });
       cy.assertText('Forbidden operation');
     });
   });

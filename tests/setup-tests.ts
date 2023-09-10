@@ -1,5 +1,4 @@
 import { installGlobals } from '@remix-run/node';
-import { afterAll, afterEach, vi } from 'vitest';
 
 import { disconnectDB, resetDB } from './db-helpers';
 

@@ -2,7 +2,7 @@ import BasePage from 'page-objects/base.page';
 
 class TracksSettings extends BasePage {
   visit(slug: string, eventSlug: string) {
-    cy.visit(`/team/${slug}/${eventSlug}/settings/tracks`);
+    cy.visitAndCheck(`/team/${slug}/${eventSlug}/settings/tracks`);
     this.isPageVisible();
   }
 

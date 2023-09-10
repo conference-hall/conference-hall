@@ -1,5 +1,4 @@
 import { parse } from '@conform-to/zod';
-import { describe, expect, it } from 'vitest';
 
 import { CfpConferenceOpeningSchema, CfpMeetupOpeningSchema, CfpPreferencesSchema } from './event-cfp-settings.schema';
 

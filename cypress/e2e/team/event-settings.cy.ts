@@ -365,7 +365,7 @@ describe('Event settings', () => {
     beforeEach(() => cy.login('Bruce Wayne'));
 
     it('cannot create new event as a team member', () => {
-      cy.visit(`/team/team-1/conference-1/settings`, { failOnStatusCode: false });
+      cy.visitAndCheck(`/team/team-1/conference-1/settings`, { failOnStatusCode: false });
       cy.assertText('Forbidden operation');
     });
   });
@@ -374,7 +374,7 @@ describe('Event settings', () => {
     beforeEach(() => cy.login('Peter Parker'));
 
     it('cannot create new event as a team reviewer', () => {
-      cy.visit(`/team/team-1/conference-1/settings`, { failOnStatusCode: false });
+      cy.visitAndCheck(`/team/team-1/conference-1/settings`, { failOnStatusCode: false });
       cy.assertText('Forbidden operation');
     });
   });

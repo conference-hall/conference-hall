@@ -7,7 +7,6 @@ import { reviewFactory } from 'tests/factories/reviews';
 import { talkFactory } from 'tests/factories/talks';
 import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
-import { beforeEach, describe, expect, it } from 'vitest';
 
 import type { ProposalsFilters } from '~/routes/__types/proposal';
 import { sortBy } from '~/utils/arrays';

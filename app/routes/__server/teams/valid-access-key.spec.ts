@@ -1,6 +1,5 @@
 import { organizerKeyFactory } from 'tests/factories/organizer-key';
 import { userFactory } from 'tests/factories/users';
-import { describe, expect, it } from 'vitest';
 
 import { db } from '../../../libs/db';
 import { validAccessKey } from './valid-access-key.server';

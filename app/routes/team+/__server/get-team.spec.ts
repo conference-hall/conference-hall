@@ -1,6 +1,5 @@
 import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
-import { describe, expect, it } from 'vitest';
 
 import { config } from '~/libs/config';
 import { TeamNotFoundError } from '~/libs/errors';

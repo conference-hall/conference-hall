@@ -1,5 +1,4 @@
 import { eventFactory } from 'tests/factories/events';
-import { describe, expect, it } from 'vitest';
 
 import { EventNotFoundError, SurveyNotEnabledError } from '../../../libs/errors';
 import { getQuestions } from './get-questions.server';

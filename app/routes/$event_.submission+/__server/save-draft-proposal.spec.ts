@@ -2,7 +2,6 @@ import { TalkLevel } from '@prisma/client';
 import { eventFactory } from 'tests/factories/events';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
-import { describe, expect, it } from 'vitest';
 
 import { db } from '~/libs/db';
 import { CfpNotOpenError, EventNotFoundError, TalkNotFoundError } from '~/libs/errors';

@@ -24,7 +24,7 @@ type ConfirmationFormType = {
 
 class EventSubmissionPage extends BasePage {
   visit(slug: string) {
-    cy.visit(`/${slug}/submission`);
+    cy.visitAndCheck(`/${slug}/submission`);
     this.isPageVisible();
   }
 

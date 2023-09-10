@@ -1,5 +1,3 @@
-import { describe, expect, it } from 'vitest';
-
 import { eventFactory } from '../../../../tests/factories/events';
 import { parseFilters, searchEvents } from './search.server';
 

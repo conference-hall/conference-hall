@@ -2,7 +2,7 @@ import BasePage from 'page-objects/base.page';
 
 class SurveySettings extends BasePage {
   visit(slug: string, eventSlug: string) {
-    cy.visit(`/team/${slug}/${eventSlug}/settings/survey`);
+    cy.visitAndCheck(`/team/${slug}/${eventSlug}/settings/survey`);
     this.isPageVisible();
   }
 

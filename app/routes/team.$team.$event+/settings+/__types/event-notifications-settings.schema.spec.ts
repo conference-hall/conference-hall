@@ -1,5 +1,4 @@
 import { parse } from '@conform-to/zod';
-import { describe, expect, it } from 'vitest';
 
 import { EventNotificationsSettingsSchema } from './event-notifications-settings.schema';
 
