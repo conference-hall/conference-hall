@@ -1,21 +1,13 @@
 import { parse } from '@conform-to/zod';
 import { TeamRole } from '@prisma/client';
-import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { db } from '../../../libs/db';
 import { createTeam, TeamSaveSchema } from './create-team.server';
 
 describe('#createOrganization', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterEach(async () => {
-    await disconnectDB();
-  });
-
   it('creates the team and add the user as owner', async () => {
     const user = await userFactory();
     const result = await createTeam(user.id, { name: 'Hello world', slug: 'hello-world' });
@@ -34,13 +26,6 @@ describe('#createOrganization', () => {
 });
 
 describe('Validate TeamSaveSchema', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterEach(async () => {
-    await disconnectDB();
-  });
-
   it('validates the team data', async () => {
     const form = new FormData();
     form.append('name', 'Hello world');

@@ -1,7 +1,6 @@
-import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { config } from '~/libs/config';
 import { TeamNotFoundError } from '~/libs/errors';
@@ -9,13 +8,6 @@ import { TeamNotFoundError } from '~/libs/errors';
 import { getTeam } from './get-team.server';
 
 describe('#getOrganization', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterEach(async () => {
-    await disconnectDB();
-  });
-
   it('returns team belonging to user', async () => {
     const user = await userFactory();
     await teamFactory({ owners: [user], attributes: { name: 'My team 1', slug: 'my-team1' } });

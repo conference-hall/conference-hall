@@ -1,5 +1,4 @@
 import type { Event, EventCategory, EventFormat, Proposal, Team, User } from '@prisma/client';
-import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventCategoryFactory } from 'tests/factories/categories';
 import { eventFactory } from 'tests/factories/events';
 import { eventFormatFactory } from 'tests/factories/formats';
@@ -8,7 +7,7 @@ import { reviewFactory } from 'tests/factories/reviews';
 import { talkFactory } from 'tests/factories/talks';
 import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 import type { ProposalsFilters } from '~/routes/__types/proposal';
 import { sortBy } from '~/utils/arrays';
@@ -24,8 +23,6 @@ describe('#searchProposals', () => {
   let proposal1: Proposal, proposal2: Proposal, proposal3: Proposal;
 
   beforeEach(async () => {
-    await resetDB();
-
     owner = await userFactory({ traits: ['clark-kent'] });
     speaker = await userFactory({ traits: ['peter-parker'] });
     team = await teamFactory({ owners: [owner] });
@@ -67,10 +64,6 @@ describe('#searchProposals', () => {
     await reviewFactory({ user: speaker, proposal: proposal1, attributes: { feeling: 'NEGATIVE', note: 0 } });
     await reviewFactory({ user: owner, proposal: proposal1, attributes: { feeling: 'POSITIVE', note: 5 } });
     await reviewFactory({ user: owner, proposal: proposal3, attributes: { feeling: 'POSITIVE', note: 1 } });
-  });
-
-  afterEach(async () => {
-    await disconnectDB();
   });
 
   describe('#search.statisics', () => {

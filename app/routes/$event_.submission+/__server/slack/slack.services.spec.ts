@@ -1,4 +1,3 @@
-import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventCategoryFactory } from 'tests/factories/categories';
 import { eventFactory } from 'tests/factories/events';
 import { eventFormatFactory } from 'tests/factories/formats';
@@ -6,7 +5,7 @@ import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { sendSubmittedTalkSlackMessage } from './slack.services';
 
@@ -16,10 +15,6 @@ vi.stubGlobal('fetch', fetchMock);
 describe('Slack services', () => {
   beforeEach(async () => {
     fetchMock.mockReset();
-    await resetDB();
-  });
-  afterEach(async () => {
-    await disconnectDB();
   });
 
   it('should not send a Slack message if Slack integration not enabled for event', async () => {

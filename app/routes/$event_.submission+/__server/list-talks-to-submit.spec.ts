@@ -1,22 +1,14 @@
-import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventFactory } from 'tests/factories/events';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { EventNotFoundError } from '~/libs/errors';
 
 import { listTalksToSubmit } from './list-talks-to-submit.server';
 
 describe('#listTalksToSubmit', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterEach(async () => {
-    await disconnectDB();
-  });
-
   it('returns drafts and talks from library which can be submitted', async () => {
     const event = await eventFactory({ traits: ['conference-cfp-open'] });
     const speaker = await userFactory();

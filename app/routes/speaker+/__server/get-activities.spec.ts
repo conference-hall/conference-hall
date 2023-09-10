@@ -1,22 +1,14 @@
-import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventFactory } from 'tests/factories/events';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { SpeakerProposalStatus } from '~/routes/__server/proposals/get-speaker-proposal-status';
 
 import { getActivities } from './get-activities.server';
 
 describe('#getActivities', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterEach(async () => {
-    await disconnectDB();
-  });
-
   it('returns speaker activity with proposal submitted ordered by update date', async () => {
     const event = await eventFactory({ traits: ['conference-cfp-open'] });
     const event2 = await eventFactory();

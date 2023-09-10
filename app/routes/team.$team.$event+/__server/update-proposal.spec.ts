@@ -1,5 +1,4 @@
 import type { Event, EventCategory, EventFormat, Proposal, Team, User } from '@prisma/client';
-import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventCategoryFactory } from 'tests/factories/categories';
 import { eventFactory } from 'tests/factories/events';
 import { eventFormatFactory } from 'tests/factories/formats';
@@ -7,7 +6,7 @@ import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 import { db } from '~/libs/db';
 import { ForbiddenOperationError } from '~/libs/errors';
@@ -23,7 +22,6 @@ describe('#updateProposal', () => {
   let proposal: Proposal;
 
   beforeEach(async () => {
-    await resetDB();
     owner = await userFactory();
     reviewer = await userFactory();
     speaker = await userFactory();
@@ -32,9 +30,6 @@ describe('#updateProposal', () => {
     format = await eventFormatFactory({ event });
     category = await eventCategoryFactory({ event });
     proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-  });
-  afterEach(async () => {
-    await disconnectDB();
   });
 
   it('updates the proposal', async () => {
@@ -95,15 +90,11 @@ describe('#updateProposalsStatus', () => {
   let event: Event;
 
   beforeEach(async () => {
-    await resetDB();
     owner = await userFactory();
     reviewer = await userFactory();
     speaker = await userFactory();
     team = await teamFactory({ owners: [owner], reviewers: [reviewer] });
     event = await eventFactory({ team });
-  });
-  afterEach(async () => {
-    await disconnectDB();
   });
 
   it('updates the proposal', async () => {

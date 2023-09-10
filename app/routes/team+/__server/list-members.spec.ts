@@ -1,20 +1,12 @@
-import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { ForbiddenOperationError } from '~/libs/errors';
 
 import { listMembers } from './list-members.server';
 
 describe('#listMembers', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterEach(async () => {
-    await disconnectDB();
-  });
-
   it('returns team members and filter them', async () => {
     const owner = await userFactory({
       traits: ['clark-kent'],

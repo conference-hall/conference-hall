@@ -1,18 +1,10 @@
-import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { checkTeamAccess } from './check-team-access.server';
 
 describe('#checkOrganizerAccess', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterEach(async () => {
-    await disconnectDB();
-  });
-
   it('can access if user has an organizer key', async () => {
     const user = await userFactory({ isOrganizer: true });
     const canAccess = await checkTeamAccess(user.id);

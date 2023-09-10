@@ -1,7 +1,6 @@
-import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { db } from '~/libs/db';
 import { TalkNotFoundError } from '~/libs/errors';
@@ -9,13 +8,6 @@ import { TalkNotFoundError } from '~/libs/errors';
 import { archiveTalk, restoreTalk } from './archive-talk.server';
 
 describe('#archiveTalk', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterEach(async () => {
-    await disconnectDB();
-  });
-
   it('archives a talk', async () => {
     const speaker = await userFactory();
     const talk = await talkFactory({ speakers: [speaker] });
@@ -41,13 +33,6 @@ describe('#archiveTalk', () => {
 });
 
 describe('#restoreTalk', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterEach(async () => {
-    await disconnectDB();
-  });
-
   it('restores a archived talk', async () => {
     const speaker = await userFactory();
     const talk = await talkFactory({

@@ -1,12 +1,11 @@
 import type { Event, Proposal, Team, User } from '@prisma/client';
-import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventFactory } from 'tests/factories/events';
 import { proposalFactory } from 'tests/factories/proposals';
 import { surveyFactory } from 'tests/factories/surveys';
 import { talkFactory } from 'tests/factories/talks';
 import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 import { db } from '~/libs/db';
 import { ForbiddenOperationError } from '~/libs/errors';
@@ -20,7 +19,6 @@ describe('#getSpeakers', () => {
   let proposal: Proposal;
 
   beforeEach(async () => {
-    await resetDB();
     owner = await userFactory({ traits: ['clark-kent'] });
     speaker1 = await userFactory({ traits: ['peter-parker'] });
     speaker2 = await userFactory({ traits: ['bruce-wayne'] });
@@ -30,9 +28,6 @@ describe('#getSpeakers', () => {
       event,
       talk: await talkFactory({ speakers: [speaker1, speaker2] }),
     });
-  });
-  afterEach(async () => {
-    await disconnectDB();
   });
 
   it('returns speakers data of a proposal', async () => {

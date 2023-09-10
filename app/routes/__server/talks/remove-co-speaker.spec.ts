@@ -1,6 +1,5 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
-import { disconnectDB, resetDB } from '../../../../tests/db-helpers';
 import { talkFactory } from '../../../../tests/factories/talks';
 import { userFactory } from '../../../../tests/factories/users';
 import { db } from '../../../libs/db';
@@ -8,13 +7,6 @@ import { TalkNotFoundError } from '../../../libs/errors';
 import { removeCoSpeakerFromTalk } from './remove-co-speaker.server';
 
 describe('#removeCoSpeakerFromTalk', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterEach(async () => {
-    await disconnectDB();
-  });
-
   it('removes a cospeaker from the talk', async () => {
     const speaker = await userFactory();
     const cospeaker = await userFactory();

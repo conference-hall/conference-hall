@@ -1,18 +1,10 @@
-import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { userFactory } from 'tests/factories/users';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { db } from '../../../libs/db';
 import { createUserAccount } from './create-user-account.server';
 
 describe('#createUser', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterEach(async () => {
-    await disconnectDB();
-  });
-
   it('creates a new user', async () => {
     const userId = await createUserAccount({
       uid: '123',

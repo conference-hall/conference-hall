@@ -1,9 +1,8 @@
-import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventFactory } from 'tests/factories/events';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { db } from '~/libs/db';
 import { InvitationNotFoundError } from '~/libs/errors';
@@ -11,13 +10,6 @@ import { InvitationNotFoundError } from '~/libs/errors';
 import { addCoSpeakerToProposal, checkProposalInviteCode } from './invite-proposal.server';
 
 describe('#addCoSpeakerToProposal', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterEach(async () => {
-    await disconnectDB();
-  });
-
   it('adds the speaker to the proposal and the talk', async () => {
     const event = await eventFactory();
     const speaker = await userFactory();
@@ -53,13 +45,6 @@ describe('#addCoSpeakerToProposal', () => {
 });
 
 describe('#checkProposalInviteCode', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterEach(async () => {
-    await disconnectDB();
-  });
-
   it('returns the proposal for an invitation code', async () => {
     const event = await eventFactory();
     const speaker = await userFactory();

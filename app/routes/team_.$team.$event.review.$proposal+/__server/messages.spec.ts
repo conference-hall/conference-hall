@@ -1,13 +1,12 @@
 import type { Event, Team, User } from '@prisma/client';
 import { MessageChannel } from '@prisma/client';
-import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventFactory } from 'tests/factories/events';
 import { messageFactory } from 'tests/factories/messages';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 import { db } from '~/libs/db';
 import { ForbiddenOperationError } from '~/libs/errors';
@@ -20,15 +19,11 @@ describe('#getProposalMessages', () => {
   let event: Event;
 
   beforeEach(async () => {
-    await resetDB();
     owner = await userFactory({ traits: ['clark-kent'] });
     member = await userFactory({ traits: ['bruce-wayne'] });
     speaker = await userFactory();
     team = await teamFactory({ owners: [owner], members: [member] });
     event = await eventFactory({ team });
-  });
-  afterEach(async () => {
-    await disconnectDB();
   });
 
   it('retrieve proposals messages', async () => {
@@ -69,14 +64,10 @@ describe('#addProposalMessage', () => {
   let event: Event;
 
   beforeEach(async () => {
-    await resetDB();
     owner = await userFactory();
     speaker = await userFactory();
     team = await teamFactory({ owners: [owner] });
     event = await eventFactory({ team });
-  });
-  afterEach(async () => {
-    await disconnectDB();
   });
 
   it('adds message to a proposal', async () => {
@@ -107,15 +98,11 @@ describe('#removeProposalMessage', () => {
   let event: Event;
 
   beforeEach(async () => {
-    await resetDB();
     owner = await userFactory();
     member = await userFactory();
     speaker = await userFactory();
     team = await teamFactory({ owners: [owner], members: [member] });
     event = await eventFactory({ team });
-  });
-  afterEach(async () => {
-    await disconnectDB();
   });
 
   it('removes a message from a proposal', async () => {

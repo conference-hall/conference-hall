@@ -1,20 +1,12 @@
-import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { db } from '../../../libs/db';
 import { ForbiddenOperationError } from '../../../libs/errors';
 import { removeMember } from './remove-member.server';
 
 describe('#removeMember', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterEach(async () => {
-    await disconnectDB();
-  });
-
   it('removes a member when user has owner role', async () => {
     const owner = await userFactory({ traits: ['clark-kent'], attributes: { id: '1' } });
     const member = await userFactory({ traits: ['bruce-wayne'], attributes: { id: '2' } });

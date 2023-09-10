@@ -1,8 +1,7 @@
 import { TeamRole } from '@prisma/client';
-import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { db } from '~/libs/db';
 import { InvitationNotFoundError } from '~/libs/errors';
@@ -10,13 +9,6 @@ import { InvitationNotFoundError } from '~/libs/errors';
 import { addMember, checkTeamInviteCode } from './invite-team.server';
 
 describe('#addMember', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterEach(async () => {
-    await disconnectDB();
-  });
-
   it('adds the member as reviewer to the team', async () => {
     const owner = await userFactory();
     const member = await userFactory();
@@ -39,13 +31,6 @@ describe('#addMember', () => {
 });
 
 describe('#checkOrganizationInviteCode', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterEach(async () => {
-    await disconnectDB();
-  });
-
   it('returns the team for an invitation code', async () => {
     const owner = await userFactory();
     const team = await teamFactory({ owners: [owner] });

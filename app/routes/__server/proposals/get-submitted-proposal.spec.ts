@@ -1,23 +1,15 @@
-import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventCategoryFactory } from 'tests/factories/categories';
 import { eventFactory } from 'tests/factories/events';
 import { eventFormatFactory } from 'tests/factories/formats';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { ProposalNotFoundError } from '../../../libs/errors';
 import { getSubmittedProposal } from './get-submitted-proposal.server';
 
 describe('#getSubmittedProposal', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterEach(async () => {
-    await disconnectDB();
-  });
-
   it('returns info about the proposal submitted on event', async () => {
     const event = await eventFactory();
     const format = await eventFormatFactory({ event });

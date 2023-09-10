@@ -1,20 +1,12 @@
 import { TalkLevel } from '@prisma/client';
-import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { userFactory } from 'tests/factories/users';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { db } from '~/libs/db';
 
 import { createTalk } from './create-talk.server';
 
 describe('#createTalk', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterEach(async () => {
-    await disconnectDB();
-  });
-
   it('creates a speaker talk', async () => {
     const speaker = await userFactory();
 

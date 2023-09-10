@@ -1,11 +1,10 @@
 import type { Event, Team, User } from '@prisma/client';
-import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventFactory } from 'tests/factories/events';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 import { db } from '~/libs/db';
 import { DeliberationDisabledError, ForbiddenOperationError } from '~/libs/errors';
@@ -18,15 +17,11 @@ describe('#rateProposal', () => {
   let event: Event;
 
   beforeEach(async () => {
-    await resetDB();
     owner = await userFactory();
     owner2 = await userFactory();
     speaker = await userFactory();
     team = await teamFactory({ owners: [owner, owner2] });
     event = await eventFactory({ team });
-  });
-  afterEach(async () => {
-    await disconnectDB();
   });
 
   it('adds then updates a review for a proposal', async () => {
