@@ -81,8 +81,8 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
-          build: npx dotenv -e .env.test -- npm run build && npx dotenv -e .env.test -- npm run test:db
-          start: npx dotenv -e .env.test -- npm run start:server
+          build: npx dotenv -e .env.test -- npm run build
+          start: npx dotenv -e .env.test -- npm run test:db && npx dotenv -e .env.test -- npm run start:server
           command-prefix: 'dotenv -e .env.test --'
           wait-on: 'http://localhost:3001'
 
