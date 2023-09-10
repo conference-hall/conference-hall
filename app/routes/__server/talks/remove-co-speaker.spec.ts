@@ -1,5 +1,3 @@
-import { describe, expect, it } from 'vitest';
-
 import { talkFactory } from '../../../../tests/factories/talks';
 import { userFactory } from '../../../../tests/factories/users';
 import { db } from '../../../libs/db';

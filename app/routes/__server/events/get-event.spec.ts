@@ -1,5 +1,4 @@
 import { teamFactory } from 'tests/factories/team';
-import { describe, expect, it } from 'vitest';
 
 import { eventCategoryFactory } from '../../../../tests/factories/categories';
 import { eventFactory } from '../../../../tests/factories/events';

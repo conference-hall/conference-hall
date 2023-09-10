@@ -1,6 +1,5 @@
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
-import { describe, expect, it } from 'vitest';
 
 import { listTalks } from './list-talks.server';
 

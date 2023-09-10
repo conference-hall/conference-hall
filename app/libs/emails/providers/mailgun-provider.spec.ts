@@ -1,5 +1,3 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-
 import { MailgunProvider } from './mailgun-provider';
 
 const fetchMock = vi.fn();

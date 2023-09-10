@@ -4,7 +4,6 @@ import { eventFormatFactory } from 'tests/factories/formats';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
-import { describe, expect, it } from 'vitest';
 
 import { ProposalNotFoundError } from '../../../libs/errors';
 import { getSpeakerProposal } from './get-speaker-proposal.server';

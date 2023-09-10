@@ -5,7 +5,6 @@ import { eventFactory } from 'tests/factories/events';
 import { eventFormatFactory } from 'tests/factories/formats';
 import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
-import { beforeEach, describe, expect, it } from 'vitest';
 
 import { db } from '~/libs/db';
 import { ForbiddenOperationError } from '~/libs/errors';

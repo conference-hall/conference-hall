@@ -1,5 +1,3 @@
-import { describe, expect, it } from 'vitest';
-
 import { getLanguage } from './languages';
 
 describe('#getLanguage', () => {

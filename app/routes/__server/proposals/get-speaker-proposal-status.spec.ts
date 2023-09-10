@@ -1,5 +1,3 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-
 import { getSpeakerProposalStatus, SpeakerProposalStatus } from './get-speaker-proposal-status';
 
 describe('getSpeakerProposalStatus', () => {

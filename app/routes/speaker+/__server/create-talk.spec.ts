@@ -1,6 +1,5 @@
 import { TalkLevel } from '@prisma/client';
 import { userFactory } from 'tests/factories/users';
-import { describe, expect, it } from 'vitest';
 
 import { db } from '~/libs/db';
 
