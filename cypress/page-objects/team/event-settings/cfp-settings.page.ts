@@ -9,7 +9,7 @@ type CfpFormType = {
 
 class CfpSettings extends BasePage {
   visit(slug: string, eventSlug: string) {
-    cy.visit(`/team/${slug}/${eventSlug}/settings/cfp`);
+    cy.visitAndCheck(`/team/${slug}/${eventSlug}/settings/cfp`);
     this.isPageVisible();
   }
 

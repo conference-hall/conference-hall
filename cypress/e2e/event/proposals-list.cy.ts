@@ -14,7 +14,7 @@ describe('Event proposals list', () => {
   const login = new LoginPage();
 
   it('redirects to signin, when user is not connected', () => {
-    cy.visit('devfest-nantes/proposals');
+    cy.visitAndCheck('devfest-nantes/proposals');
     login.isPageVisible();
   });
 

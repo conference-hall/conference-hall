@@ -2,7 +2,7 @@ import BasePage from 'page-objects/base.page';
 
 class ProposalReviewSettings extends BasePage {
   visit(slug: string, eventSlug: string) {
-    cy.visit(`/team/${slug}/${eventSlug}/settings/review`);
+    cy.visitAndCheck(`/team/${slug}/${eventSlug}/settings/review`);
     this.isPageVisible();
   }
 

@@ -7,7 +7,7 @@ type TeamNewType = {
 
 class TeamNewPage extends BasePage {
   visit() {
-    cy.visit(`/team`);
+    cy.visitAndCheck(`/team`);
     this.isPageVisible();
   }
 

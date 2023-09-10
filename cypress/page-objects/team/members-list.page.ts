@@ -2,7 +2,7 @@ import BasePage from 'page-objects/base.page';
 
 class TeamMembersPage extends BasePage {
   visit(slug: string) {
-    cy.visit(`/team/${slug}/settings/members`);
+    cy.visitAndCheck(`/team/${slug}/settings/members`);
     this.isPageVisible();
   }
 

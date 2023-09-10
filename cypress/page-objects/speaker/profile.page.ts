@@ -20,7 +20,7 @@ type AdditionalInfoType = {
 
 class SpeakerProfilePage extends BasePage {
   visit() {
-    cy.visit('/speaker/profile');
+    cy.visitAndCheck('/speaker/profile');
     this.isPageVisible();
   }
 

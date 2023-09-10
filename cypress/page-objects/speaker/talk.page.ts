@@ -2,7 +2,7 @@ import BasePage from 'page-objects/base.page';
 
 class SpeakerTalkPage extends BasePage {
   visit(talkId: string) {
-    cy.visit(`/speaker/talks/${talkId}`);
+    cy.visitAndCheck(`/speaker/talks/${talkId}`);
     this.isPageVisible();
   }
 

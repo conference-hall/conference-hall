@@ -10,25 +10,25 @@ describe('Team page access and redirections', () => {
   const login = new LoginPage();
 
   it('redirects to signin, when user is not connected', () => {
-    cy.visit('team');
+    cy.visitAndCheck('team');
     login.isPageVisible();
   });
 
   it('redirects to new team page when user has no team', () => {
     cy.login('Peter Parker');
-    cy.visit('team');
+    cy.visitAndCheck('team');
     cy.assertText('Create a new team');
   });
 
   it('redirects to request page when user has no access', () => {
     cy.login('Bruce Wayne');
-    cy.visit('team');
+    cy.visitAndCheck('team');
     cy.assertText('Become event organizer');
   });
 
   it('redirects to request page when user has no access', () => {
     cy.login('Bruce Wayne');
-    cy.visit('team');
+    cy.visitAndCheck('team');
     cy.assertText('Become event organizer');
   });
 });

@@ -2,7 +2,7 @@ import BasePage from 'page-objects/base.page';
 
 class SlackSettings extends BasePage {
   visit(slug: string, eventSlug: string) {
-    cy.visit(`/team/${slug}/${eventSlug}/settings/integrations`);
+    cy.visitAndCheck(`/team/${slug}/${eventSlug}/settings/integrations`);
     this.isPageVisible();
   }
 

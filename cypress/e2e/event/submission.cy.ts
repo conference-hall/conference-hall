@@ -18,7 +18,7 @@ describe('Submit a talk to event', () => {
   const login = new LoginPage();
 
   it('redirects to signin, when user is not connected', () => {
-    cy.visit('devfest-nantes/submission');
+    cy.visitAndCheck('devfest-nantes/submission');
     login.isPageVisible();
   });
 
@@ -300,12 +300,12 @@ describe('Submit a talk to event', () => {
     });
 
     it('cannot submit a talk to an event with a cfp not open yet', () => {
-      cy.visit('/conference-cfp-future/submission', { failOnStatusCode: false });
+      cy.visitAndCheck('/conference-cfp-future/submission', { failOnStatusCode: false });
       cy.assertText('CFP not open');
     });
 
     it('cannot submit a talk to an event with a cfp already closed', () => {
-      cy.visit('/conference-cfp-past/submission', { failOnStatusCode: false });
+      cy.visitAndCheck('/conference-cfp-past/submission', { failOnStatusCode: false });
       cy.assertText('CFP not open');
     });
   });

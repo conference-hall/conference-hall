@@ -2,7 +2,7 @@ import BasePage from './base.page';
 
 class NotificationsPage extends BasePage {
   visit() {
-    cy.visit('/notifications');
+    cy.visitAndCheck('/notifications');
     this.isPageVisible();
   }
 

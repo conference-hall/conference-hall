@@ -4,7 +4,7 @@ type SettingsFormType = { name?: string; slug?: string };
 
 class TeamSettingsPage extends BasePage {
   visit(slug: string) {
-    cy.visit(`/team/${slug}/settings`);
+    cy.visitAndCheck(`/team/${slug}/settings`);
     this.isPageVisible();
   }
 

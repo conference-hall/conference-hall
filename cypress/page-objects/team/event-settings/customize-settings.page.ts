@@ -2,7 +2,7 @@ import BasePage from 'page-objects/base.page';
 
 class CustomizeSettings extends BasePage {
   visit(slug: string, eventSlug: string) {
-    cy.visit(`/team/${slug}/${eventSlug}/settings/customize`);
+    cy.visitAndCheck(`/team/${slug}/${eventSlug}/settings/customize`);
     this.isPageVisible();
   }
 

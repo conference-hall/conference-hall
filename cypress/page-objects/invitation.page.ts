@@ -2,7 +2,7 @@ import BasePage from './base.page';
 
 class InvitationPage extends BasePage {
   visit(type: string, code: string) {
-    cy.visit(`/invite/${type}/${code}`, { failOnStatusCode: false });
+    cy.visitAndCheck(`/invite/${type}/${code}`, { failOnStatusCode: false });
     this.isPageVisible();
   }
 

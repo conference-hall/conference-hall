@@ -7,6 +7,16 @@ declare global {
   namespace Cypress {
     interface Chainable {
       /**
+       * Extends the standard visit command to wait for the page to load
+       *
+       * @returns {typeof visitAndCheck}
+       * @memberof Chainable
+       * @example
+       *    cy.visitAndCheck('/')
+       */
+      visitAndCheck: typeof visitAndCheck;
+
+      /**
        * Select a value on a list box
        * @example cy.selectOn('Sex', 'Female')
        */
@@ -122,7 +132,7 @@ Cypress.Commands.add('login', (username = 'Clark Kent') => {
   cy.session(
     [username],
     () => {
-      cy.visit('/login');
+      cy.visitAndCheck('/login');
       cy.findByRole('heading', { name: 'Sign in to your account' }).should('exist');
       cy.findByRole('button', { name: 'Google' }).click();
       cy.assertText('Please select an existing account in the Auth Emulator or add a new one:');
@@ -136,6 +146,17 @@ Cypress.Commands.add('login', (username = 'Clark Kent') => {
 Cypress.Commands.add('assertToast', (label) => {
   cy.get('#toast').should('contain.text', label);
 });
+
+// We're waiting a second because of this issue happen randomly
+// https://github.com/cypress-io/cypress/issues/7306
+// Also added custom types to avoid getting detached
+// https://github.com/cypress-io/cypress/issues/7306#issuecomment-1152752612
+function visitAndCheck(url: string, options?: Partial<Cypress.VisitOptions>) {
+  cy.visitAndCheck(url, options);
+  cy.location('pathname').should('contain', url).wait(1000);
+}
+
+Cypress.Commands.add('visitAndCheck', visitAndCheck);
 
 Cypress.on('uncaught:exception', (err) => {
   // Cypress and React Hydrating the document don't get along

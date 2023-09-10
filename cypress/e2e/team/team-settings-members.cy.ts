@@ -54,7 +54,7 @@ describe('Team members list', () => {
     beforeEach(() => cy.login('Bruce Wayne'));
 
     it('cannot access to members settings and is redirected to event page', () => {
-      cy.visit('/team/awesome-team/settings/members', { failOnStatusCode: false });
+      cy.visitAndCheck('/team/awesome-team/settings/members', { failOnStatusCode: false });
       cy.assertText('Forbidden operation');
     });
   });
@@ -63,7 +63,7 @@ describe('Team members list', () => {
     beforeEach(() => cy.login('Peter Parker'));
 
     it('cannot access to members settings and is redirected to event page', () => {
-      cy.visit('/team/awesome-team/settings/members', { failOnStatusCode: false });
+      cy.visitAndCheck('/team/awesome-team/settings/members', { failOnStatusCode: false });
       cy.assertText('Forbidden operation');
     });
   });

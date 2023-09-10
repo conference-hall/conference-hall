@@ -2,7 +2,7 @@ import BasePage from 'page-objects/base.page';
 
 class EventProposalsPage extends BasePage {
   visit(slug: string) {
-    cy.visit(`/${slug}/proposals`);
+    cy.visitAndCheck(`/${slug}/proposals`);
     this.isPageVisible();
   }
 
