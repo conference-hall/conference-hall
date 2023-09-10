@@ -3,7 +3,7 @@ import BasePage from './base.page';
 class LoginPage extends BasePage {
   visit(redirectTo?: string) {
     if (redirectTo) {
-      cy.visitAndCheck(`/login?redirectTo=${redirectTo}`);
+      cy.visit(`/login?redirectTo=${redirectTo}`);
     } else {
       cy.visitAndCheck('/login');
     }
