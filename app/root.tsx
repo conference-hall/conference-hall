@@ -31,17 +31,13 @@ export function meta() {
   return [
     { charset: 'utf-8' },
     { title: 'Conference Hall' },
-    { viewport: 'width=device-width,initial-scale=1' },
+    { name: 'viewport', content: 'width=device-width,initial-scale=1' },
     { name: 'robots', content: 'noindex' },
   ];
 }
 
 export const links: LinksFunction = () => {
-  return [
-    { rel: 'stylesheet', href: 'https://fonts.cdnfonts.com/css/inter' },
-    { rel: 'stylesheet', href: 'https://fonts.cdnfonts.com/css/ubuntu' },
-    { rel: 'stylesheet', href: tailwind },
-  ];
+  return [{ rel: 'stylesheet', href: tailwind }];
 };
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -94,8 +90,8 @@ function Document({ children, toast }: DocumentProps) {
       <body className="overflow-x-hidden bg-gray-50 font-sans text-gray-900 antialiased">
         <GlobalLoading />
         {children}
-        <Scripts />
         <ScrollRestoration />
+        <Scripts />
         <LiveReload />
         {toast && <Toast toast={toast} />}
       </body>
