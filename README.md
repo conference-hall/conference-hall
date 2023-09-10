@@ -7,7 +7,7 @@ Remix / Tailwind / HeadlessUI / Conform / Zod / Prisma / Firebase Auth / Mailgun
 ## Prerequisites
 
 - Docker
-- Node 18+
+- Node 20+
 
 ## Development
 
