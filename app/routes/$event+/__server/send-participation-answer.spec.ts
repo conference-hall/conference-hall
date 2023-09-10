@@ -34,7 +34,8 @@ describe('#sendParticipationAnswer', () => {
     expect(emails.total).toBe(1);
     expect(emails.to(event.emailOrganizer)).toEqual([
       {
-        from: `${event.name} <no-reply@conference-hall.io>`,
+        name: event.name,
+        address: 'no-reply@conference-hall.io',
         subject: `[${event.name}] Talk confirmed by speaker`,
       },
     ]);
@@ -60,7 +61,8 @@ describe('#sendParticipationAnswer', () => {
     expect(emails.total).toBe(1);
     expect(emails.to(event.emailOrganizer)).toEqual([
       {
-        from: `${event.name} <no-reply@conference-hall.io>`,
+        name: event.name,
+        address: 'no-reply@conference-hall.io',
         subject: `[${event.name}] Talk declined by speaker`,
       },
     ]);

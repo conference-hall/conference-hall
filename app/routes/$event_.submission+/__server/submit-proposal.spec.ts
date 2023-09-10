@@ -39,13 +39,15 @@ describe('#submitProposal', () => {
     expect(emails.total).toBe(2);
     expect(emails.to(speaker.email)).toEqual([
       {
-        from: `${event.name} <no-reply@conference-hall.io>`,
+        name: event.name,
+        address: 'no-reply@conference-hall.io',
         subject: `[${event.name}] Submission confirmed`,
       },
     ]);
     expect(emails.to(event.emailOrganizer)).toEqual([
       {
-        from: `${event.name} <no-reply@conference-hall.io>`,
+        name: event.name,
+        address: 'no-reply@conference-hall.io',
         subject: `[${event.name}] New proposal received`,
       },
     ]);

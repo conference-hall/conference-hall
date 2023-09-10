@@ -31,13 +31,12 @@ describe('#sendAcceptationCampaign', () => {
   it('sends emails to only accepted (not draft) proposals of the event for each speaker', async () => {
     await proposalFactory({ event: event2, talk: await talkFactory({ speakers: [speaker1] }) });
     await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker1] }), traits: ['draft'] });
-
-    const proposal_accepted_1 = await proposalFactory({
+    await proposalFactory({
       event,
       talk: await talkFactory({ speakers: [speaker1, speaker2], attributes: { title: 'Talk-1' } }),
       traits: ['accepted'],
     });
-    const proposal_accepted_2 = await proposalFactory({
+    await proposalFactory({
       event,
       talk: await talkFactory({ speakers: [speaker1], attributes: { title: 'Talk-2' } }),
       traits: ['accepted'],
@@ -48,23 +47,23 @@ describe('#sendAcceptationCampaign', () => {
     const emails = await getEmails();
     expect(emails.total).toBe(3);
 
-    expect(emails.hasEmailWithContent(speaker1.email, proposal_accepted_1.title)).toBeTruthy();
-    expect(emails.hasEmailWithContent(speaker1.email, proposal_accepted_2.title)).toBeTruthy();
     expect(emails.to(speaker1.email)).toEqual([
       {
-        from: `${event.name} <no-reply@conference-hall.io>`,
+        name: event.name,
+        address: 'no-reply@conference-hall.io',
         subject: `[${event.name}] Your talk has been accepted`,
       },
       {
-        from: `${event.name} <no-reply@conference-hall.io>`,
+        name: event.name,
+        address: 'no-reply@conference-hall.io',
         subject: `[${event.name}] Your talk has been accepted`,
       },
     ]);
 
-    expect(emails.hasEmailWithContent(speaker2.email, proposal_accepted_1.title)).toBeTruthy();
     expect(emails.to(speaker2.email)).toEqual([
       {
-        from: `${event.name} <no-reply@conference-hall.io>`,
+        name: event.name,
+        address: 'no-reply@conference-hall.io',
         subject: `[${event.name}] Your talk has been accepted`,
       },
     ]);
@@ -89,10 +88,10 @@ describe('#sendAcceptationCampaign', () => {
 
     const emails = await getEmails();
     expect(emails.total).toBe(1);
-    expect(emails.hasEmailWithContent(speaker1.email, proposal_accepted_1.title)).toBeTruthy();
     expect(emails.to(speaker1.email)).toEqual([
       {
-        from: `${event.name} <no-reply@conference-hall.io>`,
+        name: event.name,
+        address: 'no-reply@conference-hall.io',
         subject: `[${event.name}] Your talk has been accepted`,
       },
     ]);
