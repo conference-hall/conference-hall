@@ -1,18 +1,13 @@
-import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventFactory } from 'tests/factories/events';
 import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
+import { describe, expect, it } from 'vitest';
 
 import { ForbiddenOperationError } from '~/libs/errors';
 
 import { listEvents } from './list-events.server';
 
 describe('#listEvents', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterEach(disconnectDB);
-
   it('returns team events', async () => {
     const user = await userFactory();
     const team = await teamFactory({ owners: [user], attributes: { slug: 'my-team' } });

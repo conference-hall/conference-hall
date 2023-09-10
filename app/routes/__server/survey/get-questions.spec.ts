@@ -1,15 +1,10 @@
-import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventFactory } from 'tests/factories/events';
+import { describe, expect, it } from 'vitest';
 
 import { EventNotFoundError, SurveyNotEnabledError } from '../../../libs/errors';
 import { getQuestions } from './get-questions.server';
 
 describe('#getQuestions', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterEach(disconnectDB);
-
   it('returns the default survey questions', async () => {
     const event = await eventFactory({ traits: ['withSurvey'] });
 

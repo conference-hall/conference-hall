@@ -1,16 +1,13 @@
 import { z } from 'zod';
 
-import { text } from '~/routes/__types/utils';
-import { dateValidator } from '~/routes/__types/validators';
-
 export const EventDetailsSettingsSchema = z
   .object({
-    address: text(z.string().trim().nullable().default(null)),
-    description: text(z.string().trim().min(1).nullable().default(null)),
-    conferenceStart: text(dateValidator),
-    conferenceEnd: text(dateValidator),
-    websiteUrl: text(z.string().url().trim().nullable().default(null)),
-    contactEmail: text(z.string().email().trim().nullable().default(null)),
+    address: z.string().trim().nullable().default(null),
+    description: z.string().trim().min(1).nullable().default(null),
+    conferenceStart: z.coerce.date().nullable().default(null),
+    conferenceEnd: z.coerce.date().nullable().default(null),
+    websiteUrl: z.string().url().trim().nullable().default(null),
+    contactEmail: z.string().email().trim().nullable().default(null),
   })
   .refine(
     ({ conferenceStart, conferenceEnd }) => {

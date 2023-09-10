@@ -1,4 +1,5 @@
 import { parse } from '@conform-to/zod';
+import { describe, expect, it } from 'vitest';
 
 import { EventDetailsSettingsSchema } from './event-details-settings.schema';
 
@@ -52,10 +53,10 @@ describe('Validate EventDetailsSettingsSchema', () => {
 
     const result = parse(form, { schema: EventDetailsSettingsSchema });
     expect(result.error).toEqual({
-      conferenceEnd: 'Invalid date',
-      conferenceStart: 'Invalid date',
-      contactEmail: 'Invalid email',
-      websiteUrl: 'Invalid url',
+      conferenceStart: ['Invalid date'],
+      conferenceEnd: ['Invalid date'],
+      contactEmail: ['Invalid email'],
+      websiteUrl: ['Invalid url'],
     });
   });
 
@@ -66,7 +67,7 @@ describe('Validate EventDetailsSettingsSchema', () => {
 
     const result = parse(form, { schema: EventDetailsSettingsSchema });
     expect(result.error).toEqual({
-      conferenceStart: 'Conference start date must be after the conference end date.',
+      conferenceStart: ['Conference start date must be after the conference end date.'],
     });
   });
 
@@ -76,7 +77,7 @@ describe('Validate EventDetailsSettingsSchema', () => {
 
     const result = parse(form, { schema: EventDetailsSettingsSchema });
     expect(result.error).toEqual({
-      conferenceStart: 'Conference start date must be after the conference end date.',
+      conferenceStart: ['Conference start date must be after the conference end date.'],
     });
   });
 
@@ -86,7 +87,7 @@ describe('Validate EventDetailsSettingsSchema', () => {
 
     const result = parse(form, { schema: EventDetailsSettingsSchema });
     expect(result.error).toEqual({
-      conferenceStart: 'Conference start date must be after the conference end date.',
+      conferenceStart: ['Conference start date must be after the conference end date.'],
     });
   });
 });

@@ -1,3 +1,4 @@
+import { parse } from '@conform-to/zod';
 import type { Prisma } from '@prisma/client';
 import { EventVisibility } from '@prisma/client';
 import { z } from 'zod';
@@ -5,13 +6,12 @@ import { z } from 'zod';
 import { db } from '~/libs/db';
 import { getPagination } from '~/routes/__server/pagination/pagination.server';
 import type { Pagination } from '~/routes/__types/pagination';
-import { text } from '~/routes/__types/utils';
 import { getCfpState } from '~/utils/event';
 
 const SearchFiltersSchema = z.object({
-  query: text().optional(),
-  type: text(z.enum(['all', 'conference', 'meetup'])).optional(),
-  talkId: text().optional(),
+  query: z.string().trim().optional(),
+  type: z.enum(['all', 'conference', 'meetup']).optional(),
+  talkId: z.string().optional(),
 });
 
 export type SearchFilters = z.infer<typeof SearchFiltersSchema>;
@@ -59,8 +59,8 @@ export async function searchEvents(filters: SearchFilters, page: Pagination = 1)
 }
 
 export function parseFilters(params: URLSearchParams) {
-  const result = SearchFiltersSchema.safeParse(Object.fromEntries(params));
-  return result.success ? result.data : {};
+  const result = parse(params, { schema: SearchFiltersSchema });
+  return result.value || {};
 }
 
 function mapFiltersQuery(type?: string): Prisma.EventWhereInput {

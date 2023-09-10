@@ -1,8 +1,8 @@
 import type { Event, Team, User } from '@prisma/client';
-import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventFactory } from 'tests/factories/events';
 import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 import { db } from '../../../libs/db';
 import { ForbiddenOperationError } from '../../../libs/errors';
@@ -14,13 +14,11 @@ describe('#updateEvent', () => {
   let event: Event;
 
   beforeEach(async () => {
-    await resetDB();
     owner = await userFactory();
     reviewer = await userFactory();
     team = await teamFactory({ owners: [owner], reviewers: [reviewer] });
     event = await eventFactory({ team });
   });
-  afterEach(disconnectDB);
 
   it('creates a new event into the team', async () => {
     const created = await updateEvent(event.slug, owner.id, {

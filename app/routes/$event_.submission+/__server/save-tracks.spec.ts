@@ -1,11 +1,11 @@
 import { parse } from '@conform-to/zod';
-import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventCategoryFactory } from 'tests/factories/categories';
 import { eventFactory } from 'tests/factories/events';
 import { eventFormatFactory } from 'tests/factories/formats';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
+import { describe, expect, it } from 'vitest';
 
 import { db } from '~/libs/db';
 import { ProposalNotFoundError } from '~/libs/errors';
@@ -13,11 +13,6 @@ import { ProposalNotFoundError } from '~/libs/errors';
 import { getTracksSchema, saveTracks } from './save-tracks.server';
 
 describe('#saveTracks', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterEach(disconnectDB);
-
   it('set tracks of the proposal', async () => {
     const event = await eventFactory({ traits: ['conference-cfp-open'] });
     const format = await eventFormatFactory({ event });

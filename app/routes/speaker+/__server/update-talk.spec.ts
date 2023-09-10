@@ -1,7 +1,7 @@
 import { TalkLevel } from '@prisma/client';
-import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
+import { describe, expect, it } from 'vitest';
 
 import { db } from '~/libs/db';
 import { TalkNotFoundError } from '~/libs/errors';
@@ -9,11 +9,6 @@ import { TalkNotFoundError } from '~/libs/errors';
 import { updateTalk } from './update-talk.server';
 
 describe('#updateTalk', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterEach(disconnectDB);
-
   it('updates a speaker talk', async () => {
     const speaker = await userFactory();
 

@@ -1,6 +1,6 @@
-import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
+import { describe, expect, it } from 'vitest';
 
 import { db } from '~/libs/db';
 import { InvitationNotFoundError } from '~/libs/errors';
@@ -8,11 +8,6 @@ import { InvitationNotFoundError } from '~/libs/errors';
 import { addCoSpeakerToTalk, checkTalkInviteCode } from './invite-talk.server';
 
 describe('#addCoSpeakerToTalk', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterEach(disconnectDB);
-
   it('adds a cospeaker to the talk', async () => {
     const speaker = await userFactory();
     const talk = await talkFactory({ speakers: [speaker] });
@@ -37,11 +32,6 @@ describe('#addCoSpeakerToTalk', () => {
 });
 
 describe('#checkTalkInviteCode', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterEach(disconnectDB);
-
   it('returns the talk for an invitation code', async () => {
     const speaker = await userFactory();
     const talk = await talkFactory({ speakers: [speaker] });

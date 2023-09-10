@@ -1,11 +1,11 @@
 import type { Event, Team, User } from '@prisma/client';
-import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { getEmails, resetEmails } from 'tests/email-helpers';
 import { eventFactory } from 'tests/factories/events';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 import { db } from '~/libs/db';
 import { ForbiddenOperationError } from '~/libs/errors';
@@ -19,7 +19,6 @@ describe('#sendRejectionCampaign', () => {
 
   beforeEach(async () => {
     await resetEmails();
-    await resetDB();
     owner = await userFactory();
     member = await userFactory();
     reviewer = await userFactory();
@@ -29,7 +28,6 @@ describe('#sendRejectionCampaign', () => {
     event = await eventFactory({ team, attributes: { name: 'Event 1' } });
     event2 = await eventFactory({ attributes: { name: 'Event 2' } });
   });
-  afterEach(disconnectDB);
 
   it('sends emails to only rejected (not draft) proposals of the event for each speaker', async () => {
     await proposalFactory({ event: event2, talk: await talkFactory({ speakers: [speaker1] }) });

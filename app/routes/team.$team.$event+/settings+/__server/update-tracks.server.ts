@@ -3,12 +3,11 @@ import { z } from 'zod';
 
 import { db } from '~/libs/db';
 import { allowedForEvent } from '~/routes/__server/teams/check-user-role.server';
-import { text } from '~/routes/__types/utils';
 
 export const EventTrackSaveSchema = z.object({
-  id: text(z.string().trim().optional()),
-  name: text(z.string().trim().min(1)),
-  description: text(z.string().trim().nullable().default(null)),
+  id: z.string().trim().optional(),
+  name: z.string().trim().min(1),
+  description: z.string().trim().nullable().default(null),
 });
 
 type EventTrackSaveData = z.infer<typeof EventTrackSaveSchema>;

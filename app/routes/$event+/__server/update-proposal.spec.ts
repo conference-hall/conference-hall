@@ -1,11 +1,11 @@
 import { TalkLevel } from '@prisma/client';
-import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventCategoryFactory } from 'tests/factories/categories';
 import { eventFactory } from 'tests/factories/events';
 import { eventFormatFactory } from 'tests/factories/formats';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
+import { describe, expect, it } from 'vitest';
 
 import { CfpNotOpenError, EventNotFoundError, ProposalNotFoundError } from '~/libs/errors';
 import { getSpeakerProposal } from '~/routes/__server/proposals/get-speaker-proposal.server';
@@ -13,11 +13,6 @@ import { getSpeakerProposal } from '~/routes/__server/proposals/get-speaker-prop
 import { updateProposal } from './update-proposal.server';
 
 describe('#updateProposal', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterEach(disconnectDB);
-
   it('updates the proposal and the related talk', async () => {
     const event = await eventFactory({ traits: ['conference-cfp-open'] });
     const format = await eventFormatFactory({ event });

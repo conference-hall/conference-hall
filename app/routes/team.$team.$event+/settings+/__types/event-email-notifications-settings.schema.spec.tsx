@@ -1,4 +1,5 @@
 import { parse } from '@conform-to/zod';
+import { describe, expect, it } from 'vitest';
 
 import { EventEmailNotificationsSettingsSchema } from './event-email-notifications-settings.schema';
 
@@ -17,7 +18,7 @@ describe('Validate EventEmailNotificationsSettingsSchema', () => {
 
     const result = parse(form, { schema: EventEmailNotificationsSettingsSchema });
     expect(result.error).toEqual({
-      emailOrganizer: 'Invalid email',
+      emailOrganizer: ['Invalid email'],
     });
   });
 });

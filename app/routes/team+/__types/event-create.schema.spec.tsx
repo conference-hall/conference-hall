@@ -1,4 +1,5 @@
 import { parse } from '@conform-to/zod';
+import { describe, expect, it } from 'vitest';
 
 import { EventCreateSchema } from './event-create.schema';
 
@@ -28,10 +29,10 @@ describe('Validate EventCreateSchema', () => {
 
     const result = parse(form, { schema: EventCreateSchema });
     expect(result.error).toEqual({
-      name: 'Required',
-      slug: 'Must only contain lower case alphanumeric and dashes (-).',
-      type: "Invalid enum value. Expected 'CONFERENCE' | 'MEETUP', received 'toto'",
-      visibility: "Invalid enum value. Expected 'PUBLIC' | 'PRIVATE', received 'toto'",
+      name: ['Required'],
+      slug: ['Must only contain lower case alphanumeric and dashes (-).'],
+      type: ["Invalid enum value. Expected 'CONFERENCE' | 'MEETUP', received 'toto'"],
+      visibility: ["Invalid enum value. Expected 'PUBLIC' | 'PRIVATE', received 'toto'"],
     });
   });
 });

@@ -1,5 +1,4 @@
 import type { Event, EventCategory, EventFormat, Team, User } from '@prisma/client';
-import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventCategoryFactory } from 'tests/factories/categories';
 import { eventFactory } from 'tests/factories/events';
 import { eventFormatFactory } from 'tests/factories/formats';
@@ -9,6 +8,7 @@ import { reviewFactory } from 'tests/factories/reviews';
 import { talkFactory } from 'tests/factories/talks';
 import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 import { db } from '~/libs/db';
 import { ForbiddenOperationError } from '~/libs/errors';
@@ -23,7 +23,6 @@ describe('#getProposalReview', () => {
   let category: EventCategory;
 
   beforeEach(async () => {
-    await resetDB();
     owner = await userFactory({ traits: ['clark-kent'] });
     member = await userFactory({ traits: ['bruce-wayne'] });
     speaker = await userFactory({ traits: ['peter-parker'] });
@@ -32,7 +31,6 @@ describe('#getProposalReview', () => {
     format = await eventFormatFactory({ event });
     category = await eventCategoryFactory({ event });
   });
-  afterEach(disconnectDB);
 
   it('returns proposal review data', async () => {
     const proposal = await proposalFactory({

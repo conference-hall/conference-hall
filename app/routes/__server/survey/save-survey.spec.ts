@@ -1,4 +1,5 @@
-import { disconnectDB, resetDB } from '../../../../tests/db-helpers';
+import { describe, expect, it } from 'vitest';
+
 import { eventFactory } from '../../../../tests/factories/events';
 import { surveyFactory } from '../../../../tests/factories/surveys';
 import { userFactory } from '../../../../tests/factories/users';
@@ -7,11 +8,6 @@ import { getAnswers } from './get-answers.server';
 import { saveSurvey } from './save-survey.server';
 
 describe('#saveSurvey', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterEach(disconnectDB);
-
   it('creates user survey for event when it exists', async () => {
     const event = await eventFactory({ traits: ['withSurvey'] });
     const user = await userFactory();

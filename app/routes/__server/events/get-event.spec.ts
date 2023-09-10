@@ -1,6 +1,6 @@
 import { teamFactory } from 'tests/factories/team';
+import { describe, expect, it } from 'vitest';
 
-import { disconnectDB, resetDB } from '../../../../tests/db-helpers';
 import { eventCategoryFactory } from '../../../../tests/factories/categories';
 import { eventFactory } from '../../../../tests/factories/events';
 import { eventFormatFactory } from '../../../../tests/factories/formats';
@@ -8,11 +8,6 @@ import { EventNotFoundError } from '../../../libs/errors';
 import { getEvent } from './get-event.server';
 
 describe('#getEvent', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterEach(disconnectDB);
-
   it('returns the default response', async () => {
     const team = await teamFactory();
     const event = await eventFactory({ team, traits: ['conference-cfp-open', 'withSurvey'] });

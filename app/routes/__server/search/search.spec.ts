@@ -1,13 +1,9 @@
-import { disconnectDB, resetDB } from '../../../../tests/db-helpers';
+import { describe, expect, it } from 'vitest';
+
 import { eventFactory } from '../../../../tests/factories/events';
 import { parseFilters, searchEvents } from './search.server';
 
 describe('#searchEvents', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterEach(disconnectDB);
-
   it('returns the default response', async () => {
     const event = await eventFactory({
       traits: ['conference-cfp-open'],

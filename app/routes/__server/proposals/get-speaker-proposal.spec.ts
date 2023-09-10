@@ -1,21 +1,16 @@
-import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventCategoryFactory } from 'tests/factories/categories';
 import { eventFactory } from 'tests/factories/events';
 import { eventFormatFactory } from 'tests/factories/formats';
 import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
+import { describe, expect, it } from 'vitest';
 
 import { ProposalNotFoundError } from '../../../libs/errors';
 import { getSpeakerProposal } from './get-speaker-proposal.server';
 import { SpeakerProposalStatus } from './get-speaker-proposal-status';
 
 describe('#getSpeakerProposal', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterEach(disconnectDB);
-
   it('returns event proposals of the speaker', async () => {
     const event = await eventFactory({ traits: ['conference-cfp-open'] });
     const format = await eventFormatFactory({ event });

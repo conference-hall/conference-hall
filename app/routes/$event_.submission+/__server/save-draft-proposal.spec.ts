@@ -1,8 +1,8 @@
 import { TalkLevel } from '@prisma/client';
-import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventFactory } from 'tests/factories/events';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
+import { describe, expect, it } from 'vitest';
 
 import { db } from '~/libs/db';
 import { CfpNotOpenError, EventNotFoundError, TalkNotFoundError } from '~/libs/errors';
@@ -10,11 +10,6 @@ import { CfpNotOpenError, EventNotFoundError, TalkNotFoundError } from '~/libs/e
 import { saveDraftProposal } from './save-draft-proposal.server';
 
 describe('#saveDraftProposal', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterEach(disconnectDB);
-
   it('create a new draft proposal from scratch', async () => {
     const event = await eventFactory({ traits: ['conference-cfp-open'] });
     const speaker = await userFactory();

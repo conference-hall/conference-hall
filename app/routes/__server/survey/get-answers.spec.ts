@@ -1,16 +1,11 @@
-import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventFactory } from 'tests/factories/events';
 import { surveyFactory } from 'tests/factories/surveys';
 import { userFactory } from 'tests/factories/users';
+import { describe, expect, it } from 'vitest';
 
 import { getAnswers } from './get-answers.server';
 
 describe('#getAnswers', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterEach(disconnectDB);
-
   it('returns the user answers for an event', async () => {
     const event = await eventFactory({ traits: ['withSurvey'] });
     const user1 = await userFactory();

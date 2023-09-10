@@ -1,17 +1,12 @@
-import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { eventFactory } from 'tests/factories/events';
 import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
+import { describe, expect, it } from 'vitest';
 
 import { EventNotFoundError } from '../../../libs/errors';
 import { getTeamEvent } from './get-event.server';
 
 describe('#getEvent', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterEach(disconnectDB);
-
   it('returns the event for organizer', async () => {
     const user = await userFactory();
     const team = await teamFactory({ owners: [user] });

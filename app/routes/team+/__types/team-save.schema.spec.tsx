@@ -1,4 +1,5 @@
 import { parse } from '@conform-to/zod';
+import { describe, expect, it } from 'vitest';
 
 import { TeamSaveSchema } from './team-save.schema';
 
@@ -18,8 +19,8 @@ describe('Validate TeamSaveSchema', () => {
     form.append('slug', 'h');
 
     const result = parse(form, { schema: TeamSaveSchema });
-    expect(result?.error.name).toBe('String must contain at least 3 character(s)');
-    expect(result?.error.slug).toBe('String must contain at least 3 character(s)');
+    expect(result?.error.name).toEqual(['String must contain at least 3 character(s)']);
+    expect(result?.error.slug).toEqual(['String must contain at least 3 character(s)']);
   });
 
   it('validates slug format (alpha-num and dash only)', async () => {
@@ -28,6 +29,6 @@ describe('Validate TeamSaveSchema', () => {
     form.append('slug', 'Hello world/');
 
     const result = parse(form, { schema: TeamSaveSchema });
-    expect(result?.error.slug).toEqual('Must only contain lower case alphanumeric and dashes (-).');
+    expect(result?.error.slug).toEqual(['Must only contain lower case alphanumeric and dashes (-).']);
   });
 });

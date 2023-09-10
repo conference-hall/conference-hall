@@ -1,15 +1,11 @@
-import { disconnectDB, resetDB } from '../../../../tests/db-helpers';
+import { describe, expect, it } from 'vitest';
+
 import { userFactory } from '../../../../tests/factories/users';
 import { db } from '../../../libs/db';
 import { UserNotFoundError } from '../../../libs/errors';
 import { saveUserAdditionalInfo, saveUserDetails, saveUserPersonalInfo } from './save-profile.server';
 
 describe('#saveUserPersonalInfo', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterEach(disconnectDB);
-
   it('updates personal information', async () => {
     const user = await userFactory();
 
@@ -32,11 +28,6 @@ describe('#saveUserPersonalInfo', () => {
 });
 
 describe('#saveUserDetails', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterEach(disconnectDB);
-
   it('updates user details', async () => {
     const user = await userFactory();
 
@@ -57,11 +48,6 @@ describe('#saveUserDetails', () => {
 });
 
 describe('#saveUserAdditionalInfo', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterEach(disconnectDB);
-
   it('updates user additional information', async () => {
     const user = await userFactory();
 

@@ -1,15 +1,10 @@
-import { disconnectDB, resetDB } from 'tests/db-helpers';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
+import { describe, expect, it } from 'vitest';
 
 import { listTalks } from './list-talks.server';
 
 describe('#listTalks', () => {
-  beforeEach(async () => {
-    await resetDB();
-  });
-  afterEach(disconnectDB);
-
   it('returns speaker talks list', async () => {
     const speaker = await userFactory();
     const talk = await talkFactory({ speakers: [speaker] });
