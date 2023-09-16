@@ -1,6 +1,6 @@
 import { parse } from '@conform-to/zod';
 import { CreditCardIcon, KeyIcon, UserCircleIcon } from '@heroicons/react/20/solid';
-import type { ActionArgs, LoaderArgs } from '@remix-run/node';
+import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useActionData } from '@remix-run/react';
 
@@ -24,12 +24,12 @@ import { SpeakerDetailsForm } from './__components/SpeakerDetailsForm';
 
 export const meta = mergeMeta(() => [{ title: 'Profile | Conference Hall' }]);
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);
   return null;
 };
 
-export const action = async ({ request }: ActionArgs) => {
+export const action = async ({ request }: ActionFunctionArgs) => {
   const userId = await requireSession(request);
   const form = await request.formData();
   const type = form.get('intent') as string;

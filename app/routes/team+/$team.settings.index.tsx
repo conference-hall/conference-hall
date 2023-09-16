@@ -1,5 +1,5 @@
 import { parse } from '@conform-to/zod';
-import type { ActionArgs, LoaderArgs } from '@remix-run/node';
+import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
@@ -15,12 +15,12 @@ import { updateTeam } from './__server/update-team.server';
 import { TeamSaveSchema } from './__types/team-save.schema';
 import { useTeam } from './$team';
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);
   return null;
 };
 
-export const action = async ({ request, params }: ActionArgs) => {
+export const action = async ({ request, params }: ActionFunctionArgs) => {
   const userId = await requireSession(request);
   const form = await request.formData();
   invariant(params.team, 'Invalid team slug');

@@ -1,4 +1,4 @@
-import type { ActionArgs, LoaderArgs } from '@remix-run/node';
+import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 import { useFetcher, useSearchParams } from '@remix-run/react';
 import {
@@ -9,7 +9,6 @@ import {
   TwitterAuthProvider,
 } from 'firebase/auth';
 import { useCallback, useEffect, useState } from 'react';
-import { useHydrated } from 'remix-utils';
 
 import { AlertError } from '~/design-system/Alerts';
 import { LoadingIcon } from '~/design-system/icons/LoadingIcon';
@@ -21,15 +20,17 @@ import { mergeMeta } from '~/libs/meta/merge-meta';
 import { AuthProviderButton } from '~/routes/__components/AuthProviderButton';
 import { Logo } from '~/routes/__components/navbar/Logo';
 
+import { useHydrated } from './__components/utils/use-hydrated';
+
 export const meta = mergeMeta(() => [{ title: 'Login | Conference Hall' }]);
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const userId = await getSessionUserId(request);
   if (userId) return redirect('/');
   return null;
 };
 
-export const action = async ({ request }: ActionArgs) => {
+export const action = async ({ request }: ActionFunctionArgs) => {
   return createSession(request);
 };
 

@@ -1,5 +1,5 @@
 import { parse } from '@conform-to/zod';
-import type { ActionArgs, ActionFunction, LoaderArgs } from '@remix-run/node';
+import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData, useLoaderData, useNavigate } from '@remix-run/react';
 import invariant from 'tiny-invariant';
@@ -24,7 +24,7 @@ export const meta = mergeMeta<typeof loader>(({ data }) =>
   data ? [{ title: `Edit | ${data?.title} | Conference Hall` }] : [],
 );
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.talk, 'Invalid talk id');
 
@@ -33,7 +33,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   return json(talk);
 };
 
-export const action: ActionFunction = async ({ request, params }: ActionArgs) => {
+export const action = async ({ request, params }: ActionFunctionArgs) => {
   const userId = await requireSession(request);
   const form = await request.formData();
   invariant(params.talk, 'Invalid talk id');

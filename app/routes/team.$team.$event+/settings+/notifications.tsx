@@ -1,5 +1,5 @@
 import { parse } from '@conform-to/zod';
-import type { LoaderArgs } from '@remix-run/node';
+import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Form, useActionData, useFetcher } from '@remix-run/react';
 import invariant from 'tiny-invariant';
@@ -17,12 +17,12 @@ import { useOrganizerEvent } from '../_layout';
 import { EventEmailNotificationsSettingsSchema } from './__types/event-email-notifications-settings.schema';
 import { EventNotificationsSettingsSchema } from './__types/event-notifications-settings.schema';
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);
   return null;
 };
 
-export const action = async ({ request, params }: LoaderArgs) => {
+export const action = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
   const form = await request.formData();

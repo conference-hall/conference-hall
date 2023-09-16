@@ -1,4 +1,4 @@
-import { type ActionArgs, json, type LoaderArgs } from '@remix-run/node';
+import { type ActionFunctionArgs, json, type LoaderFunctionArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
@@ -8,7 +8,7 @@ import { useUser } from '~/root';
 import { Discussions } from './__components/Discussions';
 import { addProposalMessage, getProposalMessages, removeProposalMessage } from './__server/messages.server';
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
   invariant(params.proposal, 'Invalid proposal id');
@@ -18,7 +18,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   return json(messages);
 };
 
-export const action = async ({ request, params }: ActionArgs) => {
+export const action = async ({ request, params }: ActionFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
   invariant(params.proposal, 'Invalid proposal id');

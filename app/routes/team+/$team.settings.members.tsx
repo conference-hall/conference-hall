@@ -2,7 +2,7 @@ import { parse } from '@conform-to/zod';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { CubeTransparentIcon } from '@heroicons/react/24/outline';
 import type { TeamRole } from '@prisma/client';
-import type { ActionArgs, LoaderArgs } from '@remix-run/node';
+import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Form, useLoaderData, useSearchParams } from '@remix-run/react';
 import invariant from 'tiny-invariant';
@@ -24,7 +24,7 @@ import { listMembers, MembersFilterSchema } from './__server/list-members.server
 import { removeMember } from './__server/remove-member.server';
 import { useTeam } from './$team';
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.team, 'Invalid team slug');
 
@@ -36,7 +36,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   return json(members);
 };
 
-export const action = async ({ request, params }: ActionArgs) => {
+export const action = async ({ request, params }: ActionFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.team, 'Invalid team slug');
 

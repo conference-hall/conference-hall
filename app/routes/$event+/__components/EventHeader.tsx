@@ -1,9 +1,9 @@
 import { cx } from 'class-variance-authority';
-import { ClientOnly } from 'remix-utils';
 
 import { Avatar } from '~/design-system/Avatar';
 import { Container } from '~/design-system/layouts/Container';
 import { H1, Text } from '~/design-system/Typography';
+import { ClientOnly } from '~/routes/__components/utils/ClientOnly';
 import { formatConferenceDates } from '~/utils/event';
 
 type Props = {

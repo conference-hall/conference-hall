@@ -1,5 +1,5 @@
 import { Square3Stack3DIcon } from '@heroicons/react/24/outline';
-import type { LoaderArgs } from '@remix-run/node';
+import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Outlet, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
@@ -15,7 +15,7 @@ import { ArchivedFilters } from './__components/ArchivedFilter';
 import { listEvents } from './__server/list-events.server';
 import { useTeam } from './$team';
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.team, 'Invalid team slug');
 

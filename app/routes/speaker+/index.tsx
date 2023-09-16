@@ -1,5 +1,5 @@
 import { PlusIcon } from '@heroicons/react/20/solid';
-import type { LoaderArgs } from '@remix-run/node';
+import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 
@@ -17,7 +17,7 @@ import { getActivities } from './__server/get-activities.server';
 
 export const meta = mergeMeta(() => [{ title: 'Home speaker | Conference Hall' }]);
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   const url = new URL(request.url);
   const page = parsePage(url.searchParams);

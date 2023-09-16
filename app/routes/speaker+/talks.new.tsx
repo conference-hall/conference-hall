@@ -1,5 +1,5 @@
 import { parse } from '@conform-to/zod';
-import type { LoaderArgs } from '@remix-run/node';
+import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
 
@@ -17,7 +17,7 @@ import { createTalk } from './__server/create-talk.server';
 
 export const meta = mergeMeta(() => [{ title: 'New talk | Conference Hall' }]);
 
-export const action = async ({ request }: LoaderArgs) => {
+export const action = async ({ request }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   const form = await request.formData();
 

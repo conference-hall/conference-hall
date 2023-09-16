@@ -1,5 +1,5 @@
 import { parse } from '@conform-to/zod';
-import type { ActionArgs, LoaderArgs } from '@remix-run/node';
+import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
@@ -19,7 +19,7 @@ import { searchProposals } from '~/routes/team.$team.$event+/__server/search-pro
 import { getAcceptationCampaignStats } from './__server/get-acceptation-campaign-stats.server';
 import { sendAcceptationCampaign } from './__server/send-acceptation-campaign.server';
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
 
@@ -37,7 +37,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   return json({ proposals, stats });
 };
 
-export const action = async ({ request, params }: ActionArgs) => {
+export const action = async ({ request, params }: ActionFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
   const form = await request.formData();

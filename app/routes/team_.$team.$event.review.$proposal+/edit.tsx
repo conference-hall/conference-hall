@@ -1,5 +1,5 @@
 import { parse } from '@conform-to/zod';
-import { type ActionArgs, json, type LoaderArgs, redirect } from '@remix-run/node';
+import { type ActionFunctionArgs, json, type LoaderFunctionArgs, redirect } from '@remix-run/node';
 import { Form, useActionData, useLoaderData, useSearchParams } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
@@ -14,14 +14,14 @@ import { ProposalUpdateSchema } from '~/routes/__types/proposal';
 import { updateProposal } from '../team.$team.$event+/__server/update-proposal.server';
 import { useProposalReview } from './_layout';
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   await requireSession(request);
   invariant(params.event, 'Invalid event slug');
   const event = await getEvent(params.event);
   return json(event);
 };
 
-export const action = async ({ request, params }: ActionArgs) => {
+export const action = async ({ request, params }: ActionFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
   invariant(params.proposal, 'Invalid proposal id');

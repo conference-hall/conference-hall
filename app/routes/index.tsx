@@ -1,5 +1,5 @@
 import { FaceFrownIcon } from '@heroicons/react/24/outline';
-import type { LoaderArgs } from '@remix-run/node';
+import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData, useSearchParams } from '@remix-run/react';
 
@@ -17,7 +17,7 @@ import { SearchEventsFilters } from './__components/search/SearchEventsFilters';
 import { SearchEventsInput } from './__components/search/SearchEventsInput';
 import { parseFilters, searchEvents } from './__server/search/search.server';
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
   const filters = parseFilters(url.searchParams);
   const page = parsePage(url.searchParams);

@@ -1,4 +1,4 @@
-import type { LoaderArgs } from '@remix-run/node';
+import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Outlet } from '@remix-run/react';
 
@@ -9,7 +9,7 @@ import { Navbar } from '~/routes/__components/navbar/Navbar';
 
 import { checkTeamAccess } from './__server/check-team-access.server';
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   const canAccess = await checkTeamAccess(userId);
 
