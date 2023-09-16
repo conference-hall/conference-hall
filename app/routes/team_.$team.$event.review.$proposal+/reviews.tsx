@@ -1,5 +1,5 @@
 import { EyeSlashIcon } from '@heroicons/react/24/outline';
-import { json, type LoaderArgs } from '@remix-run/node';
+import { json, type LoaderFunctionArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
@@ -12,7 +12,7 @@ import { ReviewNote } from '~/routes/__components/reviews/ReviewNote';
 
 import { getReviews } from './__server/get-reviews.server';
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
   invariant(params.proposal, 'Invalid proposal id');

@@ -1,13 +1,13 @@
-import type { V2_HtmlMetaDescriptor, V2_MetaFunction } from '@remix-run/node';
+import type { MetaDescriptor, MetaFunction } from '@remix-run/node';
 
 // source: https://gist.github.com/ryanflorence/ec1849c6d690cfbffcb408ecd633e069
-export function mergeMeta<T>(overrideFn: V2_MetaFunction<T>, appendFn?: V2_MetaFunction<T>): V2_MetaFunction<T> {
+export function mergeMeta<T>(overrideFn: MetaFunction<T>, appendFn?: MetaFunction<T>): MetaFunction<T> {
   return (arg) => {
     // get meta from parent routes
     let mergedMeta = arg.matches.reduce((acc, match: any) => {
       overrideMeta(acc, match.meta || []);
       return acc;
-    }, [] as V2_HtmlMetaDescriptor[]);
+    }, [] as MetaDescriptor[]);
 
     // replace any parent meta with the same name or property with the override
     let overrides = overrideFn(arg);
@@ -20,7 +20,7 @@ export function mergeMeta<T>(overrideFn: V2_MetaFunction<T>, appendFn?: V2_MetaF
   };
 }
 
-function overrideMeta(origin: V2_HtmlMetaDescriptor[], overrides: V2_HtmlMetaDescriptor[]) {
+function overrideMeta(origin: MetaDescriptor[], overrides: MetaDescriptor[]) {
   for (let override of overrides) {
     let index = origin.findIndex(
       (meta) =>

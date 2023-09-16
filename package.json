@@ -37,9 +37,9 @@
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
     "@prisma/client": "^5.3.1",
-    "@remix-run/node": "1.19.3",
-    "@remix-run/react": "1.19.3",
-    "@remix-run/serve": "1.19.3",
+    "@remix-run/node": "2.0.0",
+    "@remix-run/react": "2.0.0",
+    "@remix-run/serve": "2.0.0",
     "@sindresorhus/slugify": "^2.2.1",
     "class-variance-authority": "^0.7.0",
     "compression": "^1.7.4",
@@ -56,8 +56,8 @@
     "nodemailer": "^6.9.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "remix": "1.19.3",
-    "remix-utils": "^6.6.0",
+    "remix": "2.0.0",
+    "source-map-support": "^0.5.21",
     "tiny-invariant": "^1.3.1",
     "use-debounce": "^9.0.4",
     "uuid": "^9.0.1",
@@ -67,8 +67,8 @@
   "devDependencies": {
     "@ladle/react": "^2.17.2",
     "@ngneat/falso": "^7.1.0",
-    "@remix-run/dev": "1.19.3",
-    "@remix-run/eslint-config": "1.19.3",
+    "@remix-run/dev": "2.0.0",
+    "@remix-run/eslint-config": "2.0.0",
     "@tailwindcss/forms": "^0.5.6",
     "@tailwindcss/typography": "^0.5.10",
     "@testing-library/cypress": "^10.0.1",
@@ -76,12 +76,12 @@
     "@testing-library/react": "^14.0.0",
     "@types/compression": "^1.7.3",
     "@types/eslint": "^8.44.2",
-    "@types/form-data": "^2.5.0",
     "@types/marked": "^5.0.1",
     "@types/morgan": "^1.9.5",
     "@types/nodemailer": "^6.4.10",
     "@types/react": "^18.2.21",
     "@types/react-dom": "^18.2.7",
+    "@types/source-map-support": "^0.5.7",
     "@types/uuid": "^9.0.4",
     "autoprefixer": "^10.4.15",
     "chokidar": "^3.5.3",
@@ -108,8 +108,11 @@
     "vitest": "^0.34.4"
   },
   "overrides": {
-    "@testing-library/cypress": {
-      "cypress": "^13.0.0"
+    "@remix-run/v1-route-convention": {
+      "@remix-run/dev": "2.0.0"
+    },
+    "remix-flat-routes": {
+      "@remix-run/dev": "2.0.0"
     }
   },
   "engines": {

@@ -1,5 +1,3 @@
-import { Response } from '@remix-run/node';
-
 export class NotFoundError extends Response {
   constructor(message: string) {
     super(message, { status: 404, statusText: message });

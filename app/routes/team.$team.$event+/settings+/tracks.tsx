@@ -1,5 +1,5 @@
 import { parse } from '@conform-to/zod';
-import type { ActionArgs, LoaderArgs } from '@remix-run/node';
+import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useFetcher } from '@remix-run/react';
 import invariant from 'tiny-invariant';
@@ -23,12 +23,12 @@ import {
 } from './__server/update-tracks.server';
 import { EventTracksSettingsSchema } from './__types/event-track-settings.schema';
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);
   return null;
 };
 
-export const action = async ({ request, params }: ActionArgs) => {
+export const action = async ({ request, params }: ActionFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
   const form = await request.formData();

@@ -1,4 +1,4 @@
-import type { LoaderArgs } from '@remix-run/node';
+import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Outlet, useLoaderData, useOutletContext } from '@remix-run/react';
 import invariant from 'tiny-invariant';
@@ -10,7 +10,7 @@ import { useTeam } from '../team+/$team';
 import type { OrganizerEvent } from './__server/get-event.server';
 import { getTeamEvent } from './__server/get-event.server';
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
 

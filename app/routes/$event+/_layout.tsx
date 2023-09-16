@@ -1,4 +1,4 @@
-import type { LoaderArgs } from '@remix-run/node';
+import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Outlet, useLoaderData, useOutletContext } from '@remix-run/react';
 import invariant from 'tiny-invariant';
@@ -19,7 +19,7 @@ export const meta = mergeMeta<typeof loader>(
   ({ data }) => (data ? eventSocialCard({ name: data.name, slug: data.slug, logo: data.logo }) : []),
 );
 
-export const loader = async ({ params }: LoaderArgs) => {
+export const loader = async ({ params }: LoaderFunctionArgs) => {
   invariant(params.event, 'Invalid event slug');
 
   const event = await getEvent(params.event);

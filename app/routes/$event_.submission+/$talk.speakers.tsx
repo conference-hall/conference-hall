@@ -1,6 +1,6 @@
 import { parse } from '@conform-to/zod';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
-import type { ActionArgs, LoaderArgs } from '@remix-run/node';
+import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
@@ -23,7 +23,7 @@ import { useSubmissionStep } from './__components/useSubmissionStep';
 
 export const handle = { step: 'speakers' };
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
   invariant(params.talk, 'Invalid talk id');
@@ -36,7 +36,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   });
 };
 
-export const action = async ({ request, params }: ActionArgs) => {
+export const action = async ({ request, params }: ActionFunctionArgs) => {
   const userId = await requireSession(request);
   const form = await request.formData();
   invariant(params.event, 'Invalid event slug');

@@ -1,6 +1,6 @@
 import { Cog6ToothIcon, UserGroupIcon } from '@heroicons/react/24/outline';
 import { TeamRole } from '@prisma/client';
-import type { LoaderArgs } from '@remix-run/node';
+import type { LoaderFunctionArgs } from '@remix-run/node';
 import { Outlet } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
@@ -13,7 +13,7 @@ import { allowedForTeam } from '~/routes/__server/teams/check-user-role.server';
 
 import { useTeam } from './$team';
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.team, 'Invalid team slug');
   await allowedForTeam(params.team, userId, [TeamRole.OWNER]);

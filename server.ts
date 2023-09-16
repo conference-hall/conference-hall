@@ -13,7 +13,9 @@ import express from 'express';
 import rateLimit from 'express-rate-limit';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import morgan from 'morgan';
+import sourceMapSupport from 'source-map-support';
 
+sourceMapSupport.install();
 installGlobals();
 run();
 

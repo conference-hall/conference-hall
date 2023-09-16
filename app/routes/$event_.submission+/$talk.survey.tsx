@@ -1,6 +1,6 @@
 import { parse } from '@conform-to/zod';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
-import type { ActionFunction, LoaderArgs } from '@remix-run/node';
+import type { ActionFunction, LoaderFunctionArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
@@ -19,7 +19,7 @@ import { useSubmissionStep } from './__components/useSubmissionStep';
 
 export const handle = { step: 'survey' };
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
   invariant(params.talk, 'Invalid talk id');

@@ -1,11 +1,11 @@
 import type { ProposalStatus, ReviewFeeling } from '@prisma/client';
 import format from 'date-fns/format';
-import { ClientOnly } from 'remix-utils';
 
 import { Card } from '~/design-system/layouts/Card';
 import { H2, Text } from '~/design-system/Typography';
 import { ProposalStatusBadge } from '~/routes/__components/proposals/ProposalStatusBadges';
 import { ReviewNote } from '~/routes/__components/reviews/ReviewNote';
+import { ClientOnly } from '~/routes/__components/utils/ClientOnly';
 
 import { ReviewForm } from './ReviewForm';
 

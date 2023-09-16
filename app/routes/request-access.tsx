@@ -1,4 +1,4 @@
-import type { ActionArgs, LoaderArgs } from '@remix-run/node';
+import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
 
@@ -16,12 +16,12 @@ import { validAccessKey } from './__server/teams/valid-access-key.server';
 
 export const meta = mergeMeta(() => [{ title: 'Request access | Conference Hall' }]);
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);
   return null;
 };
 
-export const action = async ({ request }: ActionArgs) => {
+export const action = async ({ request }: ActionFunctionArgs) => {
   const userId = await requireSession(request);
   const form = await request.formData();
   const result = await validAccessKey(userId, String(form.get('key')));

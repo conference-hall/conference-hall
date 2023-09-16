@@ -11,16 +11,7 @@ module.exports = {
     '@sindresorhus/transliterate',
     'escape-string-regexp',
   ],
-  tailwind: true,
   watchPaths: ['./tailwind.config.js'],
-  future: {
-    v2_dev: true,
-    v2_errorBoundary: true,
-    v2_headers: true,
-    v2_meta: true,
-    v2_normalizeFormMethod: true,
-    v2_routeConvention: true,
-  },
   routes: async (defineRoutes) => {
     return flatRoutes('routes', defineRoutes, {
       ignoredRouteFiles: [

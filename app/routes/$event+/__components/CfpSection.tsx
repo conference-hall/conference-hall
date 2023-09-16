@@ -1,9 +1,8 @@
-import { ClientOnly } from 'remix-utils';
-
 import { ButtonLink } from '~/design-system/Buttons';
 import { Container } from '~/design-system/layouts/Container';
 import { H2, Subtitle } from '~/design-system/Typography';
 import { CfpIcon } from '~/routes/__components/cfp/CfpIcon';
+import { ClientOnly } from '~/routes/__components/utils/ClientOnly';
 import type { CfpState } from '~/routes/__types/event';
 import { formatCFPDate, formatCFPElapsedTime } from '~/utils/event';
 

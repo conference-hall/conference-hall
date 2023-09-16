@@ -10,7 +10,7 @@ import {
   SwatchIcon,
 } from '@heroicons/react/24/outline';
 import { TeamRole } from '@prisma/client';
-import type { LoaderArgs } from '@remix-run/node';
+import type { LoaderFunctionArgs } from '@remix-run/node';
 import { Outlet } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
@@ -24,7 +24,7 @@ import { allowedForEvent } from '~/routes/__server/teams/check-user-role.server'
 import { useTeam } from '../../team+/$team';
 import { useOrganizerEvent } from '../_layout';
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
   await allowedForEvent(params.event, userId, [TeamRole.OWNER]);

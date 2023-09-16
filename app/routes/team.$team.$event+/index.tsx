@@ -1,6 +1,6 @@
 import { parse } from '@conform-to/zod';
 import { InboxIcon } from '@heroicons/react/24/outline';
-import type { ActionArgs, LoaderArgs } from '@remix-run/node';
+import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { useMemo } from 'react';
@@ -22,7 +22,7 @@ import { ProposalsList } from './__components/ProposalsList/ProposalsList';
 import { searchProposals } from './__server/search-proposals.server';
 import { useOrganizerEvent } from './_layout';
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
 
@@ -33,7 +33,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   return json(results);
 };
 
-export const action = async ({ request, params }: ActionArgs) => {
+export const action = async ({ request, params }: ActionFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
 

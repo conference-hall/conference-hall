@@ -1,6 +1,6 @@
 import { parse } from '@conform-to/zod';
 import { ArchiveBoxArrowDownIcon, ArchiveBoxXMarkIcon } from '@heroicons/react/24/outline';
-import type { ActionArgs, LoaderArgs } from '@remix-run/node';
+import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
@@ -21,12 +21,12 @@ import { useOrganizerEvent } from '../_layout';
 import { EventDetailsSettingsSchema } from './__types/event-details-settings.schema';
 import { EventGeneralSettingsSchema } from './__types/event-general-settings.schema';
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);
   return null;
 };
 
-export const action = async ({ request, params }: ActionArgs) => {
+export const action = async ({ request, params }: ActionFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
   const form = await request.formData();
@@ -38,9 +38,9 @@ export const action = async ({ request, params }: ActionArgs) => {
       if (!result.value) return json(result.error);
 
       const updated = await updateEvent(params.event, userId, result.value);
-      if (!updated.slug) return json({ slug: updated.error });
+      if (!updated.slug) return json({ slug: [updated.error] } as Record<string, string[]>);
 
-      return redirect(`/team/${params.team}/${updated.slug}/settings`, await addToast(request, 'Event saved.'));
+      throw redirect(`/team/${params.team}/${updated.slug}/settings`, await addToast(request, 'Event saved.'));
     }
     case 'details': {
       const result = parse(form, { schema: EventDetailsSettingsSchema });
@@ -55,11 +55,12 @@ export const action = async ({ request, params }: ActionArgs) => {
       return json(null, await addToast(request, `Event ${archived ? 'archived' : 'restored'}.`));
     }
   }
+  return json(null);
 };
 
 export default function EventGeneralSettingsRoute() {
   const { event } = useOrganizerEvent();
-  const errors = useActionData();
+  const errors = useActionData<typeof action>();
 
   return (
     <>

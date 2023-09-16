@@ -13,7 +13,7 @@ type EventValues = {
 
 type Props = {
   initialValues?: EventValues;
-  errors?: Record<string, string> | null;
+  errors?: Record<string, string[]> | null;
 };
 
 export function EventForm({ initialValues, errors }: Props) {

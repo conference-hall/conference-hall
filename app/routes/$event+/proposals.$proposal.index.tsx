@@ -1,5 +1,5 @@
 import { parse } from '@conform-to/zod';
-import type { ActionFunction, LoaderArgs } from '@remix-run/node';
+import type { ActionFunction, LoaderFunctionArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { useLoaderData, useNavigate } from '@remix-run/react';
 import invariant from 'tiny-invariant';
@@ -17,7 +17,7 @@ import { deleteProposal } from './__server/delete-proposal.server';
 import { sendParticipationAnswer } from './__server/send-participation-answer.server';
 import { useEvent } from './_layout';
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.proposal, 'Invalid proposal id');
 

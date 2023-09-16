@@ -1,6 +1,6 @@
 import { parse } from '@conform-to/zod';
 import { TeamRole } from '@prisma/client';
-import type { ActionArgs, LoaderArgs } from '@remix-run/node';
+import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Outlet, useLoaderData, useOutletContext, useParams } from '@remix-run/react';
 import invariant from 'tiny-invariant';
@@ -21,7 +21,7 @@ import { rateProposal } from './__server/review-proposal.server';
 
 export const meta = mergeMeta(() => [{ title: `Review proposal | Conference Hall` }]);
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
   invariant(params.proposal, 'Invalid proposal id');
@@ -32,7 +32,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   return json(proposal);
 };
 
-export const action = async ({ request, params }: ActionArgs) => {
+export const action = async ({ request, params }: ActionFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
   invariant(params.proposal, 'Invalid proposal id');

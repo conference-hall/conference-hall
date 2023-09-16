@@ -1,5 +1,5 @@
 import { BellSlashIcon } from '@heroicons/react/24/outline';
-import type { LoaderArgs } from '@remix-run/node';
+import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 
 import { CardLink } from '~/design-system/layouts/Card';
@@ -15,7 +15,7 @@ import { Navbar } from '~/routes/__components/navbar/Navbar';
 
 export const meta = mergeMeta(() => [{ title: 'Notifications | Conference Hall' }]);
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);
   return json(null);
 };

@@ -6,10 +6,16 @@ type SubmissionStepHook = {
   nextPath: string;
 };
 
+type StepHandler = { step: string };
+
+function getHandlerStep(handle: unknown): StepHandler | null {
+  return handle as StepHandler;
+}
+
 export function useSubmissionStep(): SubmissionStepHook {
   const matches = useMatches();
-  const stepsRoute = matches.find((match) => match.handle?.step === 'root');
-  const currentStepKey = matches[matches.length - 1].handle?.step;
+  const stepsRoute = matches.find((match) => getHandlerStep(match.handle)?.step === 'root');
+  const currentStepKey = getHandlerStep(matches[matches.length - 1].handle)?.step;
   const { steps } = stepsRoute?.data as any;
 
   if (!steps || !currentStepKey) {

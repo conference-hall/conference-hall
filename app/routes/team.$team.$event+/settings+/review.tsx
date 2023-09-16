@@ -1,4 +1,4 @@
-import { json, type LoaderArgs } from '@remix-run/node';
+import { json, type LoaderFunctionArgs } from '@remix-run/node';
 import { useFetcher } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
@@ -11,12 +11,12 @@ import { updateEvent } from '~/routes/__server/teams/update-event.server';
 
 import { useOrganizerEvent } from '../_layout';
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);
   return null;
 };
 
-export const action = async ({ request, params }: LoaderArgs) => {
+export const action = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
   const form = await request.formData();

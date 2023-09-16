@@ -1,5 +1,5 @@
 import { PlusIcon } from '@heroicons/react/20/solid';
-import type { LoaderArgs } from '@remix-run/node';
+import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData, useNavigate, useSearchParams } from '@remix-run/react';
 
@@ -15,7 +15,7 @@ import { listTalks } from './__server/list-talks.server';
 
 export const meta = mergeMeta(() => [{ title: 'Talks library | Conference Hall' }]);
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   const { searchParams } = new URL(request.url);
   const archived = Boolean(searchParams.get('archived'));
