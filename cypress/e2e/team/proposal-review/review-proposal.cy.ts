@@ -1,5 +1,5 @@
-import ProposalReviewPage from 'page-objects/team/event-proposal-review.page';
-import OrganizationEventsProposalsPage from 'page-objects/team/event-proposals-list.page';
+import ProposalReviewPage from '../../../page-objects/team/event-proposal-review.page.ts';
+import OrganizationEventsProposalsPage from '../../../page-objects/team/event-proposals-list.page.ts';
 
 describe('Proposal review page', () => {
   beforeEach(() => {

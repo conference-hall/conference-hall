@@ -1,4 +1,4 @@
-import LoginPage from 'page-objects/login.page';
+import LoginPage from '../../page-objects/login.page.ts';
 
 describe('Team page access and redirections', () => {
   beforeEach(() => {

@@ -1,4 +1,4 @@
-import TeamMembersPage from 'page-objects/team/members-list.page';
+import TeamMembersPage from '../../page-objects/team/members-list.page.ts';
 
 describe('Team members list', () => {
   beforeEach(() => {

@@ -1,4 +1,4 @@
-import ProposalReviewPage from 'page-objects/team/event-proposal-review.page';
+import ProposalReviewPage from '../../../page-objects/team/event-proposal-review.page.ts';
 
 describe('Speakers in proposal review page', () => {
   beforeEach(() => {

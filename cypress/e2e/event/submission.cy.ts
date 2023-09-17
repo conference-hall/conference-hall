@@ -1,8 +1,8 @@
-import EventProposalPage from 'page-objects/event/proposal.page';
-import EventProposalsPage from 'page-objects/event/proposals.page';
-import EventSubmissionPage from 'page-objects/event/submission.page';
-import EventSurveyPage from 'page-objects/event/survey.page';
-import LoginPage from 'page-objects/login.page';
+import EventProposalPage from '../../page-objects/event/proposal.page.ts';
+import EventProposalsPage from '../../page-objects/event/proposals.page.ts';
+import EventSubmissionPage from '../../page-objects/event/submission.page.ts';
+import EventSurveyPage from '../../page-objects/event/survey.page.ts';
+import LoginPage from '../../page-objects/login.page.ts';
 
 describe('Submit a talk to event', () => {
   beforeEach(() => {

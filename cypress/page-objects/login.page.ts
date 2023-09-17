@@ -1,4 +1,4 @@
-import BasePage from './base.page';
+import BasePage from './base.page.ts';
 
 class LoginPage extends BasePage {
   visit(redirectTo?: string) {

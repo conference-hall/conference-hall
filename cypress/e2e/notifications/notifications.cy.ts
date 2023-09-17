@@ -1,5 +1,5 @@
-import EventProposalPage from 'page-objects/event/proposal.page';
-import NotificationsPage from 'page-objects/notifications.page';
+import EventProposalPage from '../../page-objects/event/proposal.page.ts';
+import NotificationsPage from '../../page-objects/notifications.page.ts';
 
 describe('Notifications', () => {
   beforeEach(() => {

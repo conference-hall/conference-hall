@@ -13,14 +13,12 @@
     "types": ["node", "cypress", "@testing-library/cypress"],
     "esModuleInterop": true,
     "jsx": "react-jsx",
-    "moduleResolution": "node",
-    "target": "es2019",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "allowImportingTsExtensions": true,
+    "target": "ES2022",
     "strict": true,
     "skipLibCheck": true,
-    "resolveJsonModule": true,
-
-    "paths": {
-      "~/*": ["../app/*"]
-    }
+    "resolveJsonModule": true
   }
 }

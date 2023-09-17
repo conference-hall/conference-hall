@@ -1,5 +1,5 @@
-import { talkFactory } from '../../../tests/factories/talks';
-import { userFactory } from '../../../tests/factories/users';
+import { talkFactory } from '../../../tests/factories/talks.ts';
+import { userFactory } from '../../../tests/factories/users.ts';
 
 export const seed = async () => {
   const user1 = await userFactory({ traits: ['clark-kent'] });

@@ -1,7 +1,7 @@
-import { eventCategoryFactory } from '../../../tests/factories/categories';
-import { eventFactory } from '../../../tests/factories/events';
-import { eventFormatFactory } from '../../../tests/factories/formats';
-import { userFactory } from '../../../tests/factories/users';
+import { eventCategoryFactory } from '../../../tests/factories/categories.ts';
+import { eventFactory } from '../../../tests/factories/events.ts';
+import { eventFormatFactory } from '../../../tests/factories/formats.ts';
+import { userFactory } from '../../../tests/factories/users.ts';
 
 export const seed = async () => {
   await userFactory({ traits: ['clark-kent'] });

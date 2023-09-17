@@ -1,4 +1,4 @@
-import SpeakerProfilePage from 'page-objects/speaker/profile.page';
+import SpeakerProfilePage from '../../page-objects/speaker/profile.page.ts';
 
 describe('Speaker profile page', () => {
   beforeEach(() => {

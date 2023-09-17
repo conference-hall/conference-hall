@@ -1,4 +1,4 @@
-import TeamSettingsPage from 'page-objects/team/team-settings.page';
+import TeamSettingsPage from '../../page-objects/team/team-settings.page.ts';
 
 describe('Team settings', () => {
   beforeEach(() => {

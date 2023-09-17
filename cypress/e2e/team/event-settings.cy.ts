@@ -1,13 +1,13 @@
-import ApiSettings from 'page-objects/team/event-settings/api-settings.page';
-import CfpSettings from 'page-objects/team/event-settings/cfp-settings.page';
-import CustomizeSettings from 'page-objects/team/event-settings/customize-settings.page';
-import OrganizerEventSettingsPage from 'page-objects/team/event-settings/event-settings.page';
-import GeneralSettings from 'page-objects/team/event-settings/general-settings.page';
-import NotificationsSettings from 'page-objects/team/event-settings/notifications-settings.page';
-import ProposalReviewSettings from 'page-objects/team/event-settings/proposal-review-settings.page';
-import SlackSettings from 'page-objects/team/event-settings/slack-settings.page';
-import SurveySettings from 'page-objects/team/event-settings/survey-settings.page';
-import TracksSettings from 'page-objects/team/event-settings/tracks-settings.page';
+import ApiSettings from '../../page-objects/team/event-settings/api-settings.page.ts';
+import CfpSettings from '../../page-objects/team/event-settings/cfp-settings.page.ts';
+import CustomizeSettings from '../../page-objects/team/event-settings/customize-settings.page.ts';
+import OrganizerEventSettingsPage from '../../page-objects/team/event-settings/event-settings.page.ts';
+import GeneralSettings from '../../page-objects/team/event-settings/general-settings.page.ts';
+import NotificationsSettings from '../../page-objects/team/event-settings/notifications-settings.page.ts';
+import ProposalReviewSettings from '../../page-objects/team/event-settings/proposal-review-settings.page.ts';
+import SlackSettings from '../../page-objects/team/event-settings/slack-settings.page.ts';
+import SurveySettings from '../../page-objects/team/event-settings/survey-settings.page.ts';
+import TracksSettings from '../../page-objects/team/event-settings/tracks-settings.page.ts';
 
 describe('Event settings', () => {
   beforeEach(() => {

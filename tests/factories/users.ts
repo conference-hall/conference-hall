@@ -9,9 +9,9 @@ import {
 } from '@ngneat/falso';
 import type { Prisma } from '@prisma/client';
 
-import { db } from '../../app/libs/db';
-import { applyTraits } from './helpers/traits';
-import { organizerKeyFactory } from './organizer-key';
+import { db } from '../../app/libs/db.ts';
+import { applyTraits } from './helpers/traits.ts';
+import { organizerKeyFactory } from './organizer-key.ts';
 
 const TRAITS = {
   'clark-kent': {

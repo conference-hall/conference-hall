@@ -1,5 +1,5 @@
-import InvitationPage from 'page-objects/invitation.page';
-import SpeakerTalkPage from 'page-objects/speaker/talk.page';
+import InvitationPage from '../../page-objects/invitation.page.ts';
+import SpeakerTalkPage from '../../page-objects/speaker/talk.page.ts';
 
 describe('Invite to talk', () => {
   beforeEach(() => {

@@ -1,4 +1,4 @@
-import BasePage from './base.page';
+import BasePage from './base.page.ts';
 
 class InvitationPage extends BasePage {
   visit(type: string, code: string) {

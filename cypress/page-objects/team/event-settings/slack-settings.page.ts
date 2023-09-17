@@ -1,4 +1,4 @@
-import BasePage from 'page-objects/base.page';
+import BasePage from '../../../page-objects/base.page.ts';
 
 class SlackSettings extends BasePage {
   visit(slug: string, eventSlug: string) {

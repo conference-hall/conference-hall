@@ -1,5 +1,5 @@
-import TeamEventsPage from 'page-objects/team/events-list.page';
-import TeamNewPage from 'page-objects/team/team-new.page';
+import TeamEventsPage from '../../page-objects/team/events-list.page.ts';
+import TeamNewPage from '../../page-objects/team/team-new.page.ts';
 
 describe('Team create', () => {
   beforeEach(() => {
