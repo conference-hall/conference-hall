@@ -1,5 +1,5 @@
 import type { ProposalStatus, ReviewFeeling } from '@prisma/client';
-import format from 'date-fns/format';
+import format from 'date-fns/format/index.js';
 
 import { Card } from '~/design-system/layouts/Card';
 import { H2, Text } from '~/design-system/Typography';

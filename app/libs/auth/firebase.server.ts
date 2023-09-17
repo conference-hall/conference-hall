@@ -1,4 +1,4 @@
-import { credential } from 'firebase-admin';
+import admin from 'firebase-admin';
 import type { App } from 'firebase-admin/app';
 import { getApp, getApps, initializeApp } from 'firebase-admin/app';
 import type { Auth } from 'firebase-admin/auth';
@@ -17,7 +17,7 @@ if (getApps().length === 0) {
     app = initializeApp({
       projectId: config.FIREBASE_PROJECT_ID,
       storageBucket: config.FIREBASE_STORAGE,
-      credential: credential.cert(JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)),
+      credential: admin.credential.cert(JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)),
     });
   } else {
     app = initializeApp({

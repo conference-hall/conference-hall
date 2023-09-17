@@ -1,6 +1,6 @@
-import format from 'date-fns/format';
-import formatDistanceToNow from 'date-fns/formatDistanceToNow';
-import isSameDay from 'date-fns/isSameDay';
+import format from 'date-fns/format/index.js';
+import formatDistanceToNow from 'date-fns/formatDistanceToNow/index.js';
+import isSameDay from 'date-fns/isSameDay/index.js';
 
 import type { CfpState, EventType } from '~/routes/__types/event';
 
