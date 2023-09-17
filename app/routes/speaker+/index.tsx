@@ -3,17 +3,17 @@ import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 
-import { ButtonLink } from '~/design-system/Buttons';
-import { Container } from '~/design-system/layouts/Container';
-import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
-import { requireSession } from '~/libs/auth/session';
-import { mergeMeta } from '~/libs/meta/merge-meta';
-import { useUser } from '~/root';
-import { parsePage } from '~/routes/__types/pagination';
+import { ButtonLink } from '~/design-system/Buttons.tsx';
+import { Container } from '~/design-system/layouts/Container.tsx';
+import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
+import { requireSession } from '~/libs/auth/session.ts';
+import { mergeMeta } from '~/libs/meta/merge-meta.ts';
+import { useUser } from '~/root.tsx';
+import { parsePage } from '~/routes/__types/pagination.ts';
 
-import { SpeakerActivitiesSection } from './__components/SpeakerActivitiesSection';
-import { SpeakerDetailsSection } from './__components/SpeakerDetailsSection';
-import { getActivities } from './__server/get-activities.server';
+import { SpeakerActivitiesSection } from './__components/SpeakerActivitiesSection.tsx';
+import { SpeakerDetailsSection } from './__components/SpeakerDetailsSection.tsx';
+import { getActivities } from './__server/get-activities.server.ts';
 
 export const meta = mergeMeta(() => [{ title: 'Home speaker | Conference Hall' }]);
 

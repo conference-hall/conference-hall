@@ -1,6 +1,6 @@
 import { parse } from '@conform-to/zod';
 
-import { SurveySchema } from './survey';
+import { SurveySchema } from './survey.ts';
 
 describe('Validate SurveySchema', () => {
   it('validates survey form inputs', async () => {

@@ -1,6 +1,6 @@
 import { Form } from '@remix-run/react';
 
-import { InputSearch } from '~/design-system/forms/InputSearch';
+import { InputSearch } from '~/design-system/forms/InputSearch.tsx';
 
 export function SearchEventsInput() {
   return (

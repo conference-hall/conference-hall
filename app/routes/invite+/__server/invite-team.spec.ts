@@ -1,11 +1,11 @@
 import { TeamRole } from '@prisma/client';
-import { teamFactory } from 'tests/factories/team';
-import { userFactory } from 'tests/factories/users';
+import { teamFactory } from 'tests/factories/team.ts';
+import { userFactory } from 'tests/factories/users.ts';
 
-import { db } from '~/libs/db';
-import { InvitationNotFoundError } from '~/libs/errors';
+import { db } from '~/libs/db.ts';
+import { InvitationNotFoundError } from '~/libs/errors.ts';
 
-import { addMember, checkTeamInviteCode } from './invite-team.server';
+import { addMember, checkTeamInviteCode } from './invite-team.server.ts';
 
 describe('#addMember', () => {
   it('adds the member as reviewer to the team', async () => {

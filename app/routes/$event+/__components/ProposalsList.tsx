@@ -1,11 +1,11 @@
 import { InboxIcon } from '@heroicons/react/24/outline';
 
-import { EmptyState } from '~/design-system/layouts/EmptyState';
-import { ProposalCard } from '~/routes/__components/proposals/ProposalCard';
-import type { CfpState } from '~/routes/__types/event';
+import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
+import { ProposalCard } from '~/routes/__components/proposals/ProposalCard.tsx';
+import type { CfpState } from '~/routes/__types/event.ts';
 
-import type { EventProposals } from '../proposals.index';
-import { CfpLabel } from './CfpLabel';
+import type { EventProposals } from '../proposals.index.tsx';
+import { CfpLabel } from './CfpLabel.tsx';
 
 type Props = {
   proposals: EventProposals;

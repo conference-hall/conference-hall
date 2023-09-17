@@ -2,10 +2,10 @@ import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import invariant from 'tiny-invariant';
 
-import { requireSession } from '~/libs/auth/session';
-import { parseProposalsFilters } from '~/routes/__types/proposal';
+import { requireSession } from '~/libs/auth/session.ts';
+import { parseProposalsFilters } from '~/routes/__types/proposal.ts';
 
-import { exportProposals } from './__server/export-json.server';
+import { exportProposals } from './__server/export-json.server.ts';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);

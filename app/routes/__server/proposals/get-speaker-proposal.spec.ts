@@ -1,13 +1,14 @@
-import { eventCategoryFactory } from 'tests/factories/categories';
-import { eventFactory } from 'tests/factories/events';
-import { eventFormatFactory } from 'tests/factories/formats';
-import { proposalFactory } from 'tests/factories/proposals';
-import { talkFactory } from 'tests/factories/talks';
-import { userFactory } from 'tests/factories/users';
+import { eventCategoryFactory } from 'tests/factories/categories.ts';
+import { eventFactory } from 'tests/factories/events.ts';
+import { eventFormatFactory } from 'tests/factories/formats.ts';
+import { proposalFactory } from 'tests/factories/proposals.ts';
+import { talkFactory } from 'tests/factories/talks.ts';
+import { userFactory } from 'tests/factories/users.ts';
 
-import { ProposalNotFoundError } from '../../../libs/errors';
-import { getSpeakerProposal } from './get-speaker-proposal.server';
-import { SpeakerProposalStatus } from './get-speaker-proposal-status';
+import { ProposalNotFoundError } from '~/libs/errors.ts';
+
+import { getSpeakerProposal } from './get-speaker-proposal.server.ts';
+import { SpeakerProposalStatus } from './get-speaker-proposal-status.ts';
 
 describe('#getSpeakerProposal', () => {
   it('returns event proposals of the speaker', async () => {

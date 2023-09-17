@@ -1,8 +1,7 @@
-import type { SurveyQuestions } from '~/routes/__types/survey';
-
-import { Checkbox, CheckboxGroup } from '../../../../design-system/forms/Checkboxes';
-import { Radio, RadioGroup } from '../../../../design-system/forms/RadioGroup';
-import { TextArea } from '../../../../design-system/forms/TextArea';
+import { Checkbox, CheckboxGroup } from '~/design-system/forms/Checkboxes.tsx';
+import { Radio, RadioGroup } from '~/design-system/forms/RadioGroup.tsx';
+import { TextArea } from '~/design-system/forms/TextArea.tsx';
+import type { SurveyQuestions } from '~/routes/__types/survey.ts';
 
 export type Props = {
   questions: SurveyQuestions;

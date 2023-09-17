@@ -1,18 +1,18 @@
-import { getEmails, resetEmails } from 'tests/email-helpers';
-import { eventFactory } from 'tests/factories/events';
-import { proposalFactory } from 'tests/factories/proposals';
-import { talkFactory } from 'tests/factories/talks';
-import { userFactory } from 'tests/factories/users';
+import { getEmails, resetEmails } from 'tests/email-helpers.ts';
+import { eventFactory } from 'tests/factories/events.ts';
+import { proposalFactory } from 'tests/factories/proposals.ts';
+import { talkFactory } from 'tests/factories/talks.ts';
+import { userFactory } from 'tests/factories/users.ts';
 
-import { db } from '~/libs/db';
+import { db } from '~/libs/db.ts';
 import {
   CfpNotOpenError,
   EventNotFoundError,
   MaxSubmittedProposalsReachedError,
   ProposalNotFoundError,
-} from '~/libs/errors';
+} from '~/libs/errors.ts';
 
-import { submitProposal } from './submit-proposal.server';
+import { submitProposal } from './submit-proposal.server.ts';
 
 describe('#submitProposal', () => {
   beforeEach(async () => {

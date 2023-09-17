@@ -2,7 +2,7 @@ import format from 'date-fns/format/index.js';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow/index.js';
 import isSameDay from 'date-fns/isSameDay/index.js';
 
-import type { CfpState, EventType } from '~/routes/__types/event';
+import type { CfpState, EventType } from '~/routes/__types/event.ts';
 
 function isConferenceOpened(start?: Date | null, end?: Date | null) {
   if (!start || !end) return false;

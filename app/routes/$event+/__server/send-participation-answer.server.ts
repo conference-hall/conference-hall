@@ -1,8 +1,8 @@
-import { db } from '~/libs/db';
-import { ProposalNotFoundError } from '~/libs/errors';
+import { db } from '~/libs/db.ts';
+import { ProposalNotFoundError } from '~/libs/errors.ts';
 
-import { ProposalConfirmedEmail } from './emails/proposal-confirmed-email';
-import { ProposalDeclinedEmail } from './emails/proposal-declined-email';
+import { ProposalConfirmedEmail } from './emails/proposal-confirmed-email.ts';
+import { ProposalDeclinedEmail } from './emails/proposal-declined-email.ts';
 
 export async function sendParticipationAnswer(
   userId: string,

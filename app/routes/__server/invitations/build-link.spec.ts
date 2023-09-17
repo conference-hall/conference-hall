@@ -1,4 +1,4 @@
-import { buildInvitationLink } from './build-link.server';
+import { buildInvitationLink } from './build-link.server.ts';
 
 describe('#buildInvitationLink', () => {
   it('builds the invitation link from the invitation token', () => {

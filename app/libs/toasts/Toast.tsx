@@ -1,9 +1,9 @@
 import { CheckCircleIcon, XMarkIcon } from '@heroicons/react/20/solid';
 import { useEffect, useState } from 'react';
 
-import { IconButton } from '~/design-system/IconButtons';
-import { ToastTransition } from '~/design-system/Transitions';
-import { Text } from '~/design-system/Typography';
+import { IconButton } from '~/design-system/IconButtons.tsx';
+import { ToastTransition } from '~/design-system/Transitions.tsx';
+import { Text } from '~/design-system/Typography.tsx';
 
 type ToastData = { id: string; message: string };
 

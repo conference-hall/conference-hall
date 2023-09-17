@@ -1,7 +1,9 @@
-import { userFactory } from '../../../../tests/factories/users';
-import { db } from '../../../libs/db';
-import { UserNotFoundError } from '../../../libs/errors';
-import { saveUserAdditionalInfo, saveUserDetails, saveUserPersonalInfo } from './save-profile.server';
+import { userFactory } from 'tests/factories/users.ts';
+
+import { db } from '~/libs/db.ts';
+import { UserNotFoundError } from '~/libs/errors.ts';
+
+import { saveUserAdditionalInfo, saveUserDetails, saveUserPersonalInfo } from './save-profile.server.ts';
 
 describe('#saveUserPersonalInfo', () => {
   it('updates personal information', async () => {

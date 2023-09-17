@@ -1,4 +1,4 @@
-import { Container } from '~/design-system/layouts/Container';
+import { Container } from '~/design-system/layouts/Container.tsx';
 
 export function Footer() {
   return (

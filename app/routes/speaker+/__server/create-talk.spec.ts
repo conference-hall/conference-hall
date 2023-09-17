@@ -1,9 +1,9 @@
 import { TalkLevel } from '@prisma/client';
-import { userFactory } from 'tests/factories/users';
+import { userFactory } from 'tests/factories/users.ts';
 
-import { db } from '~/libs/db';
+import { db } from '~/libs/db.ts';
 
-import { createTalk } from './create-talk.server';
+import { createTalk } from './create-talk.server.ts';
 
 describe('#createTalk', () => {
   it('creates a speaker talk', async () => {

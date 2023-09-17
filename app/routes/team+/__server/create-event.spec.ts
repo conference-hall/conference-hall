@@ -1,12 +1,12 @@
 import type { Team, User } from '@prisma/client';
-import { eventFactory } from 'tests/factories/events';
-import { teamFactory } from 'tests/factories/team';
-import { userFactory } from 'tests/factories/users';
+import { eventFactory } from 'tests/factories/events.ts';
+import { teamFactory } from 'tests/factories/team.ts';
+import { userFactory } from 'tests/factories/users.ts';
 
-import { db } from '~/libs/db';
-import { ForbiddenOperationError } from '~/libs/errors';
+import { db } from '~/libs/db.ts';
+import { ForbiddenOperationError } from '~/libs/errors.ts';
 
-import { createEvent } from './create-event.server';
+import { createEvent } from './create-event.server.ts';
 
 describe('#createEvent', () => {
   let owner: User, reviewer: User;

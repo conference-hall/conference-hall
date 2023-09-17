@@ -5,8 +5,8 @@ import { cva, cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
 import { Fragment } from 'react';
 
-import { IconButton } from './IconButtons';
-import { Text } from './Typography';
+import { IconButton } from './IconButtons.tsx';
+import { Text } from './Typography.tsx';
 
 const POSITION = { center: 'sm:items-center', top: 'sm:items-start' };
 

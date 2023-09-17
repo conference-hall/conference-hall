@@ -1,8 +1,8 @@
 import { useParams, useSearchParams } from '@remix-run/react';
 import { useMemo } from 'react';
 
-import { Card } from '~/design-system/layouts/Card';
-import { NavTabs } from '~/design-system/navigation/NavTabs';
+import { Card } from '~/design-system/layouts/Card.tsx';
+import { NavTabs } from '~/design-system/navigation/NavTabs.tsx';
 
 type Props = { speakersCount: number; reviewsCount: number; messagesCount: number; displayReviews: boolean };
 

@@ -1,5 +1,5 @@
-import { StoryBlock } from './StoryBlock';
-import { H1, H2, H3, Subtitle, Text } from './Typography';
+import { StoryBlock } from './StoryBlock.tsx';
+import { H1, H2, H3, Subtitle, Text } from './Typography.tsx';
 
 export const Documentation = () => (
   <>

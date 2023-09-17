@@ -1,13 +1,13 @@
 import type { ProposalStatus, ReviewFeeling } from '@prisma/client';
 import format from 'date-fns/format/index.js';
 
-import { Card } from '~/design-system/layouts/Card';
-import { H2, Text } from '~/design-system/Typography';
-import { ProposalStatusBadge } from '~/routes/__components/proposals/ProposalStatusBadges';
-import { ReviewNote } from '~/routes/__components/reviews/ReviewNote';
-import { ClientOnly } from '~/routes/__components/utils/ClientOnly';
+import { Card } from '~/design-system/layouts/Card.tsx';
+import { H2, Text } from '~/design-system/Typography.tsx';
+import { ProposalStatusBadge } from '~/routes/__components/proposals/ProposalStatusBadges.tsx';
+import { ReviewNote } from '~/routes/__components/reviews/ReviewNote.tsx';
+import { ClientOnly } from '~/routes/__components/utils/ClientOnly.tsx';
 
-import { ReviewForm } from './ReviewForm';
+import { ReviewForm } from './ReviewForm.tsx';
 
 type Props = {
   proposalId: string;

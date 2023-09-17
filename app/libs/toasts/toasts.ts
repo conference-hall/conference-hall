@@ -2,7 +2,7 @@ import type { Session } from '@remix-run/node';
 import { createCookieSessionStorage } from '@remix-run/node';
 import { v4 as uuid } from 'uuid';
 
-import { config } from '../config';
+import { config } from '../config.ts';
 
 export type ToastData = { id: string; message: string };
 

@@ -6,21 +6,21 @@ import { useLoaderData } from '@remix-run/react';
 import { useMemo } from 'react';
 import invariant from 'tiny-invariant';
 
-import { useCheckboxSelection } from '~/design-system/forms/useCheckboxSelection';
-import { Container } from '~/design-system/layouts/Container';
-import { EmptyState } from '~/design-system/layouts/EmptyState';
-import { Pagination } from '~/design-system/Pagination';
-import { requireSession } from '~/libs/auth/session';
-import { addToast } from '~/libs/toasts/toasts';
-import { parsePage } from '~/routes/__types/pagination';
-import { parseProposalsFilters, ProposalsStatusUpdateSchema } from '~/routes/__types/proposal';
-import { updateProposalsStatus } from '~/routes/team.$team.$event+/__server/update-proposal.server';
+import { useCheckboxSelection } from '~/design-system/forms/useCheckboxSelection.tsx';
+import { Container } from '~/design-system/layouts/Container.tsx';
+import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
+import { Pagination } from '~/design-system/Pagination.tsx';
+import { requireSession } from '~/libs/auth/session.ts';
+import { addToast } from '~/libs/toasts/toasts.ts';
+import { parsePage } from '~/routes/__types/pagination.ts';
+import { parseProposalsFilters, ProposalsStatusUpdateSchema } from '~/routes/__types/proposal.ts';
+import { updateProposalsStatus } from '~/routes/team.$team.$event+/__server/update-proposal.server.ts';
 
-import { ProposalsActionBar } from './__components/ProposalsActionBar/ProposalsActionBar';
-import { ProposalsFilters } from './__components/ProposalsFilters/ProposalsFilters';
-import { ProposalsList } from './__components/ProposalsList/ProposalsList';
-import { searchProposals } from './__server/search-proposals.server';
-import { useOrganizerEvent } from './_layout';
+import { ProposalsActionBar } from './__components/ProposalsActionBar/ProposalsActionBar.tsx';
+import { ProposalsFilters } from './__components/ProposalsFilters/ProposalsFilters.tsx';
+import { ProposalsList } from './__components/ProposalsList/ProposalsList.tsx';
+import { searchProposals } from './__server/search-proposals.server.ts';
+import { useOrganizerEvent } from './_layout.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);

@@ -1,7 +1,7 @@
 import { MagnifyingGlassIcon, TvIcon } from '@heroicons/react/20/solid';
 
-import { IconLabel } from './IconLabel';
-import { StoryBlock } from './StoryBlock';
+import { IconLabel } from './IconLabel.tsx';
+import { StoryBlock } from './StoryBlock.tsx';
 
 export const Documentation = () => (
   <>

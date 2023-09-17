@@ -2,11 +2,11 @@ import { type ActionFunctionArgs, json, type LoaderFunctionArgs } from '@remix-r
 import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { requireSession } from '~/libs/auth/session';
-import { useUser } from '~/root';
+import { requireSession } from '~/libs/auth/session.ts';
+import { useUser } from '~/root.tsx';
 
-import { Discussions } from './__components/Discussions';
-import { addProposalMessage, getProposalMessages, removeProposalMessage } from './__server/messages.server';
+import { Discussions } from './__components/Discussions.tsx';
+import { addProposalMessage, getProposalMessages, removeProposalMessage } from './__server/messages.server.ts';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);

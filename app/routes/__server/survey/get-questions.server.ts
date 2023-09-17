@@ -1,7 +1,7 @@
-import { db } from '~/libs/db';
-import { EventNotFoundError, SurveyNotEnabledError } from '~/libs/errors';
-import { jsonToArray } from '~/libs/prisma';
-import type { SurveyQuestions } from '~/routes/__types/survey';
+import { db } from '~/libs/db.ts';
+import { EventNotFoundError, SurveyNotEnabledError } from '~/libs/errors.ts';
+import { jsonToArray } from '~/libs/prisma.ts';
+import type { SurveyQuestions } from '~/routes/__types/survey.ts';
 
 export async function getQuestions(slug: string) {
   const event = await db.event.findUnique({

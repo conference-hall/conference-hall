@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer';
 
-import { config } from '../../config';
-import type { Email, IEmailProvider, RecipientVariables } from './provider';
+import { config } from '../../config.ts';
+import type { Email, IEmailProvider, RecipientVariables } from './provider.ts';
 
 export class MailhogProvider implements IEmailProvider {
   transporter: nodemailer.Transporter;

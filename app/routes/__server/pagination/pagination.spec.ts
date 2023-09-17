@@ -1,4 +1,4 @@
-import { getPagination } from './pagination.server';
+import { getPagination } from './pagination.server.ts';
 
 describe('#getPagination', () => {
   it('computes pagination for the first page', () => {

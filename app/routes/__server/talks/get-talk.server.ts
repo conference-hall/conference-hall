@@ -1,9 +1,9 @@
-import { db } from '~/libs/db';
-import { TalkNotFoundError } from '~/libs/errors';
-import { jsonToArray } from '~/libs/prisma';
+import { db } from '~/libs/db.ts';
+import { TalkNotFoundError } from '~/libs/errors.ts';
+import { jsonToArray } from '~/libs/prisma.ts';
 
-import { buildInvitationLink } from '../invitations/build-link.server';
-import { getSpeakerProposalStatus } from '../proposals/get-speaker-proposal-status';
+import { buildInvitationLink } from '../invitations/build-link.server.ts';
+import { getSpeakerProposalStatus } from '../proposals/get-speaker-proposal-status.ts';
 
 export async function getTalk(userId: string, talkId: string) {
   const talk = await db.talk.findFirst({

@@ -1,4 +1,4 @@
-import { config } from '~/libs/config';
+import { config } from '~/libs/config.ts';
 
 type InvitationType = 'talk' | 'proposal' | 'team';
 

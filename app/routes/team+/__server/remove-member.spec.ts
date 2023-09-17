@@ -1,9 +1,10 @@
-import { teamFactory } from 'tests/factories/team';
-import { userFactory } from 'tests/factories/users';
+import { teamFactory } from 'tests/factories/team.ts';
+import { userFactory } from 'tests/factories/users.ts';
 
-import { db } from '../../../libs/db';
-import { ForbiddenOperationError } from '../../../libs/errors';
-import { removeMember } from './remove-member.server';
+import { db } from '~/libs/db.ts';
+import { ForbiddenOperationError } from '~/libs/errors.ts';
+
+import { removeMember } from './remove-member.server.ts';
 
 describe('#removeMember', () => {
   it('removes a member when user has owner role', async () => {

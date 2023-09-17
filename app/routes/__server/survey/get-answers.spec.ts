@@ -1,8 +1,8 @@
-import { eventFactory } from 'tests/factories/events';
-import { surveyFactory } from 'tests/factories/surveys';
-import { userFactory } from 'tests/factories/users';
+import { eventFactory } from 'tests/factories/events.ts';
+import { surveyFactory } from 'tests/factories/surveys.ts';
+import { userFactory } from 'tests/factories/users.ts';
 
-import { getAnswers } from './get-answers.server';
+import { getAnswers } from './get-answers.server.ts';
 
 describe('#getAnswers', () => {
   it('returns the user answers for an event', async () => {

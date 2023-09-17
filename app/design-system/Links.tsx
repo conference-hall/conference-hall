@@ -4,8 +4,8 @@ import type { VariantProps } from 'class-variance-authority';
 import { cva, cx } from 'class-variance-authority';
 import React from 'react';
 
-import type { TypographyVariantProps } from './Typography';
-import { typography } from './Typography';
+import type { TypographyVariantProps } from './Typography.tsx';
+import { typography } from './Typography.tsx';
 
 const link = cva('inline-flex items-center hover:underline', {
   variants: {

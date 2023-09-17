@@ -1,10 +1,10 @@
 import { TrashIcon } from '@heroicons/react/20/solid';
 import { Form } from '@remix-run/react';
 
-import { IconButton } from '~/design-system/IconButtons';
-import { Subtitle, Text } from '~/design-system/Typography';
+import { IconButton } from '~/design-system/IconButtons.tsx';
+import { Subtitle, Text } from '~/design-system/Typography.tsx';
 
-import { EditTrackButton } from './SaveTrackForm';
+import { EditTrackButton } from './SaveTrackForm.tsx';
 
 type TrackListProps = {
   type: 'formats' | 'categories';

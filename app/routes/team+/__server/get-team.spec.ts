@@ -1,10 +1,10 @@
-import { teamFactory } from 'tests/factories/team';
-import { userFactory } from 'tests/factories/users';
+import { teamFactory } from 'tests/factories/team.ts';
+import { userFactory } from 'tests/factories/users.ts';
 
-import { config } from '~/libs/config';
-import { TeamNotFoundError } from '~/libs/errors';
+import { config } from '~/libs/config.ts';
+import { TeamNotFoundError } from '~/libs/errors.ts';
 
-import { getTeam } from './get-team.server';
+import { getTeam } from './get-team.server.ts';
 
 describe('#getOrganization', () => {
   it('returns team belonging to user', async () => {

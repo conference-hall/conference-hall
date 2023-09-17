@@ -2,9 +2,9 @@ import { TeamRole } from '@prisma/client';
 import { unstable_parseMultipartFormData } from '@remix-run/node';
 import { z } from 'zod';
 
-import { db } from '~/libs/db';
-import { uploadToStorageHandler } from '~/libs/storage/storage.server';
-import { allowedForEvent } from '~/routes/__server/teams/check-user-role.server';
+import { db } from '~/libs/db.ts';
+import { uploadToStorageHandler } from '~/libs/storage/storage.server.ts';
+import { allowedForEvent } from '~/routes/__server/teams/check-user-role.server.ts';
 
 type UploadLogoResult = {
   status: 'success' | 'error';

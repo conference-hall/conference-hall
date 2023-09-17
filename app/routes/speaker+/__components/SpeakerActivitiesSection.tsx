@@ -1,16 +1,16 @@
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/20/solid';
 import { FireIcon } from '@heroicons/react/24/outline';
 
-import { Avatar, AvatarGroup } from '~/design-system/Avatar';
-import { ButtonLink } from '~/design-system/Buttons';
-import { IconButtonLink } from '~/design-system/IconButtons';
-import { Card } from '~/design-system/layouts/Card';
-import { EmptyState } from '~/design-system/layouts/EmptyState';
-import { Link } from '~/design-system/Links';
-import { Subtitle, Text } from '~/design-system/Typography';
-import { ProposalStatusLabel } from '~/routes/__components/proposals/ProposalStatusLabel';
-import type { SpeakerProposalStatus } from '~/routes/__server/proposals/get-speaker-proposal-status';
-import type { CfpState } from '~/routes/__types/event';
+import { Avatar, AvatarGroup } from '~/design-system/Avatar.tsx';
+import { ButtonLink } from '~/design-system/Buttons.tsx';
+import { IconButtonLink } from '~/design-system/IconButtons.tsx';
+import { Card } from '~/design-system/layouts/Card.tsx';
+import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
+import { Link } from '~/design-system/Links.tsx';
+import { Subtitle, Text } from '~/design-system/Typography.tsx';
+import { ProposalStatusLabel } from '~/routes/__components/proposals/ProposalStatusLabel.tsx';
+import type { SpeakerProposalStatus } from '~/routes/__server/proposals/get-speaker-proposal-status.ts';
+import type { CfpState } from '~/routes/__types/event.ts';
 
 interface Props {
   activities: Array<{

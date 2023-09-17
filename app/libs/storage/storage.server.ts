@@ -3,7 +3,7 @@ import stream from 'node:stream';
 import type { UploadHandler } from '@remix-run/node';
 import { v4 as uuid } from 'uuid';
 
-import { storage } from '../auth/firebase.server';
+import { storage } from '../auth/firebase.server.ts';
 
 type StorageUploaderOptions = { name: string; maxFileSize?: number };
 

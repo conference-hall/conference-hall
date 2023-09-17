@@ -1,8 +1,8 @@
 import { useFetcher } from '@remix-run/react';
 
-import { Button } from '~/design-system/Buttons';
-import { H1, Subtitle } from '~/design-system/Typography';
-import { EventForm } from '~/routes/__components/events/EventForm';
+import { Button } from '~/design-system/Buttons.tsx';
+import { H1, Subtitle } from '~/design-system/Typography.tsx';
+import { EventForm } from '~/routes/__components/events/EventForm.tsx';
 
 type Props = {
   type: string;

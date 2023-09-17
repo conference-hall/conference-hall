@@ -1,5 +1,5 @@
-import { db } from '~/libs/db';
-import { getSpeakerProposalStatus } from '~/routes/__server/proposals/get-speaker-proposal-status';
+import { db } from '~/libs/db.ts';
+import { getSpeakerProposalStatus } from '~/routes/__server/proposals/get-speaker-proposal-status.ts';
 
 export async function listSpeakerProposals(slug: string, userId: string) {
   const proposals = await db.proposal.findMany({

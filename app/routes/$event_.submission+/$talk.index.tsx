@@ -5,17 +5,17 @@ import { json, redirect } from '@remix-run/node';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { Button, ButtonLink } from '~/design-system/Buttons';
-import { Card } from '~/design-system/layouts/Card';
-import { H2 } from '~/design-system/Typography';
-import { requireSession } from '~/libs/auth/session';
-import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm';
-import { getTalk } from '~/routes/__server/talks/get-talk.server';
-import { ProposalCreateSchema } from '~/routes/__types/proposal';
+import { Button, ButtonLink } from '~/design-system/Buttons.tsx';
+import { Card } from '~/design-system/layouts/Card.tsx';
+import { H2 } from '~/design-system/Typography.tsx';
+import { requireSession } from '~/libs/auth/session.ts';
+import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm.tsx';
+import { getTalk } from '~/routes/__server/talks/get-talk.server.ts';
+import { ProposalCreateSchema } from '~/routes/__types/proposal.ts';
 
-import { useSubmissionStep } from './__components/useSubmissionStep';
-import { isTalkAlreadySubmitted } from './__server/is-talk-already-submitted.server';
-import { saveDraftProposal } from './__server/save-draft-proposal.server';
+import { useSubmissionStep } from './__components/useSubmissionStep.ts';
+import { isTalkAlreadySubmitted } from './__server/is-talk-already-submitted.server.ts';
+import { saveDraftProposal } from './__server/save-draft-proposal.server.ts';
 
 export const handle = { step: 'proposal' };
 

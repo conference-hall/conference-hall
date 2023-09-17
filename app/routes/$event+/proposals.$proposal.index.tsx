@@ -4,18 +4,18 @@ import { json, redirect } from '@remix-run/node';
 import { useLoaderData, useNavigate } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { Container } from '~/design-system/layouts/Container';
-import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
-import { requireSession } from '~/libs/auth/session';
-import { addToast } from '~/libs/toasts/toasts';
-import { ProposalDetailsSection } from '~/routes/__components/proposals/ProposalDetailsSection';
-import { ProposalStatusSection } from '~/routes/__components/proposals/ProposalStatusSection';
-import { getSpeakerProposal } from '~/routes/__server/proposals/get-speaker-proposal.server';
-import { ProposalParticipationSchema } from '~/routes/__types/proposal';
+import { Container } from '~/design-system/layouts/Container.tsx';
+import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
+import { requireSession } from '~/libs/auth/session.ts';
+import { addToast } from '~/libs/toasts/toasts.ts';
+import { ProposalDetailsSection } from '~/routes/__components/proposals/ProposalDetailsSection.tsx';
+import { ProposalStatusSection } from '~/routes/__components/proposals/ProposalStatusSection.tsx';
+import { getSpeakerProposal } from '~/routes/__server/proposals/get-speaker-proposal.server.ts';
+import { ProposalParticipationSchema } from '~/routes/__types/proposal.ts';
 
-import { deleteProposal } from './__server/delete-proposal.server';
-import { sendParticipationAnswer } from './__server/send-participation-answer.server';
-import { useEvent } from './_layout';
+import { deleteProposal } from './__server/delete-proposal.server.ts';
+import { sendParticipationAnswer } from './__server/send-participation-answer.server.ts';
+import { useEvent } from './_layout.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);

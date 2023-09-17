@@ -1,12 +1,12 @@
 import type { ProposalStatus } from '@prisma/client';
 
-import { Card } from '~/design-system/layouts/Card';
-import type { ProposalsFilters as ProposalsFiltersType } from '~/routes/__types/proposal';
+import { Card } from '~/design-system/layouts/Card.tsx';
+import type { ProposalsFilters as ProposalsFiltersType } from '~/routes/__types/proposal.ts';
 
-import { QueryFilter } from './filters/QueryFilter';
-import { ReviewsFilter } from './filters/ReviewsFilter';
-import { StatusFilter } from './filters/StatusFilter';
-import { TracksFilter } from './filters/TracksFilter';
+import { QueryFilter } from './filters/QueryFilter.tsx';
+import { ReviewsFilter } from './filters/ReviewsFilter.tsx';
+import { StatusFilter } from './filters/StatusFilter.tsx';
+import { TracksFilter } from './filters/TracksFilter.tsx';
 
 type Props = {
   filters: ProposalsFiltersType;

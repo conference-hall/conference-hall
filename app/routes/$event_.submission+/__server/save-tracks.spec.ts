@@ -1,15 +1,15 @@
 import { parse } from '@conform-to/zod';
-import { eventCategoryFactory } from 'tests/factories/categories';
-import { eventFactory } from 'tests/factories/events';
-import { eventFormatFactory } from 'tests/factories/formats';
-import { proposalFactory } from 'tests/factories/proposals';
-import { talkFactory } from 'tests/factories/talks';
-import { userFactory } from 'tests/factories/users';
+import { eventCategoryFactory } from 'tests/factories/categories.ts';
+import { eventFactory } from 'tests/factories/events.ts';
+import { eventFormatFactory } from 'tests/factories/formats.ts';
+import { proposalFactory } from 'tests/factories/proposals.ts';
+import { talkFactory } from 'tests/factories/talks.ts';
+import { userFactory } from 'tests/factories/users.ts';
 
-import { db } from '~/libs/db';
-import { ProposalNotFoundError } from '~/libs/errors';
+import { db } from '~/libs/db.ts';
+import { ProposalNotFoundError } from '~/libs/errors.ts';
 
-import { getTracksSchema, saveTracks } from './save-tracks.server';
+import { getTracksSchema, saveTracks } from './save-tracks.server.ts';
 
 describe('#saveTracks', () => {
   it('set tracks of the proposal', async () => {

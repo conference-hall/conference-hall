@@ -1,4 +1,4 @@
-import { db } from '~/libs/db';
+import { db } from '~/libs/db.ts';
 
 export async function validAccessKey(userId: string, key: string) {
   const access = await db.organizerKeyAccess.findFirst({ where: { id: key, revokedAt: { equals: null } } });

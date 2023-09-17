@@ -1,13 +1,13 @@
 import { Disclosure } from '@headlessui/react';
 
-import { ButtonLink } from '~/design-system/Buttons';
+import { ButtonLink } from '~/design-system/Buttons.tsx';
 
-import { Logo } from './Logo';
-import { MobileMenuButton, MobileMenuPanel } from './NavbarMobileMenu';
-import { Navigation } from './Navigation';
-import { type Notification, NotificationsLink } from './NotificationsLink';
-import { SearchEventsInput } from './SearchEventsInput';
-import { UserMenuDesktop } from './UserMenuDesktop';
+import { Logo } from './Logo.tsx';
+import { MobileMenuButton, MobileMenuPanel } from './NavbarMobileMenu.tsx';
+import { Navigation } from './Navigation.tsx';
+import { type Notification, NotificationsLink } from './NotificationsLink.tsx';
+import { SearchEventsInput } from './SearchEventsInput.tsx';
+import { UserMenuDesktop } from './UserMenuDesktop.tsx';
 
 type Props = {
   user: {

@@ -1,5 +1,5 @@
-import { db } from '~/libs/db';
-import { EventNotFoundError } from '~/libs/errors';
+import { db } from '~/libs/db.ts';
+import { EventNotFoundError } from '~/libs/errors.ts';
 
 export async function listTalksToSubmit(userId: string, slug: string) {
   const event = await db.event.findUnique({ select: { id: true }, where: { slug } });

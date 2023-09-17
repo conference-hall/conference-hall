@@ -3,17 +3,17 @@ import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
 
-import { Button } from '~/design-system/Buttons';
-import { Card } from '~/design-system/layouts/Card';
-import { Container } from '~/design-system/layouts/Container';
-import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
-import { requireSession } from '~/libs/auth/session';
-import { mergeMeta } from '~/libs/meta/merge-meta';
-import { addToast } from '~/libs/toasts/toasts';
-import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm';
-import { TalkSaveSchema } from '~/routes/__types/talks';
+import { Button } from '~/design-system/Buttons.tsx';
+import { Card } from '~/design-system/layouts/Card.tsx';
+import { Container } from '~/design-system/layouts/Container.tsx';
+import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
+import { requireSession } from '~/libs/auth/session.ts';
+import { mergeMeta } from '~/libs/meta/merge-meta.ts';
+import { addToast } from '~/libs/toasts/toasts.ts';
+import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm.tsx';
+import { TalkSaveSchema } from '~/routes/__types/talks.ts';
 
-import { createTalk } from './__server/create-talk.server';
+import { createTalk } from './__server/create-talk.server.ts';
 
 export const meta = mergeMeta(() => [{ title: 'New talk | Conference Hall' }]);
 

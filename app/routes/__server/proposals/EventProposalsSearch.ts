@@ -1,8 +1,8 @@
 import type { Prisma } from '@prisma/client';
 import { EmailStatus } from '@prisma/client';
 
-import { db } from '~/libs/db';
-import type { EmailStatusData, ProposalsFilters } from '~/routes/__types/proposal';
+import { db } from '~/libs/db.ts';
+import type { EmailStatusData, ProposalsFilters } from '~/routes/__types/proposal.ts';
 
 type SearchOptions = { searchBySpeakers: boolean };
 

@@ -5,7 +5,7 @@ import { cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
 import { Fragment } from 'react';
 
-import { MenuTransition } from '~/design-system/Transitions';
+import { MenuTransition } from '~/design-system/Transitions.tsx';
 
 type MenuProps = {
   trigger: React.ComponentType;

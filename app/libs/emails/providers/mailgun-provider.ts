@@ -1,7 +1,7 @@
 import FormData from 'form-data';
 
-import { config } from '../../config';
-import type { Email, IEmailProvider, ProviderVariables, RecipientVariables } from './provider';
+import { config } from '../../config.ts';
+import type { Email, IEmailProvider, ProviderVariables, RecipientVariables } from './provider.ts';
 
 const KEY = config.MAILGUN_API_KEY;
 const DOMAIN = config.MAILGUN_DOMAIN;

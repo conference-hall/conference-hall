@@ -2,7 +2,7 @@ import { parse } from '@conform-to/zod';
 import { ProposalStatus } from '@prisma/client';
 import { z } from 'zod';
 
-import { TalkSaveSchema } from './talks';
+import { TalkSaveSchema } from './talks.ts';
 
 const ProposalStatusSchema = z.enum(['SUBMITTED', 'ACCEPTED', 'REJECTED', 'CONFIRMED', 'DECLINED']);
 

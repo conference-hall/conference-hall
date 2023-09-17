@@ -3,16 +3,16 @@ import { type ActionFunctionArgs, json, type LoaderFunctionArgs, redirect } from
 import { Form, useActionData, useLoaderData, useSearchParams } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { Button, ButtonLink } from '~/design-system/Buttons';
-import { Card } from '~/design-system/layouts/Card';
-import { requireSession } from '~/libs/auth/session';
-import { addToast } from '~/libs/toasts/toasts';
-import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm';
-import { getEvent } from '~/routes/__server/events/get-event.server';
-import { ProposalUpdateSchema } from '~/routes/__types/proposal';
+import { Button, ButtonLink } from '~/design-system/Buttons.tsx';
+import { Card } from '~/design-system/layouts/Card.tsx';
+import { requireSession } from '~/libs/auth/session.ts';
+import { addToast } from '~/libs/toasts/toasts.ts';
+import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm.tsx';
+import { getEvent } from '~/routes/__server/events/get-event.server.ts';
+import { ProposalUpdateSchema } from '~/routes/__types/proposal.ts';
 
-import { updateProposal } from '../team.$team.$event+/__server/update-proposal.server';
-import { useProposalReview } from './_layout';
+import { updateProposal } from '../team.$team.$event+/__server/update-proposal.server.ts';
+import { useProposalReview } from './_layout.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   await requireSession(request);

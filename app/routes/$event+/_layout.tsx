@@ -3,16 +3,16 @@ import { json } from '@remix-run/node';
 import { Outlet, useLoaderData, useOutletContext } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { mergeMeta } from '~/libs/meta/merge-meta';
-import { eventSocialCard } from '~/libs/meta/social-cards';
-import { useUser } from '~/root';
-import { Footer } from '~/routes/__components/Footer';
-import { Navbar } from '~/routes/__components/navbar/Navbar';
-import type { Event } from '~/routes/__server/events/get-event.server';
-import { getEvent } from '~/routes/__server/events/get-event.server';
+import { mergeMeta } from '~/libs/meta/merge-meta.ts';
+import { eventSocialCard } from '~/libs/meta/social-cards.ts';
+import { useUser } from '~/root.tsx';
+import { Footer } from '~/routes/__components/Footer.tsx';
+import { Navbar } from '~/routes/__components/navbar/Navbar.tsx';
+import type { Event } from '~/routes/__server/events/get-event.server.ts';
+import { getEvent } from '~/routes/__server/events/get-event.server.ts';
 
-import { EventHeader } from './__components/EventHeader';
-import { EventTabs } from './__components/EventTabs';
+import { EventHeader } from './__components/EventHeader.tsx';
+import { EventTabs } from './__components/EventTabs.tsx';
 
 export const meta = mergeMeta<typeof loader>(
   ({ data }) => (data ? [{ title: `${data.name} | Conference Hall` }] : []),

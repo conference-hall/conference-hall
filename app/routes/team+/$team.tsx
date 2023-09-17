@@ -4,20 +4,20 @@ import { json, redirect } from '@remix-run/node';
 import { Outlet, useLoaderData, useOutletContext, useRouteLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { Container } from '~/design-system/layouts/Container';
-import { PageHeader } from '~/design-system/layouts/PageHeader';
-import { requireSession } from '~/libs/auth/session';
-import { mergeMeta } from '~/libs/meta/merge-meta';
-import { useUser } from '~/root';
-import TeamBreadcrumb from '~/routes/__components/teams/TeamBreadcrumb';
+import { Container } from '~/design-system/layouts/Container.tsx';
+import { PageHeader } from '~/design-system/layouts/PageHeader.tsx';
+import { requireSession } from '~/libs/auth/session.ts';
+import { mergeMeta } from '~/libs/meta/merge-meta.ts';
+import { useUser } from '~/root.tsx';
+import TeamBreadcrumb from '~/routes/__components/teams/TeamBreadcrumb.tsx';
 
-import type { OrganizerEvent } from '../team.$team.$event+/__server/get-event.server';
-import { EventTabs } from './__components/EventTabs';
-import { TeamTabs } from './__components/TeamTabs';
-import { createEvent } from './__server/create-event.server';
-import type { Team } from './__server/get-team.server';
-import { getTeam } from './__server/get-team.server';
-import { EventCreateSchema } from './__types/event-create.schema';
+import type { OrganizerEvent } from '../team.$team.$event+/__server/get-event.server.ts';
+import { EventTabs } from './__components/EventTabs.tsx';
+import { TeamTabs } from './__components/TeamTabs.tsx';
+import { createEvent } from './__server/create-event.server.ts';
+import type { Team } from './__server/get-team.server.ts';
+import { getTeam } from './__server/get-team.server.ts';
+import { EventCreateSchema } from './__types/event-create.schema.ts';
 
 export const meta = mergeMeta<typeof loader>(({ data }) => (data ? [{ title: `${data.name} | Conference Hall` }] : []));
 

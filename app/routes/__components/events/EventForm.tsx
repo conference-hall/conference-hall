@@ -1,9 +1,9 @@
 import slugify from '@sindresorhus/slugify';
 import { useState } from 'react';
 
-import { Input } from '~/design-system/forms/Input';
+import { Input } from '~/design-system/forms/Input.tsx';
 
-import EventVisibilityRadioGroup from './EventVisibilityRadioGroup';
+import EventVisibilityRadioGroup from './EventVisibilityRadioGroup.tsx';
 
 type EventValues = {
   name: string;

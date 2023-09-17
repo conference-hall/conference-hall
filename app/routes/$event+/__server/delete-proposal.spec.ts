@@ -1,11 +1,11 @@
-import { eventFactory } from 'tests/factories/events';
-import { proposalFactory } from 'tests/factories/proposals';
-import { talkFactory } from 'tests/factories/talks';
-import { userFactory } from 'tests/factories/users';
+import { eventFactory } from 'tests/factories/events.ts';
+import { proposalFactory } from 'tests/factories/proposals.ts';
+import { talkFactory } from 'tests/factories/talks.ts';
+import { userFactory } from 'tests/factories/users.ts';
 
-import { db } from '~/libs/db';
+import { db } from '~/libs/db.ts';
 
-import { deleteProposal } from './delete-proposal.server';
+import { deleteProposal } from './delete-proposal.server.ts';
 
 describe('#deleteProposal', () => {
   it('deletes a proposal', async () => {

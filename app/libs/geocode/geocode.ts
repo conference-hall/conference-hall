@@ -1,4 +1,4 @@
-import { config } from '../config';
+import { config } from '../config.ts';
 
 type ApiResult = {
   formatted_address: string;

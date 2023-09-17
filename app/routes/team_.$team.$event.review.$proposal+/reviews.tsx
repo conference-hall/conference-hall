@@ -3,14 +3,14 @@ import { json, type LoaderFunctionArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { AvatarName } from '~/design-system/Avatar';
-import { Card } from '~/design-system/layouts/Card';
-import { EmptyState } from '~/design-system/layouts/EmptyState';
-import { Subtitle } from '~/design-system/Typography';
-import { requireSession } from '~/libs/auth/session';
-import { ReviewNote } from '~/routes/__components/reviews/ReviewNote';
+import { AvatarName } from '~/design-system/Avatar.tsx';
+import { Card } from '~/design-system/layouts/Card.tsx';
+import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
+import { Subtitle } from '~/design-system/Typography.tsx';
+import { requireSession } from '~/libs/auth/session.ts';
+import { ReviewNote } from '~/routes/__components/reviews/ReviewNote.tsx';
 
-import { getReviews } from './__server/get-reviews.server';
+import { getReviews } from './__server/get-reviews.server.ts';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);

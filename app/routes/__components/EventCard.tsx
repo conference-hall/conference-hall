@@ -1,9 +1,9 @@
-import { Avatar } from '~/design-system/Avatar';
-import { CardLink } from '~/design-system/layouts/Card';
-import { Text } from '~/design-system/Typography';
-import type { CfpState } from '~/routes/__types/event';
+import { Avatar } from '~/design-system/Avatar.tsx';
+import { CardLink } from '~/design-system/layouts/Card.tsx';
+import { Text } from '~/design-system/Typography.tsx';
+import type { CfpState } from '~/routes/__types/event.ts';
 
-import { CfpElapsedTime } from './cfp/CfpElapsedTime';
+import { CfpElapsedTime } from './cfp/CfpElapsedTime.tsx';
 
 type Props = {
   to: string;

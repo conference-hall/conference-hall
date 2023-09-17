@@ -3,11 +3,11 @@ import { ShieldExclamationIcon, UserMinusIcon } from '@heroicons/react/24/outlin
 import { Form } from '@remix-run/react';
 import { useState } from 'react';
 
-import { Button } from '~/design-system/Buttons';
-import { Radio, RadioGroup } from '~/design-system/forms/RadioGroup';
-import { Modal } from '~/design-system/Modals';
+import { Button } from '~/design-system/Buttons.tsx';
+import { Radio, RadioGroup } from '~/design-system/forms/RadioGroup.tsx';
+import { Modal } from '~/design-system/Modals.tsx';
 
-import { InvitationModal } from '../../__components/InvitationModal';
+import { InvitationModal } from '../../__components/InvitationModal.tsx';
 
 type RemoveButtonProps = { memberId: string; memberName: string | null };
 

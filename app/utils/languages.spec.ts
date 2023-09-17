@@ -1,4 +1,4 @@
-import { getLanguage } from './languages';
+import { getLanguage } from './languages.ts';
 
 describe('#getLanguage', () => {
   it('returns the label corresponding to the language code', () => {

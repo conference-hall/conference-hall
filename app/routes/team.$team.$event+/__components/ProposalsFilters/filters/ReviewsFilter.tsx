@@ -1,8 +1,8 @@
-import { BadgeDot } from '~/design-system/Badges';
-import { ProgressBar } from '~/design-system/ProgressBar';
-import { Text } from '~/design-system/Typography';
+import { BadgeDot } from '~/design-system/Badges.tsx';
+import { ProgressBar } from '~/design-system/ProgressBar.tsx';
+import { Text } from '~/design-system/Typography.tsx';
 
-import { useProposalsSearchFilter } from '../../useProposalsSearchFilter';
+import { useProposalsSearchFilter } from '../../useProposalsSearchFilter.tsx';
 
 type Props = {
   defaultValue?: 'reviewed' | 'not-reviewed';

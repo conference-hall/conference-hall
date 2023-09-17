@@ -1,7 +1,7 @@
 import { SunIcon } from '@heroicons/react/20/solid';
 
-import { ExternalLink, Link } from './Links';
-import { StoryBlock } from './StoryBlock';
+import { ExternalLink, Link } from './Links.tsx';
+import { StoryBlock } from './StoryBlock.tsx';
 
 export const Documentation = () => (
   <>

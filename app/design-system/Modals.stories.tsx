@@ -1,9 +1,9 @@
 import { StarIcon } from '@heroicons/react/20/solid';
 import { useState } from 'react';
 
-import { Button } from './Buttons';
-import { Modal } from './Modals';
-import { StoryBlock } from './StoryBlock';
+import { Button } from './Buttons.tsx';
+import { Modal } from './Modals.tsx';
+import { StoryBlock } from './StoryBlock.tsx';
 
 export const Documentation = () => {
   const [open1, setOpen1] = useState(false);

@@ -3,17 +3,17 @@ import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { AvatarName } from '~/design-system/Avatar';
-import { Badge } from '~/design-system/Badges';
-import { IconLabel } from '~/design-system/IconLabel';
-import { GitHubIcon } from '~/design-system/icons/GitHubIcon';
-import { TwitterIcon } from '~/design-system/icons/TwitterIcon';
-import { Card } from '~/design-system/layouts/Card';
-import { Markdown } from '~/design-system/Markdown';
-import { Text } from '~/design-system/Typography';
-import { requireSession } from '~/libs/auth/session';
+import { AvatarName } from '~/design-system/Avatar.tsx';
+import { Badge } from '~/design-system/Badges.tsx';
+import { IconLabel } from '~/design-system/IconLabel.tsx';
+import { GitHubIcon } from '~/design-system/icons/GitHubIcon.tsx';
+import { TwitterIcon } from '~/design-system/icons/TwitterIcon.tsx';
+import { Card } from '~/design-system/layouts/Card.tsx';
+import { Markdown } from '~/design-system/Markdown.tsx';
+import { Text } from '~/design-system/Typography.tsx';
+import { requireSession } from '~/libs/auth/session.ts';
 
-import { getSpeakers } from './__server/get-speakers.server';
+import { getSpeakers } from './__server/get-speakers.server.ts';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);

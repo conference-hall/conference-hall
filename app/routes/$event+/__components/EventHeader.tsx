@@ -1,10 +1,10 @@
 import { cx } from 'class-variance-authority';
 
-import { Avatar } from '~/design-system/Avatar';
-import { Container } from '~/design-system/layouts/Container';
-import { H1, Text } from '~/design-system/Typography';
-import { ClientOnly } from '~/routes/__components/utils/ClientOnly';
-import { formatConferenceDates } from '~/utils/event';
+import { Avatar } from '~/design-system/Avatar.tsx';
+import { Container } from '~/design-system/layouts/Container.tsx';
+import { H1, Text } from '~/design-system/Typography.tsx';
+import { ClientOnly } from '~/routes/__components/utils/ClientOnly.tsx';
+import { formatConferenceDates } from '~/utils/event.ts';
 
 type Props = {
   name: string;

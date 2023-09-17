@@ -1,6 +1,6 @@
-import { db } from '~/libs/db';
-import { EventNotFoundError } from '~/libs/errors';
-import type { SurveyData } from '~/routes/__types/survey';
+import { db } from '~/libs/db.ts';
+import { EventNotFoundError } from '~/libs/errors.ts';
+import type { SurveyData } from '~/routes/__types/survey.ts';
 
 export async function saveSurvey(userId: string, slug: string, answers: SurveyData) {
   const event = await db.event.findUnique({

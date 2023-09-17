@@ -1,5 +1,5 @@
-import { ProgressBar } from './ProgressBar';
-import { StoryBlock } from './StoryBlock';
+import { ProgressBar } from './ProgressBar.tsx';
+import { StoryBlock } from './StoryBlock.tsx';
 
 export const Documentation = () => (
   <>

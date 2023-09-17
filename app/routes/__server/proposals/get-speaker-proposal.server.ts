@@ -1,9 +1,9 @@
-import { jsonToArray } from '~/libs/prisma';
-import { getSpeakerProposalStatus } from '~/routes/__server/proposals/get-speaker-proposal-status';
+import { db } from '~/libs/db.ts';
+import { ProposalNotFoundError } from '~/libs/errors.ts';
+import { jsonToArray } from '~/libs/prisma.ts';
+import { getSpeakerProposalStatus } from '~/routes/__server/proposals/get-speaker-proposal-status.ts';
 
-import { db } from '../../../libs/db';
-import { ProposalNotFoundError } from '../../../libs/errors';
-import { buildInvitationLink } from '../invitations/build-link.server';
+import { buildInvitationLink } from '../invitations/build-link.server.ts';
 
 export async function getSpeakerProposal(proposalId: string, userId: string) {
   const proposal = await db.proposal.findFirst({

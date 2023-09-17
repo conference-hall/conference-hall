@@ -5,17 +5,17 @@ import { json, redirect } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { Button, ButtonLink } from '~/design-system/Buttons';
-import { Card } from '~/design-system/layouts/Card';
-import { H2 } from '~/design-system/Typography';
-import { requireSession } from '~/libs/auth/session';
-import { SurveyForm } from '~/routes/__components/proposals/forms/SurveyForm';
-import { getAnswers } from '~/routes/__server/survey/get-answers.server';
-import { getQuestions } from '~/routes/__server/survey/get-questions.server';
-import { saveSurvey } from '~/routes/__server/survey/save-survey.server';
-import { SurveySchema } from '~/routes/__types/survey';
+import { Button, ButtonLink } from '~/design-system/Buttons.tsx';
+import { Card } from '~/design-system/layouts/Card.tsx';
+import { H2 } from '~/design-system/Typography.tsx';
+import { requireSession } from '~/libs/auth/session.ts';
+import { SurveyForm } from '~/routes/__components/proposals/forms/SurveyForm.tsx';
+import { getAnswers } from '~/routes/__server/survey/get-answers.server.ts';
+import { getQuestions } from '~/routes/__server/survey/get-questions.server.ts';
+import { saveSurvey } from '~/routes/__server/survey/save-survey.server.ts';
+import { SurveySchema } from '~/routes/__types/survey.ts';
 
-import { useSubmissionStep } from './__components/useSubmissionStep';
+import { useSubmissionStep } from './__components/useSubmissionStep.ts';
 
 export const handle = { step: 'survey' };
 

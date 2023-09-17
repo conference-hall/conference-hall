@@ -1,7 +1,7 @@
-import { db } from '~/libs/db';
-import { CfpNotOpenError, EventNotFoundError, TalkNotFoundError } from '~/libs/errors';
-import type { ProposalCreateData } from '~/routes/__types/proposal';
-import { getCfpState } from '~/utils/event';
+import { db } from '~/libs/db.ts';
+import { CfpNotOpenError, EventNotFoundError, TalkNotFoundError } from '~/libs/errors.ts';
+import type { ProposalCreateData } from '~/routes/__types/proposal.ts';
+import { getCfpState } from '~/utils/event.ts';
 
 export async function saveDraftProposal(talkId: string, eventSlug: string, userId: string, data: ProposalCreateData) {
   if (talkId !== 'new') {

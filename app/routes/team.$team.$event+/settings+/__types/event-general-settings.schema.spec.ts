@@ -1,6 +1,6 @@
 import { parse } from '@conform-to/zod';
 
-import { EventGeneralSettingsSchema } from './event-general-settings.schema';
+import { EventGeneralSettingsSchema } from './event-general-settings.schema.ts';
 
 describe('Validate EventGeneralSettingsSchema', () => {
   it('validates valid inputs', async () => {

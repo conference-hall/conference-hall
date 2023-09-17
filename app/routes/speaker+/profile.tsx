@@ -4,23 +4,23 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useActionData } from '@remix-run/react';
 
-import { Container } from '~/design-system/layouts/Container';
-import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
-import { NavSideMenu } from '~/design-system/navigation/NavSideMenu';
-import { requireSession } from '~/libs/auth/session';
-import { mergeMeta } from '~/libs/meta/merge-meta';
-import { addToast } from '~/libs/toasts/toasts';
-import { useUser } from '~/root';
+import { Container } from '~/design-system/layouts/Container.tsx';
+import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
+import { NavSideMenu } from '~/design-system/navigation/NavSideMenu.tsx';
+import { requireSession } from '~/libs/auth/session.ts';
+import { mergeMeta } from '~/libs/meta/merge-meta.ts';
+import { addToast } from '~/libs/toasts/toasts.ts';
+import { useUser } from '~/root.tsx';
 import {
   saveUserAdditionalInfo,
   saveUserDetails,
   saveUserPersonalInfo,
-} from '~/routes/__server/profile/save-profile.server';
-import { AdditionalInfoSchema, DetailsSchema, PersonalInfoSchema } from '~/routes/__types/profile.schema';
+} from '~/routes/__server/profile/save-profile.server.ts';
+import { AdditionalInfoSchema, DetailsSchema, PersonalInfoSchema } from '~/routes/__types/profile.schema.tsx';
 
-import { AdditionalInfoForm } from './__components/AdditionalInfoForm';
-import { PersonalInfoForm } from './__components/PersonalInfoForm';
-import { SpeakerDetailsForm } from './__components/SpeakerDetailsForm';
+import { AdditionalInfoForm } from './__components/AdditionalInfoForm.tsx';
+import { PersonalInfoForm } from './__components/PersonalInfoForm.tsx';
+import { SpeakerDetailsForm } from './__components/SpeakerDetailsForm.tsx';
 
 export const meta = mergeMeta(() => [{ title: 'Profile | Conference Hall' }]);
 

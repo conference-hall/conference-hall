@@ -1,9 +1,10 @@
-import { eventFactory } from 'tests/factories/events';
-import { teamFactory } from 'tests/factories/team';
-import { userFactory } from 'tests/factories/users';
+import { eventFactory } from 'tests/factories/events.ts';
+import { teamFactory } from 'tests/factories/team.ts';
+import { userFactory } from 'tests/factories/users.ts';
 
-import { ForbiddenOperationError } from '../../../libs/errors';
-import { allowedForEvent, allowedForTeam } from './check-user-role.server';
+import { ForbiddenOperationError } from '~/libs/errors.ts';
+
+import { allowedForEvent, allowedForTeam } from './check-user-role.server.ts';
 
 describe('#allowedForOrga', () => {
   it('returns the team if user has access to the team', async () => {

@@ -1,5 +1,5 @@
-import { db } from '~/libs/db';
-import type { UserCreateInput } from '~/routes/__types/user';
+import { db } from '~/libs/db.ts';
+import type { UserCreateInput } from '~/routes/__types/user.ts';
 
 export async function createUserAccount(input: UserCreateInput) {
   const account = await db.account.findUnique({ where: { uid: input.uid } });

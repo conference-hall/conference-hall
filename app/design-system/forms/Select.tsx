@@ -3,8 +3,8 @@ import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
 import { useCallback } from 'react';
 
-import { SelectTransition } from '../Transitions';
-import { Text } from '../Typography';
+import { SelectTransition } from '../Transitions.tsx';
+import { Text } from '../Typography.tsx';
 
 type Props = {
   name: string;

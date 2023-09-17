@@ -2,10 +2,10 @@ import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { Form, useLocation, useSearchParams, useSubmit } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
 
-import { Button } from '~/design-system/Buttons';
-import { Input } from '~/design-system/forms/Input';
+import { Button } from '~/design-system/Buttons.tsx';
+import { Input } from '~/design-system/forms/Input.tsx';
 
-import { CampaignType } from './CampaignEmailList';
+import { CampaignType } from './CampaignEmailList.tsx';
 
 type Props = { type: CampaignType };
 

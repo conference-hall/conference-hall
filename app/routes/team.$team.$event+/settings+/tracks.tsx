@@ -4,24 +4,24 @@ import { json } from '@remix-run/node';
 import { useFetcher } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { ToggleGroup } from '~/design-system/forms/Toggles';
-import { Card } from '~/design-system/layouts/Card';
-import { H2, Subtitle } from '~/design-system/Typography';
-import { requireSession } from '~/libs/auth/session';
-import { addToast } from '~/libs/toasts/toasts';
-import { updateEvent } from '~/routes/__server/teams/update-event.server';
+import { ToggleGroup } from '~/design-system/forms/Toggles.tsx';
+import { Card } from '~/design-system/layouts/Card.tsx';
+import { H2, Subtitle } from '~/design-system/Typography.tsx';
+import { requireSession } from '~/libs/auth/session.ts';
+import { addToast } from '~/libs/toasts/toasts.ts';
+import { updateEvent } from '~/routes/__server/teams/update-event.server.ts';
 
-import { useOrganizerEvent } from '../_layout';
-import { NewTrackButton } from './__components/SaveTrackForm';
-import { TrackList } from './__components/TrackList';
+import { useOrganizerEvent } from '../_layout.tsx';
+import { NewTrackButton } from './__components/SaveTrackForm.tsx';
+import { TrackList } from './__components/TrackList.tsx';
 import {
   deleteCategory,
   deleteFormat,
   EventTrackSaveSchema,
   saveCategory,
   saveFormat,
-} from './__server/update-tracks.server';
-import { EventTracksSettingsSchema } from './__types/event-track-settings.schema';
+} from './__server/update-tracks.server.ts';
+import { EventTracksSettingsSchema } from './__types/event-track-settings.schema.ts';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);

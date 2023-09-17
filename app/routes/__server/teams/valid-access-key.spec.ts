@@ -1,8 +1,9 @@
-import { organizerKeyFactory } from 'tests/factories/organizer-key';
-import { userFactory } from 'tests/factories/users';
+import { organizerKeyFactory } from 'tests/factories/organizer-key.ts';
+import { userFactory } from 'tests/factories/users.ts';
 
-import { db } from '../../../libs/db';
-import { validAccessKey } from './valid-access-key.server';
+import { db } from '~/libs/db.ts';
+
+import { validAccessKey } from './valid-access-key.server.ts';
 
 describe('#validAccessKey', () => {
   it('updates the user organizer key when key is valid', async () => {

@@ -2,12 +2,12 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import invariant from 'tiny-invariant';
 import { v4 as uuid } from 'uuid';
 
-import { requireSession } from '~/libs/auth/session';
-import { updateEvent } from '~/routes/__server/teams/update-event.server';
+import { requireSession } from '~/libs/auth/session.ts';
+import { updateEvent } from '~/routes/__server/teams/update-event.server.ts';
 
-import { useOrganizerEvent } from '../_layout';
-import { ApiTryoutSection } from './__components/ApiTryoutSection';
-import { EnableApiSection } from './__components/EnableApiSection';
+import { useOrganizerEvent } from '../_layout.tsx';
+import { ApiTryoutSection } from './__components/ApiTryoutSection.tsx';
+import { EnableApiSection } from './__components/EnableApiSection.tsx';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);

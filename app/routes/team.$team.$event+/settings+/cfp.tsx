@@ -4,15 +4,15 @@ import { json } from '@remix-run/node';
 import { useActionData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { requireSession } from '~/libs/auth/session';
-import { addToast } from '~/libs/toasts/toasts';
-import { updateEvent } from '~/routes/__server/teams/update-event.server';
+import { requireSession } from '~/libs/auth/session.ts';
+import { addToast } from '~/libs/toasts/toasts.ts';
+import { updateEvent } from '~/routes/__server/teams/update-event.server.ts';
 
-import { useOrganizerEvent } from '../_layout';
-import { CommonCfpSetting } from './__components/CommonCfpSetting';
-import { ConferenceCfpOpening } from './__components/ConferenceCfpOpening';
-import { MeetupCfpOpening } from './__components/MeetupCfpOpening';
-import * as schemas from './__types/event-cfp-settings.schema';
+import { useOrganizerEvent } from '../_layout.tsx';
+import { CommonCfpSetting } from './__components/CommonCfpSetting.tsx';
+import { ConferenceCfpOpening } from './__components/ConferenceCfpOpening.tsx';
+import { MeetupCfpOpening } from './__components/MeetupCfpOpening.tsx';
+import * as schemas from './__types/event-cfp-settings.schema.ts';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);

@@ -1,8 +1,8 @@
 import { HeartIcon, NoSymbolIcon, StarIcon, UserIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
 
-import { Text } from '~/design-system/Typography';
-import { formatReviewNote } from '~/utils/reviews';
+import { Text } from '~/design-system/Typography.tsx';
+import { formatReviewNote } from '~/utils/reviews.ts';
 
 const REVIEWS = {
   NO_OPINION: { icon: NoSymbolIcon, color: 'fill-red-100', label: 'No opinion' },

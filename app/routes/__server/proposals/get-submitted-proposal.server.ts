@@ -1,7 +1,6 @@
-import { buildInvitationLink } from '~/routes/__server/invitations/build-link.server';
-
-import { db } from '../../../libs/db';
-import { ProposalNotFoundError } from '../../../libs/errors';
+import { db } from '~/libs/db.ts';
+import { ProposalNotFoundError } from '~/libs/errors.ts';
+import { buildInvitationLink } from '~/routes/__server/invitations/build-link.server.ts';
 
 export async function getSubmittedProposal(talkId: string, eventSlug: string, userId: string) {
   const proposal = await db.proposal.findFirst({

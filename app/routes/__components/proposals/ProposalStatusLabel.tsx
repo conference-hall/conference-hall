@@ -1,7 +1,7 @@
 import { CheckCircleIcon, ClockIcon, ExclamationTriangleIcon, StarIcon, XCircleIcon } from '@heroicons/react/20/solid';
 
-import { IconLabel } from '~/design-system/IconLabel';
-import { SpeakerProposalStatus } from '~/routes/__server/proposals/get-speaker-proposal-status';
+import { IconLabel } from '~/design-system/IconLabel.tsx';
+import { SpeakerProposalStatus } from '~/routes/__server/proposals/get-speaker-proposal-status.ts';
 
 type Props = { status: SpeakerProposalStatus };
 

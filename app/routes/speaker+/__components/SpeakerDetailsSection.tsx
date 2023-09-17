@@ -1,14 +1,14 @@
 import { BuildingLibraryIcon, MapPinIcon, PencilSquareIcon } from '@heroicons/react/20/solid';
 
-import { Avatar } from '~/design-system/Avatar';
-import { ButtonLink } from '~/design-system/Buttons';
-import { IconLabel } from '~/design-system/IconLabel';
-import { GitHubIcon } from '~/design-system/icons/GitHubIcon';
-import { TwitterIcon } from '~/design-system/icons/TwitterIcon';
-import { Card } from '~/design-system/layouts/Card';
-import { Markdown } from '~/design-system/Markdown';
-import { H3, Subtitle } from '~/design-system/Typography';
-import type { UserSocialLinks } from '~/routes/__types/user';
+import { Avatar } from '~/design-system/Avatar.tsx';
+import { ButtonLink } from '~/design-system/Buttons.tsx';
+import { IconLabel } from '~/design-system/IconLabel.tsx';
+import { GitHubIcon } from '~/design-system/icons/GitHubIcon.tsx';
+import { TwitterIcon } from '~/design-system/icons/TwitterIcon.tsx';
+import { Card } from '~/design-system/layouts/Card.tsx';
+import { Markdown } from '~/design-system/Markdown.tsx';
+import { H3, Subtitle } from '~/design-system/Typography.tsx';
+import type { UserSocialLinks } from '~/routes/__types/user.ts';
 
 type Props = {
   name: string | null;

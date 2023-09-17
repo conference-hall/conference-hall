@@ -1,8 +1,8 @@
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
 
-import type { ButtonStylesProps } from '~/design-system/Buttons';
-import { button } from '~/design-system/Buttons';
-import { Menu } from '~/design-system/menus/Menu';
+import type { ButtonStylesProps } from '~/design-system/Buttons.tsx';
+import { button } from '~/design-system/Buttons.tsx';
+import { Menu } from '~/design-system/menus/Menu.tsx';
 
 type Props = { selection: Array<string> } & ButtonStylesProps;
 

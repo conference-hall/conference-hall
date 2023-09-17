@@ -1,5 +1,5 @@
-import { Badge, BadgeDot } from './Badges';
-import { StoryBlock } from './StoryBlock';
+import { Badge, BadgeDot } from './Badges.tsx';
+import { StoryBlock } from './StoryBlock.tsx';
 
 export const Documentation = () => (
   <>

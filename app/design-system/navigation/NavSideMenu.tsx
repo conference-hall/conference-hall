@@ -1,8 +1,8 @@
 import { NavLink } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
 
-import { IconLabel } from '../IconLabel';
-import { Card } from '../layouts/Card';
+import { IconLabel } from '../IconLabel.tsx';
+import { Card } from '../layouts/Card.tsx';
 
 type NavItem = { to: string; icon: React.ComponentType<{ className?: string }>; label: string };
 

@@ -4,17 +4,17 @@ import { Form, useActionData, useSubmit } from '@remix-run/react';
 import type { ChangeEvent } from 'react';
 import invariant from 'tiny-invariant';
 
-import { AlertInfo } from '~/design-system/Alerts';
-import { Avatar } from '~/design-system/Avatar';
-import { ButtonFileUpload } from '~/design-system/forms/FileUploadButton';
-import { Card } from '~/design-system/layouts/Card';
-import { ExternalLink } from '~/design-system/Links';
-import { H2, Subtitle } from '~/design-system/Typography';
-import { requireSession } from '~/libs/auth/session';
-import { addToast } from '~/libs/toasts/toasts';
+import { AlertInfo } from '~/design-system/Alerts.tsx';
+import { Avatar } from '~/design-system/Avatar.tsx';
+import { ButtonFileUpload } from '~/design-system/forms/FileUploadButton.tsx';
+import { Card } from '~/design-system/layouts/Card.tsx';
+import { ExternalLink } from '~/design-system/Links.tsx';
+import { H2, Subtitle } from '~/design-system/Typography.tsx';
+import { requireSession } from '~/libs/auth/session.ts';
+import { addToast } from '~/libs/toasts/toasts.ts';
 
-import { useOrganizerEvent } from '../_layout';
-import { uploadEventLogo } from './__server/upload-event-logo.server';
+import { useOrganizerEvent } from '../_layout.tsx';
+import { uploadEventLogo } from './__server/upload-event-logo.server.ts';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);

@@ -1,6 +1,6 @@
-import { db } from '~/libs/db';
-import { EventNotFoundError } from '~/libs/errors';
-import { getCfpState } from '~/utils/event';
+import { db } from '~/libs/db.ts';
+import { EventNotFoundError } from '~/libs/errors.ts';
+import { getCfpState } from '~/utils/event.ts';
 
 export type Event = Awaited<ReturnType<typeof getEvent>>;
 

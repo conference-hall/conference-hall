@@ -3,15 +3,15 @@ import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { ProgressBar } from '~/design-system/ProgressBar';
-import { H2, Text } from '~/design-system/Typography';
-import { requireSession } from '~/libs/auth/session';
-import { useEvent } from '~/routes/$event+/_layout';
+import { ProgressBar } from '~/design-system/ProgressBar.tsx';
+import { H2, Text } from '~/design-system/Typography.tsx';
+import { requireSession } from '~/libs/auth/session.ts';
+import { useEvent } from '~/routes/$event+/_layout.tsx';
 
-import { MaxProposalsReached } from './__components/MaxProposalsReached';
-import { NewProposal } from './__components/NewProposal';
-import { SubmissionTalksList } from './__components/SubmissionTalksList';
-import { listTalksToSubmit } from './__server/list-talks-to-submit.server';
+import { MaxProposalsReached } from './__components/MaxProposalsReached.tsx';
+import { NewProposal } from './__components/NewProposal.tsx';
+import { SubmissionTalksList } from './__components/SubmissionTalksList.tsx';
+import { listTalksToSubmit } from './__server/list-talks-to-submit.server.ts';
 
 export const handle = { step: 'selection' };
 

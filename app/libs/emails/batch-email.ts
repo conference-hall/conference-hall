@@ -1,7 +1,7 @@
 import type { Event } from '@prisma/client';
 
-import { emailProvider } from './providers/provider';
-import { buildTemplate } from './template/build-template';
+import { emailProvider } from './providers/provider.ts';
+import { buildTemplate } from './template/build-template.ts';
 
 export const MAILGUN_DELIBERATION_VARS = {
   'v:type': 'deliberation_email',

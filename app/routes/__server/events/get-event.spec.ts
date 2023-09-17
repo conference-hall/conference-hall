@@ -1,10 +1,11 @@
-import { teamFactory } from 'tests/factories/team';
+import { eventCategoryFactory } from 'tests/factories/categories.ts';
+import { eventFactory } from 'tests/factories/events.ts';
+import { eventFormatFactory } from 'tests/factories/formats.ts';
+import { teamFactory } from 'tests/factories/team.ts';
 
-import { eventCategoryFactory } from '../../../../tests/factories/categories';
-import { eventFactory } from '../../../../tests/factories/events';
-import { eventFormatFactory } from '../../../../tests/factories/formats';
-import { EventNotFoundError } from '../../../libs/errors';
-import { getEvent } from './get-event.server';
+import { EventNotFoundError } from '~/libs/errors.ts';
+
+import { getEvent } from './get-event.server.ts';
 
 describe('#getEvent', () => {
   it('returns the default response', async () => {

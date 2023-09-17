@@ -3,12 +3,12 @@ import { json } from '@remix-run/node';
 import { Outlet, useLoaderData, useOutletContext } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { requireSession } from '~/libs/auth/session';
-import { useUser } from '~/root';
+import { requireSession } from '~/libs/auth/session.ts';
+import { useUser } from '~/root.tsx';
 
-import { useTeam } from '../team+/$team';
-import type { OrganizerEvent } from './__server/get-event.server';
-import { getTeamEvent } from './__server/get-event.server';
+import { useTeam } from '../team+/$team.tsx';
+import type { OrganizerEvent } from './__server/get-event.server.ts';
+import { getTeamEvent } from './__server/get-event.server.ts';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);

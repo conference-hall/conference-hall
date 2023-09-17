@@ -4,13 +4,13 @@ import { useSearchParams } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
 import { useMemo } from 'react';
 
-import { Badge } from '~/design-system/Badges';
-import { Checkbox } from '~/design-system/forms/Checkboxes';
-import { useCheckboxSelection } from '~/design-system/forms/useCheckboxSelection';
-import { Link } from '~/design-system/Links';
-import { Text } from '~/design-system/Typography';
+import { Badge } from '~/design-system/Badges.tsx';
+import { Checkbox } from '~/design-system/forms/Checkboxes.tsx';
+import { useCheckboxSelection } from '~/design-system/forms/useCheckboxSelection.tsx';
+import { Link } from '~/design-system/Links.tsx';
+import { Text } from '~/design-system/Typography.tsx';
 
-import { ResendEmailButton, SendEmailsButton } from './SendEmailsButton';
+import { ResendEmailButton, SendEmailsButton } from './SendEmailsButton.tsx';
 
 export enum CampaignType {
   ACCEPTATION = 'acceptation',

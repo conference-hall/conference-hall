@@ -1,10 +1,10 @@
-import { eventFactory } from 'tests/factories/events';
-import { teamFactory } from 'tests/factories/team';
-import { userFactory } from 'tests/factories/users';
+import { eventFactory } from 'tests/factories/events.ts';
+import { teamFactory } from 'tests/factories/team.ts';
+import { userFactory } from 'tests/factories/users.ts';
 
-import { ForbiddenOperationError } from '~/libs/errors';
+import { ForbiddenOperationError } from '~/libs/errors.ts';
 
-import { listEvents } from './list-events.server';
+import { listEvents } from './list-events.server.ts';
 
 describe('#listEvents', () => {
   it('returns team events', async () => {

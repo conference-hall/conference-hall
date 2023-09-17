@@ -1,11 +1,11 @@
-import { db } from '~/libs/db';
-import { ApiKeyInvalidError, EventNotFoundError } from '~/libs/errors';
-import { jsonToArray } from '~/libs/prisma';
-import { EventProposalsSearch } from '~/routes/__server/proposals/EventProposalsSearch';
-import type { ProposalsFilters } from '~/routes/__types/proposal';
-import type { UserSocialLinks } from '~/routes/__types/user';
-import { getLanguage } from '~/utils/languages';
-import { getLevel } from '~/utils/levels';
+import { db } from '~/libs/db.ts';
+import { ApiKeyInvalidError, EventNotFoundError } from '~/libs/errors.ts';
+import { jsonToArray } from '~/libs/prisma.ts';
+import { EventProposalsSearch } from '~/routes/__server/proposals/EventProposalsSearch.ts';
+import type { ProposalsFilters } from '~/routes/__types/proposal.ts';
+import type { UserSocialLinks } from '~/routes/__types/user.ts';
+import { getLanguage } from '~/utils/languages.ts';
+import { getLevel } from '~/utils/levels.ts';
 
 export const getEventProposals = async (eventSlug: string, apiKey: string, filters: ProposalsFilters) => {
   const event = await db.event.findFirst({ where: { slug: eventSlug } });

@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
-import { db } from '~/libs/db';
-import { ProposalNotFoundError } from '~/libs/errors';
+import { db } from '~/libs/db.ts';
+import { ProposalNotFoundError } from '~/libs/errors.ts';
 
 const TracksMandatorySchema = z.array(z.string()).nonempty();
 const TracksSchema = z.array(z.string()).optional();

@@ -1,7 +1,7 @@
 import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/24/solid';
 
-import { Button } from './Buttons';
-import { StoryBlock } from './StoryBlock';
+import { Button } from './Buttons.tsx';
+import { StoryBlock } from './StoryBlock.tsx';
 
 export const Documentation = () => (
   <>

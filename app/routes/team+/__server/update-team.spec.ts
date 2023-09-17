@@ -1,8 +1,9 @@
-import { teamFactory } from 'tests/factories/team';
-import { userFactory } from 'tests/factories/users';
+import { teamFactory } from 'tests/factories/team.ts';
+import { userFactory } from 'tests/factories/users.ts';
 
-import { ForbiddenOperationError } from '../../../libs/errors';
-import { updateTeam } from './update-team.server';
+import { ForbiddenOperationError } from '~/libs/errors.ts';
+
+import { updateTeam } from './update-team.server.ts';
 
 describe('#updateTeam', () => {
   it('updates the team', async () => {

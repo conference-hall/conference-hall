@@ -7,22 +7,22 @@ import { json } from '@remix-run/node';
 import { Form, useLoaderData, useSearchParams } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { AvatarName } from '~/design-system/Avatar';
-import { Input } from '~/design-system/forms/Input';
-import { Card } from '~/design-system/layouts/Card';
-import { EmptyState } from '~/design-system/layouts/EmptyState';
-import { Pagination } from '~/design-system/Pagination';
-import { H3, Subtitle } from '~/design-system/Typography';
-import { requireSession } from '~/libs/auth/session';
-import { addToast } from '~/libs/toasts/toasts';
-import { useUser } from '~/root';
-import { parsePage } from '~/routes/__types/pagination';
+import { AvatarName } from '~/design-system/Avatar.tsx';
+import { Input } from '~/design-system/forms/Input.tsx';
+import { Card } from '~/design-system/layouts/Card.tsx';
+import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
+import { Pagination } from '~/design-system/Pagination.tsx';
+import { H3, Subtitle } from '~/design-system/Typography.tsx';
+import { requireSession } from '~/libs/auth/session.ts';
+import { addToast } from '~/libs/toasts/toasts.ts';
+import { useUser } from '~/root.tsx';
+import { parsePage } from '~/routes/__types/pagination.ts';
 
-import { ChangeRoleButton, InviteMemberButton, RemoveButton } from './__components/MemberActions';
-import { changeMemberRole } from './__server/change-role.server';
-import { listMembers, MembersFilterSchema } from './__server/list-members.server';
-import { removeMember } from './__server/remove-member.server';
-import { useTeam } from './$team';
+import { ChangeRoleButton, InviteMemberButton, RemoveButton } from './__components/MemberActions.tsx';
+import { changeMemberRole } from './__server/change-role.server.ts';
+import { listMembers, MembersFilterSchema } from './__server/list-members.server.ts';
+import { removeMember } from './__server/remove-member.server.ts';
+import { useTeam } from './$team.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);

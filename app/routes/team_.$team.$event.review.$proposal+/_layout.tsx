@@ -5,19 +5,19 @@ import { json, redirect } from '@remix-run/node';
 import { Outlet, useLoaderData, useOutletContext, useParams } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { requireSession } from '~/libs/auth/session';
-import { mergeMeta } from '~/libs/meta/merge-meta';
-import { addToast } from '~/libs/toasts/toasts';
-import { useUser } from '~/root';
-import { Navbar } from '~/routes/__components/navbar/Navbar';
-import { parseProposalsFilters, ProposalReviewDataSchema } from '~/routes/__types/proposal';
+import { requireSession } from '~/libs/auth/session.ts';
+import { mergeMeta } from '~/libs/meta/merge-meta.ts';
+import { addToast } from '~/libs/toasts/toasts.ts';
+import { useUser } from '~/root.tsx';
+import { Navbar } from '~/routes/__components/navbar/Navbar.tsx';
+import { parseProposalsFilters, ProposalReviewDataSchema } from '~/routes/__types/proposal.ts';
 
-import { ReviewHeader } from './__components/Header';
-import { ReviewInfoSection } from './__components/ReviewInfoSection';
-import { ReviewTabs } from './__components/Tabs';
-import type { ProposalReview } from './__server/get-proposal-review.server';
-import { getProposalReview } from './__server/get-proposal-review.server';
-import { rateProposal } from './__server/review-proposal.server';
+import { ReviewHeader } from './__components/Header.tsx';
+import { ReviewInfoSection } from './__components/ReviewInfoSection.tsx';
+import { ReviewTabs } from './__components/Tabs.tsx';
+import type { ProposalReview } from './__server/get-proposal-review.server.ts';
+import { getProposalReview } from './__server/get-proposal-review.server.ts';
+import { rateProposal } from './__server/review-proposal.server.ts';
 
 export const meta = mergeMeta(() => [{ title: `Review proposal | Conference Hall` }]);
 

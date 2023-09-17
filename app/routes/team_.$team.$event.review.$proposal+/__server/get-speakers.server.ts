@@ -1,9 +1,9 @@
-import { db } from '~/libs/db';
-import { ForbiddenOperationError, ProposalNotFoundError } from '~/libs/errors';
-import { allowedForEvent } from '~/routes/__server/teams/check-user-role.server';
-import type { SurveyData } from '~/routes/__types/survey';
-import type { UserSocialLinks } from '~/routes/__types/user';
-import { sortBy } from '~/utils/arrays';
+import { db } from '~/libs/db.ts';
+import { ForbiddenOperationError, ProposalNotFoundError } from '~/libs/errors.ts';
+import { allowedForEvent } from '~/routes/__server/teams/check-user-role.server.ts';
+import type { SurveyData } from '~/routes/__types/survey.ts';
+import type { UserSocialLinks } from '~/routes/__types/user.ts';
+import { sortBy } from '~/utils/arrays.ts';
 
 export async function getSpeakers(eventSlug: string, proposalId: string, userId: string) {
   const event = await allowedForEvent(eventSlug, userId);

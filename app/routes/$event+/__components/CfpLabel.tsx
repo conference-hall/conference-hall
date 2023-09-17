@@ -1,8 +1,8 @@
 import { cx } from 'class-variance-authority';
 
-import { CfpIcon } from '~/routes/__components/cfp/CfpIcon';
-import type { CfpState } from '~/routes/__types/event';
-import { formatCFPState } from '~/utils/event';
+import { CfpIcon } from '~/routes/__components/cfp/CfpIcon.tsx';
+import type { CfpState } from '~/routes/__types/event.ts';
+import { formatCFPState } from '~/utils/event.ts';
 
 type Props = { cfpState: CfpState; className?: string };
 

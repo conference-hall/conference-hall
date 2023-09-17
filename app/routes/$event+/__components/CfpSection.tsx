@@ -1,10 +1,10 @@
-import { ButtonLink } from '~/design-system/Buttons';
-import { Container } from '~/design-system/layouts/Container';
-import { H2, Subtitle } from '~/design-system/Typography';
-import { CfpIcon } from '~/routes/__components/cfp/CfpIcon';
-import { ClientOnly } from '~/routes/__components/utils/ClientOnly';
-import type { CfpState } from '~/routes/__types/event';
-import { formatCFPDate, formatCFPElapsedTime } from '~/utils/event';
+import { ButtonLink } from '~/design-system/Buttons.tsx';
+import { Container } from '~/design-system/layouts/Container.tsx';
+import { H2, Subtitle } from '~/design-system/Typography.tsx';
+import { CfpIcon } from '~/routes/__components/cfp/CfpIcon.tsx';
+import { ClientOnly } from '~/routes/__components/utils/ClientOnly.tsx';
+import type { CfpState } from '~/routes/__types/event.ts';
+import { formatCFPDate, formatCFPElapsedTime } from '~/utils/event.ts';
 
 type Props = { cfpState: CfpState; cfpStart?: string; cfpEnd?: string; className?: string };
 
