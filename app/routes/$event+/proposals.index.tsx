@@ -3,14 +3,14 @@ import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { ButtonLink } from '~/design-system/Buttons';
-import { Container } from '~/design-system/layouts/Container';
-import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
-import { requireSession } from '~/libs/auth/session';
+import { ButtonLink } from '~/design-system/Buttons.tsx';
+import { Container } from '~/design-system/layouts/Container.tsx';
+import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
+import { requireSession } from '~/libs/auth/session.ts';
 
-import { ProposalsList } from './__components/ProposalsList';
-import { listSpeakerProposals } from './__server/list-speaker-proposals.server';
-import { useEvent } from './_layout';
+import { ProposalsList } from './__components/ProposalsList.tsx';
+import { listSpeakerProposals } from './__server/list-speaker-proposals.server.ts';
+import { useEvent } from './_layout.tsx';
 
 export type EventProposals = Awaited<ReturnType<typeof listSpeakerProposals>>;
 

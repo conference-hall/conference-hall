@@ -1,8 +1,8 @@
 import { FireIcon } from '@heroicons/react/20/solid';
 
-import { Button } from '../Buttons';
-import { StoryBlock } from '../StoryBlock';
-import { EmptyState } from './EmptyState';
+import { Button } from '../Buttons.tsx';
+import { StoryBlock } from '../StoryBlock.tsx';
+import { EmptyState } from './EmptyState.tsx';
 
 export const Documentation = () => (
   <>

@@ -2,14 +2,14 @@ import { json, type LoaderFunctionArgs } from '@remix-run/node';
 import { useFetcher } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { ToggleGroup } from '~/design-system/forms/Toggles';
-import { Card } from '~/design-system/layouts/Card';
-import { H2 } from '~/design-system/Typography';
-import { requireSession } from '~/libs/auth/session';
-import { addToast } from '~/libs/toasts/toasts';
-import { updateEvent } from '~/routes/__server/teams/update-event.server';
+import { ToggleGroup } from '~/design-system/forms/Toggles.tsx';
+import { Card } from '~/design-system/layouts/Card.tsx';
+import { H2 } from '~/design-system/Typography.tsx';
+import { requireSession } from '~/libs/auth/session.ts';
+import { addToast } from '~/libs/toasts/toasts.ts';
+import { updateEvent } from '~/routes/__server/teams/update-event.server.ts';
 
-import { useOrganizerEvent } from '../_layout';
+import { useOrganizerEvent } from '../_layout.tsx';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);

@@ -1,7 +1,8 @@
-import { eventFactory } from 'tests/factories/events';
+import { eventFactory } from 'tests/factories/events.ts';
 
-import { EventNotFoundError, SurveyNotEnabledError } from '../../../libs/errors';
-import { getQuestions } from './get-questions.server';
+import { EventNotFoundError, SurveyNotEnabledError } from '~/libs/errors.ts';
+
+import { getQuestions } from './get-questions.server.ts';
 
 describe('#getQuestions', () => {
   it('returns the default survey questions', async () => {

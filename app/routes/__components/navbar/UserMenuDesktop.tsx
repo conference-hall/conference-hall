@@ -1,7 +1,7 @@
 import { ArrowRightOnRectangleIcon, StarIcon } from '@heroicons/react/20/solid';
 
-import { Avatar } from '~/design-system/Avatar';
-import { Menu } from '~/design-system/menus/Menu';
+import { Avatar } from '~/design-system/Avatar.tsx';
+import { Menu } from '~/design-system/menus/Menu.tsx';
 
 type Props = { name: string | null; email?: string | null; picture?: string | null; isOrganizer?: boolean };
 

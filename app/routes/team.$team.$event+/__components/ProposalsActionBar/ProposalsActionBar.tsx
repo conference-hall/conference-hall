@@ -1,11 +1,11 @@
 import { cx } from 'class-variance-authority';
 
-import { Checkbox } from '~/design-system/forms/Checkboxes';
-import { Card } from '~/design-system/layouts/Card';
+import { Checkbox } from '~/design-system/forms/Checkboxes.tsx';
+import { Card } from '~/design-system/layouts/Card.tsx';
 
-import { ChangeStatusAction } from './actions/ChangeStatusActions';
-import { ExportActions } from './actions/ExportActions';
-import { SortActions } from './actions/SortActions';
+import { ChangeStatusAction } from './actions/ChangeStatusActions.tsx';
+import { ExportActions } from './actions/ExportActions.tsx';
+import { SortActions } from './actions/SortActions.tsx';
 
 type Props = {
   total: number;

@@ -3,7 +3,7 @@ import { NavLink } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
 import { useMemo } from 'react';
 
-import { Menu } from '../menus/Menu';
+import { Menu } from '../menus/Menu.tsx';
 
 type NavTabProps = { to: string; label: string; count?: number; enabled?: boolean; end?: boolean };
 

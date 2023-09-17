@@ -1,5 +1,5 @@
-import OrganizerEventSettingsPage from 'page-objects/team/event-settings/event-settings.page';
-import TeamEventsPage from 'page-objects/team/events-list.page';
+import OrganizerEventSettingsPage from '../../page-objects/team/event-settings/event-settings.page.ts';
+import TeamEventsPage from '../../page-objects/team/events-list.page.ts';
 
 describe("Team's events list", () => {
   beforeEach(() => {

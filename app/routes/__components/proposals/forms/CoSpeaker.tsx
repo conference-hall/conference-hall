@@ -2,10 +2,10 @@ import { TrashIcon, UserPlusIcon } from '@heroicons/react/20/solid';
 import { Form } from '@remix-run/react';
 import { useState } from 'react';
 
-import { AvatarName } from '~/design-system/Avatar';
+import { AvatarName } from '~/design-system/Avatar.tsx';
+import { Button } from '~/design-system/Buttons.tsx';
 
-import { Button } from '../../../../design-system/Buttons';
-import { InvitationModal } from '../../InvitationModal';
+import { InvitationModal } from '../../InvitationModal.tsx';
 
 type CoSpeakersListProps = {
   speakers: Array<{

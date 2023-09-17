@@ -7,7 +7,7 @@ import {
   ProposalsStatusUpdateSchema,
   ProposalSubmissionSchema,
   ProposalUpdateSchema,
-} from './proposal';
+} from './proposal.ts';
 
 describe('Validate ProposalCreateSchema', () => {
   it('validates proposal form data', async () => {

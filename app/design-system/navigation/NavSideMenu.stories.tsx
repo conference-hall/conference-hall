@@ -1,7 +1,7 @@
 import { ArrowRightCircleIcon, CogIcon, UserCircleIcon } from '@heroicons/react/20/solid';
 
-import { StoryBlock } from '../StoryBlock';
-import { NavSideMenu } from './NavSideMenu';
+import { StoryBlock } from '../StoryBlock.tsx';
+import { NavSideMenu } from './NavSideMenu.tsx';
 
 export const Documentation = () => (
   <>

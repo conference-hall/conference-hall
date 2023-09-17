@@ -1,5 +1,5 @@
-import { db } from '../../../libs/db';
-import { TalkNotFoundError } from '../../../libs/errors';
+import { db } from '~/libs/db.ts';
+import { TalkNotFoundError } from '~/libs/errors.ts';
 
 /**
  * Remove a co-speaker from a talk

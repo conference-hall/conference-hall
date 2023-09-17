@@ -1,11 +1,11 @@
 import { Form } from '@remix-run/react';
 
-import { Button, ButtonLink } from '~/design-system/Buttons';
-import { Card } from '~/design-system/layouts/Card';
-import { H2, Subtitle, Text } from '~/design-system/Typography';
-import { SpeakerProposalStatus } from '~/routes/__server/proposals/get-speaker-proposal-status';
+import { Button, ButtonLink } from '~/design-system/Buttons.tsx';
+import { Card } from '~/design-system/layouts/Card.tsx';
+import { H2, Subtitle, Text } from '~/design-system/Typography.tsx';
+import { SpeakerProposalStatus } from '~/routes/__server/proposals/get-speaker-proposal-status.ts';
 
-import { ProposalDeleteButton } from './ProposalDelete';
+import { ProposalDeleteButton } from './ProposalDelete.tsx';
 
 type Props = {
   proposal: { id: string; talkId: string | null; status: SpeakerProposalStatus };

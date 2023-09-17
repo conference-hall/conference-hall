@@ -1,7 +1,7 @@
-import { talkFactory } from 'tests/factories/talks';
-import { userFactory } from 'tests/factories/users';
+import { talkFactory } from 'tests/factories/talks.ts';
+import { userFactory } from 'tests/factories/users.ts';
 
-import { listTalks } from './list-talks.server';
+import { listTalks } from './list-talks.server.ts';
 
 describe('#listTalks', () => {
   it('returns speaker talks list', async () => {

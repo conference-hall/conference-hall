@@ -4,18 +4,18 @@ import { json } from '@remix-run/node';
 import { Form, useActionData, useFetcher } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { Button } from '~/design-system/Buttons';
-import { Input } from '~/design-system/forms/Input';
-import { ToggleGroup } from '~/design-system/forms/Toggles';
-import { Card } from '~/design-system/layouts/Card';
-import { H2 } from '~/design-system/Typography';
-import { requireSession } from '~/libs/auth/session';
-import { addToast } from '~/libs/toasts/toasts';
-import { updateEvent } from '~/routes/__server/teams/update-event.server';
+import { Button } from '~/design-system/Buttons.tsx';
+import { Input } from '~/design-system/forms/Input.tsx';
+import { ToggleGroup } from '~/design-system/forms/Toggles.tsx';
+import { Card } from '~/design-system/layouts/Card.tsx';
+import { H2 } from '~/design-system/Typography.tsx';
+import { requireSession } from '~/libs/auth/session.ts';
+import { addToast } from '~/libs/toasts/toasts.ts';
+import { updateEvent } from '~/routes/__server/teams/update-event.server.ts';
 
-import { useOrganizerEvent } from '../_layout';
-import { EventEmailNotificationsSettingsSchema } from './__types/event-email-notifications-settings.schema';
-import { EventNotificationsSettingsSchema } from './__types/event-notifications-settings.schema';
+import { useOrganizerEvent } from '../_layout.tsx';
+import { EventEmailNotificationsSettingsSchema } from './__types/event-email-notifications-settings.schema.ts';
+import { EventNotificationsSettingsSchema } from './__types/event-notifications-settings.schema.ts';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);

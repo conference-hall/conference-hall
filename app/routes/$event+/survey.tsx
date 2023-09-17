@@ -4,17 +4,17 @@ import { json } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { Button } from '~/design-system/Buttons';
-import { Card } from '~/design-system/layouts/Card';
-import { Container } from '~/design-system/layouts/Container';
-import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
-import { requireSession } from '~/libs/auth/session';
-import { addToast } from '~/libs/toasts/toasts';
-import { SurveyForm } from '~/routes/__components/proposals/forms/SurveyForm';
-import { getAnswers } from '~/routes/__server/survey/get-answers.server';
-import { getQuestions } from '~/routes/__server/survey/get-questions.server';
-import { saveSurvey } from '~/routes/__server/survey/save-survey.server';
-import { SurveySchema } from '~/routes/__types/survey';
+import { Button } from '~/design-system/Buttons.tsx';
+import { Card } from '~/design-system/layouts/Card.tsx';
+import { Container } from '~/design-system/layouts/Container.tsx';
+import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
+import { requireSession } from '~/libs/auth/session.ts';
+import { addToast } from '~/libs/toasts/toasts.ts';
+import { SurveyForm } from '~/routes/__components/proposals/forms/SurveyForm.tsx';
+import { getAnswers } from '~/routes/__server/survey/get-answers.server.ts';
+import { getQuestions } from '~/routes/__server/survey/get-questions.server.ts';
+import { saveSurvey } from '~/routes/__server/survey/save-survey.server.ts';
+import { SurveySchema } from '~/routes/__types/survey.ts';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);

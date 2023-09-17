@@ -1,10 +1,10 @@
-import { talkFactory } from 'tests/factories/talks';
-import { userFactory } from 'tests/factories/users';
+import { talkFactory } from 'tests/factories/talks.ts';
+import { userFactory } from 'tests/factories/users.ts';
 
-import { db } from '~/libs/db';
-import { TalkNotFoundError } from '~/libs/errors';
+import { db } from '~/libs/db.ts';
+import { TalkNotFoundError } from '~/libs/errors.ts';
 
-import { archiveTalk, restoreTalk } from './archive-talk.server';
+import { archiveTalk, restoreTalk } from './archive-talk.server.ts';
 
 describe('#archiveTalk', () => {
   it('archives a talk', async () => {

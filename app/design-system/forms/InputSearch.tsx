@@ -1,7 +1,7 @@
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
 
-import { Label } from '../Typography';
+import { Label } from '../Typography.tsx';
 
 const SIZES = {
   m: { container: 'max-w-lg lg:max-w-xs', icon: 'h-5 w-5', input: 'py-1.5 pl-10 text-sm' },

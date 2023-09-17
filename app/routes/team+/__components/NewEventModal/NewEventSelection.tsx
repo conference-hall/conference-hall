@@ -4,8 +4,8 @@ import { MegaphoneIcon, UserGroupIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
 import { useState } from 'react';
 
-import { Button } from '~/design-system/Buttons';
-import { H1, Subtitle, Text } from '~/design-system/Typography';
+import { Button } from '~/design-system/Buttons.tsx';
+import { H1, Subtitle, Text } from '~/design-system/Typography.tsx';
 
 type Props = {
   onSubmit: (type: 'MEETUP' | 'CONFERENCE') => void;

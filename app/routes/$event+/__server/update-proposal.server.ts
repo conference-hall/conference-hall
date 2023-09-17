@@ -1,7 +1,7 @@
-import { db } from '~/libs/db';
-import { CfpNotOpenError, EventNotFoundError, ProposalNotFoundError } from '~/libs/errors';
-import type { ProposalUpdateData } from '~/routes/__types/proposal';
-import { getCfpState } from '~/utils/event';
+import { db } from '~/libs/db.ts';
+import { CfpNotOpenError, EventNotFoundError, ProposalNotFoundError } from '~/libs/errors.ts';
+import type { ProposalUpdateData } from '~/routes/__types/proposal.ts';
+import { getCfpState } from '~/utils/event.ts';
 
 export async function updateProposal(slug: string, proposalId: string, userId: string, data: ProposalUpdateData) {
   const event = await db.event.findUnique({

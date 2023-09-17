@@ -1,6 +1,6 @@
 import type { Event, Prisma, Proposal } from '@prisma/client';
 
-import { SingleEmail } from '~/libs/emails/single-email';
+import { SingleEmail } from '~/libs/emails/single-email.ts';
 
 type ProposalConfirmedEmailVariables = { proposalTitle: string };
 

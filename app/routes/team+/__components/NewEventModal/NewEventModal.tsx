@@ -1,11 +1,11 @@
 import { PlusIcon } from '@heroicons/react/20/solid';
 import { useState } from 'react';
 
-import { Button } from '~/design-system/Buttons';
-import { Modal } from '~/design-system/Modals';
+import { Button } from '~/design-system/Buttons.tsx';
+import { Modal } from '~/design-system/Modals.tsx';
 
-import { NewEventForm } from './NewEventForm';
-import { NewEventSelection } from './NewEventSelection';
+import { NewEventForm } from './NewEventForm.tsx';
+import { NewEventSelection } from './NewEventSelection.tsx';
 
 type Props = { slug: string };
 

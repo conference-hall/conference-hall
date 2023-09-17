@@ -1,6 +1,6 @@
-import { db } from '~/libs/db';
-import { TeamNotFoundError } from '~/libs/errors';
-import { buildInvitationLink } from '~/routes/__server/invitations/build-link.server';
+import { db } from '~/libs/db.ts';
+import { TeamNotFoundError } from '~/libs/errors.ts';
+import { buildInvitationLink } from '~/routes/__server/invitations/build-link.server.ts';
 
 export type Team = Awaited<ReturnType<typeof getTeam>>;
 

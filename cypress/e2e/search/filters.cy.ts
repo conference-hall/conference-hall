@@ -1,4 +1,4 @@
-import SearchEventPage from 'page-objects/search.page';
+import SearchEventPage from '../../page-objects/search.page.ts';
 
 describe('Use filters searching events.', () => {
   beforeEach(() => cy.task('seedDB', 'search/filters'));

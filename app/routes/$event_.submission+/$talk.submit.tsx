@@ -5,21 +5,21 @@ import { Form, useLoaderData } from '@remix-run/react';
 import { useState } from 'react';
 import invariant from 'tiny-invariant';
 
-import { Avatar, AvatarGroup } from '~/design-system/Avatar';
-import { Button, ButtonLink } from '~/design-system/Buttons';
-import { Checkbox } from '~/design-system/forms/Checkboxes';
-import { TextArea } from '~/design-system/forms/TextArea';
-import { Card } from '~/design-system/layouts/Card';
-import { ExternalLink } from '~/design-system/Links';
-import { H1, H2, Subtitle } from '~/design-system/Typography';
-import { requireSession } from '~/libs/auth/session';
-import { addToast } from '~/libs/toasts/toasts';
-import { getSubmittedProposal } from '~/routes/__server/proposals/get-submitted-proposal.server';
-import { ProposalSubmissionSchema } from '~/routes/__types/proposal';
-import { useEvent } from '~/routes/$event+/_layout';
+import { Avatar, AvatarGroup } from '~/design-system/Avatar.tsx';
+import { Button, ButtonLink } from '~/design-system/Buttons.tsx';
+import { Checkbox } from '~/design-system/forms/Checkboxes.tsx';
+import { TextArea } from '~/design-system/forms/TextArea.tsx';
+import { Card } from '~/design-system/layouts/Card.tsx';
+import { ExternalLink } from '~/design-system/Links.tsx';
+import { H1, H2, Subtitle } from '~/design-system/Typography.tsx';
+import { requireSession } from '~/libs/auth/session.ts';
+import { addToast } from '~/libs/toasts/toasts.ts';
+import { getSubmittedProposal } from '~/routes/__server/proposals/get-submitted-proposal.server.ts';
+import { ProposalSubmissionSchema } from '~/routes/__types/proposal.ts';
+import { useEvent } from '~/routes/$event+/_layout.tsx';
 
-import { useSubmissionStep } from './__components/useSubmissionStep';
-import { submitProposal } from './__server/submit-proposal.server';
+import { useSubmissionStep } from './__components/useSubmissionStep.ts';
+import { submitProposal } from './__server/submit-proposal.server.ts';
 
 export const handle = { step: 'submission' };
 

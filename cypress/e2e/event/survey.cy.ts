@@ -1,5 +1,5 @@
-import EventSurveyPage from 'page-objects/event/survey.page';
-import LoginPage from 'page-objects/login.page';
+import EventSurveyPage from '../../page-objects/event/survey.page.ts';
+import LoginPage from '../../page-objects/login.page.ts';
 
 describe('Submit a talk to event', () => {
   beforeEach(() => {

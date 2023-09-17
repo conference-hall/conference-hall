@@ -1,11 +1,11 @@
 import { ArrowTopRightOnSquareIcon, ChevronRightIcon, Square3Stack3DIcon } from '@heroicons/react/24/outline';
 
-import { Avatar } from '~/design-system/Avatar';
-import { Badge, BadgeDot } from '~/design-system/Badges';
-import { Link } from '~/design-system/Links';
-import type { CfpState, EventType, EventVisibility } from '~/routes/__types/event';
+import { Avatar } from '~/design-system/Avatar.tsx';
+import { Badge, BadgeDot } from '~/design-system/Badges.tsx';
+import { Link } from '~/design-system/Links.tsx';
+import type { CfpState, EventType, EventVisibility } from '~/routes/__types/event.ts';
 
-import { CfpElapsedTime } from '../cfp/CfpElapsedTime';
+import { CfpElapsedTime } from '../cfp/CfpElapsedTime.tsx';
 
 type Props = {
   team: { name: string; slug: string; role: string };

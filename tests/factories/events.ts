@@ -2,10 +2,10 @@ import { rand, randEmail, randFullAddress, randParagraph, randSportsTeam, randUr
 import type { Prisma, Team } from '@prisma/client';
 import { EventType, EventVisibility } from '@prisma/client';
 
-import { db } from '../../app/libs/db';
-import { applyTraits } from './helpers/traits';
-import { teamFactory } from './team';
-import { userFactory } from './users';
+import { db } from '../../app/libs/db.ts';
+import { applyTraits } from './helpers/traits.ts';
+import { teamFactory } from './team.ts';
+import { userFactory } from './users.ts';
 
 const TRAITS = {
   conference: {
@@ -82,7 +82,7 @@ export const eventFactory = async (options: FactoryOptions = {}) => {
     type: rand([EventType.CONFERENCE, EventType.MEETUP]),
     visibility: EventVisibility.PUBLIC,
     creator: { connect: { id: creator.id } },
-    team: { connect: { id: options.team.id } },
+    team: { connect: { id: options.team?.id } },
   };
 
   const data = {

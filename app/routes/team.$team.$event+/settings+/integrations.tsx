@@ -4,17 +4,17 @@ import { json } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { AlertInfo } from '~/design-system/Alerts';
-import { Button } from '~/design-system/Buttons';
-import { Input } from '~/design-system/forms/Input';
-import { Card } from '~/design-system/layouts/Card';
-import { ExternalLink } from '~/design-system/Links';
-import { H2 } from '~/design-system/Typography';
-import { requireSession } from '~/libs/auth/session';
-import { updateEvent } from '~/routes/__server/teams/update-event.server';
+import { AlertInfo } from '~/design-system/Alerts.tsx';
+import { Button } from '~/design-system/Buttons.tsx';
+import { Input } from '~/design-system/forms/Input.tsx';
+import { Card } from '~/design-system/layouts/Card.tsx';
+import { ExternalLink } from '~/design-system/Links.tsx';
+import { H2 } from '~/design-system/Typography.tsx';
+import { requireSession } from '~/libs/auth/session.ts';
+import { updateEvent } from '~/routes/__server/teams/update-event.server.ts';
 
-import { useOrganizerEvent } from '../_layout';
-import { EventSlackSettingsSchema } from './__types/event-slack-settings.schema';
+import { useOrganizerEvent } from '../_layout.tsx';
+import { EventSlackSettingsSchema } from './__types/event-slack-settings.schema.ts';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);

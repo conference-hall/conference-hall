@@ -1,8 +1,8 @@
-import EventProposalsPage from 'page-objects/event/proposals.page';
-import EventSubmissionPage from 'page-objects/event/submission.page';
-import SearchEventPage from 'page-objects/search.page';
-import SpeakerTalkPage from 'page-objects/speaker/talk.page';
-import SpeakerEditTalkPage from 'page-objects/speaker/talk-edit.page';
+import EventProposalsPage from '../../page-objects/event/proposals.page.ts';
+import EventSubmissionPage from '../../page-objects/event/submission.page.ts';
+import SearchEventPage from '../../page-objects/search.page.ts';
+import SpeakerTalkPage from '../../page-objects/speaker/talk.page.ts';
+import SpeakerEditTalkPage from '../../page-objects/speaker/talk-edit.page.ts';
 
 describe('Speaker talk page', () => {
   beforeEach(() => {

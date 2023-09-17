@@ -1,6 +1,6 @@
-import { config } from '../../config';
-import { MailgunProvider } from './mailgun-provider';
-import { MailhogProvider } from './mailhog-provider';
+import { config } from '../../config.ts';
+import { MailgunProvider } from './mailgun-provider.ts';
+import { MailhogProvider } from './mailhog-provider.ts';
 
 export type Email = {
   from: string;

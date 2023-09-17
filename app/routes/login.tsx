@@ -10,17 +10,17 @@ import {
 } from 'firebase/auth';
 import { useCallback, useEffect, useState } from 'react';
 
-import { AlertError } from '~/design-system/Alerts';
-import { LoadingIcon } from '~/design-system/icons/LoadingIcon';
-import { Card } from '~/design-system/layouts/Card';
-import { Link } from '~/design-system/Links';
-import { getClientAuth } from '~/libs/auth/firebase';
-import { createSession, getSessionUserId } from '~/libs/auth/session';
-import { mergeMeta } from '~/libs/meta/merge-meta';
-import { AuthProviderButton } from '~/routes/__components/AuthProviderButton';
-import { Logo } from '~/routes/__components/navbar/Logo';
+import { AlertError } from '~/design-system/Alerts.tsx';
+import { LoadingIcon } from '~/design-system/icons/LoadingIcon.tsx';
+import { Card } from '~/design-system/layouts/Card.tsx';
+import { Link } from '~/design-system/Links.tsx';
+import { getClientAuth } from '~/libs/auth/firebase.ts';
+import { createSession, getSessionUserId } from '~/libs/auth/session.ts';
+import { mergeMeta } from '~/libs/meta/merge-meta.ts';
+import { AuthProviderButton } from '~/routes/__components/AuthProviderButton.tsx';
+import { Logo } from '~/routes/__components/navbar/Logo.tsx';
 
-import { useHydrated } from './__components/utils/use-hydrated';
+import { useHydrated } from './__components/utils/use-hydrated.ts';
 
 export const meta = mergeMeta(() => [{ title: 'Login | Conference Hall' }]);
 

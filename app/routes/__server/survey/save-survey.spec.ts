@@ -1,9 +1,11 @@
-import { eventFactory } from '../../../../tests/factories/events';
-import { surveyFactory } from '../../../../tests/factories/surveys';
-import { userFactory } from '../../../../tests/factories/users';
-import { EventNotFoundError } from '../../../libs/errors';
-import { getAnswers } from './get-answers.server';
-import { saveSurvey } from './save-survey.server';
+import { eventFactory } from 'tests/factories/events.ts';
+import { surveyFactory } from 'tests/factories/surveys.ts';
+import { userFactory } from 'tests/factories/users.ts';
+
+import { EventNotFoundError } from '~/libs/errors.ts';
+
+import { getAnswers } from './get-answers.server.ts';
+import { saveSurvey } from './save-survey.server.ts';
 
 describe('#saveSurvey', () => {
   it('creates user survey for event when it exists', async () => {

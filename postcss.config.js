@@ -1,5 +1,4 @@
-// ONLY used for Tailwind configuration in Ladle
-module.exports = {
+export default {
   plugins: {
     tailwindcss: {},
     autoprefixer: {},

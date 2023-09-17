@@ -1,8 +1,8 @@
 import { Form, useFetcher } from '@remix-run/react';
 
-import { ToggleGroup } from '~/design-system/forms/Toggles';
-import { Card } from '~/design-system/layouts/Card';
-import { H2 } from '~/design-system/Typography';
+import { ToggleGroup } from '~/design-system/forms/Toggles.tsx';
+import { Card } from '~/design-system/layouts/Card.tsx';
+import { H2 } from '~/design-system/Typography.tsx';
 
 type Props = { cfpStart?: string };
 

@@ -1,8 +1,10 @@
-import { talkFactory } from '../../../../tests/factories/talks';
-import { userFactory } from '../../../../tests/factories/users';
-import { db } from '../../../libs/db';
-import { TalkNotFoundError } from '../../../libs/errors';
-import { removeCoSpeakerFromTalk } from './remove-co-speaker.server';
+import { talkFactory } from 'tests/factories/talks.ts';
+import { userFactory } from 'tests/factories/users.ts';
+
+import { db } from '~/libs/db.ts';
+import { TalkNotFoundError } from '~/libs/errors.ts';
+
+import { removeCoSpeakerFromTalk } from './remove-co-speaker.server.ts';
 
 describe('#removeCoSpeakerFromTalk', () => {
   it('removes a cospeaker from the talk', async () => {

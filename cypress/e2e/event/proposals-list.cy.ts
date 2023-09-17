@@ -1,6 +1,6 @@
-import EventProposalPage from 'page-objects/event/proposal.page';
-import EventProposalsPage from 'page-objects/event/proposals.page';
-import LoginPage from 'page-objects/login.page';
+import EventProposalPage from '../../page-objects/event/proposal.page.ts';
+import EventProposalsPage from '../../page-objects/event/proposals.page.ts';
+import LoginPage from '../../page-objects/login.page.ts';
 
 describe('Event proposals list', () => {
   beforeEach(() => {

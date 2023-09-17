@@ -1,6 +1,6 @@
-import { db } from '~/libs/db';
-import type { UserSocialLinks } from '~/routes/__types/user';
-import { sortBy } from '~/utils/arrays';
+import { db } from '~/libs/db.ts';
+import type { UserSocialLinks } from '~/routes/__types/user.ts';
+import { sortBy } from '~/utils/arrays.ts';
 
 export type User = Awaited<ReturnType<typeof getUser>>;
 

@@ -5,19 +5,19 @@ import { json, redirect } from '@remix-run/node';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { AlertError } from '~/design-system/Alerts';
-import { Button, ButtonLink } from '~/design-system/Buttons';
-import { Card } from '~/design-system/layouts/Card';
-import { H2 } from '~/design-system/Typography';
-import { requireSession } from '~/libs/auth/session';
-import { CategoriesForm } from '~/routes/__components/proposals/forms/CategoriesForm';
-import { FormatsForm } from '~/routes/__components/proposals/forms/FormatsForm';
-import { getEvent } from '~/routes/__server/events/get-event.server';
-import { getSubmittedProposal } from '~/routes/__server/proposals/get-submitted-proposal.server';
-import { useEvent } from '~/routes/$event+/_layout';
+import { AlertError } from '~/design-system/Alerts.tsx';
+import { Button, ButtonLink } from '~/design-system/Buttons.tsx';
+import { Card } from '~/design-system/layouts/Card.tsx';
+import { H2 } from '~/design-system/Typography.tsx';
+import { requireSession } from '~/libs/auth/session.ts';
+import { CategoriesForm } from '~/routes/__components/proposals/forms/CategoriesForm.tsx';
+import { FormatsForm } from '~/routes/__components/proposals/forms/FormatsForm.tsx';
+import { getEvent } from '~/routes/__server/events/get-event.server.ts';
+import { getSubmittedProposal } from '~/routes/__server/proposals/get-submitted-proposal.server.ts';
+import { useEvent } from '~/routes/$event+/_layout.tsx';
 
-import { useSubmissionStep } from './__components/useSubmissionStep';
-import { getTracksSchema, saveTracks } from './__server/save-tracks.server';
+import { useSubmissionStep } from './__components/useSubmissionStep.ts';
+import { getTracksSchema, saveTracks } from './__server/save-tracks.server.ts';
 
 export const handle = { step: 'tracks' };
 

@@ -4,21 +4,21 @@ import { json, redirect } from '@remix-run/node';
 import { Form, useActionData, useLoaderData, useNavigate } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { Button, ButtonLink } from '~/design-system/Buttons';
-import { Card } from '~/design-system/layouts/Card';
-import { Container } from '~/design-system/layouts/Container';
-import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
-import { H3, Subtitle } from '~/design-system/Typography';
-import { requireSession } from '~/libs/auth/session';
-import { mergeMeta } from '~/libs/meta/merge-meta';
-import { addToast } from '~/libs/toasts/toasts';
-import { CoSpeakersList, InviteCoSpeakerButton } from '~/routes/__components/proposals/forms/CoSpeaker';
-import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm';
-import { getTalk } from '~/routes/__server/talks/get-talk.server';
-import { removeCoSpeakerFromTalk } from '~/routes/__server/talks/remove-co-speaker.server';
-import { TalkSaveSchema } from '~/routes/__types/talks';
+import { Button, ButtonLink } from '~/design-system/Buttons.tsx';
+import { Card } from '~/design-system/layouts/Card.tsx';
+import { Container } from '~/design-system/layouts/Container.tsx';
+import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
+import { H3, Subtitle } from '~/design-system/Typography.tsx';
+import { requireSession } from '~/libs/auth/session.ts';
+import { mergeMeta } from '~/libs/meta/merge-meta.ts';
+import { addToast } from '~/libs/toasts/toasts.ts';
+import { CoSpeakersList, InviteCoSpeakerButton } from '~/routes/__components/proposals/forms/CoSpeaker.tsx';
+import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm.tsx';
+import { getTalk } from '~/routes/__server/talks/get-talk.server.ts';
+import { removeCoSpeakerFromTalk } from '~/routes/__server/talks/remove-co-speaker.server.ts';
+import { TalkSaveSchema } from '~/routes/__types/talks.ts';
 
-import { updateTalk } from './__server/update-talk.server';
+import { updateTalk } from './__server/update-talk.server.ts';
 
 export const meta = mergeMeta<typeof loader>(({ data }) =>
   data ? [{ title: `Edit | ${data?.title} | Conference Hall` }] : [],

@@ -1,11 +1,11 @@
-import { Avatar } from '~/design-system/Avatar';
-import { ButtonLink } from '~/design-system/Buttons';
-import { Card } from '~/design-system/layouts/Card';
-import { Link } from '~/design-system/Links';
-import { H3, Text } from '~/design-system/Typography';
-import type { SpeakerProposalStatus } from '~/routes/__server/proposals/get-speaker-proposal-status';
+import { Avatar } from '~/design-system/Avatar.tsx';
+import { ButtonLink } from '~/design-system/Buttons.tsx';
+import { Card } from '~/design-system/layouts/Card.tsx';
+import { Link } from '~/design-system/Links.tsx';
+import { H3, Text } from '~/design-system/Typography.tsx';
+import type { SpeakerProposalStatus } from '~/routes/__server/proposals/get-speaker-proposal-status.ts';
 
-import { ProposalStatusLabel } from './ProposalStatusLabel';
+import { ProposalStatusLabel } from './ProposalStatusLabel.tsx';
 
 type Props = {
   talkId: string;

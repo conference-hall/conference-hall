@@ -2,16 +2,16 @@ import { BellSlashIcon } from '@heroicons/react/24/outline';
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 
-import { CardLink } from '~/design-system/layouts/Card';
-import { Container } from '~/design-system/layouts/Container';
-import { EmptyState } from '~/design-system/layouts/EmptyState';
-import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
-import { H2 } from '~/design-system/Typography';
-import { requireSession } from '~/libs/auth/session';
-import { mergeMeta } from '~/libs/meta/merge-meta';
-import { useUser } from '~/root';
-import { Footer } from '~/routes/__components/Footer';
-import { Navbar } from '~/routes/__components/navbar/Navbar';
+import { CardLink } from '~/design-system/layouts/Card.tsx';
+import { Container } from '~/design-system/layouts/Container.tsx';
+import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
+import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
+import { H2 } from '~/design-system/Typography.tsx';
+import { requireSession } from '~/libs/auth/session.ts';
+import { mergeMeta } from '~/libs/meta/merge-meta.ts';
+import { useUser } from '~/root.tsx';
+import { Footer } from '~/routes/__components/Footer.tsx';
+import { Navbar } from '~/routes/__components/navbar/Navbar.tsx';
 
 export const meta = mergeMeta(() => [{ title: 'Notifications | Conference Hall' }]);
 

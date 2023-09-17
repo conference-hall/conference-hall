@@ -1,6 +1,6 @@
 import { Form, useLocation, useSearchParams } from '@remix-run/react';
 
-import { ButtonLink } from '~/design-system/Buttons';
+import { ButtonLink } from '~/design-system/Buttons.tsx';
 
 export function ArchivedFilters() {
   const { pathname } = useLocation();

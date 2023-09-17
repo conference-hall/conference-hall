@@ -1,10 +1,11 @@
 import { parse } from '@conform-to/zod';
 import { TeamRole } from '@prisma/client';
-import { teamFactory } from 'tests/factories/team';
-import { userFactory } from 'tests/factories/users';
+import { teamFactory } from 'tests/factories/team.ts';
+import { userFactory } from 'tests/factories/users.ts';
 
-import { db } from '../../../libs/db';
-import { createTeam, TeamSaveSchema } from './create-team.server';
+import { db } from '~/libs/db.ts';
+
+import { createTeam, TeamSaveSchema } from './create-team.server.ts';
 
 describe('#createOrganization', () => {
   it('creates the team and add the user as owner', async () => {

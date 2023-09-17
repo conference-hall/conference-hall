@@ -1,6 +1,6 @@
 import { parse } from '@conform-to/zod';
 
-import { AdditionalInfoSchema, DetailsSchema, PersonalInfoSchema } from './profile.schema';
+import { AdditionalInfoSchema, DetailsSchema, PersonalInfoSchema } from './profile.schema.tsx';
 
 describe('Validate PersonalInfoSchema', () => {
   it('validates personal information', async () => {

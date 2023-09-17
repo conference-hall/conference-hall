@@ -1,9 +1,10 @@
-import { teamFactory } from 'tests/factories/team';
-import { userFactory } from 'tests/factories/users';
+import { teamFactory } from 'tests/factories/team.ts';
+import { userFactory } from 'tests/factories/users.ts';
 
-import { db } from '../../../libs/db';
-import { ForbiddenOperationError } from '../../../libs/errors';
-import { changeMemberRole } from './change-role.server';
+import { db } from '~/libs/db.ts';
+import { ForbiddenOperationError } from '~/libs/errors.ts';
+
+import { changeMemberRole } from './change-role.server.ts';
 
 describe('#changeMemberRole', () => {
   it('changes the role of a member when user has owner role', async () => {

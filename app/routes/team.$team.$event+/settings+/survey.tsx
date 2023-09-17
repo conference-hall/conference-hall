@@ -3,18 +3,18 @@ import { json, type LoaderFunctionArgs } from '@remix-run/node';
 import { Form, useFetcher, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { Button } from '~/design-system/Buttons';
-import { Checkbox } from '~/design-system/forms/Checkboxes';
-import { ToggleGroup } from '~/design-system/forms/Toggles';
-import { Card } from '~/design-system/layouts/Card';
-import { H2, Subtitle } from '~/design-system/Typography';
-import { requireSession } from '~/libs/auth/session';
-import { addToast } from '~/libs/toasts/toasts';
-import { QUESTIONS } from '~/routes/__server/survey/get-questions.server';
-import { updateEvent } from '~/routes/__server/teams/update-event.server';
+import { Button } from '~/design-system/Buttons.tsx';
+import { Checkbox } from '~/design-system/forms/Checkboxes.tsx';
+import { ToggleGroup } from '~/design-system/forms/Toggles.tsx';
+import { Card } from '~/design-system/layouts/Card.tsx';
+import { H2, Subtitle } from '~/design-system/Typography.tsx';
+import { requireSession } from '~/libs/auth/session.ts';
+import { addToast } from '~/libs/toasts/toasts.ts';
+import { QUESTIONS } from '~/routes/__server/survey/get-questions.server.ts';
+import { updateEvent } from '~/routes/__server/teams/update-event.server.ts';
 
-import { useOrganizerEvent } from '../_layout';
-import { EventSurveySettingsSchema } from './__types/event-survey-settings.schema';
+import { useOrganizerEvent } from '../_layout.tsx';
+import { EventSurveySettingsSchema } from './__types/event-survey-settings.schema.ts';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);

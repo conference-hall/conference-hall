@@ -1,10 +1,10 @@
 import { Form } from '@remix-run/react';
 
-import { Button } from '~/design-system/Buttons';
-import { Input } from '~/design-system/forms/Input';
-import { Card } from '~/design-system/layouts/Card';
-import { H2, Subtitle } from '~/design-system/Typography';
-import type { UserSocialLinks } from '~/routes/__types/user';
+import { Button } from '~/design-system/Buttons.tsx';
+import { Input } from '~/design-system/forms/Input.tsx';
+import { Card } from '~/design-system/layouts/Card.tsx';
+import { H2, Subtitle } from '~/design-system/Typography.tsx';
+import type { UserSocialLinks } from '~/routes/__types/user.ts';
 
 type Props = {
   company: string | null;

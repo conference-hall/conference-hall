@@ -1,6 +1,6 @@
 import { cx } from 'class-variance-authority';
 
-import { Label } from '../Typography';
+import { Label } from '../Typography.tsx';
 
 type Props = {
   name: string;

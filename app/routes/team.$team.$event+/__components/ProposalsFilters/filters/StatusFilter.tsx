@@ -1,9 +1,9 @@
 import type { ProposalStatus } from '@prisma/client';
 
-import { Text } from '~/design-system/Typography';
-import { ProposalStatusBadge } from '~/routes/__components/proposals/ProposalStatusBadges';
+import { Text } from '~/design-system/Typography.tsx';
+import { ProposalStatusBadge } from '~/routes/__components/proposals/ProposalStatusBadges.tsx';
 
-import { useProposalsSearchFilter } from '../../useProposalsSearchFilter';
+import { useProposalsSearchFilter } from '../../useProposalsSearchFilter.tsx';
 
 type Props = {
   defaultValue?: ProposalStatus;

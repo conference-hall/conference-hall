@@ -1,15 +1,15 @@
 import type { Event, Team, User } from '@prisma/client';
-import { getEmails, resetEmails } from 'tests/email-helpers';
-import { eventFactory } from 'tests/factories/events';
-import { proposalFactory } from 'tests/factories/proposals';
-import { talkFactory } from 'tests/factories/talks';
-import { teamFactory } from 'tests/factories/team';
-import { userFactory } from 'tests/factories/users';
+import { getEmails, resetEmails } from 'tests/email-helpers.ts';
+import { eventFactory } from 'tests/factories/events.ts';
+import { proposalFactory } from 'tests/factories/proposals.ts';
+import { talkFactory } from 'tests/factories/talks.ts';
+import { teamFactory } from 'tests/factories/team.ts';
+import { userFactory } from 'tests/factories/users.ts';
 
-import { db } from '~/libs/db';
-import { ForbiddenOperationError } from '~/libs/errors';
+import { db } from '~/libs/db.ts';
+import { ForbiddenOperationError } from '~/libs/errors.ts';
 
-import { sendRejectionCampaign } from './send-rejection-campaign.server';
+import { sendRejectionCampaign } from './send-rejection-campaign.server.ts';
 
 describe('#sendRejectionCampaign', () => {
   let owner: User, member: User, reviewer: User, speaker1: User, speaker2: User;

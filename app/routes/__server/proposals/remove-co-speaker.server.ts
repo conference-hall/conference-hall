@@ -1,5 +1,5 @@
-import { db } from '../../../libs/db';
-import { ProposalNotFoundError } from '../../../libs/errors';
+import { db } from '~/libs/db.ts';
+import { ProposalNotFoundError } from '~/libs/errors.ts';
 
 export async function removeCoSpeakerFromSubmission(
   userId: string,

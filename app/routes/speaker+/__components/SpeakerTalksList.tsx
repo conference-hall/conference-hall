@@ -1,7 +1,7 @@
 import { InboxIcon } from '@heroicons/react/24/outline';
 
-import { EmptyState } from '~/design-system/layouts/EmptyState';
-import { ProposalCard } from '~/routes/__components/proposals/ProposalCard';
+import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
+import { ProposalCard } from '~/routes/__components/proposals/ProposalCard.tsx';
 
 type Props = {
   talks: Array<{

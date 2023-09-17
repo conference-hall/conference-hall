@@ -1,7 +1,7 @@
 import { PlusIcon, Square3Stack3DIcon } from '@heroicons/react/20/solid';
 import { useMemo } from 'react';
 
-import { NavTabs } from '~/design-system/navigation/NavTabs';
+import { NavTabs } from '~/design-system/navigation/NavTabs.tsx';
 
 type Props = {
   authenticated: boolean;

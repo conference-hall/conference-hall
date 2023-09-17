@@ -1,7 +1,7 @@
 import { TeamRole } from '@prisma/client';
 
-import { db } from '~/libs/db';
-import { ForbiddenOperationError } from '~/libs/errors';
+import { db } from '~/libs/db.ts';
+import { ForbiddenOperationError } from '~/libs/errors.ts';
 
 export async function allowedForTeam(slug: string, userId: string, roles?: TeamRole[]) {
   const rolesToCheck = roles || [TeamRole.MEMBER, TeamRole.REVIEWER, TeamRole.OWNER];

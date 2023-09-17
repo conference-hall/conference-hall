@@ -1,9 +1,9 @@
 import { TeamRole } from '@prisma/client';
 
-import { db } from '~/libs/db';
-import { allowedForTeam } from '~/routes/__server/teams/check-user-role.server';
+import { db } from '~/libs/db.ts';
+import { allowedForTeam } from '~/routes/__server/teams/check-user-role.server.ts';
 
-import type { TeamSaveData } from '../__types/team-save.schema';
+import type { TeamSaveData } from '../__types/team-save.schema.ts';
 
 export async function updateTeam(slug: string, userId: string, data: TeamSaveData) {
   const team = await allowedForTeam(slug, userId, [TeamRole.OWNER]);

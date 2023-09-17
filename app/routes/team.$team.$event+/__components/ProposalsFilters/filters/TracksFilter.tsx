@@ -1,7 +1,7 @@
-import Select from '~/design-system/forms/Select';
-import { Text } from '~/design-system/Typography';
+import Select from '~/design-system/forms/Select.tsx';
+import { Text } from '~/design-system/Typography.tsx';
 
-import { useProposalsSearchFilter } from '../../useProposalsSearchFilter';
+import { useProposalsSearchFilter } from '../../useProposalsSearchFilter.tsx';
 
 type Props = {
   defaultFormatValue?: string;

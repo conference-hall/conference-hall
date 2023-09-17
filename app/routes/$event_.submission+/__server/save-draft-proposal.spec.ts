@@ -1,12 +1,12 @@
 import { TalkLevel } from '@prisma/client';
-import { eventFactory } from 'tests/factories/events';
-import { talkFactory } from 'tests/factories/talks';
-import { userFactory } from 'tests/factories/users';
+import { eventFactory } from 'tests/factories/events.ts';
+import { talkFactory } from 'tests/factories/talks.ts';
+import { userFactory } from 'tests/factories/users.ts';
 
-import { db } from '~/libs/db';
-import { CfpNotOpenError, EventNotFoundError, TalkNotFoundError } from '~/libs/errors';
+import { db } from '~/libs/db.ts';
+import { CfpNotOpenError, EventNotFoundError, TalkNotFoundError } from '~/libs/errors.ts';
 
-import { saveDraftProposal } from './save-draft-proposal.server';
+import { saveDraftProposal } from './save-draft-proposal.server.ts';
 
 describe('#saveDraftProposal', () => {
   it('create a new draft proposal from scratch', async () => {

@@ -1,5 +1,5 @@
-import InvitationPage from 'page-objects/invitation.page';
-import TeamEventsPage from 'page-objects/team/events-list.page';
+import InvitationPage from '../../page-objects/invitation.page.ts';
+import TeamEventsPage from '../../page-objects/team/events-list.page.ts';
 
 describe('Invite to team', () => {
   beforeEach(() => {

@@ -3,10 +3,10 @@ import type { ReviewFeeling } from '@prisma/client';
 import { useFetcher, useParams, useSearchParams } from '@remix-run/react';
 import { useRef, useState } from 'react';
 
-import { Button } from '~/design-system/Buttons';
-import { TextArea } from '~/design-system/forms/TextArea';
+import { Button } from '~/design-system/Buttons.tsx';
+import { TextArea } from '~/design-system/forms/TextArea.tsx';
 
-import { options, ReviewNoteSelector } from './ReviewNoteSelector';
+import { options, ReviewNoteSelector } from './ReviewNoteSelector.tsx';
 
 type FormValues = { note: number | null; feeling: ReviewFeeling | null; comment: string | null };
 

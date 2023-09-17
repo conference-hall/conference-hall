@@ -1,7 +1,8 @@
-import { userFactory } from 'tests/factories/users';
+import { userFactory } from 'tests/factories/users.ts';
 
-import { db } from '../../../libs/db';
-import { createUserAccount } from './create-user-account.server';
+import { db } from '~/libs/db.ts';
+
+import { createUserAccount } from './create-user-account.server.ts';
 
 describe('#createUser', () => {
   it('creates a new user', async () => {

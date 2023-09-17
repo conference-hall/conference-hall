@@ -1,10 +1,10 @@
 import { ReviewFeeling } from '@prisma/client';
 
-import { db } from '~/libs/db';
-import { DeliberationDisabledError } from '~/libs/errors';
-import { ReviewsDetails } from '~/routes/__server/reviews/reviews-details';
-import { allowedForEvent } from '~/routes/__server/teams/check-user-role.server';
-import type { ProposalReviewData } from '~/routes/__types/proposal';
+import { db } from '~/libs/db.ts';
+import { DeliberationDisabledError } from '~/libs/errors.ts';
+import { ReviewsDetails } from '~/routes/__server/reviews/reviews-details.ts';
+import { allowedForEvent } from '~/routes/__server/teams/check-user-role.server.ts';
+import type { ProposalReviewData } from '~/routes/__types/proposal.ts';
 
 export async function rateProposal(eventSlug: string, proposalId: string, userId: string, data: ProposalReviewData) {
   const event = await allowedForEvent(eventSlug, userId);

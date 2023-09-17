@@ -1,4 +1,4 @@
-import { StatIndicator } from '~/design-system/charts/StatIndicator';
+import { StatIndicator } from '~/design-system/charts/StatIndicator.tsx';
 
 type Props = { stats: { toSend: number; sent: number; delivered: number } };
 

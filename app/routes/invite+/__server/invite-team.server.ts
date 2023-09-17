@@ -1,5 +1,5 @@
-import { db } from '~/libs/db';
-import { InvitationInvalidOrAccepted, InvitationNotFoundError } from '~/libs/errors';
+import { db } from '~/libs/db.ts';
+import { InvitationInvalidOrAccepted, InvitationNotFoundError } from '~/libs/errors.ts';
 
 export async function checkTeamInviteCode(code: string) {
   const team = await db.team.findUnique({ where: { invitationCode: code } });

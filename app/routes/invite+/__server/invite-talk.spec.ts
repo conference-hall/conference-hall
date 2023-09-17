@@ -1,10 +1,10 @@
-import { talkFactory } from 'tests/factories/talks';
-import { userFactory } from 'tests/factories/users';
+import { talkFactory } from 'tests/factories/talks.ts';
+import { userFactory } from 'tests/factories/users.ts';
 
-import { db } from '~/libs/db';
-import { InvitationNotFoundError } from '~/libs/errors';
+import { db } from '~/libs/db.ts';
+import { InvitationNotFoundError } from '~/libs/errors.ts';
 
-import { addCoSpeakerToTalk, checkTalkInviteCode } from './invite-talk.server';
+import { addCoSpeakerToTalk, checkTalkInviteCode } from './invite-talk.server.ts';
 
 describe('#addCoSpeakerToTalk', () => {
   it('adds a cospeaker to the talk', async () => {

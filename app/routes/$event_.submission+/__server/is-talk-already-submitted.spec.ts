@@ -1,9 +1,9 @@
-import { eventFactory } from 'tests/factories/events';
-import { proposalFactory } from 'tests/factories/proposals';
-import { talkFactory } from 'tests/factories/talks';
-import { userFactory } from 'tests/factories/users';
+import { eventFactory } from 'tests/factories/events.ts';
+import { proposalFactory } from 'tests/factories/proposals.ts';
+import { talkFactory } from 'tests/factories/talks.ts';
+import { userFactory } from 'tests/factories/users.ts';
 
-import { isTalkAlreadySubmitted } from './is-talk-already-submitted.server';
+import { isTalkAlreadySubmitted } from './is-talk-already-submitted.server.ts';
 
 describe('#isTalkAlreadySubmitted', () => {
   it('returns true if the talk already submitted for the event', async () => {

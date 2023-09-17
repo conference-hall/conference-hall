@@ -1,11 +1,11 @@
 import { TalkLevel } from '@prisma/client';
-import { talkFactory } from 'tests/factories/talks';
-import { userFactory } from 'tests/factories/users';
+import { talkFactory } from 'tests/factories/talks.ts';
+import { userFactory } from 'tests/factories/users.ts';
 
-import { db } from '~/libs/db';
-import { TalkNotFoundError } from '~/libs/errors';
+import { db } from '~/libs/db.ts';
+import { TalkNotFoundError } from '~/libs/errors.ts';
 
-import { updateTalk } from './update-talk.server';
+import { updateTalk } from './update-talk.server.ts';
 
 describe('#updateTalk', () => {
   it('updates a speaker talk', async () => {

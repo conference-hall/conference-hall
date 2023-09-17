@@ -2,17 +2,17 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
 
-import { Button } from '~/design-system/Buttons';
-import { Input } from '~/design-system/forms/Input';
-import { Container } from '~/design-system/layouts/Container';
-import { ExternalLink } from '~/design-system/Links';
-import { H1, Subtitle } from '~/design-system/Typography';
-import { requireSession } from '~/libs/auth/session';
-import { mergeMeta } from '~/libs/meta/merge-meta';
-import { useUser } from '~/root';
-import { Navbar } from '~/routes/__components/navbar/Navbar';
+import { Button } from '~/design-system/Buttons.tsx';
+import { Input } from '~/design-system/forms/Input.tsx';
+import { Container } from '~/design-system/layouts/Container.tsx';
+import { ExternalLink } from '~/design-system/Links.tsx';
+import { H1, Subtitle } from '~/design-system/Typography.tsx';
+import { requireSession } from '~/libs/auth/session.ts';
+import { mergeMeta } from '~/libs/meta/merge-meta.ts';
+import { useUser } from '~/root.tsx';
+import { Navbar } from '~/routes/__components/navbar/Navbar.tsx';
 
-import { validAccessKey } from './__server/teams/valid-access-key.server';
+import { validAccessKey } from './__server/teams/valid-access-key.server.ts';
 
 export const meta = mergeMeta(() => [{ title: 'Request access | Conference Hall' }]);
 

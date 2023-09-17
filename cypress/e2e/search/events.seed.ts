@@ -1,4 +1,4 @@
-import { eventFactory } from '../../../tests/factories/events';
+import { eventFactory } from '../../../tests/factories/events.ts';
 
 export const seed = async () => {
   await eventFactory({

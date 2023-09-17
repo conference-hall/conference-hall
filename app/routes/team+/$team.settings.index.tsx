@@ -4,16 +4,16 @@ import { json, redirect } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { Button } from '~/design-system/Buttons';
-import { Card } from '~/design-system/layouts/Card';
-import { H2, Subtitle } from '~/design-system/Typography';
-import { requireSession } from '~/libs/auth/session';
-import { addToast } from '~/libs/toasts/toasts';
-import { TeamForm } from '~/routes/__components/teams/TeamForm';
+import { Button } from '~/design-system/Buttons.tsx';
+import { Card } from '~/design-system/layouts/Card.tsx';
+import { H2, Subtitle } from '~/design-system/Typography.tsx';
+import { requireSession } from '~/libs/auth/session.ts';
+import { addToast } from '~/libs/toasts/toasts.ts';
+import { TeamForm } from '~/routes/__components/teams/TeamForm.tsx';
 
-import { updateTeam } from './__server/update-team.server';
-import { TeamSaveSchema } from './__types/team-save.schema';
-import { useTeam } from './$team';
+import { updateTeam } from './__server/update-team.server.ts';
+import { TeamSaveSchema } from './__types/team-save.schema.ts';
+import { useTeam } from './$team.tsx';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);

@@ -1,5 +1,6 @@
-import { eventFactory } from '../../../../tests/factories/events';
-import { parseFilters, searchEvents } from './search.server';
+import { eventFactory } from 'tests/factories/events.ts';
+
+import { parseFilters, searchEvents } from './search.server.ts';
 
 describe('#searchEvents', () => {
   it('returns the default response', async () => {

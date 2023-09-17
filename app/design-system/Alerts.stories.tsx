@@ -1,5 +1,5 @@
-import { AlertError, AlertInfo } from './Alerts';
-import { StoryBlock } from './StoryBlock';
+import { AlertError, AlertInfo } from './Alerts.tsx';
+import { StoryBlock } from './StoryBlock.tsx';
 
 export const Documentation = () => (
   <>

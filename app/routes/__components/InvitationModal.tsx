@@ -1,7 +1,7 @@
 import { UserPlusIcon } from '@heroicons/react/24/outline';
 
-import { CopyInput } from '~/design-system/forms/CopyInput';
-import { Modal } from '~/design-system/Modals';
+import { CopyInput } from '~/design-system/forms/CopyInput.tsx';
+import { Modal } from '~/design-system/Modals.tsx';
 
 type InvitationModalProps = {
   title: string;

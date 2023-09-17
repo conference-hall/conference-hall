@@ -3,19 +3,19 @@ import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData, useSearchParams } from '@remix-run/react';
 
-import { Container } from '~/design-system/layouts/Container';
-import { EmptyState } from '~/design-system/layouts/EmptyState';
-import { Pagination } from '~/design-system/Pagination';
-import { H1, H2, Text } from '~/design-system/Typography';
-import { useUser } from '~/root';
-import { EventCard } from '~/routes/__components/EventCard';
-import { Footer } from '~/routes/__components/Footer';
-import { Navbar } from '~/routes/__components/navbar/Navbar';
-import { parsePage } from '~/routes/__types/pagination';
+import { Container } from '~/design-system/layouts/Container.tsx';
+import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
+import { Pagination } from '~/design-system/Pagination.tsx';
+import { H1, H2, Text } from '~/design-system/Typography.tsx';
+import { useUser } from '~/root.tsx';
+import { EventCard } from '~/routes/__components/EventCard.tsx';
+import { Footer } from '~/routes/__components/Footer.tsx';
+import { Navbar } from '~/routes/__components/navbar/Navbar.tsx';
+import { parsePage } from '~/routes/__types/pagination.ts';
 
-import { SearchEventsFilters } from './__components/search/SearchEventsFilters';
-import { SearchEventsInput } from './__components/search/SearchEventsInput';
-import { parseFilters, searchEvents } from './__server/search/search.server';
+import { SearchEventsFilters } from './__components/search/SearchEventsFilters.tsx';
+import { SearchEventsInput } from './__components/search/SearchEventsInput.tsx';
+import { parseFilters, searchEvents } from './__server/search/search.server.ts';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);

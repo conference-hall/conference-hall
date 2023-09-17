@@ -1,16 +1,16 @@
 import type { Event, Team, User } from '@prisma/client';
 import { MessageChannel } from '@prisma/client';
-import { eventFactory } from 'tests/factories/events';
-import { messageFactory } from 'tests/factories/messages';
-import { proposalFactory } from 'tests/factories/proposals';
-import { talkFactory } from 'tests/factories/talks';
-import { teamFactory } from 'tests/factories/team';
-import { userFactory } from 'tests/factories/users';
+import { eventFactory } from 'tests/factories/events.ts';
+import { messageFactory } from 'tests/factories/messages.ts';
+import { proposalFactory } from 'tests/factories/proposals.ts';
+import { talkFactory } from 'tests/factories/talks.ts';
+import { teamFactory } from 'tests/factories/team.ts';
+import { userFactory } from 'tests/factories/users.ts';
 
-import { db } from '~/libs/db';
-import { ForbiddenOperationError } from '~/libs/errors';
+import { db } from '~/libs/db.ts';
+import { ForbiddenOperationError } from '~/libs/errors.ts';
 
-import { addProposalMessage, getProposalMessages, removeProposalMessage } from './messages.server';
+import { addProposalMessage, getProposalMessages, removeProposalMessage } from './messages.server.ts';
 
 describe('#getProposalMessages', () => {
   let owner: User, member: User, speaker: User;

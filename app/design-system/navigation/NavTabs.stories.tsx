@@ -1,5 +1,5 @@
-import { StoryBlock } from '../StoryBlock';
-import { NavTabs } from './NavTabs';
+import { StoryBlock } from '../StoryBlock.tsx';
+import { NavTabs } from './NavTabs.tsx';
 
 export const Documentation = () => (
   <>

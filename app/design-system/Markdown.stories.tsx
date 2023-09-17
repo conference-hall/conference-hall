@@ -1,5 +1,5 @@
-import { Markdown } from './Markdown';
-import { StoryBlock } from './StoryBlock';
+import { Markdown } from './Markdown.tsx';
+import { StoryBlock } from './StoryBlock.tsx';
 
 const TEXT = `
 ## Heading  

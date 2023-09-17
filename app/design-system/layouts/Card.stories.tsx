@@ -1,7 +1,7 @@
-import { Button } from '../Buttons';
-import { StoryBlock } from '../StoryBlock';
-import { H2, Text } from '../Typography';
-import { Card, CardLink } from './Card';
+import { Button } from '../Buttons.tsx';
+import { StoryBlock } from '../StoryBlock.tsx';
+import { H2, Text } from '../Typography.tsx';
+import { Card, CardLink } from './Card.tsx';
 
 export const Documentation = () => (
   <>

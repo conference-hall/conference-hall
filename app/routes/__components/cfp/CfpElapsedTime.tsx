@@ -1,11 +1,11 @@
 import { cx } from 'class-variance-authority';
 
-import { Text } from '~/design-system/Typography';
-import type { CfpState } from '~/routes/__types/event';
-import { formatCFPElapsedTime } from '~/utils/event';
+import { Text } from '~/design-system/Typography.tsx';
+import type { CfpState } from '~/routes/__types/event.ts';
+import { formatCFPElapsedTime } from '~/utils/event.ts';
 
-import { ClientOnly } from '../utils/ClientOnly';
-import { CfpIcon } from './CfpIcon';
+import { ClientOnly } from '../utils/ClientOnly.tsx';
+import { CfpIcon } from './CfpIcon.tsx';
 
 type Props = { cfpState: CfpState; cfpStart?: string; cfpEnd?: string; className?: string };
 

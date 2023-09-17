@@ -1,5 +1,5 @@
-import EventPage from 'page-objects/event/event.page';
-import SearchEventPage from 'page-objects/search.page';
+import EventPage from '../../page-objects/event/event.page.ts';
+import SearchEventPage from '../../page-objects/search.page.ts';
 
 describe('Search conferences and meetups.', () => {
   beforeEach(() => cy.task('seedDB', 'search/events'));

@@ -1,9 +1,9 @@
-import { getPagination } from '~/routes/__server/pagination/pagination.server';
-import { EventProposalsSearch } from '~/routes/__server/proposals/EventProposalsSearch';
-import { ReviewsDetails } from '~/routes/__server/reviews/reviews-details';
-import { allowedForEvent } from '~/routes/__server/teams/check-user-role.server';
-import type { Pagination } from '~/routes/__types/pagination';
-import type { ProposalsFilters } from '~/routes/__types/proposal';
+import { getPagination } from '~/routes/__server/pagination/pagination.server.ts';
+import { EventProposalsSearch } from '~/routes/__server/proposals/EventProposalsSearch.ts';
+import { ReviewsDetails } from '~/routes/__server/reviews/reviews-details.ts';
+import { allowedForEvent } from '~/routes/__server/teams/check-user-role.server.ts';
+import type { Pagination } from '~/routes/__types/pagination.ts';
+import type { ProposalsFilters } from '~/routes/__types/proposal.ts';
 
 const RESULTS_BY_PAGE = 25;
 

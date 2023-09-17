@@ -1,5 +1,5 @@
-import EventPage from 'page-objects/event/event.page';
-import EventSubmissionPage from 'page-objects/event/submission.page';
+import EventPage from '../../page-objects/event/event.page.ts';
+import EventSubmissionPage from '../../page-objects/event/submission.page.ts';
 
 describe('View event page', () => {
   beforeEach(() => {

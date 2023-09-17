@@ -2,8 +2,8 @@ import { PaperAirplaneIcon } from '@heroicons/react/24/outline';
 import { Form, useNavigation } from '@remix-run/react';
 import { useState } from 'react';
 
-import { Button } from '~/design-system/Buttons';
-import { Modal } from '~/design-system/Modals';
+import { Button } from '~/design-system/Buttons.tsx';
+import { Modal } from '~/design-system/Modals.tsx';
 
 type SendEmailsButtonProps = { total: number; selection: string[]; onSend?: () => void };
 

@@ -1,11 +1,11 @@
 import { Disclosure } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 
-import { AvatarName } from '~/design-system/Avatar';
-import { Text } from '~/design-system/Typography';
+import { AvatarName } from '~/design-system/Avatar.tsx';
+import { Text } from '~/design-system/Typography.tsx';
 
-import { type Notification, NotificationsLink } from './NotificationsLink';
-import { UserMenuMobile } from './UserMenuMobile';
+import { type Notification, NotificationsLink } from './NotificationsLink.tsx';
+import { UserMenuMobile } from './UserMenuMobile.tsx';
 
 export function MobileMenuButton({ open }: { open: boolean }) {
   return (

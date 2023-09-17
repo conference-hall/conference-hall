@@ -1,4 +1,4 @@
-import { config } from '~/libs/config';
+import { config } from '../app/libs/config.ts';
 
 const MAILHOG_URL = `http://${config.MAILHOG_HOST}:${config.MAILHOG_HTTP_PORT}`;
 

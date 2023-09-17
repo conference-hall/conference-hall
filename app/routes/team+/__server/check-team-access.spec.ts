@@ -1,7 +1,7 @@
-import { teamFactory } from 'tests/factories/team';
-import { userFactory } from 'tests/factories/users';
+import { teamFactory } from 'tests/factories/team.ts';
+import { userFactory } from 'tests/factories/users.ts';
 
-import { checkTeamAccess } from './check-team-access.server';
+import { checkTeamAccess } from './check-team-access.server.ts';
 
 describe('#checkOrganizerAccess', () => {
   it('can access if user has an organizer key', async () => {

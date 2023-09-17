@@ -1,7 +1,7 @@
-import { Card } from '~/design-system/layouts/Card';
+import { Card } from '~/design-system/layouts/Card.tsx';
 
-import type { ProposalData } from './ProposalListRow';
-import { ProposaListRow } from './ProposalListRow';
+import type { ProposalData } from './ProposalListRow.tsx';
+import { ProposaListRow } from './ProposalListRow.tsx';
 
 type Props = {
   proposals: Array<ProposalData>;

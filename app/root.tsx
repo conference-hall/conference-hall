@@ -14,17 +14,17 @@ import {
 } from '@remix-run/react';
 import type { ReactNode } from 'react';
 
-import { Container } from './design-system/layouts/Container';
-import { H1, Text } from './design-system/Typography';
-import { initializeFirebaseClient } from './libs/auth/firebase';
-import { getSessionUserId } from './libs/auth/session';
-import { config } from './libs/config';
-import { Toast } from './libs/toasts/Toast';
-import type { ToastData } from './libs/toasts/toasts';
-import { commitToastSession, getToastSession } from './libs/toasts/toasts';
-import { GlobalLoading } from './routes/__components/GlobalLoading';
-import type { User } from './routes/__server/users/get-user.server';
-import { getUser } from './routes/__server/users/get-user.server';
+import { Container } from './design-system/layouts/Container.tsx';
+import { H1, Text } from './design-system/Typography.tsx';
+import { initializeFirebaseClient } from './libs/auth/firebase.ts';
+import { getSessionUserId } from './libs/auth/session.ts';
+import { config } from './libs/config.ts';
+import { Toast } from './libs/toasts/Toast.tsx';
+import type { ToastData } from './libs/toasts/toasts.ts';
+import { commitToastSession, getToastSession } from './libs/toasts/toasts.ts';
+import { GlobalLoading } from './routes/__components/GlobalLoading.tsx';
+import type { User } from './routes/__server/users/get-user.server.ts';
+import { getUser } from './routes/__server/users/get-user.server.ts';
 import tailwind from './tailwind.css';
 
 export function meta() {

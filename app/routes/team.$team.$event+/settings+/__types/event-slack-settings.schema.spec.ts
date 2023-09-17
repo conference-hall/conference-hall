@@ -1,7 +1,7 @@
 import { parse } from '@conform-to/zod';
 import { describe, expect, it } from 'vitest';
 
-import { EventSlackSettingsSchema } from './event-slack-settings.schema';
+import { EventSlackSettingsSchema } from './event-slack-settings.schema.ts';
 
 describe('Validate EventSlackSettingsSchema', () => {
   it('validates valid inputs', async () => {

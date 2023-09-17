@@ -4,18 +4,18 @@ import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { ButtonLink } from '~/design-system/Buttons';
-import { Container } from '~/design-system/layouts/Container';
-import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
-import { requireSession } from '~/libs/auth/session';
-import { mergeMeta } from '~/libs/meta/merge-meta';
-import { addToast } from '~/libs/toasts/toasts';
-import { ProposalDetailsSection } from '~/routes/__components/proposals/ProposalDetailsSection';
-import { ProposalSubmissionsSection } from '~/routes/__components/proposals/ProposalSubmissionsSection';
-import { getTalk } from '~/routes/__server/talks/get-talk.server';
+import { ButtonLink } from '~/design-system/Buttons.tsx';
+import { Container } from '~/design-system/layouts/Container.tsx';
+import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
+import { requireSession } from '~/libs/auth/session.ts';
+import { mergeMeta } from '~/libs/meta/merge-meta.ts';
+import { addToast } from '~/libs/toasts/toasts.ts';
+import { ProposalDetailsSection } from '~/routes/__components/proposals/ProposalDetailsSection.tsx';
+import { ProposalSubmissionsSection } from '~/routes/__components/proposals/ProposalSubmissionsSection.tsx';
+import { getTalk } from '~/routes/__server/talks/get-talk.server.ts';
 
-import { ArchiveOrRestoreTalkButton } from './__components/ArchiveOrRestoreTalkButton';
-import { archiveTalk, restoreTalk } from './__server/archive-talk.server';
+import { ArchiveOrRestoreTalkButton } from './__components/ArchiveOrRestoreTalkButton.tsx';
+import { archiveTalk, restoreTalk } from './__server/archive-talk.server.ts';
 
 export const meta = mergeMeta<typeof loader>(({ data }) =>
   data ? [{ title: `${data?.title} | Conference Hall` }] : [],

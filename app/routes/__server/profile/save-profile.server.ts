@@ -1,6 +1,6 @@
-import { db } from '~/libs/db';
-import { UserNotFoundError } from '~/libs/errors';
-import type { AdditionalInfoData, DetailsData, PersonalInfoData } from '~/routes/__types/profile.schema';
+import { db } from '~/libs/db.ts';
+import { UserNotFoundError } from '~/libs/errors.ts';
+import type { AdditionalInfoData, DetailsData, PersonalInfoData } from '~/routes/__types/profile.schema.tsx';
 
 export async function saveUserPersonalInfo(userId: string, data: PersonalInfoData) {
   const user = await db.user.findUnique({ where: { id: userId } });

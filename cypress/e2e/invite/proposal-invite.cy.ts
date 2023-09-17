@@ -1,5 +1,5 @@
-import EventProposalPage from 'page-objects/event/proposal.page';
-import InvitationPage from 'page-objects/invitation.page';
+import EventProposalPage from '../../page-objects/event/proposal.page.ts';
+import InvitationPage from '../../page-objects/invitation.page.ts';
 
 describe('Invite to proposal', () => {
   beforeEach(() => {

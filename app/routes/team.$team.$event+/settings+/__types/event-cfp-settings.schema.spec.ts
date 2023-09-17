@@ -1,6 +1,10 @@
 import { parse } from '@conform-to/zod';
 
-import { CfpConferenceOpeningSchema, CfpMeetupOpeningSchema, CfpPreferencesSchema } from './event-cfp-settings.schema';
+import {
+  CfpConferenceOpeningSchema,
+  CfpMeetupOpeningSchema,
+  CfpPreferencesSchema,
+} from './event-cfp-settings.schema.ts';
 
 describe('Validate CfpPreferencesSchema', () => {
   it('validates valid inputs', async () => {

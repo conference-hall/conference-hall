@@ -3,14 +3,14 @@ import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { Subtitle, Text } from '~/design-system/Typography';
-import { requireSession } from '~/libs/auth/session';
-import { parseProposalsFilters } from '~/routes/__types/proposal';
-import { getLanguage } from '~/utils/languages';
-import { getLevel } from '~/utils/levels';
-import { formatReviewNote } from '~/utils/reviews';
+import { Subtitle, Text } from '~/design-system/Typography.tsx';
+import { requireSession } from '~/libs/auth/session.ts';
+import { parseProposalsFilters } from '~/routes/__types/proposal.ts';
+import { getLanguage } from '~/utils/languages.ts';
+import { getLevel } from '~/utils/levels.ts';
+import { formatReviewNote } from '~/utils/reviews.ts';
 
-import { exportProposals } from './__server/export-cards.server';
+import { exportProposals } from './__server/export-cards.server.ts';
 import styles from './cards.css';
 
 export const links: LinksFunction = () => [{ rel: 'stylesheet', href: styles }];

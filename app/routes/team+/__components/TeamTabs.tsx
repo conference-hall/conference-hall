@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 
-import { NavTabs } from '~/design-system/navigation/NavTabs';
+import { NavTabs } from '~/design-system/navigation/NavTabs.tsx';
 
-import { NewEventButton } from './NewEventModal/NewEventModal';
+import { NewEventButton } from './NewEventModal/NewEventModal.tsx';
 
 type Props = { slug: string; role: string };
 

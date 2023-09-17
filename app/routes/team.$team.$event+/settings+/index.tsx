@@ -5,21 +5,21 @@ import { json, redirect } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { AlertInfo } from '~/design-system/Alerts';
-import { Button } from '~/design-system/Buttons';
-import { DateRangeInput } from '~/design-system/forms/DateRangeInput';
-import { Input } from '~/design-system/forms/Input';
-import { MarkdownTextArea } from '~/design-system/forms/MarkdownTextArea';
-import { Card } from '~/design-system/layouts/Card';
-import { H2, Subtitle } from '~/design-system/Typography';
-import { requireSession } from '~/libs/auth/session';
-import { addToast } from '~/libs/toasts/toasts';
-import { EventForm } from '~/routes/__components/events/EventForm';
-import { updateEvent } from '~/routes/__server/teams/update-event.server';
+import { AlertInfo } from '~/design-system/Alerts.tsx';
+import { Button } from '~/design-system/Buttons.tsx';
+import { DateRangeInput } from '~/design-system/forms/DateRangeInput.tsx';
+import { Input } from '~/design-system/forms/Input.tsx';
+import { MarkdownTextArea } from '~/design-system/forms/MarkdownTextArea.tsx';
+import { Card } from '~/design-system/layouts/Card.tsx';
+import { H2, Subtitle } from '~/design-system/Typography.tsx';
+import { requireSession } from '~/libs/auth/session.ts';
+import { addToast } from '~/libs/toasts/toasts.ts';
+import { EventForm } from '~/routes/__components/events/EventForm.tsx';
+import { updateEvent } from '~/routes/__server/teams/update-event.server.ts';
 
-import { useOrganizerEvent } from '../_layout';
-import { EventDetailsSettingsSchema } from './__types/event-details-settings.schema';
-import { EventGeneralSettingsSchema } from './__types/event-general-settings.schema';
+import { useOrganizerEvent } from '../_layout.tsx';
+import { EventDetailsSettingsSchema } from './__types/event-details-settings.schema.ts';
+import { EventGeneralSettingsSchema } from './__types/event-general-settings.schema.ts';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);

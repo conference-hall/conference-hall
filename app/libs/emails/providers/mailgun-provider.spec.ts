@@ -1,4 +1,4 @@
-import { MailgunProvider } from './mailgun-provider';
+import { MailgunProvider } from './mailgun-provider.ts';
 
 const fetchMock = vi.fn();
 vi.stubGlobal('fetch', fetchMock);

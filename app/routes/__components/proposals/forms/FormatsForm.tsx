@@ -1,4 +1,4 @@
-import { Checkbox, CheckboxHeadingGroup } from '~/design-system/forms/Checkboxes';
+import { Checkbox, CheckboxHeadingGroup } from '~/design-system/forms/Checkboxes.tsx';
 
 type Props = {
   formats: Array<{

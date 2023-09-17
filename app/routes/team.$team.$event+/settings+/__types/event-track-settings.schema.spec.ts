@@ -1,6 +1,6 @@
 import { parse } from '@conform-to/zod';
 
-import { EventTracksSettingsSchema } from './event-track-settings.schema';
+import { EventTracksSettingsSchema } from './event-track-settings.schema.ts';
 
 describe('Validate EventTracksSettingsSchema', () => {
   it('validates valid inputs', async () => {

@@ -3,10 +3,10 @@ import type { Prisma } from '@prisma/client';
 import { EventVisibility } from '@prisma/client';
 import { z } from 'zod';
 
-import { db } from '~/libs/db';
-import { getPagination } from '~/routes/__server/pagination/pagination.server';
-import type { Pagination } from '~/routes/__types/pagination';
-import { getCfpState } from '~/utils/event';
+import { db } from '~/libs/db.ts';
+import { getPagination } from '~/routes/__server/pagination/pagination.server.ts';
+import type { Pagination } from '~/routes/__types/pagination.ts';
+import { getCfpState } from '~/utils/event.ts';
 
 const SearchFiltersSchema = z.object({
   query: z.string().trim().optional(),

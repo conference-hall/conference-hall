@@ -1,8 +1,8 @@
 import { TeamRole } from '@prisma/client';
 import { z } from 'zod';
 
-import { db } from '~/libs/db';
-import { slugValidator } from '~/routes/__types/validators';
+import { db } from '~/libs/db.ts';
+import { slugValidator } from '~/routes/__types/validators.ts';
 
 export const TeamSaveSchema = z.object({
   name: z.string().trim().min(3).max(50),

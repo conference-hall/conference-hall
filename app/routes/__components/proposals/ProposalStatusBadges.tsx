@@ -1,4 +1,4 @@
-import { BadgeDot } from '~/design-system/Badges';
+import { BadgeDot } from '~/design-system/Badges.tsx';
 
 const STATUSES = {
   DRAFT: { color: 'gray', label: 'Draft' },

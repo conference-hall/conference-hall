@@ -1,9 +1,9 @@
-import { teamFactory } from 'tests/factories/team';
-import { userFactory } from 'tests/factories/users';
+import { teamFactory } from 'tests/factories/team.ts';
+import { userFactory } from 'tests/factories/users.ts';
 
-import { ForbiddenOperationError } from '~/libs/errors';
+import { ForbiddenOperationError } from '~/libs/errors.ts';
 
-import { listMembers } from './list-members.server';
+import { listMembers } from './list-members.server.ts';
 
 describe('#listMembers', () => {
   it('returns team members and filter them', async () => {

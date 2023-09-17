@@ -1,5 +1,5 @@
-import { Pagination } from './Pagination';
-import { StoryBlock } from './StoryBlock';
+import { Pagination } from './Pagination.tsx';
+import { StoryBlock } from './StoryBlock.tsx';
 
 export const Documentation = () => (
   <>

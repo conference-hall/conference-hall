@@ -1,9 +1,9 @@
 import { TeamRole } from '@prisma/client';
 
-import { db } from '~/libs/db';
-import { allowedForTeam } from '~/routes/__server/teams/check-user-role.server';
+import { db } from '~/libs/db.ts';
+import { allowedForTeam } from '~/routes/__server/teams/check-user-role.server.ts';
 
-import type { EventCreateData } from '../__types/event-create.schema';
+import type { EventCreateData } from '../__types/event-create.schema.ts';
 
 export async function createEvent(teamSlug: string, userId: string, data: EventCreateData) {
   await allowedForTeam(teamSlug, userId, [TeamRole.OWNER]);

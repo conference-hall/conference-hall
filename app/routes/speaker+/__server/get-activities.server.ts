@@ -1,9 +1,9 @@
 import { Prisma } from '@prisma/client';
 
-import { db } from '~/libs/db';
-import { SpeakerNotFoundError } from '~/libs/errors';
-import { getSpeakerProposalStatus } from '~/routes/__server/proposals/get-speaker-proposal-status';
-import { getCfpState } from '~/utils/event';
+import { db } from '~/libs/db.ts';
+import { SpeakerNotFoundError } from '~/libs/errors.ts';
+import { getSpeakerProposalStatus } from '~/routes/__server/proposals/get-speaker-proposal-status.ts';
+import { getCfpState } from '~/utils/event.ts';
 
 const EVENTS_BY_PAGE = 3;
 

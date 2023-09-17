@@ -1,16 +1,16 @@
-import { db } from '~/libs/db';
+import { db } from '~/libs/db.ts';
 import {
   CfpNotOpenError,
   EventNotFoundError,
   MaxSubmittedProposalsReachedError,
   ProposalNotFoundError,
-} from '~/libs/errors';
-import type { ProposalSubmissionData } from '~/routes/__types/proposal';
-import { getCfpState } from '~/utils/event';
+} from '~/libs/errors.ts';
+import type { ProposalSubmissionData } from '~/routes/__types/proposal.ts';
+import { getCfpState } from '~/utils/event.ts';
 
-import { ProposalReceivedEmail } from './emails/proposal-received-email';
-import { ProposalSubmittedEmail } from './emails/proposal-submitted-email';
-import { sendSubmittedTalkSlackMessage } from './slack/slack.services';
+import { ProposalReceivedEmail } from './emails/proposal-received-email.ts';
+import { ProposalSubmittedEmail } from './emails/proposal-submitted-email.ts';
+import { sendSubmittedTalkSlackMessage } from './slack/slack.services.ts';
 
 export async function submitProposal(talkId: string, eventSlug: string, userId: string, data: ProposalSubmissionData) {
   const event = await db.event.findUnique({ where: { slug: eventSlug } });

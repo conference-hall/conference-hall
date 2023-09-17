@@ -1,8 +1,8 @@
 import { cx } from 'class-variance-authority';
 import { type ReactNode } from 'react';
 
-import { Card } from './layouts/Card';
-import { H1 } from './Typography';
+import { Card } from './layouts/Card.tsx';
+import { H1 } from './Typography.tsx';
 
 type Props = {
   title?: string;

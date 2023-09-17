@@ -4,14 +4,14 @@ import type { LoaderFunctionArgs } from '@remix-run/node';
 import { Outlet } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { Container } from '~/design-system/layouts/Container';
-import { NavSideMenu } from '~/design-system/navigation/NavSideMenu';
-import { H2 } from '~/design-system/Typography';
-import { requireSession } from '~/libs/auth/session';
-import { useUser } from '~/root';
-import { allowedForTeam } from '~/routes/__server/teams/check-user-role.server';
+import { Container } from '~/design-system/layouts/Container.tsx';
+import { NavSideMenu } from '~/design-system/navigation/NavSideMenu.tsx';
+import { H2 } from '~/design-system/Typography.tsx';
+import { requireSession } from '~/libs/auth/session.ts';
+import { useUser } from '~/root.tsx';
+import { allowedForTeam } from '~/routes/__server/teams/check-user-role.server.ts';
 
-import { useTeam } from './$team';
+import { useTeam } from './$team.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);

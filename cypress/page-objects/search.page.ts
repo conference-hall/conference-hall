@@ -1,4 +1,4 @@
-import BasePage from './base.page';
+import BasePage from './base.page.ts';
 
 class SearchEventPage extends BasePage {
   visit(searchParams?: string) {

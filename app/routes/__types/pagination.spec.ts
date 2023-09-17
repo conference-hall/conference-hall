@@ -1,4 +1,4 @@
-import { parsePage } from './pagination';
+import { parsePage } from './pagination.ts';
 
 describe('#parsePage', () => {
   it('returns valid page', async () => {

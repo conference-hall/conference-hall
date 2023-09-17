@@ -1,4 +1,4 @@
-import { db } from '~/libs/db';
+import { db } from '~/libs/db.ts';
 
 type TalksListOptions = { archived?: boolean };
 

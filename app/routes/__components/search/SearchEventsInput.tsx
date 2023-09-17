@@ -1,8 +1,8 @@
 import { Form, useSearchParams } from '@remix-run/react';
 
-import { InputSearch } from '~/design-system/forms/InputSearch';
+import { InputSearch } from '~/design-system/forms/InputSearch.tsx';
 
-import type { SearchFilters } from '../../__server/search/search.server';
+import type { SearchFilters } from '../../__server/search/search.server.ts';
 
 type Props = { filters: SearchFilters };
 

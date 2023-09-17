@@ -1,5 +1,5 @@
-import { teamFactory } from '../../../tests/factories/team';
-import { userFactory } from '../../../tests/factories/users';
+import { teamFactory } from '../../../tests/factories/team.ts';
+import { userFactory } from '../../../tests/factories/users.ts';
 
 export const seed = async () => {
   // user without organizer access

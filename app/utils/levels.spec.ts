@@ -1,4 +1,4 @@
-import { getLevel } from './levels';
+import { getLevel } from './levels.ts';
 
 describe('#getLevel', () => {
   it('returns the label corresponding to the level key', () => {

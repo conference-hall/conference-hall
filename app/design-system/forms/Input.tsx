@@ -2,7 +2,7 @@ import { cx } from 'class-variance-authority';
 import type { Ref } from 'react';
 import { forwardRef } from 'react';
 
-import { Label } from '../Typography';
+import { Label } from '../Typography.tsx';
 
 export type InputProps = {
   label?: string;

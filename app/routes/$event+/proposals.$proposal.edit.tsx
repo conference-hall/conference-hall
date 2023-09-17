@@ -4,22 +4,22 @@ import { json, redirect } from '@remix-run/node';
 import { Form, useActionData, useLoaderData, useNavigate } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { Button, ButtonLink } from '~/design-system/Buttons';
-import { Card } from '~/design-system/layouts/Card';
-import { Container } from '~/design-system/layouts/Container';
-import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle';
-import { H3, Subtitle } from '~/design-system/Typography';
-import { requireSession } from '~/libs/auth/session';
-import { addToast } from '~/libs/toasts/toasts';
-import { CoSpeakersList, InviteCoSpeakerButton } from '~/routes/__components/proposals/forms/CoSpeaker';
-import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm';
-import { getEvent } from '~/routes/__server/events/get-event.server';
-import { getSpeakerProposal } from '~/routes/__server/proposals/get-speaker-proposal.server';
-import { removeCoSpeakerFromProposal } from '~/routes/__server/proposals/remove-co-speaker.server';
-import { getProposalUpdateSchema } from '~/routes/__types/proposal';
+import { Button, ButtonLink } from '~/design-system/Buttons.tsx';
+import { Card } from '~/design-system/layouts/Card.tsx';
+import { Container } from '~/design-system/layouts/Container.tsx';
+import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
+import { H3, Subtitle } from '~/design-system/Typography.tsx';
+import { requireSession } from '~/libs/auth/session.ts';
+import { addToast } from '~/libs/toasts/toasts.ts';
+import { CoSpeakersList, InviteCoSpeakerButton } from '~/routes/__components/proposals/forms/CoSpeaker.tsx';
+import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm.tsx';
+import { getEvent } from '~/routes/__server/events/get-event.server.ts';
+import { getSpeakerProposal } from '~/routes/__server/proposals/get-speaker-proposal.server.ts';
+import { removeCoSpeakerFromProposal } from '~/routes/__server/proposals/remove-co-speaker.server.ts';
+import { getProposalUpdateSchema } from '~/routes/__types/proposal.ts';
 
-import { updateProposal } from './__server/update-proposal.server';
-import { useEvent } from './_layout';
+import { updateProposal } from './__server/update-proposal.server.ts';
+import { useEvent } from './_layout.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);

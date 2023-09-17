@@ -1,12 +1,12 @@
-import endOfDay from 'date-fns/endOfDay';
-import format from 'date-fns/format';
-import formatISO from 'date-fns/formatISO';
-import startOfDay from 'date-fns/startOfDay';
+import endOfDay from 'date-fns/endOfDay/index.js';
+import format from 'date-fns/format/index.js';
+import formatISO from 'date-fns/formatISO/index.js';
+import startOfDay from 'date-fns/startOfDay/index.js';
 import type { ChangeEvent } from 'react';
 import { useCallback, useState } from 'react';
 
-import type { InputProps } from './Input';
-import { Input } from './Input';
+import type { InputProps } from './Input.tsx';
+import { Input } from './Input.tsx';
 
 type Props = {
   start: { value?: string | null } & InputProps;

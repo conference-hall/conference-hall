@@ -1,7 +1,7 @@
 import { XMarkIcon } from '@heroicons/react/20/solid';
 
-import { IconButton } from './IconButtons';
-import { StoryBlock } from './StoryBlock';
+import { IconButton } from './IconButtons.tsx';
+import { StoryBlock } from './StoryBlock.tsx';
 
 export const Documentation = () => (
   <>

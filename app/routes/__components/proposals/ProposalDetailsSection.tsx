@@ -1,10 +1,10 @@
-import { AvatarGroup } from '~/design-system/Avatar';
-import { Badge } from '~/design-system/Badges';
-import { Card } from '~/design-system/layouts/Card';
-import { Markdown } from '~/design-system/Markdown';
-import { H3, Text } from '~/design-system/Typography';
-import { getLanguage } from '~/utils/languages';
-import { getLevel } from '~/utils/levels';
+import { AvatarGroup } from '~/design-system/Avatar.tsx';
+import { Badge } from '~/design-system/Badges.tsx';
+import { Card } from '~/design-system/layouts/Card.tsx';
+import { Markdown } from '~/design-system/Markdown.tsx';
+import { H3, Text } from '~/design-system/Typography.tsx';
+import { getLanguage } from '~/utils/languages.ts';
+import { getLevel } from '~/utils/levels.ts';
 
 type Props = {
   abstract: string;
