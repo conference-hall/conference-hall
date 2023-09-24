@@ -1,4 +1,4 @@
-import { getEmails, resetEmails } from 'tests/email-helpers.ts';
+import { resetEmails } from 'tests/email-helpers.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
@@ -30,15 +30,10 @@ describe('#sendParticipationAnswer', () => {
 
     expect(proposalUpdated?.status).toBe('CONFIRMED');
 
-    const emails = await getEmails();
-    expect(emails.total).toBe(1);
-    expect(emails.to(event.emailOrganizer)).toEqual([
-      {
-        name: event.name,
-        address: 'no-reply@conference-hall.io',
-        subject: `[${event.name}] Talk confirmed by speaker`,
-      },
-    ]);
+    await expect(event.emailOrganizer).toHaveEmail({
+      from: { name: event.name, address: 'no-reply@conference-hall.io' },
+      subject: `[${event.name}] Talk confirmed by speaker`,
+    });
   });
 
   it('declines a proposal', async () => {
@@ -57,15 +52,10 @@ describe('#sendParticipationAnswer', () => {
 
     expect(proposalUpdated?.status).toBe('DECLINED');
 
-    const emails = await getEmails();
-    expect(emails.total).toBe(1);
-    expect(emails.to(event.emailOrganizer)).toEqual([
-      {
-        name: event.name,
-        address: 'no-reply@conference-hall.io',
-        subject: `[${event.name}] Talk declined by speaker`,
-      },
-    ]);
+    await expect(event.emailOrganizer).toHaveEmail({
+      from: { name: event.name, address: 'no-reply@conference-hall.io' },
+      subject: `[${event.name}] Talk declined by speaker`,
+    });
   });
 
   it('cannot confirm or declined a not accepted proposal', async () => {

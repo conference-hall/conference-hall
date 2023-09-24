@@ -1,3 +1,5 @@
+import './custom-matchers.ts';
+
 import { installGlobals } from '@remix-run/node';
 
 import { disconnectDB, resetDB } from './db-helpers.ts';

@@ -17,6 +17,8 @@ type MailpitMessages = {
   messages: Array<MailpitMessage>;
 };
 
+export type EmailMeta = { from: { name: string; address: string }; subject: string };
+
 export async function resetEmails() {
   const response = await fetch(`${MAILPIT_APIV1}/messages`, { method: 'DELETE' });
   if (response.status !== 200) {
@@ -24,24 +26,19 @@ export async function resetEmails() {
   }
 }
 
-export async function getEmails() {
+export async function getEmailsFor(email: string | null): Promise<Array<EmailMeta> | null> {
+  if (!email) return null;
+
   const response = await fetch(`${MAILPIT_APIV1}/messages`, { method: 'GET' });
   if (response.status !== 200) {
     throw new Error(`Unable to get Mailpit emails on ${MAILPIT_APIV1}`);
   }
   const messages = (await response.json()) as MailpitMessages;
 
-  return {
-    total: messages.messages_count,
-    to(email: string | null) {
-      if (!email) return {};
-      return messages.messages
-        .filter((message) => message.To.find((to) => to.Address === email))
-        .map((message) => ({
-          name: message.From.Name,
-          address: message.From.Address,
-          subject: message.Subject,
-        }));
-    },
-  };
+  return messages.messages
+    .filter((message) => message.To.find((to) => to.Address === email))
+    .map((message) => ({
+      from: { name: message.From.Name, address: message.From.Address },
+      subject: message.Subject,
+    }));
 }

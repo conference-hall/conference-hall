@@ -1,5 +1,5 @@
 import type { Event, Team, User } from '@prisma/client';
-import { getEmails, resetEmails } from 'tests/email-helpers.ts';
+import { resetEmails } from 'tests/email-helpers.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
@@ -44,29 +44,21 @@ describe('#sendRejectionCampaign', () => {
 
     await sendRejectionCampaign(event.slug, owner.id, []);
 
-    const emails = await getEmails();
-    expect(emails.total).toBe(3);
-
-    expect(emails.to(speaker1.email)).toEqual([
+    await expect(speaker1.email).toHaveEmails([
       {
-        name: event.name,
-        address: 'no-reply@conference-hall.io',
+        from: { name: event.name, address: 'no-reply@conference-hall.io' },
         subject: `[${event.name}] Your talk has been declined`,
       },
       {
-        name: event.name,
-        address: 'no-reply@conference-hall.io',
+        from: { name: event.name, address: 'no-reply@conference-hall.io' },
         subject: `[${event.name}] Your talk has been declined`,
       },
     ]);
 
-    expect(emails.to(speaker2.email)).toEqual([
-      {
-        name: event.name,
-        address: 'no-reply@conference-hall.io',
-        subject: `[${event.name}] Your talk has been declined`,
-      },
-    ]);
+    await expect(speaker2.email).toHaveEmail({
+      from: { name: event.name, address: 'no-reply@conference-hall.io' },
+      subject: `[${event.name}] Your talk has been declined`,
+    });
 
     const proposals = await db.proposal.findMany({ orderBy: { emailRejectedStatus: 'asc' } });
     expect(proposals.map((proposal) => proposal.emailRejectedStatus)).toEqual(['SENT', 'SENT', null, null]);
@@ -86,15 +78,10 @@ describe('#sendRejectionCampaign', () => {
 
     await sendRejectionCampaign(event.slug, owner.id, [proposal_rejected_1.id]);
 
-    const emails = await getEmails();
-    expect(emails.total).toBe(1);
-    expect(emails.to(speaker1.email)).toEqual([
-      {
-        name: event.name,
-        address: 'no-reply@conference-hall.io',
-        subject: `[${event.name}] Your talk has been declined`,
-      },
-    ]);
+    await expect(speaker1.email).toHaveEmail({
+      from: { name: event.name, address: 'no-reply@conference-hall.io' },
+      subject: `[${event.name}] Your talk has been declined`,
+    });
 
     const proposals = await db.proposal.findMany({ orderBy: { emailRejectedStatus: 'asc' } });
     expect(proposals.map((proposal) => proposal.emailRejectedStatus)).toEqual(['SENT', null]);
@@ -108,8 +95,10 @@ describe('#sendRejectionCampaign', () => {
     });
     await sendRejectionCampaign(event.slug, owner.id, []);
 
-    const emails = await getEmails();
-    expect(emails.total).toBe(1);
+    await expect(speaker1.email).toHaveEmail({
+      from: { name: event.name, address: 'no-reply@conference-hall.io' },
+      subject: `[${event.name}] Your talk has been declined`,
+    });
   });
 
   it('cannot be sent by team reviewers', async () => {

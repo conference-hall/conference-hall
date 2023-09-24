@@ -1,4 +1,4 @@
-import { getEmails, resetEmails } from 'tests/email-helpers.ts';
+import { resetEmails } from 'tests/email-helpers.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
@@ -35,22 +35,15 @@ describe('#submitProposal', () => {
     expect(result?.status).toEqual('SUBMITTED');
     expect(result?.comments).toEqual('User message');
 
-    const emails = await getEmails();
-    expect(emails.total).toBe(2);
-    expect(emails.to(speaker.email)).toEqual([
-      {
-        name: event.name,
-        address: 'no-reply@conference-hall.io',
-        subject: `[${event.name}] Submission confirmed`,
-      },
-    ]);
-    expect(emails.to(event.emailOrganizer)).toEqual([
-      {
-        name: event.name,
-        address: 'no-reply@conference-hall.io',
-        subject: `[${event.name}] New proposal received`,
-      },
-    ]);
+    await expect(speaker.email).toHaveEmail({
+      from: { name: event.name, address: 'no-reply@conference-hall.io' },
+      subject: `[${event.name}] Submission confirmed`,
+    });
+
+    await expect(event.emailOrganizer).toHaveEmail({
+      from: { name: event.name, address: 'no-reply@conference-hall.io' },
+      subject: `[${event.name}] New proposal received`,
+    });
   });
 
   it('can submit if more drafts than event max proposals', async () => {
