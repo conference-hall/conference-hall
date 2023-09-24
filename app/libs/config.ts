@@ -15,9 +15,9 @@ class Config {
   COOKIE_SIGNED_SECRET: string;
   MAILGUN_DOMAIN: string;
   MAILGUN_API_KEY: string;
-  MAILHOG_HOST: string;
-  MAILHOG_SMTP_PORT: number;
-  MAILHOG_HTTP_PORT: number;
+  MAILPIT_HOST: string;
+  MAILPIT_SMTP_PORT: number;
+  MAILPIT_HTTP_PORT: number;
 
   constructor() {
     this.ENV = ENV;
@@ -31,9 +31,9 @@ class Config {
     this.COOKIE_SIGNED_SECRET = process.env.COOKIE_SIGNED_SECRET || 'secr3t';
     this.MAILGUN_DOMAIN = process.env.MAILGUN_DOMAIN || '';
     this.MAILGUN_API_KEY = process.env.MAILGUN_API_KEY || '';
-    this.MAILHOG_HOST = 'localhost';
-    this.MAILHOG_SMTP_PORT = 1025;
-    this.MAILHOG_HTTP_PORT = 8025;
+    this.MAILPIT_HOST = 'localhost';
+    this.MAILPIT_SMTP_PORT = 1025;
+    this.MAILPIT_HTTP_PORT = 8025;
   }
 
   get appUrl(): string {

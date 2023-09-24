@@ -1,6 +1,6 @@
 import { config } from '../../config.ts';
 import { MailgunProvider } from './mailgun-provider.ts';
-import { MailhogProvider } from './mailhog-provider.ts';
+import { MailpitProvider } from './mailpit-provider.ts';
 
 export type Email = {
   from: string;
@@ -33,7 +33,7 @@ export interface IEmailProvider {
 
 function getEmailProvider(): IEmailProvider {
   if (config.useEmulators) {
-    return new MailhogProvider();
+    return new MailpitProvider();
   }
   return new MailgunProvider();
 }

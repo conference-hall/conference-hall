@@ -3,13 +3,13 @@ import nodemailer from 'nodemailer';
 import { config } from '../../config.ts';
 import type { Email, IEmailProvider, RecipientVariables } from './provider.ts';
 
-export class MailhogProvider implements IEmailProvider {
+export class MailpitProvider implements IEmailProvider {
   transporter: nodemailer.Transporter;
 
   constructor() {
     this.transporter = nodemailer.createTransport({
-      host: config.MAILHOG_HOST,
-      port: config.MAILHOG_SMTP_PORT,
+      host: config.MAILPIT_HOST,
+      port: config.MAILPIT_SMTP_PORT,
     });
   }
 

@@ -22,9 +22,9 @@ services:
     volumes:
       - ./docker/firebase:/app
       - ./docker/firebase/.cache:/app/.cache/firebase/emulators/
-  mailhog:
-    container_name: ch_mailhog
-    image: mailhog/mailhog:latest
+  mailpit:
+    container_name: ch_mailpit
+    image: axllent/mailpit:latest
     ports:
       - 1025:1025
       - 8025:8025
