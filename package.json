@@ -20,14 +20,13 @@
     "cypress": "dotenv -e .env.dev -- cypress open --e2e -b electron",
     "db:migrate": "dotenv -e .env.dev -- prisma migrate dev",
     "db:reset": "dotenv -e .env.dev -- prisma migrate reset",
-    "format": "prettier -l --write .",
-    "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
+    "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint --ignore-path .gitignore .",
     "tsc": "tsc -b && tsc -b cypress",
     "story": "ladle serve",
     "prepare": "husky install"
   },
   "lint-staged": {
-    "**/*.{ts,tsx,js,jsx}": "eslint --fix --cache --cache-location ./node_modules/.cache/eslint",
+    "**/*.{ts,tsx,js,jsx}": "eslint --fix --cache --cache-location ./node_modules/.cache/eslint --ignore-path .gitignore",
     "**/*.{json,md,mdx,html,css,yml}": "prettier -l --write"
   },
   "prisma": {
