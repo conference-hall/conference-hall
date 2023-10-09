@@ -40,7 +40,7 @@ export default function IndexRoute() {
           <H1 size="4xl" variant="light" align="center">
             Conference Hall
           </H1>
-          <Text size="l" heading variant="light" align="center">
+          <Text size="l" variant="light" align="center">
             Call for papers for conferences and meetups.
           </Text>
           <SearchEventsInput filters={filters} />

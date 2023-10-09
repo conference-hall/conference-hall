@@ -8,7 +8,6 @@ import { formatConferenceDates } from '~/utils/event.ts';
 
 type Props = {
   name: string;
-  slug: string;
   type: 'CONFERENCE' | 'MEETUP';
   teamName: string;
   logo: string | null;
@@ -18,17 +17,7 @@ type Props = {
   className?: string;
 };
 
-export function EventHeader({
-  name,
-  slug,
-  type,
-  teamName,
-  logo,
-  address,
-  conferenceStart,
-  conferenceEnd,
-  className,
-}: Props) {
+export function EventHeader({ name, type, teamName, logo, address, conferenceStart, conferenceEnd, className }: Props) {
   return (
     <header className={cx('bg-gray-800', className)}>
       <Container className="flex flex-col items-center justify-between py-4 sm:flex-row">
@@ -38,14 +27,12 @@ export function EventHeader({
             <H1 size="2xl" variant="light">
               {name}
             </H1>
-            <Text variant="secondary-light" heading>
-              {`by ${teamName}`}
-            </Text>
+            <Text variant="secondary-light" weight="medium">{`by ${teamName}`}</Text>
           </div>
         </div>
 
         <div className="flex flex-col items-center gap-1 truncate sm:items-end">
-          <Text variant="light" size="base" heading strong truncate>
+          <Text variant="light" size="base" weight="semibold" truncate>
             <ClientOnly>{() => formatConferenceDates(type, conferenceStart, conferenceEnd)}</ClientOnly>
           </Text>
           {address && (

@@ -36,7 +36,6 @@ export default function EventRoute() {
 
       <EventHeader
         name={event.name}
-        slug={event.slug}
         type={event.type}
         teamName={event.teamName}
         logo={event.logo}

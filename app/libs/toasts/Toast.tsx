@@ -33,7 +33,7 @@ export function Toast({ toast }: Props) {
                 <div className="flex flex-1 items-center">
                   <CheckCircleIcon className="h-6 w-6 flex-shrink-0 text-green-400" aria-hidden="true" />
                   <div className="ml-3">
-                    <Text strong>{toast.message}</Text>
+                    <Text weight="medium">{toast.message}</Text>
                   </div>
                 </div>
                 <div className="ml-4">

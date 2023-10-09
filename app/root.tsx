@@ -25,7 +25,8 @@ import { commitToastSession, getToastSession } from './libs/toasts/toasts.ts';
 import { GlobalLoading } from './routes/__components/GlobalLoading.tsx';
 import type { User } from './routes/__server/users/get-user.server.ts';
 import { getUser } from './routes/__server/users/get-user.server.ts';
-import tailwind from './tailwind.css';
+import fontsCssUrl from './styles/fonts.css';
+import tailwindCssUrl from './styles/tailwind.css';
 
 export function meta() {
   return [
@@ -39,13 +40,11 @@ export function meta() {
 export const links: LinksFunction = () => {
   return [
     // Preload to avoid render blocking
-    { rel: 'preload', href: 'https://fonts.cdnfonts.com/css/inter', as: 'style' },
-    { rel: 'preload', href: 'https://fonts.cdnfonts.com/css/ubuntu', as: 'style' },
-    { rel: 'preload', href: tailwind, as: 'style' },
+    { rel: 'preload', href: fontsCssUrl, as: 'style' },
+    { rel: 'preload', href: tailwindCssUrl, as: 'style' },
     // Stylesheets
-    { rel: 'stylesheet', href: 'https://fonts.cdnfonts.com/css/inter' },
-    { rel: 'stylesheet', href: 'https://fonts.cdnfonts.com/css/ubuntu' },
-    { rel: 'stylesheet', href: tailwind },
+    { rel: 'stylesheet', href: fontsCssUrl },
+    { rel: 'stylesheet', href: tailwindCssUrl },
   ];
 };
 

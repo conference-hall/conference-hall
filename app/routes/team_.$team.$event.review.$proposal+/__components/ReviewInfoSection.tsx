@@ -51,7 +51,7 @@ export function ReviewInfoSection({
         <H2>Review information</H2>
         {review && (
           <div className="flex items-center justify-between">
-            <Text strong>Global review</Text>
+            <Text weight="medium">Global review</Text>
             <div className="flex gap-4">
               <ReviewNote feeling="NEGATIVE" note={review?.negatives} />
               <ReviewNote feeling="POSITIVE" note={review?.positives} />
@@ -61,23 +61,23 @@ export function ReviewInfoSection({
         )}
 
         <div className="flex items-center justify-between">
-          <Text strong>Your review</Text>
+          <Text weight="medium">Your review</Text>
           <ReviewNote feeling={userReview.feeling} note={userReview.note} />
         </div>
 
         <div className="flex justify-between gap-2">
-          <Text strong>Proposal status</Text>
+          <Text weight="medium">Proposal status</Text>
           <ProposalStatusBadge status={status} />
         </div>
 
         <div className="flex justify-between gap-2">
-          <Text strong>Submission date</Text>
+          <Text weight="medium">Submission date</Text>
           <ClientOnly>{() => <Text size="s">{format(new Date(submittedAt), 'PPP')}</Text>}</ClientOnly>
         </div>
 
         {comments && (
           <div className="flex flex-col gap-2">
-            <Text strong>Submission message</Text>
+            <Text weight="medium">Submission message</Text>
             <div className="rounded bg-gray-50 p-4">
               <Text>{comments}</Text>
             </div>

@@ -20,7 +20,7 @@ export function ReviewNote({ feeling, note }: Props) {
   return (
     <div className="flex items-center gap-1">
       <Icon className={cx('h-4 w-4', color)} aria-label={`${label}: ${formattedNote}`} />
-      <Text strong>{formattedNote}</Text>
+      <Text weight="medium">{formattedNote}</Text>
     </div>
   );
 }

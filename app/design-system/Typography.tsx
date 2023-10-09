@@ -25,8 +25,7 @@ export const typography = cva('', {
     },
     mb: { 1: 'mb-1', 2: 'mb-2', 4: 'mb-4', 6: 'mb-6', 8: 'mb-8' },
     align: { center: 'text-center' },
-    heading: { true: 'font-heading' },
-    strong: { true: 'font-medium' },
+    weight: { normal: 'font-normal', medium: 'font-medium', semibold: 'font-semibold', bold: 'font-bold' },
     srOnly: { true: 'sr-only' },
     truncate: { true: 'truncate' },
   },
@@ -50,15 +49,15 @@ function Typography({ id, as: Tag = 'p', children, ...rest }: TypographyProps) {
 }
 
 export function H1(props: TypographyProps) {
-  return <Typography as="h1" size="xl" heading strong {...props} />;
+  return <Typography as="h1" size="xl" weight="bold" {...props} />;
 }
 
 export function H2(props: TypographyProps) {
-  return <Typography as="h2" size="base" heading strong {...props} />;
+  return <Typography as="h2" size="base" weight="semibold" {...props} />;
 }
 
 export function H3(props: TypographyProps) {
-  return <Typography as="h3" size="s" heading strong {...props} />;
+  return <Typography as="h3" size="s" weight="semibold" {...props} />;
 }
 
 export function Text(props: TypographyProps) {
@@ -80,7 +79,7 @@ export function Label({
     <label
       id={id}
       htmlFor={htmlFor}
-      className={typography({ size: 's', strong: true, ...rest, className: cx(['block leading-6', className]) })}
+      className={typography({ size: 's', weight: 'medium', ...rest, className: cx(['block leading-6', className]) })}
     >
       {children}
     </label>

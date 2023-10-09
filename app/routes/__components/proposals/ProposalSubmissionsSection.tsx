@@ -27,7 +27,7 @@ export function ProposalSubmissionsSection({ talkId, submissions }: Props) {
             <li key={submission.slug} className="flex items-center justify-between gap-2">
               <div className="flex gap-2">
                 <Avatar picture={submission.logo} name={submission.name} square size="xs" aria-hidden />
-                <Link to={`/${submission.slug}/proposals`} strong heading truncate>
+                <Link to={`/${submission.slug}/proposals`} weight="medium" truncate>
                   {submission.name}
                 </Link>
               </div>
