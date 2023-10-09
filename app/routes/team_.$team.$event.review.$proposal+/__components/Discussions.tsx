@@ -34,7 +34,7 @@ export function Discussions({ userId, messages }: Props) {
     >
       {messages.length === 0 ? (
         <div className="p-8">
-          <Text variant="secondary" strong>
+          <Text variant="secondary" weight="medium">
             No conversation about the proposal.
           </Text>
         </div>

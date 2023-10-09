@@ -76,7 +76,7 @@ function EventTypeOption({ value, label, description, icon: Icon }: EventTypeOpt
             <span className="flex flex-col gap-2">
               <RadioGroup.Label as="div" className="flex items-center gap-2">
                 <Icon className="h-6 w-6 text-indigo-600" />
-                <Text strong>{label}</Text>
+                <Text weight="medium">{label}</Text>
               </RadioGroup.Label>
               <RadioGroup.Description as="div">
                 <Subtitle>{description}</Subtitle>

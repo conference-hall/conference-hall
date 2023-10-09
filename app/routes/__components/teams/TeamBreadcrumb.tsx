@@ -25,7 +25,13 @@ export default function TeamBreadcrumb({ team, event }: Props) {
   return (
     <div className="flex flex-col items-center justify-between gap-4 pt-4 sm:flex-row sm:gap-8">
       <nav className="flex items-center gap-4">
-        <Link to={`/team/${team.slug}`} variant="secondary" size="l" heading strong={!event} className="gap-2">
+        <Link
+          to={`/team/${team.slug}`}
+          variant="secondary"
+          size="l"
+          weight={event ? 'medium' : 'bold'}
+          className="gap-2"
+        >
           <Square3Stack3DIcon className="h-6 w-6 text-gray-600" />
           {team.name}
         </Link>
@@ -33,12 +39,11 @@ export default function TeamBreadcrumb({ team, event }: Props) {
           <>
             <ChevronRightIcon className="h-4 w-4 text-gray-900" />
             <Link
-              to={`/team/${team.slug}`}
+              to={`/${event.slug}`}
               target="_blank"
               variant="secondary"
               size="l"
-              heading
-              strong={!!event}
+              weight={event ? 'bold' : 'medium'}
               className="gap-2"
             >
               <Avatar size="xs" picture={event.logo} name={event.name} square aria-hidden />

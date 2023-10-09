@@ -17,7 +17,7 @@ export function TrackList({ type, tracks }: TrackListProps) {
       {tracks.map((track) => (
         <li key={track.id} className="flex items-center justify-between p-4">
           <div className="truncate">
-            <Text strong truncate>
+            <Text weight="medium" truncate>
               {track.name}
             </Text>
             <Subtitle truncate>{track.description}</Subtitle>

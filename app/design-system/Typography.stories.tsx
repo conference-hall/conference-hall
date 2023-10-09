@@ -12,8 +12,14 @@ export const Documentation = () => (
       <Text variant="link">Text link</Text>
       <Text variant="warning">Text warning</Text>
       <Text variant="error">Text error</Text>
-      <Text strong>Text strong</Text>
       <Subtitle>Subtitle</Subtitle>
+    </StoryBlock>
+
+    <StoryBlock title="Text weight" vertical>
+      <Text weight="normal">Text normal</Text>
+      <Text weight="medium">Text medium</Text>
+      <Text weight="semibold">Text semibold</Text>
+      <Text weight="bold">Text bold</Text>
     </StoryBlock>
 
     <StoryBlock title="Text sizes" vertical>

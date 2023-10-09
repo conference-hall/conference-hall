@@ -31,13 +31,12 @@ export function Link({
   size,
   mb,
   align,
-  heading,
-  strong,
+  weight,
   truncate,
   className,
   ...rest
 }: LinkProps) {
-  const defaultStyle = typography({ size, mb, align, heading, strong, truncate, className });
+  const defaultStyle = typography({ size, mb, align, weight, truncate, className });
   const linkStyle = link({ variant });
 
   return (
@@ -58,13 +57,12 @@ export function ExternalLink({
   size,
   mb,
   align,
-  heading,
-  strong,
+  weight,
   truncate,
   className,
   ...rest
 }: ExternalLinkProps) {
-  const defaultStyle = typography({ size, mb, align, heading, strong, truncate, className });
+  const defaultStyle = typography({ size, mb, align, weight, truncate, className });
   const linkStyle = link({ variant });
 
   return (

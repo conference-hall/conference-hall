@@ -38,7 +38,7 @@ export default function EventSubmitRoute() {
         <H2>Select or create a proposal</H2>
         {maxProposals && (
           <div>
-            <Text size="xs" mb={1} strong>
+            <Text size="xs" mb={1} weight="medium">
               {proposalsCount} / {maxProposals} proposals submitted.
             </Text>
             <ProgressBar value={proposalsCount} max={maxProposals} />

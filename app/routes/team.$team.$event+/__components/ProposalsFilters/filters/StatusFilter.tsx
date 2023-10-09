@@ -15,7 +15,7 @@ export function StatusFilter({ defaultValue, statuses }: Props) {
 
   return (
     <div className="space-y-2 p-4">
-      <Text variant="secondary" strong>
+      <Text variant="secondary" weight="medium">
         Proposal statuses
       </Text>
 
@@ -51,7 +51,7 @@ function StatusFilterItem({ name, count, isSelected }: StatusFilterItemProps) {
       <button onClick={handleFilter} className="flex items-center">
         <ProposalStatusBadge status={name} />
       </button>
-      <Text size="xs" variant="secondary" strong>
+      <Text size="xs" variant="secondary" weight="medium">
         {count}
       </Text>
     </div>

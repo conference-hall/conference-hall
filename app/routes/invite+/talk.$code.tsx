@@ -50,7 +50,7 @@ export default function InvitationRoute() {
             You have been invited to the talk
           </H1>
 
-          <Text size="3xl" heading strong mb={8}>
+          <Text size="3xl" weight="medium" mb={8}>
             {talk.title}
           </Text>
 

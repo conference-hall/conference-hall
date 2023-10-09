@@ -17,10 +17,10 @@ export function ReviewsFilter({ defaultValue, reviewed, total }: Props) {
     <div className="space-y-4 p-4">
       <div className="space-y-1">
         <div className="flex items-center justify-between">
-          <Text variant="secondary" strong>
+          <Text variant="secondary" weight="medium">
             Reviews
           </Text>
-          <Text size="xs" variant="secondary" strong>{`${progress}%`}</Text>
+          <Text size="xs" variant="secondary" weight="medium">{`${progress}%`}</Text>
         </div>
         <ProgressBar value={reviewed} max={total} />
       </div>
@@ -68,12 +68,12 @@ function ReviewFilterItem({ label, count, name, isSelected, color }: ReviewFilte
     <div className="flex items-center justify-between">
       <button onClick={handleFilter} className="flex items-center">
         <BadgeDot color={color}>
-          <Text as="span" size="xs" strong={isSelected}>
+          <Text as="span" size="xs" weight={isSelected ? 'bold' : 'medium'}>
             {label}
           </Text>
         </BadgeDot>
       </button>
-      <Text size="xs" variant="secondary" strong>
+      <Text size="xs" variant="secondary" weight="medium">
         {count}
       </Text>
     </div>

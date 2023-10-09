@@ -26,7 +26,7 @@ export const Documentation = () => (
     </StoryBlock>
 
     <StoryBlock title="With typography props">
-      <Link to="/" size="base" heading strong>
+      <Link to="/" size="base" weight="medium">
         Can be updated with typography props
       </Link>
     </StoryBlock>

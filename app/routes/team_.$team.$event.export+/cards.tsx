@@ -35,7 +35,7 @@ export default function ExportProposalsCards() {
         {results?.map((proposal) => (
           <div key={proposal.id} className="card">
             <div className="grow">
-              <Text size="l" strong truncate>
+              <Text size="l" weight="medium" truncate>
                 {proposal.title}
               </Text>
               <Subtitle truncate>{proposal.speakers?.join(', ')}</Subtitle>
@@ -60,7 +60,7 @@ export default function ExportProposalsCards() {
                   <Text size="base">❤️ {proposal.reviews?.positives}</Text>
                   <Text size="base">💀 {proposal.reviews?.negatives}</Text>
                 </div>
-                <Text size="3xl" strong>
+                <Text size="3xl" weight="medium">
                   {formatReviewNote(proposal.reviews?.average)}
                 </Text>
               </div>

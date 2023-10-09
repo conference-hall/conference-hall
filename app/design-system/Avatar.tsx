@@ -128,7 +128,7 @@ export function AvatarName({ name, subtitle, variant = 'primary', ...rest }: Ava
     <div className="flex items-center">
       <Avatar {...rest} aria-hidden />
       <div className="ml-3 text-left">
-        <Text variant={variant === 'primary' ? 'primary' : 'light'} strong>
+        <Text variant={variant === 'primary' ? 'primary' : 'light'} weight="medium">
           {name || 'Unknown'}
         </Text>
         <Text variant={variant === 'primary' ? 'secondary' : 'light'} size="xs">
@@ -178,7 +178,7 @@ function AvatarColor({
   return (
     <div
       className={cx(
-        'flex items-center justify-center font-heading font-medium text-gray-900/60',
+        'flex items-center justify-center font-medium text-gray-900/60',
         className,
         color,
         text_sizes[size],

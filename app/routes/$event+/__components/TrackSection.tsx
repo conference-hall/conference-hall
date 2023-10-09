@@ -17,7 +17,7 @@ export function TrackSection({ title, subtitle, tracks }: Props) {
       <dl role="list" className="mt-4 space-y-8">
         {tracks.map((track) => (
           <div key={track.name}>
-            <Text as="dt" mb={1} strong>
+            <Text as="dt" mb={1} weight="medium">
               {track.name}
             </Text>
             <Text as="dd" variant="secondary">

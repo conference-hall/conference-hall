@@ -33,9 +33,7 @@ export function ReviewHeader({ title, pagination, canEditProposal }: Props) {
           label="Previous proposal"
           variant="secondary"
         />
-        <Text strong heading>
-          {`${current}/${total}`}
-        </Text>
+        <Text weight="medium">{`${current}/${total}`}</Text>
         <IconButtonLink
           to={{ pathname: nextPath, search }}
           icon={ChevronRightIcon}

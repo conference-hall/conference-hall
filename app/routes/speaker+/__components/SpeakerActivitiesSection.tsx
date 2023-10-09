@@ -45,7 +45,7 @@ export function SpeakerActivitiesSection({ activities, nextPage, hasNextPage, cl
               <div className="flex items-center gap-4">
                 <Avatar picture={event.logo} name={event.name} square size="l" />
                 <div className="truncate">
-                  <Text size="xl" strong heading truncate>
+                  <Text size="xl" weight="medium" truncate>
                     {event.name}
                   </Text>
                   <Subtitle size="xs">{`${event.submissions.length} proposals`}</Subtitle>
@@ -63,7 +63,7 @@ export function SpeakerActivitiesSection({ activities, nextPage, hasNextPage, cl
               {event.submissions.map((submission) => (
                 <li key={submission.id} className="flex flex-col gap-1 px-6 py-4">
                   <div className="flex items-center justify-between">
-                    <Link to={`/${event.slug}/proposals/${submission.id}`} size="base" strong heading truncate>
+                    <Link to={`/${event.slug}/proposals/${submission.id}`} size="base" weight="medium" truncate>
                       {submission.title}
                     </Link>
                     <AvatarGroup avatars={submission.speakers} />
