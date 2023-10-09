@@ -27,6 +27,7 @@ import type { User } from './routes/__server/users/get-user.server.ts';
 import { getUser } from './routes/__server/users/get-user.server.ts';
 import fontsCssUrl from './styles/fonts.css';
 import tailwindCssUrl from './styles/tailwind.css';
+import { useNonce } from './utils/useNonce.ts';
 
 export function meta() {
   return [
@@ -89,6 +90,8 @@ export function useUser() {
 type DocumentProps = { children: ReactNode; toast?: ToastData };
 
 function Document({ children, toast }: DocumentProps) {
+  const nonce = useNonce();
+
   return (
     <html lang="en">
       <head>
@@ -98,9 +101,9 @@ function Document({ children, toast }: DocumentProps) {
       <body className="overflow-x-hidden bg-gray-50 font-sans text-gray-900 antialiased">
         <GlobalLoading />
         {children}
-        <ScrollRestoration />
-        <Scripts />
-        <LiveReload />
+        <ScrollRestoration nonce={nonce} />
+        <Scripts nonce={nonce} />
+        <LiveReload nonce={nonce} />
         {toast && <Toast toast={toast} />}
       </body>
     </html>

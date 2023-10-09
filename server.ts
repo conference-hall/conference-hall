@@ -1,8 +1,9 @@
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import url from 'node:url';
 
-import { createRequestHandler } from '@remix-run/express';
+import { createRequestHandler, type GetLoadContextFunction } from '@remix-run/express';
 import type { ServerBuild } from '@remix-run/node';
 import { broadcastDevReady, installGlobals } from '@remix-run/node';
 import chokidar from 'chokidar';
@@ -11,6 +12,7 @@ import compression from 'compression';
 import type { RequestHandler } from 'express';
 import express from 'express';
 import rateLimit from 'express-rate-limit';
+import helmet from 'helmet';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import morgan from 'morgan';
 import sourceMapSupport from 'source-map-support';
@@ -43,6 +45,32 @@ async function run() {
 
   // http://expressjs.com/en/advanced/best-practice-security.html#at-a-minimum-disable-x-powered-by-header
   app.disable('x-powered-by');
+
+  // Generate a nonce for each request, which we'll use for CSP.
+  app.use((_, res, next) => {
+    res.locals.cspNonce = crypto.randomBytes(32).toString('base64');
+    next();
+  });
+
+  // Security-related HTTP response headers
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          'connect-src': [process.env.NODE_ENV === 'development' ? 'ws:' : null, "'self'"].filter(Boolean) as string[],
+          'font-src': ["'self'"],
+          'frame-src': ["'self'"],
+          'img-src': ["'self'", 'data:', 'https:'],
+          'script-src': [
+            "'strict-dynamic'",
+            "'self'",
+            // @ts-expect-error Helmet types don't seem to know about res.locals
+            (_, res) => `'nonce-${res.locals.cspNonce}'`,
+          ],
+        },
+      },
+    }),
+  );
 
   // Remix fingerprints its assets so we can cache forever.
   app.use('/build', express.static('public/build', { immutable: true, maxAge: '1y' }));
@@ -77,12 +105,20 @@ async function run() {
     }),
   );
 
+  // Build the load context for Remix
+  const getLoadContext: GetLoadContextFunction = (req, res) => {
+    return {
+      cspNonce: res.locals.cspNonce,
+    };
+  };
+
   // Remix requests
   app.all(
     '*',
     process.env.NODE_ENV === 'production'
       ? createRequestHandler({
           build: initialBuild,
+          getLoadContext,
           mode: process.env.NODE_ENV,
         })
       : createDevRequestHandler(initialBuild),
@@ -129,6 +165,7 @@ async function run() {
       try {
         return createRequestHandler({
           build,
+          getLoadContext,
           mode: 'development',
         })(req, res, next);
       } catch (error) {

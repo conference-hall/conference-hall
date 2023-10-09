@@ -49,6 +49,7 @@
     "firebase": "^10.4.0",
     "firebase-admin": "^11.11.0",
     "form-data": "^4.0.0",
+    "helmet": "^7.0.0",
     "http-proxy-middleware": "^2.0.6",
     "isbot": "^3.7.0",
     "marked": "^9.1.0",
