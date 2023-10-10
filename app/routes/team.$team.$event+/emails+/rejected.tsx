@@ -7,7 +7,7 @@ import invariant from 'tiny-invariant';
 import { Pagination } from '~/design-system/Pagination.tsx';
 import { H1, H2 } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { addToast } from '~/libs/toasts/toasts.ts';
+import { toast } from '~/libs/toasts/toast.server.ts';
 import { CampaignEmailFilters } from '~/routes/__components/events/campaign-email/CampaignEmailFilters.tsx';
 import { CampaignEmailList, CampaignType } from '~/routes/__components/events/campaign-email/CampaignEmailList.tsx';
 import { CampaignEmailStats } from '~/routes/__components/events/campaign-email/CampaignEmailStats.tsx';
@@ -45,7 +45,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const result = parse(form, { schema: ProposalSelectionSchema });
   if (!result.value) return json(null);
   await sendRejectionCampaign(params.event, userId, result.value.selection);
-  return json(null, await addToast(request, 'Emails successfully sent.'));
+  return toast('success', 'Emails successfully sent.');
 };
 
 export default function RejectedProposalEmails() {

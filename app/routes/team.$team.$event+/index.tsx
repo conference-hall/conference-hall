@@ -11,7 +11,7 @@ import { Container } from '~/design-system/layouts/Container.tsx';
 import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
 import { Pagination } from '~/design-system/Pagination.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { addToast } from '~/libs/toasts/toasts.ts';
+import { toast } from '~/libs/toasts/toast.server.ts';
 import { parsePage } from '~/routes/__types/pagination.ts';
 import { parseProposalsFilters, ProposalsStatusUpdateSchema } from '~/routes/__types/proposal.ts';
 import { updateProposalsStatus } from '~/routes/team.$team.$event+/__server/update-proposal.server.ts';
@@ -42,7 +42,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   if (!result.value) return json(null);
 
   const updated = await updateProposalsStatus(params.event, userId, result.value.selection, result.value.status);
-  return json(null, await addToast(request, `${updated} proposals marked as "${result.value.status.toLowerCase()}".`));
+  return toast('success', `${updated} proposals marked as "${result.value.status.toLowerCase()}".`);
 };
 
 export default function OrganizerEventProposalsRoute() {

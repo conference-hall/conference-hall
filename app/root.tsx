@@ -19,9 +19,9 @@ import { H1, Text } from './design-system/Typography.tsx';
 import { initializeFirebaseClient } from './libs/auth/firebase.ts';
 import { getSessionUserId } from './libs/auth/session.ts';
 import { config } from './libs/config.ts';
-import { Toast } from './libs/toasts/Toast.tsx';
-import type { ToastData } from './libs/toasts/toasts.ts';
-import { commitToastSession, getToastSession } from './libs/toasts/toasts.ts';
+import type { Toast } from './libs/toasts/toast.server.ts';
+import { getToast } from './libs/toasts/toast.server.ts';
+import { Toaster } from './libs/toasts/Toaster.tsx';
 import { GlobalLoading } from './routes/__components/GlobalLoading.tsx';
 import type { User } from './routes/__server/users/get-user.server.ts';
 import { getUser } from './routes/__server/users/get-user.server.ts';
@@ -50,7 +50,7 @@ export const links: LinksFunction = () => {
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const toast = await getToastSession(request);
+  const { toast, headers: toastHeaders } = await getToast(request);
 
   const userId = await getSessionUserId(request);
   const user = await getUser(userId);
@@ -58,7 +58,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   return json(
     {
       user,
-      toast: toast.get('message') as ToastData,
+      toast,
       firebase: {
         FIREBASE_API_KEY: config.FIREBASE_API_KEY,
         FIREBASE_AUTH_DOMAIN: config.FIREBASE_AUTH_DOMAIN,
@@ -67,7 +67,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
         useFirebaseEmulators: config.useEmulators,
       },
     },
-    { headers: { 'Set-Cookie': await commitToastSession(toast) } },
+    { headers: toastHeaders || {} },
   );
 };
 
@@ -87,7 +87,7 @@ export function useUser() {
   return useOutletContext<{ user: User }>();
 }
 
-type DocumentProps = { children: ReactNode; toast?: ToastData };
+type DocumentProps = { children: ReactNode; toast?: Toast | null };
 
 function Document({ children, toast }: DocumentProps) {
   const nonce = useNonce();
@@ -104,7 +104,7 @@ function Document({ children, toast }: DocumentProps) {
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
         <LiveReload nonce={nonce} />
-        {toast && <Toast toast={toast} />}
+        <Toaster toast={toast} />
       </body>
     </html>
   );

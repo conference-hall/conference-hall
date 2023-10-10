@@ -1,13 +1,13 @@
 import { parse } from '@conform-to/zod';
 import { TeamRole } from '@prisma/client';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { json, redirect } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import { Outlet, useLoaderData, useOutletContext, useParams } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
-import { addToast } from '~/libs/toasts/toasts.ts';
+import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
 import { useUser } from '~/root.tsx';
 import { Navbar } from '~/routes/__components/navbar/Navbar.tsx';
 import { parseProposalsFilters, ProposalReviewDataSchema } from '~/routes/__types/proposal.ts';
@@ -43,9 +43,9 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   if (result.value) {
     await rateProposal(params.event, params.proposal, userId, result.value);
     if (nextPath) {
-      return redirect(nextPath, await addToast(request, 'Review saved.'));
+      return redirectWithToast(nextPath, 'success', 'Review saved.');
     }
-    return json(null, await addToast(request, 'Review saved.'));
+    return toast('success', 'Review saved.');
   }
   return null;
 };

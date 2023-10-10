@@ -9,7 +9,7 @@ import { ToggleGroup } from '~/design-system/forms/Toggles.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2, Subtitle } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { addToast } from '~/libs/toasts/toasts.ts';
+import { toast } from '~/libs/toasts/toast.server.ts';
 import { QUESTIONS } from '~/routes/__server/survey/get-questions.server.ts';
 import { updateEvent } from '~/routes/__server/teams/update-event.server.ts';
 
@@ -31,13 +31,13 @@ export const action = async ({ request, params }: LoaderFunctionArgs) => {
     case 'enable-survey': {
       const surveyEnabled = form.get('surveyEnabled') === 'true';
       await updateEvent(params.event, userId, { surveyEnabled });
-      return json(null, await addToast(request, `Speaker survey ${surveyEnabled ? 'enabled' : 'disabled'}`));
+      return toast('success', `Speaker survey ${surveyEnabled ? 'enabled' : 'disabled'}`);
     }
     case 'save-questions': {
       const result = parse(form, { schema: EventSurveySettingsSchema });
       if (!result.value) return json(null);
       await updateEvent(params.event, userId, result.value);
-      return json(null, await addToast(request, 'Survey questions saved.'));
+      return toast('success', 'Survey questions saved.');
     }
   }
   return null;

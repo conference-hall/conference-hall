@@ -1,12 +1,12 @@
 import { parse } from '@conform-to/zod';
-import { type ActionFunctionArgs, json, type LoaderFunctionArgs, redirect } from '@remix-run/node';
+import { type ActionFunctionArgs, json, type LoaderFunctionArgs } from '@remix-run/node';
 import { Form, useActionData, useLoaderData, useSearchParams } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { Button, ButtonLink } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { addToast } from '~/libs/toasts/toasts.ts';
+import { redirectWithToast } from '~/libs/toasts/toast.server.ts';
 import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm.tsx';
 import { getEvent } from '~/routes/__server/events/get-event.server.ts';
 import { ProposalUpdateSchema } from '~/routes/__types/proposal.ts';
@@ -33,9 +33,10 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   await updateProposal(params.event, params.proposal, userId, result.value);
 
   const url = new URL(request.url);
-  throw redirect(
+  return redirectWithToast(
     `/team/${params.team}/${params.event}/review/${params.proposal}${url.search}`,
-    await addToast(request, 'Proposal saved.'),
+    'success',
+    'Proposal saved.',
   );
 };
 

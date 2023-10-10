@@ -9,7 +9,7 @@ import { Container } from '~/design-system/layouts/Container.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
-import { addToast } from '~/libs/toasts/toasts.ts';
+import { toast } from '~/libs/toasts/toast.server.ts';
 import { ProposalDetailsSection } from '~/routes/__components/proposals/ProposalDetailsSection.tsx';
 import { ProposalSubmissionsSection } from '~/routes/__components/proposals/ProposalSubmissionsSection.tsx';
 import { getTalk } from '~/routes/__server/talks/get-talk.server.ts';
@@ -39,11 +39,11 @@ export const action: ActionFunction = async ({ request, params }) => {
   switch (action) {
     case 'archive-talk':
       await archiveTalk(userId, params.talk);
-      return json(null, await addToast(request, 'Talk archived.'));
+      return toast('success', 'Talk archived.');
 
     case 'restore-talk':
       await restoreTalk(userId, params.talk);
-      return json(null, await addToast(request, 'Talk restored.'));
+      return toast('success', 'Talk restored.');
   }
   return null;
 };

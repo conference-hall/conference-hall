@@ -1,4 +1,4 @@
-import { json, type LoaderFunctionArgs } from '@remix-run/node';
+import { type LoaderFunctionArgs } from '@remix-run/node';
 import { useFetcher } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
@@ -6,7 +6,7 @@ import { ToggleGroup } from '~/design-system/forms/Toggles.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2 } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { addToast } from '~/libs/toasts/toasts.ts';
+import { toast } from '~/libs/toasts/toast.server.ts';
 import { updateEvent } from '~/routes/__server/teams/update-event.server.ts';
 
 import { useOrganizerEvent } from '../_layout.tsx';
@@ -22,7 +22,7 @@ export const action = async ({ request, params }: LoaderFunctionArgs) => {
   const form = await request.formData();
   const settingName = form.get('_setting') as string;
   await updateEvent(params.event, userId, { [settingName]: form.get(settingName) === 'true' });
-  return json(null, await addToast(request, 'Review setting saved.'));
+  return toast('success', 'Review setting saved.');
 };
 
 export default function EventReviewSettingsRoute() {

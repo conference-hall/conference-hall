@@ -1,6 +1,6 @@
 import { parse } from '@conform-to/zod';
 import type { ActionFunction, LoaderFunctionArgs } from '@remix-run/node';
-import { json, redirect } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
 import { useState } from 'react';
 import invariant from 'tiny-invariant';
@@ -13,7 +13,7 @@ import { Card } from '~/design-system/layouts/Card.tsx';
 import { ExternalLink } from '~/design-system/Links.tsx';
 import { H1, H2, Subtitle } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { addToast } from '~/libs/toasts/toasts.ts';
+import { redirectWithToast } from '~/libs/toasts/toast.server.ts';
 import { getSubmittedProposal } from '~/routes/__server/proposals/get-submitted-proposal.server.ts';
 import { ProposalSubmissionSchema } from '~/routes/__types/proposal.ts';
 import { useEvent } from '~/routes/$event+/_layout.tsx';
@@ -41,7 +41,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   const result = parse(form, { schema: ProposalSubmissionSchema });
   if (result.value) await submitProposal(params.talk, params.event, userId, result.value);
 
-  return redirect(`/${params.event}/proposals`, await addToast(request, 'Congratulation! Proposal submitted!'));
+  return redirectWithToast(`/${params.event}/proposals`, 'success', 'Congratulation! Proposal submitted!');
 };
 
 export default function SubmissionSubmitRoute() {
