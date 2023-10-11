@@ -1,6 +1,6 @@
 import { parse } from '@conform-to/zod';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { json, redirect } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import { Form, useActionData, useLoaderData, useNavigate } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
@@ -10,7 +10,7 @@ import { Container } from '~/design-system/layouts/Container.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { H3, Subtitle } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { addToast } from '~/libs/toasts/toasts.ts';
+import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
 import { CoSpeakersList, InviteCoSpeakerButton } from '~/routes/__components/proposals/forms/CoSpeaker.tsx';
 import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm.tsx';
 import { getEvent } from '~/routes/__server/events/get-event.server.ts';
@@ -41,7 +41,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     case 'remove-speaker': {
       const speakerId = form.get('_speakerId')?.toString() as string;
       await removeCoSpeakerFromProposal(userId, params.proposal, speakerId);
-      return json(null, await addToast(request, 'Co-speaker removed from proposal.'));
+      return toast('success', 'Co-speaker removed from proposal.');
     }
     case 'edit-proposal': {
       const { formatsRequired, categoriesRequired } = await getEvent(params.event);
@@ -49,7 +49,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       if (!result.value) return json(result.error);
 
       await updateProposal(params.event, params.proposal, userId, result.value);
-      return redirect(`/${params.event}/proposals/${params.proposal}`, await addToast(request, 'Proposal saved.'));
+      return redirectWithToast(`/${params.event}/proposals/${params.proposal}`, 'success', 'Proposal saved.');
     }
   }
   return json(null);

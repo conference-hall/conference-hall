@@ -9,7 +9,7 @@ import { Card } from '~/design-system/layouts/Card.tsx';
 import { Container } from '~/design-system/layouts/Container.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { addToast } from '~/libs/toasts/toasts.ts';
+import { toast } from '~/libs/toasts/toast.server.ts';
 import { SurveyForm } from '~/routes/__components/proposals/forms/SurveyForm.tsx';
 import { getAnswers } from '~/routes/__server/survey/get-answers.server.ts';
 import { getQuestions } from '~/routes/__server/survey/get-questions.server.ts';
@@ -34,7 +34,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   if (!result.value) return json(null);
 
   await saveSurvey(userId, params.event, result.value);
-  return json(null, await addToast(request, 'Survey saved.'));
+  return toast('success', 'Survey saved.');
 };
 
 export default function EventSurveyRoute() {

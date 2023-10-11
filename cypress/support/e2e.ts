@@ -144,7 +144,7 @@ Cypress.Commands.add('login', (username = 'Clark Kent') => {
 });
 
 Cypress.Commands.add('assertToast', (label) => {
-  cy.get('#toast').should('contain.text', label);
+  cy.get('[data-sonner-toast]').should('contain.text', label);
 });
 
 // We're waiting a second because of this issue happen randomly

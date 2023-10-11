@@ -1,7 +1,7 @@
 import { parse } from '@conform-to/zod';
 import { ArchiveBoxArrowDownIcon, ArchiveBoxXMarkIcon } from '@heroicons/react/24/outline';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { json, redirect } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
@@ -13,7 +13,7 @@ import { MarkdownTextArea } from '~/design-system/forms/MarkdownTextArea.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2, Subtitle } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { addToast } from '~/libs/toasts/toasts.ts';
+import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
 import { EventForm } from '~/routes/__components/events/EventForm.tsx';
 import { updateEvent } from '~/routes/__server/teams/update-event.server.ts';
 
@@ -40,19 +40,19 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       const updated = await updateEvent(params.event, userId, result.value);
       if (!updated.slug) return json({ slug: [updated.error] } as Record<string, string[]>);
 
-      throw redirect(`/team/${params.team}/${updated.slug}/settings`, await addToast(request, 'Event saved.'));
+      return redirectWithToast(`/team/${params.team}/${updated.slug}/settings`, 'success', 'Event saved.');
     }
     case 'details': {
       const result = parse(form, { schema: EventDetailsSettingsSchema });
       if (!result.value) return json(result.error);
 
       await updateEvent(params.event, userId, result.value);
-      return json(null, await addToast(request, 'Event details saved.'));
+      return toast('success', 'Event details saved.');
     }
     case 'archive': {
       const archived = Boolean(form.get('archived'));
       await updateEvent(params.event, userId, { archived });
-      return json(null, await addToast(request, `Event ${archived ? 'archived' : 'restored'}.`));
+      return toast('success', `Event ${archived ? 'archived' : 'restored'}.`);
     }
   }
   return json(null);

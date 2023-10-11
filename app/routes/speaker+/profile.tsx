@@ -9,7 +9,7 @@ import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { NavSideMenu } from '~/design-system/navigation/NavSideMenu.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
-import { addToast } from '~/libs/toasts/toasts.ts';
+import { toast } from '~/libs/toasts/toast.server.ts';
 import { useUser } from '~/root.tsx';
 import {
   saveUserAdditionalInfo,
@@ -54,7 +54,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       break;
     }
   }
-  return json(null, await addToast(request, 'Profile updated.'));
+  return toast('success', 'Profile updated.');
 };
 
 const MENU_ITEMS = [

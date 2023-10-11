@@ -1,6 +1,6 @@
 import { parse } from '@conform-to/zod';
 import type { LoaderFunctionArgs } from '@remix-run/node';
-import { json, redirect } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
 
 import { Button } from '~/design-system/Buttons.tsx';
@@ -9,7 +9,7 @@ import { Container } from '~/design-system/layouts/Container.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
-import { addToast } from '~/libs/toasts/toasts.ts';
+import { redirectWithToast } from '~/libs/toasts/toast.server.ts';
 import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm.tsx';
 import { TalkSaveSchema } from '~/routes/__types/talks.ts';
 
@@ -25,7 +25,7 @@ export const action = async ({ request }: LoaderFunctionArgs) => {
   if (!result.value) return json(result.error);
 
   const talkId = await createTalk(userId, result.value);
-  return redirect(`/speaker/talks/${talkId}`, await addToast(request, 'New talk created.'));
+  return redirectWithToast(`/speaker/talks/${talkId}`, 'success', 'New talk created.');
 };
 
 export default function NewTalkRoute() {

@@ -1,13 +1,13 @@
 import { parse } from '@conform-to/zod';
 import type { ActionFunction, LoaderFunctionArgs } from '@remix-run/node';
-import { json, redirect } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import { useLoaderData, useNavigate } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { Container } from '~/design-system/layouts/Container.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { addToast } from '~/libs/toasts/toasts.ts';
+import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
 import { ProposalDetailsSection } from '~/routes/__components/proposals/ProposalDetailsSection.tsx';
 import { ProposalStatusSection } from '~/routes/__components/proposals/ProposalStatusSection.tsx';
 import { getSpeakerProposal } from '~/routes/__server/proposals/get-speaker-proposal.server.ts';
@@ -35,13 +35,13 @@ export const action: ActionFunction = async ({ request, params }) => {
   switch (action) {
     case 'delete': {
       await deleteProposal(params.proposal, userId);
-      return redirect(`/${params.event}/proposals`, await addToast(request, 'Proposal submission removed.'));
+      return redirectWithToast(`/${params.event}/proposals`, 'success', 'Proposal submission removed.');
     }
     case 'confirm': {
       const result = parse(form, { schema: ProposalParticipationSchema });
       if (!result.value) return null;
       await sendParticipationAnswer(userId, params.proposal, result.value.participation);
-      return json(null, await addToast(request, 'Your response has been sent to organizers.'));
+      return toast('success', 'Your response has been sent to organizers.');
     }
     default:
       return null;

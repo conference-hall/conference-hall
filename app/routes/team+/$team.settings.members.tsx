@@ -14,7 +14,7 @@ import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
 import { Pagination } from '~/design-system/Pagination.tsx';
 import { H3, Subtitle } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { addToast } from '~/libs/toasts/toasts.ts';
+import { toast } from '~/libs/toasts/toast.server.ts';
 import { useUser } from '~/root.tsx';
 import { parsePage } from '~/routes/__types/pagination.ts';
 
@@ -48,11 +48,11 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     case 'change-role': {
       const memberRole = form.get('memberRole') as TeamRole;
       await changeMemberRole(params.team, userId, memberId, memberRole);
-      return json(null, await addToast(request, 'Member role changed.'));
+      return toast('success', 'Member role changed.');
     }
     case 'remove-member': {
       await removeMember(params.team, userId, memberId);
-      return json(null, await addToast(request, 'Member removed from team.'));
+      return toast('success', 'Member removed from team.');
     }
   }
   return null;

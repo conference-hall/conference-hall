@@ -8,7 +8,7 @@ import { ToggleGroup } from '~/design-system/forms/Toggles.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2, Subtitle } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { addToast } from '~/libs/toasts/toasts.ts';
+import { toast } from '~/libs/toasts/toast.server.ts';
 import { updateEvent } from '~/routes/__server/teams/update-event.server.ts';
 
 import { useOrganizerEvent } from '../_layout.tsx';
@@ -62,7 +62,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       const result = parse(form, { schema: EventTracksSettingsSchema });
       if (!result.value) return json(result.error);
       await updateEvent(params.event, userId, result.value);
-      return json(null, await addToast(request, 'Track setting updated.'));
+      return toast('success', 'Track setting updated.');
     }
   }
   return null;

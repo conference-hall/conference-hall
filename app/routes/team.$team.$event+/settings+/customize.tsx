@@ -11,7 +11,7 @@ import { Card } from '~/design-system/layouts/Card.tsx';
 import { ExternalLink } from '~/design-system/Links.tsx';
 import { H2, Subtitle } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { addToast } from '~/libs/toasts/toasts.ts';
+import { createToastHeaders } from '~/libs/toasts/toast.server.ts';
 
 import { useOrganizerEvent } from '../_layout.tsx';
 import { uploadEventLogo } from './__server/upload-event-logo.server.ts';
@@ -26,7 +26,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   invariant(params.event, 'Invalid event slug');
 
   const result = await uploadEventLogo(params.event, userId, request);
-  return json(result, await addToast(request, 'Logo updated.'));
+  return json(result, { headers: await createToastHeaders({ type: 'success', title: 'Logo updated.' }) });
 };
 
 export default function EventGeneralSettingsRoute() {

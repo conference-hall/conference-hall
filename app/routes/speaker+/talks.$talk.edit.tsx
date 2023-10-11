@@ -1,6 +1,6 @@
 import { parse } from '@conform-to/zod';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { json, redirect } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import { Form, useActionData, useLoaderData, useNavigate } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
@@ -11,7 +11,7 @@ import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { H3, Subtitle } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
-import { addToast } from '~/libs/toasts/toasts.ts';
+import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
 import { CoSpeakersList, InviteCoSpeakerButton } from '~/routes/__components/proposals/forms/CoSpeaker.tsx';
 import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm.tsx';
 import { getTalk } from '~/routes/__server/talks/get-talk.server.ts';
@@ -42,12 +42,12 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   if (intent === 'remove-speaker') {
     const speakerId = form.get('_speakerId')?.toString() as string;
     await removeCoSpeakerFromTalk(userId, params.talk, speakerId);
-    return json(null, await addToast(request, 'Co-speaker removed from talk.'));
+    return toast('success', 'Co-speaker removed from talk.');
   } else {
     const result = parse(form, { schema: TalkSaveSchema });
     if (!result.value) return json(result.error);
     await updateTalk(userId, params.talk, result.value);
-    return redirect(`/speaker/talks/${params.talk}`, await addToast(request, 'Talk updated.'));
+    return redirectWithToast(`/speaker/talks/${params.talk}`, 'success', 'Talk updated.');
   }
 };
 

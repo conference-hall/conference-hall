@@ -1,6 +1,6 @@
 import { parse } from '@conform-to/zod';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { json, redirect } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
@@ -8,7 +8,7 @@ import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2, Subtitle } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { addToast } from '~/libs/toasts/toasts.ts';
+import { redirectWithToast } from '~/libs/toasts/toast.server.ts';
 import { TeamForm } from '~/routes/__components/teams/TeamForm.tsx';
 
 import { updateTeam } from './__server/update-team.server.ts';
@@ -31,7 +31,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const team = await updateTeam(params.team, userId, result.value);
   if (team?.fieldErrors) return json(team.fieldErrors);
 
-  return redirect(`/team/${team.slug}/settings`, await addToast(request, 'Team settings saved.'));
+  return redirectWithToast(`/team/${team.slug}/settings`, 'success', 'Team settings saved.');
 };
 
 export default function OrganizationSettingsRoute() {

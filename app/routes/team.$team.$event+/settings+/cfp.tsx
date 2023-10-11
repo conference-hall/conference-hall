@@ -5,7 +5,7 @@ import { useActionData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { requireSession } from '~/libs/auth/session.ts';
-import { addToast } from '~/libs/toasts/toasts.ts';
+import { toast } from '~/libs/toasts/toast.server.ts';
 import { updateEvent } from '~/routes/__server/teams/update-event.server.ts';
 
 import { useOrganizerEvent } from '../_layout.tsx';
@@ -46,7 +46,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     }
   }
 
-  return json(null, await addToast(request, 'Call for paper updated.'));
+  return toast('success', 'Call for paper updated.');
 };
 
 export default function EventCfpSettingsRoute() {
