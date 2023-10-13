@@ -26,10 +26,10 @@ export function Navbar({ user, withSearch }: Props) {
     <Disclosure as="div" className="bg-gray-800">
       {({ open }) => (
         <>
-          <div className="flex h-16 items-center justify-between px-4 sm:px-8">
+          <div className="flex h-16 items-center justify-between px-4 lg:px-8">
             <div className="flex w-full items-center">
               {/* Logo */}
-              <Logo />
+              <Logo displayName={!withSearch} />
 
               {/* Search */}
               {withSearch && <SearchEventsInput />}

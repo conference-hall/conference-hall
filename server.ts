@@ -56,6 +56,7 @@ async function run() {
   app.use(
     helmet({
       contentSecurityPolicy: {
+        reportOnly: true,
         directives: {
           'connect-src': [process.env.NODE_ENV === 'development' ? 'ws:' : null, "'self'"].filter(Boolean) as string[],
           'font-src': ["'self'"],
