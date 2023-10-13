@@ -12,7 +12,7 @@ export function SearchEventsInput({ filters }: Props) {
   const talkId = searchParams.get('talkId');
 
   return (
-    <Form action="/" method="GET" className="mt-10 flex flex-1 justify-center lg:justify-center">
+    <Form action="/" method="GET" className="flex flex-1 justify-center lg:justify-center">
       {type && <input type="hidden" name="type" value={type} />}
       {talkId && <input type="hidden" name="talkId" value={talkId} />}
 

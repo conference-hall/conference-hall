@@ -6,7 +6,7 @@ import { useLoaderData, useSearchParams } from '@remix-run/react';
 import { Container } from '~/design-system/layouts/Container.tsx';
 import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
 import { Pagination } from '~/design-system/Pagination.tsx';
-import { H1, H2, Text } from '~/design-system/Typography.tsx';
+import { H2, Text } from '~/design-system/Typography.tsx';
 import { useUser } from '~/root.tsx';
 import { EventCard } from '~/routes/__components/EventCard.tsx';
 import { Footer } from '~/routes/__components/Footer.tsx';
@@ -36,27 +36,26 @@ export default function IndexRoute() {
       <Navbar user={user} />
 
       <div className="bg-gray-800 shadow">
-        <Container className="pb-8 sm:pb-16 sm:pt-10">
-          <H1 size="4xl" variant="light" align="center">
-            Conference Hall
-          </H1>
-          <Text size="l" variant="light" align="center">
-            Call for papers for conferences and meetups.
-          </Text>
+        <Container className="py-4 pt-0 lg:pb-16 lg:pt-10">
+          <div className="hidden lg:mb-8 lg:block">
+            <Text size="2xl" weight="bold" variant="light" align="center">
+              Call for papers for conferences and meetups.
+            </Text>
+          </div>
           <SearchEventsInput filters={filters} />
         </Container>
       </div>
 
-      <Container className="pt-8 sm:pt-16">
-        <div className="mb-10 flex items-center justify-between">
+      <Container className="pt-8">
+        <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <H2 size="xl">Incoming call for papers</H2>
           <SearchEventsFilters filters={filters} />
         </div>
         {results?.length === 0 ? (
           <EmptyState icon={FaceFrownIcon} label="No results found!" />
         ) : (
-          <div className="space-y-8">
-            <ul aria-label="Search results" className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+          <div className="flex-col items-center space-y-8">
+            <ul aria-label="Search results" className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-8">
               {results.map((event) => (
                 <EventCard
                   key={event.slug}
