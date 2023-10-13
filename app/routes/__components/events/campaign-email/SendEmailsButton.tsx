@@ -1,4 +1,3 @@
-import { PaperAirplaneIcon } from '@heroicons/react/24/outline';
 import { Form, useNavigation } from '@remix-run/react';
 import { useState } from 'react';
 
@@ -68,7 +67,7 @@ function SendEmailsModal({ title, selection, isOpen, onClose, onSend }: SendEmai
   return (
     <Modal open={isOpen} onClose={onClose}>
       <Form method="POST" onSubmit={handleSubmit}>
-        <Modal.Title title={title} icon={PaperAirplaneIcon} iconColor="info" />
+        <Modal.Title title={title} />
         {selection.map((id) => (
           <input key={id} type="hidden" name="selection" value={id} />
         ))}
