@@ -19,7 +19,7 @@ export function EventTabs({ slug, type, surveyEnabled }: Props) {
   return (
     <div className="bg-gray-800">
       <Container>
-        <NavTabs tabs={eventTabs} variant="dark" py={4} />
+        <NavTabs tabs={eventTabs} variant="dark" py={4} scrollable />
       </Container>
     </div>
   );

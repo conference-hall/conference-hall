@@ -14,5 +14,5 @@ export function EventTabs({ teamSlug, eventSlug, role }: Props) {
     [teamSlug, eventSlug, role],
   );
 
-  return <NavTabs tabs={tabs} py={4} />;
+  return <NavTabs tabs={tabs} py={4} scrollable />;
 }

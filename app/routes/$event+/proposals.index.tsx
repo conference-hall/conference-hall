@@ -33,7 +33,7 @@ export default function EventSpeakerProposalsRoute() {
       </PageHeaderTitle>
 
       <Container className="mt-4 sm:my-8">
-        <ProposalsList proposals={proposals} cfpState={event.cfpState} />
+        <ProposalsList proposals={proposals} />
       </Container>
     </>
   );

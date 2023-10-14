@@ -2,23 +2,16 @@ import { InboxIcon } from '@heroicons/react/24/outline';
 
 import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
 import { ProposalCard } from '~/routes/__components/proposals/ProposalCard.tsx';
-import type { CfpState } from '~/routes/__types/event.ts';
 
 import type { EventProposals } from '../proposals.index.tsx';
-import { CfpLabel } from './CfpLabel.tsx';
 
 type Props = {
   proposals: EventProposals;
-  cfpState: CfpState;
 };
 
-export function ProposalsList({ proposals, cfpState }: Props) {
+export function ProposalsList({ proposals }: Props) {
   if (proposals.length === 0) {
-    return (
-      <EmptyState icon={InboxIcon} label="No proposals submitted!">
-        <CfpLabel cfpState={cfpState} />
-      </EmptyState>
-    );
+    return <EmptyState icon={InboxIcon} label="No proposals submitted!" />;
   }
 
   return (
