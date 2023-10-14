@@ -64,7 +64,7 @@ export function CardLink({ as, rounded, p, variant, className, children, ...rest
 // <Card.Title /> component
 
 function Title({ children, className }: { children: React.ReactNode; className?: string }) {
-  return <div className={cx('px-8 pt-8', className)}>{children}</div>;
+  return <div className={cx('px-4 pt-4 md:px-8 md:pt-8', className)}>{children}</div>;
 }
 
 Card.Title = Title;
@@ -72,7 +72,7 @@ Card.Title = Title;
 // <Card.Content /> component
 
 function Content({ children }: { children: React.ReactNode }) {
-  return <div className="flex flex-col gap-6 p-8">{children}</div>;
+  return <div className="flex flex-col gap-6 p-4 md:p-8">{children}</div>;
 }
 
 Card.Content = Content;
@@ -80,7 +80,7 @@ Card.Content = Content;
 // <Card.Actions /> component
 
 function Actions({ children }: { children: React.ReactNode }) {
-  return <div className="flex justify-end gap-4 border-t border-t-gray-200 px-8 py-4">{children}</div>;
+  return <div className="flex justify-end gap-4 border-t border-t-gray-200 px-4 md:px-8 py-4">{children}</div>;
 }
 
 Card.Actions = Actions;

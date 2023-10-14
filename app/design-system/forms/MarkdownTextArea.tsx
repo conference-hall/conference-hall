@@ -34,7 +34,7 @@ export function MarkdownTextArea({
   const handleOpenPreview = () => setPreviewOpen(true);
   const handleChangeText: ChangeEventHandler<HTMLTextAreaElement> = (e) => setMarkdown(e.target.value);
 
-  const styles = cx('shadow-sm block w-full text-gray-900 sm:text-sm rounded-md overflow-hidden border mt-1', {
+  const styles = cx('shadow-sm block w-full text-gray-900 text-sm rounded-md overflow-hidden border mt-1', {
     [baseStyles]: !error,
     [errorStyles]: !!error,
   });
@@ -49,7 +49,7 @@ export function MarkdownTextArea({
           <textarea
             id={name}
             name={name}
-            className="block w-full border-0 py-3 placeholder-gray-500 focus:ring-0 sm:text-sm"
+            className="block w-full border-0 py-3 placeholder-gray-500 focus:ring-0 text-sm"
             {...rest}
             defaultValue={defaultValue}
             onChange={handleChangeText}

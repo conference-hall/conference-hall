@@ -21,11 +21,11 @@ function InputField(
     [errorStyles]: !!error,
   });
 
-  const inputStyles = cx('block flex-1 border-0 bg-transparent py-1.5 focus:ring-0 sm:text-sm sm:leading-6', {
+  const inputStyles = cx('block flex-1 border-0 bg-transparent py-1.5 focus:ring-0 text-sm leading-6', {
     'text-gray-900 placeholder:text-gray-400': !error,
     'text-red-900 placeholder-red-300': Boolean(error),
     'pl-2': Boolean(Icon),
-    'pl-0.5': Boolean(addon),
+    'md:pl-0': Boolean(addon),
   });
 
   return (
@@ -41,7 +41,7 @@ function InputField(
             <Icon className="h-5 w-5 text-gray-400" aria-hidden="true" />
           </div>
         )}
-        {addon && <span className="flex select-none items-center pl-3 text-gray-500 sm:text-sm">{addon}</span>}
+        {addon && <span className="hidden md:flex select-none items-center pl-3 text-gray-500 text-sm">{addon}</span>}
         <input
           id={name}
           name={name}

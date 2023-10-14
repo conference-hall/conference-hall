@@ -32,7 +32,7 @@ export default function Select({ name, label, options, value, onChange, classNam
             {label}
           </Listbox.Label>
           <div className={cx('relative', { 'mt-2': !srOnly })}>
-            <Listbox.Button className="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
+            <Listbox.Button className="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 text-sm">
               <Text as="div" truncate>
                 {options.find((o) => o.id === value)?.label}
               </Text>
@@ -42,7 +42,7 @@ export default function Select({ name, label, options, value, onChange, classNam
             </Listbox.Button>
 
             <SelectTransition show={open}>
-              <Listbox.Options className="absolute z-30 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+              <Listbox.Options className="absolute z-30 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                 {options.map((option) => (
                   <Listbox.Option
                     key={option.id}
