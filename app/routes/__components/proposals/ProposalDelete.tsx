@@ -1,4 +1,3 @@
-import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import { Form } from '@remix-run/react';
 import { useState } from 'react';
 
@@ -28,8 +27,6 @@ function ProposalDeleteModal({ isOpen, onClose }: DeleteProposalModalProps) {
         <Modal.Title
           title="Are you sure you want to delete your proposal?"
           description="The talk will still be in your profile, so you will be able to submit it again later."
-          icon={ExclamationTriangleIcon}
-          iconColor="danger"
         />
         <input type="hidden" name="_action" value="delete" />
         <Modal.Actions>

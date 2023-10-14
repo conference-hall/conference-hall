@@ -1,4 +1,3 @@
-import { StarIcon } from '@heroicons/react/20/solid';
 import { useState } from 'react';
 
 import { Button } from './Buttons.tsx';
@@ -21,7 +20,7 @@ export const Documentation = () => {
       <StoryBlock title="With title and actions" vertical>
         <Button onClick={() => setOpen2(true)}>Open modal</Button>
         <Modal open={open2} onClose={() => setOpen2(false)}>
-          <Modal.Title title="Welcome" description="To a new world" icon={StarIcon} iconColor="info" />
+          <Modal.Title title="Welcome" description="To a new world" />
           Hello world !!!
           <Modal.Actions>
             <Button variant="secondary">Close</Button>

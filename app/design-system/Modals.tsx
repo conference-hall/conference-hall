@@ -27,28 +27,18 @@ export function Modal({ open, onClose, children, size, p, position = 'center' }:
 
 // MODAL Title
 
-const iconTextColors = { info: 'text-indigo-600', danger: 'text-red-600' };
-const iconBgColors = { info: 'bg-indigo-100', danger: 'bg-red-100' };
-
 type ModalTitleProps = {
-  icon: React.ComponentType<{ className?: string }>;
   title: string;
   description?: string;
-  iconColor?: keyof typeof iconTextColors;
 };
 
-function Title({ icon: Icon, title, description, iconColor = 'info' }: ModalTitleProps) {
+function Title({ title, description }: ModalTitleProps) {
   return (
-    <div>
-      <div className={cx('mx-auto flex h-12 w-12 items-center justify-center rounded-full', iconBgColors[iconColor])}>
-        <Icon className={cx('h-6 w-6', iconTextColors[iconColor])} aria-hidden="true" />
-      </div>
-      <div className="mt-3 text-center sm:mt-5">
-        <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900">
-          {title}
-        </Dialog.Title>
-        {description && <Text variant="secondary">{description}</Text>}
-      </div>
+    <div className="mt-2 sm:mt-3">
+      <Dialog.Title as="h3" className="text-base font-semibold text-gray-900 mb-1">
+        {title}
+      </Dialog.Title>
+      {description && <Text variant="secondary">{description}</Text>}
     </div>
   );
 }

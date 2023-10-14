@@ -1,5 +1,4 @@
 import { UserPlusIcon } from '@heroicons/react/20/solid';
-import { ShieldExclamationIcon, UserMinusIcon } from '@heroicons/react/24/outline';
 import { Form } from '@remix-run/react';
 import { useState } from 'react';
 
@@ -47,8 +46,6 @@ function RemoveRoleModal({ memberId, memberName, isOpen, onClose }: RemoveModalP
         <Modal.Title
           title={`Remove ${memberName} from the team?`}
           description="The member will be removed from the team and won't be able to access it anymore."
-          icon={UserMinusIcon}
-          iconColor="danger"
         />
         <input type="hidden" name="_action" value="remove-member" />
         <input type="hidden" name="_memberId" value={memberId} />
@@ -106,7 +103,7 @@ function ChangeRoleModal({ memberId, memberName, memberRole, isOpen, onClose }: 
   return (
     <Modal open={isOpen} onClose={onClose}>
       <Form method="POST" onSubmit={onClose}>
-        <Modal.Title title={`Change the role of ${memberName}?`} icon={ShieldExclamationIcon} />
+        <Modal.Title title={`Change the role of ${memberName}?`} />
         <RadioGroup className="mt-4 sm:mt-8">
           {ALL_ROLES.map((role) => (
             <Radio

@@ -1,4 +1,4 @@
-import { ExclamationTriangleIcon, PencilIcon, PlusIcon } from '@heroicons/react/20/solid';
+import { PencilIcon, PlusIcon } from '@heroicons/react/20/solid';
 import { Form } from '@remix-run/react';
 import { useState } from 'react';
 
@@ -56,8 +56,6 @@ function SaveTrackFormModal({ type, initialValues, isOpen, onClose }: SaveTrackF
         <Modal.Title
           title={type === 'formats' ? 'Format track' : 'Category track'}
           description="Provide a name and description."
-          icon={ExclamationTriangleIcon}
-          iconColor="info"
         />
         <div className="space-y-4">
           <input type="hidden" name="_action" value={`save-${type}`} />
