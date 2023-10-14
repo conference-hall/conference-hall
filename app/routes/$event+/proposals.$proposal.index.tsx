@@ -58,7 +58,10 @@ export default function ProposalRoute() {
       <PageHeaderTitle title={proposal.title} backOnClick={() => navigate(-1)} />
 
       <Container className="my-4 space-y-8 sm:my-8">
-        <div className="grid grid-cols-1 gap-6 lg:grid-flow-col-dense lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 lg:gap-6 lg:grid-flow-col-dense lg:grid-cols-3">
+          <div className="lg:col-span-1 lg:col-start-3">
+            <ProposalStatusSection proposal={proposal} event={event} />
+          </div>
           <div className="lg:col-span-2 lg:col-start-1">
             <ProposalDetailsSection
               abstract={proposal.abstract}
@@ -69,10 +72,6 @@ export default function ProposalRoute() {
               languages={proposal.languages}
               speakers={proposal.speakers}
             />
-          </div>
-
-          <div className="lg:col-span-1 lg:col-start-3">
-            <ProposalStatusSection proposal={proposal} event={event} />
           </div>
         </div>
       </Container>

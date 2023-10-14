@@ -14,7 +14,7 @@ export function ArchivedFilters() {
           to={pathname}
           variant={!archived ? 'primary' : 'secondary'}
           size="s"
-          className="rounded-r-none border-r-0"
+          className="rounded-r-none border-0 ring-1 ring-inset ring-gray-300"
         >
           Active
         </ButtonLink>
@@ -22,7 +22,7 @@ export function ArchivedFilters() {
           to={{ pathname: pathname, search: 'archived=true' }}
           variant={archived ? 'primary' : 'secondary'}
           size="s"
-          className="rounded-l-none border-l-0"
+          className="rounded-l-none -ml-px border-0 ring-1 ring-inset ring-gray-300"
         >
           Archived
         </ButtonLink>

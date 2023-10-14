@@ -10,7 +10,7 @@ type Props = { cfpState: CfpState; cfpStart?: string; cfpEnd?: string; className
 
 export function CfpSection({ cfpState, cfpStart, cfpEnd }: Props) {
   return (
-    <section className="mb-8 bg-white shadow">
+    <section className="mb-4 bg-white shadow lg:mb-8">
       <Container className="flex h-full flex-col gap-4 px-4 py-6 sm:h-24 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
         <div className="flex items-center gap-2">
           <div className="truncate">

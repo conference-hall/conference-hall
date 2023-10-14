@@ -96,7 +96,7 @@ export default function EventSubmissionRoute() {
         </Container>
       </div>
 
-      <Container className="space-y-8 pb-16 pt-8">
+      <Container className="space-y-8 py-4 md:py-6 lg:pt-8 lg:pb-16">
         <Outlet context={{ user, event }} />
       </Container>
     </>

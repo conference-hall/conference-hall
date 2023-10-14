@@ -39,7 +39,7 @@ export function CampaignEmailFilters({ type }: Props) {
           type="button"
           variant="secondary"
           onClick={() => handleChange('not-sent')}
-          className={cx('rounded-none rounded-l-md focus:z-10 focus:ring-offset-0', {
+          className={cx('rounded-none rounded-l-md border-0 ring-1 ring-inset ring-gray-300', {
             'bg-gray-100': isSendEmailPage,
           })}
         >
@@ -49,7 +49,7 @@ export function CampaignEmailFilters({ type }: Props) {
           type="button"
           variant="secondary"
           onClick={() => handleChange('sent')}
-          className={cx('rounded-none rounded-r-md border-l-0 focus:z-10 focus:ring-offset-0', {
+          className={cx('rounded-none rounded-r-md -ml-px border-0 ring-1 ring-inset ring-gray-300', {
             'bg-gray-100': !isSendEmailPage,
           })}
         >

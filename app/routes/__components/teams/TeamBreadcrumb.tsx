@@ -23,17 +23,18 @@ type Props = {
 
 export default function TeamBreadcrumb({ team, event }: Props) {
   return (
-    <div className="flex flex-col items-center justify-between gap-4 pt-4 sm:flex-row sm:gap-8">
-      <nav className="flex items-center gap-4">
+    <div className="flex justify-between gap-4 pt-4">
+      <nav className="flex items-center gap-2 lg:gap-4 truncate">
         <Link
           to={`/team/${team.slug}`}
           variant="secondary"
           size="l"
           weight={event ? 'medium' : 'bold'}
+          truncate
           className="gap-2"
         >
           <Square3Stack3DIcon className="h-6 w-6 text-gray-600" />
-          {team.name}
+          <span className="truncate">{team.name}</span>
         </Link>
         {event && (
           <>
@@ -44,10 +45,11 @@ export default function TeamBreadcrumb({ team, event }: Props) {
               variant="secondary"
               size="l"
               weight={event ? 'bold' : 'medium'}
+              truncate
               className="gap-2"
             >
               <Avatar size="xs" picture={event.logo} name={event.name} square aria-hidden />
-              {event.name}
+              <span className="truncate">{event.name}</span>
               <ArrowTopRightOnSquareIcon className="h-4 w-4" />
             </Link>
           </>
@@ -63,7 +65,7 @@ export default function TeamBreadcrumb({ team, event }: Props) {
           cfpState={event.cfpState}
           cfpStart={event.cfpStart}
           cfpEnd={event.cfpEnd}
-          className="hidden sm:flex"
+          className="hidden md:flex"
         />
       )}
     </div>

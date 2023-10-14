@@ -16,8 +16,8 @@ export function TeamTabs({ slug, role }: Props) {
   );
 
   return (
-    <div className="flex items-center justify-between">
-      <NavTabs tabs={tabs} py={4} />
+    <div className="flex flex-col pb-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:pb-0">
+      <NavTabs tabs={tabs} py={4} scrollable />
       {role === 'OWNER' && <NewEventButton slug={slug} />}
     </div>
   );

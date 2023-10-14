@@ -17,6 +17,7 @@ type Props = {
   tabs: Array<NavTabProps | NavTabDropdownProps>;
   variant?: keyof typeof BACKGROUND;
   py?: keyof typeof PADDING_Y;
+  scrollable?: boolean;
 };
 
 const BACKGROUND = {
@@ -39,11 +40,14 @@ const PADDING_Y = {
   4: 'py-4',
 };
 
-export function NavTabs({ tabs, py = 0, variant = 'light' }: Props) {
+export function NavTabs({ tabs, py = 0, variant = 'light', scrollable = false }: Props) {
   const enabledTabs = useMemo(() => tabs.filter((tab) => tab.enabled), [tabs]);
 
   return (
-    <nav className={cx('flex space-x-4', PADDING_Y[py], BACKGROUND[variant])} aria-label="Tabs">
+    <nav
+      className={cx('flex space-x-4', PADDING_Y[py], BACKGROUND[variant], { 'overflow-x-auto': scrollable })}
+      aria-label="Tabs"
+    >
       {enabledTabs.map((tab) =>
         'to' in tab ? (
           <NavLink
@@ -51,7 +55,7 @@ export function NavTabs({ tabs, py = 0, variant = 'light' }: Props) {
             to={tab.to}
             end={tab.end}
             className={(tab) =>
-              cx('rounded-md px-3 py-2 text-sm font-medium', {
+              cx('rounded-md px-3 py-2 text-sm font-medium whitespace-nowrap', {
                 [DEFAULT_LINKS[variant]]: !tab.isActive,
                 [ACTIVE_LINKS[variant]]: tab.isActive,
               })
