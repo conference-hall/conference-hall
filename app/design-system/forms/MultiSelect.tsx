@@ -42,7 +42,7 @@ export default function MultiSelect({ name, label, placeholder, options, default
         <div className={className}>
           <Listbox.Label className="block text-sm font-medium leading-6 text-gray-900">{label}</Listbox.Label>
           <div className="relative mt-2">
-            <Listbox.Button className="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
+            <Listbox.Button className="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 text-sm">
               {selected.length > 0 ? (
                 <div className="space-x-2">
                   <SelectedOptions selectedValues={selected} options={options} />
@@ -58,7 +58,7 @@ export default function MultiSelect({ name, label, placeholder, options, default
             </Listbox.Button>
 
             <SelectTransition show={open}>
-              <Listbox.Options className="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+              <Listbox.Options className="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none text-sm">
                 {options.map((option) => (
                   <Listbox.Option
                     key={option.value}

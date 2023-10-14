@@ -23,7 +23,7 @@ export function CopyInput({ id, type = 'text', value, className, error, ...rest 
             id={id}
             type={type}
             value={value}
-            className="block w-full rounded-none rounded-l-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            className="block w-full rounded-none rounded-l-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 text-sm"
             {...rest}
           />
         </div>

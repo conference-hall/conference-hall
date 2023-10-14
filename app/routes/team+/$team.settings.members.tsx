@@ -99,7 +99,7 @@ export default function OrganizationSettingsRoute() {
                         subtitle={member.role.toLowerCase()}
                       />
                       {user?.id !== member.id && (
-                        <div className="flex w-full gap-2 sm:w-auto">
+                        <div className="flex w-full gap-2 mt-4 sm:mt-0 sm:w-auto">
                           <ChangeRoleButton memberId={member.id} memberName={member.name} memberRole={member.role} />
                           <RemoveButton memberId={member.id} memberName={member.name} />
                         </div>

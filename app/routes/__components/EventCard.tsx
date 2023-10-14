@@ -19,7 +19,7 @@ export function EventCard({ to, name, type, logo, cfpState, cfpStart, cfpEnd }: 
   return (
     <CardLink as="li" to={to} className="flex h-20 lg:h-32 justify-between">
       {/* Desktop */}
-      <Avatar picture={logo} name={name} size="4xl" square className="hidden lg:block rounded-r-none" />
+      <Avatar picture={logo} name={name} size="4xl" square className="hidden lg:flex rounded-r-none" />
       {/* Mobile */}
       <Avatar picture={logo} name={name} size="2xl" square className="lg:hidden rounded-r-none" />
 

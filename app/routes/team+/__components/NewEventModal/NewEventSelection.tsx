@@ -16,7 +16,7 @@ export function NewEventSelection({ onSubmit, onCancel }: Props) {
   const [type, setType] = useState<'MEETUP' | 'CONFERENCE' | null>(null);
 
   return (
-    <div className="flex flex-col gap-16">
+    <div className="flex flex-col gap-8">
       <div>
         <H1>Create a new event</H1>
         <Subtitle>Select the event type you want to create.</Subtitle>
