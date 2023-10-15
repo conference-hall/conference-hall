@@ -5,7 +5,7 @@ import { Form, useActionData } from '@remix-run/react';
 
 import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
-import { Container } from '~/design-system/layouts/Container.tsx';
+import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
@@ -35,7 +35,7 @@ export default function NewTalkRoute() {
     <>
       <PageHeaderTitle title="Create a new talk" backTo="/speaker/talks" />
 
-      <Container className="mt-4 space-y-8 sm:mt-8">
+      <PageContent>
         <Card>
           <Card.Content>
             <Form method="POST" id="new-talk-form" className="space-y-8">
@@ -49,7 +49,7 @@ export default function NewTalkRoute() {
             </Button>
           </Card.Actions>
         </Card>
-      </Container>
+      </PageContent>
     </>
   );
 }

@@ -4,7 +4,7 @@ import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { ButtonLink } from '~/design-system/Buttons.tsx';
-import { Container } from '~/design-system/layouts/Container.tsx';
+import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 
@@ -32,9 +32,9 @@ export default function EventSpeakerProposalsRoute() {
         {event.cfpState === 'OPENED' && <ButtonLink to="../submission">Submit a proposal</ButtonLink>}
       </PageHeaderTitle>
 
-      <Container className="mt-4 sm:my-8">
+      <PageContent>
         <ProposalsList proposals={proposals} />
-      </Container>
+      </PageContent>
     </>
   );
 }

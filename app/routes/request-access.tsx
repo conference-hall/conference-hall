@@ -4,7 +4,7 @@ import { Form, useActionData } from '@remix-run/react';
 
 import { Button } from '~/design-system/Buttons.tsx';
 import { Input } from '~/design-system/forms/Input.tsx';
-import { Container } from '~/design-system/layouts/Container.tsx';
+import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { ExternalLink } from '~/design-system/Links.tsx';
 import { H1, Subtitle } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
@@ -38,9 +38,9 @@ export default function RequestAccessRoute() {
     <>
       <Navbar user={user} withSearch />
 
-      <Container className="my-4 flex justify-center sm:my-8">
-        <div className="flex max-w-2xl flex-col items-center p-8">
-          <H1 mb={4}>Become event organizer</H1>
+      <PageContent className="flex justify-center">
+        <div>
+          <H1>Become event organizer</H1>
           <Subtitle>
             Conference Hall for event organizers is in closed-beta access, you need a key to access it.
           </Subtitle>
@@ -48,7 +48,7 @@ export default function RequestAccessRoute() {
             You can request a beta key by filling{' '}
             <ExternalLink href="https://forms.gle/AnArRCSHibmG59zw7">this form.</ExternalLink>
           </Subtitle>
-          <Form method="POST" className="mt-12 w-full space-y-8">
+          <Form method="POST" className="mt-8 w-full space-y-4">
             <Input
               name="key"
               aria-label="Beta access key"
@@ -56,12 +56,10 @@ export default function RequestAccessRoute() {
               required
               error={errors?.key}
             />
-            <Button type="submit" block>
-              Get access to Conference Hall
-            </Button>
+            <Button type="submit">Get access to Conference Hall</Button>
           </Form>
         </div>
-      </Container>
+      </PageContent>
     </>
   );
 }

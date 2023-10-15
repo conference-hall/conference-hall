@@ -1,4 +1,4 @@
-import { Container } from '~/design-system/layouts/Container.tsx';
+import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 
 import { CfpSection } from './__components/CfpSection.tsx';
 import { DetailsSection } from './__components/DetailsSection.tsx';
@@ -14,7 +14,7 @@ export default function EventRoute() {
     <>
       <CfpSection cfpState={event.cfpState} cfpStart={event.cfpStart} cfpEnd={event.cfpEnd} />
 
-      <Container>
+      <PageContent>
         <DetailsSection
           type={event.type}
           description={event.description}
@@ -34,7 +34,7 @@ export default function EventRoute() {
             />
           </div>
         )}
-      </Container>
+      </PageContent>
     </>
   );
 }

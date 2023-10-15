@@ -36,7 +36,7 @@ export default function ProposalSpeakersRoute() {
 
         return (
           <Card as="li" p={8} key={speaker.id} className="space-y-6">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-4 items-start lg:items-center lg:justify-between lg:flex-row">
               <AvatarName
                 name={`${speaker.name} - ${speaker.email}`}
                 picture={speaker.picture}

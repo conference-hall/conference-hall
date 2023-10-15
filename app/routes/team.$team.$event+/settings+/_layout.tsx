@@ -14,7 +14,7 @@ import type { LoaderFunctionArgs } from '@remix-run/node';
 import { Outlet } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { Container } from '~/design-system/layouts/Container.tsx';
+import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { NavSideMenu } from '~/design-system/navigation/NavSideMenu.tsx';
 import { H2 } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
@@ -51,14 +51,18 @@ export default function OrganizationSettingsRoute() {
   const menus = getMenuItems(team.slug, event.slug);
 
   return (
-    <Container className="mt-4 flex gap-8 sm:mt-8">
+    <PageContent className="flex flex-col lg:flex-row">
       <H2 srOnly>Event settings</H2>
 
-      <NavSideMenu aria-label="Event settings menu" items={menus} className="sticky top-4 self-start" />
+      <NavSideMenu
+        aria-label="Event settings menu"
+        items={menus}
+        className="w-full self-start lg:w-60 lg:sticky lg:top-4"
+      />
 
-      <div className="min-w-0 flex-1 space-y-6 sm:px-6 lg:px-0">
+      <div className="flex-1 space-y-6">
         <Outlet context={{ user, team, event }} />
       </div>
-    </Container>
+    </PageContent>
   );
 }

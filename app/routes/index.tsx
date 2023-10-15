@@ -3,10 +3,10 @@ import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData, useSearchParams } from '@remix-run/react';
 
-import { Container } from '~/design-system/layouts/Container.tsx';
 import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
+import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { Pagination } from '~/design-system/Pagination.tsx';
-import { H2, Text } from '~/design-system/Typography.tsx';
+import { H1, H2 } from '~/design-system/Typography.tsx';
 import { useUser } from '~/root.tsx';
 import { EventCard } from '~/routes/__components/EventCard.tsx';
 import { Footer } from '~/routes/__components/Footer.tsx';
@@ -35,18 +35,16 @@ export default function IndexRoute() {
     <>
       <Navbar user={user} />
 
-      <div className="bg-gray-800 shadow">
-        <Container className="py-4 pt-0 lg:pb-16 lg:pt-10">
-          <div className="hidden lg:mb-8 lg:block">
-            <Text size="2xl" weight="bold" variant="light" align="center">
-              Call for papers for conferences and meetups.
-            </Text>
-          </div>
-          <SearchEventsInput filters={filters} />
-        </Container>
+      <div className="bg-gray-800 shadow p-4 pt-0 lg:pb-16 lg:pt-10">
+        <div className="hidden lg:mb-8 lg:block">
+          <H1 size="2xl" variant="light" align="center">
+            Call for papers for conferences and meetups.
+          </H1>
+        </div>
+        <SearchEventsInput filters={filters} />
       </div>
 
-      <Container className="pt-8">
+      <PageContent>
         <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <H2 size="xl">Incoming call for papers</H2>
           <SearchEventsFilters filters={filters} />
@@ -72,7 +70,7 @@ export default function IndexRoute() {
             <Pagination {...pagination} />
           </div>
         )}
-      </Container>
+      </PageContent>
 
       <Footer />
     </>

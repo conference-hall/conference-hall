@@ -38,10 +38,10 @@ export function SpeakerActivitiesSection({ activities, nextPage, hasNextPage, cl
 
   return (
     <section className={className}>
-      <ul aria-label="Activities list" className="space-y-8">
+      <ul aria-label="Activities list" className="space-y-4 lg:space-y-6">
         {activities.map((event) => (
           <Card key={event.slug} as="li" className="flex flex-col">
-            <div className="flex items-center justify-between border-b border-b-gray-200 p-6">
+            <div className="flex items-center justify-between border-b border-b-gray-200 p-4">
               <div className="flex items-center gap-4">
                 <Avatar picture={event.logo} name={event.name} square size="l" />
                 <div className="truncate">
@@ -61,7 +61,7 @@ export function SpeakerActivitiesSection({ activities, nextPage, hasNextPage, cl
             </div>
             <ul aria-label={`${event.name} activities`} className="divide-y">
               {event.submissions.map((submission) => (
-                <li key={submission.id} className="flex flex-col gap-1 px-6 py-4">
+                <li key={submission.id} className="flex flex-col gap-1 p-4">
                   <div className="flex items-center justify-between">
                     <Link to={`/${event.slug}/proposals/${submission.id}`} size="base" weight="medium" truncate>
                       {submission.title}

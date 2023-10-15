@@ -6,6 +6,7 @@ import invariant from 'tiny-invariant';
 
 import { IconButtonLink } from '~/design-system/IconButtons.tsx';
 import { Container } from '~/design-system/layouts/Container.tsx';
+import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { CfpNotOpenError } from '~/libs/errors.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
@@ -96,9 +97,9 @@ export default function EventSubmissionRoute() {
         </Container>
       </div>
 
-      <Container className="space-y-8 py-4 md:py-6 lg:pt-8 lg:pb-16">
+      <PageContent className="flex flex-col">
         <Outlet context={{ user, event }} />
-      </Container>
+      </PageContent>
     </>
   );
 }

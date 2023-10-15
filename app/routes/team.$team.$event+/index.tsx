@@ -7,8 +7,8 @@ import { useMemo } from 'react';
 import invariant from 'tiny-invariant';
 
 import { useCheckboxSelection } from '~/design-system/forms/useCheckboxSelection.tsx';
-import { Container } from '~/design-system/layouts/Container.tsx';
 import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
+import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { Pagination } from '~/design-system/Pagination.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
@@ -53,10 +53,10 @@ export default function OrganizerEventProposalsRoute() {
   const { checkboxRef, selection, checked, isSelected, onSelect, toggleAll } = useCheckboxSelection(ids);
 
   return (
-    <Container className="my-4 sm:my-8">
+    <PageContent>
       <h2 className="sr-only">Event proposals</h2>
 
-      <div className="flex gap-8">
+      <div className="flex flex-col gap-8 lg:flex-row">
         <section className="flex-1 space-y-4">
           <ProposalsActionBar
             total={statistics.total}
@@ -75,7 +75,7 @@ export default function OrganizerEventProposalsRoute() {
           <Pagination {...pagination} />
         </section>
 
-        <section className="w-1/4">
+        <section className="w-full lg:w-1/4">
           <ProposalsFilters
             filters={filters}
             statistics={statistics}
@@ -84,6 +84,6 @@ export default function OrganizerEventProposalsRoute() {
           />
         </section>
       </div>
-    </Container>
+    </PageContent>
   );
 }

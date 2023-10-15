@@ -4,7 +4,7 @@ import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 
 import { ButtonLink } from '~/design-system/Buttons.tsx';
-import { Container } from '~/design-system/layouts/Container.tsx';
+import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
@@ -39,7 +39,7 @@ export default function ProfileRoute() {
         </ButtonLink>
       </PageHeaderTitle>
 
-      <Container className="mt-8 grid grid-cols-1 items-start gap-4 lg:grid-cols-3 lg:gap-8">
+      <PageContent className="grid grid-cols-1 items-start lg:grid-cols-3">
         <SpeakerDetailsSection
           name={user.name}
           email={user.email}
@@ -54,9 +54,9 @@ export default function ProfileRoute() {
           activities={activities}
           nextPage={nextPage}
           hasNextPage={hasNextPage}
-          className="space-y-8 lg:col-span-2"
+          className="lg:col-span-2"
         />
-      </Container>
+      </PageContent>
     </>
   );
 }
