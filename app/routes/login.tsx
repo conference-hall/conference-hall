@@ -98,7 +98,7 @@ export default function Login() {
             </div>
           ) : (
             <>
-              <Card p={12}>
+              <Card p={16}>
                 <div>
                   {error && <AlertError className="mb-8">{error}</AlertError>}
 

@@ -4,7 +4,7 @@ import { json } from '@remix-run/node';
 import { useLoaderData, useNavigate } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { Container } from '~/design-system/layouts/Container.tsx';
+import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
@@ -57,7 +57,7 @@ export default function ProposalRoute() {
     <>
       <PageHeaderTitle title={proposal.title} backOnClick={() => navigate(-1)} />
 
-      <Container className="my-4 space-y-8 sm:my-8">
+      <PageContent>
         <div className="grid grid-cols-1 gap-4 lg:gap-6 lg:grid-flow-col-dense lg:grid-cols-3">
           <div className="lg:col-span-1 lg:col-start-3">
             <ProposalStatusSection proposal={proposal} event={event} />
@@ -74,7 +74,7 @@ export default function ProposalRoute() {
             />
           </div>
         </div>
-      </Container>
+      </PageContent>
     </>
   );
 }

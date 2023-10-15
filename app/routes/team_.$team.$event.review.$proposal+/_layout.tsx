@@ -67,7 +67,7 @@ export default function ProposalReviewRoute() {
 
       <ReviewHeader title={proposal.title} pagination={pagination} canEditProposal={canEditProposal} />
 
-      <div className="flex gap-8 px-8 py-8">
+      <div className="flex flex-col gap-4 p-4 lg:flex-row lg:gap-8 lg:p-8">
         <div className="flex-1 space-y-4">
           <ReviewTabs
             speakersCount={proposal.speakers.length}
@@ -79,7 +79,7 @@ export default function ProposalReviewRoute() {
           <Outlet context={{ user, proposalReview }} />
         </div>
 
-        <div className="w-1/4 space-y-4">
+        <div className="w-full lg:w-fit">
           <ReviewInfoSection
             proposalId={proposal.id}
             userReview={you}

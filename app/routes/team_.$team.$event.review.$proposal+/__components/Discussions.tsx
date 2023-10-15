@@ -66,7 +66,7 @@ export function Discussions({ userId, messages }: Props) {
         </ul>
       )}
 
-      <Form method="POST" className="flex gap-2 border-t border-gray-200 p-6">
+      <Form method="POST" className="flex flex-col lg:flex-row gap-2 border-t border-gray-200 p-6">
         <Input
           type="text"
           name="comment"

@@ -5,7 +5,7 @@ import { Form, useActionData } from '@remix-run/react';
 
 import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
-import { Container } from '~/design-system/layouts/Container.tsx';
+import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { TeamForm } from '~/routes/__components/teams/TeamForm.tsx';
@@ -39,7 +39,7 @@ export default function NewOrganizationRoute() {
         title="Create a new team"
         subtitle="Give a cool name to your team. You will be able to invite members and create your first event."
       />
-      <Container className="mt-8">
+      <PageContent>
         <Card p={8}>
           <Form method="POST" className="space-y-8">
             <TeamForm errors={errors} />
@@ -48,7 +48,7 @@ export default function NewOrganizationRoute() {
             </Button>
           </Form>
         </Card>
-      </Container>
+      </PageContent>
     </>
   );
 }

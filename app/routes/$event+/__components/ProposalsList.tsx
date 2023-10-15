@@ -15,7 +15,7 @@ export function ProposalsList({ proposals }: Props) {
   }
 
   return (
-    <ul aria-label="Proposals list" className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+    <ul aria-label="Proposals list" className="grid grid-cols-1 gap-4 lg:gap-6 sm:grid-cols-2">
       {proposals.map((proposal) => (
         <ProposalCard key={proposal.id} {...proposal} />
       ))}

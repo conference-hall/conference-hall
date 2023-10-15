@@ -25,7 +25,7 @@ export function ReviewHeader({ title, pagination, canEditProposal }: Props) {
   const editPath = `/team/${params.team}/${params.event}/review/${params.proposal}/edit`;
 
   return (
-    <PageHeader as="header" className="flex items-center gap-8 px-8 py-8">
+    <PageHeader as="header" className="flex items-center gap-4 lg:gap-8 p-4 lg:p-8">
       <nav className="flex items-center gap-4">
         <IconButtonLink
           to={{ pathname: previousPath, search }}

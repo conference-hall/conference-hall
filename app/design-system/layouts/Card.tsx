@@ -13,12 +13,9 @@ const ROUNDED = {
 
 const PADDING = {
   0: 'p-0',
-  4: 'p-4',
-  8: 'p-8',
-  10: 'p-10',
-  12: 'p-12',
-  16: 'p-16',
-  24: 'p-24',
+  4: 'p-2 lg:p-4',
+  8: 'p-4 lg:p-8',
+  16: 'p-8 lg:p-16',
 };
 
 const BACKGROUND = {
@@ -64,7 +61,7 @@ export function CardLink({ as, rounded, p, variant, className, children, ...rest
 // <Card.Title /> component
 
 function Title({ children, className }: { children: React.ReactNode; className?: string }) {
-  return <div className={cx('px-4 pt-4 md:px-8 md:pt-8', className)}>{children}</div>;
+  return <div className={cx('px-4 pt-4 lg:px-8 lg:pt-8', className)}>{children}</div>;
 }
 
 Card.Title = Title;
@@ -72,7 +69,7 @@ Card.Title = Title;
 // <Card.Content /> component
 
 function Content({ children }: { children: React.ReactNode }) {
-  return <div className="flex flex-col gap-6 p-4 md:p-8">{children}</div>;
+  return <div className="flex flex-col gap-4 p-4 lg:gap-6 lg:p-8">{children}</div>;
 }
 
 Card.Content = Content;
@@ -80,7 +77,7 @@ Card.Content = Content;
 // <Card.Actions /> component
 
 function Actions({ children }: { children: React.ReactNode }) {
-  return <div className="flex justify-end gap-4 border-t border-t-gray-200 px-4 md:px-8 py-4">{children}</div>;
+  return <div className="flex justify-end gap-4 border-t border-t-gray-200 px-4 py-4 lg:px-8">{children}</div>;
 }
 
 Card.Actions = Actions;

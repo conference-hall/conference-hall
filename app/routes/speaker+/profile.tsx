@@ -4,7 +4,7 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useActionData } from '@remix-run/react';
 
-import { Container } from '~/design-system/layouts/Container.tsx';
+import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { NavSideMenu } from '~/design-system/navigation/NavSideMenu.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
@@ -73,7 +73,7 @@ export default function ProfileRoute() {
     <>
       <PageHeaderTitle title="Your profile" subtitle="Share your biography and references to event organizers." />
 
-      <Container className="mt-4 flex gap-8 sm:mt-8">
+      <PageContent className="flex">
         <NavSideMenu
           aria-label="Profile edition menu"
           items={MENU_ITEMS}
@@ -81,14 +81,14 @@ export default function ProfileRoute() {
           noActive
         />
 
-        <div className="min-w-0 flex-1 space-y-6 sm:px-6 lg:px-0">
+        <div className="space-y-4 lg:space-y-6">
           <PersonalInfoForm name={user.name} email={user.email} picture={user.picture} errors={errors} />
 
           <SpeakerDetailsForm bio={user.bio} references={user.references} errors={errors} />
 
           <AdditionalInfoForm company={user.company} address={user.address} socials={user.socials} errors={errors} />
         </div>
-      </Container>
+      </PageContent>
     </>
   );
 }

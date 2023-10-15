@@ -41,13 +41,13 @@ export function ReviewInfoSection({
   return (
     <Card as="section" className="divide-y divide-gray-200">
       {reviewEnabled && (
-        <div className="space-y-4 p-6">
+        <div className="space-y-4 p-4 lg:p-6">
           <H2>Your review</H2>
           <ReviewForm key={proposalId} initialValues={userReview} nextId={nextId} />
         </div>
       )}
 
-      <div className="space-y-8 p-6">
+      <div className="space-y-8 p-4 lg:p-6">
         <H2>Review information</H2>
         {review && (
           <div className="flex items-center justify-between">

@@ -12,7 +12,7 @@ type Props = { title: string; subtitle?: string; children?: ReactNode } & BackBu
 export function PageHeaderTitle({ title, subtitle, backTo, backOnClick, children }: Props) {
   return (
     <PageHeader>
-      <Container className="flex h-full flex-col gap-4 px-4 py-6 sm:h-24 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
+      <Container className="flex h-full flex-col gap-4 py-6 sm:h-24 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2 sm:gap-4">
           <BackButton backTo={backTo} backOnClick={backOnClick} />
           <div className="truncate">

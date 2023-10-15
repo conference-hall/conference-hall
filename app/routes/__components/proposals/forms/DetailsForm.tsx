@@ -38,7 +38,7 @@ export function DetailsForm({
   const hasCategories = categories && categories.length > 0;
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-8 lg:space-y-10">
       <Input
         name="title"
         type="text"

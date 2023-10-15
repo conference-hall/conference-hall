@@ -6,7 +6,7 @@ import invariant from 'tiny-invariant';
 
 import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
-import { Container } from '~/design-system/layouts/Container.tsx';
+import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
@@ -47,7 +47,7 @@ export default function EventSurveyRoute() {
         subtitle="This information are asked by the organizers to give you a better speaker experience."
       />
 
-      <Container className="mt-4 space-y-8 sm:mt-8">
+      <PageContent>
         <Card>
           <Card.Content>
             <Form id="survey-form" method="POST">
@@ -60,7 +60,7 @@ export default function EventSurveyRoute() {
             </Button>
           </Card.Actions>
         </Card>
-      </Container>
+      </PageContent>
     </>
   );
 }

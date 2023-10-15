@@ -15,7 +15,7 @@ type Props = {
 
 export function SubmissionTalksList({ label, talks }: Props) {
   return (
-    <ul aria-label={label} className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+    <ul aria-label={label} className="grid grid-cols-1 gap-4 lg:gap-6 sm:grid-cols-2">
       {talks.map((talk) => (
         <ProposalCard key={talk.id} {...talk} />
       ))}

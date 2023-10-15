@@ -6,7 +6,7 @@ import invariant from 'tiny-invariant';
 
 import { Button, ButtonLink } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
-import { Container } from '~/design-system/layouts/Container.tsx';
+import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { H3, Subtitle } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
@@ -65,7 +65,7 @@ export default function EditProposalRoute() {
     <>
       <PageHeaderTitle title={proposal.title} backOnClick={() => navigate(-1)} />
 
-      <Container className="my-4 space-y-8 sm:my-8">
+      <PageContent>
         <div className="grid grid-cols-1 gap-6 lg:grid-flow-col-dense lg:grid-cols-3">
           <Card className="lg:col-span-2 lg:col-start-1">
             <Card.Content>
@@ -103,7 +103,7 @@ export default function EditProposalRoute() {
             </Card>
           </div>
         </div>
-      </Container>
+      </PageContent>
     </>
   );
 }

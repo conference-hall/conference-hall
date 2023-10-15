@@ -1,16 +1,18 @@
 import { PlusIcon } from '@heroicons/react/20/solid';
+import { InboxIcon } from '@heroicons/react/24/outline';
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData, useNavigate, useSearchParams } from '@remix-run/react';
 
 import { ButtonLink } from '~/design-system/Buttons.tsx';
 import Select from '~/design-system/forms/Select.tsx';
-import { Container } from '~/design-system/layouts/Container.tsx';
+import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
+import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 
-import { SpeakerTalksList } from './__components/SpeakerTalksList.tsx';
+import { ProposalCard } from '../__components/proposals/ProposalCard.tsx';
 import { listTalks } from './__server/list-talks.server.ts';
 
 export const meta = mergeMeta(() => [{ title: 'Talks library | Conference Hall' }]);
@@ -54,9 +56,17 @@ export default function SpeakerTalksRoute() {
         </ButtonLink>
       </PageHeaderTitle>
 
-      <Container className="mt-4 sm:mt-8">
-        <SpeakerTalksList talks={talks} />
-      </Container>
+      <PageContent>
+        {talks.length === 0 ? (
+          <EmptyState icon={InboxIcon} label="No talks found." />
+        ) : (
+          <ul aria-label="Talks list" className="grid grid-cols-1 gap-4 lg:gap-6 sm:grid-cols-2">
+            {talks.map((talk) => (
+              <ProposalCard key={talk.id} id={talk.id} title={talk.title} speakers={talk.speakers} />
+            ))}
+          </ul>
+        )}
+      </PageContent>
     </>
   );
 }
