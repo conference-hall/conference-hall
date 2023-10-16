@@ -6,7 +6,7 @@ import { NavTabs } from '~/design-system/navigation/NavTabs.tsx';
 type Props = {
   authenticated: boolean;
   isOrganizer?: boolean;
-  teams?: Array<{ slug: string; name: string; role: string }>;
+  teams?: Array<{ slug: string; name: string }>;
 };
 
 export function Navigation({ authenticated, isOrganizer, teams = [] }: Props) {
