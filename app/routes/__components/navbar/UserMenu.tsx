@@ -143,14 +143,14 @@ function MenuLink({ to, icon: Icon, count, onClick, children }: LinkProps) {
       >
         <Icon className="h-6 w-6 shrink-0 text-gray-400 group-hover:text-indigo-600" aria-hidden="true" />
         {children}
-        {count && count > 0 && (
+        {count && count > 0 ? (
           <>
             <span className="h-2 w-2 rounded-full bg-red-400" aria-hidden="true" />
             <span className="ml-auto w-9 min-w-max whitespace-nowrap rounded-full bg-white px-2.5 py-0.5 text-center text-xs font-medium leading-5 text-gray-600 ring-1 ring-inset ring-gray-200">
               {count}
             </span>
           </>
-        )}
+        ) : null}
       </Link>
     </li>
   );
