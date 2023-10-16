@@ -3,11 +3,9 @@ import { Disclosure } from '@headlessui/react';
 import { ButtonLink } from '~/design-system/Buttons.tsx';
 
 import { Logo } from './Logo.tsx';
-import { MobileMenuButton, MobileMenuPanel } from './NavbarMobileMenu.tsx';
 import { Navigation } from './Navigation.tsx';
-import { type Notification, NotificationsLink } from './NotificationsLink.tsx';
 import { SearchEventsInput } from './SearchEventsInput.tsx';
-import { UserMenuDesktop } from './UserMenuDesktop.tsx';
+import { UserMenu } from './UserMenu.tsx';
 
 type Props = {
   user: {
@@ -16,9 +14,15 @@ type Props = {
     picture: string | null;
     notifications: Array<Notification>;
     isOrganizer: boolean;
-    teams: Array<{ slug: string; name: string; role: string }>;
+    teams: Array<{ slug: string; name: string }>;
   } | null;
   withSearch?: boolean;
+};
+
+export type Notification = {
+  type: string;
+  proposal: { id: string; title: string };
+  event: { slug: string; name: string };
 };
 
 export function Navbar({ user, withSearch }: Props) {
@@ -39,16 +43,15 @@ export function Navbar({ user, withSearch }: Props) {
               {/* Navigation links */}
               <Navigation authenticated={Boolean(user)} isOrganizer={user?.isOrganizer} teams={user?.teams} />
 
-              {/* Notifications */}
-              {user && <NotificationsLink notifications={user.notifications} />}
-
               {/* Avatar */}
               {user && (
-                <UserMenuDesktop
+                <UserMenu
                   name={user.name}
                   email={user.email}
                   picture={user.picture}
-                  isOrganizer={user?.isOrganizer}
+                  teams={user.teams}
+                  isOrganizer={user.isOrganizer}
+                  notificationsCount={user.notifications.length}
                 />
               )}
             </div>
@@ -56,12 +59,18 @@ export function Navbar({ user, withSearch }: Props) {
             {/* Mobile menu */}
             <div className="flex lg:hidden">
               {!user && <ButtonLink to="/login">Login</ButtonLink>}
-              {user && <MobileMenuButton open={open} />}
+              {user && (
+                <UserMenu
+                  name={user.name}
+                  email={user.email}
+                  picture={user.picture}
+                  teams={user.teams}
+                  isOrganizer={user.isOrganizer}
+                  notificationsCount={user.notifications.length}
+                />
+              )}
             </div>
           </div>
-
-          {/* Mobile panel */}
-          {user && <MobileMenuPanel user={user} notifications={user.notifications} />}
         </>
       )}
     </Disclosure>
