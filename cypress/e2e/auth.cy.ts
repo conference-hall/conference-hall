@@ -15,7 +15,7 @@ describe('Authentication', () => {
 
     search.isPageVisible();
     search.userMenu().open();
-    search.userMenu().isOpen('superman@example.com');
+    search.userMenu().isOpen();
   });
 
   it('login and redirected', () => {
@@ -24,6 +24,6 @@ describe('Authentication', () => {
 
     speakers.isPageVisible();
     speakers.userMenu().open();
-    speakers.userMenu().isOpen('superman@example.com');
+    speakers.userMenu().isOpen();
   });
 });

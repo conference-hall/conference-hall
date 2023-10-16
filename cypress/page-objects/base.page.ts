@@ -11,10 +11,6 @@ class BasePage {
     cy.findByRole('link', { name: 'Profile' }).click();
   }
 
-  teams() {
-    cy.findByRole('link', { name: 'Teams' }).click();
-  }
-
   userMenu() {
     return new UserMenu();
   }
@@ -22,21 +18,21 @@ class BasePage {
 
 class UserMenu {
   menu() {
-    return cy.findByRole('button', { name: /^Open user menu/i });
+    return cy.findByRole('button', { name: /open user menu/i });
   }
 
   open() {
     this.menu().click();
-    cy.assertText('Signed in as');
+    cy.findByRole('navigation', { name: 'User navigation' }).should('be.visible');
     return this;
   }
 
-  isOpen(email: string) {
-    cy.assertText('Signed in as');
+  isOpen() {
+    cy.findByRole('navigation', { name: 'User navigation' }).should('be.visible');
   }
 
   signOut() {
-    cy.findByRole('button', { name: 'Sign out' }).click();
+    cy.findByRole('link', { name: 'Sign out' }).click();
   }
 }
 
