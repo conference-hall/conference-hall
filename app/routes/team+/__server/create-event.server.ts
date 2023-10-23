@@ -11,7 +11,7 @@ export async function createEvent(teamSlug: string, userId: string, data: EventC
   return await db.$transaction(async (trx) => {
     const existSlug = await trx.event.findFirst({ where: { slug: data.slug } });
     if (existSlug) {
-      return { error: { fieldErrors: { slug: 'This URL already exists, please try another one.' } } };
+      return { error: { slug: ['This URL already exists, please try another one.'] } };
     }
 
     await trx.event.create({

@@ -5,7 +5,7 @@ import type { SurveyQuestions } from '~/routes/__types/survey.ts';
 
 export type Props = {
   questions: SurveyQuestions;
-  initialValues: { [key: string]: string | string[] | null };
+  initialValues: { [key: string]: unknown };
 };
 
 export function SurveyForm({ questions, initialValues }: Props) {
@@ -23,6 +23,7 @@ export function SurveyForm({ questions, initialValues }: Props) {
             />
           );
         } else if (question.type === 'checkbox') {
+          const value = (initialValues[question.name] as string[]) || [];
           return (
             <CheckboxGroup key={question.name} label={question.label} inline>
               {question.answers?.map((answer) => (
@@ -31,7 +32,7 @@ export function SurveyForm({ questions, initialValues }: Props) {
                   id={answer.name}
                   name={question.name}
                   value={answer.name}
-                  defaultChecked={initialValues[question.name]?.includes(answer.name)}
+                  defaultChecked={value.includes(answer.name)}
                 >
                   {answer.label}
                 </Checkbox>

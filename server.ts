@@ -22,6 +22,7 @@ installGlobals();
 run();
 
 const PORT = process.env.PORT || 3000;
+const ENV = process.env.NODE_ENV;
 const FIREBASE_PROJECT_ID = process.env.FIREBASE_PROJECT_ID;
 
 async function run() {
@@ -58,7 +59,7 @@ async function run() {
       contentSecurityPolicy: {
         reportOnly: true,
         directives: {
-          'connect-src': [process.env.NODE_ENV === 'development' ? 'ws:' : null, "'self'"].filter(Boolean) as string[],
+          'connect-src': [ENV === 'development' ? 'ws:' : null, "'self'"].filter(Boolean) as string[],
           'font-src': ["'self'"],
           'frame-src': ["'self'"],
           'img-src': ["'self'", 'data:', 'https:'],
@@ -116,22 +117,28 @@ async function run() {
   // Remix requests
   app.all(
     '*',
-    process.env.NODE_ENV === 'production'
+    ENV === 'production'
       ? createRequestHandler({
           build: initialBuild,
           getLoadContext,
-          mode: process.env.NODE_ENV,
+          mode: ENV,
         })
       : createDevRequestHandler(initialBuild),
   );
 
   // Start the express server
   const server = app.listen(PORT, () => {
-    console.log(`✅ app ready: http://localhost:${PORT}`);
-
-    if (process.env.NODE_ENV === 'development') {
-      broadcastDevReady(initialBuild);
+    console.log('\n--------------------------------------------------\n');
+    console.log(`🌍 Environment: ${ENV}`);
+    console.log('\n--------------------------------------------------\n');
+    if (ENV === 'development') {
+      console.log(`🤖 Emulators  >  http://localhost:4000`);
+      console.log(`💌 Mailpit    >  http://localhost:8025`);
     }
+    console.log(`🚀 Web app    >  http://localhost:${PORT}`);
+    console.log('\n--------------------------------------------------\n');
+
+    if (ENV === 'development') broadcastDevReady(initialBuild);
   });
 
   // Close the express server gracefully
