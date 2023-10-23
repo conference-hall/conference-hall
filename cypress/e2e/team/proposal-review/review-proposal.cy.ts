@@ -59,15 +59,12 @@ describe('Proposal review page', () => {
     it('navigates between proposals', () => {
       review.visit('team-1', 'conference-1', 'proposal-1');
       review.title('Talk 1').should('exist');
-      cy.assertText('2/2');
-      review.nextProposal();
-      review.title('Talk 2').should('exist');
       cy.assertText('1/2');
       review.nextProposal();
-      review.title('Talk 1').should('exist');
+      review.title('Talk 2').should('exist');
       cy.assertText('2/2');
       review.previousProposal();
-      review.title('Talk 2').should('exist');
+      review.title('Talk 1').should('exist');
       cy.assertText('1/2');
     });
 

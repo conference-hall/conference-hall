@@ -41,7 +41,7 @@ describe('#getProposalReview', () => {
 
     const reviewInfo = await getProposalReview(event.slug, proposal.id, owner.id, {});
 
-    expect(reviewInfo.pagination).toEqual({ current: 1, total: 1, previousId: proposal.id, nextId: proposal.id });
+    expect(reviewInfo.pagination).toEqual({ current: 1, total: 1, previousId: undefined, nextId: undefined });
     expect(reviewInfo.proposal).toEqual({
       id: proposal.id,
       title: proposal.title,

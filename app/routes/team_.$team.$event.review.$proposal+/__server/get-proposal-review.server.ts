@@ -23,8 +23,8 @@ export async function getProposalReview(
 
   const totalProposals = proposalIds.length;
   const curIndex = proposalIds.findIndex((id) => id === proposalId);
-  const previousId = proposalIds.at(curIndex - 1);
-  const nextId = curIndex + 1 >= totalProposals ? proposalIds.at(0) : proposalIds.at(curIndex + 1);
+  const previousId = curIndex - 1 >= 0 ? proposalIds.at(curIndex - 1) : undefined;
+  const nextId = curIndex + 1 < totalProposals ? proposalIds.at(curIndex + 1) : undefined;
 
   const proposal = await db.proposal.findFirst({
     include: {

@@ -1,6 +1,7 @@
 import { PencilSquareIcon, XMarkIcon } from '@heroicons/react/20/solid';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
-import { useParams, useSearchParams } from '@remix-run/react';
+import { useNavigate, useParams, useSearchParams } from '@remix-run/react';
+import { useHotkeys } from 'react-hotkeys-hook';
 
 import { ButtonLink } from '~/design-system/Buttons.tsx';
 import { IconButtonLink } from '~/design-system/IconButtons.tsx';
@@ -14,15 +15,22 @@ type Props = {
 };
 
 export function ReviewHeader({ title, pagination, canEditProposal }: Props) {
+  const navigate = useNavigate();
   const params = useParams();
   const [searchParams] = useSearchParams();
-  const { current, total, nextId, previousId } = pagination;
 
   const search = searchParams.toString();
-  const previousPath = `/team/${params.team}/${params.event}/review/${previousId}`;
-  const nextPath = `/team/${params.team}/${params.event}/review/${nextId}`;
-  const closePath = `/team/${params.team}/${params.event}`;
+  const { current, total, nextId, previousId } = pagination;
+
+  const previousPath =
+    previousId !== undefined ? `/team/${params.team}/${params.event}/review/${previousId}` : undefined;
+  const nextPath = nextId !== undefined ? `/team/${params.team}/${params.event}/review/${nextId}` : undefined;
   const editPath = `/team/${params.team}/${params.event}/review/${params.proposal}/edit`;
+  const closePath = `/team/${params.team}/${params.event}`;
+
+  useHotkeys('left', () => navigate({ pathname: previousPath, search }), { enabled: !!previousPath });
+  useHotkeys('right', () => navigate({ pathname: nextPath, search }), { enabled: !!nextPath });
+  useHotkeys('escape', () => navigate({ pathname: closePath, search }));
 
   return (
     <PageHeader as="header" className="flex items-center gap-4 lg:gap-8 p-4 lg:p-8">
@@ -32,6 +40,7 @@ export function ReviewHeader({ title, pagination, canEditProposal }: Props) {
           icon={ChevronLeftIcon}
           label="Previous proposal"
           variant="secondary"
+          aria-disabled={!previousPath}
         />
         <Text weight="medium">{`${current}/${total}`}</Text>
         <IconButtonLink
@@ -39,6 +48,7 @@ export function ReviewHeader({ title, pagination, canEditProposal }: Props) {
           icon={ChevronRightIcon}
           label="Next proposal"
           variant="secondary"
+          aria-disabled={!nextPath}
         />
       </nav>
 
