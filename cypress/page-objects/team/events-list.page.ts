@@ -36,22 +36,20 @@ class TeamEventsPage extends BasePage {
   }
 
   newEvent() {
-    cy.findByRole('button', { name: 'New event' }).click();
-    cy.findByRole('heading', { name: 'Create a new event' }).should('exist');
+    cy.findByRole('link', { name: 'New event' }).click();
+    cy.findByRole('heading', { name: 'Select your new event type' }).should('exist');
   }
 
   selectConference() {
-    cy.findByRole('radio', { name: 'Conference' }).click();
-    cy.findByRole('button', { name: 'Continue' }).click();
+    cy.findByRole('link', { name: /Conference/ }).click();
   }
 
   selectMeetup() {
-    cy.findByRole('radio', { name: 'Meetup' }).click();
-    cy.findByRole('button', { name: 'Continue' }).click();
+    cy.findByRole('link', { name: /Meetup/ }).click();
   }
 
   createEvent() {
-    cy.findByRole('button', { name: 'Create event' }).click();
+    cy.findByRole('button', { name: 'Create new event' }).click();
   }
 
   fillNewEventForm(data: EventNewType) {

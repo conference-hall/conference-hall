@@ -13,7 +13,6 @@ import { requireSession } from '~/libs/auth/session.ts';
 import { EventForm } from '../__components/events/EventForm.tsx';
 import { createEvent } from './__server/create-event.server.ts';
 import { EventCreateSchema } from './__types/event-create.schema.ts';
-import { useTeam } from './$team.tsx';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);
@@ -36,7 +35,6 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
 export default function OrganizationRoute() {
   const errors = useActionData<typeof action>();
-  const { team } = useTeam();
   const params = useParams();
   const type = params.type || 'CONFERENCE';
 
@@ -48,7 +46,7 @@ export default function OrganizationRoute() {
           <Subtitle>You can make it public or private.</Subtitle>
         </Card.Title>
 
-        <Form action={`/team/${team.slug}`} method="POST">
+        <Form method="POST">
           <Card.Content>
             <EventForm errors={errors} />
             <input name="type" type="hidden" value={type} />
@@ -57,7 +55,7 @@ export default function OrganizationRoute() {
             <ButtonLink to=".." variant="secondary">
               Cancel
             </ButtonLink>
-            <Button type="submit">Create event</Button>
+            <Button type="submit">Create new event</Button>
           </Card.Actions>
         </Form>
       </Card>
