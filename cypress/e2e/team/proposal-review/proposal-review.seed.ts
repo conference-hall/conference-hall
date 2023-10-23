@@ -54,6 +54,26 @@ export const seed = async () => {
   const category1 = await eventCategoryFactory({ event, attributes: { name: 'Category 1' } });
   const category2 = await eventCategoryFactory({ event, attributes: { name: 'Category 2' } });
 
+  await proposalFactory({
+    event,
+    traits: ['accepted'],
+    formats: [format2],
+    categories: [category2],
+    talk: await talkFactory({ attributes: { title: 'Talk 2' }, speakers: [speaker2] }),
+  });
+
+  const event2 = await eventFactory({
+    team,
+    traits: ['conference-cfp-open'],
+    attributes: {
+      name: 'Conference 2',
+      slug: 'conference-2',
+      displayProposalsReviews: false,
+      displayProposalsSpeakers: false,
+      reviewEnabled: false,
+    },
+  });
+
   const proposal = await proposalFactory({
     attributes: { id: 'proposal-1' },
     event,
@@ -90,26 +110,6 @@ export const seed = async () => {
   await reviewFactory({ proposal, user: organizer2, attributes: { note: 3, feeling: 'NEUTRAL' } });
 
   await messageFactory({ proposal, user: organizer2, attributes: { channel: 'ORGANIZER', message: 'Hello world' } });
-
-  await proposalFactory({
-    event,
-    traits: ['accepted'],
-    formats: [format2],
-    categories: [category2],
-    talk: await talkFactory({ attributes: { title: 'Talk 2' }, speakers: [speaker2] }),
-  });
-
-  const event2 = await eventFactory({
-    team,
-    traits: ['conference-cfp-open'],
-    attributes: {
-      name: 'Conference 2',
-      slug: 'conference-2',
-      displayProposalsReviews: false,
-      displayProposalsSpeakers: false,
-      reviewEnabled: false,
-    },
-  });
 
   await proposalFactory({
     attributes: { id: 'proposal-2' },
