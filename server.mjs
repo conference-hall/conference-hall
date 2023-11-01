@@ -1,15 +1,12 @@
 import crypto from 'node:crypto';
-import fs from 'node:fs';
 import path from 'node:path';
 import url from 'node:url';
 
-import { createRequestHandler, type GetLoadContextFunction } from '@remix-run/express';
-import type { ServerBuild } from '@remix-run/node';
-import { broadcastDevReady, installGlobals } from '@remix-run/node';
-import chokidar from 'chokidar';
+import { unstable_createViteServer, unstable_loadViteServerBuild } from '@remix-run/dev';
+import { createRequestHandler } from '@remix-run/express';
+import { installGlobals } from '@remix-run/node';
 import closeWithGrace from 'close-with-grace';
 import compression from 'compression';
-import type { RequestHandler } from 'express';
 import express from 'express';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
@@ -21,13 +18,18 @@ sourceMapSupport.install();
 installGlobals();
 run();
 
-const PORT = process.env.PORT || 3000;
-const ENV = process.env.NODE_ENV;
-const FIREBASE_PROJECT_ID = process.env.FIREBASE_PROJECT_ID;
+async function serverBuild() {
+  const buildPath = path.resolve('build/index.js');
+  const buildUrl = url.pathToFileURL(buildPath).href;
+  return import(buildUrl);
+}
 
 async function run() {
-  const BUILD_PATH = path.resolve('build/index.js');
-  const initialBuild = await reimportServer();
+  const PORT = process.env.PORT || 3000;
+  const ENV = process.env.NODE_ENV;
+  const FIREBASE_PROJECT_ID = process.env.FIREBASE_PROJECT_ID;
+
+  const vite = ENV === 'production' ? undefined : await unstable_createViteServer();
 
   const app = express();
 
@@ -59,7 +61,7 @@ async function run() {
       contentSecurityPolicy: {
         reportOnly: true,
         directives: {
-          'connect-src': [ENV === 'development' ? 'ws:' : null, "'self'"].filter(Boolean) as string[],
+          'connect-src': [ENV === 'development' ? 'ws:' : null, "'self'"].filter(Boolean),
           'font-src': ["'self'"],
           'frame-src': ["'self'"],
           'img-src': ["'self'", 'data:', 'https:'],
@@ -73,16 +75,6 @@ async function run() {
       },
     }),
   );
-
-  // Remix fingerprints its assets so we can cache forever.
-  app.use('/build', express.static('public/build', { immutable: true, maxAge: '1y' }));
-
-  // Aggressively cache fonts for a year
-  app.use('/fonts', express.static('public/fonts', { immutable: true, maxAge: '1y' }));
-
-  // Everything else (like favicon.ico) is cached for an hour. You may want to be
-  // more aggressive with this caching.
-  app.use(express.static('public', { maxAge: '1h' }));
 
   // Request logging
   app.use(morgan('tiny'));
@@ -107,23 +99,23 @@ async function run() {
     }),
   );
 
-  // Build the load context for Remix
-  const getLoadContext: GetLoadContextFunction = (req, res) => {
-    return {
-      cspNonce: res.locals.cspNonce,
-    };
-  };
+  // Handle static assets
+  if (vite) {
+    app.use(vite.middlewares);
+  } else {
+    app.use('/build', express.static('public/build', { immutable: true, maxAge: '1y' }));
+  }
+  app.use('/fonts', express.static('public/fonts', { immutable: true, maxAge: '1y' }));
+  app.use(express.static('public', { maxAge: '1h' }));
 
-  // Remix requests
+  // Handle SSR requests
   app.all(
     '*',
-    ENV === 'production'
-      ? createRequestHandler({
-          build: initialBuild,
-          getLoadContext,
-          mode: ENV,
-        })
-      : createDevRequestHandler(initialBuild),
+    createRequestHandler({
+      build: vite ? () => unstable_loadViteServerBuild(vite) : await serverBuild(),
+      getLoadContext: (req, res) => ({ cspNonce: res.locals.cspNonce }),
+      mode: ENV,
+    }),
   );
 
   // Start the express server
@@ -137,8 +129,6 @@ async function run() {
     }
     console.log(`🚀 Web app    >  http://localhost:${PORT}`);
     console.log('\n--------------------------------------------------\n');
-
-    if (ENV === 'development') broadcastDevReady(initialBuild);
   });
 
   // Close the express server gracefully
@@ -147,38 +137,4 @@ async function run() {
       server.close((e) => (e ? reject(e) : resolve('ok')));
     });
   });
-
-  async function reimportServer(): Promise<ServerBuild> {
-    const stat = fs.statSync(BUILD_PATH);
-
-    // convert build path to URL for Windows compatibility with dynamic `import`
-    const BUILD_URL = url.pathToFileURL(BUILD_PATH).href;
-
-    // use a timestamp query parameter to bust the import cache
-    return import(BUILD_URL + '?t=' + stat.mtimeMs);
-  }
-
-  function createDevRequestHandler(initialBuild: ServerBuild): RequestHandler {
-    let build = initialBuild;
-    async function handleServerUpdate() {
-      // 1. re-import the server build
-      build = await reimportServer();
-      // 2. tell Remix that this app server is now up-to-date and ready
-      broadcastDevReady(build);
-    }
-    chokidar.watch(BUILD_PATH, { ignoreInitial: true }).on('add', handleServerUpdate).on('change', handleServerUpdate);
-
-    // wrap request handler to make sure its recreated with the latest build for every request
-    return async (req, res, next) => {
-      try {
-        return createRequestHandler({
-          build,
-          getLoadContext,
-          mode: 'development',
-        })(req, res, next);
-      } catch (error) {
-        next(error);
-      }
-    };
-  }
 }
