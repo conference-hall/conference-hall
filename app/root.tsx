@@ -1,7 +1,4 @@
-import './styles/tailwind.css';
-import './styles/fonts.css';
-
-import type { LoaderFunctionArgs } from '@remix-run/node';
+import type { LinksFunction, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import {
   isRouteErrorResponse,
@@ -28,6 +25,8 @@ import { Toaster } from './libs/toasts/Toaster.tsx';
 import { GlobalLoading } from './routes/__components/GlobalLoading.tsx';
 import type { User } from './routes/__server/users/get-user.server.ts';
 import { getUser } from './routes/__server/users/get-user.server.ts';
+import fontsCssUrl from './styles/fonts.css?url';
+import tailwindCssUrl from './styles/tailwind.css?url';
 import { useNonce } from './utils/useNonce.ts';
 
 export function meta() {
@@ -38,6 +37,17 @@ export function meta() {
     { name: 'robots', content: 'noindex' },
   ];
 }
+
+export const links: LinksFunction = () => {
+  return [
+    // Preload to avoid render blocking
+    { rel: 'preload', href: fontsCssUrl, as: 'style' },
+    { rel: 'preload', href: tailwindCssUrl, as: 'style' },
+    // Stylesheets
+    { rel: 'stylesheet', href: fontsCssUrl },
+    { rel: 'stylesheet', href: tailwindCssUrl },
+  ];
+};
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { toast, headers: toastHeaders } = await getToast(request);
