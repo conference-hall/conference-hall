@@ -39,6 +39,7 @@ export async function getSpeakerProposal(proposalId: string, userId: string) {
       id: speaker.id,
       name: speaker.name,
       picture: speaker.picture,
+      company: speaker.company,
       isOwner: speaker.id === proposal?.talk?.creatorId,
     })),
   };

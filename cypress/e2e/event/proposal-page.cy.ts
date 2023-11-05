@@ -22,7 +22,8 @@ describe('Event proposal page details', () => {
     cy.assertText('Awesome references');
     cy.assertText('Advanced');
     cy.assertText('French');
-    cy.assertText('by Clark Kent, Bruce Wayne');
+    cy.assertText('Clark Kent');
+    cy.assertText('Bruce Wayne');
     cy.assertText('Quickie');
     cy.assertText('Web');
   });

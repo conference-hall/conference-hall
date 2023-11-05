@@ -40,6 +40,7 @@ describe('#getSpeakerProposal', () => {
           id: speaker.id,
           name: speaker.name,
           picture: speaker.picture,
+          company: speaker.company,
           isOwner: true,
         },
       ],

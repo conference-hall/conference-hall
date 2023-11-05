@@ -58,6 +58,7 @@ export async function getProposalReview(
             id: speaker.id,
             name: speaker.name,
             picture: speaker.picture,
+            company: speaker.company,
           }))
         : [],
       reviews: {

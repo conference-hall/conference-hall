@@ -62,7 +62,7 @@ export default function EventReviewSettingsRoute() {
             }
           />
           <ToggleGroup
-            label="Display speakers in proposal page"
+            label="Display speakers in review pages"
             description="When disabled, all speakers information are not visible in proposal list and review page. Used for anonymized reviews."
             value={event.displayProposalsSpeakers}
             onChange={(checked) =>

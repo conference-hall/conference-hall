@@ -24,7 +24,8 @@ describe('Proposal review page', () => {
       cy.assertText('Talk references');
       cy.assertText('Format 1');
       cy.assertText('Category 1');
-      cy.assertText('by Marie Jane, Robin');
+      cy.assertText('Marie Jane');
+      cy.assertText('Robin');
 
       cy.findByLabelText('No way: 0').should('exist');
       cy.findByLabelText('Love it: 0').should('exist');
