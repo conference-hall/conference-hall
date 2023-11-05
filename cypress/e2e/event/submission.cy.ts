@@ -85,7 +85,7 @@ describe('Submit a talk to event', () => {
       cy.assertText('English');
       cy.assertText('An amazing abstract for an amazing talk.');
       cy.assertText('Best talk ever!');
-      cy.assertText('by Clark Kent');
+      cy.assertText('Clark Kent');
       cy.assertText('Quickie');
       cy.assertText('Web');
 

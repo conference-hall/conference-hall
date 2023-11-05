@@ -26,7 +26,8 @@ describe('Speaker talk page', () => {
     cy.assertText('Awesome references');
     cy.assertText('Advanced');
     cy.assertText('French');
-    cy.assertText('by Clark Kent, Bruce Wayne');
+    cy.assertText('Clark Kent');
+    cy.assertText('Bruce Wayne');
   });
 
   it('can edit a talk', () => {
