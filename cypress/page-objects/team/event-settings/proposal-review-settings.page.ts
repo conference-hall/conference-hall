@@ -19,7 +19,7 @@ class ProposalReviewSettings extends BasePage {
   }
 
   toggleDisplaySpeakers(checked: boolean) {
-    return cy.findByRole('switch', { name: 'Display speakers in proposal page', checked });
+    return cy.findByRole('switch', { name: 'Display speakers in review pages', checked });
   }
 }
 

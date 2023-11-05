@@ -33,6 +33,7 @@ export async function getTalk(userId: string, talkId: string) {
         id: speaker.id,
         name: speaker.name,
         picture: speaker.picture,
+        company: speaker.company,
         isOwner: speaker.id === talk.creatorId,
         isCurrentUser: speaker.id === userId,
       }))
