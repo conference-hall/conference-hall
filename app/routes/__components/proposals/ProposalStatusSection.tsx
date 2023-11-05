@@ -1,3 +1,4 @@
+import { ArrowRightIcon, CheckIcon, XMarkIcon } from '@heroicons/react/20/solid';
 import { Form } from '@remix-run/react';
 
 import { Button, ButtonLink } from '~/design-system/Buttons.tsx';
@@ -37,7 +38,7 @@ export function ProposalStatusSection(props: Props) {
 
 function Draft({ proposal, event }: Props) {
   return (
-    <Card as="section" p={8} className="space-y-8">
+    <Card as="section" p={8} className="flex flex-col lg:justify-between lg:flex-row lg:items-center space-y-4">
       <div>
         <H2 mb={1}>Draft proposal!</H2>
         {event.isCfpOpen ? (
@@ -49,13 +50,13 @@ function Draft({ proposal, event }: Props) {
       <div className="mt-5 flex gap-4">
         {event.isCfpOpen ? (
           <>
-            <ButtonLink to={`../submission/${proposal.talkId}`} block>
+            <ProposalDeleteButton />
+            <ButtonLink to={`../submission/${proposal.talkId}`} iconRight={ArrowRightIcon}>
               Continue submission
             </ButtonLink>
-            <ProposalDeleteButton className="flex-1" />
           </>
         ) : (
-          <ProposalDeleteButton className="flex-1" />
+          <ProposalDeleteButton />
         )}
       </div>
     </Card>
@@ -64,7 +65,7 @@ function Draft({ proposal, event }: Props) {
 
 function Submitted({ event }: Props) {
   return (
-    <Card as="section" p={8} className="space-y-8">
+    <Card as="section" p={8} className="flex flex-col lg:justify-between lg:flex-row lg:items-center space-y-4">
       <div>
         <H2 mb={1}>Submitted to {event.name}!</H2>
         {event.isCfpOpen ? (
@@ -78,10 +79,8 @@ function Submitted({ event }: Props) {
       </div>
       {event.isCfpOpen && (
         <div className="flex gap-4">
-          <ButtonLink to="edit" block className="flex-1">
-            Edit proposal
-          </ButtonLink>
-          <ProposalDeleteButton className="flex-1" />
+          <ProposalDeleteButton />
+          <ButtonLink to="edit">Edit proposal</ButtonLink>
         </div>
       )}
     </Card>
@@ -102,7 +101,7 @@ function DeliberationPending() {
 
 function AcceptedByOrganizers({ event, proposal }: Props) {
   return (
-    <Card as="section" p={8} className="space-y-8">
+    <Card as="section" p={8} className="flex flex-col lg:justify-between lg:flex-row lg:items-center space-y-4">
       <div>
         <H2 mb={1}>Proposal has been accepted to {event.name}!</H2>
         <Text variant="secondary">
@@ -111,18 +110,18 @@ function AcceptedByOrganizers({ event, proposal }: Props) {
         </Text>
       </div>
       <div className="flex gap-4">
-        <Form method="POST" className="flex-1">
-          <input type="hidden" name="_action" value="confirm" />
-          <input type="hidden" name="participation" value="CONFIRMED" />
-          <Button type="submit" block>
-            Confirm
-          </Button>
-        </Form>
-        <Form method="POST" className="flex-1">
+        <Form method="POST">
           <input type="hidden" name="_action" value="confirm" />
           <input type="hidden" name="participation" value="DECLINED" />
-          <Button type="submit" variant="secondary" block>
+          <Button type="submit" variant="secondary" iconRight={XMarkIcon}>
             Decline
+          </Button>
+        </Form>
+        <Form method="POST">
+          <input type="hidden" name="_action" value="confirm" />
+          <input type="hidden" name="participation" value="CONFIRMED" />
+          <Button type="submit" iconRight={CheckIcon}>
+            Confirm
           </Button>
         </Form>
       </div>
@@ -132,14 +131,9 @@ function AcceptedByOrganizers({ event, proposal }: Props) {
 
 function RejectedByOrganizers({ event, proposal }: Props) {
   return (
-    <Card as="section" p={8} className="space-y-8">
-      <div>
-        <H2 mb={1}>Proposal has been declined by {event.name}.</H2>
-        <Text variant="secondary">Thank you for your submission.</Text>
-      </div>
-      <ButtonLink to={{ pathname: '/', search: `talkId=${proposal.talkId}` }} variant="secondary" block>
-        Submit it to an other event
-      </ButtonLink>
+    <Card as="section" p={8}>
+      <H2 mb={1}>Proposal has been declined by {event.name}.</H2>
+      <Text variant="secondary">Thank you for your submission.</Text>
     </Card>
   );
 }
