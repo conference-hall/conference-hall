@@ -73,15 +73,15 @@ export default function ProfileRoute() {
     <>
       <PageHeaderTitle title="Your profile" subtitle="Share your biography and references to event organizers." />
 
-      <PageContent className="flex">
+      <PageContent className="lg:grid lg:grid-cols-12">
         <NavSideMenu
           aria-label="Profile edition menu"
           items={MENU_ITEMS}
-          className="sticky top-4 hidden self-start lg:block"
+          className="w-full mb-6 lg:col-span-3 lg:sticky lg:top-4"
           noActive
         />
 
-        <div className="space-y-4 lg:space-y-6">
+        <div className="space-y-4 lg:space-y-6 lg:col-span-9">
           <PersonalInfoForm name={user.name} email={user.email} picture={user.picture} errors={errors} />
 
           <SpeakerDetailsForm bio={user.bio} references={user.references} errors={errors} />

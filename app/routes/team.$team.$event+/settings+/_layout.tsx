@@ -51,16 +51,16 @@ export default function OrganizationSettingsRoute() {
   const menus = getMenuItems(team.slug, event.slug);
 
   return (
-    <PageContent className="flex flex-col lg:flex-row">
+    <PageContent className="lg:grid lg:grid-cols-12">
       <H2 srOnly>Event settings</H2>
 
       <NavSideMenu
         aria-label="Event settings menu"
         items={menus}
-        className="w-full self-start lg:w-60 lg:sticky lg:top-4"
+        className="w-full mb-6 lg:col-span-3 lg:sticky lg:top-4"
       />
 
-      <div className="flex-1 space-y-6">
+      <div className="space-y-6 lg:col-span-9">
         <Outlet context={{ user, team, event }} />
       </div>
     </PageContent>
