@@ -22,8 +22,8 @@ class SpeakerEditTalkPage extends BasePage {
     if (data.title) cy.typeOn('Title', data.title);
     if (data.abstract) cy.typeOn('Abstract', data.abstract);
     if (data.level) cy.findByRole('radio', { name: data.level }).click();
-    if (data.language) cy.selectOn('Languages', data.language);
     if (data.references) cy.typeOn('References', data.references);
+    if (data.language) cy.selectOn('Languages', data.language);
   }
 
   saveAbstract() {

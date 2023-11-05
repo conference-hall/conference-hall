@@ -34,8 +34,8 @@ describe('Speaker talk edition page', () => {
     cy.assertText('New title');
     cy.assertText('New abstract');
     cy.assertText('Beginner');
-    cy.assertText('English');
     cy.assertText('New references');
+    cy.assertText('English');
   });
 
   it('can invite a co-speaker', () => {
