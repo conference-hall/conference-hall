@@ -3,7 +3,7 @@ version: '3'
 services:
   postgres:
     container_name: ch_postgres
-    image: postgres:12.5-alpine
+    image: postgres:15-alpine
     volumes:
       - ./docker/postgres:/docker-entrypoint-initdb.d
     ports:
