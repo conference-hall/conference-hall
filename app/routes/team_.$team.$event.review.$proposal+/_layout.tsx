@@ -8,7 +8,6 @@ import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
 import { useUser } from '~/root.tsx';
-import { Navbar } from '~/routes/__components/navbar/Navbar.tsx';
 import { parseProposalsFilters, ProposalReviewDataSchema } from '~/routes/__types/proposal.ts';
 
 import { ReviewHeader } from './__components/Header.tsx';
@@ -62,8 +61,6 @@ export default function ProposalReviewRoute() {
 
   return (
     <>
-      <Navbar user={user} withSearch />
-
       <ReviewHeader title={proposal.title} pagination={pagination} canEditProposal={canEditProposal} />
 
       <div className="flex flex-col gap-4 p-4 lg:flex-row lg:gap-8 lg:p-8">
