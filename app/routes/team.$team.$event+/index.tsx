@@ -50,7 +50,10 @@ export default function OrganizerEventProposalsRoute() {
   const { results, filters, pagination, statistics } = useLoaderData<typeof loader>();
 
   const ids = useMemo(() => results.map(({ id }) => id), [results]);
-  const { checkboxRef, selection, checked, isSelected, onSelect, toggleAll } = useCheckboxSelection(ids);
+  const { checkboxRef, selection, allChecked, isSelected, onSelect, toggleAll } = useCheckboxSelection(
+    ids,
+    statistics.total,
+  );
 
   return (
     <PageContent>
@@ -61,7 +64,7 @@ export default function OrganizerEventProposalsRoute() {
           <ProposalsActionBar
             total={statistics.total}
             selection={selection}
-            checked={checked}
+            checked={allChecked}
             onToggleAll={toggleAll}
             checkboxRef={checkboxRef}
           />

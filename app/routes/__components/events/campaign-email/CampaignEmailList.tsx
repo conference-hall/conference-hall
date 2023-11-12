@@ -32,7 +32,10 @@ export function CampaignEmailList({ type, proposals, total }: Props) {
   const [searchParams] = useSearchParams();
   const ids = useMemo(() => proposals.map(({ id }) => id), [proposals]);
 
-  const { checkboxRef, selection, checked, isSelected, onSelect, toggleAll, reset } = useCheckboxSelection(ids);
+  const { checkboxRef, selection, allChecked, isSelected, onSelect, toggleAll, reset } = useCheckboxSelection(
+    ids,
+    total,
+  );
 
   const emailStatus = type === CampaignType.ACCEPTATION ? 'emailAcceptedStatus' : 'emailRejectedStatus';
   const isSendEmailPage = searchParams.get(emailStatus) !== 'sent';
@@ -47,7 +50,7 @@ export function CampaignEmailList({ type, proposals, total }: Props) {
               type="checkbox"
               className="mr-4 hidden h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 sm:mr-6 sm:inline-block"
               ref={checkboxRef}
-              checked={checked}
+              checked={allChecked}
               onChange={toggleAll}
             />
           )}
