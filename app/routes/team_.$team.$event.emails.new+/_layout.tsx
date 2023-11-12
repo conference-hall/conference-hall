@@ -24,8 +24,8 @@ export default function NewEmailCampaign() {
   return (
     <>
       <PageHeaderTitle
-        title="Create a new email campaign"
-        subtitle="Pre-defined email campaign to communicate CFP results to the speakers"
+        title="New campaign"
+        subtitle="Use a pre-defined email campaign to communicate CFP results to the speakers"
       >
         <IconButtonLink to={closePath} icon={XMarkIcon} label="Close email campaign creation" variant="secondary" />
       </PageHeaderTitle>
