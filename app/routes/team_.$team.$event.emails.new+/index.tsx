@@ -3,23 +3,21 @@ import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { useState } from 'react';
-import invariant from 'tiny-invariant';
 
 import { ButtonLink } from '~/design-system/Buttons.tsx';
 import { RadioGroupList } from '~/design-system/forms/RadioGroupList.tsx';
+import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2 } from '~/design-system/Typography.tsx';
 import { campaignTemplates } from '~/domain/email-campaigns/campaign-templates.server.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   await requireSession(request);
-  invariant(params.event, 'Invalid event slug');
 
   const templates = campaignTemplates.map((template) => ({
     name: template.name,
     title: template.title,
     description: template.description,
-    segments: template.segments,
   }));
 
   return json(templates);
@@ -30,11 +28,12 @@ export default function CampaignTemplateSelection() {
   const [selected, setSelected] = useState<string>(templates[0].name);
 
   return (
-    <>
-      <H2 mb={4}>Choose an email campaign template</H2>
-      <div className="flex flex-col gap-8">
+    <Card>
+      <Card.Title>
+        <H2>Choose an email campaign template</H2>
+      </Card.Title>
+      <Card.Content>
         <RadioGroupList
-          name="campaign"
           label="Campaign type"
           value={selected}
           onChange={setSelected}
@@ -44,12 +43,12 @@ export default function CampaignTemplateSelection() {
             description: template.description,
           }))}
         />
-        <div className="flex justify-end">
-          <ButtonLink to={selected} iconRight={ArrowRightIcon}>
-            Continue
-          </ButtonLink>
-        </div>
-      </div>
-    </>
+      </Card.Content>
+      <Card.Actions>
+        <ButtonLink to={selected} iconRight={ArrowRightIcon}>
+          Continue
+        </ButtonLink>
+      </Card.Actions>
+    </Card>
   );
 }

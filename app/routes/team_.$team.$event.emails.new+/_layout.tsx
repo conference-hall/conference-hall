@@ -1,10 +1,8 @@
-import { XMarkIcon } from '@heroicons/react/20/solid';
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { Outlet, useNavigate, useParams } from '@remix-run/react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import invariant from 'tiny-invariant';
 
-import { IconButtonLink } from '~/design-system/IconButtons.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
@@ -25,10 +23,9 @@ export default function NewEmailCampaign() {
     <>
       <PageHeaderTitle
         title="New campaign"
-        subtitle="Use a pre-defined email campaign to communicate CFP results to the speakers"
-      >
-        <IconButtonLink to={closePath} icon={XMarkIcon} label="Close email campaign creation" variant="secondary" />
-      </PageHeaderTitle>
+        subtitle="Use a pre-defined email campaign to communicate CFP results to the speakers."
+        closeTo={closePath}
+      />
       <PageContent>
         <Outlet />
       </PageContent>

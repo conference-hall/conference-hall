@@ -19,7 +19,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 export default function EmailCampaigns() {
   return (
     <PageContent>
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <H1>Email campaigns</H1>
         <ButtonLink to="new" iconLeft={PlusIcon}>
           New campaign

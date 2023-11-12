@@ -2,8 +2,8 @@ import { RadioGroup } from '@headlessui/react';
 import { cx } from 'class-variance-authority';
 
 type Props = {
-  name: string;
   label: string;
+  name?: string;
   options: { value: string; title: string; description: string }[];
   value?: string;
   onChange?: (value: string) => void;

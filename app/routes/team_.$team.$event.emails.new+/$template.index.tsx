@@ -4,8 +4,8 @@ import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { Badge } from '~/design-system/Badges.tsx';
 import { ButtonLink } from '~/design-system/Buttons.tsx';
+import { Input } from '~/design-system/forms/Input.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { Markdown } from '~/design-system/Markdown.tsx';
 import { H2, Subtitle, Text } from '~/design-system/Typography.tsx';
@@ -14,8 +14,7 @@ import { requireSession } from '~/libs/auth/session.ts';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   await requireSession(request);
-  invariant(params.event, 'Invalid event slug');
-  invariant(params.template, 'Invalid temaplte name');
+  invariant(params.template, 'Invalid template name');
 
   const template = campaignTemplates.find((template) => template.name === params.template);
 
@@ -26,30 +25,37 @@ export default function CampaignTemplatePreview() {
   const template = useLoaderData<typeof loader>();
 
   return (
-    <div className="space-y-8">
-      <Card p={8}>
-        <H2>{template.title}</H2>
-        <Subtitle>{template.description}</Subtitle>
-      </Card>
+    <form method="POST">
       <Card>
-        <div className="flex justify-between items-center px-8 py-4">
-          <Text weight="semibold">From: {template.email_from}</Text>
-          <Badge>Email preview</Badge>
-        </div>
-        <div className="border-b border-b-gray-200" />
-        <div className="px-8 py-4">
-          <Markdown>{template.email_subject}</Markdown>
-        </div>
-        <div className="border-b border-b-gray-200" />
-        <div className="p-8">
-          <Markdown>{template.email_template}</Markdown>
-        </div>
+        <Card.Title>
+          <H2>{template.title}</H2>
+          <Subtitle>{template.description}</Subtitle>
+        </Card.Title>
+        <Card.Content>
+          <Input label="Campaign name" name="name" defaultValue={template.title} required />
+          <div>
+            <Text weight="medium" mb={2}>
+              Email preview
+            </Text>
+            <div className="rounded border border-gray-300">
+              <div className="rounded-t bg-gray-50 border-b border-b-gray-300 p-4">
+                <Text weight="semibold">From: {template.email_from}</Text>
+              </div>
+              <div className="p-4 border-b border-b-gray-200">
+                <Text weight="medium">{template.email_subject}</Text>
+              </div>
+              <div className="p-4">
+                <Markdown>{template.email_template}</Markdown>
+              </div>
+            </div>
+          </div>
+        </Card.Content>
+        <Card.Actions>
+          <ButtonLink to="selection" iconRight={ArrowRightIcon}>
+            Go to proposals selection
+          </ButtonLink>
+        </Card.Actions>
       </Card>
-      <div className="flex justify-end">
-        <ButtonLink to="selection" iconRight={ArrowRightIcon}>
-          Go to proposals selection
-        </ButtonLink>
-      </div>
-    </div>
+    </form>
   );
 }

@@ -1,5 +1,3 @@
-import { Disclosure } from '@headlessui/react';
-
 import { ButtonLink } from '~/design-system/Buttons.tsx';
 
 import { Logo } from './Logo.tsx';
@@ -27,52 +25,52 @@ export type Notification = {
 
 export function Navbar({ user, withSearch }: Props) {
   return (
-    <Disclosure as="div" className="bg-gray-800">
-      {({ open }) => (
-        <>
-          <div className="flex h-16 items-center justify-between px-4 lg:px-8">
-            <div className="flex w-full items-center">
-              {/* Logo */}
-              <Logo displayName={!withSearch} />
+    <div className="bg-gray-800">
+      <div className="flex h-16 items-center justify-between px-4 lg:px-8">
+        <div className="flex w-full items-center">
+          {/* Logo */}
+          <Logo displayName={!withSearch} />
 
-              {/* Search */}
-              {withSearch && <SearchEventsInput />}
-            </div>
+          {/* Search */}
+          {withSearch && <SearchEventsInput />}
+        </div>
 
-            <div className="hidden gap-2 lg:flex lg:flex-shrink-0 lg:items-center lg:justify-end">
-              {/* Navigation links */}
-              <Navigation authenticated={Boolean(user)} isOrganizer={user?.isOrganizer} teams={user?.teams} />
+        <div className="hidden gap-2 lg:flex lg:flex-shrink-0 lg:items-center lg:justify-end">
+          {/* Navigation links */}
+          <Navigation authenticated={Boolean(user)} isOrganizer={user?.isOrganizer} teams={user?.teams} />
 
-              {/* Avatar */}
-              {user && (
-                <UserMenu
-                  name={user.name}
-                  email={user.email}
-                  picture={user.picture}
-                  teams={user.teams}
-                  isOrganizer={user.isOrganizer}
-                  notificationsCount={user.notifications.length}
-                />
-              )}
-            </div>
+          {/* Avatar */}
+          {user && (
+            <UserMenu
+              name={user.name}
+              email={user.email}
+              picture={user.picture}
+              teams={user.teams}
+              isOrganizer={user.isOrganizer}
+              notificationsCount={user.notifications.length}
+            />
+          )}
+        </div>
 
-            {/* Mobile menu */}
-            <div className="flex lg:hidden">
-              {!user && <ButtonLink to="/login">Login</ButtonLink>}
-              {user && (
-                <UserMenu
-                  name={user.name}
-                  email={user.email}
-                  picture={user.picture}
-                  teams={user.teams}
-                  isOrganizer={user.isOrganizer}
-                  notificationsCount={user.notifications.length}
-                />
-              )}
-            </div>
-          </div>
-        </>
-      )}
-    </Disclosure>
+        {/* Mobile menu */}
+        <div className="flex lg:hidden">
+          {!user && (
+            <ButtonLink size="s" to="/login">
+              Login
+            </ButtonLink>
+          )}
+          {user && (
+            <UserMenu
+              name={user.name}
+              email={user.email}
+              picture={user.picture}
+              teams={user.teams}
+              isOrganizer={user.isOrganizer}
+              notificationsCount={user.notifications.length}
+            />
+          )}
+        </div>
+      </div>
+    </div>
   );
 }
