@@ -1,29 +1,28 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-export const useCheckboxSelection = (items: Array<string>) => {
+export const useCheckboxSelection = (items: Array<string>, total: number) => {
   const checkboxRef = useRef<HTMLInputElement>(null);
-  const [checked, setChecked] = useState(false);
+  const [allChecked, setAllChecked] = useState(false);
   const [selection, setSelected] = useState<Array<string>>([]);
   const [indeterminate, setIndeterminate] = useState(false);
 
   useEffect(() => {
-    const isIndeterminate = selection.length > 0 && selection.length < items.length;
-    setChecked(items.length !== 0 && selection.length === items.length);
+    const isIndeterminate = selection.length > 0 && selection.length < total;
+    setAllChecked(total !== 0 && selection.length === total);
     setIndeterminate(isIndeterminate);
     if (checkboxRef.current) {
       checkboxRef.current.indeterminate = isIndeterminate;
     }
-  }, [selection, items]);
+  }, [selection, items, total]);
 
   const toggleAll = useCallback(() => {
-    setSelected(checked || indeterminate ? [] : items);
-    setChecked(!checked && !indeterminate);
-    setIndeterminate(false);
-  }, [items, checked, indeterminate]);
+    setSelected(allChecked || indeterminate ? [] : items);
+    setAllChecked(!allChecked && !indeterminate);
+  }, [items, allChecked, indeterminate]);
 
   const reset = useCallback(() => {
     setSelected([]);
-    setChecked(false);
+    setAllChecked(false);
     setIndeterminate(false);
   }, []);
 
@@ -43,13 +42,13 @@ export const useCheckboxSelection = (items: Array<string>) => {
     () => ({
       checkboxRef,
       selection,
-      checked,
+      allChecked,
       isSelected,
       onSelect,
       toggleAll,
       reset,
     }),
-    [checkboxRef, selection, checked, isSelected, onSelect, toggleAll, reset],
+    [checkboxRef, selection, allChecked, isSelected, onSelect, toggleAll, reset],
   );
 
   return value;
