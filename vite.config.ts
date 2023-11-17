@@ -5,12 +5,8 @@ import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 const config: RemixVitePluginOptions = {
-  // cacheDirectory: './node_modules/.cache/remix',
   ignoredRouteFiles: ['**/*'],
   serverModuleFormat: 'esm',
-  // serverPlatform: 'node',
-  // tailwind: true,
-  // watchPaths: ['./tailwind.config.ts'],
   routes: async (defineRoutes) => {
     return flatRoutes('routes', defineRoutes, {
       ignoredRouteFiles: [
