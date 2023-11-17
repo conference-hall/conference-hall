@@ -23,4 +23,10 @@ const config: RemixVitePluginOptions = {
 
 export default defineConfig({
   plugins: [remix(config), tsconfigPaths()],
+  resolve: {
+    alias: {
+      // Fix issue on build: https://github.com/prisma/prisma/issues/12504
+      '.prisma/client/index-browser': './node_modules/.prisma/client/index-browser.js',
+    },
+  },
 });
