@@ -1,4 +1,6 @@
-import type { LinksFunction, LoaderFunctionArgs } from '@remix-run/node';
+import './cards.css';
+
+import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
@@ -11,9 +13,6 @@ import { getLevel } from '~/utils/levels.ts';
 import { formatReviewNote } from '~/utils/reviews.ts';
 
 import { exportProposals } from './__server/export-cards.server.ts';
-import styles from './cards.css';
-
-export const links: LinksFunction = () => [{ rel: 'stylesheet', href: styles }];
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);

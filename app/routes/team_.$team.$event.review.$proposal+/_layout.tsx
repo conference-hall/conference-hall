@@ -1,5 +1,4 @@
 import { parse } from '@conform-to/zod';
-import { TeamRole } from '@prisma/client';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Outlet, useLoaderData, useOutletContext, useParams } from '@remix-run/react';
@@ -59,7 +58,7 @@ export default function ProposalReviewRoute() {
   const { you, summary } = proposal.reviews;
 
   const role = user?.teams.find((team) => team.slug === params.team)?.role;
-  const canEditProposal = TeamRole.MEMBER === role || TeamRole.OWNER === role;
+  const canEditProposal = 'MEMBER' === role || 'OWNER' === role;
 
   return (
     <>
