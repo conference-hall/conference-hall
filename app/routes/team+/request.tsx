@@ -7,10 +7,9 @@ import { Input } from '~/design-system/forms/Input.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { ExternalLink } from '~/design-system/Links.tsx';
 import { H1, Subtitle } from '~/design-system/Typography.tsx';
+import { TeamBetaAccess } from '~/domains/team-management/TeamBetaAccess.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
-
-import { validAccessKey } from '../__server/teams/valid-access-key.server.ts';
 
 export const meta = mergeMeta(() => [{ title: 'Request access | Conference Hall' }]);
 
@@ -22,10 +21,13 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 export const action = async ({ request }: ActionFunctionArgs) => {
   const userId = await requireSession(request);
   const form = await request.formData();
-  const result = await validAccessKey(userId, String(form.get('key')));
 
-  if (result?.errors) return json(result?.errors);
-  return redirect('/team/new');
+  try {
+    await TeamBetaAccess.for(userId).validateAccessKey(String(form.get('key')));
+    return redirect('/team/new');
+  } catch (InvalidAccessKeyError) {
+    return json({ key: 'Invalid access key' });
+  }
 };
 
 export default function RequestAccessRoute() {

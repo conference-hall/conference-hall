@@ -100,6 +100,12 @@ export class ApiKeyInvalidError extends BadRequestError {
   }
 }
 
+export class InvalidAccessKeyError extends BadRequestError {
+  constructor() {
+    super('Invalid access key.');
+  }
+}
+
 export class SlugAlreadyExistsError extends BadRequestError {
   constructor() {
     super('Slug already exists');

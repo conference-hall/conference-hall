@@ -7,7 +7,7 @@ import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
-import { NewTeam, TeamCreateSchema } from '~/domains/NewTeam';
+import { NewTeam, TeamCreateSchema } from '~/domains/team-management/NewTeam';
 import { requireSession } from '~/libs/auth/session.ts';
 import { TeamForm } from '~/routes/__components/teams/TeamForm.tsx';
 

@@ -8,7 +8,7 @@ import { Button, ButtonLink } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { H1, Subtitle } from '~/design-system/Typography.tsx';
-import { EventCreateSchema, MyTeamEvents } from '~/domains/MyTeamEvents.tsx';
+import { EventCreateSchema, MyTeamEvents } from '~/domains/team-management/MyTeamEvents';
 import { requireSession } from '~/libs/auth/session.ts';
 
 import { EventForm } from '../../__components/events/EventForm.tsx';

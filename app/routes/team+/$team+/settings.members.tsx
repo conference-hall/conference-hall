@@ -13,7 +13,7 @@ import { Card } from '~/design-system/layouts/Card.tsx';
 import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
 import { Pagination } from '~/design-system/Pagination.tsx';
 import { H3, Subtitle } from '~/design-system/Typography.tsx';
-import { MembersFiltersSchema, MyTeamMembers } from '~/domains/MyTeamMembers.tsx';
+import { MembersFiltersSchema, MyTeamMembers } from '~/domains/team-management/MyTeamMembers';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { useUser } from '~/root.tsx';

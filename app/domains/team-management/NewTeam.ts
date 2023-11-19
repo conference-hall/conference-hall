@@ -1,8 +1,10 @@
 import { z } from 'zod';
 
 import { db } from '~/libs/db';
-import { ForbiddenOperationError, SlugAlreadyExistsError } from '~/libs/errors';
+import { SlugAlreadyExistsError } from '~/libs/errors';
 import { slugValidator } from '~/routes/__types/validators';
+
+import { TeamBetaAccess } from './TeamBetaAccess';
 
 export const TeamCreateSchema = z.object({
   name: z.string().trim().min(3).max(50),
@@ -16,16 +18,8 @@ export class NewTeam {
     return new NewTeam(userId);
   }
 
-  async allowed() {
-    const user = await db.user.findFirst({ select: { organizerKey: true, teams: true }, where: { id: this.userId } });
-    const hasOrganizations = Boolean(user?.teams?.length);
-    if (!hasOrganizations && !user?.organizerKey) {
-      throw new ForbiddenOperationError();
-    }
-  }
-
   async create(data: z.infer<typeof TeamCreateSchema>) {
-    await this.allowed();
+    await TeamBetaAccess.for(this.userId).check();
 
     return await db.$transaction(async (trx) => {
       const existSlug = await trx.team.findFirst({ where: { slug: data.slug } });
