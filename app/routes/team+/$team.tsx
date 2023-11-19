@@ -1,10 +1,12 @@
 import type { LoaderFunctionArgs } from '@remix-run/node';
-import { json, redirect } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import { Outlet, useLoaderData, useOutletContext, useRouteLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { Container } from '~/design-system/layouts/Container';
 import { PageHeader } from '~/design-system/layouts/PageHeader';
+import type { Team } from '~/domains/MyTeam';
+import { MyTeam } from '~/domains/MyTeam';
 import { requireSession } from '~/libs/auth/session';
 import { mergeMeta } from '~/libs/meta/merge-meta';
 import { useUser } from '~/root.tsx';
@@ -14,9 +16,6 @@ import TeamBreadcrumb from '../__components/teams/TeamBreadcrumb';
 import type { TeamEvent } from './$team.$event+/__server/get-event.server';
 import { EventTabs } from './$team+/__components/EventTabs';
 import { TeamTabs } from './$team+/__components/TeamTabs';
-import { checkTeamAccess } from './$team+/__server/check-team-access.server';
-import type { Team } from './$team+/__server/get-team.server';
-import { getTeam } from './$team+/__server/get-team.server';
 
 export const meta = mergeMeta<typeof loader>(({ data }) => (data ? [{ title: `${data.name} | Conference Hall` }] : []));
 
@@ -24,11 +23,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.team, 'Invalid team slug');
 
-  const canAccess = await checkTeamAccess(userId);
-
-  if (!canAccess) return redirect('/team/request');
-
-  const team = await getTeam(params.team, userId);
+  const team = await MyTeam.for(userId, params.team).get(); // TODO: should manage errors
   return json(team);
 };
 

@@ -7,12 +7,12 @@ import invariant from 'tiny-invariant';
 import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { H1 } from '~/design-system/Typography.tsx';
+import { MyTeam } from '~/domains/MyTeam.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { EventCard } from '~/routes/__components/EventCard.tsx';
 
 import { useTeam } from '../$team.tsx';
 import { ArchivedFilters } from './__components/ArchivedFilter.tsx';
-import { listEvents } from './__server/list-events.server.ts';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
@@ -20,8 +20,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 
   const url = new URL(request.url);
   const archived = Boolean(url.searchParams.get('archived'));
-
-  const events = await listEvents(params.team, userId, archived);
+  const events = await MyTeam.for(userId, params.team).listEvents(archived);
 
   return json(events);
 };

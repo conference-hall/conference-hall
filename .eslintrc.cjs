@@ -4,6 +4,7 @@ module.exports = {
   plugins: ['simple-import-sort', 'prettier'],
   rules: {
     'prettier/prettier': 'warn',
+    'no-useless-constructor': 'off',
     'jsx-a11y/anchor-has-content': 'off',
     'simple-import-sort/imports': 'warn',
     'simple-import-sort/exports': 'warn',
