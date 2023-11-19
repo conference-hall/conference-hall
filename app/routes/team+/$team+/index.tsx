@@ -25,7 +25,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   return json(events);
 };
 
-export default function OrganizationEventsRoute() {
+export default function TeamEventsRoute() {
   const { team } = useTeam();
   const events = useLoaderData<typeof loader>();
 

@@ -13,6 +13,7 @@ import { Card } from '~/design-system/layouts/Card.tsx';
 import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
 import { Pagination } from '~/design-system/Pagination.tsx';
 import { H3, Subtitle } from '~/design-system/Typography.tsx';
+import { MembersFiltersSchema, MyTeamMembers } from '~/domains/MyTeamMembers.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { useUser } from '~/root.tsx';
@@ -20,19 +21,16 @@ import { parsePage } from '~/routes/__types/pagination.ts';
 
 import { useTeam } from '../$team.tsx';
 import { ChangeRoleButton, InviteMemberButton, RemoveButton } from './__components/MemberActions.tsx';
-import { changeMemberRole } from './__server/change-role.server.ts';
-import { listMembers, MembersFilterSchema } from './__server/list-members.server.ts';
-import { removeMember } from './__server/remove-member.server.ts';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.team, 'Invalid team slug');
 
   const url = new URL(request.url);
-  const filters = parse(url.searchParams, { schema: MembersFilterSchema });
+  const filters = parse(url.searchParams, { schema: MembersFiltersSchema });
   const page = parsePage(url.searchParams);
 
-  const members = await listMembers(params.team, userId, filters.value || {}, page);
+  const members = await MyTeamMembers.for(userId, params.team).list(filters.value || {}, page);
   return json(members);
 };
 
@@ -44,21 +42,21 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const action = form.get('_action')!;
   const memberId = String(form.get('_memberId'))!;
 
+  const members = MyTeamMembers.for(userId, params.team);
   switch (action) {
     case 'change-role': {
-      const memberRole = form.get('memberRole') as TeamRole;
-      await changeMemberRole(params.team, userId, memberId, memberRole);
+      await members.changeRole(memberId, form.get('memberRole') as TeamRole);
       return toast('success', 'Member role changed.');
     }
     case 'remove-member': {
-      await removeMember(params.team, userId, memberId);
+      await members.remove(memberId);
       return toast('success', 'Member removed from team.');
     }
   }
   return null;
 };
 
-export default function OrganizationSettingsRoute() {
+export default function TeamMembersRoute() {
   const { user } = useUser();
   const { team } = useTeam();
   const [searchParams] = useSearchParams();

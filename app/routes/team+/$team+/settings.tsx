@@ -25,7 +25,7 @@ const getMenuItems = (team?: string) => [
   { to: `/team/${team}/settings/members`, icon: UserGroupIcon, label: 'Members' },
 ];
 
-export default function OrganizationSettingsRoute() {
+export default function TeamSettingsLayout() {
   const { user } = useUser();
   const { team } = useTeam();
 

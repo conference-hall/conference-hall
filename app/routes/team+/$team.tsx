@@ -27,7 +27,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   return json(team);
 };
 
-export default function TeamLayoutRoutes() {
+export default function TeamLayout() {
   const { user } = useUser();
   const team = useLoaderData<typeof loader>();
   const event = useRouteLoaderData('routes/team+/$team.$event+/_layout') as TeamEvent;

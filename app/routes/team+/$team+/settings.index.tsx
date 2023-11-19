@@ -36,7 +36,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   }
 };
 
-export default function OrganizationSettingsRoute() {
+export default function TeamSettingsRoute() {
   const { team } = useTeam();
   const errors = useActionData<typeof action>();
 
