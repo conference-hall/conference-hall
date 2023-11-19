@@ -99,3 +99,9 @@ export class ApiKeyInvalidError extends BadRequestError {
     super('API key invalid');
   }
 }
+
+export class SlugAlreadyExistsError extends BadRequestError {
+  constructor() {
+    super('Slug already exists');
+  }
+}

@@ -7,13 +7,12 @@ import invariant from 'tiny-invariant';
 import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2, Subtitle } from '~/design-system/Typography.tsx';
+import { MyTeamSettings, TeamUpdateSchema } from '~/domains/MyTeamSettings.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast } from '~/libs/toasts/toast.server.ts';
 import { TeamForm } from '~/routes/__components/teams/TeamForm.tsx';
 
 import { useTeam } from '../$team.tsx';
-import { updateTeam } from './__server/update-team.server.ts';
-import { TeamSaveSchema } from './__types/team-save.schema.ts';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);
@@ -25,13 +24,16 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const form = await request.formData();
   invariant(params.team, 'Invalid team slug');
 
-  const result = parse(form, { schema: TeamSaveSchema });
+  const result = parse(form, { schema: TeamUpdateSchema });
   if (!result.value) return json(result.error);
 
-  const team = await updateTeam(params.team, userId, result.value);
-  if (team?.fieldErrors) return json(team.fieldErrors);
-
-  return redirectWithToast(`/team/${team.slug}/settings`, 'success', 'Team settings saved.');
+  try {
+    const settings = MyTeamSettings.for(userId, params.team);
+    const team = await settings.update(result.value);
+    return redirectWithToast(`/team/${team.slug}/settings`, 'success', 'Team settings saved.');
+  } catch (SlugAlreadyExistsError) {
+    return json({ slug: 'This URL already exists, please try another one.' });
+  }
 };
 
 export default function OrganizationSettingsRoute() {

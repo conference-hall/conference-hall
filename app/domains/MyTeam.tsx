@@ -9,8 +9,8 @@ export type Team = Awaited<ReturnType<typeof MyTeam.prototype.get>>;
 
 export class MyTeam {
   constructor(
-    private userId: string,
-    private slug: string,
+    public userId: string,
+    public slug: string,
   ) {}
 
   static for(userId: string, slug: string) {
