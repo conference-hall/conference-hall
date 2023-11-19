@@ -13,7 +13,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   return null;
 };
 
-export default function OrganizationRoute() {
+export default function NewEventTypeRoute() {
   return (
     <PageContent className="flex flex-col">
       <Card>

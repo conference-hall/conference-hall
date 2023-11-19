@@ -1,5 +1,5 @@
+import { EventProposalsSearch } from '~/domains/event-proposals/EventProposalsSearch';
 import { getPagination } from '~/routes/__server/pagination/pagination.server.ts';
-import { EventProposalsSearch } from '~/routes/__server/proposals/EventProposalsSearch.ts';
 import { ReviewsDetails } from '~/routes/__server/reviews/reviews-details.ts';
 import { allowedForEvent } from '~/routes/__server/teams/check-user-role.server.ts';
 import type { Pagination } from '~/routes/__types/pagination.ts';

@@ -34,7 +34,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   }
 };
 
-export default function OrganizationRoute() {
+export default function NewEventRoute() {
   const errors = useActionData<typeof action>();
   const params = useParams();
   const type = params.type || 'CONFERENCE';

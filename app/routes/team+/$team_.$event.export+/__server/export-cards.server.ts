@@ -1,7 +1,7 @@
 import { TeamRole } from '@prisma/client';
 
+import { EventProposalsSearch } from '~/domains/event-proposals/EventProposalsSearch';
 import { jsonToArray } from '~/libs/prisma.ts';
-import { EventProposalsSearch } from '~/routes/__server/proposals/EventProposalsSearch.ts';
 import { ReviewsDetails } from '~/routes/__server/reviews/reviews-details.ts';
 import { allowedForEvent } from '~/routes/__server/teams/check-user-role.server.ts';
 import type { ProposalsFilters } from '~/routes/__types/proposal.ts';

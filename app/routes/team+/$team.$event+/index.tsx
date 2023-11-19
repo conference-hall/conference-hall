@@ -45,7 +45,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   return toast('success', `${updated} proposals marked as "${result.value.status.toLowerCase()}".`);
 };
 
-export default function OrganizerEventProposalsRoute() {
+export default function EventReviewsRoute() {
   const { event } = useTeamEvent();
   const { results, filters, pagination, statistics } = useLoaderData<typeof loader>();
 
