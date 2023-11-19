@@ -1,20 +1,22 @@
 import type { LoaderFunctionArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
+import { json, redirect } from '@remix-run/node';
 import { Outlet, useLoaderData, useOutletContext, useRouteLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { Container } from '~/design-system/layouts/Container.tsx';
-import { PageHeader } from '~/design-system/layouts/PageHeader.tsx';
-import { requireSession } from '~/libs/auth/session.ts';
-import { mergeMeta } from '~/libs/meta/merge-meta.ts';
+import { Container } from '~/design-system/layouts/Container';
+import { PageHeader } from '~/design-system/layouts/PageHeader';
+import { requireSession } from '~/libs/auth/session';
+import { mergeMeta } from '~/libs/meta/merge-meta';
 import { useUser } from '~/root.tsx';
-import TeamBreadcrumb from '~/routes/__components/teams/TeamBreadcrumb.tsx';
+import { Navbar } from '~/routes/__components/navbar/Navbar.tsx';
 
-import type { OrganizerEvent } from '../team.$team.$event+/__server/get-event.server.ts';
-import { EventTabs } from './__components/EventTabs.tsx';
-import { TeamTabs } from './__components/TeamTabs.tsx';
-import type { Team } from './__server/get-team.server.ts';
-import { getTeam } from './__server/get-team.server.ts';
+import TeamBreadcrumb from '../__components/teams/TeamBreadcrumb';
+import type { TeamEvent } from './$team.$event+/__server/get-event.server';
+import { EventTabs } from './$team+/__components/EventTabs';
+import { TeamTabs } from './$team+/__components/TeamTabs';
+import { checkTeamAccess } from './$team+/__server/check-team-access.server';
+import type { Team } from './$team+/__server/get-team.server';
+import { getTeam } from './$team+/__server/get-team.server';
 
 export const meta = mergeMeta<typeof loader>(({ data }) => (data ? [{ title: `${data.name} | Conference Hall` }] : []));
 
@@ -22,17 +24,23 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.team, 'Invalid team slug');
 
+  const canAccess = await checkTeamAccess(userId);
+
+  if (!canAccess) return redirect('/team/request');
+
   const team = await getTeam(params.team, userId);
   return json(team);
 };
 
-export default function OrganizationRoute() {
+export default function TeamLayoutRoutes() {
   const { user } = useUser();
   const team = useLoaderData<typeof loader>();
-  const event = useRouteLoaderData('routes/team.$team.$event+/_layout') as OrganizerEvent;
+  const event = useRouteLoaderData('routes/team+/$team.$event+/_layout') as TeamEvent;
 
   return (
     <>
+      <Navbar user={user} withSearch />
+
       <PageHeader>
         <Container>
           <TeamBreadcrumb team={team} event={event} />

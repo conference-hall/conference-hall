@@ -28,7 +28,7 @@ export function Navigation({ authenticated, isOrganizer, teams = [] }: Props) {
       {
         label: 'Teams',
         enabled: isOrganizer,
-        links: [...teamLinks, { to: '/team', label: 'New team', icon: PlusIcon }],
+        links: [...teamLinks, { to: '/team/new', label: 'New team', icon: PlusIcon }],
       },
     ];
   }, [authenticated, isOrganizer, teams]);
