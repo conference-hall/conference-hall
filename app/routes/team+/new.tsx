@@ -7,10 +7,9 @@ import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
+import { NewTeam, TeamCreateSchema } from '~/domains/NewTeam';
 import { requireSession } from '~/libs/auth/session.ts';
 import { TeamForm } from '~/routes/__components/teams/TeamForm.tsx';
-
-import { createTeam, TeamSaveSchema } from './$team+/__server/create-team.server';
 
 export const loader: LoaderFunction = async ({ request }) => {
   await requireSession(request);
@@ -21,13 +20,15 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const userId = await requireSession(request);
 
   const form = await request.formData();
-  const result = await parse(form, { schema: TeamSaveSchema, async: true });
+  const result = parse(form, { schema: TeamCreateSchema });
+  if (!result.value) return json(result.error);
 
-  if (result.value) {
-    const updated = await createTeam(userId, result.value);
-    return redirect(`/team/${updated.slug}`);
+  try {
+    const team = await NewTeam.for(userId).create(result.value);
+    return redirect(`/team/${team.slug}`);
+  } catch (SlugAlreadyExistsError) {
+    return json({ slug: 'This URL already exists, please try another one.' });
   }
-  return json(result.error);
 };
 
 export default function NewTeamRoute() {

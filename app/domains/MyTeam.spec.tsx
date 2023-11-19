@@ -1,12 +1,11 @@
 import type { User } from '@prisma/client';
-import { eventFactory } from 'tests/factories/events';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 
 import { config } from '~/libs/config.ts';
-import { ForbiddenOperationError } from '~/libs/errors.ts';
+import { ForbiddenOperationError, SlugAlreadyExistsError } from '~/libs/errors.ts';
 
-import { MyTeam } from './MyTeam';
+import { MyTeam, TeamUpdateSchema } from './MyTeam';
 
 describe('MyTeam', () => {
   let user: User;
@@ -69,64 +68,65 @@ describe('MyTeam', () => {
     });
   });
 
-  describe('listEvents', () => {
-    it('returns events of the team', async () => {
-      const team = await teamFactory({ owners: [user], attributes: { slug: 'my-team' } });
-      const event1 = await eventFactory({ attributes: { name: 'A' }, team, traits: ['conference'] });
-      const event2 = await eventFactory({ attributes: { name: 'B' }, team, traits: ['meetup'] });
+  describe('updateSettings', () => {
+    it('updates the team settings', async () => {
+      const team = await teamFactory({
+        attributes: { name: 'Hello world', slug: 'hello-world' },
+        owners: [user],
+      });
 
-      const team2 = await teamFactory({ owners: [user] });
-      await eventFactory({ traits: ['conference-cfp-open'], team: team2 });
+      let result = await MyTeam.for(user.id, team.slug).updateSettings({ name: 'name', slug: 'slug' });
+      expect(result.name).toEqual('name');
+      expect(result.slug).toEqual('slug');
 
-      const events = await MyTeam.for(user.id, team.slug).listEvents(false);
-
-      expect(events).toEqual([
-        {
-          name: event1.name,
-          slug: event1.slug,
-          type: event1.type,
-          logo: event1.logo,
-          cfpStart: event1.cfpStart?.toUTCString(),
-          cfpEnd: event1.cfpEnd?.toUTCString(),
-          cfpState: 'CLOSED',
-        },
-        {
-          name: event2.name,
-          slug: event2.slug,
-          type: event2.type,
-          logo: event2.logo,
-          cfpStart: event2.cfpStart?.toUTCString(),
-          cfpEnd: event2.cfpEnd?.toUTCString(),
-          cfpState: 'CLOSED',
-        },
-      ]);
+      result = await MyTeam.for(user.id, result.slug).updateSettings({ name: 'name 2', slug: 'slug' });
+      expect(result.name).toEqual('name 2');
+      expect(result.slug).toEqual('slug');
     });
 
-    it('returns archived events of the team', async () => {
-      const team = await teamFactory({ owners: [user], attributes: { slug: 'my-team' } });
-      const event = await eventFactory({ attributes: { name: 'B' }, team, traits: ['meetup', 'archived'] });
-      await eventFactory({ attributes: { name: 'A' }, team, traits: ['conference'] });
+    it('throws an error if user is not owner', async () => {
+      const team = await teamFactory({ members: [user] });
 
-      const events = await MyTeam.for(user.id, team.slug).listEvents(true);
-
-      expect(events).toEqual([
-        {
-          name: event.name,
-          slug: event.slug,
-          type: event.type,
-          logo: event.logo,
-          cfpStart: event.cfpStart?.toUTCString(),
-          cfpEnd: event.cfpEnd?.toUTCString(),
-          cfpState: 'CLOSED',
-        },
-      ]);
+      await expect(MyTeam.for(user.id, team.slug).updateSettings({ name: 'name', slug: 'slug' })).rejects.toThrowError(
+        ForbiddenOperationError,
+      );
     });
 
-    it('throws an error when user not member of event team', async () => {
-      const team = await teamFactory({ attributes: { slug: 'my-team' } });
-      await eventFactory({ team });
+    it('throws an error if the slug already exists', async () => {
+      const team = await teamFactory({ attributes: { slug: 'hello-world' }, owners: [user] });
+      await teamFactory({ attributes: { slug: 'hello-world-exist' }, owners: [user] });
 
-      await expect(MyTeam.for(user.id, team.slug).listEvents(false)).rejects.toThrowError(ForbiddenOperationError);
+      await expect(
+        MyTeam.for(user.id, team.slug).updateSettings({ name: 'Hello world', slug: 'hello-world-exist' }),
+      ).rejects.toThrowError(SlugAlreadyExistsError);
+    });
+  });
+
+  describe('Validate TeamUpdateSchema', () => {
+    it('validates the team data', async () => {
+      const result = TeamUpdateSchema.safeParse({ name: 'Hello world', slug: 'hello-world' });
+      expect(result.success && result.data).toEqual({ name: 'Hello world', slug: 'hello-world' });
+    });
+
+    it('returns errors when data invalid', async () => {
+      const result = TeamUpdateSchema.safeParse({ name: 'H', slug: 'h' });
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        const { fieldErrors } = result.error.flatten();
+        expect(fieldErrors.name).toEqual(['String must contain at least 3 character(s)']);
+        expect(fieldErrors.slug).toEqual(['String must contain at least 3 character(s)']);
+      }
+    });
+
+    it('validates slug format (alpha-num and dash only)', async () => {
+      const result = TeamUpdateSchema.safeParse({ name: 'Hello world', slug: 'Hello world/' });
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        const { fieldErrors } = result.error.flatten();
+        expect(fieldErrors.slug).toEqual(['Must only contain lower case alphanumeric and dashes (-).']);
+      }
     });
   });
 });

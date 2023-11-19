@@ -1,11 +1,17 @@
 import type { TeamRole } from '@prisma/client';
+import { z } from 'zod';
 
 import { db } from '~/libs/db';
-import { ForbiddenOperationError, TeamNotFoundError } from '~/libs/errors';
+import { ForbiddenOperationError, SlugAlreadyExistsError, TeamNotFoundError } from '~/libs/errors';
 import { buildInvitationLink } from '~/routes/__server/invitations/build-link.server';
-import { getCfpState } from '~/utils/event';
+import { slugValidator } from '~/routes/__types/validators';
 
 export type Team = Awaited<ReturnType<typeof MyTeam.prototype.get>>;
+
+export const TeamUpdateSchema = z.object({
+  name: z.string().trim().min(3).max(50),
+  slug: slugValidator,
+});
 
 export class MyTeam {
   constructor(
@@ -40,22 +46,14 @@ export class MyTeam {
     };
   }
 
-  async listEvents(archived: boolean) {
-    await this.allowedFor(['MEMBER', 'REVIEWER', 'OWNER']);
+  async updateSettings(data: z.infer<typeof TeamUpdateSchema>) {
+    const member = await this.allowedFor(['OWNER']);
 
-    const events = await db.event.findMany({
-      where: { team: { slug: this.slug }, archived },
-      orderBy: { name: 'asc' },
+    return await db.$transaction(async (trx) => {
+      const existSlug = await trx.team.findFirst({ where: { slug: data.slug, id: { not: member.teamId } } });
+      if (existSlug) throw new SlugAlreadyExistsError();
+
+      return trx.team.update({ where: { slug: this.slug }, data });
     });
-
-    return events.map((event) => ({
-      slug: event.slug,
-      name: event.name,
-      type: event.type,
-      logo: event.logo,
-      cfpStart: event.cfpStart?.toUTCString(),
-      cfpEnd: event.cfpEnd?.toUTCString(),
-      cfpState: getCfpState(event.type, event.cfpStart, event.cfpEnd),
-    }));
   }
 }

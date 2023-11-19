@@ -25,7 +25,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const result = await validAccessKey(userId, String(form.get('key')));
 
   if (result?.errors) return json(result?.errors);
-  return redirect('/team');
+  return redirect('/team/new');
 };
 
 export default function RequestAccessRoute() {

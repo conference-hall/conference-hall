@@ -23,7 +23,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.team, 'Invalid team slug');
 
-  const team = await MyTeam.for(userId, params.team).get(); // TODO: should manage errors
+  const team = await MyTeam.for(userId, params.team).get();
   return json(team);
 };
 

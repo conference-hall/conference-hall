@@ -8,11 +8,10 @@ import { Button, ButtonLink } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { H1, Subtitle } from '~/design-system/Typography.tsx';
+import { EventCreateSchema, MyTeamEvents } from '~/domains/MyTeamEvents.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 
 import { EventForm } from '../../__components/events/EventForm.tsx';
-import { createEvent } from './__server/create-event.server.ts';
-import { EventCreateSchema } from './__types/event-create.schema.ts';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);
@@ -27,10 +26,12 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const result = parse(form, { schema: EventCreateSchema });
   if (!result.value) return json(result.error);
 
-  const event = await createEvent(params.team, userId, result.value);
-  if (event.error) return json(event.error);
-
-  return redirect(`/team/${params.team}/${event.slug}/settings`);
+  try {
+    const event = await MyTeamEvents.for(userId, params.team).create(result.value);
+    return redirect(`/team/${params.team}/${event.slug}/settings`);
+  } catch (SlugAlreadyExistsError) {
+    return json({ slug: 'This URL already exists, please try another one.' });
+  }
 };
 
 export default function OrganizationRoute() {
