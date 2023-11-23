@@ -1,5 +1,5 @@
 import { db } from '~/libs/db';
-import { ForbiddenOperationError, InvalidAccessKeyError } from '~/libs/errors';
+import { InvalidAccessKeyError } from '~/libs/errors';
 
 export class TeamBetaAccess {
   constructor(private userId: string) {}
@@ -8,12 +8,10 @@ export class TeamBetaAccess {
     return new TeamBetaAccess(userId);
   }
 
-  async check() {
+  async isAllowed() {
     const user = await db.user.findFirst({ select: { organizerKey: true, teams: true }, where: { id: this.userId } });
     const hasOrganizations = Boolean(user?.teams?.length);
-    if (!hasOrganizations && !user?.organizerKey) {
-      throw new ForbiddenOperationError();
-    }
+    return hasOrganizations || Boolean(user?.organizerKey);
   }
 
   async validateAccessKey(key: string) {

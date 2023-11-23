@@ -5,8 +5,8 @@ import invariant from 'tiny-invariant';
 
 import { Container } from '~/design-system/layouts/Container';
 import { PageHeader } from '~/design-system/layouts/PageHeader';
-import type { Team } from '~/domains/team-management/MyTeam';
-import { MyTeam } from '~/domains/team-management/MyTeam';
+import type { Team } from '~/domains/team/MyTeam';
+import { MyTeam } from '~/domains/team/MyTeam';
 import { requireSession } from '~/libs/auth/session';
 import { mergeMeta } from '~/libs/meta/merge-meta';
 import { useUser } from '~/root.tsx';

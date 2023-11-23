@@ -7,7 +7,7 @@ import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
-import { NewTeam, TeamCreateSchema } from '~/domains/team-management/NewTeam';
+import { TeamCreateSchema, UserTeams } from '~/domains/team/UserTeams';
 import { requireSession } from '~/libs/auth/session.ts';
 import { TeamForm } from '~/routes/__components/teams/TeamForm.tsx';
 
@@ -24,7 +24,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   if (!result.value) return json(result.error);
 
   try {
-    const team = await NewTeam.for(userId).create(result.value);
+    const team = await UserTeams.for(userId).create(result.value);
     return redirect(`/team/${team.slug}`);
   } catch (SlugAlreadyExistsError) {
     return json({ slug: 'This URL already exists, please try another one.' });

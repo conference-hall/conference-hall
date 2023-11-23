@@ -1,0 +1,58 @@
+import type { Event, Proposal, User } from '@prisma/client';
+import { eventFactory } from 'tests/factories/events';
+import { proposalFactory } from 'tests/factories/proposals';
+import { talkFactory } from 'tests/factories/talks';
+import { userFactory } from 'tests/factories/users';
+
+import { Notifications } from './Notifications';
+
+describe('Notifications', () => {
+  let speaker1: User;
+  let speaker2: User;
+  let event: Event;
+  let proposal: Proposal;
+
+  beforeEach(async () => {
+    speaker1 = await userFactory();
+    speaker2 = await userFactory();
+    event = await eventFactory();
+    await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker1] }), traits: ['accepted'] });
+    await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker2] }), traits: ['accepted'] });
+    await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker1] }), traits: ['draft'] });
+
+    proposal = await proposalFactory({
+      event,
+      talk: await talkFactory({ speakers: [speaker1] }),
+      traits: ['accepted'],
+      attributes: { emailAcceptedStatus: 'SENT' },
+    });
+  });
+
+  describe('unreadCount', () => {
+    it('retrieves unread notifications count', async () => {
+      const unreadCount = await Notifications.for(speaker1.id).unreadCount();
+      expect(unreadCount).toEqual(1);
+    });
+  });
+
+  describe('list', () => {
+    it("returns  accepted proposals as user's notifications", async () => {
+      const notifications = await Notifications.for(speaker1.id).list();
+
+      expect(notifications).toEqual([
+        {
+          type: 'ACCEPTED_PROPOSAL',
+          proposal: {
+            id: proposal.id,
+            title: proposal.title,
+          },
+          event: {
+            slug: event.slug,
+            name: event.name,
+          },
+          date: proposal.updatedAt.toUTCString(),
+        },
+      ]);
+    });
+  });
+});

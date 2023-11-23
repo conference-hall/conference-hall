@@ -12,8 +12,8 @@ type Props = {
     name: string | null;
     email: string | null;
     picture: string | null;
-    notifications: Array<Notification>;
     isOrganizer: boolean;
+    notificationsUnreadCount: number;
     teams: Array<{ slug: string; name: string }>;
   } | null;
   withSearch?: boolean;
@@ -51,7 +51,7 @@ export function Navbar({ user, withSearch }: Props) {
                   picture={user.picture}
                   teams={user.teams}
                   isOrganizer={user.isOrganizer}
-                  notificationsCount={user.notifications.length}
+                  notificationsCount={user.notificationsUnreadCount}
                 />
               )}
             </div>
@@ -66,7 +66,7 @@ export function Navbar({ user, withSearch }: Props) {
                   picture={user.picture}
                   teams={user.teams}
                   isOrganizer={user.isOrganizer}
-                  notificationsCount={user.notifications.length}
+                  notificationsCount={user.notificationsUnreadCount}
                 />
               )}
             </div>

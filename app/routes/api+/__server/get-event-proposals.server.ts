@@ -1,4 +1,4 @@
-import { EventProposalsSearch } from '~/domains/event-proposals/EventProposalsSearch';
+import { EventProposalsSearch } from '~/domains/organizer/proposal-search/EventProposalsSearch';
 import { db } from '~/libs/db.ts';
 import { ApiKeyInvalidError, EventNotFoundError } from '~/libs/errors.ts';
 import { jsonToArray } from '~/libs/prisma.ts';

@@ -8,7 +8,7 @@ import { TwitterIcon } from '~/design-system/icons/TwitterIcon.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { Markdown } from '~/design-system/Markdown.tsx';
 import { H3, Subtitle } from '~/design-system/Typography.tsx';
-import type { UserSocialLinks } from '~/routes/__types/user.ts';
+import type { SpeakerSocialLinks } from '~/domains/speaker/SpeakerProfile';
 
 type Props = {
   name: string | null;
@@ -17,7 +17,7 @@ type Props = {
   bio: string | null;
   address: string | null;
   company: string | null;
-  socials: UserSocialLinks;
+  socials: SpeakerSocialLinks;
 };
 
 export function SpeakerDetailsSection({ name, email, picture, bio, address, company, socials }: Props) {

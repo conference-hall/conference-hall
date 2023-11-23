@@ -1,10 +1,10 @@
 import type { Session } from '@remix-run/node';
 import { createCookieSessionStorage, redirect } from '@remix-run/node';
 
-import { createUserAccount } from '~/routes/__server/users/create-user-account.server.ts';
+import { UserRegistration } from '~/domains/user-registration/UserRegistration';
 
-import { config } from '../config.ts';
-import { auth as serverAuth } from './firebase.server.ts';
+import { config } from '../config';
+import { auth as serverAuth } from './firebase.server';
 
 const MAX_AGE_SEC = 60 * 60 * 24 * 10; // 10 days
 const MAX_AGE_MS = MAX_AGE_SEC * 1000;
@@ -36,7 +36,7 @@ export async function createSession(request: Request) {
   const { uid, name, email, picture, firebase } = await serverAuth.verifyIdToken(token, true);
 
   const jwt = await serverAuth.createSessionCookie(token, { expiresIn: MAX_AGE_MS });
-  const userId = await createUserAccount({ uid, name, email, picture, provider: firebase.sign_in_provider });
+  const userId = await UserRegistration.register({ uid, name, email, picture, provider: firebase.sign_in_provider });
 
   const session = await getSession(request);
   session.set('jwt', jwt);

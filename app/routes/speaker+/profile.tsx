@@ -2,15 +2,15 @@ import { parse } from '@conform-to/zod';
 import { CreditCardIcon, KeyIcon, UserCircleIcon } from '@heroicons/react/20/solid';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { useActionData } from '@remix-run/react';
+import { useActionData, useLoaderData } from '@remix-run/react';
 
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { NavSideMenu } from '~/design-system/navigation/NavSideMenu.tsx';
+import { SpeakerProfile } from '~/domains/speaker/SpeakerProfile.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-import { useUser } from '~/root.tsx';
 import {
   saveUserAdditionalInfo,
   saveUserDetails,
@@ -25,8 +25,9 @@ import { SpeakerDetailsForm } from './__components/SpeakerDetailsForm.tsx';
 export const meta = mergeMeta(() => [{ title: 'Profile | Conference Hall' }]);
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  await requireSession(request);
-  return null;
+  const userId = await requireSession(request);
+  const profile = await SpeakerProfile.for(userId).get();
+  return json(profile);
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -64,10 +65,8 @@ const MENU_ITEMS = [
 ];
 
 export default function ProfileRoute() {
-  const { user } = useUser();
+  const profile = useLoaderData<typeof loader>();
   const errors = useActionData<typeof action>();
-
-  if (!user) return null;
 
   return (
     <>
@@ -82,11 +81,16 @@ export default function ProfileRoute() {
         />
 
         <div className="space-y-4 lg:space-y-6 lg:col-span-9">
-          <PersonalInfoForm name={user.name} email={user.email} picture={user.picture} errors={errors} />
+          <PersonalInfoForm name={profile.name} email={profile.email} picture={profile.picture} errors={errors} />
 
-          <SpeakerDetailsForm bio={user.bio} references={user.references} errors={errors} />
+          <SpeakerDetailsForm bio={profile.bio} references={profile.references} errors={errors} />
 
-          <AdditionalInfoForm company={user.company} address={user.address} socials={user.socials} errors={errors} />
+          <AdditionalInfoForm
+            company={profile.company}
+            address={profile.address}
+            socials={profile.socials}
+            errors={errors}
+          />
         </div>
       </PageContent>
     </>

@@ -6,9 +6,9 @@ import { useLoaderData } from '@remix-run/react';
 import { ButtonLink } from '~/design-system/Buttons.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
+import { SpeakerProfile } from '~/domains/speaker/SpeakerProfile.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
-import { useUser } from '~/root.tsx';
 import { parsePage } from '~/routes/__types/pagination.ts';
 
 import { SpeakerActivitiesSection } from './__components/SpeakerActivitiesSection.tsx';
@@ -19,17 +19,17 @@ export const meta = mergeMeta(() => [{ title: 'Home speaker | Conference Hall' }
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
+  const profile = await SpeakerProfile.for(userId).get();
+
   const url = new URL(request.url);
   const page = parsePage(url.searchParams);
-  const activities = await getActivities(userId, page);
-  return json(activities);
+  const { activities, nextPage, hasNextPage } = await getActivities(userId, page);
+
+  return json({ profile, activities, nextPage, hasNextPage });
 };
 
 export default function ProfileRoute() {
-  const { activities, nextPage, hasNextPage } = useLoaderData<typeof loader>();
-  const { user } = useUser();
-
-  if (!user) return null;
+  const { profile, activities, nextPage, hasNextPage } = useLoaderData<typeof loader>();
 
   return (
     <>
@@ -41,13 +41,13 @@ export default function ProfileRoute() {
 
       <PageContent className="grid grid-cols-1 items-start lg:grid-cols-3">
         <SpeakerDetailsSection
-          name={user.name}
-          email={user.email}
-          picture={user.picture}
-          bio={user.bio}
-          address={user.address}
-          company={user.company}
-          socials={user.socials}
+          name={profile.name}
+          email={profile.email}
+          picture={profile.picture}
+          bio={profile.bio}
+          address={profile.address}
+          company={profile.company}
+          socials={profile.socials}
         />
 
         <SpeakerActivitiesSection

@@ -1,22 +1,38 @@
 import type { User } from '@prisma/client';
 import { teamFactory } from 'tests/factories/team';
-import { userFactory } from 'tests/factories/users.ts';
+import { userFactory } from 'tests/factories/users';
 
 import { db } from '~/libs/db';
 import { ForbiddenOperationError, SlugAlreadyExistsError } from '~/libs/errors';
 
-import { NewTeam, TeamCreateSchema } from './NewTeam';
+import { TeamCreateSchema, UserTeams } from './UserTeams';
 
-describe('NewTeam', () => {
+describe('UserTeams', () => {
   let user: User;
 
   beforeEach(async () => {
     user = await userFactory({ isOrganizer: true });
   });
 
+  describe('list', () => {
+    it("returns user's teams", async () => {
+      const orga1 = await teamFactory({ attributes: { name: 'A' }, owners: [user] });
+      const orga2 = await teamFactory({ attributes: { name: 'B' }, reviewers: [user] });
+      const orga3 = await teamFactory({ attributes: { name: 'C' }, members: [user] });
+
+      const teams = await UserTeams.for(user.id).list();
+
+      expect(teams).toEqual([
+        { slug: orga1.slug, name: 'A', role: 'OWNER' },
+        { slug: orga2.slug, name: 'B', role: 'REVIEWER' },
+        { slug: orga3.slug, name: 'C', role: 'MEMBER' },
+      ]);
+    });
+  });
+
   describe('create', () => {
     it('creates the team and add the user as owner', async () => {
-      const result = await NewTeam.for(user.id).create({ name: 'Hello world', slug: 'hello-world' });
+      const result = await UserTeams.for(user.id).create({ name: 'Hello world', slug: 'hello-world' });
 
       const team = await db.team.findUnique({ where: { slug: result.slug } });
       expect(team?.name).toBe('Hello world');
@@ -32,7 +48,7 @@ describe('NewTeam', () => {
 
     it('throws an error if user does not have organizer access', async () => {
       const user = await userFactory();
-      await expect(NewTeam.for(user.id).create({ name: 'Hello world', slug: 'hello-world' })).rejects.toThrowError(
+      await expect(UserTeams.for(user.id).create({ name: 'Hello world', slug: 'hello-world' })).rejects.toThrowError(
         ForbiddenOperationError,
       );
     });
@@ -40,7 +56,7 @@ describe('NewTeam', () => {
     it('returns an error when slug already exists', async () => {
       await teamFactory({ attributes: { slug: 'hello-world' } });
 
-      await expect(NewTeam.for(user.id).create({ name: 'Hello world', slug: 'hello-world' })).rejects.toThrowError(
+      await expect(UserTeams.for(user.id).create({ name: 'Hello world', slug: 'hello-world' })).rejects.toThrowError(
         SlugAlreadyExistsError,
       );
     });

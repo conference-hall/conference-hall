@@ -1,4 +1,4 @@
-import { EventProposalsSearch } from '~/domains/event-proposals/EventProposalsSearch';
+import { EventProposalsSearch } from '~/domains/organizer/proposal-search/EventProposalsSearch';
 import { db } from '~/libs/db.ts';
 import { ProposalNotFoundError } from '~/libs/errors.ts';
 import { jsonToArray } from '~/libs/prisma.ts';

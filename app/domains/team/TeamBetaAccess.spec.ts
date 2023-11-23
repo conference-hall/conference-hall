@@ -3,26 +3,34 @@ import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users.ts';
 
 import { db } from '~/libs/db';
-import { ForbiddenOperationError, InvalidAccessKeyError } from '~/libs/errors';
+import { InvalidAccessKeyError } from '~/libs/errors';
 
 import { TeamBetaAccess } from './TeamBetaAccess';
 
 describe('TeamBetaAccess', () => {
-  describe('check', () => {
-    it('does not throw error if users has an access key', async () => {
+  describe('isAllowed', () => {
+    it('is allowed if user has an organizer key', async () => {
       const user = await userFactory({ isOrganizer: true });
-      await expect(TeamBetaAccess.for(user.id).check()).resolves.not.toThrowError();
+      const isAllowed = await TeamBetaAccess.for(user.id).isAllowed();
+      expect(isAllowed).toBe(true);
     });
 
-    it('does not throw error if user is already member of a team', async () => {
+    it('is allowed if user belongs to an team', async () => {
       const user = await userFactory();
       await teamFactory({ members: [user] });
-      await expect(TeamBetaAccess.for(user.id).check()).resolves.not.toThrowError();
+      const isAllowed = await TeamBetaAccess.for(user.id).isAllowed();
+      expect(isAllowed).toBe(true);
     });
 
-    it('throws an error if user does not have an access key', async () => {
+    it('is not allowed if user does not have organizer key or teams', async () => {
       const user = await userFactory();
-      await expect(TeamBetaAccess.for(user.id).check()).rejects.toThrowError(ForbiddenOperationError);
+      const isAllowed = await TeamBetaAccess.for(user.id).isAllowed();
+      expect(isAllowed).toBe(false);
+    });
+
+    it('is not allowed when user is not found', async () => {
+      const isAllowed = await TeamBetaAccess.for('XXX').isAllowed();
+      expect(isAllowed).toBe(false);
     });
   });
 

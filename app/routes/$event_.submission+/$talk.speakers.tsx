@@ -10,8 +10,8 @@ import { MarkdownTextArea } from '~/design-system/forms/MarkdownTextArea.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { ExternalLink } from '~/design-system/Links.tsx';
 import { H2, Subtitle, Text } from '~/design-system/Typography.tsx';
+import { SpeakerProfile } from '~/domains/speaker/SpeakerProfile.ts';
 import { requireSession } from '~/libs/auth/session.ts';
-import { useUser } from '~/root.tsx';
 import { CoSpeakersList, InviteCoSpeakerButton } from '~/routes/__components/proposals/forms/CoSpeaker.tsx';
 import { getEvent } from '~/routes/__server/events/get-event.server.ts';
 import { saveUserDetails } from '~/routes/__server/profile/save-profile.server.ts';
@@ -28,8 +28,10 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   invariant(params.event, 'Invalid event slug');
   invariant(params.talk, 'Invalid talk id');
 
+  const speaker = await SpeakerProfile.for(userId).get();
   const proposal = await getSubmittedProposal(params.talk, params.event, userId);
   return json({
+    speaker,
     proposalId: proposal.id,
     invitationLink: proposal.invitationLink,
     speakers: proposal.speakers.filter((speaker) => speaker.id !== userId),
@@ -64,8 +66,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 };
 
 export default function SubmissionSpeakerRoute() {
-  const { user } = useUser();
-  const { invitationLink, speakers } = useLoaderData<typeof loader>();
+  const { speaker, speakers, invitationLink } = useLoaderData<typeof loader>();
   const errors = useActionData<typeof action>();
   const { previousPath } = useSubmissionStep();
 
@@ -81,14 +82,14 @@ export default function SubmissionSpeakerRoute() {
             label="Biography"
             rows={5}
             error={errors?.bio}
-            defaultValue={user?.bio || ''}
+            defaultValue={speaker.bio || ''}
             className="mb-3"
           />
           <Text variant="secondary">
             You can give more information about you from{' '}
             <ExternalLink href="/speaker/settings">the profile page.</ExternalLink>
           </Text>
-          <input type="hidden" name="references" value={user?.references || ''} />
+          <input type="hidden" name="references" value={speaker.references || ''} />
         </Form>
         <div className="mt-4">
           <H2>Co-speakers</H2>
