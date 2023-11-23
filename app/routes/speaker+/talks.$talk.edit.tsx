@@ -9,16 +9,13 @@ import { Card } from '~/design-system/layouts/Card.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { H3, Subtitle } from '~/design-system/Typography.tsx';
+import { TalksLibrary } from '~/domains/speaker/TalksLibrary.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
 import { CoSpeakersList, InviteCoSpeakerButton } from '~/routes/__components/proposals/forms/CoSpeaker.tsx';
 import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm.tsx';
-import { getTalk } from '~/routes/__server/talks/get-talk.server.ts';
-import { removeCoSpeakerFromTalk } from '~/routes/__server/talks/remove-co-speaker.server.ts';
 import { TalkSaveSchema } from '~/routes/__types/talks.ts';
-
-import { updateTalk } from './__server/update-talk.server.ts';
 
 export const meta = mergeMeta<typeof loader>(({ data }) =>
   data ? [{ title: `Edit | ${data?.title} | Conference Hall` }] : [],
@@ -28,7 +25,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.talk, 'Invalid talk id');
 
-  const talk = await getTalk(userId, params.talk);
+  const talk = await TalksLibrary.for(userId).get(params.talk);
   if (talk.archived) throw new Response('Talk archived.', { status: 403 });
   return json(talk);
 };
@@ -38,15 +35,16 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const form = await request.formData();
   invariant(params.talk, 'Invalid talk id');
 
+  const library = TalksLibrary.for(userId);
   const intent = form.get('intent');
   if (intent === 'remove-speaker') {
     const speakerId = form.get('_speakerId')?.toString() as string;
-    await removeCoSpeakerFromTalk(userId, params.talk, speakerId);
+    await library.removeCoSpeaker(params.talk, speakerId);
     return toast('success', 'Co-speaker removed from talk.');
   } else {
     const result = parse(form, { schema: TalkSaveSchema });
     if (!result.value) return json(result.error);
-    await updateTalk(userId, params.talk, result.value);
+    await library.update(params.talk, result.value);
     return redirectWithToast(`/speaker/talks/${params.talk}`, 'success', 'Talk updated.');
   }
 };

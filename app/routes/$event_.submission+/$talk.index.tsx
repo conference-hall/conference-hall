@@ -8,9 +8,9 @@ import invariant from 'tiny-invariant';
 import { Button, ButtonLink } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2 } from '~/design-system/Typography.tsx';
+import { TalksLibrary } from '~/domains/speaker/TalksLibrary.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm.tsx';
-import { getTalk } from '~/routes/__server/talks/get-talk.server.ts';
 import { ProposalCreateSchema } from '~/routes/__types/proposal.ts';
 
 import { useSubmissionStep } from './__components/useSubmissionStep.ts';
@@ -29,7 +29,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const alreadySubmitted = await isTalkAlreadySubmitted(params.event, params.talk, userId);
   if (alreadySubmitted) throw new Response('Talk already submitted.', { status: 400 });
 
-  const talk = await getTalk(userId, params.talk);
+  const talk = await TalksLibrary.for(userId).get(params.talk);
   return json(talk);
 };
 

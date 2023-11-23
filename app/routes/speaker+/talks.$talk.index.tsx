@@ -7,15 +7,14 @@ import invariant from 'tiny-invariant';
 import { ButtonLink } from '~/design-system/Buttons.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
+import { TalksLibrary } from '~/domains/speaker/TalksLibrary.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { ProposalDetailsSection } from '~/routes/__components/proposals/ProposalDetailsSection.tsx';
 import { ProposalSubmissionsSection } from '~/routes/__components/proposals/ProposalSubmissionsSection.tsx';
-import { getTalk } from '~/routes/__server/talks/get-talk.server.ts';
 
 import { ArchiveOrRestoreTalkButton } from './__components/ArchiveOrRestoreTalkButton.tsx';
-import { archiveTalk, restoreTalk } from './__server/archive-talk.server.ts';
 
 export const meta = mergeMeta<typeof loader>(({ data }) =>
   data ? [{ title: `${data?.title} | Conference Hall` }] : [],
@@ -25,7 +24,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.talk, 'Invalid talk id');
 
-  const talk = await getTalk(userId, params.talk);
+  const talk = await TalksLibrary.for(userId).get(params.talk);
   return json(talk);
 };
 
@@ -35,14 +34,15 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   const form = await request.formData();
   const action = form.get('_action');
+  const library = TalksLibrary.for(userId);
 
   switch (action) {
     case 'archive-talk':
-      await archiveTalk(userId, params.talk);
+      await library.archive(params.talk);
       return toast('success', 'Talk archived.');
 
     case 'restore-talk':
-      await restoreTalk(userId, params.talk);
+      await library.restore(params.talk);
       return toast('success', 'Talk restored.');
   }
   return null;
