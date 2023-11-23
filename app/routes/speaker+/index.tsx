@@ -6,6 +6,7 @@ import { useLoaderData } from '@remix-run/react';
 import { ButtonLink } from '~/design-system/Buttons.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
+import { SpeakerActivities } from '~/domains/speaker/SpeakerActivities.ts';
 import { SpeakerProfile } from '~/domains/speaker/SpeakerProfile.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
@@ -13,7 +14,6 @@ import { parsePage } from '~/routes/__types/pagination.ts';
 
 import { SpeakerActivitiesSection } from './__components/SpeakerActivitiesSection.tsx';
 import { SpeakerDetailsSection } from './__components/SpeakerDetailsSection.tsx';
-import { getActivities } from './__server/get-activities.server.ts';
 
 export const meta = mergeMeta(() => [{ title: 'Home speaker | Conference Hall' }]);
 
@@ -23,7 +23,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   const url = new URL(request.url);
   const page = parsePage(url.searchParams);
-  const { activities, nextPage, hasNextPage } = await getActivities(userId, page);
+  const { activities, nextPage, hasNextPage } = await SpeakerActivities.for(userId).list(page);
 
   return json({ profile, activities, nextPage, hasNextPage });
 };
