@@ -3,11 +3,9 @@ import { z } from 'zod';
 
 import { db } from '~/libs/db';
 import { ForbiddenOperationError } from '~/libs/errors';
-import { getPagination } from '~/routes/__server/pagination/pagination.server';
 
+import { Pagination } from '../shared/Pagination';
 import { MyTeam } from './MyTeam';
-
-const DEFAULT_PAGE_SIZE = 15;
 
 export const MembersFiltersSchema = z.object({ query: z.string().trim().optional() });
 
@@ -26,7 +24,7 @@ export class MyTeamMembers {
 
     const total = await db.teamMember.count({ where: { team: { slug } } });
 
-    const { pageIndex, currentPage, totalPages } = getPagination(page, total, DEFAULT_PAGE_SIZE);
+    const pagination = new Pagination({ page, total });
 
     const members = await db.teamMember.findMany({
       where: {
@@ -35,12 +33,12 @@ export class MyTeamMembers {
       },
       orderBy: { member: { name: 'asc' } },
       include: { member: true },
-      skip: pageIndex * DEFAULT_PAGE_SIZE,
-      take: DEFAULT_PAGE_SIZE,
+      skip: pagination.pageIndex * pagination.pageSize,
+      take: pagination.pageSize,
     });
 
     return {
-      pagination: { current: currentPage, total: totalPages },
+      pagination: { current: pagination.page, total: pagination.pageCount },
       results: members.map(({ member, role }) => ({
         role,
         id: member.id,

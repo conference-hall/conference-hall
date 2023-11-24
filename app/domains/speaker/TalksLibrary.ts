@@ -3,8 +3,9 @@ import { z } from 'zod';
 import { db } from '~/libs/db';
 import { TalkNotFoundError } from '~/libs/errors';
 import { jsonToArray } from '~/libs/prisma';
-import { buildInvitationLink } from '~/routes/__server/invitations/build-link.server';
 import { getSpeakerProposalStatus } from '~/routes/__server/proposals/get-speaker-proposal-status';
+
+import { InvitationLink } from '../shared/InvitationLink';
 
 type TalksListOptions = { archived?: boolean };
 
@@ -85,7 +86,7 @@ export class TalksLibrary {
         logo: proposal.event.logo,
         proposalStatus: getSpeakerProposalStatus(proposal, proposal.event),
       })),
-      invitationLink: buildInvitationLink('talk', talk.invitationCode),
+      invitationLink: InvitationLink.build('talk', talk.invitationCode),
     };
   }
 

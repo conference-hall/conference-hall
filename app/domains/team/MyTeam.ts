@@ -3,8 +3,9 @@ import { z } from 'zod';
 
 import { db } from '~/libs/db';
 import { ForbiddenOperationError, SlugAlreadyExistsError, TeamNotFoundError } from '~/libs/errors';
-import { buildInvitationLink } from '~/routes/__server/invitations/build-link.server';
 import { slugValidator } from '~/routes/__types/validators';
+
+import { InvitationLink } from '../shared/InvitationLink';
 
 export type Team = Awaited<ReturnType<typeof MyTeam.prototype.get>>;
 
@@ -42,7 +43,7 @@ export class MyTeam {
       name: team.name,
       slug: team.slug,
       role: member.role,
-      invitationLink: buildInvitationLink('team', team.invitationCode), // TODO: should not be able to invite if not owner?
+      invitationLink: InvitationLink.build('team', team.invitationCode), // TODO: should not be able to invite if not owner?
     };
   }
 

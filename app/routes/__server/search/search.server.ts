@@ -3,9 +3,8 @@ import type { Prisma } from '@prisma/client';
 import { EventVisibility } from '@prisma/client';
 import { z } from 'zod';
 
+import { Pagination } from '~/domains/shared/Pagination';
 import { db } from '~/libs/db.ts';
-import { getPagination } from '~/routes/__server/pagination/pagination.server.ts';
-import type { Pagination } from '~/routes/__types/pagination.ts';
 import { getCfpState } from '~/utils/event.ts';
 
 const SearchFiltersSchema = z.object({
@@ -18,7 +17,7 @@ export type SearchFilters = z.infer<typeof SearchFiltersSchema>;
 
 const RESULTS_BY_PAGE = 12;
 
-export async function searchEvents(filters: SearchFilters, page: Pagination = 1) {
+export async function searchEvents(filters: SearchFilters, page: number = 1) {
   const { query, type } = filters;
 
   const eventsWhereInput: Prisma.EventWhereInput = {
@@ -29,21 +28,21 @@ export async function searchEvents(filters: SearchFilters, page: Pagination = 1)
   };
 
   const eventsCount = await db.event.count({ where: eventsWhereInput });
-  const pagination = getPagination(page, eventsCount, RESULTS_BY_PAGE);
+  const pagination = new Pagination({ page, pageSize: RESULTS_BY_PAGE, total: eventsCount });
 
   const events = await db.event.findMany({
     select: { slug: true, name: true, type: true, address: true, cfpStart: true, cfpEnd: true, logo: true },
     where: eventsWhereInput,
     orderBy: [{ cfpStart: 'desc' }, { name: 'asc' }],
-    skip: pagination.pageIndex * RESULTS_BY_PAGE,
-    take: RESULTS_BY_PAGE,
+    skip: pagination.pageIndex * pagination.pageSize,
+    take: pagination.pageSize,
   });
 
   return {
     filters,
     pagination: {
-      current: pagination.currentPage,
-      total: pagination.totalPages,
+      current: pagination.page,
+      total: pagination.pageCount,
     },
     results: events.map((event) => ({
       slug: event.slug,

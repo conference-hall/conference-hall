@@ -1,34 +1,24 @@
 import { EventProposalsSearch } from '~/domains/organizer/proposal-search/EventProposalsSearch';
-import { getPagination } from '~/routes/__server/pagination/pagination.server.ts';
+import { Pagination } from '~/domains/shared/Pagination';
 import { ReviewsDetails } from '~/routes/__server/reviews/reviews-details.ts';
 import { allowedForEvent } from '~/routes/__server/teams/check-user-role.server.ts';
-import type { Pagination } from '~/routes/__types/pagination.ts';
 import type { ProposalsFilters } from '~/routes/__types/proposal.ts';
 
-const RESULTS_BY_PAGE = 25;
-
-export async function searchProposals(
-  eventSlug: string,
-  userId: string,
-  filters: ProposalsFilters,
-  page: Pagination = 1,
-) {
+export async function searchProposals(eventSlug: string, userId: string, filters: ProposalsFilters, page: number = 1) {
   const event = await allowedForEvent(eventSlug, userId);
 
-  const options = { searchBySpeakers: event.displayProposalsSpeakers };
-
-  const search = new EventProposalsSearch(eventSlug, userId, filters, options);
+  const search = new EventProposalsSearch(eventSlug, userId, filters, { withSpeakers: event.displayProposalsSpeakers });
 
   const statistics = await search.statistics();
 
-  const { pageIndex, currentPage, totalPages } = getPagination(page, statistics.total, RESULTS_BY_PAGE);
+  const pagination = new Pagination({ page, total: statistics.total });
 
-  const proposals = await search.proposalsByPage(pageIndex, RESULTS_BY_PAGE);
+  const proposals = await search.proposalsByPage(pagination);
 
   return {
     filters,
     statistics,
-    pagination: { current: currentPage, total: totalPages },
+    pagination: { current: pagination.page, total: pagination.pageCount },
     results: proposals.map((proposal) => {
       const reviews = new ReviewsDetails(proposal.reviews);
 

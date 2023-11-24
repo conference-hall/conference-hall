@@ -1,10 +1,11 @@
 import type { Prisma } from '@prisma/client';
 import { EmailStatus } from '@prisma/client';
 
+import type { Pagination } from '~/domains/shared/Pagination';
 import { db } from '~/libs/db.ts';
 import type { EmailStatusData, ProposalsFilters } from '~/routes/__types/proposal.ts';
 
-type SearchOptions = { searchBySpeakers: boolean };
+type SearchOptions = { withSpeakers: boolean };
 
 export class EventProposalsSearch {
   eventSlug: string;
@@ -16,7 +17,7 @@ export class EventProposalsSearch {
     this.eventSlug = eventSlug;
     this.userId = userId;
     this.filters = filters;
-    this.options = options || { searchBySpeakers: true };
+    this.options = options || { withSpeakers: true };
   }
 
   async statistics() {
@@ -28,20 +29,20 @@ export class EventProposalsSearch {
     return { total, reviewed, statuses };
   }
 
-  async proposalsByPage(pageIndex: number = 0, pageSize: number) {
+  async proposalsByPage(pagination: Pagination) {
     return db.proposal.findMany({
-      include: { speakers: this.options.searchBySpeakers, reviews: true },
+      include: { speakers: this.options.withSpeakers, reviews: true },
       where: this.whereClause(),
       orderBy: this.orderByClause(),
-      skip: pageIndex * pageSize,
-      take: pageSize,
+      skip: pagination.pageIndex * pagination.pageSize,
+      take: pagination.pageSize,
     });
   }
 
   async proposals(select: { reviews: boolean } = { reviews: true }) {
     return db.proposal.findMany({
       include: {
-        speakers: this.options.searchBySpeakers,
+        speakers: this.options.withSpeakers,
         reviews: select.reviews,
         formats: true,
         categories: true,
@@ -102,7 +103,7 @@ export class EventProposalsSearch {
       speakers: { some: { name: { contains: query, mode: 'insensitive' } } },
     };
 
-    if (this.options.searchBySpeakers) return [byTitle, bySpeakers];
+    if (this.options.withSpeakers) return [byTitle, bySpeakers];
 
     return [byTitle];
   }

@@ -9,9 +9,7 @@ import type { UserSocialLinks } from '~/routes/__types/user.ts';
 export async function exportProposals(eventSlug: string, userId: string, filters: ProposalsFilters) {
   const event = await allowedForEvent(eventSlug, userId, [TeamRole.OWNER, TeamRole.MEMBER]);
 
-  const options = { searchBySpeakers: event.displayProposalsSpeakers };
-
-  const search = new EventProposalsSearch(eventSlug, userId, filters, options);
+  const search = new EventProposalsSearch(eventSlug, userId, filters, { withSpeakers: event.displayProposalsSpeakers });
 
   const proposals = await search.proposals({ reviews: event.displayProposalsReviews });
 

@@ -8,6 +8,7 @@ import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 
+import { Pagination } from '~/domains/shared/Pagination.ts';
 import type { ProposalsFilters } from '~/routes/__types/proposal.ts';
 import { sortBy } from '~/utils/arrays.ts';
 
@@ -92,10 +93,12 @@ describe('#searchProposals', () => {
       const statistics = await search.statistics();
       expect(statistics.total).toEqual(3);
 
-      const proposalsPage1 = await search.proposalsByPage(0, 2);
+      const pagination = new Pagination({ page: 1, total: statistics.total, pageSize: 2 });
+      const proposalsPage1 = await search.proposalsByPage(pagination);
       expect(proposalsPage1.length).toEqual(2);
 
-      const proposalsPage2 = await search.proposalsByPage(1, 2);
+      const pagination2 = new Pagination({ page: 2, total: statistics.total, pageSize: 2 });
+      const proposalsPage2 = await search.proposalsByPage(pagination2);
       expect(proposalsPage2.length).toEqual(1);
     });
   });
@@ -120,7 +123,7 @@ describe('#searchProposals', () => {
 
     it('does not filter proposals by speaker name when searchBySpeakers option is false', async () => {
       const filters = { query: 'parker' };
-      const search = new EventProposalsSearch(event.slug, owner.id, filters, { searchBySpeakers: false });
+      const search = new EventProposalsSearch(event.slug, owner.id, filters, { withSpeakers: false });
       const proposals = await search.proposals();
       expect(proposals.length).toBe(0);
     });

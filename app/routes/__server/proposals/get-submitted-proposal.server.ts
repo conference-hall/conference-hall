@@ -1,6 +1,6 @@
+import { InvitationLink } from '~/domains/shared/InvitationLink';
 import { db } from '~/libs/db.ts';
 import { ProposalNotFoundError } from '~/libs/errors.ts';
-import { buildInvitationLink } from '~/routes/__server/invitations/build-link.server.ts';
 
 export async function getSubmittedProposal(talkId: string, eventSlug: string, userId: string) {
   const proposal = await db.proposal.findFirst({
@@ -13,7 +13,7 @@ export async function getSubmittedProposal(talkId: string, eventSlug: string, us
     id: proposal.id,
     title: proposal.title,
     isOwner: userId === proposal?.talk?.creatorId,
-    invitationLink: buildInvitationLink('proposal', proposal.invitationCode),
+    invitationLink: InvitationLink.build('proposal', proposal.invitationCode),
     speakers: proposal.speakers
       .map((speaker) => ({
         id: speaker.id,

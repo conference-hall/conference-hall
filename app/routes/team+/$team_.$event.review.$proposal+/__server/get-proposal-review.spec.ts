@@ -127,6 +127,8 @@ describe('#getProposalReview', () => {
     });
   });
 
+  it.todo('should hide speakers when display proposals speakers setting is false');
+
   it('returns pagination for next and previous proposals with filters', async () => {
     const proposal1 = await proposalFactory({
       event,

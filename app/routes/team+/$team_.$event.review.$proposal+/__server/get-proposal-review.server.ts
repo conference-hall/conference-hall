@@ -16,9 +16,7 @@ export async function getProposalReview(
 ) {
   const event = await allowedForEvent(eventSlug, userId);
 
-  const options = { searchBySpeakers: event.displayProposalsSpeakers };
-
-  const search = new EventProposalsSearch(eventSlug, userId, filters, options);
+  const search = new EventProposalsSearch(eventSlug, userId, filters, { withSpeakers: event.displayProposalsSpeakers });
   const proposalIds = await search.proposalsIds();
 
   const totalProposals = proposalIds.length;
