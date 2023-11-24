@@ -22,8 +22,8 @@ export const action = async ({ request }: LoaderFunctionArgs) => {
   const result = parse(form, { schema: TalksLibrary.TalkSchema });
   if (!result.value) return json(result.error);
 
-  const talkId = await TalksLibrary.for(userId).add(result.value);
-  return redirectWithToast(`/speaker/talks/${talkId}`, 'success', 'New talk created.');
+  const talk = await TalksLibrary.for(userId).add(result.value);
+  return redirectWithToast(`/speaker/talks/${talk.id}`, 'success', 'New talk created.');
 };
 
 export default function NewTalkRoute() {

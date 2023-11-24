@@ -130,6 +130,7 @@ export class TalksLibrary {
     });
   }
 
+  // TODO: should be used to check the talkId in the route? renamed to "allowed"?
   private async existsTalk(talkId: string) {
     const count = await db.talk.count({ where: { id: talkId, speakers: { some: { id: this.userId } } } });
     return count > 0;
