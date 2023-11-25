@@ -1,9 +1,6 @@
 import { db } from '~/libs/db';
 
-export type SpeakerSocialLinks = {
-  github?: string | null;
-  twitter?: string | null;
-};
+import type { ProfileData, SocialLinks } from './SpeakerProfile.types';
 
 export class SpeakerProfile {
   constructor(private userId: string) {}
@@ -24,8 +21,12 @@ export class SpeakerProfile {
       references: user.references,
       company: user.company,
       address: user.address,
-      socials: user.socials as SpeakerSocialLinks,
+      socials: user.socials as SocialLinks,
     };
+  }
+
+  async save(data: ProfileData) {
+    return db.user.update({ where: { id: this.userId }, data });
   }
 }
 

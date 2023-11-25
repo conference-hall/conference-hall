@@ -8,15 +8,10 @@ import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { NavSideMenu } from '~/design-system/navigation/NavSideMenu.tsx';
 import { SpeakerProfile } from '~/domains/speaker/SpeakerProfile.ts';
+import { AdditionalInfoSchema, DetailsSchema, PersonalInfoSchema } from '~/domains/speaker/SpeakerProfile.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-import {
-  saveUserAdditionalInfo,
-  saveUserDetails,
-  saveUserPersonalInfo,
-} from '~/routes/__server/profile/save-profile.server.ts';
-import { AdditionalInfoSchema, DetailsSchema, PersonalInfoSchema } from '~/routes/__types/profile.schema.tsx';
 
 import { AdditionalInfoForm } from './__components/AdditionalInfoForm.tsx';
 import { PersonalInfoForm } from './__components/PersonalInfoForm.tsx';
@@ -33,25 +28,26 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 export const action = async ({ request }: ActionFunctionArgs) => {
   const userId = await requireSession(request);
   const form = await request.formData();
-  const type = form.get('intent') as string;
+  const intent = form.get('intent') as string;
+  const profile = SpeakerProfile.for(userId);
 
-  switch (type) {
+  switch (intent) {
     case 'personal-info': {
       const result = parse(form, { schema: PersonalInfoSchema });
       if (!result.value) return json(result.error);
-      await saveUserPersonalInfo(userId, result.value);
+      await profile.save(result.value);
       break;
     }
     case 'speaker-details': {
       const result = parse(form, { schema: DetailsSchema });
       if (!result.value) return json(result.error);
-      await saveUserDetails(userId, result.value);
+      await profile.save(result.value);
       break;
     }
     case 'additional-info': {
       const result = parse(form, { schema: AdditionalInfoSchema });
       if (!result.value) return json(result.error);
-      await saveUserAdditionalInfo(userId, result.value);
+      await profile.save(result.value);
       break;
     }
   }

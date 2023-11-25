@@ -1,21 +1,12 @@
-import { parse } from '@conform-to/zod';
 import type { Prisma } from '@prisma/client';
-import { z } from 'zod';
 
 import { db } from '~/libs/db';
 import { getCfpState } from '~/utils/event';
 
 import { Pagination } from '../shared/Pagination';
+import type { SearchFilters } from './EventSearch.types';
 
 const RESULTS_BY_PAGE = 12;
-
-export const SearchFiltersSchema = z.object({
-  query: z.string().trim().optional(),
-  type: z.enum(['all', 'conference', 'meetup']).optional(),
-  talkId: z.string().optional(),
-});
-
-export type SearchFilters = z.infer<typeof SearchFiltersSchema>;
 
 export class EventsSearch {
   constructor(
@@ -82,10 +73,4 @@ export class EventsSearch {
         return { type: undefined, ...INCOMING_CFP };
     }
   }
-}
-
-export function parseUrlFilters(url: string) {
-  const params = new URL(url).searchParams;
-  const result = parse(params, { schema: SearchFiltersSchema });
-  return result.value || {};
 }

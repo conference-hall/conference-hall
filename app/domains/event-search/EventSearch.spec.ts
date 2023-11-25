@@ -1,6 +1,7 @@
 import { eventFactory } from 'tests/factories/events.ts';
 
-import { EventsSearch, parseUrlFilters } from './EventsSearch';
+import { EventsSearch } from './EventSearch';
+import { parseUrlFilters } from './EventSearch.types';
 
 describe('EventsSearch', () => {
   describe('search', () => {
@@ -191,7 +192,9 @@ describe('EventsSearch', () => {
       expect(result3.pagination.current).toBe(3);
     });
   });
+});
 
+describe('EventsSearch schemas', () => {
   describe('parseUrlFilters', () => {
     it('returns valid filters', async () => {
       const url = 'http://localhost/?query=foo&type=all';

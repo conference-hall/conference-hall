@@ -11,13 +11,12 @@ import { Card } from '~/design-system/layouts/Card.tsx';
 import { ExternalLink } from '~/design-system/Links.tsx';
 import { H2, Subtitle, Text } from '~/design-system/Typography.tsx';
 import { SpeakerProfile } from '~/domains/speaker/SpeakerProfile.ts';
+import { DetailsSchema } from '~/domains/speaker/SpeakerProfile.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { CoSpeakersList, InviteCoSpeakerButton } from '~/routes/__components/proposals/forms/CoSpeaker.tsx';
 import { getEvent } from '~/routes/__server/events/get-event.server.ts';
-import { saveUserDetails } from '~/routes/__server/profile/save-profile.server.ts';
 import { getSubmittedProposal } from '~/routes/__server/proposals/get-submitted-proposal.server.ts';
 import { removeCoSpeakerFromSubmission } from '~/routes/__server/proposals/remove-co-speaker.server.ts';
-import { DetailsSchema } from '~/routes/__types/profile.schema.tsx';
 
 import { useSubmissionStep } from './__components/useSubmissionStep.ts';
 
@@ -53,7 +52,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
   const result = parse(form, { schema: DetailsSchema });
   if (!result.value) return json(result.error);
-  await saveUserDetails(userId, result.value);
+  await SpeakerProfile.for(userId).save(result.value);
 
   const event = await getEvent(params.event);
   if (event.hasTracks) {
