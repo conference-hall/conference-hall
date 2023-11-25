@@ -2,20 +2,19 @@ import { parse } from '@conform-to/zod';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import type { ActionFunction, LoaderFunctionArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
-import { Form, useLoaderData } from '@remix-run/react';
+import { Form, useLoaderData, useNavigate } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { Button, ButtonLink } from '~/design-system/Buttons.tsx';
+import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2 } from '~/design-system/Typography.tsx';
+import { EventSubmissionSteps } from '~/domains/submission-funnel/EventSubmissionSteps';
 import { requireSession } from '~/libs/auth/session.ts';
 import { SurveyForm } from '~/routes/__components/proposals/forms/SurveyForm.tsx';
 import { getAnswers } from '~/routes/__server/survey/get-answers.server.ts';
 import { getQuestions } from '~/routes/__server/survey/get-questions.server.ts';
 import { saveSurvey } from '~/routes/__server/survey/save-survey.server.ts';
 import { SurveySchema } from '~/routes/__types/survey.ts';
-
-import { useSubmissionStep } from './__components/useSubmissionStep.ts';
 
 export const handle = { step: 'survey' };
 
@@ -39,12 +38,14 @@ export const action: ActionFunction = async ({ request, params }) => {
   if (!result.value) return json(null);
 
   await saveSurvey(userId, params.event, result.value);
-  return redirect(`/${params.event}/submission/${params.talk}/submit`);
+
+  const nextStep = await EventSubmissionSteps.nextStepFor('survey', params.event, params.talk);
+  return redirect(nextStep.path);
 };
 
 export default function SubmissionSurveyRoute() {
+  const navigate = useNavigate();
   const { questions, answers } = useLoaderData<typeof loader>();
-  const { previousPath } = useSubmissionStep();
 
   return (
     <Card>
@@ -57,9 +58,9 @@ export default function SubmissionSurveyRoute() {
         </Form>
       </Card.Content>
       <Card.Actions>
-        <ButtonLink to={previousPath} variant="secondary">
+        <Button onClick={() => navigate(-1)} variant="secondary">
           Go back
-        </ButtonLink>
+        </Button>
         <Button type="submit" form="survey-form" iconRight={ArrowRightIcon}>
           Continue
         </Button>

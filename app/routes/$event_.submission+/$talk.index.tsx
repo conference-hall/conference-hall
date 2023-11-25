@@ -2,19 +2,19 @@ import { parse } from '@conform-to/zod';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
-import { Form, useActionData, useLoaderData } from '@remix-run/react';
+import { Form, useActionData, useLoaderData, useNavigate } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { Button, ButtonLink } from '~/design-system/Buttons.tsx';
+import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2 } from '~/design-system/Typography.tsx';
 import { TalksLibrary } from '~/domains/speaker/TalksLibrary.ts';
+import { EventSubmissionSteps } from '~/domains/submission-funnel/EventSubmissionSteps.ts';
+import { TalkSubmission } from '~/domains/submission-funnel/TalkSubmission.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm.tsx';
 import { ProposalCreateSchema } from '~/routes/__types/proposal.ts';
 
-import { useSubmissionStep } from './__components/useSubmissionStep.ts';
-import { isTalkAlreadySubmitted } from './__server/is-talk-already-submitted.server.ts';
 import { saveDraftProposal } from './__server/save-draft-proposal.server.ts';
 
 export const handle = { step: 'proposal' };
@@ -26,7 +26,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 
   if (params.talk === 'new') return json(null);
 
-  const alreadySubmitted = await isTalkAlreadySubmitted(params.event, params.talk, userId);
+  const alreadySubmitted = await TalkSubmission.for(userId, params.event).isAlreadySubmitted(params.talk);
   if (alreadySubmitted) throw new Response('Talk already submitted.', { status: 400 });
 
   const talk = await TalksLibrary.for(userId).get(params.talk);
@@ -43,13 +43,15 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   if (!result.value) return json(result.error);
 
   const proposal = await saveDraftProposal(params.talk, params.event, userId, result.value);
-  return redirect(`/${params.event}/submission/${proposal.talkId}/speakers`);
+
+  const nextStep = await EventSubmissionSteps.nextStepFor('proposal', params.event, proposal.talkId);
+  return redirect(nextStep.path);
 };
 
 export default function SubmissionProposalRoute() {
+  const navigate = useNavigate();
   const talk = useLoaderData<typeof loader>();
   const errors = useActionData<typeof action>();
-  const { previousPath } = useSubmissionStep();
 
   return (
     <Card>
@@ -62,9 +64,9 @@ export default function SubmissionProposalRoute() {
         </Form>
       </Card.Content>
       <Card.Actions>
-        <ButtonLink to={previousPath} variant="secondary">
+        <Button onClick={() => navigate(-1)} variant="secondary">
           Go back
-        </ButtonLink>
+        </Button>
         <Button type="submit" form="proposal-form" iconRight={ArrowRightIcon}>
           Continue
         </Button>

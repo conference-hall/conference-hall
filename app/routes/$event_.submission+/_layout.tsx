@@ -8,6 +8,7 @@ import { IconButtonLink } from '~/design-system/IconButtons.tsx';
 import { Container } from '~/design-system/layouts/Container.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { EventPage } from '~/domains/event-page/EventPage.ts';
+import { EventSubmissionSteps } from '~/domains/submission-funnel/EventSubmissionSteps.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { CfpNotOpenError } from '~/libs/errors.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
@@ -16,9 +17,7 @@ import { useUser } from '~/root.tsx';
 import { Navbar } from '~/routes/__components/navbar/Navbar.tsx';
 
 import { SubmissionSteps } from './__components/SubmissionSteps.tsx';
-import { useSubmissionStep } from './__components/useSubmissionStep.ts';
-
-type Step = { key: string; name: string; path: string; form?: string; enabled: boolean };
+import { useCurrentStepKey } from './__components/useCurrentStepKey.ts';
 
 export const handle = { step: 'root' };
 
@@ -34,57 +33,15 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const event = await EventPage.for(params.event).get();
   if (!event.isCfpOpen) throw new CfpNotOpenError();
 
-  const steps: Array<Step> = [
-    {
-      key: 'selection',
-      name: 'Selection',
-      form: undefined,
-      path: `/${params.event}/submission`,
-      enabled: true,
-    },
-    {
-      key: 'proposal',
-      name: 'Proposal',
-      form: 'proposal-form',
-      path: `/${params.event}/submission/${params.talk}`,
-      enabled: true,
-    },
-    {
-      key: 'speakers',
-      name: 'Speakers',
-      form: 'speakers-form',
-      path: `/${params.event}/submission/${params.talk}/speakers`,
-      enabled: true,
-    },
-    {
-      key: 'tracks',
-      name: 'Tracks',
-      form: 'tracks-form',
-      path: `/${params.event}/submission/${params.talk}/tracks`,
-      enabled: event.hasTracks,
-    },
-    {
-      key: 'survey',
-      name: 'Survey',
-      form: 'survey-form',
-      path: `/${params.event}/submission/${params.talk}/survey`,
-      enabled: event.surveyEnabled,
-    },
-    {
-      key: 'submission',
-      name: 'Submission',
-      form: undefined,
-      path: `/${params.event}/submission/${params.talk}/submit`,
-      enabled: true,
-    },
-  ];
-  return json({ event, steps: steps.filter((step) => step.enabled) });
+  const { steps } = await EventSubmissionSteps.for(params.event, params.talk);
+  return json({ event, steps });
 };
 
 export default function EventSubmissionRoute() {
   const { user } = useUser();
   const { event, steps } = useLoaderData<typeof loader>();
-  const { currentStepKey } = useSubmissionStep();
+
+  const currentStepKey = useCurrentStepKey();
 
   return (
     <>

@@ -1,12 +1,12 @@
 import { parse } from '@conform-to/zod';
 import type { ActionFunction, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { Form, useLoaderData } from '@remix-run/react';
+import { Form, useLoaderData, useNavigate } from '@remix-run/react';
 import { useState } from 'react';
 import invariant from 'tiny-invariant';
 
 import { Avatar, AvatarGroup } from '~/design-system/Avatar.tsx';
-import { Button, ButtonLink } from '~/design-system/Buttons.tsx';
+import { Button } from '~/design-system/Buttons.tsx';
 import { Checkbox } from '~/design-system/forms/Checkboxes.tsx';
 import { TextArea } from '~/design-system/forms/TextArea.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
@@ -18,7 +18,6 @@ import { getSubmittedProposal } from '~/routes/__server/proposals/get-submitted-
 import { ProposalSubmissionSchema } from '~/routes/__types/proposal.ts';
 import { useEvent } from '~/routes/$event+/_layout.tsx';
 
-import { useSubmissionStep } from './__components/useSubmissionStep.ts';
 import { submitProposal } from './__server/submit-proposal.server.ts';
 
 export const handle = { step: 'submission' };
@@ -45,9 +44,9 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export default function SubmissionSubmitRoute() {
+  const navigate = useNavigate();
   const { event } = useEvent();
   const data = useLoaderData<typeof loader>();
-  const { previousPath } = useSubmissionStep();
   const [acceptedCod, setAcceptCod] = useState(!event.codeOfConductUrl);
 
   return (
@@ -95,9 +94,9 @@ export default function SubmissionSubmitRoute() {
       </Card.Content>
 
       <Card.Actions>
-        <ButtonLink to={previousPath} variant="secondary">
+        <Button onClick={() => navigate(-1)} variant="secondary">
           Go back
-        </ButtonLink>
+        </Button>
         <Button type="submit" form="submit-form" disabled={!acceptedCod}>
           Submit proposal
         </Button>

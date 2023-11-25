@@ -2,23 +2,21 @@ import { parse } from '@conform-to/zod';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
-import { Form, useActionData, useLoaderData } from '@remix-run/react';
+import { Form, useActionData, useLoaderData, useNavigate } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { Button, ButtonLink } from '~/design-system/Buttons.tsx';
+import { Button } from '~/design-system/Buttons.tsx';
 import { MarkdownTextArea } from '~/design-system/forms/MarkdownTextArea.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { ExternalLink } from '~/design-system/Links.tsx';
 import { H2, Subtitle, Text } from '~/design-system/Typography.tsx';
 import { SpeakerProfile } from '~/domains/speaker/SpeakerProfile.ts';
 import { DetailsSchema } from '~/domains/speaker/SpeakerProfile.types.ts';
-import { EventSubmissionSettings } from '~/domains/submission-funnel/EventSubmissionSettings.ts';
+import { EventSubmissionSteps } from '~/domains/submission-funnel/EventSubmissionSteps';
 import { requireSession } from '~/libs/auth/session.ts';
 import { CoSpeakersList, InviteCoSpeakerButton } from '~/routes/__components/proposals/forms/CoSpeaker.tsx';
 import { getSubmittedProposal } from '~/routes/__server/proposals/get-submitted-proposal.server.ts';
 import { removeCoSpeakerFromSubmission } from '~/routes/__server/proposals/remove-co-speaker.server.ts';
-
-import { useSubmissionStep } from './__components/useSubmissionStep.ts';
 
 export const handle = { step: 'speakers' };
 
@@ -31,7 +29,6 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const proposal = await getSubmittedProposal(params.talk, params.event, userId);
   return json({
     speaker,
-    proposalId: proposal.id,
     invitationLink: proposal.invitationLink,
     speakers: proposal.speakers.filter((speaker) => speaker.id !== userId),
   });
@@ -48,26 +45,20 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     const speakerId = form.get('_speakerId')?.toString() as string;
     await removeCoSpeakerFromSubmission(userId, params.talk, params.event, speakerId);
     return json(null);
-  }
-
-  const result = parse(form, { schema: DetailsSchema });
-  if (!result.value) return json(result.error);
-  await SpeakerProfile.for(userId).save(result.value);
-
-  const settings = EventSubmissionSettings.for(params.event);
-  if (await settings.hasTracks()) {
-    return redirect(`/${params.event}/submission/${params.talk}/tracks`);
-  } else if (await settings.hasSurvey()) {
-    return redirect(`/${params.event}/submission/${params.talk}/survey`);
   } else {
-    return redirect(`/${params.event}/submission/${params.talk}/submit`);
+    const result = parse(form, { schema: DetailsSchema });
+    if (!result.value) return json(result.error);
+    await SpeakerProfile.for(userId).save(result.value);
   }
+
+  const nextStep = await EventSubmissionSteps.nextStepFor('speakers', params.event, params.talk);
+  return redirect(nextStep.path);
 };
 
 export default function SubmissionSpeakerRoute() {
+  const navigate = useNavigate();
   const { speaker, speakers, invitationLink } = useLoaderData<typeof loader>();
   const errors = useActionData<typeof action>();
-  const { previousPath } = useSubmissionStep();
 
   return (
     <Card>
@@ -100,9 +91,9 @@ export default function SubmissionSpeakerRoute() {
         </div>
       </Card.Content>
       <Card.Actions>
-        <ButtonLink to={previousPath} variant="secondary">
+        <Button onClick={() => navigate(-1)} variant="secondary">
           Go back
-        </ButtonLink>
+        </Button>
         <Button type="submit" form="speakers-form" iconRight={ArrowRightIcon}>
           Continue
         </Button>
