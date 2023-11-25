@@ -1,5 +1,5 @@
 import { db } from '~/libs/db';
-import { CfpNotOpenError, ProposalNotFoundError } from '~/libs/errors';
+import { CfpNotOpenError, MaxSubmittedProposalsReachedError, ProposalNotFoundError } from '~/libs/errors';
 import type { TalkSaveData } from '~/routes/__types/talks';
 
 import { CallForPaper } from '../shared/CallForPaper';
@@ -65,5 +65,37 @@ export class TalkSubmission {
         categories: { set: [], connect: data.categories?.map((c) => ({ id: c })) },
       },
     });
+  }
+
+  async submit(talkId: string) {
+    const cfp = await CallForPaper.for(this.eventSlug);
+    if (!cfp.isOpen) throw new CfpNotOpenError();
+
+    if (cfp.maxProposals) {
+      const nbProposals = await db.proposal.count({
+        where: {
+          eventId: cfp.eventId,
+          speakers: { some: { id: this.speakerId } },
+          status: { not: { equals: 'DRAFT' } },
+          id: { not: { equals: talkId } },
+        },
+      });
+      if (nbProposals >= cfp.maxProposals) throw new MaxSubmittedProposalsReachedError();
+    }
+
+    const proposal = await db.proposal.findFirst({
+      select: { id: true },
+      where: { talkId, event: { slug: this.eventSlug }, speakers: { some: { id: this.speakerId } } },
+    });
+    if (!proposal) throw new ProposalNotFoundError();
+
+    await db.proposal.update({ data: { status: 'SUBMITTED' }, where: { id: proposal.id } });
+
+    // await ProposalSubmittedEmail.send(event, proposal);
+    // await ProposalReceivedEmail.send(event, proposal);
+
+    // if (event.slackWebhookUrl) {
+    //   await sendSubmittedTalkSlackMessage(cfp.eventId, proposal.id);
+    // }
   }
 }

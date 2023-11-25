@@ -139,7 +139,6 @@ class EventSubmissionPage extends BasePage {
   }
 
   fillConfirmationForm(data: ConfirmationFormType) {
-    if (data.message) cy.typeOn('Message to organizers', data.message);
     if (data.cod) cy.findByRole('checkbox', { name: 'Please agree with the code of conduct of the event.' }).click();
   }
 

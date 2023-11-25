@@ -1,4 +1,5 @@
 import { TalkLevel } from '@prisma/client';
+import { resetEmails } from 'tests/email-helpers';
 import { eventCategoryFactory } from 'tests/factories/categories';
 import { eventFactory } from 'tests/factories/events.ts';
 import { eventFormatFactory } from 'tests/factories/formats';
@@ -7,7 +8,13 @@ import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
 
 import { db } from '~/libs/db.ts';
-import { CfpNotOpenError, EventNotFoundError, ProposalNotFoundError, TalkNotFoundError } from '~/libs/errors.ts';
+import {
+  CfpNotOpenError,
+  EventNotFoundError,
+  MaxSubmittedProposalsReachedError,
+  ProposalNotFoundError,
+  TalkNotFoundError,
+} from '~/libs/errors.ts';
 
 import { TalkSubmission } from './TalkSubmission';
 import { getTracksSchema } from './TalkSubmission.types';
@@ -205,6 +212,93 @@ describe('TalkSubmission', () => {
       await expect(submission.saveTracks('XXX', { formats: [], categories: [] })).rejects.toThrowError(
         ProposalNotFoundError,
       );
+    });
+  });
+
+  describe('#submit', () => {
+    beforeEach(async () => {
+      await resetEmails();
+    });
+
+    it('submit a proposal', async () => {
+      const event = await eventFactory({
+        traits: ['conference-cfp-open'],
+        attributes: { name: 'Event 1', emailOrganizer: 'ben@email.com', emailNotifications: ['submitted'] },
+      });
+      const speaker = await userFactory();
+      const talk = await talkFactory({ speakers: [speaker] });
+      const proposal = await proposalFactory({ event, talk: talk, traits: ['draft'] });
+
+      await TalkSubmission.for(speaker.id, event.slug).submit(talk.id);
+
+      const result = await db.proposal.findUnique({ where: { id: proposal.id } });
+      expect(result?.status).toEqual('SUBMITTED');
+
+      // await expect(speaker.email).toHaveEmail({
+      //   from: { name: event.name, address: 'no-reply@conference-hall.io' },
+      //   subject: `[${event.name}] Submission confirmed`,
+      // });
+
+      // await expect(event.emailOrganizer).toHaveEmail({
+      //   from: { name: event.name, address: 'no-reply@conference-hall.io' },
+      //   subject: `[${event.name}] New proposal received`,
+      // });
+
+      // TODO: test slack message
+    });
+
+    it('can submit if more drafts than event max proposals', async () => {
+      const event = await eventFactory({ traits: ['conference-cfp-open'], attributes: { maxProposals: 1 } });
+      const speaker = await userFactory();
+      const talk1 = await talkFactory({ speakers: [speaker] });
+      await proposalFactory({ event, talk: talk1, traits: ['draft'] });
+      const talk2 = await talkFactory({ speakers: [speaker] });
+      const proposal = await proposalFactory({ event, talk: talk2, traits: ['draft'] });
+
+      await TalkSubmission.for(speaker.id, event.slug).submit(talk2.id);
+
+      const result = await db.proposal.findUnique({ where: { id: proposal.id } });
+      expect(result?.status).toEqual('SUBMITTED');
+    });
+
+    it('throws an error when max proposal submitted reach', async () => {
+      const event = await eventFactory({ traits: ['conference-cfp-open'], attributes: { maxProposals: 1 } });
+      const speaker = await userFactory();
+      const talk1 = await talkFactory({ speakers: [speaker] });
+      await proposalFactory({ event, talk: talk1 });
+      const talk2 = await talkFactory({ speakers: [speaker] });
+      await proposalFactory({ event, talk: talk2, traits: ['draft'] });
+
+      const submission = TalkSubmission.for(speaker.id, event.slug);
+      await expect(submission.submit(talk2.id)).rejects.toThrowError(MaxSubmittedProposalsReachedError);
+    });
+
+    it('throws an error when talk not belong to the user', async () => {
+      const event = await eventFactory({ traits: ['conference-cfp-open'] });
+      const speaker = await userFactory();
+      const talk = await talkFactory({ speakers: [speaker] });
+      await proposalFactory({ event, talk, traits: ['draft'] });
+
+      const user = await userFactory();
+      const submission = TalkSubmission.for(user.id, event.slug);
+      await expect(submission.submit(talk.id)).rejects.toThrowError(ProposalNotFoundError);
+    });
+
+    it('throws an error when CFP is not open', async () => {
+      const event = await eventFactory({ traits: ['conference-cfp-past'] });
+      const speaker = await userFactory();
+      const talk = await talkFactory({ speakers: [speaker] });
+
+      const submission = TalkSubmission.for(speaker.id, event.slug);
+      await expect(submission.submit(talk.id)).rejects.toThrowError(CfpNotOpenError);
+    });
+
+    it('throws an error when event not found', async () => {
+      const speaker = await userFactory();
+      const talk = await talkFactory({ speakers: [speaker] });
+
+      const submission = TalkSubmission.for(speaker.id, 'XXX');
+      await expect(submission.submit(talk.id)).rejects.toThrowError(EventNotFoundError);
     });
   });
 });

@@ -1,4 +1,3 @@
-import { parse } from '@conform-to/zod';
 import type { ActionFunction, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Form, useLoaderData, useNavigate } from '@remix-run/react';
@@ -8,17 +7,14 @@ import invariant from 'tiny-invariant';
 import { Avatar, AvatarGroup } from '~/design-system/Avatar.tsx';
 import { Button } from '~/design-system/Buttons.tsx';
 import { Checkbox } from '~/design-system/forms/Checkboxes.tsx';
-import { TextArea } from '~/design-system/forms/TextArea.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { ExternalLink } from '~/design-system/Links.tsx';
 import { H1, H2, Subtitle } from '~/design-system/Typography.tsx';
+import { TalkSubmission } from '~/domains/submission-funnel/TalkSubmission';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast } from '~/libs/toasts/toast.server.ts';
 import { getSubmittedProposal } from '~/routes/__server/proposals/get-submitted-proposal.server.ts';
-import { ProposalSubmissionSchema } from '~/routes/__types/proposal.ts';
 import { useEvent } from '~/routes/$event+/_layout.tsx';
-
-import { submitProposal } from './__server/submit-proposal.server.ts';
 
 export const handle = { step: 'submission' };
 
@@ -32,14 +28,11 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const userId = await requireSession(request);
-  const form = await request.formData();
+  const speakerId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
   invariant(params.talk, 'Invalid talk id');
 
-  const result = parse(form, { schema: ProposalSubmissionSchema });
-  if (result.value) await submitProposal(params.talk, params.event, userId, result.value);
-
+  await TalkSubmission.for(speakerId, params.event).submit(params.talk);
   return redirectWithToast(`/${params.event}/proposals`, 'success', 'Congratulation! Proposal submitted!');
 };
 
@@ -81,8 +74,6 @@ export default function SubmissionSubmitRoute() {
               <b>Categories:</b> {data.categories.map((c) => c.name).join(', ')}
             </Subtitle>
           )}
-
-          <TextArea name="message" label="Message to organizers" rows={4} />
 
           {event.codeOfConductUrl && (
             <Checkbox id="cod-agreement" name="cod-agreement" value="agree" onChange={() => setAcceptCod(!acceptedCod)}>

@@ -7,6 +7,7 @@ type CallForPaperEvent = {
   type: 'CONFERENCE' | 'MEETUP';
   cfpStart: Date | null;
   cfpEnd: Date | null;
+  maxProposals: number | null;
 };
 
 export class CallForPaper {
@@ -14,7 +15,7 @@ export class CallForPaper {
 
   static async for(eventSlug: string) {
     const event = await db.event.findUnique({
-      select: { id: true, type: true, cfpStart: true, cfpEnd: true },
+      select: { id: true, type: true, cfpStart: true, cfpEnd: true, maxProposals: true },
       where: { slug: eventSlug },
     });
     if (!event) throw new EventNotFoundError();
@@ -29,5 +30,9 @@ export class CallForPaper {
   get isOpen() {
     const { type, cfpStart, cfpEnd } = this.event;
     return getCfpState(type, cfpStart, cfpEnd) === 'OPENED';
+  }
+
+  get maxProposals() {
+    return this.event.maxProposals;
   }
 }
