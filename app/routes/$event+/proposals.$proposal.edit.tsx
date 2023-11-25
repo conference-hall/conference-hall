@@ -10,11 +10,11 @@ import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { H3, Subtitle } from '~/design-system/Typography.tsx';
 import { EventPage } from '~/domains/event-page/EventPage.ts';
+import { SpeakerProposal } from '~/domains/speaker-proposals/SpeakerProposal.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
 import { CoSpeakersList, InviteCoSpeakerButton } from '~/routes/__components/proposals/forms/CoSpeaker.tsx';
 import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm.tsx';
-import { getSpeakerProposal } from '~/routes/__server/proposals/get-speaker-proposal.server.ts';
 import { removeCoSpeakerFromProposal } from '~/routes/__server/proposals/remove-co-speaker.server.ts';
 import { getProposalUpdateSchema } from '~/routes/__types/proposal.ts';
 
@@ -25,7 +25,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.proposal, 'Invalid proposal id');
 
-  const proposal = await getSpeakerProposal(params.proposal, userId);
+  const proposal = await SpeakerProposal.for(userId, params.proposal).get();
   return json(proposal);
 };
 

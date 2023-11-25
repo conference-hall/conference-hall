@@ -6,11 +6,11 @@ import invariant from 'tiny-invariant';
 
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
+import { SpeakerProposal } from '~/domains/speaker-proposals/SpeakerProposal.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
 import { ProposalDetailsSection } from '~/routes/__components/proposals/ProposalDetailsSection.tsx';
 import { ProposalStatusSection } from '~/routes/__components/proposals/ProposalStatusSection.tsx';
-import { getSpeakerProposal } from '~/routes/__server/proposals/get-speaker-proposal.server.ts';
 import { ProposalParticipationSchema } from '~/routes/__types/proposal.ts';
 
 import { deleteProposal } from './__server/delete-proposal.server.ts';
@@ -21,7 +21,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.proposal, 'Invalid proposal id');
 
-  const proposal = await getSpeakerProposal(params.proposal, userId);
+  const proposal = await SpeakerProposal.for(userId, params.proposal).get();
   return json(proposal);
 };
 
@@ -31,7 +31,6 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   const form = await request.formData();
   const action = form.get('_action');
-
   switch (action) {
     case 'delete': {
       await deleteProposal(params.proposal, userId);
