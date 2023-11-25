@@ -10,9 +10,9 @@ import { useCheckboxSelection } from '~/design-system/forms/useCheckboxSelection
 import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { Pagination } from '~/design-system/Pagination.tsx';
+import { parseUrlPage } from '~/domains/shared/Pagination.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-import { parsePage } from '~/routes/__types/pagination.ts';
 import { parseProposalsFilters, ProposalsStatusUpdateSchema } from '~/routes/__types/proposal.ts';
 import { updateProposalsStatus } from '~/routes/team+/$team.$event+/__server/update-proposal.server.ts';
 
@@ -28,7 +28,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 
   const url = new URL(request.url);
   const filters = parseProposalsFilters(url.searchParams);
-  const page = parsePage(url.searchParams);
+  const page = parseUrlPage(request.url);
   const results = await searchProposals(params.event, userId, filters, page);
   return json(results);
 };

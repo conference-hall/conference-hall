@@ -1,4 +1,3 @@
-import { parse } from '@conform-to/zod';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { CubeTransparentIcon } from '@heroicons/react/24/outline';
 import type { TeamRole } from '@prisma/client';
@@ -13,11 +12,11 @@ import { Card } from '~/design-system/layouts/Card.tsx';
 import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
 import { Pagination } from '~/design-system/Pagination.tsx';
 import { H3, Subtitle } from '~/design-system/Typography.tsx';
-import { MembersFiltersSchema, MyTeamMembers } from '~/domains/team/MyTeamMembers.ts';
+import { parseUrlPage } from '~/domains/shared/Pagination.ts';
+import { MyTeamMembers, parseUrlFilters } from '~/domains/team/MyTeamMembers.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { useUser } from '~/root.tsx';
-import { parsePage } from '~/routes/__types/pagination.ts';
 
 import { useTeam } from '../$team.tsx';
 import { ChangeRoleButton, InviteMemberButton, RemoveButton } from './__components/MemberActions.tsx';
@@ -26,11 +25,10 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.team, 'Invalid team slug');
 
-  const url = new URL(request.url);
-  const filters = parse(url.searchParams, { schema: MembersFiltersSchema });
-  const page = parsePage(url.searchParams);
+  const filters = parseUrlFilters(request.url);
+  const page = parseUrlPage(request.url);
 
-  const members = await MyTeamMembers.for(userId, params.team).list(filters.value || {}, page);
+  const members = await MyTeamMembers.for(userId, params.team).list(filters, page);
   return json(members);
 };
 

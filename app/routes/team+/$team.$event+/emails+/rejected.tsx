@@ -6,12 +6,12 @@ import invariant from 'tiny-invariant';
 
 import { Pagination } from '~/design-system/Pagination.tsx';
 import { H1, H2 } from '~/design-system/Typography.tsx';
+import { parseUrlPage } from '~/domains/shared/Pagination.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { CampaignEmailFilters } from '~/routes/__components/events/campaign-email/CampaignEmailFilters.tsx';
 import { CampaignEmailList, CampaignType } from '~/routes/__components/events/campaign-email/CampaignEmailList.tsx';
 import { CampaignEmailStats } from '~/routes/__components/events/campaign-email/CampaignEmailStats.tsx';
-import { parsePage } from '~/routes/__types/pagination.ts';
 import type { ProposalsFilters } from '~/routes/__types/proposal.ts';
 import { parseProposalsFilters, ProposalSelectionSchema } from '~/routes/__types/proposal.ts';
 import { searchProposals } from '~/routes/team+/$team.$event+/__server/search-proposals.server.ts';
@@ -25,7 +25,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 
   const url = new URL(request.url);
   const proposalsFilters = parseProposalsFilters(url.searchParams);
-  const page = parsePage(url.searchParams);
+  const page = parseUrlPage(request.url);
   const filters = {
     query: proposalsFilters.query,
     emailRejectedStatus: proposalsFilters.emailRejectedStatus || 'not-sent',

@@ -1,4 +1,4 @@
-import { Pagination } from './Pagination.ts';
+import { Pagination, parseUrlPage } from './Pagination.ts';
 
 describe('Pagination', () => {
   it('computes pagination for the first page', () => {
@@ -39,5 +39,25 @@ describe('Pagination', () => {
     expect(pagination.page).toBe(10);
     expect(pagination.pageIndex).toBe(9);
     expect(pagination.pageCount).toBe(10);
+  });
+});
+
+describe('parseUrlPage', () => {
+  it('returns valid page', async () => {
+    const url = 'http://localhost/?page=1';
+    const result = parseUrlPage(url);
+    expect(result).toBe(1);
+  });
+
+  it('returns page 1 when page number invalid', async () => {
+    const url = 'http://localhost/?query=XXX';
+    const result = parseUrlPage(url);
+    expect(result).toBe(1);
+  });
+
+  it('returns page 1 when no query params', async () => {
+    const url = 'http://localhost';
+    const result = parseUrlPage(url);
+    expect(result).toBe(1);
   });
 });

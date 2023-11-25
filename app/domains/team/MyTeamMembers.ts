@@ -1,3 +1,4 @@
+import { parse } from '@conform-to/zod';
 import type { TeamRole } from '@prisma/client';
 import { z } from 'zod';
 
@@ -63,4 +64,10 @@ export class MyTeamMembers {
     if (userId === memberId) throw new ForbiddenOperationError();
     return await db.teamMember.updateMany({ data: { role }, where: { team: { slug }, memberId } });
   }
+}
+
+export function parseUrlFilters(url: string) {
+  const params = new URL(url).searchParams;
+  const result = parse(params, { schema: MembersFiltersSchema });
+  return result.value || {};
 }
