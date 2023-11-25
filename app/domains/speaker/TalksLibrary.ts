@@ -39,6 +39,29 @@ export class TalksLibrary {
     }));
   }
 
+  // TODO: add tests
+  async listForEvent(eventSlug: string) {
+    const talks = await db.talk.findMany({
+      include: { speakers: true },
+      where: {
+        speakers: { some: { id: this.speakerId } },
+        proposals: { none: { event: { slug: eventSlug } } },
+        archived: false,
+      },
+      orderBy: { title: 'asc' },
+    });
+
+    return talks.map((talk) => ({
+      id: talk.id,
+      title: talk.title,
+      speakers: talk.speakers.map((speaker) => ({
+        id: speaker.id,
+        name: speaker.name,
+        picture: speaker.picture,
+      })),
+    }));
+  }
+
   async add(data: TalkSaveData) {
     return db.talk.create({
       data: {

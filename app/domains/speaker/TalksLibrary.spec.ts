@@ -1,4 +1,6 @@
 import type { User } from '@prisma/client';
+import { eventFactory } from 'tests/factories/events';
+import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
 
@@ -60,6 +62,34 @@ describe('TalksLibrary', () => {
 
       expect(result.length).toBe(1);
       expect(result[0].id).toBe(talk.id);
+    });
+  });
+
+  describe('#listForEvent', () => {
+    it('returns talks eligible for the event', async () => {
+      const event = await eventFactory({ traits: ['conference-cfp-open'] });
+      const speaker = await userFactory();
+      const otherSpeaker = await userFactory();
+
+      // other speaker talk (not returned)
+      await talkFactory({ speakers: [otherSpeaker] });
+      // archived talk (not returned)
+      await talkFactory({ speakers: [speaker], traits: ['archived'] });
+      // talk submitted (not returned)
+      const talk1 = await talkFactory({ speakers: [speaker] });
+      await proposalFactory({ event, talk: talk1 });
+      // not submitted talk (expected)
+      const talk2 = await talkFactory({ speakers: [speaker] });
+
+      const result = await TalksLibrary.of(speaker.id).listForEvent(event.slug);
+
+      expect(result).toEqual([
+        {
+          id: talk2.id,
+          title: talk2.title,
+          speakers: [{ id: speaker.id, name: speaker.name, picture: speaker.picture }],
+        },
+      ]);
     });
   });
 
