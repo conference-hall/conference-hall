@@ -5,6 +5,7 @@ type Step = { key: string; name: string; path: string; form?: string; enabled: b
 
 type SubmissionStepsInputs = { eventSlug: string; talkSlug?: string; hasSurvey: boolean; hasTracks: boolean };
 
+// TODO: Add tests
 export class EventSubmissionSteps {
   constructor(private inputs: SubmissionStepsInputs) {}
 

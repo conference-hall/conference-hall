@@ -9,12 +9,11 @@ import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2 } from '~/design-system/Typography.tsx';
 import { TalksLibrary } from '~/domains/speaker/TalksLibrary.ts';
+import { TalkSaveSchema } from '~/domains/speaker/TalksLibrary.types.ts';
 import { EventSubmissionSteps } from '~/domains/submission-funnel/EventSubmissionSteps.ts';
+import { TalkSubmission } from '~/domains/submission-funnel/TalkSubmission.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm.tsx';
-import { ProposalCreateSchema } from '~/routes/__types/proposal.ts';
-
-import { saveDraftProposal } from './__server/save-draft-proposal.server.ts';
 
 export const handle = { step: 'proposal' };
 
@@ -30,20 +29,19 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const alreadySubmitted = await talk.isSubmittedTo(params.event);
   if (alreadySubmitted) throw new Response('Talk already submitted.', { status: 400 });
 
-  const data = await talk.get();
-  return json(data);
+  return json(await talk.get());
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
-  const userId = await requireSession(request);
+  const speakerId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
   invariant(params.talk, 'Invalid talk id');
 
-  const form = await request.formData();
-  const result = parse(form, { schema: ProposalCreateSchema });
+  const result = parse(await request.formData(), { schema: TalkSaveSchema });
   if (!result.value) return json(result.error);
 
-  const proposal = await saveDraftProposal(params.talk, params.event, userId, result.value);
+  const submission = TalkSubmission.for(speakerId, params.event);
+  const proposal = await submission.saveDraft(params.talk, result.value);
 
   const nextStep = await EventSubmissionSteps.nextStepFor('proposal', params.event, proposal.talkId);
   return redirect(nextStep.path);

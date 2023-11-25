@@ -2,8 +2,6 @@ import type { User } from '@prisma/client';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
 
-import { db } from '~/libs/db';
-
 import { TalksLibrary } from './TalksLibrary';
 import { TalkSaveSchema } from './TalksLibrary.types';
 
@@ -67,17 +65,12 @@ describe('TalksLibrary', () => {
 
   describe('#add', () => {
     it('adds a talk in the library', async () => {
-      const result = await TalksLibrary.of(speaker.id).add({
+      const talk = await TalksLibrary.of(speaker.id).add({
         title: 'Talk title',
         abstract: 'Talk abstract',
         references: 'Talk references',
         languages: ['fr'],
         level: 'ADVANCED',
-      });
-
-      const talk = await db.talk.findUnique({
-        where: { id: result.id },
-        include: { speakers: true },
       });
 
       expect(talk?.title).toBe('Talk title');

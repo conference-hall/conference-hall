@@ -115,17 +115,12 @@ describe('SpeakerTalk', () => {
       });
 
       const speakerTalk = new SpeakerTalk(speaker.id, talkId);
-      await speakerTalk.update({
+      const talk = await speakerTalk.update({
         title: 'Talk title updated',
         abstract: 'Talk abstract updated',
         references: 'Talk references updated',
         languages: ['fr', 'en'],
         level: 'BEGINNER',
-      });
-
-      const talk = await db.talk.findUnique({
-        where: { id: talkId },
-        include: { speakers: true },
       });
 
       expect(talk?.title).toBe('Talk title updated');

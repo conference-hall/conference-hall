@@ -46,6 +46,7 @@ export class TalksLibrary {
         creator: { connect: { id: this.speakerId } },
         speakers: { connect: [{ id: this.speakerId }] },
       },
+      include: { speakers: true },
     });
   }
 }

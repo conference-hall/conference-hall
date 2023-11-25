@@ -63,7 +63,7 @@ export class SpeakerTalk {
     const exists = await this.existsTalk(this.talkId);
     if (!exists) throw new TalkNotFoundError();
 
-    return db.talk.update({ where: { id: this.talkId }, data });
+    return db.talk.update({ where: { id: this.talkId }, data, include: { speakers: true } });
   }
 
   async archive() {
