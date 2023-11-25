@@ -13,8 +13,6 @@ import { ProposalDetailsSection } from '~/routes/__components/proposals/Proposal
 import { ProposalStatusSection } from '~/routes/__components/proposals/ProposalStatusSection.tsx';
 import { ProposalParticipationSchema } from '~/routes/__types/proposal.ts';
 
-import { deleteProposal } from './__server/delete-proposal.server.ts';
-import { sendParticipationAnswer } from './__server/send-participation-answer.server.ts';
 import { useEvent } from './_layout.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
@@ -29,17 +27,19 @@ export const action: ActionFunction = async ({ request, params }) => {
   const userId = await requireSession(request);
   invariant(params.proposal, 'Invalid proposal id');
 
+  const proposal = UserProposal.for(userId, params.proposal);
+
   const form = await request.formData();
   const action = form.get('_action');
   switch (action) {
     case 'delete': {
-      await deleteProposal(params.proposal, userId);
+      await proposal.delete();
       return redirectWithToast(`/${params.event}/proposals`, 'success', 'Proposal submission removed.');
     }
     case 'confirm': {
       const result = parse(form, { schema: ProposalParticipationSchema });
       if (!result.value) return null;
-      await sendParticipationAnswer(userId, params.proposal, result.value.participation);
+      await proposal.confirm(result.value.participation);
       return toast('success', 'Your response has been sent to organizers.');
     }
     default:

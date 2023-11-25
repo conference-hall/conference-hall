@@ -15,10 +15,8 @@ import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
 import { CoSpeakersList, InviteCoSpeakerButton } from '~/routes/__components/proposals/forms/CoSpeaker.tsx';
 import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm.tsx';
-import { removeCoSpeakerFromProposal } from '~/routes/__server/proposals/remove-co-speaker.server.ts';
 import { getProposalUpdateSchema } from '~/routes/__types/proposal.ts';
 
-import { updateProposal } from './__server/update-proposal.server.ts';
 import { useEvent } from './_layout.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
@@ -37,10 +35,11 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const form = await request.formData();
   const intent = form.get('intent');
 
+  const proposal = UserProposal.for(userId, params.proposal);
   switch (intent) {
     case 'remove-speaker': {
       const speakerId = form.get('_speakerId')?.toString() as string;
-      await removeCoSpeakerFromProposal(userId, params.proposal, speakerId);
+      await proposal.removeCoSpeaker(speakerId);
       return toast('success', 'Co-speaker removed from proposal.');
     }
     case 'edit-proposal': {
@@ -48,7 +47,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       const result = parse(form, { schema: getProposalUpdateSchema(formatsRequired, categoriesRequired) });
       if (!result.value) return json(result.error);
 
-      await updateProposal(params.event, params.proposal, userId, result.value);
+      await proposal.update(result.value);
       return redirectWithToast(`/${params.event}/proposals/${params.proposal}`, 'success', 'Proposal saved.');
     }
   }

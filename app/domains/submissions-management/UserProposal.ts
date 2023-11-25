@@ -1,8 +1,12 @@
 import { db } from '~/libs/db';
-import { ProposalNotFoundError } from '~/libs/errors';
+import { CfpNotOpenError, ProposalNotFoundError } from '~/libs/errors';
 import { getSpeakerProposalStatus } from '~/routes/__server/proposals/get-speaker-proposal-status';
 
+import { CallForPaper } from '../shared/CallForPaper';
 import { InvitationLink } from '../shared/InvitationLink';
+import { ProposalConfirmedEmail } from './emails/proposal-confirmed-email';
+import { ProposalDeclinedEmail } from './emails/proposal-declined-email';
+import type { ProposalSaveData } from './UserProposal.types';
 
 export class UserProposal {
   constructor(
@@ -49,5 +53,76 @@ export class UserProposal {
         isOwner: speaker.id === proposal?.talk?.creatorId,
       })),
     };
+  }
+
+  async update(data: ProposalSaveData) {
+    const proposal = await db.proposal.findFirst({
+      where: { id: this.proposalId, speakers: { some: { id: this.speakerId } } },
+      include: { event: true },
+    });
+    if (!proposal) throw new ProposalNotFoundError();
+
+    const cfp = await CallForPaper.for(proposal.event.slug);
+    if (!cfp.isOpen) throw new CfpNotOpenError();
+
+    const { formats, categories, ...talk } = data;
+    await db.proposal.update({
+      where: { id: this.proposalId },
+      data: {
+        ...talk,
+        speakers: { set: [], connect: [{ id: this.speakerId }] },
+        formats: { set: [], connect: formats?.map((id) => ({ id })) },
+        categories: { set: [], connect: categories?.map((id) => ({ id })) },
+      },
+    });
+
+    if (proposal.talkId) {
+      await db.talk.update({
+        where: { id: proposal.talkId },
+        data: talk,
+      });
+    }
+  }
+
+  async removeCoSpeaker(coSpeakerId: string) {
+    const proposal = await db.proposal.findFirst({
+      where: {
+        id: this.proposalId,
+        speakers: { some: { id: this.speakerId } },
+      },
+    });
+    if (!proposal) throw new ProposalNotFoundError();
+
+    await db.proposal.update({
+      where: { id: this.proposalId },
+      data: { speakers: { disconnect: { id: coSpeakerId } } },
+    });
+  }
+
+  async delete() {
+    await db.proposal.deleteMany({
+      where: { id: this.proposalId, speakers: { some: { id: this.speakerId } } },
+    });
+  }
+
+  async confirm(participation: 'CONFIRMED' | 'DECLINED') {
+    const proposal = await db.proposal.findFirst({
+      where: { id: this.proposalId, speakers: { some: { id: this.speakerId } } },
+      include: { event: true },
+    });
+    if (!proposal) throw new ProposalNotFoundError();
+
+    const result = await db.proposal.updateMany({
+      where: { id: this.proposalId, status: 'ACCEPTED' },
+      data: { status: participation },
+    });
+
+    if (result.count <= 0) return;
+
+    if (participation === 'CONFIRMED') {
+      await ProposalConfirmedEmail.send(proposal.event, proposal);
+    } else if (participation === 'DECLINED') {
+      await ProposalDeclinedEmail.send(proposal.event, proposal);
+    }
   }
 }

@@ -13,10 +13,9 @@ import { H2, Subtitle, Text } from '~/design-system/Typography.tsx';
 import { SpeakerProfile } from '~/domains/speaker-profile/SpeakerProfile';
 import { DetailsSchema } from '~/domains/speaker-profile/SpeakerProfile.types';
 import { SubmissionSteps } from '~/domains/submission-funnel/SubmissionSteps';
+import { TalkSubmission } from '~/domains/submission-funnel/TalkSubmission';
 import { requireSession } from '~/libs/auth/session.ts';
 import { CoSpeakersList, InviteCoSpeakerButton } from '~/routes/__components/proposals/forms/CoSpeaker.tsx';
-import { getSubmittedProposal } from '~/routes/__server/proposals/get-submitted-proposal.server.ts';
-import { removeCoSpeakerFromSubmission } from '~/routes/__server/proposals/remove-co-speaker.server.ts';
 
 export const handle = { step: 'speakers' };
 
@@ -26,7 +25,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   invariant(params.talk, 'Invalid talk id');
 
   const speaker = await SpeakerProfile.for(userId).get();
-  const proposal = await getSubmittedProposal(params.talk, params.event, userId);
+  const proposal = await TalkSubmission.for(userId, params.event).get(params.talk);
   return json({
     speaker,
     invitationLink: proposal.invitationLink,
@@ -43,7 +42,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const action = form.get('_action');
   if (action === 'remove-speaker') {
     const speakerId = form.get('_speakerId')?.toString() as string;
-    await removeCoSpeakerFromSubmission(userId, params.talk, params.event, speakerId);
+    await TalkSubmission.for(userId, params.event).removeCoSpeaker(params.talk, speakerId);
     return json(null);
   } else {
     const result = parse(form, { schema: DetailsSchema });

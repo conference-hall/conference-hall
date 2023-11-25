@@ -301,6 +301,95 @@ describe('TalkSubmission', () => {
       await expect(submission.submit(talk.id)).rejects.toThrowError(EventNotFoundError);
     });
   });
+
+  describe('#get', () => {
+    it('returns info about the proposal submitted on event', async () => {
+      const event = await eventFactory();
+      const format = await eventFormatFactory({ event });
+      const category = await eventCategoryFactory({ event });
+      const speaker = await userFactory();
+      const speaker2 = await userFactory();
+      const talk = await talkFactory({ speakers: [speaker, speaker2] });
+      const proposal = await proposalFactory({ event, talk, formats: [format], categories: [category] });
+
+      const result = await TalkSubmission.for(speaker.id, event.slug).get(talk.id);
+
+      expect(result).toEqual({
+        id: proposal.id,
+        title: proposal.title,
+        invitationLink: `http://localhost:3001/invite/proposal/${proposal.invitationCode}`,
+        isOwner: true,
+        speakers: [
+          { id: speaker.id, isOwner: true, name: speaker.name, picture: speaker.picture },
+          { id: speaker2.id, name: speaker2.name, picture: speaker2.picture, isOwner: false },
+        ],
+        formats: [{ id: format.id, name: format.name }],
+        categories: [{ id: category.id, name: category.name }],
+      });
+    });
+
+    it('throws an error if talk does not have proposal for the event', async () => {
+      const event = await eventFactory();
+      const speaker = await userFactory();
+      const talk = await talkFactory({ speakers: [speaker] });
+
+      await expect(TalkSubmission.for(speaker.id, event.slug).get(talk.id)).rejects.toThrowError(ProposalNotFoundError);
+    });
+
+    it('throws an error if proposal does not belong to user', async () => {
+      const event = await eventFactory();
+      const speaker = await userFactory();
+      const talk = await talkFactory({ speakers: [speaker] });
+      await proposalFactory({ event, talk });
+
+      const user = await userFactory();
+      await expect(TalkSubmission.for(user.id, event.slug).get(talk.id)).rejects.toThrowError(ProposalNotFoundError);
+    });
+  });
+
+  describe('#removeCoSpeaker', () => {
+    it('removes a cospeaker from the proposal', async () => {
+      const event = await eventFactory();
+      const speaker = await userFactory();
+      const cospeaker = await userFactory();
+      const talk = await talkFactory({ speakers: [speaker, cospeaker] });
+      const proposal = await proposalFactory({ event, talk });
+
+      await TalkSubmission.for(speaker.id, event.slug).removeCoSpeaker(talk.id, cospeaker.id);
+
+      const proposalUpdated = await db.proposal.findUnique({
+        where: { id: proposal.id },
+        include: { speakers: true },
+      });
+
+      const speakers = proposalUpdated?.speakers.map(({ id }) => id);
+      expect(speakers?.length).toBe(1);
+      expect(speakers).toContain(speaker.id);
+    });
+
+    it('throws an error when talk doesnt belong to the speaker', async () => {
+      const event = await eventFactory();
+      const speaker = await userFactory();
+      const cospeaker = await userFactory();
+      const talk = await talkFactory({ speakers: [speaker, cospeaker] });
+      await proposalFactory({ event, talk });
+
+      const updater = await userFactory();
+      await expect(
+        TalkSubmission.for(updater.id, event.slug).removeCoSpeaker(talk.id, cospeaker.id),
+      ).rejects.toThrowError(ProposalNotFoundError);
+    });
+
+    it('throws an error when talk not found', async () => {
+      const event = await eventFactory();
+      const speaker = await userFactory();
+
+      const cospeaker = await userFactory();
+      await expect(
+        TalkSubmission.for(speaker.id, event.slug).removeCoSpeaker('XXX', cospeaker.id),
+      ).rejects.toThrowError(ProposalNotFoundError);
+    });
+  });
 });
 
 describe('#getTracksSchema', () => {

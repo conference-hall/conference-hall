@@ -13,7 +13,6 @@ import { H1, H2, Subtitle } from '~/design-system/Typography.tsx';
 import { TalkSubmission } from '~/domains/submission-funnel/TalkSubmission';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast } from '~/libs/toasts/toast.server.ts';
-import { getSubmittedProposal } from '~/routes/__server/proposals/get-submitted-proposal.server.ts';
 import { useEvent } from '~/routes/$event+/_layout.tsx';
 
 export const handle = { step: 'submission' };
@@ -23,7 +22,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   invariant(params.event, 'Invalid event slug');
   invariant(params.talk, 'Invalid talk id');
 
-  const proposal = await getSubmittedProposal(params.talk, params.event, userId);
+  const proposal = await TalkSubmission.for(userId, params.event).get(params.talk);
   return json(proposal);
 };
 
