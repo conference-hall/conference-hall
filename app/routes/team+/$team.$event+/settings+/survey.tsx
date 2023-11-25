@@ -8,9 +8,9 @@ import { Checkbox } from '~/design-system/forms/Checkboxes.tsx';
 import { ToggleGroup } from '~/design-system/forms/Toggles.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2, Subtitle } from '~/design-system/Typography.tsx';
+import { questions } from '~/domains/event-survey/SurveyQuestions.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-import { QUESTIONS } from '~/routes/__server/survey/get-questions.server.ts';
 import { updateEvent } from '~/routes/__server/teams/update-event.server.ts';
 
 import { useTeamEvent } from '../_layout.tsx';
@@ -18,7 +18,7 @@ import { EventSurveySettingsSchema } from './__types/event-survey-settings.schem
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);
-  return { questions: QUESTIONS };
+  return { questions };
 };
 
 export const action = async ({ request, params }: LoaderFunctionArgs) => {

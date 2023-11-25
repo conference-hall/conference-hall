@@ -1,12 +1,5 @@
 import { z } from 'zod';
 
-export type SurveyQuestions = Array<{
-  name: string;
-  label: string;
-  type: 'text' | 'checkbox' | 'radio';
-  answers?: Array<{ name: string; label: string }>;
-}>;
-
 export const SurveySchema = z.object({
   gender: z.string().trim().nullable().default(null),
   tshirt: z.string().trim().nullable().default(null),

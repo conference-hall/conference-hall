@@ -1,7 +1,7 @@
+import type { SurveyData } from '~/domains/event-survey/SpeakerAnswers.types';
 import { db } from '~/libs/db.ts';
 import { ForbiddenOperationError, ProposalNotFoundError } from '~/libs/errors.ts';
 import { allowedForEvent } from '~/routes/__server/teams/check-user-role.server.ts';
-import type { SurveyData } from '~/routes/__types/survey.ts';
 import type { UserSocialLinks } from '~/routes/__types/user.ts';
 import { sortBy } from '~/utils/arrays.ts';
 

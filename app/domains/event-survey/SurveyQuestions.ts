@@ -1,22 +1,11 @@
-import { db } from '~/libs/db.ts';
-import { EventNotFoundError, SurveyNotEnabledError } from '~/libs/errors.ts';
-import { jsonToArray } from '~/libs/prisma.ts';
-import type { SurveyQuestions } from '~/routes/__types/survey.ts';
+export type SurveyQuestions = Array<{
+  name: string;
+  label: string;
+  type: 'text' | 'checkbox' | 'radio';
+  answers?: Array<{ name: string; label: string }>;
+}>;
 
-export async function getQuestions(slug: string) {
-  const event = await db.event.findUnique({
-    select: { id: true, surveyEnabled: true, surveyQuestions: true },
-    where: { slug: slug },
-  });
-  if (!event) throw new EventNotFoundError();
-
-  if (!event.surveyEnabled) throw new SurveyNotEnabledError();
-
-  const enabledQuestions = jsonToArray(event.surveyQuestions);
-  return QUESTIONS.filter((question) => enabledQuestions.includes(question.name));
-}
-
-export const QUESTIONS: SurveyQuestions = [
+export const questions: SurveyQuestions = [
   {
     name: 'gender',
     label: "What's your gender?",
