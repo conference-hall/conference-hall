@@ -25,7 +25,8 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.talk, 'Invalid talk id');
 
-  const talk = await TalksLibrary.for(userId).get(params.talk);
+  const library = TalksLibrary.of(userId);
+  const talk = await library.talk(params.talk).get();
   if (talk.archived) throw new Response('Talk archived.', { status: 403 });
   return json(talk);
 };
@@ -35,16 +36,16 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const form = await request.formData();
   invariant(params.talk, 'Invalid talk id');
 
-  const library = TalksLibrary.for(userId);
+  const talk = TalksLibrary.of(userId).talk(params.talk);
   const intent = form.get('intent');
   if (intent === 'remove-speaker') {
     const speakerId = form.get('_speakerId')?.toString() as string;
-    await library.removeCoSpeaker(params.talk, speakerId);
+    await talk.removeCoSpeaker(speakerId);
     return toast('success', 'Co-speaker removed from talk.');
   } else {
     const result = parse(form, { schema: TalkSaveSchema });
     if (!result.value) return json(result.error);
-    await library.update(params.talk, result.value);
+    await talk.update(result.value);
     return redirectWithToast(`/speaker/talks/${params.talk}`, 'success', 'Talk updated.');
   }
 };

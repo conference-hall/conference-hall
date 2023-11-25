@@ -8,6 +8,7 @@ import { Card } from '~/design-system/layouts/Card.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { TalksLibrary } from '~/domains/speaker/TalksLibrary.ts';
+import { TalkSaveSchema } from '~/domains/speaker/TalksLibrary.types';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { redirectWithToast } from '~/libs/toasts/toast.server.ts';
@@ -19,10 +20,10 @@ export const action = async ({ request }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   const form = await request.formData();
 
-  const result = parse(form, { schema: TalksLibrary.TalkSchema });
+  const result = parse(form, { schema: TalkSaveSchema });
   if (!result.value) return json(result.error);
 
-  const talk = await TalksLibrary.for(userId).add(result.value);
+  const talk = await TalksLibrary.of(userId).add(result.value);
   return redirectWithToast(`/speaker/talks/${talk.id}`, 'success', 'New talk created.');
 };
 

@@ -21,7 +21,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   const { searchParams } = new URL(request.url);
   const archived = Boolean(searchParams.get('archived'));
-  const talks = await TalksLibrary.for(userId).list({ archived });
+  const talks = await TalksLibrary.of(userId).list({ archived });
   return json(talks);
 };
 

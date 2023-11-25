@@ -24,7 +24,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.talk, 'Invalid talk id');
 
-  const talk = await TalksLibrary.for(userId).get(params.talk);
+  const talk = await TalksLibrary.of(userId).talk(params.talk).get();
   return json(talk);
 };
 
@@ -32,17 +32,17 @@ export const action: ActionFunction = async ({ request, params }) => {
   const userId = await requireSession(request);
   invariant(params.talk, 'Invalid talk id');
 
+  const talk = TalksLibrary.of(userId).talk(params.talk);
+
   const form = await request.formData();
   const action = form.get('_action');
-  const library = TalksLibrary.for(userId);
-
   switch (action) {
     case 'archive-talk':
-      await library.archive(params.talk);
+      await talk.archive();
       return toast('success', 'Talk archived.');
 
     case 'restore-talk':
-      await library.restore(params.talk);
+      await talk.restore();
       return toast('success', 'Talk restored.');
   }
   return null;

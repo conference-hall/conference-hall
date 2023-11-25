@@ -10,7 +10,6 @@ import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2 } from '~/design-system/Typography.tsx';
 import { TalksLibrary } from '~/domains/speaker/TalksLibrary.ts';
 import { EventSubmissionSteps } from '~/domains/submission-funnel/EventSubmissionSteps.ts';
-import { TalkSubmission } from '~/domains/submission-funnel/TalkSubmission.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm.tsx';
 import { ProposalCreateSchema } from '~/routes/__types/proposal.ts';
@@ -20,17 +19,19 @@ import { saveDraftProposal } from './__server/save-draft-proposal.server.ts';
 export const handle = { step: 'proposal' };
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
-  const userId = await requireSession(request);
+  const speakerId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
   invariant(params.talk, 'Invalid talk id');
 
   if (params.talk === 'new') return json(null);
 
-  const alreadySubmitted = await TalkSubmission.for(userId, params.event).isAlreadySubmitted(params.talk);
+  const talk = TalksLibrary.of(speakerId).talk(params.talk);
+
+  const alreadySubmitted = await talk.isSubmittedTo(params.event);
   if (alreadySubmitted) throw new Response('Talk already submitted.', { status: 400 });
 
-  const talk = await TalksLibrary.for(userId).get(params.talk);
-  return json(talk);
+  const data = await talk.get();
+  return json(data);
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
