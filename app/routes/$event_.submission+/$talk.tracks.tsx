@@ -11,13 +11,13 @@ import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2 } from '~/design-system/Typography.tsx';
 import { EventPage } from '~/domains/event-page/EventPage.ts';
 import { EventSubmissionSteps } from '~/domains/submission-funnel/EventSubmissionSteps.ts';
+import { TalkSubmission } from '~/domains/submission-funnel/TalkSubmission';
+import { getTracksSchema } from '~/domains/submission-funnel/TalkSubmission.types';
 import { requireSession } from '~/libs/auth/session.ts';
 import { CategoriesForm } from '~/routes/__components/proposals/forms/CategoriesForm.tsx';
 import { FormatsForm } from '~/routes/__components/proposals/forms/FormatsForm.tsx';
 import { getSubmittedProposal } from '~/routes/__server/proposals/get-submitted-proposal.server.ts';
 import { useEvent } from '~/routes/$event+/_layout.tsx';
-
-import { getTracksSchema, saveTracks } from './__server/save-tracks.server.ts';
 
 export const handle = { step: 'tracks' };
 
@@ -36,12 +36,13 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   invariant(params.event, 'Invalid event slug');
   invariant(params.talk, 'Invalid talk id');
 
-  const { id, formatsRequired, categoriesRequired } = await EventPage.for(params.event).get();
+  const { formatsRequired, categoriesRequired } = await EventPage.for(params.event).get();
 
   const result = parse(form, { schema: getTracksSchema(formatsRequired, categoriesRequired) });
   if (!result.value) return json(result.error);
 
-  await saveTracks(params.talk, id, userId, result.value);
+  const submission = TalkSubmission.for(userId, params.event);
+  await submission.saveTracks(params.talk, result.value);
 
   const nextStep = await EventSubmissionSteps.nextStepFor('tracks', params.event, params.talk);
   return redirect(nextStep.path);

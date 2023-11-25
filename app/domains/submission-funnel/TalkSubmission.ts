@@ -1,9 +1,10 @@
 import { db } from '~/libs/db';
-import { CfpNotOpenError } from '~/libs/errors';
+import { CfpNotOpenError, ProposalNotFoundError } from '~/libs/errors';
 import type { TalkSaveData } from '~/routes/__types/talks';
 
 import { CallForPaper } from '../shared/CallForPaper';
 import { TalksLibrary } from '../speaker/TalksLibrary';
+import type { TrackUpdateData } from './TalkSubmission.types';
 
 export class TalkSubmission {
   constructor(
@@ -48,5 +49,21 @@ export class TalkSubmission {
     });
 
     return { talkId: talk.id };
+  }
+
+  async saveTracks(talkId: string, data: TrackUpdateData) {
+    const proposal = await db.proposal.findFirst({
+      select: { id: true },
+      where: { talkId, event: { slug: this.eventSlug }, speakers: { some: { id: this.speakerId } } },
+    });
+    if (!proposal) throw new ProposalNotFoundError();
+
+    await db.proposal.update({
+      where: { id: proposal.id },
+      data: {
+        formats: { set: [], connect: data.formats?.map((f) => ({ id: f })) },
+        categories: { set: [], connect: data.categories?.map((c) => ({ id: c })) },
+      },
+    });
   }
 }
