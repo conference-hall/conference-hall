@@ -6,7 +6,7 @@ import invariant from 'tiny-invariant';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { NavSideMenu } from '~/design-system/navigation/NavSideMenu.tsx';
 import { H2 } from '~/design-system/Typography.tsx';
-import { MyTeam } from '~/domains/team/MyTeam';
+import { UserTeam } from '~/domains/team-management/UserTeam';
 import { requireSession } from '~/libs/auth/session.ts';
 import { useUser } from '~/root.tsx';
 
@@ -15,7 +15,7 @@ import { useTeam } from '../$team';
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.team, 'Invalid team slug');
-  await MyTeam.for(userId, params.team).allowedFor(['OWNER']);
+  await UserTeam.for(userId, params.team).allowedFor(['OWNER']);
   return null;
 };
 

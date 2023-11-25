@@ -7,7 +7,7 @@ import { Input } from '~/design-system/forms/Input.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { ExternalLink } from '~/design-system/Links.tsx';
 import { H1, Subtitle } from '~/design-system/Typography.tsx';
-import { TeamBetaAccess } from '~/domains/team/TeamBetaAccess';
+import { TeamBetaAccess } from '~/domains/team-management/TeamBetaAccess';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 

@@ -5,9 +5,9 @@ import { userFactory } from 'tests/factories/users';
 
 import { SpeakerProposalStatus } from '~/routes/__server/proposals/get-speaker-proposal-status';
 
-import { SpeakerProposals } from './SpeakerProposals';
+import { Submissions } from './Submissions';
 
-describe('SpeakerProposals', () => {
+describe('Submissions', () => {
   describe('#count', () => {
     it('returns count submitted proposals', async () => {
       const event = await eventFactory({ traits: ['conference-cfp-open'] });
@@ -20,7 +20,7 @@ describe('SpeakerProposals', () => {
       const talk2 = await talkFactory({ speakers: [speaker] });
       await proposalFactory({ event, talk: talk2, traits: ['draft'] });
 
-      const proposalsCount = await SpeakerProposals.for(speaker.id, event.slug).count();
+      const proposalsCount = await Submissions.for(speaker.id, event.slug).count();
 
       expect(proposalsCount).toEqual(1);
     });
@@ -40,7 +40,7 @@ describe('SpeakerProposals', () => {
       const otherTalk = await talkFactory({ speakers: [otherSpeaker] });
       await proposalFactory({ event, talk: otherTalk });
 
-      const results = await SpeakerProposals.for(speaker.id, event.slug).list();
+      const results = await Submissions.for(speaker.id, event.slug).list();
 
       expect(results).toEqual([
         {
@@ -73,7 +73,7 @@ describe('SpeakerProposals', () => {
       const talk2 = await talkFactory({ speakers: [speaker] });
       await proposalFactory({ event, talk: talk2, traits: ['draft'] });
 
-      const result = await SpeakerProposals.for(speaker.id, event.slug).drafts();
+      const result = await Submissions.for(speaker.id, event.slug).drafts();
 
       expect(result).toEqual([
         {

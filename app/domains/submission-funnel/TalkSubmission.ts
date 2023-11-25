@@ -3,7 +3,7 @@ import { CfpNotOpenError, MaxSubmittedProposalsReachedError, ProposalNotFoundErr
 import type { TalkSaveData } from '~/routes/__types/talks';
 
 import { CallForPaper } from '../shared/CallForPaper';
-import { TalksLibrary } from '../speaker/TalksLibrary';
+import { TalksLibrary } from '../talk-library/TalksLibrary';
 import type { TrackUpdateData } from './TalkSubmission.types';
 
 export class TalkSubmission {

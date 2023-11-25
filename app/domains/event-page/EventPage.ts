@@ -7,7 +7,7 @@ export type EventData = Awaited<ReturnType<typeof EventPage.prototype.get>>;
 export class EventPage {
   constructor(private slug: string) {}
 
-  static for(slug: string) {
+  static of(slug: string) {
     return new EventPage(slug);
   }
 

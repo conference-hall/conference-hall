@@ -22,7 +22,7 @@ export const meta = mergeMeta<typeof loader>(
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   invariant(params.event, 'Invalid event slug');
 
-  const event = await EventPage.for(params.event).get();
+  const event = await EventPage.of(params.event).get();
   return json(event);
 };
 

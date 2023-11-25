@@ -15,7 +15,7 @@ describe('EventPage', () => {
       const format = await eventFormatFactory({ event });
       const category = await eventCategoryFactory({ event });
 
-      const result = await EventPage.for(event.slug).get();
+      const result = await EventPage.of(event.slug).get();
 
       expect(result).toEqual({
         id: event.id,
@@ -52,7 +52,7 @@ describe('EventPage', () => {
     });
 
     it('throws an error when event not found', async () => {
-      await expect(EventPage.for('XXX').get()).rejects.toThrowError(EventNotFoundError);
+      await expect(EventPage.of('XXX').get()).rejects.toThrowError(EventNotFoundError);
     });
   });
 });

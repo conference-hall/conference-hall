@@ -17,7 +17,7 @@ import { useProposalReview } from './_layout.tsx';
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   await requireSession(request);
   invariant(params.event, 'Invalid event slug');
-  const event = await EventPage.for(params.event).get();
+  const event = await EventPage.of(params.event).get();
   return json(event);
 };
 

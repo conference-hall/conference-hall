@@ -9,7 +9,7 @@ import { Card } from '~/design-system/layouts/Card.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { H3, Subtitle } from '~/design-system/Typography.tsx';
-import { TalksLibrary } from '~/domains/speaker/TalksLibrary.ts';
+import { TalksLibrary } from '~/domains/talk-library/TalksLibrary';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';

@@ -13,7 +13,7 @@ import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
 import { Pagination } from '~/design-system/Pagination.tsx';
 import { H3, Subtitle } from '~/design-system/Typography.tsx';
 import { parseUrlPage } from '~/domains/shared/Pagination.ts';
-import { MyTeamMembers, parseUrlFilters } from '~/domains/team/MyTeamMembers.ts';
+import { parseUrlFilters, TeamMembers } from '~/domains/team-management/TeamMembers.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { useUser } from '~/root.tsx';
@@ -28,7 +28,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const filters = parseUrlFilters(request.url);
   const page = parseUrlPage(request.url);
 
-  const members = await MyTeamMembers.for(userId, params.team).list(filters, page);
+  const members = await TeamMembers.for(userId, params.team).list(filters, page);
   return json(members);
 };
 
@@ -40,7 +40,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const action = form.get('_action')!;
   const memberId = String(form.get('_memberId'))!;
 
-  const members = MyTeamMembers.for(userId, params.team);
+  const members = TeamMembers.for(userId, params.team);
   switch (action) {
     case 'change-role': {
       await members.changeRole(memberId, form.get('memberRole') as TeamRole);

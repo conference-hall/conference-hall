@@ -8,11 +8,11 @@ import { userFactory } from 'tests/factories/users';
 import { ProposalNotFoundError } from '~/libs/errors';
 import { SpeakerProposalStatus } from '~/routes/__server/proposals/get-speaker-proposal-status';
 
-import { SpeakerProposal } from './SpeakerProposal';
+import { UserProposal } from './UserProposal';
 
-describe('SpeakerProposal', () => {
+describe('UserProposal', () => {
   describe('#get', () => {
-    it('returns event proposals of the speaker', async () => {
+    it('returns an event proposal submitted by the user', async () => {
       const event = await eventFactory({ traits: ['conference-cfp-open'] });
       const format = await eventFormatFactory({ event });
       const category = await eventCategoryFactory({ event });
@@ -21,7 +21,7 @@ describe('SpeakerProposal', () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk, formats: [format], categories: [category] });
 
-      const result = await SpeakerProposal.for(speaker.id, proposal.id).get();
+      const result = await UserProposal.for(speaker.id, proposal.id).get();
 
       expect(result).toEqual({
         id: proposal.id,
@@ -48,21 +48,21 @@ describe('SpeakerProposal', () => {
       });
     });
 
-    it('throws an error when proposal does not exist', async () => {
+    it('throws an error when the proposal does not exist', async () => {
       const speaker = await userFactory();
 
-      const speakerProposal = SpeakerProposal.for(speaker.id, 'XXX');
+      const speakerProposal = UserProposal.for(speaker.id, 'XXX');
       await expect(speakerProposal.get()).rejects.toThrowError(ProposalNotFoundError);
     });
 
-    it('throws an error when proposal does not belong to the user', async () => {
+    it('throws an error when the proposal does not belong to the user', async () => {
       const event = await eventFactory();
       const speaker = await userFactory();
       const otherSpeaker = await userFactory();
       const talk = await talkFactory({ speakers: [otherSpeaker] });
       const proposal = await proposalFactory({ event, talk });
 
-      const speakerProposal = SpeakerProposal.for(speaker.id, proposal.id);
+      const speakerProposal = UserProposal.for(speaker.id, proposal.id);
       await expect(speakerProposal.get()).rejects.toThrowError(ProposalNotFoundError);
     });
   });

@@ -8,10 +8,10 @@ import invariant from 'tiny-invariant';
 import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2 } from '~/design-system/Typography.tsx';
-import { TalksLibrary } from '~/domains/speaker/TalksLibrary.ts';
-import { TalkSaveSchema } from '~/domains/speaker/TalksLibrary.types.ts';
-import { EventSubmissionSteps } from '~/domains/submission-funnel/EventSubmissionSteps.ts';
+import { SubmissionSteps } from '~/domains/submission-funnel/SubmissionSteps';
 import { TalkSubmission } from '~/domains/submission-funnel/TalkSubmission.ts';
+import { TalksLibrary } from '~/domains/talk-library/TalksLibrary';
+import { TalkSaveSchema } from '~/domains/talk-library/TalksLibrary.types';
 import { requireSession } from '~/libs/auth/session.ts';
 import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm.tsx';
 
@@ -43,7 +43,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const submission = TalkSubmission.for(speakerId, params.event);
   const proposal = await submission.saveDraft(params.talk, result.value);
 
-  const nextStep = await EventSubmissionSteps.nextStepFor('proposal', params.event, proposal.talkId);
+  const nextStep = await SubmissionSteps.nextStepFor('proposal', params.event, proposal.talkId);
   return redirect(nextStep.path);
 };
 

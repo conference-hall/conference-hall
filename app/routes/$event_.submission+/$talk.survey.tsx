@@ -8,7 +8,7 @@ import invariant from 'tiny-invariant';
 import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2 } from '~/design-system/Typography.tsx';
-import { EventSubmissionSteps } from '~/domains/submission-funnel/EventSubmissionSteps';
+import { SubmissionSteps } from '~/domains/submission-funnel/SubmissionSteps';
 import { requireSession } from '~/libs/auth/session.ts';
 import { SurveyForm } from '~/routes/__components/proposals/forms/SurveyForm.tsx';
 import { getAnswers } from '~/routes/__server/survey/get-answers.server.ts';
@@ -39,7 +39,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   await saveSurvey(userId, params.event, result.value);
 
-  const nextStep = await EventSubmissionSteps.nextStepFor('survey', params.event, params.talk);
+  const nextStep = await SubmissionSteps.nextStepFor('survey', params.event, params.talk);
   return redirect(nextStep.path);
 };
 

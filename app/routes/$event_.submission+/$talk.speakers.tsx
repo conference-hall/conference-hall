@@ -10,9 +10,9 @@ import { MarkdownTextArea } from '~/design-system/forms/MarkdownTextArea.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { ExternalLink } from '~/design-system/Links.tsx';
 import { H2, Subtitle, Text } from '~/design-system/Typography.tsx';
-import { SpeakerProfile } from '~/domains/speaker/SpeakerProfile.ts';
-import { DetailsSchema } from '~/domains/speaker/SpeakerProfile.types.ts';
-import { EventSubmissionSteps } from '~/domains/submission-funnel/EventSubmissionSteps';
+import { SpeakerProfile } from '~/domains/speaker-profile/SpeakerProfile';
+import { DetailsSchema } from '~/domains/speaker-profile/SpeakerProfile.types';
+import { SubmissionSteps } from '~/domains/submission-funnel/SubmissionSteps';
 import { requireSession } from '~/libs/auth/session.ts';
 import { CoSpeakersList, InviteCoSpeakerButton } from '~/routes/__components/proposals/forms/CoSpeaker.tsx';
 import { getSubmittedProposal } from '~/routes/__server/proposals/get-submitted-proposal.server.ts';
@@ -51,7 +51,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     await SpeakerProfile.for(userId).save(result.value);
   }
 
-  const nextStep = await EventSubmissionSteps.nextStepFor('speakers', params.event, params.talk);
+  const nextStep = await SubmissionSteps.nextStepFor('speakers', params.event, params.talk);
   return redirect(nextStep.path);
 };
 

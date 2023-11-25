@@ -7,8 +7,8 @@ import { ButtonLink } from '~/design-system/Buttons.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { parseUrlPage } from '~/domains/shared/Pagination.ts';
-import { SpeakerActivities } from '~/domains/speaker/SpeakerActivities.ts';
-import { SpeakerProfile } from '~/domains/speaker/SpeakerProfile.ts';
+import { SpeakerActivities } from '~/domains/speaker-activities/SpeakerActivities.ts';
+import { SpeakerProfile } from '~/domains/speaker-profile/SpeakerProfile.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 

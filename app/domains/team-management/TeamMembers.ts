@@ -6,16 +6,16 @@ import { db } from '~/libs/db';
 import { ForbiddenOperationError } from '~/libs/errors';
 
 import { Pagination } from '../shared/Pagination';
-import { MyTeam } from './MyTeam';
+import { UserTeam } from './UserTeam';
 
 export const MembersFiltersSchema = z.object({ query: z.string().trim().optional() });
 
-export class MyTeamMembers {
-  constructor(private team: MyTeam) {}
+export class TeamMembers {
+  constructor(private team: UserTeam) {}
 
   static for(userId: string, slug: string) {
-    const team = MyTeam.for(userId, slug);
-    return new MyTeamMembers(team);
+    const team = UserTeam.for(userId, slug);
+    return new TeamMembers(team);
   }
 
   async list(filters: z.infer<typeof MembersFiltersSchema>, page: number) {

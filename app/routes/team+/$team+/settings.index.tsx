@@ -7,7 +7,7 @@ import invariant from 'tiny-invariant';
 import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2, Subtitle } from '~/design-system/Typography.tsx';
-import { MyTeam, TeamUpdateSchema } from '~/domains/team/MyTeam.ts';
+import { TeamUpdateSchema, UserTeam } from '~/domains/team-management/UserTeam.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast } from '~/libs/toasts/toast.server.ts';
 import { TeamForm } from '~/routes/__components/teams/TeamForm.tsx';
@@ -28,7 +28,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   if (!result.value) return json(result.error);
 
   try {
-    const team = await MyTeam.for(userId, params.team).updateSettings(result.value);
+    const team = await UserTeam.for(userId, params.team).updateSettings(result.value);
     return redirectWithToast(`/team/${team.slug}/settings`, 'success', 'Team settings saved.');
   } catch (SlugAlreadyExistsError) {
     return json({ slug: 'This URL already exists, please try another one.' });

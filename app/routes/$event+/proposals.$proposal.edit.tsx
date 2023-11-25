@@ -10,7 +10,7 @@ import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { H3, Subtitle } from '~/design-system/Typography.tsx';
 import { EventPage } from '~/domains/event-page/EventPage.ts';
-import { SpeakerProposal } from '~/domains/speaker-proposals/SpeakerProposal.ts';
+import { UserProposal } from '~/domains/submissions-management/UserProposal.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
 import { CoSpeakersList, InviteCoSpeakerButton } from '~/routes/__components/proposals/forms/CoSpeaker.tsx';
@@ -25,7 +25,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.proposal, 'Invalid proposal id');
 
-  const proposal = await SpeakerProposal.for(userId, params.proposal).get();
+  const proposal = await UserProposal.for(userId, params.proposal).get();
   return json(proposal);
 };
 
@@ -44,7 +44,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       return toast('success', 'Co-speaker removed from proposal.');
     }
     case 'edit-proposal': {
-      const { formatsRequired, categoriesRequired } = await EventPage.for(params.event).get();
+      const { formatsRequired, categoriesRequired } = await EventPage.of(params.event).get();
       const result = parse(form, { schema: getProposalUpdateSchema(formatsRequired, categoriesRequired) });
       if (!result.value) return json(result.error);
 

@@ -4,14 +4,14 @@ import { getSpeakerProposalStatus } from '~/routes/__server/proposals/get-speake
 
 import { InvitationLink } from '../shared/InvitationLink';
 
-export class SpeakerProposal {
+export class UserProposal {
   constructor(
     private speakerId: string,
     private proposalId: string,
   ) {}
 
   static for(speakerId: string, proposalId: string) {
-    return new SpeakerProposal(speakerId, proposalId);
+    return new UserProposal(speakerId, proposalId);
   }
 
   async get() {

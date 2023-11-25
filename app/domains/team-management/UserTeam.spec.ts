@@ -5,9 +5,9 @@ import { userFactory } from 'tests/factories/users.ts';
 import { config } from '~/libs/config.ts';
 import { ForbiddenOperationError, SlugAlreadyExistsError } from '~/libs/errors.ts';
 
-import { MyTeam, TeamUpdateSchema } from './MyTeam';
+import { TeamUpdateSchema, UserTeam } from './UserTeam';
 
-describe('MyTeam', () => {
+describe('UserTeam', () => {
   let user: User;
 
   beforeEach(async () => {
@@ -18,7 +18,7 @@ describe('MyTeam', () => {
     it('returns the member info if allowed for the team', async () => {
       const team = await teamFactory({ owners: [user] });
 
-      const member = await MyTeam.for(user.id, team.slug).allowedFor(['OWNER']);
+      const member = await UserTeam.for(user.id, team.slug).allowedFor(['OWNER']);
 
       expect(member.memberId).toEqual(user.id);
       expect(member.teamId).toEqual(team.id);
@@ -27,18 +27,22 @@ describe('MyTeam', () => {
 
     it('throws an error if user role is not in the accepted role list', async () => {
       const team = await teamFactory({ members: [user] });
-      await expect(MyTeam.for(user.id, team.slug).allowedFor(['OWNER'])).rejects.toThrowError(ForbiddenOperationError);
+      await expect(UserTeam.for(user.id, team.slug).allowedFor(['OWNER'])).rejects.toThrowError(
+        ForbiddenOperationError,
+      );
     });
 
     it('throws an error if user has access to another team but not the given one', async () => {
       const team = await teamFactory();
       await teamFactory({ owners: [user] });
-      await expect(MyTeam.for(user.id, team.slug).allowedFor(['OWNER'])).rejects.toThrowError(ForbiddenOperationError);
+      await expect(UserTeam.for(user.id, team.slug).allowedFor(['OWNER'])).rejects.toThrowError(
+        ForbiddenOperationError,
+      );
     });
 
     it('throws an error if team does not exist', async () => {
       await teamFactory({ owners: [user] });
-      await expect(MyTeam.for(user.id, 'XXX').allowedFor(['OWNER'])).rejects.toThrowError(ForbiddenOperationError);
+      await expect(UserTeam.for(user.id, 'XXX').allowedFor(['OWNER'])).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
@@ -47,7 +51,7 @@ describe('MyTeam', () => {
       await teamFactory({ owners: [user], attributes: { name: 'My team 1', slug: 'my-team1' } });
       const team = await teamFactory({ members: [user], attributes: { name: 'My team 2', slug: 'my-team2' } });
 
-      const myTeam = await MyTeam.for(user.id, team.slug).get();
+      const myTeam = await UserTeam.for(user.id, team.slug).get();
 
       expect(myTeam).toEqual({
         id: team.id,
@@ -60,11 +64,11 @@ describe('MyTeam', () => {
 
     it('throws an error when user is not member of the team', async () => {
       const team = await teamFactory({ attributes: { name: 'My team', slug: 'my-team' } });
-      await expect(MyTeam.for(user.id, team.slug).get()).rejects.toThrowError(ForbiddenOperationError);
+      await expect(UserTeam.for(user.id, team.slug).get()).rejects.toThrowError(ForbiddenOperationError);
     });
 
     it('throws an error when team not found', async () => {
-      await expect(MyTeam.for(user.id, 'XXX').get()).rejects.toThrowError(ForbiddenOperationError);
+      await expect(UserTeam.for(user.id, 'XXX').get()).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
@@ -75,11 +79,11 @@ describe('MyTeam', () => {
         owners: [user],
       });
 
-      let result = await MyTeam.for(user.id, team.slug).updateSettings({ name: 'name', slug: 'slug' });
+      let result = await UserTeam.for(user.id, team.slug).updateSettings({ name: 'name', slug: 'slug' });
       expect(result.name).toEqual('name');
       expect(result.slug).toEqual('slug');
 
-      result = await MyTeam.for(user.id, result.slug).updateSettings({ name: 'name 2', slug: 'slug' });
+      result = await UserTeam.for(user.id, result.slug).updateSettings({ name: 'name 2', slug: 'slug' });
       expect(result.name).toEqual('name 2');
       expect(result.slug).toEqual('slug');
     });
@@ -87,9 +91,9 @@ describe('MyTeam', () => {
     it('throws an error if user is not owner', async () => {
       const team = await teamFactory({ members: [user] });
 
-      await expect(MyTeam.for(user.id, team.slug).updateSettings({ name: 'name', slug: 'slug' })).rejects.toThrowError(
-        ForbiddenOperationError,
-      );
+      await expect(
+        UserTeam.for(user.id, team.slug).updateSettings({ name: 'name', slug: 'slug' }),
+      ).rejects.toThrowError(ForbiddenOperationError);
     });
 
     it('throws an error if the slug already exists', async () => {
@@ -97,7 +101,7 @@ describe('MyTeam', () => {
       await teamFactory({ attributes: { slug: 'hello-world-exist' }, owners: [user] });
 
       await expect(
-        MyTeam.for(user.id, team.slug).updateSettings({ name: 'Hello world', slug: 'hello-world-exist' }),
+        UserTeam.for(user.id, team.slug).updateSettings({ name: 'Hello world', slug: 'hello-world-exist' }),
       ).rejects.toThrowError(SlugAlreadyExistsError);
     });
   });

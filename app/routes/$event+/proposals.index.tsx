@@ -6,7 +6,7 @@ import invariant from 'tiny-invariant';
 import { ButtonLink } from '~/design-system/Buttons.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
-import { SpeakerProposals } from '~/domains/speaker-proposals/SpeakerProposals.ts';
+import { Submissions } from '~/domains/submissions-management/Submissions.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 
 import { ProposalsList } from './__components/ProposalsList.tsx';
@@ -16,7 +16,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
 
-  const proposals = await SpeakerProposals.for(userId, params.event).list();
+  const proposals = await Submissions.for(userId, params.event).list();
   return json(proposals);
 };
 

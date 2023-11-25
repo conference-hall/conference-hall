@@ -6,7 +6,7 @@ import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
 
-import { SpeakerProposal } from '~/domains/speaker-proposals/SpeakerProposal.ts';
+import { UserProposal } from '~/domains/submissions-management/UserProposal.ts';
 import { CfpNotOpenError, EventNotFoundError, ProposalNotFoundError } from '~/libs/errors.ts';
 
 import { updateProposal } from './update-proposal.server.ts';
@@ -33,7 +33,7 @@ describe('#updateProposal', () => {
 
     await updateProposal(event.slug, proposal.id, speaker.id, data);
 
-    const result = await SpeakerProposal.for(speaker.id, proposal.id).get();
+    const result = await UserProposal.for(speaker.id, proposal.id).get();
 
     expect(result.title).toEqual(data.title);
     expect(result.abstract).toEqual(data.abstract);

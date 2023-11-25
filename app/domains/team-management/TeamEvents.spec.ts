@@ -6,9 +6,9 @@ import { userFactory } from 'tests/factories/users.ts';
 import { db } from '~/libs/db';
 import { ForbiddenOperationError, SlugAlreadyExistsError } from '~/libs/errors.ts';
 
-import { EventCreateSchema, MyTeamEvents } from './MyTeamEvents';
+import { EventCreateSchema, TeamEvents } from './TeamEvents';
 
-describe('MyTeamEvents', () => {
+describe('TeamEvents', () => {
   let user: User;
 
   beforeEach(async () => {
@@ -24,7 +24,7 @@ describe('MyTeamEvents', () => {
       const team2 = await teamFactory({ owners: [user] });
       await eventFactory({ traits: ['conference-cfp-open'], team: team2 });
 
-      const events = await MyTeamEvents.for(user.id, team.slug).list(false);
+      const events = await TeamEvents.for(user.id, team.slug).list(false);
 
       expect(events).toEqual([
         {
@@ -53,7 +53,7 @@ describe('MyTeamEvents', () => {
       const event = await eventFactory({ attributes: { name: 'B' }, team, traits: ['meetup', 'archived'] });
       await eventFactory({ attributes: { name: 'A' }, team, traits: ['conference'] });
 
-      const events = await MyTeamEvents.for(user.id, team.slug).list(true);
+      const events = await TeamEvents.for(user.id, team.slug).list(true);
 
       expect(events).toEqual([
         {
@@ -72,7 +72,7 @@ describe('MyTeamEvents', () => {
       const team = await teamFactory({ attributes: { slug: 'my-team' } });
       await eventFactory({ team });
 
-      await expect(MyTeamEvents.for(user.id, team.slug).list(false)).rejects.toThrowError(ForbiddenOperationError);
+      await expect(TeamEvents.for(user.id, team.slug).list(false)).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
@@ -87,7 +87,7 @@ describe('MyTeamEvents', () => {
     });
 
     it('creates a new event into the team', async () => {
-      const created = await MyTeamEvents.for(owner.id, team.slug).create({
+      const created = await TeamEvents.for(owner.id, team.slug).create({
         type: 'CONFERENCE',
         name: 'Hello world',
         slug: 'hello-world',
@@ -109,7 +109,7 @@ describe('MyTeamEvents', () => {
       await eventFactory({ team, attributes: { slug: 'hello-world' } });
 
       await expect(
-        MyTeamEvents.for(owner.id, team.slug).create({
+        TeamEvents.for(owner.id, team.slug).create({
           type: 'CONFERENCE',
           name: 'Hello world',
           slug: 'hello-world',
@@ -120,7 +120,7 @@ describe('MyTeamEvents', () => {
 
     it('throws an error if user is not owner', async () => {
       await expect(
-        MyTeamEvents.for(reviewer.id, team.slug).create({
+        TeamEvents.for(reviewer.id, team.slug).create({
           type: 'CONFERENCE',
           name: 'Hello world',
           slug: 'hello-world',
@@ -132,7 +132,7 @@ describe('MyTeamEvents', () => {
     it('throws an error if user does not belong to event team', async () => {
       const user = await userFactory();
       await expect(
-        MyTeamEvents.for(user.id, team.slug).create({
+        TeamEvents.for(user.id, team.slug).create({
           type: 'CONFERENCE',
           name: 'Hello world',
           slug: 'hello-world',

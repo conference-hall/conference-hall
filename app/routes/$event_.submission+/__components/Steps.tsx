@@ -10,7 +10,7 @@ type Props = {
   currentStep?: string;
 };
 
-function SubmissionStepsMobile({ steps, currentStep }: Props) {
+function StepsMobile({ steps, currentStep }: Props) {
   const currentStepIdx = steps.findIndex((step) => step.key === currentStep);
 
   return (
@@ -45,7 +45,7 @@ function SubmissionStepsMobile({ steps, currentStep }: Props) {
   );
 }
 
-function SubmissionStepsDesktop({ steps, currentStep }: Props) {
+function StepsDesktop({ steps, currentStep }: Props) {
   const currentStepIdx = steps.findIndex((step) => step.key === currentStep);
 
   return (
@@ -111,11 +111,11 @@ function SubmissionStepsDesktop({ steps, currentStep }: Props) {
   );
 }
 
-export function SubmissionSteps(props: Props) {
+export function Steps(props: Props) {
   return (
     <>
-      <SubmissionStepsMobile {...props} />
-      <SubmissionStepsDesktop {...props} />
+      <StepsMobile {...props} />
+      <StepsDesktop {...props} />
     </>
   );
 }

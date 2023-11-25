@@ -5,8 +5,8 @@ import invariant from 'tiny-invariant';
 
 import { ProgressBar } from '~/design-system/ProgressBar.tsx';
 import { H2, Text } from '~/design-system/Typography.tsx';
-import { TalksLibrary } from '~/domains/speaker/TalksLibrary.ts';
-import { SpeakerProposals } from '~/domains/speaker-proposals/SpeakerProposals.ts';
+import { Submissions } from '~/domains/submissions-management/Submissions.ts';
+import { TalksLibrary } from '~/domains/talk-library/TalksLibrary.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { useEvent } from '~/routes/$event+/_layout.tsx';
 
@@ -20,7 +20,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const speakerId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
 
-  const speakerProposals = SpeakerProposals.for(speakerId, params.event);
+  const speakerProposals = Submissions.for(speakerId, params.event);
   const talkLibrary = TalksLibrary.of(speakerId);
 
   return json({

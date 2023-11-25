@@ -7,8 +7,12 @@ import { useActionData, useLoaderData } from '@remix-run/react';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { NavSideMenu } from '~/design-system/navigation/NavSideMenu.tsx';
-import { SpeakerProfile } from '~/domains/speaker/SpeakerProfile.ts';
-import { AdditionalInfoSchema, DetailsSchema, PersonalInfoSchema } from '~/domains/speaker/SpeakerProfile.types.ts';
+import { SpeakerProfile } from '~/domains/speaker-profile/SpeakerProfile.ts';
+import {
+  AdditionalInfoSchema,
+  DetailsSchema,
+  PersonalInfoSchema,
+} from '~/domains/speaker-profile/SpeakerProfile.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';

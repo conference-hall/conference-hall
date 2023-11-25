@@ -6,7 +6,7 @@ import { EventTypeSchema, EventVisibilitySchema } from '~/routes/__types/event';
 import { slugValidator } from '~/routes/__types/validators';
 import { getCfpState } from '~/utils/event';
 
-import { MyTeam } from './MyTeam';
+import { UserTeam } from './UserTeam';
 
 export const EventCreateSchema = z.object({
   name: z.string().trim().min(3).max(50),
@@ -15,12 +15,12 @@ export const EventCreateSchema = z.object({
   type: EventTypeSchema,
 });
 
-export class MyTeamEvents {
-  constructor(private team: MyTeam) {}
+export class TeamEvents {
+  constructor(private team: UserTeam) {}
 
   static for(userId: string, slug: string) {
-    const team = MyTeam.for(userId, slug);
-    return new MyTeamEvents(team);
+    const team = UserTeam.for(userId, slug);
+    return new TeamEvents(team);
   }
 
   async list(archived: boolean) {

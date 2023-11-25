@@ -8,7 +8,7 @@ import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { H2 } from '~/design-system/Typography.tsx';
-import { Notifications } from '~/domains/notifications/Notifications';
+import { Notifications } from '~/domains/user-notifications/Notifications';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { useUser } from '~/root.tsx';

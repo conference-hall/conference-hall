@@ -1,14 +1,14 @@
 import { db } from '~/libs/db';
 import { getSpeakerProposalStatus } from '~/routes/__server/proposals/get-speaker-proposal-status';
 
-export class SpeakerProposals {
+export class Submissions {
   constructor(
     private speakerId: string,
     private eventSlug: string,
   ) {}
 
   static for(speakerId: string, eventSlug: string) {
-    return new SpeakerProposals(speakerId, eventSlug);
+    return new Submissions(speakerId, eventSlug);
   }
 
   async count() {

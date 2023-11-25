@@ -7,21 +7,21 @@ import { slugValidator } from '~/routes/__types/validators';
 
 import { InvitationLink } from '../shared/InvitationLink';
 
-export type Team = Awaited<ReturnType<typeof MyTeam.prototype.get>>;
+export type Team = Awaited<ReturnType<typeof UserTeam.prototype.get>>;
 
 export const TeamUpdateSchema = z.object({
   name: z.string().trim().min(3).max(50),
   slug: slugValidator,
 });
 
-export class MyTeam {
+export class UserTeam {
   constructor(
     public userId: string,
     public slug: string,
   ) {}
 
   static for(userId: string, slug: string) {
-    return new MyTeam(userId, slug);
+    return new UserTeam(userId, slug);
   }
 
   async allowedFor(roles: TeamRole[]) {

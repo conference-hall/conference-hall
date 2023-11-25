@@ -6,7 +6,7 @@ type Step = { key: string; name: string; path: string; form?: string; enabled: b
 type SubmissionStepsInputs = { eventSlug: string; talkSlug?: string; hasSurvey: boolean; hasTracks: boolean };
 
 // TODO: Add tests
-export class EventSubmissionSteps {
+export class SubmissionSteps {
   constructor(private inputs: SubmissionStepsInputs) {}
 
   static async for(eventSlug: string, talkSlug?: string) {
@@ -16,7 +16,7 @@ export class EventSubmissionSteps {
     });
     if (!settings) throw new EventNotFoundError();
 
-    return new EventSubmissionSteps({
+    return new SubmissionSteps({
       eventSlug,
       talkSlug,
       hasSurvey: settings?.surveyEnabled ?? false,
@@ -25,7 +25,7 @@ export class EventSubmissionSteps {
   }
 
   static async nextStepFor(currentStepKey: string, eventSlug: string, talkSlug: string) {
-    const submissionSteps = await EventSubmissionSteps.for(eventSlug, talkSlug);
+    const submissionSteps = await SubmissionSteps.for(eventSlug, talkSlug);
     return submissionSteps.getNextStep(currentStepKey);
   }
 

@@ -1,8 +1,8 @@
 import { db } from '~/libs/db';
 
-import { Notifications } from '../notifications/Notifications';
-import { TeamBetaAccess } from '../team/TeamBetaAccess';
-import { UserTeams } from '../team/UserTeams';
+import { TeamBetaAccess } from '../team-management/TeamBetaAccess';
+import { UserTeams } from '../team-management/UserTeams';
+import { Notifications } from '../user-notifications/Notifications';
 
 export type UserInfoData = Awaited<ReturnType<typeof UserInfo.get>>;
 
