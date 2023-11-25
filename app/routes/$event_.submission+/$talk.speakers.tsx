@@ -12,9 +12,9 @@ import { ExternalLink } from '~/design-system/Links.tsx';
 import { H2, Subtitle, Text } from '~/design-system/Typography.tsx';
 import { SpeakerProfile } from '~/domains/speaker/SpeakerProfile.ts';
 import { DetailsSchema } from '~/domains/speaker/SpeakerProfile.types.ts';
+import { EventSubmissionSettings } from '~/domains/submission-funnel/EventSubmissionSettings.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { CoSpeakersList, InviteCoSpeakerButton } from '~/routes/__components/proposals/forms/CoSpeaker.tsx';
-import { getEvent } from '~/routes/__server/events/get-event.server.ts';
 import { getSubmittedProposal } from '~/routes/__server/proposals/get-submitted-proposal.server.ts';
 import { removeCoSpeakerFromSubmission } from '~/routes/__server/proposals/remove-co-speaker.server.ts';
 
@@ -54,10 +54,10 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   if (!result.value) return json(result.error);
   await SpeakerProfile.for(userId).save(result.value);
 
-  const event = await getEvent(params.event);
-  if (event.hasTracks) {
+  const settings = EventSubmissionSettings.for(params.event);
+  if (await settings.hasTracks()) {
     return redirect(`/${params.event}/submission/${params.talk}/tracks`);
-  } else if (event.surveyEnabled) {
+  } else if (await settings.hasSurvey()) {
     return redirect(`/${params.event}/submission/${params.talk}/survey`);
   } else {
     return redirect(`/${params.event}/submission/${params.talk}/submit`);

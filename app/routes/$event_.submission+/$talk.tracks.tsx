@@ -9,10 +9,10 @@ import { AlertError } from '~/design-system/Alerts.tsx';
 import { Button, ButtonLink } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2 } from '~/design-system/Typography.tsx';
+import { EventPage } from '~/domains/event-page/EventPage.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { CategoriesForm } from '~/routes/__components/proposals/forms/CategoriesForm.tsx';
 import { FormatsForm } from '~/routes/__components/proposals/forms/FormatsForm.tsx';
-import { getEvent } from '~/routes/__server/events/get-event.server.ts';
 import { getSubmittedProposal } from '~/routes/__server/proposals/get-submitted-proposal.server.ts';
 import { useEvent } from '~/routes/$event+/_layout.tsx';
 
@@ -36,7 +36,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   invariant(params.event, 'Invalid event slug');
   invariant(params.talk, 'Invalid talk id');
 
-  const { id, surveyEnabled, formatsRequired, categoriesRequired } = await getEvent(params.event);
+  const { id, surveyEnabled, formatsRequired, categoriesRequired } = await EventPage.for(params.event).get();
 
   const result = parse(form, { schema: getTracksSchema(formatsRequired, categoriesRequired) });
   if (!result.value) return json(result.error);

@@ -3,13 +3,13 @@ import { json } from '@remix-run/node';
 import { Outlet, useLoaderData, useOutletContext } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
+import type { EventData } from '~/domains/event-page/EventPage.ts';
+import { EventPage } from '~/domains/event-page/EventPage.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { eventSocialCard } from '~/libs/meta/social-cards.ts';
 import { useUser } from '~/root.tsx';
 import { Footer } from '~/routes/__components/Footer.tsx';
 import { Navbar } from '~/routes/__components/navbar/Navbar.tsx';
-import type { Event } from '~/routes/__server/events/get-event.server.ts';
-import { getEvent } from '~/routes/__server/events/get-event.server.ts';
 
 import { EventHeader } from './__components/EventHeader.tsx';
 import { EventTabs } from './__components/EventTabs.tsx';
@@ -22,7 +22,7 @@ export const meta = mergeMeta<typeof loader>(
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   invariant(params.event, 'Invalid event slug');
 
-  const event = await getEvent(params.event);
+  const event = await EventPage.for(params.event).get();
   return json(event);
 };
 
@@ -54,5 +54,5 @@ export default function EventRoute() {
 }
 
 export function useEvent() {
-  return useOutletContext<{ event: Event }>();
+  return useOutletContext<{ event: EventData }>();
 }

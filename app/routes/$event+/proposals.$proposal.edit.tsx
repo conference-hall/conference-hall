@@ -9,11 +9,11 @@ import { Card } from '~/design-system/layouts/Card.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { H3, Subtitle } from '~/design-system/Typography.tsx';
+import { EventSubmissionSettings } from '~/domains/submission-funnel/EventSubmissionSettings.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
 import { CoSpeakersList, InviteCoSpeakerButton } from '~/routes/__components/proposals/forms/CoSpeaker.tsx';
 import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm.tsx';
-import { getEvent } from '~/routes/__server/events/get-event.server.ts';
 import { getSpeakerProposal } from '~/routes/__server/proposals/get-speaker-proposal.server.ts';
 import { removeCoSpeakerFromProposal } from '~/routes/__server/proposals/remove-co-speaker.server.ts';
 import { getProposalUpdateSchema } from '~/routes/__types/proposal.ts';
@@ -44,8 +44,10 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       return toast('success', 'Co-speaker removed from proposal.');
     }
     case 'edit-proposal': {
-      const { formatsRequired, categoriesRequired } = await getEvent(params.event);
-      const result = parse(form, { schema: getProposalUpdateSchema(formatsRequired, categoriesRequired) });
+      const tracks = await EventSubmissionSettings.for(params.event).tracksRequired();
+      const result = parse(form, {
+        schema: getProposalUpdateSchema(tracks.formatsRequired, tracks.categoriesRequired),
+      });
       if (!result.value) return json(result.error);
 
       await updateProposal(params.event, params.proposal, userId, result.value);

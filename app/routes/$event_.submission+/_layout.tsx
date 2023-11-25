@@ -7,13 +7,13 @@ import invariant from 'tiny-invariant';
 import { IconButtonLink } from '~/design-system/IconButtons.tsx';
 import { Container } from '~/design-system/layouts/Container.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
+import { EventPage } from '~/domains/event-page/EventPage.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { CfpNotOpenError } from '~/libs/errors.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { eventSocialCard } from '~/libs/meta/social-cards.ts';
 import { useUser } from '~/root.tsx';
 import { Navbar } from '~/routes/__components/navbar/Navbar.tsx';
-import { getEvent } from '~/routes/__server/events/get-event.server.ts';
 
 import { SubmissionSteps } from './__components/SubmissionSteps.tsx';
 import { useSubmissionStep } from './__components/useSubmissionStep.ts';
@@ -31,7 +31,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   await requireSession(request);
   invariant(params.event, 'Invalid event slug');
 
-  const event = await getEvent(params.event);
+  const event = await EventPage.for(params.event).get();
   if (!event.isCfpOpen) throw new CfpNotOpenError();
 
   const steps: Array<Step> = [
