@@ -234,15 +234,15 @@ describe('TalkSubmission', () => {
       const result = await db.proposal.findUnique({ where: { id: proposal.id } });
       expect(result?.status).toEqual('SUBMITTED');
 
-      // await expect(speaker.email).toHaveEmail({
-      //   from: { name: event.name, address: 'no-reply@conference-hall.io' },
-      //   subject: `[${event.name}] Submission confirmed`,
-      // });
+      await expect(speaker.email).toHaveEmail({
+        from: { name: event.name, address: 'no-reply@conference-hall.io' },
+        subject: `[${event.name}] Submission confirmed`,
+      });
 
-      // await expect(event.emailOrganizer).toHaveEmail({
-      //   from: { name: event.name, address: 'no-reply@conference-hall.io' },
-      //   subject: `[${event.name}] New proposal received`,
-      // });
+      await expect(event.emailOrganizer).toHaveEmail({
+        from: { name: event.name, address: 'no-reply@conference-hall.io' },
+        subject: `[${event.name}] New proposal received`,
+      });
 
       // TODO: test slack message
     });

@@ -7,12 +7,11 @@ import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { H1, Text } from '~/design-system/Typography.tsx';
+import { TeamMemberInvite } from '~/domains/team-management/TeamMemberInvite.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { useUser } from '~/root.tsx';
 import { Navbar } from '~/routes/__components/navbar/Navbar.tsx';
-
-import { addMember, checkTeamInviteCode } from './__server/invite-team.server.ts';
 
 export const meta = mergeMeta(() => [{ title: 'Team invitation | Conference Hall' }]);
 
@@ -20,15 +19,15 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   await requireSession(request);
   invariant(params.code, 'Invalid code');
 
-  const team = await checkTeamInviteCode(params.code);
-  return json(team);
+  const team = await TeamMemberInvite.with(params.code).check();
+  return json({ name: team.name });
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
   const userId = await requireSession(request);
   invariant(params.code, 'Invalid code');
 
-  const team = await addMember(params.code, userId);
+  const team = await TeamMemberInvite.with(params.code).addMember(userId);
   return redirect(`/team/${team.slug}`);
 };
 

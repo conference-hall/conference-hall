@@ -5,6 +5,9 @@ import type { TalkSaveData } from '~/routes/__types/talks';
 import { CallForPaper } from '../shared/CallForPaper';
 import { InvitationLink } from '../shared/InvitationLink';
 import { TalksLibrary } from '../talk-library/TalksLibrary';
+import { ProposalReceivedEmail } from './emails/proposal-received-email';
+import { ProposalSubmittedEmail } from './emails/proposal-submitted-email';
+import { sendSubmittedTalkSlackMessage } from './slack/slack.services';
 import type { TrackUpdateData } from './TalkSubmission.types';
 
 export class TalkSubmission {
@@ -85,19 +88,19 @@ export class TalkSubmission {
     }
 
     const proposal = await db.proposal.findFirst({
-      select: { id: true },
       where: { talkId, event: { slug: this.eventSlug }, speakers: { some: { id: this.speakerId } } },
+      include: { event: true, speakers: true },
     });
     if (!proposal) throw new ProposalNotFoundError();
 
     await db.proposal.update({ data: { status: 'SUBMITTED' }, where: { id: proposal.id } });
 
-    // await ProposalSubmittedEmail.send(event, proposal);
-    // await ProposalReceivedEmail.send(event, proposal);
+    await ProposalSubmittedEmail.send(proposal.event, proposal);
+    await ProposalReceivedEmail.send(proposal.event, proposal);
 
-    // if (event.slackWebhookUrl) {
-    //   await sendSubmittedTalkSlackMessage(cfp.eventId, proposal.id);
-    // }
+    if (proposal.event.slackWebhookUrl) {
+      await sendSubmittedTalkSlackMessage(cfp.eventId, proposal.id);
+    }
   }
 
   async get(talkId: string) {
