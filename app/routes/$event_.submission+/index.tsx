@@ -5,22 +5,29 @@ import invariant from 'tiny-invariant';
 
 import { ProgressBar } from '~/design-system/ProgressBar.tsx';
 import { H2, Text } from '~/design-system/Typography.tsx';
+import { Submissions } from '~/domains/cfp-submissions/Submissions.ts';
+import { TalksLibrary } from '~/domains/speaker-talks-library/TalksLibrary.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { useEvent } from '~/routes/$event+/_layout.tsx';
 
 import { MaxProposalsReached } from './__components/MaxProposalsReached.tsx';
 import { NewProposal } from './__components/NewProposal.tsx';
 import { SubmissionTalksList } from './__components/SubmissionTalksList.tsx';
-import { listTalksToSubmit } from './__server/list-talks-to-submit.server.ts';
 
 export const handle = { step: 'selection' };
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
-  const userId = await requireSession(request);
+  const speakerId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
 
-  const results = await listTalksToSubmit(userId, params.event);
-  return json(results);
+  const speakerProposals = Submissions.for(speakerId, params.event);
+  const talkLibrary = TalksLibrary.of(speakerId);
+
+  return json({
+    proposalsCount: await speakerProposals.count(),
+    drafts: await speakerProposals.drafts(),
+    talks: await talkLibrary.listForEvent(params.event),
+  });
 };
 
 export default function EventSubmitRoute() {

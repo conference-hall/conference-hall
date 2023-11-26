@@ -7,12 +7,11 @@ import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { H1, Text } from '~/design-system/Typography.tsx';
+import { CoSpeakerTalkInvite } from '~/domains/speaker-talks-library/CoSpeakerTalkInvite';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { useUser } from '~/root.tsx';
 import { Navbar } from '~/routes/__components/navbar/Navbar.tsx';
-
-import { addCoSpeakerToTalk, checkTalkInviteCode } from './__server/invite-talk.server.ts';
 
 export const meta = mergeMeta(() => [{ title: 'Talk invitation | Conference Hall' }]);
 
@@ -20,19 +19,15 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   await requireSession(request);
   invariant(params.code, 'Invalid code');
 
-  const talk = await checkTalkInviteCode(params.code);
-  if (!talk) throw new Response('Not found', { status: 404 });
-
-  return json(talk);
+  const talk = await CoSpeakerTalkInvite.with(params.code).check();
+  return json({ id: talk.id, title: talk.title });
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
   const userId = await requireSession(request);
   invariant(params.code, 'Invalid code');
 
-  const talk = await addCoSpeakerToTalk(params.code, userId);
-  if (!talk) throw new Response('Not found', { status: 404 });
-
+  const talk = await CoSpeakerTalkInvite.with(params.code).addCoSpeaker(userId);
   return redirect(`/speaker/talks/${talk.id}`);
 };
 

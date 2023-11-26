@@ -2,30 +2,27 @@ import { parse } from '@conform-to/zod';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import type { ActionFunction, LoaderFunctionArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
-import { Form, useLoaderData } from '@remix-run/react';
+import { Form, useLoaderData, useNavigate } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { Button, ButtonLink } from '~/design-system/Buttons.tsx';
+import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2 } from '~/design-system/Typography.tsx';
+import { SubmissionSteps } from '~/domains/cfp-submission-funnel/SubmissionSteps';
+import { CfpSurvey } from '~/domains/cfp-survey/CfpSurvey';
+import { SpeakerAnswers } from '~/domains/cfp-survey/SpeakerAnswers';
+import { SurveySchema } from '~/domains/cfp-survey/SpeakerAnswers.types';
 import { requireSession } from '~/libs/auth/session.ts';
 import { SurveyForm } from '~/routes/__components/proposals/forms/SurveyForm.tsx';
-import { getAnswers } from '~/routes/__server/survey/get-answers.server.ts';
-import { getQuestions } from '~/routes/__server/survey/get-questions.server.ts';
-import { saveSurvey } from '~/routes/__server/survey/save-survey.server.ts';
-import { SurveySchema } from '~/routes/__types/survey.ts';
-
-import { useSubmissionStep } from './__components/useSubmissionStep.ts';
 
 export const handle = { step: 'survey' };
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
-  invariant(params.talk, 'Invalid talk id');
 
-  const questions = await getQuestions(params.event);
-  const answers = await getAnswers(params.event, userId);
+  const questions = await CfpSurvey.of(params.event).questions();
+  const answers = await SpeakerAnswers.for(userId, params.event).answers();
   return json({ questions, answers });
 };
 
@@ -38,13 +35,15 @@ export const action: ActionFunction = async ({ request, params }) => {
   const result = parse(form, { schema: SurveySchema });
   if (!result.value) return json(null);
 
-  await saveSurvey(userId, params.event, result.value);
-  return redirect(`/${params.event}/submission/${params.talk}/submit`);
+  await SpeakerAnswers.for(userId, params.event).save(result.value);
+
+  const nextStep = await SubmissionSteps.nextStepFor('survey', params.event, params.talk);
+  return redirect(nextStep.path);
 };
 
 export default function SubmissionSurveyRoute() {
+  const navigate = useNavigate();
   const { questions, answers } = useLoaderData<typeof loader>();
-  const { previousPath } = useSubmissionStep();
 
   return (
     <Card>
@@ -57,9 +56,9 @@ export default function SubmissionSurveyRoute() {
         </Form>
       </Card.Content>
       <Card.Actions>
-        <ButtonLink to={previousPath} variant="secondary">
+        <Button onClick={() => navigate(-1)} variant="secondary">
           Go back
-        </ButtonLink>
+        </Button>
         <Button type="submit" form="survey-form" iconRight={ArrowRightIcon}>
           Continue
         </Button>

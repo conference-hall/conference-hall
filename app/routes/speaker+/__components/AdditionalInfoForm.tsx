@@ -4,12 +4,11 @@ import { Button } from '~/design-system/Buttons.tsx';
 import { Input } from '~/design-system/forms/Input.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2, Subtitle } from '~/design-system/Typography.tsx';
-import type { UserSocialLinks } from '~/routes/__types/user.ts';
 
 type Props = {
   company: string | null;
   address: string | null;
-  socials: UserSocialLinks;
+  socials: { github: string | null; twitter: string | null };
   errors?: Record<string, string | string[]> | null;
 };
 

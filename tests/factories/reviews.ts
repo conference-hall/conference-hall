@@ -1,7 +1,7 @@
 import { type Prisma, type Proposal, ReviewFeeling, type User } from '@prisma/client';
 
+import { ReviewDetails } from '../../app/domains/organizer-cfp-reviews/ReviewDetails.ts';
 import { db } from '../../app/libs/db.ts';
-import { ReviewsDetails } from '../../app/routes/__server/reviews/reviews-details.ts';
 
 type FactoryOptions = {
   user: User;
@@ -27,7 +27,7 @@ export const reviewFactory = async (options: FactoryOptions) => {
   const reviews = await db.review.findMany({
     where: { proposalId: proposal.id, feeling: { not: ReviewFeeling.NO_OPINION } },
   });
-  const reviewsDetails = new ReviewsDetails(reviews);
+  const reviewsDetails = new ReviewDetails(reviews);
   const average = reviewsDetails.summary().average ?? undefined;
   await db.proposal.update({ where: { id: proposal.id }, data: { avgRateForSort: average } });
 

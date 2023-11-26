@@ -99,11 +99,11 @@ export function UserMenu({ email, name, picture, teams, isOrganizer, notificatio
                       ))}
 
                       {!isOrganizer ? (
-                        <MenuLink to="/team" icon={Square3Stack3DIcon} onClick={handleClose}>
+                        <MenuLink to="/team/request" icon={Square3Stack3DIcon} onClick={handleClose}>
                           Become organizer
                         </MenuLink>
                       ) : (
-                        <MenuLink to="/team" icon={PlusIcon} onClick={handleClose}>
+                        <MenuLink to="/team/new" icon={PlusIcon} onClick={handleClose}>
                           New team
                         </MenuLink>
                       )}

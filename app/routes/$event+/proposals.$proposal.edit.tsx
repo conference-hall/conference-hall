@@ -9,23 +9,21 @@ import { Card } from '~/design-system/layouts/Card.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { H3, Subtitle } from '~/design-system/Typography.tsx';
+import { UserProposal } from '~/domains/cfp-submissions/UserProposal.ts';
+import { getProposalUpdateSchema } from '~/domains/cfp-submissions/UserProposal.types.ts';
+import { EventPage } from '~/domains/event-page/EventPage.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
 import { CoSpeakersList, InviteCoSpeakerButton } from '~/routes/__components/proposals/forms/CoSpeaker.tsx';
 import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm.tsx';
-import { getEvent } from '~/routes/__server/events/get-event.server.ts';
-import { getSpeakerProposal } from '~/routes/__server/proposals/get-speaker-proposal.server.ts';
-import { removeCoSpeakerFromProposal } from '~/routes/__server/proposals/remove-co-speaker.server.ts';
-import { getProposalUpdateSchema } from '~/routes/__types/proposal.ts';
 
-import { updateProposal } from './__server/update-proposal.server.ts';
 import { useEvent } from './_layout.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.proposal, 'Invalid proposal id');
 
-  const proposal = await getSpeakerProposal(params.proposal, userId);
+  const proposal = await UserProposal.for(userId, params.proposal).get();
   return json(proposal);
 };
 
@@ -37,18 +35,19 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const form = await request.formData();
   const intent = form.get('intent');
 
+  const proposal = UserProposal.for(userId, params.proposal);
   switch (intent) {
     case 'remove-speaker': {
       const speakerId = form.get('_speakerId')?.toString() as string;
-      await removeCoSpeakerFromProposal(userId, params.proposal, speakerId);
+      await proposal.removeCoSpeaker(speakerId);
       return toast('success', 'Co-speaker removed from proposal.');
     }
     case 'edit-proposal': {
-      const { formatsRequired, categoriesRequired } = await getEvent(params.event);
+      const { formatsRequired, categoriesRequired } = await EventPage.of(params.event).get();
       const result = parse(form, { schema: getProposalUpdateSchema(formatsRequired, categoriesRequired) });
       if (!result.value) return json(result.error);
 
-      await updateProposal(params.event, params.proposal, userId, result.value);
+      await proposal.update(result.value);
       return redirectWithToast(`/${params.event}/proposals/${params.proposal}`, 'success', 'Proposal saved.');
     }
   }

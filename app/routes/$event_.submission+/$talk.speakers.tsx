@@ -2,24 +2,20 @@ import { parse } from '@conform-to/zod';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
-import { Form, useActionData, useLoaderData } from '@remix-run/react';
+import { Form, useActionData, useLoaderData, useNavigate } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { Button, ButtonLink } from '~/design-system/Buttons.tsx';
+import { Button } from '~/design-system/Buttons.tsx';
 import { MarkdownTextArea } from '~/design-system/forms/MarkdownTextArea.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { ExternalLink } from '~/design-system/Links.tsx';
 import { H2, Subtitle, Text } from '~/design-system/Typography.tsx';
+import { SubmissionSteps } from '~/domains/cfp-submission-funnel/SubmissionSteps';
+import { TalkSubmission } from '~/domains/cfp-submission-funnel/TalkSubmission';
+import { SpeakerProfile } from '~/domains/speaker-profile/SpeakerProfile';
+import { DetailsSchema } from '~/domains/speaker-profile/SpeakerProfile.types';
 import { requireSession } from '~/libs/auth/session.ts';
-import { useUser } from '~/root.tsx';
 import { CoSpeakersList, InviteCoSpeakerButton } from '~/routes/__components/proposals/forms/CoSpeaker.tsx';
-import { getEvent } from '~/routes/__server/events/get-event.server.ts';
-import { saveUserDetails } from '~/routes/__server/profile/save-profile.server.ts';
-import { getSubmittedProposal } from '~/routes/__server/proposals/get-submitted-proposal.server.ts';
-import { removeCoSpeakerFromSubmission } from '~/routes/__server/proposals/remove-co-speaker.server.ts';
-import { DetailsSchema } from '~/routes/__types/profile.schema.tsx';
-
-import { useSubmissionStep } from './__components/useSubmissionStep.ts';
 
 export const handle = { step: 'speakers' };
 
@@ -28,9 +24,10 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   invariant(params.event, 'Invalid event slug');
   invariant(params.talk, 'Invalid talk id');
 
-  const proposal = await getSubmittedProposal(params.talk, params.event, userId);
+  const speaker = await SpeakerProfile.for(userId).get();
+  const proposal = await TalkSubmission.for(userId, params.event).get(params.talk);
   return json({
-    proposalId: proposal.id,
+    speaker,
     invitationLink: proposal.invitationLink,
     speakers: proposal.speakers.filter((speaker) => speaker.id !== userId),
   });
@@ -45,29 +42,22 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const action = form.get('_action');
   if (action === 'remove-speaker') {
     const speakerId = form.get('_speakerId')?.toString() as string;
-    await removeCoSpeakerFromSubmission(userId, params.talk, params.event, speakerId);
+    await TalkSubmission.for(userId, params.event).removeCoSpeaker(params.talk, speakerId);
     return json(null);
-  }
-
-  const result = parse(form, { schema: DetailsSchema });
-  if (!result.value) return json(result.error);
-  await saveUserDetails(userId, result.value);
-
-  const event = await getEvent(params.event);
-  if (event.hasTracks) {
-    return redirect(`/${params.event}/submission/${params.talk}/tracks`);
-  } else if (event.surveyEnabled) {
-    return redirect(`/${params.event}/submission/${params.talk}/survey`);
   } else {
-    return redirect(`/${params.event}/submission/${params.talk}/submit`);
+    const result = parse(form, { schema: DetailsSchema });
+    if (!result.value) return json(result.error);
+    await SpeakerProfile.for(userId).save(result.value);
   }
+
+  const nextStep = await SubmissionSteps.nextStepFor('speakers', params.event, params.talk);
+  return redirect(nextStep.path);
 };
 
 export default function SubmissionSpeakerRoute() {
-  const { user } = useUser();
-  const { invitationLink, speakers } = useLoaderData<typeof loader>();
+  const navigate = useNavigate();
+  const { speaker, speakers, invitationLink } = useLoaderData<typeof loader>();
   const errors = useActionData<typeof action>();
-  const { previousPath } = useSubmissionStep();
 
   return (
     <Card>
@@ -81,14 +71,14 @@ export default function SubmissionSpeakerRoute() {
             label="Biography"
             rows={5}
             error={errors?.bio}
-            defaultValue={user?.bio || ''}
+            defaultValue={speaker.bio || ''}
             className="mb-3"
           />
           <Text variant="secondary">
             You can give more information about you from{' '}
             <ExternalLink href="/speaker/settings">the profile page.</ExternalLink>
           </Text>
-          <input type="hidden" name="references" value={user?.references || ''} />
+          <input type="hidden" name="references" value={speaker.references || ''} />
         </Form>
         <div className="mt-4">
           <H2>Co-speakers</H2>
@@ -100,9 +90,9 @@ export default function SubmissionSpeakerRoute() {
         </div>
       </Card.Content>
       <Card.Actions>
-        <ButtonLink to={previousPath} variant="secondary">
+        <Button onClick={() => navigate(-1)} variant="secondary">
           Go back
-        </ButtonLink>
+        </Button>
         <Button type="submit" form="speakers-form" iconRight={ArrowRightIcon}>
           Continue
         </Button>

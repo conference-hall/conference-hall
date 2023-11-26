@@ -17,18 +17,18 @@ import {
 } from '@remix-run/react';
 import type { ReactNode } from 'react';
 
-import { Container } from './design-system/layouts/Container.tsx';
-import { H1, Text } from './design-system/Typography.tsx';
-import { initializeFirebaseClient } from './libs/auth/firebase.ts';
-import { getSessionUserId } from './libs/auth/session.ts';
-import { config } from './libs/config.ts';
-import type { Toast } from './libs/toasts/toast.server.ts';
-import { getToast } from './libs/toasts/toast.server.ts';
-import { Toaster } from './libs/toasts/Toaster.tsx';
-import { GlobalLoading } from './routes/__components/GlobalLoading.tsx';
-import type { User } from './routes/__server/users/get-user.server.ts';
-import { getUser } from './routes/__server/users/get-user.server.ts';
-import { useNonce } from './utils/useNonce.ts';
+import { Container } from './design-system/layouts/Container';
+import { H1, Text } from './design-system/Typography';
+import type { UserInfoData } from './domains/user-registration/UserInfo';
+import { UserInfo } from './domains/user-registration/UserInfo';
+import { initializeFirebaseClient } from './libs/auth/firebase';
+import { getSessionUserId } from './libs/auth/session';
+import { config } from './libs/config';
+import { useNonce } from './libs/nonce/useNonce';
+import type { Toast } from './libs/toasts/toast.server';
+import { getToast } from './libs/toasts/toast.server';
+import { Toaster } from './libs/toasts/Toaster';
+import { GlobalLoading } from './routes/__components/GlobalLoading';
 
 export function meta() {
   return [
@@ -43,7 +43,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { toast, headers: toastHeaders } = await getToast(request);
 
   const userId = await getSessionUserId(request);
-  const user = await getUser(userId);
+  const user = await UserInfo.get(userId);
 
   return json(
     {
@@ -74,7 +74,7 @@ export default function App() {
 }
 
 export function useUser() {
-  return useOutletContext<{ user: User }>();
+  return useOutletContext<{ user: UserInfoData }>();
 }
 
 type DocumentProps = { children: ReactNode; toast?: Toast | null };

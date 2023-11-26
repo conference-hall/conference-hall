@@ -6,22 +6,20 @@ import invariant from 'tiny-invariant';
 
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
+import { UserProposal } from '~/domains/cfp-submissions/UserProposal.ts';
+import { ProposalParticipationSchema } from '~/domains/cfp-submissions/UserProposal.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
 import { ProposalDetailsSection } from '~/routes/__components/proposals/ProposalDetailsSection.tsx';
 import { ProposalStatusSection } from '~/routes/__components/proposals/ProposalStatusSection.tsx';
-import { getSpeakerProposal } from '~/routes/__server/proposals/get-speaker-proposal.server.ts';
-import { ProposalParticipationSchema } from '~/routes/__types/proposal.ts';
 
-import { deleteProposal } from './__server/delete-proposal.server.ts';
-import { sendParticipationAnswer } from './__server/send-participation-answer.server.ts';
 import { useEvent } from './_layout.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.proposal, 'Invalid proposal id');
 
-  const proposal = await getSpeakerProposal(params.proposal, userId);
+  const proposal = await UserProposal.for(userId, params.proposal).get();
   return json(proposal);
 };
 
@@ -29,18 +27,19 @@ export const action: ActionFunction = async ({ request, params }) => {
   const userId = await requireSession(request);
   invariant(params.proposal, 'Invalid proposal id');
 
+  const proposal = UserProposal.for(userId, params.proposal);
+
   const form = await request.formData();
   const action = form.get('_action');
-
   switch (action) {
     case 'delete': {
-      await deleteProposal(params.proposal, userId);
+      await proposal.delete();
       return redirectWithToast(`/${params.event}/proposals`, 'success', 'Proposal submission removed.');
     }
     case 'confirm': {
       const result = parse(form, { schema: ProposalParticipationSchema });
       if (!result.value) return null;
-      await sendParticipationAnswer(userId, params.proposal, result.value.participation);
+      await proposal.confirm(result.value.participation);
       return toast('success', 'Your response has been sent to organizers.');
     }
     default:

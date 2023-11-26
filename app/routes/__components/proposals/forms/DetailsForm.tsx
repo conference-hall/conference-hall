@@ -3,8 +3,8 @@ import { Input } from '~/design-system/forms/Input.tsx';
 import { MarkdownTextArea } from '~/design-system/forms/MarkdownTextArea.tsx';
 import MultiSelect from '~/design-system/forms/MultiSelect.tsx';
 import { Radio, RadioGroup } from '~/design-system/forms/RadioGroup.tsx';
-import { LANGUAGES } from '~/utils/languages.ts';
-import { LEVELS } from '~/utils/levels.ts';
+import { LANGUAGES } from '~/libs/formatters/languages.ts';
+import { LEVELS } from '~/libs/formatters/levels.ts';
 
 import { CategoriesForm } from './CategoriesForm.tsx';
 import { FormatsForm } from './FormatsForm.tsx';

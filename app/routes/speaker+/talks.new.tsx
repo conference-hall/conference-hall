@@ -7,13 +7,12 @@ import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
+import { TalksLibrary } from '~/domains/speaker-talks-library/TalksLibrary';
+import { TalkSaveSchema } from '~/domains/speaker-talks-library/TalksLibrary.types';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { redirectWithToast } from '~/libs/toasts/toast.server.ts';
 import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm.tsx';
-import { TalkSaveSchema } from '~/routes/__types/talks.ts';
-
-import { createTalk } from './__server/create-talk.server.ts';
 
 export const meta = mergeMeta(() => [{ title: 'New talk | Conference Hall' }]);
 
@@ -24,8 +23,8 @@ export const action = async ({ request }: LoaderFunctionArgs) => {
   const result = parse(form, { schema: TalkSaveSchema });
   if (!result.value) return json(result.error);
 
-  const talkId = await createTalk(userId, result.value);
-  return redirectWithToast(`/speaker/talks/${talkId}`, 'success', 'New talk created.');
+  const talk = await TalksLibrary.of(userId).add(result.value);
+  return redirectWithToast(`/speaker/talks/${talk.id}`, 'success', 'New talk created.');
 };
 
 export default function NewTalkRoute() {

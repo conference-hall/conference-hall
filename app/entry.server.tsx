@@ -6,7 +6,7 @@ import { RemixServer } from '@remix-run/react';
 import isbot from 'isbot';
 import { renderToPipeableStream } from 'react-dom/server';
 
-import { NonceContext } from './utils/useNonce.ts';
+import { NonceContext } from './libs/nonce/useNonce.ts';
 
 const ABORT_DELAY = 5_000;
 

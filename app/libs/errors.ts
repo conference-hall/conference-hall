@@ -82,9 +82,9 @@ export class TeamNotFoundError extends NotFoundError {
   }
 }
 
-export class DeliberationDisabledError extends ForbiddenError {
+export class ReviewDisabledError extends ForbiddenError {
   constructor() {
-    super('Event deliberation is disabled');
+    super('Review is disabled');
   }
 }
 
@@ -97,5 +97,17 @@ export class ForbiddenOperationError extends ForbiddenError {
 export class ApiKeyInvalidError extends BadRequestError {
   constructor() {
     super('API key invalid');
+  }
+}
+
+export class InvalidAccessKeyError extends BadRequestError {
+  constructor() {
+    super('Invalid access key.');
+  }
+}
+
+export class SlugAlreadyExistsError extends BadRequestError {
+  constructor() {
+    super('Slug already exists');
   }
 }

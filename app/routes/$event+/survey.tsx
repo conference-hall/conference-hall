@@ -8,20 +8,19 @@ import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
+import { CfpSurvey } from '~/domains/cfp-survey/CfpSurvey';
+import { SpeakerAnswers } from '~/domains/cfp-survey/SpeakerAnswers';
+import { SurveySchema } from '~/domains/cfp-survey/SpeakerAnswers.types';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { SurveyForm } from '~/routes/__components/proposals/forms/SurveyForm.tsx';
-import { getAnswers } from '~/routes/__server/survey/get-answers.server.ts';
-import { getQuestions } from '~/routes/__server/survey/get-questions.server.ts';
-import { saveSurvey } from '~/routes/__server/survey/save-survey.server.ts';
-import { SurveySchema } from '~/routes/__types/survey.ts';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
 
-  const questions = await getQuestions(params.event);
-  const answers = await getAnswers(params.event, userId);
+  const questions = await CfpSurvey.of(params.event).questions();
+  const answers = await SpeakerAnswers.for(userId, params.event).answers();
   return json({ questions, answers });
 };
 
@@ -33,7 +32,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const result = parse(form, { schema: SurveySchema });
   if (!result.value) return json(null);
 
-  await saveSurvey(userId, params.event, result.value);
+  await SpeakerAnswers.for(userId, params.event).save(result.value);
   return toast('success', 'Survey saved.');
 };
 

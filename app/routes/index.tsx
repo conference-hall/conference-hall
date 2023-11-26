@@ -7,21 +7,21 @@ import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { Pagination } from '~/design-system/Pagination.tsx';
 import { H1, H2 } from '~/design-system/Typography.tsx';
+import { EventsSearch } from '~/domains/event-search/EventSearch.ts';
+import { parseUrlFilters } from '~/domains/event-search/EventSearch.types.ts';
+import { parseUrlPage } from '~/domains/shared/Pagination.ts';
 import { useUser } from '~/root.tsx';
 import { EventCard } from '~/routes/__components/EventCard.tsx';
 import { Footer } from '~/routes/__components/Footer.tsx';
 import { Navbar } from '~/routes/__components/navbar/Navbar.tsx';
-import { parsePage } from '~/routes/__types/pagination.ts';
 
 import { SearchEventsFilters } from './__components/search/SearchEventsFilters.tsx';
 import { SearchEventsInput } from './__components/search/SearchEventsInput.tsx';
-import { parseFilters, searchEvents } from './__server/search/search.server.ts';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const url = new URL(request.url);
-  const filters = parseFilters(url.searchParams);
-  const page = parsePage(url.searchParams);
-  const results = await searchEvents(filters, page);
+  const filters = parseUrlFilters(request.url);
+  const page = parseUrlPage(request.url);
+  const results = await EventsSearch.with(filters, page).search();
   return json(results);
 };
 

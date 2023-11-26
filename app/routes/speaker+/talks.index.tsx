@@ -9,11 +9,11 @@ import Select from '~/design-system/forms/Select.tsx';
 import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
+import { TalksLibrary } from '~/domains/speaker-talks-library/TalksLibrary.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 
 import { ProposalCard } from '../__components/proposals/ProposalCard.tsx';
-import { listTalks } from './__server/list-talks.server.ts';
 
 export const meta = mergeMeta(() => [{ title: 'Talks library | Conference Hall' }]);
 
@@ -21,7 +21,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   const { searchParams } = new URL(request.url);
   const archived = Boolean(searchParams.get('archived'));
-  const talks = await listTalks(userId, { archived });
+  const talks = await TalksLibrary.of(userId).list({ archived });
   return json(talks);
 };
 

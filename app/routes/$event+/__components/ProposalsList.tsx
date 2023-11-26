@@ -1,12 +1,16 @@
 import { InboxIcon } from '@heroicons/react/24/outline';
 
 import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
+import type { SpeakerProposalStatus } from '~/domains/cfp-submissions/get-speaker-proposal-status';
 import { ProposalCard } from '~/routes/__components/proposals/ProposalCard.tsx';
 
-import type { EventProposals } from '../proposals.index.tsx';
-
 type Props = {
-  proposals: EventProposals;
+  proposals: Array<{
+    id: string;
+    title: string;
+    status?: SpeakerProposalStatus;
+    speakers: Array<{ picture?: string | null; name?: string | null }>;
+  }>;
 };
 
 export function ProposalsList({ proposals }: Props) {

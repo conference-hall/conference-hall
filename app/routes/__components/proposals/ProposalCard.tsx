@@ -1,7 +1,7 @@
 import { AvatarGroup } from '~/design-system/Avatar.tsx';
 import { CardLink } from '~/design-system/layouts/Card.tsx';
 import { Text } from '~/design-system/Typography.tsx';
-import type { SpeakerProposalStatus } from '~/routes/__server/proposals/get-speaker-proposal-status.ts';
+import type { SpeakerProposalStatus } from '~/domains/cfp-submissions/get-speaker-proposal-status.ts';
 
 import { ProposalStatusLabel } from './ProposalStatusLabel.tsx';
 

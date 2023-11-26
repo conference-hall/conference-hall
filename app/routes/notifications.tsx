@@ -1,12 +1,14 @@
 import { BellSlashIcon } from '@heroicons/react/24/outline';
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
+import { useLoaderData } from '@remix-run/react';
 
 import { CardLink } from '~/design-system/layouts/Card.tsx';
 import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { H2 } from '~/design-system/Typography.tsx';
+import { Notifications } from '~/domains/user-notifications/Notifications';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { useUser } from '~/root.tsx';
@@ -16,13 +18,15 @@ import { Navbar } from '~/routes/__components/navbar/Navbar.tsx';
 export const meta = mergeMeta(() => [{ title: 'Notifications | Conference Hall' }]);
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  await requireSession(request);
-  return json(null);
+  const userId = await requireSession(request);
+  const notifications = await Notifications.for(userId).list();
+  return json(notifications);
 };
 
 export default function OrganizerRoute() {
   const { user } = useUser();
-  const hasNotifications = Boolean(user?.notifications && user?.notifications.length > 0);
+  const notifications = useLoaderData<typeof loader>();
+  const hasNotifications = Boolean(notifications && notifications.length > 0);
 
   return (
     <>
@@ -33,7 +37,7 @@ export default function OrganizerRoute() {
       <PageContent>
         {hasNotifications ? (
           <ul aria-label="Notifications list" className="space-y-4">
-            {user?.notifications.map(({ event, proposal }) => (
+            {notifications.map(({ event, proposal }) => (
               <CardLink
                 key={`${event.slug}-${proposal.id}`}
                 as="li"
