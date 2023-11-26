@@ -22,7 +22,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   invariant(params.event, 'Invalid event slug');
 
   const questions = await EventSurvey.of(params.event).questions();
-  const answers = await SpeakerAnswers.for(params.event, userId).answers();
+  const answers = await SpeakerAnswers.for(userId, params.event).answers();
   return json({ questions, answers });
 };
 
@@ -35,7 +35,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   const result = parse(form, { schema: SurveySchema });
   if (!result.value) return json(null);
 
-  await SpeakerAnswers.for(params.event, userId).save(result.value);
+  await SpeakerAnswers.for(userId, params.event).save(result.value);
 
   const nextStep = await SubmissionSteps.nextStepFor('survey', params.event, params.talk);
   return redirect(nextStep.path);
