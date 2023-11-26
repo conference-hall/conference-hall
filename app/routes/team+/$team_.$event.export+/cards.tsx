@@ -6,22 +6,21 @@ import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { Subtitle, Text } from '~/design-system/Typography.tsx';
+import { CfpReviewsSearch } from '~/domains/organizer-cfp-reviews/CfpReviewsSearch.ts';
+import { parseUrlFilters } from '~/domains/organizer-cfp-reviews/proposal-search-builder/ProposalSearchBuilder.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
-import { parseProposalsFilters } from '~/routes/__types/proposal.ts';
 import { getLanguage } from '~/utils/languages.ts';
 import { getLevel } from '~/utils/levels.ts';
 import { formatReviewNote } from '~/utils/reviews.ts';
 
-import { exportProposals } from './__server/export-cards.server.ts';
-
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
+  invariant(params.team, 'Invalid team slug');
   invariant(params.event, 'Invalid event slug');
 
-  const url = new URL(request.url);
-  const filters = parseProposalsFilters(url.searchParams);
-
-  const results = await exportProposals(params.event, userId, filters ?? {});
+  const filters = parseUrlFilters(request.url);
+  const search = CfpReviewsSearch.for(userId, params.team, params.event);
+  const results = await search.forCardsExport(filters);
   return json(results);
 };
 

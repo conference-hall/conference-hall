@@ -10,13 +10,11 @@ import { useCheckboxSelection } from '~/design-system/forms/useCheckboxSelection
 import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { Pagination } from '~/design-system/Pagination.tsx';
-import { CfpReviewsSearch } from '~/domains/organizer-cfp-reviews/CfpReviewsSearch.ts';
+import { CfpReviewsSearch, ProposalsStatusUpdateSchema } from '~/domains/organizer-cfp-reviews/CfpReviewsSearch.ts';
 import { parseUrlFilters } from '~/domains/organizer-cfp-reviews/proposal-search-builder/ProposalSearchBuilder.types.ts';
 import { parseUrlPage } from '~/domains/shared/Pagination.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-import { ProposalsStatusUpdateSchema } from '~/routes/__types/proposal.ts';
-import { updateProposalsStatus } from '~/routes/team+/$team.$event+/__server/update-proposal.server.ts';
 
 import { ProposalsActionBar } from './__components/ProposalsActionBar/ProposalsActionBar.tsx';
 import { ProposalsFilters } from './__components/ProposalsFilters/ProposalsFilters.tsx';
@@ -36,14 +34,16 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
   const userId = await requireSession(request);
+  invariant(params.team, 'Invalid team slug');
   invariant(params.event, 'Invalid event slug');
 
   const form = await request.formData();
   const result = parse(form, { schema: ProposalsStatusUpdateSchema });
   if (!result.value) return json(null);
 
-  const updated = await updateProposalsStatus(params.event, userId, result.value.selection, result.value.status);
-  return toast('success', `${updated} proposals marked as "${result.value.status.toLowerCase()}".`);
+  const search = CfpReviewsSearch.for(userId, params.team, params.event);
+  const count = await search.changeStatus(result.value.selection, result.value.status);
+  return toast('success', `${count} proposals marked as "${result.value.status.toLowerCase()}".`);
 };
 
 export default function EventReviewsRoute() {

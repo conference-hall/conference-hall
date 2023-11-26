@@ -1,36 +1,35 @@
 import { parse } from '@conform-to/zod';
 import { type ActionFunctionArgs, json, type LoaderFunctionArgs } from '@remix-run/node';
-import { Form, useActionData, useLoaderData, useSearchParams } from '@remix-run/react';
+import { Form, useActionData, useSearchParams } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { Button, ButtonLink } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
-import { EventPage } from '~/domains/event-page/EventPage.ts';
+import { ProposalReview } from '~/domains/organizer-cfp-reviews/ProposalReview.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast } from '~/libs/toasts/toast.server.ts';
 import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm.tsx';
 import { ProposalUpdateSchema } from '~/routes/__types/proposal.ts';
 
-import { updateProposal } from '../$team.$event+/__server/update-proposal.server.ts';
-import { useProposalReview } from './_layout.tsx';
+import { useProposalEvent, useProposalReview } from './_layout.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   await requireSession(request);
-  invariant(params.event, 'Invalid event slug');
-  const event = await EventPage.of(params.event).get();
-  return json(event);
+  return json(null);
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
+  invariant(params.team, 'Invalid team slug');
   invariant(params.proposal, 'Invalid proposal id');
-  const form = await request.formData();
 
+  const form = await request.formData();
   const result = parse(form, { schema: ProposalUpdateSchema });
   if (!result.value) return json(result.error);
 
-  await updateProposal(params.event, params.proposal, userId, result.value);
+  const review = ProposalReview.for(userId, params.team, params.event, params.proposal);
+  await review.update(result.value);
 
   const url = new URL(request.url);
   return redirectWithToast(
@@ -41,9 +40,9 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 };
 
 export default function OrganizerProposalEditRoute() {
+  const { event } = useProposalEvent();
   const { proposal } = useProposalReview();
   const [searchParams] = useSearchParams();
-  const event = useLoaderData<typeof loader>();
   const errors = useActionData<typeof action>();
 
   return (

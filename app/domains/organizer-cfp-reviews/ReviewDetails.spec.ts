@@ -1,6 +1,6 @@
 import { ReviewFeeling } from '@prisma/client';
 
-import { ReviewsDetails } from './ReviewDetails.ts';
+import { ReviewDetails } from './ReviewDetails.ts';
 
 describe('#ReviewsDetails', () => {
   it('computes reviews info from user reviews', () => {
@@ -12,7 +12,7 @@ describe('#ReviewsDetails', () => {
     const user3 = { id: 'uid3', name: 'Bob doe', picture: 'b.png' };
     const review3 = { userId: 'uid3', feeling: ReviewFeeling.NEGATIVE, note: 0, user: user3, ...common };
 
-    const reviews = new ReviewsDetails([review1, review2, review3]);
+    const reviews = new ReviewDetails([review1, review2, review3]);
 
     expect(reviews.summary()).toEqual({ average: 2.5, positives: 1, negatives: 1 });
     expect(reviews.ofUser('uid1')).toEqual({ note: review1.note, feeling: review1.feeling, comment: null });
@@ -24,7 +24,7 @@ describe('#ReviewsDetails', () => {
   });
 
   it('computes default values if no reviews', () => {
-    const reviews = new ReviewsDetails([]);
+    const reviews = new ReviewDetails([]);
 
     expect(reviews.summary()).toEqual({ average: null, positives: 0, negatives: 0 });
     expect(reviews.ofUser('uid1')).toEqual({ note: null, feeling: null, comment: null });

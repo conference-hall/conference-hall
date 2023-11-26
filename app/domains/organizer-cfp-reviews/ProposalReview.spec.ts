@@ -26,7 +26,7 @@ describe('ProposalReview', () => {
     owner = await userFactory({ traits: ['clark-kent'] });
     member = await userFactory({ traits: ['bruce-wayne'] });
     speaker = await userFactory({ traits: ['peter-parker'] });
-    team = await teamFactory({ owners: [owner, member] });
+    team = await teamFactory({ owners: [owner], members: [member], reviewers: [speaker] });
     event = await eventFactory({ team });
     format = await eventFormatFactory({ event });
     category = await eventCategoryFactory({ event });
@@ -253,6 +253,60 @@ describe('ProposalReview', () => {
       await expect(review.addReview({ feeling: 'NEUTRAL', note: 2, comment: null })).rejects.toThrowError(
         ForbiddenOperationError,
       );
+    });
+  });
+
+  describe('#update', () => {
+    it('updates the proposal', async () => {
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+
+      const updated = await ProposalReview.for(owner.id, team.slug, event.slug, proposal.id).update({
+        title: 'Updated',
+        abstract: 'Updated',
+        level: 'ADVANCED',
+        references: 'Updated',
+        languages: [],
+        formats: [format.id],
+        categories: [category.id],
+      });
+
+      expect(updated.title).toBe('Updated');
+      expect(updated.abstract).toBe('Updated');
+      expect(updated.level).toBe('ADVANCED');
+      expect(updated.references).toBe('Updated');
+
+      const formatCount = await db.eventFormat.count({ where: { proposals: { some: { id: proposal.id } } } });
+      expect(formatCount).toBe(1);
+
+      const categoryCount = await db.eventCategory.count({ where: { proposals: { some: { id: proposal.id } } } });
+      expect(categoryCount).toBe(1);
+    });
+
+    it('throws an error if user has not a owner or member role in the team', async () => {
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      await expect(
+        ProposalReview.for(speaker.id, team.slug, event.slug, proposal.id).update({
+          title: 'Updated',
+          abstract: 'Updated',
+          level: null,
+          references: null,
+          languages: [],
+        }),
+      ).rejects.toThrowError(ForbiddenOperationError);
+    });
+
+    it('throws an error if user does not belong to event team', async () => {
+      const user = await userFactory();
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      await expect(
+        ProposalReview.for(user.id, team.slug, event.slug, proposal.id).update({
+          title: 'Updated',
+          abstract: 'Updated',
+          level: null,
+          references: null,
+          languages: [],
+        }),
+      ).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 

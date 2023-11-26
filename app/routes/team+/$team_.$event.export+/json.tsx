@@ -2,18 +2,18 @@ import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import invariant from 'tiny-invariant';
 
+import { CfpReviewsSearch } from '~/domains/organizer-cfp-reviews/CfpReviewsSearch.ts';
+import { parseUrlFilters } from '~/domains/organizer-cfp-reviews/proposal-search-builder/ProposalSearchBuilder.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
-import { parseProposalsFilters } from '~/routes/__types/proposal.ts';
-
-import { exportProposals } from './__server/export-json.server.ts';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
+  invariant(params.team, 'Invalid team slug');
   invariant(params.event, 'Invalid event slug');
 
-  const url = new URL(request.url);
-  const filters = parseProposalsFilters(url.searchParams);
+  const filters = parseUrlFilters(request.url);
+  const search = CfpReviewsSearch.for(userId, params.team, params.event);
+  const results = await search.forJsonExport(filters);
 
-  const results = await exportProposals(params.event, userId, filters);
   return json(results);
 };

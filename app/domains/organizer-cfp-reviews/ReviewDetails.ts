@@ -4,7 +4,7 @@ import { sortBy } from '../../utils/arrays.ts';
 
 type ReviewData = Review & { user?: Partial<User> };
 
-export class ReviewsDetails {
+export class ReviewDetails {
   reviews: Array<ReviewData>;
 
   constructor(reviews: Array<ReviewData>) {

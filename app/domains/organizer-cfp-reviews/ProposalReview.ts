@@ -7,8 +7,8 @@ import { UserEvent } from '../organizer-event/UserEvent';
 import type { SocialLinks } from '../speaker-profile/SpeakerProfile.types';
 import { ProposalSearchBuilder } from './proposal-search-builder/ProposalSearchBuilder';
 import type { ProposalsFilters } from './proposal-search-builder/ProposalSearchBuilder.types';
-import type { ProposalReviewUpdateData } from './ProposalReview.types';
-import { ReviewsDetails } from './ReviewDetails';
+import type { ProposalUpdateData, ReviewUpdateData } from './ProposalReview.types';
+import { ReviewDetails } from './ReviewDetails';
 
 export type ProposalReviewData = Awaited<ReturnType<typeof ProposalReview.prototype.get>>;
 
@@ -39,7 +39,7 @@ export class ProposalReview {
     });
     if (!proposal) throw new ProposalNotFoundError();
 
-    const reviews = new ReviewsDetails(proposal.reviews);
+    const reviews = new ReviewDetails(proposal.reviews);
 
     return {
       id: proposal.id,
@@ -84,7 +84,7 @@ export class ProposalReview {
     return { total: totalProposals, current: curIndex + 1, previousId, nextId };
   }
 
-  async addReview(data: ProposalReviewUpdateData) {
+  async addReview(data: ReviewUpdateData) {
     const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER', 'REVIEWER']);
     if (!event.reviewEnabled) throw new ReviewDisabledError();
 
@@ -99,9 +99,23 @@ export class ProposalReview {
         where: { proposalId: this.proposalId, feeling: { not: 'NO_OPINION' } },
       });
 
-      const reviewsDetails = new ReviewsDetails(reviews);
+      const reviewsDetails = new ReviewDetails(reviews);
       const average = reviewsDetails.summary().average ?? undefined;
       await trx.proposal.update({ where: { id: this.proposalId }, data: { avgRateForSort: average } });
+    });
+  }
+
+  async update(data: ProposalUpdateData) {
+    await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
+
+    const { formats, categories, ...talk } = data;
+    return db.proposal.update({
+      where: { id: this.proposalId },
+      data: {
+        ...talk,
+        formats: { set: [], connect: formats?.map((id) => ({ id })) },
+        categories: { set: [], connect: categories?.map((id) => ({ id })) },
+      },
     });
   }
 
@@ -142,7 +156,7 @@ export class ProposalReview {
     if (!event.displayProposalsReviews) throw new ForbiddenOperationError();
 
     const result = await db.review.findMany({ where: { proposalId: this.proposalId }, include: { user: true } });
-    const reviews = new ReviewsDetails(result);
+    const reviews = new ReviewDetails(result);
     return reviews.ofMembers();
   }
 }

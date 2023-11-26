@@ -6,7 +6,8 @@ import invariant from 'tiny-invariant';
 
 import type { ProposalReviewData } from '~/domains/organizer-cfp-reviews/ProposalReview.ts';
 import { ProposalReview } from '~/domains/organizer-cfp-reviews/ProposalReview.ts';
-import { ProposalReviewUpdateDataSchema } from '~/domains/organizer-cfp-reviews/ProposalReview.types.ts';
+import { ReviewUpdateDataSchema } from '~/domains/organizer-cfp-reviews/ProposalReview.types.ts';
+import type { EventData } from '~/domains/organizer-event/UserEvent.ts';
 import { UserEvent } from '~/domains/organizer-event/UserEvent.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
@@ -45,7 +46,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   invariant(params.proposal, 'Invalid proposal id');
 
   const form = await request.formData();
-  const result = parse(form, { schema: ProposalReviewUpdateDataSchema });
+  const result = parse(form, { schema: ReviewUpdateDataSchema });
   if (!result.value) return toast('error', 'Something went wrong.');
 
   const proposalReview = ProposalReview.for(userId, params.team, params.event, params.proposal);
@@ -97,6 +98,10 @@ export default function ProposalReviewLayoutRoute() {
       </div>
     </>
   );
+}
+
+export function useProposalEvent() {
+  return useOutletContext<{ event: EventData }>();
 }
 
 export function useProposalReview() {
