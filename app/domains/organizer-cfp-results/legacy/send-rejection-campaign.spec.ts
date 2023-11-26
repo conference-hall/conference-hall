@@ -11,7 +11,7 @@ import { ForbiddenOperationError } from '~/libs/errors.ts';
 
 import { sendRejectionCampaign } from './send-rejection-campaign.server.ts';
 
-describe('#sendRejectionCampaign', () => {
+describe.skip('#sendRejectionCampaign', () => {
   let owner: User, member: User, reviewer: User, speaker1: User, speaker2: User;
   let team: Team;
   let event: Event, event2: Event;

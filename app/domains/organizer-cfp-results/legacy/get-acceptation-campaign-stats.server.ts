@@ -1,11 +1,6 @@
-import { TeamRole } from '@prisma/client';
-
 import { db } from '~/libs/db.ts';
-import { allowedForEvent } from '~/routes/__server/teams/check-user-role.server.ts';
 
 export async function getAcceptationCampaignStats(eventSlug: string, userId: string) {
-  await allowedForEvent(eventSlug, userId, [TeamRole.OWNER, TeamRole.MEMBER]);
-
   const toSend = await db.proposal.count({
     where: {
       event: { slug: eventSlug },
