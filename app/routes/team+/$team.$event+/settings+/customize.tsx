@@ -1,8 +1,9 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
+import { json, unstable_parseMultipartFormData } from '@remix-run/node';
 import { Form, useActionData, useSubmit } from '@remix-run/react';
 import type { ChangeEvent } from 'react';
 import invariant from 'tiny-invariant';
+import { z } from 'zod';
 
 import { AlertInfo } from '~/design-system/Alerts.tsx';
 import { Avatar } from '~/design-system/Avatar.tsx';
@@ -10,11 +11,12 @@ import { ButtonFileUpload } from '~/design-system/forms/FileUploadButton.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { ExternalLink } from '~/design-system/Links.tsx';
 import { H2, Subtitle } from '~/design-system/Typography.tsx';
+import { UserEvent } from '~/domains/organizer-event/UserEvent.ts';
 import { requireSession } from '~/libs/auth/session.ts';
-import { createToastHeaders } from '~/libs/toasts/toast.server.ts';
+import { uploadToStorageHandler } from '~/libs/storage/storage.server.ts';
+import { toast } from '~/libs/toasts/toast.server.ts';
 
 import { useTeamEvent } from '../_layout.tsx';
-import { uploadEventLogo } from './__server/upload-event-logo.server.ts';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);
@@ -23,10 +25,23 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
   const userId = await requireSession(request);
+  invariant(params.team, 'Invalid team slug');
   invariant(params.event, 'Invalid event slug');
 
-  const result = await uploadEventLogo(params.event, userId, request);
-  return json(result, { headers: await createToastHeaders({ type: 'success', title: 'Logo updated.' }) });
+  const event = await UserEvent.for(userId, params.team, params.event);
+  await event.allowedFor(['OWNER']);
+
+  const formData = await unstable_parseMultipartFormData(
+    request,
+    uploadToStorageHandler({ name: 'logo', maxFileSize: 300_000 }),
+  );
+  const result = z.string().url().safeParse(formData.get('logo'));
+  if (result.success) {
+    await event.update({ logo: result.data });
+    return toast('success', 'Logo updated.');
+  } else {
+    return json({ status: 'error', message: 'An error occurred during upload, you may exceed max file size.' });
+  }
 };
 
 export default function EventGeneralSettingsRoute() {

@@ -10,9 +10,9 @@ export type EventData = Awaited<ReturnType<typeof UserEvent.prototype.get>>;
 
 export class UserEvent {
   constructor(
-    private userId: string,
-    private teamSlug: string,
-    private eventSlug: string,
+    protected userId: string,
+    protected teamSlug: string,
+    protected eventSlug: string,
   ) {}
 
   static for(userId: string, teamSlug: string, eventSlug: string) {
@@ -73,10 +73,7 @@ export class UserEvent {
   }
 
   async update(data: Partial<Prisma.EventCreateInput>) {
-    await this.allowedFor(['OWNER']);
-
-    const event = await db.event.findFirst({ where: { slug: this.eventSlug } });
-    if (!event) throw new EventNotFoundError();
+    const event = await this.allowedFor(['OWNER']);
 
     if (data.address && event?.address !== data.address) {
       const geocodedAddress = await geocode(data.address);

@@ -52,17 +52,6 @@ export const CfpConferenceOpeningSchema = z
     { path: ['cfpStart'], message: 'Call for paper start date must be after the end date.' },
   );
 
-export const EventTracksSettingsSchema = z.object({
-  formatsRequired: z
-    .string()
-    .transform((value) => value === 'true')
-    .catch(false),
-  categoriesRequired: z
-    .string()
-    .transform((value) => value === 'true')
-    .catch(false),
-});
-
 export const EventSurveySettingsSchema = z.object({
   surveyQuestions: z.array(z.string()),
 });

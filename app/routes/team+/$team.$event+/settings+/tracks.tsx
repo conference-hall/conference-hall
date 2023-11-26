@@ -7,21 +7,14 @@ import invariant from 'tiny-invariant';
 import { ToggleGroup } from '~/design-system/forms/Toggles.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2, Subtitle } from '~/design-system/Typography.tsx';
-import { UserEvent } from '~/domains/organizer-event/UserEvent.ts';
-import { EventTracksSettingsSchema } from '~/domains/organizer-event/UserEvent.types.ts';
+import { EventTracksSettings } from '~/domains/organizer-event/EventTracksSettings.ts';
+import { TrackSaveSchema, TracksSettingsSchema } from '~/domains/organizer-event/EventTracksSettings.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 
 import { useTeamEvent } from '../_layout.tsx';
 import { NewTrackButton } from './__components/SaveTrackForm.tsx';
 import { TrackList } from './__components/TrackList.tsx';
-import {
-  deleteCategory,
-  deleteFormat,
-  EventTrackSaveSchema,
-  saveCategory,
-  saveFormat,
-} from './__server/update-tracks.server.ts';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);
@@ -32,36 +25,37 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.team, 'Invalid team slug');
   invariant(params.event, 'Invalid event slug');
-  const event = UserEvent.for(userId, params.team, params.event);
+
+  const tracks = EventTracksSettings.for(userId, params.team, params.event);
 
   const form = await request.formData();
   switch (form.get('_action')) {
     case 'delete-formats': {
       const trackId = String(form.get('trackId'));
-      await deleteFormat(params.event, userId, trackId);
+      await tracks.deleteFormat(trackId);
       break;
     }
     case 'delete-categories': {
       const trackId = String(form.get('trackId'));
-      await deleteCategory(params.event, userId, trackId);
+      await tracks.deleteCategory(trackId);
       break;
     }
     case 'save-formats': {
-      const result = parse(form, { schema: EventTrackSaveSchema });
+      const result = parse(form, { schema: TrackSaveSchema });
       if (!result.value) return json(result.error);
-      await saveFormat(params.event, userId, result.value);
+      await tracks.saveFormat(result.value);
       break;
     }
     case 'save-categories': {
-      const result = parse(form, { schema: EventTrackSaveSchema });
+      const result = parse(form, { schema: TrackSaveSchema });
       if (!result.value) return json(result.error);
-      await saveCategory(params.event, userId, result.value);
+      await tracks.saveCategory(result.value);
       break;
     }
     case 'update-track-settings': {
-      const result = parse(form, { schema: EventTracksSettingsSchema });
+      const result = parse(form, { schema: TracksSettingsSchema });
       if (!result.value) return json(result.error);
-      await event.update(result.value);
+      await tracks.updateSettings(result.value);
       return toast('success', 'Track setting updated.');
     }
   }
