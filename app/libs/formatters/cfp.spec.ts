@@ -5,7 +5,7 @@ import {
   formatConferenceDates,
   formatEventType,
   getCfpState,
-} from './event.ts';
+} from './cfp.ts';
 
 describe('#formatEventType', () => {
   it('return conference label', () => {

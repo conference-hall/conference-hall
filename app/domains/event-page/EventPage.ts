@@ -1,6 +1,6 @@
 import { db } from '~/libs/db';
 import { EventNotFoundError } from '~/libs/errors';
-import { getCfpState } from '~/utils/event';
+import { getCfpState } from '~/libs/formatters/cfp';
 
 export type EventData = Awaited<ReturnType<typeof EventPage.prototype.get>>;
 

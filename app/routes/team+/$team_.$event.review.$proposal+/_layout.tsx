@@ -7,13 +7,13 @@ import invariant from 'tiny-invariant';
 import type { ProposalReviewData } from '~/domains/organizer-cfp-reviews/ProposalReview.ts';
 import { ProposalReview } from '~/domains/organizer-cfp-reviews/ProposalReview.ts';
 import { ReviewUpdateDataSchema } from '~/domains/organizer-cfp-reviews/ProposalReview.types.ts';
-import type { EventData } from '~/domains/organizer-event/UserEvent.ts';
-import { UserEvent } from '~/domains/organizer-event/UserEvent.ts';
+import type { EventData } from '~/domains/organizer-event-settings/UserEvent.ts';
+import { UserEvent } from '~/domains/organizer-event-settings/UserEvent.ts';
+import { parseUrlFilters } from '~/domains/shared/ProposalSearchBuilder.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
 import { useUser } from '~/root.tsx';
-import { parseProposalsFilters } from '~/routes/__types/proposal.ts';
 
 import { ReviewHeader } from './__components/Header.tsx';
 import { ReviewInfoSection } from './__components/ReviewInfoSection.tsx';
@@ -29,9 +29,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 
   const event = await UserEvent.for(userId, params.team, params.event).get();
 
-  const url = new URL(request.url);
-  const filters = parseProposalsFilters(url.searchParams);
-
+  const filters = parseUrlFilters(request.url);
   const review = ProposalReview.for(userId, params.team, params.event, params.proposal);
   const proposal = await review.get();
   const pagination = await review.getPreviousAndNextReviews(filters);

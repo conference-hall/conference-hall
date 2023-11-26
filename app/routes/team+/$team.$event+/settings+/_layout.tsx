@@ -16,7 +16,7 @@ import invariant from 'tiny-invariant';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { NavSideMenu } from '~/design-system/navigation/NavSideMenu.tsx';
 import { H2 } from '~/design-system/Typography.tsx';
-import { UserEvent } from '~/domains/organizer-event/UserEvent.ts';
+import { UserEvent } from '~/domains/organizer-event-settings/UserEvent.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { useUser } from '~/root.tsx';
 

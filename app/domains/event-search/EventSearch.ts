@@ -1,7 +1,7 @@
 import type { Prisma } from '@prisma/client';
 
 import { db } from '~/libs/db';
-import { getCfpState } from '~/utils/event';
+import { getCfpState } from '~/libs/formatters/cfp';
 
 import { Pagination } from '../shared/Pagination';
 import type { SearchFilters } from './EventSearch.types';

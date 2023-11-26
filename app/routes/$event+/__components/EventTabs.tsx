@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 
 import { Container } from '~/design-system/layouts/Container.tsx';
 import { NavTabs } from '~/design-system/navigation/NavTabs.tsx';
-import type { EventType } from '~/routes/__types/event.ts';
+import type { EventType } from '~/domains/shared/Event.types';
 
 type Props = { slug: string; type: EventType; surveyEnabled: boolean };
 

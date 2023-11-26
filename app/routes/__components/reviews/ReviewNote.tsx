@@ -2,7 +2,7 @@ import { HeartIcon, NoSymbolIcon, StarIcon, UserIcon, XCircleIcon } from '@heroi
 import { cx } from 'class-variance-authority';
 
 import { Text } from '~/design-system/Typography.tsx';
-import { formatReviewNote } from '~/utils/reviews.ts';
+import { formatReviewNote } from '~/libs/formatters/reviews';
 
 const REVIEWS = {
   NO_OPINION: { icon: NoSymbolIcon, color: 'fill-red-100', label: 'No opinion' },

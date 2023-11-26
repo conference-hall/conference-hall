@@ -1,5 +1,5 @@
+import { getSpeakerProposalStatus } from '~/domains/cfp-submissions/get-speaker-proposal-status';
 import { db } from '~/libs/db';
-import { getSpeakerProposalStatus } from '~/routes/__server/proposals/get-speaker-proposal-status';
 
 export class Submissions {
   constructor(

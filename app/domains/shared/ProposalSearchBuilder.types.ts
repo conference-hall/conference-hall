@@ -3,6 +3,8 @@ import { z } from 'zod';
 
 const EmailStatusSchema = z.enum(['not-sent', 'sent']).optional();
 
+export type EmailStatusData = z.infer<typeof EmailStatusSchema>;
+
 const ProposalStatusSchema = z.enum(['SUBMITTED', 'ACCEPTED', 'REJECTED', 'CONFIRMED', 'DECLINED']);
 
 export const ProposalsFiltersSchema = z.object({

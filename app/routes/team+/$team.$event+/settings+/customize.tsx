@@ -11,7 +11,7 @@ import { ButtonFileUpload } from '~/design-system/forms/FileUploadButton.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { ExternalLink } from '~/design-system/Links.tsx';
 import { H2, Subtitle } from '~/design-system/Typography.tsx';
-import { UserEvent } from '~/domains/organizer-event/UserEvent.ts';
+import { UserEvent } from '~/domains/organizer-event-settings/UserEvent.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { uploadToStorageHandler } from '~/libs/storage/storage.server.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';

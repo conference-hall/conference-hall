@@ -1,8 +1,8 @@
 import { Prisma } from '@prisma/client';
 
+import { getSpeakerProposalStatus } from '~/domains/cfp-submissions/get-speaker-proposal-status';
 import { db } from '~/libs/db';
-import { getSpeakerProposalStatus } from '~/routes/__server/proposals/get-speaker-proposal-status';
-import { getCfpState } from '~/utils/event';
+import { getCfpState } from '~/libs/formatters/cfp';
 
 const EVENTS_BY_PAGE = 3;
 

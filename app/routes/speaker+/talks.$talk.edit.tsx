@@ -10,12 +10,12 @@ import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { H3, Subtitle } from '~/design-system/Typography.tsx';
 import { TalksLibrary } from '~/domains/speaker-talks-library/TalksLibrary';
+import { TalkSaveSchema } from '~/domains/speaker-talks-library/TalksLibrary.types';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
 import { CoSpeakersList, InviteCoSpeakerButton } from '~/routes/__components/proposals/forms/CoSpeaker.tsx';
 import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm.tsx';
-import { TalkSaveSchema } from '~/routes/__types/talks.ts';
 
 export const meta = mergeMeta<typeof loader>(({ data }) =>
   data ? [{ title: `Edit | ${data?.title} | Conference Hall` }] : [],

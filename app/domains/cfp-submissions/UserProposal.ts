@@ -1,6 +1,6 @@
+import { getSpeakerProposalStatus } from '~/domains/cfp-submissions/get-speaker-proposal-status';
 import { db } from '~/libs/db';
 import { CfpNotOpenError, ProposalNotFoundError } from '~/libs/errors';
-import { getSpeakerProposalStatus } from '~/routes/__server/proposals/get-speaker-proposal-status';
 
 import { CallForPaper } from '../shared/CallForPaper';
 import { InvitationLink } from '../shared/InvitationLink';

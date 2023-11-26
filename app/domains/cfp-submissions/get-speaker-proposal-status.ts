@@ -1,7 +1,7 @@
 import type { EmailStatus, EventType } from '@prisma/client';
 import { ProposalStatus } from '@prisma/client';
 
-import { getCfpState } from '~/utils/event.ts';
+import { getCfpState } from '~/libs/formatters/cfp';
 
 export enum SpeakerProposalStatus {
   Draft = 'Draft',

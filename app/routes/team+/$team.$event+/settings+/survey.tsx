@@ -9,8 +9,8 @@ import { ToggleGroup } from '~/design-system/forms/Toggles.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2, Subtitle } from '~/design-system/Typography.tsx';
 import { questions } from '~/domains/cfp-survey/SurveyQuestions.ts';
-import { UserEvent } from '~/domains/organizer-event/UserEvent.ts';
-import { EventSurveySettingsSchema } from '~/domains/organizer-event/UserEvent.types.ts';
+import { UserEvent } from '~/domains/organizer-event-settings/UserEvent.ts';
+import { EventSurveySettingsSchema } from '~/domains/organizer-event-settings/UserEvent.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 

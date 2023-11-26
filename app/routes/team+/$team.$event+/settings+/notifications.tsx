@@ -9,11 +9,11 @@ import { Input } from '~/design-system/forms/Input.tsx';
 import { ToggleGroup } from '~/design-system/forms/Toggles.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2 } from '~/design-system/Typography.tsx';
-import { UserEvent } from '~/domains/organizer-event/UserEvent.ts';
+import { UserEvent } from '~/domains/organizer-event-settings/UserEvent.ts';
 import {
   EventEmailNotificationsSettingsSchema,
   EventNotificationsSettingsSchema,
-} from '~/domains/organizer-event/UserEvent.types.ts';
+} from '~/domains/organizer-event-settings/UserEvent.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 

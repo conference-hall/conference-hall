@@ -1,10 +1,10 @@
+import { getSpeakerProposalStatus } from '~/domains/cfp-submissions/get-speaker-proposal-status';
 import { db } from '~/libs/db';
 import { TalkNotFoundError } from '~/libs/errors';
 import { jsonToArray } from '~/libs/prisma';
-import { getSpeakerProposalStatus } from '~/routes/__server/proposals/get-speaker-proposal-status';
-import type { TalkSaveData } from '~/routes/__types/talks';
 
 import { InvitationLink } from '../shared/InvitationLink';
+import type { TalkSaveData } from './TalksLibrary.types';
 
 export class SpeakerTalk {
   constructor(

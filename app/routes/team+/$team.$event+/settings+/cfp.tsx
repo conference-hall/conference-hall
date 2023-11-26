@@ -4,12 +4,12 @@ import { json } from '@remix-run/node';
 import { useActionData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { UserEvent } from '~/domains/organizer-event/UserEvent.ts';
+import { UserEvent } from '~/domains/organizer-event-settings/UserEvent.ts';
 import {
   CfpConferenceOpeningSchema,
   CfpMeetupOpeningSchema,
   CfpPreferencesSchema,
-} from '~/domains/organizer-event/UserEvent.types.ts';
+} from '~/domains/organizer-event-settings/UserEvent.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 

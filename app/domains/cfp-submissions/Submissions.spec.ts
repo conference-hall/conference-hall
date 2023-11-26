@@ -3,7 +3,7 @@ import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
 
-import { SpeakerProposalStatus } from '~/routes/__server/proposals/get-speaker-proposal-status';
+import { SpeakerProposalStatus } from '~/domains/cfp-submissions/get-speaker-proposal-status';
 
 import { Submissions } from './Submissions';
 

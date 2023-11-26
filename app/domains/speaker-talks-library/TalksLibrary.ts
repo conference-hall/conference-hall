@@ -1,7 +1,7 @@
 import { db } from '~/libs/db';
-import type { TalkSaveData } from '~/routes/__types/talks';
 
 import { SpeakerTalk } from './SpeakerTalk';
+import type { TalkSaveData } from './TalksLibrary.types';
 
 type TalksListOptions = { archived?: boolean };
 

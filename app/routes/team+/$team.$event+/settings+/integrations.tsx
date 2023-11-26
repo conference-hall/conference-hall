@@ -10,8 +10,8 @@ import { Input } from '~/design-system/forms/Input.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { ExternalLink } from '~/design-system/Links.tsx';
 import { H2 } from '~/design-system/Typography.tsx';
-import { UserEvent } from '~/domains/organizer-event/UserEvent.ts';
-import { EventSlackSettingsSchema } from '~/domains/organizer-event/UserEvent.types.ts';
+import { UserEvent } from '~/domains/organizer-event-settings/UserEvent.ts';
+import { EventSlackSettingsSchema } from '~/domains/organizer-event-settings/UserEvent.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 
 import { useTeamEvent } from '../_layout.tsx';

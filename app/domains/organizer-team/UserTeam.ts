@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 import { db } from '~/libs/db';
 import { ForbiddenOperationError, SlugAlreadyExistsError, TeamNotFoundError } from '~/libs/errors';
-import { slugValidator } from '~/routes/__types/validators';
+import { slugValidator } from '~/libs/validators/slug';
 
 import { InvitationLink } from '../shared/InvitationLink';
 

@@ -7,11 +7,11 @@ import invariant from 'tiny-invariant';
 
 import { Subtitle, Text } from '~/design-system/Typography.tsx';
 import { CfpReviewsSearch } from '~/domains/organizer-cfp-reviews/CfpReviewsSearch.ts';
-import { parseUrlFilters } from '~/domains/organizer-cfp-reviews/proposal-search-builder/ProposalSearchBuilder.types.ts';
+import { parseUrlFilters } from '~/domains/shared/ProposalSearchBuilder.types';
 import { requireSession } from '~/libs/auth/session.ts';
-import { getLanguage } from '~/utils/languages.ts';
-import { getLevel } from '~/utils/levels.ts';
-import { formatReviewNote } from '~/utils/reviews.ts';
+import { getLanguage } from '~/libs/formatters/languages';
+import { getLevel } from '~/libs/formatters/levels';
+import { formatReviewNote } from '~/libs/formatters/reviews';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);

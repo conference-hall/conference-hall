@@ -2,8 +2,8 @@ import { z } from 'zod';
 
 import { db } from '~/libs/db';
 import { ForbiddenOperationError, SlugAlreadyExistsError } from '~/libs/errors';
-import { slugValidator } from '~/routes/__types/validators';
-import { sortBy } from '~/utils/arrays';
+import { sortBy } from '~/libs/utils/arrays-sort-by';
+import { slugValidator } from '~/libs/validators/slug';
 
 import { TeamBetaAccess } from './TeamBetaAccess';
 

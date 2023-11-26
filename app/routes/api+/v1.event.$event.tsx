@@ -2,8 +2,8 @@ import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import invariant from 'tiny-invariant';
 
-import { parseUrlFilters } from '~/domains/organizer-cfp-reviews/proposal-search-builder/ProposalSearchBuilder.types.ts';
 import { EventApi } from '~/domains/organizer-web-api/EventApi.ts';
+import { parseUrlFilters } from '~/domains/shared/ProposalSearchBuilder.types';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   invariant(params.event, 'Invalid event slug');

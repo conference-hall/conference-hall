@@ -1,6 +1,6 @@
 import { db } from '~/libs/db';
 
-import { UserEvent } from '../organizer-event/UserEvent';
+import { UserEvent } from '../organizer-event-settings/UserEvent';
 
 export class ProposalReviewDiscussion {
   constructor(

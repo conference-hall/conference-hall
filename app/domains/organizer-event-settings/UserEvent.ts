@@ -2,9 +2,9 @@ import type { Prisma, TeamRole } from '@prisma/client';
 
 import { db } from '~/libs/db';
 import { EventNotFoundError, ForbiddenOperationError, SlugAlreadyExistsError } from '~/libs/errors';
+import { getCfpState } from '~/libs/formatters/cfp';
 import { geocode } from '~/libs/geocode/geocode';
 import { jsonToArray } from '~/libs/prisma';
-import { getCfpState } from '~/utils/event';
 
 export type EventData = Awaited<ReturnType<typeof UserEvent.prototype.get>>;
 

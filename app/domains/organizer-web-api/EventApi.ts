@@ -1,8 +1,8 @@
 import { db } from '~/libs/db';
 import { ApiKeyInvalidError, EventNotFoundError } from '~/libs/errors';
 
-import { ProposalSearchBuilder } from '../organizer-cfp-reviews/proposal-search-builder/ProposalSearchBuilder';
-import type { ProposalsFilters } from '../organizer-cfp-reviews/proposal-search-builder/ProposalSearchBuilder.types';
+import { ProposalSearchBuilder } from '../shared/ProposalSearchBuilder';
+import type { ProposalsFilters } from '../shared/ProposalSearchBuilder.types';
 import type { SocialLinks } from '../speaker-profile/SpeakerProfile.types';
 
 export class EventApi {

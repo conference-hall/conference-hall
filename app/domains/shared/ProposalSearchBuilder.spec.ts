@@ -9,10 +9,10 @@ import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 
 import { Pagination } from '~/domains/shared/Pagination.ts';
-import type { ProposalsFilters } from '~/routes/__types/proposal.ts';
-import { sortBy } from '~/utils/arrays.ts';
+import { sortBy } from '~/libs/utils/arrays-sort-by.ts';
 
 import { ProposalSearchBuilder } from './ProposalSearchBuilder.ts';
+import type { ProposalsFilters } from './ProposalSearchBuilder.types.ts';
 
 describe('EventProposalsSearch', () => {
   let owner: User, speaker: User;

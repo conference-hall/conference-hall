@@ -2,7 +2,7 @@ import type { Event, EventCategory, EventFormat, Proposal, Team, User } from '@p
 
 import { config } from '~/libs/config.ts';
 import { db } from '~/libs/db.ts';
-import { sortBy } from '~/utils/arrays.ts';
+import { sortBy } from '~/libs/utils/arrays-sort-by';
 
 function buildPayload(
   event: Event & { team: Team },

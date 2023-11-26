@@ -11,8 +11,8 @@ import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { Pagination } from '~/design-system/Pagination.tsx';
 import { CfpReviewsSearch, ProposalsStatusUpdateSchema } from '~/domains/organizer-cfp-reviews/CfpReviewsSearch.ts';
-import { parseUrlFilters } from '~/domains/organizer-cfp-reviews/proposal-search-builder/ProposalSearchBuilder.types.ts';
 import { parseUrlPage } from '~/domains/shared/Pagination.ts';
+import { parseUrlFilters } from '~/domains/shared/ProposalSearchBuilder.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 

@@ -3,7 +3,8 @@ import { EmailStatus } from '@prisma/client';
 
 import type { Pagination } from '~/domains/shared/Pagination';
 import { db } from '~/libs/db.ts';
-import type { EmailStatusData, ProposalsFilters } from '~/routes/__types/proposal.ts';
+
+import type { EmailStatusData, ProposalsFilters } from './ProposalSearchBuilder.types';
 
 type SearchOptions = { withSpeakers: boolean };
 

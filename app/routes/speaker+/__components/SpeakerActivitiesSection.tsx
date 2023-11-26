@@ -8,9 +8,9 @@ import { Card } from '~/design-system/layouts/Card.tsx';
 import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
 import { Link } from '~/design-system/Links.tsx';
 import { Subtitle, Text } from '~/design-system/Typography.tsx';
+import type { SpeakerProposalStatus } from '~/domains/cfp-submissions/get-speaker-proposal-status';
+import type { CfpState } from '~/domains/shared/Event.types';
 import { ProposalStatusLabel } from '~/routes/__components/proposals/ProposalStatusLabel.tsx';
-import type { SpeakerProposalStatus } from '~/routes/__server/proposals/get-speaker-proposal-status.ts';
-import type { CfpState } from '~/routes/__types/event.ts';
 
 interface Props {
   activities: Array<{

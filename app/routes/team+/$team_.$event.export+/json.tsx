@@ -3,7 +3,7 @@ import { json } from '@remix-run/node';
 import invariant from 'tiny-invariant';
 
 import { CfpReviewsSearch } from '~/domains/organizer-cfp-reviews/CfpReviewsSearch.ts';
-import { parseUrlFilters } from '~/domains/organizer-cfp-reviews/proposal-search-builder/ProposalSearchBuilder.types.ts';
+import { parseUrlFilters } from '~/domains/shared/ProposalSearchBuilder.types';
 import { requireSession } from '~/libs/auth/session.ts';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {

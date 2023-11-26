@@ -24,11 +24,11 @@ import { UserInfo } from './domains/user-registration/UserInfo';
 import { initializeFirebaseClient } from './libs/auth/firebase';
 import { getSessionUserId } from './libs/auth/session';
 import { config } from './libs/config';
+import { useNonce } from './libs/nonce/useNonce';
 import type { Toast } from './libs/toasts/toast.server';
 import { getToast } from './libs/toasts/toast.server';
 import { Toaster } from './libs/toasts/Toaster';
 import { GlobalLoading } from './routes/__components/GlobalLoading';
-import { useNonce } from './utils/useNonce';
 
 export function meta() {
   return [

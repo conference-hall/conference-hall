@@ -1,12 +1,12 @@
 import { db } from '~/libs/db';
 import { ForbiddenOperationError, ProposalNotFoundError, ReviewDisabledError } from '~/libs/errors';
-import { sortBy } from '~/utils/arrays';
+import { sortBy } from '~/libs/utils/arrays-sort-by';
 
 import type { SurveyData } from '../cfp-survey/SpeakerAnswers.types';
-import { UserEvent } from '../organizer-event/UserEvent';
+import { UserEvent } from '../organizer-event-settings/UserEvent';
+import { ProposalSearchBuilder } from '../shared/ProposalSearchBuilder';
+import type { ProposalsFilters } from '../shared/ProposalSearchBuilder.types';
 import type { SocialLinks } from '../speaker-profile/SpeakerProfile.types';
-import { ProposalSearchBuilder } from './proposal-search-builder/ProposalSearchBuilder';
-import type { ProposalsFilters } from './proposal-search-builder/ProposalSearchBuilder.types';
 import type { ProposalUpdateData, ReviewUpdateData } from './ProposalReview.types';
 import { ReviewDetails } from './ReviewDetails';
 

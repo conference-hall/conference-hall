@@ -7,8 +7,8 @@ import invariant from 'tiny-invariant';
 import { ToggleGroup } from '~/design-system/forms/Toggles.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2, Subtitle } from '~/design-system/Typography.tsx';
-import { EventTracksSettings } from '~/domains/organizer-event/EventTracksSettings.ts';
-import { TrackSaveSchema, TracksSettingsSchema } from '~/domains/organizer-event/EventTracksSettings.types.ts';
+import { EventTracksSettings } from '~/domains/organizer-event-settings/EventTracksSettings.ts';
+import { TrackSaveSchema, TracksSettingsSchema } from '~/domains/organizer-event-settings/EventTracksSettings.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 

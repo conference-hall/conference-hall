@@ -7,11 +7,11 @@ import invariant from 'tiny-invariant';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { UserProposal } from '~/domains/cfp-submissions/UserProposal.ts';
+import { ProposalParticipationSchema } from '~/domains/cfp-submissions/UserProposal.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
 import { ProposalDetailsSection } from '~/routes/__components/proposals/ProposalDetailsSection.tsx';
 import { ProposalStatusSection } from '~/routes/__components/proposals/ProposalStatusSection.tsx';
-import { ProposalParticipationSchema } from '~/routes/__types/proposal.ts';
 
 import { useEvent } from './_layout.tsx';
 

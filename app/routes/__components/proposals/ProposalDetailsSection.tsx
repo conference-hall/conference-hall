@@ -3,8 +3,8 @@ import { Badge } from '~/design-system/Badges.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { Markdown } from '~/design-system/Markdown.tsx';
 import { H3, Text } from '~/design-system/Typography.tsx';
-import { getLanguage } from '~/utils/languages.ts';
-import { getLevel } from '~/utils/levels.ts';
+import { getLanguage } from '~/libs/formatters/languages';
+import { getLevel } from '~/libs/formatters/levels';
 
 type Props = {
   abstract: string;

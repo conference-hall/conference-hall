@@ -3,11 +3,11 @@ import { z } from 'zod';
 
 import { db } from '~/libs/db';
 
-import { UserEvent } from '../organizer-event/UserEvent';
+import { UserEvent } from '../organizer-event-settings/UserEvent';
 import { Pagination } from '../shared/Pagination';
+import { ProposalSearchBuilder } from '../shared/ProposalSearchBuilder';
+import type { ProposalsFilters } from '../shared/ProposalSearchBuilder.types';
 import type { SocialLinks } from '../speaker-profile/SpeakerProfile.types';
-import { ProposalSearchBuilder } from './proposal-search-builder/ProposalSearchBuilder';
-import type { ProposalsFilters } from './proposal-search-builder/ProposalSearchBuilder.types';
 import { ReviewDetails } from './ReviewDetails';
 
 export const ProposalsStatusUpdateSchema = z.object({

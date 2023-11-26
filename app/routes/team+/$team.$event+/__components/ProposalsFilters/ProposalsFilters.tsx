@@ -1,7 +1,7 @@
 import type { ProposalStatus } from '@prisma/client';
 
 import { Card } from '~/design-system/layouts/Card.tsx';
-import type { ProposalsFilters as ProposalsFiltersType } from '~/routes/__types/proposal.ts';
+import type { ProposalsFilters } from '~/domains/shared/ProposalSearchBuilder.types.ts';
 
 import { QueryFilter } from './filters/QueryFilter.tsx';
 import { ReviewsFilter } from './filters/ReviewsFilter.tsx';
@@ -9,7 +9,7 @@ import { StatusFilter } from './filters/StatusFilter.tsx';
 import { TracksFilter } from './filters/TracksFilter.tsx';
 
 type Props = {
-  filters: ProposalsFiltersType;
+  filters: ProposalsFilters;
   statistics: { total: number; reviewed: number; statuses: Array<{ name: ProposalStatus; count: number }> };
   eventFormats: Array<{ id: string; name: string }>;
   eventCategories: Array<{ id: string; name: string }>;

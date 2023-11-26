@@ -1,10 +1,10 @@
 import { z } from 'zod';
 
+import { EventTypeSchema, EventVisibilitySchema } from '~/domains/shared/Event.types';
 import { db } from '~/libs/db';
 import { SlugAlreadyExistsError } from '~/libs/errors';
-import { EventTypeSchema, EventVisibilitySchema } from '~/routes/__types/event';
-import { slugValidator } from '~/routes/__types/validators';
-import { getCfpState } from '~/utils/event';
+import { getCfpState } from '~/libs/formatters/cfp';
+import { slugValidator } from '~/libs/validators/slug';
 
 import { UserTeam } from './UserTeam';
 

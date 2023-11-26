@@ -8,4 +8,4 @@ export const TalkSaveSchema = z.object({
   languages: z.array(z.string()),
 });
 
-export type TalkSchema = z.infer<typeof TalkSaveSchema>;
+export type TalkSaveData = z.infer<typeof TalkSaveSchema>;

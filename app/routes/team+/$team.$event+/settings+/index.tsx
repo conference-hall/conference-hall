@@ -12,8 +12,11 @@ import { Input } from '~/design-system/forms/Input.tsx';
 import { MarkdownTextArea } from '~/design-system/forms/MarkdownTextArea.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2, Subtitle } from '~/design-system/Typography.tsx';
-import { UserEvent } from '~/domains/organizer-event/UserEvent.ts';
-import { EventDetailsSettingsSchema, EventGeneralSettingsSchema } from '~/domains/organizer-event/UserEvent.types.ts';
+import { UserEvent } from '~/domains/organizer-event-settings/UserEvent.ts';
+import {
+  EventDetailsSettingsSchema,
+  EventGeneralSettingsSchema,
+} from '~/domains/organizer-event-settings/UserEvent.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
 import { EventForm } from '~/routes/__components/events/EventForm.tsx';

@@ -1,4 +1,4 @@
-import type { CfpState } from '~/routes/__types/event.ts';
+import type { CfpState } from '~/domains/shared/Event.types';
 
 type CfpIconProps = { cfpState: CfpState; className?: string };
 

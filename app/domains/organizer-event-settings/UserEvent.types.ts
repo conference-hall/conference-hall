@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
-import { EventVisibilitySchema } from '~/routes/__types/event';
-import { slugValidator } from '~/routes/__types/validators';
+import { EventVisibilitySchema } from '~/domains/shared/Event.types';
+import { slugValidator } from '~/libs/validators/slug';
 
 export const EventGeneralSettingsSchema = z.object({
   name: z.string().trim().min(3).max(50),

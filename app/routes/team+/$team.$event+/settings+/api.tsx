@@ -2,7 +2,7 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import invariant from 'tiny-invariant';
 import { v4 as uuid } from 'uuid';
 
-import { UserEvent } from '~/domains/organizer-event/UserEvent.ts';
+import { UserEvent } from '~/domains/organizer-event-settings/UserEvent.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 
 import { useTeamEvent } from '../_layout.tsx';

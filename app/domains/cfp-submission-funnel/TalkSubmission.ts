@@ -1,6 +1,5 @@
 import { db } from '~/libs/db';
 import { CfpNotOpenError, MaxSubmittedProposalsReachedError, ProposalNotFoundError } from '~/libs/errors';
-import type { TalkSaveData } from '~/routes/__types/talks';
 
 import { CallForPaper } from '../shared/CallForPaper';
 import { InvitationLink } from '../shared/InvitationLink';
@@ -8,7 +7,7 @@ import { TalksLibrary } from '../speaker-talks-library/TalksLibrary';
 import { ProposalReceivedEmail } from './emails/proposal-received-email';
 import { ProposalSubmittedEmail } from './emails/proposal-submitted-email';
 import { sendSubmittedTalkSlackMessage } from './slack/slack.services';
-import type { TrackUpdateData } from './TalkSubmission.types';
+import type { DraftSaveData, TrackUpdateData } from './TalkSubmission.types';
 
 export class TalkSubmission {
   constructor(
@@ -20,7 +19,7 @@ export class TalkSubmission {
     return new TalkSubmission(speakerId, eventSlug);
   }
 
-  async saveDraft(talkId: string, data: TalkSaveData) {
+  async saveDraft(talkId: string, data: DraftSaveData) {
     const cfp = await CallForPaper.for(this.eventSlug);
     if (!cfp.isOpen) throw new CfpNotOpenError();
 
