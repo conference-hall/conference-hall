@@ -8,6 +8,7 @@ import { ToggleGroup } from '~/design-system/forms/Toggles.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2, Subtitle } from '~/design-system/Typography.tsx';
 import { UserEvent } from '~/domains/organizer-event/UserEvent.ts';
+import { EventTracksSettingsSchema } from '~/domains/organizer-event/UserEvent.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 
@@ -21,7 +22,6 @@ import {
   saveCategory,
   saveFormat,
 } from './__server/update-tracks.server.ts';
-import { EventTracksSettingsSchema } from './__types/event-track-settings.schema.ts';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);

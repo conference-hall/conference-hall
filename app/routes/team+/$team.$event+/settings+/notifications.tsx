@@ -10,12 +10,14 @@ import { ToggleGroup } from '~/design-system/forms/Toggles.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2 } from '~/design-system/Typography.tsx';
 import { UserEvent } from '~/domains/organizer-event/UserEvent.ts';
+import {
+  EventEmailNotificationsSettingsSchema,
+  EventNotificationsSettingsSchema,
+} from '~/domains/organizer-event/UserEvent.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 
 import { useTeamEvent } from '../_layout.tsx';
-import { EventEmailNotificationsSettingsSchema } from './__types/event-email-notifications-settings.schema.ts';
-import { EventNotificationsSettingsSchema } from './__types/event-notifications-settings.schema.ts';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);

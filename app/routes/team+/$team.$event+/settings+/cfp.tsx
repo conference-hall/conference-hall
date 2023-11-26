@@ -5,6 +5,11 @@ import { useActionData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { UserEvent } from '~/domains/organizer-event/UserEvent.ts';
+import {
+  CfpConferenceOpeningSchema,
+  CfpMeetupOpeningSchema,
+  CfpPreferencesSchema,
+} from '~/domains/organizer-event/UserEvent.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 
@@ -12,7 +17,6 @@ import { useTeamEvent } from '../_layout.tsx';
 import { CommonCfpSetting } from './__components/CommonCfpSetting.tsx';
 import { ConferenceCfpOpening } from './__components/ConferenceCfpOpening.tsx';
 import { MeetupCfpOpening } from './__components/MeetupCfpOpening.tsx';
-import * as schemas from './__types/event-cfp-settings.schema.ts';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);
@@ -29,19 +33,19 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const intent = form.get('intent');
   switch (intent) {
     case 'save-cfp-preferences': {
-      const result = parse(form, { schema: schemas.CfpPreferencesSchema });
+      const result = parse(form, { schema: CfpPreferencesSchema });
       if (!result.value) return json(result.error);
       await event.update(result.value);
       break;
     }
     case 'save-cfp-conference-opening': {
-      const result = parse(form, { schema: schemas.CfpConferenceOpeningSchema });
+      const result = parse(form, { schema: CfpConferenceOpeningSchema });
       if (!result.value) return json(result.error);
       await event.update(result.value);
       break;
     }
     case 'save-cfp-meetup-opening': {
-      const result = parse(form, { schema: schemas.CfpMeetupOpeningSchema });
+      const result = parse(form, { schema: CfpMeetupOpeningSchema });
       if (!result.value) return json(result.error);
       await event.update(result.value);
       break;

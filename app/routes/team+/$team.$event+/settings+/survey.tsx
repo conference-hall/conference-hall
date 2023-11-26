@@ -10,11 +10,11 @@ import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2, Subtitle } from '~/design-system/Typography.tsx';
 import { questions } from '~/domains/cfp-survey/SurveyQuestions.ts';
 import { UserEvent } from '~/domains/organizer-event/UserEvent.ts';
+import { EventSurveySettingsSchema } from '~/domains/organizer-event/UserEvent.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 
 import { useTeamEvent } from '../_layout.tsx';
-import { EventSurveySettingsSchema } from './__types/event-survey-settings.schema.ts';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);
