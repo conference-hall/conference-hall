@@ -50,11 +50,11 @@ export class UserTeam {
   async updateSettings(data: z.infer<typeof TeamUpdateSchema>) {
     const member = await this.allowedFor(['OWNER']);
 
-    return await db.$transaction(async (trx) => {
+    return db.$transaction(async (trx) => {
       const existSlug = await trx.team.findFirst({ where: { slug: data.slug, id: { not: member.teamId } } });
       if (existSlug) throw new SlugAlreadyExistsError();
 
-      return trx.team.update({ where: { slug: this.slug }, data });
+      return trx.team.update({ where: { id: member.teamId }, data });
     });
   }
 }

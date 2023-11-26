@@ -7,9 +7,9 @@ import invariant from 'tiny-invariant';
 import { ToggleGroup } from '~/design-system/forms/Toggles.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2, Subtitle } from '~/design-system/Typography.tsx';
+import { UserEvent } from '~/domains/event-management/UserEvent.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-import { updateEvent } from '~/routes/__server/teams/update-event.server.ts';
 
 import { useTeamEvent } from '../_layout.tsx';
 import { NewTrackButton } from './__components/SaveTrackForm.tsx';
@@ -30,12 +30,12 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
   const userId = await requireSession(request);
+  invariant(params.team, 'Invalid team slug');
   invariant(params.event, 'Invalid event slug');
+  const event = UserEvent.for(userId, params.team, params.event);
+
   const form = await request.formData();
-
-  const action = form.get('_action');
-
-  switch (action) {
+  switch (form.get('_action')) {
     case 'delete-formats': {
       const trackId = String(form.get('trackId'));
       await deleteFormat(params.event, userId, trackId);
@@ -61,7 +61,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     case 'update-track-settings': {
       const result = parse(form, { schema: EventTracksSettingsSchema });
       if (!result.value) return json(result.error);
-      await updateEvent(params.event, userId, result.value);
+      await event.update(result.value);
       return toast('success', 'Track setting updated.');
     }
   }

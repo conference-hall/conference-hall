@@ -13,7 +13,7 @@ import { useUser } from '~/root.tsx';
 import { Navbar } from '~/routes/__components/navbar/Navbar.tsx';
 
 import TeamBreadcrumb from '../__components/teams/TeamBreadcrumb';
-import type { TeamEvent } from './$team.$event+/__server/get-event.server';
+import type { loader as routeEventLoader } from './$team.$event+/_layout';
 import { EventTabs } from './$team+/__components/EventTabs';
 import { TeamTabs } from './$team+/__components/TeamTabs';
 
@@ -30,7 +30,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 export default function TeamLayout() {
   const { user } = useUser();
   const team = useLoaderData<typeof loader>();
-  const event = useRouteLoaderData('routes/team+/$team.$event+/_layout') as TeamEvent;
+  const event = useRouteLoaderData<typeof routeEventLoader>('routes/team+/$team.$event+/_layout');
 
   return (
     <>

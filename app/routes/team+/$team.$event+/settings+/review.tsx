@@ -5,9 +5,9 @@ import invariant from 'tiny-invariant';
 import { ToggleGroup } from '~/design-system/forms/Toggles.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2 } from '~/design-system/Typography.tsx';
+import { UserEvent } from '~/domains/event-management/UserEvent.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-import { updateEvent } from '~/routes/__server/teams/update-event.server.ts';
 
 import { useTeamEvent } from '../_layout.tsx';
 
@@ -18,10 +18,13 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 export const action = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
+  invariant(params.team, 'Invalid team slug');
   invariant(params.event, 'Invalid event slug');
+  const event = UserEvent.for(userId, params.team, params.event);
+
   const form = await request.formData();
   const settingName = form.get('_setting') as string;
-  await updateEvent(params.event, userId, { [settingName]: form.get(settingName) === 'true' });
+  await event.update({ [settingName]: form.get(settingName) === 'true' });
   return toast('success', 'Review setting saved.');
 };
 

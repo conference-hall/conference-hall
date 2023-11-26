@@ -12,10 +12,10 @@ import { Input } from '~/design-system/forms/Input.tsx';
 import { MarkdownTextArea } from '~/design-system/forms/MarkdownTextArea.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2, Subtitle } from '~/design-system/Typography.tsx';
+import { UserEvent } from '~/domains/event-management/UserEvent.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
 import { EventForm } from '~/routes/__components/events/EventForm.tsx';
-import { updateEvent } from '~/routes/__server/teams/update-event.server.ts';
 
 import { useTeamEvent } from '../_layout.tsx';
 import { EventDetailsSettingsSchema } from './__types/event-details-settings.schema.ts';
@@ -28,30 +28,34 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
   const userId = await requireSession(request);
+  invariant(params.team, 'Invalid team slug');
   invariant(params.event, 'Invalid event slug');
+  const event = UserEvent.for(userId, params.team, params.event);
+
   const form = await request.formData();
   const action = form.get('_action');
-
   switch (action) {
     case 'general': {
       const result = parse(form, { schema: EventGeneralSettingsSchema });
       if (!result.value) return json(result.error);
 
-      const updated = await updateEvent(params.event, userId, result.value);
-      if (!updated.slug) return json({ slug: [updated.error] } as Record<string, string[]>);
-
-      return redirectWithToast(`/team/${params.team}/${updated.slug}/settings`, 'success', 'Event saved.');
+      try {
+        const updated = await event.update(result.value);
+        return redirectWithToast(`/team/${params.team}/${updated.slug}/settings`, 'success', 'Event saved.');
+      } catch (SlugAlreadyExistsError) {
+        return json({ slug: ['This URL already exists, please try another one.'] } as Record<string, string[]>);
+      }
     }
     case 'details': {
       const result = parse(form, { schema: EventDetailsSettingsSchema });
       if (!result.value) return json(result.error);
 
-      await updateEvent(params.event, userId, result.value);
+      await event.update(result.value);
       return toast('success', 'Event details saved.');
     }
     case 'archive': {
       const archived = Boolean(form.get('archived'));
-      await updateEvent(params.event, userId, { archived });
+      await event.update({ archived });
       return toast('success', `Event ${archived ? 'archived' : 'restored'}.`);
     }
   }

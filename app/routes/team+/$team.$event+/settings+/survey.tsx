@@ -8,10 +8,10 @@ import { Checkbox } from '~/design-system/forms/Checkboxes.tsx';
 import { ToggleGroup } from '~/design-system/forms/Toggles.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2, Subtitle } from '~/design-system/Typography.tsx';
+import { UserEvent } from '~/domains/event-management/UserEvent.ts';
 import { questions } from '~/domains/event-survey/SurveyQuestions.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-import { updateEvent } from '~/routes/__server/teams/update-event.server.ts';
 
 import { useTeamEvent } from '../_layout.tsx';
 import { EventSurveySettingsSchema } from './__types/event-survey-settings.schema.ts';
@@ -23,20 +23,21 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 export const action = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
+  invariant(params.team, 'Invalid team slug');
   invariant(params.event, 'Invalid event slug');
-  const form = await request.formData();
-  const action = form.get('_action');
+  const event = UserEvent.for(userId, params.team, params.event);
 
-  switch (action) {
+  const form = await request.formData();
+  switch (form.get('_action')) {
     case 'enable-survey': {
       const surveyEnabled = form.get('surveyEnabled') === 'true';
-      await updateEvent(params.event, userId, { surveyEnabled });
+      await event.update({ surveyEnabled });
       return toast('success', `Speaker survey ${surveyEnabled ? 'enabled' : 'disabled'}`);
     }
     case 'save-questions': {
       const result = parse(form, { schema: EventSurveySettingsSchema });
       if (!result.value) return json(null);
-      await updateEvent(params.event, userId, result.value);
+      await event.update(result.value);
       return toast('success', 'Survey questions saved.');
     }
   }
