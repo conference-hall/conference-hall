@@ -1,6 +1,6 @@
 import { TeamRole } from '@prisma/client';
 
-import { EventProposalsSearch } from '~/domains/organizer-cfp-reviews/EventProposalsSearch';
+import { ProposalSearchBuilder } from '~/domains/organizer-cfp-reviews/proposal-search-builder/ProposalSearchBuilder';
 import { ReviewsDetails } from '~/domains/organizer-cfp-reviews/ReviewDetails';
 import { jsonToArray } from '~/libs/prisma.ts';
 import { allowedForEvent } from '~/routes/__server/teams/check-user-role.server.ts';
@@ -9,7 +9,9 @@ import type { ProposalsFilters } from '~/routes/__types/proposal.ts';
 export async function exportProposals(eventSlug: string, userId: string, filters: ProposalsFilters) {
   const event = await allowedForEvent(eventSlug, userId, [TeamRole.OWNER, TeamRole.MEMBER]);
 
-  const search = new EventProposalsSearch(eventSlug, userId, filters, { withSpeakers: event.displayProposalsSpeakers });
+  const search = new ProposalSearchBuilder(eventSlug, userId, filters, {
+    withSpeakers: event.displayProposalsSpeakers,
+  });
 
   const proposals = await search.proposals({ reviews: event.displayProposalsReviews });
 

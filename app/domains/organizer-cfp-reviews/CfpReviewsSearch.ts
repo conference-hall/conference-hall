@@ -1,7 +1,7 @@
 import { UserEvent } from '../organizer-event/UserEvent';
 import { Pagination } from '../shared/Pagination';
-import { EventProposalsSearch } from './EventProposalsSearch';
-import type { ProposalsFilters } from './EventProposalsSearch.types';
+import { ProposalSearchBuilder } from './proposal-search-builder/ProposalSearchBuilder';
+import type { ProposalsFilters } from './proposal-search-builder/ProposalSearchBuilder.types';
 import { ReviewsDetails } from './ReviewDetails';
 
 export class CfpReviewsSearch {
@@ -18,14 +18,11 @@ export class CfpReviewsSearch {
   async search(filters: ProposalsFilters, page: number = 1) {
     const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER', 'REVIEWER']);
 
-    const search = new EventProposalsSearch(event.slug, this.userId, filters, {
+    const search = new ProposalSearchBuilder(event.slug, this.userId, filters, {
       withSpeakers: event.displayProposalsSpeakers,
     });
-
     const statistics = await search.statistics();
-
     const pagination = new Pagination({ page, total: statistics.total });
-
     const proposals = await search.proposalsByPage(pagination);
 
     return {

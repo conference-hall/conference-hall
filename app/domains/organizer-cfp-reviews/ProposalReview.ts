@@ -5,8 +5,12 @@ import { sortBy } from '~/utils/arrays';
 import type { SurveyData } from '../cfp-survey/SpeakerAnswers.types';
 import { UserEvent } from '../organizer-event/UserEvent';
 import type { SocialLinks } from '../speaker-profile/SpeakerProfile.types';
-import type { ProposalReviewData } from './ProposalReview.types';
+import { ProposalSearchBuilder } from './proposal-search-builder/ProposalSearchBuilder';
+import type { ProposalsFilters } from './proposal-search-builder/ProposalSearchBuilder.types';
+import type { ProposalReviewUpdateData } from './ProposalReview.types';
 import { ReviewsDetails } from './ReviewDetails';
+
+export type ProposalReviewData = Awaited<ReturnType<typeof ProposalReview.prototype.get>>;
 
 export class ProposalReview {
   constructor(
@@ -16,13 +20,12 @@ export class ProposalReview {
   ) {}
 
   static for(userId: string, teamSlug: string, eventSlug: string, proposalId: string) {
-    const event = UserEvent.for(userId, teamSlug, eventSlug);
-    return new ProposalReview(userId, proposalId, event);
+    const userEvent = UserEvent.for(userId, teamSlug, eventSlug);
+    return new ProposalReview(userId, proposalId, userEvent);
   }
 
   async get() {
     const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER', 'REVIEWER']);
-    if (!event.reviewEnabled) throw new ReviewDisabledError();
 
     const proposal = await db.proposal.findFirst({
       include: {
@@ -56,16 +59,32 @@ export class ProposalReview {
         you: reviews.ofUser(this.userId),
         summary: event.displayProposalsReviews ? reviews.summary() : undefined,
       },
-      speakers: proposal.speakers?.map((speaker) => ({
-        id: speaker.id,
-        name: speaker.name,
-        picture: speaker.picture,
-        company: speaker.company,
-      })),
+      speakers:
+        proposal.speakers?.map((speaker) => ({
+          id: speaker.id,
+          name: speaker.name,
+          picture: speaker.picture,
+          company: speaker.company,
+        })) || [],
     };
   }
 
-  async addReview(data: ProposalReviewData) {
+  async getPreviousAndNextReviews(filters: ProposalsFilters) {
+    const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER', 'REVIEWER']);
+
+    const search = new ProposalSearchBuilder(event.slug, this.userId, filters, {
+      withSpeakers: event.displayProposalsSpeakers,
+    });
+    const proposalIds = await search.proposalsIds();
+    const totalProposals = proposalIds.length;
+    const curIndex = proposalIds.findIndex((id) => id === this.proposalId);
+    const previousId = curIndex - 1 >= 0 ? proposalIds.at(curIndex - 1) : undefined;
+    const nextId = curIndex + 1 < totalProposals ? proposalIds.at(curIndex + 1) : undefined;
+
+    return { total: totalProposals, current: curIndex + 1, previousId, nextId };
+  }
+
+  async addReview(data: ProposalReviewUpdateData) {
     const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER', 'REVIEWER']);
     if (!event.reviewEnabled) throw new ReviewDisabledError();
 

@@ -7,7 +7,7 @@ import invariant from 'tiny-invariant';
 import { Pagination } from '~/design-system/Pagination.tsx';
 import { H1, H2 } from '~/design-system/Typography.tsx';
 import { CfpReviewsSearch } from '~/domains/organizer-cfp-reviews/CfpReviewsSearch.ts';
-import { parseUrlFilters } from '~/domains/organizer-cfp-reviews/EventProposalsSearch.types.ts';
+import { parseUrlFilters } from '~/domains/organizer-cfp-reviews/proposal-search-builder/ProposalSearchBuilder.types.ts';
 import { parseUrlPage } from '~/domains/shared/Pagination.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';

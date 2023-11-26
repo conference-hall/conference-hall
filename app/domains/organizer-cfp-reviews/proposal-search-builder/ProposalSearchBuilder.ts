@@ -7,7 +7,7 @@ import type { EmailStatusData, ProposalsFilters } from '~/routes/__types/proposa
 
 type SearchOptions = { withSpeakers: boolean };
 
-export class EventProposalsSearch {
+export class ProposalSearchBuilder {
   eventSlug: string;
   userId: string;
   filters: ProposalsFilters;

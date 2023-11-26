@@ -41,7 +41,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 };
 
 export default function OrganizerProposalEditRoute() {
-  const { proposalReview } = useProposalReview();
+  const { proposal } = useProposalReview();
   const [searchParams] = useSearchParams();
   const event = useLoaderData<typeof loader>();
   const errors = useActionData<typeof action>();
@@ -50,12 +50,7 @@ export default function OrganizerProposalEditRoute() {
     <Card>
       <Card.Content>
         <Form id="edit-proposal-form" method="POST">
-          <DetailsForm
-            initialValues={proposalReview.proposal}
-            formats={event.formats}
-            categories={event.categories}
-            errors={errors}
-          />
+          <DetailsForm initialValues={proposal} formats={event.formats} categories={event.categories} errors={errors} />
         </Form>
       </Card.Content>
       <Card.Actions>

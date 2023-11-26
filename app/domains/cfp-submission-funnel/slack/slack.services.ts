@@ -11,7 +11,9 @@ function buildPayload(
   const attachment = {
     fallback: `New Talk submitted to ${event.name}`,
     pretext: `*New talk submitted to ${event.name}*`,
-    author_name: `by ${proposal.speakers.map((s) => s.name).join(' & ')}`,
+    author_name: `by ${sortBy(proposal.speakers, 'name')
+      .map((s) => s.name)
+      .join(' & ')}`,
     title: proposal.title,
     text: proposal.abstract,
     title_link: `${config.appUrl}/team/${event.team.slug}/${event.slug}/review/${proposal.id}`,

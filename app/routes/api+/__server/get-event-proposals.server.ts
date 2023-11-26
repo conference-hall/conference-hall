@@ -1,4 +1,4 @@
-import { EventProposalsSearch } from '~/domains/organizer-cfp-reviews/EventProposalsSearch';
+import { ProposalSearchBuilder } from '~/domains/organizer-cfp-reviews/proposal-search-builder/ProposalSearchBuilder';
 import { db } from '~/libs/db.ts';
 import { ApiKeyInvalidError, EventNotFoundError } from '~/libs/errors.ts';
 import { jsonToArray } from '~/libs/prisma.ts';
@@ -14,7 +14,7 @@ export const getEventProposals = async (eventSlug: string, apiKey: string, filte
 
   if (event.apiKey !== apiKey) throw new ApiKeyInvalidError();
 
-  const search = new EventProposalsSearch(eventSlug, 'no-user', filters);
+  const search = new ProposalSearchBuilder(eventSlug, 'no-user', filters);
 
   const proposals = await search.proposals({ reviews: false });
 

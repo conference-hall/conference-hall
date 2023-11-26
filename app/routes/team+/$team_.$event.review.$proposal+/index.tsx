@@ -9,7 +9,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export default function ProposalReviewRoute() {
-  const { proposalReview } = useProposalReview();
+  const { proposal } = useProposalReview();
 
-  return <ProposalDetailsSection {...proposalReview.proposal} />;
+  return <ProposalDetailsSection {...proposal} />;
 }

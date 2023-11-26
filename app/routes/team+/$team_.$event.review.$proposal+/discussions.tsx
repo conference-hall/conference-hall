@@ -2,18 +2,20 @@ import { type ActionFunctionArgs, json, type LoaderFunctionArgs } from '@remix-r
 import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
+import { ProposalReviewDiscussion } from '~/domains/organizer-cfp-reviews/ProposalReviewDiscussion.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { useUser } from '~/root.tsx';
 
 import { Discussions } from './__components/Discussions.tsx';
-import { addProposalMessage, getProposalMessages, removeProposalMessage } from './__server/messages.server.ts';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
+  invariant(params.team, 'Invalid team slug');
   invariant(params.proposal, 'Invalid proposal id');
 
-  const messages = await getProposalMessages(params.event, params.proposal, userId);
+  const discussions = ProposalReviewDiscussion.for(userId, params.team, params.event, params.proposal);
+  const messages = await discussions.messages();
 
   return json(messages);
 };
@@ -21,16 +23,19 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 export const action = async ({ request, params }: ActionFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
+  invariant(params.team, 'Invalid team slug');
   invariant(params.proposal, 'Invalid proposal id');
-  const form = await request.formData();
 
+  const discussions = ProposalReviewDiscussion.for(userId, params.team, params.event, params.proposal);
+
+  const form = await request.formData();
   const action = form.get('_action')?.toString();
   if (action === 'delete') {
     const messageId = form.get('messageId')?.toString();
-    if (messageId) await removeProposalMessage(params.event, params.proposal, userId, messageId);
+    if (messageId) await discussions.remove(messageId);
   } else {
     const comment = form.get('comment')?.toString();
-    if (comment) await addProposalMessage(params.event, params.proposal, userId, comment);
+    if (comment) await discussions.add(comment);
   }
   return null;
 };

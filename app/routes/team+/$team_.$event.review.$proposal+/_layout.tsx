@@ -4,8 +4,10 @@ import { json } from '@remix-run/node';
 import { Outlet, useLoaderData, useOutletContext, useParams } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
+import type { ProposalReviewData } from '~/domains/organizer-cfp-reviews/ProposalReview.ts';
 import { ProposalReview } from '~/domains/organizer-cfp-reviews/ProposalReview.ts';
-import { ProposalReviewDataSchema } from '~/domains/organizer-cfp-reviews/ProposalReview.types.ts';
+import { ProposalReviewUpdateDataSchema } from '~/domains/organizer-cfp-reviews/ProposalReview.types.ts';
+import { UserEvent } from '~/domains/organizer-event/UserEvent.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
@@ -15,8 +17,6 @@ import { parseProposalsFilters } from '~/routes/__types/proposal.ts';
 import { ReviewHeader } from './__components/Header.tsx';
 import { ReviewInfoSection } from './__components/ReviewInfoSection.tsx';
 import { ReviewTabs } from './__components/Tabs.tsx';
-import type { ProposalReview as ProposalReviewData } from './__server/get-proposal-review.server.ts';
-import { getProposalReview } from './__server/get-proposal-review.server.ts';
 
 export const meta = mergeMeta(() => [{ title: `Review proposal | Conference Hall` }]);
 
@@ -26,10 +26,16 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   invariant(params.team, 'Invalid team slug');
   invariant(params.proposal, 'Invalid proposal id');
 
+  const event = await UserEvent.for(userId, params.team, params.event).get();
+
   const url = new URL(request.url);
   const filters = parseProposalsFilters(url.searchParams);
-  const proposal = await getProposalReview(params.event, params.proposal, userId, filters);
-  return json(proposal);
+
+  const review = ProposalReview.for(userId, params.team, params.event, params.proposal);
+  const proposal = await review.get();
+  const pagination = await review.getPreviousAndNextReviews(filters);
+
+  return json({ event, proposal, pagination });
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -39,10 +45,10 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   invariant(params.proposal, 'Invalid proposal id');
 
   const form = await request.formData();
-  const result = parse(form, { schema: ProposalReviewDataSchema });
+  const result = parse(form, { schema: ProposalReviewUpdateDataSchema });
   if (!result.value) return toast('error', 'Something went wrong.');
 
-  const proposalReview = ProposalReview.for(params.event, params.team, params.proposal, userId);
+  const proposalReview = ProposalReview.for(userId, params.team, params.event, params.proposal);
   await proposalReview.addReview(result.value);
 
   const nextPath = form.get('nextPath') as string;
@@ -54,8 +60,7 @@ export default function ProposalReviewLayoutRoute() {
   const params = useParams();
   const { user } = useUser();
 
-  const proposalReview = useLoaderData<typeof loader>();
-  const { proposal, pagination } = proposalReview;
+  const { event, proposal, pagination } = useLoaderData<typeof loader>();
   const { you, summary } = proposal.reviews;
 
   const role = user?.teams.find((team) => team.slug === params.team)?.role;
@@ -74,7 +79,7 @@ export default function ProposalReviewLayoutRoute() {
             displayReviews={Boolean(summary)}
           />
 
-          <Outlet context={{ user, proposalReview }} />
+          <Outlet context={{ user, event, proposal }} />
         </div>
 
         <div className="w-full lg:w-fit">
@@ -85,7 +90,7 @@ export default function ProposalReviewLayoutRoute() {
             status={proposal.status}
             comments={proposal.comments}
             submittedAt={proposal.createdAt}
-            reviewEnabled={proposalReview.reviewEnabled}
+            reviewEnabled={event.reviewEnabled}
             nextId={pagination.nextId}
           />
         </div>
@@ -95,5 +100,5 @@ export default function ProposalReviewLayoutRoute() {
 }
 
 export function useProposalReview() {
-  return useOutletContext<{ proposalReview: ProposalReviewData }>();
+  return useOutletContext<{ proposal: ProposalReviewData }>();
 }
