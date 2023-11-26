@@ -1,4 +1,4 @@
-import type { SurveyData } from '~/domains/event-survey/SpeakerAnswers.types';
+import type { SurveyData } from '~/domains/cfp-survey/SpeakerAnswers.types';
 import { db } from '~/libs/db.ts';
 import { ForbiddenOperationError, ProposalNotFoundError } from '~/libs/errors.ts';
 import { allowedForEvent } from '~/routes/__server/teams/check-user-role.server.ts';

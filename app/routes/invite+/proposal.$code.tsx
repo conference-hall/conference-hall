@@ -7,7 +7,7 @@ import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { H1, Text } from '~/design-system/Typography.tsx';
-import { CoSpeakerProposalInvite } from '~/domains/submissions-management/CoSpeakerProposalInvite.ts';
+import { CoSpeakerProposalInvite } from '~/domains/cfp-submissions/CoSpeakerProposalInvite';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { useUser } from '~/root.tsx';

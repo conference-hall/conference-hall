@@ -10,7 +10,7 @@ import { Checkbox } from '~/design-system/forms/Checkboxes.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { ExternalLink } from '~/design-system/Links.tsx';
 import { H1, H2, Subtitle } from '~/design-system/Typography.tsx';
-import { TalkSubmission } from '~/domains/submission-funnel/TalkSubmission';
+import { TalkSubmission } from '~/domains/cfp-submission-funnel/TalkSubmission';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast } from '~/libs/toasts/toast.server.ts';
 import { useEvent } from '~/routes/$event+/_layout.tsx';

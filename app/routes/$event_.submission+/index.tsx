@@ -5,8 +5,8 @@ import invariant from 'tiny-invariant';
 
 import { ProgressBar } from '~/design-system/ProgressBar.tsx';
 import { H2, Text } from '~/design-system/Typography.tsx';
-import { Submissions } from '~/domains/submissions-management/Submissions.ts';
-import { TalksLibrary } from '~/domains/talk-library/TalksLibrary.ts';
+import { Submissions } from '~/domains/cfp-submissions/Submissions.ts';
+import { TalksLibrary } from '~/domains/speaker-talks-library/TalksLibrary.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { useEvent } from '~/routes/$event+/_layout.tsx';
 

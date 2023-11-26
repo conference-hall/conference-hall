@@ -6,7 +6,7 @@ import invariant from 'tiny-invariant';
 
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
-import { UserProposal } from '~/domains/submissions-management/UserProposal.ts';
+import { UserProposal } from '~/domains/cfp-submissions/UserProposal.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
 import { ProposalDetailsSection } from '~/routes/__components/proposals/ProposalDetailsSection.tsx';

@@ -1,6 +1,6 @@
 import { ReviewFeeling } from '@prisma/client';
 
-import { ReviewsDetails } from './reviews-details.ts';
+import { ReviewsDetails } from './ReviewDetails.ts';
 
 describe('#ReviewsDetails', () => {
   it('computes reviews info from user reviews', () => {

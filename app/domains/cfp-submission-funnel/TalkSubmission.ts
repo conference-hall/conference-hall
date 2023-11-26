@@ -4,7 +4,7 @@ import type { TalkSaveData } from '~/routes/__types/talks';
 
 import { CallForPaper } from '../shared/CallForPaper';
 import { InvitationLink } from '../shared/InvitationLink';
-import { TalksLibrary } from '../talk-library/TalksLibrary';
+import { TalksLibrary } from '../speaker-talks-library/TalksLibrary';
 import { ProposalReceivedEmail } from './emails/proposal-received-email';
 import { ProposalSubmittedEmail } from './emails/proposal-submitted-email';
 import { sendSubmittedTalkSlackMessage } from './slack/slack.services';

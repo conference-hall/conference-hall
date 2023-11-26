@@ -1,8 +1,8 @@
 import { ReviewFeeling } from '@prisma/client';
 
+import { ReviewsDetails } from '~/domains/organizer-cfp-reviews/ReviewDetails';
 import { db } from '~/libs/db.ts';
 import { DeliberationDisabledError } from '~/libs/errors.ts';
-import { ReviewsDetails } from '~/routes/__server/reviews/reviews-details.ts';
 import { allowedForEvent } from '~/routes/__server/teams/check-user-role.server.ts';
 import type { ProposalReviewData } from '~/routes/__types/proposal.ts';
 

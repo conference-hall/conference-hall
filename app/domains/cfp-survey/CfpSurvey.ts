@@ -3,11 +3,11 @@ import { EventNotFoundError, SurveyNotEnabledError } from '~/libs/errors';
 
 import { questions } from './SurveyQuestions';
 
-export class EventSurvey {
+export class CfpSurvey {
   constructor(private eventSlug: string) {}
 
   static of(eventSlug: string) {
-    return new EventSurvey(eventSlug);
+    return new CfpSurvey(eventSlug);
   }
 
   async questions() {

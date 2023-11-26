@@ -7,7 +7,7 @@ import invariant from 'tiny-invariant';
 import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2, Subtitle } from '~/design-system/Typography.tsx';
-import { TeamUpdateSchema, UserTeam } from '~/domains/team-management/UserTeam.ts';
+import { TeamUpdateSchema, UserTeam } from '~/domains/organizer-team/UserTeam.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast } from '~/libs/toasts/toast.server.ts';
 import { TeamForm } from '~/routes/__components/teams/TeamForm.tsx';

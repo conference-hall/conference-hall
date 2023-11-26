@@ -7,7 +7,7 @@ import invariant from 'tiny-invariant';
 import { ButtonLink } from '~/design-system/Buttons.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
-import { TalksLibrary } from '~/domains/talk-library/TalksLibrary.ts';
+import { TalksLibrary } from '~/domains/speaker-talks-library/TalksLibrary.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';

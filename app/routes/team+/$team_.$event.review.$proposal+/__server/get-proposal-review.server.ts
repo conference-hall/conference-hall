@@ -1,8 +1,8 @@
-import { EventProposalsSearch } from '~/domains/organizer/proposal-search/EventProposalsSearch';
+import { EventProposalsSearch } from '~/domains/organizer-cfp-reviews/EventProposalsSearch';
+import { ReviewsDetails } from '~/domains/organizer-cfp-reviews/ReviewDetails';
 import { db } from '~/libs/db.ts';
 import { ProposalNotFoundError } from '~/libs/errors.ts';
 import { jsonToArray } from '~/libs/prisma.ts';
-import { ReviewsDetails } from '~/routes/__server/reviews/reviews-details.ts';
 import { allowedForEvent } from '~/routes/__server/teams/check-user-role.server.ts';
 import type { ProposalsFilters } from '~/routes/__types/proposal.ts';
 

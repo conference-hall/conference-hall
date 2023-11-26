@@ -4,7 +4,7 @@ import { json } from '@remix-run/node';
 import { useActionData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { UserEvent } from '~/domains/event-management/UserEvent.ts';
+import { UserEvent } from '~/domains/organizer-event/UserEvent.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 

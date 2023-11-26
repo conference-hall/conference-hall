@@ -8,8 +8,8 @@ import { Checkbox } from '~/design-system/forms/Checkboxes.tsx';
 import { ToggleGroup } from '~/design-system/forms/Toggles.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2, Subtitle } from '~/design-system/Typography.tsx';
-import { UserEvent } from '~/domains/event-management/UserEvent.ts';
-import { questions } from '~/domains/event-survey/SurveyQuestions.ts';
+import { questions } from '~/domains/cfp-survey/SurveyQuestions.ts';
+import { UserEvent } from '~/domains/organizer-event/UserEvent.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 

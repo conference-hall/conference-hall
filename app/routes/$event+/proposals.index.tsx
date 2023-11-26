@@ -6,7 +6,7 @@ import invariant from 'tiny-invariant';
 import { ButtonLink } from '~/design-system/Buttons.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
-import { Submissions } from '~/domains/submissions-management/Submissions.ts';
+import { Submissions } from '~/domains/cfp-submissions/Submissions.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 
 import { ProposalsList } from './__components/ProposalsList.tsx';

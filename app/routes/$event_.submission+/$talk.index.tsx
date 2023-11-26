@@ -8,10 +8,10 @@ import invariant from 'tiny-invariant';
 import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2 } from '~/design-system/Typography.tsx';
-import { SubmissionSteps } from '~/domains/submission-funnel/SubmissionSteps';
-import { TalkSubmission } from '~/domains/submission-funnel/TalkSubmission.ts';
-import { TalksLibrary } from '~/domains/talk-library/TalksLibrary';
-import { TalkSaveSchema } from '~/domains/talk-library/TalksLibrary.types';
+import { SubmissionSteps } from '~/domains/cfp-submission-funnel/SubmissionSteps';
+import { TalkSubmission } from '~/domains/cfp-submission-funnel/TalkSubmission';
+import { TalksLibrary } from '~/domains/speaker-talks-library/TalksLibrary';
+import { TalkSaveSchema } from '~/domains/speaker-talks-library/TalksLibrary.types';
 import { requireSession } from '~/libs/auth/session.ts';
 import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm.tsx';
 

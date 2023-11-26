@@ -10,10 +10,10 @@ import { MarkdownTextArea } from '~/design-system/forms/MarkdownTextArea.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { ExternalLink } from '~/design-system/Links.tsx';
 import { H2, Subtitle, Text } from '~/design-system/Typography.tsx';
+import { SubmissionSteps } from '~/domains/cfp-submission-funnel/SubmissionSteps';
+import { TalkSubmission } from '~/domains/cfp-submission-funnel/TalkSubmission';
 import { SpeakerProfile } from '~/domains/speaker-profile/SpeakerProfile';
 import { DetailsSchema } from '~/domains/speaker-profile/SpeakerProfile.types';
-import { SubmissionSteps } from '~/domains/submission-funnel/SubmissionSteps';
-import { TalkSubmission } from '~/domains/submission-funnel/TalkSubmission';
 import { requireSession } from '~/libs/auth/session.ts';
 import { CoSpeakersList, InviteCoSpeakerButton } from '~/routes/__components/proposals/forms/CoSpeaker.tsx';
 
