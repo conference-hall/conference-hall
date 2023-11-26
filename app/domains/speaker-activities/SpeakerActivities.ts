@@ -2,7 +2,8 @@ import { Prisma } from '@prisma/client';
 
 import { getSpeakerProposalStatus } from '~/domains/cfp-submissions/get-speaker-proposal-status';
 import { db } from '~/libs/db';
-import { getCfpState } from '~/libs/formatters/cfp';
+
+import { CallForPaper } from '../shared/CallForPaper';
 
 const EVENTS_BY_PAGE = 3;
 
@@ -33,12 +34,13 @@ export class SpeakerActivities {
     return {
       activities: eventIds.map((id) => {
         const event = events.find((e) => e.id === id)!;
+        const cfp = new CallForPaper(event);
 
         return {
           slug: event.slug,
           name: event.name,
           logo: event.logo,
-          cfpState: getCfpState(event.type, event.cfpStart, event.cfpEnd),
+          cfpState: cfp.state,
           submissions: event.proposals.map((proposal) => ({
             id: proposal.id,
             title: proposal.title,

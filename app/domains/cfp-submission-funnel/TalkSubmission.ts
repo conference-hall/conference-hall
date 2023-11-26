@@ -1,5 +1,10 @@
 import { db } from '~/libs/db';
-import { CfpNotOpenError, MaxSubmittedProposalsReachedError, ProposalNotFoundError } from '~/libs/errors';
+import {
+  CfpNotOpenError,
+  EventNotFoundError,
+  MaxSubmittedProposalsReachedError,
+  ProposalNotFoundError,
+} from '~/libs/errors';
 
 import { CallForPaper } from '../shared/CallForPaper';
 import { InvitationLink } from '../shared/InvitationLink';
@@ -20,7 +25,10 @@ export class TalkSubmission {
   }
 
   async saveDraft(talkId: string, data: DraftSaveData) {
-    const cfp = await CallForPaper.for(this.eventSlug);
+    const event = await db.event.findUnique({ where: { slug: this.eventSlug } });
+    if (!event) throw new EventNotFoundError();
+
+    const cfp = new CallForPaper(event);
     if (!cfp.isOpen) throw new CfpNotOpenError();
 
     const library = TalksLibrary.of(this.speakerId);
@@ -29,7 +37,7 @@ export class TalkSubmission {
     const speakers = talk.speakers.map((speaker) => ({ id: speaker.id }));
 
     await db.proposal.upsert({
-      where: { talkId_eventId: { talkId: talk.id, eventId: cfp.eventId } },
+      where: { talkId_eventId: { talkId: talk.id, eventId: event.id } },
       update: {
         title: talk.title,
         abstract: talk.abstract,
@@ -46,7 +54,7 @@ export class TalkSubmission {
         languages: talk.languages || [],
         status: 'DRAFT',
         talk: { connect: { id: talk.id } },
-        event: { connect: { id: cfp.eventId } },
+        event: { connect: { id: event.id } },
         speakers: { connect: speakers },
       },
     });
@@ -71,19 +79,22 @@ export class TalkSubmission {
   }
 
   async submit(talkId: string) {
-    const cfp = await CallForPaper.for(this.eventSlug);
+    const event = await db.event.findUnique({ where: { slug: this.eventSlug } });
+    if (!event) throw new EventNotFoundError();
+
+    const cfp = new CallForPaper(event);
     if (!cfp.isOpen) throw new CfpNotOpenError();
 
-    if (cfp.maxProposals) {
+    if (event.maxProposals) {
       const nbProposals = await db.proposal.count({
         where: {
-          eventId: cfp.eventId,
+          eventId: event.id,
           speakers: { some: { id: this.speakerId } },
           status: { not: { equals: 'DRAFT' } },
           id: { not: { equals: talkId } },
         },
       });
-      if (nbProposals >= cfp.maxProposals) throw new MaxSubmittedProposalsReachedError();
+      if (nbProposals >= event.maxProposals) throw new MaxSubmittedProposalsReachedError();
     }
 
     const proposal = await db.proposal.findFirst({
@@ -98,7 +109,7 @@ export class TalkSubmission {
     await ProposalReceivedEmail.send(proposal.event, proposal);
 
     if (proposal.event.slackWebhookUrl) {
-      await sendSubmittedTalkSlackMessage(cfp.eventId, proposal.id);
+      await sendSubmittedTalkSlackMessage(proposal.eventId, proposal.id);
     }
   }
 

@@ -62,7 +62,7 @@ export class UserProposal {
     });
     if (!proposal) throw new ProposalNotFoundError();
 
-    const cfp = await CallForPaper.for(proposal.event.slug);
+    const cfp = new CallForPaper(proposal.event);
     if (!cfp.isOpen) throw new CfpNotOpenError();
 
     const { formats, categories, ...talk } = data;

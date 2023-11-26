@@ -2,9 +2,10 @@ import type { Prisma, TeamRole } from '@prisma/client';
 
 import { db } from '~/libs/db';
 import { EventNotFoundError, ForbiddenOperationError, SlugAlreadyExistsError } from '~/libs/errors';
-import { getCfpState } from '~/libs/formatters/cfp';
 import { geocode } from '~/libs/geocode/geocode';
 import { jsonToArray } from '~/libs/prisma';
+
+import { CallForPaper } from '../shared/CallForPaper';
 
 export type EventData = Awaited<ReturnType<typeof UserEvent.prototype.get>>;
 
@@ -37,6 +38,8 @@ export class UserEvent {
     });
     if (!event) throw new EventNotFoundError();
 
+    const cfp = new CallForPaper(event);
+
     return {
       id: event.id,
       name: event.name,
@@ -65,7 +68,7 @@ export class UserEvent {
       apiKey: event.apiKey,
       cfpStart: event.cfpStart?.toUTCString(),
       cfpEnd: event.cfpEnd?.toUTCString(),
-      cfpState: getCfpState(event.type, event.cfpStart, event.cfpEnd),
+      cfpState: cfp.state,
       formats: event.formats.map(({ id, name, description }) => ({ id, name, description })),
       categories: event.categories.map(({ id, name, description }) => ({ id, name, description })),
       archived: event.archived,

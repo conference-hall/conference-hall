@@ -1,8 +1,8 @@
 import type { Prisma } from '@prisma/client';
 
 import { db } from '~/libs/db';
-import { getCfpState } from '~/libs/formatters/cfp';
 
+import { CallForPaper } from '../shared/CallForPaper';
 import { Pagination } from '../shared/Pagination';
 import type { SearchFilters } from './EventSearch.types';
 
@@ -51,7 +51,7 @@ export class EventsSearch {
         type: event.type,
         address: event.address,
         logo: event.logo,
-        cfpState: getCfpState(event.type, event.cfpStart, event.cfpEnd),
+        cfpState: new CallForPaper(event).state,
         cfpStart: event.cfpStart?.toUTCString(),
         cfpEnd: event.cfpEnd?.toUTCString(),
       })),

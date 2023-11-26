@@ -2,36 +2,8 @@ import format from 'date-fns/format/index.js';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow/index.js';
 import isSameDay from 'date-fns/isSameDay/index.js';
 
-import type { CfpState, EventType } from '~/domains/shared/Event.types';
-
-function isConferenceOpened(start?: Date | null, end?: Date | null) {
-  if (!start || !end) return false;
-  const today = new Date();
-  return today >= start && today <= end;
-}
-
-function isConferenceFinished(end?: Date | null) {
-  if (!end) return false;
-  const today = new Date();
-  return today > end;
-}
-
-function isMeetupOpened(start?: Date | null) {
-  if (!start) return false;
-  const today = new Date();
-  return today >= start;
-}
-
-export function getCfpState(type: string, start?: Date | null, end?: Date | null): CfpState {
-  if (type === 'MEETUP') {
-    if (isMeetupOpened(start)) return 'OPENED';
-  }
-  if (type === 'CONFERENCE') {
-    if (isConferenceOpened(start, end)) return 'OPENED';
-    if (isConferenceFinished(end)) return 'FINISHED';
-  }
-  return 'CLOSED';
-}
+import type { CfpState } from '~/domains/shared/CallForPaper';
+import type { EventType } from '~/domains/shared/Event.types';
 
 export function formatEventType(type: EventType) {
   switch (type) {

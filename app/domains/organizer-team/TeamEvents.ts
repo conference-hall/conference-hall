@@ -3,9 +3,9 @@ import { z } from 'zod';
 import { EventTypeSchema, EventVisibilitySchema } from '~/domains/shared/Event.types';
 import { db } from '~/libs/db';
 import { SlugAlreadyExistsError } from '~/libs/errors';
-import { getCfpState } from '~/libs/formatters/cfp';
 import { slugValidator } from '~/libs/validators/slug';
 
+import { CallForPaper } from '../shared/CallForPaper';
 import { UserTeam } from './UserTeam';
 
 export const EventCreateSchema = z.object({
@@ -38,7 +38,7 @@ export class TeamEvents {
       logo: event.logo,
       cfpStart: event.cfpStart?.toUTCString(),
       cfpEnd: event.cfpEnd?.toUTCString(),
-      cfpState: getCfpState(event.type, event.cfpStart, event.cfpEnd),
+      cfpState: new CallForPaper(event).state,
     }));
   }
 

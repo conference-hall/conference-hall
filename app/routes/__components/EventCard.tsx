@@ -1,7 +1,7 @@
 import { Avatar } from '~/design-system/Avatar.tsx';
 import { CardLink } from '~/design-system/layouts/Card.tsx';
 import { Subtitle, Text } from '~/design-system/Typography.tsx';
-import type { CfpState } from '~/domains/shared/Event.types.ts';
+import type { CfpState } from '~/domains/shared/CallForPaper.ts';
 
 import { CfpElapsedTime } from './cfp/CfpElapsedTime.tsx';
 

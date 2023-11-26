@@ -3,7 +3,8 @@ import { ArrowTopRightOnSquareIcon, ChevronRightIcon, Square3Stack3DIcon } from 
 import { Avatar } from '~/design-system/Avatar.tsx';
 import { Badge, BadgeDot } from '~/design-system/Badges.tsx';
 import { Link } from '~/design-system/Links.tsx';
-import type { CfpState, EventType, EventVisibility } from '~/domains/shared/Event.types.ts';
+import type { CfpState } from '~/domains/shared/CallForPaper.ts';
+import type { EventType, EventVisibility } from '~/domains/shared/Event.types.ts';
 
 import { CfpElapsedTime } from '../cfp/CfpElapsedTime.tsx';
 

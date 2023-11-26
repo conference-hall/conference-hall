@@ -1,6 +1,7 @@
 import { db } from '~/libs/db';
 import { EventNotFoundError } from '~/libs/errors';
-import { getCfpState } from '~/libs/formatters/cfp';
+
+import { CallForPaper } from '../shared/CallForPaper';
 
 export type EventData = Awaited<ReturnType<typeof EventPage.prototype.get>>;
 
@@ -19,6 +20,8 @@ export class EventPage {
 
     if (!event) throw new EventNotFoundError();
 
+    const cfp = new CallForPaper(event);
+
     return {
       id: event.id,
       slug: event.slug,
@@ -31,14 +34,14 @@ export class EventPage {
       conferenceEnd: event.conferenceEnd?.toUTCString(),
       cfpStart: event.cfpStart?.toUTCString(),
       cfpEnd: event.cfpEnd?.toUTCString(),
-      cfpState: getCfpState(event.type, event.cfpStart, event.cfpEnd),
+      cfpState: cfp.state,
+      isCfpOpen: cfp.isOpen,
       surveyEnabled: event.surveyEnabled,
       websiteUrl: event.websiteUrl,
       contactEmail: event.contactEmail,
       codeOfConductUrl: event.codeOfConductUrl,
       logo: event.logo,
       maxProposals: event.maxProposals,
-      isCfpOpen: getCfpState(event.type, event.cfpStart, event.cfpEnd) === 'OPENED',
       hasTracks: event.categories.length > 0 || event.formats.length > 0,
       formats: event.formats.map((f) => ({
         id: f.id,

@@ -1,7 +1,7 @@
 import type { EmailStatus, EventType } from '@prisma/client';
 import { ProposalStatus } from '@prisma/client';
 
-import { getCfpState } from '~/libs/formatters/cfp';
+import { CallForPaper } from '../shared/CallForPaper';
 
 export enum SpeakerProposalStatus {
   Draft = 'Draft',
@@ -30,18 +30,16 @@ export function getSpeakerProposalStatus(proposal: ProposalArgs, event: EventArg
   const { status, emailAcceptedStatus, emailRejectedStatus } = proposal;
   const { type, cfpStart, cfpEnd } = event;
 
-  const cfpStatus = getCfpState(type, cfpStart, cfpEnd);
-  const isCfpOpen = cfpStatus === 'OPENED';
-  const isCfpClose = cfpStatus !== 'OPENED';
+  const cfp = new CallForPaper({ type, cfpStart, cfpEnd });
 
   const isPendingDeliberation =
-    (status === ProposalStatus.SUBMITTED && isCfpClose) ||
+    (status === ProposalStatus.SUBMITTED && cfp.isClosed) ||
     (status === ProposalStatus.ACCEPTED && emailAcceptedStatus === null) ||
     (status === ProposalStatus.REJECTED && emailRejectedStatus === null);
 
   if (status === ProposalStatus.DRAFT) {
     return SpeakerProposalStatus.Draft;
-  } else if (status === ProposalStatus.SUBMITTED && isCfpOpen) {
+  } else if (status === ProposalStatus.SUBMITTED && cfp.isOpen) {
     return SpeakerProposalStatus.Submitted;
   } else if (isPendingDeliberation) {
     return SpeakerProposalStatus.DeliberationPending;
