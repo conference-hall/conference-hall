@@ -11,17 +11,17 @@ import { TwitterIcon } from '~/design-system/icons/TwitterIcon.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { Markdown } from '~/design-system/Markdown.tsx';
 import { Text } from '~/design-system/Typography.tsx';
+import { ProposalReview } from '~/domains/organizer-cfp-reviews/ProposalReview.ts';
 import { requireSession } from '~/libs/auth/session.ts';
-
-import { getSpeakers } from './__server/get-speakers.server.ts';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
+  invariant(params.team, 'Invalid team slug');
   invariant(params.proposal, 'Invalid proposal id');
 
-  const speakers = await getSpeakers(params.event, params.proposal, userId);
-
+  const review = ProposalReview.for(userId, params.team, params.event, params.proposal);
+  const speakers = await review.getSpeakerInfo();
   return json(speakers);
 };
 

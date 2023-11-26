@@ -4,24 +4,26 @@ import { json } from '@remix-run/node';
 import { Outlet, useLoaderData, useOutletContext, useParams } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
+import { ProposalReview } from '~/domains/organizer-cfp-reviews/ProposalReview.ts';
+import { ProposalReviewDataSchema } from '~/domains/organizer-cfp-reviews/ProposalReview.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
 import { useUser } from '~/root.tsx';
-import { parseProposalsFilters, ProposalReviewDataSchema } from '~/routes/__types/proposal.ts';
+import { parseProposalsFilters } from '~/routes/__types/proposal.ts';
 
 import { ReviewHeader } from './__components/Header.tsx';
 import { ReviewInfoSection } from './__components/ReviewInfoSection.tsx';
 import { ReviewTabs } from './__components/Tabs.tsx';
-import type { ProposalReview } from './__server/get-proposal-review.server.ts';
+import type { ProposalReview as ProposalReviewData } from './__server/get-proposal-review.server.ts';
 import { getProposalReview } from './__server/get-proposal-review.server.ts';
-import { rateProposal } from './__server/review-proposal.server.ts';
 
 export const meta = mergeMeta(() => [{ title: `Review proposal | Conference Hall` }]);
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
+  invariant(params.team, 'Invalid team slug');
   invariant(params.proposal, 'Invalid proposal id');
 
   const url = new URL(request.url);
@@ -33,19 +35,19 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 export const action = async ({ request, params }: ActionFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
+  invariant(params.team, 'Invalid team slug');
   invariant(params.proposal, 'Invalid proposal id');
-  const form = await request.formData();
-  const nextPath = form.get('nextPath') as string;
 
+  const form = await request.formData();
   const result = parse(form, { schema: ProposalReviewDataSchema });
-  if (result.value) {
-    await rateProposal(params.event, params.proposal, userId, result.value);
-    if (nextPath) {
-      return redirectWithToast(nextPath, 'success', 'Review saved.');
-    }
-    return toast('success', 'Review saved.');
-  }
-  return null;
+  if (!result.value) return toast('error', 'Something went wrong.');
+
+  const proposalReview = ProposalReview.for(params.event, params.team, params.proposal, userId);
+  await proposalReview.addReview(result.value);
+
+  const nextPath = form.get('nextPath') as string;
+  if (nextPath) return redirectWithToast(nextPath, 'success', 'Review saved.');
+  return toast('success', 'Review saved.');
 };
 
 export default function ProposalReviewLayoutRoute() {
@@ -93,5 +95,5 @@ export default function ProposalReviewLayoutRoute() {
 }
 
 export function useProposalReview() {
-  return useOutletContext<{ proposalReview: ProposalReview }>();
+  return useOutletContext<{ proposalReview: ProposalReviewData }>();
 }

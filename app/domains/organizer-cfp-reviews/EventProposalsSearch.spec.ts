@@ -14,7 +14,7 @@ import { sortBy } from '~/utils/arrays.ts';
 
 import { EventProposalsSearch } from './EventProposalsSearch.ts';
 
-describe('#searchProposals', () => {
+describe('EventProposalsSearch', () => {
   let owner: User, speaker: User;
   let team: Team;
   let event: Event, event2: Event;

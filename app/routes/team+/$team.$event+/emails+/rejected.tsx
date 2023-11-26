@@ -6,6 +6,8 @@ import invariant from 'tiny-invariant';
 
 import { Pagination } from '~/design-system/Pagination.tsx';
 import { H1, H2 } from '~/design-system/Typography.tsx';
+import { CfpReviewsSearch } from '~/domains/organizer-cfp-reviews/CfpReviewsSearch.ts';
+import { parseUrlFilters } from '~/domains/organizer-cfp-reviews/EventProposalsSearch.types.ts';
 import { parseUrlPage } from '~/domains/shared/Pagination.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
@@ -13,18 +15,17 @@ import { CampaignEmailFilters } from '~/routes/__components/events/campaign-emai
 import { CampaignEmailList, CampaignType } from '~/routes/__components/events/campaign-email/CampaignEmailList.tsx';
 import { CampaignEmailStats } from '~/routes/__components/events/campaign-email/CampaignEmailStats.tsx';
 import type { ProposalsFilters } from '~/routes/__types/proposal.ts';
-import { parseProposalsFilters, ProposalSelectionSchema } from '~/routes/__types/proposal.ts';
-import { searchProposals } from '~/routes/team+/$team.$event+/__server/search-proposals.server.ts';
+import { ProposalSelectionSchema } from '~/routes/__types/proposal.ts';
 
 import { getRejectionCampaignStats } from './__server/get-rejection-campaign-stats.server.ts';
 import { sendRejectionCampaign } from './__server/send-rejection-campaign.server.ts';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
+  invariant(params.team, 'Invalid team slug');
   invariant(params.event, 'Invalid event slug');
 
-  const url = new URL(request.url);
-  const proposalsFilters = parseProposalsFilters(url.searchParams);
+  const proposalsFilters = parseUrlFilters(request.url);
   const page = parseUrlPage(request.url);
   const filters = {
     query: proposalsFilters.query,
@@ -32,7 +33,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     status: ['REJECTED'],
   } as ProposalsFilters;
 
-  const proposals = await searchProposals(params.event, userId, filters, page);
+  const proposals = await CfpReviewsSearch.for(userId, params.team, params.event).search(filters, page);
   const stats = await getRejectionCampaignStats(params.event, userId);
   return json({ proposals, stats });
 };

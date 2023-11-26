@@ -7,17 +7,18 @@ import { AvatarName } from '~/design-system/Avatar.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
 import { Subtitle } from '~/design-system/Typography.tsx';
+import { ProposalReview } from '~/domains/organizer-cfp-reviews/ProposalReview.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { ReviewNote } from '~/routes/__components/reviews/ReviewNote.tsx';
-
-import { getReviews } from './__server/get-reviews.server.ts';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
+  invariant(params.team, 'Invalid team slug');
   invariant(params.proposal, 'Invalid proposal id');
 
-  const reviews = await getReviews(params.event, params.proposal, userId);
+  const review = ProposalReview.for(userId, params.team, params.event, params.proposal);
+  const reviews = await review.getTeamReviews();
 
   return json(reviews);
 };

@@ -10,26 +10,27 @@ import { useCheckboxSelection } from '~/design-system/forms/useCheckboxSelection
 import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { Pagination } from '~/design-system/Pagination.tsx';
+import { CfpReviewsSearch } from '~/domains/organizer-cfp-reviews/CfpReviewsSearch.ts';
+import { parseUrlFilters } from '~/domains/organizer-cfp-reviews/EventProposalsSearch.types.ts';
 import { parseUrlPage } from '~/domains/shared/Pagination.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-import { parseProposalsFilters, ProposalsStatusUpdateSchema } from '~/routes/__types/proposal.ts';
+import { ProposalsStatusUpdateSchema } from '~/routes/__types/proposal.ts';
 import { updateProposalsStatus } from '~/routes/team+/$team.$event+/__server/update-proposal.server.ts';
 
 import { ProposalsActionBar } from './__components/ProposalsActionBar/ProposalsActionBar.tsx';
 import { ProposalsFilters } from './__components/ProposalsFilters/ProposalsFilters.tsx';
 import { ProposalsList } from './__components/ProposalsList/ProposalsList.tsx';
-import { searchProposals } from './__server/search-proposals.server.ts';
 import { useTeamEvent } from './_layout.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
+  invariant(params.team, 'Invalid team slug');
   invariant(params.event, 'Invalid event slug');
 
-  const url = new URL(request.url);
-  const filters = parseProposalsFilters(url.searchParams);
+  const filters = parseUrlFilters(request.url);
   const page = parseUrlPage(request.url);
-  const results = await searchProposals(params.event, userId, filters, page);
+  const results = await CfpReviewsSearch.for(userId, params.team, params.event).search(filters, page);
   return json(results);
 };
 

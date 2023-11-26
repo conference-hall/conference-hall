@@ -82,9 +82,9 @@ export class TeamNotFoundError extends NotFoundError {
   }
 }
 
-export class DeliberationDisabledError extends ForbiddenError {
+export class ReviewDisabledError extends ForbiddenError {
   constructor() {
-    super('Event deliberation is disabled');
+    super('Review is disabled');
   }
 }
 
