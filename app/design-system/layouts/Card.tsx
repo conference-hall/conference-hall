@@ -77,7 +77,9 @@ Card.Content = Content;
 // <Card.Actions /> component
 
 function Actions({ children }: { children: React.ReactNode }) {
-  return <div className="flex justify-end gap-4 border-t border-t-gray-200 px-4 py-4 lg:px-8">{children}</div>;
+  return (
+    <div className="flex justify-end items-center gap-4 border-t border-t-gray-200 px-4 py-4 lg:px-8">{children}</div>
+  );
 }
 
 Card.Actions = Actions;

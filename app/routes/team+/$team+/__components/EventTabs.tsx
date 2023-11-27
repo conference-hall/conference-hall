@@ -8,7 +8,7 @@ export function EventTabs({ teamSlug, eventSlug, role }: Props) {
   const tabs = useMemo(
     () => [
       { to: `/team/${teamSlug}/${eventSlug}`, label: 'Proposals reviews', enabled: true, end: true },
-      { to: `/team/${teamSlug}/${eventSlug}/emails`, label: 'Email campaigns', enabled: true },
+      { to: `/team/${teamSlug}/${eventSlug}/results`, label: 'Results annoucement', enabled: role === 'OWNER' },
       { to: `/team/${teamSlug}/${eventSlug}/settings`, label: 'Settings', enabled: role === 'OWNER' },
     ],
     [teamSlug, eventSlug, role],

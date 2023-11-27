@@ -1,7 +1,6 @@
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { Outlet } from '@remix-run/react';
 
-import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { useUser } from '~/root.tsx';
 
@@ -18,9 +17,5 @@ export default function EventProposalEmails() {
   const { team } = useTeam();
   const { event } = useTeamEvent();
 
-  return (
-    <PageContent className="flex flex-col lg:flex-row">
-      <Outlet context={{ user, team, event }} />
-    </PageContent>
-  );
+  return <Outlet context={{ user, team, event }} />;
 }
