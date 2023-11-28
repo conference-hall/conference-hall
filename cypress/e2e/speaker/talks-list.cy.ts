@@ -24,7 +24,7 @@ describe('Speaker talks page', () => {
   it('displays the archived talks', () => {
     cy.login();
     talks.visit();
-    talks.filterByTalkStatus('Archived talks').click();
+    talks.displayArchivedTalks();
     talks.list().should('have.length', 1);
     talks.talk('Archived talk').should('exist');
     cy.assertUrl('/speaker/talks?archived=true');
