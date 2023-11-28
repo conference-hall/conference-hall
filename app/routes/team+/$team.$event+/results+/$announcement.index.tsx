@@ -4,7 +4,7 @@ import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { useMemo } from 'react';
 
-import { Button } from '~/design-system/Buttons';
+import { Button, ButtonLink } from '~/design-system/Buttons';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
 import { Input } from '~/design-system/forms/Input';
 import { PageContent } from '~/design-system/layouts/PageContent';
@@ -43,7 +43,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   });
 };
 
-export default function AcceptedProposalEmails() {
+export default function ResultsAnnouncementSelection() {
   const { proposals, pagination } = useLoaderData<typeof loader>();
 
   const ids = useMemo(() => proposals.map(({ id }) => id), [proposals]);
@@ -70,9 +70,9 @@ export default function AcceptedProposalEmails() {
             <Checkbox ref={ref}>
               {selection.length ? `${selection.length} selected` : `${pagination.total} proposals`}
             </Checkbox>
-            <Button iconRight={ArrowRightIcon}>
+            <ButtonLink to="publish" iconRight={ArrowRightIcon}>
               {selection.length > 0 ? `Publish for ${pagination.total} selected` : 'Publish for all'}
-            </Button>
+            </ButtonLink>
           </List.Header>
 
           <List.Content>

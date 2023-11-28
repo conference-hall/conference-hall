@@ -14,7 +14,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   return json(null);
 };
 
-export default function AcceptedProposalEmails() {
+export default function ResultsAnnouncement() {
   return (
     <PageContent className="flex flex-col">
       <H1>Results announcement</H1>
