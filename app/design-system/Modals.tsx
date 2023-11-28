@@ -34,8 +34,8 @@ type ModalTitleProps = {
 
 function Title({ title, description }: ModalTitleProps) {
   return (
-    <div className="mt-2 sm:mt-3">
-      <Dialog.Title as="h3" className="text-base font-semibold text-gray-900 mb-1">
+    <div>
+      <Dialog.Title as="h1" className="text-lg font-semibold text-gray-900 mb-1">
         {title}
       </Dialog.Title>
       {description && <Text variant="secondary">{description}</Text>}

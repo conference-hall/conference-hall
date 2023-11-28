@@ -52,7 +52,7 @@ type ToggleGroupProps = {
 
 export function ToggleGroup({ name, label, value, description, onChange }: ToggleGroupProps) {
   return (
-    <Switch.Group as="div" className="flex items-center justify-between">
+    <Switch.Group as="div" className="flex items-center">
       <span className="flex flex-grow flex-col">
         <Switch.Label as="span" className="text-sm font-medium leading-6 text-gray-900" passive>
           {label}
