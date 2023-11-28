@@ -2,8 +2,8 @@ import { SearchParamSelector } from '~/design-system/navigation/SearchParamSelec
 
 const selectors = [
   { label: 'All', value: 'all' },
-  { label: 'Conference', value: 'conference' },
-  { label: 'Meetup', value: 'meetup' },
+  { label: 'Conferences', value: 'conference' },
+  { label: 'Meetups', value: 'meetup' },
 ];
 
 export function SearchEventsFilters() {
