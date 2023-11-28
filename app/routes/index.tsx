@@ -5,7 +5,7 @@ import { useLoaderData, useSearchParams } from '@remix-run/react';
 
 import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
-import { Pagination } from '~/design-system/Pagination.tsx';
+import { Pagination } from '~/design-system/list/Pagination.tsx';
 import { H1, H2 } from '~/design-system/Typography.tsx';
 import { EventsSearch } from '~/domains/event-search/EventSearch.ts';
 import { parseUrlFilters } from '~/domains/event-search/EventSearch.types.ts';

@@ -1,21 +1,54 @@
 import { ArrowRightIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
+import { useLoaderData } from '@remix-run/react';
+import { useMemo } from 'react';
 
-import { Button, ButtonLink } from '~/design-system/Buttons';
+import { Button } from '~/design-system/Buttons';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
 import { Input } from '~/design-system/forms/Input';
 import { PageContent } from '~/design-system/layouts/PageContent';
-import { Pagination } from '~/design-system/Pagination';
+import { List } from '~/design-system/list/List';
+import { useListSelection } from '~/design-system/list/useCheckboxSelection';
 import { H1, Text } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   await requireSession(request);
-  return json(null);
+
+  const url = new URL(request.url);
+  const page = url.searchParams.get('page');
+
+  if (page === '2') {
+    return json({
+      proposals: [
+        { id: '6', name: 'Web Performance', speakers: 'by Harry Roberts' },
+        { id: '7', name: 'Web Performance', speakers: 'by Harry Roberts' },
+        { id: '8', name: 'Web Performance', speakers: 'by Harry Roberts' },
+        { id: '9', name: 'Web Performance', speakers: 'by Harry Roberts' },
+      ],
+      pagination: { current: 2, pages: 2, total: 9 },
+    });
+  }
+
+  return json({
+    proposals: [
+      { id: '1', name: 'Le web et la typographie', speakers: 'by Benjamin Petetot' },
+      { id: '2', name: 'Modern JavaScript', speakers: 'by Sarah Drasner' },
+      { id: '3', name: 'React Best Practices', speakers: 'by Dan Abramov' },
+      { id: '4', name: 'CSS Grid Layout', speakers: 'by Rachel Andrew' },
+      { id: '5', name: 'Web Accessibility', speakers: 'by Léonie Watson' },
+    ],
+    pagination: { current: 1, pages: 2, total: 9 },
+  });
 };
 
 export default function AcceptedProposalEmails() {
+  const { proposals, pagination } = useLoaderData<typeof loader>();
+
+  const ids = useMemo(() => proposals.map(({ id }) => id), [proposals]);
+  const { selection, isSelected, toggle, ref } = useListSelection(ids, pagination.total);
+
   return (
     <PageContent className="flex flex-col">
       <H1>Accepted proposals announcement</H1>
@@ -31,55 +64,39 @@ export default function AcceptedProposalEmails() {
           />
           <Button variant="secondary">Reset</Button>
         </div>
-        <div className="overflow-hidden bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-md">
-          <ul className="divide-y divide-gray-200">
-            <li className="flex items-center justify-between px-4 py-4 sm:px-6">
-              <div className="flex gap-4">
-                <Checkbox />
-                <Text weight="semibold" truncate>
-                  3 accepted proposals
-                </Text>
-              </div>
-              <div className="flex gap-4">
-                <Button iconRight={ArrowRightIcon}>Publish for all proposals</Button>
-              </div>
-            </li>
-            {['Le web et la typographie', 'Proposal2', 'Proposal3'].map((item) => (
-              <li key={item} className="flex items-center gap-4 px-4 py-4 sm:px-6">
-                <Checkbox />
+
+        <List>
+          <List.Header>
+            <Checkbox ref={ref}>
+              {selection.length ? `${selection.length} selected` : `${pagination.total} proposals`}
+            </Checkbox>
+            <Button iconRight={ArrowRightIcon}>
+              {selection.length > 0 ? `Publish for ${pagination.total} selected` : 'Publish for all'}
+            </Button>
+          </List.Header>
+
+          <List.Content>
+            {proposals.map((proposal) => (
+              <List.Row key={proposal.id}>
+                <Checkbox
+                  aria-label="Select proposal"
+                  checked={isSelected(proposal.id)}
+                  onChange={toggle(proposal.id)}
+                />
                 <div>
                   <Text weight="medium" truncate>
-                    {item}
+                    {proposal.name}
                   </Text>
                   <Text size="xs" variant="secondary">
-                    by Benjamin Petetot
+                    {proposal.speakers}
                   </Text>
                 </div>
-              </li>
+              </List.Row>
             ))}
-          </ul>
-          <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
-            <div className="flex flex-1 justify-between sm:hidden">
-              <ButtonLink to="/" variant="secondary">
-                Previous
-              </ButtonLink>
-              <ButtonLink to="/" variant="secondary">
-                Next
-              </ButtonLink>
-            </div>
-            <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-              <div>
-                <p className="text-sm text-gray-700">
-                  Showing <span className="font-medium">1</span> to <span className="font-medium">10</span> of{' '}
-                  <span className="font-medium">97</span> results
-                </p>
-              </div>
-              <div>
-                <Pagination current={1} total={10} />
-              </div>
-            </div>
-          </div>
-        </div>
+          </List.Content>
+
+          <List.PaginationFooter {...pagination} />
+        </List>
       </div>
     </PageContent>
   );

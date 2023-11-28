@@ -3,6 +3,8 @@ import { Link, useLocation, useSearchParams } from '@remix-run/react';
 import { cva } from 'class-variance-authority';
 import { useMemo } from 'react';
 
+import { ButtonLink } from '../Buttons';
+
 const pageStyle = cva('relative inline-flex items-center px-4 py-2 text-sm font-semibold focus:z-2', {
   variants: {
     active: {
@@ -74,6 +76,34 @@ export function Pagination({ current, total }: Props) {
         <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
       </Link>
     </nav>
+  );
+}
+
+export function PaginationMobile({ current, total }: Props) {
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
+  const previous = current - 1 > 0 ? current - 1 : 1;
+  const next = current + 1 <= total ? current + 1 : current;
+
+  if (total <= 1) return null;
+
+  return (
+    <div className="flex flex-1 justify-between sm:hidden">
+      <ButtonLink
+        variant="secondary"
+        to={{ pathname: location.pathname, search: getPageSearchParams(previous, searchParams) }}
+        preventScrollReset
+      >
+        Previous
+      </ButtonLink>
+      <ButtonLink
+        variant="secondary"
+        to={{ pathname: location.pathname, search: getPageSearchParams(next, searchParams) }}
+        preventScrollReset
+      >
+        Next
+      </ButtonLink>
+    </div>
   );
 }
 

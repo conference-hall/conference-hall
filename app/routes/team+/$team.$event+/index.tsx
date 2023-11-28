@@ -9,7 +9,7 @@ import invariant from 'tiny-invariant';
 import { useCheckboxSelection } from '~/design-system/forms/useCheckboxSelection.tsx';
 import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
-import { Pagination } from '~/design-system/Pagination.tsx';
+import { Pagination } from '~/design-system/list/Pagination.tsx';
 import { CfpReviewsSearch, ProposalsStatusUpdateSchema } from '~/domains/organizer-cfp-reviews/CfpReviewsSearch.ts';
 import { parseUrlPage } from '~/domains/shared/Pagination.ts';
 import { parseUrlFilters } from '~/domains/shared/ProposalSearchBuilder.types.ts';
