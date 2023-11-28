@@ -5,7 +5,7 @@ import { useMemo } from 'react';
 
 import { ButtonLink } from '../Buttons';
 
-const pageStyle = cva('relative inline-flex items-center px-4 py-2 text-sm font-semibold focus:z-2', {
+const pageStyle = cva('relative inline-flex items-center px-4 py-2 text-sm font-semibold focus:z-20', {
   variants: {
     active: {
       true: 'z-10 bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600',
