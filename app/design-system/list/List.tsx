@@ -1,3 +1,6 @@
+import type { LinkProps } from '@remix-run/react';
+import { Link } from '@remix-run/react';
+import { cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
 
 import { Pagination, PaginationMobile } from '~/design-system/list/Pagination';
@@ -15,8 +18,12 @@ function Header({ children }: { children: ReactNode }) {
 List.Header = Header;
 
 // <List.Content /> component
-function Content({ children }: { children: ReactNode }) {
-  return <ul className="divide-y divide-gray-200">{children}</ul>;
+function Content({ children, ...rest }: { children: ReactNode }) {
+  return (
+    <ul className="divide-y divide-gray-200" {...rest}>
+      {children}
+    </ul>
+  );
 }
 
 List.Content = Content;
@@ -27,6 +34,28 @@ function Row({ children }: { children: ReactNode }) {
 }
 
 List.Row = Row;
+
+// <RowLink /> component
+
+type RowLinkProps = { children: ReactNode } & LinkProps;
+
+export function RowLink({ children, className, ...rest }: RowLinkProps) {
+  return (
+    <li className="flex">
+      <Link
+        {...rest}
+        className={cx(
+          'w-full rounded-sm px-4 py-4 sm:px-6 hover:bg-gray-50 focus-visible:-outline-offset-1',
+          className,
+        )}
+      >
+        {children}
+      </Link>
+    </li>
+  );
+}
+
+List.RowLink = RowLink;
 
 // <List.Footer /> component
 function Footer({ children }: { children: ReactNode }) {
