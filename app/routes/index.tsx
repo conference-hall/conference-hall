@@ -47,7 +47,7 @@ export default function IndexRoute() {
       <PageContent>
         <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <H2 size="xl">Incoming call for papers</H2>
-          <SearchEventsFilters filters={filters} />
+          <SearchEventsFilters />
         </div>
         {results?.length === 0 ? (
           <EmptyState icon={FaceFrownIcon} label="No results found!" />
