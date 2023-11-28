@@ -19,7 +19,7 @@ export function SearchParamSelector({ param, defaultValue, selectors }: SearchPa
   );
 
   return (
-    <div className="flex gap-1  w-fit rounded-lg bg-slate-100 p-0.5 border border-gray-200">
+    <div className="flex gap-1  w-fit rounded-lg bg-slate-100 p-1 ring-1 ring-inset ring-gray-200">
       {selectors.map((selector) => (
         <Link
           key={selector.value}
