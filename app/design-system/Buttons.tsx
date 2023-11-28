@@ -22,7 +22,7 @@ export const button = cva(
       },
       disabled: { true: 'opacity-50 cursor-not-allowed' },
       loading: { true: 'opacity-50 cursor-not-allowed' },
-      block: { true: 'sm:w-full' },
+      block: { true: 'sm:w-full justify-center' },
     },
     defaultVariants: { variant: 'primary', size: 'm' },
   },
