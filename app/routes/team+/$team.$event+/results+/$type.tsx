@@ -1,12 +1,14 @@
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { useNavigate } from '@remix-run/react';
+import { useNavigate, useParams } from '@remix-run/react';
 import { useState } from 'react';
 
 import { Button, ButtonLink } from '~/design-system/Buttons';
 import { ToggleGroup } from '~/design-system/forms/Toggles';
 import { Modal } from '~/design-system/Modals';
 import { requireSession } from '~/libs/auth/session.ts';
+
+import { useResultsStatistics } from './_layout';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);
@@ -15,7 +17,13 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 export default function ResultsAnnouncementPublish() {
   const navigate = useNavigate();
+
   const [shouldSendEmail, setShouldSendEmail] = useState(true);
+
+  const { type } = useParams();
+  const statistics = useResultsStatistics(type);
+
+  if (type !== 'accepted' && type !== 'rejected') return null;
 
   return (
     <Modal size="l" open onClose={() => navigate(-1)}>
@@ -24,15 +32,15 @@ export default function ResultsAnnouncementPublish() {
         <dl className="flex items-center justify-evenly p-8 gap-4 lg:gap-16 text-center bg-slate-100 border border-slate-200 rounded">
           <div className="overflow-hidden">
             <dt className="truncate text-sm font-medium text-gray-500">Accepted proposals</dt>
-            <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">87</dd>
+            <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{statistics?.total}</dd>
           </div>
           <div className="overflow-hidden">
             <dt className="truncate text-sm font-medium text-gray-500">To publish</dt>
-            <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">87</dd>
+            <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{statistics?.notPublished}</dd>
           </div>
           <div className="overflow-hidden">
             <dt className="truncate text-sm font-medium text-gray-500">Results published</dt>
-            <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">0</dd>
+            <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{statistics?.published}</dd>
           </div>
         </dl>
         <div className="p-4 border border-gray-300 rounded">
