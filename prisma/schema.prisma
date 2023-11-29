@@ -1,5 +1,5 @@
 generator client {
-  provider        = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -195,34 +195,31 @@ enum TeamRole {
 }
 
 model Proposal {
-  id                  String          @id @default(cuid())
+  id                  String             @id @default(cuid())
   talkId              String?
-  talk                Talk?           @relation(fields: [talkId], references: [id])
+  talk                Talk?              @relation(fields: [talkId], references: [id])
   eventId             String
-  event               Event           @relation(fields: [eventId], references: [id])
+  event               Event              @relation(fields: [eventId], references: [id])
   title               String
   abstract            String
   level               TalkLevel?
-  languages           Json?
+  languages           Json?              @default("[]")
   references          String?
   comments            String?
-  speakers            User[]          @relation("speakers_proposals")
-  formats             EventFormat[]   @relation("proposals_formats")
-  categories          EventCategory[] @relation("proposals_categories")
+  speakers            User[]             @relation("speakers_proposals")
+  formats             EventFormat[]      @relation("proposals_formats")
+  categories          EventCategory[]    @relation("proposals_categories")
   reviews             Review[]
-  avgRateForSort      Float           @default(0)
-  status              ProposalStatus  @default(SUBMITTED)
+  avgRateForSort      Float              @default(0)
+  status              ProposalStatus     @default(SUBMITTED)
   emailAcceptedStatus EmailStatus?
   emailRejectedStatus EmailStatus?
   submittedAt         DateTime?
-  acceptedAt          DateTime?
-  rejectedAt          DateTime?
-  confirmedAt         DateTime?
-  declinedAt          DateTime?
-  invitationCode      String          @unique @default(cuid())
-  createdAt           DateTime        @default(now())
-  updatedAt           DateTime        @updatedAt
+  invitationCode      String             @unique @default(cuid())
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
   messages            Message[]
+  result              ResultPublication?
 
   @@unique([talkId, eventId])
   @@map("proposals")
@@ -296,4 +293,25 @@ model Message {
 enum MessageChannel {
   ORGANIZER
   SPEAKER
+}
+
+enum ResultEmailStatus {
+  NONE
+  SENT
+}
+
+enum ResultPublicationType {
+  ACCEPTED
+  REJECTED
+}
+
+model ResultPublication {
+  id          String                @id @default(cuid())
+  proposalId  String                @unique
+  proposal    Proposal              @relation(fields: [proposalId], references: [id])
+  type        ResultPublicationType
+  publishedAt DateTime              @default(now())
+  emailStatus ResultEmailStatus     @default(NONE)
+
+  @@map("result_publications")
 }
