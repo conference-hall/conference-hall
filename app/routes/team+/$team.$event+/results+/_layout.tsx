@@ -4,9 +4,10 @@ import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Outlet } from '@remix-run/react';
 
+import { AlertInfo } from '~/design-system/Alerts';
+import { ButtonLink } from '~/design-system/Buttons';
 import { Card } from '~/design-system/layouts/Card';
 import { PageContent } from '~/design-system/layouts/PageContent';
-import { Link } from '~/design-system/Links';
 import { H1, Subtitle, Text } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 
@@ -45,10 +46,10 @@ export default function ResultsAnnouncement() {
             </dl>
           </Card.Content>
           <Card.Actions>
-            <Link to="publish?type=accepted" weight="semibold" className="my-2">
+            <ButtonLink to="publish?type=accepted" variant="secondary">
               Publish results
               <ArrowRightIcon className="h-5 w-5 ml-1" aria-hidden="true" />
-            </Link>
+            </ButtonLink>
           </Card.Actions>
         </Card>
 
@@ -77,13 +78,16 @@ export default function ResultsAnnouncement() {
             </dl>
           </Card.Content>
           <Card.Actions>
-            <Link to="publish?type=rejected" weight="semibold" className="my-2">
+            <ButtonLink to="publish?type=rejected" variant="secondary">
               Publish results
               <ArrowRightIcon className="h-5 w-5 ml-1" aria-hidden="true" />
-            </Link>
+            </ButtonLink>
           </Card.Actions>
         </Card>
       </ul>
+      <AlertInfo>
+        You can also publish accepted and rejected results individually directly from a proposal review page.
+      </AlertInfo>
       <Outlet />
     </PageContent>
   );
