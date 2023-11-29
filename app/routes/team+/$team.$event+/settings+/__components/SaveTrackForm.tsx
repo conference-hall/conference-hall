@@ -51,19 +51,17 @@ type SaveTrackFormModalProps = { type: TrackType; initialValues?: TrackData; isO
 
 function SaveTrackFormModal({ type, initialValues, isOpen, onClose }: SaveTrackFormModalProps) {
   return (
-    <Modal open={isOpen} onClose={onClose}>
+    <Modal open={isOpen} size="l" onClose={onClose}>
       <Form method="POST" onSubmit={onClose}>
-        <Modal.Title
-          title={type === 'formats' ? 'Format track' : 'Category track'}
-          description="Provide a name and description."
-        />
-        <div className="space-y-4">
-          <input type="hidden" name="_action" value={`save-${type}`} />
-          <input type="hidden" name="id" value={initialValues?.id} />
+        <Modal.Title>{type === 'formats' ? 'Format track' : 'Category track'}</Modal.Title>
+        <Modal.Subtitle>Provide a name and description.</Modal.Subtitle>
+        <Modal.Content className="space-y-4">
           <Input name="name" label="Name" defaultValue={initialValues?.name} required />
           <TextArea name="description" label="Description" defaultValue={initialValues?.description || ''} rows={4} />
-        </div>
+        </Modal.Content>
         <Modal.Actions>
+          <input type="hidden" name="_action" value={`save-${type}`} />
+          <input type="hidden" name="id" value={initialValues?.id} />
           <Button onClick={onClose} type="button" variant="secondary">
             Cancel
           </Button>

@@ -6,7 +6,7 @@ import React from 'react';
 
 export const button = cva(
   [
-    'inline-flex items-center gap-x-2',
+    'inline-flex items-center justify-center gap-x-2',
     'font-medium whitespace-nowrap rounded-md shadow-sm',
     'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600',
   ],

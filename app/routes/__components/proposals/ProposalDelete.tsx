@@ -3,6 +3,7 @@ import { useState } from 'react';
 
 import { Button } from '~/design-system/Buttons.tsx';
 import { Modal } from '~/design-system/Modals.tsx';
+import { Text } from '~/design-system/Typography';
 
 type Props = { className?: string };
 
@@ -24,12 +25,12 @@ function ProposalDeleteModal({ isOpen, onClose }: DeleteProposalModalProps) {
   return (
     <Modal open={isOpen} onClose={onClose}>
       <Form method="POST" onSubmit={onClose}>
-        <Modal.Title
-          title="Are you sure you want to delete your proposal?"
-          description="The talk will still be in your profile, so you will be able to submit it again later."
-        />
-        <input type="hidden" name="_action" value="delete" />
+        <Modal.Title>Are you sure you want to delete your proposal?</Modal.Title>
+        <Modal.Content>
+          <Text>The talk will still be in your profile, so you will be able to submit it again later.</Text>
+        </Modal.Content>
         <Modal.Actions>
+          <input type="hidden" name="_action" value="delete" />
           <Button onClick={onClose} type="button" variant="secondary">
             Cancel
           </Button>

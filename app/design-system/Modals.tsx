@@ -12,7 +12,7 @@ const POSITION = { center: 'sm:items-center', top: 'sm:items-start' };
 
 type Props = { open: boolean } & LayoutProps;
 
-export function Modal({ open, onClose, children, size, position = 'center' }: Props) {
+export function Modal({ open, onClose, children, size, position }: Props) {
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-40" onClose={onClose}>
@@ -27,28 +27,36 @@ export function Modal({ open, onClose, children, size, position = 'center' }: Pr
 
 // MODAL Title
 
-type ModalTitleProps = {
-  title: string;
-  description?: string;
-};
-
-function Title({ title, description }: ModalTitleProps) {
+function Title({ children }: { children: ReactNode }) {
   return (
-    <div>
-      <Dialog.Title as="h1" className="text-lg font-semibold text-gray-900 mb-1">
-        {title}
-      </Dialog.Title>
-      {description && <Text variant="secondary">{description}</Text>}
-    </div>
+    <Dialog.Title as="h1" className="text-base font-semibold leading-6 text-gray-900">
+      {children}
+    </Dialog.Title>
   );
 }
 
 Modal.Title = Title;
 
+// MODAL Subtitle
+
+function Subtitle({ children }: { children: ReactNode }) {
+  return <Text variant="secondary">{children}</Text>;
+}
+
+Modal.Subtitle = Subtitle;
+
+// Modal Content
+
+function Content({ children, className }: { children: ReactNode; className?: string }) {
+  return <div className={cx('pt-4', className)}>{children}</div>;
+}
+
+Modal.Content = Content;
+
 // MODAL Actions
 
 function Actions({ children }: { children: ReactNode }) {
-  return <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:justify-end">{children}</div>;
+  return <div className="pt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">{children}</div>;
 }
 
 Modal.Actions = Actions;
@@ -56,7 +64,7 @@ Modal.Actions = Actions;
 // MODAL Layout
 
 const layout = cva(
-  'relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all p-4 md:p-8 sm:my-8 sm:w-full',
+  'relative transform overflow-hidden rounded-lg bg-white text:left shadow-xl transition-all p-4 md:p-8 sm:my-8 sm:w-full',
   {
     variants: {
       size: { m: 'sm:max-w-lg', l: 'sm:max-w-4xl', xl: 'sm:max-w-6xl' },
@@ -76,7 +84,7 @@ type LayoutProps = {
 function Layout({ position = 'center', size, onClose, children }: LayoutProps) {
   return (
     <div className="fixed inset-0 z-40 overflow-y-auto">
-      <div className={cx('flex min-h-full items-end justify-center p-4 text-center', POSITION[position])}>
+      <div className={cx('flex min-h-full items-end justify-center p-4', POSITION[position])}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"

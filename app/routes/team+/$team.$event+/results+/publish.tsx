@@ -1,4 +1,3 @@
-import { ChevronRightIcon } from '@heroicons/react/24/outline';
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useNavigate } from '@remix-run/react';
@@ -19,20 +18,18 @@ export default function ResultsAnnouncementPublish() {
   const [shouldSendEmail, setShouldSendEmail] = useState(true);
 
   return (
-    <Modal size="l" open={true} onClose={() => navigate(-1)}>
-      <Modal.Title title="You are going to publish results for accepted proposals" />
-      <div className="pt-8 space-y-4">
-        <dl className="flex items-center justify-evenly p-8 gap-4 lg:gap-16 text-center bg-slate-100 border border-slate-300 rounded">
+    <Modal size="l" open onClose={() => navigate(-1)}>
+      <Modal.Title>You are going to publish results for accepted proposals</Modal.Title>
+      <Modal.Content className="pt-6 space-y-4">
+        <dl className="flex items-center justify-evenly p-8 gap-4 lg:gap-16 text-center bg-slate-100 border border-slate-200 rounded">
           <div className="overflow-hidden">
             <dt className="truncate text-sm font-medium text-gray-500">Accepted proposals</dt>
             <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">87</dd>
           </div>
-          <ChevronRightIcon className="h-8 w-8 text-gray-500" aria-hidden="true" />
           <div className="overflow-hidden">
             <dt className="truncate text-sm font-medium text-gray-500">To publish</dt>
             <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">87</dd>
           </div>
-          <ChevronRightIcon className="h-8 w-8 text-gray-500" aria-hidden="true" />
           <div className="overflow-hidden">
             <dt className="truncate text-sm font-medium text-gray-500">Results published</dt>
             <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">0</dd>
@@ -46,7 +43,7 @@ export default function ResultsAnnouncementPublish() {
             onChange={setShouldSendEmail}
           />
         </div>
-      </div>
+      </Modal.Content>
       <Modal.Actions>
         <ButtonLink to=".." relative="path" variant="secondary">
           Cancel
