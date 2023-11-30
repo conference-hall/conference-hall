@@ -1,10 +1,18 @@
 import type { ProposalStatus } from '@prisma/client';
 
 import { db } from '~/libs/db';
+import { ProposalNotFoundError } from '~/libs/errors';
 
 import { UserEvent } from '../organizer-event-settings/UserEvent';
+import { ProposalAcceptedEmailsBatch } from './legacy/emails/proposal-accepted-email-batch';
+import { ProposalRejectedEmailsBatch } from './legacy/emails/proposal-rejected-email-batch';
 
 export type ResultsStatistics = Awaited<ReturnType<typeof ResultsAnnouncement.prototype.statistics>>;
+
+const STATUS_BY_TYPE = {
+  accepted: ['ACCEPTED', 'CONFIRMED', 'DECLINED'] as ProposalStatus[],
+  rejected: ['REJECTED'] as ProposalStatus[],
+};
 
 export class ResultsAnnouncement {
   constructor(
@@ -20,9 +28,51 @@ export class ResultsAnnouncement {
   async statistics() {
     const event = await this.userEvent.allowedFor(['OWNER']);
     const submitted = await this.countSubmitted(event.id);
-    const accepted = await this.getResultsStatistics(event.id, ['ACCEPTED', 'CONFIRMED', 'DECLINED']);
-    const rejected = await this.getResultsStatistics(event.id, ['REJECTED']);
+    const accepted = await this.getResultsStatistics(event.id, STATUS_BY_TYPE.accepted);
+    const rejected = await this.getResultsStatistics(event.id, STATUS_BY_TYPE.rejected);
     return { submitted, accepted, rejected };
+  }
+
+  async publishAll(forType: 'accepted' | 'rejected', withEmails: boolean) {
+    const event = await this.userEvent.allowedFor(['OWNER']);
+    const statuses = STATUS_BY_TYPE[forType];
+    const type = forType === 'accepted' ? 'ACCEPTED' : 'REJECTED';
+
+    const proposals = await db.proposal.findMany({
+      where: { eventId: event.id, status: { in: statuses }, result: { is: null } },
+      include: { speakers: true },
+    });
+
+    await db.resultPublication.createMany({
+      data: proposals.map((p) => ({ type, proposalId: p.id, emailStatus: withEmails ? 'SENT' : 'NONE' })),
+    });
+
+    if (withEmails && forType === 'accepted') await ProposalAcceptedEmailsBatch.send(event, proposals);
+    if (withEmails && forType === 'rejected') await ProposalRejectedEmailsBatch.send(event, proposals);
+  }
+
+  async publishFor(forType: 'accepted' | 'rejected', withEmails: boolean, proposalId: string) {
+    const event = await this.userEvent.allowedFor(['OWNER']);
+    const statuses = STATUS_BY_TYPE[forType];
+    const type = forType === 'accepted' ? 'ACCEPTED' : 'REJECTED';
+
+    const proposal = await db.proposal.findUnique({
+      where: { id: proposalId, eventId: event.id, status: { in: statuses }, result: { is: null } },
+      include: { speakers: true },
+    });
+    if (!proposal) throw new ProposalNotFoundError();
+
+    await db.resultPublication.create({
+      data: { type, proposalId: proposal.id, emailStatus: withEmails ? 'SENT' : 'NONE' },
+    });
+
+    if (withEmails && forType === 'accepted') await ProposalAcceptedEmailsBatch.send(event, [proposal]);
+    if (withEmails && forType === 'rejected') await ProposalRejectedEmailsBatch.send(event, [proposal]);
+  }
+
+  async unpublish(forType: 'accepted', proposalIds: Array<string>) {
+    const type = forType === 'accepted' ? 'ACCEPTED' : 'REJECTED';
+    await db.resultPublication.deleteMany({ where: { type: { not: type }, proposalId: { in: proposalIds } } });
   }
 
   private async countSubmitted(eventId: string) {
