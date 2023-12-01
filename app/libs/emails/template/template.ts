@@ -19,7 +19,7 @@ export class Template {
   }
 
   renderHtmlContent<T extends EmailVariables>(variables: T) {
-    let markdown = xss(marked.parse(this.content));
+    let markdown = xss(marked.parse(this.content, { async: false }) as string);
     for (const [key, value] of Object.entries(variables)) {
       markdown = markdown.replaceAll(`%${key}%`, value.toString());
     }
