@@ -134,6 +134,7 @@ async function run() {
   // Close the express server gracefully
   closeWithGrace(async () => {
     await new Promise((resolve, reject) => {
+      console.log('Shutting down the express server...');
       server.close((e) => (e ? reject(e) : resolve('ok')));
     });
   });
