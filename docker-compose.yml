@@ -11,6 +11,13 @@ services:
     environment:
       POSTGRES_MULTIPLE_DATABASES: '"conference-hall","conference-hall-test"'
       POSTGRES_HOST_AUTH_METHOD: trust
+  redis:
+    container_name: ch_redis
+    image: redis:7-alpine
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning
   firebase-emulators:
     container_name: ch_firebase_emulators
     build:

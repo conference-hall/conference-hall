@@ -6,6 +6,7 @@ export let config: Config;
 class Config {
   ENV: string;
   USE_EMULATORS: boolean;
+  REDIS_PRIVATE_URL: string;
   FIREBASE_PROJECT_ID: string;
   FIREBASE_API_KEY: string;
   FIREBASE_AUTH_DOMAIN: string;
@@ -22,6 +23,7 @@ class Config {
   constructor() {
     this.ENV = ENV;
     this.USE_EMULATORS = USE_EMULATORS;
+    this.REDIS_PRIVATE_URL = process.env.REDIS_PRIVATE_URL || '';
     this.FIREBASE_PROJECT_ID = process.env.FIREBASE_PROJECT_ID || '';
     this.FIREBASE_API_KEY = process.env.FIREBASE_API_KEY || '';
     this.FIREBASE_AUTH_DOMAIN = process.env.FIREBASE_AUTH_DOMAIN || '';
