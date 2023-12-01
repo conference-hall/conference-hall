@@ -12,7 +12,7 @@ const markdown = cva('max-w-none text-gray-900', {
 type Props = { as?: React.ElementType; children: string | null; className?: string } & VariantProps<typeof markdown>;
 
 export function Markdown({ as: Tag = 'div', children, size, className }: Props) {
-  const html = marked.parse(children || '');
+  const html = marked.parse(children || '', { async: false }) as string;
 
   return <Tag className={markdown({ size, className })} dangerouslySetInnerHTML={{ __html: xss(html) }} />;
 }

@@ -11,10 +11,9 @@ export function buildTemplate(subject: string, template: string, variables: Reco
     md = md.replaceAll(`%${key}%`, value);
   });
 
-  let html = base
-    .toString()
-    .replace('{{subject}}', subject)
-    .replace('{{content}}', xss(marked.parse(md)));
+  const markdown = marked.parse(md, { async: false }) as string;
+
+  let html = base.toString().replace('{{subject}}', subject).replace('{{content}}', xss(markdown));
 
   return html;
 }
