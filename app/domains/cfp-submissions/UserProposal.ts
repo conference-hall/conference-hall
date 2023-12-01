@@ -4,8 +4,8 @@ import { CfpNotOpenError, ProposalNotFoundError } from '~/libs/errors';
 
 import { CallForPaper } from '../shared/CallForPaper';
 import { InvitationLink } from '../shared/InvitationLink';
-import { ProposalConfirmedEmail } from './emails/proposal-confirmed-email';
-import { ProposalDeclinedEmail } from './emails/proposal-declined-email';
+import { ProposalConfirmedEmail } from './emails/proposal-confirmed.email';
+import { ProposalDeclinedEmail } from './emails/proposal-declined.email';
 import type { ProposalSaveData } from './UserProposal.types';
 
 export class UserProposal {

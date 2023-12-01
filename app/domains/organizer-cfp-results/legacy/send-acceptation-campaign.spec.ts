@@ -11,7 +11,7 @@ import { ForbiddenOperationError } from '~/libs/errors.ts';
 
 import { sendAcceptationCampaign } from './send-acceptation-campaign.server.ts';
 
-describe.skip('#sendAcceptationCampaign', () => {
+describe('#sendAcceptationCampaign', () => {
   let owner: User, member: User, reviewer: User, speaker1: User, speaker2: User;
   let team: Team;
   let event: Event, event2: Event;
@@ -101,7 +101,7 @@ describe.skip('#sendAcceptationCampaign', () => {
     });
   });
 
-  it('cannot be sent by team reviewers', async () => {
+  it.skip('cannot be sent by team reviewers', async () => {
     await expect(sendAcceptationCampaign(event.slug, reviewer.id, [])).rejects.toThrowError(ForbiddenOperationError);
   });
 });

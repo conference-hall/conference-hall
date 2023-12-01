@@ -9,8 +9,8 @@ import {
 import { CallForPaper } from '../shared/CallForPaper';
 import { InvitationLink } from '../shared/InvitationLink';
 import { TalksLibrary } from '../speaker-talks-library/TalksLibrary';
-import { ProposalReceivedEmail } from './emails/proposal-received-email';
-import { ProposalSubmittedEmail } from './emails/proposal-submitted-email';
+import { ProposalReceivedEmail } from './emails/proposal-received.email';
+import { ProposalSubmittedEmail } from './emails/proposal-submitted.email';
 import { sendSubmittedTalkSlackMessage } from './slack/slack.services';
 import type { DraftSaveData, TrackUpdateData } from './TalkSubmission.types';
 

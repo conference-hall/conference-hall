@@ -4,8 +4,8 @@ import { db } from '~/libs/db';
 import { ProposalNotFoundError } from '~/libs/errors';
 
 import { UserEvent } from '../organizer-event-settings/UserEvent';
-import { ProposalAcceptedEmailsBatch } from './legacy/emails/proposal-accepted-email-batch';
-import { ProposalRejectedEmailsBatch } from './legacy/emails/proposal-rejected-email-batch';
+import { ProposalAcceptedEmail } from './legacy/emails/proposal-accepted.email';
+import { ProposalRejectedEmail } from './legacy/emails/proposal-rejected.email';
 
 export type ResultsStatistics = Awaited<ReturnType<typeof ResultsAnnouncement.prototype.statistics>>;
 
@@ -47,8 +47,8 @@ export class ResultsAnnouncement {
       data: proposals.map((p) => ({ type, proposalId: p.id, emailStatus: withEmails ? 'SENT' : 'NONE' })),
     });
 
-    if (withEmails && forType === 'accepted') await ProposalAcceptedEmailsBatch.send(event, proposals);
-    if (withEmails && forType === 'rejected') await ProposalRejectedEmailsBatch.send(event, proposals);
+    if (withEmails && forType === 'accepted') await ProposalAcceptedEmail.send(event, proposals);
+    if (withEmails && forType === 'rejected') await ProposalRejectedEmail.send(event, proposals);
   }
 
   async publishFor(forType: 'accepted' | 'rejected', withEmails: boolean, proposalId: string) {
@@ -66,8 +66,8 @@ export class ResultsAnnouncement {
       data: { type, proposalId: proposal.id, emailStatus: withEmails ? 'SENT' : 'NONE' },
     });
 
-    if (withEmails && forType === 'accepted') await ProposalAcceptedEmailsBatch.send(event, [proposal]);
-    if (withEmails && forType === 'rejected') await ProposalRejectedEmailsBatch.send(event, [proposal]);
+    if (withEmails && forType === 'accepted') await ProposalAcceptedEmail.send(event, [proposal]);
+    if (withEmails && forType === 'rejected') await ProposalRejectedEmail.send(event, [proposal]);
   }
 
   async unpublish(forType: 'accepted', proposalIds: Array<string>) {

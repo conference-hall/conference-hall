@@ -1,3 +1,4 @@
+export const HTML_TEMPLATE = `
 <!DOCTYPE html>
 <html>
   <head>
@@ -217,3 +218,4 @@
     </table>
   </body>
 </html>
+`;

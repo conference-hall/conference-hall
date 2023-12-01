@@ -2,7 +2,7 @@ import { EmailStatus } from '@prisma/client';
 
 import { db } from '~/libs/db.ts';
 
-import { ProposalAcceptedEmailsBatch } from './emails/proposal-accepted-email-batch.ts';
+import { ProposalAcceptedEmail } from './emails/proposal-accepted.email.ts';
 
 export async function sendAcceptationCampaign(eventSlug: string, userId: string, proposalIds: string[]) {
   const event = await db.event.findUnique({ where: { slug: eventSlug } });
@@ -17,7 +17,7 @@ export async function sendAcceptationCampaign(eventSlug: string, userId: string,
     },
   });
 
-  await ProposalAcceptedEmailsBatch.send(event, proposals);
+  await ProposalAcceptedEmail.send(event, proposals);
 
   await db.proposal.updateMany({
     data: { emailAcceptedStatus: EmailStatus.SENT },
