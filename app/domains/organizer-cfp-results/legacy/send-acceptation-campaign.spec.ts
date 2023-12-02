@@ -73,10 +73,13 @@ describe('#sendAcceptationCampaign', () => {
 
     await sendAcceptationCampaign(event.slug, owner.id, [proposal_accepted_1.id]);
 
-    await expect(speaker1.email).toHaveEmail({
-      from: { name: event.name, address: 'no-reply@conference-hall.io' },
-      subject: `[${event.name}] Your talk has been accepted`,
-    });
+    expect([
+      {
+        from: `${event.name} <no-reply@conference-hall.io>`,
+        to: [speaker1.email],
+        subject: `[${event.name}] Your talk has been accepted`,
+      },
+    ]).toHaveEmailsEnqueued();
 
     const proposals = await db.proposal.findMany({ orderBy: { emailAcceptedStatus: 'asc' } });
     expect(proposals.map((proposal) => proposal.emailAcceptedStatus)).toEqual(['SENT', null]);
@@ -90,10 +93,13 @@ describe('#sendAcceptationCampaign', () => {
     });
     await sendAcceptationCampaign(event.slug, owner.id, []);
 
-    await expect(speaker1.email).toHaveEmail({
-      from: { name: event.name, address: 'no-reply@conference-hall.io' },
-      subject: `[${event.name}] Your talk has been accepted`,
-    });
+    expect([
+      {
+        from: `${event.name} <no-reply@conference-hall.io>`,
+        to: [speaker1.email],
+        subject: `[${event.name}] Your talk has been accepted`,
+      },
+    ]).toHaveEmailsEnqueued();
   });
 
   it.skip('cannot be sent by team reviewers', async () => {
