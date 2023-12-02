@@ -2,7 +2,7 @@ import { EmailStatus } from '@prisma/client';
 
 import { db } from '~/libs/db.ts';
 
-import { ProposalRejectedEmail } from './emails/proposal-rejected.email.ts';
+import { ProposalRejectedEmail } from '../emails/proposal-rejected.email.ts';
 
 export async function sendRejectionCampaign(eventSlug: string, userId: string, proposalIds: string[]) {
   const event = await db.event.findUnique({ where: { slug: eventSlug } });

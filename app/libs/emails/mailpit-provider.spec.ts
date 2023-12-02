@@ -1,5 +1,4 @@
 import { MailpitProvider } from './mailpit-provider';
-import { Template } from './template/template';
 
 vi.mock('nodemailer', () => {
   const sendMail = vi.fn();
@@ -18,23 +17,22 @@ describe('MailpitProvider', () => {
   });
 
   it('should send emails', async () => {
-    const emailData = {
+    const email = {
       from: 'from@example.com',
       to: ['to1@example.com', 'to2@example.com'],
       bcc: ['bcc1@example.com'],
-      variables: { subject: 'Hello', content: 'Workd' },
+      subject: 'Hello',
+      html: 'World',
     };
 
-    const template = new Template('%subject%', '**%content%**');
-
-    await mailpitProvider.send(emailData.from, [emailData], template);
+    await mailpitProvider.send(email);
 
     expect(mailpitProvider['transporter'].sendMail).toHaveBeenCalledWith({
-      from: emailData.from,
-      to: emailData.to,
-      bcc: emailData.bcc,
-      subject: 'Hello',
-      html: expect.any(String),
+      from: email.from,
+      to: email.to,
+      bcc: email.bcc,
+      subject: email.subject,
+      html: email.html,
     });
   });
 });

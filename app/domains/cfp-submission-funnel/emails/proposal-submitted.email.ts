@@ -3,21 +3,25 @@ import type { Event, Proposal, User } from '@prisma/client';
 import { emailProvider } from '~/libs/emails/provider';
 import { Template } from '~/libs/emails/template/template';
 
-type EmailVariables = { eventName: string; proposalTitle: string };
+type Variables = { eventName: string; proposalTitle: string };
 
-export class ProposalSubmittedEmail extends Template {
+export class ProposalSubmittedEmail {
   static async send(event: Event, proposal: Proposal & { speakers: User[] }) {
-    const template = new ProposalSubmittedEmail(`[${event.name}] Submission confirmed`, TEMPLATE);
-
-    const recipients = {
-      to: proposal.speakers.map((speaker) => speaker.email).filter(Boolean),
+    const template = new Template<Variables>({
+      subject: `[${event.name}] Submission confirmed`,
+      content: TEMPLATE,
       variables: {
         eventName: event.name,
         proposalTitle: proposal.title,
       },
-    };
+    });
 
-    await emailProvider.send<EmailVariables>(`${event.name} <no-reply@conference-hall.io>`, [recipients], template);
+    await emailProvider.send({
+      from: `${event.name} <no-reply@conference-hall.io>`,
+      to: proposal.speakers.map((speaker) => speaker.email).filter(Boolean),
+      subject: template.renderSubject(),
+      html: template.renderHtmlContent(),
+    });
   }
 }
 

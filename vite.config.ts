@@ -9,14 +9,7 @@ const config: RemixVitePluginOptions = {
   serverModuleFormat: 'esm',
   routes: async (defineRoutes) => {
     return flatRoutes('routes', defineRoutes, {
-      ignoredRouteFiles: [
-        '.*',
-        '**/__components/*',
-        '**/__server/*',
-        '**/__types/*',
-        '**/*.css',
-        '**/*.test.{js,jsx,ts,tsx}',
-      ],
+      ignoredRouteFiles: ['.*', '**/__components/*', '**/*.css', '**/*.test.{js,jsx,ts,tsx}'],
     });
   },
 };

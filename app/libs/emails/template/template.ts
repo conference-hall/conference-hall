@@ -1,28 +1,30 @@
 import { marked } from 'marked';
 import xss from 'xss';
 
-import { type EmailVariables } from '../provider';
 import { HTML_TEMPLATE } from './template.html';
 
-export class Template {
+export class Template<T extends Record<string, string>> {
   constructor(
-    private subject: string,
-    private content: string,
+    private template: {
+      subject: string;
+      content: string;
+      variables: T;
+    },
   ) {}
 
-  renderSubject<T extends EmailVariables>(variables: T) {
-    let subject = this.subject;
-    for (const [key, value] of Object.entries(variables)) {
+  renderSubject() {
+    let subject = this.template.subject;
+    for (const [key, value] of Object.entries(this.template.variables)) {
       subject = subject.replaceAll(`%${key}%`, value.toString());
     }
     return subject;
   }
 
-  renderHtmlContent<T extends EmailVariables>(variables: T) {
-    let markdown = xss(marked.parse(this.content, { async: false }) as string);
-    for (const [key, value] of Object.entries(variables)) {
+  renderHtmlContent() {
+    let markdown = xss(marked.parse(this.template.content, { async: false }) as string);
+    for (const [key, value] of Object.entries(this.template.variables)) {
       markdown = markdown.replaceAll(`%${key}%`, value.toString());
     }
-    return HTML_TEMPLATE.replace('{{subject}}', this.renderSubject(variables)).replace('{{content}}', markdown);
+    return HTML_TEMPLATE.replace('{{subject}}', this.renderSubject()).replace('{{content}}', markdown);
   }
 }

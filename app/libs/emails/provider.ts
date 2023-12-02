@@ -1,18 +1,11 @@
 import { config } from '../config';
 import { MailgunProvider } from './mailgun-provider';
 import { MailpitProvider } from './mailpit-provider';
-import type { Template } from './template/template';
 
-export interface EmailVariables {
-  [key: string]: string | number | boolean;
-}
+export type Email = { from: string; to: string[]; bcc?: string[]; subject: string; html: string };
 
 export interface EmailProvider {
-  send: <T extends EmailVariables>(
-    from: string,
-    recipients: { to: string[]; bcc?: string[]; variables: T }[],
-    template: Template,
-  ) => Promise<void>;
+  send: (email: Email) => Promise<void>;
 }
 
 function getEmailProvider(): EmailProvider {

@@ -1,5 +1,4 @@
 import { MailgunProvider } from './mailgun-provider';
-import { Template } from './template/template';
 
 vi.mock('mailgun.js', () => {
   const client = { messages: { create: vi.fn() } };
@@ -23,23 +22,22 @@ describe('MailgunProvider', () => {
   });
 
   it('should send emails', async () => {
-    const emailData = {
+    const email = {
       from: 'from@example.com',
       to: ['to1@example.com', 'to2@example.com'],
       bcc: ['bcc1@example.com'],
-      variables: { subject: 'Hello', content: 'Workd' },
+      subject: 'Hello',
+      html: 'World',
     };
 
-    const template = new Template('%subject%', '**%content%**');
-
-    await mailgunProvider.send(emailData.from, [emailData], template);
+    await mailgunProvider.send(email);
 
     expect(mailgunProvider['client'].messages.create).toHaveBeenCalledWith('example.com', {
-      from: emailData.from,
-      to: emailData.to,
-      bcc: emailData.bcc,
-      subject: 'Hello',
-      html: expect.any(String),
+      from: email.from,
+      to: email.to,
+      bcc: email.bcc,
+      subject: email.subject,
+      html: email.html,
     });
   });
 });

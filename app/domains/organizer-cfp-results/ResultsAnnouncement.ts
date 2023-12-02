@@ -4,8 +4,8 @@ import { db } from '~/libs/db';
 import { ProposalNotFoundError } from '~/libs/errors';
 
 import { UserEvent } from '../organizer-event-settings/UserEvent';
-import { ProposalAcceptedEmail } from './legacy/emails/proposal-accepted.email';
-import { ProposalRejectedEmail } from './legacy/emails/proposal-rejected.email';
+import { ProposalAcceptedEmail } from './emails/proposal-accepted.email';
+import { ProposalRejectedEmail } from './emails/proposal-rejected.email';
 
 export type ResultsStatistics = Awaited<ReturnType<typeof ResultsAnnouncement.prototype.statistics>>;
 
