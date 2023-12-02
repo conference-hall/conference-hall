@@ -26,7 +26,7 @@ describe('#sendAcceptationCampaign', () => {
     event2 = await eventFactory({ attributes: { name: 'Event 2' } });
   });
 
-  it.only('sends emails to only accepted (not draft) proposals of the event for each speaker', async () => {
+  it('sends emails to only accepted (not draft) proposals of the event for each speaker', async () => {
     await proposalFactory({ event: event2, talk: await talkFactory({ speakers: [speaker1] }) });
     await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker1] }), traits: ['draft'] });
     await proposalFactory({
