@@ -1,7 +1,6 @@
 import './custom-matchers.ts';
 
 import { installGlobals } from '@remix-run/node';
-import { EmailQueue } from 'jobs/email/email.queue.ts';
 
 import { disconnectDB, resetDB } from './db-helpers.ts';
 
@@ -16,7 +15,6 @@ afterEach(async () => {
 
 afterAll(async () => {
   await disconnectDB();
-  await EmailQueue.get().close();
 });
 
 // Console in tests

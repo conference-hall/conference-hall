@@ -1,4 +1,4 @@
-import { MockEmailQueue } from 'jobs/email/__mocks__/email.queue.ts';
+import { MockEmailQueue } from 'jobs/email/__mocks__/email.queue';
 import { EmailQueue } from 'jobs/email/email.queue.ts';
 import type { Mock } from 'vitest';
 import { expect } from 'vitest';
