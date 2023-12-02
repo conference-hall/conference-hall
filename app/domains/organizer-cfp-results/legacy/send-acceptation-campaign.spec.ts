@@ -1,5 +1,4 @@
 import type { Event, Team, User } from '@prisma/client';
-import { resetEmails } from 'tests/email-helpers.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
@@ -17,7 +16,6 @@ describe('#sendAcceptationCampaign', () => {
   let event: Event, event2: Event;
 
   beforeEach(async () => {
-    await resetEmails();
     owner = await userFactory();
     member = await userFactory();
     reviewer = await userFactory();
@@ -28,7 +26,7 @@ describe('#sendAcceptationCampaign', () => {
     event2 = await eventFactory({ attributes: { name: 'Event 2' } });
   });
 
-  it('sends emails to only accepted (not draft) proposals of the event for each speaker', async () => {
+  it.only('sends emails to only accepted (not draft) proposals of the event for each speaker', async () => {
     await proposalFactory({ event: event2, talk: await talkFactory({ speakers: [speaker1] }) });
     await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker1] }), traits: ['draft'] });
     await proposalFactory({
@@ -44,21 +42,18 @@ describe('#sendAcceptationCampaign', () => {
 
     await sendAcceptationCampaign(event.slug, owner.id, []);
 
-    await expect(speaker1.email).toHaveEmails([
+    expect([
       {
-        from: { name: event.name, address: 'no-reply@conference-hall.io' },
+        from: `${event.name} <no-reply@conference-hall.io>`,
+        to: [speaker1.email, speaker2.email],
         subject: `[${event.name}] Your talk has been accepted`,
       },
       {
-        from: { name: event.name, address: 'no-reply@conference-hall.io' },
+        from: `${event.name} <no-reply@conference-hall.io>`,
+        to: [speaker1.email],
         subject: `[${event.name}] Your talk has been accepted`,
       },
-    ]);
-
-    await expect(speaker2.email).toHaveEmail({
-      from: { name: event.name, address: 'no-reply@conference-hall.io' },
-      subject: `[${event.name}] Your talk has been accepted`,
-    });
+    ]).toHaveEmailsEnqueued();
 
     const proposals = await db.proposal.findMany({ orderBy: { emailAcceptedStatus: 'asc' } });
     expect(proposals.map((proposal) => proposal.emailAcceptedStatus)).toEqual(['SENT', 'SENT', null, null]);

@@ -13,6 +13,7 @@ export async function resetDB() {
     db.survey.deleteMany(),
     db.message.deleteMany(),
     db.review.deleteMany(),
+    db.resultPublication.deleteMany(),
     db.proposal.deleteMany(),
     db.talk.deleteMany(),
     db.eventFormat.deleteMany(),

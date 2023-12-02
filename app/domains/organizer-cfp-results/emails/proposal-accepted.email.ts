@@ -1,7 +1,7 @@
 import type { Event, Proposal, User } from '@prisma/client';
+import { EmailQueue } from 'jobs/email/email.queue';
 
 import { config } from '~/libs/config';
-import { emailProvider } from '~/libs/emails/provider';
 import { Template } from '~/libs/emails/template/template';
 
 type Variables = {
@@ -28,7 +28,7 @@ export class ProposalAcceptedEmail {
           },
         });
 
-        await emailProvider.send({
+        await EmailQueue.get().enqueue('proposal-accepted-email', {
           from: `${event.name} <no-reply@conference-hall.io>`,
           to: proposal.speakers.map((speaker) => speaker.email).filter(Boolean),
           subject: template.renderSubject(),
