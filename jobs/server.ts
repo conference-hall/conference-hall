@@ -1,3 +1,5 @@
+import closeWithGrace from 'close-with-grace';
+
 import { worker } from './email/email.worker';
 
 worker.on('ready', () => console.log('Emails jobs worker is ready'));
@@ -14,12 +16,8 @@ process.on('unhandledRejection', (reason, promise) => {
   console.error({ promise, reason }, '[Jobs] Unhandled Rejection at: Promise');
 });
 
-const gracefulShutdown = async () => {
+closeWithGrace(async () => {
   console.log('Shutting down the jobs worker server...');
   await worker.close();
   await worker.disconnect();
-  process.exit(0);
-};
-
-process.on('SIGINT', gracefulShutdown);
-process.on('SIGTERM', gracefulShutdown);
+});
