@@ -1,12 +1,11 @@
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { Outlet, useLoaderData, useOutletContext } from '@remix-run/react';
+import { Link, Outlet, useLoaderData, useOutletContext } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { Card } from '~/design-system/layouts/Card';
 import { PageContent } from '~/design-system/layouts/PageContent';
-import { Link } from '~/design-system/Links';
-import { H1, H2 } from '~/design-system/Typography.tsx';
+import { H1, H2, Subtitle } from '~/design-system/Typography.tsx';
 import type { ResultsStatistics } from '~/domains/organizer-cfp-results/ResultsAnnouncement';
 import { ResultsAnnouncement } from '~/domains/organizer-cfp-results/ResultsAnnouncement';
 import { requireSession } from '~/libs/auth/session.ts';
@@ -21,17 +20,25 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   return json(await results.statistics());
 };
 
-export default function ResultsAnnouncementRoute() {
+export default function DeliberationRoute() {
   const statistics = useLoaderData<typeof loader>();
 
   return (
     <PageContent className="flex flex-col">
-      <H1 srOnly>Results announcement</H1>
+      <H1 srOnly>Deliberation</H1>
 
-      <section className="space-y-4">
-        <H2>Deliberation results</H2>
-        <Card className="p-2">
-          <dl className="flex flex-wrap justify-around text-center">
+      <section className="space-y-2">
+        <H2>1. Deliberation</H2>
+        <Subtitle>
+          To deliberate, open the{' '}
+          <Link to="/" className="underline">
+            Proposals review page
+          </Link>
+          , select and mark proposals as accepted or rejected. You can also change the deliberation status individually
+          on a proposal page.
+        </Subtitle>
+        <Card className="p-4">
+          <dl className="flex flex-col md:flex-row md:justify-around text-center md:divide-x">
             <Link
               to="accepted"
               className="grow flex flex-col p-2 px-4 items-center hover:bg-slate-100 hover:no-underline rounded"
@@ -69,13 +76,10 @@ export default function ResultsAnnouncementRoute() {
               to="accepted"
               className="grow flex flex-col p-2 px-4 items-center hover:bg-slate-100 hover:no-underline rounded"
             >
-              <dt id="total-not-deliberated" className="truncate text-sm font-medium text-gray-500">
-                Not deliberated proposals
+              <dt id="total-pending" className="truncate text-sm font-medium text-gray-500">
+                Pending proposals
               </dt>
-              <dd
-                className="mt-1 text-3xl font-semibold tracking-tight text-gray-900"
-                aria-labelledby="total-not-deliberated"
-              >
+              <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900" aria-labelledby="total-pending">
                 {statistics.submitted}
               </dd>
             </Link>
@@ -83,30 +87,33 @@ export default function ResultsAnnouncementRoute() {
         </Card>
       </section>
 
-      <section className="space-y-4">
-        <H2>Announce results</H2>
+      <section className="space-y-2">
+        <H2>2. Announcements</H2>
         <div className="flex flex-col gap-4 lg:flex-row lg:gap-8">
           <AnnouncementCard
             id="announce-accepted"
-            title="Accepted proposals"
-            subtitle="Announce results to speakers for accepted proposals."
+            title="Announce accepted proposals"
+            subtitle="Publish results to speakers for accepted proposals."
             statistics={statistics.accepted}
             to="accepted"
           />
           <AnnouncementCard
             id="announce-rejected"
-            title="Rejected proposals"
-            subtitle="Announce results to speakers for rejected proposals."
+            title="Announce rejected proposals"
+            subtitle="Publish results to speakers for rejected proposals."
             statistics={statistics.rejected}
             to="rejected"
           />
         </div>
       </section>
 
-      <section className="space-y-4">
-        <H2>Speakers confirmations</H2>
-        <Card className="p-2">
-          <dl className="flex flex-wrap justify-around text-center">
+      <section className="space-y-2">
+        <H2>3. Speakers confirmations</H2>
+        <Subtitle>
+          Some metrics about speakers confirmations. Click on a metric card to see the corresponding proposals.
+        </Subtitle>
+        <Card className="p-4">
+          <dl className="flex flex-col md:flex-row md:justify-around text-center md:divide-x">
             <Link
               to="accepted"
               className="grow flex flex-col p-2 px-4 items-center hover:bg-slate-100 hover:no-underline rounded"

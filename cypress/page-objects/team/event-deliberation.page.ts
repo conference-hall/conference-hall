@@ -1,13 +1,13 @@
 import BasePage from '../base.page.ts';
 
-class ResultAnnouncementPage extends BasePage {
+class DeliberationPage extends BasePage {
   visit(teamSlug: string, eventSlug: string) {
-    cy.visitAndCheck(`/team/${teamSlug}/${eventSlug}/results`);
+    cy.visitAndCheck(`/team/${teamSlug}/${eventSlug}/deliberation`);
     this.isPageVisible();
   }
 
   isPageVisible() {
-    cy.findByRole('heading', { name: 'Results announcement' }).should('exist');
+    cy.findByRole('heading', { name: 'Deliberation' }).should('exist');
   }
 
   announceAcceptedCard() {
@@ -43,7 +43,7 @@ class ResultAnnouncementPage extends BasePage {
   }
 
   totalNotDeliberated() {
-    return cy.findByRole('definition', { name: 'Not deliberated proposals' });
+    return cy.findByRole('definition', { name: 'Pending proposals' });
   }
 
   totalConfirmations() {
@@ -64,10 +64,10 @@ class ResultAnnouncementPage extends BasePage {
 }
 
 class AnnounceAcceptedModal {
-  visit(from: ResultAnnouncementPage) {
+  visit(from: DeliberationPage) {
     from
       .announceAcceptedCard()
-      .findByRole('link', { name: /^Announce.*/i })
+      .findByRole('link', { name: /^Publish results.*/i })
       .click();
     this.isPageVisible();
   }
@@ -82,10 +82,10 @@ class AnnounceAcceptedModal {
 }
 
 class AnnounceRejectedModal {
-  visit(from: ResultAnnouncementPage) {
+  visit(from: DeliberationPage) {
     from
       .announceRejectedCard()
-      .findByRole('link', { name: /^Announce.*/i })
+      .findByRole('link', { name: /^Publish results.*/i })
       .click();
     this.isPageVisible();
   }
@@ -99,4 +99,4 @@ class AnnounceRejectedModal {
   }
 }
 
-export default ResultAnnouncementPage;
+export default DeliberationPage;

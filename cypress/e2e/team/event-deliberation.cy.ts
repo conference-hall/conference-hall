@@ -1,13 +1,13 @@
-import ResultAnnouncementPage from 'page-objects/team/event-results-announcement.page.ts';
+import DeliberationPage from 'page-objects/team/event-deliberation.page.ts';
 
-describe('Results annoucement page', () => {
+describe('Deliberation page', () => {
   beforeEach(() => {
-    cy.task('seedDB', 'team/results-announcement');
+    cy.task('seedDB', 'team/event-deliberation');
   });
 
   afterEach(() => cy.task('disconnectDB'));
 
-  const page = new ResultAnnouncementPage();
+  const page = new DeliberationPage();
 
   it('redirects to signin, when user is not connected', () => {
     cy.login('Clark Kent');
@@ -26,12 +26,12 @@ describe('Results annoucement page', () => {
     const modalAccepted = page.announceAccepted();
     modalAccepted.confirm();
     page.isPageVisible();
-    page.announceAcceptedCard().should('contain.text', 'All results accounced');
+    page.announceAcceptedCard().should('contain.text', 'All results published');
 
     const modalRejected = page.announceRejected();
     modalRejected.confirm();
     page.isPageVisible();
-    page.announceRejectedCard().should('contain.text', 'All results accounced');
+    page.announceRejectedCard().should('contain.text', 'All results published');
   });
 
   describe('as a team member', () => {
@@ -44,7 +44,7 @@ describe('Results annoucement page', () => {
   describe('as a team reviewer', () => {
     it('does not have access to result announcements', () => {
       cy.login('Peter Parker');
-      cy.visitAndCheck(`/team/team-1/conference-1/results`, { failOnStatusCode: false });
+      cy.visitAndCheck(`/team/team-1/conference-1/deliberation`, { failOnStatusCode: false });
       cy.assertText('Forbidden operation');
     });
   });

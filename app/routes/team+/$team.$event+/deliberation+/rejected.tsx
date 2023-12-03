@@ -30,12 +30,16 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const result = parse(form, { schema: PublishResultFormSchema });
   if (!result.value) throw new BadRequestError('Invalid form data');
 
-  await ResultsAnnouncement.for(userId, params.team, params.event).publishAll('ACCEPTED', result.value.sendEmails);
+  await ResultsAnnouncement.for(userId, params.team, params.event).publishAll('REJECTED', result.value.sendEmails);
 
-  return redirectWithToast(`/team/${params.team}/${params.event}/results`, 'success', 'Accepted proposal published.');
+  return redirectWithToast(
+    `/team/${params.team}/${params.event}/deliberation`,
+    'success',
+    'Rejected proposal published.',
+  );
 };
 
-export default function ResultsAcceptedModalRoute() {
-  const statistics = useResultsStatistics('accepted');
-  return <AnnoucementConfirmModal title="Accepted proposals announcement" statistics={statistics} />;
+export default function ResultsRejectedModalRoute() {
+  const statistics = useResultsStatistics('rejected');
+  return <AnnoucementConfirmModal title="Rejected proposals announcement" statistics={statistics} />;
 }
