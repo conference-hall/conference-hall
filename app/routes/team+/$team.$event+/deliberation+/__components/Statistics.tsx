@@ -8,7 +8,7 @@ type StatisticProps = { name: string; label: string; value?: number; className?:
 
 export function Statistic({ name, label, value, className }: StatisticProps) {
   return (
-    <div className={cx('overflow-hidden flex flex-col p-2 grow items-center', className)}>
+    <div className={cx('flex flex-col p-2 grow basis-1 items-center', className)}>
       <dt id={name} className="truncate text-sm font-medium text-gray-500">
         {label}
       </dt>
@@ -25,10 +25,7 @@ export function StatisticLink({ name, label, value, to, className }: StatisticLi
   return (
     <Link
       to={to}
-      className={cx(
-        'overflow-hidden flex flex-col p-2 grow items-center hover:bg-slate-100 hover:no-underline',
-        className,
-      )}
+      className={cx('flex flex-col p-2 grow basis-1 items-center hover:bg-slate-100 hover:no-underline', className)}
     >
       <dt id={name} className="truncate text-sm font-medium text-gray-500">
         {label}
