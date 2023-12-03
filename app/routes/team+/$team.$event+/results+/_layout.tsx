@@ -5,6 +5,7 @@ import invariant from 'tiny-invariant';
 
 import { Card } from '~/design-system/layouts/Card';
 import { PageContent } from '~/design-system/layouts/PageContent';
+import { Link } from '~/design-system/Links';
 import { H1, H2 } from '~/design-system/Typography.tsx';
 import type { ResultsStatistics } from '~/domains/organizer-cfp-results/ResultsAnnouncement';
 import { ResultsAnnouncement } from '~/domains/organizer-cfp-results/ResultsAnnouncement';
@@ -29,26 +30,38 @@ export default function ResultsAnnouncementRoute() {
 
       <section className="space-y-4">
         <H2>Deliberation results</H2>
-        <Card p={4}>
-          <dl className="flex justify-evenly text-center">
-            <div className="overflow-hidden">
+        <Card className="p-2">
+          <dl className="flex flex-wrap justify-around text-center">
+            <Link
+              to="accepted"
+              className="grow flex flex-col p-2 px-4 items-center hover:bg-slate-100 hover:no-underline rounded"
+            >
               <dt className="truncate text-sm font-medium text-gray-500">Total proposals</dt>
               <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
                 {statistics.submitted + statistics.accepted.total + statistics.rejected.total}
               </dd>
-            </div>
-            <div className="overflow-hidden">
+            </Link>
+            <Link
+              to="accepted"
+              className="grow flex flex-col p-2 px-4 items-center hover:bg-slate-100 hover:no-underline rounded"
+            >
               <dt className="truncate text-sm font-medium text-gray-500">Accepted proposals</dt>
               <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{statistics.accepted.total}</dd>
-            </div>
-            <div className="overflow-hidden">
+            </Link>
+            <Link
+              to="accepted"
+              className="grow flex flex-col p-2 px-4 items-center hover:bg-slate-100 hover:no-underline rounded"
+            >
               <dt className="truncate text-sm font-medium text-gray-500">Rejected proposals</dt>
               <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{statistics.rejected.total}</dd>
-            </div>
-            <div className="overflow-hidden">
+            </Link>
+            <Link
+              to="accepted"
+              className="grow flex flex-col p-2 px-4 items-center hover:bg-slate-100 hover:no-underline rounded"
+            >
               <dt className="truncate text-sm font-medium text-gray-500">Not deliberated proposals</dt>
               <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{statistics.submitted}</dd>
-            </div>
+            </Link>
           </dl>
         </Card>
       </section>
@@ -73,20 +86,36 @@ export default function ResultsAnnouncementRoute() {
 
       <section className="space-y-4">
         <H2>Speakers confirmations</H2>
-        <Card p={4}>
-          <dl className="flex justify-evenly text-center">
-            <div className="overflow-hidden">
+        <Card className="p-2">
+          <dl className="flex flex-wrap justify-around text-center">
+            <Link
+              to="accepted"
+              className="grow flex flex-col p-2 px-4 items-center hover:bg-slate-100 hover:no-underline rounded"
+            >
               <dt className="truncate text-sm font-medium text-gray-500">Total accepted</dt>
               <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{statistics.accepted.total}</dd>
-            </div>
-            <div className="overflow-hidden">
+            </Link>
+            <Link
+              to="accepted"
+              className="grow flex flex-col p-2 px-4 items-center hover:bg-slate-100 hover:no-underline rounded"
+            >
+              <dt className="truncate text-sm font-medium text-gray-500">No response yet</dt>
+              <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{statistics.accepted.total}</dd>
+            </Link>
+            <Link
+              to="accepted"
+              className="grow flex flex-col p-2 px-4 items-center hover:bg-slate-100 hover:no-underline rounded"
+            >
               <dt className="truncate text-sm font-medium text-gray-500">Confirmed by speakers</dt>
               <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">0</dd>
-            </div>
-            <div className="overflow-hidden">
+            </Link>
+            <Link
+              to="accepted"
+              className="grow flex flex-col p-2 px-4 items-center hover:bg-slate-100 hover:no-underline rounded"
+            >
               <dt className="truncate text-sm font-medium text-gray-500">Declined by speakers</dt>
               <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">0</dd>
-            </div>
+            </Link>
           </dl>
         </Card>
       </section>
