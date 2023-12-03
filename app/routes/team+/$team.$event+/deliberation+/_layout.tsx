@@ -11,6 +11,7 @@ import { ResultsAnnouncement } from '~/domains/organizer-cfp-results/ResultsAnno
 import { requireSession } from '~/libs/auth/session.ts';
 
 import { AnnouncementCard } from './__components/AnnouncementCard';
+import { StatisticLink } from './__components/Statistics';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
@@ -39,50 +40,25 @@ export default function DeliberationRoute() {
         </Subtitle>
         <Card className="p-4">
           <dl className="flex flex-col md:flex-row md:justify-around text-center md:divide-x">
-            <Link
+            <StatisticLink
+              name="total-proposals"
+              label="Total proposals"
+              value={statistics.submitted + statistics.accepted.total + statistics.rejected.total}
               to="accepted"
-              className="grow flex flex-col p-2 px-4 items-center hover:bg-slate-100 hover:no-underline rounded"
-            >
-              <dt id="total" className="truncate text-sm font-medium text-gray-500">
-                Total proposals
-              </dt>
-              <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900" aria-labelledby="total">
-                {statistics.submitted + statistics.accepted.total + statistics.rejected.total}
-              </dd>
-            </Link>
-            <Link
+            />
+            <StatisticLink
+              name="total-accepted"
+              label="Accepted proposals"
+              value={statistics.accepted.total}
               to="accepted"
-              className="grow flex flex-col p-2 px-4 items-center hover:bg-slate-100 hover:no-underline rounded"
-            >
-              <dt id="total-accepted" className="truncate text-sm font-medium text-gray-500">
-                Accepted proposals
-              </dt>
-              <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900" aria-labelledby="total-accepted">
-                {statistics.accepted.total}
-              </dd>
-            </Link>
-            <Link
-              to="accepted"
-              className="grow flex flex-col p-2 px-4 items-center hover:bg-slate-100 hover:no-underline rounded"
-            >
-              <dt id="total-rejected" className="truncate text-sm font-medium text-gray-500">
-                Rejected proposals
-              </dt>
-              <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900" aria-labelledby="total-rejected">
-                {statistics.rejected.total}
-              </dd>
-            </Link>
-            <Link
-              to="accepted"
-              className="grow flex flex-col p-2 px-4 items-center hover:bg-slate-100 hover:no-underline rounded"
-            >
-              <dt id="total-pending" className="truncate text-sm font-medium text-gray-500">
-                Pending proposals
-              </dt>
-              <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900" aria-labelledby="total-pending">
-                {statistics.submitted}
-              </dd>
-            </Link>
+            />
+            <StatisticLink
+              name="total-rejected"
+              label="Rejected proposals"
+              value={statistics.rejected.total}
+              to="rejected"
+            />
+            <StatisticLink name="total-pending" label="Pending proposals" value={statistics.submitted} to="accepted" />
           </dl>
         </Card>
       </section>
@@ -114,59 +90,10 @@ export default function DeliberationRoute() {
         </Subtitle>
         <Card className="p-4">
           <dl className="flex flex-col md:flex-row md:justify-around text-center md:divide-x">
-            <Link
-              to="accepted"
-              className="grow flex flex-col p-2 px-4 items-center hover:bg-slate-100 hover:no-underline rounded"
-            >
-              <dt id="total-confirmations" className="truncate text-sm font-medium text-gray-500">
-                Total accepted
-              </dt>
-              <dd
-                aria-labelledby="total-confirmations"
-                className="mt-1 text-3xl font-semibold tracking-tight text-gray-900"
-              >
-                {0}
-              </dd>
-            </Link>
-            <Link
-              to="accepted"
-              className="grow flex flex-col p-2 px-4 items-center hover:bg-slate-100 hover:no-underline rounded"
-            >
-              <dt id="total-no-response" className="truncate text-sm font-medium text-gray-500">
-                No response yet
-              </dt>
-              <dd
-                aria-labelledby="total-no-response"
-                className="mt-1 text-3xl font-semibold tracking-tight text-gray-900"
-              >
-                {0}
-              </dd>
-            </Link>
-            <Link
-              to="accepted"
-              className="grow flex flex-col p-2 px-4 items-center hover:bg-slate-100 hover:no-underline rounded"
-            >
-              <dt id="total-confirmed" className="truncate text-sm font-medium text-gray-500">
-                Confirmed by speakers
-              </dt>
-              <dd
-                aria-labelledby="total-confirmed"
-                className="mt-1 text-3xl font-semibold tracking-tight text-gray-900"
-              >
-                0
-              </dd>
-            </Link>
-            <Link
-              to="accepted"
-              className="grow flex flex-col p-2 px-4 items-center hover:bg-slate-100 hover:no-underline rounded"
-            >
-              <dt id="total-declined" className="truncate text-sm font-medium text-gray-500">
-                Declined by speakers
-              </dt>
-              <dd aria-labelledby="total-declined" className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
-                0
-              </dd>
-            </Link>
+            <StatisticLink name="total-confirmations" label="Total accepted" value={0} to="accepted" />
+            <StatisticLink name="total-no-response" label="No response yet" value={0} to="accepted" />
+            <StatisticLink name="total-confirmed" label="Confirmed by speakers" value={0} to="accepted" />
+            <StatisticLink name="total-declined" label="Declined by speakers" value={0} to="accepted" />
           </dl>
         </Card>
       </section>

@@ -4,7 +4,7 @@ import { Card } from '~/design-system/layouts/Card';
 import { Link } from '~/design-system/Links';
 import { Text } from '~/design-system/Typography';
 
-import type { Statistics } from './Statistics';
+import { Statistic, type Statistics } from './Statistics';
 
 type AnnouncementCardProps = { id: string; title: string; subtitle: string; statistics: Statistics; to: string };
 
@@ -18,25 +18,13 @@ export function AnnouncementCard({ id, title, subtitle, statistics, to }: Announ
             {subtitle} You can also notify speakers via email. {statistics.published} proposal(s) results already
             announced.
           </Text>
-          {statistics.notPublished !== 0 ? (
-            <dd className="flex flex-col items-center pl-8 border-l border-l-gray-200">
-              <dt id={to} className="truncate text-sm font-medium text-gray-500">
-                To publish
-              </dt>
-              <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900" aria-labelledby={to}>
-                {statistics.notPublished}
-              </dd>
-            </dd>
-          ) : (
-            <dd className="flex flex-col items-center pl-8 border-l border-l-gray-200">
-              <dt id={to} className="truncate text-sm font-medium text-gray-500">
-                Announced
-              </dt>
-              <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900" aria-labelledby={to}>
-                {statistics.published}
-              </dd>
-            </dd>
-          )}
+          <dl className="flex flex-col items-center pl-4 border-l border-l-gray-200">
+            {statistics.notPublished !== 0 ? (
+              <Statistic name="total-announce-to-publish" label="To publish" value={statistics.notPublished} />
+            ) : (
+              <Statistic name="total-announce-published" label="Announced" value={statistics.published} />
+            )}
+          </dl>
         </div>
         {statistics.notPublished > 0 ? (
           <div className="flex mt-4 text-sm leading-6">

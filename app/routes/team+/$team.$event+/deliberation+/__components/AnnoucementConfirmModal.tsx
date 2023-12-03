@@ -4,9 +4,8 @@ import { useCallback } from 'react';
 import { Button } from '~/design-system/Buttons';
 import { ToggleGroup } from '~/design-system/forms/Toggles';
 import { Modal } from '~/design-system/Modals';
-import { Text } from '~/design-system/Typography';
 
-import type { Statistics } from './Statistics';
+import { Statistic, type Statistics } from './Statistics';
 
 type AnnoucementConfirmModalProps = { title: string; statistics: Statistics | null };
 
@@ -24,11 +23,19 @@ export function AnnoucementConfirmModal({ title, statistics }: AnnoucementConfir
     <Modal size="l" open onClose={close}>
       <Modal.Title>{title}</Modal.Title>
       <Modal.Content className="pt-6 space-y-4">
-        <dl className="flex flex-col items-center mt-4 p-8 gap-2 border border-gray-300 rounded">
-          <Text as="dd" size="4xl" weight="semibold">
-            {statistics?.notPublished}
-          </Text>
-          <Text as="dt">proposals to announce</Text>
+        <dl className="flex items-center divide-x p-2 border border-gray-300 rounded">
+          <Statistic
+            name="total-annouce-published"
+            label="Already published"
+            className="basis-1/2"
+            value={statistics?.published}
+          />
+          <Statistic
+            name="total-annouce-to-publish"
+            label="To publish"
+            className="basis-1/2"
+            value={statistics?.notPublished}
+          />
         </dl>
         <div className="p-4 border border-gray-300 rounded">
           <Form id="result-form" method="POST">
