@@ -76,9 +76,17 @@ Card.Content = Content;
 
 // <Card.Actions /> component
 
-function Actions({ children }: { children: React.ReactNode }) {
+function Actions({ children, align = 'right' }: { children: React.ReactNode; align?: 'left' | 'center' | 'right' }) {
   return (
-    <div className="flex justify-end items-center gap-4 border-t border-t-gray-200 px-4 py-4 lg:px-8">{children}</div>
+    <div
+      className={cx('flex items-center gap-4 border-t border-t-gray-200 p-4 lg:px-8', {
+        'justify-end': align === 'right',
+        'justify-start': align === 'left',
+        'justify-center': align === 'center',
+      })}
+    >
+      {children}
+    </div>
   );
 }
 
