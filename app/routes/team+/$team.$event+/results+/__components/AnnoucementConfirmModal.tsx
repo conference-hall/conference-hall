@@ -24,12 +24,12 @@ export function AnnoucementConfirmModal({ title, statistics }: AnnoucementConfir
     <Modal size="l" open onClose={close}>
       <Modal.Title>{title}</Modal.Title>
       <Modal.Content className="pt-6 space-y-4">
-        <div className="flex flex-col items-center mt-4 p-8 gap-2 border border-gray-300 rounded">
-          <Text size="4xl" weight="semibold">
+        <dl className="flex flex-col items-center mt-4 p-8 gap-2 border border-gray-300 rounded">
+          <Text as="dd" size="4xl" weight="semibold">
             {statistics?.notPublished}
           </Text>
-          <Text>proposals to announce</Text>
-        </div>
+          <Text as="dt">proposals to announce</Text>
+        </dl>
         <div className="p-4 border border-gray-300 rounded">
           <Form id="result-form" method="POST">
             <ToggleGroup

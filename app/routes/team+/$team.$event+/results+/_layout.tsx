@@ -36,8 +36,10 @@ export default function ResultsAnnouncementRoute() {
               to="accepted"
               className="grow flex flex-col p-2 px-4 items-center hover:bg-slate-100 hover:no-underline rounded"
             >
-              <dt className="truncate text-sm font-medium text-gray-500">Total proposals</dt>
-              <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
+              <dt id="total" className="truncate text-sm font-medium text-gray-500">
+                Total proposals
+              </dt>
+              <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900" aria-labelledby="total">
                 {statistics.submitted + statistics.accepted.total + statistics.rejected.total}
               </dd>
             </Link>
@@ -45,22 +47,37 @@ export default function ResultsAnnouncementRoute() {
               to="accepted"
               className="grow flex flex-col p-2 px-4 items-center hover:bg-slate-100 hover:no-underline rounded"
             >
-              <dt className="truncate text-sm font-medium text-gray-500">Accepted proposals</dt>
-              <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{statistics.accepted.total}</dd>
+              <dt id="total-accepted" className="truncate text-sm font-medium text-gray-500">
+                Accepted proposals
+              </dt>
+              <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900" aria-labelledby="total-accepted">
+                {statistics.accepted.total}
+              </dd>
             </Link>
             <Link
               to="accepted"
               className="grow flex flex-col p-2 px-4 items-center hover:bg-slate-100 hover:no-underline rounded"
             >
-              <dt className="truncate text-sm font-medium text-gray-500">Rejected proposals</dt>
-              <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{statistics.rejected.total}</dd>
+              <dt id="total-rejected" className="truncate text-sm font-medium text-gray-500">
+                Rejected proposals
+              </dt>
+              <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900" aria-labelledby="total-rejected">
+                {statistics.rejected.total}
+              </dd>
             </Link>
             <Link
               to="accepted"
               className="grow flex flex-col p-2 px-4 items-center hover:bg-slate-100 hover:no-underline rounded"
             >
-              <dt className="truncate text-sm font-medium text-gray-500">Not deliberated proposals</dt>
-              <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{statistics.submitted}</dd>
+              <dt id="total-not-deliberated" className="truncate text-sm font-medium text-gray-500">
+                Not deliberated proposals
+              </dt>
+              <dd
+                className="mt-1 text-3xl font-semibold tracking-tight text-gray-900"
+                aria-labelledby="total-not-deliberated"
+              >
+                {statistics.submitted}
+              </dd>
             </Link>
           </dl>
         </Card>
@@ -68,20 +85,22 @@ export default function ResultsAnnouncementRoute() {
 
       <section className="space-y-4">
         <H2>Announce results</H2>
-        <ul className="flex flex-col gap-4 lg:flex-row lg:gap-8">
+        <div className="flex flex-col gap-4 lg:flex-row lg:gap-8">
           <AnnouncementCard
+            id="announce-accepted"
             title="Accepted proposals"
             subtitle="Announce results to speakers for accepted proposals."
             statistics={statistics.accepted}
             to="accepted"
           />
           <AnnouncementCard
+            id="announce-rejected"
             title="Rejected proposals"
             subtitle="Announce results to speakers for rejected proposals."
             statistics={statistics.rejected}
             to="rejected"
           />
-        </ul>
+        </div>
       </section>
 
       <section className="space-y-4">
@@ -92,29 +111,54 @@ export default function ResultsAnnouncementRoute() {
               to="accepted"
               className="grow flex flex-col p-2 px-4 items-center hover:bg-slate-100 hover:no-underline rounded"
             >
-              <dt className="truncate text-sm font-medium text-gray-500">Total accepted</dt>
-              <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{statistics.accepted.total}</dd>
+              <dt id="total-confirmations" className="truncate text-sm font-medium text-gray-500">
+                Total accepted
+              </dt>
+              <dd
+                aria-labelledby="total-confirmations"
+                className="mt-1 text-3xl font-semibold tracking-tight text-gray-900"
+              >
+                {0}
+              </dd>
             </Link>
             <Link
               to="accepted"
               className="grow flex flex-col p-2 px-4 items-center hover:bg-slate-100 hover:no-underline rounded"
             >
-              <dt className="truncate text-sm font-medium text-gray-500">No response yet</dt>
-              <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{statistics.accepted.total}</dd>
+              <dt id="total-no-response" className="truncate text-sm font-medium text-gray-500">
+                No response yet
+              </dt>
+              <dd
+                aria-labelledby="total-no-response"
+                className="mt-1 text-3xl font-semibold tracking-tight text-gray-900"
+              >
+                {0}
+              </dd>
             </Link>
             <Link
               to="accepted"
               className="grow flex flex-col p-2 px-4 items-center hover:bg-slate-100 hover:no-underline rounded"
             >
-              <dt className="truncate text-sm font-medium text-gray-500">Confirmed by speakers</dt>
-              <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">0</dd>
+              <dt id="total-confirmed" className="truncate text-sm font-medium text-gray-500">
+                Confirmed by speakers
+              </dt>
+              <dd
+                aria-labelledby="total-confirmed"
+                className="mt-1 text-3xl font-semibold tracking-tight text-gray-900"
+              >
+                0
+              </dd>
             </Link>
             <Link
               to="accepted"
               className="grow flex flex-col p-2 px-4 items-center hover:bg-slate-100 hover:no-underline rounded"
             >
-              <dt className="truncate text-sm font-medium text-gray-500">Declined by speakers</dt>
-              <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">0</dd>
+              <dt id="total-declined" className="truncate text-sm font-medium text-gray-500">
+                Declined by speakers
+              </dt>
+              <dd aria-labelledby="total-declined" className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
+                0
+              </dd>
             </Link>
           </dl>
         </Card>

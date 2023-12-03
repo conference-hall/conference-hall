@@ -1,6 +1,7 @@
 import type { LinkProps } from '@remix-run/react';
 import { Link } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
+import type { HTMLAttributes } from 'react';
 
 const ROUNDED = {
   sm: 'rounded-sm',
@@ -32,7 +33,7 @@ type CardProps = {
   variant?: keyof typeof BACKGROUND;
   className?: string;
   children: React.ReactNode;
-};
+} & HTMLAttributes<HTMLElement>;
 
 export function Card({ as: Tag = 'div', rounded = 'lg', p = 0, variant = 'light', className, ...rest }: CardProps) {
   return <Tag className={cx(BACKGROUND[variant], ROUNDED[rounded], PADDING[p], className)} {...rest} />;
