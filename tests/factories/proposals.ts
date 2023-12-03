@@ -25,10 +25,11 @@ type FactoryOptions = {
   categories?: EventCategory[];
   attributes?: Partial<Prisma.ProposalCreateInput>;
   traits?: Trait[];
+  withResultPublished?: boolean;
 };
 
 export const proposalFactory = (options: FactoryOptions) => {
-  const { attributes = {}, traits = [], talk, event, formats, categories } = options;
+  const { attributes = {}, traits = [], talk, event, formats, categories, withResultPublished } = options;
 
   const defaultAttributes: Prisma.ProposalCreateInput = {
     title: talk?.title || randPost().title,
@@ -47,6 +48,9 @@ export const proposalFactory = (options: FactoryOptions) => {
   }
   if (categories) {
     defaultAttributes.categories = { connect: categories.map(({ id }) => ({ id })) };
+  }
+  if (withResultPublished) {
+    defaultAttributes.result = { create: { type: 'ACCEPTED' } };
   }
 
   const data = {

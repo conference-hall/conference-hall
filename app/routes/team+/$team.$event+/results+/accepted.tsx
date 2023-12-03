@@ -17,7 +17,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.team, 'Invalid team slug');
   invariant(params.event, 'Invalid event slug');
-  await UserEvent.for(userId, params.team, params.event).allowedFor(['OWNER']);
+  await UserEvent.for(userId, params.team, params.event).allowedFor(['OWNER', 'MEMBER']);
   return json(null);
 };
 
@@ -30,7 +30,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const result = parse(form, { schema: PublishResultFormSchema });
   if (!result.value) throw new BadRequestError('Invalid form data');
 
-  await ResultsAnnouncement.for(userId, params.team, params.event).publishAll('accepted', result.value.sendEmails);
+  await ResultsAnnouncement.for(userId, params.team, params.event).publishAll('ACCEPTED', result.value.sendEmails);
 
   return redirectWithToast(`/team/${params.team}/${params.event}/results`, 'success', 'Accepted proposal published.');
 };
