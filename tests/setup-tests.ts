@@ -10,6 +10,7 @@ installGlobals();
 // DB resets and disconnect
 afterEach(async () => {
   await resetDB();
+  vi.resetAllMocks();
 });
 
 afterAll(async () => {

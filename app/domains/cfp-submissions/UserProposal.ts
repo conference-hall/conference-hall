@@ -4,8 +4,8 @@ import { CfpNotOpenError, ProposalNotFoundError } from '~/libs/errors';
 
 import { CallForPaper } from '../shared/CallForPaper';
 import { InvitationLink } from '../shared/InvitationLink';
-import { ProposalConfirmedEmail } from './emails/proposal-confirmed-email';
-import { ProposalDeclinedEmail } from './emails/proposal-declined-email';
+import { ProposalConfirmedEmail } from './emails/proposal-confirmed.email';
+import { ProposalDeclinedEmail } from './emails/proposal-declined.email';
 import type { ProposalSaveData } from './UserProposal.types';
 
 export class UserProposal {
@@ -27,6 +27,7 @@ export class UserProposal {
         formats: true,
         categories: true,
         talk: true,
+        result: true,
       },
     });
 
@@ -39,7 +40,7 @@ export class UserProposal {
       abstract: proposal.abstract,
       level: proposal.level,
       references: proposal.references,
-      status: getSpeakerProposalStatus(proposal, proposal.event),
+      status: getSpeakerProposalStatus(proposal.status, Boolean(proposal.result), proposal.event),
       createdAt: proposal.createdAt.toUTCString(),
       languages: proposal.languages as string[],
       formats: proposal.formats.map(({ id, name }) => ({ id, name })),

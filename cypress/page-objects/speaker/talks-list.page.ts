@@ -18,8 +18,8 @@ class SpeakerTalksPage extends BasePage {
     return this.list().contains(name);
   }
 
-  filterByTalkStatus(status: string) {
-    return cy.findByLabelText('Talk status').click().parent().findByRole('option', { name: status });
+  displayArchivedTalks() {
+    return cy.findByRole('link', { name: 'Archived' }).click();
   }
 
   createNewTalk() {

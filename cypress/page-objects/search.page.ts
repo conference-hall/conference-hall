@@ -16,15 +16,15 @@ class SearchEventPage extends BasePage {
   }
 
   filterByAllTypes() {
-    return cy.findByRole('button', { name: 'All' }).click();
+    return cy.findByRole('link', { name: 'All' }).click();
   }
 
   filterByConferences() {
-    return cy.findByRole('button', { name: 'Conferences' }).click();
+    return cy.findByRole('link', { name: 'Conferences' }).click();
   }
 
   filterByMeetups() {
-    return cy.findByRole('button', { name: 'Meetups' }).click();
+    return cy.findByRole('link', { name: 'Meetups' }).click();
   }
 
   results() {

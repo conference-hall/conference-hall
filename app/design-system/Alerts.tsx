@@ -6,7 +6,7 @@ type Props = { children: ReactNode; className?: string };
 
 export function AlertInfo({ children, className }: Props) {
   return (
-    <div className={cx('rounded-md bg-blue-50 p-4', className)}>
+    <div className={cx('rounded-md bg-blue-50 border border-blue-100 p-4', className)}>
       <div className="flex">
         <div className="flex-shrink-0">
           <InformationCircleIcon className="h-5 w-5 text-blue-400" aria-hidden="true" />
@@ -21,7 +21,7 @@ export function AlertInfo({ children, className }: Props) {
 
 export function AlertError({ children, className }: Props) {
   return (
-    <div className={cx('rounded-md bg-red-50 p-4', className)}>
+    <div className={cx('rounded-md bg-red-50 border border-red-100 p-4', className)}>
       <div className="flex">
         <div className="flex-shrink-0">
           <XCircleIcon className="h-5 w-5 text-red-400" aria-hidden="true" />

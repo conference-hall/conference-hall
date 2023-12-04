@@ -10,7 +10,7 @@ import { AvatarName } from '~/design-system/Avatar.tsx';
 import { Input } from '~/design-system/forms/Input.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
-import { Pagination } from '~/design-system/Pagination.tsx';
+import { Pagination } from '~/design-system/list/Pagination.tsx';
 import { H3, Subtitle } from '~/design-system/Typography.tsx';
 import { parseUrlFilters, TeamMembers } from '~/domains/organizer-team/TeamMembers.ts';
 import { parseUrlPage } from '~/domains/shared/Pagination.ts';

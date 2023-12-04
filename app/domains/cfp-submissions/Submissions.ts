@@ -27,7 +27,7 @@ export class Submissions {
         speakers: { some: { id: this.speakerId } },
         event: { slug: this.eventSlug },
       },
-      include: { speakers: true, event: true },
+      include: { speakers: true, event: true, result: true },
       orderBy: { createdAt: 'desc' },
     });
 
@@ -35,7 +35,7 @@ export class Submissions {
       id: proposal.id,
       title: proposal.title,
       talkId: proposal.talkId,
-      status: getSpeakerProposalStatus(proposal, proposal.event),
+      status: getSpeakerProposalStatus(proposal.status, Boolean(proposal.result), proposal.event),
       createdAt: proposal.createdAt.toUTCString(),
       speakers: proposal.speakers.map((speaker) => ({
         id: speaker.id,

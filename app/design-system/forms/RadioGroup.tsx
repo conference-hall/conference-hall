@@ -35,7 +35,7 @@ type RadioProps = {
 export function Radio({ id, name, description, children, ...rest }: RadioProps) {
   return (
     <div className="relative flex items-start">
-      <div className="flex h-5 items-center">
+      <div className="flex h-5 items-center mt-0.5">
         <input
           id={id}
           name={name}

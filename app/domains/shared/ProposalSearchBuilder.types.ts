@@ -1,10 +1,6 @@
 import { parse } from '@conform-to/zod';
 import { z } from 'zod';
 
-const EmailStatusSchema = z.enum(['not-sent', 'sent']).optional();
-
-export type EmailStatusData = z.infer<typeof EmailStatusSchema>;
-
 const ProposalStatusSchema = z.enum(['SUBMITTED', 'ACCEPTED', 'REJECTED', 'CONFIRMED', 'DECLINED']);
 
 export const ProposalsFiltersSchema = z.object({
@@ -14,8 +10,6 @@ export const ProposalsFiltersSchema = z.object({
   status: z.array(ProposalStatusSchema).optional(),
   formats: z.string().optional(),
   categories: z.string().optional(),
-  emailAcceptedStatus: EmailStatusSchema,
-  emailRejectedStatus: EmailStatusSchema,
 });
 
 export type ProposalsFilters = z.infer<typeof ProposalsFiltersSchema>;

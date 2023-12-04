@@ -27,12 +27,12 @@ const BACKGROUND = {
 
 const DEFAULT_LINKS = {
   light: 'text-gray-500 hover:bg-gray-100 hover:text-gray-900',
-  dark: 'text-gray-300 hover:bg-gray-700 hover:text-white',
+  dark: 'text-gray-300 hover:bg-gray-700 hover:text-white focus-visible:outline-white',
 };
 
 const ACTIVE_LINKS = {
-  light: 'bg-gray-100 text-gray-900 font-medium',
-  dark: 'bg-gray-900 text-white font-medium',
+  light: 'bg-gray-100 text-gray-900 font-semibold',
+  dark: 'bg-gray-900 text-white font-semibold focus-visible:outline-gray-200',
 };
 
 const PADDING_Y = {
@@ -45,7 +45,7 @@ export function NavTabs({ tabs, py = 0, variant = 'light', scrollable = false }:
 
   return (
     <nav
-      className={cx('flex space-x-4', PADDING_Y[py], BACKGROUND[variant], { 'overflow-x-auto': scrollable })}
+      className={cx('flex space-x-4 px-1', PADDING_Y[py], BACKGROUND[variant], { 'overflow-x-auto': scrollable })}
       aria-label="Tabs"
     >
       {enabledTabs.map((tab) =>
@@ -55,10 +55,13 @@ export function NavTabs({ tabs, py = 0, variant = 'light', scrollable = false }:
             to={tab.to}
             end={tab.end}
             className={(tab) =>
-              cx('rounded-md px-3 py-2 text-sm font-medium whitespace-nowrap', {
-                [DEFAULT_LINKS[variant]]: !tab.isActive,
-                [ACTIVE_LINKS[variant]]: tab.isActive,
-              })
+              cx(
+                'rounded-md px-3 py-2 text-sm font-medium whitespace-nowrap focus-visible:outline focus-visible:outline-2',
+                {
+                  [DEFAULT_LINKS[variant]]: !tab.isActive,
+                  [ACTIVE_LINKS[variant]]: tab.isActive,
+                },
+              )
             }
           >
             {tab.label}
@@ -88,7 +91,10 @@ function NavTabDropdown({ variant, tab }: { variant: keyof typeof BACKGROUND; ta
     <Menu
       trigger={Trigger}
       triggerLabel={`Open ${tab.label} menu`}
-      triggerClassname={cx('flex items-center rounded-md px-3 py-2 text-sm font-medium', DEFAULT_LINKS[variant])}
+      triggerClassname={cx(
+        'flex items-center rounded-md px-3 py-2 text-sm font-medium focus-visible:outline focus-visible:outline-2',
+        DEFAULT_LINKS[variant],
+      )}
     >
       {tab.links.map(({ to, label, icon }) => (
         <Menu.ItemLink key={to} to={to} icon={icon}>

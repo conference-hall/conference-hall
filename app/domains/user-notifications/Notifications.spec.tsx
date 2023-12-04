@@ -24,7 +24,7 @@ describe('Notifications', () => {
       event,
       talk: await talkFactory({ speakers: [speaker1] }),
       traits: ['accepted'],
-      attributes: { emailAcceptedStatus: 'SENT' },
+      withResultPublished: true,
     });
   });
 

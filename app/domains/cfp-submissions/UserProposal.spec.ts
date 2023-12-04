@@ -1,4 +1,3 @@
-import { resetEmails } from 'tests/email-helpers';
 import { eventCategoryFactory } from 'tests/factories/categories';
 import { eventFactory } from 'tests/factories/events';
 import { eventFormatFactory } from 'tests/factories/formats';
@@ -228,10 +227,6 @@ describe('UserProposal', () => {
   });
 
   describe('#confirm', () => {
-    beforeEach(async () => {
-      await resetEmails();
-    });
-
     it('confirms a proposal', async () => {
       const event = await eventFactory({
         attributes: { name: 'Event 1', emailOrganizer: 'ben@email.com', emailNotifications: ['confirmed'] },
@@ -248,10 +243,13 @@ describe('UserProposal', () => {
 
       expect(proposalUpdated?.status).toBe('CONFIRMED');
 
-      await expect(event.emailOrganizer).toHaveEmail({
-        from: { name: event.name, address: 'no-reply@conference-hall.io' },
-        subject: `[${event.name}] Talk confirmed by speaker`,
-      });
+      expect([
+        {
+          from: `${event.name} <no-reply@conference-hall.io>`,
+          to: [event.emailOrganizer!],
+          subject: `[${event.name}] Talk confirmed by speaker`,
+        },
+      ]).toHaveEmailsEnqueued();
     });
 
     it('declines a proposal', async () => {
@@ -270,10 +268,13 @@ describe('UserProposal', () => {
 
       expect(proposalUpdated?.status).toBe('DECLINED');
 
-      await expect(event.emailOrganizer).toHaveEmail({
-        from: { name: event.name, address: 'no-reply@conference-hall.io' },
-        subject: `[${event.name}] Talk declined by speaker`,
-      });
+      expect([
+        {
+          from: `${event.name} <no-reply@conference-hall.io>`,
+          to: [event.emailOrganizer!],
+          subject: `[${event.name}] Talk declined by speaker`,
+        },
+      ]).toHaveEmailsEnqueued();
     });
 
     it('cannot confirm or declined a not accepted proposal', async () => {

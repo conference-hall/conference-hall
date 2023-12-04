@@ -24,7 +24,7 @@ export class SpeakerTalk {
       },
       include: {
         speakers: true,
-        proposals: { include: { event: true } },
+        proposals: { include: { event: true, result: true } },
       },
     });
     if (!talk) throw new TalkNotFoundError();
@@ -53,7 +53,7 @@ export class SpeakerTalk {
         slug: proposal.event.slug,
         name: proposal.event.name,
         logo: proposal.event.logo,
-        proposalStatus: getSpeakerProposalStatus(proposal, proposal.event),
+        proposalStatus: getSpeakerProposalStatus(proposal.status, Boolean(proposal.result), proposal.event),
       })),
       invitationLink: InvitationLink.build('talk', talk.invitationCode),
     };

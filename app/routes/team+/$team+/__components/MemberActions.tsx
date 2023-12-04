@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Button } from '~/design-system/Buttons.tsx';
 import { Radio, RadioGroup } from '~/design-system/forms/RadioGroup.tsx';
 import { Modal } from '~/design-system/Modals.tsx';
+import { Text } from '~/design-system/Typography.tsx';
 
 import { InvitationModal } from '../../../__components/InvitationModal.tsx';
 
@@ -43,13 +44,13 @@ function RemoveRoleModal({ memberId, memberName, isOpen, onClose }: RemoveModalP
   return (
     <Modal open={isOpen} onClose={onClose}>
       <Form method="POST" onSubmit={onClose}>
-        <Modal.Title
-          title={`Remove ${memberName} from the team?`}
-          description="The member will be removed from the team and won't be able to access it anymore."
-        />
-        <input type="hidden" name="_action" value="remove-member" />
-        <input type="hidden" name="_memberId" value={memberId} />
+        <Modal.Title>{`Remove ${memberName} from the team?`}</Modal.Title>
+        <Modal.Content>
+          <Text>The member will be removed from the team and won't be able to access it anymore.</Text>
+        </Modal.Content>
         <Modal.Actions>
+          <input type="hidden" name="_action" value="remove-member" />
+          <input type="hidden" name="_memberId" value={memberId} />
           <Button onClick={onClose} type="button" variant="secondary">
             Cancel
           </Button>
@@ -103,25 +104,27 @@ function ChangeRoleModal({ memberId, memberName, memberRole, isOpen, onClose }: 
   return (
     <Modal open={isOpen} onClose={onClose}>
       <Form method="POST" onSubmit={onClose}>
-        <Modal.Title title={`Change the role of ${memberName}?`} />
-        <RadioGroup className="mt-4 sm:mt-8">
-          {ALL_ROLES.map((role) => (
-            <Radio
-              key={role.value}
-              id={role.value}
-              name="memberRole"
-              value={role.value}
-              description={role.description}
-              defaultChecked={memberRole === role.value}
-              required
-            >
-              {role.label}
-            </Radio>
-          ))}
-        </RadioGroup>
-        <input type="hidden" name="_action" value="change-role" />
-        <input type="hidden" name="_memberId" value={memberId} />
+        <Modal.Title>{`Change the role of ${memberName}?`}</Modal.Title>
+        <Modal.Content>
+          <RadioGroup>
+            {ALL_ROLES.map((role) => (
+              <Radio
+                key={role.value}
+                id={role.value}
+                name="memberRole"
+                value={role.value}
+                description={role.description}
+                defaultChecked={memberRole === role.value}
+                required
+              >
+                {role.label}
+              </Radio>
+            ))}
+          </RadioGroup>
+        </Modal.Content>
         <Modal.Actions>
+          <input type="hidden" name="_action" value="change-role" />
+          <input type="hidden" name="_memberId" value={memberId} />
           <Button onClick={onClose} type="button" variant="secondary">
             Cancel
           </Button>

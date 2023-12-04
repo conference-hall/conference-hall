@@ -1,5 +1,4 @@
 import { TalkLevel } from '@prisma/client';
-import { resetEmails } from 'tests/email-helpers';
 import { eventCategoryFactory } from 'tests/factories/categories';
 import { eventFactory } from 'tests/factories/events.ts';
 import { eventFormatFactory } from 'tests/factories/formats';
@@ -216,10 +215,6 @@ describe('TalkSubmission', () => {
   });
 
   describe('#submit', () => {
-    beforeEach(async () => {
-      await resetEmails();
-    });
-
     it('submit a proposal', async () => {
       const event = await eventFactory({
         traits: ['conference-cfp-open'],
@@ -234,15 +229,18 @@ describe('TalkSubmission', () => {
       const result = await db.proposal.findUnique({ where: { id: proposal.id } });
       expect(result?.status).toEqual('SUBMITTED');
 
-      await expect(speaker.email).toHaveEmail({
-        from: { name: event.name, address: 'no-reply@conference-hall.io' },
-        subject: `[${event.name}] Submission confirmed`,
-      });
-
-      await expect(event.emailOrganizer).toHaveEmail({
-        from: { name: event.name, address: 'no-reply@conference-hall.io' },
-        subject: `[${event.name}] New proposal received`,
-      });
+      expect([
+        {
+          from: `${event.name} <no-reply@conference-hall.io>`,
+          to: [speaker.email],
+          subject: `[${event.name}] Submission confirmed`,
+        },
+        {
+          from: `${event.name} <no-reply@conference-hall.io>`,
+          to: [event.emailOrganizer!],
+          subject: `[${event.name}] New proposal received`,
+        },
+      ]).toHaveEmailsEnqueued();
 
       // TODO: test slack message
     });

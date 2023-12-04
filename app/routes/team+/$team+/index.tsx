@@ -19,7 +19,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   invariant(params.team, 'Invalid team slug');
 
   const url = new URL(request.url);
-  const archived = Boolean(url.searchParams.get('archived'));
+  const archived = url.searchParams.get('archived') === 'true';
   const events = await TeamEvents.for(userId, params.team).list(archived);
 
   return json(events);

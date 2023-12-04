@@ -12,7 +12,7 @@ export default defineConfig({
     globals: true,
     threads: false,
     setupFiles: ['./tests/setup-tests.ts'],
-    include: ['./app/**/*.{test,spec}.ts?(x)'],
+    include: ['./app/**/*.{test,spec}.ts?(x)', './jobs/**/*.{test,spec}.ts?(x)'],
     reporters: isCI ? ['default', 'junit'] : 'default',
     outputFile: './test-results/unit.xml',
     watchExclude: ['.*\\/node_modules\\/.*', '.*\\/build\\/.*'],

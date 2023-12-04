@@ -1,6 +1,7 @@
 import type { LinkProps } from '@remix-run/react';
 import { Link } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
+import type { HTMLAttributes } from 'react';
 
 const ROUNDED = {
   sm: 'rounded-sm',
@@ -32,7 +33,7 @@ type CardProps = {
   variant?: keyof typeof BACKGROUND;
   className?: string;
   children: React.ReactNode;
-};
+} & HTMLAttributes<HTMLElement>;
 
 export function Card({ as: Tag = 'div', rounded = 'lg', p = 0, variant = 'light', className, ...rest }: CardProps) {
   return <Tag className={cx(BACKGROUND[variant], ROUNDED[rounded], PADDING[p], className)} {...rest} />;
@@ -76,8 +77,18 @@ Card.Content = Content;
 
 // <Card.Actions /> component
 
-function Actions({ children }: { children: React.ReactNode }) {
-  return <div className="flex justify-end gap-4 border-t border-t-gray-200 px-4 py-4 lg:px-8">{children}</div>;
+function Actions({ children, align = 'right' }: { children: React.ReactNode; align?: 'left' | 'center' | 'right' }) {
+  return (
+    <div
+      className={cx('flex items-center gap-4 border-t border-t-gray-200 p-4 lg:px-8', {
+        'justify-end': align === 'right',
+        'justify-start': align === 'left',
+        'justify-center': align === 'center',
+      })}
+    >
+      {children}
+    </div>
+  );
 }
 
 Card.Actions = Actions;

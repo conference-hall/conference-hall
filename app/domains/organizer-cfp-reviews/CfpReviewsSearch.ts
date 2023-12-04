@@ -1,4 +1,3 @@
-import type { ProposalStatus } from '@prisma/client';
 import { z } from 'zod';
 
 import { db } from '~/libs/db';
@@ -11,7 +10,7 @@ import type { SocialLinks } from '../speaker-profile/SpeakerProfile.types';
 import { ReviewDetails } from './ReviewDetails';
 
 export const ProposalsStatusUpdateSchema = z.object({
-  status: z.enum(['SUBMITTED', 'ACCEPTED', 'REJECTED', 'CONFIRMED', 'DECLINED']),
+  status: z.enum(['ACCEPTED', 'REJECTED']),
   selection: z.array(z.string()),
 });
 
@@ -47,8 +46,6 @@ export class CfpReviewsSearch {
           id: proposal.id,
           title: proposal.title,
           status: proposal.status,
-          emailAcceptedStatus: proposal.emailAcceptedStatus,
-          emailRejectedStatus: proposal.emailRejectedStatus,
           speakers: event.displayProposalsSpeakers ? proposal.speakers.map(({ name }) => name) : [],
           reviews: {
             summary: event.displayProposalsReviews ? reviews.summary() : undefined,
@@ -59,10 +56,18 @@ export class CfpReviewsSearch {
     };
   }
 
-  async changeStatus(proposalIds: string[], status: ProposalStatus) {
+  async changeStatus(proposalIds: string[], status: 'ACCEPTED' | 'REJECTED') {
     await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
 
-    const result = await db.proposal.updateMany({ where: { id: { in: proposalIds } }, data: { status } });
+    const result = await db.$transaction(async (trx) => {
+      // reset status for result publication
+      await db.resultPublication.deleteMany({
+        where: { proposal: { id: { in: proposalIds }, status: { not: status } } },
+      });
+      // update proposal status
+      return db.proposal.updateMany({ where: { id: { in: proposalIds } }, data: { status } });
+    });
+
     return result.count;
   }
 
