@@ -212,8 +212,6 @@ model Proposal {
   reviews             Review[]
   avgRateForSort      Float              @default(0)
   status              ProposalStatus     @default(SUBMITTED)
-  emailAcceptedStatus EmailStatus?
-  emailRejectedStatus EmailStatus?
   submittedAt         DateTime?
   invitationCode      String             @unique @default(cuid())
   createdAt           DateTime           @default(now())
@@ -232,11 +230,6 @@ enum ProposalStatus {
   REJECTED
   CONFIRMED
   DECLINED
-}
-
-enum EmailStatus {
-  SENT
-  DELIVERED
 }
 
 model Survey {

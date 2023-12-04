@@ -1,6 +1,6 @@
 import { randParagraph, randPost } from '@ngneat/falso';
 import type { Event, EventCategory, EventFormat, Prisma, Talk, User } from '@prisma/client';
-import { EmailStatus, ProposalStatus, TalkLevel } from '@prisma/client';
+import { ProposalStatus, TalkLevel } from '@prisma/client';
 
 import { db } from '../../app/libs/db.ts';
 import { applyTraits } from './helpers/traits.ts';
@@ -9,9 +9,7 @@ const TRAITS = {
   draft: { status: ProposalStatus.DRAFT },
   submitted: { status: ProposalStatus.SUBMITTED },
   accepted: { status: ProposalStatus.ACCEPTED },
-  acceptedAndNotified: { status: ProposalStatus.ACCEPTED, emailAcceptedStatus: EmailStatus.SENT },
   rejected: { status: ProposalStatus.REJECTED },
-  rejectedAndNotified: { status: ProposalStatus.REJECTED, emailRejectedStatus: EmailStatus.SENT },
   declined: { status: ProposalStatus.DECLINED },
   confirmed: { status: ProposalStatus.CONFIRMED },
 };

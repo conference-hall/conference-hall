@@ -11,7 +11,7 @@ export class Notifications {
     return db.proposal.count({
       where: {
         status: 'ACCEPTED',
-        emailAcceptedStatus: { not: null },
+        result: { isNot: null },
         speakers: { some: { id: this.userId } },
       },
     });
@@ -22,7 +22,7 @@ export class Notifications {
       include: { event: true },
       where: {
         status: 'ACCEPTED',
-        emailAcceptedStatus: { not: null },
+        result: { isNot: null },
         speakers: { some: { id: this.userId } },
       },
       orderBy: { updatedAt: 'desc' },

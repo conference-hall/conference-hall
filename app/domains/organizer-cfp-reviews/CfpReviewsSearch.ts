@@ -47,8 +47,6 @@ export class CfpReviewsSearch {
           id: proposal.id,
           title: proposal.title,
           status: proposal.status,
-          emailAcceptedStatus: proposal.emailAcceptedStatus,
-          emailRejectedStatus: proposal.emailRejectedStatus,
           speakers: event.displayProposalsSpeakers ? proposal.speakers.map(({ name }) => name) : [],
           reviews: {
             summary: event.displayProposalsReviews ? reviews.summary() : undefined,

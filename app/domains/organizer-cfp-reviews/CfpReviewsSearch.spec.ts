@@ -33,8 +33,6 @@ describe('CfpReviewsSearch', () => {
           id: proposal.id,
           title: proposal.title,
           status: proposal.status,
-          emailAcceptedStatus: null,
-          emailRejectedStatus: null,
           speakers: [speaker.name],
           reviews: {
             summary: { negatives: 0, positives: 0, average: null },

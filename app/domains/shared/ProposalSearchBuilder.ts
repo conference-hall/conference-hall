@@ -1,10 +1,9 @@
 import type { Prisma } from '@prisma/client';
-import { EmailStatus } from '@prisma/client';
 
 import type { Pagination } from '~/domains/shared/Pagination';
 import { db } from '~/libs/db.ts';
 
-import type { EmailStatusData, ProposalsFilters } from './ProposalSearchBuilder.types';
+import type { ProposalsFilters } from './ProposalSearchBuilder.types';
 
 type SearchOptions = { withSpeakers: boolean };
 
@@ -80,7 +79,7 @@ export class ProposalSearchBuilder {
   }
 
   private whereClause(): Prisma.ProposalWhereInput {
-    const { query, reviews, formats, categories, status, emailAcceptedStatus, emailRejectedStatus } = this.filters;
+    const { query, reviews, formats, categories, status } = this.filters;
 
     const reviewClause = reviews === 'reviewed' ? { some: { userId: this.userId } } : { none: { userId: this.userId } };
 
@@ -90,8 +89,6 @@ export class ProposalSearchBuilder {
       formats: formats ? { some: { id: formats } } : undefined,
       categories: categories ? { some: { id: categories } } : undefined,
       reviews: reviews ? reviewClause : undefined,
-      emailAcceptedStatus: this.mapEmailStatus(emailAcceptedStatus),
-      emailRejectedStatus: this.mapEmailStatus(emailRejectedStatus),
       OR: this.whereQueryClause(query),
     };
   }
@@ -119,17 +116,6 @@ export class ProposalSearchBuilder {
         return [{ createdAt: 'asc' }, { title: 'asc' }];
       default:
         return [{ createdAt: 'desc' }, { title: 'asc' }];
-    }
-  }
-
-  private mapEmailStatus(emailStatus: EmailStatusData) {
-    switch (emailStatus) {
-      case 'sent':
-        return { in: [EmailStatus.SENT, EmailStatus.DELIVERED] };
-      case 'not-sent':
-        return null;
-      default:
-        return undefined;
     }
   }
 }
