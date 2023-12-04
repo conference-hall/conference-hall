@@ -10,7 +10,7 @@ import type { SocialLinks } from '../speaker-profile/SpeakerProfile.types';
 import { ReviewDetails } from './ReviewDetails';
 
 export const ProposalsStatusUpdateSchema = z.object({
-  status: z.enum(['SUBMITTED', 'ACCEPTED', 'REJECTED', 'CONFIRMED', 'DECLINED']),
+  status: z.enum(['ACCEPTED', 'REJECTED']),
   selection: z.array(z.string()),
 });
 
