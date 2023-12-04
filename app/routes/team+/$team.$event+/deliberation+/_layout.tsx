@@ -86,7 +86,7 @@ export default function DeliberationRoute() {
       <section className="space-y-2">
         <H2>3. Speakers confirmations</H2>
         <Subtitle>
-          Some metrics about speakers confirmations. Click on a metric card to see the corresponding proposals.
+          Some insights about speakers confirmations. Click on a metric card to see the corresponding proposals.
         </Subtitle>
         <Card className="p-4">
           <dl className="flex flex-col md:flex-row md:justify-around text-center md:divide-x">
