@@ -45,12 +45,7 @@ export class SpeakerActivities {
             id: proposal.id,
             title: proposal.title,
             updatedAt: proposal.updatedAt.toUTCString(),
-            status: getSpeakerProposalStatus(
-              proposal.deliberationStatus,
-              proposal.confirmationStatus,
-              proposal.isDraft,
-              Boolean(proposal.result),
-            ),
+            status: getSpeakerProposalStatus(proposal, event, Boolean(proposal.result)),
             speakers: proposal.speakers.map((speaker) => ({
               id: speaker.id,
               name: speaker.name,

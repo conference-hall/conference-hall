@@ -40,12 +40,7 @@ export class UserProposal {
       abstract: proposal.abstract,
       level: proposal.level,
       references: proposal.references,
-      status: getSpeakerProposalStatus(
-        proposal.deliberationStatus,
-        proposal.confirmationStatus,
-        proposal.isDraft,
-        Boolean(proposal.result),
-      ),
+      status: getSpeakerProposalStatus(proposal, proposal.event, Boolean(proposal.result)),
       createdAt: proposal.createdAt.toUTCString(),
       languages: proposal.languages as string[],
       formats: proposal.formats.map(({ id, name }) => ({ id, name })),

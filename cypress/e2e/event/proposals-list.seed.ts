@@ -23,7 +23,13 @@ export const seed = async () => {
   const format = await eventFormatFactory({ event: event1, attributes: { name: 'Quickie' } });
   const category = await eventCategoryFactory({ event: event1, attributes: { name: 'Web' } });
 
-  await proposalFactory({ event: event1, talk: talk1, formats: [format], categories: [category] });
+  await proposalFactory({
+    event: event1,
+    talk: talk1,
+    traits: ['submitted'],
+    formats: [format],
+    categories: [category],
+  });
   await proposalFactory({ event: event1, talk: talk2, traits: ['draft'] });
   await proposalFactory({ event: event1, talk: talk3, traits: ['accepted'], withResultPublished: true });
   await proposalFactory({ event: event1, talk: talk4, traits: ['rejected'], withResultPublished: true });

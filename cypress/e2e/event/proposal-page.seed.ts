@@ -34,6 +34,7 @@ export const seed = async () => {
     formats: [format],
     categories: [category],
     attributes: { id: 'awesome-proposal' },
+    traits: ['submitted'],
   });
 
   const talk2 = await talkFactory({ speakers: [speaker1], attributes: { title: 'My talk 2' } });

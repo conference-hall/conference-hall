@@ -35,12 +35,7 @@ export class Submissions {
       id: proposal.id,
       title: proposal.title,
       talkId: proposal.talkId,
-      status: getSpeakerProposalStatus(
-        proposal.deliberationStatus,
-        proposal.confirmationStatus,
-        proposal.isDraft,
-        Boolean(proposal.result),
-      ),
+      status: getSpeakerProposalStatus(proposal, proposal.event, Boolean(proposal.result)),
       createdAt: proposal.createdAt.toUTCString(),
       speakers: proposal.speakers.map((speaker) => ({
         id: speaker.id,

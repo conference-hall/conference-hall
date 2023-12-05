@@ -53,12 +53,7 @@ export class SpeakerTalk {
         slug: proposal.event.slug,
         name: proposal.event.name,
         logo: proposal.event.logo,
-        proposalStatus: getSpeakerProposalStatus(
-          proposal.deliberationStatus,
-          proposal.confirmationStatus,
-          proposal.isDraft,
-          Boolean(proposal.result),
-        ),
+        proposalStatus: getSpeakerProposalStatus(proposal, proposal.event, Boolean(proposal.result)),
       })),
       invitationLink: InvitationLink.build('talk', talk.invitationCode),
     };

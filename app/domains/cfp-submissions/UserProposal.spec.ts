@@ -34,7 +34,7 @@ describe('UserProposal', () => {
         createdAt: proposal.createdAt.toUTCString(),
         languages: proposal.languages,
         invitationLink: `http://localhost:3001/invite/proposal/${proposal.invitationCode}`,
-        status: SpeakerProposalStatus.DeliberationPending,
+        status: SpeakerProposalStatus.Submitted,
         formats: [{ id: format.id, name: format.name }],
         categories: [{ id: category.id, name: category.name }],
         speakers: [
