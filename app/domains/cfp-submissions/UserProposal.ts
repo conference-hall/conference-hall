@@ -40,7 +40,12 @@ export class UserProposal {
       abstract: proposal.abstract,
       level: proposal.level,
       references: proposal.references,
-      status: getSpeakerProposalStatus(proposal.status, Boolean(proposal.result), proposal.event),
+      status: getSpeakerProposalStatus(
+        proposal.deliberationStatus,
+        proposal.confirmationStatus,
+        proposal.isDraft,
+        Boolean(proposal.result),
+      ),
       createdAt: proposal.createdAt.toUTCString(),
       languages: proposal.languages as string[],
       formats: proposal.formats.map(({ id, name }) => ({ id, name })),
@@ -114,8 +119,8 @@ export class UserProposal {
     if (!proposal) throw new ProposalNotFoundError();
 
     const result = await db.proposal.updateMany({
-      where: { id: this.proposalId, status: 'ACCEPTED' },
-      data: { status: participation },
+      where: { id: this.proposalId, deliberationStatus: 'ACCEPTED' },
+      data: { confirmationStatus: participation },
     });
 
     if (result.count <= 0) return;

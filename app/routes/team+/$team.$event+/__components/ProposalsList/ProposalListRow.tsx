@@ -1,4 +1,4 @@
-import type { ProposalStatus, ReviewFeeling } from '@prisma/client';
+import type { ReviewFeeling } from '@prisma/client';
 import { Link, useSearchParams } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
 import type { ChangeEventHandler } from 'react';
@@ -11,7 +11,7 @@ import { ReviewNote } from '~/routes/__components/reviews/ReviewNote.tsx';
 export type ProposalData = {
   id: string;
   title: string;
-  status: ProposalStatus;
+  deliberationStatus: 'PENDING' | 'ACCEPTED' | 'REJECTED';
   speakers: (string | null)[];
   reviews: {
     summary?: { negatives: number; positives: number; average: number | null };
@@ -59,9 +59,9 @@ export function ProposaListRow({ proposal, isSelected, onSelect }: ProposalRowPr
         </Link>
       </td>
       <td className="hidden w-0 px-3 py-6 text-center sm:table-cell">
-        {proposal.status && (
+        {proposal.deliberationStatus && (
           <div className="flex items-center justify-end gap-2">
-            <ProposalStatusBadge status={proposal.status} />
+            <ProposalStatusBadge status={proposal.deliberationStatus} />
           </div>
         )}
       </td>

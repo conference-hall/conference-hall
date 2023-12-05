@@ -34,7 +34,7 @@ describe('UserProposal', () => {
         createdAt: proposal.createdAt.toUTCString(),
         languages: proposal.languages,
         invitationLink: `http://localhost:3001/invite/proposal/${proposal.invitationCode}`,
-        status: SpeakerProposalStatus.Submitted,
+        status: SpeakerProposalStatus.DeliberationPending,
         formats: [{ id: format.id, name: format.name }],
         categories: [{ id: category.id, name: category.name }],
         speakers: [
@@ -241,7 +241,7 @@ describe('UserProposal', () => {
         where: { id: proposal.id },
       });
 
-      expect(proposalUpdated?.status).toBe('CONFIRMED');
+      expect(proposalUpdated?.confirmationStatus).toBe('CONFIRMED');
 
       expect([
         {
@@ -260,13 +260,13 @@ describe('UserProposal', () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk, traits: ['accepted'] });
 
-      await await UserProposal.for(speaker.id, proposal.id).confirm('DECLINED');
+      await UserProposal.for(speaker.id, proposal.id).confirm('DECLINED');
 
       const proposalUpdated = await db.proposal.findUnique({
         where: { id: proposal.id },
       });
 
-      expect(proposalUpdated?.status).toBe('DECLINED');
+      expect(proposalUpdated?.confirmationStatus).toBe('DECLINED');
 
       expect([
         {
@@ -283,13 +283,13 @@ describe('UserProposal', () => {
       const talk = await talkFactory({ speakers: [speaker] });
       const proposal = await proposalFactory({ event, talk, traits: ['submitted'] });
 
-      await await UserProposal.for(speaker.id, proposal.id).confirm('CONFIRMED');
+      await UserProposal.for(speaker.id, proposal.id).confirm('CONFIRMED');
 
       const proposalUpdated = await db.proposal.findUnique({
         where: { id: proposal.id },
       });
 
-      expect(proposalUpdated?.status).toBe('SUBMITTED');
+      expect(proposalUpdated?.confirmationStatus).toBe('PENDING');
     });
 
     it('throws an error when proposal not found', async () => {

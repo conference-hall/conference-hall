@@ -23,8 +23,8 @@ export class ProposalSearchBuilder {
   async statistics() {
     const byStatus = await this.countByStatus();
     const reviewed = await this.countUserReviews();
-    const total = byStatus.reduce((acc, next) => acc + next._count.status, 0);
-    const statuses = byStatus.map((stat) => ({ name: stat.status, count: stat._count.status }));
+    const total = byStatus.reduce((acc, next) => acc + next._count.deliberationStatus, 0);
+    const statuses = byStatus.map((stat) => ({ name: stat.deliberationStatus, count: stat._count.deliberationStatus }));
 
     return { total, reviewed, statuses };
   }
@@ -65,10 +65,10 @@ export class ProposalSearchBuilder {
 
   private countByStatus() {
     return db.proposal.groupBy({
-      _count: { status: true },
-      by: ['status'],
+      _count: { deliberationStatus: true },
+      by: ['deliberationStatus'],
       where: this.whereClause(),
-      orderBy: { _count: { status: 'desc' } },
+      orderBy: { _count: { deliberationStatus: 'desc' } },
     });
   }
 
@@ -85,7 +85,8 @@ export class ProposalSearchBuilder {
 
     return {
       event: { slug: this.eventSlug },
-      status: { in: status, not: 'DRAFT' },
+      isDraft: false,
+      deliberationStatus: { in: status },
       formats: formats ? { some: { id: formats } } : undefined,
       categories: categories ? { some: { id: categories } } : undefined,
       reviews: reviews ? reviewClause : undefined,

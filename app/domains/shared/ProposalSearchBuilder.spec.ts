@@ -76,8 +76,8 @@ describe('EventProposalsSearch', () => {
       expect(sortBy(statistics.statuses, 'name')).toEqual(
         sortBy(
           [
-            { name: 'SUBMITTED', count: 1 },
             { name: 'ACCEPTED', count: 1 },
+            { name: 'PENDING', count: 1 },
             { name: 'REJECTED', count: 1 },
           ],
           'name',

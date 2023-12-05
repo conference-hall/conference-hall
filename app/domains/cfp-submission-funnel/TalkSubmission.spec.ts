@@ -46,7 +46,7 @@ describe('TalkSubmission', () => {
       expect(proposal?.title).toEqual(data.title);
       expect(proposal?.abstract).toEqual(data.abstract);
       expect(proposal?.references).toEqual(data.references);
-      expect(proposal?.status).toEqual('DRAFT');
+      expect(proposal?.isDraft).toEqual(true);
       expect(proposal?.eventId).toEqual(event.id);
       expect(proposal?.languages).toEqual(data.languages);
       expect(proposal?.level).toEqual(data.level);
@@ -80,7 +80,7 @@ describe('TalkSubmission', () => {
       expect(proposal?.title).toEqual(data.title);
       expect(proposal?.abstract).toEqual(data.abstract);
       expect(proposal?.references).toEqual(data.references);
-      expect(proposal?.status).toEqual('DRAFT');
+      expect(proposal?.isDraft).toEqual(true);
       expect(proposal?.eventId).toEqual(event.id);
       expect(proposal?.languages).toEqual(data.languages);
       expect(proposal?.level).toEqual(data.level);
@@ -227,7 +227,8 @@ describe('TalkSubmission', () => {
       await TalkSubmission.for(speaker.id, event.slug).submit(talk.id);
 
       const result = await db.proposal.findUnique({ where: { id: proposal.id } });
-      expect(result?.status).toEqual('SUBMITTED');
+      expect(result?.isDraft).toEqual(false);
+      expect(result?.deliberationStatus).toEqual('PENDING');
 
       expect([
         {
@@ -256,7 +257,8 @@ describe('TalkSubmission', () => {
       await TalkSubmission.for(speaker.id, event.slug).submit(talk2.id);
 
       const result = await db.proposal.findUnique({ where: { id: proposal.id } });
-      expect(result?.status).toEqual('SUBMITTED');
+      expect(result?.isDraft).toEqual(false);
+      expect(result?.deliberationStatus).toEqual('PENDING');
     });
 
     it('throws an error when max proposal submitted reach', async () => {

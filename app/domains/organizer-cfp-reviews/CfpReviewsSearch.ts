@@ -45,7 +45,7 @@ export class CfpReviewsSearch {
         return {
           id: proposal.id,
           title: proposal.title,
-          status: proposal.status,
+          deliberationStatus: proposal.deliberationStatus,
           speakers: event.displayProposalsSpeakers ? proposal.speakers.map(({ name }) => name) : [],
           reviews: {
             summary: event.displayProposalsReviews ? reviews.summary() : undefined,
@@ -56,16 +56,16 @@ export class CfpReviewsSearch {
     };
   }
 
-  async changeStatus(proposalIds: string[], status: 'ACCEPTED' | 'REJECTED') {
+  async changeStatus(proposalIds: string[], deliberationStatus: 'ACCEPTED' | 'REJECTED') {
     await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
 
     const result = await db.$transaction(async (trx) => {
       // reset status for result publication
       await db.resultPublication.deleteMany({
-        where: { proposal: { id: { in: proposalIds }, status: { not: status } } },
+        where: { proposal: { id: { in: proposalIds }, deliberationStatus: { not: deliberationStatus } } },
       });
       // update proposal status
-      return db.proposal.updateMany({ where: { id: { in: proposalIds } }, data: { status } });
+      return db.proposal.updateMany({ where: { id: { in: proposalIds } }, data: { deliberationStatus } });
     });
 
     return result.count;
@@ -86,7 +86,7 @@ export class CfpReviewsSearch {
         id: proposal.id,
         title: proposal.title,
         abstract: proposal.abstract,
-        status: proposal.status,
+        deliberationStatus: proposal.deliberationStatus,
         level: proposal.level,
         comments: proposal.comments,
         references: proposal.references,

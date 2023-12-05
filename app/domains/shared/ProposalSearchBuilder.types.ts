@@ -1,7 +1,7 @@
 import { parse } from '@conform-to/zod';
 import { z } from 'zod';
 
-const ProposalStatusSchema = z.enum(['SUBMITTED', 'ACCEPTED', 'REJECTED', 'CONFIRMED', 'DECLINED']);
+const ProposalStatusSchema = z.enum(['PENDING', 'ACCEPTED', 'REJECTED']);
 
 export const ProposalsFiltersSchema = z.object({
   query: z.string().trim().optional(),

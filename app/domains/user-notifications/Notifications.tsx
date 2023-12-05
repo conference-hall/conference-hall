@@ -10,7 +10,7 @@ export class Notifications {
   async unreadCount() {
     return db.proposal.count({
       where: {
-        status: 'ACCEPTED',
+        deliberationStatus: 'ACCEPTED',
         result: { isNot: null },
         speakers: { some: { id: this.userId } },
       },
@@ -21,7 +21,7 @@ export class Notifications {
     const acceptedProposals = await db.proposal.findMany({
       include: { event: true },
       where: {
-        status: 'ACCEPTED',
+        deliberationStatus: 'ACCEPTED',
         result: { isNot: null },
         speakers: { some: { id: this.userId } },
       },

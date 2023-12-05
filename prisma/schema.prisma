@@ -195,39 +195,44 @@ enum TeamRole {
 }
 
 model Proposal {
-  id                  String             @id @default(cuid())
-  talkId              String?
-  talk                Talk?              @relation(fields: [talkId], references: [id])
-  eventId             String
-  event               Event              @relation(fields: [eventId], references: [id])
-  title               String
-  abstract            String
-  level               TalkLevel?
-  languages           Json?              @default("[]")
-  references          String?
-  comments            String?
-  speakers            User[]             @relation("speakers_proposals")
-  formats             EventFormat[]      @relation("proposals_formats")
-  categories          EventCategory[]    @relation("proposals_categories")
-  reviews             Review[]
-  avgRateForSort      Float              @default(0)
-  status              ProposalStatus     @default(SUBMITTED)
-  submittedAt         DateTime?
-  invitationCode      String             @unique @default(cuid())
-  createdAt           DateTime           @default(now())
-  updatedAt           DateTime           @updatedAt
-  messages            Message[]
-  result              ResultPublication?
+  id                 String             @id @default(cuid())
+  talkId             String?
+  talk               Talk?              @relation(fields: [talkId], references: [id])
+  eventId            String
+  event              Event              @relation(fields: [eventId], references: [id])
+  title              String
+  abstract           String
+  level              TalkLevel?
+  languages          Json?              @default("[]")
+  references         String?
+  comments           String?
+  speakers           User[]             @relation("speakers_proposals")
+  formats            EventFormat[]      @relation("proposals_formats")
+  categories         EventCategory[]    @relation("proposals_categories")
+  reviews            Review[]
+  avgRateForSort     Float              @default(0)
+  isDraft            Boolean            @default(true)
+  submittedAt        DateTime           @default(now())
+  deliberationStatus DeliberationStatus @default(PENDING)
+  confirmationStatus ConfirmationStatus @default(PENDING)
+  invitationCode     String             @unique @default(cuid())
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  messages           Message[]
+  result             ResultPublication?
 
   @@unique([talkId, eventId])
   @@map("proposals")
 }
 
-enum ProposalStatus {
-  DRAFT
-  SUBMITTED
+enum DeliberationStatus {
+  PENDING
   ACCEPTED
   REJECTED
+}
+
+enum ConfirmationStatus {
+  PENDING
   CONFIRMED
   DECLINED
 }

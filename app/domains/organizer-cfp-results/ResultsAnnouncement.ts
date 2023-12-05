@@ -1,4 +1,4 @@
-import type { ProposalStatus, ResultPublicationType } from '@prisma/client';
+import type { DeliberationStatus, ResultPublicationType } from '@prisma/client';
 
 import { db } from '~/libs/db';
 import { ForbiddenOperationError, ProposalNotFoundError } from '~/libs/errors';
@@ -8,11 +8,6 @@ import { ProposalAcceptedEmail } from './emails/proposal-accepted.email';
 import { ProposalRejectedEmail } from './emails/proposal-rejected.email';
 
 export type ResultsStatistics = Awaited<ReturnType<typeof ResultsAnnouncement.prototype.statistics>>;
-
-const STATUS_BY_TYPE = {
-  ACCEPTED: ['ACCEPTED', 'CONFIRMED', 'DECLINED'] as ProposalStatus[],
-  REJECTED: ['REJECTED'] as ProposalStatus[],
-};
 
 export class ResultsAnnouncement {
   constructor(
@@ -28,18 +23,16 @@ export class ResultsAnnouncement {
   async statistics() {
     const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
     const submitted = await this.countSubmitted(event.id);
-    const accepted = await this.getResultsStatistics(event.id, STATUS_BY_TYPE.ACCEPTED);
-    const rejected = await this.getResultsStatistics(event.id, STATUS_BY_TYPE.REJECTED);
+    const accepted = await this.getResultsStatistics(event.id, 'ACCEPTED');
+    const rejected = await this.getResultsStatistics(event.id, 'REJECTED');
     return { submitted, accepted, rejected };
   }
 
   async publishAll(type: ResultPublicationType, withEmails: boolean) {
     const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
 
-    const statuses = STATUS_BY_TYPE[type];
-
     const proposals = await db.proposal.findMany({
-      where: { eventId: event.id, status: { in: statuses }, result: { is: null } },
+      where: { eventId: event.id, deliberationStatus: type, result: { is: null } },
       include: { speakers: true },
     });
 
@@ -59,14 +52,15 @@ export class ResultsAnnouncement {
       include: { speakers: true },
     });
     if (!proposal) throw new ProposalNotFoundError();
-    if (proposal.status !== 'ACCEPTED' && proposal.status !== 'REJECTED') throw new ForbiddenOperationError();
+    if (proposal.deliberationStatus !== 'ACCEPTED' && proposal.deliberationStatus !== 'REJECTED')
+      throw new ForbiddenOperationError();
 
     await db.resultPublication.create({
-      data: { type: proposal.status, proposalId: proposal.id, emailStatus: withEmails ? 'SENT' : 'NONE' },
+      data: { type: proposal.deliberationStatus, proposalId: proposal.id, emailStatus: withEmails ? 'SENT' : 'NONE' },
     });
 
-    if (withEmails && proposal.status === 'ACCEPTED') await ProposalAcceptedEmail.send(event, [proposal]);
-    if (withEmails && proposal.status === 'REJECTED') await ProposalRejectedEmail.send(event, [proposal]);
+    if (withEmails && proposal.deliberationStatus === 'ACCEPTED') await ProposalAcceptedEmail.send(event, [proposal]);
+    if (withEmails && proposal.deliberationStatus === 'REJECTED') await ProposalRejectedEmail.send(event, [proposal]);
   }
 
   async unpublish(proposalIds: Array<string>) {
@@ -74,15 +68,15 @@ export class ResultsAnnouncement {
   }
 
   private async countSubmitted(eventId: string) {
-    return db.proposal.count({ where: { eventId, status: 'SUBMITTED' } });
+    return db.proposal.count({ where: { eventId, isDraft: false, deliberationStatus: 'PENDING' } });
   }
 
-  private async getResultsStatistics(eventId: string, statuses: Array<ProposalStatus>) {
+  private async getResultsStatistics(eventId: string, status: DeliberationStatus) {
     const published = await db.proposal.count({
-      where: { eventId, status: { in: statuses }, result: { isNot: null } },
+      where: { eventId, deliberationStatus: status, result: { isNot: null } },
     });
     const notPublished = await db.proposal.count({
-      where: { eventId, status: { in: statuses }, result: { is: null } },
+      where: { eventId, deliberationStatus: status, result: { is: null } },
     });
     return { total: published + notPublished, published, notPublished };
   }

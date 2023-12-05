@@ -52,7 +52,6 @@ export class TalkSubmission {
         level: talk.level,
         references: talk.references,
         languages: talk.languages || [],
-        status: 'DRAFT',
         talk: { connect: { id: talk.id } },
         event: { connect: { id: event.id } },
         speakers: { connect: speakers },
@@ -90,8 +89,8 @@ export class TalkSubmission {
         where: {
           eventId: event.id,
           speakers: { some: { id: this.speakerId } },
-          status: { not: { equals: 'DRAFT' } },
           id: { not: { equals: talkId } },
+          isDraft: false,
         },
       });
       if (nbProposals >= event.maxProposals) throw new MaxSubmittedProposalsReachedError();
@@ -103,7 +102,7 @@ export class TalkSubmission {
     });
     if (!proposal) throw new ProposalNotFoundError();
 
-    await db.proposal.update({ data: { status: 'SUBMITTED' }, where: { id: proposal.id } });
+    await db.proposal.update({ data: { isDraft: false }, where: { id: proposal.id } });
 
     await ProposalSubmittedEmail.send(proposal.event, proposal);
     await ProposalReceivedEmail.send(proposal.event, proposal);

@@ -1,4 +1,4 @@
-import type { ProposalStatus, ReviewFeeling } from '@prisma/client';
+import type { ReviewFeeling } from '@prisma/client';
 import format from 'date-fns/format/index.js';
 
 import { Card } from '~/design-system/layouts/Card.tsx';
@@ -21,7 +21,7 @@ type Props = {
     positives: number;
     negatives: number;
   };
-  status: ProposalStatus;
+  deliberationStatus: 'PENDING' | 'ACCEPTED' | 'REJECTED';
   comments: string | null;
   submittedAt: string;
   reviewEnabled: boolean;
@@ -32,7 +32,7 @@ export function ReviewInfoSection({
   proposalId,
   userReview,
   review,
-  status,
+  deliberationStatus,
   comments,
   submittedAt,
   reviewEnabled,
@@ -67,7 +67,7 @@ export function ReviewInfoSection({
 
         <div className="flex justify-between gap-2">
           <Text weight="medium">Proposal status</Text>
-          <ProposalStatusBadge status={status} />
+          <ProposalStatusBadge status={deliberationStatus} />
         </div>
 
         <div className="flex justify-between gap-2">

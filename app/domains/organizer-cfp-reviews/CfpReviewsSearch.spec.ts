@@ -26,13 +26,13 @@ describe('CfpReviewsSearch', () => {
   describe('#search', () => {
     it('returns event proposals info', async () => {
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-      const proposals = await CfpReviewsSearch.for(owner.id, team.slug, event.slug).search({ status: ['SUBMITTED'] });
+      const proposals = await CfpReviewsSearch.for(owner.id, team.slug, event.slug).search({ status: ['PENDING'] });
 
       expect(proposals.results).toEqual([
         {
           id: proposal.id,
           title: proposal.title,
-          status: proposal.status,
+          deliberationStatus: proposal.deliberationStatus,
           speakers: [speaker.name],
           reviews: {
             summary: { negatives: 0, positives: 0, average: null },
@@ -41,8 +41,8 @@ describe('CfpReviewsSearch', () => {
         },
       ]);
 
-      expect(proposals.filters).toEqual({ status: ['SUBMITTED'] });
-      expect(proposals.statistics).toEqual({ reviewed: 0, statuses: [{ name: 'SUBMITTED', count: 1 }], total: 1 });
+      expect(proposals.filters).toEqual({ status: ['PENDING'] });
+      expect(proposals.statistics).toEqual({ reviewed: 0, statuses: [{ name: 'PENDING', count: 1 }], total: 1 });
       expect(proposals.pagination).toEqual({ current: 1, total: 1 });
     });
 
@@ -94,7 +94,7 @@ describe('CfpReviewsSearch', () => {
         {
           id: proposal.id,
           title: proposal.title,
-          status: proposal.status,
+          deliberationStatus: proposal.deliberationStatus,
           abstract: proposal.abstract,
           comments: proposal.comments,
           languages: proposal.languages,
@@ -199,8 +199,8 @@ describe('CfpReviewsSearch', () => {
 
       expect(result).toBe(2);
       const proposals = await db.proposal.findMany();
-      expect(proposals[0].status).toBe('ACCEPTED');
-      expect(proposals[1].status).toBe('ACCEPTED');
+      expect(proposals[0].deliberationStatus).toBe('ACCEPTED');
+      expect(proposals[1].deliberationStatus).toBe('ACCEPTED');
     });
 
     it('resets the result publication when status changed', async () => {
@@ -224,11 +224,11 @@ describe('CfpReviewsSearch', () => {
       const proposals = await db.proposal.findMany({ include: { result: true } });
 
       const updated1 = proposals.find((p) => p.id === proposal1.id);
-      expect(updated1?.status).toBe('ACCEPTED');
+      expect(updated1?.deliberationStatus).toBe('ACCEPTED');
       expect(updated1?.result).not.toBeNull();
 
       const updated2 = proposals.find((p) => p.id === proposal2.id);
-      expect(updated2?.status).toBe('ACCEPTED');
+      expect(updated2?.deliberationStatus).toBe('ACCEPTED');
       expect(updated2?.result).toBeNull();
     });
 

@@ -1,13 +1,11 @@
-import type { ProposalStatus } from '@prisma/client';
-
 import { Text } from '~/design-system/Typography.tsx';
 import { ProposalStatusBadge } from '~/routes/__components/proposals/ProposalStatusBadges.tsx';
 
 import { useProposalsSearchFilter } from '../../useProposalsSearchFilter.tsx';
 
 type Props = {
-  defaultValue?: ProposalStatus;
-  statuses: Array<{ name: ProposalStatus; count: number }>;
+  defaultValue?: 'PENDING' | 'ACCEPTED' | 'REJECTED';
+  statuses: Array<{ name: 'PENDING' | 'ACCEPTED' | 'REJECTED'; count: number }>;
 };
 
 export function StatusFilter({ defaultValue, statuses }: Props) {
@@ -34,7 +32,7 @@ export function StatusFilter({ defaultValue, statuses }: Props) {
 }
 
 type StatusFilterItemProps = {
-  name: ProposalStatus;
+  name: 'PENDING' | 'ACCEPTED' | 'REJECTED';
   count: number;
   isSelected: boolean;
 };
