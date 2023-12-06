@@ -46,7 +46,7 @@ describe('EventProposalsSearch', () => {
       talk: talk2,
       attributes: { title: 'Awesome talk' },
       categories: [category],
-      traits: ['accepted'],
+      traits: ['confirmed'],
     });
     proposal3 = await proposalFactory({
       event,
@@ -139,8 +139,24 @@ describe('EventProposalsSearch', () => {
       expect(proposals[0].id).toBe(proposal2.id);
     });
 
-    it('filters proposals by status', async () => {
-      const filters: ProposalsFilters = { status: ['ACCEPTED'] };
+    it('filters proposals by deliberation status', async () => {
+      const filters: ProposalsFilters = { deliberation: 'ACCEPTED' };
+      const search = new ProposalSearchBuilder(event.slug, owner.id, filters);
+      const proposals = await search.proposals();
+      expect(proposals.length).toBe(1);
+      expect(proposals[0].id).toBe(proposal2.id);
+    });
+
+    it('filters proposals by publication status', async () => {
+      const filters: ProposalsFilters = { publication: 'PUBLISHED' };
+      const search = new ProposalSearchBuilder(event.slug, owner.id, filters);
+      const proposals = await search.proposals();
+      expect(proposals.length).toBe(1);
+      expect(proposals[0].id).toBe(proposal2.id);
+    });
+
+    it('filters proposals by confirmation status', async () => {
+      const filters: ProposalsFilters = { confirmation: 'CONFIRMED' };
       const search = new ProposalSearchBuilder(event.slug, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(1);

@@ -19,7 +19,7 @@ type Props = {
 
 export function ProposalsFilters({ filters, statistics, eventFormats, eventCategories }: Props) {
   const { total, reviewed, statuses } = statistics;
-  const { query, reviews, status, formats, categories } = filters;
+  const { query, reviews, deliberation, formats, categories } = filters;
 
   const hasFilters = Boolean(query || reviews || status || formats || categories);
 
@@ -29,7 +29,7 @@ export function ProposalsFilters({ filters, statistics, eventFormats, eventCateg
 
       <ReviewsFilter defaultValue={reviews} reviewed={reviewed} total={total} />
 
-      <StatusFilter defaultValue={status?.[0]} statuses={statuses} />
+      <StatusFilter defaultValue={deliberation} statuses={statuses} />
 
       <TracksFilter
         defaultFormatValue={formats}

@@ -79,29 +79,30 @@ export class ProposalSearchBuilder {
   }
 
   private whereClause(): Prisma.ProposalWhereInput {
-    const { query, reviews, formats, categories, status } = this.filters;
+    const { query, reviews, formats, categories, deliberation, publication, confirmation } = this.filters;
 
     const reviewClause = reviews === 'reviewed' ? { some: { userId: this.userId } } : { none: { userId: this.userId } };
 
     return {
       event: { slug: this.eventSlug },
       isDraft: false,
-      deliberationStatus: { in: status },
+      deliberationStatus: deliberation,
+      publicationStatus: publication,
+      confirmationStatus: confirmation,
       formats: formats ? { some: { id: formats } } : undefined,
       categories: categories ? { some: { id: categories } } : undefined,
       reviews: reviews ? reviewClause : undefined,
-      OR: this.whereQueryClause(query),
+      OR: this.whereSearchClause(query),
     };
   }
 
-  private whereQueryClause(query?: string) {
+  private whereSearchClause(query?: string) {
     if (!query) return undefined;
 
     const byTitle: Prisma.ProposalWhereInput = { title: { contains: query, mode: 'insensitive' } };
     const bySpeakers: Prisma.ProposalWhereInput = {
       speakers: { some: { name: { contains: query, mode: 'insensitive' } } },
     };
-
     if (this.options.withSpeakers) return [byTitle, bySpeakers];
 
     return [byTitle];

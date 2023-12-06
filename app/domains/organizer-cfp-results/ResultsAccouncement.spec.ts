@@ -33,7 +33,7 @@ describe('ResultsAnnouncement', () => {
     await proposalFactory({
       event,
       talk: await talkFactory({ speakers: [speaker1, speaker2] }),
-      traits: ['accepted', 'published'],
+      traits: ['accepted-published'],
     });
     proposalSubmitted = await proposalFactory({
       event,

@@ -1,7 +1,7 @@
 import { BadgeDot } from '~/design-system/Badges.tsx';
 
 const STATUSES = {
-  PENDING: { color: 'gray', label: 'Submitted' },
+  PENDING: { color: 'gray', label: 'Pending' },
   ACCEPTED: { color: 'green', label: 'Accepted' },
   REJECTED: { color: 'red', label: 'Rejected' },
 } as const;

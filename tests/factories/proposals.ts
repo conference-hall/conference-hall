@@ -19,7 +19,16 @@ const TRAITS = {
     publicationStatus: PublicationStatus.PUBLISHED,
     confirmationStatus: ConfirmationStatus.CONFIRMED,
   },
-  published: { publicationStatus: PublicationStatus.PUBLISHED },
+  'accepted-published': {
+    deliberationStatus: DeliberationStatus.ACCEPTED,
+    publicationStatus: PublicationStatus.PUBLISHED,
+    confirmationStatus: ConfirmationStatus.PENDING,
+  },
+  'rejected-published': {
+    deliberationStatus: DeliberationStatus.REJECTED,
+    publicationStatus: PublicationStatus.PUBLISHED,
+    confirmationStatus: ConfirmationStatus.PENDING,
+  },
 };
 
 type Trait = keyof typeof TRAITS;

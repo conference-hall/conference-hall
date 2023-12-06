@@ -113,7 +113,12 @@ export class UserProposal {
     if (!proposal) throw new ProposalNotFoundError();
 
     const result = await db.proposal.updateMany({
-      where: { id: this.proposalId, deliberationStatus: 'ACCEPTED' },
+      where: {
+        id: this.proposalId,
+        deliberationStatus: 'ACCEPTED',
+        publicationStatus: 'PUBLISHED',
+        confirmationStatus: 'PENDING',
+      },
       data: { confirmationStatus: participation },
     });
 

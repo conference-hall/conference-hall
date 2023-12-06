@@ -233,7 +233,7 @@ describe('UserProposal', () => {
       });
       const speaker = await userFactory();
       const talk = await talkFactory({ speakers: [speaker] });
-      const proposal = await proposalFactory({ event, talk, traits: ['accepted'] });
+      const proposal = await proposalFactory({ event, talk, traits: ['accepted-published'] });
 
       await UserProposal.for(speaker.id, proposal.id).confirm('CONFIRMED');
 
@@ -258,7 +258,7 @@ describe('UserProposal', () => {
       });
       const speaker = await userFactory();
       const talk = await talkFactory({ speakers: [speaker] });
-      const proposal = await proposalFactory({ event, talk, traits: ['accepted'] });
+      const proposal = await proposalFactory({ event, talk, traits: ['accepted-published'] });
 
       await UserProposal.for(speaker.id, proposal.id).confirm('DECLINED');
 
@@ -289,7 +289,22 @@ describe('UserProposal', () => {
         where: { id: proposal.id },
       });
 
-      expect(proposalUpdated?.confirmationStatus).toBe('PENDING');
+      expect(proposalUpdated?.confirmationStatus).toBeNull();
+    });
+
+    it('cannot confirm or declined a not published proposal', async () => {
+      const event = await eventFactory();
+      const speaker = await userFactory();
+      const talk = await talkFactory({ speakers: [speaker] });
+      const proposal = await proposalFactory({ event, talk, traits: ['accepted'] });
+
+      await UserProposal.for(speaker.id, proposal.id).confirm('CONFIRMED');
+
+      const proposalUpdated = await db.proposal.findUnique({
+        where: { id: proposal.id },
+      });
+
+      expect(proposalUpdated?.confirmationStatus).toBeNull();
     });
 
     it('throws an error when proposal not found', async () => {

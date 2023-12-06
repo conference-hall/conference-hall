@@ -50,12 +50,12 @@ export const seed = async () => {
     event: event,
     talk: talk3,
     attributes: { id: 'awesome-proposal3' },
-    traits: ['accepted', 'published'],
+    traits: ['accepted-published'],
   });
   await proposalFactory({
     event: event,
     talk: talk4,
     attributes: { id: 'awesome-proposal4' },
-    traits: ['rejected', 'published'],
+    traits: ['rejected-published'],
   });
 };

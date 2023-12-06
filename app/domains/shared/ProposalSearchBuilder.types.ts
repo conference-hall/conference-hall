@@ -1,13 +1,13 @@
 import { parse } from '@conform-to/zod';
 import { z } from 'zod';
 
-const ProposalStatusSchema = z.enum(['PENDING', 'ACCEPTED', 'REJECTED']);
-
 export const ProposalsFiltersSchema = z.object({
   query: z.string().trim().optional(),
   sort: z.enum(['newest', 'oldest', 'highest', 'lowest']).optional(),
   reviews: z.enum(['reviewed', 'not-reviewed']).optional(),
-  status: z.array(ProposalStatusSchema).optional(),
+  deliberation: z.enum(['PENDING', 'ACCEPTED', 'REJECTED']).optional(),
+  publication: z.enum(['NOT_PUBLISHED', 'PUBLISHED']).optional(),
+  confirmation: z.enum(['PENDING', 'CONFIRMED', 'DECLINED']).optional(),
   formats: z.string().optional(),
   categories: z.string().optional(),
 });

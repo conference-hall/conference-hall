@@ -16,7 +16,7 @@ export enum SpeakerProposalStatus {
 type ProposalArgs = {
   deliberationStatus: DeliberationStatus;
   publicationStatus: PublicationStatus;
-  confirmationStatus: ConfirmationStatus;
+  confirmationStatus: ConfirmationStatus | null;
   isDraft: boolean;
 };
 

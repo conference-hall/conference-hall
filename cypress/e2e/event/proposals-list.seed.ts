@@ -30,8 +30,8 @@ export const seed = async () => {
     categories: [category],
   });
   await proposalFactory({ event: event1, talk: talk2, traits: ['draft'] });
-  await proposalFactory({ event: event1, talk: talk3, traits: ['accepted', 'published'] });
-  await proposalFactory({ event: event1, talk: talk4, traits: ['rejected', 'published'] });
+  await proposalFactory({ event: event1, talk: talk3, traits: ['accepted-published'] });
+  await proposalFactory({ event: event1, talk: talk4, traits: ['rejected-published'] });
   await proposalFactory({ event: event1, talk: talk5, traits: ['declined'] });
   await proposalFactory({ event: event1, talk: talk6, traits: ['confirmed'] });
 

@@ -28,8 +28,8 @@ export class ResultsAnnouncement {
     if (!proposals.length) throw new ForbiddenOperationError();
 
     await db.proposal.updateMany({
-      data: { publicationStatus: 'PUBLISHED' },
       where: { id: { in: proposals.map(({ id }) => id) } },
+      data: { publicationStatus: 'PUBLISHED', confirmationStatus: status === 'ACCEPTED' ? 'PENDING' : null },
     });
 
     if (withEmails && status === 'ACCEPTED') await ProposalAcceptedEmail.send(event, proposals);
@@ -50,7 +50,13 @@ export class ResultsAnnouncement {
     });
     if (!proposal) throw new ProposalNotFoundError();
 
-    await db.proposal.update({ data: { publicationStatus: 'PUBLISHED' }, where: { id: proposal.id } });
+    await db.proposal.update({
+      where: { id: proposal.id },
+      data: {
+        publicationStatus: 'PUBLISHED',
+        confirmationStatus: proposal.deliberationStatus === 'ACCEPTED' ? 'PENDING' : null,
+      },
+    });
 
     if (withEmails && proposal.deliberationStatus === 'ACCEPTED') await ProposalAcceptedEmail.send(event, [proposal]);
     if (withEmails && proposal.deliberationStatus === 'REJECTED') await ProposalRejectedEmail.send(event, [proposal]);

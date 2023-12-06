@@ -26,7 +26,7 @@ describe('CfpReviewsSearch', () => {
   describe('#search', () => {
     it('returns event proposals info', async () => {
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-      const proposals = await CfpReviewsSearch.for(owner.id, team.slug, event.slug).search({ status: ['PENDING'] });
+      const proposals = await CfpReviewsSearch.for(owner.id, team.slug, event.slug).search({ deliberation: 'PENDING' });
 
       expect(proposals.results).toEqual([
         {
@@ -41,7 +41,7 @@ describe('CfpReviewsSearch', () => {
         },
       ]);
 
-      expect(proposals.filters).toEqual({ status: ['PENDING'] });
+      expect(proposals.filters).toEqual({ deliberation: 'PENDING' });
       expect(proposals.statistics).toEqual({ reviewed: 0, statuses: [{ name: 'PENDING', count: 1 }], total: 1 });
       expect(proposals.pagination).toEqual({ current: 1, total: 1 });
     });
@@ -211,12 +211,12 @@ describe('CfpReviewsSearch', () => {
       const proposal1 = await proposalFactory({
         event,
         talk: await talkFactory({ speakers: [speaker] }),
-        traits: ['accepted', 'published'],
+        traits: ['accepted-published'],
       });
       const proposal2 = await proposalFactory({
         event,
         talk: await talkFactory({ speakers: [speaker] }),
-        traits: ['rejected', 'published'],
+        traits: ['rejected-published'],
       });
 
       const reviews = CfpReviewsSearch.for(owner.id, team.slug, event.slug);
@@ -238,12 +238,12 @@ describe('CfpReviewsSearch', () => {
       const proposal1 = await proposalFactory({
         event,
         talk: await talkFactory({ speakers: [speaker] }),
-        traits: ['confirmed', 'published'],
+        traits: ['confirmed'],
       });
       const proposal2 = await proposalFactory({
         event,
         talk: await talkFactory({ speakers: [speaker] }),
-        traits: ['rejected', 'published'],
+        traits: ['rejected-published'],
       });
 
       const reviews = CfpReviewsSearch.for(owner.id, team.slug, event.slug);
