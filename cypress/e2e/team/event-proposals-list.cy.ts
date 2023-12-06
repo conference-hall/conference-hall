@@ -86,7 +86,7 @@ describe('Event proposals list', () => {
       proposals.filterStatus('Accepted');
 
       cy.assertText('1 proposals');
-      cy.assertUrl('status=ACCEPTED');
+      cy.assertUrl('deliberation=ACCEPTED');
       proposals.proposal('Talk 1').should('not.exist');
       proposals.proposal('Talk 2').should('exist');
       proposals.proposal('Talk 3').should('not.exist');
