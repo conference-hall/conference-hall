@@ -59,7 +59,7 @@ export class CfpReviewsSearch {
   async changeStatus(proposalIds: string[], deliberationStatus: 'PENDING' | 'ACCEPTED' | 'REJECTED') {
     await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
 
-    return db.proposal.updateMany({
+    const result = await db.proposal.updateMany({
       where: { id: { in: proposalIds }, deliberationStatus: { not: deliberationStatus } },
       data: {
         deliberationStatus,
@@ -67,6 +67,7 @@ export class CfpReviewsSearch {
         confirmationStatus: deliberationStatus === 'PENDING' ? 'PENDING' : undefined,
       },
     });
+    return result.count;
   }
 
   async forJsonExport(filters: ProposalsFilters) {

@@ -47,7 +47,7 @@ class DeliberationPage extends BasePage {
   }
 
   totalConfirmations() {
-    return cy.findByRole('definition', { name: 'Total accepted' });
+    return cy.findByRole('definition', { name: 'Total published' });
   }
 
   totalNoResponse() {

@@ -97,7 +97,7 @@ export default function DeliberationRoute() {
           <dl className="flex flex-col md:flex-row md:justify-around text-center md:divide-x">
             <StatisticLink
               name="total-confirmations"
-              label="Total accepted"
+              label="Total published"
               value={statistics.accepted.published}
               to="accepted"
             />

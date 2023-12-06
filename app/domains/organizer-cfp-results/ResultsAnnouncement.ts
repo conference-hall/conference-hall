@@ -87,12 +87,29 @@ export class ResultsAnnouncement {
     };
 
     const confirmations = {
-      pending: sum(results.filter((p) => p.publicationStatus === 'PUBLISHED' && p.confirmationStatus === 'PENDING')),
+      pending: sum(
+        results.filter(
+          (p) =>
+            p.deliberationStatus === 'ACCEPTED' &&
+            p.publicationStatus === 'PUBLISHED' &&
+            p.confirmationStatus === 'PENDING',
+        ),
+      ),
       confirmed: sum(
-        results.filter((p) => p.publicationStatus === 'PUBLISHED' && p.confirmationStatus === 'CONFIRMED'),
+        results.filter(
+          (p) =>
+            p.deliberationStatus === 'ACCEPTED' &&
+            p.publicationStatus === 'PUBLISHED' &&
+            p.confirmationStatus === 'CONFIRMED',
+        ),
       ),
       declined: sum(
-        results.filter((p) => p.publicationStatus === 'NOT_PUBLISHED' && p.confirmationStatus === 'DECLINED'),
+        results.filter(
+          (p) =>
+            p.deliberationStatus === 'ACCEPTED' &&
+            p.publicationStatus === 'NOT_PUBLISHED' &&
+            p.confirmationStatus === 'DECLINED',
+        ),
       ),
     };
 

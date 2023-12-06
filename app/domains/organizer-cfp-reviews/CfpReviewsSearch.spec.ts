@@ -197,7 +197,7 @@ describe('CfpReviewsSearch', () => {
       const reviews = CfpReviewsSearch.for(owner.id, team.slug, event.slug);
       const result = await reviews.changeStatus([proposal1.id, proposal2.id], 'ACCEPTED');
 
-      expect(result.count).toBe(2);
+      expect(result).toBe(2);
       const proposals = await db.proposal.findMany();
 
       const updated1 = proposals.find((p) => p.id === proposal1.id);
@@ -222,7 +222,7 @@ describe('CfpReviewsSearch', () => {
       const reviews = CfpReviewsSearch.for(owner.id, team.slug, event.slug);
       const result = await reviews.changeStatus([proposal1.id, proposal2.id], 'ACCEPTED');
 
-      expect(result.count).toBe(1);
+      expect(result).toBe(1);
       const proposals = await db.proposal.findMany();
 
       const updated1 = proposals.find((p) => p.id === proposal1.id);
@@ -249,7 +249,7 @@ describe('CfpReviewsSearch', () => {
       const reviews = CfpReviewsSearch.for(owner.id, team.slug, event.slug);
       const result = await reviews.changeStatus([proposal1.id, proposal2.id], 'PENDING');
 
-      expect(result.count).toBe(2);
+      expect(result).toBe(2);
       const proposals = await db.proposal.findMany();
 
       const updated1 = proposals.find((p) => p.id === proposal1.id);
