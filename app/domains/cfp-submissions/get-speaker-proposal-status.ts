@@ -11,7 +11,6 @@ export enum SpeakerProposalStatus {
   RejectedByOrganizers = 'RejectedByOrganizers',
   ConfirmedBySpeaker = 'ConfirmedBySpeaker',
   DeclinedBySpeaker = 'DeclinedBySpeaker',
-  Unknown = 'Unknown',
 }
 
 type ProposalArgs = {

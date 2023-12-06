@@ -52,8 +52,10 @@ export class ResultsAnnouncement {
       include: { speakers: true },
     });
     if (!proposal) throw new ProposalNotFoundError();
-    if (proposal.deliberationStatus !== 'ACCEPTED' && proposal.deliberationStatus !== 'REJECTED')
+
+    if (proposal.deliberationStatus !== 'ACCEPTED' && proposal.deliberationStatus !== 'REJECTED') {
       throw new ForbiddenOperationError();
+    }
 
     await db.resultPublication.create({
       data: { type: proposal.deliberationStatus, proposalId: proposal.id, emailStatus: withEmails ? 'SENT' : 'NONE' },

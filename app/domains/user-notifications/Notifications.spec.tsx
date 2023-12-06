@@ -17,9 +17,27 @@ describe('Notifications', () => {
     speaker2 = await userFactory();
     event = await eventFactory();
     await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker1] }), traits: ['accepted'] });
-    await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker2] }), traits: ['accepted'] });
     await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker1] }), traits: ['draft'] });
+    await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker2] }), traits: ['accepted'] });
 
+    await proposalFactory({
+      event,
+      talk: await talkFactory({ speakers: [speaker1] }),
+      traits: ['confirmed'],
+      withResultPublished: true,
+    });
+    await proposalFactory({
+      event,
+      talk: await talkFactory({ speakers: [speaker1] }),
+      traits: ['declined'],
+      withResultPublished: true,
+    });
+    await proposalFactory({
+      event,
+      talk: await talkFactory({ speakers: [speaker1] }),
+      traits: ['rejected'],
+      withResultPublished: true,
+    });
     proposal = await proposalFactory({
       event,
       talk: await talkFactory({ speakers: [speaker1] }),

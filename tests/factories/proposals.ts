@@ -10,8 +10,8 @@ const TRAITS = {
   submitted: { isDraft: false },
   accepted: { deliberationStatus: DeliberationStatus.ACCEPTED },
   rejected: { deliberationStatus: DeliberationStatus.REJECTED },
-  declined: { confirmationStatus: ConfirmationStatus.DECLINED },
-  confirmed: { confirmationStatus: ConfirmationStatus.CONFIRMED },
+  declined: { deliberationStatus: DeliberationStatus.ACCEPTED, confirmationStatus: ConfirmationStatus.DECLINED },
+  confirmed: { deliberationStatus: DeliberationStatus.ACCEPTED, confirmationStatus: ConfirmationStatus.CONFIRMED },
 };
 
 type Trait = keyof typeof TRAITS;

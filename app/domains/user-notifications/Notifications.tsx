@@ -11,6 +11,7 @@ export class Notifications {
     return db.proposal.count({
       where: {
         deliberationStatus: 'ACCEPTED',
+        confirmationStatus: 'PENDING',
         result: { isNot: null },
         speakers: { some: { id: this.userId } },
       },
@@ -22,6 +23,7 @@ export class Notifications {
       include: { event: true },
       where: {
         deliberationStatus: 'ACCEPTED',
+        confirmationStatus: 'PENDING',
         result: { isNot: null },
         speakers: { some: { id: this.userId } },
       },
