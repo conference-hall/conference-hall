@@ -21,7 +21,7 @@ export function ProposalsFilters({ filters, statistics, eventFormats, eventCateg
   const { total, reviewed, statuses } = statistics;
   const { query, reviews, deliberation, formats, categories } = filters;
 
-  const hasFilters = Boolean(query || reviews || status || formats || categories);
+  const hasFilters = Boolean(query || reviews || deliberation || formats || categories);
 
   return (
     <Card className="divide-y divide-gray-200">

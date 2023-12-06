@@ -41,7 +41,7 @@ function StatusFilterItem({ name, count, isSelected }: StatusFilterItemProps) {
   const { addFilterFor } = useProposalsSearchFilter();
 
   const handleFilter = () => {
-    isSelected ? addFilterFor('status', '') : addFilterFor('status', name);
+    isSelected ? addFilterFor('deliberation', '') : addFilterFor('deliberation', name);
   };
 
   return (
