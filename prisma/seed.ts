@@ -85,7 +85,6 @@ async function seed() {
     event,
     categories: [cat1],
     formats: [format1],
-    traits: ['submitted'],
   });
   await reviewFactory({ proposal: proposal1, user: user, attributes: { feeling: 'POSITIVE', note: 5 } });
   await reviewFactory({ proposal: proposal1, user: user2, attributes: { feeling: 'NEGATIVE', note: 0 } });

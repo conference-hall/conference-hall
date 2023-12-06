@@ -1,5 +1,5 @@
 import type { EventType } from '@prisma/client';
-import { ConfirmationStatus, DeliberationStatus } from '@prisma/client';
+import { ConfirmationStatus, DeliberationStatus, PublicationStatus } from '@prisma/client';
 
 import { CallForPaper } from '../shared/CallForPaper';
 
@@ -15,6 +15,7 @@ export enum SpeakerProposalStatus {
 
 type ProposalArgs = {
   deliberationStatus: DeliberationStatus;
+  publicationStatus: PublicationStatus;
   confirmationStatus: ConfirmationStatus;
   isDraft: boolean;
 };
@@ -25,12 +26,8 @@ type EventArgs = {
   cfpEnd: Date | null;
 };
 
-export function getSpeakerProposalStatus(
-  proposal: ProposalArgs,
-  event: EventArgs,
-  isResultPublished: boolean,
-): SpeakerProposalStatus {
-  const { deliberationStatus, confirmationStatus, isDraft } = proposal;
+export function getSpeakerProposalStatus(proposal: ProposalArgs, event: EventArgs): SpeakerProposalStatus {
+  const { deliberationStatus, confirmationStatus, publicationStatus, isDraft } = proposal;
   const { type, cfpStart, cfpEnd } = event;
 
   const cfp = new CallForPaper({ type, cfpStart, cfpEnd });
@@ -41,9 +38,9 @@ export function getSpeakerProposalStatus(
     return SpeakerProposalStatus.ConfirmedBySpeaker;
   } else if (confirmationStatus === ConfirmationStatus.DECLINED) {
     return SpeakerProposalStatus.DeclinedBySpeaker;
-  } else if (deliberationStatus === DeliberationStatus.ACCEPTED && isResultPublished) {
+  } else if (deliberationStatus === DeliberationStatus.ACCEPTED && publicationStatus === PublicationStatus.PUBLISHED) {
     return SpeakerProposalStatus.AcceptedByOrganizers;
-  } else if (deliberationStatus === DeliberationStatus.REJECTED && isResultPublished) {
+  } else if (deliberationStatus === DeliberationStatus.REJECTED && publicationStatus === PublicationStatus.PUBLISHED) {
     return SpeakerProposalStatus.RejectedByOrganizers;
   } else if (!cfp.isOpen) {
     return SpeakerProposalStatus.DeliberationPending;

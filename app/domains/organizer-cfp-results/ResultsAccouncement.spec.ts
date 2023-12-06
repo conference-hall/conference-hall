@@ -5,7 +5,7 @@ import { talkFactory } from 'tests/factories/talks';
 import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
 
-import { ForbiddenOperationError } from '~/libs/errors';
+import { ForbiddenOperationError, ProposalNotFoundError } from '~/libs/errors';
 
 import { ResultsAnnouncement } from './ResultsAnnouncement';
 
@@ -33,13 +33,11 @@ describe('ResultsAnnouncement', () => {
     await proposalFactory({
       event,
       talk: await talkFactory({ speakers: [speaker1, speaker2] }),
-      traits: ['accepted'],
-      withResultPublished: true,
+      traits: ['accepted', 'published'],
     });
     proposalSubmitted = await proposalFactory({
       event,
       talk: await talkFactory({ speakers: [speaker1, speaker2] }),
-      traits: ['submitted'],
     });
     const event2 = await eventFactory({ team });
     await proposalFactory({
@@ -118,7 +116,7 @@ describe('ResultsAnnouncement', () => {
     });
   });
 
-  describe('#publishOne', () => {
+  describe('#publish', () => {
     it('publish result a specific proposal', async () => {
       const announcement = ResultsAnnouncement.for(owner.id, team.slug, event.slug);
 
@@ -147,27 +145,12 @@ describe('ResultsAnnouncement', () => {
 
     it('cannot publish result for a proposal not accepted or rejected', async () => {
       const announcement = ResultsAnnouncement.for(owner.id, team.slug, event.slug);
-      await expect(announcement.publish(proposalSubmitted.id, false)).rejects.toThrowError(ForbiddenOperationError);
+      await expect(announcement.publish(proposalSubmitted.id, false)).rejects.toThrowError(ProposalNotFoundError);
     });
 
     it('cannot be sent by team reviewers', async () => {
       const announcement = ResultsAnnouncement.for(reviewer.id, team.slug, event.slug);
       await expect(announcement.publish(proposal.id, false)).rejects.toThrowError(ForbiddenOperationError);
-    });
-  });
-
-  describe('#unpublish', () => {
-    it('unpublish result for a list of proposals', async () => {
-      const announcement = ResultsAnnouncement.for(owner.id, team.slug, event.slug);
-
-      await announcement.publish(proposal.id, false);
-
-      const before = await announcement.statistics();
-      expect(before.accepted).toEqual({ total: 3, published: 2, notPublished: 1 });
-
-      await announcement.unpublish([proposal.id]);
-      const after = await announcement.statistics();
-      expect(after.accepted).toEqual({ total: 3, published: 1, notPublished: 2 });
     });
   });
 });

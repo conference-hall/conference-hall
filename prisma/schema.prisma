@@ -214,12 +214,12 @@ model Proposal {
   isDraft            Boolean            @default(true)
   submittedAt        DateTime           @default(now())
   deliberationStatus DeliberationStatus @default(PENDING)
+  publicationStatus  PublicationStatus  @default(NOT_PUBLISHED)
   confirmationStatus ConfirmationStatus @default(PENDING)
   invitationCode     String             @unique @default(cuid())
   createdAt          DateTime           @default(now())
   updatedAt          DateTime           @updatedAt
   messages           Message[]
-  result             ResultPublication?
 
   @@unique([talkId, eventId])
   @@map("proposals")
@@ -229,6 +229,11 @@ enum DeliberationStatus {
   PENDING
   ACCEPTED
   REJECTED
+}
+
+enum PublicationStatus {
+  NOT_PUBLISHED
+  PUBLISHED
 }
 
 enum ConfirmationStatus {
@@ -291,25 +296,4 @@ model Message {
 enum MessageChannel {
   ORGANIZER
   SPEAKER
-}
-
-enum ResultEmailStatus {
-  NONE
-  SENT
-}
-
-enum ResultPublicationType {
-  ACCEPTED
-  REJECTED
-}
-
-model ResultPublication {
-  id          String                @id @default(cuid())
-  proposalId  String                @unique
-  proposal    Proposal              @relation(fields: [proposalId], references: [id])
-  type        ResultPublicationType
-  publishedAt DateTime              @default(now())
-  emailStatus ResultEmailStatus     @default(NONE)
-
-  @@map("result_publications")
 }

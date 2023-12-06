@@ -40,7 +40,6 @@ describe('EventProposalsSearch', () => {
       talk: talk1,
       attributes: { title: 'Hello World' },
       formats: [format],
-      traits: ['submitted'],
     });
     proposal2 = await proposalFactory({
       event,
@@ -55,11 +54,7 @@ describe('EventProposalsSearch', () => {
       attributes: { title: 'Foo bar talk' },
       traits: ['rejected'],
     });
-    await proposalFactory({
-      event: event2,
-      talk: talk3,
-      traits: ['submitted'],
-    });
+    await proposalFactory({ event: event2, talk: talk3 });
 
     await reviewFactory({ user: speaker, proposal: proposal1, attributes: { feeling: 'NEGATIVE', note: 0 } });
     await reviewFactory({ user: owner, proposal: proposal1, attributes: { feeling: 'POSITIVE', note: 5 } });

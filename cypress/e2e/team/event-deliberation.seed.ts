@@ -26,7 +26,6 @@ export const seed = async () => {
 
   await proposalFactory({
     event,
-    traits: ['submitted'],
     talk: await talkFactory({ attributes: { title: 'Talk 1' }, speakers: [speaker1] }),
   });
 
@@ -38,21 +37,19 @@ export const seed = async () => {
 
   await proposalFactory({
     event,
-    traits: ['accepted'],
-    talk: await talkFactory({ attributes: { title: 'Talk 2' }, speakers: [speaker2] }),
-    withResultPublished: true,
-  });
-
-  await proposalFactory({
-    event,
-    traits: ['rejected'],
+    traits: ['accepted', 'published'],
     talk: await talkFactory({ attributes: { title: 'Talk 2' }, speakers: [speaker2] }),
   });
 
   await proposalFactory({
     event,
     traits: ['rejected'],
+    talk: await talkFactory({ attributes: { title: 'Talk 2' }, speakers: [speaker2] }),
+  });
+
+  await proposalFactory({
+    event,
+    traits: ['rejected', 'published'],
     talk: await talkFactory({ attributes: { title: 'Talk 3' }, speakers: [speaker1, speaker2] }),
-    withResultPublished: true,
   });
 };

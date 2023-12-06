@@ -15,7 +15,7 @@ export const seed = async () => {
     traits: ['conference-cfp-open'],
   });
 
-  await proposalFactory({ event, talk, traits: ['accepted'], withResultPublished: true });
+  await proposalFactory({ event, talk, traits: ['accepted', 'published'] });
 
   // CFP closed
   const event2 = await eventFactory({
@@ -23,5 +23,5 @@ export const seed = async () => {
     traits: ['conference-cfp-past'],
   });
 
-  await proposalFactory({ event: event2, talk, traits: ['accepted'], withResultPublished: true });
+  await proposalFactory({ event: event2, talk, traits: ['accepted', 'published'] });
 };

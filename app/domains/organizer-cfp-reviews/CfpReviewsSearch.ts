@@ -56,19 +56,17 @@ export class CfpReviewsSearch {
     };
   }
 
-  async changeStatus(proposalIds: string[], deliberationStatus: 'ACCEPTED' | 'REJECTED') {
+  async changeStatus(proposalIds: string[], deliberationStatus: 'PENDING' | 'ACCEPTED' | 'REJECTED') {
     await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
 
-    const result = await db.$transaction(async (trx) => {
-      // reset status for result publication
-      await db.resultPublication.deleteMany({
-        where: { proposal: { id: { in: proposalIds }, deliberationStatus: { not: deliberationStatus } } },
-      });
-      // update proposal status
-      return db.proposal.updateMany({ where: { id: { in: proposalIds } }, data: { deliberationStatus } });
+    return db.proposal.updateMany({
+      where: { id: { in: proposalIds }, deliberationStatus: { not: deliberationStatus } },
+      data: {
+        deliberationStatus,
+        publicationStatus: 'NOT_PUBLISHED',
+        confirmationStatus: deliberationStatus === 'PENDING' ? 'PENDING' : undefined,
+      },
     });
-
-    return result.count;
   }
 
   async forJsonExport(filters: ProposalsFilters) {

@@ -1,17 +1,25 @@
 import { randParagraph, randPost } from '@ngneat/falso';
 import type { Event, EventCategory, EventFormat, Prisma, Talk, User } from '@prisma/client';
-import { ConfirmationStatus, DeliberationStatus, TalkLevel } from '@prisma/client';
+import { ConfirmationStatus, DeliberationStatus, PublicationStatus, TalkLevel } from '@prisma/client';
 
 import { db } from '../../app/libs/db.ts';
 import { applyTraits } from './helpers/traits.ts';
 
 const TRAITS = {
   draft: { isDraft: true },
-  submitted: { isDraft: false },
   accepted: { deliberationStatus: DeliberationStatus.ACCEPTED },
   rejected: { deliberationStatus: DeliberationStatus.REJECTED },
-  declined: { deliberationStatus: DeliberationStatus.ACCEPTED, confirmationStatus: ConfirmationStatus.DECLINED },
-  confirmed: { deliberationStatus: DeliberationStatus.ACCEPTED, confirmationStatus: ConfirmationStatus.CONFIRMED },
+  declined: {
+    deliberationStatus: DeliberationStatus.ACCEPTED,
+    publicationStatus: PublicationStatus.PUBLISHED,
+    confirmationStatus: ConfirmationStatus.DECLINED,
+  },
+  confirmed: {
+    deliberationStatus: DeliberationStatus.ACCEPTED,
+    publicationStatus: PublicationStatus.PUBLISHED,
+    confirmationStatus: ConfirmationStatus.CONFIRMED,
+  },
+  published: { publicationStatus: PublicationStatus.PUBLISHED },
 };
 
 type Trait = keyof typeof TRAITS;
@@ -23,11 +31,10 @@ type FactoryOptions = {
   categories?: EventCategory[];
   attributes?: Partial<Prisma.ProposalCreateInput>;
   traits?: Trait[];
-  withResultPublished?: boolean;
 };
 
 export const proposalFactory = (options: FactoryOptions) => {
-  const { attributes = {}, traits = [], talk, event, formats, categories, withResultPublished } = options;
+  const { attributes = {}, traits = [], talk, event, formats, categories } = options;
 
   const defaultAttributes: Prisma.ProposalCreateInput = {
     title: talk?.title || randPost().title,
@@ -46,9 +53,6 @@ export const proposalFactory = (options: FactoryOptions) => {
   }
   if (categories) {
     defaultAttributes.categories = { connect: categories.map(({ id }) => ({ id })) };
-  }
-  if (withResultPublished) {
-    defaultAttributes.result = { create: { type: 'ACCEPTED' } };
   }
 
   const data = {

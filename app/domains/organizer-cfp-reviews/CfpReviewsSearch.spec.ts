@@ -197,39 +197,70 @@ describe('CfpReviewsSearch', () => {
       const reviews = CfpReviewsSearch.for(owner.id, team.slug, event.slug);
       const result = await reviews.changeStatus([proposal1.id, proposal2.id], 'ACCEPTED');
 
-      expect(result).toBe(2);
+      expect(result.count).toBe(2);
       const proposals = await db.proposal.findMany();
-      expect(proposals[0].deliberationStatus).toBe('ACCEPTED');
-      expect(proposals[1].deliberationStatus).toBe('ACCEPTED');
+
+      const updated1 = proposals.find((p) => p.id === proposal1.id);
+      expect(updated1?.deliberationStatus).toBe('ACCEPTED');
+
+      const updated2 = proposals.find((p) => p.id === proposal2.id);
+      expect(updated2?.deliberationStatus).toBe('ACCEPTED');
     });
 
-    it('resets the result publication when status changed', async () => {
+    it('resets the publication status when deliberation status changed to ACCEPTED/REJECTED', async () => {
       const proposal1 = await proposalFactory({
         event,
         talk: await talkFactory({ speakers: [speaker] }),
-        traits: ['accepted'],
-        withResultPublished: true,
+        traits: ['accepted', 'published'],
       });
       const proposal2 = await proposalFactory({
         event,
         talk: await talkFactory({ speakers: [speaker] }),
-        traits: ['rejected'],
-        withResultPublished: true,
+        traits: ['rejected', 'published'],
       });
 
       const reviews = CfpReviewsSearch.for(owner.id, team.slug, event.slug);
       const result = await reviews.changeStatus([proposal1.id, proposal2.id], 'ACCEPTED');
-      expect(result).toBe(2);
 
-      const proposals = await db.proposal.findMany({ include: { result: true } });
+      expect(result.count).toBe(1);
+      const proposals = await db.proposal.findMany();
 
       const updated1 = proposals.find((p) => p.id === proposal1.id);
       expect(updated1?.deliberationStatus).toBe('ACCEPTED');
-      expect(updated1?.result).not.toBeNull();
+      expect(updated1?.publicationStatus).toBe('PUBLISHED');
 
       const updated2 = proposals.find((p) => p.id === proposal2.id);
       expect(updated2?.deliberationStatus).toBe('ACCEPTED');
-      expect(updated2?.result).toBeNull();
+      expect(updated2?.publicationStatus).toBe('NOT_PUBLISHED');
+    });
+
+    it('resets the publication & confirmation statuses when deliberation status changed to PENDING', async () => {
+      const proposal1 = await proposalFactory({
+        event,
+        talk: await talkFactory({ speakers: [speaker] }),
+        traits: ['confirmed', 'published'],
+      });
+      const proposal2 = await proposalFactory({
+        event,
+        talk: await talkFactory({ speakers: [speaker] }),
+        traits: ['rejected', 'published'],
+      });
+
+      const reviews = CfpReviewsSearch.for(owner.id, team.slug, event.slug);
+      const result = await reviews.changeStatus([proposal1.id, proposal2.id], 'PENDING');
+
+      expect(result.count).toBe(2);
+      const proposals = await db.proposal.findMany();
+
+      const updated1 = proposals.find((p) => p.id === proposal1.id);
+      expect(updated1?.deliberationStatus).toBe('PENDING');
+      expect(updated1?.publicationStatus).toBe('NOT_PUBLISHED');
+      expect(updated1?.confirmationStatus).toBe('PENDING');
+
+      const updated2 = proposals.find((p) => p.id === proposal2.id);
+      expect(updated2?.deliberationStatus).toBe('PENDING');
+      expect(updated2?.publicationStatus).toBe('NOT_PUBLISHED');
+      expect(updated2?.confirmationStatus).toBe('PENDING');
     });
 
     it('throws an error if user has not a owner or member role in the team', async () => {

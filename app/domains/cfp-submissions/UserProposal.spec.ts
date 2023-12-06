@@ -281,7 +281,7 @@ describe('UserProposal', () => {
       const event = await eventFactory();
       const speaker = await userFactory();
       const talk = await talkFactory({ speakers: [speaker] });
-      const proposal = await proposalFactory({ event, talk, traits: ['submitted'] });
+      const proposal = await proposalFactory({ event, talk });
 
       await UserProposal.for(speaker.id, proposal.id).confirm('CONFIRMED');
 

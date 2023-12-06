@@ -12,7 +12,7 @@ export class Notifications {
       where: {
         deliberationStatus: 'ACCEPTED',
         confirmationStatus: 'PENDING',
-        result: { isNot: null },
+        publicationStatus: 'PUBLISHED',
         speakers: { some: { id: this.userId } },
       },
     });
@@ -24,7 +24,7 @@ export class Notifications {
       where: {
         deliberationStatus: 'ACCEPTED',
         confirmationStatus: 'PENDING',
-        result: { isNot: null },
+        publicationStatus: 'PUBLISHED',
         speakers: { some: { id: this.userId } },
       },
       orderBy: { updatedAt: 'desc' },

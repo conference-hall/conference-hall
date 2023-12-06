@@ -30,7 +30,7 @@ export const seed = async () => {
 
   await proposalFactory({ event: event1, talk: talk1 });
   await proposalFactory({ event: event1, talk: talk2, traits: ['draft'] });
-  await proposalFactory({ event: event1, talk: talk3, traits: ['accepted'], withResultPublished: true });
+  await proposalFactory({ event: event1, talk: talk3, traits: ['accepted', 'published'] });
 
   // CFP closed
   const event2 = await eventFactory({

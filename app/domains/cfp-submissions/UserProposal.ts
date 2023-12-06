@@ -27,7 +27,6 @@ export class UserProposal {
         formats: true,
         categories: true,
         talk: true,
-        result: true,
       },
     });
 
@@ -40,7 +39,7 @@ export class UserProposal {
       abstract: proposal.abstract,
       level: proposal.level,
       references: proposal.references,
-      status: getSpeakerProposalStatus(proposal, proposal.event, Boolean(proposal.result)),
+      status: getSpeakerProposalStatus(proposal, proposal.event),
       createdAt: proposal.createdAt.toUTCString(),
       languages: proposal.languages as string[],
       formats: proposal.formats.map(({ id, name }) => ({ id, name })),
