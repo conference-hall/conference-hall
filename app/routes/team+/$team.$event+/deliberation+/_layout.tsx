@@ -43,22 +43,27 @@ export default function DeliberationRoute() {
             <StatisticLink
               name="total-proposals"
               label="Total proposals"
-              value={statistics.submitted + statistics.accepted.total + statistics.rejected.total}
+              value={statistics.deliberation.total}
               to="accepted"
             />
             <StatisticLink
               name="total-accepted"
               label="Accepted proposals"
-              value={statistics.accepted.total}
+              value={statistics.deliberation.accepted}
               to="accepted"
             />
             <StatisticLink
               name="total-rejected"
               label="Rejected proposals"
-              value={statistics.rejected.total}
+              value={statistics.deliberation.rejected}
               to="rejected"
             />
-            <StatisticLink name="total-pending" label="Pending proposals" value={statistics.submitted} to="accepted" />
+            <StatisticLink
+              name="total-pending"
+              label="Pending proposals"
+              value={statistics.deliberation.pending}
+              to="accepted"
+            />
           </dl>
         </Card>
       </section>
@@ -90,10 +95,30 @@ export default function DeliberationRoute() {
         </Subtitle>
         <Card className="p-4">
           <dl className="flex flex-col md:flex-row md:justify-around text-center md:divide-x">
-            <StatisticLink name="total-confirmations" label="Total accepted" value={0} to="accepted" />
-            <StatisticLink name="total-no-response" label="No response yet" value={0} to="accepted" />
-            <StatisticLink name="total-confirmed" label="Confirmed by speakers" value={0} to="accepted" />
-            <StatisticLink name="total-declined" label="Declined by speakers" value={0} to="accepted" />
+            <StatisticLink
+              name="total-confirmations"
+              label="Total accepted"
+              value={statistics.accepted.published}
+              to="accepted"
+            />
+            <StatisticLink
+              name="total-no-response"
+              label="No response yet"
+              value={statistics.confirmations.pending}
+              to="accepted"
+            />
+            <StatisticLink
+              name="total-confirmed"
+              label="Confirmed by speakers"
+              value={statistics.confirmations.confirmed}
+              to="accepted"
+            />
+            <StatisticLink
+              name="total-declined"
+              label="Declined by speakers"
+              value={statistics.confirmations.declined}
+              to="accepted"
+            />
           </dl>
         </Card>
       </section>
@@ -103,9 +128,7 @@ export default function DeliberationRoute() {
   );
 }
 
-export const useResultsStatistics = (type?: string) => {
+export const useResultsStatistics = () => {
   const statistics = useOutletContext<ResultsStatistics>();
-  if (type === 'accepted') return statistics.accepted;
-  if (type === 'rejected') return statistics.rejected;
-  return null;
+  return statistics;
 };

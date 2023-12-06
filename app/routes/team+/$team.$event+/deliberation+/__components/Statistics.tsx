@@ -2,8 +2,6 @@ import { cx } from 'class-variance-authority';
 
 import { Link } from '~/design-system/Links';
 
-export type Statistics = { total: number; notPublished: number; published: number };
-
 type StatisticProps = { name: string; label: string; value?: number; className?: string };
 
 export function Statistic({ name, label, value, className }: StatisticProps) {

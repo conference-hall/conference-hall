@@ -52,9 +52,10 @@ describe('ResultsAnnouncement', () => {
       const announcement = ResultsAnnouncement.for(owner.id, team.slug, event.slug);
       const count = await announcement.statistics();
       expect(count).toEqual({
-        submitted: 1,
-        accepted: { total: 3, published: 1, notPublished: 2 },
-        rejected: { total: 1, published: 0, notPublished: 1 },
+        deliberation: { total: 5, pending: 1, accepted: 3, rejected: 1 },
+        accepted: { published: 1, notPublished: 2 },
+        rejected: { published: 0, notPublished: 1 },
+        confirmations: { pending: 1, confirmed: 0, declined: 0 },
       });
     });
   });
@@ -64,12 +65,12 @@ describe('ResultsAnnouncement', () => {
       const announcement = ResultsAnnouncement.for(owner.id, team.slug, event.slug);
 
       const count = await announcement.statistics();
-      expect(count.accepted).toEqual({ total: 3, published: 1, notPublished: 2 });
+      expect(count.accepted).toEqual({ published: 1, notPublished: 2 });
 
       await announcement.publishAll('ACCEPTED', true);
 
       const countAccepted = await announcement.statistics();
-      expect(countAccepted.accepted).toEqual({ total: 3, published: 3, notPublished: 0 });
+      expect(countAccepted.accepted).toEqual({ published: 3, notPublished: 0 });
       expect([
         {
           from: `${event.name} <no-reply@conference-hall.io>`,
@@ -88,12 +89,12 @@ describe('ResultsAnnouncement', () => {
       const announcement = ResultsAnnouncement.for(owner.id, team.slug, event.slug);
 
       const count = await announcement.statistics();
-      expect(count.rejected).toEqual({ total: 1, published: 0, notPublished: 1 });
+      expect(count.rejected).toEqual({ published: 0, notPublished: 1 });
 
       await announcement.publishAll('REJECTED', true);
 
       const countRejected = await announcement.statistics();
-      expect(countRejected.rejected).toEqual({ total: 1, published: 1, notPublished: 0 });
+      expect(countRejected.rejected).toEqual({ published: 1, notPublished: 0 });
       expect([
         {
           from: `${event.name} <no-reply@conference-hall.io>`,
@@ -107,7 +108,7 @@ describe('ResultsAnnouncement', () => {
       const announcement = ResultsAnnouncement.for(member.id, team.slug, event.slug);
       await announcement.publishAll('ACCEPTED', true);
       const count = await announcement.statistics();
-      expect(count.accepted).toEqual({ total: 3, published: 3, notPublished: 0 });
+      expect(count.accepted).toEqual({ published: 3, notPublished: 0 });
     });
 
     it('cannot be sent by team reviewers', async () => {
@@ -121,12 +122,12 @@ describe('ResultsAnnouncement', () => {
       const announcement = ResultsAnnouncement.for(owner.id, team.slug, event.slug);
 
       const count = await announcement.statistics();
-      expect(count.accepted).toEqual({ total: 3, published: 1, notPublished: 2 });
+      expect(count.accepted).toEqual({ published: 1, notPublished: 2 });
 
       await announcement.publish(proposal.id, true);
 
       const countAccepted = await announcement.statistics();
-      expect(countAccepted.accepted).toEqual({ total: 3, published: 2, notPublished: 1 });
+      expect(countAccepted.accepted).toEqual({ published: 2, notPublished: 1 });
       expect([
         {
           from: `${event.name} <no-reply@conference-hall.io>`,
@@ -140,7 +141,7 @@ describe('ResultsAnnouncement', () => {
       const announcement = ResultsAnnouncement.for(member.id, team.slug, event.slug);
       await announcement.publish(proposal.id, false);
       const count = await announcement.statistics();
-      expect(count.accepted).toEqual({ total: 3, published: 2, notPublished: 1 });
+      expect(count.accepted).toEqual({ published: 2, notPublished: 1 });
     });
 
     it('cannot publish result for a proposal not accepted or rejected', async () => {

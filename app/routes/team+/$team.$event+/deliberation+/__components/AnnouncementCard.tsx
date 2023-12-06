@@ -4,9 +4,15 @@ import { ButtonLink } from '~/design-system/Buttons';
 import { Card } from '~/design-system/layouts/Card';
 import { Text } from '~/design-system/Typography';
 
-import { Statistic, type Statistics } from './Statistics';
+import { Statistic } from './Statistics';
 
-type AnnouncementCardProps = { id: string; title: string; subtitle: string; statistics: Statistics; to: string };
+type AnnouncementCardProps = {
+  id: string;
+  title: string;
+  subtitle: string;
+  statistics: { notPublished: number; published: number };
+  to: string;
+};
 
 export function AnnouncementCard({ id, title, subtitle, statistics, to }: AnnouncementCardProps) {
   return (

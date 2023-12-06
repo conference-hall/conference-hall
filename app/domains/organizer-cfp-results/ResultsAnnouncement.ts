@@ -1,5 +1,3 @@
-import type { DeliberationStatus } from '@prisma/client';
-
 import { db } from '~/libs/db';
 import { ForbiddenOperationError, ProposalNotFoundError } from '~/libs/errors';
 
@@ -18,14 +16,6 @@ export class ResultsAnnouncement {
   static for(userId: string, teamSlug: string, eventSlug: string) {
     const userEvent = UserEvent.for(userId, teamSlug, eventSlug);
     return new ResultsAnnouncement(userId, userEvent);
-  }
-
-  async statistics() {
-    const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
-    const submitted = await this.countSubmitted(event.id);
-    const accepted = await this.getResultsStatistics(event.id, 'ACCEPTED');
-    const rejected = await this.getResultsStatistics(event.id, 'REJECTED');
-    return { submitted, accepted, rejected };
   }
 
   async publishAll(status: 'ACCEPTED' | 'REJECTED', withEmails: boolean) {
@@ -66,17 +56,50 @@ export class ResultsAnnouncement {
     if (withEmails && proposal.deliberationStatus === 'REJECTED') await ProposalRejectedEmail.send(event, [proposal]);
   }
 
-  private async countSubmitted(eventId: string) {
-    return db.proposal.count({ where: { eventId, isDraft: false, deliberationStatus: 'PENDING' } });
-  }
+  async statistics() {
+    const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
 
-  private async getResultsStatistics(eventId: string, status: DeliberationStatus) {
-    const published = await db.proposal.count({
-      where: { eventId, deliberationStatus: status, publicationStatus: 'PUBLISHED' },
+    const results = await db.proposal.groupBy({
+      by: ['deliberationStatus', 'publicationStatus', 'confirmationStatus'],
+      _count: { _all: true },
+      where: { eventId: event.id, isDraft: false },
     });
-    const notPublished = await db.proposal.count({
-      where: { eventId, deliberationStatus: status, publicationStatus: 'NOT_PUBLISHED' },
-    });
-    return { total: published + notPublished, published, notPublished };
+
+    const deliberation = {
+      total: sum(results),
+      pending: sum(results.filter((p) => p.deliberationStatus === 'PENDING')),
+      accepted: sum(results.filter((p) => p.deliberationStatus === 'ACCEPTED')),
+      rejected: sum(results.filter((p) => p.deliberationStatus === 'REJECTED')),
+    };
+
+    const accepted = {
+      published: sum(results.filter((p) => p.publicationStatus === 'PUBLISHED' && p.deliberationStatus === 'ACCEPTED')),
+      notPublished: sum(
+        results.filter((p) => p.publicationStatus === 'NOT_PUBLISHED' && p.deliberationStatus === 'ACCEPTED'),
+      ),
+    };
+
+    const rejected = {
+      published: sum(results.filter((p) => p.publicationStatus === 'PUBLISHED' && p.deliberationStatus === 'REJECTED')),
+      notPublished: sum(
+        results.filter((p) => p.publicationStatus === 'NOT_PUBLISHED' && p.deliberationStatus === 'REJECTED'),
+      ),
+    };
+
+    const confirmations = {
+      pending: sum(results.filter((p) => p.publicationStatus === 'PUBLISHED' && p.confirmationStatus === 'PENDING')),
+      confirmed: sum(
+        results.filter((p) => p.publicationStatus === 'PUBLISHED' && p.confirmationStatus === 'CONFIRMED'),
+      ),
+      declined: sum(
+        results.filter((p) => p.publicationStatus === 'NOT_PUBLISHED' && p.confirmationStatus === 'DECLINED'),
+      ),
+    };
+
+    return { deliberation, accepted, rejected, confirmations };
   }
+}
+
+function sum(group: { _count: { _all: number } }[]) {
+  return group.map(({ _count }) => _count._all).reduce((a, b) => a + b, 0);
 }

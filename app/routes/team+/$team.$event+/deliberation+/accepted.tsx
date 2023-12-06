@@ -40,6 +40,6 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 };
 
 export default function ResultsAcceptedModalRoute() {
-  const statistics = useResultsStatistics('accepted');
-  return <AnnoucementConfirmModal title="Accepted proposals announcement" statistics={statistics} />;
+  const statistics = useResultsStatistics();
+  return <AnnoucementConfirmModal title="Accepted proposals announcement" statistics={statistics.accepted} />;
 }
