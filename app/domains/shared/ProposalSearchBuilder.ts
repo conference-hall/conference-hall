@@ -3,7 +3,7 @@ import type { Prisma } from '@prisma/client';
 import type { Pagination } from '~/domains/shared/Pagination';
 import { db } from '~/libs/db.ts';
 
-import type { ProposalsFilters } from './ProposalSearchBuilder.types';
+import type { ProposalsFilters, StatusFilter } from './ProposalSearchBuilder.types';
 
 type SearchOptions = { withSpeakers: boolean };
 
@@ -79,21 +79,29 @@ export class ProposalSearchBuilder {
   }
 
   private whereClause(): Prisma.ProposalWhereInput {
-    const { query, reviews, formats, categories, deliberation, publication, confirmation } = this.filters;
+    const { query, reviews, formats, categories, status } = this.filters;
 
     const reviewClause = reviews === 'reviewed' ? { some: { userId: this.userId } } : { none: { userId: this.userId } };
 
     return {
       event: { slug: this.eventSlug },
       isDraft: false,
-      deliberationStatus: deliberation,
-      publicationStatus: publication,
-      confirmationStatus: confirmation,
       formats: formats ? { some: { id: formats } } : undefined,
       categories: categories ? { some: { id: categories } } : undefined,
       reviews: reviews ? reviewClause : undefined,
       OR: this.whereSearchClause(query),
+      ...this.whereStatus(status),
     };
+  }
+
+  private whereStatus(status?: StatusFilter): Prisma.ProposalWhereInput {
+    if (status === 'pending') return { deliberationStatus: 'PENDING' };
+    if (status === 'accepted') return { deliberationStatus: 'ACCEPTED' };
+    if (status === 'rejected') return { deliberationStatus: 'REJECTED' };
+    if (status === 'not-answered') return { publicationStatus: 'PUBLISHED', confirmationStatus: 'PENDING' };
+    if (status === 'confirmed') return { publicationStatus: 'PUBLISHED', confirmationStatus: 'CONFIRMED' };
+    if (status === 'declined') return { publicationStatus: 'PUBLISHED', confirmationStatus: 'DECLINED' };
+    return {};
   }
 
   private whereSearchClause(query?: string) {

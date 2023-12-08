@@ -1,11 +1,19 @@
+import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { Form } from '@remix-run/react';
 
-import { InputSearch } from '~/design-system/forms/InputSearch.tsx';
+import { Input } from '~/design-system/forms/Input';
 
 export function SearchEventsInput() {
   return (
     <Form action="/" method="GET" className="flex flex-1 justify-center pl-4 pr-2 lg:ml-2 lg:justify-start">
-      <InputSearch name="query" label="Search conferences and meetups." placeholder="Search" />
+      <Input
+        name="query"
+        aria-label="Search conferences and meetups."
+        icon={MagnifyingGlassIcon}
+        placeholder="Search"
+        color="dark"
+        className="w-full md:w-96"
+      />
     </Form>
   );
 }

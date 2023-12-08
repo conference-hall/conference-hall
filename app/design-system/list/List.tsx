@@ -29,8 +29,8 @@ function Content({ children, ...rest }: { children: ReactNode }) {
 List.Content = Content;
 
 // <List.Row /> component
-function Row({ children }: { children: ReactNode }) {
-  return <li className="flex items-center gap-4 px-4 py-4 sm:px-6">{children}</li>;
+function Row({ children, className }: { children: ReactNode; className?: string }) {
+  return <li className={cx('flex items-center', className)}>{children}</li>;
 }
 
 List.Row = Row;

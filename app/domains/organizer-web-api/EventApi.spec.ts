@@ -64,7 +64,7 @@ describe('#EventApi', () => {
       await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
       const eventApi = new EventApi(event.slug, '123');
-      const result = await eventApi.proposals({ deliberation: 'ACCEPTED' });
+      const result = await eventApi.proposals({ status: 'accepted' });
 
       expect(result.proposals.length).toBe(1);
       expect(result.proposals[0].title).toBe(proposal.title);

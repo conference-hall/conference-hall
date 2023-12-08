@@ -11,12 +11,12 @@ type Props = { slug: string; apiKey: string };
 
 export function ApiTryoutSection({ slug, apiKey }: Props) {
   const [query, setQuery] = useState<string>('');
-  const [status, setStatus] = useState<string>('');
+  const [deliberationStatus, setDeliberationStatus] = useState<string>('');
 
   const params = new URLSearchParams();
   params.set('key', apiKey);
   if (query) params.set('query', query);
-  if (status) params.set('status', status);
+  if (deliberationStatus) params.set('deliberationStatus', deliberationStatus);
 
   const url = `/api/v1/event/${slug}?${params.toString()}`;
 
@@ -36,18 +36,16 @@ export function ApiTryoutSection({ slug, apiKey }: Props) {
           placeholder="Search by term in proposal titles or speaker names"
         />
         <Select
-          name="status"
-          label="status"
+          name="deliberationStatus"
+          label="deliberationStatus"
           options={[
-            { id: '', label: 'All (by default)' },
-            { id: 'SUBMITTED', label: 'Submitted' },
-            { id: 'ACCEPTED', label: 'Accepted by organizers' },
-            { id: 'REJECTED', label: 'Rejected by organizers' },
-            { id: 'CONFIRMED', label: 'Confirmed by speaker' },
-            { id: 'DECLINED', label: 'Declined by speaker' },
+            { id: '', name: 'All (by default)' },
+            { id: 'PENDING', name: 'Pending' },
+            { id: 'ACCEPTED', name: 'Accepted' },
+            { id: 'REJECTED', name: 'Rejected' },
           ]}
-          value={status}
-          onChange={(name, value) => setStatus(value)}
+          defaultValue={deliberationStatus}
+          onChange={(name, value) => setDeliberationStatus(value)}
         />
       </Card.Content>
 

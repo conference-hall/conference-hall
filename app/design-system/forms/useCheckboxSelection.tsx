@@ -1,3 +1,4 @@
+import type { ChangeEvent } from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 export const useCheckboxSelection = (items: Array<string>, total: number) => {
@@ -26,9 +27,9 @@ export const useCheckboxSelection = (items: Array<string>, total: number) => {
     setIndeterminate(false);
   }, []);
 
-  const onSelect = useCallback(
-    (item: string, isSelected: boolean) => {
-      if (isSelected) {
+  const toggle = useCallback(
+    (item: string, event: ChangeEvent<HTMLInputElement>) => {
+      if (event.target.checked) {
         return setSelected([...selection, item]);
       }
       return setSelected(selection.filter((id) => id !== item));
@@ -44,11 +45,11 @@ export const useCheckboxSelection = (items: Array<string>, total: number) => {
       selection,
       allChecked,
       isSelected,
-      onSelect,
+      toggle,
       toggleAll,
       reset,
     }),
-    [checkboxRef, selection, allChecked, isSelected, onSelect, toggleAll, reset],
+    [checkboxRef, selection, allChecked, isSelected, toggle, toggleAll, reset],
   );
 
   return value;

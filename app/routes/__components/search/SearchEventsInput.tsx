@@ -1,6 +1,7 @@
+import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { Form, useSearchParams } from '@remix-run/react';
 
-import { InputSearch } from '~/design-system/forms/InputSearch.tsx';
+import { Input } from '~/design-system/forms/Input';
 import type { SearchFilters } from '~/domains/event-search/EventSearch.types';
 
 type Props = { filters: SearchFilters };
@@ -15,12 +16,15 @@ export function SearchEventsInput({ filters }: Props) {
       {type && <input type="hidden" name="type" value={type} />}
       {talkId && <input type="hidden" name="talkId" value={talkId} />}
 
-      <InputSearch
+      <Input
         name="query"
-        label="Search conferences and meetups."
+        aria-label="Search conferences and meetups."
         placeholder="Search conferences and meetups..."
+        icon={MagnifyingGlassIcon}
+        color="dark"
         size="l"
         defaultValue={query}
+        className="w-full lg:w-6/12 lg:max-w-5xl"
       />
     </Form>
   );

@@ -18,9 +18,13 @@ export function ReviewNote({ feeling, note }: Props) {
   const { icon: Icon, color, label } = REVIEWS[feeling || 'NEUTRAL'];
   const formattedNote = formatReviewNote(note);
   return (
-    <div className="flex items-center gap-1">
-      <Icon className={cx('h-4 w-4', color)} aria-label={`${label}: ${formattedNote}`} />
-      <Text weight="medium">{formattedNote}</Text>
+    <div className="flex items-center justify-end gap-1">
+      {note !== null && (
+        <>
+          <Text weight="medium">{formattedNote}</Text>
+          <Icon className={cx('h-4 w-4', color)} aria-label={`${label}: ${formattedNote}`} />
+        </>
+      )}
     </div>
   );
 }

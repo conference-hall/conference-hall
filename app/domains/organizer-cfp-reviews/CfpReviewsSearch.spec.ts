@@ -26,14 +26,14 @@ describe('CfpReviewsSearch', () => {
   describe('#search', () => {
     it('returns event proposals info', async () => {
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-      const proposals = await CfpReviewsSearch.for(owner.id, team.slug, event.slug).search({ deliberation: 'PENDING' });
+      const proposals = await CfpReviewsSearch.for(owner.id, team.slug, event.slug).search({ status: 'pending' });
 
       expect(proposals.results).toEqual([
         {
           id: proposal.id,
           title: proposal.title,
           deliberationStatus: proposal.deliberationStatus,
-          speakers: [speaker.name],
+          speakers: [{ name: speaker.name, picture: speaker.picture }],
           reviews: {
             summary: { negatives: 0, positives: 0, average: null },
             you: { note: null, feeling: null, comment: null },
