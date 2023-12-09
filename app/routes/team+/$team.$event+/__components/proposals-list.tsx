@@ -26,7 +26,11 @@ export function ProposalsList({ proposals, pagination, statistics }: Props) {
         totalReviewed={statistics.reviewed}
         totalSelected={selector.selection.length}
       />
-      <SelectAllBanner total={statistics.total} pageSelected={selector.isPageSelected} />
+      <SelectAllBanner
+        total={statistics.total}
+        totalSelected={selector.selection.length}
+        pageSelected={selector.isPageSelected}
+      />
       <List.Content>
         {proposals.map((proposal) => (
           <List.Row key={proposal.id} className="hover:bg-gray-50">

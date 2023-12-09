@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 type PaginationOptions = { page: number; total: number; pageSize?: number };
 
-const RESULTS_BY_PAGE = 25;
+const RESULTS_BY_PAGE = 20;
 
 export class Pagination {
   constructor(private options: PaginationOptions) {}

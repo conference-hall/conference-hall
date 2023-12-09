@@ -18,29 +18,28 @@ type ProposalItemProps = {
 
 export function ProposalItem({ proposal, isSelected, toggle }: ProposalItemProps) {
   const [params] = useSearchParams();
-  const { you, summary } = proposal.reviews;
+  const { id, title, reviews, speakers } = proposal;
+  const { you, summary } = reviews;
 
   return (
     <>
-      <div>
-        <Checkbox
-          aria-label={`Select proposal "${proposal.title}"`}
-          value={proposal.id}
-          checked={isSelected}
-          onChange={toggle}
-          className="px-4 pb-5 sm:pl-6 sm:pr-4"
-        />
-      </div>
+      <Checkbox
+        aria-label={`Select proposal "${title}"`}
+        value={id}
+        checked={isSelected}
+        onChange={toggle}
+        className="px-4 pb-5 sm:pl-6 sm:pr-4"
+      />
       <Link
-        to={{ pathname: `review/${proposal.id}`, search: params.toString() }}
+        to={{ pathname: `review/${id}`, search: params.toString() }}
         className="flex items-center justify-between gap-4 pr-4 py-4 sm:pr-6 grow"
       >
         <div className="space-y-1">
-          <Text weight="semibold">{proposal.title}</Text>
+          <Text weight="semibold">{title}</Text>
           <div className="flex gap-1">
             <Text size="xs" variant="secondary">
               <Join separator={<span> • </span>}>
-                {`by ${proposal.speakers.map((a) => a.name).join(', ')}`}
+                {speakers.length ? `by ${speakers.map((a) => a.name).join(', ')}` : null}
                 {deliberationLabel(proposal)}
                 {confirmationLabel(proposal)}
               </Join>
