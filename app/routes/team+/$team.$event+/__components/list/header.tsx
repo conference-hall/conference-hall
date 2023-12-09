@@ -1,9 +1,7 @@
-import { CheckIcon, XMarkIcon } from '@heroicons/react/20/solid';
-
-import { Button } from '~/design-system/Buttons';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
 import { List } from '~/design-system/list/List';
 
+import { ChangeStatus } from '../actions/change-status';
 import { ReviewsProgress } from './reviews-progress';
 
 type Props = {
@@ -11,25 +9,22 @@ type Props = {
   total: number;
   totalSelected: number;
   totalReviewed: number;
+  selection: string[];
+  isAllPagesSelected: boolean;
 };
 
-export function ListHeader({ checkboxRef, total, totalSelected, totalReviewed }: Props) {
+export function ListHeader({ checkboxRef, total, totalSelected, totalReviewed, selection, isAllPagesSelected }: Props) {
   return (
-    <List.Header>
-      <div className="flex items-center gap-4">
+    <List.Header className="h-16">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center ">
         <Checkbox aria-label="Select current page" ref={checkboxRef}>
-          {totalSelected === 0 ? `${total} proposals` : `${totalSelected} selected:`}
+          {totalSelected === 0 ? `${total} proposals` : `Mark ${totalSelected} selected as:`}
         </Checkbox>
         {totalSelected !== 0 && (
-          <div className="space-x-2">
-            <Button variant="secondary" size="s">
-              <CheckIcon className="w-4 h-4 text-green-600" aria-hidden />
-              Accept proposals
-            </Button>
-            <Button variant="secondary" size="s">
-              <XMarkIcon className="w-4 h-4 text-red-600" aria-hidden />
-              Reject proposals
-            </Button>
+          <div className="flex items-center gap-2">
+            <ChangeStatus status="ACCEPTED" selection={selection} isAllPagesSelected={isAllPagesSelected} />
+            <ChangeStatus status="PENDING" selection={selection} isAllPagesSelected={isAllPagesSelected} />
+            <ChangeStatus status="REJECTED" selection={selection} isAllPagesSelected={isAllPagesSelected} />
           </div>
         )}
       </div>

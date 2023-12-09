@@ -89,14 +89,14 @@ function reviewLabel({ reviews }: ProposalData) {
   return 'Not reviewed';
 }
 
-function deliberationLabel({ deliberationStatus }: ProposalData) {
+function deliberationLabel({ deliberationStatus, confirmationStatus }: ProposalData) {
   switch (deliberationStatus) {
     case 'ACCEPTED':
       return 'Accepted';
     case 'REJECTED':
       return 'Rejected';
     case 'PENDING':
-      return 'Not deliberated';
+      return 'Pending';
   }
 }
 
@@ -113,7 +113,7 @@ function confirmationLabel({ confirmationStatus }: ProposalData) {
 
 function deliberationIcon({ deliberationStatus, confirmationStatus }: ProposalData) {
   if (confirmationStatus === 'PENDING') {
-    return <ClockIcon className="inline ml-0.5 mb-0.5 w-4 h-4 text-gray-600" aria-hidden />;
+    return <ClockIcon className="inline ml-1 mb-0.5 w-4 h-4 text-blue-600" aria-hidden />;
   } else if (deliberationStatus === 'ACCEPTED' || confirmationStatus === 'CONFIRMED') {
     return <CheckIcon className="inline ml-0.5 mb-0.5 w-4 h-4 text-green-600" aria-hidden />;
   } else if (deliberationStatus === 'REJECTED' || confirmationStatus === 'DECLINED') {

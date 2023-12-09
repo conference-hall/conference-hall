@@ -11,7 +11,7 @@ import type { SocialLinks } from '../speaker-profile/SpeakerProfile.types';
 import { ReviewDetails } from './ReviewDetails';
 
 export const ProposalsStatusUpdateSchema = z.object({
-  status: z.enum(['ACCEPTED', 'REJECTED']),
+  status: z.enum(['PENDING', 'ACCEPTED', 'REJECTED']),
   selection: z.array(z.string()),
 });
 
@@ -68,7 +68,7 @@ export class CfpReviewsSearch {
       data: {
         deliberationStatus,
         publicationStatus: 'NOT_PUBLISHED',
-        confirmationStatus: deliberationStatus === 'PENDING' ? 'PENDING' : undefined,
+        confirmationStatus: null,
       },
     });
     return result.count;

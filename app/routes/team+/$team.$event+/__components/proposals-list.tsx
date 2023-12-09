@@ -23,6 +23,8 @@ export function ProposalsList({ proposals, pagination, statistics }: Props) {
         total={statistics.total}
         totalReviewed={statistics.reviewed}
         totalSelected={selector.totalSelected}
+        selection={selector.selection}
+        isAllPagesSelected={selector.isAllPagesSelected}
       />
       <SelectAllBanner
         total={statistics.total}
