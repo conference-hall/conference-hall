@@ -7,6 +7,7 @@ import { Fragment } from 'react';
 
 import { button } from '~/design-system/Buttons';
 import { MenuTransition } from '~/design-system/Transitions';
+import { useTeam } from '~/routes/team+/$team';
 
 const exportItems = [
   { name: 'As JSON', path: 'json', icon: CodeBracketIcon },
@@ -14,8 +15,11 @@ const exportItems = [
 ];
 
 export function ExportMenu() {
+  const { team } = useTeam();
   const params = useParams();
   const [searchParams] = useSearchParams();
+
+  if (team.role !== 'OWNER') return null;
 
   return (
     <Menu as="div" className="relative inline-block text-left">

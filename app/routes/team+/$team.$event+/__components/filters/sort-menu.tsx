@@ -7,12 +7,16 @@ import { Fragment } from 'react';
 import { button } from '~/design-system/Buttons';
 import { MenuTransition } from '~/design-system/Transitions';
 
-import { sortOptions } from './filters';
+import { useTeamEvent } from '../../_layout';
+import { sortByDatesOptions, sortByReviewsOptions } from './filters';
 
 export function SortMenu() {
   const location = useLocation();
   const [params] = useSearchParams();
+  const { event } = useTeamEvent();
   const { sort = 'newest', ...filters } = Object.fromEntries(params.entries());
+
+  const options = event.displayProposalsReviews ? [...sortByDatesOptions, ...sortByReviewsOptions] : sortByDatesOptions;
 
   return (
     <Menu as="div" className="relative inline-block text-left">
@@ -23,9 +27,10 @@ export function SortMenu() {
       <MenuTransition>
         <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="py-1">
-            {sortOptions.map(({ name, value }) => {
+            {options.map(({ name, value }) => {
               const selected = value === sort;
               const search = new URLSearchParams({ ...filters, sort: value });
+
               return (
                 <Menu.Item as={Fragment} key={value}>
                   {({ active }) => (

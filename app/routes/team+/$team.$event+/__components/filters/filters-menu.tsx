@@ -6,14 +6,12 @@ import { cx } from 'class-variance-authority';
 import { Button, button, ButtonLink } from '~/design-system/Buttons';
 import Select from '~/design-system/forms/Select';
 import { Text } from '~/design-system/Typography';
+import { useTeam } from '~/routes/team+/$team';
 
 import { useTeamEvent } from '../../_layout';
 import { reviewOptions, statusOptions } from './filters';
 
 export function FiltersMenu() {
-  const { event } = useTeamEvent();
-  const { formats, categories } = event;
-
   return (
     <Popover className="relative shrink-0">
       <Popover.Button className={button({ variant: 'secondary' })}>
@@ -21,21 +19,20 @@ export function FiltersMenu() {
         <span className="hidden sm:inline">Filters</span>
       </Popover.Button>
       <Popover.Panel className="absolute right-0 mt-2 w-96 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-        {({ close }) => <FiltersContent formats={formats} categories={categories} close={close} />}
+        {({ close }) => <FiltersContent close={close} />}
       </Popover.Panel>
     </Popover>
   );
 }
 
-type FiltersContentProps = {
-  formats: Array<{ id: string; name: string }>;
-  categories: Array<{ id: string; name: string }>;
-  close: () => void;
-};
+type FiltersContentProps = { close: () => void };
 
-function FiltersContent({ formats, categories, close }: FiltersContentProps) {
+function FiltersContent({ close }: FiltersContentProps) {
+  const { team } = useTeam();
   const location = useLocation();
   const [params] = useSearchParams();
+  const { event } = useTeamEvent();
+  const { formats, categories } = event;
 
   const hasTracks = formats.length > 0 || categories.length > 0;
 
@@ -58,14 +55,15 @@ function FiltersContent({ formats, categories, close }: FiltersContentProps) {
         className="px-4 py-3"
       />
 
-      {/* TODO: Only for members & owners */}
-      <FiltersRadio
-        label="Proposals"
-        name="status"
-        defaultValue={params.get('status')}
-        options={statusOptions}
-        className="px-4 py-3"
-      />
+      {team.role !== 'REVIEWER' && (
+        <FiltersRadio
+          label="Proposals"
+          name="status"
+          defaultValue={params.get('status')}
+          options={statusOptions}
+          className="px-4 py-3"
+        />
+      )}
 
       {hasTracks && (
         <div className="px-4 py-3 space-y-2">

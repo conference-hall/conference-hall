@@ -7,6 +7,7 @@ import { Checkbox } from '~/design-system/forms/Checkboxes';
 import { Text } from '~/design-system/Typography';
 import { Join } from '~/design-system/utils/join';
 import { ReviewNote } from '~/routes/__components/reviews/ReviewNote';
+import { useTeam } from '~/routes/team+/$team';
 
 import type { ProposalData } from '../types';
 
@@ -18,7 +19,7 @@ type ProposalItemProps = {
 
 export function ProposalItem({ proposal, isSelected, toggle }: ProposalItemProps) {
   const [params] = useSearchParams();
-  const { id, title, reviews, speakers } = proposal;
+  const { id, title, reviews } = proposal;
   const { you, summary } = reviews;
 
   return (
@@ -37,14 +38,7 @@ export function ProposalItem({ proposal, isSelected, toggle }: ProposalItemProps
         <div className="space-y-1">
           <Text weight="semibold">{title}</Text>
           <div className="flex gap-1">
-            <Text size="xs" variant="secondary">
-              <Join separator={<span> • </span>}>
-                {speakers.length ? `by ${speakers.map((a) => a.name).join(', ')}` : null}
-                {deliberationLabel(proposal)}
-                {confirmationLabel(proposal)}
-              </Join>
-              {deliberationIcon(proposal)}
-            </Text>
+            <ProposalDetails proposal={proposal} />
           </div>
         </div>
         <div className="flex gap-4 items-center">
@@ -57,6 +51,40 @@ export function ProposalItem({ proposal, isSelected, toggle }: ProposalItemProps
       </Link>
     </>
   );
+}
+
+function ProposalDetails({ proposal }: { proposal: ProposalData }) {
+  const { team } = useTeam();
+  const { speakers } = proposal;
+
+  if (team.role === 'REVIEWER') {
+    return (
+      <Text size="xs" variant="secondary">
+        <Join separator={<span> • </span>}>
+          {speakers.length ? `by ${speakers.map((a) => a.name).join(', ')}` : null}
+          {reviewLabel(proposal)}
+        </Join>
+      </Text>
+    );
+  }
+
+  return (
+    <Text size="xs" variant="secondary">
+      <Join separator={<span> • </span>}>
+        {speakers.length ? `by ${speakers.map((a) => a.name).join(', ')}` : null}
+        {deliberationLabel(proposal)}
+        {confirmationLabel(proposal)}
+      </Join>
+      {deliberationIcon(proposal)}
+    </Text>
+  );
+}
+
+function reviewLabel({ reviews }: ProposalData) {
+  if (reviews.you.note !== null) {
+    return 'Reviewed';
+  }
+  return 'Not reviewed';
 }
 
 function deliberationLabel({ deliberationStatus }: ProposalData) {

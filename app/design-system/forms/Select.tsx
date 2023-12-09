@@ -8,7 +8,7 @@ import { SelectTransition } from '../Transitions.tsx';
 type Props = {
   name: string;
   label: string;
-  options: { id?: string | null; name: string; description?: string }[];
+  options: Array<{ id?: string | null; name: string }>;
   defaultValue?: string | null;
   onChange?: (name: string, value: string) => void;
   className?: string;

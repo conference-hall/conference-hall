@@ -45,12 +45,12 @@ export const useCheckboxSelection = (items: Array<string>, total: number) => {
       selection,
       allChecked,
       isSelected,
-      isPageSelected: arraysEqual(selection, items),
+      isPageSelected: arraysEqual(selection, items) && selection.length !== total,
       toggle,
       toggleAll,
       reset,
     }),
-    [checkboxRef, selection, items, allChecked, isSelected, toggle, toggleAll, reset],
+    [checkboxRef, selection, items, allChecked, isSelected, toggle, total, toggleAll, reset],
   );
 
   return value;

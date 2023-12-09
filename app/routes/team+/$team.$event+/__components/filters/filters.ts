@@ -12,9 +12,12 @@ export const statusOptions = [
   { name: 'Declined by speakers', value: 'declined' },
 ];
 
-export const sortOptions = [
+export const sortByDatesOptions = [
   { name: 'Newest', value: 'newest' },
   { name: 'Oldest', value: 'oldest' },
+];
+
+export const sortByReviewsOptions = [
   { name: 'Highest review', value: 'highest' },
   { name: 'Lowest review', value: 'lowest' },
 ];

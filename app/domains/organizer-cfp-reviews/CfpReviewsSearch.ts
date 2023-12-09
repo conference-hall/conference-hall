@@ -75,7 +75,7 @@ export class CfpReviewsSearch {
   }
 
   async forJsonExport(filters: ProposalsFilters) {
-    const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
+    const event = await this.userEvent.allowedFor(['OWNER']);
 
     const search = new ProposalSearchBuilder(event.slug, this.userId, filters, {
       withSpeakers: event.displayProposalsSpeakers,
@@ -115,7 +115,7 @@ export class CfpReviewsSearch {
   }
 
   async forCardsExport(filters: ProposalsFilters) {
-    const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
+    const event = await this.userEvent.allowedFor(['OWNER']);
 
     const search = new ProposalSearchBuilder(event.slug, this.userId, filters, {
       withSpeakers: event.displayProposalsSpeakers,
