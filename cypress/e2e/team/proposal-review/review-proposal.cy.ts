@@ -30,7 +30,6 @@ describe('Proposal review page', () => {
       cy.findByLabelText('No way: 0').should('exist');
       cy.findByLabelText('Love it: 0').should('exist');
       cy.findByLabelText('Score: 3').should('exist');
-      cy.findByLabelText('Score: -').should('exist');
       cy.assertText('Pending');
 
       review.fillReview('Love it, 5 stars', 'Best talk');

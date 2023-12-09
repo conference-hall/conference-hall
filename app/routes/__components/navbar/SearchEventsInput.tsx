@@ -12,6 +12,7 @@ export function SearchEventsInput() {
         icon={MagnifyingGlassIcon}
         placeholder="Search"
         color="dark"
+        type="search"
         className="w-full md:w-96"
       />
     </Form>
