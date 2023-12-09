@@ -61,7 +61,7 @@ export function CheckboxField(
         <input
           ref={ref}
           id={id}
-          aria-describedby={description ? `${id}-description` : undefined}
+          aria-describedby={description ? `${id}-describe` : undefined}
           name={name}
           type="checkbox"
           className={cx('h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500', {
@@ -76,7 +76,7 @@ export function CheckboxField(
           <Label htmlFor={id}>{children}</Label>
 
           {description && (
-            <Text id={`${id}-description`} variant="secondary">
+            <Text id={`${id}-describe`} variant="secondary">
               {description}
             </Text>
           )}

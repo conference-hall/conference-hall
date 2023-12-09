@@ -5,7 +5,7 @@ import { talkFactory } from 'tests/factories/talks';
 import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
 
-import { ForbiddenOperationError } from '~/libs/errors';
+import { ForbiddenOperationError, ProposalNotFoundError } from '~/libs/errors';
 
 import { ResultsAnnouncement } from './ResultsAnnouncement';
 
@@ -33,13 +33,11 @@ describe('ResultsAnnouncement', () => {
     await proposalFactory({
       event,
       talk: await talkFactory({ speakers: [speaker1, speaker2] }),
-      traits: ['accepted'],
-      withResultPublished: true,
+      traits: ['accepted-published'],
     });
     proposalSubmitted = await proposalFactory({
       event,
       talk: await talkFactory({ speakers: [speaker1, speaker2] }),
-      traits: ['submitted'],
     });
     const event2 = await eventFactory({ team });
     await proposalFactory({
@@ -54,9 +52,10 @@ describe('ResultsAnnouncement', () => {
       const announcement = ResultsAnnouncement.for(owner.id, team.slug, event.slug);
       const count = await announcement.statistics();
       expect(count).toEqual({
-        submitted: 1,
-        accepted: { total: 3, published: 1, notPublished: 2 },
-        rejected: { total: 1, published: 0, notPublished: 1 },
+        deliberation: { total: 5, pending: 1, accepted: 3, rejected: 1 },
+        accepted: { published: 1, notPublished: 2 },
+        rejected: { published: 0, notPublished: 1 },
+        confirmations: { pending: 1, confirmed: 0, declined: 0 },
       });
     });
   });
@@ -66,12 +65,12 @@ describe('ResultsAnnouncement', () => {
       const announcement = ResultsAnnouncement.for(owner.id, team.slug, event.slug);
 
       const count = await announcement.statistics();
-      expect(count.accepted).toEqual({ total: 3, published: 1, notPublished: 2 });
+      expect(count.accepted).toEqual({ published: 1, notPublished: 2 });
 
       await announcement.publishAll('ACCEPTED', true);
 
       const countAccepted = await announcement.statistics();
-      expect(countAccepted.accepted).toEqual({ total: 3, published: 3, notPublished: 0 });
+      expect(countAccepted.accepted).toEqual({ published: 3, notPublished: 0 });
       expect([
         {
           from: `${event.name} <no-reply@conference-hall.io>`,
@@ -90,12 +89,12 @@ describe('ResultsAnnouncement', () => {
       const announcement = ResultsAnnouncement.for(owner.id, team.slug, event.slug);
 
       const count = await announcement.statistics();
-      expect(count.rejected).toEqual({ total: 1, published: 0, notPublished: 1 });
+      expect(count.rejected).toEqual({ published: 0, notPublished: 1 });
 
       await announcement.publishAll('REJECTED', true);
 
       const countRejected = await announcement.statistics();
-      expect(countRejected.rejected).toEqual({ total: 1, published: 1, notPublished: 0 });
+      expect(countRejected.rejected).toEqual({ published: 1, notPublished: 0 });
       expect([
         {
           from: `${event.name} <no-reply@conference-hall.io>`,
@@ -109,7 +108,7 @@ describe('ResultsAnnouncement', () => {
       const announcement = ResultsAnnouncement.for(member.id, team.slug, event.slug);
       await announcement.publishAll('ACCEPTED', true);
       const count = await announcement.statistics();
-      expect(count.accepted).toEqual({ total: 3, published: 3, notPublished: 0 });
+      expect(count.accepted).toEqual({ published: 3, notPublished: 0 });
     });
 
     it('cannot be sent by team reviewers', async () => {
@@ -118,17 +117,17 @@ describe('ResultsAnnouncement', () => {
     });
   });
 
-  describe('#publishOne', () => {
+  describe('#publish', () => {
     it('publish result a specific proposal', async () => {
       const announcement = ResultsAnnouncement.for(owner.id, team.slug, event.slug);
 
       const count = await announcement.statistics();
-      expect(count.accepted).toEqual({ total: 3, published: 1, notPublished: 2 });
+      expect(count.accepted).toEqual({ published: 1, notPublished: 2 });
 
       await announcement.publish(proposal.id, true);
 
       const countAccepted = await announcement.statistics();
-      expect(countAccepted.accepted).toEqual({ total: 3, published: 2, notPublished: 1 });
+      expect(countAccepted.accepted).toEqual({ published: 2, notPublished: 1 });
       expect([
         {
           from: `${event.name} <no-reply@conference-hall.io>`,
@@ -142,32 +141,17 @@ describe('ResultsAnnouncement', () => {
       const announcement = ResultsAnnouncement.for(member.id, team.slug, event.slug);
       await announcement.publish(proposal.id, false);
       const count = await announcement.statistics();
-      expect(count.accepted).toEqual({ total: 3, published: 2, notPublished: 1 });
+      expect(count.accepted).toEqual({ published: 2, notPublished: 1 });
     });
 
     it('cannot publish result for a proposal not accepted or rejected', async () => {
       const announcement = ResultsAnnouncement.for(owner.id, team.slug, event.slug);
-      await expect(announcement.publish(proposalSubmitted.id, false)).rejects.toThrowError(ForbiddenOperationError);
+      await expect(announcement.publish(proposalSubmitted.id, false)).rejects.toThrowError(ProposalNotFoundError);
     });
 
     it('cannot be sent by team reviewers', async () => {
       const announcement = ResultsAnnouncement.for(reviewer.id, team.slug, event.slug);
       await expect(announcement.publish(proposal.id, false)).rejects.toThrowError(ForbiddenOperationError);
-    });
-  });
-
-  describe('#unpublish', () => {
-    it('unpublish result for a list of proposals', async () => {
-      const announcement = ResultsAnnouncement.for(owner.id, team.slug, event.slug);
-
-      await announcement.publish(proposal.id, false);
-
-      const before = await announcement.statistics();
-      expect(before.accepted).toEqual({ total: 3, published: 2, notPublished: 1 });
-
-      await announcement.unpublish([proposal.id]);
-      const after = await announcement.statistics();
-      expect(after.accepted).toEqual({ total: 3, published: 1, notPublished: 2 });
     });
   });
 });

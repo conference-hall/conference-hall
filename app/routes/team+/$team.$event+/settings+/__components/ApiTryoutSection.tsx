@@ -36,17 +36,15 @@ export function ApiTryoutSection({ slug, apiKey }: Props) {
           placeholder="Search by term in proposal titles or speaker names"
         />
         <Select
-          name="status"
-          label="status"
+          name="deliberationStatus"
+          label="deliberationStatus"
           options={[
-            { id: '', label: 'All (by default)' },
-            { id: 'SUBMITTED', label: 'Submitted' },
-            { id: 'ACCEPTED', label: 'Accepted by organizers' },
-            { id: 'REJECTED', label: 'Rejected by organizers' },
-            { id: 'CONFIRMED', label: 'Confirmed by speaker' },
-            { id: 'DECLINED', label: 'Declined by speaker' },
+            { id: '', name: 'All (by default)' },
+            { id: 'pending', name: 'Pending' },
+            { id: 'accepted', name: 'Accepted' },
+            { id: 'rejected', name: 'Rejected' },
           ]}
-          value={status}
+          defaultValue={status}
           onChange={(name, value) => setStatus(value)}
         />
       </Card.Content>

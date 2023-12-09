@@ -24,7 +24,7 @@ export class SpeakerTalk {
       },
       include: {
         speakers: true,
-        proposals: { include: { event: true, result: true } },
+        proposals: { include: { event: true } },
       },
     });
     if (!talk) throw new TalkNotFoundError();
@@ -53,7 +53,7 @@ export class SpeakerTalk {
         slug: proposal.event.slug,
         name: proposal.event.name,
         logo: proposal.event.logo,
-        proposalStatus: getSpeakerProposalStatus(proposal.status, Boolean(proposal.result), proposal.event),
+        proposalStatus: getSpeakerProposalStatus(proposal, proposal.event),
       })),
       invitationLink: InvitationLink.build('talk', talk.invitationCode),
     };
@@ -96,8 +96,8 @@ export class SpeakerTalk {
       where: {
         talk: { id: this.talkId },
         event: { slug: eventSlug },
-        status: { not: 'DRAFT' },
         speakers: { some: { id: this.speakerId } },
+        isDraft: false,
       },
     });
     return count > 0;

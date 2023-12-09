@@ -1,5 +1,3 @@
-import type { ProposalStatus, ResultPublicationType } from '@prisma/client';
-
 import { db } from '~/libs/db';
 import { ForbiddenOperationError, ProposalNotFoundError } from '~/libs/errors';
 
@@ -8,11 +6,6 @@ import { ProposalAcceptedEmail } from './emails/proposal-accepted.email';
 import { ProposalRejectedEmail } from './emails/proposal-rejected.email';
 
 export type ResultsStatistics = Awaited<ReturnType<typeof ResultsAnnouncement.prototype.statistics>>;
-
-const STATUS_BY_TYPE = {
-  ACCEPTED: ['ACCEPTED', 'CONFIRMED', 'DECLINED'] as ProposalStatus[],
-  REJECTED: ['REJECTED'] as ProposalStatus[],
-};
 
 export class ResultsAnnouncement {
   constructor(
@@ -25,65 +18,93 @@ export class ResultsAnnouncement {
     return new ResultsAnnouncement(userId, userEvent);
   }
 
-  async statistics() {
+  async publishAll(status: 'ACCEPTED' | 'REJECTED', withEmails: boolean) {
     const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
-    const submitted = await this.countSubmitted(event.id);
-    const accepted = await this.getResultsStatistics(event.id, STATUS_BY_TYPE.ACCEPTED);
-    const rejected = await this.getResultsStatistics(event.id, STATUS_BY_TYPE.REJECTED);
-    return { submitted, accepted, rejected };
-  }
-
-  async publishAll(type: ResultPublicationType, withEmails: boolean) {
-    const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
-
-    const statuses = STATUS_BY_TYPE[type];
 
     const proposals = await db.proposal.findMany({
-      where: { eventId: event.id, status: { in: statuses }, result: { is: null } },
+      where: { eventId: event.id, publicationStatus: 'NOT_PUBLISHED', deliberationStatus: status },
       include: { speakers: true },
     });
+    if (!proposals.length) throw new ForbiddenOperationError();
 
-    await db.resultPublication.createMany({
-      data: proposals.map((p) => ({ type, proposalId: p.id, emailStatus: withEmails ? 'SENT' : 'NONE' })),
+    await db.proposal.updateMany({
+      where: { id: { in: proposals.map(({ id }) => id) } },
+      data: { publicationStatus: 'PUBLISHED', confirmationStatus: status === 'ACCEPTED' ? 'PENDING' : null },
     });
 
-    if (withEmails && type === 'ACCEPTED') await ProposalAcceptedEmail.send(event, proposals);
-    if (withEmails && type === 'REJECTED') await ProposalRejectedEmail.send(event, proposals);
+    if (withEmails && status === 'ACCEPTED') await ProposalAcceptedEmail.send(event, proposals);
+    if (withEmails && status === 'REJECTED') await ProposalRejectedEmail.send(event, proposals);
   }
 
   async publish(proposalId: string, withEmails: boolean) {
     const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
 
     const proposal = await db.proposal.findUnique({
-      where: { id: proposalId, eventId: event.id, result: { is: null } },
+      where: {
+        id: proposalId,
+        eventId: event.id,
+        publicationStatus: 'NOT_PUBLISHED',
+        deliberationStatus: { in: ['ACCEPTED', 'REJECTED'] },
+      },
       include: { speakers: true },
     });
     if (!proposal) throw new ProposalNotFoundError();
-    if (proposal.status !== 'ACCEPTED' && proposal.status !== 'REJECTED') throw new ForbiddenOperationError();
 
-    await db.resultPublication.create({
-      data: { type: proposal.status, proposalId: proposal.id, emailStatus: withEmails ? 'SENT' : 'NONE' },
+    await db.proposal.update({
+      where: { id: proposal.id },
+      data: {
+        publicationStatus: 'PUBLISHED',
+        confirmationStatus: proposal.deliberationStatus === 'ACCEPTED' ? 'PENDING' : null,
+      },
     });
 
-    if (withEmails && proposal.status === 'ACCEPTED') await ProposalAcceptedEmail.send(event, [proposal]);
-    if (withEmails && proposal.status === 'REJECTED') await ProposalRejectedEmail.send(event, [proposal]);
+    if (withEmails && proposal.deliberationStatus === 'ACCEPTED') await ProposalAcceptedEmail.send(event, [proposal]);
+    if (withEmails && proposal.deliberationStatus === 'REJECTED') await ProposalRejectedEmail.send(event, [proposal]);
   }
 
-  async unpublish(proposalIds: Array<string>) {
-    await db.resultPublication.deleteMany({ where: { proposalId: { in: proposalIds } } });
-  }
+  // TODO: Add tests for speakers confirmation
+  async statistics() {
+    const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
 
-  private async countSubmitted(eventId: string) {
-    return db.proposal.count({ where: { eventId, status: 'SUBMITTED' } });
-  }
-
-  private async getResultsStatistics(eventId: string, statuses: Array<ProposalStatus>) {
-    const published = await db.proposal.count({
-      where: { eventId, status: { in: statuses }, result: { isNot: null } },
+    const results = await db.proposal.groupBy({
+      by: ['deliberationStatus', 'publicationStatus', 'confirmationStatus'],
+      _count: { _all: true },
+      where: { eventId: event.id, isDraft: false },
     });
-    const notPublished = await db.proposal.count({
-      where: { eventId, status: { in: statuses }, result: { is: null } },
-    });
-    return { total: published + notPublished, published, notPublished };
+
+    const deliberation = {
+      total: sum(results),
+      pending: sum(results.filter((p) => p.deliberationStatus === 'PENDING')),
+      accepted: sum(results.filter((p) => p.deliberationStatus === 'ACCEPTED')),
+      rejected: sum(results.filter((p) => p.deliberationStatus === 'REJECTED')),
+    };
+
+    const accepted = {
+      published: sum(results.filter((p) => p.publicationStatus === 'PUBLISHED' && p.deliberationStatus === 'ACCEPTED')),
+      notPublished: sum(
+        results.filter((p) => p.publicationStatus === 'NOT_PUBLISHED' && p.deliberationStatus === 'ACCEPTED'),
+      ),
+    };
+
+    const rejected = {
+      published: sum(results.filter((p) => p.publicationStatus === 'PUBLISHED' && p.deliberationStatus === 'REJECTED')),
+      notPublished: sum(
+        results.filter((p) => p.publicationStatus === 'NOT_PUBLISHED' && p.deliberationStatus === 'REJECTED'),
+      ),
+    };
+
+    const confirmations = {
+      pending: sum(results.filter((p) => p.deliberationStatus === 'ACCEPTED' && p.confirmationStatus === 'PENDING')),
+      confirmed: sum(
+        results.filter((p) => p.deliberationStatus === 'ACCEPTED' && p.confirmationStatus === 'CONFIRMED'),
+      ),
+      declined: sum(results.filter((p) => p.deliberationStatus === 'ACCEPTED' && p.confirmationStatus === 'DECLINED')),
+    };
+
+    return { deliberation, accepted, rejected, confirmations };
   }
+}
+
+function sum(group: { _count: { _all: number } }[]) {
+  return group.map(({ _count }) => _count._all).reduce((a, b) => a + b, 0);
 }

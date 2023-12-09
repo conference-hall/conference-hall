@@ -3,7 +3,7 @@ import type { Prisma } from '@prisma/client';
 import type { Pagination } from '~/domains/shared/Pagination';
 import { db } from '~/libs/db.ts';
 
-import type { ProposalsFilters } from './ProposalSearchBuilder.types';
+import type { ProposalsFilters, StatusFilter } from './ProposalSearchBuilder.types';
 
 type SearchOptions = { withSpeakers: boolean };
 
@@ -21,12 +21,9 @@ export class ProposalSearchBuilder {
   }
 
   async statistics() {
-    const byStatus = await this.countByStatus();
+    const total = await this.count();
     const reviewed = await this.countUserReviews();
-    const total = byStatus.reduce((acc, next) => acc + next._count.status, 0);
-    const statuses = byStatus.map((stat) => ({ name: stat.status, count: stat._count.status }));
-
-    return { total, reviewed, statuses };
+    return { total, reviewed };
   }
 
   async proposalsByPage(pagination: Pagination) {
@@ -63,13 +60,8 @@ export class ProposalSearchBuilder {
 
   /// Privates methods
 
-  private countByStatus() {
-    return db.proposal.groupBy({
-      _count: { status: true },
-      by: ['status'],
-      where: this.whereClause(),
-      orderBy: { _count: { status: 'desc' } },
-    });
+  private count() {
+    return db.proposal.count({ where: this.whereClause() });
   }
 
   private countUserReviews() {
@@ -85,22 +77,32 @@ export class ProposalSearchBuilder {
 
     return {
       event: { slug: this.eventSlug },
-      status: { in: status, not: 'DRAFT' },
+      isDraft: false,
       formats: formats ? { some: { id: formats } } : undefined,
       categories: categories ? { some: { id: categories } } : undefined,
       reviews: reviews ? reviewClause : undefined,
-      OR: this.whereQueryClause(query),
+      OR: this.whereSearchClause(query),
+      ...this.whereStatus(status),
     };
   }
 
-  private whereQueryClause(query?: string) {
+  private whereStatus(status?: StatusFilter): Prisma.ProposalWhereInput {
+    if (status === 'pending') return { deliberationStatus: 'PENDING' };
+    if (status === 'accepted') return { deliberationStatus: 'ACCEPTED' };
+    if (status === 'rejected') return { deliberationStatus: 'REJECTED' };
+    if (status === 'not-answered') return { deliberationStatus: 'ACCEPTED', confirmationStatus: 'PENDING' };
+    if (status === 'confirmed') return { deliberationStatus: 'ACCEPTED', confirmationStatus: 'CONFIRMED' };
+    if (status === 'declined') return { deliberationStatus: 'ACCEPTED', confirmationStatus: 'DECLINED' };
+    return {};
+  }
+
+  private whereSearchClause(query?: string) {
     if (!query) return undefined;
 
     const byTitle: Prisma.ProposalWhereInput = { title: { contains: query, mode: 'insensitive' } };
     const bySpeakers: Prisma.ProposalWhereInput = {
       speakers: { some: { name: { contains: query, mode: 'insensitive' } } },
     };
-
     if (this.options.withSpeakers) return [byTitle, bySpeakers];
 
     return [byTitle];
@@ -109,9 +111,9 @@ export class ProposalSearchBuilder {
   private orderByClause(): Prisma.ProposalOrderByWithRelationInput[] {
     switch (this.filters.sort) {
       case 'highest':
-        return [{ avgRateForSort: 'desc' }, { title: 'asc' }];
+        return [{ avgRateForSort: { sort: 'desc', nulls: 'last' } }, { title: 'asc' }];
       case 'lowest':
-        return [{ avgRateForSort: 'asc' }, { title: 'asc' }];
+        return [{ avgRateForSort: { sort: 'asc', nulls: 'first' } }, { title: 'asc' }];
       case 'oldest':
         return [{ createdAt: 'asc' }, { title: 'asc' }];
       default:

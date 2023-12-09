@@ -18,8 +18,8 @@ describe('Deliberation page', () => {
     page.totalRejected().should('contain', '2');
     page.totalNotDeliberated().should('contain', '1');
 
-    page.totalConfirmations().should('contain', '0');
-    page.totalNoResponse().should('contain', '0');
+    page.totalConfirmations().should('contain', '1');
+    page.totalNoResponse().should('contain', '1');
     page.totalConfirmed().should('contain', '0');
     page.totalDeclined().should('contain', '0');
 
@@ -27,6 +27,8 @@ describe('Deliberation page', () => {
     modalAccepted.confirm();
     page.isPageVisible();
     page.announceAcceptedCard().should('contain.text', 'All results published');
+    page.totalConfirmations().should('contain', '2');
+    page.totalNoResponse().should('contain', '2');
 
     const modalRejected = page.announceRejected();
     modalRejected.confirm();

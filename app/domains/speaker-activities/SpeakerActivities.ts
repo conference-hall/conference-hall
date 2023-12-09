@@ -26,7 +26,7 @@ export class SpeakerActivities {
       include: {
         proposals: {
           where: { speakers: { some: { id: this.userId } } },
-          include: { speakers: true, result: true },
+          include: { speakers: true },
         },
       },
     });
@@ -45,7 +45,7 @@ export class SpeakerActivities {
             id: proposal.id,
             title: proposal.title,
             updatedAt: proposal.updatedAt.toUTCString(),
-            status: getSpeakerProposalStatus(proposal.status, Boolean(proposal.result), event),
+            status: getSpeakerProposalStatus(proposal, event),
             speakers: proposal.speakers.map((speaker) => ({
               id: speaker.id,
               name: speaker.name,

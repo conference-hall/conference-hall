@@ -1,18 +1,9 @@
-import { z } from 'zod';
-
-import { db } from '~/libs/db';
-
 import { UserEvent } from '../organizer-event-settings/UserEvent';
 import { Pagination } from '../shared/Pagination';
 import { ProposalSearchBuilder } from '../shared/ProposalSearchBuilder';
 import type { ProposalsFilters } from '../shared/ProposalSearchBuilder.types';
 import type { SocialLinks } from '../speaker-profile/SpeakerProfile.types';
 import { ReviewDetails } from './ReviewDetails';
-
-export const ProposalsStatusUpdateSchema = z.object({
-  status: z.enum(['ACCEPTED', 'REJECTED']),
-  selection: z.array(z.string()),
-});
 
 export class CfpReviewsSearch {
   constructor(
@@ -45,8 +36,12 @@ export class CfpReviewsSearch {
         return {
           id: proposal.id,
           title: proposal.title,
-          status: proposal.status,
-          speakers: event.displayProposalsSpeakers ? proposal.speakers.map(({ name }) => name) : [],
+          deliberationStatus: proposal.deliberationStatus,
+          publicationStatus: proposal.publicationStatus,
+          confirmationStatus: proposal.confirmationStatus,
+          speakers: event.displayProposalsSpeakers
+            ? proposal.speakers.map(({ name, picture }) => ({ name, picture }))
+            : [],
           reviews: {
             summary: event.displayProposalsReviews ? reviews.summary() : undefined,
             you: reviews.ofUser(this.userId),
@@ -56,23 +51,8 @@ export class CfpReviewsSearch {
     };
   }
 
-  async changeStatus(proposalIds: string[], status: 'ACCEPTED' | 'REJECTED') {
-    await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
-
-    const result = await db.$transaction(async (trx) => {
-      // reset status for result publication
-      await db.resultPublication.deleteMany({
-        where: { proposal: { id: { in: proposalIds }, status: { not: status } } },
-      });
-      // update proposal status
-      return db.proposal.updateMany({ where: { id: { in: proposalIds } }, data: { status } });
-    });
-
-    return result.count;
-  }
-
   async forJsonExport(filters: ProposalsFilters) {
-    const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
+    const event = await this.userEvent.allowedFor(['OWNER']);
 
     const search = new ProposalSearchBuilder(event.slug, this.userId, filters, {
       withSpeakers: event.displayProposalsSpeakers,
@@ -86,7 +66,8 @@ export class CfpReviewsSearch {
         id: proposal.id,
         title: proposal.title,
         abstract: proposal.abstract,
-        status: proposal.status,
+        deliberationStatus: proposal.deliberationStatus,
+        confirmationStatus: proposal.confirmationStatus,
         level: proposal.level,
         comments: proposal.comments,
         references: proposal.references,
@@ -111,7 +92,7 @@ export class CfpReviewsSearch {
   }
 
   async forCardsExport(filters: ProposalsFilters) {
-    const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
+    const event = await this.userEvent.allowedFor(['OWNER']);
 
     const search = new ProposalSearchBuilder(event.slug, this.userId, filters, {
       withSpeakers: event.displayProposalsSpeakers,

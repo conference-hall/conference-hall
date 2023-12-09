@@ -26,14 +26,16 @@ describe('CfpReviewsSearch', () => {
   describe('#search', () => {
     it('returns event proposals info', async () => {
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-      const proposals = await CfpReviewsSearch.for(owner.id, team.slug, event.slug).search({ status: ['SUBMITTED'] });
+      const proposals = await CfpReviewsSearch.for(owner.id, team.slug, event.slug).search({ status: 'pending' });
 
       expect(proposals.results).toEqual([
         {
           id: proposal.id,
           title: proposal.title,
-          status: proposal.status,
-          speakers: [speaker.name],
+          deliberationStatus: proposal.deliberationStatus,
+          confirmationStatus: proposal.confirmationStatus,
+          publicationStatus: proposal.publicationStatus,
+          speakers: [{ name: speaker.name, picture: speaker.picture }],
           reviews: {
             summary: { negatives: 0, positives: 0, average: null },
             you: { note: null, feeling: null, comment: null },
@@ -41,8 +43,8 @@ describe('CfpReviewsSearch', () => {
         },
       ]);
 
-      expect(proposals.filters).toEqual({ status: ['SUBMITTED'] });
-      expect(proposals.statistics).toEqual({ reviewed: 0, statuses: [{ name: 'SUBMITTED', count: 1 }], total: 1 });
+      expect(proposals.filters).toEqual({ status: 'pending' });
+      expect(proposals.statistics).toEqual({ reviewed: 0, total: 1 });
       expect(proposals.pagination).toEqual({ current: 1, total: 1 });
     });
 
@@ -71,7 +73,7 @@ describe('CfpReviewsSearch', () => {
       expect(proposals.results).toEqual([]);
 
       expect(proposals.filters).toEqual({});
-      expect(proposals.statistics).toEqual({ reviewed: 0, statuses: [], total: 0 });
+      expect(proposals.statistics).toEqual({ reviewed: 0, total: 0 });
       expect(proposals.pagination).toEqual({ current: 1, total: 0 });
     });
 
@@ -94,7 +96,8 @@ describe('CfpReviewsSearch', () => {
         {
           id: proposal.id,
           title: proposal.title,
-          status: proposal.status,
+          deliberationStatus: proposal.deliberationStatus,
+          confirmationStatus: proposal.confirmationStatus,
           abstract: proposal.abstract,
           comments: proposal.comments,
           languages: proposal.languages,
@@ -186,61 +189,6 @@ describe('CfpReviewsSearch', () => {
       const result = await CfpReviewsSearch.for(owner.id, team.slug, event.slug).forCardsExport({});
 
       expect(result[0].reviews).toBeUndefined();
-    });
-  });
-
-  describe('#changeStatus', () => {
-    it('updates the proposal', async () => {
-      const proposal1 = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-      const proposal2 = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-
-      const reviews = CfpReviewsSearch.for(owner.id, team.slug, event.slug);
-      const result = await reviews.changeStatus([proposal1.id, proposal2.id], 'ACCEPTED');
-
-      expect(result).toBe(2);
-      const proposals = await db.proposal.findMany();
-      expect(proposals[0].status).toBe('ACCEPTED');
-      expect(proposals[1].status).toBe('ACCEPTED');
-    });
-
-    it('resets the result publication when status changed', async () => {
-      const proposal1 = await proposalFactory({
-        event,
-        talk: await talkFactory({ speakers: [speaker] }),
-        traits: ['accepted'],
-        withResultPublished: true,
-      });
-      const proposal2 = await proposalFactory({
-        event,
-        talk: await talkFactory({ speakers: [speaker] }),
-        traits: ['rejected'],
-        withResultPublished: true,
-      });
-
-      const reviews = CfpReviewsSearch.for(owner.id, team.slug, event.slug);
-      const result = await reviews.changeStatus([proposal1.id, proposal2.id], 'ACCEPTED');
-      expect(result).toBe(2);
-
-      const proposals = await db.proposal.findMany({ include: { result: true } });
-
-      const updated1 = proposals.find((p) => p.id === proposal1.id);
-      expect(updated1?.status).toBe('ACCEPTED');
-      expect(updated1?.result).not.toBeNull();
-
-      const updated2 = proposals.find((p) => p.id === proposal2.id);
-      expect(updated2?.status).toBe('ACCEPTED');
-      expect(updated2?.result).toBeNull();
-    });
-
-    it('throws an error if user has not a owner or member role in the team', async () => {
-      const reviews = CfpReviewsSearch.for(reviewer.id, team.slug, event.slug);
-      await expect(reviews.changeStatus([], 'ACCEPTED')).rejects.toThrowError(ForbiddenOperationError);
-    });
-
-    it('throws an error if user does not belong to event team', async () => {
-      const user = await userFactory();
-      const reviews = CfpReviewsSearch.for(user.id, team.slug, event.slug);
-      await expect(reviews.changeStatus([], 'ACCEPTED')).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 });

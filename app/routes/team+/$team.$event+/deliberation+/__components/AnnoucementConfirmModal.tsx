@@ -5,9 +5,9 @@ import { Button } from '~/design-system/Buttons';
 import { ToggleGroup } from '~/design-system/forms/Toggles';
 import { Modal } from '~/design-system/Modals';
 
-import { Statistic, type Statistics } from './Statistics';
+import { Statistic } from './Statistics';
 
-type AnnoucementConfirmModalProps = { title: string; statistics: Statistics | null };
+type AnnoucementConfirmModalProps = { title: string; statistics: { notPublished: number; published: number } };
 
 export function AnnoucementConfirmModal({ title, statistics }: AnnoucementConfirmModalProps) {
   const navigate = useNavigate();

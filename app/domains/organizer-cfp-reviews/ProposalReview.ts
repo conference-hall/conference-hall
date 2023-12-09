@@ -48,7 +48,7 @@ export class ProposalReview {
       references: proposal.references,
       comments: proposal.comments,
       level: proposal.level,
-      status: proposal.status,
+      deliberationStatus: proposal.deliberationStatus,
       createdAt: proposal.createdAt.toUTCString(),
       languages: proposal.languages as string[],
       formats: proposal.formats.map(({ id, name }) => ({ id, name })),
@@ -100,7 +100,7 @@ export class ProposalReview {
       });
 
       const reviewsDetails = new ReviewDetails(reviews);
-      const average = reviewsDetails.summary().average ?? undefined;
+      const average = reviewsDetails.summary().average ?? null;
       await trx.proposal.update({ where: { id: this.proposalId }, data: { avgRateForSort: average } });
     });
   }

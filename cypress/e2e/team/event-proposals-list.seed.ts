@@ -34,7 +34,6 @@ export const seed = async () => {
 
   const proposal = await proposalFactory({
     event,
-    traits: ['submitted'],
     formats: [format1],
     categories: [category1],
     talk: await talkFactory({ attributes: { title: 'Talk 1' }, speakers: [speaker1] }),
@@ -50,7 +49,6 @@ export const seed = async () => {
 
   await proposalFactory({
     event,
-    traits: ['submitted'],
     talk: await talkFactory({ attributes: { title: 'Talk 3' }, speakers: [speaker1, speaker2] }),
   });
 

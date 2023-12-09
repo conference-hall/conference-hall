@@ -16,7 +16,7 @@ export class Submissions {
       where: {
         event: { slug: this.eventSlug },
         speakers: { some: { id: this.speakerId } },
-        status: { not: { equals: 'DRAFT' } },
+        isDraft: false,
       },
     });
   }
@@ -27,7 +27,7 @@ export class Submissions {
         speakers: { some: { id: this.speakerId } },
         event: { slug: this.eventSlug },
       },
-      include: { speakers: true, event: true, result: true },
+      include: { speakers: true, event: true },
       orderBy: { createdAt: 'desc' },
     });
 
@@ -35,7 +35,7 @@ export class Submissions {
       id: proposal.id,
       title: proposal.title,
       talkId: proposal.talkId,
-      status: getSpeakerProposalStatus(proposal.status, Boolean(proposal.result), proposal.event),
+      status: getSpeakerProposalStatus(proposal, proposal.event),
       createdAt: proposal.createdAt.toUTCString(),
       speakers: proposal.speakers.map((speaker) => ({
         id: speaker.id,
@@ -48,7 +48,7 @@ export class Submissions {
   async drafts() {
     const drafts = await db.proposal.findMany({
       include: { speakers: true },
-      where: { event: { slug: this.eventSlug }, speakers: { some: { id: this.speakerId } }, status: 'DRAFT' },
+      where: { event: { slug: this.eventSlug }, speakers: { some: { id: this.speakerId } }, isDraft: true },
       orderBy: { createdAt: 'desc' },
     });
 

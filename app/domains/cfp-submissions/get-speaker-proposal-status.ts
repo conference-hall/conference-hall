@@ -1,5 +1,5 @@
 import type { EventType } from '@prisma/client';
-import { ProposalStatus } from '@prisma/client';
+import { ConfirmationStatus, DeliberationStatus, PublicationStatus } from '@prisma/client';
 
 import { CallForPaper } from '../shared/CallForPaper';
 
@@ -11,8 +11,14 @@ export enum SpeakerProposalStatus {
   RejectedByOrganizers = 'RejectedByOrganizers',
   ConfirmedBySpeaker = 'ConfirmedBySpeaker',
   DeclinedBySpeaker = 'DeclinedBySpeaker',
-  Unknown = 'Unknown',
 }
+
+type ProposalArgs = {
+  deliberationStatus: DeliberationStatus;
+  publicationStatus: PublicationStatus;
+  confirmationStatus: ConfirmationStatus | null;
+  isDraft: boolean;
+};
 
 type EventArgs = {
   type: EventType;
@@ -20,29 +26,24 @@ type EventArgs = {
   cfpEnd: Date | null;
 };
 
-export function getSpeakerProposalStatus(
-  status: ProposalStatus,
-  isResultPublished: boolean,
-  event: EventArgs,
-): SpeakerProposalStatus {
+export function getSpeakerProposalStatus(proposal: ProposalArgs, event: EventArgs): SpeakerProposalStatus {
+  const { deliberationStatus, confirmationStatus, publicationStatus, isDraft } = proposal;
   const { type, cfpStart, cfpEnd } = event;
 
   const cfp = new CallForPaper({ type, cfpStart, cfpEnd });
 
-  if (status === ProposalStatus.DRAFT) {
+  if (isDraft) {
     return SpeakerProposalStatus.Draft;
-  } else if (status === ProposalStatus.SUBMITTED && cfp.isOpen) {
-    return SpeakerProposalStatus.Submitted;
-  } else if (status === ProposalStatus.CONFIRMED) {
+  } else if (confirmationStatus === ConfirmationStatus.CONFIRMED) {
     return SpeakerProposalStatus.ConfirmedBySpeaker;
-  } else if (status === ProposalStatus.DECLINED) {
+  } else if (confirmationStatus === ConfirmationStatus.DECLINED) {
     return SpeakerProposalStatus.DeclinedBySpeaker;
-  } else if (!isResultPublished) {
-    return SpeakerProposalStatus.DeliberationPending;
-  } else if (status === ProposalStatus.ACCEPTED && isResultPublished) {
+  } else if (deliberationStatus === DeliberationStatus.ACCEPTED && publicationStatus === PublicationStatus.PUBLISHED) {
     return SpeakerProposalStatus.AcceptedByOrganizers;
-  } else if (status === ProposalStatus.REJECTED && isResultPublished) {
+  } else if (deliberationStatus === DeliberationStatus.REJECTED && publicationStatus === PublicationStatus.PUBLISHED) {
     return SpeakerProposalStatus.RejectedByOrganizers;
+  } else if (!cfp.isOpen) {
+    return SpeakerProposalStatus.DeliberationPending;
   }
-  return SpeakerProposalStatus.Unknown;
+  return SpeakerProposalStatus.Submitted;
 }

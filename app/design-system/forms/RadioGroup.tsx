@@ -41,6 +41,7 @@ export function Radio({ id, name, description, children, ...rest }: RadioProps) 
           name={name}
           type="radio"
           className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
+          aria-describedby={description ? `${id}-describe` : undefined}
           {...rest}
         />
       </div>
@@ -48,7 +49,7 @@ export function Radio({ id, name, description, children, ...rest }: RadioProps) 
         <Label htmlFor={id}>{children}</Label>
 
         {description && (
-          <Text id={`${id}-description`} variant="secondary">
+          <Text id={`${id}-desccribe`} variant="secondary">
             {description}
           </Text>
         )}

@@ -50,7 +50,7 @@ describe('ProposalReview', () => {
         references: proposal.references,
         comments: proposal.comments,
         level: proposal.level,
-        status: proposal.status,
+        deliberationStatus: proposal.deliberationStatus,
         createdAt: proposal.createdAt.toUTCString(),
         languages: ['en'],
         formats: [{ id: format.id, name: format.name }],

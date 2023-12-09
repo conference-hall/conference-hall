@@ -77,7 +77,6 @@ export const seed = async () => {
   const proposal = await proposalFactory({
     attributes: { id: 'proposal-1' },
     event,
-    traits: ['submitted'],
     formats: [format1],
     categories: [category1],
     talk: await talkFactory({

@@ -20,6 +20,8 @@ describe('Speaker proposal edition page', () => {
     cy.assertRadioChecked('Advanced');
     cy.assertInputText('References', 'Awesome references');
 
+    editProposal.selectFormatTrack('Quickie');
+    editProposal.selectCategoryTrack('Web');
     editProposal.fillProposalForm({
       title: 'New title',
       abstract: 'New abstract',
@@ -27,8 +29,6 @@ describe('Speaker proposal edition page', () => {
       language: 'English',
       references: 'New references',
     });
-    editProposal.selectFormatTrack('Quickie');
-    editProposal.selectCategoryTrack('Web');
     editProposal.saveAbstract().click();
 
     cy.assertText('You have to select at least one proposal format.');

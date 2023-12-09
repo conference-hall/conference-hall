@@ -1,25 +1,23 @@
 import { parse } from '@conform-to/zod';
-import { InboxIcon } from '@heroicons/react/24/outline';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
-import { useMemo } from 'react';
 import invariant from 'tiny-invariant';
 
-import { useCheckboxSelection } from '~/design-system/forms/useCheckboxSelection.tsx';
-import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
-import { Pagination } from '~/design-system/list/Pagination.tsx';
-import { CfpReviewsSearch, ProposalsStatusUpdateSchema } from '~/domains/organizer-cfp-reviews/CfpReviewsSearch.ts';
+import { CfpReviewsSearch } from '~/domains/organizer-cfp-reviews/CfpReviewsSearch.ts';
+import { Deliberate, ProposalsStatusUpdateSchema } from '~/domains/organizer-cfp-reviews/Deliberate.ts';
 import { parseUrlPage } from '~/domains/shared/Pagination.ts';
 import { parseUrlFilters } from '~/domains/shared/ProposalSearchBuilder.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 
-import { ProposalsActionBar } from './__components/ProposalsActionBar/ProposalsActionBar.tsx';
-import { ProposalsFilters } from './__components/ProposalsFilters/ProposalsFilters.tsx';
-import { ProposalsList } from './__components/ProposalsList/ProposalsList.tsx';
-import { useTeamEvent } from './_layout.tsx';
+import { ExportMenu } from './__components/actions/export-menu.tsx';
+import { FiltersMenu } from './__components/filters/filters-menu.tsx';
+import { FiltersTags } from './__components/filters/filters-tags.tsx';
+import { SearchInput } from './__components/filters/search-input.tsx';
+import { SortMenu } from './__components/filters/sort-menu.tsx';
+import { ProposalsList } from './__components/proposals-list.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
@@ -41,52 +39,37 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const result = parse(form, { schema: ProposalsStatusUpdateSchema });
   if (!result.value) return json(null);
 
-  const search = CfpReviewsSearch.for(userId, params.team, params.event);
-  const count = await search.changeStatus(result.value.selection, result.value.status);
-  return toast('success', `${count} proposals marked as "${result.value.status.toLowerCase()}".`);
+  const { selection, status, allPagesSelected } = result.value;
+  const deliberate = Deliberate.for(userId, params.team, params.event);
+
+  let count = 0;
+  if (allPagesSelected) {
+    const filters = parseUrlFilters(request.url);
+    count = await deliberate.markAll(filters, status);
+  } else {
+    count = await deliberate.mark(selection, status);
+  }
+  return toast('success', `${count} proposals marked as "${status.toLowerCase()}".`);
 };
 
-export default function EventReviewsRoute() {
-  const { event } = useTeamEvent();
+export default function ProposalReviewsRoute() {
   const { results, filters, pagination, statistics } = useLoaderData<typeof loader>();
-
-  const ids = useMemo(() => results.map(({ id }) => id), [results]);
-  const { checkboxRef, selection, allChecked, isSelected, onSelect, toggleAll } = useCheckboxSelection(
-    ids,
-    statistics.total,
-  );
 
   return (
     <PageContent>
       <h2 className="sr-only">Event proposals</h2>
 
-      <div className="flex flex-col gap-8 lg:flex-row">
-        <section className="flex-1 space-y-4">
-          <ProposalsActionBar
-            total={statistics.total}
-            selection={selection}
-            checked={allChecked}
-            onToggleAll={toggleAll}
-            checkboxRef={checkboxRef}
-          />
-
-          {statistics.total > 0 ? (
-            <ProposalsList proposals={results} isSelected={isSelected} onSelect={onSelect} />
-          ) : (
-            <EmptyState icon={InboxIcon} label="No proposals found!" />
-          )}
-
-          <Pagination {...pagination} />
-        </section>
-
-        <section className="w-full lg:w-1/4">
-          <ProposalsFilters
-            filters={filters}
-            statistics={statistics}
-            eventFormats={event.formats}
-            eventCategories={event.categories}
-          />
-        </section>
+      <div className="space-y-4">
+        <div className="space-y-4">
+          <div className="flex gap-2">
+            <SearchInput />
+            <FiltersMenu />
+            <SortMenu />
+            <ExportMenu />
+          </div>
+          <FiltersTags filters={filters} />
+        </div>
+        <ProposalsList proposals={results} pagination={pagination} statistics={statistics} />
       </div>
     </PageContent>
   );

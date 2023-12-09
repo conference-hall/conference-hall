@@ -1,12 +1,9 @@
 import { BadgeDot } from '~/design-system/Badges.tsx';
 
 const STATUSES = {
-  DRAFT: { color: 'gray', label: 'Draft' },
-  SUBMITTED: { color: 'gray', label: 'Submitted' },
-  ACCEPTED: { color: 'blue', label: 'Accepted' },
-  REJECTED: { color: 'yellow', label: 'Rejected' },
-  CONFIRMED: { color: 'green', label: 'Confirmed' },
-  DECLINED: { color: 'red', label: 'Declined' },
+  PENDING: { color: 'gray', label: 'Pending' },
+  ACCEPTED: { color: 'green', label: 'Accepted' },
+  REJECTED: { color: 'red', label: 'Rejected' },
 } as const;
 
 type Props = { status: keyof typeof STATUSES };

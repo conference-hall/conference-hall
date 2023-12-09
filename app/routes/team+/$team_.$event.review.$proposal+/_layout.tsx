@@ -86,7 +86,7 @@ export default function ProposalReviewLayoutRoute() {
             proposalId={proposal.id}
             userReview={you}
             review={summary}
-            status={proposal.status}
+            deliberationStatus={proposal.deliberationStatus}
             comments={proposal.comments}
             submittedAt={proposal.createdAt}
             reviewEnabled={event.reviewEnabled}

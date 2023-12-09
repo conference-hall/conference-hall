@@ -11,8 +11,12 @@ export function List({ children }: { children: ReactNode }) {
 }
 
 // <List.Header /> component
-function Header({ children }: { children: ReactNode }) {
-  return <div className="flex items-center justify-between border-b border-gray-200 px-4 py-4 sm:px-6">{children}</div>;
+function Header({ children, className }: { children: ReactNode; className?: string }) {
+  return (
+    <div className={cx('flex items-center justify-between border-b border-gray-200 px-4 py-4 sm:px-6', className)}>
+      {children}
+    </div>
+  );
 }
 
 List.Header = Header;
@@ -29,8 +33,8 @@ function Content({ children, ...rest }: { children: ReactNode }) {
 List.Content = Content;
 
 // <List.Row /> component
-function Row({ children }: { children: ReactNode }) {
-  return <li className="flex items-center gap-4 px-4 py-4 sm:px-6">{children}</li>;
+function Row({ children, className }: { children: ReactNode; className?: string }) {
+  return <li className={cx('flex items-center', className)}>{children}</li>;
 }
 
 List.Row = Row;
