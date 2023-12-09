@@ -10,7 +10,7 @@ export default defineConfig({
   plugins: [tsconfigPaths()],
   test: {
     globals: true,
-    threads: false,
+    poolOptions: { threads: { singleThread: true } },
     setupFiles: ['./tests/setup-tests.ts'],
     include: ['./app/**/*.{test,spec}.ts?(x)', './jobs/**/*.{test,spec}.ts?(x)'],
     reporters: isCI ? ['default', 'junit'] : 'default',
