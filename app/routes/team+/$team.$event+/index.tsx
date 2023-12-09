@@ -11,8 +11,12 @@ import { parseUrlFilters } from '~/domains/shared/ProposalSearchBuilder.types.ts
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 
+import { ExportMenu } from './__components/actions/export-menu.tsx';
+import { FiltersMenu } from './__components/filters/filters-menu.tsx';
+import { FiltersTags } from './__components/filters/filters-tags.tsx';
+import { SearchInput } from './__components/filters/search-input.tsx';
+import { SortMenu } from './__components/filters/sort-menu.tsx';
 import { ProposalsList } from './__components/proposals-list.tsx';
-import { useTeamEvent } from './_layout.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
@@ -39,22 +43,25 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   return toast('success', `${count} proposals marked as "${result.value.status.toLowerCase()}".`);
 };
 
-export default function EventReviewsRoute() {
-  const { event } = useTeamEvent();
+export default function ProposalReviewsRoute() {
   const { results, filters, pagination, statistics } = useLoaderData<typeof loader>();
 
   return (
     <PageContent>
       <h2 className="sr-only">Event proposals</h2>
 
-      <ProposalsList
-        proposals={results}
-        filters={filters}
-        pagination={pagination}
-        statistics={statistics}
-        formats={event.formats}
-        categories={event.categories}
-      />
+      <div className="space-y-4">
+        <div className="space-y-4">
+          <div className="flex gap-2">
+            <SearchInput />
+            <FiltersMenu />
+            <SortMenu />
+            <ExportMenu />
+          </div>
+          <FiltersTags filters={filters} />
+        </div>
+        <ProposalsList proposals={results} pagination={pagination} statistics={statistics} />
+      </div>
     </PageContent>
   );
 }

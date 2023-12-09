@@ -3,27 +3,15 @@ import { useLocation, useNavigate, useSearchParams } from '@remix-run/react';
 import { Text } from '~/design-system/Typography';
 import type { ProposalsFilters } from '~/domains/shared/ProposalSearchBuilder.types';
 
-const reviews = [
-  { name: 'Reviewed by you', value: 'reviewed' },
-  { name: 'Not reviewed yet', value: 'not-reviewed' },
-];
+import { useTeamEvent } from '../../_layout';
+import { reviewOptions, statusOptions } from './filters';
 
-const statuses = [
-  { name: 'Not deliberated', value: 'pending' },
-  { name: 'Accepted', value: 'accepted' },
-  { name: 'Rejected', value: 'rejected' },
-  { name: 'Waiting for confirmation', value: 'not-answered' },
-  { name: 'Confirmed by speakers', value: 'confirmed' },
-  { name: 'Declined by speakers', value: 'declined' },
-];
+type FiltersBadgesProps = { filters: ProposalsFilters };
 
-type FiltersBadgesProps = {
-  filters: ProposalsFilters;
-  formats: Array<{ id: string; name: string }>;
-  categories: Array<{ id: string; name: string }>;
-};
+export function FiltersTags({ filters }: FiltersBadgesProps) {
+  const { event } = useTeamEvent();
+  const { formats, categories } = event;
 
-export function FiltersTags({ filters, formats, categories }: FiltersBadgesProps) {
   const hasFilters = Boolean(
     filters.query || filters.reviews || filters.status || filters.formats || filters.categories,
   );
@@ -36,8 +24,8 @@ export function FiltersTags({ filters, formats, categories }: FiltersBadgesProps
         Filters:
       </Text>
       <FilterTag name="query" value={filters.query} />
-      <FilterTag name="reviews" value={reviews.find((review) => review.value === filters.reviews)?.name} />
-      <FilterTag name="status" value={statuses.find((status) => status.value === filters.status)?.name} />
+      <FilterTag name="reviews" value={reviewOptions.find((review) => review.value === filters.reviews)?.name} />
+      <FilterTag name="status" value={statusOptions.find((status) => status.value === filters.status)?.name} />
       <FilterTag name="formats" value={formats.find((format) => format.id === filters.formats)?.name} />
       <FilterTag name="categories" value={categories.find((category) => category.id === filters.categories)?.name} />
     </div>

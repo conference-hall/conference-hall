@@ -7,12 +7,7 @@ import { Fragment } from 'react';
 import { button } from '~/design-system/Buttons';
 import { MenuTransition } from '~/design-system/Transitions';
 
-const sortOptions = [
-  { name: 'Newest', value: 'newest' },
-  { name: 'Oldest', value: 'oldest' },
-  { name: 'Highest review', value: 'highest' },
-  { name: 'Lowest review', value: 'lowest' },
-];
+import { sortOptions } from './filters';
 
 export function SortMenu() {
   const location = useLocation();

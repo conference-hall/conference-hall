@@ -21,12 +21,9 @@ export class ProposalSearchBuilder {
   }
 
   async statistics() {
-    const byStatus = await this.countByStatus();
+    const total = await this.count();
     const reviewed = await this.countUserReviews();
-    const total = byStatus.reduce((acc, next) => acc + next._count.deliberationStatus, 0);
-    const statuses = byStatus.map((stat) => ({ name: stat.deliberationStatus, count: stat._count.deliberationStatus }));
-
-    return { total, reviewed, statuses };
+    return { total, reviewed };
   }
 
   async proposalsByPage(pagination: Pagination) {
@@ -63,13 +60,8 @@ export class ProposalSearchBuilder {
 
   /// Privates methods
 
-  private countByStatus() {
-    return db.proposal.groupBy({
-      _count: { deliberationStatus: true },
-      by: ['deliberationStatus'],
-      where: this.whereClause(),
-      orderBy: { _count: { deliberationStatus: 'desc' } },
-    });
+  private count() {
+    return db.proposal.count({ where: this.whereClause() });
   }
 
   private countUserReviews() {
@@ -98,9 +90,9 @@ export class ProposalSearchBuilder {
     if (status === 'pending') return { deliberationStatus: 'PENDING' };
     if (status === 'accepted') return { deliberationStatus: 'ACCEPTED' };
     if (status === 'rejected') return { deliberationStatus: 'REJECTED' };
-    if (status === 'not-answered') return { publicationStatus: 'PUBLISHED', confirmationStatus: 'PENDING' };
-    if (status === 'confirmed') return { publicationStatus: 'PUBLISHED', confirmationStatus: 'CONFIRMED' };
-    if (status === 'declined') return { publicationStatus: 'PUBLISHED', confirmationStatus: 'DECLINED' };
+    if (status === 'not-answered') return { confirmationStatus: 'PENDING' };
+    if (status === 'confirmed') return { confirmationStatus: 'CONFIRMED' };
+    if (status === 'declined') return { confirmationStatus: 'DECLINED' };
     return {};
   }
 

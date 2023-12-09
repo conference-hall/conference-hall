@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 import { db } from '~/libs/db';
+import type { DeliberationStatus } from '~/types/proposals.types';
 
 import { UserEvent } from '../organizer-event-settings/UserEvent';
 import { Pagination } from '../shared/Pagination';
@@ -46,6 +47,7 @@ export class CfpReviewsSearch {
           id: proposal.id,
           title: proposal.title,
           deliberationStatus: proposal.deliberationStatus,
+          confirmationStatus: proposal.confirmationStatus,
           speakers: event.displayProposalsSpeakers
             ? proposal.speakers.map(({ name, picture }) => ({ name, picture }))
             : [],
@@ -58,7 +60,7 @@ export class CfpReviewsSearch {
     };
   }
 
-  async changeStatus(proposalIds: string[], deliberationStatus: 'PENDING' | 'ACCEPTED' | 'REJECTED') {
+  async changeStatus(proposalIds: string[], deliberationStatus: DeliberationStatus) {
     await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
 
     const result = await db.proposal.updateMany({
@@ -88,6 +90,7 @@ export class CfpReviewsSearch {
         title: proposal.title,
         abstract: proposal.abstract,
         deliberationStatus: proposal.deliberationStatus,
+        confirmationStatus: proposal.confirmationStatus,
         level: proposal.level,
         comments: proposal.comments,
         references: proposal.references,

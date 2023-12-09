@@ -9,7 +9,6 @@ import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 
 import { Pagination } from '~/domains/shared/Pagination.ts';
-import { sortBy } from '~/libs/utils/arrays-sort-by.ts';
 
 import { ProposalSearchBuilder } from './ProposalSearchBuilder.ts';
 import type { ProposalsFilters } from './ProposalSearchBuilder.types.ts';
@@ -82,16 +81,6 @@ describe('EventProposalsSearch', () => {
       const statistics = await search.statistics();
       expect(statistics.total).toEqual(5);
       expect(statistics.reviewed).toEqual(2);
-      expect(sortBy(statistics.statuses, 'name')).toEqual(
-        sortBy(
-          [
-            { name: 'ACCEPTED', count: 3 },
-            { name: 'PENDING', count: 1 },
-            { name: 'REJECTED', count: 1 },
-          ],
-          'name',
-        ),
-      );
     });
   });
 

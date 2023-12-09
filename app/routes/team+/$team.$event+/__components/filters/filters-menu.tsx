@@ -7,12 +7,13 @@ import { Button, button, ButtonLink } from '~/design-system/Buttons';
 import Select from '~/design-system/forms/Select';
 import { Text } from '~/design-system/Typography';
 
-type FiltersMenuProps = {
-  formats: Array<{ id: string; name: string }>;
-  categories: Array<{ id: string; name: string }>;
-};
+import { useTeamEvent } from '../../_layout';
+import { reviewOptions, statusOptions } from './filters';
 
-export function FiltersMenu({ formats, categories }: FiltersMenuProps) {
+export function FiltersMenu() {
+  const { event } = useTeamEvent();
+  const { formats, categories } = event;
+
   return (
     <Popover className="relative shrink-0">
       <Popover.Button className={button({ variant: 'secondary' })}>
@@ -25,20 +26,6 @@ export function FiltersMenu({ formats, categories }: FiltersMenuProps) {
     </Popover>
   );
 }
-
-const reviews = [
-  { name: 'Reviewed by you', value: 'reviewed' },
-  { name: 'Not reviewed yet', value: 'not-reviewed' },
-];
-
-const statuses = [
-  { name: 'Not deliberated', value: 'pending' },
-  { name: 'Accepted', value: 'accepted' },
-  { name: 'Rejected', value: 'rejected' },
-  { name: 'Waiting for confirmation', value: 'not-answered' },
-  { name: 'Confirmed by speakers', value: 'confirmed' },
-  { name: 'Declined by speakers', value: 'declined' },
-];
 
 type FiltersContentProps = {
   formats: Array<{ id: string; name: string }>;
@@ -67,7 +54,7 @@ function FiltersContent({ formats, categories, close }: FiltersContentProps) {
         label="Reviews"
         name="reviews"
         defaultValue={params.get('reviews')}
-        options={reviews}
+        options={reviewOptions}
         className="px-4 py-3"
       />
 
@@ -76,7 +63,7 @@ function FiltersContent({ formats, categories, close }: FiltersContentProps) {
         label="Proposals"
         name="status"
         defaultValue={params.get('status')}
-        options={statuses}
+        options={statusOptions}
         className="px-4 py-3"
       />
 
