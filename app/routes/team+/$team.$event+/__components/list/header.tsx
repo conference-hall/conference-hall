@@ -22,9 +22,24 @@ export function ListHeader({ checkboxRef, total, totalSelected, totalReviewed, s
         </Checkbox>
         {totalSelected !== 0 && (
           <div className="flex items-center gap-2">
-            <ChangeStatus status="ACCEPTED" selection={selection} isAllPagesSelected={isAllPagesSelected} />
-            <ChangeStatus status="PENDING" selection={selection} isAllPagesSelected={isAllPagesSelected} />
-            <ChangeStatus status="REJECTED" selection={selection} isAllPagesSelected={isAllPagesSelected} />
+            <ChangeStatus
+              status="ACCEPTED"
+              selection={selection}
+              isAllPagesSelected={isAllPagesSelected}
+              totalSelected={totalSelected}
+            />
+            <ChangeStatus
+              status="PENDING"
+              selection={selection}
+              isAllPagesSelected={isAllPagesSelected}
+              totalSelected={totalSelected}
+            />
+            <ChangeStatus
+              status="REJECTED"
+              selection={selection}
+              isAllPagesSelected={isAllPagesSelected}
+              totalSelected={totalSelected}
+            />
           </div>
         )}
       </div>

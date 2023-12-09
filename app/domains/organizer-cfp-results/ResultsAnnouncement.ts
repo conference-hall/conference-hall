@@ -62,6 +62,7 @@ export class ResultsAnnouncement {
     if (withEmails && proposal.deliberationStatus === 'REJECTED') await ProposalRejectedEmail.send(event, [proposal]);
   }
 
+  // TODO: Add tests for speakers confirmation
   async statistics() {
     const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
 
@@ -113,7 +114,7 @@ export class ResultsAnnouncement {
         results.filter(
           (p) =>
             p.deliberationStatus === 'ACCEPTED' &&
-            p.publicationStatus === 'NOT_PUBLISHED' &&
+            p.publicationStatus === 'PUBLISHED' &&
             p.confirmationStatus === 'DECLINED',
         ),
       ),

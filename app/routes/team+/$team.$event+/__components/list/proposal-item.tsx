@@ -90,6 +90,7 @@ function reviewLabel({ reviews }: ProposalData) {
 }
 
 function deliberationLabel({ deliberationStatus, confirmationStatus }: ProposalData) {
+  if (confirmationStatus) return null;
   switch (deliberationStatus) {
     case 'ACCEPTED':
       return 'Accepted';
@@ -104,9 +105,9 @@ function confirmationLabel({ confirmationStatus }: ProposalData) {
   if (confirmationStatus === 'PENDING') {
     return 'Waiting for confirmation';
   } else if (confirmationStatus === 'CONFIRMED') {
-    return 'Confirmed';
+    return 'Confirmed by speakers';
   } else if (confirmationStatus === 'DECLINED') {
-    return 'Declined';
+    return 'Declined by speakers';
   }
   return null;
 }
@@ -114,10 +115,10 @@ function confirmationLabel({ confirmationStatus }: ProposalData) {
 function deliberationIcon({ deliberationStatus, confirmationStatus }: ProposalData) {
   if (confirmationStatus === 'PENDING') {
     return <ClockIcon className="inline ml-1 mb-0.5 w-4 h-4 text-blue-600" aria-hidden />;
-  } else if (deliberationStatus === 'ACCEPTED' || confirmationStatus === 'CONFIRMED') {
-    return <CheckIcon className="inline ml-0.5 mb-0.5 w-4 h-4 text-green-600" aria-hidden />;
   } else if (deliberationStatus === 'REJECTED' || confirmationStatus === 'DECLINED') {
     return <XMarkIcon className="inline ml-0.5 mb-0.5 w-4 h-4 text-red-600" aria-hidden />;
+  } else if (deliberationStatus === 'ACCEPTED' || confirmationStatus === 'CONFIRMED') {
+    return <CheckIcon className="inline ml-0.5 mb-0.5 w-4 h-4 text-green-600" aria-hidden />;
   }
   return null;
 }
