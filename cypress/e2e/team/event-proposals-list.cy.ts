@@ -72,7 +72,7 @@ describe('Event proposals list', () => {
     it('filters by reviews', () => {
       cy.login('Clark Kent');
       proposals.visit('team-1', 'conference-1');
-      proposals.filterReviews('Reviewed');
+      proposals.filterReviews('Reviewed by you');
 
       cy.assertText('1 proposals');
       proposals.proposal('Talk 1').should('exist');
@@ -86,7 +86,7 @@ describe('Event proposals list', () => {
       proposals.filterStatus('Accepted');
 
       cy.assertText('1 proposals');
-      cy.assertUrl('deliberation=ACCEPTED');
+      cy.assertUrl('status=accepted');
       proposals.proposal('Talk 1').should('not.exist');
       proposals.proposal('Talk 2').should('exist');
       proposals.proposal('Talk 3').should('not.exist');
@@ -132,9 +132,18 @@ describe('Event proposals list', () => {
       proposals.visit('team-1', 'conference-1');
       proposals.selectProposal('Talk 1').click();
       proposals.selectProposal('Talk 3').click();
-      cy.assertText('2 selected');
-      proposals.markAs('Accepted proposal(s)');
+      cy.assertText('Mark 2 selected as:');
+      proposals.markAs('Accepted');
       cy.assertToast('2 proposals marked as "accepted".');
+    });
+
+    it('marks selected proposals as pending', () => {
+      cy.login('Clark Kent');
+      proposals.visit('team-1', 'conference-1');
+      proposals.selectProposal('Talk 2').click();
+      cy.assertText('Mark 1 selected as:');
+      proposals.markAs('Pending');
+      cy.assertToast('1 proposals marked as "pending".');
     });
 
     it('marks selected proposals as rejected', () => {
@@ -142,8 +151,8 @@ describe('Event proposals list', () => {
       proposals.visit('team-1', 'conference-1');
       proposals.selectProposal('Talk 1').click();
       proposals.selectProposal('Talk 3').click();
-      cy.assertText('2 selected');
-      proposals.markAs('Rejected proposal(s)');
+      cy.assertText('Mark 2 selected as:');
+      proposals.markAs('Rejected');
       cy.assertToast('2 proposals marked as "rejected".');
     });
   });

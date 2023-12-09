@@ -18,6 +18,7 @@ export function SearchInput() {
         type="search"
         defaultValue={query}
         placeholder="Search proposals"
+        aria-label="Search proposals"
       />
     </Form>
   );

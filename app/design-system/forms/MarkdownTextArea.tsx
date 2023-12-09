@@ -53,7 +53,7 @@ export function MarkdownTextArea({
             {...rest}
             defaultValue={defaultValue}
             onChange={handleChangeText}
-            aria-describedby={`${name}-description`}
+            aria-describedby={`${name}-describe`}
           />
           {/* Spacer element to match the height of the toolbar */}
           <div aria-hidden="true">
@@ -74,7 +74,7 @@ export function MarkdownTextArea({
           </div>
         </div>
       </div>
-      <div id={`${name}-description`}>
+      <div id={`${name}-describe`}>
         {description && <p className="mt-3 text-sm text-gray-600">{description}</p>}
         {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
       </div>

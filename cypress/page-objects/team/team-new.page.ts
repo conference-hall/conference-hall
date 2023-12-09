@@ -29,7 +29,7 @@ class TeamNewPage extends BasePage {
       .findByLabelText(label)
       .invoke('attr', 'id')
       .then((id) => {
-        return cy.get(`#${id}-description`);
+        return cy.get(`#${id}-describe`);
       });
   }
 }

@@ -22,37 +22,46 @@ class OrganizationEventsProposalsPage extends BasePage {
     return cy.findByRole('checkbox', { name: `Select proposal "${name}"` });
   }
 
-  markAs(name: string) {
-    cy.findByRole('button', { name: 'Mark as...' }).click();
+  markAs(name: 'Accepted' | 'Rejected' | 'Pending') {
     cy.findByRole('button', { name }).click();
+    cy.findByRole('button', { name: `Mark as ${name}` }).click();
   }
 
   filterSearch() {
-    return cy.findByLabelText('Find a proposal');
+    return cy.findByLabelText('Search proposals');
   }
 
   clearFilters() {
-    cy.findByRole('link', { name: 'Reset filters' }).click();
+    cy.findByRole('button', { name: 'Filters' }).click();
+    cy.findByRole('link', { name: 'Reset' }).click();
   }
 
   filterReviews(name: string) {
-    cy.findByRole('button', { name }).click();
+    cy.findByRole('button', { name: 'Filters' }).click();
+    cy.findByRole('radio', { name }).click();
+    cy.findByRole('button', { name: 'Apply now' }).click();
   }
 
   filterStatus(name: string) {
-    cy.findByRole('button', { name }).click();
+    cy.findByRole('button', { name: 'Filters' }).click();
+    cy.findByRole('radio', { name }).click();
+    cy.findByRole('button', { name: 'Apply now' }).click();
   }
 
   filterFormat(name: string) {
-    return cy.selectOn('Formats', name, false);
+    cy.findByRole('button', { name: 'Filters' }).click();
+    cy.selectOn('Formats', name, false);
+    cy.findByRole('button', { name: 'Apply now' }).click();
   }
 
   filterCategory(name: string) {
-    return cy.selectOn('Categories', name, false);
+    cy.findByRole('button', { name: 'Filters' }).click();
+    cy.selectOn('Categories', name, false);
+    cy.findByRole('button', { name: 'Apply now' }).click();
   }
 
   sortBy(sort: string) {
-    cy.findByRole('button', { name: 'Sort by...' }).click();
+    cy.findByRole('button', { name: 'Sort' }).click();
     cy.findByRole('menuitem', { name: sort }).click();
   }
 }

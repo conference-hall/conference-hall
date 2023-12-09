@@ -7,7 +7,7 @@ class DeliberationPage extends BasePage {
   }
 
   isPageVisible() {
-    cy.findByRole('heading', { name: 'Deliberation' }).should('exist');
+    cy.findByRole('heading', { name: 'Deliberation', level: 1 }).should('exist');
   }
 
   announceAcceptedCard() {
@@ -51,7 +51,7 @@ class DeliberationPage extends BasePage {
   }
 
   totalNoResponse() {
-    return cy.findByRole('definition', { name: 'No response yet' });
+    return cy.findByRole('definition', { name: 'Waiting for confirmation' });
   }
 
   totalConfirmed() {
