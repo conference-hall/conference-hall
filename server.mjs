@@ -27,6 +27,7 @@ async function serverBuild() {
 async function run() {
   const PORT = process.env.PORT || 3000;
   const ENV = process.env.NODE_ENV;
+  const CI = process.env.CI;
   const FIREBASE_PROJECT_ID = process.env.FIREBASE_PROJECT_ID;
 
   const vite = ENV === 'production' ? undefined : await unstable_createViteServer();
@@ -76,8 +77,8 @@ async function run() {
     }),
   );
 
-  // Request logging
-  app.use(morgan('tiny'));
+  // Request logging (disabled in CI)
+  if (!CI) app.use(morgan('tiny'));
 
   // Proxy Firebase authentication
   app.use(
