@@ -29,7 +29,7 @@ export default function DeliberationRoute() {
       <H1 srOnly>Deliberation</H1>
 
       <section className="space-y-2">
-        <H2>1. Deliberation</H2>
+        <H2>Deliberation</H2>
         <Subtitle>
           To deliberate, open the{' '}
           <Link to="/" className="underline">
@@ -69,7 +69,7 @@ export default function DeliberationRoute() {
       </section>
 
       <section className="space-y-2">
-        <H2>2. Announcements</H2>
+        <H2>Announcements</H2>
         <div className="flex flex-col gap-4 lg:flex-row lg:gap-8">
           <AnnouncementCard
             id="announce-accepted"
@@ -89,7 +89,7 @@ export default function DeliberationRoute() {
       </section>
 
       <section className="space-y-2">
-        <H2>3. Speakers confirmations</H2>
+        <H2>Speakers confirmations</H2>
         <Subtitle>
           Some insights about speakers confirmations. Click on a metric card to see the corresponding proposals.
         </Subtitle>
