@@ -9,9 +9,11 @@ import { H1, H2, Subtitle } from '~/design-system/Typography.tsx';
 import type { ResultsStatistics } from '~/domains/organizer-cfp-results/ResultsAnnouncement';
 import { ResultsAnnouncement } from '~/domains/organizer-cfp-results/ResultsAnnouncement';
 import { requireSession } from '~/libs/auth/session.ts';
+import { useEvent } from '~/routes/$event+/_layout';
 
+import { useTeam } from '../../$team';
 import { AnnouncementCard } from './__components/AnnouncementCard';
-import { StatisticLink } from './__components/Statistics';
+import { Statistic, StatisticLink } from './__components/Statistics';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
@@ -23,6 +25,9 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 
 export default function DeliberationRoute() {
   const statistics = useLoaderData<typeof loader>();
+  const { team } = useTeam();
+  const { event } = useEvent();
+  const reviewsPath = `/team/${team.slug}/${event.slug}`;
 
   return (
     <PageContent className="flex flex-col">
@@ -44,25 +49,25 @@ export default function DeliberationRoute() {
               name="total-proposals"
               label="Total proposals"
               value={statistics.deliberation.total}
-              to="accepted"
+              to={reviewsPath}
             />
             <StatisticLink
               name="total-accepted"
               label="Accepted proposals"
               value={statistics.deliberation.accepted}
-              to="accepted"
+              to={{ pathname: reviewsPath, search: 'status=accepted' }}
             />
             <StatisticLink
               name="total-rejected"
               label="Rejected proposals"
               value={statistics.deliberation.rejected}
-              to="rejected"
+              to={{ pathname: reviewsPath, search: 'status=rejected' }}
             />
             <StatisticLink
               name="total-pending"
               label="Pending proposals"
               value={statistics.deliberation.pending}
-              to="accepted"
+              to={{ pathname: reviewsPath, search: 'status=pending' }}
             />
           </dl>
         </Card>
@@ -95,29 +100,24 @@ export default function DeliberationRoute() {
         </Subtitle>
         <Card className="p-4">
           <dl className="flex flex-col md:flex-row md:justify-around text-center md:divide-x">
-            <StatisticLink
-              name="total-confirmations"
-              label="Total published"
-              value={statistics.accepted.published}
-              to="accepted"
-            />
+            <Statistic name="total-confirmations" label="Total published" value={statistics.accepted.published} />
             <StatisticLink
               name="total-no-response"
-              label="No response yet"
+              label="Waiting for confirmation"
               value={statistics.confirmations.pending}
-              to="accepted"
+              to={{ pathname: reviewsPath, search: 'status=not-answered' }}
             />
             <StatisticLink
               name="total-confirmed"
               label="Confirmed by speakers"
               value={statistics.confirmations.confirmed}
-              to="accepted"
+              to={{ pathname: reviewsPath, search: 'status=confirmed' }}
             />
             <StatisticLink
               name="total-declined"
               label="Declined by speakers"
               value={statistics.confirmations.declined}
-              to="accepted"
+              to={{ pathname: reviewsPath, search: 'status=declined' }}
             />
           </dl>
         </Card>

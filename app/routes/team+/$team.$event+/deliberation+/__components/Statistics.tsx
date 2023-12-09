@@ -1,3 +1,4 @@
+import type { LinkProps } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
 
 import { Link } from '~/design-system/Links';
@@ -17,7 +18,7 @@ export function Statistic({ name, label, value, className }: StatisticProps) {
   );
 }
 
-type StatisticLinkProps = StatisticProps & { to: string };
+type StatisticLinkProps = StatisticProps & Pick<LinkProps, 'to'>;
 
 export function StatisticLink({ name, label, value, to, className }: StatisticLinkProps) {
   return (
