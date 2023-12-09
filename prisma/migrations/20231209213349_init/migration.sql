@@ -11,10 +11,13 @@ CREATE TYPE "EventVisibility" AS ENUM ('PUBLIC', 'PRIVATE');
 CREATE TYPE "TeamRole" AS ENUM ('OWNER', 'MEMBER', 'REVIEWER');
 
 -- CreateEnum
-CREATE TYPE "ProposalStatus" AS ENUM ('DRAFT', 'SUBMITTED', 'ACCEPTED', 'REJECTED', 'CONFIRMED', 'DECLINED');
+CREATE TYPE "DeliberationStatus" AS ENUM ('PENDING', 'ACCEPTED', 'REJECTED');
 
 -- CreateEnum
-CREATE TYPE "EmailStatus" AS ENUM ('SENT', 'DELIVERED');
+CREATE TYPE "PublicationStatus" AS ENUM ('NOT_PUBLISHED', 'PUBLISHED');
+
+-- CreateEnum
+CREATE TYPE "ConfirmationStatus" AS ENUM ('PENDING', 'CONFIRMED', 'DECLINED');
 
 -- CreateEnum
 CREATE TYPE "ReviewFeeling" AS ENUM ('POSITIVE', 'NEGATIVE', 'NEUTRAL', 'NO_OPINION');
@@ -174,18 +177,15 @@ CREATE TABLE "proposals" (
     "title" TEXT NOT NULL,
     "abstract" TEXT NOT NULL,
     "level" "TalkLevel",
-    "languages" JSONB,
+    "languages" JSONB DEFAULT '[]',
     "references" TEXT,
     "comments" TEXT,
-    "avgRateForSort" DOUBLE PRECISION NOT NULL DEFAULT 0,
-    "status" "ProposalStatus" NOT NULL DEFAULT 'SUBMITTED',
-    "emailAcceptedStatus" "EmailStatus",
-    "emailRejectedStatus" "EmailStatus",
-    "submittedAt" TIMESTAMP(3),
-    "acceptedAt" TIMESTAMP(3),
-    "rejectedAt" TIMESTAMP(3),
-    "confirmedAt" TIMESTAMP(3),
-    "declinedAt" TIMESTAMP(3),
+    "avgRateForSort" DOUBLE PRECISION,
+    "isDraft" BOOLEAN NOT NULL DEFAULT true,
+    "submittedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "deliberationStatus" "DeliberationStatus" NOT NULL DEFAULT 'PENDING',
+    "publicationStatus" "PublicationStatus" NOT NULL DEFAULT 'NOT_PUBLISHED',
+    "confirmationStatus" "ConfirmationStatus",
     "invitationCode" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
