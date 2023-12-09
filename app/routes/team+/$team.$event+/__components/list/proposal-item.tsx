@@ -14,10 +14,11 @@ import type { ProposalData } from '../types';
 type ProposalItemProps = {
   proposal: ProposalData;
   isSelected: boolean;
+  isAllPagesSelected: boolean;
   toggle: (event: ChangeEvent<HTMLInputElement>) => void;
 };
 
-export function ProposalItem({ proposal, isSelected, toggle }: ProposalItemProps) {
+export function ProposalItem({ proposal, isSelected, isAllPagesSelected, toggle }: ProposalItemProps) {
   const [params] = useSearchParams();
   const { id, title, reviews } = proposal;
   const { you, summary } = reviews;
@@ -28,6 +29,7 @@ export function ProposalItem({ proposal, isSelected, toggle }: ProposalItemProps
         aria-label={`Select proposal "${title}"`}
         value={id}
         checked={isSelected}
+        disabled={isAllPagesSelected}
         onChange={toggle}
         className="px-4 pb-5 sm:pl-6 sm:pr-4"
       />

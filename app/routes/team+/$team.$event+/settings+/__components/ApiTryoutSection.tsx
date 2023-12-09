@@ -11,12 +11,12 @@ type Props = { slug: string; apiKey: string };
 
 export function ApiTryoutSection({ slug, apiKey }: Props) {
   const [query, setQuery] = useState<string>('');
-  const [deliberationStatus, setDeliberationStatus] = useState<string>('');
+  const [status, setStatus] = useState<string>('');
 
   const params = new URLSearchParams();
   params.set('key', apiKey);
   if (query) params.set('query', query);
-  if (deliberationStatus) params.set('deliberationStatus', deliberationStatus);
+  if (status) params.set('status', status);
 
   const url = `/api/v1/event/${slug}?${params.toString()}`;
 
@@ -40,12 +40,12 @@ export function ApiTryoutSection({ slug, apiKey }: Props) {
           label="deliberationStatus"
           options={[
             { id: '', name: 'All (by default)' },
-            { id: 'PENDING', name: 'Pending' },
-            { id: 'ACCEPTED', name: 'Accepted' },
-            { id: 'REJECTED', name: 'Rejected' },
+            { id: 'pending', name: 'Pending' },
+            { id: 'accepted', name: 'Accepted' },
+            { id: 'rejected', name: 'Rejected' },
           ]}
-          defaultValue={deliberationStatus}
-          onChange={(name, value) => setDeliberationStatus(value)}
+          defaultValue={status}
+          onChange={(name, value) => setStatus(value)}
         />
       </Card.Content>
 

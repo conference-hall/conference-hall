@@ -1,5 +1,5 @@
-import { useCheckboxSelection } from '~/design-system/forms/useCheckboxSelection';
 import { List } from '~/design-system/list/List.tsx';
+import { useListSelection } from '~/design-system/list/useListSelection';
 
 import { ListHeader } from './list/header';
 import { ProposalItem } from './list/proposal-item';
@@ -14,22 +14,22 @@ type Props = {
 
 export function ProposalsList({ proposals, pagination, statistics }: Props) {
   const ids = proposals.map((proposal) => proposal.id);
-  const selector = useCheckboxSelection(ids, statistics.total);
+  const selector = useListSelection(ids, statistics.total);
 
   return (
     <List>
       <ListHeader
-        checkboxRef={selector.checkboxRef}
-        checked={selector.allChecked}
-        toggle={selector.toggleAll}
+        checkboxRef={selector.ref}
         total={statistics.total}
         totalReviewed={statistics.reviewed}
-        totalSelected={selector.selection.length}
+        totalSelected={selector.totalSelected}
       />
       <SelectAllBanner
         total={statistics.total}
-        totalSelected={selector.selection.length}
-        pageSelected={selector.isPageSelected}
+        totalSelected={selector.totalSelected}
+        isCurrentPageSelected={selector.isCurrentPageSelected}
+        isAllPagesSelected={selector.isAllPagesSelected}
+        toggleAllPages={selector.toggleAllPages}
       />
       <List.Content>
         {proposals.map((proposal) => (
@@ -37,7 +37,8 @@ export function ProposalsList({ proposals, pagination, statistics }: Props) {
             <ProposalItem
               proposal={proposal}
               isSelected={selector.isSelected(proposal.id)}
-              toggle={(event) => selector.toggle(proposal.id, event)}
+              isAllPagesSelected={selector.isAllPagesSelected}
+              toggle={selector.toggle(proposal.id)}
             />
           </List.Row>
         ))}
