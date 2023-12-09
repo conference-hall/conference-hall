@@ -94,30 +94,11 @@ export class ResultsAnnouncement {
     };
 
     const confirmations = {
-      pending: sum(
-        results.filter(
-          (p) =>
-            p.deliberationStatus === 'ACCEPTED' &&
-            p.publicationStatus === 'PUBLISHED' &&
-            p.confirmationStatus === 'PENDING',
-        ),
-      ),
+      pending: sum(results.filter((p) => p.deliberationStatus === 'ACCEPTED' && p.confirmationStatus === 'PENDING')),
       confirmed: sum(
-        results.filter(
-          (p) =>
-            p.deliberationStatus === 'ACCEPTED' &&
-            p.publicationStatus === 'PUBLISHED' &&
-            p.confirmationStatus === 'CONFIRMED',
-        ),
+        results.filter((p) => p.deliberationStatus === 'ACCEPTED' && p.confirmationStatus === 'CONFIRMED'),
       ),
-      declined: sum(
-        results.filter(
-          (p) =>
-            p.deliberationStatus === 'ACCEPTED' &&
-            p.publicationStatus === 'PUBLISHED' &&
-            p.confirmationStatus === 'DECLINED',
-        ),
-      ),
+      declined: sum(results.filter((p) => p.deliberationStatus === 'ACCEPTED' && p.confirmationStatus === 'DECLINED')),
     };
 
     return { deliberation, accepted, rejected, confirmations };

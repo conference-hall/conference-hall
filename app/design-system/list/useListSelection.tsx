@@ -1,5 +1,5 @@
 import type { ChangeEvent } from 'react';
-import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 export const useListSelection = (ids: Array<string>, total: number) => {
   const ref = useRef<HTMLInputElement>(null);
@@ -33,7 +33,7 @@ export const useListSelection = (ids: Array<string>, total: number) => {
     setAllPagesSelected(!allPagesSelected);
   }, [allPagesSelected]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!ref.current) return;
     ref.current.disabled = total === 0;
     ref.current.checked = (total !== 0 && selection.length === total) || allPagesSelected;

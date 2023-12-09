@@ -90,9 +90,9 @@ export class ProposalSearchBuilder {
     if (status === 'pending') return { deliberationStatus: 'PENDING' };
     if (status === 'accepted') return { deliberationStatus: 'ACCEPTED' };
     if (status === 'rejected') return { deliberationStatus: 'REJECTED' };
-    if (status === 'not-answered') return { confirmationStatus: 'PENDING' };
-    if (status === 'confirmed') return { confirmationStatus: 'CONFIRMED' };
-    if (status === 'declined') return { confirmationStatus: 'DECLINED' };
+    if (status === 'not-answered') return { deliberationStatus: 'ACCEPTED', confirmationStatus: 'PENDING' };
+    if (status === 'confirmed') return { deliberationStatus: 'ACCEPTED', confirmationStatus: 'CONFIRMED' };
+    if (status === 'declined') return { deliberationStatus: 'ACCEPTED', confirmationStatus: 'DECLINED' };
     return {};
   }
 

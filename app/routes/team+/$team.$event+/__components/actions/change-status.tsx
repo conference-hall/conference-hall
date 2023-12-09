@@ -4,6 +4,7 @@ import { Form } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
 import { useState } from 'react';
 
+import { AlertInfo } from '~/design-system/Alerts';
 import { Button } from '~/design-system/Buttons';
 import { Modal } from '~/design-system/Modals';
 import { Text } from '~/design-system/Typography';
@@ -31,13 +32,17 @@ export function ChangeStatus({ status, selection, isAllPagesSelected, totalSelec
         <Icon className={cx('w-4 h-4', color)} aria-hidden />
         {label}
       </Button>
-      <Modal open={open} onClose={() => setOpen(false)}>
+      <Modal open={open} onClose={() => setOpen(false)} size="l">
         <Modal.Content>
           <Form id="change-status" method="POST" onSubmit={() => setOpen(false)}>
-            <Text size="base" weight="semibold" mb={2}>
+            <Text size="base" weight="semibold" mb={4}>
               Are you sure you want to mark the {totalSelected} selected proposals as{' '}
               <span className={color}>{label}</span>?
             </Text>
+            <AlertInfo>
+              Be careful, if you change the status of published proposals, they will be unpublished. You will have to
+              republish them to make them visible again to the speakers.
+            </AlertInfo>
             <input type="hidden" name="status" value={status} />
             <input type="hidden" name="allPagesSelected" value={String(isAllPagesSelected)} />
             {selection.map((id) => (

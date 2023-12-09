@@ -1,19 +1,9 @@
-import { z } from 'zod';
-
-import { db } from '~/libs/db';
-import type { DeliberationStatus } from '~/types/proposals.types';
-
 import { UserEvent } from '../organizer-event-settings/UserEvent';
 import { Pagination } from '../shared/Pagination';
 import { ProposalSearchBuilder } from '../shared/ProposalSearchBuilder';
 import type { ProposalsFilters } from '../shared/ProposalSearchBuilder.types';
 import type { SocialLinks } from '../speaker-profile/SpeakerProfile.types';
 import { ReviewDetails } from './ReviewDetails';
-
-export const ProposalsStatusUpdateSchema = z.object({
-  status: z.enum(['PENDING', 'ACCEPTED', 'REJECTED']),
-  selection: z.array(z.string()),
-});
 
 export class CfpReviewsSearch {
   constructor(
@@ -47,6 +37,7 @@ export class CfpReviewsSearch {
           id: proposal.id,
           title: proposal.title,
           deliberationStatus: proposal.deliberationStatus,
+          publicationStatus: proposal.publicationStatus,
           confirmationStatus: proposal.confirmationStatus,
           speakers: event.displayProposalsSpeakers
             ? proposal.speakers.map(({ name, picture }) => ({ name, picture }))
@@ -58,20 +49,6 @@ export class CfpReviewsSearch {
         };
       }),
     };
-  }
-
-  async changeStatus(proposalIds: string[], deliberationStatus: DeliberationStatus) {
-    await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
-
-    const result = await db.proposal.updateMany({
-      where: { id: { in: proposalIds }, deliberationStatus: { not: deliberationStatus } },
-      data: {
-        deliberationStatus,
-        publicationStatus: 'NOT_PUBLISHED',
-        confirmationStatus: null,
-      },
-    });
-    return result.count;
   }
 
   async forJsonExport(filters: ProposalsFilters) {

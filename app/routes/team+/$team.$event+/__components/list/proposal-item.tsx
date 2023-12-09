@@ -89,32 +89,32 @@ function reviewLabel({ reviews }: ProposalData) {
   return 'Not reviewed';
 }
 
-function deliberationLabel({ deliberationStatus, confirmationStatus }: ProposalData) {
+function deliberationLabel({ deliberationStatus, publicationStatus, confirmationStatus }: ProposalData) {
   if (confirmationStatus) return null;
   switch (deliberationStatus) {
     case 'ACCEPTED':
-      return 'Accepted';
+      return publicationStatus === 'PUBLISHED' ? 'Accepted (published)' : 'Accepted (not published)';
     case 'REJECTED':
-      return 'Rejected';
+      return publicationStatus === 'PUBLISHED' ? 'Rejected (published)' : 'Rejected (not published)';
     case 'PENDING':
       return 'Pending';
   }
 }
 
-function confirmationLabel({ confirmationStatus }: ProposalData) {
-  if (confirmationStatus === 'PENDING') {
+function confirmationLabel({ deliberationStatus, confirmationStatus }: ProposalData) {
+  if (deliberationStatus === 'ACCEPTED' && confirmationStatus === 'PENDING') {
     return 'Waiting for confirmation';
-  } else if (confirmationStatus === 'CONFIRMED') {
+  } else if (deliberationStatus === 'ACCEPTED' && confirmationStatus === 'CONFIRMED') {
     return 'Confirmed by speakers';
-  } else if (confirmationStatus === 'DECLINED') {
+  } else if (deliberationStatus === 'ACCEPTED' && confirmationStatus === 'DECLINED') {
     return 'Declined by speakers';
   }
   return null;
 }
 
 function deliberationIcon({ deliberationStatus, confirmationStatus }: ProposalData) {
-  if (confirmationStatus === 'PENDING') {
-    return <ClockIcon className="inline ml-1 mb-0.5 w-4 h-4 text-blue-600" aria-hidden />;
+  if (deliberationStatus === 'ACCEPTED' && confirmationStatus === 'PENDING') {
+    return <ClockIcon className="inline ml-1 mb-0.5 w-4 h-4 text-gray-600" aria-hidden />;
   } else if (deliberationStatus === 'REJECTED' || confirmationStatus === 'DECLINED') {
     return <XMarkIcon className="inline ml-0.5 mb-0.5 w-4 h-4 text-red-600" aria-hidden />;
   } else if (deliberationStatus === 'ACCEPTED' || confirmationStatus === 'CONFIRMED') {

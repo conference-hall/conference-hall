@@ -5,7 +5,8 @@ import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
-import { CfpReviewsSearch, ProposalsStatusUpdateSchema } from '~/domains/organizer-cfp-reviews/CfpReviewsSearch.ts';
+import { CfpReviewsSearch } from '~/domains/organizer-cfp-reviews/CfpReviewsSearch.ts';
+import { Deliberate, ProposalsStatusUpdateSchema } from '~/domains/organizer-cfp-reviews/Deliberate.ts';
 import { parseUrlPage } from '~/domains/shared/Pagination.ts';
 import { parseUrlFilters } from '~/domains/shared/ProposalSearchBuilder.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
@@ -36,11 +37,20 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
   const form = await request.formData();
   const result = parse(form, { schema: ProposalsStatusUpdateSchema });
+  console.log({ result: result.error });
   if (!result.value) return json(null);
 
-  const search = CfpReviewsSearch.for(userId, params.team, params.event);
-  const count = await search.changeStatus(result.value.selection, result.value.status);
-  return toast('success', `${count} proposals marked as "${result.value.status.toLowerCase()}".`);
+  const { selection, status, allPagesSelected } = result.value;
+  const deliberate = Deliberate.for(userId, params.team, params.event);
+
+  let count = 0;
+  if (allPagesSelected) {
+    const filters = parseUrlFilters(request.url);
+    count = await deliberate.markAll(filters, status);
+  } else {
+    count = await deliberate.mark(selection, status);
+  }
+  return toast('success', `${count} proposals marked as "${status.toLowerCase()}".`);
 };
 
 export default function ProposalReviewsRoute() {
