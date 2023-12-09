@@ -13,12 +13,13 @@ import { reviewOptions, statusOptions } from './filters';
 
 export function FiltersMenu() {
   return (
-    <Popover className="relative shrink-0">
+    <Popover className="sm:relative shrink-0">
       <Popover.Button className={button({ variant: 'secondary' })}>
         <AdjustmentsHorizontalIcon className="h-4 w-4 text-gray-500" />
         <span className="hidden sm:inline">Filters</span>
       </Popover.Button>
-      <Popover.Panel className="absolute right-0 mt-2 w-96 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+      <Popover.Overlay className="fixed inset-0 z-10 bg-black opacity-30 sm:hidden" />
+      <Popover.Panel className="fixed bottom-0 w-full sm:absolute sm:bottom-auto sm:w-96 right-0 z-10 mt-2 origin-top-right sm:rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
         {({ close }) => <FiltersContent close={close} />}
       </Popover.Panel>
     </Popover>
@@ -92,7 +93,7 @@ function FiltersContent({ close }: FiltersContentProps) {
           </div>
         </div>
       )}
-      <div className="mt-2 px-4 py-3 rounded-b-md border-t border-t-gray-200 flex justify-between">
+      <div className="mt-2 px-4 py-3 sm:rounded-b-md border-t border-t-gray-200 flex justify-between">
         <ButtonLink to={location.pathname} variant="secondary" onClick={close}>
           Reset
         </ButtonLink>

@@ -15,7 +15,7 @@ type Props = {
 
 export function ListHeader({ checkboxRef, total, totalSelected, totalReviewed, selection, isAllPagesSelected }: Props) {
   return (
-    <List.Header className="h-16">
+    <List.Header className="sm:h-16">
       <div className="flex flex-col gap-4 md:flex-row md:items-center ">
         <Checkbox aria-label="Select current page" ref={checkboxRef}>
           {totalSelected === 0 ? `${total} proposals` : `Mark ${totalSelected} selected as:`}
