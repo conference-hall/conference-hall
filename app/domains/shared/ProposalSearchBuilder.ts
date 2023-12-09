@@ -111,9 +111,9 @@ export class ProposalSearchBuilder {
   private orderByClause(): Prisma.ProposalOrderByWithRelationInput[] {
     switch (this.filters.sort) {
       case 'highest':
-        return [{ avgRateForSort: 'desc' }, { title: 'asc' }];
+        return [{ avgRateForSort: { sort: 'desc', nulls: 'last' } }, { title: 'asc' }];
       case 'lowest':
-        return [{ avgRateForSort: 'asc' }, { title: 'asc' }];
+        return [{ avgRateForSort: { sort: 'asc', nulls: 'first' } }, { title: 'asc' }];
       case 'oldest':
         return [{ createdAt: 'asc' }, { title: 'asc' }];
       default:

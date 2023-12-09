@@ -4,7 +4,7 @@ import { useListSelection } from '~/design-system/list/useListSelection';
 import { ListHeader } from './list/header';
 import { ProposalItem } from './list/proposal-item';
 import { SelectAllBanner } from './list/select-all-banner';
-import type { ProposalData } from './types';
+import type { ProposalData } from './list/types';
 
 type Props = {
   proposals: Array<ProposalData>;

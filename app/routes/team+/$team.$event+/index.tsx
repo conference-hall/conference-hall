@@ -37,7 +37,6 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
   const form = await request.formData();
   const result = parse(form, { schema: ProposalsStatusUpdateSchema });
-  console.log({ result: result.error });
   if (!result.value) return json(null);
 
   const { selection, status, allPagesSelected } = result.value;

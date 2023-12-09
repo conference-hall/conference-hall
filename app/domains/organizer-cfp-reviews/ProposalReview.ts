@@ -100,7 +100,7 @@ export class ProposalReview {
       });
 
       const reviewsDetails = new ReviewDetails(reviews);
-      const average = reviewsDetails.summary().average ?? undefined;
+      const average = reviewsDetails.summary().average ?? null;
       await trx.proposal.update({ where: { id: this.proposalId }, data: { avgRateForSort: average } });
     });
   }

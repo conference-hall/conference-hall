@@ -210,7 +210,7 @@ model Proposal {
   formats            EventFormat[]       @relation("proposals_formats")
   categories         EventCategory[]     @relation("proposals_categories")
   reviews            Review[]
-  avgRateForSort     Float               @default(0)
+  avgRateForSort     Float?               
   isDraft            Boolean             @default(true)
   submittedAt        DateTime            @default(now())
   deliberationStatus DeliberationStatus  @default(PENDING)

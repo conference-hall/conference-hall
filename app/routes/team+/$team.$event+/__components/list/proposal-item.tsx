@@ -9,7 +9,7 @@ import { Join } from '~/design-system/utils/join';
 import { ReviewNote } from '~/routes/__components/reviews/ReviewNote';
 import { useTeam } from '~/routes/team+/$team';
 
-import type { ProposalData } from '../types';
+import type { ProposalData } from './types';
 
 type ProposalItemProps = {
   proposal: ProposalData;
