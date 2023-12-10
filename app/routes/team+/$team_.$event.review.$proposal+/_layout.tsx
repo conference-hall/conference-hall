@@ -16,6 +16,7 @@ import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
 import { useUser } from '~/root.tsx';
+import { Navbar } from '~/routes/__components/navbar/Navbar.tsx';
 
 import { ReviewHeader } from './__components/review-header.tsx';
 import { ReviewSidebar } from './__components/review-sidebar.tsx';
@@ -65,15 +66,15 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     case 'change-deliberation-status': {
       const result = parse(form, { schema: DeliberateSchema });
       if (!result.value) return toast('error', 'Something went wrong.');
-
       const deliberate = Deliberate.for(userId, params.team, params.event);
       await deliberate.mark([params.proposal], result.value.status);
-      return toast('success', 'Deliberation saved.');
+      return null;
     }
     case 'publish-results': {
       const result = Publication.for(userId, params.team, params.event);
-      await result.publish(params.proposal, false);
-      return toast('success', 'Result published.');
+      console.log({ email: form.get('send-email') });
+      await result.publish(params.proposal, form.get('send-email') === 'on');
+      return null;
     }
   }
   return null;
@@ -89,9 +90,11 @@ export default function ProposalReviewLayoutRoute() {
 
   return (
     <>
+      <Navbar user={user} withSearch />
+
       <ReviewHeader title={proposal.title} pagination={pagination} />
 
-      <div className="flex flex-col gap-4 p-4 lg:flex-row lg:gap-8 lg:py-4 lg:px-8">
+      <div className="max-w-7xl m-auto flex flex-col gap-4 p-4 md:flex-row">
         <div className="flex-1 space-y-4">
           <ReviewTabs
             speakersCount={proposal.speakers.length}
@@ -103,7 +106,7 @@ export default function ProposalReviewLayoutRoute() {
           <Outlet context={{ user, event, proposal }} />
         </div>
 
-        <div className="w-full lg:w-fit">
+        <div className="w-full md:basis-1/5">
           <ReviewSidebar
             proposal={proposal}
             reviewEnabled={event.reviewEnabled}

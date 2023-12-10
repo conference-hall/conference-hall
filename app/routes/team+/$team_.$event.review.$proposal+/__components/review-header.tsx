@@ -29,39 +29,41 @@ export function ReviewHeader({ title, pagination }: Props) {
   useHotkeys('escape', () => navigate({ pathname: closePath, search }));
 
   return (
-    <header className="bg-white border-b border-b-gray-200 shadow-sm flex items-center gap-4 px-4 lg:px-8 py-4">
-      <nav className="flex items-center gap-2 lg:gap-4">
-        <IconButtonLink
-          to={{ pathname: previousPath, search }}
-          icon={ChevronLeftIcon}
-          label="Previous proposal"
-          variant="secondary"
-          aria-disabled={!previousPath}
-        />
-        <Text weight="medium">{`${current}/${total}`}</Text>
-        <IconButtonLink
-          to={{ pathname: nextPath, search }}
-          icon={ChevronRightIcon}
-          label="Next proposal"
-          variant="secondary"
-          aria-disabled={!nextPath}
-        />
-      </nav>
+    <div className="bg-white border-b border-b-gray-200 shadow-sm">
+      <header className="max-w-7xl m-auto flex items-center gap-4 p-4">
+        <nav className="flex items-center gap-2 lg:gap-4">
+          <IconButtonLink
+            to={{ pathname: previousPath, search }}
+            icon={ChevronLeftIcon}
+            label="Previous proposal"
+            variant="secondary"
+            aria-disabled={!previousPath}
+          />
+          <Text weight="medium">{`${current}/${total}`}</Text>
+          <IconButtonLink
+            to={{ pathname: nextPath, search }}
+            icon={ChevronRightIcon}
+            label="Next proposal"
+            variant="secondary"
+            aria-disabled={!nextPath}
+          />
+        </nav>
 
-      <div className="grow truncate">
-        <H1 size="base" truncate>
-          {title}
-        </H1>
-      </div>
+        <div className="grow truncate">
+          <H1 size="base" truncate>
+            {title}
+          </H1>
+        </div>
 
-      <div className="flex items-center gap-8">
-        <IconButtonLink
-          to={{ pathname: closePath, search }}
-          icon={XMarkIcon}
-          label="Close review"
-          variant="secondary"
-        />
-      </div>
-    </header>
+        <div className="flex items-center gap-8">
+          <IconButtonLink
+            to={{ pathname: closePath, search }}
+            icon={XMarkIcon}
+            label="Close review"
+            variant="secondary"
+          />
+        </div>
+      </header>
+    </div>
   );
 }

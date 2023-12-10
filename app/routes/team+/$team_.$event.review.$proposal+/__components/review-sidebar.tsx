@@ -21,7 +21,12 @@ export function ReviewSidebar({ proposal, reviewEnabled, nextId, canDeliberate }
 
       <ReviewDetails review={proposal.reviews.summary} userReview={proposal.reviews.you} />
 
-      {canDeliberate && <DeliberationSelect deliberationStatus={proposal.deliberationStatus} />}
+      {canDeliberate && (
+        <DeliberationSelect
+          deliberationStatus={proposal.deliberationStatus}
+          publicationStatus={proposal.publicationStatus}
+        />
+      )}
 
       {canDeliberate && (
         <PublicationDetails

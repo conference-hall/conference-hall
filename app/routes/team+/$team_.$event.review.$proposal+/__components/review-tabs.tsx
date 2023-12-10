@@ -38,7 +38,7 @@ export function ReviewTabs({ speakersCount, reviewsCount, messagesCount, display
 
   return (
     <Card className="p-2">
-      <NavTabs tabs={tabs} />
+      <NavTabs tabs={tabs} scrollable />
     </Card>
   );
 }
