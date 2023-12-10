@@ -1,7 +1,9 @@
 import { Card } from '~/design-system/layouts/Card.tsx';
 
 import type { ProposalData } from '../_layout';
-import { DeliberationDetails } from './review-sidebar-sections/deliberation-details';
+import { ConfirmationDetails } from './review-sidebar-sections/confirmation-details';
+import { DeliberationSelect } from './review-sidebar-sections/deliberation-select';
+import { PublicationDetails } from './review-sidebar-sections/publication-details';
 import { ReviewDetails } from './review-sidebar-sections/review-details';
 import { ReviewForm } from './review-sidebar-sections/review-form';
 
@@ -19,13 +21,16 @@ export function ReviewSidebar({ proposal, reviewEnabled, nextId, canDeliberate }
 
       <ReviewDetails review={proposal.reviews.summary} userReview={proposal.reviews.you} />
 
+      {canDeliberate && <DeliberationSelect deliberationStatus={proposal.deliberationStatus} />}
+
       {canDeliberate && (
-        <DeliberationDetails
+        <PublicationDetails
           deliberationStatus={proposal.deliberationStatus}
           publicationStatus={proposal.publicationStatus}
-          confirmationStatus={proposal.confirmationStatus}
         />
       )}
+
+      {canDeliberate && <ConfirmationDetails confirmationStatus={proposal.confirmationStatus} />}
     </Card>
   );
 }

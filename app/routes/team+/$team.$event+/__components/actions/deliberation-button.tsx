@@ -22,7 +22,7 @@ type Props = {
   totalSelected: number;
 };
 
-export function ChangeStatus({ status, selection, isAllPagesSelected, totalSelected }: Props) {
+export function DeliberationButton({ status, selection, isAllPagesSelected, totalSelected }: Props) {
   const [open, setOpen] = useState(false);
   const { label, icon: Icon, color } = statuses[status];
 

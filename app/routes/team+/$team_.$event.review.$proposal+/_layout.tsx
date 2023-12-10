@@ -4,6 +4,8 @@ import { json } from '@remix-run/node';
 import { Outlet, useLoaderData, useOutletContext, useParams } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
+import { ResultsAnnouncement } from '~/domains/organizer-cfp-results/ResultsAnnouncement.ts';
+import { Deliberate, DeliberateSchema } from '~/domains/organizer-cfp-reviews/Deliberate.ts';
 import type { ProposalReviewData } from '~/domains/organizer-cfp-reviews/ProposalReview.ts';
 import { ProposalReview } from '~/domains/organizer-cfp-reviews/ProposalReview.ts';
 import { ReviewUpdateDataSchema } from '~/domains/organizer-cfp-reviews/ProposalReview.types.ts';
@@ -60,13 +62,21 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       if (nextPath) return redirectWithToast(nextPath, 'success', 'Review saved.');
       return toast('success', 'Review saved.');
     }
-    case 'update-deliberation': {
-      return null;
+    case 'change-deliberation-status': {
+      const result = parse(form, { schema: DeliberateSchema });
+      if (!result.value) return toast('error', 'Something went wrong.');
+
+      const deliberate = Deliberate.for(userId, params.team, params.event);
+      await deliberate.mark([params.proposal], result.value.status);
+      return toast('success', 'Deliberation saved.');
     }
     case 'publish-results': {
-      return null;
+      const result = ResultsAnnouncement.for(userId, params.team, params.event);
+      await result.publish(params.proposal, false);
+      return toast('success', 'Result published.');
     }
   }
+  return null;
 };
 
 export default function ProposalReviewLayoutRoute() {

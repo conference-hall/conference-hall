@@ -7,7 +7,9 @@ import { UserEvent } from '../organizer-event-settings/UserEvent';
 import { ProposalSearchBuilder } from '../shared/ProposalSearchBuilder';
 import type { ProposalsFilters } from '../shared/ProposalSearchBuilder.types';
 
-export const ProposalsStatusUpdateSchema = z.object({
+export const DeliberateSchema = z.object({ status: z.enum(['PENDING', 'ACCEPTED', 'REJECTED']) });
+
+export const DeliberateBulkSchema = z.object({
   status: z.enum(['PENDING', 'ACCEPTED', 'REJECTED']),
   selection: z.array(z.string()),
   allPagesSelected: z.enum(['true', 'false']).transform((v) => v === 'true'),
