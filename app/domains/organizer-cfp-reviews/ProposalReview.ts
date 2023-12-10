@@ -46,10 +46,10 @@ export class ProposalReview {
       title: proposal.title,
       abstract: proposal.abstract,
       references: proposal.references,
-      comments: proposal.comments,
       level: proposal.level,
       deliberationStatus: proposal.deliberationStatus,
-      createdAt: proposal.createdAt.toUTCString(),
+      publicationStatus: proposal.publicationStatus,
+      confirmationStatus: proposal.confirmationStatus,
       languages: proposal.languages as string[],
       formats: proposal.formats.map(({ id, name }) => ({ id, name })),
       categories: proposal.categories.map(({ id, name }) => ({ id, name })),
@@ -57,7 +57,7 @@ export class ProposalReview {
       reviewsCount: proposal._count.reviews,
       reviews: {
         you: reviews.ofUser(this.userId),
-        summary: event.displayProposalsReviews ? reviews.summary() : undefined,
+        summary: event.displayProposalsReviews ? reviews.summary() : null,
       },
       speakers:
         proposal.speakers?.map((speaker) => ({

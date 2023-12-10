@@ -15,9 +15,11 @@ import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
 import { useUser } from '~/root.tsx';
 
-import { ReviewHeader } from './__components/Header.tsx';
-import { ReviewInfoSection } from './__components/ReviewInfoSection.tsx';
-import { ReviewTabs } from './__components/Tabs.tsx';
+import { ReviewHeader } from './__components/review-header.tsx';
+import { ReviewSidebar } from './__components/review-sidebar.tsx';
+import { ReviewTabs } from './__components/review-tabs.tsx';
+
+export type ProposalData = ProposalReviewData;
 
 export const meta = mergeMeta(() => [{ title: `Review proposal | Conference Hall` }]);
 
@@ -44,53 +46,59 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   invariant(params.proposal, 'Invalid proposal id');
 
   const form = await request.formData();
-  const result = parse(form, { schema: ReviewUpdateDataSchema });
-  if (!result.value) return toast('error', 'Something went wrong.');
+  const intent = form.get('intent') as string;
 
-  const proposalReview = ProposalReview.for(userId, params.team, params.event, params.proposal);
-  await proposalReview.addReview(result.value);
+  switch (intent) {
+    case 'add-review': {
+      const result = parse(form, { schema: ReviewUpdateDataSchema });
+      if (!result.value) return toast('error', 'Something went wrong.');
 
-  const nextPath = form.get('nextPath') as string;
-  if (nextPath) return redirectWithToast(nextPath, 'success', 'Review saved.');
-  return toast('success', 'Review saved.');
+      const review = ProposalReview.for(userId, params.team, params.event, params.proposal);
+      await review.addReview(result.value);
+
+      const nextPath = form.get('nextPath') as string;
+      if (nextPath) return redirectWithToast(nextPath, 'success', 'Review saved.');
+      return toast('success', 'Review saved.');
+    }
+    case 'update-deliberation': {
+      return null;
+    }
+    case 'publish-results': {
+      return null;
+    }
+  }
 };
 
 export default function ProposalReviewLayoutRoute() {
   const params = useParams();
   const { user } = useUser();
-
   const { event, proposal, pagination } = useLoaderData<typeof loader>();
-  const { you, summary } = proposal.reviews;
 
   const role = user?.teams.find((team) => team.slug === params.team)?.role;
-  const canEditProposal = 'MEMBER' === role || 'OWNER' === role;
+  const canDeliberate = role !== 'REVIEWER';
 
   return (
     <>
-      <ReviewHeader title={proposal.title} pagination={pagination} canEditProposal={canEditProposal} />
+      <ReviewHeader title={proposal.title} pagination={pagination} />
 
-      <div className="flex flex-col gap-4 p-4 lg:flex-row lg:gap-8 lg:p-8">
+      <div className="flex flex-col gap-4 p-4 lg:flex-row lg:gap-8 lg:py-4 lg:px-8">
         <div className="flex-1 space-y-4">
           <ReviewTabs
             speakersCount={proposal.speakers.length}
             reviewsCount={proposal.reviewsCount}
             messagesCount={proposal.messagesCount}
-            displayReviews={Boolean(summary)}
+            displayReviews={Boolean(proposal.reviews.summary)}
           />
 
           <Outlet context={{ user, event, proposal }} />
         </div>
 
         <div className="w-full lg:w-fit">
-          <ReviewInfoSection
-            proposalId={proposal.id}
-            userReview={you}
-            review={summary}
-            deliberationStatus={proposal.deliberationStatus}
-            comments={proposal.comments}
-            submittedAt={proposal.createdAt}
+          <ReviewSidebar
+            proposal={proposal}
             reviewEnabled={event.reviewEnabled}
             nextId={pagination.nextId}
+            canDeliberate={canDeliberate}
           />
         </div>
       </div>
@@ -103,5 +111,5 @@ export function useProposalEvent() {
 }
 
 export function useProposalReview() {
-  return useOutletContext<{ proposal: ProposalReviewData }>();
+  return useOutletContext<{ proposal: ProposalData }>();
 }

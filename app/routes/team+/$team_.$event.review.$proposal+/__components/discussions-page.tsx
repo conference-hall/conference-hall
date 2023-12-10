@@ -19,7 +19,7 @@ type Props = {
   }>;
 };
 
-export function Discussions({ userId, messages }: Props) {
+export function DiscussionsPage({ userId, messages }: Props) {
   const submit = useSubmit();
 
   const handleDelete = (messageId: string) => {

@@ -1,7 +1,6 @@
 import type { LoaderFunctionArgs } from '@remix-run/node';
 
-import { ProposalDetailsSection } from '~/routes/__components/proposals/ProposalDetailsSection.tsx';
-
+import { ProposalPage } from './__components/proposal-page.tsx';
 import { useProposalReview } from './_layout.tsx';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -11,5 +10,5 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 export default function ProposalReviewRoute() {
   const { proposal } = useProposalReview();
 
-  return <ProposalDetailsSection {...proposal} />;
+  return <ProposalPage proposal={proposal} />;
 }

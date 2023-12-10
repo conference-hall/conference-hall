@@ -29,7 +29,7 @@ type Review = { note?: number | null; feeling?: string | null };
 
 type Props = { value: Review; onChange: (index: number) => void };
 
-export function ReviewNoteSelector({ value, onChange }: Props) {
+export function ReviewSelector({ value, onChange }: Props) {
   const [selectedIndex, setSelectedIndex] = useState<number | undefined>(
     options.findIndex((option) => option.value === value.note && option.feeling === value.feeling),
   );
