@@ -1,8 +1,8 @@
 import BasePage from '../base.page.ts';
 
-class DeliberationPage extends BasePage {
+class PublicationPage extends BasePage {
   visit(teamSlug: string, eventSlug: string) {
-    cy.visitAndCheck(`/team/${teamSlug}/${eventSlug}/deliberation`);
+    cy.visitAndCheck(`/team/${teamSlug}/${eventSlug}/publication`);
     this.isPageVisible();
   }
 
@@ -10,22 +10,22 @@ class DeliberationPage extends BasePage {
     cy.findByRole('heading', { name: 'Deliberation', level: 1 }).should('exist');
   }
 
-  announceAcceptedCard() {
-    return cy.findByTestId('announce-accepted');
+  publishAcceptedCard() {
+    return cy.findByTestId('publish-accepted');
   }
 
-  announceAccepted() {
-    const modal = new AnnounceAcceptedModal();
+  publishAccepted() {
+    const modal = new PublishAcceptedModal();
     modal.visit(this);
     return modal;
   }
 
-  announceRejectedCard() {
-    return cy.findByTestId('announce-rejected');
+  publishRejectedCard() {
+    return cy.findByTestId('publish-rejected');
   }
 
-  announceRejected() {
-    const modal = new AnnounceRejectedModal();
+  publishRejected() {
+    const modal = new PublishRejectedModal();
     modal.visit(this);
     return modal;
   }
@@ -63,40 +63,40 @@ class DeliberationPage extends BasePage {
   }
 }
 
-class AnnounceAcceptedModal {
-  visit(from: DeliberationPage) {
+class PublishAcceptedModal {
+  visit(from: PublicationPage) {
     from
-      .announceAcceptedCard()
+      .publishAcceptedCard()
       .findByRole('link', { name: /^Publish results.*/i })
       .click();
     this.isPageVisible();
   }
 
   isPageVisible() {
-    cy.findByRole('heading', { name: 'Accepted proposals announcement' }).should('exist');
+    cy.findByRole('heading', { name: 'Accepted proposals publication' }).should('exist');
   }
 
   confirm() {
-    return cy.findByRole('button', { name: 'Confirm results announcement' }).click();
+    return cy.findByRole('button', { name: 'Confirm results publication' }).click();
   }
 }
 
-class AnnounceRejectedModal {
-  visit(from: DeliberationPage) {
+class PublishRejectedModal {
+  visit(from: PublicationPage) {
     from
-      .announceRejectedCard()
+      .publishRejectedCard()
       .findByRole('link', { name: /^Publish results.*/i })
       .click();
     this.isPageVisible();
   }
 
   isPageVisible() {
-    cy.findByRole('heading', { name: 'Rejected proposals announcement' }).should('exist');
+    cy.findByRole('heading', { name: 'Rejected proposals publication' }).should('exist');
   }
 
   confirm() {
-    return cy.findByRole('button', { name: 'Confirm results announcement' }).click();
+    return cy.findByRole('button', { name: 'Confirm results publication' }).click();
   }
 }
 
-export default DeliberationPage;
+export default PublicationPage;

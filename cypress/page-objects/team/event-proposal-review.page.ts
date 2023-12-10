@@ -100,7 +100,7 @@ class ProposalReviewPage extends BasePage {
   // Edit proposal
 
   editProposal() {
-    cy.findByRole('link', { name: 'Edit' }).click();
+    cy.findByRole('link', { name: 'Edit proposal' }).click();
   }
 
   fillProposalForm(data: ProposalFormType) {

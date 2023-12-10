@@ -2,11 +2,11 @@ import { type ActionFunctionArgs, json, type LoaderFunctionArgs } from '@remix-r
 import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { ProposalReviewDiscussion } from '~/domains/organizer-cfp-reviews/ProposalReviewDiscussion.ts';
+import { ProposalReviewDiscussion } from '~/domains/proposal-reviews/ProposalReviewDiscussion.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { useUser } from '~/root.tsx';
 
-import { Discussions } from './__components/Discussions.tsx';
+import { DiscussionsPage } from './__components/discussions-page.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
@@ -44,5 +44,5 @@ export default function ProposaDiscussionsRoute() {
   const { user } = useUser();
   const messages = useLoaderData<typeof loader>();
 
-  return <Discussions userId={user?.id} messages={messages} />;
+  return <DiscussionsPage userId={user?.id} messages={messages} />;
 }

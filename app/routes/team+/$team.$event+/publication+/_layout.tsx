@@ -6,24 +6,24 @@ import invariant from 'tiny-invariant';
 import { Card } from '~/design-system/layouts/Card';
 import { PageContent } from '~/design-system/layouts/PageContent';
 import { H1, H2, Subtitle } from '~/design-system/Typography.tsx';
-import type { ResultsStatistics } from '~/domains/organizer-cfp-results/ResultsAnnouncement';
-import { ResultsAnnouncement } from '~/domains/organizer-cfp-results/ResultsAnnouncement';
+import type { ResultsStatistics } from '~/domains/proposal-publication/Publication';
+import { Publication } from '~/domains/proposal-publication/Publication';
 import { requireSession } from '~/libs/auth/session.ts';
 import { useEvent } from '~/routes/$event+/_layout';
 
 import { useTeam } from '../../$team';
-import { AnnouncementCard } from './__components/AnnouncementCard';
-import { Statistic, StatisticLink } from './__components/Statistics';
+import { PublicationCard } from './__components/publication-card';
+import { Statistic, StatisticLink } from './__components/statistic';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
   invariant(params.team, 'Invalid team slug');
-  const results = ResultsAnnouncement.for(userId, params.team, params.event);
+  const results = Publication.for(userId, params.team, params.event);
   return json(await results.statistics());
 };
 
-export default function DeliberationRoute() {
+export default function PublicationRoute() {
   const statistics = useLoaderData<typeof loader>();
   const { team } = useTeam();
   const { event } = useEvent();
@@ -74,19 +74,19 @@ export default function DeliberationRoute() {
       </section>
 
       <section className="space-y-2">
-        <H2>Announcements</H2>
+        <H2>Publication</H2>
         <div className="flex flex-col gap-4 lg:flex-row lg:gap-8">
-          <AnnouncementCard
-            id="announce-accepted"
-            title="Announce accepted proposals"
-            subtitle="Publish results to speakers for accepted proposals."
+          <PublicationCard
+            id="publish-accepted"
+            title="Publish accepted proposals"
+            subtitle="Announce results to speakers for accepted proposals."
             statistics={statistics.accepted}
             to="accepted"
           />
-          <AnnouncementCard
-            id="announce-rejected"
-            title="Announce rejected proposals"
-            subtitle="Publish results to speakers for rejected proposals."
+          <PublicationCard
+            id="publish-rejected"
+            title="Publish rejected proposals"
+            subtitle="Announce results to speakers for rejected proposals."
             statistics={statistics.rejected}
             to="rejected"
           />
@@ -94,7 +94,7 @@ export default function DeliberationRoute() {
       </section>
 
       <section className="space-y-2">
-        <H2>Speakers confirmations</H2>
+        <H2>Confirmation</H2>
         <Subtitle>
           Some insights about speakers confirmations. Click on a metric card to see the corresponding proposals.
         </Subtitle>

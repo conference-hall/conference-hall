@@ -5,8 +5,8 @@ import invariant from 'tiny-invariant';
 
 import { Button, ButtonLink } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
-import { ProposalReview } from '~/domains/organizer-cfp-reviews/ProposalReview.ts';
-import { ProposalUpdateSchema } from '~/domains/organizer-cfp-reviews/ProposalReview.types.ts';
+import { ProposalReview } from '~/domains/proposal-reviews/ProposalReview.ts';
+import { ProposalUpdateSchema } from '~/domains/proposal-reviews/ProposalReview.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast } from '~/libs/toasts/toast.server.ts';
 import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm.tsx';

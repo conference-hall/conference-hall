@@ -5,8 +5,8 @@ import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
-import { CfpReviewsSearch } from '~/domains/organizer-cfp-reviews/CfpReviewsSearch.ts';
-import { Deliberate, ProposalsStatusUpdateSchema } from '~/domains/organizer-cfp-reviews/Deliberate.ts';
+import { CfpReviewsSearch } from '~/domains/proposal-reviews/CfpReviewsSearch.ts';
+import { Deliberate, DeliberateBulkSchema } from '~/domains/proposal-reviews/Deliberate.ts';
 import { parseUrlPage } from '~/domains/shared/Pagination.ts';
 import { parseUrlFilters } from '~/domains/shared/ProposalSearchBuilder.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
@@ -36,7 +36,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   invariant(params.event, 'Invalid event slug');
 
   const form = await request.formData();
-  const result = parse(form, { schema: ProposalsStatusUpdateSchema });
+  const result = parse(form, { schema: DeliberateBulkSchema });
   if (!result.value) return json(null);
 
   const { selection, status, allPagesSelected } = result.value;

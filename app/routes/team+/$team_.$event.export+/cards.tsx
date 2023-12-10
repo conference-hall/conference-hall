@@ -6,7 +6,7 @@ import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { Subtitle, Text } from '~/design-system/Typography.tsx';
-import { CfpReviewsSearch } from '~/domains/organizer-cfp-reviews/CfpReviewsSearch.ts';
+import { CfpReviewsSearch } from '~/domains/proposal-reviews/CfpReviewsSearch';
 import { parseUrlFilters } from '~/domains/shared/ProposalSearchBuilder.types';
 import { requireSession } from '~/libs/auth/session.ts';
 import { getLanguage } from '~/libs/formatters/languages';

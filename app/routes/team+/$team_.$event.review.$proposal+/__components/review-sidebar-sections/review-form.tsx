@@ -1,16 +1,15 @@
 import { ArrowRightCircleIcon } from '@heroicons/react/24/outline';
-import type { ReviewFeeling } from '@prisma/client';
 import { useFetcher, useParams, useSearchParams } from '@remix-run/react';
 import { useRef, useState } from 'react';
 
 import { Button } from '~/design-system/Buttons.tsx';
 import { TextArea } from '~/design-system/forms/TextArea.tsx';
+import { H2 } from '~/design-system/Typography.tsx';
+import type { UserReview } from '~/types/proposals.types.ts';
 
-import { options, ReviewNoteSelector } from './ReviewNoteSelector.tsx';
+import { options, ReviewSelector } from './review-selector.tsx';
 
-type FormValues = { note: number | null; feeling: ReviewFeeling | null; comment: string | null };
-
-type Props = { initialValues: FormValues; nextId?: string };
+type Props = { initialValues: UserReview; nextId?: string };
 
 export function ReviewForm({ initialValues, nextId }: Props) {
   const [changed, setChanged] = useState<boolean>(false);
@@ -36,6 +35,7 @@ export function ReviewForm({ initialValues, nextId }: Props) {
     if (!feeling) return;
 
     const data: FormData = new FormData();
+    data.append('intent', 'add-review');
     data.append('note', note);
     data.append('feeling', feeling);
     data.append('comment', comment);
@@ -45,41 +45,45 @@ export function ReviewForm({ initialValues, nextId }: Props) {
   };
 
   return (
-    <fetcher.Form ref={form} className="space-y-4">
-      <ReviewNoteSelector value={initialValues} onChange={() => setChanged(true)} />
+    <div className="space-y-4 p-4 lg:p-6">
+      <H2 size="s">Your review</H2>
 
-      <TextArea
-        name="comment"
-        aria-label="Review comment"
-        defaultValue={initialValues.comment || ''}
-        placeholder="Leave a comment"
-        rows={3}
-        onChange={() => setChanged(true)}
-      />
+      <fetcher.Form ref={form} className="space-y-4">
+        <ReviewSelector value={initialValues} onChange={() => setChanged(true)} />
 
-      <div className="flex gap-2">
-        <Button
-          type="button"
-          onClick={() => handleClick(null)}
-          variant="secondary"
-          block
-          disabled={disabled}
-          className="basis-1/2"
-        >
-          Save review
-        </Button>
-        <Button
-          type="button"
-          onClick={() => handleClick(nextPath)}
-          variant="primary"
-          iconRight={ArrowRightCircleIcon}
-          block
-          disabled={disabled}
-          className="basis-1/2"
-        >
-          Save & Next
-        </Button>
-      </div>
-    </fetcher.Form>
+        <TextArea
+          name="comment"
+          aria-label="Review comment"
+          defaultValue={initialValues.comment || ''}
+          placeholder="Leave a comment"
+          rows={3}
+          onChange={() => setChanged(true)}
+        />
+
+        <div className="flex gap-2">
+          <Button
+            type="button"
+            onClick={() => handleClick(null)}
+            variant="secondary"
+            block
+            disabled={disabled}
+            className="basis-1/2"
+          >
+            Save review
+          </Button>
+          <Button
+            type="button"
+            onClick={() => handleClick(nextPath)}
+            variant="primary"
+            iconRight={ArrowRightCircleIcon}
+            block
+            disabled={disabled}
+            className="basis-1/2"
+          >
+            Save & Next
+          </Button>
+        </div>
+      </fetcher.Form>
+    </div>
   );
 }

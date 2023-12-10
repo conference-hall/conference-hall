@@ -1,7 +1,7 @@
 import { Checkbox } from '~/design-system/forms/Checkboxes';
 import { List } from '~/design-system/list/List';
 
-import { ChangeStatus } from '../actions/change-status';
+import { DeliberationButton } from '../actions/deliberation-button';
 import { ReviewsProgress } from './reviews-progress';
 
 type Props = {
@@ -22,19 +22,19 @@ export function ListHeader({ checkboxRef, total, totalSelected, totalReviewed, s
         </Checkbox>
         {totalSelected !== 0 && (
           <div className="flex items-center gap-2">
-            <ChangeStatus
+            <DeliberationButton
               status="ACCEPTED"
               selection={selection}
               isAllPagesSelected={isAllPagesSelected}
               totalSelected={totalSelected}
             />
-            <ChangeStatus
+            <DeliberationButton
               status="PENDING"
               selection={selection}
               isAllPagesSelected={isAllPagesSelected}
               totalSelected={totalSelected}
             />
-            <ChangeStatus
+            <DeliberationButton
               status="REJECTED"
               selection={selection}
               isAllPagesSelected={isAllPagesSelected}
