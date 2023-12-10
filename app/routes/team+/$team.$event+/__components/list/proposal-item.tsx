@@ -6,7 +6,7 @@ import type { ChangeEvent } from 'react';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
 import { Text } from '~/design-system/Typography';
 import { Join } from '~/design-system/utils/join';
-import { ReviewNote } from '~/routes/__components/reviews/ReviewNote';
+import { GlobalReviewNote, UserReviewNote } from '~/routes/__components/reviews/ReviewNote';
 import { useTeam } from '~/routes/team+/$team';
 
 import type { ProposalData } from './types';
@@ -45,9 +45,9 @@ export function ProposalItem({ proposal, isSelected, isAllPagesSelected, toggle 
           </div>
         </div>
         <div className="flex gap-4 items-center">
-          <div className="hidden sm:flex sm:items-center sm:gap-4">
-            <ReviewNote feeling="USER" note={you.note} />
-            {summary && <ReviewNote feeling="NEUTRAL" note={summary.average} />}
+          <div className="hidden sm:flex sm:items-center sm:gap-6">
+            <UserReviewNote feeling={you.feeling} note={you.note} />
+            {summary && <GlobalReviewNote feeling="NEUTRAL" note={summary.average} hideEmpty />}
           </div>
           <ChevronRightIcon className="w-5 h-5 text-gray-400" />
         </div>

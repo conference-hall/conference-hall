@@ -1,7 +1,7 @@
-import { ArrowRightIcon, CheckIcon } from '@heroicons/react/20/solid';
+import { CheckIcon } from '@heroicons/react/20/solid';
 
-import { ButtonLink } from '~/design-system/Buttons';
 import { Card } from '~/design-system/layouts/Card';
+import { Link } from '~/design-system/Links';
 import { Text } from '~/design-system/Typography';
 
 import { Statistic } from './statistic';
@@ -33,9 +33,9 @@ export function PublicationCard({ id, title, subtitle, statistics, to }: Props) 
       </div>
       {statistics.notPublished > 0 ? (
         <div className="flex">
-          <ButtonLink to={to} iconRight={ArrowRightIcon}>
-            Publish results
-          </ButtonLink>
+          <Link to={to} className="font-medium">
+            Publish results &rarr;
+          </Link>
         </div>
       ) : (
         <div className="flex items-center py-2">

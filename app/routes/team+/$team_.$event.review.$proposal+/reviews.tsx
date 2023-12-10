@@ -9,7 +9,7 @@ import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
 import { Subtitle } from '~/design-system/Typography.tsx';
 import { ProposalReview } from '~/domains/proposal-reviews/ProposalReview';
 import { requireSession } from '~/libs/auth/session.ts';
-import { ReviewNote } from '~/routes/__components/reviews/ReviewNote.tsx';
+import { GlobalReviewNote } from '~/routes/__components/reviews/ReviewNote.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
@@ -36,7 +36,7 @@ export default function ProposalReviewRoute() {
         <Card as="li" key={review.id} className="space-y-4 p-4">
           <div className="flex items-center justify-between">
             <AvatarName size="xs" picture={review.picture} name={review.name} />
-            <ReviewNote feeling={review.feeling} note={review.note} />
+            <GlobalReviewNote feeling={review.feeling} note={review.note} />
           </div>
           <Subtitle>{review.comment ?? 'No comment.'}</Subtitle>
         </Card>

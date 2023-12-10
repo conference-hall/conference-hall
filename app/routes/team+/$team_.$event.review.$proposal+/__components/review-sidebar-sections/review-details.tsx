@@ -1,5 +1,5 @@
 import { H2, Text } from '~/design-system/Typography';
-import { ReviewNote } from '~/routes/__components/reviews/ReviewNote';
+import { GlobalReviewNote } from '~/routes/__components/reviews/ReviewNote';
 import type { GlobalReview, UserReview } from '~/types/proposals.types';
 
 type Props = { review: GlobalReview | null; userReview: UserReview };
@@ -13,16 +13,16 @@ export function ReviewDetails({ review, userReview }: Props) {
         <div className="flex items-center justify-between">
           <Text weight="medium">Global review</Text>
           <div className="flex gap-4">
-            <ReviewNote feeling="NEGATIVE" note={review?.negatives} />
-            <ReviewNote feeling="POSITIVE" note={review?.positives} />
-            <ReviewNote feeling="NEUTRAL" note={review?.average} />
+            <GlobalReviewNote feeling="NEGATIVE" note={review?.negatives} />
+            <GlobalReviewNote feeling="POSITIVE" note={review?.positives} />
+            <GlobalReviewNote feeling="NEUTRAL" note={review?.average} />
           </div>
         </div>
       )}
 
       <div className="flex items-center justify-between">
         <Text weight="medium">Your review</Text>
-        <ReviewNote feeling={userReview.feeling} note={userReview.note} />
+        <GlobalReviewNote feeling={userReview.feeling} note={userReview.note} />
       </div>
     </div>
   );
