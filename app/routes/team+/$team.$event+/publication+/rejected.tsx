@@ -3,14 +3,14 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import invariant from 'tiny-invariant';
 
-import { ResultsAnnouncement } from '~/domains/organizer-cfp-results/ResultsAnnouncement';
-import { PublishResultFormSchema } from '~/domains/organizer-cfp-results/ResultsAnnouncement.types';
 import { UserEvent } from '~/domains/organizer-event-settings/UserEvent';
+import { Publication } from '~/domains/proposal-publication/Publication';
+import { PublishResultFormSchema } from '~/domains/proposal-publication/Publication.types';
 import { requireSession } from '~/libs/auth/session.ts';
 import { BadRequestError } from '~/libs/errors';
 import { redirectWithToast } from '~/libs/toasts/toast.server';
 
-import { AnnoucementConfirmModal } from './__components/AnnoucementConfirmModal';
+import { PublicationConfirm } from './__components/publication-confirm';
 import { useResultsStatistics } from './_layout';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
@@ -30,16 +30,16 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const result = parse(form, { schema: PublishResultFormSchema });
   if (!result.value) throw new BadRequestError('Invalid form data');
 
-  await ResultsAnnouncement.for(userId, params.team, params.event).publishAll('ACCEPTED', result.value.sendEmails);
+  await Publication.for(userId, params.team, params.event).publishAll('REJECTED', result.value.sendEmails);
 
   return redirectWithToast(
-    `/team/${params.team}/${params.event}/deliberation`,
+    `/team/${params.team}/${params.event}/publication`,
     'success',
-    'Accepted proposal published.',
+    'Rejected proposal published.',
   );
 };
 
-export default function ResultsAcceptedModalRoute() {
+export default function PublishRejectedModalRoute() {
   const statistics = useResultsStatistics();
-  return <AnnoucementConfirmModal title="Accepted proposals announcement" statistics={statistics.accepted} />;
+  return <PublicationConfirm title="Rejected proposals publication" statistics={statistics.rejected} />;
 }

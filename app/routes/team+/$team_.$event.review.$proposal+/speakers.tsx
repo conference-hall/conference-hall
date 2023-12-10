@@ -11,7 +11,7 @@ import { TwitterIcon } from '~/design-system/icons/TwitterIcon.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { Markdown } from '~/design-system/Markdown.tsx';
 import { Text } from '~/design-system/Typography.tsx';
-import { ProposalReview } from '~/domains/organizer-cfp-reviews/ProposalReview.ts';
+import { ProposalReview } from '~/domains/proposal-reviews/ProposalReview';
 import { requireSession } from '~/libs/auth/session.ts';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {

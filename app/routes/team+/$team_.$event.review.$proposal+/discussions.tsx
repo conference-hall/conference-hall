@@ -2,7 +2,7 @@ import { type ActionFunctionArgs, json, type LoaderFunctionArgs } from '@remix-r
 import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { ProposalReviewDiscussion } from '~/domains/organizer-cfp-reviews/ProposalReviewDiscussion.ts';
+import { ProposalReviewDiscussion } from '~/domains/proposal-reviews/ProposalReviewDiscussion.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { useUser } from '~/root.tsx';
 

@@ -4,13 +4,13 @@ import { json } from '@remix-run/node';
 import { Outlet, useLoaderData, useOutletContext, useParams } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { ResultsAnnouncement } from '~/domains/organizer-cfp-results/ResultsAnnouncement.ts';
-import { Deliberate, DeliberateSchema } from '~/domains/organizer-cfp-reviews/Deliberate.ts';
-import type { ProposalReviewData } from '~/domains/organizer-cfp-reviews/ProposalReview.ts';
-import { ProposalReview } from '~/domains/organizer-cfp-reviews/ProposalReview.ts';
-import { ReviewUpdateDataSchema } from '~/domains/organizer-cfp-reviews/ProposalReview.types.ts';
 import type { EventData } from '~/domains/organizer-event-settings/UserEvent.ts';
 import { UserEvent } from '~/domains/organizer-event-settings/UserEvent.ts';
+import { Publication } from '~/domains/proposal-publication/Publication.ts';
+import { Deliberate, DeliberateSchema } from '~/domains/proposal-reviews/Deliberate.ts';
+import type { ProposalReviewData } from '~/domains/proposal-reviews/ProposalReview.ts';
+import { ProposalReview } from '~/domains/proposal-reviews/ProposalReview.ts';
+import { ReviewUpdateDataSchema } from '~/domains/proposal-reviews/ProposalReview.types.ts';
 import { parseUrlFilters } from '~/domains/shared/ProposalSearchBuilder.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
@@ -71,7 +71,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       return toast('success', 'Deliberation saved.');
     }
     case 'publish-results': {
-      const result = ResultsAnnouncement.for(userId, params.team, params.event);
+      const result = Publication.for(userId, params.team, params.event);
       await result.publish(params.proposal, false);
       return toast('success', 'Result published.');
     }

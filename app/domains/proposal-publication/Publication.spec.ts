@@ -7,9 +7,9 @@ import { userFactory } from 'tests/factories/users';
 
 import { ForbiddenOperationError, ProposalNotFoundError } from '~/libs/errors';
 
-import { ResultsAnnouncement } from './ResultsAnnouncement';
+import { Publication } from './Publication';
 
-describe('ResultsAnnouncement', () => {
+describe('Publication', () => {
   let owner: User, member: User, reviewer: User, speaker1: User, speaker2: User;
   let proposal: Proposal, proposalSubmitted: Proposal;
   let team: Team;
@@ -49,7 +49,7 @@ describe('ResultsAnnouncement', () => {
 
   describe('#statistics', () => {
     it('returns results statistics for the event', async () => {
-      const announcement = ResultsAnnouncement.for(owner.id, team.slug, event.slug);
+      const announcement = Publication.for(owner.id, team.slug, event.slug);
       const count = await announcement.statistics();
       expect(count).toEqual({
         deliberation: { total: 5, pending: 1, accepted: 3, rejected: 1 },
@@ -62,7 +62,7 @@ describe('ResultsAnnouncement', () => {
 
   describe('#publishAll', () => {
     it('publish for the even all results for accepted proposals not already announced', async () => {
-      const announcement = ResultsAnnouncement.for(owner.id, team.slug, event.slug);
+      const announcement = Publication.for(owner.id, team.slug, event.slug);
 
       const count = await announcement.statistics();
       expect(count.accepted).toEqual({ published: 1, notPublished: 2 });
@@ -86,7 +86,7 @@ describe('ResultsAnnouncement', () => {
     });
 
     it('publish for the even all results for rejected proposals not already announced', async () => {
-      const announcement = ResultsAnnouncement.for(owner.id, team.slug, event.slug);
+      const announcement = Publication.for(owner.id, team.slug, event.slug);
 
       const count = await announcement.statistics();
       expect(count.rejected).toEqual({ published: 0, notPublished: 1 });
@@ -105,21 +105,21 @@ describe('ResultsAnnouncement', () => {
     });
 
     it('can be sent by team members', async () => {
-      const announcement = ResultsAnnouncement.for(member.id, team.slug, event.slug);
+      const announcement = Publication.for(member.id, team.slug, event.slug);
       await announcement.publishAll('ACCEPTED', true);
       const count = await announcement.statistics();
       expect(count.accepted).toEqual({ published: 3, notPublished: 0 });
     });
 
     it('cannot be sent by team reviewers', async () => {
-      const announcement = ResultsAnnouncement.for(reviewer.id, team.slug, event.slug);
+      const announcement = Publication.for(reviewer.id, team.slug, event.slug);
       await expect(announcement.publishAll('ACCEPTED', false)).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
   describe('#publish', () => {
     it('publish result a specific proposal', async () => {
-      const announcement = ResultsAnnouncement.for(owner.id, team.slug, event.slug);
+      const announcement = Publication.for(owner.id, team.slug, event.slug);
 
       const count = await announcement.statistics();
       expect(count.accepted).toEqual({ published: 1, notPublished: 2 });
@@ -138,19 +138,19 @@ describe('ResultsAnnouncement', () => {
     });
 
     it('can be sent by team members', async () => {
-      const announcement = ResultsAnnouncement.for(member.id, team.slug, event.slug);
+      const announcement = Publication.for(member.id, team.slug, event.slug);
       await announcement.publish(proposal.id, false);
       const count = await announcement.statistics();
       expect(count.accepted).toEqual({ published: 2, notPublished: 1 });
     });
 
     it('cannot publish result for a proposal not accepted or rejected', async () => {
-      const announcement = ResultsAnnouncement.for(owner.id, team.slug, event.slug);
+      const announcement = Publication.for(owner.id, team.slug, event.slug);
       await expect(announcement.publish(proposalSubmitted.id, false)).rejects.toThrowError(ProposalNotFoundError);
     });
 
     it('cannot be sent by team reviewers', async () => {
-      const announcement = ResultsAnnouncement.for(reviewer.id, team.slug, event.slug);
+      const announcement = Publication.for(reviewer.id, team.slug, event.slug);
       await expect(announcement.publish(proposal.id, false)).rejects.toThrowError(ForbiddenOperationError);
     });
   });

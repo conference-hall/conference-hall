@@ -7,7 +7,7 @@ import { AvatarName } from '~/design-system/Avatar.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
 import { Subtitle } from '~/design-system/Typography.tsx';
-import { ProposalReview } from '~/domains/organizer-cfp-reviews/ProposalReview.ts';
+import { ProposalReview } from '~/domains/proposal-reviews/ProposalReview';
 import { requireSession } from '~/libs/auth/session.ts';
 import { ReviewNote } from '~/routes/__components/reviews/ReviewNote.tsx';
 

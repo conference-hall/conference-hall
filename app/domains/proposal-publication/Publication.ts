@@ -5,9 +5,9 @@ import { UserEvent } from '../organizer-event-settings/UserEvent';
 import { ProposalAcceptedEmail } from './emails/proposal-accepted.email';
 import { ProposalRejectedEmail } from './emails/proposal-rejected.email';
 
-export type ResultsStatistics = Awaited<ReturnType<typeof ResultsAnnouncement.prototype.statistics>>;
+export type ResultsStatistics = Awaited<ReturnType<typeof Publication.prototype.statistics>>;
 
-export class ResultsAnnouncement {
+export class Publication {
   constructor(
     private userId: string,
     private userEvent: UserEvent,
@@ -15,7 +15,7 @@ export class ResultsAnnouncement {
 
   static for(userId: string, teamSlug: string, eventSlug: string) {
     const userEvent = UserEvent.for(userId, teamSlug, eventSlug);
-    return new ResultsAnnouncement(userId, userEvent);
+    return new Publication(userId, userEvent);
   }
 
   async publishAll(status: 'ACCEPTED' | 'REJECTED', withEmails: boolean) {

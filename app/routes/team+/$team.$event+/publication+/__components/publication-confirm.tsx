@@ -5,11 +5,11 @@ import { Button } from '~/design-system/Buttons';
 import { ToggleGroup } from '~/design-system/forms/Toggles';
 import { Modal } from '~/design-system/Modals';
 
-import { Statistic } from './Statistics';
+import { Statistic } from './statistic';
 
-type AnnoucementConfirmModalProps = { title: string; statistics: { notPublished: number; published: number } };
+type Props = { title: string; statistics: { notPublished: number; published: number } };
 
-export function AnnoucementConfirmModal({ title, statistics }: AnnoucementConfirmModalProps) {
+export function PublicationConfirm({ title, statistics }: Props) {
   const navigate = useNavigate();
   const { state } = useNavigation();
   const isLoading = state !== 'idle';
@@ -53,7 +53,7 @@ export function AnnoucementConfirmModal({ title, statistics }: AnnoucementConfir
           Cancel
         </Button>
         <Button type="submit" form="result-form" loading={isLoading}>
-          Confirm results announcement
+          Confirm results publication
         </Button>
       </Modal.Actions>
     </Modal>
