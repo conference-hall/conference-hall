@@ -2,7 +2,7 @@ import BasePage from '../base.page.ts';
 
 class PublicationPage extends BasePage {
   visit(teamSlug: string, eventSlug: string) {
-    cy.visitAndCheck(`/team/${teamSlug}/${eventSlug}/deliberation`);
+    cy.visitAndCheck(`/team/${teamSlug}/${eventSlug}/publication`);
     this.isPageVisible();
   }
 

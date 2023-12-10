@@ -48,10 +48,10 @@ describe('ProposalReview', () => {
         title: proposal.title,
         abstract: proposal.abstract,
         references: proposal.references,
-        comments: proposal.comments,
         level: proposal.level,
         deliberationStatus: proposal.deliberationStatus,
-        createdAt: proposal.createdAt.toUTCString(),
+        publicationStatus: proposal.publicationStatus,
+        confirmationStatus: proposal.confirmationStatus,
         languages: ['en'],
         formats: [{ id: format.id, name: format.name }],
         categories: [{ id: category.id, name: category.name }],
@@ -94,7 +94,7 @@ describe('ProposalReview', () => {
       const review = await ProposalReview.for(owner.id, team.slug, event.slug, proposal.id).get();
 
       expect(review.reviews).toEqual({
-        summary: undefined,
+        summary: null,
         you: { note: 0, feeling: 'NEGATIVE', comment: 'Booo' },
       });
     });
