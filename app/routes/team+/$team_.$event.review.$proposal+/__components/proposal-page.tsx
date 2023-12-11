@@ -30,7 +30,7 @@ export function ProposalPage({ proposal }: Props) {
   return (
     <Card as="section">
       {proposal.speakers.length > 0 && (
-        <div className="flex flex-col gap-4 lg:flex-row lg:gap-6 px-2 py-4 lg:px-6 border-b border-b-gray-200">
+        <div className="flex flex-col flex-wrap gap-4 lg:flex-row lg:gap-6 px-2 py-4 lg:px-6 border-b border-b-gray-200">
           {proposal.speakers.map((speaker) => (
             <Link
               key={speaker.name}
