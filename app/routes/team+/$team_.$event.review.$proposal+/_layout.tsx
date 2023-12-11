@@ -1,6 +1,6 @@
 import { parse } from '@conform-to/zod';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { json, redirect } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import { Outlet, useLoaderData, useOutletContext, useParams } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
@@ -55,12 +55,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     case 'add-review': {
       const result = parse(form, { schema: ReviewUpdateDataSchema });
       if (!result.value) return toast('error', 'Something went wrong.');
-
       const review = ProposalReview.for(userId, params.team, params.event, params.proposal);
       await review.addReview(result.value);
-
-      const nextPath = form.get('nextPath');
-      if (nextPath) return redirect(nextPath.toString());
       break;
     }
     case 'add-comment': {
@@ -106,12 +102,7 @@ export default function ProposalReviewLayoutRoute() {
         </div>
 
         <div className="w-full md:basis-1/5">
-          <ReviewSidebar
-            proposal={proposal}
-            reviewEnabled={event.reviewEnabled}
-            nextId={pagination.nextId}
-            canDeliberate={canDeliberate}
-          />
+          <ReviewSidebar proposal={proposal} reviewEnabled={event.reviewEnabled} canDeliberate={canDeliberate} />
         </div>
       </div>
     </>

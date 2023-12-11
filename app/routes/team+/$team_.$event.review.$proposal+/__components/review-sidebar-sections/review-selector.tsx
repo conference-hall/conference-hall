@@ -1,8 +1,9 @@
 import { RadioGroup } from '@headlessui/react';
 import { HeartIcon, NoSymbolIcon, StarIcon, XCircleIcon } from '@heroicons/react/24/outline';
-import type { ReviewFeeling } from '@prisma/client';
 import { cx } from 'class-variance-authority';
 import { useCallback, useState } from 'react';
+
+import type { ReviewFeeling } from '~/types/proposals.types';
 
 export type Option = {
   label: string;
@@ -27,7 +28,7 @@ type StyleProps = { option: Option; index: number };
 
 type Review = { note?: number | null; feeling?: string | null };
 
-type Props = { value: Review; onChange: (index: number) => void };
+type Props = { value: Review; onChange: (feeling: ReviewFeeling, note: number | null) => void };
 
 export function ReviewSelector({ value, onChange }: Props) {
   const [selectedIndex, setSelectedIndex] = useState<number | undefined>(
@@ -48,8 +49,11 @@ export function ReviewSelector({ value, onChange }: Props) {
   );
 
   const handleChange = (index: string) => {
-    setSelectedIndex(parseInt(index, 10));
-    onChange(parseInt(index, 10));
+    const selected = parseInt(index, 10);
+    setSelectedIndex(selected);
+
+    const option = options[selected];
+    onChange(option.feeling, option.value);
   };
 
   return (

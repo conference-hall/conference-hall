@@ -7,17 +7,12 @@ import { PublicationDetails } from './review-sidebar-sections/publication-detail
 import { ReviewDetails } from './review-sidebar-sections/review-details';
 import { ReviewForm } from './review-sidebar-sections/review-form';
 
-type Props = {
-  proposal: ProposalData;
-  reviewEnabled: boolean;
-  nextId?: string;
-  canDeliberate: boolean;
-};
+type Props = { proposal: ProposalData; reviewEnabled: boolean; canDeliberate: boolean };
 
-export function ReviewSidebar({ proposal, reviewEnabled, nextId, canDeliberate }: Props) {
+export function ReviewSidebar({ proposal, reviewEnabled, canDeliberate }: Props) {
   return (
     <Card as="section" className="divide-y divide-gray-200">
-      {reviewEnabled && <ReviewForm key={proposal.id} initialValues={proposal.reviews.you} nextId={nextId} />}
+      {reviewEnabled && <ReviewForm key={proposal.id} initialValues={proposal.reviews.you} />}
 
       <ReviewDetails review={proposal.reviews.summary} userReview={proposal.reviews.you} />
 
