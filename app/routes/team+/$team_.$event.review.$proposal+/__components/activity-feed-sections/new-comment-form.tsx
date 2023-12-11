@@ -5,7 +5,9 @@ import { Avatar } from '~/design-system/Avatar';
 import { Button } from '~/design-system/Buttons';
 import { useUser } from '~/root';
 
-export function NewCommentForm({ compact = false }: { compact?: boolean }) {
+type Props = { compact?: boolean; className?: string };
+
+export function NewCommentForm({ compact = false, className }: Props) {
   const { user } = useUser();
 
   const navigation = useNavigation();
@@ -17,7 +19,7 @@ export function NewCommentForm({ compact = false }: { compact?: boolean }) {
   }, [isAdding]);
 
   return (
-    <>
+    <div className={className}>
       {!compact && <Avatar picture={user?.picture} name={user?.name} size="xs" />}
 
       <Form ref={formRef} method="POST" className="relative flex-auto">
@@ -43,6 +45,6 @@ export function NewCommentForm({ compact = false }: { compact?: boolean }) {
           </Button>
         </div>
       </Form>
-    </>
+    </div>
   );
 }

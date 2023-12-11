@@ -37,7 +37,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       if (comment) await discussions.add(comment.toString());
       break;
     }
-    case 'remove-comment': {
+    case 'delete-comment': {
       const discussions = Comments.for(userId, params.team, params.event, params.proposal);
       const commentId = form.get('commentId');
       if (commentId) await discussions.remove(commentId.toString());

@@ -6,6 +6,7 @@ import { ClientOnly } from '~/routes/__components/utils/ClientOnly';
 
 export function ReviewItem({ item }: { item: FeedItem }) {
   if (item.type !== 'review') return null;
+
   return (
     <>
       {item.feeling === 'NEUTRAL' && (

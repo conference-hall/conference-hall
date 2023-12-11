@@ -25,7 +25,7 @@ export function ReviewForm({ initialValues }: Props) {
 
       <ReviewSelector value={initialValues} onChange={handleSubmit} />
 
-      <NewCommentForm compact />
+      <NewCommentForm compact className="hidden lg:block" />
     </div>
   );
 }
