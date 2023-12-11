@@ -7,6 +7,7 @@ import invariant from 'tiny-invariant';
 import type { EventData } from '~/domains/organizer-event-settings/UserEvent.ts';
 import { UserEvent } from '~/domains/organizer-event-settings/UserEvent.ts';
 import { Publication } from '~/domains/proposal-publication/Publication.ts';
+import { ActivityFeed } from '~/domains/proposal-reviews/ActivityFeed.ts';
 import { Comments } from '~/domains/proposal-reviews/Comments.ts';
 import { Deliberate, DeliberateSchema } from '~/domains/proposal-reviews/Deliberate.ts';
 import type { ProposalReviewData } from '~/domains/proposal-reviews/ProposalReview.ts';
@@ -19,6 +20,8 @@ import { toast } from '~/libs/toasts/toast.server.ts';
 import { useUser } from '~/root.tsx';
 import { Navbar } from '~/routes/__components/navbar/Navbar.tsx';
 
+import { ActivityFeed as Feed } from './__components/activity-feed.tsx';
+import { ProposalPage } from './__components/proposal-page.tsx';
 import { ReviewHeader } from './__components/review-header.tsx';
 import { ReviewSidebar } from './__components/review-sidebar.tsx';
 
@@ -39,7 +42,9 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const proposal = await review.get();
   const pagination = await review.getPreviousAndNextReviews(filters);
 
-  return json({ event, proposal, pagination });
+  const activity = await ActivityFeed.for(userId, params.team, params.event, params.proposal).activity();
+
+  return json({ event, proposal, activity, pagination });
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -65,6 +70,12 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       if (comment) await discussions.add(comment.toString());
       break;
     }
+    case 'delete-comment': {
+      const discussions = Comments.for(userId, params.team, params.event, params.proposal);
+      const commentId = form.get('commentId');
+      if (commentId) await discussions.remove(commentId.toString());
+      break;
+    }
     case 'change-deliberation-status': {
       const result = parse(form, { schema: DeliberateSchema });
       if (!result.value) return toast('error', 'Something went wrong.');
@@ -85,7 +96,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 export default function ProposalReviewLayoutRoute() {
   const params = useParams();
   const { user } = useUser();
-  const { event, proposal, pagination } = useLoaderData<typeof loader>();
+  const { event, proposal, pagination, activity } = useLoaderData<typeof loader>();
 
   const role = user?.teams.find((team) => team.slug === params.team)?.role;
   const canDeliberate = role !== 'REVIEWER';
@@ -98,7 +109,9 @@ export default function ProposalReviewLayoutRoute() {
 
       <div className="max-w-7xl m-auto flex flex-col gap-4 p-4 lg:flex-row">
         <div className="flex-1 space-y-4">
-          <Outlet context={{ user, event, proposal }} />
+          <ProposalPage proposal={proposal} />
+          <Feed activity={activity} />
+          <Outlet context={{ event, proposal }} />
         </div>
 
         <div className="w-full lg:basis-1/5">

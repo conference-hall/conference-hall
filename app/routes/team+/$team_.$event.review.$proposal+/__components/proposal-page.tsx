@@ -1,5 +1,6 @@
+import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
-import { useParams, useSearchParams } from '@remix-run/react';
+import { Link, useParams, useSearchParams } from '@remix-run/react';
 
 import { AvatarName } from '~/design-system/Avatar.tsx';
 import { Badge } from '~/design-system/Badges.tsx';
@@ -29,15 +30,22 @@ export function ProposalPage({ proposal }: Props) {
   return (
     <Card as="section">
       {proposal.speakers.length > 0 && (
-        <div className="flex flex-col gap-4 lg:flex-row lg:gap-8 px-4 py-6 lg:px-8 border-b border-b-gray-200">
+        <div className="flex flex-col gap-4 lg:flex-row lg:gap-6 px-2 py-4 lg:px-6 border-b border-b-gray-200">
           {proposal.speakers.map((speaker) => (
-            <AvatarName
+            <Link
               key={speaker.name}
-              name={speaker.name}
-              picture={speaker.picture}
-              subtitle={speaker.company}
-              size="s"
-            />
+              to={`speakers/${speaker.id}?${search.toString()}`}
+              className="flex items-end gap-1 hover:bg-gray-100 p-2 rounded-md"
+            >
+              <AvatarName
+                key={speaker.name}
+                name={speaker.name}
+                picture={speaker.picture}
+                subtitle={speaker.company}
+                size="s"
+              />
+              <ChevronRightIcon className="h-4 w-4 text-gray-600" aria-hidden="true" />
+            </Link>
           ))}
         </div>
       )}

@@ -10,7 +10,7 @@ type Props = { activity: Feed; picture?: string | null };
 
 export function ActivityFeed({ activity }: Props) {
   return (
-    <div className="pl-4 lg:pr-32 pt-4 pb-8 space-y-6">
+    <div className="pl-4 pt-4 space-y-6 lg:pb-8 lg:pr-32 ">
       {activity.length > 0 && (
         <ul className="space-y-4">
           {activity.map((item, index) => (

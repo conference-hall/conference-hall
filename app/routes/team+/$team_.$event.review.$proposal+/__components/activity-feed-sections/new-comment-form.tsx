@@ -30,10 +30,10 @@ export function NewCommentForm({ compact = false, className }: Props) {
             Add your comment
           </label>
           <textarea
-            rows={compact ? 1 : 2}
-            name="comment"
             id="comment"
-            className="block w-full resize-none border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+            name="comment"
+            rows={compact ? 1 : 2}
+            className="block w-full resize-none border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-0 text-sm leading-6"
             placeholder="Add your comment..."
             defaultValue=""
           />

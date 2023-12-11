@@ -1,10 +1,10 @@
 import { parse } from '@conform-to/zod';
 import { type ActionFunctionArgs, json, type LoaderFunctionArgs } from '@remix-run/node';
-import { Form, useActionData, useSearchParams } from '@remix-run/react';
+import { Form, useActionData, useNavigate } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { Button, ButtonLink } from '~/design-system/Buttons.tsx';
-import { Card } from '~/design-system/layouts/Card.tsx';
+import { Button } from '~/design-system/Buttons.tsx';
+import SlideOver from '~/design-system/SlideOver.tsx';
 import { ProposalReview } from '~/domains/proposal-reviews/ProposalReview.ts';
 import { ProposalUpdateSchema } from '~/domains/proposal-reviews/ProposalReview.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
@@ -39,27 +39,29 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   );
 };
 
-export default function OrganizerProposalEditRoute() {
+export default function ProposalEditRoute() {
   const { event } = useProposalEvent();
   const { proposal } = useProposalReview();
-  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const errors = useActionData<typeof action>();
 
+  const onClose = () => navigate(-1);
+
   return (
-    <Card>
-      <Card.Content>
+    <SlideOver open onClose={onClose} size="l">
+      <SlideOver.Content title="Edit proposal" onClose={onClose}>
         <Form id="edit-proposal-form" method="POST">
           <DetailsForm initialValues={proposal} formats={event.formats} categories={event.categories} errors={errors} />
         </Form>
-      </Card.Content>
-      <Card.Actions>
-        <ButtonLink to={{ pathname: '..', search: searchParams.toString() }} variant="secondary">
+      </SlideOver.Content>
+      <SlideOver.Actions>
+        <Button onClick={onClose} variant="secondary">
           Cancel
-        </ButtonLink>
+        </Button>
         <Button type="submit" form="edit-proposal-form">
           Save proposal
         </Button>
-      </Card.Actions>
-    </Card>
+      </SlideOver.Actions>
+    </SlideOver>
   );
 }
