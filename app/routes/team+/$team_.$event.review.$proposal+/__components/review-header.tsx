@@ -29,7 +29,7 @@ export function ReviewHeader({ title, pagination }: Props) {
   useHotkeys('escape', () => navigate({ pathname: closePath, search }));
 
   return (
-    <div className="bg-white border-b border-b-gray-200 shadow-sm">
+    <div className="sticky top-0 bg-white border-b border-b-gray-200 shadow-sm z-10">
       <header className="max-w-7xl m-auto flex items-center gap-4 p-4">
         <nav className="flex items-center gap-2 lg:gap-4">
           <IconButtonLink
