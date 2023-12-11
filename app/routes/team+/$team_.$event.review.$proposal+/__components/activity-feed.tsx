@@ -1,150 +1,44 @@
 import { HeartIcon, StarIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
+import { formatDistanceToNowStrict } from 'date-fns';
 
 import { Avatar } from '~/design-system/Avatar';
 import { Button } from '~/design-system/Buttons';
+import type { Feed } from '~/domains/proposal-reviews/ActivityFeed';
+import { ClientOnly } from '~/routes/__components/utils/ClientOnly';
 
-const activity = [
-  {
-    id: 4,
-    type: 'commented',
-    person: {
-      name: 'Chelsea Hagon',
-      imageUrl:
-        'https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    },
-    comment: 'Called client, they reassured me the invoice would be paid by the 25th.',
-    date: '3d ago',
-    dateTime: '2023-01-23T15:56',
-  },
-  {
-    id: 41,
-    type: 'commented',
-    person: {
-      name: 'Chelsea Hagon',
-      imageUrl:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    },
-    comment: 'Called client, they reassured me the invoice would be paid by the 25th.',
-    date: '3d ago',
-    dateTime: '2023-01-23T15:56',
-  },
-  {
-    id: 43,
-    type: 'reviewed',
-    person: {
-      name: 'Chelsea Hagon',
-      imageUrl:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    },
-    comment: 'Called client, they reassured me the invoice would be paid by the 25th.',
-    feeling: 'NEUTRAL',
-    note: 4,
-    date: '3d ago',
-    dateTime: '2023-01-23T15:56',
-  },
-  {
-    id: 43,
-    type: 'reviewed',
-    person: {
-      name: 'Chelsea Hagon',
-      imageUrl:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    },
-    comment: 'Called client, they reassured me the invoice would be paid by the 25th.',
-    feeling: 'NEUTRAL',
-    note: 4,
-    date: '3d ago',
-    dateTime: '2023-01-23T15:56',
-  },
-  {
-    id: 43,
-    type: 'reviewed',
-    person: {
-      name: 'Chelsea Hagon',
-      imageUrl:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    },
-    comment: 'Called client, they reassured me the invoice would be paid by the 25th.',
-    feeling: 'NEUTRAL',
-    note: 4,
-    date: '3d ago',
-    dateTime: '2023-01-23T15:56',
-  },
-  {
-    id: 43,
-    type: 'reviewed',
-    person: {
-      name: 'Chelsea Hagon',
-      imageUrl:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    },
-    comment: 'Called client, they reassured me the invoice would be paid by the 25th.',
-    feeling: 'NEUTRAL',
-    note: 4,
-    date: '3d ago',
-    dateTime: '2023-01-23T15:56',
-  },
-  {
-    id: 44,
-    type: 'reviewed',
-    person: {
-      name: 'Chelsea Hagon',
-      imageUrl:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    },
-    comment: 'Called client, they reassured me the invoice would be paid by the 25th.',
-    feeling: 'POSITIVE',
-    note: 5,
-    date: '3d ago',
-    dateTime: '2023-01-23T15:56',
-  },
-  {
-    id: 24,
-    type: 'commented',
-    person: {
-      name: 'Chelsea Hagon',
-      imageUrl:
-        'https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    },
-    comment: 'Called client, they reassured me the invoice would be paid by the 25th.',
-    date: '3d ago',
-    dateTime: '2023-01-23T15:56',
-  },
-];
-
-export function ActivityFeed() {
+export function ActivityFeed({ activity }: { activity: Feed }) {
   return (
     <div className="pl-4 md:pr-32 pt-4 pb-8">
       <ul className="space-y-4">
-        {activity.map((activityItem, activityItemIdx) => (
-          <li key={activityItem.id} className="relative flex gap-x-4">
+        {activity.map((item, itemIdx) => (
+          <li key={item.id} className="relative flex gap-x-4">
             <div
               className={cx(
-                activityItemIdx === activity.length - 1 ? 'h-6' : '-bottom-8',
+                itemIdx === activity.length - 1 ? 'h-8' : '-bottom-8',
                 'absolute left-0 -top-8 flex w-6 justify-center',
               )}
             >
               <div className="w-px bg-gray-300" />
             </div>
-            {activityItem.type === 'commented' ? (
+            {item.type === 'comment' ? (
               <>
-                <Avatar picture={activityItem.person.imageUrl} size="xs" className="relative mt-3 flex-none" />
+                <Avatar picture={item.picture} name={item.user} size="xs" className="relative mt-3 flex-none" />
                 <div className="flex-auto rounded-md p-3 ring-1 ring-inset ring-gray-200 bg-white">
                   <div className="flex justify-between gap-x-4">
                     <div className="py-0.5 text-xs leading-5 text-gray-500">
-                      <span className="font-medium text-gray-900">{activityItem.person.name}</span> commented
+                      <span className="font-medium text-gray-900">{item.user}</span> commented
                     </div>
-                    <time dateTime={activityItem.dateTime} className="flex-none py-0.5 text-xs leading-5 text-gray-500">
-                      {activityItem.date}
+                    <time dateTime={item.timestamp} className="flex-none py-0.5 text-xs leading-5 text-gray-500">
+                      <ClientOnly>{() => `${formatDistanceToNowStrict(new Date(item.timestamp))} ago`}</ClientOnly>
                     </time>
                   </div>
-                  <p className="text-sm leading-6 text-gray-500">{activityItem.comment}</p>
+                  <p className="text-sm leading-6 text-gray-500">{item.comment}</p>
                 </div>
               </>
             ) : (
               <>
-                {activityItem.feeling === 'POSITIVE' ? (
+                {item.feeling === 'POSITIVE' ? (
                   <div className="relative flex h-6 w-6 flex-none items-center justify-center rounded-full bg-red-400 z-10">
                     <HeartIcon className="h-4 w-4 text-white" aria-hidden="true" />
                   </div>
@@ -154,14 +48,11 @@ export function ActivityFeed() {
                   </div>
                 )}
                 <p className="flex-auto py-0.5 text-xs leading-5 text-gray-500">
-                  <span className="font-medium text-gray-900">{activityItem.person.name}</span> {activityItem.type} the
-                  proposal with <strong>{activityItem.note} stars.</strong>
+                  <span className="font-medium text-gray-900">{item.user}</span> {item.type} the proposal with{' '}
+                  <strong>{item.note} stars.</strong>
                 </p>
-                <time
-                  dateTime={activityItem.dateTime}
-                  className="flex-none py-0.5 pr-3 text-xs leading-5 text-gray-500"
-                >
-                  {activityItem.date}
+                <time dateTime={item.timestamp} className="flex-none py-0.5 pr-3 text-xs leading-5 text-gray-500">
+                  <ClientOnly>{() => `${formatDistanceToNowStrict(new Date(item.timestamp))} ago`}</ClientOnly>
                 </time>
               </>
             )}
