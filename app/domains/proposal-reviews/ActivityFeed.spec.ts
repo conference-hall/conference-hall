@@ -30,7 +30,11 @@ describe('ActivityFeed', () => {
       const message2 = await messageFactory({ proposal, user: member, attributes: { message: 'Message 2' } });
       const review2 = await reviewFactory({ proposal, user: member, attributes: { feeling: 'POSITIVE', note: 4 } });
 
-      const activity = await new ActivityFeed(proposal.id).activity();
+      // TODO: Add tests
+      // reviews."feeling" != 'NO_OPINION'
+      // messages."channel" = 'ORGANIZER'
+
+      const activity = await ActivityFeed.for(owner.id, team.slug, event.slug, proposal.id).activity();
 
       expect(activity).toEqual([
         {

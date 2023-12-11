@@ -1,12 +1,13 @@
 import { parse } from '@conform-to/zod';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
+import { json, redirect } from '@remix-run/node';
 import { Outlet, useLoaderData, useOutletContext, useParams } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import type { EventData } from '~/domains/organizer-event-settings/UserEvent.ts';
 import { UserEvent } from '~/domains/organizer-event-settings/UserEvent.ts';
 import { Publication } from '~/domains/proposal-publication/Publication.ts';
+import { Comments } from '~/domains/proposal-reviews/Comments.ts';
 import { Deliberate, DeliberateSchema } from '~/domains/proposal-reviews/Deliberate.ts';
 import type { ProposalReviewData } from '~/domains/proposal-reviews/ProposalReview.ts';
 import { ProposalReview } from '~/domains/proposal-reviews/ProposalReview.ts';
@@ -14,13 +15,12 @@ import { ReviewUpdateDataSchema } from '~/domains/proposal-reviews/ProposalRevie
 import { parseUrlFilters } from '~/domains/shared/ProposalSearchBuilder.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
-import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
+import { toast } from '~/libs/toasts/toast.server.ts';
 import { useUser } from '~/root.tsx';
 import { Navbar } from '~/routes/__components/navbar/Navbar.tsx';
 
 import { ReviewHeader } from './__components/review-header.tsx';
 import { ReviewSidebar } from './__components/review-sidebar.tsx';
-import { ReviewTabs } from './__components/review-tabs.tsx';
 
 export type ProposalData = ProposalReviewData;
 
@@ -59,22 +59,28 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       const review = ProposalReview.for(userId, params.team, params.event, params.proposal);
       await review.addReview(result.value);
 
-      const nextPath = form.get('nextPath') as string;
-      if (nextPath) return redirectWithToast(nextPath, 'success', 'Review saved.');
-      return toast('success', 'Review saved.');
+      const nextPath = form.get('nextPath');
+      if (nextPath) return redirect(nextPath.toString());
+      break;
+    }
+    case 'add-comment': {
+      const discussions = Comments.for(userId, params.team, params.event, params.proposal);
+      const comment = form.get('comment');
+      if (comment) await discussions.add(comment.toString());
+      break;
     }
     case 'change-deliberation-status': {
       const result = parse(form, { schema: DeliberateSchema });
       if (!result.value) return toast('error', 'Something went wrong.');
       const deliberate = Deliberate.for(userId, params.team, params.event);
       await deliberate.mark([params.proposal], result.value.status);
-      return null;
+      break;
     }
     case 'publish-results': {
       const result = Publication.for(userId, params.team, params.event);
       console.log({ email: form.get('send-email') });
       await result.publish(params.proposal, form.get('send-email') === 'on');
-      return null;
+      break;
     }
   }
   return null;
@@ -96,13 +102,6 @@ export default function ProposalReviewLayoutRoute() {
 
       <div className="max-w-7xl m-auto flex flex-col gap-4 p-4 md:flex-row">
         <div className="flex-1 space-y-4">
-          <ReviewTabs
-            speakersCount={proposal.speakers.length}
-            reviewsCount={proposal.reviewsCount}
-            messagesCount={proposal.messagesCount}
-            displayReviews={Boolean(proposal.reviews.summary)}
-          />
-
           <Outlet context={{ user, event, proposal }} />
         </div>
 

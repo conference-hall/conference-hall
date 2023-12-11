@@ -33,7 +33,6 @@ export class ProposalReview {
         formats: true,
         categories: true,
         reviews: true,
-        _count: { select: { reviews: true, messages: true } },
       },
       where: { id: this.proposalId },
     });
@@ -53,8 +52,6 @@ export class ProposalReview {
       languages: proposal.languages as string[],
       formats: proposal.formats.map(({ id, name }) => ({ id, name })),
       categories: proposal.categories.map(({ id, name }) => ({ id, name })),
-      messagesCount: proposal._count.messages,
-      reviewsCount: proposal._count.reviews,
       reviews: {
         you: reviews.ofUser(this.userId),
         summary: event.displayProposalsReviews ? reviews.summary() : null,
@@ -72,9 +69,7 @@ export class ProposalReview {
   async getPreviousAndNextReviews(filters: ProposalsFilters) {
     const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER', 'REVIEWER']);
 
-    const search = new ProposalSearchBuilder(event.slug, this.userId, filters, {
-      withSpeakers: event.displayProposalsSpeakers,
-    });
+    const search = new ProposalSearchBuilder(event.slug, this.userId, filters);
     const proposalIds = await search.proposalsIds();
     const totalProposals = proposalIds.length;
     const curIndex = proposalIds.findIndex((id) => id === this.proposalId);
@@ -149,14 +144,5 @@ export class ProposalReview {
       }),
       'name',
     );
-  }
-
-  async getTeamReviews() {
-    const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER', 'REVIEWER']);
-    if (!event.displayProposalsReviews) throw new ForbiddenOperationError();
-
-    const result = await db.review.findMany({ where: { proposalId: this.proposalId }, include: { user: true } });
-    const reviews = new ReviewDetails(result);
-    return reviews.ofMembers();
   }
 }

@@ -2,7 +2,6 @@ import type { Event, EventCategory, EventFormat, Team, User } from '@prisma/clie
 import { eventCategoryFactory } from 'tests/factories/categories';
 import { eventFactory } from 'tests/factories/events';
 import { eventFormatFactory } from 'tests/factories/formats';
-import { messageFactory } from 'tests/factories/messages';
 import { proposalFactory } from 'tests/factories/proposals';
 import { reviewFactory } from 'tests/factories/reviews';
 import { surveyFactory } from 'tests/factories/surveys';
@@ -60,8 +59,6 @@ describe('ProposalReview', () => {
           summary: { average: null, negatives: 0, positives: 0 },
           you: { feeling: null, note: null, comment: null },
         },
-        reviewsCount: 0,
-        messagesCount: 0,
       });
     });
 
@@ -97,16 +94,6 @@ describe('ProposalReview', () => {
         summary: null,
         you: { note: 0, feeling: 'NEGATIVE', comment: 'Booo' },
       });
-    });
-
-    it('returns teams messages count', async () => {
-      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-      await messageFactory({ proposal, user: owner, attributes: { message: 'Message 1' } });
-      await messageFactory({ proposal, user: member, attributes: { message: 'Message 2' } });
-
-      const review = await ProposalReview.for(owner.id, team.slug, event.slug, proposal.id).get();
-
-      expect(review.messagesCount).toEqual(2);
     });
 
     it('throws an error if user does not belong to event team', async () => {
@@ -362,38 +349,6 @@ describe('ProposalReview', () => {
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker, member] }) });
       const review = await ProposalReview.for(user.id, team.slug, event.slug, proposal.id);
       await expect(review.getSpeakerInfo()).rejects.toThrowError(ForbiddenOperationError);
-    });
-  });
-
-  describe('#getTeamReviews', () => {
-    it('returns proposal reviews', async () => {
-      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-      await reviewFactory({ proposal, user: owner, attributes: { feeling: 'NEGATIVE', note: 0 } });
-      await reviewFactory({ proposal, user: member, attributes: { feeling: 'POSITIVE', note: 5, comment: 'Yeah!' } });
-
-      const reviews = await ProposalReview.for(owner.id, team.slug, event.slug, proposal.id).getTeamReviews();
-
-      expect(reviews).toEqual([
-        { feeling: 'POSITIVE', id: member.id, name: member.name, picture: member.picture, note: 5, comment: 'Yeah!' },
-        { feeling: 'NEGATIVE', id: owner.id, name: owner.name, picture: owner.picture, note: 0, comment: null },
-      ]);
-    });
-
-    it('throws an error if display of reviews is disabled for the event', async () => {
-      await db.event.update({ data: { displayProposalsReviews: false }, where: { id: event.id } });
-      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-
-      const review = ProposalReview.for(owner.id, team.slug, event.slug, proposal.id);
-      await expect(review.getTeamReviews()).rejects.toThrowError(ForbiddenOperationError);
-    });
-
-    it('throws an error if user does not belong to event team', async () => {
-      const user = await userFactory();
-      const event = await eventFactory();
-      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [user] }) });
-
-      const review = ProposalReview.for(user.id, team.slug, event.slug, proposal.id);
-      await expect(review.getTeamReviews()).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 });
