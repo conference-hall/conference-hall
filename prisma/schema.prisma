@@ -31,7 +31,7 @@ model User {
   surveys            Survey[]
   createdTalks       Talk[]
   createdEvents      Event[]
-  messages           Message[]
+  comments           Comment[]
   accounts           Account[]
 
   @@map("users")
@@ -205,7 +205,6 @@ model Proposal {
   level              TalkLevel?
   languages          Json?               @default("[]")
   references         String?
-  comments           String?
   speakers           User[]              @relation("speakers_proposals")
   formats            EventFormat[]       @relation("proposals_formats")
   categories         EventCategory[]     @relation("proposals_categories")
@@ -219,7 +218,7 @@ model Proposal {
   invitationCode     String              @unique @default(cuid())
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
-  messages           Message[]
+  comments           Comment[]
 
   @@unique([talkId, eventId])
   @@map("proposals")
@@ -264,7 +263,6 @@ model Review {
   proposal   Proposal      @relation(fields: [proposalId], references: [id])
   feeling    ReviewFeeling @default(NEUTRAL)
   note       Int?
-  comment    String?
   createdAt  DateTime      @default(now())
   updatedAt  DateTime      @updatedAt
 
@@ -279,21 +277,21 @@ enum ReviewFeeling {
   NO_OPINION
 }
 
-model Message {
+model Comment {
   id         String         @id @default(cuid())
   userId     String
   user       User           @relation(fields: [userId], references: [id])
   proposalId String
   proposal   Proposal       @relation(fields: [proposalId], references: [id])
-  message    String
-  channel    MessageChannel
+  comment    String
+  channel    CommentChannel
   createdAt  DateTime       @default(now())
   updatedAt  DateTime       @updatedAt
 
-  @@map("messages")
+  @@map("comments")
 }
 
-enum MessageChannel {
+enum CommentChannel {
   ORGANIZER
   SPEAKER
 }

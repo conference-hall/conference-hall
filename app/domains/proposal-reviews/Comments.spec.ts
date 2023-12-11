@@ -1,7 +1,6 @@
 import type { Event, Team, User } from '@prisma/client';
-import { MessageChannel } from '@prisma/client';
+import { commentFactory } from 'tests/factories/comments.ts';
 import { eventFactory } from 'tests/factories/events.ts';
-import { messageFactory } from 'tests/factories/messages.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
@@ -31,12 +30,12 @@ describe('Comments', () => {
 
       await Comments.for(owner.id, team.slug, event.slug, proposal.id).add('My message');
 
-      const messages = await db.message.findMany({ where: { userId: owner.id, proposalId: proposal.id } });
+      const messages = await db.comment.findMany({ where: { userId: owner.id, proposalId: proposal.id } });
       expect(messages.length).toBe(1);
 
       const message = messages[0];
-      expect(message.message).toBe('My message');
-      expect(message.channel).toBe(MessageChannel.ORGANIZER);
+      expect(message.comment).toBe('My message');
+      expect(message.channel).toBe('ORGANIZER');
     });
 
     it('throws an error if user does not belong to event team', async () => {
@@ -50,28 +49,28 @@ describe('Comments', () => {
   describe('#remove', () => {
     it('removes a comment from a proposal', async () => {
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-      const message = await messageFactory({ user: owner, proposal });
+      const message = await commentFactory({ user: owner, proposal });
 
       await Comments.for(owner.id, team.slug, event.slug, proposal.id).remove(message.id);
 
-      const messages = await db.message.findMany({ where: { userId: owner.id, proposalId: proposal.id } });
+      const messages = await db.comment.findMany({ where: { userId: owner.id, proposalId: proposal.id } });
       expect(messages.length).toBe(0);
     });
 
     it('removes a comment from a proposal only if it belongs to the user', async () => {
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-      const message = await messageFactory({ user: member, proposal });
+      const message = await commentFactory({ user: member, proposal });
 
       await Comments.for(owner.id, team.slug, event.slug, proposal.id).remove(message.id);
 
-      const messages = await db.message.findMany({ where: { userId: member.id, proposalId: proposal.id } });
+      const messages = await db.comment.findMany({ where: { userId: member.id, proposalId: proposal.id } });
       expect(messages.length).toBe(1);
     });
 
     it('throws an error if user does not belong to event team', async () => {
       const user = await userFactory();
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-      const message = await messageFactory({ user, proposal });
+      const message = await commentFactory({ user, proposal });
       const discussion = Comments.for(user.id, team.slug, event.slug, proposal.id);
       await expect(discussion.remove(message.id)).rejects.toThrowError(ForbiddenOperationError);
     });

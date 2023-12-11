@@ -1,7 +1,7 @@
 import { eventCategoryFactory } from '../../../../tests/factories/categories.ts';
+import { commentFactory } from '../../../../tests/factories/comments.ts';
 import { eventFactory } from '../../../../tests/factories/events.ts';
 import { eventFormatFactory } from '../../../../tests/factories/formats.ts';
-import { messageFactory } from '../../../../tests/factories/messages.ts';
 import { proposalFactory } from '../../../../tests/factories/proposals.ts';
 import { reviewFactory } from '../../../../tests/factories/reviews.ts';
 import { surveyFactory } from '../../../../tests/factories/surveys.ts';
@@ -108,7 +108,7 @@ export const seed = async () => {
 
   await reviewFactory({ proposal, user: organizer2, attributes: { note: 3, feeling: 'NEUTRAL' } });
 
-  await messageFactory({ proposal, user: organizer2, attributes: { channel: 'ORGANIZER', message: 'Hello world' } });
+  await commentFactory({ proposal, user: organizer2, attributes: { channel: 'ORGANIZER', comment: 'Hello world' } });
 
   await proposalFactory({
     attributes: { id: 'proposal-2' },

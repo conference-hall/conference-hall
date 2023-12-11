@@ -14,17 +14,17 @@ export class Comments {
     return new Comments(userId, proposalId, userEvent);
   }
 
-  async add(message: string) {
+  async add(comment: string) {
     await this.userEvent.allowedFor(['OWNER', 'MEMBER', 'REVIEWER']);
 
-    await db.message.create({
-      data: { userId: this.userId, proposalId: this.proposalId, message, channel: 'ORGANIZER' },
+    await db.comment.create({
+      data: { userId: this.userId, proposalId: this.proposalId, comment, channel: 'ORGANIZER' },
     });
   }
 
   async remove(messageId: string) {
     await this.userEvent.allowedFor(['OWNER', 'MEMBER', 'REVIEWER']);
 
-    await db.message.deleteMany({ where: { id: messageId, userId: this.userId, proposalId: this.proposalId } });
+    await db.comment.deleteMany({ where: { id: messageId, userId: this.userId, proposalId: this.proposalId } });
   }
 }

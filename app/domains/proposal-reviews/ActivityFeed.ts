@@ -47,19 +47,19 @@ export class ActivityFeed {
           )
           UNION ALL
           (
-            SELECT id, 'comment' AS type, messages."updatedAt" AS timestamp, messages."userId", NULL, NULL, messages."message" AS comment
-            FROM messages
-            WHERE messages."proposalId" = ${this.proposalId} AND messages."channel" = 'ORGANIZER'
+            SELECT id, 'comment' AS type, comments."updatedAt" AS timestamp, comments."userId", NULL, NULL, comments."comment" AS comment
+            FROM comments
+            WHERE comments."proposalId" = ${this.proposalId} AND comments."channel" = 'ORGANIZER'
           )
           ORDER BY timestamp ASC
         `,
       );
     } else {
-      results = await db.$queryRaw<Array<ReviewFeed | CommentFeed>>(
+      results = await db.$queryRaw<Array<CommentFeed>>(
         Prisma.sql`
-          SELECT id, 'comment' AS type, messages."updatedAt" AS timestamp, messages."userId", NULL, NULL, messages."message" AS comment
-          FROM messages
-          WHERE messages."proposalId" = ${this.proposalId} AND messages."channel" = 'ORGANIZER'
+          SELECT id, 'comment' AS type, comments."updatedAt" AS timestamp, comments."userId", NULL, NULL, comments."comment" AS comment
+          FROM comments
+          WHERE comments."proposalId" = ${this.proposalId} AND comments."channel" = 'ORGANIZER'
           ORDER BY timestamp ASC
         `,
       );

@@ -1,6 +1,6 @@
 import type { Event, Team, User } from '@prisma/client';
+import { commentFactory } from 'tests/factories/comments.ts';
 import { eventFactory } from 'tests/factories/events.ts';
-import { messageFactory } from 'tests/factories/messages.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
 import { reviewFactory } from 'tests/factories/reviews.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
@@ -25,9 +25,9 @@ describe('ActivityFeed', () => {
   describe('#messages', () => {
     it('retrieve proposals messages', async () => {
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-      const message1 = await messageFactory({ proposal, user: owner, attributes: { message: 'Message 1' } });
+      const message1 = await commentFactory({ proposal, user: owner, attributes: { comment: 'Comment 1' } });
       const review1 = await reviewFactory({ proposal, user: owner, attributes: { feeling: 'NEUTRAL', note: 3 } });
-      const message2 = await messageFactory({ proposal, user: member, attributes: { message: 'Message 2' } });
+      const message2 = await commentFactory({ proposal, user: member, attributes: { comment: 'Comment 2' } });
       const review2 = await reviewFactory({ proposal, user: member, attributes: { feeling: 'POSITIVE', note: 4 } });
 
       // TODO: Add tests
@@ -42,7 +42,7 @@ describe('ActivityFeed', () => {
           type: 'comment',
           userId: owner.id,
           timestamp: message1.updatedAt.toUTCString(),
-          comment: message1.message,
+          comment: message1.comment,
           feeling: null,
           note: null,
           user: owner.name,
@@ -64,7 +64,7 @@ describe('ActivityFeed', () => {
           type: 'comment',
           userId: member.id,
           timestamp: message2.updatedAt.toUTCString(),
-          comment: message2.message,
+          comment: message2.comment,
           feeling: null,
           note: null,
           user: member.name,
