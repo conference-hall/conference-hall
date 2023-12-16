@@ -4,7 +4,7 @@ import { marked } from 'marked';
 import React from 'react';
 import xss from 'xss';
 
-const markdown = cva('max-w-none text-gray-900', {
+const markdown = cva('max-w-full min-w-0 break-words text-gray-700', {
   variants: { size: { s: 'prose prose-sm', m: 'prose' } },
   defaultVariants: { size: 's' },
 });

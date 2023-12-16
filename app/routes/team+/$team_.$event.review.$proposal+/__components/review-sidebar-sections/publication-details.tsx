@@ -37,7 +37,9 @@ function PublicationLabel({ publicationStatus }: Props) {
         <Text variant="secondary" size="s">
           Result not yet shared with speakers. Click the button below to publish the result to speakers.
         </Text>
-        <Checkbox name="send-email">Notify speakers via email</Checkbox>
+        <Checkbox id="send-email" name="send-email">
+          Notify speakers via email
+        </Checkbox>
         <Button variant="secondary" block>
           Publish result to speakers
         </Button>

@@ -7,7 +7,6 @@ import { Badge } from '~/design-system/Badges.tsx';
 import { IconLink } from '~/design-system/IconButtons';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { Markdown } from '~/design-system/Markdown.tsx';
-import { H3, Text } from '~/design-system/Typography.tsx';
 import { getLanguage } from '~/libs/formatters/languages';
 import { getLevel } from '~/libs/formatters/levels';
 import { useUser } from '~/root';
@@ -29,7 +28,7 @@ export function ProposalPage({ proposal }: Props) {
 
   return (
     <Card as="section">
-      <div className="flex items-start lg:items-center lg:gap-6 px-2 py-4 lg:px-6 border-b border-b-gray-200">
+      <div className="flex items-start lg:items-center lg:gap-6 px-2 py-4 lg:px-4 border-b border-b-gray-200">
         <div className="flex-1 flex flex-col flex-wrap gap-4 lg:flex-row">
           {proposal.speakers.map((speaker) => (
             <Link
@@ -57,43 +56,48 @@ export function ProposalPage({ proposal }: Props) {
           />
         )}
       </div>
-
-      <Card.Content>
-        <div className="flex justify-between items-center">
-          <div className="space-x-4">
-            {proposal.level && <Badge color="indigo">{getLevel(proposal.level)}</Badge>}
-            {proposal.languages.map((language) => (
-              <Badge key={language}>{getLanguage(language)}</Badge>
-            ))}
-          </div>
-        </div>
-
+      <dl className="p-6 flex flex-col gap-6">
         <div>
-          <H3 srOnly>Abstract</H3>
-          <Markdown>{proposal.abstract}</Markdown>
+          <dt className="sr-only">Abstract</dt>
+          <Markdown as="dd" className="text-gray-700">
+            {proposal.abstract}
+          </Markdown>
         </div>
+
+        {proposal.references && (
+          <div>
+            <dt className="text-sm font-medium leading-6 text-gray-900">References</dt>
+            <Markdown as="dd" className="text-gray-700">
+              {proposal.references}
+            </Markdown>
+          </div>
+        )}
 
         {hasFormats && (
           <div>
-            <H3 mb={2}>Formats</H3>
-            <Text>{proposal.formats?.map(({ name }) => name).join(', ') || '—'}</Text>
+            <dt className="text-sm font-medium leading-6 text-gray-900">Formats</dt>
+            <dd className="text-sm leading-6 text-gray-700">
+              {proposal.formats?.map(({ id, name }) => <p key={id}>{name}</p>)}
+            </dd>
           </div>
         )}
 
         {hasCategories && (
           <div>
-            <H3 mb={2}>Categories</H3>
-            <Text>{proposal.categories?.map(({ name }) => name).join(', ') || '—'}</Text>
+            <dt className="text-sm font-medium leading-6 text-gray-900">Categories</dt>
+            <dd className="text-sm leading-6 text-gray-700">
+              {proposal.categories?.map(({ id, name }) => <p key={id}>{name}</p>)}
+            </dd>
           </div>
         )}
 
-        {proposal.references && (
-          <div>
-            <H3 mb={2}>References</H3>
-            <Markdown>{proposal.references}</Markdown>
-          </div>
-        )}
-      </Card.Content>
+        <div className="flex gap-2 flex-wrap">
+          {proposal.level && <Badge color="indigo">{getLevel(proposal.level)}</Badge>}
+          {proposal.languages.map((language) => (
+            <Badge key={language}>{getLanguage(language)}</Badge>
+          ))}
+        </div>
+      </dl>
     </Card>
   );
 }

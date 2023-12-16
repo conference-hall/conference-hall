@@ -93,7 +93,7 @@ type AvatarGroupProps = {
 
 export function AvatarGroup({ avatars, displayNames = false }: AvatarGroupProps) {
   return (
-    <div className="-space-x-1 overflow-hidden truncate">
+    <div className="-space-x-1 overflow-hidden truncate shrink-0">
       {avatars.map((avatar) => (
         <Avatar
           key={avatar.name}

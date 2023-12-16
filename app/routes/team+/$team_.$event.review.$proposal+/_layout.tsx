@@ -107,15 +107,17 @@ export default function ProposalReviewLayoutRoute() {
 
       <ReviewHeader title={proposal.title} pagination={pagination} />
 
-      <div className="max-w-7xl m-auto flex flex-col gap-4 lg:gap-6 p-4 py-6 lg:flex-row">
-        <div className="flex-1 space-y-4">
-          <ProposalPage proposal={proposal} />
-          <Feed activity={activity} />
-          <Outlet context={{ event, proposal }} />
-        </div>
+      <div className="mx-auto max-w-7xl p-4 py-6">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+          <div className="space-y-4 lg:col-span-2">
+            <ProposalPage proposal={proposal} />
+            <Feed activity={activity} />
+            <Outlet context={{ event, proposal }} />
+          </div>
 
-        <div className="w-full lg:basis-1/5">
-          <ReviewSidebar proposal={proposal} reviewEnabled={event.reviewEnabled} canDeliberate={canDeliberate} />
+          <div className="lg:col-start-3">
+            <ReviewSidebar proposal={proposal} reviewEnabled={event.reviewEnabled} canDeliberate={canDeliberate} />
+          </div>
         </div>
       </div>
     </>

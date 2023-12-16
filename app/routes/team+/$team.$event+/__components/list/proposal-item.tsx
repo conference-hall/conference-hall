@@ -36,10 +36,12 @@ export function ProposalItem({ proposal, isSelected, isAllPagesSelected, toggle 
       <Link
         to={{ pathname: `review/${id}`, search: params.toString() }}
         aria-label={`Open proposal "${title}"`}
-        className="flex items-center justify-between gap-4 pr-4 py-4 sm:pr-6 grow"
+        className="flex items-center justify-between gap-4 pr-4 py-4 sm:pr-6 grow min-w-0"
       >
-        <div className="space-y-1">
-          <Text weight="semibold">{title}</Text>
+        <div className="space-y-1 min-w-0">
+          <Text weight="semibold" truncate>
+            {title}
+          </Text>
           <div className="flex gap-1">
             <ProposalDetails proposal={proposal} />
           </div>

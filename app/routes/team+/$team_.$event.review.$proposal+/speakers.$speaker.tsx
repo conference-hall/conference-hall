@@ -76,7 +76,7 @@ export default function ProposalSpeakerRoute() {
           {details.map((detail) => (
             <div key={detail.label} className="px-4 py-6 sm:px-6">
               <dt className="text-sm font-medium leading-6 text-gray-900">{detail.label}</dt>
-              <dd className="mt-1 text-sm leading-6 text-gray-700">{detail.value}</dd>
+              <dd className="mt-1 text-sm leading-6 text-gray-700 break-words">{detail.value}</dd>
             </div>
           ))}
         </dl>
@@ -90,7 +90,7 @@ type SpeakerTitleProps = { name: string | null; picture: string | null; company:
 function SpeakerTitle({ name, picture, company }: SpeakerTitleProps) {
   return (
     <div className="flex items-center gap-4">
-      <Avatar picture={picture} name={name} size="xl" />
+      <Avatar picture={picture} name={name} size="l" />
 
       <div className="overflow-hidden">
         <Text weight="semibold" size="xl" truncate>

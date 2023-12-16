@@ -63,7 +63,7 @@ SlideOver.Content = Content;
 type ActionsProps = { children: React.ReactNode };
 
 function Actions({ children }: ActionsProps) {
-  return <div className="flex flex-shrink-0 justify-end gap-2 px-4 py-4">{children}</div>;
+  return <div className="flex flex-shrink-0 justify-end gap-4 px-4 py-4">{children}</div>;
 }
 
 SlideOver.Actions = Actions;

@@ -13,9 +13,9 @@ export function PageHeaderTitle({ title, subtitle, backTo, backOnClick, children
   return (
     <PageHeader>
       <Container className="flex h-full flex-col gap-4 py-6 sm:h-24 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-center gap-2 sm:gap-4">
+        <div className="flex items-center gap-2 sm:gap-4 min-w-0">
           <BackButton backTo={backTo} backOnClick={backOnClick} />
-          <div className="truncate">
+          <div className="truncate min-w-0">
             <H1 truncate>{title}</H1>
             {subtitle && <Subtitle truncate>{subtitle}</Subtitle>}
           </div>
