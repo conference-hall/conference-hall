@@ -38,12 +38,29 @@ export function IconButton({ icon: Icon, label, variant, size, ...rest }: IconBu
   );
 }
 
-type IconButtonLinkProps = IconButtonBaseProps & Omit<LinkProps, 'children'>;
+type IconLinkProps = IconButtonBaseProps & Omit<LinkProps, 'children'>;
 
-export function IconButtonLink({ icon: Icon, label, variant, size, ...rest }: IconButtonLinkProps) {
+export function IconLink({ icon: Icon, label, variant, size, ...rest }: IconLinkProps) {
   return (
     <Link className={button({ variant, size })} aria-label={label} title={label} {...rest}>
       <Icon className={icon({ size })} aria-hidden="true" />
     </Link>
+  );
+}
+
+type IconExternalLinkProps = IconButtonBaseProps & Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'children'>;
+
+export function IconExternalLink({ icon: Icon, label, variant, size, ...rest }: IconExternalLinkProps) {
+  return (
+    <a
+      target="_blank"
+      rel="noreferrer"
+      className={button({ variant, size })}
+      aria-label={label}
+      title={label}
+      {...rest}
+    >
+      <Icon className={icon({ size })} aria-hidden="true" />
+    </a>
   );
 }

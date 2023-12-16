@@ -1,7 +1,7 @@
 import { ArrowLeftIcon } from '@heroicons/react/20/solid';
 import type { MouseEventHandler, ReactNode } from 'react';
 
-import { IconButton, IconButtonLink } from '~/design-system/IconButtons.tsx';
+import { IconButton, IconLink } from '~/design-system/IconButtons.tsx';
 import { H1, Subtitle } from '~/design-system/Typography.tsx';
 
 import { Container } from './Container.tsx';
@@ -34,7 +34,7 @@ type BackButtonProps = {
 
 function BackButton({ backTo, backOnClick }: BackButtonProps) {
   if (backTo) {
-    return <IconButtonLink icon={ArrowLeftIcon} variant="secondary" to={backTo} label="Go back" />;
+    return <IconLink icon={ArrowLeftIcon} variant="secondary" to={backTo} label="Go back" />;
   }
   if (backOnClick) {
     return <IconButton icon={ArrowLeftIcon} variant="secondary" onClick={backOnClick} label="Go back" />;

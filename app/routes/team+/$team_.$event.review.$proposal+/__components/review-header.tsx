@@ -3,7 +3,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { useNavigate, useParams, useSearchParams } from '@remix-run/react';
 import { useHotkeys } from 'react-hotkeys-hook';
 
-import { IconButtonLink } from '~/design-system/IconButtons.tsx';
+import { IconLink } from '~/design-system/IconButtons.tsx';
 import { H1, Text } from '~/design-system/Typography.tsx';
 
 type Props = {
@@ -32,7 +32,7 @@ export function ReviewHeader({ title, pagination }: Props) {
     <div className="sticky top-0 bg-white border-b border-b-gray-200 shadow-sm z-10">
       <header className="max-w-7xl m-auto flex items-center gap-4 p-4">
         <nav className="flex items-center gap-2 lg:gap-4">
-          <IconButtonLink
+          <IconLink
             to={{ pathname: previousPath, search }}
             icon={ChevronLeftIcon}
             label="Previous proposal"
@@ -40,7 +40,7 @@ export function ReviewHeader({ title, pagination }: Props) {
             aria-disabled={!previousPath}
           />
           <Text weight="medium">{`${current}/${total}`}</Text>
-          <IconButtonLink
+          <IconLink
             to={{ pathname: nextPath, search }}
             icon={ChevronRightIcon}
             label="Next proposal"
@@ -56,12 +56,7 @@ export function ReviewHeader({ title, pagination }: Props) {
         </div>
 
         <div className="flex items-center gap-8">
-          <IconButtonLink
-            to={{ pathname: closePath, search }}
-            icon={XMarkIcon}
-            label="Close review"
-            variant="secondary"
-          />
+          <IconLink to={{ pathname: closePath, search }} icon={XMarkIcon} label="Close review" variant="secondary" />
         </div>
       </header>
     </div>

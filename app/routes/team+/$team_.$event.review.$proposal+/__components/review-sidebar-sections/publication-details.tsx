@@ -32,7 +32,7 @@ function PublicationLabel({ publicationStatus }: Props) {
     );
   } else if (publicationStatus === 'NOT_PUBLISHED') {
     return (
-      <Form method="POST" className="flex flex-col gap-2">
+      <Form method="POST" className="flex flex-col gap-4">
         <input type="hidden" name="intent" value="publish-results" />
         <Text variant="secondary" size="s">
           Result not yet shared with speakers. Click the button below to publish the result to speakers.

@@ -1,6 +1,5 @@
 import { db } from '~/libs/db';
-import { ForbiddenOperationError, ProposalNotFoundError, ReviewDisabledError } from '~/libs/errors';
-import { sortBy } from '~/libs/utils/arrays-sort-by';
+import { ForbiddenOperationError, ProposalNotFoundError, ReviewDisabledError, UserNotFoundError } from '~/libs/errors';
 
 import type { SurveyData } from '../cfp-survey/SpeakerAnswers.types';
 import { UserEvent } from '../organizer-event-settings/UserEvent';
@@ -114,35 +113,28 @@ export class ProposalReview {
     });
   }
 
-  async getSpeakerInfo() {
+  async getSpeakerInfo(speakerId: string) {
     const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER', 'REVIEWER']);
     if (!event.displayProposalsSpeakers) throw new ForbiddenOperationError();
 
-    const proposal = await db.proposal.findUnique({ include: { speakers: true }, where: { id: this.proposalId } });
-    if (!proposal) throw new ProposalNotFoundError();
-
-    const surveys = await db.survey.findMany({
-      where: { eventId: event.id, userId: { in: proposal?.speakers.map(({ id }) => id) } },
+    const speaker = await db.user.findUnique({
+      where: { id: speakerId, proposals: { some: { id: this.proposalId } } },
     });
+    if (!speaker) throw new UserNotFoundError();
 
-    return sortBy(
-      proposal.speakers.map((speaker) => {
-        const survey = surveys.find((survey) => survey.userId === speaker.id);
+    const survey = await db.survey.findFirst({ where: { eventId: event.id, userId: speakerId } });
 
-        return {
-          id: speaker.id,
-          name: speaker.name,
-          picture: speaker.picture,
-          bio: speaker.bio,
-          references: speaker.references,
-          email: speaker.email,
-          company: speaker.company,
-          address: speaker.address,
-          socials: speaker.socials as SocialLinks,
-          survey: survey?.answers as SurveyData | undefined,
-        };
-      }),
-      'name',
-    );
+    return {
+      id: speaker.id,
+      name: speaker.name,
+      picture: speaker.picture,
+      bio: speaker.bio,
+      references: speaker.references,
+      email: speaker.email,
+      company: speaker.company,
+      address: speaker.address,
+      socials: speaker.socials as SocialLinks,
+      survey: survey?.answers as SurveyData | undefined,
+    };
   }
 }

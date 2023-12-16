@@ -12,6 +12,8 @@ type Props = {
 export default function SlideOver({ open, size = 'base', onClose, children }: Props) {
   return (
     <Dialog as="div" open={open} className="relative z-20" onClose={onClose}>
+      <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+
       <div className="fixed inset-0 overflow-hidden">
         <div className="absolute inset-0 overflow-hidden">
           <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
@@ -30,9 +32,9 @@ export default function SlideOver({ open, size = 'base', onClose, children }: Pr
   );
 }
 
-type ContentProps = { title: string; children: React.ReactNode; onClose: () => void };
+type ContentProps = { title: React.ReactNode; children: React.ReactNode; onClose: () => void; className?: string };
 
-function Content({ title, children, onClose }: ContentProps) {
+function Content({ title, children, onClose, className }: ContentProps) {
   return (
     <div className="flex min-h-0 flex-1 flex-col overflow-y-scroll py-6">
       <div className="px-4 sm:px-6">
@@ -51,7 +53,7 @@ function Content({ title, children, onClose }: ContentProps) {
           </div>
         </div>
       </div>
-      <div className="relative mt-6 flex-1 px-4 sm:px-6">{children}</div>
+      <div className={cx('relative mt-6 flex-1 px-4 sm:px-6', className)}>{children}</div>
     </div>
   );
 }

@@ -126,7 +126,7 @@ type AvatarNameProps = {
 export function AvatarName({ name, subtitle, variant = 'primary', ...rest }: AvatarNameProps) {
   return (
     <div className="flex items-center">
-      <Avatar {...rest} aria-hidden />
+      <Avatar name={name} {...rest} aria-hidden />
       <div className="ml-3 text-left">
         <Text variant={variant === 'primary' ? 'primary' : 'light'} weight="medium">
           {name || 'Unknown'}

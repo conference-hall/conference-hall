@@ -3,7 +3,7 @@ import { FireIcon } from '@heroicons/react/24/outline';
 
 import { Avatar, AvatarGroup } from '~/design-system/Avatar.tsx';
 import { ButtonLink } from '~/design-system/Buttons.tsx';
-import { IconButtonLink } from '~/design-system/IconButtons.tsx';
+import { IconLink } from '~/design-system/IconButtons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
 import { Link } from '~/design-system/Links.tsx';
@@ -51,7 +51,7 @@ export function SpeakerActivitiesSection({ activities, nextPage, hasNextPage, cl
                   <Subtitle size="xs">{`${event.submissions.length} proposals`}</Subtitle>
                 </div>
               </div>
-              <IconButtonLink
+              <IconLink
                 label={`Open ${event.name} page`}
                 to={`/${event.slug}`}
                 icon={ArrowTopRightOnSquareIcon}

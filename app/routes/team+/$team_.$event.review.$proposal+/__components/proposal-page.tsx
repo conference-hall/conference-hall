@@ -4,7 +4,7 @@ import { Link, useParams, useSearchParams } from '@remix-run/react';
 
 import { AvatarName } from '~/design-system/Avatar.tsx';
 import { Badge } from '~/design-system/Badges.tsx';
-import { IconButtonLink } from '~/design-system/IconButtons';
+import { IconLink } from '~/design-system/IconButtons';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { Markdown } from '~/design-system/Markdown.tsx';
 import { H3, Text } from '~/design-system/Typography.tsx';
@@ -29,13 +29,13 @@ export function ProposalPage({ proposal }: Props) {
 
   return (
     <Card as="section">
-      {proposal.speakers.length > 0 && (
-        <div className="flex flex-col flex-wrap gap-4 lg:flex-row lg:gap-6 px-2 py-4 lg:px-6 border-b border-b-gray-200">
+      <div className="flex items-start lg:items-center lg:gap-6 px-2 py-4 lg:px-6 border-b border-b-gray-200">
+        <div className="flex-1 flex flex-col flex-wrap gap-4 lg:flex-row">
           {proposal.speakers.map((speaker) => (
             <Link
               key={speaker.name}
               to={`speakers/${speaker.id}?${search.toString()}`}
-              className="flex items-end gap-1 hover:bg-gray-100 p-2 rounded-md"
+              className="flex items-center gap-2 hover:bg-gray-100 p-2 rounded-md"
             >
               <AvatarName
                 key={speaker.name}
@@ -48,7 +48,15 @@ export function ProposalPage({ proposal }: Props) {
             </Link>
           ))}
         </div>
-      )}
+        {canEditProposal && (
+          <IconLink
+            icon={PencilSquareIcon}
+            label="Edit proposal"
+            variant="secondary"
+            to={{ pathname: 'edit', search: search.toString() }}
+          />
+        )}
+      </div>
 
       <Card.Content>
         <div className="flex justify-between items-center">
@@ -58,14 +66,6 @@ export function ProposalPage({ proposal }: Props) {
               <Badge key={language}>{getLanguage(language)}</Badge>
             ))}
           </div>
-          {canEditProposal && (
-            <IconButtonLink
-              icon={PencilSquareIcon}
-              label="Edit proposal"
-              variant="secondary"
-              to={{ pathname: 'edit', search: search.toString() }}
-            />
-          )}
         </div>
 
         <div>

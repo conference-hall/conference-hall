@@ -107,7 +107,7 @@ export default function ProposalReviewLayoutRoute() {
 
       <ReviewHeader title={proposal.title} pagination={pagination} />
 
-      <div className="max-w-7xl m-auto flex flex-col gap-4 lg:gap-8 p-4 lg:flex-row">
+      <div className="max-w-7xl m-auto flex flex-col gap-4 lg:gap-6 p-4 py-6 lg:flex-row">
         <div className="flex-1 space-y-4">
           <ProposalPage proposal={proposal} />
           <Feed activity={activity} />
