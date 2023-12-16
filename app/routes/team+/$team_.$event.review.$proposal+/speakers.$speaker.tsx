@@ -45,7 +45,7 @@ export default function ProposalSpeakerRoute() {
   ].filter((detail) => Boolean(detail.value));
 
   return (
-    <SlideOver open onClose={onClose}>
+    <SlideOver open onClose={onClose} size="l">
       <SlideOver.Content title={<Title />} onClose={onClose} className="!p-0 border-t border-t-gray-200 divide-y">
         <div className="flex items-center gap-4 py-6 px-4 sm:px-6">
           <div className="flex-1 overflow-hidden">
