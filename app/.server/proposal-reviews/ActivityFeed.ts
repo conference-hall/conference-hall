@@ -1,6 +1,6 @@
 import { Prisma } from '@prisma/client';
 
-import { db } from '~/libs/db.server';
+import { db } from 'prisma/db.server';
 import type { ReviewFeeling } from '~/types/proposals.types';
 
 import { UserEvent } from '../organizer-event-settings/UserEvent';

@@ -1,4 +1,4 @@
-import { db } from '~/libs/db.server';
+import { db } from 'prisma/db.server';
 
 import { TeamBetaAccess } from '../organizer-team/TeamBetaAccess';
 import { UserTeams } from '../organizer-team/UserTeams';

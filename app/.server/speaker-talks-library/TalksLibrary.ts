@@ -1,4 +1,4 @@
-import { db } from '~/libs/db.server';
+import { db } from 'prisma/db.server';
 
 import { SpeakerTalk } from './SpeakerTalk';
 import type { TalkSaveData } from './TalksLibrary.types';

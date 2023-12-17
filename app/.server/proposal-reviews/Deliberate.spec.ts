@@ -5,7 +5,7 @@ import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 
-import { db } from '~/libs/db.server.ts';
+import { db } from 'prisma/db.server.ts';
 import { ForbiddenOperationError } from '~/libs/errors.server.ts';
 
 import { Deliberate } from './Deliberate.ts';

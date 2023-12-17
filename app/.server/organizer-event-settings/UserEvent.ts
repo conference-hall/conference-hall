@@ -1,6 +1,6 @@
 import type { Prisma, TeamRole } from '@prisma/client';
 
-import { db } from '~/libs/db.server';
+import { db } from 'prisma/db.server';
 import { EventNotFoundError, ForbiddenOperationError, SlugAlreadyExistsError } from '~/libs/errors.server';
 import { geocode } from '~/libs/geocode/geocode.server';
 

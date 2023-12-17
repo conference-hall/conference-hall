@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { db } from '~/libs/db.server';
+import { db } from 'prisma/db.server';
 import type { DeliberationStatus } from '~/types/proposals.types';
 
 import { UserEvent } from '../organizer-event-settings/UserEvent';

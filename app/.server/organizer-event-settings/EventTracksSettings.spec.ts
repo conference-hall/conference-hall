@@ -5,7 +5,7 @@ import { eventFormatFactory } from 'tests/factories/formats';
 import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
 
-import { db } from '~/libs/db.server';
+import { db } from 'prisma/db.server';
 import { ForbiddenOperationError } from '~/libs/errors.server';
 
 import { EventTracksSettings } from './EventTracksSettings';

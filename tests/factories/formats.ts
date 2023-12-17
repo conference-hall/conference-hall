@@ -1,7 +1,7 @@
 import { randCatchPhrase, randParagraph } from '@ngneat/falso';
 import type { Event, Prisma } from '@prisma/client';
 
-import { db } from '../../app/libs/db.server.ts';
+import { db } from '../../prisma/db.server.ts';
 
 type FactoryOptions = {
   event: Event;

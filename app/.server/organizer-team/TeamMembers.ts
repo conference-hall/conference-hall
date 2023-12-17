@@ -2,7 +2,7 @@ import { parse } from '@conform-to/zod';
 import type { TeamRole } from '@prisma/client';
 import { z } from 'zod';
 
-import { db } from '~/libs/db.server';
+import { db } from 'prisma/db.server';
 import { ForbiddenOperationError } from '~/libs/errors.server';
 
 import { Pagination } from '../shared/Pagination';

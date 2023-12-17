@@ -9,7 +9,7 @@ import { talkFactory } from 'tests/factories/talks';
 import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
 
-import { db } from '~/libs/db.server';
+import { db } from 'prisma/db.server';
 import { ForbiddenOperationError, ReviewDisabledError } from '~/libs/errors.server';
 
 import { ProposalReview } from './ProposalReview';

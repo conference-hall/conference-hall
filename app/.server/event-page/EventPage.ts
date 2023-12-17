@@ -1,4 +1,4 @@
-import { db } from '~/libs/db.server';
+import { db } from 'prisma/db.server';
 import { EventNotFoundError } from '~/libs/errors.server';
 
 import { CallForPaper } from '../shared/CallForPaper';

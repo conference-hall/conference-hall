@@ -1,5 +1,5 @@
 import { getSpeakerProposalStatus } from '~/.server/cfp-submissions/get-speaker-proposal-status';
-import { db } from '~/libs/db.server';
+import { db } from 'prisma/db.server';
 import { TalkNotFoundError } from '~/libs/errors.server';
 
 import { InvitationLink } from '../shared/InvitationLink';

@@ -1,4 +1,4 @@
-import { db } from '~/libs/db.server';
+import { db } from 'prisma/db.server';
 import { ForbiddenOperationError, ProposalNotFoundError } from '~/libs/errors.server';
 
 import { UserEvent } from '../organizer-event-settings/UserEvent';

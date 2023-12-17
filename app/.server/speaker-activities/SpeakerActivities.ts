@@ -1,7 +1,7 @@
 import { Prisma } from '@prisma/client';
 
 import { getSpeakerProposalStatus } from '~/.server/cfp-submissions/get-speaker-proposal-status';
-import { db } from '~/libs/db.server';
+import { db } from 'prisma/db.server';
 
 import { CallForPaper } from '../shared/CallForPaper';
 

@@ -3,7 +3,7 @@ import { eventFactory } from 'tests/factories/events';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 
-import { db } from '~/libs/db.server';
+import { db } from 'prisma/db.server';
 import { ForbiddenOperationError, SlugAlreadyExistsError } from '~/libs/errors.server';
 
 import { EventCreateSchema, TeamEvents } from './TeamEvents';

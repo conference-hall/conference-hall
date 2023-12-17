@@ -5,7 +5,7 @@ import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
 
 import { config } from '~/libs/config.server';
-import { db } from '~/libs/db.server';
+import { db } from 'prisma/db.server';
 import { TalkNotFoundError } from '~/libs/errors.server';
 
 import { SpeakerTalk } from './SpeakerTalk';

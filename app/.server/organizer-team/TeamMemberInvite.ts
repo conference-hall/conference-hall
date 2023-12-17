@@ -1,4 +1,4 @@
-import { db } from '~/libs/db.server';
+import { db } from 'prisma/db.server';
 import { InvitationInvalidOrAccepted, InvitationNotFoundError } from '~/libs/errors.server';
 
 export class TeamMemberInvite {
