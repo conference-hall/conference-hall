@@ -29,24 +29,27 @@ export function ProposalPage({ proposal }: Props) {
   return (
     <Card as="section">
       <div className="flex items-start lg:items-center lg:gap-6 px-2 py-4 lg:px-4 border-b border-b-gray-200">
-        <div className="flex-1 flex flex-col flex-wrap gap-4 lg:flex-row">
+        <ul aria-label="Speakers" className="flex-1 flex flex-col flex-wrap gap-4 lg:flex-row">
           {proposal.speakers.map((speaker) => (
-            <Link
-              key={speaker.name}
-              to={`speakers/${speaker.id}?${search.toString()}`}
-              className="flex items-center gap-2 hover:bg-gray-100 p-2 rounded-md"
-            >
-              <AvatarName
+            <li key={speaker.name}>
+              <Link
                 key={speaker.name}
-                name={speaker.name}
-                picture={speaker.picture}
-                subtitle={speaker.company}
-                size="s"
-              />
-              <ChevronRightIcon className="h-4 w-4 text-gray-600" aria-hidden="true" />
-            </Link>
+                to={`speakers/${speaker.id}?${search.toString()}`}
+                aria-label={`View ${speaker.name} profile`}
+                className="flex items-center gap-2 hover:bg-gray-100 p-2 rounded-md"
+              >
+                <AvatarName
+                  key={speaker.name}
+                  name={speaker.name}
+                  picture={speaker.picture}
+                  subtitle={speaker.company}
+                  size="s"
+                />
+                <ChevronRightIcon className="h-4 w-4 text-gray-600" aria-hidden="true" />
+              </Link>
+            </li>
           ))}
-        </div>
+        </ul>
         {canEditProposal && (
           <IconLink
             icon={PencilSquareIcon}

@@ -14,33 +14,36 @@ describe('Speakers in proposal review page', () => {
   it('displays speakers info', () => {
     review.visit('team-1', 'conference-1', 'proposal-1');
 
-    review.speakersTab();
-
     review.speakersList().should('have.length', 2);
 
-    review
-      .speakersList()
-      .first()
-      .within(() => {
-        cy.assertText('Marie Jane - marie@example.com');
-        cy.assertText('MJ Corp - Nantes');
-        cy.assertText('MJ Bio');
-        cy.assertText('MJ References');
-        cy.assertText('https://github.com');
-        cy.assertText('https://twitter.com');
-        cy.assertText('male');
-        cy.assertText('Tshirt size: XL');
-        cy.assertText('vegan');
-        cy.assertText('Need accommodation fees');
-        cy.assertText('Need transport fees: taxi, train');
-        cy.assertText('Hello');
-      });
+    review.viewSpeakerProfile(/Marie Jane/);
 
-    review
-      .speakersList()
-      .last()
-      .within(() => {
-        cy.assertText('Robin - robin@example.com');
-      });
+    // TODO use dt/dd
+    cy.assertText('Marie Jane');
+    cy.assertText('MJ Corp');
+    cy.assertText('marie@example.com');
+    cy.assertText('Biography');
+    cy.assertText('MJ Bio');
+    cy.assertText('MJ References');
+    cy.assertText('Location');
+    cy.assertText('Nantes');
+    cy.assertText('Gender');
+    cy.assertText('male');
+    cy.assertText('Tshirt size');
+    cy.assertText('XL');
+    cy.assertText('Diet');
+    cy.assertText('vegan');
+    cy.assertText('Need accomodation fees');
+    cy.assertText('yes');
+    cy.assertText('Need Transport fees');
+    cy.assertText('taxi, train');
+    cy.assertText('More information');
+    cy.assertText('Hello');
+    cy.findByRole('button', { name: 'Close panel' }).click();
+
+    review.viewSpeakerProfile(/Robin/);
+    cy.assertText('Robin');
+    cy.assertText('robin@example.com');
+    cy.findByRole('button', { name: 'Close panel' }).click();
   });
 });

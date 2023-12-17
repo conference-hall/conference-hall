@@ -26,15 +26,13 @@ export function NewCommentForm({ compact = false, className }: Props) {
         <input type="hidden" name="intent" value="add-comment" />
 
         <div className="overflow-hidden bg-white rounded-lg pb-12 shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-indigo-600">
-          <label htmlFor="comment" className="sr-only">
-            Add your comment
-          </label>
           <textarea
             id="comment"
             name="comment"
             rows={compact ? 1 : 2}
             className="block w-full resize-none border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-0 text-sm leading-6"
             placeholder="Add your comment..."
+            aria-label="Add your comment"
             defaultValue=""
           />
         </div>

@@ -23,8 +23,8 @@ export const seed = async () => {
       address: 'Nantes',
       company: 'MJ Corp',
       socials: {
-        github: 'https://github.com',
-        twitter: 'https://twitter.com',
+        github: 'mj',
+        twitter: 'mj',
       },
     },
   });

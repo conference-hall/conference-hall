@@ -12,7 +12,7 @@ export function ActivityFeed({ activity }: Props) {
   return (
     <div className="pl-4 pt-4 space-y-6 lg:pb-8 lg:pr-32 ">
       {activity.length > 0 && (
-        <ul className="space-y-4">
+        <ul aria-label="Activity feed" className="space-y-4">
           {activity.map((item, index) => (
             <li key={item.id} className="relative flex gap-x-4">
               <FeedLine index={index} total={activity.length} />

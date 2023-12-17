@@ -46,55 +46,50 @@ class ProposalReviewPage extends BasePage {
 
   // Speakers
 
-  speakersTab() {
-    cy.findByRole('link', { name: /Speakers/ }).click();
-  }
-
   speakersList() {
-    return cy.findByRole('list', { name: 'Speakers list' }).children();
+    return cy.findByRole('list', { name: 'Speakers' }).children();
   }
 
-  // Reviews
-
-  reviewsTab() {
-    cy.findByRole('link', { name: /Reviews/ }).click();
+  viewSpeakerProfile(name: RegExp) {
+    cy.findByRole('link', { name }).click();
   }
 
-  reviewsList() {
-    return cy.findByRole('list', { name: 'Organizers reviews' }).children();
+  // Activity feed
+
+  activityFeed() {
+    return cy.findByRole('list', { name: 'Activity feed' }).children();
   }
 
-  // Discussions
-
-  discussionsTab() {
-    cy.findByRole('link', { name: /Discussions/ }).click();
+  addComment(comment: string) {
+    cy.findByRole('list', { name: 'Activity feed' })
+      .parent()
+      .within(() => {
+        cy.typeOn('Add your comment', comment);
+        cy.findByRole('button', { name: 'Comment' }).click();
+      });
   }
 
-  discussionMessages() {
-    return cy.findByRole('list', { name: 'Organizers messages' }).children();
-  }
-
-  writeMessage(comment: string) {
-    cy.typeOn('Write a message to other organizers', comment);
-    cy.findByRole('button', { name: 'Send' }).click();
-  }
-
-  deleteMessage() {
-    return cy.findByLabelText('Delete message').click({ force: true });
+  deleteComment() {
+    return cy.findByLabelText('delete').click();
   }
 
   // Review proposal
 
-  fillReview(review: string, comment: string) {
-    cy.findByRole('radio', { name: review }).click();
-    cy.typeOn('Review comment', comment);
-    cy.findByRole('button', { name: 'Save review' }).click();
+  yourReviewPanel() {
+    return cy.findByRole('heading', { name: 'Your review' }).parent();
   }
 
-  fillReviewAndGoToNext(review: string, comment: string) {
-    cy.findByRole('radio', { name: review }).click();
-    cy.typeOn('Review comment', comment);
-    cy.findByRole('button', { name: 'Save & Next' }).click();
+  review(review: string) {
+    this.yourReviewPanel().within(() => {
+      cy.findByRole('radio', { name: review }).click();
+    });
+  }
+
+  addReviewComment(comment: string) {
+    this.yourReviewPanel().within(() => {
+      cy.typeOn('Add your comment', comment);
+      cy.findByRole('button', { name: 'Comment' }).click();
+    });
   }
 
   // Edit proposal
@@ -115,7 +110,7 @@ class ProposalReviewPage extends BasePage {
   }
 
   cancelUpdateProposal() {
-    return cy.findByRole('link', { name: 'Cancel' }).click();
+    return cy.findByRole('button', { name: 'Cancel' }).click();
   }
 }
 
