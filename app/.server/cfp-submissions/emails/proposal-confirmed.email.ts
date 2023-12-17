@@ -2,12 +2,13 @@ import type { Event, Prisma, Proposal } from '@prisma/client';
 import { EmailQueue } from 'jobs/email/email.queue';
 
 import { Template } from '~/libs/emails/template/template';
+import { EventEmailNotificationsKeys } from '~/types/notifications.types';
 
 type Variables = { eventName: string; proposalTitle: string };
 
 export class ProposalConfirmedEmail {
   static async send(event: Event, proposal: Proposal) {
-    const notifications = (event.emailNotifications as Prisma.JsonArray) || [];
+    const notifications = (event.emailNotifications || []) as EventEmailNotificationsKeys;
     if (!notifications.includes('confirmed')) return;
     if (!event.emailOrganizer) return;
 

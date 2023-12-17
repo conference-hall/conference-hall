@@ -3,9 +3,10 @@ import type { Prisma, TeamRole } from '@prisma/client';
 import { db } from '~/libs/db.server';
 import { EventNotFoundError, ForbiddenOperationError, SlugAlreadyExistsError } from '~/libs/errors.server';
 import { geocode } from '~/libs/geocode/geocode.server';
-import { jsonToArray } from '~/libs/prisma.server';
 
 import { CallForPaper } from '../shared/CallForPaper';
+import { EventEmailNotificationsKeys } from '~/types/notifications.types';
+import { QuestionKeys } from '~/types/survey.types';
 
 export type EventData = Awaited<ReturnType<typeof UserEvent.prototype.get>>;
 
@@ -56,14 +57,14 @@ export class UserEvent {
       logo: event.logo,
       maxProposals: event.maxProposals,
       surveyEnabled: event.surveyEnabled,
-      surveyQuestions: jsonToArray(event.surveyQuestions),
+      surveyQuestions: event.surveyQuestions as QuestionKeys,
       reviewEnabled: event.reviewEnabled,
       displayProposalsReviews: event.displayProposalsReviews,
       displayProposalsSpeakers: event.displayProposalsSpeakers,
       formatsRequired: event.formatsRequired,
       categoriesRequired: event.categoriesRequired,
       emailOrganizer: event.emailOrganizer,
-      emailNotifications: jsonToArray(event.emailNotifications),
+      emailNotifications: event.emailNotifications as EventEmailNotificationsKeys,
       slackWebhookUrl: event.slackWebhookUrl,
       apiKey: event.apiKey,
       cfpStart: event.cfpStart?.toUTCString(),
