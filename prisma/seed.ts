@@ -70,13 +70,7 @@ async function seed() {
   });
 
   const talk1 = await talkFactory({
-    attributes: {
-      title: 'Awesome talk',
-      abstract: 'This is an awesome talk',
-      references: 'Best talk ever',
-      level: 'BEGINNER',
-      languages: ['fr'],
-    },
+    attributes: { level: 'BEGINNER', languages: ['fr'] },
     speakers: [user3],
   });
 
@@ -90,13 +84,7 @@ async function seed() {
   await reviewFactory({ proposal: proposal1, user: user2, attributes: { feeling: 'NEGATIVE', note: 0 } });
 
   const talk2 = await talkFactory({
-    attributes: {
-      title: 'Awesome talk 2',
-      abstract: 'This is an awesome talk 2',
-      references: 'Best talk ever',
-      level: 'BEGINNER',
-      languages: ['en'],
-    },
+    attributes: { level: 'BEGINNER', languages: ['en'] },
     speakers: [user3, user2],
   });
 
@@ -111,13 +99,7 @@ async function seed() {
   await reviewFactory({ proposal: proposal2, user: user2, attributes: { feeling: 'NEUTRAL', note: 3 } });
 
   const talk3 = await talkFactory({
-    attributes: {
-      title: 'Awesome talk 3',
-      abstract: 'This is an awesome talk 3',
-      references: 'Best talk ever',
-      level: 'ADVANCED',
-      languages: ['fr'],
-    },
+    attributes: { level: 'ADVANCED', languages: ['fr'] },
     speakers: [user3],
   });
 
