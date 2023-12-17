@@ -14,7 +14,7 @@ export function ReviewForm({ initialValues }: Props) {
 
   const handleSubmit = (feeling: ReviewFeeling, note: number | null) => {
     submit(
-      { intent: 'add-review', feeling, note },
+      { intent: 'add-review', feeling, note: note === null ? '' : note },
       { method: 'POST', action: `/team/${params.team}/${params.event}/review/${params.proposal}` },
     );
   };

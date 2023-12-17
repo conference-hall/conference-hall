@@ -7,6 +7,7 @@ import { Badge } from '~/design-system/Badges.tsx';
 import { IconLink } from '~/design-system/IconButtons';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { Markdown } from '~/design-system/Markdown.tsx';
+import { H1 } from '~/design-system/Typography';
 import { getLanguage } from '~/libs/formatters/languages';
 import { getLevel } from '~/libs/formatters/levels';
 import { useUser } from '~/root';
@@ -28,28 +29,10 @@ export function ProposalPage({ proposal }: Props) {
 
   return (
     <Card as="section">
-      <div className="flex items-start lg:items-center lg:gap-6 px-2 py-4 lg:px-4 border-b border-b-gray-200">
-        <ul aria-label="Speakers" className="flex-1 flex flex-col flex-wrap gap-4 lg:flex-row">
-          {proposal.speakers.map((speaker) => (
-            <li key={speaker.name}>
-              <Link
-                key={speaker.name}
-                to={`speakers/${speaker.id}?${search.toString()}`}
-                aria-label={`View ${speaker.name} profile`}
-                className="flex items-center gap-2 hover:bg-gray-100 p-2 rounded-md"
-              >
-                <AvatarName
-                  key={speaker.name}
-                  name={speaker.name}
-                  picture={speaker.picture}
-                  subtitle={speaker.company}
-                  size="s"
-                />
-                <ChevronRightIcon className="h-4 w-4 text-gray-600" aria-hidden="true" />
-              </Link>
-            </li>
-          ))}
-        </ul>
+      <div className="flex justify-between items-center gap-4 px-6 py-4 border-b border-b-gray-200">
+        <H1 size="base" weight="semibold" truncate>
+          {proposal.title}
+        </H1>
         {canEditProposal && (
           <IconLink
             icon={PencilSquareIcon}
@@ -59,6 +42,31 @@ export function ProposalPage({ proposal }: Props) {
           />
         )}
       </div>
+      {proposal.speakers.length > 0 && (
+        <div className="flex items-start lg:items-center lg:gap-6 px-2 pt-4 lg:px-4">
+          <ul aria-label="Speakers" className="flex-1 flex flex-col flex-wrap gap-4 lg:flex-row">
+            {proposal.speakers.map((speaker) => (
+              <li key={speaker.name}>
+                <Link
+                  key={speaker.name}
+                  to={`speakers/${speaker.id}?${search.toString()}`}
+                  aria-label={`View ${speaker.name} profile`}
+                  className="flex items-center gap-2 hover:bg-gray-100 p-2 rounded-md"
+                >
+                  <AvatarName
+                    key={speaker.name}
+                    name={speaker.name}
+                    picture={speaker.picture}
+                    subtitle={speaker.company}
+                    size="s"
+                  />
+                  <ChevronRightIcon className="h-4 w-4 text-gray-600" aria-hidden="true" />
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       <dl className="p-6 flex flex-col gap-6">
         <div>
           <dt className="sr-only">Abstract</dt>

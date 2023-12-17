@@ -118,7 +118,7 @@ describe('ProposalReview', () => {
       const review = ProposalReview.for(owner.id, team.slug, event.slug, proposal.id);
       const pagination = await review.getPreviousAndNextReviews({});
 
-      expect(pagination).toEqual({ current: 1, total: 1, previousId: undefined, nextId: undefined });
+      expect(pagination).toEqual({ current: 1, total: 1, reviewed: 0, previousId: undefined, nextId: undefined });
     });
 
     it('returns pagination for next and previous proposals', async () => {
@@ -132,6 +132,7 @@ describe('ProposalReview', () => {
       expect(pagination).toEqual({
         current: 2,
         total: 3,
+        reviewed: 0,
         nextId: proposal1.id,
         previousId: proposal3.id,
       });
@@ -159,6 +160,7 @@ describe('ProposalReview', () => {
       expect(pagination).toEqual({
         current: 2,
         total: 3,
+        reviewed: 0,
         nextId: proposal1.id,
         previousId: proposal5.id,
       });

@@ -69,13 +69,15 @@ export class ProposalReview {
     const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER', 'REVIEWER']);
 
     const search = new ProposalSearchBuilder(event.slug, this.userId, filters);
+
+    const { total, reviewed } = await search.statistics();
     const proposalIds = await search.proposalsIds();
-    const totalProposals = proposalIds.length;
+
     const curIndex = proposalIds.findIndex((id) => id === this.proposalId);
     const previousId = curIndex - 1 >= 0 ? proposalIds.at(curIndex - 1) : undefined;
-    const nextId = curIndex + 1 < totalProposals ? proposalIds.at(curIndex + 1) : undefined;
+    const nextId = curIndex + 1 < total ? proposalIds.at(curIndex + 1) : undefined;
 
-    return { total: totalProposals, current: curIndex + 1, previousId, nextId };
+    return { total, reviewed, current: curIndex + 1, previousId, nextId };
   }
 
   async addReview(data: ReviewUpdateData) {

@@ -59,7 +59,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   switch (intent) {
     case 'add-review': {
       const result = parse(form, { schema: ReviewUpdateDataSchema });
-      if (!result.value) return toast('error', 'Something went wrong.');
+      if (!result.value) return toast('error', 'Something went wrong.' + JSON.stringify(result.error));
       const review = ProposalReview.for(userId, params.team, params.event, params.proposal);
       await review.addReview(result.value);
       break;
@@ -105,7 +105,7 @@ export default function ProposalReviewLayoutRoute() {
     <>
       <Navbar user={user} withSearch />
 
-      <ReviewHeader title={proposal.title} pagination={pagination} />
+      <ReviewHeader {...pagination} />
 
       <div className="mx-auto max-w-7xl p-4 py-6">
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">

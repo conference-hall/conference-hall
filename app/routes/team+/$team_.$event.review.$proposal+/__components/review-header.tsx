@@ -4,20 +4,18 @@ import { useNavigate, useParams, useSearchParams } from '@remix-run/react';
 import { useHotkeys } from 'react-hotkeys-hook';
 
 import { IconLink } from '~/design-system/IconButtons.tsx';
-import { H1, Text } from '~/design-system/Typography.tsx';
+import { Text } from '~/design-system/Typography.tsx';
 
-type Props = {
-  title: string;
-  pagination: { current: number; total: number; nextId?: string; previousId?: string };
-};
+import { ReviewsProgress } from '../../$team.$event+/__components/list/reviews-progress';
 
-export function ReviewHeader({ title, pagination }: Props) {
+type Props = { current: number; total: number; reviewed: number; nextId?: string; previousId?: string };
+
+export function ReviewHeader({ current, total, reviewed, nextId, previousId }: Props) {
   const navigate = useNavigate();
   const params = useParams();
   const [searchParams] = useSearchParams();
 
   const search = searchParams.toString();
-  const { current, total, nextId, previousId } = pagination;
 
   const previousPath =
     previousId !== undefined ? `/team/${params.team}/${params.event}/review/${previousId}` : undefined;
@@ -30,7 +28,7 @@ export function ReviewHeader({ title, pagination }: Props) {
 
   return (
     <div className="sticky top-0 bg-white border-b border-b-gray-200 shadow-sm z-10">
-      <header className="max-w-7xl m-auto flex items-center gap-4 p-4">
+      <header className="max-w-7xl m-auto flex justify-between items-center gap-4 p-4">
         <nav className="flex items-center gap-2 lg:gap-4">
           <IconLink
             to={{ pathname: previousPath, search }}
@@ -49,13 +47,8 @@ export function ReviewHeader({ title, pagination }: Props) {
           />
         </nav>
 
-        <div className="grow truncate">
-          <H1 size="base" truncate>
-            {title}
-          </H1>
-        </div>
-
         <div className="flex items-center gap-8">
+          <ReviewsProgress reviewed={reviewed} total={total} />
           <IconLink to={{ pathname: closePath, search }} icon={XMarkIcon} label="Close review" variant="secondary" />
         </div>
       </header>
