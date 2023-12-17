@@ -33,7 +33,7 @@ export class SpeakerTalk {
       title: talk.title,
       abstract: talk.abstract,
       level: talk.level,
-      languages: talk.languages as string[],
+      languages: (talk.languages || []) as string[],
       references: talk.references,
       archived: talk.archived,
       createdAt: talk.createdAt.toUTCString(),
