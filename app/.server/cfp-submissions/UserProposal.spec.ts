@@ -5,11 +5,11 @@ import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
 
-import { SpeakerProposalStatus } from '~/.server/cfp-submissions/get-speaker-proposal-status';
 import { db } from '~/libs/db.server';
 import { CfpNotOpenError, ProposalNotFoundError } from '~/libs/errors.server';
 
 import { UserProposal } from './UserProposal';
+import { SpeakerProposalStatus } from '~/types/speaker.types';
 
 describe('UserProposal', () => {
   describe('#get', () => {

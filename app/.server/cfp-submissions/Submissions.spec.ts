@@ -3,9 +3,9 @@ import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
 
-import { SpeakerProposalStatus } from '~/.server/cfp-submissions/get-speaker-proposal-status';
 
 import { Submissions } from './Submissions';
+import { SpeakerProposalStatus } from '~/types/speaker.types';
 
 describe('Submissions', () => {
   describe('#count', () => {

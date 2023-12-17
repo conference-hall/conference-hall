@@ -1,4 +1,5 @@
-import { getSpeakerProposalStatus, SpeakerProposalStatus } from './get-speaker-proposal-status.ts';
+import { SpeakerProposalStatus } from '~/types/speaker.types.ts';
+import { getSpeakerProposalStatus } from './get-speaker-proposal-status.ts';
 
 describe('getSpeakerProposalStatus', () => {
   beforeEach(() => {
