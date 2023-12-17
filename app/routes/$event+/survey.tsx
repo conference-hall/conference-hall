@@ -4,13 +4,13 @@ import { json } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
+import { CfpSurvey } from '~/.server/cfp-survey/CfpSurvey';
+import { SpeakerAnswers } from '~/.server/cfp-survey/SpeakerAnswers';
+import { SurveySchema } from '~/.server/cfp-survey/SpeakerAnswers.types';
 import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
-import { CfpSurvey } from '~/domains/cfp-survey/CfpSurvey';
-import { SpeakerAnswers } from '~/domains/cfp-survey/SpeakerAnswers';
-import { SurveySchema } from '~/domains/cfp-survey/SpeakerAnswers.types';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { SurveyForm } from '~/routes/__components/proposals/forms/SurveyForm.tsx';

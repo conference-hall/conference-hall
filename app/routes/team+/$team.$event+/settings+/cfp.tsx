@@ -4,16 +4,16 @@ import { json } from '@remix-run/node';
 import { useActionData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { UserEvent } from '~/domains/organizer-event-settings/UserEvent.ts';
+import { UserEvent } from '~/.server/organizer-event-settings/UserEvent.ts';
 import {
   CfpConferenceOpeningSchema,
   CfpMeetupOpeningSchema,
   CfpPreferencesSchema,
-} from '~/domains/organizer-event-settings/UserEvent.types.ts';
+} from '~/.server/organizer-event-settings/UserEvent.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 
-import { useTeamEvent } from '../_layout.tsx';
+import { useEvent } from '../__components/useEvent.tsx';
 import { CommonCfpSetting } from './__components/CommonCfpSetting.tsx';
 import { ConferenceCfpOpening } from './__components/ConferenceCfpOpening.tsx';
 import { MeetupCfpOpening } from './__components/MeetupCfpOpening.tsx';
@@ -56,7 +56,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 };
 
 export default function EventCfpSettingsRoute() {
-  const { event } = useTeamEvent();
+  const { event } = useEvent();
   const errors = useActionData<typeof action>();
 
   return (

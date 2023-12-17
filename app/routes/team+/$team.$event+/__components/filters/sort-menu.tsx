@@ -7,13 +7,13 @@ import { Fragment } from 'react';
 import { button } from '~/design-system/Buttons';
 import { MenuTransition } from '~/design-system/Transitions';
 
-import { useTeamEvent } from '../../_layout';
+import { useEvent } from '../useEvent';
 import { sortByDatesOptions, sortByReviewsOptions } from './filters';
 
 export function SortMenu() {
   const location = useLocation();
   const [params] = useSearchParams();
-  const { event } = useTeamEvent();
+  const { event } = useEvent();
   const { sort = 'newest', ...filters } = Object.fromEntries(params.entries());
 
   const options = event.displayProposalsReviews ? [...sortByDatesOptions, ...sortByReviewsOptions] : sortByDatesOptions;

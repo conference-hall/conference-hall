@@ -3,7 +3,7 @@ import { ButtonLink } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { Link } from '~/design-system/Links.tsx';
 import { H3, Text } from '~/design-system/Typography.tsx';
-import type { SpeakerProposalStatus } from '~/domains/cfp-submissions/get-speaker-proposal-status.ts';
+import type { SpeakerProposalStatus } from '~/types/speaker.types.ts';
 
 import { ProposalStatusLabel } from './ProposalStatusLabel.tsx';
 

@@ -4,15 +4,15 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useActionData, useLoaderData } from '@remix-run/react';
 
-import { PageContent } from '~/design-system/layouts/PageContent.tsx';
-import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
-import { NavSideMenu } from '~/design-system/navigation/NavSideMenu.tsx';
-import { SpeakerProfile } from '~/domains/speaker-profile/SpeakerProfile.ts';
+import { SpeakerProfile } from '~/.server/speaker-profile/SpeakerProfile.ts';
 import {
   AdditionalInfoSchema,
   DetailsSchema,
   PersonalInfoSchema,
-} from '~/domains/speaker-profile/SpeakerProfile.types.ts';
+} from '~/.server/speaker-profile/SpeakerProfile.types.ts';
+import { PageContent } from '~/design-system/layouts/PageContent.tsx';
+import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
+import { NavSideMenu } from '~/design-system/navigation/NavSideMenu.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';

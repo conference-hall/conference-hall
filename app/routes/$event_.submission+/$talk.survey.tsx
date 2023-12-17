@@ -5,13 +5,13 @@ import { json, redirect } from '@remix-run/node';
 import { Form, useLoaderData, useNavigate } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
+import { SubmissionSteps } from '~/.server/cfp-submission-funnel/SubmissionSteps';
+import { CfpSurvey } from '~/.server/cfp-survey/CfpSurvey';
+import { SpeakerAnswers } from '~/.server/cfp-survey/SpeakerAnswers';
+import { SurveySchema } from '~/.server/cfp-survey/SpeakerAnswers.types';
 import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2 } from '~/design-system/Typography.tsx';
-import { SubmissionSteps } from '~/domains/cfp-submission-funnel/SubmissionSteps';
-import { CfpSurvey } from '~/domains/cfp-survey/CfpSurvey';
-import { SpeakerAnswers } from '~/domains/cfp-survey/SpeakerAnswers';
-import { SurveySchema } from '~/domains/cfp-survey/SpeakerAnswers.types';
 import { requireSession } from '~/libs/auth/session.ts';
 import { SurveyForm } from '~/routes/__components/proposals/forms/SurveyForm.tsx';
 

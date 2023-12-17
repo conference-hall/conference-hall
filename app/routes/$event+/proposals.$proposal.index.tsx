@@ -4,16 +4,16 @@ import { json } from '@remix-run/node';
 import { useLoaderData, useNavigate } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
+import { UserProposal } from '~/.server/cfp-submissions/UserProposal.ts';
+import { ProposalParticipationSchema } from '~/.server/cfp-submissions/UserProposal.types.ts';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
-import { UserProposal } from '~/domains/cfp-submissions/UserProposal.ts';
-import { ProposalParticipationSchema } from '~/domains/cfp-submissions/UserProposal.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
 import { ProposalDetailsSection } from '~/routes/__components/proposals/ProposalDetailsSection.tsx';
 import { ProposalStatusSection } from '~/routes/__components/proposals/ProposalStatusSection.tsx';
 
-import { useEvent } from './_layout.tsx';
+import { useEvent } from './__components/useEvent.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);

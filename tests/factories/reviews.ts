@@ -1,7 +1,7 @@
 import { type Prisma, type Proposal, ReviewFeeling, type User } from '@prisma/client';
 
-import { ReviewDetails } from '../../app/domains/proposal-reviews/ReviewDetails.ts';
-import { db } from '../../app/libs/db.ts';
+import { ReviewDetails } from '../../app/.server/proposal-reviews/ReviewDetails.ts';
+import { db } from '../../app/libs/db.server.ts';
 
 type FactoryOptions = {
   user: User;

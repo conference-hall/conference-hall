@@ -4,20 +4,20 @@ import { json } from '@remix-run/node';
 import { Form, useActionData, useLoaderData, useNavigate } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
+import { UserProposal } from '~/.server/cfp-submissions/UserProposal.ts';
+import { getProposalUpdateSchema } from '~/.server/cfp-submissions/UserProposal.types.ts';
+import { EventPage } from '~/.server/event-page/EventPage.ts';
 import { Button, ButtonLink } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { H3, Subtitle } from '~/design-system/Typography.tsx';
-import { UserProposal } from '~/domains/cfp-submissions/UserProposal.ts';
-import { getProposalUpdateSchema } from '~/domains/cfp-submissions/UserProposal.types.ts';
-import { EventPage } from '~/domains/event-page/EventPage.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
 import { CoSpeakersList, InviteCoSpeakerButton } from '~/routes/__components/proposals/forms/CoSpeaker.tsx';
 import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm.tsx';
 
-import { useEvent } from './_layout.tsx';
+import { useEvent } from './__components/useEvent.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);

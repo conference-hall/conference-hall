@@ -6,9 +6,9 @@ import { cx } from 'class-variance-authority';
 import { Button, button, ButtonLink } from '~/design-system/Buttons';
 import Select from '~/design-system/forms/Select';
 import { Text } from '~/design-system/Typography';
-import { useTeam } from '~/routes/team+/$team';
+import { useTeam } from '~/routes/team+/__components/useTeam';
 
-import { useTeamEvent } from '../../_layout';
+import { useEvent } from '../useEvent';
 import { reviewOptions, statusOptions } from './filters';
 
 export function FiltersMenu() {
@@ -32,7 +32,7 @@ function FiltersContent({ close }: FiltersContentProps) {
   const { team } = useTeam();
   const location = useLocation();
   const [params] = useSearchParams();
-  const { event } = useTeamEvent();
+  const { event } = useEvent();
   const { formats, categories } = event;
 
   const hasTracks = formats.length > 0 || categories.length > 0;

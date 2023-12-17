@@ -3,15 +3,16 @@ import { type ActionFunctionArgs, json, type LoaderFunctionArgs } from '@remix-r
 import { Form, useActionData, useNavigate } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
+import { ProposalReview } from '~/.server/proposal-reviews/ProposalReview.ts';
+import { ProposalUpdateSchema } from '~/.server/proposal-reviews/ProposalReview.types.ts';
 import { Button } from '~/design-system/Buttons.tsx';
 import SlideOver from '~/design-system/SlideOver.tsx';
-import { ProposalReview } from '~/domains/proposal-reviews/ProposalReview.ts';
-import { ProposalUpdateSchema } from '~/domains/proposal-reviews/ProposalReview.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast } from '~/libs/toasts/toast.server.ts';
 import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm.tsx';
 
-import { useProposalEvent, useProposalReview } from './_layout.tsx';
+import { useEvent } from './__components/useEvent.tsx';
+import { useProposal } from './__components/useProposal.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   await requireSession(request);
@@ -40,8 +41,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 };
 
 export default function ProposalEditRoute() {
-  const { event } = useProposalEvent();
-  const { proposal } = useProposalReview();
+  const { event } = useEvent();
+  const { proposal } = useProposal();
   const navigate = useNavigate();
   const errors = useActionData<typeof action>();
 

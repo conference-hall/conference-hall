@@ -1,4 +1,4 @@
-import { config } from '../config';
+import { config } from '../config.server';
 import { MailgunProvider } from './mailgun-provider';
 import { MailpitProvider } from './mailpit-provider';
 

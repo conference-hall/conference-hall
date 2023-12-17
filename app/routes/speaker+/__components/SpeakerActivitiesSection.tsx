@@ -1,6 +1,7 @@
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/20/solid';
 import { FireIcon } from '@heroicons/react/24/outline';
 
+import type { CfpState } from '~/.server/shared/CallForPaper';
 import { Avatar, AvatarGroup } from '~/design-system/Avatar.tsx';
 import { ButtonLink } from '~/design-system/Buttons.tsx';
 import { IconLink } from '~/design-system/IconButtons.tsx';
@@ -8,9 +9,8 @@ import { Card } from '~/design-system/layouts/Card.tsx';
 import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
 import { Link } from '~/design-system/Links.tsx';
 import { Subtitle, Text } from '~/design-system/Typography.tsx';
-import type { SpeakerProposalStatus } from '~/domains/cfp-submissions/get-speaker-proposal-status';
-import type { CfpState } from '~/domains/shared/CallForPaper';
 import { ProposalStatusLabel } from '~/routes/__components/proposals/ProposalStatusLabel.tsx';
+import type { SpeakerProposalStatus } from '~/types/speaker.types';
 
 interface Props {
   activities: Array<{

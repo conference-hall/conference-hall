@@ -2,7 +2,7 @@ import { createCookieSessionStorage, json, redirect } from '@remix-run/node';
 import { v4 as uuid } from 'uuid';
 import { z } from 'zod';
 
-import { config } from '../config.ts';
+import { config } from '../config.server.ts';
 
 export const toastKey = 'toast';
 

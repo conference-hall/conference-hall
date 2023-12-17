@@ -1,24 +1,23 @@
 import { parse } from '@conform-to/zod';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { Outlet, useLoaderData, useOutletContext, useParams } from '@remix-run/react';
+import { Outlet, useLoaderData, useParams } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import type { EventData } from '~/domains/organizer-event-settings/UserEvent.ts';
-import { UserEvent } from '~/domains/organizer-event-settings/UserEvent.ts';
-import { Publication } from '~/domains/proposal-publication/Publication.ts';
-import { ActivityFeed } from '~/domains/proposal-reviews/ActivityFeed.ts';
-import { Comments } from '~/domains/proposal-reviews/Comments.ts';
-import { Deliberate, DeliberateSchema } from '~/domains/proposal-reviews/Deliberate.ts';
-import type { ProposalReviewData } from '~/domains/proposal-reviews/ProposalReview.ts';
-import { ProposalReview } from '~/domains/proposal-reviews/ProposalReview.ts';
-import { ReviewUpdateDataSchema } from '~/domains/proposal-reviews/ProposalReview.types.ts';
-import { parseUrlFilters } from '~/domains/shared/ProposalSearchBuilder.types.ts';
+import { UserEvent } from '~/.server/organizer-event-settings/UserEvent.ts';
+import { Publication } from '~/.server/proposal-publication/Publication.ts';
+import { ActivityFeed } from '~/.server/proposal-reviews/ActivityFeed.ts';
+import { Comments } from '~/.server/proposal-reviews/Comments.ts';
+import { Deliberate, DeliberateSchema } from '~/.server/proposal-reviews/Deliberate.ts';
+import type { ProposalReviewData } from '~/.server/proposal-reviews/ProposalReview.ts';
+import { ProposalReview } from '~/.server/proposal-reviews/ProposalReview.ts';
+import { ReviewUpdateDataSchema } from '~/.server/proposal-reviews/ProposalReview.types.ts';
+import { parseUrlFilters } from '~/.server/shared/ProposalSearchBuilder.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-import { useUser } from '~/root.tsx';
 import { Navbar } from '~/routes/__components/navbar/Navbar.tsx';
+import { useUser } from '~/routes/__components/useUser.tsx';
 
 import { ActivityFeed as Feed } from './__components/activity-feed.tsx';
 import { ProposalPage } from './__components/proposal-page.tsx';
@@ -85,7 +84,6 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     }
     case 'publish-results': {
       const result = Publication.for(userId, params.team, params.event);
-      console.log({ email: form.get('send-email') });
       await result.publish(params.proposal, form.get('send-email') === 'on');
       break;
     }
@@ -122,12 +120,4 @@ export default function ProposalReviewLayoutRoute() {
       </div>
     </>
   );
-}
-
-export function useProposalEvent() {
-  return useOutletContext<{ event: EventData }>();
-}
-
-export function useProposalReview() {
-  return useOutletContext<{ proposal: ProposalData }>();
 }

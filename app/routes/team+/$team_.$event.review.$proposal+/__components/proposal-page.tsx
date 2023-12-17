@@ -9,7 +9,7 @@ import { Markdown } from '~/design-system/Markdown.tsx';
 import { H1, Text } from '~/design-system/Typography';
 import { getLanguage } from '~/libs/formatters/languages';
 import { getLevel } from '~/libs/formatters/levels';
-import { useUser } from '~/root';
+import { useUser } from '~/routes/__components/useUser';
 
 import type { ProposalData } from '../_layout';
 

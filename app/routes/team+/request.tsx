@@ -2,12 +2,12 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
 
+import { TeamBetaAccess } from '~/.server/organizer-team/TeamBetaAccess';
 import { Button } from '~/design-system/Buttons.tsx';
 import { Input } from '~/design-system/forms/Input.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { ExternalLink } from '~/design-system/Links.tsx';
 import { H1, Subtitle } from '~/design-system/Typography.tsx';
-import { TeamBetaAccess } from '~/domains/organizer-team/TeamBetaAccess';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 

@@ -1,17 +1,16 @@
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { Link, Outlet, useLoaderData, useOutletContext } from '@remix-run/react';
+import { Link, Outlet, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
+import { Publication } from '~/.server/proposal-publication/Publication';
 import { Card } from '~/design-system/layouts/Card';
 import { PageContent } from '~/design-system/layouts/PageContent';
 import { H1, H2, Subtitle } from '~/design-system/Typography.tsx';
-import type { ResultsStatistics } from '~/domains/proposal-publication/Publication';
-import { Publication } from '~/domains/proposal-publication/Publication';
 import { requireSession } from '~/libs/auth/session.ts';
-import { useEvent } from '~/routes/$event+/_layout';
+import { useEvent } from '~/routes/$event+/__components/useEvent';
 
-import { useTeam } from '../../$team';
+import { useTeam } from '../../__components/useTeam';
 import { PublicationCard } from './__components/publication-card';
 import { Statistic, StatisticLink } from './__components/statistic';
 
@@ -127,8 +126,3 @@ export default function PublicationRoute() {
     </PageContent>
   );
 }
-
-export const useResultsStatistics = () => {
-  const statistics = useOutletContext<ResultsStatistics>();
-  return statistics;
-};

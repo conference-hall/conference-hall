@@ -4,7 +4,7 @@ import { Form } from '@remix-run/react';
 import { Button, ButtonLink } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2, Subtitle, Text } from '~/design-system/Typography.tsx';
-import { SpeakerProposalStatus } from '~/domains/cfp-submissions/get-speaker-proposal-status.ts';
+import { SpeakerProposalStatus } from '~/types/speaker.types.ts';
 
 import { ProposalDeleteButton } from './ProposalDelete.tsx';
 

@@ -3,15 +3,15 @@ import { json, redirect } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
+import { CoSpeakerTalkInvite } from '~/.server/speaker-talks-library/CoSpeakerTalkInvite';
 import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { H1, Text } from '~/design-system/Typography.tsx';
-import { CoSpeakerTalkInvite } from '~/domains/speaker-talks-library/CoSpeakerTalkInvite';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
-import { useUser } from '~/root.tsx';
 import { Navbar } from '~/routes/__components/navbar/Navbar.tsx';
+import { useUser } from '~/routes/__components/useUser';
 
 export const meta = mergeMeta(() => [{ title: 'Talk invitation | Conference Hall' }]);
 

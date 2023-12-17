@@ -5,18 +5,18 @@ import type { ChangeEvent } from 'react';
 import invariant from 'tiny-invariant';
 import { z } from 'zod';
 
+import { UserEvent } from '~/.server/organizer-event-settings/UserEvent.ts';
 import { AlertInfo } from '~/design-system/Alerts.tsx';
 import { Avatar } from '~/design-system/Avatar.tsx';
 import { ButtonFileUpload } from '~/design-system/forms/FileUploadButton.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { ExternalLink } from '~/design-system/Links.tsx';
 import { H2, Subtitle } from '~/design-system/Typography.tsx';
-import { UserEvent } from '~/domains/organizer-event-settings/UserEvent.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { uploadToStorageHandler } from '~/libs/storage/storage.server.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 
-import { useTeamEvent } from '../_layout.tsx';
+import { useEvent } from '../__components/useEvent.tsx';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);
@@ -45,7 +45,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 };
 
 export default function EventGeneralSettingsRoute() {
-  const { event } = useTeamEvent();
+  const { event } = useEvent();
   const submit = useSubmit();
   const result = useActionData<typeof action>();
 

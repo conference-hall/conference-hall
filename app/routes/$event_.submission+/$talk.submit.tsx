@@ -4,16 +4,17 @@ import { Form, useLoaderData, useNavigate } from '@remix-run/react';
 import { useState } from 'react';
 import invariant from 'tiny-invariant';
 
+import { TalkSubmission } from '~/.server/cfp-submission-funnel/TalkSubmission';
 import { Avatar, AvatarGroup } from '~/design-system/Avatar.tsx';
 import { Button } from '~/design-system/Buttons.tsx';
 import { Checkbox } from '~/design-system/forms/Checkboxes.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { ExternalLink } from '~/design-system/Links.tsx';
 import { H1, H2, Subtitle } from '~/design-system/Typography.tsx';
-import { TalkSubmission } from '~/domains/cfp-submission-funnel/TalkSubmission';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast } from '~/libs/toasts/toast.server.ts';
-import { useEvent } from '~/routes/$event+/_layout.tsx';
+
+import { useEvent } from '../$event+/__components/useEvent';
 
 export const handle = { step: 'submission' };
 

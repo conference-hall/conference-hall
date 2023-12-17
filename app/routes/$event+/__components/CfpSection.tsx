@@ -1,7 +1,7 @@
+import type { CfpState } from '~/.server/shared/CallForPaper';
 import { ButtonLink } from '~/design-system/Buttons.tsx';
 import { Container } from '~/design-system/layouts/Container.tsx';
 import { H2, Subtitle } from '~/design-system/Typography.tsx';
-import type { CfpState } from '~/domains/shared/CallForPaper';
 import { formatCFPDate, formatCFPElapsedTime } from '~/libs/formatters/cfp';
 import { CfpIcon } from '~/routes/__components/cfp/CfpIcon.tsx';
 import { ClientOnly } from '~/routes/__components/utils/ClientOnly.tsx';

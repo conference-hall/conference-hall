@@ -2,7 +2,7 @@ import type { JobsOptions } from 'bullmq';
 import { Queue } from 'bullmq';
 import Redis from 'ioredis';
 
-import { config } from '~/libs/config';
+import { config } from '~/libs/config.server';
 
 import type { Email } from './email.payload';
 

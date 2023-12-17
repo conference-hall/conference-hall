@@ -3,7 +3,7 @@ import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { CfpSection } from './__components/CfpSection.tsx';
 import { DetailsSection } from './__components/DetailsSection.tsx';
 import { TrackSection } from './__components/TrackSection.tsx';
-import { useEvent } from './_layout.tsx';
+import { useEvent } from './__components/useEvent.tsx';
 
 export default function EventRoute() {
   const { event } = useEvent();

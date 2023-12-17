@@ -4,17 +4,17 @@ import { json } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
+import { UserEvent } from '~/.server/organizer-event-settings/UserEvent.ts';
+import { EventSlackSettingsSchema } from '~/.server/organizer-event-settings/UserEvent.types.ts';
 import { AlertInfo } from '~/design-system/Alerts.tsx';
 import { Button } from '~/design-system/Buttons.tsx';
 import { Input } from '~/design-system/forms/Input.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { ExternalLink } from '~/design-system/Links.tsx';
 import { H2 } from '~/design-system/Typography.tsx';
-import { UserEvent } from '~/domains/organizer-event-settings/UserEvent.ts';
-import { EventSlackSettingsSchema } from '~/domains/organizer-event-settings/UserEvent.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 
-import { useTeamEvent } from '../_layout.tsx';
+import { useEvent } from '../__components/useEvent.tsx';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);
@@ -36,7 +36,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 };
 
 export default function EventIntegrationsSettingsRoute() {
-  const { event } = useTeamEvent();
+  const { event } = useEvent();
   const errors = useActionData<typeof action>();
 
   return (

@@ -7,7 +7,7 @@ import { Fragment } from 'react';
 
 import { button } from '~/design-system/Buttons';
 import { MenuTransition } from '~/design-system/Transitions';
-import { useTeam } from '~/routes/team+/$team';
+import { useTeam } from '~/routes/team+/__components/useTeam';
 
 const exportItems = [
   { name: 'As JSON', path: 'json', icon: CodeBracketIcon },

@@ -1,7 +1,7 @@
 import { Worker } from 'bullmq';
 import Redis from 'ioredis';
 
-import { config } from '~/libs/config';
+import { config } from '~/libs/config.server';
 
 import { processor } from './email.processor';
 

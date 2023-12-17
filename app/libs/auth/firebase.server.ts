@@ -6,7 +6,7 @@ import { getAuth } from 'firebase-admin/auth';
 import type { Storage } from 'firebase-admin/storage';
 import { getStorage } from 'firebase-admin/storage';
 
-import { config } from '../config.ts';
+import { config } from '../config.server.ts';
 
 let app: App;
 let auth: Auth;
