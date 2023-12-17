@@ -4,14 +4,14 @@ import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
+import { TeamEvents } from '~/.server/organizer-team/TeamEvents.ts';
 import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { H1 } from '~/design-system/Typography.tsx';
-import { TeamEvents } from '~/domains/organizer-team/TeamEvents.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { EventCard } from '~/routes/__components/EventCard.tsx';
 
-import { useTeam } from '../$team.tsx';
+import { useTeam } from '../__components/useTeam.tsx';
 import { ArchivedFilters } from './__components/ArchivedFilter.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {

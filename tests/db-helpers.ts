@@ -1,5 +1,5 @@
-import { config } from '../app/libs/config.ts';
-import { db } from '../app/libs/db.ts';
+import { config } from '../app/libs/config.server.ts';
+import { db } from '../app/libs/db.server.ts';
 
 export async function disconnectDB() {
   await db.$disconnect();

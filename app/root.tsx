@@ -12,18 +12,16 @@ import {
   Scripts,
   ScrollRestoration,
   useLoaderData,
-  useOutletContext,
   useRouteError,
 } from '@remix-run/react';
 import type { ReactNode } from 'react';
 
+import { UserInfo } from './.server/user-registration/UserInfo';
 import { Container } from './design-system/layouts/Container';
 import { H1, Text } from './design-system/Typography';
-import type { UserInfoData } from './domains/user-registration/UserInfo';
-import { UserInfo } from './domains/user-registration/UserInfo';
 import { initializeFirebaseClient } from './libs/auth/firebase';
 import { getSessionUserId } from './libs/auth/session';
-import { config } from './libs/config';
+import { config } from './libs/config.server';
 import { useNonce } from './libs/nonce/useNonce';
 import type { Toast } from './libs/toasts/toast.server';
 import { getToast } from './libs/toasts/toast.server';
@@ -71,10 +69,6 @@ export default function App() {
       <Outlet context={{ user }} />
     </Document>
   );
-}
-
-export function useUser() {
-  return useOutletContext<{ user: UserInfoData }>();
 }
 
 type DocumentProps = { children: ReactNode; toast?: Toast | null };

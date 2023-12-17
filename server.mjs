@@ -1,8 +1,6 @@
 import crypto from 'node:crypto';
-import path from 'node:path';
-import url from 'node:url';
 
-import { unstable_createViteServer, unstable_loadViteServerBuild } from '@remix-run/dev';
+import { unstable_viteServerBuildModuleId } from '@remix-run/dev';
 import { createRequestHandler } from '@remix-run/express';
 import { installGlobals } from '@remix-run/node';
 import closeWithGrace from 'close-with-grace';
@@ -12,17 +10,9 @@ import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import morgan from 'morgan';
-import sourceMapSupport from 'source-map-support';
 
-sourceMapSupport.install();
 installGlobals();
 run();
-
-async function serverBuild() {
-  const buildPath = path.resolve('build/index.js');
-  const buildUrl = url.pathToFileURL(buildPath).href;
-  return import(buildUrl);
-}
 
 async function run() {
   const PORT = process.env.PORT || 3000;
@@ -30,7 +20,16 @@ async function run() {
   const CI = process.env.CI;
   const FIREBASE_PROJECT_ID = process.env.FIREBASE_PROJECT_ID;
 
-  const vite = ENV === 'production' ? undefined : await unstable_createViteServer();
+  const vite =
+    ENV === 'production'
+      ? undefined
+      : await import('vite').then(({ createServer }) =>
+          createServer({
+            server: {
+              middlewareMode: true,
+            },
+          }),
+        );
 
   const app = express();
 
@@ -104,16 +103,18 @@ async function run() {
   if (vite) {
     app.use(vite.middlewares);
   } else {
-    app.use('/build', express.static('public/build', { immutable: true, maxAge: '1y' }));
+    app.use('/assets', express.static('build/client/assets', { immutable: true, maxAge: '1y' }));
   }
-  app.use('/fonts', express.static('public/fonts', { immutable: true, maxAge: '1y' }));
-  app.use(express.static('public', { maxAge: '1h' }));
+  app.use('/fonts', express.static('build/client/fonts', { immutable: true, maxAge: '1y' }));
+  app.use(express.static('build/client', { maxAge: '1h' }));
 
   // Handle SSR requests
   app.all(
     '*',
     createRequestHandler({
-      build: vite ? () => unstable_loadViteServerBuild(vite) : await serverBuild(),
+      build: vite
+        ? () => vite.ssrLoadModule(unstable_viteServerBuildModuleId)
+        : await import('./build/server/index.js'),
       getLoadContext: (req, res) => ({ cspNonce: res.locals.cspNonce }),
       mode: ENV,
     }),

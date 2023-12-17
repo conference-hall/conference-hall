@@ -4,6 +4,7 @@ import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 
+import { TalksLibrary } from '~/.server/speaker-talks-library/TalksLibrary.ts';
 import { AvatarGroup } from '~/design-system/Avatar.tsx';
 import { ButtonLink } from '~/design-system/Buttons.tsx';
 import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
@@ -12,7 +13,6 @@ import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { List } from '~/design-system/list/List.tsx';
 import { SearchParamSelector } from '~/design-system/navigation/SearchParamSelector.tsx';
 import { Text } from '~/design-system/Typography.tsx';
-import { TalksLibrary } from '~/domains/speaker-talks-library/TalksLibrary.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 

@@ -1,16 +1,15 @@
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { Outlet, useLoaderData, useOutletContext, useRouteLoaderData } from '@remix-run/react';
+import { Outlet, useLoaderData, useRouteLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
+import { UserTeam } from '~/.server/organizer-team/UserTeam';
 import { Container } from '~/design-system/layouts/Container';
 import { PageHeader } from '~/design-system/layouts/PageHeader';
-import type { Team } from '~/domains/organizer-team/UserTeam';
-import { UserTeam } from '~/domains/organizer-team/UserTeam';
 import { requireSession } from '~/libs/auth/session';
 import { mergeMeta } from '~/libs/meta/merge-meta';
-import { useUser } from '~/root.tsx';
 import { Navbar } from '~/routes/__components/navbar/Navbar.tsx';
+import { useUser } from '~/routes/__components/useUser';
 
 import TeamBreadcrumb from '../__components/teams/TeamBreadcrumb';
 import type { loader as routeEventLoader } from './$team.$event+/_layout';
@@ -50,8 +49,4 @@ export default function TeamLayout() {
       <Outlet context={{ user, team }} />
     </>
   );
-}
-
-export function useTeam() {
-  return useOutletContext<{ team: Team }>();
 }

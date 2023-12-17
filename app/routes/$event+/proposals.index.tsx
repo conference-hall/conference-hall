@@ -3,14 +3,14 @@ import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
+import { Submissions } from '~/.server/cfp-submissions/Submissions.ts';
 import { ButtonLink } from '~/design-system/Buttons.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
-import { Submissions } from '~/domains/cfp-submissions/Submissions.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 
 import { ProposalsList } from './__components/ProposalsList.tsx';
-import { useEvent } from './_layout.tsx';
+import { useEvent } from './__components/useEvent.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);

@@ -1,14 +1,13 @@
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { Outlet, useLoaderData, useOutletContext } from '@remix-run/react';
+import { Outlet, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import type { EventData } from '~/domains/organizer-event-settings/UserEvent.ts';
-import { UserEvent } from '~/domains/organizer-event-settings/UserEvent.ts';
+import { UserEvent } from '~/.server/organizer-event-settings/UserEvent.ts';
 import { requireSession } from '~/libs/auth/session.ts';
-import { useUser } from '~/root.tsx';
+import { useUser } from '~/routes/__components/useUser.tsx';
 
-import { useTeam } from '../$team.tsx';
+import { useTeam } from '../__components/useTeam.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
@@ -26,8 +25,4 @@ export default function EventLayoutRoute() {
   const event = useLoaderData<typeof loader>();
 
   return <Outlet context={{ user, team, event }} />;
-}
-
-export function useTeamEvent() {
-  return useOutletContext<{ event: EventData }>();
 }

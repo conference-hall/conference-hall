@@ -4,11 +4,11 @@ import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
+import { CfpReviewsSearch } from '~/.server/proposal-reviews/CfpReviewsSearch.ts';
+import { Deliberate, DeliberateBulkSchema } from '~/.server/proposal-reviews/Deliberate.ts';
+import { parseUrlPage } from '~/.server/shared/Pagination.ts';
+import { parseUrlFilters } from '~/.server/shared/ProposalSearchBuilder.types.ts';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
-import { CfpReviewsSearch } from '~/domains/proposal-reviews/CfpReviewsSearch.ts';
-import { Deliberate, DeliberateBulkSchema } from '~/domains/proposal-reviews/Deliberate.ts';
-import { parseUrlPage } from '~/domains/shared/Pagination.ts';
-import { parseUrlFilters } from '~/domains/shared/ProposalSearchBuilder.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 

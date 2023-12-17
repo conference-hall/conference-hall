@@ -2,13 +2,13 @@ import { json, type LoaderFunctionArgs } from '@remix-run/node';
 import { useLoaderData, useNavigate } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
+import { ProposalReview } from '~/.server/proposal-reviews/ProposalReview';
 import { Avatar } from '~/design-system/Avatar';
 import { IconExternalLink } from '~/design-system/IconButtons';
 import { GitHubIcon } from '~/design-system/icons/GitHubIcon';
 import { TwitterIcon } from '~/design-system/icons/TwitterIcon';
 import SlideOver from '~/design-system/SlideOver.tsx';
 import { Text } from '~/design-system/Typography';
-import { ProposalReview } from '~/domains/proposal-reviews/ProposalReview';
 import { requireSession } from '~/libs/auth/session.ts';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {

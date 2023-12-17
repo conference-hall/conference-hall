@@ -2,14 +2,14 @@ import { type LoaderFunctionArgs } from '@remix-run/node';
 import { useFetcher } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
+import { UserEvent } from '~/.server/organizer-event-settings/UserEvent.ts';
 import { ToggleGroup } from '~/design-system/forms/Toggles.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2 } from '~/design-system/Typography.tsx';
-import { UserEvent } from '~/domains/organizer-event-settings/UserEvent.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 
-import { useTeamEvent } from '../_layout.tsx';
+import { useEvent } from '../__components/useEvent.tsx';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);
@@ -29,7 +29,7 @@ export const action = async ({ request, params }: LoaderFunctionArgs) => {
 };
 
 export default function EventReviewSettingsRoute() {
-  const { event } = useTeamEvent();
+  const { event } = useEvent();
   const fetcher = useFetcher();
 
   return (

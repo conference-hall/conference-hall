@@ -4,15 +4,15 @@ import { json } from '@remix-run/node';
 import { useFetcher } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
+import { EventTracksSettings } from '~/.server/organizer-event-settings/EventTracksSettings.ts';
+import { TrackSaveSchema, TracksSettingsSchema } from '~/.server/organizer-event-settings/EventTracksSettings.types.ts';
 import { ToggleGroup } from '~/design-system/forms/Toggles.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2, Subtitle } from '~/design-system/Typography.tsx';
-import { EventTracksSettings } from '~/domains/organizer-event-settings/EventTracksSettings.ts';
-import { TrackSaveSchema, TracksSettingsSchema } from '~/domains/organizer-event-settings/EventTracksSettings.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 
-import { useTeamEvent } from '../_layout.tsx';
+import { useEvent } from '../__components/useEvent.tsx';
 import { NewTrackButton } from './__components/SaveTrackForm.tsx';
 import { TrackList } from './__components/TrackList.tsx';
 
@@ -63,7 +63,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 };
 
 export default function EventTracksSettingsRoute() {
-  const { event } = useTeamEvent();
+  const { event } = useEvent();
 
   const fetcher = useFetcher();
   const handleUpdateSettings = (name: string, checked: boolean) => {

@@ -3,11 +3,11 @@ import type { ActionFunctionArgs, LoaderFunction } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
 
+import { TeamCreateSchema, UserTeams } from '~/.server/organizer-team/UserTeams';
 import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
-import { TeamCreateSchema, UserTeams } from '~/domains/organizer-team/UserTeams';
 import { requireSession } from '~/libs/auth/session.ts';
 import { TeamForm } from '~/routes/__components/teams/TeamForm.tsx';
 

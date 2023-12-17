@@ -3,15 +3,15 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import invariant from 'tiny-invariant';
 
-import { UserEvent } from '~/domains/organizer-event-settings/UserEvent';
-import { Publication } from '~/domains/proposal-publication/Publication';
-import { PublishResultFormSchema } from '~/domains/proposal-publication/Publication.types';
+import { UserEvent } from '~/.server/organizer-event-settings/UserEvent';
+import { Publication } from '~/.server/proposal-publication/Publication';
+import { PublishResultFormSchema } from '~/.server/proposal-publication/Publication.types';
 import { requireSession } from '~/libs/auth/session.ts';
-import { BadRequestError } from '~/libs/errors';
+import { BadRequestError } from '~/libs/errors.server';
 import { redirectWithToast } from '~/libs/toasts/toast.server';
 
 import { PublicationConfirm } from './__components/publication-confirm';
-import { useResultsStatistics } from './_layout';
+import { useStatistics } from './__components/useStatistics';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
@@ -40,6 +40,6 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 };
 
 export default function PublishRejectedModalRoute() {
-  const statistics = useResultsStatistics();
+  const statistics = useStatistics();
   return <PublicationConfirm title="Rejected proposals publication" statistics={statistics.rejected} />;
 }

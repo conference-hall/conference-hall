@@ -5,6 +5,11 @@ import { json } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
+import { UserEvent } from '~/.server/organizer-event-settings/UserEvent.ts';
+import {
+  EventDetailsSettingsSchema,
+  EventGeneralSettingsSchema,
+} from '~/.server/organizer-event-settings/UserEvent.types.ts';
 import { AlertInfo } from '~/design-system/Alerts.tsx';
 import { Button } from '~/design-system/Buttons.tsx';
 import { DateRangeInput } from '~/design-system/forms/DateRangeInput.tsx';
@@ -12,16 +17,11 @@ import { Input } from '~/design-system/forms/Input.tsx';
 import { MarkdownTextArea } from '~/design-system/forms/MarkdownTextArea.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2, Subtitle } from '~/design-system/Typography.tsx';
-import { UserEvent } from '~/domains/organizer-event-settings/UserEvent.ts';
-import {
-  EventDetailsSettingsSchema,
-  EventGeneralSettingsSchema,
-} from '~/domains/organizer-event-settings/UserEvent.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
 import { EventForm } from '~/routes/__components/events/EventForm.tsx';
 
-import { useTeamEvent } from '../_layout.tsx';
+import { useEvent } from '../__components/useEvent.tsx';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);
@@ -65,7 +65,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 };
 
 export default function EventGeneralSettingsRoute() {
-  const { event } = useTeamEvent();
+  const { event } = useEvent();
   const errors = useActionData<typeof action>();
 
   return (

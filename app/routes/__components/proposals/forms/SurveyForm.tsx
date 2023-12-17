@@ -1,7 +1,7 @@
+import type { SurveyQuestions } from '~/.server/cfp-survey/SurveyQuestions';
 import { Checkbox, CheckboxGroup } from '~/design-system/forms/Checkboxes.tsx';
 import { Radio, RadioGroup } from '~/design-system/forms/RadioGroup.tsx';
 import { TextArea } from '~/design-system/forms/TextArea.tsx';
-import type { SurveyQuestions } from '~/domains/cfp-survey/SurveyQuestions';
 
 export type Props = {
   questions: SurveyQuestions;

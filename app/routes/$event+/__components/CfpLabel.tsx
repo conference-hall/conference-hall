@@ -1,6 +1,6 @@
 import { cx } from 'class-variance-authority';
 
-import type { CfpState } from '~/domains/shared/CallForPaper';
+import type { CfpState } from '~/.server/shared/CallForPaper';
 import { formatCFPState } from '~/libs/formatters/cfp';
 import { CfpIcon } from '~/routes/__components/cfp/CfpIcon.tsx';
 

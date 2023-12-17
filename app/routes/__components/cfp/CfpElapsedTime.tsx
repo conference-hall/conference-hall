@@ -1,7 +1,7 @@
 import { cx } from 'class-variance-authority';
 
+import type { CfpState } from '~/.server/shared/CallForPaper.ts';
 import { Text } from '~/design-system/Typography.tsx';
-import type { CfpState } from '~/domains/shared/CallForPaper.ts';
 import { formatCFPElapsedTime } from '~/libs/formatters/cfp.ts';
 
 import { ClientOnly } from '../utils/ClientOnly.tsx';

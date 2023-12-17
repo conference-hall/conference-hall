@@ -3,13 +3,13 @@ import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
+import { Submissions } from '~/.server/cfp-submissions/Submissions.ts';
+import { TalksLibrary } from '~/.server/speaker-talks-library/TalksLibrary.ts';
 import { ProgressBar } from '~/design-system/ProgressBar.tsx';
 import { H2, Text } from '~/design-system/Typography.tsx';
-import { Submissions } from '~/domains/cfp-submissions/Submissions.ts';
-import { TalksLibrary } from '~/domains/speaker-talks-library/TalksLibrary.ts';
 import { requireSession } from '~/libs/auth/session.ts';
-import { useEvent } from '~/routes/$event+/_layout.tsx';
 
+import { useEvent } from '../$event+/__components/useEvent.tsx';
 import { MaxProposalsReached } from './__components/MaxProposalsReached.tsx';
 import { NewProposal } from './__components/NewProposal.tsx';
 import { SubmissionTalksList } from './__components/SubmissionTalksList.tsx';

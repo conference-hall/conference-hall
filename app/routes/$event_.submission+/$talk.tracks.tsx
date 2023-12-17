@@ -5,18 +5,19 @@ import { json, redirect } from '@remix-run/node';
 import { Form, useActionData, useLoaderData, useNavigate } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
+import { SubmissionSteps } from '~/.server/cfp-submission-funnel/SubmissionSteps';
+import { TalkSubmission } from '~/.server/cfp-submission-funnel/TalkSubmission';
+import { getTracksSchema } from '~/.server/cfp-submission-funnel/TalkSubmission.types';
+import { EventPage } from '~/.server/event-page/EventPage.ts';
 import { AlertError } from '~/design-system/Alerts.tsx';
 import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2 } from '~/design-system/Typography.tsx';
-import { SubmissionSteps } from '~/domains/cfp-submission-funnel/SubmissionSteps';
-import { TalkSubmission } from '~/domains/cfp-submission-funnel/TalkSubmission';
-import { getTracksSchema } from '~/domains/cfp-submission-funnel/TalkSubmission.types';
-import { EventPage } from '~/domains/event-page/EventPage.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { CategoriesForm } from '~/routes/__components/proposals/forms/CategoriesForm.tsx';
 import { FormatsForm } from '~/routes/__components/proposals/forms/FormatsForm.tsx';
-import { useEvent } from '~/routes/$event+/_layout.tsx';
+
+import { useEvent } from '../$event+/__components/useEvent';
 
 export const handle = { step: 'tracks' };
 

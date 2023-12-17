@@ -3,12 +3,12 @@ import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
 
+import { TalksLibrary } from '~/.server/speaker-talks-library/TalksLibrary';
+import { TalkSaveSchema } from '~/.server/speaker-talks-library/TalksLibrary.types';
 import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
-import { TalksLibrary } from '~/domains/speaker-talks-library/TalksLibrary';
-import { TalkSaveSchema } from '~/domains/speaker-talks-library/TalksLibrary.types';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { redirectWithToast } from '~/libs/toasts/toast.server.ts';

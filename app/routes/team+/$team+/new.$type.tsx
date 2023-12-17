@@ -4,11 +4,11 @@ import { json, redirect } from '@remix-run/node';
 import { Form, useActionData, useParams } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
+import { EventCreateSchema, TeamEvents } from '~/.server/organizer-team/TeamEvents.ts';
 import { Button, ButtonLink } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { H1, Subtitle } from '~/design-system/Typography.tsx';
-import { EventCreateSchema, TeamEvents } from '~/domains/organizer-team/TeamEvents.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 
 import { EventForm } from '../../__components/events/EventForm.tsx';

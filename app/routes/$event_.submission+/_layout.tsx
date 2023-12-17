@@ -4,17 +4,17 @@ import { json } from '@remix-run/node';
 import { Outlet, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
+import { SubmissionSteps } from '~/.server/cfp-submission-funnel/SubmissionSteps.ts';
+import { EventPage } from '~/.server/event-page/EventPage.ts';
 import { IconLink } from '~/design-system/IconButtons.tsx';
 import { Container } from '~/design-system/layouts/Container.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
-import { SubmissionSteps } from '~/domains/cfp-submission-funnel/SubmissionSteps.ts';
-import { EventPage } from '~/domains/event-page/EventPage.ts';
 import { requireSession } from '~/libs/auth/session.ts';
-import { CfpNotOpenError } from '~/libs/errors.ts';
+import { CfpNotOpenError } from '~/libs/errors.server.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { eventSocialCard } from '~/libs/meta/social-cards.ts';
-import { useUser } from '~/root.tsx';
 import { Navbar } from '~/routes/__components/navbar/Navbar.tsx';
+import { useUser } from '~/routes/__components/useUser.tsx';
 
 import { Steps } from './__components/Steps.tsx';
 import { useCurrentStepKey } from './__components/useCurrentStepKey.ts';

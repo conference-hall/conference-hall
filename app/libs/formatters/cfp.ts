@@ -2,8 +2,8 @@ import format from 'date-fns/format/index.js';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow/index.js';
 import isSameDay from 'date-fns/isSameDay/index.js';
 
-import type { CfpState } from '~/domains/shared/CallForPaper';
-import type { EventType } from '~/domains/shared/Event.types';
+import type { CfpState } from '~/.server/shared/CallForPaper';
+import type { EventType } from '~/.server/shared/Event.types';
 
 export function formatEventType(type: EventType) {
   switch (type) {

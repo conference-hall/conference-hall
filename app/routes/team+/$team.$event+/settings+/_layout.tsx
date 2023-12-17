@@ -13,15 +13,15 @@ import type { LoaderFunctionArgs } from '@remix-run/node';
 import { Outlet } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
+import { UserEvent } from '~/.server/organizer-event-settings/UserEvent.ts';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { NavSideMenu } from '~/design-system/navigation/NavSideMenu.tsx';
 import { H2 } from '~/design-system/Typography.tsx';
-import { UserEvent } from '~/domains/organizer-event-settings/UserEvent.ts';
 import { requireSession } from '~/libs/auth/session.ts';
-import { useUser } from '~/root.tsx';
+import { useUser } from '~/routes/__components/useUser.tsx';
 
-import { useTeam } from '../../$team.tsx';
-import { useTeamEvent } from '../_layout.tsx';
+import { useTeam } from '../../__components/useTeam.tsx';
+import { useEvent } from '../__components/useEvent.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
@@ -46,7 +46,7 @@ const getMenuItems = (team?: string, event?: string) => [
 export default function OrganizationSettingsRoute() {
   const { user } = useUser();
   const { team } = useTeam();
-  const { event } = useTeamEvent();
+  const { event } = useEvent();
 
   const menus = getMenuItems(team.slug, event.slug);
 

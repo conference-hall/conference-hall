@@ -3,14 +3,14 @@ import type { LoaderFunctionArgs } from '@remix-run/node';
 import { Outlet } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
+import { UserTeam } from '~/.server/organizer-team/UserTeam';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { NavSideMenu } from '~/design-system/navigation/NavSideMenu.tsx';
 import { H2 } from '~/design-system/Typography.tsx';
-import { UserTeam } from '~/domains/organizer-team/UserTeam';
 import { requireSession } from '~/libs/auth/session.ts';
-import { useUser } from '~/root.tsx';
+import { useUser } from '~/routes/__components/useUser';
 
-import { useTeam } from '../$team';
+import { useTeam } from '../__components/useTeam';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);

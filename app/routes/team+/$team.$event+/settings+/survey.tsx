@@ -3,18 +3,18 @@ import { json, type LoaderFunctionArgs } from '@remix-run/node';
 import { Form, useFetcher, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
+import { questions } from '~/.server/cfp-survey/SurveyQuestions.ts';
+import { UserEvent } from '~/.server/organizer-event-settings/UserEvent.ts';
+import { EventSurveySettingsSchema } from '~/.server/organizer-event-settings/UserEvent.types.ts';
 import { Button } from '~/design-system/Buttons.tsx';
 import { Checkbox } from '~/design-system/forms/Checkboxes.tsx';
 import { ToggleGroup } from '~/design-system/forms/Toggles.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2, Subtitle } from '~/design-system/Typography.tsx';
-import { questions } from '~/domains/cfp-survey/SurveyQuestions.ts';
-import { UserEvent } from '~/domains/organizer-event-settings/UserEvent.ts';
-import { EventSurveySettingsSchema } from '~/domains/organizer-event-settings/UserEvent.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 
-import { useTeamEvent } from '../_layout.tsx';
+import { useEvent } from '../__components/useEvent.tsx';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);
@@ -45,7 +45,7 @@ export const action = async ({ request, params }: LoaderFunctionArgs) => {
 };
 
 export default function EventSurveySettingsRoute() {
-  const { event } = useTeamEvent();
+  const { event } = useEvent();
   const { questions } = useLoaderData<typeof loader>();
   const fetcher = useFetcher();
 

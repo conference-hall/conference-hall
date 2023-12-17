@@ -7,7 +7,7 @@ import { Checkbox } from '~/design-system/forms/Checkboxes';
 import { Text } from '~/design-system/Typography';
 import { Join } from '~/design-system/utils/join';
 import { GlobalReviewNote, UserReviewNote } from '~/routes/__components/reviews/ReviewNote';
-import { useTeam } from '~/routes/team+/$team';
+import { useTeam } from '~/routes/team+/__components/useTeam';
 
 import type { ProposalData } from './types';
 

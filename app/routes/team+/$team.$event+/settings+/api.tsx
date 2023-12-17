@@ -2,10 +2,10 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import invariant from 'tiny-invariant';
 import { v4 as uuid } from 'uuid';
 
-import { UserEvent } from '~/domains/organizer-event-settings/UserEvent.ts';
+import { UserEvent } from '~/.server/organizer-event-settings/UserEvent.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 
-import { useTeamEvent } from '../_layout.tsx';
+import { useEvent } from '../__components/useEvent.tsx';
 import { ApiTryoutSection } from './__components/ApiTryoutSection.tsx';
 import { EnableApiSection } from './__components/EnableApiSection.tsx';
 
@@ -36,7 +36,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 };
 
 export default function EventApiSettingsRoute() {
-  const { event } = useTeamEvent();
+  const { event } = useEvent();
 
   return (
     <>
