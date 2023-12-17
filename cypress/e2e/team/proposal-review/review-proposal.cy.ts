@@ -31,24 +31,21 @@ describe('Proposal review page', () => {
       cy.findByLabelText('Score: 3').should('exist');
 
       review.review('Love it, 5 stars');
-      review.addReviewComment('Best talk');
 
       cy.findByLabelText('Score: 4').should('exist');
 
-      review.activityFeed().should('have.length', 4);
+      review.activityFeed().should('have.length', 3);
       review.activityFeed().eq(0).should('contain.text', 'Bruce Wayne reviewed the proposal with 3 stars.');
       review.activityFeed().eq(1).should('contain.text', 'Bruce Wayne commented');
       review.activityFeed().eq(1).should('contain.text', 'Hello world');
       review.activityFeed().eq(2).should('contain.text', 'Clark Kent reviewed the proposal with 5 stars.');
-      review.activityFeed().eq(3).should('contain.text', 'Clark Kent commented');
-      review.activityFeed().eq(3).should('contain.text', 'Best talk');
 
       review.addComment('This is a new comment');
-      review.activityFeed().should('have.length', 5);
-      review.activityFeed().eq(4).should('contain.text', 'Clark Kent commented');
-      review.activityFeed().eq(4).should('contain.text', 'This is a new comment');
-      review.activityFeed().eq(4).findByRole('button', { name: 'delete' }).click();
       review.activityFeed().should('have.length', 4);
+      review.activityFeed().eq(3).should('contain.text', 'Clark Kent commented');
+      review.activityFeed().eq(3).should('contain.text', 'This is a new comment');
+      review.activityFeed().eq(3).findByRole('button', { name: 'delete' }).click();
+      review.activityFeed().should('have.length', 3);
     });
 
     it('deliberate the proposal', () => {

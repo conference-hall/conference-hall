@@ -3,7 +3,6 @@ import { useParams, useSubmit } from '@remix-run/react';
 import { H2 } from '~/design-system/Typography.tsx';
 import type { ReviewFeeling, UserReview } from '~/types/proposals.types.ts';
 
-import { NewCommentForm } from '../activity-feed-sections/new-comment-form.tsx';
 import { ReviewSelector } from './review-selector.tsx';
 
 type Props = { initialValues: UserReview };
@@ -24,8 +23,6 @@ export function ReviewForm({ initialValues }: Props) {
       <H2 size="s">Your review</H2>
 
       <ReviewSelector value={initialValues} onChange={handleSubmit} />
-
-      <NewCommentForm compact className="hidden lg:block" />
     </div>
   );
 }

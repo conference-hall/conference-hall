@@ -85,13 +85,6 @@ class ProposalReviewPage extends BasePage {
     });
   }
 
-  addReviewComment(comment: string) {
-    this.yourReviewPanel().within(() => {
-      cy.typeOn('Add your comment', comment);
-      cy.findByRole('button', { name: 'Comment' }).click();
-    });
-  }
-
   // Deliberation & Publication
 
   deliberationStatus() {

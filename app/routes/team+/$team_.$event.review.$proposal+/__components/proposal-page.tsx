@@ -1,13 +1,12 @@
-import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import { Link, useParams, useSearchParams } from '@remix-run/react';
 
-import { AvatarName } from '~/design-system/Avatar.tsx';
+import { Avatar } from '~/design-system/Avatar.tsx';
 import { Badge } from '~/design-system/Badges.tsx';
 import { IconLink } from '~/design-system/IconButtons';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { Markdown } from '~/design-system/Markdown.tsx';
-import { H1 } from '~/design-system/Typography';
+import { H1, Text } from '~/design-system/Typography';
 import { getLanguage } from '~/libs/formatters/languages';
 import { getLevel } from '~/libs/formatters/levels';
 import { useUser } from '~/root';
@@ -29,7 +28,7 @@ export function ProposalPage({ proposal }: Props) {
 
   return (
     <Card as="section">
-      <div className="flex justify-between items-center gap-4 px-6 py-4 border-b border-b-gray-200">
+      <div className="flex justify-between items-center gap-4 px-6 py-3 border-b border-b-gray-200">
         <H1 size="base" weight="semibold" truncate>
           {proposal.title}
         </H1>
@@ -43,8 +42,8 @@ export function ProposalPage({ proposal }: Props) {
         )}
       </div>
       {proposal.speakers.length > 0 && (
-        <div className="flex items-start lg:items-center lg:gap-6 px-2 pt-4 lg:px-4">
-          <ul aria-label="Speakers" className="flex-1 flex flex-col flex-wrap gap-4 lg:flex-row">
+        <div className="flex items-start lg:items-center lg:gap-6 px-2 pt-3 lg:px-4">
+          <ul aria-label="Speakers" className="flex-1 flex flex-col flex-wrap gap-3 lg:flex-row">
             {proposal.speakers.map((speaker) => (
               <li key={speaker.name}>
                 <Link
@@ -53,14 +52,10 @@ export function ProposalPage({ proposal }: Props) {
                   aria-label={`View ${speaker.name} profile`}
                   className="flex items-center gap-2 hover:bg-gray-100 p-2 rounded-md"
                 >
-                  <AvatarName
-                    key={speaker.name}
-                    name={speaker.name}
-                    picture={speaker.picture}
-                    subtitle={speaker.company}
-                    size="s"
-                  />
-                  <ChevronRightIcon className="h-4 w-4 text-gray-600" aria-hidden="true" />
+                  <Avatar name={speaker.name} picture={speaker.picture} size="xs" />
+                  <Text weight="medium" variant="secondary">
+                    {speaker.name}
+                  </Text>
                 </Link>
               </li>
             ))}
