@@ -36,7 +36,6 @@ describe('Proposal edit page', () => {
 
       cy.assertToast('Proposal saved.');
 
-      // TODO use dt/dd
       cy.assertText('Talk 1 updated');
       cy.assertText('Talk description updated');
       cy.assertText('Talk references updated');

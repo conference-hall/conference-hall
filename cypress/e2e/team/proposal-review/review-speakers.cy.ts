@@ -18,7 +18,6 @@ describe('Speakers in proposal review page', () => {
 
     review.viewSpeakerProfile(/Marie Jane/);
 
-    // TODO use dt/dd
     cy.assertText('Marie Jane');
     cy.assertText('MJ Corp');
     cy.assertText('marie@example.com');

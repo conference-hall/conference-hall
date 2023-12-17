@@ -19,7 +19,6 @@ describe('Proposal review page', () => {
 
       review.title('Talk 1').should('exist');
 
-      // TODO use dt/dd
       cy.assertText('Advanced');
       cy.assertText('French');
       cy.assertText('Talk description');
@@ -52,8 +51,26 @@ describe('Proposal review page', () => {
       review.activityFeed().should('have.length', 4);
     });
 
-    // TODO (+ not displayed on reviewer page)
-    it.skip('deliberate for the proposal');
+    it('deliberate the proposal', () => {
+      review.visit('team-1', 'conference-1', 'proposal-1');
+
+      review.deliberationStatus().should('contain.text', 'Pending');
+      review.publicationHeading().should('not.exist');
+
+      review.deliberate(/Accepted/);
+      review.deliberationStatus().should('contain.text', 'Accepted');
+      review.publicationHeading().should('exist');
+
+      review.publishResult();
+      review.confirmationPanel().should('contain.text', 'Waiting for speakers confirmation');
+
+      review.deliberate(/Rejected/);
+      review.deliberationStatus().should('contain.text', 'Accepted');
+      review.publicationHeading().should('exist');
+
+      review.publishResult();
+      review.publicationPanel().should('contain.text', 'Result published to speakers');
+    });
 
     it('navigates between proposals', () => {
       review.visit('team-1', 'conference-1', 'proposal-1');
@@ -81,6 +98,18 @@ describe('Proposal review page', () => {
       cy.findByRole('heading', { name: 'Your review' }).should('not.exist');
       cy.findByRole('link', { name: /Marie Jane/ }).should('not.exist');
       cy.findByRole('link', { name: /Robin/ }).should('not.exist');
+    });
+  });
+
+  describe('as team reviewer', () => {
+    beforeEach(() => cy.login('Peter Parker'));
+
+    it('does not show deliberation, confirmation or publication panels', () => {
+      review.visit('team-1', 'conference-1', 'proposal-1');
+
+      cy.findByRole('heading', { name: 'Deliberation' }).should('not.exist');
+      cy.findByRole('heading', { name: 'Confirmation' }).should('not.exist');
+      cy.findByRole('heading', { name: 'Publication' }).should('not.exist');
     });
   });
 });

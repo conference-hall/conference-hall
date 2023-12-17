@@ -92,6 +92,33 @@ class ProposalReviewPage extends BasePage {
     });
   }
 
+  // Deliberation & Publication
+
+  deliberationStatus() {
+    return cy.findByLabelText('Change deliberation status');
+  }
+
+  deliberate(status: RegExp) {
+    this.deliberationStatus().click();
+    cy.findByRole('option', { name: status }).click();
+  }
+
+  publicationHeading() {
+    return cy.findByRole('heading', { name: 'Publication' });
+  }
+
+  publicationPanel() {
+    return this.publicationHeading().parent();
+  }
+
+  publishResult() {
+    return cy.findByRole('button', { name: 'Publish result to speakers' }).click();
+  }
+
+  confirmationPanel() {
+    return cy.findByRole('heading', { name: 'Confirmation' }).parent();
+  }
+
   // Edit proposal
 
   editProposal() {

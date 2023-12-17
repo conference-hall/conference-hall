@@ -14,9 +14,7 @@ export function PublicationDetails({ deliberationStatus, publicationStatus }: Pr
 
   return (
     <div className="space-y-4 p-4 lg:p-6">
-      <div className="flex items-center justify-between">
-        <H2 size="s">Publication</H2>
-      </div>
+      <H2 size="s">Publication</H2>
       <PublicationLabel deliberationStatus={deliberationStatus} publicationStatus={publicationStatus} />
     </div>
   );
