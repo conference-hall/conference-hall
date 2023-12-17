@@ -58,15 +58,15 @@ describe('Proposal review page', () => {
       review.publicationHeading().should('not.exist');
 
       review.deliberate(/Accepted/);
-      review.deliberationStatus().should('contain.text', 'Accepted');
       review.publicationHeading().should('exist');
+      review.deliberationStatus().should('contain.text', 'Accepted');
 
       review.publishResult();
       review.confirmationPanel().should('contain.text', 'Waiting for speakers confirmation');
 
       review.deliberate(/Rejected/);
-      review.deliberationStatus().should('contain.text', 'Accepted');
       review.publicationHeading().should('exist');
+      review.deliberationStatus().should('contain.text', 'Rejected');
 
       review.publishResult();
       review.publicationPanel().should('contain.text', 'Result published to speakers');
