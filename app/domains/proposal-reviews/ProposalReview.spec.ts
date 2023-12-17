@@ -2,7 +2,6 @@ import type { Event, EventCategory, EventFormat, Team, User } from '@prisma/clie
 import { eventCategoryFactory } from 'tests/factories/categories';
 import { eventFactory } from 'tests/factories/events';
 import { eventFormatFactory } from 'tests/factories/formats';
-import { messageFactory } from 'tests/factories/messages';
 import { proposalFactory } from 'tests/factories/proposals';
 import { reviewFactory } from 'tests/factories/reviews';
 import { surveyFactory } from 'tests/factories/surveys';
@@ -58,10 +57,8 @@ describe('ProposalReview', () => {
         speakers: [{ id: speaker.id, name: speaker.name, picture: speaker.picture, company: speaker.company }],
         reviews: {
           summary: { average: null, negatives: 0, positives: 0 },
-          you: { feeling: null, note: null, comment: null },
+          you: { feeling: null, note: null },
         },
-        reviewsCount: 0,
-        messagesCount: 0,
       });
     });
 
@@ -75,38 +72,28 @@ describe('ProposalReview', () => {
 
     it('returns teams reviews', async () => {
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-      await reviewFactory({ proposal, user: owner, attributes: { feeling: 'NEGATIVE', note: 0, comment: 'Booo' } });
+      await reviewFactory({ proposal, user: owner, attributes: { feeling: 'NEGATIVE', note: 0 } });
       await reviewFactory({ proposal, user: member, attributes: { feeling: 'POSITIVE', note: 5 } });
 
       const review = await ProposalReview.for(owner.id, team.slug, event.slug, proposal.id).get();
 
       expect(review.reviews).toEqual({
         summary: { average: 2.5, positives: 1, negatives: 1 },
-        you: { note: 0, feeling: 'NEGATIVE', comment: 'Booo' },
+        you: { note: 0, feeling: 'NEGATIVE' },
       });
     });
 
     it('does not returns reviews summary when display proposals reviews setting is false', async () => {
       await db.event.update({ data: { displayProposalsReviews: false }, where: { id: event.id } });
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-      await reviewFactory({ proposal, user: owner, attributes: { feeling: 'NEGATIVE', note: 0, comment: 'Booo' } });
+      await reviewFactory({ proposal, user: owner, attributes: { feeling: 'NEGATIVE', note: 0 } });
 
       const review = await ProposalReview.for(owner.id, team.slug, event.slug, proposal.id).get();
 
       expect(review.reviews).toEqual({
         summary: null,
-        you: { note: 0, feeling: 'NEGATIVE', comment: 'Booo' },
+        you: { note: 0, feeling: 'NEGATIVE' },
       });
-    });
-
-    it('returns teams messages count', async () => {
-      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-      await messageFactory({ proposal, user: owner, attributes: { message: 'Message 1' } });
-      await messageFactory({ proposal, user: member, attributes: { message: 'Message 2' } });
-
-      const review = await ProposalReview.for(owner.id, team.slug, event.slug, proposal.id).get();
-
-      expect(review.messagesCount).toEqual(2);
     });
 
     it('throws an error if user does not belong to event team', async () => {
@@ -131,7 +118,7 @@ describe('ProposalReview', () => {
       const review = ProposalReview.for(owner.id, team.slug, event.slug, proposal.id);
       const pagination = await review.getPreviousAndNextReviews({});
 
-      expect(pagination).toEqual({ current: 1, total: 1, previousId: undefined, nextId: undefined });
+      expect(pagination).toEqual({ current: 1, total: 1, reviewed: 0, previousId: undefined, nextId: undefined });
     });
 
     it('returns pagination for next and previous proposals', async () => {
@@ -145,6 +132,7 @@ describe('ProposalReview', () => {
       expect(pagination).toEqual({
         current: 2,
         total: 3,
+        reviewed: 0,
         nextId: proposal1.id,
         previousId: proposal3.id,
       });
@@ -172,6 +160,7 @@ describe('ProposalReview', () => {
       expect(pagination).toEqual({
         current: 2,
         total: 3,
+        reviewed: 0,
         nextId: proposal1.id,
         previousId: proposal5.id,
       });
@@ -195,7 +184,6 @@ describe('ProposalReview', () => {
       await ProposalReview.for(owner.id, team.slug, event.slug, proposal.id).addReview({
         feeling: 'NEUTRAL',
         note: 2,
-        comment: 'Why not',
       });
 
       const reviews1 = await db.review.findMany({ where: { userId: owner.id }, include: { proposal: true } });
@@ -204,14 +192,12 @@ describe('ProposalReview', () => {
       const review = reviews1[0];
       expect(review.feeling).toBe('NEUTRAL');
       expect(review.note).toBe(2);
-      expect(review.comment).toBe('Why not');
       expect(review.proposal.avgRateForSort).toBe(2);
 
       // Update first review
       await ProposalReview.for(owner.id, team.slug, event.slug, proposal.id).addReview({
         feeling: 'POSITIVE',
         note: 5,
-        comment: 'Too good!',
       });
 
       const reviews2 = await db.review.findMany({ where: { userId: owner.id }, include: { proposal: true } });
@@ -220,14 +206,12 @@ describe('ProposalReview', () => {
       const updatedReview = reviews2[0];
       expect(updatedReview.feeling).toBe('POSITIVE');
       expect(updatedReview.note).toBe(5);
-      expect(updatedReview.comment).toBe('Too good!');
       expect(updatedReview.proposal.avgRateForSort).toBe(5);
 
       // Second review
       await ProposalReview.for(member.id, team.slug, event.slug, proposal.id).addReview({
         feeling: 'NEUTRAL',
         note: 0,
-        comment: 'Too bad!',
       });
 
       const reviews3 = await db.review.findMany({ where: { proposalId: proposal.id }, include: { proposal: true } });
@@ -240,9 +224,7 @@ describe('ProposalReview', () => {
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
       const review = ProposalReview.for(owner.id, team.slug, event.slug, proposal.id);
-      await expect(review.addReview({ feeling: 'NEUTRAL', note: 2, comment: null })).rejects.toThrowError(
-        ReviewDisabledError,
-      );
+      await expect(review.addReview({ feeling: 'NEUTRAL', note: 2 })).rejects.toThrowError(ReviewDisabledError);
     });
 
     it('throws an error if user does not belong to event team', async () => {
@@ -250,9 +232,7 @@ describe('ProposalReview', () => {
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
       const review = ProposalReview.for(user.id, team.slug, event.slug, proposal.id);
-      await expect(review.addReview({ feeling: 'NEUTRAL', note: 2, comment: null })).rejects.toThrowError(
-        ForbiddenOperationError,
-      );
+      await expect(review.addReview({ feeling: 'NEUTRAL', note: 2 })).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
@@ -314,39 +294,26 @@ describe('ProposalReview', () => {
     it('returns speakers data of a proposal', async () => {
       const survey = await surveyFactory({
         event,
-        user: member,
+        user: speaker,
         attributes: { answers: { gender: 'male', tshirt: 'XL' } },
       });
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker, member] }) });
 
-      const speakers = await ProposalReview.for(owner.id, team.slug, event.slug, proposal.id).getSpeakerInfo();
+      const review = ProposalReview.for(owner.id, team.slug, event.slug, proposal.id);
+      const speakerInfo = await review.getSpeakerInfo(speaker.id);
 
-      expect(speakers).toEqual([
-        {
-          id: member.id,
-          name: member.name,
-          email: member.email,
-          bio: member.bio,
-          address: member.address,
-          company: member.company,
-          picture: member.picture,
-          references: member.references,
-          socials: member.socials,
-          survey: survey.answers,
-        },
-        {
-          id: speaker.id,
-          name: speaker.name,
-          email: speaker.email,
-          bio: speaker.bio,
-          address: speaker.address,
-          company: speaker.company,
-          picture: speaker.picture,
-          references: speaker.references,
-          socials: speaker.socials,
-          survey: undefined,
-        },
-      ]);
+      expect(speakerInfo).toEqual({
+        id: speaker.id,
+        name: speaker.name,
+        email: speaker.email,
+        bio: speaker.bio,
+        address: speaker.address,
+        company: speaker.company,
+        picture: speaker.picture,
+        references: speaker.references,
+        socials: speaker.socials,
+        survey: survey.answers,
+      });
     });
 
     it('throws an error if display speakers setting is false', async () => {
@@ -354,46 +321,14 @@ describe('ProposalReview', () => {
       await db.event.update({ data: { displayProposalsSpeakers: false }, where: { id: event.id } });
 
       const review = await ProposalReview.for(owner.id, team.slug, event.slug, proposal.id);
-      await expect(review.getSpeakerInfo()).rejects.toThrowError(ForbiddenOperationError);
+      await expect(review.getSpeakerInfo(speaker.id)).rejects.toThrowError(ForbiddenOperationError);
     });
 
     it('throws an error if user does not belong to event team', async () => {
       const user = await userFactory();
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker, member] }) });
       const review = await ProposalReview.for(user.id, team.slug, event.slug, proposal.id);
-      await expect(review.getSpeakerInfo()).rejects.toThrowError(ForbiddenOperationError);
-    });
-  });
-
-  describe('#getTeamReviews', () => {
-    it('returns proposal reviews', async () => {
-      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-      await reviewFactory({ proposal, user: owner, attributes: { feeling: 'NEGATIVE', note: 0 } });
-      await reviewFactory({ proposal, user: member, attributes: { feeling: 'POSITIVE', note: 5, comment: 'Yeah!' } });
-
-      const reviews = await ProposalReview.for(owner.id, team.slug, event.slug, proposal.id).getTeamReviews();
-
-      expect(reviews).toEqual([
-        { feeling: 'POSITIVE', id: member.id, name: member.name, picture: member.picture, note: 5, comment: 'Yeah!' },
-        { feeling: 'NEGATIVE', id: owner.id, name: owner.name, picture: owner.picture, note: 0, comment: null },
-      ]);
-    });
-
-    it('throws an error if display of reviews is disabled for the event', async () => {
-      await db.event.update({ data: { displayProposalsReviews: false }, where: { id: event.id } });
-      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-
-      const review = ProposalReview.for(owner.id, team.slug, event.slug, proposal.id);
-      await expect(review.getTeamReviews()).rejects.toThrowError(ForbiddenOperationError);
-    });
-
-    it('throws an error if user does not belong to event team', async () => {
-      const user = await userFactory();
-      const event = await eventFactory();
-      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [user] }) });
-
-      const review = ProposalReview.for(user.id, team.slug, event.slug, proposal.id);
-      await expect(review.getTeamReviews()).rejects.toThrowError(ForbiddenOperationError);
+      await expect(review.getSpeakerInfo(speaker.id)).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 });

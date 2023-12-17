@@ -69,7 +69,7 @@ export function Avatar({
   className,
 }: AvatarProps) {
   const styles = cx(
-    'shrink-0',
+    'shrink-0 bg-gray-300',
     sizes[size],
     ring ? rings[size] : null,
     ring ? ringsColor[ringColor] : null,
@@ -93,7 +93,7 @@ type AvatarGroupProps = {
 
 export function AvatarGroup({ avatars, displayNames = false }: AvatarGroupProps) {
   return (
-    <div className="-space-x-1 overflow-hidden truncate">
+    <div className="-space-x-1 overflow-hidden truncate shrink-0">
       {avatars.map((avatar) => (
         <Avatar
           key={avatar.name}
@@ -126,7 +126,7 @@ type AvatarNameProps = {
 export function AvatarName({ name, subtitle, variant = 'primary', ...rest }: AvatarNameProps) {
   return (
     <div className="flex items-center">
-      <Avatar {...rest} aria-hidden />
+      <Avatar name={name} {...rest} aria-hidden />
       <div className="ml-3 text-left">
         <Text variant={variant === 'primary' ? 'primary' : 'light'} weight="medium">
           {name || 'Unknown'}

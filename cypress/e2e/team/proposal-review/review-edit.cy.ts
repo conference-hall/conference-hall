@@ -42,8 +42,10 @@ describe('Proposal edit page', () => {
       cy.assertText('Beginner');
       cy.assertText('French');
       cy.assertText('English');
-      cy.assertText('Format 1, Format 2');
-      cy.assertText('Category 1, Category 2');
+      cy.assertText('Format 1');
+      cy.assertText('Format 2');
+      cy.assertText('Category 1');
+      cy.assertText('Category 2');
     });
 
     it('quits edit mode', () => {

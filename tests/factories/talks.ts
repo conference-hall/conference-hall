@@ -1,4 +1,4 @@
-import { randParagraph, randPost } from '@ngneat/falso';
+import { randLine, randPost } from '@ngneat/falso';
 import type { Prisma, User } from '@prisma/client';
 import { TalkLevel } from '@prisma/client';
 
@@ -24,8 +24,8 @@ export const talkFactory = (options: FactoryOptions) => {
 
   const defaultAttributes: Prisma.TalkCreateInput = {
     title: randPost().title,
-    abstract: randParagraph(),
-    references: randParagraph(),
+    abstract: randLine({ lineCount: 5 }),
+    references: randLine({ lineCount: 2 }),
     languages: ['en'],
     level: TalkLevel.INTERMEDIATE,
     creator: { connect: { id: speakers[0].id } },

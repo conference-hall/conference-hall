@@ -27,7 +27,7 @@ export const typography = cva('', {
     align: { center: 'text-center' },
     weight: { normal: 'font-normal', medium: 'font-medium', semibold: 'font-semibold', bold: 'font-bold' },
     srOnly: { true: 'sr-only' },
-    truncate: { true: 'truncate' },
+    truncate: { true: 'truncate', false: 'break-words' },
   },
   defaultVariants: { variant: 'primary', size: 's' },
 });

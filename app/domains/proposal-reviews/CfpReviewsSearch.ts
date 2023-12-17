@@ -69,7 +69,6 @@ export class CfpReviewsSearch {
         deliberationStatus: proposal.deliberationStatus,
         confirmationStatus: proposal.confirmationStatus,
         level: proposal.level,
-        comments: proposal.comments,
         references: proposal.references,
         formats: proposal.formats,
         categories: proposal.categories,

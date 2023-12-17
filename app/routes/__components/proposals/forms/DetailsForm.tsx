@@ -53,7 +53,7 @@ export function DetailsForm({
         label="Abstract"
         description="Brief description of the talk. Markdown is supported "
         required
-        rows={8}
+        rows={6}
         defaultValue={initialValues?.abstract}
         error={errors?.abstract}
       />

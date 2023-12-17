@@ -1,12 +1,12 @@
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
-import { useParams, useSearchParams } from '@remix-run/react';
+import { Link, useParams, useSearchParams } from '@remix-run/react';
 
-import { AvatarName } from '~/design-system/Avatar.tsx';
+import { Avatar } from '~/design-system/Avatar.tsx';
 import { Badge } from '~/design-system/Badges.tsx';
-import { IconButtonLink } from '~/design-system/IconButtons';
+import { IconLink } from '~/design-system/IconButtons';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { Markdown } from '~/design-system/Markdown.tsx';
-import { H3, Text } from '~/design-system/Typography.tsx';
+import { H1, Text } from '~/design-system/Typography';
 import { getLanguage } from '~/libs/formatters/languages';
 import { getLevel } from '~/libs/formatters/levels';
 import { useUser } from '~/root';
@@ -28,64 +28,82 @@ export function ProposalPage({ proposal }: Props) {
 
   return (
     <Card as="section">
+      <div className="flex justify-between items-center gap-4 px-6 py-3 border-b border-b-gray-200">
+        <H1 size="base" weight="semibold" truncate>
+          {proposal.title}
+        </H1>
+        {canEditProposal && (
+          <IconLink
+            icon={PencilSquareIcon}
+            label="Edit proposal"
+            variant="secondary"
+            to={{ pathname: 'edit', search: search.toString() }}
+          />
+        )}
+      </div>
       {proposal.speakers.length > 0 && (
-        <div className="flex flex-col gap-4 lg:flex-row lg:gap-8 px-4 py-6 lg:px-8 border-b border-b-gray-200">
-          {proposal.speakers.map((speaker) => (
-            <AvatarName
-              key={speaker.name}
-              name={speaker.name}
-              picture={speaker.picture}
-              subtitle={speaker.company}
-              size="s"
-            />
-          ))}
+        <div className="flex items-start lg:items-center lg:gap-6 px-2 pt-3 lg:px-4">
+          <ul aria-label="Speakers" className="flex-1 flex flex-col flex-wrap gap-3 lg:flex-row">
+            {proposal.speakers.map((speaker) => (
+              <li key={speaker.name}>
+                <Link
+                  key={speaker.name}
+                  to={`speakers/${speaker.id}?${search.toString()}`}
+                  aria-label={`View ${speaker.name} profile`}
+                  className="flex items-center gap-2 hover:bg-gray-100 p-2 rounded-md"
+                >
+                  <Avatar name={speaker.name} picture={speaker.picture} size="xs" />
+                  <Text weight="medium" variant="secondary">
+                    {speaker.name}
+                  </Text>
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
-
-      <Card.Content>
-        <div className="flex justify-between items-center">
-          <div className="space-x-4">
-            {proposal.level && <Badge color="indigo">{getLevel(proposal.level)}</Badge>}
-            {proposal.languages.map((language) => (
-              <Badge key={language}>{getLanguage(language)}</Badge>
-            ))}
-          </div>
-          {canEditProposal && (
-            <IconButtonLink
-              icon={PencilSquareIcon}
-              label="Edit proposal"
-              variant="secondary"
-              to={{ pathname: 'edit', search: search.toString() }}
-            />
-          )}
-        </div>
-
+      <dl className="p-6 flex flex-col gap-6">
         <div>
-          <H3 srOnly>Abstract</H3>
-          <Markdown>{proposal.abstract}</Markdown>
+          <dt className="sr-only">Abstract</dt>
+          <Markdown as="dd" className="text-gray-700">
+            {proposal.abstract}
+          </Markdown>
         </div>
+
+        {proposal.references && (
+          <div>
+            <dt className="text-sm font-medium leading-6 text-gray-900">References</dt>
+            <Markdown as="dd" className="text-gray-700">
+              {proposal.references}
+            </Markdown>
+          </div>
+        )}
 
         {hasFormats && (
           <div>
-            <H3 mb={2}>Formats</H3>
-            <Text>{proposal.formats?.map(({ name }) => name).join(', ') || '—'}</Text>
+            <dt className="text-sm font-medium leading-6 text-gray-900">Formats</dt>
+            <dd className="text-sm leading-6 text-gray-700">
+              {proposal.formats?.map(({ id, name }) => <p key={id}>{name}</p>)}
+            </dd>
           </div>
         )}
 
         {hasCategories && (
           <div>
-            <H3 mb={2}>Categories</H3>
-            <Text>{proposal.categories?.map(({ name }) => name).join(', ') || '—'}</Text>
+            <dt className="text-sm font-medium leading-6 text-gray-900">Categories</dt>
+            <dd className="text-sm leading-6 text-gray-700">
+              {proposal.categories?.map(({ id, name }) => <p key={id}>{name}</p>)}
+            </dd>
           </div>
         )}
 
-        {proposal.references && (
-          <div>
-            <H3 mb={2}>References</H3>
-            <Markdown>{proposal.references}</Markdown>
-          </div>
-        )}
-      </Card.Content>
+        <div className="flex gap-2 flex-wrap">
+          {proposal.level && <Badge color="indigo">{getLevel(proposal.level)}</Badge>}
+          {proposal.languages.map((language) => (
+            <Badge key={language}>{getLanguage(language)}</Badge>
+          ))}
+        </div>
+      </dl>
     </Card>
   );
 }

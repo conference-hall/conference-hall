@@ -38,7 +38,7 @@ describe('CfpReviewsSearch', () => {
           speakers: [{ name: speaker.name, picture: speaker.picture }],
           reviews: {
             summary: { negatives: 0, positives: 0, average: null },
-            you: { note: null, feeling: null, comment: null },
+            you: { note: null, feeling: null },
           },
         },
       ]);
@@ -99,7 +99,6 @@ describe('CfpReviewsSearch', () => {
           deliberationStatus: proposal.deliberationStatus,
           confirmationStatus: proposal.confirmationStatus,
           abstract: proposal.abstract,
-          comments: proposal.comments,
           languages: proposal.languages,
           references: proposal.references,
           level: proposal.level,

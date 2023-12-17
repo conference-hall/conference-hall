@@ -19,7 +19,7 @@
     "test:unit": "vitest --config ./vitest.config.ts",
     "cypress": "dotenv -e .env.dev -- cypress open --e2e -b electron",
     "db:migrate": "dotenv -e .env.dev -- prisma migrate dev",
-    "db:reset": "dotenv -e .env.dev -- prisma migrate reset",
+    "db:reset": "dotenv -e .env.dev -- prisma migrate reset -f",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint --ignore-path .gitignore .",
     "tsc": "tsc -b && tsc -b cypress",
     "story": "ladle serve",

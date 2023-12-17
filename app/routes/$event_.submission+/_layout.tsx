@@ -4,7 +4,7 @@ import { json } from '@remix-run/node';
 import { Outlet, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { IconButtonLink } from '~/design-system/IconButtons.tsx';
+import { IconLink } from '~/design-system/IconButtons.tsx';
 import { Container } from '~/design-system/layouts/Container.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { SubmissionSteps } from '~/domains/cfp-submission-funnel/SubmissionSteps.ts';
@@ -50,7 +50,7 @@ export default function EventSubmissionRoute() {
       <div className="sticky top-0 z-10 border-b border-gray-200 bg-white py-2 shadow">
         <Container className="flex w-full items-center justify-between gap-4 py-4">
           <Steps steps={steps} currentStep={currentStepKey} />
-          <IconButtonLink label="Cancel submission" to={`/${event.slug}`} icon={XMarkIcon} variant="secondary" />
+          <IconLink label="Cancel submission" to={`/${event.slug}`} icon={XMarkIcon} variant="secondary" />
         </Container>
       </div>
 

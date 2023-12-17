@@ -53,8 +53,8 @@ export default function SpeakerTalksRoute() {
           <List.Content aria-label="Talks list">
             {talks.length === 0 && <EmptyState icon={InboxIcon} label="No talks found." />}
             {talks.map((talk) => (
-              <List.RowLink key={talk.id} to={talk.id} className="flex justify-between items-center">
-                <div>
+              <List.RowLink key={talk.id} to={talk.id} className="flex justify-between items-center gap-4">
+                <div className="min-w-0">
                   <Text size="base" weight="semibold" mb={1} truncate>
                     {talk.title}
                   </Text>

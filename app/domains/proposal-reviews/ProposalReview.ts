@@ -1,6 +1,5 @@
 import { db } from '~/libs/db';
-import { ForbiddenOperationError, ProposalNotFoundError, ReviewDisabledError } from '~/libs/errors';
-import { sortBy } from '~/libs/utils/arrays-sort-by';
+import { ForbiddenOperationError, ProposalNotFoundError, ReviewDisabledError, UserNotFoundError } from '~/libs/errors';
 
 import type { SurveyData } from '../cfp-survey/SpeakerAnswers.types';
 import { UserEvent } from '../organizer-event-settings/UserEvent';
@@ -33,7 +32,6 @@ export class ProposalReview {
         formats: true,
         categories: true,
         reviews: true,
-        _count: { select: { reviews: true, messages: true } },
       },
       where: { id: this.proposalId },
     });
@@ -53,8 +51,6 @@ export class ProposalReview {
       languages: proposal.languages as string[],
       formats: proposal.formats.map(({ id, name }) => ({ id, name })),
       categories: proposal.categories.map(({ id, name }) => ({ id, name })),
-      messagesCount: proposal._count.messages,
-      reviewsCount: proposal._count.reviews,
       reviews: {
         you: reviews.ofUser(this.userId),
         summary: event.displayProposalsReviews ? reviews.summary() : null,
@@ -72,16 +68,16 @@ export class ProposalReview {
   async getPreviousAndNextReviews(filters: ProposalsFilters) {
     const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER', 'REVIEWER']);
 
-    const search = new ProposalSearchBuilder(event.slug, this.userId, filters, {
-      withSpeakers: event.displayProposalsSpeakers,
-    });
+    const search = new ProposalSearchBuilder(event.slug, this.userId, filters);
+
+    const { total, reviewed } = await search.statistics();
     const proposalIds = await search.proposalsIds();
-    const totalProposals = proposalIds.length;
+
     const curIndex = proposalIds.findIndex((id) => id === this.proposalId);
     const previousId = curIndex - 1 >= 0 ? proposalIds.at(curIndex - 1) : undefined;
-    const nextId = curIndex + 1 < totalProposals ? proposalIds.at(curIndex + 1) : undefined;
+    const nextId = curIndex + 1 < total ? proposalIds.at(curIndex + 1) : undefined;
 
-    return { total: totalProposals, current: curIndex + 1, previousId, nextId };
+    return { total, reviewed, current: curIndex + 1, previousId, nextId };
   }
 
   async addReview(data: ReviewUpdateData) {
@@ -119,44 +115,28 @@ export class ProposalReview {
     });
   }
 
-  async getSpeakerInfo() {
+  async getSpeakerInfo(speakerId: string) {
     const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER', 'REVIEWER']);
     if (!event.displayProposalsSpeakers) throw new ForbiddenOperationError();
 
-    const proposal = await db.proposal.findUnique({ include: { speakers: true }, where: { id: this.proposalId } });
-    if (!proposal) throw new ProposalNotFoundError();
-
-    const surveys = await db.survey.findMany({
-      where: { eventId: event.id, userId: { in: proposal?.speakers.map(({ id }) => id) } },
+    const speaker = await db.user.findUnique({
+      where: { id: speakerId, proposals: { some: { id: this.proposalId } } },
     });
+    if (!speaker) throw new UserNotFoundError();
 
-    return sortBy(
-      proposal.speakers.map((speaker) => {
-        const survey = surveys.find((survey) => survey.userId === speaker.id);
+    const survey = await db.survey.findFirst({ where: { eventId: event.id, userId: speakerId } });
 
-        return {
-          id: speaker.id,
-          name: speaker.name,
-          picture: speaker.picture,
-          bio: speaker.bio,
-          references: speaker.references,
-          email: speaker.email,
-          company: speaker.company,
-          address: speaker.address,
-          socials: speaker.socials as SocialLinks,
-          survey: survey?.answers as SurveyData | undefined,
-        };
-      }),
-      'name',
-    );
-  }
-
-  async getTeamReviews() {
-    const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER', 'REVIEWER']);
-    if (!event.displayProposalsReviews) throw new ForbiddenOperationError();
-
-    const result = await db.review.findMany({ where: { proposalId: this.proposalId }, include: { user: true } });
-    const reviews = new ReviewDetails(result);
-    return reviews.ofMembers();
+    return {
+      id: speaker.id,
+      name: speaker.name,
+      picture: speaker.picture,
+      bio: speaker.bio,
+      references: speaker.references,
+      email: speaker.email,
+      company: speaker.company,
+      address: speaker.address,
+      socials: speaker.socials as SocialLinks,
+      survey: survey?.answers as SurveyData | undefined,
+    };
   }
 }

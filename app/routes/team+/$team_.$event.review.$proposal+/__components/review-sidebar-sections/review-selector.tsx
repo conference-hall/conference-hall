@@ -1,8 +1,9 @@
 import { RadioGroup } from '@headlessui/react';
 import { HeartIcon, NoSymbolIcon, StarIcon, XCircleIcon } from '@heroicons/react/24/outline';
-import type { ReviewFeeling } from '@prisma/client';
 import { cx } from 'class-variance-authority';
 import { useCallback, useState } from 'react';
+
+import type { ReviewFeeling } from '~/types/proposals.types';
 
 export type Option = {
   label: string;
@@ -15,19 +16,19 @@ export type Option = {
 export const options: Array<Option> = [
   { label: 'No opinion', Icon: NoSymbolIcon, value: null, feeling: 'NO_OPINION', fill: 'fill-red-100' },
   { label: 'Nope, 0 star', Icon: XCircleIcon, value: 0, feeling: 'NEGATIVE', fill: 'fill-gray-300' },
-  { label: '1 star', Icon: StarIcon, value: 1, feeling: 'NEUTRAL', fill: 'fill-yellow-300' },
-  { label: '2 stars', Icon: StarIcon, value: 2, feeling: 'NEUTRAL', fill: 'fill-yellow-300' },
-  { label: '3 stars', Icon: StarIcon, value: 3, feeling: 'NEUTRAL', fill: 'fill-yellow-300' },
-  { label: '4 stars', Icon: StarIcon, value: 4, feeling: 'NEUTRAL', fill: 'fill-yellow-300' },
-  { label: '5 stars', Icon: StarIcon, value: 5, feeling: 'NEUTRAL', fill: 'fill-yellow-300' },
-  { label: 'Love it, 5 stars', Icon: HeartIcon, value: 5, feeling: 'POSITIVE', fill: 'fill-red-300' },
+  { label: '1 star', Icon: StarIcon, value: 1, feeling: 'NEUTRAL', fill: 'fill-yellow-400' },
+  { label: '2 stars', Icon: StarIcon, value: 2, feeling: 'NEUTRAL', fill: 'fill-yellow-400' },
+  { label: '3 stars', Icon: StarIcon, value: 3, feeling: 'NEUTRAL', fill: 'fill-yellow-400' },
+  { label: '4 stars', Icon: StarIcon, value: 4, feeling: 'NEUTRAL', fill: 'fill-yellow-400' },
+  { label: '5 stars', Icon: StarIcon, value: 5, feeling: 'NEUTRAL', fill: 'fill-yellow-400' },
+  { label: 'Love it, 5 stars', Icon: HeartIcon, value: 5, feeling: 'POSITIVE', fill: 'fill-red-400' },
 ];
 
 type StyleProps = { option: Option; index: number };
 
 type Review = { note?: number | null; feeling?: string | null };
 
-type Props = { value: Review; onChange: (index: number) => void };
+type Props = { value: Review; onChange: (feeling: ReviewFeeling, note: number | null) => void };
 
 export function ReviewSelector({ value, onChange }: Props) {
   const [selectedIndex, setSelectedIndex] = useState<number | undefined>(
@@ -48,8 +49,11 @@ export function ReviewSelector({ value, onChange }: Props) {
   );
 
   const handleChange = (index: string) => {
-    setSelectedIndex(parseInt(index, 10));
-    onChange(parseInt(index, 10));
+    const selected = parseInt(index, 10);
+    setSelectedIndex(selected);
+
+    const option = options[selected];
+    onChange(option.feeling, option.value);
   };
 
   return (
@@ -58,7 +62,7 @@ export function ReviewSelector({ value, onChange }: Props) {
         <RadioGroup.Label className="sr-only"> Choose a note</RadioGroup.Label>
         <div className="flex gap-2 items-center justify-between" onMouseOut={() => setOverIndex(-1)}>
           {options.map((option, index) => (
-            <RadioGroup.Option key={index} value={String(index)} title={option.label}>
+            <RadioGroup.Option key={index} value={String(index)} title={option.label} data-review-input>
               <div className="cursor-pointer" onMouseOver={() => setOverIndex(index)}>
                 <option.Icon className={iconStyles({ option, index })} />
                 <RadioGroup.Label className="sr-only">{option.label}</RadioGroup.Label>

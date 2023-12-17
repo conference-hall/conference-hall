@@ -18,6 +18,7 @@ describe('Proposal review page', () => {
       review.visit('team-1', 'conference-1', 'proposal-1');
 
       review.title('Talk 1').should('exist');
+
       cy.assertText('Advanced');
       cy.assertText('French');
       cy.assertText('Talk description');
@@ -27,33 +28,45 @@ describe('Proposal review page', () => {
       cy.assertText('Marie Jane');
       cy.assertText('Robin');
 
-      cy.findByLabelText('No way: 0').should('exist');
-      cy.findByLabelText('Love it: 0').should('exist');
       cy.findByLabelText('Score: 3').should('exist');
-      cy.assertText('Pending');
 
-      review.fillReview('Love it, 5 stars', 'Best talk');
-      cy.assertToast('Review saved.');
+      review.review('Love it, 5 stars');
 
-      cy.findByLabelText('Love it: 1').should('exist');
       cy.findByLabelText('Score: 4').should('exist');
-      cy.findByLabelText('Love it: 5').should('exist');
 
-      review.reviewsTab();
-      review
-        .reviewsList()
-        .last()
-        .within(() => {
-          cy.findByText('Clark Kent').should('exist');
-          cy.findByLabelText('Love it: 5').should('exist');
-          cy.findByText('Best talk').should('exist');
-        });
+      review.activityFeed().should('have.length', 3);
+      review.activityFeed().eq(0).should('contain.text', 'Bruce Wayne reviewed the proposal with 3 stars.');
+      review.activityFeed().eq(1).should('contain.text', 'Bruce Wayne commented');
+      review.activityFeed().eq(1).should('contain.text', 'Hello world');
+      review.activityFeed().eq(2).should('contain.text', 'Clark Kent reviewed the proposal with 5 stars.');
 
-      review.proposalTab();
+      review.addComment('This is a new comment');
+      review.activityFeed().should('have.length', 4);
+      review.activityFeed().eq(3).should('contain.text', 'Clark Kent commented');
+      review.activityFeed().eq(3).should('contain.text', 'This is a new comment');
+      review.activityFeed().eq(3).findByRole('button', { name: 'delete' }).click();
+      review.activityFeed().should('have.length', 3);
+    });
 
-      review.fillReviewAndGoToNext('Love it, 5 stars', 'Best talk ever!');
-      cy.assertToast('Review saved.');
-      review.title('Talk 2').should('exist');
+    it('deliberate the proposal', () => {
+      review.visit('team-1', 'conference-1', 'proposal-1');
+
+      review.deliberationStatus().should('contain.text', 'Pending');
+      review.publicationHeading().should('not.exist');
+
+      review.deliberate(/Accepted/);
+      review.publicationHeading().should('exist');
+      review.deliberationStatus().should('contain.text', 'Accepted');
+
+      review.publishResult();
+      review.confirmationPanel().should('contain.text', 'Waiting for speakers confirmation');
+
+      review.deliberate(/Rejected/);
+      review.publicationHeading().should('exist');
+      review.deliberationStatus().should('contain.text', 'Rejected');
+
+      review.publishResult();
+      review.publicationPanel().should('contain.text', 'Result published to speakers');
     });
 
     it('navigates between proposals', () => {
@@ -75,19 +88,25 @@ describe('Proposal review page', () => {
       proposals.isPageVisible();
     });
 
-    it('hides reviews, speakers, review panel following event settings', () => {
+    it('hides reviews, speakers following event settings', () => {
       review.visit('team-1', 'conference-2', 'proposal-2');
       review.title('Talk 3').should('exist');
 
       cy.findByRole('heading', { name: 'Your review' }).should('not.exist');
-      cy.findByRole('link', { name: /Speakers/ }).should('not.exist');
-      cy.findByRole('link', { name: /Reviews/ }).should('not.exist');
+      cy.findByRole('link', { name: /Marie Jane/ }).should('not.exist');
+      cy.findByRole('link', { name: /Robin/ }).should('not.exist');
+    });
+  });
 
-      cy.visitAndCheck(`/team/team-1/conference-2/review/proposal-2/speakers`, { failOnStatusCode: false });
-      cy.assertText('Forbidden operation');
+  describe('as team reviewer', () => {
+    beforeEach(() => cy.login('Peter Parker'));
 
-      cy.visitAndCheck(`/team/team-1/conference-2/review/proposal-2/reviews`, { failOnStatusCode: false });
-      cy.assertText('Forbidden operation');
+    it('does not show deliberation, confirmation or publication panels', () => {
+      review.visit('team-1', 'conference-1', 'proposal-1');
+
+      cy.findByRole('heading', { name: 'Deliberation' }).should('not.exist');
+      cy.findByRole('heading', { name: 'Confirmation' }).should('not.exist');
+      cy.findByRole('heading', { name: 'Publication' }).should('not.exist');
     });
   });
 });

@@ -25,13 +25,8 @@ export default function EventRoute() {
 
         {hasTracks && (
           <div className="mt-4 gap-4 grid grid-cols-1 lg:mt-8 md:grid-cols-2 lg:gap-8">
-            <TrackSection title="Formats" subtitle="Talks formats proposed by the conference." tracks={event.formats} />
-
-            <TrackSection
-              title="Categories"
-              subtitle="Different categories and tracks proposed by the conference."
-              tracks={event.categories}
-            />
+            <TrackSection title="Formats" tracks={event.formats} />
+            <TrackSection title="Categories" tracks={event.categories} />
           </div>
         )}
       </PageContent>

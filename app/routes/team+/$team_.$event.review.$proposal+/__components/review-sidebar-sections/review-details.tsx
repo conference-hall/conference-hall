@@ -13,8 +13,6 @@ export function ReviewDetails({ review, userReview }: Props) {
         <div className="flex items-center justify-between">
           <Text weight="medium">Global review</Text>
           <div className="flex gap-4">
-            <GlobalReviewNote feeling="NEGATIVE" note={review?.negatives} />
-            <GlobalReviewNote feeling="POSITIVE" note={review?.positives} />
             <GlobalReviewNote feeling="NEUTRAL" note={review?.average} />
           </div>
         </div>
