@@ -4,6 +4,9 @@ import { marked } from 'marked';
 import React from 'react';
 import xss from 'xss';
 
+// Disable headings and tables in Markdown
+marked.use({ tokenizer: { heading: () => undefined, table: () => undefined } });
+
 const markdown = cva('max-w-full min-w-0 break-words text-gray-700', {
   variants: { size: { s: 'prose prose-sm', m: 'prose' } },
   defaultVariants: { size: 's' },
