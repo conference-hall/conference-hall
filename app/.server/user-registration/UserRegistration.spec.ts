@@ -1,6 +1,6 @@
 import { userFactory } from 'tests/factories/users';
 
-import { db } from '~/libs/db.server';
+import { db } from 'prisma/db.server';
 
 import { UserRegistration } from './UserRegistration';
 

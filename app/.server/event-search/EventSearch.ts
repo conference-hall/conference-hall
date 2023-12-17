@@ -1,6 +1,6 @@
 import type { Prisma } from '@prisma/client';
 
-import { db } from '~/libs/db.server';
+import { db } from 'prisma/db.server';
 
 import { CallForPaper } from '../shared/CallForPaper';
 import { Pagination } from '../shared/Pagination';

@@ -2,7 +2,7 @@ import { randParagraph, randPost } from '@ngneat/falso';
 import type { Event, EventCategory, EventFormat, Prisma, Talk, User } from '@prisma/client';
 import { ConfirmationStatus, DeliberationStatus, PublicationStatus, TalkLevel } from '@prisma/client';
 
-import { db } from '../../app/libs/db.server.ts';
+import { db } from '../../prisma/db.server.ts';
 import { applyTraits } from './helpers/traits.ts';
 
 const TRAITS = {

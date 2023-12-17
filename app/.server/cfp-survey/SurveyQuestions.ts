@@ -1,5 +1,7 @@
+import { QuestionKey } from '~/types/survey.types';
+
 export type SurveyQuestions = Array<{
-  name: string;
+  name: QuestionKey;
   label: string;
   type: 'text' | 'checkbox' | 'radio';
   answers?: Array<{ name: string; label: string }>;

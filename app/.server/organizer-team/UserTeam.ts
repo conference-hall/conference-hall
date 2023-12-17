@@ -1,7 +1,7 @@
 import type { TeamRole } from '@prisma/client';
 import { z } from 'zod';
 
-import { db } from '~/libs/db.server';
+import { db } from 'prisma/db.server';
 import { ForbiddenOperationError, SlugAlreadyExistsError, TeamNotFoundError } from '~/libs/errors.server';
 import { slugValidator } from '~/libs/validators/slug';
 

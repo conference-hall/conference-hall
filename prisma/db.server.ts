@@ -1,7 +1,7 @@
 import type { Prisma } from '@prisma/client';
 import { PrismaClient } from '@prisma/client';
 
-import { config } from './config.server.ts';
+import { config } from '../app/libs/config.server.ts';
 
 let db: PrismaClient;
 

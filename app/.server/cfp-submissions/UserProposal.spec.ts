@@ -5,7 +5,7 @@ import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
 
-import { db } from '~/libs/db.server';
+import { db } from 'prisma/db.server';
 import { CfpNotOpenError, ProposalNotFoundError } from '~/libs/errors.server';
 
 import { UserProposal } from './UserProposal';

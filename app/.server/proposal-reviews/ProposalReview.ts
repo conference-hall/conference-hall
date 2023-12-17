@@ -1,4 +1,4 @@
-import { db } from '~/libs/db.server';
+import { db } from 'prisma/db.server';
 import { ForbiddenOperationError, ProposalNotFoundError, ReviewDisabledError, UserNotFoundError } from '~/libs/errors.server';
 
 import type { SurveyData } from '../cfp-survey/SpeakerAnswers.types';

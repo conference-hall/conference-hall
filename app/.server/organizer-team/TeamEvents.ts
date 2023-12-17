@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 import { EventTypeSchema, EventVisibilitySchema } from '~/.server/shared/Event.types';
-import { db } from '~/libs/db.server';
+import { db } from 'prisma/db.server';
 import { SlugAlreadyExistsError } from '~/libs/errors.server';
 import { slugValidator } from '~/libs/validators/slug';
 

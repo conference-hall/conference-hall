@@ -65,7 +65,7 @@ model Talk {
   title          String
   abstract       String
   level          TalkLevel?
-  languages      Json?
+  languages      Json       @default("[]")
   references     String?
   creatorId      String
   creator        User       @relation(fields: [creatorId], references: [id])
@@ -118,9 +118,9 @@ model Event {
   displayProposalsReviews  Boolean         @default(true)
   displayProposalsSpeakers Boolean         @default(true)
   surveyEnabled            Boolean         @default(false)
-  surveyQuestions          Json?
+  surveyQuestions          Json            @default("[]")
   emailOrganizer           String?
-  emailNotifications       Json?
+  emailNotifications       Json            @default("[]")
   slackWebhookUrl          String?
   apiKey                   String?
   createdAt                DateTime        @default(now())
@@ -203,13 +203,13 @@ model Proposal {
   title              String
   abstract           String
   level              TalkLevel?
-  languages          Json?               @default("[]")
+  languages          Json                @default("[]")
   references         String?
   speakers           User[]              @relation("speakers_proposals")
   formats            EventFormat[]       @relation("proposals_formats")
   categories         EventCategory[]     @relation("proposals_categories")
   reviews            Review[]
-  avgRateForSort     Float?               
+  avgRateForSort     Float?
   isDraft            Boolean             @default(true)
   submittedAt        DateTime            @default(now())
   deliberationStatus DeliberationStatus  @default(PENDING)
@@ -247,7 +247,7 @@ model Survey {
   user      User     @relation(fields: [userId], references: [id])
   eventId   String
   event     Event    @relation(fields: [eventId], references: [id])
-  answers   Json
+  answers   Json     @default("{}")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

@@ -1,4 +1,4 @@
-import { db } from '~/libs/db.server';
+import { db } from 'prisma/db.server';
 import { EventNotFoundError, SurveyNotEnabledError } from '~/libs/errors.server';
 
 import { questions } from './SurveyQuestions';

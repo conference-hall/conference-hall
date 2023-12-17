@@ -1,7 +1,7 @@
 import type { Event, EventCategory, EventFormat, Proposal, Team, User } from '@prisma/client';
 
 import { config } from '~/libs/config.server';
-import { db } from '~/libs/db.server';
+import { db } from 'prisma/db.server';
 import { sortBy } from '~/libs/utils/arrays-sort-by';
 
 function buildPayload(

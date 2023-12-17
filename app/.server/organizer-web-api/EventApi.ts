@@ -1,4 +1,4 @@
-import { db } from '~/libs/db.server';
+import { db } from 'prisma/db.server';
 import { ApiKeyInvalidError, EventNotFoundError } from '~/libs/errors.server';
 
 import { ProposalSearchBuilder } from '../shared/ProposalSearchBuilder';

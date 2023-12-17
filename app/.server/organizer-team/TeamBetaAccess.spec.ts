@@ -2,7 +2,7 @@ import { organizerKeyFactory } from 'tests/factories/organizer-key';
 import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users.ts';
 
-import { db } from '~/libs/db.server';
+import { db } from 'prisma/db.server';
 import { InvalidAccessKeyError } from '~/libs/errors.server';
 
 import { TeamBetaAccess } from './TeamBetaAccess';

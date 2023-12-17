@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { db } from '~/libs/db.server';
+import { db } from 'prisma/db.server';
 import { ForbiddenOperationError, SlugAlreadyExistsError } from '~/libs/errors.server';
 import { sortBy } from '~/libs/utils/arrays-sort-by';
 import { slugValidator } from '~/libs/validators/slug';

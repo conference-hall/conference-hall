@@ -1,7 +1,6 @@
 import { getSpeakerProposalStatus } from '~/.server/cfp-submissions/get-speaker-proposal-status';
-import { db } from '~/libs/db.server';
+import { db } from 'prisma/db.server';
 import { TalkNotFoundError } from '~/libs/errors.server';
-import { jsonToArray } from '~/libs/prisma.server';
 
 import { InvitationLink } from '../shared/InvitationLink';
 import type { TalkSaveData } from './TalksLibrary.types';
@@ -34,7 +33,7 @@ export class SpeakerTalk {
       title: talk.title,
       abstract: talk.abstract,
       level: talk.level,
-      languages: jsonToArray(talk.languages),
+      languages: (talk.languages || []) as string[],
       references: talk.references,
       archived: talk.archived,
       createdAt: talk.createdAt.toUTCString(),

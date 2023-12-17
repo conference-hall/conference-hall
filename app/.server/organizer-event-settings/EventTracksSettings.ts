@@ -1,4 +1,4 @@
-import { db } from '~/libs/db.server';
+import { db } from 'prisma/db.server';
 
 import type { TrackSaveData, TrackSettingsSaveData } from './EventTracksSettings.types';
 import { UserEvent } from './UserEvent';

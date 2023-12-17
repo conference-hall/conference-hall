@@ -1,5 +1,5 @@
 import { config } from '../app/libs/config.server.ts';
-import { db } from '../app/libs/db.server.ts';
+import { db } from '../prisma/db.server.ts';
 
 export async function disconnectDB() {
   await db.$disconnect();

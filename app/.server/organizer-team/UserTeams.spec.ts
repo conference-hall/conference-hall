@@ -2,7 +2,7 @@ import type { User } from '@prisma/client';
 import { teamFactory } from 'tests/factories/team';
 import { userFactory } from 'tests/factories/users';
 
-import { db } from '~/libs/db.server';
+import { db } from 'prisma/db.server';
 import { ForbiddenOperationError, SlugAlreadyExistsError } from '~/libs/errors.server';
 
 import { TeamCreateSchema, UserTeams } from './UserTeams';

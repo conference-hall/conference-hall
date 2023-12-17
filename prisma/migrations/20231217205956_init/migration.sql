@@ -23,7 +23,7 @@ CREATE TYPE "ConfirmationStatus" AS ENUM ('PENDING', 'CONFIRMED', 'DECLINED');
 CREATE TYPE "ReviewFeeling" AS ENUM ('POSITIVE', 'NEGATIVE', 'NEUTRAL', 'NO_OPINION');
 
 -- CreateEnum
-CREATE TYPE "MessageChannel" AS ENUM ('ORGANIZER', 'SPEAKER');
+CREATE TYPE "CommentChannel" AS ENUM ('ORGANIZER', 'SPEAKER');
 
 -- CreateTable
 CREATE TABLE "users" (
@@ -75,7 +75,7 @@ CREATE TABLE "talks" (
     "title" TEXT NOT NULL,
     "abstract" TEXT NOT NULL,
     "level" "TalkLevel",
-    "languages" JSONB,
+    "languages" JSONB NOT NULL DEFAULT '[]',
     "references" TEXT,
     "creatorId" TEXT NOT NULL,
     "archived" BOOLEAN NOT NULL DEFAULT false,
@@ -116,9 +116,9 @@ CREATE TABLE "events" (
     "displayProposalsReviews" BOOLEAN NOT NULL DEFAULT true,
     "displayProposalsSpeakers" BOOLEAN NOT NULL DEFAULT true,
     "surveyEnabled" BOOLEAN NOT NULL DEFAULT false,
-    "surveyQuestions" JSONB,
+    "surveyQuestions" JSONB NOT NULL DEFAULT '[]',
     "emailOrganizer" TEXT,
-    "emailNotifications" JSONB,
+    "emailNotifications" JSONB NOT NULL DEFAULT '[]',
     "slackWebhookUrl" TEXT,
     "apiKey" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -177,9 +177,8 @@ CREATE TABLE "proposals" (
     "title" TEXT NOT NULL,
     "abstract" TEXT NOT NULL,
     "level" "TalkLevel",
-    "languages" JSONB DEFAULT '[]',
+    "languages" JSONB NOT NULL DEFAULT '[]',
     "references" TEXT,
-    "comments" TEXT,
     "avgRateForSort" DOUBLE PRECISION,
     "isDraft" BOOLEAN NOT NULL DEFAULT true,
     "submittedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -198,7 +197,7 @@ CREATE TABLE "surveys" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "eventId" TEXT NOT NULL,
-    "answers" JSONB NOT NULL,
+    "answers" JSONB NOT NULL DEFAULT '{}',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL
 );
@@ -210,7 +209,6 @@ CREATE TABLE "reviews" (
     "proposalId" TEXT NOT NULL,
     "feeling" "ReviewFeeling" NOT NULL DEFAULT 'NEUTRAL',
     "note" INTEGER,
-    "comment" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -218,16 +216,16 @@ CREATE TABLE "reviews" (
 );
 
 -- CreateTable
-CREATE TABLE "messages" (
+CREATE TABLE "comments" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "proposalId" TEXT NOT NULL,
-    "message" TEXT NOT NULL,
-    "channel" "MessageChannel" NOT NULL,
+    "comment" TEXT NOT NULL,
+    "channel" "CommentChannel" NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "messages_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "comments_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -351,10 +349,10 @@ ALTER TABLE "reviews" ADD CONSTRAINT "reviews_userId_fkey" FOREIGN KEY ("userId"
 ALTER TABLE "reviews" ADD CONSTRAINT "reviews_proposalId_fkey" FOREIGN KEY ("proposalId") REFERENCES "proposals"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "messages" ADD CONSTRAINT "messages_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "comments" ADD CONSTRAINT "comments_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "messages" ADD CONSTRAINT "messages_proposalId_fkey" FOREIGN KEY ("proposalId") REFERENCES "proposals"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "comments" ADD CONSTRAINT "comments_proposalId_fkey" FOREIGN KEY ("proposalId") REFERENCES "proposals"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_speakers_talks" ADD CONSTRAINT "_speakers_talks_A_fkey" FOREIGN KEY ("A") REFERENCES "talks"("id") ON DELETE CASCADE ON UPDATE CASCADE;

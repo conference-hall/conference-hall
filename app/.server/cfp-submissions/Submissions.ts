@@ -1,5 +1,5 @@
 import { getSpeakerProposalStatus } from '~/.server/cfp-submissions/get-speaker-proposal-status';
-import { db } from '~/libs/db.server';
+import { db } from 'prisma/db.server';
 
 export class Submissions {
   constructor(
