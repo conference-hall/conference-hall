@@ -22,9 +22,8 @@ export function ReviewHeader({ current, total, reviewed, nextId, previousId }: P
   const nextPath = nextId !== undefined ? `/team/${params.team}/${params.event}/review/${nextId}` : undefined;
   const closePath = `/team/${params.team}/${params.event}`;
 
-  useHotkeys('left', () => navigate({ pathname: previousPath, search }), { enabled: !!previousPath });
-  useHotkeys('right', () => navigate({ pathname: nextPath, search }), { enabled: !!nextPath });
-  useHotkeys('escape', () => navigate({ pathname: closePath, search }));
+  useHotkeys('left', () => navigate({ pathname: previousPath, search }), { enabled: isKeyEnabled(!!previousPath) });
+  useHotkeys('right', () => navigate({ pathname: nextPath, search }), { enabled: isKeyEnabled(!!nextPath) });
 
   return (
     <div className="sticky top-0 bg-white border-b border-b-gray-200 shadow-sm z-10">
@@ -54,4 +53,12 @@ export function ReviewHeader({ current, total, reviewed, nextId, previousId }: P
       </header>
     </div>
   );
+}
+
+function isKeyEnabled(defaultEnabled: boolean) {
+  return (event: Event) => {
+    if (!defaultEnabled) return false;
+    if (event.target instanceof HTMLDivElement && event.target.hasAttribute('data-review-input')) return false;
+    return true;
+  };
 }
