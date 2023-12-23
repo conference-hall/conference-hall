@@ -57,7 +57,13 @@ function SaveTrackFormModal({ type, initialValues, isOpen, onClose }: SaveTrackF
         <Modal.Subtitle>Provide a name and description.</Modal.Subtitle>
         <Modal.Content className="space-y-4">
           <Input name="name" label="Name" defaultValue={initialValues?.name} required />
-          <TextArea name="description" label="Description" defaultValue={initialValues?.description || ''} rows={4} />
+          <TextArea
+            name="description"
+            label="Description"
+            defaultValue={initialValues?.description || ''}
+            required
+            rows={4}
+          />
         </Modal.Content>
         <Modal.Actions>
           <input type="hidden" name="_action" value={`save-${type}`} />
