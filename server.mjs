@@ -1,6 +1,5 @@
 import crypto from 'node:crypto';
 
-import { unstable_viteServerBuildModuleId } from '@remix-run/dev';
 import { createRequestHandler } from '@remix-run/express';
 import { installGlobals } from '@remix-run/node';
 import closeWithGrace from 'close-with-grace';
@@ -112,9 +111,7 @@ async function run() {
   app.all(
     '*',
     createRequestHandler({
-      build: vite
-        ? () => vite.ssrLoadModule(unstable_viteServerBuildModuleId)
-        : await import('./build/server/index.js'),
+      build: vite ? () => vite.ssrLoadModule('virtual:remix/server-build') : await import('./build/server/index.js'),
       getLoadContext: (req, res) => ({ cspNonce: res.locals.cspNonce }),
       mode: ENV,
     }),
