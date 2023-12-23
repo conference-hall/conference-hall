@@ -1,7 +1,4 @@
-import endOfDay from 'date-fns/endOfDay/index.js';
-import format from 'date-fns/format/index.js';
-import formatISO from 'date-fns/formatISO/index.js';
-import startOfDay from 'date-fns/startOfDay/index.js';
+import { endOfDay, format, formatISO, startOfDay } from 'date-fns';
 import type { ChangeEvent } from 'react';
 import { useCallback, useState } from 'react';
 
