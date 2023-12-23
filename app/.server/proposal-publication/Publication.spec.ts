@@ -75,12 +75,12 @@ describe('Publication', () => {
         {
           from: `${event.name} <no-reply@conference-hall.io>`,
           to: [speaker1.email, speaker2.email],
-          subject: `[${event.name}] Your talk has been accepted`,
+          subject: `[${event.name}] Congrats! Your proposal has been accepted`,
         },
         {
           from: `${event.name} <no-reply@conference-hall.io>`,
           to: [speaker1.email, speaker2.email],
-          subject: `[${event.name}] Your talk has been accepted`,
+          subject: `[${event.name}] Congrats! Your proposal has been accepted`,
         },
       ]).toHaveEmailsEnqueued();
     });
@@ -132,7 +132,7 @@ describe('Publication', () => {
         {
           from: `${event.name} <no-reply@conference-hall.io>`,
           to: [speaker1.email, speaker2.email],
-          subject: `[${event.name}] Your talk has been accepted`,
+          subject: `[${event.name}] Congrats! Your proposal has been accepted`,
         },
       ]).toHaveEmailsEnqueued();
     });

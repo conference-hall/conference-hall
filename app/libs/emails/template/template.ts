@@ -21,10 +21,10 @@ export class Template<T extends Record<string, string>> {
   }
 
   renderHtmlContent() {
-    let markdown = xss(marked.parse(this.template.content, { async: false }) as string);
+    let markdown = marked.parse(this.template.content, { async: false }) as string;
     for (const [key, value] of Object.entries(this.template.variables)) {
       markdown = markdown.replaceAll(`%${key}%`, value.toString());
     }
-    return HTML_TEMPLATE.replace('{{subject}}', this.renderSubject()).replace('{{content}}', markdown);
+    return HTML_TEMPLATE.replace('{{subject}}', this.renderSubject()).replace('{{content}}', xss(markdown));
   }
 }

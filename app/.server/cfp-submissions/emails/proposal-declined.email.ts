@@ -30,8 +30,11 @@ export class ProposalDeclinedEmail {
   }
 }
 
-const TEMPLATE = `
-Hi %eventName%'s organizers,
+const TEMPLATE = `Hi,
 
-Unfortunately, the talk **%recipient.proposalTitle%** as been declined by the speaker.
+We regret to inform you that a speaker has declined the invitation to speak at **%eventName%**.
+
+- Declined proposal: **%proposalTitle%**
+
+Best regards.
 `;

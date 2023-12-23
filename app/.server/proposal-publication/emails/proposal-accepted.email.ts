@@ -17,7 +17,7 @@ export class ProposalAcceptedEmail {
     await Promise.all(
       proposals.map(async (proposal) => {
         const template = new Template<Variables>({
-          subject: `[${event.name}] Your talk has been accepted`,
+          subject: `[${event.name}] Congrats! Your proposal has been accepted`,
           content: TEMPLATE,
           variables: {
             eventSlug: event.slug,
@@ -41,13 +41,21 @@ export class ProposalAcceptedEmail {
 
 const TEMPLATE = `Hi,
 
-Your talk **%proposalTitle%** at **%eventName%** has been accepted.
+We're thrilled to inform you that your proposal titled **%proposalTitle%** has been accepted for **%eventName%**! Congratulations!
 
-In order to help organizers for the selection and the event management, you can confirm or decline your participation to %eventName%.
+Your contribution stood out among the numerous exceptional submissions, and we're excited to have you as a potential speaker.
 
-[**Please confirm or decline.**](%appUrl%/%eventSlug%/proposals/%proposalId%)
+Here are the details of your accepted talk:
+- Event: **%eventName%**
+- Talk Title: **%proposalTitle%**
 
-See you there!
+To confirm or decline your participation as a speaker for this event, [**please click on the following link**](%appUrl%/%eventSlug%/proposals/%proposalId%).
+
+Your presence and insights will undoubtedly enrich our event. However, if, for any reason, you're unable to participate, kindly use the same link to decline the invitation at your earliest convenience.
+
+We look forward to your confirmation and eagerly anticipate your presentation at **%eventName%**!
+
+Warm regards,
 
 %eventName% team.
 `;

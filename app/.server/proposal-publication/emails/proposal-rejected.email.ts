@@ -34,11 +34,15 @@ export class ProposalRejectedEmail {
 
 const TEMPLATE = `Hi,
 
-Your talk **%proposalTitle%** at **%eventName%** has been declined.
+Thank you for your interest in presenting at **%eventName%** and for submitting your proposal titled **%proposalTitle%**.
 
-We had lots of excellent talks this year and choosing among them has been heart-breaking. 😓 
+After careful consideration and review by our selection committee, we regret to inform you that your proposal was not selected.
 
-Thank you very much for your submission and please consider submitting again next year.
+While your proposal wasn't selected this time, we sincerely appreciate the time and effort you put into crafting and submitting it.
+
+We hope you'll consider submitting proposals for future events. Your participation is highly valued, and we thank you for your interest in being part of %eventName%.
+
+Warm regards,
 
 %eventName% team.
 `;

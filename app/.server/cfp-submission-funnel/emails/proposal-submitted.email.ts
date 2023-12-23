@@ -1,9 +1,10 @@
 import type { Event, Proposal, User } from '@prisma/client';
 import { EmailQueue } from 'jobs/email/email.queue';
+import { config } from '~/libs/config.server';
 
 import { Template } from '~/libs/emails/template/template';
 
-type Variables = { eventName: string; proposalTitle: string };
+type Variables = { eventName: string; proposalTitle: string; appUrl: string };
 
 export class ProposalSubmittedEmail {
   static async send(event: Event, proposal: Proposal & { speakers: User[] }) {
@@ -13,6 +14,7 @@ export class ProposalSubmittedEmail {
       variables: {
         eventName: event.name,
         proposalTitle: proposal.title,
+        appUrl: config.appUrl,
       },
     });
 
@@ -25,14 +27,19 @@ export class ProposalSubmittedEmail {
   }
 }
 
-const TEMPLATE = `
-Hi,
+const TEMPLATE = `Hi,
 
-Your talk **%proposalTitle%** has been successfully submitted to %eventName%.
+Thank you for submitting your proposal **%proposalTitle%** for **%eventName%**! We've received your proposal successfully.
 
-In order to help organizers select and manage the event, please don't forget to fill your profile.
+To ensure that your proposal gets the attention it deserves and to assist organizers in making informed decisions, we kindly ask you to complete your speaker profile. A detailed profile greatly helps us in managing and selecting proposals effectively.
 
-You will soon be informed if your talk has been selected or not.
+Please take a moment to update your profile with any additional information that might support your proposal. Here's the link to access [your profile](%appUrl%/speaker/profile).
 
-Thanks!
+Rest assured, we're diligently reviewing all submissions, and we'll notify you soon regarding the status of your proposal. Your patience is greatly appreciated.
+
+Thank you for your participation in **%eventName%**!
+
+Warm regards,
+
+%eventName% Team.
 `;

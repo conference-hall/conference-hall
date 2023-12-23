@@ -30,10 +30,13 @@ export class ProposalReceivedEmail {
   }
 }
 
-const TEMPLATE = `
-Hi,
+const TEMPLATE = `Hi,
 
-The talk **%proposalTitle%** has been submitted for %eventName%.
+We're excited to inform you that a new proposal has been submitted for consideration at **%eventName%**.
 
-Thanks!
+- Proposal submitted: **%proposalTitle%**
+
+Please take a moment to review the proposal when you get a chance.
+
+Best regards.
 `;

@@ -30,8 +30,11 @@ export class ProposalConfirmedEmail {
   }
 }
 
-const TEMPLATE = `
-Hi %eventName%'s organizers,
+const TEMPLATE = `Hi,
 
-The talk **%recipient.proposalTitle%** as been confirmed by the speaker.
+We're thrilled to inform you that a speaker has confirmed their participation to speak at **%eventName%** event!
+
+- Confirmed proposal: **%proposalTitle%**
+
+Best regards.
 `;
