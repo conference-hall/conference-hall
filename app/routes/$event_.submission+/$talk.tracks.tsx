@@ -79,7 +79,7 @@ export default function SubmissionTracksRoute() {
               <section>
                 <CategoriesForm
                   categories={event.categories}
-                  required={event.formatsRequired}
+                  required={event.categoriesRequired}
                   initialValues={proposal.categories}
                 />
                 {errors?.categories && (
