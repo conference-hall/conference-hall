@@ -55,7 +55,7 @@ describe('EventTracksSettings', () => {
       await expect(
         EventTracksSettings.for(reviewer.id, team.slug, event.slug).saveFormat({
           name: 'Hello world',
-          description: null,
+          description: 'Hello world',
         }),
       ).rejects.toThrowError(ForbiddenOperationError);
     });
@@ -63,7 +63,7 @@ describe('EventTracksSettings', () => {
     it('throws an error if user does not belong to event team', async () => {
       const user = await userFactory();
       await expect(
-        EventTracksSettings.for(user.id, team.slug, event.slug).saveFormat({ name: 'Hello world', description: null }),
+        EventTracksSettings.for(user.id, team.slug, event.slug).saveFormat({ name: 'Hello world', description: 'Hello world' }),
       ).rejects.toThrowError(ForbiddenOperationError);
     });
   });
@@ -99,7 +99,7 @@ describe('EventTracksSettings', () => {
 
     it('throws an error if user is not owner', async () => {
       const settings = EventTracksSettings.for(reviewer.id, team.slug, event.slug);
-      await expect(settings.saveCategory({ name: 'Hello world', description: null })).rejects.toThrowError(
+      await expect(settings.saveCategory({ name: 'Hello world', description: 'Hello world' })).rejects.toThrowError(
         ForbiddenOperationError,
       );
     });
@@ -107,7 +107,7 @@ describe('EventTracksSettings', () => {
     it('throws an error if user does not belong to event team', async () => {
       const user = await userFactory();
       const settings = EventTracksSettings.for(user.id, team.slug, event.slug);
-      await expect(settings.saveCategory({ name: 'Hello world', description: null })).rejects.toThrowError(
+      await expect(settings.saveCategory({ name: 'Hello world', description: 'Hello world' })).rejects.toThrowError(
         ForbiddenOperationError,
       );
     });

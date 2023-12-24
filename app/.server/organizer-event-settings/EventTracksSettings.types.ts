@@ -2,8 +2,8 @@ import { z } from 'zod';
 
 export const TrackSaveSchema = z.object({
   id: z.string().trim().optional(),
-  name: z.string().trim().min(1),
-  description: z.string().trim().nullable().default(null),
+  name: z.string().trim().min(1).max(255),
+  description: z.string().trim().min(1).max(255),
 });
 
 export type TrackSaveData = z.infer<typeof TrackSaveSchema>;
