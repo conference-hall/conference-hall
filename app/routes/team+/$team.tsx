@@ -39,7 +39,7 @@ export default function TeamLayout() {
         <Container>
           <TeamBreadcrumb team={team} event={event} />
           {event ? (
-            <EventTabs teamSlug={team.slug} eventSlug={event.slug} role={team.role} />
+            <EventTabs teamSlug={team.slug} eventSlug={event.slug} eventType={event.type} role={team.role} />
           ) : (
             <TeamTabs slug={team.slug} role={team.role} />
           )}

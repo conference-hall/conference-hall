@@ -20,6 +20,7 @@ export class Publication {
 
   async publishAll(status: 'ACCEPTED' | 'REJECTED', withEmails: boolean) {
     const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
+    if (event.type === 'MEETUP') throw new ForbiddenOperationError();
 
     const proposals = await db.proposal.findMany({
       where: { eventId: event.id, publicationStatus: 'NOT_PUBLISHED', deliberationStatus: status },
@@ -65,6 +66,7 @@ export class Publication {
   // TODO: Add tests for speakers confirmation
   async statistics() {
     const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
+    if (event.type === 'MEETUP') throw new ForbiddenOperationError();
 
     const results = await db.proposal.groupBy({
       by: ['deliberationStatus', 'publicationStatus', 'confirmationStatus'],
