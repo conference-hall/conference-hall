@@ -1,6 +1,5 @@
 import { z } from 'zod';
 
-import { EventTypeSchema, EventVisibilitySchema } from '~/.server/shared/Event.types';
 import { db } from 'prisma/db.server';
 import { SlugAlreadyExistsError } from '~/libs/errors.server';
 import { slugValidator } from '~/libs/validators/slug';
@@ -10,9 +9,9 @@ import { UserTeam } from './UserTeam';
 
 export const EventCreateSchema = z.object({
   name: z.string().trim().min(3).max(50),
-  visibility: EventVisibilitySchema,
+  visibility: z.enum(['PUBLIC', 'PRIVATE']),
+  type: z.enum(['CONFERENCE', 'MEETUP']),
   slug: slugValidator,
-  type: EventTypeSchema,
 });
 
 export class TeamEvents {

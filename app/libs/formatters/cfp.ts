@@ -1,7 +1,7 @@
 import { format, formatDistanceToNow, isSameDay } from 'date-fns';
 
 import type { CfpState } from '~/.server/shared/CallForPaper';
-import type { EventType } from '~/.server/shared/Event.types';
+import type { EventType } from '~/types/events.types';
 
 export function formatEventType(type: EventType) {
   switch (type) {

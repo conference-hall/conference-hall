@@ -1,11 +1,10 @@
 import { z } from 'zod';
 
-import { EventVisibilitySchema } from '~/.server/shared/Event.types';
 import { slugValidator } from '~/libs/validators/slug';
 
 export const EventGeneralSettingsSchema = z.object({
   name: z.string().trim().min(3).max(50),
-  visibility: EventVisibilitySchema,
+  visibility: z.enum(['PUBLIC', 'PRIVATE']),
   slug: slugValidator,
 });
 
