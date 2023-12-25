@@ -15,5 +15,6 @@ const config: RemixVitePluginOptions = {
 };
 
 export default defineConfig({
+  build: { sourcemap: process.env.SOURCEMAP === 'true' },
   plugins: [remix(config), tsconfigPaths()],
 });

@@ -1,0 +1,38 @@
+name: Sentry release
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  sentry-release:
+    name: Sentry release
+    runs-on: ubuntu-latest
+    if: ${{ env.SENTRY_AUTH_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build with source maps
+        run: npm run build
+        env:
+          SOURCEMAPS: true
+
+      - name: Create Sentry release
+        uses: getsentry/action-release@v1
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        with:
+          environment: production
+          sourcemaps: ./build/client
+          version: ${{ github.sha }}
