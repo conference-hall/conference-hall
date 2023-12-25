@@ -2,6 +2,7 @@ import crypto from 'node:crypto';
 
 import { createRequestHandler } from '@remix-run/express';
 import { installGlobals } from '@remix-run/node';
+import * as Sentry from '@sentry/remix';
 import closeWithGrace from 'close-with-grace';
 import compression from 'compression';
 import express from 'express';
@@ -11,6 +12,7 @@ import { createProxyMiddleware } from 'http-proxy-middleware';
 import morgan from 'morgan';
 
 installGlobals();
+
 run();
 
 async function run() {
@@ -48,6 +50,10 @@ async function run() {
   // http://expressjs.com/en/advanced/best-practice-security.html#at-a-minimum-disable-x-powered-by-header
   app.disable('x-powered-by');
 
+  // Monitoring and tracing
+  app.use(Sentry.Handlers.requestHandler());
+  app.use(Sentry.Handlers.tracingHandler());
+
   // Generate a nonce for each request, which we'll use for CSP.
   app.use((_, res, next) => {
     res.locals.cspNonce = crypto.randomBytes(32).toString('base64');
@@ -60,7 +66,11 @@ async function run() {
       contentSecurityPolicy: {
         reportOnly: true,
         directives: {
-          'connect-src': [ENV === 'development' ? 'ws:' : null, "'self'"].filter(Boolean),
+          'connect-src': [
+            ENV === 'development' ? 'ws:' : null,
+            process.env.SENTRY_DSN ? '*.ingest.sentry.io' : null,
+            "'self'",
+          ].filter(Boolean),
           'font-src': ["'self'"],
           'frame-src': ["'self'"],
           'img-src': ["'self'", 'data:', 'https:'],
@@ -108,9 +118,10 @@ async function run() {
   app.use(express.static('build/client', { maxAge: '1h' }));
 
   // Handle SSR requests
+  const _createRequestHandler = Sentry.wrapExpressCreateRequestHandler(createRequestHandler);
   app.all(
     '*',
-    createRequestHandler({
+    _createRequestHandler({
       build: vite ? () => vite.ssrLoadModule('virtual:remix/server-build') : await import('./build/server/index.js'),
       getLoadContext: (req, res) => ({ cspNonce: res.locals.cspNonce }),
       mode: ENV,

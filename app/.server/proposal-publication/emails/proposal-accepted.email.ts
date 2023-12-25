@@ -1,8 +1,8 @@
 import type { Event, Proposal, User } from '@prisma/client';
 import { EmailQueue } from 'jobs/email/email.queue';
 
-import { config } from '~/libs/config.server';
 import { Template } from '~/libs/emails/template/template';
+import { appUrl } from '~/libs/env/env.server';
 
 type Variables = {
   eventSlug: string;
@@ -24,7 +24,7 @@ export class ProposalAcceptedEmail {
             eventName: event.name,
             proposalId: proposal.id,
             proposalTitle: proposal.title,
-            appUrl: config.appUrl,
+            appUrl: appUrl(),
           },
         });
 

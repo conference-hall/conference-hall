@@ -4,12 +4,12 @@ import { proposalFactory } from 'tests/factories/proposals';
 import { talkFactory } from 'tests/factories/talks';
 import { userFactory } from 'tests/factories/users';
 
-import { config } from '~/libs/config.server';
 import { db } from 'prisma/db.server';
 import { TalkNotFoundError } from '~/libs/errors.server';
 
 import { SpeakerTalk } from './SpeakerTalk';
 import { SpeakerProposalStatus } from '~/types/speaker.types';
+import { appUrl } from '~/libs/env/env.server';
 
 describe('SpeakerTalk', () => {
   let speaker: User;
@@ -32,7 +32,7 @@ describe('SpeakerTalk', () => {
         references: talk.references,
         archived: talk.archived,
         createdAt: talk.createdAt.toUTCString(),
-        invitationLink: `${config.appUrl}/invite/talk/${talk.invitationCode}`,
+        invitationLink: `${appUrl()}/invite/talk/${talk.invitationCode}`,
         isOwner: true,
         speakers: [
           {

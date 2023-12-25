@@ -2,8 +2,6 @@ import type { JobsOptions } from 'bullmq';
 import { Queue } from 'bullmq';
 import Redis from 'ioredis';
 
-import { config } from '~/libs/config.server';
-
 import type { Email } from './email.payload';
 
 export class EmailQueue {
@@ -11,7 +9,7 @@ export class EmailQueue {
   private queue: Queue;
 
   private constructor() {
-    const connection = new Redis(config.REDIS_URL, { maxRetriesPerRequest: null });
+    const connection = new Redis(process.env.REDIS_URL, { maxRetriesPerRequest: null });
     this.queue = new Queue<Email>('default', {
       connection,
       defaultJobOptions: {

@@ -4,4 +4,8 @@ import { emailProvider } from '~/libs/emails/provider';
 
 import type { Email } from './email.payload';
 
-export const processor = (job: Job<Email>) => emailProvider.send(job.data);
+export const processor = (job: Job<Email>) => {
+  if (!emailProvider) return Promise.resolve();
+
+  return emailProvider.send(job.data);
+};

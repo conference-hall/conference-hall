@@ -1,5 +1,3 @@
-import { config } from '../config.server.ts';
-
 type ApiResult = {
   formatted_address: string;
   geometry: { location: { lat: number; lng: number } };
@@ -13,7 +11,7 @@ export async function geocode(address: string | null): Promise<AddressGeocoded> 
   const defaultResult = { address, lat: null, lng: null };
   if (!address) return defaultResult;
 
-  const key = config.GOOGLE_PLACES_API_KEY;
+  const key = process.env.GOOGLE_PLACES_API_KEY;
   if (!key) return { address, lat: null, lng: null };
 
   try {

@@ -1,4 +1,3 @@
-import { config } from '../config.server';
 import { MailgunProvider } from './mailgun-provider';
 import { MailpitProvider } from './mailpit-provider';
 
@@ -8,11 +7,16 @@ export interface EmailProvider {
   send: (email: Email) => Promise<void>;
 }
 
-function getEmailProvider(): EmailProvider {
-  if (config.useEmulators) {
-    return new MailpitProvider(config.MAILPIT_HOST, config.MAILPIT_SMTP_PORT);
+function getEmailProvider(): EmailProvider | null {
+  const { USE_EMULATORS, MAILPIT_HOST, MAILPIT_SMTP_PORT, MAILGUN_API_KEY, MAILGUN_DOMAIN } = process.env;
+
+  if (USE_EMULATORS && MAILPIT_HOST && MAILPIT_SMTP_PORT) {
+    return new MailpitProvider(MAILPIT_HOST, MAILPIT_SMTP_PORT);
+  } else if (MAILGUN_API_KEY && MAILGUN_DOMAIN) {
+    return new MailgunProvider(MAILGUN_API_KEY, MAILGUN_DOMAIN);
+  } else {
+    return null;
   }
-  return new MailgunProvider(config.MAILGUN_API_KEY, config.MAILGUN_DOMAIN);
 }
 
 export const emailProvider = getEmailProvider();
