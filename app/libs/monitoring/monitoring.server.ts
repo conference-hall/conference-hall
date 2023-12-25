@@ -10,15 +10,7 @@ export function initMonitoring() {
     dsn: ENV.SENTRY_DSN,
     environment: ENV.MODE,
     tracesSampleRate: ENV.MODE === 'production' ? 1 : 0,
-    denyUrls: [
-      /\/resources\/healthcheck/,
-      /\/build\//,
-      /\/favicons\//,
-      /\/img\//,
-      /\/fonts\//,
-      /\/favicon.ico/,
-      /\/site\.webmanifest/,
-    ],
+    denyUrls: [/\/build\//, /\/favicons\//, /\/img\//, /\/fonts\//, /\/favicon.ico/, /\/site\.webmanifest/],
     integrations: [
       new Sentry.Integrations.Http({ tracing: true }),
       new Sentry.Integrations.Prisma({ client: db }),
