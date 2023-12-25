@@ -15,7 +15,7 @@ under "Tokens", and copy that to secure location (this becomes
 `SENTRY_AUTH_TOKEN`). Then visit the organization settings page and copy that
 organization slug (`SENTRY_ORG_SLUG`).
 
-Set the secrets to your server:
+Set the secrets to the server:
 
 ```
 SENTRY_DSN=<your_dsn>

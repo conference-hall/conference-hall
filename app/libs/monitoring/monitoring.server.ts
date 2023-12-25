@@ -2,7 +2,10 @@ import { ProfilingIntegration } from '@sentry/profiling-node';
 import * as Sentry from '@sentry/remix';
 import { db } from 'prisma/db.server';
 
-export function init() {
+export function initMonitoring() {
+  if (ENV.MODE !== 'production') return;
+  if (!ENV.SENTRY_DSN) return;
+
   Sentry.init({
     dsn: ENV.SENTRY_DSN,
     environment: ENV.MODE,

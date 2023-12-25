@@ -15,7 +15,7 @@ const schema = z.object({
   FIREBASE_SERVICE_ACCOUNT: z.string().optional(),
   GOOGLE_PLACES_API_KEY: z.string().optional(),
   COOKIE_SIGNED_SECRET: z.string(),
-  SENTRY_DSN: z.string(),
+  SENTRY_DSN: z.string().optional(),
 });
 
 declare global {

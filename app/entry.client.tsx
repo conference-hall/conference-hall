@@ -2,9 +2,9 @@ import { RemixBrowser } from '@remix-run/react';
 import { startTransition } from 'react';
 import { hydrateRoot } from 'react-dom/client';
 
-if (ENV.MODE === 'production' && ENV.SENTRY_DSN) {
-  import('./libs/monitoring/monitoring.client.tsx').then(({ init }) => init());
-}
+import { initMonitoring } from './libs/monitoring/monitoring.client';
+
+initMonitoring();
 
 startTransition(() => {
   hydrateRoot(document, <RemixBrowser />);

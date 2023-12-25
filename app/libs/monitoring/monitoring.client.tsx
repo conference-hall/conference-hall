@@ -2,7 +2,10 @@ import { useLocation, useMatches } from '@remix-run/react';
 import * as Sentry from '@sentry/remix';
 import { useEffect } from 'react';
 
-export function init() {
+export function initMonitoring() {
+  if (ENV.MODE !== 'production') return;
+  if (!ENV.SENTRY_DSN) return;
+
   Sentry.init({
     dsn: ENV.SENTRY_DSN,
     environment: ENV.MODE,
@@ -15,10 +18,8 @@ export function init() {
       new Sentry.BrowserProfilingIntegration(),
     ],
 
-    // Set tracesSampleRate to 1.0 to capture 100%
-    // of transactions for performance monitoring.
-    // We recommend adjusting this value in production
-    tracesSampleRate: 1.0,
+    // Set tracesSampleRate to 0.1 to capture 10%
+    tracesSampleRate: 0.1,
 
     // Capture Replay for 10% of all sessions,
     // plus for 100% of sessions with an error
