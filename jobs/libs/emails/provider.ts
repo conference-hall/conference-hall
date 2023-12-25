@@ -1,3 +1,4 @@
+import { getEnv } from '../env/env';
 import { MailgunProvider } from './mailgun-provider';
 import { MailpitProvider } from './mailpit-provider';
 
@@ -7,16 +8,18 @@ export interface EmailProvider {
   send: (email: Email) => Promise<void>;
 }
 
-function getEmailProvider(): EmailProvider | null {
-  const { USE_EMULATORS, MAILPIT_HOST, MAILPIT_SMTP_PORT, MAILGUN_API_KEY, MAILGUN_DOMAIN } = process.env;
+const env = getEnv();
 
-  if (USE_EMULATORS && MAILPIT_HOST && MAILPIT_SMTP_PORT) {
-    return new MailpitProvider(MAILPIT_HOST, MAILPIT_SMTP_PORT);
-  } else if (MAILGUN_API_KEY && MAILGUN_DOMAIN) {
-    return new MailgunProvider(MAILGUN_API_KEY, MAILGUN_DOMAIN);
-  } else {
-    return null;
+function getEmailProvider(): EmailProvider | null {
+  if (env.MAILPIT_HOST && env.MAILPIT_SMTP_PORT) {
+    return new MailpitProvider(env.MAILPIT_HOST, env.MAILPIT_SMTP_PORT);
   }
+
+  if (env.NODE_ENV === 'production' && env.MAILGUN_API_KEY && env.MAILGUN_DOMAIN) {
+    return new MailgunProvider(env.MAILGUN_API_KEY, env.MAILGUN_DOMAIN);
+  }
+
+  return null;
 }
 
 export const emailProvider = getEmailProvider();

@@ -17,12 +17,12 @@ run();
 
 async function run() {
   const PORT = process.env.PORT || 3000;
-  const ENV = process.env.NODE_ENV;
+  const MODE = process.env.NODE_ENV;
   const CI = process.env.CI;
   const FIREBASE_PROJECT_ID = process.env.FIREBASE_PROJECT_ID;
 
   const vite =
-    ENV === 'production'
+    MODE === 'production'
       ? undefined
       : await import('vite').then(({ createServer }) =>
           createServer({
@@ -67,7 +67,7 @@ async function run() {
         reportOnly: true,
         directives: {
           'connect-src': [
-            ENV === 'development' ? 'ws:' : null,
+            MODE === 'development' ? 'ws:' : null,
             process.env.SENTRY_DSN ? '*.ingest.sentry.io' : null,
             "'self'",
           ].filter(Boolean),
@@ -118,22 +118,25 @@ async function run() {
   app.use(express.static('build/client', { maxAge: '1h' }));
 
   // Handle SSR requests
-  const _createRequestHandler = Sentry.wrapExpressCreateRequestHandler(createRequestHandler);
+  const _createRequestHandler = vite
+    ? createRequestHandler
+    : Sentry.wrapExpressCreateRequestHandler(createRequestHandler);
+
   app.all(
     '*',
     _createRequestHandler({
       build: vite ? () => vite.ssrLoadModule('virtual:remix/server-build') : await import('./build/server/index.js'),
       getLoadContext: (req, res) => ({ cspNonce: res.locals.cspNonce }),
-      mode: ENV,
+      mode: MODE,
     }),
   );
 
   // Start the express server
   const server = app.listen(PORT, () => {
     console.log('\n--------------------------------------------------\n');
-    console.log(`🌍 Environment: ${ENV}`);
+    console.log(`🌍 Environment: ${MODE}`);
     console.log('\n--------------------------------------------------\n');
-    if (ENV === 'development') {
+    if (MODE === 'development') {
       console.log(`🤖 Emulators  >  http://localhost:4000`);
       console.log(`💌 Mailpit    >  http://localhost:8025`);
     }

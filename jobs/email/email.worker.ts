@@ -1,9 +1,12 @@
 import { Worker } from 'bullmq';
 import Redis from 'ioredis';
+import { getEnv } from 'jobs/libs/env/env';
 
 import { processor } from './email.processor';
 
-const connection = new Redis(process.env.REDIS_URL, { maxRetriesPerRequest: null });
+const env = getEnv();
+
+const connection = new Redis(env.REDIS_URL, { maxRetriesPerRequest: null });
 
 export const worker = new Worker('default', processor, {
   connection: connection,

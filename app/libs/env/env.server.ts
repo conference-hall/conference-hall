@@ -1,3 +1,4 @@
+// Inspired by https://github.com/epicweb-dev/epic-stack
 import { z } from 'zod';
 
 const schema = z.object({
@@ -5,8 +6,7 @@ const schema = z.object({
   USE_EMULATORS: z.string().optional(),
   PROTOCOL: z.string(),
   DOMAIN: z.string(),
-  PORT: z.string().optional(),
-  REDIS_URL: z.string(),
+  PORT: z.coerce.number().optional(),
   FIREBASE_PROJECT_ID: z.string(),
   FIREBASE_API_KEY: z.string(),
   FIREBASE_AUTH_DOMAIN: z.string(),
@@ -16,11 +16,6 @@ const schema = z.object({
   GOOGLE_PLACES_API_KEY: z.string().optional(),
   COOKIE_SIGNED_SECRET: z.string(),
   SENTRY_DSN: z.string(),
-  MAILGUN_DOMAIN: z.string().optional(),
-  MAILGUN_API_KEY: z.string().optional(),
-  MAILPIT_HOST: z.string().optional(),
-  MAILPIT_SMTP_PORT: z.number().optional(),
-  MAILPIT_HTTP_PORT: z.number().optional(),
 });
 
 declare global {
