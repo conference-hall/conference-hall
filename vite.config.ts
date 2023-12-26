@@ -1,8 +1,11 @@
 import { unstable_vitePlugin as remix } from '@remix-run/dev';
 import type { RemixVitePluginOptions } from '@remix-run/dev/dist/vite/plugin.js';
+import { sentryVitePlugin } from '@sentry/vite-plugin';
 import { flatRoutes } from 'remix-flat-routes';
 import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
+
+const withSentrySourcemap = Boolean(process.env.SENTRY_AUTH_TOKEN);
 
 const config: RemixVitePluginOptions = {
   ignoredRouteFiles: ['**/*'],
@@ -15,6 +18,16 @@ const config: RemixVitePluginOptions = {
 };
 
 export default defineConfig({
-  build: { sourcemap: process.env.SOURCEMAP === 'true' },
-  plugins: [remix(config), tsconfigPaths()],
+  build: { sourcemap: withSentrySourcemap },
+  plugins: [
+    remix(config),
+    tsconfigPaths(),
+    withSentrySourcemap
+      ? sentryVitePlugin({
+          org: process.env.SENTRY_ORG,
+          project: process.env.SENTRY_PROJECT,
+          authToken: process.env.SENTRY_AUTH_TOKEN,
+        })
+      : undefined,
+  ],
 });

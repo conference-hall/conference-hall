@@ -76,6 +76,7 @@
     "@ngneat/falso": "^7.1.1",
     "@remix-run/dev": "2.4.1",
     "@remix-run/eslint-config": "2.4.1",
+    "@sentry/vite-plugin": "^2.10.2",
     "@tailwindcss/forms": "^0.5.7",
     "@tailwindcss/typography": "^0.5.10",
     "@testing-library/cypress": "^10.0.1",
