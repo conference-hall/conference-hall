@@ -1,5 +1,6 @@
 import type { Session } from '@remix-run/node';
 import { createCookieSessionStorage, redirect } from '@remix-run/node';
+import * as Sentry from '@sentry/remix';
 
 import { UserRegistration } from '~/.server/user-registration/UserRegistration';
 
@@ -51,26 +52,15 @@ export async function destroySession(request: Request) {
 }
 
 export async function requireSession(request: Request): Promise<string> {
-  const session = await getSession(request);
-  const jwt = session.get('jwt');
-  const uid = session.get('uid');
-  const userId = session.get('userId');
+  const userId = await getSessionUserId(request);
 
-  if (!jwt || !uid || !userId) {
+  if (!userId) {
     const redirectTo = new URL(request.url).pathname;
     const searchParams = new URLSearchParams([['redirectTo', redirectTo]]);
     throw redirect(`/login?${searchParams}`);
   }
 
-  try {
-    const token = await serverAuth.verifySessionCookie(jwt);
-    if (uid !== token.uid) {
-      throw redirect('/logout');
-    }
-    return userId;
-  } catch (e) {
-    throw redirect('/logout');
-  }
+  return userId;
 }
 
 export async function getSessionUserId(request: Request): Promise<string | null> {
@@ -79,19 +69,23 @@ export async function getSessionUserId(request: Request): Promise<string | null>
   const uid = session.get('uid');
   const userId = session.get('userId');
 
-  if (!jwt || !uid || !userId) return null;
+  if (!jwt || !uid || !userId) {
+    Sentry.setUser(null);
+    return null;
+  }
 
   try {
     const token = await serverAuth.verifySessionCookie(jwt, true);
-    if (uid !== token.uid) return null;
-    return userId;
+    if (uid === token.uid) {
+      Sentry.setUser({ id: userId });
+      return userId;
+    } else {
+      Sentry.setUser(null);
+      await destroySession(request);
+    }
   } catch (e) {
-    return null;
+    Sentry.setUser(null);
+    await destroySession(request);
   }
-}
-
-export async function getSessionToken(request: Request) {
-  const session = await getSession(request);
-  const jwt = session.get('jwt');
-  return serverAuth.verifySessionCookie(jwt, true);
+  return null;
 }
