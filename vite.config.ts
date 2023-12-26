@@ -28,6 +28,7 @@ export default defineConfig({
           project: process.env.SENTRY_PROJECT,
           authToken: process.env.SENTRY_AUTH_TOKEN,
           sourcemaps: { filesToDeleteAfterUpload: ['build/**/*.map'] },
+          release: { name: process.env.RAILWAY_GIT_COMMIT_SHA },
           telemetry: false,
         })
       : undefined,

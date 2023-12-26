@@ -10,11 +10,11 @@ Once you see the onboarding page which has the DSN, copy that in `SENTRY_DSN` en
 
 ## Sentry release and sourcemap
 
-The Sentry release and source maps upload are managed by a GitHub action triggered when a new app release is done.
+The Sentry release and source maps upload are managed on app build with `@sentry/vite-plugin`.
 
-To setup the GitHub action, click [this](https://sentry.io/orgredirect/settings/:orgslug/developer-settings/new-internal/) to create an internal integration. Give it a name and add the scope for `Releases:Admin` and `Organization:Read`. Press Save, find the auth token at the bottom of the page under "Tokens", and copy that to secure location (this becomes `SENTRY_AUTH_TOKEN`). Then visit the organization settings page and copy that organization slug (`SENTRY_ORG_SLUG`).
+To setup on Sentry, click [this](https://sentry.io/orgredirect/settings/:orgslug/developer-settings/new-internal/) to create an internal integration. Give it a name and add the scope for `Releases:Admin` and `Organization:Read`. Press Save, find the auth token at the bottom of the page under "Tokens", and copy that to secure location (this becomes `SENTRY_AUTH_TOKEN`). Then visit the organization settings page and copy that organization slug (`SENTRY_ORG_SLUG`).
 
-Set the secrets for the GitHub Action:
+Set the following secrets to the build server:
 
 ```
 SENTRY_AUTH_TOKEN=<auth_token>

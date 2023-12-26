@@ -67,8 +67,6 @@ export default function handleRequest(
 export function handleError(error: unknown, { request }: LoaderFunctionArgs | ActionFunctionArgs): void {
   if (request.signal.aborted) return;
 
-  console.error(error);
-
   if (error instanceof Error) {
     Sentry.captureRemixServerException(error, 'remix.server', request);
   } else {
