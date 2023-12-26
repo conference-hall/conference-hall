@@ -1,6 +1,5 @@
 import type { Session } from '@remix-run/node';
 import { createCookieSessionStorage, redirect } from '@remix-run/node';
-import * as Sentry from '@sentry/remix';
 
 import { UserRegistration } from '~/.server/user-registration/UserRegistration';
 
@@ -70,21 +69,17 @@ export async function getSessionUserId(request: Request): Promise<string | null>
   const userId = session.get('userId');
 
   if (!jwt || !uid || !userId) {
-    Sentry.setUser(null);
     return null;
   }
 
   try {
     const token = await serverAuth.verifySessionCookie(jwt, true);
     if (uid === token.uid) {
-      Sentry.setUser({ id: userId });
       return userId;
     } else {
-      Sentry.setUser(null);
       await destroySession(request);
     }
   } catch (e) {
-    Sentry.setUser(null);
     await destroySession(request);
   }
   return null;
