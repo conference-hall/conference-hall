@@ -24,7 +24,7 @@ jobs:
       - name: Build with source maps
         run: npm run build
         env:
-          SOURCEMAPS: true
+          SOURCEMAP: true
 
       - name: Create Sentry release
         uses: getsentry/action-release@v1
