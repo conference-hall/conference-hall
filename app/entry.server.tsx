@@ -1,12 +1,19 @@
 import { PassThrough } from 'node:stream';
 
-import type { AppLoadContext, EntryContext } from '@remix-run/node';
+import type { ActionFunctionArgs, AppLoadContext, EntryContext, LoaderFunctionArgs } from '@remix-run/node';
 import { createReadableStreamFromReadable } from '@remix-run/node';
 import { RemixServer } from '@remix-run/react';
+import * as Sentry from '@sentry/remix';
 import { isbot } from 'isbot';
 import { renderToPipeableStream } from 'react-dom/server';
 
+import { initEnvironment } from './libs/env/env.server.ts';
+import { initMonitoring } from './libs/monitoring/monitoring.server.ts';
 import { NonceContext } from './libs/nonce/useNonce.ts';
+
+initEnvironment();
+
+initMonitoring();
 
 const ABORT_DELAY = 5_000;
 
@@ -55,4 +62,16 @@ export default function handleRequest(
 
     setTimeout(abort, ABORT_DELAY);
   });
+}
+
+export function handleError(error: unknown, { request }: LoaderFunctionArgs | ActionFunctionArgs): void {
+  if (request.signal.aborted) return;
+
+  console.error(error);
+
+  if (error instanceof Error) {
+    Sentry.captureRemixServerException(error, 'remix.server', request);
+  } else {
+    Sentry.captureException(error);
+  }
 }

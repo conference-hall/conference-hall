@@ -2,6 +2,7 @@ import crypto from 'node:crypto';
 
 import { createRequestHandler } from '@remix-run/express';
 import { installGlobals } from '@remix-run/node';
+import * as Sentry from '@sentry/remix';
 import closeWithGrace from 'close-with-grace';
 import compression from 'compression';
 import express from 'express';
@@ -11,16 +12,16 @@ import { createProxyMiddleware } from 'http-proxy-middleware';
 import morgan from 'morgan';
 
 installGlobals();
+
 run();
 
 async function run() {
   const PORT = process.env.PORT || 3000;
-  const ENV = process.env.NODE_ENV;
-  const CI = process.env.CI;
+  const MODE = process.env.NODE_ENV;
   const FIREBASE_PROJECT_ID = process.env.FIREBASE_PROJECT_ID;
 
   const vite =
-    ENV === 'production'
+    MODE === 'production'
       ? undefined
       : await import('vite').then(({ createServer }) =>
           createServer({
@@ -48,6 +49,10 @@ async function run() {
   // http://expressjs.com/en/advanced/best-practice-security.html#at-a-minimum-disable-x-powered-by-header
   app.disable('x-powered-by');
 
+  // Monitoring and tracing
+  app.use(Sentry.Handlers.requestHandler());
+  app.use(Sentry.Handlers.tracingHandler());
+
   // Generate a nonce for each request, which we'll use for CSP.
   app.use((_, res, next) => {
     res.locals.cspNonce = crypto.randomBytes(32).toString('base64');
@@ -60,7 +65,11 @@ async function run() {
       contentSecurityPolicy: {
         reportOnly: true,
         directives: {
-          'connect-src': [ENV === 'development' ? 'ws:' : null, "'self'"].filter(Boolean),
+          'connect-src': [
+            MODE === 'development' ? 'ws:' : null,
+            process.env.SENTRY_DSN ? '*.ingest.sentry.io' : null,
+            "'self'",
+          ].filter(Boolean),
           'font-src': ["'self'"],
           'frame-src': ["'self'"],
           'img-src': ["'self'", 'data:', 'https:'],
@@ -75,8 +84,8 @@ async function run() {
     }),
   );
 
-  // Request logging (disabled in CI)
-  if (!CI) app.use(morgan('tiny'));
+  // Request logging
+  app.use(morgan('tiny'));
 
   // Proxy Firebase authentication
   app.use(
@@ -108,21 +117,25 @@ async function run() {
   app.use(express.static('build/client', { maxAge: '1h' }));
 
   // Handle SSR requests
+  const _createRequestHandler = vite
+    ? createRequestHandler
+    : Sentry.wrapExpressCreateRequestHandler(createRequestHandler);
+
   app.all(
     '*',
-    createRequestHandler({
+    _createRequestHandler({
       build: vite ? () => vite.ssrLoadModule('virtual:remix/server-build') : await import('./build/server/index.js'),
       getLoadContext: (req, res) => ({ cspNonce: res.locals.cspNonce }),
-      mode: ENV,
+      mode: MODE,
     }),
   );
 
   // Start the express server
   const server = app.listen(PORT, () => {
     console.log('\n--------------------------------------------------\n');
-    console.log(`🌍 Environment: ${ENV}`);
+    console.log(`🌍 Environment: ${MODE}`);
     console.log('\n--------------------------------------------------\n');
-    if (ENV === 'development') {
+    if (MODE === 'development') {
       console.log(`🤖 Emulators  >  http://localhost:4000`);
       console.log(`💌 Mailpit    >  http://localhost:8025`);
     }

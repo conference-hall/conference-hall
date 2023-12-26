@@ -3,7 +3,6 @@ import { createCookieSessionStorage, redirect } from '@remix-run/node';
 
 import { UserRegistration } from '~/.server/user-registration/UserRegistration';
 
-import { config } from '../config.server';
 import { auth as serverAuth } from './firebase.server';
 
 const MAX_AGE_SEC = 60 * 60 * 24 * 10; // 10 days
@@ -15,7 +14,7 @@ const sessionStorage = createCookieSessionStorage({
     path: '/',
     httpOnly: true,
     secure: true,
-    secrets: [config.COOKIE_SIGNED_SECRET],
+    secrets: [process.env.COOKIE_SIGNED_SECRET],
     sameSite: 'strict',
   },
 });

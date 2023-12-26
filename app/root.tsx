@@ -14,6 +14,7 @@ import {
   useLoaderData,
   useRouteError,
 } from '@remix-run/react';
+import { withSentry } from '@sentry/remix';
 import type { ReactNode } from 'react';
 
 import { UserInfo } from './.server/user-registration/UserInfo';
@@ -21,7 +22,7 @@ import { Container } from './design-system/layouts/Container';
 import { H1, Text } from './design-system/Typography';
 import { initializeFirebaseClient } from './libs/auth/firebase';
 import { getSessionUserId } from './libs/auth/session';
-import { config } from './libs/config.server';
+import { getPublicEnv } from './libs/env/env.server.ts';
 import { useNonce } from './libs/nonce/useNonce';
 import type { Toast } from './libs/toasts/toast.server';
 import { getToast } from './libs/toasts/toast.server';
@@ -43,37 +44,26 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const userId = await getSessionUserId(request);
   const user = await UserInfo.get(userId);
 
-  return json(
-    {
-      user,
-      toast,
-      firebase: {
-        FIREBASE_API_KEY: config.FIREBASE_API_KEY,
-        FIREBASE_AUTH_DOMAIN: config.FIREBASE_AUTH_DOMAIN,
-        FIREBASE_PROJECT_ID: config.FIREBASE_PROJECT_ID,
-        FIREBASE_AUTH_EMULATOR_HOST: config.FIREBASE_AUTH_EMULATOR_HOST,
-        useFirebaseEmulators: config.useEmulators,
-      },
-    },
-    { headers: toastHeaders || {} },
-  );
+  return json({ user, toast, env: getPublicEnv() }, { headers: toastHeaders || {} });
 };
 
-export default function App() {
-  const { user, firebase, toast } = useLoaderData<typeof loader>();
+function App() {
+  const { user, env, toast } = useLoaderData<typeof loader>();
 
-  initializeFirebaseClient(firebase);
+  initializeFirebaseClient(env);
 
   return (
-    <Document toast={toast}>
+    <Document toast={toast} env={env}>
       <Outlet context={{ user }} />
     </Document>
   );
 }
 
-type DocumentProps = { children: ReactNode; toast?: Toast | null };
+export default withSentry(App);
 
-function Document({ children, toast }: DocumentProps) {
+type DocumentProps = { children: ReactNode; toast?: Toast | null; env?: Record<string, unknown> };
+
+function Document({ children, toast, env = {} }: DocumentProps) {
   const nonce = useNonce();
 
   return (
@@ -85,6 +75,12 @@ function Document({ children, toast }: DocumentProps) {
       <body className="overflow-x-hidden bg-slate-50 font-sans text-gray-900 antialiased">
         <GlobalLoading />
         {children}
+        <script
+          nonce={nonce}
+          dangerouslySetInnerHTML={{
+            __html: `window.ENV = ${JSON.stringify(env)}`,
+          }}
+        />
         <ScrollRestoration nonce={nonce} />
         <LiveReload nonce={nonce} />
         <Scripts nonce={nonce} />

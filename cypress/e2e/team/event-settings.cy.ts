@@ -117,7 +117,7 @@ describe('Event settings', () => {
     });
 
     describe('customize settings', () => {
-      it('can upload a new log', () => {
+      it('can upload a new logo', () => {
         customize.visit('team-1', 'conference-1');
         customize.changeLogo().selectFile('cypress/fixtures/devfest.png', { force: true });
         cy.assertText('Logo updated.');

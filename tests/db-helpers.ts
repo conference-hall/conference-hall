@@ -1,4 +1,3 @@
-import { config } from '../app/libs/config.server.ts';
 import { db } from '../prisma/db.server.ts';
 
 export async function disconnectDB() {
@@ -7,7 +6,9 @@ export async function disconnectDB() {
 }
 
 export async function resetDB() {
-  if (config.isProduction && !config.useEmulators) return '🚨 Reset DB cannot be executed in production.';
+  if (process.env.NODE_ENV === 'production' && !process.env.USE_EMULATORS) {
+    return '🚨 Reset DB cannot be executed in production.';
+  }
 
   await db.$transaction([
     db.survey.deleteMany(),

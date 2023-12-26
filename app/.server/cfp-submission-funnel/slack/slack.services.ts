@@ -1,7 +1,7 @@
 import type { Event, EventCategory, EventFormat, Proposal, Team, User } from '@prisma/client';
 
-import { config } from '~/libs/config.server';
 import { db } from 'prisma/db.server';
+import { appUrl } from '~/libs/env/env.server';
 import { sortBy } from '~/libs/utils/arrays-sort-by';
 
 function buildPayload(
@@ -16,7 +16,7 @@ function buildPayload(
       .join(' & ')}`,
     title: proposal.title,
     text: proposal.abstract,
-    title_link: `${config.appUrl}/team/${event.team.slug}/${event.slug}/review/${proposal.id}`,
+    title_link: `${appUrl()}/team/${event.team.slug}/${event.slug}/review/${proposal.id}`,
     thumb_url: proposal.speakers[0].picture,
     color: '#ffab00',
     fields: [] as unknown[],

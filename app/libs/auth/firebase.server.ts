@@ -6,8 +6,6 @@ import { getAuth } from 'firebase-admin/auth';
 import type { Storage } from 'firebase-admin/storage';
 import { getStorage } from 'firebase-admin/storage';
 
-import { config } from '../config.server.ts';
-
 let app: App;
 let auth: Auth;
 let storage: Storage;
@@ -15,14 +13,14 @@ let storage: Storage;
 if (getApps().length === 0) {
   if (process.env.FIREBASE_SERVICE_ACCOUNT) {
     app = initializeApp({
-      projectId: config.FIREBASE_PROJECT_ID,
-      storageBucket: config.FIREBASE_STORAGE,
+      projectId: process.env.FIREBASE_PROJECT_ID,
+      storageBucket: process.env.FIREBASE_STORAGE,
       credential: admin.credential.cert(JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)),
     });
   } else {
     app = initializeApp({
-      projectId: config.FIREBASE_PROJECT_ID,
-      storageBucket: config.FIREBASE_STORAGE,
+      projectId: process.env.FIREBASE_PROJECT_ID,
+      storageBucket: process.env.FIREBASE_STORAGE,
     });
   }
   auth = getAuth(app);

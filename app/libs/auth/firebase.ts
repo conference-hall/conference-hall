@@ -5,8 +5,8 @@ type FirebaseConfig = {
   FIREBASE_API_KEY: string;
   FIREBASE_AUTH_DOMAIN: string;
   FIREBASE_PROJECT_ID: string;
-  FIREBASE_AUTH_EMULATOR_HOST: string;
-  useFirebaseEmulators: boolean;
+  FIREBASE_AUTH_EMULATOR_HOST?: string;
+  USE_EMULATORS: boolean;
 };
 
 export function initializeFirebaseClient(config?: FirebaseConfig) {
@@ -21,7 +21,7 @@ export function initializeFirebaseClient(config?: FirebaseConfig) {
   const auth = getAuth(app);
   setPersistence(auth, inMemoryPersistence);
 
-  if (config.useFirebaseEmulators) {
+  if (config.USE_EMULATORS) {
     connectAuthEmulator(auth, `http://${config.FIREBASE_AUTH_EMULATOR_HOST}`, { disableWarnings: true });
   }
 }

@@ -1,9 +1,9 @@
-import { config } from '~/libs/config.server';
+import { appUrl } from '~/libs/env/env.server';
 
 type InvtationType = 'talk' | 'proposal' | 'team';
 
 export class InvitationLink {
   static build(type: InvtationType, code: string) {
-    return `${config.appUrl}/invite/${type}/${code}`;
+    return `${appUrl()}/invite/${type}/${code}`;
   }
 }

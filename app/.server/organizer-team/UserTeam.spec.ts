@@ -2,10 +2,10 @@ import type { User } from '@prisma/client';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 
-import { config } from '~/libs/config.server';
 import { ForbiddenOperationError, SlugAlreadyExistsError } from '~/libs/errors.server';
 
 import { TeamUpdateSchema, UserTeam } from './UserTeam';
+import { appUrl } from '~/libs/env/env.server';
 
 describe('UserTeam', () => {
   let user: User;
@@ -58,7 +58,7 @@ describe('UserTeam', () => {
         name: 'My team 2',
         slug: 'my-team2',
         role: 'MEMBER',
-        invitationLink: `${config.appUrl}/invite/team/${team.invitationCode}`,
+        invitationLink: `${appUrl()}/invite/team/${team.invitationCode}`,
       });
     });
 

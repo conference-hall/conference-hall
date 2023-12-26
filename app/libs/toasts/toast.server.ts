@@ -2,8 +2,6 @@ import { createCookieSessionStorage, json, redirect } from '@remix-run/node';
 import { v4 as uuid } from 'uuid';
 import { z } from 'zod';
 
-import { config } from '../config.server.ts';
-
 export const toastKey = 'toast';
 
 const TypeSchema = z.enum(['message', 'success', 'error']);
@@ -30,7 +28,7 @@ export const toastSessionStorage = createCookieSessionStorage({
     path: '/',
     httpOnly: true,
     secure: true,
-    secrets: [config.COOKIE_SIGNED_SECRET],
+    secrets: [process.env.COOKIE_SIGNED_SECRET],
     sameSite: 'strict',
   },
 });
