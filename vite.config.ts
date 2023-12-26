@@ -18,7 +18,7 @@ const config: RemixVitePluginOptions = {
 };
 
 export default defineConfig({
-  build: { sourcemap: withSentrySourcemap },
+  build: { sourcemap: withSentrySourcemap ? 'hidden' : false },
   plugins: [
     remix(config),
     tsconfigPaths(),
