@@ -23,7 +23,6 @@ import { H1, Text } from './design-system/Typography';
 import { initializeFirebaseClient } from './libs/auth/firebase';
 import { getSessionUserId } from './libs/auth/session';
 import { getPublicEnv } from './libs/env/env.server.ts';
-import { useSentryUser } from './libs/monitoring/useSentryUser.ts';
 import { useNonce } from './libs/nonce/useNonce';
 import type { Toast } from './libs/toasts/toast.server';
 import { getToast } from './libs/toasts/toast.server';
@@ -50,8 +49,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 function App() {
   const { user, env, toast } = useLoaderData<typeof loader>();
-
-  useSentryUser({ userId: user?.id, enabled: !!env.SENTRY_DSN });
 
   initializeFirebaseClient(env);
 
