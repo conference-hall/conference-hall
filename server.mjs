@@ -49,10 +49,6 @@ async function run() {
   // http://expressjs.com/en/advanced/best-practice-security.html#at-a-minimum-disable-x-powered-by-header
   app.disable('x-powered-by');
 
-  // Monitoring and tracing
-  app.use(Sentry.Handlers.requestHandler());
-  app.use(Sentry.Handlers.tracingHandler());
-
   // Generate a nonce for each request, which we'll use for CSP.
   app.use((_, res, next) => {
     res.locals.cspNonce = crypto.randomBytes(32).toString('base64');
