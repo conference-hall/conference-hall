@@ -7,6 +7,6 @@ export function init() {
     environment: 'production',
     tracesSampleRate: 1.0,
     denyUrls: [/\/__\/auth/, /\/assets\//, /\/fonts\//, /\/favicon.ico/, /\/site\.webmanifest/],
-    integrations: [new Sentry.Integrations.Http({ tracing: true }), new Sentry.Integrations.Prisma({ client: db })],
+    integrations: [new Sentry.Integrations.Prisma({ client: db })],
   });
 }
