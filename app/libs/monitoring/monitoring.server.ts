@@ -1,12 +1,14 @@
 import * as Sentry from '@sentry/remix';
 import { db } from 'prisma/db.server';
 
-export function init() {
+export function initMonitoring() {
+  if (ENV.MODE !== 'production') return;
+  if (!ENV.SENTRY_DSN) return;
+
   Sentry.init({
     dsn: ENV.SENTRY_DSN,
-    environment: 'production',
+    environment: ENV.MODE,
     tracesSampleRate: 1.0,
-    denyUrls: [/\/__\/auth/, /\/assets\//, /\/fonts\//, /\/favicon.ico/, /\/site\.webmanifest/],
     integrations: [new Sentry.Integrations.Prisma({ client: db })],
   });
 }
