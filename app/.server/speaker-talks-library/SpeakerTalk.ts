@@ -52,7 +52,7 @@ export class SpeakerTalk {
         slug: proposal.event.slug,
         name: proposal.event.name,
         logo: proposal.event.logo,
-        proposalStatus: getSpeakerProposalStatus(proposal, proposal.event),
+        proposalStatus: getSpeakerProposalStatus(proposal, proposal.event.isCfpOpen),
       })),
       invitationLink: InvitationLink.build('talk', talk.invitationCode),
     };

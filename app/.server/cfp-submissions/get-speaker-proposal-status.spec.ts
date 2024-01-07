@@ -19,11 +19,7 @@ describe('getSpeakerProposalStatus', () => {
         publicationStatus: 'NOT_PUBLISHED',
         isDraft: true,
       },
-      {
-        type: 'MEETUP',
-        cfpStart: new Date('2019-02-26T00:00:00.000Z'),
-        cfpEnd: null,
-      },
+      true,
     );
     expect(status).toBe(SpeakerProposalStatus.Draft);
   });
@@ -36,11 +32,7 @@ describe('getSpeakerProposalStatus', () => {
         publicationStatus: 'NOT_PUBLISHED',
         isDraft: false,
       },
-      {
-        type: 'MEETUP',
-        cfpStart: new Date('2019-02-26T00:00:00.000Z'),
-        cfpEnd: null,
-      },
+      true,
     );
     expect(status).toBe(SpeakerProposalStatus.Submitted);
   });
@@ -53,7 +45,7 @@ describe('getSpeakerProposalStatus', () => {
         publicationStatus: 'NOT_PUBLISHED',
         isDraft: false,
       },
-      { type: 'MEETUP', cfpStart: null, cfpEnd: null },
+      false,
     );
     expect(status).toBe(SpeakerProposalStatus.DeliberationPending);
   });
@@ -66,7 +58,7 @@ describe('getSpeakerProposalStatus', () => {
         publicationStatus: 'NOT_PUBLISHED',
         isDraft: false,
       },
-      { type: 'MEETUP', cfpStart: null, cfpEnd: null },
+      false,
     );
     expect(status).toBe(SpeakerProposalStatus.DeliberationPending);
   });
@@ -79,7 +71,7 @@ describe('getSpeakerProposalStatus', () => {
         publicationStatus: 'NOT_PUBLISHED',
         isDraft: false,
       },
-      { type: 'MEETUP', cfpStart: null, cfpEnd: null },
+      false,
     );
     expect(status).toBe(SpeakerProposalStatus.DeliberationPending);
   });
@@ -92,7 +84,7 @@ describe('getSpeakerProposalStatus', () => {
         publicationStatus: 'PUBLISHED',
         isDraft: false,
       },
-      { type: 'MEETUP', cfpStart: null, cfpEnd: null },
+      false,
     );
     expect(status).toBe(SpeakerProposalStatus.AcceptedByOrganizers);
   });
@@ -105,7 +97,7 @@ describe('getSpeakerProposalStatus', () => {
         publicationStatus: 'PUBLISHED',
         isDraft: false,
       },
-      { type: 'MEETUP', cfpStart: null, cfpEnd: null },
+      false,
     );
     expect(status).toBe(SpeakerProposalStatus.RejectedByOrganizers);
   });
@@ -118,7 +110,7 @@ describe('getSpeakerProposalStatus', () => {
         publicationStatus: 'NOT_PUBLISHED',
         isDraft: false,
       },
-      { type: 'MEETUP', cfpStart: null, cfpEnd: null },
+      false,
     );
     expect(status).toBe(SpeakerProposalStatus.ConfirmedBySpeaker);
   });
@@ -131,7 +123,7 @@ describe('getSpeakerProposalStatus', () => {
         publicationStatus: 'NOT_PUBLISHED',
         isDraft: false,
       },
-      { type: 'MEETUP', cfpStart: null, cfpEnd: null },
+      false,
     );
     expect(status).toBe(SpeakerProposalStatus.DeclinedBySpeaker);
   });

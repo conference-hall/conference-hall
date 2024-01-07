@@ -1,8 +1,6 @@
 import { db } from 'prisma/db.server';
 import { EventNotFoundError } from '~/libs/errors.server';
 
-import { CallForPaper } from '../shared/CallForPaper';
-
 export type EventData = Awaited<ReturnType<typeof EventPage.prototype.get>>;
 
 export class EventPage {
@@ -20,8 +18,6 @@ export class EventPage {
 
     if (!event) throw new EventNotFoundError();
 
-    const cfp = new CallForPaper(event);
-
     return {
       id: event.id,
       slug: event.slug,
@@ -34,8 +30,8 @@ export class EventPage {
       conferenceEnd: event.conferenceEnd?.toUTCString(),
       cfpStart: event.cfpStart?.toUTCString(),
       cfpEnd: event.cfpEnd?.toUTCString(),
-      cfpState: cfp.state,
-      isCfpOpen: cfp.isOpen,
+      cfpState: event.cfpState,
+      isCfpOpen: event.isCfpOpen,
       surveyEnabled: event.surveyEnabled,
       websiteUrl: event.websiteUrl,
       contactEmail: event.contactEmail,

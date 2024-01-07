@@ -1,7 +1,6 @@
 import type { EventType } from '@prisma/client';
 import { ConfirmationStatus, DeliberationStatus, PublicationStatus } from '@prisma/client';
 
-import { CallForPaper } from '../shared/CallForPaper';
 import { SpeakerProposalStatus } from '~/types/speaker.types';
 
 type ProposalArgs = {
@@ -11,17 +10,8 @@ type ProposalArgs = {
   isDraft: boolean;
 };
 
-type EventArgs = {
-  type: EventType;
-  cfpStart: Date | null;
-  cfpEnd: Date | null;
-};
-
-export function getSpeakerProposalStatus(proposal: ProposalArgs, event: EventArgs): SpeakerProposalStatus {
+export function getSpeakerProposalStatus(proposal: ProposalArgs, isCfpOpen: boolean): SpeakerProposalStatus {
   const { deliberationStatus, confirmationStatus, publicationStatus, isDraft } = proposal;
-  const { type, cfpStart, cfpEnd } = event;
-
-  const cfp = new CallForPaper({ type, cfpStart, cfpEnd });
 
   if (isDraft) {
     return SpeakerProposalStatus.Draft;
@@ -33,7 +23,7 @@ export function getSpeakerProposalStatus(proposal: ProposalArgs, event: EventArg
     return SpeakerProposalStatus.AcceptedByOrganizers;
   } else if (deliberationStatus === DeliberationStatus.REJECTED && publicationStatus === PublicationStatus.PUBLISHED) {
     return SpeakerProposalStatus.RejectedByOrganizers;
-  } else if (!cfp.isOpen) {
+  } else if (!isCfpOpen) {
     return SpeakerProposalStatus.DeliberationPending;
   }
   return SpeakerProposalStatus.Submitted;

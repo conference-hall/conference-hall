@@ -2,7 +2,6 @@ import { getSpeakerProposalStatus } from '~/.server/cfp-submissions/get-speaker-
 import { db } from 'prisma/db.server';
 import { CfpNotOpenError, ProposalNotFoundError } from '~/libs/errors.server';
 
-import { CallForPaper } from '../shared/CallForPaper';
 import { InvitationLink } from '../shared/InvitationLink';
 import { ProposalConfirmedEmail } from './emails/proposal-confirmed.email';
 import { ProposalDeclinedEmail } from './emails/proposal-declined.email';
@@ -39,7 +38,7 @@ export class UserProposal {
       abstract: proposal.abstract,
       level: proposal.level,
       references: proposal.references,
-      status: getSpeakerProposalStatus(proposal, proposal.event),
+      status: getSpeakerProposalStatus(proposal, proposal.event.isCfpOpen),
       createdAt: proposal.createdAt.toUTCString(),
       languages: proposal.languages as string[],
       formats: proposal.formats.map(({ id, name }) => ({ id, name })),
@@ -61,9 +60,7 @@ export class UserProposal {
       include: { event: true },
     });
     if (!proposal) throw new ProposalNotFoundError();
-
-    const cfp = new CallForPaper(proposal.event);
-    if (!cfp.isOpen) throw new CfpNotOpenError();
+    if (!proposal.event.isCfpOpen) throw new CfpNotOpenError();
 
     const { formats, categories, ...talk } = data;
     await db.proposal.update({

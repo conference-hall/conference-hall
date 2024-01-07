@@ -2,7 +2,6 @@ import type { Prisma } from '@prisma/client';
 
 import { db } from 'prisma/db.server';
 
-import { CallForPaper } from '../shared/CallForPaper';
 import { Pagination } from '../shared/Pagination';
 import type { SearchFilters } from './EventSearch.types';
 
@@ -32,7 +31,6 @@ export class EventsSearch {
     const pagination = new Pagination({ page: this.page, pageSize: RESULTS_BY_PAGE, total: eventsCount });
 
     const events = await db.event.findMany({
-      select: { slug: true, name: true, type: true, address: true, cfpStart: true, cfpEnd: true, logo: true },
       where: eventsWhereInput,
       orderBy: [{ cfpStart: 'desc' }, { name: 'asc' }],
       skip: pagination.pageIndex * pagination.pageSize,
@@ -51,7 +49,7 @@ export class EventsSearch {
         type: event.type,
         address: event.address,
         logo: event.logo,
-        cfpState: new CallForPaper(event).state,
+        cfpState: event.cfpState,
         cfpStart: event.cfpStart?.toUTCString(),
         cfpEnd: event.cfpEnd?.toUTCString(),
       })),

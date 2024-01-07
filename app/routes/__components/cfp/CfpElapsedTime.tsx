@@ -1,8 +1,8 @@
 import { cx } from 'class-variance-authority';
 
-import type { CfpState } from '~/.server/shared/CallForPaper.ts';
 import { Text } from '~/design-system/Typography.tsx';
 import { formatCFPElapsedTime } from '~/libs/formatters/cfp.ts';
+import type { CfpState } from '~/types/events.types.ts';
 
 import { ClientOnly } from '../utils/ClientOnly.tsx';
 import { CfpIcon } from './CfpIcon.tsx';
