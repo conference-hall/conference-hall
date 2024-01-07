@@ -2,7 +2,6 @@ import { getSpeakerProposalStatus } from '~/.server/cfp-submissions/get-speaker-
 import { db } from 'prisma/db.server';
 import { TalkNotFoundError } from '~/libs/errors.server';
 
-import { InvitationLink } from '../shared/InvitationLink';
 import type { TalkSaveData } from './TalksLibrary.types';
 
 export class SpeakerTalk {
@@ -54,7 +53,7 @@ export class SpeakerTalk {
         logo: proposal.event.logo,
         proposalStatus: getSpeakerProposalStatus(proposal, proposal.event.isCfpOpen),
       })),
-      invitationLink: InvitationLink.build('talk', talk.invitationCode),
+      invitationLink: talk.invitationLink,
     };
   }
 

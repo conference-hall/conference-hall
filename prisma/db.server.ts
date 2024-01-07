@@ -1,7 +1,10 @@
 import type { Prisma } from '@prisma/client';
 import { PrismaClient } from '@prisma/client';
 
-import { applyEventExtension } from './extensions/event.ts';
+import { eventExtension } from './extensions/event.ts';
+import { proposalExtension } from './extensions/proposal.ts';
+import { talkExtension } from './extensions/talk.ts';
+import { teamExtension } from './extensions/team.ts';
 
 let db: ReturnType<typeof getClient>;
 
@@ -23,7 +26,13 @@ if (process.env.NODE_ENV === 'production' && !process.env.USE_EMULATORS) {
 
 function getClient() {
   const log: Prisma.LogLevel[] = process.env.NODE_ENV === 'development' ? ['warn', 'error'] : [];
-  const client = applyEventExtension(new PrismaClient({ log }));
+
+  const client = new PrismaClient({ log })
+    .$extends(eventExtension)
+    .$extends(talkExtension)
+    .$extends(proposalExtension)
+    .$extends(teamExtension);
+
   client.$connect();
   return client;
 }

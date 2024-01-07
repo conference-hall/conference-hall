@@ -2,7 +2,6 @@ import { getSpeakerProposalStatus } from '~/.server/cfp-submissions/get-speaker-
 import { db } from 'prisma/db.server';
 import { CfpNotOpenError, ProposalNotFoundError } from '~/libs/errors.server';
 
-import { InvitationLink } from '../shared/InvitationLink';
 import { ProposalConfirmedEmail } from './emails/proposal-confirmed.email';
 import { ProposalDeclinedEmail } from './emails/proposal-declined.email';
 import type { ProposalSaveData } from './UserProposal.types';
@@ -43,7 +42,7 @@ export class UserProposal {
       languages: proposal.languages as string[],
       formats: proposal.formats.map(({ id, name }) => ({ id, name })),
       categories: proposal.categories.map(({ id, name }) => ({ id, name })),
-      invitationLink: InvitationLink.build('proposal', proposal.invitationCode),
+      invitationLink: proposal.invitationLink,
       speakers: proposal.speakers.map((speaker) => ({
         id: speaker.id,
         name: speaker.name,

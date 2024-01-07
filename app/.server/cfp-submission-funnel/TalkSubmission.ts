@@ -6,7 +6,6 @@ import {
   ProposalNotFoundError,
 } from '~/libs/errors.server';
 
-import { InvitationLink } from '../shared/InvitationLink';
 import { TalksLibrary } from '../speaker-talks-library/TalksLibrary';
 import { ProposalReceivedEmail } from './emails/proposal-received.email';
 import { ProposalSubmittedEmail } from './emails/proposal-submitted.email';
@@ -118,7 +117,7 @@ export class TalkSubmission {
       id: proposal.id,
       title: proposal.title,
       isOwner: this.speakerId === proposal?.talk?.creatorId,
-      invitationLink: InvitationLink.build('proposal', proposal.invitationCode),
+      invitationLink: proposal.invitationLink,
       speakers: proposal.speakers
         .map((speaker) => ({
           id: speaker.id,

@@ -6,7 +6,7 @@ const schema = z.object({
   USE_EMULATORS: z.string().optional(),
   PROTOCOL: z.string(),
   DOMAIN: z.string(),
-  PORT: z.coerce.number().optional(),
+  PORT: z.string().optional(),
   DATABASE_URL: z.string(),
   REDIS_URL: z.string(),
   FIREBASE_API_KEY: z.string(),
