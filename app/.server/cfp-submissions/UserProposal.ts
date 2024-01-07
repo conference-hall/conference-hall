@@ -1,4 +1,3 @@
-import { getSpeakerProposalStatus } from '~/.server/cfp-submissions/get-speaker-proposal-status';
 import { db } from 'prisma/db.server';
 import { CfpNotOpenError, ProposalNotFoundError } from '~/libs/errors.server';
 
@@ -37,7 +36,7 @@ export class UserProposal {
       abstract: proposal.abstract,
       level: proposal.level,
       references: proposal.references,
-      status: getSpeakerProposalStatus(proposal, proposal.event.isCfpOpen),
+      status: proposal.getStatusForSpeaker(proposal.event.isCfpOpen),
       createdAt: proposal.createdAt.toUTCString(),
       languages: proposal.languages as string[],
       formats: proposal.formats.map(({ id, name }) => ({ id, name })),

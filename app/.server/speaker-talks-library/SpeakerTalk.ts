@@ -1,4 +1,3 @@
-import { getSpeakerProposalStatus } from '~/.server/cfp-submissions/get-speaker-proposal-status';
 import { db } from 'prisma/db.server';
 import { TalkNotFoundError } from '~/libs/errors.server';
 
@@ -51,7 +50,7 @@ export class SpeakerTalk {
         slug: proposal.event.slug,
         name: proposal.event.name,
         logo: proposal.event.logo,
-        proposalStatus: getSpeakerProposalStatus(proposal, proposal.event.isCfpOpen),
+        proposalStatus: proposal.getStatusForSpeaker(proposal.event.isCfpOpen),
       })),
       invitationLink: talk.invitationLink,
     };

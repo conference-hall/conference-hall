@@ -1,4 +1,3 @@
-import { getSpeakerProposalStatus } from '~/.server/cfp-submissions/get-speaker-proposal-status';
 import { db } from 'prisma/db.server';
 
 export class Submissions {
@@ -35,7 +34,7 @@ export class Submissions {
       id: proposal.id,
       title: proposal.title,
       talkId: proposal.talkId,
-      status: getSpeakerProposalStatus(proposal, proposal.event.isCfpOpen),
+      status: proposal.getStatusForSpeaker(proposal.event.isCfpOpen),
       createdAt: proposal.createdAt.toUTCString(),
       speakers: proposal.speakers.map((speaker) => ({
         id: speaker.id,

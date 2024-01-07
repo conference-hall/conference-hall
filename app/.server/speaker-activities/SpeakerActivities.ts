@@ -1,6 +1,5 @@
 import { Prisma } from '@prisma/client';
 
-import { getSpeakerProposalStatus } from '~/.server/cfp-submissions/get-speaker-proposal-status';
 import { db } from 'prisma/db.server';
 
 const EVENTS_BY_PAGE = 3;
@@ -42,7 +41,7 @@ export class SpeakerActivities {
             id: proposal.id,
             title: proposal.title,
             updatedAt: proposal.updatedAt.toUTCString(),
-            status: getSpeakerProposalStatus(proposal, event.isCfpOpen),
+            status: proposal.getStatusForSpeaker(event.isCfpOpen),
             speakers: proposal.speakers.map((speaker) => ({
               id: speaker.id,
               name: speaker.name,
