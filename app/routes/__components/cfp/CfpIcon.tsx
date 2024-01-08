@@ -1,4 +1,4 @@
-import type { CfpState } from '~/.server/shared/CallForPaper';
+import type { CfpState } from '~/types/events.types';
 
 type CfpIconProps = { cfpState: CfpState; className?: string };
 

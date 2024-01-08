@@ -6,8 +6,6 @@ import {
   ProposalNotFoundError,
 } from '~/libs/errors.server';
 
-import { CallForPaper } from '../shared/CallForPaper';
-import { InvitationLink } from '../shared/InvitationLink';
 import { TalksLibrary } from '../speaker-talks-library/TalksLibrary';
 import { ProposalReceivedEmail } from './emails/proposal-received.email';
 import { ProposalSubmittedEmail } from './emails/proposal-submitted.email';
@@ -27,9 +25,7 @@ export class TalkSubmission {
   async saveDraft(talkId: string, data: DraftSaveData) {
     const event = await db.event.findUnique({ where: { slug: this.eventSlug } });
     if (!event) throw new EventNotFoundError();
-
-    const cfp = new CallForPaper(event);
-    if (!cfp.isOpen) throw new CfpNotOpenError();
+    if (!event.isCfpOpen) throw new CfpNotOpenError();
 
     const library = TalksLibrary.of(this.speakerId);
     const talk = talkId === 'new' ? await library.add(data) : await library.talk(talkId).update(data);
@@ -80,9 +76,7 @@ export class TalkSubmission {
   async submit(talkId: string) {
     const event = await db.event.findUnique({ where: { slug: this.eventSlug } });
     if (!event) throw new EventNotFoundError();
-
-    const cfp = new CallForPaper(event);
-    if (!cfp.isOpen) throw new CfpNotOpenError();
+    if (!event.isCfpOpen) throw new CfpNotOpenError();
 
     if (event.maxProposals) {
       const nbProposals = await db.proposal.count({
@@ -123,7 +117,7 @@ export class TalkSubmission {
       id: proposal.id,
       title: proposal.title,
       isOwner: this.speakerId === proposal?.talk?.creatorId,
-      invitationLink: InvitationLink.build('proposal', proposal.invitationCode),
+      invitationLink: proposal.invitationLink,
       speakers: proposal.speakers
         .map((speaker) => ({
           id: speaker.id,

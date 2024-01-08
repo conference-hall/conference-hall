@@ -5,8 +5,6 @@ import { db } from 'prisma/db.server';
 import { ForbiddenOperationError, SlugAlreadyExistsError, TeamNotFoundError } from '~/libs/errors.server';
 import { slugValidator } from '~/libs/validators/slug';
 
-import { InvitationLink } from '../shared/InvitationLink';
-
 export type Team = Awaited<ReturnType<typeof UserTeam.prototype.get>>;
 
 export const TeamUpdateSchema = z.object({
@@ -43,7 +41,7 @@ export class UserTeam {
       name: team.name,
       slug: team.slug,
       role: member.role,
-      invitationLink: InvitationLink.build('team', team.invitationCode), // TODO: should not be able to invite if not owner?
+      invitationLink: team.invitationLink, // TODO: should not be able to invite if not owner?
     };
   }
 

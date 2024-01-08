@@ -1,9 +1,6 @@
 import { Prisma } from '@prisma/client';
 
-import { getSpeakerProposalStatus } from '~/.server/cfp-submissions/get-speaker-proposal-status';
 import { db } from 'prisma/db.server';
-
-import { CallForPaper } from '../shared/CallForPaper';
 
 const EVENTS_BY_PAGE = 3;
 
@@ -34,18 +31,17 @@ export class SpeakerActivities {
     return {
       activities: eventIds.map((id) => {
         const event = events.find((e) => e.id === id)!;
-        const cfp = new CallForPaper(event);
 
         return {
           slug: event.slug,
           name: event.name,
           logo: event.logo,
-          cfpState: cfp.state,
+          cfpState: event.cfpState,
           submissions: event.proposals.map((proposal) => ({
             id: proposal.id,
             title: proposal.title,
             updatedAt: proposal.updatedAt.toUTCString(),
-            status: getSpeakerProposalStatus(proposal, event),
+            status: proposal.getStatusForSpeaker(event.isCfpOpen),
             speakers: proposal.speakers.map((speaker) => ({
               id: speaker.id,
               name: speaker.name,

@@ -4,7 +4,6 @@ import { db } from 'prisma/db.server';
 import { EventNotFoundError, ForbiddenOperationError, SlugAlreadyExistsError } from '~/libs/errors.server';
 import { geocode } from '~/libs/geocode/geocode.server';
 
-import { CallForPaper } from '../shared/CallForPaper';
 import { EventEmailNotificationsKeys } from '~/types/notifications.types';
 import { QuestionKeys } from '~/types/survey.types';
 
@@ -39,8 +38,6 @@ export class UserEvent {
     });
     if (!event) throw new EventNotFoundError();
 
-    const cfp = new CallForPaper(event);
-
     return {
       id: event.id,
       name: event.name,
@@ -69,7 +66,7 @@ export class UserEvent {
       apiKey: event.apiKey,
       cfpStart: event.cfpStart?.toUTCString(),
       cfpEnd: event.cfpEnd?.toUTCString(),
-      cfpState: cfp.state,
+      cfpState: event.cfpState,
       formats: event.formats.map(({ id, name, description }) => ({ id, name, description })),
       categories: event.categories.map(({ id, name, description }) => ({ id, name, description })),
       archived: event.archived,

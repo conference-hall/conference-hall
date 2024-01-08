@@ -1,7 +1,6 @@
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/20/solid';
 import { FireIcon } from '@heroicons/react/24/outline';
 
-import type { CfpState } from '~/.server/shared/CallForPaper';
 import { Avatar, AvatarGroup } from '~/design-system/Avatar.tsx';
 import { ButtonLink } from '~/design-system/Buttons.tsx';
 import { IconLink } from '~/design-system/IconButtons.tsx';
@@ -10,6 +9,7 @@ import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
 import { Link } from '~/design-system/Links.tsx';
 import { Subtitle, Text } from '~/design-system/Typography.tsx';
 import { ProposalStatusLabel } from '~/routes/__components/proposals/ProposalStatusLabel.tsx';
+import type { CfpState } from '~/types/events.types';
 import type { SpeakerProposalStatus } from '~/types/speaker.types';
 
 interface Props {

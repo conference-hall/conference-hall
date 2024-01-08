@@ -1,8 +1,8 @@
 import { cx } from 'class-variance-authority';
 
-import type { CfpState } from '~/.server/shared/CallForPaper';
 import { formatCFPState } from '~/libs/formatters/cfp';
 import { CfpIcon } from '~/routes/__components/cfp/CfpIcon.tsx';
+import type { CfpState } from '~/types/events.types';
 
 type Props = { cfpState: CfpState; className?: string };
 

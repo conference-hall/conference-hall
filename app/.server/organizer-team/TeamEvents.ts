@@ -4,7 +4,6 @@ import { db } from 'prisma/db.server';
 import { SlugAlreadyExistsError } from '~/libs/errors.server';
 import { slugValidator } from '~/libs/validators/slug';
 
-import { CallForPaper } from '../shared/CallForPaper';
 import { UserTeam } from './UserTeam';
 
 export const EventCreateSchema = z.object({
@@ -37,7 +36,7 @@ export class TeamEvents {
       logo: event.logo,
       cfpStart: event.cfpStart?.toUTCString(),
       cfpEnd: event.cfpEnd?.toUTCString(),
-      cfpState: new CallForPaper(event).state,
+      cfpState: event.cfpState,
     }));
   }
 
