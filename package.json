@@ -23,6 +23,7 @@
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint --ignore-path .gitignore .",
     "tsc": "tsc -b && tsc -b cypress",
     "story": "ladle serve",
+    "dep:updates": "npx npm-check-updates -i",
     "prepare": "husky install"
   },
   "lint-staged": {
@@ -110,7 +111,7 @@
     "typescript": "^5.3.3",
     "vite": "^5.0.12",
     "vite-tsconfig-paths": "^4.3.1",
-    "vitest": "^1.1.1"
+    "vitest": "^1.2.1"
   },
   "engines": {
     "node": "20.x"
