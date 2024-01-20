@@ -23,6 +23,7 @@
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint --ignore-path .gitignore .",
     "tsc": "tsc -b && tsc -b cypress",
     "story": "ladle serve",
+    "dep:updates": "npx npm-check-updates -i",
     "prepare": "husky install"
   },
   "lint-staged": {
