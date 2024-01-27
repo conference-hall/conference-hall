@@ -17,9 +17,6 @@ model User {
   references         String?
   address            String?
   socials            Json                @default("{}")
-  lat                Float?
-  lng                Float?
-  timezone           String?
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
   organizerKey       String?

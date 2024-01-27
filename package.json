@@ -24,6 +24,7 @@
     "tsc": "tsc -b && tsc -b cypress",
     "story": "ladle serve",
     "dep:updates": "npx npm-check-updates -i",
+    "script:migrate": "dotenv -e .env.dev -- tsx ./migration/index.ts",
     "prepare": "husky"
   },
   "lint-staged": {
