@@ -1,5 +1,6 @@
 import { TalkLevel, TeamRole } from '@prisma/client';
 import { db } from 'prisma/db.server';
+import { z } from 'zod';
 
 import languages from '../app/libs/formatters/languages.json';
 
@@ -19,6 +20,27 @@ export function mapBoolean(bool?: string | null) {
   if (bool === 'false') return false;
   if (bool === 'true') return true;
   return Boolean(bool);
+}
+
+export function mapInteger(int?: string | null) {
+  if (!int) return undefined;
+  const parsed = parseInt(int, 10);
+  if (Number.isNaN(parsed)) return undefined;
+  return parsed;
+}
+
+export function checkUrl(url?: string | null) {
+  const urlSchema = z.string().url().optional();
+  const result = urlSchema.safeParse(url);
+  if (!result.success) return undefined;
+  return result.data;
+}
+
+export function checkEmail(email?: string | null) {
+  const emailSchema = z.string().email().optional();
+  const result = emailSchema.safeParse(email);
+  if (!result.success) return undefined;
+  return result.data;
 }
 
 export function arrayFromBooleanMap(map?: Record<string, boolean> | null) {
@@ -66,6 +88,44 @@ export function mapRole(role?: string | null) {
     default:
       return undefined;
   }
+}
+
+export function mapEventType(type?: string | null) {
+  if (!type) return undefined;
+
+  switch (type) {
+    case 'meetup':
+      return 'MEETUP';
+    case 'conference':
+      return 'CONFERENCE';
+    default:
+      return undefined;
+  }
+}
+
+export function mapEventVisibility(visibility?: string | null) {
+  if (!visibility) return undefined;
+
+  switch (visibility) {
+    case 'public':
+      return 'PUBLIC';
+    case 'private':
+      return 'PRIVATE';
+    default:
+      return undefined;
+  }
+}
+
+export function mapSurveyQuestions(survey?: any) {
+  if (!survey) return undefined;
+  const questions = ['gender', 'tshirt', 'diet', 'accomodation', 'transports', 'info'];
+  return arrayFromBooleanMap(survey).filter((key) => questions.includes(key));
+}
+
+export function mapEmailNotifications(notifications?: any) {
+  if (!notifications) return undefined;
+  const notifs = ['submitted', 'confirmed', 'declined'];
+  return arrayFromBooleanMap(notifications).filter((key) => notifs.includes(key));
 }
 
 export async function findUser(migrationId: string, memoizedUsers: Map<string, string>) {
