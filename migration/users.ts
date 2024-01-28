@@ -4,41 +4,52 @@ import { db } from 'prisma/db.server';
 
 import { logRecord } from './utils';
 
+const usersWithoutEmail = [];
+
 /**
  * Migrate Users, Organization Keys, and Accounts
  */
 export async function migrateUsers(firestore: admin.firestore.Firestore) {
-  const usersRef = await firestore.collection('users').get();
+  const users = (await firestore.collection('users').get()).docs;
 
-  const users = await usersRef.docs.map<Prisma.UserCreateInput>((userDoc) => {
-    const user = userDoc.data();
-    return {
-      name: user.displayName,
-      email: user.email,
-      picture: user.photoURL,
-      bio: user.bio,
-      company: user.company,
-      references: user.speakerReferences,
-      address: user.address?.formattedAddress,
-      socials: { twitter: user.twitter, github: user.github }, // TODO: extract only username and compact
-      organizerKeyAccess: user.betaAccess
-        ? { connectOrCreate: { create: { id: user.betaAccess }, where: { id: user.betaAccess } } }
+  let index = 1;
+  for (const userDoc of users) {
+    const data = userDoc.data();
+
+    logRecord('User', index++, users.length, data.email);
+
+    const user: Prisma.UserCreateInput = {
+      migrationId: userDoc.id,
+      name: data.displayName,
+      email: data.email, // TODO: Test with email unique constraint
+      picture: data.photoURL,
+      bio: data.bio,
+      company: data.company,
+      references: data.speakerReferences,
+      address: data.address?.formattedAddress,
+      socials: { twitter: data.twitter, github: data.github }, // TODO: extract only username and compact
+      organizerKeyAccess: data.betaAccess
+        ? { connectOrCreate: { create: { id: data.betaAccess }, where: { id: data.betaAccess } } }
         : undefined,
       accounts: {
         create: {
           uid: userDoc.id,
-          name: user.displayName,
-          email: user.email,
-          picture: user.photoURL,
+          name: data.displayName,
+          email: data.email,
+          picture: data.photoURL,
           provider: 'unknown', // TODO: get provider from auth?
         },
       },
     };
-  });
 
-  let index = 1;
-  for (const user of users) {
-    logRecord('User', index++, users.length, user.email);
+    if (!user.email) {
+      usersWithoutEmail.push(user.migrationId);
+      continue;
+    }
+
     await db.user.create({ data: user });
   }
+
+  console.log(`Users without emails: ${usersWithoutEmail.length}`);
+  console.log(`User migrated ${users.length - usersWithoutEmail.length}`);
 }
