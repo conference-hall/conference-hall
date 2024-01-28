@@ -1,4 +1,4 @@
-import { TalkLevel } from '@prisma/client';
+import { TalkLevel, TeamRole } from '@prisma/client';
 import { db } from 'prisma/db.server';
 
 import languages from '../app/libs/formatters/languages.json';
@@ -51,6 +51,21 @@ export function mapLanguage(language?: string | null) {
   if (codes.length === 0) return undefined;
 
   return codes;
+}
+
+export function mapRole(role?: string | null) {
+  if (!role) return undefined;
+
+  switch (role) {
+    case 'owner':
+      return TeamRole.OWNER;
+    case 'member':
+      return TeamRole.MEMBER;
+    case 'reviewer':
+      return TeamRole.REVIEWER;
+    default:
+      return undefined;
+  }
 }
 
 export async function findUser(migrationId: string, memoizedUsers: Map<string, string>) {

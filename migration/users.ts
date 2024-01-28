@@ -50,6 +50,6 @@ export async function migrateUsers(firestore: admin.firestore.Firestore) {
     await db.user.create({ data: user });
   }
 
-  console.log(`Users without emails: ${usersWithoutEmail.length}`);
-  console.log(`User migrated ${users.length - usersWithoutEmail.length}`);
+  console.log(` > Users without emails: ${usersWithoutEmail.length}`);
+  console.log(` > User migrated ${users.length - usersWithoutEmail.length}`);
 }

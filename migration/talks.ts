@@ -63,9 +63,9 @@ export async function migrateTalks(firestore: admin.firestore.Firestore) {
     talksWithoutCreator.length -
     talksWithoutSpeakers.length;
 
-  console.log(`Talks without title: ${talksWithoutTitle.length}`);
-  console.log(`Talks without abstract: ${talksWithoutAbstract.length}`);
-  console.log(`Talks without creator: ${talksWithoutCreator.length}`);
-  console.log(`Talks without speakers: ${talksWithoutSpeakers.length}`);
-  console.log(`Talks migrated ${talksMigratedCount}`);
+  console.log(` > Talks without title: ${talksWithoutTitle.length}`);
+  console.log(` > Talks without abstract: ${talksWithoutAbstract.length}`);
+  console.log(` > Talks without creator: ${talksWithoutCreator.length}`);
+  console.log(` > Talks without speakers: ${talksWithoutSpeakers.length}`);
+  console.log(` > Talks migrated ${talksMigratedCount}`);
 }

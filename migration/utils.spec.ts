@@ -1,4 +1,4 @@
-import { arrayFromBooleanMap, mapBoolean, mapLanguage, mapLevel } from './utils';
+import { arrayFromBooleanMap, mapBoolean, mapLanguage, mapLevel, mapRole } from './utils';
 
 describe('#mapBoolean', () => {
   it('should return false if bool is undefined', () => {
@@ -68,5 +68,23 @@ describe('#mapLanguage', () => {
   it('should return the language if found', () => {
     expect(mapLanguage('english')).toEqual(['en']);
     expect(mapLanguage('English')).toEqual(['en']);
+  });
+});
+
+describe('#mapRole', () => {
+  it('should return undefined if role is undefined', () => {
+    expect(mapRole()).toBeUndefined();
+    expect(mapRole(null)).toBeUndefined();
+    expect(mapRole('')).toBeUndefined();
+  });
+
+  it('should return undefined if role is not found', () => {
+    expect(mapRole('foo')).toBeUndefined();
+  });
+
+  it('should return the role if found', () => {
+    expect(mapRole('owner')).toEqual('OWNER');
+    expect(mapRole('member')).toEqual('MEMBER');
+    expect(mapRole('reviewer')).toEqual('REVIEWER');
   });
 });
