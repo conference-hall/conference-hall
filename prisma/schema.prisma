@@ -19,6 +19,7 @@ model User {
   socials            Json                @default("{}")
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
+  migrationId        String?
   organizerKey       String?
   organizerKeyAccess OrganizerKeyAccess? @relation(fields: [organizerKey], references: [id])
   talks              Talk[]              @relation("speakers_talks")
@@ -70,6 +71,7 @@ model Talk {
   invitationCode String     @unique @default(cuid())
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @updatedAt
+  migrationId    String?
   speakers       User[]     @relation("speakers_talks")
   proposals      Proposal[]
 
@@ -122,6 +124,7 @@ model Event {
   apiKey                   String?
   createdAt                DateTime        @default(now())
   updatedAt                DateTime        @updatedAt
+  migrationId              String?
   proposals                Proposal[]
   surveys                  Survey[]
 
@@ -132,6 +135,7 @@ model EventFormat {
   id          String     @id @default(cuid())
   name        String
   description String?
+  migrationId String?
   event       Event      @relation(fields: [eventId], references: [id])
   eventId     String
   proposals   Proposal[] @relation("proposals_formats")
@@ -143,6 +147,7 @@ model EventCategory {
   id          String     @id @default(cuid())
   name        String
   description String?
+  migrationId String?
   event       Event      @relation(fields: [eventId], references: [id])
   eventId     String
   proposals   Proposal[] @relation("proposals_categories")
@@ -167,6 +172,7 @@ model Team {
   invitationCode String       @unique @default(cuid())
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
+  migrationId    String?
   members        TeamMember[]
   events         Event[]
 
@@ -215,6 +221,7 @@ model Proposal {
   invitationCode     String              @unique @default(cuid())
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
+  migrationId        String?
   comments           Comment[]
 
   @@unique([talkId, eventId])
@@ -239,29 +246,31 @@ enum ConfirmationStatus {
 }
 
 model Survey {
-  id        String   @unique @default(cuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  eventId   String
-  event     Event    @relation(fields: [eventId], references: [id])
-  answers   Json     @default("{}")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @unique @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  eventId     String
+  event       Event    @relation(fields: [eventId], references: [id])
+  answers     Json     @default("{}")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  migrationId String?
 
   @@unique([userId, eventId])
   @@map("surveys")
 }
 
 model Review {
-  id         String        @id @default(cuid())
-  userId     String
-  user       User          @relation(fields: [userId], references: [id])
-  proposalId String
-  proposal   Proposal      @relation(fields: [proposalId], references: [id])
-  feeling    ReviewFeeling @default(NEUTRAL)
-  note       Int?
-  createdAt  DateTime      @default(now())
-  updatedAt  DateTime      @updatedAt
+  id          String        @id @default(cuid())
+  userId      String
+  user        User          @relation(fields: [userId], references: [id])
+  proposalId  String
+  proposal    Proposal      @relation(fields: [proposalId], references: [id])
+  feeling     ReviewFeeling @default(NEUTRAL)
+  note        Int?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  migrationId String?
 
   @@unique([userId, proposalId])
   @@map("reviews")
@@ -275,15 +284,16 @@ enum ReviewFeeling {
 }
 
 model Comment {
-  id         String         @id @default(cuid())
-  userId     String
-  user       User           @relation(fields: [userId], references: [id])
-  proposalId String
-  proposal   Proposal       @relation(fields: [proposalId], references: [id])
-  comment    String
-  channel    CommentChannel
-  createdAt  DateTime       @default(now())
-  updatedAt  DateTime       @updatedAt
+  id          String         @id @default(cuid())
+  userId      String
+  user        User           @relation(fields: [userId], references: [id])
+  proposalId  String
+  proposal    Proposal       @relation(fields: [proposalId], references: [id])
+  comment     String
+  channel     CommentChannel
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  migrationId String?
 
   @@map("comments")
 }
