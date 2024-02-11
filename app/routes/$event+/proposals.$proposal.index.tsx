@@ -1,4 +1,3 @@
-import { parse } from '@conform-to/zod';
 import type { ActionFunction, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData, useNavigate } from '@remix-run/react';
@@ -10,6 +9,7 @@ import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
+import { parseWithZod } from '~/libs/zod-parser.ts';
 import { ProposalDetailsSection } from '~/routes/__components/proposals/ProposalDetailsSection.tsx';
 import { ProposalStatusSection } from '~/routes/__components/proposals/ProposalStatusSection.tsx';
 
@@ -37,8 +37,8 @@ export const action: ActionFunction = async ({ request, params }) => {
       return redirectWithToast(`/${params.event}/proposals`, 'success', 'Proposal submission removed.');
     }
     case 'confirm': {
-      const result = parse(form, { schema: ProposalParticipationSchema });
-      if (!result.value) return null;
+      const result = parseWithZod(form, ProposalParticipationSchema);
+      if (!result.success) return null;
       await proposal.confirm(result.value.participation);
       return toast('success', 'Your response has been sent to organizers.');
     }

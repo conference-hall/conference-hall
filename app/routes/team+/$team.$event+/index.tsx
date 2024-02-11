@@ -1,4 +1,3 @@
-import { parse } from '@conform-to/zod';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
@@ -11,6 +10,7 @@ import { parseUrlFilters } from '~/.server/shared/ProposalSearchBuilder.types.ts
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
+import { parseWithZod } from '~/libs/zod-parser.ts';
 
 import { ExportMenu } from './__components/actions/export-menu.tsx';
 import { FiltersMenu } from './__components/filters/filters-menu.tsx';
@@ -36,8 +36,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   invariant(params.event, 'Invalid event slug');
 
   const form = await request.formData();
-  const result = parse(form, { schema: DeliberateBulkSchema });
-  if (!result.value) return json(null);
+  const result = parseWithZod(form, DeliberateBulkSchema);
+  if (!result.success) return json(null);
 
   const { selection, status, allPagesSelected } = result.value;
   const deliberate = Deliberate.for(userId, params.team, params.event);

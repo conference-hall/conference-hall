@@ -1,4 +1,3 @@
-import { parse } from '@conform-to/zod';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
@@ -13,6 +12,7 @@ import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2 } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
+import { parseWithZod } from '~/libs/zod-parser';
 import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm.tsx';
 
 export const handle = { step: 'proposal' };
@@ -37,8 +37,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   invariant(params.event, 'Invalid event slug');
   invariant(params.talk, 'Invalid talk id');
 
-  const result = parse(await request.formData(), { schema: TalkSaveSchema });
-  if (!result.value) return json(result.error);
+  const result = parseWithZod(await request.formData(), TalkSaveSchema);
+  if (!result.success) return json(result.error);
 
   const submission = TalkSubmission.for(speakerId, params.event);
   const proposal = await submission.saveDraft(params.talk, result.value);

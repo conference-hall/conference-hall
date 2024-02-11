@@ -1,4 +1,3 @@
-import { parse } from '@conform-to/zod';
 import { CreditCardIcon, KeyIcon, UserCircleIcon } from '@heroicons/react/20/solid';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
@@ -16,6 +15,7 @@ import { NavSideMenu } from '~/design-system/navigation/NavSideMenu.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
+import { parseWithZod } from '~/libs/zod-parser.ts';
 
 import { AdditionalInfoForm } from './__components/AdditionalInfoForm.tsx';
 import { PersonalInfoForm } from './__components/PersonalInfoForm.tsx';
@@ -37,20 +37,20 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   switch (intent) {
     case 'personal-info': {
-      const result = parse(form, { schema: PersonalInfoSchema });
-      if (!result.value) return json(result.error);
+      const result = parseWithZod(form, PersonalInfoSchema);
+      if (!result.success) return json(result.error);
       await profile.save(result.value);
       break;
     }
     case 'speaker-details': {
-      const result = parse(form, { schema: DetailsSchema });
-      if (!result.value) return json(result.error);
+      const result = parseWithZod(form, DetailsSchema);
+      if (!result.success) return json(result.error);
       await profile.save(result.value);
       break;
     }
     case 'additional-info': {
-      const result = parse(form, { schema: AdditionalInfoSchema });
-      if (!result.value) return json(result.error);
+      const result = parseWithZod(form, AdditionalInfoSchema);
+      if (!result.success) return json(result.error);
       await profile.save(result.value);
       break;
     }

@@ -1,5 +1,5 @@
-import { parse } from '@conform-to/zod';
 import { z } from 'zod';
+import { parseWithZod } from '~/libs/zod-parser';
 
 const StatusFilterSchema = z
   .enum(['pending', 'accepted', 'rejected', 'not-answered', 'confirmed', 'declined'])
@@ -20,6 +20,6 @@ export type ProposalsFilters = z.infer<typeof ProposalsFiltersSchema>;
 
 export function parseUrlFilters(url: string) {
   const params = new URL(url).searchParams;
-  const result = parse(params, { schema: ProposalsFiltersSchema });
+  const result = parseWithZod(params, ProposalsFiltersSchema);
   return result.value || {};
 }

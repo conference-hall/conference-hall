@@ -1,4 +1,3 @@
-import { parse } from '@conform-to/zod';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import type { ActionFunction, LoaderFunctionArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
@@ -13,6 +12,7 @@ import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2 } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
+import { parseWithZod } from '~/libs/zod-parser';
 import { SurveyForm } from '~/routes/__components/proposals/forms/SurveyForm.tsx';
 
 export const handle = { step: 'survey' };
@@ -32,8 +32,8 @@ export const action: ActionFunction = async ({ request, params }) => {
   invariant(params.event, 'Invalid event slug');
   invariant(params.talk, 'Invalid talk id');
 
-  const result = parse(form, { schema: SurveySchema });
-  if (!result.value) return json(null);
+  const result = parseWithZod(form, SurveySchema);
+  if (!result.success) return json(null);
 
   await SpeakerAnswers.for(userId, params.event).save(result.value);
 
