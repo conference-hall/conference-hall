@@ -3,7 +3,7 @@ import './styles/fonts.css';
 
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData } from '@remix-run/react';
+import { Links, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData } from '@remix-run/react';
 import { withSentry } from '@sentry/remix';
 import type { ReactNode } from 'react';
 
@@ -71,7 +71,6 @@ function Document({ children, toast, env = {} }: DocumentProps) {
           }}
         />
         <ScrollRestoration nonce={nonce} />
-        <LiveReload nonce={nonce} />
         <Scripts nonce={nonce} />
         <Toaster toast={toast} />
       </body>
