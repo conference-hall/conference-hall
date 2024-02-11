@@ -1,4 +1,3 @@
-import { parse } from '@conform-to/zod';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
@@ -14,6 +13,7 @@ import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2 } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
+import { parseWithZod } from '~/libs/zod-parser';
 import { CategoriesForm } from '~/routes/__components/proposals/forms/CategoriesForm.tsx';
 import { FormatsForm } from '~/routes/__components/proposals/forms/FormatsForm.tsx';
 
@@ -38,8 +38,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
   const { formatsRequired, categoriesRequired } = await EventPage.of(params.event).get();
 
-  const result = parse(form, { schema: getTracksSchema(formatsRequired, categoriesRequired) });
-  if (!result.value) return json(result.error);
+  const result = parseWithZod(form, getTracksSchema(formatsRequired, categoriesRequired));
+  if (!result.success) return json(result.error);
 
   const submission = TalkSubmission.for(userId, params.event);
   await submission.saveTracks(params.talk, result.value);

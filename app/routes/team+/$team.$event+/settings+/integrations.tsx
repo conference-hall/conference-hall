@@ -1,4 +1,3 @@
-import { parse } from '@conform-to/zod';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
@@ -13,6 +12,7 @@ import { Card } from '~/design-system/layouts/Card.tsx';
 import { ExternalLink } from '~/design-system/Links.tsx';
 import { H2 } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
+import { parseWithZod } from '~/libs/zod-parser.ts';
 
 import { useEvent } from '../__components/useEvent.tsx';
 
@@ -28,8 +28,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const event = UserEvent.for(userId, params.team, params.event);
 
   const form = await request.formData();
-  const result = parse(form, { schema: EventSlackSettingsSchema });
-  if (!result.value) return json(result.error);
+  const result = parseWithZod(form, EventSlackSettingsSchema);
+  if (!result.success) return json(result.error);
 
   await event.update(result.value);
   return json(null);

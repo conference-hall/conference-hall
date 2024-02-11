@@ -1,4 +1,3 @@
-import { parse } from '@conform-to/zod';
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
@@ -12,6 +11,7 @@ import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { redirectWithToast } from '~/libs/toasts/toast.server.ts';
+import { parseWithZod } from '~/libs/zod-parser';
 import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm.tsx';
 
 export const meta = mergeMeta(() => [{ title: 'New talk | Conference Hall' }]);
@@ -20,8 +20,8 @@ export const action = async ({ request }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   const form = await request.formData();
 
-  const result = parse(form, { schema: TalkSaveSchema });
-  if (!result.value) return json(result.error);
+  const result = parseWithZod(form, TalkSaveSchema);
+  if (!result.success) return json(result.error);
 
   const talk = await TalksLibrary.of(userId).add(result.value);
   return redirectWithToast(`/speaker/talks/${talk.id}`, 'success', 'New talk created.');

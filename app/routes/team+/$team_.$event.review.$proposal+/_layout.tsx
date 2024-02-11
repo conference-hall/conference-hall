@@ -1,4 +1,3 @@
-import { parse } from '@conform-to/zod';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Outlet, useLoaderData, useParams } from '@remix-run/react';
@@ -16,6 +15,7 @@ import { parseUrlFilters } from '~/.server/shared/ProposalSearchBuilder.types.ts
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
+import { parseWithZod } from '~/libs/zod-parser.ts';
 import { Navbar } from '~/routes/__components/navbar/Navbar.tsx';
 import { useUser } from '~/routes/__components/useUser.tsx';
 
@@ -57,8 +57,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
   switch (intent) {
     case 'add-review': {
-      const result = parse(form, { schema: ReviewUpdateDataSchema });
-      if (!result.value) return toast('error', 'Something went wrong.' + JSON.stringify(result.error));
+      const result = parseWithZod(form, ReviewUpdateDataSchema);
+      if (!result.success) return toast('error', 'Something went wrong.' + JSON.stringify(result.error));
       const review = ProposalReview.for(userId, params.team, params.event, params.proposal);
       await review.addReview(result.value);
       break;
@@ -76,8 +76,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       break;
     }
     case 'change-deliberation-status': {
-      const result = parse(form, { schema: DeliberateSchema });
-      if (!result.value) return toast('error', 'Something went wrong.');
+      const result = parseWithZod(form, DeliberateSchema);
+      if (!result.success) return toast('error', 'Something went wrong.');
       const deliberate = Deliberate.for(userId, params.team, params.event);
       await deliberate.mark([params.proposal], result.value.status);
       break;

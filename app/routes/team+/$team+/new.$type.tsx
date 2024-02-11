@@ -1,4 +1,3 @@
-import { parse } from '@conform-to/zod';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData, useParams } from '@remix-run/react';
@@ -10,6 +9,7 @@ import { Card } from '~/design-system/layouts/Card.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { H1, Subtitle } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
+import { parseWithZod } from '~/libs/zod-parser.ts';
 
 import { EventForm } from '../../__components/events/EventForm.tsx';
 
@@ -23,8 +23,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   invariant(params.team, 'Invalid team slug');
   const form = await request.formData();
 
-  const result = parse(form, { schema: EventCreateSchema });
-  if (!result.value) return json(result.error);
+  const result = parseWithZod(form, EventCreateSchema);
+  if (!result.success) return json(result.error);
 
   try {
     const event = await TeamEvents.for(userId, params.team).create(result.value);

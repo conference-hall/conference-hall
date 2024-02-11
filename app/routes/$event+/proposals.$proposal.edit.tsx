@@ -1,4 +1,3 @@
-import { parse } from '@conform-to/zod';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Form, useActionData, useLoaderData, useNavigate } from '@remix-run/react';
@@ -14,6 +13,7 @@ import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { H3, Subtitle } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
+import { parseWithZod } from '~/libs/zod-parser.ts';
 import { CoSpeakersList, InviteCoSpeakerButton } from '~/routes/__components/proposals/forms/CoSpeaker.tsx';
 import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm.tsx';
 
@@ -44,8 +44,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     }
     case 'edit-proposal': {
       const { formatsRequired, categoriesRequired } = await EventPage.of(params.event).get();
-      const result = parse(form, { schema: getProposalUpdateSchema(formatsRequired, categoriesRequired) });
-      if (!result.value) return json(result.error);
+      const result = parseWithZod(form, getProposalUpdateSchema(formatsRequired, categoriesRequired));
+      if (!result.success) return json(result.error);
 
       await proposal.update(result.value);
       return redirectWithToast(`/${params.event}/proposals/${params.proposal}`, 'success', 'Proposal saved.');

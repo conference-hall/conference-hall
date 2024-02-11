@@ -1,4 +1,3 @@
-import { parse } from '@conform-to/zod';
 import type { ActionFunctionArgs, LoaderFunction } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
@@ -9,6 +8,7 @@ import { Card } from '~/design-system/layouts/Card.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
+import { parseWithZod } from '~/libs/zod-parser';
 import { TeamForm } from '~/routes/__components/teams/TeamForm.tsx';
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -20,8 +20,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const userId = await requireSession(request);
 
   const form = await request.formData();
-  const result = parse(form, { schema: TeamCreateSchema });
-  if (!result.value) return json(result.error);
+  const result = parseWithZod(form, TeamCreateSchema);
+  if (!result.success) return json(result.error);
 
   try {
     const team = await UserTeams.for(userId).create(result.value);

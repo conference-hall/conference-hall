@@ -1,4 +1,3 @@
-import { parse } from '@conform-to/zod';
 import { ArchiveBoxArrowDownIcon, ArchiveBoxXMarkIcon } from '@heroicons/react/24/outline';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
@@ -19,6 +18,7 @@ import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2, Subtitle } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
+import { parseWithZod } from '~/libs/zod-parser.ts';
 import { EventForm } from '~/routes/__components/events/EventForm.tsx';
 
 import { useEvent } from '../__components/useEvent.tsx';
@@ -38,8 +38,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const action = form.get('_action');
   switch (action) {
     case 'general': {
-      const result = parse(form, { schema: EventGeneralSettingsSchema });
-      if (!result.value) return json(result.error);
+      const result = parseWithZod(form, EventGeneralSettingsSchema);
+      if (!result.success) return json(result.error);
 
       try {
         const updated = await event.update(result.value);
@@ -49,8 +49,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       }
     }
     case 'details': {
-      const result = parse(form, { schema: EventDetailsSettingsSchema });
-      if (!result.value) return json(result.error);
+      const result = parseWithZod(form, EventDetailsSettingsSchema);
+      if (!result.success) return json(result.error);
 
       await event.update(result.value);
       return toast('success', 'Event details saved.');

@@ -1,4 +1,3 @@
-import { parse } from '@conform-to/zod';
 import { type ActionFunctionArgs, json, type LoaderFunctionArgs } from '@remix-run/node';
 import { Form, useActionData, useNavigate } from '@remix-run/react';
 import invariant from 'tiny-invariant';
@@ -9,6 +8,7 @@ import { Button } from '~/design-system/Buttons.tsx';
 import SlideOver from '~/design-system/SlideOver.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast } from '~/libs/toasts/toast.server.ts';
+import { parseWithZod } from '~/libs/zod-parser.ts';
 import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm.tsx';
 
 import { useEvent } from './__components/useEvent.tsx';
@@ -26,8 +26,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   invariant(params.proposal, 'Invalid proposal id');
 
   const form = await request.formData();
-  const result = parse(form, { schema: ProposalUpdateSchema });
-  if (!result.value) return json(result.error);
+  const result = parseWithZod(form, ProposalUpdateSchema);
+  if (!result.success) return json(result.error);
 
   const review = ProposalReview.for(userId, params.team, params.event, params.proposal);
   await review.update(result.value);

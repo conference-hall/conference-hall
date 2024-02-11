@@ -34,7 +34,6 @@
     "seed": "tsx ./prisma/seed.ts"
   },
   "dependencies": {
-    "@conform-to/zod": "^0.9.1",
     "@headlessui/react": "^1.7.18",
     "@heroicons/react": "^2.1.1",
     "@prisma/client": "^5.9.1",

@@ -1,4 +1,3 @@
-import { parse } from '@conform-to/zod';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Form, useActionData, useLoaderData, useNavigate } from '@remix-run/react';
@@ -14,6 +13,7 @@ import { H3, Subtitle } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
+import { parseWithZod } from '~/libs/zod-parser';
 import { CoSpeakersList, InviteCoSpeakerButton } from '~/routes/__components/proposals/forms/CoSpeaker.tsx';
 import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm.tsx';
 
@@ -43,8 +43,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     await talk.removeCoSpeaker(speakerId);
     return toast('success', 'Co-speaker removed from talk.');
   } else {
-    const result = parse(form, { schema: TalkSaveSchema });
-    if (!result.value) return json(result.error);
+    const result = parseWithZod(form, TalkSaveSchema);
+    if (!result.success) return json(result.error);
     await talk.update(result.value);
     return redirectWithToast(`/speaker/talks/${params.talk}`, 'success', 'Talk updated.');
   }
