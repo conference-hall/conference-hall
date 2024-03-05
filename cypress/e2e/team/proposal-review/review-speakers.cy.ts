@@ -16,33 +16,34 @@ describe('Speakers in proposal review page', () => {
 
     review.speakersList().should('have.length', 2);
 
-    review.viewSpeakerProfile(/Marie Jane/);
+    review.withinSpeakerProfile(/Marie Jane/, () => {
+      cy.assertText('Marie Jane');
+      cy.assertText('MJ Corp');
+      cy.assertText('marie@example.com');
+      cy.assertText('Biography');
+      cy.assertText('MJ Bio');
+      cy.assertText('MJ References');
+      cy.assertText('Location');
+      cy.assertText('Nantes');
+      cy.assertText('Gender');
+      cy.assertText('male');
+      cy.assertText('Tshirt size');
+      cy.assertText('XL');
+      cy.assertText('Diet');
+      cy.assertText('vegan');
+      cy.assertText('Need accomodation fees');
+      cy.assertText('yes');
+      cy.assertText('Need Transport fees');
+      cy.assertText('taxi, train');
+      cy.assertText('More information');
+      cy.assertText('Hello');
+      cy.findByRole('button', { name: 'Close panel' }).click();
+    });
 
-    cy.assertText('Marie Jane');
-    cy.assertText('MJ Corp');
-    cy.assertText('marie@example.com');
-    cy.assertText('Biography');
-    cy.assertText('MJ Bio');
-    cy.assertText('MJ References');
-    cy.assertText('Location');
-    cy.assertText('Nantes');
-    cy.assertText('Gender');
-    cy.assertText('male');
-    cy.assertText('Tshirt size');
-    cy.assertText('XL');
-    cy.assertText('Diet');
-    cy.assertText('vegan');
-    cy.assertText('Need accomodation fees');
-    cy.assertText('yes');
-    cy.assertText('Need Transport fees');
-    cy.assertText('taxi, train');
-    cy.assertText('More information');
-    cy.assertText('Hello');
-    cy.findByRole('button', { name: 'Close panel' }).click();
-
-    review.viewSpeakerProfile(/Robin/);
-    cy.assertText('Robin');
-    cy.assertText('robin@example.com');
-    cy.findByRole('button', { name: 'Close panel' }).click();
+    review.withinSpeakerProfile(/Robin/, () => {
+      cy.assertText('Robin');
+      cy.assertText('robin@example.com');
+      cy.findByRole('button', { name: 'Close panel' }).click();
+    });
   });
 });
