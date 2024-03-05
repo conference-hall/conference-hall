@@ -36,20 +36,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   return json({ user, toast, env: getPublicEnv() }, { headers: toastHeaders || {} });
 };
 
-function App() {
-  const { user, env, toast } = useLoaderData<typeof loader>();
-
-  initializeFirebaseClient(env);
-
-  return (
-    <Document toast={toast} env={env}>
-      <Outlet context={{ user }} />
-    </Document>
-  );
-}
-
-export default withSentry(App);
-
 type DocumentProps = { children: ReactNode; toast?: Toast | null; env?: Record<string, unknown> };
 
 function Document({ children, toast, env = {} }: DocumentProps) {
@@ -78,6 +64,18 @@ function Document({ children, toast, env = {} }: DocumentProps) {
   );
 }
 
+function App() {
+  const { user, env, toast } = useLoaderData<typeof loader>();
+
+  initializeFirebaseClient(env);
+
+  return (
+    <Document toast={toast} env={env}>
+      <Outlet context={{ user }} />
+    </Document>
+  );
+}
+
 export function ErrorBoundary() {
   return (
     <Document>
@@ -85,3 +83,5 @@ export function ErrorBoundary() {
     </Document>
   );
 }
+
+export default withSentry(App);

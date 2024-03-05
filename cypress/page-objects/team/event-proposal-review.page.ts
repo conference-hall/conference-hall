@@ -50,8 +50,9 @@ class ProposalReviewPage extends BasePage {
     return cy.findByRole('list', { name: 'Speakers' }).children();
   }
 
-  viewSpeakerProfile(name: RegExp) {
+  withinSpeakerProfile(name: RegExp, callback: () => void) {
     cy.findByRole('link', { name }).click();
+    return cy.findByRole('dialog', { name: name }).within(callback);
   }
 
   // Activity feed
