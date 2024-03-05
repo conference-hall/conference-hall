@@ -36,10 +36,9 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   return json({ user, toast, env: getPublicEnv() }, { headers: toastHeaders || {} });
 };
 
-type LayoutProps = { children: ReactNode; toast?: Toast | null; env?: Record<string, unknown> };
+type DocumentProps = { children: ReactNode; toast?: Toast | null; env?: Record<string, unknown> };
 
-export function Layout({ children }: LayoutProps) {
-  const { env, toast } = useLoaderData<typeof loader>();
+function Document({ children, toast, env = {} }: DocumentProps) {
   const nonce = useNonce();
 
   return (
@@ -54,7 +53,7 @@ export function Layout({ children }: LayoutProps) {
         <script
           nonce={nonce}
           dangerouslySetInnerHTML={{
-            __html: `window.ENV = ${JSON.stringify(env ?? {})}`,
+            __html: `window.ENV = ${JSON.stringify(env)}`,
           }}
         />
         <ScrollRestoration nonce={nonce} />
@@ -66,15 +65,23 @@ export function Layout({ children }: LayoutProps) {
 }
 
 function App() {
-  const { user, env } = useLoaderData<typeof loader>();
+  const { user, env, toast } = useLoaderData<typeof loader>();
 
   initializeFirebaseClient(env);
 
-  return <Outlet context={{ user }} />;
+  return (
+    <Document toast={toast} env={env}>
+      <Outlet context={{ user }} />
+    </Document>
+  );
 }
 
 export function ErrorBoundary() {
-  return <GeneralErrorBoundary />;
+  return (
+    <Document>
+      <GeneralErrorBoundary />
+    </Document>
+  );
 }
 
 export default withSentry(App);
