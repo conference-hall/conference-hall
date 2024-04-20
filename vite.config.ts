@@ -30,4 +30,5 @@ export default defineConfig({
         })
       : undefined,
   ],
+  optimizeDeps: { exclude: ['farmhash'] }, // FIXME: Farmhash is not compatible with Vite
 });
