@@ -4,7 +4,7 @@ import { ReviewDetails } from './ReviewDetails.ts';
 
 describe('#ReviewsDetails', () => {
   it('computes reviews info from user reviews', () => {
-    const common = { id: '1', proposalId: 'p1', createdAt: new Date(), updatedAt: new Date() };
+    const common = { id: '1', proposalId: 'p1', createdAt: new Date(), updatedAt: new Date(), migrationId: null };
     const user1 = { id: 'uid1', name: 'John doe', picture: 'j.png' };
     const review1 = { userId: 'uid1', feeling: ReviewFeeling.POSITIVE, note: 5, user: user1, ...common };
     const user2 = { id: 'uid2', name: 'Jane doe', picture: 'd.png' };
