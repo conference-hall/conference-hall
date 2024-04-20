@@ -1,6 +1,8 @@
 import admin from 'firebase-admin';
 import { db } from 'prisma/db.server';
 
+import { migrateEvents } from './event';
+import { migrateSurveys } from './surveys';
 import { migrateTalks } from './talks';
 import { migrateTeams } from './teams';
 import { migrateUsers } from './users';
@@ -24,6 +26,12 @@ async function main() {
 
   console.log('Migrating teams...');
   await migrateTeams(firestore);
+
+  console.log('Migrating events...');
+  await migrateEvents(firestore);
+
+  console.log('Migrate surveys...');
+  await migrateSurveys(firestore);
 }
 
 function initFirestore() {
@@ -42,10 +50,10 @@ function initFirestore() {
 
 export async function resetDB() {
   await db.$transaction([
-    db.survey.deleteMany(),
     db.comment.deleteMany(),
     db.review.deleteMany(),
     db.proposal.deleteMany(),
+    db.survey.deleteMany(),
     db.talk.deleteMany(),
     db.eventFormat.deleteMany(),
     db.eventCategory.deleteMany(),
