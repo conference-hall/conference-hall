@@ -36,8 +36,21 @@ export async function migrateEvents(firestore: admin.firestore.Firestore) {
 
     logRecord('Event', index++, events.length, data.name);
 
-    const team = await db.team.findFirst({ where: { migrationId: data.organization } }); // TODO: create it if not exists
-    const creator = await findUser(data.owner, memoizedUsers);
+    const creatorId = await findUser(data.owner, memoizedUsers);
+
+    let team = null;
+    if (data.organization) {
+      team = await db.team.findFirst({ where: { migrationId: data.organization } });
+    } else if (creatorId) {
+      const creator = await db.user.findFirst({ where: { id: creatorId } });
+      team = await db.team.create({
+        data: {
+          slug: slugify(`team-${creator?.name}`),
+          name: `Team ${creator?.name}`,
+          members: { create: [{ role: 'OWNER', member: { connect: { id: creatorId } } }] },
+        },
+      });
+    }
 
     const settings = (
       await firestore.collection('events').doc(eventDoc.id).collection('settings').limit(1).get()
@@ -52,11 +65,11 @@ export async function migrateEvents(firestore: admin.firestore.Firestore) {
       logo: checkUrl(data.bannerUrl), // TODO: rename to logoUrl?
       description: data.description,
       contactEmail: checkEmail(data.contact),
-      websiteUrl: checkUrl(data.websiteUrl),
-      cfpEnd: cfpDates('end', data),
+      websiteUrl: checkUrl(data.website),
       cfpStart: cfpDates('start', data),
-      conferenceEnd: data?.conferenceDates?.end?.toDate(),
+      cfpEnd: cfpDates('end', data),
       conferenceStart: data?.conferenceDates?.start?.toDate(),
+      conferenceEnd: data?.conferenceDates?.end?.toDate(),
       address: data.address?.formattedAddress,
       lat: data.address?.latLng?.lat,
       lng: data.address?.latLng?.lng,
@@ -82,13 +95,13 @@ export async function migrateEvents(firestore: admin.firestore.Firestore) {
       maxProposals: mapInteger(data.maxProposals),
       archived: mapBoolean(data.archived),
       team: { connect: { id: team?.id } },
-      creator: { connect: { id: creator } },
+      creator: { connect: { id: creatorId } },
     };
 
     if (!team) {
       eventsWithoutTeam.push(event.migrationId);
       continue;
-    } else if (!creator) {
+    } else if (!creatorId) {
       eventsWithoutOwner.push(event.migrationId);
       continue;
     }
@@ -119,7 +132,7 @@ function cfpDates(date: 'start' | 'end', data: any) {
     return data?.cfpDates?.[date]?.toDate();
   }
   const cfpOpened = mapBoolean(data?.cfpOpened);
-  if (data.type === 'meetup' && cfpOpened) {
+  if (data.type === 'meetup' && date === 'start' && cfpOpened) {
     return new Date();
   }
   return undefined;
