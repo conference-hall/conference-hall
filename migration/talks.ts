@@ -1,8 +1,9 @@
 import type { Prisma } from '@prisma/client';
 import type admin from 'firebase-admin';
 import { db } from 'prisma/db.server';
+import ProgressBar from 'progress';
 
-import { arrayFromBooleanMap, findUser, findUsers, logRecord, mapBoolean, mapLanguage, mapLevel } from './utils';
+import { arrayFromBooleanMap, findUser, findUsers, mapBoolean, mapLanguage, mapLevel } from './utils';
 
 // Memoize users
 const memoizedUsers = new Map<string, string>();
@@ -17,12 +18,13 @@ const talksWithoutSpeakers = [];
  */
 export async function migrateTalks(firestore: admin.firestore.Firestore) {
   const talks = (await firestore.collection('talks').get()).docs;
+  const talkProgress = new ProgressBar('  Talks      [:percent] - Elapsed: :elapseds - ETA: :etas (:rate/s) [:bar]', {
+    total: talks.length,
+  });
 
-  let index = 1;
   for (const talkDoc of talks) {
     const data = talkDoc.data();
-
-    logRecord('Talk', index++, talks.length, data.title);
+    talkProgress.tick();
 
     const speakersIds = await findUsers(arrayFromBooleanMap(data.speakers), memoizedUsers);
     const creatorId = (await findUser(data.owner, memoizedUsers)) || speakersIds[0];
@@ -37,6 +39,8 @@ export async function migrateTalks(firestore: admin.firestore.Firestore) {
       archived: mapBoolean(data.archived),
       creator: { connect: { id: creatorId } },
       speakers: { connect: speakersIds.map((id) => ({ id })) },
+      createdAt: data.updateTimestamp?.toDate(),
+      updatedAt: data.updateTimestamp?.toDate(),
     };
 
     if (!talk.title) {

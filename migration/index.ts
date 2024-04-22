@@ -1,7 +1,9 @@
 import admin from 'firebase-admin';
+import { getAuth } from 'firebase-admin/auth';
 import { db } from 'prisma/db.server';
 
 import { migrateEvents } from './event';
+import { migrateProposals } from './proposals';
 import { migrateSurveys } from './surveys';
 import { migrateTalks } from './talks';
 import { migrateTeams } from './teams';
@@ -12,14 +14,14 @@ const serviceAccount = process.env.MIGRATE_FIREBASE_SERVICE_ACCOUNT;
 
 async function main() {
   console.log('Connect to firestore...');
-  const firestore = initFirestore();
-  if (!firestore) return;
+  const { auth, firestore } = initFirestore();
+  if (!firestore || !auth) return;
 
   console.log('Reset database...');
   await resetDB();
 
   console.log('Migrating users...');
-  await migrateUsers(firestore);
+  await migrateUsers(firestore, auth);
 
   console.log('Migrating talks...');
   await migrateTalks(firestore);
@@ -32,12 +34,15 @@ async function main() {
 
   console.log('Migrate surveys...');
   await migrateSurveys(firestore);
+
+  console.log('Migrate proposals...');
+  await migrateProposals(firestore);
 }
 
 function initFirestore() {
   if (!serviceAccount || !projectId) {
     console.log('Missing MIGRATE_FIREBASE_SERVICE_ACCOUNT or MIGRATE_FIREBASE_PROJECT_ID');
-    return;
+    return {};
   }
 
   const app = admin.initializeApp({
@@ -45,7 +50,10 @@ function initFirestore() {
     credential: admin.credential.cert(JSON.parse(serviceAccount)),
   });
 
-  return app.firestore();
+  const auth = getAuth(app);
+  const firestore = app.firestore();
+
+  return { auth, firestore };
 }
 
 export async function resetDB() {

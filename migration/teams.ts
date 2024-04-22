@@ -2,8 +2,9 @@ import { type Prisma, TeamRole } from '@prisma/client';
 import { slugifyWithCounter } from '@sindresorhus/slugify';
 import type admin from 'firebase-admin';
 import { db } from 'prisma/db.server';
+import ProgressBar from 'progress';
 
-import { findUser, logRecord, mapRole } from './utils';
+import { findUser, mapRole } from './utils';
 
 // Memoize
 const memoizedUsers = new Map<string, string>();
@@ -18,12 +19,13 @@ const slugify = slugifyWithCounter();
  */
 export async function migrateTeams(firestore: admin.firestore.Firestore) {
   const organizations = (await firestore.collection('organizations').get()).docs;
+  const teamProgress = new ProgressBar('  Teams       [:percent] - Elapsed: :elapseds - ETA: :etas (:rate/s) [:bar]', {
+    total: organizations.length,
+  });
 
-  let index = 1;
   for (const orgaDoc of organizations) {
     const data = orgaDoc.data();
-
-    logRecord('Team', index++, organizations.length, data.name);
+    teamProgress.tick();
 
     const members = await mapMembers(data.members, data.owner);
 
@@ -32,6 +34,8 @@ export async function migrateTeams(firestore: admin.firestore.Firestore) {
       name: data.name,
       slug: slugify(data.name),
       members: { create: members },
+      createdAt: data.createTimestamp?.toDate(),
+      updatedAt: data.updateTimestamp?.toDate(),
     };
 
     if (members.length === 0) {

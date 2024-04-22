@@ -11,8 +11,14 @@ export const LANGUAGES: LanguageValues = Object.entries(languages).map(([id, lab
   label,
 }));
 
-export function logRecord(name: string, index: number, total: number, id: string) {
-  console.log(`  ${name} [${index}/${total}] ${id}`);
+export function logRecord(name: string, index: number, total: number, id: string, update?: boolean) {
+  if (update) {
+    process.stdout.clearLine(0);
+    process.stdout.cursorTo(0);
+    process.stdout.write(`\r  ${name} [${index}/${total}] ${id}\n`);
+  } else {
+    console.log(`  ${name} [${index}/${total}] ${id}`);
+  }
 }
 
 export function mapBoolean(bool?: string | null) {
@@ -141,4 +147,30 @@ export async function findUser(migrationId: string, memoizedUsers: Map<string, s
 export async function findUsers(migrationIds: string[], memoizedUsers: Map<string, string>) {
   const users = await Promise.all(migrationIds.map((migrationId) => findUser(migrationId, memoizedUsers)));
   return users.filter(Boolean);
+}
+
+export function convertTwitterHandle(handle: string) {
+  if (!handle) return undefined;
+  if (handle.startsWith('@')) return handle.replace('@', '');
+  if (handle.startsWith('https://twitter.com/')) return handle.replace('https://twitter.com/', '');
+  if (handle.startsWith('http://twitter.com/')) return handle.replace('http://twitter.com/', '');
+  if (handle.startsWith('https://x.com/')) return handle.replace('https://x.com/', '');
+  if (handle.startsWith('http://x.com/')) return handle.replace('http://x.com/', '');
+  return handle;
+}
+
+export function convertGithubHandle(handle: string) {
+  if (!handle) return undefined;
+  if (handle.startsWith('@')) return handle.replace('@', '');
+  if (handle.startsWith('https://github.com/')) return handle.replace('https://github.com/', '');
+  if (handle.startsWith('http://github.com/')) return handle.replace('http://github.com/', '');
+  return handle;
+}
+
+export function convertSocials(twitter: string, github: string) {
+  if (!twitter && !github) return undefined;
+  const socials = {} as { twitter?: string; github?: string };
+  if (twitter) socials.twitter = convertTwitterHandle(twitter);
+  if (github) socials.github = convertGithubHandle(github);
+  return socials;
 }

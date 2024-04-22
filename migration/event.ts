@@ -2,12 +2,12 @@ import { Prisma } from '@prisma/client';
 import { slugifyWithCounter } from '@sindresorhus/slugify';
 import type admin from 'firebase-admin';
 import { db } from 'prisma/db.server';
+import ProgressBar from 'progress';
 
 import {
   checkEmail,
   checkUrl,
   findUser,
-  logRecord,
   mapBoolean,
   mapEmailNotifications,
   mapEventType,
@@ -29,12 +29,13 @@ const eventsWithoutOwner = [];
  */
 export async function migrateEvents(firestore: admin.firestore.Firestore) {
   const events = (await firestore.collection('events').get()).docs;
+  const eventProgress = new ProgressBar('  Events     [:percent] - Elapsed: :elapseds - ETA: :etas (:rate/s) [:bar]', {
+    total: events.length,
+  });
 
-  let index = 1;
   for (const eventDoc of events) {
     const data = eventDoc.data();
-
-    logRecord('Event', index++, events.length, data.name);
+    eventProgress.tick();
 
     const creatorId = await findUser(data.owner, memoizedUsers);
 
@@ -73,7 +74,6 @@ export async function migrateEvents(firestore: admin.firestore.Firestore) {
       address: data.address?.formattedAddress,
       lat: data.address?.latLng?.lat,
       lng: data.address?.latLng?.lng,
-      timezone: undefined, // TODO: to delete?
       displayProposalsReviews:
         settings?.deliberation?.displayRatings === undefined
           ? undefined
@@ -96,6 +96,8 @@ export async function migrateEvents(firestore: admin.firestore.Firestore) {
       archived: mapBoolean(data.archived),
       team: { connect: { id: team?.id } },
       creator: { connect: { id: creatorId } },
+      createdAt: data.createTimestamp?.toDate(),
+      updatedAt: data.updateTimestamp?.toDate(),
     };
 
     if (!team) {

@@ -1,7 +1,8 @@
 import type admin from 'firebase-admin';
 import { db } from 'prisma/db.server';
+import ProgressBar from 'progress';
 
-import { findUser, logRecord } from './utils';
+import { findUser } from './utils';
 
 // Memoize users
 const memoizedUsers = new Map<string, string>();
@@ -13,17 +14,19 @@ const surveyWithoutUser = [];
  */
 export async function migrateSurveys(firestore: admin.firestore.Firestore) {
   const events = await db.event.findMany();
+  const eventProgress = new ProgressBar('  Surveys   [:percent] - Elapsed: :elapseds - ETA: :etas (:rate/s) [:bar]', {
+    total: events.length,
+  });
 
-  let index = 1;
   for (const event of events) {
+    eventProgress.tick();
+
     if (!event.migrationId) {
       console.log(` > Event migrationId not found for event: ${event.name}`);
       continue;
     }
 
     const surveys = (await firestore.collection('events').doc(event.migrationId).collection('surveys').get()).docs;
-
-    logRecord(`Surveys (${surveys.length})`, index++, events.length, event.name);
 
     for (const surveyDoc of surveys) {
       const data = surveyDoc.data();
@@ -47,12 +50,14 @@ export async function migrateSurveys(firestore: admin.firestore.Firestore) {
             diet: mapMultiValues(data.diet), // vegan, vegetarian, gluten-free, halal, nut-allergy
             info: data.info, // string
           },
+          createdAt: data.updateTimestamp?.toDate(),
+          updatedAt: data.updateTimestamp?.toDate(),
         },
       });
     }
-
-    console.log(` > Surveys without user: ${surveyWithoutUser.length}`);
   }
+
+  console.log(` > Surveys without user: ${surveyWithoutUser.length}`);
 }
 
 function mapMultiValues(values: Record<string, string[]>) {

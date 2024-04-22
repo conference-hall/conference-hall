@@ -1,55 +1,93 @@
 import type { Prisma } from '@prisma/client';
 import type admin from 'firebase-admin';
+import type { UserRecord } from 'firebase-admin/auth';
 import { db } from 'prisma/db.server';
+import ProgressBar from 'progress';
 
-import { logRecord } from './utils';
+import { convertSocials } from './utils';
 
-const usersWithoutEmail = [];
+const usersWithoutEmail: Array<void | UserRecord> = [];
+const usersAuthNotFound: Array<string> = [];
 
 /**
  * Migrate Users, Organization Keys, and Accounts
  */
-export async function migrateUsers(firestore: admin.firestore.Firestore) {
+export async function migrateUsers(firestore: admin.firestore.Firestore, auth: admin.auth.Auth) {
   const users = (await firestore.collection('users').get()).docs;
+  const userProgress = new ProgressBar('  Users      [:percent] - Elapsed: :elapseds - ETA: :etas (:rate/s) [:bar]', {
+    total: users.length,
+  });
 
-  let index = 1;
   for (const userDoc of users) {
     const data = userDoc.data();
+    userProgress.tick();
 
-    logRecord('User', index++, users.length, data.email);
+    const userAuth = await auth.getUser(userDoc.id).catch((error) => {
+      console.error(` > Error fetching user: ${userDoc.id}`, error);
+    });
+
+    if (!userAuth) {
+      usersAuthNotFound.push(userDoc.id);
+      continue;
+    }
+
+    const provider = userAuth?.providerData?.[0]?.providerId || 'unknown';
+    const email = getEmail(userDoc.id, data.email, userAuth?.email);
+    const name = data.displayName || userAuth?.displayName || 'noname';
+    const picture = data.photoURL || userAuth?.photoURL;
 
     const user: Prisma.UserCreateInput = {
       migrationId: userDoc.id,
-      name: data.displayName,
-      email: data.email, // TODO: Test with email unique constraint
-      picture: data.photoURL,
+      name, // TODO: Make name not null with default value (with default value 'no name' for example)
+      // TODO: Check if all user emails are unique (and not null values)
+      // - Create multiple accounts linked to the same user
+      // - Change findUser to findUserFromAccount
+      // - APP: Add an error when user create an account with the same email but different provider (uid)
+      email,
+      picture,
       bio: data.bio,
       company: data.company,
       references: data.speakerReferences,
       address: data.address?.formattedAddress,
-      socials: { twitter: data.twitter, github: data.github }, // TODO: extract only username and compact
+      socials: convertSocials(data.twitter, data.github),
       organizerKeyAccess: data.betaAccess
         ? { connectOrCreate: { create: { id: data.betaAccess }, where: { id: data.betaAccess } } }
         : undefined,
       accounts: {
         create: {
           uid: userDoc.id,
-          name: data.displayName,
-          email: data.email,
-          picture: data.photoURL,
-          provider: 'unknown', // TODO: get provider from auth?
+          name,
+          email,
+          picture,
+          provider,
+          createdAt: data.createTimestamp?.toDate(),
+          updatedAt: data.updateTimestamp?.toDate(),
         },
       },
+      createdAt: data.createTimestamp?.toDate(),
+      updatedAt: data.updateTimestamp?.toDate(),
     };
 
     if (!user.email) {
-      usersWithoutEmail.push(user.migrationId);
+      usersWithoutEmail.push(userAuth);
       continue;
     }
 
     await db.user.create({ data: user });
   }
 
-  console.log(` > Users without emails: ${usersWithoutEmail.length}`); // TODO: Manage users without email
+  console.log(` > Users auth not found: ${usersAuthNotFound}`);
+
+  console.log(` > Users without emails: ${usersWithoutEmail.length}`);
+  for (const user of usersWithoutEmail) {
+    const u = user as UserRecord;
+    console.log(`   - ${u.uid}, ${u.email}, ${u.providerData[0].providerId}`);
+  }
   console.log(` > User migrated ${users.length - usersWithoutEmail.length}`);
+}
+
+function getEmail(uid: string, email: string, authEmail?: string) {
+  if (authEmail && authEmail.includes('@')) return authEmail;
+  if (email && email.includes('@')) return email;
+  return `${uid}@example.com`;
 }
