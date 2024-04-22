@@ -22,12 +22,11 @@ export async function migrateUsers(firestore: admin.firestore.Firestore, auth: a
     const data = userDoc.data();
     userProgress.tick();
 
-    const userAuth = await auth.getUser(userDoc.id).catch((error) => {
-      console.error(` > Error fetching user: ${userDoc.id}`, error);
+    const userAuth = await auth.getUser(userDoc.id).catch(() => {
+      usersAuthNotFound.push(userDoc.id);
     });
 
     if (!userAuth) {
-      usersAuthNotFound.push(userDoc.id);
       continue;
     }
 
