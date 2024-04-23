@@ -39,9 +39,6 @@ export async function migrateUsers(firestore: admin.firestore.Firestore, auth: a
       migrationId: userDoc.id,
       name, // TODO: Make name not null with default value (with default value 'no name' for example)
       // TODO: Check if all user emails are unique (and not null values)
-      // - Create multiple accounts linked to the same user
-      // - Change findUser to findUserFromAccount
-      // - APP: Add an error when user create an account with the same email but different provider (uid)
       email,
       picture,
       bio: data.bio,
@@ -76,7 +73,6 @@ export async function migrateUsers(firestore: admin.firestore.Firestore, auth: a
   }
 
   console.log(` > Users auth not found: ${usersAuthNotFound}`);
-
   console.log(` > Users without emails: ${usersWithoutEmail.length}`);
   for (const user of usersWithoutEmail) {
     const u = user as UserRecord;

@@ -44,7 +44,7 @@ export async function migrateProposals(firestore: admin.firestore.Firestore) {
       const data = proposalDoc.data();
 
       const speakersIds = await findUsers(arrayFromBooleanMap(data.speakers), memoizedUsers);
-      const talk = data.talk ? await db.talk.findFirst({ where: { migrationId: proposalDoc.id } }) : undefined;
+      const talk = await db.talk.findFirst({ where: { migrationId: proposalDoc.id } });
 
       // get formats
       const formats = data.formats ? event.formats.filter((format) => format.migrationId === data.formats) : undefined;
@@ -156,14 +156,16 @@ export async function migrateProposals(firestore: admin.firestore.Firestore) {
   console.log(` > Proposals migrated ${proposalsMigratedCount}`);
 }
 
-function mapConfirmationStatus(status: string): ConfirmationStatus {
+function mapConfirmationStatus(status: string): ConfirmationStatus | null {
   switch (status) {
     case 'confirmed':
       return ConfirmationStatus.CONFIRMED;
     case 'declined':
       return ConfirmationStatus.DECLINED;
-    default:
+    case 'accepted':
       return ConfirmationStatus.PENDING;
+    default:
+      return null;
   }
 }
 

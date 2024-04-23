@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client';
-import { slugifyWithCounter } from '@sindresorhus/slugify';
+import slugify, { slugifyWithCounter } from '@sindresorhus/slugify';
 import type admin from 'firebase-admin';
 import { db } from 'prisma/db.server';
 import ProgressBar from 'progress';
@@ -19,7 +19,7 @@ import {
 // Memoize
 const memoizedUsers = new Map<string, string>();
 
-const slugify = slugifyWithCounter();
+const slugifyEvent = slugifyWithCounter();
 
 const eventsWithoutTeam = [];
 const eventsWithoutOwner = [];
@@ -44,13 +44,17 @@ export async function migrateEvents(firestore: admin.firestore.Firestore) {
       team = await db.team.findFirst({ where: { migrationId: data.organization } });
     } else if (creatorId) {
       const creator = await db.user.findFirst({ where: { id: creatorId } });
-      team = await db.team.create({
-        data: {
-          slug: slugify(`team-${creator?.name}`),
-          name: `Team ${creator?.name}`,
-          members: { create: [{ role: 'OWNER', member: { connect: { id: creatorId } } }] },
-        },
-      });
+      const slug = slugify(`team-${creator?.name}`);
+      team = await db.team.findFirst({ where: { slug } });
+      if (!team) {
+        team = await db.team.create({
+          data: {
+            slug,
+            name: `Team ${creator?.name}`,
+            members: { create: [{ role: 'OWNER', member: { connect: { id: creatorId } } }] },
+          },
+        });
+      }
     }
 
     const settings = (
@@ -60,7 +64,7 @@ export async function migrateEvents(firestore: admin.firestore.Firestore) {
     const event: Prisma.EventCreateInput = {
       migrationId: eventDoc.id,
       name: data.name,
-      slug: slugify(data.name),
+      slug: slugifyEvent(data.name),
       type: mapEventType(data.type),
       visibility: mapEventVisibility(data.visibility),
       logo: checkUrl(data.bannerUrl), // TODO: rename to logoUrl?
@@ -129,7 +133,7 @@ async function createEvent(event: Prisma.EventCreateInput) {
   }
 }
 
-function cfpDates(date: 'start' | 'end', data: any) {
+function cfpDates(date: 'start' | 'end', data: any): Date | undefined {
   if (data.type === 'conference') {
     return data?.cfpDates?.[date]?.toDate();
   }
