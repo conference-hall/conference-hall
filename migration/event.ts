@@ -73,8 +73,8 @@ export async function migrateEvents(firestore: admin.firestore.Firestore) {
       websiteUrl: checkUrl(data.website),
       cfpStart: cfpDates('start', data),
       cfpEnd: cfpDates('end', data),
-      conferenceStart: data?.conferenceDates?.start?.toDate(),
-      conferenceEnd: data?.conferenceDates?.end?.toDate(),
+      conferenceStart: conferenceDates('start', data),
+      conferenceEnd: conferenceDates('end', data),
       address: data.address?.formattedAddress,
       lat: data.address?.latLng?.lat,
       lng: data.address?.latLng?.lng,
@@ -125,7 +125,7 @@ async function createEvent(event: Prisma.EventCreateInput) {
     await db.event.create({ data: event });
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002') {
-      event.slug = slugify(event.name);
+      event.slug = slugifyEvent(event.name);
       await createEvent(event);
     } else {
       throw e;
@@ -133,9 +133,20 @@ async function createEvent(event: Prisma.EventCreateInput) {
   }
 }
 
+function conferenceDates(date: 'start' | 'end', data: any): Date | undefined {
+  if (data.type === 'conference') {
+    const current = data?.conferenceDates?.[date]?.toDate();
+    if (!(current instanceof Date)) return undefined;
+    return current;
+  }
+  return undefined;
+}
+
 function cfpDates(date: 'start' | 'end', data: any): Date | undefined {
   if (data.type === 'conference') {
-    return data?.cfpDates?.[date]?.toDate();
+    const current = data?.cfpDates?.[date]?.toDate();
+    if (!(current instanceof Date)) return undefined;
+    return current;
   }
   const cfpOpened = mapBoolean(data?.cfpOpened);
   if (data.type === 'meetup' && date === 'start' && cfpOpened) {

@@ -172,6 +172,8 @@ function mapConfirmationStatus(status: string): ConfirmationStatus | null {
 function mapDeliberationStatus(status: string): DeliberationStatus {
   switch (status) {
     case 'accepted':
+    case 'confirmed':
+    case 'declined':
       return DeliberationStatus.ACCEPTED;
     case 'rejected':
       return DeliberationStatus.REJECTED;
@@ -183,6 +185,8 @@ function mapDeliberationStatus(status: string): DeliberationStatus {
 function mapPublicationStatus(status: string): PublicationStatus {
   switch (status) {
     case 'sent':
+    case 'sending':
+    case 'delivered':
       return PublicationStatus.PUBLISHED;
     default:
       return PublicationStatus.NOT_PUBLISHED;
@@ -192,9 +196,9 @@ function mapPublicationStatus(status: string): PublicationStatus {
 function mapFeelings(feeling: string): ReviewFeeling {
   switch (feeling) {
     case 'love':
-      return ReviewFeeling.NEGATIVE;
-    case 'hate':
       return ReviewFeeling.POSITIVE;
+    case 'hate':
+      return ReviewFeeling.NEGATIVE;
     case 'noopinion':
       return ReviewFeeling.NO_OPINION;
     default:
