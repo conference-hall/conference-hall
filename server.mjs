@@ -87,7 +87,7 @@ async function run() {
   app.use(
     '/__/auth',
     createProxyMiddleware({
-      target: `https://${FIREBASE_PROJECT_ID}.firebaseapp.com`,
+      target: `https://${FIREBASE_PROJECT_ID}.firebaseapp.com/__/auth`,
       changeOrigin: true,
     }),
   );
