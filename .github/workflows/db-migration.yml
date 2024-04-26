@@ -1,0 +1,30 @@
+name: DB Migration
+on:
+  workflow_dispatch:
+
+env:
+  TZ: UTC
+  NODE_ENV: production
+  USE_EMULATORS: false
+  DATABASE_URL: ${{ secrets.MIGRATE_DATABASE_URL }}
+  MIGRATE_FIREBASE_PROJECT_ID: ${{ secrets.MIGRATE_FIREBASE_PROJECT_ID }}
+  MIGRATE_FIREBASE_SERVICE_ACCOUNT: ${{ secrets.MIGRATE_FIREBASE_SERVICE_ACCOUNT }}
+
+jobs:
+  migration:
+    name: Migration
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Migration
+        run: npm run script:migrate
