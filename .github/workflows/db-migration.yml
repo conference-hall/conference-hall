@@ -4,7 +4,7 @@ on:
 
 env:
   TZ: UTC
-  NODE_ENV: production
+  NODE_ENV: development
   USE_EMULATORS: false
   DATABASE_URL: ${{ secrets.MIGRATE_DATABASE_URL }}
   MIGRATE_FIREBASE_PROJECT_ID: ${{ secrets.MIGRATE_FIREBASE_PROJECT_ID }}

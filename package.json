@@ -24,8 +24,8 @@
     "tsc": "tsc -b && tsc -b cypress",
     "story": "ladle serve",
     "dep:updates": "npx npm-check-updates -i",
-    "script:migrate": "dotenv -e .env.dev -- tsx ./migration/index.ts",
-    "prepare": "if [[ $NODE_ENV != \"production\" ]]; then husky; fi"
+    "script:migrate": "tsx ./migration/index.ts",
+    "prepare": "husky"
   },
   "lint-staged": {
     "**/*.{ts,tsx,js,jsx}": "eslint --fix --cache --cache-location ./node_modules/.cache/eslint --ignore-path .gitignore",
