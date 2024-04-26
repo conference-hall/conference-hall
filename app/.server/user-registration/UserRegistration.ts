@@ -14,7 +14,7 @@ export class UserRegistration {
 
     if (account) return account.user.id;
 
-    const { uid, name, email = `${data.uid}@example.com`, picture, provider } = data;
+    const { uid, name = 'noname', email = `${data.uid}@example.com`, picture, provider } = data;
 
     const newAccount = await db.account.create({
       data: {
