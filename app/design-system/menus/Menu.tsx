@@ -24,7 +24,7 @@ export function Menu({ trigger: Trigger, triggerLabel, triggerClassname, childre
       <MenuTransition>
         <MenuItems
           anchor={{ to: 'bottom end', gap: '8px' }}
-          className="w-56 rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+          className="z-10 w-56 rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
         >
           {children}
         </MenuItems>
