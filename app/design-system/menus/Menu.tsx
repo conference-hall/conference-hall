@@ -1,4 +1,4 @@
-import { Menu as MenuDropdown } from '@headlessui/react';
+import { Menu as MenuDropdown, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import type { FormProps, LinkProps } from '@remix-run/react';
 import { Form, Link } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
@@ -17,14 +17,17 @@ type MenuProps = {
 export function Menu({ trigger: Trigger, triggerLabel, triggerClassname, children }: MenuProps) {
   return (
     <MenuDropdown as="div" className="relative z-20 ml-3 shrink-0">
-      <MenuDropdown.Button className={triggerClassname}>
+      <MenuButton className={triggerClassname}>
         {triggerLabel && <span className="sr-only">{triggerLabel}</span>}
         <Trigger />
-      </MenuDropdown.Button>
+      </MenuButton>
       <MenuTransition>
-        <MenuDropdown.Items className="absolute right-0 mt-2 w-56 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <MenuItems
+          anchor={{ to: 'bottom end', gap: '8px' }}
+          className="w-56 rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+        >
           {children}
-        </MenuDropdown.Items>
+        </MenuItems>
       </MenuTransition>
     </MenuDropdown>
   );
@@ -42,14 +45,14 @@ type MenuItemLinkProps = MenuItemBase & LinkProps;
 
 function ItemLink({ icon: Icon, className, children, ...rest }: MenuItemLinkProps) {
   return (
-    <MenuDropdown.Item as={Fragment}>
-      {({ active }) => (
-        <Link {...rest} className={itemStyles(active, className)}>
+    <MenuItem as={Fragment}>
+      {({ focus }) => (
+        <Link {...rest} className={itemStyles(focus, className)}>
           {Icon && <Icon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />}
           {children}
         </Link>
       )}
-    </MenuDropdown.Item>
+    </MenuItem>
   );
 }
 
@@ -59,14 +62,14 @@ type MenuItemFormProps = MenuItemBase & FormProps;
 
 function ItemForm({ icon: Icon, className, children, ...rest }: MenuItemFormProps) {
   return (
-    <MenuDropdown.Item as={Fragment}>
-      {({ active }) => (
-        <Form {...rest} className={itemStyles(active, className)}>
+    <MenuItem as={Fragment}>
+      {({ focus }) => (
+        <Form {...rest} className={itemStyles(focus, className)}>
           {Icon && <Icon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />}
           {children}
         </Form>
       )}
-    </MenuDropdown.Item>
+    </MenuItem>
   );
 }
 
@@ -76,14 +79,14 @@ type MenuItemExternalLinkProps = MenuItemBase & React.AnchorHTMLAttributes<HTMLA
 
 function ItemExternalLink({ icon: Icon, className, children, ...rest }: MenuItemExternalLinkProps) {
   return (
-    <MenuDropdown.Item as={Fragment}>
-      {({ active }) => (
-        <a {...rest} className={itemStyles(active, className)}>
+    <MenuItem as={Fragment}>
+      {({ focus }) => (
+        <a {...rest} className={itemStyles(focus, className)}>
           {Icon && <Icon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />}
           {children}
         </a>
       )}
-    </MenuDropdown.Item>
+    </MenuItem>
   );
 }
 

@@ -1,4 +1,4 @@
-import { Listbox } from '@headlessui/react';
+import { Field, Label, Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
 import { useState } from 'react';
@@ -37,12 +37,12 @@ function SelectedOptions({ selectedValues, options }: SelectedOptionsProps) {
 export default function MultiSelect({ name, label, placeholder, options, defaultValues, className }: Props) {
   const [selected, setSelected] = useState<string[]>(defaultValues);
   return (
-    <Listbox name={name} value={selected} onChange={setSelected} multiple>
-      {({ open }) => (
-        <div className={className}>
-          <Listbox.Label className="block text-sm font-medium leading-6 text-gray-900">{label}</Listbox.Label>
+    <Field className={className}>
+      <Label className="block text-sm font-medium leading-6 text-gray-900">{label}</Label>
+      <Listbox name={name} value={selected} onChange={setSelected} multiple>
+        {({ open }) => (
           <div className="relative mt-2">
-            <Listbox.Button className="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 text-sm">
+            <ListboxButton className="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 text-sm">
               {selected.length > 0 ? (
                 <div className="space-x-2">
                   <SelectedOptions selectedValues={selected} options={options} />
@@ -55,22 +55,25 @@ export default function MultiSelect({ name, label, placeholder, options, default
               <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                 <ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
               </span>
-            </Listbox.Button>
+            </ListboxButton>
 
             <SelectTransition show={open}>
-              <Listbox.Options className="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none text-sm">
+              <ListboxOptions
+                anchor={{ to: 'bottom start', gap: '4px' }}
+                className="z-20 w-[var(--button-width)] rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none text-sm"
+              >
                 {options.map((option) => (
-                  <Listbox.Option
+                  <ListboxOption
                     key={option.value}
                     value={option.value}
-                    className={({ active }) =>
+                    className={({ focus }) =>
                       cx(
-                        active ? 'bg-indigo-600 text-white' : 'text-gray-900',
+                        focus ? 'bg-indigo-600 text-white' : 'text-gray-900',
                         'relative cursor-default select-none py-2 pl-3 pr-9',
                       )
                     }
                   >
-                    {({ selected, active }) => (
+                    {({ selected, focus }) => (
                       <>
                         <span className={cx(selected ? 'font-semibold' : 'font-normal', 'block truncate')}>
                           {option.label}
@@ -79,7 +82,7 @@ export default function MultiSelect({ name, label, placeholder, options, default
                         {selected ? (
                           <span
                             className={cx(
-                              active ? 'text-white' : 'text-indigo-600',
+                              focus ? 'text-white' : 'text-indigo-600',
                               'absolute inset-y-0 right-0 flex items-center pr-4',
                             )}
                           >
@@ -88,13 +91,13 @@ export default function MultiSelect({ name, label, placeholder, options, default
                         ) : null}
                       </>
                     )}
-                  </Listbox.Option>
+                  </ListboxOption>
                 ))}
-              </Listbox.Options>
+              </ListboxOptions>
             </SelectTransition>
           </div>
-        </div>
-      )}
-    </Listbox>
+        )}
+      </Listbox>
+    </Field>
   );
 }

@@ -1,4 +1,4 @@
-import { Switch } from '@headlessui/react';
+import { Description, Field, Label, Switch } from '@headlessui/react';
 import { cx } from 'class-variance-authority';
 import { useCallback, useState } from 'react';
 
@@ -52,19 +52,15 @@ type ToggleGroupProps = {
 
 export function ToggleGroup({ name, label, value, description, onChange }: ToggleGroupProps) {
   return (
-    <Switch.Group as="div" className="flex items-center">
+    <Field className="flex items-center">
       <span className="flex flex-grow flex-col">
-        <Switch.Label as="span" className="text-sm font-medium leading-6 text-gray-900" passive>
+        <Label className="text-sm font-medium leading-6 text-gray-900" passive>
           {label}
-        </Switch.Label>
-        {description && (
-          <Switch.Description as="span" className="text-sm text-gray-500">
-            {description}
-          </Switch.Description>
-        )}
+        </Label>
+        {description && <Description className="text-sm text-gray-500">{description}</Description>}
       </span>
 
       <Toggle name={name} value={value} onChange={onChange} />
-    </Switch.Group>
+    </Field>
   );
 }

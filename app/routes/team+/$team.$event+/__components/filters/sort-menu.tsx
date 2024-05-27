@@ -1,4 +1,4 @@
-import { Menu } from '@headlessui/react';
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import { ArrowsUpDownIcon, CheckIcon } from '@heroicons/react/20/solid';
 import { Link, useLocation, useSearchParams } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
@@ -20,25 +20,28 @@ export function SortMenu() {
 
   return (
     <Menu as="div" className="relative inline-block text-left">
-      <Menu.Button className={button({ variant: 'secondary' })}>
+      <MenuButton className={button({ variant: 'secondary' })}>
         <ArrowsUpDownIcon className="h-4 w-4 text-gray-500" />
         <span className="hidden sm:inline">Sort</span>
-      </Menu.Button>
+      </MenuButton>
       <MenuTransition>
-        <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <MenuItems
+          anchor={{ to: 'bottom end', gap: '8px' }}
+          className="z-10 w-56 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+        >
           <div className="py-1">
             {options.map(({ name, value }) => {
               const selected = value === sort;
               const search = new URLSearchParams({ ...filters, sort: value });
 
               return (
-                <Menu.Item as={Fragment} key={value}>
-                  {({ active }) => (
+                <MenuItem as={Fragment} key={value}>
+                  {({ focus }) => (
                     <Link
                       to={{ pathname: location.pathname, search: search.toString() }}
                       className={cx(
                         'relative block px-4 py-2 text-sm',
-                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                        focus ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                         selected ? 'font-semibold' : '',
                       )}
                     >
@@ -50,11 +53,11 @@ export function SortMenu() {
                       ) : null}
                     </Link>
                   )}
-                </Menu.Item>
+                </MenuItem>
               );
             })}
           </div>
-        </Menu.Items>
+        </MenuItems>
       </MenuTransition>
     </Menu>
   );

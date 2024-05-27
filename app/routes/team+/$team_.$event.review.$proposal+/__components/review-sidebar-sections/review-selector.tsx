@@ -1,4 +1,4 @@
-import { RadioGroup } from '@headlessui/react';
+import { Fieldset, Label, Radio, RadioGroup } from '@headlessui/react';
 import { HeartIcon, NoSymbolIcon, StarIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
 import { useCallback, useState } from 'react';
@@ -57,21 +57,21 @@ export function ReviewSelector({ value, onChange }: Props) {
   };
 
   return (
-    <>
+    <Fieldset>
+      <Label className="sr-only"> Choose a note</Label>
       <RadioGroup name="review" value={String(selectedIndex)} onChange={handleChange}>
-        <RadioGroup.Label className="sr-only"> Choose a note</RadioGroup.Label>
         <div className="flex gap-2 items-center justify-between" onMouseOut={() => setOverIndex(-1)}>
           {options.map((option, index) => (
-            <RadioGroup.Option key={index} value={String(index)} title={option.label} data-review-input>
+            <Radio key={index} value={String(index)} title={option.label} data-review-input>
               <div className="cursor-pointer" onMouseOver={() => setOverIndex(index)}>
                 <option.Icon className={iconStyles({ option, index })} />
-                <RadioGroup.Label className="sr-only">{option.label}</RadioGroup.Label>
+                <Label className="sr-only">{option.label}</Label>
               </div>
-            </RadioGroup.Option>
+            </Radio>
           ))}
         </div>
       </RadioGroup>
-    </>
+    </Fieldset>
   );
 }
 
