@@ -11,7 +11,7 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline';
 import { Link } from '@remix-run/react';
-import { Fragment, useState } from 'react';
+import { useState } from 'react';
 
 import { Avatar, AvatarName } from '~/design-system/Avatar.tsx';
 import { Text } from '~/design-system/Typography.tsx';
@@ -35,7 +35,7 @@ export function UserMenu({ email, name, picture, teams, isOrganizer, notificatio
     <>
       <OpenButton name={name} picture={picture} notificationsCount={notificationsCount} onClick={handleOpen} />
 
-      <Transition show={open} as={Fragment}>
+      <Transition show={open}>
         <Dialog as="div" className="relative z-20" onClose={setOpen}>
           <div className="fixed inset-0 bg-gray-500 bg-opacity-20 transition-opacity" />
 
