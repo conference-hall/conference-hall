@@ -10,10 +10,6 @@ export function initMonitoring() {
     dsn: ENV.SENTRY_DSN,
     environment: ENV.MODE,
     tracesSampleRate: 1,
-    integrations: [
-      new Sentry.BrowserTracing({
-        routingInstrumentation: Sentry.remixRouterInstrumentation(useEffect, useLocation, useMatches),
-      }),
-    ],
+    integrations: [Sentry.browserTracingIntegration({ useEffect, useLocation, useMatches })],
   });
 }

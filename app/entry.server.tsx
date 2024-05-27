@@ -64,4 +64,4 @@ export default function handleRequest(
   });
 }
 
-export const handleError = Sentry.wrapRemixHandleError;
+export const handleError = Sentry.sentryHandleError;
