@@ -4,6 +4,8 @@ import { cx } from 'class-variance-authority';
 import { Text } from '~/design-system/Typography.tsx';
 import { formatReviewNote } from '~/libs/formatters/reviews';
 
+import { ClientOnly } from '../utils/ClientOnly';
+
 const REVIEWS = {
   NO_OPINION: { icon: NoSymbolIcon, color: '', stroke: '', label: 'No opinion' },
   NEUTRAL: { icon: StarIcon, color: 'fill-yellow-400', stroke: 'text-yellow-400', label: 'Score' },
@@ -18,10 +20,16 @@ export function GlobalReviewNote({ feeling, note, hideEmpty }: Props) {
   const formattedNote = formatReviewNote(note);
   return (
     <div className={cx('flex items-center justify-end gap-1', { invisible: note === null && hideEmpty })}>
-      <Text weight="semibold" variant="secondary">
-        {formattedNote}
-      </Text>
-      <Icon className={cx('h-5 w-5', color, stroke)} aria-label={`${label}: ${formattedNote}`} />
+      <ClientOnly>
+        {() => (
+          <>
+            <Text weight="semibold" variant="secondary">
+              {formattedNote}
+            </Text>
+            <Icon className={cx('h-5 w-5', color, stroke)} aria-label={`${label}: ${formattedNote}`} />
+          </>
+        )}
+      </ClientOnly>
     </div>
   );
 }
@@ -38,10 +46,16 @@ export function UserReviewNote({ feeling, note }: Props) {
 
   return (
     <div className="flex items-center justify-end gap-1">
-      <Text weight="semibold" variant="secondary">
-        {formattedNote}
-      </Text>
-      <UserCircleIcon className="h-5 w-5 text-gray-700" aria-label={`Your review: ${formattedNote}`} />
+      <ClientOnly>
+        {() => (
+          <>
+            <Text weight="semibold" variant="secondary">
+              {formattedNote}
+            </Text>
+            <UserCircleIcon className="h-5 w-5 text-gray-700" aria-label={`Your review: ${formattedNote}`} />
+          </>
+        )}
+      </ClientOnly>
     </div>
   );
 }

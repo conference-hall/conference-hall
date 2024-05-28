@@ -18,19 +18,19 @@ const TRAITS = {
     id: '9licQdPND0UtBhShJ7vveJ703sJs',
     name: 'Clark Kent',
     email: 'superman@example.com',
-    picture: 'https://s3.amazonaws.com/comicgeeks/characters/avatars/19.jpg',
+    picture: 'https://i.pravatar.cc/150?img=13',
   },
   'bruce-wayne': {
     id: 'e9HDr773xNpXbOy2H0C7FDhGD2fc',
     name: 'Bruce Wayne',
     email: 'batman@example.com',
-    picture: 'http://multiversitystatic.s3.amazonaws.com/uploads/2013/02/Bruce-Wayne-Jordan-Gibson-Art-Of-The-Week.png',
+    picture: 'https://i.pravatar.cc/150?img=56',
   },
   'peter-parker': {
     id: 'tpSmd3FehZIM3Wp4HYSBnfnQmXLb',
     name: 'Peter Parker',
     email: 'spiderman@example.com',
-    picture: 'https://www.mdcu-comics.fr/uploads/news/2020/09/news_illustre_1600620975_30.jpg',
+    picture: 'https://i.pravatar.cc/150?img=8',
   },
 };
 

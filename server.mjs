@@ -55,19 +55,23 @@ async function run() {
     next();
   });
 
-  // Security-related HTTP response headers
+  // Security-related HTTP response headers with Helmet
   app.use(
     helmet({
+      xPoweredBy: false,
+      referrerPolicy: { policy: 'same-origin' },
+      crossOriginEmbedderPolicy: false,
       contentSecurityPolicy: {
         reportOnly: true,
         directives: {
           'connect-src': [
-            MODE === 'development' ? 'ws:' : null,
+            MODE === 'development' ? 'ws://localhost:*' : null,
+            MODE === 'development' ? 'http://localhost:*' : null,
             process.env.SENTRY_DSN ? '*.ingest.sentry.io' : null,
             "'self'",
           ].filter(Boolean),
+          'frame-src': ["'self'", MODE === 'development' ? 'http://localhost:*' : null].filter(Boolean),
           'font-src': ["'self'"],
-          'frame-src': ["'self'"],
           'img-src': ["'self'", 'data:', 'https:'],
           'script-src': [
             "'strict-dynamic'",
@@ -75,6 +79,11 @@ async function run() {
             // @ts-expect-error Helmet types don't seem to know about res.locals
             (_, res) => `'nonce-${res.locals.cspNonce}'`,
           ],
+          'script-src-attr': [
+            // @ts-expect-error
+            (_, res) => `'nonce-${res.locals.cspNonce}'`,
+          ],
+          'upgrade-insecure-requests': null,
         },
       },
     }),
