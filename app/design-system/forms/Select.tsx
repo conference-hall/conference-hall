@@ -1,4 +1,4 @@
-import { Listbox } from '@headlessui/react';
+import { Field, Label, Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react';
 import { ChevronUpDownIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
 import { useCallback, useState } from 'react';
@@ -49,12 +49,12 @@ export default function Select({
         const { name, icon: Icon, iconClassname } = options.find((o) => o.id === currentValue) || {};
 
         return (
-          <div className={className}>
-            <Listbox.Label className={cx('block text-sm font-medium leading-6 text-gray-900', { 'sr-only': srOnly })}>
+          <Field className={className}>
+            <Label className={cx('block text-sm font-medium leading-6 text-gray-900', { 'sr-only': srOnly })}>
               {label}
-            </Listbox.Label>
+            </Label>
             <div className={cx('relative', { 'mt-1': !srOnly })}>
-              <Listbox.Button className="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-600 text-sm leading-6">
+              <ListboxButton className="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-600 text-sm leading-6">
                 <span className="flex items-center truncate">
                   {Icon && <Icon className={cx('mr-2 h-4 w-4', iconClassname)} aria-hidden="true" />}
                   {name}
@@ -62,17 +62,20 @@ export default function Select({
                 <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                   <ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
                 </span>
-              </Listbox.Button>
+              </ListboxButton>
 
               <SelectTransition show={open}>
-                <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <ListboxOptions
+                  anchor={{ to: 'bottom start', gap: '4px' }}
+                  className="z-10 w-[var(--button-width)] rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                >
                   {options.map((option) => (
-                    <Listbox.Option
+                    <ListboxOption
                       key={option.id}
                       value={option.id}
-                      className={({ active }) =>
+                      className={({ focus }) =>
                         cx('relative cursor-default select-none py-2 pl-3 pr-9 text-gray-900', {
-                          'bg-gray-100': active,
+                          'bg-gray-100': focus,
                         })
                       }
                     >
@@ -84,12 +87,12 @@ export default function Select({
                           {option.name}
                         </span>
                       )}
-                    </Listbox.Option>
+                    </ListboxOption>
                   ))}
-                </Listbox.Options>
+                </ListboxOptions>
               </SelectTransition>
             </div>
-          </div>
+          </Field>
         );
       }}
     </Listbox>

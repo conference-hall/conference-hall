@@ -87,7 +87,7 @@ declare global {
 Cypress.Commands.add('selectOn', (label, value, exit = true) => {
   cy.findByLabelText(label).click();
   cy.findByRole('option', { name: value }).click();
-  if (exit) cy.get('body').click();
+  if (exit) cy.findByLabelText(label).click();
 });
 
 Cypress.Commands.add('typeOn', (label: string | RegExp, text: string) => {

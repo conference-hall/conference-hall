@@ -1,9 +1,8 @@
-import { Dialog, Transition } from '@headlessui/react';
+import { Dialog, DialogPanel, DialogTitle, Transition, TransitionChild } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/20/solid';
 import type { VariantProps } from 'class-variance-authority';
 import { cva, cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
-import { Fragment } from 'react';
 
 import { IconButton } from './IconButtons.tsx';
 import { Text } from './Typography.tsx';
@@ -14,14 +13,14 @@ type Props = { open: boolean } & LayoutProps;
 
 export function Modal({ open, onClose, children, size, position }: Props) {
   return (
-    <Transition.Root show={open} as={Fragment}>
+    <Transition show={open}>
       <Dialog as="div" className="relative z-40" onClose={onClose}>
         <Background />
         <Layout onClose={onClose} size={size} position={position}>
           {children}
         </Layout>
       </Dialog>
-    </Transition.Root>
+    </Transition>
   );
 }
 
@@ -29,9 +28,9 @@ export function Modal({ open, onClose, children, size, position }: Props) {
 
 function Title({ children }: { children: ReactNode }) {
   return (
-    <Dialog.Title as="h1" className="text-base font-semibold leading-6 text-gray-900">
+    <DialogTitle as="h1" className="text-base font-semibold leading-6 text-gray-900">
       {children}
-    </Dialog.Title>
+    </DialogTitle>
   );
 }
 
@@ -85,8 +84,7 @@ function Layout({ position = 'center', size, onClose, children }: LayoutProps) {
   return (
     <div className="fixed inset-0 z-40 overflow-y-auto">
       <div className={cx('flex min-h-full items-end justify-center p-4', POSITION[position])}>
-        <Transition.Child
-          as={Fragment}
+        <TransitionChild
           enter="ease-out duration-300"
           enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           enterTo="opacity-100 translate-y-0 sm:scale-100"
@@ -94,13 +92,13 @@ function Layout({ position = 'center', size, onClose, children }: LayoutProps) {
           leaveFrom="opacity-100 translate-y-0 sm:scale-100"
           leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
         >
-          <Dialog.Panel className={layout({ size })}>
+          <DialogPanel className={layout({ size })}>
             <div className="absolute right-0 top-0 hidden pr-4 pt-4 sm:block">
               <IconButton icon={XMarkIcon} onClick={onClose} label="Close" variant="secondary" />
             </div>
             {children}
-          </Dialog.Panel>
-        </Transition.Child>
+          </DialogPanel>
+        </TransitionChild>
       </div>
     </div>
   );
@@ -110,8 +108,7 @@ function Layout({ position = 'center', size, onClose, children }: LayoutProps) {
 
 function Background() {
   return (
-    <Transition.Child
-      as={Fragment}
+    <TransitionChild
       enter="ease-out duration-300"
       enterFrom="opacity-0"
       enterTo="opacity-100"
@@ -120,6 +117,6 @@ function Background() {
       leaveTo="opacity-0"
     >
       <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
-    </Transition.Child>
+    </TransitionChild>
   );
 }

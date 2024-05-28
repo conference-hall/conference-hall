@@ -61,11 +61,13 @@ export default function ProposalReviewsRoute() {
 
       <div className="space-y-4">
         <div className="space-y-4">
-          <div className="flex gap-2">
+          <div className="flex flex-col gap-2 sm:flex-row">
             <SearchInput />
-            <FiltersMenu />
-            <SortMenu />
-            <ExportMenu />
+            <div className="flex gap-2">
+              <FiltersMenu />
+              <SortMenu />
+              <ExportMenu />
+            </div>
           </div>
           <FiltersTags filters={filters} />
         </div>

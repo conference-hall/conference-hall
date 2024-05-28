@@ -1,4 +1,14 @@
-import { Popover, RadioGroup } from '@headlessui/react';
+import {
+  Fieldset,
+  Label,
+  Legend,
+  Popover,
+  PopoverButton,
+  PopoverOverlay,
+  PopoverPanel,
+  Radio,
+  RadioGroup,
+} from '@headlessui/react';
 import { AdjustmentsHorizontalIcon } from '@heroicons/react/20/solid';
 import { Form, useLocation, useSearchParams } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
@@ -13,16 +23,32 @@ import { reviewOptions, statusOptions } from './filters';
 
 export function FiltersMenu() {
   return (
-    <Popover className="sm:relative shrink-0">
-      <Popover.Button className={button({ variant: 'secondary' })}>
-        <AdjustmentsHorizontalIcon className="h-4 w-4 text-gray-500" />
-        <span className="hidden sm:inline">Filters</span>
-      </Popover.Button>
-      <Popover.Overlay className="fixed inset-0 z-10 bg-black opacity-30 sm:hidden" />
-      <Popover.Panel className="fixed bottom-0 w-full sm:absolute sm:bottom-auto sm:w-96 right-0 z-10 mt-2 origin-top-right sm:rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-        {({ close }) => <FiltersContent close={close} />}
-      </Popover.Panel>
-    </Popover>
+    <>
+      {/* Desktop */}
+      <Popover className="hidden sm:block">
+        <PopoverButton className={button({ variant: 'secondary' })}>
+          <AdjustmentsHorizontalIcon className="h-4 w-4 text-gray-500" />
+          <span>Filters</span>
+        </PopoverButton>
+        <PopoverPanel
+          anchor={{ to: 'bottom end', gap: '8px' }}
+          className="z-10 w-96 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+        >
+          {({ close }) => <FiltersContent close={close} />}
+        </PopoverPanel>
+      </Popover>
+      {/* Mobile */}
+      <Popover className="sm:hidden">
+        <PopoverButton className={button({ variant: 'secondary' })}>
+          <AdjustmentsHorizontalIcon className="h-4 w-4 text-gray-500" />
+          <span>Filters</span>
+        </PopoverButton>
+        <PopoverOverlay className="fixed inset-0 z-10 bg-black/15" />
+        <PopoverPanel className="fixed bottom-0 left-0 z-10 w-full bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+          {({ close }) => <FiltersContent close={close} />}
+        </PopoverPanel>
+      </Popover>
+    </>
   );
 }
 
@@ -113,23 +139,25 @@ type FiltersRadioProps = {
 
 function FiltersRadio({ label, name, defaultValue, options, className }: FiltersRadioProps) {
   return (
-    <RadioGroup name={name} defaultValue={defaultValue} className={className}>
-      <RadioGroup.Label className="text-gray-600 text-sm font-medium">{label}</RadioGroup.Label>
-      <div className="flex gap-2 flex-wrap mt-1">
-        {options.map((option) => (
-          <RadioGroup.Option
-            key={option.name}
-            value={option.value}
-            className={({ checked }) =>
-              cx('cursor-pointer', button({ variant: 'secondary', size: 's' }), {
-                '!bg-indigo-100 ring-indigo-200 text-indigo-700 hover:bg-indigo-100': checked,
-              })
-            }
-          >
-            <RadioGroup.Label as="span">{option.name}</RadioGroup.Label>
-          </RadioGroup.Option>
-        ))}
-      </div>
-    </RadioGroup>
+    <Fieldset className={className}>
+      <Legend className="text-gray-600 text-sm font-medium">{label}</Legend>
+      <RadioGroup name={name} defaultValue={defaultValue}>
+        <div className="flex gap-2 flex-wrap mt-1">
+          {options.map((option) => (
+            <Radio
+              key={option.name}
+              value={option.value}
+              className={({ checked }) =>
+                cx('cursor-pointer', button({ variant: 'secondary', size: 's' }), {
+                  '!bg-indigo-100 ring-indigo-200 text-indigo-700 hover:bg-indigo-100': checked,
+                })
+              }
+            >
+              <Label>{option.name}</Label>
+            </Radio>
+          ))}
+        </div>
+      </RadioGroup>
+    </Fieldset>
   );
 }

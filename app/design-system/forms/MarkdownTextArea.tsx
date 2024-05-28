@@ -92,7 +92,7 @@ function MardownPreviewModal({ markdown, isOpen, onClose }: MardownPreviewModalP
   return (
     <Dialog className="fixed inset-0 z-40 overflow-y-auto" open={isOpen} onClose={onClose}>
       <div className="block min-h-screen p-0 px-4 pb-20 pt-4 text-center">
-        <Dialog.Overlay className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
         <div className="absolute right-0 top-0 hidden pr-4 pt-4 sm:block">
           <button
             type="button"

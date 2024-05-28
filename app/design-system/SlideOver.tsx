@@ -1,4 +1,4 @@
-import { Dialog } from '@headlessui/react';
+import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
 
@@ -17,14 +17,14 @@ export default function SlideOver({ open, size = 'base', onClose, children }: Pr
       <div className="fixed inset-0 overflow-hidden">
         <div className="absolute inset-0 overflow-hidden">
           <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full">
-            <Dialog.Panel
+            <DialogPanel
               className={cx('pointer-events-auto w-screen', {
                 'max-w-lg': size === 'base',
                 'max-w-2xl': size === 'l',
               })}
             >
               <div className="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl">{children}</div>
-            </Dialog.Panel>
+            </DialogPanel>
           </div>
         </div>
       </div>
@@ -39,7 +39,7 @@ function Content({ title, children, onClose, className }: ContentProps) {
     <div className="flex min-h-0 flex-1 flex-col overflow-y-scroll py-6">
       <div className="px-4 sm:px-6">
         <div className="flex items-start justify-between">
-          <Dialog.Title className="text-base font-semibold leading-6 text-gray-900">{title}</Dialog.Title>
+          <DialogTitle className="text-base font-semibold leading-6 text-gray-900">{title}</DialogTitle>
           <div className="ml-3 flex h-7 items-center">
             <button
               type="button"

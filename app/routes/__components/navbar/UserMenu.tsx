@@ -1,6 +1,6 @@
-import { Dialog, Transition } from '@headlessui/react';
+import { Dialog, DialogPanel, Transition } from '@headlessui/react';
 import {
-  ArrowRightOnRectangleIcon,
+  ArrowRightStartOnRectangleIcon,
   BellIcon,
   HomeIcon,
   MagnifyingGlassIcon,
@@ -11,7 +11,7 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline';
 import { Link } from '@remix-run/react';
-import { Fragment, useState } from 'react';
+import { useState } from 'react';
 
 import { Avatar, AvatarName } from '~/design-system/Avatar.tsx';
 import { Text } from '~/design-system/Typography.tsx';
@@ -35,14 +35,14 @@ export function UserMenu({ email, name, picture, teams, isOrganizer, notificatio
     <>
       <OpenButton name={name} picture={picture} notificationsCount={notificationsCount} onClick={handleOpen} />
 
-      <Transition.Root show={open} as={Fragment}>
+      <Transition show={open}>
         <Dialog as="div" className="relative z-20" onClose={setOpen}>
           <div className="fixed inset-0 bg-gray-500 bg-opacity-20 transition-opacity" />
 
           <div className="fixed inset-0 overflow-hidden">
             <div className="absolute inset-0 overflow-hidden">
               <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
-                <Dialog.Panel className="pointer-events-auto w-screen max-w-xs">
+                <DialogPanel className="pointer-events-auto w-screen max-w-xs">
                   <nav
                     aria-label="User navigation"
                     className="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl"
@@ -110,17 +110,17 @@ export function UserMenu({ email, name, picture, teams, isOrganizer, notificatio
 
                       <Divider />
 
-                      <MenuLink to="/logout" icon={ArrowRightOnRectangleIcon} onClick={handleClose}>
+                      <MenuLink to="/logout" icon={ArrowRightStartOnRectangleIcon} onClick={handleClose}>
                         Sign out
                       </MenuLink>
                     </ul>
                   </nav>
-                </Dialog.Panel>
+                </DialogPanel>
               </div>
             </div>
           </div>
         </Dialog>
-      </Transition.Root>
+      </Transition>
     </>
   );
 }

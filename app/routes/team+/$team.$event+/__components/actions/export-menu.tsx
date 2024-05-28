@@ -1,4 +1,4 @@
-import { Menu } from '@headlessui/react';
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import { ArrowDownTrayIcon, CodeBracketIcon } from '@heroicons/react/20/solid';
 import { Squares2X2Icon } from '@heroicons/react/24/outline';
 import { useParams, useSearchParams } from '@remix-run/react';
@@ -23,12 +23,15 @@ export function ExportMenu() {
 
   return (
     <Menu as="div" className="relative inline-block text-left">
-      <Menu.Button className={button({ variant: 'secondary' })}>
+      <MenuButton className={button({ variant: 'secondary' })}>
         <ArrowDownTrayIcon className="h-4 w-4 text-gray-500" />
-        <span className="hidden sm:inline">Export</span>
-      </Menu.Button>
+        <span>Export</span>
+      </MenuButton>
       <MenuTransition>
-        <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <MenuItems
+          anchor={{ to: 'bottom end', gap: '8px' }}
+          className="z-10 w-56 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+        >
           <div className="py-1">
             {exportItems.map(({ name, path, icon }) => (
               <ExportMenuItem
@@ -40,7 +43,7 @@ export function ExportMenu() {
               </ExportMenuItem>
             ))}
           </div>
-        </Menu.Items>
+        </MenuItems>
       </MenuTransition>
     </Menu>
   );
@@ -56,21 +59,21 @@ function ExportMenuItem({
   children: React.ReactNode;
 }) {
   return (
-    <Menu.Item as={Fragment}>
-      {({ active }) => (
+    <MenuItem as={Fragment}>
+      {({ focus }) => (
         <a
           href={href}
           target="_blank"
           rel="noreferrer"
           className={cx(
             'relative flex items-center gap-3 px-4 py-2 text-sm',
-            active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+            focus ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
           )}
         >
           <Icon className="h-4 w-4 text-gray-400" aria-hidden="true" />
           {children}
         </a>
       )}
-    </Menu.Item>
+    </MenuItem>
   );
 }

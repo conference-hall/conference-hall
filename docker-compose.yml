@@ -14,7 +14,6 @@ services:
   redis:
     container_name: ch_redis
     image: redis:7-alpine
-    restart: always
     ports:
       - '6379:6379'
     command: redis-server --save 20 1 --loglevel warning
