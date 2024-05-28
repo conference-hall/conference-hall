@@ -17,6 +17,11 @@ export default defineConfig({
           ignoredRouteFiles: ['.*', '**/__components/*', '**/*.css', '**/*.test.{js,jsx,ts,tsx}'],
         });
       },
+      future: {
+        v3_fetcherPersist: true,
+        v3_relativeSplatPath: true,
+        v3_throwAbortReason: true,
+      },
     }),
     tsconfigPaths(),
     withSentrySourcemap
