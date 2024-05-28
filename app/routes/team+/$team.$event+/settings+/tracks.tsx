@@ -65,7 +65,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 export default function EventTracksSettingsRoute() {
   const { event } = useEvent();
 
-  const fetcher = useFetcher();
+  const fetcher = useFetcher<typeof action>();
   const handleUpdateSettings = (name: string, checked: boolean) => {
     fetcher.submit({ _action: 'update-track-settings', [name]: String(checked) }, { method: 'POST' });
   };

@@ -30,7 +30,7 @@ export const action = async ({ request, params }: LoaderFunctionArgs) => {
 
 export default function EventReviewSettingsRoute() {
   const { event } = useEvent();
-  const fetcher = useFetcher();
+  const fetcher = useFetcher<typeof action>();
 
   return (
     <>

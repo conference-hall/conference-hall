@@ -1,5 +1,5 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { redirect } from '@remix-run/node';
+import { json, redirect } from '@remix-run/node';
 import { useFetcher, useSearchParams } from '@remix-run/react';
 import {
   getRedirectResult,
@@ -27,7 +27,7 @@ export const meta = mergeMeta(() => [{ title: 'Login | Conference Hall' }]);
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const userId = await getSessionUserId(request);
   if (userId) return redirect('/');
-  return null;
+  return json(null);
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -42,7 +42,7 @@ export default function Login() {
   const loading = searchParams.get('loading');
   const redirectTo = searchParams.get('redirectTo') || '/';
 
-  const { submit } = useFetcher();
+  const { submit } = useFetcher<typeof action>();
 
   useEffect(() => {
     const clientAuth = getClientAuth();

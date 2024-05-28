@@ -4,10 +4,12 @@ import { ToggleGroup } from '~/design-system/forms/Toggles.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2 } from '~/design-system/Typography.tsx';
 
+import type { action } from '../cfp';
+
 type Props = { cfpStart?: string };
 
 export function MeetupCfpOpening({ cfpStart }: Props) {
-  const fetcher = useFetcher();
+  const fetcher = useFetcher<typeof action>();
 
   const handleChange = (checked: boolean) => {
     fetcher.submit(

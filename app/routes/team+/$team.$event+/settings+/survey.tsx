@@ -47,7 +47,7 @@ export const action = async ({ request, params }: LoaderFunctionArgs) => {
 export default function EventSurveySettingsRoute() {
   const { event } = useEvent();
   const { questions } = useLoaderData<typeof loader>();
-  const fetcher = useFetcher();
+  const fetcher = useFetcher<typeof action>();
 
   return (
     <>
