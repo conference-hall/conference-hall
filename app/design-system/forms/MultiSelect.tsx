@@ -42,9 +42,9 @@ export default function MultiSelect({ name, label, placeholder, options, default
       <Listbox name={name} value={selected} onChange={setSelected} multiple>
         {({ open }) => (
           <div className="relative mt-2">
-            <ListboxButton className="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 text-sm">
+            <ListboxButton className="relative w-full cursor-default rounded-md border border-gray-300 bg-white h-9 pl-2 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 text-sm">
               {selected.length > 0 ? (
-                <div className="space-x-2">
+                <div className="space-x-1">
                   <SelectedOptions selectedValues={selected} options={options} />
                 </div>
               ) : (
@@ -60,17 +60,16 @@ export default function MultiSelect({ name, label, placeholder, options, default
             <SelectTransition show={open}>
               <ListboxOptions
                 anchor={{ to: 'bottom start', gap: '4px' }}
-                className="z-20 w-[var(--button-width)] rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none text-sm"
+                className="z-20 w-[var(--button-width)] [--anchor-max-height:300px] rounded-md bg-white py-1  text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
               >
                 {options.map((option) => (
                   <ListboxOption
                     key={option.value}
                     value={option.value}
                     className={({ focus }) =>
-                      cx(
-                        focus ? 'bg-indigo-600 text-white' : 'text-gray-900',
-                        'relative cursor-default select-none py-2 pl-3 pr-9',
-                      )
+                      cx('relative cursor-default select-none py-2 pl-3 pr-9 text-gray-900', {
+                        'bg-gray-100': focus,
+                      })
                     }
                   >
                     {({ selected, focus }) => (
@@ -80,12 +79,7 @@ export default function MultiSelect({ name, label, placeholder, options, default
                         </span>
 
                         {selected ? (
-                          <span
-                            className={cx(
-                              focus ? 'text-white' : 'text-indigo-600',
-                              'absolute inset-y-0 right-0 flex items-center pr-4',
-                            )}
-                          >
+                          <span className="text-indigo-600 absolute inset-y-0 right-0 flex items-center pr-4">
                             <CheckIcon className="h-5 w-5" aria-hidden="true" />
                           </span>
                         ) : null}
