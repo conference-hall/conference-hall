@@ -60,7 +60,7 @@ export default function MultiSelect({ name, label, placeholder, options, default
             <SelectTransition show={open}>
               <ListboxOptions
                 anchor={{ to: 'bottom start', gap: '4px' }}
-                className="z-20 w-[var(--button-width)] [--anchor-max-height:300px] rounded-md bg-white py-1  text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                className="z-20 w-[var(--button-width)] [--anchor-max-height:300px] rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
               >
                 {options.map((option) => (
                   <ListboxOption
@@ -72,7 +72,7 @@ export default function MultiSelect({ name, label, placeholder, options, default
                       })
                     }
                   >
-                    {({ selected, focus }) => (
+                    {({ selected }) => (
                       <>
                         <span className={cx(selected ? 'font-semibold' : 'font-normal', 'block truncate')}>
                           {option.label}
