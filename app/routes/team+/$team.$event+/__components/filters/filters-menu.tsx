@@ -23,20 +23,32 @@ import { reviewOptions, statusOptions } from './filters';
 
 export function FiltersMenu() {
   return (
-    <Popover className="sm:relative shrink-0">
-      <PopoverButton className={button({ variant: 'secondary' })}>
-        <AdjustmentsHorizontalIcon className="h-4 w-4 text-gray-500" />
-        <span className="hidden sm:inline">Filters</span>
-      </PopoverButton>
-      <PopoverOverlay className="fixed inset-0 z-10 bg-black/15 sm:hidden" />
-      <PopoverPanel
-        portal
-        anchor="bottom end"
-        className="z-10 w-full sm:w-96 sm:rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 [--anchor-gap:8px] focus:outline-none"
-      >
-        {({ close }) => <FiltersContent close={close} />}
-      </PopoverPanel>
-    </Popover>
+    <>
+      {/* Desktop */}
+      <Popover className="hidden sm:block">
+        <PopoverButton className={button({ variant: 'secondary' })}>
+          <AdjustmentsHorizontalIcon className="h-4 w-4 text-gray-500" />
+          <span>Filters</span>
+        </PopoverButton>
+        <PopoverPanel
+          anchor={{ to: 'bottom end', gap: '8px' }}
+          className="z-10 w-96 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+        >
+          {({ close }) => <FiltersContent close={close} />}
+        </PopoverPanel>
+      </Popover>
+      {/* Mobile */}
+      <Popover className="sm:hidden">
+        <PopoverButton className={button({ variant: 'secondary' })}>
+          <AdjustmentsHorizontalIcon className="h-4 w-4 text-gray-500" />
+          <span>Filters</span>
+        </PopoverButton>
+        <PopoverOverlay className="fixed inset-0 z-10 bg-black/15" />
+        <PopoverPanel className="fixed bottom-0 left-0 z-10 w-full bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+          {({ close }) => <FiltersContent close={close} />}
+        </PopoverPanel>
+      </Popover>
+    </>
   );
 }
 

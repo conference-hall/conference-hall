@@ -25,7 +25,7 @@ export function ExportMenu() {
     <Menu as="div" className="relative inline-block text-left">
       <MenuButton className={button({ variant: 'secondary' })}>
         <ArrowDownTrayIcon className="h-4 w-4 text-gray-500" />
-        <span className="hidden sm:inline">Export</span>
+        <span>Export</span>
       </MenuButton>
       <MenuTransition>
         <MenuItems

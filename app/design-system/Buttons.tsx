@@ -17,8 +17,8 @@ export const button = cva(
         secondary: 'text-gray-700 bg-white hover:bg-gray-50 ring-1 ring-inset ring-gray-300',
       },
       size: {
-        s: 'px-2.5 py-1.5 text-xs font-semibold',
-        m: 'px-3 py-2 text-sm font-semibold',
+        s: 'h-7 px-2.5 py-1.5 text-xs font-semibold',
+        m: 'h-9 px-3 py-2 text-sm font-semibold',
       },
       disabled: { true: 'opacity-50 cursor-not-allowed' },
       loading: { true: 'opacity-50 cursor-not-allowed' },

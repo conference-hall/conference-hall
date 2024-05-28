@@ -22,7 +22,7 @@ export function SortMenu() {
     <Menu as="div" className="relative inline-block text-left">
       <MenuButton className={button({ variant: 'secondary' })}>
         <ArrowsUpDownIcon className="h-4 w-4 text-gray-500" />
-        <span className="hidden sm:inline">Sort</span>
+        <span>Sort</span>
       </MenuButton>
       <MenuTransition>
         <MenuItems
