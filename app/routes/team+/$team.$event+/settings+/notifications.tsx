@@ -52,7 +52,7 @@ export const action = async ({ request, params }: LoaderFunctionArgs) => {
 export default function EventNotificationsSettingsRoute() {
   const { event } = useEvent();
   const errors = useActionData<typeof action>();
-  const fetcher = useFetcher();
+  const fetcher = useFetcher<typeof action>();
 
   const handleChangeNotification = (name: string, checked: boolean) => {
     const form = new FormData();

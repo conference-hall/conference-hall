@@ -5,7 +5,7 @@ import { installGlobals } from '@remix-run/node';
 import { disconnectDB, resetDB } from './db-helpers.ts';
 
 // This installs globals such as "fetch", "Response", "Request" and "Headers.
-installGlobals();
+installGlobals({ nativeFetch: true });
 
 // DB resets and disconnect
 afterEach(async () => {

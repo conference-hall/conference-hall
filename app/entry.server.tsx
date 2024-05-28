@@ -17,6 +17,9 @@ initMonitoring();
 
 const ABORT_DELAY = 5_000;
 
+// Reject all pending promises from handler functions after 5 seconds
+export const streamTimeout = 5_000;
+
 export default function handleRequest(
   request: Request,
   responseStatusCode: number,
@@ -31,7 +34,7 @@ export default function handleRequest(
     const nonce = loadContext?.cspNonce as string;
     const { pipe, abort } = renderToPipeableStream(
       <NonceContext.Provider value={nonce}>
-        <RemixServer abortDelay={ABORT_DELAY} context={remixContext} url={request.url} />
+        <RemixServer abortDelay={ABORT_DELAY} context={remixContext} url={request.url} nonce={nonce} />
       </NonceContext.Provider>,
       {
         [callbackName]() {
@@ -60,7 +63,8 @@ export default function handleRequest(
       },
     );
 
-    setTimeout(abort, ABORT_DELAY);
+    // Automatically timeout the react renderer after 10 seconds
+    setTimeout(abort, 10_000);
   });
 }
 

@@ -11,7 +11,7 @@ import helmet from 'helmet';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import morgan from 'morgan';
 
-installGlobals();
+installGlobals({ nativeFetch: true });
 
 run();
 

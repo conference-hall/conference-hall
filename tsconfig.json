@@ -3,7 +3,7 @@
   "include": ["env.d.ts", "**/*.ts", "**/*.tsx", "./app/.server/**/*.ts", "./app/.server/**/*.tsx"],
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
-    "types": ["vitest/globals"],
+    "types": ["vitest/globals", "@remix-run/react/future/single-fetch.d.ts"],
     "isolatedModules": true,
     "esModuleInterop": true,
     "jsx": "react-jsx",
