@@ -31,7 +31,7 @@ export default function handleRequest(
 
   return new Promise((resolve, reject) => {
     let shellRendered = false;
-    const nonce = loadContext?.cspNonce as string;
+    const nonce = String(loadContext.cspNonce) ?? undefined;
     const { pipe, abort } = renderToPipeableStream(
       <NonceContext.Provider value={nonce}>
         <RemixServer abortDelay={ABORT_DELAY} context={remixContext} url={request.url} nonce={nonce} />
@@ -60,6 +60,7 @@ export default function handleRequest(
           responseStatusCode = 500;
           if (shellRendered) console.error(error);
         },
+        nonce,
       },
     );
 

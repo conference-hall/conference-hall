@@ -6,7 +6,7 @@
       "createdAt": "1639517863303",
       "lastLoginAt": "1639517863303",
       "displayName": "Clark Kent",
-      "photoUrl": "https://s3.amazonaws.com/comicgeeks/characters/avatars/19.jpg",
+      "photoUrl": "https://i.pravatar.cc/150?img=13",
       "email": "superman@example.com",
       "emailVerified": true,
       "providerUserInfo": [
@@ -15,7 +15,7 @@
           "rawId": "0166865576143941033104591757725674640474",
           "federatedId": "0166865576143941033104591757725674640474",
           "displayName": "Clark Kent",
-          "photoUrl": "https://s3.amazonaws.com/comicgeeks/characters/avatars/19.jpg",
+          "photoUrl": "https://i.pravatar.cc/150?img=13",
           "email": "superman@example.com"
         }
       ],
@@ -26,7 +26,7 @@
       "createdAt": "1639517779481",
       "lastLoginAt": "1639517779482",
       "displayName": "Bruce Wayne",
-      "photoUrl": "http://multiversitystatic.s3.amazonaws.com/uploads/2013/02/Bruce-Wayne-Jordan-Gibson-Art-Of-The-Week.png",
+      "photoUrl": "https://i.pravatar.cc/150?img=56",
       "email": "batman@example.com",
       "emailVerified": false,
       "providerUserInfo": [
@@ -35,7 +35,7 @@
           "rawId": "9281832045646629538168474915239394725820",
           "federatedId": "9281832045646629538168474915239394725820",
           "displayName": "Bruce Wayne",
-          "photoUrl": "http://multiversitystatic.s3.amazonaws.com/uploads/2013/02/Bruce-Wayne-Jordan-Gibson-Art-Of-The-Week.png",
+          "photoUrl": "https://i.pravatar.cc/150?img=56",
           "email": "bruce@example.com"
         }
       ],
@@ -49,7 +49,7 @@
       "createdAt": "1639517985408",
       "lastLoginAt": "1639517985408",
       "displayName": "Peter Parker",
-      "photoUrl": "https://www.mdcu-comics.fr/uploads/news/2020/09/news_illustre_1600620975_30.jpg",
+      "photoUrl": "https://i.pravatar.cc/150?img=8",
       "email": "spiderman@example.com",
       "emailVerified": true,
       "providerUserInfo": [
@@ -58,7 +58,7 @@
           "rawId": "8057270383691617901095557511400607768665",
           "federatedId": "8057270383691617901095557511400607768665",
           "displayName": "Peter Parker",
-          "photoUrl": "https://www.mdcu-comics.fr/uploads/news/2020/09/news_illustre_1600620975_30.jpg",
+          "photoUrl": "https://i.pravatar.cc/150?img=8",
           "email": "spiderman@example.com"
         }
       ],
@@ -69,7 +69,7 @@
       "createdAt": "1639517934530",
       "lastLoginAt": "1639517934530",
       "displayName": "Harley Quinn",
-      "photoUrl": "https://i.pinimg.com/736x/21/f6/67/21f667935097562f2686d6927fc3dd01.jpg",
+      "photoUrl": "https://i.pravatar.cc/150?img=10",
       "email": "quinn@example.com",
       "emailVerified": true,
       "providerUserInfo": [
@@ -78,7 +78,7 @@
           "rawId": "5630529428478709098558971090098382574066",
           "federatedId": "5630529428478709098558971090098382574066",
           "displayName": "Harley Quinn",
-          "photoUrl": "https://i.pinimg.com/736x/21/f6/67/21f667935097562f2686d6927fc3dd01.jpg",
+          "photoUrl": "https://i.pravatar.cc/150?img=10",
           "email": "quinn@example.com"
         }
       ],
@@ -89,14 +89,14 @@
       "createdAt": "1639516967954",
       "lastLoginAt": "1639517332621",
       "displayName": "Matthew Murdock",
-      "photoUrl": "https://avatarfiles.alphacoders.com/159/159860.jpg",
+      "photoUrl": "https://i.pravatar.cc/150?img=14",
       "providerUserInfo": [
         {
           "providerId": "google.com",
           "rawId": "3259868021647173840678693909727920934503",
           "federatedId": "3259868021647173840678693909727920934503",
           "displayName": "Matthew Murdock",
-          "photoUrl": "https://avatarfiles.alphacoders.com/159/159860.jpg",
+          "photoUrl": "https://i.pravatar.cc/150?img=14",
           "email": "daredevil@example.com"
         }
       ],
