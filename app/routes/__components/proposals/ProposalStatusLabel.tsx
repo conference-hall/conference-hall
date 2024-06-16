@@ -28,7 +28,7 @@ export function ProposalStatusLabel({ status }: Props) {
 
 export function Draft() {
   return (
-    <IconLabel icon={ExclamationTriangleIcon} variant="secondary">
+    <IconLabel icon={ExclamationTriangleIcon} variant="secondary" size="xs">
       Draft proposal
     </IconLabel>
   );
@@ -36,7 +36,7 @@ export function Draft() {
 
 function Submitted() {
   return (
-    <IconLabel icon={CheckCircleIcon} variant="secondary">
+    <IconLabel icon={CheckCircleIcon} variant="secondary" size="xs">
       Submitted
     </IconLabel>
   );
@@ -44,7 +44,7 @@ function Submitted() {
 
 function DeliberationPending() {
   return (
-    <IconLabel icon={ClockIcon} variant="secondary">
+    <IconLabel icon={ClockIcon} variant="secondary" size="xs">
       Deliberation pending
     </IconLabel>
   );
@@ -52,7 +52,7 @@ function DeliberationPending() {
 
 function AcceptedByOrganizers() {
   return (
-    <IconLabel icon={StarIcon} variant="secondary">
+    <IconLabel icon={StarIcon} variant="secondary" size="xs">
       Accepted
     </IconLabel>
   );
@@ -60,7 +60,7 @@ function AcceptedByOrganizers() {
 
 function RejectedByOrganizers() {
   return (
-    <IconLabel icon={XCircleIcon} variant="secondary">
+    <IconLabel icon={XCircleIcon} variant="secondary" size="xs">
       Declined by organizers
     </IconLabel>
   );
@@ -68,7 +68,7 @@ function RejectedByOrganizers() {
 
 function ConfirmedBySpeaker() {
   return (
-    <IconLabel icon={CheckCircleIcon} variant="secondary">
+    <IconLabel icon={CheckCircleIcon} variant="secondary" size="xs">
       Participation confirmed
     </IconLabel>
   );
@@ -76,7 +76,7 @@ function ConfirmedBySpeaker() {
 
 function DeclinedBySpeaker() {
   return (
-    <IconLabel icon={XCircleIcon} variant="secondary">
+    <IconLabel icon={XCircleIcon} variant="secondary" size="xs">
       Declined by you
     </IconLabel>
   );

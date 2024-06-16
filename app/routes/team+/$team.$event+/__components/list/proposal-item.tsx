@@ -20,6 +20,8 @@ type ProposalItemProps = {
 
 export function ProposalItem({ proposal, isSelected, isAllPagesSelected, toggle }: ProposalItemProps) {
   const [params] = useSearchParams();
+  const { team } = useTeam();
+
   const { id, title, reviews } = proposal;
   const { you, summary } = reviews;
 
@@ -39,9 +41,12 @@ export function ProposalItem({ proposal, isSelected, isAllPagesSelected, toggle 
         className="flex items-center justify-between gap-4 pr-4 py-4 sm:pr-6 grow min-w-0"
       >
         <div className="space-y-1 min-w-0">
-          <Text weight="semibold" truncate>
-            {title}
-          </Text>
+          <div className="flex items-center gap-1">
+            <Text weight="semibold" truncate>
+              {title}
+            </Text>
+            {team.role !== 'REVIEWER' && deliberationIcon(proposal)}
+          </div>
           <div className="flex gap-1">
             <ProposalDetails proposal={proposal} />
           </div>
@@ -65,22 +70,21 @@ function ProposalDetails({ proposal }: { proposal: ProposalData }) {
   if (team.role === 'REVIEWER') {
     return (
       <Text size="xs" variant="secondary">
-        <Join separator={<span> • </span>}>
-          {speakers.length ? `by ${speakers.map((a) => a.name).join(', ')}` : null}
-          {reviewLabel(proposal)}
-        </Join>
+        {speakers.length ? `by ${speakers.map((a) => a.name).join(', ')} - ` : null}
+        {reviewLabel(proposal)}
       </Text>
     );
   }
 
   return (
     <Text size="xs" variant="secondary">
-      <Join separator={<span> • </span>}>
-        {speakers.length ? `by ${speakers.map((a) => a.name).join(', ')}` : null}
+      {speakers.length ? `by ${speakers.map((a) => a.name).join(', ')} - ` : null}
+      <Join separator={<span> &gt; </span>}>
+        {reviewLabel(proposal)}
         {deliberationLabel(proposal)}
+        {publicationLabel(proposal)}
         {confirmationLabel(proposal)}
       </Join>
-      {deliberationIcon(proposal)}
     </Text>
   );
 }
@@ -96,11 +100,34 @@ function deliberationLabel({ deliberationStatus, publicationStatus, confirmation
   if (confirmationStatus) return null;
   switch (deliberationStatus) {
     case 'ACCEPTED':
-      return publicationStatus === 'PUBLISHED' ? 'Accepted (published)' : 'Accepted (not published)';
+      return 'Accepted';
     case 'REJECTED':
-      return publicationStatus === 'PUBLISHED' ? 'Rejected (published)' : 'Rejected (not published)';
+      return 'Rejected';
     case 'PENDING':
-      return 'Pending';
+      return null;
+  }
+}
+
+function deliberationIcon({ deliberationStatus, confirmationStatus }: ProposalData) {
+  if (deliberationStatus === 'ACCEPTED' && confirmationStatus === 'PENDING') {
+    return <ClockIcon className="inline shrink-0 ml-1 mb-0.5 w-4 h-4 text-gray-600" aria-hidden />;
+  } else if (deliberationStatus === 'REJECTED' || confirmationStatus === 'DECLINED') {
+    return <XMarkIcon className="inline shrink-0 ml-0.5 mb-0.5 w-4 h-4 text-red-600" aria-hidden />;
+  } else if (deliberationStatus === 'ACCEPTED' || confirmationStatus === 'CONFIRMED') {
+    return <CheckIcon className="inline shrink-0 ml-0.5 mb-0.5 w-4 h-4 text-green-600" aria-hidden />;
+  }
+  return null;
+}
+
+function publicationLabel({ deliberationStatus, publicationStatus, confirmationStatus }: ProposalData) {
+  if (confirmationStatus || deliberationStatus === 'PENDING') return null;
+  switch (publicationStatus) {
+    case 'PUBLISHED':
+      return 'Published';
+    case 'NOT_PUBLISHED':
+      return 'Not published';
+    default:
+      return null;
   }
 }
 
@@ -111,17 +138,6 @@ function confirmationLabel({ deliberationStatus, confirmationStatus }: ProposalD
     return 'Confirmed by speakers';
   } else if (deliberationStatus === 'ACCEPTED' && confirmationStatus === 'DECLINED') {
     return 'Declined by speakers';
-  }
-  return null;
-}
-
-function deliberationIcon({ deliberationStatus, confirmationStatus }: ProposalData) {
-  if (deliberationStatus === 'ACCEPTED' && confirmationStatus === 'PENDING') {
-    return <ClockIcon className="inline ml-1 mb-0.5 w-4 h-4 text-gray-600" aria-hidden />;
-  } else if (deliberationStatus === 'REJECTED' || confirmationStatus === 'DECLINED') {
-    return <XMarkIcon className="inline ml-0.5 mb-0.5 w-4 h-4 text-red-600" aria-hidden />;
-  } else if (deliberationStatus === 'ACCEPTED' || confirmationStatus === 'CONFIRMED') {
-    return <CheckIcon className="inline ml-0.5 mb-0.5 w-4 h-4 text-green-600" aria-hidden />;
   }
   return null;
 }

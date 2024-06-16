@@ -35,7 +35,7 @@ export default function EventReviewSettingsRoute() {
   return (
     <>
       <Card as="section" p={8} className="space-y-6">
-        <H2>Proposals review</H2>
+        <H2>Enable proposals reviews</H2>
 
         <ToggleGroup
           label="Proposals review activation"

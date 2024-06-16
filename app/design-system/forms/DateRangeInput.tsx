@@ -47,6 +47,7 @@ export function DateRangeInput({ start, end, error, className }: Props) {
           value={toInputFormat(startDate)}
           onChange={handleStartDate}
           className="col-span-2 sm:col-span-1"
+          suppressHydrationWarning
         />
         <input type="hidden" name={start.name} value={toISOFormat(startDate)} />
         <Input
@@ -58,6 +59,7 @@ export function DateRangeInput({ start, end, error, className }: Props) {
           value={toInputFormat(endDate)}
           onChange={handleEndDate}
           className="col-span-2 sm:col-span-1"
+          suppressHydrationWarning
         />
         <input type="hidden" name={end.name} value={toISOFormat(endDate, true)} />
       </div>

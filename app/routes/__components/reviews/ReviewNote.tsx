@@ -19,14 +19,14 @@ export function GlobalReviewNote({ feeling, note, hideEmpty }: Props) {
   const { icon: Icon, color, stroke, label } = REVIEWS[feeling || 'NEUTRAL'];
   const formattedNote = formatReviewNote(note);
   return (
-    <div className={cx('flex items-center justify-end gap-1', { invisible: note === null && hideEmpty })}>
+    <div className={cx('flex items-center justify-end gap-1 w-14', { invisible: note === null && hideEmpty })}>
       <ClientOnly>
         {() => (
           <>
             <Text weight="semibold" variant="secondary">
               {formattedNote}
             </Text>
-            <Icon className={cx('h-5 w-5', color, stroke)} aria-label={`${label}: ${formattedNote}`} />
+            <Icon className={cx('h-5 w-5 shrink-0', color, stroke)} aria-label={`${label}: ${formattedNote}`} />
           </>
         )}
       </ClientOnly>
@@ -40,10 +40,6 @@ export function UserReviewNote({ feeling, note }: Props) {
   const { icon: Icon, color, stroke, label } = REVIEWS[feeling];
   const formattedNote = formatReviewNote(note);
 
-  if (feeling === 'POSITIVE' || feeling === 'NEGATIVE' || feeling === 'NO_OPINION') {
-    return <Icon className={cx('h-5 w-5', color, stroke)} aria-label={`Your review: ${label}`} />;
-  }
-
   return (
     <div className="flex items-center justify-end gap-1">
       <ClientOnly>
@@ -52,7 +48,11 @@ export function UserReviewNote({ feeling, note }: Props) {
             <Text weight="semibold" variant="secondary">
               {formattedNote}
             </Text>
-            <UserCircleIcon className="h-5 w-5 text-gray-700" aria-label={`Your review: ${formattedNote}`} />
+            {feeling === 'NEUTRAL' ? (
+              <UserCircleIcon className="h-5 w-5 text-gray-700 shrink-0" aria-label={`Your review: ${formattedNote}`} />
+            ) : (
+              <Icon className={cx('h-5 w-5 shrink-0', color, stroke)} aria-label={`Your review: ${label}`} />
+            )}
           </>
         )}
       </ClientOnly>
