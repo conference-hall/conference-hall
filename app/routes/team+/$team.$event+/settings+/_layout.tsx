@@ -37,7 +37,7 @@ const getMenuItems = (team?: string, event?: string) => [
   { to: `/team/${team}/${event}/settings/tracks`, icon: SwatchIcon, label: 'Tracks' },
   { to: `/team/${team}/${event}/settings/customize`, icon: PaintBrushIcon, label: 'Customize' },
   { to: `/team/${team}/${event}/settings/survey`, icon: QuestionMarkCircleIcon, label: 'Speaker survey' },
-  { to: `/team/${team}/${event}/settings/review`, icon: StarIcon, label: 'Proposals review' },
+  { to: `/team/${team}/${event}/settings/review`, icon: StarIcon, label: 'Reviews' },
   { to: `/team/${team}/${event}/settings/notifications`, icon: EnvelopeIcon, label: 'Email notifications' },
   { to: `/team/${team}/${event}/settings/integrations`, icon: CpuChipIcon, label: 'Slack integration' },
   { to: `/team/${team}/${event}/settings/api`, icon: CodeBracketIcon, label: 'Web API' },

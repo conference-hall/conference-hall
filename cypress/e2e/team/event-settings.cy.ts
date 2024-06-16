@@ -47,7 +47,7 @@ describe('Event settings', () => {
       settings.openSetting('Speaker survey');
       survey.isPageVisible();
 
-      settings.openSetting('Proposals review');
+      settings.openSetting('Reviews');
       review.isPageVisible();
 
       settings.openSetting('Email notifications');

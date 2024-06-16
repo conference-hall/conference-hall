@@ -7,7 +7,7 @@ class ProposalReviewSettings extends BasePage {
   }
 
   isPageVisible() {
-    cy.findByRole('heading', { name: 'Proposals review' }).should('exist');
+    cy.findByRole('heading', { name: 'Enable proposals reviews' }).should('exist');
   }
 
   toggleReview(checked: boolean) {
