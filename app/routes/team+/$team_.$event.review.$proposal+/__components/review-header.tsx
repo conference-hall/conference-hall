@@ -1,7 +1,6 @@
 import { XMarkIcon } from '@heroicons/react/20/solid';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
-import { useNavigate, useParams, useSearchParams } from '@remix-run/react';
-import { useHotkeys } from 'react-hotkeys-hook';
+import { useParams, useSearchParams } from '@remix-run/react';
 
 import { IconLink } from '~/design-system/IconButtons.tsx';
 import { Text } from '~/design-system/Typography.tsx';
@@ -11,7 +10,6 @@ import { ReviewsProgress } from '../../$team.$event+/__components/list/reviews-p
 type Props = { current: number; total: number; reviewed: number; nextId?: string; previousId?: string };
 
 export function ReviewHeader({ current, total, reviewed, nextId, previousId }: Props) {
-  const navigate = useNavigate();
   const params = useParams();
   const [searchParams] = useSearchParams();
 
@@ -21,9 +19,6 @@ export function ReviewHeader({ current, total, reviewed, nextId, previousId }: P
     previousId !== undefined ? `/team/${params.team}/${params.event}/review/${previousId}` : undefined;
   const nextPath = nextId !== undefined ? `/team/${params.team}/${params.event}/review/${nextId}` : undefined;
   const closePath = `/team/${params.team}/${params.event}`;
-
-  useHotkeys('left', () => navigate({ pathname: previousPath, search }), { enabled: isKeyEnabled(!!previousPath) });
-  useHotkeys('right', () => navigate({ pathname: nextPath, search }), { enabled: isKeyEnabled(!!nextPath) });
 
   return (
     <div className="sticky top-0 bg-white border-b border-b-gray-200 shadow-sm z-10">
@@ -53,12 +48,4 @@ export function ReviewHeader({ current, total, reviewed, nextId, previousId }: P
       </header>
     </div>
   );
-}
-
-function isKeyEnabled(defaultEnabled: boolean) {
-  return (event: Event) => {
-    if (!defaultEnabled) return false;
-    if (event.target instanceof HTMLDivElement && event.target.hasAttribute('data-review-input')) return false;
-    return true;
-  };
 }
