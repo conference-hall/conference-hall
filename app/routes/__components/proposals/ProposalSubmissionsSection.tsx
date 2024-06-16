@@ -26,7 +26,11 @@ export function ProposalSubmissionsSection({ talkId, submissions }: Props) {
         <ul className="flex gap-4">
           {submissions.map((submission) => (
             <li key={submission.slug}>
-              <Link to={`/${submission.slug}/proposals`} className="flex gap-2 hover:bg-gray-100 p-2 rounded-md">
+              <Link
+                to={`/${submission.slug}/proposals`}
+                aria-label={`Go to ${submission.name}`}
+                className="flex gap-2 hover:bg-gray-100 p-2 rounded-md"
+              >
                 <Avatar picture={submission.logo} name={submission.name} square size="m" aria-hidden />
                 <div className="flex flex-col gap-0.5 truncate">
                   <Text weight="medium" truncate>
