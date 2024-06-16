@@ -37,6 +37,11 @@ export function PublicationCard({ id, title, subtitle, statistics, to }: Props) 
             Publish results &rarr;
           </Link>
         </div>
+      ) : statistics.published === 0 ? (
+        <div className="flex items-center py-2">
+          <CheckIcon className="h-5 w-5 mr-1 text-green-600" aria-hidden="true" />
+          <Text weight="semibold">Nothing to publish yet</Text>
+        </div>
       ) : (
         <div className="flex items-center py-2">
           <CheckIcon className="h-5 w-5 mr-1 text-green-600" aria-hidden="true" />
