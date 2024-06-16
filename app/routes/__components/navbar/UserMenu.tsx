@@ -59,7 +59,17 @@ export function UserMenu({ email, name, picture, teams, isOrganizer, notificatio
                         Search events
                       </MenuLink>
 
+                      <MenuLink to="/notifications" icon={BellIcon} count={notificationsCount} onClick={handleClose}>
+                        Notifications
+                      </MenuLink>
+
                       <Divider />
+
+                      <li className="px-2 pb-2">
+                        <Text size="xs" weight="semibold" variant="secondary">
+                          Speaker
+                        </Text>
+                      </li>
 
                       <MenuLink to="/speaker" icon={HomeIcon} onClick={handleClose}>
                         Home
@@ -71,10 +81,6 @@ export function UserMenu({ email, name, picture, teams, isOrganizer, notificatio
 
                       <MenuLink to="/speaker/profile" icon={UserIcon} onClick={handleClose}>
                         Profile
-                      </MenuLink>
-
-                      <MenuLink to="/notifications" icon={BellIcon} count={notificationsCount} onClick={handleClose}>
-                        Notifications
                       </MenuLink>
 
                       <Divider />

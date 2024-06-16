@@ -16,7 +16,6 @@ import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { parseWithZod } from '~/libs/zod-parser.ts';
-import { Navbar } from '~/routes/__components/navbar/Navbar.tsx';
 import { useUser } from '~/routes/__components/useUser.tsx';
 
 import { ActivityFeed as Feed } from './__components/activity-feed.tsx';
@@ -101,11 +100,9 @@ export default function ProposalReviewLayoutRoute() {
 
   return (
     <>
-      <Navbar user={user} withSearch />
-
       <ReviewHeader {...pagination} />
 
-      <div className="mx-auto max-w-7xl p-4 py-6">
+      <div className="mx-auto max-w-7xl px-4">
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-10">
           <div className="space-y-4 lg:col-span-7">
             <ProposalPage proposal={proposal} />

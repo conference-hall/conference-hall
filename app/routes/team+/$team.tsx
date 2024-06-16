@@ -4,14 +4,12 @@ import { Outlet, useLoaderData, useRouteLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { UserTeam } from '~/.server/team/UserTeam';
-import { Container } from '~/design-system/layouts/Container';
 import { PageHeader } from '~/design-system/layouts/PageHeader';
 import { requireSession } from '~/libs/auth/session';
 import { mergeMeta } from '~/libs/meta/merge-meta';
-import { Navbar } from '~/routes/__components/navbar/Navbar.tsx';
 import { useUser } from '~/routes/__components/useUser';
 
-import TeamBreadcrumb from '../__components/teams/TeamBreadcrumb';
+import { NavbarOrga } from '../__components/navbar/NavbarOrga';
 import type { loader as routeEventLoader } from './$team.$event+/_layout';
 import { EventTabs } from './$team+/__components/EventTabs';
 import { TeamTabs } from './$team+/__components/TeamTabs';
@@ -33,17 +31,14 @@ export default function TeamLayout() {
 
   return (
     <>
-      <Navbar user={user} withSearch />
+      <NavbarOrga user={user} />
 
-      <PageHeader>
-        <Container>
-          <TeamBreadcrumb team={team} event={event} />
-          {event ? (
-            <EventTabs teamSlug={team.slug} eventSlug={event.slug} eventType={event.type} role={team.role} />
-          ) : (
-            <TeamTabs slug={team.slug} role={team.role} />
-          )}
-        </Container>
+      <PageHeader className="px-4 lg:px-8">
+        {event ? (
+          <EventTabs teamSlug={team.slug} eventSlug={event.slug} eventType={event.type} role={team.role} />
+        ) : (
+          <TeamTabs slug={team.slug} role={team.role} />
+        )}
       </PageHeader>
 
       <Outlet context={{ user, team }} />

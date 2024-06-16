@@ -1,4 +1,3 @@
-import { XMarkIcon } from '@heroicons/react/20/solid';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { useParams, useSearchParams } from '@remix-run/react';
 
@@ -18,10 +17,9 @@ export function ReviewHeader({ current, total, reviewed, nextId, previousId }: P
   const previousPath =
     previousId !== undefined ? `/team/${params.team}/${params.event}/review/${previousId}` : undefined;
   const nextPath = nextId !== undefined ? `/team/${params.team}/${params.event}/review/${nextId}` : undefined;
-  const closePath = `/team/${params.team}/${params.event}`;
 
   return (
-    <div className="sticky top-0 bg-white border-b border-b-gray-200 shadow-sm z-10">
+    <div>
       <header className="max-w-7xl m-auto flex justify-between items-center gap-4 p-4">
         <nav className="flex items-center gap-2 lg:gap-4">
           <IconLink
@@ -43,7 +41,6 @@ export function ReviewHeader({ current, total, reviewed, nextId, previousId }: P
 
         <div className="flex items-center gap-8">
           <ReviewsProgress reviewed={reviewed} total={total} />
-          <IconLink to={{ pathname: closePath, search }} icon={XMarkIcon} label="Close review" variant="secondary" />
         </div>
       </header>
     </div>
