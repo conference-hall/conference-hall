@@ -2,7 +2,7 @@ import { db } from 'prisma/db.server';
 import { ForbiddenOperationError, ProposalNotFoundError, ReviewDisabledError, UserNotFoundError } from '~/libs/errors.server';
 
 import type { SurveyData } from '../cfp-survey/SpeakerAnswers.types';
-import { UserEvent } from '../organizer-event-settings/UserEvent';
+import { UserEvent } from '../event-settings/UserEvent';
 import { ProposalSearchBuilder } from '../shared/ProposalSearchBuilder';
 import type { ProposalsFilters } from '../shared/ProposalSearchBuilder.types';
 import type { SocialLinks } from '../speaker-profile/SpeakerProfile.types';

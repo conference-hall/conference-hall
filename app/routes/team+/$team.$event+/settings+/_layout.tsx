@@ -13,7 +13,7 @@ import type { LoaderFunctionArgs } from '@remix-run/node';
 import { Outlet } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { UserEvent } from '~/.server/organizer-event-settings/UserEvent.ts';
+import { UserEvent } from '~/.server/event-settings/UserEvent.ts';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { NavSideMenu } from '~/design-system/navigation/NavSideMenu.tsx';
 import { H2 } from '~/design-system/Typography.tsx';

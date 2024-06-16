@@ -2,9 +2,9 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import invariant from 'tiny-invariant';
 
-import { UserEvent } from '~/.server/organizer-event-settings/UserEvent';
-import { Publication } from '~/.server/proposal-publication/Publication';
-import { PublishResultFormSchema } from '~/.server/proposal-publication/Publication.types';
+import { UserEvent } from '~/.server/event-settings/UserEvent';
+import { Publication } from '~/.server/publications/Publication';
+import { PublishResultFormSchema } from '~/.server/publications/Publication.types';
 import { requireSession } from '~/libs/auth/session.ts';
 import { BadRequestError } from '~/libs/errors.server';
 import { redirectWithToast } from '~/libs/toasts/toast.server';

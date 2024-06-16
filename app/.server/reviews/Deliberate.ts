@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { db } from 'prisma/db.server';
 import type { DeliberationStatus } from '~/types/proposals.types';
 
-import { UserEvent } from '../organizer-event-settings/UserEvent';
+import { UserEvent } from '../event-settings/UserEvent';
 import { ProposalSearchBuilder } from '../shared/ProposalSearchBuilder';
 import type { ProposalsFilters } from '../shared/ProposalSearchBuilder.types';
 

@@ -3,7 +3,7 @@ import { json, redirect } from '@remix-run/node';
 import { Form, useActionData, useParams } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { EventCreateSchema, TeamEvents } from '~/.server/organizer-team/TeamEvents.ts';
+import { EventCreateSchema, TeamEvents } from '~/.server/team/TeamEvents.ts';
 import { Button, ButtonLink } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';

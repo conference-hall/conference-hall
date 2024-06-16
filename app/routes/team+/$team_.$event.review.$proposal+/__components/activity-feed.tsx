@@ -1,6 +1,6 @@
 import { cx } from 'class-variance-authority';
 
-import type { Feed } from '~/.server/proposal-reviews/ActivityFeed';
+import type { Feed } from '~/.server/reviews/ActivityFeed';
 
 import { CommentItem } from './activity-feed-sections/comment-item';
 import { NewCommentForm } from './activity-feed-sections/new-comment-form';

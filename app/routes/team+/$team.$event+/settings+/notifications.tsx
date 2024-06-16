@@ -3,11 +3,11 @@ import { json } from '@remix-run/node';
 import { Form, useActionData, useFetcher } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { UserEvent } from '~/.server/organizer-event-settings/UserEvent.ts';
+import { UserEvent } from '~/.server/event-settings/UserEvent.ts';
 import {
   EventEmailNotificationsSettingsSchema,
   EventNotificationsSettingsSchema,
-} from '~/.server/organizer-event-settings/UserEvent.types.ts';
+} from '~/.server/event-settings/UserEvent.types.ts';
 import { Button } from '~/design-system/Buttons.tsx';
 import { Input } from '~/design-system/forms/Input.tsx';
 import { ToggleGroup } from '~/design-system/forms/Toggles.tsx';

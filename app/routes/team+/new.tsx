@@ -2,7 +2,7 @@ import type { ActionFunctionArgs, LoaderFunction } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
 
-import { TeamCreateSchema, UserTeams } from '~/.server/organizer-team/UserTeams';
+import { TeamCreateSchema, UserTeams } from '~/.server/team/UserTeams';
 import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';

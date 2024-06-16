@@ -3,7 +3,7 @@ import type { LoaderFunctionArgs } from '@remix-run/node';
 import { Outlet } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { UserTeam } from '~/.server/organizer-team/UserTeam';
+import { UserTeam } from '~/.server/team/UserTeam';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { NavSideMenu } from '~/design-system/navigation/NavSideMenu.tsx';
 import { H2 } from '~/design-system/Typography.tsx';

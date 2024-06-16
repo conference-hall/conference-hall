@@ -5,7 +5,7 @@ import type { ChangeEvent } from 'react';
 import invariant from 'tiny-invariant';
 import { z } from 'zod';
 
-import { UserEvent } from '~/.server/organizer-event-settings/UserEvent.ts';
+import { UserEvent } from '~/.server/event-settings/UserEvent.ts';
 import { AlertInfo } from '~/design-system/Alerts.tsx';
 import { Avatar } from '~/design-system/Avatar.tsx';
 import { ButtonFileUpload } from '~/design-system/forms/FileUploadButton.tsx';

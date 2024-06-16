@@ -1,7 +1,7 @@
 import { Form } from '@remix-run/react';
 import { formatDistanceToNowStrict } from 'date-fns';
 
-import type { FeedItem } from '~/.server/proposal-reviews/ActivityFeed';
+import type { FeedItem } from '~/.server/reviews/ActivityFeed';
 import { Avatar } from '~/design-system/Avatar';
 import { useUser } from '~/routes/__components/useUser';
 import { ClientOnly } from '~/routes/__components/utils/ClientOnly';
