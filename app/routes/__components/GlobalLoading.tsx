@@ -25,15 +25,15 @@ function GlobalLoadingComponent() {
       role="progressbar"
       aria-hidden={!active}
       aria-valuetext={active ? 'Loading' : undefined}
-      className="fixed inset-x-0 left-0 top-0 z-50 h-0.5 animate-pulse"
+      className="fixed inset-x-0 left-0 top-0 z-50 h-1"
     >
       <div
         ref={ref}
         className={cx(
-          'h-full bg-gradient-to-r from-blue-500 to-cyan-500 transition-all duration-500 ease-in-out',
-          state === 'idle' && animationComplete && 'w-0 opacity-0 transition-none',
-          state === 'submitting' && 'w-4/12',
-          state === 'loading' && 'w-10/12',
+          'h-full bg-indigo-200 transition-all duration-500 ease-in-out',
+          state === 'idle' && animationComplete && 'w-0 transition-none',
+          state === 'submitting' && 'w-3/12',
+          state === 'loading' && 'w-6/12',
           state === 'idle' && !animationComplete && 'w-full',
         )}
       />
