@@ -1,7 +1,7 @@
 import { db } from 'prisma/db.server';
 import { ForbiddenOperationError, ProposalNotFoundError } from '~/libs/errors.server';
 
-import { UserEvent } from '../organizer-event-settings/UserEvent';
+import { UserEvent } from '../event-settings/UserEvent';
 import { ProposalAcceptedEmail } from './emails/proposal-accepted.email';
 import { ProposalRejectedEmail } from './emails/proposal-rejected.email';
 

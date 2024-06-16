@@ -2,7 +2,7 @@ import { type LoaderFunctionArgs } from '@remix-run/node';
 import { useFetcher } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { UserEvent } from '~/.server/organizer-event-settings/UserEvent.ts';
+import { UserEvent } from '~/.server/event-settings/UserEvent.ts';
 import { ToggleGroup } from '~/design-system/forms/Toggles.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2 } from '~/design-system/Typography.tsx';

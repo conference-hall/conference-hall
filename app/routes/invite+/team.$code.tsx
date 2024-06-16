@@ -3,7 +3,7 @@ import { json, redirect } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { TeamMemberInvite } from '~/.server/organizer-team/TeamMemberInvite';
+import { TeamMemberInvite } from '~/.server/team/TeamMemberInvite';
 import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';

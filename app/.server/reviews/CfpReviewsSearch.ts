@@ -1,4 +1,4 @@
-import { UserEvent } from '../organizer-event-settings/UserEvent';
+import { UserEvent } from '../event-settings/UserEvent';
 import { Pagination } from '../shared/Pagination';
 import { ProposalSearchBuilder } from '../shared/ProposalSearchBuilder';
 import type { ProposalsFilters } from '../shared/ProposalSearchBuilder.types';

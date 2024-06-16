@@ -3,14 +3,14 @@ import { json } from '@remix-run/node';
 import { Outlet, useLoaderData, useParams } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { UserEvent } from '~/.server/organizer-event-settings/UserEvent.ts';
-import { Publication } from '~/.server/proposal-publication/Publication.ts';
+import { UserEvent } from '~/.server/event-settings/UserEvent.ts';
 import { ActivityFeed } from '~/.server/proposal-reviews/ActivityFeed.ts';
 import { Comments } from '~/.server/proposal-reviews/Comments.ts';
 import { Deliberate, DeliberateSchema } from '~/.server/proposal-reviews/Deliberate.ts';
 import type { ProposalReviewData } from '~/.server/proposal-reviews/ProposalReview.ts';
 import { ProposalReview } from '~/.server/proposal-reviews/ProposalReview.ts';
-import { ReviewUpdateDataSchema } from '~/.server/proposal-reviews/ProposalReview.types.ts';
+import { Publication } from '~/.server/publications/Publication.ts';
+import { ReviewUpdateDataSchema } from '~/.server/reviews/ProposalReview.types.ts';
 import { parseUrlFilters } from '~/.server/shared/ProposalSearchBuilder.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';

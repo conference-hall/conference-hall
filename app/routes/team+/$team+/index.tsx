@@ -4,7 +4,7 @@ import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { TeamEvents } from '~/.server/organizer-team/TeamEvents.ts';
+import { TeamEvents } from '~/.server/team/TeamEvents.ts';
 import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { H1 } from '~/design-system/Typography.tsx';

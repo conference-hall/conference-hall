@@ -3,7 +3,7 @@ import { Form, useActionData, useNavigate } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { ProposalReview } from '~/.server/proposal-reviews/ProposalReview.ts';
-import { ProposalUpdateSchema } from '~/.server/proposal-reviews/ProposalReview.types.ts';
+import { ProposalUpdateSchema } from '~/.server/reviews/ProposalReview.types.ts';
 import { Button } from '~/design-system/Buttons.tsx';
 import SlideOver from '~/design-system/SlideOver.tsx';
 import { requireSession } from '~/libs/auth/session.ts';

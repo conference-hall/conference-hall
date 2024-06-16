@@ -4,11 +4,8 @@ import { json } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { UserEvent } from '~/.server/organizer-event-settings/UserEvent.ts';
-import {
-  EventDetailsSettingsSchema,
-  EventGeneralSettingsSchema,
-} from '~/.server/organizer-event-settings/UserEvent.types.ts';
+import { UserEvent } from '~/.server/event-settings/UserEvent.ts';
+import { EventDetailsSettingsSchema, EventGeneralSettingsSchema } from '~/.server/event-settings/UserEvent.types.ts';
 import { AlertInfo } from '~/design-system/Alerts.tsx';
 import { Button } from '~/design-system/Buttons.tsx';
 import { DateRangeInput } from '~/design-system/forms/DateRangeInput.tsx';
