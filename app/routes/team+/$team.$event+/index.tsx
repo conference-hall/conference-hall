@@ -3,8 +3,8 @@ import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { CfpReviewsSearch } from '~/.server/proposal-reviews/CfpReviewsSearch.ts';
-import { Deliberate, DeliberateBulkSchema } from '~/.server/proposal-reviews/Deliberate.ts';
+import { CfpReviewsSearch } from '~/.server/reviews/CfpReviewsSearch.ts';
+import { Deliberate, DeliberateBulkSchema } from '~/.server/reviews/Deliberate.ts';
 import { parseUrlPage } from '~/.server/shared/Pagination.ts';
 import { parseUrlFilters } from '~/.server/shared/ProposalSearchBuilder.types.ts';
 import { PageContent } from '~/design-system/layouts/PageContent.tsx';

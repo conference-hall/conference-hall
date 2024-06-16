@@ -2,7 +2,7 @@ import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import invariant from 'tiny-invariant';
 
-import { EventApi } from '~/.server/organizer-web-api/EventApi.ts';
+import { EventApi } from '~/.server/event-web-api/EventApi.ts';
 import { parseUrlFilters } from '~/.server/shared/ProposalSearchBuilder.types';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {

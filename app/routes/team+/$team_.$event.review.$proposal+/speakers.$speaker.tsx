@@ -2,7 +2,7 @@ import { json, type LoaderFunctionArgs } from '@remix-run/node';
 import { useLoaderData, useNavigate } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { ProposalReview } from '~/.server/proposal-reviews/ProposalReview';
+import { ProposalReview } from '~/.server/reviews/ProposalReview';
 import { Avatar } from '~/design-system/Avatar';
 import { IconExternalLink } from '~/design-system/IconButtons';
 import { GitHubIcon } from '~/design-system/icons/GitHubIcon';
