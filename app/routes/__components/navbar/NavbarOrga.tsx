@@ -1,13 +1,14 @@
-import { ChevronRightIcon } from '@heroicons/react/24/solid';
-import { Link, useRouteLoaderData } from '@remix-run/react';
+import { useRouteLoaderData } from '@remix-run/react';
 import { useMemo } from 'react';
 
-import { Avatar } from '~/design-system/Avatar.tsx';
 import { ButtonLink } from '~/design-system/Buttons.tsx';
+import { SlashBarIcon } from '~/design-system/icons/SlashBarIcon.tsx';
 import { NavTabs } from '~/design-system/navigation/NavTabs.tsx';
 
 import type { loader as routeTeamLoader } from '../../team+/$team';
 import type { loader as routeEventLoader } from '../../team+/$team.$event+/_layout';
+import { EventButton } from './dropdowns/EventButton.tsx';
+import { TeamsDropdown } from './dropdowns/TeamsDropdown.tsx';
 import { Logo } from './Logo.tsx';
 import { UserMenu } from './UserMenu.tsx';
 
@@ -35,6 +36,7 @@ export function NavbarOrga({ user }: Props) {
         <div className="flex w-full items-center">
           {/* Logo */}
           <Logo displayName={false} />
+
           {/* Teams breadcrumb */}
           {user?.isOrganizer ? <TeamBreadcrumb teams={user.teams} /> : null}
         </div>
@@ -84,28 +86,12 @@ function TeamBreadcrumb({ teams }: TeamBreadcrumbProps) {
   const event = useRouteLoaderData<typeof routeEventLoader>('routes/team+/$team.$event+/_layout');
 
   return (
-    <nav className="ml-6 flex items-center gap-2 text-gray-200 text-sm font-semibold">
-      <ul className="flex gap-2 text-sm">
-        {teams
-          .filter((team) => team.slug === currentTeam.slug)
-          .map((team) => (
-            <li key={team.slug}>
-              <Link to={`/team/${currentTeam.slug}`} className="flex gap-2 text-gray-50 items-center hover:underline">
-                {team.name}
-              </Link>
-            </li>
-          ))}
-      </ul>
+    <nav className="flex ml-6 items-center text-gray-200 text-sm font-semibold">
+      <TeamsDropdown teams={teams} currentTeamSlug={currentTeam.slug} />
       {event && (
         <>
-          <ChevronRightIcon className="h-4 w-4" />
-          <Link
-            to={`/team/${currentTeam.slug}/${event.slug}`}
-            className="flex gap-2 text-gray-50 items-center font-bold hover:underline"
-          >
-            <Avatar size="xs" picture={event.logo} name={event.name} square aria-hidden />
-            <span>{event.name}</span>
-          </Link>
+          <SlashBarIcon className="hidden sm:flex h-4 w-4 fill-gray-500" />
+          <EventButton currentTeamSlug={currentTeam.slug} event={event} />
         </>
       )}
     </nav>

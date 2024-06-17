@@ -4,6 +4,7 @@ import { Outlet, useLoaderData, useRouteLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { UserTeam } from '~/.server/team/UserTeam';
+import { Container } from '~/design-system/layouts/Container';
 import { PageHeader } from '~/design-system/layouts/PageHeader';
 import { requireSession } from '~/libs/auth/session';
 import { mergeMeta } from '~/libs/meta/merge-meta';
@@ -33,12 +34,14 @@ export default function TeamLayout() {
     <>
       <NavbarOrga user={user} />
 
-      <PageHeader className="px-4 lg:px-8">
-        {event ? (
-          <EventTabs teamSlug={team.slug} eventSlug={event.slug} eventType={event.type} role={team.role} />
-        ) : (
-          <TeamTabs slug={team.slug} role={team.role} />
-        )}
+      <PageHeader>
+        <Container>
+          {event ? (
+            <EventTabs teamSlug={team.slug} eventSlug={event.slug} eventType={event.type} role={team.role} />
+          ) : (
+            <TeamTabs slug={team.slug} role={team.role} />
+          )}
+        </Container>
       </PageHeader>
 
       <Outlet context={{ user, team }} />
