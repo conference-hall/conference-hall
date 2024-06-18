@@ -6,7 +6,7 @@ import { useLoaderData } from '@remix-run/react';
 import { Notifications } from '~/.server/user-notifications/Notifications';
 import { CardLink } from '~/design-system/layouts/Card.tsx';
 import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
-import { PageContent } from '~/design-system/layouts/PageContent.tsx';
+import { Page } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { H2 } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
@@ -34,7 +34,7 @@ export default function OrganizerRoute() {
 
       <PageHeaderTitle title="Notifications" subtitle="Notifications from events organizers about your proposals." />
 
-      <PageContent>
+      <Page>
         {hasNotifications ? (
           <ul aria-label="Notifications list" className="space-y-4">
             {notifications.map(({ event, proposal }) => (
@@ -58,7 +58,7 @@ export default function OrganizerRoute() {
         ) : (
           <EmptyState label="No notifications" icon={BellSlashIcon} />
         )}
-      </PageContent>
+      </Page>
 
       <Footer />
     </>

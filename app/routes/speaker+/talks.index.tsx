@@ -8,7 +8,7 @@ import { TalksLibrary } from '~/.server/speaker-talks-library/TalksLibrary.ts';
 import { AvatarGroup } from '~/design-system/Avatar.tsx';
 import { ButtonLink } from '~/design-system/Buttons.tsx';
 import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
-import { PageContent } from '~/design-system/layouts/PageContent.tsx';
+import { Page } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { List } from '~/design-system/list/List.tsx';
 import { SearchParamSelector } from '~/design-system/navigation/SearchParamSelector.tsx';
@@ -37,7 +37,7 @@ export default function SpeakerTalksRoute() {
         </ButtonLink>
       </PageHeaderTitle>
 
-      <PageContent className="space-y-8">
+      <Page className="space-y-8">
         <List>
           <List.Header>
             <Text weight="semibold">{`${talks.length} talks`}</Text>
@@ -67,7 +67,7 @@ export default function SpeakerTalksRoute() {
             ))}
           </List.Content>
         </List>
-      </PageContent>
+      </Page>
     </>
   );
 }

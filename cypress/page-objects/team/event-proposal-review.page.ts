@@ -12,7 +12,7 @@ type ProposalFormType = {
 
 class ProposalReviewPage extends BasePage {
   visit(teamSlug: string, eventSlug: string, proposalId: string) {
-    cy.visitAndCheck(`/team/${teamSlug}/${eventSlug}/review/${proposalId}`);
+    cy.visitAndCheck(`/team/${teamSlug}/${eventSlug}/reviews/${proposalId}`);
     this.isPageVisible();
   }
 

@@ -14,7 +14,7 @@ import { Outlet } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { UserEvent } from '~/.server/event-settings/UserEvent.ts';
-import { PageContent } from '~/design-system/layouts/PageContent.tsx';
+import { Page } from '~/design-system/layouts/PageContent.tsx';
 import { NavSideMenu } from '~/design-system/navigation/NavSideMenu.tsx';
 import { H2 } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
@@ -51,7 +51,7 @@ export default function OrganizationSettingsRoute() {
   const menus = getMenuItems(team.slug, event.slug);
 
   return (
-    <PageContent className="lg:grid lg:grid-cols-12">
+    <Page className="lg:grid lg:grid-cols-12">
       <H2 srOnly>Event settings</H2>
 
       <NavSideMenu
@@ -63,6 +63,6 @@ export default function OrganizationSettingsRoute() {
       <div className="space-y-6 lg:col-span-9">
         <Outlet context={{ user, team, event }} />
       </div>
-    </PageContent>
+    </Page>
   );
 }

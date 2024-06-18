@@ -6,7 +6,7 @@ import invariant from 'tiny-invariant';
 
 import { TalksLibrary } from '~/.server/speaker-talks-library/TalksLibrary.ts';
 import { ButtonLink } from '~/design-system/Buttons.tsx';
-import { PageContent } from '~/design-system/layouts/PageContent.tsx';
+import { Page } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
@@ -60,7 +60,7 @@ export default function SpeakerTalkRoute() {
         </ButtonLink>
       </PageHeaderTitle>
 
-      <PageContent>
+      <Page>
         <div className="grid grid-cols-1 gap-6 lg:grid-flow-col-dense lg:grid-cols-3">
           <div className="lg:col-span-2 lg:col-start-1">
             <ProposalDetailsSection
@@ -76,7 +76,7 @@ export default function SpeakerTalkRoute() {
             <ProposalSubmissionsSection talkId={talk.id} submissions={talk.submissions} />
           </div>
         </div>
-      </PageContent>
+      </Page>
     </>
   );
 }

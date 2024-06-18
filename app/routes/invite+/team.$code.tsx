@@ -6,7 +6,7 @@ import invariant from 'tiny-invariant';
 import { TeamMemberInvite } from '~/.server/team/TeamMemberInvite';
 import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
-import { PageContent } from '~/design-system/layouts/PageContent.tsx';
+import { Page } from '~/design-system/layouts/PageContent.tsx';
 import { H1, Text } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
@@ -39,7 +39,7 @@ export default function InvitationRoute() {
     <>
       <Navbar user={user} />
 
-      <PageContent>
+      <Page>
         <Card p={16} className="flex flex-col items-center">
           <H1 mb={4} variant="secondary">
             You have been invited to the team
@@ -53,7 +53,7 @@ export default function InvitationRoute() {
             <Button type="submit">Accept invitation</Button>
           </Form>
         </Card>
-      </PageContent>
+      </Page>
     </>
   );
 }

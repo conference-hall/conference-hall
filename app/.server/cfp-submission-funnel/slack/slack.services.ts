@@ -16,7 +16,7 @@ function buildPayload(
       .join(' & ')}`,
     title: proposal.title,
     text: proposal.abstract,
-    title_link: `${appUrl()}/team/${event.team.slug}/${event.slug}/review/${proposal.id}`,
+    title_link: `${appUrl()}/team/${event.team.slug}/${event.slug}/reviews/${proposal.id}`,
     thumb_url: proposal.speakers[0].picture,
     color: '#ffab00',
     fields: [] as unknown[],

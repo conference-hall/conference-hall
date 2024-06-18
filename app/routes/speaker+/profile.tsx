@@ -9,7 +9,7 @@ import {
   DetailsSchema,
   PersonalInfoSchema,
 } from '~/.server/speaker-profile/SpeakerProfile.types.ts';
-import { PageContent } from '~/design-system/layouts/PageContent.tsx';
+import { Page } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { NavSideMenu } from '~/design-system/navigation/NavSideMenu.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
@@ -72,7 +72,7 @@ export default function ProfileRoute() {
     <>
       <PageHeaderTitle title="Your profile" subtitle="Share your biography and references to event organizers." />
 
-      <PageContent className="lg:grid lg:grid-cols-12">
+      <Page className="lg:grid lg:grid-cols-12">
         <NavSideMenu
           aria-label="Profile edition menu"
           items={MENU_ITEMS}
@@ -92,7 +92,7 @@ export default function ProfileRoute() {
             errors={errors}
           />
         </div>
-      </PageContent>
+      </Page>
     </>
   );
 }

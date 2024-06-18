@@ -5,7 +5,7 @@ import { Form, useActionData } from '@remix-run/react';
 import { TeamBetaAccess } from '~/.server/team/TeamBetaAccess';
 import { Button } from '~/design-system/Buttons.tsx';
 import { Input } from '~/design-system/forms/Input.tsx';
-import { PageContent } from '~/design-system/layouts/PageContent.tsx';
+import { Page } from '~/design-system/layouts/PageContent.tsx';
 import { ExternalLink } from '~/design-system/Links.tsx';
 import { H1, Subtitle } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
@@ -34,7 +34,7 @@ export default function RequestAccessRoute() {
   const errors = useActionData<typeof action>();
 
   return (
-    <PageContent className="flex justify-center">
+    <Page className="flex justify-center">
       <div>
         <H1>Become event organizer</H1>
         <Subtitle>Conference Hall for event organizers is in closed-beta access, you need a key to access it.</Subtitle>
@@ -53,6 +53,6 @@ export default function RequestAccessRoute() {
           <Button type="submit">Get access to Conference Hall</Button>
         </Form>
       </div>
-    </PageContent>
+    </Page>
   );
 }

@@ -5,7 +5,7 @@ import { Form, useActionData } from '@remix-run/react';
 import { TeamCreateSchema, UserTeams } from '~/.server/team/UserTeams';
 import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
-import { PageContent } from '~/design-system/layouts/PageContent.tsx';
+import { Page } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { parseWithZod } from '~/libs/zod-parser';
@@ -40,7 +40,7 @@ export default function NewTeamRoute() {
         title="Create a new team"
         subtitle="Give a cool name to your team. You will be able to invite members and create your first event."
       />
-      <PageContent>
+      <Page>
         <Card p={8}>
           <Form method="POST" className="space-y-8">
             <TeamForm errors={errors} />
@@ -49,7 +49,7 @@ export default function NewTeamRoute() {
             </Button>
           </Form>
         </Card>
-      </PageContent>
+      </Page>
     </>
   );
 }

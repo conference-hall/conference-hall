@@ -7,7 +7,7 @@ import { parseUrlPage } from '~/.server/shared/Pagination.ts';
 import { SpeakerActivities } from '~/.server/speaker-activities/SpeakerActivities.ts';
 import { SpeakerProfile } from '~/.server/speaker-profile/SpeakerProfile.ts';
 import { ButtonLink } from '~/design-system/Buttons.tsx';
-import { PageContent } from '~/design-system/layouts/PageContent.tsx';
+import { Page } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
@@ -38,7 +38,7 @@ export default function ProfileRoute() {
         </ButtonLink>
       </PageHeaderTitle>
 
-      <PageContent className="grid grid-cols-1 items-start lg:grid-cols-3">
+      <Page className="grid grid-cols-1 items-start lg:grid-cols-3">
         <SpeakerDetailsSection
           name={profile.name}
           email={profile.email}
@@ -55,7 +55,7 @@ export default function ProfileRoute() {
           hasNextPage={hasNextPage}
           className="lg:col-span-2"
         />
-      </PageContent>
+      </Page>
     </>
   );
 }

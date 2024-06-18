@@ -8,7 +8,7 @@ import { SubmissionSteps } from '~/.server/cfp-submission-funnel/SubmissionSteps
 import { EventPage } from '~/.server/event-page/EventPage.ts';
 import { IconLink } from '~/design-system/IconButtons.tsx';
 import { Container } from '~/design-system/layouts/Container.tsx';
-import { PageContent } from '~/design-system/layouts/PageContent.tsx';
+import { Page } from '~/design-system/layouts/PageContent.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { CfpNotOpenError } from '~/libs/errors.server.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
@@ -54,9 +54,9 @@ export default function EventSubmissionRoute() {
         </Container>
       </div>
 
-      <PageContent className="flex flex-col">
+      <Page className="flex flex-col">
         <Outlet context={{ user, event }} />
-      </PageContent>
+      </Page>
     </>
   );
 }

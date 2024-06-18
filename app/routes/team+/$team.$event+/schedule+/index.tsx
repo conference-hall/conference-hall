@@ -13,10 +13,10 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   return null;
 };
 
-export default function OverviewRoute() {
+export default function ScheduleRoute() {
   return (
     <Page>
-      <H2>Overview</H2>
+      <H2>Schedule</H2>
       <Text>WIP</Text>
     </Page>
   );

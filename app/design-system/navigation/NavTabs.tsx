@@ -25,6 +25,11 @@ const ACTIVE_LINKS = {
   dark: 'bg-gray-900 text-white font-semibold focus-visible:outline-gray-200',
 };
 
+const ICON = {
+  light: 'h-4 w-4 shrink-0 text-gray-600',
+  dark: 'h-4 w-4 shrink-0 text-gray-300',
+};
+
 const PADDING_Y = {
   0: 'py-0',
   4: 'py-4',
@@ -44,22 +49,26 @@ export function NavTabs({ children, py = 0, variant = 'light', scrollable = fals
 type NavTabProps = {
   children: ReactNode;
   count?: number;
-  end?: boolean;
   variant?: keyof typeof BACKGROUND;
+  icon?: React.ComponentType<{ className?: string }>;
 } & RemixNavLinkProps;
 
-export function NavTab({ to, end, count, variant = 'light', children }: NavTabProps) {
+export function NavTab({ to, end, count, variant = 'light', icon: Icon, children }: NavTabProps) {
   return (
     <NavLink
       to={to}
       end={end}
       className={(tab) =>
-        cx('rounded-md px-3 py-2 text-sm font-medium whitespace-nowrap focus-visible:outline focus-visible:outline-2', {
-          [DEFAULT_LINKS[variant]]: !tab.isActive,
-          [ACTIVE_LINKS[variant]]: tab.isActive,
-        })
+        cx(
+          'flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium whitespace-nowrap focus-visible:outline focus-visible:outline-2',
+          {
+            [DEFAULT_LINKS[variant]]: !tab.isActive,
+            [ACTIVE_LINKS[variant]]: tab.isActive,
+          },
+        )
       }
     >
+      {Icon ? <Icon className={ICON[variant]} /> : null}
       {children}
       {count ? (
         <span className="ml-3 hidden rounded-full bg-gray-200 px-2.5 py-0.5 text-xs font-medium text-gray-900 md:inline-block">

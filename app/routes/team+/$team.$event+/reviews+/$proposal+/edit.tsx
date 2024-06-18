@@ -34,7 +34,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
   const url = new URL(request.url);
   return redirectWithToast(
-    `/team/${params.team}/${params.event}/review/${params.proposal}${url.search}`,
+    `/team/${params.team}/${params.event}/reviews/${params.proposal}${url.search}`,
     'success',
     'Proposal saved.',
   );

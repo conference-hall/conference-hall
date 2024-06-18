@@ -4,7 +4,7 @@ import { useParams, useSearchParams } from '@remix-run/react';
 import { IconLink } from '~/design-system/IconButtons.tsx';
 import { Text } from '~/design-system/Typography.tsx';
 
-import { ReviewsProgress } from '../../$team.$event+/__components/list/reviews-progress';
+import { ReviewsProgress } from '../../../__components/list/reviews-progress';
 
 type Props = { current: number; total: number; reviewed: number; nextId?: string; previousId?: string };
 
@@ -15,8 +15,8 @@ export function ReviewHeader({ current, total, reviewed, nextId, previousId }: P
   const search = searchParams.toString();
 
   const previousPath =
-    previousId !== undefined ? `/team/${params.team}/${params.event}/review/${previousId}` : undefined;
-  const nextPath = nextId !== undefined ? `/team/${params.team}/${params.event}/review/${nextId}` : undefined;
+    previousId !== undefined ? `/team/${params.team}/${params.event}/reviews/${previousId}` : undefined;
+  const nextPath = nextId !== undefined ? `/team/${params.team}/${params.event}/reviews/${nextId}` : undefined;
 
   return (
     <header className="max-w-7xl m-auto flex justify-between items-center gap-4 pb-4 px-4 lg:-mt-4">

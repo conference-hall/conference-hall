@@ -5,7 +5,7 @@ import invariant from 'tiny-invariant';
 
 import { Publication } from '~/.server/publications/Publication';
 import { Card } from '~/design-system/layouts/Card';
-import { PageContent } from '~/design-system/layouts/PageContent';
+import { Page } from '~/design-system/layouts/PageContent';
 import { H1, H2, Subtitle } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { useEvent } from '~/routes/$event+/__components/useEvent';
@@ -29,7 +29,7 @@ export default function PublicationRoute() {
   const reviewsPath = `/team/${team.slug}/${event.slug}`;
 
   return (
-    <PageContent className="flex flex-col">
+    <Page className="flex flex-col">
       <H1 srOnly>Deliberation</H1>
 
       <section className="space-y-2">
@@ -123,6 +123,6 @@ export default function PublicationRoute() {
       </section>
 
       <Outlet context={statistics} />
-    </PageContent>
+    </Page>
   );
 }

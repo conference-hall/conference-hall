@@ -7,7 +7,7 @@ import { EventsSearch } from '~/.server/event-search/EventSearch.ts';
 import { parseUrlFilters } from '~/.server/event-search/EventSearch.types.ts';
 import { parseUrlPage } from '~/.server/shared/Pagination.ts';
 import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
-import { PageContent } from '~/design-system/layouts/PageContent.tsx';
+import { Page } from '~/design-system/layouts/PageContent.tsx';
 import { Pagination } from '~/design-system/list/Pagination.tsx';
 import { H1, H2 } from '~/design-system/Typography.tsx';
 import { EventCard } from '~/routes/__components/EventCard.tsx';
@@ -44,7 +44,7 @@ export default function IndexRoute() {
         <SearchEventsInput filters={filters} />
       </div>
 
-      <PageContent>
+      <Page>
         <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <H2 size="xl">Incoming call for papers</H2>
           <SearchEventsFilters />
@@ -70,7 +70,7 @@ export default function IndexRoute() {
             <Pagination {...pagination} />
           </div>
         )}
-      </PageContent>
+      </Page>
 
       <Footer />
     </>

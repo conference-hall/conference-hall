@@ -2,7 +2,7 @@ import { MegaphoneIcon, UserGroupIcon } from '@heroicons/react/24/outline';
 import type { LoaderFunctionArgs } from '@remix-run/node';
 
 import { Card } from '~/design-system/layouts/Card.tsx';
-import { PageContent } from '~/design-system/layouts/PageContent.tsx';
+import { Page } from '~/design-system/layouts/PageContent.tsx';
 import { H1, Subtitle } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 
@@ -15,7 +15,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 export default function NewEventTypeRoute() {
   return (
-    <PageContent className="flex flex-col">
+    <Page className="flex flex-col">
       <Card>
         <Card.Title>
           <H1>Select your new event type</H1>
@@ -37,6 +37,6 @@ export default function NewEventTypeRoute() {
           />
         </Card.Content>
       </Card>
-    </PageContent>
+    </Page>
   );
 }

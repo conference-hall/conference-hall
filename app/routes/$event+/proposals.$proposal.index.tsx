@@ -5,7 +5,7 @@ import invariant from 'tiny-invariant';
 
 import { UserProposal } from '~/.server/cfp-submissions/UserProposal.ts';
 import { ProposalParticipationSchema } from '~/.server/cfp-submissions/UserProposal.types.ts';
-import { PageContent } from '~/design-system/layouts/PageContent.tsx';
+import { Page } from '~/design-system/layouts/PageContent.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
@@ -56,7 +56,7 @@ export default function ProposalRoute() {
     <>
       <PageHeaderTitle title={proposal.title} backOnClick={() => navigate(-1)} />
 
-      <PageContent>
+      <Page>
         <div className="space-y-4 lg:space-y-6">
           <ProposalStatusSection proposal={proposal} event={event} />
           <ProposalDetailsSection
@@ -69,7 +69,7 @@ export default function ProposalRoute() {
             speakers={proposal.speakers}
           />
         </div>
-      </PageContent>
+      </Page>
     </>
   );
 }
