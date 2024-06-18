@@ -21,9 +21,7 @@ const itemStyle = (focus: boolean = false, active: boolean = false) =>
 
 type Props = { currentTeamSlug?: string; teams: Array<{ slug: string; name: string }> };
 
-export function TeamsDropdown({ teams, currentTeamSlug }: Props) {
-  if (!currentTeamSlug) return null;
-
+export function TeamsDropdown({ teams = [], currentTeamSlug }: Props) {
   const currentTeam = teams.find((team) => team.slug === currentTeamSlug);
 
   return (
@@ -31,7 +29,7 @@ export function TeamsDropdown({ teams, currentTeamSlug }: Props) {
       {({ open }) => (
         <>
           <MenuButton className={menuStyle}>
-            {currentTeam?.name}
+            {currentTeam ? currentTeam.name : 'Teams'}
             {open ? (
               <ChevronUpIcon className="h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
             ) : (
@@ -57,7 +55,7 @@ export function TeamsDropdown({ teams, currentTeamSlug }: Props) {
                 {({ focus }) => (
                   <Link to="/team/new" className={itemStyle(focus)}>
                     <PlusIcon className="mr-2 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
-                    Create a team
+                    New team
                   </Link>
                 )}
               </MenuItem>

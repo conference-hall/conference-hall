@@ -1,9 +1,7 @@
 import { useRouteLoaderData } from '@remix-run/react';
-import { useMemo } from 'react';
 
-import { ButtonLink } from '~/design-system/Buttons.tsx';
 import { SlashBarIcon } from '~/design-system/icons/SlashBarIcon.tsx';
-import { NavTabs } from '~/design-system/navigation/NavTabs.tsx';
+import { NavTab, NavTabs } from '~/design-system/navigation/NavTabs.tsx';
 
 import type { loader as routeTeamLoader } from '../../team+/$team';
 import type { loader as routeEventLoader } from '../../team+/$team.$event+/_layout';
@@ -42,8 +40,14 @@ export function NavbarOrga({ user }: Props) {
         </div>
 
         <div className="hidden gap-2 lg:flex lg:flex-shrink-0 lg:items-center lg:justify-end">
-          {/* Navigation */}
-          <Navigation authenticated={!!user} />
+          {/* Login */}
+          {!user ? (
+            <NavTabs variant="dark">
+              <NavTab to="/login" variant="dark">
+                Login
+              </NavTab>
+            </NavTabs>
+          ) : null}
 
           {/* Avatar */}
           {user && (
@@ -60,8 +64,7 @@ export function NavbarOrga({ user }: Props) {
 
         {/* Mobile menu */}
         <div className="flex lg:hidden">
-          {!user && <ButtonLink to="/login">Login</ButtonLink>}
-          {user && (
+          {user ? (
             <UserMenu
               name={user.name}
               email={user.email}
@@ -70,6 +73,12 @@ export function NavbarOrga({ user }: Props) {
               isOrganizer={user.isOrganizer}
               notificationsCount={user.notificationsUnreadCount}
             />
+          ) : (
+            <NavTabs variant="dark">
+              <NavTab to="/login" variant="dark">
+                Login
+              </NavTab>
+            </NavTabs>
           )}
         </div>
       </div>
@@ -96,17 +105,4 @@ function TeamBreadcrumb({ teams }: TeamBreadcrumbProps) {
       )}
     </nav>
   );
-}
-
-type NavigationProps = { authenticated: boolean };
-
-function Navigation({ authenticated }: NavigationProps) {
-  const tabs = useMemo(() => {
-    if (!authenticated) {
-      return [{ label: 'Login', to: '/login', enabled: true }];
-    }
-    return [];
-  }, [authenticated]);
-
-  return <NavTabs tabs={tabs} variant="dark" />;
 }

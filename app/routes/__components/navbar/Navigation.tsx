@@ -1,7 +1,6 @@
-import { PlusIcon, Square3Stack3DIcon } from '@heroicons/react/20/solid';
-import { useMemo } from 'react';
+import { NavTab, NavTabs } from '~/design-system/navigation/NavTabs.tsx';
 
-import { NavTabs } from '~/design-system/navigation/NavTabs.tsx';
+import { TeamsDropdown } from './dropdowns/TeamsDropdown';
 
 type Props = {
   authenticated: boolean;
@@ -10,28 +9,22 @@ type Props = {
 };
 
 export function Navigation({ authenticated, isOrganizer, teams = [] }: Props) {
-  const tabs = useMemo(() => {
-    if (!authenticated) {
-      return [{ label: 'Login', to: '/login', enabled: true }];
-    }
+  if (!authenticated) {
+    return (
+      <NavTabs variant="dark">
+        <NavTab to="/login" variant="dark">
+          Login
+        </NavTab>
+      </NavTabs>
+    );
+  }
 
-    const teamLinks = teams.map((team) => ({
-      to: `/team/${team.slug}`,
-      label: team.name,
-      icon: Square3Stack3DIcon,
-    }));
-
-    return [
-      { to: `/speaker`, label: 'Home', enabled: true, end: true },
-      { to: `/speaker/talks`, label: 'Talks library', enabled: true },
-      { to: `/speaker/profile`, label: 'Profile', enabled: true },
-      {
-        label: 'Teams',
-        enabled: isOrganizer,
-        links: [...teamLinks, { to: '/team/new', label: 'New team', icon: PlusIcon }],
-      },
-    ];
-  }, [authenticated, isOrganizer, teams]);
-
-  return <NavTabs tabs={tabs} variant="dark" />;
+  return (
+    <NavTabs variant="dark">
+      <NavTab to="/speaker" end variant="dark">
+        My profile
+      </NavTab>
+      {isOrganizer ? <TeamsDropdown teams={teams} /> : null}
+    </NavTabs>
+  );
 }
