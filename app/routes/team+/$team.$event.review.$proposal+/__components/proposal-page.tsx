@@ -42,7 +42,7 @@ export function ProposalPage({ proposal }: Props) {
         )}
       </div>
       {proposal.speakers.length > 0 && (
-        <ul aria-label="Speakers" className="flex-1 flex flex-col flex-wrap gap-3 lg:flex-row px-2 pt-4 lg:px-4">
+        <ul aria-label="Speakers" className="flex flex-row gap-3 pt-4 px-4">
           {proposal.speakers.map((speaker) => (
             <li key={speaker.name}>
               <Link
