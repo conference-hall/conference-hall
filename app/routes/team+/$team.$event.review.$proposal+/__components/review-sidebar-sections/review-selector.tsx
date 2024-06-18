@@ -40,7 +40,7 @@ export function ReviewSelector({ value, onChange }: Props) {
     ({ option, index }: StyleProps) => {
       const currentSelected = isSelected(index, selectedIndex);
       const currentOver = isSelected(index, overIndex);
-      return cx('h-8 w-8 stroke-gray-600', {
+      return cx('h-7 w-7 stroke-gray-600', {
         'stroke-indigo-500': !currentSelected && currentOver,
         [option.fill]: currentSelected,
       });
@@ -60,7 +60,7 @@ export function ReviewSelector({ value, onChange }: Props) {
     <Fieldset>
       <Label className="sr-only"> Choose a note</Label>
       <RadioGroup name="review" value={String(selectedIndex)} onChange={handleChange}>
-        <div className="flex gap-2 items-center justify-between" onMouseOut={() => setOverIndex(-1)}>
+        <div className="flex gap-2 items-center" onMouseOut={() => setOverIndex(-1)}>
           {options.map((option, index) => (
             <Radio key={index} value={String(index)} title={option.label} data-review-input>
               <div className="cursor-pointer" onMouseOver={() => setOverIndex(index)}>

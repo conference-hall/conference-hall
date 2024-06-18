@@ -42,25 +42,23 @@ export function ProposalPage({ proposal }: Props) {
         )}
       </div>
       {proposal.speakers.length > 0 && (
-        <div className="flex items-start lg:items-center lg:gap-6 px-2 pt-3 lg:px-4">
-          <ul aria-label="Speakers" className="flex-1 flex flex-col flex-wrap gap-3 lg:flex-row">
-            {proposal.speakers.map((speaker) => (
-              <li key={speaker.name}>
-                <Link
-                  key={speaker.name}
-                  to={`speakers/${speaker.id}?${search.toString()}`}
-                  aria-label={`View ${speaker.name} profile`}
-                  className="flex items-center gap-2 hover:bg-gray-100 p-2 rounded-md"
-                >
-                  <Avatar name={speaker.name} picture={speaker.picture} size="xs" />
-                  <Text weight="medium" variant="secondary">
-                    {speaker.name}
-                  </Text>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <ul aria-label="Speakers" className="flex-1 flex flex-col flex-wrap gap-3 lg:flex-row px-2 pt-4 lg:px-4">
+          {proposal.speakers.map((speaker) => (
+            <li key={speaker.name}>
+              <Link
+                key={speaker.name}
+                to={`speakers/${speaker.id}?${search.toString()}`}
+                aria-label={`View ${speaker.name} profile`}
+                className="flex items-center gap-2  hover:bg-gray-100 p-1 pr-3 rounded-full border border-gray-200"
+              >
+                <Avatar name={speaker.name} picture={speaker.picture} size="xs" />
+                <Text weight="medium" size="xs" variant="secondary">
+                  {speaker.name}
+                </Text>
+              </Link>
+            </li>
+          ))}
+        </ul>
       )}
       <dl className="p-6 flex flex-col gap-6">
         <div>
