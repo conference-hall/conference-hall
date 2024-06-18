@@ -19,30 +19,28 @@ export function ReviewHeader({ current, total, reviewed, nextId, previousId }: P
   const nextPath = nextId !== undefined ? `/team/${params.team}/${params.event}/review/${nextId}` : undefined;
 
   return (
-    <div>
-      <header className="max-w-7xl m-auto flex justify-between items-center gap-4 p-4">
-        <nav className="flex items-center gap-2 lg:gap-4">
-          <IconLink
-            to={{ pathname: previousPath, search }}
-            icon={ChevronLeftIcon}
-            label="Previous proposal"
-            variant="secondary"
-            aria-disabled={!previousPath}
-          />
-          <Text weight="medium">{`${current}/${total}`}</Text>
-          <IconLink
-            to={{ pathname: nextPath, search }}
-            icon={ChevronRightIcon}
-            label="Next proposal"
-            variant="secondary"
-            aria-disabled={!nextPath}
-          />
-        </nav>
+    <header className="max-w-7xl m-auto flex justify-between items-center gap-4 pb-4 px-4 -mt-4">
+      <nav className="flex items-center gap-2 lg:gap-4">
+        <IconLink
+          to={{ pathname: previousPath, search }}
+          icon={ChevronLeftIcon}
+          label="Previous proposal"
+          variant="secondary"
+          aria-disabled={!previousPath}
+        />
+        <Text weight="medium">{`${current}/${total}`}</Text>
+        <IconLink
+          to={{ pathname: nextPath, search }}
+          icon={ChevronRightIcon}
+          label="Next proposal"
+          variant="secondary"
+          aria-disabled={!nextPath}
+        />
+      </nav>
 
-        <div className="flex items-center gap-8">
-          <ReviewsProgress reviewed={reviewed} total={total} />
-        </div>
-      </header>
-    </div>
+      <div className="flex items-center gap-8">
+        <ReviewsProgress reviewed={reviewed} total={total} />
+      </div>
+    </header>
   );
 }

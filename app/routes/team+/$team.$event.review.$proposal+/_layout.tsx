@@ -12,6 +12,7 @@ import type { ProposalReviewData } from '~/.server/reviews/ProposalReview.ts';
 import { ProposalReview } from '~/.server/reviews/ProposalReview.ts';
 import { ReviewUpdateDataSchema } from '~/.server/reviews/ProposalReview.types.ts';
 import { parseUrlFilters } from '~/.server/shared/ProposalSearchBuilder.types.ts';
+import { PageContent } from '~/design-system/layouts/PageContent.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
@@ -99,7 +100,7 @@ export default function ProposalReviewLayoutRoute() {
   const canDeliberate = role !== 'REVIEWER';
 
   return (
-    <>
+    <PageContent>
       <ReviewHeader {...pagination} />
 
       <div className="mx-auto max-w-7xl px-4">
@@ -115,6 +116,6 @@ export default function ProposalReviewLayoutRoute() {
           </div>
         </div>
       </div>
-    </>
+    </PageContent>
   );
 }
