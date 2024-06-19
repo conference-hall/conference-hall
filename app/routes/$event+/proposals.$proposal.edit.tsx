@@ -14,9 +14,9 @@ import { H3, Subtitle } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
 import { parseWithZod } from '~/libs/zod-parser.ts';
-import { CoSpeakersList, InviteCoSpeakerButton } from '~/routes/__components/proposals/forms/CoSpeaker.tsx';
 import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm.tsx';
 
+import { CoSpeakers } from '../__components/talks/co-speaker.tsx';
 import { useEvent } from './__components/useEvent.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
@@ -97,8 +97,11 @@ export default function EditProposalRoute() {
                   When co-speaker accepts the invite, he/she will be automatically added to the proposal.
                 </Subtitle>
               </div>
-              <CoSpeakersList speakers={proposal.speakers} showRemoveAction />
-              <InviteCoSpeakerButton invitationLink={proposal.invitationLink} block />
+              <CoSpeakers
+                speakers={proposal.speakers}
+                invitationLink={proposal.invitationLink}
+                canEdit={proposal.isOwner}
+              />
             </Card>
           </div>
         </div>

@@ -42,6 +42,7 @@ export class SpeakerTalk {
           name: speaker.name,
           picture: speaker.picture,
           company: speaker.company,
+          bio: speaker.bio,
           isOwner: speaker.id === talk.creatorId,
           isCurrentUser: speaker.id === this.speakerId,
         }))

@@ -8,8 +8,9 @@ import { Page } from '~/design-system/layouts/PageContent.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-import { ProposalDetailsSection } from '~/routes/__components/proposals/ProposalDetailsSection.tsx';
-import { ProposalSubmissionsSection } from '~/routes/__components/proposals/ProposalSubmissionsSection.tsx';
+
+import { ActivityFeed } from '../__components/talks/activity-feed';
+import { TalkSection } from '../__components/talks/talk-section';
 
 export const meta = mergeMeta<typeof loader>(({ data }) =>
   data ? [{ title: `${data?.title} | Conference Hall` }] : [],
@@ -30,7 +31,8 @@ export const action: ActionFunction = async ({ request, params }) => {
   const talk = TalksLibrary.of(userId).talk(params.talk);
 
   const form = await request.formData();
-  const action = form.get('_action');
+  const action = form.get('intent');
+
   switch (action) {
     case 'archive-talk':
       await talk.archive();
@@ -39,6 +41,10 @@ export const action: ActionFunction = async ({ request, params }) => {
     case 'restore-talk':
       await talk.restore();
       return toast('success', 'Talk restored.');
+
+    case 'remove-speaker':
+      await talk.removeCoSpeaker(form.get('_speakerId')?.toString() as string);
+      return toast('success', 'Co-speaker removed from talk.');
   }
   return null;
 };
@@ -48,20 +54,10 @@ export default function SpeakerTalkRoute() {
 
   return (
     <Page>
-      <div className="grid grid-cols-1 gap-6 lg:grid-flow-col-dense lg:grid-cols-3">
-        <div className="lg:col-span-2 lg:col-start-1">
-          <ProposalDetailsSection
-            abstract={talk.abstract}
-            references={talk.references}
-            level={talk.level}
-            languages={talk.languages}
-            speakers={talk.speakers}
-          />
-        </div>
+      <TalkSection talk={talk} canEdit canArchive canSubmit />
 
-        <div className="lg:col-span-1 lg:col-start-3">
-          <ProposalSubmissionsSection talkId={talk.id} submissions={talk.submissions} />
-        </div>
+      <div className="pl-4 pt-8 md:w-2/3">
+        <ActivityFeed activity={['1']} />
       </div>
     </Page>
   );

@@ -13,8 +13,9 @@ import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
 import { parseWithZod } from '~/libs/zod-parser';
-import { CoSpeakersList, InviteCoSpeakerButton } from '~/routes/__components/proposals/forms/CoSpeaker.tsx';
 import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm.tsx';
+
+import { CoSpeakers } from '../__components/talks/co-speaker';
 
 export const meta = mergeMeta<typeof loader>(({ data }) =>
   data ? [{ title: `Edit | ${data?.title} | Conference Hall` }] : [],
@@ -78,8 +79,7 @@ export default function SpeakerTalkRoute() {
               <H3>Speakers</H3>
               <Subtitle>When co-speaker accepts the invite, he/she will be automatically added to the talk.</Subtitle>
             </div>
-            <CoSpeakersList speakers={talk.speakers} showRemoveAction />
-            <InviteCoSpeakerButton invitationLink={talk.invitationLink} block />
+            <CoSpeakers speakers={talk.speakers} invitationLink={talk.invitationLink} canEdit={talk.isOwner} />
           </Card>
         </div>
       </div>

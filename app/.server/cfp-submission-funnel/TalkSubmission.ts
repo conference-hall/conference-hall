@@ -123,9 +123,9 @@ export class TalkSubmission {
           id: speaker.id,
           name: speaker.name,
           picture: speaker.picture,
-          isOwner: speaker.id === proposal?.talk?.creatorId,
+          isCurrentUser: this.speakerId === speaker.id,
         }))
-        .sort((a, b) => (a.isOwner ? -1 : 0) - (b.isOwner ? -1 : 0)),
+        .sort((a, b) => (a.isCurrentUser ? -1 : 0) - (b.isCurrentUser ? -1 : 0)),
       formats: proposal.formats.map((f) => ({ id: f.id, name: f.name })),
       categories: proposal.categories.map((c) => ({ id: c.id, name: c.name })),
     };

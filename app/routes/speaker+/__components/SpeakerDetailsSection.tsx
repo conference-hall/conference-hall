@@ -6,6 +6,7 @@ import { GitHubIcon } from '~/design-system/icons/GitHubIcon.tsx';
 import { TwitterIcon } from '~/design-system/icons/TwitterIcon.tsx';
 import { Card } from '~/design-system/layouts/Card';
 import { Markdown } from '~/design-system/Markdown.tsx';
+import { Text } from '~/design-system/Typography';
 
 type Props = {
   email: string | null;
@@ -24,11 +25,13 @@ export function SpeakerDetailsSection({ bio, address, socials }: Props) {
 
   return (
     <div className="hidden sm:block space-y-6">
-      <Card p={8} className="space-y-6">
-        {bio && <Markdown className="line-clamp-5">{bio}</Markdown>}
+      <Card>
+        <div className="p-6">
+          {bio ? <Markdown className="line-clamp-5">{bio}</Markdown> : <Text>Fill your profile</Text>}
+        </div>
 
         {displayInfo && (
-          <div className="space-y-4">
+          <div className="p-6 space-y-4 border-t border-t-gray-200">
             {address && <IconLabel icon={MapPinIcon}>{address}</IconLabel>}
             {twitter && <IconLabel icon={TwitterIcon}>{twitter}</IconLabel>}
             {github && <IconLabel icon={GitHubIcon}>{github}</IconLabel>}

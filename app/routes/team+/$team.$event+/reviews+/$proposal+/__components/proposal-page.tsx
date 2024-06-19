@@ -1,14 +1,14 @@
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
-import { Link, useParams, useSearchParams } from '@remix-run/react';
+import { useParams, useSearchParams } from '@remix-run/react';
 
-import { Avatar } from '~/design-system/Avatar.tsx';
 import { Badge } from '~/design-system/Badges.tsx';
 import { IconLink } from '~/design-system/IconButtons';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { Markdown } from '~/design-system/Markdown.tsx';
-import { H1, Text } from '~/design-system/Typography';
+import { H1 } from '~/design-system/Typography';
 import { getLanguage } from '~/libs/formatters/languages';
 import { getLevel } from '~/libs/formatters/levels';
+import { CoSpeakers } from '~/routes/__components/talks/co-speaker';
 import { useUser } from '~/routes/__components/useUser';
 
 import type { ProposalData } from '../_layout';
@@ -41,25 +41,11 @@ export function ProposalPage({ proposal }: Props) {
           />
         )}
       </div>
+
       {proposal.speakers.length > 0 && (
-        <ul aria-label="Speakers" className="flex flex-row gap-3 pt-4 px-4">
-          {proposal.speakers.map((speaker) => (
-            <li key={speaker.name}>
-              <Link
-                key={speaker.name}
-                to={`speakers/${speaker.id}?${search.toString()}`}
-                aria-label={`View ${speaker.name} profile`}
-                className="flex items-center gap-2  hover:bg-gray-100 p-1 pr-3 rounded-full border border-gray-200"
-              >
-                <Avatar name={speaker.name} picture={speaker.picture} size="xs" />
-                <Text weight="medium" size="xs" variant="secondary">
-                  {speaker.name}
-                </Text>
-              </Link>
-            </li>
-          ))}
-        </ul>
+        <CoSpeakers speakers={proposal.speakers} canEdit={false} className="pt-4 px-4" />
       )}
+
       <dl className="p-6 flex flex-col gap-6">
         <div>
           <dt className="sr-only">Abstract</dt>
