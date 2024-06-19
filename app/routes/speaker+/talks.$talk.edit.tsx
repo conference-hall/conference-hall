@@ -8,14 +8,11 @@ import { TalkSaveSchema } from '~/.server/speaker-talks-library/TalksLibrary.typ
 import { Button, ButtonLink } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { Page } from '~/design-system/layouts/PageContent.tsx';
-import { H3, Subtitle } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
-import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
+import { redirectWithToast } from '~/libs/toasts/toast.server.ts';
 import { parseWithZod } from '~/libs/zod-parser';
 import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm.tsx';
-
-import { CoSpeakers } from '../__components/talks/co-speaker';
 
 export const meta = mergeMeta<typeof loader>(({ data }) =>
   data ? [{ title: `Edit | ${data?.title} | Conference Hall` }] : [],
@@ -28,6 +25,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const library = TalksLibrary.of(userId);
   const talk = await library.talk(params.talk).get();
   if (talk.archived) throw new Response('Talk archived.', { status: 403 });
+
   return json(talk);
 };
 
@@ -37,17 +35,11 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   invariant(params.talk, 'Invalid talk id');
 
   const talk = TalksLibrary.of(userId).talk(params.talk);
-  const intent = form.get('intent');
-  if (intent === 'remove-speaker') {
-    const speakerId = form.get('_speakerId')?.toString() as string;
-    await talk.removeCoSpeaker(speakerId);
-    return toast('success', 'Co-speaker removed from talk.');
-  } else {
-    const result = parseWithZod(form, TalkSaveSchema);
-    if (!result.success) return json(result.error);
-    await talk.update(result.value);
-    return redirectWithToast(`/speaker/talks/${params.talk}`, 'success', 'Talk updated.');
-  }
+
+  const result = parseWithZod(form, TalkSaveSchema);
+  if (!result.success) return json(result.error);
+  await talk.update(result.value);
+  return redirectWithToast(`/speaker/talks/${params.talk}`, 'success', 'Talk updated.');
 };
 
 export default function SpeakerTalkRoute() {
@@ -56,33 +48,21 @@ export default function SpeakerTalkRoute() {
 
   return (
     <Page>
-      <div className="grid grid-cols-1 gap-6 lg:grid-flow-col-dense lg:grid-cols-3">
-        <Card className="lg:col-span-2 lg:col-start-1">
-          <Card.Content>
-            <Form method="POST" id="edit-talk-form">
-              <DetailsForm initialValues={talk} errors={errors} />
-            </Form>
-          </Card.Content>
-          <Card.Actions>
-            <ButtonLink to={`/speaker/talks/${talk.id}`} variant="secondary">
-              Cancel
-            </ButtonLink>
-            <Button type="submit" name="intent" value="talk-edit" form="edit-talk-form">
-              Save talk
-            </Button>
-          </Card.Actions>
-        </Card>
-
-        <div className="lg:col-span-1 lg:col-start-3">
-          <Card p={8} className="space-y-6">
-            <div>
-              <H3>Speakers</H3>
-              <Subtitle>When co-speaker accepts the invite, he/she will be automatically added to the talk.</Subtitle>
-            </div>
-            <CoSpeakers speakers={talk.speakers} invitationLink={talk.invitationLink} canEdit={talk.isOwner} />
-          </Card>
-        </div>
-      </div>
+      <Card className="lg:col-span-2 lg:col-start-1">
+        <Card.Content>
+          <Form method="POST" id="edit-talk-form">
+            <DetailsForm initialValues={talk} errors={errors} />
+          </Form>
+        </Card.Content>
+        <Card.Actions>
+          <ButtonLink to={`/speaker/talks/${talk.id}`} variant="secondary">
+            Cancel
+          </ButtonLink>
+          <Button type="submit" name="intent" value="talk-edit" form="edit-talk-form">
+            Save talk
+          </Button>
+        </Card.Actions>
+      </Card>
     </Page>
   );
 }
