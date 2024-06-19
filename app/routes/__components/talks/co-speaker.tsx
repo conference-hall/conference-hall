@@ -46,7 +46,7 @@ type CoSpeakersProps = {
 
 export function CoSpeakers({ speakers, invitationLink, canEdit, className }: CoSpeakersProps) {
   return (
-    <ul aria-label="Speakers" className={cx('flex flex-row gap-3', className)}>
+    <ul aria-label="Speakers" className={cx('flex flex-row flex-wrap gap-3', className)}>
       {speakers.map((speaker) => (
         <li key={speaker.name}>
           <SpeakerPill speaker={speaker} canEdit={canEdit} />
@@ -70,10 +70,10 @@ function SpeakerPill({ speaker, canEdit }: SpeakerPillProps) {
     <button
       aria-label={`View ${speaker.name} profile`}
       onClick={() => setOpen(true)}
-      className="flex items-center gap-2  hover:bg-gray-100 p-1 pr-3 rounded-full border border-gray-200"
+      className="flex items-center gap-2 hover:bg-gray-100 p-1 pr-3 rounded-full border border-gray-200"
     >
       <Avatar name={speaker.name} picture={speaker.picture} size="xs" />
-      <Text weight="medium" size="xs" variant="secondary">
+      <Text weight="medium" size="xs" variant="secondary" truncate>
         {speaker.name}
       </Text>
       <SpeakerDrawer

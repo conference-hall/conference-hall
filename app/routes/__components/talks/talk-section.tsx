@@ -1,5 +1,5 @@
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react';
-import { ChevronDownIcon } from '@heroicons/react/20/solid';
+import { ChevronDownIcon, PaperAirplaneIcon } from '@heroicons/react/20/solid';
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import type { TalkLevel } from '@prisma/client';
 import { useSearchParams } from '@remix-run/react';
@@ -44,7 +44,7 @@ export function TalkSection({ talk, canEdit, canArchive, canSubmit, referencesOp
 
   return (
     <Card as="section">
-      <div className="flex justify-between items-center gap-4 px-6 py-3 border-b border-b-gray-200">
+      <div className="flex flex-col sm:flex-row justify-between items-center gap-4 px-6 py-3 border-b border-b-gray-200">
         <H1 size="base" weight="semibold" truncate>
           {talk.title}
         </H1>
@@ -60,7 +60,9 @@ export function TalkSection({ talk, canEdit, canArchive, canSubmit, referencesOp
             </ButtonLink>
           )}
           {canSubmit && !talk.archived && (
-            <ButtonLink to={{ pathname: '/', search: `?talkId=${talk.id}` }}>Submit to event</ButtonLink>
+            <ButtonLink iconLeft={PaperAirplaneIcon} to={{ pathname: '/', search: `?talkId=${talk.id}` }}>
+              Submit to event
+            </ButtonLink>
           )}
         </div>
       </div>
