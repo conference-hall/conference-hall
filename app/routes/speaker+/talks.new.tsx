@@ -7,7 +7,6 @@ import { TalkSaveSchema } from '~/.server/speaker-talks-library/TalksLibrary.typ
 import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { Page } from '~/design-system/layouts/PageContent.tsx';
-import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { redirectWithToast } from '~/libs/toasts/toast.server.ts';
@@ -31,24 +30,20 @@ export default function NewTalkRoute() {
   const errors = useActionData<typeof action>();
 
   return (
-    <>
-      <PageHeaderTitle title="Create a new talk" backTo="/speaker/talks" />
+    <Page>
+      <Card>
+        <Card.Content>
+          <Form method="POST" id="new-talk-form" className="space-y-8">
+            <DetailsForm errors={errors} />
+          </Form>
+        </Card.Content>
 
-      <Page>
-        <Card>
-          <Card.Content>
-            <Form method="POST" id="new-talk-form" className="space-y-8">
-              <DetailsForm errors={errors} />
-            </Form>
-          </Card.Content>
-
-          <Card.Actions>
-            <Button type="submit" form="new-talk-form">
-              Create new talk
-            </Button>
-          </Card.Actions>
-        </Card>
-      </Page>
-    </>
+        <Card.Actions>
+          <Button type="submit" form="new-talk-form">
+            Create new talk
+          </Button>
+        </Card.Actions>
+      </Card>
+    </Page>
   );
 }

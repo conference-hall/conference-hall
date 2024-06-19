@@ -1,6 +1,6 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { Form, useActionData, useLoaderData, useNavigate } from '@remix-run/react';
+import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { TalksLibrary } from '~/.server/speaker-talks-library/TalksLibrary';
@@ -8,7 +8,6 @@ import { TalkSaveSchema } from '~/.server/speaker-talks-library/TalksLibrary.typ
 import { Button, ButtonLink } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { Page } from '~/design-system/layouts/PageContent.tsx';
-import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { H3, Subtitle } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
@@ -53,42 +52,37 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 export default function SpeakerTalkRoute() {
   const talk = useLoaderData<typeof loader>();
   const errors = useActionData<typeof action>();
-  const navigate = useNavigate();
 
   return (
-    <>
-      <PageHeaderTitle title={talk.title} backOnClick={() => navigate(-1)} />
+    <Page>
+      <div className="grid grid-cols-1 gap-6 lg:grid-flow-col-dense lg:grid-cols-3">
+        <Card className="lg:col-span-2 lg:col-start-1">
+          <Card.Content>
+            <Form method="POST" id="edit-talk-form">
+              <DetailsForm initialValues={talk} errors={errors} />
+            </Form>
+          </Card.Content>
+          <Card.Actions>
+            <ButtonLink to={`/speaker/talks/${talk.id}`} variant="secondary">
+              Cancel
+            </ButtonLink>
+            <Button type="submit" name="intent" value="talk-edit" form="edit-talk-form">
+              Save talk
+            </Button>
+          </Card.Actions>
+        </Card>
 
-      <Page>
-        <div className="grid grid-cols-1 gap-6 lg:grid-flow-col-dense lg:grid-cols-3">
-          <Card className="lg:col-span-2 lg:col-start-1">
-            <Card.Content>
-              <Form method="POST" id="edit-talk-form">
-                <DetailsForm initialValues={talk} errors={errors} />
-              </Form>
-            </Card.Content>
-            <Card.Actions>
-              <ButtonLink to={`/speaker/talks/${talk.id}`} variant="secondary">
-                Cancel
-              </ButtonLink>
-              <Button type="submit" name="intent" value="talk-edit" form="edit-talk-form">
-                Save talk
-              </Button>
-            </Card.Actions>
+        <div className="lg:col-span-1 lg:col-start-3">
+          <Card p={8} className="space-y-6">
+            <div>
+              <H3>Speakers</H3>
+              <Subtitle>When co-speaker accepts the invite, he/she will be automatically added to the talk.</Subtitle>
+            </div>
+            <CoSpeakersList speakers={talk.speakers} showRemoveAction />
+            <InviteCoSpeakerButton invitationLink={talk.invitationLink} block />
           </Card>
-
-          <div className="lg:col-span-1 lg:col-start-3">
-            <Card p={8} className="space-y-6">
-              <div>
-                <H3>Speakers</H3>
-                <Subtitle>When co-speaker accepts the invite, he/she will be automatically added to the talk.</Subtitle>
-              </div>
-              <CoSpeakersList speakers={talk.speakers} showRemoveAction />
-              <InviteCoSpeakerButton invitationLink={talk.invitationLink} block />
-            </Card>
-          </div>
         </div>
-      </Page>
-    </>
+      </div>
+    </Page>
   );
 }

@@ -2,12 +2,11 @@ import { Dialog, DialogPanel, Transition } from '@headlessui/react';
 import {
   ArrowRightStartOnRectangleIcon,
   BellIcon,
-  HomeIcon,
+  FireIcon,
   MagnifyingGlassIcon,
   MicrophoneIcon,
   PlusIcon,
   Square3Stack3DIcon,
-  UserIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
 import { Link } from '@remix-run/react';
@@ -71,16 +70,12 @@ export function UserMenu({ email, name, picture, teams, isOrganizer, notificatio
                         </Text>
                       </li>
 
-                      <MenuLink to="/speaker" icon={HomeIcon} onClick={handleClose}>
-                        Home
+                      <MenuLink to="/speaker" icon={FireIcon} onClick={handleClose}>
+                        Activity
                       </MenuLink>
 
                       <MenuLink to="/speaker/talks" icon={MicrophoneIcon} onClick={handleClose}>
                         Talks library
-                      </MenuLink>
-
-                      <MenuLink to="/speaker/profile" icon={UserIcon} onClick={handleClose}>
-                        Profile
                       </MenuLink>
 
                       <Divider />

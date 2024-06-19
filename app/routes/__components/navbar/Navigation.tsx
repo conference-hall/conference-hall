@@ -1,7 +1,5 @@
 import { NavTab, NavTabs } from '~/design-system/navigation/NavTabs.tsx';
 
-import { TeamsDropdown } from './dropdowns/TeamsDropdown';
-
 type Props = {
   authenticated: boolean;
   isOrganizer?: boolean;
@@ -24,7 +22,11 @@ export function Navigation({ authenticated, isOrganizer, teams = [] }: Props) {
       <NavTab to="/speaker" end variant="dark">
         My profile
       </NavTab>
-      {isOrganizer ? <TeamsDropdown teams={teams} /> : null}
+      {isOrganizer ? (
+        <NavTab to="/speaker/teams" end variant="dark">
+          My teams
+        </NavTab>
+      ) : null}
     </NavTabs>
   );
 }

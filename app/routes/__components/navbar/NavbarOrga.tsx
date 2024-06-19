@@ -8,6 +8,7 @@ import type { loader as routeEventLoader } from '../../team+/$team.$event+/_layo
 import { EventButton } from './dropdowns/EventButton.tsx';
 import { TeamsDropdown } from './dropdowns/TeamsDropdown.tsx';
 import { Logo } from './Logo.tsx';
+import { Navigation } from './Navigation.tsx';
 import { UserMenu } from './UserMenu.tsx';
 
 type Props = {
@@ -39,15 +40,9 @@ export function NavbarOrga({ user }: Props) {
           {user?.isOrganizer ? <TeamBreadcrumb teams={user.teams} /> : null}
         </div>
 
-        <div className="hidden gap-2 lg:flex lg:flex-shrink-0 lg:items-center lg:justify-end">
-          {/* Login */}
-          {!user ? (
-            <NavTabs variant="dark">
-              <NavTab to="/login" variant="dark">
-                Login
-              </NavTab>
-            </NavTabs>
-          ) : null}
+        <div className="hidden gap-4 lg:flex lg:flex-shrink-0 lg:items-center lg:justify-end">
+          {/* Navigation links */}
+          <Navigation authenticated={Boolean(user)} isOrganizer={user?.isOrganizer} teams={user?.teams} />
 
           {/* Avatar */}
           {user && (

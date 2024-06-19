@@ -8,6 +8,7 @@ type Props = {
   variant?: keyof typeof BACKGROUND;
   py?: keyof typeof PADDING_Y;
   scrollable?: boolean;
+  className?: string;
 };
 
 const BACKGROUND = {
@@ -35,10 +36,16 @@ const PADDING_Y = {
   4: 'py-4',
 };
 
-export function NavTabs({ children, py = 0, variant = 'light', scrollable = false }: Props) {
+export function NavTabs({ children, py = 0, variant = 'light', scrollable = false, className }: Props) {
   return (
     <nav
-      className={cx('flex space-x-4 px-1', PADDING_Y[py], BACKGROUND[variant], { 'overflow-x-auto': scrollable })}
+      className={cx(
+        'flex space-x-4 px-1',
+        PADDING_Y[py],
+        BACKGROUND[variant],
+        { 'overflow-x-auto': scrollable },
+        className,
+      )}
       aria-label="Tabs"
     >
       {children}

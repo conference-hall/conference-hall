@@ -6,17 +6,16 @@ import { useLoaderData } from '@remix-run/react';
 
 import { TalksLibrary } from '~/.server/speaker-talks-library/TalksLibrary.ts';
 import { AvatarGroup } from '~/design-system/Avatar.tsx';
-import { ButtonLink } from '~/design-system/Buttons.tsx';
+import { ButtonLink } from '~/design-system/Buttons';
 import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
 import { Page } from '~/design-system/layouts/PageContent.tsx';
-import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
 import { List } from '~/design-system/list/List.tsx';
 import { SearchParamSelector } from '~/design-system/navigation/SearchParamSelector.tsx';
-import { Text } from '~/design-system/Typography.tsx';
+import { H1, Text } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 
-export const meta = mergeMeta(() => [{ title: 'Talks library | Conference Hall' }]);
+export const meta = mergeMeta(() => [{ title: 'My talks library | Conference Hall' }]);
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
@@ -30,44 +29,42 @@ export default function SpeakerTalksRoute() {
   const talks = useLoaderData<typeof loader>();
 
   return (
-    <>
-      <PageHeaderTitle title="Your talks library" subtitle="This is your talks library.">
-        <ButtonLink iconLeft={PlusIcon} to="/speaker/talks/new">
+    <Page className="space-y-8">
+      <div className="flex items-center justify-between">
+        <H1>My talks library</H1>
+        <ButtonLink to="/speaker/talks/new" iconLeft={PlusIcon} variant="secondary">
           New talk
         </ButtonLink>
-      </PageHeaderTitle>
-
-      <Page className="space-y-8">
-        <List>
-          <List.Header>
-            <Text weight="semibold">{`${talks.length} talks`}</Text>
-            <SearchParamSelector
-              param="archived"
-              defaultValue="false"
-              selectors={[
-                { label: 'Active', value: 'false' },
-                { label: 'Archived', value: 'true' },
-              ]}
-            />
-          </List.Header>
-          <List.Content aria-label="Talks list">
-            {talks.length === 0 && <EmptyState icon={InboxIcon} label="No talks found." />}
-            {talks.map((talk) => (
-              <List.RowLink key={talk.id} to={talk.id} className="flex justify-between items-center gap-4">
-                <div className="min-w-0">
-                  <Text size="base" weight="semibold" mb={1} truncate>
-                    {talk.title}
-                  </Text>
-                  <AvatarGroup avatars={talk.speakers} displayNames />
-                </div>
-                <div>
-                  <ChevronRightIcon className="h-5 w-5 flex-none text-gray-400" aria-hidden="true" />
-                </div>
-              </List.RowLink>
-            ))}
-          </List.Content>
-        </List>
-      </Page>
-    </>
+      </div>
+      <List>
+        <List.Header>
+          <Text weight="semibold">{`${talks.length} talks`}</Text>
+          <SearchParamSelector
+            param="archived"
+            defaultValue="false"
+            selectors={[
+              { label: 'Active', value: 'false' },
+              { label: 'Archived', value: 'true' },
+            ]}
+          />
+        </List.Header>
+        <List.Content aria-label="Talks list">
+          {talks.length === 0 && <EmptyState icon={InboxIcon} label="No talks found." />}
+          {talks.map((talk) => (
+            <List.RowLink key={talk.id} to={talk.id} className="flex justify-between items-center gap-4">
+              <div className="min-w-0">
+                <Text size="base" weight="semibold" mb={1} truncate>
+                  {talk.title}
+                </Text>
+                <AvatarGroup avatars={talk.speakers} displayNames />
+              </div>
+              <div>
+                <ChevronRightIcon className="h-5 w-5 flex-none text-gray-400" aria-hidden="true" />
+              </div>
+            </List.RowLink>
+          ))}
+        </List.Content>
+      </List>
+    </Page>
   );
 }
