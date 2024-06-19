@@ -45,14 +45,29 @@ export function ToastTransition({ show, children }: TransitionProps) {
 export function SlideOverTransition({ children }: TransitionProps) {
   return (
     <TransitionChild
-      enter="transform transition ease-in-out duration-500 sm:duration-700"
+      enter="transform transition ease-in-out duration-500"
       enterFrom="translate-x-full"
       enterTo="translate-x-0"
-      leave="transform transition ease-in-out duration-500 sm:duration-700"
+      leave="transform transition ease-in-out duration-500"
       leaveFrom="translate-x-0"
       leaveTo="translate-x-full"
     >
       {children}
+    </TransitionChild>
+  );
+}
+
+export function Background() {
+  return (
+    <TransitionChild
+      enter="ease-out duration-300"
+      enterFrom="opacity-0"
+      enterTo="opacity-100"
+      leave="ease-in duration-200"
+      leaveFrom="opacity-100"
+      leaveTo="opacity-0"
+    >
+      <div className="fixed inset-0 bg-gray-500 bg-opacity-20 transition-opacity" />
     </TransitionChild>
   );
 }

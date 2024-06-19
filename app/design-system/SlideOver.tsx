@@ -2,7 +2,7 @@ import { Dialog, DialogPanel, DialogTitle, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
 
-import { SlideOverTransition } from './Transitions';
+import { Background, SlideOverTransition } from './Transitions';
 
 type Props = {
   open: boolean;
@@ -15,7 +15,7 @@ export default function SlideOver({ open, size = 'base', onClose, children }: Pr
   return (
     <Transition show={open}>
       <Dialog className="relative z-20" onClose={onClose}>
-        <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+        <Background />
 
         <div className="fixed inset-0 overflow-hidden">
           <div className="absolute inset-0 overflow-hidden">
