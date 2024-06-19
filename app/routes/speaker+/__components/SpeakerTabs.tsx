@@ -2,7 +2,9 @@ import { FireIcon, MicrophoneIcon, Square3Stack3DIcon, UserIcon } from '@heroico
 
 import { NavTab, NavTabs } from '~/design-system/navigation/NavTabs.tsx';
 
-export function SpeakerTabs() {
+type Props = { isOrganizer?: boolean };
+
+export function SpeakerTabs({ isOrganizer }: Props) {
   return (
     <NavTabs py={4} scrollable className="sm:ml-40">
       <NavTab to="/speaker" icon={FireIcon} end>
@@ -17,9 +19,11 @@ export function SpeakerTabs() {
         My profile
       </NavTab>
 
-      <NavTab to="/speaker/teams" icon={Square3Stack3DIcon}>
-        My teams
-      </NavTab>
+      {isOrganizer ? (
+        <NavTab to="/speaker/teams" icon={Square3Stack3DIcon}>
+          My teams
+        </NavTab>
+      ) : null}
     </NavTabs>
   );
 }
