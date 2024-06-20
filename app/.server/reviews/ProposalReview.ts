@@ -62,6 +62,11 @@ export class ProposalReview {
           picture: speaker.picture,
           company: speaker.company,
           bio: speaker.bio,
+          references: speaker.references,
+          email: speaker.email,
+          address: speaker.address,
+          socials: speaker.socials as SocialLinks,
+          // TODO: survey: speaker.surveys.answers as SurveyData | undefined,
         })) || [],
     };
   }
@@ -114,30 +119,5 @@ export class ProposalReview {
         categories: { set: [], connect: categories?.map((id) => ({ id })) },
       },
     });
-  }
-
-  async getSpeakerInfo(speakerId: string) {
-    const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER', 'REVIEWER']);
-    if (!event.displayProposalsSpeakers) throw new ForbiddenOperationError();
-
-    const speaker = await db.user.findUnique({
-      where: { id: speakerId, proposals: { some: { id: this.proposalId } } },
-    });
-    if (!speaker) throw new UserNotFoundError();
-
-    const survey = await db.survey.findFirst({ where: { eventId: event.id, userId: speakerId } });
-
-    return {
-      id: speaker.id,
-      name: speaker.name,
-      picture: speaker.picture,
-      bio: speaker.bio,
-      references: speaker.references,
-      email: speaker.email,
-      company: speaker.company,
-      address: speaker.address,
-      socials: speaker.socials as SocialLinks,
-      survey: survey?.answers as SurveyData | undefined,
-    };
   }
 }
