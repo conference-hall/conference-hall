@@ -20,7 +20,7 @@ import { parseWithZod } from '~/libs/zod-parser.ts';
 import { TalkSection } from '~/routes/__components/talks/talk-section.tsx';
 import { useUser } from '~/routes/__components/useUser.tsx';
 
-import { ActivityFeed as Feed } from './__components/activity-feed';
+import { ProposalActivityFeed as Feed } from './__components/proposal-activity/proposal-activity-feed';
 import { ReviewHeader } from './__components/review-header';
 import { ReviewSidebar } from './__components/review-sidebar';
 

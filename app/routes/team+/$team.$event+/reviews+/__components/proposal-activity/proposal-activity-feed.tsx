@@ -2,13 +2,13 @@ import { cx } from 'class-variance-authority';
 
 import type { Feed } from '~/.server/reviews/ActivityFeed';
 
-import { CommentItem } from './activity-feed-sections/comment-item';
-import { NewCommentForm } from './activity-feed-sections/new-comment-form';
-import { ReviewItem } from './activity-feed-sections/review-item';
+import { CommentItem } from './comment-item';
+import { NewCommentForm } from './new-comment-form';
+import { ReviewItem } from './review-item';
 
 type Props = { activity: Feed; picture?: string | null };
 
-export function ActivityFeed({ activity }: Props) {
+export function ProposalActivityFeed({ activity }: Props) {
   return (
     <div className="pl-4 pt-4 space-y-6 lg:pb-8 lg:pr-32 ">
       {activity.length > 0 && (

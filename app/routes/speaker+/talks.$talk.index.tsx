@@ -11,7 +11,7 @@ import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { parseWithZod } from '~/libs/zod-parser';
 
-import { ActivityFeed } from '../__components/talks/talk-activities/activity-feed';
+import { TalkActivityFeed } from '../__components/talks/talk-activity/talk-activity-feed';
 import { TalkSection } from '../__components/talks/talk-section';
 
 export const meta = mergeMeta<typeof loader>(({ data }) =>
@@ -70,7 +70,7 @@ export default function SpeakerTalkRoute() {
       <TalkSection talk={talk} errors={errors} canEditSpeakers canEditTalk canArchive canSubmit />
 
       <div className="pl-4 pt-8 md:w-2/3">
-        <ActivityFeed activity={['1']} />
+        <TalkActivityFeed activity={['1']} />
       </div>
     </Page>
   );
