@@ -1,9 +1,8 @@
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react';
-import { ChevronDownIcon, PaperAirplaneIcon } from '@heroicons/react/20/solid';
+import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import type { TalkLevel } from '@prisma/client';
 
 import { Badge } from '~/design-system/Badges.tsx';
-import { ButtonLink } from '~/design-system/Buttons';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { Markdown } from '~/design-system/Markdown.tsx';
 import { H1 } from '~/design-system/Typography';
@@ -39,7 +38,6 @@ type Props = {
   canEditTalk: boolean;
   canEditSpeakers: boolean;
   canArchive: boolean;
-  canSubmit: boolean;
   showFormats?: boolean;
   showCategories?: boolean;
   referencesOpen?: boolean;
@@ -52,7 +50,6 @@ export function TalkSection({
   canEditTalk,
   canEditSpeakers,
   canArchive,
-  canSubmit,
   showFormats = false,
   showCategories = false,
   referencesOpen = false,
@@ -67,12 +64,6 @@ export function TalkSection({
           {canArchive && <TalkArchiveButton archived={Boolean(talk.archived)} />}
 
           {canEditTalk && !talk.archived && <TalkEditButton initialValues={talk} event={event} errors={errors} />}
-
-          {canSubmit && !talk.archived && (
-            <ButtonLink iconLeft={PaperAirplaneIcon} to={{ pathname: '/', search: `?talkId=${talk.id}` }}>
-              Submit to event
-            </ButtonLink>
-          )}
         </div>
       </div>
 

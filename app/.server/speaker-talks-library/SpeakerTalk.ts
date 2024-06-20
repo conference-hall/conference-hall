@@ -50,9 +50,9 @@ export class SpeakerTalk {
       submissions: talk.proposals.map((proposal) => ({
         slug: proposal.event.slug,
         name: proposal.event.name,
-        logo: proposal.event.logo,
         proposalStatus: proposal.getStatusForSpeaker(proposal.event.isCfpOpen),
-      })),
+        timestamp: proposal.createdAt.toUTCString(),
+      })).sort((a, b) => a < b ? -1 : 1),
       invitationLink: talk.invitationLink,
     };
   }

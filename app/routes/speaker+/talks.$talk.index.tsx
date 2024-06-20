@@ -67,10 +67,14 @@ export default function SpeakerTalkRoute() {
 
   return (
     <Page>
-      <TalkSection talk={talk} errors={errors} canEditSpeakers canEditTalk canArchive canSubmit />
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-10">
+        <div className="lg:col-span-7">
+          <TalkSection talk={talk} errors={errors} canEditSpeakers canEditTalk canArchive />
+        </div>
 
-      <div className="pl-4 pt-8 md:w-2/3">
-        <TalkActivityFeed activity={['1']} />
+        <div className="lg:col-span-3">
+          <TalkActivityFeed talkId={talk.id} canSubmit={!talk.archived} submissions={talk.submissions} />
+        </div>
       </div>
     </Page>
   );

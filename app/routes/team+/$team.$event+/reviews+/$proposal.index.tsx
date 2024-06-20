@@ -126,7 +126,6 @@ export default function ProposalReviewLayoutRoute() {
               canEditTalk={canEdit}
               canEditSpeakers={false}
               canArchive={false}
-              canSubmit={false}
               showFormats={hasFormats}
               showCategories={hasCategories}
               referencesOpen

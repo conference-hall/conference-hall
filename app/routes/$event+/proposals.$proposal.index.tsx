@@ -79,7 +79,6 @@ export default function ProposalRoute() {
           canEditSpeakers={proposal.status === SpeakerProposalStatus.Submitted}
           canEditTalk={proposal.status === SpeakerProposalStatus.Submitted}
           canArchive={false}
-          canSubmit={false}
         />
       </div>
     </Page>
