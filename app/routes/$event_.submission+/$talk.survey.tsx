@@ -1,7 +1,7 @@
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import type { ActionFunction, LoaderFunctionArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
-import { Form, useLoaderData, useNavigate } from '@remix-run/react';
+import { useLoaderData, useNavigate } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { SubmissionSteps } from '~/.server/cfp-submission-funnel/SubmissionSteps';
@@ -13,7 +13,8 @@ import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2 } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { parseWithZod } from '~/libs/zod-parser';
-import { SurveyForm } from '~/routes/__components/proposals/forms/SurveyForm.tsx';
+
+import { SurveyForm } from '../__components/talks/talk-forms/survey-form';
 
 export const handle = { step: 'survey' };
 
@@ -51,9 +52,7 @@ export default function SubmissionSurveyRoute() {
         <H2>We have some questions for you</H2>
       </Card.Title>
       <Card.Content>
-        <Form id="survey-form" method="POST">
-          <SurveyForm questions={questions} initialValues={answers} />
-        </Form>
+        <SurveyForm id="survey-form" questions={questions} initialValues={answers} />
       </Card.Content>
       <Card.Actions>
         <Button onClick={() => navigate(-1)} variant="secondary">

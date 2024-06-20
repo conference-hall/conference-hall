@@ -61,6 +61,7 @@ export class ProposalReview {
           name: speaker.name,
           picture: speaker.picture,
           company: speaker.company,
+          bio: speaker.bio,
         })) || [],
     };
   }

@@ -4,7 +4,7 @@ import { useParams, useSearchParams } from '@remix-run/react';
 import { IconLink } from '~/design-system/IconButtons.tsx';
 import { Text } from '~/design-system/Typography.tsx';
 
-import { ReviewsProgress } from '../../../__components/list/reviews-progress';
+import { ReviewsProgress } from '../../__components/list/reviews-progress';
 
 type Props = { current: number; total: number; reviewed: number; nextId?: string; previousId?: string };
 

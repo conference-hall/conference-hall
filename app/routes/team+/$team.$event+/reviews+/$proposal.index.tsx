@@ -1,6 +1,6 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { Outlet, useLoaderData, useParams } from '@remix-run/react';
+import { useActionData, useLoaderData, useParams } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { UserEvent } from '~/.server/event-settings/UserEvent.ts';
@@ -10,19 +10,19 @@ import { Comments } from '~/.server/reviews/Comments.ts';
 import { Deliberate, DeliberateSchema } from '~/.server/reviews/Deliberate.ts';
 import type { ProposalReviewData } from '~/.server/reviews/ProposalReview.ts';
 import { ProposalReview } from '~/.server/reviews/ProposalReview.ts';
-import { ReviewUpdateDataSchema } from '~/.server/reviews/ProposalReview.types.ts';
+import { ProposalUpdateSchema, ReviewUpdateDataSchema } from '~/.server/reviews/ProposalReview.types.ts';
 import { parseUrlFilters } from '~/.server/shared/ProposalSearchBuilder.types.ts';
 import { Page } from '~/design-system/layouts/PageContent.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { parseWithZod } from '~/libs/zod-parser.ts';
+import { TalkSection } from '~/routes/__components/talks/talk-section.tsx';
 import { useUser } from '~/routes/__components/useUser.tsx';
 
-import { ActivityFeed as Feed } from './__components/activity-feed.tsx';
-import { ProposalPage } from './__components/proposal-page.tsx';
-import { ReviewHeader } from './__components/review-header.tsx';
-import { ReviewSidebar } from './__components/review-sidebar.tsx';
+import { ActivityFeed as Feed } from './__components/activity-feed';
+import { ReviewHeader } from './__components/review-header';
+import { ReviewSidebar } from './__components/review-sidebar';
 
 export type ProposalData = ProposalReviewData;
 
@@ -87,6 +87,14 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       await result.publish(params.proposal, form.get('send-email') === 'on');
       break;
     }
+    case 'edit-talk': {
+      const result = parseWithZod(form, ProposalUpdateSchema);
+      if (!result.success) return json(result.error);
+
+      const proposal = ProposalReview.for(userId, params.team, params.event, params.proposal);
+      await proposal.update(result.value);
+      return toast('success', 'Proposal saved.');
+    }
   }
   return null;
 };
@@ -95,9 +103,14 @@ export default function ProposalReviewLayoutRoute() {
   const params = useParams();
   const { user } = useUser();
   const { event, proposal, pagination, activity } = useLoaderData<typeof loader>();
+  const errors = useActionData<typeof action>();
 
   const role = user?.teams.find((team) => team.slug === params.team)?.role;
+  const canEdit = role !== 'REVIEWER';
   const canDeliberate = role !== 'REVIEWER';
+
+  const hasFormats = proposal.formats && proposal.formats.length > 0;
+  const hasCategories = proposal.categories && proposal.categories.length > 0;
 
   return (
     <Page>
@@ -106,9 +119,19 @@ export default function ProposalReviewLayoutRoute() {
       <div className="mx-auto max-w-7xl px-4">
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-10">
           <div className="space-y-4 lg:col-span-7">
-            <ProposalPage proposal={proposal} />
+            <TalkSection
+              talk={proposal}
+              errors={errors}
+              event={event}
+              canEditTalk={canEdit}
+              canEditSpeakers={false}
+              canArchive={false}
+              canSubmit={false}
+              showFormats={hasFormats}
+              showCategories={hasCategories}
+              referencesOpen
+            />
             <Feed activity={activity} />
-            <Outlet context={{ event, proposal }} />
           </div>
 
           <div className="lg:col-span-3">

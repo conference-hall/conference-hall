@@ -11,7 +11,7 @@ import { getLevel } from '~/libs/formatters/levels';
 import { CoSpeakers } from '~/routes/__components/talks/co-speaker';
 import { useUser } from '~/routes/__components/useUser';
 
-import type { ProposalData } from '../_layout';
+import type { ProposalData } from '../$proposal.index';
 
 type Props = { proposal: ProposalData };
 

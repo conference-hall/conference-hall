@@ -10,9 +10,10 @@ import { H1 } from '~/design-system/Typography';
 import { getLanguage } from '~/libs/formatters/languages';
 import { getLevel } from '~/libs/formatters/levels';
 
+import type { SpeakerProps } from './co-speaker';
 import { CoSpeakers } from './co-speaker';
-import { TalkEditButton } from './talk-edit';
 import { TalkArchiveButton } from './talk-forms/talk-archive-button';
+import { TalkEditButton } from './talk-forms/talk-form-drawer';
 
 type Props = {
   talk: {
@@ -22,20 +23,21 @@ type Props = {
     references: string | null;
     level: TalkLevel | null;
     languages: Array<string>;
-    invitationLink: string;
-    archived: boolean;
-    speakers: Array<{
-      id: string;
-      name: string | null;
-      picture: string | null;
-      bio: string | null;
-      isCurrentUser: boolean;
-    }>;
+    speakers: Array<SpeakerProps>;
+    invitationLink?: string;
+    archived?: boolean;
     formats?: Array<{ id: string; name: string }>;
     categories?: Array<{ id: string; name: string }>;
   };
+  event?: {
+    formats?: Array<{ id: string; name: string; description: string | null }>;
+    formatsRequired?: boolean;
+    categories?: Array<{ id: string; name: string; description: string | null }>;
+    categoriesRequired?: boolean;
+  };
   errors?: Record<string, string | string[]> | null;
-  canEdit: boolean;
+  canEditTalk: boolean;
+  canEditSpeakers: boolean;
   canArchive: boolean;
   canSubmit: boolean;
   showFormats?: boolean;
@@ -45,8 +47,10 @@ type Props = {
 
 export function TalkSection({
   talk,
+  event,
   errors,
-  canEdit,
+  canEditTalk,
+  canEditSpeakers,
   canArchive,
   canSubmit,
   showFormats = false,
@@ -60,8 +64,10 @@ export function TalkSection({
           {talk.title}
         </H1>
         <div className="flex justify-between items-center gap-4">
-          {canArchive && <TalkArchiveButton archived={talk.archived} />}
-          {canEdit && !talk.archived && <TalkEditButton initialValues={talk} errors={errors} />}
+          {canArchive && <TalkArchiveButton archived={Boolean(talk.archived)} />}
+
+          {canEditTalk && !talk.archived && <TalkEditButton initialValues={talk} event={event} errors={errors} />}
+
           {canSubmit && !talk.archived && (
             <ButtonLink iconLeft={PaperAirplaneIcon} to={{ pathname: '/', search: `?talkId=${talk.id}` }}>
               Submit to event
@@ -73,7 +79,7 @@ export function TalkSection({
       <CoSpeakers
         speakers={talk.speakers}
         invitationLink={talk.invitationLink}
-        canEdit={canEdit && !talk.archived}
+        canEdit={canEditSpeakers && !talk.archived}
         className="p-4"
       />
 

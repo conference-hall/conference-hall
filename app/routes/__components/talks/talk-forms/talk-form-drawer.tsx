@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Button } from '~/design-system/Buttons';
 import SlideOver from '~/design-system/SlideOver';
 
-import { TalkForm } from './talk-forms/talk-form';
+import { TalkForm } from './talk-form';
 
 type TalkEditProps = {
   initialValues?: {
@@ -16,10 +16,12 @@ type TalkEditProps = {
     formats?: Array<{ id: string }>;
     categories?: Array<{ id: string }>;
   } | null;
-  formats?: Array<{ id: string; name: string; description: string | null }>;
-  formatsRequired?: boolean;
-  categories?: Array<{ id: string; name: string; description: string | null }>;
-  categoriesRequired?: boolean;
+  event?: {
+    formats?: Array<{ id: string; name: string; description: string | null }>;
+    formatsRequired?: boolean;
+    categories?: Array<{ id: string; name: string; description: string | null }>;
+    categoriesRequired?: boolean;
+  };
   errors?: Record<string, string | string[]> | null;
 };
 
@@ -43,26 +45,17 @@ type TalkEditDrawerProps = TalkEditProps & {
   onClose: () => void;
 };
 
-function TalkEditDrawer({
-  initialValues,
-  formats,
-  formatsRequired,
-  categories,
-  categoriesRequired,
-  errors,
-  open,
-  onClose,
-}: TalkEditDrawerProps) {
+function TalkEditDrawer({ initialValues, event, errors, open, onClose }: TalkEditDrawerProps) {
   return (
     <SlideOver open={open} onClose={onClose} size="l">
       <SlideOver.Content title="Edit talk" onClose={onClose}>
         <TalkForm
           id="edit-talk-form"
           initialValues={initialValues}
-          formats={formats}
-          categories={categories}
-          formatsRequired={formatsRequired}
-          categoriesRequired={categoriesRequired}
+          formats={event?.formats}
+          categories={event?.categories}
+          formatsRequired={event?.formatsRequired}
+          categoriesRequired={event?.categoriesRequired}
           errors={errors}
         />
       </SlideOver.Content>

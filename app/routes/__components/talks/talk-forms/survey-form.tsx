@@ -1,16 +1,19 @@
+import { Form } from '@remix-run/react';
+
 import type { SurveyQuestions } from '~/.server/cfp-survey/SurveyQuestions';
 import { Checkbox, CheckboxGroup } from '~/design-system/forms/Checkboxes.tsx';
 import { Radio, RadioGroup } from '~/design-system/forms/RadioGroup.tsx';
 import { TextArea } from '~/design-system/forms/TextArea.tsx';
 
 export type Props = {
+  id: string;
   questions: SurveyQuestions;
   initialValues: { [key: string]: unknown };
 };
 
-export function SurveyForm({ questions, initialValues }: Props) {
+export function SurveyForm({ id, questions, initialValues }: Props) {
   return (
-    <div className="space-y-10">
+    <Form id={id} method="POST" className="space-y-10">
       {questions.map((question) => {
         if (question.type === 'text') {
           return (
@@ -58,6 +61,6 @@ export function SurveyForm({ questions, initialValues }: Props) {
         }
         return null;
       })}
-    </div>
+    </Form>
   );
 }

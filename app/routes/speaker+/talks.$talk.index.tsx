@@ -67,7 +67,7 @@ export default function SpeakerTalkRoute() {
 
   return (
     <Page>
-      <TalkSection talk={talk} errors={errors} canEdit canArchive canSubmit />
+      <TalkSection talk={talk} errors={errors} canEditSpeakers canEditTalk canArchive canSubmit />
 
       <div className="pl-4 pt-8 md:w-2/3">
         <ActivityFeed activity={['1']} />

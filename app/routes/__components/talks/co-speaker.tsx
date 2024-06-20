@@ -13,7 +13,7 @@ import { Text } from '~/design-system/Typography.tsx';
 
 import { InvitationModal } from '../InvitationModal.tsx';
 
-type SpeakerProps = {
+export type SpeakerProps = {
   id: string;
   name: string | null;
   email?: string;
