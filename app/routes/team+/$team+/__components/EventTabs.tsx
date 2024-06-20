@@ -1,11 +1,4 @@
-import {
-  CalendarIcon,
-  Cog6ToothIcon,
-  HomeIcon,
-  MegaphoneIcon,
-  QueueListIcon,
-  UserGroupIcon,
-} from '@heroicons/react/24/outline';
+import { CalendarIcon, Cog6ToothIcon, HomeIcon, MegaphoneIcon, QueueListIcon } from '@heroicons/react/24/outline';
 import { useSearchParams } from '@remix-run/react';
 
 import { NavTab, NavTabs } from '~/design-system/navigation/NavTabs.tsx';
@@ -25,10 +18,6 @@ export function EventTabs({ teamSlug, eventSlug, eventType, role }: Props) {
 
       <NavTab to={{ pathname: `/team/${teamSlug}/${eventSlug}/reviews`, search }} icon={QueueListIcon}>
         Proposals
-      </NavTab>
-
-      <NavTab to={{ pathname: `/team/${teamSlug}/${eventSlug}/speakers`, search }} icon={UserGroupIcon}>
-        Speakers
       </NavTab>
 
       {role !== 'REVIEWER' && eventType === 'CONFERENCE' ? (
