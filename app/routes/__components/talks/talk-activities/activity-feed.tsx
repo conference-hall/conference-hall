@@ -1,6 +1,6 @@
 import { cx } from 'class-variance-authority';
 
-import { TalkSubmittedItem } from './talk-activity-sections/talk-submitted-item';
+import { TalkSubmittedItem } from './talk-submitted-item';
 
 type Props = { activity: Array<string> };
 

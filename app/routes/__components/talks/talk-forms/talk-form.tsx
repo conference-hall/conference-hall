@@ -1,3 +1,5 @@
+import { Form } from '@remix-run/react';
+
 import { AlertError } from '~/design-system/Alerts.tsx';
 import { Input } from '~/design-system/forms/Input.tsx';
 import { MarkdownTextArea } from '~/design-system/forms/MarkdownTextArea.tsx';
@@ -6,10 +8,11 @@ import { Radio, RadioGroup } from '~/design-system/forms/RadioGroup.tsx';
 import { LANGUAGES } from '~/libs/formatters/languages.ts';
 import { LEVELS } from '~/libs/formatters/levels.ts';
 
-import { CategoriesForm } from './CategoriesForm.tsx';
-import { FormatsForm } from './FormatsForm.tsx';
+import { CategoriesForm } from './categories-form.tsx';
+import { FormatsForm } from './formats-form.tsx';
 
 type Props = {
+  id: string;
   initialValues?: {
     title: string;
     abstract: string;
@@ -26,7 +29,8 @@ type Props = {
   errors?: Record<string, string | string[]> | null;
 };
 
-export function DetailsForm({
+export function TalkForm({
+  id,
   initialValues,
   formats,
   formatsRequired,
@@ -38,7 +42,7 @@ export function DetailsForm({
   const hasCategories = categories && categories.length > 0;
 
   return (
-    <div className="space-y-8 lg:space-y-10">
+    <Form id={id} method="POST" className="space-y-8 lg:space-y-10">
       <Input
         name="title"
         type="text"
@@ -100,6 +104,6 @@ export function DetailsForm({
         defaultValue={initialValues?.references ?? ''}
         error={errors?.references}
       />
-    </div>
+    </Form>
   );
 }

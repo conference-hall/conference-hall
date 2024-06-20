@@ -1,8 +1,6 @@
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react';
 import { ChevronDownIcon, PaperAirplaneIcon } from '@heroicons/react/20/solid';
-import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import type { TalkLevel } from '@prisma/client';
-import { useSearchParams } from '@remix-run/react';
 
 import { Badge } from '~/design-system/Badges.tsx';
 import { ButtonLink } from '~/design-system/Buttons';
@@ -13,7 +11,8 @@ import { getLanguage } from '~/libs/formatters/languages';
 import { getLevel } from '~/libs/formatters/levels';
 
 import { CoSpeakers } from './co-speaker';
-import { TalkArchiveButton } from './talk-archive-button';
+import { TalkEditButton } from './talk-edit';
+import { TalkArchiveButton } from './talk-forms/talk-archive-button';
 
 type Props = {
   talk: {
@@ -32,16 +31,28 @@ type Props = {
       bio: string | null;
       isCurrentUser: boolean;
     }>;
+    formats?: Array<{ id: string; name: string }>;
+    categories?: Array<{ id: string; name: string }>;
   };
+  errors?: Record<string, string | string[]> | null;
   canEdit: boolean;
   canArchive: boolean;
   canSubmit: boolean;
+  showFormats?: boolean;
+  showCategories?: boolean;
   referencesOpen?: boolean;
 };
 
-export function TalkSection({ talk, canEdit, canArchive, canSubmit, referencesOpen = false }: Props) {
-  const [search] = useSearchParams();
-
+export function TalkSection({
+  talk,
+  errors,
+  canEdit,
+  canArchive,
+  canSubmit,
+  showFormats = false,
+  showCategories = false,
+  referencesOpen = false,
+}: Props) {
   return (
     <Card as="section">
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4 px-6 py-3 border-b border-b-gray-200">
@@ -50,15 +61,7 @@ export function TalkSection({ talk, canEdit, canArchive, canSubmit, referencesOp
         </H1>
         <div className="flex justify-between items-center gap-4">
           {canArchive && <TalkArchiveButton archived={talk.archived} />}
-          {canEdit && !talk.archived && (
-            <ButtonLink
-              iconLeft={PencilSquareIcon}
-              variant="secondary"
-              to={{ pathname: 'edit', search: search.toString() }}
-            >
-              Edit
-            </ButtonLink>
-          )}
+          {canEdit && !talk.archived && <TalkEditButton initialValues={talk} errors={errors} />}
           {canSubmit && !talk.archived && (
             <ButtonLink iconLeft={PaperAirplaneIcon} to={{ pathname: '/', search: `?talkId=${talk.id}` }}>
               Submit to event
@@ -81,6 +84,24 @@ export function TalkSection({ talk, canEdit, canArchive, canSubmit, referencesOp
             {talk.abstract}
           </Markdown>
         </div>
+
+        {showFormats && (
+          <div>
+            <dt className="text-sm font-medium leading-6 text-gray-900">Formats</dt>
+            <dd className="text-sm leading-6 text-gray-700">
+              {talk.formats?.map(({ id, name }) => <p key={id}>{name}</p>)}
+            </dd>
+          </div>
+        )}
+
+        {showCategories && (
+          <div>
+            <dt className="text-sm font-medium leading-6 text-gray-900">Categories</dt>
+            <dd className="text-sm leading-6 text-gray-700">
+              {talk.categories?.map(({ id, name }) => <p key={id}>{name}</p>)}
+            </dd>
+          </div>
+        )}
 
         <div className="flex gap-2 flex-wrap">
           {talk.level && <Badge color="indigo">{getLevel(talk.level)}</Badge>}

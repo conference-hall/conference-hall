@@ -67,22 +67,25 @@ function SpeakerPill({ speaker, canEdit }: SpeakerPillProps) {
   const [open, setOpen] = useState(false);
 
   return (
-    <button
-      aria-label={`View ${speaker.name} profile`}
-      onClick={() => setOpen(true)}
-      className="flex items-center gap-2 hover:bg-gray-100 p-1 pr-3 rounded-full border border-gray-200"
-    >
-      <Avatar name={speaker.name} picture={speaker.picture} size="xs" />
-      <Text weight="medium" size="xs" variant="secondary" truncate>
-        {speaker.name}
-      </Text>
+    <>
+      <button
+        aria-label={`View ${speaker.name} profile`}
+        onClick={() => setOpen(true)}
+        className="flex items-center gap-2 hover:bg-gray-100 p-1 pr-3 rounded-full border border-gray-200"
+      >
+        <Avatar name={speaker.name} picture={speaker.picture} size="xs" />
+        <Text weight="medium" size="xs" variant="secondary" truncate>
+          {speaker.name}
+        </Text>
+      </button>
+
       <SpeakerDrawer
         speaker={speaker}
         canEdit={canEdit && !speaker.isCurrentUser}
         open={open}
         onClose={() => setOpen(false)}
       />
-    </button>
+    </>
   );
 }
 
@@ -200,10 +203,10 @@ function SpeakerTitle({ name, picture, company }: SpeakerTitleProps) {
       <Avatar picture={picture} name={name} size="l" />
 
       <div className="overflow-hidden">
-        <Text weight="semibold" size="xl" truncate>
+        <Text weight="bold" size="xl" truncate>
           {name}
         </Text>
-        <Text variant="secondary" truncate>
+        <Text variant="secondary" weight="normal" truncate>
           {company}
         </Text>
       </div>

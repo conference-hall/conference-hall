@@ -1,6 +1,6 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { Form, useActionData, useLoaderData, useNavigate } from '@remix-run/react';
+import { useActionData, useLoaderData, useNavigate } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { UserProposal } from '~/.server/cfp-submissions/UserProposal.ts';
@@ -14,9 +14,9 @@ import { H3, Subtitle } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
 import { parseWithZod } from '~/libs/zod-parser.ts';
-import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm.tsx';
 
 import { CoSpeakers } from '../__components/talks/co-speaker.tsx';
+import { TalkForm } from '../__components/talks/talk-forms/talk-form.tsx';
 import { useEvent } from './__components/useEvent.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
@@ -68,16 +68,15 @@ export default function EditProposalRoute() {
         <div className="grid grid-cols-1 gap-6 lg:grid-flow-col-dense lg:grid-cols-3">
           <Card className="lg:col-span-2 lg:col-start-1">
             <Card.Content>
-              <Form method="POST" id="edit-proposal-form">
-                <DetailsForm
-                  initialValues={proposal}
-                  errors={errors}
-                  formats={event.formats}
-                  formatsRequired={event.formatsRequired}
-                  categories={event.categories}
-                  categoriesRequired={event.categoriesRequired}
-                />
-              </Form>
+              <TalkForm
+                id="edit-proposal-form"
+                initialValues={proposal}
+                errors={errors}
+                formats={event.formats}
+                formatsRequired={event.formatsRequired}
+                categories={event.categories}
+                categoriesRequired={event.categoriesRequired}
+              />
             </Card.Content>
             <Card.Actions>
               <ButtonLink to={`/${event.slug}/proposals/${proposal.id}`} variant="secondary">

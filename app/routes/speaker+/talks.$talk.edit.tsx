@@ -1,6 +1,6 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { Form, useActionData, useLoaderData } from '@remix-run/react';
+import { useActionData, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { TalksLibrary } from '~/.server/speaker-talks-library/TalksLibrary';
@@ -12,7 +12,8 @@ import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { redirectWithToast } from '~/libs/toasts/toast.server.ts';
 import { parseWithZod } from '~/libs/zod-parser';
-import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm.tsx';
+
+import { TalkForm } from '../__components/talks/talk-forms/talk-form';
 
 export const meta = mergeMeta<typeof loader>(({ data }) =>
   data ? [{ title: `Edit | ${data?.title} | Conference Hall` }] : [],
@@ -50,9 +51,7 @@ export default function SpeakerTalkRoute() {
     <Page>
       <Card className="lg:col-span-2 lg:col-start-1">
         <Card.Content>
-          <Form method="POST" id="edit-talk-form">
-            <DetailsForm initialValues={talk} errors={errors} />
-          </Form>
+          <TalkForm id="edit-talk-form" initialValues={talk} errors={errors} />
         </Card.Content>
         <Card.Actions>
           <ButtonLink to={`/speaker/talks/${talk.id}`} variant="secondary">

@@ -1,5 +1,5 @@
 import { type ActionFunctionArgs, json, type LoaderFunctionArgs } from '@remix-run/node';
-import { Form, useActionData, useNavigate } from '@remix-run/react';
+import { useActionData, useNavigate } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { ProposalReview } from '~/.server/reviews/ProposalReview.ts';
@@ -9,12 +9,12 @@ import SlideOver from '~/design-system/SlideOver.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast } from '~/libs/toasts/toast.server.ts';
 import { parseWithZod } from '~/libs/zod-parser.ts';
-import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm.tsx';
+import { TalkForm } from '~/routes/__components/talks/talk-forms/talk-form.tsx';
 
 import { useEvent } from './__components/useEvent.tsx';
 import { useProposal } from './__components/useProposal.tsx';
 
-export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);
   return json(null);
 };
@@ -51,9 +51,13 @@ export default function ProposalEditRoute() {
   return (
     <SlideOver open onClose={onClose} size="l">
       <SlideOver.Content title="Edit proposal" onClose={onClose}>
-        <Form id="edit-proposal-form" method="POST">
-          <DetailsForm initialValues={proposal} formats={event.formats} categories={event.categories} errors={errors} />
-        </Form>
+        <TalkForm
+          id="edit-proposal-form"
+          initialValues={proposal}
+          formats={event.formats}
+          categories={event.categories}
+          errors={errors}
+        />
       </SlideOver.Content>
       <SlideOver.Actions>
         <Button onClick={onClose} variant="secondary">
