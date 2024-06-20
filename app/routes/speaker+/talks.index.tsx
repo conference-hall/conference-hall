@@ -2,7 +2,7 @@ import { ChevronRightIcon, PlusIcon } from '@heroicons/react/20/solid';
 import { InboxIcon } from '@heroicons/react/24/outline';
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
+import { useLoaderData, useSearchParams } from '@remix-run/react';
 
 import { TalksLibrary } from '~/.server/speaker-talks-library/TalksLibrary.ts';
 import { AvatarGroup } from '~/design-system/Avatar.tsx';
@@ -27,6 +27,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 export default function SpeakerTalksRoute() {
   const talks = useLoaderData<typeof loader>();
+  const [searchParams] = useSearchParams();
+  const archived = searchParams.get('archived') === 'true';
 
   return (
     <Page className="space-y-8">
@@ -36,6 +38,7 @@ export default function SpeakerTalksRoute() {
           New talk
         </ButtonLink>
       </div>
+
       <List>
         <List.Header>
           <Text weight="semibold">{`${talks.length} talks`}</Text>
@@ -49,7 +52,9 @@ export default function SpeakerTalksRoute() {
           />
         </List.Header>
         <List.Content aria-label="Talks list">
-          {talks.length === 0 && <EmptyState icon={InboxIcon} label="No talks found." />}
+          {talks.length === 0 && (
+            <EmptyState icon={InboxIcon} label={archived ? 'No talks archived.' : 'No talks found.'} />
+          )}
           {talks.map((talk) => (
             <List.RowLink key={talk.id} to={talk.id} className="flex justify-between items-center gap-4">
               <div className="min-w-0">

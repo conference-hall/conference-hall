@@ -1,4 +1,4 @@
-import { PencilSquareIcon } from '@heroicons/react/20/solid';
+import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
 
 import { Button } from '~/design-system/Buttons';

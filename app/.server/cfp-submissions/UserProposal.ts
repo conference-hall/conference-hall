@@ -46,6 +46,7 @@ export class UserProposal {
       speakers: proposal.speakers.map((speaker) => ({
         id: speaker.id,
         name: speaker.name,
+        bio: speaker.bio,
         picture: speaker.picture,
         company: speaker.company,
         isCurrentUser: this.speakerId === speaker.id,

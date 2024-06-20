@@ -80,7 +80,6 @@ function Submitted({ event }: Props) {
       {event.isCfpOpen && (
         <div className="flex gap-4">
           <ProposalDeleteButton />
-          <ButtonLink to="edit">Edit proposal</ButtonLink>
         </div>
       )}
     </Card>
