@@ -1,12 +1,14 @@
 import { NavTab, NavTabs } from '~/design-system/navigation/NavTabs.tsx';
 
+import { TeamsDropdown } from './dropdowns/teams-dropdown';
+
 type Props = {
   authenticated: boolean;
-  isOrganizer?: boolean;
   teams?: Array<{ slug: string; name: string }>;
+  showTeams?: boolean;
 };
 
-export function Navigation({ authenticated, isOrganizer, teams = [] }: Props) {
+export function Navigation({ authenticated, teams = [], showTeams = false }: Props) {
   if (!authenticated) {
     return (
       <NavTabs variant="dark">
@@ -22,11 +24,7 @@ export function Navigation({ authenticated, isOrganizer, teams = [] }: Props) {
       <NavTab to="/speaker" end variant="dark">
         My profile
       </NavTab>
-      {isOrganizer ? (
-        <NavTab to="/speaker/teams" end variant="dark">
-          My teams
-        </NavTab>
-      ) : null}
+      {showTeams ? <TeamsDropdown teams={teams} /> : null}
     </NavTabs>
   );
 }

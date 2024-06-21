@@ -5,8 +5,8 @@ import { NavTab, NavTabs } from '~/design-system/navigation/NavTabs.tsx';
 
 import type { loader as routeTeamLoader } from '../../team+/$team';
 import type { loader as routeEventLoader } from '../../team+/$team.$event+/_layout';
-import { EventButton } from './dropdowns/EventButton.tsx';
-import { TeamsDropdown } from './dropdowns/TeamsDropdown.tsx';
+import { EventButton } from './dropdowns/event-button.tsx';
+import { TeamsDropdown } from './dropdowns/teams-dropdown.tsx';
 import { Logo } from './Logo.tsx';
 import { Navigation } from './Navigation.tsx';
 import { UserMenu } from './UserMenu.tsx';
@@ -42,7 +42,7 @@ export function NavbarOrga({ user }: Props) {
 
         <div className="hidden gap-4 lg:flex lg:flex-shrink-0 lg:items-center lg:justify-end">
           {/* Navigation links */}
-          <Navigation authenticated={Boolean(user)} isOrganizer={user?.isOrganizer} teams={user?.teams} />
+          <Navigation authenticated={Boolean(user)} />
 
           {/* Avatar */}
           {user && (

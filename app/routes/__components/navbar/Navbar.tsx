@@ -37,7 +37,7 @@ export function Navbar({ user, withSearch }: Props) {
 
         <div className="hidden gap-4 lg:flex lg:flex-shrink-0 lg:items-center lg:justify-end">
           {/* Navigation links */}
-          <Navigation authenticated={Boolean(user)} isOrganizer={user?.isOrganizer} teams={user?.teams} />
+          <Navigation authenticated={Boolean(user)} teams={user?.teams} showTeams={user?.isOrganizer} />
 
           {/* Avatar */}
           {user && (

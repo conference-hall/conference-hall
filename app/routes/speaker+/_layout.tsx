@@ -46,7 +46,7 @@ export default function SpeakerRoute() {
 
       <PageHeader>
         <Container>
-          <SpeakerTabs isOrganizer={user?.isOrganizer} />
+          <SpeakerTabs />
         </Container>
       </PageHeader>
 

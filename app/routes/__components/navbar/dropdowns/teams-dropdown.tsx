@@ -29,7 +29,7 @@ export function TeamsDropdown({ teams = [], currentTeamSlug }: Props) {
       {({ open }) => (
         <>
           <MenuButton className={menuStyle}>
-            {currentTeam ? currentTeam.name : 'Teams'}
+            {currentTeam ? currentTeam.name : 'My teams'}
             {open ? (
               <ChevronUpIcon className="h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
             ) : (
