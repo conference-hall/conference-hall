@@ -6,7 +6,7 @@ import type { ChangeEvent } from 'react';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
 import { Text } from '~/design-system/Typography';
 import { Join } from '~/design-system/utils/join';
-import { GlobalReviewNote, UserReviewNote } from '~/routes/__components/reviews/ReviewNote';
+import { GlobalReviewNote, UserReviewNote } from '~/routes/__components/reviews/review-note';
 import { useTeam } from '~/routes/team+/__components/useTeam';
 
 import type { ProposalData } from './types';

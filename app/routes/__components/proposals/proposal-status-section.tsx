@@ -6,7 +6,7 @@ import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2, Subtitle, Text } from '~/design-system/Typography.tsx';
 import { SpeakerProposalStatus } from '~/types/speaker.types.ts';
 
-import { ProposalDeleteButton } from './ProposalDelete.tsx';
+import { ProposalDeleteButton } from './proposal-delete.tsx';
 
 type Props = {
   proposal: { id: string; talkId: string | null; status: SpeakerProposalStatus };

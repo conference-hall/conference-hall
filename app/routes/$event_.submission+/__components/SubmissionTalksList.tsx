@@ -1,4 +1,4 @@
-import { ProposalCard } from '~/routes/__components/proposals/ProposalCard.tsx';
+import { ProposalCard } from '~/routes/__components/proposals/proposal-card';
 
 type Props = {
   label: string;

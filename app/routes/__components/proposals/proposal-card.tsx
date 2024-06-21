@@ -3,7 +3,7 @@ import { CardLink } from '~/design-system/layouts/Card.tsx';
 import { Text } from '~/design-system/Typography.tsx';
 import type { SpeakerProposalStatus } from '~/types/speaker.types.ts';
 
-import { ProposalStatusLabel } from './ProposalStatusLabel.tsx';
+import { ProposalStatusLabel } from './proposal-status-label.tsx';
 
 type Props = {
   id: string;

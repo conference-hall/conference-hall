@@ -1,5 +1,5 @@
 import { H2, Text } from '~/design-system/Typography';
-import { GlobalReviewNote } from '~/routes/__components/reviews/ReviewNote';
+import { GlobalReviewNote } from '~/routes/__components/reviews/review-note';
 import type { GlobalReview, UserReview } from '~/types/proposals.types';
 
 type Props = { review: GlobalReview | null; userReview: UserReview };

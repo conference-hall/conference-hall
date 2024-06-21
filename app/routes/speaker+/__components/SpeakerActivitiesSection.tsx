@@ -8,7 +8,7 @@ import { Card } from '~/design-system/layouts/Card.tsx';
 import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
 import { Link } from '~/design-system/Links.tsx';
 import { Subtitle, Text } from '~/design-system/Typography.tsx';
-import { ProposalStatusLabel } from '~/routes/__components/proposals/ProposalStatusLabel.tsx';
+import { ProposalStatusLabel } from '~/routes/__components/proposals/proposal-status-label';
 import type { CfpState } from '~/types/events.types';
 import type { SpeakerProposalStatus } from '~/types/speaker.types';
 

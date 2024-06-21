@@ -10,9 +10,9 @@ import { Page } from '~/design-system/layouts/PageContent.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
 import { parseWithZod } from '~/libs/zod-parser.ts';
-import { ProposalStatusSection } from '~/routes/__components/proposals/ProposalStatusSection.tsx';
 import { SpeakerProposalStatus } from '~/types/speaker.types.ts';
 
+import { ProposalStatusSection } from '../__components/proposals/proposal-status-section.tsx';
 import { TalkSection } from '../__components/talks/talk-section.tsx';
 import { useEvent } from './__components/useEvent.tsx';
 

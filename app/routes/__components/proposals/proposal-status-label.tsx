@@ -1,6 +1,4 @@
-import { CheckCircleIcon, ClockIcon, ExclamationTriangleIcon, StarIcon, XCircleIcon } from '@heroicons/react/20/solid';
-
-import { IconLabel } from '~/design-system/IconLabel.tsx';
+import { Text } from '~/design-system/Typography';
 import { SpeakerProposalStatus } from '~/types/speaker.types';
 
 type Props = { status: SpeakerProposalStatus };
@@ -28,56 +26,56 @@ export function ProposalStatusLabel({ status }: Props) {
 
 export function Draft() {
   return (
-    <IconLabel icon={ExclamationTriangleIcon} variant="secondary" size="xs">
+    <Text variant="secondary" size="xs">
       Draft proposal
-    </IconLabel>
+    </Text>
   );
 }
 
 function Submitted() {
   return (
-    <IconLabel icon={CheckCircleIcon} variant="secondary" size="xs">
-      Submitted
-    </IconLabel>
+    <Text variant="secondary" size="xs">
+      Proposal applied
+    </Text>
   );
 }
 
 function DeliberationPending() {
   return (
-    <IconLabel icon={ClockIcon} variant="secondary" size="xs">
+    <Text variant="secondary" size="xs">
       Deliberation pending
-    </IconLabel>
+    </Text>
   );
 }
 
 function AcceptedByOrganizers() {
   return (
-    <IconLabel icon={StarIcon} variant="secondary" size="xs">
-      Accepted
-    </IconLabel>
+    <Text variant="secondary" size="xs">
+      Proposal accepted
+    </Text>
   );
 }
 
 function RejectedByOrganizers() {
   return (
-    <IconLabel icon={XCircleIcon} variant="secondary" size="xs">
+    <Text variant="secondary" size="xs">
       Declined by organizers
-    </IconLabel>
+    </Text>
   );
 }
 
 function ConfirmedBySpeaker() {
   return (
-    <IconLabel icon={CheckCircleIcon} variant="secondary" size="xs">
+    <Text variant="secondary" size="xs">
       Participation confirmed
-    </IconLabel>
+    </Text>
   );
 }
 
 function DeclinedBySpeaker() {
   return (
-    <IconLabel icon={XCircleIcon} variant="secondary" size="xs">
+    <Text variant="secondary" size="xs">
       Declined by you
-    </IconLabel>
+    </Text>
   );
 }
