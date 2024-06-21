@@ -19,7 +19,7 @@ describe('Proposal edit page', () => {
 
       cy.assertInputText('Title', 'Talk 1');
       cy.assertInputText('Abstract', 'Talk description');
-      cy.assertInputText('References', 'Talk references');
+      cy.assertInputText('References', 'My talk references');
       cy.assertRadioChecked('Advanced');
       cy.assertChecked(/Format 1/);
       cy.assertChecked(/Category 1/);

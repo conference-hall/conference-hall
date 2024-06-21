@@ -20,8 +20,6 @@ describe('Speaker home page', () => {
     home.visit();
 
     cy.assertText('Clark Kent');
-    cy.assertText('superman@example.com');
-    cy.assertText('Clark Kent');
     cy.assertText('Clark kent biography');
     cy.assertText('Metropolis');
     cy.assertText('Daily planet');

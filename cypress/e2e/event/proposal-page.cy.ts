@@ -17,21 +17,24 @@ describe('Event proposal page details', () => {
   it('displays talk data', () => {
     proposal.visit('devfest-nantes', 'awesome-proposal');
 
+    proposal.speakerButton('Clark Kent').should('exist');
+    proposal.speakerButton('Bruce Wayne').should('exist');
+
     cy.assertText('Awesome talk');
     cy.assertText('Awesome abstract');
-    cy.assertText('Awesome references');
     cy.assertText('Advanced');
     cy.assertText('French');
-    cy.assertText('Clark Kent');
-    cy.assertText('Bruce Wayne');
     cy.assertText('Quickie');
     cy.assertText('Web');
+
+    proposal.openReferences();
+    cy.assertText('Awesome references');
   });
 
   it('can edit a proposal', () => {
     proposal.visit('devfest-nantes', 'awesome-proposal');
-    proposal.editProposal();
-    cy.assertText('Awesome talk');
+    const edit = proposal.editProposal();
+    edit.isPageVisible();
   });
 
   it('can delete a proposal', () => {

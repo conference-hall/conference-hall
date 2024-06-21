@@ -1,5 +1,4 @@
 import SpeakerTalkPage from '../../page-objects/speaker/talk.page.ts';
-import SpeakerEditTalkPage from '../../page-objects/speaker/talk-edit.page.ts';
 
 describe('Speaker talk edition page', () => {
   beforeEach(() => {
@@ -9,11 +8,11 @@ describe('Speaker talk edition page', () => {
 
   afterEach(() => cy.task('disconnectDB'));
 
-  const editTalk = new SpeakerEditTalkPage();
   const talk = new SpeakerTalkPage();
 
   it('can edit a talk', () => {
-    editTalk.visit('awesome-talk');
+    talk.visit('awesome-talk');
+    const editTalk = talk.editTalk();
 
     cy.assertInputText('Title', 'Awesome talk');
     cy.assertInputText('Abstract', 'Awesome abstract');
@@ -27,38 +26,42 @@ describe('Speaker talk edition page', () => {
       language: 'English',
       references: 'New references',
     });
-    editTalk.saveAbstract();
+    editTalk.save();
     cy.assertToast('Talk updated.');
+    editTalk.close();
 
     talk.isPageVisible();
     cy.assertText('New title');
     cy.assertText('New abstract');
     cy.assertText('Beginner');
-    cy.assertText('New references');
     cy.assertText('English');
+    talk.openReferences();
+    cy.assertText('New references');
   });
 
   it('can invite a co-speaker', () => {
-    editTalk.visit('awesome-talk');
-    editTalk.coSpeakerInvite().should('exist');
-    editTalk.closeCoSpeakerModal();
+    talk.visit('awesome-talk');
+    talk.addSpeaker().should('exist');
+    talk.closeSpeakerModal();
   });
 
   it('can remove a co-speaker', () => {
-    editTalk.visit('awesome-talk');
-    cy.assertText('Bruce Wayne');
-    editTalk.removeCoSpeaker('Bruce Wayne').click();
+    talk.visit('awesome-talk');
+    talk.speakerButton('Bruce Wayne').click();
+    talk.removeCoSpeaker('Bruce Wayne');
     cy.assertToast('Co-speaker removed from talk.');
     cy.assertNoText('Bruce Wayne');
   });
 
   it('display errors on mandatory fields', () => {
-    editTalk.visit('awesome-talk');
+    talk.visit('awesome-talk');
+    const editTalk = talk.editTalk();
+
     editTalk.fillTalkForm({
       title: ' ',
       abstract: ' ',
     });
-    editTalk.saveAbstract();
+    editTalk.save();
     editTalk.error('Title').should('contain.text', 'String must contain at least 1 character(s)');
     editTalk.error('Abstract').should('contain.text', 'String must contain at least 1 character(s)');
   });

@@ -69,6 +69,7 @@ export default function ProposalRoute() {
 
   return (
     <Page>
+      <h1 className="sr-only">Proposal page</h1>
       <div className="space-y-4 lg:space-y-6">
         <ProposalStatusSection proposal={proposal} event={event} />
 

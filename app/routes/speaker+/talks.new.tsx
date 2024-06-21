@@ -32,6 +32,7 @@ export default function NewTalkRoute() {
 
   return (
     <Page>
+      <h1 className="sr-only">Create a new talk</h1>
       <Card>
         <Card.Content>
           <TalkForm id="new-talk-form" errors={errors} />

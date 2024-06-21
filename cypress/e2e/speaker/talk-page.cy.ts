@@ -2,7 +2,6 @@ import EventProposalsPage from '../../page-objects/event/proposals.page.ts';
 import EventSubmissionPage from '../../page-objects/event/submission.page.ts';
 import SearchEventPage from '../../page-objects/search.page.ts';
 import SpeakerTalkPage from '../../page-objects/speaker/talk.page.ts';
-import SpeakerEditTalkPage from '../../page-objects/speaker/talk-edit.page.ts';
 
 describe('Speaker talk page', () => {
   beforeEach(() => {
@@ -13,7 +12,6 @@ describe('Speaker talk page', () => {
   afterEach(() => cy.task('disconnectDB'));
 
   const talk = new SpeakerTalkPage();
-  const editTalk = new SpeakerEditTalkPage();
   const search = new SearchEventPage();
   const submission = new EventSubmissionPage();
   const proposals = new EventProposalsPage();
@@ -21,18 +19,21 @@ describe('Speaker talk page', () => {
   it('displays talk data', () => {
     talk.visit('awesome-talk');
 
+    talk.speakerButton('Clark Kent').should('exist');
+    talk.speakerButton('Bruce Wayne').should('exist');
+
     cy.assertText('Awesome talk');
     cy.assertText('Awesome abstract');
-    cy.assertText('Awesome references');
     cy.assertText('Advanced');
     cy.assertText('French');
-    cy.assertText('Clark Kent');
-    cy.assertText('Bruce Wayne');
+
+    talk.openReferences();
+    cy.assertText('Awesome references');
   });
 
   it('can edit a talk', () => {
     talk.visit('awesome-talk');
-    talk.editTalk();
+    const editTalk = talk.editTalk();
     editTalk.isPageVisible();
     cy.assertText('Awesome talk');
   });

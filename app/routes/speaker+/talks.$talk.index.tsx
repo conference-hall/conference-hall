@@ -67,6 +67,8 @@ export default function SpeakerTalkRoute() {
 
   return (
     <Page>
+      <h1 className="sr-only">Talk page</h1>
+
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-10">
         <div className="lg:col-span-7">
           <TalkSection talk={talk} errors={errors} canEditSpeakers canEditTalk canArchive />

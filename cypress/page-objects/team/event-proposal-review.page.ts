@@ -34,8 +34,8 @@ class ProposalReviewPage extends BasePage {
     cy.findByRole('link', { name: 'Previous proposal' }).click();
   }
 
-  close() {
-    cy.findByRole('link', { name: 'Close review' }).click();
+  goBackToList() {
+    cy.findByRole('link', { name: 'Proposals' }).click();
   }
 
   // Proposal
@@ -50,8 +50,12 @@ class ProposalReviewPage extends BasePage {
     return cy.findByRole('list', { name: 'Speakers' }).children();
   }
 
+  speaker(name: RegExp) {
+    return cy.findByRole('button', { name });
+  }
+
   withinSpeakerProfile(name: RegExp, callback: () => void) {
-    cy.findByRole('link', { name }).click();
+    this.speaker(name).click();
     return cy.findByRole('dialog', { name: name }).within(callback);
   }
 
@@ -116,7 +120,7 @@ class ProposalReviewPage extends BasePage {
   // Edit proposal
 
   editProposal() {
-    cy.findByRole('link', { name: 'Edit proposal' }).click();
+    cy.findByRole('button', { name: 'Edit' }).click();
   }
 
   fillProposalForm(data: ProposalFormType) {
@@ -127,7 +131,8 @@ class ProposalReviewPage extends BasePage {
     cy.typeOn('References', data.references);
     cy.findByRole('checkbox', { name: data.format }).click();
     cy.findByRole('checkbox', { name: data.category }).click();
-    cy.findByRole('button', { name: 'Save proposal' }).click();
+    cy.findByRole('button', { name: 'Save' }).click();
+    cy.findByRole('button', { name: 'Cancel' }).click();
   }
 
   cancelUpdateProposal() {

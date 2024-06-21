@@ -15,7 +15,7 @@ class EventEditProposalPage extends BasePage {
   }
 
   isPageVisible() {
-    cy.findByRole('button', { name: 'Save proposal' }).should('exist');
+    cy.findByRole('heading', { name: 'Edit talk' }).should('exist');
   }
 
   fillProposalForm(data: ProposalFormType) {

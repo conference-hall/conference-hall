@@ -29,6 +29,8 @@ export default function ProfileRoute() {
 
   return (
     <Page className="grid grid-cols-1 items-start lg:grid-cols-3">
+      <h1 className="sr-only">Speaker activity</h1>
+
       <SpeakerDetailsSection
         email={profile.email}
         picture={profile.picture}

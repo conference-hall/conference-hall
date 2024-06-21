@@ -7,7 +7,7 @@ class SpeakerHomePage extends BasePage {
   }
 
   isPageVisible() {
-    cy.findByRole('heading', { name: 'Welcome to Conference Hall' }).should('exist');
+    cy.findByRole('heading', { name: 'Speaker activity' }).should('exist');
   }
 
   editProfile() {

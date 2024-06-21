@@ -69,6 +69,8 @@ export default function ProfileRoute() {
 
   return (
     <Page className="lg:grid lg:grid-cols-12">
+      <h1 className="sr-only">My profile</h1>
+
       <NavSideMenu
         aria-label="Profile edition menu"
         items={MENU_ITEMS}

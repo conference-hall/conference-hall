@@ -25,12 +25,15 @@ describe('Speaker talk creation page', () => {
     cy.assertToast('New talk created.');
 
     talk.isPageVisible();
+    talk.speakerButton('Clark Kent').should('exist');
+
     cy.assertText('Awesome title');
     cy.assertText('Awesome abstract');
     cy.assertText('Intermediate');
     cy.assertText('English');
+
+    talk.openReferences();
     cy.assertText('Best talk ever!');
-    cy.assertText('Clark Kent');
   });
 
   it('display errors on mandatory fields', () => {

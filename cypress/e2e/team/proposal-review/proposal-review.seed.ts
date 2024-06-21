@@ -84,7 +84,7 @@ export const seed = async () => {
         title: 'Talk 1',
         abstract: 'Talk description',
         level: 'ADVANCED',
-        references: 'Talk references',
+        references: 'My talk references',
         languages: ['fr'],
       },
       speakers: [speaker1, speaker2],
