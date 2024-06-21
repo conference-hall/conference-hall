@@ -320,8 +320,8 @@ describe('TalkSubmission', () => {
         invitationLink: `http://localhost:3001/invite/proposal/${proposal.invitationCode}`,
         isOwner: true,
         speakers: [
-          { id: speaker.id, isOwner: true, name: speaker.name, picture: speaker.picture },
-          { id: speaker2.id, name: speaker2.name, picture: speaker2.picture, isOwner: false },
+          { id: speaker.id, name: speaker.name, picture: speaker.picture, isCurrentUser: true },
+          { id: speaker2.id, name: speaker2.name, picture: speaker2.picture, isCurrentUser: false },
         ],
         formats: [{ id: format.id, name: format.name }],
         categories: [{ id: category.id, name: category.name }],

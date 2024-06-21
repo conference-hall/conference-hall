@@ -37,13 +37,15 @@ describe('UserProposal', () => {
         status: SpeakerProposalStatus.Submitted,
         formats: [{ id: format.id, name: format.name }],
         categories: [{ id: category.id, name: category.name }],
+        isOwner: true,
         speakers: [
           {
             id: speaker.id,
             name: speaker.name,
+            bio: speaker.bio,
             picture: speaker.picture,
             company: speaker.company,
-            isOwner: true,
+            isCurrentUser: true,
           },
         ],
       });

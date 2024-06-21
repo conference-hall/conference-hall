@@ -54,7 +54,19 @@ describe('ProposalReview', () => {
         languages: ['en'],
         formats: [{ id: format.id, name: format.name }],
         categories: [{ id: category.id, name: category.name }],
-        speakers: [{ id: speaker.id, name: speaker.name, picture: speaker.picture, company: speaker.company }],
+        speakers: [
+          {
+            id: speaker.id,
+            name: speaker.name,
+            bio: speaker.bio,
+            address: speaker.address,
+            email: speaker.email,
+            picture: speaker.picture,
+            company: speaker.company,
+            references: speaker.references,
+            socials: speaker.socials,
+          },
+        ],
         reviews: {
           summary: { average: null, negatives: 0, positives: 0 },
           you: { feeling: null, note: null },
