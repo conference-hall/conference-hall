@@ -18,7 +18,7 @@ import { getClientAuth } from '~/libs/auth/firebase.ts';
 import { createSession, getSessionUserId } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { AuthProviderButton } from '~/routes/__components/auth-provider-button.tsx';
-import { Logo } from '~/routes/__components/navbar/Logo.tsx';
+import { Logo } from '~/routes/__components/navbar/logo.cap.tsx';
 
 import { useHydrated } from './__components/utils/use-hydrated.ts';
 

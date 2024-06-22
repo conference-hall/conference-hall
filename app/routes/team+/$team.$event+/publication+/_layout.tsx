@@ -8,9 +8,9 @@ import { Card } from '~/design-system/layouts/card.cap.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H1, H2, Subtitle } from '~/design-system/typography.cap.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { useEvent } from '~/routes/$event+/__components/useEvent.tsx';
+import { useEvent } from '~/routes/$event+/__components/use-event.tsx';
 
-import { useTeam } from '../../__components/useTeam.tsx';
+import { useTeam } from '../../__components/use-team.tsx';
 import { PublicationCard } from './__components/publication-card.tsx';
 import { Statistic, StatisticLink } from './__components/statistic.tsx';
 

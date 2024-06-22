@@ -10,13 +10,13 @@ import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { Pagination } from '~/design-system/list/pagination.cap.tsx';
 import { H1, H2 } from '~/design-system/typography.cap.tsx';
-import { Footer } from '~/routes/__components/Footer.tsx';
-import { Navbar } from '~/routes/__components/navbar/Navbar.tsx';
+import { Footer } from '~/routes/__components/footer.cap.tsx';
+import { Navbar } from '~/routes/__components/navbar/navbar.cap.tsx';
 import { useUser } from '~/routes/__components/use-user.tsx';
 
 import { EventCard } from './__components/events/event-card.tsx';
-import { SearchEventsFilters } from './__components/search/SearchEventsFilters.tsx';
-import { SearchEventsInput } from './__components/search/SearchEventsInput.tsx';
+import { SearchEventsFilters } from './__components/search/search-events-filters.tsx';
+import { SearchEventsInput } from './__components/search/search-events-input.tsx';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const filters = parseUrlFilters(request.url);

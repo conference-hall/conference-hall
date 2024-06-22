@@ -14,7 +14,7 @@ import { SpeakerProposalStatus } from '~/types/speaker.types.ts';
 
 import { ProposalStatusSection } from '../__components/proposals/proposal-status-section.tsx';
 import { TalkSection } from '../__components/talks/talk-section.tsx';
-import { useEvent } from './__components/useEvent.tsx';
+import { useEvent } from './__components/use-event.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);

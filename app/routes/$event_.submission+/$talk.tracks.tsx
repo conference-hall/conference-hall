@@ -17,7 +17,7 @@ import { parseWithZod } from '~/libs/zod-parser.ts';
 
 import { CategoriesForm } from '../__components/talks/talk-forms/categories-form.tsx';
 import { FormatsForm } from '../__components/talks/talk-forms/formats-form.tsx';
-import { useEvent } from '../$event+/__components/useEvent.tsx';
+import { useEvent } from '../$event+/__components/use-event.tsx';
 
 export const handle = { step: 'tracks' };
 

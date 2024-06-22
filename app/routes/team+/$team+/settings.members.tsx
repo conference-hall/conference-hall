@@ -18,7 +18,7 @@ import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { useUser } from '~/routes/__components/use-user.tsx';
 
-import { useTeam } from '../__components/useTeam.tsx';
+import { useTeam } from '../__components/use-team.tsx';
 import { ChangeRoleButton, InviteMemberButton, RemoveButton } from './__components/MemberActions.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {

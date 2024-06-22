@@ -9,8 +9,8 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/page-header-title.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 
-import { ProposalsList } from './__components/ProposalsList.tsx';
-import { useEvent } from './__components/useEvent.tsx';
+import { ProposalsList } from './__components/proposals-list.tsx';
+import { useEvent } from './__components/use-event.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);

@@ -9,8 +9,8 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 
-import { SpeakerActivitiesSection } from './__components/SpeakerActivitiesSection.tsx';
-import { SpeakerDetailsSection } from './__components/SpeakerDetailsSection.tsx';
+import { SpeakerActivitiesSection } from './__components/speaker-activities-section.tsx';
+import { SpeakerDetailsSection } from './__components/speaker-details-section.tsx';
 
 export const meta = mergeMeta(() => [{ title: 'Activity | Conference Hall' }]);
 

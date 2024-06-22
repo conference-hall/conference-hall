@@ -1,9 +1,9 @@
 import { ButtonLink } from '~/design-system/buttons.cap.tsx';
 
-import { Logo } from './Logo.tsx';
-import { Navigation } from './Navigation.tsx';
-import { SearchEventsInput } from './SearchEventsInput.tsx';
-import { UserMenu } from './UserMenu.tsx';
+import { Logo } from './logo.cap.tsx';
+import { Navigation } from './navigation.cap.tsx';
+import { SearchEventsInput } from './search-events-input.tsx';
+import { UserMenu } from './user-menu.tsx';
 
 type Props = {
   user: {

@@ -10,7 +10,7 @@ import { H2 } from '~/design-system/typography.cap.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { useUser } from '~/routes/__components/use-user.tsx';
 
-import { useTeam } from '../__components/useTeam.tsx';
+import { useTeam } from '../__components/use-team.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);

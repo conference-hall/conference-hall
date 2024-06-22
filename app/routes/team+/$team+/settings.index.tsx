@@ -12,7 +12,7 @@ import { redirectWithToast } from '~/libs/toasts/toast.server.ts';
 import { parseWithZod } from '~/libs/zod-parser.ts';
 import { TeamForm } from '~/routes/__components/teams/team-form.tsx';
 
-import { useTeam } from '../__components/useTeam.tsx';
+import { useTeam } from '../__components/use-team.tsx';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);

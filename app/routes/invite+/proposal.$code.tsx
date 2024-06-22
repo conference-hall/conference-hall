@@ -10,7 +10,7 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { H1, Text } from '~/design-system/typography.cap.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
-import { Navbar } from '~/routes/__components/navbar/Navbar.tsx';
+import { Navbar } from '~/routes/__components/navbar/navbar.cap.tsx';
 import { useUser } from '~/routes/__components/use-user.tsx';
 
 export const meta = mergeMeta(() => [{ title: 'Proposal invitation | Conference Hall' }]);

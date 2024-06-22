@@ -13,11 +13,11 @@ import { requireSession } from '~/libs/auth/session.ts';
 import { CfpNotOpenError } from '~/libs/errors.server.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { eventSocialCard } from '~/libs/meta/social-cards.ts';
-import { Navbar } from '~/routes/__components/navbar/Navbar.tsx';
+import { Navbar } from '~/routes/__components/navbar/navbar.cap.tsx';
 import { useUser } from '~/routes/__components/use-user.tsx';
 
-import { Steps } from './__components/Steps.tsx';
-import { useCurrentStepKey } from './__components/useCurrentStepKey.ts';
+import { Steps } from './__components/steps.cap.tsx';
+import { useCurrentStepKey } from './__components/use-current-step-key.ts';
 
 export const handle = { step: 'root' };
 

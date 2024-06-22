@@ -14,9 +14,9 @@ import { toast } from '~/libs/toasts/toast.server.ts';
 import { parseWithZod } from '~/libs/zod-parser.ts';
 
 import { useEvent } from '../__components/useEvent.tsx';
-import { CommonCfpSetting } from './__components/CommonCfpSetting.tsx';
-import { ConferenceCfpOpening } from './__components/ConferenceCfpOpening.tsx';
-import { MeetupCfpOpening } from './__components/MeetupCfpOpening.tsx';
+import { CommonCfpSetting } from './__components/common-cfp-setting.tsx';
+import { ConferenceCfpOpening } from './__components/conference-cfp-opening.tsx';
+import { MeetupCfpOpening } from './__components/meetup-cfp-opening.tsx';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);

@@ -3,13 +3,13 @@ import { useRouteLoaderData } from '@remix-run/react';
 import { SlashBarIcon } from '~/design-system/icons/slash-bar-icon.tsx';
 import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
 
-import type { loader as routeTeamLoader } from '../../team+/$team';
-import type { loader as routeEventLoader } from '../../team+/$team.$event+/_layout';
+import type { loader as routeEventLoader } from '../../team+/$team.$event+/_layout.tsx';
+import type { loader as routeTeamLoader } from '../../team+/$team.tsx';
 import { EventButton } from './dropdowns/event-button.tsx';
 import { TeamsDropdown } from './dropdowns/teams-dropdown.tsx';
-import { Logo } from './Logo.tsx';
-import { Navigation } from './Navigation.tsx';
-import { UserMenu } from './UserMenu.tsx';
+import { Logo } from './logo.cap.tsx';
+import { Navigation } from './navigation.cap.tsx';
+import { UserMenu } from './user-menu.tsx';
 
 type Props = {
   user: {

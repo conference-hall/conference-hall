@@ -4,7 +4,7 @@ import { Form } from '@remix-run/react';
 import { IconButton } from '~/design-system/icon-buttons.tsx';
 import { Subtitle, Text } from '~/design-system/typography.cap.tsx';
 
-import { EditTrackButton } from './SaveTrackForm.tsx';
+import { EditTrackButton } from './save-track-form.tsx';
 
 type TrackListProps = {
   type: 'formats' | 'categories';

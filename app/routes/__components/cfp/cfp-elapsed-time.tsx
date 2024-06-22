@@ -5,7 +5,7 @@ import { formatCFPElapsedTime } from '~/libs/formatters/cfp.ts';
 import type { CfpState } from '~/types/events.types.ts';
 
 import { ClientOnly } from '../utils/client-only.tsx';
-import { CfpIcon } from './CfpIcon.tsx';
+import { CfpIcon } from './cfp-icon.tsx';
 
 type Props = { cfpState: CfpState; cfpStart?: string; cfpEnd?: string; className?: string };
 

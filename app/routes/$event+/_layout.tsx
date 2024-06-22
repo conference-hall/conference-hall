@@ -6,12 +6,12 @@ import invariant from 'tiny-invariant';
 import { EventPage } from '~/.server/event-page/event-page.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { eventSocialCard } from '~/libs/meta/social-cards.ts';
-import { Footer } from '~/routes/__components/Footer.tsx';
-import { Navbar } from '~/routes/__components/navbar/Navbar.tsx';
+import { Footer } from '~/routes/__components/footer.cap.tsx';
+import { Navbar } from '~/routes/__components/navbar/navbar.cap.tsx';
 import { useUser } from '~/routes/__components/use-user.tsx';
 
-import { EventHeader } from './__components/EventHeader.tsx';
-import { EventTabs } from './__components/EventTabs.tsx';
+import { EventHeader } from './__components/event-header.tsx';
+import { EventTabs } from './__components/event-tabs.tsx';
 
 export const meta = mergeMeta<typeof loader>(
   ({ data }) => (data ? [{ title: `${data.name} | Conference Hall` }] : []),

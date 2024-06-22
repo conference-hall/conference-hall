@@ -11,8 +11,8 @@ import { PageHeaderTitle } from '~/design-system/layouts/page-header-title.tsx';
 import { H2 } from '~/design-system/typography.cap.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
-import { Footer } from '~/routes/__components/Footer.tsx';
-import { Navbar } from '~/routes/__components/navbar/Navbar.tsx';
+import { Footer } from '~/routes/__components/footer.cap.tsx';
+import { Navbar } from '~/routes/__components/navbar/navbar.cap.tsx';
 import { useUser } from '~/routes/__components/use-user.tsx';
 
 export const meta = mergeMeta(() => [{ title: 'Notifications | Conference Hall' }]);

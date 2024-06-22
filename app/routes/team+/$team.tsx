@@ -10,7 +10,7 @@ import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { useUser } from '~/routes/__components/use-user.tsx';
 
-import { NavbarOrga } from '../__components/navbar/NavbarOrga.tsx';
+import { NavbarOrga } from '../__components/navbar/navbar-orga.tsx';
 import type { loader as routeEventLoader } from './$team.$event+/_layout';
 import { EventTabs } from './$team+/__components/EventTabs.tsx';
 import { TeamTabs } from './$team+/__components/TeamTabs.tsx';

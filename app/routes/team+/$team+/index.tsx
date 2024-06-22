@@ -11,7 +11,7 @@ import { H1 } from '~/design-system/typography.cap.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { EventCard } from '~/routes/__components/events/event-card.tsx';
 
-import { useTeam } from '../__components/useTeam.tsx';
+import { useTeam } from '../__components/use-team.tsx';
 import { ArchivedFilters } from './__components/ArchivedFilter.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {

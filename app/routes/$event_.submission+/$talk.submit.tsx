@@ -14,7 +14,7 @@ import { H1, H2, Subtitle } from '~/design-system/typography.cap.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast } from '~/libs/toasts/toast.server.ts';
 
-import { useEvent } from '../$event+/__components/useEvent.tsx';
+import { useEvent } from '../$event+/__components/use-event.tsx';
 
 export const handle = { step: 'submission' };
 

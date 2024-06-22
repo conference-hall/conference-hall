@@ -13,8 +13,8 @@ import { toast } from '~/libs/toasts/toast.server.ts';
 import { parseWithZod } from '~/libs/zod-parser.ts';
 
 import { useEvent } from '../__components/useEvent.tsx';
-import { NewTrackButton } from './__components/SaveTrackForm.tsx';
-import { TrackList } from './__components/TrackList.tsx';
+import { NewTrackButton } from './__components/save-track-form.tsx';
+import { TrackList } from './__components/track-list.tsx';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);

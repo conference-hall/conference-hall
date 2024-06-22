@@ -1,9 +1,9 @@
 import { Page } from '~/design-system/layouts/page.tsx';
 
-import { CfpSection } from './__components/CfpSection.tsx';
-import { DetailsSection } from './__components/DetailsSection.tsx';
-import { TrackSection } from './__components/TrackSection.tsx';
-import { useEvent } from './__components/useEvent.tsx';
+import { CfpSection } from './__components/cfp-section.tsx';
+import { DetailsSection } from './__components/details-section.tsx';
+import { TrackSection } from './__components/track-section.tsx';
+import { useEvent } from './__components/use-event.tsx';
 
 export default function EventRoute() {
   const { event } = useEvent();
