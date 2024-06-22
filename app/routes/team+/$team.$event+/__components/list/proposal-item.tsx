@@ -3,8 +3,8 @@ import { ClockIcon } from '@heroicons/react/24/outline';
 import { Link, useSearchParams } from '@remix-run/react';
 import type { ChangeEvent } from 'react';
 
-import { Checkbox } from '~/design-system/forms/checkboxes.cap.tsx';
-import { Text } from '~/design-system/typography.cap.tsx';
+import { Checkbox } from '~/design-system/forms/checkboxes.tsx';
+import { Text } from '~/design-system/typography.tsx';
 import { Join } from '~/design-system/utils/join.tsx';
 import { GlobalReviewNote, UserReviewNote } from '~/routes/__components/reviews/review-note.tsx';
 import { useTeam } from '~/routes/team+/__components/use-team.tsx';

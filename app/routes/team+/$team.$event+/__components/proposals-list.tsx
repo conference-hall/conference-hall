@@ -1,4 +1,4 @@
-import { List } from '~/design-system/list/list.cap.tsx';
+import { List } from '~/design-system/list/list.tsx';
 import { useListSelection } from '~/design-system/list/use-list-selection.tsx';
 
 import { ListHeader } from './list/header.tsx';

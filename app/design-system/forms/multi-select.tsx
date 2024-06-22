@@ -3,9 +3,9 @@ import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
 import { useState } from 'react';
 
-import { Badge } from '../badges.cap.tsx';
-import { SelectTransition } from '../transitions.cap.tsx';
-import { Text } from '../typography.cap.tsx';
+import { Badge } from '../badges.tsx';
+import { SelectTransition } from '../transitions.tsx';
+import { Text } from '../typography.tsx';
 
 type Option = { value: string; label: string };
 

@@ -1,7 +1,7 @@
 import type { Prisma } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
 
-import { Pagination } from '../shared/pagination.cap.ts';
+import { Pagination } from '../shared/pagination.ts';
 import type { SearchFilters } from './event-search.types.ts';
 
 const RESULTS_BY_PAGE = 12;

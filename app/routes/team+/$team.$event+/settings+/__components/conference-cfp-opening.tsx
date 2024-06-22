@@ -1,10 +1,10 @@
 import { Form } from '@remix-run/react';
 
-import { AlertInfo } from '~/design-system/alerts.cap.tsx';
-import { Button } from '~/design-system/buttons.cap.tsx';
+import { AlertInfo } from '~/design-system/alerts.tsx';
+import { Button } from '~/design-system/buttons.tsx';
 import { DateRangeInput } from '~/design-system/forms/date-range-input.tsx';
-import { Card } from '~/design-system/layouts/card.cap.tsx';
-import { H2 } from '~/design-system/typography.cap.tsx';
+import { Card } from '~/design-system/layouts/card.tsx';
+import { H2 } from '~/design-system/typography.tsx';
 
 type Props = { cfpStart?: string; cfpEnd?: string; errors?: Record<string, string | string[]> | null };
 

@@ -10,15 +10,15 @@ import {
 } from 'firebase/auth';
 import { useCallback, useEffect, useState } from 'react';
 
-import { AlertError } from '~/design-system/alerts.cap.tsx';
+import { AlertError } from '~/design-system/alerts.tsx';
 import { LoadingIcon } from '~/design-system/icons/loading-icon.tsx';
-import { Card } from '~/design-system/layouts/card.cap.tsx';
-import { Link } from '~/design-system/links.cap.tsx';
+import { Card } from '~/design-system/layouts/card.tsx';
+import { Link } from '~/design-system/links.tsx';
 import { getClientAuth } from '~/libs/auth/firebase.ts';
 import { createSession, getSessionUserId } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { AuthProviderButton } from '~/routes/__components/auth-provider-button.tsx';
-import { Logo } from '~/routes/__components/navbar/logo.cap.tsx';
+import { Logo } from '~/routes/__components/navbar/logo.tsx';
 
 import { useHydrated } from './__components/utils/use-hydrated.ts';
 

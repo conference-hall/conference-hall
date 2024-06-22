@@ -1,7 +1,7 @@
 import { Link } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
 
-import { Avatar } from '~/design-system/avatar.cap.tsx';
+import { Avatar } from '~/design-system/avatar.tsx';
 
 const menuStyle = cx(
   'flex items-center gap-2',

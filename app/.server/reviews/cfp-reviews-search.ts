@@ -1,5 +1,5 @@
 import { UserEvent } from '../event-settings/user-event.ts';
-import { Pagination } from '../shared/pagination.cap.ts';
+import { Pagination } from '../shared/pagination.ts';
 import { ProposalSearchBuilder } from '../shared/proposal-search-builder.ts';
 import type { ProposalsFilters } from '../shared/proposal-search-builder.types.ts';
 import type { SocialLinks } from '../speaker-profile/speaker-profile.types.ts';

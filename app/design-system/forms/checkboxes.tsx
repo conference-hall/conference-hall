@@ -2,7 +2,7 @@ import { cx } from 'class-variance-authority';
 import type { ReactNode, Ref } from 'react';
 import { forwardRef } from 'react';
 
-import { Label, Text } from '../typography.cap.tsx';
+import { Label, Text } from '../typography.tsx';
 
 type CheckboxGroupProps = {
   label: string;

@@ -7,16 +7,16 @@ import invariant from 'tiny-invariant';
 import { SubmissionSteps } from '~/.server/cfp-submission-funnel/submission-steps.ts';
 import { EventPage } from '~/.server/event-page/event-page.ts';
 import { IconLink } from '~/design-system/icon-buttons.tsx';
-import { Container } from '~/design-system/layouts/container.cap.tsx';
+import { Container } from '~/design-system/layouts/container.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { CfpNotOpenError } from '~/libs/errors.server.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { eventSocialCard } from '~/libs/meta/social-cards.ts';
-import { Navbar } from '~/routes/__components/navbar/navbar.cap.tsx';
+import { Navbar } from '~/routes/__components/navbar/navbar.tsx';
 import { useUser } from '~/routes/__components/use-user.tsx';
 
-import { Steps } from './__components/steps.cap.tsx';
+import { Steps } from './__components/steps.tsx';
 import { useCurrentStepKey } from './__components/use-current-step-key.ts';
 
 export const handle = { step: 'root' };

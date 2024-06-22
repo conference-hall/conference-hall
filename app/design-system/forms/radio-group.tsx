@@ -1,7 +1,7 @@
 import { cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
 
-import { Label, Text } from '../typography.cap.tsx';
+import { Label, Text } from '../typography.tsx';
 
 type RadioGroupProps = {
   label?: string;

@@ -1,5 +1,5 @@
-import { Checkbox } from '~/design-system/forms/checkboxes.cap.tsx';
-import { List } from '~/design-system/list/list.cap.tsx';
+import { Checkbox } from '~/design-system/forms/checkboxes.tsx';
+import { List } from '~/design-system/list/list.tsx';
 
 import { DeliberationButton } from '../actions/deliberation-button.tsx';
 import { ReviewsProgress } from './reviews-progress.tsx';

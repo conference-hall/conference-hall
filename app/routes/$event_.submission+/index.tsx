@@ -3,10 +3,10 @@ import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { Submissions } from '~/.server/cfp-submissions/submissions.cap.ts';
+import { Submissions } from '~/.server/cfp-submissions/submissions.ts';
 import { TalksLibrary } from '~/.server/speaker-talks-library/talks-library.ts';
 import { ProgressBar } from '~/design-system/progress-bar.tsx';
-import { H2, Text } from '~/design-system/typography.cap.tsx';
+import { H2, Text } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 
 import { useEvent } from '../$event+/__components/use-event.tsx';

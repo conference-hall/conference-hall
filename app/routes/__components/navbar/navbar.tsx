@@ -1,7 +1,7 @@
-import { ButtonLink } from '~/design-system/buttons.cap.tsx';
+import { ButtonLink } from '~/design-system/buttons.tsx';
 
-import { Logo } from './logo.cap.tsx';
-import { Navigation } from './navigation.cap.tsx';
+import { Logo } from './logo.tsx';
+import { Navigation } from './navigation.tsx';
 import { SearchEventsInput } from './search-events-input.tsx';
 import { UserMenu } from './user-menu.tsx';
 

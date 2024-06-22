@@ -1,6 +1,6 @@
-import { Avatar } from '~/design-system/avatar.cap.tsx';
-import { CardLink } from '~/design-system/layouts/card.cap.tsx';
-import { Subtitle, Text } from '~/design-system/typography.cap.tsx';
+import { Avatar } from '~/design-system/avatar.tsx';
+import { CardLink } from '~/design-system/layouts/card.tsx';
+import { Subtitle, Text } from '~/design-system/typography.tsx';
 import type { CfpState } from '~/types/events.types.ts';
 
 import { CfpElapsedTime } from '../cfp/cfp-elapsed-time.tsx';

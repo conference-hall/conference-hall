@@ -3,7 +3,7 @@ import { Link, useLocation, useSearchParams } from '@remix-run/react';
 import { cva } from 'class-variance-authority';
 import { useMemo } from 'react';
 
-import { ButtonLink } from '../buttons.cap.tsx';
+import { ButtonLink } from '../buttons.tsx';
 
 const pageStyle = cva('relative inline-flex items-center px-4 py-2 text-sm font-semibold focus:z-20', {
   variants: {

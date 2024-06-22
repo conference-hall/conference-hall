@@ -2,9 +2,9 @@ import { ArrowLeftIcon } from '@heroicons/react/20/solid';
 import type { MouseEventHandler, ReactNode } from 'react';
 
 import { IconButton, IconLink } from '~/design-system/icon-buttons.tsx';
-import { H1, Subtitle } from '~/design-system/typography.cap.tsx';
+import { H1, Subtitle } from '~/design-system/typography.tsx';
 
-import { Container } from './container.cap.tsx';
+import { Container } from './container.tsx';
 import { PageHeader } from './page-header.tsx';
 
 type Props = { title: string; subtitle?: string; children?: ReactNode } & BackButtonProps;

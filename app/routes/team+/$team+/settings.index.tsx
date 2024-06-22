@@ -4,9 +4,9 @@ import { Form, useActionData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { TeamUpdateSchema, UserTeam } from '~/.server/team/user-team.ts';
-import { Button } from '~/design-system/buttons.cap.tsx';
-import { Card } from '~/design-system/layouts/card.cap.tsx';
-import { H2, Subtitle } from '~/design-system/typography.cap.tsx';
+import { Button } from '~/design-system/buttons.tsx';
+import { Card } from '~/design-system/layouts/card.tsx';
+import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast } from '~/libs/toasts/toast.server.ts';
 import { parseWithZod } from '~/libs/zod-parser.ts';

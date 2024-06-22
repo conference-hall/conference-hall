@@ -3,13 +3,13 @@ import { Form } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
 import { useState } from 'react';
 
-import { Avatar } from '~/design-system/avatar.cap.tsx';
-import { Button } from '~/design-system/buttons.cap.tsx';
+import { Avatar } from '~/design-system/avatar.tsx';
+import { Button } from '~/design-system/buttons.tsx';
 import { IconExternalLink } from '~/design-system/icon-buttons.tsx';
 import { GitHubIcon } from '~/design-system/icons/github-icon.tsx';
 import { TwitterIcon } from '~/design-system/icons/twitter-icon.tsx';
 import { SlideOver } from '~/design-system/slide-over.tsx';
-import { Text } from '~/design-system/typography.cap.tsx';
+import { Text } from '~/design-system/typography.tsx';
 
 import { InvitationModal } from '../invitation-modal.tsx';
 

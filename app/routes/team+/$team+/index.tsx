@@ -7,12 +7,12 @@ import invariant from 'tiny-invariant';
 import { TeamEvents } from '~/.server/team/team-events.ts';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
-import { H1 } from '~/design-system/typography.cap.tsx';
+import { H1 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { EventCard } from '~/routes/__components/events/event-card.tsx';
 
 import { useTeam } from '../__components/use-team.tsx';
-import { ArchivedFilters } from './__components/ArchivedFilter.tsx';
+import { ArchivedFilters } from './__components/archived-filter.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);

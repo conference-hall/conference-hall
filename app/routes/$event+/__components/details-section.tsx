@@ -1,9 +1,9 @@
 import { EnvelopeIcon, GlobeEuropeAfricaIcon, HeartIcon } from '@heroicons/react/20/solid';
 
-import { Card } from '~/design-system/layouts/card.cap.tsx';
-import { ExternalLink } from '~/design-system/links.cap.tsx';
-import { Markdown } from '~/design-system/markdown.cap.tsx';
-import { H2 } from '~/design-system/typography.cap.tsx';
+import { Card } from '~/design-system/layouts/card.tsx';
+import { ExternalLink } from '~/design-system/links.tsx';
+import { Markdown } from '~/design-system/markdown.tsx';
+import { H2 } from '~/design-system/typography.tsx';
 
 type Props = {
   type: 'CONFERENCE' | 'MEETUP';

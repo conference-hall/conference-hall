@@ -6,20 +6,20 @@ import { json } from '@remix-run/node';
 import { Form, useLoaderData, useSearchParams } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { parseUrlPage } from '~/.server/shared/pagination.cap.ts';
+import { parseUrlPage } from '~/.server/shared/pagination.ts';
 import { parseUrlFilters, TeamMembers } from '~/.server/team/team-members.ts';
-import { AvatarName } from '~/design-system/avatar.cap.tsx';
-import { Input } from '~/design-system/forms/input.cap.tsx';
-import { Card } from '~/design-system/layouts/card.cap.tsx';
+import { AvatarName } from '~/design-system/avatar.tsx';
+import { Input } from '~/design-system/forms/input.tsx';
+import { Card } from '~/design-system/layouts/card.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
-import { Pagination } from '~/design-system/list/pagination.cap.tsx';
-import { H3, Subtitle } from '~/design-system/typography.cap.tsx';
+import { Pagination } from '~/design-system/list/pagination.tsx';
+import { H3, Subtitle } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { useUser } from '~/routes/__components/use-user.tsx';
 
 import { useTeam } from '../__components/use-team.tsx';
-import { ChangeRoleButton, InviteMemberButton, RemoveButton } from './__components/MemberActions.tsx';
+import { ChangeRoleButton, InviteMemberButton, RemoveButton } from './__components/member-actions.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);

@@ -7,7 +7,7 @@ import { userFactory } from 'tests/factories/users.ts';
 
 import { ForbiddenOperationError, ProposalNotFoundError } from '~/libs/errors.server.ts';
 
-import { Publication } from './publication.cap.ts';
+import { Publication } from './publication.ts';
 
 describe('Publication', () => {
   let owner: User, member: User, reviewer: User, speaker1: User, speaker2: User;

@@ -8,7 +8,7 @@ import { userFactory } from 'tests/factories/users.ts';
 
 import { ForbiddenOperationError } from '~/libs/errors.server.ts';
 
-import { Deliberate } from './deliberate.cap.ts';
+import { Deliberate } from './deliberate.ts';
 
 describe('Deliberate', () => {
   let owner: User, reviewer: User, speaker: User;

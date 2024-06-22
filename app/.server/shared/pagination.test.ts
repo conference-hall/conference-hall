@@ -1,4 +1,4 @@
-import { Pagination, parseUrlPage } from './pagination.cap.ts';
+import { Pagination, parseUrlPage } from './pagination.ts';
 
 describe('Pagination', () => {
   it('computes pagination for the first page', () => {

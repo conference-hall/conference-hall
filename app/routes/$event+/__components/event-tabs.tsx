@@ -1,4 +1,4 @@
-import { Container } from '~/design-system/layouts/container.cap.tsx';
+import { Container } from '~/design-system/layouts/container.tsx';
 import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
 import type { EventType } from '~/types/events.types';
 

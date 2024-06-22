@@ -8,10 +8,10 @@ import { SubmissionSteps } from '~/.server/cfp-submission-funnel/submission-step
 import { TalkSubmission } from '~/.server/cfp-submission-funnel/talk-submission.ts';
 import { getTracksSchema } from '~/.server/cfp-submission-funnel/talk-submission.types.ts';
 import { EventPage } from '~/.server/event-page/event-page.ts';
-import { AlertError } from '~/design-system/alerts.cap.tsx';
-import { Button } from '~/design-system/buttons.cap.tsx';
-import { Card } from '~/design-system/layouts/card.cap.tsx';
-import { H2 } from '~/design-system/typography.cap.tsx';
+import { AlertError } from '~/design-system/alerts.tsx';
+import { Button } from '~/design-system/buttons.tsx';
+import { Card } from '~/design-system/layouts/card.tsx';
+import { H2 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { parseWithZod } from '~/libs/zod-parser.ts';
 

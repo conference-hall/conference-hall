@@ -1,9 +1,9 @@
 import { Form } from '@remix-run/react';
 
-import { Button } from '~/design-system/buttons.cap.tsx';
-import { Input } from '~/design-system/forms/input.cap.tsx';
-import { Card } from '~/design-system/layouts/card.cap.tsx';
-import { H2 } from '~/design-system/typography.cap.tsx';
+import { Button } from '~/design-system/buttons.tsx';
+import { Input } from '~/design-system/forms/input.tsx';
+import { Card } from '~/design-system/layouts/card.tsx';
+import { H2 } from '~/design-system/typography.tsx';
 
 type Props = {
   maxProposals: number | null;

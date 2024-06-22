@@ -1,4 +1,4 @@
-import { H2, Text } from '~/design-system/typography.cap.tsx';
+import { H2, Text } from '~/design-system/typography.tsx';
 import { GlobalReviewNote } from '~/routes/__components/reviews/review-note.tsx';
 import type { GlobalReview, UserReview } from '~/types/proposals.types';
 

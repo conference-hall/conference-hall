@@ -2,11 +2,11 @@ import { PencilIcon, PlusIcon } from '@heroicons/react/20/solid';
 import { Form } from '@remix-run/react';
 import { useState } from 'react';
 
-import { Button } from '~/design-system/buttons.cap.tsx';
-import { Input } from '~/design-system/forms/input.cap.tsx';
-import { TextArea } from '~/design-system/forms/textarea.cap.tsx';
+import { Button } from '~/design-system/buttons.tsx';
+import { Input } from '~/design-system/forms/input.tsx';
+import { TextArea } from '~/design-system/forms/textarea.tsx';
 import { IconButton } from '~/design-system/icon-buttons.tsx';
-import { Modal } from '~/design-system/modals.cap.tsx';
+import { Modal } from '~/design-system/modals.tsx';
 
 type TrackType = 'formats' | 'categories';
 type TrackData = { id: string; name: string; description?: string | null };

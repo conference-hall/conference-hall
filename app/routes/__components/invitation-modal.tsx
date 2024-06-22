@@ -1,6 +1,6 @@
 import { CopyInput } from '~/design-system/forms/copy-input.tsx';
-import { Modal } from '~/design-system/modals.cap.tsx';
-import { Text } from '~/design-system/typography.cap.tsx';
+import { Modal } from '~/design-system/modals.tsx';
+import { Text } from '~/design-system/typography.tsx';
 
 type InvitationModalProps = {
   title: string;

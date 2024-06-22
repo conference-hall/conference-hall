@@ -7,7 +7,7 @@ import invariant from 'tiny-invariant';
 
 import { CfpReviewsSearch } from '~/.server/reviews/cfp-reviews-search.ts';
 import { parseUrlFilters } from '~/.server/shared/proposal-search-builder.types.ts';
-import { Subtitle, Text } from '~/design-system/typography.cap.tsx';
+import { Subtitle, Text } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { getLanguage } from '~/libs/formatters/languages.ts';
 import { getLevel } from '~/libs/formatters/levels.ts';
