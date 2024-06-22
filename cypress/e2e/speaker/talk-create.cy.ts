@@ -25,7 +25,7 @@ describe('Speaker talk creation page', () => {
     cy.assertToast('New talk created.');
 
     talk.isPageVisible();
-    talk.speakerButton('Clark Kent').should('exist');
+    talk.cospeakers().speaker('Clark Kent').should('exist');
 
     cy.assertText('Awesome title');
     cy.assertText('Awesome abstract');
