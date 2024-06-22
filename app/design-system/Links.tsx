@@ -12,6 +12,7 @@ const link = cva('inline-flex items-center hover:underline', {
     variant: {
       primary: 'text-indigo-600',
       secondary: 'text-gray-900',
+      'secondary-light': 'text-gray-300',
     },
   },
   defaultVariants: { variant: 'primary' },

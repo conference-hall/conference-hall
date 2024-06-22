@@ -54,7 +54,19 @@ describe('ProposalReview', () => {
         languages: ['en'],
         formats: [{ id: format.id, name: format.name }],
         categories: [{ id: category.id, name: category.name }],
-        speakers: [{ id: speaker.id, name: speaker.name, picture: speaker.picture, company: speaker.company }],
+        speakers: [
+          {
+            id: speaker.id,
+            name: speaker.name,
+            bio: speaker.bio,
+            address: speaker.address,
+            email: speaker.email,
+            picture: speaker.picture,
+            company: speaker.company,
+            references: speaker.references,
+            socials: speaker.socials,
+          },
+        ],
         reviews: {
           summary: { average: null, negatives: 0, positives: 0 },
           you: { feeling: null, note: null },
@@ -287,48 +299,6 @@ describe('ProposalReview', () => {
           languages: [],
         }),
       ).rejects.toThrowError(ForbiddenOperationError);
-    });
-  });
-
-  describe('#getSpeakerInfo', () => {
-    it('returns speakers data of a proposal', async () => {
-      const survey = await surveyFactory({
-        event,
-        user: speaker,
-        attributes: { answers: { gender: 'male', tshirt: 'XL' } },
-      });
-      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker, member] }) });
-
-      const review = ProposalReview.for(owner.id, team.slug, event.slug, proposal.id);
-      const speakerInfo = await review.getSpeakerInfo(speaker.id);
-
-      expect(speakerInfo).toEqual({
-        id: speaker.id,
-        name: speaker.name,
-        email: speaker.email,
-        bio: speaker.bio,
-        address: speaker.address,
-        company: speaker.company,
-        picture: speaker.picture,
-        references: speaker.references,
-        socials: speaker.socials,
-        survey: survey.answers,
-      });
-    });
-
-    it('throws an error if display speakers setting is false', async () => {
-      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker, member] }) });
-      await db.event.update({ data: { displayProposalsSpeakers: false }, where: { id: event.id } });
-
-      const review = await ProposalReview.for(owner.id, team.slug, event.slug, proposal.id);
-      await expect(review.getSpeakerInfo(speaker.id)).rejects.toThrowError(ForbiddenOperationError);
-    });
-
-    it('throws an error if user does not belong to event team', async () => {
-      const user = await userFactory();
-      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker, member] }) });
-      const review = await ProposalReview.for(user.id, team.slug, event.slug, proposal.id);
-      await expect(review.getSpeakerInfo(speaker.id)).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 });

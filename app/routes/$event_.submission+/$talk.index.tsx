@@ -1,7 +1,7 @@
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
-import { Form, useActionData, useLoaderData, useNavigate } from '@remix-run/react';
+import { useActionData, useLoaderData, useNavigate } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { SubmissionSteps } from '~/.server/cfp-submission-funnel/SubmissionSteps';
@@ -13,7 +13,8 @@ import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2 } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { parseWithZod } from '~/libs/zod-parser';
-import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm.tsx';
+
+import { TalkForm } from '../__components/talks/talk-forms/talk-form';
 
 export const handle = { step: 'proposal' };
 
@@ -47,7 +48,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   return redirect(nextStep.path);
 };
 
-export default function SubmissionProposalRoute() {
+export default function SubmissionTalkRoute() {
   const navigate = useNavigate();
   const talk = useLoaderData<typeof loader>();
   const errors = useActionData<typeof action>();
@@ -58,15 +59,13 @@ export default function SubmissionProposalRoute() {
         <H2>Your proposal</H2>
       </Card.Title>
       <Card.Content>
-        <Form id="proposal-form" method="POST">
-          <DetailsForm initialValues={talk} errors={errors} />
-        </Form>
+        <TalkForm id="talk-form" initialValues={talk} errors={errors} />
       </Card.Content>
       <Card.Actions>
         <Button onClick={() => navigate(-1)} variant="secondary">
           Go back
         </Button>
-        <Button type="submit" form="proposal-form" iconRight={ArrowRightIcon}>
+        <Button type="submit" form="talk-form" iconRight={ArrowRightIcon}>
           Continue
         </Button>
       </Card.Actions>

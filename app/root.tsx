@@ -16,7 +16,7 @@ import type { Toast } from './libs/toasts/toast.server';
 import { getToast } from './libs/toasts/toast.server';
 import { Toaster } from './libs/toasts/Toaster';
 import { GeneralErrorBoundary } from './routes/__components/error-boundary.tsx';
-import { GlobalLoading } from './routes/__components/GlobalLoading';
+import { GlobalLoading } from './routes/__components/global-loading.tsx';
 
 export function meta() {
   return [

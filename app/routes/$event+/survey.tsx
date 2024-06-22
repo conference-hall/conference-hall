@@ -1,6 +1,6 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { Form, useLoaderData } from '@remix-run/react';
+import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { CfpSurvey } from '~/.server/cfp-survey/CfpSurvey';
@@ -8,12 +8,13 @@ import { SpeakerAnswers } from '~/.server/cfp-survey/SpeakerAnswers';
 import { SurveySchema } from '~/.server/cfp-survey/SpeakerAnswers.types';
 import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
-import { PageContent } from '~/design-system/layouts/PageContent.tsx';
-import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
+import { Page } from '~/design-system/layouts/page';
+import { PageHeaderTitle } from '~/design-system/layouts/page-header-title';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { parseWithZod } from '~/libs/zod-parser';
-import { SurveyForm } from '~/routes/__components/proposals/forms/SurveyForm.tsx';
+
+import { SurveyForm } from '../__components/talks/talk-forms/survey-form';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
@@ -46,12 +47,10 @@ export default function EventSurveyRoute() {
         subtitle="This information are asked by the organizers to give you a better speaker experience."
       />
 
-      <PageContent>
+      <Page>
         <Card>
           <Card.Content>
-            <Form id="survey-form" method="POST">
-              <SurveyForm questions={questions} initialValues={answers} />
-            </Form>
+            <SurveyForm id="survey-form" questions={questions} initialValues={answers} />
           </Card.Content>
           <Card.Actions>
             <Button type="submit" form="survey-form">
@@ -59,7 +58,7 @@ export default function EventSurveyRoute() {
             </Button>
           </Card.Actions>
         </Card>
-      </PageContent>
+      </Page>
     </>
   );
 }

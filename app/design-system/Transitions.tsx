@@ -1,4 +1,4 @@
-import { Transition } from '@headlessui/react';
+import { Transition, TransitionChild } from '@headlessui/react';
 import type { ReactNode } from 'react';
 
 type TransitionProps = { show?: boolean; children: ReactNode };
@@ -39,5 +39,35 @@ export function ToastTransition({ show, children }: TransitionProps) {
     >
       {children}
     </Transition>
+  );
+}
+
+export function SlideOverTransition({ children }: TransitionProps) {
+  return (
+    <TransitionChild
+      enter="transform transition ease-in-out duration-500"
+      enterFrom="translate-x-full"
+      enterTo="translate-x-0"
+      leave="transform transition ease-in-out duration-500"
+      leaveFrom="translate-x-0"
+      leaveTo="translate-x-full"
+    >
+      {children}
+    </TransitionChild>
+  );
+}
+
+export function Background() {
+  return (
+    <TransitionChild
+      enter="ease-out duration-300"
+      enterFrom="opacity-0"
+      enterTo="opacity-100"
+      leave="ease-in duration-200"
+      leaveFrom="opacity-100"
+      leaveTo="opacity-0"
+    >
+      <div className="fixed inset-0 bg-gray-500 bg-opacity-20 transition-opacity" />
+    </TransitionChild>
   );
 }

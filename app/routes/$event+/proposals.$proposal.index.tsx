@@ -1,18 +1,19 @@
-import type { ActionFunction, LoaderFunctionArgs } from '@remix-run/node';
+import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { useLoaderData, useNavigate } from '@remix-run/react';
+import { useActionData, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { UserProposal } from '~/.server/cfp-submissions/UserProposal.ts';
-import { ProposalParticipationSchema } from '~/.server/cfp-submissions/UserProposal.types.ts';
-import { PageContent } from '~/design-system/layouts/PageContent.tsx';
-import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
+import { getProposalUpdateSchema, ProposalParticipationSchema } from '~/.server/cfp-submissions/UserProposal.types.ts';
+import { EventPage } from '~/.server/event-page/EventPage.ts';
+import { Page } from '~/design-system/layouts/page.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
 import { parseWithZod } from '~/libs/zod-parser.ts';
-import { ProposalDetailsSection } from '~/routes/__components/proposals/ProposalDetailsSection.tsx';
-import { ProposalStatusSection } from '~/routes/__components/proposals/ProposalStatusSection.tsx';
+import { SpeakerProposalStatus } from '~/types/speaker.types.ts';
 
+import { ProposalStatusSection } from '../__components/proposals/proposal-status-section.tsx';
+import { TalkSection } from '../__components/talks/talk-section.tsx';
 import { useEvent } from './__components/useEvent.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
@@ -23,24 +24,39 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   return json(proposal);
 };
 
-export const action: ActionFunction = async ({ request, params }) => {
+export const action = async ({ request, params }: ActionFunctionArgs) => {
   const userId = await requireSession(request);
+  invariant(params.event, 'Invalid event slug');
   invariant(params.proposal, 'Invalid proposal id');
 
   const proposal = UserProposal.for(userId, params.proposal);
 
   const form = await request.formData();
-  const action = form.get('_action');
+  const action = form.get('intent');
+
   switch (action) {
-    case 'delete': {
+    case 'proposal-delete': {
       await proposal.delete();
       return redirectWithToast(`/${params.event}/proposals`, 'success', 'Proposal submission removed.');
     }
-    case 'confirm': {
+    case 'proposal-confirmation': {
       const result = parseWithZod(form, ProposalParticipationSchema);
       if (!result.success) return null;
       await proposal.confirm(result.value.participation);
       return toast('success', 'Your response has been sent to organizers.');
+    }
+    case 'remove-speaker': {
+      const speakerId = form.get('_speakerId')?.toString() as string;
+      await proposal.removeCoSpeaker(speakerId);
+      return toast('success', 'Co-speaker removed from proposal.');
+    }
+    case 'edit-talk': {
+      const { formatsRequired, categoriesRequired } = await EventPage.of(params.event).get();
+      const result = parseWithZod(form, getProposalUpdateSchema(formatsRequired, categoriesRequired));
+      if (!result.success) return json(result.error);
+
+      await proposal.update(result.value);
+      return toast('success', 'Proposal saved.');
     }
     default:
       return null;
@@ -50,26 +66,27 @@ export const action: ActionFunction = async ({ request, params }) => {
 export default function ProposalRoute() {
   const { event } = useEvent();
   const proposal = useLoaderData<typeof loader>();
-  const navigate = useNavigate();
+  const errors = useActionData<typeof action>();
+
+  const canEdit = proposal.status === SpeakerProposalStatus.Submitted;
 
   return (
-    <>
-      <PageHeaderTitle title={proposal.title} backOnClick={() => navigate(-1)} />
+    <Page>
+      <h1 className="sr-only">Proposal page</h1>
+      <div className="space-y-4 lg:space-y-6">
+        <ProposalStatusSection proposal={proposal} event={event} />
 
-      <PageContent>
-        <div className="space-y-4 lg:space-y-6">
-          <ProposalStatusSection proposal={proposal} event={event} />
-          <ProposalDetailsSection
-            abstract={proposal.abstract}
-            references={proposal.references}
-            formats={proposal.formats}
-            categories={proposal.categories}
-            level={proposal.level}
-            languages={proposal.languages}
-            speakers={proposal.speakers}
-          />
-        </div>
-      </PageContent>
-    </>
+        <TalkSection
+          talk={proposal}
+          event={event}
+          errors={errors}
+          canEditSpeakers={canEdit}
+          canEditTalk={canEdit}
+          canArchive={false}
+          showFormats
+          showCategories
+        />
+      </div>
+    </Page>
   );
 }

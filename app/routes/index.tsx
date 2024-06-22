@@ -6,15 +6,15 @@ import { useLoaderData, useSearchParams } from '@remix-run/react';
 import { EventsSearch } from '~/.server/event-search/EventSearch.ts';
 import { parseUrlFilters } from '~/.server/event-search/EventSearch.types.ts';
 import { parseUrlPage } from '~/.server/shared/Pagination.ts';
-import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
-import { PageContent } from '~/design-system/layouts/PageContent.tsx';
+import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
+import { Page } from '~/design-system/layouts/page.tsx';
 import { Pagination } from '~/design-system/list/Pagination.tsx';
 import { H1, H2 } from '~/design-system/Typography.tsx';
-import { EventCard } from '~/routes/__components/EventCard.tsx';
 import { Footer } from '~/routes/__components/Footer.tsx';
 import { Navbar } from '~/routes/__components/navbar/Navbar.tsx';
-import { useUser } from '~/routes/__components/useUser.tsx';
+import { useUser } from '~/routes/__components/use-user.tsx';
 
+import { EventCard } from './__components/events/event-card.tsx';
 import { SearchEventsFilters } from './__components/search/SearchEventsFilters.tsx';
 import { SearchEventsInput } from './__components/search/SearchEventsInput.tsx';
 
@@ -44,7 +44,7 @@ export default function IndexRoute() {
         <SearchEventsInput filters={filters} />
       </div>
 
-      <PageContent>
+      <Page>
         <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <H2 size="xl">Incoming call for papers</H2>
           <SearchEventsFilters />
@@ -70,7 +70,7 @@ export default function IndexRoute() {
             <Pagination {...pagination} />
           </div>
         )}
-      </PageContent>
+      </Page>
 
       <Footer />
     </>

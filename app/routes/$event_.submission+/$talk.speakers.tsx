@@ -15,7 +15,8 @@ import { ExternalLink } from '~/design-system/Links.tsx';
 import { H2, Subtitle, Text } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { parseWithZod } from '~/libs/zod-parser';
-import { CoSpeakersList, InviteCoSpeakerButton } from '~/routes/__components/proposals/forms/CoSpeaker.tsx';
+
+import { CoSpeakers } from '../__components/talks/co-speaker';
 
 export const handle = { step: 'speakers' };
 
@@ -29,6 +30,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   return json({
     speaker,
     invitationLink: proposal.invitationLink,
+    isOwner: proposal.isOwner,
     speakers: proposal.speakers.filter((speaker) => speaker.id !== userId),
   });
 };
@@ -56,7 +58,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
 export default function SubmissionSpeakerRoute() {
   const navigate = useNavigate();
-  const { speaker, speakers, invitationLink } = useLoaderData<typeof loader>();
+  const { speaker, speakers, isOwner, invitationLink } = useLoaderData<typeof loader>();
   const errors = useActionData<typeof action>();
 
   return (
@@ -83,10 +85,7 @@ export default function SubmissionSpeakerRoute() {
         <div className="mt-4">
           <H2>Co-speakers</H2>
           <Subtitle>When co-speaker accepts the invite, he/she will be automatically added to the proposal.</Subtitle>
-          <div className="mt-6 space-y-6">
-            {speakers.length > 1 && <CoSpeakersList speakers={speakers} showRemoveAction className="max-w-md py-4" />}
-            <InviteCoSpeakerButton invitationLink={invitationLink} />
-          </div>
+          <CoSpeakers speakers={speakers} invitationLink={invitationLink} canEdit={isOwner} className="mt-6" />
         </div>
       </Card.Content>
       <Card.Actions>

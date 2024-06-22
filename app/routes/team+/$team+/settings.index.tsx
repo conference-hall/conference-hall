@@ -10,7 +10,7 @@ import { H2, Subtitle } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast } from '~/libs/toasts/toast.server.ts';
 import { parseWithZod } from '~/libs/zod-parser.ts';
-import { TeamForm } from '~/routes/__components/teams/TeamForm.tsx';
+import { TeamForm } from '~/routes/__components/teams/team-form.tsx';
 
 import { useTeam } from '../__components/useTeam.tsx';
 

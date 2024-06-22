@@ -5,7 +5,7 @@ import invariant from 'tiny-invariant';
 
 import { UserEvent } from '~/.server/event-settings/UserEvent.ts';
 import { requireSession } from '~/libs/auth/session.ts';
-import { useUser } from '~/routes/__components/useUser.tsx';
+import { useUser } from '~/routes/__components/use-user.tsx';
 
 import { useTeam } from '../__components/useTeam.tsx';
 

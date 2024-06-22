@@ -65,12 +65,6 @@ npm run lint
 npm run tsc
 ```
 
-### Components stories with Ladle
-
-```
-npm run story
-```
-
 ### Export emulators data
 
 ```

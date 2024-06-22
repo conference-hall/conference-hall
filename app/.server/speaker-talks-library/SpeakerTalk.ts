@@ -42,6 +42,7 @@ export class SpeakerTalk {
           name: speaker.name,
           picture: speaker.picture,
           company: speaker.company,
+          bio: speaker.bio,
           isOwner: speaker.id === talk.creatorId,
           isCurrentUser: speaker.id === this.speakerId,
         }))
@@ -51,7 +52,8 @@ export class SpeakerTalk {
         name: proposal.event.name,
         logo: proposal.event.logo,
         proposalStatus: proposal.getStatusForSpeaker(proposal.event.isCfpOpen),
-      })),
+        createdAt: proposal.createdAt.toUTCString(),
+      })).sort((a, b) => a.createdAt > b.createdAt ? -1 : 1), // TODO: Test the sort
       invitationLink: talk.invitationLink,
     };
   }

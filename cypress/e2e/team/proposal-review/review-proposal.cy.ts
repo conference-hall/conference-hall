@@ -22,7 +22,7 @@ describe('Proposal review page', () => {
       cy.assertText('Advanced');
       cy.assertText('French');
       cy.assertText('Talk description');
-      cy.assertText('Talk references');
+      cy.assertText('My talk references');
       cy.assertText('Format 1');
       cy.assertText('Category 1');
       cy.assertText('Marie Jane');
@@ -84,7 +84,7 @@ describe('Proposal review page', () => {
     it('exits the proposal review page', () => {
       review.visit('team-1', 'conference-1', 'proposal-1');
       review.title('Talk 1').should('exist');
-      review.close();
+      review.goBackToList();
       proposals.isPageVisible();
     });
 

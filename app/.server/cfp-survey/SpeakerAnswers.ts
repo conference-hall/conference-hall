@@ -19,7 +19,7 @@ export class SpeakerAnswers {
       where: { event: { slug: this.eventSlug }, user: { id: this.userId } },
     });
 
-    return (userSurvey?.answers ?? {}) as Record<string, unknown>;
+    return (userSurvey?.answers ?? {}) as SurveyData;
   }
 
   async save(answers: SurveyData) {
@@ -38,5 +38,26 @@ export class SpeakerAnswers {
         answers: answers,
       },
     });
+  }
+}
+
+// TODO Add tests
+export class SpeakersAnswers {
+  constructor(
+    private userIds: Array<string>,
+    private eventSlug: string,
+  ) {}
+
+  static for(userIds: Array<string>, eventSlug: string) {
+    return new SpeakersAnswers(userIds, eventSlug);
+  }
+
+  async getAnswers() {
+    const userSurveys = await db.survey.findMany({
+      select: { userId: true, answers: true },
+      where: { event: { slug: this.eventSlug }, user: { id: { in: this.userIds } } },
+    });
+
+    return userSurveys.map(survey => ({ userId: survey.userId, answers: survey.answers as SurveyData }));
   }
 }

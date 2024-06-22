@@ -4,7 +4,7 @@ import { Text } from '~/design-system/Typography.tsx';
 import { formatCFPElapsedTime } from '~/libs/formatters/cfp.ts';
 import type { CfpState } from '~/types/events.types.ts';
 
-import { ClientOnly } from '../utils/ClientOnly.tsx';
+import { ClientOnly } from '../utils/client-only.tsx';
 import { CfpIcon } from './CfpIcon.tsx';
 
 type Props = { cfpState: CfpState; cfpStart?: string; cfpEnd?: string; className?: string };

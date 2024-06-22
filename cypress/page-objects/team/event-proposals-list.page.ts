@@ -2,7 +2,7 @@ import BasePage from '../../page-objects/base.page.ts';
 
 class OrganizationEventsProposalsPage extends BasePage {
   visit(teamSlug: string, eventSlug: string) {
-    cy.visitAndCheck(`/team/${teamSlug}/${eventSlug}`);
+    cy.visitAndCheck(`/team/${teamSlug}/${eventSlug}/reviews`);
     this.isPageVisible();
   }
 

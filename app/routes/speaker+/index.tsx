@@ -1,4 +1,3 @@
-import { PlusIcon } from '@heroicons/react/20/solid';
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
@@ -6,16 +5,14 @@ import { useLoaderData } from '@remix-run/react';
 import { parseUrlPage } from '~/.server/shared/Pagination.ts';
 import { SpeakerActivities } from '~/.server/speaker-activities/SpeakerActivities.ts';
 import { SpeakerProfile } from '~/.server/speaker-profile/SpeakerProfile.ts';
-import { ButtonLink } from '~/design-system/Buttons.tsx';
-import { PageContent } from '~/design-system/layouts/PageContent.tsx';
-import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
+import { Page } from '~/design-system/layouts/page.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 
 import { SpeakerActivitiesSection } from './__components/SpeakerActivitiesSection.tsx';
 import { SpeakerDetailsSection } from './__components/SpeakerDetailsSection.tsx';
 
-export const meta = mergeMeta(() => [{ title: 'Home speaker | Conference Hall' }]);
+export const meta = mergeMeta(() => [{ title: 'Activity | Conference Hall' }]);
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
@@ -31,31 +28,23 @@ export default function ProfileRoute() {
   const { profile, activities, nextPage, hasNextPage } = useLoaderData<typeof loader>();
 
   return (
-    <>
-      <PageHeaderTitle title="Welcome to Conference Hall" subtitle="Your last submissions to conferences and meetups.">
-        <ButtonLink iconLeft={PlusIcon} to="/speaker/talks/new">
-          New talk
-        </ButtonLink>
-      </PageHeaderTitle>
+    <Page className="grid grid-cols-1 items-start lg:grid-cols-3">
+      <h1 className="sr-only">Speaker activity</h1>
 
-      <PageContent className="grid grid-cols-1 items-start lg:grid-cols-3">
-        <SpeakerDetailsSection
-          name={profile.name}
-          email={profile.email}
-          picture={profile.picture}
-          bio={profile.bio}
-          address={profile.address}
-          company={profile.company}
-          socials={profile.socials}
-        />
+      <SpeakerDetailsSection
+        email={profile.email}
+        picture={profile.picture}
+        bio={profile.bio}
+        address={profile.address}
+        socials={profile.socials}
+      />
 
-        <SpeakerActivitiesSection
-          activities={activities}
-          nextPage={nextPage}
-          hasNextPage={hasNextPage}
-          className="lg:col-span-2"
-        />
-      </PageContent>
-    </>
+      <SpeakerActivitiesSection
+        activities={activities}
+        nextPage={nextPage}
+        hasNextPage={hasNextPage}
+        className="lg:col-span-2"
+      />
+    </Page>
   );
 }

@@ -6,12 +6,12 @@ import invariant from 'tiny-invariant';
 import { EventCreateSchema, TeamEvents } from '~/.server/team/TeamEvents.ts';
 import { Button, ButtonLink } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
-import { PageContent } from '~/design-system/layouts/PageContent.tsx';
+import { Page } from '~/design-system/layouts/page.tsx';
 import { H1, Subtitle } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { parseWithZod } from '~/libs/zod-parser.ts';
 
-import { EventForm } from '../../__components/events/EventForm.tsx';
+import { EventForm } from '../../__components/events/event-form.tsx';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);
@@ -40,7 +40,7 @@ export default function NewEventRoute() {
   const type = params.type || 'CONFERENCE';
 
   return (
-    <PageContent className="flex flex-col">
+    <Page className="flex flex-col">
       <Card>
         <Card.Title>
           <H1>Create a new event</H1>
@@ -60,6 +60,6 @@ export default function NewEventRoute() {
           </Card.Actions>
         </Form>
       </Card>
-    </PageContent>
+    </Page>
   );
 }

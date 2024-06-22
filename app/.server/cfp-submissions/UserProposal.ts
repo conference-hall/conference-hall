@@ -42,12 +42,14 @@ export class UserProposal {
       formats: proposal.formats.map(({ id, name }) => ({ id, name })),
       categories: proposal.categories.map(({ id, name }) => ({ id, name })),
       invitationLink: proposal.invitationLink,
+      isOwner: this.speakerId === proposal?.talk?.creatorId,
       speakers: proposal.speakers.map((speaker) => ({
         id: speaker.id,
         name: speaker.name,
+        bio: speaker.bio,
         picture: speaker.picture,
         company: speaker.company,
-        isOwner: speaker.id === proposal?.talk?.creatorId,
+        isCurrentUser: this.speakerId === speaker.id,
       })),
     };
   }

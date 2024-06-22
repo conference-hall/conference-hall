@@ -9,7 +9,7 @@ type ReviewProgressProps = {
 export function ReviewsProgress({ total, reviewed }: ReviewProgressProps) {
   const progress = total > 0 ? Math.round((reviewed / total) * 100) : 0;
   return (
-    <div className="hidden sm:flex sm:flex-col sm:items-start sm:gap-0.5">
+    <div className="flex flex-col items-start gap-0.5">
       <Text variant="secondary" weight="medium" size="xs">
         {`${progress}% proposals reviewed`}
       </Text>

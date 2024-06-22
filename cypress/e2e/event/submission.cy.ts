@@ -80,14 +80,15 @@ describe('Submit a talk to event', () => {
 
       // Check proposal info
       proposal.isPageVisible();
+      proposal.cospeakers().speaker('Clark Kent').should('exist');
       cy.assertText('The amazing talk');
       cy.assertText('Intermediate');
       cy.assertText('English');
       cy.assertText('An amazing abstract for an amazing talk.');
-      cy.assertText('Best talk ever!');
-      cy.assertText('Clark Kent');
       cy.assertText('Quickie');
       cy.assertText('Web');
+      proposal.openReferences();
+      cy.assertText('Best talk ever!');
 
       // Check survey info
       survey.visit('devfest-nantes');
@@ -148,6 +149,8 @@ describe('Submit a talk to event', () => {
       cy.assertText('Intermediate');
       cy.assertText('English');
       cy.assertText('Abstract UPDATED');
+
+      proposal.openReferences();
       cy.assertText('References UPDATED');
     });
 

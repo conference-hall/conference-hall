@@ -38,6 +38,7 @@ describe('SpeakerTalk', () => {
           {
             id: speaker.id,
             name: speaker.name,
+            bio: speaker.bio,
             picture: speaker.picture,
             company: speaker.company,
             isOwner: true,
@@ -61,6 +62,7 @@ describe('SpeakerTalk', () => {
         {
           id: owner.id,
           name: owner.name,
+          bio: owner.bio,
           picture: owner.picture,
           company: owner.company,
           isOwner: true,
@@ -69,6 +71,7 @@ describe('SpeakerTalk', () => {
         {
           id: speaker.id,
           name: speaker.name,
+          bio: speaker.bio,
           picture: speaker.picture,
           company: speaker.company,
           isOwner: false,
@@ -91,6 +94,7 @@ describe('SpeakerTalk', () => {
           slug: proposal.event.slug,
           logo: proposal.event.logo,
           proposalStatus: SpeakerProposalStatus.DeliberationPending,
+          createdAt: proposal.createdAt.toUTCString(),
         },
       ]);
     });

@@ -1,4 +1,4 @@
-import { SearchParamSelector } from '~/design-system/navigation/SearchParamSelector';
+import { SearchParamSelector } from '~/design-system/navigation/search-param-selector';
 
 export function ArchivedFilters() {
   return (

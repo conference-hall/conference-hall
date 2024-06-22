@@ -25,7 +25,7 @@ class SpeakerProfilePage extends BasePage {
   }
 
   isPageVisible() {
-    cy.findByRole('heading', { name: 'Your profile' }).should('exist');
+    cy.findByRole('heading', { name: 'My profile' }).should('exist');
   }
 
   fillPersonalInfoForm(data: PersonalInfoType) {

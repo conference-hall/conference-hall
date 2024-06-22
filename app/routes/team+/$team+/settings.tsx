@@ -4,11 +4,11 @@ import { Outlet } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { UserTeam } from '~/.server/team/UserTeam';
-import { PageContent } from '~/design-system/layouts/PageContent.tsx';
-import { NavSideMenu } from '~/design-system/navigation/NavSideMenu.tsx';
+import { Page } from '~/design-system/layouts/page';
+import { NavSideMenu } from '~/design-system/navigation/nav-side-menu';
 import { H2 } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { useUser } from '~/routes/__components/useUser';
+import { useUser } from '~/routes/__components/use-user';
 
 import { useTeam } from '../__components/useTeam';
 
@@ -31,7 +31,7 @@ export default function TeamSettingsLayout() {
   const menus = getMenuItems(team.slug);
 
   return (
-    <PageContent className="lg:grid lg:grid-cols-12">
+    <Page className="lg:grid lg:grid-cols-12">
       <H2 srOnly>Team settings</H2>
 
       <NavSideMenu
@@ -43,6 +43,6 @@ export default function TeamSettingsLayout() {
       <div className="lg:col-span-9">
         <Outlet context={{ user, team }} />
       </div>
-    </PageContent>
+    </Page>
   );
 }

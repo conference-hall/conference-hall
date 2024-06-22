@@ -14,9 +14,11 @@ describe('Speakers in proposal review page', () => {
   it('displays speakers info', () => {
     review.visit('team-1', 'conference-1', 'proposal-1');
 
-    review.speakersList().should('have.length', 2);
+    const cospeakers = review.cospeakers();
 
-    review.withinSpeakerProfile(/Marie Jane/, () => {
+    cospeakers.speakersList().should('have.length', 2);
+
+    cospeakers.withinSpeakerProfile(/Marie Jane/, () => {
       cy.assertText('Marie Jane');
       cy.assertText('MJ Corp');
       cy.assertText('marie@example.com');
@@ -40,7 +42,7 @@ describe('Speakers in proposal review page', () => {
       cy.findByRole('button', { name: 'Close panel' }).click();
     });
 
-    review.withinSpeakerProfile(/Robin/, () => {
+    cospeakers.withinSpeakerProfile(/Robin/, () => {
       cy.assertText('Robin');
       cy.assertText('robin@example.com');
       cy.findByRole('button', { name: 'Close panel' }).click();

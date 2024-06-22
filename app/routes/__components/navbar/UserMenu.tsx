@@ -2,12 +2,11 @@ import { Dialog, DialogPanel, Transition } from '@headlessui/react';
 import {
   ArrowRightStartOnRectangleIcon,
   BellIcon,
-  HomeIcon,
+  FireIcon,
   MagnifyingGlassIcon,
   MicrophoneIcon,
   PlusIcon,
   Square3Stack3DIcon,
-  UserIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
 import { Link } from '@remix-run/react';
@@ -45,7 +44,7 @@ export function UserMenu({ email, name, picture, teams, isOrganizer, notificatio
                 <DialogPanel className="pointer-events-auto w-screen max-w-xs">
                   <nav
                     aria-label="User navigation"
-                    className="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl"
+                    className="flex h-full flex-col overflow-y-auto bg-white py-6 shadow-xl"
                   >
                     <div className="px-4 sm:px-6">
                       <div className="flex items-start justify-between">
@@ -59,22 +58,24 @@ export function UserMenu({ email, name, picture, teams, isOrganizer, notificatio
                         Search events
                       </MenuLink>
 
+                      <MenuLink to="/notifications" icon={BellIcon} count={notificationsCount} onClick={handleClose}>
+                        Notifications
+                      </MenuLink>
+
                       <Divider />
 
-                      <MenuLink to="/speaker" icon={HomeIcon} onClick={handleClose}>
-                        Home
+                      <li className="px-2 pb-2">
+                        <Text size="xs" weight="semibold" variant="secondary">
+                          Speaker
+                        </Text>
+                      </li>
+
+                      <MenuLink to="/speaker" icon={FireIcon} onClick={handleClose}>
+                        Activity
                       </MenuLink>
 
                       <MenuLink to="/speaker/talks" icon={MicrophoneIcon} onClick={handleClose}>
                         Talks library
-                      </MenuLink>
-
-                      <MenuLink to="/speaker/profile" icon={UserIcon} onClick={handleClose}>
-                        Profile
-                      </MenuLink>
-
-                      <MenuLink to="/notifications" icon={BellIcon} count={notificationsCount} onClick={handleClose}>
-                        Notifications
                       </MenuLink>
 
                       <Divider />

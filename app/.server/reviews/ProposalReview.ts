@@ -8,6 +8,7 @@ import type { ProposalsFilters } from '../shared/ProposalSearchBuilder.types';
 import type { SocialLinks } from '../speaker-profile/SpeakerProfile.types';
 import type { ProposalUpdateData, ReviewUpdateData } from './ProposalReview.types';
 import { ReviewDetails } from './ReviewDetails';
+import { SpeakersAnswers } from '../cfp-survey/SpeakerAnswers';
 
 export type ProposalReviewData = Awaited<ReturnType<typeof ProposalReview.prototype.get>>;
 
@@ -39,6 +40,13 @@ export class ProposalReview {
 
     const reviews = new ReviewDetails(proposal.reviews);
 
+    // TODO add tests on answers
+    let answers: Array<{userId: string; answers: SurveyData }>;
+    if (proposal.speakers) {
+      const surveys = new SpeakersAnswers(proposal.speakers.map(s => s.id), event.slug);
+      answers = await surveys.getAnswers()
+    }
+
     return {
       id: proposal.id,
       title: proposal.title,
@@ -57,10 +65,16 @@ export class ProposalReview {
       },
       speakers:
         proposal.speakers?.map((speaker) => ({
-          id: speaker.id,
-          name: speaker.name,
-          picture: speaker.picture,
-          company: speaker.company,
+            id: speaker.id,
+            name: speaker.name,
+            picture: speaker.picture,
+            company: speaker.company,
+            bio: speaker.bio,
+            references: speaker.references,
+            email: speaker.email,
+            address: speaker.address,
+            socials: speaker.socials as SocialLinks,
+            survey: answers?.find(a => a.userId === speaker.id)?.answers as SurveyData,
         })) || [],
     };
   }
@@ -113,30 +127,5 @@ export class ProposalReview {
         categories: { set: [], connect: categories?.map((id) => ({ id })) },
       },
     });
-  }
-
-  async getSpeakerInfo(speakerId: string) {
-    const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER', 'REVIEWER']);
-    if (!event.displayProposalsSpeakers) throw new ForbiddenOperationError();
-
-    const speaker = await db.user.findUnique({
-      where: { id: speakerId, proposals: { some: { id: this.proposalId } } },
-    });
-    if (!speaker) throw new UserNotFoundError();
-
-    const survey = await db.survey.findFirst({ where: { eventId: event.id, userId: speakerId } });
-
-    return {
-      id: speaker.id,
-      name: speaker.name,
-      picture: speaker.picture,
-      bio: speaker.bio,
-      references: speaker.references,
-      email: speaker.email,
-      company: speaker.company,
-      address: speaker.address,
-      socials: speaker.socials as SocialLinks,
-      survey: survey?.answers as SurveyData | undefined,
-    };
   }
 }

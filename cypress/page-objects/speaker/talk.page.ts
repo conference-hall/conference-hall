@@ -1,4 +1,7 @@
 import BasePage from 'page-objects/base.page.ts';
+import TalkCoSpeakersActions from 'page-objects/common/talk-co-speakers.actions.ts';
+
+import TalkEditFormActions from '../common/talk-edit-form.actions.ts';
 
 class SpeakerTalkPage extends BasePage {
   visit(talkId: string) {
@@ -7,8 +10,11 @@ class SpeakerTalkPage extends BasePage {
   }
 
   isPageVisible() {
-    cy.findByRole('heading', { name: 'Abstract' }).should('exist');
-    cy.findByRole('heading', { name: 'Submissions' }).should('exist');
+    cy.findByRole('heading', { name: 'Talk page' }).should('exist');
+  }
+
+  openReferences() {
+    cy.findByText('Talk references').click();
   }
 
   submitTalk() {
@@ -16,7 +22,12 @@ class SpeakerTalkPage extends BasePage {
   }
 
   editTalk() {
-    cy.findByRole('link', { name: 'Edit' }).click();
+    cy.findByRole('button', { name: 'Edit' }).click();
+    return new TalkEditFormActions();
+  }
+
+  cospeakers() {
+    return new TalkCoSpeakersActions();
   }
 
   archiveTalk() {

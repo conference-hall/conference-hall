@@ -9,9 +9,8 @@ import {
   DetailsSchema,
   PersonalInfoSchema,
 } from '~/.server/speaker-profile/SpeakerProfile.types.ts';
-import { PageContent } from '~/design-system/layouts/PageContent.tsx';
-import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
-import { NavSideMenu } from '~/design-system/navigation/NavSideMenu.tsx';
+import { Page } from '~/design-system/layouts/page.tsx';
+import { NavSideMenu } from '~/design-system/navigation/nav-side-menu.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
@@ -21,7 +20,7 @@ import { AdditionalInfoForm } from './__components/AdditionalInfoForm.tsx';
 import { PersonalInfoForm } from './__components/PersonalInfoForm.tsx';
 import { SpeakerDetailsForm } from './__components/SpeakerDetailsForm.tsx';
 
-export const meta = mergeMeta(() => [{ title: 'Profile | Conference Hall' }]);
+export const meta = mergeMeta(() => [{ title: 'My profile | Conference Hall' }]);
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
@@ -69,30 +68,28 @@ export default function ProfileRoute() {
   const errors = useActionData<typeof action>();
 
   return (
-    <>
-      <PageHeaderTitle title="Your profile" subtitle="Share your biography and references to event organizers." />
+    <Page className="lg:grid lg:grid-cols-12">
+      <h1 className="sr-only">My profile</h1>
 
-      <PageContent className="lg:grid lg:grid-cols-12">
-        <NavSideMenu
-          aria-label="Profile edition menu"
-          items={MENU_ITEMS}
-          className="w-full mb-6 lg:col-span-3 lg:sticky lg:top-4"
-          noActive
+      <NavSideMenu
+        aria-label="Profile edition menu"
+        items={MENU_ITEMS}
+        className="w-full mb-6 lg:col-span-3 lg:sticky lg:top-4"
+        noActive
+      />
+
+      <div className="space-y-4 lg:space-y-6 lg:col-span-9">
+        <PersonalInfoForm name={profile.name} email={profile.email} picture={profile.picture} errors={errors} />
+
+        <SpeakerDetailsForm bio={profile.bio} references={profile.references} errors={errors} />
+
+        <AdditionalInfoForm
+          company={profile.company}
+          address={profile.address}
+          socials={profile.socials}
+          errors={errors}
         />
-
-        <div className="space-y-4 lg:space-y-6 lg:col-span-9">
-          <PersonalInfoForm name={profile.name} email={profile.email} picture={profile.picture} errors={errors} />
-
-          <SpeakerDetailsForm bio={profile.bio} references={profile.references} errors={errors} />
-
-          <AdditionalInfoForm
-            company={profile.company}
-            address={profile.address}
-            socials={profile.socials}
-            errors={errors}
-          />
-        </div>
-      </PageContent>
-    </>
+      </div>
+    </Page>
   );
 }

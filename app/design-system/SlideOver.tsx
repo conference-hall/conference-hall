@@ -1,6 +1,8 @@
-import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
-import { XMarkIcon } from '@heroicons/react/24/outline';
+import { Dialog, DialogPanel, DialogTitle, Transition } from '@headlessui/react';
+import { XMarkIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
+
+import { Background, SlideOverTransition } from './Transitions';
 
 type Props = {
   open: boolean;
@@ -9,26 +11,30 @@ type Props = {
   children: React.ReactNode;
 };
 
-export default function SlideOver({ open, size = 'base', onClose, children }: Props) {
+export function SlideOver({ open, size = 'base', onClose, children }: Props) {
   return (
-    <Dialog as="div" open={open} className="relative z-20" onClose={onClose}>
-      <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+    <Transition show={open}>
+      <Dialog className="relative z-20" onClose={onClose}>
+        <Background />
 
-      <div className="fixed inset-0 overflow-hidden">
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full">
-            <DialogPanel
-              className={cx('pointer-events-auto w-screen', {
-                'max-w-lg': size === 'base',
-                'max-w-2xl': size === 'l',
-              })}
-            >
-              <div className="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl">{children}</div>
-            </DialogPanel>
+        <div className="fixed inset-0 overflow-hidden">
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full">
+              <SlideOverTransition>
+                <DialogPanel
+                  className={cx('pointer-events-auto w-screen', {
+                    'max-w-lg': size === 'base',
+                    'max-w-2xl': size === 'l',
+                  })}
+                >
+                  <div className="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl">{children}</div>
+                </DialogPanel>
+              </SlideOverTransition>
+            </div>
           </div>
         </div>
-      </div>
-    </Dialog>
+      </Dialog>
+    </Transition>
   );
 }
 

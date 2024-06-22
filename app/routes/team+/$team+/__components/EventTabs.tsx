@@ -1,23 +1,42 @@
-import { useMemo } from 'react';
+import { CalendarIcon, Cog6ToothIcon, HomeIcon, MegaphoneIcon, QueueListIcon } from '@heroicons/react/24/outline';
+import { useSearchParams } from '@remix-run/react';
 
-import { NavTabs } from '~/design-system/navigation/NavTabs.tsx';
+import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs';
 import type { EventType } from '~/types/events.types';
 
 type Props = { teamSlug: string; eventSlug: string; eventType: EventType; role: string };
 
 export function EventTabs({ teamSlug, eventSlug, eventType, role }: Props) {
-  const tabs = useMemo(
-    () => [
-      { to: `/team/${teamSlug}/${eventSlug}`, label: 'Proposals reviews', enabled: true, end: true },
-      {
-        to: `/team/${teamSlug}/${eventSlug}/publication`,
-        label: 'Publication',
-        enabled: role !== 'REVIEWER' && eventType === 'CONFERENCE',
-      },
-      { to: `/team/${teamSlug}/${eventSlug}/settings`, label: 'Settings', enabled: role === 'OWNER' },
-    ],
-    [teamSlug, eventSlug, eventType, role],
-  );
+  const [searchParams] = useSearchParams();
+  const search = searchParams.toString();
 
-  return <NavTabs tabs={tabs} py={4} scrollable />;
+  return (
+    <NavTabs py={4} scrollable>
+      <NavTab to={{ pathname: `/team/${teamSlug}/${eventSlug}`, search }} icon={HomeIcon} end>
+        Overview
+      </NavTab>
+
+      <NavTab to={{ pathname: `/team/${teamSlug}/${eventSlug}/reviews`, search }} icon={QueueListIcon}>
+        Proposals
+      </NavTab>
+
+      {role !== 'REVIEWER' && eventType === 'CONFERENCE' ? (
+        <NavTab to={`/team/${teamSlug}/${eventSlug}/publication`} icon={MegaphoneIcon}>
+          Publication
+        </NavTab>
+      ) : null}
+
+      {role !== 'REVIEWER' && eventType === 'CONFERENCE' ? (
+        <NavTab to={`/team/${teamSlug}/${eventSlug}/schedule`} icon={CalendarIcon}>
+          Schedule
+        </NavTab>
+      ) : null}
+
+      {role === 'OWNER' ? (
+        <NavTab to={`/team/${teamSlug}/${eventSlug}/settings`} icon={Cog6ToothIcon}>
+          Settings
+        </NavTab>
+      ) : null}
+    </NavTabs>
+  );
 }

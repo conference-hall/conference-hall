@@ -5,10 +5,10 @@ import { Avatar, AvatarGroup } from '~/design-system/Avatar.tsx';
 import { ButtonLink } from '~/design-system/Buttons.tsx';
 import { IconLink } from '~/design-system/IconButtons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
-import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
+import { EmptyState } from '~/design-system/layouts/empty-state';
 import { Link } from '~/design-system/Links.tsx';
 import { Subtitle, Text } from '~/design-system/Typography.tsx';
-import { ProposalStatusLabel } from '~/routes/__components/proposals/ProposalStatusLabel.tsx';
+import { ProposalStatusLabel } from '~/routes/__components/proposals/proposal-status-label';
 import type { CfpState } from '~/types/events.types';
 import type { SpeakerProposalStatus } from '~/types/speaker.types';
 
@@ -45,7 +45,7 @@ export function SpeakerActivitiesSection({ activities, nextPage, hasNextPage, cl
               <div className="flex items-center gap-4">
                 <Avatar picture={event.logo} name={event.name} square size="l" />
                 <div className="truncate">
-                  <Text size="xl" weight="medium" truncate>
+                  <Text size="l" weight="bold" truncate>
                     {event.name}
                   </Text>
                   <Subtitle size="xs">{`${event.submissions.length} proposals`}</Subtitle>
@@ -63,7 +63,7 @@ export function SpeakerActivitiesSection({ activities, nextPage, hasNextPage, cl
               {event.submissions.map((submission) => (
                 <li key={submission.id} className="flex flex-col gap-1 p-4">
                   <div className="flex items-center justify-between">
-                    <Link to={`/${event.slug}/proposals/${submission.id}`} size="base" weight="medium" truncate>
+                    <Link to={`/${event.slug}/proposals/${submission.id}`} size="s" weight="semibold" truncate>
                       {submission.title}
                     </Link>
                     <AvatarGroup avatars={submission.speakers} />

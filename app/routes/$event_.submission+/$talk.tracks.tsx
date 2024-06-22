@@ -14,9 +14,9 @@ import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2 } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { parseWithZod } from '~/libs/zod-parser';
-import { CategoriesForm } from '~/routes/__components/proposals/forms/CategoriesForm.tsx';
-import { FormatsForm } from '~/routes/__components/proposals/forms/FormatsForm.tsx';
 
+import { CategoriesForm } from '../__components/talks/talk-forms/categories-form';
+import { FormatsForm } from '../__components/talks/talk-forms/formats-form';
 import { useEvent } from '../$event+/__components/useEvent';
 
 export const handle = { step: 'tracks' };

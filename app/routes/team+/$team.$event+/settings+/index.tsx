@@ -16,7 +16,7 @@ import { H2, Subtitle } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
 import { parseWithZod } from '~/libs/zod-parser.ts';
-import { EventForm } from '~/routes/__components/events/EventForm.tsx';
+import { EventForm } from '~/routes/__components/events/event-form.tsx';
 
 import { useEvent } from '../__components/useEvent.tsx';
 

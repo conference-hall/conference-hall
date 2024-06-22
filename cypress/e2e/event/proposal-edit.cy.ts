@@ -1,5 +1,4 @@
 import EventProposalPage from '../../page-objects/event/proposal.page.ts';
-import EventEditProposalPage from '../../page-objects/event/proposal-edit.page.ts';
 
 describe('Speaker proposal edition page', () => {
   beforeEach(() => {
@@ -9,74 +8,72 @@ describe('Speaker proposal edition page', () => {
 
   afterEach(() => cy.task('disconnectDB'));
 
-  const editProposal = new EventEditProposalPage();
   const proposal = new EventProposalPage();
 
   it('can edit a proposal', () => {
-    editProposal.visit('devfest-nantes', 'awesome-proposal');
+    proposal.visit('devfest-nantes', 'awesome-proposal');
+    const edit = proposal.editProposal();
 
     cy.assertInputText('Title', 'Awesome talk');
     cy.assertInputText('Abstract', 'Awesome abstract');
     cy.assertRadioChecked('Advanced');
     cy.assertInputText('References', 'Awesome references');
 
-    editProposal.selectFormatTrack('Quickie');
-    editProposal.selectCategoryTrack('Web');
-    editProposal.fillProposalForm({
+    edit.selectFormatTrack('Quickie');
+    edit.selectCategoryTrack('Web');
+    edit.fillForm({
       title: 'New title',
       abstract: 'New abstract',
       level: 'Beginner',
       language: 'English',
       references: 'New references',
     });
-    editProposal.saveAbstract().click();
+    edit.save();
 
     cy.assertText('You have to select at least one proposal format.');
     cy.assertText('You have to select at least one proposal category.');
 
-    editProposal.selectFormatTrack('Quickie 2');
-    editProposal.selectCategoryTrack('Web 2');
-    editProposal.saveAbstract().click();
+    edit.selectFormatTrack('Quickie 2');
+    edit.selectCategoryTrack('Web 2');
+    edit.save();
     cy.assertToast('Proposal saved.');
+    edit.close();
 
     proposal.isPageVisible();
     cy.assertText('New title');
     cy.assertText('New abstract');
-    cy.assertText('Beginner');
-    cy.assertText('English');
-    cy.assertText('New references');
     cy.assertText('Quickie 2');
     cy.assertText('Web 2');
+    cy.assertText('Beginner');
+    cy.assertText('English');
+
+    proposal.openReferences();
+    cy.assertText('New references');
   });
 
   it('can invite a co-speaker', () => {
-    editProposal.visit('devfest-nantes', 'awesome-proposal');
-    editProposal.coSpeakerInvite().should('exist');
-    editProposal.closeCoSpeakerModal();
+    proposal.visit('devfest-nantes', 'awesome-proposal');
+    const cospeakers = proposal.cospeakers();
+    cospeakers.inviteSpeaker();
+    cy.findByLabelText('Copy invitation link').should('exist');
+    cospeakers.closeInviteSpeakerModal();
   });
 
   it('can remove a co-speaker', () => {
-    editProposal.visit('devfest-nantes', 'awesome-proposal');
-    cy.assertText('Bruce Wayne');
-    editProposal.removeCoSpeaker('Bruce Wayne').click();
-    editProposal.isPageVisible();
+    proposal.visit('devfest-nantes', 'awesome-proposal');
+    const cospeakers = proposal.cospeakers();
+    cospeakers.openSpeakerModal('Bruce Wayne');
+    cospeakers.removeCoSpeaker('Bruce Wayne');
     cy.assertToast('Co-speaker removed from proposal.');
-    cy.assertNoText('Bruce Wayne');
+    cospeakers.speaker('Bruce Wayne').should('not.exist');
   });
 
   it('display errors on mandatory fields', () => {
-    editProposal.visit('devfest-nantes', 'awesome-proposal');
-    editProposal.fillProposalForm({
-      title: ' ',
-      abstract: ' ',
-    });
-    editProposal.saveAbstract().click();
+    proposal.visit('devfest-nantes', 'awesome-proposal');
+    const editProposal = proposal.editProposal();
+    editProposal.fillForm({ title: ' ', abstract: ' ' });
+    editProposal.save();
     editProposal.error('Title').should('contain.text', 'String must contain at least 1 character(s)');
     editProposal.error('Abstract').should('contain.text', 'String must contain at least 1 character(s)');
-  });
-
-  it('cannot edit a proposal not found', () => {
-    cy.visitAndCheck('/devfest-nantes/proposals/not-found/edit', { failOnStatusCode: false });
-    cy.assertText('Proposal not found');
   });
 });

@@ -1,20 +1,18 @@
-import { PencilSquareIcon } from '@heroicons/react/24/outline';
-import type { ActionFunction, LoaderFunctionArgs } from '@remix-run/node';
+import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
+import { useActionData, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { TalksLibrary } from '~/.server/speaker-talks-library/TalksLibrary.ts';
-import { ButtonLink } from '~/design-system/Buttons.tsx';
-import { PageContent } from '~/design-system/layouts/PageContent.tsx';
-import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
+import { TalkSaveSchema } from '~/.server/speaker-talks-library/TalksLibrary.types';
+import { Page } from '~/design-system/layouts/page';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-import { ProposalDetailsSection } from '~/routes/__components/proposals/ProposalDetailsSection.tsx';
-import { ProposalSubmissionsSection } from '~/routes/__components/proposals/ProposalSubmissionsSection.tsx';
+import { parseWithZod } from '~/libs/zod-parser';
 
-import { ArchiveOrRestoreTalkButton } from './__components/ArchiveOrRestoreTalkButton.tsx';
+import { TalkSection } from '../__components/talks/talk-section';
+import { TalkSubmissionsSection } from '../__components/talks/talk-submissions-section';
 
 export const meta = mergeMeta<typeof loader>(({ data }) =>
   data ? [{ title: `${data?.title} | Conference Hall` }] : [],
@@ -28,55 +26,58 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   return json(talk);
 };
 
-export const action: ActionFunction = async ({ request, params }) => {
+export const action = async ({ request, params }: ActionFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.talk, 'Invalid talk id');
 
   const talk = TalksLibrary.of(userId).talk(params.talk);
 
   const form = await request.formData();
-  const action = form.get('_action');
+  const action = form.get('intent');
+
   switch (action) {
-    case 'archive-talk':
+    case 'archive-talk': {
       await talk.archive();
       return toast('success', 'Talk archived.');
-
-    case 'restore-talk':
+    }
+    case 'restore-talk': {
       await talk.restore();
       return toast('success', 'Talk restored.');
+    }
+    case 'remove-speaker': {
+      await talk.removeCoSpeaker(form.get('_speakerId')?.toString() as string);
+      return toast('success', 'Co-speaker removed from talk.');
+    }
+    case 'edit-talk': {
+      const result = parseWithZod(form, TalkSaveSchema);
+      if (!result.success) {
+        return json(result.error);
+      }
+      await talk.update(result.value);
+      return toast('success', 'Talk updated.');
+    }
+    default:
+      return json(null);
   }
-  return null;
 };
 
 export default function SpeakerTalkRoute() {
   const talk = useLoaderData<typeof loader>();
+  const errors = useActionData<typeof action>();
 
   return (
-    <>
-      <PageHeaderTitle title={talk.title} backTo="/speaker/talks">
-        <ArchiveOrRestoreTalkButton archived={talk.archived} />
-        <ButtonLink iconLeft={PencilSquareIcon} to="edit" variant="secondary">
-          Edit
-        </ButtonLink>
-      </PageHeaderTitle>
+    <Page>
+      <h1 className="sr-only">Talk page</h1>
 
-      <PageContent>
-        <div className="grid grid-cols-1 gap-6 lg:grid-flow-col-dense lg:grid-cols-3">
-          <div className="lg:col-span-2 lg:col-start-1">
-            <ProposalDetailsSection
-              abstract={talk.abstract}
-              references={talk.references}
-              level={talk.level}
-              languages={talk.languages}
-              speakers={talk.speakers}
-            />
-          </div>
-
-          <div className="lg:col-span-1 lg:col-start-3">
-            <ProposalSubmissionsSection talkId={talk.id} submissions={talk.submissions} />
-          </div>
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-10">
+        <div className="lg:col-span-7">
+          <TalkSection talk={talk} errors={errors} canEditSpeakers canEditTalk canArchive />
         </div>
-      </PageContent>
-    </>
+
+        <div className="lg:col-span-3">
+          <TalkSubmissionsSection talkId={talk.id} canSubmit={!talk.archived} submissions={talk.submissions} />
+        </div>
+      </div>
+    </Page>
   );
 }

@@ -1,18 +1,18 @@
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { Form, useActionData } from '@remix-run/react';
+import { useActionData } from '@remix-run/react';
 
 import { TalksLibrary } from '~/.server/speaker-talks-library/TalksLibrary';
 import { TalkSaveSchema } from '~/.server/speaker-talks-library/TalksLibrary.types';
 import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
-import { PageContent } from '~/design-system/layouts/PageContent.tsx';
-import { PageHeaderTitle } from '~/design-system/layouts/PageHeaderTitle.tsx';
+import { Page } from '~/design-system/layouts/page';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { redirectWithToast } from '~/libs/toasts/toast.server.ts';
 import { parseWithZod } from '~/libs/zod-parser';
-import { DetailsForm } from '~/routes/__components/proposals/forms/DetailsForm.tsx';
+
+import { TalkForm } from '../__components/talks/talk-forms/talk-form';
 
 export const meta = mergeMeta(() => [{ title: 'New talk | Conference Hall' }]);
 
@@ -31,24 +31,19 @@ export default function NewTalkRoute() {
   const errors = useActionData<typeof action>();
 
   return (
-    <>
-      <PageHeaderTitle title="Create a new talk" backTo="/speaker/talks" />
+    <Page>
+      <h1 className="sr-only">Create a new talk</h1>
+      <Card>
+        <Card.Content>
+          <TalkForm id="new-talk-form" errors={errors} />
+        </Card.Content>
 
-      <PageContent>
-        <Card>
-          <Card.Content>
-            <Form method="POST" id="new-talk-form" className="space-y-8">
-              <DetailsForm errors={errors} />
-            </Form>
-          </Card.Content>
-
-          <Card.Actions>
-            <Button type="submit" form="new-talk-form">
-              Create new talk
-            </Button>
-          </Card.Actions>
-        </Card>
-      </PageContent>
-    </>
+        <Card.Actions>
+          <Button type="submit" form="new-talk-form">
+            Create new talk
+          </Button>
+        </Card.Actions>
+      </Card>
+    </Page>
   );
 }

@@ -5,6 +5,7 @@ import { cva, cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
 
 import { IconButton } from './IconButtons.tsx';
+import { Background } from './Transitions.tsx';
 import { Text } from './Typography.tsx';
 
 const POSITION = { center: 'sm:items-center', top: 'sm:items-start' };
@@ -101,22 +102,5 @@ function Layout({ position = 'center', size, onClose, children }: LayoutProps) {
         </TransitionChild>
       </div>
     </div>
-  );
-}
-
-// MODAL Background
-
-function Background() {
-  return (
-    <TransitionChild
-      enter="ease-out duration-300"
-      enterFrom="opacity-0"
-      enterTo="opacity-100"
-      leave="ease-in duration-200"
-      leaveFrom="opacity-100"
-      leaveTo="opacity-0"
-    >
-      <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
-    </TransitionChild>
   );
 }

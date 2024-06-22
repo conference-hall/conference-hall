@@ -5,13 +5,12 @@ import invariant from 'tiny-invariant';
 
 import { UserTeam } from '~/.server/team/UserTeam';
 import { Container } from '~/design-system/layouts/Container';
-import { PageHeader } from '~/design-system/layouts/PageHeader';
+import { PageHeader } from '~/design-system/layouts/page-header';
 import { requireSession } from '~/libs/auth/session';
 import { mergeMeta } from '~/libs/meta/merge-meta';
-import { Navbar } from '~/routes/__components/navbar/Navbar.tsx';
-import { useUser } from '~/routes/__components/useUser';
+import { useUser } from '~/routes/__components/use-user';
 
-import TeamBreadcrumb from '../__components/teams/TeamBreadcrumb';
+import { NavbarOrga } from '../__components/navbar/NavbarOrga';
 import type { loader as routeEventLoader } from './$team.$event+/_layout';
 import { EventTabs } from './$team+/__components/EventTabs';
 import { TeamTabs } from './$team+/__components/TeamTabs';
@@ -33,11 +32,10 @@ export default function TeamLayout() {
 
   return (
     <>
-      <Navbar user={user} withSearch />
+      <NavbarOrga user={user} />
 
       <PageHeader>
         <Container>
-          <TeamBreadcrumb team={team} event={event} />
           {event ? (
             <EventTabs teamSlug={team.slug} eventSlug={event.slug} eventType={event.type} role={team.role} />
           ) : (

@@ -6,7 +6,7 @@ import type { ChangeEvent } from 'react';
 import { Checkbox } from '~/design-system/forms/Checkboxes';
 import { Text } from '~/design-system/Typography';
 import { Join } from '~/design-system/utils/join';
-import { GlobalReviewNote, UserReviewNote } from '~/routes/__components/reviews/ReviewNote';
+import { GlobalReviewNote, UserReviewNote } from '~/routes/__components/reviews/review-note';
 import { useTeam } from '~/routes/team+/__components/useTeam';
 
 import type { ProposalData } from './types';
@@ -36,7 +36,7 @@ export function ProposalItem({ proposal, isSelected, isAllPagesSelected, toggle 
         className="px-4 pb-5 sm:pl-6 sm:pr-4"
       />
       <Link
-        to={{ pathname: `review/${id}`, search: params.toString() }}
+        to={{ pathname: id, search: params.toString() }}
         aria-label={`Open proposal "${title}"`}
         className="flex items-center justify-between gap-4 pr-4 py-4 sm:pr-6 grow min-w-0"
       >
