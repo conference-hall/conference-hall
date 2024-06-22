@@ -1,6 +1,6 @@
-import { userFactory } from 'tests/factories/users';
+import { userFactory } from 'tests/factories/users.ts';
 
-import { UserInfo } from './UserInfo';
+import { UserInfo } from './UserInfo.ts';
 
 describe('UserInfo', () => {
   describe('get', () => {

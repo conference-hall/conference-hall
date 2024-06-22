@@ -1,18 +1,17 @@
 import type { Event, EventCategory, EventFormat, Team, User } from '@prisma/client';
-import { eventCategoryFactory } from 'tests/factories/categories';
-import { eventFactory } from 'tests/factories/events';
-import { eventFormatFactory } from 'tests/factories/formats';
-import { proposalFactory } from 'tests/factories/proposals';
-import { reviewFactory } from 'tests/factories/reviews';
-import { surveyFactory } from 'tests/factories/surveys';
-import { talkFactory } from 'tests/factories/talks';
-import { teamFactory } from 'tests/factories/team';
-import { userFactory } from 'tests/factories/users';
+import { db } from 'prisma/db.server.ts';
+import { eventCategoryFactory } from 'tests/factories/categories.ts';
+import { eventFactory } from 'tests/factories/events.ts';
+import { eventFormatFactory } from 'tests/factories/formats.ts';
+import { proposalFactory } from 'tests/factories/proposals.ts';
+import { reviewFactory } from 'tests/factories/reviews.ts';
+import { talkFactory } from 'tests/factories/talks.ts';
+import { teamFactory } from 'tests/factories/team.ts';
+import { userFactory } from 'tests/factories/users.ts';
 
-import { db } from 'prisma/db.server';
-import { ForbiddenOperationError, ReviewDisabledError } from '~/libs/errors.server';
+import { ForbiddenOperationError, ReviewDisabledError } from '~/libs/errors.server.ts';
 
-import { ProposalReview } from './ProposalReview';
+import { ProposalReview } from './ProposalReview.ts';
 
 describe('ProposalReview', () => {
   let owner: User, member: User, speaker: User;

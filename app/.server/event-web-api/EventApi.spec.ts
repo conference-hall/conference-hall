@@ -5,9 +5,9 @@ import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
 
-import { ApiKeyInvalidError, EventNotFoundError } from '~/libs/errors.server';
+import { ApiKeyInvalidError, EventNotFoundError } from '~/libs/errors.server.ts';
 
-import { EventApi } from './EventApi';
+import { EventApi } from './EventApi.ts';
 
 describe('#EventApi', () => {
   describe('#proposals', () => {

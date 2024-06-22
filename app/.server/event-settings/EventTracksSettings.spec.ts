@@ -1,14 +1,14 @@
 import type { Event, EventCategory, EventFormat, Team, User } from '@prisma/client';
-import { eventCategoryFactory } from 'tests/factories/categories';
-import { eventFactory } from 'tests/factories/events';
-import { eventFormatFactory } from 'tests/factories/formats';
-import { teamFactory } from 'tests/factories/team';
-import { userFactory } from 'tests/factories/users';
+import { db } from 'prisma/db.server.ts';
+import { eventCategoryFactory } from 'tests/factories/categories.ts';
+import { eventFactory } from 'tests/factories/events.ts';
+import { eventFormatFactory } from 'tests/factories/formats.ts';
+import { teamFactory } from 'tests/factories/team.ts';
+import { userFactory } from 'tests/factories/users.ts';
 
-import { db } from 'prisma/db.server';
-import { ForbiddenOperationError } from '~/libs/errors.server';
+import { ForbiddenOperationError } from '~/libs/errors.server.ts';
 
-import { EventTracksSettings } from './EventTracksSettings';
+import { EventTracksSettings } from './EventTracksSettings.ts';
 
 describe('EventTracksSettings', () => {
   let owner: User, reviewer: User;
@@ -63,7 +63,10 @@ describe('EventTracksSettings', () => {
     it('throws an error if user does not belong to event team', async () => {
       const user = await userFactory();
       await expect(
-        EventTracksSettings.for(user.id, team.slug, event.slug).saveFormat({ name: 'Hello world', description: 'Hello world' }),
+        EventTracksSettings.for(user.id, team.slug, event.slug).saveFormat({
+          name: 'Hello world',
+          description: 'Hello world',
+        }),
       ).rejects.toThrowError(ForbiddenOperationError);
     });
   });

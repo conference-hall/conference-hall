@@ -1,9 +1,10 @@
-import { db } from 'prisma/db.server';
-import { ForbiddenOperationError, ProposalNotFoundError } from '~/libs/errors.server';
+import { db } from 'prisma/db.server.ts';
 
-import { UserEvent } from '../event-settings/UserEvent';
-import { ProposalAcceptedEmail } from './emails/proposal-accepted.email';
-import { ProposalRejectedEmail } from './emails/proposal-rejected.email';
+import { ForbiddenOperationError, ProposalNotFoundError } from '~/libs/errors.server.ts';
+
+import { UserEvent } from '../event-settings/UserEvent.ts';
+import { ProposalAcceptedEmail } from './emails/proposal-accepted.email.ts';
+import { ProposalRejectedEmail } from './emails/proposal-rejected.email.ts';
 
 export type ResultsStatistics = Awaited<ReturnType<typeof Publication.prototype.statistics>>;
 

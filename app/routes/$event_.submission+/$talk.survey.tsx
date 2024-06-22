@@ -4,7 +4,7 @@ import { json, redirect } from '@remix-run/node';
 import { useLoaderData, useNavigate } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { SubmissionSteps } from '~/.server/cfp-submission-funnel/SubmissionSteps.ts';
+import { SubmissionSteps } from '~/.server/cfp-submission-funnel/submission-steps.ts';
 import { CfpSurvey } from '~/.server/cfp-survey/CfpSurvey.ts';
 import { SpeakerAnswers } from '~/.server/cfp-survey/SpeakerAnswers.ts';
 import { SurveySchema } from '~/.server/cfp-survey/SpeakerAnswers.types.ts';

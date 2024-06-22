@@ -2,10 +2,10 @@ import type { User } from '@prisma/client';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 
-import { ForbiddenOperationError, SlugAlreadyExistsError } from '~/libs/errors.server';
+import { appUrl } from '~/libs/env/env.server.ts';
+import { ForbiddenOperationError, SlugAlreadyExistsError } from '~/libs/errors.server.ts';
 
-import { TeamUpdateSchema, UserTeam } from './UserTeam';
-import { appUrl } from '~/libs/env/env.server';
+import { TeamUpdateSchema, UserTeam } from './UserTeam.ts';
 
 describe('UserTeam', () => {
   let user: User;

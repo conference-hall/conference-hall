@@ -1,10 +1,10 @@
+import { db } from 'prisma/db.server.ts';
 import { z } from 'zod';
 
-import { db } from 'prisma/db.server';
 import type { DeliberationStatus } from '~/types/proposals.types';
 
-import { UserEvent } from '../event-settings/UserEvent';
-import { ProposalSearchBuilder } from '../shared/ProposalSearchBuilder';
+import { UserEvent } from '../event-settings/UserEvent.ts';
+import { ProposalSearchBuilder } from '../shared/ProposalSearchBuilder.ts';
 import type { ProposalsFilters } from '../shared/ProposalSearchBuilder.types';
 
 export const DeliberateSchema = z.object({ status: z.enum(['PENDING', 'ACCEPTED', 'REJECTED']) });

@@ -1,22 +1,22 @@
 import { TalkLevel } from '@prisma/client';
-import { eventCategoryFactory } from 'tests/factories/categories';
+import { db } from 'prisma/db.server.ts';
+import { eventCategoryFactory } from 'tests/factories/categories.ts';
 import { eventFactory } from 'tests/factories/events.ts';
-import { eventFormatFactory } from 'tests/factories/formats';
-import { proposalFactory } from 'tests/factories/proposals';
+import { eventFormatFactory } from 'tests/factories/formats.ts';
+import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
 
-import { db } from 'prisma/db.server';
 import {
   CfpNotOpenError,
   EventNotFoundError,
   MaxSubmittedProposalsReachedError,
   ProposalNotFoundError,
   TalkNotFoundError,
-} from '~/libs/errors.server';
+} from '~/libs/errors.server.ts';
 
-import { TalkSubmission } from './TalkSubmission';
-import { getTracksSchema } from './TalkSubmission.types';
+import { TalkSubmission } from './talk-submission.ts';
+import { getTracksSchema } from './talk-submission.types.ts';
 
 describe('TalkSubmission', () => {
   describe('#saveDraft', () => {

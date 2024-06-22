@@ -1,7 +1,8 @@
-import { db } from 'prisma/db.server';
-import { EventNotFoundError, SurveyNotEnabledError } from '~/libs/errors.server';
+import { db } from 'prisma/db.server.ts';
 
-import { questions } from './SurveyQuestions';
+import { EventNotFoundError, SurveyNotEnabledError } from '~/libs/errors.server.ts';
+
+import { questions } from './SurveyQuestions.ts';
 
 export class CfpSurvey {
   constructor(private eventSlug: string) {}

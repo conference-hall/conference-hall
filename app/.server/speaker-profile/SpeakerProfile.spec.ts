@@ -1,8 +1,8 @@
 import type { User } from '@prisma/client';
-import { userFactory } from 'tests/factories/users';
+import { userFactory } from 'tests/factories/users.ts';
 
-import { ProfileNotFoundError, SpeakerProfile } from './SpeakerProfile';
-import { AdditionalInfoSchema, DetailsSchema, PersonalInfoSchema } from './SpeakerProfile.types';
+import { ProfileNotFoundError, SpeakerProfile } from './SpeakerProfile.ts';
+import { AdditionalInfoSchema, DetailsSchema, PersonalInfoSchema } from './SpeakerProfile.types.ts';
 
 describe('SpeakerProfile', () => {
   let user: User;

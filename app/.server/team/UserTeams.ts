@@ -1,11 +1,11 @@
+import { db } from 'prisma/db.server.ts';
 import { z } from 'zod';
 
-import { db } from 'prisma/db.server';
-import { ForbiddenOperationError, SlugAlreadyExistsError } from '~/libs/errors.server';
-import { sortBy } from '~/libs/utils/arrays-sort-by';
-import { slugValidator } from '~/libs/validators/slug';
+import { ForbiddenOperationError, SlugAlreadyExistsError } from '~/libs/errors.server.ts';
+import { sortBy } from '~/libs/utils/arrays-sort-by.ts';
+import { slugValidator } from '~/libs/validators/slug.ts';
 
-import { TeamBetaAccess } from './TeamBetaAccess';
+import { TeamBetaAccess } from './TeamBetaAccess.ts';
 
 export const TeamCreateSchema = z.object({
   name: z.string().trim().min(3).max(50),

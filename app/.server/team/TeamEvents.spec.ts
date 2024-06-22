@@ -1,12 +1,12 @@
 import type { Team, User } from '@prisma/client';
-import { eventFactory } from 'tests/factories/events';
+import { db } from 'prisma/db.server.ts';
+import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 
-import { db } from 'prisma/db.server';
-import { ForbiddenOperationError, SlugAlreadyExistsError } from '~/libs/errors.server';
+import { ForbiddenOperationError, SlugAlreadyExistsError } from '~/libs/errors.server.ts';
 
-import { EventCreateSchema, TeamEvents } from './TeamEvents';
+import { EventCreateSchema, TeamEvents } from './TeamEvents.ts';
 
 describe('TeamEvents', () => {
   let user: User;

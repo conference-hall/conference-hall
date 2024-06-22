@@ -4,8 +4,8 @@ import { json, redirect } from '@remix-run/node';
 import { Form, useActionData, useLoaderData, useNavigate } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { SubmissionSteps } from '~/.server/cfp-submission-funnel/SubmissionSteps.ts';
-import { TalkSubmission } from '~/.server/cfp-submission-funnel/TalkSubmission.ts';
+import { SubmissionSteps } from '~/.server/cfp-submission-funnel/submission-steps.ts';
+import { TalkSubmission } from '~/.server/cfp-submission-funnel/talk-submission.ts';
 import { SpeakerProfile } from '~/.server/speaker-profile/SpeakerProfile.ts';
 import { DetailsSchema } from '~/.server/speaker-profile/SpeakerProfile.types.ts';
 import { Button } from '~/design-system/Buttons.tsx';

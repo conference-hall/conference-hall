@@ -1,12 +1,12 @@
 import type { TeamRole } from '@prisma/client';
+import { db } from 'prisma/db.server.ts';
 import { z } from 'zod';
 
-import { db } from 'prisma/db.server';
-import { ForbiddenOperationError } from '~/libs/errors.server';
+import { ForbiddenOperationError } from '~/libs/errors.server.ts';
+import { parseWithZod } from '~/libs/zod-parser.ts';
 
-import { Pagination } from '../shared/Pagination';
-import { UserTeam } from './UserTeam';
-import { parseWithZod } from '~/libs/zod-parser';
+import { Pagination } from '../shared/Pagination.ts';
+import { UserTeam } from './UserTeam.ts';
 
 export const MembersFiltersSchema = z.object({ query: z.string().trim().optional() });
 

@@ -1,4 +1,4 @@
-import { db } from 'prisma/db.server';
+import { db } from 'prisma/db.server.ts';
 
 import type { ProfileData, SocialLinks } from './SpeakerProfile.types';
 

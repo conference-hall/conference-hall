@@ -1,9 +1,9 @@
 import type { TeamRole } from '@prisma/client';
+import { db } from 'prisma/db.server.ts';
 import { z } from 'zod';
 
-import { db } from 'prisma/db.server';
-import { ForbiddenOperationError, SlugAlreadyExistsError, TeamNotFoundError } from '~/libs/errors.server';
-import { slugValidator } from '~/libs/validators/slug';
+import { ForbiddenOperationError, SlugAlreadyExistsError, TeamNotFoundError } from '~/libs/errors.server.ts';
+import { slugValidator } from '~/libs/validators/slug.ts';
 
 export type Team = Awaited<ReturnType<typeof UserTeam.prototype.get>>;
 

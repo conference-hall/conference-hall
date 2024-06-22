@@ -1,9 +1,9 @@
-import { UserEvent } from '../event-settings/UserEvent';
-import { Pagination } from '../shared/Pagination';
-import { ProposalSearchBuilder } from '../shared/ProposalSearchBuilder';
+import { UserEvent } from '../event-settings/UserEvent.ts';
+import { Pagination } from '../shared/Pagination.ts';
+import { ProposalSearchBuilder } from '../shared/ProposalSearchBuilder.ts';
 import type { ProposalsFilters } from '../shared/ProposalSearchBuilder.types';
 import type { SocialLinks } from '../speaker-profile/SpeakerProfile.types';
-import { ReviewDetails } from './ReviewDetails';
+import { ReviewDetails } from './ReviewDetails.ts';
 
 export class CfpReviewsSearch {
   constructor(

@@ -1,6 +1,6 @@
-import { db } from 'prisma/db.server';
+import { db } from 'prisma/db.server.ts';
 
-import { SpeakerTalk } from './SpeakerTalk';
+import { SpeakerTalk } from './SpeakerTalk.ts';
 import type { TalkSaveData } from './TalksLibrary.types';
 
 type TalksListOptions = { archived?: boolean };

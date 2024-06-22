@@ -1,5 +1,6 @@
 import { z } from 'zod';
-import { parseWithZod } from '~/libs/zod-parser';
+
+import { parseWithZod } from '~/libs/zod-parser.ts';
 
 export const SearchFiltersSchema = z.object({
   query: z.string().trim().optional(),

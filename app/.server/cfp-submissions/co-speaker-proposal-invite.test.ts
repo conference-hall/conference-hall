@@ -1,12 +1,12 @@
-import { eventFactory } from 'tests/factories/events';
-import { proposalFactory } from 'tests/factories/proposals';
+import { db } from 'prisma/db.server.ts';
+import { eventFactory } from 'tests/factories/events.ts';
+import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
 
-import { db } from 'prisma/db.server';
-import { InvitationNotFoundError } from '~/libs/errors.server';
+import { InvitationNotFoundError } from '~/libs/errors.server.ts';
 
-import { CoSpeakerProposalInvite } from './CoSpeakerProposalInvite';
+import { CoSpeakerProposalInvite } from './co-speaker-proposal-invite.ts';
 
 describe('CoSpeakerProposalInvite', () => {
   describe('#check', () => {
