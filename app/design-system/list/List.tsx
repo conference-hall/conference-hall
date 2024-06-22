@@ -81,7 +81,6 @@ function PaginationFooter({ current, pages, total }: { current: number; pages: n
           </p>
         </div>
         <div>
-          {/* TODO Change total prop to pages */}
           <Pagination current={current} total={pages} />
         </div>
       </div>
