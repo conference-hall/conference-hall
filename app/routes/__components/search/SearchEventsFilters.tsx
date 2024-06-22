@@ -1,4 +1,4 @@
-import { SearchParamSelector } from '~/design-system/navigation/search-param-selector';
+import { SearchParamSelector } from '~/design-system/navigation/search-param-selector.tsx';
 
 const selectors = [
   { label: 'All', value: 'all' },

@@ -2,7 +2,7 @@ import { PlusIcon } from '@heroicons/react/20/solid';
 import { Cog6ToothIcon, StarIcon } from '@heroicons/react/24/outline';
 
 import { ButtonLink } from '~/design-system/Buttons.tsx';
-import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs';
+import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
 
 type Props = { slug: string; role: string };
 

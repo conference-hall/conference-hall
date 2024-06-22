@@ -1,6 +1,6 @@
-import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs';
+import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
 
-import { TeamsDropdown } from './dropdowns/teams-dropdown';
+import { TeamsDropdown } from './dropdowns/teams-dropdown.tsx';
 
 type Props = {
   authenticated: boolean;

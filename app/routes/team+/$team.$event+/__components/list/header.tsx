@@ -1,8 +1,8 @@
-import { Checkbox } from '~/design-system/forms/Checkboxes';
-import { List } from '~/design-system/list/List';
+import { Checkbox } from '~/design-system/forms/Checkboxes.tsx';
+import { List } from '~/design-system/list/List.tsx';
 
-import { DeliberationButton } from '../actions/deliberation-button';
-import { ReviewsProgress } from './reviews-progress';
+import { DeliberationButton } from '../actions/deliberation-button.tsx';
+import { ReviewsProgress } from './reviews-progress.tsx';
 
 type Props = {
   checkboxRef: React.RefObject<HTMLInputElement>;

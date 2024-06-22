@@ -1,11 +1,11 @@
 import { Card } from '~/design-system/layouts/Card.tsx';
 
 import type { ProposalData } from '../$proposal.index';
-import { ConfirmationDetails } from './review-sidebar-sections/confirmation-details';
-import { DeliberationSelect } from './review-sidebar-sections/deliberation-select';
-import { PublicationDetails } from './review-sidebar-sections/publication-details';
-import { ReviewDetails } from './review-sidebar-sections/review-details';
-import { ReviewForm } from './review-sidebar-sections/review-form';
+import { ConfirmationDetails } from './review-sidebar-sections/confirmation-details.tsx';
+import { DeliberationSelect } from './review-sidebar-sections/deliberation-select.tsx';
+import { PublicationDetails } from './review-sidebar-sections/publication-details.tsx';
+import { ReviewDetails } from './review-sidebar-sections/review-details.tsx';
+import { ReviewForm } from './review-sidebar-sections/review-form.tsx';
 
 type Props = { proposal: ProposalData; reviewEnabled: boolean; canDeliberate: boolean };
 

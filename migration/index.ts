@@ -1,13 +1,13 @@
 import admin from 'firebase-admin';
 import { getAuth } from 'firebase-admin/auth';
-import { db } from 'prisma/db.server';
+import { db } from 'prisma/db.server.ts';
 
-import { migrateEvents } from './event';
-import { migrateProposals } from './proposals';
-import { migrateSurveys } from './surveys';
-import { migrateTalks } from './talks';
-import { migrateTeams } from './teams';
-import { migrateUsers } from './users';
+import { migrateEvents } from './event.ts';
+import { migrateProposals } from './proposals.ts';
+import { migrateSurveys } from './surveys.ts';
+import { migrateTalks } from './talks.ts';
+import { migrateTeams } from './teams.ts';
+import { migrateUsers } from './users.ts';
 
 const projectId = process.env.MIGRATE_FIREBASE_PROJECT_ID;
 const serviceAccount = process.env.MIGRATE_FIREBASE_SERVICE_ACCOUNT;

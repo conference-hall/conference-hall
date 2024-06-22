@@ -4,7 +4,7 @@ import { Link } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
 import { Fragment } from 'react/jsx-runtime';
 
-import { MenuTransition } from '~/design-system/Transitions';
+import { MenuTransition } from '~/design-system/Transitions.tsx';
 
 const menuStyle = cx(
   'flex items-center gap-1',

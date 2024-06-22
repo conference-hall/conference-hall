@@ -1,6 +1,6 @@
 import closeWithGrace from 'close-with-grace';
 
-import { worker } from './email/email.worker';
+import { worker } from './email/email.worker.ts';
 
 worker.on('ready', () => console.log('Emails jobs worker is ready'));
 

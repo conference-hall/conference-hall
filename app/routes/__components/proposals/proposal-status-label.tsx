@@ -1,5 +1,5 @@
-import { Text } from '~/design-system/Typography';
-import { SpeakerProposalStatus } from '~/types/speaker.types';
+import { Text } from '~/design-system/Typography.tsx';
+import { SpeakerProposalStatus } from '~/types/speaker.types.ts';
 
 type Props = { status: SpeakerProposalStatus };
 

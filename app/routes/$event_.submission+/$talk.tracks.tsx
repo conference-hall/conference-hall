@@ -4,20 +4,20 @@ import { json, redirect } from '@remix-run/node';
 import { Form, useActionData, useLoaderData, useNavigate } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { SubmissionSteps } from '~/.server/cfp-submission-funnel/SubmissionSteps';
-import { TalkSubmission } from '~/.server/cfp-submission-funnel/TalkSubmission';
-import { getTracksSchema } from '~/.server/cfp-submission-funnel/TalkSubmission.types';
+import { SubmissionSteps } from '~/.server/cfp-submission-funnel/SubmissionSteps.ts';
+import { TalkSubmission } from '~/.server/cfp-submission-funnel/TalkSubmission.ts';
+import { getTracksSchema } from '~/.server/cfp-submission-funnel/TalkSubmission.types.ts';
 import { EventPage } from '~/.server/event-page/EventPage.ts';
 import { AlertError } from '~/design-system/Alerts.tsx';
 import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2 } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { parseWithZod } from '~/libs/zod-parser';
+import { parseWithZod } from '~/libs/zod-parser.ts';
 
-import { CategoriesForm } from '../__components/talks/talk-forms/categories-form';
-import { FormatsForm } from '../__components/talks/talk-forms/formats-form';
-import { useEvent } from '../$event+/__components/useEvent';
+import { CategoriesForm } from '../__components/talks/talk-forms/categories-form.tsx';
+import { FormatsForm } from '../__components/talks/talk-forms/formats-form.tsx';
+import { useEvent } from '../$event+/__components/useEvent.tsx';
 
 export const handle = { step: 'tracks' };
 

@@ -4,9 +4,9 @@ import { ButtonLink } from '~/design-system/Buttons.tsx';
 import { IconLabel } from '~/design-system/IconLabel.tsx';
 import { GitHubIcon } from '~/design-system/icons/GitHubIcon.tsx';
 import { TwitterIcon } from '~/design-system/icons/TwitterIcon.tsx';
-import { Card } from '~/design-system/layouts/Card';
+import { Card } from '~/design-system/layouts/Card.tsx';
 import { Markdown } from '~/design-system/Markdown.tsx';
-import { Text } from '~/design-system/Typography';
+import { Text } from '~/design-system/Typography.tsx';
 
 type Props = {
   email: string | null;

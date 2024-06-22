@@ -2,16 +2,16 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import invariant from 'tiny-invariant';
 
-import { UserEvent } from '~/.server/event-settings/UserEvent';
-import { Publication } from '~/.server/publications/Publication';
-import { PublishResultFormSchema } from '~/.server/publications/Publication.types';
+import { UserEvent } from '~/.server/event-settings/UserEvent.ts';
+import { Publication } from '~/.server/publications/Publication.ts';
+import { PublishResultFormSchema } from '~/.server/publications/Publication.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
-import { BadRequestError } from '~/libs/errors.server';
-import { redirectWithToast } from '~/libs/toasts/toast.server';
-import { parseWithZod } from '~/libs/zod-parser';
+import { BadRequestError } from '~/libs/errors.server.ts';
+import { redirectWithToast } from '~/libs/toasts/toast.server.ts';
+import { parseWithZod } from '~/libs/zod-parser.ts';
 
-import { PublicationConfirm } from './__components/publication-confirm';
-import { useStatistics } from './__components/useStatistics';
+import { PublicationConfirm } from './__components/publication-confirm.tsx';
+import { useStatistics } from './__components/useStatistics.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);

@@ -1,9 +1,9 @@
 import type { Prisma } from '@prisma/client';
 import type admin from 'firebase-admin';
-import { db } from 'prisma/db.server';
+import { db } from 'prisma/db.server.ts';
 import ProgressBar from 'progress';
 
-import { arrayFromBooleanMap, findUser, findUsers, mapBoolean, mapLanguage, mapLevel } from './utils';
+import { arrayFromBooleanMap, findUser, findUsers, mapBoolean, mapLanguage, mapLevel } from './utils.ts';
 
 // Memoize users
 const memoizedUsers = new Map<string, string>();

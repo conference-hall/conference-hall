@@ -12,17 +12,17 @@ import type { ProposalReviewData } from '~/.server/reviews/ProposalReview.ts';
 import { ProposalReview } from '~/.server/reviews/ProposalReview.ts';
 import { ProposalUpdateSchema, ReviewUpdateDataSchema } from '~/.server/reviews/ProposalReview.types.ts';
 import { parseUrlFilters } from '~/.server/shared/ProposalSearchBuilder.types.ts';
-import { Page } from '~/design-system/layouts/page';
+import { Page } from '~/design-system/layouts/page.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { parseWithZod } from '~/libs/zod-parser.ts';
 import { TalkSection } from '~/routes/__components/talks/talk-section.tsx';
-import { useUser } from '~/routes/__components/use-user';
+import { useUser } from '~/routes/__components/use-user.tsx';
 
-import { ProposalActivityFeed as Feed } from './__components/proposal-activity/proposal-activity-feed';
-import { ReviewHeader } from './__components/review-header';
-import { ReviewSidebar } from './__components/review-sidebar';
+import { ProposalActivityFeed as Feed } from './__components/proposal-activity/proposal-activity-feed.tsx';
+import { ReviewHeader } from './__components/review-header.tsx';
+import { ReviewSidebar } from './__components/review-sidebar.tsx';
 
 export type ProposalData = ProposalReviewData;
 

@@ -7,14 +7,14 @@ import { Links, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData } from '
 import { withSentry } from '@sentry/remix';
 import type { ReactNode } from 'react';
 
-import { UserInfo } from './.server/user-registration/UserInfo';
-import { initializeFirebaseClient } from './libs/auth/firebase';
-import { getSessionUserId } from './libs/auth/session';
+import { UserInfo } from './.server/user-registration/UserInfo.ts';
+import { initializeFirebaseClient } from './libs/auth/firebase.ts';
+import { getSessionUserId } from './libs/auth/session.ts';
 import { getPublicEnv } from './libs/env/env.server.ts';
-import { useNonce } from './libs/nonce/useNonce';
+import { useNonce } from './libs/nonce/useNonce.ts';
 import type { Toast } from './libs/toasts/toast.server';
-import { getToast } from './libs/toasts/toast.server';
-import { Toaster } from './libs/toasts/Toaster';
+import { getToast } from './libs/toasts/toast.server.ts';
+import { Toaster } from './libs/toasts/Toaster.tsx';
 import { GeneralErrorBoundary } from './routes/__components/error-boundary.tsx';
 import { GlobalLoading } from './routes/__components/global-loading.tsx';
 

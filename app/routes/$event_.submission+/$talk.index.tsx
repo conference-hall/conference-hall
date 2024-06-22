@@ -4,17 +4,17 @@ import { json, redirect } from '@remix-run/node';
 import { useActionData, useLoaderData, useNavigate } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { SubmissionSteps } from '~/.server/cfp-submission-funnel/SubmissionSteps';
-import { TalkSubmission } from '~/.server/cfp-submission-funnel/TalkSubmission';
-import { TalksLibrary } from '~/.server/speaker-talks-library/TalksLibrary';
-import { TalkSaveSchema } from '~/.server/speaker-talks-library/TalksLibrary.types';
+import { SubmissionSteps } from '~/.server/cfp-submission-funnel/SubmissionSteps.ts';
+import { TalkSubmission } from '~/.server/cfp-submission-funnel/TalkSubmission.ts';
+import { TalksLibrary } from '~/.server/speaker-talks-library/TalksLibrary.ts';
+import { TalkSaveSchema } from '~/.server/speaker-talks-library/TalksLibrary.types.ts';
 import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2 } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { parseWithZod } from '~/libs/zod-parser';
+import { parseWithZod } from '~/libs/zod-parser.ts';
 
-import { TalkForm } from '../__components/talks/talk-forms/talk-form';
+import { TalkForm } from '../__components/talks/talk-forms/talk-form.tsx';
 
 export const handle = { step: 'proposal' };
 

@@ -11,7 +11,7 @@ import {
   mapLevel,
   mapRole,
   mapSurveyQuestions,
-} from './utils';
+} from './utils.ts';
 
 describe('#mapBoolean', () => {
   it('should return false if bool is undefined', () => {

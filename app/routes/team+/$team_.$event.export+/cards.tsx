@@ -5,13 +5,13 @@ import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { CfpReviewsSearch } from '~/.server/reviews/CfpReviewsSearch';
-import { parseUrlFilters } from '~/.server/shared/ProposalSearchBuilder.types';
+import { CfpReviewsSearch } from '~/.server/reviews/CfpReviewsSearch.ts';
+import { parseUrlFilters } from '~/.server/shared/ProposalSearchBuilder.types.ts';
 import { Subtitle, Text } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { getLanguage } from '~/libs/formatters/languages';
-import { getLevel } from '~/libs/formatters/levels';
-import { formatReviewNote } from '~/libs/formatters/reviews';
+import { getLanguage } from '~/libs/formatters/languages.ts';
+import { getLevel } from '~/libs/formatters/levels.ts';
+import { formatReviewNote } from '~/libs/formatters/reviews.ts';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);

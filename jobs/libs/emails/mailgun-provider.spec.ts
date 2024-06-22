@@ -1,4 +1,4 @@
-import { MailgunProvider } from './mailgun-provider';
+import { MailgunProvider } from './mailgun-provider.ts';
 
 vi.mock('mailgun.js', () => {
   const client = { messages: { create: vi.fn() } };

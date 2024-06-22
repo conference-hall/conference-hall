@@ -2,9 +2,9 @@ import { HeartIcon, NoSymbolIcon, StarIcon, UserCircleIcon, XCircleIcon } from '
 import { cx } from 'class-variance-authority';
 
 import { Text } from '~/design-system/Typography.tsx';
-import { formatReviewNote } from '~/libs/formatters/reviews';
+import { formatReviewNote } from '~/libs/formatters/reviews.ts';
 
-import { ClientOnly } from '../utils/client-only';
+import { ClientOnly } from '../utils/client-only.tsx';
 
 const REVIEWS = {
   NO_OPINION: { icon: NoSymbolIcon, color: '', stroke: '', label: 'No opinion' },

@@ -1,7 +1,7 @@
 import type { JobsOptions } from 'bullmq';
 import { Queue } from 'bullmq';
 import Redis from 'ioredis';
-import { getEnv } from 'jobs/libs/env/env';
+import { getEnv } from 'jobs/libs/env/env.ts';
 
 import type { Email } from './email.payload';
 

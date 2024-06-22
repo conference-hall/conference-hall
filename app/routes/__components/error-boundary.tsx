@@ -3,8 +3,8 @@
 import { type ErrorResponse, isRouteErrorResponse, useParams, useRouteError } from '@remix-run/react';
 import { captureRemixErrorBoundaryError } from '@sentry/remix';
 
-import { Container } from '~/design-system/layouts/Container';
-import { H1, Text } from '~/design-system/Typography';
+import { Container } from '~/design-system/layouts/Container.tsx';
+import { H1, Text } from '~/design-system/Typography.tsx';
 
 type StatusHandler = (info: { error: ErrorResponse; params: Record<string, string | undefined> }) => JSX.Element | null;
 

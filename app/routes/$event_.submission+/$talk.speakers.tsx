@@ -4,19 +4,19 @@ import { json, redirect } from '@remix-run/node';
 import { Form, useActionData, useLoaderData, useNavigate } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { SubmissionSteps } from '~/.server/cfp-submission-funnel/SubmissionSteps';
-import { TalkSubmission } from '~/.server/cfp-submission-funnel/TalkSubmission';
-import { SpeakerProfile } from '~/.server/speaker-profile/SpeakerProfile';
-import { DetailsSchema } from '~/.server/speaker-profile/SpeakerProfile.types';
+import { SubmissionSteps } from '~/.server/cfp-submission-funnel/SubmissionSteps.ts';
+import { TalkSubmission } from '~/.server/cfp-submission-funnel/TalkSubmission.ts';
+import { SpeakerProfile } from '~/.server/speaker-profile/SpeakerProfile.ts';
+import { DetailsSchema } from '~/.server/speaker-profile/SpeakerProfile.types.ts';
 import { Button } from '~/design-system/Buttons.tsx';
 import { MarkdownTextArea } from '~/design-system/forms/MarkdownTextArea.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { ExternalLink } from '~/design-system/Links.tsx';
 import { H2, Subtitle, Text } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { parseWithZod } from '~/libs/zod-parser';
+import { parseWithZod } from '~/libs/zod-parser.ts';
 
-import { CoSpeakers } from '../__components/talks/co-speaker';
+import { CoSpeakers } from '../__components/talks/co-speaker.tsx';
 
 export const handle = { step: 'speakers' };
 

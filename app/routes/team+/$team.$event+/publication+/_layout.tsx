@@ -3,16 +3,16 @@ import { json } from '@remix-run/node';
 import { Link, Outlet, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { Publication } from '~/.server/publications/Publication';
-import { Card } from '~/design-system/layouts/Card';
-import { Page } from '~/design-system/layouts/page';
+import { Publication } from '~/.server/publications/Publication.ts';
+import { Card } from '~/design-system/layouts/Card.tsx';
+import { Page } from '~/design-system/layouts/page.tsx';
 import { H1, H2, Subtitle } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { useEvent } from '~/routes/$event+/__components/useEvent';
+import { useEvent } from '~/routes/$event+/__components/useEvent.tsx';
 
-import { useTeam } from '../../__components/useTeam';
-import { PublicationCard } from './__components/publication-card';
-import { Statistic, StatisticLink } from './__components/statistic';
+import { useTeam } from '../../__components/useTeam.tsx';
+import { PublicationCard } from './__components/publication-card.tsx';
+import { Statistic, StatisticLink } from './__components/statistic.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);

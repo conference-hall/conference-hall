@@ -4,11 +4,11 @@ import { Link, useLocation, useSearchParams } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
 import { Fragment } from 'react';
 
-import { button } from '~/design-system/Buttons';
-import { MenuTransition } from '~/design-system/Transitions';
+import { button } from '~/design-system/Buttons.tsx';
+import { MenuTransition } from '~/design-system/Transitions.tsx';
 
-import { useEvent } from '../useEvent';
-import { sortByDatesOptions, sortByReviewsOptions } from './filters';
+import { useEvent } from '../useEvent.tsx';
+import { sortByDatesOptions, sortByReviewsOptions } from './filters.ts';
 
 export function SortMenu() {
   const location = useLocation();

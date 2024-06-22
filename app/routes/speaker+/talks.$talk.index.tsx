@@ -4,15 +4,15 @@ import { useActionData, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { TalksLibrary } from '~/.server/speaker-talks-library/TalksLibrary.ts';
-import { TalkSaveSchema } from '~/.server/speaker-talks-library/TalksLibrary.types';
-import { Page } from '~/design-system/layouts/page';
+import { TalkSaveSchema } from '~/.server/speaker-talks-library/TalksLibrary.types.ts';
+import { Page } from '~/design-system/layouts/page.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-import { parseWithZod } from '~/libs/zod-parser';
+import { parseWithZod } from '~/libs/zod-parser.ts';
 
-import { TalkSection } from '../__components/talks/talk-section';
-import { TalkSubmissionsSection } from '../__components/talks/talk-submissions-section';
+import { TalkSection } from '../__components/talks/talk-section.tsx';
+import { TalkSubmissionsSection } from '../__components/talks/talk-submissions-section.tsx';
 
 export const meta = mergeMeta<typeof loader>(({ data }) =>
   data ? [{ title: `${data?.title} | Conference Hall` }] : [],

@@ -1,6 +1,6 @@
-import { getEnv } from '../env/env';
-import { MailgunProvider } from './mailgun-provider';
-import { MailpitProvider } from './mailpit-provider';
+import { getEnv } from '../env/env.ts';
+import { MailgunProvider } from './mailgun-provider.ts';
+import { MailpitProvider } from './mailpit-provider.ts';
 
 export type Email = { from: string; to: string[]; bcc?: string[]; subject: string; html: string };
 

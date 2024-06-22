@@ -4,17 +4,17 @@ import { json, redirect } from '@remix-run/node';
 import { useLoaderData, useNavigate } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { SubmissionSteps } from '~/.server/cfp-submission-funnel/SubmissionSteps';
-import { CfpSurvey } from '~/.server/cfp-survey/CfpSurvey';
-import { SpeakerAnswers } from '~/.server/cfp-survey/SpeakerAnswers';
-import { SurveySchema } from '~/.server/cfp-survey/SpeakerAnswers.types';
+import { SubmissionSteps } from '~/.server/cfp-submission-funnel/SubmissionSteps.ts';
+import { CfpSurvey } from '~/.server/cfp-survey/CfpSurvey.ts';
+import { SpeakerAnswers } from '~/.server/cfp-survey/SpeakerAnswers.ts';
+import { SurveySchema } from '~/.server/cfp-survey/SpeakerAnswers.types.ts';
 import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2 } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { parseWithZod } from '~/libs/zod-parser';
+import { parseWithZod } from '~/libs/zod-parser.ts';
 
-import { SurveyForm } from '../__components/talks/talk-forms/survey-form';
+import { SurveyForm } from '../__components/talks/talk-forms/survey-form.tsx';
 
 export const handle = { step: 'survey' };
 
