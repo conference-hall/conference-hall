@@ -3,20 +3,20 @@ import { json } from '@remix-run/node';
 import { useActionData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { UserEvent } from '~/.server/event-settings/UserEvent.ts';
+import { UserEvent } from '~/.server/event-settings/user-event.ts';
 import {
   CfpConferenceOpeningSchema,
   CfpMeetupOpeningSchema,
   CfpPreferencesSchema,
-} from '~/.server/event-settings/UserEvent.types.ts';
+} from '~/.server/event-settings/user-event.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { parseWithZod } from '~/libs/zod-parser.ts';
 
 import { useEvent } from '../__components/useEvent.tsx';
-import { CommonCfpSetting } from './__components/CommonCfpSetting.tsx';
-import { ConferenceCfpOpening } from './__components/ConferenceCfpOpening.tsx';
-import { MeetupCfpOpening } from './__components/MeetupCfpOpening.tsx';
+import { CommonCfpSetting } from './__components/common-cfp-setting.tsx';
+import { ConferenceCfpOpening } from './__components/conference-cfp-opening.tsx';
+import { MeetupCfpOpening } from './__components/meetup-cfp-opening.tsx';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);

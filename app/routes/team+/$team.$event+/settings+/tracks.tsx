@@ -3,18 +3,18 @@ import { json } from '@remix-run/node';
 import { useFetcher } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { EventTracksSettings } from '~/.server/event-settings/EventTracksSettings.ts';
-import { TrackSaveSchema, TracksSettingsSchema } from '~/.server/event-settings/EventTracksSettings.types.ts';
-import { ToggleGroup } from '~/design-system/forms/Toggles.tsx';
-import { Card } from '~/design-system/layouts/Card.tsx';
-import { H2, Subtitle } from '~/design-system/Typography.tsx';
+import { EventTracksSettings } from '~/.server/event-settings/event-tracks-settings.ts';
+import { TrackSaveSchema, TracksSettingsSchema } from '~/.server/event-settings/event-tracks-settings.types.ts';
+import { ToggleGroup } from '~/design-system/forms/toggles.cap.tsx';
+import { Card } from '~/design-system/layouts/card.cap.tsx';
+import { H2, Subtitle } from '~/design-system/typography.cap.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { parseWithZod } from '~/libs/zod-parser.ts';
 
 import { useEvent } from '../__components/useEvent.tsx';
-import { NewTrackButton } from './__components/SaveTrackForm.tsx';
-import { TrackList } from './__components/TrackList.tsx';
+import { NewTrackButton } from './__components/save-track-form.tsx';
+import { TrackList } from './__components/track-list.tsx';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);

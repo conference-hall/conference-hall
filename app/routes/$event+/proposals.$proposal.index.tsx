@@ -5,7 +5,7 @@ import invariant from 'tiny-invariant';
 
 import { UserProposal } from '~/.server/cfp-submissions/user-proposal.ts';
 import { getProposalUpdateSchema, ProposalParticipationSchema } from '~/.server/cfp-submissions/user-proposal.types.ts';
-import { EventPage } from '~/.server/event-page/EventPage.ts';
+import { EventPage } from '~/.server/event-page/event-page.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
@@ -14,7 +14,7 @@ import { SpeakerProposalStatus } from '~/types/speaker.types.ts';
 
 import { ProposalStatusSection } from '../__components/proposals/proposal-status-section.tsx';
 import { TalkSection } from '../__components/talks/talk-section.tsx';
-import { useEvent } from './__components/useEvent.tsx';
+import { useEvent } from './__components/use-event.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);

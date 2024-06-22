@@ -1,7 +1,7 @@
 import type { Session } from '@remix-run/node';
 import { createCookieSessionStorage, redirect } from '@remix-run/node';
 
-import { UserRegistration } from '~/.server/user-registration/UserRegistration.ts';
+import { UserRegistration } from '~/.server/user-registration/user-registration.ts';
 
 import { auth as serverAuth } from './firebase.server.ts';
 

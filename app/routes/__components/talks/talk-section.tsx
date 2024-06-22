@@ -2,10 +2,10 @@ import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import type { TalkLevel } from '@prisma/client';
 
-import { Badge } from '~/design-system/Badges.tsx';
-import { Card } from '~/design-system/layouts/Card.tsx';
-import { Markdown } from '~/design-system/Markdown.tsx';
-import { H1 } from '~/design-system/Typography.tsx';
+import { Badge } from '~/design-system/badges.cap.tsx';
+import { Card } from '~/design-system/layouts/card.cap.tsx';
+import { Markdown } from '~/design-system/markdown.cap.tsx';
+import { H1 } from '~/design-system/typography.cap.tsx';
 import { getLanguage } from '~/libs/formatters/languages.ts';
 import { getLevel } from '~/libs/formatters/levels.ts';
 

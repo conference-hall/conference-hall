@@ -1,11 +1,11 @@
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import { useParams, useSearchParams } from '@remix-run/react';
 
-import { Badge } from '~/design-system/Badges.tsx';
-import { IconLink } from '~/design-system/IconButtons.tsx';
-import { Card } from '~/design-system/layouts/Card.tsx';
-import { Markdown } from '~/design-system/Markdown.tsx';
-import { H1 } from '~/design-system/Typography.tsx';
+import { Badge } from '~/design-system/badges.cap.tsx';
+import { IconLink } from '~/design-system/icon-buttons.tsx';
+import { Card } from '~/design-system/layouts/card.cap.tsx';
+import { Markdown } from '~/design-system/markdown.cap.tsx';
+import { H1 } from '~/design-system/typography.cap.tsx';
 import { getLanguage } from '~/libs/formatters/languages.ts';
 import { getLevel } from '~/libs/formatters/levels.ts';
 import { CoSpeakers } from '~/routes/__components/talks/co-speaker.tsx';

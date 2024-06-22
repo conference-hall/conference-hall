@@ -3,12 +3,12 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useActionData, useLoaderData } from '@remix-run/react';
 
-import { SpeakerProfile } from '~/.server/speaker-profile/SpeakerProfile.ts';
+import { SpeakerProfile } from '~/.server/speaker-profile/speaker-profile.ts';
 import {
   AdditionalInfoSchema,
   DetailsSchema,
   PersonalInfoSchema,
-} from '~/.server/speaker-profile/SpeakerProfile.types.ts';
+} from '~/.server/speaker-profile/speaker-profile.types.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { NavSideMenu } from '~/design-system/navigation/nav-side-menu.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
@@ -16,9 +16,9 @@ import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { parseWithZod } from '~/libs/zod-parser.ts';
 
-import { AdditionalInfoForm } from './__components/AdditionalInfoForm.tsx';
-import { PersonalInfoForm } from './__components/PersonalInfoForm.tsx';
-import { SpeakerDetailsForm } from './__components/SpeakerDetailsForm.tsx';
+import { AdditionalInfoForm } from './__components/additional-info-form.tsx';
+import { PersonalInfoForm } from './__components/personal-info-form.tsx';
+import { SpeakerDetailsForm } from './__components/speaker-details-form.tsx';
 
 export const meta = mergeMeta(() => [{ title: 'My profile | Conference Hall' }]);
 

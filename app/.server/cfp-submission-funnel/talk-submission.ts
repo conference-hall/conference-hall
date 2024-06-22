@@ -7,7 +7,7 @@ import {
   ProposalNotFoundError,
 } from '~/libs/errors.server.ts';
 
-import { TalksLibrary } from '../speaker-talks-library/TalksLibrary.ts';
+import { TalksLibrary } from '../speaker-talks-library/talks-library.ts';
 import { ProposalReceivedEmail } from './emails/proposal-received.email.ts';
 import { ProposalSubmittedEmail } from './emails/proposal-submitted.email.ts';
 import { sendSubmittedTalkSlackMessage } from './slack/slack.services.ts';

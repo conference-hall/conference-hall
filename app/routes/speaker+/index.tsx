@@ -2,15 +2,15 @@ import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 
-import { parseUrlPage } from '~/.server/shared/Pagination.ts';
-import { SpeakerActivities } from '~/.server/speaker-activities/SpeakerActivities.ts';
-import { SpeakerProfile } from '~/.server/speaker-profile/SpeakerProfile.ts';
+import { parseUrlPage } from '~/.server/shared/pagination.cap.ts';
+import { SpeakerActivities } from '~/.server/speaker-activities/speaker-activities.ts';
+import { SpeakerProfile } from '~/.server/speaker-profile/speaker-profile.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 
-import { SpeakerActivitiesSection } from './__components/SpeakerActivitiesSection.tsx';
-import { SpeakerDetailsSection } from './__components/SpeakerDetailsSection.tsx';
+import { SpeakerActivitiesSection } from './__components/speaker-activities-section.tsx';
+import { SpeakerDetailsSection } from './__components/speaker-details-section.tsx';
 
 export const meta = mergeMeta(() => [{ title: 'Activity | Conference Hall' }]);
 

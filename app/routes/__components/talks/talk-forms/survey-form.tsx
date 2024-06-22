@@ -1,9 +1,9 @@
 import { Form } from '@remix-run/react';
 
-import type { SurveyQuestions } from '~/.server/cfp-survey/SurveyQuestions';
-import { Checkbox, CheckboxGroup } from '~/design-system/forms/Checkboxes.tsx';
-import { Radio, RadioGroup } from '~/design-system/forms/RadioGroup.tsx';
-import { TextArea } from '~/design-system/forms/TextArea.tsx';
+import type { SurveyQuestions } from '~/.server/cfp-survey/survey-questions';
+import { Checkbox, CheckboxGroup } from '~/design-system/forms/checkboxes.cap.tsx';
+import { Radio, RadioGroup } from '~/design-system/forms/radio-group.tsx';
+import { TextArea } from '~/design-system/forms/textarea.cap.tsx';
 
 export type Props = {
   id: string;

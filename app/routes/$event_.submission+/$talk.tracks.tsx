@@ -7,17 +7,17 @@ import invariant from 'tiny-invariant';
 import { SubmissionSteps } from '~/.server/cfp-submission-funnel/submission-steps.ts';
 import { TalkSubmission } from '~/.server/cfp-submission-funnel/talk-submission.ts';
 import { getTracksSchema } from '~/.server/cfp-submission-funnel/talk-submission.types.ts';
-import { EventPage } from '~/.server/event-page/EventPage.ts';
-import { AlertError } from '~/design-system/Alerts.tsx';
-import { Button } from '~/design-system/Buttons.tsx';
-import { Card } from '~/design-system/layouts/Card.tsx';
-import { H2 } from '~/design-system/Typography.tsx';
+import { EventPage } from '~/.server/event-page/event-page.ts';
+import { AlertError } from '~/design-system/alerts.cap.tsx';
+import { Button } from '~/design-system/buttons.cap.tsx';
+import { Card } from '~/design-system/layouts/card.cap.tsx';
+import { H2 } from '~/design-system/typography.cap.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { parseWithZod } from '~/libs/zod-parser.ts';
 
 import { CategoriesForm } from '../__components/talks/talk-forms/categories-form.tsx';
 import { FormatsForm } from '../__components/talks/talk-forms/formats-form.tsx';
-import { useEvent } from '../$event+/__components/useEvent.tsx';
+import { useEvent } from '../$event+/__components/use-event.tsx';
 
 export const handle = { step: 'tracks' };
 

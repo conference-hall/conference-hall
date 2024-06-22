@@ -1,10 +1,10 @@
 import { Form } from '@remix-run/react';
 
-import { AlertError } from '~/design-system/Alerts.tsx';
-import { Input } from '~/design-system/forms/Input.tsx';
-import { MarkdownTextArea } from '~/design-system/forms/MarkdownTextArea.tsx';
-import MultiSelect from '~/design-system/forms/MultiSelect.tsx';
-import { Radio, RadioGroup } from '~/design-system/forms/RadioGroup.tsx';
+import { AlertError } from '~/design-system/alerts.cap.tsx';
+import { Input } from '~/design-system/forms/input.cap.tsx';
+import { MarkdownTextArea } from '~/design-system/forms/markdown-textarea.tsx';
+import MultiSelect from '~/design-system/forms/multi-select.tsx';
+import { Radio, RadioGroup } from '~/design-system/forms/radio-group.tsx';
 import { LANGUAGES } from '~/libs/formatters/languages.ts';
 import { LEVELS } from '~/libs/formatters/levels.ts';
 

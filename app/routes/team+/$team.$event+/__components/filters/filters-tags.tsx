@@ -1,7 +1,7 @@
 import { useLocation, useNavigate, useSearchParams } from '@remix-run/react';
 
-import type { ProposalsFilters } from '~/.server/shared/ProposalSearchBuilder.types';
-import { Text } from '~/design-system/Typography.tsx';
+import type { ProposalsFilters } from '~/.server/shared/proposal-search-builder.types.ts';
+import { Text } from '~/design-system/typography.cap.tsx';
 
 import { useEvent } from '../useEvent.tsx';
 import { reviewOptions, statusOptions } from './filters.ts';

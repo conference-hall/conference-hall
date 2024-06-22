@@ -3,10 +3,10 @@ import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { CfpReviewsSearch } from '~/.server/reviews/CfpReviewsSearch.ts';
-import { Deliberate, DeliberateBulkSchema } from '~/.server/reviews/Deliberate.ts';
-import { parseUrlPage } from '~/.server/shared/Pagination.ts';
-import { parseUrlFilters } from '~/.server/shared/ProposalSearchBuilder.types.ts';
+import { CfpReviewsSearch } from '~/.server/reviews/cfp-reviews-search.ts';
+import { Deliberate, DeliberateBulkSchema } from '~/.server/reviews/deliberate.cap.ts';
+import { parseUrlPage } from '~/.server/shared/pagination.cap.ts';
+import { parseUrlFilters } from '~/.server/shared/proposal-search-builder.types.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';

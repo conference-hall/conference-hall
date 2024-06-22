@@ -3,16 +3,16 @@ import { json } from '@remix-run/node';
 import { Form, useActionData, useFetcher } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { UserEvent } from '~/.server/event-settings/UserEvent.ts';
+import { UserEvent } from '~/.server/event-settings/user-event.ts';
 import {
   EventEmailNotificationsSettingsSchema,
   EventNotificationsSettingsSchema,
-} from '~/.server/event-settings/UserEvent.types.ts';
-import { Button } from '~/design-system/Buttons.tsx';
-import { Input } from '~/design-system/forms/Input.tsx';
-import { ToggleGroup } from '~/design-system/forms/Toggles.tsx';
-import { Card } from '~/design-system/layouts/Card.tsx';
-import { H2 } from '~/design-system/Typography.tsx';
+} from '~/.server/event-settings/user-event.types.ts';
+import { Button } from '~/design-system/buttons.cap.tsx';
+import { Input } from '~/design-system/forms/input.cap.tsx';
+import { ToggleGroup } from '~/design-system/forms/toggles.cap.tsx';
+import { Card } from '~/design-system/layouts/card.cap.tsx';
+import { H2 } from '~/design-system/typography.cap.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { parseWithZod } from '~/libs/zod-parser.ts';

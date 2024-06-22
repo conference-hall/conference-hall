@@ -3,16 +3,16 @@ import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { Submissions } from '~/.server/cfp-submissions/Submissions.ts';
-import { TalksLibrary } from '~/.server/speaker-talks-library/TalksLibrary.ts';
-import { ProgressBar } from '~/design-system/ProgressBar.tsx';
-import { H2, Text } from '~/design-system/Typography.tsx';
+import { Submissions } from '~/.server/cfp-submissions/submissions.cap.ts';
+import { TalksLibrary } from '~/.server/speaker-talks-library/talks-library.ts';
+import { ProgressBar } from '~/design-system/progress-bar.tsx';
+import { H2, Text } from '~/design-system/typography.cap.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 
-import { useEvent } from '../$event+/__components/useEvent.tsx';
-import { MaxProposalsReached } from './__components/MaxProposalsReached.tsx';
-import { NewProposal } from './__components/NewProposal.tsx';
-import { SubmissionTalksList } from './__components/SubmissionTalksList.tsx';
+import { useEvent } from '../$event+/__components/use-event.tsx';
+import { MaxProposalsReached } from './__components/max-proposals-reached.tsx';
+import { NewProposal } from './__components/new-proposal.tsx';
+import { SubmissionTalksList } from './__components/submission-talks-list.tsx';
 
 export const handle = { step: 'selection' };
 

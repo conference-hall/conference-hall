@@ -1,7 +1,7 @@
 import type { LinkProps } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
 
-import { Link } from '~/design-system/Links.tsx';
+import { Link } from '~/design-system/links.cap.tsx';
 
 type StatisticProps = { name: string; label: string; value?: number; className?: string };
 

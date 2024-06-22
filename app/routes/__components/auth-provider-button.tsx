@@ -1,8 +1,8 @@
 import { cx } from 'class-variance-authority';
 
-import { GitHubIcon } from '~/design-system/icons/GitHubIcon.tsx';
-import { GoogleIcon } from '~/design-system/icons/GoogleIcon.tsx';
-import { TwitterIcon } from '~/design-system/icons/TwitterIcon.tsx';
+import { GitHubIcon } from '~/design-system/icons/github-icon.tsx';
+import { GoogleIcon } from '~/design-system/icons/google-icon.tsx';
+import { TwitterIcon } from '~/design-system/icons/twitter-icon.tsx';
 
 const PROVIDERS = {
   google: { style: 'bg-[#EA2533] focus-visible:outline-[#EA2533]', label: 'Google', icon: GoogleIcon },

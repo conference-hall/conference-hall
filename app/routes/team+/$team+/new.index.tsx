@@ -1,9 +1,9 @@
 import { MegaphoneIcon, UserGroupIcon } from '@heroicons/react/24/outline';
 import type { LoaderFunctionArgs } from '@remix-run/node';
 
-import { Card } from '~/design-system/layouts/Card.tsx';
+import { Card } from '~/design-system/layouts/card.cap.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
-import { H1, Subtitle } from '~/design-system/Typography.tsx';
+import { H1, Subtitle } from '~/design-system/typography.cap.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 
 import { EventTypeButton } from './__components/EventTypeButton.tsx';

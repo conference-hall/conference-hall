@@ -13,14 +13,14 @@ import type { LoaderFunctionArgs } from '@remix-run/node';
 import { Outlet } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { UserEvent } from '~/.server/event-settings/UserEvent.ts';
+import { UserEvent } from '~/.server/event-settings/user-event.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { NavSideMenu } from '~/design-system/navigation/nav-side-menu.tsx';
-import { H2 } from '~/design-system/Typography.tsx';
+import { H2 } from '~/design-system/typography.cap.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { useUser } from '~/routes/__components/use-user.tsx';
 
-import { useTeam } from '../../__components/useTeam.tsx';
+import { useTeam } from '../../__components/use-team.tsx';
 import { useEvent } from '../__components/useEvent.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {

@@ -1,8 +1,8 @@
 import { Form, useNavigation } from '@remix-run/react';
 import { useEffect, useRef } from 'react';
 
-import { Avatar } from '~/design-system/Avatar.tsx';
-import { Button } from '~/design-system/Buttons.tsx';
+import { Avatar } from '~/design-system/avatar.cap.tsx';
+import { Button } from '~/design-system/buttons.cap.tsx';
 import { useUser } from '~/routes/__components/use-user.tsx';
 
 type Props = { compact?: boolean; className?: string };

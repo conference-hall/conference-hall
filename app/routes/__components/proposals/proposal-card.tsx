@@ -1,6 +1,6 @@
-import { AvatarGroup } from '~/design-system/Avatar.tsx';
-import { CardLink } from '~/design-system/layouts/Card.tsx';
-import { Text } from '~/design-system/Typography.tsx';
+import { AvatarGroup } from '~/design-system/avatar.cap.tsx';
+import { CardLink } from '~/design-system/layouts/card.cap.tsx';
+import { Text } from '~/design-system/typography.cap.tsx';
 import type { SpeakerProposalStatus } from '~/types/speaker.types.ts';
 
 import { ProposalStatusLabel } from './proposal-status-label.tsx';

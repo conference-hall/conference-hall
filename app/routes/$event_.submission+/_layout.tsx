@@ -5,19 +5,19 @@ import { Outlet, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { SubmissionSteps } from '~/.server/cfp-submission-funnel/submission-steps.ts';
-import { EventPage } from '~/.server/event-page/EventPage.ts';
-import { IconLink } from '~/design-system/IconButtons.tsx';
-import { Container } from '~/design-system/layouts/Container.tsx';
+import { EventPage } from '~/.server/event-page/event-page.ts';
+import { IconLink } from '~/design-system/icon-buttons.tsx';
+import { Container } from '~/design-system/layouts/container.cap.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { CfpNotOpenError } from '~/libs/errors.server.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { eventSocialCard } from '~/libs/meta/social-cards.ts';
-import { Navbar } from '~/routes/__components/navbar/Navbar.tsx';
+import { Navbar } from '~/routes/__components/navbar/navbar.cap.tsx';
 import { useUser } from '~/routes/__components/use-user.tsx';
 
-import { Steps } from './__components/Steps.tsx';
-import { useCurrentStepKey } from './__components/useCurrentStepKey.ts';
+import { Steps } from './__components/steps.cap.tsx';
+import { useCurrentStepKey } from './__components/use-current-step-key.ts';
 
 export const handle = { step: 'root' };
 

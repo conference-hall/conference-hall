@@ -4,14 +4,14 @@ import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData, useSearchParams } from '@remix-run/react';
 
-import { TalksLibrary } from '~/.server/speaker-talks-library/TalksLibrary.ts';
-import { AvatarGroup } from '~/design-system/Avatar.tsx';
-import { ButtonLink } from '~/design-system/Buttons.tsx';
+import { TalksLibrary } from '~/.server/speaker-talks-library/talks-library.ts';
+import { AvatarGroup } from '~/design-system/avatar.cap.tsx';
+import { ButtonLink } from '~/design-system/buttons.cap.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
-import { List } from '~/design-system/list/List.tsx';
+import { List } from '~/design-system/list/list.cap.tsx';
 import { SearchParamSelector } from '~/design-system/navigation/search-param-selector.tsx';
-import { H1, Text } from '~/design-system/Typography.tsx';
+import { H1, Text } from '~/design-system/typography.cap.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 

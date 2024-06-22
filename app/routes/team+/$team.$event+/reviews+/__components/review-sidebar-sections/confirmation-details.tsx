@@ -1,7 +1,7 @@
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/20/solid';
 import { ClockIcon } from '@heroicons/react/24/outline';
 
-import { H2, Text } from '~/design-system/Typography.tsx';
+import { H2, Text } from '~/design-system/typography.cap.tsx';
 import type { ConfirmationStatus } from '~/types/proposals.types';
 
 type Props = { confirmationStatus: ConfirmationStatus };

@@ -9,7 +9,7 @@ import { renderToPipeableStream } from 'react-dom/server';
 
 import { initEnvironment } from './libs/env/env.server.ts';
 import { initMonitoring } from './libs/monitoring/monitoring.server.ts';
-import { NonceContext } from './libs/nonce/useNonce.ts';
+import { NonceContext } from './libs/nonce/use-nonce.ts';
 
 initEnvironment();
 

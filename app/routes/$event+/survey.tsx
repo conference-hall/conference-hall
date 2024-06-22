@@ -3,11 +3,11 @@ import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { CfpSurvey } from '~/.server/cfp-survey/CfpSurvey.ts';
-import { SpeakerAnswers } from '~/.server/cfp-survey/SpeakerAnswers.ts';
-import { SurveySchema } from '~/.server/cfp-survey/SpeakerAnswers.types.ts';
-import { Button } from '~/design-system/Buttons.tsx';
-import { Card } from '~/design-system/layouts/Card.tsx';
+import { CfpSurvey } from '~/.server/cfp-survey/cfp-survey.ts';
+import { SpeakerAnswers } from '~/.server/cfp-survey/speaker-answers.ts';
+import { SurveySchema } from '~/.server/cfp-survey/speaker-answers.types.ts';
+import { Button } from '~/design-system/buttons.cap.tsx';
+import { Card } from '~/design-system/layouts/card.cap.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/page-header-title.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
