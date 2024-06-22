@@ -3,8 +3,8 @@ import { json } from '@remix-run/node';
 import { useFetcher } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { EventTracksSettings } from '~/.server/event-settings/EventTracksSettings.ts';
-import { TrackSaveSchema, TracksSettingsSchema } from '~/.server/event-settings/EventTracksSettings.types.ts';
+import { EventTracksSettings } from '~/.server/event-settings/event-tracks-settings.ts';
+import { TrackSaveSchema, TracksSettingsSchema } from '~/.server/event-settings/event-tracks-settings.types.ts';
 import { ToggleGroup } from '~/design-system/forms/Toggles.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2, Subtitle } from '~/design-system/Typography.tsx';

@@ -3,9 +3,9 @@ import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData, useSearchParams } from '@remix-run/react';
 
-import { EventsSearch } from '~/.server/event-search/EventSearch.ts';
-import { parseUrlFilters } from '~/.server/event-search/EventSearch.types.ts';
-import { parseUrlPage } from '~/.server/shared/Pagination.ts';
+import { EventsSearch } from '~/.server/event-search/event-search.ts';
+import { parseUrlFilters } from '~/.server/event-search/event-search.types.ts';
+import { parseUrlPage } from '~/.server/shared/pagination.cap.ts';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { Pagination } from '~/design-system/list/Pagination.tsx';

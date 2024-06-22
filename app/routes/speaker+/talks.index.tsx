@@ -4,7 +4,7 @@ import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData, useSearchParams } from '@remix-run/react';
 
-import { TalksLibrary } from '~/.server/speaker-talks-library/TalksLibrary.ts';
+import { TalksLibrary } from '~/.server/speaker-talks-library/talks-library.ts';
 import { AvatarGroup } from '~/design-system/Avatar.tsx';
 import { ButtonLink } from '~/design-system/Buttons.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';

@@ -3,7 +3,7 @@ import { json } from '@remix-run/node';
 import { Link, Outlet, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { Publication } from '~/.server/publications/Publication.ts';
+import { Publication } from '~/.server/publications/publication.cap.ts';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H1, H2, Subtitle } from '~/design-system/Typography.tsx';

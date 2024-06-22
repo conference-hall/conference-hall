@@ -1,6 +1,6 @@
 import { Form } from '@remix-run/react';
 
-import type { SurveyQuestions } from '~/.server/cfp-survey/SurveyQuestions';
+import type { SurveyQuestions } from '~/.server/cfp-survey/survey-questions';
 import { Checkbox, CheckboxGroup } from '~/design-system/forms/Checkboxes.tsx';
 import { Radio, RadioGroup } from '~/design-system/forms/RadioGroup.tsx';
 import { TextArea } from '~/design-system/forms/TextArea.tsx';

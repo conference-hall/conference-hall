@@ -3,7 +3,7 @@ import { json } from '@remix-run/node';
 import { Outlet, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { UserEvent } from '~/.server/event-settings/UserEvent.ts';
+import { UserEvent } from '~/.server/event-settings/user-event.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { useUser } from '~/routes/__components/use-user.tsx';
 

@@ -3,7 +3,7 @@ import { json } from '@remix-run/node';
 import { Outlet, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { EventPage } from '~/.server/event-page/EventPage.ts';
+import { EventPage } from '~/.server/event-page/event-page.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { eventSocialCard } from '~/libs/meta/social-cards.ts';
 import { Footer } from '~/routes/__components/Footer.tsx';

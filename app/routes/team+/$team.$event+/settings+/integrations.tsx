@@ -3,8 +3,8 @@ import { json } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { UserEvent } from '~/.server/event-settings/UserEvent.ts';
-import { EventSlackSettingsSchema } from '~/.server/event-settings/UserEvent.types.ts';
+import { UserEvent } from '~/.server/event-settings/user-event.ts';
+import { EventSlackSettingsSchema } from '~/.server/event-settings/user-event.types.ts';
 import { AlertInfo } from '~/design-system/Alerts.tsx';
 import { Button } from '~/design-system/Buttons.tsx';
 import { Input } from '~/design-system/forms/Input.tsx';

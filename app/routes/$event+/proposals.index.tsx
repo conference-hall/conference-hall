@@ -3,7 +3,7 @@ import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { Submissions } from '~/.server/cfp-submissions/Submissions.ts';
+import { Submissions } from '~/.server/cfp-submissions/submissions.cap.ts';
 import { ButtonLink } from '~/design-system/Buttons.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/page-header-title.tsx';

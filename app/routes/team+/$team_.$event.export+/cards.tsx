@@ -5,8 +5,8 @@ import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { CfpReviewsSearch } from '~/.server/reviews/CfpReviewsSearch.ts';
-import { parseUrlFilters } from '~/.server/shared/ProposalSearchBuilder.types.ts';
+import { CfpReviewsSearch } from '~/.server/reviews/cfp-reviews-search.ts';
+import { parseUrlFilters } from '~/.server/shared/proposal-search-builder.types.ts';
 import { Subtitle, Text } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { getLanguage } from '~/libs/formatters/languages.ts';

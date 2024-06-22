@@ -6,8 +6,8 @@ import { json } from '@remix-run/node';
 import { Form, useLoaderData, useSearchParams } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { parseUrlPage } from '~/.server/shared/Pagination.ts';
-import { parseUrlFilters, TeamMembers } from '~/.server/team/TeamMembers.ts';
+import { parseUrlPage } from '~/.server/shared/pagination.cap.ts';
+import { parseUrlFilters, TeamMembers } from '~/.server/team/team-members.ts';
 import { AvatarName } from '~/design-system/Avatar.tsx';
 import { Input } from '~/design-system/forms/Input.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';

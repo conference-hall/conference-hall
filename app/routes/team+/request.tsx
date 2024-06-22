@@ -2,7 +2,7 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
 
-import { TeamBetaAccess } from '~/.server/team/TeamBetaAccess.ts';
+import { TeamBetaAccess } from '~/.server/team/team-beta-access.ts';
 import { Button } from '~/design-system/Buttons.tsx';
 import { Input } from '~/design-system/forms/Input.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';

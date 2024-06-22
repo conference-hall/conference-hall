@@ -3,12 +3,12 @@ import { json } from '@remix-run/node';
 import { useActionData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { UserEvent } from '~/.server/event-settings/UserEvent.ts';
+import { UserEvent } from '~/.server/event-settings/user-event.ts';
 import {
   CfpConferenceOpeningSchema,
   CfpMeetupOpeningSchema,
   CfpPreferencesSchema,
-} from '~/.server/event-settings/UserEvent.types.ts';
+} from '~/.server/event-settings/user-event.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { parseWithZod } from '~/libs/zod-parser.ts';

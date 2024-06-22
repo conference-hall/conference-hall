@@ -3,12 +3,12 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useActionData, useLoaderData } from '@remix-run/react';
 
-import { SpeakerProfile } from '~/.server/speaker-profile/SpeakerProfile.ts';
+import { SpeakerProfile } from '~/.server/speaker-profile/speaker-profile.ts';
 import {
   AdditionalInfoSchema,
   DetailsSchema,
   PersonalInfoSchema,
-} from '~/.server/speaker-profile/SpeakerProfile.types.ts';
+} from '~/.server/speaker-profile/speaker-profile.types.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { NavSideMenu } from '~/design-system/navigation/nav-side-menu.tsx';
 import { requireSession } from '~/libs/auth/session.ts';

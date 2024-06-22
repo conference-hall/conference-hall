@@ -7,7 +7,7 @@ import { Links, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData } from '
 import { withSentry } from '@sentry/remix';
 import type { ReactNode } from 'react';
 
-import { UserInfo } from './.server/user-registration/UserInfo.ts';
+import { UserInfo } from './.server/user-registration/user-info.ts';
 import { initializeFirebaseClient } from './libs/auth/firebase.ts';
 import { getSessionUserId } from './libs/auth/session.ts';
 import { getPublicEnv } from './libs/env/env.server.ts';

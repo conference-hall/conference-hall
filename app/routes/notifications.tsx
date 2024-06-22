@@ -3,7 +3,7 @@ import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 
-import { Notifications } from '~/.server/user-notifications/Notifications.ts';
+import { Notifications } from '~/.server/user-notifications/notifications.cap.ts';
 import { CardLink } from '~/design-system/layouts/Card.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';

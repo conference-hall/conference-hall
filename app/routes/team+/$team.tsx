@@ -3,7 +3,7 @@ import { json } from '@remix-run/node';
 import { Outlet, useLoaderData, useRouteLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { UserTeam } from '~/.server/team/UserTeam.ts';
+import { UserTeam } from '~/.server/team/user-team.ts';
 import { Container } from '~/design-system/layouts/Container.tsx';
 import { PageHeader } from '~/design-system/layouts/page-header.tsx';
 import { requireSession } from '~/libs/auth/session.ts';

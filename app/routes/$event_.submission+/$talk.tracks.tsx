@@ -7,7 +7,7 @@ import invariant from 'tiny-invariant';
 import { SubmissionSteps } from '~/.server/cfp-submission-funnel/submission-steps.ts';
 import { TalkSubmission } from '~/.server/cfp-submission-funnel/talk-submission.ts';
 import { getTracksSchema } from '~/.server/cfp-submission-funnel/talk-submission.types.ts';
-import { EventPage } from '~/.server/event-page/EventPage.ts';
+import { EventPage } from '~/.server/event-page/event-page.ts';
 import { AlertError } from '~/design-system/Alerts.tsx';
 import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';

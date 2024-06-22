@@ -2,8 +2,8 @@ import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useActionData } from '@remix-run/react';
 
-import { TalksLibrary } from '~/.server/speaker-talks-library/TalksLibrary.ts';
-import { TalkSaveSchema } from '~/.server/speaker-talks-library/TalksLibrary.types.ts';
+import { TalksLibrary } from '~/.server/speaker-talks-library/talks-library.ts';
+import { TalkSaveSchema } from '~/.server/speaker-talks-library/talks-library.types.ts';
 import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';

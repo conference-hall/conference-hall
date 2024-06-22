@@ -2,9 +2,9 @@ import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 
-import { parseUrlPage } from '~/.server/shared/Pagination.ts';
-import { SpeakerActivities } from '~/.server/speaker-activities/SpeakerActivities.ts';
-import { SpeakerProfile } from '~/.server/speaker-profile/SpeakerProfile.ts';
+import { parseUrlPage } from '~/.server/shared/pagination.cap.ts';
+import { SpeakerActivities } from '~/.server/speaker-activities/speaker-activities.ts';
+import { SpeakerProfile } from '~/.server/speaker-profile/speaker-profile.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';

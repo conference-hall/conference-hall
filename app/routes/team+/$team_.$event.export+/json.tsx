@@ -2,8 +2,8 @@ import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import invariant from 'tiny-invariant';
 
-import { CfpReviewsSearch } from '~/.server/reviews/CfpReviewsSearch.ts';
-import { parseUrlFilters } from '~/.server/shared/ProposalSearchBuilder.types.ts';
+import { CfpReviewsSearch } from '~/.server/reviews/cfp-reviews-search.ts';
+import { parseUrlFilters } from '~/.server/shared/proposal-search-builder.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {

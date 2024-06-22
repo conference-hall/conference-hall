@@ -3,7 +3,7 @@ import { json } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { TeamUpdateSchema, UserTeam } from '~/.server/team/UserTeam.ts';
+import { TeamUpdateSchema, UserTeam } from '~/.server/team/user-team.ts';
 import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2, Subtitle } from '~/design-system/Typography.tsx';

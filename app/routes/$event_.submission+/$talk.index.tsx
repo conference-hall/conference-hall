@@ -6,8 +6,8 @@ import invariant from 'tiny-invariant';
 
 import { SubmissionSteps } from '~/.server/cfp-submission-funnel/submission-steps.ts';
 import { TalkSubmission } from '~/.server/cfp-submission-funnel/talk-submission.ts';
-import { TalksLibrary } from '~/.server/speaker-talks-library/TalksLibrary.ts';
-import { TalkSaveSchema } from '~/.server/speaker-talks-library/TalksLibrary.types.ts';
+import { TalksLibrary } from '~/.server/speaker-talks-library/talks-library.ts';
+import { TalkSaveSchema } from '~/.server/speaker-talks-library/talks-library.types.ts';
 import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2 } from '~/design-system/Typography.tsx';

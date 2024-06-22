@@ -5,7 +5,7 @@ import { userFactory } from 'tests/factories/users.ts';
 
 import { SpeakerProposalStatus } from '~/types/speaker.types.ts';
 
-import { Submissions } from './Submissions.ts';
+import { Submissions } from './submissions.cap.ts';
 
 describe('Submissions', () => {
   describe('#count', () => {

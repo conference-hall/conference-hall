@@ -2,9 +2,9 @@ import { json, type LoaderFunctionArgs } from '@remix-run/node';
 import { Form, useFetcher, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { questions } from '~/.server/cfp-survey/SurveyQuestions.ts';
-import { UserEvent } from '~/.server/event-settings/UserEvent.ts';
-import { EventSurveySettingsSchema } from '~/.server/event-settings/UserEvent.types.ts';
+import { questions } from '~/.server/cfp-survey/survey-questions.ts';
+import { UserEvent } from '~/.server/event-settings/user-event.ts';
+import { EventSurveySettingsSchema } from '~/.server/event-settings/user-event.types.ts';
 import { Button } from '~/design-system/Buttons.tsx';
 import { Checkbox } from '~/design-system/forms/Checkboxes.tsx';
 import { ToggleGroup } from '~/design-system/forms/Toggles.tsx';
