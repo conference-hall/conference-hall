@@ -2,10 +2,10 @@ import { UserPlusIcon } from '@heroicons/react/20/solid';
 import { Form } from '@remix-run/react';
 import { useState } from 'react';
 
-import { Button } from '~/design-system/buttons.cap.tsx';
+import { Button } from '~/design-system/buttons.tsx';
 import { Radio, RadioGroup } from '~/design-system/forms/radio-group.tsx';
-import { Modal } from '~/design-system/modals.cap.tsx';
-import { Text } from '~/design-system/typography.cap.tsx';
+import { Modal } from '~/design-system/modals.tsx';
+import { Text } from '~/design-system/typography.tsx';
 
 import { InvitationModal } from '../../../__components/invitation-modal.tsx';
 

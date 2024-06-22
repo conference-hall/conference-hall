@@ -1,7 +1,7 @@
 import type { Prisma } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
 
-import type { Pagination } from '~/.server/shared/pagination.cap';
+import type { Pagination } from '~/.server/shared/pagination';
 
 import type { ProposalsFilters, StatusFilter } from './proposal-search-builder.types';
 

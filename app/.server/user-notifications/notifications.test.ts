@@ -4,7 +4,7 @@ import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
 
-import { Notifications } from './notifications.cap.ts';
+import { Notifications } from './notifications.ts';
 
 describe('Notifications', () => {
   let speaker1: User;

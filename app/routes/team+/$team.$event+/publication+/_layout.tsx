@@ -3,10 +3,10 @@ import { json } from '@remix-run/node';
 import { Link, Outlet, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { Publication } from '~/.server/publications/publication.cap.ts';
-import { Card } from '~/design-system/layouts/card.cap.tsx';
+import { Publication } from '~/.server/publications/publication.ts';
+import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
-import { H1, H2, Subtitle } from '~/design-system/typography.cap.tsx';
+import { H1, H2, Subtitle } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { useEvent } from '~/routes/$event+/__components/use-event.tsx';
 

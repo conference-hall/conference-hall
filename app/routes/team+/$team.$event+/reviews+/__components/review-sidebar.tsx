@@ -1,4 +1,4 @@
-import { Card } from '~/design-system/layouts/card.cap.tsx';
+import { Card } from '~/design-system/layouts/card.tsx';
 
 import type { ProposalData } from '../$proposal.index';
 import { ConfirmationDetails } from './review-sidebar-sections/confirmation-details.tsx';

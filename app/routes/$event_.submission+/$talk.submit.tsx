@@ -5,12 +5,12 @@ import { useState } from 'react';
 import invariant from 'tiny-invariant';
 
 import { TalkSubmission } from '~/.server/cfp-submission-funnel/talk-submission.ts';
-import { Avatar, AvatarGroup } from '~/design-system/avatar.cap.tsx';
-import { Button } from '~/design-system/buttons.cap.tsx';
-import { Checkbox } from '~/design-system/forms/checkboxes.cap.tsx';
-import { Card } from '~/design-system/layouts/card.cap.tsx';
-import { ExternalLink } from '~/design-system/links.cap.tsx';
-import { H1, H2, Subtitle } from '~/design-system/typography.cap.tsx';
+import { Avatar, AvatarGroup } from '~/design-system/avatar.tsx';
+import { Button } from '~/design-system/buttons.tsx';
+import { Checkbox } from '~/design-system/forms/checkboxes.tsx';
+import { Card } from '~/design-system/layouts/card.tsx';
+import { ExternalLink } from '~/design-system/links.tsx';
+import { H1, H2, Subtitle } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast } from '~/libs/toasts/toast.server.ts';
 

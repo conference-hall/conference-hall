@@ -4,9 +4,9 @@ import { cx } from 'class-variance-authority';
 import type { ChangeEventHandler } from 'react';
 import { useState } from 'react';
 
-import { Button } from '../buttons.cap.tsx';
-import { Markdown } from '../markdown.cap.tsx';
-import { Label } from '../typography.cap.tsx';
+import { Button } from '../buttons.tsx';
+import { Markdown } from '../markdown.tsx';
+import { Label } from '../typography.tsx';
 
 type MarkdownTextAreaProps = {
   label: string;

@@ -1,6 +1,6 @@
 import { Link } from '@remix-run/react';
 
-import { Text } from '~/design-system/typography.cap.tsx';
+import { Text } from '~/design-system/typography.tsx';
 
 type Props = { displayName?: boolean };
 

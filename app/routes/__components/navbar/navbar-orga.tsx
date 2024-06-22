@@ -7,8 +7,8 @@ import type { loader as routeEventLoader } from '../../team+/$team.$event+/_layo
 import type { loader as routeTeamLoader } from '../../team+/$team.tsx';
 import { EventButton } from './dropdowns/event-button.tsx';
 import { TeamsDropdown } from './dropdowns/teams-dropdown.tsx';
-import { Logo } from './logo.cap.tsx';
-import { Navigation } from './navigation.cap.tsx';
+import { Logo } from './logo.tsx';
+import { Navigation } from './navigation.tsx';
 import { UserMenu } from './user-menu.tsx';
 
 type Props = {

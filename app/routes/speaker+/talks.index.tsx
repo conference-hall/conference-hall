@@ -5,13 +5,13 @@ import { json } from '@remix-run/node';
 import { useLoaderData, useSearchParams } from '@remix-run/react';
 
 import { TalksLibrary } from '~/.server/speaker-talks-library/talks-library.ts';
-import { AvatarGroup } from '~/design-system/avatar.cap.tsx';
-import { ButtonLink } from '~/design-system/buttons.cap.tsx';
+import { AvatarGroup } from '~/design-system/avatar.tsx';
+import { ButtonLink } from '~/design-system/buttons.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
-import { List } from '~/design-system/list/list.cap.tsx';
+import { List } from '~/design-system/list/list.tsx';
 import { SearchParamSelector } from '~/design-system/navigation/search-param-selector.tsx';
-import { H1, Text } from '~/design-system/typography.cap.tsx';
+import { H1, Text } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 

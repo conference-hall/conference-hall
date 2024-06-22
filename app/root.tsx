@@ -14,7 +14,7 @@ import { getPublicEnv } from './libs/env/env.server.ts';
 import { useNonce } from './libs/nonce/use-nonce.ts';
 import type { Toast } from './libs/toasts/toast.server';
 import { getToast } from './libs/toasts/toast.server.ts';
-import { Toaster } from './libs/toasts/toaster.cap.tsx';
+import { Toaster } from './libs/toasts/toaster.tsx';
 import { GeneralErrorBoundary } from './routes/__components/error-boundary.tsx';
 import { GlobalLoading } from './routes/__components/global-loading.tsx';
 

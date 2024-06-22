@@ -1,5 +1,5 @@
-import { Card } from '~/design-system/layouts/card.cap.tsx';
-import { H2, Text } from '~/design-system/typography.cap.tsx';
+import { Card } from '~/design-system/layouts/card.tsx';
+import { H2, Text } from '~/design-system/typography.tsx';
 
 type Props = {
   title: string;

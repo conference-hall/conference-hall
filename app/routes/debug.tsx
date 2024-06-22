@@ -1,4 +1,4 @@
-import { Button } from '~/design-system/buttons.cap.tsx';
+import { Button } from '~/design-system/buttons.tsx';
 
 export const loader = async () => {
   return null;

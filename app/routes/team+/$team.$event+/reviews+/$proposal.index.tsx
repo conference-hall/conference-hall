@@ -4,10 +4,10 @@ import { useActionData, useLoaderData, useParams } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
-import { Publication } from '~/.server/publications/publication.cap.ts';
+import { Publication } from '~/.server/publications/publication.ts';
 import { ActivityFeed } from '~/.server/reviews/activity-feed.ts';
-import { Comments } from '~/.server/reviews/comments.cap.ts';
-import { Deliberate, DeliberateSchema } from '~/.server/reviews/deliberate.cap.ts';
+import { Comments } from '~/.server/reviews/comments.ts';
+import { Deliberate, DeliberateSchema } from '~/.server/reviews/deliberate.ts';
 import type { ProposalReviewData } from '~/.server/reviews/proposal-review.ts';
 import { ProposalReview } from '~/.server/reviews/proposal-review.ts';
 import { ProposalUpdateSchema, ReviewUpdateDataSchema } from '~/.server/reviews/proposal-review.types.ts';

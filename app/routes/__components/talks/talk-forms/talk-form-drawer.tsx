@@ -1,7 +1,7 @@
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
 
-import { Button } from '~/design-system/buttons.cap.tsx';
+import { Button } from '~/design-system/buttons.tsx';
 import { SlideOver } from '~/design-system/slide-over.tsx';
 
 import { TalkForm } from './talk-form.tsx';

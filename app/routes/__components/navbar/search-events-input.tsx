@@ -1,7 +1,7 @@
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { Form } from '@remix-run/react';
 
-import { Input } from '~/design-system/forms/input.cap.tsx';
+import { Input } from '~/design-system/forms/input.tsx';
 
 export function SearchEventsInput() {
   return (

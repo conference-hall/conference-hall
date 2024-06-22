@@ -1,10 +1,10 @@
 import { Form } from '@remix-run/react';
 
-import { Avatar } from '~/design-system/avatar.cap.tsx';
-import { Button } from '~/design-system/buttons.cap.tsx';
-import { Input } from '~/design-system/forms/input.cap.tsx';
-import { Card } from '~/design-system/layouts/card.cap.tsx';
-import { H2, Subtitle } from '~/design-system/typography.cap.tsx';
+import { Avatar } from '~/design-system/avatar.tsx';
+import { Button } from '~/design-system/buttons.tsx';
+import { Input } from '~/design-system/forms/input.tsx';
+import { Card } from '~/design-system/layouts/card.tsx';
+import { H2, Subtitle } from '~/design-system/typography.tsx';
 
 type Props = {
   name: string | null;

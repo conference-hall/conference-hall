@@ -3,7 +3,7 @@ import { Link } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
 
-import { Pagination, PaginationMobile } from '~/design-system/list/pagination.cap.tsx';
+import { Pagination, PaginationMobile } from '~/design-system/list/pagination.tsx';
 
 // <List /> component
 export function List({ children }: { children: ReactNode }) {

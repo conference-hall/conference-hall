@@ -4,10 +4,10 @@ import { Form } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
 import { useState } from 'react';
 
-import { AlertInfo } from '~/design-system/alerts.cap.tsx';
-import { Button } from '~/design-system/buttons.cap.tsx';
-import { Modal } from '~/design-system/modals.cap.tsx';
-import { Text } from '~/design-system/typography.cap.tsx';
+import { AlertInfo } from '~/design-system/alerts.tsx';
+import { Button } from '~/design-system/buttons.tsx';
+import { Modal } from '~/design-system/modals.tsx';
+import { Text } from '~/design-system/typography.tsx';
 
 const statuses = {
   ACCEPTED: { label: 'Accepted', icon: CheckIcon, color: 'text-green-600' },

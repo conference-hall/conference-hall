@@ -4,13 +4,13 @@ import { Form, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { CoSpeakerTalkInvite } from '~/.server/speaker-talks-library/co-speaker-talk-invite.ts';
-import { Button } from '~/design-system/buttons.cap.tsx';
-import { Card } from '~/design-system/layouts/card.cap.tsx';
+import { Button } from '~/design-system/buttons.tsx';
+import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
-import { H1, Text } from '~/design-system/typography.cap.tsx';
+import { H1, Text } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
-import { Navbar } from '~/routes/__components/navbar/navbar.cap.tsx';
+import { Navbar } from '~/routes/__components/navbar/navbar.tsx';
 import { useUser } from '~/routes/__components/use-user.tsx';
 
 export const meta = mergeMeta(() => [{ title: 'Talk invitation | Conference Hall' }]);

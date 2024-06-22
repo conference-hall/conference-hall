@@ -1,10 +1,10 @@
 import { cx } from 'class-variance-authority';
 
-import type { ButtonStylesProps } from '../buttons.cap.tsx';
-import { button } from '../buttons.cap.tsx';
-import { Label } from '../typography.cap.tsx';
-import type { InputProps } from './input.cap.tsx';
-import { Input } from './input.cap.tsx';
+import type { ButtonStylesProps } from '../buttons.tsx';
+import { button } from '../buttons.tsx';
+import { Label } from '../typography.tsx';
+import type { InputProps } from './input.tsx';
+import { Input } from './input.tsx';
 
 type ButtonFileUploadProps = ButtonStylesProps & InputProps;
 

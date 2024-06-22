@@ -13,9 +13,9 @@ import { AdjustmentsHorizontalIcon } from '@heroicons/react/20/solid';
 import { Form, useLocation, useSearchParams } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
 
-import { Button, button, ButtonLink } from '~/design-system/buttons.cap.tsx';
-import Select from '~/design-system/forms/select.cap.tsx';
-import { Text } from '~/design-system/typography.cap.tsx';
+import { Button, button, ButtonLink } from '~/design-system/buttons.tsx';
+import Select from '~/design-system/forms/select.tsx';
+import { Text } from '~/design-system/typography.tsx';
 import { useTeam } from '~/routes/team+/__components/use-team.tsx';
 
 import { useEvent } from '../useEvent.tsx';

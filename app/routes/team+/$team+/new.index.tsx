@@ -1,12 +1,12 @@
 import { MegaphoneIcon, UserGroupIcon } from '@heroicons/react/24/outline';
 import type { LoaderFunctionArgs } from '@remix-run/node';
 
-import { Card } from '~/design-system/layouts/card.cap.tsx';
+import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
-import { H1, Subtitle } from '~/design-system/typography.cap.tsx';
+import { H1, Subtitle } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 
-import { EventTypeButton } from './__components/EventTypeButton.tsx';
+import { EventTypeButton } from './__components/event-type-button.tsx';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);

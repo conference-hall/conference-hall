@@ -4,8 +4,8 @@ import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { CfpReviewsSearch } from '~/.server/reviews/cfp-reviews-search.ts';
-import { Deliberate, DeliberateBulkSchema } from '~/.server/reviews/deliberate.cap.ts';
-import { parseUrlPage } from '~/.server/shared/pagination.cap.ts';
+import { Deliberate, DeliberateBulkSchema } from '~/.server/reviews/deliberate.ts';
+import { parseUrlPage } from '~/.server/shared/pagination.ts';
 import { parseUrlFilters } from '~/.server/shared/proposal-search-builder.types.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { requireSession } from '~/libs/auth/session.ts';

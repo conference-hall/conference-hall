@@ -4,7 +4,7 @@ import { Outlet, useLoaderData, useRouteLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { UserTeam } from '~/.server/team/user-team.ts';
-import { Container } from '~/design-system/layouts/container.cap.tsx';
+import { Container } from '~/design-system/layouts/container.tsx';
 import { PageHeader } from '~/design-system/layouts/page-header.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
@@ -12,8 +12,8 @@ import { useUser } from '~/routes/__components/use-user.tsx';
 
 import { NavbarOrga } from '../__components/navbar/navbar-orga.tsx';
 import type { loader as routeEventLoader } from './$team.$event+/_layout';
-import { EventTabs } from './$team+/__components/EventTabs.tsx';
-import { TeamTabs } from './$team+/__components/TeamTabs.tsx';
+import { EventTabs } from './$team+/__components/event-tabs.tsx';
+import { TeamTabs } from './$team+/__components/team-tabs.tsx';
 
 export const meta = mergeMeta<typeof loader>(({ data }) => (data ? [{ title: `${data.name} | Conference Hall` }] : []));
 

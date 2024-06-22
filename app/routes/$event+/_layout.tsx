@@ -6,8 +6,8 @@ import invariant from 'tiny-invariant';
 import { EventPage } from '~/.server/event-page/event-page.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { eventSocialCard } from '~/libs/meta/social-cards.ts';
-import { Footer } from '~/routes/__components/footer.cap.tsx';
-import { Navbar } from '~/routes/__components/navbar/navbar.cap.tsx';
+import { Footer } from '~/routes/__components/footer.tsx';
+import { Navbar } from '~/routes/__components/navbar/navbar.tsx';
 import { useUser } from '~/routes/__components/use-user.tsx';
 
 import { EventHeader } from './__components/event-header.tsx';

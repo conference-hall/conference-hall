@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { ForbiddenOperationError } from '~/libs/errors.server.ts';
 import { parseWithZod } from '~/libs/zod-parser.ts';
 
-import { Pagination } from '../shared/pagination.cap.ts';
+import { Pagination } from '../shared/pagination.ts';
 import { UserTeam } from './user-team.ts';
 
 export const MembersFiltersSchema = z.object({ query: z.string().trim().optional() });

@@ -2,7 +2,7 @@ import { db } from 'prisma/db.server.ts';
 
 import { TeamBetaAccess } from '../team/team-beta-access.ts';
 import { UserTeams } from '../team/user-teams.ts';
-import { Notifications } from '../user-notifications/notifications.cap.ts';
+import { Notifications } from '../user-notifications/notifications.ts';
 
 export type UserInfoData = Awaited<ReturnType<typeof UserInfo.get>>;
 

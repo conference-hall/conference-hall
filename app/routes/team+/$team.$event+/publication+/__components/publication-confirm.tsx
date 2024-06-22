@@ -1,9 +1,9 @@
 import { Form, useNavigate, useNavigation } from '@remix-run/react';
 import { useCallback } from 'react';
 
-import { Button } from '~/design-system/buttons.cap.tsx';
-import { ToggleGroup } from '~/design-system/forms/toggles.cap.tsx';
-import { Modal } from '~/design-system/modals.cap.tsx';
+import { Button } from '~/design-system/buttons.tsx';
+import { ToggleGroup } from '~/design-system/forms/toggles.tsx';
+import { Modal } from '~/design-system/modals.tsx';
 
 import { Statistic } from './statistic.tsx';
 

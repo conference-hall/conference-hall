@@ -8,7 +8,7 @@ import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 
-import { Pagination } from '~/.server/shared/pagination.cap.ts';
+import { Pagination } from '~/.server/shared/pagination.ts';
 
 import { ProposalSearchBuilder } from './proposal-search-builder.ts';
 import type { ProposalsFilters } from './proposal-search-builder.types.ts';

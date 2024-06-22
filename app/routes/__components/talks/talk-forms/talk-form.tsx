@@ -1,7 +1,7 @@
 import { Form } from '@remix-run/react';
 
-import { AlertError } from '~/design-system/alerts.cap.tsx';
-import { Input } from '~/design-system/forms/input.cap.tsx';
+import { AlertError } from '~/design-system/alerts.tsx';
+import { Input } from '~/design-system/forms/input.tsx';
 import { MarkdownTextArea } from '~/design-system/forms/markdown-textarea.tsx';
 import MultiSelect from '~/design-system/forms/multi-select.tsx';
 import { Radio, RadioGroup } from '~/design-system/forms/radio-group.tsx';

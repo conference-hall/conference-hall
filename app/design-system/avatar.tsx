@@ -1,6 +1,6 @@
 import { cx } from 'class-variance-authority';
 
-import { Text } from './typography.cap.tsx';
+import { Text } from './typography.tsx';
 
 const sizes = {
   xs: 'h-6 w-6',

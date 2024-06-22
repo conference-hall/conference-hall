@@ -1,13 +1,13 @@
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/20/solid';
 import { FireIcon } from '@heroicons/react/24/outline';
 
-import { Avatar, AvatarGroup } from '~/design-system/avatar.cap.tsx';
-import { ButtonLink } from '~/design-system/buttons.cap.tsx';
+import { Avatar, AvatarGroup } from '~/design-system/avatar.tsx';
+import { ButtonLink } from '~/design-system/buttons.tsx';
 import { IconLink } from '~/design-system/icon-buttons.tsx';
-import { Card } from '~/design-system/layouts/card.cap.tsx';
+import { Card } from '~/design-system/layouts/card.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
-import { Link } from '~/design-system/links.cap.tsx';
-import { Subtitle, Text } from '~/design-system/typography.cap.tsx';
+import { Link } from '~/design-system/links.tsx';
+import { Subtitle, Text } from '~/design-system/typography.tsx';
 import { ProposalStatusLabel } from '~/routes/__components/proposals/proposal-status-label.tsx';
 import type { CfpState } from '~/types/events.types';
 import type { SpeakerProposalStatus } from '~/types/speaker.types';

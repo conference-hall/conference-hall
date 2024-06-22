@@ -5,9 +5,9 @@ import invariant from 'tiny-invariant';
 
 import { EventTracksSettings } from '~/.server/event-settings/event-tracks-settings.ts';
 import { TrackSaveSchema, TracksSettingsSchema } from '~/.server/event-settings/event-tracks-settings.types.ts';
-import { ToggleGroup } from '~/design-system/forms/toggles.cap.tsx';
-import { Card } from '~/design-system/layouts/card.cap.tsx';
-import { H2, Subtitle } from '~/design-system/typography.cap.tsx';
+import { ToggleGroup } from '~/design-system/forms/toggles.tsx';
+import { Card } from '~/design-system/layouts/card.tsx';
+import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { parseWithZod } from '~/libs/zod-parser.ts';

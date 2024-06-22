@@ -1,4 +1,4 @@
-import { Text } from '~/design-system/typography.cap.tsx';
+import { Text } from '~/design-system/typography.tsx';
 
 type SelectAllBannerProps = {
   total: number;

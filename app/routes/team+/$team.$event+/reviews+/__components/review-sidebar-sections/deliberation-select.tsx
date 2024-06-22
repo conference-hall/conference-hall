@@ -2,8 +2,8 @@ import { CheckIcon, XMarkIcon } from '@heroicons/react/20/solid';
 import { QuestionMarkCircleIcon } from '@heroicons/react/24/outline';
 import { useSubmit } from '@remix-run/react';
 
-import Select from '~/design-system/forms/select.cap.tsx';
-import { H2 } from '~/design-system/typography.cap.tsx';
+import Select from '~/design-system/forms/select.tsx';
+import { H2 } from '~/design-system/typography.tsx';
 import type { DeliberationStatus, PublicationStatus } from '~/types/proposals.types';
 
 type Props = { deliberationStatus: DeliberationStatus; publicationStatus: PublicationStatus };

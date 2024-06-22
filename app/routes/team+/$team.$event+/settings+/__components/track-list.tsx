@@ -2,7 +2,7 @@ import { TrashIcon } from '@heroicons/react/20/solid';
 import { Form } from '@remix-run/react';
 
 import { IconButton } from '~/design-system/icon-buttons.tsx';
-import { Subtitle, Text } from '~/design-system/typography.cap.tsx';
+import { Subtitle, Text } from '~/design-system/typography.tsx';
 
 import { EditTrackButton } from './save-track-form.tsx';
 

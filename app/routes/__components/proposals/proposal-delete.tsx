@@ -1,9 +1,9 @@
 import { Form } from '@remix-run/react';
 import { useState } from 'react';
 
-import { Button } from '~/design-system/buttons.cap.tsx';
-import { Modal } from '~/design-system/modals.cap.tsx';
-import { Text } from '~/design-system/typography.cap.tsx';
+import { Button } from '~/design-system/buttons.tsx';
+import { Modal } from '~/design-system/modals.tsx';
+import { Text } from '~/design-system/typography.tsx';
 
 type Props = { className?: string };
 

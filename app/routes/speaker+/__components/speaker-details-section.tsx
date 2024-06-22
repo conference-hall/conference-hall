@@ -1,12 +1,12 @@
 import { MapPinIcon, PencilSquareIcon, PlusIcon } from '@heroicons/react/20/solid';
 
-import { ButtonLink } from '~/design-system/buttons.cap.tsx';
+import { ButtonLink } from '~/design-system/buttons.tsx';
 import { IconLabel } from '~/design-system/icon-label.tsx';
 import { GitHubIcon } from '~/design-system/icons/github-icon.tsx';
 import { TwitterIcon } from '~/design-system/icons/twitter-icon.tsx';
-import { Card } from '~/design-system/layouts/card.cap.tsx';
-import { Markdown } from '~/design-system/markdown.cap.tsx';
-import { Text } from '~/design-system/typography.cap.tsx';
+import { Card } from '~/design-system/layouts/card.tsx';
+import { Markdown } from '~/design-system/markdown.tsx';
+import { Text } from '~/design-system/typography.tsx';
 
 type Props = {
   email: string | null;

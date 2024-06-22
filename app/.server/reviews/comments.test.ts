@@ -9,7 +9,7 @@ import { userFactory } from 'tests/factories/users.ts';
 
 import { ForbiddenOperationError } from '~/libs/errors.server.ts';
 
-import { Comments } from './comments.cap.ts';
+import { Comments } from './comments.ts';
 
 describe('Comments', () => {
   let owner: User, member: User, speaker: User;

@@ -1,5 +1,5 @@
-import type { TypographyVariantProps } from './typography.cap.tsx';
-import { Text } from './typography.cap.tsx';
+import type { TypographyVariantProps } from './typography.tsx';
+import { Text } from './typography.tsx';
 
 type Props = {
   children: React.ReactNode;

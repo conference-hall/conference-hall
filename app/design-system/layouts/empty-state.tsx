@@ -1,7 +1,7 @@
 import { cx } from 'class-variance-authority';
 
-import { Text } from '../typography.cap.tsx';
-import { Card } from './card.cap.tsx';
+import { Text } from '../typography.tsx';
+import { Card } from './card.tsx';
 
 type Icon = React.ComponentType<{ className?: string }>;
 

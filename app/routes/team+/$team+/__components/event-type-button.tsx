@@ -1,7 +1,7 @@
 import { Link } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
 
-import { Subtitle, Text } from '~/design-system/typography.cap.tsx';
+import { Subtitle, Text } from '~/design-system/typography.tsx';
 
 type EventTypeButtonProps = {
   type: string;

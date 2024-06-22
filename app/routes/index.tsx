@@ -5,13 +5,13 @@ import { useLoaderData, useSearchParams } from '@remix-run/react';
 
 import { EventsSearch } from '~/.server/event-search/event-search.ts';
 import { parseUrlFilters } from '~/.server/event-search/event-search.types.ts';
-import { parseUrlPage } from '~/.server/shared/pagination.cap.ts';
+import { parseUrlPage } from '~/.server/shared/pagination.ts';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
-import { Pagination } from '~/design-system/list/pagination.cap.tsx';
-import { H1, H2 } from '~/design-system/typography.cap.tsx';
-import { Footer } from '~/routes/__components/footer.cap.tsx';
-import { Navbar } from '~/routes/__components/navbar/navbar.cap.tsx';
+import { Pagination } from '~/design-system/list/pagination.tsx';
+import { H1, H2 } from '~/design-system/typography.tsx';
+import { Footer } from '~/routes/__components/footer.tsx';
+import { Navbar } from '~/routes/__components/navbar/navbar.tsx';
 import { useUser } from '~/routes/__components/use-user.tsx';
 
 import { EventCard } from './__components/events/event-card.tsx';

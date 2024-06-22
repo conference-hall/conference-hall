@@ -1,6 +1,6 @@
 import { cx } from 'class-variance-authority';
 
-import { Text } from '~/design-system/typography.cap.tsx';
+import { Text } from '~/design-system/typography.tsx';
 import { formatCFPElapsedTime } from '~/libs/formatters/cfp.ts';
 import type { CfpState } from '~/types/events.types.ts';
 

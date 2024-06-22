@@ -1,8 +1,8 @@
 import { CheckIcon } from '@heroicons/react/20/solid';
 
-import { Card } from '~/design-system/layouts/card.cap.tsx';
-import { Link } from '~/design-system/links.cap.tsx';
-import { Text } from '~/design-system/typography.cap.tsx';
+import { Card } from '~/design-system/layouts/card.tsx';
+import { Link } from '~/design-system/links.tsx';
+import { Text } from '~/design-system/typography.tsx';
 
 import { Statistic } from './statistic.tsx';
 

@@ -1,7 +1,7 @@
 import slugify from '@sindresorhus/slugify';
 import { useState } from 'react';
 
-import { Input } from '~/design-system/forms/input.cap.tsx';
+import { Input } from '~/design-system/forms/input.tsx';
 
 import EventVisibilityRadioGroup from './event-visibility-radio-group.tsx';
 

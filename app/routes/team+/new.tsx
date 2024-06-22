@@ -3,8 +3,8 @@ import { json, redirect } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
 
 import { TeamCreateSchema, UserTeams } from '~/.server/team/user-teams.ts';
-import { Button } from '~/design-system/buttons.cap.tsx';
-import { Card } from '~/design-system/layouts/card.cap.tsx';
+import { Button } from '~/design-system/buttons.tsx';
+import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/page-header-title.tsx';
 import { requireSession } from '~/libs/auth/session.ts';

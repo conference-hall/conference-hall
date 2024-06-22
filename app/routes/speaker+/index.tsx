@@ -2,7 +2,7 @@ import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 
-import { parseUrlPage } from '~/.server/shared/pagination.cap.ts';
+import { parseUrlPage } from '~/.server/shared/pagination.ts';
 import { SpeakerActivities } from '~/.server/speaker-activities/speaker-activities.ts';
 import { SpeakerProfile } from '~/.server/speaker-profile/speaker-profile.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
