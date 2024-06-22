@@ -1,7 +1,7 @@
 import { Form } from '@remix-run/react';
 
 import { Button } from '~/design-system/Buttons.tsx';
-import { MarkdownTextArea } from '~/design-system/forms/MarkdownTextArea.tsx';
+import { MarkdownTextArea } from '~/design-system/forms/markdown-textarea.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2, Subtitle } from '~/design-system/Typography.tsx';
 

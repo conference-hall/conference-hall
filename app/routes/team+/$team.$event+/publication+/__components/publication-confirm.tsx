@@ -2,7 +2,7 @@ import { Form, useNavigate, useNavigation } from '@remix-run/react';
 import { useCallback } from 'react';
 
 import { Button } from '~/design-system/Buttons.tsx';
-import { ToggleGroup } from '~/design-system/forms/Toggles.tsx';
+import { ToggleGroup } from '~/design-system/forms/toggles.cap.tsx';
 import { Modal } from '~/design-system/Modals.tsx';
 
 import { Statistic } from './statistic.tsx';

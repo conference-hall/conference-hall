@@ -2,7 +2,7 @@ import { Form } from '@remix-run/react';
 
 import { Avatar } from '~/design-system/Avatar.tsx';
 import { Button } from '~/design-system/Buttons.tsx';
-import { Input } from '~/design-system/forms/Input.tsx';
+import { Input } from '~/design-system/forms/input.cap.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2, Subtitle } from '~/design-system/Typography.tsx';
 

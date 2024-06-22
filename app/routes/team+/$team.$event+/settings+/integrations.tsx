@@ -7,7 +7,7 @@ import { UserEvent } from '~/.server/event-settings/user-event.ts';
 import { EventSlackSettingsSchema } from '~/.server/event-settings/user-event.types.ts';
 import { AlertInfo } from '~/design-system/Alerts.tsx';
 import { Button } from '~/design-system/Buttons.tsx';
-import { Input } from '~/design-system/forms/Input.tsx';
+import { Input } from '~/design-system/forms/input.cap.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { ExternalLink } from '~/design-system/Links.tsx';
 import { H2 } from '~/design-system/Typography.tsx';

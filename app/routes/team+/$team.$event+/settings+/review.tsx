@@ -3,7 +3,7 @@ import { useFetcher } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
-import { ToggleGroup } from '~/design-system/forms/Toggles.tsx';
+import { ToggleGroup } from '~/design-system/forms/toggles.cap.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2 } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';

@@ -9,7 +9,7 @@ import { TalkSubmission } from '~/.server/cfp-submission-funnel/talk-submission.
 import { SpeakerProfile } from '~/.server/speaker-profile/speaker-profile.ts';
 import { DetailsSchema } from '~/.server/speaker-profile/speaker-profile.types.ts';
 import { Button } from '~/design-system/Buttons.tsx';
-import { MarkdownTextArea } from '~/design-system/forms/MarkdownTextArea.tsx';
+import { MarkdownTextArea } from '~/design-system/forms/markdown-textarea.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { ExternalLink } from '~/design-system/Links.tsx';
 import { H2, Subtitle, Text } from '~/design-system/Typography.tsx';

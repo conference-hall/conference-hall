@@ -9,8 +9,8 @@ import {
   EventNotificationsSettingsSchema,
 } from '~/.server/event-settings/user-event.types.ts';
 import { Button } from '~/design-system/Buttons.tsx';
-import { Input } from '~/design-system/forms/Input.tsx';
-import { ToggleGroup } from '~/design-system/forms/Toggles.tsx';
+import { Input } from '~/design-system/forms/input.cap.tsx';
+import { ToggleGroup } from '~/design-system/forms/toggles.cap.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2 } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';

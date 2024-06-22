@@ -2,8 +2,8 @@ import { endOfDay, format, formatISO, startOfDay } from 'date-fns';
 import type { ChangeEvent } from 'react';
 import { useCallback, useState } from 'react';
 
-import type { InputProps } from './Input.tsx';
-import { Input } from './Input.tsx';
+import type { InputProps } from './input.cap.tsx';
+import { Input } from './input.cap.tsx';
 
 type Props = {
   start: { value?: string | null } & InputProps;

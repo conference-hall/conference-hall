@@ -14,7 +14,7 @@ import { Form, useLocation, useSearchParams } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
 
 import { Button, button, ButtonLink } from '~/design-system/Buttons.tsx';
-import Select from '~/design-system/forms/Select.tsx';
+import Select from '~/design-system/forms/select.cap.tsx';
 import { Text } from '~/design-system/Typography.tsx';
 import { useTeam } from '~/routes/team+/__components/useTeam.tsx';
 

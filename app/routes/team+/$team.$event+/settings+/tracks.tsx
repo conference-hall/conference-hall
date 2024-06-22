@@ -5,7 +5,7 @@ import invariant from 'tiny-invariant';
 
 import { EventTracksSettings } from '~/.server/event-settings/event-tracks-settings.ts';
 import { TrackSaveSchema, TracksSettingsSchema } from '~/.server/event-settings/event-tracks-settings.types.ts';
-import { ToggleGroup } from '~/design-system/forms/Toggles.tsx';
+import { ToggleGroup } from '~/design-system/forms/toggles.cap.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { H2, Subtitle } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';

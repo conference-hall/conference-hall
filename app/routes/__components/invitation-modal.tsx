@@ -1,4 +1,4 @@
-import { CopyInput } from '~/design-system/forms/CopyInput.tsx';
+import { CopyInput } from '~/design-system/forms/copy-input.tsx';
 import { Modal } from '~/design-system/Modals.tsx';
 import { Text } from '~/design-system/Typography.tsx';
 

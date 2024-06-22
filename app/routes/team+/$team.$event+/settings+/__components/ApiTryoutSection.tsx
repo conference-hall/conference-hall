@@ -1,8 +1,8 @@
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { useState } from 'react';
 
-import { Input } from '~/design-system/forms/Input.tsx';
-import Select from '~/design-system/forms/Select.tsx';
+import { Input } from '~/design-system/forms/input.cap.tsx';
+import Select from '~/design-system/forms/select.cap.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { ExternalLink } from '~/design-system/Links.tsx';
 import { H2, Subtitle } from '~/design-system/Typography.tsx';

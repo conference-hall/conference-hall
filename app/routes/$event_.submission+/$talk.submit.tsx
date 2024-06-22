@@ -7,7 +7,7 @@ import invariant from 'tiny-invariant';
 import { TalkSubmission } from '~/.server/cfp-submission-funnel/talk-submission.ts';
 import { Avatar, AvatarGroup } from '~/design-system/Avatar.tsx';
 import { Button } from '~/design-system/Buttons.tsx';
-import { Checkbox } from '~/design-system/forms/Checkboxes.tsx';
+import { Checkbox } from '~/design-system/forms/checkboxes.cap.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { ExternalLink } from '~/design-system/Links.tsx';
 import { H1, H2, Subtitle } from '~/design-system/Typography.tsx';

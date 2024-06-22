@@ -1,7 +1,7 @@
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { Form, useSearchParams } from '@remix-run/react';
 
-import { Input } from '~/design-system/forms/Input.tsx';
+import { Input } from '~/design-system/forms/input.cap.tsx';
 
 export function SearchInput() {
   const [params] = useSearchParams();

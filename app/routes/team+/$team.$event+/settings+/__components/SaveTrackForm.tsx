@@ -3,8 +3,8 @@ import { Form } from '@remix-run/react';
 import { useState } from 'react';
 
 import { Button } from '~/design-system/Buttons.tsx';
-import { Input } from '~/design-system/forms/Input.tsx';
-import { TextArea } from '~/design-system/forms/TextArea.tsx';
+import { Input } from '~/design-system/forms/input.cap.tsx';
+import { TextArea } from '~/design-system/forms/textarea.cap.tsx';
 import { IconButton } from '~/design-system/IconButtons.tsx';
 import { Modal } from '~/design-system/Modals.tsx';
 

@@ -1,4 +1,4 @@
-import { Checkbox } from '~/design-system/forms/Checkboxes.tsx';
+import { Checkbox } from '~/design-system/forms/checkboxes.cap.tsx';
 import { List } from '~/design-system/list/List.tsx';
 
 import { DeliberationButton } from '../actions/deliberation-button.tsx';

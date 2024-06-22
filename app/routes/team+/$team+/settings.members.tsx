@@ -9,7 +9,7 @@ import invariant from 'tiny-invariant';
 import { parseUrlPage } from '~/.server/shared/pagination.cap.ts';
 import { parseUrlFilters, TeamMembers } from '~/.server/team/team-members.ts';
 import { AvatarName } from '~/design-system/Avatar.tsx';
-import { Input } from '~/design-system/forms/Input.tsx';
+import { Input } from '~/design-system/forms/input.cap.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Pagination } from '~/design-system/list/Pagination.tsx';

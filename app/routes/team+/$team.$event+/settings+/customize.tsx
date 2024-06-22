@@ -8,7 +8,7 @@ import { z } from 'zod';
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
 import { AlertInfo } from '~/design-system/Alerts.tsx';
 import { Avatar } from '~/design-system/Avatar.tsx';
-import { ButtonFileUpload } from '~/design-system/forms/FileUploadButton.tsx';
+import { ButtonFileUpload } from '~/design-system/forms/file-upload-button.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { ExternalLink } from '~/design-system/Links.tsx';
 import { H2, Subtitle } from '~/design-system/Typography.tsx';
