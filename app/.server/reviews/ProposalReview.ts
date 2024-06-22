@@ -40,8 +40,12 @@ export class ProposalReview {
 
     const reviews = new ReviewDetails(proposal.reviews);
 
-    const surveys = new SpeakersAnswers(proposal.speakers.map(s => s.id), event.slug);
-    const answers = await surveys.getAnswers()
+    // TODO add tests on answers
+    let answers: Array<{userId: string; answers: SurveyData }>;
+    if (proposal.speakers) {
+      const surveys = new SpeakersAnswers(proposal.speakers.map(s => s.id), event.slug);
+      answers = await surveys.getAnswers()
+    }
 
     return {
       id: proposal.id,
@@ -70,7 +74,7 @@ export class ProposalReview {
             email: speaker.email,
             address: speaker.address,
             socials: speaker.socials as SocialLinks,
-            survey: answers.find(a => a.userId === speaker.id)?.answers as SurveyData,
+            survey: answers?.find(a => a.userId === speaker.id)?.answers as SurveyData,
         })) || [],
     };
   }
