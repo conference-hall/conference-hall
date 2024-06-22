@@ -1,5 +1,5 @@
 import { Dialog, DialogPanel, DialogTitle, Transition } from '@headlessui/react';
-import { XMarkIcon } from '@heroicons/react/24/outline';
+import { XMarkIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
 
 import { Background, SlideOverTransition } from './Transitions';
@@ -11,7 +11,7 @@ type Props = {
   children: React.ReactNode;
 };
 
-export default function SlideOver({ open, size = 'base', onClose, children }: Props) {
+export function SlideOver({ open, size = 'base', onClose, children }: Props) {
   return (
     <Transition show={open}>
       <Dialog className="relative z-20" onClose={onClose}>

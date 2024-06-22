@@ -2,7 +2,7 @@ import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
 
 import { Button } from '~/design-system/Buttons';
-import SlideOver from '~/design-system/SlideOver';
+import { SlideOver } from '~/design-system/SlideOver';
 
 import { TalkForm } from './talk-form';
 

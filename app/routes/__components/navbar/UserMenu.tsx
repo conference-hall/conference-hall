@@ -44,7 +44,7 @@ export function UserMenu({ email, name, picture, teams, isOrganizer, notificatio
                 <DialogPanel className="pointer-events-auto w-screen max-w-xs">
                   <nav
                     aria-label="User navigation"
-                    className="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl"
+                    className="flex h-full flex-col overflow-y-auto bg-white py-6 shadow-xl"
                   >
                     <div className="px-4 sm:px-6">
                       <div className="flex items-start justify-between">

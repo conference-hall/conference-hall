@@ -82,7 +82,7 @@ export function TalkSection({
           </Markdown>
         </div>
 
-        {showFormats && (
+        {showFormats && talk.formats && talk.formats?.length > 0 && (
           <div>
             <dt className="text-sm font-medium leading-6 text-gray-900">Formats</dt>
             <dd className="text-sm leading-6 text-gray-700">
@@ -91,7 +91,7 @@ export function TalkSection({
           </div>
         )}
 
-        {showCategories && (
+        {showCategories && talk.categories && talk.categories?.length > 0 && (
           <div>
             <dt className="text-sm font-medium leading-6 text-gray-900">Categories</dt>
             <dd className="text-sm leading-6 text-gray-700">

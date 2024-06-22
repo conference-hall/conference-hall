@@ -6,7 +6,7 @@ import { type Toast } from './toast.server.ts';
 export function Toaster({ toast }: { toast?: Toast | null }) {
   return (
     <>
-      <SonnerToaster closeButton richColors position="bottom-right" />
+      <SonnerToaster position="bottom-left" />
       {toast ? <ShowToast toast={toast} /> : null}
     </>
   );

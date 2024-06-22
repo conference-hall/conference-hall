@@ -8,7 +8,7 @@ import { Button } from '~/design-system/Buttons.tsx';
 import { IconExternalLink } from '~/design-system/IconButtons.tsx';
 import { GitHubIcon } from '~/design-system/icons/GitHubIcon.tsx';
 import { TwitterIcon } from '~/design-system/icons/TwitterIcon.tsx';
-import SlideOver from '~/design-system/SlideOver.tsx';
+import { SlideOver } from '~/design-system/SlideOver.tsx';
 import { Text } from '~/design-system/Typography.tsx';
 
 import { InvitationModal } from '../InvitationModal.tsx';
