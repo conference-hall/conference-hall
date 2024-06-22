@@ -8,6 +8,7 @@ import type { ProposalsFilters } from '../shared/ProposalSearchBuilder.types';
 import type { SocialLinks } from '../speaker-profile/SpeakerProfile.types';
 import type { ProposalUpdateData, ReviewUpdateData } from './ProposalReview.types';
 import { ReviewDetails } from './ReviewDetails';
+import { SpeakersAnswers } from '../cfp-survey/SpeakerAnswers';
 
 export type ProposalReviewData = Awaited<ReturnType<typeof ProposalReview.prototype.get>>;
 
@@ -39,6 +40,9 @@ export class ProposalReview {
 
     const reviews = new ReviewDetails(proposal.reviews);
 
+    const surveys = new SpeakersAnswers(proposal.speakers.map(s => s.id), event.slug);
+    const answers = await surveys.getAnswers()
+
     return {
       id: proposal.id,
       title: proposal.title,
@@ -57,16 +61,16 @@ export class ProposalReview {
       },
       speakers:
         proposal.speakers?.map((speaker) => ({
-          id: speaker.id,
-          name: speaker.name,
-          picture: speaker.picture,
-          company: speaker.company,
-          bio: speaker.bio,
-          references: speaker.references,
-          email: speaker.email,
-          address: speaker.address,
-          socials: speaker.socials as SocialLinks,
-          // TODO: survey: speaker.surveys.answers as SurveyData | undefined,
+            id: speaker.id,
+            name: speaker.name,
+            picture: speaker.picture,
+            company: speaker.company,
+            bio: speaker.bio,
+            references: speaker.references,
+            email: speaker.email,
+            address: speaker.address,
+            socials: speaker.socials as SocialLinks,
+            survey: answers.find(a => a.userId === speaker.id)?.answers as SurveyData,
         })) || [],
     };
   }

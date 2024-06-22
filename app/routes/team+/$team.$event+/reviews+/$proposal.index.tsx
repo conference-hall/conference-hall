@@ -35,8 +35,8 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   invariant(params.proposal, 'Invalid proposal id');
 
   const event = await UserEvent.for(userId, params.team, params.event).get();
-
   const filters = parseUrlFilters(request.url);
+
   const review = ProposalReview.for(userId, params.team, params.event, params.proposal);
   const proposal = await review.get();
   const pagination = await review.getPreviousAndNextReviews(filters);
