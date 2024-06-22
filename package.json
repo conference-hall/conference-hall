@@ -22,7 +22,6 @@
     "db:reset": "dotenv -e .env.dev -- prisma migrate reset -f",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint --ignore-path .gitignore .",
     "tsc": "tsc -b && tsc -b cypress",
-    "story": "ladle serve",
     "dep:updates": "npx npm-check-updates -i",
     "script:migrate": "tsx ./migration/index.ts",
     "prepare": "husky"
@@ -71,7 +70,6 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@ladle/react": "^4.1.0",
     "@ngneat/falso": "^7.2.0",
     "@remix-run/dev": "^2.9.2",
     "@remix-run/eslint-config": "^2.9.2",

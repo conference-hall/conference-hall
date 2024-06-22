@@ -4,7 +4,7 @@ import { Avatar } from '~/design-system/Avatar.tsx';
 import { Container } from '~/design-system/layouts/Container.tsx';
 import { H1, Text } from '~/design-system/Typography.tsx';
 import { formatConferenceDates } from '~/libs/formatters/cfp';
-import { ClientOnly } from '~/routes/__components/utils/ClientOnly.tsx';
+import { ClientOnly } from '~/routes/__components/utils/client-only';
 
 type Props = {
   name: string;

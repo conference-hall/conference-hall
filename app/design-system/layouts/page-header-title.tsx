@@ -5,7 +5,7 @@ import { IconButton, IconLink } from '~/design-system/IconButtons.tsx';
 import { H1, Subtitle } from '~/design-system/Typography.tsx';
 
 import { Container } from './Container.tsx';
-import { PageHeader } from './PageHeader.tsx';
+import { PageHeader } from './page-header.tsx';
 
 type Props = { title: string; subtitle?: string; children?: ReactNode } & BackButtonProps;
 

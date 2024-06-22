@@ -5,11 +5,11 @@ import { Outlet, useLoaderData } from '@remix-run/react';
 import { SpeakerProfile } from '~/.server/speaker-profile/SpeakerProfile';
 import { Avatar } from '~/design-system/Avatar';
 import { Container } from '~/design-system/layouts/Container';
-import { PageHeader } from '~/design-system/layouts/PageHeader';
+import { PageHeader } from '~/design-system/layouts/page-header';
 import { H1, Text } from '~/design-system/Typography';
 import { requireSession } from '~/libs/auth/session.ts';
 import { Navbar } from '~/routes/__components/navbar/Navbar.tsx';
-import { useUser } from '~/routes/__components/useUser';
+import { useUser } from '~/routes/__components/use-user';
 
 import { SpeakerTabs } from './__components/SpeakerTabs';
 

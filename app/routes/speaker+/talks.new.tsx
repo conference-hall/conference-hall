@@ -6,7 +6,7 @@ import { TalksLibrary } from '~/.server/speaker-talks-library/TalksLibrary';
 import { TalkSaveSchema } from '~/.server/speaker-talks-library/TalksLibrary.types';
 import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
-import { Page } from '~/design-system/layouts/PageContent.tsx';
+import { Page } from '~/design-system/layouts/page';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { redirectWithToast } from '~/libs/toasts/toast.server.ts';

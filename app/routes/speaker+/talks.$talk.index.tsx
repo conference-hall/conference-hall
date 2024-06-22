@@ -5,7 +5,7 @@ import invariant from 'tiny-invariant';
 
 import { TalksLibrary } from '~/.server/speaker-talks-library/TalksLibrary.ts';
 import { TalkSaveSchema } from '~/.server/speaker-talks-library/TalksLibrary.types';
-import { Page } from '~/design-system/layouts/PageContent.tsx';
+import { Page } from '~/design-system/layouts/page';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';

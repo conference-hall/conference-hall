@@ -1,3 +1,4 @@
+// TODO Add tests
 export function formatReviewNote(note?: number | null) {
   if (note === null || note === undefined) return null;
 

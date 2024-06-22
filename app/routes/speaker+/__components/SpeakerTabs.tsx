@@ -1,6 +1,6 @@
 import { FireIcon, MicrophoneIcon, UserIcon } from '@heroicons/react/24/outline';
 
-import { NavTab, NavTabs } from '~/design-system/navigation/NavTabs.tsx';
+import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs';
 
 export function SpeakerTabs() {
   return (

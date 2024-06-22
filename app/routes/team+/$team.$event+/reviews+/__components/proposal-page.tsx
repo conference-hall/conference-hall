@@ -9,7 +9,7 @@ import { H1 } from '~/design-system/Typography';
 import { getLanguage } from '~/libs/formatters/languages';
 import { getLevel } from '~/libs/formatters/levels';
 import { CoSpeakers } from '~/routes/__components/talks/co-speaker';
-import { useUser } from '~/routes/__components/useUser';
+import { useUser } from '~/routes/__components/use-user';
 
 import type { ProposalData } from '../$proposal.index';
 

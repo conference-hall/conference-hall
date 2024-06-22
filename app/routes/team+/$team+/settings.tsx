@@ -4,11 +4,11 @@ import { Outlet } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { UserTeam } from '~/.server/team/UserTeam';
-import { Page } from '~/design-system/layouts/PageContent.tsx';
-import { NavSideMenu } from '~/design-system/navigation/NavSideMenu.tsx';
+import { Page } from '~/design-system/layouts/page';
+import { NavSideMenu } from '~/design-system/navigation/nav-side-menu';
 import { H2 } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { useUser } from '~/routes/__components/useUser';
+import { useUser } from '~/routes/__components/use-user';
 
 import { useTeam } from '../__components/useTeam';
 

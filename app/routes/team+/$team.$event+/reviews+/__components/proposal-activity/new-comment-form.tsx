@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react';
 
 import { Avatar } from '~/design-system/Avatar';
 import { Button } from '~/design-system/Buttons';
-import { useUser } from '~/routes/__components/useUser';
+import { useUser } from '~/routes/__components/use-user';
 
 type Props = { compact?: boolean; className?: string };
 

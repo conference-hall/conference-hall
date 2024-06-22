@@ -7,7 +7,7 @@ import { Radio, RadioGroup } from '~/design-system/forms/RadioGroup.tsx';
 import { Modal } from '~/design-system/Modals.tsx';
 import { Text } from '~/design-system/Typography.tsx';
 
-import { InvitationModal } from '../../../__components/InvitationModal.tsx';
+import { InvitationModal } from '../../../__components/invitation-modal.tsx';
 
 type RemoveButtonProps = { memberId: string; memberName: string | null };
 

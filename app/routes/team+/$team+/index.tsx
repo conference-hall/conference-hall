@@ -5,11 +5,11 @@ import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { TeamEvents } from '~/.server/team/TeamEvents.ts';
-import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
-import { Page } from '~/design-system/layouts/PageContent.tsx';
+import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
+import { Page } from '~/design-system/layouts/page.tsx';
 import { H1 } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { EventCard } from '~/routes/__components/EventCard.tsx';
+import { EventCard } from '~/routes/__components/events/event-card.tsx';
 
 import { useTeam } from '../__components/useTeam.tsx';
 import { ArchivedFilters } from './__components/ArchivedFilter.tsx';

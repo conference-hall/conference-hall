@@ -1,7 +1,7 @@
 import { CalendarIcon, Cog6ToothIcon, HomeIcon, MegaphoneIcon, QueueListIcon } from '@heroicons/react/24/outline';
 import { useSearchParams } from '@remix-run/react';
 
-import { NavTab, NavTabs } from '~/design-system/navigation/NavTabs.tsx';
+import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs';
 import type { EventType } from '~/types/events.types';
 
 type Props = { teamSlug: string; eventSlug: string; eventType: EventType; role: string };

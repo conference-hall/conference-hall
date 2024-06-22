@@ -8,7 +8,7 @@ import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { eventSocialCard } from '~/libs/meta/social-cards.ts';
 import { Footer } from '~/routes/__components/Footer.tsx';
 import { Navbar } from '~/routes/__components/navbar/Navbar.tsx';
-import { useUser } from '~/routes/__components/useUser.tsx';
+import { useUser } from '~/routes/__components/use-user.tsx';
 
 import { EventHeader } from './__components/EventHeader.tsx';
 import { EventTabs } from './__components/EventTabs.tsx';

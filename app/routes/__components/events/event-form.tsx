@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 import { Input } from '~/design-system/forms/Input.tsx';
 
-import EventVisibilityRadioGroup from './EventVisibilityRadioGroup.tsx';
+import EventVisibilityRadioGroup from './event-visibility-radio-group';
 
 type EventValues = {
   name: string;

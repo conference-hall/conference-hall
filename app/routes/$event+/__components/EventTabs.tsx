@@ -1,5 +1,5 @@
 import { Container } from '~/design-system/layouts/Container.tsx';
-import { NavTab, NavTabs } from '~/design-system/navigation/NavTabs.tsx';
+import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs';
 import type { EventType } from '~/types/events.types';
 
 type Props = { slug: string; type: EventType; surveyEnabled: boolean };

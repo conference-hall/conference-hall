@@ -3,8 +3,8 @@ import { formatDistanceToNowStrict } from 'date-fns';
 
 import type { FeedItem } from '~/.server/reviews/ActivityFeed';
 import { Avatar } from '~/design-system/Avatar';
-import { useUser } from '~/routes/__components/useUser';
-import { ClientOnly } from '~/routes/__components/utils/ClientOnly';
+import { useUser } from '~/routes/__components/use-user';
+import { ClientOnly } from '~/routes/__components/utils/client-only';
 
 export function CommentItem({ item }: { item: FeedItem }) {
   const { user } = useUser();

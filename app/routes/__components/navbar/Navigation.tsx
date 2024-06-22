@@ -1,4 +1,4 @@
-import { NavTab, NavTabs } from '~/design-system/navigation/NavTabs.tsx';
+import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs';
 
 import { TeamsDropdown } from './dropdowns/teams-dropdown';
 

@@ -5,7 +5,7 @@ import { Avatar, AvatarGroup } from '~/design-system/Avatar.tsx';
 import { ButtonLink } from '~/design-system/Buttons.tsx';
 import { IconLink } from '~/design-system/IconButtons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
-import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
+import { EmptyState } from '~/design-system/layouts/empty-state';
 import { Link } from '~/design-system/Links.tsx';
 import { Subtitle, Text } from '~/design-system/Typography.tsx';
 import { ProposalStatusLabel } from '~/routes/__components/proposals/proposal-status-label';

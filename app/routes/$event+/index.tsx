@@ -1,4 +1,4 @@
-import { Page } from '~/design-system/layouts/PageContent.tsx';
+import { Page } from '~/design-system/layouts/page.tsx';
 
 import { CfpSection } from './__components/CfpSection.tsx';
 import { DetailsSection } from './__components/DetailsSection.tsx';

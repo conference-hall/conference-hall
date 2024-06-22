@@ -3,7 +3,7 @@ import { CardLink } from '~/design-system/layouts/Card.tsx';
 import { Subtitle, Text } from '~/design-system/Typography.tsx';
 import type { CfpState } from '~/types/events.types.ts';
 
-import { CfpElapsedTime } from './cfp/CfpElapsedTime.tsx';
+import { CfpElapsedTime } from '../cfp/CfpElapsedTime.tsx';
 
 type Props = {
   to: string;

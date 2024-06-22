@@ -7,7 +7,7 @@ import { CfpReviewsSearch } from '~/.server/reviews/CfpReviewsSearch.ts';
 import { Deliberate, DeliberateBulkSchema } from '~/.server/reviews/Deliberate.ts';
 import { parseUrlPage } from '~/.server/shared/Pagination.ts';
 import { parseUrlFilters } from '~/.server/shared/ProposalSearchBuilder.types.ts';
-import { Page } from '~/design-system/layouts/PageContent.tsx';
+import { Page } from '~/design-system/layouts/page.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { parseWithZod } from '~/libs/zod-parser.ts';

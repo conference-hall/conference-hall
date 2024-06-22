@@ -9,8 +9,8 @@ import {
   DetailsSchema,
   PersonalInfoSchema,
 } from '~/.server/speaker-profile/SpeakerProfile.types.ts';
-import { Page } from '~/design-system/layouts/PageContent.tsx';
-import { NavSideMenu } from '~/design-system/navigation/NavSideMenu.tsx';
+import { Page } from '~/design-system/layouts/page.tsx';
+import { NavSideMenu } from '~/design-system/navigation/nav-side-menu.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';

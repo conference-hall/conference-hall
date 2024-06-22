@@ -5,10 +5,10 @@ import invariant from 'tiny-invariant';
 
 import { UserTeam } from '~/.server/team/UserTeam';
 import { Container } from '~/design-system/layouts/Container';
-import { PageHeader } from '~/design-system/layouts/PageHeader';
+import { PageHeader } from '~/design-system/layouts/page-header';
 import { requireSession } from '~/libs/auth/session';
 import { mergeMeta } from '~/libs/meta/merge-meta';
-import { useUser } from '~/routes/__components/useUser';
+import { useUser } from '~/routes/__components/use-user';
 
 import { NavbarOrga } from '../__components/navbar/NavbarOrga';
 import type { loader as routeEventLoader } from './$team.$event+/_layout';

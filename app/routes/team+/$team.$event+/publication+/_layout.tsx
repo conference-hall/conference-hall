@@ -5,7 +5,7 @@ import invariant from 'tiny-invariant';
 
 import { Publication } from '~/.server/publications/Publication';
 import { Card } from '~/design-system/layouts/Card';
-import { Page } from '~/design-system/layouts/PageContent';
+import { Page } from '~/design-system/layouts/page';
 import { H1, H2, Subtitle } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { useEvent } from '~/routes/$event+/__components/useEvent';

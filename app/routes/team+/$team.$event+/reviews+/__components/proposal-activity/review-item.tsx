@@ -2,7 +2,7 @@ import { HeartIcon, StarIcon, XMarkIcon } from '@heroicons/react/20/solid';
 import { formatDistanceToNowStrict } from 'date-fns';
 
 import type { FeedItem } from '~/.server/reviews/ActivityFeed';
-import { ClientOnly } from '~/routes/__components/utils/ClientOnly';
+import { ClientOnly } from '~/routes/__components/utils/client-only';
 
 export function ReviewItem({ item }: { item: FeedItem }) {
   if (item.type !== 'review') return null;

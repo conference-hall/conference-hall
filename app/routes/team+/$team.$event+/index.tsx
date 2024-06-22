@@ -1,7 +1,7 @@
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import invariant from 'tiny-invariant';
 
-import { Page } from '~/design-system/layouts/PageContent.tsx';
+import { Page } from '~/design-system/layouts/page';
 import { H2, Text } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 

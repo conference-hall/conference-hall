@@ -5,7 +5,7 @@ import { Form, useActionData } from '@remix-run/react';
 import { TeamBetaAccess } from '~/.server/team/TeamBetaAccess';
 import { Button } from '~/design-system/Buttons.tsx';
 import { Input } from '~/design-system/forms/Input.tsx';
-import { Page } from '~/design-system/layouts/PageContent.tsx';
+import { Page } from '~/design-system/layouts/page';
 import { ExternalLink } from '~/design-system/Links.tsx';
 import { H1, Subtitle } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';

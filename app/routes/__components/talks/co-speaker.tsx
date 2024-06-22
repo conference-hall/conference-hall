@@ -11,7 +11,7 @@ import { TwitterIcon } from '~/design-system/icons/TwitterIcon.tsx';
 import { SlideOver } from '~/design-system/SlideOver.tsx';
 import { Text } from '~/design-system/Typography.tsx';
 
-import { InvitationModal } from '../InvitationModal.tsx';
+import { InvitationModal } from '../invitation-modal.tsx';
 
 export type SpeakerProps = {
   id: string;

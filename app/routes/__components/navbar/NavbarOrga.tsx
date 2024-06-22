@@ -1,7 +1,7 @@
 import { useRouteLoaderData } from '@remix-run/react';
 
 import { SlashBarIcon } from '~/design-system/icons/SlashBarIcon.tsx';
-import { NavTab, NavTabs } from '~/design-system/navigation/NavTabs.tsx';
+import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
 
 import type { loader as routeTeamLoader } from '../../team+/$team';
 import type { loader as routeEventLoader } from '../../team+/$team.$event+/_layout';

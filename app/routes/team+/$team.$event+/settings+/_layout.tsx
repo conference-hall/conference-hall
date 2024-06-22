@@ -14,11 +14,11 @@ import { Outlet } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { UserEvent } from '~/.server/event-settings/UserEvent.ts';
-import { Page } from '~/design-system/layouts/PageContent.tsx';
-import { NavSideMenu } from '~/design-system/navigation/NavSideMenu.tsx';
+import { Page } from '~/design-system/layouts/page.tsx';
+import { NavSideMenu } from '~/design-system/navigation/nav-side-menu.tsx';
 import { H2 } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { useUser } from '~/routes/__components/useUser.tsx';
+import { useUser } from '~/routes/__components/use-user.tsx';
 
 import { useTeam } from '../../__components/useTeam.tsx';
 import { useEvent } from '../__components/useEvent.tsx';

@@ -5,7 +5,7 @@ import { useLoaderData } from '@remix-run/react';
 import { parseUrlPage } from '~/.server/shared/Pagination.ts';
 import { SpeakerActivities } from '~/.server/speaker-activities/SpeakerActivities.ts';
 import { SpeakerProfile } from '~/.server/speaker-profile/SpeakerProfile.ts';
-import { Page } from '~/design-system/layouts/PageContent.tsx';
+import { Page } from '~/design-system/layouts/page.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 

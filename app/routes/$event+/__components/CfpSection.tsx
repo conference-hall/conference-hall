@@ -3,7 +3,7 @@ import { Container } from '~/design-system/layouts/Container.tsx';
 import { H2, Subtitle } from '~/design-system/Typography.tsx';
 import { formatCFPDate, formatCFPElapsedTime } from '~/libs/formatters/cfp';
 import { CfpIcon } from '~/routes/__components/cfp/CfpIcon.tsx';
-import { ClientOnly } from '~/routes/__components/utils/ClientOnly.tsx';
+import { ClientOnly } from '~/routes/__components/utils/client-only';
 import type { CfpState } from '~/types/events.types';
 
 type Props = { cfpState: CfpState; cfpStart?: string; cfpEnd?: string; className?: string };

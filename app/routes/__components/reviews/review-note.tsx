@@ -4,7 +4,7 @@ import { cx } from 'class-variance-authority';
 import { Text } from '~/design-system/Typography.tsx';
 import { formatReviewNote } from '~/libs/formatters/reviews';
 
-import { ClientOnly } from '../utils/ClientOnly';
+import { ClientOnly } from '../utils/client-only';
 
 const REVIEWS = {
   NO_OPINION: { icon: NoSymbolIcon, color: '', stroke: '', label: 'No opinion' },

@@ -1,6 +1,6 @@
 import { InboxIcon } from '@heroicons/react/24/outline';
 
-import { EmptyState } from '~/design-system/layouts/EmptyState.tsx';
+import { EmptyState } from '~/design-system/layouts/empty-state';
 import { ProposalCard } from '~/routes/__components/proposals/proposal-card';
 import type { SpeakerProposalStatus } from '~/types/speaker.types';
 
