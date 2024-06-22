@@ -1,9 +1,10 @@
-import { db } from 'prisma/db.server';
-import { CfpNotOpenError, ProposalNotFoundError } from '~/libs/errors.server';
+import { db } from 'prisma/db.server.ts';
 
-import { ProposalConfirmedEmail } from './emails/proposal-confirmed.email';
-import { ProposalDeclinedEmail } from './emails/proposal-declined.email';
-import type { ProposalSaveData } from './UserProposal.types';
+import { CfpNotOpenError, ProposalNotFoundError } from '~/libs/errors.server.ts';
+
+import { ProposalConfirmedEmail } from './emails/proposal-confirmed.email.ts';
+import { ProposalDeclinedEmail } from './emails/proposal-declined.email.ts';
+import type { ProposalSaveData } from './user-proposal.types';
 
 export class UserProposal {
   constructor(

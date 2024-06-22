@@ -1,14 +1,15 @@
-import { db } from 'prisma/db.server';
-import { ForbiddenOperationError, ProposalNotFoundError, ReviewDisabledError, UserNotFoundError } from '~/libs/errors.server';
+import { db } from 'prisma/db.server.ts';
 
+import { ProposalNotFoundError, ReviewDisabledError } from '~/libs/errors.server.ts';
+
+import { SpeakersAnswers } from '../cfp-survey/SpeakerAnswers.ts';
 import type { SurveyData } from '../cfp-survey/SpeakerAnswers.types';
-import { UserEvent } from '../event-settings/UserEvent';
-import { ProposalSearchBuilder } from '../shared/ProposalSearchBuilder';
+import { UserEvent } from '../event-settings/UserEvent.ts';
+import { ProposalSearchBuilder } from '../shared/ProposalSearchBuilder.ts';
 import type { ProposalsFilters } from '../shared/ProposalSearchBuilder.types';
 import type { SocialLinks } from '../speaker-profile/SpeakerProfile.types';
 import type { ProposalUpdateData, ReviewUpdateData } from './ProposalReview.types';
-import { ReviewDetails } from './ReviewDetails';
-import { SpeakersAnswers } from '../cfp-survey/SpeakerAnswers';
+import { ReviewDetails } from './ReviewDetails.ts';
 
 export type ProposalReviewData = Awaited<ReturnType<typeof ProposalReview.prototype.get>>;
 
@@ -41,10 +42,13 @@ export class ProposalReview {
     const reviews = new ReviewDetails(proposal.reviews);
 
     // TODO add tests on answers
-    let answers: Array<{userId: string; answers: SurveyData }>;
+    let answers: Array<{ userId: string; answers: SurveyData }>;
     if (proposal.speakers) {
-      const surveys = new SpeakersAnswers(proposal.speakers.map(s => s.id), event.slug);
-      answers = await surveys.getAnswers()
+      const surveys = new SpeakersAnswers(
+        proposal.speakers.map((s) => s.id),
+        event.slug,
+      );
+      answers = await surveys.getAnswers();
     }
 
     return {
@@ -65,16 +69,16 @@ export class ProposalReview {
       },
       speakers:
         proposal.speakers?.map((speaker) => ({
-            id: speaker.id,
-            name: speaker.name,
-            picture: speaker.picture,
-            company: speaker.company,
-            bio: speaker.bio,
-            references: speaker.references,
-            email: speaker.email,
-            address: speaker.address,
-            socials: speaker.socials as SocialLinks,
-            survey: answers?.find(a => a.userId === speaker.id)?.answers as SurveyData,
+          id: speaker.id,
+          name: speaker.name,
+          picture: speaker.picture,
+          company: speaker.company,
+          bio: speaker.bio,
+          references: speaker.references,
+          email: speaker.email,
+          address: speaker.address,
+          socials: speaker.socials as SocialLinks,
+          survey: answers?.find((a) => a.userId === speaker.id)?.answers as SurveyData,
         })) || [],
     };
   }

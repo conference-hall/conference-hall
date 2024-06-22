@@ -1,5 +1,6 @@
-import { db } from 'prisma/db.server';
-import { TalkNotFoundError } from '~/libs/errors.server';
+import { db } from 'prisma/db.server.ts';
+
+import { TalkNotFoundError } from '~/libs/errors.server.ts';
 
 import type { TalkSaveData } from './TalksLibrary.types';
 
@@ -47,13 +48,15 @@ export class SpeakerTalk {
           isCurrentUser: speaker.id === this.speakerId,
         }))
         .sort((a, b) => (a.isOwner ? -1 : 0) - (b.isOwner ? -1 : 0)),
-      submissions: talk.proposals.map((proposal) => ({
-        slug: proposal.event.slug,
-        name: proposal.event.name,
-        logo: proposal.event.logo,
-        proposalStatus: proposal.getStatusForSpeaker(proposal.event.isCfpOpen),
-        createdAt: proposal.createdAt.toUTCString(),
-      })).sort((a, b) => a.createdAt > b.createdAt ? -1 : 1), // TODO: Test the sort
+      submissions: talk.proposals
+        .map((proposal) => ({
+          slug: proposal.event.slug,
+          name: proposal.event.name,
+          logo: proposal.event.logo,
+          proposalStatus: proposal.getStatusForSpeaker(proposal.event.isCfpOpen),
+          createdAt: proposal.createdAt.toUTCString(),
+        }))
+        .sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1)), // TODO: Test the sort
       invitationLink: talk.invitationLink,
     };
   }

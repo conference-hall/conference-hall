@@ -1,15 +1,15 @@
-import { eventCategoryFactory } from 'tests/factories/categories';
-import { eventFactory } from 'tests/factories/events';
-import { eventFormatFactory } from 'tests/factories/formats';
-import { proposalFactory } from 'tests/factories/proposals';
-import { talkFactory } from 'tests/factories/talks';
-import { userFactory } from 'tests/factories/users';
+import { db } from 'prisma/db.server.ts';
+import { eventCategoryFactory } from 'tests/factories/categories.ts';
+import { eventFactory } from 'tests/factories/events.ts';
+import { eventFormatFactory } from 'tests/factories/formats.ts';
+import { proposalFactory } from 'tests/factories/proposals.ts';
+import { talkFactory } from 'tests/factories/talks.ts';
+import { userFactory } from 'tests/factories/users.ts';
 
-import { db } from 'prisma/db.server';
-import { CfpNotOpenError, ProposalNotFoundError } from '~/libs/errors.server';
+import { CfpNotOpenError, ProposalNotFoundError } from '~/libs/errors.server.ts';
+import { SpeakerProposalStatus } from '~/types/speaker.types.ts';
 
-import { UserProposal } from './UserProposal';
-import { SpeakerProposalStatus } from '~/types/speaker.types';
+import { UserProposal } from './user-proposal.ts';
 
 describe('UserProposal', () => {
   describe('#get', () => {

@@ -1,5 +1,6 @@
 import { z } from 'zod';
-import { parseWithZod } from '~/libs/zod-parser';
+
+import { parseWithZod } from '~/libs/zod-parser.ts';
 
 type PaginationOptions = { page: number; total: number; pageSize?: number };
 

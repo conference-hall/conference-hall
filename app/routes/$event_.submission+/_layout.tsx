@@ -4,7 +4,7 @@ import { json } from '@remix-run/node';
 import { Outlet, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { SubmissionSteps } from '~/.server/cfp-submission-funnel/SubmissionSteps.ts';
+import { SubmissionSteps } from '~/.server/cfp-submission-funnel/submission-steps.ts';
 import { EventPage } from '~/.server/event-page/EventPage.ts';
 import { IconLink } from '~/design-system/IconButtons.tsx';
 import { Container } from '~/design-system/layouts/Container.tsx';

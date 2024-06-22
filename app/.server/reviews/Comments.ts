@@ -1,6 +1,6 @@
-import { db } from 'prisma/db.server';
+import { db } from 'prisma/db.server.ts';
 
-import { UserEvent } from '../event-settings/UserEvent';
+import { UserEvent } from '../event-settings/UserEvent.ts';
 
 export class Comments {
   constructor(

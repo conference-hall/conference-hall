@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { slugValidator } from '~/libs/validators/slug';
+import { slugValidator } from '~/libs/validators/slug.ts';
 
 export const EventGeneralSettingsSchema = z.object({
   name: z.string().trim().min(3).max(50),

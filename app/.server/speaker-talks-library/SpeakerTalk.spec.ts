@@ -1,15 +1,15 @@
 import type { User } from '@prisma/client';
-import { eventFactory } from 'tests/factories/events';
-import { proposalFactory } from 'tests/factories/proposals';
-import { talkFactory } from 'tests/factories/talks';
-import { userFactory } from 'tests/factories/users';
+import { db } from 'prisma/db.server.ts';
+import { eventFactory } from 'tests/factories/events.ts';
+import { proposalFactory } from 'tests/factories/proposals.ts';
+import { talkFactory } from 'tests/factories/talks.ts';
+import { userFactory } from 'tests/factories/users.ts';
 
-import { db } from 'prisma/db.server';
-import { TalkNotFoundError } from '~/libs/errors.server';
+import { appUrl } from '~/libs/env/env.server.ts';
+import { TalkNotFoundError } from '~/libs/errors.server.ts';
+import { SpeakerProposalStatus } from '~/types/speaker.types.ts';
 
-import { SpeakerTalk } from './SpeakerTalk';
-import { SpeakerProposalStatus } from '~/types/speaker.types';
-import { appUrl } from '~/libs/env/env.server';
+import { SpeakerTalk } from './SpeakerTalk.ts';
 
 describe('SpeakerTalk', () => {
   let speaker: User;

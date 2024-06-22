@@ -1,5 +1,6 @@
-import { db } from 'prisma/db.server';
-import { EventNotFoundError } from '~/libs/errors.server';
+import { db } from 'prisma/db.server.ts';
+
+import { EventNotFoundError } from '~/libs/errors.server.ts';
 
 import type { SurveyData } from './SpeakerAnswers.types';
 
@@ -58,6 +59,6 @@ export class SpeakersAnswers {
       where: { event: { slug: this.eventSlug }, user: { id: { in: this.userIds } } },
     });
 
-    return userSurveys.map(survey => ({ userId: survey.userId, answers: survey.answers as SurveyData }));
+    return userSurveys.map((survey) => ({ userId: survey.userId, answers: survey.answers as SurveyData }));
   }
 }

@@ -1,8 +1,7 @@
-import { userFactory } from 'tests/factories/users';
+import { db } from 'prisma/db.server.ts';
+import { userFactory } from 'tests/factories/users.ts';
 
-import { db } from 'prisma/db.server';
-
-import { UserRegistration } from './UserRegistration';
+import { UserRegistration } from './UserRegistration.ts';
 
 describe('UserRegistration', () => {
   describe('register', () => {

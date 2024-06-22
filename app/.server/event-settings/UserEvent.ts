@@ -1,11 +1,10 @@
 import type { Prisma, TeamRole } from '@prisma/client';
+import { db } from 'prisma/db.server.ts';
 
-import { db } from 'prisma/db.server';
-import { EventNotFoundError, ForbiddenOperationError, SlugAlreadyExistsError } from '~/libs/errors.server';
-import { geocode } from '~/libs/geocode/geocode.server';
-
-import { EventEmailNotificationsKeys } from '~/types/notifications.types';
-import { QuestionKeys } from '~/types/survey.types';
+import { EventNotFoundError, ForbiddenOperationError, SlugAlreadyExistsError } from '~/libs/errors.server.ts';
+import { geocode } from '~/libs/geocode/geocode.server.ts';
+import type { EventEmailNotificationsKeys } from '~/types/notifications.types';
+import type { QuestionKeys } from '~/types/survey.types';
 
 export type EventData = Awaited<ReturnType<typeof UserEvent.prototype.get>>;
 

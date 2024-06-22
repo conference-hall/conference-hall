@@ -1,10 +1,10 @@
+import { db } from 'prisma/db.server.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
 
-import { db } from 'prisma/db.server';
-import { InvitationNotFoundError } from '~/libs/errors.server';
+import { InvitationNotFoundError } from '~/libs/errors.server.ts';
 
-import { CoSpeakerTalkInvite } from './CoSpeakerTalkInvite';
+import { CoSpeakerTalkInvite } from './CoSpeakerTalkInvite.ts';
 
 describe('CoSpeakerTalkInvite', () => {
   describe('#check', () => {

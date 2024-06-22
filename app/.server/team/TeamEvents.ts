@@ -1,10 +1,10 @@
+import { db } from 'prisma/db.server.ts';
 import { z } from 'zod';
 
-import { db } from 'prisma/db.server';
-import { SlugAlreadyExistsError } from '~/libs/errors.server';
-import { slugValidator } from '~/libs/validators/slug';
+import { SlugAlreadyExistsError } from '~/libs/errors.server.ts';
+import { slugValidator } from '~/libs/validators/slug.ts';
 
-import { UserTeam } from './UserTeam';
+import { UserTeam } from './UserTeam.ts';
 
 export const EventCreateSchema = z.object({
   name: z.string().trim().min(3).max(50),

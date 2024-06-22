@@ -1,16 +1,17 @@
-import { db } from 'prisma/db.server';
+import { db } from 'prisma/db.server.ts';
+
 import {
   CfpNotOpenError,
   EventNotFoundError,
   MaxSubmittedProposalsReachedError,
   ProposalNotFoundError,
-} from '~/libs/errors.server';
+} from '~/libs/errors.server.ts';
 
-import { TalksLibrary } from '../speaker-talks-library/TalksLibrary';
-import { ProposalReceivedEmail } from './emails/proposal-received.email';
-import { ProposalSubmittedEmail } from './emails/proposal-submitted.email';
-import { sendSubmittedTalkSlackMessage } from './slack/slack.services';
-import type { DraftSaveData, TrackUpdateData } from './TalkSubmission.types';
+import { TalksLibrary } from '../speaker-talks-library/TalksLibrary.ts';
+import { ProposalReceivedEmail } from './emails/proposal-received.email.ts';
+import { ProposalSubmittedEmail } from './emails/proposal-submitted.email.ts';
+import { sendSubmittedTalkSlackMessage } from './slack/slack.services.ts';
+import type { DraftSaveData, TrackUpdateData } from './talk-submission.types';
 
 export class TalkSubmission {
   constructor(

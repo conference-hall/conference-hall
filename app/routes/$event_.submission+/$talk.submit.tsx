@@ -4,7 +4,7 @@ import { Form, useLoaderData, useNavigate } from '@remix-run/react';
 import { useState } from 'react';
 import invariant from 'tiny-invariant';
 
-import { TalkSubmission } from '~/.server/cfp-submission-funnel/TalkSubmission.ts';
+import { TalkSubmission } from '~/.server/cfp-submission-funnel/talk-submission.ts';
 import { Avatar, AvatarGroup } from '~/design-system/Avatar.tsx';
 import { Button } from '~/design-system/Buttons.tsx';
 import { Checkbox } from '~/design-system/forms/Checkboxes.tsx';

@@ -1,7 +1,7 @@
 import { eventFactory } from 'tests/factories/events.ts';
 
-import { EventsSearch } from './EventSearch';
-import { parseUrlFilters } from './EventSearch.types';
+import { EventsSearch } from './EventSearch.ts';
+import { parseUrlFilters } from './EventSearch.types.ts';
 
 describe('EventsSearch', () => {
   describe('search', () => {

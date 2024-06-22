@@ -1,10 +1,11 @@
-import { eventFactory } from 'tests/factories/events';
-import { proposalFactory } from 'tests/factories/proposals';
-import { talkFactory } from 'tests/factories/talks';
-import { userFactory } from 'tests/factories/users';
+import { eventFactory } from 'tests/factories/events.ts';
+import { proposalFactory } from 'tests/factories/proposals.ts';
+import { talkFactory } from 'tests/factories/talks.ts';
+import { userFactory } from 'tests/factories/users.ts';
 
-import { SpeakerActivities } from './SpeakerActivities';
-import { SpeakerProposalStatus } from '~/types/speaker.types';
+import { SpeakerProposalStatus } from '~/types/speaker.types.ts';
+
+import { SpeakerActivities } from './SpeakerActivities.ts';
 
 describe('SpeakerActivities', () => {
   describe('list', () => {

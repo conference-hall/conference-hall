@@ -1,5 +1,6 @@
-import { db } from 'prisma/db.server';
-import { InvitationInvalidOrAccepted, InvitationNotFoundError } from '~/libs/errors.server';
+import { db } from 'prisma/db.server.ts';
+
+import { InvitationInvalidOrAccepted, InvitationNotFoundError } from '~/libs/errors.server.ts';
 
 export class TeamMemberInvite {
   constructor(private code: string) {}

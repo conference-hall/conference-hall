@@ -1,5 +1,6 @@
-import { db } from 'prisma/db.server';
-import { EventNotFoundError } from '~/libs/errors.server';
+import { db } from 'prisma/db.server.ts';
+
+import { EventNotFoundError } from '~/libs/errors.server.ts';
 
 export type EventData = Awaited<ReturnType<typeof EventPage.prototype.get>>;
 

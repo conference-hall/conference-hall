@@ -1,4 +1,5 @@
 import type { Event, Team, User } from '@prisma/client';
+import { db } from 'prisma/db.server.ts';
 import { commentFactory } from 'tests/factories/comments.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
@@ -6,7 +7,6 @@ import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 
-import { db } from 'prisma/db.server.ts';
 import { ForbiddenOperationError } from '~/libs/errors.server.ts';
 
 import { Comments } from './Comments.ts';

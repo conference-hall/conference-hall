@@ -1,5 +1,6 @@
 import { z } from 'zod';
-import { parseWithZod } from '~/libs/zod-parser';
+
+import { parseWithZod } from '~/libs/zod-parser.ts';
 
 const StatusFilterSchema = z
   .enum(['pending', 'accepted', 'rejected', 'not-answered', 'confirmed', 'declined'])

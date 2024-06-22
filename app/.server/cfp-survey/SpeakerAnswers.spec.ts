@@ -1,11 +1,11 @@
-import { eventFactory } from 'tests/factories/events';
-import { surveyFactory } from 'tests/factories/surveys';
-import { userFactory } from 'tests/factories/users';
+import { eventFactory } from 'tests/factories/events.ts';
+import { surveyFactory } from 'tests/factories/surveys.ts';
+import { userFactory } from 'tests/factories/users.ts';
 
-import { EventNotFoundError } from '~/libs/errors.server';
+import { EventNotFoundError } from '~/libs/errors.server.ts';
 
-import { SpeakerAnswers } from './SpeakerAnswers';
-import { SurveySchema } from './SpeakerAnswers.types';
+import { SpeakerAnswers } from './SpeakerAnswers.ts';
+import { SurveySchema } from './SpeakerAnswers.types.ts';
 
 describe('SpeakerAnswers', () => {
   describe('answers', () => {

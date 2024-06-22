@@ -1,8 +1,8 @@
-import type { Event, Prisma, Proposal } from '@prisma/client';
-import { EmailQueue } from 'jobs/email/email.queue';
+import type { Event, Proposal } from '@prisma/client';
+import { EmailQueue } from 'jobs/email/email.queue.ts';
 
-import { Template } from '~/libs/email-template/template';
-import { EventEmailNotificationsKeys } from '~/types/notifications.types';
+import { Template } from '~/libs/email-template/template.ts';
+import type { EventEmailNotificationsKeys } from '~/types/notifications.types.ts';
 
 type Variables = { eventName: string; proposalTitle: string };
 

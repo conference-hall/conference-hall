@@ -1,4 +1,4 @@
-import { db } from 'prisma/db.server';
+import { db } from 'prisma/db.server.ts';
 
 export class Notifications {
   constructor(private userId: string) {}

@@ -1,8 +1,8 @@
-import { eventFactory } from 'tests/factories/events';
+import { eventFactory } from 'tests/factories/events.ts';
 
-import { EventNotFoundError, SurveyNotEnabledError } from '~/libs/errors.server';
+import { EventNotFoundError, SurveyNotEnabledError } from '~/libs/errors.server.ts';
 
-import { CfpSurvey } from './CfpSurvey';
+import { CfpSurvey } from './CfpSurvey.ts';
 
 describe('CfpSurvey', () => {
   describe('questions', () => {

@@ -1,11 +1,11 @@
 import type { User } from '@prisma/client';
-import { eventFactory } from 'tests/factories/events';
-import { proposalFactory } from 'tests/factories/proposals';
-import { talkFactory } from 'tests/factories/talks';
-import { userFactory } from 'tests/factories/users';
+import { eventFactory } from 'tests/factories/events.ts';
+import { proposalFactory } from 'tests/factories/proposals.ts';
+import { talkFactory } from 'tests/factories/talks.ts';
+import { userFactory } from 'tests/factories/users.ts';
 
-import { TalksLibrary } from './TalksLibrary';
-import { TalkSaveSchema } from './TalksLibrary.types';
+import { TalksLibrary } from './TalksLibrary.ts';
+import { TalkSaveSchema } from './TalksLibrary.types.ts';
 
 describe('TalksLibrary', () => {
   let speaker: User;

@@ -1,7 +1,8 @@
-import { db } from 'prisma/db.server';
-import { ApiKeyInvalidError, EventNotFoundError } from '~/libs/errors.server';
+import { db } from 'prisma/db.server.ts';
 
-import { ProposalSearchBuilder } from '../shared/ProposalSearchBuilder';
+import { ApiKeyInvalidError, EventNotFoundError } from '~/libs/errors.server.ts';
+
+import { ProposalSearchBuilder } from '../shared/ProposalSearchBuilder.ts';
 import type { ProposalsFilters } from '../shared/ProposalSearchBuilder.types';
 import type { SocialLinks } from '../speaker-profile/SpeakerProfile.types';
 

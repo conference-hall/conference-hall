@@ -1,4 +1,4 @@
-import { QuestionKey } from '~/types/survey.types';
+import type { QuestionKey } from '~/types/survey.types';
 
 export type SurveyQuestions = Array<{
   name: QuestionKey;

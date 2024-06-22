@@ -3,8 +3,8 @@ import { json } from '@remix-run/node';
 import { useActionData, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { UserProposal } from '~/.server/cfp-submissions/UserProposal.ts';
-import { getProposalUpdateSchema, ProposalParticipationSchema } from '~/.server/cfp-submissions/UserProposal.types.ts';
+import { UserProposal } from '~/.server/cfp-submissions/user-proposal.ts';
+import { getProposalUpdateSchema, ProposalParticipationSchema } from '~/.server/cfp-submissions/user-proposal.types.ts';
 import { EventPage } from '~/.server/event-page/EventPage.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { requireSession } from '~/libs/auth/session.ts';

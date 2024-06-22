@@ -1,7 +1,7 @@
-import { db } from 'prisma/db.server';
+import { db } from 'prisma/db.server.ts';
 
 import type { TrackSaveData, TrackSettingsSaveData } from './EventTracksSettings.types';
-import { UserEvent } from './UserEvent';
+import { UserEvent } from './UserEvent.ts';
 
 export class EventTracksSettings extends UserEvent {
   static for(userId: string, teamSlug: string, eventSlug: string) {

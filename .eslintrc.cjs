@@ -1,5 +1,6 @@
 /** @type {import('@types/eslint').Linter.BaseConfig} */
 module.exports = {
+  ignorePatterns: ['!.server'],
   extends: ['eslint:recommended', '@remix-run/eslint-config', '@remix-run/eslint-config/node', 'prettier'],
   plugins: ['simple-import-sort', 'prettier'],
   rules: {

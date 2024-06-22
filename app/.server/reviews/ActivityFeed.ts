@@ -1,9 +1,9 @@
 import { Prisma } from '@prisma/client';
+import { db } from 'prisma/db.server.ts';
 
-import { db } from 'prisma/db.server';
 import type { ReviewFeeling } from '~/types/proposals.types';
 
-import { UserEvent } from '../event-settings/UserEvent';
+import { UserEvent } from '../event-settings/UserEvent.ts';
 
 type ReviewFeed = {
   id: string;
