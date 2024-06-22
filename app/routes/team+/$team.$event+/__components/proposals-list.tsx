@@ -1,9 +1,9 @@
 import { List } from '~/design-system/list/List.tsx';
-import { useListSelection } from '~/design-system/list/useListSelection';
+import { useListSelection } from '~/design-system/list/useListSelection.tsx';
 
-import { ListHeader } from './list/header';
-import { ProposalItem } from './list/proposal-item';
-import { SelectAllBanner } from './list/select-all-banner';
+import { ListHeader } from './list/header.tsx';
+import { ProposalItem } from './list/proposal-item.tsx';
+import { SelectAllBanner } from './list/select-all-banner.tsx';
 import type { ProposalData } from './list/types';
 
 type Props = {

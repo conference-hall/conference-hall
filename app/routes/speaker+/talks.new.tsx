@@ -2,17 +2,17 @@ import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useActionData } from '@remix-run/react';
 
-import { TalksLibrary } from '~/.server/speaker-talks-library/TalksLibrary';
-import { TalkSaveSchema } from '~/.server/speaker-talks-library/TalksLibrary.types';
+import { TalksLibrary } from '~/.server/speaker-talks-library/TalksLibrary.ts';
+import { TalkSaveSchema } from '~/.server/speaker-talks-library/TalksLibrary.types.ts';
 import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
-import { Page } from '~/design-system/layouts/page';
+import { Page } from '~/design-system/layouts/page.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { redirectWithToast } from '~/libs/toasts/toast.server.ts';
-import { parseWithZod } from '~/libs/zod-parser';
+import { parseWithZod } from '~/libs/zod-parser.ts';
 
-import { TalkForm } from '../__components/talks/talk-forms/talk-form';
+import { TalkForm } from '../__components/talks/talk-forms/talk-form.tsx';
 
 export const meta = mergeMeta(() => [{ title: 'New talk | Conference Hall' }]);
 

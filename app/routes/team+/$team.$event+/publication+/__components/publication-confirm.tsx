@@ -1,11 +1,11 @@
 import { Form, useNavigate, useNavigation } from '@remix-run/react';
 import { useCallback } from 'react';
 
-import { Button } from '~/design-system/Buttons';
-import { ToggleGroup } from '~/design-system/forms/Toggles';
-import { Modal } from '~/design-system/Modals';
+import { Button } from '~/design-system/Buttons.tsx';
+import { ToggleGroup } from '~/design-system/forms/Toggles.tsx';
+import { Modal } from '~/design-system/Modals.tsx';
 
-import { Statistic } from './statistic';
+import { Statistic } from './statistic.tsx';
 
 type Props = { title: string; statistics: { notPublished: number; published: number } };
 

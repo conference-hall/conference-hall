@@ -5,9 +5,9 @@ import { useParams, useSearchParams } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
 import { Fragment } from 'react';
 
-import { button } from '~/design-system/Buttons';
-import { MenuTransition } from '~/design-system/Transitions';
-import { useTeam } from '~/routes/team+/__components/useTeam';
+import { button } from '~/design-system/Buttons.tsx';
+import { MenuTransition } from '~/design-system/Transitions.tsx';
+import { useTeam } from '~/routes/team+/__components/useTeam.tsx';
 
 const exportItems = [
   { name: 'As JSON', path: 'json', icon: CodeBracketIcon },

@@ -3,18 +3,18 @@ import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { CfpSurvey } from '~/.server/cfp-survey/CfpSurvey';
-import { SpeakerAnswers } from '~/.server/cfp-survey/SpeakerAnswers';
-import { SurveySchema } from '~/.server/cfp-survey/SpeakerAnswers.types';
+import { CfpSurvey } from '~/.server/cfp-survey/CfpSurvey.ts';
+import { SpeakerAnswers } from '~/.server/cfp-survey/SpeakerAnswers.ts';
+import { SurveySchema } from '~/.server/cfp-survey/SpeakerAnswers.types.ts';
 import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
-import { Page } from '~/design-system/layouts/page';
-import { PageHeaderTitle } from '~/design-system/layouts/page-header-title';
+import { Page } from '~/design-system/layouts/page.tsx';
+import { PageHeaderTitle } from '~/design-system/layouts/page-header-title.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-import { parseWithZod } from '~/libs/zod-parser';
+import { parseWithZod } from '~/libs/zod-parser.ts';
 
-import { SurveyForm } from '../__components/talks/talk-forms/survey-form';
+import { SurveyForm } from '../__components/talks/talk-forms/survey-form.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);

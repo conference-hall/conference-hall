@@ -1,5 +1,5 @@
 import type { Job } from 'bullmq';
-import { emailProvider } from 'jobs/libs/emails/provider';
+import { emailProvider } from 'jobs/libs/emails/provider.ts';
 
 import type { Email } from './email.payload';
 

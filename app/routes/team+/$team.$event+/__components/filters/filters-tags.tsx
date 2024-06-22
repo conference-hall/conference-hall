@@ -1,10 +1,10 @@
 import { useLocation, useNavigate, useSearchParams } from '@remix-run/react';
 
 import type { ProposalsFilters } from '~/.server/shared/ProposalSearchBuilder.types';
-import { Text } from '~/design-system/Typography';
+import { Text } from '~/design-system/Typography.tsx';
 
-import { useEvent } from '../useEvent';
-import { reviewOptions, statusOptions } from './filters';
+import { useEvent } from '../useEvent.tsx';
+import { reviewOptions, statusOptions } from './filters.ts';
 
 type FiltersBadgesProps = { filters: ProposalsFilters };
 

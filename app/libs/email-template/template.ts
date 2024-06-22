@@ -1,7 +1,7 @@
 import { marked } from 'marked';
 import xss from 'xss';
 
-import { HTML_TEMPLATE } from './template.html';
+import { HTML_TEMPLATE } from './template.html.ts';
 
 export class Template<T extends Record<string, string>> {
   constructor(

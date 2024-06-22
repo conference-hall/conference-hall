@@ -1,4 +1,4 @@
-import { MailpitProvider } from './mailpit-provider';
+import { MailpitProvider } from './mailpit-provider.ts';
 
 vi.mock('nodemailer', () => {
   const sendMail = vi.fn();

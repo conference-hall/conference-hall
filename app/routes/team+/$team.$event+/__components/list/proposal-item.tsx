@@ -3,11 +3,11 @@ import { ClockIcon } from '@heroicons/react/24/outline';
 import { Link, useSearchParams } from '@remix-run/react';
 import type { ChangeEvent } from 'react';
 
-import { Checkbox } from '~/design-system/forms/Checkboxes';
-import { Text } from '~/design-system/Typography';
-import { Join } from '~/design-system/utils/join';
-import { GlobalReviewNote, UserReviewNote } from '~/routes/__components/reviews/review-note';
-import { useTeam } from '~/routes/team+/__components/useTeam';
+import { Checkbox } from '~/design-system/forms/Checkboxes.tsx';
+import { Text } from '~/design-system/Typography.tsx';
+import { Join } from '~/design-system/utils/join.tsx';
+import { GlobalReviewNote, UserReviewNote } from '~/routes/__components/reviews/review-note.tsx';
+import { useTeam } from '~/routes/team+/__components/useTeam.tsx';
 
 import type { ProposalData } from './types';
 

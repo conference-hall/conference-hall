@@ -2,7 +2,7 @@ import { Dialog, DialogPanel, DialogTitle, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
 
-import { Background, SlideOverTransition } from './Transitions';
+import { Background, SlideOverTransition } from './Transitions.tsx';
 
 type Props = {
   open: boolean;

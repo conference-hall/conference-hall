@@ -1,10 +1,10 @@
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
 
-import { Button } from '~/design-system/Buttons';
-import { SlideOver } from '~/design-system/SlideOver';
+import { Button } from '~/design-system/Buttons.tsx';
+import { SlideOver } from '~/design-system/SlideOver.tsx';
 
-import { TalkForm } from './talk-form';
+import { TalkForm } from './talk-form.tsx';
 
 type TalkEditProps = {
   initialValues?: {

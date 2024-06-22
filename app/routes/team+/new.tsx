@@ -2,14 +2,14 @@ import type { ActionFunctionArgs, LoaderFunction } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
 
-import { TeamCreateSchema, UserTeams } from '~/.server/team/UserTeams';
+import { TeamCreateSchema, UserTeams } from '~/.server/team/UserTeams.ts';
 import { Button } from '~/design-system/Buttons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
-import { Page } from '~/design-system/layouts/page';
-import { PageHeaderTitle } from '~/design-system/layouts/page-header-title';
+import { Page } from '~/design-system/layouts/page.tsx';
+import { PageHeaderTitle } from '~/design-system/layouts/page-header-title.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { parseWithZod } from '~/libs/zod-parser';
-import { TeamForm } from '~/routes/__components/teams/team-form';
+import { parseWithZod } from '~/libs/zod-parser.ts';
+import { TeamForm } from '~/routes/__components/teams/team-form.tsx';
 
 export const loader: LoaderFunction = async ({ request }) => {
   await requireSession(request);

@@ -1,10 +1,10 @@
 import { type Prisma, TeamRole } from '@prisma/client';
 import { slugifyWithCounter } from '@sindresorhus/slugify';
 import type admin from 'firebase-admin';
-import { db } from 'prisma/db.server';
+import { db } from 'prisma/db.server.ts';
 import ProgressBar from 'progress';
 
-import { findUser, mapRole } from './utils';
+import { findUser, mapRole } from './utils.ts';
 
 // Memoize
 const memoizedUsers = new Map<string, string>();

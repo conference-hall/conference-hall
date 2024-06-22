@@ -8,5 +8,6 @@ module.exports = {
     'jsx-a11y/anchor-has-content': 'off',
     'simple-import-sort/imports': 'warn',
     'simple-import-sort/exports': 'warn',
+    'import/extensions': ['error', 'ignorePackages'],
   },
 };

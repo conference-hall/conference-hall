@@ -2,7 +2,7 @@ import formData from 'form-data';
 import Mailgun from 'mailgun.js';
 import type { IMailgunClient } from 'mailgun.js/Interfaces';
 
-import { EmailValidator } from './email-validator';
+import { EmailValidator } from './email-validator.ts';
 import type { Email, EmailProvider } from './provider';
 
 export class MailgunProvider implements EmailProvider {

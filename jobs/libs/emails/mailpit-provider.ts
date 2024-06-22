@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 
-import { EmailValidator } from './email-validator';
+import { EmailValidator } from './email-validator.ts';
 import type { Email, EmailProvider } from './provider';
 
 export class MailpitProvider implements EmailProvider {

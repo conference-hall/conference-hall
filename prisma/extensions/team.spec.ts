@@ -1,4 +1,4 @@
-import { teamFactory } from 'tests/factories/team';
+import { teamFactory } from 'tests/factories/team.ts';
 
 describe('Team', () => {
   describe('Team#invitationLink', () => {

@@ -1,9 +1,9 @@
 import { RocketLaunchIcon } from '@heroicons/react/24/outline';
 import { Form } from '@remix-run/react';
 
-import { Button } from '~/design-system/Buttons';
-import { Checkbox } from '~/design-system/forms/Checkboxes';
-import { H2, Text } from '~/design-system/Typography';
+import { Button } from '~/design-system/Buttons.tsx';
+import { Checkbox } from '~/design-system/forms/Checkboxes.tsx';
+import { H2, Text } from '~/design-system/Typography.tsx';
 import type { DeliberationStatus, PublicationStatus } from '~/types/proposals.types';
 
 type Props = { deliberationStatus: DeliberationStatus; publicationStatus: PublicationStatus };

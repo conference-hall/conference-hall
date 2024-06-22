@@ -6,11 +6,11 @@ import { useLoaderData, useSearchParams } from '@remix-run/react';
 
 import { TalksLibrary } from '~/.server/speaker-talks-library/TalksLibrary.ts';
 import { AvatarGroup } from '~/design-system/Avatar.tsx';
-import { ButtonLink } from '~/design-system/Buttons';
-import { EmptyState } from '~/design-system/layouts/empty-state';
-import { Page } from '~/design-system/layouts/page';
+import { ButtonLink } from '~/design-system/Buttons.tsx';
+import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
+import { Page } from '~/design-system/layouts/page.tsx';
 import { List } from '~/design-system/list/List.tsx';
-import { SearchParamSelector } from '~/design-system/navigation/search-param-selector';
+import { SearchParamSelector } from '~/design-system/navigation/search-param-selector.tsx';
 import { H1, Text } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';

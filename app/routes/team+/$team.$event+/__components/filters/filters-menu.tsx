@@ -13,13 +13,13 @@ import { AdjustmentsHorizontalIcon } from '@heroicons/react/20/solid';
 import { Form, useLocation, useSearchParams } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
 
-import { Button, button, ButtonLink } from '~/design-system/Buttons';
-import Select from '~/design-system/forms/Select';
-import { Text } from '~/design-system/Typography';
-import { useTeam } from '~/routes/team+/__components/useTeam';
+import { Button, button, ButtonLink } from '~/design-system/Buttons.tsx';
+import Select from '~/design-system/forms/Select.tsx';
+import { Text } from '~/design-system/Typography.tsx';
+import { useTeam } from '~/routes/team+/__components/useTeam.tsx';
 
-import { useEvent } from '../useEvent';
-import { reviewOptions, statusOptions } from './filters';
+import { useEvent } from '../useEvent.tsx';
+import { reviewOptions, statusOptions } from './filters.ts';
 
 export function FiltersMenu() {
   return (

@@ -1,5 +1,5 @@
 import { TalkLevel, TeamRole } from '@prisma/client';
-import { db } from 'prisma/db.server';
+import { db } from 'prisma/db.server.ts';
 import { z } from 'zod';
 
 import languages from '../app/libs/formatters/languages.json';

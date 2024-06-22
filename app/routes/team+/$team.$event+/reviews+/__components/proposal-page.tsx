@@ -2,14 +2,14 @@ import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import { useParams, useSearchParams } from '@remix-run/react';
 
 import { Badge } from '~/design-system/Badges.tsx';
-import { IconLink } from '~/design-system/IconButtons';
+import { IconLink } from '~/design-system/IconButtons.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { Markdown } from '~/design-system/Markdown.tsx';
-import { H1 } from '~/design-system/Typography';
-import { getLanguage } from '~/libs/formatters/languages';
-import { getLevel } from '~/libs/formatters/levels';
-import { CoSpeakers } from '~/routes/__components/talks/co-speaker';
-import { useUser } from '~/routes/__components/use-user';
+import { H1 } from '~/design-system/Typography.tsx';
+import { getLanguage } from '~/libs/formatters/languages.ts';
+import { getLevel } from '~/libs/formatters/levels.ts';
+import { CoSpeakers } from '~/routes/__components/talks/co-speaker.tsx';
+import { useUser } from '~/routes/__components/use-user.tsx';
 
 import type { ProposalData } from '../$proposal.index';
 

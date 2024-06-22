@@ -1,4 +1,4 @@
-import { eventFactory } from 'tests/factories/events';
+import { eventFactory } from 'tests/factories/events.ts';
 
 describe('Event model extensions', () => {
   beforeEach(() => {

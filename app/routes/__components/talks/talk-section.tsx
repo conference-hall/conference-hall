@@ -5,14 +5,14 @@ import type { TalkLevel } from '@prisma/client';
 import { Badge } from '~/design-system/Badges.tsx';
 import { Card } from '~/design-system/layouts/Card.tsx';
 import { Markdown } from '~/design-system/Markdown.tsx';
-import { H1 } from '~/design-system/Typography';
-import { getLanguage } from '~/libs/formatters/languages';
-import { getLevel } from '~/libs/formatters/levels';
+import { H1 } from '~/design-system/Typography.tsx';
+import { getLanguage } from '~/libs/formatters/languages.ts';
+import { getLevel } from '~/libs/formatters/levels.ts';
 
 import type { SpeakerProps } from './co-speaker';
-import { CoSpeakers } from './co-speaker';
-import { TalkArchiveButton } from './talk-forms/talk-archive-button';
-import { TalkEditButton } from './talk-forms/talk-form-drawer';
+import { CoSpeakers } from './co-speaker.tsx';
+import { TalkArchiveButton } from './talk-forms/talk-archive-button.tsx';
+import { TalkEditButton } from './talk-forms/talk-form-drawer.tsx';
 
 type Props = {
   talk: {

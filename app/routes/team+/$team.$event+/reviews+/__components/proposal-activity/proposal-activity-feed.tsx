@@ -2,9 +2,9 @@ import { cx } from 'class-variance-authority';
 
 import type { Feed } from '~/.server/reviews/ActivityFeed';
 
-import { CommentItem } from './comment-item';
-import { NewCommentForm } from './new-comment-form';
-import { ReviewItem } from './review-item';
+import { CommentItem } from './comment-item.tsx';
+import { NewCommentForm } from './new-comment-form.tsx';
+import { ReviewItem } from './review-item.tsx';
 
 type Props = { activity: Feed; picture?: string | null };
 

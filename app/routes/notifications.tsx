@@ -3,17 +3,17 @@ import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 
-import { Notifications } from '~/.server/user-notifications/Notifications';
+import { Notifications } from '~/.server/user-notifications/Notifications.tsx';
 import { CardLink } from '~/design-system/layouts/Card.tsx';
-import { EmptyState } from '~/design-system/layouts/empty-state';
-import { Page } from '~/design-system/layouts/page';
-import { PageHeaderTitle } from '~/design-system/layouts/page-header-title';
+import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
+import { Page } from '~/design-system/layouts/page.tsx';
+import { PageHeaderTitle } from '~/design-system/layouts/page-header-title.tsx';
 import { H2 } from '~/design-system/Typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { Footer } from '~/routes/__components/Footer.tsx';
 import { Navbar } from '~/routes/__components/navbar/Navbar.tsx';
-import { useUser } from '~/routes/__components/use-user';
+import { useUser } from '~/routes/__components/use-user.tsx';
 
 export const meta = mergeMeta(() => [{ title: 'Notifications | Conference Hall' }]);
 

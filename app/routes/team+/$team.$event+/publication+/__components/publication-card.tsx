@@ -1,10 +1,10 @@
 import { CheckIcon } from '@heroicons/react/20/solid';
 
-import { Card } from '~/design-system/layouts/Card';
-import { Link } from '~/design-system/Links';
-import { Text } from '~/design-system/Typography';
+import { Card } from '~/design-system/layouts/Card.tsx';
+import { Link } from '~/design-system/Links.tsx';
+import { Text } from '~/design-system/Typography.tsx';
 
-import { Statistic } from './statistic';
+import { Statistic } from './statistic.tsx';
 
 type Props = {
   id: string;

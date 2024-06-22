@@ -1,7 +1,7 @@
 import { Prisma } from '@prisma/client';
 import slugify, { slugifyWithCounter } from '@sindresorhus/slugify';
 import type admin from 'firebase-admin';
-import { db } from 'prisma/db.server';
+import { db } from 'prisma/db.server.ts';
 import ProgressBar from 'progress';
 
 import {
@@ -14,7 +14,7 @@ import {
   mapEventVisibility,
   mapInteger,
   mapSurveyQuestions,
-} from './utils';
+} from './utils.ts';
 
 // Memoize
 const memoizedUsers = new Map<string, string>();

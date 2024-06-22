@@ -3,7 +3,7 @@ import { json } from '@remix-run/node';
 import invariant from 'tiny-invariant';
 
 import { EventApi } from '~/.server/event-web-api/EventApi.ts';
-import { parseUrlFilters } from '~/.server/shared/ProposalSearchBuilder.types';
+import { parseUrlFilters } from '~/.server/shared/ProposalSearchBuilder.types.ts';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   invariant(params.event, 'Invalid event slug');

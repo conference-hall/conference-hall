@@ -1,10 +1,10 @@
 import type { Prisma } from '@prisma/client';
 import type admin from 'firebase-admin';
 import type { UserRecord } from 'firebase-admin/auth';
-import { db } from 'prisma/db.server';
+import { db } from 'prisma/db.server.ts';
 import ProgressBar from 'progress';
 
-import { convertSocials } from './utils';
+import { convertSocials } from './utils.ts';
 
 const usersWithoutEmail: Array<void | UserRecord> = [];
 const usersAuthNotFound: Array<string> = [];
