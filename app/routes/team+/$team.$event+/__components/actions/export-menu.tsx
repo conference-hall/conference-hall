@@ -5,8 +5,8 @@ import { useParams, useSearchParams } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
 import { Fragment } from 'react';
 
-import { button } from '~/design-system/Buttons.tsx';
-import { MenuTransition } from '~/design-system/Transitions.tsx';
+import { button } from '~/design-system/buttons.cap.tsx';
+import { MenuTransition } from '~/design-system/transitions.cap.tsx';
 import { useTeam } from '~/routes/team+/__components/useTeam.tsx';
 
 const exportItems = [

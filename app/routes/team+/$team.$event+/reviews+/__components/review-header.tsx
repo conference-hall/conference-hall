@@ -1,8 +1,8 @@
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { useParams, useSearchParams } from '@remix-run/react';
 
-import { IconLink } from '~/design-system/IconButtons.tsx';
-import { Text } from '~/design-system/Typography.tsx';
+import { IconLink } from '~/design-system/icon-buttons.tsx';
+import { Text } from '~/design-system/typography.cap.tsx';
 
 import { ReviewsProgress } from '../../__components/list/reviews-progress.tsx';
 

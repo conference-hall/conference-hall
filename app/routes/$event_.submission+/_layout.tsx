@@ -6,8 +6,8 @@ import invariant from 'tiny-invariant';
 
 import { SubmissionSteps } from '~/.server/cfp-submission-funnel/submission-steps.ts';
 import { EventPage } from '~/.server/event-page/event-page.ts';
-import { IconLink } from '~/design-system/IconButtons.tsx';
-import { Container } from '~/design-system/layouts/Container.tsx';
+import { IconLink } from '~/design-system/icon-buttons.tsx';
+import { Container } from '~/design-system/layouts/container.cap.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { CfpNotOpenError } from '~/libs/errors.server.ts';

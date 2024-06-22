@@ -1,9 +1,9 @@
 import { ArrowRightIcon, CheckIcon, XMarkIcon } from '@heroicons/react/20/solid';
 import { Form } from '@remix-run/react';
 
-import { Button, ButtonLink } from '~/design-system/Buttons.tsx';
-import { Card } from '~/design-system/layouts/Card.tsx';
-import { H2, Subtitle, Text } from '~/design-system/Typography.tsx';
+import { Button, ButtonLink } from '~/design-system/buttons.cap.tsx';
+import { Card } from '~/design-system/layouts/card.cap.tsx';
+import { H2, Subtitle, Text } from '~/design-system/typography.cap.tsx';
 import { SpeakerProposalStatus } from '~/types/speaker.types.ts';
 
 import { ProposalDeleteButton } from './proposal-delete.tsx';

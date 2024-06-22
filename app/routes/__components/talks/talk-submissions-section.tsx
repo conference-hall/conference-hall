@@ -1,9 +1,9 @@
 import { Link } from '@remix-run/react';
 
-import { Avatar } from '~/design-system/Avatar.tsx';
-import { ButtonLink } from '~/design-system/Buttons.tsx';
-import { Card } from '~/design-system/layouts/Card.tsx';
-import { H3, Text } from '~/design-system/Typography.tsx';
+import { Avatar } from '~/design-system/avatar.cap.tsx';
+import { ButtonLink } from '~/design-system/buttons.cap.tsx';
+import { Card } from '~/design-system/layouts/card.cap.tsx';
+import { H3, Text } from '~/design-system/typography.cap.tsx';
 import type { SpeakerProposalStatus } from '~/types/speaker.types.ts';
 
 import { ProposalStatusLabel } from '../proposals/proposal-status-label.tsx';

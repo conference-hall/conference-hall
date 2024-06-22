@@ -1,6 +1,6 @@
 import { cx } from 'class-variance-authority';
 
-import { Container } from './Container.tsx';
+import { Container } from './container.cap.tsx';
 
 type Props = { children: React.ReactNode; className?: string };
 

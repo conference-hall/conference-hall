@@ -3,10 +3,10 @@ import { json } from '@remix-run/node';
 import { Outlet, useLoaderData } from '@remix-run/react';
 
 import { SpeakerProfile } from '~/.server/speaker-profile/speaker-profile.ts';
-import { Avatar } from '~/design-system/Avatar.tsx';
-import { Container } from '~/design-system/layouts/Container.tsx';
+import { Avatar } from '~/design-system/avatar.cap.tsx';
+import { Container } from '~/design-system/layouts/container.cap.tsx';
 import { PageHeader } from '~/design-system/layouts/page-header.tsx';
-import { H1, Text } from '~/design-system/Typography.tsx';
+import { H1, Text } from '~/design-system/typography.cap.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { Navbar } from '~/routes/__components/navbar/Navbar.tsx';
 import { useUser } from '~/routes/__components/use-user.tsx';

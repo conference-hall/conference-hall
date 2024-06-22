@@ -1,8 +1,8 @@
 import { cx } from 'class-variance-authority';
 
-import { Avatar } from '~/design-system/Avatar.tsx';
-import { Container } from '~/design-system/layouts/Container.tsx';
-import { H1, Text } from '~/design-system/Typography.tsx';
+import { Avatar } from '~/design-system/avatar.cap.tsx';
+import { Container } from '~/design-system/layouts/container.cap.tsx';
+import { H1, Text } from '~/design-system/typography.cap.tsx';
 import { formatConferenceDates } from '~/libs/formatters/cfp.ts';
 import { ClientOnly } from '~/routes/__components/utils/client-only.tsx';
 

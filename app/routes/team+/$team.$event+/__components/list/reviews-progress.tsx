@@ -1,5 +1,5 @@
-import { ProgressBar } from '~/design-system/ProgressBar.tsx';
-import { Text } from '~/design-system/Typography.tsx';
+import { ProgressBar } from '~/design-system/progress-bar.tsx';
+import { Text } from '~/design-system/typography.cap.tsx';
 
 type ReviewProgressProps = {
   reviewed: number;

@@ -1,5 +1,5 @@
-import { List } from '~/design-system/list/List.tsx';
-import { useListSelection } from '~/design-system/list/useListSelection.tsx';
+import { List } from '~/design-system/list/list.cap.tsx';
+import { useListSelection } from '~/design-system/list/use-list-selection.tsx';
 
 import { ListHeader } from './list/header.tsx';
 import { ProposalItem } from './list/proposal-item.tsx';

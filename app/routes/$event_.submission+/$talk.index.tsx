@@ -8,9 +8,9 @@ import { SubmissionSteps } from '~/.server/cfp-submission-funnel/submission-step
 import { TalkSubmission } from '~/.server/cfp-submission-funnel/talk-submission.ts';
 import { TalksLibrary } from '~/.server/speaker-talks-library/talks-library.ts';
 import { TalkSaveSchema } from '~/.server/speaker-talks-library/talks-library.types.ts';
-import { Button } from '~/design-system/Buttons.tsx';
-import { Card } from '~/design-system/layouts/Card.tsx';
-import { H2 } from '~/design-system/Typography.tsx';
+import { Button } from '~/design-system/buttons.cap.tsx';
+import { Card } from '~/design-system/layouts/card.cap.tsx';
+import { H2 } from '~/design-system/typography.cap.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { parseWithZod } from '~/libs/zod-parser.ts';
 

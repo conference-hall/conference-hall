@@ -8,9 +8,9 @@ import { SubmissionSteps } from '~/.server/cfp-submission-funnel/submission-step
 import { CfpSurvey } from '~/.server/cfp-survey/cfp-survey.ts';
 import { SpeakerAnswers } from '~/.server/cfp-survey/speaker-answers.ts';
 import { SurveySchema } from '~/.server/cfp-survey/speaker-answers.types.ts';
-import { Button } from '~/design-system/Buttons.tsx';
-import { Card } from '~/design-system/layouts/Card.tsx';
-import { H2 } from '~/design-system/Typography.tsx';
+import { Button } from '~/design-system/buttons.cap.tsx';
+import { Card } from '~/design-system/layouts/card.cap.tsx';
+import { H2 } from '~/design-system/typography.cap.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { parseWithZod } from '~/libs/zod-parser.ts';
 

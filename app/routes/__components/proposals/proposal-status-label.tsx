@@ -1,4 +1,4 @@
-import { Text } from '~/design-system/Typography.tsx';
+import { Text } from '~/design-system/typography.cap.tsx';
 import { SpeakerProposalStatus } from '~/types/speaker.types.ts';
 
 type Props = { status: SpeakerProposalStatus };

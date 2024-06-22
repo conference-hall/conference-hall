@@ -4,9 +4,9 @@ import { Link, Outlet, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { Publication } from '~/.server/publications/publication.cap.ts';
-import { Card } from '~/design-system/layouts/Card.tsx';
+import { Card } from '~/design-system/layouts/card.cap.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
-import { H1, H2, Subtitle } from '~/design-system/Typography.tsx';
+import { H1, H2, Subtitle } from '~/design-system/typography.cap.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { useEvent } from '~/routes/$event+/__components/useEvent.tsx';
 

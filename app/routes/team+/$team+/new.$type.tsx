@@ -4,10 +4,10 @@ import { Form, useActionData, useParams } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { EventCreateSchema, TeamEvents } from '~/.server/team/team-events.ts';
-import { Button, ButtonLink } from '~/design-system/Buttons.tsx';
-import { Card } from '~/design-system/layouts/Card.tsx';
+import { Button, ButtonLink } from '~/design-system/buttons.cap.tsx';
+import { Card } from '~/design-system/layouts/card.cap.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
-import { H1, Subtitle } from '~/design-system/Typography.tsx';
+import { H1, Subtitle } from '~/design-system/typography.cap.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { parseWithZod } from '~/libs/zod-parser.ts';
 

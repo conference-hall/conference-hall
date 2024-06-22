@@ -4,9 +4,9 @@ import type { VariantProps } from 'class-variance-authority';
 import { cva, cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
 
-import { IconButton } from './IconButtons.tsx';
-import { Background } from './Transitions.tsx';
-import { Text } from './Typography.tsx';
+import { IconButton } from './icon-buttons.tsx';
+import { Background } from './transitions.cap.tsx';
+import { Text } from './typography.cap.tsx';
 
 const POSITION = { center: 'sm:items-center', top: 'sm:items-start' };
 

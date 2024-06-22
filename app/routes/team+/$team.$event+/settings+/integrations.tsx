@@ -5,12 +5,12 @@ import invariant from 'tiny-invariant';
 
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
 import { EventSlackSettingsSchema } from '~/.server/event-settings/user-event.types.ts';
-import { AlertInfo } from '~/design-system/Alerts.tsx';
-import { Button } from '~/design-system/Buttons.tsx';
+import { AlertInfo } from '~/design-system/alerts.cap.tsx';
+import { Button } from '~/design-system/buttons.cap.tsx';
 import { Input } from '~/design-system/forms/input.cap.tsx';
-import { Card } from '~/design-system/layouts/Card.tsx';
-import { ExternalLink } from '~/design-system/Links.tsx';
-import { H2 } from '~/design-system/Typography.tsx';
+import { Card } from '~/design-system/layouts/card.cap.tsx';
+import { ExternalLink } from '~/design-system/links.cap.tsx';
+import { H2 } from '~/design-system/typography.cap.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { parseWithZod } from '~/libs/zod-parser.ts';
 

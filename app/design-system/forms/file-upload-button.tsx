@@ -1,8 +1,8 @@
 import { cx } from 'class-variance-authority';
 
-import type { ButtonStylesProps } from '../Buttons.tsx';
-import { button } from '../Buttons.tsx';
-import { Label } from '../Typography.tsx';
+import type { ButtonStylesProps } from '../buttons.cap.tsx';
+import { button } from '../buttons.cap.tsx';
+import { Label } from '../typography.cap.tsx';
 import type { InputProps } from './input.cap.tsx';
 import { Input } from './input.cap.tsx';
 

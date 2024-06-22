@@ -4,7 +4,7 @@ import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { Submissions } from '~/.server/cfp-submissions/submissions.cap.ts';
-import { ButtonLink } from '~/design-system/Buttons.tsx';
+import { ButtonLink } from '~/design-system/buttons.cap.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { PageHeaderTitle } from '~/design-system/layouts/page-header-title.tsx';
 import { requireSession } from '~/libs/auth/session.ts';

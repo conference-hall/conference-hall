@@ -12,8 +12,8 @@ import {
 import { Link } from '@remix-run/react';
 import { useState } from 'react';
 
-import { Avatar, AvatarName } from '~/design-system/Avatar.tsx';
-import { Text } from '~/design-system/Typography.tsx';
+import { Avatar, AvatarName } from '~/design-system/avatar.cap.tsx';
+import { Text } from '~/design-system/typography.cap.tsx';
 
 type MenuProps = {
   email: string | null;

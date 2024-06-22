@@ -3,7 +3,7 @@ import { QuestionMarkCircleIcon } from '@heroicons/react/24/outline';
 import { useSubmit } from '@remix-run/react';
 
 import Select from '~/design-system/forms/select.cap.tsx';
-import { H2 } from '~/design-system/Typography.tsx';
+import { H2 } from '~/design-system/typography.cap.tsx';
 import type { DeliberationStatus, PublicationStatus } from '~/types/proposals.types';
 
 type Props = { deliberationStatus: DeliberationStatus; publicationStatus: PublicationStatus };

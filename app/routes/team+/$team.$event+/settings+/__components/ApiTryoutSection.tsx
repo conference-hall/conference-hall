@@ -3,9 +3,9 @@ import { useState } from 'react';
 
 import { Input } from '~/design-system/forms/input.cap.tsx';
 import Select from '~/design-system/forms/select.cap.tsx';
-import { Card } from '~/design-system/layouts/Card.tsx';
-import { ExternalLink } from '~/design-system/Links.tsx';
-import { H2, Subtitle } from '~/design-system/Typography.tsx';
+import { Card } from '~/design-system/layouts/card.cap.tsx';
+import { ExternalLink } from '~/design-system/links.cap.tsx';
+import { H2, Subtitle } from '~/design-system/typography.cap.tsx';
 
 type Props = { slug: string; apiKey: string };
 

@@ -2,7 +2,7 @@ import { cva } from 'class-variance-authority';
 import type { InputHTMLAttributes, Ref } from 'react';
 import { forwardRef } from 'react';
 
-import { Label } from '../Typography.tsx';
+import { Label } from '../typography.cap.tsx';
 
 export type InputProps = {
   label?: string;

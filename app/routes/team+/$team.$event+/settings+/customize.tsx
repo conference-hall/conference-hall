@@ -6,12 +6,12 @@ import invariant from 'tiny-invariant';
 import { z } from 'zod';
 
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
-import { AlertInfo } from '~/design-system/Alerts.tsx';
-import { Avatar } from '~/design-system/Avatar.tsx';
+import { AlertInfo } from '~/design-system/alerts.cap.tsx';
+import { Avatar } from '~/design-system/avatar.cap.tsx';
 import { ButtonFileUpload } from '~/design-system/forms/file-upload-button.tsx';
-import { Card } from '~/design-system/layouts/Card.tsx';
-import { ExternalLink } from '~/design-system/Links.tsx';
-import { H2, Subtitle } from '~/design-system/Typography.tsx';
+import { Card } from '~/design-system/layouts/card.cap.tsx';
+import { ExternalLink } from '~/design-system/links.cap.tsx';
+import { H2, Subtitle } from '~/design-system/typography.cap.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { uploadToStorageHandler } from '~/libs/storage/storage.server.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';

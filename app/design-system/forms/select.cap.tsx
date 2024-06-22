@@ -3,7 +3,7 @@ import { ChevronUpDownIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
 import { useCallback, useState } from 'react';
 
-import { SelectTransition } from '../Transitions.tsx';
+import { SelectTransition } from '../transitions.cap.tsx';
 
 type Props = {
   name: string;

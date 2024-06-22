@@ -6,13 +6,13 @@ import invariant from 'tiny-invariant';
 
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
 import { EventDetailsSettingsSchema, EventGeneralSettingsSchema } from '~/.server/event-settings/user-event.types.ts';
-import { AlertInfo } from '~/design-system/Alerts.tsx';
-import { Button } from '~/design-system/Buttons.tsx';
+import { AlertInfo } from '~/design-system/alerts.cap.tsx';
+import { Button } from '~/design-system/buttons.cap.tsx';
 import { DateRangeInput } from '~/design-system/forms/date-range-input.tsx';
 import { Input } from '~/design-system/forms/input.cap.tsx';
 import { MarkdownTextArea } from '~/design-system/forms/markdown-textarea.tsx';
-import { Card } from '~/design-system/layouts/Card.tsx';
-import { H2, Subtitle } from '~/design-system/Typography.tsx';
+import { Card } from '~/design-system/layouts/card.cap.tsx';
+import { H2, Subtitle } from '~/design-system/typography.cap.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
 import { parseWithZod } from '~/libs/zod-parser.ts';

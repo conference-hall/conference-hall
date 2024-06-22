@@ -1,4 +1,4 @@
-import { ButtonLink } from '~/design-system/Buttons.tsx';
+import { ButtonLink } from '~/design-system/buttons.cap.tsx';
 
 import { Logo } from './Logo.tsx';
 import { Navigation } from './Navigation.tsx';

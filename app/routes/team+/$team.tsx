@@ -4,7 +4,7 @@ import { Outlet, useLoaderData, useRouteLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { UserTeam } from '~/.server/team/user-team.ts';
-import { Container } from '~/design-system/layouts/Container.tsx';
+import { Container } from '~/design-system/layouts/container.cap.tsx';
 import { PageHeader } from '~/design-system/layouts/page-header.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';

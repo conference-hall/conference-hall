@@ -7,7 +7,7 @@ import invariant from 'tiny-invariant';
 import { TeamEvents } from '~/.server/team/team-events.ts';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
-import { H1 } from '~/design-system/Typography.tsx';
+import { H1 } from '~/design-system/typography.cap.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { EventCard } from '~/routes/__components/events/event-card.tsx';
 

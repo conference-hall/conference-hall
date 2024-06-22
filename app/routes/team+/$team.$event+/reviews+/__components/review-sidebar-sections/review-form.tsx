@@ -1,6 +1,6 @@
 import { useParams, useSubmit } from '@remix-run/react';
 
-import { H2 } from '~/design-system/Typography.tsx';
+import { H2 } from '~/design-system/typography.cap.tsx';
 import type { ReviewFeeling, UserReview } from '~/types/proposals.types.ts';
 
 import { ReviewSelector } from './review-selector.tsx';
