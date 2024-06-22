@@ -1,6 +1,6 @@
 import BasePage from 'page-objects/base.page.ts';
-
-import EventEditProposalPage from './proposal-edit.page.ts';
+import TalkCoSpeakersActions from 'page-objects/common/talk-co-speakers.actions.ts';
+import TalkEditFormActions from 'page-objects/common/talk-edit-form.actions.ts';
 
 class EventProposalPage extends BasePage {
   visit(slug: string, proposalId: string) {
@@ -12,9 +12,17 @@ class EventProposalPage extends BasePage {
     cy.findByRole('heading', { name: 'Proposal page' }).should('exist');
   }
 
+  openReferences() {
+    cy.findByText('Talk references').click();
+  }
+
   editProposal() {
     cy.findByRole('button', { name: 'Edit' }).click();
-    return new EventEditProposalPage();
+    return new TalkEditFormActions();
+  }
+
+  cospeakers() {
+    return new TalkCoSpeakersActions();
   }
 
   submitProposal() {
@@ -43,14 +51,6 @@ class EventProposalPage extends BasePage {
 
   confirmDelete() {
     this.deleteConfirmDialog().findByRole('button', { name: 'Delete proposal' }).click();
-  }
-
-  speakerButton(name: string) {
-    return cy.findByRole('button', { name: `View ${name} profile` });
-  }
-
-  openReferences() {
-    cy.findByText('Talk references').click();
   }
 }
 

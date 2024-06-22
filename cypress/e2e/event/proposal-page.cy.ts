@@ -17,8 +17,9 @@ describe('Event proposal page details', () => {
   it('displays talk data', () => {
     proposal.visit('devfest-nantes', 'awesome-proposal');
 
-    proposal.speakerButton('Clark Kent').should('exist');
-    proposal.speakerButton('Bruce Wayne').should('exist');
+    const cospeaker = proposal.cospeakers();
+    cospeaker.speaker('Clark Kent').should('exist');
+    cospeaker.speaker('Bruce Wayne').should('exist');
 
     cy.assertText('Awesome talk');
     cy.assertText('Awesome abstract');
@@ -34,7 +35,7 @@ describe('Event proposal page details', () => {
   it('can edit a proposal', () => {
     proposal.visit('devfest-nantes', 'awesome-proposal');
     const edit = proposal.editProposal();
-    edit.isPageVisible();
+    edit.isVisible();
   });
 
   it('can delete a proposal', () => {

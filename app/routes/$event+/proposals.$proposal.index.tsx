@@ -32,13 +32,14 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const proposal = UserProposal.for(userId, params.proposal);
 
   const form = await request.formData();
-  const action = form.get('_action');
+  const action = form.get('intent');
+
   switch (action) {
-    case 'delete': {
+    case 'proposal-delete': {
       await proposal.delete();
       return redirectWithToast(`/${params.event}/proposals`, 'success', 'Proposal submission removed.');
     }
-    case 'confirm': {
+    case 'proposal-confirmation': {
       const result = parseWithZod(form, ProposalParticipationSchema);
       if (!result.success) return null;
       await proposal.confirm(result.value.participation);
@@ -67,6 +68,8 @@ export default function ProposalRoute() {
   const proposal = useLoaderData<typeof loader>();
   const errors = useActionData<typeof action>();
 
+  const canEdit = proposal.status === SpeakerProposalStatus.Submitted;
+
   return (
     <Page>
       <h1 className="sr-only">Proposal page</h1>
@@ -77,9 +80,11 @@ export default function ProposalRoute() {
           talk={proposal}
           event={event}
           errors={errors}
-          canEditSpeakers={proposal.status === SpeakerProposalStatus.Submitted}
-          canEditTalk={proposal.status === SpeakerProposalStatus.Submitted}
+          canEditSpeakers={canEdit}
+          canEditTalk={canEdit}
           canArchive={false}
+          showFormats
+          showCategories
         />
       </div>
     </Page>

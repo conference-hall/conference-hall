@@ -80,7 +80,7 @@ describe('Submit a talk to event', () => {
 
       // Check proposal info
       proposal.isPageVisible();
-      proposal.speakerButton('Clark Kent').should('exist');
+      proposal.cospeakers().speaker('Clark Kent').should('exist');
       cy.assertText('The amazing talk');
       cy.assertText('Intermediate');
       cy.assertText('English');

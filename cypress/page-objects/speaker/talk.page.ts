@@ -1,6 +1,7 @@
 import BasePage from 'page-objects/base.page.ts';
+import TalkCoSpeakersActions from 'page-objects/common/talk-co-speakers.actions.ts';
 
-import SpeakerEditTalkPage from './talk-edit.page.ts';
+import TalkEditFormActions from '../common/talk-edit-form.actions.ts';
 
 class SpeakerTalkPage extends BasePage {
   visit(talkId: string) {
@@ -12,13 +13,21 @@ class SpeakerTalkPage extends BasePage {
     cy.findByRole('heading', { name: 'Talk page' }).should('exist');
   }
 
+  openReferences() {
+    cy.findByText('Talk references').click();
+  }
+
   submitTalk() {
     cy.findByRole('link', { name: 'Submit talk' }).click();
   }
 
   editTalk() {
     cy.findByRole('button', { name: 'Edit' }).click();
-    return new SpeakerEditTalkPage();
+    return new TalkEditFormActions();
+  }
+
+  cospeakers() {
+    return new TalkCoSpeakersActions();
   }
 
   archiveTalk() {
@@ -27,27 +36,6 @@ class SpeakerTalkPage extends BasePage {
 
   restoreTalk() {
     cy.findByRole('button', { name: 'Restore' }).click();
-  }
-
-  speakerButton(name: string) {
-    return cy.findByRole('button', { name: `View ${name} profile` });
-  }
-
-  openReferences() {
-    cy.findByText('Talk references').click();
-  }
-
-  addSpeaker() {
-    cy.findByRole('button', { name: 'Add a co-speaker' }).click();
-    return cy.findByLabelText('Copy invitation link');
-  }
-
-  closeSpeakerModal() {
-    cy.findByRole('button', { name: 'Close' }).click();
-  }
-
-  removeCoSpeaker(speakerName: string) {
-    cy.findByRole('button', { name: `Remove "${speakerName}" from the talk` }).click();
   }
 }
 

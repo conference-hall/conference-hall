@@ -110,16 +110,14 @@ function AcceptedByOrganizers({ event, proposal }: Props) {
       </div>
       <div className="flex gap-4">
         <Form method="POST">
-          <input type="hidden" name="_action" value="confirm" />
           <input type="hidden" name="participation" value="DECLINED" />
-          <Button type="submit" variant="secondary" iconRight={XMarkIcon}>
+          <Button type="submit" name="intent" value="proposal-confirmation" variant="secondary" iconRight={XMarkIcon}>
             Decline
           </Button>
         </Form>
         <Form method="POST">
-          <input type="hidden" name="_action" value="confirm" />
           <input type="hidden" name="participation" value="CONFIRMED" />
-          <Button type="submit" iconRight={CheckIcon}>
+          <Button type="submit" name="intent" value="proposal-confirmation" iconRight={CheckIcon}>
             Confirm
           </Button>
         </Form>

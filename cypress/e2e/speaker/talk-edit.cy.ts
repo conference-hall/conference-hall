@@ -19,13 +19,14 @@ describe('Speaker talk edition page', () => {
     cy.assertRadioChecked('Advanced');
     cy.assertInputText('References', 'Awesome references');
 
-    editTalk.fillTalkForm({
+    editTalk.fillForm({
       title: 'New title',
       abstract: 'New abstract',
       level: 'Beginner',
       language: 'English',
       references: 'New references',
     });
+
     editTalk.save();
     cy.assertToast('Talk updated.');
     editTalk.close();
@@ -41,14 +42,16 @@ describe('Speaker talk edition page', () => {
 
   it('can invite a co-speaker', () => {
     talk.visit('awesome-talk');
-    talk.addSpeaker().should('exist');
-    talk.closeSpeakerModal();
+    const cospeaker = talk.cospeakers();
+    cospeaker.inviteSpeaker();
+    cospeaker.closeSpeakerModal();
   });
 
   it('can remove a co-speaker', () => {
     talk.visit('awesome-talk');
-    talk.speakerButton('Bruce Wayne').click();
-    talk.removeCoSpeaker('Bruce Wayne');
+    const cospeaker = talk.cospeakers();
+    cospeaker.openSpeakerModal('Bruce Wayne');
+    cospeaker.removeCoSpeaker('Bruce Wayne');
     cy.assertToast('Co-speaker removed from talk.');
     cy.assertNoText('Bruce Wayne');
   });
@@ -57,10 +60,7 @@ describe('Speaker talk edition page', () => {
     talk.visit('awesome-talk');
     const editTalk = talk.editTalk();
 
-    editTalk.fillTalkForm({
-      title: ' ',
-      abstract: ' ',
-    });
+    editTalk.fillForm({ title: ' ', abstract: ' ' });
     editTalk.save();
     editTalk.error('Title').should('contain.text', 'String must contain at least 1 character(s)');
     editTalk.error('Abstract').should('contain.text', 'String must contain at least 1 character(s)');

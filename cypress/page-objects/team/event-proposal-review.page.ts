@@ -1,14 +1,7 @@
-import BasePage from '../../page-objects/base.page.ts';
+import TalkCoSpeakersActions from 'page-objects/common/talk-co-speakers.actions.ts';
+import TalkEditFormActions from 'page-objects/common/talk-edit-form.actions.ts';
 
-type ProposalFormType = {
-  title: string;
-  abstract: string;
-  level: string;
-  language: string;
-  references: string;
-  format: string;
-  category: string;
-};
+import BasePage from '../../page-objects/base.page.ts';
 
 class ProposalReviewPage extends BasePage {
   visit(teamSlug: string, eventSlug: string, proposalId: string) {
@@ -46,17 +39,8 @@ class ProposalReviewPage extends BasePage {
 
   // Speakers
 
-  speakersList() {
-    return cy.findByRole('list', { name: 'Speakers' }).children();
-  }
-
-  speaker(name: RegExp) {
-    return cy.findByRole('button', { name });
-  }
-
-  withinSpeakerProfile(name: RegExp, callback: () => void) {
-    this.speaker(name).click();
-    return cy.findByRole('dialog', { name: name }).within(callback);
+  cospeakers() {
+    return new TalkCoSpeakersActions();
   }
 
   // Activity feed
@@ -121,22 +105,7 @@ class ProposalReviewPage extends BasePage {
 
   editProposal() {
     cy.findByRole('button', { name: 'Edit' }).click();
-  }
-
-  fillProposalForm(data: ProposalFormType) {
-    cy.typeOn('Title', data.title);
-    cy.typeOn('Abstract', data.abstract);
-    cy.findByRole('radio', { name: data.level }).click();
-    cy.selectOn('Languages', data.language);
-    cy.typeOn('References', data.references);
-    cy.findByRole('checkbox', { name: data.format }).click();
-    cy.findByRole('checkbox', { name: data.category }).click();
-    cy.findByRole('button', { name: 'Save' }).click();
-    cy.findByRole('button', { name: 'Cancel' }).click();
-  }
-
-  cancelUpdateProposal() {
-    return cy.findByRole('button', { name: 'Cancel' }).click();
+    return new TalkEditFormActions();
   }
 }
 

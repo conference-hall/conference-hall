@@ -19,8 +19,9 @@ describe('Speaker talk page', () => {
   it('displays talk data', () => {
     talk.visit('awesome-talk');
 
-    talk.speakerButton('Clark Kent').should('exist');
-    talk.speakerButton('Bruce Wayne').should('exist');
+    const cospeaker = talk.cospeakers();
+    cospeaker.speaker('Clark Kent').should('exist');
+    cospeaker.speaker('Bruce Wayne').should('exist');
 
     cy.assertText('Awesome talk');
     cy.assertText('Awesome abstract');
@@ -34,7 +35,7 @@ describe('Speaker talk page', () => {
   it('can edit a talk', () => {
     talk.visit('awesome-talk');
     const editTalk = talk.editTalk();
-    editTalk.isPageVisible();
+    editTalk.isVisible();
     cy.assertText('Awesome talk');
   });
 

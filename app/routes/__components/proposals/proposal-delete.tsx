@@ -30,11 +30,12 @@ function ProposalDeleteModal({ isOpen, onClose }: DeleteProposalModalProps) {
           <Text>The talk will still be in your profile, so you will be able to submit it again later.</Text>
         </Modal.Content>
         <Modal.Actions>
-          <input type="hidden" name="_action" value="delete" />
           <Button onClick={onClose} type="button" variant="secondary">
             Cancel
           </Button>
-          <Button type="submit">Delete proposal</Button>
+          <Button type="submit" name="intent" value="proposal-delete">
+            Delete proposal
+          </Button>
         </Modal.Actions>
       </Form>
     </Modal>

@@ -1,29 +1,30 @@
-import BasePage from 'page-objects/base.page.ts';
-
-type ProposalFormType = {
+type TalkFormType = {
   title?: string;
   abstract?: string;
   level?: string;
   language?: string;
   references?: string;
+  format?: string;
+  category?: string;
 };
 
-class EventEditProposalPage extends BasePage {
-  visit(eventSlug: string, proposalId: string) {
-    cy.visitAndCheck(`/${eventSlug}/proposals/${proposalId}/edit`);
-    this.isPageVisible();
+class TalkEditFormActions {
+  constructor() {
+    this.isVisible();
   }
 
-  isPageVisible() {
+  isVisible() {
     cy.findByRole('heading', { name: 'Edit talk' }).should('exist');
   }
 
-  fillProposalForm(data: ProposalFormType) {
+  fillForm(data: TalkFormType) {
     if (data.title) cy.typeOn('Title', data.title);
     if (data.abstract) cy.typeOn('Abstract', data.abstract);
     if (data.level) cy.findByRole('radio', { name: data.level }).click();
     if (data.language) cy.selectOn('Languages', data.language);
     if (data.references) cy.typeOn('References', data.references);
+    if (data.format) this.selectFormatTrack(data.format);
+    if (data.category) this.selectCategoryTrack(data.category);
   }
 
   selectFormatTrack(format: string) {
@@ -34,21 +35,12 @@ class EventEditProposalPage extends BasePage {
     cy.findByRole('checkbox', { name: category }).click();
   }
 
-  saveAbstract() {
-    return cy.findByRole('button', { name: 'Save proposal' });
+  save() {
+    cy.findByRole('button', { name: 'Save' }).click();
   }
 
-  coSpeakerInvite() {
-    cy.findByRole('button', { name: 'Invite a co-speaker' }).click();
-    return cy.findByLabelText('Copy invitation link');
-  }
-
-  closeCoSpeakerModal() {
-    return cy.findByRole('button', { name: 'Close' }).click();
-  }
-
-  removeCoSpeaker(speakerName: string) {
-    return cy.findByLabelText(`Remove speaker ${speakerName}`);
+  close() {
+    cy.findByRole('button', { name: 'Cancel' }).click();
   }
 
   error(label: string) {
@@ -61,4 +53,4 @@ class EventEditProposalPage extends BasePage {
   }
 }
 
-export default EventEditProposalPage;
+export default TalkEditFormActions;

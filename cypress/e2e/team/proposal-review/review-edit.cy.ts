@@ -15,7 +15,7 @@ describe('Proposal edit page', () => {
     it('can edit a proposal', () => {
       review.visit('team-1', 'conference-1', 'proposal-1');
 
-      review.editProposal();
+      const edit = review.editProposal();
 
       cy.assertInputText('Title', 'Talk 1');
       cy.assertInputText('Abstract', 'Talk description');
@@ -24,7 +24,7 @@ describe('Proposal edit page', () => {
       cy.assertChecked(/Format 1/);
       cy.assertChecked(/Category 1/);
 
-      review.fillProposalForm({
+      edit.fillForm({
         title: 'Talk 1 updated',
         abstract: 'Talk description updated',
         level: 'Beginner',
@@ -34,7 +34,9 @@ describe('Proposal edit page', () => {
         category: 'Category 2',
       });
 
+      edit.save();
       cy.assertToast('Proposal saved.');
+      edit.close();
 
       cy.assertText('Talk 1 updated');
       cy.assertText('Talk description updated');
@@ -46,15 +48,6 @@ describe('Proposal edit page', () => {
       cy.assertText('Format 2');
       cy.assertText('Category 1');
       cy.assertText('Category 2');
-    });
-
-    it('quits edit mode', () => {
-      review.visit('team-1', 'conference-1', 'proposal-1');
-      review.editProposal();
-
-      cy.assertInputText('Title', 'Talk 1');
-      review.cancelUpdateProposal();
-      cy.findByRole('button', { name: 'Update proposal' }).should('not.exist');
     });
   });
 });
