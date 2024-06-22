@@ -12,7 +12,7 @@ export default defineConfig({
     globals: true,
     poolOptions: { threads: { singleThread: true } },
     setupFiles: ['./tests/setup-tests.ts'],
-    include: ['**/*.{test,spec}.ts?(x)'],
+    include: ['**/*.test.ts?(x)'],
     reporters: isCI ? ['default', 'junit'] : 'default',
     outputFile: './test-results/unit.xml',
     watchExclude: ['.*\\/node_modules\\/.*', '.*\\/build\\/.*'],
