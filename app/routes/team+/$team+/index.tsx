@@ -1,7 +1,7 @@
 import { Square3Stack3DIcon } from '@heroicons/react/24/outline';
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
+import { useLoaderData, useSearchParams } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { TeamEvents } from '~/.server/team/team-events.ts';
@@ -28,6 +28,9 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 export default function TeamEventsRoute() {
   const { team } = useTeam();
   const events = useLoaderData<typeof loader>();
+
+  const [searchParams] = useSearchParams();
+  const archived = searchParams.get('archived') === 'true';
 
   const hasEvent = events.length > 0;
 
@@ -56,7 +59,7 @@ export default function TeamEventsRoute() {
       ) : (
         <EmptyState
           icon={Square3Stack3DIcon}
-          label={`Welcome to "${team.name}"`}
+          label={archived ? 'No events archived' : `Welcome to "${team.name}"`}
           className="flex flex-col items-center gap-2"
         />
       )}
