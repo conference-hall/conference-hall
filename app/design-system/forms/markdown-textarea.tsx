@@ -1,10 +1,9 @@
-import { Dialog } from '@headlessui/react';
-import { XMarkIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
 import type { ChangeEventHandler } from 'react';
 import { useState } from 'react';
 
 import { Button } from '../buttons.tsx';
+import { Modal } from '../dialogs/modals.tsx';
 import { Markdown } from '../markdown.tsx';
 import { Label } from '../typography.tsx';
 
@@ -70,7 +69,12 @@ export function MarkdownTextArea({
             <Button type="button" variant="secondary" size="s" onClick={handleOpenPreview}>
               Preview
             </Button>
-            <MardownPreviewModal markdown={markdown} isOpen={isPreviewOpen} onClose={handleClosePreview} />
+            <MardownPreviewModal
+              label={label}
+              markdown={markdown}
+              isOpen={isPreviewOpen}
+              onClose={handleClosePreview}
+            />
           </div>
         </div>
       </div>
@@ -83,30 +87,18 @@ export function MarkdownTextArea({
 }
 
 type MardownPreviewModalProps = {
+  label: string;
   markdown?: string | null;
   isOpen: boolean;
   onClose: () => void;
 };
 
-function MardownPreviewModal({ markdown, isOpen, onClose }: MardownPreviewModalProps) {
+function MardownPreviewModal({ label, markdown, isOpen, onClose }: MardownPreviewModalProps) {
   return (
-    <Dialog className="fixed inset-0 z-40 overflow-y-auto" open={isOpen} onClose={onClose}>
-      <div className="block min-h-screen p-0 px-4 pb-20 pt-4 text-center">
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
-        <div className="absolute right-0 top-0 hidden pr-4 pt-4 sm:block">
-          <button
-            type="button"
-            className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-            onClick={onClose}
-          >
-            <span className="sr-only">Close</span>
-            <XMarkIcon className="h-6 w-6" aria-hidden="true" />
-          </button>
-        </div>
-        <div className="inline-block w-full transform rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl sm:my-8 sm:p-6 sm:align-middle md:max-w-5xl">
-          {markdown ? <Markdown>{markdown}</Markdown> : <p>Nothing to preview.</p>}
-        </div>
-      </div>
-    </Dialog>
+    <Modal title={label} size="full" open={isOpen} onClose={onClose}>
+      <Modal.Content className="space-y-4">
+        {markdown ? <Markdown>{markdown}</Markdown> : <p>Nothing to preview.</p>}
+      </Modal.Content>
+    </Modal>
   );
 }

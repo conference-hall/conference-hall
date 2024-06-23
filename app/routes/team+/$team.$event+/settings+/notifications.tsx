@@ -31,8 +31,9 @@ export const action = async ({ request, params }: LoaderFunctionArgs) => {
   const event = UserEvent.for(userId, params.team, params.event);
 
   const form = await request.formData();
-  const action = form.get('_action');
-  switch (action) {
+  const intent = form.get('intent');
+
+  switch (intent) {
     case 'save-email-notifications': {
       const result = parseWithZod(form, EventEmailNotificationsSettingsSchema);
       if (!result.success) return json(result.error);
@@ -56,7 +57,7 @@ export default function EventNotificationsSettingsRoute() {
 
   const handleChangeNotification = (name: string, checked: boolean) => {
     const form = new FormData();
-    form.set('_action', 'save-notifications');
+    form.set('intent', 'save-notifications');
 
     if (checked) {
       event.emailNotifications.forEach((n) => form.append('emailNotifications', n));
@@ -76,7 +77,6 @@ export default function EventNotificationsSettingsRoute() {
 
         <Card.Content>
           <Form method="POST" id="email-notifications-form" className="flex items-end gap-4">
-            <input type="hidden" name="_action" value="save-email-notifications" />
             <Input
               name="emailOrganizer"
               label="Email receiving notifications"
@@ -89,7 +89,7 @@ export default function EventNotificationsSettingsRoute() {
         </Card.Content>
 
         <Card.Actions>
-          <Button type="submit" form="email-notifications-form">
+          <Button type="submit" name="intent" value="save-email-notifications" form="email-notifications-form">
             Save email
           </Button>
         </Card.Actions>

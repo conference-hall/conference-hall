@@ -43,6 +43,7 @@ describe('Submit a talk to event', () => {
       submission.continue();
 
       // Step: speaker
+      // TODO: Test remove co-speaker
       submission.isSpeakerStepVisible();
       submission.fillSpeakerForm({ bio: 'I am the best!' });
       submission.continue();

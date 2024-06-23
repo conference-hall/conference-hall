@@ -19,10 +19,10 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   invariant(params.team, 'Invalid team slug');
   invariant(params.event, 'Invalid event slug');
   const form = await request.formData();
-  const action = form.get('_action');
+  const intent = form.get('intent');
 
   const event = UserEvent.for(userId, params.team, params.event);
-  switch (action) {
+  switch (intent) {
     case 'revoke-api-key': {
       await event.update({ apiKey: null });
       break;

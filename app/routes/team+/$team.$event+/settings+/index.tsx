@@ -32,8 +32,9 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const event = UserEvent.for(userId, params.team, params.event);
 
   const form = await request.formData();
-  const action = form.get('_action');
-  switch (action) {
+  const intent = form.get('intent');
+
+  switch (intent) {
     case 'general': {
       const result = parseWithZod(form, EventGeneralSettingsSchema);
       if (!result.success) return json(result.error);
@@ -72,15 +73,16 @@ export default function EventGeneralSettingsRoute() {
           <H2>General</H2>
         </Card.Title>
 
-        <Form method="POST">
-          <Card.Content>
-            <input type="hidden" name="_action" value="general" />
+        <Card.Content>
+          <Form id="general-form" method="POST" className="space-y-4 lg:space-y-6">
             <EventForm initialValues={event} errors={errors} />
-          </Card.Content>
-          <Card.Actions>
-            <Button type="submit">Update event</Button>
-          </Card.Actions>
-        </Form>
+          </Form>
+        </Card.Content>
+        <Card.Actions>
+          <Button type="submit" name="intent" value="general" form="general-form">
+            Update event
+          </Button>
+        </Card.Actions>
       </Card>
 
       <Card as="section">
@@ -91,9 +93,8 @@ export default function EventGeneralSettingsRoute() {
           </Subtitle>
         </Card.Title>
 
-        <Form method="POST">
-          <Card.Content>
-            <input type="hidden" name="_action" value="details" />
+        <Card.Content>
+          <Form id="details-form" method="POST" className="space-y-4 lg:space-y-6">
             {event.type === 'CONFERENCE' && (
               <DateRangeInput
                 start={{ name: 'conferenceStart', label: 'Start date', value: event?.conferenceStart }}
@@ -128,12 +129,14 @@ export default function EventGeneralSettingsRoute() {
               defaultValue={event.contactEmail || ''}
               error={errors?.contactEmail}
             />
-          </Card.Content>
+          </Form>
+        </Card.Content>
 
-          <Card.Actions>
-            <Button type="submit">Update event details</Button>
-          </Card.Actions>
-        </Form>
+        <Card.Actions>
+          <Button type="submit" name="intent" value="details" form="details-form">
+            Update event details
+          </Button>
+        </Card.Actions>
       </Card>
 
       <Card as="section">
@@ -150,11 +153,12 @@ export default function EventGeneralSettingsRoute() {
 
         <Card.Actions>
           <Form method="POST">
-            <input type="hidden" name="_action" value="archive" />
             <input type="hidden" name="archived" value={event.archived ? '' : 'true'} />
             <Button
               type="submit"
               variant="secondary"
+              name="intent"
+              value="archive"
               iconLeft={event.archived ? ArchiveBoxXMarkIcon : ArchiveBoxArrowDownIcon}
             >
               {event.archived ? 'Restore event' : 'Archive event'}

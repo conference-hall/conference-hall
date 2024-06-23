@@ -53,7 +53,7 @@ type ToggleGroupProps = {
 export function ToggleGroup({ name, label, value, description, onChange }: ToggleGroupProps) {
   return (
     <Field className="flex items-center">
-      <span className="flex flex-grow flex-col">
+      <span className="flex flex-grow flex-col mr-4">
         <Label className="text-sm font-medium leading-6 text-gray-900" passive>
           {label}
         </Label>

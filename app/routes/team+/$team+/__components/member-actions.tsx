@@ -3,8 +3,8 @@ import { Form } from '@remix-run/react';
 import { useState } from 'react';
 
 import { Button } from '~/design-system/buttons.tsx';
+import { Modal } from '~/design-system/dialogs/modals.tsx';
 import { Radio, RadioGroup } from '~/design-system/forms/radio-group.tsx';
-import { Modal } from '~/design-system/modals.tsx';
 import { Text } from '~/design-system/typography.tsx';
 
 import { InvitationModal } from '../../../__components/invitation-modal.tsx';
@@ -42,21 +42,21 @@ type RemoveModalProps = {
 
 function RemoveRoleModal({ memberId, memberName, isOpen, onClose }: RemoveModalProps) {
   return (
-    <Modal open={isOpen} onClose={onClose}>
-      <Form method="POST" onSubmit={onClose}>
-        <Modal.Title>{`Remove ${memberName} from the team?`}</Modal.Title>
-        <Modal.Content>
+    <Modal title={`Remove ${memberName} from the team?`} open={isOpen} onClose={onClose}>
+      <Modal.Content>
+        <Form id="remove-member-form" method="POST" onSubmit={onClose}>
           <Text>The member will be removed from the team and won't be able to access it anymore.</Text>
-        </Modal.Content>
-        <Modal.Actions>
-          <input type="hidden" name="_action" value="remove-member" />
-          <input type="hidden" name="_memberId" value={memberId} />
-          <Button onClick={onClose} type="button" variant="secondary">
-            Cancel
-          </Button>
-          <Button type="submit">Remove {memberName}</Button>
-        </Modal.Actions>
-      </Form>
+          <input type="hidden" name="memberId" value={memberId} />
+        </Form>
+      </Modal.Content>
+      <Modal.Actions>
+        <Button onClick={onClose} type="button" variant="secondary">
+          Cancel
+        </Button>
+        <Button type="submit" name="intent" value="remove-member" form="remove-member-form">
+          Remove {memberName}
+        </Button>
+      </Modal.Actions>
     </Modal>
   );
 }
@@ -102,10 +102,10 @@ const ALL_ROLES = [
 
 function ChangeRoleModal({ memberId, memberName, memberRole, isOpen, onClose }: ChangeRoleModalProps) {
   return (
-    <Modal open={isOpen} onClose={onClose}>
-      <Form method="POST" onSubmit={onClose}>
-        <Modal.Title>{`Change the role of ${memberName}?`}</Modal.Title>
-        <Modal.Content>
+    <Modal title={`Change the role of ${memberName}?`} open={isOpen} onClose={onClose}>
+      <Modal.Content>
+        <Form id="change-role-form" method="POST" onSubmit={onClose}>
+          <input type="hidden" name="memberId" value={memberId} />
           <RadioGroup>
             {ALL_ROLES.map((role) => (
               <Radio
@@ -121,16 +121,16 @@ function ChangeRoleModal({ memberId, memberName, memberRole, isOpen, onClose }: 
               </Radio>
             ))}
           </RadioGroup>
-        </Modal.Content>
-        <Modal.Actions>
-          <input type="hidden" name="_action" value="change-role" />
-          <input type="hidden" name="_memberId" value={memberId} />
-          <Button onClick={onClose} type="button" variant="secondary">
-            Cancel
-          </Button>
-          <Button type="submit">Change {memberName}'s role</Button>
-        </Modal.Actions>
-      </Form>
+        </Form>
+      </Modal.Content>
+      <Modal.Actions>
+        <Button onClick={onClose} type="button" variant="secondary">
+          Cancel
+        </Button>
+        <Button type="submit" name="intent" value="change-role" form="change-role-form">
+          Change {memberName}'s role
+        </Button>
+      </Modal.Actions>
     </Modal>
   );
 }

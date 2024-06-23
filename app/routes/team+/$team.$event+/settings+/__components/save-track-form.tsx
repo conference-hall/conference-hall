@@ -1,12 +1,13 @@
-import { PencilIcon, PlusIcon } from '@heroicons/react/20/solid';
+import { PlusIcon } from '@heroicons/react/20/solid';
+import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import { Form } from '@remix-run/react';
 import { useState } from 'react';
 
 import { Button } from '~/design-system/buttons.tsx';
+import { Modal } from '~/design-system/dialogs/modals.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { TextArea } from '~/design-system/forms/textarea.tsx';
 import { IconButton } from '~/design-system/icon-buttons.tsx';
-import { Modal } from '~/design-system/modals.tsx';
 
 type TrackType = 'formats' | 'categories';
 type TrackData = { id: string; name: string; description?: string | null };
@@ -31,9 +32,8 @@ export function EditTrackButton({ type, initialValues }: EditTrackButtonProps) {
   return (
     <>
       <IconButton
-        icon={PencilIcon}
+        icon={PencilSquareIcon}
         onClick={() => setModalOpen(true)}
-        size="s"
         variant="secondary"
         label={`Edit ${initialValues.name}`}
       />
@@ -51,11 +51,9 @@ type SaveTrackFormModalProps = { type: TrackType; initialValues?: TrackData; isO
 
 function SaveTrackFormModal({ type, initialValues, isOpen, onClose }: SaveTrackFormModalProps) {
   return (
-    <Modal open={isOpen} size="l" onClose={onClose}>
-      <Form method="POST" onSubmit={onClose}>
-        <Modal.Title>{type === 'formats' ? 'Format track' : 'Category track'}</Modal.Title>
-        <Modal.Subtitle>Provide a name and description.</Modal.Subtitle>
-        <Modal.Content className="space-y-4">
+    <Modal title={type === 'formats' ? 'Format track' : 'Category track'} size="l" open={isOpen} onClose={onClose}>
+      <Modal.Content>
+        <Form id="save-track-form" method="POST" onSubmit={onClose} className="space-y-4 lg:space-y-6">
           <Input name="name" label="Name" defaultValue={initialValues?.name} required />
           <TextArea
             name="description"
@@ -64,16 +62,17 @@ function SaveTrackFormModal({ type, initialValues, isOpen, onClose }: SaveTrackF
             required
             rows={4}
           />
-        </Modal.Content>
-        <Modal.Actions>
-          <input type="hidden" name="_action" value={`save-${type}`} />
           <input type="hidden" name="id" value={initialValues?.id} />
-          <Button onClick={onClose} type="button" variant="secondary">
-            Cancel
-          </Button>
-          <Button type="submit">{type === 'formats' ? 'Save format' : 'Save category'}</Button>
-        </Modal.Actions>
-      </Form>
+        </Form>
+      </Modal.Content>
+      <Modal.Actions>
+        <Button onClick={onClose} type="button" variant="secondary">
+          Cancel
+        </Button>
+        <Button type="submit" name="intent" value={`save-${type}`} form="save-track-form">
+          {type === 'formats' ? 'Save format' : 'Save category'}
+        </Button>
+      </Modal.Actions>
     </Modal>
   );
 }

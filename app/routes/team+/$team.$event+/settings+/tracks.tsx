@@ -29,7 +29,9 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const tracks = EventTracksSettings.for(userId, params.team, params.event);
 
   const form = await request.formData();
-  switch (form.get('_action')) {
+  const intent = form.get('intent');
+
+  switch (intent) {
     case 'delete-formats': {
       const trackId = String(form.get('trackId'));
       await tracks.deleteFormat(trackId);
@@ -67,7 +69,7 @@ export default function EventTracksSettingsRoute() {
 
   const fetcher = useFetcher<typeof action>();
   const handleUpdateSettings = (name: string, checked: boolean) => {
-    fetcher.submit({ _action: 'update-track-settings', [name]: String(checked) }, { method: 'POST' });
+    fetcher.submit({ intent: 'update-track-settings', [name]: String(checked) }, { method: 'POST' });
   };
 
   return (

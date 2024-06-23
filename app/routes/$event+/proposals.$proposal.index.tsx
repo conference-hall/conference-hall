@@ -32,9 +32,9 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const proposal = UserProposal.for(userId, params.proposal);
 
   const form = await request.formData();
-  const action = form.get('intent');
+  const intent = form.get('intent');
 
-  switch (action) {
+  switch (intent) {
     case 'proposal-delete': {
       await proposal.delete();
       return redirectWithToast(`/${params.event}/proposals`, 'success', 'Proposal submission removed.');
