@@ -47,7 +47,7 @@ type TalkEditDrawerProps = TalkEditProps & {
 
 function TalkEditDrawer({ initialValues, event, errors, open, onClose }: TalkEditDrawerProps) {
   return (
-    <SlideOver open={open} onClose={onClose} size="l">
+    <SlideOver open={open} onClose={onClose} size="xl">
       <SlideOver.Content title="Edit talk" onClose={onClose}>
         <TalkForm
           id="edit-talk-form"

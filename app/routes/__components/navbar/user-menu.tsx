@@ -1,4 +1,3 @@
-import { Dialog, DialogPanel, Transition } from '@headlessui/react';
 import {
   ArrowRightStartOnRectangleIcon,
   BellIcon,
@@ -7,12 +6,12 @@ import {
   MicrophoneIcon,
   PlusIcon,
   Square3Stack3DIcon,
-  XMarkIcon,
 } from '@heroicons/react/24/outline';
 import { Link } from '@remix-run/react';
 import { useState } from 'react';
 
 import { Avatar, AvatarName } from '~/design-system/avatar.tsx';
+import { SlideOver } from '~/design-system/slide-over.tsx';
 import { Text } from '~/design-system/typography.tsx';
 
 type MenuProps = {
@@ -34,94 +33,72 @@ export function UserMenu({ email, name, picture, teams, isOrganizer, notificatio
     <>
       <OpenButton name={name} picture={picture} notificationsCount={notificationsCount} onClick={handleOpen} />
 
-      <Transition show={open}>
-        <Dialog as="div" className="relative z-20" onClose={setOpen}>
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-20 transition-opacity" />
+      <SlideOver open={open} onClose={handleClose} size="s">
+        <SlideOver.Content
+          title={<AvatarName picture={picture} name={name} subtitle={email} size="s" />}
+          onClose={handleClose}
+        >
+          <nav aria-label="User navigation" className="flex h-full flex-col overflow-y-auto">
+            <ul className="relative flex-1">
+              <MenuLink to="/" icon={MagnifyingGlassIcon} onClick={handleClose}>
+                Search events
+              </MenuLink>
 
-          <div className="fixed inset-0 overflow-hidden">
-            <div className="absolute inset-0 overflow-hidden">
-              <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
-                <DialogPanel className="pointer-events-auto w-screen max-w-xs">
-                  <nav
-                    aria-label="User navigation"
-                    className="flex h-full flex-col overflow-y-auto bg-white py-6 shadow-xl"
-                  >
-                    <div className="px-4 sm:px-6">
-                      <div className="flex items-start justify-between">
-                        <AvatarName picture={picture} name={name} subtitle={email} size="s" />
-                        <CloseButton onClick={handleClose} />
-                      </div>
-                    </div>
+              <MenuLink to="/notifications" icon={BellIcon} count={notificationsCount} onClick={handleClose}>
+                Notifications
+              </MenuLink>
 
-                    <ul className="relative mt-6 flex-1 px-4">
-                      <MenuLink to="/" icon={MagnifyingGlassIcon} onClick={handleClose}>
-                        Search events
-                      </MenuLink>
+              <Divider />
 
-                      <MenuLink to="/notifications" icon={BellIcon} count={notificationsCount} onClick={handleClose}>
-                        Notifications
-                      </MenuLink>
+              <li className="px-2 pb-2">
+                <Text size="xs" weight="semibold" variant="secondary">
+                  Speaker
+                </Text>
+              </li>
 
-                      <Divider />
+              <MenuLink to="/speaker" icon={FireIcon} onClick={handleClose}>
+                Activity
+              </MenuLink>
 
-                      <li className="px-2 pb-2">
-                        <Text size="xs" weight="semibold" variant="secondary">
-                          Speaker
-                        </Text>
-                      </li>
+              <MenuLink to="/speaker/talks" icon={MicrophoneIcon} onClick={handleClose}>
+                Talks library
+              </MenuLink>
 
-                      <MenuLink to="/speaker" icon={FireIcon} onClick={handleClose}>
-                        Activity
-                      </MenuLink>
+              <Divider />
 
-                      <MenuLink to="/speaker/talks" icon={MicrophoneIcon} onClick={handleClose}>
-                        Talks library
-                      </MenuLink>
+              {teams.length >= 0 && (
+                <li className="px-2 pb-2">
+                  <Text size="xs" weight="semibold" variant="secondary">
+                    Teams
+                  </Text>
+                </li>
+              )}
 
-                      <Divider />
+              {teams.map((team) => (
+                <MenuLink key={team.slug} to={`/team/${team.slug}`} icon={Square3Stack3DIcon} onClick={handleClose}>
+                  {team.name}
+                </MenuLink>
+              ))}
 
-                      {teams.length >= 0 && (
-                        <li className="px-2 pb-2">
-                          <Text size="xs" weight="semibold" variant="secondary">
-                            Teams
-                          </Text>
-                        </li>
-                      )}
+              {!isOrganizer ? (
+                <MenuLink to="/team/request" icon={Square3Stack3DIcon} onClick={handleClose}>
+                  Become organizer
+                </MenuLink>
+              ) : (
+                <MenuLink to="/team/new" icon={PlusIcon} onClick={handleClose}>
+                  New team
+                </MenuLink>
+              )}
 
-                      {teams.map((team) => (
-                        <MenuLink
-                          key={team.slug}
-                          to={`/team/${team.slug}`}
-                          icon={Square3Stack3DIcon}
-                          onClick={handleClose}
-                        >
-                          {team.name}
-                        </MenuLink>
-                      ))}
+              <Divider />
 
-                      {!isOrganizer ? (
-                        <MenuLink to="/team/request" icon={Square3Stack3DIcon} onClick={handleClose}>
-                          Become organizer
-                        </MenuLink>
-                      ) : (
-                        <MenuLink to="/team/new" icon={PlusIcon} onClick={handleClose}>
-                          New team
-                        </MenuLink>
-                      )}
-
-                      <Divider />
-
-                      <MenuLink to="/logout" icon={ArrowRightStartOnRectangleIcon} onClick={handleClose}>
-                        Sign out
-                      </MenuLink>
-                    </ul>
-                  </nav>
-                </DialogPanel>
-              </div>
-            </div>
-          </div>
-        </Dialog>
-      </Transition>
+              <MenuLink to="/logout" icon={ArrowRightStartOnRectangleIcon} onClick={handleClose}>
+                Sign out
+              </MenuLink>
+            </ul>
+          </nav>
+        </SlideOver.Content>
+      </SlideOver>
     </>
   );
 }
@@ -175,23 +152,5 @@ function OpenButton({ name, picture, notificationsCount, onClick }: OpenProps) {
         <span className="absolute bottom-0 right-0 block h-2 w-2 rounded-full bg-red-400 ring-2 ring-gray-800" />
       )}
     </button>
-  );
-}
-
-type CloseProps = { onClick: () => void };
-
-function CloseButton({ onClick }: CloseProps) {
-  return (
-    <div className="ml-3 flex h-7 items-center">
-      <button
-        type="button"
-        className="relative rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-        onClick={onClick}
-      >
-        <span className="absolute -inset-2.5" />
-        <span className="sr-only">Close user navigation</span>
-        <XMarkIcon className="h-6 w-6" aria-hidden="true" />
-      </button>
-    </div>
   );
 }

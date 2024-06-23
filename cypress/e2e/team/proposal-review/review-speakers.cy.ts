@@ -39,13 +39,13 @@ describe('Speakers in proposal review page', () => {
       cy.assertText('taxi, train');
       cy.assertText('More information');
       cy.assertText('Hello');
-      cy.findByRole('button', { name: 'Close panel' }).click();
+      cy.findByRole('button', { name: 'Close' }).click();
     });
 
     cospeakers.withinSpeakerProfile(/Robin/, () => {
       cy.assertText('Robin');
       cy.assertText('robin@example.com');
-      cy.findByRole('button', { name: 'Close panel' }).click();
+      cy.findByRole('button', { name: 'Close' }).click();
     });
   });
 });

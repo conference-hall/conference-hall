@@ -6,12 +6,12 @@ import { Background, SlideOverTransition } from './transitions.tsx';
 
 type Props = {
   open: boolean;
-  size?: 'base' | 'l';
+  size?: 's' | 'm' | 'l' | 'xl';
   onClose: () => void;
   children: React.ReactNode;
 };
 
-export function SlideOver({ open, size = 'base', onClose, children }: Props) {
+export function SlideOver({ open, size = 'm', onClose, children }: Props) {
   return (
     <Transition show={open}>
       <Dialog className="relative z-20" onClose={onClose}>
@@ -23,8 +23,10 @@ export function SlideOver({ open, size = 'base', onClose, children }: Props) {
               <SlideOverTransition>
                 <DialogPanel
                   className={cx('pointer-events-auto w-screen', {
-                    'max-w-lg': size === 'base',
+                    'max-w-sm': size === 's',
+                    'max-w-lg': size === 'm',
                     'max-w-2xl': size === 'l',
+                    'max-w-4xl': size === 'xl',
                   })}
                 >
                   <div className="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl">{children}</div>
@@ -42,7 +44,7 @@ type ContentProps = { title: React.ReactNode; children: React.ReactNode; onClose
 
 function Content({ title, children, onClose, className }: ContentProps) {
   return (
-    <div className="flex min-h-0 flex-1 flex-col overflow-y-scroll py-6">
+    <div className="flex min-h-0 flex-1 flex-col overflow-y-auto py-6">
       <div className="px-4 sm:px-6">
         <div className="flex items-start justify-between">
           <DialogTitle className="text-base font-semibold leading-6 text-gray-900">{title}</DialogTitle>
@@ -53,7 +55,7 @@ function Content({ title, children, onClose, className }: ContentProps) {
               onClick={onClose}
             >
               <span className="absolute -inset-2.5" />
-              <span className="sr-only">Close panel</span>
+              <span className="sr-only">Close</span>
               <XMarkIcon className="h-6 w-6" aria-hidden="true" />
             </button>
           </div>
