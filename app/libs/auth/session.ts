@@ -32,17 +32,22 @@ export async function createSession(request: Request) {
   const token = form.get('token') as string;
   const redirectTo = form.get('redirectTo')?.toString() || '/';
 
-  const { uid, name, email, picture, firebase } = await serverAuth.verifyIdToken(token, true);
+  try {
+    const { uid, name, email, picture, firebase } = await serverAuth.verifyIdToken(token, true);
 
-  const jwt = await serverAuth.createSessionCookie(token, { expiresIn: MAX_AGE_MS });
-  const userId = await UserRegistration.register({ uid, name, email, picture, provider: firebase.sign_in_provider });
+    const jwt = await serverAuth.createSessionCookie(token, { expiresIn: MAX_AGE_MS });
+    const userId = await UserRegistration.register({ uid, name, email, picture, provider: firebase.sign_in_provider });
 
-  const session = await getSession(request);
-  session.set('jwt', jwt);
-  session.set('uid', uid);
-  session.set('userId', userId);
+    const session = await getSession(request);
+    session.set('jwt', jwt);
+    session.set('uid', uid);
+    session.set('userId', userId);
 
-  return redirect(redirectTo, { headers: { 'Set-Cookie': await commitSession(session) } });
+    return redirect(redirectTo, { headers: { 'Set-Cookie': await commitSession(session) } });
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 }
 
 export async function destroySession(request: Request) {

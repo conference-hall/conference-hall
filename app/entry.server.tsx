@@ -1,6 +1,6 @@
 import { PassThrough } from 'node:stream';
 
-import type { AppLoadContext, EntryContext } from '@remix-run/node';
+import type { ActionFunctionArgs, AppLoadContext, EntryContext, LoaderFunctionArgs } from '@remix-run/node';
 import { createReadableStreamFromReadable } from '@remix-run/node';
 import { RemixServer } from '@remix-run/react';
 import * as Sentry from '@sentry/remix';
@@ -69,4 +69,10 @@ export default function handleRequest(
   });
 }
 
-export const handleError = Sentry.sentryHandleError;
+export function handleError(error: unknown, { request, params, context }: LoaderFunctionArgs | ActionFunctionArgs) {
+  if (!request.signal.aborted) {
+    console.error(error);
+    // @ts-expect-error
+    Sentry.sentryHandleError(error, { request, params, context });
+  }
+}

@@ -67,7 +67,8 @@ async function run() {
           'connect-src': [
             MODE === 'development' ? 'ws://localhost:*' : null,
             MODE === 'development' ? 'http://localhost:*' : null,
-            process.env.SENTRY_DSN ? '*.ingest.sentry.io' : null,
+            MODE === 'production' ? '*.googleapis.com' : null,
+            process.env.SENTRY_DSN ? '*.sentry.io' : null,
             "'self'",
           ].filter(Boolean),
           'frame-src': ["'self'", MODE === 'development' ? 'http://localhost:*' : null].filter(Boolean),
@@ -100,6 +101,13 @@ async function run() {
       changeOrigin: true,
     }),
   );
+  app.use(
+    '/__/firebase',
+    createProxyMiddleware({
+      target: `https://${FIREBASE_PROJECT_ID}.firebaseapp.com/__/firebase`,
+      changeOrigin: true,
+    }),
+  );
 
   // Rate limits
   app.use(
@@ -122,6 +130,7 @@ async function run() {
   app.use(express.static('build/client', { maxAge: '1h' }));
 
   // Handle SSR requests
+
   const _createRequestHandler = vite
     ? createRequestHandler
     : Sentry.wrapExpressCreateRequestHandler(createRequestHandler);
