@@ -37,12 +37,13 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
   const userId = await requireSession(request);
-  const form = await request.formData();
   invariant(params.event, 'Invalid event slug');
   invariant(params.talk, 'Invalid talk id');
 
-  const action = form.get('_action');
-  if (action === 'remove-speaker') {
+  const form = await request.formData();
+  const intent = form.get('intent');
+
+  if (intent === 'remove-speaker') {
     const speakerId = form.get('_speakerId')?.toString() as string;
     await TalkSubmission.for(userId, params.event).removeCoSpeaker(params.talk, speakerId);
     return json(null);

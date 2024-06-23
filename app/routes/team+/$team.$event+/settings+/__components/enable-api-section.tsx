@@ -18,11 +18,6 @@ export function EnableApiSection({ apiKey }: Props) {
 
       <Card.Content>
         <Form method="POST" id="api-integration-form">
-          {apiKey ? (
-            <input type="hidden" name="_action" value="revoke-api-key" />
-          ) : (
-            <input type="hidden" name="_action" value="generate-api-key" />
-          )}
           <Input
             name="apiKey"
             label="API key"
@@ -35,7 +30,12 @@ export function EnableApiSection({ apiKey }: Props) {
       </Card.Content>
 
       <Card.Actions>
-        <Button type="submit" form="api-integration-form">
+        <Button
+          type="submit"
+          name="intent"
+          value={apiKey ? 'revoke-api-key' : 'generate-api-key'}
+          form="api-integration-form"
+        >
           {apiKey ? 'Revoke API key' : 'Generate API key'}
         </Button>
       </Card.Actions>

@@ -37,11 +37,11 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   invariant(params.team, 'Invalid team slug');
 
   const form = await request.formData();
-  const action = form.get('_action')!;
-  const memberId = String(form.get('_memberId'))!;
+  const intent = form.get('intent')!;
+  const memberId = String(form.get('memberId'))!;
 
   const members = TeamMembers.for(userId, params.team);
-  switch (action) {
+  switch (intent) {
     case 'change-role': {
       await members.changeRole(memberId, form.get('memberRole') as TeamRole);
       return toast('success', 'Member role changed.');

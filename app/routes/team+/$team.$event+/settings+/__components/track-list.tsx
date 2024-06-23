@@ -1,4 +1,4 @@
-import { TrashIcon } from '@heroicons/react/20/solid';
+import { TrashIcon } from '@heroicons/react/24/outline';
 import { Form } from '@remix-run/react';
 
 import { IconButton } from '~/design-system/icon-buttons.tsx';
@@ -25,9 +25,14 @@ export function TrackList({ type, tracks }: TrackListProps) {
           <div className="ml-4 flex flex-shrink-0 gap-2">
             <EditTrackButton type={type} initialValues={track} />
             <Form method="POST">
-              <input type="hidden" name="_action" value={`delete-${type}`} />
               <input type="hidden" name="trackId" value={track.id} />
-              <IconButton icon={TrashIcon} size="s" variant="secondary" label={`Remove ${track.name}`} />
+              <IconButton
+                icon={TrashIcon}
+                variant="secondary"
+                name="intent"
+                value={`delete-${type}`}
+                label={`Remove ${track.name}`}
+              />
             </Form>
           </div>
         </li>

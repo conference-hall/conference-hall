@@ -33,9 +33,9 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const talk = TalksLibrary.of(userId).talk(params.talk);
 
   const form = await request.formData();
-  const action = form.get('intent');
+  const intent = form.get('intent');
 
-  switch (action) {
+  switch (intent) {
     case 'archive-talk': {
       await talk.archive();
       return toast('success', 'Talk archived.');

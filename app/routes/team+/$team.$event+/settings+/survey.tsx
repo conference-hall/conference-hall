@@ -28,7 +28,9 @@ export const action = async ({ request, params }: LoaderFunctionArgs) => {
   const event = UserEvent.for(userId, params.team, params.event);
 
   const form = await request.formData();
-  switch (form.get('_action')) {
+  const intent = form.get('intent');
+
+  switch (intent) {
     case 'enable-survey': {
       const surveyEnabled = form.get('surveyEnabled') === 'true';
       await event.update({ surveyEnabled });
@@ -59,7 +61,7 @@ export default function EventSurveySettingsRoute() {
           description="When enabled a short survey will be asked to speakers when they submit a proposal."
           value={event.surveyEnabled}
           onChange={(checked) =>
-            fetcher.submit({ _action: 'enable-survey', surveyEnabled: String(checked) }, { method: 'POST' })
+            fetcher.submit({ intent: 'enable-survey', surveyEnabled: String(checked) }, { method: 'POST' })
           }
         />
       </Card>
@@ -84,12 +86,17 @@ export default function EventSurveySettingsRoute() {
                 {question.label}
               </Checkbox>
             ))}
-            <input type="hidden" name="_action" value="save-questions" />
           </Form>
         </Card.Content>
 
         <Card.Actions>
-          <Button type="submit" form="questions-form" disabled={!event.surveyEnabled}>
+          <Button
+            type="submit"
+            name="intent"
+            value="save-questions"
+            form="questions-form"
+            disabled={!event.surveyEnabled}
+          >
             Save questions
           </Button>
         </Card.Actions>
