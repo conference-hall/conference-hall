@@ -26,6 +26,7 @@ export function SearchEventsInput({ filters }: Props) {
         defaultValue={query}
         type="search"
         className="w-full lg:w-6/12 lg:max-w-5xl"
+        min={3}
       />
     </Form>
   );

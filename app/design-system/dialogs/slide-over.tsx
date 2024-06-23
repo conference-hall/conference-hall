@@ -14,10 +14,10 @@ type Props = {
 export function SlideOver({ open, size = 'm', onClose, children }: Props) {
   return (
     <Transition show={open}>
-      <Dialog className="relative z-20" onClose={onClose}>
+      <Dialog className="relative z-40" onClose={onClose}>
         <Background />
 
-        <div className="fixed inset-0 overflow-hidden">
+        <div className="fixed inset-0 overflow-hidden z-40">
           <div className="absolute inset-0 overflow-hidden">
             <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full">
               <SlideOverTransition>
