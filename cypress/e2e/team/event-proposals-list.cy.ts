@@ -72,8 +72,20 @@ describe('Event proposals list', () => {
     it('filters by reviews', () => {
       cy.login('Clark Kent');
       proposals.visit('team-1', 'conference-1');
-      proposals.filterReviews('Reviewed by you');
 
+      proposals.filterReviews('Reviewed');
+      cy.assertText('2 proposals');
+      proposals.proposal('Talk 1').should('exist');
+      proposals.proposal('Talk 2').should('exist');
+      proposals.proposal('Talk 3').should('not.exist');
+
+      proposals.filterReviews('Not reviewed');
+      cy.assertText('1 proposals');
+      proposals.proposal('Talk 1').should('not.exist');
+      proposals.proposal('Talk 2').should('not.exist');
+      proposals.proposal('Talk 3').should('exist');
+
+      proposals.filterReviews('My favorites');
       cy.assertText('1 proposals');
       proposals.proposal('Talk 1').should('exist');
       proposals.proposal('Talk 2').should('not.exist');

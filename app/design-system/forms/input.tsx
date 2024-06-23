@@ -59,7 +59,7 @@ const containerStyle = cva(
     variants: {
       color: {
         light: 'bg-white ring-gray-300 focus-within:ring-indigo-600',
-        dark: 'bg-gray-700 ring-gray-700 focus-within:ring-indigo-500',
+        dark: 'bg-gray-700 ring-gray-700 focus-within:ring-white',
       },
       error: {
         true: 'ring-red-300 focus:ring-red-500 focus:border-red-500',
@@ -73,7 +73,7 @@ const inputStyle = cva('block flex-1 border-0 bg-transparent focus:ring-0', {
   variants: {
     color: {
       light: 'text-gray-900 placeholder:text-gray-400',
-      dark: 'text-gray-300 placeholder:text-gray-400',
+      dark: 'font-semibold text-gray-300 placeholder:text-gray-400',
     },
     size: {
       m: 'py-1.5 text-sm leading-6',

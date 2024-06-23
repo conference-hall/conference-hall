@@ -1,20 +1,11 @@
-import {
-  Fieldset,
-  Label,
-  Legend,
-  Popover,
-  PopoverButton,
-  PopoverOverlay,
-  PopoverPanel,
-  Radio,
-  RadioGroup,
-} from '@headlessui/react';
+import { Fieldset, Label, Legend, Popover, PopoverButton, PopoverPanel, Radio, RadioGroup } from '@headlessui/react';
 import { AdjustmentsHorizontalIcon } from '@heroicons/react/20/solid';
 import { Form, useLocation, useSearchParams } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
 
 import { Button, button, ButtonLink } from '~/design-system/buttons.tsx';
 import Select from '~/design-system/forms/select.tsx';
+import { Background } from '~/design-system/transitions.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { useTeam } from '~/routes/team+/__components/use-team.tsx';
 
@@ -37,13 +28,14 @@ export function FiltersMenu() {
           {({ close }) => <FiltersContent close={close} />}
         </PopoverPanel>
       </Popover>
+
       {/* Mobile */}
       <Popover className="sm:hidden">
         <PopoverButton className={button({ variant: 'secondary' })}>
           <AdjustmentsHorizontalIcon className="h-4 w-4 text-gray-500" />
           <span>Filters</span>
         </PopoverButton>
-        <PopoverOverlay className="fixed inset-0 z-10 bg-black/15" />
+        <Background />
         <PopoverPanel className="fixed bottom-0 left-0 z-10 w-full bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           {({ close }) => <FiltersContent close={close} />}
         </PopoverPanel>

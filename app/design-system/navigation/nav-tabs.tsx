@@ -17,12 +17,12 @@ const BACKGROUND = {
 };
 
 const DEFAULT_LINKS = {
-  light: 'text-gray-500 hover:bg-gray-100 hover:text-gray-900',
+  light: 'text-gray-500 hover:bg-gray-100 hover:text-gray-900 focus-visible:outline-indigo-600',
   dark: 'text-gray-300 hover:bg-gray-700 hover:text-white focus-visible:outline-white',
 };
 
 const ACTIVE_LINKS = {
-  light: 'bg-gray-100 text-gray-900 font-semibold',
+  light: 'bg-gray-100 text-gray-900 font-semibold focus-visible:outline-indigo-600',
   dark: 'bg-gray-900 text-white font-semibold focus-visible:outline-gray-200',
 };
 

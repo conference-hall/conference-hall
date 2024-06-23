@@ -32,14 +32,16 @@ export const seed = async () => {
   const category1 = await eventCategoryFactory({ event, attributes: { name: 'Category 1' } });
   const category2 = await eventCategoryFactory({ event, attributes: { name: 'Category 2' } });
 
-  const proposal = await proposalFactory({
+  const proposal1 = await proposalFactory({
     event,
     formats: [format1],
     categories: [category1],
     talk: await talkFactory({ attributes: { title: 'Talk 1' }, speakers: [speaker1] }),
   });
 
-  await proposalFactory({
+  await reviewFactory({ proposal: proposal1, user: organizer1, attributes: { note: 5, feeling: 'POSITIVE' } });
+
+  const proposal2 = await proposalFactory({
     event,
     traits: ['accepted'],
     formats: [format2],
@@ -47,10 +49,10 @@ export const seed = async () => {
     talk: await talkFactory({ attributes: { title: 'Talk 2' }, speakers: [speaker2] }),
   });
 
+  await reviewFactory({ proposal: proposal2, user: organizer1, attributes: { note: 2, feeling: 'NEUTRAL' } });
+
   await proposalFactory({
     event,
     talk: await talkFactory({ attributes: { title: 'Talk 3' }, speakers: [speaker1, speaker2] }),
   });
-
-  await reviewFactory({ proposal, user: organizer1 });
 };

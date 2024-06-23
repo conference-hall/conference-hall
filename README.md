@@ -50,7 +50,7 @@ npm run test
 Execute end-to-end tests (Dev server MUST be running):
 
 ```
-npm run cypress
+npm run test:e2e
 ```
 
 ### Execute linting
