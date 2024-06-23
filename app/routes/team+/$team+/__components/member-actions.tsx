@@ -3,8 +3,8 @@ import { Form } from '@remix-run/react';
 import { useState } from 'react';
 
 import { Button } from '~/design-system/buttons.tsx';
+import { Modal } from '~/design-system/dialogs/modals.tsx';
 import { Radio, RadioGroup } from '~/design-system/forms/radio-group.tsx';
-import { Modal } from '~/design-system/modals.tsx';
 import { Text } from '~/design-system/typography.tsx';
 
 import { InvitationModal } from '../../../__components/invitation-modal.tsx';
@@ -42,9 +42,8 @@ type RemoveModalProps = {
 
 function RemoveRoleModal({ memberId, memberName, isOpen, onClose }: RemoveModalProps) {
   return (
-    <Modal open={isOpen} onClose={onClose}>
+    <Modal title={`Remove ${memberName} from the team?`} open={isOpen} onClose={onClose}>
       <Form method="POST" onSubmit={onClose}>
-        <Modal.Title>{`Remove ${memberName} from the team?`}</Modal.Title>
         <Modal.Content>
           <Text>The member will be removed from the team and won't be able to access it anymore.</Text>
         </Modal.Content>
@@ -102,9 +101,8 @@ const ALL_ROLES = [
 
 function ChangeRoleModal({ memberId, memberName, memberRole, isOpen, onClose }: ChangeRoleModalProps) {
   return (
-    <Modal open={isOpen} onClose={onClose}>
+    <Modal title={`Change the role of ${memberName}?`} open={isOpen} onClose={onClose}>
       <Form method="POST" onSubmit={onClose}>
-        <Modal.Title>{`Change the role of ${memberName}?`}</Modal.Title>
         <Modal.Content>
           <RadioGroup>
             {ALL_ROLES.map((role) => (

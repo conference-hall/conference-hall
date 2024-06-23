@@ -18,25 +18,24 @@ export function MenuTransition({ children }: TransitionProps) {
   );
 }
 
-export function SelectTransition({ show, children }: TransitionProps) {
+export function ModalTransition({ children }: TransitionProps) {
   return (
-    <Transition show={show} leave="transition ease-in duration-100" leaveFrom="opacity-100" leaveTo="opacity-0">
+    <TransitionChild
+      enter="ease-out duration-300"
+      enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+      enterTo="opacity-100 translate-y-0 sm:scale-100"
+      leave="ease-in duration-200"
+      leaveFrom="opacity-100 translate-y-0 sm:scale-100"
+      leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+    >
       {children}
-    </Transition>
+    </TransitionChild>
   );
 }
 
-export function ToastTransition({ show, children }: TransitionProps) {
+export function SelectTransition({ show, children }: TransitionProps) {
   return (
-    <Transition
-      show={show}
-      enter="transform ease-out duration-300 transition"
-      enterFrom="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
-      enterTo="translate-y-0 opacity-100 sm:translate-x-0"
-      leave="transition ease-in duration-100"
-      leaveFrom="opacity-100"
-      leaveTo="opacity-0"
-    >
+    <Transition show={show} leave="transition ease-in duration-100" leaveFrom="opacity-100" leaveTo="opacity-0">
       {children}
     </Transition>
   );

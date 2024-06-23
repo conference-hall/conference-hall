@@ -2,8 +2,8 @@ import { Form, useNavigate, useNavigation } from '@remix-run/react';
 import { useCallback } from 'react';
 
 import { Button } from '~/design-system/buttons.tsx';
+import { Modal } from '~/design-system/dialogs/modals.tsx';
 import { ToggleGroup } from '~/design-system/forms/toggles.tsx';
-import { Modal } from '~/design-system/modals.tsx';
 
 import { Statistic } from './statistic.tsx';
 
@@ -20,8 +20,7 @@ export function PublicationConfirm({ title, statistics }: Props) {
   }, [navigate, isLoading]);
 
   return (
-    <Modal size="l" open onClose={close}>
-      <Modal.Title>{title}</Modal.Title>
+    <Modal title={title} open onClose={close}>
       <Modal.Content className="pt-6 space-y-4">
         <dl className="flex items-center divide-x p-2 border border-gray-300 rounded">
           <Statistic
@@ -37,16 +36,14 @@ export function PublicationConfirm({ title, statistics }: Props) {
             value={statistics?.notPublished}
           />
         </dl>
-        <div className="p-4 border border-gray-300 rounded">
-          <Form id="result-form" method="POST">
-            <ToggleGroup
-              name="sendEmails"
-              label="Send an email to notify speakers"
-              description="The email will be sent to each proposal speaker"
-              value={true}
-            />
-          </Form>
-        </div>
+        <Form id="result-form" method="POST">
+          <ToggleGroup
+            name="sendEmails"
+            label="Send an email to notify speakers"
+            description="The email will be sent to each proposal speaker"
+            value={true}
+          />
+        </Form>
       </Modal.Content>
       <Modal.Actions>
         <Button onClick={close} variant="secondary" loading={isLoading}>

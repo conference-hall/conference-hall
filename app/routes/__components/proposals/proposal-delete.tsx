@@ -2,7 +2,7 @@ import { Form } from '@remix-run/react';
 import { useState } from 'react';
 
 import { Button } from '~/design-system/buttons.tsx';
-import { Modal } from '~/design-system/modals.tsx';
+import { Modal } from '~/design-system/dialogs/modals.tsx';
 import { Text } from '~/design-system/typography.tsx';
 
 type Props = { className?: string };
@@ -23,9 +23,8 @@ type DeleteProposalModalProps = { isOpen: boolean; onClose: () => void };
 
 function ProposalDeleteModal({ isOpen, onClose }: DeleteProposalModalProps) {
   return (
-    <Modal open={isOpen} onClose={onClose}>
+    <Modal title="Are you sure you want to delete your proposal?" open={isOpen} onClose={onClose}>
       <Form method="POST" onSubmit={onClose}>
-        <Modal.Title>Are you sure you want to delete your proposal?</Modal.Title>
         <Modal.Content>
           <Text>The talk will still be in your profile, so you will be able to submit it again later.</Text>
         </Modal.Content>

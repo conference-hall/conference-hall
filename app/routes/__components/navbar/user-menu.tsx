@@ -11,7 +11,7 @@ import { Link } from '@remix-run/react';
 import { useState } from 'react';
 
 import { Avatar, AvatarName } from '~/design-system/avatar.tsx';
-import { SlideOver } from '~/design-system/slide-over.tsx';
+import { SlideOver } from '~/design-system/dialogs/slide-over.tsx';
 import { Text } from '~/design-system/typography.tsx';
 
 type MenuProps = {
