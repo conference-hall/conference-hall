@@ -1,6 +1,7 @@
 export const reviewOptions = [
-  { name: 'Reviewed by you', value: 'reviewed' },
-  { name: 'Not reviewed yet', value: 'not-reviewed' },
+  { name: 'Reviewed', value: 'reviewed' },
+  { name: 'Not reviewed', value: 'not-reviewed' },
+  { name: 'My favorites', value: 'my-favorites' },
 ];
 
 export const statusOptions = [

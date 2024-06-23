@@ -3,7 +3,7 @@ import { db } from 'prisma/db.server.ts';
 
 import type { Pagination } from '~/.server/shared/pagination';
 
-import type { ProposalsFilters, StatusFilter } from './proposal-search-builder.types';
+import type { ProposalsFilters, ReviewsFilter, StatusFilter } from './proposal-search-builder.types';
 
 type SearchOptions = { withSpeakers: boolean };
 
@@ -73,14 +73,12 @@ export class ProposalSearchBuilder {
   private whereClause(): Prisma.ProposalWhereInput {
     const { query, reviews, formats, categories, status } = this.filters;
 
-    const reviewClause = reviews === 'reviewed' ? { some: { userId: this.userId } } : { none: { userId: this.userId } };
-
     return {
       event: { slug: this.eventSlug },
       isDraft: false,
       formats: formats ? { some: { id: formats } } : undefined,
       categories: categories ? { some: { id: categories } } : undefined,
-      reviews: reviews ? reviewClause : undefined,
+      reviews: this.reviewsClause(reviews),
       OR: this.whereSearchClause(query),
       ...this.whereStatus(status),
     };
@@ -106,6 +104,13 @@ export class ProposalSearchBuilder {
     if (this.options.withSpeakers) return [byTitle, bySpeakers];
 
     return [byTitle];
+  }
+
+  private reviewsClause(reviews?: ReviewsFilter): Prisma.ReviewListRelationFilter | undefined {
+    if (!reviews) return undefined;
+    if (reviews === 'reviewed') return { some: { userId: this.userId } };
+    if (reviews === 'not-reviewed') return { none: { userId: this.userId } };
+    if (reviews === 'my-favorites') return { some: { userId: this.userId, feeling: 'POSITIVE' } };
   }
 
   private orderByClause(): Prisma.ProposalOrderByWithRelationInput[] {

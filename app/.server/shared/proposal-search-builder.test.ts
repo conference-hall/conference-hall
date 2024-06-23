@@ -70,8 +70,10 @@ describe('EventProposalsSearch', () => {
     await proposalFactory({ event: event2, talk: talk3 });
 
     await reviewFactory({ user: speaker, proposal: proposal1, attributes: { feeling: 'NEGATIVE', note: 0 } });
+    await reviewFactory({ user: speaker, proposal: proposal2, attributes: { feeling: 'POSITIVE', note: 5 } });
     await reviewFactory({ user: owner, proposal: proposal1, attributes: { feeling: 'POSITIVE', note: 5 } });
-    await reviewFactory({ user: owner, proposal: proposal3, attributes: { feeling: 'POSITIVE', note: 1 } });
+    await reviewFactory({ user: owner, proposal: proposal2, attributes: { feeling: 'NEUTRAL', note: 5 } });
+    await reviewFactory({ user: owner, proposal: proposal3, attributes: { feeling: 'NEUTRAL', note: 1 } });
   });
 
   describe('#search.statisics', () => {
@@ -80,7 +82,7 @@ describe('EventProposalsSearch', () => {
 
       const statistics = await search.statistics();
       expect(statistics.total).toEqual(5);
-      expect(statistics.reviewed).toEqual(2);
+      expect(statistics.reviewed).toEqual(3);
     });
   });
 
@@ -194,19 +196,27 @@ describe('EventProposalsSearch', () => {
       const filters: ProposalsFilters = { reviews: 'reviewed' };
       const search = new ProposalSearchBuilder(event.slug, owner.id, filters);
       const proposals = await search.proposals();
-      expect(proposals.length).toBe(2);
+      expect(proposals.length).toBe(3);
       expect(proposals[0].title).toBe(proposal3.title);
-      expect(proposals[1].title).toBe(proposal1.title);
+      expect(proposals[1].title).toBe(proposal2.title);
+      expect(proposals[2].title).toBe(proposal1.title);
     });
 
     it('filters proposals by user not reviewed only', async () => {
       const filters: ProposalsFilters = { reviews: 'not-reviewed' };
       const search = new ProposalSearchBuilder(event.slug, owner.id, filters);
       const proposals = await search.proposals();
-      expect(proposals.length).toBe(3);
+      expect(proposals.length).toBe(2);
       expect(proposals[0].title).toBe(proposal5.title);
       expect(proposals[1].title).toBe(proposal4.title);
-      expect(proposals[2].title).toBe(proposal2.title);
+    });
+
+    it('filters proposals by user favorite reviews only', async () => {
+      const filters: ProposalsFilters = { reviews: 'my-favorites' };
+      const search = new ProposalSearchBuilder(event.slug, owner.id, filters);
+      const proposals = await search.proposals();
+      expect(proposals.length).toBe(1);
+      expect(proposals[0].title).toBe(proposal1.title);
     });
 
     it('sorts by newest (default)', async () => {
@@ -237,9 +247,9 @@ describe('EventProposalsSearch', () => {
       const search = new ProposalSearchBuilder(event.slug, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(5);
-      expect(proposals[0].title).toBe(proposal1.title);
-      expect(proposals[1].title).toBe(proposal3.title);
-      expect(proposals[2].title).toBe(proposal2.title);
+      expect(proposals[0].title).toBe(proposal2.title);
+      expect(proposals[1].title).toBe(proposal1.title);
+      expect(proposals[2].title).toBe(proposal3.title);
       expect(proposals[3].title).toBe(proposal4.title);
       expect(proposals[4].title).toBe(proposal5.title);
     });
@@ -249,11 +259,11 @@ describe('EventProposalsSearch', () => {
       const search = new ProposalSearchBuilder(event.slug, owner.id, filters);
       const proposals = await search.proposals();
       expect(proposals.length).toBe(5);
-      expect(proposals[0].title).toBe(proposal2.title);
-      expect(proposals[1].title).toBe(proposal4.title);
-      expect(proposals[2].title).toBe(proposal5.title);
-      expect(proposals[3].title).toBe(proposal3.title);
-      expect(proposals[4].title).toBe(proposal1.title);
+      expect(proposals[0].title).toBe(proposal4.title);
+      expect(proposals[1].title).toBe(proposal5.title);
+      expect(proposals[2].title).toBe(proposal3.title);
+      expect(proposals[3].title).toBe(proposal1.title);
+      expect(proposals[4].title).toBe(proposal2.title);
     });
   });
 
