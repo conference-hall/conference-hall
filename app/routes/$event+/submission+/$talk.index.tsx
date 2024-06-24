@@ -13,8 +13,7 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { parseWithZod } from '~/libs/zod-parser.ts';
-
-import { TalkForm } from '../__components/talks/talk-forms/talk-form.tsx';
+import { TalkForm } from '~/routes/__components/talks/talk-forms/talk-form.tsx';
 
 export const handle = { step: 'proposal' };
 

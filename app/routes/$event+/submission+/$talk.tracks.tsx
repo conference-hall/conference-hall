@@ -14,10 +14,10 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { parseWithZod } from '~/libs/zod-parser.ts';
+import { CategoriesForm } from '~/routes/__components/talks/talk-forms/categories-form.tsx';
+import { FormatsForm } from '~/routes/__components/talks/talk-forms/formats-form.tsx';
 
-import { CategoriesForm } from '../__components/talks/talk-forms/categories-form.tsx';
-import { FormatsForm } from '../__components/talks/talk-forms/formats-form.tsx';
-import { useEvent } from '../$event+/__components/use-event.tsx';
+import { useEvent } from '../__components/use-event.tsx';
 
 export const handle = { step: 'tracks' };
 

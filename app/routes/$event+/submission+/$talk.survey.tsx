@@ -13,8 +13,7 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { parseWithZod } from '~/libs/zod-parser.ts';
-
-import { SurveyForm } from '../__components/talks/talk-forms/survey-form.tsx';
+import { SurveyForm } from '~/routes/__components/talks/talk-forms/survey-form.tsx';
 
 export const handle = { step: 'survey' };
 

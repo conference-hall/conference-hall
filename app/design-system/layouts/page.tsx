@@ -18,8 +18,8 @@ type NavHeaderProps = { children?: ReactNode; className?: string };
 
 function NavHeader({ className, children }: NavHeaderProps) {
   return (
-    <div className={cx('bg-white shadow', className)}>
-      <Container>{children}</Container>
+    <div className="bg-white shadow">
+      <Container className={className}>{children}</Container>
     </div>
   );
 }

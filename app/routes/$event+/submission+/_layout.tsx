@@ -7,13 +7,11 @@ import invariant from 'tiny-invariant';
 import { SubmissionSteps } from '~/.server/cfp-submission-funnel/submission-steps.ts';
 import { EventPage } from '~/.server/event-page/event-page.ts';
 import { IconLink } from '~/design-system/icon-buttons.tsx';
-import { Container } from '~/design-system/layouts/container.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { CfpNotOpenError } from '~/libs/errors.server.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { eventSocialCard } from '~/libs/meta/social-cards.ts';
-import { Navbar } from '~/routes/__components/navbar/navbar.tsx';
 import { useUser } from '~/routes/__components/use-user.tsx';
 
 import { Steps } from './__components/steps.tsx';
@@ -45,14 +43,10 @@ export default function EventSubmissionRoute() {
 
   return (
     <>
-      <Navbar user={user} withSearch />
-
-      <div className="sticky top-0 z-10 border-b border-gray-200 bg-white py-2 shadow">
-        <Container className="flex w-full items-center justify-between gap-4 py-4">
-          <Steps steps={steps} currentStep={currentStepKey} />
-          <IconLink label="Cancel submission" to={`/${event.slug}`} icon={XMarkIcon} variant="secondary" />
-        </Container>
-      </div>
+      <Page.NavHeader className="flex w-full items-center justify-between gap-4 py-4">
+        <Steps steps={steps} currentStep={currentStepKey} />
+        <IconLink label="Cancel submission" to={`/${event.slug}`} icon={XMarkIcon} variant="secondary" />
+      </Page.NavHeader>
 
       <Page className="flex flex-col">
         <Outlet context={{ user, event }} />

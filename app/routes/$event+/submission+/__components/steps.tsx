@@ -14,7 +14,7 @@ function StepsMobile({ steps, currentStep }: Props) {
   const currentStepIdx = steps.findIndex((step) => step.key === currentStep);
 
   return (
-    <nav className="flex items-center xl:hidden" aria-label="Progress">
+    <nav className="flex items-center xl:hidden sm:pl-40" aria-label="Progress">
       <p className="text-sm font-bold">
         Step {currentStepIdx + 1} of {steps.length}
       </p>
@@ -49,7 +49,7 @@ function StepsDesktop({ steps, currentStep }: Props) {
   const currentStepIdx = steps.findIndex((step) => step.key === currentStep);
 
   return (
-    <nav aria-label="Progress" className="hidden xl:block">
+    <nav aria-label="Progress" className="hidden xl:block sm:pl-40">
       <ol className="divide-y divide-gray-300 rounded-full border  border-gray-300 md:flex md:divide-y-0">
         {steps.map((step, stepIdx) => (
           <li
@@ -59,7 +59,7 @@ function StepsDesktop({ steps, currentStep }: Props) {
           >
             {stepIdx < currentStepIdx ? (
               <Link to={step.path} className="group flex w-full items-center">
-                <span className="flex items-center px-6 py-2 text-sm font-medium">
+                <span className="flex items-center px-4 py-1.5 text-sm font-medium">
                   <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-indigo-600 group-hover:bg-indigo-800">
                     <CheckIcon className="h-4 w-4 text-white" aria-hidden="true" />
                   </span>
@@ -67,7 +67,7 @@ function StepsDesktop({ steps, currentStep }: Props) {
                 </span>
               </Link>
             ) : stepIdx === currentStepIdx ? (
-              <span className="flex items-center px-6 py-2 text-sm font-medium">
+              <span className="flex items-center px-4 py-1.5 text-sm font-medium">
                 <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full border border-indigo-600">
                   <span className="text-indigo-600">{stepIdx + 1}</span>
                 </span>
@@ -75,7 +75,7 @@ function StepsDesktop({ steps, currentStep }: Props) {
               </span>
             ) : (
               <span className="flex items-center">
-                <span className="flex items-center px-6 py-2 text-sm font-medium">
+                <span className="flex items-center px-4 py-1.5 text-sm font-medium">
                   <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full border border-gray-300">
                     <span className="text-gray-500">{stepIdx + 1}</span>
                   </span>

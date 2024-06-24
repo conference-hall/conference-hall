@@ -1,6 +1,6 @@
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { Outlet, useLoaderData } from '@remix-run/react';
+import { Outlet, useLoaderData, useMatch } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { EventPage } from '~/.server/event-page/event-page.ts';
@@ -32,6 +32,8 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 export default function EventRoute() {
   const { user } = useUser();
   const event = useLoaderData<typeof loader>();
+
+  const submissionRoute = useMatch('/:event/submission/*');
 
   return (
     <>
@@ -81,7 +83,9 @@ export default function EventRoute() {
         </Container>
       </header>
 
-      <EventTabs slug={event.slug} type={event.type} surveyEnabled={event.surveyEnabled} className="sm:ml-40" />
+      {!submissionRoute ? (
+        <EventTabs slug={event.slug} type={event.type} surveyEnabled={event.surveyEnabled} className="sm:ml-40" />
+      ) : null}
 
       <Outlet context={{ user, event }} />
 
