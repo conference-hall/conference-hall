@@ -117,12 +117,17 @@ export class TalkSubmission {
     return {
       id: proposal.id,
       title: proposal.title,
+      abstract: proposal.abstract,
+      level: proposal.level,
+      languages: (proposal.languages || []) as string[],
+      references: proposal.references,
       isOwner: this.speakerId === proposal?.talk?.creatorId,
       invitationLink: proposal.invitationLink,
       speakers: proposal.speakers
         .map((speaker) => ({
           id: speaker.id,
           name: speaker.name,
+          bio: speaker.bio,
           picture: speaker.picture,
           isCurrentUser: this.speakerId === speaker.id,
         }))
