@@ -69,8 +69,7 @@ describe('Submit a talk to event', () => {
       // Step: confirmation
       submission.isConfirmationStepVisible();
       cy.assertText('The amazing talk');
-      cy.assertText('by Clark Kent');
-      submission.fillConfirmationForm({ message: 'You rock!', cod: true });
+      submission.fillConfirmationForm({ cod: true });
       submission.submit();
       cy.assertToast('Congratulation! Proposal submitted!');
 
@@ -214,7 +213,7 @@ describe('Submit a talk to event', () => {
 
       // Step: confirmation
       submission.isConfirmationStepVisible();
-      submission.fillConfirmationForm({ message: 'You rock!', cod: true });
+      submission.fillConfirmationForm({ cod: true });
       submission.submit();
 
       // Check proposal list
@@ -245,7 +244,7 @@ describe('Submit a talk to event', () => {
 
       // Step: confirmation
       submission.isConfirmationStepVisible();
-      submission.fillConfirmationForm({ message: 'You rock!', cod: true });
+      submission.fillConfirmationForm({ cod: true });
       submission.submit();
 
       // Check proposal list

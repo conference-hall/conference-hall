@@ -18,7 +18,6 @@ type SurveyFormType = {
 };
 
 type ConfirmationFormType = {
-  message?: string;
   cod?: boolean;
 };
 
