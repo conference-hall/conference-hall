@@ -4,9 +4,9 @@ import type { ReactNode } from 'react';
 
 type Props = { children: ReactNode; className?: string };
 
-export function AlertInfo({ children, className }: Props) {
+export function AlertInfo({ children, className, ...rest }: Props) {
   return (
-    <div className={cx('rounded-md bg-blue-50 border border-blue-100 p-4', className)}>
+    <div className={cx('rounded-md bg-blue-50 border border-blue-100 p-4', className)} {...rest}>
       <div className="flex">
         <div className="flex-shrink-0">
           <InformationCircleIcon className="h-5 w-5 text-blue-400" aria-hidden="true" />

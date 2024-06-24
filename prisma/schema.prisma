@@ -265,7 +265,7 @@ model Review {
   userId      String
   user        User          @relation(fields: [userId], references: [id])
   proposalId  String
-  proposal    Proposal      @relation(fields: [proposalId], references: [id])
+  proposal    Proposal      @relation(fields: [proposalId], references: [id], onDelete: Cascade)
   feeling     ReviewFeeling @default(NEUTRAL)
   note        Int?
   createdAt   DateTime      @default(now())
@@ -288,7 +288,7 @@ model Comment {
   userId      String
   user        User           @relation(fields: [userId], references: [id])
   proposalId  String
-  proposal    Proposal       @relation(fields: [proposalId], references: [id])
+  proposal    Proposal       @relation(fields: [proposalId], references: [id], onDelete: Cascade)
   comment     String
   channel     CommentChannel
   createdAt   DateTime       @default(now())

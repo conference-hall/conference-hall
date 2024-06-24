@@ -6,7 +6,6 @@ import invariant from 'tiny-invariant';
 import { Submissions } from '~/.server/cfp-submissions/submissions.ts';
 import { ButtonLink } from '~/design-system/buttons.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
-import { PageHeaderTitle } from '~/design-system/layouts/page-header-title.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 
 import { ProposalsList } from './__components/proposals-list.tsx';
@@ -25,14 +24,11 @@ export default function EventSpeakerProposalsRoute() {
   const proposals = useLoaderData<typeof loader>();
 
   return (
-    <>
-      <PageHeaderTitle title="Your proposals" subtitle="All your draft and submitted proposals for the event.">
+    <Page>
+      <Page.Heading title="Your proposals" subtitle="All your draft and submitted proposals for the event.">
         {event.cfpState === 'OPENED' && <ButtonLink to="../submission">Submit a proposal</ButtonLink>}
-      </PageHeaderTitle>
-
-      <Page>
-        <ProposalsList proposals={proposals} />
-      </Page>
-    </>
+      </Page.Heading>
+      <ProposalsList proposals={proposals} />
+    </Page>
   );
 }

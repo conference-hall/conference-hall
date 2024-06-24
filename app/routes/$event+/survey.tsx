@@ -9,7 +9,6 @@ import { SurveySchema } from '~/.server/cfp-survey/speaker-answers.types.ts';
 import { Button } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
-import { PageHeaderTitle } from '~/design-system/layouts/page-header-title.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { parseWithZod } from '~/libs/zod-parser.ts';
@@ -41,24 +40,22 @@ export default function EventSurveyRoute() {
   const { questions, answers } = useLoaderData<typeof loader>();
 
   return (
-    <>
-      <PageHeaderTitle
+    <Page>
+      <Page.Heading
         title="We have some questions for you."
         subtitle="This information are asked by the organizers to give you a better speaker experience."
       />
 
-      <Page>
-        <Card>
-          <Card.Content>
-            <SurveyForm id="survey-form" questions={questions} initialValues={answers} />
-          </Card.Content>
-          <Card.Actions>
-            <Button type="submit" form="survey-form">
-              Save survey
-            </Button>
-          </Card.Actions>
-        </Card>
-      </Page>
-    </>
+      <Card>
+        <Card.Content>
+          <SurveyForm id="survey-form" questions={questions} initialValues={answers} />
+        </Card.Content>
+        <Card.Actions>
+          <Button type="submit" form="survey-form">
+            Save survey
+          </Button>
+        </Card.Actions>
+      </Card>
+    </Page>
   );
 }

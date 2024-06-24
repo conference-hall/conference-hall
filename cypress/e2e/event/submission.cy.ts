@@ -69,8 +69,7 @@ describe('Submit a talk to event', () => {
       // Step: confirmation
       submission.isConfirmationStepVisible();
       cy.assertText('The amazing talk');
-      cy.assertText('by Clark Kent');
-      submission.fillConfirmationForm({ message: 'You rock!', cod: true });
+      submission.fillConfirmationForm({ cod: true });
       submission.submit();
       cy.assertToast('Congratulation! Proposal submitted!');
 
@@ -214,7 +213,7 @@ describe('Submit a talk to event', () => {
 
       // Step: confirmation
       submission.isConfirmationStepVisible();
-      submission.fillConfirmationForm({ message: 'You rock!', cod: true });
+      submission.fillConfirmationForm({ cod: true });
       submission.submit();
 
       // Check proposal list
@@ -245,7 +244,7 @@ describe('Submit a talk to event', () => {
 
       // Step: confirmation
       submission.isConfirmationStepVisible();
-      submission.fillConfirmationForm({ message: 'You rock!', cod: true });
+      submission.fillConfirmationForm({ cod: true });
       submission.submit();
 
       // Check proposal list
@@ -280,7 +279,12 @@ describe('Submit a talk to event', () => {
 
     it('cannot submit a talk when max proposal reached', () => {
       submission.visit('with-max-proposals');
-      cy.assertText('0 / 1 proposals submitted.');
+      submission
+        .maxProposalAlert()
+        .should(
+          'contain.text',
+          'You can submit a maximum of 1 proposals by speaker. You currently have submitted 0 proposals.',
+        );
 
       submission.talk('My existing talk').click();
       submission.isTalkStepVisible();

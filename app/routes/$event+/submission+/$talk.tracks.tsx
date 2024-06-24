@@ -11,13 +11,14 @@ import { EventPage } from '~/.server/event-page/event-page.ts';
 import { AlertError } from '~/design-system/alerts.tsx';
 import { Button } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
+import { Page } from '~/design-system/layouts/page.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { parseWithZod } from '~/libs/zod-parser.ts';
+import { CategoriesForm } from '~/routes/__components/talks/talk-forms/categories-form.tsx';
+import { FormatsForm } from '~/routes/__components/talks/talk-forms/formats-form.tsx';
 
-import { CategoriesForm } from '../__components/talks/talk-forms/categories-form.tsx';
-import { FormatsForm } from '../__components/talks/talk-forms/formats-form.tsx';
-import { useEvent } from '../$event+/__components/use-event.tsx';
+import { useEvent } from '../__components/use-event.tsx';
 
 export const handle = { step: 'tracks' };
 
@@ -55,49 +56,51 @@ export default function SubmissionTracksRoute() {
   const errors = useActionData<typeof action>();
 
   return (
-    <Card>
-      <Card.Title>
-        <H2>Proposal tracks</H2>
-      </Card.Title>
-      <Card.Content>
-        <Form id="tracks-form" method="POST">
-          <div className="space-y-12">
-            {event.formats?.length > 0 && (
-              <section>
-                <FormatsForm
-                  formats={event.formats}
-                  required={event.formatsRequired}
-                  initialValues={proposal.formats}
-                />
-                {errors?.formats && (
-                  <AlertError className="mt-4">You must select at least one proposal format.</AlertError>
-                )}
-              </section>
-            )}
+    <Page>
+      <Card>
+        <Card.Title>
+          <H2>Proposal tracks</H2>
+        </Card.Title>
+        <Card.Content>
+          <Form id="tracks-form" method="POST">
+            <div className="space-y-12">
+              {event.formats?.length > 0 && (
+                <section>
+                  <FormatsForm
+                    formats={event.formats}
+                    required={event.formatsRequired}
+                    initialValues={proposal.formats}
+                  />
+                  {errors?.formats && (
+                    <AlertError className="mt-4">You must select at least one proposal format.</AlertError>
+                  )}
+                </section>
+              )}
 
-            {event.categories?.length > 0 && (
-              <section>
-                <CategoriesForm
-                  categories={event.categories}
-                  required={event.categoriesRequired}
-                  initialValues={proposal.categories}
-                />
-                {errors?.categories && (
-                  <AlertError className="mt-4">You must select at least one proposal category.</AlertError>
-                )}
-              </section>
-            )}
-          </div>
-        </Form>
-      </Card.Content>
-      <Card.Actions>
-        <Button onClick={() => navigate(-1)} variant="secondary">
-          Go back
-        </Button>
-        <Button type="submit" form="tracks-form" iconRight={ArrowRightIcon}>
-          Continue
-        </Button>
-      </Card.Actions>
-    </Card>
+              {event.categories?.length > 0 && (
+                <section>
+                  <CategoriesForm
+                    categories={event.categories}
+                    required={event.categoriesRequired}
+                    initialValues={proposal.categories}
+                  />
+                  {errors?.categories && (
+                    <AlertError className="mt-4">You must select at least one proposal category.</AlertError>
+                  )}
+                </section>
+              )}
+            </div>
+          </Form>
+        </Card.Content>
+        <Card.Actions>
+          <Button onClick={() => navigate(-1)} variant="secondary">
+            Go back
+          </Button>
+          <Button type="submit" form="tracks-form" iconRight={ArrowRightIcon}>
+            Continue
+          </Button>
+        </Card.Actions>
+      </Card>
+    </Page>
   );
 }

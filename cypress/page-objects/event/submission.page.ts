@@ -18,7 +18,6 @@ type SurveyFormType = {
 };
 
 type ConfirmationFormType = {
-  message?: string;
   cod?: boolean;
 };
 
@@ -29,7 +28,7 @@ class EventSubmissionPage extends BasePage {
   }
 
   isPageVisible() {
-    cy.findByRole('heading', { name: 'Select or create a proposal' }).should('exist');
+    cy.findByRole('heading', { name: 'Submit a proposal' }).should('exist');
   }
 
   /**
@@ -37,7 +36,11 @@ class EventSubmissionPage extends BasePage {
    */
 
   createNewProposal() {
-    return cy.findByRole('link', { name: 'Create a new proposal' }).click();
+    return cy.findByRole('link', { name: 'New proposal' }).click();
+  }
+
+  maxProposalAlert() {
+    return cy.findByLabelText('Maximum of proposals by speaker').should('exist');
   }
 
   drafts() {

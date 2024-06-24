@@ -18,7 +18,7 @@ const BACKGROUND = {
 
 const DEFAULT_LINKS = {
   light: 'text-gray-500 hover:bg-gray-100 hover:text-gray-900 focus-visible:outline-indigo-600',
-  dark: 'text-gray-300 hover:bg-gray-700 hover:text-white focus-visible:outline-white',
+  dark: 'text-gray-300 hover:bg-gray-700 font-semibold hover:text-white focus-visible:outline-white',
 };
 
 const ACTIVE_LINKS = {
@@ -33,7 +33,7 @@ const ICON = {
 
 const PADDING_Y = {
   0: 'py-0',
-  4: 'py-4',
+  4: 'py-2 sm:py-4',
 };
 
 export function NavTabs({ children, py = 0, variant = 'light', scrollable = false, className }: Props) {
