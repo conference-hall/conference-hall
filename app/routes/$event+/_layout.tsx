@@ -84,7 +84,13 @@ export default function EventRoute() {
       </header>
 
       {!submissionRoute ? (
-        <EventTabs slug={event.slug} type={event.type} surveyEnabled={event.surveyEnabled} className="sm:ml-40" />
+        <EventTabs
+          slug={event.slug}
+          type={event.type}
+          surveyEnabled={event.surveyEnabled}
+          isAuthenticated={Boolean(user)}
+          className="sm:ml-40"
+        />
       ) : null}
 
       <Outlet context={{ user, event }} />
