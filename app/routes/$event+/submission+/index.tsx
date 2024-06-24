@@ -38,7 +38,11 @@ export default function EventSubmitRoute() {
   const { maxProposals } = event;
 
   if (maxProposals && proposalsCount >= maxProposals) {
-    return <MaxProposalsReached maxProposals={maxProposals} />;
+    return (
+      <Page>
+        <MaxProposalsReached maxProposals={maxProposals} />
+      </Page>
+    );
   }
 
   return (
