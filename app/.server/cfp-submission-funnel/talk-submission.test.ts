@@ -317,11 +317,15 @@ describe('TalkSubmission', () => {
       expect(result).toEqual({
         id: proposal.id,
         title: proposal.title,
+        abstract: proposal.abstract,
+        languages: proposal.languages,
+        level: proposal.level,
+        references: proposal.references,
         invitationLink: `http://localhost:3001/invite/proposal/${proposal.invitationCode}`,
         isOwner: true,
         speakers: [
-          { id: speaker.id, name: speaker.name, picture: speaker.picture, isCurrentUser: true },
-          { id: speaker2.id, name: speaker2.name, picture: speaker2.picture, isCurrentUser: false },
+          { id: speaker.id, name: speaker.name, bio: speaker.bio, picture: speaker.picture, isCurrentUser: true },
+          { id: speaker2.id, name: speaker2.name, bio: speaker2.bio, picture: speaker2.picture, isCurrentUser: false },
         ],
         formats: [{ id: format.id, name: format.name }],
         categories: [{ id: category.id, name: category.name }],
