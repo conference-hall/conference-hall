@@ -17,7 +17,7 @@ export function EnableApiSection({ apiKey }: Props) {
       </Card.Title>
 
       <Card.Content>
-        <Form method="POST" id="api-integration-form">
+        <Form method="POST" id="api-integration-form" className="space-y-4">
           <Input
             name="apiKey"
             label="API key"
@@ -25,7 +25,7 @@ export function EnableApiSection({ apiKey }: Props) {
             value={apiKey || ''}
             placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
           />
-          <AlertInfo className="mt-4">The API is limited to 5 requests every hour.</AlertInfo>
+          <AlertInfo>The API is limited to 5 requests every hour.</AlertInfo>
         </Form>
       </Card.Content>
 

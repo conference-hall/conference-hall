@@ -40,7 +40,7 @@ function Heading({ title, subtitle, children }: HeadingProps) {
         </div>
       </div>
 
-      {children && <div className="flex flex-col-reverse gap-4 sm:mt-0 sm:flex-row">{children}</div>}
+      {children && <div className="flex flex-col-reverse items-center gap-4 sm:mt-0 sm:flex-row">{children}</div>}
     </div>
   );
 }

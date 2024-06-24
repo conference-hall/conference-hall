@@ -8,6 +8,7 @@ import { TalkSubmission } from '~/.server/cfp-submission-funnel/talk-submission.
 import { Button } from '~/design-system/buttons.tsx';
 import { Checkbox } from '~/design-system/forms/checkboxes.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
+import { Page } from '~/design-system/layouts/page.tsx';
 import { ExternalLink } from '~/design-system/links.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast } from '~/libs/toasts/toast.server.ts';
@@ -42,7 +43,7 @@ export default function SubmissionSubmitRoute() {
   const [acceptedCod, setAcceptCod] = useState(!event.codeOfConductUrl);
 
   return (
-    <>
+    <Page className="space-y-4">
       <TalkSection
         talk={proposal}
         event={event}
@@ -80,6 +81,6 @@ export default function SubmissionSubmitRoute() {
           </Form>
         </Card.Content>
       </Card>
-    </>
+    </Page>
   );
 }

@@ -10,6 +10,7 @@ import { TalksLibrary } from '~/.server/speaker-talks-library/talks-library.ts';
 import { TalkSaveSchema } from '~/.server/speaker-talks-library/talks-library.types.ts';
 import { Button } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
+import { Page } from '~/design-system/layouts/page.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { parseWithZod } from '~/libs/zod-parser.ts';
@@ -53,21 +54,23 @@ export default function SubmissionTalkRoute() {
   const errors = useActionData<typeof action>();
 
   return (
-    <Card>
-      <Card.Title>
-        <H2>Your proposal</H2>
-      </Card.Title>
-      <Card.Content>
-        <TalkForm id="talk-form" initialValues={talk} errors={errors} />
-      </Card.Content>
-      <Card.Actions>
-        <Button onClick={() => navigate(-1)} variant="secondary">
-          Go back
-        </Button>
-        <Button type="submit" form="talk-form" iconRight={ArrowRightIcon}>
-          Continue
-        </Button>
-      </Card.Actions>
-    </Card>
+    <Page>
+      <Card>
+        <Card.Title>
+          <H2>Your proposal</H2>
+        </Card.Title>
+        <Card.Content>
+          <TalkForm id="talk-form" initialValues={talk} errors={errors} />
+        </Card.Content>
+        <Card.Actions>
+          <Button onClick={() => navigate(-1)} variant="secondary">
+            Go back
+          </Button>
+          <Button type="submit" form="talk-form" iconRight={ArrowRightIcon}>
+            Continue
+          </Button>
+        </Card.Actions>
+      </Card>
+    </Page>
   );
 }

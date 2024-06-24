@@ -1,3 +1,4 @@
+import { PlusIcon } from '@heroicons/react/20/solid';
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
@@ -5,13 +6,14 @@ import invariant from 'tiny-invariant';
 
 import { Submissions } from '~/.server/cfp-submissions/submissions.ts';
 import { TalksLibrary } from '~/.server/speaker-talks-library/talks-library.ts';
-import { ProgressBar } from '~/design-system/progress-bar.tsx';
-import { H2, Text } from '~/design-system/typography.tsx';
+import { ButtonLink } from '~/design-system/buttons.tsx';
+import { Page } from '~/design-system/layouts/page.tsx';
+import { H2 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 
 import { useEvent } from '../__components/use-event.tsx';
-import { MaxProposalsReached } from './__components/max-proposals-reached.tsx';
-import { NewProposal } from './__components/new-proposal.tsx';
+import { MaxProposalsAlert, MaxProposalsReached } from './__components/max-proposals.tsx';
+import { NoSubmissionState } from './__components/no-submissions-state.tsx';
 import { SubmissionTalksList } from './__components/submission-talks-list.tsx';
 
 export const handle = { step: 'selection' };
@@ -40,34 +42,38 @@ export default function EventSubmitRoute() {
   }
 
   return (
-    <>
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-        <H2>Select or create a proposal</H2>
-        {maxProposals && (
-          <div>
-            <Text size="xs" mb={1} weight="medium">
-              {proposalsCount} / {maxProposals} proposals submitted.
-            </Text>
-            <ProgressBar value={proposalsCount} max={maxProposals} />
-          </div>
+    <Page>
+      <Page.Heading title="Submit a proposal" subtitle="Select a talk from your library or create a new proposal">
+        {(drafts.length !== 0 || talks.length !== 0) && (
+          <ButtonLink to="new" variant="primary" iconLeft={PlusIcon}>
+            New proposal
+          </ButtonLink>
+        )}
+      </Page.Heading>
+
+      <div className="space-y-8">
+        {maxProposals && <MaxProposalsAlert maxProposals={maxProposals} proposalsCount={proposalsCount} />}
+
+        {drafts.length > 0 && (
+          <section className="space-y-4">
+            <H2 variant="secondary">Your draft proposals</H2>
+            <SubmissionTalksList label="Draft proposals list" talks={drafts} />
+          </section>
+        )}
+
+        {talks.length > 0 && (
+          <section className="space-y-4">
+            <H2 variant="secondary">From your talks library</H2>
+            <SubmissionTalksList label="Talks list" talks={talks} />
+          </section>
+        )}
+
+        {drafts.length === 0 && talks.length === 0 && (
+          <section className="space-y-4">
+            <NoSubmissionState />
+          </section>
         )}
       </div>
-
-      <NewProposal />
-
-      {drafts.length > 0 && (
-        <section className="space-y-4">
-          <H2>Draft proposals</H2>
-          <SubmissionTalksList label="Draft proposals list" talks={drafts} />
-        </section>
-      )}
-
-      {talks.length > 0 && (
-        <section className="space-y-4">
-          <H2>From your talks library</H2>
-          <SubmissionTalksList label="Talks list" talks={talks} />
-        </section>
-      )}
-    </>
+    </Page>
   );
 }

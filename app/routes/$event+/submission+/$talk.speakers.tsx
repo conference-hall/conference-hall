@@ -11,6 +11,7 @@ import { DetailsSchema } from '~/.server/speaker-profile/speaker-profile.types.t
 import { Button } from '~/design-system/buttons.tsx';
 import { MarkdownTextArea } from '~/design-system/forms/markdown-textarea.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
+import { Page } from '~/design-system/layouts/page.tsx';
 import { ExternalLink } from '~/design-system/links.tsx';
 import { H2, Subtitle, Text } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
@@ -62,40 +63,42 @@ export default function SubmissionSpeakerRoute() {
   const errors = useActionData<typeof action>();
 
   return (
-    <Card>
-      <Card.Title>
-        <H2>Speaker details</H2>
-      </Card.Title>
-      <Card.Content>
-        <Form id="speakers-form" method="POST">
-          <MarkdownTextArea
-            name="bio"
-            label="Biography"
-            rows={5}
-            error={errors?.bio}
-            defaultValue={speaker.bio || ''}
-            className="mb-3"
-          />
-          <Text variant="secondary">
-            You can give more information about you from{' '}
-            <ExternalLink href="/speaker/settings">the profile page.</ExternalLink>
-          </Text>
-          <input type="hidden" name="references" value={speaker.references || ''} />
-        </Form>
-        <div className="mt-4">
-          <H2>Co-speakers</H2>
-          <Subtitle>When co-speaker accepts the invite, he/she will be automatically added to the proposal.</Subtitle>
-          <CoSpeakers speakers={speakers} invitationLink={invitationLink} canEdit={isOwner} className="mt-6" />
-        </div>
-      </Card.Content>
-      <Card.Actions>
-        <Button onClick={() => navigate(-1)} variant="secondary">
-          Go back
-        </Button>
-        <Button type="submit" form="speakers-form" iconRight={ArrowRightIcon}>
-          Continue
-        </Button>
-      </Card.Actions>
-    </Card>
+    <Page>
+      <Card>
+        <Card.Title>
+          <H2>Speaker details</H2>
+        </Card.Title>
+        <Card.Content>
+          <Form id="speakers-form" method="POST">
+            <MarkdownTextArea
+              name="bio"
+              label="Biography"
+              rows={5}
+              error={errors?.bio}
+              defaultValue={speaker.bio || ''}
+              className="mb-3"
+            />
+            <Text variant="secondary">
+              You can give more information about you from{' '}
+              <ExternalLink href="/speaker/settings">the profile page.</ExternalLink>
+            </Text>
+            <input type="hidden" name="references" value={speaker.references || ''} />
+          </Form>
+          <div className="mt-4">
+            <H2>Co-speakers</H2>
+            <Subtitle>When co-speaker accepts the invite, he/she will be automatically added to the proposal.</Subtitle>
+            <CoSpeakers speakers={speakers} invitationLink={invitationLink} canEdit={isOwner} className="mt-6" />
+          </div>
+        </Card.Content>
+        <Card.Actions>
+          <Button onClick={() => navigate(-1)} variant="secondary">
+            Go back
+          </Button>
+          <Button type="submit" form="speakers-form" iconRight={ArrowRightIcon}>
+            Continue
+          </Button>
+        </Card.Actions>
+      </Card>
+    </Page>
   );
 }

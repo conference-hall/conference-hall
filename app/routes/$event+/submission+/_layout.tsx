@@ -48,9 +48,7 @@ export default function EventSubmissionRoute() {
         <IconLink label="Cancel submission" to={`/${event.slug}`} icon={XMarkIcon} variant="secondary" />
       </Page.NavHeader>
 
-      <Page className="flex flex-col">
-        <Outlet context={{ user, event }} />
-      </Page>
+      <Outlet context={{ user, event }} />
     </>
   );
 }
