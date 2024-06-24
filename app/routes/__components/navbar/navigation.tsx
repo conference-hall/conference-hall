@@ -1,5 +1,6 @@
 import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
 
+import { LoginButton } from './dropdowns/login-button.tsx';
 import { TeamsDropdown } from './dropdowns/teams-dropdown.tsx';
 
 type Props = {
@@ -10,13 +11,7 @@ type Props = {
 
 export function Navigation({ authenticated, teams = [], showTeams = false }: Props) {
   if (!authenticated) {
-    return (
-      <NavTabs variant="dark">
-        <NavTab to="/login" variant="dark">
-          Login
-        </NavTab>
-      </NavTabs>
-    );
+    return <LoginButton />;
   }
 
   return (

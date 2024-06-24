@@ -1,5 +1,4 @@
-import { ButtonLink } from '~/design-system/buttons.tsx';
-
+import { LoginButton } from './dropdowns/login-button.tsx';
 import { Logo } from './logo.tsx';
 import { Navigation } from './navigation.tsx';
 import { SearchEventsInput } from './search-events-input.tsx';
@@ -54,8 +53,7 @@ export function Navbar({ user, withSearch }: Props) {
 
         {/* Mobile menu */}
         <div className="flex lg:hidden">
-          {!user && <ButtonLink to="/login">Login</ButtonLink>}
-          {user && (
+          {user ? (
             <UserMenu
               name={user.name}
               email={user.email}
@@ -64,6 +62,8 @@ export function Navbar({ user, withSearch }: Props) {
               isOrganizer={user.isOrganizer}
               notificationsCount={user.notificationsUnreadCount}
             />
+          ) : (
+            <LoginButton />
           )}
         </div>
       </div>

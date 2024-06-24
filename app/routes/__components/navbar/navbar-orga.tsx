@@ -1,11 +1,11 @@
 import { useRouteLoaderData } from '@remix-run/react';
 
 import { SlashBarIcon } from '~/design-system/icons/slash-bar-icon.tsx';
-import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
 
 import type { loader as routeEventLoader } from '../../team+/$team.$event+/_layout.tsx';
 import type { loader as routeTeamLoader } from '../../team+/$team.tsx';
 import { EventButton } from './dropdowns/event-button.tsx';
+import { LoginButton } from './dropdowns/login-button.tsx';
 import { TeamsDropdown } from './dropdowns/teams-dropdown.tsx';
 import { Logo } from './logo.tsx';
 import { Navigation } from './navigation.tsx';
@@ -69,11 +69,7 @@ export function NavbarOrga({ user }: Props) {
               notificationsCount={user.notificationsUnreadCount}
             />
           ) : (
-            <NavTabs variant="dark">
-              <NavTab to="/login" variant="dark">
-                Login
-              </NavTab>
-            </NavTabs>
+            <LoginButton />
           )}
         </div>
       </div>
