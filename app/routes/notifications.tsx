@@ -7,7 +7,6 @@ import { Notifications } from '~/.server/user-notifications/notifications.ts';
 import { CardLink } from '~/design-system/layouts/card.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
-import { PageHeaderTitle } from '~/design-system/layouts/page-header-title.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
@@ -32,9 +31,9 @@ export default function OrganizerRoute() {
     <>
       <Navbar user={user} withSearch />
 
-      <PageHeaderTitle title="Notifications" subtitle="Notifications from events organizers about your proposals." />
-
       <Page>
+        <Page.Heading title="Notifications" subtitle="Notifications from events organizers about your proposals." />
+
         {hasNotifications ? (
           <ul aria-label="Notifications list" className="space-y-4">
             {notifications.map(({ event, proposal }) => (

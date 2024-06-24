@@ -11,7 +11,7 @@ import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { SearchParamSelector } from '~/design-system/navigation/search-param-selector.tsx';
-import { H1, Text } from '~/design-system/typography.tsx';
+import { Text } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 
@@ -31,13 +31,12 @@ export default function SpeakerTalksRoute() {
   const archived = searchParams.get('archived') === 'true';
 
   return (
-    <Page className="space-y-8">
-      <div className="flex items-center justify-between">
-        <H1>My talks library</H1>
+    <Page>
+      <Page.Heading title="My talks library" subtitle="Create or edit all your talks">
         <ButtonLink to="/speaker/talks/new" iconLeft={PlusIcon} variant="secondary">
           New talk
         </ButtonLink>
-      </div>
+      </Page.Heading>
 
       <List>
         <List.Header>

@@ -1,3 +1,4 @@
+import { PlusIcon } from '@heroicons/react/20/solid';
 import { Square3Stack3DIcon } from '@heroicons/react/24/outline';
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
@@ -5,9 +6,9 @@ import { useLoaderData, useSearchParams } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { TeamEvents } from '~/.server/team/team-events.ts';
+import { ButtonLink } from '~/design-system/buttons.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
-import { H1 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { EventCard } from '~/routes/__components/events/event-card.tsx';
 
@@ -35,11 +36,15 @@ export default function TeamEventsRoute() {
   const hasEvent = events.length > 0;
 
   return (
-    <Page className="flex flex-col">
-      <div className="flex items-center justify-between">
-        <H1>Team events</H1>
+    <Page>
+      <Page.Heading title="Team events" subtitle="Manage your team events call for papers">
         <ArchivedFilters />
-      </div>
+        {team.role === 'OWNER' ? (
+          <ButtonLink to={`/team/${team.slug}/new`} variant="secondary" iconLeft={PlusIcon}>
+            New event
+          </ButtonLink>
+        ) : null}
+      </Page.Heading>
 
       {hasEvent ? (
         <ul aria-label="Events list" className="grid grid-cols-1 gap-4 lg:gap-8 lg:grid-cols-2">

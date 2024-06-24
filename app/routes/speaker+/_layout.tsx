@@ -5,7 +5,6 @@ import { Outlet, useLoaderData } from '@remix-run/react';
 import { SpeakerProfile } from '~/.server/speaker-profile/speaker-profile.ts';
 import { Avatar } from '~/design-system/avatar.tsx';
 import { Container } from '~/design-system/layouts/container.tsx';
-import { PageHeader } from '~/design-system/layouts/page-header.tsx';
 import { H1, Text } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { Navbar } from '~/routes/__components/navbar/navbar.tsx';
@@ -27,7 +26,7 @@ export default function SpeakerRoute() {
     <>
       <Navbar user={user} withSearch />
 
-      <div className="hidden sm:block bg-gray-800">
+      <header className="hidden sm:block bg-gray-800">
         <Container className="h-24 flex gap-6 items-end relative">
           <Avatar
             picture={profile.picture}
@@ -35,20 +34,16 @@ export default function SpeakerRoute() {
             size="4xl"
             ring
             ringColor="white"
-            className="absolute -bottom-12 left-12"
+            className="absolute -bottom-12"
           />
           <div className="ml-40 p-2">
             <H1 variant="light">{profile.name}</H1>
             {profile.company && <Text variant="secondary-light">{profile.company}</Text>}
           </div>
         </Container>
-      </div>
+      </header>
 
-      <PageHeader>
-        <Container>
-          <SpeakerTabs />
-        </Container>
-      </PageHeader>
+      <SpeakerTabs className="sm:ml-40" />
 
       <Outlet context={{ user }} />
     </>
