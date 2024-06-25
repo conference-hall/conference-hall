@@ -9,7 +9,7 @@ export function ChartEmptyState({ className }: Props) {
   return (
     <div
       className={cx(
-        'flex min-h-44 grow items-center justify-center rounded-md border border-dashed border-gray-200 p-4',
+        'flex h-full min-h-44 grow items-center justify-center rounded-md border border-dashed border-gray-200 p-4',
         className,
       )}
     >

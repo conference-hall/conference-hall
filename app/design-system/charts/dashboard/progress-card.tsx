@@ -5,7 +5,7 @@ import { ProgressCircle } from '../progress-circle.tsx';
 
 type Props = { label: string; value?: number; max?: number };
 
-export function ProgressCard({ label, value = 0, max = 0 }: Props) {
+export function ProgressCard({ label, value = 0, max = 100 }: Props) {
   const safeValue = Math.min(max, Math.max(value, 0));
   const percentage = max ? (safeValue / max) * 100 : safeValue;
 
@@ -13,7 +13,7 @@ export function ProgressCard({ label, value = 0, max = 0 }: Props) {
     <Card className="flex flex-col">
       <div className="flex flex-col justify-center gap-4 p-4 px-6 grow">
         <div className="flex items-center gap-x-5">
-          <ProgressCircle value={safeValue}>
+          <ProgressCircle value={percentage}>
             <Text weight="medium">{`${percentage}%`}</Text>
           </ProgressCircle>
           <div>

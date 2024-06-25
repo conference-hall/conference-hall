@@ -21,7 +21,7 @@ export function BarListCard({ label, metric, data = [] }: BarListCardProps) {
     <Card className="space-y-6 p-6 relative">
       <div className="flex items-center justify-between">
         <H3>{label}</H3>
-        <Subtitle size="xs">{metric}</Subtitle>
+        {data.length > 0 ? <Subtitle size="xs">{metric}</Subtitle> : null}
       </div>
       <div className={cx('overflow-hidden max-h-[260px]', { 'pb-6': data.length > MAX_BAR })}>
         {data.length !== 0 ? <BarList data={data} /> : <ChartEmptyState />}

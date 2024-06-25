@@ -1,11 +1,12 @@
 // Tremor Raw BarList [v0.1.0]
 
+import { Link } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
 import React from 'react';
 
 type Bar<T> = T & {
-  key?: string;
-  href?: string;
+  id?: string;
+  to?: string;
   value: number;
   name: string;
 };
@@ -23,14 +24,12 @@ function BarListInner<T>(
     data = [],
     valueFormatter = (value) => value.toString(),
     showAnimation = false,
-    onValueChange,
     sortOrder = 'descending',
     className,
     ...props
   }: BarListProps<T>,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const Component = onValueChange ? 'button' : 'div';
   const sortedData = React.useMemo(() => {
     if (sortOrder === 'none') {
       return data;
@@ -56,25 +55,7 @@ function BarListInner<T>(
     >
       <div className="relative w-full space-y-1.5">
         {sortedData.map((item, index) => (
-          <Component
-            key={item.key ?? item.name}
-            onClick={() => {
-              onValueChange?.(item);
-            }}
-            className={cx(
-              // base
-              'group w-full rounded',
-              // focus
-              // focusRing,
-              onValueChange
-                ? [
-                    '!-m-0 cursor-pointer',
-                    // hover
-                    'hover:bg-gray-50 hover:dark:bg-gray-900',
-                  ]
-                : '',
-            )}
-          >
+          <div key={item.id ?? item.name} className="group w-full rounded">
             <div
               className={cx(
                 // base
@@ -82,7 +63,6 @@ function BarListInner<T>(
                 rowHeight,
                 // background color
                 'bg-blue-200 dark:bg-blue-900',
-                onValueChange ? 'group-hover:bg-blue-300 group-hover:dark:bg-blue-800' : '',
                 // margin and duration
                 {
                   'mb-0': index === sortedData.length - 1,
@@ -92,9 +72,9 @@ function BarListInner<T>(
               style={{ width: `${widths[index]}%` }}
             >
               <div className={cx('absolute left-2 flex max-w-full pr-2')}>
-                {item.href ? (
-                  <a
-                    href={item.href}
+                {item.to ? (
+                  <Link
+                    to={item.to}
                     className={cx(
                       // base
                       'truncate whitespace-nowrap rounded text-sm',
@@ -102,15 +82,10 @@ function BarListInner<T>(
                       'text-gray-900 dark:text-gray-50',
                       // hover
                       'hover:underline hover:underline-offset-2',
-                      // focus
-                      // focusRing,
                     )}
-                    target="_blank"
-                    rel="noreferrer"
-                    onClick={(event) => event.stopPropagation()}
                   >
                     {item.name}
-                  </a>
+                  </Link>
                 ) : (
                   <p
                     className={cx(
@@ -125,13 +100,13 @@ function BarListInner<T>(
                 )}
               </div>
             </div>
-          </Component>
+          </div>
         ))}
       </div>
       <div>
         {sortedData.map((item, index) => (
           <div
-            key={item.key ?? item.name}
+            key={item.id ?? item.name}
             className={cx(
               'flex items-center justify-end',
               rowHeight,
