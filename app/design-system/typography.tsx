@@ -49,7 +49,7 @@ function Typography({ id, as: Tag = 'p', children, ...rest }: TypographyProps) {
 }
 
 export function H1(props: TypographyProps) {
-  return <Typography as="h1" size="xl" weight="bold" {...props} />;
+  return <Typography as="h1" size="l" weight="semibold" {...props} />;
 }
 
 export function H2(props: TypographyProps) {

@@ -29,7 +29,7 @@ export function ProposalPage({ proposal }: Props) {
   return (
     <Card as="section">
       <div className="flex justify-between items-center gap-4 px-6 py-3 border-b border-b-gray-200">
-        <H1 size="base" weight="semibold" truncate>
+        <H1 size="base" truncate>
           {proposal.title}
         </H1>
         {canEditProposal && (

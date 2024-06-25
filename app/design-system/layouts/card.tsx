@@ -20,7 +20,7 @@ const PADDING = {
 };
 
 const BACKGROUND = {
-  light: 'bg-white shadow-sm ring-1 ring-gray-900/5',
+  light: 'bg-white shadow-sm border border-gray-200',
   dark: 'bg-gray-800',
 };
 

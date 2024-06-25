@@ -57,7 +57,7 @@ export function TalkSection({
   return (
     <Card as="section">
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4 px-6 py-3 border-b border-b-gray-200">
-        <H1 size="base" weight="semibold" truncate>
+        <H1 size="base" truncate>
           {talk.title}
         </H1>
         <div className="flex justify-between items-center gap-4">

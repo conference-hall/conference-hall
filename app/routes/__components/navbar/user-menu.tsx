@@ -12,6 +12,7 @@ import { useState } from 'react';
 
 import { Avatar, AvatarName } from '~/design-system/avatar.tsx';
 import { SlideOver } from '~/design-system/dialogs/slide-over.tsx';
+import { Divider } from '~/design-system/divider.tsx';
 import { Text } from '~/design-system/typography.tsx';
 
 type MenuProps = {
@@ -48,7 +49,7 @@ export function UserMenu({ email, name, picture, teams, isOrganizer, notificatio
                 Notifications
               </MenuLink>
 
-              <Divider />
+              <Divider as="li" className="my-2" />
 
               <li className="px-2 pb-2">
                 <Text size="xs" weight="semibold" variant="secondary">
@@ -64,7 +65,7 @@ export function UserMenu({ email, name, picture, teams, isOrganizer, notificatio
                 Talks library
               </MenuLink>
 
-              <Divider />
+              <Divider as="li" className="my-2" />
 
               {teams.length >= 0 && (
                 <li className="px-2 pb-2">
@@ -90,7 +91,7 @@ export function UserMenu({ email, name, picture, teams, isOrganizer, notificatio
                 </MenuLink>
               )}
 
-              <Divider />
+              <Divider as="li" className="my-2" />
 
               <MenuLink to="/logout" icon={ArrowRightStartOnRectangleIcon} onClick={handleClose}>
                 Sign out
@@ -132,10 +133,6 @@ function MenuLink({ to, icon: Icon, count, onClick, children }: LinkProps) {
       </Link>
     </li>
   );
-}
-
-function Divider() {
-  return <li role="presentation" aria-hidden="true" className="border-t border-gray-200 my-2" />;
 }
 
 type OpenProps = { name: string | null; picture: string | null; notificationsCount: number; onClick: () => void };
