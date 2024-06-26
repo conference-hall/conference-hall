@@ -31,13 +31,13 @@ export function SubmissionsChart({ data }: Props) {
           tick={{ transform: 'translate(0, 6)' }}
           minTickGap={5}
         />
-        <CartesianGrid vertical={false} className=" stroke-1 stroke-gray-200" />
+        <CartesianGrid vertical={false} className="stroke-1 stroke-gray-200" />
         <Area
           dataKey="value"
-          stroke="#3b82f6"
+          stroke="#6366f1"
           strokeWidth={2}
-          fillOpacity={0.2}
-          fill="#3b82f6"
+          fillOpacity={0.1}
+          fill="#6366f1"
           isAnimationActive={false}
         />
         <Tooltip

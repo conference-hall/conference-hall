@@ -62,7 +62,7 @@ function BarListInner<T>(
                 'flex items-center rounded transition-all',
                 rowHeight,
                 // background color
-                'bg-blue-200 dark:bg-blue-900',
+                'bg-indigo-200 dark:bg-indigo-900',
                 // margin and duration
                 {
                   'mb-0': index === sortedData.length - 1,

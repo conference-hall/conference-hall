@@ -31,8 +31,8 @@ const ProgressCircle = React.forwardRef<SVGSVGElement, ProgressCircleProps>(
     const circumference = normalizedRadius * 2 * Math.PI;
     const offset = circumference - (safeValue / max) * circumference;
 
-    const background = 'stroke-blue-200 dark:stroke-blue-500/30';
-    const circle = 'stroke-blue-500 dark:stroke-blue-500';
+    const background = 'stroke-indigo-200 dark:stroke-indigo-500/30';
+    const circle = 'stroke-indigo-500 dark:stroke-indigo-500';
 
     return (
       <>
