@@ -1,6 +1,6 @@
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
 
-import { StatusCard } from '~/design-system/charts/dashboard/status-card.tsx';
+import { StatusCard } from '~/design-system/dashboard/status-card.tsx';
 import { Link } from '~/design-system/links.tsx';
 import type { EventVisibility } from '~/types/events.types.ts';
 

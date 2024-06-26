@@ -4,8 +4,8 @@ import { Divider } from '~/design-system/divider.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
 
-import type { StatusPillProps } from '../status-pill.tsx';
-import { StatusPill } from '../status-pill.tsx';
+import type { StatusPillProps } from '../charts/status-pill.tsx';
+import { StatusPill } from '../charts/status-pill.tsx';
 
 type Props = { label: string; subtitle?: string; children?: React.ReactNode } & StatusPillProps;
 

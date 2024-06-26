@@ -3,7 +3,7 @@ import type { TooltipProps } from 'recharts';
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis } from 'recharts';
 import type { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent';
 
-import { NoData } from '~/design-system/charts/no-data.tsx';
+import { NoData } from '~/design-system/dashboard/no-data.tsx';
 import { Divider } from '~/design-system/divider.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { ClientOnly } from '~/routes/__components/utils/client-only.tsx';

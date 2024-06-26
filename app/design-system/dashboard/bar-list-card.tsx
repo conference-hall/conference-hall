@@ -4,9 +4,9 @@ import { Button } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H3, Subtitle } from '~/design-system/typography.tsx';
 
-import type { BarListProps } from '../bar-list.tsx';
-import { BarList } from '../bar-list.tsx';
-import { NoData } from '../no-data.tsx';
+import type { BarListProps } from '../charts/bar-list.tsx';
+import { BarList } from '../charts/bar-list.tsx';
+import { NoData } from './no-data.tsx';
 
 interface BarListCardProps<T = unknown> {
   label: string;

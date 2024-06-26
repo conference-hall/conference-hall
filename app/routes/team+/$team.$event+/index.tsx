@@ -3,9 +3,9 @@ import { json, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { EventMetrics } from '~/.server/event-metrics/event-metrics.tsx';
-import { BarListCard } from '~/design-system/charts/dashboard/bar-list-card.tsx';
-import { ProgressCard } from '~/design-system/charts/dashboard/progress-card.tsx';
-import { StatisticCard } from '~/design-system/charts/dashboard/statistic-card.tsx';
+import { BarListCard } from '~/design-system/dashboard/bar-list-card.tsx';
+import { ProgressCard } from '~/design-system/dashboard/progress-card.tsx';
+import { StatisticCard } from '~/design-system/dashboard/statistic-card.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H3 } from '~/design-system/typography.tsx';

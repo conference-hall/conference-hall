@@ -1,4 +1,4 @@
-import { StatusCard } from '~/design-system/charts/dashboard/status-card.tsx';
+import { StatusCard } from '~/design-system/dashboard/status-card.tsx';
 import { Link } from '~/design-system/links.tsx';
 import { cfpColorStatus, formatCFPDate, formatCFPState } from '~/libs/formatters/cfp.ts';
 import { ClientOnly } from '~/routes/__components/utils/client-only.tsx';

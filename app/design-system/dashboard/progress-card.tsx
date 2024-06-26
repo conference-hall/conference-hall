@@ -1,7 +1,7 @@
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Subtitle, Text } from '~/design-system/typography.tsx';
 
-import { ProgressCircle } from '../progress-circle.tsx';
+import { ProgressCircle } from '../charts/progress-circle.tsx';
 
 type Props = { label: string; value?: number; max?: number };
 
