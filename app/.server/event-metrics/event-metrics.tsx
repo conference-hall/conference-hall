@@ -20,6 +20,17 @@ export class EventMetrics {
 
     const proposalsCount = await db.proposal.count({ where: { eventId: id, isDraft: false } });
 
+    if (proposalsCount === 0) {
+      return {
+        proposalsCount: 0,
+        speakersCount: 0,
+        reviewsCount: 0,
+        byFormats: formats.length !== 0 ? [] : null,
+        byCategories: categories.length !== 0 ? [] : null,
+        byDays: [],
+      };
+    }
+
     const reviewsCount = await db.review.count({
       where: { proposal: { eventId: id, isDraft: false }, userId: this.userId },
     });
@@ -32,7 +43,9 @@ export class EventMetrics {
 
     const byCategories = await this.proposalsByCategories(id, categories);
 
-    return { proposalsCount, speakersCount, reviewsCount, byFormats, byCategories };
+    const byDays = await this.proposalsByDays(id);
+
+    return { proposalsCount, speakersCount, reviewsCount, byFormats, byCategories, byDays };
   }
 
   async proposalsByFormats(eventId: string, formats: Array<Pick<EventFormat, 'id' | 'name' | 'description'>>) {
@@ -83,5 +96,23 @@ export class EventMetrics {
         to: `reviews?categories=${item.id}`,
       };
     });
+  }
+
+  async proposalsByDays(eventId: string) {
+    const proposalsByDays = await db.$queryRaw<Array<{ date: string; value: BigInt }>>(
+      Prisma.sql`
+        WITH data AS (
+          SELECT DATE_TRUNC('day', "createdAt") AS date, count(id) AS count
+          FROM proposals
+          WHERE "eventId"=${eventId}
+          AND "isDraft" IS FALSE
+          GROUP BY 1
+          ORDER BY 1
+        )
+        SELECT date, SUM(count) OVER (ORDER BY date ASC rows BETWEEN unbounded preceding AND current row) AS value FROM data
+      `,
+    );
+
+    return proposalsByDays.map((item) => ({ date: item.date, value: Number(item.value) }));
   }
 }

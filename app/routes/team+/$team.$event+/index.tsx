@@ -27,35 +27,6 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   return json(metrics);
 };
 
-const DATA = [
-  { date: '2023-02-01', value: 1 },
-  { date: '2023-02-02', value: 2 },
-  { date: '2023-03-01', value: 3 },
-  { date: '2023-04-01', value: 10 },
-  { date: '2023-04-02', value: 10 },
-  { date: '2023-04-03', value: 11 },
-  { date: '2023-04-04', value: 14 },
-  { date: '2023-04-06', value: 18 },
-  { date: '2023-04-07', value: 19 },
-  { date: '2023-04-09', value: 21 },
-  { date: '2023-04-10', value: 25 },
-  { date: '2023-04-12', value: 27 },
-  { date: '2023-05-01', value: 29 },
-  { date: '2023-05-02', value: 29 },
-  { date: '2023-05-03', value: 29 },
-  { date: '2023-05-04', value: 29 },
-  { date: '2023-05-08', value: 29 },
-  { date: '2023-05-09', value: 29 },
-  { date: '2023-06-09', value: 29 },
-  { date: '2023-09-09', value: 29 },
-  { date: '2023-10-09', value: 29 },
-  { date: '2023-11-09', value: 29 },
-  { date: '2023-11-10', value: 29 },
-  { date: '2023-11-11', value: 29 },
-  { date: '2023-11-12', value: 29 },
-  { date: '2023-11-13', value: 29 },
-];
-
 export default function OverviewRoute() {
   const { team } = useTeam();
   const { event } = useEvent();
@@ -93,7 +64,7 @@ export default function OverviewRoute() {
               />
             </div>
 
-            <SubmissionsChart data={DATA} />
+            <SubmissionsChart data={metrics.byDays} />
           </Card>
         </div>
 
