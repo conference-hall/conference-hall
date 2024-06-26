@@ -22,12 +22,15 @@ type LinkVariants = VariantProps<typeof link> & Omit<TypographyVariantProps, 'va
 
 type Icon = React.ComponentType<{ className?: string }>;
 
-type LinkProps = { icon?: Icon } & LinkVariants & RemixLinkProps;
+type LinkIcons = { iconLeft?: Icon; iconRight?: Icon };
+
+type LinkProps = LinkVariants & LinkIcons & RemixLinkProps;
 
 export function Link({
   to,
   children,
-  icon: Icon,
+  iconLeft: IconLeft,
+  iconRight: IconRight,
   variant,
   size,
   mb,
@@ -42,18 +45,20 @@ export function Link({
 
   return (
     <RemixLink to={to} className={cx(defaultStyle, linkStyle)} {...rest}>
-      {Icon && <Icon className="mr-2 h-5 w-5" aria-hidden="true" />}
+      {IconLeft && <IconLeft className="mr-1.5 h-5 w-5" aria-hidden="true" />}
       {children}
+      {IconRight && <IconRight className="ml-1.5 h-5 w-5" aria-hidden="true" />}
     </RemixLink>
   );
 }
 
-type ExternalLinkProps = { icon?: Icon } & LinkVariants & React.AnchorHTMLAttributes<HTMLAnchorElement>;
+type ExternalLinkProps = LinkVariants & LinkIcons & React.AnchorHTMLAttributes<HTMLAnchorElement>;
 
 export function ExternalLink({
   href,
   children,
-  icon: Icon,
+  iconLeft: IconLeft,
+  iconRight: IconRight,
   variant,
   size,
   mb,
@@ -68,8 +73,9 @@ export function ExternalLink({
 
   return (
     <a href={href} target="_blank" rel="noreferrer" className={cx(defaultStyle, linkStyle)} {...rest}>
-      {Icon && <Icon className="mr-2 h-5 w-5" aria-hidden="true" />}
+      {IconLeft && <IconLeft className="mr-1.5 h-5 w-5" aria-hidden="true" />}
       {children}
+      {IconRight && <IconRight className="ml-1.5 h-5 w-5" aria-hidden="true" />}
     </a>
   );
 }

@@ -1,4 +1,4 @@
-import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
+import { ArrowRightIcon } from '@heroicons/react/20/solid';
 
 import { StatusCard } from '~/design-system/dashboard/status-card.tsx';
 import { Link } from '~/design-system/links.tsx';
@@ -21,14 +21,9 @@ export function VisibilityStatusCard({ slug, visibility, showActions }: Props) {
   return (
     <StatusCard {...props}>
       {showActions ? (
-        <>
-          <Link to={`/${slug}`} className="font-medium">
-            Event page <ArrowTopRightOnSquareIcon className="h-4 w-4 ml-1" />
-          </Link>
-          <Link to="settings" className="font-medium">
-            Change →
-          </Link>
-        </>
+        <Link to="settings" iconRight={ArrowRightIcon} weight="medium">
+          Change
+        </Link>
       ) : null}
     </StatusCard>
   );

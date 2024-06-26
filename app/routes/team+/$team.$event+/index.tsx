@@ -36,8 +36,8 @@ export default function OverviewRoute() {
 
   return (
     <Page>
-      <div className="space-y-6">
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+      <div className="space-y-4 lg:space-y-6">
+        <div className="grid grid-cols-1 gap-4 lg:gap-6 lg:grid-cols-3">
           <CfpStatusCard
             cfpState={event.cfpState}
             cfpStart={event.cfpStart}
@@ -54,7 +54,7 @@ export default function OverviewRoute() {
           <Card className="p-6 space-y-6">
             <H3>Call for paper metrics</H3>
 
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-4 lg:gap-6 lg:grid-cols-3">
               <StatisticCard label="Proposals" stat={`${metrics.proposalsCount}`} />
               <StatisticCard label="Speakers" stat={`${metrics.speakersCount}`} />
               <ProgressCard
@@ -68,7 +68,7 @@ export default function OverviewRoute() {
           </Card>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 lg:gap-6 sm:grid-cols-2">
           {metrics.byFormats && <BarListCard label="Proposals by formats" data={metrics.byFormats} />}
           {metrics.byCategories && <BarListCard label="Proposals by categories" data={metrics.byCategories} />}
         </div>

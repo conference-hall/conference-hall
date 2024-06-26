@@ -1,3 +1,5 @@
+import { ArrowRightIcon } from '@heroicons/react/20/solid';
+
 import { StatusCard } from '~/design-system/dashboard/status-card.tsx';
 import { Link } from '~/design-system/links.tsx';
 
@@ -14,8 +16,8 @@ export function ReviewStatusCard({ reviewEnabled, showActions }: Props) {
   return (
     <StatusCard {...props}>
       {showActions ? (
-        <Link to="settings/review" className="font-medium">
-          Change →
+        <Link to="settings/review" iconRight={ArrowRightIcon} weight="medium">
+          Change
         </Link>
       ) : null}
     </StatusCard>

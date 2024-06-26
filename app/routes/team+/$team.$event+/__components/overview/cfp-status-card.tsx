@@ -1,3 +1,5 @@
+import { ArrowRightIcon } from '@heroicons/react/20/solid';
+
 import { StatusCard } from '~/design-system/dashboard/status-card.tsx';
 import { Link } from '~/design-system/links.tsx';
 import { cfpColorStatus, formatCFPDate, formatCFPState } from '~/libs/formatters/cfp.ts';
@@ -16,8 +18,8 @@ export function CfpStatusCard({ cfpState, cfpStart, cfpEnd, showActions }: Props
           subtitle={formatCFPDate(cfpState, cfpStart, cfpEnd, 'Pp')}
         >
           {showActions ? (
-            <Link to="settings/cfp" className="font-medium">
-              Change →
+            <Link to="settings/cfp" iconRight={ArrowRightIcon} weight="medium">
+              Change
             </Link>
           ) : null}
         </StatusCard>

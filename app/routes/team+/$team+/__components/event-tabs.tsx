@@ -1,7 +1,9 @@
+import { ArrowTopRightOnSquareIcon } from '@heroicons/react/20/solid';
 import { CalendarIcon, Cog6ToothIcon, HomeIcon, MegaphoneIcon, QueueListIcon } from '@heroicons/react/24/outline';
 import { useSearchParams } from '@remix-run/react';
 
 import { Page } from '~/design-system/layouts/page.tsx';
+import { Link } from '~/design-system/links.tsx';
 import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
 import type { EventType } from '~/types/events.types';
 
@@ -12,8 +14,8 @@ export function EventTabs({ teamSlug, eventSlug, eventType, role }: Props) {
   const search = searchParams.toString();
 
   return (
-    <Page.NavHeader>
-      <NavTabs py={4} scrollable>
+    <Page.NavHeader className="flex items-center space-between">
+      <NavTabs py={4} className="grow" scrollable>
         <NavTab to={{ pathname: `/team/${teamSlug}/${eventSlug}`, search }} icon={HomeIcon} end>
           Overview
         </NavTab>
@@ -40,6 +42,16 @@ export function EventTabs({ teamSlug, eventSlug, eventType, role }: Props) {
           </NavTab>
         ) : null}
       </NavTabs>
+
+      <Link
+        to={`/${eventSlug}`}
+        target="_blank"
+        iconRight={ArrowTopRightOnSquareIcon}
+        weight="medium"
+        className="hidden lg:flex"
+      >
+        Event page
+      </Link>
     </Page.NavHeader>
   );
 }
