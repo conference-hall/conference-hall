@@ -26,7 +26,7 @@ export default function PublicationRoute() {
   const statistics = useLoaderData<typeof loader>();
   const { team } = useTeam();
   const { event } = useEvent();
-  const reviewsPath = `/team/${team.slug}/${event.slug}`;
+  const reviewsPath = `/team/${team.slug}/${event.slug}/reviews`;
 
   return (
     <Page className="flex flex-col">
