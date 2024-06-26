@@ -55,7 +55,6 @@ export function formatCFPElapsedTime(state: CfpState, start?: string | null, end
   }
 }
 
-// TODO: add format arg tests
 export function formatCFPDate(state: CfpState, start?: string, end?: string, format = 'PPPPp') {
   if (!start || !end) return undefined;
 
@@ -71,7 +70,6 @@ export function formatCFPDate(state: CfpState, start?: string, end?: string, for
 
 const STATUSES = { OPENED: 'success', CLOSED: 'warning', FINISHED: 'error' } as const;
 
-// TODO: add tests
 export function cfpColorStatus(cfpState: CfpState, cfpStart?: string, cfpEnd?: string) {
   if (!cfpStart && !cfpEnd) return 'disabled';
   return STATUSES[cfpState];
