@@ -55,6 +55,7 @@ export const proposalFactory = (options: FactoryOptions) => {
     speakers: { connect: talk.speakers.map(({ id }) => ({ id })) },
     event: { connect: { id: event.id } },
     isDraft: false,
+    createdAt: new Date(),
   };
 
   if (formats) {

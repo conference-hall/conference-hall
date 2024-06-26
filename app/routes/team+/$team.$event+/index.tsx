@@ -23,7 +23,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   invariant(params.team, 'Invalid team slug');
   invariant(params.event, 'Invalid event slug');
 
-  const metrics = await EventMetrics.for(userId, params.team, params.event).metrics();
+  const metrics = await EventMetrics.for(userId, params.team, params.event).globalMetrics();
   return json(metrics);
 };
 
@@ -64,7 +64,7 @@ export default function OverviewRoute() {
               />
             </div>
 
-            <SubmissionsChart data={metrics.byDays} />
+            <SubmissionsChart data={metrics.byCumulativeDays} />
           </Card>
         </div>
 

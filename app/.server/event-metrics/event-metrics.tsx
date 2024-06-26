@@ -1,9 +1,10 @@
-import { type EventCategory, type EventFormat, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
 
 import { UserEvent } from '../event-settings/user-event.ts';
 
-// TODO: Add tests
+type TrackType = { id: string; name: string };
+
 export class EventMetrics {
   constructor(
     private userId: string,
@@ -15,11 +16,10 @@ export class EventMetrics {
     return new EventMetrics(userId, userEvent);
   }
 
-  async metrics() {
+  async globalMetrics() {
     const { id, formats, categories } = await this.userEvent.get();
 
-    const proposalsCount = await db.proposal.count({ where: { eventId: id, isDraft: false } });
-
+    const proposalsCount = await this.proposalsCount(id);
     if (proposalsCount === 0) {
       return {
         proposalsCount: 0,
@@ -27,28 +27,33 @@ export class EventMetrics {
         reviewsCount: 0,
         byFormats: formats.length !== 0 ? [] : null,
         byCategories: categories.length !== 0 ? [] : null,
-        byDays: [],
+        byCumulativeDays: [],
       };
     }
 
-    const reviewsCount = await db.review.count({
-      where: { proposal: { eventId: id, isDraft: false }, userId: this.userId },
-    });
-
-    const speakersCount = await db.user.count({
-      where: { proposals: { some: { eventId: id, isDraft: false } } },
-    });
-
-    const byFormats = await this.proposalsByFormats(id, formats);
-
-    const byCategories = await this.proposalsByCategories(id, categories);
-
-    const byDays = await this.proposalsByDays(id);
-
-    return { proposalsCount, speakersCount, reviewsCount, byFormats, byCategories, byDays };
+    return {
+      proposalsCount,
+      speakersCount: await this.speakersCount(id),
+      reviewsCount: await this.reviewsCount(id),
+      byFormats: await this.proposalsByFormats(id, formats),
+      byCategories: await this.proposalsByCategories(id, categories),
+      byCumulativeDays: await this.proposalsByCumulativeDays(id),
+    };
   }
 
-  async proposalsByFormats(eventId: string, formats: Array<Pick<EventFormat, 'id' | 'name' | 'description'>>) {
+  private async proposalsCount(eventId: string) {
+    return db.proposal.count({ where: { eventId, isDraft: false } });
+  }
+
+  private async reviewsCount(eventId: string) {
+    return db.review.count({ where: { proposal: { eventId, isDraft: false }, userId: this.userId } });
+  }
+
+  private async speakersCount(eventId: string) {
+    return db.user.count({ where: { proposals: { some: { eventId, isDraft: false } } } });
+  }
+
+  private async proposalsByFormats(eventId: string, formats: Array<TrackType>) {
     if (formats.length === 0) return null;
 
     const byFormats = await db.$queryRaw<Array<{ id: string; value: BigInt }>>(
@@ -73,7 +78,7 @@ export class EventMetrics {
     });
   }
 
-  async proposalsByCategories(eventId: string, categories: Array<Pick<EventCategory, 'id' | 'name' | 'description'>>) {
+  private async proposalsByCategories(eventId: string, categories: Array<TrackType>) {
     if (categories.length === 0) return null;
 
     const byCategories = await db.$queryRaw<Array<{ id: string; value: BigInt }>>(
@@ -98,8 +103,8 @@ export class EventMetrics {
     });
   }
 
-  async proposalsByDays(eventId: string) {
-    const proposalsByDays = await db.$queryRaw<Array<{ date: string; value: BigInt }>>(
+  private async proposalsByCumulativeDays(eventId: string) {
+    const proposalsByDays = await db.$queryRaw<Array<{ date: Date; value: BigInt }>>(
       Prisma.sql`
         WITH data AS (
           SELECT DATE_TRUNC('day', "createdAt") AS date, count(id) AS count
@@ -113,6 +118,6 @@ export class EventMetrics {
       `,
     );
 
-    return proposalsByDays.map((item) => ({ date: item.date, value: Number(item.value) }));
+    return proposalsByDays.map((item) => ({ date: item.date.toUTCString(), value: Number(item.value) }));
   }
 }
