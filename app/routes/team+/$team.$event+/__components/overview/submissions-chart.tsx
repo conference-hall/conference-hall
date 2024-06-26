@@ -65,7 +65,7 @@ function CustomTooltip({ payload, label }: TooltipProps<ValueType, NameType>) {
       <Divider />
       <div className="flex flex-row items-center space-between p-2 px-3 space-x-16">
         <div className="flex items-center space-x-2">
-          <span className="h-0.5 w-3 bg-blue-500" aria-hidden={true} />
+          <span className="h-0.5 w-3 bg-indigo-500" aria-hidden={true} />
           <Text variant="secondary">Proposals</Text>
         </div>
         <Text weight="medium">{payload?.[0]?.value}</Text>
