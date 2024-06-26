@@ -6,7 +6,7 @@ import { H3, Subtitle } from '~/design-system/typography.tsx';
 
 import type { BarListProps } from '../bar-list.tsx';
 import { BarList } from '../bar-list.tsx';
-import { ChartEmptyState } from '../chart-empty-state.tsx';
+import { NoData } from '../no-data.tsx';
 
 interface BarListCardProps<T = unknown> {
   label: string;
@@ -24,7 +24,7 @@ export function BarListCard({ label, metric, data = [] }: BarListCardProps) {
         {data.length > 0 ? <Subtitle size="xs">{metric}</Subtitle> : null}
       </div>
       <div className={cx('overflow-hidden max-h-[260px]', { 'pb-6': data.length > MAX_BAR })}>
-        {data.length !== 0 ? <BarList data={data} /> : <ChartEmptyState />}
+        {data.length !== 0 ? <BarList data={data} /> : <NoData />}
       </div>
       {data.length > MAX_BAR && (
         <div className="flex justify-center absolute inset-x-0 rounded-b-md bottom-0 bg-gradient-to-t from-white to-transparent py-7 pt-12">

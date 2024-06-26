@@ -5,7 +5,7 @@ import { Subtitle, Text } from '../typography.tsx';
 
 type Props = { className?: string };
 
-export function ChartEmptyState({ className }: Props) {
+export function NoData({ className }: Props) {
   return (
     <div
       className={cx(
