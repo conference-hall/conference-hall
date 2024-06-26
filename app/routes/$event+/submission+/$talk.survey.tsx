@@ -23,7 +23,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   invariant(params.event, 'Invalid event slug');
 
   const questions = await CfpSurvey.of(params.event).questions();
-  const answers = await SpeakerAnswers.for(userId, params.event).answers();
+  const answers = await SpeakerAnswers.for(userId, params.event).getAnswers();
   return json({ questions, answers });
 };
 

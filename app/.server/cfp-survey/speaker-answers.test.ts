@@ -4,11 +4,11 @@ import { userFactory } from 'tests/factories/users.ts';
 
 import { EventNotFoundError } from '~/libs/errors.server.ts';
 
-import { SpeakerAnswers } from './speaker-answers.ts';
+import { SpeakerAnswers, SpeakersAnswers } from './speaker-answers.ts';
 import { SurveySchema } from './speaker-answers.types.ts';
 
 describe('SpeakerAnswers', () => {
-  describe('answers', () => {
+  describe('getAnswers', () => {
     it('returns the user answers for an event', async () => {
       const event = await eventFactory({ traits: ['withSurvey'] });
       const user1 = await userFactory();
@@ -24,7 +24,7 @@ describe('SpeakerAnswers', () => {
         attributes: { answers: { gender: 'female' } },
       });
 
-      const answers = await SpeakerAnswers.for(user2.id, event.slug).answers();
+      const answers = await SpeakerAnswers.for(user2.id, event.slug).getAnswers();
 
       expect(answers).toEqual({ gender: 'female' });
     });
@@ -32,13 +32,13 @@ describe('SpeakerAnswers', () => {
     it('returns nothing when user hasnt respond any questions', async () => {
       const event = await eventFactory({ traits: ['withSurvey'] });
       const user = await userFactory();
-      const answers = await SpeakerAnswers.for(user.id, event.slug).answers();
+      const answers = await SpeakerAnswers.for(user.id, event.slug).getAnswers();
       expect(answers).toEqual({});
     });
 
     it('returns nothing when event doesnt exist', async () => {
       const user = await userFactory();
-      const answers = await SpeakerAnswers.for(user.id, 'XXX').answers();
+      const answers = await SpeakerAnswers.for(user.id, 'XXX').getAnswers();
       expect(answers).toEqual({});
     });
   });
@@ -58,7 +58,7 @@ describe('SpeakerAnswers', () => {
         info: 'Hello',
       });
 
-      const answers = await survey.answers();
+      const answers = await survey.getAnswers();
       expect(answers).toEqual({
         gender: 'male',
         tshirt: 'XL',
@@ -97,7 +97,7 @@ describe('SpeakerAnswers', () => {
         info: 'World',
       });
 
-      const answers = await survey.answers();
+      const answers = await survey.getAnswers();
       expect(answers).toEqual({
         gender: 'female',
         tshirt: 'L',
@@ -143,6 +143,55 @@ describe('SpeakerAnswers', () => {
         diet: ['vegan', 'vegetarian'],
         info: 'Hello',
       });
+    });
+  });
+});
+
+describe('SpeakersAnswers', () => {
+  describe('getAnswers', () => {
+    it('returns the user answers for an event', async () => {
+      const event = await eventFactory({ traits: ['withSurvey'] });
+      const event2 = await eventFactory({ traits: ['withSurvey'] });
+      const user1 = await userFactory();
+      await surveyFactory({
+        user: user1,
+        event,
+        attributes: { answers: { gender: 'male' } },
+      });
+      const user2 = await userFactory();
+      await surveyFactory({
+        user: user2,
+        event,
+        attributes: { answers: { gender: 'female' } },
+      });
+      const user3 = await userFactory();
+      await surveyFactory({
+        user: user3,
+        event: event2,
+        attributes: { answers: { gender: 'female' } },
+      });
+
+      const answers = await SpeakersAnswers.for([user1.id, user2.id], event.slug).getAnswers();
+
+      expect(answers).toEqual(
+        expect.arrayContaining([
+          { userId: user1.id, answers: { gender: 'male' } },
+          { userId: user2.id, answers: { gender: 'female' } },
+        ]),
+      );
+    });
+
+    it('returns nothing when user hasnt respond any questions', async () => {
+      const event = await eventFactory({ traits: ['withSurvey'] });
+      const user = await userFactory();
+      const answers = await SpeakersAnswers.for([user.id], event.slug).getAnswers();
+      expect(answers).toEqual([]);
+    });
+
+    it('returns nothing when event doesnt exist', async () => {
+      const user = await userFactory();
+      const answers = await SpeakersAnswers.for([user.id], 'XXX').getAnswers();
+      expect(answers).toEqual([]);
     });
   });
 });
