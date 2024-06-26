@@ -1,22 +1,22 @@
 import { cx } from 'class-variance-authority';
 
+import { StatusPill } from '~/design-system/charts/status-pill.tsx';
 import { Text } from '~/design-system/typography.tsx';
-import { formatCFPElapsedTime } from '~/libs/formatters/cfp.ts';
+import { cfpColorStatus, formatCFPState } from '~/libs/formatters/cfp.ts';
 import type { CfpState } from '~/types/events.types.ts';
 
 import { ClientOnly } from '../utils/client-only.tsx';
-import { CfpIcon } from './cfp-icon.tsx';
 
 type Props = { cfpState: CfpState; cfpStart?: string; cfpEnd?: string; className?: string };
 
 export function CfpElapsedTime({ cfpState, cfpStart, cfpEnd, className }: Props) {
   return (
     <div className={cx('flex items-center space-x-2', className)}>
-      <CfpIcon cfpState={cfpState} />
+      <StatusPill status={cfpColorStatus(cfpState, cfpStart, cfpEnd)} />
       <ClientOnly>
         {() => (
           <Text variant="secondary" weight="medium" truncate>
-            {formatCFPElapsedTime(cfpState, cfpStart, cfpEnd)}
+            {formatCFPState(cfpState, cfpStart, cfpEnd)}
           </Text>
         )}
       </ClientOnly>

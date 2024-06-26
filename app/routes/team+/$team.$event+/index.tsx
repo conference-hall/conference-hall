@@ -1,4 +1,3 @@
-import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
@@ -8,14 +7,15 @@ import { ChartEmptyState } from '~/design-system/charts/chart-empty-state.tsx';
 import { BarListCard } from '~/design-system/charts/dashboard/bar-list-card.tsx';
 import { ProgressCard } from '~/design-system/charts/dashboard/progress-card.tsx';
 import { StatisticCard } from '~/design-system/charts/dashboard/statistic-card.tsx';
-import { StatusCard } from '~/design-system/charts/dashboard/status-card.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
-import { Link } from '~/design-system/links.tsx';
 import { H3 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { formatCFPState } from '~/libs/formatters/cfp.ts';
 
+import { useTeam } from '../__components/use-team.tsx';
+import { CfpStatusCard } from './__components/overview/cfp-status-card.tsx';
+import { ReviewStatusCard } from './__components/overview/review-status-card.tsx';
+import { VisibilityStatusCard } from './__components/overview/visibility-status-card.tsx';
 import { useEvent } from './__components/useEvent.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
@@ -28,33 +28,26 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 };
 
 export default function OverviewRoute() {
+  const { team } = useTeam();
   const { event } = useEvent();
   const metrics = useLoaderData<typeof loader>();
+
+  const showActions = team.role === 'OWNER' || team.role === 'REVIEWER';
 
   return (
     <Page>
       <div className="space-y-6">
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          <StatusCard status="success" label={formatCFPState(event.cfpState)} subtitle="Open until 25/06/2024 10:23 AM">
-            <Link to="settings/cfp" className="font-medium">
-              Change →
-            </Link>
-          </StatusCard>
+          <CfpStatusCard
+            cfpState={event.cfpState}
+            cfpStart={event.cfpStart}
+            cfpEnd={event.cfpEnd}
+            showActions={showActions}
+          />
 
-          <StatusCard status="success" label="Visibility is public" subtitle="The event is available in the search.">
-            <Link to={`/${event.slug}`} className="font-medium">
-              Share <ArrowTopRightOnSquareIcon className="h-4 w-4 ml-1" />
-            </Link>
-            <Link to="settings" className="font-medium">
-              Change →
-            </Link>
-          </StatusCard>
+          <VisibilityStatusCard slug={event.slug} visibility={event.visibility} showActions={showActions} />
 
-          <StatusCard status="success" label="Reviews are enabled" subtitle="All team members can review proposals.">
-            <Link to="settings/review" className="font-medium">
-              Change →
-            </Link>
-          </StatusCard>
+          <ReviewStatusCard reviewEnabled={event.reviewEnabled} showActions={showActions} />
         </div>
 
         <div>

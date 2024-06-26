@@ -4,7 +4,10 @@ import { Divider } from '~/design-system/divider.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
 
-type Props = { label: string; subtitle: string; children: React.ReactNode } & StatusPillProps;
+import type { StatusPillProps } from '../status-pill.tsx';
+import { StatusPill } from '../status-pill.tsx';
+
+type Props = { label: string; subtitle?: string; children?: React.ReactNode } & StatusPillProps;
 
 export function StatusCard({ status, label, subtitle, children }: Props) {
   return (
@@ -15,30 +18,20 @@ export function StatusCard({ status, label, subtitle, children }: Props) {
             <StatusPill status={status} />
             <H2 truncate>{label}</H2>
           </div>
-          <div className="mt-1 ml-6">
-            <Subtitle>{subtitle}</Subtitle>
-          </div>
+          {subtitle ? (
+            <div className="mt-1 ml-6">
+              <Subtitle>{subtitle}</Subtitle>
+            </div>
+          ) : null}
         </div>
       </div>
 
-      <Divider />
-
-      <div className="flex flex-row items-center gap-4 justify-end p-3">{children}</div>
+      {children ? (
+        <>
+          <Divider />
+          <div className="flex flex-row items-center gap-4 justify-end p-3">{children}</div>
+        </>
+      ) : null}
     </Card>
   );
-}
-
-type StatusPillProps = { status: 'success' | 'error' | 'warning' | 'disabled' };
-
-export function StatusPill({ status }: StatusPillProps) {
-  switch (status) {
-    case 'success':
-      return <span className="flex h-3 w-3 flex-shrink-0 rounded-full bg-green-400" aria-hidden="true"></span>;
-    case 'error':
-      return <span className="flex h-3 w-3 flex-shrink-0 rounded-full bg-red-400" aria-hidden="true"></span>;
-    case 'warning':
-      return <span className="flex h-3 w-3 flex-shrink-0 rounded-full bg-orange-400" aria-hidden="true"></span>;
-    case 'disabled':
-      return <span className="flex h-3 w-3 flex-shrink-0 rounded-full bg-gray-400" aria-hidden="true"></span>;
-  }
 }
