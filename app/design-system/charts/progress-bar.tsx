@@ -14,8 +14,8 @@ const ProgressBar = React.forwardRef<HTMLDivElement, ProgressBarProps>(
   ({ value = 0, max = 100, label, showAnimation = false, className, ...props }: ProgressBarProps, forwardedRef) => {
     const safeValue = Math.min(max, Math.max(value, 0));
 
-    const background = 'bg-gray-200 dark:bg-gray-500/40';
-    const bar = 'bg-gray-500 dark:bg-gray-500';
+    const background = 'bg-gray-200';
+    const bar = 'bg-gray-500';
 
     return (
       <div ref={forwardedRef} className={cx('flex w-full items-center', className)} {...props}>
@@ -42,7 +42,7 @@ const ProgressBar = React.forwardRef<HTMLDivElement, ProgressBarProps>(
               // base
               'ml-2 whitespace-nowrap text-sm font-medium leading-none',
               // text color
-              'text-gray-900 dark:text-gray-50',
+              'text-gray-900',
             )}
           >
             {label}

@@ -62,7 +62,7 @@ function BarListInner<T>(
                 'flex items-center rounded transition-all',
                 rowHeight,
                 // background color
-                'bg-indigo-200 dark:bg-indigo-900',
+                'bg-indigo-200',
                 // margin and duration
                 {
                   'mb-0': index === sortedData.length - 1,
@@ -79,7 +79,7 @@ function BarListInner<T>(
                       // base
                       'truncate whitespace-nowrap rounded text-sm',
                       // text color
-                      'text-gray-900 dark:text-gray-50',
+                      'text-gray-900',
                       // hover
                       'hover:underline hover:underline-offset-2',
                     )}
@@ -92,7 +92,7 @@ function BarListInner<T>(
                       // base
                       'truncate whitespace-nowrap text-sm',
                       // text color
-                      'text-gray-900 dark:text-gray-50',
+                      'text-gray-900',
                     )}
                   >
                     {item.name}
@@ -118,7 +118,7 @@ function BarListInner<T>(
                 // base
                 'truncate whitespace-nowrap text-sm leading-none',
                 // text color
-                'text-gray-900 dark:text-gray-50',
+                'text-gray-900',
               )}
             >
               {valueFormatter(item.value)}
