@@ -1,7 +1,7 @@
 import { ChartBarIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
 
-import { Subtitle, Text } from '../typography.tsx';
+import { Text } from '../typography.tsx';
 
 type Props = { className?: string };
 
@@ -17,7 +17,6 @@ export function NoData({ className }: Props) {
         <ChartBarIcon className="mx-auto h-7 w-7 text-gray-400" aria-hidden={true} />
         <div className="mt-2">
           <Text weight="medium">No data to show</Text>
-          <Subtitle>May take 24 hours for data to load</Subtitle>
         </div>
       </div>
     </div>

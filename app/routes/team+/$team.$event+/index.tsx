@@ -52,7 +52,7 @@ export default function OverviewRoute() {
 
         <div>
           <Card className="p-6 space-y-6">
-            <H3>Submissions</H3>
+            <H3>Call for paper metrics</H3>
 
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
               <StatisticCard label="Proposals" stat={`${metrics.proposalsCount}`} />
@@ -69,8 +69,8 @@ export default function OverviewRoute() {
         </div>
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-          {metrics.byFormats && <BarListCard label="Formats" metric="PROPOSALS" data={metrics.byFormats} />}
-          {metrics.byCategories && <BarListCard label="Categories" metric="PROPOSALS" data={metrics.byCategories} />}
+          {metrics.byFormats && <BarListCard label="Proposals by formats" data={metrics.byFormats} />}
+          {metrics.byCategories && <BarListCard label="Proposals by categories" data={metrics.byCategories} />}
         </div>
       </div>
     </Page>
