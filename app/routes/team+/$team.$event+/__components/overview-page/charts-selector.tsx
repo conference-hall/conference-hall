@@ -1,8 +1,8 @@
 import { cx } from 'class-variance-authority';
 
-export type ChartSelectorValue = 'cumulative' | 'count';
+import type { ChartType } from './proposals-by-days-chart.tsx';
 
-type Props = { selected: ChartSelectorValue; onSelect: (value: ChartSelectorValue) => void };
+type Props = { selected: ChartType; onSelect: (value: ChartType) => void };
 
 export function ChartSelector({ selected, onSelect }: Props) {
   return (

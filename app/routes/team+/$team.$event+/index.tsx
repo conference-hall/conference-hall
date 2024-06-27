@@ -14,10 +14,9 @@ import { requireSession } from '~/libs/auth/session.ts';
 
 import { useTeam } from '../__components/use-team.tsx';
 import { CfpStatusCard } from './__components/overview-page/cfp-status-card.tsx';
-import type { ChartSelectorValue } from './__components/overview-page/charts-selector.tsx';
 import { ChartSelector } from './__components/overview-page/charts-selector.tsx';
-import { CountByDayChart } from './__components/overview-page/count-by-day-chart.tsx';
-import { CumulativeByDayChart } from './__components/overview-page/cumulative-by-day-chart.tsx';
+import type { ChartType } from './__components/overview-page/proposals-by-days-chart.tsx';
+import { ProposalsByDayChart } from './__components/overview-page/proposals-by-days-chart.tsx';
 import { ReviewStatusCard } from './__components/overview-page/review-status-card.tsx';
 import { VisibilityStatusCard } from './__components/overview-page/visibility-status-card.tsx';
 import { useEvent } from './__components/useEvent.tsx';
@@ -36,7 +35,7 @@ export default function OverviewRoute() {
   const { event } = useEvent();
   const metrics = useLoaderData<typeof loader>();
 
-  const [chartSelected, setChartSelected] = useState<ChartSelectorValue>('cumulative');
+  const [chartSelected, setChartSelected] = useState<ChartType>('cumulative');
 
   const showActions = team.role === 'OWNER' || team.role === 'REVIEWER';
 
@@ -74,11 +73,7 @@ export default function OverviewRoute() {
               />
             </div>
 
-            {chartSelected === 'cumulative' ? (
-              <CumulativeByDayChart data={metrics.byDays} />
-            ) : (
-              <CountByDayChart data={metrics.byDays} />
-            )}
+            <ProposalsByDayChart type={chartSelected} data={metrics.byDays} />
           </Card>
         </div>
 
