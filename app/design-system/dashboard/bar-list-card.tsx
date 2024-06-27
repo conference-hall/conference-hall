@@ -1,9 +1,10 @@
+import slugify from '@sindresorhus/slugify';
 import { cx } from 'class-variance-authority';
 import { useState } from 'react';
 
 import { Button } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
-import { H3 } from '~/design-system/typography.tsx';
+import { H2 } from '~/design-system/typography.tsx';
 
 import type { BarListProps } from '../charts/bar-list.tsx';
 import { BarList } from '../charts/bar-list.tsx';
@@ -18,13 +19,16 @@ interface BarListCardProps<T = unknown> {
 const MAX_BAR = 7;
 
 export function BarListCard({ label, data = [] }: BarListCardProps) {
+  const id = slugify(label);
   const [open, setOpen] = useState(false);
   const onOpen = () => setOpen(true);
   const onClose = () => setOpen(false);
 
   return (
-    <Card className="space-y-6 p-6 relative">
-      <H3>{label}</H3>
+    <Card className="space-y-6 p-6 relative" aria-labelledby={id}>
+      <H2 id={id} size="s">
+        {label}
+      </H2>
       <div className={cx('overflow-hidden max-h-[260px]', { 'pb-6': data.length > MAX_BAR })}>
         {data.length !== 0 ? <BarList data={data} /> : <NoData />}
       </div>

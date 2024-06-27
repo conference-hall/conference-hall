@@ -1,3 +1,4 @@
+import slugify from '@sindresorhus/slugify';
 import React from 'react';
 
 import { Divider } from '~/design-system/divider.tsx';
@@ -10,13 +11,17 @@ import { StatusPill } from '../charts/status-pill.tsx';
 type Props = { label: string; subtitle?: string; children?: React.ReactNode } & StatusPillProps;
 
 export function StatusCard({ status, label, subtitle, children }: Props) {
+  const id = slugify(label);
+
   return (
-    <Card className="flex flex-col">
+    <Card className="flex flex-col" aria-labelledby={id}>
       <div className="flex flex-col gap-4 p-6 grow">
         <div className="flex flex-col">
           <div className="flex items-center gap-3">
             <StatusPill status={status} />
-            <H2 truncate>{label}</H2>
+            <H2 id={id} truncate>
+              {label}
+            </H2>
           </div>
           {subtitle ? (
             <div className="mt-1 ml-6">

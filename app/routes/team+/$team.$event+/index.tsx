@@ -36,6 +36,7 @@ export default function OverviewRoute() {
 
   return (
     <Page>
+      <h1 className="sr-only">Event overview</h1>
       <div className="space-y-4 lg:space-y-6">
         <div className="grid grid-cols-1 gap-4 lg:gap-6 lg:grid-cols-3">
           <CfpStatusCard
