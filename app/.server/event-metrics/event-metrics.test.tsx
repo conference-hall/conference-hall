@@ -78,10 +78,10 @@ describe('EventMetrics', () => {
           { id: category2.id, name: category2.name, value: 1, to: `reviews?categories=${category2.id}` },
         ]),
       );
-      expect(metrics.byCumulativeDays).toEqual(
+      expect(metrics.byDays).toEqual(
         expect.arrayContaining([
-          { date: 'Wed, 26 Feb 2020 00:00:00 GMT', value: 1 },
-          { date: 'Thu, 26 Mar 2020 00:00:00 GMT', value: 2 },
+          { date: 'Wed, 26 Feb 2020 00:00:00 GMT', count: 1, cumulative: 1 },
+          { date: 'Thu, 26 Mar 2020 00:00:00 GMT', count: 1, cumulative: 2 },
         ]),
       );
     });
@@ -97,7 +97,7 @@ describe('EventMetrics', () => {
       expect(metrics.reviewsCount).toBe(0);
       expect(metrics.byCategories).toBe(null);
       expect(metrics.byFormats).toBe(null);
-      expect(metrics.byCumulativeDays).toEqual([]);
+      expect(metrics.byDays).toEqual([]);
     });
 
     it('returns metrics for an event with proposals but without tracks', async () => {
@@ -113,7 +113,7 @@ describe('EventMetrics', () => {
       expect(metrics.reviewsCount).toBe(0);
       expect(metrics.byCategories).toBe(null);
       expect(metrics.byFormats).toBe(null);
-      expect(metrics.byCumulativeDays.length).toBe(1);
+      expect(metrics.byDays.length).toBe(1);
     });
   });
 });
