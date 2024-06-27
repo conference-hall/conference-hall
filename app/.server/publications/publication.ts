@@ -64,7 +64,6 @@ export class Publication {
     if (withEmails && proposal.deliberationStatus === 'REJECTED') await ProposalRejectedEmail.send(event, [proposal]);
   }
 
-  // TODO: Add tests for speakers confirmation
   async statistics() {
     const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
     if (event.type === 'MEETUP') throw new ForbiddenOperationError();

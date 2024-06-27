@@ -1,4 +1,11 @@
-import { formatCFPDate, formatCFPElapsedTime, formatCFPState, formatConferenceDates, formatEventType } from './cfp.ts';
+import {
+  cfpColorStatus,
+  formatCFPDate,
+  formatCFPElapsedTime,
+  formatCFPState,
+  formatConferenceDates,
+  formatEventType,
+} from './cfp.ts';
 
 describe('#formatEventType', () => {
   it('return conference label', () => {
@@ -30,18 +37,23 @@ describe('#formatConferenceDates', () => {
 });
 
 describe('#formatCFPState', () => {
-  it('return closed cfp message', () => {
+  it('return disabled cfp message', () => {
     const message = formatCFPState('CLOSED');
+    expect(message).toBe('Call for paper is disabled');
+  });
+
+  it('return closed cfp message', () => {
+    const message = formatCFPState('CLOSED', '2020-10-05T00:00:00.000Z', '2020-10-07T00:00:00.000Z');
     expect(message).toBe('Call for paper not open yet');
   });
 
   it('return opened cfp message', () => {
-    const message = formatCFPState('OPENED');
+    const message = formatCFPState('OPENED', '2020-10-05T00:00:00.000Z', '2020-10-07T00:00:00.000Z');
     expect(message).toBe('Call for paper open');
   });
 
   it('return finished cfp message', () => {
-    const message = formatCFPState('FINISHED');
+    const message = formatCFPState('FINISHED', '2020-10-05T00:00:00.000Z', '2020-10-07T00:00:00.000Z');
     expect(message).toBe('Call for paper closed');
   });
 });
@@ -55,9 +67,9 @@ describe('#formatCFPElapsedTime', () => {
     vi.useRealTimers();
   });
 
-  it('return "CFP not open" if no dates', () => {
+  it('return "CFP disabled" if no dates', () => {
     const message = formatCFPElapsedTime('CLOSED');
-    expect(message).toBe('Call for paper not open yet');
+    expect(message).toBe('Call for paper is disabled');
   });
 
   it('returns closed CFP', () => {
@@ -96,18 +108,45 @@ describe('#formatCFPDate', () => {
     expect(message).toBeUndefined();
   });
 
-  it('return one day conference info', () => {
+  it('return the date when the cfp will be open', () => {
     const message = formatCFPDate('CLOSED', '2020-10-05T00:00:00.000Z', '2020-10-07T00:00:00.000Z');
     expect(message).toBe('Open on Monday, October 5th, 2020 at 12:00 AM');
   });
 
-  it('return several days for opened conference info', () => {
+  it('return the date when the cfp will be closed', () => {
     const message = formatCFPDate('OPENED', '2020-10-05T00:00:00.000Z', '2020-10-07T00:00:00.000Z');
     expect(message).toBe('Open until Wednesday, October 7th, 2020 at 12:00 AM');
   });
 
-  it('return several days for finished conference info', () => {
+  it('return the date when the cfp is finished', () => {
     const message = formatCFPDate('FINISHED', '2020-10-05T00:00:00.000Z', '2020-10-07T00:00:00.000Z');
-    expect(message).toBe('Closed since Wednesday, October 7th, 2020');
+    expect(message).toBe('Closed since Wednesday, October 7th, 2020 at 12:00 AM');
+  });
+
+  it('return the date in another format', () => {
+    const message = formatCFPDate('FINISHED', '2020-10-05T00:00:00.000Z', '2020-10-07T00:00:00.000Z', 'Pp');
+    expect(message).toBe('Closed since 10/07/2020, 12:00 AM');
+  });
+});
+
+describe('#cfpColorStatus', () => {
+  it('return "disabled" status color if no dates', () => {
+    const message = cfpColorStatus('CLOSED');
+    expect(message).toBe('disabled');
+  });
+
+  it('return "warning" status color if cfp closed', () => {
+    const message = cfpColorStatus('CLOSED', '2020-10-05T00:00:00.000Z', '2020-10-07T00:00:00.000Z');
+    expect(message).toBe('warning');
+  });
+
+  it('return "success" status color if cfp open', () => {
+    const message = cfpColorStatus('OPENED', '2020-10-05T00:00:00.000Z', '2020-10-07T00:00:00.000Z');
+    expect(message).toBe('success');
+  });
+
+  it('return "error" status color if cfp finished', () => {
+    const message = cfpColorStatus('FINISHED', '2020-10-05T00:00:00.000Z', '2020-10-07T00:00:00.000Z');
+    expect(message).toBe('error');
   });
 });

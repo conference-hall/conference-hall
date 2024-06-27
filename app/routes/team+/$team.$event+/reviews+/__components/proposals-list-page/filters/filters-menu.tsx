@@ -8,8 +8,8 @@ import Select from '~/design-system/forms/select.tsx';
 import { Background } from '~/design-system/transitions.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { useTeam } from '~/routes/team+/__components/use-team.tsx';
+import { useEvent } from '~/routes/team+/$team.$event+/__components/useEvent.tsx';
 
-import { useEvent } from '../useEvent.tsx';
 import { reviewOptions, statusOptions } from './filters.ts';
 
 export function FiltersMenu() {

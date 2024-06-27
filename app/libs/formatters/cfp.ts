@@ -1,4 +1,4 @@
-import { format, formatDistanceToNow, isSameDay } from 'date-fns';
+import { format as formatter, formatDistanceToNow, isSameDay } from 'date-fns';
 
 import type { CfpState, EventType } from '~/types/events.types';
 
@@ -17,15 +17,17 @@ export function formatConferenceDates(type: EventType, start?: string, end?: str
   const endDate = new Date(end);
 
   if (isSameDay(startDate, endDate)) {
-    return format(startDate, 'PPP');
+    return formatter(startDate, 'PPP');
   }
 
-  const startFormatted = format(startDate, 'MMMM do');
-  const endFormatted = format(endDate, 'PPP');
+  const startFormatted = formatter(startDate, 'MMMM do');
+  const endFormatted = formatter(endDate, 'PPP');
   return `${startFormatted} to ${endFormatted}`;
 }
 
-export function formatCFPState(state: CfpState) {
+export function formatCFPState(state: CfpState, start?: string | null, end?: string | null) {
+  if (!start && !end) return 'Call for paper is disabled';
+
   switch (state) {
     case 'CLOSED':
       return 'Call for paper not open yet';
@@ -37,7 +39,9 @@ export function formatCFPState(state: CfpState) {
 }
 
 export function formatCFPElapsedTime(state: CfpState, start?: string | null, end?: string | null) {
-  if (!start || !end) return formatCFPState(state);
+  if (!start && !end) return 'Call for paper is disabled';
+  if (!start || !end) return formatCFPState(state, start, end);
+
   const startDate = new Date(start);
   const endDate = new Date(end);
 
@@ -51,14 +55,22 @@ export function formatCFPElapsedTime(state: CfpState, start?: string | null, end
   }
 }
 
-export function formatCFPDate(state: CfpState, start?: string, end?: string) {
-  if (!start || !end) return;
+export function formatCFPDate(state: CfpState, start?: string, end?: string, format = 'PPPPp') {
+  if (!start || !end) return undefined;
+
   switch (state) {
     case 'CLOSED':
-      return `Open on ${format(new Date(start), 'PPPPp')}`;
+      return `Open on ${formatter(new Date(start), format)}`;
     case 'OPENED':
-      return `Open until ${format(new Date(end), 'PPPPp')}`;
+      return `Open until ${formatter(new Date(end), format)}`;
     case 'FINISHED':
-      return `Closed since ${format(new Date(end), 'PPPP')}`;
+      return `Closed since ${formatter(new Date(end), format)}`;
   }
+}
+
+const STATUSES = { OPENED: 'success', CLOSED: 'warning', FINISHED: 'error' } as const;
+
+export function cfpColorStatus(cfpState: CfpState, cfpStart?: string, cfpEnd?: string) {
+  if (!cfpStart && !cfpEnd) return 'disabled';
+  return STATUSES[cfpState];
 }

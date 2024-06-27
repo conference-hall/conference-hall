@@ -20,9 +20,9 @@ import { parseWithZod } from '~/libs/zod-parser.ts';
 import { TalkSection } from '~/routes/__components/talks/talk-section.tsx';
 import { useUser } from '~/routes/__components/use-user.tsx';
 
-import { ProposalActivityFeed as Feed } from './__components/proposal-activity/proposal-activity-feed.tsx';
-import { ReviewHeader } from './__components/review-header.tsx';
-import { ReviewSidebar } from './__components/review-sidebar.tsx';
+import { ProposalActivityFeed as Feed } from './__components/proposal-page/proposal-activity/proposal-activity-feed.tsx';
+import { ReviewHeader } from './__components/proposal-page/review-header.tsx';
+import { ReviewSidebar } from './__components/proposal-page/review-sidebar.tsx';
 
 export type ProposalData = ProposalReviewData;
 

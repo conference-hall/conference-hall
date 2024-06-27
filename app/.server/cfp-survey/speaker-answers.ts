@@ -14,7 +14,7 @@ export class SpeakerAnswers {
     return new SpeakerAnswers(userId, eventSlug);
   }
 
-  async answers() {
+  async getAnswers() {
     const userSurvey = await db.survey.findFirst({
       select: { answers: true },
       where: { event: { slug: this.eventSlug }, user: { id: this.userId } },
@@ -42,7 +42,6 @@ export class SpeakerAnswers {
   }
 }
 
-// TODO Add tests
 export class SpeakersAnswers {
   constructor(
     private userIds: Array<string>,

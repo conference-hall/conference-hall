@@ -27,7 +27,7 @@ export function MeetupCfpOpening({ cfpStart }: Props) {
       <Form method="POST">
         <Card.Content>
           <ToggleGroup
-            label="Call for paper open"
+            label="Call for paper activation"
             description="Enable the call for paper for this meetup."
             value={Boolean(cfpStart)}
             onChange={handleChange}

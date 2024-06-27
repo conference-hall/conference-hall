@@ -1,7 +1,7 @@
 import { ButtonLink } from '~/design-system/buttons.tsx';
+import { StatusPill } from '~/design-system/charts/status-pill.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
-import { formatCFPDate, formatCFPElapsedTime } from '~/libs/formatters/cfp.ts';
-import { CfpIcon } from '~/routes/__components/cfp/cfp-icon.tsx';
+import { cfpColorStatus, formatCFPDate, formatCFPElapsedTime } from '~/libs/formatters/cfp.ts';
 import { ClientOnly } from '~/routes/__components/utils/client-only.tsx';
 import type { CfpState } from '~/types/events.types';
 
@@ -15,7 +15,7 @@ export function CfpSection({ cfpState, cfpStart, cfpEnd }: Props) {
           <ClientOnly>
             {() => (
               <div className="flex items-center gap-4">
-                <CfpIcon cfpState={cfpState} />
+                <StatusPill status={cfpColorStatus(cfpState, cfpStart, cfpEnd)} />
                 <div>
                   <H2 truncate>{formatCFPElapsedTime(cfpState, cfpStart, cfpEnd)}</H2>
                   <Subtitle truncate>{formatCFPDate(cfpState, cfpStart, cfpEnd)}</Subtitle>

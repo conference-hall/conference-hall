@@ -30,7 +30,7 @@ class CfpSettings extends BasePage {
   }
 
   toggleCfpMeetup(checked: boolean) {
-    return cy.findByRole('switch', { name: 'Call for paper open', checked });
+    return cy.findByRole('switch', { name: 'Call for paper activation', checked });
   }
 }
 

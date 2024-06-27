@@ -30,6 +30,8 @@ describe('Publication', () => {
     });
     await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker1, speaker2] }), traits: ['accepted'] });
     await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker1] }), traits: ['rejected'] });
+    await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker1] }), traits: ['confirmed'] });
+    await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker1] }), traits: ['declined'] });
     await proposalFactory({
       event,
       talk: await talkFactory({ speakers: [speaker1, speaker2] }),
@@ -52,10 +54,10 @@ describe('Publication', () => {
       const publication = Publication.for(owner.id, team.slug, event.slug);
       const count = await publication.statistics();
       expect(count).toEqual({
-        deliberation: { total: 5, pending: 1, accepted: 3, rejected: 1 },
-        accepted: { published: 1, notPublished: 2 },
+        deliberation: { total: 7, pending: 1, accepted: 5, rejected: 1 },
+        accepted: { published: 3, notPublished: 2 },
         rejected: { published: 0, notPublished: 1 },
-        confirmations: { pending: 1, confirmed: 0, declined: 0 },
+        confirmations: { pending: 1, confirmed: 1, declined: 1 },
       });
     });
 
@@ -76,12 +78,12 @@ describe('Publication', () => {
       const publication = Publication.for(owner.id, team.slug, event.slug);
 
       const count = await publication.statistics();
-      expect(count.accepted).toEqual({ published: 1, notPublished: 2 });
+      expect(count.accepted).toEqual({ published: 3, notPublished: 2 });
 
       await publication.publishAll('ACCEPTED', true);
 
       const countAccepted = await publication.statistics();
-      expect(countAccepted.accepted).toEqual({ published: 3, notPublished: 0 });
+      expect(countAccepted.accepted).toEqual({ published: 5, notPublished: 0 });
       expect([
         {
           from: `${event.name} <no-reply@conference-hall.io>`,
@@ -119,7 +121,7 @@ describe('Publication', () => {
       const publication = Publication.for(member.id, team.slug, event.slug);
       await publication.publishAll('ACCEPTED', true);
       const count = await publication.statistics();
-      expect(count.accepted).toEqual({ published: 3, notPublished: 0 });
+      expect(count.accepted).toEqual({ published: 5, notPublished: 0 });
     });
 
     it('cannot be sent by team reviewers', async () => {
@@ -139,12 +141,12 @@ describe('Publication', () => {
       const publication = Publication.for(owner.id, team.slug, event.slug);
 
       const count = await publication.statistics();
-      expect(count.accepted).toEqual({ published: 1, notPublished: 2 });
+      expect(count.accepted).toEqual({ published: 3, notPublished: 2 });
 
       await publication.publish(proposal.id, true);
 
       const countAccepted = await publication.statistics();
-      expect(countAccepted.accepted).toEqual({ published: 2, notPublished: 1 });
+      expect(countAccepted.accepted).toEqual({ published: 4, notPublished: 1 });
       expect([
         {
           from: `${event.name} <no-reply@conference-hall.io>`,
@@ -158,7 +160,7 @@ describe('Publication', () => {
       const publication = Publication.for(member.id, team.slug, event.slug);
       await publication.publish(proposal.id, false);
       const count = await publication.statistics();
-      expect(count.accepted).toEqual({ published: 2, notPublished: 1 });
+      expect(count.accepted).toEqual({ published: 4, notPublished: 1 });
     });
 
     it('cannot publish result for a proposal not accepted or rejected', async () => {

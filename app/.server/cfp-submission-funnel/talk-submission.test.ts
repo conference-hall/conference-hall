@@ -397,7 +397,7 @@ describe('TalkSubmission', () => {
 });
 
 describe('#getTracksSchema', () => {
-  it('validates tracks form inputs', async () => {
+  it('validates tracks form inputs', () => {
     const TrackSchema = getTracksSchema(true, true);
     const result = TrackSchema.safeParse({
       formats: ['format 1', 'format 2'],
@@ -409,5 +409,19 @@ describe('#getTracksSchema', () => {
     });
   });
 
-  it.todo('returns errors when tracks are mandatory');
+  it('validates tracks when no tracks', () => {
+    const TrackSchema = getTracksSchema(false, false);
+    const result = TrackSchema.safeParse({ formats: [], categories: [] });
+
+    expect(result.success && result.data).toEqual({ formats: [], categories: [] });
+  });
+
+  it('returns errors when no tracks and tracks are mandatory', () => {
+    const TrackSchema = getTracksSchema(true, true);
+    const result = TrackSchema.safeParse({ formats: [], categories: [] });
+
+    const errors = result.error?.flatten();
+    expect(errors?.fieldErrors.formats).toEqual(['Array must contain at least 1 element(s)']);
+    expect(errors?.fieldErrors.categories).toEqual(['Array must contain at least 1 element(s)']);
+  });
 });

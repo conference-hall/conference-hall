@@ -37,17 +37,17 @@ export function DetailsSection({
       {hasDetails && (
         <div className="flex flex-col gap-4 sm:flex-row sm:gap-16">
           {websiteUrl && (
-            <ExternalLink href={websiteUrl} icon={GlobeEuropeAfricaIcon}>
+            <ExternalLink href={websiteUrl} iconLeft={GlobeEuropeAfricaIcon}>
               Website
             </ExternalLink>
           )}
           {contactEmail && (
-            <ExternalLink href={`mailto:${contactEmail}`} icon={EnvelopeIcon}>
+            <ExternalLink href={`mailto:${contactEmail}`} iconLeft={EnvelopeIcon}>
               Contacts
             </ExternalLink>
           )}
           {codeOfConductUrl && (
-            <ExternalLink href={codeOfConductUrl} icon={HeartIcon}>
+            <ExternalLink href={codeOfConductUrl} iconLeft={HeartIcon}>
               Code of conduct
             </ExternalLink>
           )}

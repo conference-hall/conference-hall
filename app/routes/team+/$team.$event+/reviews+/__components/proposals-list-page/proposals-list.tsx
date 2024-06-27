@@ -4,7 +4,7 @@ import { useListSelection } from '~/design-system/list/use-list-selection.tsx';
 import { ListHeader } from './list/header.tsx';
 import { ProposalItem } from './list/proposal-item.tsx';
 import { SelectAllBanner } from './list/select-all-banner.tsx';
-import type { ProposalData } from './list/types';
+import type { ProposalData } from './list/types.ts';
 
 type Props = {
   proposals: Array<ProposalData>;

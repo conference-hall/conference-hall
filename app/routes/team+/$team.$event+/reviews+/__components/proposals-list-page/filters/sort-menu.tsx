@@ -6,8 +6,8 @@ import { Fragment } from 'react';
 
 import { button } from '~/design-system/buttons.tsx';
 import { MenuTransition } from '~/design-system/transitions.tsx';
+import { useEvent } from '~/routes/team+/$team.$event+/__components/useEvent.tsx';
 
-import { useEvent } from '../useEvent.tsx';
 import { sortByDatesOptions, sortByReviewsOptions } from './filters.ts';
 
 export function SortMenu() {
