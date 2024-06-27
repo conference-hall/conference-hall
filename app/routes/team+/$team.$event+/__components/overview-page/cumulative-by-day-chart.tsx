@@ -8,11 +8,11 @@ import { Divider } from '~/design-system/divider.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { ClientOnly } from '~/routes/__components/utils/client-only.tsx';
 
-type Props = { data: Array<{ date: string; value: number }> };
+type Props = { data: Array<{ date: string; count: number; cumulative: number }> };
 
 const DATE_FORMAT = 'LLL dd';
 
-export function SubmissionsChart({ data }: Props) {
+export function CumulativeByDayChart({ data }: Props) {
   if (data.length === 0) return <NoData />;
 
   return (
@@ -36,7 +36,7 @@ export function SubmissionsChart({ data }: Props) {
             />
             <CartesianGrid vertical={false} className="stroke-1 stroke-gray-200" />
             <Area
-              dataKey="value"
+              dataKey="cumulative"
               stroke="#6366f1"
               strokeWidth={2}
               fillOpacity={0.1}

@@ -1,5 +1,6 @@
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json, useLoaderData } from '@remix-run/react';
+import { useState } from 'react';
 import invariant from 'tiny-invariant';
 
 import { EventMetrics } from '~/.server/event-metrics/event-metrics.tsx';
@@ -13,8 +14,11 @@ import { requireSession } from '~/libs/auth/session.ts';
 
 import { useTeam } from '../__components/use-team.tsx';
 import { CfpStatusCard } from './__components/overview-page/cfp-status-card.tsx';
+import type { ChartSelectorValue } from './__components/overview-page/charts-selector.tsx';
+import { ChartSelector } from './__components/overview-page/charts-selector.tsx';
+import { CountByDayChart } from './__components/overview-page/count-by-day-chart.tsx';
+import { CumulativeByDayChart } from './__components/overview-page/cumulative-by-day-chart.tsx';
 import { ReviewStatusCard } from './__components/overview-page/review-status-card.tsx';
-import { SubmissionsChart } from './__components/overview-page/submissions-chart.tsx';
 import { VisibilityStatusCard } from './__components/overview-page/visibility-status-card.tsx';
 import { useEvent } from './__components/useEvent.tsx';
 
@@ -31,6 +35,8 @@ export default function OverviewRoute() {
   const { team } = useTeam();
   const { event } = useEvent();
   const metrics = useLoaderData<typeof loader>();
+
+  const [chartSelected, setChartSelected] = useState<ChartSelectorValue>('cumulative');
 
   const showActions = team.role === 'OWNER' || team.role === 'REVIEWER';
 
@@ -53,7 +59,10 @@ export default function OverviewRoute() {
 
         <div>
           <Card className="p-6 space-y-6">
-            <H3>Call for paper metrics</H3>
+            <div className="flex flex-row items-center justify-between">
+              <H3>Call for paper metrics</H3>
+              <ChartSelector selected={chartSelected} onSelect={setChartSelected} />
+            </div>
 
             <div className="grid grid-cols-1 gap-4 lg:gap-6 lg:grid-cols-3">
               <StatisticCard label="Proposals" stat={`${metrics.proposalsCount}`} />
@@ -65,7 +74,11 @@ export default function OverviewRoute() {
               />
             </div>
 
-            <SubmissionsChart data={metrics.byCumulativeDays} />
+            {chartSelected === 'cumulative' ? (
+              <CumulativeByDayChart data={metrics.byDays} />
+            ) : (
+              <CountByDayChart data={metrics.byDays} />
+            )}
           </Card>
         </div>
 

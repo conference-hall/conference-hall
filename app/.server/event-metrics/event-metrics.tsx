@@ -27,7 +27,7 @@ export class EventMetrics {
         reviewsCount: 0,
         byFormats: formats.length !== 0 ? [] : null,
         byCategories: categories.length !== 0 ? [] : null,
-        byCumulativeDays: [],
+        byDays: [],
       };
     }
 
@@ -37,7 +37,7 @@ export class EventMetrics {
       reviewsCount: await this.reviewsCount(id),
       byFormats: await this.proposalsByFormats(id, formats),
       byCategories: await this.proposalsByCategories(id, categories),
-      byCumulativeDays: await this.proposalsByCumulativeDays(id),
+      byDays: await this.proposalsByDays(id),
     };
   }
 
@@ -103,8 +103,8 @@ export class EventMetrics {
     });
   }
 
-  private async proposalsByCumulativeDays(eventId: string) {
-    const proposalsByDays = await db.$queryRaw<Array<{ date: Date; value: BigInt }>>(
+  private async proposalsByDays(eventId: string) {
+    const proposalsByDays = await db.$queryRaw<Array<{ date: Date; count: BigInt; cumulative: BigInt }>>(
       Prisma.sql`
         WITH data AS (
           SELECT DATE_TRUNC('day', "createdAt") AS date, count(id) AS count
@@ -114,10 +114,14 @@ export class EventMetrics {
           GROUP BY 1
           ORDER BY 1
         )
-        SELECT date, SUM(count) OVER (ORDER BY date ASC rows BETWEEN unbounded preceding AND current row) AS value FROM data
+        SELECT date, count, SUM(count) OVER (ORDER BY date ASC rows BETWEEN unbounded preceding AND current row) AS cumulative FROM data
       `,
     );
 
-    return proposalsByDays.map((item) => ({ date: item.date.toUTCString(), value: Number(item.value) }));
+    return proposalsByDays.map((item) => ({
+      date: item.date.toUTCString(),
+      count: Number(item.count),
+      cumulative: Number(item.cumulative),
+    }));
   }
 }
