@@ -1,6 +1,6 @@
 import { Card } from '~/design-system/layouts/card.tsx';
 
-import type { ProposalData } from '../$proposal.index';
+import type { ProposalData } from '../../$proposal.index.tsx';
 import { ConfirmationDetails } from './review-sidebar-sections/confirmation-details.tsx';
 import { DeliberationSelect } from './review-sidebar-sections/deliberation-select.tsx';
 import { PublicationDetails } from './review-sidebar-sections/publication-details.tsx';

@@ -12,12 +12,12 @@ import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { parseWithZod } from '~/libs/zod-parser.ts';
 
-import { ExportMenu } from '../__components/actions/export-menu.tsx';
-import { FiltersMenu } from '../__components/filters/filters-menu.tsx';
-import { FiltersTags } from '../__components/filters/filters-tags.tsx';
-import { SearchInput } from '../__components/filters/search-input.tsx';
-import { SortMenu } from '../__components/filters/sort-menu.tsx';
-import { ProposalsList } from '../__components/proposals-list.tsx';
+import { ExportMenu } from './__components/proposals-list-page/actions/export-menu.tsx';
+import { FiltersMenu } from './__components/proposals-list-page/filters/filters-menu.tsx';
+import { FiltersTags } from './__components/proposals-list-page/filters/filters-tags.tsx';
+import { SearchInput } from './__components/proposals-list-page/filters/search-input.tsx';
+import { SortMenu } from './__components/proposals-list-page/filters/sort-menu.tsx';
+import { ProposalsList } from './__components/proposals-list-page/proposals-list.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);

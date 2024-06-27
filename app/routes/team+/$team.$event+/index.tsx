@@ -12,10 +12,10 @@ import { H3 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 
 import { useTeam } from '../__components/use-team.tsx';
-import { CfpStatusCard } from './__components/overview/cfp-status-card.tsx';
-import { ReviewStatusCard } from './__components/overview/review-status-card.tsx';
-import { SubmissionsChart } from './__components/overview/submissions-chart.tsx';
-import { VisibilityStatusCard } from './__components/overview/visibility-status-card.tsx';
+import { CfpStatusCard } from './__components/overview-page/cfp-status-card.tsx';
+import { ReviewStatusCard } from './__components/overview-page/review-status-card.tsx';
+import { SubmissionsChart } from './__components/overview-page/submissions-chart.tsx';
+import { VisibilityStatusCard } from './__components/overview-page/visibility-status-card.tsx';
 import { useEvent } from './__components/useEvent.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
