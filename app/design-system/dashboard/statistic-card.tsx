@@ -1,3 +1,4 @@
+import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import slugify from '@sindresorhus/slugify';
 
 import { Divider } from '~/design-system/divider.tsx';
@@ -24,8 +25,8 @@ export function StatisticCard({ label, stat, to }: Props) {
           <Divider />
 
           <div className="flex flex-row items-center justify-end p-3">
-            <Link to="/" className="font-medium">
-              View more →
+            <Link to="/" iconRight={ArrowRightIcon} weight="medium">
+              View more
             </Link>
           </div>
         </>
