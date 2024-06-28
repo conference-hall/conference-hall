@@ -23,6 +23,8 @@ Start Docker image for Postgres DB, Firebase emulators and Mailpit:
 docker compose up
 ```
 
+Hello
+
 Start the development server:
 
 ```sh
