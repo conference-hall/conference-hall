@@ -20,7 +20,7 @@ npm install
 Start Docker image for Postgres DB, Firebase emulators and Mailpit:
 
 ```sh
-docker compose up -d
+docker compose up
 ```
 
 Start the development server:
