@@ -12,7 +12,6 @@ import { createProxyMiddleware } from 'http-proxy-middleware';
 import morgan from 'morgan';
 
 installGlobals({ nativeFetch: true });
-
 run();
 
 async function run() {
