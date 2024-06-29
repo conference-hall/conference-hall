@@ -4,19 +4,48 @@ import { useState } from 'react';
 import { Button } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 
-import { extractTimeSlots, formatTime, generateTimeSlots } from './utils/timeslots.ts';
+import type { Session } from './utils/sessions.ts';
+import type { TimeSlot } from './utils/timeslots.ts';
+import {
+  countIntervalsInTimeSlot,
+  extractTimeSlots,
+  formatTime,
+  formatTimeSlot,
+  generateTimeSlots,
+  haveSameStartDate,
+  isTimeSlotIncluded,
+  totalTimeInMinutes,
+} from './utils/timeslots.ts';
 import { useTimeslotSelector } from './utils/use-timeslot-selector.tsx';
+
+const HOUR_INTERVAL = 60; // 60 minutes
+const SLOT_INTERVAL = 5; // 5 minutes
 
 export default function Schedule() {
   const startTimeline = '09:00';
   const endTimeline = '18:00';
-  const hours = generateTimeSlots(startTimeline, endTimeline, 60);
-  const slots = generateTimeSlots(startTimeline, endTimeline, 5);
+  const hours = generateTimeSlots(startTimeline, endTimeline, HOUR_INTERVAL);
+  const slots = generateTimeSlots(startTimeline, endTimeline, SLOT_INTERVAL);
 
   const [tracks, setTrack] = useState(['', '', '']);
   const addTrack = () => setTrack((r) => [...r, '']);
 
-  const selector = useTimeslotSelector();
+  const [sessions, setSession] = useState<Array<Session>>([]);
+
+  const handleSession = (track: number, timeslot: TimeSlot) => {
+    console.log('Track', track, formatTimeSlot(timeslot));
+    setSession((s) => [...s, { track, timeslot }]);
+  };
+
+  const getSession = (track: number, timeslot: TimeSlot) => {
+    return sessions.find((session) => session.track === track && haveSameStartDate(session.timeslot, timeslot));
+  };
+
+  const hasSession = (track: number, timeslot: TimeSlot) => {
+    return sessions.some((session) => session.track === track && isTimeSlotIncluded(timeslot, session.timeslot));
+  };
+
+  const selector = useTimeslotSelector(handleSession);
 
   return (
     <Card>
@@ -69,18 +98,22 @@ export default function Schedule() {
                           const startTime = formatTime(slot.start);
                           const endTime = formatTime(slot.end);
                           const isSelected = selector.isSelectedSlot(trackIndex, slot);
+                          const selectable = !hasSession(trackIndex, slot);
+                          const session = getSession(trackIndex, slot);
 
                           return (
                             <div
                               key={`${startTime}-${endTime}`}
-                              onMouseDown={selector.onSelectStart(trackIndex, slot)}
-                              onMouseEnter={selector.onSelectHover(trackIndex, slot)}
-                              onMouseUp={selector.onSelect}
-                              className={cx('h-2 cursor-pointer relative', {
-                                'hover:bg-gray-50': !isSelected,
-                                'bg-blue-50': isSelected,
+                              onMouseDown={selectable ? selector.onSelectStart(trackIndex, slot) : undefined}
+                              onMouseEnter={selectable ? selector.onSelectHover(trackIndex, slot) : undefined}
+                              onMouseUp={selectable ? selector.onSelect : undefined}
+                              className={cx('h-[8px] relative', {
+                                'hover:bg-gray-50 cursor-pointer': selectable && !isSelected,
+                                'bg-blue-50': selectable && isSelected,
                               })}
-                            ></div>
+                            >
+                              {session ? <SessionBlock session={session} /> : null}
+                            </div>
                           );
                         })}
                       </td>
@@ -94,4 +127,14 @@ export default function Schedule() {
       </div>
     </Card>
   );
+}
+
+type SessionProps = { session: Session };
+
+function SessionBlock({ session }: SessionProps) {
+  const totalTimeMinutes = totalTimeInMinutes(session.timeslot);
+  const intervalsCount = countIntervalsInTimeSlot(session.timeslot, SLOT_INTERVAL);
+  const height = 8 * intervalsCount + (Math.ceil(totalTimeMinutes / HOUR_INTERVAL) - 1) * 3;
+
+  return <div className="absolute top-0 left-0 right-0 bg-red-50 h-2" style={{ height: `${height}px` }}></div>;
 }

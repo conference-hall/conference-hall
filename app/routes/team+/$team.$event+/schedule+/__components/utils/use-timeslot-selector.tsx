@@ -1,55 +1,43 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useState } from 'react';
 
-import { formatTimeSlot, getFullTimeslot, isTimeSlotIncludedBetween, type TimeSlot } from './timeslots.ts';
+import { getFullTimeslot, isTimeSlotIncluded, type TimeSlot } from './timeslots.ts';
 
-export function useTimeslotSelector() {
+export function useTimeslotSelector(onSelectTimeslot: (track: number, timeslot: TimeSlot) => void) {
   const [selectedTrack, setSelectedTrack] = useState<number | null>(null);
 
   const [startSlot, setStartSlot] = useState<TimeSlot | null>(null);
   const [currentSlot, setCurrentSlot] = useState<TimeSlot | null>(null);
 
-  const reset = useCallback(() => {
+  const reset = () => {
     setSelectedTrack(null);
     setStartSlot(null);
     setCurrentSlot(null);
-  }, []);
+  };
 
-  const isSelectedSlot = useCallback(
-    (track: number, slot: TimeSlot) => {
-      if (startSlot === null || selectedTrack !== track) return false;
-      if (currentSlot === null) return false;
-      const timeslot = getFullTimeslot(startSlot, currentSlot);
-      return isTimeSlotIncludedBetween(slot, timeslot.start, timeslot.end);
-    },
-    [startSlot, currentSlot, selectedTrack],
-  );
+  const isSelectedSlot = (track: number, slot: TimeSlot) => {
+    if (startSlot === null || selectedTrack !== track) return false;
+    if (currentSlot === null) return false;
+    const timeslot = getFullTimeslot(startSlot, currentSlot);
+    return isTimeSlotIncluded(slot, timeslot);
+  };
 
-  const onSelectStart = useCallback(
-    (track: number, slot: TimeSlot) => () => {
-      reset();
-      setSelectedTrack(track);
-      setStartSlot(slot);
-    },
-    [reset],
-  );
+  const onSelectStart = (track: number, slot: TimeSlot) => () => {
+    reset();
+    setSelectedTrack(track);
+    setStartSlot(slot);
+  };
 
-  const onSelectHover = useCallback(
-    (track: number, slot: TimeSlot) => () => {
-      if (startSlot === null || selectedTrack !== track) return;
-      setCurrentSlot(slot);
-    },
-    [startSlot, selectedTrack],
-  );
+  const onSelectHover = (track: number, slot: TimeSlot) => () => {
+    if (startSlot === null || selectedTrack !== track) return;
+    setCurrentSlot(slot);
+  };
 
-  const onSelect = useCallback(() => {
+  const onSelect = () => {
     if (startSlot === null || selectedTrack === null) return reset();
     const timeslot = getFullTimeslot(startSlot, currentSlot || startSlot);
-    console.log('Track', selectedTrack, formatTimeSlot(timeslot));
+    onSelectTimeslot(selectedTrack, timeslot);
     reset();
-  }, [startSlot, currentSlot, selectedTrack, reset]);
+  };
 
-  return useMemo(
-    () => ({ isSelectedSlot, onSelectStart, onSelectHover, onSelect }),
-    [isSelectedSlot, onSelectStart, onSelectHover, onSelect],
-  );
+  return { isSelectedSlot, onSelectStart, onSelectHover, onSelect };
 }

@@ -1,4 +1,4 @@
-import { addMinutes, format, isAfter, isBefore, isEqual, parse } from 'date-fns';
+import { addMinutes, differenceInMinutes, format, isAfter, isBefore, isEqual, parse } from 'date-fns';
 
 export type TimeSlot = {
   start: Date;
@@ -40,6 +40,10 @@ export const generateTimeSlots = (startTime: string, endTime: string, durationMi
   return slots;
 };
 
+export const totalTimeInMinutes = (slot: TimeSlot): number => {
+  return differenceInMinutes(slot.end, slot.start);
+};
+
 export const isEqualTimeSlot = (slot1: TimeSlot, slot2: TimeSlot): boolean => {
   return isEqual(slot1.start, slot2.start) && isEqual(slot1.end, slot2.end);
 };
@@ -52,11 +56,28 @@ export const isBeforeTimeSlot = (slot1: TimeSlot, slot2: TimeSlot): boolean => {
   return isBefore(slot1.start, slot2.start);
 };
 
+export const haveSameStartDate = (slot1: TimeSlot, slot2: TimeSlot): boolean => {
+  return isEqual(slot1.start, slot2.start);
+};
+
+export const isTimeSlotIncluded = (slot: TimeSlot, inSlot?: TimeSlot): boolean => {
+  if (!inSlot) return false;
+  return (
+    (isAfter(slot.start, inSlot.start) || isEqual(slot.start, inSlot.start)) &&
+    (isBefore(slot.end, inSlot.end) || isEqual(slot.end, inSlot.end))
+  );
+};
+
 export const isTimeSlotIncludedBetween = (slot: TimeSlot, startTime: Date, endTime: Date): boolean => {
   return (
     (isAfter(slot.start, startTime) || isEqual(slot.start, startTime)) &&
     (isBefore(slot.end, endTime) || isEqual(slot.end, endTime))
   );
+};
+
+export const countIntervalsInTimeSlot = (slot: TimeSlot, intervalMinutes: number): number => {
+  const durationInMinutes = differenceInMinutes(slot.end, slot.start);
+  return Math.floor(durationInMinutes / intervalMinutes);
 };
 
 export const extractTimeSlots = (slots: Array<TimeSlot>, startTime: string, endTime: string): Array<TimeSlot> => {
