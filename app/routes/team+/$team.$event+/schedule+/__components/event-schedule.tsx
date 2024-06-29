@@ -7,46 +7,42 @@ import {
   MagnifyingGlassMinusIcon,
   MagnifyingGlassPlusIcon,
 } from '@heroicons/react/24/outline';
-import { Form } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
 import { useState } from 'react';
-import { v4 as uuid } from 'uuid';
 
-import { Button } from '~/design-system/buttons.tsx';
-import { Modal } from '~/design-system/dialogs/modals.tsx';
-import { IconButton } from '~/design-system/icon-buttons.tsx';
+import { IconButton, IconLink } from '~/design-system/icon-buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 
 import Schedule from './schedule/schedule.tsx';
-import type { Session, Track } from './schedule/types.ts';
+import type { Session } from './schedule/types.ts';
 import { formatTimeSlot } from './schedule/utils/timeslots.ts';
+import { SessionFormModal } from './session-form.tsx';
+import type { ScheduleSettings } from './settings-form.tsx';
 
-export default function EventSchedule() {
+type Props = { settings: ScheduleSettings };
+
+export default function EventSchedule({ settings }: Props) {
   const [expanded, setExpanded] = useState(false);
 
   const [zoomLevel, setZoomLevel] = useState(2);
   const zoomIn = () => setZoomLevel((z) => Math.min(z + 1, 4));
   const zoomOut = () => setZoomLevel((z) => Math.max(z - 1, 0));
-  console.log(zoomLevel);
-
-  const [tracks, setTrack] = useState<Array<Track>>([{ id: uuid(), name: 'Room' }]);
-  const addTrack = () => setTrack((r) => [...r, { id: uuid(), name: 'Room' }]);
 
   const [openSession, setOpenSession] = useState<Session | null>(null);
   const onCloseSession = () => setOpenSession(null);
 
   return (
-    <main className={cx('px-4 my-4', { 'mx-auto max-w-7xl': !expanded })}>
+    <main className={cx('px-8 my-8', { 'mx-auto max-w-7xl': !expanded })}>
       <Card>
-        <SessionFormModal session={openSession} onClose={onCloseSession} />
+        <SessionFormModal session={openSession} tracks={settings.tracks} onClose={onCloseSession} />
 
         <header className="flex flex-row items-center justify-between gap-4 p-4 px-6 rounded-t-lg bg-slate-100">
           <div className="flex items-center gap-2">
-            <IconButton icon={ChevronLeftIcon} label="Previous day" onClick={addTrack} variant="secondary" />
+            <IconButton icon={ChevronLeftIcon} label="Previous day" onClick={() => {}} variant="secondary" />
             <h1 className="text-base font-semibold leading-6 text-gray-900">
               <time dateTime="2022-01-01">January 1st 2022</time>
             </h1>
-            <IconButton icon={ChevronRightIcon} label="Next day" onClick={addTrack} variant="secondary" />
+            <IconButton icon={ChevronRightIcon} label="Next day" onClick={() => {}} variant="secondary" />
           </div>
           <div className="flex items-center gap-4">
             <IconButton icon={MagnifyingGlassPlusIcon} label="Zoom in" onClick={zoomIn} variant="secondary" />
@@ -67,14 +63,14 @@ export default function EventSchedule() {
               />
             )}
 
-            <IconButton icon={Cog6ToothIcon} label="Schedule settings" onClick={addTrack} variant="secondary" />
+            <IconLink icon={Cog6ToothIcon} label="Schedule settings" to="settings" variant="secondary" />
           </div>
         </header>
 
         <Schedule
-          startTime="09:00"
-          endTime="17:00"
-          tracks={tracks}
+          startTime={settings.startTime}
+          endTime={settings.endTime}
+          tracks={settings.tracks}
           initialSessions={[]}
           onAddSession={setOpenSession}
           onSelectSession={setOpenSession}
@@ -104,30 +100,5 @@ function SessionBlock({ session, zoomLevel, oneLine }: SessionBlockProps) {
       <p className="truncate">{formatTimeSlot(session.timeslot)}</p>
       <p className="font-semibold truncate">(No title)</p>
     </div>
-  );
-}
-
-type SessionFormModalProps = { session: Session | null; onClose: () => void };
-
-function SessionFormModal({ session, onClose }: SessionFormModalProps) {
-  const open = Boolean(session);
-  const title = session ? formatTimeSlot(session.timeslot) : null;
-
-  return (
-    <Modal title={title} open={open} size="l" onClose={onClose}>
-      {session ? (
-        <Form method="POST" onSubmit={onClose}>
-          <Modal.Content>(No title)</Modal.Content>
-          <Modal.Actions>
-            <Button onClick={onClose} type="button" variant="secondary">
-              Cancel
-            </Button>
-            <Button type="submit" name="intent" value="save-session">
-              Save
-            </Button>
-          </Modal.Actions>
-        </Form>
-      ) : null}
-    </Modal>
   );
 }
