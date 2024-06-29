@@ -52,10 +52,10 @@ export const isBeforeTimeSlot = (slot1: TimeSlot, slot2: TimeSlot): boolean => {
   return isBefore(slot1.start, slot2.start);
 };
 
-export const isTimeSlotIncluded = (slot: TimeSlot, startSlot: TimeSlot, endSlot: TimeSlot): boolean => {
+export const isTimeSlotIncludedBetween = (slot: TimeSlot, startTime: Date, endTime: Date): boolean => {
   return (
-    (isAfter(slot.start, startSlot.start) || isEqual(slot.start, startSlot.start)) &&
-    (isBefore(slot.end, endSlot.end) || isEqual(slot.end, endSlot.end))
+    (isAfter(slot.start, startTime) || isEqual(slot.start, startTime)) &&
+    (isBefore(slot.end, endTime) || isEqual(slot.end, endTime))
   );
 };
 

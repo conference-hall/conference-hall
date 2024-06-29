@@ -1,53 +1,51 @@
+import { isAfter } from 'date-fns';
 import { useState } from 'react';
 
-import { formatTime, isAfterTimeSlot, isEqualTimeSlot, isTimeSlotIncluded, type TimeSlot } from './timeslots.ts';
+import { formatTime, isTimeSlotIncludedBetween, type TimeSlot } from './timeslots.ts';
 
 export function useTimeslotSelector() {
-  const [startTrack, setStartTrack] = useState<number | null>(null);
+  const [selectedTrack, setSelectedTrack] = useState<number | null>(null);
 
-  const [startSlot, setStartSlot] = useState<TimeSlot | null>(null);
-  const [currentSlot, setCurrentSlot] = useState<TimeSlot | null>(null);
-  const [endSlot, setEndSlot] = useState<TimeSlot | null>(null);
+  const [startTime, setStartTime] = useState<Date | null>(null);
+  const [currentTime, setCurrentTime] = useState<Date | null>(null);
 
   const reset = () => {
     console.log('reset');
-    setStartTrack(null);
-    setStartSlot(null);
-    setCurrentSlot(null);
-    setEndSlot(null);
+    setSelectedTrack(null);
+    setStartTime(null);
+    setCurrentTime(null);
+  };
+
+  const getSortedTimes = (start: Date, end: Date) => {
+    if (isAfter(start, end)) return { start: end, end: start };
+    return { start, end };
   };
 
   const isSelectedSlot = (track: number, slot: TimeSlot) => {
-    if (startSlot === null || startTrack !== track) return false;
-    if (endSlot !== null) return isTimeSlotIncluded(slot, startSlot, endSlot);
-    if (currentSlot !== null) return isTimeSlotIncluded(slot, startSlot, currentSlot);
-    return false;
+    if (startTime === null || selectedTrack !== track) return false;
+    if (currentTime === null) return false;
+    const { start, end } = getSortedTimes(startTime, currentTime);
+    return isTimeSlotIncludedBetween(slot, start, end);
   };
 
-  const onSelectStart = (track: number, slot: TimeSlot) => () => {
-    console.log('start', track, slot);
+  const onSelectStart = (track: number, start: Date) => () => {
+    console.log('start', track, start);
     reset();
-    setStartTrack(track);
-    setStartSlot(slot);
+    setSelectedTrack(track);
+    setStartTime(start);
   };
 
-  const onSelectHover = (track: number, slot: TimeSlot) => () => {
-    if (startSlot === null || startTrack !== track) return;
-    if (endSlot !== null) return;
-    if (isEqualTimeSlot(startSlot, slot) || isAfterTimeSlot(slot, startSlot)) {
-      console.log('over', track, slot);
-      setCurrentSlot(slot);
-    }
+  const onSelectHover = (track: number, end: Date) => () => {
+    if (startTime === null || selectedTrack !== track) return;
+    console.log('over', track, end);
+    setCurrentTime(end);
   };
 
   const onSelect = () => {
-    if (startSlot === null || startTrack === null) return reset();
-
-    const slot = currentSlot || startSlot;
-
-    console.log('selected', startTrack, formatTime(startSlot.start), formatTime(slot.end));
-    setCurrentSlot(slot);
-    setEndSlot(slot);
+    if (startTime === null || selectedTrack === null) return reset();
+    const { start, end } = getSortedTimes(startTime, currentTime || startTime);
+    console.log('selected', selectedTrack, formatTime(start), formatTime(end));
+    reset();
   };
 
   return { isSelectedSlot, onSelectStart, onSelectHover, onSelect };
