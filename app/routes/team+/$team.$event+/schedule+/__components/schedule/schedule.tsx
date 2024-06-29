@@ -52,15 +52,17 @@ export default function Schedule({
   const selector = useTimeslotSelector(handleAddSession);
 
   return (
-    <div className={cx('w-full border-t border-gray-200 overflow-hidden', { 'select-none': selector.isSelecting })}>
-      <table className="min-w-full border-separate border-spacing-0 overflow-x-auto">
+    <div className={cx('w-full border-t border-gray-200', { 'select-none': selector.isSelecting })}>
+      <table className="min-w-full border-separate border-spacing-0">
         {/* Gutter */}
         <thead>
           <tr className="sticky top-0 z-40 divide-x divide-gray-200 shadow">
-            <th scope="col" className="w-6 p-3 bg-white text-left text-sm font-semibold text-gray-900"></th>
+            <th scope="col" className="w-6 h-12 bg-white text-left text-sm font-semibold text-gray-900"></th>
             {tracks.map((track) => (
-              <th key={track.id} scope="col" className="p-3 bg-white text-center text-sm font-semibold text-gray-900">
-                {track.name}
+              <th scope="col" key={track.id} className="h-12 bg-white relative">
+                <div className="absolute flex items-center justify-center top-0 bottom-0 right-0 left-0 overflow-hidden">
+                  <p className="p-2 text-sm font-semibold text-gray-900 truncate">{track.name}</p>
+                </div>
               </th>
             ))}
           </tr>
