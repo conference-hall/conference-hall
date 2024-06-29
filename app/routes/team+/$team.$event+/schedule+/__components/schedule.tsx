@@ -19,8 +19,10 @@ import {
 } from './utils/timeslots.ts';
 import { useTimeslotSelector } from './utils/use-timeslot-selector.tsx';
 
-const HOUR_INTERVAL = 60; // 60 minutes
-const SLOT_INTERVAL = 5; // 5 minutes
+const HOUR_INTERVAL = 60; // minutes
+const SLOT_INTERVAL = 10; // minutes
+const TIMESLOT_HEIGHT = 24; // px
+const SESSION_MIN_HEIGHT = 24; // px
 
 export default function Schedule() {
   const startTimeline = '09:00';
@@ -112,10 +114,11 @@ export default function Schedule() {
                               onMouseDown={selectable ? selector.onSelectStart(trackIndex, slot) : undefined}
                               onMouseEnter={selectable ? selector.onSelectHover(trackIndex, slot) : undefined}
                               onMouseUp={selector.onSelect}
-                              className={cx('h-[8px] relative', {
+                              className={cx('relative', {
                                 'hover:bg-gray-50 cursor-pointer': selectable && !isSelected,
                                 'bg-blue-50 cursor-pointer': selectable && isSelected,
                               })}
+                              style={{ height: `${TIMESLOT_HEIGHT}px` }}
                             >
                               {session ? <SessionBlock session={session} /> : null}
                             </div>
@@ -139,7 +142,19 @@ type SessionProps = { session: Session };
 function SessionBlock({ session }: SessionProps) {
   const totalTimeMinutes = totalTimeInMinutes(session.timeslot);
   const intervalsCount = countIntervalsInTimeSlot(session.timeslot, SLOT_INTERVAL);
-  const height = 8 * intervalsCount + (Math.ceil(totalTimeMinutes / HOUR_INTERVAL) - 1) * 3;
 
-  return <div className="absolute top-0 left-0 right-0 bg-red-50 h-2" style={{ height: `${height}px` }}></div>;
+  const height = Math.max(
+    TIMESLOT_HEIGHT * intervalsCount + (Math.ceil(totalTimeMinutes / HOUR_INTERVAL) - 1) * 3,
+    SESSION_MIN_HEIGHT,
+  );
+
+  return (
+    <div
+      className="absolute top-0 left-0 right-0 p-1 text-xs overflow-hidden bg-red-50 border border-red-200 rounded"
+      style={{ height: `${height}px` }}
+    >
+      <p className="text-red-400 truncate">{formatTimeSlot(session.timeslot)}</p>
+      <p className="text-red-400 truncate">This is a session name, This is a session name, This is a session name</p>
+    </div>
+  );
 }
