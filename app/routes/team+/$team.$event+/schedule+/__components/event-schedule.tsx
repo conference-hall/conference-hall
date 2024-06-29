@@ -19,13 +19,15 @@ import { formatTimeSlot } from './schedule/utils/timeslots.ts';
 import { SessionFormModal } from './session-form.tsx';
 import type { ScheduleSettings } from './settings-form.tsx';
 
+const MAX_ZOOM_LEVEL = 4;
+
 type Props = { settings: ScheduleSettings };
 
 export default function EventSchedule({ settings }: Props) {
   const [expanded, setExpanded] = useState(false);
 
   const [zoomLevel, setZoomLevel] = useState(2);
-  const zoomIn = () => setZoomLevel((z) => Math.min(z + 1, 4));
+  const zoomIn = () => setZoomLevel((z) => Math.min(z + 1, MAX_ZOOM_LEVEL));
   const zoomOut = () => setZoomLevel((z) => Math.max(z - 1, 0));
 
   const [openSession, setOpenSession] = useState<Session | null>(null);
@@ -38,15 +40,27 @@ export default function EventSchedule({ settings }: Props) {
 
         <header className="flex flex-row items-center justify-between gap-4 p-4 px-6 rounded-t-lg bg-slate-100">
           <div className="flex items-center gap-2">
-            <IconButton icon={ChevronLeftIcon} label="Previous day" onClick={() => {}} variant="secondary" />
+            <IconButton icon={ChevronLeftIcon} label="Previous day" onClick={() => {}} disabled variant="secondary" />
             <h1 className="text-base font-semibold leading-6 text-gray-900">
               <time dateTime="2022-01-01">January 1st 2022</time>
             </h1>
-            <IconButton icon={ChevronRightIcon} label="Next day" onClick={() => {}} variant="secondary" />
+            <IconButton icon={ChevronRightIcon} label="Next day" onClick={() => {}} disabled variant="secondary" />
           </div>
           <div className="flex items-center gap-4">
-            <IconButton icon={MagnifyingGlassPlusIcon} label="Zoom in" onClick={zoomIn} variant="secondary" />
-            <IconButton icon={MagnifyingGlassMinusIcon} label="Zoom out" onClick={zoomOut} variant="secondary" />
+            <IconButton
+              icon={MagnifyingGlassPlusIcon}
+              label="Zoom in"
+              onClick={zoomIn}
+              disabled={zoomLevel === MAX_ZOOM_LEVEL}
+              variant="secondary"
+            />
+            <IconButton
+              icon={MagnifyingGlassMinusIcon}
+              label="Zoom out"
+              onClick={zoomOut}
+              disabled={zoomLevel === 0}
+              variant="secondary"
+            />
             {expanded ? (
               <IconButton
                 icon={ArrowsPointingInIcon}
