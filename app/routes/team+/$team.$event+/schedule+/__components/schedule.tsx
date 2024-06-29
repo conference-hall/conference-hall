@@ -4,71 +4,19 @@ import { useState } from 'react';
 import { Button } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 
-import type { TimeSlot } from './utils/timeslots.ts';
-import {
-  extractTimeSlots,
-  formatTime,
-  generateTimeSlots,
-  isAfterTimeSlot,
-  isEqualTimeSlot,
-  isTimeSlotIncluded,
-} from './utils/timeslots.ts';
+import { extractTimeSlots, formatTime, generateTimeSlots } from './utils/timeslots.ts';
+import { useTimeslotSelector } from './utils/use-timeslot-selector.tsx';
 
 export default function Schedule() {
+  const startTimeline = '09:00';
+  const endTimeline = '18:00';
+  const hours = generateTimeSlots(startTimeline, endTimeline, 60);
+  const slots = generateTimeSlots(startTimeline, endTimeline, 5);
+
   const [tracks, setTrack] = useState(['', '', '']);
   const addTrack = () => setTrack((r) => [...r, '']);
 
-  const [startTrack, setStartTrack] = useState<number | null>(null);
-
-  const [startSlot, setStartSlot] = useState<TimeSlot | null>(null);
-  const [currentSlot, setCurrentSlot] = useState<TimeSlot | null>(null);
-  const [endSlot, setEndSlot] = useState<TimeSlot | null>(null);
-
-  const reset = () => {
-    console.log('reset');
-    setStartTrack(null);
-    setStartSlot(null);
-    setCurrentSlot(null);
-    setEndSlot(null);
-  };
-
-  const isSelectedSlot = (track: number, slot: TimeSlot) => {
-    if (startSlot === null || startTrack !== track) return false;
-    if (endSlot !== null) return isTimeSlotIncluded(slot, startSlot, endSlot);
-    if (currentSlot !== null) return isTimeSlotIncluded(slot, startSlot, currentSlot);
-    return false;
-  };
-
-  const start = '09:00';
-  const end = '18:00';
-  const hours = generateTimeSlots(start, end, 60);
-  const slots = generateTimeSlots(start, end, 5);
-
-  const onMouseDown = (track: number, slot: TimeSlot) => () => {
-    console.log('start', track, slot);
-    reset();
-    setStartTrack(track);
-    setStartSlot(slot);
-  };
-
-  const onMouseEnter = (track: number, slot: TimeSlot) => () => {
-    if (startSlot === null || startTrack !== track) return;
-    if (endSlot !== null) return;
-    if (isEqualTimeSlot(startSlot, slot) || isAfterTimeSlot(slot, startSlot)) {
-      console.log('over', track, slot);
-      setCurrentSlot(slot);
-    }
-  };
-
-  const onMouseUp = () => {
-    if (startSlot === null || startTrack === null) return reset();
-
-    const slot = currentSlot || startSlot;
-
-    console.log('selected', startTrack, formatTime(startSlot.start), formatTime(slot.end));
-    setCurrentSlot(slot);
-    setEndSlot(slot);
-  };
+  const selector = useTimeslotSelector();
 
   return (
     <Card>
@@ -120,14 +68,14 @@ export default function Schedule() {
                         {hourSlots.map((slot) => {
                           const startTime = formatTime(slot.start);
                           const endTime = formatTime(slot.end);
-                          const isSelected = isSelectedSlot(trackIndex, slot);
+                          const isSelected = selector.isSelectedSlot(trackIndex, slot);
 
                           return (
                             <div
                               key={`${startTime}-${endTime}`}
-                              onMouseDown={onMouseDown(trackIndex, slot)}
-                              onMouseEnter={onMouseEnter(trackIndex, slot)}
-                              onMouseUp={onMouseUp}
+                              onMouseDown={selector.onSelectStart(trackIndex, slot)}
+                              onMouseEnter={selector.onSelectHover(trackIndex, slot)}
+                              onMouseUp={selector.onSelect}
                               className={cx('h-2 cursor-pointer relative', {
                                 'hover:bg-gray-50': !isSelected,
                                 'bg-blue-50': isSelected,
