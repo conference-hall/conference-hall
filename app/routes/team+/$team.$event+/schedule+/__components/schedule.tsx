@@ -19,30 +19,24 @@ export default function Schedule() {
   const addTrack = () => setTrack((r) => [...r, '']);
 
   const [startTrack, setStartTrack] = useState<number | null>(null);
+
   const [startSlot, setStartSlot] = useState<TimeSlot | null>(null);
-
-  const [currentTrack, setCurrentTrack] = useState<number | null>(null);
   const [currentSlot, setCurrentSlot] = useState<TimeSlot | null>(null);
-
-  const [endTrack, setEndTrack] = useState<number | null>(null);
   const [endSlot, setEndSlot] = useState<TimeSlot | null>(null);
 
   const reset = () => {
     console.log('reset');
     setStartTrack(null);
     setStartSlot(null);
-    setCurrentTrack(null);
     setCurrentSlot(null);
-    setEndTrack(null);
     setEndSlot(null);
   };
 
   const isSelectedSlot = (track: number, slot: TimeSlot) => {
     if (startSlot === null || startTrack !== track) return false;
-    if (currentSlot === null || currentTrack !== track) return false;
-
     if (endSlot !== null) return isTimeSlotIncluded(slot, startSlot, endSlot);
-    return isTimeSlotIncluded(slot, startSlot, currentSlot);
+    if (currentSlot !== null) return isTimeSlotIncluded(slot, startSlot, currentSlot);
+    return false;
   };
 
   const start = '09:00';
@@ -59,24 +53,20 @@ export default function Schedule() {
 
   const onMouseEnter = (track: number, slot: TimeSlot) => () => {
     if (startSlot === null || startTrack !== track) return;
-    if (endSlot !== null || endTrack !== null) return;
+    if (endSlot !== null) return;
     if (isEqualTimeSlot(startSlot, slot) || isAfterTimeSlot(slot, startSlot)) {
       console.log('over', track, slot);
-      setCurrentTrack(track);
       setCurrentSlot(slot);
     }
   };
 
   const onMouseUp = () => {
-    if (startSlot === null) return reset();
+    if (startSlot === null || startTrack === null) return reset();
 
     const slot = currentSlot || startSlot;
-    const track = currentTrack || startTrack;
 
     console.log('selected', startTrack, formatTime(startSlot.start), formatTime(slot.end));
-    setCurrentTrack(track);
     setCurrentSlot(slot);
-    setEndTrack(track);
     setEndSlot(slot);
   };
 
