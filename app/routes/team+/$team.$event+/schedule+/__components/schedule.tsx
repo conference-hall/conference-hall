@@ -73,8 +73,8 @@ export default function Schedule() {
                           return (
                             <div
                               key={`${startTime}-${endTime}`}
-                              onMouseDown={selector.onSelectStart(trackIndex, slot.start)}
-                              onMouseEnter={selector.onSelectHover(trackIndex, slot.end)}
+                              onMouseDown={selector.onSelectStart(trackIndex, slot)}
+                              onMouseEnter={selector.onSelectHover(trackIndex, slot)}
                               onMouseUp={selector.onSelect}
                               className={cx('h-2 cursor-pointer relative', {
                                 'hover:bg-gray-50': !isSelected,
