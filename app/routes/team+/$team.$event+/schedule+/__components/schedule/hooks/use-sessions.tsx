@@ -6,21 +6,22 @@ import { areTimeSlotsOverlapping, formatTimeSlot, haveSameStartDate, isTimeSlotI
 export function useSessions(initialSessions: Array<Session> = []) {
   const [sessions, setSession] = useState<Array<Session>>(initialSessions);
 
-  const addSession = (track: number, timeslot: TimeSlot) => {
+  const addSession = (trackId: string, timeslot: TimeSlot) => {
     const conflicting = sessions.some(
-      (session) => session.track === track && areTimeSlotsOverlapping(timeslot, session.timeslot),
+      (session) => session.trackId === trackId && areTimeSlotsOverlapping(timeslot, session.timeslot),
     );
-    if (conflicting) return;
-    console.log('Track', track, formatTimeSlot(timeslot));
-    setSession((s) => [...s, { track, timeslot }]);
+    if (conflicting) return false;
+    console.log('Track', trackId, formatTimeSlot(timeslot));
+    setSession((s) => [...s, { trackId, timeslot }]);
+    return true;
   };
 
-  const getSession = (track: number, timeslot: TimeSlot) => {
-    return sessions.find((session) => session.track === track && haveSameStartDate(session.timeslot, timeslot));
+  const getSession = (trackId: string, timeslot: TimeSlot) => {
+    return sessions.find((session) => session.trackId === trackId && haveSameStartDate(session.timeslot, timeslot));
   };
 
-  const hasSession = (track: number, timeslot: TimeSlot) => {
-    return sessions.some((session) => session.track === track && isTimeSlotIncluded(timeslot, session.timeslot));
+  const hasSession = (trackId: string, timeslot: TimeSlot) => {
+    return sessions.some((session) => session.trackId === trackId && isTimeSlotIncluded(timeslot, session.timeslot));
   };
 
   return { addSession, getSession, hasSession };

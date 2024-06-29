@@ -41,89 +41,84 @@ export default function Schedule({
 
   const sessions = useSessions(initialSessions);
 
-  const handleAddSession = (track: number, timeslot: TimeSlot) => {
-    sessions.addSession(track, timeslot);
-    onAddSession({ track, timeslot });
+  const handleAddSession = (trackId: string, timeslot: TimeSlot) => {
+    const added = sessions.addSession(trackId, timeslot);
+    if (added) onAddSession({ trackId, timeslot });
   };
 
   const selector = useTimeslotSelector(handleAddSession);
 
   return (
-    <div className="flow-root select-none">
-      <div className="inline-block min-w-full">
-        <table className="min-w-full border-collapse">
-          {/* Gutter */}
-          <thead>
-            <tr className="divide-x divide-gray-200">
-              <th
-                scope="col"
-                className="sticky top-0 z-40 p-0 bg-white w-6 border-b border-gray-300 text-left text-sm font-semibold text-gray-900"
-              >
-                Time
+    <div className={cx('w-full border-t border-gray-200', { 'select-none': selector.isSelecting })}>
+      <table className="min-w-full border-separate border-spacing-0">
+        {/* Gutter */}
+        <thead>
+          <tr className="sticky top-0 z-40 divide-x divide-gray-200 shadow">
+            <th scope="col" className="w-6 p-3 bg-white text-left text-sm font-semibold text-gray-900"></th>
+            {tracks.map((track) => (
+              <th key={track.id} scope="col" className="p-3 bg-white text-center text-sm font-semibold text-gray-900">
+                {track.name}
               </th>
-              {tracks.map((track) => (
-                <th
-                  key={track.id}
-                  scope="col"
-                  className="sticky top-0 z-40 p-0 bg-white border-b border-gray-300 text-left text-sm font-semibold text-gray-900 table-cell"
-                >
-                  Room
-                </th>
-              ))}
-            </tr>
-          </thead>
+            ))}
+          </tr>
+        </thead>
 
-          {/* Content */}
-          <tbody>
-            {/* Hours */}
-            {hours.map((hour) => {
-              const startTime = formatTime(hour.start);
-              const endTime = formatTime(hour.end);
-              const hourSlots = extractTimeSlots(slots, startTime, endTime);
+        {/* Content */}
+        <tbody>
+          {/* Empty line */}
+          <tr className="divide-x divide-gray-200 align-top">
+            <td className="h-6"></td>
+            {tracks.map((track) => (
+              <td key={track.id} className="h-6 border-b"></td>
+            ))}
+          </tr>
 
-              return (
-                <tr key={`${startTime}-${endTime}`} className="divide-x divide-gray-200 align-top">
-                  {/* Gutter time */}
-                  <td className="p-0 border-b border-gray-200 whitespace-nowrap text-sm font-medium text-gray-900">
-                    {startTime}
+          {/* Hours */}
+          {hours.map((hour) => {
+            const startTime = formatTime(hour.start);
+            const endTime = formatTime(hour.end);
+            const hourSlots = extractTimeSlots(slots, startTime, endTime);
+
+            return (
+              <tr key={`${startTime}-${endTime}`} className="divide-x divide-gray-200 align-top">
+                {/* Gutter time */}
+                <td className="px-2 -mt-2 whitespace-nowrap text-xs text-gray-500 block">{startTime}</td>
+
+                {/* Rows by track */}
+                {tracks.map((track) => (
+                  <td key={track.id} className="p-0 border-b">
+                    {hourSlots.map((slot) => {
+                      const startTime = formatTime(slot.start);
+                      const endTime = formatTime(slot.end);
+                      const isSelected = selector.isSelectedSlot(track.id, slot);
+                      const selectable = !sessions.hasSession(track.id, slot);
+                      const session = sessions.getSession(track.id, slot);
+
+                      return (
+                        <div
+                          key={`${startTime}-${endTime}`}
+                          onMouseDown={selectable ? selector.onSelectStart(track.id, slot) : undefined}
+                          onMouseEnter={selectable ? selector.onSelectHover(track.id, slot) : undefined}
+                          onMouseUp={selector.onSelect}
+                          className={cx('relative', {
+                            'hover:bg-gray-50 cursor-pointer': selectable && !isSelected,
+                            'bg-blue-50 cursor-pointer': selectable && isSelected,
+                          })}
+                          style={{ height: `${TIMESLOT_HEIGHT}px` }}
+                        >
+                          {session ? (
+                            <SessionBlock session={session} renderSession={renderSession} onClick={onSelectSession} />
+                          ) : null}
+                        </div>
+                      );
+                    })}
                   </td>
-
-                  {/* Rows by track */}
-                  {tracks.map((_, trackIndex) => (
-                    <td key={trackIndex} className="p-0 border-b border-gray-200">
-                      {hourSlots.map((slot) => {
-                        const startTime = formatTime(slot.start);
-                        const endTime = formatTime(slot.end);
-                        const isSelected = selector.isSelectedSlot(trackIndex, slot);
-                        const selectable = !sessions.hasSession(trackIndex, slot);
-                        const session = sessions.getSession(trackIndex, slot);
-
-                        return (
-                          <div
-                            key={`${startTime}-${endTime}`}
-                            onMouseDown={selectable ? selector.onSelectStart(trackIndex, slot) : undefined}
-                            onMouseEnter={selectable ? selector.onSelectHover(trackIndex, slot) : undefined}
-                            onMouseUp={selector.onSelect}
-                            className={cx('relative', {
-                              'hover:bg-gray-50 cursor-pointer': selectable && !isSelected,
-                              'bg-blue-50 cursor-pointer': selectable && isSelected,
-                            })}
-                            style={{ height: `${TIMESLOT_HEIGHT}px` }}
-                          >
-                            {session ? (
-                              <SessionBlock session={session} renderSession={renderSession} onClick={onSelectSession} />
-                            ) : null}
-                          </div>
-                        );
-                      })}
-                    </td>
-                  ))}
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
+                ))}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     </div>
   );
 }
