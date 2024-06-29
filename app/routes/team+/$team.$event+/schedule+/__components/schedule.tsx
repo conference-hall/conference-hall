@@ -7,6 +7,7 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import type { Session } from './utils/sessions.ts';
 import type { TimeSlot } from './utils/timeslots.ts';
 import {
+  areTimeSlotsOverlapping,
   countIntervalsInTimeSlot,
   extractTimeSlots,
   formatTime,
@@ -32,7 +33,11 @@ export default function Schedule() {
 
   const [sessions, setSession] = useState<Array<Session>>([]);
 
-  const handleSession = (track: number, timeslot: TimeSlot) => {
+  const addSession = (track: number, timeslot: TimeSlot) => {
+    const conflicting = sessions.some(
+      (session) => session.track === track && areTimeSlotsOverlapping(timeslot, session.timeslot),
+    );
+    if (conflicting) return;
     console.log('Track', track, formatTimeSlot(timeslot));
     setSession((s) => [...s, { track, timeslot }]);
   };
@@ -45,7 +50,7 @@ export default function Schedule() {
     return sessions.some((session) => session.track === track && isTimeSlotIncluded(timeslot, session.timeslot));
   };
 
-  const selector = useTimeslotSelector(handleSession);
+  const selector = useTimeslotSelector(addSession);
 
   return (
     <Card>
@@ -106,10 +111,10 @@ export default function Schedule() {
                               key={`${startTime}-${endTime}`}
                               onMouseDown={selectable ? selector.onSelectStart(trackIndex, slot) : undefined}
                               onMouseEnter={selectable ? selector.onSelectHover(trackIndex, slot) : undefined}
-                              onMouseUp={selectable ? selector.onSelect : undefined}
+                              onMouseUp={selector.onSelect}
                               className={cx('h-[8px] relative', {
                                 'hover:bg-gray-50 cursor-pointer': selectable && !isSelected,
-                                'bg-blue-50': selectable && isSelected,
+                                'bg-blue-50 cursor-pointer': selectable && isSelected,
                               })}
                             >
                               {session ? <SessionBlock session={session} /> : null}

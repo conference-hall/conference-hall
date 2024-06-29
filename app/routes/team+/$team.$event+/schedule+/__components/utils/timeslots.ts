@@ -75,6 +75,15 @@ export const isTimeSlotIncludedBetween = (slot: TimeSlot, startTime: Date, endTi
   );
 };
 
+export const areTimeSlotsOverlapping = (slot1: TimeSlot, slot2: TimeSlot): boolean => {
+  return !(
+    isBefore(slot1.end, slot2.start) ||
+    isEqual(slot1.end, slot2.start) ||
+    isAfter(slot1.start, slot2.end) ||
+    isEqual(slot1.start, slot2.end)
+  );
+};
+
 export const countIntervalsInTimeSlot = (slot: TimeSlot, intervalMinutes: number): number => {
   const durationInMinutes = differenceInMinutes(slot.end, slot.start);
   return Math.floor(durationInMinutes / intervalMinutes);
