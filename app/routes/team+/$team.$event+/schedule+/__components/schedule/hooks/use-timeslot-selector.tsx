@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
-import { getFullTimeslot, isTimeSlotIncluded, type TimeSlot } from './timeslots.ts';
+import type { TimeSlot } from '../types.ts';
+import { getFullTimeslot, isTimeSlotIncluded } from '../utils/timeslots.ts';
 
 export function useTimeslotSelector(onSelectTimeslot: (track: number, timeslot: TimeSlot) => void) {
   const [selectedTrack, setSelectedTrack] = useState<number | null>(null);

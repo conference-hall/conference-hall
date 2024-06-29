@@ -1,20 +1,10 @@
 import { useState } from 'react';
 
-import {
-  areTimeSlotsOverlapping,
-  formatTimeSlot,
-  haveSameStartDate,
-  isTimeSlotIncluded,
-  type TimeSlot,
-} from './timeslots.ts';
+import type { Session, TimeSlot } from '../types.ts';
+import { areTimeSlotsOverlapping, formatTimeSlot, haveSameStartDate, isTimeSlotIncluded } from '../utils/timeslots.ts';
 
-export type Session = {
-  track: number;
-  timeslot: TimeSlot;
-};
-
-export function useSessions() {
-  const [sessions, setSession] = useState<Array<Session>>([]);
+export function useSessions(initialSessions: Array<Session> = []) {
+  const [sessions, setSession] = useState<Array<Session>>(initialSessions);
 
   const addSession = (track: number, timeslot: TimeSlot) => {
     const conflicting = sessions.some(

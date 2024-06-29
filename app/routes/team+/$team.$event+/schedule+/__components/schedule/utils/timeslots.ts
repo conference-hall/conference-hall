@@ -1,9 +1,6 @@
 import { addMinutes, differenceInMinutes, format, isAfter, isBefore, isEqual, parse } from 'date-fns';
 
-export type TimeSlot = {
-  start: Date;
-  end: Date;
-};
+import type { TimeSlot } from '../types.ts';
 
 export const generateTimes = (startTime: string, endTime: string, durationMinutes: number = 5): Array<string> => {
   const times: Array<string> = [];
