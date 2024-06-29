@@ -2,8 +2,9 @@ import type { LoaderFunctionArgs } from '@remix-run/node';
 import invariant from 'tiny-invariant';
 
 import { Page } from '~/design-system/layouts/page.tsx';
-import { H2, Text } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
+
+import Schedule from './__components/schedule.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   await requireSession(request);
@@ -16,8 +17,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 export default function ScheduleRoute() {
   return (
     <Page>
-      <H2>Schedule</H2>
-      <Text>WIP</Text>
+      <Schedule />
     </Page>
   );
 }
