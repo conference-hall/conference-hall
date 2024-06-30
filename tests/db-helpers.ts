@@ -14,6 +14,7 @@ export async function resetDB() {
     db.survey.deleteMany(),
     db.comment.deleteMany(),
     db.review.deleteMany(),
+    db.schedule.deleteMany(),
     db.proposal.deleteMany(),
     db.talk.deleteMany(),
     db.eventFormat.deleteMany(),

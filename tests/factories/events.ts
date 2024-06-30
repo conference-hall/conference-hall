@@ -1,4 +1,13 @@
-import { rand, randEmail, randFullAddress, randParagraph, randSportsTeam, randUrl, randUuid } from '@ngneat/falso';
+import {
+  rand,
+  randEmail,
+  randFullAddress,
+  randParagraph,
+  randSportsTeam,
+  randText,
+  randUrl,
+  randUuid,
+} from '@ngneat/falso';
 import type { Prisma, Team } from '@prisma/client';
 import { EventType, EventVisibility } from '@prisma/client';
 
@@ -50,6 +59,9 @@ const TRAITS = {
   withSurvey: {
     surveyEnabled: true,
     surveyQuestions: ['gender', 'tshirt', 'diet', 'accomodation', 'transports', 'info'],
+  },
+  withSchedule: {
+    schedules: { create: { name: randText() } },
   },
 };
 

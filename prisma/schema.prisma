@@ -127,6 +127,7 @@ model Event {
   migrationId              String?
   proposals                Proposal[]
   surveys                  Survey[]
+  schedules                Schedule[]
 
   @@map("events")
 }
@@ -301,4 +302,18 @@ model Comment {
 enum CommentChannel {
   ORGANIZER
   SPEAKER
+}
+
+model Schedule {
+  id              String   @id @default(cuid())
+  eventId         String
+  event           Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  name            String
+  startTimeslot   String   @default("09:00")
+  endTimeslot     String   @default("18:00")
+  intervalMinutes Int      @default(10)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("schedules")
 }

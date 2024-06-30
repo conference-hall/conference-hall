@@ -21,6 +21,7 @@ const DEFAULT_TRACK: Track = { id: 'track-1', name: 'Track' };
 type ScheduleProps = {
   startTime: string;
   endTime: string;
+  interval?: number;
   tracks: Array<Track>;
   initialSessions: Array<Session>;
   renderSession: (session: Session, zoomLevel: number, oneLine: boolean) => ReactNode;
@@ -32,6 +33,7 @@ type ScheduleProps = {
 export default function Schedule({
   startTime,
   endTime,
+  interval = SLOT_INTERVAL,
   tracks = [DEFAULT_TRACK],
   initialSessions = [],
   renderSession,
@@ -40,7 +42,7 @@ export default function Schedule({
   zoomLevel = DEFAULT_TIMESLOT_HEIGHT_IDX,
 }: ScheduleProps) {
   const hours = generateTimeSlots(startTime, endTime, HOUR_INTERVAL);
-  const slots = generateTimeSlots(startTime, endTime, SLOT_INTERVAL);
+  const slots = generateTimeSlots(startTime, endTime, interval);
 
   const sessions = useSessions(initialSessions);
 
@@ -116,6 +118,7 @@ export default function Schedule({
                               session={session}
                               renderSession={renderSession}
                               onClick={onSelectSession}
+                              interval={interval}
                               zoomLevel={zoomLevel}
                             />
                           ) : null}
@@ -137,12 +140,13 @@ type SessionProps = {
   session: Session;
   renderSession: (session: Session, zoomLevel: number, oneLine: boolean) => ReactNode;
   onClick: (session: Session) => void;
+  interval: number;
   zoomLevel: number;
 };
 
-function SessionBlock({ session, renderSession, onClick, zoomLevel }: SessionProps) {
+function SessionBlock({ session, renderSession, onClick, interval, zoomLevel }: SessionProps) {
   const totalTimeMinutes = totalTimeInMinutes(session.timeslot);
-  const intervalsCount = countIntervalsInTimeSlot(session.timeslot, SLOT_INTERVAL);
+  const intervalsCount = countIntervalsInTimeSlot(session.timeslot, interval);
 
   const height = getTimeslotHeight(zoomLevel) * intervalsCount + Math.ceil(totalTimeMinutes / HOUR_INTERVAL) - 3;
 

@@ -14,16 +14,18 @@ import { IconButton, IconLink } from '~/design-system/icon-buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 
 import Schedule from './schedule/schedule.tsx';
-import type { Session } from './schedule/types.ts';
+import type { Session, Track } from './schedule/types.ts';
 import { formatTimeSlot } from './schedule/utils/timeslots.ts';
 import { SessionFormModal } from './session-form.tsx';
-import type { ScheduleSettings } from './settings-form.tsx';
 
 const MAX_ZOOM_LEVEL = 4;
 
-type Props = { settings: ScheduleSettings };
+type Props = {
+  settings: { name: string; startTimeslot: string; endTimeslot: string; intervalMinutes: number };
+  tracks: Array<Track>;
+};
 
-export default function EventSchedule({ settings }: Props) {
+export default function EventSchedule({ settings, tracks }: Props) {
   const [expanded, setExpanded] = useState(false);
 
   const [zoomLevel, setZoomLevel] = useState(2);
@@ -36,7 +38,7 @@ export default function EventSchedule({ settings }: Props) {
   return (
     <main className={cx('px-8 my-8', { 'mx-auto max-w-7xl': !expanded })}>
       <Card>
-        <SessionFormModal session={openSession} tracks={settings.tracks} onClose={onCloseSession} />
+        <SessionFormModal session={openSession} tracks={tracks} onClose={onCloseSession} />
 
         <header className="flex flex-row items-center justify-between gap-4 p-4 px-6 rounded-t-lg bg-slate-100">
           <div className="flex items-center gap-2">
@@ -82,9 +84,10 @@ export default function EventSchedule({ settings }: Props) {
         </header>
 
         <Schedule
-          startTime={settings.startTime}
-          endTime={settings.endTime}
-          tracks={settings.tracks}
+          startTime={settings.startTimeslot}
+          endTime={settings.endTimeslot}
+          interval={settings.intervalMinutes}
+          tracks={tracks}
           initialSessions={[]}
           onAddSession={setOpenSession}
           onSelectSession={setOpenSession}

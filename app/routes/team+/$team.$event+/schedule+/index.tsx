@@ -1,31 +1,32 @@
-import type { LoaderFunctionArgs } from '@remix-run/node';
+import { json, type LoaderFunctionArgs, redirect } from '@remix-run/node';
+import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 import { v4 as uuid } from 'uuid';
 
+import { EventSchedule } from '~/.server/event-schedule/event-schedule.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 
-import EventSchedule from './__components/event-schedule.tsx';
-import type { ScheduleSettings } from './__components/settings-form.tsx';
+import EventScheduleComp from './__components/event-schedule.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
-  await requireSession(request);
+  const userId = await requireSession(request);
   invariant(params.team, 'Invalid team slug');
   invariant(params.event, 'Invalid event slug');
 
-  return null;
+  const settings = await EventSchedule.for(userId, params.team, params.event).settings();
+
+  if (!settings) return redirect(`/team/${params.team}/${params.event}/schedule/settings`);
+
+  return json({ settings });
 };
 
 export default function ScheduleRoute() {
-  const settings: ScheduleSettings = {
-    name: 'Devfest Nantes schedule',
-    startTime: '09:00',
-    endTime: '18:00',
-    intervalMinutes: 5,
-    tracks: [
-      { id: uuid(), name: 'Room 1' },
-      { id: uuid(), name: 'Room 2' },
-    ],
-  };
+  const { settings } = useLoaderData<typeof loader>();
 
-  return <EventSchedule settings={settings} />;
+  const tracks = [
+    { id: uuid(), name: 'Room 1' },
+    { id: uuid(), name: 'Room 2' },
+  ];
+
+  return <EventScheduleComp settings={settings} tracks={tracks} />;
 }

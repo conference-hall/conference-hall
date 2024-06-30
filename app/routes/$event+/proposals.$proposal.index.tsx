@@ -9,7 +9,7 @@ import { EventPage } from '~/.server/event-page/event-page.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
-import { parseWithZod } from '~/libs/zod-parser.ts';
+import { parseWithZod } from '~/libs/validators/zod-parser.ts';
 import { SpeakerProposalStatus } from '~/types/speaker.types.ts';
 
 import { ProposalStatusSection } from '../__components/proposals/proposal-status-section.tsx';

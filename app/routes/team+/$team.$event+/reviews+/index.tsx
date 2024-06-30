@@ -10,7 +10,7 @@ import { parseUrlFilters } from '~/.server/shared/proposal-search-builder.types.
 import { Page } from '~/design-system/layouts/page.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-import { parseWithZod } from '~/libs/zod-parser.ts';
+import { parseWithZod } from '~/libs/validators/zod-parser.ts';
 
 import { ExportMenu } from './__components/proposals-list-page/actions/export-menu.tsx';
 import { FiltersMenu } from './__components/proposals-list-page/filters/filters-menu.tsx';
