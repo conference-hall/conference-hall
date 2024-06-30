@@ -63,6 +63,14 @@ const TRAITS = {
   withSchedule: {
     schedules: { create: { name: randText() } },
   },
+  withFullSchedule: {
+    schedules: {
+      create: {
+        name: randText(),
+        tracks: { createMany: { data: [{ name: randText() }, { name: randText() }] } },
+      },
+    },
+  },
 };
 
 type Trait = keyof typeof TRAITS;

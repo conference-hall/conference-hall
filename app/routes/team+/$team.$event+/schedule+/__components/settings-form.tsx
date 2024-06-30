@@ -24,8 +24,8 @@ export function SettingsForm({ settings, errors }: SettingsFormProps) {
   return (
     <Card as="section">
       <Card.Title>
-        <H2>Schedule settings</H2>
-        <Subtitle>Configure your conference schedule timeline.</Subtitle>
+        <H2>Schedule display</H2>
+        <Subtitle>Customize how the schedule looks like.</Subtitle>
       </Card.Title>
 
       <Card.Content>

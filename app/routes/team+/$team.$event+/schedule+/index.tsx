@@ -1,7 +1,6 @@
 import { json, type LoaderFunctionArgs, redirect } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
-import { v4 as uuid } from 'uuid';
 
 import { EventSchedule } from '~/.server/event-schedule/event-schedule.ts';
 import { requireSession } from '~/libs/auth/session.ts';
@@ -17,16 +16,11 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 
   if (!settings) return redirect(`/team/${params.team}/${params.event}/schedule/settings`);
 
-  return json({ settings });
+  return json(settings);
 };
 
 export default function ScheduleRoute() {
-  const { settings } = useLoaderData<typeof loader>();
+  const settings = useLoaderData<typeof loader>();
 
-  const tracks = [
-    { id: uuid(), name: 'Room 1' },
-    { id: uuid(), name: 'Room 2' },
-  ];
-
-  return <EventScheduleComp settings={settings} tracks={tracks} />;
+  return <EventScheduleComp settings={settings} tracks={settings.tracks} />;
 }

@@ -12,4 +12,10 @@ export const ScheduleSettingsDataSchema = z.object({
   intervalMinutes: z.coerce.number().superRefine(zodNumberEnum(INTERVALS)),
 });
 
+export const ScheduleTrackSaveSchema = z.object({
+  id: z.string().trim().optional(),
+  name: z.string().trim().min(1).max(255),
+});
+
+export type ScheduleTrackSaveData = z.infer<typeof ScheduleTrackSaveSchema>;
 export type ScheduleSettingsData = z.infer<typeof ScheduleSettingsDataSchema>;
