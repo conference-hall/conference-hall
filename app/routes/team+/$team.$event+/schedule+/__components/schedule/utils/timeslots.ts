@@ -1,56 +1,70 @@
-import { addMinutes, differenceInMinutes, format, isAfter, isBefore, isEqual, parse } from 'date-fns';
+import {
+  addMinutes,
+  differenceInMinutes,
+  endOfDay,
+  format,
+  isAfter,
+  isBefore,
+  isEqual,
+  parse,
+  startOfDay,
+} from 'date-fns';
 
 import type { TimeSlot } from '../types.ts';
 
-export const generateTimes = (startTime: string, endTime: string, durationMinutes: number = 5): Array<string> => {
-  const times: Array<string> = [];
-  let [currentHour, currentMinute] = startTime.split(':').map(Number);
+export const generateDailyTimeSlots = (intervalMinutes: number): Array<TimeSlot> => {
+  const start = startOfDay(new Date()); // 00:00 of the current day
+  const end = endOfDay(new Date()); // 23:59 of the current day
+  const timeSlots: Array<TimeSlot> = [];
 
-  const [endHour, endMinute] = endTime.split(':').map(Number);
+  let currentStart = start;
 
-  while (currentHour < endHour || (currentHour === endHour && currentMinute <= endMinute)) {
-    const time = `${String(currentHour).padStart(2, '0')}:${String(currentMinute).padStart(2, '0')}`;
-    times.push(time);
-    currentMinute += durationMinutes;
-
-    if (currentMinute >= 60) {
-      currentMinute -= 60;
-      currentHour += 1;
+  while (isBefore(currentStart, end) || isEqual(currentStart, end)) {
+    const currentEnd = addMinutes(currentStart, intervalMinutes);
+    if (isAfter(currentEnd, end)) {
+      timeSlots.push({ start: currentStart, end });
+      break;
     }
+    timeSlots.push({ start: currentStart, end: currentEnd });
+    currentStart = currentEnd;
   }
 
-  return times;
+  return timeSlots;
 };
 
-export const generateTimeSlots = (startTime: string, endTime: string, durationMinutes: number = 5): Array<TimeSlot> => {
-  const slots: Array<TimeSlot> = [];
-  let currentTime = parse(startTime, 'HH:mm', new Date());
-  const endTimeParsed = parse(endTime, 'HH:mm', new Date());
+export const getDailyTimeSlots = (
+  startTime: string,
+  endTime: string,
+  intervalMinutes: number,
+  includeEndSlot = false,
+): Array<TimeSlot> => {
+  const timeSlots = generateDailyTimeSlots(intervalMinutes);
+  const start = parse(startTime, 'HH:mm', new Date());
+  const end = parse(endTime, 'HH:mm', new Date());
 
-  while (isBefore(currentTime, endTimeParsed)) {
-    const nextTime = addMinutes(currentTime, durationMinutes);
-    if (isAfter(nextTime, endTimeParsed)) break;
-    slots.push({ start: currentTime, end: nextTime });
-    currentTime = nextTime;
-  }
+  const result = timeSlots.filter((slot) => {
+    if (includeEndSlot) {
+      return (
+        (isAfter(slot.start, start) || isEqual(slot.start, start)) &&
+        (isBefore(slot.end, end) || isEqual(slot.end, end))
+      );
+    } else {
+      return (
+        (isAfter(slot.start, start) || isEqual(slot.start, start)) &&
+        (isBefore(slot.start, end) || isEqual(slot.start, end))
+      );
+    }
+  });
 
-  return slots;
+  return result;
 };
 
 export const totalTimeInMinutes = (slot: TimeSlot): number => {
   return differenceInMinutes(slot.end, slot.start);
 };
 
-export const isEqualTimeSlot = (slot1: TimeSlot, slot2: TimeSlot): boolean => {
-  return isEqual(slot1.start, slot2.start) && isEqual(slot1.end, slot2.end);
-};
-
 export const isAfterTimeSlot = (slot1: TimeSlot, slot2: TimeSlot): boolean => {
   return isAfter(slot1.start, slot2.start);
-};
-
-export const isBeforeTimeSlot = (slot1: TimeSlot, slot2: TimeSlot): boolean => {
-  return isBefore(slot1.start, slot2.start);
 };
 
 export const haveSameStartDate = (slot1: TimeSlot, slot2: TimeSlot): boolean => {
@@ -62,13 +76,6 @@ export const isTimeSlotIncluded = (slot: TimeSlot, inSlot?: TimeSlot): boolean =
   return (
     (isAfter(slot.start, inSlot.start) || isEqual(slot.start, inSlot.start)) &&
     (isBefore(slot.end, inSlot.end) || isEqual(slot.end, inSlot.end))
-  );
-};
-
-export const isTimeSlotIncludedBetween = (slot: TimeSlot, startTime: Date, endTime: Date): boolean => {
-  return (
-    (isAfter(slot.start, startTime) || isEqual(slot.start, startTime)) &&
-    (isBefore(slot.end, endTime) || isEqual(slot.end, endTime))
   );
 };
 
@@ -86,14 +93,10 @@ export const countIntervalsInTimeSlot = (slot: TimeSlot, intervalMinutes: number
   return Math.floor(durationInMinutes / intervalMinutes);
 };
 
-export const extractTimeSlots = (slots: Array<TimeSlot>, startTime: string, endTime: string): Array<TimeSlot> => {
-  const start = parse(startTime, 'HH:mm', new Date());
-  const end = parse(endTime, 'HH:mm', new Date());
-  return slots.filter((slot) => {
-    return (
-      (isAfter(slot.start, start) || isEqual(slot.start, start)) && (isBefore(slot.end, end) || isEqual(slot.end, end))
-    );
-  });
+export const moveTimeSlotStart = (slot: TimeSlot, newStart: Date): TimeSlot => {
+  const durationInMinutes = differenceInMinutes(slot.end, slot.start);
+  const newEnd = addMinutes(newStart, durationInMinutes);
+  return { start: newStart, end: newEnd };
 };
 
 export const getFullTimeslot = (slot1: TimeSlot, slot2: TimeSlot) => {

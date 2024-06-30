@@ -6,9 +6,13 @@ import Select from '~/design-system/forms/select.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
 
-import { generateTimes } from './schedule/utils/timeslots.ts';
+import { formatTime, generateDailyTimeSlots } from './schedule/utils/timeslots.ts';
 
-const TIME_OPTIONS = generateTimes('00:00', '23:00', 60).map((t) => ({ id: t, name: t }));
+const TIME_OPTIONS = generateDailyTimeSlots(60).map(({ start }) => ({
+  id: formatTime(start),
+  name: formatTime(start),
+}));
+
 const INTERVAL_OPTIONS = [
   { id: '5', name: '5 min' },
   { id: '10', name: '10 min' },

@@ -1,5 +1,14 @@
-import type { DragEndEvent } from '@dnd-kit/core';
-import { DndContext, useDraggable, useDroppable } from '@dnd-kit/core';
+import type { CollisionDetection, DragEndEvent } from '@dnd-kit/core';
+import {
+  closestCenter,
+  DndContext,
+  PointerSensor,
+  rectIntersection,
+  useDraggable,
+  useDroppable,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
 import { cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
 import { v4 as uuid } from 'uuid';
@@ -8,13 +17,7 @@ import { useSessions } from './hooks/use-sessions.tsx';
 import type { TimeSlotSelector } from './hooks/use-timeslot-selector.tsx';
 import { useTimeslotSelector } from './hooks/use-timeslot-selector.tsx';
 import type { Session, TimeSlot, Track } from './types.ts';
-import {
-  countIntervalsInTimeSlot,
-  extractTimeSlots,
-  formatTime,
-  generateTimeSlots,
-  totalTimeInMinutes,
-} from './utils/timeslots.ts';
+import { countIntervalsInTimeSlot, formatTime, getDailyTimeSlots, totalTimeInMinutes } from './utils/timeslots.ts';
 
 const HOUR_INTERVAL = 60; // minutes
 const SLOT_INTERVAL = 10; // minutes
@@ -45,15 +48,14 @@ export default function Schedule({
   onSelectSession,
   zoomLevel = DEFAULT_ZOOM_LEVEL,
 }: ScheduleProps) {
-  const hours = generateTimeSlots(startTime, endTime, HOUR_INTERVAL);
-  const slots = generateTimeSlots(startTime, endTime, interval);
-
+  const hours = getDailyTimeSlots(startTime, endTime, HOUR_INTERVAL);
   const sessions = useSessions(initialSessions);
 
   const handleAddSession = (trackId: string, timeslot: TimeSlot) => {
     const session = { id: uuid(), trackId, timeslot };
-    const added = sessions.addSession(session);
-    if (added) onAddSession(session);
+    sessions.addSession(session);
+    // const added = sessions.addSession(session);
+    // if (added) onAddSession(session);
   };
 
   const selector = useTimeslotSelector(handleAddSession);
@@ -66,8 +68,11 @@ export default function Schedule({
     }
   };
 
+  // used to make a session clickable over dnd
+  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
+
   return (
-    <DndContext onDragEnd={handleDragEnd}>
+    <DndContext onDragEnd={handleDragEnd} sensors={sensors} collisionDetection={customCollisionDetection}>
       <div className={cx('w-full border-t border-gray-200', { 'select-none': selector.isSelecting })}>
         <table className="min-w-full border-separate border-spacing-0">
           {/* Gutter */}
@@ -98,7 +103,7 @@ export default function Schedule({
             {hours.map((hour, rowIndex) => {
               const startTime = formatTime(hour.start);
               const endTime = formatTime(hour.end);
-              const hourSlots = extractTimeSlots(slots, startTime, endTime);
+              const hourSlots = getDailyTimeSlots(startTime, endTime, interval, true);
 
               return (
                 <tr key={`${startTime}-${endTime}`} className="divide-x divide-gray-200 align-top">
@@ -159,16 +164,10 @@ function Timeslot({ trackId, slot, selectable, zoomLevel, selector, children }: 
 
   const { isOver, setNodeRef } = useDroppable({
     id,
-    disabled: !selectable,
     data: { type: 'timeslot', trackId, timeslot: slot },
   });
 
   const isSelected = selector.isSelectedSlot(trackId, slot);
-
-  const style = {
-    height: `${getTimeslotHeight(zoomLevel)}px`,
-    backgroundColor: isOver ? 'red' : undefined,
-  };
 
   return (
     <div
@@ -176,10 +175,10 @@ function Timeslot({ trackId, slot, selectable, zoomLevel, selector, children }: 
       onMouseDown={selectable ? selector.onSelectStart(trackId, slot) : undefined}
       onMouseEnter={selectable ? selector.onSelectHover(trackId, slot) : undefined}
       onMouseUp={selector.onSelect}
-      style={style}
+      style={{ height: `${getTimeslotHeight(zoomLevel)}px` }}
       className={cx('relative', {
         'hover:bg-gray-50': selectable && !isSelected,
-        'bg-blue-50': selectable && isSelected,
+        'bg-blue-50': (selectable && isSelected) || isOver,
       })}
     >
       {children}
@@ -231,3 +230,21 @@ function getTimeslotHeight(zoomLevel: number) {
   }
   return TIMESLOT_HEIGHTS[DEFAULT_ZOOM_LEVEL];
 }
+
+// Custom collision detection function
+const customCollisionDetection: CollisionDetection = (args) => {
+  const { droppableContainers, collisionRect } = args;
+
+  // Check for collisions prioritizing the top of droppable elements
+  const prioritizedCollisions = droppableContainers.filter(({ rect }) => {
+    if (!rect.current) return false;
+    return collisionRect.top >= rect.current.top && collisionRect.top <= rect.current.bottom;
+  });
+
+  // If no collisions were found, fallback to the default closestCenter strategy
+  if (prioritizedCollisions.length === 0) {
+    return closestCenter(args);
+  }
+
+  return rectIntersection({ ...args, droppableContainers: prioritizedCollisions });
+};

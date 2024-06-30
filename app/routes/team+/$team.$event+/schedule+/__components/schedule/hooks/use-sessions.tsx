@@ -1,7 +1,12 @@
 import { useState } from 'react';
 
 import type { Session, TimeSlot } from '../types.ts';
-import { areTimeSlotsOverlapping, haveSameStartDate, isTimeSlotIncluded } from '../utils/timeslots.ts';
+import {
+  areTimeSlotsOverlapping,
+  haveSameStartDate,
+  isTimeSlotIncluded,
+  moveTimeSlotStart,
+} from '../utils/timeslots.ts';
 
 export function useSessions(initialSessions: Array<Session> = []) {
   const [sessions, setSession] = useState<Array<Session>>(initialSessions);
@@ -25,9 +30,18 @@ export function useSessions(initialSessions: Array<Session> = []) {
     return sessions.some((session) => session.trackId === trackId && isTimeSlotIncluded(timeslot, session.timeslot));
   };
 
-  // TODO: Change session model: timeslot + duration
-  const moveSession = (session: Session, trackId: string, timeslot: TimeSlot) => {
-    setSession((sessions) => [...sessions.filter((s) => s.id !== session.id), { ...session, trackId, timeslot }]);
+  const moveSession = (session: Session, newTrackId: string, newTimeslot: TimeSlot) => {
+    const updatedTimeslot = moveTimeSlotStart(session.timeslot, newTimeslot.start);
+
+    const conflicting = sessions.some(
+      (s) => s.id !== session.id && s.trackId === newTrackId && areTimeSlotsOverlapping(updatedTimeslot, s.timeslot),
+    );
+    if (conflicting) return;
+
+    setSession((sessions) => [
+      ...sessions.filter((s) => s.id !== session.id),
+      { ...session, trackId: newTrackId, timeslot: updatedTimeslot },
+    ]);
   };
 
   return { getSession, addSession, moveSession, hasSession };

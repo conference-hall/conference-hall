@@ -18,7 +18,8 @@ import type { Session, Track } from './schedule/types.ts';
 import { formatTimeSlot } from './schedule/utils/timeslots.ts';
 import { SessionFormModal } from './session-form.tsx';
 
-const MAX_ZOOM_LEVEL = 3;
+const ZOOM_LEVEL_DEFAULT = 0;
+const ZOOM_LEVEL_MAX = 3;
 
 type Props = {
   settings: { name: string; startTimeslot: string; endTimeslot: string; intervalMinutes: number };
@@ -28,8 +29,8 @@ type Props = {
 export default function EventSchedule({ settings, tracks }: Props) {
   const [expanded, setExpanded] = useState(false);
 
-  const [zoomLevel, setZoomLevel] = useState(1);
-  const zoomIn = () => setZoomLevel((z) => Math.min(z + 1, MAX_ZOOM_LEVEL));
+  const [zoomLevel, setZoomLevel] = useState(ZOOM_LEVEL_DEFAULT);
+  const zoomIn = () => setZoomLevel((z) => Math.min(z + 1, ZOOM_LEVEL_MAX));
   const zoomOut = () => setZoomLevel((z) => Math.max(z - 1, 0));
 
   const [openSession, setOpenSession] = useState<Session | null>(null);
@@ -53,7 +54,7 @@ export default function EventSchedule({ settings, tracks }: Props) {
               icon={MagnifyingGlassPlusIcon}
               label="Zoom in"
               onClick={zoomIn}
-              disabled={zoomLevel === MAX_ZOOM_LEVEL}
+              disabled={zoomLevel === ZOOM_LEVEL_MAX}
               variant="secondary"
             />
             <IconButton
