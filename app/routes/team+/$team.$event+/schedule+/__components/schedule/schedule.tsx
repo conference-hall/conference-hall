@@ -33,6 +33,7 @@ type ScheduleProps = {
   initialSessions: Array<Session>;
   renderSession: (session: Session, zoomLevel: number, oneLine: boolean) => ReactNode;
   onAddSession: (session: Session) => void;
+  onUpdateSession: (session: Session) => void;
   onSelectSession: (session: Session) => void;
   zoomLevel?: number;
 };
@@ -45,6 +46,7 @@ export default function Schedule({
   initialSessions = [],
   renderSession,
   onAddSession,
+  onUpdateSession,
   onSelectSession,
   zoomLevel = DEFAULT_ZOOM_LEVEL,
 }: ScheduleProps) {
@@ -53,9 +55,8 @@ export default function Schedule({
 
   const handleAddSession = (trackId: string, timeslot: TimeSlot) => {
     const session = { id: uuid(), trackId, timeslot };
-    sessions.addSession(session);
-    // const added = sessions.addSession(session);
-    // if (added) onAddSession(session);
+    const addedSession = sessions.addSession(session);
+    if (addedSession) onAddSession(addedSession);
   };
 
   const selector = useTimeslotSelector(handleAddSession);
@@ -64,7 +65,8 @@ export default function Schedule({
     if (over?.data?.current?.type === 'timeslot') {
       const { trackId, timeslot } = over.data.current || {};
       const { session } = active.data.current || {};
-      sessions.moveSession(session, trackId, timeslot);
+      const movedSession = sessions.moveSession(session, trackId, timeslot);
+      if (movedSession) onUpdateSession(movedSession);
     }
   };
 
