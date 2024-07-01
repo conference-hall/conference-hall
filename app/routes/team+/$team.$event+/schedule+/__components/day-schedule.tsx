@@ -26,20 +26,17 @@ import { SessionFormModal } from './session-form.tsx';
 const ZOOM_LEVEL_DEFAULT = 0;
 const ZOOM_LEVEL_MAX = 3;
 
+type DaySetting = { id: string; day: string; startTime: string; endTime: string };
+
 type Props = {
+  name: string;
   currentDayId: string;
-  schedule: {
-    name: string;
-    startTimeslot: string;
-    endTimeslot: string;
-    intervalMinutes: number;
-    days: Array<{ id: string; day: string }>;
-    tracks: Array<Track>;
-  };
+  days: Array<DaySetting>;
+  tracks: Array<Track>;
   sessions: Array<Session>;
 };
 
-export function DaySchedule({ currentDayId, schedule, sessions }: Props) {
+export function DaySchedule({ name, currentDayId, days, tracks, sessions }: Props) {
   const [expanded, setExpanded] = useState(false);
 
   const [zoomLevel, setZoomLevel] = useState(ZOOM_LEVEL_DEFAULT);
@@ -49,18 +46,18 @@ export function DaySchedule({ currentDayId, schedule, sessions }: Props) {
   const [openSession, setOpenSession] = useState<Session | null>(null);
   const onCloseSession = () => setOpenSession(null);
 
-  const { currentDay, previousDay, nextDay } = getDayNavigation(schedule.days, currentDayId);
+  const { currentDay, previousDay, nextDay } = getDayNavigation(days, currentDayId);
 
   return (
     <main className={cx('px-8 my-8', { 'mx-auto max-w-7xl': !expanded })}>
-      <Page.Heading title={schedule.name}>
+      <Page.Heading title={name}>
         <ButtonLink to="../settings" variant="secondary" relative="path" iconLeft={Cog6ToothIcon}>
           Settings
         </ButtonLink>
       </Page.Heading>
 
       <Card>
-        <SessionFormModal session={openSession} tracks={schedule.tracks} onClose={onCloseSession} />
+        <SessionFormModal session={openSession} tracks={tracks} onClose={onCloseSession} />
 
         <header className="flex flex-row items-center justify-between gap-4 p-4 px-6 rounded-t-lg bg-slate-100">
           <div className="flex items-center gap-3 shrink">
@@ -89,7 +86,7 @@ export function DaySchedule({ currentDayId, schedule, sessions }: Props) {
           <div className="flex items-center gap-4">
             <div className="mr-1 pr-6 border-r border-gray-300">
               <Button onClick={() => {}} variant="secondary" iconLeft={ClockIcon}>
-                {`${schedule.startTimeslot} to ${schedule.endTimeslot}`}
+                {`09:00 to 18:00`}
               </Button>
             </div>
             <IconButton
@@ -126,10 +123,9 @@ export function DaySchedule({ currentDayId, schedule, sessions }: Props) {
 
         <Schedule
           key={currentDayId}
-          startTime={schedule.startTimeslot}
-          endTime={schedule.endTimeslot}
-          interval={schedule.intervalMinutes}
-          tracks={schedule.tracks}
+          startTime={currentDay?.startTime || '09:00'}
+          endTime={currentDay?.endTime || '18:00'}
+          tracks={tracks}
           initialSessions={sessions}
           onAddSession={setOpenSession}
           onSelectSession={setOpenSession}
@@ -162,7 +158,7 @@ function SessionBlock({ session, zoomLevel, oneLine }: SessionBlockProps) {
   );
 }
 
-function getDayNavigation(days: Array<{ id: string; day: string }>, currentDayId: string) {
+function getDayNavigation(days: Array<DaySetting>, currentDayId: string) {
   if (!days.length) return { currentDay: null, previousDay: null, nextDay: null };
 
   const currentIndex = currentDayId ? days.findIndex((day) => day.id === currentDayId) : 0;

@@ -4,12 +4,7 @@ import { db } from 'prisma/db.server.ts';
 import { ForbiddenError, ForbiddenOperationError, NotFoundError } from '~/libs/errors.server.ts';
 
 import { UserEvent } from '../event-settings/user-event.ts';
-import type {
-  ScheduleCreateData,
-  ScheduleEditData,
-  ScheduleSettingsData,
-  ScheduleTrackSaveData,
-} from './event-schedule.types.ts';
+import type { ScheduleCreateData, ScheduleEditData, ScheduleTrackSaveData } from './event-schedule.types.ts';
 
 export class EventSchedule {
   constructor(
@@ -36,12 +31,9 @@ export class EventSchedule {
       name: schedule.name,
       startDate: schedule.startDate,
       endDate: schedule.endDate,
-      startTimeslot: schedule.startTimeslot,
-      endTimeslot: schedule.endTimeslot,
-      intervalMinutes: schedule.intervalMinutes,
       days: [...schedule.days]
         .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
-        .map((d) => ({ id: d.id, day: d.day })),
+        .map((d) => ({ id: d.id, day: d.day, startTime: d.startTime, endTime: d.endTime })),
       tracks: [...schedule.tracks]
         .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
         .map((t) => ({ id: t.id, name: t.name })),
@@ -87,7 +79,7 @@ export class EventSchedule {
     await db.schedule.delete({ where: { id: schedule.id } });
   }
 
-  async saveSettings(data: ScheduleSettingsData) {
+  async saveSettings(data: ScheduleEditData) {
     const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
     if (event.type === 'MEETUP') throw new ForbiddenOperationError();
 

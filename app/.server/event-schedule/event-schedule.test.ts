@@ -7,7 +7,7 @@ import { userFactory } from 'tests/factories/users.ts';
 import { ForbiddenError, ForbiddenOperationError, NotFoundError } from '~/libs/errors.server.ts';
 
 import { EventSchedule } from './event-schedule.ts';
-import type { ScheduleSettingsData } from './event-schedule.types.ts';
+import type { ScheduleEditData } from './event-schedule.types.ts';
 
 describe('EventSchedule', () => {
   let owner: User, reviewer: User;
@@ -32,9 +32,6 @@ describe('EventSchedule', () => {
       const settings = await eventSchedule.get();
       expect(settings).toEqual({
         name: schedule.name,
-        startTimeslot: schedule.startTimeslot,
-        endTimeslot: schedule.endTimeslot,
-        intervalMinutes: schedule.intervalMinutes,
         tracks: [{ id: track.id, name: track.name }],
       });
     });
@@ -60,11 +57,8 @@ describe('EventSchedule', () => {
   });
 
   describe('#saveSettings', () => {
-    const scheduleSettings: ScheduleSettingsData = {
+    const scheduleSettings: ScheduleEditData = {
       name: 'New schedule name',
-      startTimeslot: '10:00',
-      endTimeslot: '12:00',
-      intervalMinutes: 15,
     };
 
     it('save schedule settings', async () => {
@@ -73,9 +67,6 @@ describe('EventSchedule', () => {
 
       const actual = await settings.get();
       expect(actual?.name).toEqual(scheduleSettings.name);
-      expect(actual?.startTimeslot).toEqual(scheduleSettings.startTimeslot);
-      expect(actual?.endTimeslot).toEqual(scheduleSettings.endTimeslot);
-      expect(actual?.intervalMinutes).toEqual(scheduleSettings.intervalMinutes);
     });
 
     it('throws not found Error when no schedule defined for the event', async () => {

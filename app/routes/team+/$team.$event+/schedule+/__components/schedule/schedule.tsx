@@ -20,7 +20,7 @@ import type { Session, TimeSlot, Track } from './types.ts';
 import { countIntervalsInTimeSlot, formatTime, getDailyTimeSlots, totalTimeInMinutes } from './utils/timeslots.ts';
 
 const HOUR_INTERVAL = 60; // minutes
-const SLOT_INTERVAL = 10; // minutes
+const SLOT_INTERVAL = 5; // minutes
 const TIMESLOT_HEIGHTS = [8, 12, 16, 20]; // px
 const DEFAULT_ZOOM_LEVEL = 1;
 const DEFAULT_TRACK: Track = { id: 'track-1', name: 'Track' };

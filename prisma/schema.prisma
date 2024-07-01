@@ -305,19 +305,16 @@ enum CommentChannel {
 }
 
 model Schedule {
-  id              String          @id @default(cuid())
-  eventId         String
-  event           Event           @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  name            String
-  startDate       DateTime
-  endDate         DateTime
-  startTimeslot   String          @default("09:00")
-  endTimeslot     String          @default("18:00")
-  intervalMinutes Int             @default(10)
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
-  days            ScheduleDay[]
-  tracks          ScheduleTrack[]
+  id        String          @id @default(cuid())
+  eventId   String
+  event     Event           @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  name      String
+  startDate DateTime
+  endDate   DateTime
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+  days      ScheduleDay[]
+  tracks    ScheduleTrack[]
 
   @@map("schedules")
 }
@@ -325,6 +322,8 @@ model Schedule {
 model ScheduleDay {
   id         String   @id @default(cuid())
   day        DateTime
+  startTime  String   @default("09:00")
+  endTime    String   @default("18:00")
   scheduleId String
   schedule   Schedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
   createdAt  DateTime @default(now())

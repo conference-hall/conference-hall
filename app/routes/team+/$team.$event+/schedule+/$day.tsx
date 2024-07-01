@@ -21,7 +21,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 
 export default function ScheduleRoute() {
   const { day } = useParams();
-  const schedule = useLoaderData<typeof loader>();
+  const { name, tracks, days } = useLoaderData<typeof loader>();
 
-  return <DaySchedule currentDayId={day!} schedule={schedule} sessions={[]} />;
+  return <DaySchedule currentDayId={day!} name={name} tracks={tracks} days={days} sessions={[]} />;
 }
