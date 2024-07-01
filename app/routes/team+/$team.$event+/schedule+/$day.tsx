@@ -23,5 +23,5 @@ export default function ScheduleRoute() {
   const { day } = useParams();
   const schedule = useLoaderData<typeof loader>();
 
-  return <DaySchedule currentDayId={day!} schedule={schedule} />;
+  return <DaySchedule currentDayId={day!} schedule={schedule} sessions={[]} />;
 }

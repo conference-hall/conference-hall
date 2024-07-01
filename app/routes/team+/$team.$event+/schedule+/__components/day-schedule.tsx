@@ -36,9 +36,10 @@ type Props = {
     days: Array<{ id: string; day: string }>;
     tracks: Array<Track>;
   };
+  sessions: Array<Session>;
 };
 
-export function DaySchedule({ currentDayId, schedule }: Props) {
+export function DaySchedule({ currentDayId, schedule, sessions }: Props) {
   const [expanded, setExpanded] = useState(false);
 
   const [zoomLevel, setZoomLevel] = useState(ZOOM_LEVEL_DEFAULT);
@@ -124,11 +125,12 @@ export function DaySchedule({ currentDayId, schedule }: Props) {
         </header>
 
         <Schedule
+          key={currentDayId}
           startTime={schedule.startTimeslot}
           endTime={schedule.endTimeslot}
           interval={schedule.intervalMinutes}
           tracks={schedule.tracks}
-          initialSessions={[]}
+          initialSessions={sessions}
           onAddSession={setOpenSession}
           onSelectSession={setOpenSession}
           renderSession={(session, zoomLevel, oneLine) => (
