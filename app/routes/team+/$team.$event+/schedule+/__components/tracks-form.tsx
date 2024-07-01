@@ -17,6 +17,8 @@ type TrackListProps = {
 };
 
 export function TracksForm({ tracks }: TrackListProps) {
+  const [isModalOpen, setModalOpen] = useState(false);
+
   return (
     <Card as="section">
       <Card.Title className="flex items-center justify-between">
@@ -24,7 +26,6 @@ export function TracksForm({ tracks }: TrackListProps) {
           <H2>Tracks</H2>
           <Subtitle>Define tracks of your schedule (ex: rooms...).</Subtitle>
         </div>
-        <NewTrackButton />
       </Card.Title>
 
       <Card.Content>
@@ -53,19 +54,14 @@ export function TracksForm({ tracks }: TrackListProps) {
           ))}
         </ul>
       </Card.Content>
-    </Card>
-  );
-}
 
-export function NewTrackButton() {
-  const [isModalOpen, setModalOpen] = useState(false);
-  return (
-    <>
-      <Button iconLeft={PlusIcon} onClick={() => setModalOpen(true)} variant="secondary">
-        New track
-      </Button>
-      <TrackFormModal isOpen={isModalOpen} onClose={() => setModalOpen(false)} />
-    </>
+      <Card.Actions>
+        <Button iconLeft={PlusIcon} onClick={() => setModalOpen(true)}>
+          New track
+        </Button>
+        <TrackFormModal isOpen={isModalOpen} onClose={() => setModalOpen(false)} />
+      </Card.Actions>
+    </Card>
   );
 }
 

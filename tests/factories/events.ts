@@ -61,12 +61,16 @@ const TRAITS = {
     surveyQuestions: ['gender', 'tshirt', 'diet', 'accomodation', 'transports', 'info'],
   },
   withSchedule: {
-    schedules: { create: { name: randText() } },
+    schedules: {
+      create: { name: randText(), startDate: '2024-10-05T00:00:00.000Z', endDate: '2024-10-06T00:00:00.000Z' },
+    },
   },
   withFullSchedule: {
     schedules: {
       create: {
         name: randText(),
+        startDate: '2024-10-05T00:00:00.000Z',
+        endDate: '2024-10-06T00:00:00.000Z',
         tracks: { createMany: { data: [{ name: randText() }, { name: randText() }] } },
       },
     },

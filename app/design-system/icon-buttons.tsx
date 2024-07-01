@@ -48,6 +48,14 @@ export function IconButton({ icon: Icon, label, variant, size, disabled, ...rest
 type IconLinkProps = IconButtonBaseProps & Omit<LinkProps, 'children'>;
 
 export function IconLink({ icon: Icon, label, variant, size, disabled, ...rest }: IconLinkProps) {
+  if (disabled) {
+    return (
+      <div className={button({ variant, size, disabled })} aria-disabled="true">
+        <Icon className={icon({ size })} aria-hidden="true" />
+      </div>
+    );
+  }
+
   return (
     <Link className={button({ variant, size, disabled })} aria-label={label} title={label} {...rest}>
       <Icon className={icon({ size })} aria-hidden="true" />

@@ -6,8 +6,8 @@ import invariant from 'tiny-invariant';
 import { z } from 'zod';
 
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
-import { AlertInfo } from '~/design-system/alerts.tsx';
 import { Avatar } from '~/design-system/avatar.tsx';
+import { Callout } from '~/design-system/callout.tsx';
 import { ButtonFileUpload } from '~/design-system/forms/file-upload-button.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { ExternalLink } from '~/design-system/links.tsx';
@@ -64,14 +64,14 @@ export default function EventGeneralSettingsRoute() {
 
       <Card.Content>
         <Avatar picture={event.logo} name={`${event.name} logo`} square size="4xl" />
-        <AlertInfo>
+        <Callout title="Logo format">
           JPEG, PNG, WEBP or AVIF formats supported with optimal resolution of 500x500.
           <br />
           300kB max. You can optimize your logo with{' '}
           <ExternalLink href="https://squoosh.app" variant="secondary">
             squoosh.app
           </ExternalLink>
-        </AlertInfo>
+        </Callout>
         {result?.status === 'error' && <p className="text-sm text-red-600">{result.message}</p>}
       </Card.Content>
 

@@ -1,7 +1,7 @@
 import { Form } from '@remix-run/react';
 
-import { AlertInfo } from '~/design-system/alerts.tsx';
 import { Button } from '~/design-system/buttons.tsx';
+import { Callout } from '~/design-system/callout.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
@@ -25,7 +25,7 @@ export function EnableApiSection({ apiKey }: Props) {
             value={apiKey || ''}
             placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
           />
-          <AlertInfo>The API is limited to 5 requests every hour.</AlertInfo>
+          <Callout title="Rate limit">The API is limited to 5 requests every hour.</Callout>
         </Form>
       </Card.Content>
 

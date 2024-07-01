@@ -1,6 +1,6 @@
 import { Form } from '@remix-run/react';
 
-import { AlertError } from '~/design-system/alerts.tsx';
+import { Callout } from '~/design-system/callout.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { MarkdownTextArea } from '~/design-system/forms/markdown-textarea.tsx';
 import MultiSelect from '~/design-system/forms/multi-select.tsx';
@@ -85,7 +85,7 @@ export function TalkForm({
           initialValues={initialValues?.formats?.map(({ id }) => id)}
         />
       )}
-      {errors?.formats && <AlertError>You have to select at least one proposal format.</AlertError>}
+      {errors?.formats && <Callout title="You have to select at least one proposal format" variant="error" />}
 
       {hasCategories && (
         <CategoriesForm
@@ -94,7 +94,7 @@ export function TalkForm({
           initialValues={initialValues?.categories?.map(({ id }) => id)}
         />
       )}
-      {errors?.categories && <AlertError>You have to select at least one proposal category.</AlertError>}
+      {errors?.categories && <Callout title="You have to select at least one proposal category" variant="error" />}
 
       <MarkdownTextArea
         name="references"

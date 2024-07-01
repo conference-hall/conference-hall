@@ -4,8 +4,8 @@ import { Form } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
 import { useState } from 'react';
 
-import { AlertInfo } from '~/design-system/alerts.tsx';
 import { Button } from '~/design-system/buttons.tsx';
+import { Callout } from '~/design-system/callout.tsx';
 import { Modal } from '~/design-system/dialogs/modals.tsx';
 import { Text } from '~/design-system/typography.tsx';
 
@@ -41,10 +41,10 @@ export function DeliberationButton({ status, selection, isAllPagesSelected, tota
       <Modal title={<Title />} open={open} onClose={() => setOpen(false)}>
         <Modal.Content>
           <Form id="change-status" method="POST" onSubmit={() => setOpen(false)}>
-            <AlertInfo>
-              Be careful, if you change the status of published proposals, they will be unpublished. You will have to
-              republish them to make them visible again to the speakers.
-            </AlertInfo>
+            <Callout title="Be careful">
+              If you change the status of published proposals, they will be unpublished. You will have to republish them
+              to make them visible again to the speakers.
+            </Callout>
             <input type="hidden" name="status" value={status} />
             <input type="hidden" name="allPagesSelected" value={String(isAllPagesSelected)} />
             {selection.map((id) => (

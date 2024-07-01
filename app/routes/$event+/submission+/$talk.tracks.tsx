@@ -8,8 +8,8 @@ import { SubmissionSteps } from '~/.server/cfp-submission-funnel/submission-step
 import { TalkSubmission } from '~/.server/cfp-submission-funnel/talk-submission.ts';
 import { getTracksSchema } from '~/.server/cfp-submission-funnel/talk-submission.types.ts';
 import { EventPage } from '~/.server/event-page/event-page.ts';
-import { AlertError } from '~/design-system/alerts.tsx';
 import { Button } from '~/design-system/buttons.tsx';
+import { Callout } from '~/design-system/callout.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H2 } from '~/design-system/typography.tsx';
@@ -72,7 +72,7 @@ export default function SubmissionTracksRoute() {
                     initialValues={proposal.formats}
                   />
                   {errors?.formats && (
-                    <AlertError className="mt-4">You must select at least one proposal format.</AlertError>
+                    <Callout title="You must select at least one proposal format." variant="error" className="mt-4" />
                   )}
                 </section>
               )}
@@ -85,7 +85,7 @@ export default function SubmissionTracksRoute() {
                     initialValues={proposal.categories}
                   />
                   {errors?.categories && (
-                    <AlertError className="mt-4">You must select at least one proposal category.</AlertError>
+                    <Callout title="You must select at least one proposal category." variant="error" className="mt-4" />
                   )}
                 </section>
               )}

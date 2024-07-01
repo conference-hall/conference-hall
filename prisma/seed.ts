@@ -20,7 +20,7 @@ async function seed() {
   });
 
   const event = await eventFactory({
-    traits: ['conference', 'conference-cfp-open', 'withSurvey', 'withFullSchedule'],
+    traits: ['conference', 'conference-cfp-open', 'withSurvey'],
     team,
     attributes: {
       name: 'Devfest Nantes',

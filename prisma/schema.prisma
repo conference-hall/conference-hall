@@ -309,14 +309,29 @@ model Schedule {
   eventId         String
   event           Event           @relation(fields: [eventId], references: [id], onDelete: Cascade)
   name            String
+  startDate       DateTime
+  endDate         DateTime
   startTimeslot   String          @default("09:00")
   endTimeslot     String          @default("18:00")
   intervalMinutes Int             @default(10)
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
+  days            ScheduleDay[]
   tracks          ScheduleTrack[]
 
   @@map("schedules")
+}
+
+model ScheduleDay {
+  id         String   @id @default(cuid())
+  day        DateTime
+  scheduleId String
+  schedule   Schedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([scheduleId, day])
+  @@map("schedule_days")
 }
 
 model ScheduleTrack {
@@ -324,8 +339,8 @@ model ScheduleTrack {
   name       String
   scheduleId String
   schedule   Schedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   @@map("schedule_tracks")
 }

@@ -24,12 +24,12 @@ describe('EventSchedule', () => {
     await eventFactory({ team, traits: ['conference', 'withSchedule'] });
   });
 
-  describe('#settings', () => {
-    it('get schedule settings', async () => {
+  describe('#get', () => {
+    it('get schedule', async () => {
       const eventSchedule = EventSchedule.for(owner.id, team.slug, event.slug);
       const track = await eventSchedule.saveTrack({ name: 'Room' });
 
-      const settings = await eventSchedule.settings();
+      const settings = await eventSchedule.get();
       expect(settings).toEqual({
         name: schedule.name,
         startTimeslot: schedule.startTimeslot,
@@ -41,19 +41,19 @@ describe('EventSchedule', () => {
 
     it('returns null when no schedule defined for the event', async () => {
       const eventWithoutSchedule = await eventFactory({ team, traits: ['conference'] });
-      const settings = await EventSchedule.for(owner.id, team.slug, eventWithoutSchedule.slug).settings();
+      const settings = await EventSchedule.for(owner.id, team.slug, eventWithoutSchedule.slug).get();
       expect(settings).toBe(null);
     });
 
     it('throws forbidden error for reviewers', async () => {
-      await expect(EventSchedule.for(reviewer.id, team.slug, event.slug).settings()).rejects.toThrowError(
+      await expect(EventSchedule.for(reviewer.id, team.slug, event.slug).get()).rejects.toThrowError(
         ForbiddenOperationError,
       );
     });
 
     it('throws forbidden error for meetups', async () => {
       const meetup = await eventFactory({ team, traits: ['meetup'] });
-      await expect(EventSchedule.for(owner.id, team.slug, meetup.slug).settings()).rejects.toThrowError(
+      await expect(EventSchedule.for(owner.id, team.slug, meetup.slug).get()).rejects.toThrowError(
         ForbiddenOperationError,
       );
     });
@@ -71,7 +71,7 @@ describe('EventSchedule', () => {
       const settings = EventSchedule.for(owner.id, team.slug, event.slug);
       await settings.saveSettings(scheduleSettings);
 
-      const actual = await settings.settings();
+      const actual = await settings.get();
       expect(actual?.name).toEqual(scheduleSettings.name);
       expect(actual?.startTimeslot).toEqual(scheduleSettings.startTimeslot);
       expect(actual?.endTimeslot).toEqual(scheduleSettings.endTimeslot);
@@ -104,7 +104,7 @@ describe('EventSchedule', () => {
       const eventSchedule = EventSchedule.for(owner.id, team.slug, event.slug);
       await eventSchedule.saveTrack({ name: 'Room 1' });
 
-      const actual = await eventSchedule.settings();
+      const actual = await eventSchedule.get();
       expect(actual?.tracks.length).toBe(1);
       expect(actual?.tracks[0].name).toBe('Room 1');
     });
@@ -115,7 +115,7 @@ describe('EventSchedule', () => {
 
       await eventSchedule.saveTrack({ id: track.id, name: 'Room 2' });
 
-      const actual = await eventSchedule.settings();
+      const actual = await eventSchedule.get();
       expect(actual?.tracks.length).toBe(1);
       expect(actual?.tracks[0].name).toBe('Room 2');
     });
@@ -149,7 +149,7 @@ describe('EventSchedule', () => {
 
       await eventSchedule.deleteTrack(track1.id);
 
-      const actual = await eventSchedule.settings();
+      const actual = await eventSchedule.get();
       expect(actual?.tracks.length).toBe(1);
       expect(actual?.tracks[0].name).toBe(track2.name);
     });

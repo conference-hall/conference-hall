@@ -6,8 +6,8 @@ import invariant from 'tiny-invariant';
 
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
 import { EventDetailsSettingsSchema, EventGeneralSettingsSchema } from '~/.server/event-settings/user-event.types.ts';
-import { AlertInfo } from '~/design-system/alerts.tsx';
 import { Button } from '~/design-system/buttons.tsx';
+import { Callout } from '~/design-system/callout.tsx';
 import { DateRangeInput } from '~/design-system/forms/date-range-input.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { MarkdownTextArea } from '~/design-system/forms/markdown-textarea.tsx';
@@ -145,10 +145,10 @@ export default function EventGeneralSettingsRoute() {
         </Card.Title>
 
         <Card.Content>
-          <AlertInfo>
+          <Callout title="Be careful">
             Archived events are not displayed anymore in the team list and in the Conference Hall search. Nothing is
             deleted, you can restore them when you want.
-          </AlertInfo>
+          </Callout>
         </Card.Content>
 
         <Card.Actions>

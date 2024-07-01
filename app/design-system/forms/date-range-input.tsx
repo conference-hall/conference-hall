@@ -8,11 +8,12 @@ import { Input } from './input.tsx';
 type Props = {
   start: { value?: string | null } & InputProps;
   end: { value?: string | null } & InputProps;
+  required?: boolean;
   error?: string | string[];
   className?: string;
 };
 
-export function DateRangeInput({ start, end, error, className }: Props) {
+export function DateRangeInput({ start, end, required, error, className }: Props) {
   const [startDate, setStartDate] = useState<Date | null>(start.value ? new Date(start.value) : null);
   const [endDate, setEndDate] = useState<Date | null>(end.value ? new Date(end.value) : null);
 
@@ -47,6 +48,7 @@ export function DateRangeInput({ start, end, error, className }: Props) {
           value={toInputFormat(startDate)}
           onChange={handleStartDate}
           className="col-span-2 sm:col-span-1"
+          required={required}
           suppressHydrationWarning
         />
         <input type="hidden" name={start.name} value={toISOFormat(startDate)} />
@@ -59,6 +61,7 @@ export function DateRangeInput({ start, end, error, className }: Props) {
           value={toInputFormat(endDate)}
           onChange={handleEndDate}
           className="col-span-2 sm:col-span-1"
+          required={required}
           suppressHydrationWarning
         />
         <input type="hidden" name={end.name} value={toISOFormat(endDate, true)} />
