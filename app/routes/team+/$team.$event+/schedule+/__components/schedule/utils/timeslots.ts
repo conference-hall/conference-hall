@@ -12,9 +12,9 @@ import {
 
 import type { TimeSlot } from '../types.ts';
 
-export const generateDailyTimeSlots = (intervalMinutes: number): Array<TimeSlot> => {
-  const start = startOfDay(new Date()); // 00:00 of the current day
-  const end = endOfDay(new Date()); // 23:59 of the current day
+export const generateDailyTimeSlots = (day: Date, intervalMinutes: number): Array<TimeSlot> => {
+  const start = startOfDay(day); // 00:00 of the current day
+  const end = endOfDay(day); // 23:59 of the current day
   const timeSlots: Array<TimeSlot> = [];
 
   let currentStart = start;
@@ -33,14 +33,15 @@ export const generateDailyTimeSlots = (intervalMinutes: number): Array<TimeSlot>
 };
 
 export const getDailyTimeSlots = (
+  day: Date,
   startTime: string,
   endTime: string,
   intervalMinutes: number,
   includeEndSlot = false,
 ): Array<TimeSlot> => {
-  const timeSlots = generateDailyTimeSlots(intervalMinutes);
-  const start = parse(startTime, 'HH:mm', new Date());
-  const end = parse(endTime, 'HH:mm', new Date());
+  const timeSlots = generateDailyTimeSlots(day, intervalMinutes);
+  const start = parse(startTime, 'HH:mm', day);
+  const end = parse(endTime, 'HH:mm', day);
 
   const result = timeSlots.filter((slot) => {
     if (includeEndSlot) {

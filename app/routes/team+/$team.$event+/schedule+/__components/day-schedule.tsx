@@ -123,20 +123,23 @@ export function DaySchedule({ name, currentDayId, days, tracks, sessions, onAddS
           </div>
         </header>
 
-        <Schedule
-          key={currentDayId}
-          startTime={currentDay?.startTime || '09:00'}
-          endTime={currentDay?.endTime || '18:00'}
-          tracks={tracks}
-          initialSessions={sessions}
-          onSelectSession={setOpenSession}
-          onAddSession={onAddSession}
-          onUpdateSession={onUpdateSession}
-          renderSession={(session, zoomLevel, oneLine) => (
-            <SessionBlock session={session} zoomLevel={zoomLevel} oneLine={oneLine} />
-          )}
-          zoomLevel={zoomLevel}
-        />
+        {currentDay ? (
+          <Schedule
+            key={currentDayId}
+            day={new Date(currentDay.day)}
+            startTime={currentDay.startTime}
+            endTime={currentDay.endTime}
+            tracks={tracks}
+            initialSessions={sessions}
+            onSelectSession={setOpenSession}
+            onAddSession={onAddSession}
+            onUpdateSession={onUpdateSession}
+            renderSession={(session, zoomLevel, oneLine) => (
+              <SessionBlock session={session} zoomLevel={zoomLevel} oneLine={oneLine} />
+            )}
+            zoomLevel={zoomLevel}
+          />
+        ) : null}
       </Card>
     </main>
   );

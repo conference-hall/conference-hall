@@ -26,8 +26,9 @@ const DEFAULT_ZOOM_LEVEL = 1;
 const DEFAULT_TRACK: Track = { id: 'track-1', name: 'Track' };
 
 type ScheduleProps = {
-  startTime: string;
-  endTime: string;
+  day: Date;
+  startTime: string; // TODO: rename display time else 00:00
+  endTime: string; // TODO: rename display time else 23:00
   interval?: number;
   tracks: Array<Track>;
   initialSessions: Array<Session>;
@@ -39,6 +40,7 @@ type ScheduleProps = {
 };
 
 export default function Schedule({
+  day,
   startTime,
   endTime,
   interval = SLOT_INTERVAL,
@@ -50,7 +52,7 @@ export default function Schedule({
   onSelectSession,
   zoomLevel = DEFAULT_ZOOM_LEVEL,
 }: ScheduleProps) {
-  const hours = getDailyTimeSlots(startTime, endTime, HOUR_INTERVAL);
+  const hours = getDailyTimeSlots(day, startTime, endTime, HOUR_INTERVAL);
   const sessions = useSessions(initialSessions);
 
   const handleAddSession = (trackId: string, timeslot: TimeSlot) => {
@@ -105,7 +107,7 @@ export default function Schedule({
             {hours.map((hour, rowIndex) => {
               const startTime = formatTime(hour.start);
               const endTime = formatTime(hour.end);
-              const hourSlots = getDailyTimeSlots(startTime, endTime, interval, true);
+              const hourSlots = getDailyTimeSlots(day, startTime, endTime, interval, true);
 
               return (
                 <tr key={`${startTime}-${endTime}`} className="divide-x divide-gray-200 align-top">
