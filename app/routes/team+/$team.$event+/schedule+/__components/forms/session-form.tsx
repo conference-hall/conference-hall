@@ -3,8 +3,8 @@ import { Form } from '@remix-run/react';
 import { Button } from '~/design-system/buttons.tsx';
 import { Modal } from '~/design-system/dialogs/modals.tsx';
 
-import type { Session, Track } from './schedule/types.ts';
-import { formatTimeSlot } from './schedule/utils/timeslots.ts';
+import { formatTimeSlot } from '../schedule/timeslots.ts';
+import type { Session, Track } from '../schedule/types.ts';
 
 type SessionFormModalProps = {
   session: Session | null;

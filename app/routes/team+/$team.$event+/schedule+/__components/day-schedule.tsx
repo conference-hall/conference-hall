@@ -18,10 +18,10 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 
+import { SessionFormModal } from './forms/session-form.tsx';
 import Schedule from './schedule/schedule.tsx';
-import type { Session, Track } from './schedule/types.ts';
-import { formatTimeSlot } from './schedule/utils/timeslots.ts';
-import { SessionFormModal } from './session-form.tsx';
+import { formatTimeSlot } from './schedule/timeslots.ts';
+import type { Session, TimeSlot, Track } from './schedule/types.ts';
 
 const ZOOM_LEVEL_DEFAULT = 0;
 const ZOOM_LEVEL_MAX = 3;
@@ -34,8 +34,8 @@ type Props = {
   days: Array<DaySetting>;
   tracks: Array<Track>;
   sessions: Array<Session>;
-  onAddSession: (session: Session) => void;
-  onUpdateSession: (session: Session) => void;
+  onAddSession: (trackId: string, timeslot: TimeSlot) => void;
+  onUpdateSession: (session: Session, newTrackId: string, newTimeslot: TimeSlot) => void;
 };
 
 export function DaySchedule({ name, currentDayId, days, tracks, sessions, onAddSession, onUpdateSession }: Props) {
@@ -125,19 +125,18 @@ export function DaySchedule({ name, currentDayId, days, tracks, sessions, onAddS
 
         {currentDay ? (
           <Schedule
-            key={currentDayId}
             day={new Date(currentDay.day)}
             startTime={currentDay.startTime}
             endTime={currentDay.endTime}
             tracks={tracks}
-            initialSessions={sessions}
+            sessions={sessions}
+            zoomLevel={zoomLevel}
             onSelectSession={setOpenSession}
             onAddSession={onAddSession}
             onUpdateSession={onUpdateSession}
             renderSession={(session, zoomLevel, oneLine) => (
               <SessionBlock session={session} zoomLevel={zoomLevel} oneLine={oneLine} />
             )}
-            zoomLevel={zoomLevel}
           />
         ) : null}
       </Card>

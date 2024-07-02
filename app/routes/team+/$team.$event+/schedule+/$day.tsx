@@ -1,16 +1,21 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
-import { useFetcher, useLoaderData, useParams } from '@remix-run/react';
+import { useFetchers, useLoaderData, useParams, useSubmit } from '@remix-run/react';
 import { formatISO } from 'date-fns';
 import invariant from 'tiny-invariant';
+import { v4 as uuid } from 'uuid';
 
 import { EventSchedule } from '~/.server/event-schedule/event-schedule.ts';
-import { ScheduleSessionSaveSchema } from '~/.server/event-schedule/event-schedule.types.ts';
+import {
+  ScheduleSessionCreateSchema,
+  ScheduleSessionUpdateSchema,
+} from '~/.server/event-schedule/event-schedule.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { parseWithZod } from '~/libs/validators/zod-parser.ts';
 
 import { DaySchedule } from './__components/day-schedule.tsx';
-import type { Session } from './__components/schedule/types.ts';
+import { areTimeSlotsOverlapping, moveTimeSlotStart } from './__components/schedule/timeslots.ts';
+import type { Session, TimeSlot } from './__components/schedule/types.ts';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
@@ -38,18 +43,19 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
   const form = await request.formData();
   const intent = form.get('intent');
-  const result = parseWithZod(form, ScheduleSessionSaveSchema);
-  if (!result.success) return json(result.error);
 
   // TODO: Secure to update event and schedule sessions
   switch (intent) {
     case 'add-session': {
+      const result = parseWithZod(form, ScheduleSessionCreateSchema);
+      if (!result.success) return json(result.error);
       await schedule.addSession(params.day, result.value);
       break;
     }
     case 'update-session': {
-      const sessionId = String(form.get('id'));
-      await schedule.updateSession(sessionId, result.value);
+      const result = parseWithZod(form, ScheduleSessionUpdateSchema);
+      if (!result.success) return json(result.error);
+      await schedule.updateSession(result.value);
       break;
     }
   }
@@ -60,30 +66,46 @@ export default function ScheduleRoute() {
   const { day } = useParams();
   const { name, tracks, days, sessions } = useLoaderData<typeof loader>();
 
-  const fetcher = useFetcher<typeof action>();
+  const scheduleSessions = useOptimisticSessions(sessions);
 
-  const addSession = (session: Session) => {
-    fetcher.submit(
+  const submit = useSubmit();
+
+  const addSession = (trackId: string, timeslot: TimeSlot) => {
+    const conflicting = scheduleSessions.some(
+      (s) => s.trackId === trackId && areTimeSlotsOverlapping(timeslot, s.timeslot),
+    );
+    if (conflicting) return;
+
+    const id = uuid(); // TODO: let id from DB and use an optimisticId
+    submit(
       {
         intent: 'add-session',
-        trackId: session.trackId,
-        startTime: formatISO(session.timeslot.start),
-        endTime: formatISO(session.timeslot.end),
+        id,
+        trackId: trackId,
+        startTime: formatISO(timeslot.start),
+        endTime: formatISO(timeslot.end),
       },
-      { method: 'POST' },
+      { method: 'POST', navigate: false, fetcherKey: `session:${id}` },
     );
   };
 
-  const updateSession = (session: Session) => {
-    fetcher.submit(
+  const updateSession = (session: Session, newTrackId: string, newTimeslot: TimeSlot) => {
+    const updatedTimeslot = moveTimeSlotStart(session.timeslot, newTimeslot.start);
+
+    const conflicting = scheduleSessions.some(
+      (s) => s.id !== session.id && s.trackId === newTrackId && areTimeSlotsOverlapping(updatedTimeslot, s.timeslot),
+    );
+    if (conflicting) return;
+
+    submit(
       {
         intent: 'update-session',
         id: session.id,
-        trackId: session.trackId,
-        startTime: formatISO(session.timeslot.start),
-        endTime: formatISO(session.timeslot.end),
+        trackId: newTrackId,
+        startTime: formatISO(updatedTimeslot.start),
+        endTime: formatISO(updatedTimeslot.end),
       },
-      { method: 'POST' },
+      { method: 'POST', navigate: false, fetcherKey: `session:${session.id}`, unstable_flushSync: true },
     );
   };
 
@@ -95,13 +117,49 @@ export default function ScheduleRoute() {
       days={days}
       onAddSession={addSession}
       onUpdateSession={updateSession}
-      sessions={sessions.map((session) => ({
-        ...session,
-        timeslot: {
-          start: new Date(session.timeslot.start),
-          end: new Date(session.timeslot.end),
-        },
-      }))}
+      sessions={scheduleSessions}
     />
   );
+}
+
+type SessionData = { id: string; trackId: string; startTime: string; endTime: string };
+
+function useOptimisticSessions(sessions: Array<SessionData>) {
+  type PendingSession = ReturnType<typeof useFetchers>[number] & {
+    formData: FormData;
+  };
+
+  const sessionsById = new Map(
+    sessions.map(({ id, trackId, startTime, endTime }) => [
+      id,
+      {
+        id,
+        trackId,
+        timeslot: { start: new Date(startTime), end: new Date(endTime) },
+      },
+    ]),
+  );
+
+  const fetchers = useFetchers();
+
+  const pendingSessions = fetchers
+    .filter((fetcher): fetcher is PendingSession => {
+      if (!fetcher.formData) return false;
+      const intent = fetcher.formData.get('intent');
+      return intent === 'add-session' || intent === 'update-session';
+    })
+    .map((fetcher) => ({
+      id: String(fetcher.formData?.get('id')),
+      trackId: String(fetcher.formData?.get('trackId')),
+      timeslot: {
+        start: new Date(String(fetcher.formData?.get('startTime'))),
+        end: new Date(String(fetcher.formData?.get('endTime'))),
+      },
+    }));
+
+  for (let session of pendingSessions) {
+    sessionsById.set(session.id, session);
+  }
+
+  return Array.from(sessionsById.values());
 }

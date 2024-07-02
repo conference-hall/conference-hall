@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
-import type { TimeSlot } from '../types.ts';
-import { getFullTimeslot, isTimeSlotIncluded } from '../utils/timeslots.ts';
+import { getFullTimeslot, isTimeSlotIncluded } from './timeslots.ts';
+import type { TimeSlot } from './types.ts';
 
 export type TimeSlotSelector = {
   isSelecting: boolean;

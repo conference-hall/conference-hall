@@ -7,7 +7,8 @@ import { UserEvent } from '../event-settings/user-event.ts';
 import type {
   ScheduleCreateData,
   ScheduleEditData,
-  ScheduleSessionSaveData,
+  ScheduleSessionCreateData,
+  ScheduleSessionUpdateData,
   ScheduleTrackSaveData,
 } from './event-schedule.types.ts';
 
@@ -53,22 +54,19 @@ export class EventSchedule {
     return sessions.map((session) => ({
       id: session.id,
       trackId: session.trackId,
-      timeslot: {
-        start: session.startTime,
-        end: session.endTime,
-      },
+      startTime: session.startTime,
+      endTime: session.endTime,
     }));
   }
 
   // TODO: Add tests
-  async addSession(dayId: string, data: ScheduleSessionSaveData) {
+  async addSession(dayId: string, data: ScheduleSessionCreateData) {
     await db.scheduleSession.create({ data: { dayId, ...data } });
   }
 
   // TODO: Add tests
-  async updateSession(sessionId: string, data: ScheduleSessionSaveData) {
-    console.log({ sessionId, data });
-    await db.scheduleSession.update({ data, where: { id: sessionId } });
+  async updateSession(data: ScheduleSessionUpdateData) {
+    await db.scheduleSession.update({ data, where: { id: data.id } });
   }
 
   // TODO: Add tests

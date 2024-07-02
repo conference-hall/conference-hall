@@ -11,13 +11,18 @@ import {
 } from '@dnd-kit/core';
 import { cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
-import { v4 as uuid } from 'uuid';
 
-import { useSessions } from './hooks/use-sessions.tsx';
-import type { TimeSlotSelector } from './hooks/use-timeslot-selector.tsx';
-import { useTimeslotSelector } from './hooks/use-timeslot-selector.tsx';
+import {
+  countIntervalsInTimeSlot,
+  formatTime,
+  getDailyTimeSlots,
+  haveSameStartDate,
+  isTimeSlotIncluded,
+  totalTimeInMinutes,
+} from './timeslots.ts';
 import type { Session, TimeSlot, Track } from './types.ts';
-import { countIntervalsInTimeSlot, formatTime, getDailyTimeSlots, totalTimeInMinutes } from './utils/timeslots.ts';
+import type { TimeSlotSelector } from './use-timeslot-selector.tsx';
+import { useTimeslotSelector } from './use-timeslot-selector.tsx';
 
 const HOUR_INTERVAL = 60; // minutes
 const SLOT_INTERVAL = 5; // minutes
@@ -31,10 +36,10 @@ type ScheduleProps = {
   endTime: string; // TODO: rename display time else 23:00
   interval?: number;
   tracks: Array<Track>;
-  initialSessions: Array<Session>;
+  sessions: Array<Session>;
   renderSession: (session: Session, zoomLevel: number, oneLine: boolean) => ReactNode;
-  onAddSession: (session: Session) => void;
-  onUpdateSession: (session: Session) => void;
+  onAddSession: (trackId: string, timeslot: TimeSlot) => void;
+  onUpdateSession: (session: Session, newTrackId: string, newTimeslot: TimeSlot) => void;
   onSelectSession: (session: Session) => void;
   zoomLevel?: number;
 };
@@ -45,7 +50,7 @@ export default function Schedule({
   endTime,
   interval = SLOT_INTERVAL,
   tracks = [DEFAULT_TRACK],
-  initialSessions = [],
+  sessions = [],
   renderSession,
   onAddSession,
   onUpdateSession,
@@ -53,22 +58,14 @@ export default function Schedule({
   zoomLevel = DEFAULT_ZOOM_LEVEL,
 }: ScheduleProps) {
   const hours = getDailyTimeSlots(day, startTime, endTime, HOUR_INTERVAL);
-  const sessions = useSessions(initialSessions);
 
-  const handleAddSession = (trackId: string, timeslot: TimeSlot) => {
-    const session = { id: uuid(), trackId, timeslot };
-    const addedSession = sessions.addSession(session);
-    if (addedSession) onAddSession(addedSession);
-  };
-
-  const selector = useTimeslotSelector(handleAddSession);
+  const selector = useTimeslotSelector(onAddSession);
 
   const handleDragEnd = ({ active, over }: DragEndEvent) => {
     if (over?.data?.current?.type === 'timeslot') {
       const { trackId, timeslot } = over.data.current || {};
       const { session } = active.data.current || {};
-      const movedSession = sessions.moveSession(session, trackId, timeslot);
-      if (movedSession) onUpdateSession(movedSession);
+      onUpdateSession(session, trackId, timeslot);
     }
   };
 
@@ -118,8 +115,13 @@ export default function Schedule({
                   {tracks.map((track) => (
                     <td key={track.id} className={cx('p-0', { 'border-b': rowIndex !== hours.length - 1 })}>
                       {hourSlots.map((slot) => {
-                        const session = sessions.getSession(track.id, slot);
-                        const selectable = !sessions.hasSession(track.id, slot);
+                        const session = sessions.find(
+                          (session) => session.trackId === track.id && haveSameStartDate(slot, session.timeslot),
+                        );
+
+                        const selectable = !sessions.some(
+                          (session) => session.trackId === track.id && isTimeSlotIncluded(slot, session.timeslot),
+                        );
 
                         return (
                           <Timeslot

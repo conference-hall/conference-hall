@@ -10,7 +10,7 @@ import {
   startOfDay,
 } from 'date-fns';
 
-import type { TimeSlot } from '../types.ts';
+import type { TimeSlot } from './types.ts';
 
 export const generateDailyTimeSlots = (day: Date, intervalMinutes: number): Array<TimeSlot> => {
   const start = startOfDay(day); // 00:00 of the current day

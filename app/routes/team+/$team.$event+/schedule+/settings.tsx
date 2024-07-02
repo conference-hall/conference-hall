@@ -11,9 +11,9 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { parseWithZod } from '~/libs/validators/zod-parser.ts';
 
-import { ScheduleDeleteForm } from './__components/schedule-delete-form.tsx';
-import { ScheduleEditForm } from './__components/schedule-edit-form.tsx';
-import { TracksForm } from './__components/tracks-form.tsx';
+import { ScheduleDeleteForm } from './__components/forms/schedule-delete-form.tsx';
+import { ScheduleEditForm } from './__components/forms/schedule-edit-form.tsx';
+import { TracksForm } from './__components/forms/tracks-form.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
