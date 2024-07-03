@@ -18,6 +18,7 @@ import {
   getDailyTimeSlots,
   haveSameStartDate,
   isTimeSlotIncluded,
+  moveTimeSlotStart,
   totalTimeInMinutes,
 } from './timeslots.ts';
 import type { Session, TimeSlot, Track } from './types.ts';
@@ -37,7 +38,7 @@ type ScheduleProps = {
   interval?: number;
   tracks: Array<Track>;
   sessions: Array<Session>;
-  renderSession: (session: Session, zoomLevel: number, oneLine: boolean) => ReactNode;
+  renderSession: (session: Session) => ReactNode;
   onAddSession: (trackId: string, timeslot: TimeSlot) => void;
   onUpdateSession: (session: Session, newTrackId: string, newTimeslot: TimeSlot) => void;
   onSelectSession: (session: Session) => void;
@@ -73,7 +74,7 @@ export default function Schedule({
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
 
   return (
-    <DndContext onDragEnd={handleDragEnd} sensors={sensors} collisionDetection={customCollisionDetection}>
+    <DndContext onDragEnd={handleDragEnd} sensors={sensors} collisionDetection={collisionDetection}>
       <div className={cx('w-full bg-white', { 'select-none': selector.isSelecting })}>
         <table className="min-w-full border-separate border-spacing-0">
           {/* Gutter */}
@@ -135,7 +136,8 @@ export default function Schedule({
                             zoomLevel={zoomLevel}
                           >
                             {session ? (
-                              <SessionBlock
+                              // Displayed session block
+                              <SessionWrapper
                                 session={session}
                                 renderSession={renderSession}
                                 onClick={onSelectSession}
@@ -143,7 +145,8 @@ export default function Schedule({
                                 zoomLevel={zoomLevel}
                               />
                             ) : selectedSlot && haveSameStartDate(slot, selectedSlot) ? (
-                              <SessionBlock
+                              // Display pre-rendered session on selection
+                              <SessionWrapper
                                 session={{ id: 'selection', trackId: track.id, timeslot: selectedSlot }}
                                 renderSession={renderSession}
                                 interval={interval}
@@ -202,16 +205,19 @@ function Timeslot({ trackId, slot, selectable, zoomLevel, selector, children }: 
   );
 }
 
-type SessionProps = {
+type SessionWrapperProps = {
   session: Session;
-  renderSession: (session: Session, zoomLevel: number, oneLine: boolean) => ReactNode;
+  renderSession: (session: Session) => ReactNode;
   onClick?: (session: Session) => void;
   interval: number;
   zoomLevel: number;
 };
 
-function SessionBlock({ session, renderSession, onClick, interval, zoomLevel }: SessionProps) {
-  const { attributes, listeners, setNodeRef, transform } = useDraggable({ id: session.id, data: { session } });
+function SessionWrapper({ session, renderSession, onClick, interval, zoomLevel }: SessionWrapperProps) {
+  const { attributes, listeners, setNodeRef, transform, isDragging, over } = useDraggable({
+    id: session.id,
+    data: { session },
+  });
 
   const totalTimeMinutes = totalTimeInMinutes(session.timeslot);
   const intervalsCount = countIntervalsInTimeSlot(session.timeslot, interval);
@@ -223,9 +229,16 @@ function SessionBlock({ session, renderSession, onClick, interval, zoomLevel }: 
     right: '1px',
     height: `${height}px`,
     transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
-    zIndex: transform ? '40' : undefined,
+    zIndex: isDragging ? '40' : undefined,
   };
 
+  // update displayed timeslot when dragging
+  if (isDragging && over?.data?.current?.type === 'timeslot') {
+    const { timeslot } = over.data.current || {};
+    session = { ...session, timeslot: moveTimeSlotStart(session.timeslot, timeslot.start) };
+  }
+
+  // renderSession(session, isDragging, height)
   return (
     <button
       ref={setNodeRef}
@@ -235,7 +248,7 @@ function SessionBlock({ session, renderSession, onClick, interval, zoomLevel }: 
       {...listeners}
       {...attributes}
     >
-      {renderSession(session, zoomLevel, intervalsCount === 1)}
+      {renderSession(session)}
     </button>
   );
 }
@@ -248,7 +261,7 @@ function getTimeslotHeight(zoomLevel: number) {
 }
 
 // Custom collision detection function
-const customCollisionDetection: CollisionDetection = (args) => {
+const collisionDetection: CollisionDetection = (args) => {
   const { droppableContainers, collisionRect } = args;
 
   // Check for collisions prioritizing the top of droppable elements

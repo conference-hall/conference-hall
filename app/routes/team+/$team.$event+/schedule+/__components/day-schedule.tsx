@@ -67,9 +67,7 @@ export function DaySchedule({ name, currentDayId, days, tracks, sessions, onAddS
               onSelectSession={setOpenSession}
               onAddSession={onAddSession}
               onUpdateSession={onUpdateSession}
-              renderSession={(session, zoomLevel, oneLine) => (
-                <SessionBlock session={session} zoomLevel={zoomLevel} oneLine={oneLine} />
-              )}
+              renderSession={(session) => <SessionBlock session={session} />}
             />
           </>
         ) : null}
