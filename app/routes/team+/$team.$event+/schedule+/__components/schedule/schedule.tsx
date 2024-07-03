@@ -29,12 +29,11 @@ const HOUR_INTERVAL = 60; // minutes
 const SLOT_INTERVAL = 5; // minutes
 const TIMESLOT_HEIGHTS = [8, 12, 16, 20]; // px
 const DEFAULT_ZOOM_LEVEL = 1;
-const DEFAULT_TRACK: Track = { id: 'track-1', name: 'Track' };
 
 type ScheduleProps = {
   day: Date;
-  startTime: string; // TODO: rename display time else 00:00
-  endTime: string; // TODO: rename display time else 23:00
+  startTime: string; // TODO: rename display time
+  endTime: string; // TODO: rename display time
   interval?: number;
   tracks: Array<Track>;
   sessions: Array<Session>;
@@ -50,7 +49,7 @@ export default function Schedule({
   startTime,
   endTime,
   interval = SLOT_INTERVAL,
-  tracks = [DEFAULT_TRACK],
+  tracks = [],
   sessions = [],
   renderSession,
   onAddSession,
@@ -116,44 +115,18 @@ export default function Schedule({
                   {tracks.map((track) => (
                     <td key={track.id} className={cx('p-0', { 'border-b': rowIndex !== hours.length - 1 })}>
                       {hourSlots.map((slot) => {
-                        const session = sessions.find(
-                          (session) => session.trackId === track.id && haveSameStartDate(slot, session.timeslot),
-                        );
-
-                        const selectable = !sessions.some(
-                          (session) => session.trackId === track.id && isTimeSlotIncluded(slot, session.timeslot),
-                        );
-
-                        const selectedSlot = selector.getSelectedSlot(track.id);
-
                         return (
                           <Timeslot
                             key={formatTime(slot.start)}
                             trackId={track.id}
                             slot={slot}
+                            sessions={sessions}
                             selector={selector}
-                            selectable={selectable}
+                            interval={interval}
                             zoomLevel={zoomLevel}
-                          >
-                            {session ? (
-                              // Displayed session block
-                              <SessionWrapper
-                                session={session}
-                                renderSession={renderSession}
-                                onClick={onSelectSession}
-                                interval={interval}
-                                zoomLevel={zoomLevel}
-                              />
-                            ) : selectedSlot && haveSameStartDate(slot, selectedSlot) ? (
-                              // Display pre-rendered session on selection
-                              <SessionWrapper
-                                session={{ id: 'selection', trackId: track.id, timeslot: selectedSlot }}
-                                renderSession={renderSession}
-                                interval={interval}
-                                zoomLevel={zoomLevel}
-                              />
-                            ) : null}
-                          </Timeslot>
+                            onSelectSession={onSelectSession}
+                            renderSession={renderSession}
+                          />
                         );
                       })}
                     </td>
@@ -171,13 +144,24 @@ export default function Schedule({
 type TimeslotProps = {
   trackId: string;
   slot: TimeSlot;
-  selectable: boolean;
-  zoomLevel: number;
+  sessions: Array<Session>;
   selector: TimeSlotSelector;
-  children: ReactNode;
+  interval: number;
+  zoomLevel: number;
+  onSelectSession: (session: Session) => void;
+  renderSession: (session: Session) => ReactNode;
 };
 
-function Timeslot({ trackId, slot, selectable, zoomLevel, selector, children }: TimeslotProps) {
+function Timeslot({
+  trackId,
+  slot,
+  sessions,
+  selector,
+  interval,
+  zoomLevel,
+  onSelectSession,
+  renderSession,
+}: TimeslotProps) {
   const id = `${trackId}-${formatTime(slot.start)}`;
 
   const { isOver, setNodeRef } = useDroppable({
@@ -185,7 +169,15 @@ function Timeslot({ trackId, slot, selectable, zoomLevel, selector, children }: 
     data: { type: 'timeslot', trackId, timeslot: slot },
   });
 
+  // current session on timeslot start
+  const session = sessions.find((session) => session.trackId === trackId && haveSameStartDate(slot, session.timeslot));
+
+  // selection attributes
   const isSelected = selector.isSelectedSlot(trackId, slot);
+  const selectedSlot = selector.getSelectedSlot(trackId);
+  const selectable = !sessions.some(
+    (session) => session.trackId === trackId && isTimeSlotIncluded(slot, session.timeslot),
+  );
 
   return (
     <div
@@ -200,7 +192,24 @@ function Timeslot({ trackId, slot, selectable, zoomLevel, selector, children }: 
         'bg-blue-50': isOver,
       })}
     >
-      {children}
+      {session ? (
+        // Displayed session block
+        <SessionWrapper
+          session={session}
+          renderSession={renderSession}
+          onClick={onSelectSession}
+          interval={interval}
+          zoomLevel={zoomLevel}
+        />
+      ) : selectedSlot && haveSameStartDate(slot, selectedSlot) ? (
+        // Display pre-rendered session on selection
+        <SessionWrapper
+          session={{ id: 'selection', trackId, timeslot: selectedSlot }}
+          renderSession={renderSession}
+          interval={interval}
+          zoomLevel={zoomLevel}
+        />
+      ) : null}
     </div>
   );
 }
@@ -214,23 +223,16 @@ type SessionWrapperProps = {
 };
 
 function SessionWrapper({ session, renderSession, onClick, interval, zoomLevel }: SessionWrapperProps) {
+  // draggable session
   const { attributes, listeners, setNodeRef, transform, isDragging, over } = useDraggable({
     id: session.id,
-    data: { session },
+    data: { session }, // TODO: disable when currently selecting
   });
 
+  // compute session height
   const totalTimeMinutes = totalTimeInMinutes(session.timeslot);
   const intervalsCount = countIntervalsInTimeSlot(session.timeslot, interval);
-
   const height = getTimeslotHeight(zoomLevel) * intervalsCount + Math.ceil(totalTimeMinutes / HOUR_INTERVAL) - 3;
-  const style = {
-    top: '1px',
-    left: '1px',
-    right: '1px',
-    height: `${height}px`,
-    transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
-    zIndex: isDragging ? '40' : undefined,
-  };
 
   // update displayed timeslot when dragging
   if (isDragging && over?.data?.current?.type === 'timeslot') {
@@ -244,7 +246,14 @@ function SessionWrapper({ session, renderSession, onClick, interval, zoomLevel }
       ref={setNodeRef}
       className="absolute z-20 overflow-hidden text-left"
       onClick={() => (onClick ? onClick(session) : undefined)}
-      style={style}
+      style={{
+        top: '1px',
+        left: '1px',
+        right: '1px',
+        height: `${height}px`,
+        transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
+        zIndex: isDragging ? '40' : undefined,
+      }}
       {...listeners}
       {...attributes}
     >
