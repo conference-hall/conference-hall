@@ -1,10 +1,11 @@
 import { useState } from 'react';
 
-import { getFullTimeslot, isTimeSlotIncluded } from './timeslots.ts';
+import { getFullTimeslot, isAfterTimeSlot, isTimeSlotIncluded } from './timeslots.ts';
 import type { TimeSlot } from './types.ts';
 
 export type TimeSlotSelector = {
   isSelecting: boolean;
+  getSelectedSlot: (trackId: string) => TimeSlot | null;
   isSelectedSlot: (trackId: string, slot: TimeSlot) => boolean;
   onSelectStart: (trackId: string, slot: TimeSlot) => () => void;
   onSelectHover: (trackId: string, slot: TimeSlot) => () => void;
@@ -24,6 +25,17 @@ export function useTimeslotSelector(onSelectTimeslot: (trackId: string, timeslot
   };
 
   const isSelecting = Boolean(startSlot);
+
+  const getSelectedSlot = (trackId: string) => {
+    if (!startSlot) return null;
+    if (!currentSlot) return null;
+    if (trackId !== selectedTrack) return null;
+    if (isAfterTimeSlot(startSlot, currentSlot)) {
+      return { start: currentSlot?.start || startSlot.start, end: startSlot.end };
+    } else {
+      return { start: startSlot.start, end: currentSlot?.end || startSlot.end };
+    }
+  };
 
   const isSelectedSlot = (trackId: string, slot: TimeSlot) => {
     if (startSlot === null || selectedTrack !== trackId) return false;
@@ -50,5 +62,5 @@ export function useTimeslotSelector(onSelectTimeslot: (trackId: string, timeslot
     reset();
   };
 
-  return { isSelecting, isSelectedSlot, onSelectStart, onSelectHover, onSelect };
+  return { isSelecting, getSelectedSlot, isSelectedSlot, onSelectStart, onSelectHover, onSelect };
 }

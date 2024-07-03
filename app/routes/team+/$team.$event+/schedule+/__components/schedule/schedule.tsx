@@ -123,6 +123,8 @@ export default function Schedule({
                           (session) => session.trackId === track.id && isTimeSlotIncluded(slot, session.timeslot),
                         );
 
+                        const selectedSlot = selector.getSelectedSlot(track.id);
+
                         return (
                           <Timeslot
                             key={formatTime(slot.start)}
@@ -137,6 +139,13 @@ export default function Schedule({
                                 session={session}
                                 renderSession={renderSession}
                                 onClick={onSelectSession}
+                                interval={interval}
+                                zoomLevel={zoomLevel}
+                              />
+                            ) : selectedSlot && haveSameStartDate(slot, selectedSlot) ? (
+                              <SessionBlock
+                                session={{ id: 'selection', trackId: track.id, timeslot: selectedSlot }}
+                                renderSession={renderSession}
                                 interval={interval}
                                 zoomLevel={zoomLevel}
                               />
@@ -183,8 +192,9 @@ function Timeslot({ trackId, slot, selectable, zoomLevel, selector, children }: 
       onMouseUp={selector.onSelect}
       style={{ height: `${getTimeslotHeight(zoomLevel)}px` }}
       className={cx('relative', {
+        'z-10': selectable,
         'hover:bg-gray-50': selectable && !isSelected,
-        'bg-blue-50': (selectable && isSelected) || isOver,
+        'bg-blue-50': isOver,
       })}
     >
       {children}
@@ -195,7 +205,7 @@ function Timeslot({ trackId, slot, selectable, zoomLevel, selector, children }: 
 type SessionProps = {
   session: Session;
   renderSession: (session: Session, zoomLevel: number, oneLine: boolean) => ReactNode;
-  onClick: (session: Session) => void;
+  onClick?: (session: Session) => void;
   interval: number;
   zoomLevel: number;
 };
@@ -220,7 +230,7 @@ function SessionBlock({ session, renderSession, onClick, interval, zoomLevel }: 
     <button
       ref={setNodeRef}
       className="absolute z-20 overflow-hidden text-left"
-      onClick={() => onClick(session)}
+      onClick={() => (onClick ? onClick(session) : undefined)}
       style={style}
       {...listeners}
       {...attributes}
