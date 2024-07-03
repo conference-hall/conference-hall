@@ -8,8 +8,6 @@ export function useScheduleFullscreen() {
 
   const [searchParams] = useSearchParams();
 
-  console.log(Boolean(scheduleRoute), searchParams.get('fullscreen') === 'true');
-
   const isFullscreen = Boolean(scheduleRoute) && searchParams.get('fullscreen') === 'true';
 
   const toggle = () => {

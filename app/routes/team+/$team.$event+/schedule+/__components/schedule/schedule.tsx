@@ -66,6 +66,8 @@ export default function Schedule({
       const { trackId, timeslot } = over.data.current || {};
       const { session } = active.data.current || {};
       onUpdateSession(session, trackId, timeslot);
+    } else if (over?.data?.current?.type === 'session') {
+      console.log('Switch sessions !!!');
     }
   };
 
@@ -223,10 +225,17 @@ type SessionWrapperProps = {
 };
 
 function SessionWrapper({ session, renderSession, onClick, interval, zoomLevel }: SessionWrapperProps) {
-  // draggable session
+  // draggable to move session
   const { attributes, listeners, setNodeRef, transform, isDragging, over } = useDraggable({
     id: session.id,
-    data: { session }, // TODO: disable when currently selecting
+    data: { session },
+  }); // TODO: disable when currently selecting
+
+  // droppable to switch sessions
+  const { setNodeRef: setDropRef } = useDroppable({
+    id: `drop:${session.id}`,
+    data: { type: 'session', trackId: session.trackId, timeslot: session.timeslot },
+    disabled: isDragging,
   });
 
   // compute session height
@@ -250,14 +259,15 @@ function SessionWrapper({ session, renderSession, onClick, interval, zoomLevel }
         top: '1px',
         left: '1px',
         right: '1px',
-        height: `${height}px`,
         transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
         zIndex: isDragging ? '40' : undefined,
       }}
       {...listeners}
       {...attributes}
     >
-      {renderSession(session)}
+      <div ref={setDropRef} style={{ height: `${height}px` }}>
+        {renderSession(session)}
+      </div>
     </button>
   );
 }
