@@ -2,8 +2,8 @@ import { useFetchers, useSubmit } from '@remix-run/react';
 import { formatISO } from 'date-fns';
 import { v4 as uuid } from 'uuid';
 
-import { areTimeSlotsOverlapping, moveTimeSlotStart } from './__components/schedule/timeslots.ts';
-import type { Session, TimeSlot } from './__components/schedule/types.ts';
+import { areTimeSlotsOverlapping, moveTimeSlotStart } from './schedule/timeslots.ts';
+import type { Session, TimeSlot } from './schedule/types.ts';
 
 type SessionData = { id: string; trackId: string; startTime: string; endTime: string };
 

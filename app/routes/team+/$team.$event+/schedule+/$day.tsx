@@ -12,7 +12,7 @@ import { requireSession } from '~/libs/auth/session.ts';
 import { parseWithZod } from '~/libs/validators/zod-parser.ts';
 
 import { DaySchedule } from './__components/day-schedule.tsx';
-import { useSessions } from './use-sessions.ts';
+import { useSessions } from './__components/use-sessions.ts';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);

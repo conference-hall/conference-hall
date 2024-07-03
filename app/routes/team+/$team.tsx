@@ -10,6 +10,7 @@ import { useUser } from '~/routes/__components/use-user.tsx';
 
 import { NavbarOrga } from '../__components/navbar/navbar-orga.tsx';
 import type { loader as routeEventLoader } from './$team.$event+/_layout';
+import { useScheduleFullscreen } from './$team.$event+/schedule+/__components/header/use-schedule-fullscreen.tsx';
 import { EventTabs } from './$team+/__components/event-tabs.tsx';
 import { TeamTabs } from './$team+/__components/team-tabs.tsx';
 
@@ -27,6 +28,10 @@ export default function TeamLayout() {
   const { user } = useUser();
   const team = useLoaderData<typeof loader>();
   const event = useRouteLoaderData<typeof routeEventLoader>('routes/team+/$team.$event+/_layout');
+
+  const { isFullscreen } = useScheduleFullscreen();
+
+  if (isFullscreen) return <Outlet context={{ user, team }} />;
 
   return (
     <>

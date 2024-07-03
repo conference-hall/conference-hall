@@ -3,16 +3,16 @@ import { Form } from '@remix-run/react';
 import { Button } from '~/design-system/buttons.tsx';
 import { Modal } from '~/design-system/dialogs/modals.tsx';
 
-import { formatTimeSlot } from '../schedule/timeslots.ts';
-import type { Session, Track } from '../schedule/types.ts';
+import { formatTimeSlot } from './schedule/timeslots.ts';
+import type { Session, Track } from './schedule/types.ts';
 
-type SessionFormModalProps = {
+type SessionModalProps = {
   session: Session | null;
   tracks: Array<Track>;
   onClose: () => void;
 };
 
-export function SessionFormModal({ session, tracks, onClose }: SessionFormModalProps) {
+export function SessionModal({ session, tracks, onClose }: SessionModalProps) {
   const open = Boolean(session);
   const sessionTrack = session ? tracks.find((t) => session.trackId === t.id)?.name : 'Unknown';
   const sessionTimeslot = session ? formatTimeSlot(session.timeslot) : '00:00 - 00:00';

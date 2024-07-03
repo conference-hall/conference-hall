@@ -1,32 +1,19 @@
-import {
-  ArrowsPointingInIcon,
-  ArrowsPointingOutIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  ClockIcon,
-  Cog6ToothIcon,
-  MagnifyingGlassMinusIcon,
-  MagnifyingGlassPlusIcon,
-} from '@heroicons/react/24/outline';
+import { Cog6ToothIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
-import { format } from 'date-fns';
 import { useState } from 'react';
 
-import { Button, ButtonLink } from '~/design-system/buttons.tsx';
-import { IconButton, IconLink } from '~/design-system/icon-buttons.tsx';
-import { Card } from '~/design-system/layouts/card.tsx';
+import { ButtonLink } from '~/design-system/buttons.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
-import { H2 } from '~/design-system/typography.tsx';
 
-import { SessionFormModal } from './forms/session-form.tsx';
+import { ScheduleHeader } from './header/schedule-header.tsx';
+import { useScheduleFullscreen } from './header/use-schedule-fullscreen.tsx';
+import { useZoomHandlers } from './header/use-zoom-handlers.tsx';
 import Schedule from './schedule/schedule.tsx';
-import { formatTimeSlot } from './schedule/timeslots.ts';
 import type { Session, TimeSlot, Track } from './schedule/types.ts';
+import { SessionBlock } from './session-block.tsx';
+import { SessionModal } from './session-modal.tsx';
 
-const ZOOM_LEVEL_DEFAULT = 0;
-const ZOOM_LEVEL_MAX = 3;
-
-type DaySetting = { id: string; day: string; startTime: string; endTime: string };
+export type DaySetting = { id: string; day: string; startTime: string; endTime: string };
 
 type Props = {
   name: string;
@@ -39,11 +26,9 @@ type Props = {
 };
 
 export function DaySchedule({ name, currentDayId, days, tracks, sessions, onAddSession, onUpdateSession }: Props) {
-  const [expanded, setExpanded] = useState(false);
+  const { isFullscreen } = useScheduleFullscreen();
 
-  const [zoomLevel, setZoomLevel] = useState(ZOOM_LEVEL_DEFAULT);
-  const zoomIn = () => setZoomLevel((z) => Math.min(z + 1, ZOOM_LEVEL_MAX));
-  const zoomOut = () => setZoomLevel((z) => Math.max(z - 1, 0));
+  const zoomHandlers = useZoomHandlers();
 
   const [openSession, setOpenSession] = useState<Session | null>(null);
   const onCloseSession = () => setOpenSession(null);
@@ -51,115 +36,45 @@ export function DaySchedule({ name, currentDayId, days, tracks, sessions, onAddS
   const { currentDay, previousDay, nextDay } = getDayNavigation(days, currentDayId);
 
   return (
-    <main className={cx('px-8 my-8', { 'mx-auto max-w-7xl': !expanded })}>
-      <Page.Heading title={name}>
-        <ButtonLink to="../settings" variant="secondary" relative="path" iconLeft={Cog6ToothIcon}>
-          Settings
-        </ButtonLink>
-      </Page.Heading>
+    <main className={cx({ 'px-8 my-8 mx-auto max-w-7xl': !isFullscreen })}>
+      {!isFullscreen ? (
+        <Page.Heading title={name}>
+          <ButtonLink to="../settings" variant="secondary" relative="path" iconLeft={Cog6ToothIcon}>
+            Settings
+          </ButtonLink>
+        </Page.Heading>
+      ) : null}
 
-      <Card>
-        <SessionFormModal session={openSession} tracks={tracks} onClose={onCloseSession} />
-
-        <header className="flex flex-row items-center justify-between gap-4 p-4 px-6 rounded-t-lg bg-slate-100">
-          <div className="flex items-center gap-3 shrink">
-            <IconLink
-              icon={ChevronLeftIcon}
-              label="Previous day"
-              to={`../${previousDay ? previousDay.id : currentDayId}`}
-              relative="path"
-              disabled={!previousDay}
-              variant="secondary"
-            />
-            <H2 truncate>
-              {currentDay ? (
-                <time dateTime={format(currentDay.day, 'yyyy-MM-dd')}>{format(currentDay.day, 'PPPP')}</time>
-              ) : null}
-            </H2>
-            <IconLink
-              icon={ChevronRightIcon}
-              label="Next day"
-              to={`../${nextDay ? nextDay.id : currentDayId}`}
-              relative="path"
-              disabled={!nextDay}
-              variant="secondary"
-            />
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="mr-1 pr-6 border-r border-gray-300">
-              <Button onClick={() => {}} variant="secondary" iconLeft={ClockIcon}>
-                {`09:00 to 18:00`}
-              </Button>
-            </div>
-            <IconButton
-              icon={MagnifyingGlassPlusIcon}
-              label="Zoom in"
-              onClick={zoomIn}
-              disabled={zoomLevel === ZOOM_LEVEL_MAX}
-              variant="secondary"
-            />
-            <IconButton
-              icon={MagnifyingGlassMinusIcon}
-              label="Zoom out"
-              onClick={zoomOut}
-              disabled={zoomLevel === 0}
-              variant="secondary"
-            />
-            {expanded ? (
-              <IconButton
-                icon={ArrowsPointingInIcon}
-                label="Collapse schedule"
-                onClick={() => setExpanded(false)}
-                variant="secondary"
-              />
-            ) : (
-              <IconButton
-                icon={ArrowsPointingOutIcon}
-                label="Expand schedule"
-                onClick={() => setExpanded(true)}
-                variant="secondary"
-              />
-            )}
-          </div>
-        </header>
+      <div className={cx({ 'border border-gray-200 rounded-t-lg': !isFullscreen })}>
+        <SessionModal session={openSession} tracks={tracks} onClose={onCloseSession} />
 
         {currentDay ? (
-          <Schedule
-            day={new Date(currentDay.day)}
-            startTime={currentDay.startTime}
-            endTime={currentDay.endTime}
-            tracks={tracks}
-            sessions={sessions}
-            zoomLevel={zoomLevel}
-            onSelectSession={setOpenSession}
-            onAddSession={onAddSession}
-            onUpdateSession={onUpdateSession}
-            renderSession={(session, zoomLevel, oneLine) => (
-              <SessionBlock session={session} zoomLevel={zoomLevel} oneLine={oneLine} />
-            )}
-          />
+          <>
+            <ScheduleHeader
+              currentDay={new Date(currentDay.day)}
+              previousDayId={previousDay?.id}
+              nextDayId={nextDay?.id}
+              zoomHandlers={zoomHandlers}
+            />
+
+            <Schedule
+              day={new Date(currentDay.day)}
+              startTime={currentDay.startTime}
+              endTime={currentDay.endTime}
+              tracks={tracks}
+              sessions={sessions}
+              zoomLevel={zoomHandlers.level}
+              onSelectSession={setOpenSession}
+              onAddSession={onAddSession}
+              onUpdateSession={onUpdateSession}
+              renderSession={(session, zoomLevel, oneLine) => (
+                <SessionBlock session={session} zoomLevel={zoomLevel} oneLine={oneLine} />
+              )}
+            />
+          </>
         ) : null}
-      </Card>
+      </div>
     </main>
-  );
-}
-
-type SessionBlockProps = { session: Session; zoomLevel: number; oneLine: boolean };
-
-function SessionBlock({ session, zoomLevel, oneLine }: SessionBlockProps) {
-  return (
-    <div
-      className={cx(
-        'text-xs h-full px-1 text-indigo-400 bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 rounded',
-        {
-          'p-1': !oneLine && zoomLevel >= 3,
-          'flex gap-1': oneLine,
-        },
-      )}
-    >
-      <p className="truncate">{formatTimeSlot(session.timeslot)}</p>
-      <p className="font-semibold truncate">(No title)</p>
-    </div>
   );
 }
 

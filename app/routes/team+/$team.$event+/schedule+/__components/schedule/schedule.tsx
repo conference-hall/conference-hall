@@ -74,14 +74,14 @@ export default function Schedule({
 
   return (
     <DndContext onDragEnd={handleDragEnd} sensors={sensors} collisionDetection={customCollisionDetection}>
-      <div className={cx('w-full border-t border-gray-200', { 'select-none': selector.isSelecting })}>
+      <div className={cx('w-full bg-white', { 'select-none': selector.isSelecting })}>
         <table className="min-w-full border-separate border-spacing-0">
           {/* Gutter */}
           <thead>
-            <tr className="sticky top-0 z-30 divide-x divide-gray-200 shadow">
-              <th scope="col" className="w-6 h-12 bg-white text-left text-sm font-semibold text-gray-900"></th>
+            <tr className="sticky top-[64px] z-30 divide-x divide-gray-200 shadow">
+              <th scope="col" className="w-6 h-12 text-left text-sm font-semibold bg-white text-gray-900"></th>
               {tracks.map((track) => (
-                <th scope="col" key={track.id} className="h-12 bg-white relative">
+                <th scope="col" key={track.id} className="h-12 relative bg-white">
                   <div className="absolute flex items-center justify-center top-0 bottom-0 right-0 left-0 overflow-hidden">
                     <p className="p-2 text-sm font-semibold text-gray-900 truncate">{track.name}</p>
                   </div>
