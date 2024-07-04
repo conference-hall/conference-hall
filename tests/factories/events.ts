@@ -98,6 +98,7 @@ export const eventFactory = async (options: FactoryOptions = {}) => {
     name: randSportsTeam(),
     slug: `slug-${randUuid()}`,
     description: randParagraph(),
+    timezone: 'Europe/Paris',
     address: randFullAddress(),
     logo: `https://picsum.photos/seed/${randUuid()}/128`,
     websiteUrl: randUrl(),

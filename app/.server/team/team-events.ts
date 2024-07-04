@@ -10,6 +10,7 @@ export const EventCreateSchema = z.object({
   name: z.string().trim().min(3).max(50),
   visibility: z.enum(['PUBLIC', 'PRIVATE']),
   type: z.enum(['CONFERENCE', 'MEETUP']),
+  timezone: z.string(),
   slug: slugValidator,
 });
 

@@ -92,6 +92,7 @@ describe('TeamEvents', () => {
         name: 'Hello world',
         slug: 'hello-world',
         visibility: 'PUBLIC',
+        timezone: 'Europe/Paris',
       });
 
       expect(created.slug).toBe('hello-world');
@@ -114,6 +115,7 @@ describe('TeamEvents', () => {
           name: 'Hello world',
           slug: 'hello-world',
           visibility: 'PUBLIC',
+          timezone: 'Europe/Paris',
         }),
       ).rejects.toThrowError(SlugAlreadyExistsError);
     });
@@ -125,6 +127,7 @@ describe('TeamEvents', () => {
           name: 'Hello world',
           slug: 'hello-world',
           visibility: 'PUBLIC',
+          timezone: 'Europe/Paris',
         }),
       ).rejects.toThrowError(ForbiddenOperationError);
     });
@@ -137,6 +140,7 @@ describe('TeamEvents', () => {
           name: 'Hello world',
           slug: 'hello-world',
           visibility: 'PUBLIC',
+          timezone: 'Europe/Paris',
         }),
       ).rejects.toThrowError(ForbiddenOperationError);
     });
@@ -149,6 +153,7 @@ describe('TeamEvents', () => {
         name: 'Event name',
         visibility: 'PUBLIC',
         slug: 'event-name',
+        timezone: 'Europe/Paris',
       });
 
       expect(result.success && result.data).toEqual({
@@ -156,6 +161,7 @@ describe('TeamEvents', () => {
         slug: 'event-name',
         type: 'CONFERENCE',
         visibility: 'PUBLIC',
+        timezone: 'Europe/Paris',
       });
     });
 

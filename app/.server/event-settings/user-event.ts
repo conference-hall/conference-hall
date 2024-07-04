@@ -42,6 +42,7 @@ export class UserEvent {
       name: event.name,
       slug: event.slug,
       type: event.type,
+      timezone: event.timezone,
       address: event.address,
       conferenceStart: event.conferenceStart?.toUTCString(),
       conferenceEnd: event.conferenceEnd?.toUTCString(),

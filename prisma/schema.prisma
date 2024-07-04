@@ -94,9 +94,9 @@ model Event {
   teamId                   String
   team                     Team            @relation(fields: [teamId], references: [id])
   address                  String?
+  timezone                 String
   lat                      Float?
   lng                      Float?
-  timezone                 String?
   contactEmail             String?
   websiteUrl               String?
   codeOfConductUrl         String?

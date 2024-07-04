@@ -6,6 +6,7 @@ export const EventGeneralSettingsSchema = z.object({
   name: z.string().trim().min(3).max(50),
   visibility: z.enum(['PUBLIC', 'PRIVATE']),
   slug: slugValidator,
+  timezone: z.string(),
 });
 
 export const EventDetailsSettingsSchema = z

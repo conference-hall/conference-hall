@@ -3,16 +3,16 @@ import { useState } from 'react';
 
 import { Input } from '~/design-system/forms/input.tsx';
 
-import EventVisibilityRadioGroup from './event-visibility-radio-group.tsx';
-
-type EventValues = {
-  name: string;
-  slug: string;
-  visibility: 'PUBLIC' | 'PRIVATE';
-};
+import { EventTimezoneInput } from './event-timezone.tsx';
+import { EventVisibilityRadioGroup } from './event-visibility-radio-group.tsx';
 
 type Props = {
-  initialValues?: EventValues;
+  initialValues?: {
+    name: string;
+    slug: string;
+    visibility: 'PUBLIC' | 'PRIVATE';
+    timezone: string;
+  };
   errors?: Record<string, string | string[]> | null;
 };
 
@@ -47,6 +47,7 @@ export function EventForm({ initialValues, errors }: Props) {
         error={errors?.slug}
       />
       <EventVisibilityRadioGroup defaultValue={initialValues?.visibility} />
+      <EventTimezoneInput defaultValue={initialValues?.timezone} />
     </>
   );
 }

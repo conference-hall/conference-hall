@@ -67,14 +67,15 @@ export async function migrateEvents(firestore: admin.firestore.Firestore) {
       slug: slugifyEvent(data.name),
       type: mapEventType(data.type),
       visibility: mapEventVisibility(data.visibility),
+      timezone: 'Europe/Paris', // TODO: set event timezone otherwise default value
       logo: checkUrl(data.bannerUrl), // TODO: rename to logoUrl?
       description: data.description,
       contactEmail: checkEmail(data.contact),
       websiteUrl: checkUrl(data.website),
-      cfpStart: cfpDates('start', data),
-      cfpEnd: cfpDates('end', data),
-      conferenceStart: conferenceDates('start', data),
-      conferenceEnd: conferenceDates('end', data),
+      cfpStart: cfpDates('start', data), // TODO: check it is UTC (begin and end of day in TZ)
+      cfpEnd: cfpDates('end', data), // TODO: check it is UTC (begin and end of day in TZ)
+      conferenceStart: conferenceDates('start', data), // TODO: check it is UTC (begin and end of day in TZ)
+      conferenceEnd: conferenceDates('end', data), // TODO: check it is UTC (begin and end of day in TZ)
       address: data.address?.formattedAddress,
       lat: data.address?.latLng?.lat,
       lng: data.address?.latLng?.lng,
