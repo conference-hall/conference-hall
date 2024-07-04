@@ -305,16 +305,16 @@ enum CommentChannel {
 }
 
 model Schedule {
-  id        String          @id @default(cuid())
+  id        String            @id @default(cuid())
   eventId   String
-  event     Event           @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  event     Event             @relation(fields: [eventId], references: [id], onDelete: Cascade)
   name      String
-  startDate DateTime
-  endDate   DateTime
-  createdAt DateTime        @default(now())
-  updatedAt DateTime        @updatedAt
+  start     DateTime
+  end       DateTime
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
   tracks    ScheduleTrack[]
-  sessions ScheduleSession[]
+  sessions  ScheduleSession[]
 
   @@map("schedules")
 }
@@ -332,15 +332,15 @@ model ScheduleTrack {
 }
 
 model ScheduleSession {
-  id        String        @id @default(cuid())
-  startTime DateTime
-  endTime   DateTime
-  scheduleId      String
-  schedule        Schedule          @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
-  trackId   String
-  track     ScheduleTrack @relation(fields: [trackId], references: [id])
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
+  id         String        @id @default(cuid())
+  start      DateTime
+  end        DateTime
+  scheduleId String
+  schedule   Schedule      @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+  trackId    String
+  track      ScheduleTrack @relation(fields: [trackId], references: [id])
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
 
   @@map("schedule_sessions")
 }
