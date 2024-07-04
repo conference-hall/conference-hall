@@ -313,8 +313,8 @@ model Schedule {
   endDate   DateTime
   createdAt DateTime        @default(now())
   updatedAt DateTime        @updatedAt
-  days      ScheduleDay[]
   tracks    ScheduleTrack[]
+  sessions ScheduleSession[]
 
   @@map("schedules")
 }
@@ -331,27 +331,12 @@ model ScheduleTrack {
   @@map("schedule_tracks")
 }
 
-model ScheduleDay {
-  id              String            @id @default(cuid())
-  day             DateTime
-  startTime       String            @default("09:00")
-  endTime         String            @default("18:00")
-  scheduleId      String
-  schedule        Schedule          @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
-  ScheduleSession ScheduleSession[]
-
-  @@unique([scheduleId, day])
-  @@map("schedule_days")
-}
-
 model ScheduleSession {
   id        String        @id @default(cuid())
   startTime DateTime
   endTime   DateTime
-  dayId     String
-  day       ScheduleDay   @relation(fields: [dayId], references: [id], onDelete: Cascade)
+  scheduleId      String
+  schedule        Schedule          @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
   trackId   String
   track     ScheduleTrack @relation(fields: [trackId], references: [id])
   createdAt DateTime      @default(now())
