@@ -85,7 +85,7 @@ export function TalkForm({
           initialValues={initialValues?.formats?.map(({ id }) => id)}
         />
       )}
-      {errors?.formats && <Callout title="You have to select at least one proposal format" variant="error" />}
+      {errors?.formats && <Callout title="You have to select at least one proposal format." variant="error" />}
 
       {hasCategories && (
         <CategoriesForm
@@ -94,7 +94,7 @@ export function TalkForm({
           initialValues={initialValues?.categories?.map(({ id }) => id)}
         />
       )}
-      {errors?.categories && <Callout title="You have to select at least one proposal category" variant="error" />}
+      {errors?.categories && <Callout title="You have to select at least one proposal category." variant="error" />}
 
       <MarkdownTextArea
         name="references"
