@@ -20,12 +20,12 @@ import type { ZoomHandlers } from './use-zoom-handlers.tsx';
 
 type Props = {
   currentDay: Date;
-  previousDayId: string | null;
-  nextDayId: string | null;
+  previousDayIndex: number | null;
+  nextDayIndex: number | null;
   zoomHandlers: ZoomHandlers;
 };
 
-export function ScheduleHeader({ currentDay, previousDayId, nextDayId, zoomHandlers }: Props) {
+export function ScheduleHeader({ currentDay, previousDayIndex, nextDayIndex, zoomHandlers }: Props) {
   const [searchParams] = useSearchParams();
   const scheduleFullscreen = useScheduleFullscreen();
 
@@ -42,9 +42,9 @@ export function ScheduleHeader({ currentDay, previousDayId, nextDayId, zoomHandl
         <IconLink
           icon={ChevronLeftIcon}
           label="Previous day"
-          to={{ pathname: `../${previousDayId}`, search: searchParams.toString() }}
+          to={{ pathname: `../${previousDayIndex}`, search: searchParams.toString() }}
           relative="path"
-          disabled={!previousDayId}
+          disabled={previousDayIndex === null}
           variant="secondary"
         />
         <H2 truncate>
@@ -53,9 +53,9 @@ export function ScheduleHeader({ currentDay, previousDayId, nextDayId, zoomHandl
         <IconLink
           icon={ChevronRightIcon}
           label="Next day"
-          to={{ pathname: `../${nextDayId}`, search: searchParams.toString() }}
+          to={{ pathname: `../${nextDayIndex}`, search: searchParams.toString() }}
           relative="path"
-          disabled={!nextDayId}
+          disabled={nextDayIndex === null}
           variant="secondary"
         />
       </div>

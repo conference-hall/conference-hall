@@ -62,7 +62,12 @@ export default function EventCfpSettingsRoute() {
   return (
     <>
       {event.type === 'CONFERENCE' ? (
-        <ConferenceCfpOpening cfpStart={event.cfpStart} cfpEnd={event.cfpEnd} errors={errors} />
+        <ConferenceCfpOpening
+          cfpStart={event.cfpStart}
+          cfpEnd={event.cfpEnd}
+          timezone={event.timezone}
+          errors={errors}
+        />
       ) : (
         <MeetupCfpOpening cfpStart={event.cfpStart} />
       )}

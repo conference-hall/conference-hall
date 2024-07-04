@@ -129,6 +129,7 @@ export default function EventGeneralSettingsRoute() {
               defaultValue={event.contactEmail || ''}
               error={errors?.contactEmail}
             />
+            <input type="hidden" name="timezone" value={event.timezone} />
           </Form>
         </Card.Content>
 

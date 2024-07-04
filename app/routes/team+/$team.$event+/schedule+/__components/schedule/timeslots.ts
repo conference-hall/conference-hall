@@ -15,6 +15,7 @@ import type { TimeSlot } from './types.ts';
 export const generateDailyTimeSlots = (day: Date, intervalMinutes: number): Array<TimeSlot> => {
   const start = startOfDay(day); // 00:00 of the current day
   const end = endOfDay(day); // 23:59 of the current day
+
   const timeSlots: Array<TimeSlot> = [];
 
   let currentStart = start;

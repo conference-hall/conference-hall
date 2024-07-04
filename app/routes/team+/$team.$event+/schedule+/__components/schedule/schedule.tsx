@@ -13,6 +13,8 @@ import { cx } from 'class-variance-authority';
 import { format } from 'date-fns';
 import type { ReactNode } from 'react';
 
+import { getGMTOffset } from '~/libs/datetimes/timezone.ts';
+
 import {
   countIntervalsInTimeSlot,
   formatTime,
@@ -35,6 +37,7 @@ type ScheduleProps = {
   day: Date;
   startTime: Date; // TODO: rename display time
   endTime: Date; // TODO: rename display time
+  timezone: string;
   interval?: number;
   tracks: Array<Track>;
   sessions: Array<Session>;
@@ -49,6 +52,7 @@ export default function Schedule({
   day,
   startTime,
   endTime,
+  timezone,
   interval = SLOT_INTERVAL,
   tracks = [],
   sessions = [],
@@ -82,7 +86,9 @@ export default function Schedule({
           {/* Gutter */}
           <thead>
             <tr className="sticky top-[64px] z-30 divide-x divide-gray-200 shadow">
-              <th scope="col" className="w-6 h-12 text-left text-sm font-semibold bg-white text-gray-900"></th>
+              <th scope="col" className="h-12 text-xs font-normal text-center bg-white text-gray-400">
+                {getGMTOffset(timezone)}
+              </th>
               {tracks.map((track) => (
                 <th scope="col" key={track.id} className="h-12 relative bg-white">
                   <div className="absolute flex items-center justify-center top-0 bottom-0 right-0 left-0 overflow-hidden">
@@ -97,7 +103,7 @@ export default function Schedule({
           <tbody>
             {/* Empty line */}
             <tr className="divide-x divide-gray-200 align-top">
-              <td className="h-6"></td>
+              <td className="w-8"></td>
               {tracks.map((track) => (
                 <td key={track.id} className="h-6 border-b"></td>
               ))}

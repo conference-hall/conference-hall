@@ -21,7 +21,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   invariant(params.day, 'Invalid day');
 
   const eventSchedule = EventSchedule.for(userId, params.team, params.event);
-  const scheduleByDay = await eventSchedule.getSchedulesByDay(params.day);
+  const scheduleByDay = await eventSchedule.getSchedulesByDay(Number(params.day));
 
   if (!scheduleByDay) return redirect(`/team/${params.team}/${params.event}/schedule`);
 
@@ -60,14 +60,15 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 export default function ScheduleRoute() {
   const scheduleByDay = useLoaderData<typeof loader>();
 
-  const sessions = useSessions(scheduleByDay.sessions);
+  const sessions = useSessions(scheduleByDay.sessions, scheduleByDay.timezone);
 
   return (
     <DaySchedule
       name={scheduleByDay.name}
+      timezone={scheduleByDay.timezone}
       currentDay={scheduleByDay.currentDay}
-      previousDay={scheduleByDay.previousDay}
-      nextDay={scheduleByDay.nextDay}
+      previousDayIndex={scheduleByDay.previousDayIndex}
+      nextDayIndex={scheduleByDay.nextDayIndex}
       tracks={scheduleByDay.tracks}
       onAddSession={sessions.add}
       onUpdateSession={sessions.update}

@@ -1,3 +1,5 @@
+import { endOfDay, parse, startOfDay } from 'date-fns';
+import { fromZonedTime, toZonedTime } from 'date-fns-tz';
 import { z } from 'zod';
 
 export const INTERVALS = [5, 10, 15] as const;
@@ -5,9 +7,16 @@ export const INTERVALS = [5, 10, 15] as const;
 export const ScheduleCreateSchema = z
   .object({
     name: z.string().trim().min(1).max(255),
-    start: z.coerce.date(),
-    end: z.coerce.date(),
+    timezone: z.string(),
+    start: z.string(),
+    end: z.string(),
   })
+  .transform(({ start, end, timezone, ...rest }) => ({
+    ...rest,
+    timezone,
+    start: fromZonedTime(startOfDay(parse(start, 'yyyy-MM-dd', toZonedTime(new Date(), timezone))), timezone),
+    end: fromZonedTime(endOfDay(parse(end, 'yyyy-MM-dd', toZonedTime(new Date(), timezone))), timezone),
+  }))
   .refine(
     ({ start, end }) => {
       if (start && !end) return false;
@@ -15,7 +24,7 @@ export const ScheduleCreateSchema = z
       if (start && end && start > end) return false;
       return true;
     },
-    { path: ['startDate'], message: 'Schedule start date must be after the end date.' },
+    { path: ['start'], message: 'Schedule start date must be after the end date.' },
   );
 
 // TODO: rename like sessions

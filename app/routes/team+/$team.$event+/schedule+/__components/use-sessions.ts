@@ -1,5 +1,6 @@
 import { useFetchers, useSubmit } from '@remix-run/react';
 import { formatISO } from 'date-fns';
+import { fromZonedTime, toZonedTime } from 'date-fns-tz';
 import { v4 as uuid } from 'uuid';
 
 import { areTimeSlotsOverlapping, moveTimeSlotStart } from './schedule/timeslots.ts';
@@ -7,14 +8,13 @@ import type { Session, TimeSlot } from './schedule/types.ts';
 
 type SessionData = { id: string; trackId: string; start: string; end: string };
 
-export function useSessions(initialSessions: Array<SessionData>) {
-  const sessions = useOptimisticSessions(initialSessions);
+export function useSessions(initialSessions: Array<SessionData>, timezone: string) {
+  const sessions = useOptimisticSessions(initialSessions, timezone);
 
   const submit = useSubmit();
 
   const add = (trackId: string, timeslot: TimeSlot) => {
     const conflicting = sessions.some((s) => s.trackId === trackId && areTimeSlotsOverlapping(timeslot, s.timeslot));
-    console.log({ conflicting });
     if (conflicting) return;
 
     const id = uuid(); // TODO: let id from DB and use an optimisticId
@@ -23,8 +23,8 @@ export function useSessions(initialSessions: Array<SessionData>) {
         intent: 'add-session',
         id,
         trackId: trackId,
-        start: formatISO(timeslot.start),
-        end: formatISO(timeslot.end),
+        start: formatISO(fromZonedTime(timeslot.start, timezone)),
+        end: formatISO(fromZonedTime(timeslot.end, timezone)),
       },
       { method: 'POST', navigate: false, fetcherKey: `session:${id}` },
     );
@@ -43,8 +43,8 @@ export function useSessions(initialSessions: Array<SessionData>) {
         intent: 'update-session',
         id: session.id,
         trackId: newTrackId,
-        start: formatISO(updatedTimeslot.start),
-        end: formatISO(updatedTimeslot.end),
+        start: formatISO(fromZonedTime(updatedTimeslot.start, timezone)),
+        end: formatISO(fromZonedTime(updatedTimeslot.end, timezone)),
       },
       { method: 'POST', navigate: false, fetcherKey: `session:${session.id}`, unstable_flushSync: true },
     );
@@ -53,7 +53,7 @@ export function useSessions(initialSessions: Array<SessionData>) {
   return { add, update, data: sessions };
 }
 
-function useOptimisticSessions(initialSessions: Array<SessionData>) {
+function useOptimisticSessions(initialSessions: Array<SessionData>, timezone: string) {
   type PendingSession = ReturnType<typeof useFetchers>[number] & {
     formData: FormData;
   };
@@ -64,7 +64,7 @@ function useOptimisticSessions(initialSessions: Array<SessionData>) {
       {
         id,
         trackId,
-        timeslot: { start: new Date(start), end: new Date(end) },
+        timeslot: { start: toZonedTime(start, timezone), end: toZonedTime(end, timezone) },
       },
     ]),
   );

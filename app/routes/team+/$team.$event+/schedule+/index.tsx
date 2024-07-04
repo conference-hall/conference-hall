@@ -1,8 +1,6 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
-import { format, startOfDay } from 'date-fns';
-import { toZonedTime } from 'date-fns-tz';
 import invariant from 'tiny-invariant';
 
 import { EventSchedule } from '~/.server/event-schedule/event-schedule.ts';
@@ -11,6 +9,7 @@ import { UserEvent } from '~/.server/event-settings/user-event.ts';
 import { Button } from '~/design-system/buttons.tsx';
 import { DateRangeInput } from '~/design-system/forms/date-range-input.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
+import { InputTimezone } from '~/design-system/forms/input-timezone.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
@@ -25,13 +24,17 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const schedule = await EventSchedule.for(userId, params.team, params.event).get();
 
   if (schedule) {
-    const day = format(startOfDay(toZonedTime(schedule.start, schedule.timezone)), 'yyyy-MM-dd');
-    return redirect(`/team/${params.team}/${params.event}/schedule/${day}`);
+    return redirect(`/team/${params.team}/${params.event}/schedule/0`);
   }
 
   const event = await UserEvent.for(userId, params.team, params.event).get();
 
-  return json({ name: `${event.name} schedule`, start: event.conferenceStart, end: event.conferenceEnd });
+  return json({
+    name: `${event.name} schedule`,
+    start: event.conferenceStart,
+    end: event.conferenceEnd,
+    timezone: event.timezone,
+  });
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -64,6 +67,7 @@ export default function ScheduleRoute() {
         <Card.Content>
           <Form id="create-schedule-form" method="POST" className="space-y-4 lg:space-y-6">
             <Input name="name" label="Name" defaultValue={schedule.name} required error={errors?.name} />
+            <InputTimezone name="timezone" label="Timezone" defaultValue={schedule.timezone} />
             <DateRangeInput
               start={{ name: 'start', label: 'Start date', value: schedule.start }}
               end={{ name: 'end', label: 'End date', value: schedule.end }}

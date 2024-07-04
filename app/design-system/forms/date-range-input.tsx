@@ -1,4 +1,4 @@
-import { endOfDay, format, formatISO, startOfDay } from 'date-fns';
+import { format } from 'date-fns';
 import type { ChangeEvent } from 'react';
 import { useCallback, useState } from 'react';
 
@@ -42,41 +42,34 @@ export function DateRangeInput({ start, end, required, error, className }: Props
       <div className="grid grid-cols-2 gap-4 sm:gap-6">
         <Input
           type="date"
-          name={`${start.name}-local`}
+          name={start.name}
           label={start.label}
           autoComplete="off"
-          value={toInputFormat(startDate)}
+          value={toDayFormat(startDate)}
           onChange={handleStartDate}
           className="col-span-2 sm:col-span-1"
           required={required}
           suppressHydrationWarning
         />
-        <input type="hidden" name={start.name} value={toISOFormat(startDate)} />
         <Input
           type="date"
-          name={`${end.name}-local`}
+          name={end.name}
           label={end.label}
           autoComplete="off"
-          min={toInputFormat(startDate)}
-          value={toInputFormat(endDate)}
+          min={toDayFormat(startDate)}
+          value={toDayFormat(endDate)}
           onChange={handleEndDate}
           className="col-span-2 sm:col-span-1"
           required={required}
           suppressHydrationWarning
         />
-        <input type="hidden" name={end.name} value={toISOFormat(endDate, true)} />
       </div>
       {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
     </div>
   );
 }
 
-function toInputFormat(date: Date | null) {
+function toDayFormat(date: Date | null) {
   if (!date) return '';
   return format(date, 'yyyy-MM-dd');
-}
-
-function toISOFormat(date: Date | null, end: boolean = false) {
-  if (!date) return '';
-  return formatISO(end ? endOfDay(date) : startOfDay(date));
 }

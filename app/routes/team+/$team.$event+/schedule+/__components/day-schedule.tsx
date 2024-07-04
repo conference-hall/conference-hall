@@ -1,6 +1,7 @@
 import { Cog6ToothIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
 import { endOfDay, startOfDay } from 'date-fns';
+import { toZonedTime } from 'date-fns-tz';
 import { useState } from 'react';
 
 import { ButtonLink } from '~/design-system/buttons.tsx';
@@ -18,9 +19,10 @@ export type DaySetting = { id: string; day: string; startTime: string; endTime: 
 
 type Props = {
   name: string;
+  timezone: string;
   currentDay: string;
-  previousDay: string | null;
-  nextDay: string | null;
+  previousDayIndex: number | null;
+  nextDayIndex: number | null;
   tracks: Array<Track>;
   sessions: Array<Session>;
   onAddSession: (trackId: string, timeslot: TimeSlot) => void;
@@ -29,17 +31,18 @@ type Props = {
 
 export function DaySchedule({
   name,
+  timezone,
   currentDay,
-  previousDay,
-  nextDay,
+  previousDayIndex,
+  nextDayIndex,
   tracks,
   sessions,
   onAddSession,
   onUpdateSession,
 }: Props) {
-  const currentDayDate = new Date(currentDay); // TODO: ok with tz?
-  const startTime = startOfDay(currentDay); // TODO: ok with tz?
-  const endTime = endOfDay(currentDay); // TODO: ok with tz?
+  const currentDayDate = toZonedTime(currentDay, timezone);
+  const startTime = startOfDay(currentDayDate);
+  const endTime = endOfDay(currentDayDate);
 
   const { isFullscreen } = useScheduleFullscreen();
 
@@ -61,12 +64,12 @@ export function DaySchedule({
       <div className={cx({ 'border border-gray-200 rounded-t-lg': !isFullscreen })}>
         <SessionModal session={openSession} tracks={tracks} onClose={onCloseSession} />
 
-        {currentDay ? (
+        {currentDayDate ? (
           <>
             <ScheduleHeader
               currentDay={currentDayDate}
-              previousDayId={previousDay}
-              nextDayId={nextDay}
+              previousDayIndex={previousDayIndex}
+              nextDayIndex={nextDayIndex}
               zoomHandlers={zoomHandlers}
             />
 
@@ -74,6 +77,7 @@ export function DaySchedule({
               day={currentDayDate}
               startTime={startTime}
               endTime={endTime}
+              timezone={timezone}
               tracks={tracks}
               sessions={sessions}
               zoomLevel={zoomHandlers.level}

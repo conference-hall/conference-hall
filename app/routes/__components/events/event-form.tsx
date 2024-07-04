@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 import { Input } from '~/design-system/forms/input.tsx';
 
-import { EventTimezoneInput } from './event-timezone.tsx';
+import { InputTimezone } from '../../../design-system/forms/input-timezone.tsx';
 import { EventVisibilityRadioGroup } from './event-visibility-radio-group.tsx';
 
 type Props = {
@@ -47,7 +47,7 @@ export function EventForm({ initialValues, errors }: Props) {
         error={errors?.slug}
       />
       <EventVisibilityRadioGroup defaultValue={initialValues?.visibility} />
-      <EventTimezoneInput defaultValue={initialValues?.timezone} />
+      <InputTimezone name="timezone" label="Event timezone" defaultValue={initialValues?.timezone} />
     </>
   );
 }

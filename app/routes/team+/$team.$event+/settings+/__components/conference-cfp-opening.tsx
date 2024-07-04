@@ -6,9 +6,14 @@ import { DateRangeInput } from '~/design-system/forms/date-range-input.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 
-type Props = { cfpStart?: string; cfpEnd?: string; errors?: Record<string, string | string[]> | null };
+type Props = {
+  cfpStart?: string;
+  cfpEnd?: string;
+  timezone: string;
+  errors?: Record<string, string | string[]> | null;
+};
 
-export function ConferenceCfpOpening({ cfpStart, cfpEnd, errors }: Props) {
+export function ConferenceCfpOpening({ cfpStart, cfpEnd, timezone, errors }: Props) {
   return (
     <Card as="section">
       <Card.Title>
@@ -27,6 +32,7 @@ export function ConferenceCfpOpening({ cfpStart, cfpEnd, errors }: Props) {
               Specify the period during which the call for papers will be open. The CFP will automatically open and
               close based on these dates and times.
             </Callout>
+            <input type="hidden" name="timezone" value={timezone} />
           </div>
         </Card.Content>
         <Card.Actions>

@@ -309,6 +309,7 @@ model Schedule {
   eventId   String
   event     Event             @relation(fields: [eventId], references: [id], onDelete: Cascade)
   name      String
+  timezone  String
   start     DateTime
   end       DateTime
   createdAt DateTime          @default(now())

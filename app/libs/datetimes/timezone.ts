@@ -43,6 +43,18 @@ export function getTimezonesList() {
     .map(({ id, name }) => ({ id, name }));
 }
 
+// Get GMT offset from a timezone
+export function getGMTOffset(timezone: string) {
+  const date = new Date();
+  const formatter = new Intl.DateTimeFormat('en-US', { timeZone: timezone, timeZoneName: 'short' });
+  const parts = formatter.formatToParts(date);
+
+  // Find the GMT offset part
+  const gmtOffsetPart = parts.find((part) => part.type === 'timeZoneName');
+  if (!gmtOffsetPart) return null;
+  return gmtOffsetPart.value.replace('UTC', 'GMT');
+}
+
 // Function to parse offset string to number
 function parseOffset(offset?: string) {
   if (offset === undefined) return -1000;

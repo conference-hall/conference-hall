@@ -1,5 +1,4 @@
-import { eachDayOfInterval, endOfDay, format, isAfter, isBefore, isEqual, parse, startOfDay } from 'date-fns';
-import { fromZonedTime, toZonedTime } from 'date-fns-tz';
+import { addDays, isAfter, isBefore } from 'date-fns';
 import { db } from 'prisma/db.server.ts';
 
 import { ForbiddenError, ForbiddenOperationError, NotFoundError } from '~/libs/errors.server.ts';
@@ -12,8 +11,6 @@ import type {
   ScheduleSessionUpdateData,
   ScheduleTrackSaveData,
 } from './event-schedule.types.ts';
-
-const TZ = 'Europe/Paris';
 
 export class EventSchedule {
   constructor(
@@ -37,9 +34,9 @@ export class EventSchedule {
     return {
       id: schedule.id,
       name: schedule.name,
+      timezone: schedule.timezone,
       start: schedule.start.toISOString(),
       end: schedule.end.toISOString(),
-      timezone: TZ,
       tracks: [...schedule.tracks]
         .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
         .map((t) => ({ id: t.id, name: t.name })),
@@ -54,6 +51,7 @@ export class EventSchedule {
     await db.schedule.create({
       data: {
         name: data.name,
+        timezone: data.timezone,
         start: data.start,
         end: data.end,
         tracks: { create: { name: 'Main stage' } },
@@ -63,7 +61,8 @@ export class EventSchedule {
   }
 
   // TODO: Add tests
-  async getSchedulesByDay(dayId: string) {
+  // TODO Zod check dayIndex is number
+  async getSchedulesByDay(dayIndex: number) {
     const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
     if (event.type === 'MEETUP') throw new ForbiddenOperationError();
 
@@ -73,36 +72,23 @@ export class EventSchedule {
     });
     if (!schedule) return null;
 
-    const currentDayUtc = fromZonedTime(startOfDay(parse(dayId, 'yyyy-MM-dd', toZonedTime(new Date(), TZ))), TZ); // TODO: should be timezoned
+    const currentDay = addDays(schedule.start, dayIndex);
 
-    if (isBefore(currentDayUtc, schedule.start) || isAfter(currentDayUtc, schedule.end)) {
+    if (isBefore(currentDay, schedule.start) || isAfter(currentDay, schedule.end)) {
       throw new NotFoundError('Day not in schedule');
     }
 
-    const daysTz = eachDayOfInterval({
-      start: toZonedTime(schedule.start, TZ),
-      end: toZonedTime(schedule.end, TZ),
-    }).map((d) => startOfDay(d)); // TODO: should be timezoned
+    const sessions = await db.scheduleSession.findMany({ where: { scheduleId: schedule.id } });
 
-    const currentDayTz = toZonedTime(currentDayUtc, TZ);
-    const currentDayIndex = daysTz.findIndex((d) => isEqual(d, currentDayTz));
-
-    const previousDayTz = daysTz[currentDayIndex - 1];
-    const nextDayTz = daysTz[currentDayIndex + 1];
-
-    const sessions = await db.scheduleSession.findMany({
-      where: {
-        scheduleId: schedule.id,
-        start: { gte: fromZonedTime(startOfDay(currentDayTz), TZ) },
-        end: { lte: fromZonedTime(endOfDay(currentDayTz), TZ) },
-      },
-    });
+    const hasPreviousDay = !isBefore(addDays(currentDay, dayIndex - 1), schedule.start);
+    const hasNextDay = !isAfter(addDays(currentDay, dayIndex + 1), schedule.end);
 
     return {
       name: schedule.name,
-      currentDay: format(currentDayTz, 'yyyy-MM-dd'),
-      previousDay: previousDayTz ? format(previousDayTz, 'yyyy-MM-dd') : null,
-      nextDay: nextDayTz ? format(nextDayTz, 'yyyy-MM-dd') : null,
+      timezone: schedule.timezone,
+      currentDay: currentDay.toISOString(),
+      previousDayIndex: hasPreviousDay ? dayIndex - 1 : null,
+      nextDayIndex: hasNextDay ? dayIndex + 1 : null,
       tracks: [...schedule.tracks]
         .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
         .map((t) => ({ id: t.id, name: t.name })),

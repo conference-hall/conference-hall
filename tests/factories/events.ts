@@ -62,13 +62,19 @@ const TRAITS = {
   },
   withSchedule: {
     schedules: {
-      create: { name: randText(), start: '2024-10-05T00:00:00.000Z', end: '2024-10-06T00:00:00.000Z' },
+      create: {
+        name: randText(),
+        timezone: 'Europe/Paris',
+        start: '2024-10-05T00:00:00.000Z',
+        end: '2024-10-06T00:00:00.000Z',
+      },
     },
   },
   withFullSchedule: {
     schedules: {
       create: {
         name: randText(),
+        timezone: 'Europe/Paris',
         start: '2024-10-05T00:00:00.000Z',
         end: '2024-10-06T00:00:00.000Z',
         tracks: { createMany: { data: [{ name: randText() }, { name: randText() }] } },

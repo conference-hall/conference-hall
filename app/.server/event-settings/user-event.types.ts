@@ -1,3 +1,5 @@
+import { endOfDay, parse, startOfDay } from 'date-fns';
+import { fromZonedTime, toZonedTime } from 'date-fns-tz';
 import { z } from 'zod';
 
 import { slugValidator } from '~/libs/validators/slug.ts';
@@ -11,13 +13,24 @@ export const EventGeneralSettingsSchema = z.object({
 
 export const EventDetailsSettingsSchema = z
   .object({
+    timezone: z.string(),
     address: z.string().trim().nullable().default(null),
     description: z.string().trim().min(1).nullable().default(null),
-    conferenceStart: z.coerce.date().nullable().default(null),
-    conferenceEnd: z.coerce.date().nullable().default(null),
+    conferenceStart: z.string().nullable().default(null),
+    conferenceEnd: z.string().nullable().default(null),
     websiteUrl: z.string().url().trim().nullable().default(null),
     contactEmail: z.string().email().trim().nullable().default(null),
   })
+  .transform(({ conferenceStart, conferenceEnd, timezone, ...rest }) => ({
+    ...rest,
+    timezone,
+    conferenceStart: conferenceStart
+      ? fromZonedTime(startOfDay(parse(conferenceStart, 'yyyy-MM-dd', toZonedTime(new Date(), timezone))), timezone)
+      : null,
+    conferenceEnd: conferenceEnd
+      ? fromZonedTime(endOfDay(parse(conferenceEnd, 'yyyy-MM-dd', toZonedTime(new Date(), timezone))), timezone)
+      : null,
+  }))
   .refine(
     ({ conferenceStart, conferenceEnd }) => {
       if (conferenceStart && !conferenceEnd) return false;
@@ -39,9 +52,20 @@ export const CfpMeetupOpeningSchema = z.object({
 
 export const CfpConferenceOpeningSchema = z
   .object({
-    cfpStart: z.coerce.date().nullable().default(null),
-    cfpEnd: z.coerce.date().nullable().default(null),
+    timezone: z.string(),
+    cfpStart: z.string().nullable().default(null),
+    cfpEnd: z.string().nullable().default(null),
   })
+  .transform(({ cfpStart, cfpEnd, timezone, ...rest }) => ({
+    ...rest,
+    timezone,
+    cfpStart: cfpStart
+      ? fromZonedTime(startOfDay(parse(cfpStart, 'yyyy-MM-dd', toZonedTime(new Date(), timezone))), timezone)
+      : null,
+    cfpEnd: cfpEnd
+      ? fromZonedTime(endOfDay(parse(cfpEnd, 'yyyy-MM-dd', toZonedTime(new Date(), timezone))), timezone)
+      : null,
+  }))
   .refine(
     ({ cfpStart, cfpEnd }) => {
       if (cfpStart && !cfpEnd) return false;
