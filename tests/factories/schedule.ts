@@ -19,8 +19,8 @@ export const scheduleFactory = async (options: FactoryOptions = {}) => {
   const defaultAttributes: Prisma.ScheduleCreateInput = {
     name: randText(),
     event: { connect: { id: options.event?.id } },
-    startDate: '2024-10-05T00:00:00.000Z',
-    endDate: '2024-10-06T00:00:00.000Z',
+    start: '2024-10-05T00:00:00.000Z',
+    end: '2024-10-06T00:00:00.000Z',
   };
 
   const data = { ...defaultAttributes, ...attributes };

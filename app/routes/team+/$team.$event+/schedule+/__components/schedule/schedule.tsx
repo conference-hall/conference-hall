@@ -10,6 +10,7 @@ import {
   useSensors,
 } from '@dnd-kit/core';
 import { cx } from 'class-variance-authority';
+import { format } from 'date-fns';
 import type { ReactNode } from 'react';
 
 import {
@@ -32,8 +33,8 @@ const DEFAULT_ZOOM_LEVEL = 1;
 
 type ScheduleProps = {
   day: Date;
-  startTime: string; // TODO: rename display time
-  endTime: string; // TODO: rename display time
+  startTime: Date; // TODO: rename display time
+  endTime: Date; // TODO: rename display time
   interval?: number;
   tracks: Array<Track>;
   sessions: Array<Session>;
@@ -57,7 +58,7 @@ export default function Schedule({
   onSelectSession,
   zoomLevel = DEFAULT_ZOOM_LEVEL,
 }: ScheduleProps) {
-  const hours = getDailyTimeSlots(day, startTime, endTime, HOUR_INTERVAL);
+  const hours = getDailyTimeSlots(day, format(startTime, 'HH:mm'), format(endTime, 'HH:mm'), HOUR_INTERVAL); // TODO: use Dates in util
 
   const selector = useTimeslotSelector(onAddSession);
 

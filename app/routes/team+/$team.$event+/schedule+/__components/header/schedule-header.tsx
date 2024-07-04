@@ -20,8 +20,8 @@ import type { ZoomHandlers } from './use-zoom-handlers.tsx';
 
 type Props = {
   currentDay: Date;
-  previousDayId?: string;
-  nextDayId?: string;
+  previousDayId: string | null;
+  nextDayId: string | null;
   zoomHandlers: ZoomHandlers;
 };
 

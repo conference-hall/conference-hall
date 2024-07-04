@@ -1,6 +1,8 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
+import { format, startOfDay } from 'date-fns';
+import { toZonedTime } from 'date-fns-tz';
 import invariant from 'tiny-invariant';
 
 import { EventSchedule } from '~/.server/event-schedule/event-schedule.ts';
@@ -21,15 +23,15 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   invariant(params.event, 'Invalid event slug');
 
   const schedule = await EventSchedule.for(userId, params.team, params.event).get();
-  const firstScheduleDay = schedule?.days.at(0);
 
-  if (firstScheduleDay) {
-    return redirect(`/team/${params.team}/${params.event}/schedule/${firstScheduleDay.id}`);
+  if (schedule) {
+    const day = format(startOfDay(toZonedTime(schedule.start, schedule.timezone)), 'yyyy-MM-dd');
+    return redirect(`/team/${params.team}/${params.event}/schedule/${day}`);
   }
 
   const event = await UserEvent.for(userId, params.team, params.event).get();
 
-  return json({ name: `${event.name} schedule`, startDate: event.conferenceStart, endDate: event.conferenceEnd });
+  return json({ name: `${event.name} schedule`, start: event.conferenceStart, end: event.conferenceEnd });
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -63,8 +65,8 @@ export default function ScheduleRoute() {
           <Form id="create-schedule-form" method="POST" className="space-y-4 lg:space-y-6">
             <Input name="name" label="Name" defaultValue={schedule.name} required error={errors?.name} />
             <DateRangeInput
-              start={{ name: 'startDate', label: 'Start date', value: schedule.startDate }}
-              end={{ name: 'endDate', label: 'End date', value: schedule.endDate }}
+              start={{ name: 'start', label: 'Start date', value: schedule.start }}
+              end={{ name: 'end', label: 'End date', value: schedule.end }}
               error={errors?.start}
             />
           </Form>

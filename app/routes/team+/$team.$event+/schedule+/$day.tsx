@@ -1,6 +1,6 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
-import { useLoaderData, useParams } from '@remix-run/react';
+import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { EventSchedule } from '~/.server/event-schedule/event-schedule.ts';
@@ -21,13 +21,11 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   invariant(params.day, 'Invalid day');
 
   const eventSchedule = EventSchedule.for(userId, params.team, params.event);
+  const scheduleByDay = await eventSchedule.getSchedulesByDay(params.day);
 
-  const schedule = await eventSchedule.get();
-  if (!schedule) return redirect(`/team/${params.team}/${params.event}/schedule`);
+  if (!scheduleByDay) return redirect(`/team/${params.team}/${params.event}/schedule`);
 
-  const sessions = await eventSchedule.getSessionsByDay(schedule.id, params.day);
-
-  return json({ ...schedule, sessions });
+  return json(scheduleByDay);
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -46,7 +44,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     case 'add-session': {
       const result = parseWithZod(form, ScheduleSessionCreateSchema);
       if (!result.success) return json(result.error);
-      await eventSchedule.addSession(params.day, result.value);
+      await eventSchedule.addSession(result.value);
       break;
     }
     case 'update-session': {
@@ -60,19 +58,17 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 };
 
 export default function ScheduleRoute() {
-  // TODO: move currentDay, nextDay and previousDay into the loader data
-  const { day } = useParams();
+  const scheduleByDay = useLoaderData<typeof loader>();
 
-  const schedule = useLoaderData<typeof loader>();
-
-  const sessions = useSessions(schedule.sessions);
+  const sessions = useSessions(scheduleByDay.sessions);
 
   return (
     <DaySchedule
-      currentDayId={day!}
-      name={schedule.name}
-      tracks={schedule.tracks}
-      days={schedule.days}
+      name={scheduleByDay.name}
+      currentDay={scheduleByDay.currentDay}
+      previousDay={scheduleByDay.previousDay}
+      nextDay={scheduleByDay.nextDay}
+      tracks={scheduleByDay.tracks}
       onAddSession={sessions.add}
       onUpdateSession={sessions.update}
       sessions={sessions.data}
