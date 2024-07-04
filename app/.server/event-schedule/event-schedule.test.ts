@@ -31,7 +31,11 @@ describe('EventSchedule', () => {
 
       const settings = await eventSchedule.get();
       expect(settings).toEqual({
+        id: schedule.id,
         name: schedule.name,
+        start: schedule.start.toISOString(),
+        end: schedule.end.toISOString(),
+        timezone: 'Europe/Paris',
         tracks: [{ id: track.id, name: track.name }],
       });
     });
