@@ -99,6 +99,7 @@ export default function EventGeneralSettingsRoute() {
               <DateRangeInput
                 start={{ name: 'conferenceStart', label: 'Start date', value: event?.conferenceStart }}
                 end={{ name: 'conferenceEnd', label: 'End date', value: event?.conferenceEnd }}
+                timezone={event?.timezone}
                 error={errors?.conferenceStart}
               />
             )}

@@ -71,6 +71,7 @@ export default function ScheduleRoute() {
             <DateRangeInput
               start={{ name: 'start', label: 'Start date', value: schedule.start }}
               end={{ name: 'end', label: 'End date', value: schedule.end }}
+              timezone={schedule.timezone}
               error={errors?.start}
             />
           </Form>

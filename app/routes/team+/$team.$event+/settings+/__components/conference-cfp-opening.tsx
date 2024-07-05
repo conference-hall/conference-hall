@@ -26,6 +26,7 @@ export function ConferenceCfpOpening({ cfpStart, cfpEnd, timezone, errors }: Pro
             <DateRangeInput
               start={{ name: 'cfpStart', label: 'Opening date', value: cfpStart }}
               end={{ name: 'cfpEnd', label: 'Closing date', value: cfpEnd }}
+              timezone={timezone}
               error={errors?.cfpStart}
             />
             <Callout title="Call for Papers period">

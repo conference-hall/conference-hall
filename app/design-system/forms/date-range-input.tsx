@@ -1,4 +1,5 @@
 import { format } from 'date-fns';
+import { toZonedTime } from 'date-fns-tz';
 import type { ChangeEvent } from 'react';
 import { useCallback, useState } from 'react';
 
@@ -8,14 +9,15 @@ import { Input } from './input.tsx';
 type Props = {
   start: { value?: string | null } & InputProps;
   end: { value?: string | null } & InputProps;
+  timezone: string;
   required?: boolean;
   error?: string | string[];
   className?: string;
 };
 
-export function DateRangeInput({ start, end, required, error, className }: Props) {
-  const [startDate, setStartDate] = useState<Date | null>(start.value ? new Date(start.value) : null);
-  const [endDate, setEndDate] = useState<Date | null>(end.value ? new Date(end.value) : null);
+export function DateRangeInput({ start, end, timezone, required, error, className }: Props) {
+  const [startDate, setStartDate] = useState<Date | null>(start.value ? toZonedTime(start.value, timezone) : null);
+  const [endDate, setEndDate] = useState<Date | null>(end.value ? toZonedTime(end.value, timezone) : null);
 
   const handleStartDate = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {

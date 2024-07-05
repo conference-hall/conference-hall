@@ -81,12 +81,13 @@ function useOptimisticSessions(initialSessions: Array<SessionData>, timezone: st
       id: String(fetcher.formData?.get('id')),
       trackId: String(fetcher.formData?.get('trackId')),
       timeslot: {
-        start: new Date(String(fetcher.formData?.get('startTime'))),
-        end: new Date(String(fetcher.formData?.get('endTime'))),
+        start: toZonedTime(String(fetcher.formData?.get('start')), timezone),
+        end: toZonedTime(String(fetcher.formData?.get('end')), timezone),
       },
     }));
 
   for (let session of pendingSessions) {
+    console.log(session.id, session.timeslot.start, session.timeslot.end);
     sessionsById.set(session.id, session);
   }
 
