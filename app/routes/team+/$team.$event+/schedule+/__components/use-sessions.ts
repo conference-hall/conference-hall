@@ -26,7 +26,13 @@ export function useSessions(initialSessions: Array<SessionData>, timezone: strin
         start: formatISO(fromZonedTime(timeslot.start, timezone)),
         end: formatISO(fromZonedTime(timeslot.end, timezone)),
       },
-      { method: 'POST', navigate: false, fetcherKey: `session:${id}` },
+      {
+        method: 'POST',
+        navigate: false,
+        fetcherKey: `session:${id}`,
+        unstable_flushSync: true,
+        preventScrollReset: true,
+      },
     );
   };
 
@@ -46,7 +52,13 @@ export function useSessions(initialSessions: Array<SessionData>, timezone: strin
         start: formatISO(fromZonedTime(updatedTimeslot.start, timezone)),
         end: formatISO(fromZonedTime(updatedTimeslot.end, timezone)),
       },
-      { method: 'POST', navigate: false, fetcherKey: `session:${session.id}`, unstable_flushSync: true },
+      {
+        method: 'POST',
+        navigate: false,
+        fetcherKey: `session:${session.id}`,
+        unstable_flushSync: true,
+        preventScrollReset: true,
+      },
     );
   };
 
@@ -87,7 +99,6 @@ function useOptimisticSessions(initialSessions: Array<SessionData>, timezone: st
     }));
 
   for (let session of pendingSessions) {
-    console.log(session.id, session.timeslot.start, session.timeslot.end);
     sessionsById.set(session.id, session);
   }
 

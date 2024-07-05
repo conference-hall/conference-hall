@@ -339,7 +339,7 @@ model ScheduleSession {
   scheduleId String
   schedule   Schedule      @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
   trackId    String
-  track      ScheduleTrack @relation(fields: [trackId], references: [id])
+  track      ScheduleTrack @relation(fields: [trackId], references: [id], onDelete: Cascade)
   createdAt  DateTime      @default(now())
   updatedAt  DateTime      @updatedAt
 

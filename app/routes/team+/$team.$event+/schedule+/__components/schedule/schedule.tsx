@@ -173,10 +173,7 @@ function Timeslot({
 }: TimeslotProps) {
   const id = `${trackId}-${formatTime(slot.start)}`;
 
-  const { isOver, setNodeRef } = useDroppable({
-    id,
-    data: { type: 'timeslot', trackId, timeslot: slot },
-  });
+  const { setNodeRef } = useDroppable({ id, data: { type: 'timeslot', trackId, timeslot: slot } });
 
   // current session on timeslot start
   const session = sessions.find((session) => session.trackId === trackId && haveSameStartDate(slot, session.timeslot));
@@ -198,7 +195,6 @@ function Timeslot({
       className={cx('relative', {
         'z-10': selectable,
         'hover:bg-gray-50': selectable && !isSelected,
-        'bg-blue-50': isOver,
       })}
     >
       {session ? (
@@ -258,7 +254,7 @@ function SessionWrapper({ session, renderSession, onClick, interval, zoomLevel }
 
   // renderSession(session, isDragging, height)
   return (
-    <button
+    <div
       ref={setNodeRef}
       className="absolute z-20 overflow-hidden text-left"
       onClick={() => (onClick ? onClick(session) : undefined)}
@@ -275,7 +271,7 @@ function SessionWrapper({ session, renderSession, onClick, interval, zoomLevel }
       <div ref={setDropRef} style={{ height: `${height}px` }}>
         {renderSession(session)}
       </div>
-    </button>
+    </div>
   );
 }
 
