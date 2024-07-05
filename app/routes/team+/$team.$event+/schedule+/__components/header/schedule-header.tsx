@@ -4,6 +4,7 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   ClockIcon,
+  Cog6ToothIcon,
   MagnifyingGlassMinusIcon,
   MagnifyingGlassPlusIcon,
 } from '@heroicons/react/24/outline';
@@ -15,17 +16,29 @@ import { Button } from '~/design-system/buttons.tsx';
 import { IconButton, IconLink } from '~/design-system/icon-buttons.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 
+import { formatTime } from '../schedule/timeslots.ts';
 import { useScheduleFullscreen } from './use-schedule-fullscreen.tsx';
 import type { ZoomHandlers } from './use-zoom-handlers.tsx';
 
 type Props = {
   currentDay: Date;
+  startTime: Date;
+  endTime: Date;
   previousDayIndex: number | null;
   nextDayIndex: number | null;
   zoomHandlers: ZoomHandlers;
+  onChangeDisplayTime: (start: number, end: number) => void;
 };
 
-export function ScheduleHeader({ currentDay, previousDayIndex, nextDayIndex, zoomHandlers }: Props) {
+export function ScheduleHeader({
+  currentDay,
+  startTime,
+  endTime,
+  previousDayIndex,
+  nextDayIndex,
+  zoomHandlers,
+  onChangeDisplayTime,
+}: Props) {
   const [searchParams] = useSearchParams();
   const scheduleFullscreen = useScheduleFullscreen();
 
@@ -64,8 +77,8 @@ export function ScheduleHeader({ currentDay, previousDayIndex, nextDayIndex, zoo
 
       <div className="flex items-center gap-4">
         <div className="mr-1 pr-6 border-r border-gray-300">
-          <Button onClick={() => {}} variant="secondary" iconLeft={ClockIcon}>
-            {`09:00 to 18:00`}
+          <Button onClick={() => onChangeDisplayTime(9, 18)} variant="secondary" iconLeft={ClockIcon}>
+            {`${formatTime(startTime)} to ${formatTime(endTime)}`}
           </Button>
         </div>
         <IconButton
@@ -88,6 +101,7 @@ export function ScheduleHeader({ currentDay, previousDayIndex, nextDayIndex, zoo
           onClick={scheduleFullscreen.toggle}
           variant="secondary"
         />
+        <IconLink icon={Cog6ToothIcon} label="Settings" to="../settings" relative="path" variant="secondary" />
       </div>
     </header>
   );
