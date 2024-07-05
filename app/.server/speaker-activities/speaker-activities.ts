@@ -39,7 +39,7 @@ export class SpeakerActivities {
           submissions: event.proposals.map((proposal) => ({
             id: proposal.id,
             title: proposal.title,
-            updatedAt: proposal.updatedAt.toUTCString(),
+            updatedAt: proposal.updatedAt.toISOString(),
             status: proposal.getStatusForSpeaker(event.isCfpOpen),
             speakers: proposal.speakers.map((speaker) => ({
               id: speaker.id,

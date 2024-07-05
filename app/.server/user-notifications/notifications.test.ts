@@ -64,7 +64,7 @@ describe('Notifications', () => {
             slug: event.slug,
             name: event.name,
           },
-          date: proposal.updatedAt.toUTCString(),
+          date: proposal.updatedAt.toISOString(),
         },
       ]);
     });

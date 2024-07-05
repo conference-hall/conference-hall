@@ -35,8 +35,8 @@ export class TeamEvents {
       name: event.name,
       type: event.type,
       logo: event.logo,
-      cfpStart: event.cfpStart?.toUTCString(),
-      cfpEnd: event.cfpEnd?.toUTCString(),
+      cfpStart: event.cfpStart?.toISOString(),
+      cfpEnd: event.cfpEnd?.toISOString(),
       cfpState: event.cfpState,
     }));
   }

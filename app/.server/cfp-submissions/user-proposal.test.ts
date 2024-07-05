@@ -31,7 +31,7 @@ describe('UserProposal', () => {
         abstract: proposal.abstract,
         references: proposal.references,
         level: proposal.level,
-        createdAt: proposal.createdAt.toUTCString(),
+        createdAt: proposal.createdAt.toISOString(),
         languages: proposal.languages,
         invitationLink: `http://localhost:3001/invite/proposal/${proposal.invitationCode}`,
         status: SpeakerProposalStatus.Submitted,

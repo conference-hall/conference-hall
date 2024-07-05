@@ -31,7 +31,7 @@ describe('SpeakerTalk', () => {
         languages: talk.languages,
         references: talk.references,
         archived: talk.archived,
-        createdAt: talk.createdAt.toUTCString(),
+        createdAt: talk.createdAt.toISOString(),
         invitationLink: `${appUrl()}/invite/talk/${talk.invitationCode}`,
         isOwner: true,
         speakers: [
@@ -94,7 +94,7 @@ describe('SpeakerTalk', () => {
           slug: proposal.event.slug,
           logo: proposal.event.logo,
           proposalStatus: SpeakerProposalStatus.DeliberationPending,
-          createdAt: proposal.createdAt.toUTCString(),
+          createdAt: proposal.createdAt.toISOString(),
         },
       ]);
     });

@@ -38,7 +38,7 @@ export class UserProposal {
       level: proposal.level,
       references: proposal.references,
       status: proposal.getStatusForSpeaker(proposal.event.isCfpOpen),
-      createdAt: proposal.createdAt.toUTCString(),
+      createdAt: proposal.createdAt.toISOString(),
       languages: proposal.languages as string[],
       formats: proposal.formats.map(({ id, name }) => ({ id, name })),
       categories: proposal.categories.map(({ id, name }) => ({ id, name })),

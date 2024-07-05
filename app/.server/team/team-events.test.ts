@@ -32,8 +32,8 @@ describe('TeamEvents', () => {
           slug: event1.slug,
           type: event1.type,
           logo: event1.logo,
-          cfpStart: event1.cfpStart?.toUTCString(),
-          cfpEnd: event1.cfpEnd?.toUTCString(),
+          cfpStart: event1.cfpStart?.toISOString(),
+          cfpEnd: event1.cfpEnd?.toISOString(),
           cfpState: 'CLOSED',
         },
         {
@@ -41,8 +41,8 @@ describe('TeamEvents', () => {
           slug: event2.slug,
           type: event2.type,
           logo: event2.logo,
-          cfpStart: event2.cfpStart?.toUTCString(),
-          cfpEnd: event2.cfpEnd?.toUTCString(),
+          cfpStart: event2.cfpStart?.toISOString(),
+          cfpEnd: event2.cfpEnd?.toISOString(),
           cfpState: 'CLOSED',
         },
       ]);
@@ -61,8 +61,8 @@ describe('TeamEvents', () => {
           slug: event.slug,
           type: event.type,
           logo: event.logo,
-          cfpStart: event.cfpStart?.toUTCString(),
-          cfpEnd: event.cfpEnd?.toUTCString(),
+          cfpStart: event.cfpStart?.toISOString(),
+          cfpEnd: event.cfpEnd?.toISOString(),
           cfpState: 'CLOSED',
         },
       ]);
