@@ -46,6 +46,7 @@ export function ScheduleHeader({ currentDay, previousDayIndex, nextDayIndex, zoo
           relative="path"
           disabled={previousDayIndex === null}
           variant="secondary"
+          preventScrollReset
         />
         <H2 truncate>
           {currentDay ? <time dateTime={format(currentDay, 'yyyy-MM-dd')}>{format(currentDay, 'PPPP')}</time> : null}
@@ -57,6 +58,7 @@ export function ScheduleHeader({ currentDay, previousDayIndex, nextDayIndex, zoo
           relative="path"
           disabled={nextDayIndex === null}
           variant="secondary"
+          preventScrollReset
         />
       </div>
 

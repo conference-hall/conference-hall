@@ -13,7 +13,7 @@ export function useScheduleFullscreen() {
   const toggle = () => {
     if (!scheduleRoute) return;
     searchParams.set('fullscreen', String(!isFullscreen));
-    navigate({ pathname: location.pathname, search: searchParams.toString() });
+    navigate({ pathname: location.pathname, search: searchParams.toString() }, { preventScrollReset: true });
   };
 
   return { isFullscreen, toggle };

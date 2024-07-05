@@ -83,12 +83,14 @@ export default function Schedule({
     <DndContext onDragEnd={handleDragEnd} sensors={sensors} collisionDetection={collisionDetection}>
       <div className={cx('w-full bg-white', { 'select-none': selector.isSelecting })}>
         <table className="min-w-full border-separate border-spacing-0">
-          {/* Gutter */}
+          {/* Header */}
           <thead>
             <tr className="sticky top-[64px] z-30 divide-x divide-gray-200 shadow">
+              {/* Gutter with timezone */}
               <th scope="col" className="h-12 text-xs font-normal text-center bg-white text-gray-400">
                 {getGMTOffset(timezone)}
               </th>
+              {/* Tracks header */}
               {tracks.map((track) => (
                 <th scope="col" key={track.id} className="h-12 relative bg-white">
                   <div className="absolute flex items-center justify-center top-0 bottom-0 right-0 left-0 overflow-hidden">
@@ -109,7 +111,7 @@ export default function Schedule({
               ))}
             </tr>
 
-            {/* Hours */}
+            {/* Rows by hours */}
             {hours.map((hour, rowIndex) => {
               const startTime = formatTime(hour.start);
               const endTime = formatTime(hour.end);
@@ -123,12 +125,12 @@ export default function Schedule({
                   {/* Rows by track */}
                   {tracks.map((track) => (
                     <td key={track.id} className={cx('p-0', { 'border-b': rowIndex !== hours.length - 1 })}>
-                      {hourSlots.map((slot) => {
+                      {hourSlots.map((timeslot) => {
                         return (
                           <Timeslot
-                            key={formatTime(slot.start)}
+                            key={formatTime(timeslot.start)}
                             trackId={track.id}
-                            slot={slot}
+                            timeslot={timeslot}
                             sessions={sessions}
                             selector={selector}
                             interval={interval}
@@ -152,7 +154,7 @@ export default function Schedule({
 
 type TimeslotProps = {
   trackId: string;
-  slot: TimeSlot;
+  timeslot: TimeSlot;
   sessions: Array<Session>;
   selector: TimeSlotSelector;
   interval: number;
@@ -163,7 +165,7 @@ type TimeslotProps = {
 
 function Timeslot({
   trackId,
-  slot,
+  timeslot,
   sessions,
   selector,
   interval,
@@ -171,25 +173,27 @@ function Timeslot({
   onSelectSession,
   renderSession,
 }: TimeslotProps) {
-  const id = `${trackId}-${formatTime(slot.start)}`;
+  const id = `${trackId}-${formatTime(timeslot.start)}`;
 
-  const { setNodeRef } = useDroppable({ id, data: { type: 'timeslot', trackId, timeslot: slot } });
+  const { setNodeRef } = useDroppable({ id, data: { type: 'timeslot', trackId, timeslot } });
 
   // current session on timeslot start
-  const session = sessions.find((session) => session.trackId === trackId && haveSameStartDate(slot, session.timeslot));
+  const session = sessions.find(
+    (session) => session.trackId === trackId && haveSameStartDate(timeslot, session.timeslot),
+  );
 
   // selection attributes
-  const isSelected = selector.isSelectedSlot(trackId, slot);
+  const isSelected = selector.isSelectedSlot(trackId, timeslot);
   const selectedSlot = selector.getSelectedSlot(trackId);
   const selectable = !sessions.some(
-    (session) => session.trackId === trackId && isTimeSlotIncluded(slot, session.timeslot),
+    (session) => session.trackId === trackId && isTimeSlotIncluded(timeslot, session.timeslot),
   );
 
   return (
     <div
       ref={setNodeRef}
-      onMouseDown={selectable ? selector.onSelectStart(trackId, slot) : undefined}
-      onMouseEnter={selectable ? selector.onSelectHover(trackId, slot) : undefined}
+      onMouseDown={selectable ? selector.onSelectStart(trackId, timeslot) : undefined}
+      onMouseEnter={selectable ? selector.onSelectHover(trackId, timeslot) : undefined}
       onMouseUp={selector.onSelect}
       style={{ height: `${getTimeslotHeight(zoomLevel)}px` }}
       className={cx('relative', {
@@ -206,7 +210,7 @@ function Timeslot({
           interval={interval}
           zoomLevel={zoomLevel}
         />
-      ) : selectedSlot && haveSameStartDate(slot, selectedSlot) ? (
+      ) : selectedSlot && haveSameStartDate(timeslot, selectedSlot) ? (
         // Display pre-rendered session on selection
         <SessionWrapper
           session={{ id: 'selection', trackId, timeslot: selectedSlot }}
