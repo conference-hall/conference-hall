@@ -1,10 +1,22 @@
+/*
+  Warnings:
+
+  - Made the column `timezone` on table `events` required. This step will fail if there are existing NULL values in that column.
+
+*/
+-- AlterTable
+ALTER TABLE "events" ALTER COLUMN "timezone" SET NOT NULL;
+
 -- CreateTable
 CREATE TABLE "schedules" (
     "id" TEXT NOT NULL,
     "eventId" TEXT NOT NULL,
     "name" TEXT NOT NULL,
+    "timezone" TEXT NOT NULL,
     "start" TIMESTAMP(3) NOT NULL,
     "end" TIMESTAMP(3) NOT NULL,
+    "displayStartHour" INTEGER NOT NULL,
+    "displayEndHour" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -45,4 +57,4 @@ ALTER TABLE "schedule_tracks" ADD CONSTRAINT "schedule_tracks_scheduleId_fkey" F
 ALTER TABLE "schedule_sessions" ADD CONSTRAINT "schedule_sessions_scheduleId_fkey" FOREIGN KEY ("scheduleId") REFERENCES "schedules"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "schedule_sessions" ADD CONSTRAINT "schedule_sessions_trackId_fkey" FOREIGN KEY ("trackId") REFERENCES "schedule_tracks"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "schedule_sessions" ADD CONSTRAINT "schedule_sessions_trackId_fkey" FOREIGN KEY ("trackId") REFERENCES "schedule_tracks"("id") ON DELETE CASCADE ON UPDATE CASCADE;
