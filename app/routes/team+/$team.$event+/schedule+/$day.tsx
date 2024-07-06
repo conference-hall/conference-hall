@@ -65,7 +65,6 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     }
     case 'update-display-times': {
       const result = parseWithZod(form, ScheduleDisplayTimesUpdateSchema);
-      console.log(result);
       if (!result.success) return json(result.error);
       await eventSchedule.edit(result.value);
       break;
@@ -88,6 +87,7 @@ export default function ScheduleRoute() {
 
   const { isFullscreen } = useScheduleFullscreen();
   const zoomHandlers = useZoomHandlers();
+
   const [openSession, setOpenSession] = useState<Session | null>(null);
   const onCloseSession = () => setOpenSession(null);
 

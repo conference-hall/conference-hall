@@ -3,7 +3,6 @@ import {
   ArrowsPointingOutIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
-  ClockIcon,
   Cog6ToothIcon,
   MagnifyingGlassMinusIcon,
   MagnifyingGlassPlusIcon,
@@ -12,11 +11,10 @@ import { useSearchParams } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
 import { format } from 'date-fns';
 
-import { Button } from '~/design-system/buttons.tsx';
 import { IconButton, IconLink } from '~/design-system/icon-buttons.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 
-import { formatTime } from '../schedule/timeslots.ts';
+import { DisplayTimesMenu } from './display-times-menu.tsx';
 import { useScheduleFullscreen } from './use-schedule-fullscreen.tsx';
 import type { ZoomHandlers } from './use-zoom-handlers.tsx';
 
@@ -77,9 +75,7 @@ export function ScheduleHeader({
 
       <div className="flex items-center gap-4">
         <div className="mr-1 pr-6 border-r border-gray-300">
-          <Button onClick={() => onChangeDisplayTime(17, 13)} variant="secondary" iconLeft={ClockIcon}>
-            {`${formatTime(startTime)} to ${formatTime(endTime)}`}
-          </Button>
+          <DisplayTimesMenu startTime={startTime} endTime={endTime} onChangeDisplayTime={onChangeDisplayTime} />
         </div>
         <IconButton
           icon={MagnifyingGlassPlusIcon}
