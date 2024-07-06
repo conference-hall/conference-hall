@@ -77,7 +77,7 @@ export function ScheduleHeader({
 
       <div className="flex items-center gap-4">
         <div className="mr-1 pr-6 border-r border-gray-300">
-          <Button onClick={() => onChangeDisplayTime(9, 18)} variant="secondary" iconLeft={ClockIcon}>
+          <Button onClick={() => onChangeDisplayTime(17, 13)} variant="secondary" iconLeft={ClockIcon}>
             {`${formatTime(startTime)} to ${formatTime(endTime)}`}
           </Button>
         </div>

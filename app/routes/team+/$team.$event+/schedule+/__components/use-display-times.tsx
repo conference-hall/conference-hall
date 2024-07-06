@@ -1,20 +1,45 @@
-import { endOfHour, setHours, startOfHour } from 'date-fns';
+import { useFetcher } from '@remix-run/react';
+import { addHours, endOfHour, startOfHour } from 'date-fns';
 import { toZonedTime } from 'date-fns-tz';
-import { useState } from 'react';
 
-export function useDisplayTimes(currentDay: string, timezone: string, startHour: number, endHour: number) {
+export function useDisplayTimes(
+  currentDay: string,
+  displayStartHour: number,
+  displayEndHour: number,
+  timezone: string,
+) {
   const currentDayDate = toZonedTime(currentDay, timezone);
 
-  const [start, setStart] = useState<number>(startHour);
-  const [end, setEnd] = useState<number>(endHour);
+  // @ts-expect-error
+  const fetcher = useFetcher();
 
-  const startTime = startOfHour(setHours(currentDayDate, start));
-  const endTime = endOfHour(setHours(currentDayDate, end));
+  // optimistic update
+  if (fetcher.formData?.get('intent') === 'update-display-times') {
+    const start = Number(fetcher.formData?.get('displayStartHour'));
+    const end = Number(fetcher.formData?.get('displayEndHour'));
+    if (start <= end) {
+      displayStartHour = start;
+      displayEndHour = end;
+    }
+  }
 
-  const onChange = (startHour: number, endHour: number) => {
-    setStart(startHour);
-    setEnd(endHour);
+  const startTime = startOfHour(addHours(currentDayDate, displayStartHour));
+  const endTime = endOfHour(addHours(currentDayDate, displayEndHour));
+
+  const update = (start: number, end: number) => {
+    fetcher.submit(
+      {
+        intent: 'update-display-times',
+        displayStartHour: start,
+        displayEndHour: end,
+      },
+      {
+        method: 'POST',
+        navigate: false,
+        preventScrollReset: true,
+      },
+    );
   };
 
-  return { currentDay: currentDayDate, startTime, endTime, onChange };
+  return { currentDay: currentDayDate, startTime, endTime, update };
 }

@@ -1,27 +1,30 @@
-import { format } from 'date-fns';
+import { format, parse } from 'date-fns';
 import { toZonedTime } from 'date-fns-tz';
 import type { ChangeEvent } from 'react';
 import { useCallback, useState } from 'react';
 
-import type { InputProps } from './input.tsx';
-import { Input } from './input.tsx';
+import SelectNative from './select-native.tsx';
 
 type Props = {
-  start: { value?: string | null } & InputProps;
-  end: { value?: string | null } & InputProps;
+  start: { name: string; value?: string | null; label: string };
+  end: { name: string; value?: string | null; label: string };
   timezone: string;
   required?: boolean;
   error?: string | string[];
   className?: string;
 };
 
-export function DateRangeInput({ start, end, timezone, required, error, className }: Props) {
-  const [startDate, setStartDate] = useState<Date | null>(start.value ? toZonedTime(start.value, timezone) : null);
-  const [endDate, setEndDate] = useState<Date | null>(end.value ? toZonedTime(end.value, timezone) : null);
+export function TimeRangeInput({ start, end, timezone, required, error, className }: Props) {
+  const [startDate, setStartDate] = useState<Date | null>(
+    start.value ? toZonedTime(parse(start.value, 'HH:mm', new Date()), timezone) : null,
+  );
+  const [endDate, setEndDate] = useState<Date | null>(
+    end.value ? toZonedTime(parse(end.value, 'HH:mm', new Date()), timezone) : null,
+  );
 
   const handleStartDate = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      const newStartDate = event.target.valueAsDate ? toZonedTime(event.target.valueAsDate, timezone) : null;
+    (event: ChangeEvent<HTMLSelectElement>) => {
+      const newStartDate = event.target.value ? toZonedTime(event.target.value, timezone) : null;
       setStartDate(newStartDate);
       if (!newStartDate) return setEndDate(null);
       if (!endDate) return setEndDate(newStartDate);
@@ -31,8 +34,9 @@ export function DateRangeInput({ start, end, timezone, required, error, classNam
   );
 
   const handleEndDate = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      const newEndDate = event.target.valueAsDate ? toZonedTime(event.target.valueAsDate, timezone) : null;
+    (event: ChangeEvent<HTMLSelectElement>) => {
+      const newEndDate = event.target.value ? toZonedTime(event.target.value, timezone) : null;
+
       setEndDate(newEndDate);
       if (!startDate) return setStartDate(newEndDate);
     },
@@ -42,28 +46,31 @@ export function DateRangeInput({ start, end, timezone, required, error, classNam
   return (
     <div className={className}>
       <div className="grid grid-cols-2 gap-4 sm:gap-6">
-        <Input
-          type="date"
+        <SelectNative
           name={start.name}
           label={start.label}
-          autoComplete="off"
           value={toDayFormat(startDate)}
           onChange={handleStartDate}
           className="col-span-2 sm:col-span-1"
           required={required}
           suppressHydrationWarning
+          options={[
+            { name: '00:00', value: '0' },
+            { name: '01:00', value: '1' },
+          ]}
         />
-        <Input
-          type="date"
+        <SelectNative
           name={end.name}
           label={end.label}
-          autoComplete="off"
-          min={toDayFormat(startDate)}
           value={toDayFormat(endDate)}
           onChange={handleEndDate}
           className="col-span-2 sm:col-span-1"
           required={required}
           suppressHydrationWarning
+          options={[
+            { name: '00:00', value: '0' },
+            { name: '01:00', value: '1' },
+          ]}
         />
       </div>
       {error && <p className="mt-1 text-sm text-red-600">{error}</p>}

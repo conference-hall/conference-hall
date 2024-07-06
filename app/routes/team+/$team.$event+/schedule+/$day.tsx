@@ -7,6 +7,7 @@ import invariant from 'tiny-invariant';
 
 import { EventSchedule } from '~/.server/event-schedule/event-schedule.ts';
 import {
+  ScheduleDisplayTimesUpdateSchema,
   ScheduleSessionCreateSchema,
   ScheduleSessionUpdateSchema,
 } from '~/.server/event-schedule/event-schedule.types.ts';
@@ -30,11 +31,11 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   invariant(params.day, 'Invalid day');
 
   const eventSchedule = EventSchedule.for(userId, params.team, params.event);
-  const scheduleByDay = await eventSchedule.getSchedulesByDay(Number(params.day));
+  const schedule = await eventSchedule.getSchedulesByDay(Number(params.day));
 
-  if (!scheduleByDay) return redirect(`/team/${params.team}/${params.event}/schedule`);
+  if (!schedule) return redirect(`/team/${params.team}/${params.event}/schedule`);
 
-  return json(scheduleByDay);
+  return json(schedule);
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -62,15 +63,28 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       await eventSchedule.updateSession(result.value);
       break;
     }
+    case 'update-display-times': {
+      const result = parseWithZod(form, ScheduleDisplayTimesUpdateSchema);
+      console.log(result);
+      if (!result.success) return json(result.error);
+      await eventSchedule.edit(result.value);
+      break;
+    }
   }
   return json(null);
 };
 
 export default function ScheduleRoute() {
-  const scheduleByDay = useLoaderData<typeof loader>();
+  const schedule = useLoaderData<typeof loader>();
 
-  const sessions = useSessions(scheduleByDay.sessions, scheduleByDay.timezone);
-  const displayTimes = useDisplayTimes(scheduleByDay.currentDay, scheduleByDay.timezone, 0, 23);
+  const sessions = useSessions(schedule.sessions, schedule.timezone);
+
+  const displayTimes = useDisplayTimes(
+    schedule.currentDay,
+    schedule.displayStartHour,
+    schedule.displayEndHour,
+    schedule.timezone,
+  );
 
   const { isFullscreen } = useScheduleFullscreen();
   const zoomHandlers = useZoomHandlers();
@@ -80,24 +94,24 @@ export default function ScheduleRoute() {
   return (
     <main className={cx({ 'px-8 my-8 mx-auto max-w-7xl': !isFullscreen })}>
       <div className={cx({ 'border border-gray-200 rounded-t-lg': !isFullscreen })}>
-        <SessionModal session={openSession} tracks={scheduleByDay.tracks} onClose={onCloseSession} />
+        <SessionModal session={openSession} tracks={schedule.tracks} onClose={onCloseSession} />
 
         <ScheduleHeader
           currentDay={displayTimes.currentDay}
           startTime={displayTimes.startTime}
           endTime={displayTimes.endTime}
-          previousDayIndex={scheduleByDay.previousDayIndex}
-          nextDayIndex={scheduleByDay.nextDayIndex}
+          previousDayIndex={schedule.previousDayIndex}
+          nextDayIndex={schedule.nextDayIndex}
           zoomHandlers={zoomHandlers}
-          onChangeDisplayTime={displayTimes.onChange}
+          onChangeDisplayTime={displayTimes.update}
         />
 
         <Schedule
           day={displayTimes.currentDay}
           startTime={displayTimes.startTime}
           endTime={displayTimes.endTime}
-          timezone={scheduleByDay.timezone}
-          tracks={scheduleByDay.tracks}
+          timezone={schedule.timezone}
+          tracks={schedule.tracks}
           sessions={sessions.data}
           zoomLevel={zoomHandlers.level}
           onSelectSession={setOpenSession}

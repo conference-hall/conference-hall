@@ -24,7 +24,7 @@ export const ScheduleCreateSchema = z
       if (start && end && start > end) return false;
       return true;
     },
-    { path: ['start'], message: 'Schedule start date must be after the end date.' },
+    { path: ['start'], message: 'Schedule start date must be before the end date.' },
   );
 
 // TODO: rename like sessions
@@ -37,6 +37,19 @@ export const ScheduleTrackSaveSchema = z.object({
   id: z.string().trim().optional(),
   name: z.string().trim().min(1).max(255),
 });
+
+export const ScheduleDisplayTimesUpdateSchema = z
+  .object({
+    displayStartHour: z.number().min(0).max(23),
+    displayEndHour: z.number().min(0).max(23),
+  })
+  .refine(
+    ({ displayStartHour, displayEndHour }) => {
+      if (displayStartHour > displayEndHour) return false;
+      return true;
+    },
+    { path: ['displayStartHour'], message: 'Displayed start hour must be before end hour.' },
+  );
 
 export const ScheduleSessionCreateSchema = z.object({
   trackId: z.string(),
@@ -53,3 +66,4 @@ export type ScheduleCreateData = z.infer<typeof ScheduleCreateSchema>;
 export type ScheduleTrackSaveData = z.infer<typeof ScheduleTrackSaveSchema>;
 export type ScheduleSessionCreateData = z.infer<typeof ScheduleSessionCreateSchema>;
 export type ScheduleSessionUpdateData = z.infer<typeof ScheduleSessionUpdateSchema>;
+export type ScheduleDisplayTimesUpdateData = z.infer<typeof ScheduleDisplayTimesUpdateSchema>;

@@ -1,3 +1,4 @@
+import type { Prisma } from '@prisma/client';
 import { addDays, isAfter, isBefore } from 'date-fns';
 import { db } from 'prisma/db.server.ts';
 
@@ -54,6 +55,8 @@ export class EventSchedule {
         timezone: data.timezone,
         start: data.start,
         end: data.end,
+        displayStartHour: 9,
+        displayEndHour: 18,
         tracks: { create: { name: 'Main stage' } },
         event: { connect: { slug: this.eventSlug } },
       },
@@ -87,6 +90,8 @@ export class EventSchedule {
       name: schedule.name,
       timezone: schedule.timezone,
       currentDay: currentDay.toISOString(),
+      displayStartHour: schedule.displayStartHour,
+      displayEndHour: schedule.displayEndHour,
       previousDayIndex: hasPreviousDay ? dayIndex - 1 : null,
       nextDayIndex: hasNextDay ? dayIndex + 1 : null,
       tracks: [...schedule.tracks]
@@ -132,7 +137,7 @@ export class EventSchedule {
   }
 
   // TODO: Add tests
-  async edit(data: ScheduleEditData) {
+  async edit(data: Partial<Prisma.ScheduleCreateInput>) {
     const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
     if (event.type === 'MEETUP') throw new ForbiddenOperationError();
 
