@@ -24,6 +24,7 @@ export class EventSchedule {
     return new EventSchedule(eventSlug, userEvent);
   }
 
+  // TODO: Improve tests
   // TODO: moves all "this.userEvent.allowedFor" in controllers ?
   async get() {
     const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER']);

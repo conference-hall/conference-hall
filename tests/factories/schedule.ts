@@ -22,6 +22,8 @@ export const scheduleFactory = async (options: FactoryOptions = {}) => {
     timezone: 'Europe/Paris',
     start: '2024-10-05T00:00:00.000Z',
     end: '2024-10-06T00:00:00.000Z',
+    displayStartHour: 9,
+    displayEndHour: 18,
   };
 
   const data = { ...defaultAttributes, ...attributes };
