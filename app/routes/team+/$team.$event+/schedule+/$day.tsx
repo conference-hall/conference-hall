@@ -12,6 +12,7 @@ import {
   ScheduleSessionUpdateSchema,
 } from '~/.server/event-schedule/event-schedule.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
+import { toast } from '~/libs/toasts/toast.server.ts';
 import { parseWithZod } from '~/libs/validators/zod-parser.ts';
 
 import { ScheduleHeader } from './__components/header/schedule-header.tsx';
@@ -53,13 +54,13 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   switch (intent) {
     case 'add-session': {
       const result = parseWithZod(form, ScheduleSessionCreateSchema);
-      if (!result.success) return json(result.error);
+      if (!result.success) return toast('error', 'An error occured');
       await eventSchedule.addSession(result.value);
       break;
     }
     case 'update-session': {
       const result = parseWithZod(form, ScheduleSessionUpdateSchema);
-      if (!result.success) return json(result.error);
+      if (!result.success) return toast('error', 'An error occured');
       await eventSchedule.updateSession(result.value);
       break;
     }
@@ -69,7 +70,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     }
     case 'update-display-times': {
       const result = parseWithZod(form, ScheduleDisplayTimesUpdateSchema);
-      if (!result.success) return json(result.error);
+      if (!result.success) return toast('error', 'An error occured');
       await eventSchedule.edit(result.value);
       break;
     }
