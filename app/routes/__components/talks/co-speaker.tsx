@@ -63,7 +63,7 @@ export function CoSpeakers({ speakers, invitationLink, canEdit, className }: CoS
 
 type SpeakerPillProps = { speaker: SpeakerProps; canEdit?: boolean };
 
-function SpeakerPill({ speaker, canEdit }: SpeakerPillProps) {
+export function SpeakerPill({ speaker, canEdit }: SpeakerPillProps) {
   const [open, setOpen] = useState(false);
 
   return (

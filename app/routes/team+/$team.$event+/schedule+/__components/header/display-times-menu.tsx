@@ -4,10 +4,10 @@ import { ClockIcon } from '@heroicons/react/24/outline';
 import { differenceInMinutes, startOfDay } from 'date-fns';
 
 import { button } from '~/design-system/buttons.tsx';
+import { TimeRangeInput } from '~/design-system/forms/time-range-input.tsx';
 import { IconButton } from '~/design-system/icon-buttons.tsx';
 import { Text } from '~/design-system/typography.tsx';
 
-import { TimeRangeInput } from '../forms/time-range-input.tsx';
 import { formatTime } from '../schedule/timeslots.ts';
 
 type Props = {
