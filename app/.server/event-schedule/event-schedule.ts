@@ -110,8 +110,7 @@ export class EventSchedule {
           ? {
               id: proposal.id,
               title: proposal.title,
-              level: proposal.level,
-              languages: proposal.languages,
+              languages: proposal.languages as string[],
               deliberationStatus: proposal.deliberationStatus,
               confirmationStatus: proposal.confirmationStatus,
               formats: proposal.formats.map((f) => ({ id: f.id, name: f.name })),

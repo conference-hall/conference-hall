@@ -3,10 +3,8 @@ import { formatISO } from 'date-fns';
 import { fromZonedTime, toZonedTime } from 'date-fns-tz';
 import { v4 as uuid } from 'uuid';
 
+import type { ScheduleSession, SessionData, TimeSlot } from './schedule.types.ts';
 import { areTimeSlotsOverlapping, moveTimeSlotStart } from './schedule/timeslots.ts';
-import type { Session, TimeSlot } from './schedule/types.ts';
-
-type SessionData = { id: string; trackId: string; start: string; end: string };
 
 export function useSessions(initialSessions: Array<SessionData>, timezone: string) {
   const sessions = useOptimisticSessions(initialSessions, timezone);
@@ -36,7 +34,7 @@ export function useSessions(initialSessions: Array<SessionData>, timezone: strin
     );
   };
 
-  const onUpdate = (session: Session, newTrackId: string, newTimeslot: TimeSlot, proposalId?: string) => {
+  const onUpdate = (session: ScheduleSession, newTrackId: string, newTimeslot: TimeSlot, proposalId?: string) => {
     const conflicting = sessions.some(
       (s) => s.id !== session.id && s.trackId === newTrackId && areTimeSlotsOverlapping(newTimeslot, s.timeslot),
     );
@@ -61,12 +59,12 @@ export function useSessions(initialSessions: Array<SessionData>, timezone: strin
     );
   };
 
-  const onMove = (session: Session, newTrackId: string, newTimeslot: TimeSlot) => {
+  const onMove = (session: ScheduleSession, newTrackId: string, newTimeslot: TimeSlot) => {
     const updatedTimeslot = moveTimeSlotStart(session.timeslot, newTimeslot.start);
     onUpdate(session, newTrackId, updatedTimeslot);
   };
 
-  const onDelete = (session: Session) => {
+  const onDelete = (session: ScheduleSession) => {
     submit(
       {
         intent: 'delete-session',
@@ -97,12 +95,13 @@ function useOptimisticSessions(initialSessions: Array<SessionData>, timezone: st
   };
 
   const sessionsById = new Map(
-    initialSessions.map(({ id, trackId, start, end }) => [
+    initialSessions.map(({ id, trackId, start, end, proposal }) => [
       id,
       {
         id,
         trackId,
         timeslot: { start: toZonedTime(start, timezone), end: toZonedTime(end, timezone) },
+        proposal,
       },
     ]),
   );
@@ -126,7 +125,8 @@ function useOptimisticSessions(initialSessions: Array<SessionData>, timezone: st
     }));
 
   for (let session of pendingSessions) {
-    sessionsById.set(session.id, session);
+    const current = sessionsById.get(session.id);
+    sessionsById.set(session.id, { ...session, proposal: current?.proposal });
   }
 
   // Pending delete

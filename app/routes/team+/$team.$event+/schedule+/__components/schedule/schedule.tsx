@@ -16,6 +16,7 @@ import type { ReactNode } from 'react';
 
 import { getGMTOffset } from '~/libs/datetimes/timezone.ts';
 
+import type { ScheduleSession, TimeSlot, Track } from '../schedule.types.ts';
 import {
   countIntervalsInTimeSlot,
   formatTime,
@@ -25,7 +26,6 @@ import {
   moveTimeSlotStart,
   totalTimeInMinutes,
 } from './timeslots.ts';
-import type { Session, TimeSlot, Track } from './types.ts';
 import type { TimeSlotSelector } from './use-timeslot-selector.tsx';
 import { useTimeslotSelector } from './use-timeslot-selector.tsx';
 
@@ -41,11 +41,11 @@ type ScheduleProps = {
   timezone: string;
   interval?: number;
   tracks: Array<Track>;
-  sessions: Array<Session>;
-  renderSession: (session: Session) => ReactNode;
+  sessions: Array<ScheduleSession>;
+  renderSession: (session: ScheduleSession) => ReactNode;
   onAddSession: (trackId: string, timeslot: TimeSlot) => void;
-  onMoveSession: (session: Session, newTrackId: string, newTimeslot: TimeSlot) => void;
-  onSelectSession: (session: Session) => void;
+  onMoveSession: (session: ScheduleSession, newTrackId: string, newTimeslot: TimeSlot) => void;
+  onSelectSession: (session: ScheduleSession) => void;
   zoomLevel?: number;
 };
 
@@ -161,12 +161,12 @@ export default function Schedule({
 type TimeslotProps = {
   trackId: string;
   timeslot: TimeSlot;
-  sessions: Array<Session>;
+  sessions: Array<ScheduleSession>;
   selector: TimeSlotSelector;
   interval: number;
   zoomLevel: number;
-  onSelectSession: (session: Session) => void;
-  renderSession: (session: Session) => ReactNode;
+  onSelectSession: (session: ScheduleSession) => void;
+  renderSession: (session: ScheduleSession) => ReactNode;
 };
 
 function Timeslot({
@@ -230,9 +230,9 @@ function Timeslot({
 }
 
 type SessionWrapperProps = {
-  session: Session;
-  renderSession: (session: Session) => ReactNode;
-  onClick?: (session: Session) => void;
+  session: ScheduleSession;
+  renderSession: (session: ScheduleSession) => ReactNode;
+  onClick?: (session: ScheduleSession) => void;
   interval: number;
   zoomLevel: number;
 };

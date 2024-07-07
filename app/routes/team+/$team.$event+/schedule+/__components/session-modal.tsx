@@ -7,6 +7,7 @@ import { addMinutes, differenceInMinutes, startOfDay } from 'date-fns';
 import type { ChangeEvent } from 'react';
 import { useState } from 'react';
 
+import { Badge } from '~/design-system/badges.tsx';
 import { Button, button } from '~/design-system/buttons.tsx';
 import { Divider } from '~/design-system/divider.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
@@ -18,13 +19,7 @@ import { H2, Text } from '~/design-system/typography.tsx';
 import { SpeakerPill } from '~/routes/__components/talks/co-speaker.tsx';
 
 import type { loader } from '../../reviews+/autocomplete.tsx';
-import type { Session, TimeSlot, Track } from './schedule/types.ts';
-
-const SPEAKERS = [
-  { id: '1', name: 'John parker', picture: 'https://i.pravatar.cc/150?img=11' },
-  { id: '2', name: 'John parker', picture: 'https://i.pravatar.cc/150?img=11' },
-  { id: '3', name: 'John parker', picture: 'https://i.pravatar.cc/150?img=11' },
-];
+import type { ScheduleProposalData, ScheduleSession, TimeSlot, Track } from './schedule.types.ts';
 
 const FILTER_OPTIONS = [
   { name: 'Accepted', value: 'accepted' },
@@ -34,12 +29,12 @@ const FILTER_OPTIONS = [
 ];
 
 type SessionModalProps = {
-  session: Session;
+  session: ScheduleSession;
   startTime: Date;
   endTime: Date;
   tracks: Array<Track>;
-  onDeleteSession: (session: Session) => void;
-  onUpdateSession: (session: Session, newTrackId: string, newTimeslot: TimeSlot, proposalId?: string) => void;
+  onDeleteSession: (session: ScheduleSession) => void;
+  onUpdateSession: (session: ScheduleSession, newTrackId: string, newTimeslot: TimeSlot, proposalId?: string) => void;
   onClose: () => void;
 };
 
@@ -54,11 +49,11 @@ export function SessionModal({
 }: SessionModalProps) {
   const [timeslot, setTimeslot] = useState(session.timeslot);
   const [trackId, setTrackId] = useState(session.trackId);
-  const [proposalId, setProposalId] = useState('');
-  const [isSearching, setSearching] = useState(false);
+  const [proposal, setProposal] = useState(session.proposal);
+  const [isSearching, setSearching] = useState(!session.proposal);
 
   const handleSave = () => {
-    onUpdateSession(session, trackId, timeslot, proposalId);
+    onUpdateSession(session, trackId, timeslot, proposal?.id);
     onClose();
   };
 
@@ -108,42 +103,44 @@ export function SessionModal({
             <Divider />
 
             {/* Content */}
-            {isSearching ? (
-              <SearchProposal
-                onChangeProposal={setProposalId}
-                onClose={() => setSearching(false)}
-                className="space-y-1 p-4 min-h-72"
-              />
-            ) : (
-              <div className="space-y-4 p-4">
-                <div className="flex items-center justify-between gap-2">
-                  <H2 size="l" truncate>
-                    Le web ou la typographie
-                  </H2>
-                  <div className="flex gap-2">
-                    {/* TODO: set correct link */}
-                    <IconLink
-                      icon={ArrowTopRightOnSquareIcon}
-                      label="See proposal"
-                      to="/team/gdg-nantes/devfest-nantes/reviews"
-                      variant="secondary"
-                      target="_blank"
-                    />
-                    <IconButton
-                      icon={MagnifyingGlassIcon}
-                      label="Search proposals"
-                      onClick={() => setSearching(true)}
-                      variant="secondary"
-                    />
+            <div className="space-y-1 p-4 min-h-72">
+              {isSearching ? (
+                <SearchProposal onChangeProposal={setProposal} onClose={() => setSearching(false)} />
+              ) : proposal ? (
+                <>
+                  <div className="flex items-center justify-between gap-2">
+                    <H2 size="l" truncate>
+                      {proposal?.title}
+                    </H2>
+                    <div className="flex gap-2">
+                      {/* TODO: set correct link */}
+                      <IconLink
+                        icon={ArrowTopRightOnSquareIcon}
+                        label="See proposal"
+                        to={`/team/gdg-nantes/devfest-nantes/reviews/${proposal.id}`}
+                        variant="secondary"
+                        target="_blank"
+                      />
+                      <IconButton
+                        icon={MagnifyingGlassIcon}
+                        label="Search proposals"
+                        onClick={() => setSearching(true)}
+                        variant="secondary"
+                      />
+                    </div>
                   </div>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {SPEAKERS.map((s) => (
-                    <SpeakerPill key={s.id} speaker={s} />
-                  ))}
-                </div>
-              </div>
-            )}
+                  <div className="flex flex-wrap gap-2">
+                    {proposal.speakers.map((speaker) => (
+                      <SpeakerPill key={speaker.id} speaker={speaker} />
+                    ))}
+                  </div>
+                  <div>
+                    <Badge>{proposal.deliberationStatus}</Badge>
+                    {proposal.confirmationStatus && <Badge>{proposal.confirmationStatus}</Badge>}
+                  </div>
+                </>
+              ) : null}
+            </div>
 
             <Divider />
 
@@ -177,16 +174,16 @@ function setMinutesFromStartOfDay(date: Date, minutes: number): Date {
 }
 
 type SearchProposalProps = {
-  onChangeProposal: (proposalId: string) => void;
+  onChangeProposal: (proposal: ScheduleProposalData) => void;
   onClose: () => void;
-  className: string;
 };
 
-function SearchProposal({ onChangeProposal, onClose, className }: SearchProposalProps) {
+function SearchProposal({ onChangeProposal, onClose }: SearchProposalProps) {
   const [query, setQuery] = useState('');
   const [status, setStatus] = useState('accepted');
 
   // TODO: Limit search results to 3 or 4
+  // TODO: Set correct URL with team and event
   const fetcher = useFetcher<typeof loader>();
   const search = (filters: { query: string; status: string }) => {
     fetcher.submit(filters, { action: '/team/gdg-nantes/devfest-nantes/reviews/autocomplete', method: 'GET' });
@@ -203,13 +200,13 @@ function SearchProposal({ onChangeProposal, onClose, className }: SearchProposal
     search({ query, status: value });
   };
 
-  const handleChangeProposal = (proposalId: string) => {
-    onChangeProposal(proposalId);
+  const handleChangeProposal = (proposal: ScheduleProposalData) => {
+    onChangeProposal(proposal);
     onClose();
   };
 
   return (
-    <div className={className}>
+    <>
       <div className="flex items-center justify-between gap-2">
         <Input
           name="query"
@@ -237,11 +234,11 @@ function SearchProposal({ onChangeProposal, onClose, className }: SearchProposal
         {fetcher.data?.results?.map((proposal) => (
           <li key={proposal.id}>
             <Text>{proposal.title}</Text>
-            <Button onClick={() => handleChangeProposal(proposal.id)}>Select</Button>
+            <Button onClick={() => handleChangeProposal(proposal)}>Select</Button>
           </li>
         ))}
       </ul>
-    </div>
+    </>
   );
 }
 

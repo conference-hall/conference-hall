@@ -17,8 +17,8 @@ import { parseWithZod } from '~/libs/validators/zod-parser.ts';
 import { ScheduleHeader } from './__components/header/schedule-header.tsx';
 import { useScheduleFullscreen } from './__components/header/use-schedule-fullscreen.tsx';
 import { useZoomHandlers } from './__components/header/use-zoom-handlers.tsx';
+import type { ScheduleSession } from './__components/schedule.types.ts';
 import Schedule from './__components/schedule/schedule.tsx';
-import type { Session } from './__components/schedule/types.ts';
 import { SessionBlock } from './__components/session-block.tsx';
 import { SessionModal } from './__components/session-modal.tsx';
 import { useDisplayTimes } from './__components/use-display-times.tsx';
@@ -92,7 +92,7 @@ export default function ScheduleRoute() {
   const { isFullscreen } = useScheduleFullscreen();
   const zoomHandlers = useZoomHandlers();
 
-  const [openSession, setOpenSession] = useState<Session | null>(null);
+  const [openSession, setOpenSession] = useState<ScheduleSession | null>(null);
   const onCloseSession = () => setOpenSession(null);
 
   return (
