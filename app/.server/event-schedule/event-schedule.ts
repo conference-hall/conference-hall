@@ -82,7 +82,10 @@ export class EventSchedule {
       throw new NotFoundError('Day not in schedule');
     }
 
-    const sessions = await db.scheduleSession.findMany({ where: { scheduleId: schedule.id } });
+    const sessions = await db.scheduleSession.findMany({
+      where: { scheduleId: schedule.id },
+      include: { proposal: { include: { speakers: true, formats: true, categories: true } } },
+    });
 
     const hasPreviousDay = !isBefore(addDays(currentDay, dayIndex - 1), schedule.start);
     const hasNextDay = !isAfter(addDays(currentDay, dayIndex + 1), schedule.end);
@@ -98,11 +101,30 @@ export class EventSchedule {
       tracks: [...schedule.tracks]
         .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
         .map((t) => ({ id: t.id, name: t.name })),
-      sessions: sessions.map((session) => ({
-        id: session.id,
-        trackId: session.trackId,
-        start: session.start.toISOString(),
-        end: session.end.toISOString(),
+      sessions: sessions.map(({ id, trackId, start, end, proposal }) => ({
+        id: id,
+        trackId: trackId,
+        start: start.toISOString(),
+        end: end.toISOString(),
+        proposal: proposal
+          ? {
+              id: proposal.id,
+              title: proposal.title,
+              level: proposal.level,
+              languages: proposal.languages,
+              deliberationStatus: proposal.deliberationStatus,
+              confirmationStatus: proposal.confirmationStatus,
+              formats: proposal.formats.map((f) => ({ id: f.id, name: f.name })),
+              categories: proposal.categories.map((c) => ({ id: c.id, name: c.name })),
+              speakers: proposal.speakers.map((s) => ({
+                id: s.id,
+                name: s.name,
+                picture: s.picture,
+                bio: s.bio,
+                company: s.company,
+              })),
+            }
+          : null,
       })),
     };
   }
