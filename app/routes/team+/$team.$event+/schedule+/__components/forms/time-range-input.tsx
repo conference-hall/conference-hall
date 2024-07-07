@@ -2,7 +2,7 @@ import { format, setMinutes, startOfDay } from 'date-fns';
 import type { ChangeEvent } from 'react';
 import { useState } from 'react';
 
-import SelectNative from '~/design-system/forms/select-native.tsx';
+import { SelectNative } from '~/design-system/forms/select-native.tsx';
 
 type Props = {
   startTime: number;
@@ -76,6 +76,7 @@ function generateTimeOptions(step: number, min: number, max: number) {
   }));
 }
 
+// TODO: extract
 function formatTime(minutes: number): string {
   const date = setMinutes(startOfDay(new Date()), minutes);
   return format(date, 'HH:mm');

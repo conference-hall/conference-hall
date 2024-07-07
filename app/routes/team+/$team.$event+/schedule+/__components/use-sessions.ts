@@ -13,7 +13,7 @@ export function useSessions(initialSessions: Array<SessionData>, timezone: strin
 
   const submit = useSubmit();
 
-  const add = (trackId: string, timeslot: TimeSlot) => {
+  const onAdd = (trackId: string, timeslot: TimeSlot) => {
     const conflicting = sessions.some((s) => s.trackId === trackId && areTimeSlotsOverlapping(timeslot, s.timeslot));
     if (conflicting) return;
 
@@ -36,7 +36,7 @@ export function useSessions(initialSessions: Array<SessionData>, timezone: strin
     );
   };
 
-  const update = (session: Session, newTrackId: string, newTimeslot: TimeSlot) => {
+  const onUpdate = (session: Session, newTrackId: string, newTimeslot: TimeSlot) => {
     const conflicting = sessions.some(
       (s) => s.id !== session.id && s.trackId === newTrackId && areTimeSlotsOverlapping(newTimeslot, s.timeslot),
     );
@@ -60,12 +60,28 @@ export function useSessions(initialSessions: Array<SessionData>, timezone: strin
     );
   };
 
-  const move = (session: Session, newTrackId: string, newTimeslot: TimeSlot) => {
+  const onMove = (session: Session, newTrackId: string, newTimeslot: TimeSlot) => {
     const updatedTimeslot = moveTimeSlotStart(session.timeslot, newTimeslot.start);
-    update(session, newTrackId, updatedTimeslot);
+    onUpdate(session, newTrackId, updatedTimeslot);
   };
 
-  return { add, update, move, data: sessions };
+  const onDelete = (session: Session) => {
+    submit(
+      {
+        intent: 'delete-session',
+        id: session.id,
+      },
+      {
+        method: 'POST',
+        navigate: false,
+        fetcherKey: `session:${session.id}`,
+        unstable_flushSync: true,
+        preventScrollReset: true,
+      },
+    );
+  };
+
+  return { add: onAdd, update: onUpdate, move: onMove, delete: onDelete, data: sessions };
 }
 
 function useOptimisticSessions(initialSessions: Array<SessionData>, timezone: string) {
@@ -86,6 +102,7 @@ function useOptimisticSessions(initialSessions: Array<SessionData>, timezone: st
 
   const fetchers = useFetchers();
 
+  // Pending add & update
   const pendingSessions = fetchers
     .filter((fetcher): fetcher is PendingSession => {
       if (!fetcher.formData) return false;
@@ -104,6 +121,17 @@ function useOptimisticSessions(initialSessions: Array<SessionData>, timezone: st
   for (let session of pendingSessions) {
     sessionsById.set(session.id, session);
   }
+
+  // Pending delete
+  fetchers
+    .filter((fetcher): fetcher is PendingSession => {
+      if (!fetcher.formData) return false;
+      const intent = fetcher.formData.get('intent');
+      return intent === 'delete-session';
+    })
+    .forEach((fetcher) => {
+      sessionsById.delete(String(fetcher.formData?.get('id')));
+    });
 
   return Array.from(sessionsById.values());
 }

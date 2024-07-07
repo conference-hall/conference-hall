@@ -138,6 +138,11 @@ export class EventSchedule {
   }
 
   // TODO: Add tests
+  async deleteSession(sessionId: string) {
+    await db.scheduleSession.delete({ where: { id: sessionId } });
+  }
+
+  // TODO: Add tests
   async edit(data: Partial<Prisma.ScheduleCreateInput>) {
     const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
     if (event.type === 'MEETUP') throw new ForbiddenOperationError();

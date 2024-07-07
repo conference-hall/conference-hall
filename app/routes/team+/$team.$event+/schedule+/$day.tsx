@@ -63,6 +63,10 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       await eventSchedule.updateSession(result.value);
       break;
     }
+    case 'delete-session': {
+      await eventSchedule.deleteSession(String(form.get('id')));
+      break;
+    }
     case 'update-display-times': {
       const result = parseWithZod(form, ScheduleDisplayTimesUpdateSchema);
       if (!result.success) return json(result.error);
@@ -101,7 +105,7 @@ export default function ScheduleRoute() {
             startTime={displayTimes.startTime}
             endTime={displayTimes.endTime}
             tracks={schedule.tracks}
-            onDeleteSession={() => {}}
+            onDeleteSession={sessions.delete}
             onUpdateSession={sessions.update}
             onClose={onCloseSession}
           />

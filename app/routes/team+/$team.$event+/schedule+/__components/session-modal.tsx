@@ -6,7 +6,7 @@ import { useState } from 'react';
 
 import { Button } from '~/design-system/buttons.tsx';
 import { Divider } from '~/design-system/divider.tsx';
-import SelectNative from '~/design-system/forms/select-native.tsx';
+import { SelectNative } from '~/design-system/forms/select-native.tsx';
 import { IconButton } from '~/design-system/icon-buttons.tsx';
 import { Background, ModalTransition } from '~/design-system/transitions.tsx';
 
@@ -42,6 +42,11 @@ export function SessionModal({
     onClose();
   };
 
+  const handleDelete = () => {
+    onDeleteSession(session);
+    onClose();
+  };
+
   return (
     <Transition show={open}>
       <Dialog className="relative z-40" onClose={onClose}>
@@ -57,12 +62,7 @@ export function SessionModal({
                 {/* Header */}
                 <div className="flex items-center justify-end gap-2 px-2 pt-2">
                   <DialogTitle className="sr-only">Edit session</DialogTitle>
-                  <IconButton
-                    icon={TrashIcon}
-                    label="Delete session"
-                    onClick={() => session && onDeleteSession(session)}
-                    variant="secondary"
-                  />
+                  <IconButton icon={TrashIcon} label="Delete session" onClick={handleDelete} variant="secondary" />
                   <IconButton icon={XMarkIcon} label="Close" onClick={onClose} variant="secondary" />
                 </div>
 
