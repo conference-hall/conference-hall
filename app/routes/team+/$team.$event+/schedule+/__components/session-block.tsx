@@ -9,7 +9,7 @@ export function SessionBlock({ session }: SessionBlockProps) {
   const { timeslot, proposal } = session;
 
   return (
-    <div className="text-xs flex flex-col justify-between h-full px-1 text-indigo-400 bg-indigo-50 border border-indigo-200 rounded">
+    <div className="text-xs flex flex-col justify-between h-full px-1 text-gray-600 bg-gray-50 border border-gray-300 rounded">
       {proposal ? (
         <>
           <div>
@@ -25,7 +25,10 @@ export function SessionBlock({ session }: SessionBlockProps) {
           </div>
         </>
       ) : (
-        <p>{formatTimeSlot(timeslot)}</p>
+        <div className="h-full flex flex-col justify-between">
+          <p className="italic">(Empty slot)</p>
+          <p>{formatTimeSlot(timeslot)}</p>
+        </div>
       )}
     </div>
   );
