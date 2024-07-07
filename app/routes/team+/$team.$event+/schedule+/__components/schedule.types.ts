@@ -28,10 +28,7 @@ export type ScheduleProposalData = {
   formats?: Array<{ id: string; name: string }>;
   categories?: Array<{ id: string; name: string }>;
   speakers: Array<{
-    id: string;
     name: string | null;
     picture: string | null;
-    bio?: string | null;
-    company?: string | null;
   }>;
 };

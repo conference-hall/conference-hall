@@ -40,7 +40,7 @@ export class CfpReviewsSearch {
           publicationStatus: proposal.publicationStatus,
           confirmationStatus: proposal.confirmationStatus,
           speakers: event.displayProposalsSpeakers
-            ? proposal.speakers.map(({ id, name, picture, bio, company }) => ({ id, name, picture, bio, company }))
+            ? proposal.speakers.map(({ name, picture }) => ({ name, picture }))
             : [],
           reviews: {
             summary: event.displayProposalsReviews ? reviews.summary() : undefined,

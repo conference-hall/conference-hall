@@ -7,7 +7,6 @@ import { addMinutes, differenceInMinutes, startOfDay } from 'date-fns';
 import type { ChangeEvent } from 'react';
 import { useState } from 'react';
 
-import { Badge } from '~/design-system/badges.tsx';
 import { Button, button } from '~/design-system/buttons.tsx';
 import { Divider } from '~/design-system/divider.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
@@ -15,8 +14,7 @@ import { SelectNative } from '~/design-system/forms/select-native.tsx';
 import { TimeRangeInput } from '~/design-system/forms/time-range-input.tsx';
 import { IconButton, IconLink } from '~/design-system/icon-buttons.tsx';
 import { Background } from '~/design-system/transitions.tsx';
-import { H2, Text } from '~/design-system/typography.tsx';
-import { SpeakerPill } from '~/routes/__components/talks/co-speaker.tsx';
+import { H2, Subtitle, Text } from '~/design-system/typography.tsx';
 
 import type { loader } from '../../reviews+/autocomplete.tsx';
 import type { ScheduleProposalData, ScheduleSession, TimeSlot, Track } from './schedule.types.ts';
@@ -108,11 +106,12 @@ export function SessionModal({
                 <SearchProposal onChangeProposal={setProposal} onClose={() => setSearching(false)} />
               ) : proposal ? (
                 <>
-                  <div className="flex items-center justify-between gap-2">
-                    <H2 size="l" truncate>
-                      {proposal?.title}
-                    </H2>
-                    <div className="flex gap-2">
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <H2 size="l">{proposal?.title}</H2>
+                      <Subtitle truncate>{proposal.speakers.map((s) => s.name).join(', ')}</Subtitle>
+                    </div>
+                    <div className="flex gap-2 shrink-0">
                       {/* TODO: set correct link */}
                       <IconLink
                         icon={ArrowTopRightOnSquareIcon}
@@ -128,15 +127,6 @@ export function SessionModal({
                         variant="secondary"
                       />
                     </div>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {proposal.speakers.map((speaker) => (
-                      <SpeakerPill key={speaker.id} speaker={speaker} />
-                    ))}
-                  </div>
-                  <div>
-                    <Badge>{proposal.deliberationStatus}</Badge>
-                    {proposal.confirmationStatus && <Badge>{proposal.confirmationStatus}</Badge>}
                   </div>
                 </>
               ) : null}
