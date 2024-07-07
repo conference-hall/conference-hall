@@ -154,6 +154,7 @@ export class EventSchedule {
         trackId: data.trackId,
         start: data.start,
         end: data.end,
+        proposalId: data.proposalId ? data.proposalId : undefined,
       },
       where: { id: data.id },
     });

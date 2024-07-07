@@ -36,7 +36,7 @@ export function useSessions(initialSessions: Array<SessionData>, timezone: strin
     );
   };
 
-  const onUpdate = (session: Session, newTrackId: string, newTimeslot: TimeSlot) => {
+  const onUpdate = (session: Session, newTrackId: string, newTimeslot: TimeSlot, proposalId?: string) => {
     const conflicting = sessions.some(
       (s) => s.id !== session.id && s.trackId === newTrackId && areTimeSlotsOverlapping(newTimeslot, s.timeslot),
     );
@@ -49,6 +49,7 @@ export function useSessions(initialSessions: Array<SessionData>, timezone: strin
         trackId: newTrackId,
         start: formatISO(fromZonedTime(newTimeslot.start, timezone)),
         end: formatISO(fromZonedTime(newTimeslot.end, timezone)),
+        proposalId: proposalId ?? '',
       },
       {
         method: 'POST',
@@ -81,7 +82,13 @@ export function useSessions(initialSessions: Array<SessionData>, timezone: strin
     );
   };
 
-  return { add: onAdd, update: onUpdate, move: onMove, delete: onDelete, data: sessions };
+  return {
+    add: onAdd,
+    update: onUpdate,
+    move: onMove,
+    delete: onDelete,
+    data: sessions,
+  };
 }
 
 function useOptimisticSessions(initialSessions: Array<SessionData>, timezone: string) {

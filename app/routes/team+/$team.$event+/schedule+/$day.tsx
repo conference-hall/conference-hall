@@ -100,7 +100,6 @@ export default function ScheduleRoute() {
       <div className={cx({ 'border border-gray-200 rounded-t-lg': !isFullscreen })}>
         {openSession && (
           <SessionModal
-            open={Boolean(openSession)}
             session={openSession}
             startTime={displayTimes.startTime}
             endTime={displayTimes.endTime}
