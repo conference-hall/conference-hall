@@ -44,7 +44,7 @@ type ScheduleProps = {
   sessions: Array<Session>;
   renderSession: (session: Session) => ReactNode;
   onAddSession: (trackId: string, timeslot: TimeSlot) => void;
-  onUpdateSession: (session: Session, newTrackId: string, newTimeslot: TimeSlot) => void;
+  onMoveSession: (session: Session, newTrackId: string, newTimeslot: TimeSlot) => void;
   onSelectSession: (session: Session) => void;
   zoomLevel?: number;
 };
@@ -59,7 +59,7 @@ export default function Schedule({
   sessions = [],
   renderSession,
   onAddSession,
-  onUpdateSession,
+  onMoveSession,
   onSelectSession,
   zoomLevel = DEFAULT_ZOOM_LEVEL,
 }: ScheduleProps) {
@@ -71,7 +71,7 @@ export default function Schedule({
     if (over?.data?.current?.type === 'timeslot') {
       const { trackId, timeslot } = over.data.current || {};
       const { session } = active.data.current || {};
-      onUpdateSession(session, trackId, timeslot);
+      onMoveSession(session, trackId, timeslot);
     } else if (over?.data?.current?.type === 'session') {
       console.log('Switch sessions !!!');
     }

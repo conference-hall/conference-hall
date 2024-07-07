@@ -40,15 +40,21 @@ export const ScheduleTrackSaveSchema = z.object({
 
 export const ScheduleDisplayTimesUpdateSchema = z
   .object({
-    displayStartHour: z.number().min(0).max(23),
-    displayEndHour: z.number().min(0).max(23),
+    displayStartMinutes: z
+      .number()
+      .min(0)
+      .max(23 * 60),
+    displayEndMinutes: z
+      .number()
+      .min(0)
+      .max(23 * 60),
   })
   .refine(
-    ({ displayStartHour, displayEndHour }) => {
-      if (displayStartHour > displayEndHour) return false;
+    ({ displayStartMinutes, displayEndMinutes }) => {
+      if (displayStartMinutes > displayEndMinutes) return false;
       return true;
     },
-    { path: ['displayStartHour'], message: 'Displayed start hour must be before end hour.' },
+    { path: ['displayStartMinutes'], message: 'Displayed start in minutes must be before end in minutes.' },
   );
 
 export const ScheduleSessionCreateSchema = z.object({

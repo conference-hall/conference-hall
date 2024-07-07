@@ -1,13 +1,13 @@
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
+import { XMarkIcon } from '@heroicons/react/20/solid';
 import { ClockIcon } from '@heroicons/react/24/outline';
-import { endOfHour, format, getHours, setHours, startOfDay, startOfHour } from 'date-fns';
-import type { ChangeEvent } from 'react';
-import { useState } from 'react';
+import { differenceInMinutes, startOfDay } from 'date-fns';
 
-import { Button, button } from '~/design-system/buttons.tsx';
-import SelectNative from '~/design-system/forms/select-native.tsx';
+import { button } from '~/design-system/buttons.tsx';
+import { IconButton } from '~/design-system/icon-buttons.tsx';
 import { Text } from '~/design-system/typography.tsx';
 
+import { TimeRangeInput } from '../forms/time-range-input.tsx';
 import { formatTime } from '../schedule/timeslots.ts';
 
 type Props = {
@@ -17,15 +17,6 @@ type Props = {
 };
 
 export function DisplayTimesMenu({ startTime, endTime, onChangeDisplayTime }: Props) {
-  const [start, setStart] = useState(getHours(startTime));
-  const [end, setEnd] = useState(getHours(endTime));
-
-  const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    const hour = Number(event.target.value);
-    if (event.target.name === 'start') setStart(hour);
-    if (event.target.name === 'end') setEnd(hour);
-  };
-
   return (
     <Popover className="hidden sm:block">
       <PopoverButton className={button({ variant: 'secondary' })}>
@@ -39,38 +30,19 @@ export function DisplayTimesMenu({ startTime, endTime, onChangeDisplayTime }: Pr
       >
         {({ close }) => (
           <>
-            <div className="px-4 py-3 bg-gray-50 border-b border-b-gray-200 rounded-t-md">
+            <div className="flex items-center justify-between pl-4 pr-2 py-1 bg-gray-50 border-b border-b-gray-200 rounded-t-md">
               <Text variant="secondary" weight="semibold">
                 Display times
               </Text>
+              <IconButton icon={XMarkIcon} label="Close" onClick={() => close()} variant="secondary" />
             </div>
-            <div className="flex items-center gap-2 p-4">
-              <SelectNative
-                name="start"
-                label="From"
-                value={start}
-                options={START_HOURS_OPTIONS.filter((o) => Number(o.value) <= end)}
-                onChange={handleSelectChange}
-                inline
+            <div className="p-4">
+              <TimeRangeInput
+                startTime={getMinutesFromStartOfDay(startTime)}
+                endTime={getMinutesFromStartOfDay(endTime)}
+                step={60}
+                onChange={onChangeDisplayTime}
               />
-
-              <SelectNative
-                name="end"
-                label="To"
-                value={end}
-                options={END_HOURS_OPTIONS.filter((o) => Number(o.value) >= start)}
-                onChange={handleSelectChange}
-                inline
-              />
-
-              <Button
-                onClick={() => {
-                  onChangeDisplayTime(start, end);
-                  close();
-                }}
-              >
-                Apply
-              </Button>
             </div>
           </>
         )}
@@ -79,26 +51,7 @@ export function DisplayTimesMenu({ startTime, endTime, onChangeDisplayTime }: Pr
   );
 }
 
-const START_HOURS_OPTIONS = Array(24)
-  .fill(0)
-  .map((_, index) => ({
-    name: formatHour(index),
-    value: String(index),
-  }));
-
-const END_HOURS_OPTIONS = Array(24)
-  .fill(0)
-  .map((_, index) => ({
-    name: formatHour(index, { endOfDay: true }),
-    value: String(index),
-  }));
-
-function formatHour(hour: number, options: { endOfDay?: boolean } = {}): string {
-  if (hour < 0 || hour > 23) throw new Error('Hour must be between 0 and 23');
-
-  const date = setHours(startOfDay(new Date()), hour);
-  if (options.endOfDay) {
-    return format(endOfHour(date), 'HH:mm');
-  }
-  return format(startOfHour(date), 'HH:mm');
+// TODO: extract
+function getMinutesFromStartOfDay(date: Date): number {
+  return differenceInMinutes(date, startOfDay(date));
 }

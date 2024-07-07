@@ -80,8 +80,8 @@ export default function ScheduleRoute() {
 
   const displayTimes = useDisplayTimes(
     schedule.currentDay,
-    schedule.displayStartHour,
-    schedule.displayEndHour,
+    schedule.displayStartMinutes,
+    schedule.displayEndMinutes,
     schedule.timezone,
   );
 
@@ -94,7 +94,18 @@ export default function ScheduleRoute() {
   return (
     <main className={cx({ 'px-8 my-8 mx-auto max-w-7xl': !isFullscreen })}>
       <div className={cx({ 'border border-gray-200 rounded-t-lg': !isFullscreen })}>
-        <SessionModal session={openSession} tracks={schedule.tracks} onClose={onCloseSession} />
+        {openSession && (
+          <SessionModal
+            open={Boolean(openSession)}
+            session={openSession}
+            startTime={displayTimes.startTime}
+            endTime={displayTimes.endTime}
+            tracks={schedule.tracks}
+            onDeleteSession={() => {}}
+            onUpdateSession={sessions.update}
+            onClose={onCloseSession}
+          />
+        )}
 
         <ScheduleHeader
           currentDay={displayTimes.currentDay}
@@ -116,7 +127,7 @@ export default function ScheduleRoute() {
           zoomLevel={zoomHandlers.level}
           onSelectSession={setOpenSession}
           onAddSession={sessions.add}
-          onUpdateSession={sessions.update}
+          onMoveSession={sessions.move}
           renderSession={(session) => <SessionBlock session={session} />}
         />
       </div>

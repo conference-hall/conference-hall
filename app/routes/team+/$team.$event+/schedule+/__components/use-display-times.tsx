@@ -1,11 +1,11 @@
 import { useFetcher } from '@remix-run/react';
-import { addHours, endOfHour, startOfHour } from 'date-fns';
+import { addMinutes } from 'date-fns';
 import { toZonedTime } from 'date-fns-tz';
 
 export function useDisplayTimes(
   currentDay: string,
-  displayStartHour: number,
-  displayEndHour: number,
+  displayStartMinutes: number,
+  displayEndMinutes: number,
   timezone: string,
 ) {
   const currentDayDate = toZonedTime(currentDay, timezone);
@@ -15,23 +15,23 @@ export function useDisplayTimes(
 
   // optimistic update
   if (fetcher.formData?.get('intent') === 'update-display-times') {
-    const start = Number(fetcher.formData?.get('displayStartHour'));
-    const end = Number(fetcher.formData?.get('displayEndHour'));
+    const start = Number(fetcher.formData?.get('displayStartMinutes'));
+    const end = Number(fetcher.formData?.get('displayEndMinutes'));
     if (start <= end) {
-      displayStartHour = start;
-      displayEndHour = end;
+      displayStartMinutes = start;
+      displayEndMinutes = end;
     }
   }
 
-  const startTime = startOfHour(addHours(currentDayDate, displayStartHour));
-  const endTime = endOfHour(addHours(currentDayDate, displayEndHour));
+  const startTime = addMinutes(currentDayDate, displayStartMinutes);
+  const endTime = addMinutes(currentDayDate, displayEndMinutes);
 
   const update = (start: number, end: number) => {
     fetcher.submit(
       {
         intent: 'update-display-times',
-        displayStartHour: start,
-        displayEndHour: end,
+        displayStartMinutes: start,
+        displayEndMinutes: end,
       },
       {
         method: 'POST',

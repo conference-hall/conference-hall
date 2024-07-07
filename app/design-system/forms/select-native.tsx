@@ -8,12 +8,15 @@ type Props = {
   label: string;
   options: Array<{ name: string; value: string }>;
   inline?: boolean;
+  srOnly?: boolean;
 } & SelectHTMLAttributes<HTMLSelectElement>;
 
-export default function SelectNative({ name, label, options, inline, ...rest }: Props) {
+export default function SelectNative({ name, label, options, inline, srOnly, ...rest }: Props) {
   return (
     <div className={cx({ 'flex items-center gap-2': inline })}>
-      <Label htmlFor={name}>{label}</Label>
+      <Label htmlFor={name} className={cx({ 'sr-only': srOnly })}>
+        {label}
+      </Label>
 
       <select
         id={name}

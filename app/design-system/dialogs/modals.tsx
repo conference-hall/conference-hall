@@ -58,7 +58,6 @@ function Title({ children, onClose }: { children: ReactNode; onClose: () => void
           className="relative rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           onClick={onClose}
         >
-          <span className="absolute -inset-2.5" />
           <span className="sr-only">Close</span>
           <XMarkIcon className="h-6 w-6" aria-hidden="true" />
         </button>
