@@ -46,6 +46,7 @@ type ScheduleProps = {
   onAddSession: (trackId: string, timeslot: TimeSlot) => void;
   onMoveSession: (session: ScheduleSession, newTrackId: string, newTimeslot: TimeSlot) => void;
   onSelectSession: (session: ScheduleSession) => void;
+  onSwitchSessions: (source: ScheduleSession, target: ScheduleSession) => void;
   zoomLevel?: number;
 };
 
@@ -61,6 +62,7 @@ export default function Schedule({
   onAddSession,
   onMoveSession,
   onSelectSession,
+  onSwitchSessions,
   zoomLevel = DEFAULT_ZOOM_LEVEL,
 }: ScheduleProps) {
   const hours = getDailyTimeSlots(day, format(startTime, 'HH:mm'), format(endTime, 'HH:mm'), HOUR_INTERVAL); // TODO: use Dates in util
@@ -73,7 +75,9 @@ export default function Schedule({
       const { session } = active.data.current || {};
       onMoveSession(session, trackId, timeslot);
     } else if (over?.data?.current?.type === 'session') {
-      console.log('Switch sessions !!!');
+      const { session: source } = active.data.current || {};
+      const { session: target } = over.data.current || {};
+      onSwitchSessions(source, target);
     }
   };
 
@@ -181,30 +185,29 @@ function Timeslot({
 }: TimeslotProps) {
   const id = `${trackId}-${formatTime(timeslot.start)}`;
 
-  const { setNodeRef } = useDroppable({ id, data: { type: 'timeslot', trackId, timeslot } });
-
-  // current session on timeslot start
+  // current session
   const session = sessions.find(
     (session) => session.trackId === trackId && haveSameStartDate(timeslot, session.timeslot),
   );
+  const hasSession = Boolean(session && isTimeSlotIncluded(timeslot, session.timeslot));
+
+  // Droppable for sessions switch
+  const { setNodeRef } = useDroppable({ id, data: { type: 'timeslot', trackId, timeslot }, disabled: hasSession });
 
   // selection attributes
   const isSelected = selector.isSelectedSlot(trackId, timeslot);
   const selectedSlot = selector.getSelectedSlot(trackId);
-  const selectable = !sessions.some(
-    (session) => session.trackId === trackId && isTimeSlotIncluded(timeslot, session.timeslot),
-  );
 
   return (
     <div
       ref={setNodeRef}
-      onMouseDown={selectable ? selector.onSelectStart(trackId, timeslot) : undefined}
-      onMouseEnter={selectable ? selector.onSelectHover(trackId, timeslot) : undefined}
+      onMouseDown={!hasSession ? selector.onSelectStart(trackId, timeslot) : undefined}
+      onMouseEnter={!hasSession ? selector.onSelectHover(trackId, timeslot) : undefined}
       onMouseUp={selector.onSelect}
       style={{ height: `${getTimeslotHeight(zoomLevel)}px` }}
       className={cx('relative', {
-        'z-10': selectable,
-        'hover:bg-gray-50': selectable && !isSelected,
+        'z-10': !hasSession,
+        'hover:bg-gray-50': !hasSession && !isSelected,
       })}
     >
       {session ? (
@@ -247,7 +250,7 @@ function SessionWrapper({ session, renderSession, onClick, interval, zoomLevel }
   // droppable to switch sessions
   const { setNodeRef: setDropRef } = useDroppable({
     id: `drop:${session.id}`,
-    data: { type: 'session', trackId: session.trackId, timeslot: session.timeslot },
+    data: { type: 'session', session },
     disabled: isDragging,
   });
 

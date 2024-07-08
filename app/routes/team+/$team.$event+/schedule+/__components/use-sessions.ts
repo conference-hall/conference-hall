@@ -34,12 +34,23 @@ export function useSessions(initialSessions: Array<SessionData>, timezone: strin
     );
   };
 
-  const onUpdate = (session: ScheduleSession, newTrackId: string, newTimeslot: TimeSlot, proposalId?: string) => {
-    const conflicting = sessions.some(
-      (s) => s.id !== session.id && s.trackId === newTrackId && areTimeSlotsOverlapping(newTimeslot, s.timeslot),
+  const onDelete = (session: ScheduleSession) => {
+    submit(
+      {
+        intent: 'delete-session',
+        id: session.id,
+      },
+      {
+        method: 'POST',
+        navigate: false,
+        fetcherKey: `session:${session.id}`,
+        unstable_flushSync: true,
+        preventScrollReset: true,
+      },
     );
-    if (conflicting) return;
+  };
 
+  const update = (session: ScheduleSession, newTrackId: string, newTimeslot: TimeSlot, proposalId?: string) => {
     submit(
       {
         intent: 'update-session',
@@ -59,32 +70,37 @@ export function useSessions(initialSessions: Array<SessionData>, timezone: strin
     );
   };
 
-  const onMove = (session: ScheduleSession, newTrackId: string, newTimeslot: TimeSlot) => {
-    const updatedTimeslot = moveTimeSlotStart(session.timeslot, newTimeslot.start);
-    onUpdate(session, newTrackId, updatedTimeslot);
+  const onUpdate = (session: ScheduleSession, newTrackId: string, newTimeslot: TimeSlot, proposalId?: string) => {
+    const conflicting = sessions.some(
+      (s) => s.id !== session.id && s.trackId === newTrackId && areTimeSlotsOverlapping(newTimeslot, s.timeslot),
+    );
+    if (conflicting) return;
+
+    update(session, newTrackId, newTimeslot, proposalId);
   };
 
-  const onDelete = (session: ScheduleSession) => {
-    submit(
-      {
-        intent: 'delete-session',
-        id: session.id,
-      },
-      {
-        method: 'POST',
-        navigate: false,
-        fetcherKey: `session:${session.id}`,
-        unstable_flushSync: true,
-        preventScrollReset: true,
-      },
+  const onMove = (session: ScheduleSession, newTrackId: string, newTimeslot: TimeSlot) => {
+    const updatedTimeslot = moveTimeSlotStart(session.timeslot, newTimeslot.start);
+
+    const conflicting = sessions.some(
+      (s) => s.id !== session.id && s.trackId === newTrackId && areTimeSlotsOverlapping(updatedTimeslot, s.timeslot),
     );
+    if (conflicting) return;
+
+    update(session, newTrackId, updatedTimeslot);
+  };
+
+  const onSwitch = (source: ScheduleSession, target: ScheduleSession) => {
+    update(source, target.trackId, target.timeslot);
+    update(target, source.trackId, source.timeslot);
   };
 
   return {
     add: onAdd,
+    delete: onDelete,
     update: onUpdate,
     move: onMove,
-    delete: onDelete,
+    switch: onSwitch,
     data: sessions,
   };
 }

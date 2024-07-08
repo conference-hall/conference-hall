@@ -132,6 +132,7 @@ export default function ScheduleRoute() {
           onSelectSession={setOpenSession}
           onAddSession={sessions.add}
           onMoveSession={sessions.move}
+          onSwitchSessions={sessions.switch}
           renderSession={(session) => <SessionBlock session={session} />}
         />
       </div>
