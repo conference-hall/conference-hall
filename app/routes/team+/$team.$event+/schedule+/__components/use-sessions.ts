@@ -15,7 +15,7 @@ export function useSessions(initialSessions: Array<SessionData>, timezone: strin
     const conflicting = sessions.some((s) => s.trackId === trackId && areTimeSlotsOverlapping(timeslot, s.timeslot));
     if (conflicting) return;
 
-    const id = uuid(); // TODO: let id from DB and use an optimisticId
+    const id = uuid();
     submit(
       {
         intent: 'add-session',
