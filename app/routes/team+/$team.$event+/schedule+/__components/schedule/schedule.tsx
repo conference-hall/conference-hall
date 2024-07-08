@@ -67,7 +67,7 @@ export default function Schedule({
 }: ScheduleProps) {
   const hours = getDailyTimeSlots(day, format(startTime, 'HH:mm'), format(endTime, 'HH:mm'), HOUR_INTERVAL); // TODO: use Dates in util
 
-  const selector = useTimeslotSelector(onAddSession);
+  const selector = useTimeslotSelector(sessions, onAddSession);
 
   const handleDragEnd = ({ active, over }: DragEndEvent) => {
     if (over?.data?.current?.type === 'timeslot') {
@@ -86,6 +86,7 @@ export default function Schedule({
 
   return (
     <DndContext
+      id="dnd-schedule"
       onDragEnd={handleDragEnd}
       sensors={sensors}
       collisionDetection={collisionDetection}

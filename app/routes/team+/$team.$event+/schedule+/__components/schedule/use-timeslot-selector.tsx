@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
-import type { TimeSlot } from '../schedule.types.ts';
-import { getFullTimeslot, isAfterTimeSlot, isTimeSlotIncluded } from './timeslots.ts';
+import type { ScheduleSession, TimeSlot } from '../schedule.types.ts';
+import { areTimeSlotsOverlapping, getFullTimeslot, isAfterTimeSlot, isTimeSlotIncluded } from './timeslots.ts';
 
 export type TimeSlotSelector = {
   isSelecting: boolean;
@@ -12,7 +12,10 @@ export type TimeSlotSelector = {
   onSelect: () => void;
 };
 
-export function useTimeslotSelector(onSelectTimeslot: (trackId: string, timeslot: TimeSlot) => void): TimeSlotSelector {
+export function useTimeslotSelector(
+  sessions: Array<ScheduleSession>,
+  onSelectTimeslot: (trackId: string, timeslot: TimeSlot) => void,
+): TimeSlotSelector {
   const [selectedTrack, setSelectedTrack] = useState<string | null>(null);
 
   const [startSlot, setStartSlot] = useState<TimeSlot | null>(null);
@@ -52,6 +55,13 @@ export function useTimeslotSelector(onSelectTimeslot: (trackId: string, timeslot
 
   const onSelectHover = (trackId: string, slot: TimeSlot) => () => {
     if (startSlot === null || selectedTrack !== trackId) return;
+
+    const timeslot = getFullTimeslot(startSlot, slot);
+    const containsSession = sessions.some(
+      (s) => s.trackId === trackId && areTimeSlotsOverlapping(s.timeslot, timeslot),
+    );
+    if (containsSession) return;
+
     setCurrentSlot(slot);
   };
 
