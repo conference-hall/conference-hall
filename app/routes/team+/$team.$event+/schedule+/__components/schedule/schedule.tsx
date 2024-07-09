@@ -11,7 +11,6 @@ import {
 } from '@dnd-kit/core';
 import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { cx } from 'class-variance-authority';
-import { format } from 'date-fns';
 import type { ReactNode } from 'react';
 
 import { getGMTOffset } from '~/libs/datetimes/timezone.ts';
@@ -65,7 +64,7 @@ export default function Schedule({
   onSwitchSessions,
   zoomLevel = DEFAULT_ZOOM_LEVEL,
 }: ScheduleProps) {
-  const hours = getDailyTimeSlots(day, format(startTime, 'HH:mm'), format(endTime, 'HH:mm'), HOUR_INTERVAL); // TODO: use Dates in util
+  const hours = getDailyTimeSlots(day, startTime, endTime, HOUR_INTERVAL);
 
   const selector = useTimeslotSelector(sessions, onAddSession);
 
@@ -124,14 +123,14 @@ export default function Schedule({
 
             {/* Rows by hours */}
             {hours.map((hour, rowIndex) => {
-              const startTime = formatTime(hour.start);
-              const endTime = formatTime(hour.end);
-              const hourSlots = getDailyTimeSlots(day, startTime, endTime, interval, true);
+              const startHour = formatTime(hour.start);
+              const endHour = formatTime(hour.end);
+              const hourSlots = getDailyTimeSlots(day, hour.start, hour.end, interval, true);
 
               return (
-                <tr key={`${startTime}-${endTime}`} className="divide-x divide-gray-200 align-top">
+                <tr key={`${startHour}-${endHour}`} className="divide-x divide-gray-200 align-top">
                   {/* Gutter time */}
-                  <td className="px-2 -mt-2 whitespace-nowrap text-xs text-gray-500 block">{startTime}</td>
+                  <td className="px-2 -mt-2 whitespace-nowrap text-xs text-gray-500 block">{startHour}</td>
 
                   {/* Rows by track */}
                   {tracks.map((track) => (

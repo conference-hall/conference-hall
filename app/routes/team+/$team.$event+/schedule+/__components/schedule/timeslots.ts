@@ -1,14 +1,4 @@
-import {
-  addMinutes,
-  differenceInMinutes,
-  endOfDay,
-  format,
-  isAfter,
-  isBefore,
-  isEqual,
-  parse,
-  startOfDay,
-} from 'date-fns';
+import { addMinutes, differenceInMinutes, endOfDay, format, isAfter, isBefore, isEqual, startOfDay } from 'date-fns';
 
 import type { TimeSlot } from '../schedule.types.ts';
 
@@ -35,14 +25,12 @@ export const generateDailyTimeSlots = (day: Date, intervalMinutes: number): Arra
 
 export const getDailyTimeSlots = (
   day: Date,
-  startTime: string,
-  endTime: string,
+  start: Date,
+  end: Date,
   intervalMinutes: number,
   includeEndSlot = false,
 ): Array<TimeSlot> => {
   const timeSlots = generateDailyTimeSlots(day, intervalMinutes);
-  const start = parse(startTime, 'HH:mm', day);
-  const end = parse(endTime, 'HH:mm', day);
 
   const result = timeSlots.filter((slot) => {
     if (includeEndSlot) {
