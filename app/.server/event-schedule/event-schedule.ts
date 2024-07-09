@@ -7,7 +7,6 @@ import { ForbiddenError, ForbiddenOperationError, NotFoundError } from '~/libs/e
 import { UserEvent } from '../event-settings/user-event.ts';
 import type {
   ScheduleCreateData,
-  ScheduleEditData,
   ScheduleSessionCreateData,
   ScheduleSessionUpdateData,
   ScheduleTrackSaveData,
@@ -165,7 +164,7 @@ export class EventSchedule {
   }
 
   // TODO: Add tests
-  async edit(data: Partial<Prisma.ScheduleCreateInput>) {
+  async update(data: Partial<Prisma.ScheduleCreateInput>) {
     const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
     if (event.type === 'MEETUP') throw new ForbiddenOperationError();
 
@@ -184,16 +183,6 @@ export class EventSchedule {
     if (!schedule) throw new NotFoundError('Schedule not found');
 
     await db.schedule.delete({ where: { id: schedule.id } });
-  }
-
-  async saveSettings(data: ScheduleEditData) {
-    const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
-    if (event.type === 'MEETUP') throw new ForbiddenOperationError();
-
-    const schedule = await db.schedule.findFirst({ where: { eventId: event.id } });
-    if (!schedule) throw new NotFoundError('Schedule not found');
-
-    await db.schedule.update({ data, where: { id: schedule.id } });
   }
 
   async saveTrack(data: ScheduleTrackSaveData) {

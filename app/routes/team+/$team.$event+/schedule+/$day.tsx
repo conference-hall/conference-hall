@@ -71,7 +71,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     case 'update-display-times': {
       const result = parseWithZod(form, ScheduleDisplayTimesUpdateSchema);
       if (!result.success) return toast('error', 'An error occured');
-      await eventSchedule.edit(result.value);
+      await eventSchedule.update(result.value);
       break;
     }
   }

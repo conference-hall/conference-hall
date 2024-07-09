@@ -36,8 +36,8 @@ const DEFAULT_ZOOM_LEVEL = 1;
 
 type ScheduleProps = {
   day: Date;
-  startTime: Date; // TODO: rename display time
-  endTime: Date; // TODO: rename display time
+  startTime: Date;
+  endTime: Date;
   timezone: string;
   interval?: number;
   tracks: Array<Track>;

@@ -7,7 +7,6 @@ import { userFactory } from 'tests/factories/users.ts';
 import { ForbiddenError, ForbiddenOperationError, NotFoundError } from '~/libs/errors.server.ts';
 
 import { EventSchedule } from './event-schedule.ts';
-import type { ScheduleEditData } from './event-schedule.types.ts';
 
 describe('EventSchedule', () => {
   let owner: User, reviewer: User;
@@ -60,14 +59,12 @@ describe('EventSchedule', () => {
     });
   });
 
-  describe('#saveSettings', () => {
-    const scheduleSettings: ScheduleEditData = {
-      name: 'New schedule name',
-    };
+  describe('#update', () => {
+    const scheduleSettings = { name: 'New schedule name' };
 
     it('save schedule settings', async () => {
       const settings = EventSchedule.for(owner.id, team.slug, event.slug);
-      await settings.saveSettings(scheduleSettings);
+      await settings.update(scheduleSettings);
 
       const actual = await settings.get();
       expect(actual?.name).toEqual(scheduleSettings.name);
@@ -76,21 +73,21 @@ describe('EventSchedule', () => {
     it('throws not found Error when no schedule defined for the event', async () => {
       const eventWithoutSchedule = await eventFactory({ team, traits: ['conference'] });
       await expect(
-        EventSchedule.for(owner.id, team.slug, eventWithoutSchedule.slug).saveSettings(scheduleSettings),
+        EventSchedule.for(owner.id, team.slug, eventWithoutSchedule.slug).update(scheduleSettings),
       ).rejects.toThrowError(NotFoundError);
     });
 
     it('throws forbidden error for reviewers', async () => {
-      await expect(
-        EventSchedule.for(reviewer.id, team.slug, event.slug).saveSettings(scheduleSettings),
-      ).rejects.toThrowError(ForbiddenOperationError);
+      await expect(EventSchedule.for(reviewer.id, team.slug, event.slug).update(scheduleSettings)).rejects.toThrowError(
+        ForbiddenOperationError,
+      );
     });
 
     it('throws forbidden error for meetups', async () => {
       const meetup = await eventFactory({ team, traits: ['meetup'] });
-      await expect(
-        EventSchedule.for(owner.id, team.slug, meetup.slug).saveSettings(scheduleSettings),
-      ).rejects.toThrowError(ForbiddenOperationError);
+      await expect(EventSchedule.for(owner.id, team.slug, meetup.slug).update(scheduleSettings)).rejects.toThrowError(
+        ForbiddenOperationError,
+      );
     });
   });
 

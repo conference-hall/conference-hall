@@ -1,18 +1,17 @@
 import { ArrowLeftIcon } from '@heroicons/react/20/solid';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
-import { useActionData, useLoaderData } from '@remix-run/react';
+import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { EventSchedule } from '~/.server/event-schedule/event-schedule.ts';
-import { ScheduleEditSchema, ScheduleTrackSaveSchema } from '~/.server/event-schedule/event-schedule.types.ts';
+import { ScheduleTrackSaveSchema } from '~/.server/event-schedule/event-schedule.types.ts';
 import { ButtonLink } from '~/design-system/buttons.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { parseWithZod } from '~/libs/validators/zod-parser.ts';
 
 import { ScheduleDeleteForm } from './__components/forms/schedule-delete-form.tsx';
-import { ScheduleEditForm } from './__components/forms/schedule-edit-form.tsx';
 import { TracksForm } from './__components/forms/tracks-form.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
@@ -47,12 +46,6 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       await schedule.deleteTrack(trackId);
       break;
     }
-    case 'edit-schedule': {
-      const result = parseWithZod(form, ScheduleEditSchema);
-      if (!result.success) return json(result.error);
-      await schedule.edit(result.value);
-      break;
-    }
     case 'delete-schedule': {
       await schedule.delete();
       break;
@@ -63,7 +56,6 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
 export default function ScheduleSettingsRoute() {
   const schedule = useLoaderData<typeof loader>();
-  const errors = useActionData<typeof action>();
 
   return (
     <Page>
@@ -73,8 +65,6 @@ export default function ScheduleSettingsRoute() {
         </ButtonLink>
       </Page.Heading>
       <div className="space-y-6">
-        <ScheduleEditForm name={schedule.name} errors={errors} />
-
         <TracksForm tracks={schedule.tracks} />
 
         <ScheduleDeleteForm />
