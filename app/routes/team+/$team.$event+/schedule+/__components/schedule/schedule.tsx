@@ -1,9 +1,9 @@
 import type { CollisionDetection, DragEndEvent } from '@dnd-kit/core';
 import {
-  closestCenter,
   DndContext,
   PointerSensor,
   rectIntersection,
+  useDndContext,
   useDraggable,
   useDroppable,
   useSensor,
@@ -186,18 +186,25 @@ function Timeslot({
 }: TimeslotProps) {
   const id = `${trackId}-${formatTime(timeslot.start)}`;
 
-  // current session
-  const session = sessions.find(
-    (session) => session.trackId === trackId && haveSameStartDate(timeslot, session.timeslot),
-  );
-  const hasSession = Boolean(session && isTimeSlotIncluded(timeslot, session.timeslot));
-
-  // Droppable for sessions switch
-  const { setNodeRef } = useDroppable({ id, data: { type: 'timeslot', trackId, timeslot }, disabled: hasSession });
-
   // selection attributes
   const isSelected = selector.isSelectedSlot(trackId, timeslot);
   const selectedSlot = selector.getSelectedSlot(trackId);
+
+  // is timeslot include a session
+  const { active } = useDndContext();
+  const currentSession = sessions.find((s) => s.trackId === trackId && isTimeSlotIncluded(timeslot, s.timeslot));
+  const hasSession = Boolean(currentSession);
+  const isCurrentSessionDragging = currentSession && active?.id === currentSession.id;
+
+  // displayed session on first session timeslot
+  const session = currentSession && haveSameStartDate(timeslot, currentSession.timeslot) ? currentSession : null;
+
+  // Droppable for sessions switch
+  const { setNodeRef, isOver } = useDroppable({
+    id,
+    data: { type: 'timeslot', trackId, timeslot },
+    disabled: hasSession && !isCurrentSessionDragging,
+  });
 
   return (
     <div
@@ -209,6 +216,7 @@ function Timeslot({
       className={cx('relative', {
         'z-10': !hasSession,
         'hover:bg-gray-50': !hasSession && !isSelected,
+        'border-t-2 border-blue-600': isOver,
       })}
     >
       {session ? (
@@ -246,10 +254,10 @@ function SessionWrapper({ session, renderSession, onClick, interval, zoomLevel }
   const { attributes, listeners, setNodeRef, transform, isDragging, over } = useDraggable({
     id: session.id,
     data: { session },
-  }); // TODO: disable when currently selecting
+  });
 
   // droppable to switch sessions
-  const { setNodeRef: setDropRef } = useDroppable({
+  const { setNodeRef: setDropRef, isOver } = useDroppable({
     id: `drop:${session.id}`,
     data: { type: 'session', session },
     disabled: isDragging,
@@ -260,17 +268,16 @@ function SessionWrapper({ session, renderSession, onClick, interval, zoomLevel }
   const intervalsCount = countIntervalsInTimeSlot(session.timeslot, interval);
   const height = getTimeslotHeight(zoomLevel) * intervalsCount + Math.ceil(totalTimeMinutes / HOUR_INTERVAL) - 3;
 
-  // update displayed timeslot when dragging
+  // update displayed times on session when dragging
   if (isDragging && over?.data?.current?.type === 'timeslot') {
     const { timeslot } = over.data.current || {};
     session = { ...session, timeslot: moveTimeSlotStart(session.timeslot, timeslot.start) };
   }
 
-  // renderSession(session, isDragging, height)
   return (
     <div
       ref={setNodeRef}
-      className="absolute z-20 overflow-hidden text-left"
+      className={cx('absolute z-20 overflow-hidden text-left', { 'ring-1 ring-blue-600 rounded-md': isOver })}
       onClick={() => (onClick ? onClick(session) : undefined)}
       style={{
         top: '1px',
@@ -296,20 +303,14 @@ function getTimeslotHeight(zoomLevel: number) {
   return TIMESLOT_HEIGHTS[DEFAULT_ZOOM_LEVEL];
 }
 
-// Custom collision detection function
+// Check for collisions prioritizing the top of droppable elements
 const collisionDetection: CollisionDetection = (args) => {
   const { droppableContainers, collisionRect } = args;
 
-  // Check for collisions prioritizing the top of droppable elements
   const prioritizedCollisions = droppableContainers.filter(({ rect }) => {
     if (!rect.current) return false;
     return collisionRect.top >= rect.current.top && collisionRect.top <= rect.current.bottom;
   });
-
-  // If no collisions were found, fallback to the default closestCenter strategy
-  if (prioritizedCollisions.length === 0) {
-    return closestCenter(args);
-  }
 
   return rectIntersection({ ...args, droppableContainers: prioritizedCollisions });
 };
