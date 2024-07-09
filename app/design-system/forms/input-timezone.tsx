@@ -9,7 +9,7 @@ export function InputTimezone(props: Props) {
   return <ClientOnly>{() => <InputTimezoneWrapped {...props} />}</ClientOnly>;
 }
 
-// TODO: manage hydration issue (disabled input, disable hydration issues?)
+// TODOXXX: manage hydration issue (disabled input, disable hydration issues?)
 function InputTimezoneWrapped({ name, label, defaultValue, onChange }: Props) {
   const userTimezone = getUserTimezone();
   const timezonesOptions = getTimezonesList();

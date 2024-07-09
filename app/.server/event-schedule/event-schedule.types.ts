@@ -4,7 +4,7 @@ import { z } from 'zod';
 
 export const INTERVALS = [5, 10, 15] as const;
 
-// TODO: Add tests
+// TODOXXX: Add tests
 export const ScheduleCreateSchema = z
   .object({
     name: z.string().trim().min(1).max(255),
@@ -33,7 +33,7 @@ export const ScheduleTrackSaveSchema = z.object({
   name: z.string().trim().min(1).max(255),
 });
 
-// TODO: Add tests
+// TODOXXX: Add tests
 export const ScheduleDisplayTimesUpdateSchema = z
   .object({
     displayStartMinutes: z

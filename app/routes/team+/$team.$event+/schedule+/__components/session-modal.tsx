@@ -112,7 +112,7 @@ export function SessionModal({
                       <Subtitle truncate>{proposal.speakers.map((s) => s.name).join(', ')}</Subtitle>
                     </div>
                     <div className="flex gap-2 shrink-0">
-                      {/* TODO: set correct link */}
+                      {/* TODOXXX: set correct link */}
                       <IconLink
                         icon={ArrowTopRightOnSquareIcon}
                         label="See proposal"
@@ -153,12 +153,12 @@ export function SessionModal({
   );
 }
 
-// TODO: extract
+// TODOXXX: extract
 function getMinutesFromStartOfDay(date: Date): number {
   return differenceInMinutes(date, startOfDay(date));
 }
 
-// TODO: extract
+// TODOXXX: extract
 function setMinutesFromStartOfDay(date: Date, minutes: number): Date {
   return addMinutes(startOfDay(date), minutes);
 }
@@ -172,14 +172,14 @@ function SearchProposal({ onChangeProposal, onClose }: SearchProposalProps) {
   const [query, setQuery] = useState('');
   const [status, setStatus] = useState('accepted');
 
-  // TODO: Limit search results to 3 or 4
-  // TODO: Set correct URL with team and event
+  // TODOXXX: Limit search results to 3 or 4
+  // TODOXXX: Set correct URL with team and event
   const fetcher = useFetcher<typeof loader>();
   const search = (filters: { query: string; status: string }) => {
     fetcher.submit(filters, { action: '/team/gdg-nantes/devfest-nantes/reviews/autocomplete', method: 'GET' });
   };
 
-  // TODO: Debounce
+  // TODOXXX: Debounce
   const handleChangeQuery = (event: ChangeEvent<HTMLInputElement>) => {
     setQuery(event.target.value);
     search({ query: event.target.value, status });
