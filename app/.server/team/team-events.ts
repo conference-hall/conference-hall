@@ -2,7 +2,7 @@ import { db } from 'prisma/db.server.ts';
 import { z } from 'zod';
 
 import { SlugAlreadyExistsError } from '~/libs/errors.server.ts';
-import { slugValidator } from '~/libs/validators/slug.ts';
+import { SlugSchema } from '~/libs/validators/slug.ts';
 
 import { UserTeam } from './user-team.ts';
 
@@ -11,7 +11,7 @@ export const EventCreateSchema = z.object({
   visibility: z.enum(['PUBLIC', 'PRIVATE']),
   type: z.enum(['CONFERENCE', 'MEETUP']),
   timezone: z.string(),
-  slug: slugValidator,
+  slug: SlugSchema,
 });
 
 export class TeamEvents {

@@ -3,13 +3,13 @@ import { db } from 'prisma/db.server.ts';
 import { z } from 'zod';
 
 import { ForbiddenOperationError, SlugAlreadyExistsError, TeamNotFoundError } from '~/libs/errors.server.ts';
-import { slugValidator } from '~/libs/validators/slug.ts';
+import { SlugSchema } from '~/libs/validators/slug.ts';
 
 export type Team = Awaited<ReturnType<typeof UserTeam.prototype.get>>;
 
 export const TeamUpdateSchema = z.object({
   name: z.string().trim().min(3).max(50),
-  slug: slugValidator,
+  slug: SlugSchema,
 });
 
 export class UserTeam {

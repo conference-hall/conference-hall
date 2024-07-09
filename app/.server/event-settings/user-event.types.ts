@@ -2,12 +2,12 @@ import { endOfDay, parse, startOfDay } from 'date-fns';
 import { fromZonedTime, toZonedTime } from 'date-fns-tz';
 import { z } from 'zod';
 
-import { slugValidator } from '~/libs/validators/slug.ts';
+import { SlugSchema } from '~/libs/validators/slug.ts';
 
 export const EventGeneralSettingsSchema = z.object({
   name: z.string().trim().min(3).max(50),
   visibility: z.enum(['PUBLIC', 'PRIVATE']),
-  slug: slugValidator,
+  slug: SlugSchema,
   timezone: z.string(),
 });
 

@@ -23,8 +23,6 @@ export class EventSchedule {
     return new EventSchedule(eventSlug, userEvent);
   }
 
-  // TODO: Improve tests
-  // TODO: moves all "this.userEvent.allowedFor" in controllers ?
   async get() {
     const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
     if (event.type === 'MEETUP') throw new ForbiddenOperationError();
@@ -44,7 +42,6 @@ export class EventSchedule {
     };
   }
 
-  // TODO: Add tests
   async create(data: ScheduleCreateData) {
     const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
     if (event.type === 'MEETUP') throw new ForbiddenOperationError();
@@ -63,8 +60,95 @@ export class EventSchedule {
     });
   }
 
-  // TODO: Add tests
-  // TODO Zod check dayIndex is number
+  async update(data: Partial<Prisma.ScheduleCreateInput>) {
+    const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
+    if (event.type === 'MEETUP') throw new ForbiddenOperationError();
+
+    const schedule = await db.schedule.findFirst({ where: { eventId: event.id } });
+    if (!schedule) throw new NotFoundError('Schedule not found');
+
+    await db.schedule.update({ data, where: { id: schedule.id } });
+  }
+
+  async delete() {
+    const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
+    if (event.type === 'MEETUP') throw new ForbiddenOperationError();
+
+    const schedule = await db.schedule.findFirst({ where: { eventId: event.id } });
+    if (!schedule) throw new NotFoundError('Schedule not found');
+
+    await db.schedule.delete({ where: { id: schedule.id } });
+  }
+
+  async addSession(data: ScheduleSessionCreateData) {
+    const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
+    if (event.type === 'MEETUP') throw new ForbiddenOperationError();
+
+    const schedule = await db.schedule.findFirst({ where: { eventId: event.id } });
+    if (!schedule) throw new NotFoundError('Schedule not found');
+
+    return db.scheduleSession.create({
+      data: {
+        trackId: data.trackId,
+        start: data.start,
+        end: data.end,
+        scheduleId: schedule.id,
+      },
+    });
+  }
+
+  async updateSession(data: ScheduleSessionUpdateData) {
+    const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
+    if (event.type === 'MEETUP') throw new ForbiddenOperationError();
+
+    const schedule = await db.schedule.findFirst({ where: { eventId: event.id } });
+    if (!schedule) throw new NotFoundError('Schedule not found');
+
+    return db.scheduleSession.update({
+      data: {
+        trackId: data.trackId,
+        start: data.start,
+        end: data.end,
+        proposalId: data.proposalId ? data.proposalId : undefined,
+      },
+      where: { id: data.id, scheduleId: schedule.id },
+    });
+  }
+
+  async deleteSession(sessionId: string) {
+    const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
+    if (event.type === 'MEETUP') throw new ForbiddenOperationError();
+
+    const schedule = await db.schedule.findFirst({ where: { eventId: event.id } });
+    if (!schedule) throw new NotFoundError('Schedule not found');
+
+    await db.scheduleSession.delete({ where: { id: sessionId, scheduleId: schedule.id } });
+  }
+
+  async saveTrack(data: ScheduleTrackSaveData) {
+    const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
+    if (event.type === 'MEETUP') throw new ForbiddenOperationError();
+
+    const schedule = await db.schedule.findFirst({ where: { eventId: event.id } });
+    if (!schedule) throw new NotFoundError('Schedule not found');
+
+    if (data.id) {
+      return db.scheduleTrack.update({ where: { id: data.id }, data: { name: data.name } });
+    }
+    return db.scheduleTrack.create({ data: { name: data.name, schedule: { connect: { id: schedule.id } } } });
+  }
+
+  async deleteTrack(trackId: string) {
+    const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
+    if (event.type === 'MEETUP') throw new ForbiddenOperationError();
+
+    const schedule = await db.schedule.findFirst({ where: { eventId: event.id }, include: { tracks: true } });
+    if (!schedule) throw new NotFoundError('Schedule not found');
+    if (schedule.tracks.length <= 1) throw new ForbiddenError('You must have at least one room defined');
+
+    return db.scheduleTrack.delete({ where: { id: trackId } });
+  }
+
   async getSchedulesByDay(dayIndex: number) {
     const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
     if (event.type === 'MEETUP') throw new ForbiddenOperationError();
@@ -125,87 +209,5 @@ export class EventSchedule {
           : null,
       })),
     };
-  }
-
-  // TODO: Add tests
-  async addSession(data: ScheduleSessionCreateData) {
-    const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
-    if (event.type === 'MEETUP') throw new ForbiddenOperationError();
-
-    const schedule = await db.schedule.findFirst({ where: { eventId: event.id }, include: { sessions: true } });
-    if (!schedule) return null;
-
-    await db.scheduleSession.create({
-      data: {
-        trackId: data.trackId,
-        start: data.start,
-        end: data.end,
-        scheduleId: schedule.id,
-      },
-    });
-  }
-
-  // TODO: Add tests
-  async updateSession(data: ScheduleSessionUpdateData) {
-    await db.scheduleSession.update({
-      data: {
-        trackId: data.trackId,
-        start: data.start,
-        end: data.end,
-        proposalId: data.proposalId ? data.proposalId : undefined,
-      },
-      where: { id: data.id },
-    });
-  }
-
-  // TODO: Add tests
-  async deleteSession(sessionId: string) {
-    await db.scheduleSession.delete({ where: { id: sessionId } });
-  }
-
-  // TODO: Add tests
-  async update(data: Partial<Prisma.ScheduleCreateInput>) {
-    const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
-    if (event.type === 'MEETUP') throw new ForbiddenOperationError();
-
-    const schedule = await db.schedule.findFirst({ where: { eventId: event.id } });
-    if (!schedule) throw new NotFoundError('Schedule not found');
-
-    await db.schedule.update({ data, where: { id: schedule.id } });
-  }
-
-  // TODO: Add tests
-  async delete() {
-    const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
-    if (event.type === 'MEETUP') throw new ForbiddenOperationError();
-
-    const schedule = await db.schedule.findFirst({ where: { eventId: event.id } });
-    if (!schedule) throw new NotFoundError('Schedule not found');
-
-    await db.schedule.delete({ where: { id: schedule.id } });
-  }
-
-  async saveTrack(data: ScheduleTrackSaveData) {
-    const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
-    if (event.type === 'MEETUP') throw new ForbiddenOperationError();
-
-    const schedule = await db.schedule.findFirst({ where: { eventId: event.id } });
-    if (!schedule) throw new NotFoundError('Schedule not found');
-
-    if (data.id) {
-      return db.scheduleTrack.update({ where: { id: data.id }, data: { name: data.name } });
-    }
-    return db.scheduleTrack.create({ data: { name: data.name, schedule: { connect: { id: schedule.id } } } });
-  }
-
-  async deleteTrack(trackId: string) {
-    const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
-    if (event.type === 'MEETUP') throw new ForbiddenOperationError();
-
-    const schedule = await db.schedule.findFirst({ where: { eventId: event.id }, include: { tracks: true } });
-    if (!schedule) throw new NotFoundError('Schedule not found');
-    if (schedule.tracks.length <= 1) throw new ForbiddenError('You must have at least one room defined');
-
-    return db.scheduleTrack.delete({ where: { id: trackId } });
   }
 }

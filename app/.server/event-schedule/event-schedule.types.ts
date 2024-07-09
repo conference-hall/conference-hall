@@ -64,6 +64,9 @@ export const ScheduleSessionUpdateSchema = ScheduleSessionCreateSchema.extend({
   proposalId: z.string().optional(),
 });
 
+export const SchedulSessionIdSchema = z.string();
+export const ScheduleDayIdSchema = z.coerce.number().int();
+
 export type ScheduleCreateData = z.infer<typeof ScheduleCreateSchema>;
 export type ScheduleTrackSaveData = z.infer<typeof ScheduleTrackSaveSchema>;
 export type ScheduleSessionCreateData = z.infer<typeof ScheduleSessionCreateSchema>;

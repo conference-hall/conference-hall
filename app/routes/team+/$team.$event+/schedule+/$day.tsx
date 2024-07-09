@@ -7,9 +7,11 @@ import invariant from 'tiny-invariant';
 
 import { EventSchedule } from '~/.server/event-schedule/event-schedule.ts';
 import {
+  ScheduleDayIdSchema,
   ScheduleDisplayTimesUpdateSchema,
   ScheduleSessionCreateSchema,
   ScheduleSessionUpdateSchema,
+  SchedulSessionIdSchema,
 } from '~/.server/event-schedule/event-schedule.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
@@ -32,8 +34,11 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   invariant(params.day, 'Invalid day');
 
   const eventSchedule = EventSchedule.for(userId, params.team, params.event);
-  const schedule = await eventSchedule.getSchedulesByDay(Number(params.day));
 
+  const result = ScheduleDayIdSchema.safeParse(params.day);
+  if (!result.success) return redirect(`/team/${params.team}/${params.event}`);
+
+  const schedule = await eventSchedule.getSchedulesByDay(result.data);
   if (!schedule) return redirect(`/team/${params.team}/${params.event}/schedule`);
 
   return json(schedule);
@@ -50,7 +55,6 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const form = await request.formData();
   const intent = form.get('intent');
 
-  // TODO: Secure to update event and schedule sessions
   switch (intent) {
     case 'add-session': {
       const result = parseWithZod(form, ScheduleSessionCreateSchema);
@@ -65,7 +69,9 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       break;
     }
     case 'delete-session': {
-      await eventSchedule.deleteSession(String(form.get('id')));
+      const result = parseWithZod(form, SchedulSessionIdSchema);
+      if (!result.success) return toast('error', 'An error occured');
+      await eventSchedule.deleteSession(result.value);
       break;
     }
     case 'update-display-times': {

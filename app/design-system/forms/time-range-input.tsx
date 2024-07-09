@@ -76,7 +76,6 @@ function generateTimeOptions(step: number, min: number, max: number) {
   }));
 }
 
-// TODO: extract
 function formatTime(minutes: number): string {
   const date = setMinutes(startOfDay(new Date()), minutes);
   return format(date, 'HH:mm');

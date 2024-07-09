@@ -3,13 +3,13 @@ import { z } from 'zod';
 
 import { ForbiddenOperationError, SlugAlreadyExistsError } from '~/libs/errors.server.ts';
 import { sortBy } from '~/libs/utils/arrays-sort-by.ts';
-import { slugValidator } from '~/libs/validators/slug.ts';
+import { SlugSchema } from '~/libs/validators/slug.ts';
 
 import { TeamBetaAccess } from './team-beta-access.ts';
 
 export const TeamCreateSchema = z.object({
   name: z.string().trim().min(3).max(50),
-  slug: slugValidator,
+  slug: SlugSchema,
 });
 
 export class UserTeams {
