@@ -6,7 +6,6 @@ import {
   PaintBrushIcon,
   TrashIcon,
 } from '@heroicons/react/24/outline';
-import { addMinutes, differenceInMinutes, startOfDay } from 'date-fns';
 import type { FormEvent } from 'react';
 import { useEffect, useRef, useState } from 'react';
 
@@ -17,6 +16,7 @@ import { SelectNative } from '~/design-system/forms/select-native.tsx';
 import { TimeRangeInput } from '~/design-system/forms/time-range-input.tsx';
 import { IconButton, IconLink } from '~/design-system/icon-buttons.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
+import { getMinutesFromStartOfDay, setMinutesFromStartOfDay } from '~/libs/datetimes/datetimes.ts';
 
 import type { ScheduleSession, Track } from '../schedule.types.ts';
 import { SESSION_COLORS } from './constants.ts';
@@ -175,14 +175,4 @@ export function SessionForm({
       </div>
     </>
   );
-}
-
-// TODOXXX: extract
-function getMinutesFromStartOfDay(date: Date): number {
-  return differenceInMinutes(date, startOfDay(date));
-}
-
-// TODOXXX: extract
-function setMinutesFromStartOfDay(date: Date, minutes: number): Date {
-  return addMinutes(startOfDay(date), minutes);
 }

@@ -1,4 +1,5 @@
 // TODOXXX: Add tests
+// TODOXXX: Extract other timezones utils
 
 // Get user timezone
 export function getUserTimezone() {

@@ -13,9 +13,7 @@ import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
 
-import { getGMTOffset } from '~/libs/datetimes/timezone.ts';
-
-import type { ScheduleSession, TimeSlot, Track } from '../schedule.types.ts';
+import type { TimeSlot } from '~/libs/datetimes/timeslots.ts';
 import {
   countIntervalsInTimeSlot,
   formatTime,
@@ -24,7 +22,10 @@ import {
   isTimeSlotIncluded,
   moveTimeSlotStart,
   totalTimeInMinutes,
-} from './timeslots.ts';
+} from '~/libs/datetimes/timeslots.ts';
+import { getGMTOffset } from '~/libs/datetimes/timezone.ts';
+
+import type { ScheduleSession, Track } from '../schedule.types.ts';
 import type { TimeSlotSelector } from './use-timeslot-selector.tsx';
 import { useTimeslotSelector } from './use-timeslot-selector.tsx';
 

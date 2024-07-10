@@ -1,7 +1,14 @@
 import { useState } from 'react';
 
-import type { ScheduleSession, TimeSlot } from '../schedule.types.ts';
-import { areTimeSlotsOverlapping, getFullTimeslot, isAfterTimeSlot, isTimeSlotIncluded } from './timeslots.ts';
+import type { TimeSlot } from '~/libs/datetimes/timeslots.ts';
+import {
+  areTimeSlotsOverlapping,
+  getFullTimeslot,
+  isAfterTimeSlot,
+  isTimeSlotIncluded,
+} from '~/libs/datetimes/timeslots.ts';
+
+import type { ScheduleSession } from '../schedule.types.ts';
 
 export type TimeSlotSelector = {
   isSelecting: boolean;

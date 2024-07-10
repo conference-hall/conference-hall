@@ -1,8 +1,7 @@
+import type { TimeSlot } from '~/libs/datetimes/timeslots.ts';
 import type { ConfirmationStatus, DeliberationStatus } from '~/types/proposals.types.ts';
 
 export type Track = { id: string; name: string };
-
-export type TimeSlot = { start: Date; end: Date };
 
 export type ScheduleSession = {
   id: string;

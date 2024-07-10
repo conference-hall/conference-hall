@@ -1,14 +1,14 @@
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/20/solid';
 import { ClockIcon } from '@heroicons/react/24/outline';
-import { differenceInMinutes, startOfDay } from 'date-fns';
 
 import { button } from '~/design-system/buttons.tsx';
 import { TimeRangeInput } from '~/design-system/forms/time-range-input.tsx';
 import { IconButton } from '~/design-system/icon-buttons.tsx';
 import { Text } from '~/design-system/typography.tsx';
+import { getMinutesFromStartOfDay } from '~/libs/datetimes/datetimes.ts';
 
-import { formatTime } from '../schedule/timeslots.ts';
+import { formatTime } from '../../../../../../libs/datetimes/timeslots.ts';
 
 type Props = {
   startTime: Date;
@@ -49,9 +49,4 @@ export function DisplayTimesMenu({ startTime, endTime, onChangeDisplayTime }: Pr
       </PopoverPanel>
     </Popover>
   );
-}
-
-// TODOXXX: extract
-function getMinutesFromStartOfDay(date: Date): number {
-  return differenceInMinutes(date, startOfDay(date));
 }

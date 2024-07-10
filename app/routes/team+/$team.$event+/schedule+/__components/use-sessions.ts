@@ -3,8 +3,10 @@ import { formatISO } from 'date-fns';
 import { fromZonedTime, toZonedTime } from 'date-fns-tz';
 import { v4 as uuid } from 'uuid';
 
-import type { ScheduleSession, SessionData, TimeSlot } from './schedule.types.ts';
-import { areTimeSlotsOverlapping, moveTimeSlotStart } from './schedule/timeslots.ts';
+import type { TimeSlot } from '~/libs/datetimes/timeslots.ts';
+import { areTimeSlotsOverlapping, moveTimeSlotStart } from '~/libs/datetimes/timeslots.ts';
+
+import type { ScheduleSession, SessionData } from './schedule.types.ts';
 
 export function useSessions(initialSessions: Array<SessionData>, timezone: string) {
   const sessions = useOptimisticSessions(initialSessions, timezone);

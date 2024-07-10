@@ -1,8 +1,8 @@
 import { CheckIcon, ClockIcon, XMarkIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
 
+import { formatTimeSlot } from '../../../../../../libs/datetimes/timeslots.ts';
 import type { ScheduleProposalData, ScheduleSession } from '../schedule.types.ts';
-import { formatTimeSlot } from '../schedule/timeslots.ts';
 import { SESSION_COLORS } from './constants.ts';
 
 type SessionBlockProps = { session: ScheduleSession };
