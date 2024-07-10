@@ -1,67 +1,61 @@
-import { Dialog, DialogPanel, DialogTitle, Fieldset, Label, Legend, Radio, RadioGroup } from '@headlessui/react';
-import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/20/solid';
-import { ArrowTopRightOnSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
+import {
+  Combobox,
+  ComboboxInput,
+  ComboboxOption,
+  ComboboxOptions,
+  Dialog,
+  DialogPanel,
+  DialogTitle,
+} from '@headlessui/react';
+import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
+import {
+  ArrowTopRightOnSquareIcon,
+  ClockIcon,
+  DocumentPlusIcon,
+  FolderIcon,
+  MapPinIcon,
+  PaintBrushIcon,
+  TrashIcon,
+} from '@heroicons/react/24/outline';
 import { useFetcher } from '@remix-run/react';
-import { cx } from 'class-variance-authority';
-import { addMinutes, differenceInMinutes, startOfDay } from 'date-fns';
-import type { ChangeEvent } from 'react';
+import { addMinutes, differenceInMinutes, formatISO, startOfDay } from 'date-fns';
+import { fromZonedTime } from 'date-fns-tz';
 import { useState } from 'react';
 
-import { Button, button } from '~/design-system/buttons.tsx';
-import { Divider } from '~/design-system/divider.tsx';
+import { Button } from '~/design-system/buttons.tsx';
+import ColorPicker from '~/design-system/forms/color-picker.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { SelectNative } from '~/design-system/forms/select-native.tsx';
 import { TimeRangeInput } from '~/design-system/forms/time-range-input.tsx';
 import { IconButton, IconLink } from '~/design-system/icon-buttons.tsx';
 import { Background } from '~/design-system/transitions.tsx';
-import { H2, Subtitle, Text } from '~/design-system/typography.tsx';
+import { H2, Subtitle } from '~/design-system/typography.tsx';
 
-import type { loader } from '../../reviews+/autocomplete.tsx';
-import type { ScheduleProposalData, ScheduleSession, TimeSlot, Track } from './schedule.types.ts';
-
-const FILTER_OPTIONS = [
-  { name: 'Accepted', value: 'accepted' },
-  { name: 'Pending', value: 'pending' },
-  { name: 'Rejected', value: 'rejected' },
-  { name: 'All', value: '' },
-];
+import type { loader as AutocompleteLoader } from '../../reviews+/autocomplete.tsx';
+import type { loader as ScheduleDayLoader } from '../$day.tsx';
+import type { ScheduleProposalData, ScheduleSession, Track } from './schedule.types.ts';
 
 type SessionModalProps = {
   session: ScheduleSession;
   startTime: Date;
   endTime: Date;
+  timezone: string;
   tracks: Array<Track>;
-  onDeleteSession: (session: ScheduleSession) => void;
-  onUpdateSession: (session: ScheduleSession, newTrackId: string, newTimeslot: TimeSlot, proposalId?: string) => void;
   onClose: () => void;
 };
 
-export function SessionModal({
-  session,
-  startTime,
-  endTime,
-  tracks,
-  onDeleteSession,
-  onUpdateSession,
-  onClose,
-}: SessionModalProps) {
-  const [timeslot, setTimeslot] = useState(session.timeslot);
-  const [trackId, setTrackId] = useState(session.trackId);
+export function SessionModal({ session, startTime, endTime, timezone, tracks, onClose }: SessionModalProps) {
   const [proposal, setProposal] = useState(session.proposal);
-  const [isSearching, setSearching] = useState(!session.proposal);
 
-  const handleSave = () => {
-    onUpdateSession(session, trackId, timeslot, proposal?.id);
-    onClose();
-  };
+  const [isSearching, setSearching] = useState(false);
 
-  const handleDelete = () => {
-    onDeleteSession(session);
+  const handleClose = () => {
+    if (isSearching) return setSearching(false);
     onClose();
   };
 
   return (
-    <Dialog className="relative z-40" open onClose={onClose}>
+    <Dialog className="relative z-40" open onClose={handleClose}>
       <Background />
 
       <div className="fixed inset-0 z-40 overflow-y-auto h-full">
@@ -73,83 +67,258 @@ export function SessionModal({
             <DialogTitle className="sr-only">Edit session</DialogTitle>
 
             {/* Header */}
-            <div className="flex items-center justify-between gap-2 p-4 bg-slate-50">
-              <TimeRangeInput
-                startTime={getMinutesFromStartOfDay(timeslot.start)}
-                endTime={getMinutesFromStartOfDay(timeslot.end)}
-                min={getMinutesFromStartOfDay(startTime)}
-                max={getMinutesFromStartOfDay(endTime) + 59}
-                step={5}
-                startRelative
-                onChange={(start, end) => {
-                  setTimeslot({
-                    start: setMinutesFromStartOfDay(timeslot.start, start),
-                    end: setMinutesFromStartOfDay(timeslot.start, end),
-                  });
-                }}
-              />
-              <SelectNative
-                name="trackId"
-                label="Track"
-                value={trackId}
-                onChange={(e) => setTrackId(e.target.value)}
-                options={tracks.map((t) => ({ name: t.name, value: t.id }))}
-                srOnly
-              />
-            </div>
-
-            <Divider />
 
             {/* Content */}
-            <div className="space-y-1 p-4 min-h-72">
-              {isSearching ? (
-                <SearchProposal onChangeProposal={setProposal} onClose={() => setSearching(false)} />
-              ) : proposal ? (
-                <>
-                  <div className="flex items-start justify-between gap-2">
-                    <div>
-                      <H2 size="l">{proposal?.title}</H2>
-                      <Subtitle truncate>{proposal.speakers.map((s) => s.name).join(', ')}</Subtitle>
-                    </div>
-                    <div className="flex gap-2 shrink-0">
-                      {/* TODOXXX: set correct link */}
-                      <IconLink
-                        icon={ArrowTopRightOnSquareIcon}
-                        label="See proposal"
-                        to={`/team/gdg-nantes/devfest-nantes/reviews/${proposal.id}`}
-                        variant="secondary"
-                        target="_blank"
-                      />
-                      <IconButton
-                        icon={MagnifyingGlassIcon}
-                        label="Search proposals"
-                        onClick={() => setSearching(true)}
-                        variant="secondary"
-                      />
-                    </div>
-                  </div>
-                </>
-              ) : null}
-            </div>
-
-            <Divider />
-
-            {/* Footer */}
-            <div className="flex items-center justify-between gap-2 p-4 bg-slate-50">
-              <Button variant="secondary" iconLeft={TrashIcon} onClick={handleDelete}>
-                Remove
-              </Button>
-              <div className="flex justify-end gap-3">
-                <Button variant="secondary" onClick={onClose}>
-                  Cancel
-                </Button>
-                <Button onClick={handleSave}>Save</Button>
-              </div>
-            </div>
+            {isSearching ? (
+              <SearchSessionProposal onChange={setProposal} onClose={() => setSearching(false)} />
+            ) : (
+              <SessionForm
+                session={session}
+                proposal={proposal}
+                startTime={startTime}
+                endTime={endTime}
+                timezone={timezone}
+                tracks={tracks}
+                onOpenSearch={() => setSearching(true)}
+                onClose={onClose}
+              />
+            )}
           </DialogPanel>
         </div>
       </div>
     </Dialog>
+  );
+}
+
+type SearchProposalProps = {
+  onChange: (proposal: ScheduleProposalData | null) => void;
+  onClose: () => void;
+};
+
+function SearchSessionProposal({ onChange, onClose }: SearchProposalProps) {
+  const [query, setQuery] = useState('');
+
+  // TODOXXX: Limit search results to 3 or 4
+  // TODOXXX: Set correct URL with team and event
+  const fetcher = useFetcher<typeof AutocompleteLoader>();
+  const search = (filters: { query: string }) => {
+    fetcher.submit(filters, { action: '/team/gdg-nantes/devfest-nantes/reviews/autocomplete', method: 'GET' });
+  };
+
+  const results = fetcher.data?.results ?? [];
+
+  // TODOXXX: Debounce
+  const handleChangeQuery = (value: string) => {
+    setQuery(value);
+    search({ query: value });
+  };
+
+  const handleChange = (value: string | ScheduleProposalData) => {
+    if (value === 'raw-session') {
+      onChange(null);
+    } else {
+      onChange(value as ScheduleProposalData);
+    }
+    onClose();
+  };
+
+  return (
+    <Combobox onChange={handleChange}>
+      {/* Search */}
+      <div className="relative border-b border-gray-100">
+        <MagnifyingGlassIcon
+          className="pointer-events-none absolute left-4 top-3.5 h-5 w-5 text-gray-400"
+          aria-hidden="true"
+        />
+        <ComboboxInput
+          autoFocus
+          className="h-12 w-full border-0 bg-transparent pl-11 pr-4 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm"
+          placeholder="Search by proposal titles or speaker names..."
+          onChange={(event) => handleChangeQuery(event.target.value)}
+        />
+      </div>
+
+      {(query === '' || results.length > 0) && (
+        <ComboboxOptions static as="ul" className="max-h-80 scroll-py-2 divide-y divide-gray-100 overflow-y-auto">
+          {/* Result list */}
+          {results.length > 0 && (
+            <li className="p-2">
+              <ul className="text-sm text-gray-700">
+                {results.map((proposal) => (
+                  <ComboboxOption
+                    as="li"
+                    key={proposal.id}
+                    value={proposal}
+                    className="group flex cursor-default select-none items-center rounded-md px-3 py-2 data-[focus]:bg-indigo-600 data-[focus]:text-white"
+                  >
+                    <span className="ml-3 flex-auto truncate">{proposal.title}</span>
+                    <span className="ml-3 hidden flex-none text-indigo-100 group-data-[focus]:inline">Select...</span>
+                  </ComboboxOption>
+                ))}
+              </ul>
+            </li>
+          )}
+
+          {/* Quick actions */}
+          <li className="p-2">
+            <h2 className="sr-only">Quick actions</h2>
+            <ul className="text-sm text-gray-700">
+              <ComboboxOption
+                as="li"
+                value="raw-session"
+                className="group flex cursor-default select-none items-center rounded-md px-3 py-2 data-[focus]:bg-indigo-600 data-[focus]:text-white"
+              >
+                <DocumentPlusIcon
+                  className="h-6 w-6 flex-none text-gray-400 group-data-[focus]:text-white"
+                  aria-hidden="true"
+                />
+                <span className="ml-3 flex-auto truncate">Raw session...</span>
+              </ComboboxOption>
+            </ul>
+          </li>
+        </ComboboxOptions>
+      )}
+
+      {/* No results */}
+      {query !== '' && results.length === 0 && (
+        <div className="px-6 py-14 text-center sm:px-14">
+          <FolderIcon className="mx-auto h-6 w-6 text-gray-400" aria-hidden="true" />
+          <p className="mt-4 text-sm text-gray-900">We couldn't find any proposals with that term. Please try again.</p>
+        </div>
+      )}
+    </Combobox>
+  );
+}
+
+type Props = {
+  session: ScheduleSession;
+  proposal?: ScheduleProposalData | null;
+  startTime: Date;
+  endTime: Date;
+  timezone: string;
+  tracks: Array<Track>;
+  onClose: () => void;
+  onOpenSearch: () => void;
+};
+
+function SessionForm({ session, proposal, startTime, endTime, timezone, tracks, onClose, onOpenSearch }: Props) {
+  const fetcher = useFetcher<typeof ScheduleDayLoader>();
+
+  const [timeslot, setTimeslot] = useState(session.timeslot);
+
+  return (
+    <>
+      <fetcher.Form
+        id="update-session-form"
+        method="POST"
+        onSubmit={onClose}
+        preventScrollReset
+        className="flex flex-col gap-8 px-6 py-6"
+      >
+        {proposal ? (
+          <div className="flex items-start justify-between gap-6">
+            <div>
+              <H2 size="l">{proposal?.title}</H2>
+              <Subtitle truncate>{proposal?.speakers.map((s) => s.name).join(', ')}</Subtitle>
+            </div>
+            <div className="flex gap-2 shrink-0">
+              {/* TODOXXX: set correct link */}
+              <IconLink
+                icon={ArrowTopRightOnSquareIcon}
+                label="See proposal"
+                to={`/team/gdg-nantes/devfest-nantes/reviews/${proposal?.id}`}
+                variant="secondary"
+                target="_blank"
+              />
+              <IconButton
+                icon={MagnifyingGlassIcon}
+                label="Search proposals"
+                type="button"
+                onClick={onOpenSearch}
+                variant="secondary"
+              />
+            </div>
+          </div>
+        ) : (
+          <div className="flex items-center justify-between gap-2">
+            <Input
+              name="name"
+              defaultValue={session.name ?? ''}
+              placeholder="Session name"
+              aria-label="Session name"
+              className="grow"
+            />
+            <IconButton
+              icon={MagnifyingGlassIcon}
+              label="Search proposals"
+              type="button"
+              onClick={onOpenSearch}
+              variant="secondary"
+            />
+          </div>
+        )}
+
+        <div className="flex items-center gap-6">
+          <ClockIcon className="h-5 w-5 shrink-0 text-gray-500" aria-hidden="true" />
+          <TimeRangeInput
+            nameStart="start-local"
+            startTime={getMinutesFromStartOfDay(timeslot.start)}
+            nameEnd="end-local"
+            endTime={getMinutesFromStartOfDay(timeslot.end)}
+            min={getMinutesFromStartOfDay(startTime)}
+            max={getMinutesFromStartOfDay(endTime) + 59}
+            step={5}
+            startRelative
+            hideFromLabel
+            onChange={(start, end) => {
+              setTimeslot({
+                start: setMinutesFromStartOfDay(timeslot.start, start),
+                end: setMinutesFromStartOfDay(timeslot.start, end),
+              });
+            }}
+          />
+          <input type="hidden" name="start" value={formatISO(fromZonedTime(timeslot.start, timezone))} />
+          <input type="hidden" name="end" value={formatISO(fromZonedTime(timeslot.end, timezone))} />
+        </div>
+
+        <div className="flex items-center gap-6">
+          <MapPinIcon className="h-5 w-5 shrink-0 text-gray-500" aria-hidden="true" />
+          <SelectNative
+            name="trackId"
+            label="Track"
+            defaultValue={session.trackId}
+            options={tracks.map((t) => ({ name: t.name, value: t.id }))}
+            srOnly
+          />
+        </div>
+
+        <div className="flex items-center gap-7">
+          <PaintBrushIcon className="h-5 w-5 shrink-0 text-gray-500" aria-hidden="true" />
+          <ColorPicker label="Choose a label color" srOnly />
+        </div>
+
+        <input type="hidden" name="id" value={session.id} />
+        <input type="hidden" name="proposalId" value={proposal ? proposal.id : ''} />
+      </fetcher.Form>
+
+      {/* Footer */}
+      <div className="flex items-center justify-between gap-2 p-6">
+        <fetcher.Form method="POST" onSubmit={onClose} preventScrollReset>
+          <input type="hidden" name="id" value={session.id} />
+          <Button type="submit" name="intent" value="delete-session" variant="secondary" iconLeft={TrashIcon}>
+            Remove
+          </Button>
+        </fetcher.Form>
+        <div className="flex justify-end gap-3">
+          <Button variant="secondary" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button type="submit" name="intent" value="update-session" form="update-session-form">
+            Save session
+          </Button>
+        </div>
+      </div>
+    </>
   );
 }
 
@@ -161,107 +330,4 @@ function getMinutesFromStartOfDay(date: Date): number {
 // TODOXXX: extract
 function setMinutesFromStartOfDay(date: Date, minutes: number): Date {
   return addMinutes(startOfDay(date), minutes);
-}
-
-type SearchProposalProps = {
-  onChangeProposal: (proposal: ScheduleProposalData) => void;
-  onClose: () => void;
-};
-
-function SearchProposal({ onChangeProposal, onClose }: SearchProposalProps) {
-  const [query, setQuery] = useState('');
-  const [status, setStatus] = useState('accepted');
-
-  // TODOXXX: Limit search results to 3 or 4
-  // TODOXXX: Set correct URL with team and event
-  const fetcher = useFetcher<typeof loader>();
-  const search = (filters: { query: string; status: string }) => {
-    fetcher.submit(filters, { action: '/team/gdg-nantes/devfest-nantes/reviews/autocomplete', method: 'GET' });
-  };
-
-  // TODOXXX: Debounce
-  const handleChangeQuery = (event: ChangeEvent<HTMLInputElement>) => {
-    setQuery(event.target.value);
-    search({ query: event.target.value, status });
-  };
-
-  const handleChangeStatus = (value: string) => {
-    setStatus(value);
-    search({ query, status: value });
-  };
-
-  const handleChangeProposal = (proposal: ScheduleProposalData) => {
-    onChangeProposal(proposal);
-    onClose();
-  };
-
-  return (
-    <>
-      <div className="flex items-center justify-between gap-2">
-        <Input
-          name="query"
-          icon={MagnifyingGlassIcon}
-          type="search"
-          placeholder="Search proposals by title or speakers"
-          aria-label="Search proposals"
-          value={query}
-          onChange={handleChangeQuery}
-          className="w-full"
-        />
-        <IconButton icon={XMarkIcon} label="Go back" onClick={onClose} variant="secondary" />
-      </div>
-      <div>
-        <FiltersRadio
-          label="Filters"
-          name="name"
-          value={status}
-          onChange={handleChangeStatus}
-          options={FILTER_OPTIONS}
-        />
-      </div>
-
-      <ul>
-        {fetcher.data?.results?.map((proposal) => (
-          <li key={proposal.id}>
-            <Text>{proposal.title}</Text>
-            <Button onClick={() => handleChangeProposal(proposal)}>Select</Button>
-          </li>
-        ))}
-      </ul>
-    </>
-  );
-}
-
-type FiltersRadioProps = {
-  label: string;
-  name: string;
-  value: string;
-  onChange: (value: string) => void;
-  options: Array<{ name: string; value: string }>;
-  className?: string;
-};
-
-function FiltersRadio({ label, value, onChange, options, className }: FiltersRadioProps) {
-  return (
-    <Fieldset className={className}>
-      <Legend className="sr-only">{label}</Legend>
-      <RadioGroup value={value} onChange={onChange}>
-        <div className="flex gap-2 flex-wrap mt-1">
-          {options.map((option) => (
-            <Radio
-              key={option.value}
-              value={option.value}
-              className={({ checked }) =>
-                cx('cursor-pointer', button({ variant: 'secondary', size: 's' }), {
-                  '!bg-indigo-100 ring-indigo-200 text-indigo-700 hover:bg-indigo-100': checked,
-                })
-              }
-            >
-              <Label>{option.name}</Label>
-            </Radio>
-          ))}
-        </div>
-      </RadioGroup>
-    </Fieldset>
-  );
 }

@@ -69,9 +69,9 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       break;
     }
     case 'delete-session': {
-      const result = parseWithZod(form, SchedulSessionIdSchema);
+      const result = SchedulSessionIdSchema.safeParse(form.get('id'));
       if (!result.success) return toast('error', 'An error occured');
-      await eventSchedule.deleteSession(result.value);
+      await eventSchedule.deleteSession(result.data);
       break;
     }
     case 'update-display-times': {
@@ -110,9 +110,8 @@ export default function ScheduleRoute() {
             session={openSession}
             startTime={displayTimes.startTime}
             endTime={displayTimes.endTime}
+            timezone={schedule.timezone}
             tracks={schedule.tracks}
-            onDeleteSession={sessions.delete}
-            onUpdateSession={sessions.update}
             onClose={onCloseSession}
           />
         )}

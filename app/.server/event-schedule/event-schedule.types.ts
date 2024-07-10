@@ -61,6 +61,7 @@ export const ScheduleSessionCreateSchema = z.object({
 
 export const ScheduleSessionUpdateSchema = ScheduleSessionCreateSchema.extend({
   id: z.string(),
+  name: z.string().trim().optional(),
   proposalId: z.string().optional(),
 });
 

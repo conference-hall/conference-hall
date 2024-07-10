@@ -109,7 +109,8 @@ export class EventSchedule {
         trackId: data.trackId,
         start: data.start,
         end: data.end,
-        proposalId: data.proposalId ? data.proposalId : undefined,
+        name: !data.proposalId ? data.name : null,
+        proposalId: data.proposalId ? data.proposalId : null,
       },
       where: { id: data.id, scheduleId: schedule.id },
     });
@@ -184,11 +185,12 @@ export class EventSchedule {
       tracks: [...schedule.tracks]
         .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
         .map((t) => ({ id: t.id, name: t.name })),
-      sessions: sessions.map(({ id, trackId, start, end, proposal }) => ({
+      sessions: sessions.map(({ id, trackId, start, end, name, proposal }) => ({
         id: id,
         trackId: trackId,
         start: start.toISOString(),
         end: end.toISOString(),
+        name: name,
         proposal: proposal
           ? {
               id: proposal.id,

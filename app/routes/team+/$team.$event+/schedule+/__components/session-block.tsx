@@ -25,8 +25,8 @@ export function SessionBlock({ session }: SessionBlockProps) {
           </div>
         </>
       ) : (
-        <div className="h-full flex flex-col justify-between opacity-70">
-          <p className="italic">(Empty slot)</p>
+        <div className="h-full flex flex-col justify-between">
+          <p className="font-semibold">{session.name}</p>
           <p>{formatTimeSlot(timeslot)}</p>
         </div>
       )}

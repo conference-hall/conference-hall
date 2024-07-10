@@ -8,6 +8,7 @@ export type ScheduleSession = {
   id: string;
   trackId: string;
   timeslot: TimeSlot;
+  name?: string | null;
   proposal?: ScheduleProposalData | null;
 };
 
@@ -16,6 +17,7 @@ export type SessionData = {
   trackId: string;
   start: string;
   end: string;
+  name?: string | null;
   proposal?: ScheduleProposalData | null;
 };
 

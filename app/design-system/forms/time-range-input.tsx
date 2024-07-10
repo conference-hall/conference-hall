@@ -5,24 +5,32 @@ import { useState } from 'react';
 import { SelectNative } from '~/design-system/forms/select-native.tsx';
 
 type Props = {
+  nameStart?: string;
   startTime: number;
+  nameEnd?: string;
   endTime: number;
   step: number;
   min?: number;
   max?: number;
   startRelative?: boolean;
+  hideFromLabel?: boolean;
+  hideToLabel?: boolean;
   onChange: (start: number, end: number) => void;
 };
 
 const MINUTES_IN_DAY = 23 * 60 + 59;
 
 export function TimeRangeInput({
+  nameStart = 'start',
   startTime,
+  nameEnd = 'end',
   endTime,
   min = 0,
   max = MINUTES_IN_DAY,
   step = 60,
   startRelative,
+  hideFromLabel,
+  hideToLabel,
   onChange,
 }: Props) {
   const [start, setStart] = useState(startTime);
@@ -30,13 +38,13 @@ export function TimeRangeInput({
 
   const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const minutes = Number(event.target.value);
-    if (event.target.name === 'start') {
+    if (event.target.name === nameStart) {
       const minutesEnd = startRelative ? minutes + (end - start) : end;
       setStart(minutes);
       setEnd(minutesEnd);
       onChange(minutes, minutesEnd);
     }
-    if (event.target.name === 'end') {
+    if (event.target.name === nameEnd) {
       setEnd(minutes);
       onChange(start, minutes);
     }
@@ -45,20 +53,22 @@ export function TimeRangeInput({
   return (
     <div className="flex items-center gap-2">
       <SelectNative
-        name="start"
+        name={nameStart}
         label="From"
         value={start}
         options={generateTimeOptions(step, min, max).filter((o) => startRelative || Number(o.value) <= end)}
         onChange={handleSelectChange}
+        srOnly={hideFromLabel}
         inline
       />
 
       <SelectNative
-        name="end"
+        name={nameEnd}
         label="To"
         value={end}
         options={generateTimeOptions(step, min, max).filter((o) => Number(o.value) >= start)}
         onChange={handleSelectChange}
+        srOnly={hideToLabel}
         inline
       />
     </div>
