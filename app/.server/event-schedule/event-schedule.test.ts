@@ -223,6 +223,7 @@ describe('EventSchedule', () => {
       const actual = await eventSchedule.updateSession({
         id: session.id,
         trackId: track2.id,
+        color: 'gray',
         start: new Date(schedule.end),
         end: new Date(schedule.end),
         proposalId: proposal.id,
@@ -240,6 +241,7 @@ describe('EventSchedule', () => {
         EventSchedule.for(owner.id, team.slug, eventWithoutSchedule.slug).updateSession({
           id: 'id',
           trackId: 'track',
+          color: 'gray',
           start: new Date(schedule.end),
           end: new Date(schedule.end),
           proposalId: 'proposal',
@@ -252,6 +254,7 @@ describe('EventSchedule', () => {
         EventSchedule.for(reviewer.id, team.slug, event.slug).updateSession({
           id: 'id',
           trackId: 'track',
+          color: 'gray',
           start: new Date(schedule.end),
           end: new Date(schedule.end),
           proposalId: 'proposal',
@@ -265,6 +268,7 @@ describe('EventSchedule', () => {
         EventSchedule.for(owner.id, team.slug, meetup.slug).updateSession({
           id: 'id',
           trackId: 'track',
+          color: 'gray',
           start: new Date(schedule.end),
           end: new Date(schedule.end),
           proposalId: 'proposal',
@@ -406,6 +410,7 @@ describe('EventSchedule', () => {
       await eventSchedule.updateSession({
         id: session.id,
         trackId: track.id,
+        color: 'gray',
         start: new Date(schedule.start),
         end: new Date(schedule.start),
         proposalId: proposal.id,
@@ -427,6 +432,8 @@ describe('EventSchedule', () => {
             trackId: session.trackId,
             start: session.start.toISOString(),
             end: session.end.toISOString(),
+            name: null,
+            color: 'gray',
             proposal: {
               id: proposal.id,
               title: proposal.title,
