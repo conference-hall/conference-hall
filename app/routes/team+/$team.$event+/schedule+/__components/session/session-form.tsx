@@ -6,6 +6,7 @@ import {
   PaintBrushIcon,
   TrashIcon,
 } from '@heroicons/react/24/outline';
+import { useParams } from '@remix-run/react';
 import type { FormEvent } from 'react';
 import { useEffect, useRef, useState } from 'react';
 
@@ -45,6 +46,8 @@ export function SessionForm({
   onUpdateSession,
   onDeleteSession,
 }: Props) {
+  const { team, event } = useParams();
+
   const [name, setName] = useState(session.name);
   const [color, setColor] = useState(session.color);
   const [trackId, setTrackId] = useState(session.trackId);
@@ -79,11 +82,10 @@ export function SessionForm({
               <Subtitle truncate>{proposal?.speakers.map((s) => s.name).join(', ')}</Subtitle>
             </div>
             <div className="flex gap-2 shrink-0">
-              {/* TODOXXX: set correct link */}
               <IconLink
                 icon={ArrowTopRightOnSquareIcon}
                 label="See proposal"
-                to={`/team/gdg-nantes/devfest-nantes/reviews/${proposal?.id}`}
+                to={`/team/${team}/${event}/reviews/${proposal?.id}`}
                 variant="secondary"
                 target="_blank"
               />

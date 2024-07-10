@@ -21,6 +21,7 @@ export class CfpReviewsSearch {
 
     const search = new ProposalSearchBuilder(event.slug, this.userId, filters, {
       withSpeakers: event.displayProposalsSpeakers,
+      withReviews: true,
     });
     const statistics = await search.statistics();
     const pagination = new Pagination({ page, total: statistics.total });
@@ -51,11 +52,36 @@ export class CfpReviewsSearch {
     };
   }
 
+  // TODOXXX: Add tests
+  async autocomplete(filters: ProposalsFilters) {
+    const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER', 'REVIEWER']);
+
+    const search = new ProposalSearchBuilder(event.slug, this.userId, filters, {
+      withSpeakers: true,
+      withReviews: true,
+    });
+    const pagination = new Pagination({ page: 1, total: 10, pageSize: 5 });
+    const proposals = await search.proposalsByPage(pagination);
+
+    return proposals.map((proposal) => {
+      return {
+        id: proposal.id,
+        title: proposal.title,
+        deliberationStatus: proposal.deliberationStatus,
+        confirmationStatus: proposal.confirmationStatus,
+        speakers: event.displayProposalsSpeakers
+          ? proposal.speakers.map(({ name, picture }) => ({ name, picture }))
+          : [],
+      };
+    });
+  }
+
   async forJsonExport(filters: ProposalsFilters) {
     const event = await this.userEvent.allowedFor(['OWNER']);
 
     const search = new ProposalSearchBuilder(event.slug, this.userId, filters, {
       withSpeakers: event.displayProposalsSpeakers,
+      withReviews: true,
     });
 
     const proposals = await search.proposals({ reviews: event.displayProposalsReviews });
@@ -95,6 +121,7 @@ export class CfpReviewsSearch {
 
     const search = new ProposalSearchBuilder(event.slug, this.userId, filters, {
       withSpeakers: event.displayProposalsSpeakers,
+      withReviews: true,
     });
 
     const proposals = await search.proposals({ reviews: event.displayProposalsReviews });

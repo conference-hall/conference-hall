@@ -1,7 +1,9 @@
 import { Combobox, ComboboxInput, ComboboxOption, ComboboxOptions } from '@headlessui/react';
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import { DocumentPlusIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
-import { useFetcher } from '@remix-run/react';
+import { useFetcher, useParams } from '@remix-run/react';
+import type { ChangeEvent } from 'react';
+import { useDebouncedCallback } from 'use-debounce';
 
 import type { loader as AutocompleteLoader } from '../../../reviews+/autocomplete.tsx';
 import type { ScheduleProposalData } from '../schedule.types.ts';
@@ -12,21 +14,22 @@ type SearchSessionProposalProps = {
 };
 
 export function SearchSessionProposal({ onChange, onClose }: SearchSessionProposalProps) {
-  // TODOXXX: Limit search results to 3 or 4
-  // TODOXXX: Set correct URL with team and event
+  const { team, event } = useParams();
+
   const fetcher = useFetcher<typeof AutocompleteLoader>();
   const search = (filters: { query: string }) => {
-    fetcher.submit(filters, { action: '/team/gdg-nantes/devfest-nantes/reviews/autocomplete', method: 'GET' });
+    fetcher.submit(filters, { action: `/team/${team}/${event}/reviews/autocomplete`, method: 'GET' });
   };
 
-  let results = fetcher.data?.results ?? [];
+  let results = fetcher.data ?? [];
 
-  // TODOXXX: Debounce
-  const handleChangeQuery = (value: string) => {
-    search({ query: value });
-  };
+  const debouncedOnChange = useDebouncedCallback(
+    (event: ChangeEvent<HTMLInputElement>) => search({ query: event.target.value }),
+    300,
+  );
 
   const handleChange = (value: { intent: string; proposal: ScheduleProposalData | null }) => {
+    if (!value) return;
     if (value.intent === 'raw-session') {
       onChange(null);
       onClose();
@@ -48,7 +51,7 @@ export function SearchSessionProposal({ onChange, onClose }: SearchSessionPropos
           autoFocus
           className="h-12 w-full border-0 bg-transparent pl-11 pr-4 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm"
           placeholder="Search by proposal titles or speaker names..."
-          onChange={(event) => handleChangeQuery(event.target.value)}
+          onChange={debouncedOnChange}
         />
       </div>
 
