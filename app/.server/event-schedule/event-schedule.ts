@@ -92,6 +92,7 @@ export class EventSchedule {
         trackId: data.trackId,
         start: data.start,
         end: data.end,
+        color: 'gray',
         scheduleId: schedule.id,
       },
     });
@@ -109,6 +110,7 @@ export class EventSchedule {
         trackId: data.trackId,
         start: data.start,
         end: data.end,
+        color: data.color,
         name: !data.proposalId ? data.name : null,
         proposalId: data.proposalId ? data.proposalId : null,
       },
@@ -185,11 +187,12 @@ export class EventSchedule {
       tracks: [...schedule.tracks]
         .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
         .map((t) => ({ id: t.id, name: t.name })),
-      sessions: sessions.map(({ id, trackId, start, end, name, proposal }) => ({
+      sessions: sessions.map(({ id, trackId, start, end, name, color, proposal }) => ({
         id: id,
         trackId: trackId,
         start: start.toISOString(),
         end: end.toISOString(),
+        color: color,
         name: name,
         proposal: proposal
           ? {

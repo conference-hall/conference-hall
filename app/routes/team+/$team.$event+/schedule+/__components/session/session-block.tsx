@@ -1,15 +1,19 @@
 import { CheckIcon, ClockIcon, XMarkIcon } from '@heroicons/react/20/solid';
+import { cx } from 'class-variance-authority';
 
-import type { ScheduleProposalData, ScheduleSession } from './schedule.types.ts';
-import { formatTimeSlot } from './schedule/timeslots.ts';
+import type { ScheduleProposalData, ScheduleSession } from '../schedule.types.ts';
+import { formatTimeSlot } from '../schedule/timeslots.ts';
+import { SESSION_COLORS } from './constants.ts';
 
 type SessionBlockProps = { session: ScheduleSession };
 
 export function SessionBlock({ session }: SessionBlockProps) {
   const { timeslot, proposal } = session;
 
+  const { block } = SESSION_COLORS.find((c) => c.value === session.color) ?? SESSION_COLORS[0];
+
   return (
-    <div className="text-xs flex flex-col justify-between h-full px-1 text-gray-600 bg-gray-50 border border-gray-300 rounded">
+    <div className={cx('text-xs flex flex-col justify-between h-full px-1 rounded', block)}>
       {proposal ? (
         <>
           <div>

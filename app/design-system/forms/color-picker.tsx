@@ -1,25 +1,16 @@
 import { Radio, RadioGroup } from '@headlessui/react';
 import { cx } from 'class-variance-authority';
-import { useState } from 'react';
-
-const options = [
-  { name: 'Gray', value: 'gray', color: 'text-gray-500' },
-  { name: 'Pink', value: 'pink', color: 'text-pink-500' },
-  { name: 'Purple', value: 'purple', color: 'text-purple-500' },
-  { name: 'Blue', value: 'blue', color: 'text-blue-500' },
-  { name: 'Green', value: 'green', color: 'text-green-500' },
-  { name: 'Yellow', value: 'yellow', color: 'text-yellow-500' },
-];
 
 type Props = {
   label: string;
+  value?: string | null;
+  onChange?: (value: string) => void;
   srOnly?: boolean;
+  options: Array<{ name: string; value: string; color: string }>;
   className?: string;
 };
 
-export default function ColorPicker({ label, srOnly, className }: Props) {
-  const [selectedColor, setSelectedColor] = useState(options[0].value);
-
+export default function ColorPicker({ label, value, onChange, srOnly, options, className }: Props) {
   return (
     <fieldset className={className}>
       <legend
@@ -27,7 +18,7 @@ export default function ColorPicker({ label, srOnly, className }: Props) {
       >
         {label}
       </legend>
-      <RadioGroup value={selectedColor} onChange={setSelectedColor} className="flex items-center space-x-3">
+      <RadioGroup value={value} onChange={onChange} className="flex items-center space-x-3">
         {options.map((option) => (
           <Radio
             key={option.name}

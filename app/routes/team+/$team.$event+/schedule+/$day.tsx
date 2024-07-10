@@ -22,8 +22,8 @@ import { useScheduleFullscreen } from './__components/header/use-schedule-fullsc
 import { useZoomHandlers } from './__components/header/use-zoom-handlers.tsx';
 import type { ScheduleSession } from './__components/schedule.types.ts';
 import Schedule from './__components/schedule/schedule.tsx';
-import { SessionBlock } from './__components/session-block.tsx';
-import { SessionModal } from './__components/session-modal.tsx';
+import { SessionBlock } from './__components/session/session-block.tsx';
+import { SessionModal } from './__components/session/session-modal.tsx';
 import { useDisplayTimes } from './__components/use-display-times.tsx';
 import { useSessions } from './__components/use-sessions.ts';
 
@@ -110,8 +110,9 @@ export default function ScheduleRoute() {
             session={openSession}
             startTime={displayTimes.startTime}
             endTime={displayTimes.endTime}
-            timezone={schedule.timezone}
             tracks={schedule.tracks}
+            onUpdateSession={sessions.update}
+            onDeleteSession={sessions.delete}
             onClose={onCloseSession}
           />
         )}

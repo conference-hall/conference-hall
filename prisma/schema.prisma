@@ -338,6 +338,7 @@ model ScheduleTrack {
 model ScheduleSession {
   id         String        @id @default(cuid())
   name       String?
+  color      String
   start      DateTime
   end        DateTime
   scheduleId String
