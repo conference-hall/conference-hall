@@ -9,6 +9,7 @@ import {
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
+import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { cx } from 'class-variance-authority';
 import { format } from 'date-fns';
 import type { ReactNode } from 'react';
@@ -80,7 +81,12 @@ export default function Schedule({
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
 
   return (
-    <DndContext onDragEnd={handleDragEnd} sensors={sensors} collisionDetection={collisionDetection}>
+    <DndContext
+      onDragEnd={handleDragEnd}
+      sensors={sensors}
+      collisionDetection={collisionDetection}
+      modifiers={[restrictToWindowEdges]}
+    >
       <div className={cx('w-full bg-white', { 'select-none': selector.isSelecting })}>
         <table className="min-w-full border-separate border-spacing-0">
           {/* Header */}
