@@ -1,7 +1,4 @@
-// TODOXXX: Add tests
-// TODOXXX: Extract other timezones utils
-
-import { endOfDay, formatISO, parse, startOfDay } from 'date-fns';
+import { endOfDay, parse, startOfDay } from 'date-fns';
 import { fromZonedTime, toZonedTime } from 'date-fns-tz';
 
 // Get user timezone
@@ -77,7 +74,7 @@ export function parseToUtcEndOfDay(date: string, timezone: string, format: strin
   return fromZonedTime(endOfDay(parse(date, format, toZonedTime(new Date(), timezone))), timezone);
 }
 
-// Convert a local date with timezone to UTC and format it to ISO
+// Convert a timezoned date to UTC and format it to ISO format
 export function formatZonedTimeToUtc(date: Date, timezone: string) {
-  return formatISO(fromZonedTime(date, timezone));
+  return fromZonedTime(date, timezone).toISOString();
 }
