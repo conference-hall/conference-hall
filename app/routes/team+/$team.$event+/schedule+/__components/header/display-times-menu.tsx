@@ -6,9 +6,7 @@ import { button } from '~/design-system/buttons.tsx';
 import { TimeRangeInput } from '~/design-system/forms/time-range-input.tsx';
 import { IconButton } from '~/design-system/icon-buttons.tsx';
 import { Text } from '~/design-system/typography.tsx';
-import { getMinutesFromStartOfDay } from '~/libs/datetimes/datetimes.ts';
-
-import { formatTime } from '../../../../../../libs/datetimes/timeslots.ts';
+import { getMinutesFromStartOfDay, toTimeFormat } from '~/libs/datetimes/datetimes.ts';
 
 type Props = {
   startTime: Date;
@@ -21,7 +19,7 @@ export function DisplayTimesMenu({ startTime, endTime, onChangeDisplayTime }: Pr
     <Popover className="hidden sm:block">
       <PopoverButton className={button({ variant: 'secondary' })}>
         <ClockIcon className="h-4 w-4 text-gray-500" />
-        <span> {`${formatTime(startTime)} to ${formatTime(endTime)}`}</span>
+        <span> {`${toTimeFormat(startTime)} to ${toTimeFormat(endTime)}`}</span>
       </PopoverButton>
 
       <PopoverPanel

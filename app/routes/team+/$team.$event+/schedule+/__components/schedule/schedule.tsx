@@ -13,10 +13,10 @@ import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
 
+import { toTimeFormat } from '~/libs/datetimes/datetimes.ts';
 import type { TimeSlot } from '~/libs/datetimes/timeslots.ts';
 import {
   countIntervalsInTimeSlot,
-  formatTime,
   getDailyTimeSlots,
   haveSameStartDate,
   isTimeSlotIncluded,
@@ -124,14 +124,16 @@ export default function Schedule({
 
             {/* Rows by hours */}
             {hours.map((hour, rowIndex) => {
-              const startHour = formatTime(hour.start);
-              const endHour = formatTime(hour.end);
+              const startHour = toTimeFormat(hour.start);
+              const endHour = toTimeFormat(hour.end);
               const hourSlots = getDailyTimeSlots(day, hour.start, hour.end, interval, true);
 
               return (
                 <tr key={`${startHour}-${endHour}`} className="divide-x divide-gray-200 align-top">
                   {/* Gutter time */}
-                  <td className="px-2 -mt-2 whitespace-nowrap text-xs text-gray-500 block">{startHour}</td>
+                  <td className="px-2 -mt-2 whitespace-nowrap text-xs text-gray-500 block">
+                    <time dateTime={startHour}>{startHour}</time>
+                  </td>
 
                   {/* Rows by track */}
                   {tracks.map((track) => (
@@ -139,7 +141,7 @@ export default function Schedule({
                       {hourSlots.map((timeslot) => {
                         return (
                           <Timeslot
-                            key={formatTime(timeslot.start)}
+                            key={toTimeFormat(timeslot.start)}
                             trackId={track.id}
                             timeslot={timeslot}
                             sessions={sessions}
@@ -184,8 +186,6 @@ function Timeslot({
   onSelectSession,
   renderSession,
 }: TimeslotProps) {
-  const id = `${trackId}-${formatTime(timeslot.start)}`;
-
   // selection attributes
   const isSelected = selector.isSelectedSlot(trackId, timeslot);
   const selectedSlot = selector.getSelectedSlot(trackId);
@@ -201,7 +201,7 @@ function Timeslot({
 
   // Droppable for sessions switch
   const { setNodeRef, isOver } = useDroppable({
-    id,
+    id: `${trackId}-${timeslot.start.toISOString()}`,
     data: { type: 'timeslot', trackId, timeslot },
     disabled: hasSession && !isCurrentSessionDragging,
   });

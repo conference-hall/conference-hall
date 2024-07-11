@@ -81,12 +81,12 @@ function generateTimeOptions(step: number, min: number, max: number) {
     minutesArray.push(i);
   }
   return minutesArray.map((minutes) => ({
-    name: formatTime(minutes),
+    name: toTimeFormat(minutes),
     value: String(minutes),
   }));
 }
 
-function formatTime(minutes: number): string {
+function toTimeFormat(minutes: number): string {
   const date = setMinutes(startOfDay(new Date()), minutes);
   return format(date, 'HH:mm');
 }

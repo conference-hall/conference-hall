@@ -1,7 +1,8 @@
 import { CheckIcon, ClockIcon, XMarkIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
 
-import { formatTimeSlot } from '../../../../../../libs/datetimes/timeslots.ts';
+import { toTimeFormat } from '~/libs/datetimes/datetimes.ts';
+
 import type { ScheduleProposalData, ScheduleSession } from '../schedule.types.ts';
 import { SESSION_COLORS } from './constants.ts';
 
@@ -11,6 +12,9 @@ export function SessionBlock({ session }: SessionBlockProps) {
   const { timeslot, proposal } = session;
 
   const { block } = SESSION_COLORS.find((c) => c.value === session.color) ?? SESSION_COLORS[0];
+
+  const start = toTimeFormat(timeslot.start);
+  const end = toTimeFormat(timeslot.end);
 
   return (
     <div className={cx('text-xs flex flex-col justify-between h-full px-1 rounded', block)}>
@@ -24,14 +28,18 @@ export function SessionBlock({ session }: SessionBlockProps) {
             <p className="italic truncate">{proposal.speakers.map((s) => s.name).join(', ')}</p>
           </div>
           <div className="flex justify-between">
-            <p>{formatTimeSlot(timeslot)}</p>
+            <p>
+              <time dateTime={start}>{start}</time> - <time dateTime={end}>{end}</time>
+            </p>
             {proposal.languages && <p>[{proposal.languages.join(',')}]</p>}
           </div>
         </>
       ) : (
         <div className="h-full flex flex-col justify-between">
           <p className="font-semibold">{session.name}</p>
-          <p>{formatTimeSlot(timeslot)}</p>
+          <p>
+            <time dateTime={start}>{start}</time> - <time dateTime={end}>{end}</time>
+          </p>
         </div>
       )}
     </div>

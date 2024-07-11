@@ -94,10 +94,6 @@ export const getFullTimeslot = (slot1: TimeSlot, slot2: TimeSlot) => {
   return { start: slot1.start, end: slot2.end };
 };
 
-export const formatTime = (time: Date, formatStr: string = 'HH:mm'): string => {
-  return format(time, formatStr);
-};
-
 export const formatTimeSlot = (slot: TimeSlot, formatStr: string = 'HH:mm'): string => {
   const formattedStart = format(slot.start, formatStr);
   const formattedEnd = format(slot.end, formatStr);
