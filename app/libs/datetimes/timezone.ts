@@ -1,6 +1,9 @@
 // TODOXXX: Add tests
 // TODOXXX: Extract other timezones utils
 
+import { endOfDay, formatISO, parse, startOfDay } from 'date-fns';
+import { fromZonedTime, toZonedTime } from 'date-fns-tz';
+
 // Get user timezone
 export function getUserTimezone() {
   return Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -62,4 +65,19 @@ function parseOffset(offset?: string) {
   const [hours, minutes] = offset.replace('GMT', '').split(':');
   const parsedOffset = parseInt(hours, 10) * 60 + parseInt(minutes, 10);
   return parsedOffset;
+}
+
+// Parse a string date from a timezone and convert it to start of the day and UTC
+export function parseToUtcStartOfDay(date: string, timezone: string, format: string = 'yyyy-MM-dd') {
+  return fromZonedTime(startOfDay(parse(date, format, toZonedTime(new Date(), timezone))), timezone);
+}
+
+// Parse a string date from a timezone and convert it to end of the day and UTC
+export function parseToUtcEndOfDay(date: string, timezone: string, format: string = 'yyyy-MM-dd') {
+  return fromZonedTime(endOfDay(parse(date, format, toZonedTime(new Date(), timezone))), timezone);
+}
+
+// Convert a local date with timezone to UTC and format it to ISO
+export function formatZonedTimeToUtc(date: Date, timezone: string) {
+  return formatISO(fromZonedTime(date, timezone));
 }

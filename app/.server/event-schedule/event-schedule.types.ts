@@ -1,6 +1,6 @@
-import { endOfDay, parse, startOfDay } from 'date-fns';
-import { fromZonedTime, toZonedTime } from 'date-fns-tz';
 import { z } from 'zod';
+
+import { parseToUtcEndOfDay, parseToUtcStartOfDay } from '~/libs/datetimes/timezone.ts';
 
 export const INTERVALS = [5, 10, 15] as const;
 
@@ -15,8 +15,8 @@ export const ScheduleCreateSchema = z
   .transform(({ start, end, timezone, ...rest }) => ({
     ...rest,
     timezone,
-    start: fromZonedTime(startOfDay(parse(start, 'yyyy-MM-dd', toZonedTime(new Date(), timezone))), timezone),
-    end: fromZonedTime(endOfDay(parse(end, 'yyyy-MM-dd', toZonedTime(new Date(), timezone))), timezone),
+    start: parseToUtcStartOfDay(start, timezone, 'yyyy-MM-dd'),
+    end: parseToUtcEndOfDay(end, timezone, 'yyyy-MM-dd'),
   }))
   .refine(
     ({ start, end }) => {

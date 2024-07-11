@@ -35,7 +35,6 @@ export function useDisplayTimes(
       },
       {
         method: 'POST',
-        navigate: false,
         preventScrollReset: true,
       },
     );

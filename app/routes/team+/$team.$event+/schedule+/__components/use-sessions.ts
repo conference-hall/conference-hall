@@ -1,10 +1,10 @@
 import { useFetchers, useSubmit } from '@remix-run/react';
-import { formatISO } from 'date-fns';
-import { fromZonedTime, toZonedTime } from 'date-fns-tz';
+import { toZonedTime } from 'date-fns-tz';
 import { v4 as uuid } from 'uuid';
 
 import type { TimeSlot } from '~/libs/datetimes/timeslots.ts';
 import { areTimeSlotsOverlapping, moveTimeSlotStart } from '~/libs/datetimes/timeslots.ts';
+import { formatZonedTimeToUtc } from '~/libs/datetimes/timezone.ts';
 
 import type { ScheduleSession, SessionData } from './schedule.types.ts';
 
@@ -23,8 +23,8 @@ export function useSessions(initialSessions: Array<SessionData>, timezone: strin
         intent: 'add-session',
         id,
         trackId: trackId,
-        start: formatISO(fromZonedTime(timeslot.start, timezone)),
-        end: formatISO(fromZonedTime(timeslot.end, timezone)),
+        start: formatZonedTimeToUtc(timeslot.start, timezone),
+        end: formatZonedTimeToUtc(timeslot.end, timezone),
       },
       {
         method: 'POST',
@@ -42,8 +42,8 @@ export function useSessions(initialSessions: Array<SessionData>, timezone: strin
         intent: 'update-session',
         id: session.id,
         trackId: session.trackId,
-        start: formatISO(fromZonedTime(session.timeslot.start, timezone)),
-        end: formatISO(fromZonedTime(session.timeslot.end, timezone)),
+        start: formatZonedTimeToUtc(session.timeslot.start, timezone),
+        end: formatZonedTimeToUtc(session.timeslot.end, timezone),
         color: session.color,
         name: session.name ?? '',
         proposalId: session.proposal?.id ?? '',

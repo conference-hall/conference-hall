@@ -1,7 +1,6 @@
-import { endOfDay, parse, startOfDay } from 'date-fns';
-import { fromZonedTime, toZonedTime } from 'date-fns-tz';
 import { z } from 'zod';
 
+import { parseToUtcEndOfDay, parseToUtcStartOfDay } from '~/libs/datetimes/timezone.ts';
 import { SlugSchema } from '~/libs/validators/slug.ts';
 
 export const EventGeneralSettingsSchema = z.object({
@@ -24,12 +23,8 @@ export const EventDetailsSettingsSchema = z
   .transform(({ conferenceStart, conferenceEnd, timezone, ...rest }) => ({
     ...rest,
     timezone,
-    conferenceStart: conferenceStart
-      ? fromZonedTime(startOfDay(parse(conferenceStart, 'yyyy-MM-dd', toZonedTime(new Date(), timezone))), timezone)
-      : null,
-    conferenceEnd: conferenceEnd
-      ? fromZonedTime(endOfDay(parse(conferenceEnd, 'yyyy-MM-dd', toZonedTime(new Date(), timezone))), timezone)
-      : null,
+    conferenceStart: conferenceStart ? parseToUtcStartOfDay(conferenceStart, timezone, 'yyyy-MM-dd') : null,
+    conferenceEnd: conferenceEnd ? parseToUtcEndOfDay(conferenceEnd, timezone, 'yyyy-MM-dd') : null,
   }))
   .refine(
     ({ conferenceStart, conferenceEnd }) => {
@@ -59,12 +54,8 @@ export const CfpConferenceOpeningSchema = z
   .transform(({ cfpStart, cfpEnd, timezone, ...rest }) => ({
     ...rest,
     timezone,
-    cfpStart: cfpStart
-      ? fromZonedTime(startOfDay(parse(cfpStart, 'yyyy-MM-dd', toZonedTime(new Date(), timezone))), timezone)
-      : null,
-    cfpEnd: cfpEnd
-      ? fromZonedTime(endOfDay(parse(cfpEnd, 'yyyy-MM-dd', toZonedTime(new Date(), timezone))), timezone)
-      : null,
+    cfpStart: cfpStart ? parseToUtcStartOfDay(cfpStart, timezone, 'yyyy-MM-dd') : null,
+    cfpEnd: cfpEnd ? parseToUtcEndOfDay(cfpEnd, timezone, 'yyyy-MM-dd') : null,
   }))
   .refine(
     ({ cfpStart, cfpEnd }) => {
