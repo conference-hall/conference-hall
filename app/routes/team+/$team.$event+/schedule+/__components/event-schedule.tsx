@@ -18,7 +18,7 @@ import type { Session, Track } from './schedule/types.ts';
 import { formatTimeSlot } from './schedule/utils/timeslots.ts';
 import { SessionFormModal } from './session-form.tsx';
 
-const MAX_ZOOM_LEVEL = 4;
+const MAX_ZOOM_LEVEL = 3;
 
 type Props = {
   settings: { name: string; startTimeslot: string; endTimeslot: string; intervalMinutes: number };
@@ -28,7 +28,7 @@ type Props = {
 export default function EventSchedule({ settings, tracks }: Props) {
   const [expanded, setExpanded] = useState(false);
 
-  const [zoomLevel, setZoomLevel] = useState(2);
+  const [zoomLevel, setZoomLevel] = useState(1);
   const zoomIn = () => setZoomLevel((z) => Math.min(z + 1, MAX_ZOOM_LEVEL));
   const zoomOut = () => setZoomLevel((z) => Math.max(z - 1, 0));
 

@@ -6,12 +6,14 @@ import { areTimeSlotsOverlapping, haveSameStartDate, isTimeSlotIncluded } from '
 export function useSessions(initialSessions: Array<Session> = []) {
   const [sessions, setSession] = useState<Array<Session>>(initialSessions);
 
-  const addSession = (trackId: string, timeslot: TimeSlot) => {
+  const addSession = (session: Session) => {
+    const { trackId, timeslot } = session;
+
     const conflicting = sessions.some(
       (session) => session.trackId === trackId && areTimeSlotsOverlapping(timeslot, session.timeslot),
     );
     if (conflicting) return false;
-    setSession((s) => [...s, { trackId, timeslot }]);
+    setSession((sessions) => [...sessions, session]);
     return true;
   };
 
@@ -23,5 +25,10 @@ export function useSessions(initialSessions: Array<Session> = []) {
     return sessions.some((session) => session.trackId === trackId && isTimeSlotIncluded(timeslot, session.timeslot));
   };
 
-  return { addSession, getSession, hasSession };
+  // TODO: Change session model: timeslot + duration
+  const moveSession = (session: Session, trackId: string, timeslot: TimeSlot) => {
+    setSession((sessions) => [...sessions.filter((s) => s.id !== session.id), { ...session, trackId, timeslot }]);
+  };
+
+  return { getSession, addSession, moveSession, hasSession };
 }

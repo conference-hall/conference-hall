@@ -3,7 +3,15 @@ import { useState } from 'react';
 import type { TimeSlot } from '../types.ts';
 import { getFullTimeslot, isTimeSlotIncluded } from '../utils/timeslots.ts';
 
-export function useTimeslotSelector(onSelectTimeslot: (trackId: string, timeslot: TimeSlot) => void) {
+export type TimeSlotSelector = {
+  isSelecting: boolean;
+  isSelectedSlot: (trackId: string, slot: TimeSlot) => boolean;
+  onSelectStart: (trackId: string, slot: TimeSlot) => () => void;
+  onSelectHover: (trackId: string, slot: TimeSlot) => () => void;
+  onSelect: () => void;
+};
+
+export function useTimeslotSelector(onSelectTimeslot: (trackId: string, timeslot: TimeSlot) => void): TimeSlotSelector {
   const [selectedTrack, setSelectedTrack] = useState<string | null>(null);
 
   const [startSlot, setStartSlot] = useState<TimeSlot | null>(null);
