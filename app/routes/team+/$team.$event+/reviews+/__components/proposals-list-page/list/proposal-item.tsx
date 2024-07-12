@@ -27,18 +27,20 @@ export function ProposalItem({ proposal, isSelected, isAllPagesSelected, toggle 
 
   return (
     <>
-      <Checkbox
-        aria-label={`Select proposal "${title}"`}
-        value={id}
-        checked={isSelected}
-        disabled={isAllPagesSelected}
-        onChange={toggle}
-        className="px-4 pb-5 sm:pl-6 sm:pr-4"
-      />
+      {team.role !== 'REVIEWER' ? (
+        <Checkbox
+          aria-label={`Select proposal "${title}"`}
+          value={id}
+          checked={isSelected}
+          disabled={isAllPagesSelected}
+          onChange={toggle}
+          className="pb-5 pr-4"
+        />
+      ) : undefined}
       <Link
         to={{ pathname: id, search: params.toString() }}
         aria-label={`Open proposal "${title}"`}
-        className="flex items-center justify-between gap-4 pr-4 py-4 sm:pr-6 grow min-w-0"
+        className="flex items-center justify-between gap-4 py-4 grow min-w-0"
       >
         <div className="space-y-1 min-w-0">
           <div className="flex items-center gap-1">

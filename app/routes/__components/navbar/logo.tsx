@@ -11,7 +11,13 @@ export function Logo({ displayName }: Props) {
       title="Go to event search"
       className="flex items-center gap-4 truncate rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
     >
-      <img className="h-8 w-8" src="https://tailwindui.com/img/logos/workflow-mark-indigo-300.svg" aria-hidden alt="" />
+      <img
+        width="32px"
+        height="32px"
+        src="https://tailwindui.com/img/logos/workflow-mark-indigo-300.svg"
+        aria-hidden
+        alt=""
+      />
       {displayName && (
         <Text as="span" weight={'bold'} variant="light" size="l" truncate>
           Conference Hall

@@ -35,7 +35,7 @@ export function ProposalsList({ proposals, pagination, statistics }: Props) {
       />
       <List.Content>
         {proposals.map((proposal) => (
-          <List.Row key={proposal.id} className="hover:bg-gray-50">
+          <List.Row key={proposal.id} className="hover:bg-gray-50 px-4 sm:px-6">
             <ProposalItem
               proposal={proposal}
               isSelected={selector.isSelected(proposal.id)}
