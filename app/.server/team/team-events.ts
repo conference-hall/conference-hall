@@ -35,6 +35,7 @@ export class TeamEvents {
       name: event.name,
       type: event.type,
       logo: event.logo,
+      timezone: event.timezone,
       cfpStart: event.cfpStart?.toISOString(),
       cfpEnd: event.cfpEnd?.toISOString(),
       cfpState: event.cfpState,

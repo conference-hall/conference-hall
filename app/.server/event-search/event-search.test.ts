@@ -23,6 +23,7 @@ describe('EventsSearch', () => {
             type: 'CONFERENCE',
             address: 'address-1',
             cfpState: 'OPENED',
+            timezone: event.timezone,
             cfpStart: event.cfpStart?.toISOString(),
             cfpEnd: event.cfpEnd?.toISOString(),
             logo: event.logo,

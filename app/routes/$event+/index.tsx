@@ -19,6 +19,7 @@ export default function EventRoute() {
         cfpState={event.cfpState}
         cfpStart={event.cfpStart}
         cfpEnd={event.cfpEnd}
+        timezone={event.timezone}
       />
 
       {hasTracks && (

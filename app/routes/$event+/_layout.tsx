@@ -71,7 +71,7 @@ export default function EventRoute() {
           <div className="hidden md:flex md:flex-col md:items-end md:gap-1 truncate">
             <Text variant="light" size="base" weight="semibold" truncate>
               <ClientOnly>
-                {() => formatConferenceDates(event.type, event.conferenceStart, event.conferenceEnd)}
+                {() => formatConferenceDates(event.type, event.timezone, event.conferenceStart, event.conferenceEnd)}
               </ClientOnly>
             </Text>
             {event.address && (

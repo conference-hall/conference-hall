@@ -49,6 +49,7 @@ export class EventsSearch {
         address: event.address,
         logo: event.logo,
         cfpState: event.cfpState,
+        timezone: event.timezone,
         cfpStart: event.cfpStart?.toISOString(),
         cfpEnd: event.cfpEnd?.toISOString(),
       })),

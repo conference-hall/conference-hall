@@ -6,16 +6,16 @@ import { cfpColorStatus, formatCFPDate, formatCFPState } from '~/libs/formatters
 import { ClientOnly } from '~/routes/__components/utils/client-only.tsx';
 import type { CfpState } from '~/types/events.types.ts';
 
-type Props = { cfpState: CfpState; cfpStart?: string; cfpEnd?: string; showActions: boolean };
+type Props = { cfpState: CfpState; cfpStart?: string; cfpEnd?: string; timezone: string; showActions: boolean };
 
-export function CfpStatusCard({ cfpState, cfpStart, cfpEnd, showActions }: Props) {
+export function CfpStatusCard({ cfpState, cfpStart, cfpEnd, timezone, showActions }: Props) {
   return (
     <ClientOnly fallback={<StatusCard.Fallback showActions={showActions} />}>
       {() => (
         <StatusCard
           status={cfpColorStatus(cfpState, cfpStart, cfpEnd)}
           label={formatCFPState(cfpState, cfpStart, cfpEnd)}
-          subtitle={formatCFPDate(cfpState, cfpStart, cfpEnd, 'Pp')}
+          subtitle={formatCFPDate(cfpState, timezone, cfpStart, cfpEnd, 'Pp (z)')}
         >
           {showActions ? (
             <Link to="settings/cfp" iconRight={ArrowRightIcon} weight="medium">

@@ -15,6 +15,7 @@ type Props = {
   cfpState: CfpState;
   cfpStart?: string;
   cfpEnd?: string;
+  timezone: string;
   className?: string;
 };
 
@@ -26,11 +27,12 @@ export function DetailsSection({
   cfpState,
   cfpStart,
   cfpEnd,
+  timezone,
 }: Props) {
   const hasDetails = websiteUrl || contactEmail || codeOfConductUrl;
   return (
     <Card as="section" p={8} className="space-y-8">
-      <CfpSection cfpState={cfpState} cfpStart={cfpStart} cfpEnd={cfpEnd} />
+      <CfpSection cfpState={cfpState} cfpStart={cfpStart} cfpEnd={cfpEnd} timezone={timezone} />
 
       <Markdown>{description}</Markdown>
 

@@ -24,6 +24,7 @@ describe('EventPage', () => {
         name: event.name,
         teamName: team.name,
         address: event.address,
+        timezone: event.timezone,
         conferenceStart: event.conferenceStart?.toISOString(),
         conferenceEnd: event.conferenceEnd?.toISOString(),
         description: event.description,

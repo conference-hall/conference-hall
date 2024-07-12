@@ -3,7 +3,7 @@ import { H2, Text } from '~/design-system/typography.tsx';
 
 type Props = {
   title: string;
-  tracks: Array<{ name: string; description: string | null }>;
+  tracks: Array<{ id: string; name: string; description: string | null }>;
 };
 
 export function TrackSection({ title, tracks }: Props) {
@@ -14,7 +14,7 @@ export function TrackSection({ title, tracks }: Props) {
       <H2 mb={1}>{title}</H2>
       <dl role="list" className="mt-4 space-y-8">
         {tracks.map((track) => (
-          <div key={track.name}>
+          <div key={track.id}>
             <Text as="dt" mb={1} weight="medium">
               {track.name}
             </Text>

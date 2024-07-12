@@ -5,9 +5,9 @@ import { cfpColorStatus, formatCFPDate, formatCFPElapsedTime } from '~/libs/form
 import { ClientOnly } from '~/routes/__components/utils/client-only.tsx';
 import type { CfpState } from '~/types/events.types';
 
-type Props = { cfpState: CfpState; cfpStart?: string; cfpEnd?: string; className?: string };
+type Props = { cfpState: CfpState; cfpStart?: string; cfpEnd?: string; timezone: string; className?: string };
 
-export function CfpSection({ cfpState, cfpStart, cfpEnd }: Props) {
+export function CfpSection({ cfpState, cfpStart, cfpEnd, timezone }: Props) {
   return (
     <section className="flex h-full flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div className="flex items-center gap-2">
@@ -18,7 +18,7 @@ export function CfpSection({ cfpState, cfpStart, cfpEnd }: Props) {
                 <StatusPill status={cfpColorStatus(cfpState, cfpStart, cfpEnd)} />
                 <div>
                   <H2 truncate>{formatCFPElapsedTime(cfpState, cfpStart, cfpEnd)}</H2>
-                  <Subtitle truncate>{formatCFPDate(cfpState, cfpStart, cfpEnd)}</Subtitle>
+                  <Subtitle truncate>{formatCFPDate(cfpState, timezone, cfpStart, cfpEnd)}</Subtitle>
                 </div>
               </div>
             )}

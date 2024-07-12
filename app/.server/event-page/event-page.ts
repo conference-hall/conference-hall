@@ -27,6 +27,7 @@ export class EventPage {
       teamName: event.team.name,
       description: event.description,
       address: event.address,
+      timezone: event.timezone,
       conferenceStart: event.conferenceStart?.toISOString(),
       conferenceEnd: event.conferenceEnd?.toISOString(),
       cfpStart: event.cfpStart?.toISOString(),

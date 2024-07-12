@@ -21,18 +21,28 @@ describe('#formatEventType', () => {
 
 describe('#formatConferenceDates', () => {
   it('return conference type when no dates', () => {
-    const message = formatConferenceDates('CONFERENCE');
+    const message = formatConferenceDates('CONFERENCE', 'Europe/Paris');
     expect(message).toBe('Conference');
   });
 
   it('return one day conference info', () => {
-    const message = formatConferenceDates('CONFERENCE', '2020-10-05T00:00:00.000Z', '2020-10-05T00:00:00.000Z');
-    expect(message).toBe('October 5th, 2020');
+    const message = formatConferenceDates(
+      'CONFERENCE',
+      'Europe/Paris',
+      '2020-10-05T00:00:00.000Z',
+      '2020-10-05T00:00:00.000Z',
+    );
+    expect(message).toBe('October 5th, 2020 (GMT+2)');
   });
 
   it('return several days conference info', () => {
-    const message = formatConferenceDates('CONFERENCE', '2020-10-05T00:00:00.000Z', '2020-10-07T00:00:00.000Z');
-    expect(message).toBe('October 5th to October 7th, 2020');
+    const message = formatConferenceDates(
+      'CONFERENCE',
+      'Europe/Paris',
+      '2020-10-05T00:00:00.000Z',
+      '2020-10-07T00:00:00.000Z',
+    );
+    expect(message).toBe('October 5th to October 7th, 2020 (GMT+2)');
   });
 });
 
@@ -99,33 +109,39 @@ describe('#formatCFPElapsedTime', () => {
 
 describe('#formatCFPDate', () => {
   it('return undefined if no dates', () => {
-    const message = formatCFPDate('CLOSED');
+    const message = formatCFPDate('CLOSED', 'Europe/Paris');
     expect(message).toBeUndefined();
   });
 
   it('return undefined if only start date', () => {
-    const message = formatCFPDate('CLOSED', '2020-10-05T00:00:00.000Z');
+    const message = formatCFPDate('CLOSED', 'Europe/Paris', '2020-10-05T00:00:00.000Z');
     expect(message).toBeUndefined();
   });
 
   it('return the date when the cfp will be open', () => {
-    const message = formatCFPDate('CLOSED', '2020-10-05T00:00:00.000Z', '2020-10-07T00:00:00.000Z');
-    expect(message).toBe('Open on Monday, October 5th, 2020 at 12:00 AM');
+    const message = formatCFPDate('CLOSED', 'Europe/Paris', '2020-10-05T00:00:00.000Z', '2020-10-07T00:00:00.000Z');
+    expect(message).toBe('Open on Monday, October 5th, 2020 at 2:00 AM (GMT+2)');
   });
 
   it('return the date when the cfp will be closed', () => {
-    const message = formatCFPDate('OPENED', '2020-10-05T00:00:00.000Z', '2020-10-07T00:00:00.000Z');
-    expect(message).toBe('Open until Wednesday, October 7th, 2020 at 12:00 AM');
+    const message = formatCFPDate('OPENED', 'Europe/Paris', '2020-10-05T00:00:00.000Z', '2020-10-07T00:00:00.000Z');
+    expect(message).toBe('Open until Wednesday, October 7th, 2020 at 2:00 AM (GMT+2)');
   });
 
   it('return the date when the cfp is finished', () => {
-    const message = formatCFPDate('FINISHED', '2020-10-05T00:00:00.000Z', '2020-10-07T00:00:00.000Z');
-    expect(message).toBe('Closed since Wednesday, October 7th, 2020 at 12:00 AM');
+    const message = formatCFPDate('FINISHED', 'Europe/Paris', '2020-10-05T00:00:00.000Z', '2020-10-07T00:00:00.000Z');
+    expect(message).toBe('Closed since Wednesday, October 7th, 2020 at 2:00 AM (GMT+2)');
   });
 
   it('return the date in another format', () => {
-    const message = formatCFPDate('FINISHED', '2020-10-05T00:00:00.000Z', '2020-10-07T00:00:00.000Z', 'Pp');
-    expect(message).toBe('Closed since 10/07/2020, 12:00 AM');
+    const message = formatCFPDate(
+      'FINISHED',
+      'Europe/Paris',
+      '2020-10-05T00:00:00.000Z',
+      '2020-10-07T00:00:00.000Z',
+      'Pp (z)',
+    );
+    expect(message).toBe('Closed since 10/07/2020, 2:00 AM (GMT+2)');
   });
 });
 
