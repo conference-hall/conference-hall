@@ -3,13 +3,13 @@ import { cx } from 'class-variance-authority';
 import { Text } from './typography.tsx';
 
 const sizes = {
-  xs: 'h-6 w-6',
-  s: 'h-8 w-8',
-  m: 'h-10 w-10',
-  l: 'h-12 w-12',
-  xl: 'h-16 w-16',
-  '2xl': 'h-20 w-20',
-  '4xl': 'h-32 w-32',
+  xs: '24px',
+  s: '32px',
+  m: '40px',
+  l: '48px',
+  xl: '64px',
+  '2xl': '80px',
+  '4xl': '128px',
 };
 
 const text_sizes = {
@@ -70,7 +70,6 @@ export function Avatar({
 }: AvatarProps) {
   const styles = cx(
     'shrink-0 bg-gray-300',
-    sizes[size],
     ring ? rings[size] : null,
     ring ? ringsColor[ringColor] : null,
     square ? square_sizes[size] : 'rounded-full',
@@ -78,7 +77,7 @@ export function Avatar({
   );
 
   if (picture) {
-    return <AvatarImage name={name} picture={picture} className={styles} aria-hidden={ariaHidden} />;
+    return <AvatarImage name={name} picture={picture} className={styles} size={size} aria-hidden={ariaHidden} />;
   }
   return <AvatarColor name={name} size={size} className={styles} />;
 }
@@ -148,13 +147,21 @@ const getColor = (name: string) => {
   return colors[colorIndex];
 };
 
-type AvatarImageProps = { picture: string; name?: string | null; 'aria-hidden'?: boolean; className: string };
+type AvatarImageProps = {
+  picture: string;
+  name?: string | null;
+  'aria-hidden'?: boolean;
+  size: keyof typeof sizes;
+  className: string;
+};
 
-function AvatarImage({ picture, name, 'aria-hidden': ariaHidden, className }: AvatarImageProps) {
+function AvatarImage({ picture, name, 'aria-hidden': ariaHidden, size, className }: AvatarImageProps) {
   return (
     <img
       className={className}
       src={picture}
+      height={sizes[size]}
+      width={sizes[size]}
       alt={!ariaHidden && name ? name : ''}
       aria-hidden={ariaHidden}
       loading="lazy"
@@ -183,6 +190,7 @@ function AvatarColor({
         color,
         text_sizes[size],
       )}
+      style={{ height: sizes[size], width: sizes[size] }}
     >
       {initial}
     </div>

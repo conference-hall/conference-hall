@@ -86,7 +86,7 @@ function TeamBreadcrumb({ teams }: TeamBreadcrumbProps) {
   const event = useRouteLoaderData<typeof routeEventLoader>('routes/team+/$team.$event+/_layout');
 
   return (
-    <nav className="flex ml-6 items-center text-gray-200 text-sm font-semibold">
+    <nav className="flex ml-4 items-center text-gray-200 text-sm font-semibold">
       <TeamsDropdown teams={teams} currentTeamSlug={currentTeam.slug} />
       {event && (
         <>
