@@ -9,7 +9,7 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-import { parseWithZod } from '~/libs/zod-parser.ts';
+import { parseWithZod } from '~/libs/validators/zod-parser.ts';
 
 import { TalkSection } from '../__components/talks/talk-section.tsx';
 import { TalkSubmissionsSection } from '../__components/talks/talk-submissions-section.tsx';

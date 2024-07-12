@@ -49,8 +49,9 @@ export class EventsSearch {
         address: event.address,
         logo: event.logo,
         cfpState: event.cfpState,
-        cfpStart: event.cfpStart?.toUTCString(),
-        cfpEnd: event.cfpEnd?.toUTCString(),
+        timezone: event.timezone,
+        cfpStart: event.cfpStart?.toISOString(),
+        cfpEnd: event.cfpEnd?.toISOString(),
       })),
     };
   }

@@ -15,7 +15,7 @@ describe('View event page', () => {
     event.visit('devfest-nantes');
     cy.assertText('Devfest Nantes');
     cy.assertText('Nantes, France');
-    cy.assertText('October 5th, 2020');
+    cy.assertText('October 5th, 2020 (CEST)');
     cy.assertText('Call for paper open for over 69 years');
     cy.assertText('The event !');
     cy.assertLink('Website', 'https://devfest.gdgnantes.com');

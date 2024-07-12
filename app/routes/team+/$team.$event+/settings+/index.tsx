@@ -6,8 +6,8 @@ import invariant from 'tiny-invariant';
 
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
 import { EventDetailsSettingsSchema, EventGeneralSettingsSchema } from '~/.server/event-settings/user-event.types.ts';
-import { AlertInfo } from '~/design-system/alerts.tsx';
 import { Button } from '~/design-system/buttons.tsx';
+import { Callout } from '~/design-system/callout.tsx';
 import { DateRangeInput } from '~/design-system/forms/date-range-input.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { MarkdownTextArea } from '~/design-system/forms/markdown-textarea.tsx';
@@ -15,7 +15,7 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
-import { parseWithZod } from '~/libs/zod-parser.ts';
+import { parseWithZod } from '~/libs/validators/zod-parser.ts';
 import { EventForm } from '~/routes/__components/events/event-form.tsx';
 
 import { useEvent } from '../__components/useEvent.tsx';
@@ -99,6 +99,7 @@ export default function EventGeneralSettingsRoute() {
               <DateRangeInput
                 start={{ name: 'conferenceStart', label: 'Start date', value: event?.conferenceStart }}
                 end={{ name: 'conferenceEnd', label: 'End date', value: event?.conferenceEnd }}
+                timezone={event?.timezone}
                 error={errors?.conferenceStart}
               />
             )}
@@ -129,6 +130,7 @@ export default function EventGeneralSettingsRoute() {
               defaultValue={event.contactEmail || ''}
               error={errors?.contactEmail}
             />
+            <input type="hidden" name="timezone" value={event.timezone} />
           </Form>
         </Card.Content>
 
@@ -145,10 +147,10 @@ export default function EventGeneralSettingsRoute() {
         </Card.Title>
 
         <Card.Content>
-          <AlertInfo>
+          <Callout title="Be careful">
             Archived events are not displayed anymore in the team list and in the Conference Hall search. Nothing is
             deleted, you can restore them when you want.
-          </AlertInfo>
+          </Callout>
         </Card.Content>
 
         <Card.Actions>

@@ -1,4 +1,13 @@
-import { rand, randEmail, randFullAddress, randParagraph, randSportsTeam, randUrl, randUuid } from '@ngneat/falso';
+import {
+  rand,
+  randEmail,
+  randFullAddress,
+  randParagraph,
+  randSportsTeam,
+  randText,
+  randUrl,
+  randUuid,
+} from '@ngneat/falso';
 import type { Prisma, Team } from '@prisma/client';
 import { EventType, EventVisibility } from '@prisma/client';
 
@@ -51,6 +60,18 @@ const TRAITS = {
     surveyEnabled: true,
     surveyQuestions: ['gender', 'tshirt', 'diet', 'accomodation', 'transports', 'info'],
   },
+  withSchedule: {
+    schedules: {
+      create: {
+        name: randText(),
+        timezone: 'Europe/Paris',
+        start: '2024-10-05T00:00:00.000Z',
+        end: '2024-10-06T00:00:00.000Z',
+        displayStartMinutes: 9 * 60,
+        displayEndMinutes: 18 * 60,
+      },
+    },
+  },
 };
 
 type Trait = keyof typeof TRAITS;
@@ -74,6 +95,7 @@ export const eventFactory = async (options: FactoryOptions = {}) => {
     name: randSportsTeam(),
     slug: `slug-${randUuid()}`,
     description: randParagraph(),
+    timezone: 'Europe/Paris',
     address: randFullAddress(),
     logo: `https://picsum.photos/seed/${randUuid()}/128`,
     websiteUrl: randUrl(),

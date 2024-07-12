@@ -11,7 +11,7 @@ import {
 } from '~/.server/event-settings/user-event.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-import { parseWithZod } from '~/libs/zod-parser.ts';
+import { parseWithZod } from '~/libs/validators/zod-parser.ts';
 
 import { useEvent } from '../__components/useEvent.tsx';
 import { CommonCfpSetting } from './__components/common-cfp-setting.tsx';
@@ -62,7 +62,12 @@ export default function EventCfpSettingsRoute() {
   return (
     <>
       {event.type === 'CONFERENCE' ? (
-        <ConferenceCfpOpening cfpStart={event.cfpStart} cfpEnd={event.cfpEnd} errors={errors} />
+        <ConferenceCfpOpening
+          cfpStart={event.cfpStart}
+          cfpEnd={event.cfpEnd}
+          timezone={event.timezone}
+          errors={errors}
+        />
       ) : (
         <MeetupCfpOpening cfpStart={event.cfpStart} />
       )}

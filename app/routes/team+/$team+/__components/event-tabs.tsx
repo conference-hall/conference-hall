@@ -31,7 +31,7 @@ export function EventTabs({ teamSlug, eventSlug, eventType, role }: Props) {
         ) : null}
 
         {role !== 'REVIEWER' && eventType === 'CONFERENCE' ? (
-          <NavTab to={`/team/${teamSlug}/${eventSlug}/schedule`} icon={CalendarIcon}>
+          <NavTab to={`/team/${teamSlug}/${eventSlug}/schedule`} icon={CalendarIcon} className="hidden md:flex">
             Schedule
           </NavTab>
         ) : null}

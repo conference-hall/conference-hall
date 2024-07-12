@@ -1,20 +1,25 @@
 import { EnvelopeIcon, GlobeEuropeAfricaIcon, HeartIcon } from '@heroicons/react/20/solid';
+import { ClockIcon, MapPinIcon } from '@heroicons/react/24/outline';
 
+import { Divider } from '~/design-system/divider.tsx';
+import { IconLabel } from '~/design-system/icon-label.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { ExternalLink } from '~/design-system/links.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
-import type { CfpState } from '~/types/events.types.ts';
-
-import { CfpSection } from './cfp-section.tsx';
+import { Text } from '~/design-system/typography.tsx';
+import { formatConferenceDates, formatEventType } from '~/libs/formatters/cfp.ts';
+import { ClientOnly } from '~/routes/__components/utils/client-only.tsx';
 
 type Props = {
   description: string | null;
   websiteUrl: string | null;
   contactEmail: string | null;
   codeOfConductUrl: string | null;
-  cfpState: CfpState;
-  cfpStart?: string;
-  cfpEnd?: string;
+  conferenceStart?: string;
+  conferenceEnd?: string;
+  address: string | null;
+  type: 'CONFERENCE' | 'MEETUP';
+  timezone: string;
   className?: string;
 };
 
@@ -23,16 +28,38 @@ export function DetailsSection({
   websiteUrl,
   contactEmail,
   codeOfConductUrl,
-  cfpState,
-  cfpStart,
-  cfpEnd,
+  conferenceStart,
+  conferenceEnd,
+  address,
+  type,
+  timezone,
 }: Props) {
   const hasDetails = websiteUrl || contactEmail || codeOfConductUrl;
   return (
     <Card as="section" p={8} className="space-y-8">
-      <CfpSection cfpState={cfpState} cfpStart={cfpStart} cfpEnd={cfpEnd} />
+      <div className="space-y-2">
+        <Text weight="semibold" size="base" mb={6}>
+          {formatEventType(type)}
+        </Text>
+
+        {conferenceStart && conferenceEnd ? (
+          <IconLabel icon={ClockIcon} gap="l">
+            <ClientOnly>{() => formatConferenceDates(type, timezone, conferenceStart, conferenceEnd)}</ClientOnly>
+          </IconLabel>
+        ) : null}
+
+        {address && (
+          <IconLabel icon={MapPinIcon} gap="l">
+            {address}
+          </IconLabel>
+        )}
+      </div>
+
+      <Divider />
 
       <Markdown>{description}</Markdown>
+
+      <Divider />
 
       {hasDetails && (
         <div className="flex flex-col gap-4 sm:flex-row sm:gap-16">

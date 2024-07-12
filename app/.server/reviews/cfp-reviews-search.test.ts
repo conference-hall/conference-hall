@@ -86,6 +86,37 @@ describe('CfpReviewsSearch', () => {
     });
   });
 
+  describe('#autocomplete', () => {
+    it('returns event proposals info', async () => {
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      const proposals = await CfpReviewsSearch.for(owner.id, team.slug, event.slug).autocomplete({ status: 'pending' });
+
+      expect(proposals).toEqual([
+        {
+          id: proposal.id,
+          title: proposal.title,
+          deliberationStatus: proposal.deliberationStatus,
+          confirmationStatus: proposal.confirmationStatus,
+          speakers: [{ name: speaker.name, picture: speaker.picture }],
+        },
+      ]);
+    });
+
+    it('returns empty results of an event without proposals', async () => {
+      const proposals = await CfpReviewsSearch.for(owner.id, team.slug, event.slug).autocomplete({});
+
+      expect(proposals).toEqual([]);
+    });
+
+    it('throws an error if user does not belong to event team', async () => {
+      const user = await userFactory();
+      const event = await eventFactory();
+      await proposalFactory({ event, talk: await talkFactory({ speakers: [user] }) });
+      const reviewsSearch = CfpReviewsSearch.for(user.id, team.slug, event.slug);
+      await expect(reviewsSearch.autocomplete({})).rejects.toThrowError(ForbiddenOperationError);
+    });
+  });
+
   describe('#forJsonExport', () => {
     it('export reviews to json', async () => {
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });

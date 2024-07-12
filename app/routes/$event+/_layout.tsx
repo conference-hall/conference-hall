@@ -7,14 +7,12 @@ import { EventPage } from '~/.server/event-page/event-page.ts';
 import { Avatar } from '~/design-system/avatar.tsx';
 import { Container } from '~/design-system/layouts/container.tsx';
 import { H1, Text } from '~/design-system/typography.tsx';
-import { formatConferenceDates } from '~/libs/formatters/cfp.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { eventSocialCard } from '~/libs/meta/social-cards.ts';
 import { Footer } from '~/routes/__components/footer.tsx';
 import { Navbar } from '~/routes/__components/navbar/navbar.tsx';
 import { useUser } from '~/routes/__components/use-user.tsx';
 
-import { ClientOnly } from '../__components/utils/client-only.tsx';
 import { EventTabs } from './__components/event-tabs.tsx';
 
 export const meta = mergeMeta<typeof loader>(
@@ -40,45 +38,30 @@ export default function EventRoute() {
       <Navbar user={user} withSearch />
 
       <header className="bg-gray-800">
-        <Container className="h-24 flex flex-row items-center justify-between">
-          <div className="flex gap-6 items-end relative">
-            <Avatar
-              picture={event.logo}
-              name={event.name}
-              size="4xl"
-              square
-              ring
-              ringColor="white"
-              className="hidden sm:block absolute -bottom-16"
-            />
-            <Avatar
-              picture={event.logo}
-              name={event.name}
-              size="xl"
-              square
-              ring
-              ringColor="white"
-              className="sm:hidden"
-            />
-            <div className="sm:ml-40 p-2">
-              <H1 size="2xl" variant="light">
-                {event.name}
-              </H1>
-              <Text variant="secondary-light" weight="medium">{`by ${event.teamName}`}</Text>
-            </div>
-          </div>
-
-          <div className="hidden md:flex md:flex-col md:items-end md:gap-1 truncate">
-            <Text variant="light" size="base" weight="semibold" truncate>
-              <ClientOnly>
-                {() => formatConferenceDates(event.type, event.conferenceStart, event.conferenceEnd)}
-              </ClientOnly>
-            </Text>
-            {event.address && (
-              <Text variant="secondary-light" size="xs" truncate>
-                {event.address}
-              </Text>
-            )}
+        <Container className="h-24 flex flex-row items-center justify-between relative">
+          <Avatar
+            picture={event.logo}
+            name={event.name}
+            size="4xl"
+            square
+            ring
+            ringColor="white"
+            className="hidden sm:flex absolute -bottom-12"
+          />
+          <Avatar
+            picture={event.logo}
+            name={event.name}
+            size="xl"
+            square
+            ring
+            ringColor="white"
+            className="sm:hidden"
+          />
+          <div className="ml-2 sm:ml-40 p-2 overflow-hidden">
+            <H1 size="2xl" variant="light" truncate>
+              {event.name}
+            </H1>
+            <Text variant="secondary-light" weight="medium">{`by ${event.teamName}`}</Text>
           </div>
         </Container>
       </header>

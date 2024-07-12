@@ -39,10 +39,6 @@ class EventSubmissionPage extends BasePage {
     return cy.findByRole('link', { name: 'New proposal' }).click();
   }
 
-  maxProposalAlert() {
-    return cy.findByLabelText('Maximum of proposals by speaker').should('exist');
-  }
-
   drafts() {
     return cy.findByRole('list', { name: 'Draft proposals list' }).children();
   }

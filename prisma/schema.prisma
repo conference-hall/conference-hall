@@ -94,9 +94,9 @@ model Event {
   teamId                   String
   team                     Team            @relation(fields: [teamId], references: [id])
   address                  String?
+  timezone                 String
   lat                      Float?
   lng                      Float?
-  timezone                 String?
   contactEmail             String?
   websiteUrl               String?
   codeOfConductUrl         String?
@@ -127,6 +127,7 @@ model Event {
   migrationId              String?
   proposals                Proposal[]
   surveys                  Survey[]
+  schedules                Schedule[]
 
   @@map("events")
 }
@@ -223,6 +224,7 @@ model Proposal {
   updatedAt          DateTime            @updatedAt
   migrationId        String?
   comments           Comment[]
+  ScheduleSession    ScheduleSession[]
 
   @@unique([talkId, eventId])
   @@map("proposals")
@@ -301,4 +303,52 @@ model Comment {
 enum CommentChannel {
   ORGANIZER
   SPEAKER
+}
+
+model Schedule {
+  id                  String            @id @default(cuid())
+  eventId             String
+  event               Event             @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  name                String
+  timezone            String
+  start               DateTime
+  end                 DateTime
+  displayStartMinutes Int
+  displayEndMinutes   Int
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+  tracks              ScheduleTrack[]
+  sessions            ScheduleSession[]
+
+  @@map("schedules")
+}
+
+model ScheduleTrack {
+  id              String            @id @default(cuid())
+  name            String
+  scheduleId      String
+  schedule        Schedule          @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+  ScheduleSession ScheduleSession[]
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  @@map("schedule_tracks")
+}
+
+model ScheduleSession {
+  id         String        @id @default(cuid())
+  name       String?
+  color      String
+  start      DateTime
+  end        DateTime
+  scheduleId String
+  schedule   Schedule      @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+  trackId    String
+  track      ScheduleTrack @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  proposalId String?
+  proposal   Proposal?     @relation(fields: [proposalId], references: [id])
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+
+  @@map("schedule_sessions")
 }

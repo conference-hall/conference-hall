@@ -11,11 +11,7 @@ const settings = [
   },
 ];
 
-export default function EventVisibilityRadioGroup({
-  defaultValue = 'PRIVATE',
-}: {
-  defaultValue?: 'PUBLIC' | 'PRIVATE';
-}) {
+export function EventVisibilityRadioGroup({ defaultValue = 'PRIVATE' }: { defaultValue?: 'PUBLIC' | 'PRIVATE' }) {
   const [selected, setSelected] = useState(defaultValue);
 
   return (

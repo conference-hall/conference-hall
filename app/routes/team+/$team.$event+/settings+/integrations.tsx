@@ -5,14 +5,14 @@ import invariant from 'tiny-invariant';
 
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
 import { EventSlackSettingsSchema } from '~/.server/event-settings/user-event.types.ts';
-import { AlertInfo } from '~/design-system/alerts.tsx';
 import { Button } from '~/design-system/buttons.tsx';
+import { Callout } from '~/design-system/callout.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { ExternalLink } from '~/design-system/links.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { parseWithZod } from '~/libs/zod-parser.ts';
+import { parseWithZod } from '~/libs/validators/zod-parser.ts';
 
 import { useEvent } from '../__components/useEvent.tsx';
 
@@ -55,14 +55,14 @@ export default function EventIntegrationsSettingsRoute() {
             error={errors?.slackWebhookUrl}
           />
         </Form>
-        <AlertInfo>
+        <Callout title="How to get the Slack web hook URL?">
           With Slack integration you will be able to received notifications about speakers in a dedicated Slack channel.
           Follow the 3 steps of the{' '}
-          <ExternalLink href="https://api.slack.com/incoming-webhooks" variant="secondary">
+          <ExternalLink href="https://api.slack.com/incoming-webhooks" variant="secondary" weight="medium">
             Slack documentation
           </ExternalLink>{' '}
           to get the Incoming Web Hook URL and choose the channel.
-        </AlertInfo>
+        </Callout>
       </Card.Content>
 
       <Card.Actions>

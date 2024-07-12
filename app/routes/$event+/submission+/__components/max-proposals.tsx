@@ -1,7 +1,7 @@
 import { FireIcon } from '@heroicons/react/24/outline';
 
-import { AlertInfo } from '~/design-system/alerts.tsx';
 import { ButtonLink } from '~/design-system/buttons.tsx';
+import { Callout } from '~/design-system/callout.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 
 type MaxProposalsReachedProps = { maxProposals: number };
@@ -23,11 +23,11 @@ type MaxProposalsAlertProps = { proposalsCount: number; maxProposals: number };
 
 export function MaxProposalsAlert({ proposalsCount, maxProposals }: MaxProposalsAlertProps) {
   return (
-    <AlertInfo aria-label="Maximum of proposals by speaker">
+    <Callout title="Maximum of proposals by speaker">
       {`You can submit a maximum of `}
       <strong>{`${maxProposals} proposals by speaker. `}</strong>
       {`You currently have submitted `}
       <strong>{`${proposalsCount} proposals.`}</strong>
-    </AlertInfo>
+    </Callout>
   );
 }

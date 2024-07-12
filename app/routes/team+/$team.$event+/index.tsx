@@ -48,6 +48,7 @@ export default function OverviewRoute() {
             cfpState={event.cfpState}
             cfpStart={event.cfpStart}
             cfpEnd={event.cfpEnd}
+            timezone={event.timezone}
             showActions={showActions}
           />
 

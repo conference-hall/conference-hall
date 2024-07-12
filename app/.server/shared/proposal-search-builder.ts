@@ -5,7 +5,7 @@ import type { Pagination } from '~/.server/shared/pagination';
 
 import type { ProposalsFilters, ReviewsFilter, StatusFilter } from './proposal-search-builder.types';
 
-type SearchOptions = { withSpeakers: boolean };
+type SearchOptions = { withSpeakers: boolean; withReviews: boolean };
 
 export class ProposalSearchBuilder {
   eventSlug: string;
@@ -17,7 +17,7 @@ export class ProposalSearchBuilder {
     this.eventSlug = eventSlug;
     this.userId = userId;
     this.filters = filters;
-    this.options = options || { withSpeakers: true };
+    this.options = options || { withSpeakers: true, withReviews: true };
   }
 
   async statistics() {
@@ -28,7 +28,7 @@ export class ProposalSearchBuilder {
 
   async proposalsByPage(pagination: Pagination) {
     return db.proposal.findMany({
-      include: { speakers: this.options.withSpeakers, reviews: true },
+      include: { speakers: this.options.withSpeakers, reviews: this.options.withReviews },
       where: this.whereClause(),
       orderBy: this.orderByClause(),
       skip: pagination.pageIndex * pagination.pageSize,

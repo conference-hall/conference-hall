@@ -31,7 +31,7 @@ describe('SpeakerActivities', () => {
               {
                 id: proposal2.id,
                 title: proposal2.title,
-                updatedAt: proposal2.createdAt.toUTCString(),
+                updatedAt: proposal2.updatedAt.toISOString(),
                 status: SpeakerProposalStatus.DeliberationPending,
                 speakers: [{ id: speaker.id, name: speaker.name, picture: speaker.picture }],
               },
@@ -46,7 +46,7 @@ describe('SpeakerActivities', () => {
               {
                 id: proposal.id,
                 title: proposal.title,
-                updatedAt: proposal.createdAt.toUTCString(),
+                updatedAt: proposal.updatedAt.toISOString(),
                 status: SpeakerProposalStatus.Submitted,
                 speakers: [{ id: speaker.id, name: speaker.name, picture: speaker.picture }],
               },

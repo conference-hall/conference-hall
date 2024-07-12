@@ -40,7 +40,7 @@ export class Notifications {
         slug: proposal.event.slug,
         name: proposal.event.name,
       },
-      date: proposal.updatedAt.toUTCString(),
+      date: proposal.updatedAt.toISOString(),
     }));
   }
 }

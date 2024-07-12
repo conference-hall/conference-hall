@@ -1,14 +1,19 @@
 import { Form } from '@remix-run/react';
 
-import { AlertInfo } from '~/design-system/alerts.tsx';
 import { Button } from '~/design-system/buttons.tsx';
+import { Callout } from '~/design-system/callout.tsx';
 import { DateRangeInput } from '~/design-system/forms/date-range-input.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 
-type Props = { cfpStart?: string; cfpEnd?: string; errors?: Record<string, string | string[]> | null };
+type Props = {
+  cfpStart?: string;
+  cfpEnd?: string;
+  timezone: string;
+  errors?: Record<string, string | string[]> | null;
+};
 
-export function ConferenceCfpOpening({ cfpStart, cfpEnd, errors }: Props) {
+export function ConferenceCfpOpening({ cfpStart, cfpEnd, timezone, errors }: Props) {
   return (
     <Card as="section">
       <Card.Title>
@@ -21,12 +26,14 @@ export function ConferenceCfpOpening({ cfpStart, cfpEnd, errors }: Props) {
             <DateRangeInput
               start={{ name: 'cfpStart', label: 'Opening date', value: cfpStart }}
               end={{ name: 'cfpEnd', label: 'Closing date', value: cfpEnd }}
+              timezone={timezone}
               error={errors?.cfpStart}
             />
-            <AlertInfo>
-              Define the period during which the call for papers should be open. The opening and closing of the CFP will
-              be done automatically according to these dates and times.
-            </AlertInfo>
+            <Callout title="Call for Papers period">
+              Specify the period during which the call for papers will be open. The CFP will automatically open and
+              close based on these dates and times.
+            </Callout>
+            <input type="hidden" name="timezone" value={timezone} />
           </div>
         </Card.Content>
         <Card.Actions>

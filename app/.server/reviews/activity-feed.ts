@@ -73,7 +73,7 @@ export class ActivityFeed {
       const user = users.find((user) => user.id === result.userId);
       return {
         ...result,
-        timestamp: result.timestamp.toUTCString(),
+        timestamp: result.timestamp.toISOString(),
         user: user?.name ?? '?',
         picture: user?.picture ?? null,
       };

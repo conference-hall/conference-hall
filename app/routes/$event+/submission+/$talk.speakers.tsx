@@ -15,7 +15,7 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { ExternalLink } from '~/design-system/links.tsx';
 import { H2, Subtitle, Text } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { parseWithZod } from '~/libs/zod-parser.ts';
+import { parseWithZod } from '~/libs/validators/zod-parser.ts';
 import { CoSpeakers } from '~/routes/__components/talks/co-speaker.tsx';
 
 export const handle = { step: 'speakers' };

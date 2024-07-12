@@ -20,6 +20,7 @@ export function ListHeader({ checkboxRef, total, totalSelected, totalReviewed, s
         <Checkbox aria-label="Select current page" ref={checkboxRef}>
           {totalSelected === 0 ? `${total} proposals` : `Mark ${totalSelected} selected as:`}
         </Checkbox>
+
         {totalSelected !== 0 && (
           <div className="flex items-center gap-2">
             <DeliberationButton

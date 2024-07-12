@@ -119,7 +119,7 @@ export class EventMetrics {
     );
 
     return proposalsByDays.map((item) => ({
-      date: item.date.toUTCString(),
+      date: item.date.toISOString(),
       count: Number(item.count),
       cumulative: Number(item.cumulative),
     }));

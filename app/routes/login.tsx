@@ -10,7 +10,7 @@ import {
 } from 'firebase/auth';
 import { useCallback, useEffect, useState } from 'react';
 
-import { AlertError } from '~/design-system/alerts.tsx';
+import { Callout } from '~/design-system/callout.tsx';
 import { LoadingIcon } from '~/design-system/icons/loading-icon.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Link } from '~/design-system/links.tsx';
@@ -100,7 +100,11 @@ export default function Login() {
             <>
               <Card p={16}>
                 <div>
-                  {error && <AlertError className="mb-8">{error}</AlertError>}
+                  {error && (
+                    <Callout title="Error" variant="error" className="mb-8">
+                      {error}
+                    </Callout>
+                  )}
 
                   <div className="relative">
                     <div className="absolute inset-0 flex items-center" aria-hidden="true">

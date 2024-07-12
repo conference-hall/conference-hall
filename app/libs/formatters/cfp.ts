@@ -1,4 +1,5 @@
-import { format as formatter, formatDistanceToNow, isSameDay } from 'date-fns';
+import { formatDistanceToNow, isSameDay } from 'date-fns';
+import { format as formatInTimeZone, toZonedTime } from 'date-fns-tz';
 
 import type { CfpState, EventType } from '~/types/events.types';
 
@@ -11,17 +12,16 @@ export function formatEventType(type: EventType) {
   }
 }
 
-export function formatConferenceDates(type: EventType, start?: string, end?: string) {
-  if (!start || !end) return formatEventType(type);
-  const startDate = new Date(start);
-  const endDate = new Date(end);
+export function formatConferenceDates(type: EventType, timeZone: string, start: string, end: string) {
+  const startDate = toZonedTime(start, timeZone);
+  const endDate = toZonedTime(end, timeZone);
 
   if (isSameDay(startDate, endDate)) {
-    return formatter(startDate, 'PPP');
+    return formatInTimeZone(startDate, 'PPP (z)', { timeZone });
   }
 
-  const startFormatted = formatter(startDate, 'MMMM do');
-  const endFormatted = formatter(endDate, 'PPP');
+  const startFormatted = formatInTimeZone(startDate, 'MMMM do', { timeZone });
+  const endFormatted = formatInTimeZone(endDate, 'PPP (z)', { timeZone });
   return `${startFormatted} to ${endFormatted}`;
 }
 
@@ -55,16 +55,18 @@ export function formatCFPElapsedTime(state: CfpState, start?: string | null, end
   }
 }
 
-export function formatCFPDate(state: CfpState, start?: string, end?: string, format = 'PPPPp') {
+export function formatCFPDate(state: CfpState, timeZone: string, start?: string, end?: string, format = 'PPPPp (z)') {
   if (!start || !end) return undefined;
+  const startDate = toZonedTime(start, timeZone);
+  const endDate = toZonedTime(end, timeZone);
 
   switch (state) {
     case 'CLOSED':
-      return `Open on ${formatter(new Date(start), format)}`;
+      return `Open on ${formatInTimeZone(startDate, format, { timeZone })}`;
     case 'OPENED':
-      return `Open until ${formatter(new Date(end), format)}`;
+      return `Open until ${formatInTimeZone(endDate, format, { timeZone })}`;
     case 'FINISHED':
-      return `Closed since ${formatter(new Date(end), format)}`;
+      return `Closed since ${formatInTimeZone(endDate, format, { timeZone })}`;
   }
 }
 

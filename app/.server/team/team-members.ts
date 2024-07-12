@@ -3,7 +3,7 @@ import { db } from 'prisma/db.server.ts';
 import { z } from 'zod';
 
 import { ForbiddenOperationError } from '~/libs/errors.server.ts';
-import { parseWithZod } from '~/libs/zod-parser.ts';
+import { parseWithZod } from '~/libs/validators/zod-parser.ts';
 
 import { Pagination } from '../shared/pagination.ts';
 import { UserTeam } from './user-team.ts';

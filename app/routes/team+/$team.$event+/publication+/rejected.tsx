@@ -8,7 +8,7 @@ import { PublishResultFormSchema } from '~/.server/publications/publication.type
 import { requireSession } from '~/libs/auth/session.ts';
 import { BadRequestError } from '~/libs/errors.server.ts';
 import { redirectWithToast } from '~/libs/toasts/toast.server.ts';
-import { parseWithZod } from '~/libs/zod-parser.ts';
+import { parseWithZod } from '~/libs/validators/zod-parser.ts';
 
 import { PublicationConfirm } from './__components/publication-confirm.tsx';
 import { useStatistics } from './__components/useStatistics.tsx';

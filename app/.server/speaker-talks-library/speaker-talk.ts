@@ -35,7 +35,7 @@ export class SpeakerTalk {
       languages: (talk.languages || []) as string[],
       references: talk.references,
       archived: talk.archived,
-      createdAt: talk.createdAt.toUTCString(),
+      createdAt: talk.createdAt.toISOString(),
       isOwner: this.speakerId === talk.creatorId,
       speakers: talk.speakers
         .map((speaker) => ({
@@ -54,7 +54,7 @@ export class SpeakerTalk {
           name: proposal.event.name,
           logo: proposal.event.logo,
           proposalStatus: proposal.getStatusForSpeaker(proposal.event.isCfpOpen),
-          createdAt: proposal.createdAt.toUTCString(),
+          createdAt: proposal.createdAt.toISOString(),
         }))
         .sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1)), // TODO: Test the sort
       invitationLink: talk.invitationLink,

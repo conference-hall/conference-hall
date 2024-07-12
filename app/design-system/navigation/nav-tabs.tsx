@@ -58,9 +58,10 @@ type NavTabProps = {
   count?: number;
   variant?: keyof typeof BACKGROUND;
   icon?: React.ComponentType<{ className?: string }>;
+  className?: string;
 } & RemixNavLinkProps;
 
-export function NavTab({ to, end, count, variant = 'light', icon: Icon, children }: NavTabProps) {
+export function NavTab({ to, end, count, variant = 'light', icon: Icon, className, children }: NavTabProps) {
   return (
     <NavLink
       to={to}
@@ -72,6 +73,7 @@ export function NavTab({ to, end, count, variant = 'light', icon: Icon, children
             [DEFAULT_LINKS[variant]]: !tab.isActive,
             [ACTIVE_LINKS[variant]]: tab.isActive,
           },
+          className,
         )
       }
     >

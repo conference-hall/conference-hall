@@ -78,8 +78,9 @@ describe('UserEvent', () => {
         slug: event.slug,
         type: event.type,
         address: event.address,
-        conferenceStart: event.conferenceStart?.toUTCString(),
-        conferenceEnd: event.conferenceEnd?.toUTCString(),
+        timezone: event.timezone,
+        conferenceStart: event.conferenceStart?.toISOString(),
+        conferenceEnd: event.conferenceEnd?.toISOString(),
         description: event.description,
         visibility: event.visibility,
         websiteUrl: event.websiteUrl,
@@ -98,8 +99,8 @@ describe('UserEvent', () => {
         emailNotifications: [],
         slackWebhookUrl: event.slackWebhookUrl,
         apiKey: event.apiKey,
-        cfpStart: event.cfpStart?.toUTCString(),
-        cfpEnd: event.cfpEnd?.toUTCString(),
+        cfpStart: event.cfpStart?.toISOString(),
+        cfpEnd: event.cfpEnd?.toISOString(),
         cfpState: 'OPENED',
         formats: [],
         categories: [],
@@ -135,11 +136,12 @@ describe('UserEvent', () => {
       event = await eventFactory({ team });
     });
 
-    it('creates a new event into the team', async () => {
+    it('updates an event', async () => {
       const created = await UserEvent.for(owner.id, team.slug, event.slug).update({
         name: 'Updated',
         slug: 'updated',
         visibility: 'PUBLIC',
+        timezone: 'Europe/Oslo',
         address: 'Address',
         description: 'Updated',
         categoriesRequired: true,
@@ -156,6 +158,7 @@ describe('UserEvent', () => {
       expect(updated?.name).toBe('Updated');
       expect(updated?.slug).toBe('updated');
       expect(updated?.visibility).toBe('PUBLIC');
+      expect(updated?.timezone).toBe('Europe/Oslo');
       expect(updated?.address).toBe('Address');
       expect(updated?.categoriesRequired).toBe(true);
       expect(updated?.formatsRequired).toBe(true);

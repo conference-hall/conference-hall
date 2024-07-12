@@ -121,7 +121,10 @@ describe('EventProposalsSearch', () => {
 
     it('does not filter proposals by speaker name when searchBySpeakers option is false', async () => {
       const filters = { query: 'parker' };
-      const search = new ProposalSearchBuilder(event.slug, owner.id, filters, { withSpeakers: false });
+      const search = new ProposalSearchBuilder(event.slug, owner.id, filters, {
+        withSpeakers: false,
+        withReviews: false,
+      });
       const proposals = await search.proposals();
       expect(proposals.length).toBe(0);
     });

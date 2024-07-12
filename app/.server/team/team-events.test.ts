@@ -32,8 +32,9 @@ describe('TeamEvents', () => {
           slug: event1.slug,
           type: event1.type,
           logo: event1.logo,
-          cfpStart: event1.cfpStart?.toUTCString(),
-          cfpEnd: event1.cfpEnd?.toUTCString(),
+          timezone: event1.timezone,
+          cfpStart: event1.cfpStart?.toISOString(),
+          cfpEnd: event1.cfpEnd?.toISOString(),
           cfpState: 'CLOSED',
         },
         {
@@ -41,8 +42,9 @@ describe('TeamEvents', () => {
           slug: event2.slug,
           type: event2.type,
           logo: event2.logo,
-          cfpStart: event2.cfpStart?.toUTCString(),
-          cfpEnd: event2.cfpEnd?.toUTCString(),
+          timezone: event2.timezone,
+          cfpStart: event2.cfpStart?.toISOString(),
+          cfpEnd: event2.cfpEnd?.toISOString(),
           cfpState: 'CLOSED',
         },
       ]);
@@ -61,8 +63,9 @@ describe('TeamEvents', () => {
           slug: event.slug,
           type: event.type,
           logo: event.logo,
-          cfpStart: event.cfpStart?.toUTCString(),
-          cfpEnd: event.cfpEnd?.toUTCString(),
+          timezone: event.timezone,
+          cfpStart: event.cfpStart?.toISOString(),
+          cfpEnd: event.cfpEnd?.toISOString(),
           cfpState: 'CLOSED',
         },
       ]);
@@ -92,6 +95,7 @@ describe('TeamEvents', () => {
         name: 'Hello world',
         slug: 'hello-world',
         visibility: 'PUBLIC',
+        timezone: 'Europe/Paris',
       });
 
       expect(created.slug).toBe('hello-world');
@@ -114,6 +118,7 @@ describe('TeamEvents', () => {
           name: 'Hello world',
           slug: 'hello-world',
           visibility: 'PUBLIC',
+          timezone: 'Europe/Paris',
         }),
       ).rejects.toThrowError(SlugAlreadyExistsError);
     });
@@ -125,6 +130,7 @@ describe('TeamEvents', () => {
           name: 'Hello world',
           slug: 'hello-world',
           visibility: 'PUBLIC',
+          timezone: 'Europe/Paris',
         }),
       ).rejects.toThrowError(ForbiddenOperationError);
     });
@@ -137,6 +143,7 @@ describe('TeamEvents', () => {
           name: 'Hello world',
           slug: 'hello-world',
           visibility: 'PUBLIC',
+          timezone: 'Europe/Paris',
         }),
       ).rejects.toThrowError(ForbiddenOperationError);
     });
@@ -149,6 +156,7 @@ describe('TeamEvents', () => {
         name: 'Event name',
         visibility: 'PUBLIC',
         slug: 'event-name',
+        timezone: 'Europe/Paris',
       });
 
       expect(result.success && result.data).toEqual({
@@ -156,6 +164,7 @@ describe('TeamEvents', () => {
         slug: 'event-name',
         type: 'CONFERENCE',
         visibility: 'PUBLIC',
+        timezone: 'Europe/Paris',
       });
     });
 

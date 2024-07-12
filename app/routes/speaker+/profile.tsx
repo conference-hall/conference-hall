@@ -14,7 +14,7 @@ import { NavSideMenu } from '~/design-system/navigation/nav-side-menu.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-import { parseWithZod } from '~/libs/zod-parser.ts';
+import { parseWithZod } from '~/libs/validators/zod-parser.ts';
 
 import { AdditionalInfoForm } from './__components/additional-info-form.tsx';
 import { PersonalInfoForm } from './__components/personal-info-form.tsx';

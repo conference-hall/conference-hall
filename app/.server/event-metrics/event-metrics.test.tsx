@@ -80,8 +80,8 @@ describe('EventMetrics', () => {
       );
       expect(metrics.byDays).toEqual(
         expect.arrayContaining([
-          { date: 'Wed, 26 Feb 2020 00:00:00 GMT', count: 1, cumulative: 1 },
-          { date: 'Thu, 26 Mar 2020 00:00:00 GMT', count: 1, cumulative: 2 },
+          { date: '2020-02-26T00:00:00.000Z', count: 1, cumulative: 1 },
+          { date: '2020-03-26T00:00:00.000Z', count: 1, cumulative: 2 },
         ]),
       );
     });
