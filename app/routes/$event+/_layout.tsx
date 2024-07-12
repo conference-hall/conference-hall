@@ -46,7 +46,7 @@ export default function EventRoute() {
             square
             ring
             ringColor="white"
-            className="hidden sm:block absolute -bottom-12"
+            className="hidden sm:flex absolute -bottom-12"
           />
           <Avatar
             picture={event.logo}
