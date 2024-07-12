@@ -23,14 +23,14 @@ export function EventCard({ to, name, type, logo, cfpState, cfpStart, cfpEnd }: 
       {/* Mobile */}
       <Avatar picture={logo} name={name} size="2xl" square className="lg:hidden rounded-r-none" />
 
-      <div className="flex flex-1 flex-col justify-between truncate py-2 px-4 lg:p-4">
-        <div className="flex justify-between items-center gap-2 lg:flex-col lg:items-start lg:gap-0">
-          <Text size="l" weight="semibold" mb={1} truncate>
-            {name}
-          </Text>
+      <div className="flex flex-1 flex-col justify-between overflow-hidden py-2 px-4 lg:p-4">
+        <Text size="l" weight="semibold" truncate>
+          {name}
+        </Text>
+        <div className="flex flex-row-reverse items-center sm:flex-col sm:items-start flex-1 justify-between">
           <Subtitle weight="medium">{type === 'CONFERENCE' ? 'Conference' : 'Meetup'}</Subtitle>
+          <CfpElapsedTime cfpState={cfpState} cfpStart={cfpStart} cfpEnd={cfpEnd} />
         </div>
-        <CfpElapsedTime cfpState={cfpState} cfpStart={cfpStart} cfpEnd={cfpEnd} />
       </div>
     </CardLink>
   );
