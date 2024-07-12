@@ -4,7 +4,6 @@ import { parseToUtcEndOfDay, parseToUtcStartOfDay } from '~/libs/datetimes/timez
 
 export const INTERVALS = [5, 10, 15] as const;
 
-// TODOXXX: Add tests
 export const ScheduleCreateSchema = z
   .object({
     name: z.string().trim().min(1).max(255),
@@ -33,7 +32,6 @@ export const ScheduleTrackSaveSchema = z.object({
   name: z.string().trim().min(1).max(255),
 });
 
-// TODOXXX: Add tests
 export const ScheduleDisplayTimesUpdateSchema = z
   .object({
     displayStartMinutes: z
@@ -45,13 +43,10 @@ export const ScheduleDisplayTimesUpdateSchema = z
       .min(0)
       .max(23 * 60),
   })
-  .refine(
-    ({ displayStartMinutes, displayEndMinutes }) => {
-      if (displayStartMinutes > displayEndMinutes) return false;
-      return true;
-    },
-    { path: ['displayStartMinutes'], message: 'Displayed start in minutes must be before end in minutes.' },
-  );
+  .refine(({ displayStartMinutes, displayEndMinutes }) => displayStartMinutes <= displayEndMinutes, {
+    path: ['displayStartMinutes'],
+    message: 'Displayed start in minutes must be before end in minutes.',
+  });
 
 export const ScheduleSessionCreateSchema = z.object({
   trackId: z.string(),
