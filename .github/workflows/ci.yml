@@ -85,6 +85,9 @@ jobs:
           start: npx dotenv -e .env.test -- npm start
           command-prefix: 'dotenv -e .env.test --'
           wait-on: 'http://localhost:3001'
+        env:
+          UTC: TZ
+          CYPRESS_UTC: TZ
 
       - name: Stop database and firebase emulators
         if: always()
