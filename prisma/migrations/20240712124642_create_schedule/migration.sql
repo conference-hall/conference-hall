@@ -15,8 +15,8 @@ CREATE TABLE "schedules" (
     "timezone" TEXT NOT NULL,
     "start" TIMESTAMP(3) NOT NULL,
     "end" TIMESTAMP(3) NOT NULL,
-    "displayStartHour" INTEGER NOT NULL,
-    "displayEndHour" INTEGER NOT NULL,
+    "displayStartMinutes" INTEGER NOT NULL,
+    "displayEndMinutes" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -37,10 +37,13 @@ CREATE TABLE "schedule_tracks" (
 -- CreateTable
 CREATE TABLE "schedule_sessions" (
     "id" TEXT NOT NULL,
+    "name" TEXT,
+    "color" TEXT NOT NULL,
     "start" TIMESTAMP(3) NOT NULL,
     "end" TIMESTAMP(3) NOT NULL,
     "scheduleId" TEXT NOT NULL,
     "trackId" TEXT NOT NULL,
+    "proposalId" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -58,3 +61,6 @@ ALTER TABLE "schedule_sessions" ADD CONSTRAINT "schedule_sessions_scheduleId_fke
 
 -- AddForeignKey
 ALTER TABLE "schedule_sessions" ADD CONSTRAINT "schedule_sessions_trackId_fkey" FOREIGN KEY ("trackId") REFERENCES "schedule_tracks"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "schedule_sessions" ADD CONSTRAINT "schedule_sessions_proposalId_fkey" FOREIGN KEY ("proposalId") REFERENCES "proposals"("id") ON DELETE SET NULL ON UPDATE CASCADE;
