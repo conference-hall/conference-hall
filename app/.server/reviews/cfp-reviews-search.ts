@@ -52,7 +52,6 @@ export class CfpReviewsSearch {
     };
   }
 
-  // TODOXXX: Add tests
   async autocomplete(filters: ProposalsFilters) {
     const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER', 'REVIEWER']);
 
