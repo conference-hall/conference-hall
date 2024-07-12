@@ -27,7 +27,7 @@ export function SpeakerDetailsSection({ bio, address, socials }: Props) {
     <div className="hidden sm:block space-y-6">
       <Card>
         <div className="p-6">
-          {bio ? <Markdown className="line-clamp-5">{bio}</Markdown> : <Text>Fill your profile</Text>}
+          {bio ? <Markdown className="line-clamp-5">{bio}</Markdown> : <Text variant="secondary">(No profile)</Text>}
         </div>
 
         {displayInfo && (
