@@ -207,6 +207,8 @@ function Timeslot({
   return (
     <div
       ref={setNodeRef}
+      role="button"
+      aria-label={`Timeslot ${toTimeFormat(timeslot.start)}`}
       onMouseDown={!hasSession ? selector.onSelectStart(trackId, timeslot) : undefined}
       onMouseEnter={!hasSession ? selector.onSelectHover(trackId, timeslot) : undefined}
       onMouseUp={selector.onSelect}

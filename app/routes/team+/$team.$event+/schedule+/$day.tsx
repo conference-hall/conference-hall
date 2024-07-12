@@ -104,6 +104,8 @@ export default function ScheduleRoute() {
 
   return (
     <main className={cx({ 'px-8 my-8 mx-auto max-w-7xl': !isFullscreen })}>
+      <h1 className="sr-only">{schedule.name}</h1>
+
       <div className={cx({ 'border border-gray-200 rounded-t-lg': !isFullscreen })}>
         {openSession && (
           <SessionModal
