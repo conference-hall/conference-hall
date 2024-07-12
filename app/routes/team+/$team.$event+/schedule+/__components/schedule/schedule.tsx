@@ -35,7 +35,6 @@ const TIMESLOT_HEIGHTS = [8, 12, 16, 20]; // px
 const DEFAULT_ZOOM_LEVEL = 1;
 
 type ScheduleProps = {
-  day: Date;
   startTime: Date;
   endTime: Date;
   timezone: string;
@@ -51,7 +50,6 @@ type ScheduleProps = {
 };
 
 export default function Schedule({
-  day,
   startTime,
   endTime,
   timezone,
@@ -65,7 +63,7 @@ export default function Schedule({
   onSwitchSessions,
   zoomLevel = DEFAULT_ZOOM_LEVEL,
 }: ScheduleProps) {
-  const hours = getDailyTimeSlots(day, startTime, endTime, HOUR_INTERVAL);
+  const hours = getDailyTimeSlots(startTime, endTime, HOUR_INTERVAL, true);
 
   const selector = useTimeslotSelector(sessions, onAddSession);
 
@@ -126,7 +124,7 @@ export default function Schedule({
             {hours.map((hour, rowIndex) => {
               const startHour = toTimeFormat(hour.start);
               const endHour = toTimeFormat(hour.end);
-              const hourSlots = getDailyTimeSlots(day, hour.start, hour.end, interval, true);
+              const hourSlots = getDailyTimeSlots(hour.start, hour.end, interval);
 
               return (
                 <tr key={`${startHour}-${endHour}`} className="divide-x divide-gray-200 align-top">

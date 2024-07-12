@@ -1,8 +1,33 @@
-import { addMinutes, differenceInMinutes, endOfDay, format, isAfter, isBefore, isEqual, startOfDay } from 'date-fns';
+import { addMinutes, differenceInMinutes, endOfDay, isAfter, isBefore, isEqual, startOfDay } from 'date-fns';
 
 export type TimeSlot = { start: Date; end: Date };
 
-export const generateDailyTimeSlots = (day: Date, intervalMinutes: number): Array<TimeSlot> => {
+export const getDailyTimeSlots = (
+  start: Date,
+  end: Date,
+  intervalMinutes: number,
+  includeEndSlot = false,
+): Array<TimeSlot> => {
+  const timeSlots = generateDailyTimeSlots(start, intervalMinutes);
+
+  const result = timeSlots.filter((slot) => {
+    if (includeEndSlot) {
+      return (
+        (isAfter(slot.start, start) || isEqual(slot.start, start)) &&
+        (isBefore(slot.start, end) || isEqual(slot.start, end))
+      );
+    } else {
+      return (
+        (isAfter(slot.start, start) || isEqual(slot.start, start)) &&
+        (isBefore(slot.end, end) || isEqual(slot.end, end))
+      );
+    }
+  });
+
+  return result;
+};
+
+const generateDailyTimeSlots = (day: Date, intervalMinutes: number): Array<TimeSlot> => {
   const start = startOfDay(day); // 00:00 of the current day
   const end = endOfDay(day); // 23:59 of the current day
 
@@ -21,32 +46,6 @@ export const generateDailyTimeSlots = (day: Date, intervalMinutes: number): Arra
   }
 
   return timeSlots;
-};
-
-export const getDailyTimeSlots = (
-  day: Date,
-  start: Date,
-  end: Date,
-  intervalMinutes: number,
-  includeEndSlot = false,
-): Array<TimeSlot> => {
-  const timeSlots = generateDailyTimeSlots(day, intervalMinutes);
-
-  const result = timeSlots.filter((slot) => {
-    if (includeEndSlot) {
-      return (
-        (isAfter(slot.start, start) || isEqual(slot.start, start)) &&
-        (isBefore(slot.end, end) || isEqual(slot.end, end))
-      );
-    } else {
-      return (
-        (isAfter(slot.start, start) || isEqual(slot.start, start)) &&
-        (isBefore(slot.start, end) || isEqual(slot.start, end))
-      );
-    }
-  });
-
-  return result;
 };
 
 export const totalTimeInMinutes = (slot: TimeSlot): number => {
@@ -89,13 +88,7 @@ export const moveTimeSlotStart = (slot: TimeSlot, newStart: Date): TimeSlot => {
   return { start: newStart, end: newEnd };
 };
 
-export const getFullTimeslot = (slot1: TimeSlot, slot2: TimeSlot) => {
+export const mergeTimeslots = (slot1: TimeSlot, slot2: TimeSlot) => {
   if (isAfterTimeSlot(slot1, slot2)) return { start: slot2.start, end: slot1.end };
   return { start: slot1.start, end: slot2.end };
-};
-
-export const formatTimeSlot = (slot: TimeSlot, formatStr: string = 'HH:mm'): string => {
-  const formattedStart = format(slot.start, formatStr);
-  const formattedEnd = format(slot.end, formatStr);
-  return `${formattedStart} - ${formattedEnd}`;
 };

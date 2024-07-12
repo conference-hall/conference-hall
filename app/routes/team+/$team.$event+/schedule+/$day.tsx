@@ -128,7 +128,6 @@ export default function ScheduleRoute() {
         />
 
         <Schedule
-          day={displayTimes.currentDay}
           startTime={displayTimes.startTime}
           endTime={displayTimes.endTime}
           timezone={schedule.timezone}
