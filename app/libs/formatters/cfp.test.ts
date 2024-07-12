@@ -20,11 +20,6 @@ describe('#formatEventType', () => {
 });
 
 describe('#formatConferenceDates', () => {
-  it('return conference type when no dates', () => {
-    const message = formatConferenceDates('CONFERENCE', 'Europe/Paris');
-    expect(message).toBe('Conference');
-  });
-
   it('return one day conference info', () => {
     const message = formatConferenceDates(
       'CONFERENCE',

@@ -9,24 +9,21 @@ type Props = { cfpState: CfpState; cfpStart?: string; cfpEnd?: string; timezone:
 
 export function CfpSection({ cfpState, cfpStart, cfpEnd, timezone }: Props) {
   return (
-    <section className="flex h-full flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-      <div className="flex items-center gap-2">
-        <div className="truncate">
-          <ClientOnly>
-            {() => (
-              <div className="flex items-center gap-4">
-                <StatusPill status={cfpColorStatus(cfpState, cfpStart, cfpEnd)} />
-                <div>
-                  <H2 truncate>{formatCFPElapsedTime(cfpState, cfpStart, cfpEnd)}</H2>
-                  <Subtitle truncate>{formatCFPDate(cfpState, timezone, cfpStart, cfpEnd)}</Subtitle>
-                </div>
-              </div>
-            )}
-          </ClientOnly>
-        </div>
-      </div>
+    <section className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <ClientOnly>
+        {() => (
+          <div className="flex items-center gap-4 overflow-hidden">
+            <StatusPill status={cfpColorStatus(cfpState, cfpStart, cfpEnd)} />
+            <div className="overflow-hidden">
+              <H2 truncate>{formatCFPElapsedTime(cfpState, cfpStart, cfpEnd)}</H2>
+              <Subtitle truncate>{formatCFPDate(cfpState, timezone, cfpStart, cfpEnd)}</Subtitle>
+            </div>
+          </div>
+        )}
+      </ClientOnly>
+
       {cfpState === 'OPENED' && (
-        <div className="flex-shrink-0">
+        <div>
           <ButtonLink to="submission" block>
             Submit a proposal
           </ButtonLink>
