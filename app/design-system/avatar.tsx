@@ -12,6 +12,16 @@ const sizes = {
   '4xl': '128px',
 };
 
+const sizes_tw = {
+  xs: 'h-6 w-6',
+  s: 'h-8 w-8',
+  m: 'h-10 w-10',
+  l: 'h-12 w-12',
+  xl: 'h-16 w-16',
+  '2xl': 'h-20 w-20',
+  '4xl': 'h-32 w-32',
+};
+
 const text_sizes = {
   xs: 'text-sm',
   s: 'text-lg',
@@ -70,6 +80,7 @@ export function Avatar({
 }: AvatarProps) {
   const styles = cx(
     'shrink-0 bg-gray-300',
+    sizes_tw[size],
     ring ? rings[size] : null,
     ring ? ringsColor[ringColor] : null,
     square ? square_sizes[size] : 'rounded-full',
