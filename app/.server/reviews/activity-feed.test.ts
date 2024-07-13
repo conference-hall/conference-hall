@@ -1,4 +1,4 @@
-import type { Event, Team, User } from '@prisma/client';
+import { CommentChannel, type Team, type User } from '@prisma/client';
 import { commentFactory } from 'tests/factories/comments.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
@@ -10,29 +10,28 @@ import { userFactory } from 'tests/factories/users.ts';
 import { ActivityFeed } from './activity-feed.ts';
 
 describe('ActivityFeed', () => {
-  let owner: User, member: User, speaker: User;
+  let owner: User, member1: User, member2: User, speaker: User;
   let team: Team;
-  let event: Event;
 
   beforeEach(async () => {
     owner = await userFactory({ traits: ['clark-kent'] });
-    member = await userFactory({ traits: ['bruce-wayne'] });
+    member1 = await userFactory({ traits: ['bruce-wayne'] });
+    member2 = await userFactory({ traits: ['peter-parker'] });
     speaker = await userFactory();
-    team = await teamFactory({ owners: [owner], members: [member] });
-    event = await eventFactory({ team });
+    team = await teamFactory({ owners: [owner], members: [member1, member2] });
   });
 
-  describe('#messages', () => {
-    it('retrieve proposals messages', async () => {
+  describe('#activity', () => {
+    it('retrieve all proposals reviews and comments', async () => {
+      const event = await eventFactory({ team });
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-      const message1 = await commentFactory({ proposal, user: owner, attributes: { comment: 'Comment 1' } });
+      const message1 = await commentFactory({ proposal, user: owner });
       const review1 = await reviewFactory({ proposal, user: owner, attributes: { feeling: 'NEUTRAL', note: 3 } });
-      const message2 = await commentFactory({ proposal, user: member, attributes: { comment: 'Comment 2' } });
-      const review2 = await reviewFactory({ proposal, user: member, attributes: { feeling: 'POSITIVE', note: 4 } });
+      const message2 = await commentFactory({ proposal, user: member1 });
+      const review2 = await reviewFactory({ proposal, user: member1, attributes: { feeling: 'POSITIVE', note: 4 } });
 
-      // TODO: Add tests
-      // reviews."feeling" != 'NO_OPINION'
-      // messages."channel" = 'ORGANIZER'
+      await reviewFactory({ proposal, user: member2, attributes: { feeling: 'NO_OPINION' } });
+      await commentFactory({ proposal, user: member1, attributes: { channel: CommentChannel.SPEAKER } });
 
       const activity = await ActivityFeed.for(owner.id, team.slug, event.slug, proposal.id).activity();
 
@@ -62,24 +61,47 @@ describe('ActivityFeed', () => {
         {
           id: message2.id,
           type: 'comment',
-          userId: member.id,
+          userId: member1.id,
           timestamp: message2.updatedAt.toISOString(),
           comment: message2.comment,
           feeling: null,
           note: null,
-          user: member.name,
-          picture: member.picture,
+          user: member1.name,
+          picture: member1.picture,
         },
         {
           id: review2.id,
           type: 'review',
-          userId: member.id,
+          userId: member1.id,
           timestamp: review2.updatedAt.toISOString(),
           comment: null,
           feeling: review2.feeling,
           note: review2.note,
-          user: member.name,
-          picture: member.picture,
+          user: member1.name,
+          picture: member1.picture,
+        },
+      ]);
+    });
+
+    it('retrieves only comments when reviews display is disabled', async () => {
+      const event = await eventFactory({ team, attributes: { displayProposalsReviews: false } });
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      const message = await commentFactory({ proposal, user: owner });
+      await reviewFactory({ proposal, user: owner, attributes: { feeling: 'NEUTRAL', note: 3 } });
+
+      const activity = await ActivityFeed.for(owner.id, team.slug, event.slug, proposal.id).activity();
+
+      expect(activity).toEqual([
+        {
+          id: message.id,
+          type: 'comment',
+          userId: owner.id,
+          timestamp: message.updatedAt.toISOString(),
+          comment: message.comment,
+          feeling: null,
+          note: null,
+          user: owner.name,
+          picture: owner.picture,
         },
       ]);
     });
