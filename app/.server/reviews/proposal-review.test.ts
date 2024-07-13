@@ -5,6 +5,7 @@ import { eventFactory } from 'tests/factories/events.ts';
 import { eventFormatFactory } from 'tests/factories/formats.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
 import { reviewFactory } from 'tests/factories/reviews.ts';
+import { surveyFactory } from 'tests/factories/surveys.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
@@ -25,7 +26,7 @@ describe('ProposalReview', () => {
     member = await userFactory({ traits: ['bruce-wayne'] });
     speaker = await userFactory({ traits: ['peter-parker'] });
     team = await teamFactory({ owners: [owner], members: [member], reviewers: [speaker] });
-    event = await eventFactory({ team });
+    event = await eventFactory({ team, traits: ['withSurvey'] });
     format = await eventFormatFactory({ event });
     category = await eventCategoryFactory({ event });
   });
@@ -38,6 +39,7 @@ describe('ProposalReview', () => {
         categories: [category],
         talk: await talkFactory({ speakers: [speaker] }),
       });
+      await surveyFactory({ event, user: speaker, attributes: { answers: { gender: 'male' } } });
 
       const review = await ProposalReview.for(owner.id, team.slug, event.slug, proposal.id).get();
 
@@ -64,6 +66,7 @@ describe('ProposalReview', () => {
             company: speaker.company,
             references: speaker.references,
             socials: speaker.socials,
+            survey: { gender: 'male' },
           },
         ],
         reviews: {

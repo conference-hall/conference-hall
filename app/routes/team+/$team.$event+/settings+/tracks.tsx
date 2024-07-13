@@ -1,3 +1,4 @@
+import { parseWithZod } from '@conform-to/zod';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useFetcher } from '@remix-run/react';
@@ -10,7 +11,6 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-import { parseWithZod } from '~/libs/validators/zod-parser.ts';
 
 import { useEvent } from '../__components/useEvent.tsx';
 import { NewTrackButton } from './__components/save-track-form.tsx';
@@ -43,20 +43,20 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       break;
     }
     case 'save-formats': {
-      const result = parseWithZod(form, TrackSaveSchema);
-      if (!result.success) return json(result.error);
+      const result = parseWithZod(form, { schema: TrackSaveSchema });
+      if (result.status !== 'success') return json(result.error);
       await tracks.saveFormat(result.value);
       break;
     }
     case 'save-categories': {
-      const result = parseWithZod(form, TrackSaveSchema);
-      if (!result.success) return json(result.error);
+      const result = parseWithZod(form, { schema: TrackSaveSchema });
+      if (result.status !== 'success') return json(result.error);
       await tracks.saveCategory(result.value);
       break;
     }
     case 'update-track-settings': {
-      const result = parseWithZod(form, TracksSettingsSchema);
-      if (!result.success) return json(result.error);
+      const result = parseWithZod(form, { schema: TracksSettingsSchema });
+      if (result.status !== 'success') return json(result.error);
       await tracks.updateSettings(result.value);
       return toast('success', 'Track setting updated.');
     }

@@ -1,4 +1,5 @@
 import BasePage from 'page-objects/base.page.ts';
+import TalkCoSpeakersActions from 'page-objects/common/talk-co-speakers.actions.ts';
 
 type TalkFormType = {
   title: string;
@@ -88,13 +89,8 @@ class EventSubmissionPage extends BasePage {
     cy.typeOn('Biography', bio);
   }
 
-  coSpeakerInvite() {
-    cy.findByRole('button', { name: 'Invite a co-speaker' }).click();
-    return cy.findByLabelText('Copy invitation link');
-  }
-
-  closeCoSpeakerModal() {
-    return cy.findByRole('button', { name: 'Close' }).click();
+  cospeakers() {
+    return new TalkCoSpeakersActions();
   }
 
   /**

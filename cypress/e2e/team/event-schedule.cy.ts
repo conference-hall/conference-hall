@@ -14,7 +14,6 @@ describe('Schedule page', () => {
     page.visit('team-1', 'conference-1');
 
     cy.assertInputText('Name', 'Conference 1 schedule');
-    // TODO cy.assertSelect('Timezone', '(GMT+02:00) Central European Time - Europe/Paris');
     cy.assertInputText('Start date', '2022-01-01');
     cy.assertInputText('End date', '2022-01-02');
 

@@ -79,7 +79,7 @@ export default function TeamMembersRoute() {
               icon={MagnifyingGlassIcon}
             />
           </Form>
-          <InviteMemberButton invitationLink={team.invitationLink} />
+          {team.invitationLink ? <InviteMemberButton invitationLink={team.invitationLink} /> : null}
         </div>
 
         {results.length > 0 ? (

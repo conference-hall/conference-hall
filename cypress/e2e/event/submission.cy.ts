@@ -43,7 +43,6 @@ describe('Submit a talk to event', () => {
       submission.continue();
 
       // Step: speaker
-      // TODO: Test remove co-speaker
       submission.isSpeakerStepVisible();
       submission.fillSpeakerForm({ bio: 'I am the best!' });
       submission.continue();
@@ -123,6 +122,16 @@ describe('Submit a talk to event', () => {
 
       // Step: speaker
       submission.isSpeakerStepVisible();
+
+      const cospeakers = submission.cospeakers();
+      cospeakers.speaker('Peter Parker').should('exist');
+      cospeakers.openSpeakerModal('Peter Parker');
+      cospeakers.removeCoSpeaker('Peter Parker');
+      cospeakers.speaker('Peter Parker').should('not.exist');
+
+      cospeakers.inviteSpeaker();
+      cospeakers.closeInviteSpeakerModal();
+
       submission.continue();
 
       // Step: tracks

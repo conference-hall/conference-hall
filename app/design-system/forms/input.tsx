@@ -2,12 +2,14 @@ import { cva } from 'class-variance-authority';
 import type { InputHTMLAttributes, Ref } from 'react';
 import { forwardRef } from 'react';
 
+import type { SubmissionError } from '~/types/errors.types.ts';
+
 import { Label } from '../typography.tsx';
 
 export type InputProps = {
   label?: string;
   addon?: string;
-  error?: string | string[];
+  error?: SubmissionError;
   description?: string;
   icon?: React.ComponentType<{ className?: string }>;
   size?: 'm' | 'l';

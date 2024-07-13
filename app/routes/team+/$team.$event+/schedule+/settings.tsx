@@ -1,3 +1,4 @@
+import { parseWithZod } from '@conform-to/zod';
 import { ArrowLeftIcon } from '@heroicons/react/20/solid';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
@@ -9,7 +10,6 @@ import { ScheduleTrackSaveSchema } from '~/.server/event-schedule/event-schedule
 import { ButtonLink } from '~/design-system/buttons.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { parseWithZod } from '~/libs/validators/zod-parser.ts';
 
 import { ScheduleDeleteForm } from './__components/forms/schedule-delete-form.tsx';
 import { TracksForm } from './__components/forms/tracks-form.tsx';
@@ -36,8 +36,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
   switch (intent) {
     case 'save-track': {
-      const result = parseWithZod(form, ScheduleTrackSaveSchema);
-      if (!result.success) return json(result.error);
+      const result = parseWithZod(form, { schema: ScheduleTrackSaveSchema });
+      if (result.status !== 'success') return json(result.error);
       await schedule.saveTrack(result.value);
       break;
     }

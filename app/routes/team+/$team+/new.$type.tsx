@@ -1,3 +1,4 @@
+import { parseWithZod } from '@conform-to/zod';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData, useParams } from '@remix-run/react';
@@ -9,7 +10,6 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H1, Subtitle } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { parseWithZod } from '~/libs/validators/zod-parser.ts';
 
 import { EventForm } from '../../__components/events/event-form.tsx';
 
@@ -23,14 +23,14 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   invariant(params.team, 'Invalid team slug');
   const form = await request.formData();
 
-  const result = parseWithZod(form, EventCreateSchema);
-  if (!result.success) return json(result.error);
+  const result = parseWithZod(form, { schema: EventCreateSchema });
+  if (result.status !== 'success') return json(result.error);
 
   try {
     const event = await TeamEvents.for(userId, params.team).create(result.value);
     return redirect(`/team/${params.team}/${event.slug}/settings`);
   } catch (SlugAlreadyExistsError) {
-    return json({ slug: 'This URL already exists, please try another one.' });
+    return json({ slug: ['This URL already exists, please try another one.'] });
   }
 };
 

@@ -56,34 +56,34 @@ export class SpeakerTalk {
           proposalStatus: proposal.getStatusForSpeaker(proposal.event.isCfpOpen),
           createdAt: proposal.createdAt.toISOString(),
         }))
-        .sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1)), // TODO: Test the sort
+        .sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1)),
       invitationLink: talk.invitationLink,
     };
   }
 
   async update(data: TalkSaveData) {
-    const exists = await this.existsTalk(this.talkId);
+    const exists = await this.allowed(this.talkId);
     if (!exists) throw new TalkNotFoundError();
 
     return db.talk.update({ where: { id: this.talkId }, data, include: { speakers: true } });
   }
 
   async archive() {
-    const exists = await this.existsTalk(this.talkId);
+    const exists = await this.allowed(this.talkId);
     if (!exists) throw new TalkNotFoundError();
 
     return db.talk.update({ where: { id: this.talkId }, data: { archived: true } });
   }
 
   async restore() {
-    const exits = await this.existsTalk(this.talkId);
+    const exits = await this.allowed(this.talkId);
     if (!exits) throw new TalkNotFoundError();
 
     return db.talk.update({ where: { id: this.talkId }, data: { archived: false } });
   }
 
   async removeCoSpeaker(coSpeakerId: string) {
-    const exits = await this.existsTalk(this.talkId);
+    const exits = await this.allowed(this.talkId);
     if (!exits) throw new TalkNotFoundError();
 
     await db.talk.update({
@@ -92,7 +92,6 @@ export class SpeakerTalk {
     });
   }
 
-  // TODO: add tests
   async isSubmittedTo(eventSlug: string) {
     const count = await db.proposal.count({
       where: {
@@ -105,8 +104,7 @@ export class SpeakerTalk {
     return count > 0;
   }
 
-  // TODO: should be used to check the talkId in the route? renamed to "allowed"?
-  private async existsTalk(talkId: string) {
+  private async allowed(talkId: string) {
     const count = await db.talk.count({ where: { id: talkId, speakers: { some: { id: this.speakerId } } } });
     return count > 0;
   }

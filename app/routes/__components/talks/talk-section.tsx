@@ -8,6 +8,7 @@ import { Markdown } from '~/design-system/markdown.tsx';
 import { H1 } from '~/design-system/typography.tsx';
 import { getLanguage } from '~/libs/formatters/languages.ts';
 import { getLevel } from '~/libs/formatters/levels.ts';
+import type { SubmissionErrors } from '~/types/errors.types.ts';
 
 import type { SpeakerProps } from './co-speaker';
 import { CoSpeakers } from './co-speaker.tsx';
@@ -34,7 +35,7 @@ type Props = {
     categories?: Array<{ id: string; name: string; description: string | null }>;
     categoriesRequired?: boolean;
   };
-  errors?: Record<string, string | string[]> | null;
+  errors?: SubmissionErrors;
   canEditTalk: boolean;
   canEditSpeakers: boolean;
   canArchive: boolean;

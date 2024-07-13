@@ -1,6 +1,5 @@
+import { parseWithZod } from '@conform-to/zod';
 import { z } from 'zod';
-
-import { parseWithZod } from '~/libs/validators/zod-parser.ts';
 
 const ReviewsFiltersSchema = z.enum(['reviewed', 'not-reviewed', 'my-favorites']).optional();
 
@@ -25,6 +24,7 @@ export type ProposalsFilters = z.infer<typeof ProposalsFiltersSchema>;
 
 export function parseUrlFilters(url: string) {
   const params = new URL(url).searchParams;
-  const result = parseWithZod(params, ProposalsFiltersSchema);
-  return result.value || {};
+  const result = parseWithZod(params, { schema: ProposalsFiltersSchema });
+  if (result.status !== 'success') return {};
+  return result.value;
 }

@@ -1,3 +1,4 @@
+import { parseWithZod } from '@conform-to/zod';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useActionData, useLoaderData } from '@remix-run/react';
@@ -9,7 +10,6 @@ import { EventPage } from '~/.server/event-page/event-page.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
-import { parseWithZod } from '~/libs/validators/zod-parser.ts';
 import { SpeakerProposalStatus } from '~/types/speaker.types.ts';
 
 import { ProposalStatusSection } from '../__components/proposals/proposal-status-section.tsx';
@@ -40,8 +40,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       return redirectWithToast(`/${params.event}/proposals`, 'success', 'Proposal submission removed.');
     }
     case 'proposal-confirmation': {
-      const result = parseWithZod(form, ProposalParticipationSchema);
-      if (!result.success) return null;
+      const result = parseWithZod(form, { schema: ProposalParticipationSchema });
+      if (result.status !== 'success') return null;
       await proposal.confirm(result.value.participation);
       return toast('success', 'Your response has been sent to organizers.');
     }
@@ -52,8 +52,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     }
     case 'edit-talk': {
       const { formatsRequired, categoriesRequired } = await EventPage.of(params.event).get();
-      const result = parseWithZod(form, getProposalUpdateSchema(formatsRequired, categoriesRequired));
-      if (!result.success) return json(result.error);
+      const result = parseWithZod(form, { schema: getProposalUpdateSchema(formatsRequired, categoriesRequired) });
+      if (result.status !== 'success') return json(result.error);
 
       await proposal.update(result.value);
       return toast('success', 'Proposal saved.');

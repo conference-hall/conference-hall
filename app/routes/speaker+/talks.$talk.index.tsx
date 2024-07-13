@@ -1,3 +1,4 @@
+import { parseWithZod } from '@conform-to/zod';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useActionData, useLoaderData } from '@remix-run/react';
@@ -9,7 +10,6 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-import { parseWithZod } from '~/libs/validators/zod-parser.ts';
 
 import { TalkSection } from '../__components/talks/talk-section.tsx';
 import { TalkSubmissionsSection } from '../__components/talks/talk-submissions-section.tsx';
@@ -49,10 +49,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       return toast('success', 'Co-speaker removed from talk.');
     }
     case 'edit-talk': {
-      const result = parseWithZod(form, TalkSaveSchema);
-      if (!result.success) {
-        return json(result.error);
-      }
+      const result = parseWithZod(form, { schema: TalkSaveSchema });
+      if (result.status !== 'success') return json(result.error);
       await talk.update(result.value);
       return toast('success', 'Talk updated.');
     }

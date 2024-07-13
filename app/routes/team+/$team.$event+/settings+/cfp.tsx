@@ -1,3 +1,4 @@
+import { parseWithZod } from '@conform-to/zod';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useActionData } from '@remix-run/react';
@@ -11,7 +12,6 @@ import {
 } from '~/.server/event-settings/user-event.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-import { parseWithZod } from '~/libs/validators/zod-parser.ts';
 
 import { useEvent } from '../__components/useEvent.tsx';
 import { CommonCfpSetting } from './__components/common-cfp-setting.tsx';
@@ -33,20 +33,20 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const intent = form.get('intent');
   switch (intent) {
     case 'save-cfp-preferences': {
-      const result = parseWithZod(form, CfpPreferencesSchema);
-      if (!result.success) return json(result.error);
+      const result = parseWithZod(form, { schema: CfpPreferencesSchema });
+      if (result.status !== 'success') return json(result.error);
       await event.update(result.value);
       break;
     }
     case 'save-cfp-conference-opening': {
-      const result = parseWithZod(form, CfpConferenceOpeningSchema);
-      if (!result.success) return json(result.error);
+      const result = parseWithZod(form, { schema: CfpConferenceOpeningSchema });
+      if (result.status !== 'success') return json(result.error);
       await event.update(result.value);
       break;
     }
     case 'save-cfp-meetup-opening': {
-      const result = parseWithZod(form, CfpMeetupOpeningSchema);
-      if (!result.success) return json(result.error);
+      const result = parseWithZod(form, { schema: CfpMeetupOpeningSchema });
+      if (result.status !== 'success') return json(result.error);
       await event.update(result.value);
       break;
     }

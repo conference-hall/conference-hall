@@ -2,6 +2,7 @@ import slugify from '@sindresorhus/slugify';
 import { useState } from 'react';
 
 import { Input } from '~/design-system/forms/input.tsx';
+import type { SubmissionErrors } from '~/types/errors.types.ts';
 
 import { InputTimezone } from '../../../design-system/forms/input-timezone.tsx';
 import { EventVisibilityRadioGroup } from './event-visibility-radio-group.tsx';
@@ -13,7 +14,7 @@ type Props = {
     visibility: 'PUBLIC' | 'PRIVATE';
     timezone: string;
   };
-  errors?: Record<string, string | string[]> | null;
+  errors: SubmissionErrors;
 };
 
 export function EventForm({ initialValues, errors }: Props) {

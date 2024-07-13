@@ -1,3 +1,4 @@
+import { parseWithZod } from '@conform-to/zod';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import invariant from 'tiny-invariant';
@@ -8,7 +9,6 @@ import { PublishResultFormSchema } from '~/.server/publications/publication.type
 import { requireSession } from '~/libs/auth/session.ts';
 import { BadRequestError } from '~/libs/errors.server.ts';
 import { redirectWithToast } from '~/libs/toasts/toast.server.ts';
-import { parseWithZod } from '~/libs/validators/zod-parser.ts';
 
 import { PublicationConfirm } from './__components/publication-confirm.tsx';
 import { useStatistics } from './__components/useStatistics.tsx';
@@ -27,8 +27,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   invariant(params.event, 'Invalid event slug');
 
   const form = await request.formData();
-  const result = parseWithZod(form, PublishResultFormSchema);
-  if (!result.success) throw new BadRequestError('Invalid form data');
+  const result = parseWithZod(form, { schema: PublishResultFormSchema });
+  if (result.status !== 'success') throw new BadRequestError('Invalid form data');
 
   await Publication.for(userId, params.team, params.event).publishAll('REJECTED', result.value.sendEmails);
 

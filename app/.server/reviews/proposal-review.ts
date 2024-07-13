@@ -41,7 +41,6 @@ export class ProposalReview {
 
     const reviews = new ReviewDetails(proposal.reviews);
 
-    // TODO add tests on answers
     let answers: Array<{ userId: string; answers: SurveyData }>;
     if (proposal.speakers) {
       const surveys = new SpeakersAnswers(

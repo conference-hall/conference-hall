@@ -80,21 +80,28 @@ describe('SpeakerTalk', () => {
       ]);
     });
 
-    it('returns proposals when talk submitted', async () => {
+    it('returns proposals when talk submitted ordered by creation date', async () => {
       const speaker = await userFactory();
-      const event = await eventFactory();
       const talk = await talkFactory({ speakers: [speaker] });
-      const proposal = await proposalFactory({ talk, event });
+      const proposal1 = await proposalFactory({ talk, event: await eventFactory() });
+      const proposal2 = await proposalFactory({ talk, event: await eventFactory() });
 
       const result = await SpeakerTalk.for(speaker.id, talk.id).get();
 
       expect(result.submissions).toEqual([
         {
-          name: proposal.event.name,
-          slug: proposal.event.slug,
-          logo: proposal.event.logo,
+          name: proposal2.event.name,
+          slug: proposal2.event.slug,
+          logo: proposal2.event.logo,
           proposalStatus: SpeakerProposalStatus.DeliberationPending,
-          createdAt: proposal.createdAt.toISOString(),
+          createdAt: proposal2.createdAt.toISOString(),
+        },
+        {
+          name: proposal1.event.name,
+          slug: proposal1.event.slug,
+          logo: proposal1.event.logo,
+          proposalStatus: SpeakerProposalStatus.DeliberationPending,
+          createdAt: proposal1.createdAt.toISOString(),
         },
       ]);
     });
@@ -246,6 +253,24 @@ describe('SpeakerTalk', () => {
       await expect(SpeakerTalk.for(speaker.id, 'XXX').removeCoSpeaker(cospeaker.id)).rejects.toThrowError(
         TalkNotFoundError,
       );
+    });
+  });
+
+  describe('#isSubmittedTo', () => {
+    it('checks if a talk has been submitted to an event', async () => {
+      const speaker = await userFactory();
+      const talk = await talkFactory({ speakers: [speaker] });
+      const event1 = await eventFactory();
+      const event2 = await eventFactory();
+      await proposalFactory({ talk, event: event1 });
+
+      const speakerTalk = SpeakerTalk.for(speaker.id, talk.id);
+
+      const isSubmittedToEvent1 = await speakerTalk.isSubmittedTo(event1.slug);
+      expect(isSubmittedToEvent1).toBe(true);
+
+      const isSubmittedToEvent2 = await speakerTalk.isSubmittedTo(event2.slug);
+      expect(isSubmittedToEvent2).toBe(false);
     });
   });
 });

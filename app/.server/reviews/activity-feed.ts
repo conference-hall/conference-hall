@@ -36,7 +36,6 @@ export class ActivityFeed {
 
     let results: Array<ReviewFeed | CommentFeed> = [];
 
-    // Get reviews and comments from proposal
     if (event.displayProposalsReviews) {
       results = await db.$queryRaw<Array<ReviewFeed | CommentFeed>>(
         Prisma.sql`
@@ -47,7 +46,7 @@ export class ActivityFeed {
           )
           UNION ALL
           (
-            SELECT id, 'comment' AS type, comments."updatedAt" AS timestamp, comments."userId", NULL, NULL, comments."comment" AS comment
+            SELECT id, 'comment' AS type, comments."updatedAt" AS timestamp, comments."userId", NULL as "feeling", NULL as "note", comments."comment" AS comment
             FROM comments
             WHERE comments."proposalId" = ${this.proposalId} AND comments."channel" = 'ORGANIZER'
           )
@@ -57,7 +56,7 @@ export class ActivityFeed {
     } else {
       results = await db.$queryRaw<Array<CommentFeed>>(
         Prisma.sql`
-          SELECT id, 'comment' AS type, comments."updatedAt" AS timestamp, comments."userId", NULL, NULL, comments."comment" AS comment
+          SELECT id, 'comment' AS type, comments."updatedAt" AS timestamp, comments."userId", NULL as "feeling", NULL as "note", comments."comment" AS comment
           FROM comments
           WHERE comments."proposalId" = ${this.proposalId} AND comments."channel" = 'ORGANIZER'
           ORDER BY timestamp ASC
@@ -65,7 +64,7 @@ export class ActivityFeed {
       );
     }
 
-    // Get users from feed
+    // Get users from activities
     const userIds = [...new Set(results.map((result) => result.userId))];
     const users = await db.user.findMany({ where: { id: { in: userIds } } });
 

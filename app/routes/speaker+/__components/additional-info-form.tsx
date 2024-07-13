@@ -4,12 +4,13 @@ import { Button } from '~/design-system/buttons.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
+import type { SubmissionErrors } from '~/types/errors.types.ts';
 
 type Props = {
   company: string | null;
   address: string | null;
   socials: { github: string | null; twitter: string | null };
-  errors?: Record<string, string | string[]> | null;
+  errors: SubmissionErrors;
 };
 
 export function AdditionalInfoForm({ company, address, socials, errors }: Props) {
