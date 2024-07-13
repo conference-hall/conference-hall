@@ -20,7 +20,7 @@ import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { AuthProviderButton } from '~/routes/__components/auth-provider-button.tsx';
 import { Logo } from '~/routes/__components/navbar/logo.tsx';
 
-import { useHydrated } from './__components/utils/use-hydrated.ts';
+import { useHydrated } from '../__components/utils/use-hydrated.ts';
 
 export const meta = mergeMeta(() => [{ title: 'Login | Conference Hall' }]);
 
@@ -50,7 +50,7 @@ export default function Login() {
       .then(async (credentials) => {
         if (!credentials) return;
         const token = await credentials.user.getIdToken();
-        submit({ token, redirectTo }, { method: 'post', action: '/login' });
+        submit({ token, redirectTo }, { method: 'POST', action: '/auth/login' });
       })
       .catch((error) => setError(error.message));
   }, [submit, redirectTo]);
@@ -94,7 +94,7 @@ export default function Login() {
           {loading && !error ? (
             <div className="mt-2 flex flex-col items-center gap-12">
               <LoadingIcon className="h-10 w-10" />
-              <Link to="/login">Go back to login</Link>
+              <Link to="/auth/login">Go back to login</Link>
             </div>
           ) : (
             <>

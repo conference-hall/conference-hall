@@ -61,7 +61,7 @@ export async function requireSession(request: Request): Promise<string> {
   if (!userId) {
     const redirectTo = new URL(request.url).pathname;
     const searchParams = new URLSearchParams([['redirectTo', redirectTo]]);
-    throw redirect(`/login?${searchParams}`);
+    throw redirect(`/auth/login?${searchParams}`);
   }
 
   return userId;

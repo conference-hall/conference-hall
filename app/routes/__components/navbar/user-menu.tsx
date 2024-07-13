@@ -7,13 +7,15 @@ import {
   PlusIcon,
   Square3Stack3DIcon,
 } from '@heroicons/react/24/outline';
-import { Link } from '@remix-run/react';
+import { Link, useFetcher } from '@remix-run/react';
 import { useState } from 'react';
 
 import { Avatar, AvatarName } from '~/design-system/avatar.tsx';
 import { SlideOver } from '~/design-system/dialogs/slide-over.tsx';
 import { Divider } from '~/design-system/divider.tsx';
 import { Text } from '~/design-system/typography.tsx';
+import { getClientAuth } from '~/libs/auth/firebase.ts';
+import type { action as LogoutAction } from '~/routes/auth+/logout.tsx';
 
 type MenuProps = {
   email: string | null;
@@ -93,9 +95,7 @@ export function UserMenu({ email, name, picture, teams, isOrganizer, notificatio
 
               <Divider as="li" className="my-2" />
 
-              <MenuLink to="/logout" icon={ArrowRightStartOnRectangleIcon} onClick={handleClose}>
-                Sign out
-              </MenuLink>
+              <SignOutMenu />
             </ul>
           </nav>
         </SlideOver.Content>
@@ -149,5 +149,33 @@ function OpenButton({ name, picture, notificationsCount, onClick }: OpenProps) {
         <span className="absolute bottom-0 right-0 block h-2 w-2 rounded-full bg-red-400 ring-2 ring-gray-800" />
       )}
     </button>
+  );
+}
+
+function SignOutMenu() {
+  const fetcher = useFetcher<typeof LogoutAction>();
+
+  const handleSignout = () => {
+    const clientAuth = getClientAuth();
+    clientAuth.signOut().then(() => {
+      fetcher.submit({ intent: 'signout' });
+    });
+  };
+
+  return (
+    <li>
+      <fetcher.Form method="POST" action="/auth/logout">
+        <button
+          onClick={handleSignout}
+          className="group flex items-center gap-x-3 w-full text-left rounded-md p-2 text-sm leading-6 font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-100"
+        >
+          <ArrowRightStartOnRectangleIcon
+            className="h-6 w-6 shrink-0 text-gray-400 group-hover:text-indigo-600"
+            aria-hidden="true"
+          />
+          Sign out
+        </button>
+      </fetcher.Form>
+    </li>
   );
 }
