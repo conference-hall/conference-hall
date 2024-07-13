@@ -1,3 +1,4 @@
+import { parseWithZod } from '@conform-to/zod';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
@@ -9,7 +10,6 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast } from '~/libs/toasts/toast.server.ts';
-import { parseWithZod } from '~/libs/validators/zod-parser.ts';
 import { TeamForm } from '~/routes/__components/teams/team-form.tsx';
 
 import { useTeam } from '../__components/use-team.tsx';
@@ -24,14 +24,14 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const form = await request.formData();
   invariant(params.team, 'Invalid team slug');
 
-  const result = parseWithZod(form, TeamUpdateSchema);
-  if (!result.value) return json(result.error);
+  const result = parseWithZod(form, { schema: TeamUpdateSchema });
+  if (result.status !== 'success') return json(result.error);
 
   try {
     const team = await UserTeam.for(userId, params.team).updateSettings(result.value);
     return redirectWithToast(`/team/${team.slug}/settings`, 'success', 'Team settings saved.');
   } catch (SlugAlreadyExistsError) {
-    return json({ slug: 'This URL already exists, please try another one.' });
+    return json({ slug: ['This URL already exists, please try another one.'] });
   }
 };
 

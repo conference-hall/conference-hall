@@ -5,12 +5,13 @@ import { Callout } from '~/design-system/callout.tsx';
 import { DateRangeInput } from '~/design-system/forms/date-range-input.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2 } from '~/design-system/typography.tsx';
+import type { SubmissionErrors } from '~/types/errors.types.ts';
 
 type Props = {
   cfpStart?: string;
   cfpEnd?: string;
   timezone: string;
-  errors?: Record<string, string | string[]> | null;
+  errors: SubmissionErrors;
 };
 
 export function ConferenceCfpOpening({ cfpStart, cfpEnd, timezone, errors }: Props) {

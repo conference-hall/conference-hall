@@ -3,6 +3,7 @@ import { useState } from 'react';
 
 import { Button } from '~/design-system/buttons.tsx';
 import { SlideOver } from '~/design-system/dialogs/slide-over.tsx';
+import type { SubmissionErrors } from '~/types/errors.types.ts';
 
 import { TalkForm } from './talk-form.tsx';
 
@@ -22,7 +23,7 @@ type TalkEditProps = {
     categories?: Array<{ id: string; name: string; description: string | null }>;
     categoriesRequired?: boolean;
   };
-  errors?: Record<string, string | string[]> | null;
+  errors: SubmissionErrors;
 };
 
 export function TalkEditButton(props: TalkEditProps) {

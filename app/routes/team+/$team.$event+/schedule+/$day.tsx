@@ -1,3 +1,4 @@
+import { parseWithZod } from '@conform-to/zod';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
@@ -15,7 +16,6 @@ import {
 } from '~/.server/event-schedule/event-schedule.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-import { parseWithZod } from '~/libs/validators/zod-parser.ts';
 
 import { ScheduleHeader } from './__components/header/schedule-header.tsx';
 import { useScheduleFullscreen } from './__components/header/use-schedule-fullscreen.tsx';
@@ -57,14 +57,14 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
   switch (intent) {
     case 'add-session': {
-      const result = parseWithZod(form, ScheduleSessionCreateSchema);
-      if (!result.success) return toast('error', 'An error occured');
+      const result = parseWithZod(form, { schema: ScheduleSessionCreateSchema });
+      if (result.status !== 'success') return toast('error', 'An error occured');
       await eventSchedule.addSession(result.value);
       break;
     }
     case 'update-session': {
-      const result = parseWithZod(form, ScheduleSessionUpdateSchema);
-      if (!result.success) return toast('error', 'An error occured');
+      const result = parseWithZod(form, { schema: ScheduleSessionUpdateSchema });
+      if (result.status !== 'success') return toast('error', 'An error occured');
       await eventSchedule.updateSession(result.value);
       break;
     }
@@ -75,8 +75,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       break;
     }
     case 'update-display-times': {
-      const result = parseWithZod(form, ScheduleDisplayTimesUpdateSchema);
-      if (!result.success) return toast('error', 'An error occured');
+      const result = parseWithZod(form, { schema: ScheduleDisplayTimesUpdateSchema });
+      if (result.status !== 'success') return toast('error', 'An error occured');
       await eventSchedule.update(result.value);
       break;
     }

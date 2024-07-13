@@ -1,3 +1,4 @@
+import { parseWithZod } from '@conform-to/zod';
 import { json, type LoaderFunctionArgs } from '@remix-run/node';
 import { Form, useFetcher, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
@@ -12,7 +13,6 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-import { parseWithZod } from '~/libs/validators/zod-parser.ts';
 
 import { useEvent } from '../__components/useEvent.tsx';
 
@@ -37,8 +37,8 @@ export const action = async ({ request, params }: LoaderFunctionArgs) => {
       return toast('success', `Speaker survey ${surveyEnabled ? 'enabled' : 'disabled'}`);
     }
     case 'save-questions': {
-      const result = parseWithZod(form, EventSurveySettingsSchema);
-      if (!result.success) return json(null);
+      const result = parseWithZod(form, { schema: EventSurveySettingsSchema });
+      if (result.status !== 'success') return json(null);
       await event.update(result.value);
       return toast('success', 'Survey questions saved.');
     }

@@ -1,3 +1,4 @@
+import { parseWithZod } from '@conform-to/zod';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useActionData, useLoaderData, useParams } from '@remix-run/react';
@@ -16,7 +17,6 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-import { parseWithZod } from '~/libs/validators/zod-parser.ts';
 import { TalkSection } from '~/routes/__components/talks/talk-section.tsx';
 import { useUser } from '~/routes/__components/use-user.tsx';
 
@@ -57,8 +57,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
   switch (intent) {
     case 'add-review': {
-      const result = parseWithZod(form, ReviewUpdateDataSchema);
-      if (!result.success) return toast('error', 'Something went wrong.' + JSON.stringify(result.error));
+      const result = parseWithZod(form, { schema: ReviewUpdateDataSchema });
+      if (result.status !== 'success') return toast('error', 'Something went wrong.' + JSON.stringify(result.error));
       const review = ProposalReview.for(userId, params.team, params.event, params.proposal);
       await review.addReview(result.value);
       break;
@@ -76,8 +76,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       break;
     }
     case 'change-deliberation-status': {
-      const result = parseWithZod(form, DeliberateSchema);
-      if (!result.success) return toast('error', 'Something went wrong.');
+      const result = parseWithZod(form, { schema: DeliberateSchema });
+      if (result.status !== 'success') return toast('error', 'Something went wrong.');
       const deliberate = Deliberate.for(userId, params.team, params.event);
       await deliberate.mark([params.proposal], result.value.status);
       break;
@@ -88,8 +88,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       break;
     }
     case 'edit-talk': {
-      const result = parseWithZod(form, ProposalUpdateSchema);
-      if (!result.success) return json(result.error);
+      const result = parseWithZod(form, { schema: ProposalUpdateSchema });
+      if (result.status !== 'success') return json(result.error);
 
       const proposal = ProposalReview.for(userId, params.team, params.event, params.proposal);
       await proposal.update(result.value);

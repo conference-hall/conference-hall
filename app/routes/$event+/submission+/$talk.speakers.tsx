@@ -1,3 +1,4 @@
+import { parseWithZod } from '@conform-to/zod';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
@@ -15,7 +16,6 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { ExternalLink } from '~/design-system/links.tsx';
 import { H2, Subtitle, Text } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { parseWithZod } from '~/libs/validators/zod-parser.ts';
 import { CoSpeakers } from '~/routes/__components/talks/co-speaker.tsx';
 
 export const handle = { step: 'speakers' };
@@ -48,8 +48,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     await TalkSubmission.for(userId, params.event).removeCoSpeaker(params.talk, speakerId);
     return json(null);
   } else {
-    const result = parseWithZod(form, DetailsSchema);
-    if (!result.success) return json(result.error);
+    const result = parseWithZod(form, { schema: DetailsSchema });
+    if (result.status !== 'success') return json(result.error);
     await SpeakerProfile.for(userId).save(result.value);
   }
 

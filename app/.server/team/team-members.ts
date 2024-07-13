@@ -1,9 +1,9 @@
+import { parseWithZod } from '@conform-to/zod';
 import type { TeamRole } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
 import { z } from 'zod';
 
 import { ForbiddenOperationError } from '~/libs/errors.server.ts';
-import { parseWithZod } from '~/libs/validators/zod-parser.ts';
 
 import { Pagination } from '../shared/pagination.ts';
 import { UserTeam } from './user-team.ts';
@@ -68,6 +68,7 @@ export class TeamMembers {
 
 export function parseUrlFilters(url: string) {
   const params = new URL(url).searchParams;
-  const result = parseWithZod(params, MembersFiltersSchema);
-  return result.value || {};
+  const result = parseWithZod(params, { schema: MembersFiltersSchema });
+  if (result.status !== 'success') return {};
+  return result.value;
 }

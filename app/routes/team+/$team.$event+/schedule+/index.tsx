@@ -1,3 +1,4 @@
+import { parseWithZod } from '@conform-to/zod';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
@@ -14,7 +15,6 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { parseWithZod } from '~/libs/validators/zod-parser.ts';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
@@ -44,8 +44,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const schedule = EventSchedule.for(userId, params.team, params.event);
 
   const form = await request.formData();
-  const result = parseWithZod(form, ScheduleCreateSchema);
-  if (!result.success) return json(result.error);
+  const result = parseWithZod(form, { schema: ScheduleCreateSchema });
+  if (result.status !== 'success') return json(result.error);
 
   await schedule.create(result.value);
 

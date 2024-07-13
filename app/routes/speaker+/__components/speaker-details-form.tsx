@@ -4,11 +4,12 @@ import { Button } from '~/design-system/buttons.tsx';
 import { MarkdownTextArea } from '~/design-system/forms/markdown-textarea.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
+import type { SubmissionErrors } from '~/types/errors.types.ts';
 
 type Props = {
   bio: string | null;
   references: string | null;
-  errors?: Record<string, string | string[]> | null;
+  errors: SubmissionErrors;
 };
 
 export function SpeakerDetailsForm({ bio, references, errors }: Props) {

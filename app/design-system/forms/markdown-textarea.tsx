@@ -2,6 +2,8 @@ import { cx } from 'class-variance-authority';
 import type { ChangeEventHandler } from 'react';
 import { useState } from 'react';
 
+import type { SubmissionError } from '~/types/errors.types.ts';
+
 import { Button } from '../buttons.tsx';
 import { Modal } from '../dialogs/modals.tsx';
 import { Markdown } from '../markdown.tsx';
@@ -11,7 +13,7 @@ type MarkdownTextAreaProps = {
   label: string;
   description?: string;
   defaultValue?: string | null;
-  error?: string | string[];
+  error?: SubmissionError;
 } & React.TextareaHTMLAttributes<HTMLTextAreaElement>;
 
 const baseStyles = 'border-gray-300 focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500';

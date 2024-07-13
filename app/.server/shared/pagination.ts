@@ -1,6 +1,5 @@
+import { parseWithZod } from '@conform-to/zod';
 import { z } from 'zod';
-
-import { parseWithZod } from '~/libs/validators/zod-parser.ts';
 
 type PaginationOptions = { page: number; total: number; pageSize?: number };
 
@@ -32,6 +31,7 @@ export class Pagination {
 
 export function parseUrlPage(url: string) {
   const params = new URL(url).searchParams;
-  const result = parseWithZod(params, z.object({ page: z.number().default(1) }));
-  return result.value?.page || 1;
+  const result = parseWithZod(params, { schema: z.object({ page: z.number().default(1) }) });
+  if (result.status !== 'success') return 1;
+  return result.value.page;
 }

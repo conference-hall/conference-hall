@@ -2,10 +2,11 @@ import slugify from '@sindresorhus/slugify';
 import { useState } from 'react';
 
 import { Input } from '~/design-system/forms/input.tsx';
+import type { SubmissionErrors } from '~/types/errors.types.ts';
 
 type TeamFormProps = {
   initialValues?: { name: string; slug: string };
-  errors?: Record<string, string | string[]>;
+  errors: SubmissionErrors;
 };
 
 export function TeamForm({ initialValues, errors }: TeamFormProps) {

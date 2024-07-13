@@ -1,3 +1,4 @@
+import { parseWithZod } from '@conform-to/zod';
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Form, useActionData, useFetcher } from '@remix-run/react';
@@ -15,7 +16,6 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-import { parseWithZod } from '~/libs/validators/zod-parser.ts';
 
 import { useEvent } from '../__components/useEvent.tsx';
 
@@ -35,14 +35,14 @@ export const action = async ({ request, params }: LoaderFunctionArgs) => {
 
   switch (intent) {
     case 'save-email-notifications': {
-      const result = parseWithZod(form, EventEmailNotificationsSettingsSchema);
-      if (!result.success) return json(result.error);
+      const result = parseWithZod(form, { schema: EventEmailNotificationsSettingsSchema });
+      if (result.status !== 'success') return json(result.error);
       await event.update(result.value);
       return toast('success', 'Notification email saved.');
     }
     case 'save-notifications': {
-      const result = parseWithZod(form, EventNotificationsSettingsSchema);
-      if (!result.success) return json(result.error);
+      const result = parseWithZod(form, { schema: EventNotificationsSettingsSchema });
+      if (result.status !== 'success') return json(result.error);
       await event.update(result.value);
       return toast('success', 'Notification setting saved.');
     }

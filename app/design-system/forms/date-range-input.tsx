@@ -3,6 +3,8 @@ import { toZonedTime } from 'date-fns-tz';
 import type { ChangeEvent } from 'react';
 import { useCallback, useState } from 'react';
 
+import type { SubmissionError } from '~/types/errors.types.ts';
+
 import type { InputProps } from './input.tsx';
 import { Input } from './input.tsx';
 
@@ -11,7 +13,7 @@ type Props = {
   end: { value?: string | null } & InputProps;
   timezone: string;
   required?: boolean;
-  error?: string | string[];
+  error?: SubmissionError;
   className?: string;
 };
 

@@ -7,6 +7,7 @@ import MultiSelect from '~/design-system/forms/multi-select.tsx';
 import { Radio, RadioGroup } from '~/design-system/forms/radio-group.tsx';
 import { LANGUAGES } from '~/libs/formatters/languages.ts';
 import { LEVELS } from '~/libs/formatters/levels.ts';
+import type { SubmissionErrors } from '~/types/errors.types.ts';
 
 import { CategoriesForm } from './categories-form.tsx';
 import { FormatsForm } from './formats-form.tsx';
@@ -26,7 +27,7 @@ type Props = {
   formatsRequired?: boolean;
   categories?: Array<{ id: string; name: string; description: string | null }>;
   categoriesRequired?: boolean;
-  errors?: Record<string, string | string[]> | null;
+  errors: SubmissionErrors;
 };
 
 export function TalkForm({
