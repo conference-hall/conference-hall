@@ -8,7 +8,10 @@ export function LoginButton() {
 
   return (
     <NavTabs variant="dark">
-      <NavTab to={{ pathname: '/login', search: location.pathname ? redirectTo.toString() : undefined }} variant="dark">
+      <NavTab
+        to={{ pathname: '/auth/login', search: location.pathname ? redirectTo.toString() : undefined }}
+        variant="dark"
+      >
         Login
       </NavTab>
     </NavTabs>

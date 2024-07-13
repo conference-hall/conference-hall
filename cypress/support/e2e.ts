@@ -132,7 +132,7 @@ Cypress.Commands.add('login', (username = 'Clark Kent') => {
   cy.session(
     [username],
     () => {
-      cy.visitAndCheck('/login');
+      cy.visitAndCheck('/auth/login');
       cy.findByRole('heading', { name: 'Sign in to your account' }).should('exist');
       cy.findByRole('button', { name: 'Google' }).click();
       cy.assertText('Please select an existing account in the Auth Emulator or add a new one:');
