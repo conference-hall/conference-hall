@@ -1,5 +1,6 @@
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/20/solid';
 import { FireIcon } from '@heroicons/react/24/outline';
+import { cx } from 'class-variance-authority';
 
 import { Avatar, AvatarGroup } from '~/design-system/avatar.tsx';
 import { ButtonLink } from '~/design-system/buttons.tsx';
@@ -37,7 +38,7 @@ export function SpeakerActivitiesSection({ activities, nextPage, hasNextPage, cl
   }
 
   return (
-    <section className={className}>
+    <section className={cx('space-y-4', className)}>
       <ul aria-label="Activities list" className="space-y-4 lg:space-y-6">
         {activities.map((event) => (
           <Card key={event.slug} as="li" className="flex flex-col">
