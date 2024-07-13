@@ -13,7 +13,6 @@ describe('Publication page', () => {
     cy.login('Clark Kent');
     page.visit('team-1', 'conference-1');
 
-    // TODO: add tests on links to proposals list page
     page.totalProposals().should('contain', '5');
     page.totalAccepted().should('contain', '2');
     page.totalRejected().should('contain', '2');

@@ -260,10 +260,8 @@ describe('SpeakerTalk', () => {
     it('checks if a talk has been submitted to an event', async () => {
       const speaker = await userFactory();
       const talk = await talkFactory({ speakers: [speaker] });
-
       const event1 = await eventFactory();
       const event2 = await eventFactory();
-
       await proposalFactory({ talk, event: event1 });
 
       const speakerTalk = SpeakerTalk.for(speaker.id, talk.id);

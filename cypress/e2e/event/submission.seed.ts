@@ -5,10 +5,11 @@ import { talkFactory } from '../../../tests/factories/talks.ts';
 import { userFactory } from '../../../tests/factories/users.ts';
 
 export const seed = async () => {
-  const user = await userFactory({ traits: ['clark-kent'], attributes: { bio: '' } });
+  const speaker = await userFactory({ traits: ['clark-kent'], attributes: { bio: '' } });
+  const speaker2 = await userFactory({ traits: ['peter-parker'], attributes: { bio: '' } });
 
   await talkFactory({
-    speakers: [user],
+    speakers: [speaker, speaker2],
     attributes: {
       title: 'My existing talk',
       abstract: 'My existing abstract',

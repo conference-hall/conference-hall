@@ -39,7 +39,6 @@ export class TalksLibrary {
     }));
   }
 
-  // TODO: add tests
   async listForEvent(eventSlug: string) {
     const talks = await db.talk.findMany({
       include: { speakers: true },
