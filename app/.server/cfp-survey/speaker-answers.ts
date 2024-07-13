@@ -55,7 +55,7 @@ export class SpeakersAnswers {
   async getAnswers() {
     const userSurveys = await db.survey.findMany({
       select: { userId: true, answers: true },
-      where: { event: { slug: this.eventSlug }, user: { id: { in: this.userIds } } },
+      where: { event: { slug: this.eventSlug }, userId: { in: this.userIds } },
     });
 
     return userSurveys.map((survey) => ({ userId: survey.userId, answers: survey.answers as SurveyData }));
