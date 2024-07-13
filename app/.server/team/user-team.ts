@@ -41,7 +41,7 @@ export class UserTeam {
       name: team.name,
       slug: team.slug,
       role: member.role,
-      invitationLink: team.invitationLink, // TODO: should not be able to invite if not owner?
+      invitationLink: member.role !== 'REVIEWER' ? team.invitationLink : undefined,
     };
   }
 

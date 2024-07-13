@@ -62,6 +62,14 @@ describe('UserTeam', () => {
       });
     });
 
+    it('does not return the invitation link if the user is reviewer', async () => {
+      const team = await teamFactory({ reviewers: [user] });
+
+      const myTeam = await UserTeam.for(user.id, team.slug).get();
+
+      expect(myTeam.invitationLink).toBe(undefined);
+    });
+
     it('throws an error when user is not member of the team', async () => {
       const team = await teamFactory({ attributes: { name: 'My team', slug: 'my-team' } });
       await expect(UserTeam.for(user.id, team.slug).get()).rejects.toThrowError(ForbiddenOperationError);
