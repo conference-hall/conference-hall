@@ -68,4 +68,32 @@ describe('SubmissionSteps', () => {
       expect(steps.find((step) => step.key === 'tracks')).toBe(undefined);
     });
   });
+
+  describe('#getNextStep', () => {
+    it('return the next steps', async () => {
+      const event = await eventFactory({ traits: ['conference-cfp-open', 'withSurvey'] });
+      await eventFormatFactory({ event });
+      await eventCategoryFactory({ event });
+
+      const submission = await SubmissionSteps.for(event.slug, 'talkId');
+
+      expect(submission.getNextStep('selection').key).toBe('proposal');
+      expect(submission.getNextStep('proposal').key).toBe('speakers');
+      expect(submission.getNextStep('speakers').key).toBe('tracks');
+      expect(submission.getNextStep('tracks').key).toBe('survey');
+      expect(submission.getNextStep('survey').key).toBe('submission');
+    });
+  });
+
+  describe('#SubmissionSteps.nextStepFor', () => {
+    it('return the next steps', async () => {
+      const event = await eventFactory({ traits: ['conference-cfp-open', 'withSurvey'] });
+      await eventFormatFactory({ event });
+      await eventCategoryFactory({ event });
+
+      const nextStep = await SubmissionSteps.nextStepFor('selection', event.slug, 'talkId');
+
+      expect(nextStep.key).toBe('proposal');
+    });
+  });
 });

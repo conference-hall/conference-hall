@@ -6,7 +6,6 @@ type Step = { key: string; name: string; path: string; form?: string; enabled: b
 
 type SubmissionStepsInputs = { eventSlug: string; proposalId?: string; hasSurvey: boolean; hasTracks: boolean };
 
-// TODO: Add tests
 export class SubmissionSteps {
   constructor(private inputs: SubmissionStepsInputs) {}
 
@@ -77,7 +76,7 @@ export class SubmissionSteps {
     ].filter((step) => step.enabled);
   }
 
-  private getNextStep(currentStepKey: string) {
+  getNextStep(currentStepKey: string) {
     const steps = this.steps;
     const currentStepIndex = steps.findIndex((step) => step.key === currentStepKey);
 
