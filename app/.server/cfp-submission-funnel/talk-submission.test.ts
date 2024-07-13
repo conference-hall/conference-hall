@@ -6,6 +6,7 @@ import { eventFormatFactory } from 'tests/factories/formats.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
+import type { Mock } from 'vitest';
 
 import {
   CfpNotOpenError,
@@ -15,8 +16,14 @@ import {
   TalkNotFoundError,
 } from '~/libs/errors.server.ts';
 
+import { sendSubmittedTalkSlackMessage } from './slack/slack.services.ts';
 import { TalkSubmission } from './talk-submission.ts';
 import { getTracksSchema } from './talk-submission.types.ts';
+
+vi.mock('./slack/slack.services.ts', () => {
+  return { sendSubmittedTalkSlackMessage: vi.fn() };
+});
+const sendSubmittedTalkSlackMessageMock = sendSubmittedTalkSlackMessage as Mock;
 
 describe('TalkSubmission', () => {
   describe('#saveDraft', () => {
@@ -243,7 +250,7 @@ describe('TalkSubmission', () => {
         },
       ]).toHaveEmailsEnqueued();
 
-      // TODO: test slack message
+      expect(sendSubmittedTalkSlackMessageMock).not.toHaveBeenCalled();
     });
 
     it('can submit if more drafts than event max proposals', async () => {
@@ -259,6 +266,20 @@ describe('TalkSubmission', () => {
       const result = await db.proposal.findUnique({ where: { id: proposal.id } });
       expect(result?.isDraft).toEqual(false);
       expect(result?.deliberationStatus).toEqual('PENDING');
+    });
+
+    it('triggers slack integration', async () => {
+      const event = await eventFactory({
+        traits: ['conference-cfp-open'],
+        attributes: { slackWebhookUrl: 'http://webhook.example.net' },
+      });
+      const speaker = await userFactory();
+      const talk = await talkFactory({ speakers: [speaker] });
+      const proposal = await proposalFactory({ event, talk: talk, traits: ['draft'] });
+
+      await TalkSubmission.for(speaker.id, event.slug).submit(talk.id);
+
+      expect(sendSubmittedTalkSlackMessageMock).toHaveBeenCalledWith(event.id, proposal.id);
     });
 
     it('throws an error when max proposal submitted reach', async () => {
