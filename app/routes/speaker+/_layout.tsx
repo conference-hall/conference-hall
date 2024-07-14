@@ -29,7 +29,7 @@ export default function SpeakerRoute() {
       <Navbar user={user} withSearch />
 
       <header className={cx(BG_HEADER, 'hidden sm:block')}>
-        <Container className="h-24 flex gap-6 items-end relative">
+        <Container className="h-24 flex flex-row items-center relative">
           <Avatar
             picture={profile.picture}
             name={profile.name}
@@ -38,9 +38,15 @@ export default function SpeakerRoute() {
             ringColor="white"
             className="absolute -bottom-12"
           />
-          <div className="ml-40 p-2">
-            <H1 variant="light">{profile.name}</H1>
-            {profile.company && <Text variant="secondary-light">{profile.company}</Text>}
+          <div className="ml-2 sm:ml-40 p-2 overflow-hidden">
+            <H1 size="2xl" variant="light" truncate>
+              {profile.name}
+            </H1>
+            {profile.company && (
+              <Text variant="secondary-light" weight="medium">
+                {profile.company}
+              </Text>
+            )}
           </div>
         </Container>
       </header>
