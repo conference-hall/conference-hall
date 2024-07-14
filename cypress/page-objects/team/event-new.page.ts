@@ -5,38 +5,8 @@ type EventNewType = {
   slug?: string;
 };
 
-class TeamEventsPage extends BasePage {
-  visit(slug: string) {
-    cy.visitAndCheck(`/team/${slug}`);
-    this.isPageVisible();
-  }
-
+class EventNewPage extends BasePage {
   isPageVisible() {
-    cy.findByRole('heading', { name: 'Team events' }).should('exist');
-  }
-
-  eventsTab() {
-    return cy.findByRole('link', { name: 'Events' });
-  }
-
-  settingsTab() {
-    return cy.findByRole('link', { name: 'Settings' });
-  }
-
-  list() {
-    return cy.findByRole('list', { name: 'Events list' }).children();
-  }
-
-  archivedEvents() {
-    return cy.findByRole('link', { name: 'Archived' }).click();
-  }
-
-  event(name: string) {
-    return this.list().contains(name);
-  }
-
-  newEvent() {
-    cy.findByRole('link', { name: 'New event' }).click();
     cy.findByRole('heading', { name: 'Select your new event type' }).should('exist');
   }
 
@@ -68,4 +38,4 @@ class TeamEventsPage extends BasePage {
   }
 }
 
-export default TeamEventsPage;
+export default EventNewPage;

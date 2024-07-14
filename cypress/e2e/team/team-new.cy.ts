@@ -1,4 +1,4 @@
-import TeamEventsPage from '../../page-objects/team/events-list.page.ts';
+import TeamHomePage from '../../page-objects/team/team-home.page.ts';
 import TeamNewPage from '../../page-objects/team/team-new.page.ts';
 
 describe('Team create', () => {
@@ -9,7 +9,7 @@ describe('Team create', () => {
   afterEach(() => cy.task('disconnectDB'));
 
   const teamNew = new TeamNewPage();
-  const team = new TeamEventsPage();
+  const team = new TeamHomePage();
 
   it('can create a new team', () => {
     cy.login();
