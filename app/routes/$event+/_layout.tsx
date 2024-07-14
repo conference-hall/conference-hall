@@ -39,7 +39,7 @@ export default function EventRoute() {
       <Navbar user={user} withSearch />
 
       <header className={BG_HEADER}>
-        <Container className="h-24 flex flex-row items-center justify-between relative">
+        <Container className="h-24 flex flex-row items-center relative">
           <Avatar
             picture={event.logo}
             name={event.name}
