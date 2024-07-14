@@ -2,7 +2,7 @@ import formData from 'form-data';
 import Mailgun from 'mailgun.js';
 import type { IMailgunClient } from 'mailgun.js/Interfaces';
 
-import { EmailValidator } from './email-validator.ts';
+import { isValidEmail } from '../validators/email-validator.ts';
 import type { Email, EmailProvider } from './provider';
 
 export class MailgunProvider implements EmailProvider {
@@ -16,7 +16,7 @@ export class MailgunProvider implements EmailProvider {
   }
 
   public async send(email: Email) {
-    const recipientEmails = email.to.filter(EmailValidator.isValid);
+    const recipientEmails = email.to.filter(isValidEmail);
     if (recipientEmails.length === 0) return;
 
     try {
