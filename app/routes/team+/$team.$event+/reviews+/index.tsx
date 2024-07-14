@@ -11,6 +11,7 @@ import { parseUrlFilters } from '~/.server/shared/proposal-search-builder.types.
 import { Page } from '~/design-system/layouts/page.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
+import { getObjectHash } from '~/libs/utils/object-hash.ts';
 
 import { ExportMenu } from './__components/proposals-list-page/actions/export-menu.tsx';
 import { FiltersMenu } from './__components/proposals-list-page/filters/filters-menu.tsx';
@@ -55,6 +56,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 export default function ReviewsRoute() {
   const { results, filters, pagination, statistics } = useLoaderData<typeof loader>();
 
+  const filtersHash = getObjectHash(filters);
+
   return (
     <Page>
       <h2 className="sr-only">Event proposals</h2>
@@ -71,7 +74,7 @@ export default function ReviewsRoute() {
           </div>
           <FiltersTags filters={filters} />
         </div>
-        <ProposalsList proposals={results} pagination={pagination} statistics={statistics} />
+        <ProposalsList proposals={results} pagination={pagination} statistics={statistics} filtersHash={filtersHash} />
       </div>
     </Page>
   );

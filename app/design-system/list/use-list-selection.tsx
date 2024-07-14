@@ -1,8 +1,9 @@
 import type { ChangeEvent } from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-export const useListSelection = (ids: Array<string>, total: number) => {
+export const useListSelection = (ids: Array<string>, total: number, hash: string) => {
   const ref = useRef<HTMLInputElement>(null);
+  const lastHash = useRef<string>();
   const [selection, setSelection] = useState<Array<string>>([]);
   const [allPagesSelected, setAllPagesSelected] = useState(false);
 
@@ -33,14 +34,6 @@ export const useListSelection = (ids: Array<string>, total: number) => {
     setAllPagesSelected(!allPagesSelected);
   }, [allPagesSelected]);
 
-  useEffect(() => {
-    if (!ref.current) return;
-    ref.current.disabled = total === 0;
-    ref.current.checked = (total !== 0 && selection.length === total) || allPagesSelected;
-    ref.current.indeterminate = selection.length > 0 && selection.length < total;
-    ref.current.onchange = toggleAll;
-  }, [selection, ids, toggleAll, total, allPagesSelected]);
-
   const reset = useCallback(() => {
     setSelection([]);
     setAllPagesSelected(false);
@@ -53,6 +46,22 @@ export const useListSelection = (ids: Array<string>, total: number) => {
     },
     [selection, allPagesSelected],
   );
+
+  // Used to reset selection when the list has changed (using a hash corresponding to the list content)
+  useEffect(() => {
+    if (lastHash.current && lastHash.current !== hash) {
+      reset();
+    }
+    lastHash.current = hash;
+  }, [hash, reset]);
+
+  useEffect(() => {
+    if (!ref.current) return;
+    ref.current.disabled = total === 0;
+    ref.current.checked = (total !== 0 && selection.length === total) || allPagesSelected;
+    ref.current.indeterminate = selection.length > 0 && selection.length < total;
+    ref.current.onchange = toggleAll;
+  }, [selection, ids, toggleAll, total, allPagesSelected]);
 
   return useMemo(
     () => ({
