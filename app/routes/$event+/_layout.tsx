@@ -5,6 +5,7 @@ import invariant from 'tiny-invariant';
 
 import { EventPage } from '~/.server/event-page/event-page.ts';
 import { Avatar } from '~/design-system/avatar.tsx';
+import { BG_HEADER } from '~/design-system/colors.ts';
 import { Container } from '~/design-system/layouts/container.tsx';
 import { H1, Text } from '~/design-system/typography.tsx';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
@@ -37,8 +38,8 @@ export default function EventRoute() {
     <>
       <Navbar user={user} withSearch />
 
-      <header className="bg-gray-800">
-        <Container className="h-24 flex flex-row items-center justify-between relative">
+      <header className={BG_HEADER}>
+        <Container className="h-24 flex flex-row items-center relative">
           <Avatar
             picture={event.logo}
             name={event.name}

@@ -1,9 +1,11 @@
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Outlet, useLoaderData } from '@remix-run/react';
+import { cx } from 'class-variance-authority';
 
 import { SpeakerProfile } from '~/.server/speaker-profile/speaker-profile.ts';
 import { Avatar } from '~/design-system/avatar.tsx';
+import { BG_HEADER } from '~/design-system/colors.ts';
 import { Container } from '~/design-system/layouts/container.tsx';
 import { H1, Text } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
@@ -26,8 +28,8 @@ export default function SpeakerRoute() {
     <>
       <Navbar user={user} withSearch />
 
-      <header className="hidden sm:block bg-gray-800">
-        <Container className="h-24 flex gap-6 items-end relative">
+      <header className={cx(BG_HEADER, 'hidden sm:block')}>
+        <Container className="h-24 flex flex-row items-center relative">
           <Avatar
             picture={profile.picture}
             name={profile.name}
@@ -36,9 +38,15 @@ export default function SpeakerRoute() {
             ringColor="white"
             className="absolute -bottom-12"
           />
-          <div className="ml-40 p-2">
-            <H1 variant="light">{profile.name}</H1>
-            {profile.company && <Text variant="secondary-light">{profile.company}</Text>}
+          <div className="ml-2 sm:ml-40 p-2 overflow-hidden">
+            <H1 size="2xl" variant="light" truncate>
+              {profile.name}
+            </H1>
+            {profile.company && (
+              <Text variant="secondary-light" weight="medium">
+                {profile.company}
+              </Text>
+            )}
           </div>
         </Container>
       </header>
