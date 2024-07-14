@@ -1,7 +1,7 @@
 import './styles/tailwind.css';
 import './styles/fonts.css';
 
-import type { LoaderFunctionArgs } from '@remix-run/node';
+import type { LinksFunction, LoaderFunctionArgs, MetaFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Links, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData } from '@remix-run/react';
 import { withSentry } from '@sentry/remix';
@@ -18,14 +18,24 @@ import { Toaster } from './libs/toasts/toaster.tsx';
 import { GeneralErrorBoundary } from './routes/__components/error-boundary.tsx';
 import { GlobalLoading } from './routes/__components/global-loading.tsx';
 
-export function meta() {
+export const meta: MetaFunction<typeof loader> = () => {
   return [
     { charset: 'utf-8' },
     { title: 'Conference Hall' },
     { name: 'viewport', content: 'width=device-width,initial-scale=1' },
     { name: 'robots', content: 'noindex' },
   ];
-}
+};
+
+export const links: LinksFunction = () => {
+  return [
+    { rel: 'icon', type: 'image/svg+xml', href: '/favicons/favicon.svg' },
+    { rel: 'mask-icon', href: '/favicons/mask-icon.svg' },
+    { rel: 'alternate icon', type: 'image/png', href: '/favicons/favicon-32x32.png' },
+    { rel: 'apple-touch-icon', href: '/favicons/apple-touch-icon.png' },
+    { rel: 'manifest', href: '/site.webmanifest', crossOrigin: 'use-credentials' },
+  ];
+};
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { toast, headers: toastHeaders } = await getToast(request);

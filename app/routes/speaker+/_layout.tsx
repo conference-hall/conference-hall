@@ -1,9 +1,11 @@
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Outlet, useLoaderData } from '@remix-run/react';
+import { cx } from 'class-variance-authority';
 
 import { SpeakerProfile } from '~/.server/speaker-profile/speaker-profile.ts';
 import { Avatar } from '~/design-system/avatar.tsx';
+import { BG_HEADER } from '~/design-system/colors.ts';
 import { Container } from '~/design-system/layouts/container.tsx';
 import { H1, Text } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
@@ -26,7 +28,7 @@ export default function SpeakerRoute() {
     <>
       <Navbar user={user} withSearch />
 
-      <header className="hidden sm:block bg-gray-800">
+      <header className={cx(BG_HEADER, 'hidden sm:block')}>
         <Container className="h-24 flex gap-6 items-end relative">
           <Avatar
             picture={profile.picture}

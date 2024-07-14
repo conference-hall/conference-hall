@@ -1,5 +1,6 @@
 import { Link } from '@remix-run/react';
 
+import { ConferenceHallLogo } from '~/design-system/logo.tsx';
 import { Text } from '~/design-system/typography.tsx';
 
 type Props = { displayName?: boolean };
@@ -11,13 +12,7 @@ export function Logo({ displayName }: Props) {
       title="Go to event search"
       className="flex items-center gap-4 truncate rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
     >
-      <img
-        width="32px"
-        height="32px"
-        src="https://tailwindui.com/img/logos/workflow-mark-indigo-300.svg"
-        aria-hidden
-        alt=""
-      />
+      <ConferenceHallLogo width="32px" height="32px" aria-hidden className="fill-indigo-400" />
       {displayName && (
         <Text as="span" weight={'bold'} variant="light" size="l" truncate>
           Conference Hall

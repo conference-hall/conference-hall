@@ -1,3 +1,5 @@
+import { BG_HEADER } from '~/design-system/colors.ts';
+
 import { LoginButton } from './dropdowns/login-button.tsx';
 import { Logo } from './logo.tsx';
 import { Navigation } from './navigation.tsx';
@@ -24,7 +26,7 @@ export type Notification = {
 
 export function Navbar({ user, withSearch }: Props) {
   return (
-    <div className="bg-gray-800">
+    <div className={BG_HEADER}>
       <div className="flex h-16 items-center justify-between px-4 lg:px-8">
         <div className="flex w-full items-center">
           {/* Logo */}
