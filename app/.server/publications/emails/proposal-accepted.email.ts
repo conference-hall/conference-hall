@@ -1,4 +1,4 @@
-import type { Event, Proposal, User } from '@prisma/client';
+import type { Event, EventFormat, Proposal, User } from '@prisma/client';
 import { EmailQueue } from 'jobs/email/email.queue.ts';
 
 import { Template } from '~/libs/email-template/template.ts';
@@ -9,21 +9,23 @@ type Variables = {
   eventName: string;
   proposalId: string;
   proposalTitle: string;
+  formats: string;
   appUrl: string;
 };
 
 export class ProposalAcceptedEmail {
-  static async send(event: Event, proposals: Array<Proposal & { speakers: User[] }>) {
+  static async send(event: Event, proposals: Array<Proposal & { speakers: User[]; formats: EventFormat[] }>) {
     await Promise.all(
       proposals.map(async (proposal) => {
         const template = new Template<Variables>({
           subject: `[${event.name}] Congrats! Your proposal has been accepted`,
-          content: TEMPLATE,
+          content: getTemplate(proposal.formats.length > 0),
           variables: {
             eventSlug: event.slug,
             eventName: event.name,
             proposalId: proposal.id,
             proposalTitle: proposal.title,
+            formats: proposal.formats.map((f) => f.name).join(', '),
             appUrl: appUrl(),
           },
         });
@@ -39,7 +41,7 @@ export class ProposalAcceptedEmail {
   }
 }
 
-const TEMPLATE = `Hi,
+const getTemplate = (hasFormats: boolean) => `Hi,
 
 We're thrilled to inform you that your proposal titled **%proposalTitle%** has been accepted for **%eventName%**! Congratulations!
 
@@ -48,6 +50,7 @@ Your contribution stood out among the numerous exceptional submissions, and we'r
 Here are the details of your accepted talk:
 - Event: **%eventName%**
 - Talk Title: **%proposalTitle%**
+${hasFormats ? '- Formats: **%formats%**' : ''}
 
 To confirm or decline your participation as a speaker for this event, [**please click on the following link**](%appUrl%/%eventSlug%/proposals/%proposalId%).
 
