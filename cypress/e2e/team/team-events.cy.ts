@@ -1,14 +1,15 @@
+import TeamHomePage from 'page-objects/team/team-home.page.ts';
+
 import OrganizerEventSettingsPage from '../../page-objects/team/event-settings/event-settings.page.ts';
-import TeamEventsPage from '../../page-objects/team/events-list.page.ts';
 
 describe("Team's events list", () => {
   beforeEach(() => {
-    cy.task('seedDB', 'team/events-list');
+    cy.task('seedDB', 'team/team-events');
   });
 
   afterEach(() => cy.task('disconnectDB'));
 
-  const team = new TeamEventsPage();
+  const team = new TeamHomePage();
   const eventSettings = new OrganizerEventSettingsPage();
 
   describe('as a team owner', () => {
@@ -36,10 +37,10 @@ describe("Team's events list", () => {
 
     it('can create a new conference', () => {
       team.visit('awesome-team');
-      team.newEvent();
-      team.selectConference();
-      team.fillNewEventForm({ name: 'Hello world' });
-      team.createEvent();
+      const newEventPage = team.newEvent();
+      newEventPage.selectConference();
+      newEventPage.fillNewEventForm({ name: 'Hello world' });
+      newEventPage.createEvent();
       eventSettings.isPageVisible();
       cy.assertInputText('Name', 'Hello world');
       cy.assertInputText('Event URL', 'hello-world');
@@ -47,10 +48,10 @@ describe("Team's events list", () => {
 
     it('can create a new meetup', () => {
       team.visit('awesome-team');
-      team.newEvent();
-      team.selectMeetup();
-      team.fillNewEventForm({ name: 'Hello world' });
-      team.createEvent();
+      const newEventPage = team.newEvent();
+      newEventPage.selectMeetup();
+      newEventPage.fillNewEventForm({ name: 'Hello world' });
+      newEventPage.createEvent();
       eventSettings.isPageVisible();
       cy.assertInputText('Name', 'Hello world');
       cy.assertInputText('Event URL', 'hello-world');
@@ -58,11 +59,11 @@ describe("Team's events list", () => {
 
     it('cannot create an event with an existing slug', () => {
       team.visit('awesome-team');
-      team.newEvent();
-      team.selectConference();
-      team.fillNewEventForm({ name: 'Hello world', slug: 'event-1' });
-      team.createEvent();
-      team.error('Event URL').should('contain.text', 'This URL already exists, please try another one.');
+      const newEventPage = team.newEvent();
+      newEventPage.selectConference();
+      newEventPage.fillNewEventForm({ name: 'Hello world', slug: 'event-1' });
+      newEventPage.createEvent();
+      newEventPage.error('Event URL').should('contain.text', 'This URL already exists, please try another one.');
     });
   });
 
