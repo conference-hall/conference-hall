@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 
-import { EmailValidator } from './email-validator.ts';
+import { isValidEmail } from '../validators/email-validator.ts';
 import type { Email, EmailProvider } from './provider';
 
 export class MailpitProvider implements EmailProvider {
@@ -11,7 +11,7 @@ export class MailpitProvider implements EmailProvider {
   }
 
   public async send(email: Email) {
-    const recipientEmails = email.to.filter(EmailValidator.isValid);
+    const recipientEmails = email.to.filter(isValidEmail);
     if (recipientEmails.length === 0) return;
 
     try {
