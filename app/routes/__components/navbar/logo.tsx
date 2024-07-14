@@ -12,7 +12,7 @@ export function Logo({ displayName }: Props) {
       title="Go to event search"
       className="flex items-center gap-4 truncate rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
     >
-      <ConferenceHallLogo width="32px" height="32px" aria-hidden className="fill-indigo-400" />
+      <ConferenceHallLogo width="24px" height="24px" aria-hidden className="fill-indigo-400" />
       {displayName && (
         <Text as="span" weight={'bold'} variant="light" size="l" truncate>
           Conference Hall

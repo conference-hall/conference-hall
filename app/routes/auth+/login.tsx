@@ -14,11 +14,11 @@ import { Callout } from '~/design-system/callout.tsx';
 import { LoadingIcon } from '~/design-system/icons/loading-icon.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Link } from '~/design-system/links.tsx';
+import { ConferenceHallLogo } from '~/design-system/logo.tsx';
 import { getClientAuth } from '~/libs/auth/firebase.ts';
 import { createSession, getSessionUserId } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { AuthProviderButton } from '~/routes/__components/auth-provider-button.tsx';
-import { Logo } from '~/routes/__components/navbar/logo.tsx';
 
 import { useHydrated } from '../__components/utils/use-hydrated.ts';
 
@@ -84,7 +84,7 @@ export default function Login() {
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center py-12 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center sm:mx-auto sm:w-full sm:max-w-md">
-          <Logo />
+          <ConferenceHallLogo width="48px" height="48px" aria-hidden className="fill-slate-300" />
           <h2 className="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
             Sign in to your account
           </h2>
@@ -123,7 +123,7 @@ export default function Login() {
                 </div>
               </Card>
               <p className="mt-10 text-center text-sm text-gray-500">
-                &copy; 2023 Conference Hall. All rights reserved.
+                &copy; 2024 Conference Hall. All rights reserved.
               </p>
             </>
           )}
