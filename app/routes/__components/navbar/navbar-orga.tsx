@@ -1,6 +1,6 @@
 import { useRouteLoaderData } from '@remix-run/react';
 
-import { BG_HEADER } from '~/design-system/colors.ts';
+import { BG_COLOR } from '~/design-system/colors.ts';
 import { SlashBarIcon } from '~/design-system/icons/slash-bar-icon.tsx';
 
 import type { loader as routeEventLoader } from '../../team+/$team.$event+/_layout.tsx';
@@ -31,7 +31,7 @@ export type Notification = {
 
 export function NavbarOrga({ user }: Props) {
   return (
-    <div className={BG_HEADER}>
+    <div className={BG_COLOR}>
       <div className="flex h-16 items-center justify-between px-4 lg:px-8">
         <div className="flex w-full items-center">
           {/* Logo */}

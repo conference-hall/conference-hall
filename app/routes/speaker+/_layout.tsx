@@ -5,7 +5,7 @@ import { cx } from 'class-variance-authority';
 
 import { SpeakerProfile } from '~/.server/speaker-profile/speaker-profile.ts';
 import { Avatar } from '~/design-system/avatar.tsx';
-import { BG_HEADER } from '~/design-system/colors.ts';
+import { BG_GRADIENT_COLOR } from '~/design-system/colors.ts';
 import { Container } from '~/design-system/layouts/container.tsx';
 import { H1, Text } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
@@ -28,7 +28,7 @@ export default function SpeakerRoute() {
     <>
       <Navbar user={user} withSearch />
 
-      <header className={cx(BG_HEADER, 'hidden sm:block')}>
+      <header className={cx(BG_GRADIENT_COLOR, 'hidden sm:block')}>
         <Container className="h-24 flex flex-row items-center relative">
           <Avatar
             picture={profile.picture}

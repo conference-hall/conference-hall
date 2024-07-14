@@ -6,7 +6,7 @@ import { Avatar } from '~/design-system/avatar.tsx';
 const menuStyle = cx(
   'flex items-center gap-2',
   'text-sm font-semibold whitespace-nowrap',
-  'text-gray-100 hover:bg-gray-800 hover:text-white focus-visible:outline-white',
+  'text-gray-100 hover:bg-gray-900 hover:text-white focus-visible:outline-white',
   'px-3 py-1.5 rounded-md focus-visible:outline focus-visible:outline-2',
 );
 

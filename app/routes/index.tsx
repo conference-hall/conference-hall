@@ -7,7 +7,7 @@ import { cx } from 'class-variance-authority';
 import { EventsSearch } from '~/.server/event-search/event-search.ts';
 import { parseUrlFilters } from '~/.server/event-search/event-search.types.ts';
 import { parseUrlPage } from '~/.server/shared/pagination.ts';
-import { BG_HEADER } from '~/design-system/colors.ts';
+import { BG_GRADIENT_COLOR } from '~/design-system/colors.ts';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { Pagination } from '~/design-system/list/pagination.tsx';
@@ -37,7 +37,7 @@ export default function IndexRoute() {
     <>
       <Navbar user={user} />
 
-      <div className={cx(BG_HEADER, 'shadow p-4 pt-0 lg:pb-16 lg:pt-10')}>
+      <div className={cx(BG_GRADIENT_COLOR, 'shadow p-4 pt-0 lg:pb-16 lg:pt-10')}>
         <div className="hidden lg:mb-8 lg:block">
           <H1 size="2xl" weight="bold" variant="light" align="center">
             Call for papers for conferences and meetups.

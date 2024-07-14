@@ -18,7 +18,7 @@ const BACKGROUND = {
 
 const DEFAULT_LINKS = {
   light: 'text-gray-500 hover:bg-gray-100 hover:text-gray-900 focus-visible:outline-indigo-600',
-  dark: 'text-gray-300 hover:bg-gray-800 font-semibold hover:text-white focus-visible:outline-white',
+  dark: 'text-gray-300 hover:bg-gray-900 font-semibold hover:text-white focus-visible:outline-white',
 };
 
 const ACTIVE_LINKS = {
