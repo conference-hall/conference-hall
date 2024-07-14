@@ -10,11 +10,13 @@ type Props = {
   proposals: Array<ProposalData>;
   pagination: { current: number; total: number };
   statistics: { total: number; reviewed: number };
+  filtersHash: string;
 };
 
-export function ProposalsList({ proposals, pagination, statistics }: Props) {
+export function ProposalsList({ proposals, pagination, statistics, filtersHash }: Props) {
   const ids = proposals.map((proposal) => proposal.id);
-  const selector = useListSelection(ids, statistics.total);
+
+  const selector = useListSelection(ids, statistics.total, filtersHash);
 
   return (
     <List>
