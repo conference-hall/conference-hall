@@ -1,5 +1,5 @@
 import InvitationPage from '../../page-objects/invitation.page.ts';
-import TeamEventsPage from '../../page-objects/team/events-list.page.ts';
+import TeamHomePage from '../../page-objects/team/team-home.page.ts';
 
 describe('Invite to team', () => {
   beforeEach(() => {
@@ -9,7 +9,7 @@ describe('Invite to team', () => {
   afterEach(() => cy.task('disconnectDB'));
 
   const invite = new InvitationPage();
-  const team = new TeamEventsPage();
+  const team = new TeamHomePage();
 
   it('accepts team invite', () => {
     cy.login('Bruce Wayne');
