@@ -1,3 +1,4 @@
+import mdx from '@mdx-js/rollup';
 import { vitePlugin as remix } from '@remix-run/dev';
 import { sentryVitePlugin } from '@sentry/vite-plugin';
 import { flatRoutes } from 'remix-flat-routes';
@@ -9,6 +10,7 @@ const withSentrySourcemap = Boolean(process.env.SENTRY_AUTH_TOKEN);
 export default defineConfig({
   build: { manifest: true },
   plugins: [
+    mdx(),
     remix({
       serverModuleFormat: 'esm',
       ignoredRouteFiles: ['**/*'],

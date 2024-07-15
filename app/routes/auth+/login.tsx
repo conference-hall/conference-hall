@@ -20,6 +20,7 @@ import { createSession, getSessionUserId } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { AuthProviderButton } from '~/routes/__components/auth-provider-button.tsx';
 
+import { Footer } from '../__components/footer.tsx';
 import { useHydrated } from '../__components/utils/use-hydrated.ts';
 
 export const meta = mergeMeta(() => [{ title: 'Login | Conference Hall' }]);
@@ -122,9 +123,7 @@ export default function Login() {
                   </div>
                 </div>
               </Card>
-              <p className="mt-10 text-center text-sm text-gray-500">
-                &copy; 2024 Conference Hall. All rights reserved.
-              </p>
+              <Footer />
             </>
           )}
         </div>

@@ -17,6 +17,8 @@ import { Text } from '~/design-system/typography.tsx';
 import { getClientAuth } from '~/libs/auth/firebase.ts';
 import type { action as LogoutAction } from '~/routes/auth+/logout.tsx';
 
+import { LegalLinks } from '../footer.tsx';
+
 type MenuProps = {
   email: string | null;
   name: string | null;
@@ -97,6 +99,8 @@ export function UserMenu({ email, name, picture, teams, isOrganizer, notificatio
 
               <SignOutMenu />
             </ul>
+
+            <LegalLinks />
           </nav>
         </SlideOver.Content>
       </SlideOver>
