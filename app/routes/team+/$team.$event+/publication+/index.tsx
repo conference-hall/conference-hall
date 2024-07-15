@@ -1,13 +1,17 @@
-import type { LoaderFunctionArgs } from '@remix-run/node';
+import { parseWithZod } from '@conform-to/zod';
+import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { Link, Outlet, useLoaderData } from '@remix-run/react';
+import { Link, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { Publication } from '~/.server/publications/publication.ts';
+import { PublishResultFormSchema } from '~/.server/publications/publication.types.ts';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H1, H2, Subtitle } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
+import { BadRequestError } from '~/libs/errors.server.ts';
+import { toast } from '~/libs/toasts/toast.server.ts';
 import { useEvent } from '~/routes/$event+/__components/use-event.tsx';
 
 import { useTeam } from '../../__components/use-team.tsx';
@@ -20,6 +24,21 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   invariant(params.team, 'Invalid team slug');
   const results = Publication.for(userId, params.team, params.event);
   return json(await results.statistics());
+};
+
+export const action = async ({ request, params }: ActionFunctionArgs) => {
+  const userId = await requireSession(request);
+  invariant(params.team, 'Invalid team slug');
+  invariant(params.event, 'Invalid event slug');
+
+  const form = await request.formData();
+  const result = parseWithZod(form, { schema: PublishResultFormSchema });
+  if (result.status !== 'success') throw new BadRequestError('Invalid form data');
+
+  const { type, sendEmails } = result.value;
+  await Publication.for(userId, params.team, params.event).publishAll(type, sendEmails);
+
+  return toast('success', type === 'ACCEPTED' ? 'Accepted proposals published.' : 'Rejected proposals published.');
 };
 
 export default function PublicationRoute() {
@@ -77,17 +96,17 @@ export default function PublicationRoute() {
         <div className="flex flex-col gap-4 lg:flex-row lg:gap-8">
           <PublicationCard
             id="publish-accepted"
+            type="ACCEPTED"
             title="Publish accepted proposals"
             subtitle="Announce results to speakers for accepted proposals."
             statistics={statistics.accepted}
-            to="accepted"
           />
           <PublicationCard
             id="publish-rejected"
             title="Publish rejected proposals"
             subtitle="Announce results to speakers for rejected proposals."
             statistics={statistics.rejected}
-            to="rejected"
+            type="REJECTED"
           />
         </div>
       </section>
@@ -121,8 +140,6 @@ export default function PublicationRoute() {
           </dl>
         </Card>
       </section>
-
-      <Outlet context={statistics} />
     </Page>
   );
 }
