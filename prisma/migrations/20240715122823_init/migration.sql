@@ -36,11 +36,9 @@ CREATE TABLE "users" (
     "references" TEXT,
     "address" TEXT,
     "socials" JSONB NOT NULL DEFAULT '{}',
-    "lat" DOUBLE PRECISION,
-    "lng" DOUBLE PRECISION,
-    "timezone" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "migrationId" TEXT,
     "organizerKey" TEXT,
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
@@ -82,6 +80,7 @@ CREATE TABLE "talks" (
     "invitationCode" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "migrationId" TEXT,
 
     CONSTRAINT "talks_pkey" PRIMARY KEY ("id")
 );
@@ -96,9 +95,9 @@ CREATE TABLE "events" (
     "visibility" "EventVisibility" NOT NULL DEFAULT 'PRIVATE',
     "teamId" TEXT NOT NULL,
     "address" TEXT,
+    "timezone" TEXT NOT NULL,
     "lat" DOUBLE PRECISION,
     "lng" DOUBLE PRECISION,
-    "timezone" TEXT,
     "contactEmail" TEXT,
     "websiteUrl" TEXT,
     "codeOfConductUrl" TEXT,
@@ -123,6 +122,7 @@ CREATE TABLE "events" (
     "apiKey" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "migrationId" TEXT,
 
     CONSTRAINT "events_pkey" PRIMARY KEY ("id")
 );
@@ -132,6 +132,7 @@ CREATE TABLE "event_formats" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT,
+    "migrationId" TEXT,
     "eventId" TEXT NOT NULL,
 
     CONSTRAINT "event_formats_pkey" PRIMARY KEY ("id")
@@ -142,6 +143,7 @@ CREATE TABLE "event_categories" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT,
+    "migrationId" TEXT,
     "eventId" TEXT NOT NULL,
 
     CONSTRAINT "event_categories_pkey" PRIMARY KEY ("id")
@@ -155,6 +157,7 @@ CREATE TABLE "teams" (
     "invitationCode" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "migrationId" TEXT,
 
     CONSTRAINT "teams_pkey" PRIMARY KEY ("id")
 );
@@ -188,6 +191,7 @@ CREATE TABLE "proposals" (
     "invitationCode" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "migrationId" TEXT,
 
     CONSTRAINT "proposals_pkey" PRIMARY KEY ("id")
 );
@@ -199,7 +203,8 @@ CREATE TABLE "surveys" (
     "eventId" TEXT NOT NULL,
     "answers" JSONB NOT NULL DEFAULT '{}',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "migrationId" TEXT
 );
 
 -- CreateTable
@@ -211,6 +216,7 @@ CREATE TABLE "reviews" (
     "note" INTEGER,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "migrationId" TEXT,
 
     CONSTRAINT "reviews_pkey" PRIMARY KEY ("id")
 );
@@ -224,8 +230,52 @@ CREATE TABLE "comments" (
     "channel" "CommentChannel" NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "migrationId" TEXT,
 
     CONSTRAINT "comments_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "schedules" (
+    "id" TEXT NOT NULL,
+    "eventId" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "timezone" TEXT NOT NULL,
+    "start" TIMESTAMP(3) NOT NULL,
+    "end" TIMESTAMP(3) NOT NULL,
+    "displayStartMinutes" INTEGER NOT NULL,
+    "displayEndMinutes" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "schedules_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "schedule_tracks" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "scheduleId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "schedule_tracks_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "schedule_sessions" (
+    "id" TEXT NOT NULL,
+    "name" TEXT,
+    "color" TEXT NOT NULL,
+    "start" TIMESTAMP(3) NOT NULL,
+    "end" TIMESTAMP(3) NOT NULL,
+    "scheduleId" TEXT NOT NULL,
+    "trackId" TEXT NOT NULL,
+    "proposalId" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "schedule_sessions_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -346,13 +396,28 @@ ALTER TABLE "surveys" ADD CONSTRAINT "surveys_eventId_fkey" FOREIGN KEY ("eventI
 ALTER TABLE "reviews" ADD CONSTRAINT "reviews_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "reviews" ADD CONSTRAINT "reviews_proposalId_fkey" FOREIGN KEY ("proposalId") REFERENCES "proposals"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "reviews" ADD CONSTRAINT "reviews_proposalId_fkey" FOREIGN KEY ("proposalId") REFERENCES "proposals"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "comments" ADD CONSTRAINT "comments_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "comments" ADD CONSTRAINT "comments_proposalId_fkey" FOREIGN KEY ("proposalId") REFERENCES "proposals"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "comments" ADD CONSTRAINT "comments_proposalId_fkey" FOREIGN KEY ("proposalId") REFERENCES "proposals"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "schedules" ADD CONSTRAINT "schedules_eventId_fkey" FOREIGN KEY ("eventId") REFERENCES "events"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "schedule_tracks" ADD CONSTRAINT "schedule_tracks_scheduleId_fkey" FOREIGN KEY ("scheduleId") REFERENCES "schedules"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "schedule_sessions" ADD CONSTRAINT "schedule_sessions_scheduleId_fkey" FOREIGN KEY ("scheduleId") REFERENCES "schedules"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "schedule_sessions" ADD CONSTRAINT "schedule_sessions_trackId_fkey" FOREIGN KEY ("trackId") REFERENCES "schedule_tracks"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "schedule_sessions" ADD CONSTRAINT "schedule_sessions_proposalId_fkey" FOREIGN KEY ("proposalId") REFERENCES "proposals"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_speakers_talks" ADD CONSTRAINT "_speakers_talks_A_fkey" FOREIGN KEY ("A") REFERENCES "talks"("id") ON DELETE CASCADE ON UPDATE CASCADE;
