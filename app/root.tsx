@@ -18,13 +18,17 @@ import { Toaster } from './libs/toasts/toaster.tsx';
 import { GeneralErrorBoundary } from './routes/__components/error-boundary.tsx';
 import { GlobalLoading } from './routes/__components/global-loading.tsx';
 
-export const meta: MetaFunction<typeof loader> = () => {
-  return [
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
+  const metatags = [
     { charset: 'utf-8' },
     { title: 'Conference Hall' },
     { name: 'viewport', content: 'width=device-width,initial-scale=1' },
-    { name: 'robots', content: 'noindex' },
   ];
+
+  const isSeoEnabled = data?.env?.SEO_ENABLED;
+  if (!isSeoEnabled) metatags.push({ name: 'robots', content: 'noindex' });
+
+  return metatags;
 };
 
 export const links: LinksFunction = () => {
