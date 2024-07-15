@@ -1,13 +1,15 @@
 import slugify from '@sindresorhus/slugify';
+import type { ReactNode } from 'react';
 
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Subtitle, Text } from '~/design-system/typography.tsx';
 
 import { ProgressCircle } from '../charts/progress-circle.tsx';
+import { Divider } from '../divider.tsx';
 
-type Props = { label: string; value?: number; max?: number };
+type Props = { label: string; value?: number; max?: number; children?: ReactNode };
 
-export function ProgressCard({ label, value = 0, max = 100 }: Props) {
+export function ProgressCard({ label, value = 0, max = 100, children }: Props) {
   const id = slugify(label);
   const safeValue = Math.min(max, Math.max(value, 0));
   const percentage = max ? (safeValue / max) * 100 : safeValue;
@@ -25,6 +27,13 @@ export function ProgressCard({ label, value = 0, max = 100 }: Props) {
           </div>
         </div>
       </div>
+
+      {children && (
+        <>
+          <Divider />
+          <div className="flex flex-row items-center justify-end py-3 px-4">{children}</div>
+        </>
+      )}
     </Card>
   );
 }

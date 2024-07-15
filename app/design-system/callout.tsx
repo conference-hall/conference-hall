@@ -45,7 +45,7 @@ const calloutVariants = cva('flex flex-col overflow-hidden rounded-md p-4 text-s
 });
 
 interface CalloutProps extends React.ComponentPropsWithoutRef<'div'>, VariantProps<typeof calloutVariants> {
-  title: string;
+  title?: string;
   icon?: React.ElementType;
 }
 
@@ -53,11 +53,13 @@ const Callout = React.forwardRef<HTMLDivElement, CalloutProps>(
   ({ title, icon: Icon, className, variant, children, ...props }: CalloutProps, forwardedRef) => {
     return (
       <div ref={forwardedRef} className={cx(calloutVariants({ variant }), className)} {...props}>
-        <div className={cx('flex items-start')}>
-          {Icon ? <Icon className={cx('mr-1.5 h-5 w-5 shrink-0')} aria-hidden="true" /> : null}
-          <span className={cx('font-semibold')}>{title}</span>
-        </div>
-        <div className={cx('overflow-y-auto', children ? 'mt-2' : '')}>{children}</div>
+        {title ? (
+          <div className="flex items-start">
+            {Icon ? <Icon className={cx('mr-1.5 h-5 w-5 shrink-0')} aria-hidden="true" /> : null}
+            <span className={cx('font-semibold')}>{title}</span>
+          </div>
+        ) : null}
+        <div className={cx('overflow-y-auto', children && title ? 'mt-2' : '')}>{children}</div>
       </div>
     );
   },

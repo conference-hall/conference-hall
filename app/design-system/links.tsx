@@ -7,7 +7,7 @@ import React from 'react';
 import type { TypographyVariantProps } from './typography.tsx';
 import { typography } from './typography.tsx';
 
-const link = cva('inline-flex items-center hover:underline', {
+export const link = cva('inline-flex items-center hover:underline', {
   variants: {
     variant: {
       primary: 'text-indigo-600',

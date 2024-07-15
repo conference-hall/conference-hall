@@ -36,7 +36,9 @@ type CardProps = {
 } & HTMLAttributes<HTMLElement>;
 
 export function Card({ as: Tag = 'div', rounded = 'lg', p = 0, variant = 'light', className, ...rest }: CardProps) {
-  return <Tag className={cx(BACKGROUND[variant], ROUNDED[rounded], PADDING[p], className)} {...rest} />;
+  return (
+    <Tag className={cx('flex flex-col', BACKGROUND[variant], ROUNDED[rounded], PADDING[p], className)} {...rest} />
+  );
 }
 
 // <CardLink /> component
@@ -69,8 +71,10 @@ Card.Title = Title;
 
 // <Card.Content /> component
 
-function Content({ children }: { children: React.ReactNode }) {
-  return <div className="flex flex-col gap-4 p-4 lg:gap-6 lg:p-8">{children}</div>;
+function Content({ children, className }: { children: React.ReactNode; className?: string }) {
+  return (
+    <div className={cx('p-4 lg:p-8', { 'flex grow flex-col gap-4 lg:gap-6': !className }, className)}>{children}</div>
+  );
 }
 
 Card.Content = Content;
