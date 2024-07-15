@@ -22,7 +22,9 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
   invariant(params.team, 'Invalid team slug');
+
   const results = Publication.for(userId, params.team, params.event);
+
   return json(await results.statistics());
 };
 
@@ -49,7 +51,26 @@ export default function PublicationRoute() {
 
   return (
     <Page className="flex flex-col">
-      <H1 srOnly>Deliberation</H1>
+      <H1 srOnly>Publication</H1>
+
+      <section className="space-y-2">
+        <div className="flex flex-col gap-4 lg:flex-row lg:gap-8">
+          <PublicationCard
+            id="publish-accepted"
+            type="ACCEPTED"
+            title="Publish accepted proposals"
+            subtitle="Announce results to speakers for accepted proposals."
+            statistics={statistics.accepted}
+          />
+          <PublicationCard
+            id="publish-rejected"
+            title="Publish rejected proposals"
+            subtitle="Announce results to speakers for rejected proposals."
+            statistics={statistics.rejected}
+            type="REJECTED"
+          />
+        </div>
+      </section>
 
       <section className="space-y-2">
         <H2>Deliberation</H2>
@@ -89,26 +110,6 @@ export default function PublicationRoute() {
             />
           </dl>
         </Card>
-      </section>
-
-      <section className="space-y-2">
-        <H2>Publication</H2>
-        <div className="flex flex-col gap-4 lg:flex-row lg:gap-8">
-          <PublicationCard
-            id="publish-accepted"
-            type="ACCEPTED"
-            title="Publish accepted proposals"
-            subtitle="Announce results to speakers for accepted proposals."
-            statistics={statistics.accepted}
-          />
-          <PublicationCard
-            id="publish-rejected"
-            title="Publish rejected proposals"
-            subtitle="Announce results to speakers for rejected proposals."
-            statistics={statistics.rejected}
-            type="REJECTED"
-          />
-        </div>
       </section>
 
       <section className="space-y-2">

@@ -1,7 +1,7 @@
 import { CheckIcon } from '@heroicons/react/20/solid';
 
 import { Card } from '~/design-system/layouts/card.tsx';
-import { Text } from '~/design-system/typography.tsx';
+import { H2, Text } from '~/design-system/typography.tsx';
 
 import { PublicationButton } from './publication-confirm-modal.tsx';
 import { Statistic } from './statistic.tsx';
@@ -17,7 +17,7 @@ type Props = {
 export function PublicationCard({ id, title, subtitle, statistics, type }: Props) {
   return (
     <Card data-testid={id} className="basis-1/2 px-4 py-5 sm:p-6 space-y-2">
-      <h3 className="text-base font-semibold leading-6 text-gray-900">{title}</h3>
+      <H2>{title}</H2>
 
       <div className="flex gap-4">
         <Text variant="secondary">
