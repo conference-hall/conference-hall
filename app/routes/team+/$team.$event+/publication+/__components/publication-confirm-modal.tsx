@@ -1,11 +1,14 @@
+import { CheckIcon } from '@heroicons/react/20/solid';
 import { Form } from '@remix-run/react';
+import { cx } from 'class-variance-authority';
 import { useState } from 'react';
 
 import { Button } from '~/design-system/buttons.tsx';
+import { StatisticCard } from '~/design-system/dashboard/statistic-card.tsx';
 import { Modal } from '~/design-system/dialogs/modals.tsx';
 import { ToggleGroup } from '~/design-system/forms/toggles.tsx';
-
-import { Statistic } from './statistic.tsx';
+import { link } from '~/design-system/links.tsx';
+import { Text } from '~/design-system/typography.tsx';
 
 type PublicationProps = {
   type: 'ACCEPTED' | 'REJECTED';
@@ -15,11 +18,24 @@ type PublicationProps = {
 export function PublicationButton({ type, statistics }: PublicationProps) {
   const [open, setOpen] = useState(false);
 
+  if (statistics.published === 0 && statistics.notPublished === 0) {
+    return <Text weight="medium">Nothing to publish yet</Text>;
+  }
+
+  if (statistics.notPublished === 0) {
+    return (
+      <div className="flex items-center">
+        <CheckIcon className="h-5 w-5 mr-1 text-green-600" aria-hidden="true" />
+        <Text weight="medium">Results published</Text>
+      </div>
+    );
+  }
+
   return (
     <>
-      <Button onClick={() => setOpen(true)} className="font-medium">
-        Publish results &rarr;
-      </Button>
+      <button onClick={() => setOpen(true)} className={cx(link(), 'text-sm font-medium')}>
+        Publish {type === 'ACCEPTED' ? '"Accepted"' : '"Rejected"'} &rarr;
+      </button>
 
       <PublicationConfirmModal type={type} statistics={statistics} open={open} onClose={() => setOpen(false)} />
     </>
@@ -37,20 +53,7 @@ function PublicationConfirmModal({ type, statistics, open, onClose }: ModalProps
   return (
     <Modal title={title} open={open} onClose={onClose}>
       <Modal.Content className="pt-6 space-y-4">
-        <dl className="flex items-center divide-x p-2 border border-gray-300 rounded">
-          <Statistic
-            name="total-annouce-published"
-            label="Already published"
-            className="basis-1/2"
-            value={statistics?.published}
-          />
-          <Statistic
-            name="total-annouce-to-publish"
-            label="To publish"
-            className="basis-1/2"
-            value={statistics?.notPublished}
-          />
-        </dl>
+        <StatisticCard label="Results to publish" stat={`${statistics.notPublished}`} />
         <Form id="result-form" method="POST" onSubmit={onClose}>
           <ToggleGroup
             name="sendEmails"

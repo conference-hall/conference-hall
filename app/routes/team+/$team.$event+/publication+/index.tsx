@@ -1,31 +1,33 @@
 import { parseWithZod } from '@conform-to/zod';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { Link, useLoaderData } from '@remix-run/react';
+import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { Publication } from '~/.server/publications/publication.ts';
 import { PublishResultFormSchema } from '~/.server/publications/publication.types.ts';
+import { Callout } from '~/design-system/callout.tsx';
+import DonutCard from '~/design-system/dashboard/donut-card.tsx';
+import { ProgressCard } from '~/design-system/dashboard/progress-card.tsx';
+import { StatisticCard } from '~/design-system/dashboard/statistic-card.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
+import { Link } from '~/design-system/links.tsx';
 import { H1, H2, Subtitle } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { BadRequestError } from '~/libs/errors.server.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-import { useEvent } from '~/routes/$event+/__components/use-event.tsx';
 
-import { useTeam } from '../../__components/use-team.tsx';
-import { PublicationCard } from './__components/publication-card.tsx';
-import { Statistic, StatisticLink } from './__components/statistic.tsx';
+import { PublicationButton } from './__components/publication-confirm-modal.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
   invariant(params.team, 'Invalid team slug');
 
-  const results = Publication.for(userId, params.team, params.event);
+  const statistics = await Publication.for(userId, params.team, params.event).statistics();
 
-  return json(await results.statistics());
+  return json(statistics);
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -45,101 +47,106 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
 export default function PublicationRoute() {
   const statistics = useLoaderData<typeof loader>();
-  const { team } = useTeam();
-  const { event } = useEvent();
-  const reviewsPath = `/team/${team.slug}/${event.slug}/reviews`;
 
   return (
     <Page className="flex flex-col">
       <H1 srOnly>Publication</H1>
 
-      <section className="space-y-2">
-        <div className="flex flex-col gap-4 lg:flex-row lg:gap-8">
-          <PublicationCard
-            id="publish-accepted"
-            type="ACCEPTED"
-            title="Publish accepted proposals"
-            subtitle="Announce results to speakers for accepted proposals."
-            statistics={statistics.accepted}
-          />
-          <PublicationCard
-            id="publish-rejected"
-            title="Publish rejected proposals"
-            subtitle="Announce results to speakers for rejected proposals."
-            statistics={statistics.rejected}
-            type="REJECTED"
-          />
-        </div>
-      </section>
+      <Card as="section">
+        <Card.Title>
+          <H2>Publish results</H2>
+          <Subtitle>Announce results and send emails to speakers for accepted or rejected proposals.</Subtitle>
+        </Card.Title>
 
-      <section className="space-y-2">
-        <H2>Deliberation</H2>
-        <Subtitle>
-          To deliberate, open the{' '}
-          <Link to="/" className="underline">
-            Proposals review page
-          </Link>
-          , select and mark proposals as accepted or rejected. You can also change the deliberation status individually
-          on a proposal page.
-        </Subtitle>
-        <Card className="p-4">
-          <dl className="flex flex-col md:flex-row md:justify-around text-center md:divide-x">
-            <StatisticLink
-              name="total-proposals"
-              label="Total proposals"
-              value={statistics.deliberation.total}
-              to={reviewsPath}
-            />
-            <StatisticLink
-              name="total-accepted"
-              label="Accepted proposals"
-              value={statistics.deliberation.accepted}
-              to={{ pathname: reviewsPath, search: 'status=accepted' }}
-            />
-            <StatisticLink
-              name="total-rejected"
-              label="Rejected proposals"
-              value={statistics.deliberation.rejected}
-              to={{ pathname: reviewsPath, search: 'status=rejected' }}
-            />
-            <StatisticLink
-              name="total-pending"
-              label="Pending proposals"
-              value={statistics.deliberation.pending}
-              to={{ pathname: reviewsPath, search: 'status=pending' }}
-            />
-          </dl>
-        </Card>
-      </section>
+        <Card.Content className="grid grid-cols-1 gap-4 lg:gap-6 lg:grid-cols-3">
+          <StatisticCard
+            label="Total results published"
+            stat={`${statistics.accepted.published + statistics.rejected.published}`}
+          >
+            <Link to="../reviews" relative="path" size="s" weight="medium">
+              See all proposals &rarr;
+            </Link>
+          </StatisticCard>
+          <ProgressCard
+            label="Accepted published"
+            value={statistics.accepted.published}
+            max={statistics.deliberation.accepted}
+          >
+            <PublicationButton type="ACCEPTED" statistics={statistics.accepted} />
+          </ProgressCard>
+          <ProgressCard
+            label="Rejected published"
+            value={statistics.rejected.published}
+            max={statistics.deliberation.rejected}
+          >
+            <PublicationButton type="REJECTED" statistics={statistics.rejected} />
+          </ProgressCard>
+        </Card.Content>
+      </Card>
 
-      <section className="space-y-2">
-        <H2>Confirmation</H2>
-        <Subtitle>
-          Some insights about speakers confirmations. Click on a metric card to see the corresponding proposals.
-        </Subtitle>
-        <Card className="p-4">
-          <dl className="flex flex-col md:flex-row md:justify-around text-center md:divide-x">
-            <Statistic name="total-confirmations" label="Total published" value={statistics.accepted.published} />
-            <StatisticLink
-              name="total-no-response"
-              label="Waiting for confirmation"
-              value={statistics.confirmations.pending}
-              to={{ pathname: reviewsPath, search: 'status=not-answered' }}
-            />
-            <StatisticLink
-              name="total-confirmed"
-              label="Confirmed by speakers"
-              value={statistics.confirmations.confirmed}
-              to={{ pathname: reviewsPath, search: 'status=confirmed' }}
-            />
-            <StatisticLink
-              name="total-declined"
-              label="Declined by speakers"
-              value={statistics.confirmations.declined}
-              to={{ pathname: reviewsPath, search: 'status=declined' }}
-            />
-          </dl>
-        </Card>
+      <section className="flex flex-col gap-4 lg:flex-row lg:gap-8">
+        <DonutCard
+          title="Deliberation results"
+          subtitle="Proposals accepted or rejected by organizers"
+          donutLabel={`${statistics.deliberation.total}`}
+          categoryLabel="Status"
+          amountLabel="Proposals"
+          noDataHint="You need to mark proposals as accepted or rejected."
+          data={[
+            {
+              name: 'Accepted proposals',
+              amount: statistics.deliberation.accepted,
+              colorChart: 'cyan',
+              colorLegend: 'bg-cyan-500',
+            },
+            {
+              name: 'Rejected proposals',
+              amount: statistics.deliberation.rejected,
+              colorChart: 'pink',
+              colorLegend: 'bg-pink-500',
+            },
+            {
+              name: 'Pending proposals',
+              amount: statistics.deliberation.pending,
+              colorChart: 'gray',
+              colorLegend: 'bg-gray-500',
+            },
+          ]}
+        >
+          <Callout>
+            To deliberate, open the Proposals page, select and mark proposals as accepted or rejected. You can also
+            change the deliberation status individually on a proposal page.
+          </Callout>
+        </DonutCard>
+
+        <DonutCard
+          title="Speaker confirmations"
+          subtitle="Proposals confirmed or declined by speakers."
+          donutLabel={`${statistics.accepted.published}`}
+          categoryLabel="Status"
+          amountLabel="Proposals"
+          noDataHint="You need to publish results for accepted proposals."
+          data={[
+            {
+              name: 'Confirmed by speakers',
+              amount: statistics.confirmations.confirmed,
+              colorChart: 'cyan',
+              colorLegend: 'bg-cyan-500',
+            },
+            {
+              name: 'Declined by speakers',
+              amount: statistics.confirmations.declined,
+              colorChart: 'pink',
+              colorLegend: 'bg-pink-500',
+            },
+            {
+              name: 'Waiting for confirmation',
+              amount: statistics.confirmations.pending,
+              colorChart: 'gray',
+              colorLegend: 'bg-gray-500',
+            },
+          ]}
+        />
       </section>
     </Page>
   );

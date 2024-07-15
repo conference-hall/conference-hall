@@ -1,14 +1,13 @@
-import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import slugify from '@sindresorhus/slugify';
+import type { ReactNode } from 'react';
 
 import { Divider } from '~/design-system/divider.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
-import { Link } from '~/design-system/links.tsx';
 import { Text } from '~/design-system/typography.tsx';
 
-type Props = { label: string; stat: string; to?: string };
+type Props = { label: string; stat: string; children?: ReactNode };
 
-export function StatisticCard({ label, stat, to }: Props) {
+export function StatisticCard({ label, stat, children }: Props) {
   const id = slugify(label);
 
   return (
@@ -20,15 +19,10 @@ export function StatisticCard({ label, stat, to }: Props) {
         <p className="text-3xl font-semibold mt-2">{stat}</p>
       </div>
 
-      {to && (
+      {children && (
         <>
           <Divider />
-
-          <div className="flex flex-row items-center justify-end p-3">
-            <Link to="/" iconRight={ArrowRightIcon} weight="medium">
-              View more
-            </Link>
-          </div>
+          <div className="flex flex-row items-center justify-end py-3 px-4">{children}</div>
         </>
       )}
     </Card>
