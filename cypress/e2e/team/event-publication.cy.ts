@@ -13,27 +13,32 @@ describe('Publication page', () => {
     cy.login('Clark Kent');
     page.visit('team-1', 'conference-1');
 
-    page.totalProposals().should('contain', '5');
-    page.totalAccepted().should('contain', '2');
-    page.totalRejected().should('contain', '2');
-    page.totalNotDeliberated().should('contain', '1');
+    page.dashboardCard('Total results published').within(() => {
+      cy.assertText('2');
+      page.cardActionLink(/See all proposals/).should('have.attr', 'href', '/team/team-1/conference-1/reviews');
+    });
 
-    page.totalConfirmations().should('contain', '1');
-    page.totalNoResponse().should('contain', '1');
-    page.totalConfirmed().should('contain', '0');
-    page.totalDeclined().should('contain', '0');
+    page.dashboardCard('Accepted published').within(() => {
+      cy.assertText('1 / 2');
+    });
 
-    const modalAccepted = page.publishAccepted();
-    modalAccepted.confirm();
-    page.isPageVisible();
-    page.publishAcceptedCard().should('contain.text', 'All results published');
-    page.totalConfirmations().should('contain', '2');
-    page.totalNoResponse().should('contain', '2');
+    const accepted = page.publish(/Publish "Accepted"/);
+    page.dashboardCard('Results to publish').within(() => {
+      cy.assertText('1');
+    });
+    accepted.confirm();
+    page.dashboardCard('Accepted published').within(() => {
+      cy.assertText('2 / 2');
+    });
 
-    const modalRejected = page.publishRejected();
-    modalRejected.confirm();
-    page.isPageVisible();
-    page.publishRejectedCard().should('contain.text', 'All results published');
+    const rejected = page.publish(/Publish "Rejected"/);
+    page.dashboardCard('Results to publish').within(() => {
+      cy.assertText('1');
+    });
+    rejected.confirm();
+    page.dashboardCard('Rejected published').within(() => {
+      cy.assertText('2 / 2');
+    });
   });
 
   describe('as a team member', () => {

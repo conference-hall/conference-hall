@@ -89,7 +89,7 @@ export default function PublicationRoute() {
           title="Deliberation results"
           subtitle="Proposals accepted or rejected by organizers"
           donutLabel={`${statistics.deliberation.total}`}
-          categoryLabel="Status"
+          categoryLabel="Deliberation status"
           amountLabel="Proposals"
           noDataHint="You need to mark proposals as accepted or rejected."
           data={[
@@ -98,18 +98,21 @@ export default function PublicationRoute() {
               amount: statistics.deliberation.accepted,
               colorChart: 'cyan',
               colorLegend: 'bg-cyan-500',
+              to: '../reviews?status=accepted',
             },
             {
               name: 'Rejected proposals',
               amount: statistics.deliberation.rejected,
               colorChart: 'pink',
               colorLegend: 'bg-pink-500',
+              to: '../reviews?status=rejected',
             },
             {
               name: 'Pending proposals',
               amount: statistics.deliberation.pending,
               colorChart: 'gray',
               colorLegend: 'bg-gray-500',
+              to: '../reviews?status=pending',
             },
           ]}
         >
@@ -123,7 +126,7 @@ export default function PublicationRoute() {
           title="Speaker confirmations"
           subtitle="Proposals confirmed or declined by speakers."
           donutLabel={`${statistics.accepted.published}`}
-          categoryLabel="Status"
+          categoryLabel="Confirmation status"
           amountLabel="Proposals"
           noDataHint="You need to publish results for accepted proposals."
           data={[
@@ -132,18 +135,21 @@ export default function PublicationRoute() {
               amount: statistics.confirmations.confirmed,
               colorChart: 'cyan',
               colorLegend: 'bg-cyan-500',
+              to: '../reviews?status=confirmed',
             },
             {
               name: 'Declined by speakers',
               amount: statistics.confirmations.declined,
               colorChart: 'pink',
               colorLegend: 'bg-pink-500',
+              to: '../reviews?status=declined',
             },
             {
               name: 'Waiting for confirmation',
               amount: statistics.confirmations.pending,
               colorChart: 'gray',
               colorLegend: 'bg-gray-500',
+              to: '../reviews?status=not-answered',
             },
           ]}
         />

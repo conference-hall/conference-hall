@@ -1,3 +1,4 @@
+import { Link } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
 
@@ -12,6 +13,7 @@ type Data = {
   amount: number;
   colorChart: AvailableChartColorsKeys;
   colorLegend: string;
+  to?: string;
 };
 
 type Props = {
@@ -68,7 +70,13 @@ export default function DonutCard({
                     <li key={item.name} className="relative flex items-center justify-between py-2">
                       <div className="flex items-center space-x-2.5 truncate">
                         <span className={cx(item.colorLegend, 'size-2.5 shrink-0 rounded-sm')} aria-hidden={true} />
-                        <span className="truncate">{item.name}</span>
+                        {item.to ? (
+                          <Link to={item.to} className="underline-offset-2 hover:underline truncate">
+                            {item.name}
+                          </Link>
+                        ) : (
+                          <span className="truncate">{item.name}</span>
+                        )}
                       </div>
                       <p className="flex items-center space-x-2">
                         <span className="font-medium tabular-nums text-gray-900">{item.amount}</span>

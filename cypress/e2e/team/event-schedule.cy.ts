@@ -9,7 +9,7 @@ describe('Schedule page', () => {
 
   const page = new ScheduleNewPage();
 
-  it.only('manages a schedule', () => {
+  it('manages a schedule', () => {
     cy.login('Clark Kent');
     page.visit('team-1', 'conference-1');
 
