@@ -1,3 +1,5 @@
+import { cx } from 'class-variance-authority';
+
 import { BG_COLOR } from '~/design-system/colors.ts';
 
 import { LoginButton } from './dropdowns/login-button.tsx';
@@ -16,6 +18,8 @@ type Props = {
     teams: Array<{ slug: string; name: string }>;
   } | null;
   withSearch?: boolean;
+  variant?: 'primary' | 'secondary';
+  className?: string;
 };
 
 export type Notification = {
@@ -24,13 +28,13 @@ export type Notification = {
   event: { slug: string; name: string };
 };
 
-export function Navbar({ user, withSearch }: Props) {
+export function Navbar({ user, withSearch, variant = 'primary', className }: Props) {
   return (
-    <div className={BG_COLOR}>
+    <div className={cx(BG_COLOR, className)}>
       <div className="flex h-16 items-center justify-between px-4 lg:px-8">
         <div className="flex w-full items-center">
           {/* Logo */}
-          <Logo displayName={!withSearch} />
+          <Logo displayName={!withSearch} variant={variant} />
 
           {/* Search */}
           {withSearch && <SearchEventsInput />}
