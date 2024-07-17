@@ -20,7 +20,7 @@ import { createSession, getSessionUserId } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { AuthProviderButton } from '~/routes/__components/auth-provider-button.tsx';
 
-import { Footer } from '../__components/footer.tsx';
+import { FullscreenPage } from '../__components/fullscreen-page.tsx';
 import { useHydrated } from '../__components/utils/use-hydrated.ts';
 
 export const meta = mergeMeta(() => [{ title: 'Login | Conference Hall' }]);
@@ -82,52 +82,49 @@ export default function Login() {
   );
 
   return (
-    <>
-      <div className="flex min-h-full flex-1 flex-col justify-center py-12 sm:px-6 lg:px-8">
-        <div className="flex flex-col items-center sm:mx-auto sm:w-full sm:max-w-md">
-          <ConferenceHallLogo width="48px" height="48px" aria-hidden className="fill-slate-300" />
-          <h2 className="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-            Sign in to your account
-          </h2>
-        </div>
+    <FullscreenPage>
+      <div className="flex flex-col items-center sm:mx-auto sm:w-full sm:max-w-md">
+        <ConferenceHallLogo width="48px" height="48px" aria-hidden className="fill-slate-300" />
+        <h2 className="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+          Sign in to your account
+        </h2>
+      </div>
 
-        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
-          {loading && !error ? (
-            <div className="mt-2 flex flex-col items-center gap-12">
-              <LoadingIcon className="h-10 w-10" />
-              <Link to="/auth/login">Go back to login</Link>
-            </div>
-          ) : (
-            <>
-              <Card p={16}>
-                <div>
-                  {error && (
-                    <Callout title="Error" variant="error" className="mb-8">
-                      {error}
-                    </Callout>
-                  )}
+      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
+        {loading && !error ? (
+          <div className="mt-2 flex flex-col items-center gap-12">
+            <LoadingIcon className="h-10 w-10" />
+            <Link to="/auth/login">Go back to login</Link>
+          </div>
+        ) : (
+          <>
+            <Card p={16}>
+              <div>
+                {error && (
+                  <Callout title="Error" variant="error" className="mb-8">
+                    {error}
+                  </Callout>
+                )}
 
-                  <div className="relative">
-                    <div className="absolute inset-0 flex items-center" aria-hidden="true">
-                      <div className="w-full border-t border-gray-200" />
-                    </div>
-                    <div className="relative flex justify-center text-sm font-medium leading-6">
-                      <span className="bg-white px-6 text-gray-900">Continue with</span>
-                    </div>
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center" aria-hidden="true">
+                    <div className="w-full border-t border-gray-200" />
                   </div>
-
-                  <div className="mt-8 flex flex-col gap-4">
-                    <AuthProviderButton provider="google" onClick={signIn} />
-                    <AuthProviderButton provider="twitter" onClick={signIn} />
-                    <AuthProviderButton provider="github" onClick={signIn} />
+                  <div className="relative flex justify-center text-sm font-medium leading-6">
+                    <span className="bg-white px-6 text-gray-900">Continue with</span>
                   </div>
                 </div>
-              </Card>
-              <Footer />
-            </>
-          )}
-        </div>
+
+                <div className="mt-8 flex flex-col gap-4">
+                  <AuthProviderButton provider="google" onClick={signIn} />
+                  <AuthProviderButton provider="twitter" onClick={signIn} />
+                  <AuthProviderButton provider="github" onClick={signIn} />
+                </div>
+              </div>
+            </Card>
+          </>
+        )}
       </div>
-    </>
+    </FullscreenPage>
   );
 }
