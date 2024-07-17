@@ -12,7 +12,7 @@ class TeamNewPage extends BasePage {
   }
 
   isPageVisible() {
-    cy.findByRole('heading', { name: 'Create a new team' }).should('exist');
+    cy.findByRole('heading', { name: 'Create a new team.' }).should('exist');
   }
 
   fillForm(data: TeamNewType) {
@@ -21,7 +21,7 @@ class TeamNewPage extends BasePage {
   }
 
   newTeam() {
-    return cy.findByRole('button', { name: 'New team' });
+    return cy.findByRole('button', { name: 'Create team' });
   }
 
   error(label: string) {

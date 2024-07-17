@@ -8,6 +8,7 @@ describe('Team page access and redirections', () => {
   it('displays request access page', () => {
     cy.login('Bruce Wayne');
     cy.visit('team/request');
-    cy.assertText('Become event organizer');
+    cy.assertText('Become event organizer.');
+    // TODO: Add more tests
   });
 });

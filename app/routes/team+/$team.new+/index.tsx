@@ -23,7 +23,7 @@ export default function NewEventTypeRoute() {
 
   return (
     <>
-      <FullscreenPage.Title title="Select your new event type." subtitle="Is it a conference or a meetup?" />
+      <FullscreenPage.Title title="Select your event type." subtitle="Is it a conference or a meetup?" />
 
       <Card>
         <Card.Content>
