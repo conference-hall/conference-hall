@@ -1,15 +1,19 @@
+import { ArrowRightIcon } from '@heroicons/react/20/solid';
+import { KeyIcon } from '@heroicons/react/24/outline';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
 
 import { TeamBetaAccess } from '~/.server/team/team-beta-access.ts';
-import { Button } from '~/design-system/buttons.tsx';
+import { Button, button } from '~/design-system/buttons.tsx';
+import { DividerWithLabel } from '~/design-system/divider.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
-import { Page } from '~/design-system/layouts/page.tsx';
-import { ExternalLink } from '~/design-system/links.tsx';
+import { Card } from '~/design-system/layouts/card.tsx';
 import { H1, Subtitle } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
+
+import { FullscreenPage } from '../__components/fullscreen-page.tsx';
 
 export const meta = mergeMeta(() => [{ title: 'Request access | Conference Hall' }]);
 
@@ -34,25 +38,35 @@ export default function RequestAccessRoute() {
   const errors = useActionData<typeof action>();
 
   return (
-    <Page className="flex justify-center">
-      <div>
-        <H1>Become event organizer</H1>
+    <FullscreenPage>
+      <div className="space-y-6">
+        <H1 size="3xl" weight="bold">
+          Become event organizer
+        </H1>
         <Subtitle>Conference Hall for event organizers is in closed-beta access, you need a key to access it.</Subtitle>
-        <Subtitle>
-          You can request a beta key by filling{' '}
-          <ExternalLink href="https://forms.gle/AnArRCSHibmG59zw7">this form.</ExternalLink>
-        </Subtitle>
-        <Form method="POST" className="mt-8 w-full space-y-4">
+      </div>
+      <Card className="p-8 md:p-12">
+        <Form method="POST" className="flex flex-col sm:flex-row gap-2">
           <Input
             name="key"
             aria-label="Beta access key"
             placeholder="Paste your beta access key here..."
+            className="grow"
             required
             error={errors?.key}
           />
-          <Button type="submit">Get access to Conference Hall</Button>
+          <Button type="submit" variant="secondary" iconRight={ArrowRightIcon}>
+            Get access
+          </Button>
         </Form>
-      </div>
-    </Page>
+
+        <DividerWithLabel label="or" className="py-8" />
+
+        <a href="https://forms.gle/AnArRCSHibmG59zw7" target="_blank" className={button()} rel="noreferrer">
+          <KeyIcon className="h-4 w-4" aria-hidden="true" />
+          Request a beta access key
+        </a>
+      </Card>
+    </FullscreenPage>
   );
 }
