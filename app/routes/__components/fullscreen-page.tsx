@@ -9,9 +9,9 @@ import type { NavbarLayout } from './navbar/navbar.tsx';
 import { Navbar } from './navbar/navbar.tsx';
 import { useUser } from './use-user.tsx';
 
-type Props = { children: ReactNode; navbar: NavbarLayout; className?: string };
+type Props = { children: ReactNode; navbar: NavbarLayout; compact?: boolean; className?: string };
 
-export function FullscreenPage({ children, navbar, className }: Props) {
+export function FullscreenPage({ children, navbar, compact, className }: Props) {
   const { user } = useUser();
 
   return (
@@ -19,8 +19,21 @@ export function FullscreenPage({ children, navbar, className }: Props) {
       <Navbar layout={navbar} user={user} variant="secondary" className="bg-transparent absolute inset-x-0 z-30" />
 
       {/* Main panel */}
-      <div className="flex flex-col space-between col-span-2 h-screen w-full pt-24 md:pt-36 px-8 md:px-16 lg:px-32">
-        <main className={cx('space-y-8 md:space-y-16 grow max-w-4xl overflow-auto', className)}>{children}</main>
+      <div
+        className={cx('flex flex-col space-between col-span-2 h-screen w-full px-8 md:px-16 lg:px-32', {
+          'pt-24 md:pt-36': !compact,
+          'pt-24': compact,
+        })}
+      >
+        <main
+          className={cx(
+            'grow max-w-4xl overflow-auto',
+            { 'space-y-8 md:space-y-16': !compact, 'space-y-8': compact },
+            className,
+          )}
+        >
+          {children}
+        </main>
 
         <Footer />
       </div>

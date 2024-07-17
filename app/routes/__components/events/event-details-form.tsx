@@ -15,6 +15,7 @@ type Props = {
   description: string | null;
   websiteUrl: string | null;
   contactEmail: string | null;
+  compact?: boolean;
   errors: SubmissionErrors;
 };
 
@@ -27,6 +28,7 @@ export function EventDetailsForm({
   description,
   websiteUrl,
   contactEmail,
+  compact,
   errors,
 }: Props) {
   return (
@@ -57,9 +59,18 @@ export function EventDetailsForm({
         error={errors?.description}
       />
 
-      <Input name="websiteUrl" label="Website URL" defaultValue={websiteUrl || ''} error={errors?.websiteUrl} />
+      {!compact ? (
+        <Input name="websiteUrl" label="Website URL" defaultValue={websiteUrl || ''} error={errors?.websiteUrl} />
+      ) : null}
 
-      <Input name="contactEmail" label="Contact email" defaultValue={contactEmail || ''} error={errors?.contactEmail} />
+      {!compact ? (
+        <Input
+          name="contactEmail"
+          label="Contact email"
+          defaultValue={contactEmail || ''}
+          error={errors?.contactEmail}
+        />
+      ) : null}
 
       <input type="hidden" name="timezone" value={timezone} />
     </Form>

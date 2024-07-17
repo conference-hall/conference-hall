@@ -66,6 +66,7 @@ export default function NewEventDetailsRoute() {
             websiteUrl={event.websiteUrl}
             contactEmail={event.contactEmail}
             errors={errors}
+            compact
           />
         </Card.Content>
 
