@@ -39,7 +39,7 @@ export default function RequestAccessRoute() {
   return (
     <FullscreenPage>
       <FullscreenPage.Title
-        title="Become event organizer"
+        title="Become event organizer."
         subtitle="Conference Hall for event organizers is in closed-beta access, you need a key to access it."
       />
 

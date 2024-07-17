@@ -1,6 +1,6 @@
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { Outlet, useLoaderData, useRouteLoaderData } from '@remix-run/react';
+import { Outlet, useLoaderData, useMatch, useRouteLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { UserTeam } from '~/.server/team/user-team.ts';
@@ -30,8 +30,9 @@ export default function TeamLayout() {
   const event = useRouteLoaderData<typeof routeEventLoader>('routes/team+/$team.$event+/_layout');
 
   const { isFullscreen } = useScheduleFullscreen();
+  const isEventCreationRoute = Boolean(useMatch('/team/:team/new/*'));
 
-  if (isFullscreen) return <Outlet context={{ user, team }} />;
+  if (isFullscreen || isEventCreationRoute) return <Outlet context={{ user, team }} />;
 
   return (
     <>

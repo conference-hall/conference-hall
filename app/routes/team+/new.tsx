@@ -37,7 +37,7 @@ export default function NewTeamRoute() {
   return (
     <FullscreenPage>
       <FullscreenPage.Title
-        title="Create a new team"
+        title="Create a new team."
         subtitle="Give a cool name to your team. You will be able to invite members and create your first event."
       />
 
@@ -49,7 +49,7 @@ export default function NewTeamRoute() {
         </Card.Content>
         <Card.Actions>
           <Button type="submit" className="mt-4" form="new-team-form">
-            Create new team
+            Create team
           </Button>
         </Card.Actions>
       </Card>

@@ -1,4 +1,5 @@
 import { parseWithZod } from '@conform-to/zod';
+import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData, useParams } from '@remix-run/react';
@@ -7,9 +8,8 @@ import invariant from 'tiny-invariant';
 import { EventCreateSchema, TeamEvents } from '~/.server/team/team-events.ts';
 import { Button, ButtonLink } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
-import { Page } from '~/design-system/layouts/page.tsx';
-import { H1, Subtitle } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
+import { FullscreenPage } from '~/routes/__components/fullscreen-page.tsx';
 
 import { EventForm } from '../../__components/events/event-form.tsx';
 
@@ -28,7 +28,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
   try {
     const event = await TeamEvents.for(userId, params.team).create(result.value);
-    return redirect(`/team/${params.team}/${event.slug}/settings`);
+    return redirect(`/team/${params.team}/new/${event.slug}/details`);
   } catch (SlugAlreadyExistsError) {
     return json({ slug: ['This URL already exists, please try another one.'] });
   }
@@ -39,27 +39,32 @@ export default function NewEventRoute() {
   const params = useParams();
   const type = params.type || 'CONFERENCE';
 
-  return (
-    <Page className="flex flex-col">
-      <Card>
-        <Card.Title>
-          <H1>Create a new event</H1>
-          <Subtitle>You can make it public or private.</Subtitle>
-        </Card.Title>
+  const title = type === 'CONFERENCE' ? 'Create a new conference.' : 'Create a new meetup.';
 
-        <Form method="POST">
-          <Card.Content>
+  return (
+    <>
+      <FullscreenPage.Title
+        title={title}
+        subtitle="You will able to setup the call for paper later and make the event public or private."
+      />
+
+      <Card>
+        <Card.Content>
+          <Form id="create-event-form" method="POST" className="flex grow flex-col gap-4 lg:gap-6">
             <EventForm errors={errors} />
             <input name="type" type="hidden" value={type} />
-          </Card.Content>
-          <Card.Actions>
-            <ButtonLink to=".." variant="secondary">
-              Cancel
-            </ButtonLink>
-            <Button type="submit">Create new event</Button>
-          </Card.Actions>
-        </Form>
+          </Form>
+        </Card.Content>
+
+        <Card.Actions>
+          <ButtonLink to=".." variant="secondary">
+            Go back
+          </ButtonLink>
+          <Button type="submit" form="create-event-form" iconRight={ArrowRightIcon}>
+            Continue
+          </Button>
+        </Card.Actions>
       </Card>
-    </Page>
+    </>
   );
 }

@@ -19,7 +19,7 @@ export function FullscreenPage({ children, className }: Props) {
 
       {/* Main panel */}
       <div className="flex flex-col space-between col-span-2 h-screen w-full pt-24 md:pt-36 px-8 md:px-16 lg:px-32">
-        <main className={cx('space-y-8 md:space-y-16 grow overflow-auto', className)}>{children}</main>
+        <main className={cx('space-y-8 md:space-y-16 grow max-w-4xl overflow-auto', className)}>{children}</main>
 
         <Footer />
       </div>

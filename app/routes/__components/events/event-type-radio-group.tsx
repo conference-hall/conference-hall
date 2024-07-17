@@ -1,25 +1,30 @@
 import { Description, Field, Fieldset, Label, Legend, Radio, RadioGroup } from '@headlessui/react';
 import { cx } from 'class-variance-authority';
-import { useState } from 'react';
+
+import type { EventType } from '~/types/events.types.ts';
 
 const settings = [
-  { name: 'Private', value: 'PRIVATE', description: 'This event would be available to anyone who has the link.' },
   {
-    name: 'Public',
-    value: 'PUBLIC',
-    description: 'This event will be available in the Conference Hall search and visible to anyone.',
+    name: 'Conference',
+    value: 'CONFERENCE',
+    description: 'With conference, the call for papers is open to proposals for a specific period.',
+  },
+  {
+    name: 'Meetup',
+    value: 'MEETUP',
+    description: 'With meetup, you can manually open or close the call for paper.',
   },
 ];
 
-export function EventVisibilityRadioGroup({ defaultValue = 'PRIVATE' }: { defaultValue?: 'PUBLIC' | 'PRIVATE' }) {
-  const [selected, setSelected] = useState(defaultValue);
+type Props = { selected: EventType; onSelect: (type: EventType) => void };
 
+export function EventTypeRadioGroup({ selected, onSelect }: Props) {
   return (
     <Fieldset>
-      <Legend className="text-sm font-medium text-gray-900"> Visibility </Legend>
+      <Legend className="text-sm font-medium text-gray-900">Event type</Legend>
 
-      <RadioGroup name="visibility" value={selected} onChange={setSelected}>
-        <div className="mt-2 -space-y-px rounded-md bg-white">
+      <RadioGroup name="type" value={selected} onChange={onSelect}>
+        <div className="mt-4 -space-y-px rounded-md bg-white">
           {settings.map((setting, settingIdx) => (
             <Field key={setting.name}>
               <Radio
@@ -45,7 +50,7 @@ export function EventVisibilityRadioGroup({ defaultValue = 'PRIVATE' }: { defaul
                     >
                       <span className="h-1.5 w-1.5 rounded-full bg-white" />
                     </span>
-                    <span className="ml-3 flex flex-col">
+                    <span className="ml-3 flex flex-col gap-2">
                       <Label className={cx(checked ? 'text-indigo-900' : 'text-gray-900', 'block text-sm font-medium')}>
                         {setting.name}
                       </Label>

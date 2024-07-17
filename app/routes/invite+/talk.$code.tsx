@@ -38,7 +38,7 @@ export default function InvitationRoute() {
 
   return (
     <FullscreenPage>
-      <FullscreenPage.Title title="Talk invitation" subtitle="You have been invited to be co-speaker on a talk." />
+      <FullscreenPage.Title title="Talk invitation." subtitle="You have been invited to be co-speaker on a talk." />
 
       <Card>
         <Card.Content>

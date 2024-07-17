@@ -39,7 +39,7 @@ export default function InvitationRoute() {
   return (
     <FullscreenPage>
       <FullscreenPage.Title
-        title="Talk invitation"
+        title="Talk invitation."
         subtitle={`You have been invited to be co-speaker on a talk for the ${proposal.event.slug} event.`}
       />
 
