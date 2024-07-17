@@ -11,12 +11,26 @@ export class CoSpeakerProposalInvite {
 
   async check() {
     const proposal = await db.proposal.findUnique({
-      include: { event: true },
+      include: { event: true, speakers: true },
       where: { invitationCode: this.code },
     });
     if (!proposal) throw new InvitationNotFoundError();
 
-    return proposal;
+    return {
+      id: proposal.id,
+      title: proposal.title,
+      description: proposal.abstract,
+      speakers: proposal.speakers.map((speaker) => ({ id: speaker.id, name: speaker.name, picture: speaker.picture })),
+      event: {
+        name: proposal.event.name,
+        slug: proposal.event.slug,
+        type: proposal.event.type,
+        logo: proposal.event.logo,
+        cfpState: proposal.event.cfpState,
+        cfpStart: proposal.event.cfpStart,
+        cfpEnd: proposal.event.cfpEnd,
+      },
+    };
   }
 
   async addCoSpeaker(coSpeakerId: string) {

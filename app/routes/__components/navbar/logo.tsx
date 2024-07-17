@@ -3,9 +3,9 @@ import { Link } from '@remix-run/react';
 import { ConferenceHallLogo } from '~/design-system/logo.tsx';
 import { Text } from '~/design-system/typography.tsx';
 
-type Props = { displayName?: boolean };
+type Props = { displayName?: boolean; variant?: 'primary' | 'secondary' };
 
-export function Logo({ displayName }: Props) {
+export function Logo({ displayName, variant = 'primary' }: Props) {
   return (
     <Link
       to="/"
@@ -14,7 +14,7 @@ export function Logo({ displayName }: Props) {
     >
       <ConferenceHallLogo width="24px" height="24px" aria-hidden className="fill-indigo-400" />
       {displayName && (
-        <Text as="span" weight={'bold'} variant="light" size="l" truncate>
+        <Text as="span" weight="bold" variant={variant === 'primary' ? 'light' : undefined} size="l" truncate>
           Conference Hall
         </Text>
       )}

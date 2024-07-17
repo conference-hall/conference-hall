@@ -10,7 +10,7 @@ import { ButtonLink } from '~/design-system/buttons.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { EventCard } from '~/routes/__components/events/event-card.tsx';
+import { EventCardLink } from '~/routes/__components/events/event-card.tsx';
 
 import { useTeam } from '../__components/use-team.tsx';
 import { ArchivedFilters } from './__components/archived-filter.tsx';
@@ -49,7 +49,7 @@ export default function TeamEventsRoute() {
       {hasEvent ? (
         <ul aria-label="Events list" className="grid grid-cols-1 gap-4 lg:gap-8 lg:grid-cols-2">
           {events.map((event) => (
-            <EventCard
+            <EventCardLink
               key={event.slug}
               to={`/team/${team.slug}/${event.slug}`}
               name={event.name}

@@ -38,10 +38,21 @@ describe("Team's events list", () => {
     it('can create a new conference', () => {
       team.visit('awesome-team');
       const newEventPage = team.newEvent();
+
       newEventPage.selectConference();
+      newEventPage.continueToGeneralForm();
+
+      newEventPage.isConferenceFormVisible();
       newEventPage.fillNewEventForm({ name: 'Hello world' });
-      newEventPage.createEvent();
-      eventSettings.isPageVisible();
+      newEventPage.continueToDetailsForm();
+
+      newEventPage.isDetailsFormVisible('Hello world');
+      newEventPage.continueToCfpForm();
+
+      newEventPage.isCfpFormVisible('Hello world');
+      newEventPage.finish();
+
+      eventSettings.visit('awesome-team', 'hello-world');
       cy.assertInputText('Name', 'Hello world');
       cy.assertInputText('Event URL', 'hello-world');
     });
@@ -49,10 +60,18 @@ describe("Team's events list", () => {
     it('can create a new meetup', () => {
       team.visit('awesome-team');
       const newEventPage = team.newEvent();
+
       newEventPage.selectMeetup();
+      newEventPage.continueToGeneralForm();
+
+      newEventPage.isMeetupFormVisible();
       newEventPage.fillNewEventForm({ name: 'Hello world' });
-      newEventPage.createEvent();
-      eventSettings.isPageVisible();
+      newEventPage.continueToDetailsForm();
+
+      newEventPage.isDetailsFormVisible('Hello world');
+      newEventPage.finish();
+
+      eventSettings.visit('awesome-team', 'hello-world');
       cy.assertInputText('Name', 'Hello world');
       cy.assertInputText('Event URL', 'hello-world');
     });
@@ -60,9 +79,14 @@ describe("Team's events list", () => {
     it('cannot create an event with an existing slug', () => {
       team.visit('awesome-team');
       const newEventPage = team.newEvent();
+
       newEventPage.selectConference();
+      newEventPage.continueToGeneralForm();
+
+      newEventPage.isConferenceFormVisible();
       newEventPage.fillNewEventForm({ name: 'Hello world', slug: 'event-1' });
-      newEventPage.createEvent();
+      newEventPage.continueToDetailsForm();
+
       newEventPage.error('Event URL').should('contain.text', 'This URL already exists, please try another one.');
     });
   });

@@ -49,7 +49,7 @@ export function CoSpeakers({ speakers, invitationLink, canEdit, className }: CoS
     <ul aria-label="Speakers" className={cx('flex flex-row flex-wrap gap-3', className)}>
       {speakers.map((speaker) => (
         <li key={speaker.name}>
-          <SpeakerPill speaker={speaker} canEdit={canEdit} />
+          <SpeakerPillButton speaker={speaker} canEdit={canEdit} />
         </li>
       ))}
       {canEdit && invitationLink && (
@@ -61,22 +61,15 @@ export function CoSpeakers({ speakers, invitationLink, canEdit, className }: CoS
   );
 }
 
-type SpeakerPillProps = { speaker: SpeakerProps; canEdit?: boolean };
+type SpeakerPillButtonProps = { speaker: SpeakerProps; canEdit?: boolean };
 
-export function SpeakerPill({ speaker, canEdit }: SpeakerPillProps) {
+export function SpeakerPillButton({ speaker, canEdit }: SpeakerPillButtonProps) {
   const [open, setOpen] = useState(false);
 
   return (
     <>
-      <button
-        aria-label={`View ${speaker.name} profile`}
-        onClick={() => setOpen(true)}
-        className="flex items-center gap-2 hover:bg-gray-100 p-1 pr-3 rounded-full border border-gray-200"
-      >
-        <Avatar name={speaker.name} picture={speaker.picture} size="xs" />
-        <Text weight="medium" size="xs" variant="secondary" truncate>
-          {speaker.name}
-        </Text>
+      <button aria-label={`View ${speaker.name} profile`} onClick={() => setOpen(true)}>
+        <SpeakerPill speaker={speaker} className="hover:bg-gray-100" />
       </button>
 
       <SpeakerDrawer
@@ -86,6 +79,19 @@ export function SpeakerPill({ speaker, canEdit }: SpeakerPillProps) {
         onClose={() => setOpen(false)}
       />
     </>
+  );
+}
+
+type SpeakerPillProps = { speaker: SpeakerProps; className?: string };
+
+export function SpeakerPill({ speaker, className }: SpeakerPillProps) {
+  return (
+    <span className={cx('flex items-center gap-2  p-1 pr-3 rounded-full border border-gray-200', className)}>
+      <Avatar name={speaker.name} picture={speaker.picture} size="xs" />
+      <Text weight="medium" size="xs" variant="secondary" truncate>
+        {speaker.name}
+      </Text>
+    </span>
   );
 }
 

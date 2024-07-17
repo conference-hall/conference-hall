@@ -16,7 +16,7 @@ import { Footer } from '~/routes/__components/footer.tsx';
 import { Navbar } from '~/routes/__components/navbar/navbar.tsx';
 import { useUser } from '~/routes/__components/use-user.tsx';
 
-import { EventCard } from './__components/events/event-card.tsx';
+import { EventCardLink } from './__components/events/event-card.tsx';
 import { SearchEventsFilters } from './__components/search/search-events-filters.tsx';
 import { SearchEventsInput } from './__components/search/search-events-input.tsx';
 
@@ -57,7 +57,7 @@ export default function IndexRoute() {
           <div className="flex-col items-center space-y-8">
             <ul aria-label="Search results" className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-8">
               {results.map((event) => (
-                <EventCard
+                <EventCardLink
                   key={event.slug}
                   to={talkId ? `/${event.slug}/submission/${talkId}` : `/${event.slug}`}
                   name={event.name}

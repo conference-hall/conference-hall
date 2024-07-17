@@ -44,7 +44,7 @@ export function UserMenu({ email, name, picture, teams, isOrganizer, notificatio
           onClose={handleClose}
         >
           <nav aria-label="User navigation" className="flex h-full flex-col overflow-y-auto">
-            <ul className="relative flex-1">
+            <ul className="relative flex-1 p-0.5">
               <MenuLink to="/" icon={MagnifyingGlassIcon} onClick={handleClose}>
                 Search events
               </MenuLink>

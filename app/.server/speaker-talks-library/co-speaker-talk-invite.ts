@@ -10,11 +10,16 @@ export class CoSpeakerTalkInvite {
   }
 
   async check() {
-    const talk = await db.talk.findUnique({ where: { invitationCode: this.code } });
+    const talk = await db.talk.findUnique({ where: { invitationCode: this.code }, include: { speakers: true } });
 
     if (!talk) throw new InvitationNotFoundError();
 
-    return talk;
+    return {
+      id: talk.id,
+      title: talk.title,
+      description: talk.abstract,
+      speakers: talk.speakers.map((speaker) => ({ id: speaker.id, name: speaker.name, picture: speaker.picture })),
+    };
   }
 
   async addCoSpeaker(coSpeakerId: string) {
