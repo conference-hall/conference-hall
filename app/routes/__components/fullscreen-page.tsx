@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 
 import { ConferenceHallLogo } from '~/design-system/logo.tsx';
+import { H1, Subtitle } from '~/design-system/typography.tsx';
 
 import { Footer } from './footer.tsx';
 import { Navbar } from './navbar/navbar.tsx';
@@ -31,3 +32,18 @@ export function FullscreenPage({ children }: Props) {
     </div>
   );
 }
+
+type FullscreenPageTitle = { title: string; subtitle?: string };
+
+function Title({ title, subtitle }: FullscreenPageTitle) {
+  return (
+    <div className="space-y-6">
+      <H1 size="3xl" weight="bold">
+        {title}
+      </H1>
+      {subtitle ? <Subtitle>{subtitle}</Subtitle> : null}
+    </div>
+  );
+}
+
+FullscreenPage.Title = Title;

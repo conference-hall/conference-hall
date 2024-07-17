@@ -9,7 +9,6 @@ import { Button, button } from '~/design-system/buttons.tsx';
 import { DividerWithLabel } from '~/design-system/divider.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
-import { H1, Subtitle } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 
@@ -39,12 +38,11 @@ export default function RequestAccessRoute() {
 
   return (
     <FullscreenPage>
-      <div className="space-y-6">
-        <H1 size="3xl" weight="bold">
-          Become event organizer
-        </H1>
-        <Subtitle>Conference Hall for event organizers is in closed-beta access, you need a key to access it.</Subtitle>
-      </div>
+      <FullscreenPage.Title
+        title="Become event organizer"
+        subtitle="Conference Hall for event organizers is in closed-beta access, you need a key to access it."
+      />
+
       <Card className="p-8 md:p-12">
         <Form method="POST" className="flex flex-col sm:flex-row gap-2">
           <Input

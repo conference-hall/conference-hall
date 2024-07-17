@@ -72,7 +72,7 @@ export function formatCFPDate(state: CfpState, timeZone: string, start?: string,
 
 const STATUSES = { OPENED: 'success', CLOSED: 'warning', FINISHED: 'error' } as const;
 
-export function cfpColorStatus(cfpState: CfpState, cfpStart?: string, cfpEnd?: string) {
+export function cfpColorStatus(cfpState: CfpState, cfpStart?: string | null, cfpEnd?: string | null) {
   if (!cfpStart && !cfpEnd) return 'disabled';
   return STATUSES[cfpState];
 }

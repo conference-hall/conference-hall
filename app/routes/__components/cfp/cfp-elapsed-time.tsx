@@ -7,7 +7,7 @@ import type { CfpState } from '~/types/events.types.ts';
 
 import { ClientOnly } from '../utils/client-only.tsx';
 
-type Props = { cfpState: CfpState; cfpStart?: string; cfpEnd?: string; className?: string };
+type Props = { cfpState: CfpState; cfpStart?: string | null; cfpEnd?: string | null; className?: string };
 
 export function CfpElapsedTime({ cfpState, cfpStart, cfpEnd, className }: Props) {
   return (

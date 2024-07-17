@@ -6,12 +6,14 @@ import invariant from 'tiny-invariant';
 import { CoSpeakerProposalInvite } from '~/.server/cfp-submissions/co-speaker-proposal-invite.ts';
 import { Button } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
-import { Page } from '~/design-system/layouts/page.tsx';
-import { H1, Text } from '~/design-system/typography.tsx';
+import { Markdown } from '~/design-system/markdown.tsx';
+import { H2 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
-import { Navbar } from '~/routes/__components/navbar/navbar.tsx';
-import { useUser } from '~/routes/__components/use-user.tsx';
+
+import { EventCard } from '../__components/events/event-card.tsx';
+import { FullscreenPage } from '../__components/fullscreen-page.tsx';
+import { SpeakerPill } from '../__components/talks/co-speaker.tsx';
 
 export const meta = mergeMeta(() => [{ title: 'Proposal invitation | Conference Hall' }]);
 
@@ -20,7 +22,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   invariant(params.code, 'Invalid code');
 
   const proposal = await CoSpeakerProposalInvite.with(params.code).check();
-  return json({ title: proposal.title });
+  return json(proposal);
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
@@ -33,27 +35,39 @@ export const action: ActionFunction = async ({ request, params }) => {
 
 export default function InvitationRoute() {
   const proposal = useLoaderData<typeof loader>();
-  const { user } = useUser();
 
   return (
-    <>
-      <Navbar user={user} />
+    <FullscreenPage>
+      <FullscreenPage.Title
+        title="Talk invitation"
+        subtitle={`You have been invited to be co-speaker on a talk for the ${proposal.event.slug} event.`}
+      />
 
-      <Page>
-        <Card p={16} className="flex flex-col items-center">
-          <H1 mb={4} variant="secondary">
-            You have been invited to proposal
-          </H1>
+      <div className="space-y-8">
+        <EventCard {...proposal.event} />
 
-          <Text size="3xl" weight="medium" mb={8}>
-            {proposal.title}
-          </Text>
+        <Card>
+          <Card.Content>
+            <H2 size="l">{proposal.title}</H2>
 
-          <Form method="POST">
-            <Button type="submit">Accept invitation</Button>
-          </Form>
+            <ul aria-label="Speakers" className="flex flex-row flex-wrap gap-3">
+              {proposal.speakers.map((speaker) => (
+                <li key={speaker.name}>
+                  <SpeakerPill speaker={speaker} />
+                </li>
+              ))}
+            </ul>
+
+            <Markdown className="line-clamp-6">{proposal.description}</Markdown>
+          </Card.Content>
+
+          <Card.Actions>
+            <Form method="POST">
+              <Button type="submit">Accept invitation</Button>
+            </Form>
+          </Card.Actions>
         </Card>
-      </Page>
-    </>
+      </div>
+    </FullscreenPage>
   );
 }
