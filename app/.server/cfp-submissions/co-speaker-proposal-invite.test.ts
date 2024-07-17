@@ -18,7 +18,21 @@ describe('CoSpeakerProposalInvite', () => {
 
       const result = await CoSpeakerProposalInvite.with(proposal.invitationCode).check();
 
-      expect(result.id).toEqual(proposal.id);
+      expect(result).toEqual({
+        id: proposal.id,
+        title: proposal.title,
+        description: proposal.abstract,
+        speakers: [{ id: speaker.id, name: speaker.name, picture: speaker.picture }],
+        event: {
+          name: proposal.event.name,
+          slug: proposal.event.slug,
+          type: proposal.event.type,
+          logo: proposal.event.logo,
+          cfpState: proposal.event.cfpState,
+          cfpStart: proposal.event.cfpStart,
+          cfpEnd: proposal.event.cfpEnd,
+        },
+      });
     });
 
     it('returns throws an error when invitation code not found', async () => {

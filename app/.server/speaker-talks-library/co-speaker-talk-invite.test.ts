@@ -14,7 +14,12 @@ describe('CoSpeakerTalkInvite', () => {
 
       const result = await CoSpeakerTalkInvite.with(talk.invitationCode).check();
 
-      expect(result.id).toEqual(talk.id);
+      expect(result).toEqual({
+        id: talk.id,
+        title: talk.title,
+        description: talk.abstract,
+        speakers: [{ id: speaker.id, name: speaker.name, picture: speaker.picture }],
+      });
     });
 
     it('returns throws an error when invitation code not found', async () => {
