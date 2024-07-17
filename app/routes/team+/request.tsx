@@ -37,7 +37,7 @@ export default function RequestAccessRoute() {
   const errors = useActionData<typeof action>();
 
   return (
-    <FullscreenPage>
+    <FullscreenPage navbar="default">
       <FullscreenPage.Title
         title="Become event organizer."
         subtitle="Conference Hall for event organizers is in closed-beta access, you need a key to access it."

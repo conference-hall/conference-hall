@@ -82,7 +82,7 @@ export default function Login() {
   );
 
   return (
-    <FullscreenPage>
+    <FullscreenPage navbar="auth">
       <div className="flex flex-col items-center sm:mx-auto sm:w-full sm:max-w-md">
         <ConferenceHallLogo width="48px" height="48px" aria-hidden className="fill-slate-300" />
         <h2 className="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">

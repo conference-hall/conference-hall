@@ -14,7 +14,7 @@ describe('UserInfo', () => {
         email: user.email,
         picture: user.picture,
         teams: [],
-        isOrganizer: false,
+        hasTeamAccess: false,
         notificationsUnreadCount: 0,
       });
     });

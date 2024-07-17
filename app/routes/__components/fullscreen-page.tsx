@@ -5,17 +5,18 @@ import { ConferenceHallLogo } from '~/design-system/logo.tsx';
 import { H1, Subtitle } from '~/design-system/typography.tsx';
 
 import { Footer } from './footer.tsx';
+import type { NavbarLayout } from './navbar/navbar.tsx';
 import { Navbar } from './navbar/navbar.tsx';
 import { useUser } from './use-user.tsx';
 
-type Props = { children: ReactNode; className?: string };
+type Props = { children: ReactNode; navbar: NavbarLayout; className?: string };
 
-export function FullscreenPage({ children, className }: Props) {
+export function FullscreenPage({ children, navbar, className }: Props) {
   const { user } = useUser();
 
   return (
     <div className="relative grid grid-cols-1 lg:grid-cols-3 h-screen w-screen overflow-hidden">
-      <Navbar user={user} variant="secondary" className="bg-transparent absolute inset-x-0 z-30" />
+      <Navbar layout={navbar} user={user} variant="secondary" className="bg-transparent absolute inset-x-0 z-30" />
 
       {/* Main panel */}
       <div className="flex flex-col space-between col-span-2 h-screen w-full pt-24 md:pt-36 px-8 md:px-16 lg:px-32">

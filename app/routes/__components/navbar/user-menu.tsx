@@ -23,12 +23,12 @@ type MenuProps = {
   email: string | null;
   name: string | null;
   picture: string | null;
+  hasTeamAccess?: boolean;
   teams: Array<{ slug: string; name: string }>;
-  isOrganizer?: boolean;
   notificationsCount: number;
 };
 
-export function UserMenu({ email, name, picture, teams, isOrganizer, notificationsCount }: MenuProps) {
+export function UserMenu({ email, name, picture, hasTeamAccess, teams, notificationsCount }: MenuProps) {
   const [open, setOpen] = useState(false);
 
   const handleClose = () => setOpen(false);
@@ -85,13 +85,13 @@ export function UserMenu({ email, name, picture, teams, isOrganizer, notificatio
                 </MenuLink>
               ))}
 
-              {!isOrganizer ? (
-                <MenuLink to="/team/request" icon={Square3Stack3DIcon} onClick={handleClose}>
-                  Become organizer
-                </MenuLink>
-              ) : (
+              {hasTeamAccess ? (
                 <MenuLink to="/team/new" icon={PlusIcon} onClick={handleClose}>
                   New team
+                </MenuLink>
+              ) : (
+                <MenuLink to="/team/request" icon={Square3Stack3DIcon} onClick={handleClose}>
+                  Become organizer
                 </MenuLink>
               )}
 

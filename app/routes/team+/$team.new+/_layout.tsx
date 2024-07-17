@@ -21,7 +21,7 @@ export default function EventCreationLayout() {
   const { team } = useTeam();
 
   return (
-    <FullscreenPage>
+    <FullscreenPage navbar="default">
       <Outlet context={{ team }} />
     </FullscreenPage>
   );

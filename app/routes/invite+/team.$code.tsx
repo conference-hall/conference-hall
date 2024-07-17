@@ -34,7 +34,7 @@ export default function InvitationRoute() {
   const team = useLoaderData<typeof loader>();
 
   return (
-    <FullscreenPage className="text-center">
+    <FullscreenPage navbar="default" className="text-center">
       <Card className="p-8 md:p-16 space-y-16">
         <div className="space-y-6">
           <H1 size="3xl" weight="bold">
