@@ -6,12 +6,11 @@ import invariant from 'tiny-invariant';
 import { TeamMemberInvite } from '~/.server/team/team-member-invite.ts';
 import { Button } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
-import { Page } from '~/design-system/layouts/page.tsx';
-import { H1, Text } from '~/design-system/typography.tsx';
+import { H1, Subtitle } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
-import { Navbar } from '~/routes/__components/navbar/navbar.tsx';
-import { useUser } from '~/routes/__components/use-user.tsx';
+
+import { FullscreenPage } from '../__components/fullscreen-page.tsx';
 
 export const meta = mergeMeta(() => [{ title: 'Team invitation | Conference Hall' }]);
 
@@ -33,27 +32,21 @@ export const action: ActionFunction = async ({ request, params }) => {
 
 export default function InvitationRoute() {
   const team = useLoaderData<typeof loader>();
-  const { user } = useUser();
 
   return (
-    <>
-      <Navbar user={user} />
-
-      <Page>
-        <Card p={16} className="flex flex-col items-center">
-          <H1 mb={4} variant="secondary">
-            You have been invited to the team
-          </H1>
-
-          <Text size="3xl" weight="medium" mb={8}>
+    <FullscreenPage className="text-center">
+      <Card className="p-8 md:p-16 space-y-16">
+        <div className="space-y-6">
+          <H1 size="3xl" weight="bold">
             {team.name}
-          </Text>
+          </H1>
+          <Subtitle>{`You have been invited to join the ${team.name} team in Conference Hall.`}</Subtitle>
+        </div>
 
-          <Form method="POST">
-            <Button type="submit">Accept invitation</Button>
-          </Form>
-        </Card>
-      </Page>
-    </>
+        <Form method="POST">
+          <Button type="submit">Accept invitation</Button>
+        </Form>
+      </Card>
+    </FullscreenPage>
   );
 }

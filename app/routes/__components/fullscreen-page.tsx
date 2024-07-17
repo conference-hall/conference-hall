@@ -1,3 +1,4 @@
+import { cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
 
 import { ConferenceHallLogo } from '~/design-system/logo.tsx';
@@ -7,9 +8,9 @@ import { Footer } from './footer.tsx';
 import { Navbar } from './navbar/navbar.tsx';
 import { useUser } from './use-user.tsx';
 
-type Props = { children: ReactNode };
+type Props = { children: ReactNode; className?: string };
 
-export function FullscreenPage({ children }: Props) {
+export function FullscreenPage({ children, className }: Props) {
   const { user } = useUser();
 
   return (
@@ -18,7 +19,7 @@ export function FullscreenPage({ children }: Props) {
 
       {/* Main panel */}
       <div className="flex flex-col space-between col-span-2 h-screen w-full pt-24 md:pt-36 px-8 md:px-16 lg:px-32">
-        <main className="space-y-8 md:space-y-16 grow overflow-auto">{children}</main>
+        <main className={cx('space-y-8 md:space-y-16 grow overflow-auto', className)}>{children}</main>
 
         <Footer />
       </div>
