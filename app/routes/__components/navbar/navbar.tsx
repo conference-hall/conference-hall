@@ -6,43 +6,52 @@ import { LoginButton } from './dropdowns/login-button.tsx';
 import { Logo } from './logo.tsx';
 import { Navigation } from './navigation.tsx';
 import { SearchEventsInput } from './search-events-input.tsx';
+import { TeamBreadcrumb } from './team-breadcrumb.tsx';
 import { UserMenu } from './user-menu.tsx';
+
+export type NavbarLayout = 'default' | 'team' | 'auth';
 
 type Props = {
   user: {
     name: string | null;
     email: string | null;
     picture: string | null;
-    isOrganizer: boolean;
+    hasTeamAccess: boolean;
     notificationsUnreadCount: number;
     teams: Array<{ slug: string; name: string }>;
   } | null;
-  withSearch?: boolean;
+  layout?: NavbarLayout;
   variant?: 'primary' | 'secondary';
+  withSearch?: boolean;
   className?: string;
 };
 
-export type Notification = {
-  type: string;
-  proposal: { id: string; title: string };
-  event: { slug: string; name: string };
-};
-
-export function Navbar({ user, withSearch, variant = 'primary', className }: Props) {
+export function Navbar({ user, layout = 'default', variant = 'primary', withSearch = false, className }: Props) {
   return (
     <div className={cx(BG_COLOR, className)}>
       <div className="flex h-16 items-center justify-between px-4 lg:px-8">
         <div className="flex w-full items-center">
           {/* Logo */}
-          <Logo displayName={!withSearch} variant={variant} />
+          <Logo label={!withSearch && layout !== 'team' ? 'Conference Hall' : undefined} variant={variant} />
 
-          {/* Search */}
-          {withSearch && <SearchEventsInput />}
+          {user?.hasTeamAccess && layout === 'team' ? (
+            /* Teams breadcrumb */
+            <TeamBreadcrumb teams={user.teams} />
+          ) : withSearch && layout === 'default' ? (
+            /* Search */
+            <SearchEventsInput />
+          ) : null}
         </div>
 
         <div className="hidden gap-4 lg:flex lg:flex-shrink-0 lg:items-center lg:justify-end">
           {/* Navigation links */}
-          <Navigation authenticated={Boolean(user)} teams={user?.teams} showTeams={user?.isOrganizer} />
+          {layout !== 'auth' ? (
+            <Navigation
+              authenticated={Boolean(user)}
+              teams={user?.teams}
+              withTeams={user?.hasTeamAccess && layout !== 'team'}
+            />
+          ) : null}
 
           {/* Avatar */}
           {user && (
@@ -51,7 +60,7 @@ export function Navbar({ user, withSearch, variant = 'primary', className }: Pro
               email={user.email}
               picture={user.picture}
               teams={user.teams}
-              isOrganizer={user.isOrganizer}
+              hasTeamAccess={user.hasTeamAccess}
               notificationsCount={user.notificationsUnreadCount}
             />
           )}
@@ -65,12 +74,12 @@ export function Navbar({ user, withSearch, variant = 'primary', className }: Pro
               email={user.email}
               picture={user.picture}
               teams={user.teams}
-              isOrganizer={user.isOrganizer}
+              hasTeamAccess={user.hasTeamAccess}
               notificationsCount={user.notificationsUnreadCount}
             />
-          ) : (
+          ) : layout !== 'auth' ? (
             <LoginButton />
-          )}
+          ) : null}
         </div>
       </div>
     </div>

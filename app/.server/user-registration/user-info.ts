@@ -23,7 +23,7 @@ export class UserInfo {
       email: user.email,
       picture: user.picture,
       teams: await teams.list(),
-      isOrganizer: await teamAccess.isAllowed(),
+      hasTeamAccess: await teamAccess.isAllowed(),
       notificationsUnreadCount: await notifications.unreadCount(),
     };
   }

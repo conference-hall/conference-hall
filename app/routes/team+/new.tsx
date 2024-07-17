@@ -35,7 +35,7 @@ export default function NewTeamRoute() {
   const errors = useActionData<typeof action>();
 
   return (
-    <FullscreenPage>
+    <FullscreenPage navbar="default">
       <FullscreenPage.Title
         title="Create a new team."
         subtitle="Give a cool name to your team. You will be able to invite members and create your first event."

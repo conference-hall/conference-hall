@@ -37,7 +37,7 @@ export default function InvitationRoute() {
   const talk = useLoaderData<typeof loader>();
 
   return (
-    <FullscreenPage>
+    <FullscreenPage navbar="default">
       <FullscreenPage.Title title="Talk invitation." subtitle="You have been invited to be co-speaker on a talk." />
 
       <Card>

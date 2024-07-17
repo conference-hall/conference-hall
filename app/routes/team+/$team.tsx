@@ -8,7 +8,7 @@ import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { useUser } from '~/routes/__components/use-user.tsx';
 
-import { NavbarOrga } from '../__components/navbar/navbar-orga.tsx';
+import { Navbar } from '../__components/navbar/navbar.tsx';
 import type { loader as routeEventLoader } from './$team.$event+/_layout';
 import { useScheduleFullscreen } from './$team.$event+/schedule+/__components/header/use-schedule-fullscreen.tsx';
 import { EventTabs } from './$team+/__components/event-tabs.tsx';
@@ -36,7 +36,7 @@ export default function TeamLayout() {
 
   return (
     <>
-      <NavbarOrga user={user} />
+      <Navbar layout="team" user={user} />
 
       {event ? (
         <EventTabs teamSlug={team.slug} eventSlug={event.slug} eventType={event.type} role={team.role} />

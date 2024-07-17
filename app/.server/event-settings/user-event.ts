@@ -3,7 +3,7 @@ import { db } from 'prisma/db.server.ts';
 
 import { EventNotFoundError, ForbiddenOperationError, SlugAlreadyExistsError } from '~/libs/errors.server.ts';
 import { geocode } from '~/libs/geocode/geocode.server.ts';
-import type { EventEmailNotificationsKeys } from '~/types/notifications.types';
+import type { EventEmailNotificationsKeys } from '~/types/events.types.ts';
 import type { QuestionKeys } from '~/types/survey.types';
 
 export type EventData = Awaited<ReturnType<typeof UserEvent.prototype.get>>;

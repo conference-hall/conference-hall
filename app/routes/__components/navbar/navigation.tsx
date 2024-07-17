@@ -6,10 +6,10 @@ import { TeamsDropdown } from './dropdowns/teams-dropdown.tsx';
 type Props = {
   authenticated: boolean;
   teams?: Array<{ slug: string; name: string }>;
-  showTeams?: boolean;
+  withTeams?: boolean;
 };
 
-export function Navigation({ authenticated, teams = [], showTeams = false }: Props) {
+export function Navigation({ authenticated, teams = [], withTeams = false }: Props) {
   if (!authenticated) {
     return <LoginButton />;
   }
@@ -19,7 +19,7 @@ export function Navigation({ authenticated, teams = [], showTeams = false }: Pro
       <NavTab to="/speaker" end variant="dark">
         My profile
       </NavTab>
-      {showTeams ? <TeamsDropdown teams={teams} /> : null}
+      {withTeams ? <TeamsDropdown teams={teams} /> : null}
     </NavTabs>
   );
 }
