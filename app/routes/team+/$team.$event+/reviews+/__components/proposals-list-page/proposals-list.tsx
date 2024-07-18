@@ -1,3 +1,6 @@
+import { InboxIcon } from '@heroicons/react/24/outline';
+
+import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { useListSelection } from '~/design-system/list/use-list-selection.tsx';
 
@@ -46,7 +49,9 @@ export function ProposalsList({ proposals, pagination, statistics, filtersHash }
             />
           </List.Row>
         ))}
+        {statistics.total === 0 ? <EmptyState icon={InboxIcon} label="No proposals." noBorder /> : null}
       </List.Content>
+
       <List.PaginationFooter current={pagination.current} pages={pagination.total} total={statistics.total} />
     </List>
   );

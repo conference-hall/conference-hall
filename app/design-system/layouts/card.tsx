@@ -19,25 +19,29 @@ const PADDING = {
   16: 'p-8 lg:p-16',
 };
 
-const BACKGROUND = {
-  light: 'bg-white shadow-sm border border-gray-200',
-  dark: 'bg-gray-800',
-};
-
 // <Card /> component
 
 type CardProps = {
   as?: React.ElementType;
   rounded?: keyof typeof ROUNDED;
   p?: keyof typeof PADDING;
-  variant?: keyof typeof BACKGROUND;
   className?: string;
   children: React.ReactNode;
+  noBorder?: boolean;
 } & HTMLAttributes<HTMLElement>;
 
-export function Card({ as: Tag = 'div', rounded = 'lg', p = 0, variant = 'light', className, ...rest }: CardProps) {
+export function Card({ as: Tag = 'div', rounded = 'lg', p = 0, noBorder = false, className, ...rest }: CardProps) {
   return (
-    <Tag className={cx('flex flex-col', BACKGROUND[variant], ROUNDED[rounded], PADDING[p], className)} {...rest} />
+    <Tag
+      className={cx(
+        'flex flex-col bg-white',
+        { 'shadow-sm border border-gray-200': !noBorder },
+        ROUNDED[rounded],
+        PADDING[p],
+        className,
+      )}
+      {...rest}
+    />
   );
 }
 
@@ -45,12 +49,11 @@ export function Card({ as: Tag = 'div', rounded = 'lg', p = 0, variant = 'light'
 
 type CardLinkProps = LinkProps & CardProps;
 
-export function CardLink({ as, rounded, p, variant, className, children, ...rest }: CardLinkProps) {
+export function CardLink({ as, rounded, p, className, children, ...rest }: CardLinkProps) {
   return (
     <Card
       as={as}
       p={p}
-      variant={variant}
       rounded={rounded}
       className="focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:shadow-md"
     >

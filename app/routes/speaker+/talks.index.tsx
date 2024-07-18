@@ -52,7 +52,7 @@ export default function SpeakerTalksRoute() {
         </List.Header>
         <List.Content aria-label="Talks list">
           {talks.length === 0 && (
-            <EmptyState icon={InboxIcon} label={archived ? 'No talks archived.' : 'No talks found.'} />
+            <EmptyState icon={InboxIcon} label={archived ? 'No talks archived.' : 'No talks found.'} noBorder />
           )}
           {talks.map((talk) => (
             <List.RowLink key={talk.id} to={talk.id} className="flex justify-between items-center gap-4">
