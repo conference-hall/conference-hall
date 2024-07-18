@@ -14,6 +14,7 @@ import { requireSession } from '~/libs/auth/session.ts';
 import { EventDetailsForm } from '~/routes/__components/events/event-details-form.tsx';
 import { FullscreenPage } from '~/routes/__components/fullscreen-page.tsx';
 
+import { EventCreationStepper } from '../__components/event-creation-stepper.tsx';
 import { useTeam } from '../__components/use-team.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
@@ -54,6 +55,8 @@ export default function NewEventDetailsRoute() {
         subtitle="Provide details about the event, like address, dates and description to generate the event page."
       />
 
+      <EventCreationStepper type={event.type} currentStep={1} />
+
       <Card>
         <Card.Content>
           <EventDetailsForm
@@ -66,6 +69,7 @@ export default function NewEventDetailsRoute() {
             websiteUrl={event.websiteUrl}
             contactEmail={event.contactEmail}
             errors={errors}
+            compact
           />
         </Card.Content>
 

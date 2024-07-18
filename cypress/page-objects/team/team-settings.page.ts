@@ -20,15 +20,6 @@ class TeamSettingsPage extends BasePage {
   saveAbstract() {
     return cy.findByRole('button', { name: 'Save' });
   }
-
-  error(label: string) {
-    return cy
-      .findByLabelText(label)
-      .invoke('attr', 'id')
-      .then((id) => {
-        return cy.get(`#${id}-describe`);
-      });
-  }
 }
 
 export default TeamSettingsPage;

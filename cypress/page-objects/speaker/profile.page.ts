@@ -40,15 +40,6 @@ class SpeakerProfilePage extends BasePage {
     });
   }
 
-  error(label: string) {
-    return cy
-      .findByLabelText(label)
-      .invoke('attr', 'id')
-      .then((id) => {
-        return cy.get(`#${id}-describe`);
-      });
-  }
-
   fillSpeakerDetails(data: SpeakerDetailsType) {
     if (data.bio) cy.typeOn('Biography', data.bio);
     if (data.references) cy.typeOn('Speaker references', data.references);

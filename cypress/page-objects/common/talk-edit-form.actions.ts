@@ -1,3 +1,5 @@
+import BasePage from 'page-objects/base.page.ts';
+
 type TalkFormType = {
   title?: string;
   abstract?: string;
@@ -8,8 +10,9 @@ type TalkFormType = {
   category?: string;
 };
 
-class TalkEditFormActions {
+class TalkEditFormActions extends BasePage {
   constructor() {
+    super();
     this.isVisible();
   }
 
@@ -41,15 +44,6 @@ class TalkEditFormActions {
 
   close() {
     cy.findByRole('button', { name: 'Cancel' }).click();
-  }
-
-  error(label: string) {
-    return cy
-      .findByLabelText(label)
-      .invoke('attr', 'id')
-      .then((id) => {
-        return cy.get(`#${id}-describe`);
-      });
   }
 }
 

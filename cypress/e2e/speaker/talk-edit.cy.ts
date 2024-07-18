@@ -62,7 +62,7 @@ describe('Speaker talk edition page', () => {
 
     editTalk.fillForm({ title: ' ', abstract: ' ' });
     editTalk.save();
-    editTalk.error('Title').should('contain.text', 'String must contain at least 1 character(s)');
-    editTalk.error('Abstract').should('contain.text', 'String must contain at least 1 character(s)');
+    editTalk.inputError('Title').should('contain.text', 'String must contain at least 1 character(s)');
+    editTalk.inputError('Abstract').should('contain.text', 'String must contain at least 1 character(s)');
   });
 });
