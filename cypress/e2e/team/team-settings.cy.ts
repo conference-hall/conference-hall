@@ -27,7 +27,9 @@ describe('Team settings', () => {
       settings.visit('awesome-team');
       settings.fillSettingsForm({ name: 'Awesome team updated', slug: '!@#$%^' });
       settings.saveAbstract().click();
-      settings.error('Team URL').should('contain.text', 'Must only contain lower case alphanumeric and dashes (-).');
+      settings
+        .inputError('Team URL')
+        .should('contain.text', 'Must only contain lower case alphanumeric and dashes (-).');
     });
   });
 

@@ -73,7 +73,7 @@ describe('Speaker proposal edition page', () => {
     const editProposal = proposal.editProposal();
     editProposal.fillForm({ title: ' ', abstract: ' ' });
     editProposal.save();
-    editProposal.error('Title').should('contain.text', 'String must contain at least 1 character(s)');
-    editProposal.error('Abstract').should('contain.text', 'String must contain at least 1 character(s)');
+    editProposal.inputError('Title').should('contain.text', 'String must contain at least 1 character(s)');
+    editProposal.inputError('Abstract').should('contain.text', 'String must contain at least 1 character(s)');
   });
 });

@@ -55,15 +55,6 @@ class EventNewPage extends BasePage {
   finish() {
     cy.findByRole('button', { name: 'Finish' }).click();
   }
-
-  error(label: string) {
-    return cy
-      .findByLabelText(label)
-      .invoke('attr', 'id')
-      .then((id) => {
-        return cy.get(`#${id}-describe`);
-      });
-  }
 }
 
 export default EventNewPage;

@@ -14,6 +14,7 @@ import { requireSession } from '~/libs/auth/session.ts';
 import { EventCfpConferenceForm } from '~/routes/__components/events/event-cfp-conference-form.tsx';
 import { FullscreenPage } from '~/routes/__components/fullscreen-page.tsx';
 
+import { EventCreationStepper } from '../__components/event-creation-stepper.tsx';
 import { useTeam } from '../__components/use-team.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
@@ -55,6 +56,8 @@ export default function NewEventDetailsRoute() {
         title={`${event.name} call for paper.`}
         subtitle="Set up the conference Call For Paper openings."
       />
+
+      <EventCreationStepper type={event.type} currentStep={2} />
 
       <Card>
         <Card.Content>

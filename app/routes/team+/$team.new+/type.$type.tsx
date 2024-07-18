@@ -10,8 +10,10 @@ import { Button, ButtonLink } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { FullscreenPage } from '~/routes/__components/fullscreen-page.tsx';
+import type { EventType } from '~/types/events.types.ts';
 
 import { EventForm } from '../../__components/events/event-form.tsx';
+import { EventCreationStepper } from '../__components/event-creation-stepper.tsx';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);
@@ -37,7 +39,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 export default function NewEventRoute() {
   const errors = useActionData<typeof action>();
   const params = useParams();
-  const type = params.type || 'CONFERENCE';
+  const type = (params.type || 'CONFERENCE') as EventType;
 
   const title = type === 'CONFERENCE' ? 'Create a new conference.' : 'Create a new meetup.';
 
@@ -47,6 +49,8 @@ export default function NewEventRoute() {
         title={title}
         subtitle="You will able to setup the call for paper later and make the event public or private."
       />
+
+      <EventCreationStepper type={type} currentStep={0} />
 
       <Card>
         <Card.Content>

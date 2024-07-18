@@ -87,7 +87,7 @@ describe("Team's events list", () => {
       newEventPage.fillNewEventForm({ name: 'Hello world', slug: 'event-1' });
       newEventPage.continueToDetailsForm();
 
-      newEventPage.error('Event URL').should('contain.text', 'This URL already exists, please try another one.');
+      newEventPage.inputError('Event URL').should('contain.text', 'This URL already exists, please try another one.');
     });
   });
 

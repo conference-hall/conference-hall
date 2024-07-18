@@ -27,7 +27,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   try {
     await TeamBetaAccess.for(userId).validateAccessKey(String(form.get('key')));
-    return redirect('/team/select');
+    return redirect('/team/new');
   } catch (InvalidAccessKeyError) {
     return json({ key: ['Invalid access key'] });
   }

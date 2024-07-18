@@ -20,17 +20,13 @@ export function FullscreenPage({ children, navbar, compact, className }: Props) 
 
       {/* Main panel */}
       <div
-        className={cx('flex flex-col space-between col-span-2 h-screen w-full px-8 md:px-16 lg:px-32', {
+        className={cx('flex flex-col space-between col-span-2 h-screen w-full px-8 md:px-16 lg:px-32 overflow-auto', {
           'pt-24 md:pt-36': !compact,
           'pt-24': compact,
         })}
       >
         <main
-          className={cx(
-            'grow max-w-4xl overflow-auto',
-            { 'space-y-8 md:space-y-16': !compact, 'space-y-8': compact },
-            className,
-          )}
+          className={cx('grow max-w-4xl', { 'space-y-8 md:space-y-16': !compact, 'space-y-8': compact }, className)}
         >
           {children}
         </main>

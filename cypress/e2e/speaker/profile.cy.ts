@@ -28,8 +28,8 @@ describe('Speaker profile page', () => {
       email: ' ',
     });
     profile.savePersonalInfo();
-    profile.error('Full name').should('contain.text', 'String must contain at least 1 character(s)');
-    profile.error('Email address').should('contain.text', 'Invalid email');
+    profile.inputError('Full name').should('contain.text', 'String must contain at least 1 character(s)');
+    profile.inputError('Email address').should('contain.text', 'Invalid email');
   });
 
   it('edit speaker details', () => {

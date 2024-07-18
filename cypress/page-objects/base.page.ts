@@ -14,6 +14,15 @@ class BasePage {
   userMenu() {
     return new UserMenu();
   }
+
+  inputError(label: string) {
+    return cy
+      .findByLabelText(label)
+      .invoke('attr', 'id')
+      .then((id) => {
+        return cy.get(`#${id}-describe`);
+      });
+  }
 }
 
 class UserMenu {

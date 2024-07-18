@@ -23,15 +23,6 @@ class TeamNewPage extends BasePage {
   newTeam() {
     return cy.findByRole('button', { name: 'Create team' });
   }
-
-  error(label: string) {
-    return cy
-      .findByLabelText(label)
-      .invoke('attr', 'id')
-      .then((id) => {
-        return cy.get(`#${id}-describe`);
-      });
-  }
 }
 
 export default TeamNewPage;
