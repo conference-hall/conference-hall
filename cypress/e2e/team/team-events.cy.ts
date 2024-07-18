@@ -47,9 +47,16 @@ describe("Team's events list", () => {
       newEventPage.continueToDetailsForm();
 
       newEventPage.isDetailsFormVisible('Hello world');
+      newEventPage.fillDetailsForm({
+        startDate: '2022-12-12',
+        endDate: '2022-12-13',
+        address: 'Nantes, France',
+        description: 'Hello world!',
+      });
       newEventPage.continueToCfpForm();
 
       newEventPage.isCfpFormVisible('Hello world');
+      newEventPage.fillConferenceOpenings({ cfpStart: '2022-12-12', cfpEnd: '2022-12-13' });
       newEventPage.finish();
 
       eventSettings.visit('awesome-team', 'hello-world');
@@ -69,6 +76,7 @@ describe("Team's events list", () => {
       newEventPage.continueToDetailsForm();
 
       newEventPage.isDetailsFormVisible('Hello world');
+      newEventPage.fillDetailsForm({ description: 'Hello world!' });
       newEventPage.finish();
 
       eventSettings.visit('awesome-team', 'hello-world');

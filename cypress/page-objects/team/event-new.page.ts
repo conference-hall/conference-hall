@@ -5,6 +5,18 @@ type EventNewType = {
   slug?: string;
 };
 
+type EventDetailFormType = {
+  startDate?: string;
+  endDate?: string;
+  address?: string;
+  description?: string;
+};
+
+type CfpFormType = {
+  cfpStart?: string;
+  cfpEnd?: string;
+};
+
 class EventNewPage extends BasePage {
   isPageVisible() {
     cy.findByRole('heading', { name: 'Select your event type.' }).should('exist');
@@ -36,20 +48,32 @@ class EventNewPage extends BasePage {
     cy.findByRole('radio', { name: 'Public' }).click();
   }
 
-  continueToDetailsForm() {
-    cy.findByRole('button', { name: 'Continue' }).click();
-  }
-
   isDetailsFormVisible(name: string) {
     cy.findByRole('heading', { name: `${name} information.` }).should('exist');
   }
 
-  continueToCfpForm() {
+  fillDetailsForm(data: EventDetailFormType) {
+    if (data.startDate) cy.typeOn('Start date', data.startDate);
+    if (data.endDate) cy.typeOn('End date', data.endDate);
+    if (data.address) cy.typeOn('Venue address or city', data.address);
+    if (data.description) cy.typeOn('Description', data.description);
+  }
+
+  continueToDetailsForm() {
     cy.findByRole('button', { name: 'Continue' }).click();
   }
 
   isCfpFormVisible(name: string) {
     cy.findByRole('heading', { name: `${name} call for paper.` }).should('exist');
+  }
+
+  fillConferenceOpenings(data: CfpFormType) {
+    if (data.cfpStart) cy.typeOn('Opening date', data.cfpStart);
+    if (data.cfpEnd) cy.typeOn('Closing date', data.cfpEnd);
+  }
+
+  continueToCfpForm() {
+    cy.findByRole('button', { name: 'Continue' }).click();
   }
 
   finish() {
