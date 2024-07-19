@@ -51,7 +51,9 @@ export async function migrateTeams(firestore: admin.firestore.Firestore) {
 
   console.log(` > Teams without members: ${teamsWithoutMembers.length}`);
   console.log(` > Teams without owner: ${teamsWithouOwner.length}`);
-  console.log(` > Teams migrated ${organizations.length - teamsWithoutMembers.length - teamsWithouOwner.length}`);
+  console.log(
+    ` > Teams migrated ${organizations.length - teamsWithoutMembers.length - teamsWithouOwner.length} / ${organizations.length}`,
+  );
 }
 
 // Map team members to Prisma TeamMemberCreateInput[]
