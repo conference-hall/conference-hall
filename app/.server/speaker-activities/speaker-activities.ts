@@ -34,7 +34,7 @@ export class SpeakerActivities {
         return {
           slug: event.slug,
           name: event.name,
-          logo: event.logo,
+          logoUrl: event.logoUrl,
           cfpState: event.cfpState,
           submissions: event.proposals.map((proposal) => ({
             id: proposal.id,

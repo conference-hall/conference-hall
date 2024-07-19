@@ -52,7 +52,7 @@ export class SpeakerTalk {
         .map((proposal) => ({
           slug: proposal.event.slug,
           name: proposal.event.name,
-          logo: proposal.event.logo,
+          logoUrl: proposal.event.logoUrl,
           proposalStatus: proposal.getStatusForSpeaker(proposal.event.isCfpOpen),
           createdAt: proposal.createdAt.toISOString(),
         }))

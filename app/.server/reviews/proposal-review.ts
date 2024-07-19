@@ -75,7 +75,7 @@ export class ProposalReview {
           bio: speaker.bio,
           references: speaker.references,
           email: speaker.email,
-          address: speaker.address,
+          location: speaker.location,
           socials: speaker.socials as SocialLinks,
           survey: answers?.find((a) => a.userId === speaker.id)?.answers as SurveyData,
         })) || [],

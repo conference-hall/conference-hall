@@ -62,7 +62,7 @@ export default function IndexRoute() {
                   to={talkId ? `/${event.slug}/submission/${talkId}` : `/${event.slug}`}
                   name={event.name}
                   type={event.type}
-                  logo={event.logo}
+                  logoUrl={event.logoUrl}
                   cfpState={event.cfpState}
                   cfpStart={event.cfpStart}
                   cfpEnd={event.cfpEnd}

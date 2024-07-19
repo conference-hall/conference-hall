@@ -11,7 +11,7 @@ type Props = {
   timezone: string;
   conferenceStart: string | undefined;
   conferenceEnd: string | undefined;
-  address: string | null;
+  location: string | null;
   description: string | null;
   websiteUrl: string | null;
   contactEmail: string | null;
@@ -24,7 +24,7 @@ export function EventDetailsForm({
   timezone,
   conferenceStart,
   conferenceEnd,
-  address,
+  location,
   description,
   websiteUrl,
   contactEmail,
@@ -43,11 +43,11 @@ export function EventDetailsForm({
       )}
 
       <Input
-        name="address"
+        name="location"
         label="Venue address or city"
         autoComplete="off"
-        defaultValue={address || ''}
-        error={errors?.address}
+        defaultValue={location || ''}
+        error={errors?.location}
       />
 
       <MarkdownTextArea

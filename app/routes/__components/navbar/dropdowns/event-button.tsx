@@ -10,14 +10,14 @@ const menuStyle = cx(
   'px-3 py-1.5 rounded-md focus-visible:outline focus-visible:outline-2',
 );
 
-type Props = { currentTeamSlug?: string; event: { slug: string; name: string; logo: string | null } };
+type Props = { currentTeamSlug?: string; event: { slug: string; name: string; logoUrl: string | null } };
 
 export function EventButton({ currentTeamSlug, event }: Props) {
   if (!currentTeamSlug) return null;
 
   return (
     <Link to={`/team/${currentTeamSlug}/${event.slug}`} className={menuStyle}>
-      <Avatar size="xs" picture={event.logo} name={event.name} square aria-hidden />
+      <Avatar size="xs" picture={event.logoUrl} name={event.name} square aria-hidden />
       <span>{event.name}</span>
     </Link>
   );

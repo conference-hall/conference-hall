@@ -19,12 +19,12 @@ export const SocialLinksSchema = z.object({
 export const AdditionalInfoSchema = z
   .object({
     company: z.string().trim().nullable().default(null),
-    address: z.string().trim().nullable().default(null),
+    location: z.string().trim().nullable().default(null),
   })
   .merge(SocialLinksSchema)
-  .transform(({ company, address, twitter, github }) => ({
+  .transform(({ company, location, twitter, github }) => ({
     company,
-    address,
+    location,
     socials: { github, twitter },
   }));
 

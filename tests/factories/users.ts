@@ -49,7 +49,7 @@ export const userFactory = async (options: FactoryOptions = {}) => {
     name: randFullName(),
     email: randEmail(),
     picture: randAvatar(),
-    address: randCity(),
+    location: randCity(),
     bio: randParagraph(),
     references: randParagraph(),
     company: randCompanyName(),
@@ -72,13 +72,13 @@ export const userFactory = async (options: FactoryOptions = {}) => {
 
   const user = await db.user.create({ data });
 
-  await db.account.create({
+  await db.authenticationMethod.create({
     data: {
       uid: user.id,
       name: user.name,
       email: user.email,
       picture: user.picture,
-      provider: 'google',
+      provider: 'google.com',
       userId: user.id,
     },
   });

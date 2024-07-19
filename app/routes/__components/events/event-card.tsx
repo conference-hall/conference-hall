@@ -8,7 +8,7 @@ import { CfpElapsedTime } from '../cfp/cfp-elapsed-time.tsx';
 type CardContentProps = {
   name: string;
   type: 'CONFERENCE' | 'MEETUP';
-  logo: string | null;
+  logoUrl: string | null;
   cfpState: CfpState;
   cfpStart?: string | null;
   cfpEnd?: string | null;
@@ -32,13 +32,13 @@ export function EventCard(props: CardContentProps) {
   );
 }
 
-function CardContent({ name, type, logo, cfpState, cfpStart, cfpEnd }: CardContentProps) {
+function CardContent({ name, type, logoUrl, cfpState, cfpStart, cfpEnd }: CardContentProps) {
   return (
     <span className="flex h-20 lg:h-32 justify-between">
       {/* Desktop */}
-      <Avatar picture={logo} name={name} size="4xl" square className="hidden lg:flex rounded-r-none" />
+      <Avatar picture={logoUrl} name={name} size="4xl" square className="hidden lg:flex rounded-r-none" />
       {/* Mobile */}
-      <Avatar picture={logo} name={name} size="2xl" square className="lg:hidden rounded-r-none" />
+      <Avatar picture={logoUrl} name={name} size="2xl" square className="lg:hidden rounded-r-none" />
 
       <div className="flex flex-1 flex-col justify-between overflow-hidden py-2 px-4 lg:p-4">
         <Text size="l" weight="semibold" truncate>

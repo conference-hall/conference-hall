@@ -14,7 +14,7 @@ type Props = {
   submissions: Array<{
     slug: string;
     name: string;
-    logo: string | null;
+    logoUrl: string | null;
     proposalStatus: SpeakerProposalStatus;
   }>;
 };
@@ -33,7 +33,7 @@ export function TalkSubmissionsSection({ talkId, canSubmit, submissions }: Props
                 aria-label={`Go to ${submission.name}`}
                 className="flex gap-2 w-full hover:bg-gray-100 p-2 rounded-md"
               >
-                <Avatar picture={submission.logo} name={submission.name} square size="m" aria-hidden />
+                <Avatar picture={submission.logoUrl} name={submission.name} square size="m" aria-hidden />
                 <div className="flex flex-col gap-0.5 truncate">
                   <Text weight="medium" truncate>
                     {submission.name}

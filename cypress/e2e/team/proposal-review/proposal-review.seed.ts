@@ -20,7 +20,7 @@ export const seed = async () => {
       email: 'marie@example.com',
       bio: 'MJ Bio',
       references: 'MJ References',
-      address: 'Nantes',
+      location: 'Nantes',
       company: 'MJ Corp',
       socials: {
         github: 'mj',

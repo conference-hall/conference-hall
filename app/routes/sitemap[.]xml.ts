@@ -24,8 +24,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
   // Add events to sitemap
   const events = await getEventsForSitemap();
   for (const event of events) {
-    if (event.logo) {
-      stream.write({ url: `/${event.slug}`, changefreq: 'weekly', priority: 0.5, img: event.logo });
+    if (event.logoUrl) {
+      stream.write({ url: `/${event.slug}`, changefreq: 'weekly', priority: 0.5, img: event.logoUrl });
     } else {
       stream.write({ url: `/${event.slug}`, changefreq: 'weekly', priority: 0.5 });
     }

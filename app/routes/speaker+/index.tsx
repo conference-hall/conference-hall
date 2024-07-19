@@ -35,7 +35,7 @@ export default function ProfileRoute() {
         email={profile.email}
         picture={profile.picture}
         bio={profile.bio}
-        address={profile.address}
+        location={profile.location}
         socials={profile.socials}
       />
 

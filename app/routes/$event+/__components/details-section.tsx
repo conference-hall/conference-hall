@@ -17,7 +17,7 @@ type Props = {
   codeOfConductUrl: string | null;
   conferenceStart?: string;
   conferenceEnd?: string;
-  address: string | null;
+  location: string | null;
   type: 'CONFERENCE' | 'MEETUP';
   timezone: string;
   className?: string;
@@ -30,7 +30,7 @@ export function DetailsSection({
   codeOfConductUrl,
   conferenceStart,
   conferenceEnd,
-  address,
+  location,
   type,
   timezone,
 }: Props) {
@@ -48,9 +48,9 @@ export function DetailsSection({
           </IconLabel>
         ) : null}
 
-        {address && (
+        {location && (
           <IconLabel icon={MapPinIcon} gap="l">
-            {address}
+            {location}
           </IconLabel>
         )}
       </div>

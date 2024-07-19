@@ -18,7 +18,7 @@ import { EventTabs } from './__components/event-tabs.tsx';
 
 export const meta = mergeMeta<typeof loader>(
   ({ data }) => (data ? [{ title: `${data.name} | Conference Hall` }] : []),
-  ({ data }) => (data ? eventSocialCard({ name: data.name, slug: data.slug, logo: data.logo }) : []),
+  ({ data }) => (data ? eventSocialCard({ name: data.name, slug: data.slug, logoUrl: data.logoUrl }) : []),
 );
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
@@ -41,7 +41,7 @@ export default function EventRoute() {
       <header className={BG_GRADIENT_COLOR}>
         <Container className="h-24 flex flex-row items-center relative">
           <Avatar
-            picture={event.logo}
+            picture={event.logoUrl}
             name={event.name}
             size="4xl"
             square
@@ -50,7 +50,7 @@ export default function EventRoute() {
             className="hidden sm:flex absolute -bottom-12"
           />
           <Avatar
-            picture={event.logo}
+            picture={event.logoUrl}
             name={event.name}
             size="xl"
             square

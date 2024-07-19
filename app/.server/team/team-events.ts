@@ -34,7 +34,7 @@ export class TeamEvents {
       slug: event.slug,
       name: event.name,
       type: event.type,
-      logo: event.logo,
+      logoUrl: event.logoUrl,
       timezone: event.timezone,
       cfpStart: event.cfpStart?.toISOString(),
       cfpEnd: event.cfpEnd?.toISOString(),

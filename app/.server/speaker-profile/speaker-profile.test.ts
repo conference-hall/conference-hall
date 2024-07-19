@@ -21,7 +21,7 @@ describe('SpeakerProfile', () => {
         bio: user.bio,
         references: user.references,
         company: user.company,
-        address: user.address,
+        location: user.location,
         socials: user.socials,
       });
     });
@@ -42,7 +42,7 @@ describe('SpeakerProfile', () => {
         bio: 'lorem ipsum',
         references: 'impedit quidem quisquam',
         company: 'company',
-        address: 'address',
+        location: 'location',
         socials: {
           twitter: 'twitter',
           github: 'github',
@@ -56,7 +56,7 @@ describe('SpeakerProfile', () => {
       expect(updated?.bio).toEqual('lorem ipsum');
       expect(updated?.references).toEqual('impedit quidem quisquam');
       expect(updated?.company).toEqual('company');
-      expect(updated?.address).toEqual('address');
+      expect(updated?.location).toEqual('location');
       expect(updated?.socials).toEqual({ github: 'github', twitter: 'twitter' });
     });
   });
@@ -108,14 +108,14 @@ describe('SpeakerProfile schemas', () => {
     it('validates additional indormation', async () => {
       const result = AdditionalInfoSchema.safeParse({
         company: 'company',
-        address: 'address',
+        location: 'location',
         twitter: 'twitter',
         github: 'github',
       });
 
       expect(result.success && result.data).toEqual({
         company: 'company',
-        address: 'address',
+        location: 'location',
         socials: { github: 'github', twitter: 'twitter' },
       });
     });

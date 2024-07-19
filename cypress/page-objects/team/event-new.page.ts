@@ -8,7 +8,7 @@ type EventNewType = {
 type EventDetailFormType = {
   startDate?: string;
   endDate?: string;
-  address?: string;
+  location?: string;
   description?: string;
 };
 
@@ -55,7 +55,7 @@ class EventNewPage extends BasePage {
   fillDetailsForm(data: EventDetailFormType) {
     if (data.startDate) cy.typeOn('Start date', data.startDate);
     if (data.endDate) cy.typeOn('End date', data.endDate);
-    if (data.address) cy.typeOn('Venue address or city', data.address);
+    if (data.location) cy.typeOn('Venue address or city', data.location);
     if (data.description) cy.typeOn('Description', data.description);
   }
 

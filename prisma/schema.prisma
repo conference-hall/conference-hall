@@ -8,34 +8,36 @@ datasource db {
 }
 
 model User {
-  id                 String              @id @default(cuid())
-  email              String
-  name               String?
-  bio                String?
-  picture            String?
-  company            String?
-  references         String?
-  address            String?
-  socials            Json                @default("{}")
-  createdAt          DateTime            @default(now())
-  updatedAt          DateTime            @updatedAt
-  migrationId        String?
-  organizerKey       String?
-  organizerKeyAccess OrganizerKeyAccess? @relation(fields: [organizerKey], references: [id])
-  talks              Talk[]              @relation("speakers_talks")
-  proposals          Proposal[]          @relation("speakers_proposals")
-  teams              TeamMember[]
-  reviews            Review[]
-  surveys            Survey[]
-  createdTalks       Talk[]
-  createdEvents      Event[]
-  comments           Comment[]
-  accounts           Account[]
+  id                    String                 @id @default(cuid())
+  name                  String
+  email                 String
+  emailVerified         Boolean                @default(false)
+  termsAccepted         Boolean                @default(false)
+  bio                   String?
+  picture               String?
+  company               String?
+  references            String?
+  location              String?
+  socials               Json                   @default("{}")
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  migrationId           String?
+  organizerKey          String?
+  organizerKeyAccess    OrganizerKeyAccess?    @relation(fields: [organizerKey], references: [id])
+  talks                 Talk[]                 @relation("speakers_talks")
+  proposals             Proposal[]             @relation("speakers_proposals")
+  teams                 TeamMember[]
+  reviews               Review[]
+  surveys               Survey[]
+  createdTalks          Talk[]
+  createdEvents         Event[]
+  comments              Comment[]
+  authenticationMethods AuthenticationMethod[]
 
   @@map("users")
 }
 
-model Account {
+model AuthenticationMethod {
   uid       String   @id
   email     String
   name      String?
@@ -46,7 +48,7 @@ model Account {
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@map("accounts")
+  @@map("authentication_methods")
 }
 
 model OrganizerKeyAccess {
@@ -93,14 +95,14 @@ model Event {
   visibility               EventVisibility @default(PRIVATE)
   teamId                   String
   team                     Team            @relation(fields: [teamId], references: [id])
-  address                  String?
+  location                 String?
   timezone                 String
   lat                      Float?
   lng                      Float?
   contactEmail             String?
   websiteUrl               String?
   codeOfConductUrl         String?
-  logo                     String?
+  logoUrl                  String?
   conferenceStart          DateTime?
   conferenceEnd            DateTime?
   cfpStart                 DateTime?

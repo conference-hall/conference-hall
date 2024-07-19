@@ -12,5 +12,5 @@ export async function getEventsForSitemap() {
     orderBy: [{ name: 'asc' }],
   });
 
-  return events.map((event) => ({ name: event.name, slug: event.slug, logo: event.logo }));
+  return events.map((event) => ({ name: event.name, slug: event.slug, logoUrl: event.logoUrl }));
 }

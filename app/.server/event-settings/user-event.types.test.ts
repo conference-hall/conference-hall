@@ -15,7 +15,7 @@ describe('UserEvent types', () => {
         conferenceStart: new Date('2023-12-31T23:00:00.000Z'),
         conferenceEnd: new Date('2024-01-02T22:59:59.999Z'),
         description: null,
-        address: null,
+        location: null,
         contactEmail: null,
         websiteUrl: null,
       });

@@ -21,7 +21,7 @@ export type SpeakerProps = {
   company?: string | null;
   bio?: string | null;
   references?: string | null;
-  address?: string | null;
+  location?: string | null;
   survey?: {
     gender: string | null;
     tshirt: string | null;
@@ -144,7 +144,7 @@ function SpeakerDrawer({ speaker, canEdit, open, onClose }: SpeakerDrawerProps) 
   const details = [
     { label: 'Biography', value: speaker.bio },
     { label: 'References', value: speaker.references },
-    { label: 'Location', value: speaker.address },
+    { label: 'Location', value: speaker.location },
     { label: 'Gender', value: speaker.survey?.gender },
     { label: 'Tshirt size', value: speaker.survey?.tshirt },
     { label: 'Diet', value: speaker.survey?.diet?.join(', ') },

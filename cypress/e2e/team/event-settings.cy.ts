@@ -81,7 +81,7 @@ describe('Event settings', () => {
         general.saveDetailsForm({
           startDate: '2022-12-12',
           endDate: '2022-12-13',
-          address: 'Nantes, France',
+          location: 'Nantes, France',
           description: 'Hello world!',
           websiteUrl: 'https://website.com',
           contactEmail: 'contact@email.com',

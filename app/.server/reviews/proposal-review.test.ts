@@ -60,7 +60,7 @@ describe('ProposalReview', () => {
             id: speaker.id,
             name: speaker.name,
             bio: speaker.bio,
-            address: speaker.address,
+            location: speaker.location,
             email: speaker.email,
             picture: speaker.picture,
             company: speaker.company,

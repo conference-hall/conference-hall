@@ -77,7 +77,7 @@ describe('UserEvent', () => {
         name: event.name,
         slug: event.slug,
         type: event.type,
-        address: event.address,
+        location: event.location,
         timezone: event.timezone,
         conferenceStart: event.conferenceStart?.toISOString(),
         conferenceEnd: event.conferenceEnd?.toISOString(),
@@ -86,7 +86,7 @@ describe('UserEvent', () => {
         websiteUrl: event.websiteUrl,
         codeOfConductUrl: event.codeOfConductUrl,
         contactEmail: event.contactEmail,
-        logo: event.logo,
+        logoUrl: event.logoUrl,
         maxProposals: event.maxProposals,
         surveyEnabled: event.surveyEnabled,
         surveyQuestions: [],
@@ -142,13 +142,13 @@ describe('UserEvent', () => {
         slug: 'updated',
         visibility: 'PUBLIC',
         timezone: 'Europe/Oslo',
-        address: 'Address',
+        location: 'Location',
         description: 'Updated',
         categoriesRequired: true,
         formatsRequired: true,
         codeOfConductUrl: 'codeOfConductUrl',
         emailNotifications: ['submitted'],
-        logo: 'logo',
+        logoUrl: 'logoUrl',
         apiKey: 'apiKey',
       });
 
@@ -159,17 +159,17 @@ describe('UserEvent', () => {
       expect(updated?.slug).toBe('updated');
       expect(updated?.visibility).toBe('PUBLIC');
       expect(updated?.timezone).toBe('Europe/Oslo');
-      expect(updated?.address).toBe('Address');
+      expect(updated?.location).toBe('Location');
       expect(updated?.categoriesRequired).toBe(true);
       expect(updated?.formatsRequired).toBe(true);
       expect(updated?.description).toBe('Updated');
-      expect(updated?.logo).toBe('logo');
+      expect(updated?.logoUrl).toBe('logoUrl');
       expect(updated?.codeOfConductUrl).toBe('codeOfConductUrl');
       expect(updated?.emailNotifications).toEqual(['submitted']);
       expect(updated?.apiKey).toBe('apiKey');
     });
 
-    it.todo('test address geocoding');
+    it.todo('test location geocoding');
 
     it('returns an error message when slug already exists', async () => {
       await eventFactory({ team, attributes: { slug: 'hello-world' } });

@@ -6,7 +6,7 @@ export const seed = async () => {
     attributes: {
       bio: 'Clark kent biography',
       references: 'Clark kent is superman',
-      address: 'Metropolis',
+      location: 'Metropolis',
       company: 'Daily planet',
       socials: {
         github: 'ckent-github',

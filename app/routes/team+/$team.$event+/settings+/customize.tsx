@@ -33,11 +33,11 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
   const formData = await unstable_parseMultipartFormData(
     request,
-    uploadToStorageHandler({ name: 'logo', maxFileSize: 300_000 }),
+    uploadToStorageHandler({ name: 'logoUrl', maxFileSize: 300_000 }),
   );
-  const result = z.string().url().safeParse(formData.get('logo'));
+  const result = z.string().url().safeParse(formData.get('logoUrl'));
   if (result.success) {
-    await event.update({ logo: result.data });
+    await event.update({ logoUrl: result.data });
     return toast('success', 'Logo updated.');
   } else {
     return json({ status: 'error', message: 'An error occurred during upload, you may exceed max file size.' });
@@ -63,7 +63,7 @@ export default function EventGeneralSettingsRoute() {
       </Card.Title>
 
       <Card.Content>
-        <Avatar picture={event.logo} name={`${event.name} logo`} square size="4xl" />
+        <Avatar picture={event.logoUrl} name={`${event.name} logo`} square size="4xl" />
         <Callout title="Logo format">
           JPEG, PNG, WEBP or AVIF formats supported with optimal resolution of 500x500.
           <br />
@@ -77,7 +77,7 @@ export default function EventGeneralSettingsRoute() {
 
       <Card.Actions>
         <Form method="POST" encType="multipart/form-data" onChange={handleSubmit}>
-          <ButtonFileUpload name="logo" accept="image/jpeg,image/png,image/webp,image/avif">
+          <ButtonFileUpload name="logoUrl" accept="image/jpeg,image/png,image/webp,image/avif">
             Change logo
           </ButtonFileUpload>
         </Form>
