@@ -72,7 +72,7 @@ export async function migrateUsers(firestore: admin.firestore.Firestore, auth: a
     await db.user.create({ data: user });
   }
 
-  console.log(` > Users auth not found: ${usersAuthNotFound}`);
+  console.log(` > Users auth not found: ${usersAuthNotFound.length}`);
   for (const user of usersAuthNotFound) {
     console.log(`   - ${user.uid}, ${user.email}`);
   }
@@ -81,7 +81,7 @@ export async function migrateUsers(firestore: admin.firestore.Firestore, auth: a
     const u = user as UserRecord;
     console.log(`   - ${u.uid}, ${u.email}, ${u.providerData[0].providerId}`);
   }
-  console.log(` > User migrated ${users.length}`);
+  console.log(` > User migrated ${users.length - usersWithoutEmail.length} / ${users.length}`);
 }
 
 function getEmail(uid: string, email: string, authEmail?: string) {

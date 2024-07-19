@@ -18,7 +18,14 @@ export class UserRegistration {
 
     if (authentication) return authentication.user.id;
 
-    const { uid, name = '(No name)', email = `${data.uid}@example.com`, emailVerified, picture, provider } = data;
+    const {
+      uid,
+      name = '(No name)',
+      email = `${data.uid}@example.com`,
+      emailVerified,
+      picture,
+      provider = 'unknown',
+    } = data;
 
     const newAuthentication = await db.authenticationMethod.create({
       data: {
