@@ -1,5 +1,3 @@
-import type { LoaderFunctionArgs } from '@remix-run/node';
-
 import { appUrl } from '~/libs/env/env.server.ts';
 
 const isSeoEnabled = process.env.SEO_ENABLED === 'true';
@@ -24,7 +22,7 @@ Noindex: /
 Sitemap: ${appUrl()}/sitemap.xml
 `;
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+export const loader = async () => {
   const robotText = isSeoEnabled ? ROBOT_TXT_PRODUCTION : ROBOT_TXT_DEV;
   const bytes = new TextEncoder().encode(robotText).byteLength;
 
