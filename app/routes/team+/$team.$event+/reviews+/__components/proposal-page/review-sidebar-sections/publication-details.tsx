@@ -1,9 +1,9 @@
-import { RocketLaunchIcon } from '@heroicons/react/24/outline';
 import { Form } from '@remix-run/react';
 
+import { BadgeDot } from '~/design-system/badges.tsx';
 import { Button } from '~/design-system/buttons.tsx';
 import { Checkbox } from '~/design-system/forms/checkboxes.tsx';
-import { H2, Text } from '~/design-system/typography.tsx';
+import { H2 } from '~/design-system/typography.tsx';
 import type { DeliberationStatus, PublicationStatus } from '~/types/proposals.types';
 
 type Props = { deliberationStatus: DeliberationStatus; publicationStatus: PublicationStatus };
@@ -22,23 +22,15 @@ export function PublicationDetails({ deliberationStatus, publicationStatus }: Pr
 
 function PublicationLabel({ publicationStatus }: Props) {
   if (publicationStatus === 'PUBLISHED') {
-    return (
-      <Text variant="secondary">
-        <RocketLaunchIcon className="w-5 h-5 mr-2 mb-0.5 inline-block text-gray-600" />
-        Result published to speakers
-      </Text>
-    );
+    return <BadgeDot color="green">Result published to speakers</BadgeDot>;
   } else if (publicationStatus === 'NOT_PUBLISHED') {
     return (
-      <Form method="POST" className="flex flex-col gap-4">
-        <input type="hidden" name="intent" value="publish-results" />
-        <Text variant="secondary" size="s">
-          Result not yet shared with speakers. Click the button below to publish the result to speakers.
-        </Text>
+      <Form method="POST" className="space-y-4">
+        <BadgeDot color="gray">Result not published to speakers</BadgeDot>
         <Checkbox id="send-email" name="send-email">
           Notify speakers via email
         </Checkbox>
-        <Button variant="secondary" block>
+        <Button type="submit" name="intent" value="publish-results" variant="secondary" block>
           Publish result to speakers
         </Button>
       </Form>
