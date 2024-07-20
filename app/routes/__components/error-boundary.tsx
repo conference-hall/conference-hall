@@ -1,28 +1,12 @@
-// Source: https://github.com/epicweb-dev/epic-stack/blob/main/app/components/error-boundary.tsx
-
-import { type ErrorResponse, isRouteErrorResponse, useParams, useRouteError } from '@remix-run/react';
+import { isRouteErrorResponse, useRouteError } from '@remix-run/react';
 import { captureRemixErrorBoundaryError } from '@sentry/remix';
 
-import { Container } from '~/design-system/layouts/container.tsx';
-import { H1, Text } from '~/design-system/typography.tsx';
+import { Forbidden } from './errors/forbidden.tsx';
+import { InternalServerError } from './errors/internal-server-error.tsx';
+import { NotFound } from './errors/not-found.tsx';
 
-type StatusHandler = (info: { error: ErrorResponse; params: Record<string, string | undefined> }) => JSX.Element | null;
-
-export function GeneralErrorBoundary({
-  defaultStatusHandler = ({ error }) => (
-    <>
-      <H1>{error.status}</H1>
-      <Text>{error.data}</Text>
-    </>
-  ),
-  statusHandlers,
-}: {
-  defaultStatusHandler?: StatusHandler;
-  statusHandlers?: Record<number, StatusHandler>;
-  unexpectedErrorHandler?: (error: unknown) => JSX.Element | null;
-}) {
+export function GeneralErrorBoundary() {
   const error = useRouteError();
-  const params = useParams();
 
   captureRemixErrorBoundaryError(error);
 
@@ -30,25 +14,11 @@ export function GeneralErrorBoundary({
     console.error(error);
   }
 
-  return (
-    <Container className="my-4 sm:my-8">
-      {isRouteErrorResponse(error) ? (
-        (statusHandlers?.[error.status] ?? defaultStatusHandler)({
-          error,
-          params,
-        })
-      ) : (
-        <Text>{getErrorMessage(error)}</Text>
-      )}
-    </Container>
-  );
-}
+  if (isRouteErrorResponse(error)) {
+    if (error.status === 403) return <Forbidden />;
 
-function getErrorMessage(error: unknown) {
-  if (typeof error === 'string') return error;
-  if (error && typeof error === 'object' && 'message' in error && typeof error.message === 'string') {
-    return error.message;
+    return <NotFound />;
   }
-  console.error('Unable to get error message for error', error);
-  return 'Unknown Error';
+
+  return <InternalServerError />;
 }

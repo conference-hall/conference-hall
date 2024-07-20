@@ -366,7 +366,7 @@ describe('Event settings', () => {
 
     it('cannot create new event as a team member', () => {
       cy.visitAndCheck(`/team/team-1/conference-1/settings`, { failOnStatusCode: false });
-      cy.assertText('Forbidden operation');
+      settings.assertForbiddenPage();
     });
   });
 
@@ -375,7 +375,7 @@ describe('Event settings', () => {
 
     it('cannot create new event as a team reviewer', () => {
       cy.visitAndCheck(`/team/team-1/conference-1/settings`, { failOnStatusCode: false });
-      cy.assertText('Forbidden operation');
+      settings.assertForbiddenPage();
     });
   });
 });

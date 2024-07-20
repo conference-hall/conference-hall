@@ -38,7 +38,7 @@ describe('Team settings', () => {
 
     it('cannot access to the team settings page', () => {
       cy.visitAndCheck('/team/awesome-team/settings/members', { failOnStatusCode: false });
-      cy.assertText('Forbidden operation');
+      settings.assertForbiddenPage();
     });
   });
 
@@ -47,7 +47,7 @@ describe('Team settings', () => {
 
     it('cannot access to the team settings page', () => {
       cy.visitAndCheck('/team/awesome-team/settings/members', { failOnStatusCode: false });
-      cy.assertText('Forbidden operation');
+      settings.assertForbiddenPage();
     });
   });
 });

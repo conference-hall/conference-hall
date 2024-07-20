@@ -19,6 +19,7 @@ const schema = z.object({
   COOKIE_SIGNED_SECRET: z.string(),
   SENTRY_DSN: z.string().optional(),
   SEO_ENABLED: z.string().optional(),
+  MAINTENANCE_ENABLED: z.string().optional(),
 });
 
 declare global {
