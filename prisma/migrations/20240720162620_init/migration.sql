@@ -28,13 +28,15 @@ CREATE TYPE "CommentChannel" AS ENUM ('ORGANIZER', 'SPEAKER');
 -- CreateTable
 CREATE TABLE "users" (
     "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "name" TEXT,
+    "emailVerified" BOOLEAN NOT NULL DEFAULT false,
+    "termsAccepted" BOOLEAN NOT NULL DEFAULT false,
     "bio" TEXT,
     "picture" TEXT,
     "company" TEXT,
     "references" TEXT,
-    "address" TEXT,
+    "location" TEXT,
     "socials" JSONB NOT NULL DEFAULT '{}',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -45,17 +47,17 @@ CREATE TABLE "users" (
 );
 
 -- CreateTable
-CREATE TABLE "accounts" (
+CREATE TABLE "authentication_methods" (
     "uid" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "name" TEXT,
+    "name" TEXT NOT NULL,
     "picture" TEXT,
-    "provider" TEXT,
+    "provider" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "userId" TEXT NOT NULL,
 
-    CONSTRAINT "accounts_pkey" PRIMARY KEY ("uid")
+    CONSTRAINT "authentication_methods_pkey" PRIMARY KEY ("uid")
 );
 
 -- CreateTable
@@ -94,14 +96,14 @@ CREATE TABLE "events" (
     "type" "EventType" NOT NULL DEFAULT 'CONFERENCE',
     "visibility" "EventVisibility" NOT NULL DEFAULT 'PRIVATE',
     "teamId" TEXT NOT NULL,
-    "address" TEXT,
+    "location" TEXT,
     "timezone" TEXT NOT NULL,
     "lat" DOUBLE PRECISION,
     "lng" DOUBLE PRECISION,
     "contactEmail" TEXT,
     "websiteUrl" TEXT,
     "codeOfConductUrl" TEXT,
-    "logo" TEXT,
+    "logoUrl" TEXT,
     "conferenceStart" TIMESTAMP(3),
     "conferenceEnd" TIMESTAMP(3),
     "cfpStart" TIMESTAMP(3),
@@ -357,7 +359,7 @@ CREATE INDEX "_speakers_proposals_B_index" ON "_speakers_proposals"("B");
 ALTER TABLE "users" ADD CONSTRAINT "users_organizerKey_fkey" FOREIGN KEY ("organizerKey") REFERENCES "organizer_key_access"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "accounts" ADD CONSTRAINT "accounts_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "authentication_methods" ADD CONSTRAINT "authentication_methods_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "talks" ADD CONSTRAINT "talks_creatorId_fkey" FOREIGN KEY ("creatorId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
