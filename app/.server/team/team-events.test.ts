@@ -28,16 +28,6 @@ describe('TeamEvents', () => {
 
       expect(events).toEqual([
         {
-          name: event1.name,
-          slug: event1.slug,
-          type: event1.type,
-          logoUrl: event1.logoUrl,
-          timezone: event1.timezone,
-          cfpStart: event1.cfpStart?.toISOString(),
-          cfpEnd: event1.cfpEnd?.toISOString(),
-          cfpState: 'CLOSED',
-        },
-        {
           name: event2.name,
           slug: event2.slug,
           type: event2.type,
@@ -45,6 +35,16 @@ describe('TeamEvents', () => {
           timezone: event2.timezone,
           cfpStart: event2.cfpStart?.toISOString(),
           cfpEnd: event2.cfpEnd?.toISOString(),
+          cfpState: 'CLOSED',
+        },
+        {
+          name: event1.name,
+          slug: event1.slug,
+          type: event1.type,
+          logoUrl: event1.logoUrl,
+          timezone: event1.timezone,
+          cfpStart: event1.cfpStart?.toISOString(),
+          cfpEnd: event1.cfpEnd?.toISOString(),
           cfpState: 'CLOSED',
         },
       ]);
