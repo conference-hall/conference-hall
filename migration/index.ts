@@ -18,7 +18,23 @@ async function main() {
   if (!firestore || !auth) return;
 
   console.log('Reset database...');
-  await resetDB();
+  await db.comment.deleteMany();
+  await db.review.deleteMany();
+  await db.proposal.deleteMany();
+  await db.survey.deleteMany();
+
+  await db.eventFormat.deleteMany();
+  await db.eventCategory.deleteMany();
+  await db.event.deleteMany();
+
+  await db.teamMember.deleteMany();
+  await db.team.deleteMany();
+
+  await db.talk.deleteMany();
+
+  await db.organizerKeyAccess.deleteMany();
+  await db.authenticationMethod.deleteMany();
+  await db.user.deleteMany();
 
   console.log('Migrating users...');
   await migrateUsers(firestore, auth);
@@ -54,23 +70,6 @@ function initFirestore() {
   const firestore = app.firestore();
 
   return { auth, firestore };
-}
-
-export async function resetDB() {
-  await db.$transaction([
-    db.comment.deleteMany(),
-    db.review.deleteMany(),
-    db.proposal.deleteMany(),
-    db.survey.deleteMany(),
-    db.talk.deleteMany(),
-    db.eventFormat.deleteMany(),
-    db.eventCategory.deleteMany(),
-    db.event.deleteMany(),
-    db.teamMember.deleteMany(),
-    db.team.deleteMany(),
-    db.organizerKeyAccess.deleteMany(),
-    db.user.deleteMany(),
-  ]);
 }
 
 main();

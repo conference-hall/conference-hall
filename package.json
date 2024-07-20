@@ -24,7 +24,7 @@
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint --ignore-path .gitignore .",
     "tsc": "tsc -b && tsc -b cypress",
     "dep:updates": "npx npm-check-updates -i",
-    "script:migrate": "tsx ./migration/index.ts",
+    "script:migrate": "dotenv -e .env.migrate -- tsx ./migration/index.ts",
     "prepare": "husky"
   },
   "lint-staged": {

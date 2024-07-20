@@ -32,8 +32,8 @@ export async function migrateTalks(firestore: admin.firestore.Firestore) {
 
     const talk: Prisma.TalkCreateInput = {
       migrationId: talkDoc.id,
-      title: data.title, //  || '(No title)'
-      abstract: data.abstract, //  || '(No abstract)'
+      title: data.title,
+      abstract: data.abstract,
       references: data.references,
       level: mapLevel(data.level),
       languages: mapLanguage(data.language),
