@@ -147,7 +147,7 @@ describe('CfpReviewsSearch', () => {
               bio: speaker.bio,
               picture: speaker.picture,
               company: speaker.company,
-              address: speaker.address,
+              location: speaker.location,
               references: speaker.references,
               socials: speaker.socials,
             },

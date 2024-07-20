@@ -22,3 +22,6 @@ test-results
 
 # ignore ts files
 *.ignore.ts
+
+# .env
+.env.migrate

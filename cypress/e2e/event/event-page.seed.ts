@@ -10,7 +10,7 @@ export const seed = async () => {
     attributes: {
       name: 'Devfest Nantes',
       slug: 'devfest-nantes',
-      address: 'Nantes, France',
+      location: 'Nantes, France',
       description: 'The event !',
       conferenceStart: '2020-10-05T00:00:00.000Z',
       conferenceEnd: '2020-10-05T00:00:00.000Z',

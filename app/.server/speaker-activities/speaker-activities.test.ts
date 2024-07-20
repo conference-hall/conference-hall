@@ -25,7 +25,7 @@ describe('SpeakerActivities', () => {
           {
             slug: event2.slug,
             name: event2.name,
-            logo: event2.logo,
+            logoUrl: event2.logoUrl,
             cfpState: 'CLOSED',
             submissions: [
               {
@@ -40,7 +40,7 @@ describe('SpeakerActivities', () => {
           {
             slug: event.slug,
             name: event.name,
-            logo: event.logo,
+            logoUrl: event.logoUrl,
             cfpState: 'OPENED',
             submissions: [
               {

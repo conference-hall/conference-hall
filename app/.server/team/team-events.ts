@@ -27,14 +27,14 @@ export class TeamEvents {
 
     const events = await db.event.findMany({
       where: { team: { slug: this.team.slug }, archived },
-      orderBy: { name: 'asc' },
+      orderBy: [{ createdAt: 'desc' }, { name: 'asc' }],
     });
 
     return events.map((event) => ({
       slug: event.slug,
       name: event.name,
       type: event.type,
-      logo: event.logo,
+      logoUrl: event.logoUrl,
       timezone: event.timezone,
       cfpStart: event.cfpStart?.toISOString(),
       cfpEnd: event.cfpEnd?.toISOString(),

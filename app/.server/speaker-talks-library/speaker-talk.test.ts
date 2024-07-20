@@ -92,14 +92,14 @@ describe('SpeakerTalk', () => {
         {
           name: proposal2.event.name,
           slug: proposal2.event.slug,
-          logo: proposal2.event.logo,
+          logoUrl: proposal2.event.logoUrl,
           proposalStatus: SpeakerProposalStatus.DeliberationPending,
           createdAt: proposal2.createdAt.toISOString(),
         },
         {
           name: proposal1.event.name,
           slug: proposal1.event.slug,
-          logo: proposal1.event.logo,
+          logoUrl: proposal1.event.logoUrl,
           proposalStatus: SpeakerProposalStatus.DeliberationPending,
           createdAt: proposal1.createdAt.toISOString(),
         },

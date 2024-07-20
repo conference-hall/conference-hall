@@ -105,7 +105,7 @@ export class CfpReviewsSearch {
               company: speaker.company,
               references: speaker.references,
               picture: speaker.picture,
-              address: speaker.address,
+              location: speaker.location,
               email: speaker.email,
               socials: speaker.socials as SocialLinks,
             }))

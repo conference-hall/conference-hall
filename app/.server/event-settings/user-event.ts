@@ -42,7 +42,7 @@ export class UserEvent {
       name: event.name,
       slug: event.slug,
       type: event.type,
-      address: event.address,
+      location: event.location,
       timezone: event.timezone,
       conferenceStart: event.conferenceStart?.toISOString(),
       conferenceEnd: event.conferenceEnd?.toISOString(),
@@ -51,7 +51,7 @@ export class UserEvent {
       websiteUrl: event.websiteUrl,
       codeOfConductUrl: event.codeOfConductUrl,
       contactEmail: event.contactEmail,
-      logo: event.logo,
+      logoUrl: event.logoUrl,
       maxProposals: event.maxProposals,
       surveyEnabled: event.surveyEnabled,
       surveyQuestions: (event.surveyQuestions || []) as QuestionKeys,
@@ -76,9 +76,9 @@ export class UserEvent {
   async update(data: Partial<Prisma.EventCreateInput>) {
     const event = await this.allowedFor(['OWNER']);
 
-    if (data.address && event?.address !== data.address) {
-      const geocodedAddress = await geocode(data.address);
-      data.address = geocodedAddress.address;
+    if (data.location && event?.location !== data.location) {
+      const geocodedAddress = await geocode(data.location);
+      data.location = geocodedAddress.location;
       data.lat = geocodedAddress.lat;
       data.lng = geocodedAddress.lng;
     }

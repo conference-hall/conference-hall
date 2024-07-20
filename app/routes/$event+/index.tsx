@@ -29,7 +29,7 @@ export default function EventRoute() {
         codeOfConductUrl={event.codeOfConductUrl}
         conferenceStart={event.conferenceStart}
         conferenceEnd={event.conferenceEnd}
-        address={event.address}
+        location={event.location}
         type={event.type}
         timezone={event.timezone}
       />

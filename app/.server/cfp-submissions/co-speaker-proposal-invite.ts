@@ -25,7 +25,7 @@ export class CoSpeakerProposalInvite {
         name: proposal.event.name,
         slug: proposal.event.slug,
         type: proposal.event.type,
-        logo: proposal.event.logo,
+        logoUrl: proposal.event.logoUrl,
         cfpState: proposal.event.cfpState,
         cfpStart: proposal.event.cfpStart,
         cfpEnd: proposal.event.cfpEnd,

@@ -2,7 +2,7 @@ import { eventSocialCard } from './social-cards.ts';
 
 describe('#eventSocialCard', () => {
   it('returns an event social card with a logo', () => {
-    const socialCard = eventSocialCard({ name: 'Devfest', slug: 'devfest', logo: 'https://devfest.com/logo.png' });
+    const socialCard = eventSocialCard({ name: 'Devfest', slug: 'devfest', logoUrl: 'https://devfest.com/logo.png' });
 
     expect(socialCard).toEqual([
       { content: 'Devfest call for paper', property: 'og:title' },
@@ -19,7 +19,7 @@ describe('#eventSocialCard', () => {
   });
 
   it('returns an event social card without a logo', () => {
-    const socialCard = eventSocialCard({ name: 'Devfest', slug: 'devfest', logo: null });
+    const socialCard = eventSocialCard({ name: 'Devfest', slug: 'devfest', logoUrl: null });
 
     expect(socialCard).toEqual([
       { content: 'Devfest call for paper', property: 'og:title' },

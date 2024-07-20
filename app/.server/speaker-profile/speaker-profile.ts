@@ -20,7 +20,7 @@ export class SpeakerProfile {
       bio: user.bio,
       references: user.references,
       company: user.company,
-      address: user.address,
+      location: user.location,
       socials: user.socials as SocialLinks,
     };
   }

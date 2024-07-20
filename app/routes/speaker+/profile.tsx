@@ -85,7 +85,7 @@ export default function ProfileRoute() {
 
         <AdditionalInfoForm
           company={profile.company}
-          address={profile.address}
+          location={profile.location}
           socials={profile.socials}
           errors={errors}
         />

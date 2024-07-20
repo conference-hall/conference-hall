@@ -69,7 +69,7 @@ export default function EventCfpSettingsRoute() {
           errors={errors}
         />
       ) : (
-        <MeetupCfpOpening cfpStart={event.cfpStart} />
+        <MeetupCfpOpening cfpStart={event.cfpStart} timezone={event.timezone} />
       )}
 
       <CommonCfpSetting maxProposals={event.maxProposals} codeOfConductUrl={event.codeOfConductUrl} errors={errors} />

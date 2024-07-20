@@ -9,6 +9,7 @@ import { SlideOver } from '~/design-system/dialogs/slide-over.tsx';
 import { IconExternalLink } from '~/design-system/icon-buttons.tsx';
 import { GitHubIcon } from '~/design-system/icons/github-icon.tsx';
 import { TwitterIcon } from '~/design-system/icons/twitter-icon.tsx';
+import { Markdown } from '~/design-system/markdown.tsx';
 import { Text } from '~/design-system/typography.tsx';
 
 import { InvitationModal } from '../invitation-modal.tsx';
@@ -21,7 +22,7 @@ export type SpeakerProps = {
   company?: string | null;
   bio?: string | null;
   references?: string | null;
-  address?: string | null;
+  location?: string | null;
   survey?: {
     gender: string | null;
     tshirt: string | null;
@@ -142,15 +143,15 @@ function SpeakerDrawer({ speaker, canEdit, open, onClose }: SpeakerDrawerProps) 
   const Title = () => <SpeakerTitle name={speaker.name} picture={speaker.picture} company={speaker.company} />;
 
   const details = [
-    { label: 'Biography', value: speaker.bio },
-    { label: 'References', value: speaker.references },
-    { label: 'Location', value: speaker.address },
-    { label: 'Gender', value: speaker.survey?.gender },
-    { label: 'Tshirt size', value: speaker.survey?.tshirt },
-    { label: 'Diet', value: speaker.survey?.diet?.join(', ') },
-    { label: 'Need accomodation fees', value: speaker.survey?.accomodation },
-    { label: 'Need Transport fees', value: speaker.survey?.transports?.join(', ') },
-    { label: 'More information', value: speaker.survey?.info },
+    { key: 'bio', label: 'Biography', value: speaker.bio },
+    { key: 'references', label: 'References', value: speaker.references },
+    { key: 'location', label: 'Location', value: speaker.location },
+    { key: 'gender', label: 'Gender', value: speaker.survey?.gender },
+    { key: 'tshirt', label: 'Tshirt size', value: speaker.survey?.tshirt },
+    { key: 'diet', label: 'Diet', value: speaker.survey?.diet?.join(', ') },
+    { key: 'accomodation', label: 'Need accomodation fees', value: speaker.survey?.accomodation },
+    { key: 'transports', label: 'Need Transport fees', value: speaker.survey?.transports?.join(', ') },
+    { key: 'survey', label: 'More information', value: speaker.survey?.info },
   ].filter((detail) => Boolean(detail.value));
 
   return (
@@ -192,7 +193,13 @@ function SpeakerDrawer({ speaker, canEdit, open, onClose }: SpeakerDrawerProps) 
           {details.map((detail) => (
             <div key={detail.label} className="px-4 py-6 sm:px-6">
               <dt className="text-sm font-medium leading-6 text-gray-900">{detail.label}</dt>
-              <dd className="mt-1 text-sm leading-6 text-gray-700 break-words">{detail.value}</dd>
+              <dd className="mt-1 text-sm leading-6 text-gray-700 break-words">
+                {(detail.key === 'bio' || detail.key === 'references') && detail.value ? (
+                  <Markdown>{detail.value}</Markdown>
+                ) : (
+                  detail.value
+                )}
+              </dd>
             </div>
           ))}
         </dl>

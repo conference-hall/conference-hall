@@ -8,12 +8,12 @@ import type { SubmissionErrors } from '~/types/errors.types.ts';
 
 type Props = {
   company: string | null;
-  address: string | null;
+  location: string | null;
   socials: { github: string | null; twitter: string | null };
   errors: SubmissionErrors;
 };
 
-export function AdditionalInfoForm({ company, address, socials, errors }: Props) {
+export function AdditionalInfoForm({ company, location, socials, errors }: Props) {
   const { github, twitter } = socials;
 
   return (
@@ -27,7 +27,12 @@ export function AdditionalInfoForm({ company, address, socials, errors }: Props)
 
         <Card.Content>
           <Input name="company" label="Company" defaultValue={company || ''} error={errors?.company} />
-          <Input name="address" label="Location (city, country)" defaultValue={address || ''} error={errors?.address} />
+          <Input
+            name="location"
+            label="Location (city, country)"
+            defaultValue={location || ''}
+            error={errors?.location}
+          />
           <Input
             name="twitter"
             label="Twitter"

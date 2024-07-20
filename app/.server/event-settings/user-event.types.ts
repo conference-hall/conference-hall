@@ -13,7 +13,7 @@ export const EventGeneralSettingsSchema = z.object({
 export const EventDetailsSettingsSchema = z
   .object({
     timezone: z.string(),
-    address: z.string().trim().nullable().default(null),
+    location: z.string().trim().nullable().default(null),
     description: z.string().trim().min(1).nullable().default(null),
     conferenceStart: z.string().nullable().default(null),
     conferenceEnd: z.string().nullable().default(null),

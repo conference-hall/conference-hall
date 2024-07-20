@@ -8,7 +8,7 @@ describe('EventsSearch', () => {
     it('returns the default response', async () => {
       const event = await eventFactory({
         traits: ['conference-cfp-open'],
-        attributes: { name: 'conf-1', slug: 'conf-1', address: 'address-1' },
+        attributes: { name: 'conf-1', slug: 'conf-1', location: 'location-1' },
       });
 
       const result = await EventsSearch.with({ type: 'conference' }).search();
@@ -21,12 +21,12 @@ describe('EventsSearch', () => {
             slug: 'conf-1',
             name: 'conf-1',
             type: 'CONFERENCE',
-            address: 'address-1',
+            location: 'location-1',
             cfpState: 'OPENED',
             timezone: event.timezone,
             cfpStart: event.cfpStart?.toISOString(),
             cfpEnd: event.cfpEnd?.toISOString(),
-            logo: event.logo,
+            logoUrl: event.logoUrl,
           },
         ],
       });

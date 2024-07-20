@@ -17,7 +17,7 @@ interface Props {
   activities: Array<{
     slug: string;
     name: string;
-    logo: string | null;
+    logoUrl: string | null;
     cfpState: CfpState;
     submissions: Array<{
       id: string;
@@ -44,7 +44,7 @@ export function SpeakerActivitiesSection({ activities, nextPage, hasNextPage, cl
           <Card key={event.slug} as="li" className="flex flex-col">
             <div className="flex items-center justify-between border-b border-b-gray-200 p-4">
               <div className="flex items-center gap-4">
-                <Avatar picture={event.logo} name={event.name} square size="l" />
+                <Avatar picture={event.logoUrl} name={event.name} square size="l" />
                 <div className="truncate">
                   <Text size="l" weight="bold" truncate>
                     {event.name}

@@ -26,7 +26,7 @@ export class EventPage {
       name: event.name,
       teamName: event.team.name,
       description: event.description,
-      address: event.address,
+      location: event.location,
       timezone: event.timezone,
       conferenceStart: event.conferenceStart?.toISOString(),
       conferenceEnd: event.conferenceEnd?.toISOString(),
@@ -38,7 +38,7 @@ export class EventPage {
       websiteUrl: event.websiteUrl,
       contactEmail: event.contactEmail,
       codeOfConductUrl: event.codeOfConductUrl,
-      logo: event.logo,
+      logoUrl: event.logoUrl,
       maxProposals: event.maxProposals,
       hasTracks: event.categories.length > 0 || event.formats.length > 0,
       formats: event.formats.map((f) => ({

@@ -12,16 +12,16 @@ type Props = {
   email: string | null;
   picture: string | null;
   bio: string | null;
-  address: string | null;
+  location: string | null;
   socials: {
     github: string | null;
     twitter: string | null;
   };
 };
 
-export function SpeakerDetailsSection({ bio, address, socials }: Props) {
+export function SpeakerDetailsSection({ bio, location, socials }: Props) {
   const { github, twitter } = socials;
-  const displayInfo = address || twitter || github;
+  const displayInfo = location || twitter || github;
 
   return (
     <div className="hidden sm:block space-y-6">
@@ -32,7 +32,7 @@ export function SpeakerDetailsSection({ bio, address, socials }: Props) {
 
         {displayInfo && (
           <div className="p-6 space-y-4 border-t border-t-gray-200">
-            {address && <IconLabel icon={MapPinIcon}>{address}</IconLabel>}
+            {location && <IconLabel icon={MapPinIcon}>{location}</IconLabel>}
             {twitter && <IconLabel icon={TwitterIcon}>{twitter}</IconLabel>}
             {github && <IconLabel icon={GitHubIcon}>{github}</IconLabel>}
           </div>

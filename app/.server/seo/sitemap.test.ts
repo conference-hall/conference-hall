@@ -17,7 +17,7 @@ describe('#getEventsForSitemap', () => {
     expect(result.find((r) => r.name === 'conf-1')).toEqual({
       name: event.name,
       slug: event.slug,
-      logo: event.logo,
+      logoUrl: event.logoUrl,
     });
   });
 

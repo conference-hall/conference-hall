@@ -72,9 +72,9 @@ export function mapLevel(level?: string | null) {
 export function mapLanguage(language?: string | null) {
   if (!language) return undefined;
 
-  const codes = LANGUAGES.filter(({ label }) => label.toLowerCase() === language.toLocaleLowerCase()).map(
-    ({ value }) => value,
-  );
+  const languages = language.split(',').map((l) => l.trim().toLowerCase());
+
+  const codes = LANGUAGES.filter(({ label }) => languages.includes(label.toLowerCase())).map(({ value }) => value);
 
   if (codes.length === 0) return undefined;
 
@@ -135,6 +135,7 @@ export function mapEmailNotifications(notifications?: any) {
 }
 
 export async function findUser(migrationId: string, memoizedUsers: Map<string, string>) {
+  if (!migrationId) return undefined;
   if (memoizedUsers.has(migrationId)) return memoizedUsers.get(migrationId) as string;
 
   const user = await db.user.findFirst({ where: { migrationId } });

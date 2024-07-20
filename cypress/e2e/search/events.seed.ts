@@ -5,7 +5,7 @@ export const seed = async () => {
     attributes: {
       name: 'Devfest Nantes',
       slug: 'devfest-nantes',
-      address: 'Nantes, France',
+      location: 'Nantes, France',
     },
     traits: ['conference-cfp-open'],
   });
@@ -13,7 +13,7 @@ export const seed = async () => {
     attributes: {
       name: 'GDG Nantes',
       slug: 'gdg-nantes',
-      address: 'Nantes, France',
+      location: 'Nantes, France',
     },
     traits: ['meetup-cfp-open'],
   });

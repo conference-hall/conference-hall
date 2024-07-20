@@ -1,5 +1,7 @@
-import { Prisma } from '@prisma/client';
+import { Prisma, TeamRole } from '@prisma/client';
 import slugify, { slugifyWithCounter } from '@sindresorhus/slugify';
+import { endOfDay, startOfDay } from 'date-fns';
+import { fromZonedTime, toZonedTime } from 'date-fns-tz';
 import type admin from 'firebase-admin';
 import { db } from 'prisma/db.server.ts';
 import ProgressBar from 'progress';
@@ -37,20 +39,27 @@ export async function migrateEvents(firestore: admin.firestore.Firestore) {
     const data = eventDoc.data();
     eventProgress.tick();
 
-    const creatorId = await findUser(data.owner, memoizedUsers);
+    let creatorId = await findUser(data.owner, memoizedUsers);
 
     let team = null;
     if (data.organization) {
-      team = await db.team.findFirst({ where: { migrationId: data.organization } });
+      team = await db.team.findFirst({
+        where: { migrationId: data.organization },
+        include: { members: { where: { role: TeamRole.OWNER } } },
+      });
+
+      if (!creatorId) {
+        creatorId = team?.members?.at(0)?.memberId;
+      }
     } else if (creatorId) {
       const creator = await db.user.findFirst({ where: { id: creatorId } });
-      const slug = slugify(`team-${creator?.name}`);
+      const slug = slugify(`team-${creatorId}`);
       team = await db.team.findFirst({ where: { slug } });
       if (!team) {
         team = await db.team.create({
           data: {
             slug,
-            name: `Team ${creator?.name}`,
+            name: `${creator?.name}'s team`,
             members: { create: [{ role: 'OWNER', member: { connect: { id: creatorId } } }] },
           },
         });
@@ -61,22 +70,24 @@ export async function migrateEvents(firestore: admin.firestore.Firestore) {
       await firestore.collection('events').doc(eventDoc.id).collection('settings').limit(1).get()
     ).docs?.[0]?.data();
 
+    const timezone = data?.address?.timezone?.id || 'Europe/Paris';
+
     const event: Prisma.EventCreateInput = {
       migrationId: eventDoc.id,
       name: data.name,
       slug: slugifyEvent(data.name),
       type: mapEventType(data.type),
       visibility: mapEventVisibility(data.visibility),
-      timezone: 'Europe/Paris', // TODO: set event timezone otherwise default value
-      logo: checkUrl(data.bannerUrl), // TODO: rename to logoUrl?
+      timezone,
+      logoUrl: checkUrl(data.bannerUrl),
       description: data.description,
       contactEmail: checkEmail(data.contact),
       websiteUrl: checkUrl(data.website),
-      cfpStart: cfpDates('start', data), // TODO: check it is UTC (begin and end of day in TZ)
-      cfpEnd: cfpDates('end', data), // TODO: check it is UTC (begin and end of day in TZ)
-      conferenceStart: conferenceDates('start', data), // TODO: check it is UTC (begin and end of day in TZ)
-      conferenceEnd: conferenceDates('end', data), // TODO: check it is UTC (begin and end of day in TZ)
-      address: data.address?.formattedAddress,
+      cfpStart: cfpDates('start', data, timezone),
+      cfpEnd: cfpDates('end', data, timezone),
+      conferenceStart: conferenceDates('start', data, timezone),
+      conferenceEnd: conferenceDates('end', data, timezone),
+      location: data.address?.formattedAddress,
       lat: data.address?.latLng?.lat,
       lng: data.address?.latLng?.lng,
       displayProposalsReviews:
@@ -109,6 +120,7 @@ export async function migrateEvents(firestore: admin.firestore.Firestore) {
       eventsWithoutTeam.push(event.migrationId);
       continue;
     } else if (!creatorId) {
+      console.log(JSON.stringify(data));
       eventsWithoutOwner.push(event.migrationId);
       continue;
     }
@@ -118,40 +130,58 @@ export async function migrateEvents(firestore: admin.firestore.Firestore) {
 
   console.log(` > Events without team: ${eventsWithoutTeam.length}`);
   console.log(` > Events without owner: ${eventsWithoutOwner.length}`);
-  console.log(` > Events migrated ${events.length - eventsWithoutTeam.length - eventsWithoutOwner.length}`);
+  console.log(
+    ` > Events migrated ${events.length - eventsWithoutTeam.length - eventsWithoutOwner.length} / ${events.length}`,
+  );
 }
 
 async function createEvent(event: Prisma.EventCreateInput) {
   try {
     await db.event.create({ data: event });
-  } catch (e) {
-    if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002') {
+  } catch (error: any) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
       event.slug = slugifyEvent(event.name);
       await createEvent(event);
     } else {
-      throw e;
+      console.log(error);
+      console.log(event.migrationId, event.name, event.slug);
+      throw error;
     }
   }
 }
 
-function conferenceDates(date: 'start' | 'end', data: any): Date | undefined {
+function conferenceDates(date: 'start' | 'end', data: any, timezone: string): Date | undefined {
   if (data.type === 'conference') {
-    const current = data?.conferenceDates?.[date]?.toDate();
-    if (!(current instanceof Date)) return undefined;
-    return current;
+    if (!data?.conferenceDates?.[date]) return undefined;
+
+    const currentTz = toZonedTime(data?.conferenceDates?.[date]?.toDate(), timezone);
+    if (!(currentTz instanceof Date)) return undefined;
+
+    if (date === 'start') {
+      return fromZonedTime(startOfDay(currentTz), timezone);
+    } else {
+      return fromZonedTime(endOfDay(currentTz), timezone);
+    }
   }
   return undefined;
 }
 
-function cfpDates(date: 'start' | 'end', data: any): Date | undefined {
+function cfpDates(date: 'start' | 'end', data: any, timezone: string): Date | undefined {
   if (data.type === 'conference') {
-    const current = data?.cfpDates?.[date]?.toDate();
-    if (!(current instanceof Date)) return undefined;
-    return current;
+    if (!data?.cfpDates?.[date]) return undefined;
+
+    const currentTz = toZonedTime(data?.cfpDates?.[date]?.toDate(), timezone);
+    if (!(currentTz instanceof Date)) return undefined;
+
+    if (date === 'start') {
+      return fromZonedTime(startOfDay(currentTz), timezone);
+    } else {
+      return fromZonedTime(endOfDay(currentTz), timezone);
+    }
   }
   const cfpOpened = mapBoolean(data?.cfpOpened);
   if (data.type === 'meetup' && date === 'start' && cfpOpened) {
-    return new Date();
+    return fromZonedTime(startOfDay(toZonedTime(new Date(), timezone)), timezone);
   }
   return undefined;
 }

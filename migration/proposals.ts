@@ -18,6 +18,7 @@ const memoizedUsers = new Map<string, string>();
 const proposalsWithoutTitle = [];
 const proposalsWithoutAbstract = [];
 const proposalsWithoutSpeakers = [];
+let totalWithoutTalks = 0;
 
 /**
  * Migrate Proposals, comments and reviews
@@ -28,7 +29,7 @@ export async function migrateProposals(firestore: admin.firestore.Firestore) {
     total: events.length,
   });
 
-  let proposalsMigratedCount = 1;
+  let proposalsMigratedCount = 0;
 
   for (const event of events) {
     eventProgress.tick();
@@ -44,7 +45,7 @@ export async function migrateProposals(firestore: admin.firestore.Firestore) {
       const data = proposalDoc.data();
 
       const speakersIds = await findUsers(arrayFromBooleanMap(data.speakers), memoizedUsers);
-      const talk = await db.talk.findFirst({ where: { migrationId: proposalDoc.id } });
+      const talk = await findTalk(event.id, proposalDoc.id);
 
       // get formats
       const formats = data.formats ? event.formats.filter((format) => format.migrationId === data.formats) : undefined;
@@ -134,6 +135,10 @@ export async function migrateProposals(firestore: admin.firestore.Firestore) {
         comments: { createMany: { data: comments } },
       };
 
+      if (!talk?.id) {
+        totalWithoutTalks += 1;
+      }
+
       if (!proposal.title) {
         proposalsWithoutTitle.push(proposal.migrationId);
         continue;
@@ -153,6 +158,7 @@ export async function migrateProposals(firestore: admin.firestore.Firestore) {
   console.log(` > Proposals without title: ${proposalsWithoutTitle.length}`);
   console.log(` > Proposals without abstract: ${proposalsWithoutAbstract.length}`);
   console.log(` > Proposals without speakers: ${proposalsWithoutSpeakers.length}`);
+  console.log(` > Proposals without talk`, totalWithoutTalks);
   console.log(` > Proposals migrated ${proposalsMigratedCount}`);
 }
 
@@ -204,4 +210,25 @@ function mapFeelings(feeling: string): ReviewFeeling {
     default:
       return ReviewFeeling.NEUTRAL;
   }
+}
+
+async function findTalk(eventId: string, proposalId: string) {
+  let talk = await db.talk.findFirst({ where: { migrationId: proposalId } });
+
+  if (talk) {
+    const already = await alreadySubmittedTalk(eventId, talk.id);
+    if (already) {
+      console.log(`Link already exists for ${proposalId}: ${eventId}/${talk.id} with proposal ${already.id}`);
+      return null;
+    } else {
+      return talk;
+    }
+  }
+
+  return null;
+}
+
+async function alreadySubmittedTalk(eventId: string, talkId: string) {
+  const proposal = await db.proposal.findUnique({ where: { talkId_eventId: { talkId, eventId } } });
+  return proposal;
 }

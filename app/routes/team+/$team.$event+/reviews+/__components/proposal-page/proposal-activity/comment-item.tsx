@@ -13,9 +13,7 @@ export function CommentItem({ item }: { item: FeedItem }) {
 
   return (
     <>
-      <div>
-        <Avatar picture={item.picture} name={item.user} size="xs" className="relative mt-3 flex-none" />
-      </div>
+      <Avatar picture={item.picture} name={item.user} size="xs" className="relative mt-3 flex-none" />
       <div className="w-full rounded-md p-3 ring-1 ring-inset ring-gray-200 bg-white min-w-0">
         <div className="flex justify-between gap-x-4">
           <div className="py-0.5 text-xs leading-5 text-gray-500">
