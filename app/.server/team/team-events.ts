@@ -27,7 +27,7 @@ export class TeamEvents {
 
     const events = await db.event.findMany({
       where: { team: { slug: this.team.slug }, archived },
-      orderBy: { name: 'asc' },
+      orderBy: [{ createdAt: 'desc' }, { name: 'asc' }],
     });
 
     return events.map((event) => ({

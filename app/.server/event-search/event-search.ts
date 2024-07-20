@@ -31,7 +31,7 @@ export class EventsSearch {
 
     const events = await db.event.findMany({
       where: eventsWhereInput,
-      orderBy: [{ cfpStart: 'desc' }, { name: 'asc' }],
+      orderBy: [{ type: 'desc' }, { cfpStart: 'desc' }, { name: 'asc' }],
       skip: pagination.pageIndex * pagination.pageSize,
       take: pagination.pageSize,
     });

@@ -1,5 +1,6 @@
 import { Form, useFetcher } from '@remix-run/react';
 import { format } from 'date-fns';
+import { fromZonedTime } from 'date-fns-tz';
 
 import { ToggleGroup } from '~/design-system/forms/toggles.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
@@ -7,14 +8,17 @@ import { H2 } from '~/design-system/typography.tsx';
 
 import type { action } from '../cfp';
 
-type Props = { cfpStart?: string };
+type Props = { cfpStart?: string; timezone: string };
 
-export function MeetupCfpOpening({ cfpStart }: Props) {
+export function MeetupCfpOpening({ cfpStart, timezone }: Props) {
   const fetcher = useFetcher<typeof action>();
 
   const handleChange = (checked: boolean) => {
     fetcher.submit(
-      { intent: 'save-cfp-meetup-opening', cfpStart: checked ? format(new Date(), 'yyyy-MM-dd') : '' }, // TODO: manage event timezone
+      {
+        intent: 'save-cfp-meetup-opening',
+        cfpStart: checked ? format(fromZonedTime(new Date(), timezone), 'yyyy-MM-dd') : '',
+      },
       { method: 'POST' },
     );
   };
