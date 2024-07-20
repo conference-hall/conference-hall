@@ -55,7 +55,7 @@ describe('Team members list', () => {
 
     it('cannot access to members settings and is redirected to event page', () => {
       cy.visitAndCheck('/team/awesome-team/settings/members', { failOnStatusCode: false });
-      cy.assertText('Forbidden operation');
+      members.assertForbiddenPage();
     });
   });
 
@@ -64,7 +64,7 @@ describe('Team members list', () => {
 
     it('cannot access to members settings and is redirected to event page', () => {
       cy.visitAndCheck('/team/awesome-team/settings/members', { failOnStatusCode: false });
-      cy.assertText('Forbidden operation');
+      members.assertForbiddenPage();
     });
   });
 });

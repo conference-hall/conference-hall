@@ -52,7 +52,7 @@ describe('Publication page', () => {
     it('does not have access to publication', () => {
       cy.login('Peter Parker');
       cy.visitAndCheck(`/team/team-1/conference-1/publication`, { failOnStatusCode: false });
-      cy.assertText('Forbidden operation');
+      page.assertForbiddenPage();
     });
   });
 });

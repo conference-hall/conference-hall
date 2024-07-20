@@ -39,7 +39,7 @@ describe('View event page', () => {
 
   it('displays a not found page if event does not exist', () => {
     event.visit('event-dont-exist');
-    cy.assertText('Event not found');
+    event.assertPageNotFound();
   });
 
   it('can submit a proposal', () => {

@@ -23,6 +23,14 @@ class BasePage {
         return cy.get(`#${id}-describe`);
       });
   }
+
+  assertPageNotFound() {
+    cy.findByRole('heading', { name: 'Page not found' }).should('be.visible');
+  }
+
+  assertForbiddenPage() {
+    cy.findByRole('heading', { name: 'Forbidden action' }).should('be.visible');
+  }
 }
 
 class UserMenu {

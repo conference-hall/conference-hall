@@ -59,15 +59,6 @@ describe('Speaker talk page', () => {
     submission.isTalkStepVisible();
   });
 
-  it('cannot submit a talk already submitted', () => {
-    talk.visit('awesome-talk');
-    talk.submitTalk(); // FLAKY
-    search.isPageVisible();
-    cy.assertUrl('?talkId=awesome-talk');
-    search.result('Devfest Nantes').click();
-    cy.assertText('Talk already submitted.');
-  });
-
   it('can see a submitted proposal of a talk', () => {
     talk.visit('awesome-talk');
     cy.assertText('Submissions');
@@ -75,5 +66,15 @@ describe('Speaker talk page', () => {
     proposals.isPageVisible();
     proposals.list().should('have.length', 1);
     proposals.proposal('Awesome talk').should('exist');
+  });
+
+  it('cannot submit a talk already submitted', () => {
+    talk.visit('awesome-talk');
+    talk.submitTalk();
+
+    search.isPageVisible();
+    cy.assertUrl('?talkId=awesome-talk');
+    search.result('Devfest Nantes').click();
+    search.assertPageNotFound(); // TODO: Improve error message
   });
 });

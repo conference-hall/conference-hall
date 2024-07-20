@@ -30,7 +30,7 @@ describe('Schedule page', () => {
     it('does not have access to schedule', () => {
       cy.login('Bruce Wayne');
       cy.visitAndCheck(`/team/team-1/conference-1/schedule`, { failOnStatusCode: false });
-      cy.assertText('Forbidden operation');
+      page.assertForbiddenPage();
     });
   });
 });
