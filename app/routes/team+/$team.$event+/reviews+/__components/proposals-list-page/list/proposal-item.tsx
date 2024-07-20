@@ -1,11 +1,10 @@
-import { CheckIcon, ChevronRightIcon, XMarkIcon } from '@heroicons/react/20/solid';
-import { ClockIcon } from '@heroicons/react/24/outline';
+import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import { Link, useSearchParams } from '@remix-run/react';
 import type { ChangeEvent } from 'react';
 
+import { BadgeDot } from '~/design-system/badges.tsx';
 import { Checkbox } from '~/design-system/forms/checkboxes.tsx';
 import { Text } from '~/design-system/typography.tsx';
-import { Join } from '~/design-system/utils/join.tsx';
 import { GlobalReviewNote, UserReviewNote } from '~/routes/__components/reviews/review-note.tsx';
 import { useTeam } from '~/routes/team+/__components/use-team.tsx';
 
@@ -34,7 +33,7 @@ export function ProposalItem({ proposal, isSelected, isAllPagesSelected, toggle 
           checked={isSelected}
           disabled={isAllPagesSelected}
           onChange={toggle}
-          className="pb-5 pr-4"
+          className="pb-0 md:pb-5 pr-4"
         />
       ) : undefined}
       <Link
@@ -42,15 +41,22 @@ export function ProposalItem({ proposal, isSelected, isAllPagesSelected, toggle 
         aria-label={`Open proposal "${title}"`}
         className="flex items-center justify-between gap-4 py-4 grow min-w-0"
       >
-        <div className="space-y-1 min-w-0">
-          <div className="flex items-center gap-1">
+        <div className="space-y-2 md:space-y-1 min-w-0">
+          <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-2">
             <Text weight="semibold" truncate>
               {title}
             </Text>
-            {team.role !== 'REVIEWER' && deliberationIcon(proposal)}
+            {team.role !== 'REVIEWER' && proposal.deliberationStatus !== 'PENDING' ? (
+              <span className="flex items-center gap-1">
+                {deliberationBadge(proposal)}
+                {publicationBadge(proposal)}
+              </span>
+            ) : null}
           </div>
           <div className="flex gap-1">
-            <ProposalDetails proposal={proposal} />
+            <Text size="xs" variant="secondary">
+              {proposal.speakers.length ? `by ${proposal.speakers.map((a) => a.name).join(', ')}` : null}
+            </Text>
           </div>
         </div>
         <div className="flex gap-4 items-center">
@@ -65,81 +71,62 @@ export function ProposalItem({ proposal, isSelected, isAllPagesSelected, toggle 
   );
 }
 
-function ProposalDetails({ proposal }: { proposal: ProposalData }) {
-  const { team } = useTeam();
-  const { speakers } = proposal;
-
-  if (team.role === 'REVIEWER') {
-    return (
-      <Text size="xs" variant="secondary">
-        {speakers.length ? `by ${speakers.map((a) => a.name).join(', ')} - ` : null}
-        {reviewLabel(proposal)}
-      </Text>
-    );
-  }
-
-  return (
-    <Text size="xs" variant="secondary">
-      {speakers.length ? `by ${speakers.map((a) => a.name).join(', ')} - ` : null}
-      <Join separator={<span> &gt; </span>}>
-        {reviewLabel(proposal)}
-        {deliberationLabel(proposal)}
-        {publicationLabel(proposal)}
-        {confirmationLabel(proposal)}
-      </Join>
-    </Text>
-  );
-}
-
-function reviewLabel({ reviews }: ProposalData) {
-  if (reviews.you.note !== null) {
-    return 'Reviewed';
-  }
-  return 'Not reviewed';
-}
-
-function deliberationLabel({ deliberationStatus, publicationStatus, confirmationStatus }: ProposalData) {
+function deliberationBadge({ deliberationStatus, confirmationStatus }: ProposalData) {
   if (confirmationStatus) return null;
+
   switch (deliberationStatus) {
     case 'ACCEPTED':
-      return 'Accepted';
+      return (
+        <BadgeDot pill compact color="green">
+          Accepted
+        </BadgeDot>
+      );
     case 'REJECTED':
-      return 'Rejected';
+      return (
+        <BadgeDot pill compact color="red">
+          Rejected
+        </BadgeDot>
+      );
     case 'PENDING':
       return null;
   }
 }
 
-function deliberationIcon({ deliberationStatus, confirmationStatus }: ProposalData) {
-  if (deliberationStatus === 'ACCEPTED' && confirmationStatus === 'PENDING') {
-    return <ClockIcon className="inline shrink-0 ml-1 mb-0.5 w-4 h-4 text-gray-600" aria-hidden />;
-  } else if (deliberationStatus === 'REJECTED' || confirmationStatus === 'DECLINED') {
-    return <XMarkIcon className="inline shrink-0 ml-0.5 mb-0.5 w-4 h-4 text-red-600" aria-hidden />;
-  } else if (deliberationStatus === 'ACCEPTED' || confirmationStatus === 'CONFIRMED') {
-    return <CheckIcon className="inline shrink-0 ml-0.5 mb-0.5 w-4 h-4 text-green-600" aria-hidden />;
-  }
-  return null;
-}
+function publicationBadge({ deliberationStatus, publicationStatus, confirmationStatus }: ProposalData) {
+  if (deliberationStatus === 'PENDING') return null;
 
-function publicationLabel({ deliberationStatus, publicationStatus, confirmationStatus }: ProposalData) {
-  if (confirmationStatus || deliberationStatus === 'PENDING') return null;
-  switch (publicationStatus) {
-    case 'PUBLISHED':
-      return 'Published';
-    case 'NOT_PUBLISHED':
-      return 'Not published';
-    default:
-      return null;
-  }
-}
-
-function confirmationLabel({ deliberationStatus, confirmationStatus }: ProposalData) {
-  if (deliberationStatus === 'ACCEPTED' && confirmationStatus === 'PENDING') {
-    return 'Waiting for confirmation';
-  } else if (deliberationStatus === 'ACCEPTED' && confirmationStatus === 'CONFIRMED') {
-    return 'Confirmed by speakers';
-  } else if (deliberationStatus === 'ACCEPTED' && confirmationStatus === 'DECLINED') {
-    return 'Declined by speakers';
+  if (deliberationStatus === 'ACCEPTED' && publicationStatus === 'PUBLISHED' && confirmationStatus === 'PENDING') {
+    return (
+      <BadgeDot pill compact color="blue">
+        Waiting for confirmation
+      </BadgeDot>
+    );
+  } else if (
+    deliberationStatus === 'ACCEPTED' &&
+    publicationStatus === 'PUBLISHED' &&
+    confirmationStatus === 'CONFIRMED'
+  ) {
+    return (
+      <BadgeDot pill compact color="green">
+        Confirmed by speakers
+      </BadgeDot>
+    );
+  } else if (
+    deliberationStatus === 'ACCEPTED' &&
+    publicationStatus === 'PUBLISHED' &&
+    confirmationStatus === 'DECLINED'
+  ) {
+    return (
+      <BadgeDot pill compact color="red">
+        Declined by speakers
+      </BadgeDot>
+    );
+  } else if (publicationStatus === 'NOT_PUBLISHED') {
+    return (
+      <BadgeDot pill compact color="gray">
+        Not published
+      </BadgeDot>
+    );
   }
   return null;
 }
