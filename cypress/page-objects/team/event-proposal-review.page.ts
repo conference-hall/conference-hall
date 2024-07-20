@@ -98,7 +98,7 @@ class ProposalReviewPage extends BasePage {
   }
 
   confirmationPanel() {
-    return cy.findByRole('heading', { name: 'Confirmation' }).parent();
+    return cy.findByRole('heading', { name: 'Speakers confirmation' }).parent();
   }
 
   // Edit proposal
