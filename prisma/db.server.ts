@@ -25,7 +25,8 @@ if (process.env.NODE_ENV === 'production' && !process.env.USE_EMULATORS) {
 }
 
 function getClient() {
-  const log: Prisma.LogLevel[] = process.env.NODE_ENV === 'development' ? ['warn', 'error'] : [];
+  const log: Prisma.LogLevel[] =
+    process.env.NODE_ENV === 'development' ? ['info', 'warn', 'error'] : ['info', 'warn', 'error'];
 
   const client = new PrismaClient({ log })
     .$extends(eventExtension)
