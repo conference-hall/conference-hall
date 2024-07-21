@@ -9,7 +9,7 @@ import type { ReactNode } from 'react';
 
 import { UserInfo } from './.server/user-registration/user-info.ts';
 import { initializeFirebaseClient } from './libs/auth/firebase.ts';
-import { getSessionUserId } from './libs/auth/session.ts';
+import { destroySession, getSessionUserId } from './libs/auth/session.ts';
 import { getPublicEnv } from './libs/env/env.server.ts';
 import { useNonce } from './libs/nonce/use-nonce.ts';
 import type { Toast } from './libs/toasts/toast.server';
@@ -54,6 +54,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   const userId = await getSessionUserId(request);
   const user = await UserInfo.get(userId);
+  if (userId && !user) await destroySession(request);
 
   return json({ user, toast, env: getPublicEnv() }, { headers: toastHeaders || {} });
 };
