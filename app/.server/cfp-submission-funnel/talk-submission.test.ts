@@ -342,7 +342,7 @@ describe('TalkSubmission', () => {
         languages: proposal.languages,
         level: proposal.level,
         references: proposal.references,
-        invitationLink: `http://localhost:3001/invite/proposal/${proposal.invitationCode}`,
+        invitationLink: `http://localhost:3000/invite/proposal/${proposal.invitationCode}`,
         isOwner: true,
         speakers: [
           { id: speaker.id, name: speaker.name, bio: speaker.bio, picture: speaker.picture, isCurrentUser: true },

@@ -4,9 +4,7 @@ import { z } from 'zod';
 const schema = z.object({
   NODE_ENV: z.enum(['production', 'development']),
   USE_EMULATORS: z.string().optional(),
-  PROTOCOL: z.string(),
-  DOMAIN: z.string(),
-  PORT: z.string().optional(),
+  APP_URL: z.string(),
   DATABASE_URL: z.string(),
   REDIS_URL: z.string(),
   FIREBASE_API_KEY: z.string(),
@@ -59,9 +57,7 @@ export function getPublicEnv() {
 }
 
 export function appUrl() {
-  const { PROTOCOL, DOMAIN, PORT } = process.env;
-  if (!PORT) return `${PROTOCOL}://${DOMAIN}`;
-  return `${PROTOCOL}://${DOMAIN}:${PORT}`;
+  return process.env.APP_URL;
 }
 
 type ENV = ReturnType<typeof getPublicEnv>;

@@ -2,14 +2,11 @@ import { defineConfig } from 'cypress';
 
 import { disconnectDB, resetDB } from './tests/db-helpers.ts';
 
-const { PROTOCOL, DOMAIN, PORT } = process.env;
-const APP_URL = `${PROTOCOL}://${DOMAIN}:${PORT}`;
-
 export default defineConfig({
   experimentalMemoryManagement: true,
   screenshotOnRunFailure: false,
   e2e: {
-    baseUrl: APP_URL,
+    baseUrl: process.env.APP_URL,
     viewportWidth: 1440,
     viewportHeight: 800,
     scrollBehavior: 'center',

@@ -7,7 +7,7 @@ describe('Talk', () => {
       const speaker = await userFactory();
       const talk = await talkFactory({ speakers: [speaker] });
 
-      expect(talk.invitationLink).toBe(`http://localhost:3001/invite/talk/${talk.invitationCode}`);
+      expect(talk.invitationLink).toBe(`http://localhost:3000/invite/talk/${talk.invitationCode}`);
     });
   });
 });

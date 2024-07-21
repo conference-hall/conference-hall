@@ -13,7 +13,7 @@ describe('Proposal#invitationLink', () => {
     const talk = await talkFactory({ speakers: [speaker] });
     const proposal = await proposalFactory({ event, talk });
 
-    expect(proposal.invitationLink).toBe(`http://localhost:3001/invite/proposal/${proposal.invitationCode}`);
+    expect(proposal.invitationLink).toBe(`http://localhost:3000/invite/proposal/${proposal.invitationCode}`);
   });
 });
 
