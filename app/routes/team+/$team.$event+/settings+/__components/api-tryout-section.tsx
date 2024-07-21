@@ -40,7 +40,7 @@ export function ApiTryoutSection({ slug, apiKey }: Props) {
           label="deliberationStatus"
           options={[
             { id: '', name: 'All (by default)' },
-            { id: 'pending', name: 'Pending' },
+            { id: 'pending', name: 'Not deliberated' },
             { id: 'accepted', name: 'Accepted' },
             { id: 'rejected', name: 'Rejected' },
           ]}

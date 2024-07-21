@@ -59,28 +59,23 @@ export default function PublicationRoute() {
         </Card.Title>
 
         <Card.Content className="grid grid-cols-1 gap-4 lg:gap-6 lg:grid-cols-3">
-          <StatisticCard
+          <ProgressCard
             label="Total results published"
-            stat={`${statistics.accepted.published + statistics.rejected.published}`}
+            value={statistics.accepted.published + statistics.rejected.published}
+            max={statistics.deliberation.accepted + statistics.deliberation.rejected}
           >
             <Link to="../reviews" relative="path" size="s" weight="medium">
               See all proposals &rarr;
             </Link>
-          </StatisticCard>
-          <ProgressCard
-            label="Accepted published"
-            value={statistics.accepted.published}
-            max={statistics.deliberation.accepted}
-          >
+          </ProgressCard>
+
+          <StatisticCard label="Accepted proposals to publish" stat={`${statistics.accepted.notPublished}`}>
             <PublicationButton type="ACCEPTED" statistics={statistics.accepted} />
-          </ProgressCard>
-          <ProgressCard
-            label="Rejected published"
-            value={statistics.rejected.published}
-            max={statistics.deliberation.rejected}
-          >
+          </StatisticCard>
+
+          <StatisticCard label="Rejected proposals to publish" stat={`${statistics.rejected.notPublished}`}>
             <PublicationButton type="REJECTED" statistics={statistics.rejected} />
-          </ProgressCard>
+          </StatisticCard>
         </Card.Content>
       </Card>
 
@@ -96,28 +91,28 @@ export default function PublicationRoute() {
             {
               name: 'Accepted proposals',
               amount: statistics.deliberation.accepted,
-              colorChart: 'cyan',
-              colorLegend: 'bg-cyan-500',
+              colorChart: 'green',
+              colorLegend: 'bg-green-500',
               to: '../reviews?status=accepted',
             },
             {
               name: 'Rejected proposals',
               amount: statistics.deliberation.rejected,
-              colorChart: 'pink',
-              colorLegend: 'bg-pink-500',
+              colorChart: 'red',
+              colorLegend: 'bg-red-500',
               to: '../reviews?status=rejected',
             },
             {
-              name: 'Pending proposals',
+              name: 'Not deliberated proposals',
               amount: statistics.deliberation.pending,
-              colorChart: 'gray',
-              colorLegend: 'bg-gray-500',
+              colorChart: 'blue',
+              colorLegend: 'bg-blue-500',
               to: '../reviews?status=pending',
             },
           ]}
         >
           <Callout>
-            To deliberate, open the Proposals page, select and mark proposals as accepted or rejected. You can also
+            To deliberate, open the proposals page, select and mark proposals as accepted or rejected. You can also
             change the deliberation status individually on a proposal page.
           </Callout>
         </DonutCard>
@@ -133,26 +128,28 @@ export default function PublicationRoute() {
             {
               name: 'Confirmed by speakers',
               amount: statistics.confirmations.confirmed,
-              colorChart: 'cyan',
-              colorLegend: 'bg-cyan-500',
+              colorChart: 'green',
+              colorLegend: 'bg-green-500',
               to: '../reviews?status=confirmed',
             },
             {
               name: 'Declined by speakers',
               amount: statistics.confirmations.declined,
-              colorChart: 'pink',
-              colorLegend: 'bg-pink-500',
+              colorChart: 'red',
+              colorLegend: 'bg-red-500',
               to: '../reviews?status=declined',
             },
             {
               name: 'Waiting for confirmation',
               amount: statistics.confirmations.pending,
-              colorChart: 'gray',
-              colorLegend: 'bg-gray-500',
+              colorChart: 'blue',
+              colorLegend: 'bg-blue-500',
               to: '../reviews?status=not-answered',
             },
           ]}
-        />
+        >
+          <Callout>To get speaker confirmation, organizers must publish results for accepted proposals.</Callout>
+        </DonutCard>
       </section>
     </Page>
   );

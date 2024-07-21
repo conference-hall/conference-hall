@@ -11,7 +11,7 @@ type Props = { deliberationStatus: DeliberationStatus; publicationStatus: Public
 const statuses = {
   ACCEPTED: { name: 'Accepted', icon: CheckIcon, iconClassname: 'text-green-600' },
   REJECTED: { name: 'Rejected', icon: XMarkIcon, iconClassname: 'text-red-600' },
-  PENDING: { name: 'Pending', icon: QuestionMarkCircleIcon, iconClassname: 'text-gray-600' },
+  PENDING: { name: 'Not deliberated', icon: QuestionMarkCircleIcon, iconClassname: 'text-gray-600' },
 };
 
 const confirmation =

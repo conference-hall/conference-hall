@@ -14,30 +14,40 @@ describe('Publication page', () => {
     page.visit('team-1', 'conference-1');
 
     page.dashboardCard('Total results published').within(() => {
-      cy.assertText('2');
+      cy.assertText('2 / 4');
       page.cardActionLink(/See all proposals/).should('have.attr', 'href', '/team/team-1/conference-1/reviews');
     });
 
-    page.dashboardCard('Accepted published').within(() => {
-      cy.assertText('1 / 2');
+    page.dashboardCard('Accepted proposals to publish').within(() => {
+      cy.assertText('1');
     });
-
-    const accepted = page.publish(/Publish "Accepted"/);
+    const acceptedModal = page.publish(/Publish all "Accepted"/);
     page.dashboardCard('Results to publish').within(() => {
       cy.assertText('1');
     });
-    accepted.confirm();
-    page.dashboardCard('Accepted published').within(() => {
-      cy.assertText('2 / 2');
+    acceptedModal.confirm();
+    page.dashboardCard('Accepted proposals to publish').within(() => {
+      cy.assertText('0');
     });
 
-    const rejected = page.publish(/Publish "Rejected"/);
+    page.dashboardCard('Total results published').within(() => {
+      cy.assertText('3 / 4');
+    });
+
+    page.dashboardCard('Rejected proposals to publish').within(() => {
+      cy.assertText('1');
+    });
+    const rejectedModal = page.publish(/Publish all "Rejected"/);
     page.dashboardCard('Results to publish').within(() => {
       cy.assertText('1');
     });
-    rejected.confirm();
-    page.dashboardCard('Rejected published').within(() => {
-      cy.assertText('2 / 2');
+    rejectedModal.confirm();
+    page.dashboardCard('Rejected proposals to publish').within(() => {
+      cy.assertText('0');
+    });
+
+    page.dashboardCard('Total results published').within(() => {
+      cy.assertText('4 / 4');
     });
   });
 

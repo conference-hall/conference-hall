@@ -22,7 +22,7 @@ class OrganizationEventsProposalsPage extends BasePage {
     return cy.findByRole('checkbox', { name: `Select proposal "${name}"` });
   }
 
-  markAs(name: 'Accepted' | 'Rejected' | 'Pending') {
+  markAs(name: 'Accepted' | 'Rejected' | 'Not deliberated') {
     cy.findByRole('button', { name }).click();
     cy.findByRole('button', { name: `Mark as ${name}` }).click();
   }

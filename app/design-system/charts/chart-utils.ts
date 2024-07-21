@@ -9,11 +9,17 @@ export const chartColors = {
     fill: 'fill-blue-500',
     text: 'text-blue-500',
   },
-  emerald: {
-    bg: 'bg-emerald-500',
-    stroke: 'stroke-emerald-500',
-    fill: 'fill-emerald-500',
-    text: 'text-emerald-500',
+  red: {
+    bg: 'bg-red-500',
+    stroke: 'stroke-red-500',
+    fill: 'fill-red-500',
+    text: 'text-red-500',
+  },
+  green: {
+    bg: 'bg-green-500',
+    stroke: 'stroke-green-500',
+    fill: 'fill-green-500',
+    text: 'text-green-500',
   },
   violet: {
     bg: 'bg-violet-500',
@@ -38,12 +44,6 @@ export const chartColors = {
     stroke: 'stroke-cyan-500',
     fill: 'fill-cyan-500',
     text: 'text-cyan-500',
-  },
-  pink: {
-    bg: 'bg-pink-500',
-    stroke: 'stroke-pink-500',
-    fill: 'fill-pink-500',
-    text: 'text-pink-500',
   },
 } as const satisfies {
   [color: string]: {
