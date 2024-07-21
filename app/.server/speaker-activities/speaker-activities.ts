@@ -1,7 +1,7 @@
 import { Prisma } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
 
-const EVENTS_BY_PAGE = 3;
+const EVENTS_BY_PAGE = 5;
 
 export class SpeakerActivities {
   constructor(private userId: string) {}

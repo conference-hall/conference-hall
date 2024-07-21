@@ -13,6 +13,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Callout } from '~/design-system/callout.tsx';
 import { LoadingIcon } from '~/design-system/icons/loading-icon.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
+import { Page } from '~/design-system/layouts/page.tsx';
 import { Link } from '~/design-system/links.tsx';
 import { ConferenceHallLogo } from '~/design-system/logo.tsx';
 import { getClientAuth } from '~/libs/auth/firebase.ts';
@@ -20,7 +21,7 @@ import { createSession, getSessionUserId } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { AuthProviderButton } from '~/routes/__components/auth-provider-button.tsx';
 
-import { FullscreenPage } from '../__components/fullscreen-page.tsx';
+import { Footer } from '../__components/footer.tsx';
 import { useHydrated } from '../__components/utils/use-hydrated.ts';
 
 export const meta = mergeMeta(() => [{ title: 'Login | Conference Hall' }]);
@@ -82,8 +83,8 @@ export default function Login() {
   );
 
   return (
-    <FullscreenPage navbar="auth">
-      <div className="flex flex-col items-center sm:mx-auto sm:w-full sm:max-w-md">
+    <Page>
+      <div className="flex flex-col items-center pt-16 sm:mx-auto sm:w-full sm:max-w-md">
         <ConferenceHallLogo width="48px" height="48px" aria-hidden className="fill-slate-300" />
         <h2 className="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
           Sign in to your account
@@ -125,6 +126,7 @@ export default function Login() {
           </>
         )}
       </div>
-    </FullscreenPage>
+      <Footer />
+    </Page>
   );
 }

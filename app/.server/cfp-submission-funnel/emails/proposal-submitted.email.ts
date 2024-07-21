@@ -31,15 +31,13 @@ const TEMPLATE = `Hi,
 
 Thank you for submitting your proposal **%proposalTitle%** for **%eventName%**! We've received your proposal successfully.
 
-To ensure that your proposal gets the attention it deserves and to assist organizers in making informed decisions, we kindly ask you to complete your speaker profile. A detailed profile greatly helps us in managing and selecting proposals effectively.
+To ensure that your proposal gets the attention it deserves and to assist organizers in making informed decisions, we kindly ask you to complete [your speaker profile](%appUrl%/speaker/profile). A detailed profile greatly helps us in managing and selecting proposals effectively.
 
-Please take a moment to update your profile with any additional information that might support your proposal. Here's the link to access [your profile](%appUrl%/speaker/profile).
-
-Rest assured, we're diligently reviewing all submissions, and we'll notify you soon regarding the status of your proposal. Your patience is greatly appreciated.
+We're diligently reviewing all submissions, and we'll notify you soon regarding the status of your proposal. Your patience is greatly appreciated.
 
 Thank you for your participation in **%eventName%**!
 
-Warm regards,
+Best regards,
 
-%eventName% Team.
+%eventName%.
 `;

@@ -32,7 +32,7 @@ export class ProposalReceivedEmail {
 
 const TEMPLATE = `Hi,
 
-We're excited to inform you that a new proposal has been submitted for consideration at **%eventName%**.
+We're excited to inform you that a new proposal has been applied at **%eventName%**.
 
 - Proposal submitted: **%proposalTitle%**
 

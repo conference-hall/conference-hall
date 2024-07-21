@@ -9,7 +9,7 @@ import { ProgressCard } from '~/design-system/dashboard/progress-card.tsx';
 import { StatisticCard } from '~/design-system/dashboard/statistic-card.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
-import { H3 } from '~/design-system/typography.tsx';
+import { H2 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 
 import { useTeam } from '../__components/use-team.tsx';
@@ -60,7 +60,7 @@ export default function OverviewRoute() {
         <div>
           <Card className="p-6 space-y-6">
             <div className="flex flex-row items-center justify-between">
-              <H3>Call for paper metrics</H3>
+              <H2>Call for paper metrics</H2>
               <ChartSelector selected={chartSelected} onSelect={setChartSelected} />
             </div>
 
