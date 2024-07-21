@@ -84,7 +84,7 @@ jobs:
           build: npx dotenv -e .env.test -- npm run build
           start: npx dotenv -e .env.test -- npm start
           command-prefix: 'dotenv -e .env.test --'
-          wait-on: 'http://localhost:3001'
+          wait-on: 'http://localhost:3000'
 
       - name: Stop database and firebase emulators
         if: always()
