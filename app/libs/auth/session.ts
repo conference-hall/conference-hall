@@ -59,7 +59,7 @@ export async function createSession(request: Request) {
 
 export async function destroySession(request: Request) {
   const session = await getSession(request);
-  return redirect('/', { headers: { 'Set-Cookie': await sessionStorage.destroySession(session) } });
+  throw redirect('/', { headers: { 'Set-Cookie': await sessionStorage.destroySession(session) } });
 }
 
 export async function requireSession(request: Request): Promise<string> {
