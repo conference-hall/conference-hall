@@ -26,9 +26,7 @@ export function BarListCard({ label, data = [] }: BarListCardProps) {
 
   return (
     <Card className="space-y-6 p-6 relative" aria-labelledby={id}>
-      <H2 id={id} size="s">
-        {label}
-      </H2>
+      <H2 id={id}>{label}</H2>
       <div className={cx('overflow-hidden max-h-[260px]', { 'pb-6': data.length > MAX_BAR })}>
         {data.length !== 0 ? <BarList data={data} /> : <NoData />}
       </div>

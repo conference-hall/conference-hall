@@ -45,8 +45,6 @@ const getTemplate = (hasFormats: boolean) => `Hi,
 
 We're thrilled to inform you that your proposal titled **%proposalTitle%** has been accepted for **%eventName%**! Congratulations!
 
-Your contribution stood out among the numerous exceptional submissions, and we're excited to have you as a potential speaker.
-
 Here are the details of your accepted talk:
 - Event: **%eventName%**
 - Talk Title: **%proposalTitle%**
@@ -58,7 +56,7 @@ Your presence and insights will undoubtedly enrich our event. However, if, for a
 
 We look forward to your confirmation and eagerly anticipate your presentation at **%eventName%**!
 
-Warm regards,
+Best regards,
 
-%eventName% team.
+%eventName%.
 `;

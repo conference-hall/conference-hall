@@ -40,9 +40,9 @@ After careful consideration and review by our selection committee, we regret to 
 
 While your proposal wasn't selected this time, we sincerely appreciate the time and effort you put into crafting and submitting it.
 
-We hope you'll consider submitting proposals for future events. Your participation is highly valued, and we thank you for your interest in being part of %eventName%.
+We hope you'll consider submitting proposals for future events. We thank you for your interest in being part of %eventName%.
 
-Warm regards,
+Best regards,
 
-%eventName% team.
+%eventName%.
 `;
