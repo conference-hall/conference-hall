@@ -13,7 +13,6 @@ const schema = z.object({
   FIREBASE_PROJECT_ID: z.string(),
   FIREBASE_SERVICE_ACCOUNT: z.string().optional(),
   FIREBASE_STORAGE: z.string(),
-  GOOGLE_PLACES_API_KEY: z.string().optional(),
   COOKIE_SIGNED_SECRET: z.string(),
   SENTRY_DSN: z.string().optional(),
   SEO_ENABLED: z.string().optional(),

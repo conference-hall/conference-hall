@@ -2,7 +2,6 @@ import type { Prisma, TeamRole } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
 
 import { EventNotFoundError, ForbiddenOperationError, SlugAlreadyExistsError } from '~/libs/errors.server.ts';
-import { geocode } from '~/libs/geocode/geocode.server.ts';
 import type { EventEmailNotificationsKeys } from '~/types/events.types.ts';
 import type { QuestionKeys } from '~/types/survey.types';
 
@@ -75,13 +74,6 @@ export class UserEvent {
 
   async update(data: Partial<Prisma.EventCreateInput>) {
     const event = await this.allowedFor(['OWNER']);
-
-    if (data.location && event?.location !== data.location) {
-      const geocodedAddress = await geocode(data.location);
-      data.location = geocodedAddress.location;
-      data.lat = geocodedAddress.lat;
-      data.lng = geocodedAddress.lng;
-    }
 
     return db.$transaction(async (trx) => {
       if (data.slug) {
