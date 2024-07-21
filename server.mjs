@@ -16,6 +16,7 @@ installGlobals({ nativeFetch: true });
 run();
 
 async function run() {
+  const APP_URL = process.env.APP_URL;
   const PORT = process.env.PORT || 3000;
   const MODE = process.env.NODE_ENV;
   const FIREBASE_PROJECT_ID = process.env.FIREBASE_PROJECT_ID;
@@ -153,7 +154,7 @@ async function run() {
       console.log(`🤖 Emulators  >  http://localhost:4000`);
       console.log(`💌 Mailpit    >  http://localhost:8025`);
     }
-    console.log(`🚀 Web app    >  http://localhost:${PORT}`);
+    console.log(`🚀 Web app    >  ${APP_URL}`);
     console.log('\n--------------------------------------------------\n');
   });
 
