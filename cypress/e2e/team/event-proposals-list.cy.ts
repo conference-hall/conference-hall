@@ -154,7 +154,7 @@ describe('Event proposals list', () => {
       proposals.visit('team-1', 'conference-1');
       proposals.selectProposal('Talk 2').click();
       cy.assertText('Mark 1 selected as:');
-      proposals.markAs('Pending');
+      proposals.markAs('Not deliberated');
       cy.assertToast('1 proposals marked as "pending".');
     });
 

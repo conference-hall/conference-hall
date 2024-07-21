@@ -51,7 +51,7 @@ describe('Proposal review page', () => {
     it('deliberate the proposal', () => {
       review.visit('team-1', 'conference-1', 'proposal-1');
 
-      review.deliberationStatus().should('contain.text', 'Pending');
+      review.deliberationStatus().should('contain.text', 'Not deliberated');
       review.publicationHeading().should('not.exist');
 
       review.deliberate(/Accepted/);

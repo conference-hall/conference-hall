@@ -5,7 +5,7 @@ export const reviewOptions = [
 ];
 
 export const statusOptions = [
-  { name: 'Pending', value: 'pending' },
+  { name: 'Not deliberated', value: 'pending' },
   { name: 'Accepted', value: 'accepted' },
   { name: 'Rejected', value: 'rejected' },
   { name: 'Waiting for confirmation', value: 'not-answered' },

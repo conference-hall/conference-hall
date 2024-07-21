@@ -11,7 +11,7 @@ import { Text } from '~/design-system/typography.tsx';
 
 const statuses = {
   ACCEPTED: { label: 'Accepted', icon: CheckIcon, color: 'text-green-600' },
-  PENDING: { label: 'Pending', icon: QuestionMarkCircleIcon, color: 'text-gray-600' },
+  PENDING: { label: 'Not deliberated', icon: QuestionMarkCircleIcon, color: 'text-gray-600' },
   REJECTED: { label: 'Rejected', icon: XMarkIcon, color: 'text-red-600' },
 };
 
