@@ -3,6 +3,7 @@ import { captureRemixErrorBoundaryError } from '@sentry/remix';
 
 import { Forbidden } from './errors/forbidden.tsx';
 import { InternalServerError } from './errors/internal-server-error.tsx';
+import { Maintenance } from './errors/maintenance.tsx';
 import { NotFound } from './errors/not-found.tsx';
 
 export function GeneralErrorBoundary() {
@@ -16,6 +17,7 @@ export function GeneralErrorBoundary() {
 
   if (isRouteErrorResponse(error)) {
     if (error.status === 403) return <Forbidden />;
+    if (error.status === 503) return <Maintenance />;
 
     return <NotFound />;
   }

@@ -2,7 +2,7 @@ import './styles/tailwind.css';
 import './styles/fonts.css';
 
 import type { LinksFunction, LoaderFunctionArgs, MetaFunction } from '@remix-run/node';
-import { json, redirect } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import { Links, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData } from '@remix-run/react';
 import { withSentry } from '@sentry/remix';
 import type { ReactNode } from 'react';
@@ -17,6 +17,8 @@ import { getToast } from './libs/toasts/toast.server.ts';
 import { Toaster } from './libs/toasts/toaster.tsx';
 import { GeneralErrorBoundary } from './routes/__components/error-boundary.tsx';
 import { GlobalLoading } from './routes/__components/global-loading.tsx';
+
+const ONE_DAY_IN_SECONDS = String(24 * 60 * 60);
 
 const isMaintenanceMode = process.env.MAINTENANCE_ENABLED === 'true';
 
@@ -44,12 +46,14 @@ export const links: LinksFunction = () => {
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
+  if (isMaintenanceMode) {
+    throw new Response('Maintenance', { status: 503, headers: { 'Retry-After': ONE_DAY_IN_SECONDS } });
+  }
+
   const { toast, headers: toastHeaders } = await getToast(request);
 
   const userId = await getSessionUserId(request);
   const user = await UserInfo.get(userId);
-
-  if (isMaintenanceMode) return redirect('/maintenance');
 
   return json({ user, toast, env: getPublicEnv() }, { headers: toastHeaders || {} });
 };
