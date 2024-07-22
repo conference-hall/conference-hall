@@ -126,7 +126,7 @@ export async function migrateProposals(firestore: admin.firestore.Firestore) {
         updatedAt: data.updateTimestamp?.toDate(),
         avgRateForSort: data.rating,
         isDraft: false,
-        confirmationStatus: mapConfirmationStatus(data.state), // CONFIRMED, DECLINED, PENDING // state = confirmed or declined
+        confirmationStatus: mapConfirmationStatus(data.state, data.emailStatus), // CONFIRMED, DECLINED, PENDING // state = confirmed or declined
         deliberationStatus: mapDeliberationStatus(data.state), // ACCEPTED, REJECTED, PENDING // state = accepted or rejected
         publicationStatus: mapPublicationStatus(data.emailStatus), // PUBLISHED, NOT_PUBLISHED // emailStatus = sent
         formats: formats ? { connect: formats.map((id) => id) } : undefined,
@@ -162,14 +162,14 @@ export async function migrateProposals(firestore: admin.firestore.Firestore) {
   console.log(` > Proposals migrated ${proposalsMigratedCount}`);
 }
 
-function mapConfirmationStatus(status: string): ConfirmationStatus | null {
+function mapConfirmationStatus(status: string, emailStatus: string): ConfirmationStatus | null {
   switch (status) {
     case 'confirmed':
       return ConfirmationStatus.CONFIRMED;
     case 'declined':
       return ConfirmationStatus.DECLINED;
     case 'accepted':
-      return ConfirmationStatus.PENDING;
+      return emailStatus ? ConfirmationStatus.PENDING : null;
     default:
       return null;
   }
@@ -188,8 +188,8 @@ function mapDeliberationStatus(status: string): DeliberationStatus {
   }
 }
 
-function mapPublicationStatus(status: string): PublicationStatus {
-  switch (status) {
+function mapPublicationStatus(emailStatus: string): PublicationStatus {
+  switch (emailStatus) {
     case 'sent':
     case 'sending':
     case 'delivered':

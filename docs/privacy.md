@@ -51,7 +51,7 @@ You can exercise these rights by writing us using the contact details below. For
 
 ## 6. Contact information for data privacy matters
 
-Contact email: support@conference-hall.io
+You can contact us through the GitHub repository on https://github.com/bpetetot/conference-hall
 
 ## 7. Modifications
 

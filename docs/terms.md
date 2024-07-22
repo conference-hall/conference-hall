@@ -12,9 +12,7 @@ They may be supplemented by specific conditions, including the contractual term,
 
 ## 2. Website and Services Management, Contact Details
 
-The Website and Services are managed by Benjamin Petetot and can be contacted through the following channels:
-
-Email address: support@conference-hall.io
+The Website and Services are managed by Benjamin Petetot and can be contacted through the GitHub repository on https://github.com/bpetetot/conference-hall
 
 ## 3. Access to the Website and Services
 
