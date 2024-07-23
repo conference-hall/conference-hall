@@ -1,4 +1,3 @@
-import type { Prisma } from '@prisma/client';
 import { PrismaClient } from '@prisma/client';
 
 import { eventExtension } from './extensions/event.ts';
@@ -25,15 +24,35 @@ if (process.env.NODE_ENV === 'production' && !process.env.USE_EMULATORS) {
 }
 
 function getClient() {
-  const log: Prisma.LogLevel[] = process.env.NODE_ENV === 'development' ? ['warn', 'error'] : ['warn', 'error'];
-
-  const client = new PrismaClient({ log })
+  const client = buildClientWithLogger()
     .$extends(eventExtension)
     .$extends(talkExtension)
     .$extends(proposalExtension)
     .$extends(teamExtension);
 
   client.$connect();
+
+  return client;
+}
+
+function buildClientWithLogger(): PrismaClient {
+  if (process.env.NODE_ENV === 'development') {
+    return new PrismaClient({ log: ['warn', 'error'] });
+  }
+
+  const client = new PrismaClient({
+    log: [
+      { emit: 'event', level: 'warn' },
+      { emit: 'event', level: 'error' },
+    ],
+  });
+  client.$on('warn', (event) => {
+    console.log(JSON.stringify({ level: 'warn', message: event.message, timestamp: event.timestamp.toISOString() }));
+  });
+  client.$on('error', (event) => {
+    console.log(JSON.stringify({ level: 'error', message: event.message, timestamp: event.timestamp.toISOString() }));
+  });
+
   return client;
 }
 
