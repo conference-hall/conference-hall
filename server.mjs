@@ -19,6 +19,7 @@ async function run() {
   const APP_URL = process.env.APP_URL;
   const PORT = process.env.PORT || 3000;
   const MODE = process.env.NODE_ENV;
+  const IS_CI = process.env.USE_EMULATORS === 'true';
   const FIREBASE_PROJECT_ID = process.env.FIREBASE_PROJECT_ID;
 
   const vite =
@@ -92,7 +93,25 @@ async function run() {
   );
 
   // Request logging
-  app.use(morgan('tiny'));
+  if (MODE === 'development') {
+    app.use(morgan('tiny'));
+  } else if (!IS_CI) {
+    app.use(
+      morgan((tokens, req, res) => {
+        const status = tokens['status'](req, res);
+        return JSON.stringify({
+          level: status >= 500 ? 'error' : status >= 400 ? 'warn' : 'info',
+          message: `${tokens['method'](req, res)} - ${status} - ${tokens['url'](req, res)}`,
+          timestamp: tokens['date'](req, res, 'iso'),
+          method: tokens['method'](req, res),
+          url: tokens['url'](req, res),
+          duration: tokens['response-time'](req, res),
+          contentType: tokens.res(req, res, 'content-type'),
+          status,
+        });
+      }),
+    );
+  }
 
   // Proxy Firebase authentication
   app.use(
