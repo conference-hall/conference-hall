@@ -19,7 +19,7 @@ async function run() {
   const APP_URL = process.env.APP_URL;
   const PORT = process.env.PORT || 3000;
   const MODE = process.env.NODE_ENV;
-  const IS_CI = process.env.CI === 'true';
+  const IS_CI = Boolean(process.env.CI);
   const FIREBASE_PROJECT_ID = process.env.FIREBASE_PROJECT_ID;
 
   const vite =
