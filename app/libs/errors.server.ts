@@ -90,7 +90,7 @@ export class ReviewDisabledError extends ForbiddenError {
 
 export class ForbiddenOperationError extends ForbiddenError {
   constructor() {
-    super('Forbidden operation');
+    super('Forbidden action');
   }
 }
 
@@ -109,5 +109,11 @@ export class InvalidAccessKeyError extends BadRequestError {
 export class SlugAlreadyExistsError extends BadRequestError {
   constructor() {
     super('Slug already exists');
+  }
+}
+
+export class TalkAlreadySubmittedError extends BadRequestError {
+  constructor() {
+    super('Talk already submitted');
   }
 }

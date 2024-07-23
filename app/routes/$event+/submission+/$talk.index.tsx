@@ -14,6 +14,7 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
+import { TalkAlreadySubmittedError } from '~/libs/errors.server.ts';
 import { TalkForm } from '~/routes/__components/talks/talk-forms/talk-form.tsx';
 
 export const handle = { step: 'proposal' };
@@ -28,7 +29,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const talk = TalksLibrary.of(speakerId).talk(params.talk);
 
   const alreadySubmitted = await talk.isSubmittedTo(params.event);
-  if (alreadySubmitted) throw new Response('Talk already submitted.', { status: 400 });
+  if (alreadySubmitted) throw new TalkAlreadySubmittedError();
 
   return json(await talk.get());
 };

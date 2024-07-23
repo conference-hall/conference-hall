@@ -24,12 +24,12 @@ class BasePage {
       });
   }
 
-  assertPageNotFound() {
-    cy.findByRole('heading', { name: 'Page not found' }).should('be.visible');
+  assertPageNotFound(title?: string) {
+    cy.findByRole('heading', { name: title || 'Page not found' }).should('be.visible');
   }
 
-  assertForbiddenPage() {
-    cy.findByRole('heading', { name: 'Forbidden action' }).should('be.visible');
+  assertForbiddenPage(title?: string) {
+    cy.findByRole('heading', { name: title || 'Forbidden action' }).should('be.visible');
   }
 }
 

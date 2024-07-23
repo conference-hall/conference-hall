@@ -1,6 +1,3 @@
-import './styles/tailwind.css';
-import './styles/fonts.css';
-
 import type { LinksFunction, LoaderFunctionArgs, MetaFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Links, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData } from '@remix-run/react';
@@ -17,6 +14,8 @@ import { getToast } from './libs/toasts/toast.server.ts';
 import { Toaster } from './libs/toasts/toaster.tsx';
 import { GeneralErrorBoundary } from './routes/__components/error-boundary.tsx';
 import { GlobalLoading } from './routes/__components/global-loading.tsx';
+import fonts from './styles/fonts.css?url';
+import tailwind from './styles/tailwind.css?url';
 
 const ONE_DAY_IN_SECONDS = String(24 * 60 * 60);
 
@@ -42,6 +41,8 @@ export const links: LinksFunction = () => {
     { rel: 'alternate icon', type: 'image/png', href: '/favicons/favicon-32x32.png' },
     { rel: 'apple-touch-icon', href: '/favicons/apple-touch-icon.png' },
     { rel: 'manifest', href: '/site.webmanifest', crossOrigin: 'use-credentials' },
+    { rel: 'stylesheet', href: fonts },
+    { rel: 'stylesheet', href: tailwind },
   ];
 };
 

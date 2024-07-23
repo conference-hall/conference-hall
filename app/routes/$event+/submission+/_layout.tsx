@@ -12,6 +12,7 @@ import { requireSession } from '~/libs/auth/session.ts';
 import { CfpNotOpenError } from '~/libs/errors.server.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { eventSocialCard } from '~/libs/meta/social-cards.ts';
+import { NestedErrorBoundary } from '~/routes/__components/error-boundary.tsx';
 import { useUser } from '~/routes/__components/use-user.tsx';
 
 import { Steps } from './__components/steps.tsx';
@@ -52,4 +53,8 @@ export default function EventSubmissionRoute() {
       <Outlet context={{ user, event }} />
     </>
   );
+}
+
+export function ErrorBoundary() {
+  return <NestedErrorBoundary />;
 }
