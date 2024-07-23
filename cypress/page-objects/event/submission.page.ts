@@ -147,6 +147,13 @@ class EventSubmissionPage extends BasePage {
   checkMyProposalsButton() {
     return cy.findByRole('link', { name: 'Check submitted proposals' }).click();
   }
+
+  /**
+   * Error
+   */
+  assertCfpNotFound() {
+    cy.findByRole('heading', { name: 'CFP not open' }).should('be.visible');
+  }
 }
 
 export default EventSubmissionPage;

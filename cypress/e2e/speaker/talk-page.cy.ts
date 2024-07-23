@@ -75,6 +75,6 @@ describe('Speaker talk page', () => {
     search.isPageVisible();
     cy.assertUrl('?talkId=awesome-talk');
     search.result('Devfest Nantes').click();
-    search.assertPageNotFound(); // TODO: Improve error message
+    search.assertForbiddenPage('Talk already submitted');
   });
 });

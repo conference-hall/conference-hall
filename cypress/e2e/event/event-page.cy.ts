@@ -39,7 +39,7 @@ describe('View event page', () => {
 
   it('displays a not found page if event does not exist', () => {
     event.visit('event-dont-exist');
-    event.assertPageNotFound();
+    event.assertPageNotFound('Event not found');
   });
 
   it('can submit a proposal', () => {

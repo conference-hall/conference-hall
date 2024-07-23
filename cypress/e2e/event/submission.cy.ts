@@ -316,12 +316,12 @@ describe('Submit a talk to event', () => {
 
     it('cannot submit a talk to an event with a cfp not open yet', () => {
       cy.visitAndCheck('/conference-cfp-future/submission', { failOnStatusCode: false });
-      submission.assertPageNotFound();
+      submission.assertCfpNotFound();
     });
 
     it('cannot submit a talk to an event with a cfp already closed', () => {
       cy.visitAndCheck('/conference-cfp-past/submission', { failOnStatusCode: false });
-      submission.assertPageNotFound();
+      submission.assertCfpNotFound();
     });
   });
 });
