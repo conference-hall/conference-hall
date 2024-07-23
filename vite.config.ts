@@ -39,5 +39,12 @@ export default defineConfig({
         })
       : undefined,
   ],
-  optimizeDeps: { exclude: ['farmhash'] }, // FIXME: Farmhash is not compatible with Vite
+  server: {
+    warmup: {
+      clientFiles: ['./app/entry.client.tsx', './app/root.tsx', './app/routes/**/*'],
+    },
+  },
+  optimizeDeps: {
+    include: ['./app/routes/**/*'],
+  },
 });

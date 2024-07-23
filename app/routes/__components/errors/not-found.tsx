@@ -1,13 +1,15 @@
 import { ButtonLink } from '~/design-system/buttons.tsx';
 
-import { SinglePage } from '../single-page.tsx';
+import { ErrorDisplay } from './error-display.tsx';
 
-export function NotFound() {
+type Props = { text?: string };
+
+export function NotFound({ text = 'Page not found' }: Props) {
   return (
-    <SinglePage title="Page not found" subtitle="Whoops! That page doesn’t exist." withFooter>
+    <ErrorDisplay title={text} subtitle="Whoops! That page doesn’t exist.">
       <div className="pt-8">
         <ButtonLink to="/">Go to Home</ButtonLink>
       </div>
-    </SinglePage>
+    </ErrorDisplay>
   );
 }
