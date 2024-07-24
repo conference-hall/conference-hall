@@ -1,10 +1,8 @@
 // Tremor Raw DonutChart [v0.0.0]
 
-'use client';
-
 import { cx } from 'class-variance-authority';
 import React from 'react';
-import { Pie, PieChart as ReChartsDonutChart, ResponsiveContainer, Sector, Tooltip } from 'recharts';
+import { Pie, PieChart, ResponsiveContainer, Sector, Tooltip } from 'recharts';
 
 import type { AvailableChartColorsKeys } from './chart-utils.ts';
 import { AvailableChartColors, constructCategoryColors, getColorClassName } from './chart-utils.ts';
@@ -194,7 +192,7 @@ const DonutChart = React.forwardRef<HTMLDivElement, DonutChartProps>(
     return (
       <div ref={forwardedRef} className={cx('h-40 w-40', className)} {...other}>
         <ResponsiveContainer className="size-full">
-          <ReChartsDonutChart
+          <PieChart
             onClick={
               onValueChange && activeIndex !== undefined
                 ? () => {
@@ -275,7 +273,7 @@ const DonutChart = React.forwardRef<HTMLDivElement, DonutChartProps>(
                 }}
               />
             )}
-          </ReChartsDonutChart>
+          </PieChart>
         </ResponsiveContainer>
       </div>
     );
