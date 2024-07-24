@@ -1,4 +1,5 @@
 import compression from 'compression';
+import express from 'express';
 import { createExpressApp } from 'remix-create-express-app';
 
 import { applyLogging } from './logging.ts';
@@ -37,6 +38,9 @@ export function createAppServer() {
 
       // Seo header
       applySeoHeader(app);
+
+      // Cache assets
+      app.use('/fonts', express.static('build/client/fonts', { immutable: true, maxAge: '1y' }));
     },
     // Load context should match the AppLoadContext interface defined above
     getLoadContext: async (_, res) => {
