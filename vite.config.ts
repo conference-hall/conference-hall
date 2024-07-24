@@ -1,6 +1,7 @@
 import mdx from '@mdx-js/rollup';
 import { vitePlugin as remix } from '@remix-run/dev';
 import { sentryVitePlugin } from '@sentry/vite-plugin';
+import { expressDevServer } from 'remix-express-dev-server';
 import { flatRoutes } from 'remix-flat-routes';
 import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
@@ -8,8 +9,10 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 const withSentrySourcemap = Boolean(process.env.SENTRY_AUTH_TOKEN);
 
 export default defineConfig({
-  build: { manifest: true },
+  build: { target: 'esnext', manifest: true },
+  optimizeDeps: { include: ['./app/routes/**/*'] },
   plugins: [
+    expressDevServer(),
     mdx(),
     remix({
       serverModuleFormat: 'esm',
@@ -40,11 +43,7 @@ export default defineConfig({
       : undefined,
   ],
   server: {
-    warmup: {
-      clientFiles: ['./app/entry.client.tsx', './app/root.tsx', './app/routes/**/*'],
-    },
-  },
-  optimizeDeps: {
-    include: ['./app/routes/**/*'],
+    port: Number(process.env.PORT) || 3000,
+    warmup: { clientFiles: ['./app/entry.client.tsx', './app/root.tsx', './app/routes/**/*'] },
   },
 });

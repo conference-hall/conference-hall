@@ -6,6 +6,7 @@ import { RemixServer } from '@remix-run/react';
 import * as Sentry from '@sentry/remix';
 import { isbot } from 'isbot';
 import { renderToPipeableStream } from 'react-dom/server';
+import { createAppServer } from 'server/index.ts';
 
 import { initEnvironment } from './libs/env/env.server.ts';
 import { initMonitoring } from './libs/monitoring/monitoring.server.ts';
@@ -76,3 +77,5 @@ export function handleError(error: unknown, { request, params, context }: Loader
     Sentry.sentryHandleError(error, { request, params, context });
   }
 }
+
+export const app = createAppServer();

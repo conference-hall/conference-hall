@@ -87,7 +87,7 @@ export default function DonutCard({
               </div>
             </>
           ) : (
-            <NoData subtitle={noDataHint} className={!children ? 'h-full ' : undefined} />
+            <NoData subtitle={noDataHint} className={!children ? 'h-full' : undefined} />
           )}
           {children}
         </Card.Content>
