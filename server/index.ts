@@ -5,6 +5,7 @@ import { applyLogging } from './logging.ts';
 import { applyProxyFirebaseAuth } from './proxy-firebase-auth.ts';
 import { applyRateLimits } from './rate-limit.ts';
 import { applySecurity } from './security.ts';
+import { applySeoHeader } from './seo.ts';
 import { applyUrlCleaning } from './url-cleaning.ts';
 
 declare module '@remix-run/node' {
@@ -33,6 +34,9 @@ export function createAppServer() {
 
       // Rate limits
       applyRateLimits(app);
+
+      // Seo header
+      applySeoHeader(app);
     },
     // Load context should match the AppLoadContext interface defined above
     getLoadContext: async (_, res) => {
