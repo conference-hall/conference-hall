@@ -1,8 +1,8 @@
 import { Cog6ToothIcon, StarIcon } from '@heroicons/react/24/outline';
 
-import type { UserPermissions } from '~/.server/team/user-permissions.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
+import type { UserPermissions } from '~/types/team.types.ts';
 
 type Props = { slug: string; permissions: UserPermissions };
 
