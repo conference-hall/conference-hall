@@ -59,6 +59,7 @@
     "helmet": "^7.1.0",
     "http-proxy-middleware": "^3.0.0",
     "isbot": "^5.1.13",
+    "json-2-csv": "^5.5.4",
     "mailgun.js": "^10.2.3",
     "marked": "^13.0.2",
     "morgan": "^1.10.0",
