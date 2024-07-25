@@ -26,13 +26,13 @@ export function applySecurity(app: express.Application) {
         reportOnly: true,
         directives: {
           'connect-src': [
-            isDevelopment ? 'ws://localhost:*' : '',
-            isDevelopment ? 'http://localhost:*' : '',
+            isDevelopment ? 'ws://127.0.0.1:*' : '',
+            isDevelopment ? 'http://127.0.0.1:*' : '',
             isProduction ? '*.googleapis.com' : '',
             process.env.SENTRY_DSN ? '*.sentry.io' : '',
             "'self'",
           ].filter(Boolean),
-          'frame-src': ["'self'", isDevelopment ? 'http://localhost:*' : ''].filter(Boolean),
+          'frame-src': ["'self'", isDevelopment ? 'http://127.0.0.1:*' : ''].filter(Boolean),
           'font-src': ["'self'"],
           'img-src': ["'self'", 'data:', 'https:'],
           'script-src': [

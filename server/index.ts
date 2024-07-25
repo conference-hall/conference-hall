@@ -2,6 +2,7 @@ import compression from 'compression';
 import express from 'express';
 import { createExpressApp } from 'remix-create-express-app';
 
+import { applyLocalhostRedirect } from './localhost-redirect.ts';
 import { applyLogging } from './logging.ts';
 import { applyProxyFirebaseAuth } from './proxy-firebase-auth.ts';
 import { applyRateLimits } from './rate-limit.ts';
@@ -18,6 +19,9 @@ declare module '@remix-run/node' {
 export function createAppServer() {
   return createExpressApp({
     configure: (app) => {
+      // dev only: redirect localhost to 127.0.0.1
+      applyLocalhostRedirect(app);
+
       // Request URL cleaning
       applyUrlCleaning(app);
 
