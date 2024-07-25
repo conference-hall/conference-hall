@@ -22,7 +22,7 @@ export class UserTeams {
   async list() {
     const accesses = await db.teamMember.findMany({ where: { memberId: this.userId }, include: { team: true } });
     return sortBy(
-      accesses.map((member) => ({ slug: member.team.slug, name: member.team.name, role: member.role })),
+      accesses.map((member) => ({ slug: member.team.slug, name: member.team.name })),
       'name',
     );
   }

@@ -39,9 +39,14 @@ export default function TeamLayout() {
       <Navbar layout="team" user={user} />
 
       {event ? (
-        <EventTabs teamSlug={team.slug} eventSlug={event.slug} eventType={event.type} role={team.role} />
+        <EventTabs
+          teamSlug={team.slug}
+          eventSlug={event.slug}
+          eventType={event.type}
+          permissions={team.userPermissions}
+        />
       ) : (
-        <TeamTabs slug={team.slug} role={team.role} />
+        <TeamTabs slug={team.slug} permissions={team.userPermissions} />
       )}
 
       <Outlet context={{ user, team }} />

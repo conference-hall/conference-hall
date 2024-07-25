@@ -29,7 +29,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   invariant(params.event, 'Invalid event slug');
 
   const event = await UserEvent.for(userId, params.team, params.event);
-  await event.allowedFor(['OWNER']);
+  await event.needsPermission('canEditEvent');
 
   const formData = await unstable_parseMultipartFormData(
     request,

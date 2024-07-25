@@ -1,9 +1,12 @@
-import type { Prisma, TeamRole } from '@prisma/client';
+import type { Prisma } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
 
 import { EventNotFoundError, ForbiddenOperationError, SlugAlreadyExistsError } from '~/libs/errors.server.ts';
 import type { EventEmailNotificationsKeys } from '~/types/events.types.ts';
 import type { QuestionKeys } from '~/types/survey.types';
+
+import type { Permission } from '../team/user-permissions.ts';
+import { UserPermissions } from '../team/user-permissions.ts';
 
 export type EventData = Awaited<ReturnType<typeof UserEvent.prototype.get>>;
 
@@ -18,7 +21,9 @@ export class UserEvent {
     return new UserEvent(userId, teamSlug, eventSlug);
   }
 
-  async allowedFor(roles: TeamRole[]) {
+  async needsPermission(permission: Permission) {
+    const roles = UserPermissions.getRoleWith(permission);
+
     const event = await db.event.findFirst({
       where: {
         slug: this.eventSlug,
@@ -73,7 +78,7 @@ export class UserEvent {
   }
 
   async update(data: Partial<Prisma.EventCreateInput>) {
-    const event = await this.allowedFor(['OWNER']);
+    const event = await this.needsPermission('canEditEvent');
 
     return db.$transaction(async (trx) => {
       if (data.slug) {

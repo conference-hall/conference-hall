@@ -26,7 +26,7 @@ export class ProposalReview {
   }
 
   async get() {
-    const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER', 'REVIEWER']);
+    const event = await this.userEvent.needsPermission('canAccessEvent');
 
     const proposal = await db.proposal.findFirst({
       include: {
@@ -83,7 +83,7 @@ export class ProposalReview {
   }
 
   async getPreviousAndNextReviews(filters: ProposalsFilters) {
-    const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER', 'REVIEWER']);
+    const event = await this.userEvent.needsPermission('canAccessEvent');
 
     const search = new ProposalSearchBuilder(event.slug, this.userId, filters);
 
@@ -98,7 +98,7 @@ export class ProposalReview {
   }
 
   async addReview(data: ReviewUpdateData) {
-    const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER', 'REVIEWER']);
+    const event = await this.userEvent.needsPermission('canAccessEvent');
     if (!event.reviewEnabled) throw new ReviewDisabledError();
 
     await db.$transaction(async (trx) => {
@@ -119,7 +119,7 @@ export class ProposalReview {
   }
 
   async update(data: ProposalUpdateData) {
-    await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
+    await this.userEvent.needsPermission('canEditEventProposals');
 
     const { formats, categories, ...talk } = data;
     return db.proposal.update({

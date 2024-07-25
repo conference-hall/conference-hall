@@ -55,7 +55,7 @@ describe('Event overview', () => {
     });
 
     it('displays dashboard cards for a reviewer on a simple event', () => {
-      cy.login('Bruce Wayne');
+      cy.login('Peter Parker');
       overview.visit('team-1', 'conference-2');
 
       overview.dashboardCard('Call for paper closed').within(() => {

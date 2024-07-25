@@ -37,8 +37,6 @@ export default function OverviewRoute() {
 
   const [chartSelected, setChartSelected] = useState<ChartType>('cumulative');
 
-  const showActions = team.role === 'OWNER' || team.role === 'REVIEWER';
-
   return (
     <Page>
       <h1 className="sr-only">Event overview</h1>
@@ -49,12 +47,16 @@ export default function OverviewRoute() {
             cfpStart={event.cfpStart}
             cfpEnd={event.cfpEnd}
             timezone={event.timezone}
-            showActions={showActions}
+            showActions={team.userPermissions.canEditEvent}
           />
 
-          <VisibilityStatusCard slug={event.slug} visibility={event.visibility} showActions={showActions} />
+          <VisibilityStatusCard
+            slug={event.slug}
+            visibility={event.visibility}
+            showActions={team.userPermissions.canEditEvent}
+          />
 
-          <ReviewStatusCard reviewEnabled={event.reviewEnabled} showActions={showActions} />
+          <ReviewStatusCard reviewEnabled={event.reviewEnabled} showActions={team.userPermissions.canEditEvent} />
         </div>
 
         <div>

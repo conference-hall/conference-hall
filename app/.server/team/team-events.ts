@@ -23,7 +23,7 @@ export class TeamEvents {
   }
 
   async list(archived: boolean) {
-    await this.team.allowedFor(['MEMBER', 'REVIEWER', 'OWNER']);
+    await this.team.needsPermission('canAccessEvent');
 
     const events = await db.event.findMany({
       where: { team: { slug: this.team.slug }, archived },
@@ -43,7 +43,7 @@ export class TeamEvents {
   }
 
   async create(data: z.infer<typeof EventCreateSchema>) {
-    await this.team.allowedFor(['OWNER']);
+    await this.team.needsPermission('canCreateEvent');
 
     const { userId, slug } = this.team;
     return await db.$transaction(async (trx) => {

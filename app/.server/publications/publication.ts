@@ -20,7 +20,7 @@ export class Publication {
   }
 
   async publishAll(status: 'ACCEPTED' | 'REJECTED', withEmails: boolean) {
-    const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
+    const event = await this.userEvent.needsPermission('canPublishEventResults');
     if (event.type === 'MEETUP') throw new ForbiddenOperationError();
 
     const proposals = await db.proposal.findMany({
@@ -39,7 +39,7 @@ export class Publication {
   }
 
   async publish(proposalId: string, withEmails: boolean) {
-    const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
+    const event = await this.userEvent.needsPermission('canPublishEventResults');
 
     const proposal = await db.proposal.findUnique({
       where: {
@@ -65,7 +65,7 @@ export class Publication {
   }
 
   async statistics() {
-    const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
+    const event = await this.userEvent.needsPermission('canPublishEventResults');
     if (event.type === 'MEETUP') throw new ForbiddenOperationError();
 
     const results = await db.proposal.groupBy({

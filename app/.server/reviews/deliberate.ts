@@ -27,7 +27,7 @@ export class Deliberate {
   }
 
   async mark(proposalIds: string[], deliberationStatus: DeliberationStatus) {
-    await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
+    await this.userEvent.needsPermission('canDeliberateEventProposals');
 
     const result = await db.proposal.updateMany({
       where: { id: { in: proposalIds }, deliberationStatus: { not: deliberationStatus } },
@@ -41,7 +41,7 @@ export class Deliberate {
   }
 
   async markAll(filters: ProposalsFilters, deliberationStatus: DeliberationStatus) {
-    const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER']);
+    const event = await this.userEvent.needsPermission('canDeliberateEventProposals');
 
     const search = new ProposalSearchBuilder(event.slug, this.userId, filters);
     const proposalIds = await search.proposalsIds();

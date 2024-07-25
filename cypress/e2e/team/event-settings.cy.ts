@@ -364,16 +364,15 @@ describe('Event settings', () => {
   describe('as a team member', () => {
     beforeEach(() => cy.login('Bruce Wayne'));
 
-    it('cannot create new event as a team member', () => {
-      cy.visitAndCheck(`/team/team-1/conference-1/settings`, { failOnStatusCode: false });
-      settings.assertForbiddenPage();
+    it('can access to event settings as a team member', () => {
+      general.visit('team-1', 'conference-1');
     });
   });
 
   describe('as a team reviewer', () => {
     beforeEach(() => cy.login('Peter Parker'));
 
-    it('cannot create new event as a team reviewer', () => {
+    it('cannot access to event settings as a team reviewer', () => {
       cy.visitAndCheck(`/team/team-1/conference-1/settings`, { failOnStatusCode: false });
       settings.assertForbiddenPage();
     });

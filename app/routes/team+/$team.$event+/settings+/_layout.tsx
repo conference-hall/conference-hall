@@ -27,7 +27,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.team, 'Invalid team slug');
   invariant(params.event, 'Invalid event slug');
-  await UserEvent.for(userId, params.team, params.event).allowedFor(['OWNER']);
+  await UserEvent.for(userId, params.team, params.event).needsPermission('canEditEvent');
   return null;
 };
 

@@ -74,7 +74,7 @@ function FiltersContent({ close }: FiltersContentProps) {
         className="px-4 py-3"
       />
 
-      {team.role !== 'REVIEWER' && (
+      {team.userPermissions.canDeliberateEventProposals && (
         <FiltersRadio
           label="Proposals"
           name="status"

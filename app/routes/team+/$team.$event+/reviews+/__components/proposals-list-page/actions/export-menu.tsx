@@ -19,7 +19,7 @@ export function ExportMenu() {
   const params = useParams();
   const [searchParams] = useSearchParams();
 
-  if (team.role !== 'OWNER') return null;
+  if (!team.userPermissions.canExportEventProposals) return null;
 
   return (
     <Menu as="div" className="relative inline-block text-left">
