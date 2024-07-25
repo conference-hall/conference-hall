@@ -9,21 +9,21 @@ import { EventNotFoundError, ForbiddenOperationError, SlugAlreadyExistsError } f
 import { UserEvent } from './user-event.ts';
 
 describe('UserEvent', () => {
-  describe('#allowedFor', () => {
-    it('returns the event if user has access to the event', async () => {
+  describe('#needsPermission', () => {
+    it('returns the event if user is allowed for the given permission', async () => {
       const user = await userFactory();
       const team = await teamFactory({ owners: [user] });
       const event = await eventFactory({ team });
 
-      const result = await UserEvent.for(user.id, team.slug, event.slug).allowedFor(['OWNER']);
+      const result = await UserEvent.for(user.id, team.slug, event.slug).needsPermission('canEditEvent');
       expect(result.id).toEqual(event.id);
     });
 
-    it('throws an error if user role is not in the accepted role list', async () => {
+    it('throws an error if user role is not allowed for the permission', async () => {
       const user = await userFactory();
-      const team = await teamFactory({ owners: [user] });
+      const team = await teamFactory({ reviewers: [user] });
       const event = await eventFactory({ team });
-      await expect(UserEvent.for(user.id, team.slug, event.slug).allowedFor(['MEMBER'])).rejects.toThrowError(
+      await expect(UserEvent.for(user.id, team.slug, event.slug).needsPermission('canEditEvent')).rejects.toThrowError(
         ForbiddenOperationError,
       );
     });
@@ -32,7 +32,7 @@ describe('UserEvent', () => {
       const user = await userFactory();
       const team = await teamFactory();
       const event = await eventFactory({ team });
-      await expect(UserEvent.for(user.id, team.slug, event.slug).allowedFor(['OWNER'])).rejects.toThrowError(
+      await expect(UserEvent.for(user.id, team.slug, event.slug).needsPermission('canEditEvent')).rejects.toThrowError(
         ForbiddenOperationError,
       );
     });
@@ -42,7 +42,7 @@ describe('UserEvent', () => {
       const team = await teamFactory({ owners: [user] });
       const team2 = await teamFactory({ owners: [user] });
       const event = await eventFactory({ team: team2 });
-      await expect(UserEvent.for(user.id, team.slug, event.slug).allowedFor(['OWNER'])).rejects.toThrowError(
+      await expect(UserEvent.for(user.id, team.slug, event.slug).needsPermission('canEditEvent')).rejects.toThrowError(
         ForbiddenOperationError,
       );
     });
@@ -50,7 +50,7 @@ describe('UserEvent', () => {
     it('throws an error if event does not exist', async () => {
       const user = await userFactory();
       const team = await teamFactory();
-      await expect(UserEvent.for(user.id, team.slug, 'XXX').allowedFor(['OWNER'])).rejects.toThrowError(
+      await expect(UserEvent.for(user.id, team.slug, 'XXX').needsPermission('canEditEvent')).rejects.toThrowError(
         ForbiddenOperationError,
       );
     });

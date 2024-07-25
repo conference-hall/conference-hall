@@ -15,7 +15,7 @@ export class Comments {
   }
 
   async add(comment: string) {
-    await this.userEvent.allowedFor(['OWNER', 'MEMBER', 'REVIEWER']);
+    await this.userEvent.needsPermission('canAccessEvent');
 
     await db.comment.create({
       data: { userId: this.userId, proposalId: this.proposalId, comment, channel: 'ORGANIZER' },
@@ -23,7 +23,7 @@ export class Comments {
   }
 
   async remove(messageId: string) {
-    await this.userEvent.allowedFor(['OWNER', 'MEMBER', 'REVIEWER']);
+    await this.userEvent.needsPermission('canAccessEvent');
 
     await db.comment.deleteMany({ where: { id: messageId, userId: this.userId, proposalId: this.proposalId } });
   }

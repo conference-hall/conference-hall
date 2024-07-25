@@ -32,7 +32,7 @@ export class ActivityFeed {
   }
 
   async activity() {
-    const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER', 'REVIEWER']);
+    const event = await this.userEvent.needsPermission('canAccessEvent');
 
     let results: Array<ReviewFeed | CommentFeed> = [];
 

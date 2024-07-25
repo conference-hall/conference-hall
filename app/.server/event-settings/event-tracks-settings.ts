@@ -13,7 +13,7 @@ export class EventTracksSettings extends UserEvent {
   }
 
   async saveFormat(data: TrackSaveData) {
-    await this.allowedFor(['OWNER']);
+    await this.needsPermission('canEditEvent');
 
     if (data.id) {
       return db.eventFormat.update({
@@ -27,12 +27,12 @@ export class EventTracksSettings extends UserEvent {
   }
 
   async deleteFormat(formatId: string) {
-    await this.allowedFor(['OWNER']);
+    await this.needsPermission('canEditEvent');
     return db.eventFormat.delete({ where: { id: formatId } });
   }
 
   async saveCategory(data: TrackSaveData) {
-    await this.allowedFor(['OWNER']);
+    await this.needsPermission('canEditEvent');
     if (data.id) {
       return db.eventCategory.update({
         where: { id: data.id },
@@ -45,7 +45,7 @@ export class EventTracksSettings extends UserEvent {
   }
 
   async deleteCategory(categoryId: string) {
-    await this.allowedFor(['OWNER']);
+    await this.needsPermission('canEditEvent');
     return db.eventCategory.delete({ where: { id: categoryId } });
   }
 }

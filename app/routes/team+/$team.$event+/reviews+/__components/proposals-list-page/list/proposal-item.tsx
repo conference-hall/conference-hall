@@ -26,7 +26,7 @@ export function ProposalItem({ proposal, isSelected, isAllPagesSelected, toggle 
 
   return (
     <>
-      {team.role !== 'REVIEWER' ? (
+      {team.userPermissions.canDeliberateEventProposals ? (
         <Checkbox
           aria-label={`Select proposal "${title}"`}
           value={id}
@@ -46,7 +46,7 @@ export function ProposalItem({ proposal, isSelected, isAllPagesSelected, toggle 
             <Text weight="semibold" truncate>
               {title}
             </Text>
-            {team.role !== 'REVIEWER' && proposal.deliberationStatus !== 'PENDING' ? (
+            {team.userPermissions.canDeliberateEventProposals && proposal.deliberationStatus !== 'PENDING' ? (
               <span className="flex items-center gap-1">
                 {deliberationBadge(proposal)}
                 {publicationBadge(proposal)}

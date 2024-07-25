@@ -17,15 +17,15 @@ describe('UserTeams', () => {
   describe('list', () => {
     it("returns user's teams", async () => {
       const orga1 = await teamFactory({ attributes: { name: 'A' }, owners: [user] });
-      const orga2 = await teamFactory({ attributes: { name: 'B' }, reviewers: [user] });
-      const orga3 = await teamFactory({ attributes: { name: 'C' }, members: [user] });
+      const orga2 = await teamFactory({ attributes: { name: 'B' }, members: [user] });
+      const orga3 = await teamFactory({ attributes: { name: 'C' }, reviewers: [user] });
 
       const teams = await UserTeams.for(user.id).list();
 
       expect(teams).toEqual([
-        { slug: orga1.slug, name: 'A', role: 'OWNER' },
-        { slug: orga2.slug, name: 'B', role: 'REVIEWER' },
-        { slug: orga3.slug, name: 'C', role: 'MEMBER' },
+        { slug: orga1.slug, name: 'A' },
+        { slug: orga2.slug, name: 'B' },
+        { slug: orga3.slug, name: 'C' },
       ]);
     });
   });

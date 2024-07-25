@@ -1,9 +1,11 @@
-import type { TeamRole } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
 import { z } from 'zod';
 
 import { ForbiddenOperationError, SlugAlreadyExistsError, TeamNotFoundError } from '~/libs/errors.server.ts';
 import { SlugSchema } from '~/libs/validators/slug.ts';
+
+import type { Permission } from './user-permissions.ts';
+import { UserPermissions } from './user-permissions.ts';
 
 export type Team = Awaited<ReturnType<typeof UserTeam.prototype.get>>;
 
@@ -22,31 +24,39 @@ export class UserTeam {
     return new UserTeam(userId, slug);
   }
 
-  async allowedFor(roles: TeamRole[]) {
+  async needsPermission(permission: Permission) {
+    const roles = UserPermissions.getRoleWith(permission);
+
     const member = await db.teamMember.findFirst({
       where: { memberId: this.userId, role: { in: roles }, team: { slug: this.slug } },
     });
     if (!member) throw new ForbiddenOperationError();
-    return member;
+    return {
+      memberId: member.memberId,
+      teamId: member.teamId,
+      permissions: UserPermissions.getPermissions(member.role),
+    };
   }
 
   async get() {
-    const member = await this.allowedFor(['MEMBER', 'REVIEWER', 'OWNER']);
+    const member = await this.needsPermission('canAccessTeam');
 
     const team = await db.team.findUnique({ where: { slug: this.slug } });
     if (!team) throw new TeamNotFoundError();
+
+    const userPermissions = member.permissions;
 
     return {
       id: team.id,
       name: team.name,
       slug: team.slug,
-      role: member.role,
-      invitationLink: member.role !== 'REVIEWER' ? team.invitationLink : undefined,
+      userPermissions,
+      invitationLink: userPermissions.canEditTeam ? team.invitationLink : undefined,
     };
   }
 
   async updateSettings(data: z.infer<typeof TeamUpdateSchema>) {
-    const member = await this.allowedFor(['OWNER']);
+    const member = await this.needsPermission('canEditTeam');
 
     return db.$transaction(async (trx) => {
       const existSlug = await trx.team.findFirst({ where: { slug: data.slug, id: { not: member.teamId } } });

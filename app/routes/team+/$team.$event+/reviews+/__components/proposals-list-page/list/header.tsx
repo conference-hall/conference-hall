@@ -21,7 +21,7 @@ export function ListHeader({ checkboxRef, total, totalSelected, totalReviewed, s
   return (
     <List.Header className="sm:h-16">
       <div className="flex flex-col gap-4 md:flex-row md:items-center ">
-        {team.role !== 'REVIEWER' ? (
+        {team.userPermissions.canDeliberateEventProposals ? (
           <Checkbox aria-label="Select current page" ref={checkboxRef}>
             {totalSelected === 0 ? `${total} proposals` : `Mark ${totalSelected} selected as:`}
           </Checkbox>

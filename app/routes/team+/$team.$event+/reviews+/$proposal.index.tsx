@@ -1,7 +1,7 @@
 import { parseWithZod } from '@conform-to/zod';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { useActionData, useLoaderData, useParams } from '@remix-run/react';
+import { useActionData, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
@@ -18,8 +18,8 @@ import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { TalkSection } from '~/routes/__components/talks/talk-section.tsx';
-import { useUser } from '~/routes/__components/use-user.tsx';
 
+import { useTeam } from '../../__components/use-team.tsx';
 import { ProposalActivityFeed as Feed } from './__components/proposal-page/proposal-activity/proposal-activity-feed.tsx';
 import { ReviewHeader } from './__components/proposal-page/review-header.tsx';
 import { ReviewSidebar } from './__components/proposal-page/review-sidebar.tsx';
@@ -100,14 +100,9 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 };
 
 export default function ProposalReviewLayoutRoute() {
-  const params = useParams();
-  const { user } = useUser();
+  const { team } = useTeam();
   const { event, proposal, pagination, activity } = useLoaderData<typeof loader>();
   const errors = useActionData<typeof action>();
-
-  const role = user?.teams.find((team) => team.slug === params.team)?.role;
-  const canEdit = role !== 'REVIEWER';
-  const canDeliberate = role !== 'REVIEWER';
 
   const hasFormats = proposal.formats && proposal.formats.length > 0;
   const hasCategories = proposal.categories && proposal.categories.length > 0;
@@ -123,7 +118,7 @@ export default function ProposalReviewLayoutRoute() {
               talk={proposal}
               errors={errors}
               event={event}
-              canEditTalk={canEdit}
+              canEditTalk={team.userPermissions.canEditEventProposals}
               canEditSpeakers={false}
               canArchive={false}
               showFormats={hasFormats}
@@ -134,7 +129,11 @@ export default function ProposalReviewLayoutRoute() {
           </div>
 
           <div className="lg:col-span-3">
-            <ReviewSidebar proposal={proposal} reviewEnabled={event.reviewEnabled} canDeliberate={canDeliberate} />
+            <ReviewSidebar
+              proposal={proposal}
+              reviewEnabled={event.reviewEnabled}
+              canDeliberate={team.userPermissions.canDeliberateEventProposals}
+            />
           </div>
         </div>
       </div>

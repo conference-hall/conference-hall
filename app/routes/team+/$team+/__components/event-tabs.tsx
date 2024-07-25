@@ -2,14 +2,15 @@ import { ArrowTopRightOnSquareIcon } from '@heroicons/react/20/solid';
 import { CalendarIcon, Cog6ToothIcon, HomeIcon, MegaphoneIcon, QueueListIcon } from '@heroicons/react/24/outline';
 import { useSearchParams } from '@remix-run/react';
 
+import type { UserPermissions } from '~/.server/team/user-permissions.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { Link } from '~/design-system/links.tsx';
 import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
 import type { EventType } from '~/types/events.types';
 
-type Props = { teamSlug: string; eventSlug: string; eventType: EventType; role: string };
+type Props = { teamSlug: string; eventSlug: string; eventType: EventType; permissions: UserPermissions };
 
-export function EventTabs({ teamSlug, eventSlug, eventType, role }: Props) {
+export function EventTabs({ teamSlug, eventSlug, eventType, permissions }: Props) {
   const [searchParams] = useSearchParams();
   const search = searchParams.toString();
 
@@ -24,19 +25,19 @@ export function EventTabs({ teamSlug, eventSlug, eventType, role }: Props) {
           Proposals
         </NavTab>
 
-        {role !== 'REVIEWER' && eventType === 'CONFERENCE' ? (
+        {eventType === 'CONFERENCE' && permissions.canPublishEventResults ? (
           <NavTab to={`/team/${teamSlug}/${eventSlug}/publication`} icon={MegaphoneIcon}>
             Publication
           </NavTab>
         ) : null}
 
-        {role !== 'REVIEWER' && eventType === 'CONFERENCE' ? (
+        {eventType === 'CONFERENCE' && permissions.canEditEventSchedule ? (
           <NavTab to={`/team/${teamSlug}/${eventSlug}/schedule`} icon={CalendarIcon} className="hidden md:flex">
             Schedule
           </NavTab>
         ) : null}
 
-        {role === 'OWNER' ? (
+        {permissions.canEditEvent ? (
           <NavTab to={`/team/${teamSlug}/${eventSlug}/settings`} icon={Cog6ToothIcon}>
             Settings
           </NavTab>

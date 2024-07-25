@@ -39,7 +39,7 @@ export default function TeamEventsRoute() {
     <Page>
       <Page.Heading title="Team events" subtitle="Manage your team events call for papers">
         <ArchivedFilters />
-        {team.role === 'OWNER' ? (
+        {team.userPermissions.canCreateEvent ? (
           <ButtonLink to={`/team/${team.slug}/new`} variant="secondary" iconLeft={PlusIcon}>
             New event
           </ButtonLink>

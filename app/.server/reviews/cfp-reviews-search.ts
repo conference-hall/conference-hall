@@ -17,7 +17,7 @@ export class CfpReviewsSearch {
   }
 
   async search(filters: ProposalsFilters, page: number = 1) {
-    const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER', 'REVIEWER']);
+    const event = await this.userEvent.needsPermission('canAccessEvent');
 
     const search = new ProposalSearchBuilder(event.slug, this.userId, filters, {
       withSpeakers: event.displayProposalsSpeakers,
@@ -53,7 +53,7 @@ export class CfpReviewsSearch {
   }
 
   async autocomplete(filters: ProposalsFilters) {
-    const event = await this.userEvent.allowedFor(['OWNER', 'MEMBER', 'REVIEWER']);
+    const event = await this.userEvent.needsPermission('canAccessEvent');
 
     const search = new ProposalSearchBuilder(event.slug, this.userId, filters, {
       withSpeakers: true,
@@ -76,7 +76,7 @@ export class CfpReviewsSearch {
   }
 
   async forJsonExport(filters: ProposalsFilters) {
-    const event = await this.userEvent.allowedFor(['OWNER']);
+    const event = await this.userEvent.needsPermission('canExportEventProposals');
 
     const search = new ProposalSearchBuilder(event.slug, this.userId, filters, {
       withSpeakers: event.displayProposalsSpeakers,
@@ -116,7 +116,7 @@ export class CfpReviewsSearch {
   }
 
   async forCardsExport(filters: ProposalsFilters) {
-    const event = await this.userEvent.allowedFor(['OWNER']);
+    const event = await this.userEvent.needsPermission('canExportEventProposals');
 
     const search = new ProposalSearchBuilder(event.slug, this.userId, filters, {
       withSpeakers: event.displayProposalsSpeakers,

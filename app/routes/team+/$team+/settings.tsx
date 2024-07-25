@@ -15,7 +15,7 @@ import { useTeam } from '../__components/use-team.tsx';
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.team, 'Invalid team slug');
-  await UserTeam.for(userId, params.team).allowedFor(['OWNER']);
+  await UserTeam.for(userId, params.team).needsPermission('canEditTeam');
   return null;
 };
 

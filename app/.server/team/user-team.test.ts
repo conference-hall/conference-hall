@@ -14,20 +14,20 @@ describe('UserTeam', () => {
     user = await userFactory();
   });
 
-  describe('allowedFor', () => {
-    it('returns the member info if allowed for the team', async () => {
+  describe('needsPermission', () => {
+    it('returns the member info if allowed the given permission', async () => {
       const team = await teamFactory({ owners: [user] });
 
-      const member = await UserTeam.for(user.id, team.slug).allowedFor(['OWNER']);
+      const member = await UserTeam.for(user.id, team.slug).needsPermission('canEditTeam');
 
       expect(member.memberId).toEqual(user.id);
       expect(member.teamId).toEqual(team.id);
-      expect(member.role).toEqual('OWNER');
+      expect(member.permissions.canEditTeam).toBe(true);
     });
 
     it('throws an error if user role is not in the accepted role list', async () => {
       const team = await teamFactory({ members: [user] });
-      await expect(UserTeam.for(user.id, team.slug).allowedFor(['OWNER'])).rejects.toThrowError(
+      await expect(UserTeam.for(user.id, team.slug).needsPermission('canEditTeam')).rejects.toThrowError(
         ForbiddenOperationError,
       );
     });
@@ -35,21 +35,23 @@ describe('UserTeam', () => {
     it('throws an error if user has access to another team but not the given one', async () => {
       const team = await teamFactory();
       await teamFactory({ owners: [user] });
-      await expect(UserTeam.for(user.id, team.slug).allowedFor(['OWNER'])).rejects.toThrowError(
+      await expect(UserTeam.for(user.id, team.slug).needsPermission('canEditTeam')).rejects.toThrowError(
         ForbiddenOperationError,
       );
     });
 
     it('throws an error if team does not exist', async () => {
       await teamFactory({ owners: [user] });
-      await expect(UserTeam.for(user.id, 'XXX').allowedFor(['OWNER'])).rejects.toThrowError(ForbiddenOperationError);
+      await expect(UserTeam.for(user.id, 'XXX').needsPermission('canEditTeam')).rejects.toThrowError(
+        ForbiddenOperationError,
+      );
     });
   });
 
   describe('get', () => {
     it('returns team belonging to user', async () => {
-      await teamFactory({ owners: [user], attributes: { name: 'My team 1', slug: 'my-team1' } });
-      const team = await teamFactory({ members: [user], attributes: { name: 'My team 2', slug: 'my-team2' } });
+      await teamFactory({ members: [user], attributes: { name: 'My team 1', slug: 'my-team1' } });
+      const team = await teamFactory({ owners: [user], attributes: { name: 'My team 2', slug: 'my-team2' } });
 
       const myTeam = await UserTeam.for(user.id, team.slug).get();
 
@@ -57,8 +59,8 @@ describe('UserTeam', () => {
         id: team.id,
         name: 'My team 2',
         slug: 'my-team2',
-        role: 'MEMBER',
         invitationLink: `${appUrl()}/invite/team/${team.invitationCode}`,
+        userPermissions: expect.objectContaining({ canEditTeam: true }),
       });
     });
 

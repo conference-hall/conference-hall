@@ -19,7 +19,7 @@ export class TeamMembers {
   }
 
   async list(filters: z.infer<typeof MembersFiltersSchema>, page: number) {
-    await this.team.allowedFor(['OWNER']);
+    await this.team.needsPermission('canEditTeam');
 
     const { slug } = this.team;
 
@@ -50,7 +50,7 @@ export class TeamMembers {
   }
 
   async remove(memberId: string) {
-    await this.team.allowedFor(['OWNER']);
+    await this.team.needsPermission('canEditTeam');
 
     const { userId, slug } = this.team;
     if (memberId === userId) throw new ForbiddenOperationError();
@@ -58,7 +58,7 @@ export class TeamMembers {
   }
 
   async changeRole(memberId: string, role: TeamRole) {
-    await this.team.allowedFor(['OWNER']);
+    await this.team.needsPermission('canEditTeam');
 
     const { userId, slug } = this.team;
     if (userId === memberId) throw new ForbiddenOperationError();
