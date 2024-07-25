@@ -1,6 +1,4 @@
-import { marked } from 'marked';
-import xss from 'xss';
-
+import { MarkdownParser } from '../markdown/markdown-parser.ts';
 import { HTML_TEMPLATE } from './template.html.ts';
 
 export class Template<T extends Record<string, string>> {
@@ -21,10 +19,13 @@ export class Template<T extends Record<string, string>> {
   }
 
   renderHtmlContent() {
-    let markdown = marked.parse(this.template.content, { async: false }) as string;
+    let content = this.template.content;
     for (const [key, value] of Object.entries(this.template.variables)) {
-      markdown = markdown.replaceAll(`%${key}%`, value.toString());
+      content = content.replaceAll(`%${key}%`, value.toString());
     }
-    return HTML_TEMPLATE.replace('{{subject}}', this.renderSubject()).replace('{{content}}', xss(markdown));
+
+    const html = MarkdownParser.parse(content);
+
+    return HTML_TEMPLATE.replace('{{subject}}', this.renderSubject()).replace('{{content}}', html);
   }
 }

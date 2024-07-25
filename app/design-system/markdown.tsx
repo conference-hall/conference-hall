@@ -1,21 +1,17 @@
-import type { VariantProps } from 'class-variance-authority';
-import { cva } from 'class-variance-authority';
-import { marked } from 'marked';
+import { cx } from 'class-variance-authority';
 import React from 'react';
-import xss from 'xss';
 
-// Disable headings and tables in Markdown
-marked.use({ tokenizer: { heading: () => undefined, table: () => undefined } });
+import { MarkdownParser } from '~/libs/markdown/markdown-parser.ts';
 
-const markdown = cva('max-w-full min-w-0 break-words text-gray-700', {
-  variants: { size: { s: 'prose prose-sm', m: 'prose' } },
-  defaultVariants: { size: 's' },
-});
+type Props = { as?: React.ElementType; children: string | null; className?: string };
 
-type Props = { as?: React.ElementType; children: string | null; className?: string } & VariantProps<typeof markdown>;
+export function Markdown({ as: Tag = 'div', children, className }: Props) {
+  const html = MarkdownParser.parse(children, { withAppRenderer: true });
 
-export function Markdown({ as: Tag = 'div', children, size, className }: Props) {
-  const html = marked.parse(children || '', { async: false }) as string;
-
-  return <Tag className={markdown({ size, className })} dangerouslySetInnerHTML={{ __html: xss(html) }} />;
+  return (
+    <Tag
+      className={cx('max-w-full min-w-0 break-words prose prose-sm', className)}
+      dangerouslySetInnerHTML={{ __html: html }}
+    />
+  );
 }
