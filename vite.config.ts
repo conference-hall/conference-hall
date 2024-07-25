@@ -43,7 +43,9 @@ export default defineConfig({
       : undefined,
   ],
   server: {
+    host: '127.0.0.1',
     port: Number(process.env.PORT) || 3000,
+    strictPort: true,
     warmup: { clientFiles: ['./app/entry.client.tsx', './app/root.tsx', './app/routes/**/*'] },
   },
 });
