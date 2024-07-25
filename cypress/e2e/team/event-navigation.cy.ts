@@ -20,14 +20,14 @@ describe('Event navigation page', () => {
       page.settingsTab().should('exist');
     });
 
-    it('team members can access to limited set of features', () => {
+    it('team members can access to all features', () => {
       cy.login('Bruce Wayne');
       page.visit('team-1', 'conference-1');
       page.overviewTab().should('exist');
       page.proposalsTab().should('exist');
       page.publicationTab().should('exist');
       page.scheduleTab().should('exist');
-      page.settingsTab().should('not.exist');
+      page.settingsTab().should('exist');
     });
 
     it('team reviewers can access to limited set of features', () => {
@@ -52,14 +52,14 @@ describe('Event navigation page', () => {
       page.settingsTab().should('exist');
     });
 
-    it('team members can access to limited set of features', () => {
+    it('team members can access to all features', () => {
       cy.login('Bruce Wayne');
       page.visit('team-1', 'meetup-1');
       page.overviewTab().should('exist');
       page.proposalsTab().should('exist');
       page.publicationTab().should('not.exist');
       page.scheduleTab().should('not.exist');
-      page.settingsTab().should('not.exist');
+      page.settingsTab().should('exist');
     });
 
     it('team reviewers can access to limited set of features', () => {
