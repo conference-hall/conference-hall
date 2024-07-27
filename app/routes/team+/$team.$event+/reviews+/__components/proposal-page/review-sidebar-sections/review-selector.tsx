@@ -60,7 +60,7 @@ export function ReviewSelector({ value, onChange }: Props) {
     <Fieldset>
       <Label className="sr-only"> Choose a note</Label>
       <RadioGroup name="review" value={String(selectedIndex)} onChange={handleChange}>
-        <div className="flex gap-2 items-center" onMouseOut={() => setOverIndex(-1)}>
+        <div className="flex gap-1 justify-between items-center" onMouseOut={() => setOverIndex(-1)}>
           {options.map((option, index) => (
             <Radio key={index} value={String(index)} title={option.label} data-review-input>
               <div className="cursor-pointer" onMouseOver={() => setOverIndex(index)}>

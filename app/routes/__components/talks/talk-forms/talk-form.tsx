@@ -28,6 +28,7 @@ type Props = {
   categories?: Array<{ id: string; name: string; description: string | null }>;
   categoriesRequired?: boolean;
   errors: SubmissionErrors;
+  onSubmit?: () => void;
 };
 
 export function TalkForm({
@@ -38,12 +39,13 @@ export function TalkForm({
   categories,
   categoriesRequired,
   errors,
+  onSubmit,
 }: Props) {
   const hasFormats = formats && formats.length > 0;
   const hasCategories = categories && categories.length > 0;
 
   return (
-    <Form id={id} method="POST" className="space-y-8 lg:space-y-10">
+    <Form id={id} method="POST" className="space-y-8 lg:space-y-10" onSubmit={onSubmit}>
       <Input
         name="title"
         type="text"

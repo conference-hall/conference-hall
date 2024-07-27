@@ -58,6 +58,7 @@ function TalkEditDrawer({ initialValues, event, errors, open, onClose }: TalkEdi
           formatsRequired={event?.formatsRequired}
           categoriesRequired={event?.categoriesRequired}
           errors={errors}
+          onSubmit={onClose}
         />
       </SlideOver.Content>
       <SlideOver.Actions>

@@ -23,6 +23,7 @@ export class SpeakerActivities {
         team: true,
         proposals: {
           where: { speakers: { some: { id: this.userId } } },
+          include: { speakers: true },
         },
       },
     });
@@ -41,6 +42,11 @@ export class SpeakerActivities {
             id: proposal.id,
             title: proposal.title,
             status: proposal.getStatusForSpeaker(event.isCfpOpen),
+            speakers: proposal.speakers.map((speaker) => ({
+              id: speaker.id,
+              name: speaker.name,
+              picture: speaker.picture,
+            })),
           })),
         };
       }),
