@@ -31,7 +31,7 @@ export default function SpeakerTalksRoute() {
 
   return (
     <Page>
-      <h1 className="sr-only">Talk library</h1>
+      <h1 className="sr-only">Talks library</h1>
       <List>
         <List.Header>
           <Text weight="semibold">{`${talks.length} talks`}</Text>

@@ -18,7 +18,7 @@ class SpeakerTalkPage extends BasePage {
   }
 
   submitTalk() {
-    cy.findByRole('link', { name: 'Submit talk' }).click();
+    cy.findByRole('link', { name: 'Submit' }).click();
   }
 
   editTalk() {

@@ -23,7 +23,7 @@ type DeleteProposalModalProps = { isOpen: boolean; onClose: () => void };
 
 function ProposalDeleteModal({ isOpen, onClose }: DeleteProposalModalProps) {
   return (
-    <Modal title="Are you sure you want to remove your proposal?" open={isOpen} onClose={onClose}>
+    <Modal title="Are you sure you want to remove your submission?" open={isOpen} onClose={onClose}>
       <Form method="POST" onSubmit={onClose}>
         <Modal.Content>
           <Text>The talk will still be in your profile, so you will be able to submit it again later.</Text>

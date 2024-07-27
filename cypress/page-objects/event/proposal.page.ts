@@ -42,7 +42,7 @@ class EventProposalPage extends BasePage {
   }
 
   deleteConfirmDialog() {
-    return cy.findByRole('dialog', { name: 'Are you sure you want to delete your proposal?' });
+    return cy.findByRole('dialog', { name: 'Are you sure you want to remove your submission?' });
   }
 
   cancelDelete() {

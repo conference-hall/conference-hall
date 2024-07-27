@@ -33,10 +33,9 @@ describe('Speaker home page', () => {
       .last()
       .within(() => {
         cy.assertText('Devfest Nantes');
-        cy.assertText('3 proposals');
       });
 
-    home.eventActivities('Devfest Nantes').should('have.length', 3);
+    home.eventActivities('Devfest Nantes').should('have.length', 4);
 
     home.activity('My talk 2').click();
     eventProposal.isPageVisible();

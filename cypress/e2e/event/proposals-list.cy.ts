@@ -22,12 +22,12 @@ describe('Event proposals list', () => {
     cy.login();
     proposals.visit('devfest-nantes');
     proposals.list().should('have.length', 6);
-    proposals.proposal('My talk 1').should('contain.text', 'Proposal applied');
-    proposals.proposal('My talk 2').should('contain.text', 'Draft proposal');
-    proposals.proposal('My talk 3').should('contain.text', 'Proposal accepted');
-    proposals.proposal('My talk 4').should('contain.text', 'Declined by organizers');
+    proposals.proposal('My talk 1').should('contain.text', 'Applied');
+    proposals.proposal('My talk 2').should('contain.text', 'Draft');
+    proposals.proposal('My talk 3').should('contain.text', 'Accepted');
+    proposals.proposal('My talk 4').should('contain.text', 'Declined');
     proposals.proposal('My talk 5').should('contain.text', 'Declined by you');
-    proposals.proposal('My talk 6').should('contain.text', 'Participation confirmed');
+    proposals.proposal('My talk 6').should('contain.text', 'Confirmed');
   });
 
   it('can access to talk details', () => {
@@ -41,7 +41,7 @@ describe('Event proposals list', () => {
     cy.login();
     proposals.visit('conference-cfp-past');
     proposals.list().should('have.length', 1);
-    proposals.proposal('My talk 1').should('contain.text', 'Deliberation pending');
+    proposals.proposal('My talk 1').should('contain.text', 'Applied');
   });
 
   it('displays empty state when no proposals', () => {

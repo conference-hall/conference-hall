@@ -29,7 +29,7 @@ export default function ProfileRoute() {
 
   return (
     <Page className="grid grid-cols-1 items-start lg:grid-cols-3">
-      <h1 className="sr-only">Your speaker activity</h1>
+      <h1 className="sr-only">Your activity</h1>
 
       <SpeakerDetailsSection
         email={profile.email}
