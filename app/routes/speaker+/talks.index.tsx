@@ -1,4 +1,4 @@
-import { ChevronRightIcon, PlusIcon } from '@heroicons/react/20/solid';
+import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import { InboxIcon } from '@heroicons/react/24/outline';
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
@@ -6,7 +6,6 @@ import { useLoaderData, useSearchParams } from '@remix-run/react';
 
 import { TalksLibrary } from '~/.server/speaker-talks-library/talks-library.ts';
 import { AvatarGroup } from '~/design-system/avatar.tsx';
-import { ButtonLink } from '~/design-system/buttons.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { List } from '~/design-system/list/list.tsx';
@@ -32,12 +31,7 @@ export default function SpeakerTalksRoute() {
 
   return (
     <Page>
-      <Page.Heading title="My talks library" subtitle="Create or edit all your talks">
-        <ButtonLink to="/speaker/talks/new" iconLeft={PlusIcon} variant="secondary">
-          New talk
-        </ButtonLink>
-      </Page.Heading>
-
+      <h1 className="sr-only">Talk library</h1>
       <List>
         <List.Header>
           <Text weight="semibold">{`${talks.length} talks`}</Text>

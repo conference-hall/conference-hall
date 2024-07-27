@@ -1,4 +1,4 @@
-import { MapPinIcon, PencilSquareIcon, PlusIcon } from '@heroicons/react/20/solid';
+import { MapPinIcon, PencilSquareIcon } from '@heroicons/react/20/solid';
 
 import { ButtonLink } from '~/design-system/buttons.tsx';
 import { IconLabel } from '~/design-system/icon-label.tsx';
@@ -37,16 +37,13 @@ export function SpeakerDetailsSection({ bio, location, socials }: Props) {
             {github && <IconLabel icon={GitHubIcon}>{github}</IconLabel>}
           </div>
         )}
-      </Card>
 
-      <div className="space-y-2">
-        <ButtonLink to="profile" variant="secondary" iconLeft={PencilSquareIcon} block>
-          Edit your profile
-        </ButtonLink>
-        <ButtonLink to="talks/new" variant="secondary" iconLeft={PlusIcon} block>
-          New talk
-        </ButtonLink>
-      </div>
+        <div className="px-2 pb-2 pt-2 border-t border-t-gray-200">
+          <ButtonLink to="profile" variant="secondary" iconLeft={PencilSquareIcon} block>
+            Edit your profile
+          </ButtonLink>
+        </div>
+      </Card>
     </div>
   );
 }
