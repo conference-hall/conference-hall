@@ -7,6 +7,7 @@ import invariant from 'tiny-invariant';
 import { TalksLibrary } from '~/.server/speaker-talks-library/talks-library.ts';
 import { TalkSaveSchema } from '~/.server/speaker-talks-library/talks-library.types.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
+import { H1 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
@@ -65,7 +66,7 @@ export default function SpeakerTalkRoute() {
 
   return (
     <Page>
-      <h1 className="sr-only">Talk page</h1>
+      <H1 srOnly>Talk page</H1>
 
       <div className="space-y-6">
         <TalkSection

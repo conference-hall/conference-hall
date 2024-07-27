@@ -9,7 +9,7 @@ import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { SearchParamSelector } from '~/design-system/navigation/search-param-selector.tsx';
-import { Text } from '~/design-system/typography.tsx';
+import { H1, Text } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 
@@ -30,7 +30,8 @@ export default function SpeakerTalksRoute() {
 
   return (
     <Page>
-      <h1 className="sr-only">Talks library</h1>
+      <H1 srOnly>Talks library</H1>
+
       <List>
         <List.Header>
           <Text weight="semibold">{`${talks.length} talks`}</Text>

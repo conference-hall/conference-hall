@@ -6,6 +6,7 @@ import { parseUrlPage } from '~/.server/shared/pagination.ts';
 import { SpeakerActivities } from '~/.server/speaker-activities/speaker-activities.ts';
 import { SpeakerProfile } from '~/.server/speaker-profile/speaker-profile.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
+import { H1 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 
@@ -29,7 +30,7 @@ export default function ProfileRoute() {
 
   return (
     <Page className="grid grid-cols-1 items-start lg:grid-cols-3">
-      <h1 className="sr-only">Your activity</h1>
+      <H1 srOnly>Your activity</H1>
 
       <SpeakerDetailsSection
         email={profile.email}
