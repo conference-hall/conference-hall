@@ -5,7 +5,6 @@ import { BG_COLOR } from '~/design-system/colors.ts';
 import { LoginButton } from './dropdowns/login-button.tsx';
 import { Logo } from './logo.tsx';
 import { Navigation } from './navigation.tsx';
-import { SearchEventsInput } from './search-events-input.tsx';
 import { TeamBreadcrumb } from './team-breadcrumb.tsx';
 import { UserMenu } from './user-menu.tsx';
 
@@ -22,24 +21,20 @@ type Props = {
   } | null;
   layout?: NavbarLayout;
   variant?: 'primary' | 'secondary';
-  withSearch?: boolean;
   className?: string;
 };
 
-export function Navbar({ user, layout = 'default', variant = 'primary', withSearch = false, className }: Props) {
+export function Navbar({ user, layout = 'default', variant = 'primary', className }: Props) {
   return (
     <div className={cx(BG_COLOR, className)}>
       <div className="flex h-16 items-center justify-between px-4 lg:px-8">
         <div className="flex w-full items-center">
           {/* Logo */}
-          <Logo label={!withSearch && layout !== 'team' ? 'Conference Hall' : undefined} variant={variant} />
+          <Logo label={layout !== 'team' ? 'Conference Hall' : undefined} variant={variant} />
 
           {user?.hasTeamAccess && layout === 'team' ? (
             /* Teams breadcrumb */
             <TeamBreadcrumb teams={user.teams} />
-          ) : withSearch && layout === 'default' ? (
-            /* Search */
-            <SearchEventsInput />
           ) : null}
         </div>
 

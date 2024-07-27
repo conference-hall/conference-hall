@@ -14,7 +14,7 @@ export function Logo({ label, variant = 'primary' }: Props) {
     >
       <ConferenceHallLogo width="24px" height="24px" aria-hidden className="fill-indigo-400" />
       {label ? (
-        <Text as="span" weight="bold" variant={variant === 'primary' ? 'light' : undefined} size="l" truncate>
+        <Text as="span" weight="semibold" variant={variant === 'primary' ? 'light' : undefined} size="l" truncate>
           {label}
         </Text>
       ) : null}

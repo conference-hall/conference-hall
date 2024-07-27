@@ -29,7 +29,7 @@ export default function OrganizerRoute() {
 
   return (
     <>
-      <Navbar user={user} withSearch />
+      <Navbar user={user} />
 
       <Page>
         <Page.Heading title="Notifications" subtitle="Notifications from events organizers about your proposals." />

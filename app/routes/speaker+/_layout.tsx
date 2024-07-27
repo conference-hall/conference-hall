@@ -26,7 +26,7 @@ export default function SpeakerRoute() {
 
   return (
     <>
-      <Navbar user={user} withSearch />
+      <Navbar user={user} />
 
       <header className={cx(BG_GRADIENT_COLOR, 'hidden sm:block')}>
         <Container className="h-24 flex flex-row items-center relative">
