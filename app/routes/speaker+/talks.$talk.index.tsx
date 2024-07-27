@@ -78,7 +78,7 @@ export default function SpeakerTalkRoute() {
           showBackButton
         />
 
-        <TalkSubmissionsSection submissions={talk.submissions} />
+        {talk.submissions.length > 0 ? <TalkSubmissionsSection submissions={talk.submissions} /> : null}
       </div>
     </Page>
   );

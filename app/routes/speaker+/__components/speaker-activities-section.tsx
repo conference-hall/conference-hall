@@ -67,6 +67,7 @@ export function SpeakerActivitiesSection({ activities, nextPage, hasNextPage, cl
                 target="_blank"
               />
             </div>
+
             <ul aria-label={`${event.name} activities`} className="divide-y">
               {event.submissions
                 .filter((proposal) => DISPLAYED_PROPOSAL_STATUSES.includes(proposal.status))
@@ -76,11 +77,11 @@ export function SpeakerActivitiesSection({ activities, nextPage, hasNextPage, cl
                       to={`/${event.slug}/proposals/${submission.id}`}
                       className="flex justify-between items-center gap-4 p-4 hover:bg-gray-50 focus-visible:-outline-offset-1"
                     >
-                      <div className="min-w-0">
+                      <div className="overflow-hidden">
                         <H3 truncate>{submission.title}</H3>
-                        <ProposalStatusLabel status={submission.status} />
                       </div>
-                      <div>
+                      <div className="flex items-center gap-4">
+                        <ProposalStatusLabel status={submission.status} />
                         <ChevronRightIcon className="h-5 w-5 flex-none text-gray-400" aria-hidden="true" />
                       </div>
                     </RemixLink>
