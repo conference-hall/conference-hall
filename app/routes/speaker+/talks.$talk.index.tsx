@@ -7,6 +7,7 @@ import invariant from 'tiny-invariant';
 import { TalksLibrary } from '~/.server/speaker-talks-library/talks-library.ts';
 import { TalkSaveSchema } from '~/.server/speaker-talks-library/talks-library.types.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
+import { H1 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
@@ -65,16 +66,20 @@ export default function SpeakerTalkRoute() {
 
   return (
     <Page>
-      <h1 className="sr-only">Talk page</h1>
+      <H1 srOnly>Talk page</H1>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-10">
-        <div className="lg:col-span-7">
-          <TalkSection talk={talk} errors={errors} canEditSpeakers canEditTalk canArchive />
-        </div>
+      <div className="space-y-6">
+        <TalkSection
+          talk={talk}
+          errors={errors}
+          canEditSpeakers
+          canArchive
+          canEditTalk
+          canSubmitTalk={!talk.archived}
+          showBackButton
+        />
 
-        <div className="lg:col-span-3">
-          <TalkSubmissionsSection talkId={talk.id} canSubmit={!talk.archived} submissions={talk.submissions} />
-        </div>
+        {talk.submissions.length > 0 ? <TalkSubmissionsSection submissions={talk.submissions} /> : null}
       </div>
     </Page>
   );

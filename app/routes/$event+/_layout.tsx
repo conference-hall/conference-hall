@@ -36,7 +36,7 @@ export default function EventRoute() {
 
   return (
     <>
-      <Navbar user={user} withSearch />
+      <Navbar user={user} />
 
       <header className={BG_GRADIENT_COLOR}>
         <Container className="h-24 flex flex-row items-center relative">
@@ -71,6 +71,7 @@ export default function EventRoute() {
         <EventTabs
           slug={event.slug}
           type={event.type}
+          cfpState={event.cfpState}
           surveyEnabled={event.surveyEnabled}
           isAuthenticated={Boolean(user)}
           className="sm:ml-40"

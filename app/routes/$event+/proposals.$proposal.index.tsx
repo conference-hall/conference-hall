@@ -85,6 +85,7 @@ export default function ProposalRoute() {
           canArchive={false}
           showFormats
           showCategories
+          showBackButton
         />
       </div>
     </Page>

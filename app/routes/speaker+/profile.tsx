@@ -12,6 +12,7 @@ import {
 } from '~/.server/speaker-profile/speaker-profile.types.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { NavSideMenu } from '~/design-system/navigation/nav-side-menu.tsx';
+import { H1 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
@@ -69,12 +70,12 @@ export default function ProfileRoute() {
 
   return (
     <Page className="lg:grid lg:grid-cols-12">
-      <h1 className="sr-only">My profile</h1>
+      <H1 srOnly>My profile</H1>
 
       <NavSideMenu
         aria-label="Profile edition menu"
         items={MENU_ITEMS}
-        className="w-full mb-6 lg:col-span-3 lg:sticky lg:top-4"
+        className="w-full mb-6 lg:col-span-3 lg:sticky lg:top-4 lg:self-start"
         noActive
       />
 

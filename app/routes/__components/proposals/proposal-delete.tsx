@@ -12,7 +12,7 @@ export function ProposalDeleteButton({ className }: Props) {
   return (
     <>
       <Button variant="secondary" onClick={() => setModalOpen(true)} className={className}>
-        Delete proposal
+        Remove proposal
       </Button>
       <ProposalDeleteModal isOpen={isModalOpen} onClose={() => setModalOpen(false)} />
     </>
@@ -23,7 +23,7 @@ type DeleteProposalModalProps = { isOpen: boolean; onClose: () => void };
 
 function ProposalDeleteModal({ isOpen, onClose }: DeleteProposalModalProps) {
   return (
-    <Modal title="Are you sure you want to delete your proposal?" open={isOpen} onClose={onClose}>
+    <Modal title="Are you sure you want to remove your submission?" open={isOpen} onClose={onClose}>
       <Form method="POST" onSubmit={onClose}>
         <Modal.Content>
           <Text>The talk will still be in your profile, so you will be able to submit it again later.</Text>
@@ -33,7 +33,7 @@ function ProposalDeleteModal({ isOpen, onClose }: DeleteProposalModalProps) {
             Cancel
           </Button>
           <Button type="submit" name="intent" value="proposal-delete">
-            Delete proposal
+            Remove proposal
           </Button>
         </Modal.Actions>
       </Form>

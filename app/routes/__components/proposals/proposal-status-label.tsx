@@ -1,4 +1,4 @@
-import { Text } from '~/design-system/typography.tsx';
+import { BadgeDot } from '~/design-system/badges.tsx';
 import { SpeakerProposalStatus } from '~/types/speaker.types.ts';
 
 type Props = { status: SpeakerProposalStatus };
@@ -6,76 +6,19 @@ type Props = { status: SpeakerProposalStatus };
 export function ProposalStatusLabel({ status }: Props) {
   switch (status) {
     case SpeakerProposalStatus.Draft:
-      return <Draft />;
+      return <BadgeDot color="yellow">Draft</BadgeDot>;
     case SpeakerProposalStatus.Submitted:
-      return <Submitted />;
     case SpeakerProposalStatus.DeliberationPending:
-      return <DeliberationPending />;
+      return <BadgeDot color="blue">Applied</BadgeDot>;
     case SpeakerProposalStatus.AcceptedByOrganizers:
-      return <AcceptedByOrganizers />;
+      return <BadgeDot color="green">Accepted</BadgeDot>;
     case SpeakerProposalStatus.RejectedByOrganizers:
-      return <RejectedByOrganizers />;
+      return <BadgeDot color="red">Declined</BadgeDot>;
     case SpeakerProposalStatus.ConfirmedBySpeaker:
-      return <ConfirmedBySpeaker />;
+      return <BadgeDot color="green">Confirmed</BadgeDot>;
     case SpeakerProposalStatus.DeclinedBySpeaker:
-      return <DeclinedBySpeaker />;
+      return <BadgeDot color="red">Declined by you</BadgeDot>;
     default:
       return null;
   }
-}
-
-export function Draft() {
-  return (
-    <Text variant="secondary" size="xs">
-      Draft proposal
-    </Text>
-  );
-}
-
-function Submitted() {
-  return (
-    <Text variant="secondary" size="xs">
-      Proposal applied
-    </Text>
-  );
-}
-
-function DeliberationPending() {
-  return (
-    <Text variant="secondary" size="xs">
-      Deliberation pending
-    </Text>
-  );
-}
-
-function AcceptedByOrganizers() {
-  return (
-    <Text variant="secondary" size="xs">
-      Proposal accepted
-    </Text>
-  );
-}
-
-function RejectedByOrganizers() {
-  return (
-    <Text variant="secondary" size="xs">
-      Declined by organizers
-    </Text>
-  );
-}
-
-function ConfirmedBySpeaker() {
-  return (
-    <Text variant="secondary" size="xs">
-      Participation confirmed
-    </Text>
-  );
-}
-
-function DeclinedBySpeaker() {
-  return (
-    <Text variant="secondary" size="xs">
-      Declined by you
-    </Text>
-  );
 }

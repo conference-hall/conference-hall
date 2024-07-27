@@ -6,7 +6,7 @@ import { CommentItem } from './comment-item.tsx';
 import { NewCommentForm } from './new-comment-form.tsx';
 import { ReviewItem } from './review-item.tsx';
 
-type Props = { activity: Feed; picture?: string | null };
+type Props = { activity: Feed };
 
 export function ProposalActivityFeed({ activity }: Props) {
   return (

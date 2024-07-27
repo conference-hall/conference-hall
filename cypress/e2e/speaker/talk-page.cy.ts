@@ -61,7 +61,7 @@ describe('Speaker talk page', () => {
 
   it('can see a submitted proposal of a talk', () => {
     talk.visit('awesome-talk');
-    cy.assertText('Submissions');
+    cy.assertText('Talk submissions');
     cy.findByRole('link', { name: 'Go to Devfest Nantes' }).click();
     proposals.isPageVisible();
     proposals.list().should('have.length', 1);

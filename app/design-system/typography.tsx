@@ -37,12 +37,13 @@ export type TypographyVariantProps = VariantProps<typeof typography>;
 type TypographyProps = {
   id?: string;
   as?: React.ElementType;
+  className?: string;
   children: React.ReactNode;
 } & TypographyVariantProps;
 
-function Typography({ id, as: Tag = 'p', children, ...rest }: TypographyProps) {
+function Typography({ id, as: Tag = 'p', children, className, ...rest }: TypographyProps) {
   return (
-    <Tag id={id} className={typography(rest)}>
+    <Tag id={id} className={cx(typography(rest), className)}>
       {children}
     </Tag>
   );

@@ -1,8 +1,11 @@
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
+import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 import type { TalkLevel } from '@prisma/client';
+import { cx } from 'class-variance-authority';
 
 import { Badge } from '~/design-system/badges.tsx';
+import { IconLink } from '~/design-system/icon-buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
 import { H1 } from '~/design-system/typography.tsx';
@@ -14,6 +17,7 @@ import type { SpeakerProps } from './co-speaker';
 import { CoSpeakers } from './co-speaker.tsx';
 import { TalkArchiveButton } from './talk-forms/talk-archive-button.tsx';
 import { TalkEditButton } from './talk-forms/talk-form-drawer.tsx';
+import { TalkSubmitButton } from './talk-forms/talk-submit-button.tsx';
 
 type Props = {
   talk: {
@@ -39,6 +43,8 @@ type Props = {
   canEditTalk: boolean;
   canEditSpeakers: boolean;
   canArchive: boolean;
+  canSubmitTalk?: boolean;
+  showBackButton?: boolean;
   showFormats?: boolean;
   showCategories?: boolean;
   referencesOpen?: boolean;
@@ -51,20 +57,29 @@ export function TalkSection({
   canEditTalk,
   canEditSpeakers,
   canArchive,
+  canSubmitTalk = false,
+  showBackButton = false,
   showFormats = false,
   showCategories = false,
   referencesOpen = false,
 }: Props) {
   return (
     <Card as="section">
-      <div className="flex flex-col sm:flex-row justify-between items-center gap-4 px-6 py-3 border-b border-b-gray-200">
-        <H1 size="base" truncate>
-          {talk.title}
-        </H1>
-        <div className="flex justify-between items-center gap-4">
+      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 pl-6 pr-3 py-3 border-b border-b-gray-200">
+        <div className={cx('flex items-center gap-2', { '-ml-2': showBackButton })}>
+          {showBackButton ? (
+            <IconLink icon={ChevronLeftIcon} label="Go back" to=".." variant="secondary" relative="path" />
+          ) : null}
+          <H1 size="base" truncate>
+            {talk.title}
+          </H1>
+        </div>
+        <div className="flex sm:justify-between items-center gap-3">
           {canArchive && <TalkArchiveButton archived={Boolean(talk.archived)} />}
 
           {canEditTalk && !talk.archived && <TalkEditButton initialValues={talk} event={event} errors={errors} />}
+
+          {canSubmitTalk && <TalkSubmitButton talkId={talk.id} />}
         </div>
       </div>
 

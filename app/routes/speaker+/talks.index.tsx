@@ -1,17 +1,15 @@
-import { ChevronRightIcon, PlusIcon } from '@heroicons/react/20/solid';
+import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import { InboxIcon } from '@heroicons/react/24/outline';
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData, useSearchParams } from '@remix-run/react';
 
 import { TalksLibrary } from '~/.server/speaker-talks-library/talks-library.ts';
-import { AvatarGroup } from '~/design-system/avatar.tsx';
-import { ButtonLink } from '~/design-system/buttons.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { SearchParamSelector } from '~/design-system/navigation/search-param-selector.tsx';
-import { Text } from '~/design-system/typography.tsx';
+import { H1, Text } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 
@@ -32,11 +30,7 @@ export default function SpeakerTalksRoute() {
 
   return (
     <Page>
-      <Page.Heading title="My talks library" subtitle="Create or edit all your talks">
-        <ButtonLink to="/speaker/talks/new" iconLeft={PlusIcon} variant="secondary">
-          New talk
-        </ButtonLink>
-      </Page.Heading>
+      <H1 srOnly>Talks library</H1>
 
       <List>
         <List.Header>
@@ -45,8 +39,8 @@ export default function SpeakerTalksRoute() {
             param="archived"
             defaultValue="false"
             selectors={[
-              { label: 'Active', value: 'false' },
               { label: 'Archived', value: 'true' },
+              { label: 'Active', value: 'false' },
             ]}
           />
         </List.Header>
@@ -57,10 +51,12 @@ export default function SpeakerTalksRoute() {
           {talks.map((talk) => (
             <List.RowLink key={talk.id} to={talk.id} className="flex justify-between items-center gap-4">
               <div className="min-w-0">
-                <Text size="base" weight="semibold" mb={1} truncate>
+                <Text size="s" weight="medium" truncate>
                   {talk.title}
                 </Text>
-                <AvatarGroup avatars={talk.speakers} displayNames />
+                <Text size="xs" variant="secondary">
+                  {talk.speakers.length ? `by ${talk.speakers.map((a) => a.name).join(', ')}` : null}
+                </Text>
               </div>
               <div>
                 <ChevronRightIcon className="h-5 w-5 flex-none text-gray-400" aria-hidden="true" />

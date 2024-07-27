@@ -17,11 +17,12 @@ type Props = {
 export function PersonalInfoForm({ name, email, picture, errors }: Props) {
   return (
     <Card as="section">
-      <Form method="POST" aria-labelledby="personal-info-label" preventScrollReset>
+      <Form method="POST" aria-labelledby="personal-info" preventScrollReset>
         <Card.Title>
-          <H2 id="personal-info-label">Personal information</H2>
+          <H2 id="personal-info" className="scroll-mt-12">
+            Personal information
+          </H2>
           <Subtitle>Use a permanent address where you can receive email.</Subtitle>
-          <a id="personal-info" href="#personal-info" className="scroll-mt-24" aria-hidden={true} />
         </Card.Title>
 
         <Card.Content>

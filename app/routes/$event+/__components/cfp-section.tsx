@@ -1,4 +1,3 @@
-import { ButtonLink } from '~/design-system/buttons.tsx';
 import { StatusPill } from '~/design-system/charts/status-pill.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { cfpColorStatus, formatCFPDate, formatCFPElapsedTime } from '~/libs/formatters/cfp.ts';
@@ -21,14 +20,6 @@ export function CfpSection({ cfpState, cfpStart, cfpEnd, timezone }: Props) {
           )}
         </ClientOnly>
       </div>
-
-      {cfpState === 'OPENED' && (
-        <div>
-          <ButtonLink to="submission" block>
-            Submit a proposal
-          </ButtonLink>
-        </div>
-      )}
     </section>
   );
 }

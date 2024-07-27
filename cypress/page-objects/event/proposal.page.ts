@@ -38,11 +38,11 @@ class EventProposalPage extends BasePage {
   }
 
   deleteProposal() {
-    cy.findByRole('button', { name: 'Delete proposal' }).click();
+    cy.findByRole('button', { name: 'Remove proposal' }).click();
   }
 
   deleteConfirmDialog() {
-    return cy.findByRole('dialog', { name: 'Are you sure you want to delete your proposal?' });
+    return cy.findByRole('dialog', { name: 'Are you sure you want to remove your submission?' });
   }
 
   cancelDelete() {
@@ -50,7 +50,7 @@ class EventProposalPage extends BasePage {
   }
 
   confirmDelete() {
-    this.deleteConfirmDialog().findByRole('button', { name: 'Delete proposal' }).click();
+    this.deleteConfirmDialog().findByRole('button', { name: 'Remove proposal' }).click();
   }
 }
 

@@ -57,7 +57,7 @@ export default function OrganizationSettingsRoute() {
       <NavSideMenu
         aria-label="Event settings menu"
         items={menus}
-        className="w-full mb-6 lg:col-span-3 lg:sticky lg:top-4"
+        className="w-full mb-6 lg:col-span-3 lg:sticky lg:top-4 lg:self-start"
       />
 
       <div className="space-y-6 lg:col-span-9">

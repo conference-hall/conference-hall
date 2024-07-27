@@ -1,4 +1,7 @@
-import { ProposalCard } from '~/routes/__components/proposals/proposal-card.tsx';
+import { ChevronRightIcon } from '@heroicons/react/20/solid';
+
+import { List } from '~/design-system/list/list.tsx';
+import { H2, Text } from '~/design-system/typography.tsx';
 
 type Props = {
   label: string;
@@ -15,10 +18,28 @@ type Props = {
 
 export function SubmissionTalksList({ label, talks }: Props) {
   return (
-    <ul aria-label={label} className="grid grid-cols-1 gap-4 lg:gap-6 sm:grid-cols-2">
-      {talks.map((talk) => (
-        <ProposalCard key={talk.id} {...talk} />
-      ))}
-    </ul>
+    <List>
+      <List.Header>
+        <H2 weight="semibold">{label}</H2>
+      </List.Header>
+
+      <List.Content aria-label={label}>
+        {talks.map((talk) => (
+          <List.RowLink key={talk.id} to={talk.id} className="flex justify-between items-center gap-4">
+            <div className="min-w-0">
+              <Text size="s" weight="medium" truncate>
+                {talk.title}
+              </Text>
+              <Text size="xs" variant="secondary">
+                {talk.speakers.length ? `by ${talk.speakers.map((a) => a.name).join(', ')}` : null}
+              </Text>
+            </div>
+            <div>
+              <ChevronRightIcon className="h-5 w-5 flex-none text-gray-400" aria-hidden="true" />
+            </div>
+          </List.RowLink>
+        ))}
+      </List.Content>
+    </List>
   );
 }

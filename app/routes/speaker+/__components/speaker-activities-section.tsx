@@ -1,36 +1,40 @@
-import { ArrowTopRightOnSquareIcon } from '@heroicons/react/20/solid';
+import { ArrowTopRightOnSquareIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
 import { FireIcon } from '@heroicons/react/24/outline';
+import { Link as RemixLink } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
 
-import { Avatar, AvatarGroup } from '~/design-system/avatar.tsx';
+import { Avatar } from '~/design-system/avatar.tsx';
 import { ButtonLink } from '~/design-system/buttons.tsx';
 import { IconLink } from '~/design-system/icon-buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Link } from '~/design-system/links.tsx';
-import { Subtitle, Text } from '~/design-system/typography.tsx';
+import { H2, H3, Subtitle } from '~/design-system/typography.tsx';
 import { ProposalStatusLabel } from '~/routes/__components/proposals/proposal-status-label.tsx';
 import type { CfpState } from '~/types/events.types';
-import type { SpeakerProposalStatus } from '~/types/speaker.types';
+import { SpeakerProposalStatus } from '~/types/speaker.types.ts';
 
 interface Props {
   activities: Array<{
     slug: string;
     name: string;
+    teamName: string;
     logoUrl: string | null;
     cfpState: CfpState;
-    submissions: Array<{
-      id: string;
-      title: string;
-      updatedAt: string;
-      status: SpeakerProposalStatus;
-      speakers: Array<{ name: string | null; picture: string | null }>;
-    }>;
+    submissions: Array<{ id: string; title: string; status: SpeakerProposalStatus }>;
   }>;
   nextPage: number;
   hasNextPage: boolean;
   className?: string;
 }
+
+const DISPLAYED_PROPOSAL_STATUSES = [
+  SpeakerProposalStatus.Draft,
+  SpeakerProposalStatus.Submitted,
+  SpeakerProposalStatus.DeliberationPending,
+  SpeakerProposalStatus.AcceptedByOrganizers,
+  SpeakerProposalStatus.ConfirmedBySpeaker,
+];
 
 export function SpeakerActivitiesSection({ activities, nextPage, hasNextPage, className }: Props) {
   if (activities.length === 0) {
@@ -46,10 +50,8 @@ export function SpeakerActivitiesSection({ activities, nextPage, hasNextPage, cl
               <div className="flex items-center gap-4">
                 <Avatar picture={event.logoUrl} name={event.name} square size="l" />
                 <div className="truncate">
-                  <Text size="l" weight="bold" truncate>
-                    {event.name}
-                  </Text>
-                  <Subtitle size="xs">{`${event.submissions.length} proposals`}</Subtitle>
+                  <H2 truncate>{event.name}</H2>
+                  <Subtitle size="xs">by {event.teamName}</Subtitle>
                 </div>
               </div>
               <IconLink
@@ -60,22 +62,39 @@ export function SpeakerActivitiesSection({ activities, nextPage, hasNextPage, cl
                 target="_blank"
               />
             </div>
+
             <ul aria-label={`${event.name} activities`} className="divide-y">
-              {event.submissions.map((submission) => (
-                <li key={submission.id} className="flex flex-col gap-1 p-4">
-                  <div className="flex items-center justify-between">
-                    <Link to={`/${event.slug}/proposals/${submission.id}`} size="s" weight="semibold" truncate>
-                      {submission.title}
-                    </Link>
-                    <AvatarGroup avatars={submission.speakers} />
-                  </div>
-                  <ProposalStatusLabel status={submission.status} />
-                </li>
-              ))}
+              {event.submissions
+                .filter((proposal) => DISPLAYED_PROPOSAL_STATUSES.includes(proposal.status))
+                .map((submission) => (
+                  <li key={submission.id}>
+                    <RemixLink
+                      to={`/${event.slug}/proposals/${submission.id}`}
+                      className="flex justify-between items-center gap-4 p-4 hover:bg-gray-50 focus-visible:-outline-offset-1"
+                    >
+                      <div className="overflow-hidden">
+                        <H3 weight="medium" size="s" truncate>
+                          {submission.title}
+                        </H3>
+                      </div>
+                      <div className="flex items-center gap-4">
+                        <ProposalStatusLabel status={submission.status} />
+                        <ChevronRightIcon className="h-5 w-5 flex-none text-gray-400" aria-hidden="true" />
+                      </div>
+                    </RemixLink>
+                  </li>
+                ))}
+              <li className="flex justify-between items-center px-4 py-3">
+                <Subtitle size="xs">{`${event.submissions.length} proposal(s) applied`}</Subtitle>
+                <Link to={`/${event.slug}/proposals`} size="xs">
+                  See all your proposals
+                </Link>
+              </li>
             </ul>
           </Card>
         ))}
       </ul>
+
       {hasNextPage && (
         <ButtonLink to={{ pathname: '/speaker', search: `page=${nextPage}` }} variant="secondary" preventScrollReset>
           More...

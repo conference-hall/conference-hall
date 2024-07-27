@@ -8,7 +8,6 @@ import { Submissions } from '~/.server/cfp-submissions/submissions.ts';
 import { TalksLibrary } from '~/.server/speaker-talks-library/talks-library.ts';
 import { ButtonLink } from '~/design-system/buttons.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
-import { H2 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 
 import { useEvent } from '../__components/use-event.tsx';
@@ -60,15 +59,13 @@ export default function EventSubmitRoute() {
 
         {drafts.length > 0 && (
           <section className="space-y-4">
-            <H2 variant="secondary">Your draft proposals</H2>
-            <SubmissionTalksList label="Draft proposals list" talks={drafts} />
+            <SubmissionTalksList label="Your draft proposals" talks={drafts} />
           </section>
         )}
 
         {talks.length > 0 && (
           <section className="space-y-4">
-            <H2 variant="secondary">From your talks library</H2>
-            <SubmissionTalksList label="Talks list" talks={talks} />
+            <SubmissionTalksList label="Your talks library" talks={talks} />
           </section>
         )}
 

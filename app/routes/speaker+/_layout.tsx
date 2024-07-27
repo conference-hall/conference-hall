@@ -12,6 +12,7 @@ import { requireSession } from '~/libs/auth/session.ts';
 import { Navbar } from '~/routes/__components/navbar/navbar.tsx';
 import { useUser } from '~/routes/__components/use-user.tsx';
 
+import { Footer } from '../__components/footer.tsx';
 import { SpeakerTabs } from './__components/speaker-tabs.tsx';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -26,7 +27,7 @@ export default function SpeakerRoute() {
 
   return (
     <>
-      <Navbar user={user} withSearch />
+      <Navbar user={user} />
 
       <header className={cx(BG_GRADIENT_COLOR, 'hidden sm:block')}>
         <Container className="h-24 flex flex-row items-center relative">
@@ -54,6 +55,8 @@ export default function SpeakerRoute() {
       <SpeakerTabs className="sm:ml-40" />
 
       <Outlet context={{ user }} />
+
+      <Footer />
     </>
   );
 }

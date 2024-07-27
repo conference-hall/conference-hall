@@ -8,6 +8,7 @@ import { TalkSaveSchema } from '~/.server/speaker-talks-library/talks-library.ty
 import { Button } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
+import { H1 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { redirectWithToast } from '~/libs/toasts/toast.server.ts';
@@ -31,8 +32,9 @@ export default function NewTalkRoute() {
   const errors = useActionData<typeof action>();
 
   return (
-    <Page>
-      <h1 className="sr-only">Create a new talk</h1>
+    <Page className="md:mt-4 lg:mt-4">
+      <H1 srOnly>Create a new talk</H1>
+
       <Card>
         <Card.Content>
           <TalkForm id="new-talk-form" errors={errors} />

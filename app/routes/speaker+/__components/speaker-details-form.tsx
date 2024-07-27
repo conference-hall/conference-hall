@@ -15,13 +15,14 @@ type Props = {
 export function SpeakerDetailsForm({ bio, references, errors }: Props) {
   return (
     <Card as="section">
-      <Form method="POST" aria-labelledby="speaker-details-label" preventScrollReset>
+      <Form method="POST" aria-labelledby="speaker-details" preventScrollReset>
         <Card.Title>
-          <H2 id="speaker-details-label">Speaker details</H2>
+          <H2 id="speaker-details" className="scroll-mt-12">
+            Speaker details
+          </H2>
           <Subtitle>
             Give more information about you, these information will be visible by organizers when you submit a talk.
           </Subtitle>
-          <a id="speaker-details" href="#speaker-details" className="scroll-mt-24" />
         </Card.Title>
 
         <Card.Content>

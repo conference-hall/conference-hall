@@ -7,7 +7,7 @@ class SpeakerTalksPage extends BasePage {
   }
 
   isPageVisible() {
-    cy.findByRole('heading', { name: 'My talks library' }).should('exist');
+    cy.findByRole('heading', { name: 'Talks library' }).should('exist');
   }
 
   list() {
