@@ -5,7 +5,6 @@ import { json } from '@remix-run/node';
 import { useLoaderData, useSearchParams } from '@remix-run/react';
 
 import { TalksLibrary } from '~/.server/speaker-talks-library/talks-library.ts';
-import { AvatarGroup } from '~/design-system/avatar.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { List } from '~/design-system/list/list.tsx';
@@ -51,10 +50,12 @@ export default function SpeakerTalksRoute() {
           {talks.map((talk) => (
             <List.RowLink key={talk.id} to={talk.id} className="flex justify-between items-center gap-4">
               <div className="min-w-0">
-                <Text size="base" weight="semibold" mb={1} truncate>
+                <Text size="s" weight="medium" truncate>
                   {talk.title}
                 </Text>
-                <AvatarGroup avatars={talk.speakers} displayNames />
+                <Text size="xs" variant="secondary">
+                  {talk.speakers.length ? `by ${talk.speakers.map((a) => a.name).join(', ')}` : null}
+                </Text>
               </div>
               <div>
                 <ChevronRightIcon className="h-5 w-5 flex-none text-gray-400" aria-hidden="true" />

@@ -31,12 +31,7 @@ describe('SpeakerActivities', () => {
             logoUrl: event2.logoUrl,
             cfpState: 'CLOSED',
             submissions: [
-              {
-                id: proposal2.id,
-                title: proposal2.title,
-                status: SpeakerProposalStatus.DeliberationPending,
-                speakers: [{ id: speaker.id, name: speaker.name, picture: speaker.picture }],
-              },
+              { id: proposal2.id, title: proposal2.title, status: SpeakerProposalStatus.DeliberationPending },
             ],
           },
           {
@@ -45,14 +40,7 @@ describe('SpeakerActivities', () => {
             teamName: team.name,
             logoUrl: event.logoUrl,
             cfpState: 'OPENED',
-            submissions: [
-              {
-                id: proposal.id,
-                title: proposal.title,
-                status: SpeakerProposalStatus.Submitted,
-                speakers: [{ id: speaker.id, name: speaker.name, picture: speaker.picture }],
-              },
-            ],
+            submissions: [{ id: proposal.id, title: proposal.title, status: SpeakerProposalStatus.Submitted }],
           },
         ],
         hasNextPage: false,

@@ -71,6 +71,7 @@ export default function EventRoute() {
         <EventTabs
           slug={event.slug}
           type={event.type}
+          cfpState={event.cfpState}
           surveyEnabled={event.surveyEnabled}
           isAuthenticated={Boolean(user)}
           className="sm:ml-40"

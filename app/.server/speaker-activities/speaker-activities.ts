@@ -1,7 +1,7 @@
 import { Prisma } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
 
-const EVENTS_BY_PAGE = 5;
+const EVENTS_BY_PAGE = 8;
 
 export class SpeakerActivities {
   constructor(private userId: string) {}
@@ -23,7 +23,6 @@ export class SpeakerActivities {
         team: true,
         proposals: {
           where: { speakers: { some: { id: this.userId } } },
-          include: { speakers: true },
         },
       },
     });
@@ -42,11 +41,6 @@ export class SpeakerActivities {
             id: proposal.id,
             title: proposal.title,
             status: proposal.getStatusForSpeaker(event.isCfpOpen),
-            speakers: proposal.speakers.map((speaker) => ({
-              id: speaker.id,
-              name: speaker.name,
-              picture: speaker.picture,
-            })),
           })),
         };
       }),

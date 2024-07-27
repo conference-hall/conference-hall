@@ -21,12 +21,7 @@ interface Props {
     teamName: string;
     logoUrl: string | null;
     cfpState: CfpState;
-    submissions: Array<{
-      id: string;
-      title: string;
-      status: SpeakerProposalStatus;
-      speakers: Array<{ name: string | null; picture: string | null }>;
-    }>;
+    submissions: Array<{ id: string; title: string; status: SpeakerProposalStatus }>;
   }>;
   nextPage: number;
   hasNextPage: boolean;
@@ -78,7 +73,9 @@ export function SpeakerActivitiesSection({ activities, nextPage, hasNextPage, cl
                       className="flex justify-between items-center gap-4 p-4 hover:bg-gray-50 focus-visible:-outline-offset-1"
                     >
                       <div className="overflow-hidden">
-                        <H3 truncate>{submission.title}</H3>
+                        <H3 weight="medium" size="s" truncate>
+                          {submission.title}
+                        </H3>
                       </div>
                       <div className="flex items-center gap-4">
                         <ProposalStatusLabel status={submission.status} />
