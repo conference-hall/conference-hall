@@ -38,8 +38,8 @@ export default function SpeakerTalksRoute() {
             param="archived"
             defaultValue="false"
             selectors={[
-              { label: 'Active', value: 'false' },
               { label: 'Archived', value: 'true' },
+              { label: 'Active', value: 'false' },
             ]}
           />
         </List.Header>
