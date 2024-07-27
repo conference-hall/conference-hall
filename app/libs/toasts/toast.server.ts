@@ -10,7 +10,6 @@ const ToastSchema = z.object({
   id: z.string().default(() => uuid()),
   title: z.string().optional(),
   type: TypeSchema.default('message'),
-  description: z.string().optional(),
 });
 
 type ToastType = z.infer<typeof TypeSchema>;

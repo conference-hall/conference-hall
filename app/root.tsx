@@ -73,6 +73,7 @@ function Document({ children, toast, env = {} }: DocumentProps) {
       </head>
       <body className="overflow-x-hidden bg-slate-50 font-sans text-gray-900 antialiased">
         <GlobalLoading />
+        <Toaster toast={toast} />
         {children}
         <script
           nonce={nonce}
@@ -82,7 +83,6 @@ function Document({ children, toast, env = {} }: DocumentProps) {
         />
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
-        <Toaster toast={toast} />
       </body>
     </html>
   );
