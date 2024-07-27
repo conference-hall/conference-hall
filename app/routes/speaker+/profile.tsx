@@ -75,7 +75,7 @@ export default function ProfileRoute() {
       <NavSideMenu
         aria-label="Profile edition menu"
         items={MENU_ITEMS}
-        className="w-full mb-6 lg:col-span-3 lg:sticky lg:top-4 lg:self-start"
+        className="hidden sm:block w-full mb-6 lg:col-span-3 lg:sticky lg:top-4 lg:self-start"
         noActive
       />
 
