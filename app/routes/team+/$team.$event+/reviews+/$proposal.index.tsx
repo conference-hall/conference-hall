@@ -112,8 +112,8 @@ export default function ProposalReviewLayoutRoute() {
       <ReviewHeader {...pagination} />
 
       <div className="mx-auto max-w-7xl px-4">
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-10">
-          <div className="space-y-4 lg:col-span-7">
+        <div className="flex flex-col md:flex-row gap-6">
+          <div className="space-y-4 lg:col-span-8">
             <TalkSection
               talk={proposal}
               errors={errors}
@@ -128,7 +128,7 @@ export default function ProposalReviewLayoutRoute() {
             <Feed activity={activity} />
           </div>
 
-          <div className="lg:col-span-3">
+          <div className="min-w-80">
             <ReviewSidebar
               proposal={proposal}
               reviewEnabled={event.reviewEnabled}

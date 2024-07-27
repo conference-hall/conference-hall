@@ -9,7 +9,7 @@ import { IconLink } from '~/design-system/icon-buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Link } from '~/design-system/links.tsx';
-import { H2, H3, Subtitle } from '~/design-system/typography.tsx';
+import { H2, H3, Subtitle, Text } from '~/design-system/typography.tsx';
 import { ProposalStatusLabel } from '~/routes/__components/proposals/proposal-status-label.tsx';
 import type { CfpState } from '~/types/events.types';
 import { SpeakerProposalStatus } from '~/types/speaker.types.ts';
@@ -21,7 +21,12 @@ interface Props {
     teamName: string;
     logoUrl: string | null;
     cfpState: CfpState;
-    submissions: Array<{ id: string; title: string; status: SpeakerProposalStatus }>;
+    submissions: Array<{
+      id: string;
+      title: string;
+      status: SpeakerProposalStatus;
+      speakers: Array<{ name: string | null; picture: string | null }>;
+    }>;
   }>;
   nextPage: number;
   hasNextPage: boolean;
@@ -76,6 +81,11 @@ export function SpeakerActivitiesSection({ activities, nextPage, hasNextPage, cl
                         <H3 weight="medium" size="s" truncate>
                           {submission.title}
                         </H3>
+                        <Text size="xs" variant="secondary">
+                          {submission.speakers.length
+                            ? `by ${submission.speakers.map((s) => s.name).join(', ')}`
+                            : null}
+                        </Text>
                       </div>
                       <div className="flex items-center gap-4">
                         <ProposalStatusLabel status={submission.status} />
@@ -84,10 +94,10 @@ export function SpeakerActivitiesSection({ activities, nextPage, hasNextPage, cl
                     </RemixLink>
                   </li>
                 ))}
-              <li className="flex justify-between items-center px-4 py-3">
-                <Subtitle size="xs">{`${event.submissions.length} proposal(s) applied`}</Subtitle>
-                <Link to={`/${event.slug}/proposals`} size="xs">
-                  See all your proposals
+              <li className="flex gap-1 px-4 py-3">
+                <Subtitle size="xs">{`${event.submissions.length} proposal(s) applied · `}</Subtitle>
+                <Link to={`/${event.slug}/proposals`} variant="secondary" size="xs">
+                  See all proposals
                 </Link>
               </li>
             </ul>

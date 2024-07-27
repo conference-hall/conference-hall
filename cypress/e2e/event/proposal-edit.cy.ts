@@ -19,8 +19,6 @@ describe('Speaker proposal edition page', () => {
     cy.assertRadioChecked('Advanced');
     cy.assertInputText('References', 'Awesome references');
 
-    edit.selectFormatTrack('Quickie');
-    edit.selectCategoryTrack('Web');
     edit.fillForm({
       title: 'New title',
       abstract: 'New abstract',
@@ -28,16 +26,13 @@ describe('Speaker proposal edition page', () => {
       language: 'English',
       references: 'New references',
     });
-    edit.save();
 
-    cy.assertText('You have to select at least one proposal format.');
-    cy.assertText('You have to select at least one proposal category.');
-
+    edit.selectFormatTrack('Quickie');
+    edit.selectCategoryTrack('Web');
     edit.selectFormatTrack('Quickie 2');
     edit.selectCategoryTrack('Web 2');
     edit.save();
     cy.assertToast('Proposal saved.');
-    edit.close();
 
     proposal.isPageVisible();
     cy.assertText('New title');

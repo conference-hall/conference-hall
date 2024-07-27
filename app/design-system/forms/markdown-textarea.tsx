@@ -59,9 +59,7 @@ export function MarkdownTextArea({
           {/* Spacer element to match the height of the toolbar */}
           <div aria-hidden="true">
             <div className="py-2">
-              <div className="py-px">
-                <div className="h-8" />
-              </div>
+              <div className="h-7" />
             </div>
           </div>
         </div>
