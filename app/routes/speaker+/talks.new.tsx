@@ -31,7 +31,7 @@ export default function NewTalkRoute() {
   const errors = useActionData<typeof action>();
 
   return (
-    <Page>
+    <Page className="md:mt-4 lg:mt-4">
       <h1 className="sr-only">Create a new talk</h1>
       <Card>
         <Card.Content>

@@ -1,4 +1,4 @@
-import { MapPinIcon, PencilSquareIcon } from '@heroicons/react/20/solid';
+import { LockClosedIcon, MapPinIcon, PencilSquareIcon } from '@heroicons/react/20/solid';
 
 import { ButtonLink } from '~/design-system/buttons.tsx';
 import { IconLabel } from '~/design-system/icon-label.tsx';
@@ -25,20 +25,27 @@ export function SpeakerDetailsSection({ bio, location, socials }: Props) {
 
   return (
     <div className="hidden sm:block space-y-6">
-      <Card>
+      <Card className="divide-y divide-gray-200">
         <div className="p-6">
           {bio ? <Markdown className="line-clamp-5">{bio}</Markdown> : <Text variant="secondary">(No profile)</Text>}
         </div>
 
         {displayInfo && (
-          <div className="p-6 space-y-4 border-t border-t-gray-200">
+          <div className="p-6 space-y-4">
             {location && <IconLabel icon={MapPinIcon}>{location}</IconLabel>}
             {twitter && <IconLabel icon={TwitterIcon}>{twitter}</IconLabel>}
             {github && <IconLabel icon={GitHubIcon}>{github}</IconLabel>}
           </div>
         )}
 
-        <div className="px-2 pb-2 pt-2 border-t border-t-gray-200">
+        <div className="px-6 py-4 flex items-center gap-3">
+          <LockClosedIcon aria-hidden="true" className="h-4 w-4 flex-shrink-0 text-gray-400" />
+          <Text weight="medium" variant="secondary">
+            Your speaker activity is private.
+          </Text>
+        </div>
+
+        <div className="p-4">
           <ButtonLink to="profile" variant="secondary" iconLeft={PencilSquareIcon} block>
             Edit your profile
           </ButtonLink>

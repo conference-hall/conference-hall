@@ -1,7 +1,6 @@
 import { Link } from '@remix-run/react';
 
 import { Avatar } from '~/design-system/avatar.tsx';
-import { ButtonLink } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H3, Text } from '~/design-system/typography.tsx';
 import type { SpeakerProposalStatus } from '~/types/speaker.types.ts';
@@ -9,8 +8,6 @@ import type { SpeakerProposalStatus } from '~/types/speaker.types.ts';
 import { ProposalStatusLabel } from '../proposals/proposal-status-label.tsx';
 
 type Props = {
-  talkId: string;
-  canSubmit: boolean;
   submissions: Array<{
     slug: string;
     name: string;
@@ -19,7 +16,7 @@ type Props = {
   }>;
 };
 
-export function TalkSubmissionsSection({ talkId, canSubmit, submissions }: Props) {
+export function TalkSubmissionsSection({ submissions }: Props) {
   return (
     <Card as="section" className="p-6 space-y-6">
       <H3>Submissions</H3>
@@ -46,12 +43,6 @@ export function TalkSubmissionsSection({ talkId, canSubmit, submissions }: Props
         </ul>
       ) : (
         <Text variant="secondary">No submissions yet.</Text>
-      )}
-
-      {canSubmit && (
-        <ButtonLink to={`/?talkId=${talkId}`} block>
-          Submit talk
-        </ButtonLink>
       )}
     </Card>
   );
