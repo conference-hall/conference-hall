@@ -34,7 +34,7 @@ export default function EventSpeakerProposalsRoute() {
           <Text weight="semibold">{`${proposals.length} proposal(s) submitted`}</Text>
         </List.Header>
 
-        <List.Content aria-label="Talks list">
+        <List.Content aria-label="Proposals list">
           {proposals.length === 0 ? <EmptyState icon={InboxIcon} label="No proposals submitted!" noBorder /> : null}
           {proposals.map((proposal) => (
             <List.RowLink key={proposal.id} to={proposal.id} className="flex justify-between items-center gap-4">

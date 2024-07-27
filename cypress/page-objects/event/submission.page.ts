@@ -41,7 +41,7 @@ class EventSubmissionPage extends BasePage {
   }
 
   drafts() {
-    return cy.findByRole('list', { name: 'Draft proposals list' }).children();
+    return cy.findByRole('list', { name: 'Your draft proposals' }).children();
   }
 
   draft(name: string) {
@@ -49,7 +49,7 @@ class EventSubmissionPage extends BasePage {
   }
 
   talks() {
-    return cy.findByRole('list', { name: 'Talks list' }).children();
+    return cy.findByRole('list', { name: 'Your talks library' }).children();
   }
 
   talk(name: string) {
