@@ -41,10 +41,6 @@ class TalkEditFormActions extends BasePage {
   save() {
     cy.findByRole('button', { name: 'Save' }).click();
   }
-
-  close() {
-    cy.findByRole('button', { name: 'Cancel' }).click();
-  }
 }
 
 export default TalkEditFormActions;

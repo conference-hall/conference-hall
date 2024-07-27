@@ -29,7 +29,6 @@ describe('Speaker talk edition page', () => {
 
     editTalk.save();
     cy.assertToast('Talk updated.');
-    editTalk.close();
 
     talk.isPageVisible();
     cy.assertText('New title');
