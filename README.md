@@ -1,15 +1,48 @@
-# Conference Hall Remix
+# Conference Hall
 
-## Stack
+**Conference Hall** is an open SaaS platform to manage call for papers and speaker submissions for your conferences and meetups. Any speaker writes a talk once and can submit it to every event of the platform.
+
+https://conference-hall.io
+
+## Features
+
+**You are a speaker:**
+
+- ✨ Write the abstract of your talk
+- 🚀 Submit your talks to events (meetups and conferences)
+- 🤝 Invite co-speakers to your talk
+- 🔒 Social login
+
+**You are an event organizer:**
+
+- ❤️ Create your conference or meetup
+- 📣 Call for papers opens and closes automatically
+- ⚡️ Make it public or private
+- 👥 Use teams to share an event between organizers
+- 💡 Custom formats and categories for the talks
+- 📥 Send survey to speakers
+- ⭐️ Review proposals
+- 💬 Discussion between organizers about a proposal
+- ✅ Mark proposals as accepted, declined...
+- 💌 Publish result to speakers and notify them with emails
+- 👌 Get speaker confirmations
+- 📃 Export the proposals
+- 🌍 Some integrations (Slack, API...)
+
+## Development
+
+If you want to contribute and make **Conference Hall** better, read our [Contributing Guidelines](./docs/contributing.md).
+
+### Stack
 
 Remix / Tailwind / HeadlessUI / Conform / Zod / Prisma / Firebase Auth / Mailgun / Express / Typescript / Postgresql
 
-## Prerequisites
+### Prerequisites
 
 - Docker
 - Node 20+
 
-## Development
+### Getting started
 
 Install dependencies:
 
@@ -20,7 +53,7 @@ npm install
 Start Docker image for Postgres DB, Firebase emulators and Mailpit:
 
 ```sh
-docker compose up -d
+docker compose up
 ```
 
 Start the development server:
@@ -29,45 +62,45 @@ Start the development server:
 npm run dev
 ```
 
-## Useful commands
+### Useful commands
 
-### Reset and seed local DB
+#### Reset and seed local DB
 
-```
+```sh
 npm run db:reset
 ```
 
-### Execute tests
+#### Execute tests
 
 The docker image for Postgres DB and Firebase emulators MUST be running.
 
 Execute unit and integration tests:
 
-```
+```sh
 npm run test
 ```
 
 Execute end-to-end tests (Dev server MUST be running):
 
-```
+```sh
 npm run test:e2e
 ```
 
-### Execute linting
+#### Execute linting
 
-```
+```sh
 npm run lint
 ```
 
-### Execute typecript check
+#### Execute typecript check
 
-```
+```sh
 npm run tsc
 ```
 
-### Export emulators data
+#### Export emulators data
 
-```
+```sh
 docker exec -it ch_firebase_emulators sh
 firebase --project=conference-hall emulators:export fixtures
 ```
