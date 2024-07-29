@@ -11,5 +11,15 @@ export function initMonitoring() {
     environment: ENV.MODE,
     tracesSampleRate: 1,
     integrations: [Sentry.browserTracingIntegration({ useEffect, useLocation, useMatches })],
+    beforeSend(event) {
+      if (event.request?.url) {
+        const url = new URL(event.request.url);
+        // This error is from a browser extension, ignore it
+        if (url.protocol === 'chrome-extension:' || url.protocol === 'moz-extension:') {
+          return null;
+        }
+      }
+      return event;
+    },
   });
 }

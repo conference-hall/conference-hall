@@ -2,6 +2,9 @@ import compression from 'compression';
 import express from 'express';
 import { createExpressApp } from 'remix-create-express-app';
 
+import { initEnvironment } from '~/libs/env/env.server.ts';
+import { initMonitoring } from '~/libs/monitoring/monitoring.server.ts';
+
 import { applyLocalhostRedirect } from './localhost-redirect.ts';
 import { applyLogging } from './logging.ts';
 import { applyProxyFirebaseAuth } from './proxy-firebase-auth.ts';
@@ -15,6 +18,9 @@ declare module '@remix-run/node' {
     cspNonce: string;
   }
 }
+
+initEnvironment();
+initMonitoring();
 
 export function createAppServer() {
   return createExpressApp({
