@@ -9,33 +9,33 @@ const calloutVariants = cva('flex flex-col overflow-hidden rounded-md p-4 text-s
     variant: {
       default: [
         // text color
-        'text-blue-900 dark:text-blue-400',
+        'text-blue-900',
         // background color
-        'bg-blue-50 dark:bg-blue-950/70 ',
+        'bg-blue-50',
       ],
       success: [
         // text color
-        'text-emerald-900 dark:text-emerald-500',
+        'text-emerald-900',
         // background color
-        'bg-emerald-50 dark:bg-emerald-950/70 ',
+        'bg-emerald-50',
       ],
       error: [
         // text color
-        ' text-red-900 dark:text-red-500',
+        ' text-red-900',
         // background color
-        'bg-red-50 dark:bg-red-950/70',
+        'bg-red-50',
       ],
       warning: [
         // text color
-        ' text-yellow-900 dark:text-yellow-500',
+        ' text-yellow-900',
         // background color
-        'bg-yellow-50 dark:bg-yellow-950/70',
+        'bg-yellow-50',
       ],
       neutral: [
         // text color
-        'text-gray-900 dark:text-gray-400',
+        'text-gray-900',
         // background color
-        'bg-gray-100 dark:bg-gray-800/70',
+        'bg-gray-100',
       ],
     },
   },
