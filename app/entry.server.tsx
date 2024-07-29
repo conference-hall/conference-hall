@@ -8,13 +8,7 @@ import { isbot } from 'isbot';
 import { renderToPipeableStream } from 'react-dom/server';
 import { createAppServer } from 'server/index.ts';
 
-import { initEnvironment } from './libs/env/env.server.ts';
-import { initMonitoring } from './libs/monitoring/monitoring.server.ts';
 import { NonceContext } from './libs/nonce/use-nonce.ts';
-
-initEnvironment();
-
-initMonitoring();
 
 const ABORT_DELAY = 5_000;
 

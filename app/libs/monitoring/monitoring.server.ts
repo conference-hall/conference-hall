@@ -7,7 +7,8 @@ export function initMonitoring() {
   Sentry.init({
     dsn: ENV.SENTRY_DSN,
     environment: ENV.MODE,
-    tracesSampleRate: 1.0,
+    tracesSampleRate: 1,
     integrations: [Sentry.prismaIntegration()],
+    autoInstrumentRemix: true,
   });
 }
