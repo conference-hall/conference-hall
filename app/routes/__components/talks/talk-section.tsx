@@ -66,15 +66,13 @@ export function TalkSection({
   return (
     <Card as="section">
       <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 pl-6 pr-3 py-3 border-b border-b-gray-200">
-        <div className={cx('flex items-center gap-2', { '-ml-2': showBackButton })}>
+        <div className={cx('flex items-center gap-2 min-w-0', { '-ml-2': showBackButton })}>
           {showBackButton ? (
             <IconLink icon={ChevronLeftIcon} label="Go back" to=".." variant="secondary" relative="path" />
           ) : null}
-          <H1 size="base" truncate>
-            {talk.title}
-          </H1>
+          <H1 size="base">{talk.title}</H1>
         </div>
-        <div className="flex sm:justify-between items-center gap-3">
+        <div className="flex flex-row sm:justify-between items-center gap-3">
           {canArchive && <TalkArchiveButton archived={Boolean(talk.archived)} />}
 
           {canEditTalk && !talk.archived && <TalkEditButton initialValues={talk} event={event} errors={errors} />}
