@@ -56,6 +56,12 @@ Start Docker image for Postgres DB, Firebase emulators and Mailpit:
 docker compose up
 ```
 
+If you start **Conference Hall** for the first time, you need to setup the database with the following command :
+
+```shell
+npm run db:reset
+```
+
 Start the development server:
 
 ```sh
