@@ -30,7 +30,7 @@ export function mapBoolean(bool?: string | null) {
 
 export function mapInteger(int?: string | null) {
   if (!int) return undefined;
-  const parsed = parseInt(int, 10);
+  const parsed = Number.parseInt(int, 10);
   if (Number.isNaN(parsed)) return undefined;
   return parsed;
 }

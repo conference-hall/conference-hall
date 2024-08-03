@@ -22,7 +22,7 @@ export default function handleRequest(
   remixContext: EntryContext,
   loadContext: AppLoadContext,
 ) {
-  const callbackName = isbot(request.headers.get('user-agent')!) ? 'onAllReady' : 'onShellReady';
+  const callbackName = isbot(request.headers.get('user-agent')) ? 'onAllReady' : 'onShellReady';
 
   return new Promise((resolve, reject) => {
     let shellRendered = false;

@@ -10,8 +10,13 @@ import { ForbiddenOperationError, ProposalNotFoundError } from '~/libs/errors.se
 import { Publication } from './publication.ts';
 
 describe('Publication', () => {
-  let owner: User, member: User, reviewer: User, speaker1: User, speaker2: User;
-  let proposal: Proposal, proposalSubmitted: Proposal;
+  let owner: User;
+  let member: User;
+  let reviewer: User;
+  let speaker1: User;
+  let speaker2: User;
+  let proposal: Proposal;
+  let proposalSubmitted: Proposal;
   let team: Team;
   let event: Event;
 

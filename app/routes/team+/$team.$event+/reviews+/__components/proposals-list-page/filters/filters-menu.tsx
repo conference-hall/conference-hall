@@ -3,12 +3,12 @@ import { AdjustmentsHorizontalIcon } from '@heroicons/react/20/solid';
 import { Form, useLocation, useSearchParams } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
 
-import { Button, button, ButtonLink } from '~/design-system/buttons.tsx';
+import { Button, ButtonLink, button } from '~/design-system/buttons.tsx';
 import Select from '~/design-system/forms/select.tsx';
 import { Background } from '~/design-system/transitions.tsx';
 import { Text } from '~/design-system/typography.tsx';
-import { useTeam } from '~/routes/team+/__components/use-team.tsx';
 import { useEvent } from '~/routes/team+/$team.$event+/__components/useEvent.tsx';
+import { useTeam } from '~/routes/team+/__components/use-team.tsx';
 
 import { reviewOptions, statusOptions } from './filters.ts';
 
@@ -63,8 +63,8 @@ function FiltersContent({ close }: FiltersContentProps) {
         </Text>
       </div>
 
-      {params.get('query') && <input type="hidden" name="query" value={params.get('query')!} />}
-      {params.get('sort') && <input type="hidden" name="sort" value={params.get('sort')!} />}
+      {params.get('query') && <input type="hidden" name="query" value={params.get('query') || ''} />}
+      {params.get('sort') && <input type="hidden" name="sort" value={params.get('sort') || ''} />}
 
       <FiltersRadio
         label="Reviews"

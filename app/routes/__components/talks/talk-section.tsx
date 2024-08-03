@@ -100,7 +100,9 @@ export function TalkSection({
           <div>
             <dt className="text-sm font-medium leading-6 text-gray-900">Formats</dt>
             <dd className="text-sm leading-6 text-gray-700">
-              {talk.formats?.map(({ id, name }) => <p key={id}>{name}</p>)}
+              {talk.formats?.map(({ id, name }) => (
+                <p key={id}>{name}</p>
+              ))}
             </dd>
           </div>
         )}
@@ -109,7 +111,9 @@ export function TalkSection({
           <div>
             <dt className="text-sm font-medium leading-6 text-gray-900">Categories</dt>
             <dd className="text-sm leading-6 text-gray-700">
-              {talk.categories?.map(({ id, name }) => <p key={id}>{name}</p>)}
+              {talk.categories?.map(({ id, name }) => (
+                <p key={id}>{name}</p>
+              ))}
             </dd>
           </div>
         )}

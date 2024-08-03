@@ -151,21 +151,21 @@ function useOptimisticSessions(initialSessions: Array<SessionData>, timezone: st
       },
     }));
 
-  for (let session of pendingSessions) {
+  for (const session of pendingSessions) {
     const current = sessionsById.get(session.id);
     sessionsById.set(session.id, { ...session, proposal: current?.proposal });
   }
 
   // Pending delete
-  fetchers
-    .filter((fetcher): fetcher is PendingSession => {
-      if (!fetcher.formData) return false;
-      const intent = fetcher.formData.get('intent');
-      return intent === 'delete-session';
-    })
-    .forEach((fetcher) => {
-      sessionsById.delete(String(fetcher.formData?.get('id')));
-    });
+  const deleteFetchers = fetchers.filter((fetcher): fetcher is PendingSession => {
+    if (!fetcher.formData) return false;
+    const intent = fetcher.formData.get('intent');
+    return intent === 'delete-session';
+  });
+
+  for (const fetcher of deleteFetchers) {
+    sessionsById.delete(String(fetcher.formData?.get('id')));
+  }
 
   return Array.from(sessionsById.values());
 }

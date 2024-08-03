@@ -8,11 +8,11 @@ import invariant from 'tiny-invariant';
 
 import { EventSchedule } from '~/.server/event-schedule/event-schedule.ts';
 import {
+  SchedulSessionIdSchema,
   ScheduleDayIdSchema,
   ScheduleDisplayTimesUpdateSchema,
   ScheduleSessionCreateSchema,
   ScheduleSessionUpdateSchema,
-  SchedulSessionIdSchema,
 } from '~/.server/event-schedule/event-schedule.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';

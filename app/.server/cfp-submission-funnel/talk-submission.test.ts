@@ -245,7 +245,7 @@ describe('TalkSubmission', () => {
         },
         {
           from: `${event.name} <no-reply@conference-hall.io>`,
-          to: [event.emailOrganizer!],
+          to: [event.emailOrganizer],
           subject: `[${event.name}] New proposal received`,
         },
       ]).toHaveEmailsEnqueued();

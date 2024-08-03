@@ -38,12 +38,12 @@ const ProgressCircle = React.forwardRef<SVGSVGElement, ProgressCircleProps>(
       <>
         <div className={cx('relative')}>
           <svg
+            role="img"
             ref={forwardedRef}
             width={radius * 2}
             height={radius * 2}
             viewBox={`0 0 ${radius * 2} ${radius * 2}`}
             className={cx('-rotate-90 transform', className)}
-            role="progress circle"
             aria-label="progress bar"
             aria-valuenow={value}
             aria-valuemin={0}

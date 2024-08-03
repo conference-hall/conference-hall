@@ -26,7 +26,7 @@ import { ReviewSidebar } from './__components/proposal-page/review-sidebar.tsx';
 
 export type ProposalData = ProposalReviewData;
 
-export const meta = mergeMeta(() => [{ title: `Review proposal | Conference Hall` }]);
+export const meta = mergeMeta(() => [{ title: 'Review proposal | Conference Hall' }]);
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
@@ -58,7 +58,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   switch (intent) {
     case 'add-review': {
       const result = parseWithZod(form, { schema: ReviewUpdateDataSchema });
-      if (result.status !== 'success') return toast('error', 'Something went wrong.' + JSON.stringify(result.error));
+      if (result.status !== 'success') return toast('error', 'Something went wrong.');
       const review = ProposalReview.for(userId, params.team, params.event, params.proposal);
       await review.addReview(result.value);
       break;

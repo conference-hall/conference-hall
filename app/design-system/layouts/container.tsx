@@ -1,5 +1,5 @@
 import { cx } from 'class-variance-authority';
-import React from 'react';
+import type React from 'react';
 
 type Props = { as?: React.ElementType; children: React.ReactNode; className?: string };
 

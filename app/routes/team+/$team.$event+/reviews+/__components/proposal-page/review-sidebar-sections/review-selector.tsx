@@ -49,7 +49,7 @@ export function ReviewSelector({ value, onChange }: Props) {
   );
 
   const handleChange = (index: string) => {
-    const selected = parseInt(index, 10);
+    const selected = Number.parseInt(index, 10);
     setSelectedIndex(selected);
 
     const option = options[selected];

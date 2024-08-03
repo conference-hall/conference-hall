@@ -55,6 +55,8 @@ export function SessionForm({
   const [proposal, setProposal] = useState(session.proposal);
 
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: used for refresh
   useEffect(() => {
     if (inputRef.current) inputRef.current.focus();
   }, [proposal]);

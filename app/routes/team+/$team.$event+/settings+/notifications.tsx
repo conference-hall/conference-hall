@@ -60,10 +60,14 @@ export default function EventNotificationsSettingsRoute() {
     form.set('intent', 'save-notifications');
 
     if (checked) {
-      event.emailNotifications.forEach((n) => form.append('emailNotifications', n));
+      for (const notification of event.emailNotifications) {
+        form.append('emailNotifications', notification);
+      }
       form.append('emailNotifications', name);
     } else {
-      event.emailNotifications.filter((n) => n !== name).forEach((n) => form.append('emailNotifications', n));
+      for (const notification of event.emailNotifications.filter((n) => n !== name)) {
+        form.append('emailNotifications', notification);
+      }
     }
     fetcher.submit(form, { method: 'POST' });
   };

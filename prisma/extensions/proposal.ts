@@ -18,21 +18,31 @@ export const proposalExtension = Prisma.defineExtension({
           return (isCfpOpen: boolean): SpeakerProposalStatus => {
             if (isDraft) {
               return SpeakerProposalStatus.Draft;
-            } else if (confirmationStatus === ConfirmationStatus.CONFIRMED) {
+            }
+
+            if (confirmationStatus === ConfirmationStatus.CONFIRMED) {
               return SpeakerProposalStatus.ConfirmedBySpeaker;
-            } else if (confirmationStatus === ConfirmationStatus.DECLINED) {
+            }
+
+            if (confirmationStatus === ConfirmationStatus.DECLINED) {
               return SpeakerProposalStatus.DeclinedBySpeaker;
-            } else if (
+            }
+
+            if (
               deliberationStatus === DeliberationStatus.ACCEPTED &&
               publicationStatus === PublicationStatus.PUBLISHED
             ) {
               return SpeakerProposalStatus.AcceptedByOrganizers;
-            } else if (
+            }
+
+            if (
               deliberationStatus === DeliberationStatus.REJECTED &&
               publicationStatus === PublicationStatus.PUBLISHED
             ) {
               return SpeakerProposalStatus.RejectedByOrganizers;
-            } else if (!isCfpOpen) {
+            }
+
+            if (!isCfpOpen) {
               return SpeakerProposalStatus.DeliberationPending;
             }
             return SpeakerProposalStatus.Submitted;

@@ -15,7 +15,9 @@ import { ForbiddenOperationError, ReviewDisabledError } from '~/libs/errors.serv
 import { ProposalReview } from './proposal-review.ts';
 
 describe('ProposalReview', () => {
-  let owner: User, member: User, speaker: User;
+  let owner: User;
+  let member: User;
+  let speaker: User;
   let team: Team;
   let event: Event;
   let format: EventFormat;

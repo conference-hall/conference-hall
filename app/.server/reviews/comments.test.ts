@@ -12,7 +12,9 @@ import { ForbiddenOperationError } from '~/libs/errors.server.ts';
 import { Comments } from './comments.ts';
 
 describe('Comments', () => {
-  let owner: User, member: User, speaker: User;
+  let owner: User;
+  let member: User;
+  let speaker: User;
   let team: Team;
   let event: Event;
 

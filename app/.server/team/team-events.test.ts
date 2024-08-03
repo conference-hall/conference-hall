@@ -80,7 +80,8 @@ describe('TeamEvents', () => {
   });
 
   describe('create', () => {
-    let owner: User, reviewer: User;
+    let owner: User;
+    let reviewer: User;
     let team: Team;
 
     beforeEach(async () => {

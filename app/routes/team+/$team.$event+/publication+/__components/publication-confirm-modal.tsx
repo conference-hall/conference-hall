@@ -33,7 +33,7 @@ export function PublicationButton({ type, statistics }: PublicationProps) {
 
   return (
     <>
-      <button onClick={() => setOpen(true)} className={cx(link(), 'text-sm font-medium')}>
+      <button type="button" onClick={() => setOpen(true)} className={cx(link(), 'text-sm font-medium')}>
         Publish all {type === 'ACCEPTED' ? '"Accepted"' : '"Rejected"'} &rarr;
       </button>
 

@@ -10,7 +10,7 @@ export function mergeMeta<T>(overrideFn: MetaFunction<T>, appendFn?: MetaFunctio
     }, [] as MetaDescriptor[]);
 
     // replace any parent meta with the same name or property with the override
-    let overrides = overrideFn(arg);
+    const overrides = overrideFn(arg);
     overrideMeta(mergedMeta, overrides);
 
     // append any additional meta
@@ -21,8 +21,8 @@ export function mergeMeta<T>(overrideFn: MetaFunction<T>, appendFn?: MetaFunctio
 }
 
 function overrideMeta(origin: MetaDescriptor[], overrides: MetaDescriptor[]) {
-  for (let override of overrides) {
-    let index = origin.findIndex(
+  for (const override of overrides) {
+    const index = origin.findIndex(
       (meta) =>
         ('name' in meta && 'name' in override && meta.name === override.name) ||
         ('property' in meta && 'property' in override && meta.property === override.property) ||

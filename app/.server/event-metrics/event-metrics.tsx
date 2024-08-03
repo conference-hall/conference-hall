@@ -56,7 +56,7 @@ export class EventMetrics {
   private async proposalsByFormats(eventId: string, formats: Array<TrackType>) {
     if (formats.length === 0) return null;
 
-    const byFormats = await db.$queryRaw<Array<{ id: string; value: BigInt }>>(
+    const byFormats = await db.$queryRaw<Array<{ id: string; value: bigint }>>(
       Prisma.sql`
         SELECT _proposals_formats."A" AS id, count(proposals.id) AS value 
         FROM _proposals_formats
@@ -81,7 +81,7 @@ export class EventMetrics {
   private async proposalsByCategories(eventId: string, categories: Array<TrackType>) {
     if (categories.length === 0) return null;
 
-    const byCategories = await db.$queryRaw<Array<{ id: string; value: BigInt }>>(
+    const byCategories = await db.$queryRaw<Array<{ id: string; value: bigint }>>(
       Prisma.sql`
         SELECT _proposals_categories."A" AS id, count(proposals.id) AS value 
         FROM _proposals_categories
@@ -104,7 +104,7 @@ export class EventMetrics {
   }
 
   private async proposalsByDays(eventId: string) {
-    const proposalsByDays = await db.$queryRaw<Array<{ date: Date; count: BigInt; cumulative: BigInt }>>(
+    const proposalsByDays = await db.$queryRaw<Array<{ date: Date; count: bigint; cumulative: bigint }>>(
       Prisma.sql`
         WITH data AS (
           SELECT DATE_TRUNC('day', "createdAt") AS date, count(id) AS count

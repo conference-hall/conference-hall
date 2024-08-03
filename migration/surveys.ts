@@ -65,9 +65,7 @@ function mapMultiValues(values: Record<string, string[]>) {
   try {
     return Object.values(values)
       .filter(Boolean)
-      .reduce((acc, value) => {
-        return [...acc, ...value];
-      }, []);
+      .reduce((acc, value) => acc.concat(value), []);
   } catch (error) {
     return undefined;
   }

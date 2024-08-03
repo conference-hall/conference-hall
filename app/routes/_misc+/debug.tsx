@@ -8,7 +8,6 @@ export const loader = async () => {
 
 export const action = async () => {
   throw new Error('Failed');
-  return null;
 };
 
 export default function DebugPage() {

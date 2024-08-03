@@ -9,7 +9,7 @@ const RESULTS_BY_PAGE = 12;
 export class EventsSearch {
   constructor(
     private filters: SearchFilters,
-    private page: number = 1,
+    private page = 1,
   ) {}
 
   static with(filters: SearchFilters, page?: number) {

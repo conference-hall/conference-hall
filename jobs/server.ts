@@ -8,7 +8,7 @@ worker.on('completed', (job) => console.log(`Completed job ${job.id} successfull
 
 worker.on('failed', (job, err) => console.log(`Failed job ${job?.id} with ${err}`));
 
-process.on('uncaughtException', function (err) {
+process.on('uncaughtException', (err) => {
   console.error(err, '[Jobs] Uncaught exception');
 });
 

@@ -23,10 +23,10 @@ export class EmailQueue {
   }
 
   static get() {
-    if (!this.instance) {
-      this.instance = new EmailQueue();
+    if (!EmailQueue.instance) {
+      EmailQueue.instance = new EmailQueue();
     }
-    return this.instance;
+    return EmailQueue.instance;
   }
 
   async enqueue(jobName: string, mail: Email, options?: JobsOptions) {

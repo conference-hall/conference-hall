@@ -11,11 +11,15 @@ import { userFactory } from 'tests/factories/users.ts';
 import { EventMetrics } from './event-metrics.tsx';
 
 describe('EventMetrics', () => {
-  let owner: User, speaker: User;
+  let owner: User;
+  let speaker: User;
   let team: Team;
-  let event: Event, event2: Event;
-  let format: EventFormat, format2: EventFormat;
-  let category: EventCategory, category2: EventCategory;
+  let event: Event;
+  let event2: Event;
+  let format: EventFormat;
+  let format2: EventFormat;
+  let category: EventCategory;
+  let category2: EventCategory;
 
   beforeEach(async () => {
     vi.useFakeTimers();

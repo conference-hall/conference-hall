@@ -142,10 +142,14 @@ export async function migrateProposals(firestore: admin.firestore.Firestore) {
       if (!proposal.title) {
         proposalsWithoutTitle.push(proposal.migrationId);
         continue;
-      } else if (!proposal.abstract) {
+      }
+
+      if (!proposal.abstract) {
         proposalsWithoutAbstract.push(proposal.migrationId);
         continue;
-      } else if (speakersIds.length === 0) {
+      }
+
+      if (speakersIds.length === 0) {
         proposalsWithoutSpeakers.push(proposal.migrationId);
         continue;
       }
@@ -158,7 +162,7 @@ export async function migrateProposals(firestore: admin.firestore.Firestore) {
   console.log(` > Proposals without title: ${proposalsWithoutTitle.length}`);
   console.log(` > Proposals without abstract: ${proposalsWithoutAbstract.length}`);
   console.log(` > Proposals without speakers: ${proposalsWithoutSpeakers.length}`);
-  console.log(` > Proposals without talk`, totalWithoutTalks);
+  console.log(' > Proposals without talk', totalWithoutTalks);
   console.log(` > Proposals migrated ${proposalsMigratedCount}`);
 }
 
@@ -213,16 +217,15 @@ function mapFeelings(feeling: string): ReviewFeeling {
 }
 
 async function findTalk(eventId: string, proposalId: string) {
-  let talk = await db.talk.findFirst({ where: { migrationId: proposalId } });
+  const talk = await db.talk.findFirst({ where: { migrationId: proposalId } });
 
   if (talk) {
     const already = await alreadySubmittedTalk(eventId, talk.id);
     if (already) {
       console.log(`Link already exists for ${proposalId}: ${eventId}/${talk.id} with proposal ${already.id}`);
       return null;
-    } else {
-      return talk;
     }
+    return talk;
   }
 
   return null;

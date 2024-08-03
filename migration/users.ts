@@ -6,6 +6,7 @@ import ProgressBar from 'progress';
 
 import { convertSocials } from './utils.ts';
 
+// biome-ignore lint/suspicious/noConfusingVoidType: for migration
 const usersWithoutEmail: Array<void | UserRecord> = [];
 const usersAuthNotFound: Array<any> = [];
 
@@ -85,7 +86,7 @@ export async function migrateUsers(firestore: admin.firestore.Firestore, auth: a
 }
 
 function getEmail(uid: string, email: string, authEmail?: string) {
-  if (authEmail && authEmail.includes('@')) return authEmail;
-  if (email && email.includes('@')) return email;
+  if (authEmail?.includes('@')) return authEmail;
+  if (email?.includes('@')) return email;
   return `${uid}@example.com`;
 }

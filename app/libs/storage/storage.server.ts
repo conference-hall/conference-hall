@@ -25,7 +25,7 @@ export function uploadToStorageHandler(options: StorageUploaderOptions): UploadH
   };
 }
 
-async function uploadToStorage(data: AsyncIterable<Uint8Array>, filepath: string, maxFileSize: number = 1_000_000) {
+async function uploadToStorage(data: AsyncIterable<Uint8Array>, filepath: string, maxFileSize = 1_000_000) {
   const file = storage.bucket().file(filepath);
 
   const passthroughStream = new stream.PassThrough();

@@ -31,7 +31,10 @@ export async function loader() {
   }
 
   // cache the sitemap
-  streamToPromise(stream).then((sm) => (sitemap = sm));
+  streamToPromise(stream).then((sm) => {
+    sitemap = sm;
+    return sitemap;
+  });
 
   stream.end();
 

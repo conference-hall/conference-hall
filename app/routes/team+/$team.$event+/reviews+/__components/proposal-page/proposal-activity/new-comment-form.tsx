@@ -11,7 +11,7 @@ export function NewCommentForm({ compact = false, className }: Props) {
   const { user } = useUser();
 
   const navigation = useNavigation();
-  const isAdding = navigation.state == 'submitting';
+  const isAdding = navigation.state === 'submitting';
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {

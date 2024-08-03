@@ -1,10 +1,10 @@
 export class MockEmailQueue {
   static instance: MockEmailQueue;
   static get() {
-    if (!this.instance) {
-      this.instance = new MockEmailQueue();
+    if (!MockEmailQueue.instance) {
+      MockEmailQueue.instance = new MockEmailQueue();
     }
-    return this.instance;
+    return MockEmailQueue.instance;
   }
   enqueue = vi.fn();
   close = vi.fn();

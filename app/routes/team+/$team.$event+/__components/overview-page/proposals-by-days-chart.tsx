@@ -136,5 +136,5 @@ function CustomTooltip({ payload, label }: TooltipProps<ValueType, NameType>) {
 }
 
 function ChartPlaceholder() {
-  return <div className="h-full min-h-60 grow animate-pulse p-4" aria-hidden="true"></div>;
+  return <div className="h-full min-h-60 grow animate-pulse p-4" aria-hidden="true" />;
 }
