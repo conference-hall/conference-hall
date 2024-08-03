@@ -14,12 +14,18 @@ import { ProposalSearchBuilder } from './proposal-search-builder.ts';
 import type { ProposalsFilters } from './proposal-search-builder.types.ts';
 
 describe('EventProposalsSearch', () => {
-  let owner: User, speaker: User;
+  let owner: User;
+  let speaker: User;
   let team: Team;
-  let event: Event, event2: Event;
+  let event: Event;
+  let event2: Event;
   let format: EventFormat;
   let category: EventCategory;
-  let proposal1: Proposal, proposal2: Proposal, proposal3: Proposal, proposal4: Proposal, proposal5: Proposal;
+  let proposal1: Proposal;
+  let proposal2: Proposal;
+  let proposal3: Proposal;
+  let proposal4: Proposal;
+  let proposal5: Proposal;
 
   beforeEach(async () => {
     owner = await userFactory({ traits: ['clark-kent'] });

@@ -21,7 +21,7 @@ export function SearchSessionProposal({ onChange, onClose }: SearchSessionPropos
     fetcher.submit(filters, { action: `/team/${team}/${event}/reviews/autocomplete`, method: 'GET' });
   };
 
-  let results = fetcher.data ?? [];
+  const results = fetcher.data ?? [];
 
   const debouncedOnChange = useDebouncedCallback(
     (event: ChangeEvent<HTMLInputElement>) => search({ query: event.target.value }),

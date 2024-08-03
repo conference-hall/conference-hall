@@ -114,9 +114,9 @@ export default function Schedule({
           <tbody>
             {/* Empty line */}
             <tr className="divide-x divide-gray-200 align-top">
-              <td className="w-8"></td>
+              <td className="w-8" />
               {tracks.map((track) => (
-                <td key={track.id} className="h-6 border-b"></td>
+                <td key={track.id} className="h-6 border-b" />
               ))}
             </tr>
 

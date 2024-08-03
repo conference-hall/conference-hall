@@ -10,7 +10,10 @@ import { userFactory } from 'tests/factories/users.ts';
 import { ActivityFeed } from './activity-feed.ts';
 
 describe('ActivityFeed', () => {
-  let owner: User, member1: User, member2: User, speaker: User;
+  let owner: User;
+  let member1: User;
+  let member2: User;
+  let speaker: User;
   let team: Team;
 
   beforeEach(async () => {

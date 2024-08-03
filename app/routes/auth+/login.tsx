@@ -2,11 +2,12 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { useFetcher, useSearchParams } from '@remix-run/react';
 import {
-  getRedirectResult,
+  type AuthProvider,
   GithubAuthProvider,
   GoogleAuthProvider,
-  signInWithRedirect,
   TwitterAuthProvider,
+  getRedirectResult,
+  signInWithRedirect,
 } from 'firebase/auth';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -59,25 +60,28 @@ export default function Login() {
 
   const signIn = useCallback(
     async (provider: string) => {
-      // Set loading status in url to get it when redirected back from auth
+      // Set loading state in url to get it when redirected back from auth
       if (hydrated) {
         const { protocol, host, pathname } = window.location;
         const newurl = `${protocol}//${host}${pathname}?redirectTo=${redirectTo}&loading=true`;
         window.history.pushState({ path: newurl }, '', newurl);
       }
 
-      let authProvider;
       if (provider === 'google') {
-        authProvider = new GoogleAuthProvider();
+        const authProvider = new GoogleAuthProvider();
         authProvider.setCustomParameters({ prompt: 'select_account' });
-      } else if (provider === 'twitter') {
-        authProvider = new TwitterAuthProvider();
-      } else if (provider === 'github') {
-        authProvider = new GithubAuthProvider();
+        return signInWithRedirect(getClientAuth(), authProvider);
       }
 
-      if (!authProvider) return;
-      await signInWithRedirect(getClientAuth(), authProvider);
+      if (provider === 'twitter') {
+        const authProvider = new TwitterAuthProvider();
+        return signInWithRedirect(getClientAuth(), authProvider);
+      }
+
+      if (provider === 'github') {
+        const authProvider = new GithubAuthProvider();
+        return signInWithRedirect(getClientAuth(), authProvider);
+      }
     },
     [hydrated, redirectTo],
   );

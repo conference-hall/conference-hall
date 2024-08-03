@@ -60,17 +60,17 @@ export function getGMTOffset(timezone: string) {
 function parseOffset(offset?: string) {
   if (offset === undefined) return -1000;
   const [hours, minutes] = offset.replace('GMT', '').split(':');
-  const parsedOffset = parseInt(hours, 10) * 60 + parseInt(minutes, 10);
+  const parsedOffset = Number.parseInt(hours, 10) * 60 + Number.parseInt(minutes, 10);
   return parsedOffset;
 }
 
 // Parse a string date from a timezone and convert it to start of the day and UTC
-export function parseToUtcStartOfDay(date: string, timezone: string, format: string = 'yyyy-MM-dd') {
+export function parseToUtcStartOfDay(date: string, timezone: string, format = 'yyyy-MM-dd') {
   return fromZonedTime(startOfDay(parse(date, format, toZonedTime(new Date(), timezone))), timezone);
 }
 
 // Parse a string date from a timezone and convert it to end of the day and UTC
-export function parseToUtcEndOfDay(date: string, timezone: string, format: string = 'yyyy-MM-dd') {
+export function parseToUtcEndOfDay(date: string, timezone: string, format = 'yyyy-MM-dd') {
   return fromZonedTime(endOfDay(parse(date, format, toZonedTime(new Date(), timezone))), timezone);
 }
 

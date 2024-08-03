@@ -13,7 +13,7 @@ const menuStyle = cx(
   'px-3 py-2 rounded-md focus-visible:outline focus-visible:outline-2',
 );
 
-const itemStyle = (focus: boolean = false, active: boolean = false) =>
+const itemStyle = (focus = false, active = false) =>
   cx('group flex w-full items-center px-4 py-2 text-sm text-gray-700', {
     'font-semibold': active,
     'bg-gray-100 text-gray-900': focus,

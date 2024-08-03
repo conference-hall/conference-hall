@@ -16,7 +16,7 @@ export class CfpReviewsSearch {
     return new CfpReviewsSearch(userId, userEvent);
   }
 
-  async search(filters: ProposalsFilters, page: number = 1) {
+  async search(filters: ProposalsFilters, page = 1) {
     const event = await this.userEvent.needsPermission('canAccessEvent');
 
     const search = new ProposalSearchBuilder(event.slug, this.userId, filters, {

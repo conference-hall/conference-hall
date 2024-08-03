@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
-import { toast as showToast, Toaster as SonnerToaster } from 'sonner';
+import { Toaster as SonnerToaster, toast as showToast } from 'sonner';
 
-import { type Toast } from './toast.server.ts';
+import type { Toast } from './toast.server.ts';
 
 export function Toaster({ toast }: { toast?: Toast | null }) {
   return (

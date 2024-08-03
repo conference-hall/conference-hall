@@ -2,7 +2,7 @@ import type { LinkProps } from '@remix-run/react';
 import { Link } from '@remix-run/react';
 import type { VariantProps } from 'class-variance-authority';
 import { cva } from 'class-variance-authority';
-import React from 'react';
+import type React from 'react';
 
 const button = cva(
   ['flex items-center rounded-full shrink-0', 'focus:outline-none focus:ring-2 focus:ring-indigo-500'],

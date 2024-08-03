@@ -9,10 +9,10 @@ import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { useUser } from '~/routes/__components/use-user.tsx';
 
 import { Navbar } from '../__components/navbar/navbar.tsx';
-import type { loader as routeEventLoader } from './$team.$event+/_layout';
-import { useScheduleFullscreen } from './$team.$event+/schedule+/__components/header/use-schedule-fullscreen.tsx';
 import { EventTabs } from './$team+/__components/event-tabs.tsx';
 import { TeamTabs } from './$team+/__components/team-tabs.tsx';
+import type { loader as routeEventLoader } from './$team.$event+/_layout';
+import { useScheduleFullscreen } from './$team.$event+/schedule+/__components/header/use-schedule-fullscreen.tsx';
 
 export const meta = mergeMeta<typeof loader>(({ data }) => (data ? [{ title: `${data.name} | Conference Hall` }] : []));
 

@@ -29,7 +29,7 @@ describe('Schedule page', () => {
   describe('as a team reviewer', () => {
     it('does not have access to schedule', () => {
       cy.login('Bruce Wayne');
-      cy.visitAndCheck(`/team/team-1/conference-1/schedule`, { failOnStatusCode: false });
+      cy.visitAndCheck('/team/team-1/conference-1/schedule', { failOnStatusCode: false });
       page.assertForbiddenPage();
     });
   });

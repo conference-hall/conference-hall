@@ -373,7 +373,7 @@ describe('Event settings', () => {
     beforeEach(() => cy.login('Peter Parker'));
 
     it('cannot access to event settings as a team reviewer', () => {
-      cy.visitAndCheck(`/team/team-1/conference-1/settings`, { failOnStatusCode: false });
+      cy.visitAndCheck('/team/team-1/conference-1/settings', { failOnStatusCode: false });
       settings.assertForbiddenPage();
     });
   });

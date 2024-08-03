@@ -6,7 +6,9 @@ export function getObjectHash(obj: Record<string, any>): string {
 function sortObjectKeys(obj: any): any {
   if (Array.isArray(obj)) {
     return obj.map(sortObjectKeys);
-  } else if (obj !== null && typeof obj === 'object') {
+  }
+
+  if (obj !== null && typeof obj === 'object') {
     return Object.keys(obj)
       .sort()
       .reduce(
@@ -22,8 +24,8 @@ function sortObjectKeys(obj: any): any {
 
 function simpleHash(str: string): string {
   let hash = 0;
-  let i;
-  let chr;
+  let i: number;
+  let chr: number;
 
   if (str.length === 0) return hash.toString();
 

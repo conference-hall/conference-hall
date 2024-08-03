@@ -144,6 +144,7 @@ type OpenProps = { name: string | null; picture: string | null; notificationsCou
 function OpenButton({ name, picture, notificationsCount, onClick }: OpenProps) {
   return (
     <button
+      type="button"
       onClick={onClick}
       className="relative flex flex-shrink-0 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
     >
@@ -170,6 +171,7 @@ function SignOutMenu() {
     <li>
       <fetcher.Form method="POST" action="/auth/logout">
         <button
+          type="submit"
           onClick={handleSignout}
           className="group flex items-center gap-x-3 w-full text-left rounded-md p-2 text-sm leading-6 font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-100"
         >

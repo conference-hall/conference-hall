@@ -89,7 +89,7 @@ describe('TeamMembers', () => {
 
       await TeamMembers.for(owner.id, team.slug).changeRole(member.id, 'REVIEWER');
 
-      const members = await TeamMembers.for(owner.id, team.slug).list({ query: member.name! }, 1);
+      const members = await TeamMembers.for(owner.id, team.slug).list({ query: member.name }, 1);
       expect(members.results).toEqual([
         { id: member.id, name: member.name, role: 'REVIEWER', picture: member.picture },
       ]);

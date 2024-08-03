@@ -10,7 +10,7 @@ export class SpeakerActivities {
     return new SpeakerActivities(userId);
   }
 
-  async list(page: number = 1) {
+  async list(page = 1) {
     const eventSubmittedIds = await lastEventsSubmitted(this.userId);
 
     const totalEvents = eventSubmittedIds.length;

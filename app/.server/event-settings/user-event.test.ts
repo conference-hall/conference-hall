@@ -125,7 +125,8 @@ describe('UserEvent', () => {
   });
 
   describe('#update', () => {
-    let owner: User, reviewer: User;
+    let owner: User;
+    let reviewer: User;
     let team: Team;
     let event: Event;
 

@@ -11,7 +11,8 @@ import { ForbiddenOperationError } from '~/libs/errors.server.ts';
 import { EventTracksSettings } from './event-tracks-settings.ts';
 
 describe('EventTracksSettings', () => {
-  let owner: User, reviewer: User;
+  let owner: User;
+  let reviewer: User;
   let team: Team;
   let event: Event;
 

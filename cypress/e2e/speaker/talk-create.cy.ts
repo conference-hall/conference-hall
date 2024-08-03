@@ -1,5 +1,5 @@
-import SpeakerTalkPage from '../../page-objects/speaker/talk.page.ts';
 import SpeakerNewTalkPage from '../../page-objects/speaker/talk-new.page.ts';
+import SpeakerTalkPage from '../../page-objects/speaker/talk.page.ts';
 
 describe('Speaker talk creation page', () => {
   beforeEach(() => {

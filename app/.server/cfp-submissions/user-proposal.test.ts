@@ -248,7 +248,7 @@ describe('UserProposal', () => {
       expect([
         {
           from: `${event.name} <no-reply@conference-hall.io>`,
-          to: [event.emailOrganizer!],
+          to: [event.emailOrganizer],
           subject: `[${event.name}] Talk confirmed by speaker`,
         },
       ]).toHaveEmailsEnqueued();
@@ -273,7 +273,7 @@ describe('UserProposal', () => {
       expect([
         {
           from: `${event.name} <no-reply@conference-hall.io>`,
-          to: [event.emailOrganizer!],
+          to: [event.emailOrganizer],
           subject: `[${event.name}] Talk declined by speaker`,
         },
       ]).toHaveEmailsEnqueued();

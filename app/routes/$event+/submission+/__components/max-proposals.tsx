@@ -24,9 +24,9 @@ type MaxProposalsAlertProps = { proposalsCount: number; maxProposals: number };
 export function MaxProposalsAlert({ proposalsCount, maxProposals }: MaxProposalsAlertProps) {
   return (
     <Callout title="Maximum of proposals by speaker">
-      {`You can submit a maximum of `}
+      {'You can submit a maximum of '}
       <strong>{`${maxProposals} proposals by speaker. `}</strong>
-      {`You currently have submitted `}
+      {'You currently have submitted '}
       <strong>{`${proposalsCount} proposals.`}</strong>
     </Callout>
   );

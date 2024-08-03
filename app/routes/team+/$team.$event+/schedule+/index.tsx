@@ -9,8 +9,8 @@ import { ScheduleCreateSchema } from '~/.server/event-schedule/event-schedule.ty
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
 import { Button } from '~/design-system/buttons.tsx';
 import { DateRangeInput } from '~/design-system/forms/date-range-input.tsx';
-import { Input } from '~/design-system/forms/input.tsx';
 import { InputTimezone } from '~/design-system/forms/input-timezone.tsx';
+import { Input } from '~/design-system/forms/input.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';

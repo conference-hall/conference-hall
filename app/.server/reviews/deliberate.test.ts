@@ -11,7 +11,9 @@ import { ForbiddenOperationError } from '~/libs/errors.server.ts';
 import { Deliberate } from './deliberate.ts';
 
 describe('Deliberate', () => {
-  let owner: User, reviewer: User, speaker: User;
+  let owner: User;
+  let reviewer: User;
+  let speaker: User;
   let team: Team;
   let event: Event;
 

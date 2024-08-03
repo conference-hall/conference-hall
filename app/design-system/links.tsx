@@ -2,7 +2,7 @@ import type { LinkProps as RemixLinkProps } from '@remix-run/react';
 import { Link as RemixLink } from '@remix-run/react';
 import type { VariantProps } from 'class-variance-authority';
 import { cva, cx } from 'class-variance-authority';
-import React from 'react';
+import type React from 'react';
 
 import type { TypographyVariantProps } from './typography.tsx';
 import { typography } from './typography.tsx';

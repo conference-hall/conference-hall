@@ -11,7 +11,9 @@ import { ForbiddenOperationError } from '~/libs/errors.server.ts';
 import { CfpReviewsSearch } from './cfp-reviews-search.ts';
 
 describe('CfpReviewsSearch', () => {
-  let owner: User, reviewer: User, speaker: User;
+  let owner: User;
+  let reviewer: User;
+  let speaker: User;
   let team: Team;
   let event: Event;
 
@@ -63,7 +65,7 @@ describe('CfpReviewsSearch', () => {
       await db.event.update({ data: { displayProposalsReviews: false }, where: { id: event.id } });
       await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
 
-      let proposals = await CfpReviewsSearch.for(owner.id, team.slug, event.slug).search({});
+      const proposals = await CfpReviewsSearch.for(owner.id, team.slug, event.slug).search({});
       expect(proposals.results[0].reviews.summary).toBeUndefined();
     });
 

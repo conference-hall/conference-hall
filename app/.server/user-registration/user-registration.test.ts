@@ -37,13 +37,13 @@ describe('UserRegistration', () => {
 
       const user = await db.user.findFirst({ where: { id: userId }, include: { authenticationMethods: true } });
       expect(user?.name).toEqual('Bob');
-      expect(user?.email).toEqual(`123@example.com`);
+      expect(user?.email).toEqual('123@example.com');
       expect(user?.emailVerified).toEqual(false);
       expect(user?.termsAccepted).toEqual(false);
       expect(user?.picture).toBe(null);
       expect(user?.authenticationMethods[0].uid).toEqual('123');
       expect(user?.authenticationMethods[0].name).toEqual('Bob');
-      expect(user?.authenticationMethods[0].email).toEqual(`123@example.com`);
+      expect(user?.authenticationMethods[0].email).toEqual('123@example.com');
       expect(user?.authenticationMethods[0].picture).toBe(null);
       expect(user?.authenticationMethods[0].provider).toEqual('google.com');
     });

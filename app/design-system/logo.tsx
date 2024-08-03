@@ -3,6 +3,7 @@ import type { SVGProps } from 'react';
 export function ConferenceHallLogo(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
+      role="presentation"
       width="512"
       height="512"
       viewBox="0 0 512 512"

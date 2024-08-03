@@ -11,7 +11,8 @@ import { ForbiddenError, ForbiddenOperationError, NotFoundError } from '~/libs/e
 import { EventSchedule } from './event-schedule.ts';
 
 describe('EventSchedule', () => {
-  let owner: User, reviewer: User;
+  let owner: User;
+  let reviewer: User;
   let team: Team;
   let event: Event;
   let schedule: Schedule;

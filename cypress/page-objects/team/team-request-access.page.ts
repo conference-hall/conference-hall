@@ -2,7 +2,7 @@ import BasePage from '../../page-objects/base.page.ts';
 
 class TeamRequestAccessPage extends BasePage {
   visit() {
-    cy.visitAndCheck(`/team/request`);
+    cy.visitAndCheck('/team/request');
     this.isPageVisible();
   }
 

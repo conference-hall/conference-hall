@@ -7,7 +7,7 @@ export function applyLocalhostRedirect(app: express.Application) {
     if (!isDevelopment) return next();
 
     const host = req.headers.host;
-    if (host && host.includes('localhost')) {
+    if (host?.includes('localhost')) {
       return res.redirect(`${process.env.APP_URL}${req.url}`);
     }
     next();

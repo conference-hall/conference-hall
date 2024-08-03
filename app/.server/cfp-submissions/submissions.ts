@@ -47,7 +47,11 @@ export class Submissions {
   async drafts() {
     const drafts = await db.proposal.findMany({
       include: { speakers: true },
-      where: { event: { slug: this.eventSlug }, speakers: { some: { id: this.speakerId } }, isDraft: true },
+      where: {
+        event: { slug: this.eventSlug },
+        speakers: { some: { id: this.speakerId } },
+        isDraft: true,
+      },
       orderBy: { createdAt: 'desc' },
     });
 
