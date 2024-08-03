@@ -22,6 +22,7 @@
     "db:migrate": "dotenv -e .env.dev -- prisma migrate dev",
     "db:reset": "dotenv -e .env.dev -- prisma migrate reset -f",
     "lint": "biome check",
+    "lint:ci": "biome ci",
     "tsc": "tsc -b && tsc -b cypress",
     "script:migrate": "dotenv -e .env.migrate -- tsx ./migration/index.ts"
   },

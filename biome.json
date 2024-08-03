@@ -1,8 +1,5 @@
 {
   "$schema": "https://biomejs.dev/schemas/1.8.3/schema.json",
-  "organizeImports": {
-    "enabled": true
-  },
   "formatter": {
     "enabled": true,
     "formatWithErrors": true,
@@ -41,5 +38,13 @@
       "quoteStyle": "single",
       "jsxQuoteStyle": "double"
     }
+  },
+  "organizeImports": {
+    "enabled": true
+  },
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
   }
 }

@@ -3,5 +3,5 @@ output: false
 pre-commit:
   commands:
     linter:
-      run: npx @biomejs/biome check --write --no-errors-on-unmatched --files-ignore-unknown=true {staged_files}
+      run: npm run lint -- --write --no-errors-on-unmatched --files-ignore-unknown=true {staged_files}
       stage_fixed: true
