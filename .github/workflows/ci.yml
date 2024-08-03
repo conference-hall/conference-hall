@@ -27,7 +27,7 @@ jobs:
         run: npm ci
 
       - name: Linting
-        run: npm run lint
+        run: npm run lint:ci
 
       - name: Typescript checking
         run: npm run tsc
