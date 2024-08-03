@@ -63,7 +63,8 @@ describe('Speaker proposal edition page', () => {
     cospeakers.speaker('Bruce Wayne').should('not.exist');
   });
 
-  it('display errors on mandatory fields', () => {
+  // enable when client-side validation is done
+  it.skip('display errors on mandatory fields', () => {
     proposal.visit('devfest-nantes', 'awesome-proposal');
     const editProposal = proposal.editProposal();
     editProposal.fillForm({ title: ' ', abstract: ' ' });

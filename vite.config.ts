@@ -27,7 +27,7 @@ export default defineConfig({
         v3_relativeSplatPath: true,
         v3_throwAbortReason: true,
         unstable_singleFetch: true,
-        unstable_fogOfWar: true,
+        unstable_lazyRouteDiscovery: true,
       },
     }),
     tsconfigPaths(),
@@ -48,4 +48,5 @@ export default defineConfig({
     strictPort: true,
     warmup: { clientFiles: ['./app/entry.client.tsx', './app/root.tsx', './app/routes/**/*'] },
   },
+  clearScreen: false,
 });
