@@ -48,4 +48,5 @@ export default defineConfig({
     strictPort: true,
     warmup: { clientFiles: ['./app/entry.client.tsx', './app/root.tsx', './app/routes/**/*'] },
   },
+  clearScreen: false,
 });
