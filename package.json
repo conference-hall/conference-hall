@@ -25,10 +25,6 @@
     "tsc": "tsc -b && tsc -b cypress",
     "script:migrate": "dotenv -e .env.migrate -- tsx ./migration/index.ts"
   },
-  "lint-staged": {
-    "**/*.{ts,tsx,js,jsx}": "eslint --fix --cache --cache-location ./node_modules/.cache/eslint --ignore-path .gitignore",
-    "**/*.{json,md,mdx,html,css,yml}": "prettier -l --write"
-  },
   "prisma": {
     "seed": "tsx ./prisma/seed.ts"
   },

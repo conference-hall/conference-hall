@@ -1,0 +1,10 @@
+pre-commit:
+  parallel: true
+  commands:
+    lint:
+      glob: "*.{js,ts,jsx,tsx}"
+      run: eslint --fix --cache --cache-location ./node_modules/.cache/eslint --ignore-path .gitignore -- {staged_files}
+    format:
+      glob: "*.{json,md,mdx,html,css,yml}"
+      run: prettier -l --write {staged_files}
+
