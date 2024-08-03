@@ -23,8 +23,7 @@
     "db:reset": "dotenv -e .env.dev -- prisma migrate reset -f",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint --ignore-path .gitignore .",
     "tsc": "tsc -b && tsc -b cypress",
-    "script:migrate": "dotenv -e .env.migrate -- tsx ./migration/index.ts",
-    "prepare": "husky"
+    "script:migrate": "dotenv -e .env.migrate -- tsx ./migration/index.ts"
   },
   "lint-staged": {
     "**/*.{ts,tsx,js,jsx}": "eslint --fix --cache --cache-location ./node_modules/.cache/eslint --ignore-path .gitignore",
@@ -105,8 +104,7 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-simple-import-sort": "^12.1.1",
-    "husky": "^9.1.4",
-    "lint-staged": "^15.2.8",
+    "lefthook": "^1.7.11",
     "prettier": "^3.3.3",
     "prettier-plugin-tailwindcss": "^0.6.5",
     "prisma": "^5.17.0",
