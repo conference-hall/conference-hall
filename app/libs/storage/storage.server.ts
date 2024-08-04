@@ -4,6 +4,7 @@ import type { UploadHandler } from '@remix-run/node';
 import { v4 as uuid } from 'uuid';
 
 import { storage } from '../auth/firebase.server.ts';
+import { appUrl } from '../env/env.server.ts';
 
 type StorageUploaderOptions = { name: string; maxFileSize?: number };
 
@@ -41,10 +42,18 @@ async function uploadToStorage(data: AsyncIterable<Uint8Array>, filepath: string
   passthroughStream.end();
 
   try {
-    passthroughStream.pipe(file.createWriteStream());
+    await new Promise((resolve, reject) => {
+      const writeStream = file.createWriteStream();
+      passthroughStream.pipe(writeStream).on('finish', resolve).on('error', reject);
+    });
   } catch (e) {
     passthroughStream.destroy();
     return null;
   }
-  return file.publicUrl();
+
+  return getStorageProxyUrl(filepath);
+}
+
+function getStorageProxyUrl(filepath: string) {
+  return `${appUrl()}/storage/${filepath}`;
 }
