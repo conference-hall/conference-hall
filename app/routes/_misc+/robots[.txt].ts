@@ -11,6 +11,7 @@ Disallow: /speaker/
 Disallow: /team/
 Disallow: /debug/
 Disallow: /notifications/
+Disallow: /storage/
 
 Sitemap: ${appUrl()}/sitemap.xml
 `;
