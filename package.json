@@ -5,6 +5,7 @@
   "sideEffects": false,
   "type": "module",
   "license": "AGPL-3.0",
+  "description": "test",
   "scripts": {
     "dev": "dotenv -e .env.dev -- concurrently -r 'npm:dev:*'",
     "dev:app": "vite",
