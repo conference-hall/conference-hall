@@ -28,7 +28,7 @@ export const loader: LoaderFunction = async ({ params }) => {
       headers: {
         'Content-Type': metadata.contentType,
         'Content-Length': metadata.size?.toString(),
-        'Cache-Control': `public, max-age=${ONE_YEAR_IN_SECONDS}`,
+        'Cache-Control': `public, max-age=${ONE_YEAR_IN_SECONDS}, immutable`,
       },
     });
   } catch (error) {
