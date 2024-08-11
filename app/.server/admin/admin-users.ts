@@ -1,6 +1,7 @@
 import type { Prisma } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
 import { z } from 'zod';
+import { UserNotFoundError } from '~/libs/errors.server.ts';
 import { Pagination } from '../shared/pagination.ts';
 import { needsAdminRole } from './authorization.ts';
 
@@ -43,6 +44,41 @@ export class AdminUsers {
         name: user.name,
         email: user.email,
         createdAt: user.createdAt,
+      })),
+    };
+  }
+
+  async getUserInfo(userId: string) {
+    const user = await db.user.findUnique({
+      where: { id: userId },
+      include: { authenticationMethods: true },
+    });
+
+    if (!user) throw new UserNotFoundError();
+
+    const memberships = await db.teamMember.findMany({
+      where: { memberId: userId },
+      include: { team: true },
+    });
+
+    return {
+      name: user.name,
+      email: user.email,
+      emailVerified: user.emailVerified,
+      termsAccepted: user.termsAccepted,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+      authenticationMethods: user.authenticationMethods.map((method) => ({
+        provider: method.provider,
+        email: method.email,
+        uid: method.uid,
+        createdAt: method.createdAt,
+      })),
+      teams: memberships.map((member) => ({
+        slug: member.team.slug,
+        name: member.team.name,
+        role: member.role,
+        updatedAt: member.team.updatedAt,
       })),
     };
   }

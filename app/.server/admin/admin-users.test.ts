@@ -10,4 +10,12 @@ describe('AdminUsers', () => {
 
     it.todo('throws an error when user is not admin');
   });
+
+  describe('#getUserInfo', () => {
+    it.todo('get user info');
+
+    it.todo('throws an error when user is not found');
+
+    it.todo('throws an error when user is not admin');
+  });
 });
