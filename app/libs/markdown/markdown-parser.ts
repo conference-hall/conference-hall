@@ -39,7 +39,6 @@ function parse(source: string | null, options: ParserOptions = {}) {
   const marked = new Marked({
     gfm: true,
     breaks: true,
-    useNewRenderer: true,
     renderer: options.withAppRenderer ? appRenderer : defaultRenderer,
   });
 
