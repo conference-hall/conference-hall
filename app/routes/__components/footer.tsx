@@ -25,6 +25,14 @@ export function LegalLinks() {
       <Link to="/docs/license" target="_blank" className="hover:underline underline-offset-2">
         License
       </Link>
+      <a
+        href="https://github.com/conference-hall/conference-hall"
+        target="_blank"
+        className="hover:underline underline-offset-2"
+        rel="noreferrer"
+      >
+        GitHub
+      </a>
     </div>
   );
 }
