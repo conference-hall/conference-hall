@@ -1,0 +1,35 @@
+name: 🐛 Bug Report
+description: Something is wrong with Conference Hall.
+labels:
+  - 'bug'
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for helping to improve Conference Hall!
+
+  - type: textarea
+    attributes:
+      label: What happened?
+      description: A concise description of what you're experiencing.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Expected Behavior
+      description: A concise description of what you expected to happen.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Your environment
+      description: Give us some info about your environment to be able to reproduce the issue.
+      placeholder: Operating System, Browser...
+    validations:
+      required: true
