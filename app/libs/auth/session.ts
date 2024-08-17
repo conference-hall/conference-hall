@@ -15,7 +15,7 @@ const sessionStorage = createCookieSessionStorage({
     httpOnly: true,
     secure: true,
     secrets: [process.env.COOKIE_SIGNED_SECRET],
-    sameSite: 'strict',
+    sameSite: 'lax',
   },
 });
 
