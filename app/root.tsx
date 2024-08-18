@@ -60,11 +60,9 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   return json({ user, toast, env: getPublicEnv() }, { headers: toastHeaders || {} });
 };
 
-type DocumentProps = { children: ReactNode; toast?: Toast | null; env?: Record<string, unknown> };
+type DocumentProps = { children: ReactNode; toast?: Toast | null; nonce: string; env?: Record<string, unknown> };
 
-function Document({ children, toast, env = {} }: DocumentProps) {
-  const nonce = useNonce();
-
+function Document({ children, toast, nonce, env = {} }: DocumentProps) {
   return (
     <html lang="en">
       <head>
@@ -90,19 +88,22 @@ function Document({ children, toast, env = {} }: DocumentProps) {
 
 function App() {
   const { user, env, toast } = useLoaderData<typeof loader>();
+  const nonce = useNonce();
 
   initializeFirebaseClient(env);
 
   return (
-    <Document toast={toast} env={env}>
+    <Document toast={toast} env={env} nonce={nonce}>
       <Outlet context={{ user }} />
     </Document>
   );
 }
 
 export function ErrorBoundary() {
+  const nonce = useNonce();
+
   return (
-    <Document>
+    <Document nonce={nonce}>
       <GeneralErrorBoundary />
     </Document>
   );
