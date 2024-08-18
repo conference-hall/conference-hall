@@ -6,10 +6,14 @@ import { flatRoutes } from 'remix-flat-routes';
 import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
-const withSentrySourcemap = Boolean(process.env.SENTRY_AUTH_TOKEN);
+const withSourcemap = Boolean(process.env.SENTRY_AUTH_TOKEN);
 
 export default defineConfig({
-  build: { target: 'esnext', manifest: true },
+  build: {
+    target: 'esnext',
+    manifest: true,
+    sourcemap: withSourcemap ? 'hidden' : false,
+  },
   optimizeDeps: { include: ['./app/routes/**/*'] },
   plugins: [
     expressDevServer(),
@@ -31,7 +35,7 @@ export default defineConfig({
       },
     }),
     tsconfigPaths(),
-    withSentrySourcemap
+    withSourcemap
       ? sentryVitePlugin({
           org: process.env.SENTRY_ORG,
           project: process.env.SENTRY_PROJECT,
