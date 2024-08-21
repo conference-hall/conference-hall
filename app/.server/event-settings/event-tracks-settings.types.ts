@@ -13,7 +13,15 @@ export const TracksSettingsSchema = z.object({
     .string()
     .transform((value) => value === 'true')
     .catch(false),
+  formatsAllowMultiple: z
+    .string()
+    .transform((value) => value === 'true')
+    .catch(false),
   categoriesRequired: z
+    .string()
+    .transform((value) => value === 'true')
+    .catch(false),
+  categoriesAllowMultiple: z
     .string()
     .transform((value) => value === 'true')
     .catch(false),
