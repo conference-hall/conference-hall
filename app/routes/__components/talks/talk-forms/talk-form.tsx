@@ -25,8 +25,10 @@ type Props = {
   } | null;
   formats?: Array<{ id: string; name: string; description: string | null }>;
   formatsRequired?: boolean;
+  formatsAllowMultiple?: boolean;
   categories?: Array<{ id: string; name: string; description: string | null }>;
   categoriesRequired?: boolean;
+  categoriesAllowMultiple?: boolean;
   errors: SubmissionErrors;
   onSubmit?: () => void;
 };
@@ -36,8 +38,10 @@ export function TalkForm({
   initialValues,
   formats,
   formatsRequired,
+  formatsAllowMultiple,
   categories,
   categoriesRequired,
+  categoriesAllowMultiple,
   errors,
   onSubmit,
 }: Props) {
@@ -83,6 +87,7 @@ export function TalkForm({
 
       {hasFormats && (
         <FormatsForm
+          formatsAllowMultiple={formatsAllowMultiple ?? false}
           formats={formats}
           required={formatsRequired}
           initialValues={initialValues?.formats?.map(({ id }) => id)}
@@ -92,6 +97,7 @@ export function TalkForm({
 
       {hasCategories && (
         <CategoriesForm
+          categoriesAllowMultiple={categoriesAllowMultiple ?? false}
           categories={categories}
           required={categoriesRequired}
           initialValues={initialValues?.categories?.map(({ id }) => id)}

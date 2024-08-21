@@ -1,6 +1,7 @@
 import { Checkbox, CheckboxHeadingGroup } from '~/design-system/forms/checkboxes.tsx';
+import { Radio, RadioGroup } from '~/design-system/forms/radio-group.tsx';
 
-type Props = {
+type FormProps = {
   categories: Array<{
     id: string;
     name: string;
@@ -10,21 +11,49 @@ type Props = {
   initialValues?: string[];
 };
 
-export function CategoriesForm({ categories, required, initialValues }: Props) {
+type Props = { categoriesAllowMultiple: boolean } & FormProps;
+
+export function CategoriesForm({ categoriesAllowMultiple, ...formProps }: Props) {
+  if (categoriesAllowMultiple) {
+    return <CategoriesCheckboxForm {...formProps} />;
+  }
+  return <CategoriesRadioForm {...formProps} />;
+}
+
+function CategoriesCheckboxForm({ categories, required, initialValues }: FormProps) {
   return (
     <CheckboxHeadingGroup label="Select proposal categories" description={required ? '(required)' : '(optional)'}>
-      {categories.map((c) => (
+      {categories.map((category) => (
         <Checkbox
-          key={c.id}
-          id={c.id}
+          key={category.id}
+          id={category.id}
           name="categories"
-          value={c.id}
-          defaultChecked={initialValues?.includes(c.id)}
-          description={c.description}
+          value={category.id}
+          defaultChecked={initialValues?.includes(category.id)}
+          description={category.description}
         >
-          {c.name}
+          {category.name}
         </Checkbox>
       ))}
     </CheckboxHeadingGroup>
+  );
+}
+
+function CategoriesRadioForm({ categories, required, initialValues }: FormProps) {
+  return (
+    <RadioGroup label="Select proposal categories" description={required ? '(required)' : '(optional)'}>
+      {categories.map((category) => (
+        <Radio
+          key={category.id}
+          id={category.id}
+          name="categories"
+          value={category.id}
+          defaultChecked={initialValues?.includes(category.id)}
+          description={category.description}
+        >
+          {category.name}
+        </Radio>
+      ))}
+    </RadioGroup>
   );
 }

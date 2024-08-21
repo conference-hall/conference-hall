@@ -36,8 +36,10 @@ type Props = {
   event?: {
     formats?: Array<{ id: string; name: string; description: string | null }>;
     formatsRequired?: boolean;
+    formatsAllowMultiple?: boolean;
     categories?: Array<{ id: string; name: string; description: string | null }>;
     categoriesRequired?: boolean;
+    categoriesAllowMultiple?: boolean;
   };
   errors?: SubmissionErrors;
   canEditTalk: boolean;
