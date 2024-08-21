@@ -14,6 +14,10 @@ class TracksSettings extends BasePage {
     cy.findByLabelText('Format selection required').click();
   }
 
+  formatsAllowMultiple() {
+    cy.findByLabelText('Allow multiple formats selection').click();
+  }
+
   newFormat() {
     return cy.findByRole('button', { name: 'New format' });
   }
@@ -24,6 +28,10 @@ class TracksSettings extends BasePage {
 
   categoriesRequired() {
     cy.findByLabelText('Category selection required').click();
+  }
+
+  categoriesAllowMultiple() {
+    cy.findByLabelText('Allow multiple categories selection').click();
   }
 
   newCategory() {
