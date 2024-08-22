@@ -20,8 +20,10 @@ type TalkEditProps = {
   event?: {
     formats?: Array<{ id: string; name: string; description: string | null }>;
     formatsRequired?: boolean;
+    formatsAllowMultiple?: boolean;
     categories?: Array<{ id: string; name: string; description: string | null }>;
     categoriesRequired?: boolean;
+    categoriesAllowMultiple?: boolean;
   };
   errors: SubmissionErrors;
 };
@@ -56,7 +58,9 @@ function TalkEditDrawer({ initialValues, event, errors, open, onClose }: TalkEdi
           formats={event?.formats}
           categories={event?.categories}
           formatsRequired={event?.formatsRequired}
+          formatsAllowMultiple={event?.formatsAllowMultiple}
           categoriesRequired={event?.categoriesRequired}
+          categoriesAllowMultiple={event?.categoriesAllowMultiple}
           errors={errors}
           onSubmit={onClose}
         />

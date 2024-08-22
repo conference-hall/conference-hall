@@ -67,6 +67,7 @@ export default function SubmissionTracksRoute() {
               {event.formats?.length > 0 && (
                 <section>
                   <FormatsForm
+                    formatsAllowMultiple={event.formatsAllowMultiple}
                     formats={event.formats}
                     required={event.formatsRequired}
                     initialValues={proposal.formats}
@@ -80,6 +81,7 @@ export default function SubmissionTracksRoute() {
               {event.categories?.length > 0 && (
                 <section>
                   <CategoriesForm
+                    categoriesAllowMultiple={event.categoriesAllowMultiple}
                     categories={event.categories}
                     required={event.categoriesRequired}
                     initialValues={proposal.categories}

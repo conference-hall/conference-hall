@@ -151,13 +151,15 @@ describe('Event settings', () => {
         cy.assertText('Conf');
         cy.assertText('Long talk');
 
-        tracks.formatsRequired();
+        tracks.formatsRequired().click();
+        tracks.formatsAllowMultiple().click();
         cy.assertToast('Track setting updated.');
 
         cy.reload();
         cy.assertText('Conf');
         cy.assertText('Long talk');
-        cy.findByRole('switch', { name: 'Format selection required', checked: true }).should('exist');
+        tracks.formatsRequired(true).should('exist');
+        tracks.formatsAllowMultiple(true).should('exist');
 
         cy.findByRole('button', { name: 'Remove Conf' }).click();
         cy.assertNoText('Conf');
@@ -190,13 +192,15 @@ describe('Event settings', () => {
         cy.assertText('Cloud');
         cy.assertText('This is the cloud');
 
-        tracks.categoriesRequired();
+        tracks.categoriesRequired().click();
+        tracks.categoriesAllowMultiple().click();
         cy.assertToast('Track setting updated.');
 
         cy.reload();
         cy.assertText('Cloud');
         cy.assertText('This is the cloud');
-        cy.findByRole('switch', { name: 'Category selection required', checked: true }).should('exist');
+        tracks.categoriesRequired().should('exist');
+        tracks.categoriesAllowMultiple().should('exist');
 
         cy.findByRole('button', { name: 'Remove Cloud' }).click();
         cy.assertNoText('Cloud');

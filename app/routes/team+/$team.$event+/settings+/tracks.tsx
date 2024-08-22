@@ -69,7 +69,17 @@ export default function EventTracksSettingsRoute() {
 
   const fetcher = useFetcher<typeof action>();
   const handleUpdateSettings = (name: string, checked: boolean) => {
-    fetcher.submit({ intent: 'update-track-settings', [name]: String(checked) }, { method: 'POST' });
+    fetcher.submit(
+      {
+        intent: 'update-track-settings',
+        formatsRequired: event.formatsRequired,
+        formatsAllowMultiple: event.formatsAllowMultiple,
+        categoriesRequired: event.categoriesRequired,
+        categoriesAllowMultiple: event.categoriesAllowMultiple,
+        [name]: String(checked),
+      },
+      { method: 'POST' },
+    );
   };
 
   return (
@@ -92,6 +102,12 @@ export default function EventTracksSettingsRoute() {
               value={event.formatsRequired}
               onChange={(checked) => handleUpdateSettings('formatsRequired', checked)}
             />
+            <ToggleGroup
+              label="Allow multiple formats"
+              description="Determines whether the input allows users to select multiple formats."
+              value={event.formatsAllowMultiple}
+              onChange={(checked) => handleUpdateSettings('formatsAllowMultiple', checked)}
+            />
           </>
         )}
       </Card>
@@ -113,6 +129,12 @@ export default function EventTracksSettingsRoute() {
               description="When a speaker submit a proposal, the category selection is mandatory."
               value={event.categoriesRequired}
               onChange={(checked) => handleUpdateSettings('categoriesRequired', checked)}
+            />
+            <ToggleGroup
+              label="Allow multiple categories"
+              description="Determines whether the input allows users to select multiple categories."
+              value={event.categoriesAllowMultiple}
+              onChange={(checked) => handleUpdateSettings('categoriesAllowMultiple', checked)}
             />
           </>
         )}

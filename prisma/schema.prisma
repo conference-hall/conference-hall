@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["tracing"]
 }
 
@@ -110,8 +110,10 @@ model Event {
   cfpEnd                   DateTime?
   formats                  EventFormat[]
   formatsRequired          Boolean         @default(false)
+  formatsAllowMultiple     Boolean         @default(false)
   categories               EventCategory[]
   categoriesRequired       Boolean         @default(false)
+  categoriesAllowMultiple  Boolean         @default(false)
   maxProposals             Int?
   creatorId                String
   creator                  User            @relation(fields: [creatorId], references: [id])

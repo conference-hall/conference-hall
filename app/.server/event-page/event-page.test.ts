@@ -41,6 +41,7 @@ describe('EventPage', () => {
         hasTracks: true,
         formats: [{ id: format.id, name: format.name, description: format.description }],
         formatsRequired: false,
+        formatsAllowMultiple: false,
         categories: [
           {
             id: category.id,
@@ -49,6 +50,7 @@ describe('EventPage', () => {
           },
         ],
         categoriesRequired: false,
+        categoriesAllowMultiple: false,
       });
     });
 

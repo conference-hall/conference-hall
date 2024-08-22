@@ -47,12 +47,14 @@ export class EventPage {
         description: f.description,
       })),
       formatsRequired: event.formatsRequired,
+      formatsAllowMultiple: event.formatsAllowMultiple,
       categories: event.categories.map((c) => ({
         id: c.id,
         name: c.name,
         description: c.description,
       })),
       categoriesRequired: event.categoriesRequired,
+      categoriesAllowMultiple: event.categoriesAllowMultiple,
     };
   }
 }
