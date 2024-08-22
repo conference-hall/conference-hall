@@ -21,7 +21,12 @@ export const seed = async () => {
 
   // Conference
   const event1 = await eventFactory({
-    attributes: { name: 'Devfest Nantes', slug: 'devfest-nantes' },
+    attributes: {
+      name: 'Devfest Nantes',
+      slug: 'devfest-nantes',
+      formatsAllowMultiple: true,
+      categoriesAllowMultiple: true,
+    },
     traits: ['conference-cfp-open', 'withSurvey'],
   });
   await eventFormatFactory({ event: event1, attributes: { name: 'Quickie' } });
@@ -29,7 +34,14 @@ export const seed = async () => {
 
   // Without survey
   const event2 = await eventFactory({
-    attributes: { name: 'Devfest Nantes', slug: 'without-survey', formatsRequired: true, categoriesRequired: true },
+    attributes: {
+      name: 'Devfest Nantes',
+      slug: 'without-survey',
+      formatsRequired: true,
+      categoriesRequired: true,
+      formatsAllowMultiple: true,
+      categoriesAllowMultiple: true,
+    },
     traits: ['conference-cfp-open'],
   });
   await eventFormatFactory({ event: event2, attributes: { name: 'Quickie' } });

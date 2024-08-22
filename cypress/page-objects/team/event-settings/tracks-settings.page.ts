@@ -10,12 +10,12 @@ class TracksSettings extends BasePage {
     cy.findByRole('heading', { name: 'Formats' }).should('exist');
   }
 
-  formatsRequired() {
-    cy.findByLabelText('Format selection required').click();
+  formatsRequired(checked?: boolean) {
+    return cy.findByRole('switch', { name: 'Format selection required', checked });
   }
 
-  formatsAllowMultiple() {
-    cy.findByLabelText('Allow multiple formats selection').click();
+  formatsAllowMultiple(checked?: boolean) {
+    return cy.findByRole('switch', { name: 'Allow multiple formats', checked });
   }
 
   newFormat() {
@@ -26,12 +26,12 @@ class TracksSettings extends BasePage {
     return cy.findByRole('dialog', { name: 'Format track' });
   }
 
-  categoriesRequired() {
-    cy.findByLabelText('Category selection required').click();
+  categoriesRequired(checked?: true) {
+    return cy.findByRole('switch', { name: 'Category selection required', checked });
   }
 
-  categoriesAllowMultiple() {
-    cy.findByLabelText('Allow multiple categories selection').click();
+  categoriesAllowMultiple(checked?: true) {
+    return cy.findByRole('switch', { name: 'Allow multiple categories', checked });
   }
 
   newCategory() {
