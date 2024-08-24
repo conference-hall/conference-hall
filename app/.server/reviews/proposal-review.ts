@@ -102,10 +102,10 @@ export class ProposalReview {
     if (!event.reviewEnabled) throw new ReviewDisabledError();
 
     await db.$transaction(async (trx) => {
-      await db.review.upsert({
+      await trx.review.upsert({
         where: { userId_proposalId: { userId: this.userId, proposalId: this.proposalId } },
-        update: data,
         create: { userId: this.userId, proposalId: this.proposalId, ...data },
+        update: data,
       });
 
       const reviews = await trx.review.findMany({
