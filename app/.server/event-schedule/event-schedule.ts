@@ -125,7 +125,8 @@ export class EventSchedule {
     const schedule = await db.schedule.findFirst({ where: { eventId: event.id } });
     if (!schedule) throw new NotFoundError('Schedule not found');
 
-    await db.scheduleSession.delete({ where: { id: sessionId, scheduleId: schedule.id } });
+    if (!sessionId) return; // sessionId checked and deleteMany to avoid "Record to delete does not exist"
+    await db.scheduleSession.deleteMany({ where: { id: sessionId, scheduleId: schedule.id } });
   }
 
   async saveTrack(data: ScheduleTrackSaveData) {
