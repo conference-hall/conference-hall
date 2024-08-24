@@ -31,13 +31,9 @@ export class SpeakerAnswers {
     if (!event) throw new EventNotFoundError();
 
     await db.survey.upsert({
-      where: { userId_eventId: { eventId: event.id, userId: this.userId } },
+      where: { userId_eventId: { userId: this.userId, eventId: event.id } },
+      create: { eventId: event.id, userId: this.userId, answers: answers },
       update: { answers },
-      create: {
-        event: { connect: { id: event.id } },
-        user: { connect: { id: this.userId } },
-        answers: answers,
-      },
     });
   }
 }
