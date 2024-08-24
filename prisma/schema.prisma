@@ -280,6 +280,7 @@ model Review {
   migrationId String?
 
   @@unique([userId, proposalId])
+  @@index([proposalId, feeling])
   @@map("reviews")
 }
 
