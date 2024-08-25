@@ -26,6 +26,7 @@ export class EventPage {
       name: event.name,
       teamName: event.team.name,
       description: event.description,
+      onlineEvent: event.onlineEvent,
       location: event.location,
       timezone: event.timezone,
       conferenceStart: event.conferenceStart?.toISOString(),

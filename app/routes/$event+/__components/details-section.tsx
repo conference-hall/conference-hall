@@ -17,6 +17,7 @@ type Props = {
   codeOfConductUrl: string | null;
   conferenceStart?: string;
   conferenceEnd?: string;
+  onlineEvent: boolean;
   location: string | null;
   type: 'CONFERENCE' | 'MEETUP';
   timezone: string;
@@ -30,6 +31,7 @@ export function DetailsSection({
   codeOfConductUrl,
   conferenceStart,
   conferenceEnd,
+  onlineEvent,
   location,
   type,
   timezone,
@@ -48,11 +50,17 @@ export function DetailsSection({
           </IconLabel>
         ) : null}
 
-        {location && (
+        {location ? (
           <IconLabel icon={MapPinIcon} gap="l">
             {location}
           </IconLabel>
-        )}
+        ) : null}
+
+        {onlineEvent ? (
+          <IconLabel icon={MapPinIcon} gap="l">
+            The event is online
+          </IconLabel>
+        ) : null}
       </div>
 
       <Divider />

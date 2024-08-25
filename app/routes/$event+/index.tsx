@@ -29,6 +29,7 @@ export default function EventRoute() {
         codeOfConductUrl={event.codeOfConductUrl}
         conferenceStart={event.conferenceStart}
         conferenceEnd={event.conferenceEnd}
+        onlineEvent={event.onlineEvent}
         location={event.location}
         type={event.type}
         timezone={event.timezone}
