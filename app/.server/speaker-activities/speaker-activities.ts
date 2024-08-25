@@ -10,11 +10,11 @@ export class SpeakerActivities {
     return new SpeakerActivities(userId);
   }
 
-  async list(page = 1) {
+  async list(page = 1, pageSize = EVENTS_BY_PAGE) {
     const eventSubmittedIds = await lastEventsSubmitted(this.userId);
 
     const totalEvents = eventSubmittedIds.length;
-    const takeEvents = Math.min(page * EVENTS_BY_PAGE, totalEvents);
+    const takeEvents = Math.min(page * pageSize, totalEvents);
     const eventIds = eventSubmittedIds.slice(0, takeEvents);
 
     const events = await db.event.findMany({
@@ -23,7 +23,7 @@ export class SpeakerActivities {
         team: true,
         proposals: {
           where: { speakers: { some: { id: this.userId } } },
-          include: { speakers: true },
+          include: { speakers: true, talk: true },
         },
       },
     });
@@ -38,16 +38,18 @@ export class SpeakerActivities {
           teamName: event.team.name,
           logoUrl: event.logoUrl,
           cfpState: event.cfpState,
-          submissions: event.proposals.map((proposal) => ({
-            id: proposal.id,
-            title: proposal.title,
-            status: proposal.getStatusForSpeaker(event.isCfpOpen),
-            speakers: proposal.speakers.map((speaker) => ({
-              id: speaker.id,
-              name: speaker.name,
-              picture: speaker.picture,
+          submissions: event.proposals
+            .filter((proposal) => proposal.talk && !proposal.talk.archived)
+            .map((proposal) => ({
+              id: proposal.id,
+              title: proposal.title,
+              status: proposal.getStatusForSpeaker(event.isCfpOpen),
+              speakers: proposal.speakers.map((speaker) => ({
+                id: speaker.id,
+                name: speaker.name,
+                picture: speaker.picture,
+              })),
             })),
-          })),
         };
       }),
       hasNextPage: takeEvents < totalEvents,
