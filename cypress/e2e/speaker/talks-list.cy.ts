@@ -27,7 +27,18 @@ describe('Speaker talks page', () => {
     talks.displayArchivedTalks();
     talks.list().should('have.length', 1);
     talks.talk('Archived talk').should('exist');
-    cy.assertUrl('/speaker/talks?archived=true');
+    cy.assertUrl('/speaker/talks?filter=archived');
+  });
+
+  it('displays all talks', () => {
+    cy.login();
+    talks.visit();
+    talks.displayAllTalks();
+    talks.list().should('have.length', 3);
+    talks.talk('Awesome talk').should('exist');
+    talks.talk('Best talk ever').should('exist');
+    talks.talk('Archived talk').should('exist');
+    cy.assertUrl('/speaker/talks?filter=all');
   });
 
   it('can create a new talk from the list', () => {

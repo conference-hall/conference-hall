@@ -22,6 +22,10 @@ class SpeakerTalksPage extends BasePage {
     return cy.findByRole('link', { name: 'Archived' }).click();
   }
 
+  displayAllTalks() {
+    return cy.findByRole('link', { name: 'All' }).click();
+  }
+
   createNewTalk() {
     return cy.findByRole('link', { name: 'New talk' });
   }
