@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+export const TalksListFilterSchema = z.enum(['all', 'archived', 'active']).optional();
+
 export const TalkSaveSchema = z.object({
   title: z.string().trim().min(1),
   abstract: z.string().trim().min(1),
@@ -8,4 +10,5 @@ export const TalkSaveSchema = z.object({
   languages: z.array(z.string()),
 });
 
+export type TalksListFilter = z.infer<typeof TalksListFilterSchema>;
 export type TalkSaveData = z.infer<typeof TalkSaveSchema>;

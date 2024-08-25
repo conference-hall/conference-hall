@@ -50,7 +50,7 @@ describe('TalksLibrary', () => {
       expect(speakerIds).toEqual([owner.id, cospeaker.id].sort());
     });
 
-    it('returns archived talks when archived option is set', async () => {
+    it('returns archived talks when "archived" filter is set', async () => {
       const speaker = await userFactory();
       await talkFactory({ speakers: [speaker] });
       const talk = await talkFactory({
@@ -58,10 +58,25 @@ describe('TalksLibrary', () => {
         attributes: { archived: true },
       });
 
-      const result = await TalksLibrary.of(speaker.id).list({ archived: true });
+      const result = await TalksLibrary.of(speaker.id).list('archived');
 
       expect(result.length).toBe(1);
       expect(result[0].id).toBe(talk.id);
+    });
+
+    it('returns active and archived talks when "all" filter is set', async () => {
+      const speaker = await userFactory();
+      const talk = await talkFactory({ speakers: [speaker] });
+      const talkArchived = await talkFactory({
+        speakers: [speaker],
+        attributes: { archived: true },
+      });
+
+      const result = await TalksLibrary.of(speaker.id).list('all');
+
+      expect(result.length).toBe(2);
+      expect(result[0].id).toBe(talkArchived.id);
+      expect(result[1].id).toBe(talk.id);
     });
   });
 
