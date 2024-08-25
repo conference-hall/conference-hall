@@ -26,6 +26,7 @@ async function seed() {
       name: 'Devfest Nantes',
       slug: 'devfest-nantes',
       maxProposals: 3,
+      migrationId: '123',
     },
   });
   const format1 = await eventFormatFactory({ event });
