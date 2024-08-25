@@ -1,8 +1,10 @@
 import { Form } from '@remix-run/react';
+import { useState } from 'react';
 
 import { DateRangeInput } from '~/design-system/forms/date-range-input.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { MarkdownTextArea } from '~/design-system/forms/markdown-textarea.tsx';
+import { ToggleGroup } from '~/design-system/forms/toggles.tsx';
 import type { SubmissionErrors } from '~/types/errors.types.ts';
 import type { EventType } from '~/types/events.types.ts';
 
@@ -11,6 +13,7 @@ type Props = {
   timezone: string;
   conferenceStart: string | undefined;
   conferenceEnd: string | undefined;
+  onlineEvent: boolean;
   location: string | null;
   description: string | null;
   websiteUrl: string | null;
@@ -24,6 +27,7 @@ export function EventDetailsForm({
   timezone,
   conferenceStart,
   conferenceEnd,
+  onlineEvent,
   location,
   description,
   websiteUrl,
@@ -31,6 +35,8 @@ export function EventDetailsForm({
   compact,
   errors,
 }: Props) {
+  const [onlineChecked, setOnlineChanged] = useState<boolean>(onlineEvent);
+
   return (
     <Form id="details-form" method="POST" className="space-y-4 lg:space-y-6">
       {type === 'CONFERENCE' && (
@@ -42,13 +48,24 @@ export function EventDetailsForm({
         />
       )}
 
-      <Input
-        name="location"
-        label="Venue address or city"
-        autoComplete="off"
-        defaultValue={location || ''}
-        error={errors?.location}
+      <ToggleGroup
+        name="onlineEvent"
+        label="Is online event?"
+        description="Indicate whether the event will be held online."
+        value={onlineChecked}
+        onChange={setOnlineChanged}
+        reverse
       />
+
+      {!onlineChecked ? (
+        <Input
+          name="location"
+          label="Venue location (address, city, country)"
+          autoComplete="off"
+          defaultValue={location || ''}
+          error={errors?.location}
+        />
+      ) : null}
 
       <MarkdownTextArea
         name="description"
