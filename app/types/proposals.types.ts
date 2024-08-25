@@ -10,4 +10,4 @@ export type GlobalReview = { negatives: number; positives: number; average: numb
 
 export type UserReview = { feeling: ReviewFeeling | null; note: number | null; comment?: string | null };
 
-export type TalkLanguages = Array<string>;
+export type Languages = Array<string>;

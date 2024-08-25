@@ -1,6 +1,6 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import { ArrowDownTrayIcon } from '@heroicons/react/20/solid';
-import { CalendarDaysIcon, CodeBracketIcon, Squares2X2Icon } from '@heroicons/react/24/outline';
+import { CalendarDaysIcon, CodeBracketIcon, Squares2X2Icon, TableCellsIcon } from '@heroicons/react/24/outline';
 import { Form, useFetchers, useParams, useSearchParams } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
 import { Fragment } from 'react';
@@ -42,6 +42,13 @@ export function ExportMenu() {
               href={`/team/${params.team}/${params.event}/export/json?${searchParams.toString()}`}
             >
               As JSON
+            </ExportMenuLink>
+
+            <ExportMenuLink
+              icon={TableCellsIcon}
+              href={`/team/${params.team}/${params.event}/export/csv?${searchParams.toString()}`}
+            >
+              As CSV
             </ExportMenuLink>
 
             <ExportMenuLink

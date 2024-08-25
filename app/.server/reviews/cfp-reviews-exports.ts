@@ -28,6 +28,7 @@ export class CfpReviewsExports {
 
     return proposals.map((proposal) => {
       const reviews = new ReviewDetails(proposal.reviews);
+
       return {
         id: proposal.id,
         title: proposal.title,
