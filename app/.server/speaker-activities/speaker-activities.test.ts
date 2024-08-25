@@ -6,20 +6,33 @@ import { userFactory } from 'tests/factories/users.ts';
 
 import { SpeakerProposalStatus } from '~/types/speaker.types.ts';
 
+import type { Event, Proposal, Team, User } from '@prisma/client';
 import { SpeakerActivities } from './speaker-activities.ts';
 
 describe('SpeakerActivities', () => {
   describe('list', () => {
-    it('returns speaker activity with proposal submitted ordered by update date', async () => {
-      const team = await teamFactory();
-      const event = await eventFactory({ traits: ['conference-cfp-open'], team });
-      const event2 = await eventFactory({ team });
+    let team: Team;
+    let speaker: User;
+    let event: Event;
+    let event2: Event;
+    let proposal: Proposal;
+    let proposalEvent2: Proposal;
 
-      const speaker = await userFactory();
+    beforeEach(async () => {
+      team = await teamFactory();
+      event = await eventFactory({ traits: ['conference-cfp-open'], team });
+      event2 = await eventFactory({ team });
+
+      speaker = await userFactory();
       const talk = await talkFactory({ speakers: [speaker] });
-      const proposal = await proposalFactory({ event, talk });
-      const proposal2 = await proposalFactory({ event: event2, talk: talk });
+      const archivedTalk = await talkFactory({ speakers: [speaker], traits: ['archived'] });
 
+      await proposalFactory({ event, talk: archivedTalk });
+      proposal = await proposalFactory({ event, talk });
+      proposalEvent2 = await proposalFactory({ event: event2, talk: talk });
+    });
+
+    it('returns speaker activity with proposal submitted ordered by update date', async () => {
       const result = await SpeakerActivities.for(speaker.id).list();
 
       expect(result).toEqual({
@@ -32,8 +45,8 @@ describe('SpeakerActivities', () => {
             cfpState: 'CLOSED',
             submissions: [
               {
-                id: proposal2.id,
-                title: proposal2.title,
+                id: proposalEvent2.id,
+                title: proposalEvent2.title,
                 status: SpeakerProposalStatus.DeliberationPending,
                 speakers: [{ id: speaker.id, name: speaker.name, picture: speaker.picture }],
               },
@@ -60,6 +73,22 @@ describe('SpeakerActivities', () => {
       });
     });
 
-    it.todo('returns the second page');
+    it('returns the next events page', async () => {
+      const pageSize = 1;
+
+      const resultPage1 = await SpeakerActivities.for(speaker.id).list(1, pageSize);
+
+      expect(resultPage1.hasNextPage).toBe(true);
+      expect(resultPage1.nextPage).toBe(2);
+      expect(resultPage1.activities.length).toBe(1);
+      expect(resultPage1.activities[0].slug).toBe(event2.slug);
+
+      const resultPage2 = await SpeakerActivities.for(speaker.id).list(2, pageSize);
+
+      expect(resultPage2.hasNextPage).toBe(false);
+      expect(resultPage2.activities.length).toBe(2);
+      expect(resultPage2.activities[0].slug).toBe(event2.slug);
+      expect(resultPage2.activities[1].slug).toBe(event.slug);
+    });
   });
 });

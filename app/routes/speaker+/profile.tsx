@@ -20,13 +20,13 @@ import { toast } from '~/libs/toasts/toast.server.ts';
 import { AdditionalInfoForm } from './__components/additional-info-form.tsx';
 import { PersonalInfoForm } from './__components/personal-info-form.tsx';
 import { SpeakerDetailsForm } from './__components/speaker-details-form.tsx';
+import { useProfile } from './__components/use-profile.ts';
 
 export const meta = mergeMeta(() => [{ title: 'My profile | Conference Hall' }]);
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const userId = await requireSession(request);
-  const profile = await SpeakerProfile.for(userId).get();
-  return json(profile);
+  await requireSession(request);
+  return null;
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -65,7 +65,7 @@ const MENU_ITEMS = [
 ];
 
 export default function ProfileRoute() {
-  const profile = useLoaderData<typeof loader>();
+  const { profile } = useProfile();
   const errors = useActionData<typeof action>();
 
   return (

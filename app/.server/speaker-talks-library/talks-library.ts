@@ -1,9 +1,7 @@
 import { db } from 'prisma/db.server.ts';
 
 import { SpeakerTalk } from './speaker-talk.ts';
-import type { TalkSaveData } from './talks-library.types.ts';
-
-type TalksListOptions = { archived?: boolean };
+import type { TalkSaveData, TalksListFilter } from './talks-library.types.ts';
 
 export class TalksLibrary {
   constructor(private speakerId: string) {}
@@ -16,11 +14,11 @@ export class TalksLibrary {
     return new SpeakerTalk(this.speakerId, talkId);
   }
 
-  async list(options: TalksListOptions = { archived: false }) {
+  async list(filter: TalksListFilter = 'active') {
     const talks = await db.talk.findMany({
       where: {
         speakers: { some: { id: this.speakerId } },
-        archived: Boolean(options.archived),
+        archived: filter === 'active' ? false : filter === 'archived' ? true : undefined,
       },
       include: { speakers: true },
       orderBy: { updatedAt: 'desc' },
