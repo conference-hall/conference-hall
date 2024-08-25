@@ -54,7 +54,7 @@ export default function SpeakerRoute() {
 
       <SpeakerTabs className="sm:ml-40" />
 
-      <Outlet context={{ user }} />
+      <Outlet context={{ user, profile }} />
 
       <Footer />
     </>
