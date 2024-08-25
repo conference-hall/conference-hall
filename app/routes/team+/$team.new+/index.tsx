@@ -34,7 +34,7 @@ export default function NewEventTypeRoute() {
           <ButtonLink to={`/team/${team.slug}`} type="button" variant="secondary">
             Cancel
           </ButtonLink>
-          <ButtonLink to={`/team/${team.slug}/new/type/${type}`} type="button" iconRight={ArrowRightIcon}>
+          <ButtonLink to={`/team/${team.slug}/new/type/${type}`} type="button" replace iconRight={ArrowRightIcon}>
             Continue
           </ButtonLink>
         </Card.Actions>

@@ -47,12 +47,13 @@ type ToggleGroupProps = {
   label: string;
   value: boolean;
   description?: string;
+  reverse?: boolean;
   onChange?: (checked: boolean) => void;
 };
 
-export function ToggleGroup({ name, label, value, description, onChange }: ToggleGroupProps) {
+export function ToggleGroup({ name, label, value, description, reverse, onChange }: ToggleGroupProps) {
   return (
-    <Field className="flex items-center">
+    <Field className={cx('flex items-center', { 'flex-row-reverse gap-4': reverse })}>
       <span className="flex flex-grow flex-col mr-4">
         <Label className="text-sm font-medium leading-6 text-gray-900" passive>
           {label}

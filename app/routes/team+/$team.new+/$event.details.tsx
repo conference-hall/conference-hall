@@ -64,6 +64,7 @@ export default function NewEventDetailsRoute() {
             timezone={event.timezone}
             conferenceStart={event.conferenceStart}
             conferenceEnd={event.conferenceEnd}
+            onlineEvent={event.onlineEvent}
             location={event.location}
             description={event.description}
             websiteUrl={event.websiteUrl}

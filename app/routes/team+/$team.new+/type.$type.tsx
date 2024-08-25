@@ -54,7 +54,7 @@ export default function NewEventRoute() {
 
       <Card>
         <Card.Content>
-          <Form id="create-event-form" method="POST" className="flex grow flex-col gap-4 lg:gap-6">
+          <Form id="create-event-form" method="POST" replace className="flex grow flex-col gap-4 lg:gap-6">
             <EventForm errors={errors} />
             <input name="type" type="hidden" value={type} />
           </Form>

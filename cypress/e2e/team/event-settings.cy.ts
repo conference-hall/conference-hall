@@ -90,18 +90,24 @@ describe('Event settings', () => {
 
         cy.assertInputText('Start date', '2022-12-12');
         cy.assertInputText('End date', '2022-12-13');
-        cy.assertInputText('Venue address or city', 'Nantes, France');
+        cy.assertInputText('Venue location (address, city, country)', 'Nantes, France');
         cy.assertInputText('Description', 'Hello world!');
         cy.assertInputText('Website URL', 'https://website.com');
         cy.assertInputText('Contact email', 'contact@email.com');
+        general.switchOnlineEvent(false).should('exist');
 
         cy.reload();
         cy.assertInputText('Start date', '2022-12-12');
         cy.assertInputText('End date', '2022-12-13');
-        cy.assertInputText('Venue address or city', 'Nantes, France');
+        cy.assertInputText('Venue location (address, city, country)', 'Nantes, France');
         cy.assertInputText('Description', 'Hello world!');
         cy.assertInputText('Website URL', 'https://website.com');
         cy.assertInputText('Contact email', 'contact@email.com');
+
+        general.switchOnlineEvent(false).click();
+        general.saveUpdateEventDetails();
+        cy.reload();
+        general.switchOnlineEvent(true).should('exist');
       });
 
       it('archive an event', () => {

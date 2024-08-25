@@ -35,11 +35,19 @@ class GeneralSettings extends BasePage {
   saveDetailsForm(data: DetailFormType) {
     if (data.startDate) cy.typeOn('Start date', data.startDate);
     if (data.endDate) cy.typeOn('End date', data.endDate);
-    if (data.location) cy.typeOn('Venue address or city', data.location);
+    if (data.location) cy.typeOn('Venue location (address, city, country)', data.location);
     if (data.description) cy.typeOn('Description', data.description);
     if (data.websiteUrl) cy.typeOn('Website URL', data.websiteUrl);
     if (data.contactEmail) cy.typeOn('Contact email', data.contactEmail);
+    this.saveUpdateEventDetails();
+  }
+
+  saveUpdateEventDetails() {
     cy.findByRole('button', { name: 'Update event details' }).click();
+  }
+
+  switchOnlineEvent(checked?: boolean) {
+    return cy.findByRole('switch', { name: 'Is online event?', checked });
   }
 
   archive() {

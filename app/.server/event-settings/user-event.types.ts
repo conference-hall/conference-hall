@@ -14,6 +14,7 @@ export const EventDetailsSettingsSchema = z
   .object({
     timezone: z.string(),
     location: z.string().trim().nullable().default(null),
+    onlineEvent: z.boolean().default(false),
     description: z.string().trim().min(1).nullable().default(null),
     conferenceStart: z.string().nullable().default(null),
     conferenceEnd: z.string().nullable().default(null),

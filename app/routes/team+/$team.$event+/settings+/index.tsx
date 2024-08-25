@@ -95,6 +95,7 @@ export default function EventGeneralSettingsRoute() {
             timezone={event.timezone}
             conferenceStart={event.conferenceStart}
             conferenceEnd={event.conferenceEnd}
+            onlineEvent={event.onlineEvent}
             location={event.location}
             description={event.description}
             websiteUrl={event.websiteUrl}

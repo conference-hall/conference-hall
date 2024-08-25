@@ -78,6 +78,7 @@ describe('UserEvent', () => {
         slug: event.slug,
         type: event.type,
         location: event.location,
+        onlineEvent: event.onlineEvent,
         timezone: event.timezone,
         conferenceStart: event.conferenceStart?.toISOString(),
         conferenceEnd: event.conferenceEnd?.toISOString(),
