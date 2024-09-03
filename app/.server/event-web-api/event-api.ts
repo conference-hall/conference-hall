@@ -21,15 +21,22 @@ export class EventApi {
 
     const search = new ProposalSearchBuilder(this.eventSlug, 'no-user', filters);
 
-    const proposals = await search.proposals({ reviews: false });
+    const proposals = await search.proposals();
 
     return {
       name: event.name,
+      startDate: event.conferenceStart,
+      endDate: event.conferenceEnd,
       proposals: proposals.map((proposal) => {
         return {
+          id: proposal.id,
           title: proposal.title,
           abstract: proposal.abstract,
+          deliberationStatus: proposal.deliberationStatus,
+          confirmationStatus: proposal.confirmationStatus,
+          publicationStatus: proposal.publicationStatus,
           level: proposal.level,
+          references: proposal.references,
           formats: proposal.formats.map((f) => f.name),
           categories: proposal.categories.map((c) => c.name),
           languages: proposal.languages as string[],
@@ -37,9 +44,13 @@ export class EventApi {
             name: speaker.name,
             bio: speaker.bio,
             company: speaker.company,
+            references: speaker.references,
             picture: speaker.picture,
+            location: speaker.location,
+            email: speaker.email,
             socials: speaker.socials as SocialLinks,
           })),
+          reviews: proposal.reviews,
         };
       }),
     };
