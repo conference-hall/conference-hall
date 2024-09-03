@@ -8,13 +8,14 @@ import { userFactory } from 'tests/factories/users.ts';
 import { ApiKeyInvalidError, EventNotFoundError } from '~/libs/errors.server.ts';
 
 import { eventProposalTagFactory } from 'tests/factories/proposal-tags.ts';
+import { reviewFactory } from 'tests/factories/reviews.ts';
 import { EventApi } from './event-api.ts';
 
 describe('#EventApi', () => {
   describe('#proposals', () => {
     it('return proposals from api', async () => {
       const speaker = await userFactory();
-      const event = await eventFactory({ attributes: { apiKey: '123' } });
+      const event = await eventFactory({ attributes: { apiKey: '123' }, traits: ['conference'] });
       const format = await eventFormatFactory({ event });
       const category = await eventCategoryFactory({ event });
       const tag = await eventProposalTagFactory({ event });
@@ -25,31 +26,47 @@ describe('#EventApi', () => {
         categories: [category],
         tags: [tag],
         talk: await talkFactory({ speakers: [speaker], attributes: { level: 'BEGINNER', languages: ['fr'] } }),
+        traits: ['confirmed'],
       });
+      const review = await reviewFactory({ proposal, user: speaker });
 
       const eventApi = new EventApi(event.slug, '123');
       const result = await eventApi.proposals({});
 
       expect(result).toEqual({
+        startDate: event.conferenceStart,
+        endDate: event.conferenceEnd,
         name: event.name,
         proposals: [
           {
             title: proposal.title,
             abstract: proposal.abstract,
             level: 'BEGINNER',
+            references: proposal.references,
             formats: [format.name],
+            id: proposal.id,
             categories: [category.name],
             tags: [tag.name],
+            deliberationStatus: 'ACCEPTED',
+            publicationStatus: 'PUBLISHED',
+            confirmationStatus: 'CONFIRMED',
             languages: ['fr'],
             speakers: [
               {
                 name: speaker.name,
                 bio: speaker.bio,
                 company: speaker.company,
+                references: speaker.references,
+                location: speaker.location,
                 picture: speaker.picture,
                 socials: speaker.socials,
               },
             ],
+            review: {
+              average: review.note,
+              positives: 0,
+              negatives: 0,
+            },
           },
         ],
       });
