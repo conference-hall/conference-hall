@@ -4,6 +4,6 @@
 
 @layer base {
   :root {
-    --font-sans: 'Inter', 'Inter Fallback';
+    --font-sans: "Inter", "Inter Fallback";
   }
 }
