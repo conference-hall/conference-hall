@@ -6,6 +6,12 @@ import { flatRoutes } from 'remix-flat-routes';
 import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
+declare module '@remix-run/server-runtime' {
+  interface Future {
+    unstable_singleFetch: true;
+  }
+}
+
 const withSourcemap = Boolean(process.env.SENTRY_AUTH_TOKEN);
 
 export default defineConfig({
@@ -14,7 +20,6 @@ export default defineConfig({
     manifest: true,
     sourcemap: withSourcemap ? 'hidden' : false,
   },
-  optimizeDeps: { include: ['./app/routes/**/*'] },
   plugins: [
     expressDevServer(),
     mdx(),
@@ -30,8 +35,9 @@ export default defineConfig({
         v3_fetcherPersist: true,
         v3_relativeSplatPath: true,
         v3_throwAbortReason: true,
-        unstable_singleFetch: true,
         unstable_lazyRouteDiscovery: true,
+        unstable_optimizeDeps: true,
+        unstable_singleFetch: true,
       },
     }),
     tsconfigPaths(),
@@ -50,7 +56,6 @@ export default defineConfig({
     host: '127.0.0.1',
     port: Number(process.env.PORT) || 3000,
     strictPort: true,
-    warmup: { clientFiles: ['./app/entry.client.tsx', './app/root.tsx', './app/routes/**/*'] },
   },
   clearScreen: false,
 });
