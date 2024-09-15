@@ -12,16 +12,16 @@ import { CfpReviewsSearch } from './cfp-reviews-search.ts';
 
 describe('CfpReviewsSearch', () => {
   let owner: User;
-  let reviewer: User;
+  let member: User;
   let speaker: User;
   let team: Team;
   let event: Event;
 
   beforeEach(async () => {
     owner = await userFactory({ traits: ['clark-kent'] });
-    reviewer = await userFactory({ traits: ['bruce-wayne'] });
+    member = await userFactory({ traits: ['bruce-wayne'] });
     speaker = await userFactory({ traits: ['peter-parker'] });
-    team = await teamFactory({ owners: [owner], reviewers: [reviewer] });
+    team = await teamFactory({ owners: [owner], members: [member] });
     event = await eventFactory({ team });
   });
 
@@ -73,7 +73,6 @@ describe('CfpReviewsSearch', () => {
       const proposals = await CfpReviewsSearch.for(owner.id, team.slug, event.slug).search({});
 
       expect(proposals.results).toEqual([]);
-
       expect(proposals.filters).toEqual({});
       expect(proposals.statistics).toEqual({ reviewed: 0, total: 0 });
       expect(proposals.pagination).toEqual({ current: 1, total: 0 });
@@ -83,7 +82,9 @@ describe('CfpReviewsSearch', () => {
       const user = await userFactory();
       const event = await eventFactory();
       await proposalFactory({ event, talk: await talkFactory({ speakers: [user] }) });
+
       const reviewsSearch = CfpReviewsSearch.for(user.id, team.slug, event.slug);
+
       await expect(reviewsSearch.search({})).rejects.toThrowError(ForbiddenOperationError);
     });
   });
@@ -114,7 +115,9 @@ describe('CfpReviewsSearch', () => {
       const user = await userFactory();
       const event = await eventFactory();
       await proposalFactory({ event, talk: await talkFactory({ speakers: [user] }) });
+
       const reviewsSearch = CfpReviewsSearch.for(user.id, team.slug, event.slug);
+
       await expect(reviewsSearch.autocomplete({})).rejects.toThrowError(ForbiddenOperationError);
     });
   });
@@ -158,24 +161,10 @@ describe('CfpReviewsSearch', () => {
       ]);
     });
 
-    it('does not export speakers when display speakers setting is false', async () => {
-      await db.event.update({ data: { displayProposalsSpeakers: false }, where: { id: event.id } });
+    it('throws an error if user is not owner', async () => {
+      const reviewsSearch = await CfpReviewsSearch.for(member.id, team.slug, event.slug);
 
-      await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-
-      const result = await CfpReviewsSearch.for(owner.id, team.slug, event.slug).forJsonExport({});
-
-      expect(result[0].speakers).toBeUndefined();
-    });
-
-    it('does not export reviews when display reviews setting is false', async () => {
-      await db.event.update({ data: { displayProposalsReviews: false }, where: { id: event.id } });
-
-      await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-
-      const result = await CfpReviewsSearch.for(owner.id, team.slug, event.slug).forJsonExport({});
-
-      expect(result[0].reviews).toBeUndefined();
+      await expect(reviewsSearch.forJsonExport({})).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 
@@ -203,24 +192,10 @@ describe('CfpReviewsSearch', () => {
       ]);
     });
 
-    it('does not export speakers when display speakers setting is false', async () => {
-      await db.event.update({ data: { displayProposalsSpeakers: false }, where: { id: event.id } });
+    it('throws an error if user is not owner', async () => {
+      const reviewsSearch = await CfpReviewsSearch.for(member.id, team.slug, event.slug);
 
-      await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-
-      const result = await CfpReviewsSearch.for(owner.id, team.slug, event.slug).forCardsExport({});
-
-      expect(result[0].speakers).toBeUndefined();
-    });
-
-    it('does not export reviews when display reviews setting is false', async () => {
-      await db.event.update({ data: { displayProposalsReviews: false }, where: { id: event.id } });
-
-      await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-
-      const result = await CfpReviewsSearch.for(owner.id, team.slug, event.slug).forCardsExport({});
-
-      expect(result[0].reviews).toBeUndefined();
+      await expect(reviewsSearch.forCardsExport({})).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 });
