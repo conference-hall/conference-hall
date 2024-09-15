@@ -79,11 +79,11 @@ export class CfpReviewsSearch {
     const event = await this.userEvent.needsPermission('canExportEventProposals');
 
     const search = new ProposalSearchBuilder(event.slug, this.userId, filters, {
-      withSpeakers: event.displayProposalsSpeakers,
+      withSpeakers: true,
       withReviews: true,
     });
 
-    const proposals = await search.proposals({ reviews: event.displayProposalsReviews });
+    const proposals = await search.proposals({ reviews: true });
 
     return proposals.map((proposal) => {
       const reviews = new ReviewDetails(proposal.reviews);
@@ -98,19 +98,17 @@ export class CfpReviewsSearch {
         formats: proposal.formats,
         categories: proposal.categories,
         languages: proposal.languages,
-        speakers: event.displayProposalsSpeakers
-          ? proposal.speakers.map((speaker) => ({
-              name: speaker.name,
-              bio: speaker.bio,
-              company: speaker.company,
-              references: speaker.references,
-              picture: speaker.picture,
-              location: speaker.location,
-              email: speaker.email,
-              socials: speaker.socials as SocialLinks,
-            }))
-          : undefined,
-        reviews: event.displayProposalsReviews ? reviews.summary() : undefined,
+        speakers: proposal.speakers.map((speaker) => ({
+          name: speaker.name,
+          bio: speaker.bio,
+          company: speaker.company,
+          references: speaker.references,
+          picture: speaker.picture,
+          location: speaker.location,
+          email: speaker.email,
+          socials: speaker.socials as SocialLinks,
+        })),
+        reviews: reviews.summary(),
       };
     });
   }
@@ -119,11 +117,11 @@ export class CfpReviewsSearch {
     const event = await this.userEvent.needsPermission('canExportEventProposals');
 
     const search = new ProposalSearchBuilder(event.slug, this.userId, filters, {
-      withSpeakers: event.displayProposalsSpeakers,
+      withSpeakers: true,
       withReviews: true,
     });
 
-    const proposals = await search.proposals({ reviews: event.displayProposalsReviews });
+    const proposals = await search.proposals({ reviews: true });
 
     return proposals.map((proposal) => {
       const reviews = new ReviewDetails(proposal.reviews);
@@ -135,8 +133,8 @@ export class CfpReviewsSearch {
         formats: proposal.formats,
         categories: proposal.categories,
         languages: proposal.languages as string[],
-        speakers: event.displayProposalsSpeakers ? proposal.speakers.map((speaker) => speaker.name) : undefined,
-        reviews: event.displayProposalsReviews ? reviews.summary() : undefined,
+        speakers: proposal.speakers.map((speaker) => speaker.name),
+        reviews: reviews.summary(),
       };
     });
   }
