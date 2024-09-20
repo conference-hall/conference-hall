@@ -9,8 +9,6 @@ export function useDisplayTimes(
   timezone: string,
 ) {
   const currentDayDate = toZonedTime(currentDay, timezone);
-
-  // @ts-expect-error
   const fetcher = useFetcher();
 
   // optimistic update

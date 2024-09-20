@@ -8,9 +8,6 @@ node_modules
 /build
 /public/build
 
-# prisma
-/prisma/factories
-
 # firebase
 .firebaserc
 
@@ -20,8 +17,8 @@ node_modules
 # tests
 test-results
 
-# ignore ts files
-*.ignore.ts
+# typescript
+tsconfig.tsbuildinfo
 
 # vite
 vite.config.ts.timestamp*.mjs
