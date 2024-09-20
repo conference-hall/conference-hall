@@ -1,6 +1,9 @@
 import { endOfDay, parse, startOfDay } from 'date-fns';
 import { fromZonedTime, toZonedTime } from 'date-fns-tz';
 
+// TODO: Add missing tests
+// TODO: Move all usages of `date-fns-tz` in this file
+
 // Get user timezone
 export function getUserTimezone() {
   return Intl.DateTimeFormat().resolvedOptions().timeZone;
