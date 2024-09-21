@@ -1,70 +1,69 @@
-import type { QuestionKey } from '~/types/survey.types';
-
-export type SurveyQuestions = Array<{
-  name: QuestionKey;
-  label: string;
-  type: 'text' | 'checkbox' | 'radio';
-  answers?: Array<{ name: string; label: string }>;
-}>;
+import type { SurveyQuestions } from '~/types/survey.types';
 
 export const questions: SurveyQuestions = [
   {
-    name: 'gender',
+    id: 'gender',
     label: "What's your gender?",
     type: 'radio',
-    answers: [
-      { name: 'male', label: 'Male' },
-      { name: 'female', label: 'Female' },
-      { name: 'genderless', label: 'Genderless' },
+    required: false,
+    options: [
+      { id: 'male', label: 'Male' },
+      { id: 'female', label: 'Female' },
+      { id: 'genderless', label: 'Genderless' },
     ],
   },
   {
-    name: 'tshirt',
+    id: 'tshirt',
     label: "What's your Tshirt size?",
     type: 'radio',
-    answers: [
-      { name: 'S', label: 'S' },
-      { name: 'M', label: 'M' },
-      { name: 'L', label: 'L' },
-      { name: 'XL', label: 'XL' },
-      { name: 'XXL', label: 'XXL' },
-      { name: 'XXXL', label: 'XXXL' },
+    required: false,
+    options: [
+      { id: 'S', label: 'S' },
+      { id: 'M', label: 'M' },
+      { id: 'L', label: 'L' },
+      { id: 'XL', label: 'XL' },
+      { id: 'XXL', label: 'XXL' },
+      { id: 'XXXL', label: 'XXXL' },
     ],
   },
   {
-    name: 'accomodation',
+    id: 'accomodation',
     label: 'Do you need accommodation funding? (Hotel, AirBnB...)',
     type: 'radio',
-    answers: [
-      { name: 'yes', label: 'Yes' },
-      { name: 'no', label: 'No' },
+    required: false,
+    options: [
+      { id: 'yes', label: 'Yes' },
+      { id: 'no', label: 'No' },
     ],
   },
   {
-    name: 'transports',
+    id: 'transports',
     label: 'Do you need transports funding?',
     type: 'checkbox',
-    answers: [
-      { name: 'taxi', label: 'Taxi' },
-      { name: 'train', label: 'Train' },
-      { name: 'plane', label: 'Plane' },
+    required: false,
+    options: [
+      { id: 'taxi', label: 'Taxi' },
+      { id: 'train', label: 'Train' },
+      { id: 'plane', label: 'Plane' },
     ],
   },
   {
-    name: 'diet',
+    id: 'diet',
     label: 'Do you have any special diet restrictions?',
     type: 'checkbox',
-    answers: [
-      { name: 'vegetarian', label: 'Vegetarian' },
-      { name: 'vegan', label: 'Vegan' },
-      { name: 'halal', label: 'Halal' },
-      { name: 'gluten-free', label: 'Gluten-free' },
-      { name: 'nut allergy', label: 'Nut allergy' },
+    required: false,
+    options: [
+      { id: 'vegetarian', label: 'Vegetarian' },
+      { id: 'vegan', label: 'Vegan' },
+      { id: 'halal', label: 'Halal' },
+      { id: 'gluten-free', label: 'Gluten-free' },
+      { id: 'nut allergy', label: 'Nut allergy' },
     ],
   },
   {
-    name: 'info',
+    id: 'info',
     label: 'Do you have specific information to share?',
     type: 'text',
+    required: false,
   },
 ];

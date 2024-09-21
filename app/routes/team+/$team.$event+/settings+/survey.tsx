@@ -76,11 +76,11 @@ export default function EventSurveySettingsRoute() {
           <Form method="POST" id="questions-form" className="space-y-4">
             {questions.map((question) => (
               <Checkbox
-                key={question.name}
-                id={question.name}
+                key={question.id}
+                id={question.id}
                 name="surveyQuestions"
-                value={question.name}
-                defaultChecked={event.surveyQuestions.includes(question.name)}
+                value={question.id}
+                defaultChecked={event.surveyQuestions.includes(question.id)}
                 disabled={!event.surveyEnabled}
               >
                 {question.label}

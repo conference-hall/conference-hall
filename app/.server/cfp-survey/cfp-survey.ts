@@ -21,6 +21,6 @@ export class CfpSurvey {
     if (!event.surveyEnabled) throw new SurveyNotEnabledError();
 
     const enabledQuestions = event.surveyQuestions as string[];
-    return questions.filter((question) => enabledQuestions.includes(question.name));
+    return questions.filter((question) => enabledQuestions.includes(question.id));
   }
 }

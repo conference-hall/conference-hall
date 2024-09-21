@@ -3,7 +3,6 @@ import { db } from 'prisma/db.server.ts';
 
 import { EventNotFoundError, ForbiddenOperationError, SlugAlreadyExistsError } from '~/libs/errors.server.ts';
 import type { EventEmailNotificationsKeys } from '~/types/events.types.ts';
-import type { QuestionKeys } from '~/types/survey.types';
 
 import type { Permission } from '../team/user-permissions.ts';
 import { UserPermissions } from '../team/user-permissions.ts';
@@ -59,7 +58,7 @@ export class UserEvent {
       logoUrl: event.logoUrl,
       maxProposals: event.maxProposals,
       surveyEnabled: event.surveyEnabled,
-      surveyQuestions: (event.surveyQuestions || []) as QuestionKeys,
+      surveyQuestions: (event.surveyQuestions || []) as Array<string>,
       reviewEnabled: event.reviewEnabled,
       displayProposalsReviews: event.displayProposalsReviews,
       displayProposalsSpeakers: event.displayProposalsSpeakers,
