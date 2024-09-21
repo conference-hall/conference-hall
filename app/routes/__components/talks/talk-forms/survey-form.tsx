@@ -1,9 +1,9 @@
 import { Form } from '@remix-run/react';
 
-import type { SurveyQuestions } from '~/.server/cfp-survey/survey-questions';
 import { Checkbox, CheckboxGroup } from '~/design-system/forms/checkboxes.tsx';
 import { Radio, RadioGroup } from '~/design-system/forms/radio-group.tsx';
 import { TextArea } from '~/design-system/forms/textarea.tsx';
+import type { SurveyQuestions } from '~/types/survey.types.ts';
 
 export type Props = {
   id: string;
@@ -18,42 +18,42 @@ export function SurveyForm({ id, questions, initialValues }: Props) {
         if (question.type === 'text') {
           return (
             <TextArea
-              key={question.name}
-              name={question.name}
+              key={question.id}
+              name={question.id}
               label={question.label}
-              defaultValue={initialValues[question.name] as string}
+              defaultValue={initialValues[question.id] as string}
               rows={5}
             />
           );
         } else if (question.type === 'checkbox') {
-          const value = (initialValues[question.name] as string[]) || [];
+          const value = (initialValues[question.id] as string[]) || [];
           return (
-            <CheckboxGroup key={question.name} label={question.label} inline>
-              {question.answers?.map((answer) => (
+            <CheckboxGroup key={question.id} label={question.label} inline>
+              {question.options?.map((option) => (
                 <Checkbox
-                  key={answer.name}
-                  id={answer.name}
-                  name={question.name}
-                  value={answer.name}
-                  defaultChecked={value.includes(answer.name)}
+                  key={option.id}
+                  id={option.id}
+                  name={question.id}
+                  value={option.id}
+                  defaultChecked={value.includes(option.id)}
                 >
-                  {answer.label}
+                  {option.label}
                 </Checkbox>
               ))}
             </CheckboxGroup>
           );
         } else if (question.type === 'radio') {
           return (
-            <RadioGroup key={question.name} label={question.label} inline>
-              {question.answers?.map((answer) => (
+            <RadioGroup key={question.id} label={question.label} inline>
+              {question.options?.map((option) => (
                 <Radio
-                  key={answer.name}
-                  id={answer.name}
-                  name={question.name}
-                  value={answer.name}
-                  defaultChecked={initialValues[question.name] === answer.name}
+                  key={option.id}
+                  id={option.id}
+                  name={question.id}
+                  value={option.id}
+                  defaultChecked={initialValues[question.id] === option.id}
                 >
-                  {answer.label}
+                  {option.label}
                 </Radio>
               ))}
             </RadioGroup>

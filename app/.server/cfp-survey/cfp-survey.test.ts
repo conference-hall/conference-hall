@@ -11,8 +11,8 @@ describe('CfpSurvey', () => {
 
       const questions = await CfpSurvey.of(event.slug).questions();
 
-      const questionNames = questions.map(({ name }) => name);
-      expect(questionNames).toEqual(['gender', 'tshirt', 'accomodation', 'transports', 'diet', 'info']);
+      const questionIds = questions.map(({ id }) => id);
+      expect(questionIds).toEqual(['gender', 'tshirt', 'accomodation', 'transports', 'diet', 'info']);
     });
 
     it('returns the selected survey questions', async () => {
@@ -23,8 +23,8 @@ describe('CfpSurvey', () => {
 
       const questions = await CfpSurvey.of(event.slug).questions();
 
-      const questionNames = questions.map(({ name }) => name);
-      expect(questionNames).toEqual(['gender']);
+      const questionIds = questions.map(({ id }) => id);
+      expect(questionIds).toEqual(['gender']);
     });
 
     it('throws an error when event not found', async () => {
