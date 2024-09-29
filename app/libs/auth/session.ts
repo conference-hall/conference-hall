@@ -32,6 +32,8 @@ export async function createSession(request: Request) {
   const token = form.get('token') as string;
   const redirectTo = form.get('redirectTo')?.toString() || '/';
 
+  if (!token) return destroySession(request);
+
   try {
     const { uid, name, email, email_verified, picture, firebase } = await serverAuth.verifyIdToken(token, true);
 
