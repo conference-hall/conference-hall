@@ -59,8 +59,12 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     case 'add-review': {
       const result = parseWithZod(form, { schema: ReviewUpdateDataSchema });
       if (result.status !== 'success') return toast('error', 'Something went wrong.');
+      console.log('>>>>>>>>>>> START ADD REVIEW');
+      console.time('review');
       const review = ProposalReview.for(userId, params.team, params.event, params.proposal);
       await review.addReview(result.value);
+      console.timeEnd('review');
+      console.log('>>>>>>>>>>> END ADD REVIEW');
       break;
     }
     case 'add-comment': {
