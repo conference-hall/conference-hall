@@ -21,7 +21,11 @@ export class ProposalReview {
   ) {}
 
   static for(userId: string, teamSlug: string, eventSlug: string, proposalId: string) {
+    console.log('>>>>>>>> Start UserEvent');
+    console.time('UserEvent');
     const userEvent = UserEvent.for(userId, teamSlug, eventSlug);
+    console.timeEnd('UserEvent');
+    console.log('>>>>>>>> End UserEvent');
     return new ProposalReview(userId, proposalId, userEvent);
   }
 
@@ -98,23 +102,39 @@ export class ProposalReview {
   }
 
   async addReview(data: ReviewUpdateData) {
+    console.log('>>>>>>>> Start Permissions');
+    console.time('permissions');
     const event = await this.userEvent.needsPermission('canAccessEvent');
+    console.timeEnd('permissions');
+    console.log('>>>>>>>> End Permissions');
     if (!event.reviewEnabled) throw new ReviewDisabledError();
 
     await db.$transaction(async (trx) => {
+      console.log('>>>>>>>> Start review.upsert');
+      console.time('review.upsert');
       await trx.review.upsert({
         where: { userId_proposalId: { userId: this.userId, proposalId: this.proposalId } },
         create: { userId: this.userId, proposalId: this.proposalId, ...data },
         update: data,
       });
+      console.timeEnd('review.upsert');
+      console.log('>>>>>>>> End review.findMany');
 
+      console.log('>>>>>>>> Start review.findMany');
+      console.time('review.findMany');
       const reviews = await trx.review.findMany({
         where: { proposalId: this.proposalId, feeling: { not: 'NO_OPINION' } },
       });
+      console.timeEnd('review.findMany');
+      console.log('>>>>>>>> End review.findMany');
 
+      console.log('>>>>>>>> Start proposal.update');
+      console.time('proposal.update');
       const reviewsDetails = new ReviewDetails(reviews);
       const average = reviewsDetails.summary().average ?? null;
       await trx.proposal.update({ where: { id: this.proposalId }, data: { avgRateForSort: average } });
+      console.timeEnd('proposal.update');
+      console.log('>>>>>>>> End proposal.update');
     });
   }
 
