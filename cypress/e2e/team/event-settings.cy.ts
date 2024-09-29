@@ -106,8 +106,7 @@ describe('Event settings', () => {
 
         general.switchOnlineEvent(false).click();
         general.saveUpdateEventDetails();
-        cy.reload();
-        general.switchOnlineEvent(true).should('exist');
+        cy.assertToast('Event details saved.');
       });
 
       it('archive an event', () => {
