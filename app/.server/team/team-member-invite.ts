@@ -11,7 +11,6 @@ export class TeamMemberInvite {
 
   async check() {
     const team = await db.team.findUnique({ where: { invitationCode: this.code } });
-
     if (!team) throw new InvitationNotFoundError();
 
     return team;
@@ -20,11 +19,10 @@ export class TeamMemberInvite {
   async addMember(userId: string) {
     const team = await this.check();
 
-    try {
-      await db.teamMember.create({ data: { memberId: userId, teamId: team.id } });
-    } catch (e) {
-      throw new InvitationInvalidOrAccepted();
-    }
+    const exists = await db.teamMember.count({ where: { memberId: userId, teamId: team.id } });
+    if (exists > 0) throw new InvitationInvalidOrAccepted();
+
+    await db.teamMember.create({ data: { memberId: userId, teamId: team.id } });
 
     return team;
   }
