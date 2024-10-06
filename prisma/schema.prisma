@@ -20,6 +20,7 @@ model User {
   references            String?
   location              String?
   socials               Json                   @default("{}")
+  admin                 Boolean                @default(false)
   createdAt             DateTime               @default(now())
   updatedAt             DateTime               @updatedAt
   migrationId           String?
