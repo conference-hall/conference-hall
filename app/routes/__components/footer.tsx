@@ -33,6 +33,14 @@ export function LegalLinks() {
       >
         GitHub
       </a>
+      <a
+        href="https://github.com/sponsors/conference-hall"
+        target="_blank"
+        className="hover:underline underline-offset-2"
+        rel="noreferrer"
+      >
+        Sponsor
+      </a>
     </div>
   );
 }

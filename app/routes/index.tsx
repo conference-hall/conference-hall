@@ -20,6 +20,7 @@ import { Link } from '~/design-system/links.tsx';
 import { EventCardLink } from './__components/events/event-card.tsx';
 import { SearchEventsFilters } from './__components/search/search-events-filters.tsx';
 import { SearchEventsInput } from './__components/search/search-events-input.tsx';
+import { SponsorLink } from './__components/sponsor-link.tsx';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const filters = parseUrlFilters(request.url);
@@ -62,10 +63,11 @@ export default function IndexRoute() {
           <H2 size="xl">Incoming call for papers</H2>
           <SearchEventsFilters />
         </div>
+
         {results?.length === 0 ? (
           <EmptyState icon={FaceFrownIcon} label="No results found!" />
         ) : (
-          <div className="flex-col items-center space-y-8">
+          <div className="flex flex-col items-center space-y-8">
             <ul aria-label="Search results" className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-8">
               {results.map((event) => (
                 <EventCardLink
@@ -80,7 +82,10 @@ export default function IndexRoute() {
                 />
               ))}
             </ul>
+
             <Pagination {...pagination} />
+
+            <SponsorLink />
           </div>
         )}
       </Page>

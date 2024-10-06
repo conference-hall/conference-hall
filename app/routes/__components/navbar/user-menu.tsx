@@ -18,6 +18,7 @@ import { getClientAuth } from '~/libs/auth/firebase.ts';
 import type { action as LogoutAction } from '~/routes/auth+/logout.tsx';
 
 import { LegalLinks } from '../footer.tsx';
+import { SponsorLink } from '../sponsor-link.tsx';
 
 type MenuProps = {
   email: string | null;
@@ -100,7 +101,10 @@ export function UserMenu({ email, name, picture, hasTeamAccess, teams, notificat
               <SignOutMenu />
             </ul>
 
-            <LegalLinks />
+            <div className="mt-4 space-y-4">
+              <SponsorLink />
+              <LegalLinks />
+            </div>
           </nav>
         </SlideOver.Content>
       </SlideOver>
