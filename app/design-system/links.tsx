@@ -40,7 +40,7 @@ export function Link({
   className,
   ...rest
 }: LinkProps) {
-  const defaultStyle = typography({ size, mb, align, weight, truncate, className });
+  const defaultStyle = typography({ size, mb, align, weight, truncate, variant, className });
   const linkStyle = link({ variant });
 
   return (

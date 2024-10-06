@@ -1,6 +1,7 @@
 import { NavLink } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
 
+import { SponsorLink } from '~/routes/__components/sponsor-link.tsx';
 import { IconLabel } from '../icon-label.tsx';
 import { Card } from '../layouts/card.tsx';
 
@@ -10,7 +11,7 @@ type Props = { items: Array<NavItem>; noActive?: boolean; className?: string };
 
 export function NavSideMenu({ items, noActive, className, ...rest }: Props) {
   return (
-    <aside className={cx('w-1/5', className)}>
+    <aside className={cx('w-1/5 space-y-4', className)}>
       <Card p={4} as="nav" className="space-y-1" {...rest}>
         {items.map((item) => (
           <NavLink key={item.to} to={item.to} className={({ isActive }) => menuStyles(isActive, noActive)} end>
@@ -18,6 +19,8 @@ export function NavSideMenu({ items, noActive, className, ...rest }: Props) {
           </NavLink>
         ))}
       </Card>
+
+      <SponsorLink />
     </aside>
   );
 }

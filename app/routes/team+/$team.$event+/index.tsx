@@ -12,6 +12,7 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 
+import { SponsorLink } from '~/routes/__components/sponsor-link.tsx';
 import { useTeam } from '../__components/use-team.tsx';
 import { CfpStatusCard } from './__components/overview-page/cfp-status-card.tsx';
 import { ChartSelector } from './__components/overview-page/charts-selector.tsx';
@@ -83,6 +84,10 @@ export default function OverviewRoute() {
         <div className="grid grid-cols-1 gap-4 lg:gap-6 sm:grid-cols-2">
           {metrics.byFormats && <BarListCard label="Proposals by formats" data={metrics.byFormats} />}
           {metrics.byCategories && <BarListCard label="Proposals by categories" data={metrics.byCategories} />}
+        </div>
+
+        <div className="flex">
+          <SponsorLink />
         </div>
       </div>
     </Page>
