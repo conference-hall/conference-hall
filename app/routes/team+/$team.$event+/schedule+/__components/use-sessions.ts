@@ -30,7 +30,7 @@ export function useSessions(initialSessions: Array<SessionData>, timezone: strin
         method: 'POST',
         navigate: false,
         fetcherKey: `session:${id}`,
-        unstable_flushSync: true,
+        flushSync: true,
         preventScrollReset: true,
       },
     );
@@ -52,7 +52,7 @@ export function useSessions(initialSessions: Array<SessionData>, timezone: strin
         method: 'POST',
         navigate: false,
         fetcherKey: `session:${session.id}`,
-        unstable_flushSync: true,
+        flushSync: true,
         preventScrollReset: true,
       },
     );
