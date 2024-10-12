@@ -68,7 +68,7 @@ export default function IndexRoute() {
           <EmptyState icon={FaceFrownIcon} label="No results found!" />
         ) : (
           <div className="flex flex-col items-center space-y-8">
-            <ul aria-label="Search results" className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-8">
+            <ul aria-label="Search results" className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-8 w-full">
               {results.map((event) => (
                 <EventCardLink
                   key={event.slug}
