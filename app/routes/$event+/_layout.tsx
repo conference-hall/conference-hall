@@ -17,7 +17,13 @@ import { useUser } from '~/routes/__components/use-user.tsx';
 import { EventTabs } from './__components/event-tabs.tsx';
 
 export const meta = mergeMeta<typeof loader>(
-  ({ data }) => (data ? [{ title: `${data.name} | Conference Hall` }] : []),
+  ({ data }) =>
+    data
+      ? [
+          { title: `${data.name} | Conference Hall` },
+          { name: 'description', content: `Submit your proposal to ${data.name}'s call for papers.` },
+        ]
+      : [],
   ({ data }) => (data ? eventSocialCard({ name: data.name, slug: data.slug, logoUrl: data.logoUrl }) : []),
 );
 

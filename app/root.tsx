@@ -25,6 +25,11 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
   const metatags = [
     { charset: 'utf-8' },
     { title: 'Conference Hall' },
+    {
+      name: 'description',
+      content:
+        'Open SaaS for managing call for papers, speaker submissions, and event organization with automated workflows, reviews, and team collaboration.',
+    },
     { name: 'viewport', content: 'width=device-width,initial-scale=1' },
   ];
 

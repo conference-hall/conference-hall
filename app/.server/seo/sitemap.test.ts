@@ -13,7 +13,7 @@ describe('#getEventsForSitemap', () => {
     const result = await getEventsForSitemap();
 
     const names = result.map((e) => e.name).sort();
-    expect(names).toEqual(['conf-1', 'conf-3']);
+    expect(names).toEqual(['conf-1', 'conf-2', 'conf-3']);
     expect(result.find((r) => r.name === 'conf-1')).toEqual({
       name: event.name,
       slug: event.slug,

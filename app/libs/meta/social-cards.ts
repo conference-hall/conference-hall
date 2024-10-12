@@ -5,11 +5,11 @@ type SocialCard = { name: string; slug: string; logoUrl: string | null };
 
 export function eventSocialCard({ name, slug, logoUrl }: SocialCard) {
   const meta: Record<string, string>[] = [
-    { property: 'og:title', content: `${name} call for paper` },
-    { property: 'og:description', content: `Submit your proposal to ${name} call for paper on Conference Hall.` },
+    { property: 'og:title', content: `${name}'s call for papers` },
+    { property: 'og:description', content: `Submit your proposal to ${name}'s call for papers.` },
     { property: 'og:type', content: 'event' },
     { property: 'og:url', content: `https://conference-hall.io/${slug}` },
-    { name: 'twitter:title', content: `${name} call for paper` },
+    { name: 'twitter:title', content: `${name}'s call for papers` },
   ];
 
   if (logoUrl) {
