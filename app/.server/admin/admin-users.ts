@@ -17,7 +17,7 @@ export class AdminUsers {
     return new AdminUsers();
   }
 
-  async listUsers(filters: UsersSearchFilters, page: number) {
+  async listUsers(filters: UsersSearchFilters, page: number, pageSize?: number) {
     const { query } = filters;
 
     const where: Prisma.UserWhereInput | undefined = query
@@ -26,7 +26,7 @@ export class AdminUsers {
 
     const total = await db.user.count({ where });
 
-    const pagination = new Pagination({ page, total });
+    const pagination = new Pagination({ page, total, pageSize });
 
     const users = await db.user.findMany({
       where,
@@ -66,8 +66,8 @@ export class AdminUsers {
       email: user.email,
       emailVerified: user.emailVerified,
       termsAccepted: user.termsAccepted,
-      createdAt: user.createdAt,
       updatedAt: user.updatedAt,
+      createdAt: user.createdAt,
       authenticationMethods: user.authenticationMethods.map((method) => ({
         provider: method.provider,
         email: method.email,
@@ -78,7 +78,7 @@ export class AdminUsers {
         slug: member.team.slug,
         name: member.team.name,
         role: member.role,
-        updatedAt: member.team.updatedAt,
+        createdAt: member.createdAt,
       })),
     };
   }

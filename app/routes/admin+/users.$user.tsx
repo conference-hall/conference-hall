@@ -103,7 +103,7 @@ export default function AdminUserRoute() {
                 <H3>{team.name}</H3>
                 <Subtitle size="xs">{team.role}</Subtitle>
               </div>
-              <Text variant="secondary">{format(team.updatedAt, DATETIME_FORMAT)}</Text>
+              <Text variant="secondary">{format(team.createdAt, DATETIME_FORMAT)}</Text>
             </List.Row>
           ))}
         </List.Content>
