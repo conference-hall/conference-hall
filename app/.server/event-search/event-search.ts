@@ -1,4 +1,4 @@
-import type { Prisma } from '@prisma/client';
+import { EventType, type Prisma } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
 
 import { Pagination } from '../shared/pagination.ts';
@@ -23,7 +23,7 @@ export class EventsSearch {
       visibility: 'PUBLIC',
       archived: false,
       name: { contains: query, mode: 'insensitive' },
-      ...this.mapFiltersQuery(type),
+      ...this.byEventType(type),
     };
 
     const eventsCount = await db.event.count({ where: eventsWhereInput });
@@ -56,19 +56,17 @@ export class EventsSearch {
     };
   }
 
-  private mapFiltersQuery(type?: string): Prisma.EventWhereInput {
-    const INCOMING_CFP = {
-      cfpStart: { not: null },
-      OR: [{ cfpEnd: null }, { cfpEnd: { gt: new Date() } }],
-    };
+  private byEventType(type?: string): Prisma.EventWhereInput {
+    const OPEN_MEETUP = { type: EventType.MEETUP, cfpStart: { not: null } };
+    const OPEN_CONFERENCE = { type: EventType.CONFERENCE, cfpEnd: { gte: new Date() } };
 
     switch (type) {
       case 'conference':
-        return { type: 'CONFERENCE', ...INCOMING_CFP };
+        return OPEN_CONFERENCE;
       case 'meetup':
-        return { type: 'MEETUP', cfpStart: { not: null } };
+        return OPEN_MEETUP;
       default:
-        return { type: undefined, ...INCOMING_CFP };
+        return { OR: [OPEN_MEETUP, OPEN_CONFERENCE] };
     }
   }
 }
