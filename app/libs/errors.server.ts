@@ -88,6 +88,12 @@ export class ReviewDisabledError extends ForbiddenError {
   }
 }
 
+export class NotAuthorizedError extends ForbiddenError {
+  constructor() {
+    super('Not authorized');
+  }
+}
+
 export class ForbiddenOperationError extends ForbiddenError {
   constructor() {
     super('Forbidden action');

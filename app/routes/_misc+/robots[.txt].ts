@@ -12,6 +12,7 @@ Disallow: /team/
 Disallow: /debug/
 Disallow: /notifications/
 Disallow: /storage/
+Disallow: /admin/
 
 Sitemap: ${appUrl()}/sitemap.xml
 `;

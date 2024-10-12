@@ -32,6 +32,9 @@ const TRAITS = {
     email: 'spiderman@example.com',
     picture: 'https://i.pravatar.cc/150?img=8',
   },
+  admin: {
+    admin: true,
+  },
 };
 
 type Trait = keyof typeof TRAITS;

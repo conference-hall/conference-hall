@@ -9,7 +9,7 @@ import { teamFactory } from '../tests/factories/team.ts';
 import { userFactory } from '../tests/factories/users.ts';
 
 async function seed() {
-  const user = await userFactory({ traits: ['clark-kent'] });
+  const user = await userFactory({ traits: ['clark-kent', 'admin'] });
   const user2 = await userFactory({ traits: ['bruce-wayne'] });
   const user3 = await userFactory({ traits: ['peter-parker'] });
 
