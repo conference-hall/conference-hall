@@ -11,9 +11,9 @@ export type EventData = Awaited<ReturnType<typeof UserEvent.prototype.get>>;
 
 export class UserEvent {
   constructor(
-    protected userId: string,
-    protected teamSlug: string,
-    protected eventSlug: string,
+    public userId: string,
+    public teamSlug: string,
+    public eventSlug: string,
   ) {}
 
   static for(userId: string, teamSlug: string, eventSlug: string) {

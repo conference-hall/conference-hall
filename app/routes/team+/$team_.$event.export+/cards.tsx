@@ -4,8 +4,8 @@ import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
+import { CfpReviewsExports } from '~/.server/reviews/cfp-reviews-exports.ts';
 
-import { CfpReviewsSearch } from '~/.server/reviews/cfp-reviews-search.ts';
 import { parseUrlFilters } from '~/.server/shared/proposal-search-builder.types.ts';
 import { Subtitle, Text } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
@@ -19,8 +19,8 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   invariant(params.event, 'Invalid event slug');
 
   const filters = parseUrlFilters(request.url);
-  const search = CfpReviewsSearch.for(userId, params.team, params.event);
-  const results = await search.forCardsExport(filters);
+  const search = CfpReviewsExports.for(userId, params.team, params.event);
+  const results = await search.forCards(filters);
   return json(results);
 };
 

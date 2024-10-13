@@ -76,7 +76,7 @@ const TRAITS = {
     integrations: {
       create: {
         name: 'OPEN_PLANNER',
-        configuration: { eventId: randUuid(), apiKey: randUuid() },
+        configuration: { eventId: 'open-planner-event-id', apiKey: 'open-planner-api-key' },
       },
     },
   },

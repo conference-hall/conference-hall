@@ -5,7 +5,7 @@ import {
   randEmail,
   randFullName,
   randParagraph,
-  randUserName,
+  randSequence,
 } from '@ngneat/falso';
 import type { Prisma } from '@prisma/client';
 
@@ -57,8 +57,8 @@ export const userFactory = async (options: FactoryOptions = {}) => {
     references: randParagraph(),
     company: randCompanyName(),
     socials: {
-      github: randUserName(),
-      twitter: randUserName(),
+      github: randSequence(),
+      twitter: randSequence(),
     },
   };
 

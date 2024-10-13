@@ -4,7 +4,7 @@ const BASE_URL = 'https://api.openplanner.fr';
 
 type ApiResponse = { success: true; error: undefined } | { success: false; error: string };
 
-const SessionAndSpeakersPayloadSchema = z.object({
+const OpenPlannerSessionsPayloadSchema = z.object({
   sessions: z.array(
     z.object({
       id: z.string(),
@@ -31,10 +31,10 @@ const SessionAndSpeakersPayloadSchema = z.object({
   ),
 });
 
-type SessionAndSpeakersPayload = z.infer<typeof SessionAndSpeakersPayloadSchema>;
+export type OpenPlannerSessionsPayload = z.infer<typeof OpenPlannerSessionsPayloadSchema>;
 
-async function postSessionsAndSpeakers(eventId: string, apiKey: string, payload: SessionAndSpeakersPayload) {
-  const validation = SessionAndSpeakersPayloadSchema.safeParse(payload);
+async function postSessionsAndSpeakers(eventId: string, apiKey: string, payload: OpenPlannerSessionsPayload) {
+  const validation = OpenPlannerSessionsPayloadSchema.safeParse(payload);
 
   if (!eventId || !apiKey || !validation.success) {
     return { success: false, error: 'Invalid OpenPlanner payload. Please, open a bug.' };
