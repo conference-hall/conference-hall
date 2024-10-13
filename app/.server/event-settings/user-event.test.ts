@@ -66,7 +66,7 @@ describe('UserEvent', () => {
           slug: 'event',
           visibility: 'PUBLIC',
         },
-        traits: ['conference-cfp-open'],
+        traits: ['conference-cfp-open', 'withIntegration'],
         team,
       });
 
@@ -102,6 +102,7 @@ describe('UserEvent', () => {
         emailNotifications: [],
         slackWebhookUrl: event.slackWebhookUrl,
         apiKey: event.apiKey,
+        integrations: ['OPEN_PLANNER'],
         cfpStart: event.cfpStart?.toISOString(),
         cfpEnd: event.cfpEnd?.toISOString(),
         cfpState: 'OPENED',

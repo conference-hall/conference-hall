@@ -35,7 +35,7 @@ export class UserEvent {
 
   async get() {
     const event = await db.event.findFirst({
-      include: { formats: true, categories: true },
+      include: { formats: true, categories: true, integrations: true },
       where: { slug: this.eventSlug, team: { slug: this.teamSlug, members: { some: { memberId: this.userId } } } },
     });
     if (!event) throw new EventNotFoundError();
@@ -75,6 +75,7 @@ export class UserEvent {
       cfpState: event.cfpState,
       formats: event.formats.map(({ id, name, description }) => ({ id, name, description })),
       categories: event.categories.map(({ id, name, description }) => ({ id, name, description })),
+      integrations: event.integrations.map((integration) => integration.name),
       archived: event.archived,
     };
   }
