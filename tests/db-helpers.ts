@@ -21,6 +21,7 @@ export async function resetDB() {
     db.talk.deleteMany(),
     db.eventFormat.deleteMany(),
     db.eventCategory.deleteMany(),
+    db.eventIntegrationConfig.deleteMany(),
     db.event.deleteMany(),
     db.teamMember.deleteMany(),
     db.team.deleteMany(),

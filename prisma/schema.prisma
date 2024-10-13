@@ -89,16 +89,16 @@ enum TalkLevel {
 }
 
 model Event {
-  id                       String          @id @default(cuid())
-  slug                     String          @unique
+  id                       String                   @id @default(cuid())
+  slug                     String                   @unique
   name                     String
   description              String?
-  type                     EventType       @default(CONFERENCE)
-  visibility               EventVisibility @default(PRIVATE)
+  type                     EventType                @default(CONFERENCE)
+  visibility               EventVisibility          @default(PRIVATE)
   teamId                   String
-  team                     Team            @relation(fields: [teamId], references: [id])
+  team                     Team                     @relation(fields: [teamId], references: [id])
   location                 String?
-  onlineEvent              Boolean         @default(false)
+  onlineEvent              Boolean                  @default(false)
   timezone                 String
   lat                      Float?
   lng                      Float?
@@ -111,32 +111,43 @@ model Event {
   cfpStart                 DateTime?
   cfpEnd                   DateTime?
   formats                  EventFormat[]
-  formatsRequired          Boolean         @default(false)
-  formatsAllowMultiple     Boolean         @default(false)
+  formatsRequired          Boolean                  @default(false)
+  formatsAllowMultiple     Boolean                  @default(false)
   categories               EventCategory[]
-  categoriesRequired       Boolean         @default(false)
-  categoriesAllowMultiple  Boolean         @default(false)
+  categoriesRequired       Boolean                  @default(false)
+  categoriesAllowMultiple  Boolean                  @default(false)
   maxProposals             Int?
   creatorId                String
-  creator                  User            @relation(fields: [creatorId], references: [id])
-  archived                 Boolean         @default(false)
-  reviewEnabled            Boolean         @default(true)
-  displayProposalsReviews  Boolean         @default(true)
-  displayProposalsSpeakers Boolean         @default(true)
-  surveyEnabled            Boolean         @default(false)
-  surveyQuestions          Json            @default("[]")
+  creator                  User                     @relation(fields: [creatorId], references: [id])
+  archived                 Boolean                  @default(false)
+  reviewEnabled            Boolean                  @default(true)
+  displayProposalsReviews  Boolean                  @default(true)
+  displayProposalsSpeakers Boolean                  @default(true)
+  surveyEnabled            Boolean                  @default(false)
+  surveyQuestions          Json                     @default("[]")
   emailOrganizer           String?
-  emailNotifications       Json            @default("[]")
+  emailNotifications       Json                     @default("[]")
   slackWebhookUrl          String?
   apiKey                   String?
-  createdAt                DateTime        @default(now())
-  updatedAt                DateTime        @updatedAt
+  createdAt                DateTime                 @default(now())
+  updatedAt                DateTime                 @updatedAt
   migrationId              String?
   proposals                Proposal[]
   surveys                  Survey[]
   schedules                Schedule[]
+  integrations             EventIntegrationConfig[]
 
   @@map("events")
+}
+
+enum EventType {
+  MEETUP
+  CONFERENCE
+}
+
+enum EventVisibility {
+  PUBLIC
+  PRIVATE
 }
 
 model EventFormat {
@@ -163,14 +174,18 @@ model EventCategory {
   @@map("event_categories")
 }
 
-enum EventType {
-  MEETUP
-  CONFERENCE
+model EventIntegrationConfig {
+  id            String               @id @default(cuid())
+  name          EventIntegrationName
+  configuration Json                 @default("{}")
+  event         Event                @relation(fields: [eventId], references: [id])
+  eventId       String
+
+  @@map("event_integration_configurations")
 }
 
-enum EventVisibility {
-  PUBLIC
-  PRIVATE
+enum EventIntegrationName {
+  OPEN_PLANNER
 }
 
 model Team {
