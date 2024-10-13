@@ -58,25 +58,25 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   switch (intent) {
     case 'add-session': {
       const result = parseWithZod(form, { schema: ScheduleSessionCreateSchema });
-      if (result.status !== 'success') return toast('error', 'An error occured');
+      if (result.status !== 'success') return toast('error', 'Something went wrong.');
       await eventSchedule.addSession(result.value);
       break;
     }
     case 'update-session': {
       const result = parseWithZod(form, { schema: ScheduleSessionUpdateSchema });
-      if (result.status !== 'success') return toast('error', 'An error occured');
+      if (result.status !== 'success') return toast('error', 'Something went wrong.');
       await eventSchedule.updateSession(result.value);
       break;
     }
     case 'delete-session': {
       const result = SchedulSessionIdSchema.safeParse(form.get('id'));
-      if (!result.success) return toast('error', 'An error occured');
+      if (!result.success) return toast('error', 'Something went wrong.');
       await eventSchedule.deleteSession(result.data);
       break;
     }
     case 'update-display-times': {
       const result = parseWithZod(form, { schema: ScheduleDisplayTimesUpdateSchema });
-      if (result.status !== 'success') return toast('error', 'An error occured');
+      if (result.status !== 'success') return toast('error', 'Something went wrong.');
       await eventSchedule.update(result.value);
       break;
     }
