@@ -53,7 +53,7 @@ describe('Event settings', () => {
       settings.openSetting('Email notifications');
       notifications.isPageVisible();
 
-      settings.openSetting('Slack integration');
+      settings.openSetting('Integrations');
       slack.isPageVisible();
 
       settings.openSetting('Web API');
