@@ -13,11 +13,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
   const filters = parseUrlFilters(request.url);
   const exports = CfpReviewsExports.for(userId, params.team, params.event);
-  const result = await exports.forOpenPlanner(filters);
 
-  if (!result.success) {
-    return toast('error', result.error);
-  }
+  await exports.forOpenPlanner(filters);
 
-  return toast('success', 'Export to OpenPlanner successfully done.');
+  return toast('success', 'Exporting to OpenPlanner is in progress and may take a few minutes...');
 };

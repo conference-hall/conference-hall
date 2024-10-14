@@ -2,8 +2,6 @@ import { z } from 'zod';
 
 const BASE_URL = 'https://api.openplanner.fr';
 
-type ApiResponse = { success: true; error: undefined } | { success: false; error: string };
-
 const OpenPlannerSessionsPayloadSchema = z.object({
   sessions: z.array(
     z.object({
@@ -33,6 +31,9 @@ const OpenPlannerSessionsPayloadSchema = z.object({
 
 export type OpenPlannerSessionsPayload = z.infer<typeof OpenPlannerSessionsPayloadSchema>;
 
+// TODO: the POST is not awaiting the fetch call (fire-and-forget)
+// Because the call can be very long and result with a timeout.
+// This should be done with a job later.
 async function postSessionsAndSpeakers(eventId: string, apiKey: string, payload: OpenPlannerSessionsPayload) {
   const validation = OpenPlannerSessionsPayloadSchema.safeParse(payload);
 
@@ -40,41 +41,18 @@ async function postSessionsAndSpeakers(eventId: string, apiKey: string, payload:
     return { success: false, error: 'Invalid OpenPlanner payload. Please, open a bug.' };
   }
 
-  try {
-    const url = `${BASE_URL}/v1/${eventId}/sessions-speakers?apiKey=${encodeURIComponent(apiKey)}`;
+  const url = `${BASE_URL}/v1/${eventId}/sessions-speakers?apiKey=${encodeURIComponent(apiKey)}`;
 
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
+  fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  }).catch((error) => {
+    console.log({
+      level: 'error',
+      message: `Open planner error: ${error.message}`,
     });
-
-    if (!response.ok) {
-      const result = await response.json();
-
-      console.log({
-        level: 'error',
-        status: response.status,
-        message: `Open planner error: ${JSON.stringify(result)}`,
-      });
-
-      if (response.status === 401) {
-        throw new Error('Invalid OpenPlanner API key.');
-      }
-      if (response.status === 400) {
-        throw new Error('An error occurred with OpenPlanner. Please try again later.');
-      }
-      throw new Error('OpenPlanner: Unknown error. Please, try again later.');
-    }
-
-    const data: ApiResponse = await response.json();
-    return data;
-  } catch (error) {
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'OpenPlanner: Unknown error',
-    };
-  }
+  });
 }
 
 export const OpenPlanner = { postSessionsAndSpeakers };
