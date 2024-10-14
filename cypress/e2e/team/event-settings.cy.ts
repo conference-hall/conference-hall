@@ -3,9 +3,9 @@ import CfpSettings from '../../page-objects/team/event-settings/cfp-settings.pag
 import CustomizeSettings from '../../page-objects/team/event-settings/customize-settings.page.ts';
 import OrganizerEventSettingsPage from '../../page-objects/team/event-settings/event-settings.page.ts';
 import GeneralSettings from '../../page-objects/team/event-settings/general-settings.page.ts';
+import IntegrationsSettings from '../../page-objects/team/event-settings/integrations-settings.page.ts';
 import NotificationsSettings from '../../page-objects/team/event-settings/notifications-settings.page.ts';
 import ProposalReviewSettings from '../../page-objects/team/event-settings/proposal-review-settings.page.ts';
-import SlackSettings from '../../page-objects/team/event-settings/slack-settings.page.ts';
 import SurveySettings from '../../page-objects/team/event-settings/survey-settings.page.ts';
 import TracksSettings from '../../page-objects/team/event-settings/tracks-settings.page.ts';
 
@@ -24,7 +24,7 @@ describe('Event settings', () => {
   const survey = new SurveySettings();
   const review = new ProposalReviewSettings();
   const notifications = new NotificationsSettings();
-  const slack = new SlackSettings();
+  const integrations = new IntegrationsSettings();
   const api = new ApiSettings();
 
   describe('as a team owner', () => {
@@ -54,7 +54,7 @@ describe('Event settings', () => {
       notifications.isPageVisible();
 
       settings.openSetting('Integrations');
-      slack.isPageVisible();
+      integrations.isPageVisible();
 
       settings.openSetting('Web API');
       api.isPageVisible();
@@ -338,16 +338,34 @@ describe('Event settings', () => {
       });
     });
 
-    describe('slack integration settings', () => {
-      it('fills slack web hook url', () => {
-        slack.visit('team-1', 'conference-1');
-        slack.saveSlackWebhook('foo');
+    describe('integrations settings', () => {
+      it('fills slack configuration', () => {
+        integrations.visit('team-1', 'conference-1');
+        integrations.saveSlackConfiguration('foo');
         cy.assertText('Invalid url');
 
-        slack.saveSlackWebhook('https://slack.com/webhook/test');
+        integrations.saveSlackConfiguration('https://slack.com/webhook/test');
 
         cy.reload();
         cy.assertInputText('Slack web hook URL', 'https://slack.com/webhook/test');
+      });
+
+      it('fills open-planner configuration', () => {
+        integrations.visit('team-1', 'conference-1');
+        integrations.saveSlackConfiguration('foo');
+        cy.assertText('Invalid url');
+
+        integrations.saveOpenPlannerConfiguration('eventId!', 'apiKey!');
+
+        cy.reload();
+        cy.assertInputText('OpenPlanner event id', 'eventId!');
+        cy.assertInputText('OpenPlanner API key', 'apiKey!');
+
+        integrations.disableOpenPlanner();
+
+        cy.reload();
+        cy.assertInputText('OpenPlanner event id', '');
+        cy.assertInputText('OpenPlanner API key', '');
       });
     });
 
