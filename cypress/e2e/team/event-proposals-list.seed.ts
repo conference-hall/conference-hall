@@ -27,6 +27,12 @@ export const seed = async () => {
     attributes: { name: 'Conference 1', slug: 'conference-1' },
   });
 
+  await eventFactory({
+    team,
+    traits: ['conference-cfp-open', 'withIntegration'],
+    attributes: { name: 'Conference 2', slug: 'conference-2' },
+  });
+
   const format1 = await eventFormatFactory({ event, attributes: { name: 'Format 1' } });
   const format2 = await eventFormatFactory({ event, attributes: { name: 'Format 2' } });
   const category1 = await eventCategoryFactory({ event, attributes: { name: 'Category 1' } });

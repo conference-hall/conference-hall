@@ -16,7 +16,7 @@ import { requireSession } from '~/libs/auth/session.ts';
 import { uploadToStorageHandler } from '~/libs/storage/storage.server.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 
-import { useEvent } from '../__components/useEvent.tsx';
+import { useEvent } from '../__components/use-event.tsx';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);

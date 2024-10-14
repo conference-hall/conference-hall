@@ -5,7 +5,7 @@ import { v4 as uuid } from 'uuid';
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 
-import { useEvent } from '../__components/useEvent.tsx';
+import { useEvent } from '../__components/use-event.tsx';
 import { ApiTryoutSection } from './__components/api-tryout-section.tsx';
 import { EnableApiSection } from './__components/enable-api-section.tsx';
 

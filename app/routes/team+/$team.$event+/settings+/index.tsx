@@ -16,7 +16,7 @@ import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
 import { EventDetailsForm } from '~/routes/__components/events/event-details-form.tsx';
 import { EventForm } from '~/routes/__components/events/event-form.tsx';
 
-import { useEvent } from '../__components/useEvent.tsx';
+import { useEvent } from '../__components/use-event.tsx';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);

@@ -20,7 +20,7 @@ import type { ChartType } from './__components/overview-page/proposals-by-days-c
 import { ProposalsByDayChart } from './__components/overview-page/proposals-by-days-chart.tsx';
 import { ReviewStatusCard } from './__components/overview-page/review-status-card.tsx';
 import { VisibilityStatusCard } from './__components/overview-page/visibility-status-card.tsx';
-import { useEvent } from './__components/useEvent.tsx';
+import { useEvent } from './__components/use-event.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);

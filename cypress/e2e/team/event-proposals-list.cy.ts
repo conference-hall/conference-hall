@@ -168,4 +168,35 @@ describe('Event proposals list', () => {
       cy.assertToast('2 proposals marked as "rejected".');
     });
   });
+
+  describe('Exports on proposals', () => {
+    it('displays exports for owners', () => {
+      cy.login('Clark Kent');
+      proposals.visit('team-1', 'conference-1');
+
+      proposals.exportMenu().click();
+
+      cy.findByRole('menuitem', { name: 'As JSON' }).should('exist');
+      cy.findByRole('menuitem', { name: 'As printable cards' }).should('exist');
+      cy.findByRole('menuitem', { name: 'To OpenPlanner' }).should('not.exist');
+    });
+
+    it('displays exports for owners with OpenPlanner integration', () => {
+      cy.login('Clark Kent');
+      proposals.visit('team-1', 'conference-2');
+
+      proposals.exportMenu().click();
+
+      cy.findByRole('menuitem', { name: 'As JSON' }).should('exist');
+      cy.findByRole('menuitem', { name: 'As printable cards' }).should('exist');
+      cy.findByRole('menuitem', { name: 'To OpenPlanner' }).should('exist');
+    });
+
+    it('does not display exports for members and reviewers', () => {
+      cy.login('Bruce Wayne');
+      proposals.visit('team-1', 'conference-1');
+
+      proposals.exportMenu().should('not.exist');
+    });
+  });
 });

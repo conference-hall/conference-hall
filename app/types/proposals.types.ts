@@ -9,3 +9,5 @@ export type ReviewFeeling = 'POSITIVE' | 'NEGATIVE' | 'NEUTRAL' | 'NO_OPINION';
 export type GlobalReview = { negatives: number; positives: number; average: number | null };
 
 export type UserReview = { feeling: ReviewFeeling | null; note: number | null; comment?: string | null };
+
+export type TalkLanguages = Array<string>;

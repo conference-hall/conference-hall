@@ -72,6 +72,14 @@ const TRAITS = {
       },
     },
   },
+  withIntegration: {
+    integrations: {
+      create: {
+        name: 'OPEN_PLANNER',
+        configuration: { eventId: 'open-planner-event-id', apiKey: 'open-planner-api-key' },
+      },
+    },
+  },
 };
 
 type Trait = keyof typeof TRAITS;

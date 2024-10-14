@@ -64,6 +64,10 @@ class OrganizationEventsProposalsPage extends BasePage {
     cy.findByRole('button', { name: 'Sort' }).click();
     cy.findByRole('menuitem', { name: sort }).click();
   }
+
+  exportMenu() {
+    return cy.findByRole('button', { name: 'Export' });
+  }
 }
 
 export default OrganizationEventsProposalsPage;

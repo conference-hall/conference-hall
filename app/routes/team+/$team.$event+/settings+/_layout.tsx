@@ -21,7 +21,7 @@ import { requireSession } from '~/libs/auth/session.ts';
 import { useUser } from '~/routes/__components/use-user.tsx';
 
 import { useTeam } from '../../__components/use-team.tsx';
-import { useEvent } from '../__components/useEvent.tsx';
+import { useEvent } from '../__components/use-event.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
@@ -39,7 +39,7 @@ const getMenuItems = (team?: string, event?: string) => [
   { to: `/team/${team}/${event}/settings/survey`, icon: QuestionMarkCircleIcon, label: 'Speaker survey' },
   { to: `/team/${team}/${event}/settings/review`, icon: StarIcon, label: 'Reviews' },
   { to: `/team/${team}/${event}/settings/notifications`, icon: EnvelopeIcon, label: 'Email notifications' },
-  { to: `/team/${team}/${event}/settings/integrations`, icon: CpuChipIcon, label: 'Slack integration' },
+  { to: `/team/${team}/${event}/settings/integrations`, icon: CpuChipIcon, label: 'Integrations' },
   { to: `/team/${team}/${event}/settings/api`, icon: CodeBracketIcon, label: 'Web API' },
 ];
 
