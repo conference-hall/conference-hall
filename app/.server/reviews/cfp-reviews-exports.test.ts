@@ -170,10 +170,7 @@ describe('CfpReviewsExports', () => {
             bio: speaker.bio,
             company: speaker.company,
             photoUrl: speaker.picture,
-            socials: [
-              { name: 'GitHub', link: `https://github.com/${socials.github}` },
-              { name: 'X', link: `https://x.com/${socials.twitter}` },
-            ],
+            socials: [],
           },
         ],
       });

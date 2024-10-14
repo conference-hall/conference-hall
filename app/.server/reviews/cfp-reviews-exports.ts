@@ -129,10 +129,11 @@ export class CfpReviewsExports {
             continue;
           }
 
-          const socials = speaker.socials as SocialLinks;
-          const socialArray = [];
-          if (socials.github) socialArray.push({ name: 'GitHub', link: `https://github.com/${socials.github}` });
-          if (socials.twitter) socialArray.push({ name: 'X', link: `https://x.com/${socials.twitter}` });
+          // socials attribute is causing a bug during export
+          // const socials = speaker.socials as SocialLinks;
+          // const socialArray = [];
+          // if (socials.github) socialArray.push({ name: 'GitHub', link: `https://github.com/${socials.github}` });
+          // if (socials.twitter) socialArray.push({ name: 'X', link: `https://x.com/${socials.twitter}` });
 
           result.speakers.push(
             compactObject({
@@ -141,7 +142,7 @@ export class CfpReviewsExports {
               bio: speaker.bio,
               company: speaker.company,
               photoUrl: speaker.picture,
-              socials: socialArray,
+              socials: [],
             }),
           );
         }
