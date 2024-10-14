@@ -7,7 +7,7 @@ import { Button, ButtonLink, button } from '~/design-system/buttons.tsx';
 import Select from '~/design-system/forms/select.tsx';
 import { Background } from '~/design-system/transitions.tsx';
 import { Text } from '~/design-system/typography.tsx';
-import { useEvent } from '~/routes/team+/$team.$event+/__components/useEvent.tsx';
+import { useEvent } from '~/routes/team+/$team.$event+/__components/use-event.tsx';
 import { useTeam } from '~/routes/team+/__components/use-team.tsx';
 
 import { reviewOptions, statusOptions } from './filters.ts';

@@ -14,7 +14,7 @@ import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 
-import { useEvent } from '../__components/useEvent.tsx';
+import { useEvent } from '../__components/use-event.tsx';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);

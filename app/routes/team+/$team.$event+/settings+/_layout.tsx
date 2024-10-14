@@ -21,7 +21,7 @@ import { requireSession } from '~/libs/auth/session.ts';
 import { useUser } from '~/routes/__components/use-user.tsx';
 
 import { useTeam } from '../../__components/use-team.tsx';
-import { useEvent } from '../__components/useEvent.tsx';
+import { useEvent } from '../__components/use-event.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);

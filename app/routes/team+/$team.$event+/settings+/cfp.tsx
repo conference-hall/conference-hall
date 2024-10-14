@@ -13,7 +13,7 @@ import {
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 
-import { useEvent } from '../__components/useEvent.tsx';
+import { useEvent } from '../__components/use-event.tsx';
 import { CommonCfpSetting } from './__components/common-cfp-setting.tsx';
 import { ConferenceCfpOpening } from './__components/conference-cfp-opening.tsx';
 import { MeetupCfpOpening } from './__components/meetup-cfp-opening.tsx';

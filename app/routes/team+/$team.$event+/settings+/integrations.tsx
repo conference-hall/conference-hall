@@ -18,7 +18,7 @@ import { z } from 'zod';
 import { EventIntegrations } from '~/.server/event-settings/event-integrations.ts';
 import { OpenPlannerConfigSchema } from '~/.server/event-settings/event-integrations.types.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-import { useEvent } from '../__components/useEvent.tsx';
+import { useEvent } from '../__components/use-event.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
