@@ -80,7 +80,7 @@ export default function SubmissionSpeakerRoute() {
             />
             <Text variant="secondary">
               You can give more information about you from{' '}
-              <ExternalLink href="/speaker/settings">the profile page.</ExternalLink>
+              <ExternalLink href="/speaker/profile">the profile page.</ExternalLink>
             </Text>
             <input type="hidden" name="references" value={speaker.references || ''} />
           </Form>
