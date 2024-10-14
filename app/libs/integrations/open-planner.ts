@@ -50,6 +50,14 @@ async function postSessionsAndSpeakers(eventId: string, apiKey: string, payload:
     });
 
     if (!response.ok) {
+      const result = await response.json();
+
+      console.log({
+        level: 'error',
+        status: response.status,
+        message: `Open planner error: ${JSON.stringify(result)}`,
+      });
+
       if (response.status === 401) {
         throw new Error('Invalid OpenPlanner API key.');
       }
