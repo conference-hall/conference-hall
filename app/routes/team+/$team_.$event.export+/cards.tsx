@@ -19,8 +19,8 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   invariant(params.event, 'Invalid event slug');
 
   const filters = parseUrlFilters(request.url);
-  const search = CfpReviewsExports.for(userId, params.team, params.event);
-  const results = await search.forCards(filters);
+  const exports = CfpReviewsExports.for(userId, params.team, params.event);
+  const results = await exports.forCards(filters);
   return json(results);
 };
 
