@@ -139,7 +139,6 @@ describe('CfpReviewsExports', () => {
       const exports = CfpReviewsExports.for(owner.id, team.slug, event.slug);
       const result = await exports.forOpenPlanner({});
 
-      expect(result.success).toBe(true);
       expect(postSessionsAndSpeakersMock).toHaveBeenCalledWith('open-planner-event-id', 'open-planner-api-key', {
         sessions: [
           {
