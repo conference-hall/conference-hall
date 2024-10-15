@@ -15,6 +15,7 @@ export const button = cva(
       variant: {
         primary: 'text-white bg-indigo-600 hover:bg-indigo-500',
         secondary: 'text-gray-700 bg-white hover:bg-gray-50 ring-1 ring-inset ring-gray-300',
+        important: 'text-red-600 bg-white hover:bg-red-50 ring-1 ring-inset ring-red-400',
       },
       size: {
         s: 'h-7 px-2.5 py-1.5 text-xs font-semibold',
@@ -30,7 +31,11 @@ export const button = cva(
 
 const icon = cva('', {
   variants: {
-    variant: { primary: '', secondary: 'text-gray-400 group-hover:text-gray-500' },
+    variant: {
+      primary: '',
+      secondary: 'text-gray-400 group-hover:text-gray-500',
+      important: 'text-red-500 group-hover:text-red-600',
+    },
     size: { s: 'h-4 w-4', m: 'h-5 w-5' },
     dir: { left: '', right: '' },
   },

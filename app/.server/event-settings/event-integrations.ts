@@ -1,6 +1,7 @@
 import { db } from 'prisma/db.server.ts';
 
 import type { EventIntegrationName } from '@prisma/client';
+import { OpenPlanner } from '~/libs/integrations/open-planner.ts';
 import type { EventIntegrationConfigData } from './event-integrations.types.ts';
 import { UserEvent } from './user-event.ts';
 
@@ -29,6 +30,13 @@ export class EventIntegrations extends UserEvent {
       await db.eventIntegrationConfig.create({ data: { ...data, eventId: event.id } });
     } else {
       await db.eventIntegrationConfig.update({ where: { id: data.id }, data });
+    }
+  }
+
+  async checkConfiguration(data: EventIntegrationConfigData) {
+    if (data.name === 'OPEN_PLANNER') {
+      const { eventId, apiKey } = data.configuration;
+      return OpenPlanner.checkConfiguration(eventId, apiKey);
     }
   }
 
