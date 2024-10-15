@@ -22,7 +22,7 @@ class IntegrationsSettings extends BasePage {
   }
 
   disableOpenPlanner() {
-    cy.findByRole('button', { name: 'Disable OpenPlanner integration' }).click();
+    cy.findByRole('button', { name: 'Disable' }).click();
   }
 }
 

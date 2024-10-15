@@ -56,8 +56,15 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       if (resultConfig.status !== 'success') return json(resultConfig.error);
 
       const eventIntegrations = EventIntegrations.for(userId, params.team, params.event);
-      await eventIntegrations.save({ id: resultId.value.id, name: 'OPEN_PLANNER', configuration: resultConfig.value });
-      return toast('success', 'OpenPlanner integration is enabled.');
+      const data = { id: resultId.value.id, name: 'OPEN_PLANNER', configuration: resultConfig.value } as const;
+
+      await eventIntegrations.save(data);
+      const result = await eventIntegrations.checkConfiguration(data);
+
+      if (result && !result.success) {
+        return json({ configurationError: [result.error] } as Record<string, string[]>);
+      }
+      return toast('success', 'Integration is enabled.');
     }
     case 'disable-integration': {
       const resultId = parseWithZod(form, { schema: z.object({ id: z.string() }) });
@@ -140,6 +147,8 @@ export default function EventIntegrationsSettingsRoute() {
               error={errors?.apiKey}
             />
 
+            {errors?.configurationError ? <Callout title={errors.configurationError[0]} variant="error" /> : null}
+
             <input type="hidden" name="id" value={openPlanner?.id} />
           </Form>
 
@@ -156,10 +165,10 @@ export default function EventIntegrationsSettingsRoute() {
               type="submit"
               name="intent"
               value="disable-integration"
-              variant="secondary"
+              variant="important"
               form="openplanner-integration-form"
             >
-              Disable OpenPlanner integration
+              Disable
             </Button>
           ) : null}
           <Button type="submit" name="intent" value="save-open-planner-integration" form="openplanner-integration-form">

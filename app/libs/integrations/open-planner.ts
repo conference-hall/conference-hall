@@ -55,4 +55,37 @@ async function postSessionsAndSpeakers(eventId: string, apiKey: string, payload:
   });
 }
 
-export const OpenPlanner = { postSessionsAndSpeakers };
+async function checkConfiguration(eventId: string, apiKey: string) {
+  if (!eventId || !apiKey) {
+    return { success: false, error: 'Invalid event id or API key.' };
+  }
+
+  try {
+    const url = `${BASE_URL}/v1/${eventId}/sessions-speakers?apiKey=${encodeURIComponent(apiKey)}`;
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sessions: [], speakers: [] }),
+    });
+
+    if (!response.ok) {
+      if (response.status === 401) {
+        throw new Error('Invalid OpenPlanner API key.');
+      }
+      if (response.status === 400) {
+        throw new Error('Invalid OpenPlanner event id.');
+      }
+      throw new Error('Unknown error.');
+    }
+
+    return { success: true };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error.',
+    };
+  }
+}
+
+export const OpenPlanner = { postSessionsAndSpeakers, checkConfiguration };

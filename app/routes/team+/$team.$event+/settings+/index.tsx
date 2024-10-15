@@ -128,7 +128,7 @@ export default function EventGeneralSettingsRoute() {
             <input type="hidden" name="archived" value={event.archived ? '' : 'true'} />
             <Button
               type="submit"
-              variant="secondary"
+              variant={event.archived ? 'secondary' : 'important'}
               name="intent"
               value="archive"
               iconLeft={event.archived ? ArchiveBoxXMarkIcon : ArchiveBoxArrowDownIcon}
