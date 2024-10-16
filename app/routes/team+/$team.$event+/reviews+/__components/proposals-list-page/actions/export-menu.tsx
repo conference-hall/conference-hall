@@ -39,14 +39,14 @@ export function ExportMenu() {
           <div className="py-1">
             <ExportMenuLink
               icon={CodeBracketIcon}
-              href={`/team/${params.team}/${params.event}/export/cards?${searchParams.toString()}`}
+              href={`/team/${params.team}/${params.event}/export/json?${searchParams.toString()}`}
             >
               As JSON
             </ExportMenuLink>
 
             <ExportMenuLink
               icon={Squares2X2Icon}
-              href={`/team/${params.team}/${params.event}/export/json?${searchParams.toString()}`}
+              href={`/team/${params.team}/${params.event}/export/cards?${searchParams.toString()}`}
             >
               As printable cards
             </ExportMenuLink>

@@ -176,8 +176,17 @@ describe('Event proposals list', () => {
 
       proposals.exportMenu().click();
 
-      cy.findByRole('menuitem', { name: 'As JSON' }).should('exist');
-      cy.findByRole('menuitem', { name: 'As printable cards' }).should('exist');
+      cy.findByRole('menuitem', { name: 'As JSON' }).should(
+        'have.attr',
+        'href',
+        '/team/team-1/conference-1/export/json?',
+      );
+      cy.findByRole('menuitem', { name: 'As printable cards' }).should(
+        'have.attr',
+        'href',
+        '/team/team-1/conference-1/export/cards?',
+      );
+
       cy.findByRole('menuitem', { name: 'To OpenPlanner' }).should('not.exist');
     });
 
@@ -187,8 +196,17 @@ describe('Event proposals list', () => {
 
       proposals.exportMenu().click();
 
-      cy.findByRole('menuitem', { name: 'As JSON' }).should('exist');
-      cy.findByRole('menuitem', { name: 'As printable cards' }).should('exist');
+      cy.findByRole('menuitem', { name: 'As JSON' }).should(
+        'have.attr',
+        'href',
+        '/team/team-1/conference-2/export/json?',
+      );
+      cy.findByRole('menuitem', { name: 'As printable cards' }).should(
+        'have.attr',
+        'href',
+        '/team/team-1/conference-2/export/cards?',
+      );
+
       cy.findByRole('menuitem', { name: 'To OpenPlanner' }).should('exist');
     });
 
