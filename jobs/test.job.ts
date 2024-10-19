@@ -1,5 +1,5 @@
-import { job } from 'jobs/libs/job';
 import { db } from 'prisma/db.server.ts';
+import { job } from './libs/job.ts';
 import { logger } from './libs/logger/logger.ts';
 
 export const testJob = job<string>({

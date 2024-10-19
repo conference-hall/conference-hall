@@ -1,6 +1,6 @@
 import { Worker } from 'bullmq';
 import Redis from 'ioredis';
-import { getEnv } from 'jobs/libs/env/env.ts';
+import { getEnv } from './env/env.ts';
 
 const env = getEnv();
 

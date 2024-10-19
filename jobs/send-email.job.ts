@@ -1,5 +1,5 @@
-import { emailProvider } from 'jobs/libs/emails/provider.ts';
-import { job } from 'jobs/libs/job';
+import { emailProvider } from './libs/emails/provider.ts';
+import { job } from './libs/job.ts';
 
 export type Email = {
   from: string;

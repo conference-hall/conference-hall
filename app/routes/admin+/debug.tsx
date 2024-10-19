@@ -1,6 +1,6 @@
 import type { ActionFunctionArgs } from '@remix-run/node';
 import { Form, json } from '@remix-run/react';
-import { testJob } from 'jobs/test.job';
+import { testJob } from 'jobs/test.job.ts';
 
 import { Button } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
