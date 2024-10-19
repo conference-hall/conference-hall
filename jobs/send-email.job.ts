@@ -1,5 +1,5 @@
 import { emailProvider } from 'jobs/libs/emails/provider.ts';
-import { task } from 'jobs/libs/tasks/task.ts';
+import { job } from 'jobs/libs/job';
 
 export type Email = {
   from: string;
@@ -9,8 +9,9 @@ export type Email = {
   html: string;
 };
 
-export const sendEmail = task<Email>({
-  id: 'send-email',
+export const sendEmail = job<Email>({
+  name: 'send-email',
+  queue: 'default',
   run: async (payload: Email) => {
     if (!emailProvider) return Promise.reject('Email provider not found');
 

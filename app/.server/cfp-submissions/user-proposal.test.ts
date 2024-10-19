@@ -9,7 +9,7 @@ import { userFactory } from 'tests/factories/users.ts';
 import { CfpNotOpenError, ProposalNotFoundError } from '~/libs/errors.server.ts';
 import { SpeakerProposalStatus } from '~/types/speaker.types.ts';
 
-import { sendEmail } from 'jobs/tasks/send-email.job.ts';
+import { sendEmail } from 'jobs/send-email.job.ts';
 import { UserProposal } from './user-proposal.ts';
 
 describe('UserProposal', () => {

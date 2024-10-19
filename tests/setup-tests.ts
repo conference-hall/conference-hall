@@ -3,9 +3,9 @@ import { installGlobals } from '@remix-run/node';
 import { disconnectDB, resetDB } from './db-helpers.ts';
 
 // Mock jobs during testing
-vi.mock('../jobs/libs/tasks/task.ts', () => {
+vi.mock('../jobs/libs/job.ts', () => {
   return {
-    task: vi.fn().mockImplementation((config) => ({
+    job: vi.fn().mockImplementation((config) => ({
       config,
       trigger: vi.fn(),
     })),
