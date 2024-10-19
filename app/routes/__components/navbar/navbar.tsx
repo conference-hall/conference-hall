@@ -2,7 +2,7 @@ import { cx } from 'class-variance-authority';
 
 import { BG_COLOR } from '~/design-system/colors.ts';
 
-import { LoginButton } from './dropdowns/login-button.tsx';
+import { LoginButton } from './login-button.tsx';
 import { Logo } from './logo.tsx';
 import { Navigation } from './navigation.tsx';
 import { TeamBreadcrumb } from './team-breadcrumb.tsx';
@@ -17,7 +17,7 @@ type Props = {
     picture: string | null;
     hasTeamAccess: boolean;
     notificationsUnreadCount: number;
-    teams: Array<{ slug: string; name: string }>;
+    teams: Array<{ slug: string; name: string; events: Array<{ slug: string; name: string; logoUrl: string | null }> }>;
   } | null;
   layout?: NavbarLayout;
   variant?: 'primary' | 'secondary';

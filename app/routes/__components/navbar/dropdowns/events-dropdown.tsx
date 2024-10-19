@@ -1,8 +1,9 @@
-import { Menu, MenuButton, MenuItem, MenuItems, MenuSeparator } from '@headlessui/react';
-import { ChevronDownIcon, ChevronUpIcon, PlusIcon } from '@heroicons/react/20/solid';
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
+import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/20/solid';
 import { Link } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
 import { Fragment } from 'react/jsx-runtime';
+import { Avatar } from '~/design-system/avatar.tsx';
 
 import { MenuTransition } from '~/design-system/transitions.tsx';
 
@@ -20,17 +21,26 @@ const itemStyle = (focus = false, active = false) =>
   });
 
 type Props = {
-  currentTeam?: { slug: string; name: string };
-  teams: Array<{ slug: string; name: string }>;
+  currentTeam: { slug: string; name: string };
+  currentEvent: { slug: string; name: string; logoUrl: string | null };
+  events: Array<{ slug: string; name: string; logoUrl: string | null }>;
 };
 
-export function TeamsDropdown({ teams = [], currentTeam }: Props) {
+export function EventsDropdown({ events = [], currentTeam, currentEvent }: Props) {
   return (
     <Menu as="div" className="hidden sm:flex relative z-20 shrink-0">
       {({ open }) => (
         <>
           <MenuButton className={menuStyle}>
-            {currentTeam ? currentTeam.name : 'My teams'}
+            <Avatar
+              size="xs"
+              picture={currentEvent.logoUrl}
+              name={currentEvent.name}
+              square
+              aria-hidden
+              className="mr-2"
+            />
+            {currentEvent.name}
             {open ? (
               <ChevronUpIcon className="h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
             ) : (
@@ -42,24 +52,19 @@ export function TeamsDropdown({ teams = [], currentTeam }: Props) {
               anchor={{ to: 'bottom start', gap: '8px' }}
               className="z-10 w-56 rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
             >
-              {teams.map((team) => (
-                <MenuItem key={team.slug} as={Fragment}>
+              {events.map(({ slug, name, logoUrl }) => (
+                <MenuItem key={slug} as={Fragment}>
                   {({ focus }) => (
-                    <Link to={`/team/${team.slug}`} className={itemStyle(focus, team.slug === currentTeam?.slug)}>
-                      {team.name}
+                    <Link
+                      to={`/team/${currentTeam.slug}/${slug}`}
+                      className={itemStyle(focus, slug === currentEvent.slug)}
+                    >
+                      <Avatar size="xs" picture={logoUrl} name={name} square aria-hidden className="mr-2" />
+                      {name}
                     </Link>
                   )}
                 </MenuItem>
               ))}
-              <MenuSeparator className="border-t border-gray-200 my-1" />
-              <MenuItem>
-                {({ focus }) => (
-                  <Link to="/team/new" className={itemStyle(focus)}>
-                    <PlusIcon className="mr-2 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
-                    New team
-                  </Link>
-                )}
-              </MenuItem>
             </MenuItems>
           </MenuTransition>
         </>

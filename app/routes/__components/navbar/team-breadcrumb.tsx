@@ -1,27 +1,28 @@
-import { useRouteLoaderData } from '@remix-run/react';
+import { useParams } from '@remix-run/react';
 
 import { SlashBarIcon } from '~/design-system/icons/slash-bar-icon.tsx';
 
-import type { loader as routeEventLoader } from '../../team+/$team.$event+/_layout.tsx';
-import type { loader as routeTeamLoader } from '../../team+/$team.tsx';
-import { EventButton } from './dropdowns/event-button.tsx';
+import { EventsDropdown } from './dropdowns/events-dropdown.tsx';
 import { TeamsDropdown } from './dropdowns/teams-dropdown.tsx';
 
 type Props = {
-  teams: Array<{ slug: string; name: string }>;
+  teams: Array<{ slug: string; name: string; events: Array<{ slug: string; name: string; logoUrl: string | null }> }>;
 };
 
 export function TeamBreadcrumb({ teams }: Props) {
-  const currentTeam = useRouteLoaderData<typeof routeTeamLoader>('routes/team+/$team');
-  const event = useRouteLoaderData<typeof routeEventLoader>('routes/team+/$team.$event+/_layout');
+  const { team, event } = useParams();
+
+  const currentTeam = teams.find(({ slug }) => slug === team);
+  const currentEvent = currentTeam?.events?.find(({ slug }) => slug === event);
 
   return (
     <nav className="flex ml-4 items-center text-gray-200 text-sm font-semibold">
-      <TeamsDropdown teams={teams} currentTeamSlug={currentTeam?.slug} />
-      {currentTeam && event ? (
+      <TeamsDropdown teams={teams} currentTeam={currentTeam} />
+
+      {currentTeam && currentEvent ? (
         <>
           <SlashBarIcon className="hidden sm:flex h-4 w-4 fill-gray-500" />
-          <EventButton currentTeamSlug={currentTeam.slug} event={event} />
+          <EventsDropdown events={currentTeam.events} currentTeam={currentTeam} currentEvent={currentEvent} />
         </>
       ) : null}
     </nav>

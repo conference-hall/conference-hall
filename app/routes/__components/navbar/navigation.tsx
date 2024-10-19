@@ -1,11 +1,11 @@
 import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
 
-import { LoginButton } from './dropdowns/login-button.tsx';
 import { TeamsDropdown } from './dropdowns/teams-dropdown.tsx';
+import { LoginButton } from './login-button.tsx';
 
 type Props = {
   authenticated: boolean;
-  teams?: Array<{ slug: string; name: string }>;
+  teams?: Array<{ slug: string; name: string; events: Array<{ slug: string; name: string }> }>;
   withTeams?: boolean;
 };
 
