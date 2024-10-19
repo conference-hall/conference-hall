@@ -6,8 +6,8 @@
   "type": "module",
   "license": "AGPL-3.0",
   "scripts": {
-    "dev": "dotenv -e .env.dev -- concurrently -r 'npm:dev:*'",
-    "dev:app": "vite",
+    "dev": "dotenv -e .env.dev -- concurrently -k -c '#fdba74,#93c5fd' 'npm:dev:*'",
+    "dev:vite": "vite",
     "dev:jobs": "tsx ./jobs/server.ts",
     "build": "remix vite:build",
     "start": "npm run start:db && npm run start:server",

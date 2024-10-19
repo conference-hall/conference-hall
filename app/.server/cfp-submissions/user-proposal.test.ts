@@ -9,6 +9,7 @@ import { userFactory } from 'tests/factories/users.ts';
 import { CfpNotOpenError, ProposalNotFoundError } from '~/libs/errors.server.ts';
 import { SpeakerProposalStatus } from '~/types/speaker.types.ts';
 
+import { sendEmail } from 'jobs/send-email.job.ts';
 import { UserProposal } from './user-proposal.ts';
 
 describe('UserProposal', () => {
@@ -245,13 +246,13 @@ describe('UserProposal', () => {
 
       expect(proposalUpdated?.confirmationStatus).toBe('CONFIRMED');
 
-      expect([
-        {
+      expect(sendEmail.trigger).toHaveBeenCalledWith(
+        expect.objectContaining({
           from: `${event.name} <no-reply@conference-hall.io>`,
           to: [event.emailOrganizer],
           subject: `[${event.name}] Talk confirmed by speaker`,
-        },
-      ]).toHaveEmailsEnqueued();
+        }),
+      );
     });
 
     it('declines a proposal', async () => {
@@ -270,13 +271,13 @@ describe('UserProposal', () => {
 
       expect(proposalUpdated?.confirmationStatus).toBe('DECLINED');
 
-      expect([
-        {
+      expect(sendEmail.trigger).toHaveBeenCalledWith(
+        expect.objectContaining({
           from: `${event.name} <no-reply@conference-hall.io>`,
           to: [event.emailOrganizer],
           subject: `[${event.name}] Talk declined by speaker`,
-        },
-      ]).toHaveEmailsEnqueued();
+        }),
+      );
     });
 
     it('cannot confirm or declined a not accepted proposal', async () => {

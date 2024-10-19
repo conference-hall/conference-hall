@@ -1,8 +1,16 @@
-import './custom-matchers.ts';
-
 import { installGlobals } from '@remix-run/node';
 
 import { disconnectDB, resetDB } from './db-helpers.ts';
+
+// Mock jobs during testing
+vi.mock('../jobs/libs/job.ts', () => {
+  return {
+    job: vi.fn().mockImplementation((config) => ({
+      config,
+      trigger: vi.fn(),
+    })),
+  };
+});
 
 // This installs globals such as "fetch", "Response", "Request" and "Headers.
 installGlobals({ nativeFetch: true });
@@ -10,7 +18,7 @@ installGlobals({ nativeFetch: true });
 // DB resets and disconnect
 afterEach(async () => {
   await resetDB();
-  vi.resetAllMocks();
+  vi.restoreAllMocks();
 });
 
 afterAll(async () => {

@@ -7,6 +7,7 @@ import { userFactory } from 'tests/factories/users.ts';
 
 import { ForbiddenOperationError, ProposalNotFoundError } from '~/libs/errors.server.ts';
 
+import { sendEmail } from 'jobs/send-email.job.ts';
 import { Publication } from './publication.ts';
 
 describe('Publication', () => {
@@ -89,18 +90,24 @@ describe('Publication', () => {
 
       const countAccepted = await publication.statistics();
       expect(countAccepted.accepted).toEqual({ published: 5, notPublished: 0 });
-      expect([
-        {
+
+      expect(sendEmail.trigger).toHaveBeenNthCalledWith(
+        1,
+        expect.objectContaining({
           from: `${event.name} <no-reply@conference-hall.io>`,
           to: [speaker1.email, speaker2.email],
           subject: `[${event.name}] Congrats! Your proposal has been accepted`,
-        },
-        {
+        }),
+      );
+
+      expect(sendEmail.trigger).toHaveBeenNthCalledWith(
+        2,
+        expect.objectContaining({
           from: `${event.name} <no-reply@conference-hall.io>`,
           to: [speaker1.email, speaker2.email],
           subject: `[${event.name}] Congrats! Your proposal has been accepted`,
-        },
-      ]).toHaveEmailsEnqueued();
+        }),
+      );
     });
 
     it('publish for the even all results for rejected proposals not already announced', async () => {
@@ -113,13 +120,14 @@ describe('Publication', () => {
 
       const countRejected = await publication.statistics();
       expect(countRejected.rejected).toEqual({ published: 1, notPublished: 0 });
-      expect([
-        {
+
+      expect(sendEmail.trigger).toHaveBeenCalledWith(
+        expect.objectContaining({
           from: `${event.name} <no-reply@conference-hall.io>`,
           to: [speaker1.email],
           subject: `[${event.name}] Your talk has been declined`,
-        },
-      ]).toHaveEmailsEnqueued();
+        }),
+      );
     });
 
     it('can be sent by team members', async () => {
@@ -152,13 +160,14 @@ describe('Publication', () => {
 
       const countAccepted = await publication.statistics();
       expect(countAccepted.accepted).toEqual({ published: 4, notPublished: 1 });
-      expect([
-        {
+
+      expect(sendEmail.trigger).toHaveBeenCalledWith(
+        expect.objectContaining({
           from: `${event.name} <no-reply@conference-hall.io>`,
           to: [speaker1.email, speaker2.email],
           subject: `[${event.name}] Congrats! Your proposal has been accepted`,
-        },
-      ]).toHaveEmailsEnqueued();
+        }),
+      );
     });
 
     it('can be sent by team members', async () => {
