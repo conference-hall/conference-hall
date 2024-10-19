@@ -1,31 +1,35 @@
 import { Queue } from 'bullmq';
 import Redis from 'ioredis';
 import { getEnv } from 'jobs/libs/env/env.ts';
+import { DEFAULT_QUEUE } from './worker.ts';
 
 const env = getEnv();
 
 export type JobConfig<Payload> = {
   name: string;
-  queue: string;
+  queue?: string;
   run: (payload: Payload) => Promise<void>;
 };
 
 export type Job<Payload> = {
   config: JobConfig<Payload>;
-  trigger: (payload: Payload) => Promise<void>;
+  trigger: (payload?: Payload) => Promise<void>;
 };
 
 const queues = new Map<string, Queue<unknown>>();
 
 export function job<Payload>(config: JobConfig<Payload>): Job<Payload> {
+  const { name, queue = DEFAULT_QUEUE } = config;
+
   return {
     config,
-    trigger: async (payload: Payload) => {
-      if (!queues.has(config.queue)) {
+    trigger: async (payload?: Payload) => {
+      if (!queues.has(queue)) {
         const connection = new Redis(env.REDIS_URL, { maxRetriesPerRequest: null });
+
         queues.set(
-          config.queue,
-          new Queue<Payload>(config.queue, {
+          queue,
+          new Queue<Payload>(queue, {
             connection,
             defaultJobOptions: {
               attempts: 5,
@@ -35,8 +39,7 @@ export function job<Payload>(config: JobConfig<Payload>): Job<Payload> {
         );
       }
 
-      const queue = queues.get(config.queue);
-      await queue?.add(config.name, payload);
+      await queues.get(queue)?.add(name, payload);
     },
   };
 }

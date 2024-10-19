@@ -2,8 +2,9 @@ import closeWithGrace from 'close-with-grace';
 import { logger } from './libs/logger/logger.ts';
 import { createJobWorkers } from './libs/worker.ts';
 import { sendEmail } from './send-email.job.ts';
+import { testJob } from './test.job.ts';
 
-const jobs = [sendEmail];
+const jobs = [sendEmail, testJob];
 
 const workers = createJobWorkers(jobs);
 

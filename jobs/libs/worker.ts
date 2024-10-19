@@ -7,12 +7,14 @@ const env = getEnv();
 import type { Job } from './job.ts';
 import { logger } from './logger/logger.ts';
 
+export const DEFAULT_QUEUE = 'default';
+
 export type JobWorker = { queue: string; close: () => Promise<void> };
 
 export function createJobWorkers(jobs: Array<Job<any>>): Array<JobWorker> {
   const jobsByQueue = new Map();
   for (const job of jobs) {
-    const { queue } = job.config;
+    const { queue = DEFAULT_QUEUE } = job.config;
     if (jobsByQueue.has(queue)) {
       jobsByQueue.get(queue).push(job);
     } else {
@@ -35,10 +37,9 @@ function createJobWorker(queue: string, jobs: Array<Job<any>>): JobWorker {
     queue,
     async ({ name, data }) => {
       const job = jobs.find((job) => job.config.name === name);
-      if (!job) {
-        logger.error(`Job not found: "${name}"`);
-        return;
-      }
+
+      if (!job) throw new Error(`Job not found: "${name}"`);
+
       await job.config.run(data);
     },
     {
@@ -61,7 +62,7 @@ function createJobWorker(queue: string, jobs: Array<Job<any>>): JobWorker {
   });
 
   worker.on('failed', (job, err) => {
-    logger.error(`Failed job "${job?.name}". Job ID: ${job?.id}. Error: ${err}`);
+    logger.error(`Failed job "${job?.name}". Job ID: ${job?.id}. ${err}`);
   });
 
   return {
