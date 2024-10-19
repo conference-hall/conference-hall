@@ -1,23 +1,18 @@
 import closeWithGrace from 'close-with-grace';
+import { createWorker } from './libs/tasks/task.ts';
+import { sendEmail } from './tasks/send-email.job.ts';
 
-import { worker } from './email/email.worker.ts';
-
-worker.on('ready', () => console.log('Emails jobs worker is ready'));
-
-worker.on('completed', (job) => console.log(`Completed job ${job.id} successfully`));
-
-worker.on('failed', (job, err) => console.log(`Failed job ${job?.id} with ${err}`));
+const worker = createWorker([sendEmail]);
 
 process.on('uncaughtException', (err) => {
-  console.error(err, '[Jobs] Uncaught exception');
+  console.error('[Jobs] Uncaught exception', err);
 });
 
 process.on('unhandledRejection', (reason, promise) => {
-  console.error({ promise, reason }, '[Jobs] Unhandled Rejection at: Promise');
+  console.error(`[Jobs] Unhandled Rejection: ${reason}`, promise);
 });
 
 closeWithGrace(async () => {
-  console.log('Shutting down the jobs worker server...');
+  console.log('[Jobs] Shutting down the jobs worker server...');
   await worker.close();
-  await worker.disconnect();
 });

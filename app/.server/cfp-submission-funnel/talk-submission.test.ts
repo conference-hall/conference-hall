@@ -16,6 +16,7 @@ import {
   TalkNotFoundError,
 } from '~/libs/errors.server.ts';
 
+import { sendEmail } from 'jobs/tasks/send-email.job.ts';
 import { sendSubmittedTalkSlackMessage } from './slack/slack.services.ts';
 import { TalkSubmission } from './talk-submission.ts';
 import { getTracksSchema } from './talk-submission.types.ts';
@@ -237,18 +238,23 @@ describe('TalkSubmission', () => {
       expect(result?.isDraft).toEqual(false);
       expect(result?.deliberationStatus).toEqual('PENDING');
 
-      expect([
-        {
+      expect(sendEmail.trigger).toHaveBeenNthCalledWith(
+        1,
+        expect.objectContaining({
           from: `${event.name} <no-reply@conference-hall.io>`,
           to: [speaker.email],
           subject: `[${event.name}] Submission confirmed`,
-        },
-        {
+        }),
+      );
+
+      expect(sendEmail.trigger).toHaveBeenNthCalledWith(
+        2,
+        expect.objectContaining({
           from: `${event.name} <no-reply@conference-hall.io>`,
           to: [event.emailOrganizer],
           subject: `[${event.name}] New proposal received`,
-        },
-      ]).toHaveEmailsEnqueued();
+        }),
+      );
 
       expect(sendSubmittedTalkSlackMessageMock).not.toHaveBeenCalled();
     });

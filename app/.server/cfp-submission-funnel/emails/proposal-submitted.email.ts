@@ -1,5 +1,5 @@
 import type { Event, Proposal, User } from '@prisma/client';
-import { EmailQueue } from 'jobs/email/email.queue.ts';
+import { sendEmail } from 'jobs/tasks/send-email.job.ts';
 
 import { Template } from '~/libs/email-template/template.ts';
 import { appUrl } from '~/libs/env/env.server.ts';
@@ -18,7 +18,7 @@ export class ProposalSubmittedEmail {
       },
     });
 
-    await EmailQueue.get().enqueue('proposal-submitted-email', {
+    await sendEmail.trigger({
       from: `${event.name} <no-reply@conference-hall.io>`,
       to: proposal.speakers.map((speaker) => speaker.email).filter(Boolean),
       subject: template.renderSubject(),

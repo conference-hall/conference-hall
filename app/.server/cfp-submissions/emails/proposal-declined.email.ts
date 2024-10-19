@@ -1,5 +1,5 @@
 import type { Event, Proposal } from '@prisma/client';
-import { EmailQueue } from 'jobs/email/email.queue.ts';
+import { sendEmail } from 'jobs/tasks/send-email.job.ts';
 
 import { Template } from '~/libs/email-template/template.ts';
 import type { EventEmailNotificationsKeys } from '~/types/events.types.ts';
@@ -21,7 +21,7 @@ export class ProposalDeclinedEmail {
       },
     });
 
-    await EmailQueue.get().enqueue('proposal-declined-email', {
+    await sendEmail.trigger({
       from: `${event.name} <no-reply@conference-hall.io>`,
       to: [event.emailOrganizer],
       subject: template.renderSubject(),
