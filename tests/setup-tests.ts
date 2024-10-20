@@ -8,6 +8,15 @@ import { disconnectDB, resetDB } from './db-helpers.ts';
 // This installs globals such as "fetch", "Response", "Request" and "Headers.
 installGlobals({ nativeFetch: true });
 
+afterEach(async () => {
+  cleanup();
+  await resetDB();
+});
+
+afterAll(async () => {
+  await disconnectDB();
+});
+
 // Mock jobs
 vi.mock('../app/libs/jobs/job.ts', () => {
   return {
@@ -18,14 +27,15 @@ vi.mock('../app/libs/jobs/job.ts', () => {
   };
 });
 
-afterEach(async () => {
-  cleanup();
-  await resetDB();
-});
+// Mock the ResizeObserver
+vi.stubGlobal(
+  'ResizeObserver',
+  vi.fn(() => ({
+    observe: vi.fn(),
+    unobserve: vi.fn(),
+    disconnect: vi.fn(),
+  })),
+);
 
-afterAll(async () => {
-  await disconnectDB();
-});
-
-// Console in tests
+// Mock console
 global.console.info = vi.fn();
