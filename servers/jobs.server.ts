@@ -1,8 +1,9 @@
 import closeWithGrace from 'close-with-grace';
-import { logger } from './libs/logger/logger.ts';
-import { createJobWorkers } from './libs/worker.ts';
-import { sendEmail } from './send-email.job.ts';
-import { testJob } from './test.job.ts';
+
+import { sendEmail } from '../app/.server/shared/jobs/send-email.job.ts';
+import { testJob } from '../app/.server/shared/jobs/test.job.ts';
+import { logger } from '../app/libs/jobs/logger.ts';
+import { createJobWorkers } from '../app/libs/jobs/worker.ts';
 
 const jobs = [sendEmail, testJob];
 

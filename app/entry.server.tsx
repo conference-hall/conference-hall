@@ -6,7 +6,7 @@ import { RemixServer } from '@remix-run/react';
 import * as Sentry from '@sentry/remix';
 import { isbot } from 'isbot';
 import { renderToPipeableStream } from 'react-dom/server';
-import { createAppServer } from 'server/index.ts';
+import { createAppServer } from '../servers/web.server.ts';
 
 import { NonceContext } from './libs/nonce/use-nonce.ts';
 

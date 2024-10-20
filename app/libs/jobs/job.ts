@@ -1,6 +1,7 @@
 import { Queue } from 'bullmq';
 import Redis from 'ioredis';
-import { getEnv } from './env/env.ts';
+
+import { getEnv } from './env.ts';
 import { DEFAULT_QUEUE } from './worker.ts';
 
 const env = getEnv();
