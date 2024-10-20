@@ -20,16 +20,24 @@ export class UserTeams {
   }
 
   async list() {
-    const accesses = await db.teamMember.findMany({ where: { memberId: this.userId }, include: { team: true } });
-    return sortBy(
-      accesses.map((member) => ({ slug: member.team.slug, name: member.team.name })),
-      'name',
-    );
+    const teamsMembership = await db.teamMember.findMany({
+      where: { memberId: this.userId },
+      include: { team: { include: { events: true } } },
+    });
+
+    const teams = teamsMembership.map(({ team }) => {
+      const events = team.events.map((event) => ({ slug: event.slug, name: event.name, logoUrl: event.logoUrl }));
+      return { slug: team.slug, name: team.name, events: sortBy(events, 'name') };
+    });
+
+    return sortBy(teams, 'name');
   }
 
   async create(data: z.infer<typeof TeamCreateSchema>) {
-    const isAllowed = await TeamBetaAccess.for(this.userId).isAllowed();
-    if (!isAllowed) throw new ForbiddenOperationError();
+    const user = await db.user.findFirst({ select: { organizerKey: true, teams: true }, where: { id: this.userId } });
+
+    const hasBetaAccess = TeamBetaAccess.hasAccess(user, user?.teams?.length);
+    if (!hasBetaAccess) throw new ForbiddenOperationError();
 
     return await db.$transaction(async (trx) => {
       const existSlug = await trx.team.findFirst({ where: { slug: data.slug } });

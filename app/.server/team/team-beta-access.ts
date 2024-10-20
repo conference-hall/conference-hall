@@ -9,10 +9,9 @@ export class TeamBetaAccess {
     return new TeamBetaAccess(userId);
   }
 
-  async isAllowed() {
-    const user = await db.user.findFirst({ select: { organizerKey: true, teams: true }, where: { id: this.userId } });
-    const hasOrganizations = Boolean(user?.teams?.length);
-    return hasOrganizations || Boolean(user?.organizerKey);
+  static hasAccess(user: { organizerKey: string | null } | null, teamsCount = 0) {
+    if (!user) return false;
+    return teamsCount > 0 || Boolean(user.organizerKey);
   }
 
   async validateAccessKey(key: string) {

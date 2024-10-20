@@ -5,6 +5,7 @@ import { userFactory } from 'tests/factories/users.ts';
 
 import { ForbiddenOperationError, SlugAlreadyExistsError } from '~/libs/errors.server.ts';
 
+import { eventFactory } from 'tests/factories/events.ts';
 import { TeamCreateSchema, UserTeams } from './user-teams.ts';
 
 describe('UserTeams', () => {
@@ -16,16 +17,25 @@ describe('UserTeams', () => {
 
   describe('list', () => {
     it("returns user's teams", async () => {
-      const orga1 = await teamFactory({ attributes: { name: 'A' }, owners: [user] });
-      const orga2 = await teamFactory({ attributes: { name: 'B' }, members: [user] });
-      const orga3 = await teamFactory({ attributes: { name: 'C' }, reviewers: [user] });
+      const team1 = await teamFactory({ attributes: { name: 'A' }, owners: [user] });
+      const team2 = await teamFactory({ attributes: { name: 'B' }, members: [user] });
+      const team3 = await teamFactory({ attributes: { name: 'C' }, reviewers: [user] });
+      const event1 = await eventFactory({ team: team1, attributes: { name: 'A' } });
+      const event2 = await eventFactory({ team: team1, attributes: { name: 'B' } });
 
       const teams = await UserTeams.for(user.id).list();
 
       expect(teams).toEqual([
-        { slug: orga1.slug, name: 'A' },
-        { slug: orga2.slug, name: 'B' },
-        { slug: orga3.slug, name: 'C' },
+        {
+          slug: team1.slug,
+          name: 'A',
+          events: [
+            { slug: event1.slug, name: event1.name, logoUrl: event1.logoUrl },
+            { slug: event2.slug, name: event2.name, logoUrl: event2.logoUrl },
+          ],
+        },
+        { slug: team2.slug, name: 'B', events: [] },
+        { slug: team3.slug, name: 'C', events: [] },
       ]);
     });
   });
