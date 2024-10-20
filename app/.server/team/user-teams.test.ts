@@ -30,8 +30,8 @@ describe('UserTeams', () => {
           slug: team1.slug,
           name: 'A',
           events: [
-            { slug: event1.slug, name: event1.name, logoUrl: event1.logoUrl },
-            { slug: event2.slug, name: event2.name, logoUrl: event2.logoUrl },
+            { slug: event1.slug, name: event1.name, logoUrl: event1.logoUrl, archived: false },
+            { slug: event2.slug, name: event2.name, logoUrl: event2.logoUrl, archived: false },
           ],
         },
         { slug: team2.slug, name: 'B', events: [] },

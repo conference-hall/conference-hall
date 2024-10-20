@@ -23,10 +23,12 @@ const itemStyle = (focus = false, active = false) =>
 type Props = {
   currentTeam: { slug: string; name: string };
   currentEvent: { slug: string; name: string; logoUrl: string | null };
-  events: Array<{ slug: string; name: string; logoUrl: string | null }>;
+  events: Array<{ slug: string; name: string; logoUrl: string | null; archived: boolean }>;
 };
 
 export function EventsDropdown({ events = [], currentTeam, currentEvent }: Props) {
+  const eventsDisplayed = events.filter((event) => !event.archived || event.slug === currentEvent.slug);
+
   return (
     <Menu as="div" className="hidden sm:flex relative z-20 shrink-0">
       {({ open }) => (
@@ -52,7 +54,7 @@ export function EventsDropdown({ events = [], currentTeam, currentEvent }: Props
               anchor={{ to: 'bottom start', gap: '8px' }}
               className="z-10 w-56 rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
             >
-              {events.map(({ slug, name, logoUrl }) => (
+              {eventsDisplayed.map(({ slug, name, logoUrl }) => (
                 <MenuItem key={slug} as={Fragment}>
                   {({ focus }) => (
                     <Link

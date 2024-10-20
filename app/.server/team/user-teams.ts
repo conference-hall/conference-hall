@@ -26,7 +26,12 @@ export class UserTeams {
     });
 
     const teams = teamsMembership.map(({ team }) => {
-      const events = team.events.map((event) => ({ slug: event.slug, name: event.name, logoUrl: event.logoUrl }));
+      const events = team.events.map((event) => ({
+        slug: event.slug,
+        name: event.name,
+        archived: event.archived,
+        logoUrl: event.logoUrl,
+      }));
       return { slug: team.slug, name: team.name, events: sortBy(events, 'name') };
     });
 

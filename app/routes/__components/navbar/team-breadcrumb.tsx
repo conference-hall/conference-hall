@@ -6,7 +6,11 @@ import { EventsDropdown } from './dropdowns/events-dropdown.tsx';
 import { TeamsDropdown } from './dropdowns/teams-dropdown.tsx';
 
 type Props = {
-  teams: Array<{ slug: string; name: string; events: Array<{ slug: string; name: string; logoUrl: string | null }> }>;
+  teams: Array<{
+    slug: string;
+    name: string;
+    events: Array<{ slug: string; name: string; logoUrl: string | null; archived: boolean }>;
+  }>;
 };
 
 export function TeamBreadcrumb({ teams }: Props) {
