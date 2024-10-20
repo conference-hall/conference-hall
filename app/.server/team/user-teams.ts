@@ -34,8 +34,10 @@ export class UserTeams {
   }
 
   async create(data: z.infer<typeof TeamCreateSchema>) {
-    const isAllowed = await TeamBetaAccess.for(this.userId).isAllowed();
-    if (!isAllowed) throw new ForbiddenOperationError();
+    const user = await db.user.findFirst({ select: { organizerKey: true, teams: true }, where: { id: this.userId } });
+
+    const hasBetaAccess = TeamBetaAccess.hasAccess(user, user?.teams?.length);
+    if (!hasBetaAccess) throw new ForbiddenOperationError();
 
     return await db.$transaction(async (trx) => {
       const existSlug = await trx.team.findFirst({ where: { slug: data.slug } });

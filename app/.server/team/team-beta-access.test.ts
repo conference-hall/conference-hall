@@ -1,6 +1,5 @@
 import { db } from 'prisma/db.server.ts';
 import { organizerKeyFactory } from 'tests/factories/organizer-key.ts';
-import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 
 import { InvalidAccessKeyError } from '~/libs/errors.server.ts';
@@ -8,29 +7,32 @@ import { InvalidAccessKeyError } from '~/libs/errors.server.ts';
 import { TeamBetaAccess } from './team-beta-access.ts';
 
 describe('TeamBetaAccess', () => {
-  describe('isAllowed', () => {
-    it('is allowed if user has an organizer key', async () => {
-      const user = await userFactory({ isOrganizer: true });
-      const isAllowed = await TeamBetaAccess.for(user.id).isAllowed();
-      expect(isAllowed).toBe(true);
+  describe('hasAccess', () => {
+    it('hasAccess if user has an organizer key', async () => {
+      const user = { organizerKey: '123' };
+      const hasAccess = TeamBetaAccess.hasAccess(user);
+      expect(hasAccess).toBe(true);
     });
 
-    it('is allowed if user belongs to an team', async () => {
-      const user = await userFactory();
-      await teamFactory({ members: [user] });
-      const isAllowed = await TeamBetaAccess.for(user.id).isAllowed();
-      expect(isAllowed).toBe(true);
+    it('hasAccess if user belongs to an team', async () => {
+      const user = { organizerKey: '123' };
+      const teamsCount = 2;
+      const hasAccess = await TeamBetaAccess.hasAccess(user, teamsCount);
+      expect(hasAccess).toBe(true);
     });
 
     it('is not allowed if user does not have organizer key or teams', async () => {
-      const user = await userFactory();
-      const isAllowed = await TeamBetaAccess.for(user.id).isAllowed();
-      expect(isAllowed).toBe(false);
+      const user = { organizerKey: null };
+      const teamsCount = 0;
+      const hasAccess = await TeamBetaAccess.hasAccess(user, teamsCount);
+      expect(hasAccess).toBe(false);
     });
 
     it('is not allowed when user is not found', async () => {
-      const isAllowed = await TeamBetaAccess.for('XXX').isAllowed();
-      expect(isAllowed).toBe(false);
+      const user = null;
+      const teamsCount = 2;
+      const hasAccess = await TeamBetaAccess.hasAccess(user, teamsCount);
+      expect(hasAccess).toBe(false);
     });
   });
 

@@ -13,18 +13,18 @@ export class UserInfo {
     const user = await db.user.findUnique({ where: { id: userId } });
     if (!user) return null;
 
-    const teamAccess = TeamBetaAccess.for(user.id);
-    const teams = UserTeams.for(user.id);
-    const notifications = Notifications.for(user.id);
+    const teams = await UserTeams.for(user.id).list();
+    const hasTeamAccess = TeamBetaAccess.hasAccess(user, teams.length);
+    const notificationsUnreadCount = await Notifications.for(user.id).unreadCount();
 
     return {
       id: user.id,
       name: user.name,
       email: user.email,
       picture: user.picture,
-      teams: await teams.list(),
-      hasTeamAccess: await teamAccess.isAllowed(),
-      notificationsUnreadCount: await notifications.unreadCount(),
+      notificationsUnreadCount,
+      hasTeamAccess,
+      teams,
     };
   }
 }
