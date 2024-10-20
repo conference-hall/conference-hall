@@ -6,7 +6,7 @@ export async function disconnectDB() {
 }
 
 export async function resetDB() {
-  if (process.env.NODE_ENV === 'production' && !process.env.USE_EMULATORS) {
+  if (process.env.NODE_ENV === 'production') {
     return '🚨 Reset DB cannot be executed in production.';
   }
 
