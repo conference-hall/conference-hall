@@ -5,13 +5,13 @@ import { createExpressApp } from 'remix-create-express-app';
 import { initEnvironment } from '~/libs/env/env.server.ts';
 import { initMonitoring } from '~/libs/monitoring/monitoring.server.ts';
 
-import { applyLocalhostRedirect } from './localhost-redirect.ts';
-import { applyLogging } from './logging.ts';
-import { applyProxyFirebaseAuth } from './proxy-firebase-auth.ts';
-import { applyRateLimits } from './rate-limit.ts';
-import { applySecurity } from './security.ts';
-import { applySeoHeader } from './seo.ts';
-import { applyUrlCleaning } from './url-cleaning.ts';
+import { applyLocalhostRedirect } from './middlewares/localhost-redirect.ts';
+import { applyLogging } from './middlewares/logging.ts';
+import { applyProxyFirebaseAuth } from './middlewares/proxy-firebase-auth.ts';
+import { applyRateLimits } from './middlewares/rate-limit.ts';
+import { applySecurity } from './middlewares/security.ts';
+import { applySeoHeader } from './middlewares/seo.ts';
+import { applyUrlCleaning } from './middlewares/url-cleaning.ts';
 
 declare module '@remix-run/node' {
   interface AppLoadContext {

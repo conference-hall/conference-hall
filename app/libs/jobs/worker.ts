@@ -1,11 +1,11 @@
 import { Worker } from 'bullmq';
 import Redis from 'ioredis';
-import { getEnv } from './env/env.ts';
+
+import { getEnv } from './env.ts';
+import type { Job } from './job.ts';
+import { logger } from './logger.ts';
 
 const env = getEnv();
-
-import type { Job } from './job.ts';
-import { logger } from './logger/logger.ts';
 
 export const DEFAULT_QUEUE = 'default';
 

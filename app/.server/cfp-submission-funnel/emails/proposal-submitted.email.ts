@@ -1,5 +1,5 @@
 import type { Event, Proposal, User } from '@prisma/client';
-import { sendEmail } from 'jobs/send-email.job.ts';
+import { sendEmail } from '~/.server/shared/jobs/send-email.job';
 
 import { Template } from '~/libs/email-template/template.ts';
 import { appUrl } from '~/libs/env/env.server.ts';

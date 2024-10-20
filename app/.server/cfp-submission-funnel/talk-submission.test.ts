@@ -16,7 +16,7 @@ import {
   TalkNotFoundError,
 } from '~/libs/errors.server.ts';
 
-import { sendEmail } from 'jobs/send-email.job.ts';
+import { sendEmail } from '~/.server/shared/jobs/send-email.job.ts';
 import { sendSubmittedTalkSlackMessage } from './slack/slack.services.ts';
 import { TalkSubmission } from './talk-submission.ts';
 import { getTracksSchema } from './talk-submission.types.ts';

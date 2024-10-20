@@ -7,7 +7,7 @@ import { userFactory } from 'tests/factories/users.ts';
 
 import { ForbiddenOperationError, ProposalNotFoundError } from '~/libs/errors.server.ts';
 
-import { sendEmail } from 'jobs/send-email.job.ts';
+import { sendEmail } from '~/.server/shared/jobs/send-email.job.ts';
 import { Publication } from './publication.ts';
 
 describe('Publication', () => {
