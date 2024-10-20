@@ -17,7 +17,11 @@ type Props = {
     picture: string | null;
     hasTeamAccess: boolean;
     notificationsUnreadCount: number;
-    teams: Array<{ slug: string; name: string; events: Array<{ slug: string; name: string; logoUrl: string | null }> }>;
+    teams: Array<{
+      slug: string;
+      name: string;
+      events: Array<{ slug: string; name: string; logoUrl: string | null; archived: boolean }>;
+    }>;
   } | null;
   layout?: NavbarLayout;
   variant?: 'primary' | 'secondary';
