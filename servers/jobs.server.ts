@@ -1,11 +1,12 @@
 import closeWithGrace from 'close-with-grace';
 
+import { exportToOpenPlanner } from '~/.server/reviews/jobs/export-to-open-planner.job.ts';
 import { sendEmail } from '../app/.server/shared/jobs/send-email.job.ts';
 import { testJob } from '../app/.server/shared/jobs/test.job.ts';
 import { logger } from '../app/libs/jobs/logger.ts';
 import { createJobWorkers } from '../app/libs/jobs/worker.ts';
 
-const jobs = [sendEmail, testJob];
+const jobs = [sendEmail, exportToOpenPlanner, testJob];
 
 const workers = createJobWorkers(jobs);
 
