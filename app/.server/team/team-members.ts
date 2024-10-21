@@ -19,7 +19,7 @@ export class TeamMembers {
   }
 
   async list(filters: z.infer<typeof MembersFiltersSchema>, page: number) {
-    await this.team.needsPermission('canEditTeam');
+    await this.team.needsPermission('canAccessTeam');
 
     const { slug } = this.team;
 
@@ -49,11 +49,23 @@ export class TeamMembers {
     };
   }
 
+  async leave() {
+    const { memberId, teamId, role } = await this.team.needsPermission('canAccessTeam');
+
+    if (role === 'OWNER') {
+      const ownerCount = await db.teamMember.count({ where: { teamId, role: 'OWNER' } });
+      if (ownerCount <= 1) throw new ForbiddenOperationError();
+    }
+
+    return db.teamMember.delete({ where: { memberId_teamId: { memberId, teamId } } });
+  }
+
   async remove(memberId: string) {
     await this.team.needsPermission('canEditTeam');
 
     const { userId, slug } = this.team;
     if (memberId === userId) throw new ForbiddenOperationError();
+
     return db.teamMember.deleteMany({ where: { team: { slug }, memberId } });
   }
 

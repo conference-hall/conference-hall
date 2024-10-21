@@ -12,6 +12,7 @@ import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast } from '~/libs/toasts/toast.server.ts';
 import { TeamForm } from '~/routes/__components/teams/team-form.tsx';
 
+import { TeamMembers } from '~/.server/team/team-members.ts';
 import { useTeam } from '../__components/use-team.tsx';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -21,40 +22,77 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
   const userId = await requireSession(request);
-  const form = await request.formData();
   invariant(params.team, 'Invalid team slug');
 
-  const result = parseWithZod(form, { schema: TeamUpdateSchema });
-  if (result.status !== 'success') return json(result.error);
+  const form = await request.formData();
+  const intent = form.get('intent') as string;
 
-  try {
-    const team = await UserTeam.for(userId, params.team).updateSettings(result.value);
-    return redirectWithToast(`/team/${team.slug}/settings`, 'success', 'Team settings saved.');
-  } catch (SlugAlreadyExistsError) {
-    return json({ slug: ['This URL already exists, please try another one.'] });
+  switch (intent) {
+    case 'save-team': {
+      const result = parseWithZod(form, { schema: TeamUpdateSchema });
+      if (result.status !== 'success') return json(result.error);
+
+      try {
+        const team = await UserTeam.for(userId, params.team).updateSettings(result.value);
+        return redirectWithToast(`/team/${team.slug}/settings`, 'success', 'Team settings saved.');
+      } catch (SlugAlreadyExistsError) {
+        return json({ slug: ['This URL already exists, please try another one.'] });
+      }
+    }
+    case 'leave-team': {
+      await TeamMembers.for(userId, params.team).leave();
+      return redirectWithToast('/speaker', 'success', "You've successfully left the team.");
+    }
   }
+  return null;
 };
 
 export default function TeamSettingsRoute() {
-  const { team } = useTeam();
   const errors = useActionData<typeof action>();
+  const { team } = useTeam();
+  const { canEditTeam } = team.userPermissions;
 
   return (
-    <Card as="section">
-      <Form method="POST" preventScrollReset>
-        <Card.Title>
-          <H2>General</H2>
-          <Subtitle>Change team name and URL.</Subtitle>
-        </Card.Title>
+    <div className="space-y-8">
+      {canEditTeam ? (
+        <Card as="section">
+          <Form method="POST" preventScrollReset>
+            <Card.Title>
+              <H2>General</H2>
+              <Subtitle>Change team name and URL.</Subtitle>
+            </Card.Title>
 
-        <Card.Content>
-          <TeamForm initialValues={team} errors={errors} />
-        </Card.Content>
+            <Card.Content>
+              <TeamForm initialValues={team} errors={errors} />
+            </Card.Content>
 
-        <Card.Actions>
-          <Button type="submit">Save</Button>
-        </Card.Actions>
-      </Form>
-    </Card>
+            <Card.Actions>
+              <Button type="submit" name="intent" value="save-team">
+                Save
+              </Button>
+            </Card.Actions>
+          </Form>
+        </Card>
+      ) : (
+        <Card as="section">
+          <Form method="POST" preventScrollReset>
+            <Card.Title>
+              <H2>Leave the "{team.name}" team</H2>
+              <Subtitle>
+                If you leave the team, you’ll lose access to it and won’t be able to manage its events.
+              </Subtitle>
+            </Card.Title>
+
+            <Card.Content>
+              <div>
+                <Button type="submit" name="intent" value="leave-team" variant="important">
+                  Leave "{team.name}" team
+                </Button>
+              </div>
+            </Card.Content>
+          </Form>
+        </Card>
+      )}
+    </div>
   );
 }

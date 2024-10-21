@@ -46,7 +46,7 @@ export default function TeamLayout() {
           permissions={team.userPermissions}
         />
       ) : (
-        <TeamTabs slug={team.slug} permissions={team.userPermissions} />
+        <TeamTabs slug={team.slug} role={team.userRole} />
       )}
 
       <Outlet context={{ user, team }} />

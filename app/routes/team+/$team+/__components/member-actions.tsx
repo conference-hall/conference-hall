@@ -135,10 +135,13 @@ function ChangeRoleModal({ memberId, memberName, memberRole, isOpen, onClose }: 
   );
 }
 
-type InviteProps = { invitationLink: string };
+type InviteProps = { invitationLink: string | undefined };
 
 export function InviteMemberButton({ invitationLink }: InviteProps) {
   const [open, setOpen] = useState(false);
+
+  if (!invitationLink) return null;
+
   return (
     <>
       <Button onClick={() => setOpen(true)} iconLeft={UserPlusIcon} variant="secondary">

@@ -23,6 +23,7 @@ describe('UserTeam', () => {
       expect(member.memberId).toEqual(user.id);
       expect(member.teamId).toEqual(team.id);
       expect(member.permissions.canEditTeam).toBe(true);
+      expect(member.role).toBe('OWNER');
     });
 
     it('throws an error if user role is not in the accepted role list', async () => {
@@ -60,6 +61,7 @@ describe('UserTeam', () => {
         name: 'My team 2',
         slug: 'my-team2',
         invitationLink: `${appUrl()}/invite/team/${team.invitationCode}`,
+        userRole: 'OWNER',
         userPermissions: expect.objectContaining({ canEditTeam: true }),
       });
     });
