@@ -13,7 +13,7 @@ describe('#EventApi', () => {
   describe('#proposals', () => {
     it('return proposals from api', async () => {
       const speaker = await userFactory();
-      const event = await eventFactory({ attributes: { apiKey: '123' } });
+      const event = await eventFactory({ attributes: { apiKey: '123' }, traits: ['conference'] });
       const format = await eventFormatFactory({ event });
       const category = await eventCategoryFactory({ event });
 
@@ -22,26 +22,38 @@ describe('#EventApi', () => {
         formats: [format],
         categories: [category],
         talk: await talkFactory({ speakers: [speaker], attributes: { level: 'BEGINNER', languages: ['fr'] } }),
+        traits: ['confirmed'],
       });
 
       const eventApi = new EventApi(event.slug, '123');
       const result = await eventApi.proposals({});
 
       expect(result).toEqual({
+        startDate: event.conferenceStart,
+        endDate: event.conferenceEnd,
         name: event.name,
         proposals: [
           {
             title: proposal.title,
             abstract: proposal.abstract,
             level: 'BEGINNER',
+            references: proposal.references,
             formats: [format.name],
+            reviews: [],
+            id: proposal.id,
             categories: [category.name],
+            deliberationStatus: 'ACCEPTED',
+            publicationStatus: 'PUBLISHED',
+            confirmationStatus: 'CONFIRMED',
             languages: ['fr'],
             speakers: [
               {
                 name: speaker.name,
                 bio: speaker.bio,
                 company: speaker.company,
+                email: speaker.email,
+                references: speaker.references,
+                location: speaker.location,
                 picture: speaker.picture,
                 socials: speaker.socials,
               },
