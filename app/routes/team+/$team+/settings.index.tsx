@@ -75,7 +75,15 @@ export default function TeamSettingsRoute() {
         </Card>
       ) : (
         <Card as="section">
-          <Form method="POST" preventScrollReset>
+          <Form
+            method="POST"
+            preventScrollReset
+            onSubmit={(event) => {
+              if (!confirm(`Are you sure you want to leave the "${team.name}" team?`)) {
+                event.preventDefault();
+              }
+            }}
+          >
             <Card.Title>
               <H2>Leave the "{team.name}" team</H2>
               <Subtitle>
