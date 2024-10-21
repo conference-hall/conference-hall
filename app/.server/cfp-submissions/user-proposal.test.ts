@@ -34,7 +34,7 @@ describe('UserProposal', () => {
         level: proposal.level,
         createdAt: proposal.createdAt.toISOString(),
         languages: proposal.languages,
-        invitationLink: `http://127.0.0.1:3000/invite/proposal/${proposal.invitationCode}`,
+        invitationLink: `${process.env.APP_URL}/invite/proposal/${proposal.invitationCode}`,
         status: SpeakerProposalStatus.Submitted,
         formats: [{ id: format.id, name: format.name }],
         categories: [{ id: category.id, name: category.name }],
