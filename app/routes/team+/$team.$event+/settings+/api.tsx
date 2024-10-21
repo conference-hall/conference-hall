@@ -1,4 +1,4 @@
-import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
+import { type ActionFunctionArgs, type LoaderFunctionArgs, json } from '@remix-run/node';
 import invariant from 'tiny-invariant';
 import { v4 as uuid } from 'uuid';
 
@@ -11,7 +11,7 @@ import { EnableApiSection } from './__components/enable-api-section.tsx';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);
-  return null;
+  return json(null);
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -32,7 +32,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       break;
     }
   }
-  return null;
+  return json(null);
 };
 
 export default function EventApiSettingsRoute() {
