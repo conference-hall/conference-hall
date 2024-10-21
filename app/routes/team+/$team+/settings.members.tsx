@@ -61,13 +61,13 @@ export default function TeamMembersRoute() {
   const [searchParams] = useSearchParams();
   const { results, pagination } = useLoaderData<typeof loader>();
 
-  const { canEditTeam } = team.userPermissions;
+  const { canManageTeamMembers } = team.userPermissions;
 
   return (
     <Card as="section">
       <Card.Title>
         <H3 size="base">Members</H3>
-        {canEditTeam ? <Subtitle>Invite, remove or change role of team members.</Subtitle> : null}
+        {canManageTeamMembers ? <Subtitle>Invite, remove or change role of team members.</Subtitle> : null}
       </Card.Title>
 
       <Card.Content>
@@ -82,7 +82,7 @@ export default function TeamMembersRoute() {
               icon={MagnifyingGlassIcon}
             />
           </Form>
-          {canEditTeam ? <InviteMemberButton invitationLink={team.invitationLink} /> : null}
+          {canManageTeamMembers ? <InviteMemberButton invitationLink={team.invitationLink} /> : null}
         </div>
 
         {results.length > 0 ? (
@@ -97,7 +97,7 @@ export default function TeamMembersRoute() {
                         name={member.name || 'Unknown'}
                         subtitle={ROLE_NAMES[member.role]}
                       />
-                      {canEditTeam && user?.id !== member.id && (
+                      {canManageTeamMembers && user?.id !== member.id && (
                         <div className="flex w-full gap-2 mt-4 sm:mt-0 sm:w-auto">
                           <ChangeRoleButton memberId={member.id} memberName={member.name} memberRole={member.role} />
                           <RemoveButton memberId={member.id} memberName={member.name} />

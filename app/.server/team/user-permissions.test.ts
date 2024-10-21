@@ -8,8 +8,9 @@ describe('UserPermissions', () => {
       const permissions = UserPermissions.getPermissions(TeamRole.OWNER);
 
       expect(permissions).toEqual({
-        canEditTeam: true,
         canAccessTeam: true,
+        canEditTeam: true,
+        canManageTeamMembers: true,
         canLeaveTeam: false,
         canAccessEvent: true,
         canCreateEvent: true,
@@ -28,6 +29,7 @@ describe('UserPermissions', () => {
       expect(permissions).toEqual({
         canAccessTeam: true,
         canEditTeam: false,
+        canManageTeamMembers: false,
         canLeaveTeam: true,
         canAccessEvent: true,
         canCreateEvent: false,
@@ -46,6 +48,7 @@ describe('UserPermissions', () => {
       expect(permissions).toEqual({
         canAccessTeam: true,
         canEditTeam: false,
+        canManageTeamMembers: false,
         canLeaveTeam: true,
         canAccessEvent: true,
         canCreateEvent: false,

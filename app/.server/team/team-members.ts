@@ -56,7 +56,7 @@ export class TeamMembers {
   }
 
   async remove(memberId: string) {
-    await this.team.needsPermission('canEditTeam');
+    await this.team.needsPermission('canManageTeamMembers');
 
     const { userId, slug } = this.team;
     if (memberId === userId) throw new ForbiddenOperationError();
@@ -65,7 +65,7 @@ export class TeamMembers {
   }
 
   async changeRole(memberId: string, role: TeamRole) {
-    await this.team.needsPermission('canEditTeam');
+    await this.team.needsPermission('canManageTeamMembers');
 
     const { userId, slug } = this.team;
     if (userId === memberId) throw new ForbiddenOperationError();

@@ -53,7 +53,7 @@ export class UserTeam {
       slug: team.slug,
       userPermissions,
       userRole: member.role,
-      invitationLink: userPermissions.canEditTeam ? team.invitationLink : undefined,
+      invitationLink: userPermissions.canManageTeamMembers ? team.invitationLink : undefined,
     };
   }
 
