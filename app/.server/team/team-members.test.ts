@@ -53,6 +53,34 @@ describe('TeamMembers', () => {
     });
   });
 
+  describe('leave', () => {
+    it('leaves the organization as member', async () => {
+      const owner = await userFactory();
+      const member = await userFactory();
+      const team = await teamFactory({ owners: [owner], members: [member] });
+
+      await TeamMembers.for(member.id, team.slug).leave();
+
+      const members = await TeamMembers.for(owner.id, team.slug).list({}, 1);
+      expect(members.results).toEqual([{ id: owner.id, name: owner.name, role: 'OWNER', picture: owner.picture }]);
+    });
+
+    it('throws an error when user a owner of the team', async () => {
+      const owner = await userFactory();
+      const team = await teamFactory({ owners: [owner] });
+
+      await expect(TeamMembers.for(owner.id, team.slug).leave()).rejects.toThrowError(ForbiddenOperationError);
+    });
+
+    it('throws an error when user does not belong to the team', async () => {
+      const user = await userFactory();
+      const owner = await userFactory();
+      const team = await teamFactory({ owners: [owner] });
+
+      await expect(TeamMembers.for(user.id, team.slug).leave()).rejects.toThrowError(ForbiddenOperationError);
+    });
+  });
+
   describe('remove', () => {
     it('removes a member from the team', async () => {
       const owner = await userFactory();

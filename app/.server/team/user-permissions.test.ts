@@ -8,16 +8,18 @@ describe('UserPermissions', () => {
       const permissions = UserPermissions.getPermissions(TeamRole.OWNER);
 
       expect(permissions).toEqual({
-        canAccessEvent: true,
         canAccessTeam: true,
+        canEditTeam: true,
+        canManageTeamMembers: true,
+        canLeaveTeam: false,
+        canAccessEvent: true,
         canCreateEvent: true,
-        canDeliberateEventProposals: true,
         canEditEvent: true,
         canEditEventProposals: true,
-        canEditEventSchedule: true,
-        canEditTeam: true,
         canExportEventProposals: true,
+        canDeliberateEventProposals: true,
         canPublishEventResults: true,
+        canEditEventSchedule: true,
       });
     });
 
@@ -27,6 +29,8 @@ describe('UserPermissions', () => {
       expect(permissions).toEqual({
         canAccessTeam: true,
         canEditTeam: false,
+        canManageTeamMembers: false,
+        canLeaveTeam: true,
         canAccessEvent: true,
         canCreateEvent: false,
         canEditEvent: true,
@@ -44,6 +48,8 @@ describe('UserPermissions', () => {
       expect(permissions).toEqual({
         canAccessTeam: true,
         canEditTeam: false,
+        canManageTeamMembers: false,
+        canLeaveTeam: true,
         canAccessEvent: true,
         canCreateEvent: false,
         canEditEvent: false,

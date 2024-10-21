@@ -3,6 +3,8 @@ import { TeamRole } from '@prisma/client';
 export type UserPermissions = {
   canAccessTeam: boolean;
   canEditTeam: boolean;
+  canManageTeamMembers: boolean;
+  canLeaveTeam: boolean;
   canAccessEvent: boolean;
   canCreateEvent: boolean;
   canEditEvent: boolean;
@@ -18,6 +20,8 @@ export type Permission = keyof UserPermissions;
 const TEAM_OWNER_PERMISSIONS: UserPermissions = {
   canAccessTeam: true,
   canEditTeam: true,
+  canManageTeamMembers: true,
+  canLeaveTeam: false,
   canCreateEvent: true,
   canAccessEvent: true,
   canEditEvent: true,
@@ -31,6 +35,8 @@ const TEAM_OWNER_PERMISSIONS: UserPermissions = {
 const TEAM_MEMBER_PERMISSIONS: UserPermissions = {
   canAccessTeam: true,
   canEditTeam: false,
+  canManageTeamMembers: false,
+  canLeaveTeam: true,
   canAccessEvent: true,
   canCreateEvent: false,
   canEditEvent: true,
@@ -44,6 +50,8 @@ const TEAM_MEMBER_PERMISSIONS: UserPermissions = {
 const TEAM_REVIEWER_PERMISSIONS: UserPermissions = {
   canAccessTeam: true,
   canEditTeam: false,
+  canManageTeamMembers: false,
+  canLeaveTeam: true,
   canAccessEvent: true,
   canCreateEvent: false,
   canEditEvent: false,

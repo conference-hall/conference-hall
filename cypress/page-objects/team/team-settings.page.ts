@@ -20,6 +20,10 @@ class TeamSettingsPage extends BasePage {
   saveAbstract() {
     return cy.findByRole('button', { name: 'Save' });
   }
+
+  leaveTeam(teamName: string) {
+    return cy.findByRole('button', { name: `Leave "${teamName}" team` });
+  }
 }
 
 export default TeamSettingsPage;

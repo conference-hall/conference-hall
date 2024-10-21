@@ -29,12 +29,14 @@ describe('Team members list', () => {
       members.changeRoleButton('Clark Kent').should('not.exist');
       members.changeRoleButton('Peter Parker').should('exist');
 
-      members.member('Bruce Wayne').assertText('member');
+      members.member('Bruce Wayne').assertText('Member');
+
       members.changeRoleButton('Bruce Wayne').click();
       members.selectRoleToChange('Bruce Wayne', 'Owner');
       members.confirmChangeRole('Bruce Wayne');
+
       cy.assertToast('Member role changed.');
-      members.member('Bruce Wayne').parent().should('contain.text', 'owner');
+      members.member('Bruce Wayne').parent().should('contain.text', 'Owner');
     });
 
     it('can remove a member', () => {
@@ -53,18 +55,38 @@ describe('Team members list', () => {
   describe('as a team member', () => {
     beforeEach(() => cy.login('Bruce Wayne'));
 
-    it('cannot access to members settings and is redirected to event page', () => {
-      cy.visitAndCheck('/team/awesome-team/settings/members', { failOnStatusCode: false });
-      members.assertForbiddenPage();
+    it('can access to members settings but without edit permissions', () => {
+      members.visit('awesome-team');
+
+      members.list().should('have.length', 3);
+
+      members.changeRoleButton('Clark Kent').should('not.exist');
+      members.removeMemberButton('Clark Kent').should('not.exist');
+
+      members.changeRoleButton('Bruce Wayne').should('not.exist');
+      members.removeMemberButton('Bruce Wayne').should('not.exist');
+
+      members.changeRoleButton('Peter Parker').should('not.exist');
+      members.removeMemberButton('Peter Parker').should('not.exist');
     });
   });
 
   describe('as a team reviewer', () => {
     beforeEach(() => cy.login('Peter Parker'));
 
-    it('cannot access to members settings and is redirected to event page', () => {
-      cy.visitAndCheck('/team/awesome-team/settings/members', { failOnStatusCode: false });
-      members.assertForbiddenPage();
+    it('can access to members settings but without edit permissions', () => {
+      members.visit('awesome-team');
+
+      members.list().should('have.length', 3);
+
+      members.changeRoleButton('Clark Kent').should('not.exist');
+      members.removeMemberButton('Clark Kent').should('not.exist');
+
+      members.changeRoleButton('Bruce Wayne').should('not.exist');
+      members.removeMemberButton('Bruce Wayne').should('not.exist');
+
+      members.changeRoleButton('Peter Parker').should('not.exist');
+      members.removeMemberButton('Peter Parker').should('not.exist');
     });
   });
 });

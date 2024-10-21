@@ -105,7 +105,7 @@ describe("Team's events list", () => {
     it('displays limited tabs and actions', () => {
       team.visit('awesome-team');
       team.eventsTab().should('exist');
-      team.settingsTab().should('not.exist');
+      team.settingsTab().should('exist');
       cy.findByRole('button', { name: 'New event' }).should('not.exist');
     });
   });
@@ -116,7 +116,7 @@ describe("Team's events list", () => {
     it('displays limited tabs and actions', () => {
       team.visit('awesome-team');
       team.eventsTab().should('exist');
-      team.settingsTab().should('not.exist');
+      team.settingsTab().should('exist');
       cy.findByRole('button', { name: 'New event' }).should('not.exist');
     });
   });

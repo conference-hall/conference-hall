@@ -34,6 +34,7 @@ export class UserTeam {
     return {
       memberId: member.memberId,
       teamId: member.teamId,
+      role: member.role,
       permissions: UserPermissions.getPermissions(member.role),
     };
   }
@@ -51,7 +52,8 @@ export class UserTeam {
       name: team.name,
       slug: team.slug,
       userPermissions,
-      invitationLink: userPermissions.canEditTeam ? team.invitationLink : undefined,
+      userRole: member.role,
+      invitationLink: userPermissions.canManageTeamMembers ? team.invitationLink : undefined,
     };
   }
 

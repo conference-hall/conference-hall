@@ -18,6 +18,7 @@ import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { useUser } from '~/routes/__components/use-user.tsx';
 
+import { ROLE_NAMES } from '~/libs/formatters/team-roles.ts';
 import { useTeam } from '../__components/use-team.tsx';
 import { ChangeRoleButton, InviteMemberButton, RemoveButton } from './__components/member-actions.tsx';
 
@@ -60,16 +61,18 @@ export default function TeamMembersRoute() {
   const [searchParams] = useSearchParams();
   const { results, pagination } = useLoaderData<typeof loader>();
 
+  const { canManageTeamMembers } = team.userPermissions;
+
   return (
     <Card as="section">
       <Card.Title>
         <H3 size="base">Members</H3>
-        <Subtitle>Invite, remove or change role of team members.</Subtitle>
+        {canManageTeamMembers ? <Subtitle>Invite, remove or change role of team members.</Subtitle> : null}
       </Card.Title>
 
       <Card.Content>
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <Form method="GET">
+          <Form method="GET" className="grow">
             <Input
               type="search"
               name="query"
@@ -79,7 +82,7 @@ export default function TeamMembersRoute() {
               icon={MagnifyingGlassIcon}
             />
           </Form>
-          {team.invitationLink ? <InviteMemberButton invitationLink={team.invitationLink} /> : null}
+          {canManageTeamMembers ? <InviteMemberButton invitationLink={team.invitationLink} /> : null}
         </div>
 
         {results.length > 0 ? (
@@ -92,9 +95,9 @@ export default function TeamMembersRoute() {
                       <AvatarName
                         picture={member.picture}
                         name={member.name || 'Unknown'}
-                        subtitle={member.role.toLowerCase()}
+                        subtitle={ROLE_NAMES[member.role]}
                       />
-                      {user?.id !== member.id && (
+                      {canManageTeamMembers && user?.id !== member.id && (
                         <div className="flex w-full gap-2 mt-4 sm:mt-0 sm:w-auto">
                           <ChangeRoleButton memberId={member.id} memberName={member.name} memberRole={member.role} />
                           <RemoveButton memberId={member.id} memberName={member.name} />
