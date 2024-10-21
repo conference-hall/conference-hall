@@ -51,7 +51,7 @@ export function applyRateLimits(app: express.Application) {
     // }
 
     // Rate limit for GET /api
-    if (req.path.includes('/api')) {
+    if (req.path.startsWith('/api')) {
       return apiRateLimit(req, res, next);
     }
 
