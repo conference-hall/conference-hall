@@ -65,18 +65,7 @@ describe('TeamMembers', () => {
       expect(members.results).toEqual([{ id: owner.id, name: owner.name, role: 'OWNER', picture: owner.picture }]);
     });
 
-    it('leaves the organization as owner', async () => {
-      const owner = await userFactory();
-      const owner2 = await userFactory();
-      const team = await teamFactory({ owners: [owner, owner2] });
-
-      await TeamMembers.for(owner2.id, team.slug).leave();
-
-      const members = await TeamMembers.for(owner.id, team.slug).list({}, 1);
-      expect(members.results).toEqual([{ id: owner.id, name: owner.name, role: 'OWNER', picture: owner.picture }]);
-    });
-
-    it('throws an error when user is the last owner of the team', async () => {
+    it('throws an error when user a owner of the team', async () => {
       const owner = await userFactory();
       const team = await teamFactory({ owners: [owner] });
 

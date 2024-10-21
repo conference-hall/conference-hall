@@ -50,7 +50,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 export default function TeamSettingsRoute() {
   const errors = useActionData<typeof action>();
   const { team } = useTeam();
-  const { canEditTeam } = team.userPermissions;
+  const { canEditTeam, canLeaveTeam } = team.userPermissions;
 
   return (
     <div className="space-y-8">
@@ -73,7 +73,9 @@ export default function TeamSettingsRoute() {
             </Card.Actions>
           </Form>
         </Card>
-      ) : (
+      ) : null}
+
+      {canLeaveTeam ? (
         <Card as="section">
           <Form
             method="POST"
@@ -100,7 +102,7 @@ export default function TeamSettingsRoute() {
             </Card.Content>
           </Form>
         </Card>
-      )}
+      ) : null}
     </div>
   );
 }

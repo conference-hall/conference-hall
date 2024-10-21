@@ -50,12 +50,7 @@ export class TeamMembers {
   }
 
   async leave() {
-    const { memberId, teamId, role } = await this.team.needsPermission('canAccessTeam');
-
-    if (role === 'OWNER') {
-      const ownerCount = await db.teamMember.count({ where: { teamId, role: 'OWNER' } });
-      if (ownerCount <= 1) throw new ForbiddenOperationError();
-    }
+    const { memberId, teamId } = await this.team.needsPermission('canLeaveTeam');
 
     return db.teamMember.delete({ where: { memberId_teamId: { memberId, teamId } } });
   }
