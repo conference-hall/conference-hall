@@ -5,7 +5,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 
 // TODO: use rate limiting in Redis instead of in memory
 
-// Disable rate limiting on dev and CI environments
+// Disable rate limiting on dev and test environments
 const maxMultiple = isProduction ? 1 : 10_000;
 
 const defaultRateLimit = {
