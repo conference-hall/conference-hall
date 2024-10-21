@@ -7,6 +7,7 @@ const isCI = process.env.USE_EMULATORS === 'true';
 export function applyLogging(app: express.Application) {
   if (!isProduction) {
     app.use(morgan('tiny'));
+    return;
   }
 
   if (isProduction && !isCI) {

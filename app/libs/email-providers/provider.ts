@@ -16,8 +16,6 @@ type MailConfig = {
   MAILGUN_DOMAIN?: string;
 };
 
-const env = getEnv();
-
 export function getEmailProvider(config: MailConfig): EmailProvider | null {
   const { NODE_ENV, MAILPIT_HOST, MAILPIT_SMTP_PORT, MAILGUN_API_KEY, MAILGUN_DOMAIN } = config;
 

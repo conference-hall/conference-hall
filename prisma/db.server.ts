@@ -36,7 +36,7 @@ function getClient() {
 }
 
 function buildClientWithLogger(): PrismaClient {
-  if (process.env.NODE_ENV === 'development') {
+  if (['development', 'test'].includes(process.env.NODE_ENV)) {
     return new PrismaClient({ log: ['warn', 'error'] });
   }
 

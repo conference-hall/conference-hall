@@ -2,7 +2,7 @@
 import { z } from 'zod';
 
 const schema = z.object({
-  NODE_ENV: z.enum(['production', 'development']),
+  NODE_ENV: z.enum(['production', 'development', 'test']),
   USE_EMULATORS: z.string().optional(),
   APP_URL: z.string(),
   DATABASE_URL: z.string(),
@@ -44,7 +44,7 @@ export function initEnvironment() {
  */
 export function getPublicEnv() {
   return {
-    MODE: process.env.NODE_ENV,
+    NODE_ENV: process.env.NODE_ENV,
     USE_EMULATORS: process.env.USE_EMULATORS === 'true',
     FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
     FIREBASE_AUTH_DOMAIN: process.env.FIREBASE_AUTH_DOMAIN,

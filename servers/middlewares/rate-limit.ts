@@ -2,12 +2,11 @@ import type express from 'express';
 import rateLimit from 'express-rate-limit';
 
 const isProduction = process.env.NODE_ENV === 'production';
-const isCI = process.env.USE_EMULATORS === 'true';
 
 // TODO: use rate limiting in Redis instead of in memory
 
-// Disable rate limiting on dev and CI environments
-const maxMultiple = !isProduction || isCI ? 10_000 : 1;
+// Disable rate limiting on dev and test environments
+const maxMultiple = isProduction ? 1 : 10_000;
 
 const defaultRateLimit = {
   windowMs: 60 * 1000, // every minutes
@@ -52,7 +51,7 @@ export function applyRateLimits(app: express.Application) {
     // }
 
     // Rate limit for GET /api
-    if (req.path.includes('/api')) {
+    if (req.path.startsWith('/api')) {
       return apiRateLimit(req, res, next);
     }
 

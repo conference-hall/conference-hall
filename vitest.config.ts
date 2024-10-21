@@ -16,6 +16,8 @@ export default defineConfig({
     include: ['**/*.test.ts?(x)'],
     reporters: isCI ? ['default', 'junit'] : 'default',
     outputFile: './test-results/unit.xml',
+    restoreMocks: true,
+    env: { NODE_ENV: 'test' },
   },
   server: { watch: { ignored: ['.*\\/node_modules\\/.*', '.*\\/build\\/.*'] } },
 });
