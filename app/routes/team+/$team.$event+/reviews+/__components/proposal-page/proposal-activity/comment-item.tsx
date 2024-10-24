@@ -4,7 +4,6 @@ import { formatDistanceToNowStrict } from 'date-fns';
 import type { FeedItem } from '~/.server/reviews/activity-feed.ts';
 import { Avatar } from '~/design-system/avatar.tsx';
 import { useUser } from '~/routes/__components/use-user.tsx';
-import { ClientOnly } from '~/routes/__components/utils/client-only.tsx';
 
 export function CommentItem({ item }: { item: FeedItem }) {
   const { user } = useUser();
@@ -32,7 +31,7 @@ export function CommentItem({ item }: { item: FeedItem }) {
             )}
           </div>
           <time dateTime={item.timestamp} className="flex-none py-0.5 text-xs leading-5 text-gray-500">
-            <ClientOnly>{() => `${formatDistanceToNowStrict(new Date(item.timestamp))} ago`}</ClientOnly>
+            {formatDistanceToNowStrict(new Date(item.timestamp))} ago
           </time>
         </div>
         <p className="text-sm leading-6 text-gray-500 whitespace-pre-line break-words">{item.comment}</p>

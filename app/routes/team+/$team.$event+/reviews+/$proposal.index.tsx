@@ -1,7 +1,7 @@
 import { parseWithZod } from '@conform-to/zod';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
-import { useActionData, useLoaderData } from '@remix-run/react';
+import { defer, json } from '@remix-run/node';
+import { Await, useActionData, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
@@ -19,7 +19,9 @@ import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { TalkSection } from '~/routes/__components/talks/talk-section.tsx';
 
+import { Suspense } from 'react';
 import { useTeam } from '../../__components/use-team.tsx';
+import { LoadingActivities } from './__components/proposal-page/proposal-activity/loading-activities.tsx';
 import { ProposalActivityFeed as Feed } from './__components/proposal-page/proposal-activity/proposal-activity-feed.tsx';
 import { ReviewHeader } from './__components/proposal-page/review-header.tsx';
 import { ReviewSidebar } from './__components/proposal-page/review-sidebar.tsx';
@@ -34,16 +36,19 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   invariant(params.team, 'Invalid team slug');
   invariant(params.proposal, 'Invalid proposal id');
 
-  const event = await UserEvent.for(userId, params.team, params.event).get();
+  const activityPromise = ActivityFeed.for(userId, params.team, params.event, params.proposal).activity();
+
   const filters = parseUrlFilters(request.url);
+  const userEvent = UserEvent.for(userId, params.team, params.event);
+  const proposalReview = ProposalReview.for(userId, params.team, params.event, params.proposal);
 
-  const review = ProposalReview.for(userId, params.team, params.event, params.proposal);
-  const proposal = await review.get();
-  const pagination = await review.getPreviousAndNextReviews(filters);
+  const [event, proposal, pagination] = await Promise.all([
+    userEvent.get(),
+    proposalReview.get(),
+    proposalReview.getPreviousAndNextReviews(filters),
+  ]);
 
-  const activity = await ActivityFeed.for(userId, params.team, params.event, params.proposal).activity();
-
-  return json({ event, proposal, activity, pagination });
+  return defer({ event, proposal, pagination, activityPromise });
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -101,7 +106,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
 export default function ProposalReviewLayoutRoute() {
   const { team } = useTeam();
-  const { event, proposal, pagination, activity } = useLoaderData<typeof loader>();
+  const { event, proposal, pagination, activityPromise } = useLoaderData<typeof loader>();
   const errors = useActionData<typeof action>();
 
   const hasFormats = proposal.formats && proposal.formats.length > 0;
@@ -125,7 +130,10 @@ export default function ProposalReviewLayoutRoute() {
               showCategories={hasCategories}
               referencesOpen
             />
-            <Feed activity={activity} />
+
+            <Suspense fallback={<LoadingActivities />}>
+              <Await resolve={activityPromise}>{(activity) => <Feed activity={activity} />}</Await>
+            </Suspense>
           </div>
 
           <div className="lg:col-span-3">
