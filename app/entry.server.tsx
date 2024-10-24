@@ -10,10 +10,7 @@ import { createAppServer } from '../servers/web.server.ts';
 
 import { NonceContext } from './libs/nonce/use-nonce.ts';
 
-const ABORT_DELAY = 5_000;
-
-// Reject all pending promises from handler functions after 5 seconds
-export const streamTimeout = 5_000;
+const ABORT_DELAY = 8_000;
 
 export default function handleRequest(
   request: Request,
@@ -59,8 +56,8 @@ export default function handleRequest(
       },
     );
 
-    // Automatically timeout the react renderer after 10 seconds
-    setTimeout(abort, 10_000);
+    // Automatically timeout the react renderer
+    setTimeout(abort, ABORT_DELAY);
   });
 }
 

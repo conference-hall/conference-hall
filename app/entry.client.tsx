@@ -1,5 +1,5 @@
 import { RemixBrowser } from '@remix-run/react';
-import { startTransition } from 'react';
+import { StrictMode, startTransition } from 'react';
 import { hydrateRoot } from 'react-dom/client';
 
 import { initMonitoring } from './libs/monitoring/monitoring.client.ts';
@@ -7,5 +7,10 @@ import { initMonitoring } from './libs/monitoring/monitoring.client.ts';
 initMonitoring();
 
 startTransition(() => {
-  hydrateRoot(document, <RemixBrowser />);
+  hydrateRoot(
+    document,
+    <StrictMode>
+      <RemixBrowser />
+    </StrictMode>,
+  );
 });

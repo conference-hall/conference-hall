@@ -2,7 +2,6 @@ import { HeartIcon, StarIcon, XMarkIcon } from '@heroicons/react/20/solid';
 import { formatDistanceToNowStrict } from 'date-fns';
 
 import type { FeedItem } from '~/.server/reviews/activity-feed.ts';
-import { ClientOnly } from '~/routes/__components/utils/client-only.tsx';
 
 export function ReviewItem({ item }: { item: FeedItem }) {
   if (item.type !== 'review') return null;
@@ -29,7 +28,7 @@ export function ReviewItem({ item }: { item: FeedItem }) {
         <strong>{item.note} stars.</strong>
       </p>
       <time dateTime={item.timestamp} className="flex-none py-0.5 pr-3 text-xs leading-5 text-gray-500">
-        <ClientOnly>{() => `${formatDistanceToNowStrict(new Date(item.timestamp))} ago`}</ClientOnly>
+        {formatDistanceToNowStrict(new Date(item.timestamp))} ago
       </time>
     </>
   );
