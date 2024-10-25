@@ -4,7 +4,6 @@ import { defer, json } from '@remix-run/node';
 import { Await, useActionData, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import { UserEvent } from '~/.server/event-settings/user-event.ts';
 import { Publication } from '~/.server/publications/publication.ts';
 import { ActivityFeed } from '~/.server/reviews/activity-feed.ts';
 import { Comments } from '~/.server/reviews/comments.ts';
@@ -21,6 +20,8 @@ import { TalkSection } from '~/routes/__components/talks/talk-section.tsx';
 
 import { Suspense } from 'react';
 import { useTeam } from '../../__components/use-team.tsx';
+import { useEvent } from '../__components/use-event.tsx';
+import { OtherProposalsDisclosure } from './__components/proposal-page/other-proposals-disclosure.tsx';
 import { LoadingActivities } from './__components/proposal-page/proposal-activity/loading-activities.tsx';
 import { ProposalActivityFeed as Feed } from './__components/proposal-page/proposal-activity/proposal-activity-feed.tsx';
 import { ReviewHeader } from './__components/proposal-page/review-header.tsx';
@@ -36,19 +37,16 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   invariant(params.team, 'Invalid team slug');
   invariant(params.proposal, 'Invalid proposal id');
 
-  const activityPromise = ActivityFeed.for(userId, params.team, params.event, params.proposal).activity();
-
   const filters = parseUrlFilters(request.url);
-  const userEvent = UserEvent.for(userId, params.team, params.event);
   const proposalReview = ProposalReview.for(userId, params.team, params.event, params.proposal);
+  const activityFeed = ActivityFeed.for(userId, params.team, params.event, params.proposal);
 
-  const [event, proposal, pagination] = await Promise.all([
-    userEvent.get(),
-    proposalReview.get(),
-    proposalReview.getPreviousAndNextReviews(filters),
-  ]);
+  const activityPromise = activityFeed.activity();
+  const proposal = await proposalReview.get();
+  const otherProposalsPromise = proposalReview.getOtherProposals(proposal.speakers.map((s) => s.id));
+  const pagination = await proposalReview.getPreviousAndNextReviews(filters);
 
-  return defer({ event, proposal, pagination, activityPromise });
+  return defer({ proposal, pagination, activityPromise, otherProposalsPromise });
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -106,7 +104,9 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
 export default function ProposalReviewLayoutRoute() {
   const { team } = useTeam();
-  const { event, proposal, pagination, activityPromise } = useLoaderData<typeof loader>();
+  const { event } = useEvent();
+
+  const { proposal, pagination, activityPromise, otherProposalsPromise } = useLoaderData<typeof loader>();
   const errors = useActionData<typeof action>();
 
   const hasFormats = proposal.formats && proposal.formats.length > 0;
@@ -117,26 +117,31 @@ export default function ProposalReviewLayoutRoute() {
       <ReviewHeader {...pagination} />
 
       <div className="mx-auto max-w-7xl px-4">
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-10">
-          <div className="space-y-4 lg:col-span-7">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+          <div className="space-y-4 lg:col-span-8">
             <TalkSection
               talk={proposal}
               errors={errors}
               event={event}
               canEditTalk={team.userPermissions.canEditEventProposals}
-              canEditSpeakers={false}
+              canEditSpeakers={true}
               canArchive={false}
               showFormats={hasFormats}
               showCategories={hasCategories}
-              referencesOpen
-            />
+            >
+              <Suspense fallback={null}>
+                <Await resolve={otherProposalsPromise}>
+                  {(proposals) => <OtherProposalsDisclosure proposals={proposals} />}
+                </Await>
+              </Suspense>
+            </TalkSection>
 
             <Suspense fallback={<LoadingActivities />}>
               <Await resolve={activityPromise}>{(activity) => <Feed activity={activity} />}</Await>
             </Suspense>
           </div>
 
-          <div className="lg:col-span-3">
+          <div className="lg:col-span-4">
             <ReviewSidebar
               proposal={proposal}
               reviewEnabled={event.reviewEnabled}

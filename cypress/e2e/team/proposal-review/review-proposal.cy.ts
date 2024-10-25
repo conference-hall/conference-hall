@@ -22,11 +22,16 @@ describe('Proposal review page', () => {
       cy.assertText('Advanced');
       cy.assertText('French');
       cy.assertText('Talk description');
-      cy.assertText('My talk references');
       cy.assertText('Format 1');
       cy.assertText('Category 1');
       cy.assertText('Marie Jane');
       cy.assertText('Robin');
+
+      review.openTalkReferences();
+      cy.assertText('My talk references');
+
+      review.openOtherProposals();
+      cy.assertText('Talk 2');
 
       cy.findByLabelText('Score: 3').should('exist');
 

@@ -122,6 +122,65 @@ describe('ProposalReview', () => {
     });
   });
 
+  describe('#getOtherProposals', () => {
+    it('returns other speakers proposals', async () => {
+      const proposal1 = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      const proposal2 = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }), traits: ['draft'] });
+      const event2 = await eventFactory({ team });
+      await proposalFactory({ event: event2, talk: await talkFactory({ speakers: [speaker] }) });
+      const review = await reviewFactory({
+        proposal: proposal2,
+        user: owner,
+        attributes: { feeling: 'NEUTRAL', note: 3 },
+      });
+
+      const proposalReview = ProposalReview.for(owner.id, team.slug, event.slug, proposal1.id);
+      const otherProposals = await proposalReview.getOtherProposals([speaker.id]);
+
+      expect(otherProposals).toEqual([
+        { id: proposal2.id, title: proposal2.title, review: review.note, speakers: [speaker.name] },
+      ]);
+    });
+
+    it('returns other speakers proposals without reviews when disabled for event', async () => {
+      const event2 = await eventFactory({ team, attributes: { displayProposalsReviews: false } });
+      const proposal1 = await proposalFactory({ event: event2, talk: await talkFactory({ speakers: [speaker] }) });
+      const proposal2 = await proposalFactory({ event: event2, talk: await talkFactory({ speakers: [speaker] }) });
+      await reviewFactory({
+        proposal: proposal2,
+        user: owner,
+        attributes: { feeling: 'NEUTRAL', note: 3 },
+      });
+
+      const proposalReview = ProposalReview.for(owner.id, team.slug, event2.slug, proposal1.id);
+      const otherProposals = await proposalReview.getOtherProposals([speaker.id]);
+
+      expect(otherProposals).toEqual([
+        { id: proposal2.id, title: proposal2.title, review: null, speakers: [speaker.name] },
+      ]);
+    });
+
+    it('returns empty array when speakers display disabled', async () => {
+      const event2 = await eventFactory({ team, attributes: { displayProposalsSpeakers: false } });
+      const proposal1 = await proposalFactory({ event: event2, talk: await talkFactory({ speakers: [speaker] }) });
+      const proposal2 = await proposalFactory({ event: event2, talk: await talkFactory({ speakers: [speaker] }) });
+
+      const proposalReview = ProposalReview.for(owner.id, team.slug, event2.slug, proposal1.id);
+      const otherProposals = await proposalReview.getOtherProposals([speaker.id]);
+
+      expect(otherProposals).toEqual([]);
+    });
+
+    it('throws an error if user does not belong to event team', async () => {
+      const user = await userFactory();
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [user] }) });
+      await expect(
+        ProposalReview.for(user.id, team.slug, event.slug, proposal.id).getOtherProposals([]),
+      ).rejects.toThrowError(ForbiddenOperationError);
+    });
+  });
+
   describe('#getPreviousAndNextReviews', () => {
     it('returns a default pagination when no other reviews', async () => {
       const proposal = await proposalFactory({

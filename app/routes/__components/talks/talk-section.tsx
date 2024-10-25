@@ -8,11 +8,12 @@ import { Badge } from '~/design-system/badges.tsx';
 import { IconLink } from '~/design-system/icon-buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
-import { H1 } from '~/design-system/typography.tsx';
+import { H1, Text } from '~/design-system/typography.tsx';
 import { getLanguage } from '~/libs/formatters/languages.ts';
 import { getLevel } from '~/libs/formatters/levels.ts';
 import type { SubmissionErrors } from '~/types/errors.types.ts';
 
+import type { ReactNode } from 'react';
 import type { SpeakerProps } from './co-speaker';
 import { CoSpeakers } from './co-speaker.tsx';
 import { TalkArchiveButton } from './talk-forms/talk-archive-button.tsx';
@@ -50,12 +51,14 @@ type Props = {
   showFormats?: boolean;
   showCategories?: boolean;
   referencesOpen?: boolean;
+  children?: ReactNode;
 };
 
 export function TalkSection({
   talk,
   event,
   errors,
+  children,
   canEditTalk,
   canEditSpeakers,
   canArchive,
@@ -128,24 +131,19 @@ export function TalkSection({
         </div>
       </dl>
 
-      {talk.references && (
-        <dl className="px-6 py-4 border-t border-t-gray-200">
-          <Disclosure defaultOpen={referencesOpen}>
-            <DisclosureButton
-              as="dt"
-              className="group flex items-center gap-2 text-sm font-medium leading-6 text-gray-900 cursor-pointer"
-            >
-              <span>Talk references</span>
-              <ChevronDownIcon className="h-4 w-4 group-data-[open]:rotate-180" />
-            </DisclosureButton>
-            <DisclosurePanel>
-              <Markdown as="dd" className="text-gray-700 pt-2">
-                {talk.references}
-              </Markdown>
-            </DisclosurePanel>
-          </Disclosure>
-        </dl>
-      )}
+      {talk.references ? (
+        <Disclosure defaultOpen={referencesOpen}>
+          <DisclosureButton className="px-6 py-4 group flex items-center gap-2 text-sm font-medium leading-6 text-gray-900 cursor-pointer hover:underline border-t border-t-gray-200">
+            <span>Talk references</span>
+            <ChevronDownIcon className="h-4 w-4 group-data-[open]:rotate-180" />
+          </DisclosureButton>
+          <DisclosurePanel as="dd" className="px-6 pb-4">
+            <Markdown className="text-gray-700">{talk.references}</Markdown>
+          </DisclosurePanel>
+        </Disclosure>
+      ) : null}
+
+      {children}
     </Card>
   );
 }

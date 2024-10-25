@@ -82,6 +82,32 @@ export class ProposalReview {
     };
   }
 
+  async getOtherProposals(speakerIds: Array<string>) {
+    const event = await this.userEvent.needsPermission('canAccessEvent');
+
+    if (!event.displayProposalsSpeakers) return [];
+
+    const proposals = await db.proposal.findMany({
+      include: { reviews: true, speakers: true },
+      where: {
+        id: { not: this.proposalId },
+        speakers: { some: { id: { in: speakerIds } } },
+        eventId: event.id,
+        isDraft: false,
+      },
+    });
+
+    return proposals.map((proposal) => {
+      const reviews = new ReviewDetails(proposal.reviews);
+      return {
+        id: proposal.id,
+        title: proposal.title,
+        review: event.displayProposalsReviews ? reviews.summary().average : null,
+        speakers: proposal.speakers.map((speaker) => speaker.name),
+      };
+    });
+  }
+
   async getPreviousAndNextReviews(filters: ProposalsFilters) {
     const event = await this.userEvent.needsPermission('canAccessEvent');
 

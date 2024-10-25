@@ -37,6 +37,14 @@ class ProposalReviewPage extends BasePage {
     cy.findByRole('link', { name: 'Proposal' }).click();
   }
 
+  openTalkReferences() {
+    cy.findByRole('button', { name: 'Talk references' }).click();
+  }
+
+  openOtherProposals() {
+    cy.findByRole('button', { name: /Other proposals by speakers/ }).click();
+  }
+
   // Speakers
 
   cospeakers() {
