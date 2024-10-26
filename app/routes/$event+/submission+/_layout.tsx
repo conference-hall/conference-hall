@@ -11,7 +11,6 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { CfpNotOpenError } from '~/libs/errors.server.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
-import { eventSocialCard } from '~/libs/meta/social-cards.ts';
 import { NestedErrorBoundary } from '~/routes/__components/error-boundary.tsx';
 import { useUser } from '~/routes/__components/use-user.tsx';
 
@@ -20,10 +19,8 @@ import { useCurrentStepKey } from './__components/use-current-step-key.ts';
 
 export const handle = { step: 'root' };
 
-export const meta = mergeMeta<typeof loader>(
-  ({ data }) => (data ? [{ title: `${data.event.name} submission | Conference Hall` }] : []),
-  ({ data }) =>
-    data ? eventSocialCard({ name: data.event.name, slug: data.event.slug, logoUrl: data.event.logoUrl }) : [],
+export const meta = mergeMeta<typeof loader>(({ data }) =>
+  data ? [{ title: `${data.event.name} submission | Conference Hall` }] : [],
 );
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
