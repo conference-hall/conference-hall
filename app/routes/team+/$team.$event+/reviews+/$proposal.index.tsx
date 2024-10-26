@@ -124,7 +124,7 @@ export default function ProposalReviewLayoutRoute() {
               errors={errors}
               event={event}
               canEditTalk={team.userPermissions.canEditEventProposals}
-              canEditSpeakers={true}
+              canEditSpeakers={false}
               canArchive={false}
               showFormats={hasFormats}
               showCategories={hasCategories}
