@@ -53,11 +53,9 @@ export function ProposalItem({ proposal, isSelected, isAllPagesSelected, toggle 
               </span>
             ) : null}
           </div>
-          <div className="flex gap-1">
-            <Text size="xs" variant="secondary">
-              {proposal.speakers.length ? `by ${proposal.speakers.map((a) => a.name).join(', ')}` : null}
-            </Text>
-          </div>
+          <Text size="xs" variant="secondary">
+            {proposal.speakers.length ? `by ${proposal.speakers.map((a) => a.name).join(', ')}` : null}
+          </Text>
         </div>
         <div className="flex gap-4 items-center">
           <div className="hidden sm:flex sm:items-center sm:gap-6">

@@ -39,7 +39,6 @@ describe('Proposal edit page', () => {
 
       cy.assertText('Talk 1 updated');
       cy.assertText('Talk description updated');
-      cy.assertText('Talk references updated');
       cy.assertText('Beginner');
       cy.assertText('French');
       cy.assertText('English');
@@ -47,6 +46,9 @@ describe('Proposal edit page', () => {
       cy.assertText('Format 2');
       cy.assertText('Category 1');
       cy.assertText('Category 2');
+
+      review.openTalkReferences();
+      cy.assertText('Talk references updated');
     });
   });
 });

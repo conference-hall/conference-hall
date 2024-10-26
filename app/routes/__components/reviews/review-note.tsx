@@ -18,6 +18,7 @@ type Props = { feeling: keyof typeof REVIEWS | null; note: number | null; hideEm
 export function GlobalReviewNote({ feeling, note, hideEmpty }: Props) {
   const { icon: Icon, color, stroke, label } = REVIEWS[feeling || 'NEUTRAL'];
   const formattedNote = formatReviewNote(note);
+
   return (
     <div className={cx('flex items-center justify-end gap-1 w-14', { invisible: note === null && hideEmpty })}>
       <ClientOnly>
