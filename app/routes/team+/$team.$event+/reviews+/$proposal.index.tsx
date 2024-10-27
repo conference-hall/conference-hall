@@ -10,7 +10,11 @@ import { Comments } from '~/.server/reviews/comments.ts';
 import { Deliberate, DeliberateSchema } from '~/.server/reviews/deliberate.ts';
 import type { ProposalReviewData } from '~/.server/reviews/proposal-review.ts';
 import { ProposalReview } from '~/.server/reviews/proposal-review.ts';
-import { ProposalUpdateSchema, ReviewUpdateDataSchema } from '~/.server/reviews/proposal-review.types.ts';
+import {
+  CommentReactionSchema,
+  ProposalUpdateSchema,
+  ReviewUpdateDataSchema,
+} from '~/.server/reviews/proposal-review.types.ts';
 import { parseUrlFilters } from '~/.server/shared/proposal-search-builder.types.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
@@ -76,6 +80,13 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       const discussions = Comments.for(userId, params.team, params.event, params.proposal);
       const commentId = form.get('commentId');
       if (commentId) await discussions.remove(commentId.toString());
+      break;
+    }
+    case 'react-to-comment': {
+      const discussions = Comments.for(userId, params.team, params.event, params.proposal);
+      const result = parseWithZod(form, { schema: CommentReactionSchema });
+      if (result.status !== 'success') return toast('error', 'Something went wrong.');
+      await discussions.reactToComment(result.value);
       break;
     }
     case 'change-deliberation-status': {
