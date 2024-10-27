@@ -1,4 +1,5 @@
 import { cva, cx } from 'class-variance-authority';
+import { Tooltip } from '~/design-system/tooltip.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { EmojiPicker } from './emoji-picker.tsx';
 import { type Emoji, type EmojiReaction, getEmoji } from './emojis.ts';
@@ -22,7 +23,6 @@ const emojiReactionStyles = cva('flex items-center gap-2 rounded-full shrink-0 h
 });
 
 // TODO: Add tests
-// TODO: Add reactedBy tooltip
 export function EmojiReactions({ emojis, reactions, onChangeEmoji, className }: EmojiReactionsProps) {
   return (
     <ul className={cx('flex items-center flex-wrap gap-2', className)}>
@@ -30,20 +30,27 @@ export function EmojiReactions({ emojis, reactions, onChangeEmoji, className }: 
         const emoji = getEmoji(reaction.code, emojis);
         if (!emoji) return null;
 
+        const tooltip = (
+          <span>
+            <strong>{reaction.reactedBy.join(', ')}</strong> reacted with {emoji.skin}
+          </span>
+        );
+
         return (
           <li key={emoji.code}>
-            <button
-              type="button"
-              className={emojiReactionStyles({ reacted: reaction.reacted })}
-              aria-label={emoji.name}
-              title={emoji.name}
-              onClick={() => onChangeEmoji(emoji)}
-            >
-              <span className="font-serif text-s">{emoji.skin}</span>
-              <Text size="xs" weight="medium">
-                {reaction.reactedBy.length}
-              </Text>
-            </button>
+            <Tooltip text={tooltip}>
+              <button
+                type="button"
+                aria-label={emoji.name}
+                onClick={() => onChangeEmoji(emoji)}
+                className={emojiReactionStyles({ reacted: reaction.reacted })}
+              >
+                <span className="font-serif text-s">{emoji.skin}</span>
+                <Text size="xs" weight="medium">
+                  {reaction.reactedBy.length}
+                </Text>
+              </button>
+            </Tooltip>
           </li>
         );
       })}
