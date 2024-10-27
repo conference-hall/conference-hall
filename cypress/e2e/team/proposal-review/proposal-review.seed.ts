@@ -113,7 +113,12 @@ export const seed = async () => {
 
   await reviewFactory({ proposal, user: organizer2, attributes: { note: 3, feeling: 'NEUTRAL' } });
 
-  await commentFactory({ proposal, user: organizer2, attributes: { channel: 'ORGANIZER', comment: 'Hello world' } });
+  await commentFactory({
+    proposal,
+    user: organizer2,
+    attributes: { channel: 'ORGANIZER', comment: 'Hello world' },
+    traits: ['withReaction'],
+  });
 
   await proposalFactory({
     attributes: { id: 'proposal-2' },

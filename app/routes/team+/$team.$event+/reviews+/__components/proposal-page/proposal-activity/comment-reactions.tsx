@@ -1,10 +1,22 @@
 import { useFetchers, useSubmit } from '@remix-run/react';
 import { EmojiReactions } from '~/routes/__components/emojis/emoji-reactions.tsx';
-import { EMOJIS, type Emoji, type EmojiReaction } from '~/routes/__components/emojis/emojis.ts';
+import type { Emoji, EmojiReaction } from '~/types/emojis.types';
+
+export const EMOJIS: Array<Emoji> = [
+  { code: '+1', skin: '👍', name: 'Thumbs up' },
+  { code: '-1', skin: '👎', name: 'Thumbs down' },
+  { code: 'heart', skin: '❤️', name: 'Heart' },
+  { code: 'smile', skin: '😄', name: 'Laughing' },
+  { code: 'cry', skin: '😢', name: 'Sadness' },
+  { code: 'tada', skin: '🎉', name: 'Celebration' },
+  { code: 'rocket', skin: '🚀', name: 'Excitement' },
+  { code: 'fire', skin: '🔥', name: 'Trending' },
+  { code: 'clap', skin: '👏', name: 'Applause' },
+  { code: 'thinking_face', skin: '🤔', name: 'Thinking' },
+];
 
 type CommentReactions = { commentId: string; reactions: Array<EmojiReaction> };
 
-// TODO: Add e2e test
 export function CommentReactions({ commentId, reactions }: CommentReactions) {
   const optimisticReactions = useOptimisticReactions(commentId, reactions);
 

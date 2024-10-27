@@ -1,13 +1,12 @@
 import { cva, cx } from 'class-variance-authority';
 import { Tooltip } from '~/design-system/tooltip.tsx';
 import { Text } from '~/design-system/typography.tsx';
+import type { Emoji, EmojiReaction } from '../../../types/emojis.types.ts';
 import { EmojiPicker } from './emoji-picker.tsx';
-import { type Emoji, type EmojiReaction, getEmoji } from './emojis.ts';
 
 type EmojiReactionsProps = {
   emojis: Array<Emoji>;
   reactions: Array<EmojiReaction>;
-  label?: string;
   onChangeEmoji: (emoji: Emoji) => void;
   className?: string;
 };
@@ -22,12 +21,11 @@ const emojiReactionStyles = cva('flex items-center gap-2 rounded-full shrink-0 h
   defaultVariants: { reacted: false },
 });
 
-// TODO: Add tests
 export function EmojiReactions({ emojis, reactions, onChangeEmoji, className }: EmojiReactionsProps) {
   return (
     <ul className={cx('flex items-center flex-wrap gap-2', className)}>
       {reactions.map((reaction) => {
-        const emoji = getEmoji(reaction.code, emojis);
+        const emoji = emojis.find((emoji) => emoji.code === reaction.code);
         if (!emoji) return null;
 
         const tooltip = (

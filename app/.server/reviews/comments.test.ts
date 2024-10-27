@@ -77,4 +77,54 @@ describe('Comments', () => {
       await expect(discussion.remove(message.id)).rejects.toThrowError(ForbiddenOperationError);
     });
   });
+
+  describe('#reactToComment', () => {
+    it('adds a reaction to a comment', async () => {
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      const message = await commentFactory({ user: owner, proposal });
+
+      await Comments.for(owner.id, team.slug, event.slug, proposal.id).reactToComment({
+        commentId: message.id,
+        code: 'tada',
+      });
+
+      const reactions = await Comments.listReactions([message.id], owner.id);
+      expect(reactions[message.id]).toEqual([{ code: 'tada', reacted: true, reactedBy: ['You'] }]);
+    });
+
+    it('removes a reaction to a comment', async () => {
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      const message = await commentFactory({ user: owner, proposal, traits: ['withReaction'] });
+
+      await Comments.for(owner.id, team.slug, event.slug, proposal.id).reactToComment({
+        commentId: message.id,
+        code: 'tada',
+      });
+
+      const reactions = await Comments.listReactions([message.id], owner.id);
+      expect(reactions[message.id]).toEqual([]);
+    });
+  });
+
+  describe('#Comments.listReactions', () => {
+    it('lists comments reactions', async () => {
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      const message1 = await commentFactory({ user: owner, proposal, traits: ['withReaction'] });
+      const message2 = await commentFactory({ user: member, proposal, traits: ['withReaction'] });
+
+      const reactions = await Comments.listReactions([message1.id, message2.id], owner.id);
+      expect(reactions).toEqual({
+        [message1.id]: [{ code: 'tada', reacted: true, reactedBy: ['You'] }],
+        [message2.id]: [{ code: 'tada', reacted: false, reactedBy: [member.name] }],
+      });
+    });
+
+    it('returns an empty object when no comment id given', async () => {
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      await commentFactory({ user: owner, proposal, traits: ['withReaction'] });
+
+      const reactions = await Comments.listReactions([], owner.id);
+      expect(reactions).toEqual({});
+    });
+  });
 });

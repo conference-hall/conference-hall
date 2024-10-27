@@ -1,7 +1,7 @@
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
 import { cx } from 'class-variance-authority';
 import { EmojiAddIcon } from '~/design-system/icons/emoji-add-icon.tsx';
-import type { Emoji } from './emojis.ts';
+import type { Emoji } from '../../../types/emojis.types.ts';
 
 type EmojiPickerProps = {
   emojis: Array<Emoji>;
@@ -10,7 +10,6 @@ type EmojiPickerProps = {
   onSelectEmoji: (emoji: Emoji) => void;
 };
 
-// TODO: Add tests
 export function EmojiPicker({
   emojis,
   disabledEmojis = [],
@@ -48,7 +47,6 @@ export function EmojiPicker({
                   title={emoji.name}
                   disabled={disabled}
                   onClick={() => {
-                    // if (disabled)
                     onSelectEmoji(emoji);
                     close();
                   }}

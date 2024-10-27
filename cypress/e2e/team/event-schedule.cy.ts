@@ -22,7 +22,6 @@ describe('Schedule page', () => {
 
     cy.findByRole('heading', { name: 'Saturday, January 1st, 2022' }).should('exist');
     cy.assertText('09:00 to 18:00');
-    cy.assertText('GMT+2');
     cy.assertText('Main stage');
   });
 

@@ -1,6 +1,6 @@
 import { db } from 'prisma/db.server.ts';
 
-import type { EmojiReaction } from '~/routes/__components/emojis/emojis.ts';
+import type { EmojiReaction } from '~/types/emojis.types.ts';
 import { UserEvent } from '../event-settings/user-event.ts';
 import type { CommentReactionData } from './proposal-review.types.ts';
 
@@ -30,7 +30,6 @@ export class Comments {
     await db.comment.deleteMany({ where: { id: commentId, userId: this.userId, proposalId: this.proposalId } });
   }
 
-  // TODO: Add tests
   async reactToComment({ commentId, code }: CommentReactionData) {
     await this.userEvent.needsPermission('canAccessEvent');
 
@@ -49,7 +48,6 @@ export class Comments {
     return db.commentReaction.create({ data: { userId: this.userEvent.userId, commentId, code } });
   }
 
-  // TODO: Add tests
   static async listReactions(commentIds: Array<string>, currentUserId: string) {
     if (commentIds.length === 0) return {};
 

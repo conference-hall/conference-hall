@@ -45,6 +45,10 @@ describe('Proposal review page', () => {
       review.activityFeed().eq(1).should('contain.text', 'Hello world');
       review.activityFeed().eq(2).should('contain.text', 'Clark Kent reviewed the proposal with 5 stars.');
 
+      review.activityFeed().eq(1).findByRole('button', { name: 'Select a reaction' }).click();
+      cy.findByRole('button', { name: 'Thumbs up' }).click();
+      review.activityFeed().eq(1).findByRole('button', { name: 'Thumbs up' }).should('exist');
+
       review.addComment('This is a new comment');
       review.activityFeed().should('have.length', 4);
       review.activityFeed().eq(3).should('contain.text', 'Clark Kent commented');
