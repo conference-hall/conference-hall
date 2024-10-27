@@ -31,9 +31,6 @@ const OpenPlannerSessionsPayloadSchema = z.object({
 
 export type OpenPlannerSessionsPayload = z.infer<typeof OpenPlannerSessionsPayloadSchema>;
 
-// TODO: the POST is not awaiting the fetch call (fire-and-forget)
-// Because the call can be very long and result with a timeout.
-// This should be done with a job later.
 async function postSessionsAndSpeakers(eventId: string, apiKey: string, payload: OpenPlannerSessionsPayload) {
   const validation = OpenPlannerSessionsPayloadSchema.safeParse(payload);
 
@@ -43,7 +40,7 @@ async function postSessionsAndSpeakers(eventId: string, apiKey: string, payload:
 
   const url = `${BASE_URL}/v1/${eventId}/sessions-speakers?apiKey=${encodeURIComponent(apiKey)}`;
 
-  fetch(url, {
+  await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),

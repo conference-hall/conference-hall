@@ -6,10 +6,13 @@ type FactoryOptions = {
   user: User;
   proposal: Proposal;
   attributes?: Partial<Prisma.CommentCreateInput>;
+  traits?: Array<Trait>;
 };
 
-export const commentFactory = (options: FactoryOptions) => {
-  const { attributes = {}, user, proposal } = options;
+type Trait = 'withReaction';
+
+export const commentFactory = async (options: FactoryOptions) => {
+  const { attributes = {}, traits = [], user, proposal } = options;
 
   const defaultAttributes: Prisma.CommentCreateInput = {
     user: { connect: { id: user.id } },
@@ -19,5 +22,17 @@ export const commentFactory = (options: FactoryOptions) => {
   };
 
   const data = { ...defaultAttributes, ...attributes };
-  return db.comment.create({ data });
+  const comment = await db.comment.create({ data });
+
+  if (traits.includes('withReaction')) {
+    await db.commentReaction.create({
+      data: {
+        code: 'tada',
+        commentId: comment.id,
+        userId: user.id,
+      },
+    });
+  }
+
+  return comment;
 };

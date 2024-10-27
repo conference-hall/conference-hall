@@ -33,8 +33,9 @@ model User {
   surveys               Survey[]
   createdTalks          Talk[]
   createdEvents         Event[]
-  comments              Comment[]
   authenticationMethods AuthenticationMethod[]
+  comments              Comment[]
+  commentReactions      CommentReaction[]
 
   @@map("users")
 }
@@ -309,15 +310,16 @@ enum ReviewFeeling {
 }
 
 model Comment {
-  id          String         @id @default(cuid())
+  id          String            @id @default(cuid())
   userId      String
-  user        User           @relation(fields: [userId], references: [id])
+  user        User              @relation(fields: [userId], references: [id])
   proposalId  String
-  proposal    Proposal       @relation(fields: [proposalId], references: [id], onDelete: Cascade)
+  proposal    Proposal          @relation(fields: [proposalId], references: [id], onDelete: Cascade)
   comment     String
   channel     CommentChannel
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
+  reactions   CommentReaction[]
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
   migrationId String?
 
   @@map("comments")
@@ -326,6 +328,18 @@ model Comment {
 enum CommentChannel {
   ORGANIZER
   SPEAKER
+}
+
+model CommentReaction {
+  id        String  @id @default(cuid())
+  code      String
+  commentId String
+  comment   Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  userId    String
+  reactedBy User    @relation(fields: [userId], references: [id])
+
+  @@unique([userId, commentId, code])
+  @@map("comment_reactions")
 }
 
 model Schedule {

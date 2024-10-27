@@ -18,3 +18,7 @@ export const ReviewUpdateDataSchema = z.object({
 });
 
 export type ReviewUpdateData = z.infer<typeof ReviewUpdateDataSchema>;
+
+export const CommentReactionSchema = z.object({ commentId: z.string(), code: z.string() });
+
+export type CommentReactionData = z.infer<typeof CommentReactionSchema>;

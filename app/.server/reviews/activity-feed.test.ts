@@ -28,7 +28,7 @@ describe('ActivityFeed', () => {
     it('retrieve all proposals reviews and comments', async () => {
       const event = await eventFactory({ team });
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
-      const message1 = await commentFactory({ proposal, user: owner });
+      const message1 = await commentFactory({ proposal, user: owner, traits: ['withReaction'] });
       const review1 = await reviewFactory({ proposal, user: owner, attributes: { feeling: 'NEUTRAL', note: 3 } });
       const message2 = await commentFactory({ proposal, user: member1 });
       const review2 = await reviewFactory({ proposal, user: member1, attributes: { feeling: 'POSITIVE', note: 4 } });
@@ -49,6 +49,7 @@ describe('ActivityFeed', () => {
           note: null,
           user: owner.name,
           picture: owner.picture,
+          reactions: [{ code: 'tada', reacted: true, reactedBy: ['You'] }],
         },
         {
           id: review1.id,
@@ -71,6 +72,7 @@ describe('ActivityFeed', () => {
           note: null,
           user: member1.name,
           picture: member1.picture,
+          reactions: [],
         },
         {
           id: review2.id,
@@ -105,6 +107,7 @@ describe('ActivityFeed', () => {
           note: null,
           user: owner.name,
           picture: owner.picture,
+          reactions: [],
         },
       ]);
     });
