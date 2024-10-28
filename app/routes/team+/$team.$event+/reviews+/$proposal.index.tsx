@@ -22,7 +22,11 @@ import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { TalkSection } from '~/routes/__components/talks/talk-section.tsx';
 
+import { Cog6ToothIcon } from '@heroicons/react/24/outline';
 import { Suspense } from 'react';
+import { IconButton } from '~/design-system/icon-buttons.tsx';
+import { Card } from '~/design-system/layouts/card.tsx';
+import { H2, Text } from '~/design-system/typography.tsx';
 import { useTeam } from '../../__components/use-team.tsx';
 import { useEvent } from '../__components/use-event.tsx';
 import { OtherProposalsDisclosure } from './__components/proposal-page/other-proposals-disclosure.tsx';
@@ -30,6 +34,7 @@ import { LoadingActivities } from './__components/proposal-page/proposal-activit
 import { ProposalActivityFeed as Feed } from './__components/proposal-page/proposal-activity/proposal-activity-feed.tsx';
 import { ReviewHeader } from './__components/proposal-page/review-header.tsx';
 import { ReviewSidebar } from './__components/proposal-page/review-sidebar.tsx';
+import { TagsCard } from './__components/proposal-page/tags-card.tsx';
 
 export type ProposalData = ProposalReviewData;
 
@@ -152,12 +157,14 @@ export default function ProposalReviewLayoutRoute() {
             </Suspense>
           </div>
 
-          <div className="lg:col-span-4">
+          <div className="lg:col-span-4 space-y-4">
             <ReviewSidebar
               proposal={proposal}
               reviewEnabled={event.reviewEnabled}
               canDeliberate={team.userPermissions.canDeliberateEventProposals}
             />
+
+            <TagsCard />
           </div>
         </div>
       </div>
