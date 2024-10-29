@@ -108,6 +108,7 @@ describe('UserEvent', () => {
         cfpState: 'OPENED',
         formats: [],
         categories: [],
+        tags: [],
         archived: false,
       });
     });

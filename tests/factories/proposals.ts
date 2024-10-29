@@ -1,5 +1,5 @@
 import { randParagraph, randPost } from '@ngneat/falso';
-import type { Event, EventCategory, EventFormat, Prisma, Talk, User } from '@prisma/client';
+import type { Event, EventCategory, EventFormat, EventProposalTag, Prisma, Talk, User } from '@prisma/client';
 import { ConfirmationStatus, DeliberationStatus, PublicationStatus, TalkLevel } from '@prisma/client';
 
 import { db } from '../../prisma/db.server.ts';
@@ -38,12 +38,13 @@ type FactoryOptions = {
   talk: Talk & { speakers: User[] };
   formats?: EventFormat[];
   categories?: EventCategory[];
+  tags?: EventProposalTag[];
   attributes?: Partial<Prisma.ProposalCreateInput>;
   traits?: Trait[];
 };
 
 export const proposalFactory = (options: FactoryOptions) => {
-  const { attributes = {}, traits = [], talk, event, formats, categories } = options;
+  const { attributes = {}, traits = [], talk, event, formats, categories, tags } = options;
 
   const defaultAttributes: Prisma.ProposalCreateInput = {
     title: talk?.title || randPost().title,
@@ -63,6 +64,9 @@ export const proposalFactory = (options: FactoryOptions) => {
   }
   if (categories) {
     defaultAttributes.categories = { connect: categories.map(({ id }) => ({ id })) };
+  }
+  if (tags) {
+    defaultAttributes.tags = { connect: tags.map(({ id }) => ({ id })) };
   }
 
   const data = {

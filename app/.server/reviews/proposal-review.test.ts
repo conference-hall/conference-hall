@@ -1,4 +1,4 @@
-import type { Event, EventCategory, EventFormat, Team, User } from '@prisma/client';
+import type { Event, EventCategory, EventFormat, EventProposalTag, Team, User } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
 import { eventCategoryFactory } from 'tests/factories/categories.ts';
 import { eventFactory } from 'tests/factories/events.ts';
@@ -12,6 +12,7 @@ import { userFactory } from 'tests/factories/users.ts';
 
 import { ForbiddenOperationError, ReviewDisabledError } from '~/libs/errors.server.ts';
 
+import { eventProposalTagFactory } from 'tests/factories/proposal-tags.ts';
 import { ProposalReview } from './proposal-review.ts';
 
 describe('ProposalReview', () => {
@@ -22,6 +23,7 @@ describe('ProposalReview', () => {
   let event: Event;
   let format: EventFormat;
   let category: EventCategory;
+  let tag: EventProposalTag;
 
   beforeEach(async () => {
     owner = await userFactory({ traits: ['clark-kent'] });
@@ -31,6 +33,7 @@ describe('ProposalReview', () => {
     event = await eventFactory({ team, traits: ['withSurvey'] });
     format = await eventFormatFactory({ event });
     category = await eventCategoryFactory({ event });
+    tag = await eventProposalTagFactory({ event });
   });
 
   describe('#get', () => {
@@ -39,6 +42,7 @@ describe('ProposalReview', () => {
         event,
         formats: [format],
         categories: [category],
+        tags: [tag],
         talk: await talkFactory({ speakers: [speaker] }),
       });
       await surveyFactory({ event, user: speaker, attributes: { answers: { gender: 'male' } } });
@@ -57,6 +61,7 @@ describe('ProposalReview', () => {
         languages: ['en'],
         formats: [{ id: format.id, name: format.name }],
         categories: [{ id: category.id, name: category.name }],
+        tags: [{ id: tag.id, name: tag.name, color: tag.color }],
         speakers: [
           {
             id: speaker.id,
