@@ -5,6 +5,7 @@ import type {
   PublicationStatus,
   UserReview,
 } from '~/types/proposals.types';
+import type { Tag } from '~/types/tags.types.ts';
 
 export type ProposalData = {
   id: string;
@@ -14,4 +15,5 @@ export type ProposalData = {
   confirmationStatus: ConfirmationStatus | null;
   speakers: Array<{ name: string | null; picture: string | null }>;
   reviews: { summary?: GlobalReview; you: UserReview };
+  tags: Array<Tag>;
 };

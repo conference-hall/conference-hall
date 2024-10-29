@@ -10,10 +10,10 @@ type FiltersBadgesProps = { filters: ProposalsFilters };
 
 export function FiltersTags({ filters }: FiltersBadgesProps) {
   const { event } = useEvent();
-  const { formats, categories } = event;
+  const { formats, categories, tags } = event;
 
   const hasFilters = Boolean(
-    filters.query || filters.reviews || filters.status || filters.formats || filters.categories,
+    filters.query || filters.reviews || filters.status || filters.formats || filters.categories || filters.tags,
   );
 
   if (!hasFilters) return null;
@@ -28,6 +28,7 @@ export function FiltersTags({ filters }: FiltersBadgesProps) {
       <FilterTag name="status" value={statusOptions.find((status) => status.value === filters.status)?.name} />
       <FilterTag name="formats" value={formats.find((format) => format.id === filters.formats)?.name} />
       <FilterTag name="categories" value={categories.find((category) => category.id === filters.categories)?.name} />
+      <FilterTag name="tags" value={tags.find((tag) => tag.id === filters.tags)?.name} />
     </div>
   );
 }

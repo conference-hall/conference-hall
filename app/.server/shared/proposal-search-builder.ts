@@ -28,7 +28,11 @@ export class ProposalSearchBuilder {
 
   async proposalsByPage(pagination: Pagination) {
     return db.proposal.findMany({
-      include: { speakers: this.options.withSpeakers, reviews: this.options.withReviews },
+      include: {
+        speakers: this.options.withSpeakers,
+        reviews: this.options.withReviews,
+        tags: true,
+      },
       where: this.whereClause(),
       orderBy: this.orderByClause(),
       skip: pagination.pageIndex * pagination.pageSize,
@@ -43,6 +47,7 @@ export class ProposalSearchBuilder {
         reviews: select.reviews,
         formats: true,
         categories: true,
+        tags: true,
       },
       where: this.whereClause(),
       orderBy: this.orderByClause(),
@@ -71,13 +76,14 @@ export class ProposalSearchBuilder {
   }
 
   private whereClause(): Prisma.ProposalWhereInput {
-    const { query, reviews, formats, categories, status } = this.filters;
+    const { query, reviews, formats, categories, tags, status } = this.filters;
 
     return {
       event: { slug: this.eventSlug },
       isDraft: false,
       formats: formats ? { some: { id: formats } } : undefined,
       categories: categories ? { some: { id: categories } } : undefined,
+      tags: tags ? { some: { id: tags } } : undefined,
       reviews: this.reviewsClause(reviews),
       OR: this.whereSearchClause(query),
       ...this.whereStatus(status),

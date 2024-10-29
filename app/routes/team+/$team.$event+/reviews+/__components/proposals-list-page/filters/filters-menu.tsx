@@ -51,7 +51,7 @@ function FiltersContent({ close }: FiltersContentProps) {
   const location = useLocation();
   const [params] = useSearchParams();
   const { event } = useEvent();
-  const { formats, categories } = event;
+  const { formats, categories, tags } = event;
 
   const hasTracks = formats.length > 0 || categories.length > 0;
 
@@ -95,7 +95,7 @@ function FiltersContent({ close }: FiltersContentProps) {
                 name="formats"
                 label="Formats"
                 defaultValue={params.get('formats')}
-                options={[{ id: null, name: 'All formats' }, ...formats]}
+                options={[{ id: null, name: 'Select a format...' }, ...formats]}
                 srOnly
               />
             )}
@@ -104,11 +104,26 @@ function FiltersContent({ close }: FiltersContentProps) {
                 name="categories"
                 label="Categories"
                 defaultValue={params.get('categories')}
-                options={[{ id: null, name: 'All categories' }, ...categories]}
+                options={[{ id: null, name: 'Select a category...' }, ...categories]}
                 srOnly
               />
             )}
           </div>
+        </div>
+      )}
+
+      {tags.length > 0 && (
+        <div className="px-4 py-3 space-y-2">
+          <Text variant="secondary" weight="medium" size="s">
+            Tags
+          </Text>
+          <Select
+            name="tags"
+            label="tags"
+            defaultValue={params.get('tags')}
+            options={[{ id: null, name: 'Select a tag...' }, ...tags]}
+            srOnly
+          />
         </div>
       )}
       <div className="mt-2 px-4 py-3 sm:rounded-b-md border-t border-t-gray-200 flex justify-between">

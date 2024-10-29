@@ -8,6 +8,7 @@ import { Text } from '~/design-system/typography.tsx';
 import { GlobalReviewNote, UserReviewNote } from '~/routes/__components/reviews/review-note.tsx';
 import { useTeam } from '~/routes/team+/__components/use-team.tsx';
 
+import { Tag } from '~/routes/__components/tags/tag.tsx';
 import type { ProposalData } from './types';
 
 type ProposalItemProps = {
@@ -42,17 +43,21 @@ export function ProposalItem({ proposal, isSelected, isAllPagesSelected, toggle 
         className="flex items-center justify-between gap-4 py-4 grow min-w-0"
       >
         <div className="space-y-2 md:space-y-1 min-w-0">
-          <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-2">
-            <Text weight="semibold" truncate>
-              {title}
-            </Text>
+          <div className="flex flex-wrap items-center gap-1">
+            <Text weight="semibold">{title}</Text>
+
             {team.userPermissions.canDeliberateEventProposals && proposal.deliberationStatus !== 'PENDING' ? (
-              <span className="flex items-center gap-1">
+              <>
                 {deliberationBadge(proposal)}
                 {publicationBadge(proposal)}
-              </span>
+              </>
             ) : null}
+
+            {proposal.tags.map((tag) => (
+              <Tag key={tag.id} tag={tag} />
+            ))}
           </div>
+
           <Text size="xs" variant="secondary">
             {proposal.speakers.length ? `by ${proposal.speakers.map((a) => a.name).join(', ')}` : null}
           </Text>

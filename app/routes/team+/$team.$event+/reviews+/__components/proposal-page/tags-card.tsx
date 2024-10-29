@@ -11,12 +11,11 @@ import type { Tag as TagType } from '~/types/tags.types.ts';
 type TagsCardProps = { proposalTags: Array<TagType>; eventTags: Array<TagType> };
 
 export function TagsCard({ proposalTags, eventTags }: TagsCardProps) {
-  const [tags, setTags] = useState(proposalTags);
-
   const submit = useSubmit();
 
+  const tags = sortBy(proposalTags, 'name');
+
   const onChangeTags = (tags: Array<TagType>) => {
-    setTags(sortBy(tags, 'name'));
     const formData = new FormData();
     formData.set('intent', 'save-tags');
     for (const tag of tags) {
