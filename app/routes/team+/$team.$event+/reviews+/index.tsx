@@ -13,6 +13,8 @@ import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { getObjectHash } from '~/libs/utils/object-hash.ts';
 
+import { TagIcon } from '@heroicons/react/24/outline';
+import { ButtonLink } from '~/design-system/buttons.tsx';
 import { ExportMenu } from './__components/proposals-list-page/actions/export-menu.tsx';
 import { FiltersMenu } from './__components/proposals-list-page/filters/filters-menu.tsx';
 import { FiltersTags } from './__components/proposals-list-page/filters/filters-tags.tsx';
@@ -69,11 +71,15 @@ export default function ReviewsRoute() {
             <div className="flex gap-2">
               <FiltersMenu />
               <SortMenu />
+              <ButtonLink to="tags" variant="secondary" iconLeft={TagIcon}>
+                Tags
+              </ButtonLink>
               <ExportMenu />
             </div>
           </div>
           <FiltersTags filters={filters} />
         </div>
+
         <ProposalsList proposals={results} pagination={pagination} statistics={statistics} filtersHash={filtersHash} />
       </div>
     </Page>

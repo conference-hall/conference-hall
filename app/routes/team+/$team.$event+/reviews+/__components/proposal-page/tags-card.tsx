@@ -1,25 +1,14 @@
 import { Cog6ToothIcon } from '@heroicons/react/24/outline';
-import { randAnimal, randHex } from '@ngneat/falso';
 import { useState } from 'react';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Text } from '~/design-system/typography.tsx';
 import { TagSelect } from '~/routes/__components/tags/tag-select.tsx';
 import { Tag } from '~/routes/__components/tags/tag.tsx';
-
-const EVENT_TAGS = [
-  { id: 'tag-1', name: randAnimal(), color: randHex() },
-  { id: 'tag-2', name: randAnimal(), color: randHex() },
-  { id: 'tag-3', name: randAnimal(), color: randHex() },
-  { id: 'tag-4', name: randAnimal(), color: randHex() },
-  { id: 'tag-5', name: randAnimal(), color: randHex() },
-  { id: 'tag-6', name: randAnimal(), color: randHex() },
-  { id: 'tag-7', name: randAnimal(), color: randHex() },
-  { id: 'tag-8', name: randAnimal(), color: randHex() },
-  { id: 'tag-9', name: randAnimal(), color: randHex() },
-];
+import { EVENT_TAGS } from '~/types/tags.types.ts';
 
 const PROPOSAL_TAGS = ['tag-1', 'tag-2', 'tag-8', 'tag-4'];
 
+// TODO: Optimistic rendering
 export function TagsCard() {
   const [tags, setTags] = useState(EVENT_TAGS.filter((t) => PROPOSAL_TAGS.includes(t.id)));
 

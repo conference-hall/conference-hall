@@ -16,6 +16,7 @@ type TagSelectorProps = {
   children: React.ReactNode;
 };
 
+// TODO: Add tests
 export function TagSelect({ tags, defaultValues = [], onChange, children }: TagSelectorProps) {
   const sortedTags = [...tags].sort((a, b) => {
     if (defaultValues.includes(b)) return 1;
@@ -116,7 +117,7 @@ function TagsListbox({ tags, children, open, onClose }: TagsListboxProps) {
           ) : null}
         </div>
 
-        <Link to="/proposals" className="text-xs flex items-center gap-2 px-4 py-3 hover:bg-gray-100">
+        <Link to="../tags" relative="path" className="text-xs flex items-center gap-2 px-4 py-3 hover:bg-gray-100">
           <PencilSquareMicroIcon className="text-gray-400" />
           Manage tags
         </Link>

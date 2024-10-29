@@ -17,7 +17,7 @@ export function RemoveButton({ memberId, memberName }: RemoveButtonProps) {
     <>
       <Button
         aria-label={`Remove ${memberName} from team`}
-        variant="secondary"
+        variant="important"
         size="s"
         onClick={() => setModalOpen(true)}
       >
@@ -95,9 +95,23 @@ type ChangeRoleModalProps = {
 };
 
 const ALL_ROLES = [
-  { label: 'Owner', value: 'OWNER', description: 'Has full administrative access to the entire team.' },
-  { label: 'Member', value: 'MEMBER', description: 'Can see every in the team, and can create new events.' },
-  { label: 'Reviewer', value: 'REVIEWER', description: 'Can only review events proposals in the team.' },
+  {
+    label: 'Owner',
+    value: 'OWNER',
+    description:
+      'Full control over team and events, including member management, event creation, and proposal publishing.',
+  },
+  {
+    label: 'Member',
+    value: 'MEMBER',
+    description:
+      'Can view team, access and edit events, deliberate on proposals, and publish results. Cannot create events or manage team settings.',
+  },
+  {
+    label: 'Reviewer',
+    value: 'REVIEWER',
+    description: 'Read-only access to team and events, with no editing or publishing rights.',
+  },
 ];
 
 function ChangeRoleModal({ memberId, memberName, memberRole, isOpen, onClose }: ChangeRoleModalProps) {
@@ -144,7 +158,7 @@ export function InviteMemberButton({ invitationLink }: InviteProps) {
 
   return (
     <>
-      <Button onClick={() => setOpen(true)} iconLeft={UserPlusIcon} variant="secondary">
+      <Button onClick={() => setOpen(true)} iconLeft={UserPlusIcon}>
         Invite member
       </Button>
       <InvitationModal

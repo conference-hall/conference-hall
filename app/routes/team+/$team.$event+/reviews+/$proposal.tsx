@@ -22,11 +22,7 @@ import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { TalkSection } from '~/routes/__components/talks/talk-section.tsx';
 
-import { Cog6ToothIcon } from '@heroicons/react/24/outline';
 import { Suspense } from 'react';
-import { IconButton } from '~/design-system/icon-buttons.tsx';
-import { Card } from '~/design-system/layouts/card.tsx';
-import { H2, Text } from '~/design-system/typography.tsx';
 import { useTeam } from '../../__components/use-team.tsx';
 import { useEvent } from '../__components/use-event.tsx';
 import { OtherProposalsDisclosure } from './__components/proposal-page/other-proposals-disclosure.tsx';

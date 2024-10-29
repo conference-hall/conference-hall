@@ -1,6 +1,7 @@
+import { getContrastColor } from '~/libs/colors/colors.ts';
 import type { Tag as TagType } from '~/types/tags.types.ts';
 
-type TagProps = { tag: TagType };
+type TagProps = { tag: Omit<TagType, 'id'> };
 
 export function Tag({ tag }: TagProps) {
   return (
@@ -11,15 +12,4 @@ export function Tag({ tag }: TagProps) {
       <span className="truncate">{tag.name}</span>
     </div>
   );
-}
-
-function getContrastColor(hex: string) {
-  const rgb = Number.parseInt(hex.slice(1), 16);
-  const r = (rgb >> 16) & 0xff;
-  const g = (rgb >> 8) & 0xff;
-  const b = rgb & 0xff;
-
-  const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-
-  return luminance > 158 ? '#000000' : '#ffffff';
 }
