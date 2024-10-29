@@ -12,6 +12,7 @@ export async function resetDB() {
 
   await db.$transaction([
     db.survey.deleteMany(),
+    db.commentReaction.deleteMany(),
     db.comment.deleteMany(),
     db.review.deleteMany(),
     db.scheduleSession.deleteMany(),

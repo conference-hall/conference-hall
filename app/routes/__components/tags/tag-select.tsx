@@ -117,7 +117,13 @@ function TagsListbox({ tags, children, open, onClose }: TagsListboxProps) {
           ) : null}
         </div>
 
-        <Link to="../tags" relative="path" className="text-xs flex items-center gap-2 px-4 py-3 hover:bg-gray-100">
+        {/* TODO: Display only if link given as prop */}
+        <Link
+          to="../../settings/tags"
+          relative="path"
+          target="_blank"
+          className="text-xs flex items-center gap-2 px-4 py-3 hover:bg-gray-100"
+        >
           <PencilSquareMicroIcon className="text-gray-400" />
           Manage tags
         </Link>
