@@ -2,13 +2,14 @@ import { db } from 'prisma/db.server.ts';
 
 import { ProposalNotFoundError, ReviewDisabledError } from '~/libs/errors.server.ts';
 
+import { sortBy } from '~/libs/utils/arrays-sort-by.ts';
 import { SpeakersAnswers } from '../cfp-survey/speaker-answers.ts';
 import type { SurveyData } from '../cfp-survey/speaker-answers.types.ts';
 import { UserEvent } from '../event-settings/user-event.ts';
 import { ProposalSearchBuilder } from '../shared/proposal-search-builder.ts';
 import type { ProposalsFilters } from '../shared/proposal-search-builder.types.ts';
 import type { SocialLinks } from '../speaker-profile/speaker-profile.types.ts';
-import type { ProposalUpdateData, ReviewUpdateData } from './proposal-review.types.ts';
+import type { ProposalSaveTagsData, ProposalUpdateData, ReviewUpdateData } from './proposal-review.types.ts';
 import { ReviewDetails } from './review-details.ts';
 
 export type ProposalReviewData = Awaited<ReturnType<typeof ProposalReview.prototype.get>>;
@@ -34,6 +35,7 @@ export class ProposalReview {
         formats: true,
         categories: true,
         reviews: true,
+        tags: true,
       },
       where: { id: this.proposalId },
     });
@@ -79,6 +81,10 @@ export class ProposalReview {
           socials: speaker.socials as SocialLinks,
           survey: answers?.find((a) => a.userId === speaker.id)?.answers as SurveyData,
         })) || [],
+      tags: sortBy(
+        proposal.tags.map((tag) => ({ id: tag.id, name: tag.name, color: tag.color })),
+        'name',
+      ),
     };
   }
 
@@ -155,6 +161,16 @@ export class ProposalReview {
         formats: { set: [], connect: formats?.map((id) => ({ id })) },
         categories: { set: [], connect: categories?.map((id) => ({ id })) },
       },
+    });
+  }
+
+  // TODO: Add tests
+  async saveTags(data: ProposalSaveTagsData) {
+    await this.userEvent.needsPermission('canEditEventProposals');
+
+    return db.proposal.update({
+      where: { id: this.proposalId },
+      data: { tags: { set: [], connect: data.tags?.map((id) => ({ id })) } },
     });
   }
 }

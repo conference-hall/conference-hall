@@ -12,6 +12,12 @@ export const ProposalUpdateSchema = z.object({
 
 export type ProposalUpdateData = z.infer<typeof ProposalUpdateSchema>;
 
+export const ProposalSaveTagsSchema = z.object({
+  tags: z.array(z.string()),
+});
+
+export type ProposalSaveTagsData = z.infer<typeof ProposalSaveTagsSchema>;
+
 export const ReviewUpdateDataSchema = z.object({
   note: z.number().min(0).max(5).nullable().default(null),
   feeling: z.enum(['NEUTRAL', 'POSITIVE', 'NEGATIVE', 'NO_OPINION']),

@@ -12,6 +12,7 @@ import type { ProposalReviewData } from '~/.server/reviews/proposal-review.ts';
 import { ProposalReview } from '~/.server/reviews/proposal-review.ts';
 import {
   CommentReactionSchema,
+  ProposalSaveTagsSchema,
   ProposalUpdateSchema,
   ReviewUpdateDataSchema,
 } from '~/.server/reviews/proposal-review.types.ts';
@@ -110,6 +111,14 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       await proposal.update(result.value);
       return toast('success', 'Proposal saved.');
     }
+    case 'save-tags': {
+      const result = parseWithZod(form, { schema: ProposalSaveTagsSchema });
+      if (result.status !== 'success') return toast('error', 'Something went wrong.');
+
+      const proposal = ProposalReview.for(userId, params.team, params.event, params.proposal);
+      await proposal.saveTags(result.value);
+      break;
+    }
   }
   return null;
 };
@@ -160,7 +169,7 @@ export default function ProposalReviewLayoutRoute() {
               canDeliberate={team.userPermissions.canDeliberateEventProposals}
             />
 
-            <TagsCard />
+            <TagsCard eventTags={event.tags} proposalTags={proposal.tags} />
           </div>
         </div>
       </div>

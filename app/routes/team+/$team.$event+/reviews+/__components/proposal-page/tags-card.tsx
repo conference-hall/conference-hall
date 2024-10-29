@@ -1,20 +1,33 @@
 import { Cog6ToothIcon } from '@heroicons/react/24/outline';
+import { useSubmit } from '@remix-run/react';
 import { useState } from 'react';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Text } from '~/design-system/typography.tsx';
+import { sortBy } from '~/libs/utils/arrays-sort-by.ts';
 import { TagSelect } from '~/routes/__components/tags/tag-select.tsx';
 import { Tag } from '~/routes/__components/tags/tag.tsx';
-import { EVENT_TAGS } from '~/types/tags.types.ts';
+import type { Tag as TagType } from '~/types/tags.types.ts';
 
-const PROPOSAL_TAGS = ['tag-1', 'tag-2', 'tag-8', 'tag-4'];
+type TagsCardProps = { proposalTags: Array<TagType>; eventTags: Array<TagType> };
 
-// TODO: Optimistic rendering
-export function TagsCard() {
-  const [tags, setTags] = useState(EVENT_TAGS.filter((t) => PROPOSAL_TAGS.includes(t.id)));
+export function TagsCard({ proposalTags, eventTags }: TagsCardProps) {
+  const [tags, setTags] = useState(proposalTags);
+
+  const submit = useSubmit();
+
+  const onChangeTags = (tags: Array<TagType>) => {
+    setTags(sortBy(tags, 'name'));
+    const formData = new FormData();
+    formData.set('intent', 'save-tags');
+    for (const tag of tags) {
+      formData.append('tags', tag.id);
+    }
+    submit(formData, { method: 'POST', navigate: false, preventScrollReset: true });
+  };
 
   return (
     <Card as="section" className="p-4 lg:p-6">
-      <TagSelect tags={EVENT_TAGS} defaultValues={tags} onChange={setTags}>
+      <TagSelect tags={eventTags} defaultValues={tags} onChange={onChangeTags}>
         <div className="flex items-center justify-between group">
           <H2 size="s" className="group-hover:text-indigo-600">
             Tags

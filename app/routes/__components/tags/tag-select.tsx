@@ -19,8 +19,8 @@ type TagSelectorProps = {
 // TODO: Add tests
 export function TagSelect({ tags, defaultValues = [], onChange, children }: TagSelectorProps) {
   const sortedTags = [...tags].sort((a, b) => {
-    if (defaultValues.includes(b)) return 1;
-    if (defaultValues.includes(a)) return -1;
+    if (defaultValues.some((tag) => tag.id === b.id)) return 1;
+    if (defaultValues.some((tag) => tag.id === a.id)) return -1;
     return 0;
   });
 

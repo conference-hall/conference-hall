@@ -4,6 +4,7 @@ import { db } from 'prisma/db.server.ts';
 import { EventNotFoundError, ForbiddenOperationError, SlugAlreadyExistsError } from '~/libs/errors.server.ts';
 import type { EventEmailNotificationsKeys } from '~/types/events.types.ts';
 
+import { sortBy } from '~/libs/utils/arrays-sort-by.ts';
 import type { Permission } from '../team/user-permissions.ts';
 import { UserPermissions } from '../team/user-permissions.ts';
 
@@ -35,7 +36,7 @@ export class UserEvent {
 
   async get() {
     const event = await db.event.findFirst({
-      include: { formats: true, categories: true, integrations: true },
+      include: { formats: true, categories: true, integrations: true, proposalTags: true },
       where: { slug: this.eventSlug, team: { slug: this.teamSlug, members: { some: { memberId: this.userId } } } },
     });
     if (!event) throw new EventNotFoundError();
@@ -77,6 +78,10 @@ export class UserEvent {
       categories: event.categories.map(({ id, name, description }) => ({ id, name, description })),
       integrations: event.integrations.map((integration) => integration.name),
       archived: event.archived,
+      tags: sortBy(
+        event.proposalTags.map((tag) => ({ id: tag.id, name: tag.name, color: tag.color })),
+        'name',
+      ),
     };
   }
 
