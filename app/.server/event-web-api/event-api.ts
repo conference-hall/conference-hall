@@ -32,6 +32,7 @@ export class EventApi {
           level: proposal.level,
           formats: proposal.formats.map((f) => f.name),
           categories: proposal.categories.map((c) => c.name),
+          tags: proposal.tags.map((tag) => tag.name),
           languages: proposal.languages as string[],
           speakers: proposal.speakers.map((speaker) => ({
             name: speaker.name,

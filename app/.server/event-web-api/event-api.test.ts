@@ -7,6 +7,7 @@ import { userFactory } from 'tests/factories/users.ts';
 
 import { ApiKeyInvalidError, EventNotFoundError } from '~/libs/errors.server.ts';
 
+import { eventProposalTagFactory } from 'tests/factories/proposal-tags.ts';
 import { EventApi } from './event-api.ts';
 
 describe('#EventApi', () => {
@@ -16,11 +17,13 @@ describe('#EventApi', () => {
       const event = await eventFactory({ attributes: { apiKey: '123' } });
       const format = await eventFormatFactory({ event });
       const category = await eventCategoryFactory({ event });
+      const tag = await eventProposalTagFactory({ event });
 
       const proposal = await proposalFactory({
         event,
         formats: [format],
         categories: [category],
+        tags: [tag],
         talk: await talkFactory({ speakers: [speaker], attributes: { level: 'BEGINNER', languages: ['fr'] } }),
       });
 
@@ -36,6 +39,7 @@ describe('#EventApi', () => {
             level: 'BEGINNER',
             formats: [format.name],
             categories: [category.name],
+            tags: [tag.name],
             languages: ['fr'],
             speakers: [
               {

@@ -36,8 +36,17 @@ export class CfpReviewsExports {
         confirmationStatus: proposal.confirmationStatus,
         level: proposal.level,
         references: proposal.references,
-        formats: proposal.formats,
-        categories: proposal.categories,
+        formats: proposal.formats.map((format) => ({
+          id: format.id,
+          name: format.name,
+          description: format.description,
+        })),
+        categories: proposal.categories.map((category) => ({
+          id: category.id,
+          name: category.name,
+          description: category.description,
+        })),
+        tags: proposal.tags.map((tag) => tag.name),
         languages: proposal.languages,
         speakers: proposal.speakers.map((speaker) => ({
           name: speaker.name,
