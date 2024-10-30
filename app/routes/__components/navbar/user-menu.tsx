@@ -7,7 +7,7 @@ import {
   PlusIcon,
   Square3Stack3DIcon,
 } from '@heroicons/react/24/outline';
-import { Link, useFetcher } from '@remix-run/react';
+import { Form, Link } from '@remix-run/react';
 import { useState } from 'react';
 
 import { Avatar, AvatarName } from '~/design-system/avatar.tsx';
@@ -15,7 +15,6 @@ import { SlideOver } from '~/design-system/dialogs/slide-over.tsx';
 import { Divider } from '~/design-system/divider.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { getClientAuth } from '~/libs/auth/firebase.ts';
-import type { action as LogoutAction } from '~/routes/auth+/logout.tsx';
 
 import { LegalLinks } from '../footer.tsx';
 import { SponsorLink } from '../sponsor-link.tsx';
@@ -162,18 +161,14 @@ function OpenButton({ name, picture, notificationsCount, onClick }: OpenProps) {
 }
 
 function SignOutMenu() {
-  const fetcher = useFetcher<typeof LogoutAction>();
-
-  const handleSignout = () => {
+  const handleSignout = async () => {
     const clientAuth = getClientAuth();
-    clientAuth.signOut().then(() => {
-      fetcher.submit({ intent: 'signout' });
-    });
+    await clientAuth.signOut();
   };
 
   return (
     <li>
-      <fetcher.Form method="POST" action="/auth/logout">
+      <Form method="POST" onSubmit={handleSignout} action="/auth/logout">
         <button
           type="submit"
           onClick={handleSignout}
@@ -185,7 +180,7 @@ function SignOutMenu() {
           />
           Sign out
         </button>
-      </fetcher.Form>
+      </Form>
     </li>
   );
 }
