@@ -164,7 +164,6 @@ export class ProposalReview {
     });
   }
 
-  // TODO: Add tests
   async saveTags(data: ProposalSaveTagsData) {
     await this.userEvent.needsPermission('canEditEventProposals');
 

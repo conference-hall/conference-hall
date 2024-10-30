@@ -1,5 +1,6 @@
 import { cx } from 'class-variance-authority';
 
+import { generateGradientColor } from '~/libs/colors/colors.ts';
 import { Text } from './typography.tsx';
 
 const sizes = {
@@ -41,17 +42,6 @@ const square_sizes = {
   '2xl': 'rounded-md',
   '4xl': 'rounded-md',
 };
-
-const colors = [
-  'bg-red-200',
-  'bg-orange-200',
-  'bg-cyan-200',
-  'bg-blue-200',
-  'bg-purple-200',
-  'bg-green-200',
-  'bg-rose-200',
-  'bg-indigo-200',
-];
 
 const rings = { xs: 'ring-2', s: 'ring-2', m: 'ring-2', l: 'ring-2', xl: 'ring-2', '2xl': 'ring-3', '4xl': 'ring-4' };
 
@@ -149,15 +139,6 @@ export function AvatarName({ name, subtitle, variant = 'primary', ...rest }: Ava
   );
 }
 
-const getColor = (name: string) => {
-  const nameCharCodeSum = name
-    .split('')
-    .map((char) => char.charCodeAt(0))
-    .reduce((acc, curr) => acc + curr, 0);
-  const colorIndex = nameCharCodeSum % colors.length;
-  return colors[colorIndex];
-};
-
 type AvatarImageProps = {
   picture: string;
   name?: string | null;
@@ -190,18 +171,13 @@ function AvatarColor({
   className: string;
 }) {
   const avatarName = name || 'Unknown';
-  const color = getColor(avatarName);
+  const gradient = generateGradientColor(avatarName);
   const initial = avatarName.charAt(0).toUpperCase();
 
   return (
     <div
-      className={cx(
-        'flex items-center justify-center font-medium text-gray-900/60',
-        className,
-        color,
-        text_sizes[size],
-      )}
-      style={{ height: sizes[size], width: sizes[size] }}
+      className={cx('flex items-center justify-center font-medium text-gray-900/70', className, text_sizes[size])}
+      style={{ height: sizes[size], width: sizes[size], background: gradient }}
     >
       {initial}
     </div>

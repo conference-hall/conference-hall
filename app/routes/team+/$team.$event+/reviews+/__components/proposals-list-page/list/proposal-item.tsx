@@ -34,7 +34,7 @@ export function ProposalItem({ proposal, isSelected, isAllPagesSelected, toggle 
           checked={isSelected}
           disabled={isAllPagesSelected}
           onChange={toggle}
-          className="pb-0 md:pb-5 pr-4"
+          className="pb-14 md:pb-5 pr-4"
         />
       ) : undefined}
       <Link
@@ -43,8 +43,10 @@ export function ProposalItem({ proposal, isSelected, isAllPagesSelected, toggle 
         className="flex items-center justify-between gap-4 py-4 grow min-w-0"
       >
         <div className="space-y-2 md:space-y-1 min-w-0">
-          <div className="flex flex-wrap items-center gap-1">
-            <Text weight="semibold">{title}</Text>
+          <div className="flex flex-wrap items-center gap-2">
+            <Text size="base" weight="semibold">
+              {title}
+            </Text>
 
             {team.userPermissions.canDeliberateEventProposals && proposal.deliberationStatus !== 'PENDING' ? (
               <>

@@ -13,7 +13,6 @@ import { Input } from '~/design-system/forms/input.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 
-import { Page } from '~/design-system/layouts/page.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { Pagination } from '~/design-system/list/pagination.tsx';
 import { H2, Text } from '~/design-system/typography.tsx';
@@ -29,9 +28,12 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 
   const filters = parseUrlFilters(request.url);
   const page = parseUrlPage(request.url);
-  const { tags, pagination } = await EventProposalTags.for(userId, params.team, params.event).list(filters, page);
+  const { count, tags, pagination } = await EventProposalTags.for(userId, params.team, params.event).list(
+    filters,
+    page,
+  );
 
-  return json({ tags, filters, pagination });
+  return json({ count, tags, filters, pagination });
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -62,9 +64,9 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   return null;
 };
 
-// TODO: Add e2e tests
+// TODO: [tags] Add e2e tests
 export default function ProposalTagsRoute() {
-  const { tags, filters, pagination } = useLoaderData<typeof loader>();
+  const { count, tags, filters, pagination } = useLoaderData<typeof loader>();
 
   return (
     <Card as="section">
@@ -85,7 +87,7 @@ export default function ProposalTagsRoute() {
           </Form>
           <TagModal mode="create">
             {({ onOpen }) => (
-              <Button onClick={onOpen} iconLeft={PlusIcon} variant="secondary">
+              <Button onClick={onOpen} iconLeft={PlusIcon}>
                 New tag
               </Button>
             )}
@@ -94,7 +96,7 @@ export default function ProposalTagsRoute() {
 
         <List>
           <List.Header>
-            <Text weight="medium">{tags.length} tags</Text>
+            <Text weight="medium">{count} tags</Text>
           </List.Header>
 
           <List.Content>

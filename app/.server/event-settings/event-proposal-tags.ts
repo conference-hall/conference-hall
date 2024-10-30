@@ -5,13 +5,12 @@ import { Pagination } from '../shared/pagination.ts';
 import type { TagFilters, TagSaveData } from './event-proposal-tags.types.ts';
 import { UserEvent } from './user-event.ts';
 
-// TODO: Add tests
 export class EventProposalTags extends UserEvent {
   static for(userId: string, teamSlug: string, eventSlug: string) {
     return new EventProposalTags(userId, teamSlug, eventSlug);
   }
 
-  async list(filters: TagFilters, page = 1) {
+  async list(filters: TagFilters, page = 1, pageSize?: number) {
     const event = await this.needsPermission('canEditEvent');
 
     const tagsWhereInput: Prisma.EventProposalTagWhereInput = {
@@ -19,8 +18,8 @@ export class EventProposalTags extends UserEvent {
       name: { contains: filters.query, mode: 'insensitive' },
     };
 
-    const tagsCount = await db.eventProposalTag.count({ where: tagsWhereInput });
-    const pagination = new Pagination({ page, total: tagsCount });
+    const count = await db.eventProposalTag.count({ where: tagsWhereInput });
+    const pagination = new Pagination({ page, pageSize, total: count });
 
     const tags = await db.eventProposalTag.findMany({
       where: tagsWhereInput,
@@ -30,6 +29,7 @@ export class EventProposalTags extends UserEvent {
     });
 
     return {
+      count,
       tags: tags.map((tag) => ({ id: tag.id, name: tag.name, color: tag.color })),
       pagination: { current: pagination.page, total: pagination.pageCount },
     };

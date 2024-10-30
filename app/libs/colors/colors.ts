@@ -1,6 +1,4 @@
-// TODO: add tests
-// TODO: use them in avatar
-const colors: string[] = [
+export const COLORS: string[] = [
   '#FF5F5F', // Red
   '#FF9A3C', // Orange
   '#FFD93D', // Yellow
@@ -14,8 +12,8 @@ const colors: string[] = [
 ];
 
 export function getRandomColor(): string {
-  const randomIndex = Math.floor(Math.random() * colors.length);
-  return colors[randomIndex];
+  const randomIndex = Math.floor(Math.random() * COLORS.length);
+  return COLORS[randomIndex];
 }
 
 export function getContrastColor(hex: string) {
@@ -27,4 +25,18 @@ export function getContrastColor(hex: string) {
   const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
 
   return luminance > 158 ? '#000000' : '#ffffff';
+}
+
+export function generateGradientColor(str: string): string {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  const baseHue = Math.abs(hash) % 360;
+  const color1 = `hsl(${baseHue}, 70%, 55%)`;
+  const color2 = `hsl(${baseHue}, 70%, 65%)`;
+  const color3 = `hsl(${baseHue}, 70%, 75%)`;
+
+  return `linear-gradient(135deg, ${color1}, ${color2}, ${color3})`;
 }

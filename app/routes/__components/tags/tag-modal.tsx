@@ -15,7 +15,6 @@ type TagModalProps = {
   children: (props: { onOpen: () => void }) => ReactNode;
 };
 
-// TODO: Add tests
 export function TagModal({ mode, initialValues, children }: TagModalProps) {
   const [open, setOpen] = useState(false);
 

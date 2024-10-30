@@ -8,9 +8,14 @@ import { TagSelect } from '~/routes/__components/tags/tag-select.tsx';
 import { Tag } from '~/routes/__components/tags/tag.tsx';
 import type { Tag as TagType } from '~/types/tags.types.ts';
 
-type TagsCardProps = { proposalTags: Array<TagType>; eventTags: Array<TagType> };
+type TagsCardProps = {
+  proposalTags: Array<TagType>;
+  eventTags: Array<TagType>;
+  canEditProposalTags: boolean;
+  canEditEventTags: boolean;
+};
 
-export function TagsCard({ proposalTags, eventTags }: TagsCardProps) {
+export function TagsCard({ proposalTags, eventTags, canEditProposalTags, canEditEventTags }: TagsCardProps) {
   const submit = useSubmit();
 
   const tags = sortBy(proposalTags, 'name');
@@ -26,14 +31,18 @@ export function TagsCard({ proposalTags, eventTags }: TagsCardProps) {
 
   return (
     <Card as="section" className="p-4 lg:p-6">
-      <TagSelect tags={eventTags} defaultValues={tags} onChange={onChangeTags}>
-        <div className="flex items-center justify-between group">
-          <H2 size="s" className="group-hover:text-indigo-600">
-            Tags
-          </H2>
-          <Cog6ToothIcon className="h-5 w-5 text-gray-500 group-hover:text-indigo-600" role="presentation" />
-        </div>
-      </TagSelect>
+      {canEditProposalTags ? (
+        <TagSelect tags={eventTags} defaultValues={tags} onChange={onChangeTags} canEditEventTags={canEditEventTags}>
+          <div className="flex items-center justify-between group">
+            <H2 size="s" className="group-hover:text-indigo-600">
+              Tags
+            </H2>
+            <Cog6ToothIcon className="h-5 w-5 text-gray-500 group-hover:text-indigo-600" role="presentation" />
+          </div>
+        </TagSelect>
+      ) : (
+        <H2 size="s">Tags</H2>
+      )}
 
       <div className="mt-4 flex flex-wrap gap-2">
         {tags.length === 0 ? <Text size="xs">No tags yet.</Text> : null}

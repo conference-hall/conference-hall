@@ -9,15 +9,15 @@ import { XMarkMicroIcon } from '~/design-system/icons/x-mark-micro-icon.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import type { Tag } from '~/types/tags.types.ts';
 
-type TagSelectorProps = {
+export type TagSelectorProps = {
   tags: Array<Tag>;
   defaultValues: Array<Tag>;
   onChange: (tags: Array<Tag>) => void;
+  canEditEventTags: boolean;
   children: React.ReactNode;
 };
 
-// TODO: Add tests
-export function TagSelect({ tags, defaultValues = [], onChange, children }: TagSelectorProps) {
+export function TagSelect({ tags, defaultValues = [], onChange, canEditEventTags, children }: TagSelectorProps) {
   const sortedTags = [...tags].sort((a, b) => {
     if (defaultValues.some((tag) => tag.id === b.id)) return 1;
     if (defaultValues.some((tag) => tag.id === a.id)) return -1;
@@ -31,7 +31,7 @@ export function TagSelect({ tags, defaultValues = [], onChange, children }: TagS
   return (
     <Listbox value={selectedTags} onChange={setSelectedTags} multiple>
       {({ open }) => (
-        <TagsListbox tags={sortedTags} open={open} onClose={handleChange}>
+        <TagsListbox tags={sortedTags} canEditEventTags={canEditEventTags} open={open} onClose={handleChange}>
           {children}
         </TagsListbox>
       )}
@@ -41,14 +41,15 @@ export function TagSelect({ tags, defaultValues = [], onChange, children }: TagS
 
 type TagsListboxProps = {
   tags: Array<Tag>;
+  canEditEventTags: boolean;
   children: React.ReactNode;
   open: boolean;
   onClose?: () => void;
 };
 
-function TagsListbox({ tags, children, open, onClose }: TagsListboxProps) {
+function TagsListbox({ tags, canEditEventTags, children, open, onClose }: TagsListboxProps) {
   const [filter, setFilter] = useState('');
-  const filteredTags = tags.filter((tag) => tag.name.toLowerCase().includes(filter));
+  const filteredTags = tags.filter((tag) => tag.name.toLowerCase().includes(filter?.toLowerCase()));
 
   const openStateRef = useRef(false);
 
@@ -117,16 +118,16 @@ function TagsListbox({ tags, children, open, onClose }: TagsListboxProps) {
           ) : null}
         </div>
 
-        {/* TODO: Display only if link given as prop */}
-        <Link
-          to="../../settings/tags"
-          relative="path"
-          target="_blank"
-          className="text-xs flex items-center gap-2 px-4 py-3 hover:bg-gray-100"
-        >
-          <PencilSquareMicroIcon className="text-gray-400" />
-          Manage tags
-        </Link>
+        {canEditEventTags ? (
+          <Link
+            to="../../settings/tags"
+            relative="path"
+            className="text-xs flex items-center gap-2 px-4 py-3 hover:bg-gray-100"
+          >
+            <PencilSquareMicroIcon className="text-gray-400" />
+            Manage tags
+          </Link>
+        ) : null}
       </ListboxOptions>
     </>
   );

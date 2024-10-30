@@ -4,7 +4,6 @@ import type { Tag as TagType } from '~/types/tags.types.ts';
 
 type TagProps = { tag: TagType };
 
-// TODO: Add tests
 export function Tag({ tag }: TagProps) {
   const params = useParams();
   const [searchParams] = useSearchParams();
