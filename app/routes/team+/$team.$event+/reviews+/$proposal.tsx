@@ -170,6 +170,7 @@ export default function ProposalReviewLayoutRoute() {
             />
 
             <TagsCard
+              proposalId={proposal.id}
               eventTags={event.tags}
               proposalTags={proposal.tags}
               canEditProposalTags={team.userPermissions.canEditEventProposals}

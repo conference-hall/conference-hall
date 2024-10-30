@@ -9,13 +9,20 @@ import { Tag } from '~/routes/__components/tags/tag.tsx';
 import type { Tag as TagType } from '~/types/tags.types.ts';
 
 type TagsCardProps = {
+  proposalId: string;
   proposalTags: Array<TagType>;
   eventTags: Array<TagType>;
   canEditProposalTags: boolean;
   canEditEventTags: boolean;
 };
 
-export function TagsCard({ proposalTags, eventTags, canEditProposalTags, canEditEventTags }: TagsCardProps) {
+export function TagsCard({
+  proposalId,
+  proposalTags,
+  eventTags,
+  canEditProposalTags,
+  canEditEventTags,
+}: TagsCardProps) {
   const submit = useSubmit();
 
   const tags = sortBy(proposalTags, 'name');
@@ -32,7 +39,13 @@ export function TagsCard({ proposalTags, eventTags, canEditProposalTags, canEdit
   return (
     <Card as="section" className="p-4 lg:p-6">
       {canEditProposalTags ? (
-        <TagSelect tags={eventTags} defaultValues={tags} onChange={onChangeTags} canEditEventTags={canEditEventTags}>
+        <TagSelect
+          key={proposalId}
+          tags={eventTags}
+          defaultValues={tags}
+          onChange={onChangeTags}
+          canEditEventTags={canEditEventTags}
+        >
           <div className="flex items-center justify-between group">
             <H2 size="s" className="group-hover:text-indigo-600">
               Tags
