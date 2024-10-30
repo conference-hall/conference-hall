@@ -66,6 +66,16 @@ describe('TagSelect component', () => {
     ]);
   });
 
+  it('doest not calls onChange when no changes in tags', async () => {
+    const { user } = renderComponent({ defaultValues: [tags[0]] });
+
+    await user.click(screen.getByRole('button', { name: 'Open Tags' }));
+    expect(onChangeMock).not.toHaveBeenCalled();
+
+    await user.click(screen.getByRole('button', { name: 'Open Tags' }));
+    expect(onChangeMock).not.toHaveBeenCalled();
+  });
+
   it('displays "Manage tags" link if canEditEventTags is true', async () => {
     const { user } = renderComponent({ canEditEventTags: true });
 

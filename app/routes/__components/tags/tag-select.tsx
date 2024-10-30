@@ -26,7 +26,13 @@ export function TagSelect({ tags, defaultValues = [], onChange, canEditEventTags
 
   const [selectedTags, setSelectedTags] = useState(defaultValues);
 
-  const handleChange = () => onChange(selectedTags);
+  const handleChange = () => {
+    const selectedTagIds = selectedTags.map((tag) => tag.id);
+    if (selectedTags.length === defaultValues.length && defaultValues.every((tag) => selectedTagIds.includes(tag.id))) {
+      return;
+    }
+    onChange(selectedTags);
+  };
 
   return (
     <Listbox value={selectedTags} onChange={setSelectedTags} multiple>
