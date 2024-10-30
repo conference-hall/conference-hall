@@ -169,7 +169,6 @@ export default function ProposalReviewLayoutRoute() {
               canDeliberate={team.userPermissions.canDeliberateEventProposals}
             />
 
-            {/* TODO: [tags] Add e2e tests */}
             <TagsCard
               eventTags={event.tags}
               proposalTags={proposal.tags}

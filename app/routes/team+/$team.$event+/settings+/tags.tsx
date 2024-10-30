@@ -64,7 +64,6 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   return null;
 };
 
-// TODO: [tags] Add e2e tests
 export default function ProposalTagsRoute() {
   const { count, tags, filters, pagination } = useLoaderData<typeof loader>();
 
