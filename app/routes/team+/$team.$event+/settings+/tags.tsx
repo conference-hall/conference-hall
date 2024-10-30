@@ -80,6 +80,7 @@ export default function ProposalTagsRoute() {
             <Input
               type="search"
               name="query"
+              aria-label="Search tags"
               placeholder="Search tags"
               defaultValue={filters.query}
               icon={MagnifyingGlassIcon}

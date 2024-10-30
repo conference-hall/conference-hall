@@ -1,6 +1,6 @@
 import BasePage from '../../page-objects/base.page.ts';
 
-class OrganizationEventsProposalsPage extends BasePage {
+class EventsProposalsListPage extends BasePage {
   visit(teamSlug: string, eventSlug: string) {
     cy.visitAndCheck(`/team/${teamSlug}/${eventSlug}/reviews`);
     this.isPageVisible();
@@ -8,10 +8,6 @@ class OrganizationEventsProposalsPage extends BasePage {
 
   isPageVisible() {
     cy.findByRole('heading', { name: 'Event proposals' }).should('exist');
-  }
-
-  table() {
-    return cy.findAllByRole('row');
   }
 
   proposal(name: string) {
@@ -60,6 +56,12 @@ class OrganizationEventsProposalsPage extends BasePage {
     cy.findByRole('button', { name: 'Apply now' }).click();
   }
 
+  filterTag(name: string) {
+    cy.findByRole('button', { name: 'Filters' }).click();
+    cy.selectOn('Tags', name, false);
+    cy.findByRole('button', { name: 'Apply now' }).click();
+  }
+
   sortBy(sort: string) {
     cy.findByRole('button', { name: 'Sort' }).click();
     cy.findByRole('menuitem', { name: sort }).click();
@@ -70,4 +72,4 @@ class OrganizationEventsProposalsPage extends BasePage {
   }
 }
 
-export default OrganizationEventsProposalsPage;
+export default EventsProposalsListPage;

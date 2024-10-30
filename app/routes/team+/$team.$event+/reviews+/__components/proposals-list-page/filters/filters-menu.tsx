@@ -119,7 +119,7 @@ function FiltersContent({ close }: FiltersContentProps) {
           </Text>
           <Select
             name="tags"
-            label="tags"
+            label="Tags"
             defaultValue={params.get('tags')}
             options={[{ id: null, name: 'Select a tag...' }, ...tags]}
             srOnly

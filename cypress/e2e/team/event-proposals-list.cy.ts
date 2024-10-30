@@ -1,5 +1,5 @@
 import ProposalReviewPage from '../../page-objects/team/event-proposal-review.page.ts';
-import OrganizationEventsProposalsPage from '../../page-objects/team/event-proposals-list.page.ts';
+import EventsProposalsListPage from '../../page-objects/team/event-proposals-list.page.ts';
 
 describe('Event proposals list', () => {
   beforeEach(() => {
@@ -8,7 +8,7 @@ describe('Event proposals list', () => {
 
   afterEach(() => cy.task('disconnectDB'));
 
-  const proposals = new OrganizationEventsProposalsPage();
+  const proposals = new EventsProposalsListPage();
   const review = new ProposalReviewPage();
 
   describe('Displays proposals', () => {
@@ -123,6 +123,18 @@ describe('Event proposals list', () => {
 
       cy.assertText('1 proposals');
       cy.assertUrl('categories=');
+      proposals.proposal('Talk 1').should('exist');
+      proposals.proposal('Talk 2').should('not.exist');
+      proposals.proposal('Talk 3').should('not.exist');
+    });
+
+    it('filters by tags', () => {
+      cy.login('Clark Kent');
+      proposals.visit('team-1', 'conference-1');
+      proposals.filterTag('Tag 1');
+
+      cy.assertText('1 proposals');
+      cy.assertUrl('tags=');
       proposals.proposal('Talk 1').should('exist');
       proposals.proposal('Talk 2').should('not.exist');
       proposals.proposal('Talk 3').should('not.exist');
