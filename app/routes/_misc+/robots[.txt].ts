@@ -13,6 +13,7 @@ Disallow: /debug/
 Disallow: /notifications/
 Disallow: /storage/
 Disallow: /admin/
+Disallow: /cdn-cgi/
 
 Sitemap: ${appUrl()}/sitemap.xml
 `;

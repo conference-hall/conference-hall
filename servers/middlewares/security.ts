@@ -2,6 +2,7 @@ import crypto from 'node:crypto';
 
 import type express from 'express';
 import helmet from 'helmet';
+import { appUrl } from '~/libs/env/env.server.ts';
 
 const isProduction = process.env.NODE_ENV === 'production';
 const isDevelopment = process.env.NODE_ENV === 'development';
@@ -38,9 +39,11 @@ export function applySecurity(app: express.Application) {
           'script-src': [
             "'strict-dynamic'",
             "'self'",
+            isProduction ? `${appUrl()}/__/auth/*` : '',
+            isProduction ? `${appUrl()}/cdn-cgi/*` : '',
             // @ts-expect-error Helmet types don't seem to know about res.locals
             (_, res) => `'nonce-${res.locals.cspNonce}'`,
-          ],
+          ].filter(Boolean),
           'script-src-attr': [
             // @ts-expect-error Helmet types don't seem to know about res.locals
             (_, res) => `'nonce-${res.locals.cspNonce}'`,
