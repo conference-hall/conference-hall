@@ -74,6 +74,7 @@ export default function ReviewsRoute() {
           </div>
           <FiltersTags filters={filters} />
         </div>
+
         <ProposalsList proposals={results} pagination={pagination} statistics={statistics} filtersHash={filtersHash} />
       </div>
     </Page>

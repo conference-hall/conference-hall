@@ -1,11 +1,18 @@
 // @vitest-environment jsdom
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import { MemoryRouter } from 'react-router-dom';
+import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 
 import { EventsDropdown } from './events-dropdown.tsx';
 
 describe('EventsDropdown component', () => {
+  const renderComponent = (element: React.ReactNode) => {
+    const user = userEvent.setup();
+    const router = createMemoryRouter([{ path: '/', element }]);
+    render(<RouterProvider router={router} />);
+    return { user };
+  };
+
   const events = [
     { slug: 'event-1', name: 'Event 1', logoUrl: null, archived: false },
     { slug: 'event-2', name: 'Event 2', logoUrl: null, archived: false },
@@ -13,14 +20,12 @@ describe('EventsDropdown component', () => {
   ];
 
   it('displays and opens the dropdown', async () => {
-    const user = userEvent.setup();
-
     const currentTeam = { slug: 'team-1', name: 'Team 1' };
     const currentEvent = { slug: 'event-1', name: 'Event 1', logoUrl: null };
 
-    render(<EventsDropdown events={events} currentTeam={currentTeam} currentEvent={currentEvent} />, {
-      wrapper: MemoryRouter,
-    });
+    const { user } = renderComponent(
+      <EventsDropdown events={events} currentTeam={currentTeam} currentEvent={currentEvent} />,
+    );
 
     const button = screen.getByRole('button');
     expect(button).toHaveTextContent('Event 1');
@@ -41,9 +46,7 @@ describe('EventsDropdown component', () => {
     const currentTeam = { slug: 'team-1', name: 'Team 1' };
     const currentEvent = { slug: 'event-3', name: 'Event 3', logoUrl: null };
 
-    render(<EventsDropdown events={events} currentTeam={currentTeam} currentEvent={currentEvent} />, {
-      wrapper: MemoryRouter,
-    });
+    renderComponent(<EventsDropdown events={events} currentTeam={currentTeam} currentEvent={currentEvent} />);
 
     const button = screen.getByRole('button');
     expect(button).toHaveTextContent('Event 3');

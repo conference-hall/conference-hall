@@ -136,6 +136,7 @@ model Event {
   proposals                Proposal[]
   surveys                  Survey[]
   schedules                Schedule[]
+  proposalTags             EventProposalTag[]
   integrations             EventIntegrationConfig[]
 
   @@map("events")
@@ -173,6 +174,18 @@ model EventCategory {
   proposals   Proposal[] @relation("proposals_categories")
 
   @@map("event_categories")
+}
+
+model EventProposalTag {
+  id        String     @id @default(cuid())
+  name      String
+  color     String
+  event     Event      @relation(fields: [eventId], references: [id])
+  eventId   String
+  proposals Proposal[] @relation("proposal_to_event_proposal_tags")
+  createdAt DateTime   @default(now())
+
+  @@map("event_proposal_tags")
 }
 
 model EventIntegrationConfig {
@@ -235,6 +248,7 @@ model Proposal {
   speakers           User[]              @relation("speakers_proposals")
   formats            EventFormat[]       @relation("proposals_formats")
   categories         EventCategory[]     @relation("proposals_categories")
+  tags               EventProposalTag[]  @relation("proposal_to_event_proposal_tags")
   reviews            Review[]
   avgRateForSort     Float?
   isDraft            Boolean             @default(true)

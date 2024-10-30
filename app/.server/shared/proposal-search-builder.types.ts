@@ -14,6 +14,7 @@ export const ProposalsFiltersSchema = z.object({
   status: StatusFilterSchema,
   formats: z.string().optional(),
   categories: z.string().optional(),
+  tags: z.string().optional(),
 });
 
 export type ReviewsFilter = z.infer<typeof ReviewsFiltersSchema>;

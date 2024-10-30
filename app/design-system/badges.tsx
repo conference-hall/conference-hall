@@ -19,23 +19,26 @@ const defaultBadge = cva('inline-flex items-center text-nowrap', {
   defaultVariants: { color: 'gray', pill: false, compact: false },
 });
 
-const dotBadge = cva('inline-flex items-center gap-x-1.5 text-gray-900 ring-1 ring-inset ring-gray-200 text-nowrap', {
-  variants: {
-    color: {
-      gray: 'fill-gray-500',
-      red: 'fill-red-500',
-      yellow: 'fill-yellow-500',
-      green: 'fill-green-500',
-      blue: 'fill-blue-500',
-      indigo: 'fill-indigo-500',
-      purple: 'fill-purple-500',
-      pink: 'fill-pink-500',
+const dotBadge = cva(
+  'inline-flex items-center text-xs font-semibold gap-x-1.5 text-gray-600 ring-1 ring-inset ring-gray-200 text-nowrap',
+  {
+    variants: {
+      color: {
+        gray: 'fill-gray-500',
+        red: 'fill-red-500',
+        yellow: 'fill-yellow-500',
+        green: 'fill-green-500',
+        blue: 'fill-blue-500',
+        indigo: 'fill-indigo-500',
+        purple: 'fill-purple-500',
+        pink: 'fill-pink-500',
+      },
+      compact: { true: 'px-2 py-0.5', false: 'px-2 py-1' },
+      pill: { true: 'rounded-full', false: 'rounded-md' },
     },
-    compact: { true: 'px-2 py-0.5 text-[11px]', false: 'px-2 py-1 text-xs font-medium' },
-    pill: { true: 'rounded-full', false: 'rounded-md' },
+    defaultVariants: { color: 'gray', pill: false, compact: false },
   },
-  defaultVariants: { color: 'gray', pill: false, compact: false },
-});
+);
 
 type BadgeProps = { children: React.ReactNode } & VariantProps<typeof defaultBadge>;
 

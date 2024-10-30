@@ -1,5 +1,5 @@
 import ProposalReviewPage from '../../../page-objects/team/event-proposal-review.page.ts';
-import OrganizationEventsProposalsPage from '../../../page-objects/team/event-proposals-list.page.ts';
+import EventsProposalsListPage from '../../../page-objects/team/event-proposals-list.page.ts';
 
 describe('Proposal review page', () => {
   beforeEach(() => {
@@ -9,7 +9,7 @@ describe('Proposal review page', () => {
   afterEach(() => cy.task('disconnectDB'));
 
   const review = new ProposalReviewPage();
-  const proposals = new OrganizationEventsProposalsPage();
+  const proposals = new EventsProposalsListPage();
 
   describe('as team owner', () => {
     beforeEach(() => cy.login('Clark Kent'));
@@ -57,7 +57,7 @@ describe('Proposal review page', () => {
       review.activityFeed().should('have.length', 3);
     });
 
-    it('deliberate the proposal', () => {
+    it('deliberates the proposal', () => {
       review.visit('team-1', 'conference-1', 'proposal-1');
 
       review.deliberationStatus().should('contain.text', 'Not deliberated');
@@ -76,6 +76,28 @@ describe('Proposal review page', () => {
 
       review.publishResult();
       review.publicationPanel().should('contain.text', 'Result published to speakers');
+    });
+
+    it('manage tags', () => {
+      review.visit('team-1', 'conference-1', 'proposal-1');
+
+      cy.findByRole('link', { name: 'Tag 1' }).should('exist');
+      cy.findByRole('link', { name: 'Tag 2' }).should('not.exist');
+
+      cy.findByRole('button', { name: 'Tags' }).click();
+      cy.findByRole('option', { name: 'Tag 1' }).click();
+      cy.findByRole('option', { name: 'Tag 2' }).click();
+      cy.findByRole('button', { name: 'Tags' }).click();
+
+      cy.findByRole('link', { name: 'Tag 1' }).should('not.exist');
+      cy.findByRole('link', { name: 'Tag 2' }).should('exist');
+
+      cy.findByRole('link', { name: 'Tag 2' }).click();
+      proposals.isPageVisible();
+
+      cy.assertText('1 proposals');
+      proposals.proposal('Talk 1').should('exist');
+      cy.findByRole('link', { name: 'Tag 2' }).should('exist');
     });
 
     it('navigates between proposals', () => {

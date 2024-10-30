@@ -1,3 +1,4 @@
+import { eventProposalTagFactory } from 'tests/factories/proposal-tags.ts';
 import { eventCategoryFactory } from '../tests/factories/categories.ts';
 import { eventFactory } from '../tests/factories/events.ts';
 import { eventFormatFactory } from '../tests/factories/formats.ts';
@@ -29,12 +30,17 @@ async function seed() {
       migrationId: '123',
     },
   });
+
   const format1 = await eventFormatFactory({ event });
   const format2 = await eventFormatFactory({ event });
   await eventFormatFactory({ event });
+
   const cat1 = await eventCategoryFactory({ event });
   const cat2 = await eventCategoryFactory({ event });
   await eventCategoryFactory({ event });
+
+  const tag1 = await eventProposalTagFactory({ event });
+  const tag2 = await eventProposalTagFactory({ event });
 
   const meetup = await eventFactory({
     traits: ['meetup-cfp-open'],
@@ -80,6 +86,7 @@ async function seed() {
     event,
     categories: [cat1],
     formats: [format1],
+    tags: [tag1],
   });
   await reviewFactory({ proposal: proposal1, user: user, attributes: { feeling: 'POSITIVE', note: 5 } });
   await reviewFactory({ proposal: proposal1, user: user2, attributes: { feeling: 'NEGATIVE', note: 0 } });
@@ -95,6 +102,7 @@ async function seed() {
     categories: [cat2],
     formats: [format1, format2],
     traits: ['accepted'],
+    tags: [tag2],
   });
   await reviewFactory({ proposal: proposal2, user: user, attributes: { feeling: 'NO_OPINION', note: null } });
   await reviewFactory({ proposal: proposal2, user: user2, attributes: { feeling: 'NEUTRAL', note: 3 } });

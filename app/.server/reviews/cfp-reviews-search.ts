@@ -1,3 +1,4 @@
+import { sortBy } from '~/libs/utils/arrays-sort-by.ts';
 import { UserEvent } from '../event-settings/user-event.ts';
 import { Pagination } from '../shared/pagination.ts';
 import { ProposalSearchBuilder } from '../shared/proposal-search-builder.ts';
@@ -42,6 +43,10 @@ export class CfpReviewsSearch {
           speakers: event.displayProposalsSpeakers
             ? proposal.speakers.map(({ name, picture }) => ({ name, picture }))
             : [],
+          tags: sortBy(
+            proposal.tags.map((tag) => ({ id: tag.id, name: tag.name, color: tag.color })),
+            'name',
+          ),
           reviews: {
             summary: event.displayProposalsReviews ? reviews.summary() : undefined,
             you: reviews.ofUser(this.userId),

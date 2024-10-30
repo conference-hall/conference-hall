@@ -1,13 +1,14 @@
-import ApiSettings from '../../page-objects/team/event-settings/api-settings.page.ts';
-import CfpSettings from '../../page-objects/team/event-settings/cfp-settings.page.ts';
-import CustomizeSettings from '../../page-objects/team/event-settings/customize-settings.page.ts';
-import OrganizerEventSettingsPage from '../../page-objects/team/event-settings/event-settings.page.ts';
-import GeneralSettings from '../../page-objects/team/event-settings/general-settings.page.ts';
-import IntegrationsSettings from '../../page-objects/team/event-settings/integrations-settings.page.ts';
-import NotificationsSettings from '../../page-objects/team/event-settings/notifications-settings.page.ts';
-import ProposalReviewSettings from '../../page-objects/team/event-settings/proposal-review-settings.page.ts';
-import SurveySettings from '../../page-objects/team/event-settings/survey-settings.page.ts';
-import TracksSettings from '../../page-objects/team/event-settings/tracks-settings.page.ts';
+import ApiSettings from 'page-objects/team/event-settings/api-settings.page.ts';
+import CfpSettings from 'page-objects/team/event-settings/cfp-settings.page.ts';
+import CustomizeSettings from 'page-objects/team/event-settings/customize-settings.page.ts';
+import OrganizerEventSettingsPage from 'page-objects/team/event-settings/event-settings.page.ts';
+import GeneralSettings from 'page-objects/team/event-settings/general-settings.page.ts';
+import IntegrationsSettings from 'page-objects/team/event-settings/integrations-settings.page.ts';
+import NotificationsSettings from 'page-objects/team/event-settings/notifications-settings.page.ts';
+import ProposalReviewSettings from 'page-objects/team/event-settings/proposal-review-settings.page.ts';
+import SurveySettings from 'page-objects/team/event-settings/survey-settings.page.ts';
+import TagsSettings from 'page-objects/team/event-settings/tags-settings.page.ts';
+import TracksSettings from 'page-objects/team/event-settings/tracks-settings.page.ts';
 
 describe('Event settings', () => {
   beforeEach(() => {
@@ -20,6 +21,7 @@ describe('Event settings', () => {
   const general = new GeneralSettings();
   const customize = new CustomizeSettings();
   const tracks = new TracksSettings();
+  const tags = new TagsSettings();
   const cfp = new CfpSettings();
   const survey = new SurveySettings();
   const review = new ProposalReviewSettings();
@@ -40,6 +42,9 @@ describe('Event settings', () => {
 
       settings.openSetting('Tracks');
       tracks.isPageVisible();
+
+      settings.openSetting('Proposal tags');
+      tags.isPageVisible();
 
       settings.openSetting('Customize');
       customize.isPageVisible();
@@ -210,6 +215,34 @@ describe('Event settings', () => {
         cy.findByRole('button', { name: 'Remove Cloud' }).click();
         cy.assertNoText('Cloud');
         cy.assertNoText('This is the cloud');
+      });
+    });
+
+    describe('tags settings', () => {
+      it('add, edit and remove a tag', () => {
+        tags.visit('team-1', 'conference-1');
+
+        tags.newTag().click();
+        tags.createTag('Foo');
+
+        tags.newTag().click();
+        tags.createTag('Bar');
+
+        cy.assertText('2 tags');
+        tags.tag('Foo').should('exist');
+        tags.tag('Bar').should('exist');
+
+        tags.searchTag('Bar');
+        cy.assertText('1 tags');
+        tags.tag('Foo').should('not.exist');
+        tags.tag('Bar').should('exist');
+
+        tags.editTag().click();
+        tags.saveTag('BarBar');
+        tags.tag('BarBar').should('exist');
+
+        tags.deleteTag().click();
+        cy.assertText('No tags to display.');
       });
     });
 

@@ -12,6 +12,7 @@ import type { ProposalReviewData } from '~/.server/reviews/proposal-review.ts';
 import { ProposalReview } from '~/.server/reviews/proposal-review.ts';
 import {
   CommentReactionSchema,
+  ProposalSaveTagsSchema,
   ProposalUpdateSchema,
   ReviewUpdateDataSchema,
 } from '~/.server/reviews/proposal-review.types.ts';
@@ -30,6 +31,7 @@ import { LoadingActivities } from './__components/proposal-page/proposal-activit
 import { ProposalActivityFeed as Feed } from './__components/proposal-page/proposal-activity/proposal-activity-feed.tsx';
 import { ReviewHeader } from './__components/proposal-page/review-header.tsx';
 import { ReviewSidebar } from './__components/proposal-page/review-sidebar.tsx';
+import { TagsCard } from './__components/proposal-page/tags-card.tsx';
 
 export type ProposalData = ProposalReviewData;
 
@@ -109,6 +111,14 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       await proposal.update(result.value);
       return toast('success', 'Proposal saved.');
     }
+    case 'save-tags': {
+      const result = parseWithZod(form, { schema: ProposalSaveTagsSchema });
+      if (result.status !== 'success') return toast('error', 'Something went wrong.');
+
+      const proposal = ProposalReview.for(userId, params.team, params.event, params.proposal);
+      await proposal.saveTags(result.value);
+      break;
+    }
   }
   return null;
 };
@@ -152,11 +162,18 @@ export default function ProposalReviewLayoutRoute() {
             </Suspense>
           </div>
 
-          <div className="lg:col-span-4">
+          <div className="lg:col-span-4 space-y-4">
             <ReviewSidebar
               proposal={proposal}
               reviewEnabled={event.reviewEnabled}
               canDeliberate={team.userPermissions.canDeliberateEventProposals}
+            />
+
+            <TagsCard
+              eventTags={event.tags}
+              proposalTags={proposal.tags}
+              canEditProposalTags={team.userPermissions.canEditEventProposals}
+              canEditEventTags={team.userPermissions.canEditEvent}
             />
           </div>
         </div>

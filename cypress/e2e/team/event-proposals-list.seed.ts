@@ -1,6 +1,7 @@
 import { eventCategoryFactory } from '../../../tests/factories/categories.ts';
 import { eventFactory } from '../../../tests/factories/events.ts';
 import { eventFormatFactory } from '../../../tests/factories/formats.ts';
+import { eventProposalTagFactory } from '../../../tests/factories/proposal-tags.ts';
 import { proposalFactory } from '../../../tests/factories/proposals.ts';
 import { reviewFactory } from '../../../tests/factories/reviews.ts';
 import { talkFactory } from '../../../tests/factories/talks.ts';
@@ -37,11 +38,13 @@ export const seed = async () => {
   const format2 = await eventFormatFactory({ event, attributes: { name: 'Format 2' } });
   const category1 = await eventCategoryFactory({ event, attributes: { name: 'Category 1' } });
   const category2 = await eventCategoryFactory({ event, attributes: { name: 'Category 2' } });
+  const tag = await eventProposalTagFactory({ event, attributes: { name: 'Tag 1' } });
 
   const proposal1 = await proposalFactory({
     event,
     formats: [format1],
     categories: [category1],
+    tags: [tag],
     talk: await talkFactory({ attributes: { title: 'Talk 1' }, speakers: [speaker1] }),
   });
 

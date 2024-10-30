@@ -1,4 +1,4 @@
-import type { Event, EventCategory, EventFormat, Team, User } from '@prisma/client';
+import type { Event, EventCategory, EventFormat, EventProposalTag, Team, User } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
 import { eventCategoryFactory } from 'tests/factories/categories.ts';
 import { eventFactory } from 'tests/factories/events.ts';
@@ -12,6 +12,7 @@ import { userFactory } from 'tests/factories/users.ts';
 
 import { ForbiddenOperationError, ReviewDisabledError } from '~/libs/errors.server.ts';
 
+import { eventProposalTagFactory } from 'tests/factories/proposal-tags.ts';
 import { ProposalReview } from './proposal-review.ts';
 
 describe('ProposalReview', () => {
@@ -22,6 +23,7 @@ describe('ProposalReview', () => {
   let event: Event;
   let format: EventFormat;
   let category: EventCategory;
+  let tag: EventProposalTag;
 
   beforeEach(async () => {
     owner = await userFactory({ traits: ['clark-kent'] });
@@ -31,6 +33,7 @@ describe('ProposalReview', () => {
     event = await eventFactory({ team, traits: ['withSurvey'] });
     format = await eventFormatFactory({ event });
     category = await eventCategoryFactory({ event });
+    tag = await eventProposalTagFactory({ event });
   });
 
   describe('#get', () => {
@@ -39,6 +42,7 @@ describe('ProposalReview', () => {
         event,
         formats: [format],
         categories: [category],
+        tags: [tag],
         talk: await talkFactory({ speakers: [speaker] }),
       });
       await surveyFactory({ event, user: speaker, attributes: { answers: { gender: 'male' } } });
@@ -57,6 +61,7 @@ describe('ProposalReview', () => {
         languages: ['en'],
         formats: [{ id: format.id, name: format.name }],
         categories: [{ id: category.id, name: category.name }],
+        tags: [{ id: tag.id, name: tag.name, color: tag.color }],
         speakers: [
           {
             id: speaker.id,
@@ -362,6 +367,52 @@ describe('ProposalReview', () => {
           languages: [],
         }),
       ).rejects.toThrowError(ForbiddenOperationError);
+    });
+  });
+
+  describe('#saveTags', () => {
+    it('adds a new tags to the proposal', async () => {
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+
+      const proposalReview = ProposalReview.for(owner.id, team.slug, event.slug, proposal.id);
+      await proposalReview.saveTags({ tags: [tag.id] });
+
+      const updatedProposal = await proposalReview.get();
+      expect(updatedProposal.tags).toEqual([{ id: tag.id, name: tag.name, color: tag.color }]);
+    });
+
+    it('removes tags from the proposal', async () => {
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }), tags: [tag] });
+
+      const proposalReview = ProposalReview.for(owner.id, team.slug, event.slug, proposal.id);
+      await proposalReview.saveTags({ tags: [] });
+
+      const updatedProposal = await proposalReview.get();
+      expect(updatedProposal.tags).toEqual([]);
+    });
+
+    it('changes tags of the proposal', async () => {
+      const newTag = await eventProposalTagFactory({ event });
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }), tags: [tag] });
+
+      const proposalReview = ProposalReview.for(owner.id, team.slug, event.slug, proposal.id);
+      await proposalReview.saveTags({ tags: [newTag.id] });
+
+      const updatedProposal = await proposalReview.get();
+      expect(updatedProposal.tags).toEqual([{ id: newTag.id, name: newTag.name, color: newTag.color }]);
+    });
+
+    it('throws an error if user has not a owner or member role in the team', async () => {
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      const proposalReview = ProposalReview.for(speaker.id, team.slug, event.slug, proposal.id);
+      await expect(proposalReview.saveTags({ tags: [] })).rejects.toThrowError(ForbiddenOperationError);
+    });
+
+    it('throws an error if user does not belong to event team', async () => {
+      const user = await userFactory();
+      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      const proposalReview = ProposalReview.for(user.id, team.slug, event.slug, proposal.id);
+      await expect(proposalReview.saveTags({ tags: [] })).rejects.toThrowError(ForbiddenOperationError);
     });
   });
 });

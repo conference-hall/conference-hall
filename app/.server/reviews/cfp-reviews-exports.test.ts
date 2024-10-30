@@ -1,4 +1,4 @@
-import type { Event, EventCategory, EventFormat, Team, User } from '@prisma/client';
+import type { Event, EventCategory, EventFormat, EventProposalTag, Team, User } from '@prisma/client';
 import { eventFactory } from 'tests/factories/events.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
@@ -9,6 +9,7 @@ import { ForbiddenOperationError } from '~/libs/errors.server.ts';
 
 import { eventCategoryFactory } from 'tests/factories/categories.ts';
 import { eventFormatFactory } from 'tests/factories/formats.ts';
+import { eventProposalTagFactory } from 'tests/factories/proposal-tags.ts';
 import { CfpReviewsExports } from './cfp-reviews-exports.ts';
 import { exportToOpenPlanner } from './jobs/export-to-open-planner.job.ts';
 
@@ -20,6 +21,7 @@ describe('CfpReviewsExports', () => {
   let event: Event;
   let format: EventFormat;
   let category: EventCategory;
+  let tag: EventProposalTag;
 
   beforeEach(async () => {
     owner = await userFactory({ traits: ['clark-kent'] });
@@ -29,11 +31,18 @@ describe('CfpReviewsExports', () => {
     event = await eventFactory({ team, traits: ['withIntegration'] });
     format = await eventFormatFactory({ event });
     category = await eventCategoryFactory({ event });
+    tag = await eventProposalTagFactory({ event });
   });
 
   describe('#forJson', () => {
     it('export reviews to json', async () => {
-      const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }) });
+      const proposal = await proposalFactory({
+        event,
+        formats: [format],
+        categories: [category],
+        tags: [tag],
+        talk: await talkFactory({ speakers: [speaker] }),
+      });
 
       const result = await CfpReviewsExports.for(owner.id, team.slug, event.slug).forJson({});
 
@@ -47,13 +56,10 @@ describe('CfpReviewsExports', () => {
           languages: proposal.languages,
           references: proposal.references,
           level: proposal.level,
-          categories: [],
-          formats: [],
-          reviews: {
-            negatives: 0,
-            positives: 0,
-            average: null,
-          },
+          formats: [{ id: format.id, name: format.name, description: format.description }],
+          categories: [{ id: category.id, name: category.name, description: category.description }],
+          tags: [tag.name],
+          reviews: { negatives: 0, positives: 0, average: null },
           speakers: [
             {
               name: speaker.name,

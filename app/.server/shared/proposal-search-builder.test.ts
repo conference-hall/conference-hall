@@ -1,4 +1,4 @@
-import type { Event, EventCategory, EventFormat, Proposal, Team, User } from '@prisma/client';
+import type { Event, EventCategory, EventFormat, EventProposalTag, Proposal, Team, User } from '@prisma/client';
 import { eventCategoryFactory } from 'tests/factories/categories.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { eventFormatFactory } from 'tests/factories/formats.ts';
@@ -10,6 +10,7 @@ import { userFactory } from 'tests/factories/users.ts';
 
 import { Pagination } from '~/.server/shared/pagination.ts';
 
+import { eventProposalTagFactory } from 'tests/factories/proposal-tags.ts';
 import { ProposalSearchBuilder } from './proposal-search-builder.ts';
 import type { ProposalsFilters } from './proposal-search-builder.types.ts';
 
@@ -21,6 +22,7 @@ describe('EventProposalsSearch', () => {
   let event2: Event;
   let format: EventFormat;
   let category: EventCategory;
+  let tag: EventProposalTag;
   let proposal1: Proposal;
   let proposal2: Proposal;
   let proposal3: Proposal;
@@ -34,6 +36,7 @@ describe('EventProposalsSearch', () => {
     event = await eventFactory({ team });
     format = await eventFormatFactory({ event });
     category = await eventCategoryFactory({ event });
+    tag = await eventProposalTagFactory({ event });
     event2 = await eventFactory();
 
     const talk1 = await talkFactory({ speakers: [speaker] });
@@ -59,6 +62,7 @@ describe('EventProposalsSearch', () => {
       event,
       talk: talk3,
       attributes: { title: 'Foo bar talk' },
+      tags: [tag],
       traits: ['rejected'],
     });
     proposal4 = await proposalFactory({
@@ -149,6 +153,14 @@ describe('EventProposalsSearch', () => {
       const proposals = await search.proposals();
       expect(proposals.length).toBe(1);
       expect(proposals[0].title).toBe(proposal2.title);
+    });
+
+    it('filters proposals by tags', async () => {
+      const filters = { tags: tag.id };
+      const search = new ProposalSearchBuilder(event.slug, owner.id, filters);
+      const proposals = await search.proposals();
+      expect(proposals.length).toBe(1);
+      expect(proposals[0].title).toBe(proposal3.title);
     });
 
     it('filters proposals by status pending', async () => {

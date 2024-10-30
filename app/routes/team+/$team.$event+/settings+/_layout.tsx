@@ -8,6 +8,7 @@ import {
   QuestionMarkCircleIcon,
   StarIcon,
   SwatchIcon,
+  TagIcon,
 } from '@heroicons/react/24/outline';
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { Outlet } from '@remix-run/react';
@@ -35,6 +36,7 @@ const getMenuItems = (team?: string, event?: string) => [
   { to: `/team/${team}/${event}/settings`, icon: Cog6ToothIcon, label: 'General' },
   { to: `/team/${team}/${event}/settings/cfp`, icon: PaperAirplaneIcon, label: 'Call for paper' },
   { to: `/team/${team}/${event}/settings/tracks`, icon: SwatchIcon, label: 'Tracks' },
+  { to: `/team/${team}/${event}/settings/tags`, icon: TagIcon, label: 'Proposal tags' },
   { to: `/team/${team}/${event}/settings/customize`, icon: PaintBrushIcon, label: 'Customize' },
   { to: `/team/${team}/${event}/settings/survey`, icon: QuestionMarkCircleIcon, label: 'Speaker survey' },
   { to: `/team/${team}/${event}/settings/review`, icon: StarIcon, label: 'Reviews' },
