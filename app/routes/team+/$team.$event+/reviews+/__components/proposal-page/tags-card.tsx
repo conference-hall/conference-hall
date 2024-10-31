@@ -1,6 +1,5 @@
 import { Cog6ToothIcon } from '@heroicons/react/24/outline';
-import { useSubmit } from '@remix-run/react';
-import { useState } from 'react';
+import { useFetcher } from '@remix-run/react';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Text } from '~/design-system/typography.tsx';
 import { sortBy } from '~/libs/utils/arrays-sort-by.ts';
@@ -23,18 +22,7 @@ export function TagsCard({
   canEditProposalTags,
   canEditEventTags,
 }: TagsCardProps) {
-  const submit = useSubmit();
-
-  const tags = sortBy(proposalTags, 'name');
-
-  const onChangeTags = (tags: Array<TagType>) => {
-    const formData = new FormData();
-    formData.set('intent', 'save-tags');
-    for (const tag of tags) {
-      formData.append('tags', tag.id);
-    }
-    submit(formData, { method: 'POST', navigate: false, preventScrollReset: true });
-  };
+  const { tags, update } = useOptimisticUpdateTags(proposalTags, eventTags);
 
   return (
     <Card as="section" className="p-4 lg:p-6">
@@ -43,7 +31,7 @@ export function TagsCard({
           key={proposalId}
           tags={eventTags}
           defaultValues={tags}
-          onChange={onChangeTags}
+          onChange={update}
           canEditEventTags={canEditEventTags}
         >
           <div className="flex items-center justify-between group">
@@ -66,4 +54,25 @@ export function TagsCard({
       </div>
     </Card>
   );
+}
+
+export function useOptimisticUpdateTags(proposalTags: Array<TagType>, eventTags: Array<TagType>) {
+  const fetcher = useFetcher();
+
+  // optimistic update
+  if (fetcher.formData?.get('intent') === 'save-tags') {
+    const pendingTags = fetcher.formData?.getAll('tags') as string[];
+    proposalTags = eventTags.filter((tag) => pendingTags.includes(tag.id));
+  }
+
+  const update = (tags: Array<TagType>) => {
+    const formData = new FormData();
+    formData.set('intent', 'save-tags');
+    for (const tag of tags) {
+      formData.append('tags', tag.id);
+    }
+    fetcher.submit(formData, { method: 'POST', preventScrollReset: true });
+  };
+
+  return { tags: sortBy(proposalTags, 'name'), update };
 }

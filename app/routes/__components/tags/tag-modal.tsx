@@ -45,7 +45,7 @@ function TagModaContent({ mode, initialValues, open, onClose }: TagModalContentP
   const [name, setName] = useState(initialValues?.name);
   const [color, setColor] = useState(defaultColor);
 
-  const TagPreview = <Tag tag={{ id: 'new', color, name: name || 'Tag preview' }} />;
+  const TagPreview = <Tag tag={{ id: 'new', color, name: name || 'Tag preview' }} isSearchLink={false} />;
 
   return (
     <Modal title={TagPreview} size="m" open={open} onClose={onClose}>
