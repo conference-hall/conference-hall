@@ -2,9 +2,24 @@ import { Link, useParams, useSearchParams } from '@remix-run/react';
 import { getContrastColor } from '~/libs/colors/colors.ts';
 import type { Tag as TagType } from '~/types/tags.types.ts';
 
-type TagProps = { tag: TagType };
+type TagProps = { tag: TagType; isSearchLink?: boolean };
 
-export function Tag({ tag }: TagProps) {
+const styles =
+  'inline-flex items-center text-nowrap px-2 py-0.5 text-xs font-semibold rounded-full text-white max-w-full';
+
+export function Tag({ tag, isSearchLink = true }: TagProps) {
+  if (isSearchLink) {
+    return <TagLink tag={tag} />;
+  }
+
+  return (
+    <div style={{ backgroundColor: tag.color, color: getContrastColor(tag.color) }} className={styles}>
+      <span className="truncate">{tag.name}</span>
+    </div>
+  );
+}
+
+function TagLink({ tag }: TagProps) {
   const params = useParams();
   const [searchParams] = useSearchParams();
 
@@ -13,8 +28,8 @@ export function Tag({ tag }: TagProps) {
   return (
     <Link
       to={{ pathname: `/team/${params.team}/${params.event}/reviews`, search: newSearchParams.toString() }}
-      className="inline-flex items-center text-nowrap px-2 py-0.5 text-xs font-semibold rounded-full text-white max-w-full"
       style={{ backgroundColor: tag.color, color: getContrastColor(tag.color) }}
+      className={styles}
     >
       <span className="truncate">{tag.name}</span>
     </Link>

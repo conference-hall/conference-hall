@@ -1,4 +1,3 @@
-import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import { Link, useSearchParams } from '@remix-run/react';
 import type { ChangeEvent } from 'react';
 
@@ -34,19 +33,20 @@ export function ProposalItem({ proposal, isSelected, isAllPagesSelected, toggle 
           checked={isSelected}
           disabled={isAllPagesSelected}
           onChange={toggle}
-          className="pb-14 md:pb-5 pr-4"
+          className="self-start pt-[15px] pr-4"
         />
       ) : undefined}
-      <Link
-        to={{ pathname: id, search: params.toString() }}
-        aria-label={`Open proposal "${title}"`}
-        className="flex items-center justify-between gap-4 py-4 grow min-w-0"
-      >
+
+      <div className="flex items-center justify-between gap-4 py-3 grow min-w-0">
         <div className="space-y-2 md:space-y-1 min-w-0">
           <div className="flex flex-wrap items-center gap-2">
-            <Text size="base" weight="semibold">
+            <Link
+              to={{ pathname: id, search: params.toString() }}
+              aria-label={`Open proposal "${title}"`}
+              className="font-semibold hover:text-indigo-700"
+            >
               {title}
-            </Text>
+            </Link>
 
             {team.userPermissions.canDeliberateEventProposals && proposal.deliberationStatus !== 'PENDING' ? (
               <>
@@ -64,14 +64,12 @@ export function ProposalItem({ proposal, isSelected, isAllPagesSelected, toggle 
             {proposal.speakers.length ? `by ${proposal.speakers.map((a) => a.name).join(', ')}` : null}
           </Text>
         </div>
-        <div className="flex gap-4 items-center">
-          <div className="hidden sm:flex sm:items-center sm:gap-6">
-            <UserReviewNote feeling={you.feeling} note={you.note} />
-            {summary && <GlobalReviewNote feeling="NEUTRAL" note={summary.average} hideEmpty />}
-          </div>
-          <ChevronRightIcon className="w-5 h-5 text-gray-400" />
+
+        <div className="hidden sm:flex sm:items-center sm:gap-6">
+          <UserReviewNote feeling={you.feeling} note={you.note} />
+          {summary && <GlobalReviewNote feeling="NEUTRAL" note={summary.average} hideEmpty />}
         </div>
-      </Link>
+      </div>
     </>
   );
 }
