@@ -9,8 +9,6 @@ describe('Speaker home page', () => {
     cy.login();
   });
 
-  afterEach(() => cy.task('disconnectDB'));
-
   const home = new SpeakerHomePage();
   const profile = new SpeakerProfilePage();
   const newTalk = new SpeakerNewTalkPage();

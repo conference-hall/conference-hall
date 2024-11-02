@@ -7,8 +7,6 @@ describe('Event proposals list', () => {
     cy.task('seedDB', 'event/proposals-list');
   });
 
-  afterEach(() => cy.task('disconnectDB'));
-
   const proposals = new EventProposalsPage();
   const proposal = new EventProposalPage();
   const login = new LoginPage();

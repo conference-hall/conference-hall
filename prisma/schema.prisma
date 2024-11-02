@@ -403,3 +403,13 @@ model ScheduleSession {
 
   @@map("schedule_sessions")
 }
+
+model FeatureFlag {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("feature_flags")
+}

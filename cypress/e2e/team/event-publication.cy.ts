@@ -5,8 +5,6 @@ describe('Publication page', () => {
     cy.task('seedDB', 'team/event-publication');
   });
 
-  afterEach(() => cy.task('disconnectDB'));
-
   const page = new PublicationPage();
 
   it('checks statistics and publish results', () => {

@@ -5,8 +5,6 @@ describe('Team members list', () => {
     cy.task('seedDB', 'team/team-settings-members');
   });
 
-  afterEach(() => cy.task('disconnectDB'));
-
   const members = new TeamMembersPage();
 
   describe('as a team owner', () => {

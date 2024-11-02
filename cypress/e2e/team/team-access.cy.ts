@@ -6,8 +6,6 @@ describe('Team page access and redirections', () => {
     cy.task('seedDB', 'team/team-access');
   });
 
-  afterEach(() => cy.task('disconnectDB'));
-
   const requestPage = new TeamRequestAccessPage();
   const newTeamPage = new TeamNewPage();
 

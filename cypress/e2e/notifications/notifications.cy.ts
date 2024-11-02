@@ -6,8 +6,6 @@ describe('Notifications', () => {
     cy.task('seedDB', 'notifications/notifications');
   });
 
-  afterEach(() => cy.task('disconnectDB'));
-
   const notifications = new NotificationsPage();
   const proposal = new EventProposalPage();
 

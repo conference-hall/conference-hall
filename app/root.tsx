@@ -8,11 +8,13 @@ import { UserInfo } from './.server/user-registration/user-info.ts';
 import { initializeFirebaseClient } from './libs/auth/firebase.ts';
 import { destroySession, getSessionUserId } from './libs/auth/session.ts';
 import { getPublicEnv } from './libs/env/env.server.ts';
+import { flags } from './libs/feature-flags/flags.server.ts';
 import { useNonce } from './libs/nonce/use-nonce.ts';
 import type { Toast } from './libs/toasts/toast.server';
 import { getToast } from './libs/toasts/toast.server.ts';
 import { Toaster } from './libs/toasts/toaster.tsx';
 import { GeneralErrorBoundary } from './routes/__components/error-boundary.tsx';
+import { FlagsProvider } from './routes/__components/flags-context.tsx';
 import { GlobalLoading } from './routes/__components/global-loading.tsx';
 import fonts from './styles/fonts.css?url';
 import tailwind from './styles/tailwind.css?url';
@@ -33,7 +35,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
     { name: 'viewport', content: 'width=device-width,initial-scale=1' },
   ];
 
-  const isSeoEnabled = data?.env?.SEO_ENABLED;
+  const isSeoEnabled = data?.flags.seo;
   if (!isSeoEnabled) metatags.push({ name: 'robots', content: 'noindex' });
 
   return metatags;
@@ -62,7 +64,9 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await UserInfo.get(userId);
   if (userId && !user) await destroySession(request);
 
-  return json({ user, toast, env: getPublicEnv() }, { headers: toastHeaders || {} });
+  const frontendFlags = await flags.withTag('frontend');
+
+  return json({ user, toast, env: getPublicEnv(), flags: frontendFlags }, { headers: toastHeaders || {} });
 };
 
 type DocumentProps = { children: ReactNode; toast?: Toast | null; nonce: string; env?: Record<string, unknown> };
@@ -92,15 +96,17 @@ function Document({ children, toast, nonce, env = {} }: DocumentProps) {
 }
 
 function App() {
-  const { user, env, toast } = useLoaderData<typeof loader>();
+  const { user, env, toast, flags } = useLoaderData<typeof loader>();
   const nonce = useNonce();
 
   initializeFirebaseClient(env);
 
   return (
-    <Document toast={toast} env={env} nonce={nonce}>
-      <Outlet context={{ user }} />
-    </Document>
+    <FlagsProvider flags={flags}>
+      <Document toast={toast} env={env} nonce={nonce}>
+        <Outlet context={{ user }} />
+      </Document>
+    </FlagsProvider>
   );
 }
 

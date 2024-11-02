@@ -1,11 +1,8 @@
 import { Worker } from 'bullmq';
-import Redis from 'ioredis';
 
-import { getEnv } from './env.ts';
+import { getRedisClient } from '../redis.ts';
 import type { Job } from './job.ts';
 import { logger } from './logger.ts';
-
-const env = getEnv();
 
 export const DEFAULT_QUEUE = 'default';
 
@@ -31,7 +28,7 @@ export function createJobWorkers(jobs: Array<Job<any>>): Array<JobWorker> {
 }
 
 function createJobWorker(queue: string, jobs: Array<Job<any>>): JobWorker {
-  const connection = new Redis(env.REDIS_URL, { maxRetriesPerRequest: null });
+  const connection = getRedisClient();
 
   const worker = new Worker(
     queue,

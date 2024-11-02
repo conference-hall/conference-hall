@@ -5,8 +5,6 @@ describe('Event navigation page', () => {
     cy.task('seedDB', 'team/event-navigation');
   });
 
-  afterEach(() => cy.task('disconnectDB'));
-
   const page = new EventNavBarPage();
 
   describe('for a conference', () => {

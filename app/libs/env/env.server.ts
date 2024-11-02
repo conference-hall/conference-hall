@@ -15,7 +15,6 @@ const schema = z.object({
   FIREBASE_STORAGE: z.string(),
   COOKIE_SIGNED_SECRET: z.string(),
   SENTRY_DSN: z.string().optional(),
-  SEO_ENABLED: z.string().optional(),
   MAINTENANCE_ENABLED: z.string().optional(),
 });
 
@@ -51,7 +50,6 @@ export function getPublicEnv() {
     FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
     FIREBASE_AUTH_EMULATOR_HOST: process.env.FIREBASE_AUTH_EMULATOR_HOST,
     SENTRY_DSN: process.env.SENTRY_DSN,
-    SEO_ENABLED: process.env.SEO_ENABLED === 'true',
   };
 }
 

@@ -33,7 +33,7 @@ export default function AdminRoute() {
 
       <List>
         <List.Header className="flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-center">
-          <Text weight="semibold">{`${statistics.total} user(s)`}</Text>
+          <Text weight="semibold">{`${statistics.total} users`}</Text>
           <Form method="GET">
             <Input
               name="query"

@@ -6,8 +6,6 @@ describe('Invite to talk', () => {
     cy.task('seedDB', 'invite/talk-invite');
   });
 
-  afterEach(() => cy.task('disconnectDB'));
-
   const invite = new InvitationPage();
   const talk = new SpeakerTalkPage();
 

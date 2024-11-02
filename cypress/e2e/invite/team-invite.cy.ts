@@ -6,8 +6,6 @@ describe('Invite to team', () => {
     cy.task('seedDB', 'invite/team-invite');
   });
 
-  afterEach(() => cy.task('disconnectDB'));
-
   const invite = new InvitationPage();
   const team = new TeamHomePage();
 

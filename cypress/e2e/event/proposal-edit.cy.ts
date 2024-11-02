@@ -6,8 +6,6 @@ describe('Speaker proposal edition page', () => {
     cy.login();
   });
 
-  afterEach(() => cy.task('disconnectDB'));
-
   const proposal = new EventProposalPage();
 
   it('can edit a proposal', () => {

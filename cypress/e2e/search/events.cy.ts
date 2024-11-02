@@ -3,7 +3,6 @@ import SearchEventPage from '../../page-objects/search.page.ts';
 
 describe('Search conferences and meetups.', () => {
   beforeEach(() => cy.task('seedDB', 'search/events'));
-  afterEach(() => cy.task('disconnectDB'));
 
   const search = new SearchEventPage();
   const event = new EventPage();

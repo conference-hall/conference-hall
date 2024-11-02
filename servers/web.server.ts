@@ -24,7 +24,7 @@ initMonitoring();
 
 export function createAppServer() {
   return createExpressApp({
-    configure: (app) => {
+    configure: async (app) => {
       // dev only: redirect localhost to 127.0.0.1
       applyLocalhostRedirect(app);
 
@@ -47,7 +47,7 @@ export function createAppServer() {
       applyRateLimits(app);
 
       // Seo header
-      applySeoHeader(app);
+      await applySeoHeader(app);
 
       // Cache assets
       app.use('/fonts', express.static('build/client/fonts', { immutable: true, maxAge: '1y' }));

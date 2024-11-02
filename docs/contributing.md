@@ -21,8 +21,8 @@ Ideally you should talk about it on [Discussions](https://github.com/conference-
 ## Development
 
 - [Getting started](../README.md#development)
+- [Feature flags](./feature-flags.md)
 - [Monitoring](./monitoring.md)
-- [SEO](./seo.md)
 - [Timezones](./timezones.md)
 
 ## Legals

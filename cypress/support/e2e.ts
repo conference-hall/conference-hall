@@ -191,3 +191,8 @@ Cypress.on('test:before:run', () => {
     },
   });
 });
+
+afterEach(() => {
+  cy.task('disconnectDB');
+  cy.task('resetFlags');
+});

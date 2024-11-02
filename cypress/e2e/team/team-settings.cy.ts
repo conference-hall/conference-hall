@@ -6,8 +6,6 @@ describe('Team settings', () => {
     cy.task('seedDB', 'team/team-settings');
   });
 
-  afterEach(() => cy.task('disconnectDB'));
-
   const settings = new TeamSettingsPage();
   const homepage = new SpeakerHomePage();
 

@@ -5,8 +5,6 @@ describe('Event overview', () => {
     cy.task('seedDB', 'team/event-overview');
   });
 
-  afterEach(() => cy.task('disconnectDB'));
-
   const overview = new ProposalOverview();
 
   describe('Displays event overview', () => {

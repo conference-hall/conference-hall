@@ -1,8 +1,9 @@
 import type express from 'express';
+import { flags } from '~/libs/feature-flags/flags.server.ts';
 
-const isSeoEnabled = process.env.SEO_ENABLED === 'true';
+export async function applySeoHeader(app: express.Application) {
+  const isSeoEnabled = await flags.get('seo');
 
-export function applySeoHeader(app: express.Application) {
   if (isSeoEnabled) return;
 
   app.use((_, res, next) => {

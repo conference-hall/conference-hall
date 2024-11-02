@@ -6,8 +6,6 @@ describe('Team create', () => {
     cy.task('seedDB', 'team/team-new');
   });
 
-  afterEach(() => cy.task('disconnectDB'));
-
   const teamNew = new TeamNewPage();
   const team = new TeamHomePage();
 

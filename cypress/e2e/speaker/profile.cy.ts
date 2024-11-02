@@ -6,8 +6,6 @@ describe('Speaker profile page', () => {
     cy.login();
   });
 
-  afterEach(() => cy.task('disconnectDB'));
-
   const profile = new SpeakerProfilePage();
 
   it('edit personal information', () => {

@@ -1,5 +1,6 @@
 import { defineConfig } from 'cypress';
 
+import { flags } from './app/libs/feature-flags/flags.server.ts';
 import { disconnectDB, resetDB } from './tests/db-helpers.ts';
 
 export default defineConfig({
@@ -25,6 +26,14 @@ export default defineConfig({
             throw new Error('An error occurred seeding the database');
           }
           return 'loaded';
+        },
+        setFlag: async (flag: { key: any; value: any }) => {
+          await flags.set(flag.key, flag.value);
+          return 'flag set';
+        },
+        resetFlags: async () => {
+          await flags.resetDefaults();
+          return 'flags reset';
         },
       });
 

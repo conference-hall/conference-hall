@@ -7,8 +7,6 @@ describe("Team's events list", () => {
     cy.task('seedDB', 'team/team-events');
   });
 
-  afterEach(() => cy.task('disconnectDB'));
-
   const team = new TeamHomePage();
   const eventSettings = new OrganizerEventSettingsPage();
 

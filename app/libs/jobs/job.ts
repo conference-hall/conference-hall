@@ -1,10 +1,7 @@
 import { Queue } from 'bullmq';
-import Redis from 'ioredis';
 
-import { getEnv } from './env.ts';
+import { getRedisClient } from '../redis.ts';
 import { DEFAULT_QUEUE } from './worker.ts';
-
-const env = getEnv();
 
 export type JobConfig<Payload> = {
   name: string;
@@ -26,7 +23,7 @@ export function job<Payload>(config: JobConfig<Payload>): Job<Payload> {
     config,
     trigger: async (payload?: Payload) => {
       if (!queues.has(queue)) {
-        const connection = new Redis(env.REDIS_URL, { maxRetriesPerRequest: null });
+        const connection = getRedisClient();
 
         queues.set(
           queue,

@@ -7,8 +7,6 @@ describe('Speaker talk creation page', () => {
     cy.login();
   });
 
-  afterEach(() => cy.task('disconnectDB'));
-
   const newTalk = new SpeakerNewTalkPage();
   const talk = new SpeakerTalkPage();
 
