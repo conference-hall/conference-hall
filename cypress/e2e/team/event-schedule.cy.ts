@@ -5,8 +5,6 @@ describe('Schedule page', () => {
     cy.task('seedDB', 'team/event-schedule');
   });
 
-  afterEach(() => cy.task('disconnectDB'));
-
   const page = new ScheduleNewPage();
 
   it('manages a schedule', () => {

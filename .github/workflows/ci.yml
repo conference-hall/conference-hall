@@ -85,9 +85,9 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
-          build: npx dotenv -e .env.test -- npm run build
-          start: npx dotenv -e .env.test -- npm start
-          command-prefix: 'dotenv -e .env.test --'
+          build: npx dotenv -e .env.e2e -- npm run build
+          start: npx dotenv -e .env.e2e -- npm start
+          command-prefix: 'dotenv -e .env.e2e --'
           wait-on: 'http://127.0.0.1:3000'
 
       - name: Stop database and firebase emulators

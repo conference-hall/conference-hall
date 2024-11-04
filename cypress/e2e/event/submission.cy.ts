@@ -9,8 +9,6 @@ describe('Submit a talk to event', () => {
     cy.task('seedDB', 'event/submission');
   });
 
-  afterEach(() => cy.task('disconnectDB'));
-
   const submission = new EventSubmissionPage();
   const proposals = new EventProposalsPage();
   const proposal = new EventProposalPage();

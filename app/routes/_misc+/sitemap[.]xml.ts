@@ -2,12 +2,13 @@ import { SitemapStream, streamToPromise } from 'sitemap';
 
 import { getEventsForSitemap } from '~/.server/seo/sitemap.ts';
 import { appUrl } from '~/libs/env/env.server.ts';
-
-const isSeoEnabled = process.env.SEO_ENABLED === 'true';
+import { flags } from '~/libs/feature-flags/flags.server.ts';
 
 let sitemap: Buffer; // TODO: Cache to Redis with a TTL (weekly)
 
 export async function loader() {
+  const isSeoEnabled = await flags.get('seo');
+
   if (!isSeoEnabled) {
     return new Response(null, { headers: { 'Content-Type': 'application/xml' } });
   }

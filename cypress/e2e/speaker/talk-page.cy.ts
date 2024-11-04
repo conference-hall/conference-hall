@@ -9,8 +9,6 @@ describe('Speaker talk page', () => {
     cy.login();
   });
 
-  afterEach(() => cy.task('disconnectDB'));
-
   const talk = new SpeakerTalkPage();
   const search = new SearchEventPage();
   const submission = new EventSubmissionPage();

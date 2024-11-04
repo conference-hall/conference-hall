@@ -8,8 +8,6 @@ describe('Event proposal page details', () => {
     cy.login();
   });
 
-  afterEach(() => cy.task('disconnectDB'));
-
   const proposal = new EventProposalPage();
   const proposals = new EventProposalsPage();
   const submission = new EventSubmissionPage();

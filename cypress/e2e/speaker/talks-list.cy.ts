@@ -7,8 +7,6 @@ describe('Speaker talks page', () => {
     cy.task('seedDB', 'speaker/talks-list');
   });
 
-  afterEach(() => cy.task('disconnectDB'));
-
   const talks = new SpeakerTalksPage();
   const newTalk = new SpeakerNewTalkPage();
   const talk = new SpeakerTalkPage();

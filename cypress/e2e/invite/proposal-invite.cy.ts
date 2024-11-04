@@ -6,8 +6,6 @@ describe('Invite to proposal', () => {
     cy.task('seedDB', 'invite/proposal-invite');
   });
 
-  afterEach(() => cy.task('disconnectDB'));
-
   const invite = new InvitationPage();
   const proposal = new EventProposalPage();
 

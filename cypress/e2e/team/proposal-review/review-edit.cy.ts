@@ -5,8 +5,6 @@ describe('Proposal edit page', () => {
     cy.task('seedDB', 'team/proposal-review/proposal-review');
   });
 
-  afterEach(() => cy.task('disconnectDB'));
-
   const review = new ProposalReviewPage();
 
   describe('as team owner', () => {

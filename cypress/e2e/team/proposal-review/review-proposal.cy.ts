@@ -6,8 +6,6 @@ describe('Proposal review page', () => {
     cy.task('seedDB', 'team/proposal-review/proposal-review');
   });
 
-  afterEach(() => cy.task('disconnectDB'));
-
   const review = new ProposalReviewPage();
   const proposals = new EventsProposalsListPage();
 

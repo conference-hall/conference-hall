@@ -3,8 +3,6 @@ import SearchEventPage from '../page-objects/search.page.ts';
 import SpeakerTalksPage from '../page-objects/speaker/talks-list.page.ts';
 
 describe('Authentication', () => {
-  afterEach(() => cy.task('disconnectDB'));
-
   const login = new LoginPage();
   const search = new SearchEventPage();
   const speakers = new SpeakerTalksPage();

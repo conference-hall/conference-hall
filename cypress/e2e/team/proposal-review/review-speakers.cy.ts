@@ -6,8 +6,6 @@ describe('Speakers in proposal review page', () => {
     cy.login('Clark Kent');
   });
 
-  afterEach(() => cy.task('disconnectDB'));
-
   const review = new ProposalReviewPage();
 
   it('displays speakers info', () => {

@@ -6,8 +6,6 @@ describe('Speaker talk edition page', () => {
     cy.login();
   });
 
-  afterEach(() => cy.task('disconnectDB'));
-
   const talk = new SpeakerTalkPage();
 
   it('can edit a talk', () => {

@@ -15,8 +15,6 @@ describe('Event settings', () => {
     cy.task('seedDB', 'team/event-settings');
   });
 
-  afterEach(() => cy.task('disconnectDB'));
-
   const settings = new OrganizerEventSettingsPage();
   const general = new GeneralSettings();
   const customize = new CustomizeSettings();

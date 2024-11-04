@@ -3,6 +3,7 @@ import '@testing-library/jest-dom/vitest';
 import { installGlobals } from '@remix-run/node';
 import { cleanup } from '@testing-library/react';
 
+import { flags } from '~/libs/feature-flags/flags.server.ts';
 import { disconnectDB, resetDB } from './db-helpers.ts';
 
 // This installs globals such as "fetch", "Response", "Request" and "Headers.
@@ -11,6 +12,7 @@ installGlobals({ nativeFetch: true });
 afterEach(async () => {
   cleanup();
   await resetDB();
+  await flags.resetDefaults();
 });
 
 afterAll(async () => {

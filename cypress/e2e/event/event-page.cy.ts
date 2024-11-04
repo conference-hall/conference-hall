@@ -6,7 +6,6 @@ describe('View event page', () => {
     cy.task('seedDB', 'event/event-page');
     cy.clock(new Date(2021, 3, 14));
   });
-  afterEach(() => cy.task('disconnectDB'));
 
   const event = new EventPage();
   const submission = new EventSubmissionPage();

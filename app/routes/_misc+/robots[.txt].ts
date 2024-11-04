@@ -1,6 +1,5 @@
 import { appUrl } from '~/libs/env/env.server.ts';
-
-const isSeoEnabled = process.env.SEO_ENABLED === 'true';
+import { flags } from '~/libs/feature-flags/flags.server.ts';
 
 const ROBOT_TXT_PRODUCTION = `User-agent: *
 Allow: /
@@ -26,6 +25,7 @@ Sitemap: ${appUrl()}/sitemap.xml
 `;
 
 export const loader = async () => {
+  const isSeoEnabled = await flags.get('seo');
   const robotText = isSeoEnabled ? ROBOT_TXT_PRODUCTION : ROBOT_TXT_DEV;
   const bytes = new TextEncoder().encode(robotText).byteLength;
 
