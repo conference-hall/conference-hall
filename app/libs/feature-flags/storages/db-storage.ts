@@ -11,14 +11,14 @@ export class DbStorage implements FlagsStorage {
     this.cache = cache;
   }
 
-  async getValue(key: string, _config: FlagConfig): Promise<any> {
+  async getValue(key: string): Promise<any> {
     return this.cache.get(key, async () => {
       const flag = await db.featureFlag.findUnique({ where: { key } });
       return flag?.value;
     });
   }
 
-  async getValues(keys: string[], _config: FlagConfig): Promise<Record<string, any>> {
+  async getValues(keys: string[]): Promise<Record<string, any>> {
     const values: Record<string, any> = {};
     const missingKeys: string[] = [];
 

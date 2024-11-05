@@ -23,7 +23,7 @@ describe('DbStorage', () => {
     const cacheGetSpy = vi.spyOn(cache, 'get');
     await cache.set('testKey', 'testValue');
 
-    const value = await dbStorage.getValue('testKey', testConfig);
+    const value = await dbStorage.getValue('testKey');
 
     expect(value).toBe('testValue');
     expect(cacheGetSpy).toHaveBeenCalledWith('testKey', expect.any(Function));
@@ -32,7 +32,7 @@ describe('DbStorage', () => {
   it('should get value from db if not in cache', async () => {
     const cacheGetSpy = vi.spyOn(cache, 'get');
 
-    const value = await dbStorage.getValue('testKey', testConfig);
+    const value = await dbStorage.getValue('testKey');
 
     expect(value).toBe('testValue');
     expect(cacheGetSpy).toHaveBeenCalledWith('testKey', expect.any(Function));
@@ -71,7 +71,7 @@ describe('DbStorage', () => {
     await cache.set('key1', 'value1');
     await db.featureFlag.create({ data: { key: 'key2', value: 'value2' } });
 
-    const values = await dbStorage.getValues(['key1', 'key2'], testConfig);
+    const values = await dbStorage.getValues(['key1', 'key2']);
 
     expect(values).toEqual({ key1: 'value1', key2: 'value2' });
     expect(cacheGetSpy).toHaveBeenCalledWith('key1', expect.any(Function));

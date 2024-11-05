@@ -1,6 +1,5 @@
 import type { FlagsStorage } from './storages/flags-storage.ts';
 import type {
-  FlagConfig,
   FlagKey,
   FlagTaggedConfig,
   FlagTaggedKey,
@@ -32,7 +31,7 @@ export class FlagsClient<C extends FlagsConfig> {
     }
 
     for (const [key, config] of Object.entries(this.config)) {
-      const value = await this.storage.getValue(key, config);
+      const value = await this.storage.getValue(key);
       if (value === undefined) {
         await this.storage.setValue(key, config.defaultValue, config);
       }
@@ -41,7 +40,7 @@ export class FlagsClient<C extends FlagsConfig> {
 
   async get<K extends FlagKey<C>>(key: K): Promise<FlagValue<C, K>> {
     const config = this.config[key];
-    const value = await this.storage.getValue(String(key), config);
+    const value = await this.storage.getValue(String(key));
     return (value ?? config.defaultValue) as FlagValue<C, K>;
   }
 
@@ -52,7 +51,7 @@ export class FlagsClient<C extends FlagsConfig> {
 
   async all(): Promise<FlagValues<C>> {
     const keys = Object.keys(this.config) as FlagKey<C>[];
-    const values = await this.storage.getValues(keys.map(String), this.config[keys[0]]);
+    const values = await this.storage.getValues(keys.map(String));
 
     const result = {} as FlagValues<C>;
     for (const key of keys) {
@@ -68,7 +67,7 @@ export class FlagsClient<C extends FlagsConfig> {
     ) as FlagTaggedConfig<C, K>;
 
     const keys = Object.keys(taggedConfig) as K[];
-    const values = await this.storage.getValues(keys.map(String), taggedConfig[keys[0]]);
+    const values = await this.storage.getValues(keys.map(String));
 
     const result = {} as FlagTaggedValues<C, K>;
     for (const key of keys) {
