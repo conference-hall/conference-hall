@@ -40,7 +40,7 @@ React / Remix / Typescript / Tailwind / HeadlessUI / Conform / Zod / Prisma / Fi
 ### Prerequisites
 
 - Docker
-- Node 20+
+- Node 22+
 
 ### Getting started
 
