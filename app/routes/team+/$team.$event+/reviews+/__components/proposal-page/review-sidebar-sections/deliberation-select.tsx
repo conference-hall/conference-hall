@@ -20,7 +20,7 @@ const confirmation =
 export function DeliberationSelect({ deliberationStatus, publicationStatus }: Props) {
   const submit = useSubmit();
 
-  const handleSubmit = (name: string, value: string) => {
+  const handleSubmit = (_name: string, value: string) => {
     if (publicationStatus === 'PUBLISHED' && !confirm(confirmation)) return;
     submit({ intent: 'change-deliberation-status', status: value }, { method: 'POST' });
   };

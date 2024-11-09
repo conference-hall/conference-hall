@@ -98,7 +98,7 @@ function DeliberationPending() {
   );
 }
 
-function AcceptedByOrganizers({ event, proposal }: Props) {
+function AcceptedByOrganizers({ event }: Props) {
   return (
     <Card as="section" p={8} className="flex flex-col lg:justify-between lg:flex-row lg:items-center space-y-4">
       <div>
@@ -126,7 +126,7 @@ function AcceptedByOrganizers({ event, proposal }: Props) {
   );
 }
 
-function RejectedByOrganizers({ event, proposal }: Props) {
+function RejectedByOrganizers({ event }: Props) {
   return (
     <Card as="section" p={8}>
       <H2 mb={1}>Proposal has been declined by {event.name}.</H2>

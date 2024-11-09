@@ -21,22 +21,12 @@ describe('#formatEventType', () => {
 
 describe('#formatConferenceDates', () => {
   it('return one day conference info', () => {
-    const message = formatConferenceDates(
-      'CONFERENCE',
-      'Europe/Paris',
-      '2020-10-05T00:00:00.000Z',
-      '2020-10-05T00:00:00.000Z',
-    );
+    const message = formatConferenceDates('Europe/Paris', '2020-10-05T00:00:00.000Z', '2020-10-05T00:00:00.000Z');
     expect(message).toBe('October 5th, 2020 (GMT+2)');
   });
 
   it('return several days conference info', () => {
-    const message = formatConferenceDates(
-      'CONFERENCE',
-      'Europe/Paris',
-      '2020-10-05T00:00:00.000Z',
-      '2020-10-07T00:00:00.000Z',
-    );
+    const message = formatConferenceDates('Europe/Paris', '2020-10-05T00:00:00.000Z', '2020-10-07T00:00:00.000Z');
     expect(message).toBe('October 5th to October 7th, 2020 (GMT+2)');
   });
 });

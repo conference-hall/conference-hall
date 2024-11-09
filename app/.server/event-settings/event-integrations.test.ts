@@ -1,4 +1,4 @@
-import type { Event, EventFormat, EventIntegrationConfig, Team, User } from '@prisma/client';
+import type { Event, Team, User } from '@prisma/client';
 import { eventFactory } from 'tests/factories/events.ts';
 import { eventIntegrationFactory } from 'tests/factories/integrations.ts';
 import { teamFactory } from 'tests/factories/team.ts';

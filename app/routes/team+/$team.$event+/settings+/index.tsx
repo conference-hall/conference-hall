@@ -38,7 +38,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       try {
         const updated = await event.update(result.value);
         return redirectWithToast(`/team/${params.team}/${updated.slug}/settings`, 'success', 'Event saved.');
-      } catch (SlugAlreadyExistsError) {
+      } catch (_error) {
         return { slug: ['This URL already exists, please try another one.'] } as Record<string, string[]>;
       }
     }

@@ -30,7 +30,7 @@ export class CoSpeakerTalkInvite {
         where: { id: talk.id },
         data: { speakers: { connect: { id: coSpeakerId } } },
       });
-    } catch (e) {
+    } catch (_error) {
       throw new InvitationInvalidOrAccepted();
     }
 

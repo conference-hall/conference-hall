@@ -46,7 +46,7 @@ export function DetailsSection({
 
         {conferenceStart && conferenceEnd ? (
           <IconLabel icon={ClockIcon} gap="l">
-            <ClientOnly>{() => formatConferenceDates(type, timezone, conferenceStart, conferenceEnd)}</ClientOnly>
+            <ClientOnly>{() => formatConferenceDates(timezone, conferenceStart, conferenceEnd)}</ClientOnly>
           </IconLabel>
         ) : null}
 

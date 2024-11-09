@@ -20,6 +20,10 @@
         "noStaticOnlyClass": "off",
         "useLiteralKeys": "off"
       },
+      "correctness": {
+        "noUnusedImports": "error",
+        "noUnusedVariables": "error"
+      },
       "style": {
         "noUselessElse": "off",
         "noParameterAssign": "off",
