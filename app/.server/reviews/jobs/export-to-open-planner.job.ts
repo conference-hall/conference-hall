@@ -4,7 +4,7 @@ import type { ProposalsFilters } from '~/.server/shared/proposal-search-builder.
 import { OpenPlanner, type OpenPlannerSessionsPayload } from '~/libs/integrations/open-planner.ts';
 import { job } from '~/libs/jobs/job.ts';
 import { compactObject } from '~/libs/utils/object-compact.ts';
-import type { TalkLanguages } from '~/types/proposals.types.ts';
+import type { Languages } from '~/types/proposals.types.ts';
 
 export type ExportToOpenPlannerPayload = {
   userId: string;
@@ -34,7 +34,7 @@ export const exportToOpenPlanner = job<ExportToOpenPlannerPayload>({
         // add sessions
         const format = proposal.formats?.at(0);
         const category = proposal.categories?.at(0);
-        const languages = proposal.languages as TalkLanguages;
+        const languages = proposal.languages as Languages;
 
         result.sessions.push(
           compactObject({
