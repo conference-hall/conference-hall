@@ -93,7 +93,7 @@ export async function getSessionUserId(request: Request): Promise<string | null>
     } else {
       await destroySession(request);
     }
-  } catch (e) {
+  } catch (_error) {
     await destroySession(request);
   }
   return null;

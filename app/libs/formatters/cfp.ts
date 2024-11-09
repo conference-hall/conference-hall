@@ -12,7 +12,7 @@ export function formatEventType(type: EventType) {
   }
 }
 
-export function formatConferenceDates(type: EventType, timeZone: string, start: string, end: string) {
+export function formatConferenceDates(timeZone: string, start: string, end: string) {
   const startDate = toZonedTime(start, timeZone);
   const endDate = toZonedTime(end, timeZone);
 

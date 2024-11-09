@@ -26,7 +26,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   try {
     const team = await UserTeams.for(userId).create(result.value);
     return redirect(`/team/${team.slug}`);
-  } catch (SlugAlreadyExistsError) {
+  } catch (_error) {
     return { slug: ['This URL already exists, please try another one.'] };
   }
 };

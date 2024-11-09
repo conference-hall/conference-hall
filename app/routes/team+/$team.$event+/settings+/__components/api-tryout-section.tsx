@@ -45,7 +45,7 @@ export function ApiTryoutSection({ slug, apiKey }: Props) {
             { id: 'rejected', name: 'Rejected' },
           ]}
           defaultValue={status}
-          onChange={(name, value) => setStatus(value)}
+          onChange={(_name, value) => setStatus(value)}
         />
       </Card.Content>
 

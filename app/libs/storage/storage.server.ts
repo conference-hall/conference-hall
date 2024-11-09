@@ -46,7 +46,7 @@ async function uploadToStorage(data: AsyncIterable<Uint8Array>, filepath: string
       const writeStream = file.createWriteStream();
       passthroughStream.pipe(writeStream).on('finish', resolve).on('error', reject);
     });
-  } catch (e) {
+  } catch (_error) {
     passthroughStream.destroy();
     return null;
   }

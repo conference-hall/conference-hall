@@ -34,7 +34,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       try {
         const team = await UserTeam.for(userId, params.team).updateSettings(result.value);
         return redirectWithToast(`/team/${team.slug}/settings`, 'success', 'Team settings saved.');
-      } catch (SlugAlreadyExistsError) {
+      } catch (_error) {
         return { slug: ['This URL already exists, please try another one.'] };
       }
     }

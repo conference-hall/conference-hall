@@ -50,11 +50,7 @@ export default function OverviewRoute() {
             showActions={team.userPermissions.canEditEvent}
           />
 
-          <VisibilityStatusCard
-            slug={event.slug}
-            visibility={event.visibility}
-            showActions={team.userPermissions.canEditEvent}
-          />
+          <VisibilityStatusCard visibility={event.visibility} showActions={team.userPermissions.canEditEvent} />
 
           <ReviewStatusCard reviewEnabled={event.reviewEnabled} showActions={team.userPermissions.canEditEvent} />
         </div>

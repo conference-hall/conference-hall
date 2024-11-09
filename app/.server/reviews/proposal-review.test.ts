@@ -169,7 +169,7 @@ describe('ProposalReview', () => {
     it('returns empty array when speakers display disabled', async () => {
       const event2 = await eventFactory({ team, attributes: { displayProposalsSpeakers: false } });
       const proposal1 = await proposalFactory({ event: event2, talk: await talkFactory({ speakers: [speaker] }) });
-      const proposal2 = await proposalFactory({ event: event2, talk: await talkFactory({ speakers: [speaker] }) });
+      await proposalFactory({ event: event2, talk: await talkFactory({ speakers: [speaker] }) });
 
       const proposalReview = ProposalReview.for(owner.id, team.slug, event2.slug, proposal1.id);
       const otherProposals = await proposalReview.getOtherProposals([speaker.id]);

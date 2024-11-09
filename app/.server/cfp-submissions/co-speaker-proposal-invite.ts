@@ -50,7 +50,7 @@ export class CoSpeakerProposalInvite {
           });
         }
       });
-    } catch (e) {
+    } catch (_error) {
       throw new InvitationInvalidOrAccepted();
     }
 
