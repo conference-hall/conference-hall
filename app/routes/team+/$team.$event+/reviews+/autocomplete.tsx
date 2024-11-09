@@ -1,5 +1,4 @@
 import type { LoaderFunctionArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
 import invariant from 'tiny-invariant';
 
 import { CfpReviewsSearch } from '~/.server/reviews/cfp-reviews-search.ts';
@@ -12,7 +11,5 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   invariant(params.event, 'Invalid event slug');
 
   const filters = parseUrlFilters(request.url);
-  const results = await CfpReviewsSearch.for(userId, params.team, params.event).autocomplete(filters);
-
-  return json(results);
+  return CfpReviewsSearch.for(userId, params.team, params.event).autocomplete(filters);
 };

@@ -1,6 +1,5 @@
 import { PlusIcon } from '@heroicons/react/20/solid';
 import type { LoaderFunctionArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
@@ -24,11 +23,11 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const speakerProposals = Submissions.for(speakerId, params.event);
   const talkLibrary = TalksLibrary.of(speakerId);
 
-  return json({
+  return {
     proposalsCount: await speakerProposals.count(),
     drafts: await speakerProposals.drafts(),
     talks: await talkLibrary.listForEvent(params.event),
-  });
+  };
 };
 
 export default function EventSubmitRoute() {

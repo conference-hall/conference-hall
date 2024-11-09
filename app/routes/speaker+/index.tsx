@@ -1,5 +1,4 @@
 import type { LoaderFunctionArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 
 import { parseUrlPage } from '~/.server/shared/pagination.ts';
@@ -21,7 +20,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const page = parseUrlPage(request.url);
   const { activities, nextPage, hasNextPage } = await SpeakerActivities.for(userId).list(page);
 
-  return json({ activities, nextPage, hasNextPage });
+  return { activities, nextPage, hasNextPage };
 };
 
 export default function ProfileRoute() {

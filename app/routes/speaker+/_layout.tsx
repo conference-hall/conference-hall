@@ -1,5 +1,4 @@
 import type { LoaderFunctionArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
 import { Outlet, useLoaderData } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
 
@@ -17,8 +16,7 @@ import { SpeakerTabs } from './__components/speaker-tabs.tsx';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
-  const profile = await SpeakerProfile.for(userId).get();
-  return json(profile);
+  return SpeakerProfile.for(userId).get();
 };
 
 export default function SpeakerRoute() {

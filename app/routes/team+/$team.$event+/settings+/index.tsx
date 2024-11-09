@@ -1,7 +1,6 @@
 import { parseWithZod } from '@conform-to/zod';
 import { ArchiveBoxArrowDownIcon, ArchiveBoxXMarkIcon } from '@heroicons/react/24/outline';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
@@ -35,17 +34,17 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   switch (intent) {
     case 'general': {
       const result = parseWithZod(form, { schema: EventGeneralSettingsSchema });
-      if (result.status !== 'success') return json(result.error);
+      if (result.status !== 'success') return result.error;
       try {
         const updated = await event.update(result.value);
         return redirectWithToast(`/team/${params.team}/${updated.slug}/settings`, 'success', 'Event saved.');
       } catch (SlugAlreadyExistsError) {
-        return json({ slug: ['This URL already exists, please try another one.'] } as Record<string, string[]>);
+        return { slug: ['This URL already exists, please try another one.'] } as Record<string, string[]>;
       }
     }
     case 'details': {
       const result = parseWithZod(form, { schema: EventDetailsSettingsSchema });
-      if (result.status !== 'success') return json(result.error);
+      if (result.status !== 'success') return result.error;
       await event.update(result.value);
       return toast('success', 'Event details saved.');
     }
@@ -55,7 +54,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       return toast('success', `Event ${archived ? 'archived' : 'restored'}.`);
     }
   }
-  return json(null);
+  return null;
 };
 
 export default function EventGeneralSettingsRoute() {

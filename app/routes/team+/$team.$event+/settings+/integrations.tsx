@@ -1,6 +1,5 @@
 import { parseWithZod } from '@conform-to/zod';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
@@ -28,7 +27,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const eventIntegrations = EventIntegrations.for(userId, params.team, params.event);
   const openPlanner = await eventIntegrations.getConfiguration('OPEN_PLANNER');
 
-  return json({ openPlanner });
+  return { openPlanner };
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -42,7 +41,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   switch (intent) {
     case 'save-slack-integration': {
       const result = parseWithZod(form, { schema: EventSlackSettingsSchema });
-      if (result.status !== 'success') return json(result.error);
+      if (result.status !== 'success') return result.error;
 
       const event = UserEvent.for(userId, params.team, params.event);
       await event.update(result.value);
@@ -53,7 +52,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       if (resultId.status !== 'success') return toast('error', 'Something went wrong.');
 
       const resultConfig = parseWithZod(form, { schema: OpenPlannerConfigSchema });
-      if (resultConfig.status !== 'success') return json(resultConfig.error);
+      if (resultConfig.status !== 'success') return resultConfig.error;
 
       const eventIntegrations = EventIntegrations.for(userId, params.team, params.event);
       const data = { id: resultId.value.id, name: 'OPEN_PLANNER', configuration: resultConfig.value } as const;
@@ -62,7 +61,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       const result = await eventIntegrations.checkConfiguration(data);
 
       if (result && !result.success) {
-        return json({ configurationError: [result.error] } as Record<string, string[]>);
+        return { configurationError: [result.error] } as Record<string, string[]>;
       }
       return toast('success', 'Integration is enabled.');
     }
@@ -76,7 +75,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     }
   }
 
-  return json(null);
+  return null;
 };
 
 export default function EventIntegrationsSettingsRoute() {

@@ -1,6 +1,5 @@
 import { BellSlashIcon } from '@heroicons/react/24/outline';
 import type { LoaderFunctionArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 
 import { Notifications } from '~/.server/user-notifications/notifications.ts';
@@ -18,8 +17,7 @@ export const meta = mergeMeta(() => [{ title: 'Notifications | Conference Hall' 
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
-  const notifications = await Notifications.for(userId).list();
-  return json(notifications);
+  return Notifications.for(userId).list();
 };
 
 export default function OrganizerRoute() {

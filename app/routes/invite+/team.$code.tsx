@@ -1,5 +1,5 @@
 import type { ActionFunction, LoaderFunctionArgs } from '@remix-run/node';
-import { json, redirect } from '@remix-run/node';
+import { redirect } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
@@ -19,7 +19,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   invariant(params.code, 'Invalid code');
 
   const team = await TeamMemberInvite.with(params.code).check();
-  return json({ name: team.name });
+  return { name: team.name };
 };
 
 export const action: ActionFunction = async ({ request, params }) => {

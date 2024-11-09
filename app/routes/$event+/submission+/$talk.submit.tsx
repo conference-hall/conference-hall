@@ -1,5 +1,4 @@
 import type { ActionFunction, LoaderFunctionArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
 import { Form, useLoaderData, useNavigate } from '@remix-run/react';
 import { useState } from 'react';
 import invariant from 'tiny-invariant';
@@ -23,8 +22,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   invariant(params.event, 'Invalid event slug');
   invariant(params.talk, 'Invalid talk id');
 
-  const proposal = await TalkSubmission.for(userId, params.event).get(params.talk);
-  return json(proposal);
+  return TalkSubmission.for(userId, params.event).get(params.talk);
 };
 
 export const action: ActionFunction = async ({ request, params }) => {

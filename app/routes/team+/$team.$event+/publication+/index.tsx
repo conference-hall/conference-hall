@@ -1,6 +1,5 @@
 import { parseWithZod } from '@conform-to/zod';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
@@ -25,9 +24,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   invariant(params.event, 'Invalid event slug');
   invariant(params.team, 'Invalid team slug');
 
-  const statistics = await Publication.for(userId, params.team, params.event).statistics();
-
-  return json(statistics);
+  return Publication.for(userId, params.team, params.event).statistics();
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {

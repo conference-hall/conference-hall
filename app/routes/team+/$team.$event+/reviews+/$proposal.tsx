@@ -1,6 +1,5 @@
 import { parseWithZod } from '@conform-to/zod';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { defer, json } from '@remix-run/node';
 import { Await, useActionData, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
@@ -52,7 +51,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const otherProposalsPromise = proposalReview.getOtherProposals(proposal.speakers.map((s) => s.id));
   const pagination = await proposalReview.getPreviousAndNextReviews(filters);
 
-  return defer({ proposal, pagination, activityPromise, otherProposalsPromise });
+  return { proposal, pagination, activityPromise, otherProposalsPromise };
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -105,7 +104,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     }
     case 'edit-talk': {
       const result = parseWithZod(form, { schema: ProposalUpdateSchema });
-      if (result.status !== 'success') return json(result.error);
+      if (result.status !== 'success') return result.error;
 
       const proposal = ProposalReview.for(userId, params.team, params.event, params.proposal);
       await proposal.update(result.value);

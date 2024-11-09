@@ -1,6 +1,5 @@
 import { parseWithZod } from '@conform-to/zod';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
 import { useActionData, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
@@ -21,7 +20,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   invariant(params.proposal, 'Invalid proposal id');
 
   const proposal = await UserProposal.for(userId, params.proposal).get();
-  return json(proposal);
+  return proposal;
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -53,7 +52,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     case 'edit-talk': {
       const { formatsRequired, categoriesRequired } = await EventPage.of(params.event).get();
       const result = parseWithZod(form, { schema: getProposalUpdateSchema(formatsRequired, categoriesRequired) });
-      if (result.status !== 'success') return json(result.error);
+      if (result.status !== 'success') return result.error;
 
       await proposal.update(result.value);
       return toast('success', 'Proposal saved.');

@@ -1,4 +1,4 @@
-import { createCookieSessionStorage, json, redirect } from '@remix-run/node';
+import { createCookieSessionStorage, data, redirect } from '@remix-run/node';
 import { v4 as uuid } from 'uuid';
 import { z } from 'zod';
 
@@ -37,7 +37,7 @@ export async function redirectWithToast(url: string, type: ToastType, title: str
 }
 
 export async function toast(type: ToastType, title: string) {
-  return json(null, { headers: await createToastHeaders({ type, title }) });
+  return data(null, { headers: await createToastHeaders({ type, title }) });
 }
 
 export async function getToast(request: Request) {

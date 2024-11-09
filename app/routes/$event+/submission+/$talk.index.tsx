@@ -1,7 +1,7 @@
 import { parseWithZod } from '@conform-to/zod';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { json, redirect } from '@remix-run/node';
+import { redirect } from '@remix-run/node';
 import { useActionData, useLoaderData, useNavigate } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
@@ -24,14 +24,14 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   invariant(params.event, 'Invalid event slug');
   invariant(params.talk, 'Invalid talk id');
 
-  if (params.talk === 'new') return json(null);
+  if (params.talk === 'new') return null;
 
   const talk = TalksLibrary.of(speakerId).talk(params.talk);
 
   const alreadySubmitted = await talk.isSubmittedTo(params.event);
   if (alreadySubmitted) throw new TalkAlreadySubmittedError();
 
-  return json(await talk.get());
+  return talk.get();
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -41,7 +41,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
   const form = await request.formData();
   const result = parseWithZod(form, { schema: TalkSaveSchema });
-  if (result.status !== 'success') return json(result.error);
+  if (result.status !== 'success') return result.error;
 
   const submission = TalkSubmission.for(speakerId, params.event);
   const proposal = await submission.saveDraft(params.talk, result.value);

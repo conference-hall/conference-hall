@@ -1,6 +1,5 @@
 import { parseWithZod } from '@conform-to/zod';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
 import { useActionData, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
@@ -23,8 +22,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.talk, 'Invalid talk id');
 
-  const talk = await TalksLibrary.of(userId).talk(params.talk).get();
-  return json(talk);
+  return TalksLibrary.of(userId).talk(params.talk).get();
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -51,12 +49,12 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     }
     case 'edit-talk': {
       const result = parseWithZod(form, { schema: TalkSaveSchema });
-      if (result.status !== 'success') return json(result.error);
+      if (result.status !== 'success') return result.error;
       await talk.update(result.value);
       return toast('success', 'Talk updated.');
     }
     default:
-      return json(null);
+      return null;
   }
 };
 

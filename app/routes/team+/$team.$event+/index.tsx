@@ -1,5 +1,5 @@
 import type { LoaderFunctionArgs } from '@remix-run/node';
-import { json, useLoaderData } from '@remix-run/react';
+import { useLoaderData } from '@remix-run/react';
 import { useState } from 'react';
 import invariant from 'tiny-invariant';
 
@@ -27,8 +27,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   invariant(params.team, 'Invalid team slug');
   invariant(params.event, 'Invalid event slug');
 
-  const metrics = await EventMetrics.for(userId, params.team, params.event).globalMetrics();
-  return json(metrics);
+  return EventMetrics.for(userId, params.team, params.event).globalMetrics();
 };
 
 export default function OverviewRoute() {

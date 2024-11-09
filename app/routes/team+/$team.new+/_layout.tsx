@@ -1,5 +1,4 @@
 import type { LoaderFunctionArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
 import { Outlet } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
@@ -13,8 +12,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.team, 'Invalid team slug');
 
-  const team = await UserTeam.for(userId, params.team).get();
-  return json(team);
+  return UserTeam.for(userId, params.team).get();
 };
 
 export default function EventCreationLayout() {

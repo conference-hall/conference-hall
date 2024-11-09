@@ -1,7 +1,6 @@
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import { InboxIcon } from '@heroicons/react/24/outline';
 import type { LoaderFunctionArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
 import { useLoaderData, useSearchParams } from '@remix-run/react';
 
 import { TalksLibrary } from '~/.server/speaker-talks-library/talks-library.ts';
@@ -20,9 +19,9 @@ export const meta = mergeMeta(() => [{ title: 'My talks library | Conference Hal
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   const { searchParams } = new URL(request.url);
+
   const filter = TalksListFilterSchema.safeParse(searchParams.get('filter'));
-  const talks = await TalksLibrary.of(userId).list(filter.data);
-  return json(talks);
+  return TalksLibrary.of(userId).list(filter.data);
 };
 
 export default function SpeakerTalksRoute() {

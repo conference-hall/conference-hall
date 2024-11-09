@@ -1,5 +1,4 @@
 import type { LoaderFunctionArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
 import invariant from 'tiny-invariant';
 
 import { EventApi } from '~/.server/event-web-api/event-api.ts';
@@ -14,7 +13,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 
   const filters = parseUrlFilters(request.url);
   const eventApi = new EventApi(params.event, key);
-  const proposals = await eventApi.proposals(filters);
 
-  return json(proposals);
+  const events = await eventApi.proposals(filters);
+  return Response.json(events);
 };

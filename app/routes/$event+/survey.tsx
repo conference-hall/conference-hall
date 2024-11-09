@@ -1,6 +1,5 @@
 import { parseWithZod } from '@conform-to/zod';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
@@ -21,7 +20,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 
   const questions = await CfpSurvey.of(params.event).questions();
   const answers = await SpeakerAnswers.for(userId, params.event).getAnswers();
-  return json({ questions, answers });
+  return { questions, answers };
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -30,7 +29,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
   const form = await request.formData();
   const result = parseWithZod(form, { schema: SurveySchema });
-  if (result.status !== 'success') return json(null);
+  if (result.status !== 'success') return null;
 
   await SpeakerAnswers.for(userId, params.event).save(result.value);
   return toast('success', 'Survey saved.');

@@ -2,7 +2,6 @@ import { parseWithZod } from '@conform-to/zod';
 import { MagnifyingGlassIcon, PlusIcon } from '@heroicons/react/20/solid';
 import { TagIcon } from '@heroicons/react/24/outline';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 import { EventProposalTags } from '~/.server/event-settings/event-proposal-tags.ts';
@@ -33,7 +32,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     page,
   );
 
-  return json({ count, tags, filters, pagination });
+  return { count, tags, filters, pagination };
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {

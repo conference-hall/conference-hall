@@ -1,6 +1,5 @@
 import { parseWithZod } from '@conform-to/zod';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
 import { useFetcher } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
@@ -44,19 +43,19 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     }
     case 'save-formats': {
       const result = parseWithZod(form, { schema: TrackSaveSchema });
-      if (result.status !== 'success') return json(result.error);
+      if (result.status !== 'success') return result.error;
       await tracks.saveFormat(result.value);
       break;
     }
     case 'save-categories': {
       const result = parseWithZod(form, { schema: TrackSaveSchema });
-      if (result.status !== 'success') return json(result.error);
+      if (result.status !== 'success') return result.error;
       await tracks.saveCategory(result.value);
       break;
     }
     case 'update-track-settings': {
       const result = parseWithZod(form, { schema: TracksSettingsSchema });
-      if (result.status !== 'success') return json(result.error);
+      if (result.status !== 'success') return result.error;
       await tracks.updateSettings(result.value);
       return toast('success', 'Track setting updated.');
     }

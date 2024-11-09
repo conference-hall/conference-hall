@@ -1,5 +1,5 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { json, unstable_parseMultipartFormData } from '@remix-run/node';
+import { unstable_parseMultipartFormData } from '@remix-run/node';
 import { Form, useActionData, useSubmit } from '@remix-run/react';
 import type { ChangeEvent } from 'react';
 import invariant from 'tiny-invariant';
@@ -40,7 +40,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     await event.update({ logoUrl: result.data });
     return toast('success', 'Logo updated.');
   } else {
-    return json({ status: 'error', message: 'An error occurred during upload, you may exceed max file size.' });
+    return { status: 'error', message: 'An error occurred during upload, you may exceed max file size.' };
   }
 };
 

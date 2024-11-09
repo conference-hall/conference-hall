@@ -1,6 +1,5 @@
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import type { LoaderFunctionArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
 import { Outlet, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
@@ -31,7 +30,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   if (!event.isCfpOpen) throw new CfpNotOpenError();
 
   const { steps } = await SubmissionSteps.for(params.event, params.talk);
-  return json({ event, steps });
+  return { event, steps };
 };
 
 export default function EventSubmissionRoute() {

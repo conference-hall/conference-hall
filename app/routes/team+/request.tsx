@@ -1,7 +1,7 @@
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { KeyIcon } from '@heroicons/react/24/outline';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { json, redirect } from '@remix-run/node';
+import { redirect } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
 
 import { TeamBetaAccess } from '~/.server/team/team-beta-access.ts';
@@ -29,7 +29,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     await TeamBetaAccess.for(userId).validateAccessKey(String(form.get('key')));
     return redirect('/team/new');
   } catch (InvalidAccessKeyError) {
-    return json({ key: ['Invalid access key'] });
+    return { key: ['Invalid access key'] };
   }
 };
 

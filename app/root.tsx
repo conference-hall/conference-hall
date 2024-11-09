@@ -1,5 +1,5 @@
 import type { LinksFunction, LoaderFunctionArgs, MetaFunction } from '@remix-run/node';
-import { json } from '@remix-run/node';
+import { data } from '@remix-run/node';
 import { Links, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData } from '@remix-run/react';
 import { withSentry } from '@sentry/remix';
 import type { ReactNode } from 'react';
@@ -66,7 +66,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   const frontendFlags = await flags.withTag('frontend');
 
-  return json({ user, toast, env: getPublicEnv(), flags: frontendFlags }, { headers: toastHeaders || {} });
+  return data({ user, toast, env: getPublicEnv(), flags: frontendFlags }, { headers: toastHeaders || {} });
 };
 
 type DocumentProps = { children: ReactNode; toast?: Toast | null; nonce: string; env?: Record<string, unknown> };

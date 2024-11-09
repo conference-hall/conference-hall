@@ -1,6 +1,6 @@
 import { parseWithZod } from '@conform-to/zod';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { json, redirect } from '@remix-run/node';
+import { redirect } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
 import { useState } from 'react';
@@ -41,7 +41,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const schedule = await eventSchedule.getSchedulesByDay(result.data);
   if (!schedule) return redirect(`/team/${params.team}/${params.event}/schedule`);
 
-  return json(schedule);
+  return schedule;
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -81,7 +81,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       break;
     }
   }
-  return json(null);
+  return null;
 };
 
 export default function ScheduleRoute() {

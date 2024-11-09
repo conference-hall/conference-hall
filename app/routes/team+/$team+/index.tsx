@@ -1,7 +1,6 @@
 import { PlusIcon } from '@heroicons/react/20/solid';
 import { Square3Stack3DIcon } from '@heroicons/react/24/outline';
 import type { LoaderFunctionArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
 import { useLoaderData, useSearchParams } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
@@ -21,9 +20,8 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 
   const url = new URL(request.url);
   const archived = url.searchParams.get('archived') === 'true';
-  const events = await TeamEvents.for(userId, params.team).list(archived);
 
-  return json(events);
+  return TeamEvents.for(userId, params.team).list(archived);
 };
 
 export default function TeamEventsRoute() {
