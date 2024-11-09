@@ -8,7 +8,7 @@ import { Badge } from '~/design-system/badges.tsx';
 import { IconLink } from '~/design-system/icon-buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
-import { H1, Text } from '~/design-system/typography.tsx';
+import { H1 } from '~/design-system/typography.tsx';
 import { getLanguage } from '~/libs/formatters/languages.ts';
 import { getLevel } from '~/libs/formatters/levels.ts';
 import type { SubmissionErrors } from '~/types/errors.types.ts';

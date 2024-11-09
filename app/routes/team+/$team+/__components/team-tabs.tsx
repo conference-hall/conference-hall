@@ -3,7 +3,6 @@ import { Badge } from '~/design-system/badges.tsx';
 
 import { Page } from '~/design-system/layouts/page.tsx';
 import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
-import { Text } from '~/design-system/typography.tsx';
 import { ROLE_NAMES } from '~/libs/formatters/team-roles.ts';
 import type { TeamRole } from '~/types/team.types.ts';
 

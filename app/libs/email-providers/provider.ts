@@ -1,4 +1,3 @@
-import { getEnv } from '../jobs/env.ts';
 import { MailgunProvider } from './mailgun-provider.ts';
 import { MailpitProvider } from './mailpit-provider.ts';
 
