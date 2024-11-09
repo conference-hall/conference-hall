@@ -1,5 +1,4 @@
 import type { LoaderFunctionArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
 import { Outlet, useLoaderData, useMatch } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
@@ -31,7 +30,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
   invariant(params.event, 'Invalid event slug');
 
   const event = await EventPage.of(params.event).get();
-  return json(event);
+  return event;
 };
 
 export default function EventRoute() {

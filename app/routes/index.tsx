@@ -1,6 +1,5 @@
 import { FaceFrownIcon } from '@heroicons/react/24/outline';
 import type { LoaderFunctionArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
 import { useLoaderData, useSearchParams } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
 
@@ -26,7 +25,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const filters = parseUrlFilters(request.url);
   const page = parseUrlPage(request.url);
   const results = await EventsSearch.with(filters, page).search();
-  return json(results);
+  return results;
 };
 
 export default function IndexRoute() {

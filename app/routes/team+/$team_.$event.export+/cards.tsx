@@ -1,7 +1,6 @@
 import './cards.css';
 
 import type { LoaderFunctionArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 import { CfpReviewsExports } from '~/.server/reviews/cfp-reviews-exports.ts';
@@ -20,8 +19,8 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 
   const filters = parseUrlFilters(request.url);
   const exports = CfpReviewsExports.for(userId, params.team, params.event);
-  const results = await exports.forCards(filters);
-  return json(results);
+
+  return exports.forCards(filters);
 };
 
 export default function ExportProposalsCards() {

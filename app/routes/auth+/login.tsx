@@ -1,8 +1,7 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { json, redirect } from '@remix-run/node';
+import { redirect } from '@remix-run/node';
 import { useFetcher, useSearchParams } from '@remix-run/react';
 import {
-  type AuthProvider,
   GithubAuthProvider,
   GoogleAuthProvider,
   TwitterAuthProvider,
@@ -30,7 +29,7 @@ export const meta = mergeMeta(() => [{ title: 'Login | Conference Hall' }]);
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const userId = await getSessionUserId(request);
   if (userId) return redirect('/');
-  return json(null);
+  return null;
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {

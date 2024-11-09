@@ -2,7 +2,7 @@ import { parseWithZod } from '@conform-to/zod';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { CheckIcon, ClockIcon } from '@heroicons/react/24/outline';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { json, redirect } from '@remix-run/node';
+import { redirect } from '@remix-run/node';
 import { useActionData, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
@@ -22,8 +22,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   invariant(params.team, 'Invalid team slug');
   invariant(params.event, 'Invalid event slug');
 
-  const event = await UserEvent.for(userId, params.team, params.event).get();
-  return json(event);
+  return UserEvent.for(userId, params.team, params.event).get();
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -35,7 +34,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
   const form = await request.formData();
   const result = parseWithZod(form, { schema: EventDetailsSettingsSchema });
-  if (result.status !== 'success') return json(result.error);
+  if (result.status !== 'success') return result.error;
   await event.update(result.value);
 
   return redirect(`/team/${params.team}/new/${params.event}/cfp`);

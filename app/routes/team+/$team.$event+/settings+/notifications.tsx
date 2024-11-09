@@ -1,6 +1,5 @@
 import { parseWithZod } from '@conform-to/zod';
 import type { LoaderFunctionArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
 import { Form, useActionData, useFetcher } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
@@ -36,18 +35,18 @@ export const action = async ({ request, params }: LoaderFunctionArgs) => {
   switch (intent) {
     case 'save-email-notifications': {
       const result = parseWithZod(form, { schema: EventEmailNotificationsSettingsSchema });
-      if (result.status !== 'success') return json(result.error);
+      if (result.status !== 'success') return result.error;
       await event.update(result.value);
       return toast('success', 'Notification email saved.');
     }
     case 'save-notifications': {
       const result = parseWithZod(form, { schema: EventNotificationsSettingsSchema });
-      if (result.status !== 'success') return json(result.error);
+      if (result.status !== 'success') return result.error;
       await event.update(result.value);
       return toast('success', 'Notification setting saved.');
     }
   }
-  return json(null);
+  return null;
 };
 
 export default function EventNotificationsSettingsRoute() {

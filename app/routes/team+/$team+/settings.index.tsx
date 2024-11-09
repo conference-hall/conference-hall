@@ -1,6 +1,5 @@
 import { parseWithZod } from '@conform-to/zod';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
@@ -30,13 +29,13 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   switch (intent) {
     case 'save-team': {
       const result = parseWithZod(form, { schema: TeamUpdateSchema });
-      if (result.status !== 'success') return json(result.error);
+      if (result.status !== 'success') return result.error;
 
       try {
         const team = await UserTeam.for(userId, params.team).updateSettings(result.value);
         return redirectWithToast(`/team/${team.slug}/settings`, 'success', 'Team settings saved.');
       } catch (SlugAlreadyExistsError) {
-        return json({ slug: ['This URL already exists, please try another one.'] });
+        return { slug: ['This URL already exists, please try another one.'] };
       }
     }
     case 'leave-team': {

@@ -1,6 +1,5 @@
 import { parseWithZod } from '@conform-to/zod';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
@@ -27,8 +26,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 
   const filters = parseUrlFilters(request.url);
   const page = parseUrlPage(request.url);
-  const results = await CfpReviewsSearch.for(userId, params.team, params.event).search(filters, page);
-  return json(results);
+  return CfpReviewsSearch.for(userId, params.team, params.event).search(filters, page);
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -38,7 +36,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
   const form = await request.formData();
   const result = parseWithZod(form, { schema: DeliberateBulkSchema });
-  if (result.status !== 'success') return json(null);
+  if (result.status !== 'success') return null;
 
   const { selection, status, allPagesSelected } = result.value;
   const deliberate = Deliberate.for(userId, params.team, params.event);

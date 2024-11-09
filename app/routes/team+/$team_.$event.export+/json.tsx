@@ -1,5 +1,4 @@
 import type { LoaderFunctionArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
 import invariant from 'tiny-invariant';
 import { CfpReviewsExports } from '~/.server/reviews/cfp-reviews-exports.ts';
 
@@ -13,7 +12,8 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 
   const filters = parseUrlFilters(request.url);
   const exports = CfpReviewsExports.for(userId, params.team, params.event);
+
   const results = await exports.forJson(filters);
 
-  return json(results);
+  return Response.json(results);
 };

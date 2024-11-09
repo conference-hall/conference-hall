@@ -1,5 +1,5 @@
 import type { ActionFunctionArgs } from '@remix-run/node';
-import { Form, json } from '@remix-run/react';
+import { Form } from '@remix-run/react';
 import { testJob } from '~/.server/shared/jobs/test.job';
 
 import { Button } from '~/design-system/buttons.tsx';
@@ -24,7 +24,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       break;
     }
   }
-  return json(null);
+  return null;
 };
 
 export default function DebugPage() {

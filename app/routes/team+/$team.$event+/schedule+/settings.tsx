@@ -1,7 +1,7 @@
 import { parseWithZod } from '@conform-to/zod';
 import { ArrowLeftIcon } from '@heroicons/react/20/solid';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { json, redirect } from '@remix-run/node';
+import { redirect } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
@@ -22,7 +22,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const schedule = await EventSchedule.for(userId, params.team, params.event).get();
   if (!schedule) return redirect(`/team/${params.team}/${params.event}/schedule`);
 
-  return json(schedule);
+  return schedule;
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -37,7 +37,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   switch (intent) {
     case 'save-track': {
       const result = parseWithZod(form, { schema: ScheduleTrackSaveSchema });
-      if (result.status !== 'success') return json(result.error);
+      if (result.status !== 'success') return result.error;
       await schedule.saveTrack(result.value);
       break;
     }
@@ -51,7 +51,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       break;
     }
   }
-  return json(null);
+  return null;
 };
 
 export default function ScheduleSettingsRoute() {

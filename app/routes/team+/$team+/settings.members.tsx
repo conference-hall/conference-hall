@@ -2,7 +2,6 @@ import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { CubeTransparentIcon } from '@heroicons/react/24/outline';
 import type { TeamRole } from '@prisma/client';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
 import { Form, useLoaderData, useSearchParams } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
@@ -29,8 +28,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const filters = parseUrlFilters(request.url);
   const page = parseUrlPage(request.url);
 
-  const members = await TeamMembers.for(userId, params.team).list(filters, page);
-  return json(members);
+  return TeamMembers.for(userId, params.team).list(filters, page);
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {

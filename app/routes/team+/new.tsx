@@ -1,6 +1,6 @@
 import { parseWithZod } from '@conform-to/zod';
 import type { ActionFunctionArgs, LoaderFunction } from '@remix-run/node';
-import { json, redirect } from '@remix-run/node';
+import { redirect } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
 
 import { TeamCreateSchema, UserTeams } from '~/.server/team/user-teams.ts';
@@ -21,13 +21,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   const form = await request.formData();
   const result = parseWithZod(form, { schema: TeamCreateSchema });
-  if (result.status !== 'success') return json(result.error);
+  if (result.status !== 'success') return result.error;
 
   try {
     const team = await UserTeams.for(userId).create(result.value);
     return redirect(`/team/${team.slug}`);
   } catch (SlugAlreadyExistsError) {
-    return json({ slug: ['This URL already exists, please try another one.'] });
+    return { slug: ['This URL already exists, please try another one.'] };
   }
 };
 

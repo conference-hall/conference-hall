@@ -1,5 +1,5 @@
 import { parseWithZod } from '@conform-to/zod';
-import { type LoaderFunctionArgs, json } from '@remix-run/node';
+import type { LoaderFunctionArgs } from '@remix-run/node';
 import { Form, useFetcher, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
@@ -38,7 +38,7 @@ export const action = async ({ request, params }: LoaderFunctionArgs) => {
     }
     case 'save-questions': {
       const result = parseWithZod(form, { schema: EventSurveySettingsSchema });
-      if (result.status !== 'success') return json(null);
+      if (result.status !== 'success') return null;
       await event.update(result.value);
       return toast('success', 'Survey questions saved.');
     }

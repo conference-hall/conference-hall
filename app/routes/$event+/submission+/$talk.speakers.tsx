@@ -1,7 +1,7 @@
 import { parseWithZod } from '@conform-to/zod';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { json, redirect } from '@remix-run/node';
+import { redirect } from '@remix-run/node';
 import { Form, useActionData, useLoaderData, useNavigate } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
@@ -27,12 +27,12 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 
   const speaker = await SpeakerProfile.for(userId).get();
   const proposal = await TalkSubmission.for(userId, params.event).get(params.talk);
-  return json({
+  return {
     speaker,
     invitationLink: proposal.invitationLink,
     isOwner: proposal.isOwner,
     speakers: proposal.speakers.filter((speaker) => speaker.id !== userId),
-  });
+  };
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -46,10 +46,10 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   if (intent === 'remove-speaker') {
     const speakerId = form.get('_speakerId')?.toString() as string;
     await TalkSubmission.for(userId, params.event).removeCoSpeaker(params.talk, speakerId);
-    return json(null);
+    return null;
   } else {
     const result = parseWithZod(form, { schema: DetailsSchema });
-    if (result.status !== 'success') return json(result.error);
+    if (result.status !== 'success') return result.error;
     await SpeakerProfile.for(userId).save(result.value);
   }
 

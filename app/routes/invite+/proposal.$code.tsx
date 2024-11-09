@@ -22,7 +22,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   invariant(params.code, 'Invalid code');
 
   const proposal = await CoSpeakerProposalInvite.with(params.code).check();
-  return json(proposal);
+  return proposal;
 };
 
 export const action: ActionFunction = async ({ request, params }) => {

@@ -1,8 +1,7 @@
 import { parseWithZod } from '@conform-to/zod';
 import { CreditCardIcon, KeyIcon, UserCircleIcon } from '@heroicons/react/20/solid';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
-import { useActionData, useLoaderData } from '@remix-run/react';
+import { useActionData } from '@remix-run/react';
 
 import { SpeakerProfile } from '~/.server/speaker-profile/speaker-profile.ts';
 import {
@@ -38,19 +37,19 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   switch (intent) {
     case 'personal-info': {
       const result = parseWithZod(form, { schema: PersonalInfoSchema });
-      if (result.status !== 'success') return json(result.error);
+      if (result.status !== 'success') return result.error;
       await profile.save(result.value);
       break;
     }
     case 'speaker-details': {
       const result = parseWithZod(form, { schema: DetailsSchema });
-      if (result.status !== 'success') return json(result.error);
+      if (result.status !== 'success') return result.error;
       await profile.save(result.value);
       break;
     }
     case 'additional-info': {
       const result = parseWithZod(form, { schema: AdditionalInfoSchema });
-      if (result.status !== 'success') return json(result.error);
+      if (result.status !== 'success') return result.error;
       await profile.save(result.value);
       break;
     }

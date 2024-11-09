@@ -1,6 +1,5 @@
 import { parseWithZod } from '@conform-to/zod';
 import type { LoaderFunctionArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
 import { useActionData } from '@remix-run/react';
 
 import { TalksLibrary } from '~/.server/speaker-talks-library/talks-library.ts';
@@ -22,7 +21,7 @@ export const action = async ({ request }: LoaderFunctionArgs) => {
   const form = await request.formData();
 
   const result = parseWithZod(form, { schema: TalkSaveSchema });
-  if (result.status !== 'success') return json(result.error);
+  if (result.status !== 'success') return result.error;
 
   const talk = await TalksLibrary.of(userId).add(result.value);
   return redirectWithToast(`/speaker/talks/${talk.id}`, 'success', 'New talk created.');

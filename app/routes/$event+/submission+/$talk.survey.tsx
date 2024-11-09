@@ -1,7 +1,7 @@
 import { parseWithZod } from '@conform-to/zod';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import type { ActionFunction, LoaderFunctionArgs } from '@remix-run/node';
-import { json, redirect } from '@remix-run/node';
+import { redirect } from '@remix-run/node';
 import { useLoaderData, useNavigate } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
@@ -24,7 +24,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 
   const questions = await CfpSurvey.of(params.event).questions();
   const answers = await SpeakerAnswers.for(userId, params.event).getAnswers();
-  return json({ questions, answers });
+  return { questions, answers };
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
@@ -34,7 +34,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   invariant(params.talk, 'Invalid talk id');
 
   const result = parseWithZod(form, { schema: SurveySchema });
-  if (result.status !== 'success') return json(null);
+  if (result.status !== 'success') return null;
 
   await SpeakerAnswers.for(userId, params.event).save(result.value);
 

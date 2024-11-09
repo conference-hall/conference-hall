@@ -1,6 +1,6 @@
 import { parseWithZod } from '@conform-to/zod';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { json, redirect } from '@remix-run/node';
+import { redirect } from '@remix-run/node';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
@@ -29,12 +29,12 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 
   const event = await UserEvent.for(userId, params.team, params.event).get();
 
-  return json({
+  return {
     name: `${event.name} schedule`,
     start: event.conferenceStart,
     end: event.conferenceEnd,
     timezone: event.timezone,
-  });
+  };
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -45,7 +45,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
   const form = await request.formData();
   const result = parseWithZod(form, { schema: ScheduleCreateSchema });
-  if (result.status !== 'success') return json(result.error);
+  if (result.status !== 'success') return result.error;
 
   await schedule.create(result.value);
 
