@@ -11,8 +11,8 @@ import { requireSession } from '~/libs/auth/session.ts';
 import { CfpNotOpenError } from '~/libs/errors.server.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { NestedErrorBoundary } from '~/routes/__components/error-boundary.tsx';
-import { useUser } from '~/routes/__components/use-user.tsx';
 
+import { useCurrentEvent } from '~/routes/__components/contexts/event-page-context.tsx';
 import { Steps } from './__components/steps.tsx';
 import { useCurrentStepKey } from './__components/use-current-step-key.ts';
 
@@ -34,8 +34,8 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 };
 
 export default function EventSubmissionRoute() {
-  const { user } = useUser();
-  const { event, steps } = useLoaderData<typeof loader>();
+  const { slug } = useCurrentEvent();
+  const { steps } = useLoaderData<typeof loader>();
 
   const currentStepKey = useCurrentStepKey();
 
@@ -43,10 +43,10 @@ export default function EventSubmissionRoute() {
     <>
       <Page.NavHeader className="flex w-full items-center justify-between gap-4 py-4">
         <Steps steps={steps} currentStep={currentStepKey} />
-        <IconLink label="Cancel submission" to={`/${event.slug}`} icon={XMarkIcon} variant="secondary" />
+        <IconLink label="Cancel submission" to={`/${slug}`} icon={XMarkIcon} variant="secondary" />
       </Page.NavHeader>
 
-      <Outlet context={{ user, event }} />
+      <Outlet />
     </>
   );
 }

@@ -4,9 +4,7 @@ import invariant from 'tiny-invariant';
 
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
 import { requireSession } from '~/libs/auth/session.ts';
-import { useUser } from '~/routes/__components/use-user.tsx';
-
-import { useTeam } from '../__components/use-team.tsx';
+import { CurrentEventTeamProvider } from '~/routes/__components/contexts/event-team-context';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
@@ -17,10 +15,11 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 };
 
 export default function EventLayoutRoute() {
-  const { user } = useUser();
-  const { team } = useTeam();
-
   const event = useLoaderData<typeof loader>();
 
-  return <Outlet context={{ user, team, event }} />;
+  return (
+    <CurrentEventTeamProvider event={event}>
+      <Outlet />
+    </CurrentEventTeamProvider>
+  );
 }

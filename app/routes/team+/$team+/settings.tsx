@@ -8,9 +8,7 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { NavSideMenu } from '~/design-system/navigation/nav-side-menu.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { useUser } from '~/routes/__components/use-user.tsx';
-
-import { useTeam } from '../__components/use-team.tsx';
+import { useCurrentTeam } from '~/routes/__components/contexts/team-context.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
@@ -25,10 +23,9 @@ const getMenuItems = (team?: string) => [
 ];
 
 export default function TeamSettingsLayout() {
-  const { user } = useUser();
-  const { team } = useTeam();
+  const currentTeam = useCurrentTeam();
 
-  const menus = getMenuItems(team.slug);
+  const menus = getMenuItems(currentTeam.slug);
 
   return (
     <Page className="lg:grid lg:grid-cols-12">
@@ -41,7 +38,7 @@ export default function TeamSettingsLayout() {
       />
 
       <div className="lg:col-span-9">
-        <Outlet context={{ user, team }} />
+        <Outlet />
       </div>
     </Page>
   );

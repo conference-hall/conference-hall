@@ -8,8 +8,7 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-
-import { useEvent } from '../__components/use-event.tsx';
+import { useCurrentEvent } from '~/routes/__components/contexts/event-team-context';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);
@@ -29,7 +28,8 @@ export const action = async ({ request, params }: LoaderFunctionArgs) => {
 };
 
 export default function EventReviewSettingsRoute() {
-  const { event } = useEvent();
+  const currentEvent = useCurrentEvent();
+
   const fetcher = useFetcher<typeof action>();
 
   return (
@@ -40,7 +40,7 @@ export default function EventReviewSettingsRoute() {
         <ToggleGroup
           label="Proposals review activation"
           description="When disabled, reviewers won't be able to review proposals anymore."
-          value={event.reviewEnabled}
+          value={currentEvent.reviewEnabled}
           onChange={(checked) =>
             fetcher.submit({ _setting: 'reviewEnabled', reviewEnabled: String(checked) }, { method: 'POST' })
           }
@@ -56,7 +56,7 @@ export default function EventReviewSettingsRoute() {
           <ToggleGroup
             label="Display reviews of all team members"
             description="When disabled, reviews of all team members and global note won't be visible."
-            value={event.displayProposalsReviews}
+            value={currentEvent.displayProposalsReviews}
             onChange={(checked) =>
               fetcher.submit(
                 { _setting: 'displayProposalsReviews', displayProposalsReviews: String(checked) },
@@ -67,7 +67,7 @@ export default function EventReviewSettingsRoute() {
           <ToggleGroup
             label="Display speakers in review pages"
             description="When disabled, all speakers information are not visible in proposal list and review page. Used for anonymized reviews."
-            value={event.displayProposalsSpeakers}
+            value={currentEvent.displayProposalsSpeakers}
             onChange={(checked) =>
               fetcher.submit(
                 { _setting: 'displayProposalsSpeakers', displayProposalsSpeakers: String(checked) },

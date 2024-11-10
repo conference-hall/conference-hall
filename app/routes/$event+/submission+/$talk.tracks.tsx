@@ -18,7 +18,7 @@ import { requireSession } from '~/libs/auth/session.ts';
 import { CategoriesForm } from '~/routes/__components/talks/talk-forms/categories-form.tsx';
 import { FormatsForm } from '~/routes/__components/talks/talk-forms/formats-form.tsx';
 
-import { useEvent } from '../__components/use-event.tsx';
+import { useCurrentEvent } from '~/routes/__components/contexts/event-page-context.tsx';
 
 export const handle = { step: 'tracks' };
 
@@ -51,7 +51,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
 export default function SubmissionTracksRoute() {
   const navigate = useNavigate();
-  const { event } = useEvent();
+  const currentEvent = useCurrentEvent();
   const proposal = useLoaderData<typeof loader>();
   const errors = useActionData<typeof action>();
 
@@ -64,12 +64,12 @@ export default function SubmissionTracksRoute() {
         <Card.Content>
           <Form id="tracks-form" method="POST">
             <div className="space-y-12">
-              {event.formats?.length > 0 && (
+              {currentEvent.formats?.length > 0 && (
                 <section>
                   <FormatsForm
-                    formatsAllowMultiple={event.formatsAllowMultiple}
-                    formats={event.formats}
-                    required={event.formatsRequired}
+                    formatsAllowMultiple={currentEvent.formatsAllowMultiple}
+                    formats={currentEvent.formats}
+                    required={currentEvent.formatsRequired}
                     initialValues={proposal.formats}
                   />
                   {errors?.formats && (
@@ -78,12 +78,12 @@ export default function SubmissionTracksRoute() {
                 </section>
               )}
 
-              {event.categories?.length > 0 && (
+              {currentEvent.categories?.length > 0 && (
                 <section>
                   <CategoriesForm
-                    categoriesAllowMultiple={event.categoriesAllowMultiple}
-                    categories={event.categories}
-                    required={event.categoriesRequired}
+                    categoriesAllowMultiple={currentEvent.categoriesAllowMultiple}
+                    categories={currentEvent.categories}
+                    required={currentEvent.categoriesRequired}
                     initialValues={proposal.categories}
                   />
                   {errors?.categories && (

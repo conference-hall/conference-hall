@@ -3,12 +3,12 @@ import { useEffect, useRef } from 'react';
 
 import { Avatar } from '~/design-system/avatar.tsx';
 import { Button } from '~/design-system/buttons.tsx';
-import { useUser } from '~/routes/__components/use-user.tsx';
+import { useUser } from '~/routes/__components/contexts/user-context.tsx';
 
 type Props = { compact?: boolean; className?: string };
 
 export function NewCommentForm({ compact = false, className }: Props) {
-  const { user } = useUser();
+  const user = useUser();
 
   const navigation = useNavigation();
   const isAdding = navigation.state === 'submitting';

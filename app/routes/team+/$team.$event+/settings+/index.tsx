@@ -12,10 +12,9 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
+import { useCurrentEvent } from '~/routes/__components/contexts/event-team-context';
 import { EventDetailsForm } from '~/routes/__components/events/event-details-form.tsx';
 import { EventForm } from '~/routes/__components/events/event-form.tsx';
-
-import { useEvent } from '../__components/use-event.tsx';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);
@@ -58,7 +57,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 };
 
 export default function EventGeneralSettingsRoute() {
-  const { event } = useEvent();
+  const currentEvent = useCurrentEvent();
   const errors = useActionData<typeof action>();
 
   return (
@@ -70,7 +69,7 @@ export default function EventGeneralSettingsRoute() {
 
         <Card.Content>
           <Form id="general-form" method="POST" className="space-y-4 lg:space-y-6">
-            <EventForm initialValues={event} errors={errors} />
+            <EventForm initialValues={currentEvent} errors={errors} />
           </Form>
         </Card.Content>
         <Card.Actions>
@@ -90,15 +89,15 @@ export default function EventGeneralSettingsRoute() {
 
         <Card.Content>
           <EventDetailsForm
-            type={event.type}
-            timezone={event.timezone}
-            conferenceStart={event.conferenceStart}
-            conferenceEnd={event.conferenceEnd}
-            onlineEvent={event.onlineEvent}
-            location={event.location}
-            description={event.description}
-            websiteUrl={event.websiteUrl}
-            contactEmail={event.contactEmail}
+            type={currentEvent.type}
+            timezone={currentEvent.timezone}
+            conferenceStart={currentEvent.conferenceStart}
+            conferenceEnd={currentEvent.conferenceEnd}
+            onlineEvent={currentEvent.onlineEvent}
+            location={currentEvent.location}
+            description={currentEvent.description}
+            websiteUrl={currentEvent.websiteUrl}
+            contactEmail={currentEvent.contactEmail}
             errors={errors}
           />
         </Card.Content>
@@ -124,15 +123,15 @@ export default function EventGeneralSettingsRoute() {
 
         <Card.Actions>
           <Form method="POST">
-            <input type="hidden" name="archived" value={event.archived ? '' : 'true'} />
+            <input type="hidden" name="archived" value={currentEvent.archived ? '' : 'true'} />
             <Button
               type="submit"
-              variant={event.archived ? 'secondary' : 'important'}
+              variant={currentEvent.archived ? 'secondary' : 'important'}
               name="intent"
               value="archive"
-              iconLeft={event.archived ? ArchiveBoxXMarkIcon : ArchiveBoxArrowDownIcon}
+              iconLeft={currentEvent.archived ? ArchiveBoxXMarkIcon : ArchiveBoxArrowDownIcon}
             >
-              {event.archived ? 'Restore event' : 'Archive event'}
+              {currentEvent.archived ? 'Restore event' : 'Archive event'}
             </Button>
           </Form>
         </Card.Actions>

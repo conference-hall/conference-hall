@@ -15,10 +15,10 @@ import { Pagination } from '~/design-system/list/pagination.tsx';
 import { H3, Subtitle } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-import { useUser } from '~/routes/__components/use-user.tsx';
 
 import { ROLE_NAMES } from '~/libs/formatters/team-roles.ts';
-import { useTeam } from '../__components/use-team.tsx';
+import { useCurrentTeam } from '~/routes/__components/contexts/team-context.tsx';
+import { useUser } from '~/routes/__components/contexts/user-context.tsx';
 import { ChangeRoleButton, InviteMemberButton, RemoveButton } from './__components/member-actions.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
@@ -54,12 +54,12 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 };
 
 export default function TeamMembersRoute() {
-  const { user } = useUser();
-  const { team } = useTeam();
+  const user = useUser();
+  const currentTeam = useCurrentTeam();
   const [searchParams] = useSearchParams();
   const { results, pagination } = useLoaderData<typeof loader>();
 
-  const { canManageTeamMembers } = team.userPermissions;
+  const { canManageTeamMembers } = currentTeam.userPermissions;
 
   return (
     <Card as="section">
@@ -80,7 +80,7 @@ export default function TeamMembersRoute() {
               icon={MagnifyingGlassIcon}
             />
           </Form>
-          {canManageTeamMembers ? <InviteMemberButton invitationLink={team.invitationLink} /> : null}
+          {canManageTeamMembers ? <InviteMemberButton invitationLink={currentTeam.invitationLink} /> : null}
         </div>
 
         {results.length > 0 ? (

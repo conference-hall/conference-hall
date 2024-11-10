@@ -19,10 +19,9 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { NavSideMenu } from '~/design-system/navigation/nav-side-menu.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { useUser } from '~/routes/__components/use-user.tsx';
 
-import { useTeam } from '../../__components/use-team.tsx';
-import { useEvent } from '../__components/use-event.tsx';
+import { useCurrentEvent } from '~/routes/__components/contexts/event-team-context';
+import { useCurrentTeam } from '~/routes/__components/contexts/team-context.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
@@ -46,11 +45,10 @@ const getMenuItems = (team?: string, event?: string) => [
 ];
 
 export default function OrganizationSettingsRoute() {
-  const { user } = useUser();
-  const { team } = useTeam();
-  const { event } = useEvent();
+  const currentTeam = useCurrentTeam();
+  const currentEvent = useCurrentEvent();
 
-  const menus = getMenuItems(team.slug, event.slug);
+  const menus = getMenuItems(currentTeam.slug, currentEvent.slug);
 
   return (
     <Page className="lg:grid lg:grid-cols-12">
@@ -63,7 +61,7 @@ export default function OrganizationSettingsRoute() {
       />
 
       <div className="space-y-6 lg:col-span-9">
-        <Outlet context={{ user, team, event }} />
+        <Outlet />
       </div>
     </Page>
   );

@@ -9,7 +9,7 @@ import { ButtonLink } from '~/design-system/buttons.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 
-import { useEvent } from '../__components/use-event.tsx';
+import { useCurrentEvent } from '~/routes/__components/contexts/event-page-context.tsx';
 import { MaxProposalsAlert, MaxProposalsReached } from './__components/max-proposals.tsx';
 import { NoSubmissionState } from './__components/no-submissions-state.tsx';
 import { SubmissionTalksList } from './__components/submission-talks-list.tsx';
@@ -31,9 +31,8 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 };
 
 export default function EventSubmitRoute() {
-  const { event } = useEvent();
   const { proposalsCount, drafts, talks } = useLoaderData<typeof loader>();
-  const { maxProposals } = event;
+  const { maxProposals } = useCurrentEvent();
 
   if (maxProposals && proposalsCount >= maxProposals) {
     return (

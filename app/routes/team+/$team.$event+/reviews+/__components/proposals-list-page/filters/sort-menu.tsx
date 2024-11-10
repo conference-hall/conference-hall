@@ -6,17 +6,17 @@ import { Fragment } from 'react';
 
 import { button } from '~/design-system/buttons.tsx';
 import { MenuTransition } from '~/design-system/transitions.tsx';
-import { useEvent } from '~/routes/team+/$team.$event+/__components/use-event.tsx';
 
+import { useCurrentEvent } from '~/routes/__components/contexts/event-team-context.tsx';
 import { sortByDatesOptions, sortByReviewsOptions } from './filters.ts';
 
 export function SortMenu() {
   const location = useLocation();
   const [params] = useSearchParams();
-  const { event } = useEvent();
   const { sort = 'newest', ...filters } = Object.fromEntries(params.entries());
 
-  const options = event.displayProposalsReviews ? [...sortByDatesOptions, ...sortByReviewsOptions] : sortByDatesOptions;
+  const { displayProposalsReviews } = useCurrentEvent();
+  const options = displayProposalsReviews ? [...sortByDatesOptions, ...sortByReviewsOptions] : sortByDatesOptions;
 
   return (
     <Menu as="div" className="relative inline-block text-left">

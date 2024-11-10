@@ -8,8 +8,8 @@ import { requireSession } from '~/libs/auth/session.ts';
 import { FullscreenPage } from '~/routes/__components/fullscreen-page.tsx';
 import type { EventType } from '~/types/events.types.ts';
 
+import { useCurrentTeam } from '~/routes/__components/contexts/team-context.tsx';
 import { EventTypeRadioGroup } from '../../__components/events/event-type-radio-group.tsx';
-import { useTeam } from '../__components/use-team.tsx';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);
@@ -17,7 +17,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export default function NewEventTypeRoute() {
-  const { team } = useTeam();
+  const currentTeam = useCurrentTeam();
 
   const [type, setType] = useState<EventType>('CONFERENCE');
 
@@ -31,10 +31,15 @@ export default function NewEventTypeRoute() {
         </Card.Content>
 
         <Card.Actions>
-          <ButtonLink to={`/team/${team.slug}`} type="button" variant="secondary">
+          <ButtonLink to={`/team/${currentTeam.slug}`} type="button" variant="secondary">
             Cancel
           </ButtonLink>
-          <ButtonLink to={`/team/${team.slug}/new/type/${type}`} type="button" replace iconRight={ArrowRightIcon}>
+          <ButtonLink
+            to={`/team/${currentTeam.slug}/new/type/${type}`}
+            type="button"
+            replace
+            iconRight={ArrowRightIcon}
+          >
             Continue
           </ButtonLink>
         </Card.Actions>

@@ -3,11 +3,11 @@ import { formatDistanceToNowStrict } from 'date-fns';
 
 import type { FeedItem } from '~/.server/reviews/activity-feed.ts';
 import { Avatar } from '~/design-system/avatar.tsx';
-import { useUser } from '~/routes/__components/use-user.tsx';
+import { useUser } from '~/routes/__components/contexts/user-context.tsx';
 import { CommentReactions } from './comment-reactions.tsx';
 
 export function CommentItem({ item }: { item: FeedItem }) {
-  const { user } = useUser();
+  const user = useUser();
 
   if (item.type !== 'comment') return null;
 

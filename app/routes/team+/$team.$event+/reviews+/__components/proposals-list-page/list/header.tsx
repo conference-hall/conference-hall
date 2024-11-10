@@ -1,8 +1,8 @@
 import { Checkbox } from '~/design-system/forms/checkboxes.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { Text } from '~/design-system/typography.tsx';
-import { useTeam } from '~/routes/team+/__components/use-team.tsx';
 
+import { useCurrentTeam } from '~/routes/__components/contexts/team-context.tsx';
 import { DeliberationButton } from '../actions/deliberation-button.tsx';
 import { ReviewsProgress } from './reviews-progress.tsx';
 
@@ -16,12 +16,12 @@ type Props = {
 };
 
 export function ListHeader({ checkboxRef, total, totalSelected, totalReviewed, selection, isAllPagesSelected }: Props) {
-  const { team } = useTeam();
+  const currentTeam = useCurrentTeam();
 
   return (
     <List.Header className="sm:h-16">
       <div className="flex flex-col gap-4 md:flex-row md:items-center ">
-        {team.userPermissions.canDeliberateEventProposals ? (
+        {currentTeam.userPermissions.canDeliberateEventProposals ? (
           <Checkbox aria-label="Select current page" ref={checkboxRef}>
             {totalSelected === 0 ? `${total} proposals` : `Mark ${totalSelected} selected as:`}
           </Checkbox>

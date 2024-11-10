@@ -2,15 +2,14 @@ import { useLocation, useNavigate, useSearchParams } from '@remix-run/react';
 
 import type { ProposalsFilters } from '~/.server/shared/proposal-search-builder.types.ts';
 import { Text } from '~/design-system/typography.tsx';
-import { useEvent } from '~/routes/team+/$team.$event+/__components/use-event.tsx';
 
+import { useCurrentEvent } from '~/routes/__components/contexts/event-team-context.tsx';
 import { reviewOptions, statusOptions } from './filters.ts';
 
 type FiltersBadgesProps = { filters: ProposalsFilters };
 
 export function FiltersTags({ filters }: FiltersBadgesProps) {
-  const { event } = useEvent();
-  const { formats, categories, tags } = event;
+  const { formats, categories, tags } = useCurrentEvent();
 
   const hasFilters = Boolean(
     filters.query || filters.reviews || filters.status || filters.formats || filters.categories || filters.tags,

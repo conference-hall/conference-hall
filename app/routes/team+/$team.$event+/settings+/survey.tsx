@@ -13,8 +13,7 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-
-import { useEvent } from '../__components/use-event.tsx';
+import { useCurrentEvent } from '~/routes/__components/contexts/event-team-context';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);
@@ -47,7 +46,7 @@ export const action = async ({ request, params }: LoaderFunctionArgs) => {
 };
 
 export default function EventSurveySettingsRoute() {
-  const { event } = useEvent();
+  const { surveyEnabled, surveyQuestions } = useCurrentEvent();
   const { questions } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<typeof action>();
 
@@ -59,7 +58,7 @@ export default function EventSurveySettingsRoute() {
         <ToggleGroup
           label="Speaker survey activation"
           description="When enabled a short survey will be asked to speakers when they submit a proposal."
-          value={event.surveyEnabled}
+          value={surveyEnabled}
           onChange={(checked) =>
             fetcher.submit({ intent: 'enable-survey', surveyEnabled: String(checked) }, { method: 'POST' })
           }
@@ -80,8 +79,8 @@ export default function EventSurveySettingsRoute() {
                 id={question.id}
                 name="surveyQuestions"
                 value={question.id}
-                defaultChecked={event.surveyQuestions.includes(question.id)}
-                disabled={!event.surveyEnabled}
+                defaultChecked={surveyQuestions.includes(question.id)}
+                disabled={!surveyEnabled}
               >
                 {question.label}
               </Checkbox>
@@ -90,13 +89,7 @@ export default function EventSurveySettingsRoute() {
         </Card.Content>
 
         <Card.Actions>
-          <Button
-            type="submit"
-            name="intent"
-            value="save-questions"
-            form="questions-form"
-            disabled={!event.surveyEnabled}
-          >
+          <Button type="submit" name="intent" value="save-questions" form="questions-form" disabled={!surveyEnabled}>
             Save questions
           </Button>
         </Card.Actions>

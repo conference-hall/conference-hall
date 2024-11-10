@@ -11,7 +11,7 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { EventCardLink } from '~/routes/__components/events/event-card.tsx';
 
-import { useTeam } from '../__components/use-team.tsx';
+import { useCurrentTeam } from '~/routes/__components/contexts/team-context.tsx';
 import { ArchivedFilters } from './__components/archived-filter.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
@@ -25,7 +25,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 };
 
 export default function TeamEventsRoute() {
-  const { team } = useTeam();
+  const currentTeam = useCurrentTeam();
   const events = useLoaderData<typeof loader>();
 
   const [searchParams] = useSearchParams();
@@ -37,8 +37,8 @@ export default function TeamEventsRoute() {
     <Page>
       <Page.Heading title="Team events" subtitle="Manage your team events call for papers">
         <ArchivedFilters />
-        {team.userPermissions.canCreateEvent ? (
-          <ButtonLink to={`/team/${team.slug}/new`} variant="secondary" iconLeft={PlusIcon}>
+        {currentTeam.userPermissions.canCreateEvent ? (
+          <ButtonLink to={`/team/${currentTeam.slug}/new`} variant="secondary" iconLeft={PlusIcon}>
             New event
           </ButtonLink>
         ) : null}
@@ -49,7 +49,7 @@ export default function TeamEventsRoute() {
           {events.map((event) => (
             <EventCardLink
               key={event.slug}
-              to={`/team/${team.slug}/${event.slug}`}
+              to={`/team/${currentTeam.slug}/${event.slug}`}
               name={event.name}
               type={event.type}
               logoUrl={event.logoUrl}
@@ -62,7 +62,7 @@ export default function TeamEventsRoute() {
       ) : (
         <EmptyState
           icon={Square3Stack3DIcon}
-          label={archived ? 'No events archived' : `Welcome to "${team.name}"`}
+          label={archived ? 'No events archived' : `Welcome to "${currentTeam.name}"`}
           className="flex flex-col items-center gap-2"
         />
       )}

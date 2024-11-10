@@ -11,8 +11,9 @@ import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { eventSocialCard } from '~/libs/meta/social-cards.ts';
 import { Footer } from '~/routes/__components/footer.tsx';
 import { Navbar } from '~/routes/__components/navbar/navbar.tsx';
-import { useUser } from '~/routes/__components/use-user.tsx';
 
+import { CurrentEventPageProvider } from '../__components/contexts/event-page-context.tsx';
+import { useUser } from '../__components/contexts/user-context.tsx';
 import { EventTabs } from './__components/event-tabs.tsx';
 
 export const meta = mergeMeta<typeof loader>(
@@ -34,14 +35,14 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 };
 
 export default function EventRoute() {
-  const { user } = useUser();
+  const user = useUser();
   const event = useLoaderData<typeof loader>();
 
   const submissionRoute = useMatch('/:event/submission/*');
 
   return (
     <>
-      <Navbar user={user} />
+      <Navbar />
 
       <header className={BG_GRADIENT_COLOR}>
         <Container className="h-24 flex flex-row items-center relative">
@@ -83,7 +84,9 @@ export default function EventRoute() {
         />
       ) : null}
 
-      <Outlet context={{ user, event }} />
+      <CurrentEventPageProvider event={event}>
+        <Outlet />
+      </CurrentEventPageProvider>
 
       <Footer />
     </>

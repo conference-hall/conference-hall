@@ -14,8 +14,8 @@ import { requireSession } from '~/libs/auth/session.ts';
 import { EventDetailsForm } from '~/routes/__components/events/event-details-form.tsx';
 import { FullscreenPage } from '~/routes/__components/fullscreen-page.tsx';
 
+import { useCurrentTeam } from '~/routes/__components/contexts/team-context.tsx';
 import { EventCreationStepper } from '../__components/event-creation-stepper.tsx';
-import { useTeam } from '../__components/use-team.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
@@ -41,7 +41,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 };
 
 export default function NewEventDetailsRoute() {
-  const { team } = useTeam();
+  const currentTeam = useCurrentTeam();
   const event = useLoaderData<typeof loader>();
   const errors = useActionData<typeof action>();
 
@@ -74,7 +74,7 @@ export default function NewEventDetailsRoute() {
         </Card.Content>
 
         <Card.Actions>
-          <ButtonLink to={`/team/${team.slug}/${event.slug}`} iconLeft={ClockIcon} variant="secondary">
+          <ButtonLink to={`/team/${currentTeam.slug}/${event.slug}`} iconLeft={ClockIcon} variant="secondary">
             Do it later
           </ButtonLink>
           {isConference ? (
