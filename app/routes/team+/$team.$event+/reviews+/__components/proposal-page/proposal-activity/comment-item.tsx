@@ -31,8 +31,8 @@ export function CommentItem({ item }: { item: FeedItem }) {
               </>
             )}
           </div>
-          <time dateTime={item.timestamp} className="flex-none py-0.5 text-xs leading-5 text-gray-500">
-            {formatDistanceToNowStrict(new Date(item.timestamp))} ago
+          <time dateTime={item.timestamp.toISOString()} className="flex-none py-0.5 text-xs leading-5 text-gray-500">
+            {formatDistanceToNowStrict(item.timestamp)} ago
           </time>
         </div>
 

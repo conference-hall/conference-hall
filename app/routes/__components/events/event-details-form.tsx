@@ -11,8 +11,8 @@ import type { EventType } from '~/types/events.types.ts';
 type Props = {
   type: EventType;
   timezone: string;
-  conferenceStart: string | undefined;
-  conferenceEnd: string | undefined;
+  conferenceStart: Date | null;
+  conferenceEnd: Date | null;
   onlineEvent: boolean;
   location: string | null;
   description: string | null;

@@ -28,7 +28,7 @@ export class TalksLibrary {
       id: talk.id,
       title: talk.title,
       archived: talk.archived,
-      createdAt: talk.createdAt.toISOString(),
+      createdAt: talk.createdAt,
       speakers: talk.speakers.map((speaker) => ({
         id: speaker.id,
         name: speaker.name,

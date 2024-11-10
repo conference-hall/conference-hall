@@ -15,8 +15,8 @@ export type ScheduleSession = {
 export type SessionData = {
   id: string;
   trackId: string;
-  start: string;
-  end: string;
+  start: Date;
+  end: Date;
   color: string;
   name?: string | null;
   proposal?: ScheduleProposalData | null;

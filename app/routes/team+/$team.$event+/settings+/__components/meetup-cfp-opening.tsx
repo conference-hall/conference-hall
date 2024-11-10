@@ -8,7 +8,7 @@ import { H2 } from '~/design-system/typography.tsx';
 
 import type { action } from '../cfp';
 
-type Props = { cfpStart?: string; timezone: string };
+type Props = { cfpStart: Date | null; timezone: string };
 
 export function MeetupCfpOpening({ cfpStart, timezone }: Props) {
   const fetcher = useFetcher<typeof action>();

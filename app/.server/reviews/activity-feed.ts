@@ -90,7 +90,7 @@ export class ActivityFeed {
 
       return {
         ...result,
-        timestamp: result.timestamp.toISOString(),
+        timestamp: result.timestamp,
         user: user?.name ?? '?',
         picture: user?.picture ?? null,
       };

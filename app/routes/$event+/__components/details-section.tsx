@@ -15,8 +15,8 @@ type Props = {
   websiteUrl: string | null;
   contactEmail: string | null;
   codeOfConductUrl: string | null;
-  conferenceStart?: string;
-  conferenceEnd?: string;
+  conferenceStart: Date | null;
+  conferenceEnd: Date | null;
   onlineEvent: boolean;
   location: string | null;
   type: 'CONFERENCE' | 'MEETUP';

@@ -10,8 +10,8 @@ type CardContentProps = {
   type: 'CONFERENCE' | 'MEETUP';
   logoUrl: string | null;
   cfpState: CfpState;
-  cfpStart?: string | null;
-  cfpEnd?: string | null;
+  cfpStart: Date | null;
+  cfpEnd: Date | null;
 };
 
 type EventCardLinkProps = { to: string } & CardContentProps;

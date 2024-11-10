@@ -28,7 +28,7 @@ describe('TalksLibrary', () => {
           id: talk.id,
           title: talk.title,
           archived: false,
-          createdAt: talk.createdAt.toISOString(),
+          createdAt: talk.createdAt,
           speakers: [{ id: speaker.id, name: speaker.name, picture: speaker.picture }],
         },
       ]);
