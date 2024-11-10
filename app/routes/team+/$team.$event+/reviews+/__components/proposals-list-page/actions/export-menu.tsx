@@ -7,11 +7,11 @@ import { Fragment } from 'react';
 
 import { button } from '~/design-system/buttons.tsx';
 import { MenuTransition } from '~/design-system/transitions.tsx';
+import { useCurrentTeam } from '~/routes/__components/contexts/team-context.tsx';
 import { useEvent } from '~/routes/team+/$team.$event+/__components/use-event';
-import { useTeam } from '~/routes/team+/__components/use-team.tsx';
 
 export function ExportMenu() {
-  const { team } = useTeam();
+  const currentTeam = useCurrentTeam();
   const { event } = useEvent();
   const params = useParams();
   const [searchParams] = useSearchParams();
@@ -23,7 +23,7 @@ export function ExportMenu() {
 
   const isOpenPlannerEnabled = event.integrations.includes('OPEN_PLANNER');
 
-  if (!team.userPermissions.canExportEventProposals) return null;
+  if (!currentTeam.userPermissions.canExportEventProposals) return null;
 
   return (
     <Menu as="div" className="relative inline-block text-left">

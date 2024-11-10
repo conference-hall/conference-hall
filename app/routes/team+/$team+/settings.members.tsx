@@ -17,8 +17,8 @@ import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 
 import { ROLE_NAMES } from '~/libs/formatters/team-roles.ts';
+import { useCurrentTeam } from '~/routes/__components/contexts/team-context.tsx';
 import { useUser } from '~/routes/__components/contexts/user-context.tsx';
-import { useTeam } from '../__components/use-team.tsx';
 import { ChangeRoleButton, InviteMemberButton, RemoveButton } from './__components/member-actions.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
@@ -55,11 +55,11 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
 export default function TeamMembersRoute() {
   const user = useUser();
-  const { team } = useTeam();
+  const currentTeam = useCurrentTeam();
   const [searchParams] = useSearchParams();
   const { results, pagination } = useLoaderData<typeof loader>();
 
-  const { canManageTeamMembers } = team.userPermissions;
+  const { canManageTeamMembers } = currentTeam.userPermissions;
 
   return (
     <Card as="section">
@@ -80,7 +80,7 @@ export default function TeamMembersRoute() {
               icon={MagnifyingGlassIcon}
             />
           </Form>
-          {canManageTeamMembers ? <InviteMemberButton invitationLink={team.invitationLink} /> : null}
+          {canManageTeamMembers ? <InviteMemberButton invitationLink={currentTeam.invitationLink} /> : null}
         </div>
 
         {results.length > 0 ? (

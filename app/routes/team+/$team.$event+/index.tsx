@@ -12,8 +12,8 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 
+import { useCurrentTeam } from '~/routes/__components/contexts/team-context.tsx';
 import { SponsorLink } from '~/routes/__components/sponsor-link.tsx';
-import { useTeam } from '../__components/use-team.tsx';
 import { CfpStatusCard } from './__components/overview-page/cfp-status-card.tsx';
 import { ChartSelector } from './__components/overview-page/charts-selector.tsx';
 import type { ChartType } from './__components/overview-page/proposals-by-days-chart.tsx';
@@ -31,9 +31,12 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 };
 
 export default function OverviewRoute() {
-  const { team } = useTeam();
-  const { event } = useEvent();
   const metrics = useLoaderData<typeof loader>();
+
+  const currentTeam = useCurrentTeam();
+  const { canEditEvent } = currentTeam.userPermissions;
+
+  const { event } = useEvent();
 
   const [chartSelected, setChartSelected] = useState<ChartType>('cumulative');
 
@@ -47,12 +50,12 @@ export default function OverviewRoute() {
             cfpStart={event.cfpStart}
             cfpEnd={event.cfpEnd}
             timezone={event.timezone}
-            showActions={team.userPermissions.canEditEvent}
+            showActions={canEditEvent}
           />
 
-          <VisibilityStatusCard visibility={event.visibility} showActions={team.userPermissions.canEditEvent} />
+          <VisibilityStatusCard visibility={event.visibility} showActions={canEditEvent} />
 
-          <ReviewStatusCard reviewEnabled={event.reviewEnabled} showActions={team.userPermissions.canEditEvent} />
+          <ReviewStatusCard reviewEnabled={event.reviewEnabled} showActions={canEditEvent} />
         </div>
 
         <div>

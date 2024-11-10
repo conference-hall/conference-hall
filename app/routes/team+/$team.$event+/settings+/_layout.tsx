@@ -20,7 +20,7 @@ import { NavSideMenu } from '~/design-system/navigation/nav-side-menu.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 
-import { useTeam } from '../../__components/use-team.tsx';
+import { useCurrentTeam } from '~/routes/__components/contexts/team-context.tsx';
 import { useEvent } from '../__components/use-event.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
@@ -45,10 +45,10 @@ const getMenuItems = (team?: string, event?: string) => [
 ];
 
 export default function OrganizationSettingsRoute() {
-  const { team } = useTeam();
+  const currentTeam = useCurrentTeam();
   const { event } = useEvent();
 
-  const menus = getMenuItems(team.slug, event.slug);
+  const menus = getMenuItems(currentTeam.slug, event.slug);
 
   return (
     <Page className="lg:grid lg:grid-cols-12">
@@ -61,7 +61,7 @@ export default function OrganizationSettingsRoute() {
       />
 
       <div className="space-y-6 lg:col-span-9">
-        <Outlet context={{ team, event }} />
+        <Outlet context={{ event }} />
       </div>
     </Page>
   );

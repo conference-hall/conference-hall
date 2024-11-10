@@ -7,8 +7,6 @@ import { SlugSchema } from '~/libs/validators/slug.ts';
 import type { Permission } from './user-permissions.ts';
 import { UserPermissions } from './user-permissions.ts';
 
-export type Team = Awaited<ReturnType<typeof UserTeam.prototype.get>>;
-
 export const TeamUpdateSchema = z.object({
   name: z.string().trim().min(3).max(50),
   slug: SlugSchema,

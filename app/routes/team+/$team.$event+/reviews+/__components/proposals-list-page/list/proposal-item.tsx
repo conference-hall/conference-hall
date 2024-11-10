@@ -5,8 +5,8 @@ import { BadgeDot } from '~/design-system/badges.tsx';
 import { Checkbox } from '~/design-system/forms/checkboxes.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { GlobalReviewNote, UserReviewNote } from '~/routes/__components/reviews/review-note.tsx';
-import { useTeam } from '~/routes/team+/__components/use-team.tsx';
 
+import { useCurrentTeam } from '~/routes/__components/contexts/team-context.tsx';
 import { Tag } from '~/routes/__components/tags/tag.tsx';
 import type { ProposalData } from './types';
 
@@ -19,14 +19,16 @@ type ProposalItemProps = {
 
 export function ProposalItem({ proposal, isSelected, isAllPagesSelected, toggle }: ProposalItemProps) {
   const [params] = useSearchParams();
-  const { team } = useTeam();
+
+  const currentTeam = useCurrentTeam();
+  const { canDeliberateEventProposals } = currentTeam.userPermissions;
 
   const { id, title, reviews } = proposal;
   const { you, summary } = reviews;
 
   return (
     <>
-      {team.userPermissions.canDeliberateEventProposals ? (
+      {canDeliberateEventProposals ? (
         <Checkbox
           aria-label={`Select proposal "${title}"`}
           value={id}
@@ -48,7 +50,7 @@ export function ProposalItem({ proposal, isSelected, isAllPagesSelected, toggle 
               {title}
             </Link>
 
-            {team.userPermissions.canDeliberateEventProposals && proposal.deliberationStatus !== 'PENDING' ? (
+            {canDeliberateEventProposals && proposal.deliberationStatus !== 'PENDING' ? (
               <>
                 {deliberationBadge(proposal)}
                 {publicationBadge(proposal)}

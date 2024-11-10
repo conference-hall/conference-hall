@@ -12,7 +12,7 @@ import { redirectWithToast } from '~/libs/toasts/toast.server.ts';
 import { TeamForm } from '~/routes/__components/teams/team-form.tsx';
 
 import { TeamMembers } from '~/.server/team/team-members.ts';
-import { useTeam } from '../__components/use-team.tsx';
+import { useCurrentTeam } from '~/routes/__components/contexts/team-context.tsx';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);
@@ -48,8 +48,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
 export default function TeamSettingsRoute() {
   const errors = useActionData<typeof action>();
-  const { team } = useTeam();
-  const { canEditTeam, canLeaveTeam } = team.userPermissions;
+  const currentTeam = useCurrentTeam();
+  const { canEditTeam, canLeaveTeam } = currentTeam.userPermissions;
 
   return (
     <div className="space-y-8">
@@ -62,7 +62,7 @@ export default function TeamSettingsRoute() {
             </Card.Title>
 
             <Card.Content>
-              <TeamForm initialValues={team} errors={errors} />
+              <TeamForm initialValues={currentTeam} errors={errors} />
             </Card.Content>
 
             <Card.Actions>
@@ -80,13 +80,13 @@ export default function TeamSettingsRoute() {
             method="POST"
             preventScrollReset
             onSubmit={(event) => {
-              if (!confirm(`Are you sure you want to leave the "${team.name}" team?`)) {
+              if (!confirm(`Are you sure you want to leave the "${currentTeam.name}" team?`)) {
                 event.preventDefault();
               }
             }}
           >
             <Card.Title>
-              <H2>Leave the "{team.name}" team</H2>
+              <H2>Leave the "{currentTeam.name}" team</H2>
               <Subtitle>
                 If you leave the team, you’ll lose access to it and won’t be able to manage its events.
               </Subtitle>
@@ -95,7 +95,7 @@ export default function TeamSettingsRoute() {
             <Card.Content>
               <div>
                 <Button type="submit" name="intent" value="leave-team" variant="important">
-                  Leave "{team.name}" team
+                  Leave "{currentTeam.name}" team
                 </Button>
               </div>
             </Card.Content>

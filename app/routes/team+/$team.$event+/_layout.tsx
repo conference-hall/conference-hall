@@ -5,8 +5,6 @@ import invariant from 'tiny-invariant';
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 
-import { useTeam } from '../__components/use-team.tsx';
-
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.team, 'Invalid team slug');
@@ -16,9 +14,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 };
 
 export default function EventLayoutRoute() {
-  const { team } = useTeam();
-
   const event = useLoaderData<typeof loader>();
 
-  return <Outlet context={{ team, event }} />;
+  return <Outlet context={{ event }} />;
 }

@@ -6,6 +6,7 @@ import { UserTeam } from '~/.server/team/user-team.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 
+import { CurrentTeamProvider } from '../__components/contexts/team-context.tsx';
 import { Navbar } from '../__components/navbar/navbar.tsx';
 import { EventTabs } from './$team+/__components/event-tabs.tsx';
 import { TeamTabs } from './$team+/__components/team-tabs.tsx';
@@ -28,10 +29,16 @@ export default function TeamLayout() {
   const { isFullscreen } = useScheduleFullscreen();
   const isEventCreationRoute = Boolean(useMatch('/team/:team/new/*'));
 
-  if (isFullscreen || isEventCreationRoute) return <Outlet context={{ team }} />;
+  if (isFullscreen || isEventCreationRoute) {
+    return (
+      <CurrentTeamProvider team={team}>
+        <Outlet />
+      </CurrentTeamProvider>
+    );
+  }
 
   return (
-    <>
+    <CurrentTeamProvider team={team}>
       <Navbar layout="team" />
 
       {event ? (
@@ -45,7 +52,7 @@ export default function TeamLayout() {
         <TeamTabs slug={team.slug} role={team.userRole} />
       )}
 
-      <Outlet context={{ team }} />
-    </>
+      <Outlet />
+    </CurrentTeamProvider>
   );
 }

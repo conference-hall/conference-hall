@@ -23,7 +23,7 @@ import { toast } from '~/libs/toasts/toast.server.ts';
 import { TalkSection } from '~/routes/__components/talks/talk-section.tsx';
 
 import { Suspense } from 'react';
-import { useTeam } from '../../__components/use-team.tsx';
+import { useCurrentTeam } from '~/routes/__components/contexts/team-context.tsx';
 import { useEvent } from '../__components/use-event.tsx';
 import { OtherProposalsDisclosure } from './__components/proposal-page/other-proposals-disclosure.tsx';
 import { LoadingActivities } from './__components/proposal-page/proposal-activity/loading-activities.tsx';
@@ -123,7 +123,9 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 };
 
 export default function ProposalReviewLayoutRoute() {
-  const { team } = useTeam();
+  const currentTeam = useCurrentTeam();
+  const { canEditEvent, canEditEventProposals, canDeliberateEventProposals } = currentTeam.userPermissions;
+
   const { event } = useEvent();
 
   const { proposal, pagination, activityPromise, otherProposalsPromise } = useLoaderData<typeof loader>();
@@ -143,7 +145,7 @@ export default function ProposalReviewLayoutRoute() {
               talk={proposal}
               errors={errors}
               event={event}
-              canEditTalk={team.userPermissions.canEditEventProposals}
+              canEditTalk={canEditEventProposals}
               canEditSpeakers={false}
               canArchive={false}
               showFormats={hasFormats}
@@ -165,15 +167,15 @@ export default function ProposalReviewLayoutRoute() {
             <ReviewSidebar
               proposal={proposal}
               reviewEnabled={event.reviewEnabled}
-              canDeliberate={team.userPermissions.canDeliberateEventProposals}
+              canDeliberate={canDeliberateEventProposals}
             />
 
             <TagsCard
               proposalId={proposal.id}
               eventTags={event.tags}
               proposalTags={proposal.tags}
-              canEditProposalTags={team.userPermissions.canEditEventProposals}
-              canEditEventTags={team.userPermissions.canEditEvent}
+              canEditProposalTags={canEditEventProposals}
+              canEditEventTags={canEditEvent}
             />
           </div>
         </div>
