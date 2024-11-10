@@ -15,6 +15,10 @@ export const FlagsProvider = ({ children, flags }: FlagsProviderProps) => {
   return <FlagsContext.Provider value={flags}>{children}</FlagsContext.Provider>;
 };
 
+/**
+ * Returns the feature flags
+ * @returns {Flags}
+ */
 export function useFlags(): Flags {
   const context = useContext(FlagsContext);
   if (context === undefined) {
@@ -23,6 +27,11 @@ export function useFlags(): Flags {
   return context;
 }
 
+/**
+ * Returns the flag value for the given key
+ * @param key flag key
+ * @returns {boolean}
+ */
 export function useFlag<Key extends keyof Flags>(key: Key): Flags[Key] {
   const flags = useFlags();
   return flags[key];
