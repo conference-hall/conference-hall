@@ -1,6 +1,6 @@
-import type { SerializeFrom } from '@remix-run/node';
 import { type ReactNode, createContext, useContext } from 'react';
 import type { loader } from '~/routes/team+/$team.$event+/_layout.tsx';
+import type { SerializeFrom } from '~/types/remix.types.ts';
 
 type CurrentEvent = SerializeFrom<typeof loader>;
 

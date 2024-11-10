@@ -1,6 +1,6 @@
-import type { SerializeFrom } from '@remix-run/node';
 import { type ReactNode, createContext, useContext } from 'react';
 import type { loader } from '~/root.tsx';
+import type { SerializeFrom } from '~/types/remix.types.ts';
 
 type User = SerializeFrom<typeof loader>['user'];
 
