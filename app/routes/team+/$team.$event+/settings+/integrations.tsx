@@ -17,7 +17,7 @@ import { z } from 'zod';
 import { EventIntegrations } from '~/.server/event-settings/event-integrations.ts';
 import { OpenPlannerConfigSchema } from '~/.server/event-settings/event-integrations.types.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-import { useEvent } from '../__components/use-event.tsx';
+import { useCurrentEvent } from '~/routes/__components/contexts/event-team-context';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
@@ -79,9 +79,9 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 };
 
 export default function EventIntegrationsSettingsRoute() {
-  const { event } = useEvent();
   const { openPlanner } = useLoaderData<typeof loader>();
   const errors = useActionData<typeof action>();
+  const { slackWebhookUrl } = useCurrentEvent();
 
   return (
     <div className="space-y-8">
@@ -96,7 +96,7 @@ export default function EventIntegrationsSettingsRoute() {
               name="slackWebhookUrl"
               label="Slack web hook URL"
               placeholder="https://hooks.slack.com/services/xxx-yyy-zzz"
-              defaultValue={event.slackWebhookUrl || ''}
+              defaultValue={slackWebhookUrl || ''}
               error={errors?.slackWebhookUrl}
             />
           </Form>

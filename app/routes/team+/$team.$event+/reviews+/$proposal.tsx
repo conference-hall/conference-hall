@@ -23,8 +23,8 @@ import { toast } from '~/libs/toasts/toast.server.ts';
 import { TalkSection } from '~/routes/__components/talks/talk-section.tsx';
 
 import { Suspense } from 'react';
+import { useCurrentEvent } from '~/routes/__components/contexts/event-team-context.tsx';
 import { useCurrentTeam } from '~/routes/__components/contexts/team-context.tsx';
-import { useEvent } from '../__components/use-event.tsx';
 import { OtherProposalsDisclosure } from './__components/proposal-page/other-proposals-disclosure.tsx';
 import { LoadingActivities } from './__components/proposal-page/proposal-activity/loading-activities.tsx';
 import { ProposalActivityFeed as Feed } from './__components/proposal-page/proposal-activity/proposal-activity-feed.tsx';
@@ -126,7 +126,7 @@ export default function ProposalReviewLayoutRoute() {
   const currentTeam = useCurrentTeam();
   const { canEditEvent, canEditEventProposals, canDeliberateEventProposals } = currentTeam.userPermissions;
 
-  const { event } = useEvent();
+  const currentEvent = useCurrentEvent();
 
   const { proposal, pagination, activityPromise, otherProposalsPromise } = useLoaderData<typeof loader>();
   const errors = useActionData<typeof action>();
@@ -144,7 +144,7 @@ export default function ProposalReviewLayoutRoute() {
             <TalkSection
               talk={proposal}
               errors={errors}
-              event={event}
+              event={currentEvent}
               canEditTalk={canEditEventProposals}
               canEditSpeakers={false}
               canArchive={false}
@@ -166,13 +166,13 @@ export default function ProposalReviewLayoutRoute() {
           <div className="lg:col-span-4 space-y-4">
             <ReviewSidebar
               proposal={proposal}
-              reviewEnabled={event.reviewEnabled}
+              reviewEnabled={currentEvent.reviewEnabled}
               canDeliberate={canDeliberateEventProposals}
             />
 
             <TagsCard
               proposalId={proposal.id}
-              eventTags={event.tags}
+              eventTags={currentEvent.tags}
               proposalTags={proposal.tags}
               canEditProposalTags={canEditEventProposals}
               canEditEventTags={canEditEvent}

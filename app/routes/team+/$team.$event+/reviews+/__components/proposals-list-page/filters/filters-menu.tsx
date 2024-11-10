@@ -7,8 +7,8 @@ import { Button, ButtonLink, button } from '~/design-system/buttons.tsx';
 import Select from '~/design-system/forms/select.tsx';
 import { Background } from '~/design-system/transitions.tsx';
 import { Text } from '~/design-system/typography.tsx';
-import { useEvent } from '~/routes/team+/$team.$event+/__components/use-event.tsx';
 
+import { useCurrentEvent } from '~/routes/__components/contexts/event-team-context.tsx';
 import { useCurrentTeam } from '~/routes/__components/contexts/team-context.tsx';
 import { reviewOptions, statusOptions } from './filters.ts';
 
@@ -48,11 +48,11 @@ type FiltersContentProps = { close: () => void };
 
 function FiltersContent({ close }: FiltersContentProps) {
   const currentTeam = useCurrentTeam();
+
   const location = useLocation();
   const [params] = useSearchParams();
-  const { event } = useEvent();
-  const { formats, categories, tags } = event;
 
+  const { formats, categories, tags } = useCurrentEvent();
   const hasTracks = formats.length > 0 || categories.length > 0;
 
   return (

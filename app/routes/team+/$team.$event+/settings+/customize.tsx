@@ -15,8 +15,7 @@ import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { uploadToStorageHandler } from '~/libs/storage/storage.server.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-
-import { useEvent } from '../__components/use-event.tsx';
+import { useCurrentEvent } from '~/routes/__components/contexts/event-team-context';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);
@@ -45,7 +44,6 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 };
 
 export default function EventGeneralSettingsRoute() {
-  const { event } = useEvent();
   const submit = useSubmit();
   const result = useActionData<typeof action>();
 
@@ -55,6 +53,8 @@ export default function EventGeneralSettingsRoute() {
     }
   };
 
+  const { name, logoUrl } = useCurrentEvent();
+
   return (
     <Card as="section">
       <Card.Title>
@@ -63,7 +63,7 @@ export default function EventGeneralSettingsRoute() {
       </Card.Title>
 
       <Card.Content>
-        <Avatar picture={event.logoUrl} name={`${event.name} logo`} square size="4xl" />
+        <Avatar picture={logoUrl} name={`${name} logo`} square size="4xl" />
         <Callout title="Logo format">
           JPEG, PNG, WEBP or AVIF formats supported with optimal resolution of 500x500.
           <br />

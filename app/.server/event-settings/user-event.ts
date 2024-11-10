@@ -8,8 +8,6 @@ import { sortBy } from '~/libs/utils/arrays-sort-by.ts';
 import type { Permission } from '../team/user-permissions.ts';
 import { UserPermissions } from '../team/user-permissions.ts';
 
-export type EventData = Awaited<ReturnType<typeof UserEvent.prototype.get>>;
-
 export class UserEvent {
   constructor(
     public userId: string,

@@ -15,8 +15,7 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-
-import { useEvent } from '../__components/use-event.tsx';
+import { useCurrentEvent } from '~/routes/__components/contexts/event-team-context';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);
@@ -50,7 +49,7 @@ export const action = async ({ request, params }: LoaderFunctionArgs) => {
 };
 
 export default function EventNotificationsSettingsRoute() {
-  const { event } = useEvent();
+  const { emailNotifications, emailOrganizer } = useCurrentEvent();
   const errors = useActionData<typeof action>();
   const fetcher = useFetcher<typeof action>();
 
@@ -59,12 +58,12 @@ export default function EventNotificationsSettingsRoute() {
     form.set('intent', 'save-notifications');
 
     if (checked) {
-      for (const notification of event.emailNotifications) {
+      for (const notification of emailNotifications) {
         form.append('emailNotifications', notification);
       }
       form.append('emailNotifications', name);
     } else {
-      for (const notification of event.emailNotifications.filter((n) => n !== name)) {
+      for (const notification of emailNotifications.filter((n) => n !== name)) {
         form.append('emailNotifications', notification);
       }
     }
@@ -84,7 +83,7 @@ export default function EventNotificationsSettingsRoute() {
               name="emailOrganizer"
               label="Email receiving notifications"
               placeholder="contact@email.com"
-              defaultValue={event.emailOrganizer || ''}
+              defaultValue={emailOrganizer || ''}
               error={errors?.emailOrganizer}
               className="grow"
             />
@@ -107,19 +106,19 @@ export default function EventNotificationsSettingsRoute() {
           <ToggleGroup
             label="Submitted proposals"
             description="Receive an email when a speaker submit a talk."
-            value={event.emailNotifications?.includes('submitted')}
+            value={emailNotifications?.includes('submitted')}
             onChange={(checked) => handleChangeNotification('submitted', checked)}
           />
           <ToggleGroup
             label="Confirmed proposals"
             description="Receive an email when a speaker confirm a talk."
-            value={event.emailNotifications?.includes('confirmed')}
+            value={emailNotifications?.includes('confirmed')}
             onChange={(checked) => handleChangeNotification('confirmed', checked)}
           />
           <ToggleGroup
             label="Declined proposals"
             description="Receive an email when a speaker decline a talk."
-            value={event.emailNotifications?.includes('declined')}
+            value={emailNotifications?.includes('declined')}
             onChange={(checked) => handleChangeNotification('declined', checked)}
           />
         </Card.Content>

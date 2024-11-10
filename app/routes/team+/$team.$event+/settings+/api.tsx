@@ -5,7 +5,7 @@ import { v4 as uuid } from 'uuid';
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 
-import { useEvent } from '../__components/use-event.tsx';
+import { useCurrentEvent } from '~/routes/__components/contexts/event-team-context.tsx';
 import { ApiTryoutSection } from './__components/api-tryout-section.tsx';
 import { EnableApiSection } from './__components/enable-api-section.tsx';
 
@@ -36,12 +36,12 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 };
 
 export default function EventApiSettingsRoute() {
-  const { event } = useEvent();
+  const { slug, apiKey } = useCurrentEvent();
 
   return (
     <>
-      <EnableApiSection apiKey={event.apiKey} />
-      {event.apiKey && <ApiTryoutSection slug={event.slug} apiKey={event.apiKey} />}
+      <EnableApiSection apiKey={apiKey} />
+      {apiKey && <ApiTryoutSection slug={slug} apiKey={apiKey} />}
     </>
   );
 }

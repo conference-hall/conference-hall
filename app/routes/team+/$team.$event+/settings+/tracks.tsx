@@ -11,7 +11,7 @@ import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 
-import { useEvent } from '../__components/use-event.tsx';
+import { useCurrentEvent } from '~/routes/__components/contexts/event-team-context.tsx';
 import { NewTrackButton } from './__components/save-track-form.tsx';
 import { TrackList } from './__components/track-list.tsx';
 
@@ -64,17 +64,17 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 };
 
 export default function EventTracksSettingsRoute() {
-  const { event } = useEvent();
+  const currentEvent = useCurrentEvent();
 
   const fetcher = useFetcher<typeof action>();
   const handleUpdateSettings = (name: string, checked: boolean) => {
     fetcher.submit(
       {
         intent: 'update-track-settings',
-        formatsRequired: event.formatsRequired,
-        formatsAllowMultiple: event.formatsAllowMultiple,
-        categoriesRequired: event.categoriesRequired,
-        categoriesAllowMultiple: event.categoriesAllowMultiple,
+        formatsRequired: currentEvent.formatsRequired,
+        formatsAllowMultiple: currentEvent.formatsAllowMultiple,
+        categoriesRequired: currentEvent.categoriesRequired,
+        categoriesAllowMultiple: currentEvent.categoriesAllowMultiple,
         [name]: String(checked),
       },
       { method: 'POST' },
@@ -92,19 +92,19 @@ export default function EventTracksSettingsRoute() {
           <NewTrackButton type="formats" />
         </div>
 
-        {event.formats.length > 0 && (
+        {currentEvent.formats.length > 0 && (
           <>
-            <TrackList type="formats" tracks={event.formats} />
+            <TrackList type="formats" tracks={currentEvent.formats} />
             <ToggleGroup
               label="Format selection required"
               description="When a speaker submit a proposal, the format selection is mandatory."
-              value={event.formatsRequired}
+              value={currentEvent.formatsRequired}
               onChange={(checked) => handleUpdateSettings('formatsRequired', checked)}
             />
             <ToggleGroup
               label="Allow multiple formats"
               description="Determines whether the input allows users to select multiple formats."
-              value={event.formatsAllowMultiple}
+              value={currentEvent.formatsAllowMultiple}
               onChange={(checked) => handleUpdateSettings('formatsAllowMultiple', checked)}
             />
           </>
@@ -120,19 +120,19 @@ export default function EventTracksSettingsRoute() {
           <NewTrackButton type="categories" />
         </div>
 
-        {event.categories.length > 0 && (
+        {currentEvent.categories.length > 0 && (
           <>
-            <TrackList type="categories" tracks={event.categories} />
+            <TrackList type="categories" tracks={currentEvent.categories} />
             <ToggleGroup
               label="Category selection required"
               description="When a speaker submit a proposal, the category selection is mandatory."
-              value={event.categoriesRequired}
+              value={currentEvent.categoriesRequired}
               onChange={(checked) => handleUpdateSettings('categoriesRequired', checked)}
             />
             <ToggleGroup
               label="Allow multiple categories"
               description="Determines whether the input allows users to select multiple categories."
-              value={event.categoriesAllowMultiple}
+              value={currentEvent.categoriesAllowMultiple}
               onChange={(checked) => handleUpdateSettings('categoriesAllowMultiple', checked)}
             />
           </>

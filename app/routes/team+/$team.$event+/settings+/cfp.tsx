@@ -12,7 +12,7 @@ import {
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 
-import { useEvent } from '../__components/use-event.tsx';
+import { useCurrentEvent } from '~/routes/__components/contexts/event-team-context.tsx';
 import { CommonCfpSetting } from './__components/common-cfp-setting.tsx';
 import { ConferenceCfpOpening } from './__components/conference-cfp-opening.tsx';
 import { MeetupCfpOpening } from './__components/meetup-cfp-opening.tsx';
@@ -55,23 +55,27 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 };
 
 export default function EventCfpSettingsRoute() {
-  const { event } = useEvent();
+  const currentEvent = useCurrentEvent();
   const errors = useActionData<typeof action>();
 
   return (
     <>
-      {event.type === 'CONFERENCE' ? (
+      {currentEvent.type === 'CONFERENCE' ? (
         <ConferenceCfpOpening
-          cfpStart={event.cfpStart}
-          cfpEnd={event.cfpEnd}
-          timezone={event.timezone}
+          cfpStart={currentEvent.cfpStart}
+          cfpEnd={currentEvent.cfpEnd}
+          timezone={currentEvent.timezone}
           errors={errors}
         />
       ) : (
-        <MeetupCfpOpening cfpStart={event.cfpStart} timezone={event.timezone} />
+        <MeetupCfpOpening cfpStart={currentEvent.cfpStart} timezone={currentEvent.timezone} />
       )}
 
-      <CommonCfpSetting maxProposals={event.maxProposals} codeOfConductUrl={event.codeOfConductUrl} errors={errors} />
+      <CommonCfpSetting
+        maxProposals={currentEvent.maxProposals}
+        codeOfConductUrl={currentEvent.codeOfConductUrl}
+        errors={errors}
+      />
     </>
   );
 }

@@ -15,6 +15,10 @@ export const UserProvider = ({ children, user }: UserProviderProps) => {
   return <UserContext.Provider value={user}>{children}</UserContext.Provider>;
 };
 
+/**
+ * Returns the authenticated user under the route "root"
+ * @returns {User}
+ */
 export function useUser(): User {
   const context = useContext(UserContext);
   if (context === undefined) {

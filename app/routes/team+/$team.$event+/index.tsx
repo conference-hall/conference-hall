@@ -12,6 +12,7 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 
+import { useCurrentEvent } from '~/routes/__components/contexts/event-team-context.tsx';
 import { useCurrentTeam } from '~/routes/__components/contexts/team-context.tsx';
 import { SponsorLink } from '~/routes/__components/sponsor-link.tsx';
 import { CfpStatusCard } from './__components/overview-page/cfp-status-card.tsx';
@@ -20,7 +21,6 @@ import type { ChartType } from './__components/overview-page/proposals-by-days-c
 import { ProposalsByDayChart } from './__components/overview-page/proposals-by-days-chart.tsx';
 import { ReviewStatusCard } from './__components/overview-page/review-status-card.tsx';
 import { VisibilityStatusCard } from './__components/overview-page/visibility-status-card.tsx';
-import { useEvent } from './__components/use-event.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
@@ -36,7 +36,7 @@ export default function OverviewRoute() {
   const currentTeam = useCurrentTeam();
   const { canEditEvent } = currentTeam.userPermissions;
 
-  const { event } = useEvent();
+  const currentEvent = useCurrentEvent();
 
   const [chartSelected, setChartSelected] = useState<ChartType>('cumulative');
 
@@ -46,16 +46,16 @@ export default function OverviewRoute() {
       <div className="space-y-4 lg:space-y-6">
         <div className="grid grid-cols-1 gap-4 lg:gap-6 lg:grid-cols-3">
           <CfpStatusCard
-            cfpState={event.cfpState}
-            cfpStart={event.cfpStart}
-            cfpEnd={event.cfpEnd}
-            timezone={event.timezone}
+            cfpState={currentEvent.cfpState}
+            cfpStart={currentEvent.cfpStart}
+            cfpEnd={currentEvent.cfpEnd}
+            timezone={currentEvent.timezone}
             showActions={canEditEvent}
           />
 
-          <VisibilityStatusCard visibility={event.visibility} showActions={canEditEvent} />
+          <VisibilityStatusCard visibility={currentEvent.visibility} showActions={canEditEvent} />
 
-          <ReviewStatusCard reviewEnabled={event.reviewEnabled} showActions={canEditEvent} />
+          <ReviewStatusCard reviewEnabled={currentEvent.reviewEnabled} showActions={canEditEvent} />
         </div>
 
         <div>
