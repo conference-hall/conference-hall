@@ -10,6 +10,7 @@ import { H1, Text } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { Navbar } from '~/routes/__components/navbar/navbar.tsx';
 
+import { SpeakerProfileProvider } from '../__components/contexts/speaker-profile-context.tsx';
 import { Footer } from '../__components/footer.tsx';
 import { SpeakerTabs } from './__components/speaker-tabs.tsx';
 
@@ -50,7 +51,9 @@ export default function SpeakerRoute() {
 
       <SpeakerTabs className="sm:ml-40" />
 
-      <Outlet context={{ profile }} />
+      <SpeakerProfileProvider profile={profile}>
+        <Outlet />
+      </SpeakerProfileProvider>
 
       <Footer />
     </>

@@ -8,9 +8,9 @@ import { H1 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 
+import { useSpeakerProfile } from '../__components/contexts/speaker-profile-context.tsx';
 import { SpeakerActivitiesSection } from './__components/speaker-activities-section.tsx';
 import { SpeakerDetailsSection } from './__components/speaker-details-section.tsx';
-import { useProfile } from './__components/use-profile.ts';
 
 export const meta = mergeMeta(() => [{ title: 'Activity | Conference Hall' }]);
 
@@ -24,7 +24,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export default function ProfileRoute() {
-  const { profile } = useProfile();
+  const profile = useSpeakerProfile();
   const { activities, nextPage, hasNextPage } = useLoaderData<typeof loader>();
 
   return (
