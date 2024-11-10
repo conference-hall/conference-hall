@@ -13,8 +13,9 @@ import { useNonce } from './libs/nonce/use-nonce.ts';
 import type { Toast } from './libs/toasts/toast.server';
 import { getToast } from './libs/toasts/toast.server.ts';
 import { Toaster } from './libs/toasts/toaster.tsx';
+import { FlagsProvider } from './routes/__components/contexts/flags-context.tsx';
+import { UserProvider } from './routes/__components/contexts/user-context.tsx';
 import { GeneralErrorBoundary } from './routes/__components/error-boundary.tsx';
-import { FlagsProvider } from './routes/__components/flags-context.tsx';
 import { GlobalLoading } from './routes/__components/global-loading.tsx';
 import fonts from './styles/fonts.css?url';
 import tailwind from './styles/tailwind.css?url';
@@ -103,9 +104,11 @@ function App() {
 
   return (
     <FlagsProvider flags={flags}>
-      <Document toast={toast} env={env} nonce={nonce}>
-        <Outlet context={{ user }} />
-      </Document>
+      <UserProvider user={user}>
+        <Document toast={toast} env={env} nonce={nonce}>
+          <Outlet />
+        </Document>
+      </UserProvider>
     </FlagsProvider>
   );
 }

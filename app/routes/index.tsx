@@ -13,9 +13,9 @@ import { Pagination } from '~/design-system/list/pagination.tsx';
 import { H1, H2 } from '~/design-system/typography.tsx';
 import { Footer } from '~/routes/__components/footer.tsx';
 import { Navbar } from '~/routes/__components/navbar/navbar.tsx';
-import { useUser } from '~/routes/__components/use-user.tsx';
 
 import { Link } from '~/design-system/links.tsx';
+import { useUser } from './__components/contexts/user-context.tsx';
 import { EventCardLink } from './__components/events/event-card.tsx';
 import { SearchEventsFilters } from './__components/search/search-events-filters.tsx';
 import { SearchEventsInput } from './__components/search/search-events-input.tsx';
@@ -29,14 +29,14 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export default function IndexRoute() {
-  const { user } = useUser();
+  const user = useUser();
   const { filters, results, pagination } = useLoaderData<typeof loader>();
   const [searchParams] = useSearchParams();
   const talkId = searchParams.get('talkId');
 
   return (
     <>
-      <Navbar user={user} />
+      <Navbar />
 
       <div className={cx(BG_GRADIENT_COLOR, 'shadow p-4 pt-0 lg:pb-16 lg:pt-10')}>
         <div className="hidden lg:mb-8 lg:block">

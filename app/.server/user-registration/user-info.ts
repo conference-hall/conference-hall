@@ -4,8 +4,6 @@ import { TeamBetaAccess } from '../team/team-beta-access.ts';
 import { UserTeams } from '../team/user-teams.ts';
 import { Notifications } from '../user-notifications/notifications.ts';
 
-export type UserInfoData = Awaited<ReturnType<typeof UserInfo.get>>;
-
 export class UserInfo {
   static async get(userId: string | null) {
     if (!userId) return null;

@@ -7,16 +7,13 @@ import { H1, Subtitle } from '~/design-system/typography.tsx';
 import { Footer } from './footer.tsx';
 import type { NavbarLayout } from './navbar/navbar.tsx';
 import { Navbar } from './navbar/navbar.tsx';
-import { useUser } from './use-user.tsx';
 
 type Props = { children: ReactNode; navbar: NavbarLayout; compact?: boolean; className?: string };
 
 export function FullscreenPage({ children, navbar, compact, className }: Props) {
-  const { user } = useUser();
-
   return (
     <div className="relative grid grid-cols-1 lg:grid-cols-3 h-screen w-screen overflow-hidden">
-      <Navbar layout={navbar} user={user} variant="secondary" className="bg-transparent absolute inset-x-0 z-30" />
+      <Navbar layout={navbar} variant="secondary" className="bg-transparent absolute inset-x-0 z-30" />
 
       {/* Main panel */}
       <div

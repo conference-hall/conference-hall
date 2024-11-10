@@ -11,7 +11,6 @@ import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { Footer } from '~/routes/__components/footer.tsx';
 import { Navbar } from '~/routes/__components/navbar/navbar.tsx';
-import { useUser } from '~/routes/__components/use-user.tsx';
 
 export const meta = mergeMeta(() => [{ title: 'Notifications | Conference Hall' }]);
 
@@ -21,13 +20,12 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export default function OrganizerRoute() {
-  const { user } = useUser();
   const notifications = useLoaderData<typeof loader>();
   const hasNotifications = Boolean(notifications && notifications.length > 0);
 
   return (
     <>
-      <Navbar user={user} />
+      <Navbar />
 
       <Page>
         <Page.Heading title="Notifications" subtitle="Notifications from events organizers about your proposals." />

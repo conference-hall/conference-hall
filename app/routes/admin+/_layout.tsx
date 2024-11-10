@@ -4,7 +4,6 @@ import { needsAdminRole } from '~/.server/admin/authorization.ts';
 
 import { requireSession } from '~/libs/auth/session.ts';
 import { Navbar } from '~/routes/__components/navbar/navbar.tsx';
-import { useUser } from '~/routes/__components/use-user.tsx';
 import { AdminTabs } from './__components/admin-tabs.tsx';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -16,13 +15,11 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export default function AdminLayoutRoute() {
-  const { user } = useUser();
-
   return (
     <>
-      <Navbar user={user} />
+      <Navbar />
       <AdminTabs />
-      <Outlet context={{ user }} />
+      <Outlet />
     </>
   );
 }

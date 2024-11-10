@@ -5,7 +5,6 @@ import invariant from 'tiny-invariant';
 import { UserTeam } from '~/.server/team/user-team.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
-import { useUser } from '~/routes/__components/use-user.tsx';
 
 import { Navbar } from '../__components/navbar/navbar.tsx';
 import { EventTabs } from './$team+/__components/event-tabs.tsx';
@@ -23,18 +22,17 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 };
 
 export default function TeamLayout() {
-  const { user } = useUser();
   const team = useLoaderData<typeof loader>();
   const event = useRouteLoaderData<typeof routeEventLoader>('routes/team+/$team.$event+/_layout');
 
   const { isFullscreen } = useScheduleFullscreen();
   const isEventCreationRoute = Boolean(useMatch('/team/:team/new/*'));
 
-  if (isFullscreen || isEventCreationRoute) return <Outlet context={{ user, team }} />;
+  if (isFullscreen || isEventCreationRoute) return <Outlet context={{ team }} />;
 
   return (
     <>
-      <Navbar layout="team" user={user} />
+      <Navbar layout="team" />
 
       {event ? (
         <EventTabs
@@ -47,7 +45,7 @@ export default function TeamLayout() {
         <TeamTabs slug={team.slug} role={team.userRole} />
       )}
 
-      <Outlet context={{ user, team }} />
+      <Outlet context={{ team }} />
     </>
   );
 }

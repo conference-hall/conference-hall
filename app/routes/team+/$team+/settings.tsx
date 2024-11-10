@@ -8,7 +8,6 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { NavSideMenu } from '~/design-system/navigation/nav-side-menu.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { useUser } from '~/routes/__components/use-user.tsx';
 
 import { useTeam } from '../__components/use-team.tsx';
 
@@ -25,7 +24,6 @@ const getMenuItems = (team?: string) => [
 ];
 
 export default function TeamSettingsLayout() {
-  const { user } = useUser();
   const { team } = useTeam();
 
   const menus = getMenuItems(team.slug);
@@ -41,7 +39,7 @@ export default function TeamSettingsLayout() {
       />
 
       <div className="lg:col-span-9">
-        <Outlet context={{ user, team }} />
+        <Outlet context={{ team }} />
       </div>
     </Page>
   );

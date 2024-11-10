@@ -2,6 +2,7 @@ import { cx } from 'class-variance-authority';
 
 import { BG_COLOR } from '~/design-system/colors.ts';
 
+import { useUser } from '../contexts/user-context.tsx';
 import { LoginButton } from './login-button.tsx';
 import { Logo } from './logo.tsx';
 import { Navigation } from './navigation.tsx';
@@ -11,24 +12,14 @@ import { UserMenu } from './user-menu.tsx';
 export type NavbarLayout = 'default' | 'team' | 'auth';
 
 type Props = {
-  user: {
-    name: string | null;
-    email: string | null;
-    picture: string | null;
-    hasTeamAccess: boolean;
-    notificationsUnreadCount: number;
-    teams: Array<{
-      slug: string;
-      name: string;
-      events: Array<{ slug: string; name: string; logoUrl: string | null; archived: boolean }>;
-    }>;
-  } | null;
   layout?: NavbarLayout;
   variant?: 'primary' | 'secondary';
   className?: string;
 };
 
-export function Navbar({ user, layout = 'default', variant = 'primary', className }: Props) {
+export function Navbar({ layout = 'default', variant = 'primary', className }: Props) {
+  const user = useUser();
+
   return (
     <div className={cx(BG_COLOR, className)}>
       <div className="flex h-16 items-center justify-between px-4 lg:px-8">

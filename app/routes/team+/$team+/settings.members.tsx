@@ -15,9 +15,9 @@ import { Pagination } from '~/design-system/list/pagination.tsx';
 import { H3, Subtitle } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-import { useUser } from '~/routes/__components/use-user.tsx';
 
 import { ROLE_NAMES } from '~/libs/formatters/team-roles.ts';
+import { useUser } from '~/routes/__components/contexts/user-context.tsx';
 import { useTeam } from '../__components/use-team.tsx';
 import { ChangeRoleButton, InviteMemberButton, RemoveButton } from './__components/member-actions.tsx';
 
@@ -54,7 +54,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 };
 
 export default function TeamMembersRoute() {
-  const { user } = useUser();
+  const user = useUser();
   const { team } = useTeam();
   const [searchParams] = useSearchParams();
   const { results, pagination } = useLoaderData<typeof loader>();
