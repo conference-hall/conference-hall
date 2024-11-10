@@ -11,9 +11,8 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { ExternalLink } from '~/design-system/links.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast } from '~/libs/toasts/toast.server.ts';
+import { useCurrentEvent } from '~/routes/__components/contexts/event-page-context.tsx';
 import { TalkSection } from '~/routes/__components/talks/talk-section.tsx';
-
-import { useEvent } from '../__components/use-event.tsx';
 
 export const handle = { step: 'submission' };
 
@@ -36,15 +35,15 @@ export const action: ActionFunction = async ({ request, params }) => {
 
 export default function SubmissionSubmitRoute() {
   const navigate = useNavigate();
-  const { event } = useEvent();
+  const currentEvent = useCurrentEvent();
   const proposal = useLoaderData<typeof loader>();
-  const [acceptedCod, setAcceptCod] = useState(!event.codeOfConductUrl);
+  const [acceptedCod, setAcceptCod] = useState(!currentEvent.codeOfConductUrl);
 
   return (
     <Page className="space-y-4">
       <TalkSection
         talk={proposal}
-        event={event}
+        event={currentEvent}
         canEditTalk={false}
         canEditSpeakers={false}
         canArchive={false}
@@ -54,15 +53,15 @@ export default function SubmissionSubmitRoute() {
       <Card>
         <Card.Content>
           <Form method="POST" id="submit-form" className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            {event.codeOfConductUrl ? (
+            {currentEvent.codeOfConductUrl ? (
               <Checkbox
                 id="cod-agreement"
                 name="cod-agreement"
                 value="agree"
                 onChange={() => setAcceptCod(!acceptedCod)}
               >
-                Please agree with the <ExternalLink href={event.codeOfConductUrl}>code of conduct</ExternalLink> of the
-                event.
+                Please agree with the <ExternalLink href={currentEvent.codeOfConductUrl}>code of conduct</ExternalLink>{' '}
+                of the event.
               </Checkbox>
             ) : (
               <div />

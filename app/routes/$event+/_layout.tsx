@@ -12,6 +12,7 @@ import { eventSocialCard } from '~/libs/meta/social-cards.ts';
 import { Footer } from '~/routes/__components/footer.tsx';
 import { Navbar } from '~/routes/__components/navbar/navbar.tsx';
 
+import { CurrentEventPageProvider } from '../__components/contexts/event-page-context.tsx';
 import { useUser } from '../__components/contexts/user-context.tsx';
 import { EventTabs } from './__components/event-tabs.tsx';
 
@@ -83,7 +84,9 @@ export default function EventRoute() {
         />
       ) : null}
 
-      <Outlet context={{ event }} />
+      <CurrentEventPageProvider event={event}>
+        <Outlet />
+      </CurrentEventPageProvider>
 
       <Footer />
     </>

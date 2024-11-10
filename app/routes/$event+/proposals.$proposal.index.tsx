@@ -11,9 +11,9 @@ import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
 import { SpeakerProposalStatus } from '~/types/speaker.types.ts';
 
+import { useCurrentEvent } from '../__components/contexts/event-page-context.tsx';
 import { ProposalStatusSection } from '../__components/proposals/proposal-status-section.tsx';
 import { TalkSection } from '../__components/talks/talk-section.tsx';
-import { useEvent } from './__components/use-event.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
@@ -63,7 +63,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 };
 
 export default function ProposalRoute() {
-  const { event } = useEvent();
+  const currentEvent = useCurrentEvent();
   const proposal = useLoaderData<typeof loader>();
   const errors = useActionData<typeof action>();
 
@@ -73,11 +73,11 @@ export default function ProposalRoute() {
     <Page>
       <h1 className="sr-only">Proposal page</h1>
       <div className="space-y-4 lg:space-y-6">
-        <ProposalStatusSection proposal={proposal} event={event} />
+        <ProposalStatusSection proposal={proposal} event={currentEvent} />
 
         <TalkSection
           talk={proposal}
-          event={event}
+          event={currentEvent}
           errors={errors}
           canEditSpeakers={canEdit}
           canEditTalk={canEdit}
