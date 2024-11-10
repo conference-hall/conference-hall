@@ -20,6 +20,7 @@ export function applyLogging(app: express.Application) {
           message: `${tokens['method'](req, res)} - ${status} - ${tokens['url'](req, res)}`,
           timestamp: tokens['date'](req, res, 'iso'),
           method: tokens['method'](req, res),
+          referrer: tokens['referrer'](req, res),
           url: tokens['url'](req, res),
           duration: tokens['response-time'](req, res),
           contentType: tokens.res(req, res, 'content-type'),
