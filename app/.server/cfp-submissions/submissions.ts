@@ -35,7 +35,7 @@ export class Submissions {
       title: proposal.title,
       talkId: proposal.talkId,
       status: proposal.getStatusForSpeaker(proposal.event.isCfpOpen),
-      createdAt: proposal.createdAt.toISOString(),
+      createdAt: proposal.createdAt,
       speakers: proposal.speakers.map((speaker) => ({
         id: speaker.id,
         name: speaker.name,

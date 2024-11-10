@@ -32,7 +32,7 @@ describe('UserProposal', () => {
         abstract: proposal.abstract,
         references: proposal.references,
         level: proposal.level,
-        createdAt: proposal.createdAt.toISOString(),
+        createdAt: proposal.createdAt,
         languages: proposal.languages,
         invitationLink: `${process.env.APP_URL}/invite/proposal/${proposal.invitationCode}`,
         status: SpeakerProposalStatus.Submitted,

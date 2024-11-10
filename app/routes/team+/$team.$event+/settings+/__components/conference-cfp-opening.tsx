@@ -5,8 +5,8 @@ import { EventCfpConferenceForm } from '~/routes/__components/events/event-cfp-c
 import type { SubmissionErrors } from '~/types/errors.types.ts';
 
 type Props = {
-  cfpStart?: string;
-  cfpEnd?: string;
+  cfpStart: Date | null;
+  cfpEnd: Date | null;
   timezone: string;
   errors: SubmissionErrors;
 };

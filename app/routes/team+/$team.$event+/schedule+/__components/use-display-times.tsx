@@ -3,7 +3,7 @@ import { addMinutes } from 'date-fns';
 import { toZonedTime } from 'date-fns-tz';
 
 export function useDisplayTimes(
-  currentDay: string,
+  currentDay: Date,
   displayStartMinutes: number,
   displayEndMinutes: number,
   timezone: string,

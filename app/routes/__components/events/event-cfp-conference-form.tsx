@@ -6,8 +6,8 @@ import type { SubmissionErrors } from '~/types/errors.types.ts';
 
 type Props = {
   timezone: string;
-  cfpStart: string | undefined;
-  cfpEnd: string | undefined;
+  cfpStart: Date | null;
+  cfpEnd: Date | null;
   errors: SubmissionErrors;
 };
 

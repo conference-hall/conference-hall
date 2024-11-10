@@ -9,7 +9,7 @@ import { Text } from '~/design-system/typography.tsx';
 import { ClientOnly } from '~/routes/__components/utils/client-only.tsx';
 
 export type ChartType = 'cumulative' | 'count';
-type ChartData = Array<{ date: string; count: number; cumulative: number }>;
+type ChartData = Array<{ date: Date; count: number; cumulative: number }>;
 
 type ProposalsByDayChartProps = { type: ChartType; data: ChartData };
 

@@ -48,7 +48,7 @@ describe('Submissions', () => {
           title: proposal.title,
           talkId: proposal.talkId,
           status: SpeakerProposalStatus.Submitted,
-          createdAt: proposal.createdAt.toISOString(),
+          createdAt: proposal.createdAt,
           speakers: [
             {
               id: speaker.id,

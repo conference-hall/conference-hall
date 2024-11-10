@@ -34,8 +34,8 @@ export class EventSchedule {
       id: schedule.id,
       name: schedule.name,
       timezone: schedule.timezone,
-      start: schedule.start.toISOString(),
-      end: schedule.end.toISOString(),
+      start: schedule.start,
+      end: schedule.end,
       tracks: [...schedule.tracks]
         .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
         .map((t) => ({ id: t.id, name: t.name })),
@@ -180,7 +180,7 @@ export class EventSchedule {
     return {
       name: schedule.name,
       timezone: schedule.timezone,
-      currentDay: currentDay.toISOString(),
+      currentDay: currentDay,
       displayStartMinutes: schedule.displayStartMinutes,
       displayEndMinutes: schedule.displayEndMinutes,
       previousDayIndex: hasPreviousDay ? dayIndex - 1 : null,
@@ -191,8 +191,8 @@ export class EventSchedule {
       sessions: sessions.map(({ id, trackId, start, end, name, color, proposal }) => ({
         id: id,
         trackId: trackId,
-        start: start.toISOString(),
-        end: end.toISOString(),
+        start: start,
+        end: end,
         color: color,
         name: name,
         proposal: proposal

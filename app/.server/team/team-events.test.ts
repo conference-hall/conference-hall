@@ -33,8 +33,8 @@ describe('TeamEvents', () => {
           type: event2.type,
           logoUrl: event2.logoUrl,
           timezone: event2.timezone,
-          cfpStart: event2.cfpStart?.toISOString(),
-          cfpEnd: event2.cfpEnd?.toISOString(),
+          cfpStart: event2.cfpStart,
+          cfpEnd: event2.cfpEnd,
           cfpState: 'CLOSED',
         },
         {
@@ -43,8 +43,8 @@ describe('TeamEvents', () => {
           type: event1.type,
           logoUrl: event1.logoUrl,
           timezone: event1.timezone,
-          cfpStart: event1.cfpStart?.toISOString(),
-          cfpEnd: event1.cfpEnd?.toISOString(),
+          cfpStart: event1.cfpStart,
+          cfpEnd: event1.cfpEnd,
           cfpState: 'CLOSED',
         },
       ]);
@@ -64,8 +64,8 @@ describe('TeamEvents', () => {
           type: event.type,
           logoUrl: event.logoUrl,
           timezone: event.timezone,
-          cfpStart: event.cfpStart?.toISOString(),
-          cfpEnd: event.cfpEnd?.toISOString(),
+          cfpStart: event.cfpStart,
+          cfpEnd: event.cfpEnd,
           cfpState: 'CLOSED',
         },
       ]);

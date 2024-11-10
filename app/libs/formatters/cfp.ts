@@ -12,7 +12,7 @@ export function formatEventType(type: EventType) {
   }
 }
 
-export function formatConferenceDates(timeZone: string, start: string, end: string) {
+export function formatConferenceDates(timeZone: string, start: Date, end: Date) {
   const startDate = toZonedTime(start, timeZone);
   const endDate = toZonedTime(end, timeZone);
 
@@ -25,7 +25,7 @@ export function formatConferenceDates(timeZone: string, start: string, end: stri
   return `${startFormatted} to ${endFormatted}`;
 }
 
-export function formatCFPState(state: CfpState, start?: string | null, end?: string | null) {
+export function formatCFPState(state: CfpState, start?: Date | null, end?: Date | null) {
   if (!start && !end) return 'Call for paper is disabled';
 
   switch (state) {
@@ -38,7 +38,7 @@ export function formatCFPState(state: CfpState, start?: string | null, end?: str
   }
 }
 
-export function formatCFPElapsedTime(state: CfpState, start?: string | null, end?: string | null) {
+export function formatCFPElapsedTime(state: CfpState, start?: Date | null, end?: Date | null) {
   if (!start && !end) return 'Call for paper is disabled';
   if (!start || !end) return formatCFPState(state, start, end);
 
@@ -55,7 +55,13 @@ export function formatCFPElapsedTime(state: CfpState, start?: string | null, end
   }
 }
 
-export function formatCFPDate(state: CfpState, timeZone: string, start?: string, end?: string, format = 'PPPPp (z)') {
+export function formatCFPDate(
+  state: CfpState,
+  timeZone: string,
+  start: Date | null,
+  end: Date | null,
+  format = 'PPPPp (z)',
+) {
   if (!start || !end) return undefined;
   const startDate = toZonedTime(start, timeZone);
   const endDate = toZonedTime(end, timeZone);
@@ -72,7 +78,7 @@ export function formatCFPDate(state: CfpState, timeZone: string, start?: string,
 
 const STATUSES = { OPENED: 'success', CLOSED: 'warning', FINISHED: 'error' } as const;
 
-export function cfpColorStatus(cfpState: CfpState, cfpStart?: string | null, cfpEnd?: string | null) {
+export function cfpColorStatus(cfpState: CfpState, cfpStart: Date | null, cfpEnd: Date | null) {
   if (!cfpStart && !cfpEnd) return 'disabled';
   return STATUSES[cfpState];
 }

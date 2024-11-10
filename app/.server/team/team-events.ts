@@ -36,8 +36,8 @@ export class TeamEvents {
       type: event.type,
       logoUrl: event.logoUrl,
       timezone: event.timezone,
-      cfpStart: event.cfpStart?.toISOString(),
-      cfpEnd: event.cfpEnd?.toISOString(),
+      cfpStart: event.cfpStart,
+      cfpEnd: event.cfpEnd,
       cfpState: event.cfpState,
     }));
   }

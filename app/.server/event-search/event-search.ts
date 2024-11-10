@@ -50,8 +50,8 @@ export class EventsSearch {
         logoUrl: event.logoUrl,
         cfpState: event.cfpState,
         timezone: event.timezone,
-        cfpStart: event.cfpStart?.toISOString(),
-        cfpEnd: event.cfpEnd?.toISOString(),
+        cfpStart: event.cfpStart,
+        cfpEnd: event.cfpEnd,
       })),
     };
   }

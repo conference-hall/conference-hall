@@ -5,12 +5,11 @@ import { useCallback, useState } from 'react';
 
 import type { SubmissionError } from '~/types/errors.types.ts';
 
-import type { InputProps } from './input.tsx';
 import { Input } from './input.tsx';
 
 type Props = {
-  start: { value?: string | null } & InputProps;
-  end: { value?: string | null } & InputProps;
+  start: { name: string; label: string; value: Date | null };
+  end: { name: string; label: string; value: Date | null };
   timezone: string;
   required?: boolean;
   error?: SubmissionError;

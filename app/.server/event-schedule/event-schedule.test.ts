@@ -35,8 +35,8 @@ describe('EventSchedule', () => {
       expect(actual).toEqual({
         id: schedule.id,
         name: schedule.name,
-        start: schedule.start.toISOString(),
-        end: schedule.end.toISOString(),
+        start: schedule.start,
+        end: schedule.end,
         timezone: 'Europe/Paris',
         tracks: [{ id: track.id, name: track.name }],
       });
@@ -74,8 +74,8 @@ describe('EventSchedule', () => {
       const actual = await eventSchedule.get();
       expect(actual?.name).toEqual('My schedule');
       expect(actual?.timezone).toEqual('Europe/Paris');
-      expect(actual?.start).toEqual(expected.start.toISOString());
-      expect(actual?.end).toEqual(expected.end.toISOString());
+      expect(actual?.start).toEqual(expected.start);
+      expect(actual?.end).toEqual(expected.end);
       expect(actual?.tracks.at(0)?.name).toEqual('Main stage');
     });
 
@@ -103,8 +103,8 @@ describe('EventSchedule', () => {
 
       const actual = await eventSchedule.get();
       expect(actual?.name).toEqual(expected.name);
-      expect(actual?.start).toEqual(expected.start.toISOString());
-      expect(actual?.end).toEqual(expected.end.toISOString());
+      expect(actual?.start).toEqual(expected.start);
+      expect(actual?.end).toEqual(expected.end);
     });
 
     it('throws not found Error when no schedule defined for the event', async () => {
@@ -420,7 +420,7 @@ describe('EventSchedule', () => {
       const firstDay = await eventSchedule.getSchedulesByDay(0);
       expect(firstDay).toEqual({
         name: schedule.name,
-        currentDay: schedule.start.toISOString(),
+        currentDay: schedule.start,
         timezone: 'Europe/Paris',
         displayEndMinutes: 1080,
         displayStartMinutes: 540,
@@ -431,8 +431,8 @@ describe('EventSchedule', () => {
           {
             id: session.id,
             trackId: session.trackId,
-            start: session.start.toISOString(),
-            end: session.end.toISOString(),
+            start: session.start,
+            end: session.end,
             name: null,
             color: 'gray',
             proposal: {
@@ -458,7 +458,7 @@ describe('EventSchedule', () => {
       });
 
       const nextDay = await eventSchedule.getSchedulesByDay(1);
-      expect(nextDay?.currentDay).toEqual(schedule.end.toISOString());
+      expect(nextDay?.currentDay).toEqual(schedule.end);
       expect(nextDay?.nextDayIndex).toBe(null);
       expect(nextDay?.previousDayIndex).toBe(0);
     });

@@ -6,7 +6,7 @@ import { cfpColorStatus, formatCFPDate, formatCFPState } from '~/libs/formatters
 import { ClientOnly } from '~/routes/__components/utils/client-only.tsx';
 import type { CfpState } from '~/types/events.types.ts';
 
-type Props = { cfpState: CfpState; cfpStart?: string; cfpEnd?: string; timezone: string; showActions: boolean };
+type Props = { cfpState: CfpState; cfpStart: Date | null; cfpEnd: Date | null; timezone: string; showActions: boolean };
 
 export function CfpStatusCard({ cfpState, cfpStart, cfpEnd, timezone, showActions }: Props) {
   return (

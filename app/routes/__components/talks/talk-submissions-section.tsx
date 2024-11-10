@@ -16,7 +16,7 @@ type Props = {
     name: string;
     logoUrl: string | null;
     proposalStatus: SpeakerProposalStatus;
-    createdAt: string;
+    createdAt: Date;
   }>;
 };
 

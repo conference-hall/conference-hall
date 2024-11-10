@@ -27,8 +27,8 @@ export function ReviewItem({ item }: { item: FeedItem }) {
         <span className="font-medium text-gray-900">{item.user}</span> reviewed the proposal with{' '}
         <strong>{item.note} stars.</strong>
       </p>
-      <time dateTime={item.timestamp} className="flex-none py-0.5 pr-3 text-xs leading-5 text-gray-500">
-        {formatDistanceToNowStrict(new Date(item.timestamp))} ago
+      <time dateTime={item.timestamp.toISOString()} className="flex-none py-0.5 pr-3 text-xs leading-5 text-gray-500">
+        {formatDistanceToNowStrict(item.timestamp)} ago
       </time>
     </>
   );

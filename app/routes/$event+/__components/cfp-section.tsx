@@ -4,7 +4,7 @@ import { cfpColorStatus, formatCFPDate, formatCFPElapsedTime } from '~/libs/form
 import { ClientOnly } from '~/routes/__components/utils/client-only.tsx';
 import type { CfpState } from '~/types/events.types';
 
-type Props = { cfpState: CfpState; cfpStart?: string; cfpEnd?: string; timezone: string; className?: string };
+type Props = { cfpState: CfpState; cfpStart: Date | null; cfpEnd: Date | null; timezone: string; className?: string };
 
 export function CfpSection({ cfpState, cfpStart, cfpEnd, timezone }: Props) {
   return (

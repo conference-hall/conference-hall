@@ -27,8 +27,8 @@ export class CoSpeakerProposalInvite {
         type: proposal.event.type,
         logoUrl: proposal.event.logoUrl,
         cfpState: proposal.event.cfpState,
-        cfpStart: proposal.event.cfpStart?.toISOString(),
-        cfpEnd: proposal.event.cfpEnd?.toISOString(),
+        cfpStart: proposal.event.cfpStart,
+        cfpEnd: proposal.event.cfpEnd,
       },
     };
   }
