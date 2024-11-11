@@ -39,7 +39,7 @@ export const EventDetailsSettingsSchema = z
 
 export const CfpPreferencesSchema = z.object({
   codeOfConductUrl: z.string().url().trim().nullable().default(null),
-  maxProposals: z.number().nullable().default(null),
+  maxProposals: z.number().min(1).nullable().default(null),
 });
 
 export const CfpMeetupOpeningSchema = z.object({
