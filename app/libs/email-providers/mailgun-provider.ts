@@ -23,7 +23,6 @@ export class MailgunProvider implements EmailProvider {
       await this.client.messages.create(this.domain, {
         from: email.from,
         to: recipientEmails,
-        bcc: email.bcc,
         subject: email.subject,
         html: email.html,
       });

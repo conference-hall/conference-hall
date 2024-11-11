@@ -25,7 +25,6 @@ describe('MailgunProvider', () => {
     const email = {
       from: 'from@example.com',
       to: ['to1@example.com', 'to2@example.com'],
-      bcc: ['bcc1@example.com'],
       subject: 'Hello',
       html: 'World',
     };
@@ -35,7 +34,6 @@ describe('MailgunProvider', () => {
     expect(mailgunProvider['client'].messages.create).toHaveBeenCalledWith('example.com', {
       from: email.from,
       to: email.to,
-      bcc: email.bcc,
       subject: email.subject,
       html: email.html,
     });

@@ -18,7 +18,6 @@ export class MailpitProvider implements EmailProvider {
       await this.transporter.sendMail({
         from: email.from,
         to: recipientEmails,
-        bcc: email.bcc,
         subject: email.subject,
         html: email.html,
       });
