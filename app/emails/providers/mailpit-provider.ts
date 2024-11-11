@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 
-import { isValidEmail } from '../validators/email.ts';
+import { isValidEmail } from '../utils/email.ts';
 import type { Email, EmailProvider } from './provider.ts';
 
 export class MailpitProvider implements EmailProvider {
@@ -18,7 +18,6 @@ export class MailpitProvider implements EmailProvider {
       await this.transporter.sendMail({
         from: email.from,
         to: recipientEmails,
-        bcc: email.bcc,
         subject: email.subject,
         html: email.html,
       });

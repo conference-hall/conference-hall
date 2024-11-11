@@ -2,9 +2,9 @@ import { db } from 'prisma/db.server.ts';
 
 import { ForbiddenOperationError, ProposalNotFoundError } from '~/libs/errors.server.ts';
 
+import { sendProposalAcceptedEmailToSpeakers } from '~/emails/templates/speakers/proposal-accepted.tsx';
+import { sendProposalRejectedEmailToSpeakers } from '~/emails/templates/speakers/proposal-rejected.tsx';
 import { UserEvent } from '../event-settings/user-event.ts';
-import { ProposalAcceptedEmail } from './emails/proposal-accepted.email.ts';
-import { ProposalRejectedEmail } from './emails/proposal-rejected.email.ts';
 
 export type ResultsStatistics = Awaited<ReturnType<typeof Publication.prototype.statistics>>;
 
@@ -34,8 +34,13 @@ export class Publication {
       data: { publicationStatus: 'PUBLISHED', confirmationStatus: status === 'ACCEPTED' ? 'PENDING' : null },
     });
 
-    if (withEmails && status === 'ACCEPTED') await ProposalAcceptedEmail.send(event, proposals);
-    if (withEmails && status === 'REJECTED') await ProposalRejectedEmail.send(event, proposals);
+    if (withEmails && status === 'ACCEPTED') {
+      await Promise.all(proposals.map((proposal) => sendProposalAcceptedEmailToSpeakers({ event, proposal })));
+    }
+
+    if (withEmails && status === 'REJECTED') {
+      await Promise.all(proposals.map((proposal) => sendProposalRejectedEmailToSpeakers({ event, proposal })));
+    }
   }
 
   async publish(proposalId: string, withEmails: boolean) {
@@ -60,8 +65,13 @@ export class Publication {
       },
     });
 
-    if (withEmails && proposal.deliberationStatus === 'ACCEPTED') await ProposalAcceptedEmail.send(event, [proposal]);
-    if (withEmails && proposal.deliberationStatus === 'REJECTED') await ProposalRejectedEmail.send(event, [proposal]);
+    if (withEmails && proposal.deliberationStatus === 'ACCEPTED') {
+      await sendProposalAcceptedEmailToSpeakers({ event, proposal });
+    }
+
+    if (withEmails && proposal.deliberationStatus === 'REJECTED') {
+      await sendProposalRejectedEmailToSpeakers({ event, proposal });
+    }
   }
 
   async statistics() {

@@ -2,8 +2,8 @@ import { db } from 'prisma/db.server.ts';
 
 import { CfpNotOpenError, ProposalNotFoundError } from '~/libs/errors.server.ts';
 
-import { ProposalConfirmedEmail } from './emails/proposal-confirmed.email.ts';
-import { ProposalDeclinedEmail } from './emails/proposal-declined.email.ts';
+import { sendProposalConfirmedEmailToOrganizers } from '~/emails/templates/organizers/proposal-confirmed.tsx';
+import { sendProposalDeclinedEmailToOrganizers } from '~/emails/templates/organizers/proposal-declined.tsx';
 import type { ProposalSaveData } from './user-proposal.types';
 
 export class UserProposal {
@@ -106,7 +106,7 @@ export class UserProposal {
   async confirm(participation: 'CONFIRMED' | 'DECLINED') {
     const proposal = await db.proposal.findFirst({
       where: { id: this.proposalId, speakers: { some: { id: this.speakerId } } },
-      include: { event: true },
+      include: { event: { include: { team: true } }, speakers: true },
     });
     if (!proposal) throw new ProposalNotFoundError();
 
@@ -123,9 +123,9 @@ export class UserProposal {
     if (result.count <= 0) return;
 
     if (participation === 'CONFIRMED') {
-      await ProposalConfirmedEmail.send(proposal.event, proposal);
+      await sendProposalConfirmedEmailToOrganizers({ event: proposal.event, proposal });
     } else if (participation === 'DECLINED') {
-      await ProposalDeclinedEmail.send(proposal.event, proposal);
+      await sendProposalDeclinedEmailToOrganizers({ event: proposal.event, proposal });
     }
   }
 }

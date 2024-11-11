@@ -1,15 +1,13 @@
 import { db } from 'prisma/db.server.ts';
-
+import { sendProposalSubmittedEmailToOrganizers } from '~/emails/templates/organizers/proposal-submitted.tsx';
+import { sendProposalSubmittedEmailToSpeakers } from '~/emails/templates/speakers/proposal-submitted.tsx';
 import {
   CfpNotOpenError,
   EventNotFoundError,
   MaxSubmittedProposalsReachedError,
   ProposalNotFoundError,
 } from '~/libs/errors.server.ts';
-
 import { TalksLibrary } from '../speaker-talks-library/talks-library.ts';
-import { ProposalReceivedEmail } from './emails/proposal-received.email.ts';
-import { ProposalSubmittedEmail } from './emails/proposal-submitted.email.ts';
 import { sendSubmittedTalkSlackMessage } from './slack/slack.services.ts';
 import type { DraftSaveData, TrackUpdateData } from './talk-submission.types';
 
@@ -75,7 +73,7 @@ export class TalkSubmission {
   }
 
   async submit(talkId: string) {
-    const event = await db.event.findUnique({ where: { slug: this.eventSlug } });
+    const event = await db.event.findUnique({ where: { slug: this.eventSlug }, include: { team: true } });
     if (!event) throw new EventNotFoundError();
     if (!event.isCfpOpen) throw new CfpNotOpenError();
 
@@ -93,17 +91,17 @@ export class TalkSubmission {
 
     const proposal = await db.proposal.findFirst({
       where: { talkId, event: { slug: this.eventSlug }, speakers: { some: { id: this.speakerId } } },
-      include: { event: true, speakers: true },
+      include: { speakers: true },
     });
     if (!proposal) throw new ProposalNotFoundError();
 
     await db.proposal.update({ data: { isDraft: false }, where: { id: proposal.id } });
 
-    await ProposalSubmittedEmail.send(proposal.event, proposal);
-    await ProposalReceivedEmail.send(proposal.event, proposal);
+    await sendProposalSubmittedEmailToSpeakers({ event, proposal });
+    await sendProposalSubmittedEmailToOrganizers({ event, proposal });
 
-    if (proposal.event.slackWebhookUrl) {
-      await sendSubmittedTalkSlackMessage(proposal.eventId, proposal.id);
+    if (event.slackWebhookUrl) {
+      await sendSubmittedTalkSlackMessage(event.id, proposal.id);
     }
   }
 

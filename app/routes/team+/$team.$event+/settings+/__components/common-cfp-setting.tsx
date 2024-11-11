@@ -26,6 +26,7 @@ export function CommonCfpSetting({ maxProposals, codeOfConductUrl, errors }: Pro
             label="Maximum of proposals per speaker"
             type="number"
             defaultValue={maxProposals || ''}
+            min={1}
             autoComplete="off"
             description="Optional. Limits the number of proposals a speaker can submit to the event."
             error={errors?.maxProposals}

@@ -1,7 +1,7 @@
 import { MailgunProvider } from './mailgun-provider.ts';
 import { MailpitProvider } from './mailpit-provider.ts';
 
-export type Email = { from: string; to: string[]; bcc?: string[]; subject: string; html: string };
+export type Email = { from: string; to: string[]; subject: string; html: string };
 
 export interface EmailProvider {
   send: (email: Email) => Promise<void>;

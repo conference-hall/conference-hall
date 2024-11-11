@@ -20,7 +20,6 @@ describe('MailpitProvider', () => {
     const email = {
       from: 'from@example.com',
       to: ['to1@example.com', 'to2@example.com'],
-      bcc: ['bcc1@example.com'],
       subject: 'Hello',
       html: 'World',
     };
@@ -30,7 +29,6 @@ describe('MailpitProvider', () => {
     expect(mailpitProvider['transporter'].sendMail).toHaveBeenCalledWith({
       from: email.from,
       to: email.to,
-      bcc: email.bcc,
       subject: email.subject,
       html: email.html,
     });

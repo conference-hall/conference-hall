@@ -2,7 +2,7 @@ import formData from 'form-data';
 import Mailgun from 'mailgun.js';
 import type { IMailgunClient } from 'mailgun.js/Interfaces';
 
-import { isValidEmail } from '../validators/email.ts';
+import { isValidEmail } from '../utils/email.ts';
 import type { Email, EmailProvider } from './provider.ts';
 
 export class MailgunProvider implements EmailProvider {
@@ -23,7 +23,6 @@ export class MailgunProvider implements EmailProvider {
       await this.client.messages.create(this.domain, {
         from: email.from,
         to: recipientEmails,
-        bcc: email.bcc,
         subject: email.subject,
         html: email.html,
       });

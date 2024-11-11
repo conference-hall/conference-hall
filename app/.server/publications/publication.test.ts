@@ -7,7 +7,7 @@ import { userFactory } from 'tests/factories/users.ts';
 
 import { ForbiddenOperationError, ProposalNotFoundError } from '~/libs/errors.server.ts';
 
-import { sendEmail } from '~/.server/shared/jobs/send-email.job.ts';
+import { sendEmail } from '~/emails/send-email.job.ts';
 import { Publication } from './publication.ts';
 
 describe('Publication', () => {
@@ -17,6 +17,7 @@ describe('Publication', () => {
   let speaker1: User;
   let speaker2: User;
   let proposal: Proposal;
+  let rejectedProposal: Proposal;
   let proposalSubmitted: Proposal;
   let team: Team;
   let event: Event;
@@ -34,8 +35,12 @@ describe('Publication', () => {
       talk: await talkFactory({ speakers: [speaker1, speaker2] }),
       traits: ['accepted'],
     });
+    rejectedProposal = await proposalFactory({
+      event,
+      talk: await talkFactory({ speakers: [speaker1] }),
+      traits: ['rejected'],
+    });
     await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker1, speaker2] }), traits: ['accepted'] });
-    await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker1] }), traits: ['rejected'] });
     await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker1] }), traits: ['confirmed'] });
     await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker1] }), traits: ['declined'] });
     await proposalFactory({
@@ -94,18 +99,16 @@ describe('Publication', () => {
       expect(sendEmail.trigger).toHaveBeenNthCalledWith(
         1,
         expect.objectContaining({
-          from: `${event.name} <no-reply@conference-hall.io>`,
+          template: 'speakers/proposal-accepted',
           to: [speaker1.email, speaker2.email],
-          subject: `[${event.name}] Congrats! Your proposal has been accepted`,
         }),
       );
 
       expect(sendEmail.trigger).toHaveBeenNthCalledWith(
         2,
         expect.objectContaining({
-          from: `${event.name} <no-reply@conference-hall.io>`,
+          template: 'speakers/proposal-accepted',
           to: [speaker1.email, speaker2.email],
-          subject: `[${event.name}] Congrats! Your proposal has been accepted`,
         }),
       );
     });
@@ -123,9 +126,8 @@ describe('Publication', () => {
 
       expect(sendEmail.trigger).toHaveBeenCalledWith(
         expect.objectContaining({
-          from: `${event.name} <no-reply@conference-hall.io>`,
+          template: 'speakers/proposal-rejected',
           to: [speaker1.email],
-          subject: `[${event.name}] Your talk has been declined`,
         }),
       );
     });
@@ -150,7 +152,7 @@ describe('Publication', () => {
   });
 
   describe('#publish', () => {
-    it('publish result a specific proposal', async () => {
+    it('publish result an accepted proposal', async () => {
       const publication = Publication.for(owner.id, team.slug, event.slug);
 
       const count = await publication.statistics();
@@ -163,9 +165,27 @@ describe('Publication', () => {
 
       expect(sendEmail.trigger).toHaveBeenCalledWith(
         expect.objectContaining({
-          from: `${event.name} <no-reply@conference-hall.io>`,
+          template: 'speakers/proposal-accepted',
           to: [speaker1.email, speaker2.email],
-          subject: `[${event.name}] Congrats! Your proposal has been accepted`,
+        }),
+      );
+    });
+
+    it('publish result a rejected proposal', async () => {
+      const publication = Publication.for(owner.id, team.slug, event.slug);
+
+      const count = await publication.statistics();
+      expect(count.rejected).toEqual({ published: 0, notPublished: 1 });
+
+      await publication.publish(rejectedProposal.id, true);
+
+      const countRejected = await publication.statistics();
+      expect(countRejected.rejected).toEqual({ published: 1, notPublished: 0 });
+
+      expect(sendEmail.trigger).toHaveBeenCalledWith(
+        expect.objectContaining({
+          template: 'speakers/proposal-rejected',
+          to: [speaker1.email],
         }),
       );
     });
