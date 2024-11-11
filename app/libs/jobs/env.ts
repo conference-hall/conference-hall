@@ -4,6 +4,7 @@ import { z } from 'zod';
 const schema = z.object({
   NODE_ENV: z.enum(['production', 'development', 'test']),
   REDIS_URL: z.string(),
+  APP_URL: z.string(),
   MAILGUN_DOMAIN: z.string().optional(),
   MAILGUN_API_KEY: z.string().optional(),
   MAILPIT_HOST: z.string().optional(),

@@ -9,7 +9,7 @@ import { userFactory } from 'tests/factories/users.ts';
 import { CfpNotOpenError, ProposalNotFoundError } from '~/libs/errors.server.ts';
 import { SpeakerProposalStatus } from '~/types/speaker.types.ts';
 
-import { sendEmail } from '~/.server/shared/jobs/send-email.job.ts';
+import { sendEmail } from '~/emails/send-email.job.ts';
 import { UserProposal } from './user-proposal.ts';
 
 describe('UserProposal', () => {
@@ -248,9 +248,8 @@ describe('UserProposal', () => {
 
       expect(sendEmail.trigger).toHaveBeenCalledWith(
         expect.objectContaining({
-          from: `${event.name} <no-reply@conference-hall.io>`,
+          template: 'organizers/proposal-confirmed',
           to: [event.emailOrganizer],
-          subject: `[${event.name}] Talk confirmed by speaker`,
         }),
       );
     });
@@ -273,9 +272,8 @@ describe('UserProposal', () => {
 
       expect(sendEmail.trigger).toHaveBeenCalledWith(
         expect.objectContaining({
-          from: `${event.name} <no-reply@conference-hall.io>`,
+          template: 'organizers/proposal-declined',
           to: [event.emailOrganizer],
-          subject: `[${event.name}] Talk declined by speaker`,
         }),
       );
     });
