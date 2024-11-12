@@ -51,6 +51,9 @@ export class CfpReviewsSearch {
             summary: event.displayProposalsReviews ? reviews.summary() : undefined,
             you: reviews.ofUser(this.userId),
           },
+          comments: {
+            count: proposal._count.comments,
+          },
         };
       }),
     };

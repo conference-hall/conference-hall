@@ -8,6 +8,7 @@ import { userFactory } from 'tests/factories/users.ts';
 
 import { ForbiddenOperationError } from '~/libs/errors.server.ts';
 
+import { commentFactory } from 'tests/factories/comments.ts';
 import { eventProposalTagFactory } from 'tests/factories/proposal-tags.ts';
 import { CfpReviewsSearch } from './cfp-reviews-search.ts';
 
@@ -30,6 +31,7 @@ describe('CfpReviewsSearch', () => {
     it('returns event proposals info', async () => {
       const tag = await eventProposalTagFactory({ event });
       const proposal = await proposalFactory({ event, talk: await talkFactory({ speakers: [speaker] }), tags: [tag] });
+      await commentFactory({ proposal: proposal, user: owner });
       const proposals = await CfpReviewsSearch.for(owner.id, team.slug, event.slug).search({ status: 'pending' });
 
       expect(proposals.results).toEqual([
@@ -45,6 +47,7 @@ describe('CfpReviewsSearch', () => {
             summary: { negatives: 0, positives: 0, average: null },
             you: { note: null, feeling: null },
           },
+          comments: { count: 1 },
         },
       ]);
 

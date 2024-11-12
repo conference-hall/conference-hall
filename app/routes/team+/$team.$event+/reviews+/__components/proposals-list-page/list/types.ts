@@ -15,5 +15,6 @@ export type ProposalData = {
   confirmationStatus: ConfirmationStatus | null;
   speakers: Array<{ name: string | null; picture: string | null }>;
   reviews: { summary?: GlobalReview; you: UserReview };
+  comments: { count: number };
   tags: Array<Tag>;
 };
