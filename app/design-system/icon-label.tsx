@@ -1,16 +1,18 @@
 import { cx } from 'class-variance-authority';
 
-import type { TypographyVariantProps } from './typography.tsx';
+import type { TypographyProps } from './typography.tsx';
 import { Text } from './typography.tsx';
 
 type Props = {
   children: React.ReactNode;
   alt?: string;
-  gap?: 'base' | 'm' | 'l';
+  gap?: 'xs' | 'sm' | 'base' | 'm' | 'l';
   icon: React.ComponentType<{ className?: string }>;
-} & TypographyVariantProps;
+} & TypographyProps;
 
 const GAP = {
+  xs: 'gap-0.5',
+  sm: 'gap-1',
   base: 'gap-2',
   m: 'gap-4',
   l: 'gap-4',
