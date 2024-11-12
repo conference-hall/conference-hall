@@ -19,15 +19,17 @@ export function GlobalReviewNote({ feeling, note, hideEmpty }: Props) {
   const { icon: Icon, color, stroke, label } = REVIEWS[feeling || 'NEUTRAL'];
   const formattedNote = formatReviewNote(note);
 
+  if (note === null && feeling !== 'NO_OPINION') return <div />;
+
   return (
-    <div className={cx('flex items-center justify-end gap-1 w-14', { invisible: note === null && hideEmpty })}>
+    <div className={cx('flex items-center justify-end gap-1', { invisible: note === null && hideEmpty })}>
       <ClientOnly>
         {() => (
           <>
             <Text weight="semibold" variant="secondary">
               {formattedNote}
             </Text>
-            <Icon className={cx('h-5 w-5 shrink-0', color, stroke)} aria-label={`${label}: ${formattedNote}`} />
+            <Icon className={cx('size-5 shrink-0', color, stroke)} aria-label={`${label}: ${formattedNote}`} />
           </>
         )}
       </ClientOnly>
@@ -36,10 +38,10 @@ export function GlobalReviewNote({ feeling, note, hideEmpty }: Props) {
 }
 
 export function UserReviewNote({ feeling, note }: Props) {
-  if (!feeling) return null;
-
-  const { icon: Icon, color, stroke, label } = REVIEWS[feeling];
+  const { icon: Icon, color, stroke, label } = REVIEWS[feeling || 'NEUTRAL'];
   const formattedNote = formatReviewNote(note);
+
+  if (note === null && feeling !== 'NO_OPINION') return <div />;
 
   return (
     <div className="flex items-center justify-end gap-1">
@@ -50,9 +52,9 @@ export function UserReviewNote({ feeling, note }: Props) {
               {formattedNote}
             </Text>
             {feeling === 'NEUTRAL' ? (
-              <UserCircleIcon className="h-5 w-5 text-gray-700 shrink-0" aria-label={`Your review: ${formattedNote}`} />
+              <UserCircleIcon className="size-5 text-gray-700 shrink-0" aria-label={`Your review: ${formattedNote}`} />
             ) : (
-              <Icon className={cx('h-5 w-5 shrink-0', color, stroke)} aria-label={`Your review: ${label}`} />
+              <Icon className={cx('size-5 shrink-0', color, stroke)} aria-label={`Your review: ${label}`} />
             )}
           </>
         )}

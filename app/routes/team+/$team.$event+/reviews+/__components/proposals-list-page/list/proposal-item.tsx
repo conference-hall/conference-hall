@@ -7,6 +7,7 @@ import { Text } from '~/design-system/typography.tsx';
 import { GlobalReviewNote, UserReviewNote } from '~/routes/__components/reviews/review-note.tsx';
 
 import { useCurrentTeam } from '~/routes/__components/contexts/team-context.tsx';
+import { ReviewComments } from '~/routes/__components/reviews/review-comments';
 import { Tag } from '~/routes/__components/tags/tag.tsx';
 import type { ProposalData } from './types';
 
@@ -67,7 +68,8 @@ export function ProposalItem({ proposal, isSelected, isAllPagesSelected, toggle 
           </Text>
         </div>
 
-        <div className="hidden sm:flex sm:items-center sm:gap-6">
+        <div className="hidden sm:flex sm:items-center sm:gap-2 sm:[&>*]:w-14">
+          <ReviewComments count={proposal.comments.count} />
           <UserReviewNote feeling={you.feeling} note={you.note} />
           {summary && <GlobalReviewNote feeling="NEUTRAL" note={summary.average} hideEmpty />}
         </div>

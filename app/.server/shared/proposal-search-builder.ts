@@ -31,6 +31,9 @@ export class ProposalSearchBuilder {
       include: {
         speakers: this.options.withSpeakers,
         reviews: this.options.withReviews,
+        _count: {
+          select: { comments: true },
+        },
         tags: true,
       },
       where: this.whereClause(),
