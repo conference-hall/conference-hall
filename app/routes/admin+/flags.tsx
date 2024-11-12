@@ -27,7 +27,7 @@ export const action = async ({ request }: LoaderFunctionArgs) => {
   return null;
 };
 
-export default function FlagsRoute() {
+export default function AdminFlagsRoute() {
   const flags = useLoaderData<typeof loader>();
 
   return (

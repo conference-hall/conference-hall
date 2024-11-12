@@ -8,6 +8,7 @@ export function AdminTabs() {
         <NavTab to="/admin" end>
           Users
         </NavTab>
+        <NavTab to="/admin/teams">Teams</NavTab>
         <NavTab to="/admin/flags">Feature flags</NavTab>
         <NavTab to="/admin/debug">Debug</NavTab>
       </NavTabs>

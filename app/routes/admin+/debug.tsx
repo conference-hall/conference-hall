@@ -27,7 +27,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   return null;
 };
 
-export default function DebugPage() {
+export default function AdminDebugPage() {
   return (
     <Page>
       <H1 srOnly>Users</H1>
