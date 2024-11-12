@@ -7,11 +7,11 @@ export function ReviewComments({ count }: Props) {
   if (count === 0) return null;
 
   return (
-    <div className="flex items-center flex-row-reverse justify-end gap-1">
-      <ChatBubbleBottomCenterTextIcon className="h-5 w-5 shrink-0" aria-label="Number of comments" />
+    <div className="flex items-center justify-end gap-1">
       <Text weight="semibold" variant="secondary">
         {count}
       </Text>
+      <ChatBubbleBottomCenterTextIcon className="size-5 shrink-0 text-gray-600" aria-label={`${count} comment(s)`} />
     </div>
   );
 }
