@@ -10,6 +10,7 @@ import { userFactory } from 'tests/factories/users.ts';
 
 import { Pagination } from '~/.server/shared/pagination.ts';
 
+import { commentFactory } from 'tests/factories/comments.ts';
 import { eventProposalTagFactory } from 'tests/factories/proposal-tags.ts';
 import { ProposalSearchBuilder } from './proposal-search-builder.ts';
 import type { ProposalsFilters } from './proposal-search-builder.types.ts';
@@ -84,6 +85,10 @@ describe('EventProposalsSearch', () => {
     await reviewFactory({ user: owner, proposal: proposal1, attributes: { feeling: 'POSITIVE', note: 5 } });
     await reviewFactory({ user: owner, proposal: proposal2, attributes: { feeling: 'NEUTRAL', note: 5 } });
     await reviewFactory({ user: owner, proposal: proposal3, attributes: { feeling: 'NEUTRAL', note: 1 } });
+
+    await commentFactory({ user: owner, proposal: proposal1 });
+    await commentFactory({ user: owner, proposal: proposal3 });
+    await commentFactory({ user: owner, proposal: proposal3 });
   });
 
   describe('#search.statisics', () => {
@@ -285,6 +290,30 @@ describe('EventProposalsSearch', () => {
       expect(proposals[2].title).toBe(proposal3.title);
       expect(proposals[3].title).toBe(proposal1.title);
       expect(proposals[4].title).toBe(proposal2.title);
+    });
+
+    it('sort by most comments', async () => {
+      const filters: ProposalsFilters = { sort: 'most-comments' };
+      const search = new ProposalSearchBuilder(event.slug, owner.id, filters);
+      const proposals = await search.proposals();
+      expect(proposals.length).toBe(5);
+      expect(proposals[0].title).toBe(proposal3.title);
+      expect(proposals[1].title).toBe(proposal1.title);
+      expect(proposals[2].title).toBe(proposal2.title);
+      expect(proposals[3].title).toBe(proposal4.title);
+      expect(proposals[4].title).toBe(proposal5.title);
+    });
+
+    it('sort by fewest comments', async () => {
+      const filters: ProposalsFilters = { sort: 'fewest-comments' };
+      const search = new ProposalSearchBuilder(event.slug, owner.id, filters);
+      const proposals = await search.proposals();
+      expect(proposals.length).toBe(5);
+      expect(proposals[0].title).toBe(proposal2.title);
+      expect(proposals[1].title).toBe(proposal4.title);
+      expect(proposals[2].title).toBe(proposal5.title);
+      expect(proposals[3].title).toBe(proposal1.title);
+      expect(proposals[4].title).toBe(proposal3.title);
     });
   });
 

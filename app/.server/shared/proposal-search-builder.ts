@@ -130,6 +130,10 @@ export class ProposalSearchBuilder {
         return [{ avgRateForSort: { sort: 'asc', nulls: 'first' } }, { title: 'asc' }];
       case 'oldest':
         return [{ createdAt: 'asc' }, { title: 'asc' }];
+      case 'most-comments':
+        return [{ comments: { _count: 'desc' } }, { title: 'asc' }];
+      case 'fewest-comments':
+        return [{ comments: { _count: 'asc' } }, { title: 'asc' }];
       default:
         return [{ createdAt: 'desc' }, { title: 'asc' }];
     }
