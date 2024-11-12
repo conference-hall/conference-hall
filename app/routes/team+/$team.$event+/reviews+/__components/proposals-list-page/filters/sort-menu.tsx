@@ -8,7 +8,7 @@ import { button } from '~/design-system/buttons.tsx';
 import { MenuTransition } from '~/design-system/transitions.tsx';
 
 import { useCurrentEvent } from '~/routes/__components/contexts/event-team-context.tsx';
-import { sortByDatesOptions, sortByReviewsOptions } from './filters.ts';
+import { sortByCommentsOptions, sortByDatesOptions, sortByReviewsOptions } from './filters.ts';
 
 export function SortMenu() {
   const location = useLocation();
@@ -16,7 +16,11 @@ export function SortMenu() {
   const { sort = 'newest', ...filters } = Object.fromEntries(params.entries());
 
   const { displayProposalsReviews } = useCurrentEvent();
-  const options = displayProposalsReviews ? [...sortByDatesOptions, ...sortByReviewsOptions] : sortByDatesOptions;
+  const options = [
+    ...sortByDatesOptions,
+    ...(displayProposalsReviews ? sortByReviewsOptions : []),
+    ...sortByCommentsOptions,
+  ];
 
   return (
     <Menu as="div" className="relative inline-block text-left">

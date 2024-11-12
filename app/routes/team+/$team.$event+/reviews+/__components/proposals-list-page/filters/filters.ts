@@ -22,3 +22,8 @@ export const sortByReviewsOptions = [
   { name: 'Highest review', value: 'highest' },
   { name: 'Lowest review', value: 'lowest' },
 ];
+
+export const sortByCommentsOptions = [
+  { name: 'Most comments', value: 'most-comments' },
+  { name: 'Fewest comments', value: 'fewest-comments' },
+];

@@ -9,7 +9,7 @@ const StatusFilterSchema = z
 
 export const ProposalsFiltersSchema = z.object({
   query: z.string().trim().optional(),
-  sort: z.enum(['newest', 'oldest', 'highest', 'lowest']).optional(),
+  sort: z.enum(['newest', 'oldest', 'highest', 'lowest', 'most-comments', 'fewest-comments']).optional(),
   reviews: ReviewsFiltersSchema,
   status: StatusFilterSchema,
   formats: z.string().optional(),
