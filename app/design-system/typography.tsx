@@ -34,7 +34,7 @@ export const typography = cva('', {
 
 export type TypographyVariantProps = VariantProps<typeof typography>;
 
-type TypographyProps = {
+export type TypographyProps = {
   id?: string;
   as?: React.ElementType;
   className?: string;

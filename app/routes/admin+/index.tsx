@@ -24,7 +24,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   return adminUsers.listUsers(filters, page);
 };
 
-export default function AdminRoute() {
+export default function AdminUsersRoute() {
   const { results, filters, pagination, statistics } = useLoaderData<typeof loader>();
 
   return (
