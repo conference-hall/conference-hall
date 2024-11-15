@@ -4,6 +4,10 @@
 
 https://conference-hall.io
 
+## Sponsors
+
+[<img src="./docs/sponsors/devlille.svg" alt="DevLille logo" height="100"/>](https://devlille.fr)
+
 ## Features
 
 **You are a speaker:**
