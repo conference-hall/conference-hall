@@ -29,6 +29,7 @@ export const loader: LoaderFunction = async ({ params }) => {
         'Content-Type': metadata.contentType,
         'Content-Length': metadata.size?.toString(),
         'Cache-Control': `public, max-age=${ONE_YEAR_IN_SECONDS}, immutable`,
+        'Cross-Origin-Resource-Policy': 'cross-origin',
       },
     });
   } catch (error) {

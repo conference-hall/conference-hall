@@ -6,10 +6,10 @@ describe('#eventSocialCard', () => {
 
     expect(socialCard).toEqual([
       { content: "Devfest's call for papers", property: 'og:title' },
-      { content: "Submit your proposal to Devfest's call for papers.", property: 'og:description' },
+      { content: 'Submit your proposal to Devfest call for papers.', property: 'og:description' },
       { content: 'event', property: 'og:type' },
       { content: 'https://conference-hall.io/devfest', property: 'og:url' },
-      { content: "Devfest's call for papers", name: 'twitter:title' },
+      { content: 'Devfest call for papers', name: 'twitter:title' },
       { content: 'https://devfest.com/logo.png', property: 'og:image' },
       { content: '200', property: 'og:image:width' },
       { content: '200', property: 'og:image:height' },
@@ -23,10 +23,10 @@ describe('#eventSocialCard', () => {
 
     expect(socialCard).toEqual([
       { content: "Devfest's call for papers", property: 'og:title' },
-      { content: "Submit your proposal to Devfest's call for papers.", property: 'og:description' },
+      { content: 'Submit your proposal to Devfest call for papers.', property: 'og:description' },
       { content: 'event', property: 'og:type' },
       { content: 'https://conference-hall.io/devfest', property: 'og:url' },
-      { content: "Devfest's call for papers", name: 'twitter:title' },
+      { content: 'Devfest call for papers', name: 'twitter:title' },
       { content: 'summary', name: 'twitter:card' },
     ]);
   });

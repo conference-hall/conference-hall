@@ -1,12 +1,13 @@
 import { cx } from 'class-variance-authority';
 
+import type { SubmissionError } from '~/types/errors.types.ts';
 import { Label } from '../typography.tsx';
 
 type Props = {
   name: string;
   label?: string;
   description?: string;
-  error?: string;
+  error?: SubmissionError;
 } & React.TextareaHTMLAttributes<HTMLTextAreaElement>;
 
 const baseStyles = 'focus:ring-indigo-500 focus:border-indigo-500 border-gray-300';
