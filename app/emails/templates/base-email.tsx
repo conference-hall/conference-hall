@@ -1,18 +1,17 @@
-import { Body, Container, Head, Html, Link, Preview, Section, Tailwind } from '@react-email/components';
+import { Body, Container, Head, Html, Link, Section, Tailwind } from '@react-email/components';
 import { cx } from 'class-variance-authority';
-import { appUrl } from '~/libs/env/env.server.ts';
 
 export type BaseEmailProps = {
-  preview: string;
   children: React.ReactNode;
   lang?: string;
 };
 
-export default function BaseEmail({ preview, children, lang = 'en' }: BaseEmailProps) {
+const APP_URL = process.env.APP_URL;
+
+export default function BaseEmail({ children, lang = 'en' }: BaseEmailProps) {
   return (
     <Html lang={lang}>
       <Head />
-      <Preview>{preview}</Preview>
 
       <Tailwind>
         <Body className="bg-white my-auto mx-auto font-sans">
@@ -21,7 +20,7 @@ export default function BaseEmail({ preview, children, lang = 'en' }: BaseEmailP
           </Container>
 
           <Section className="text-center mx-auto">
-            <Link href={appUrl()} className="text-xs text-gray-400">
+            <Link href={APP_URL} className="text-xs text-gray-400">
               Powered by Conference Hall
             </Link>
           </Section>

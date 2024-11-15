@@ -34,7 +34,7 @@ export function sendProposalDeclinedEmailToOrganizers(data: EmailData) {
 
 export default function ProposalDeclinedEmail({ event, proposal }: EmailData) {
   return (
-    <BaseEventEmail logoUrl={event.logoUrl} preview={`"${proposal.title}" declined by speaker(s).`}>
+    <BaseEventEmail logoUrl={event.logoUrl}>
       <Heading className={styles.h1}>Proposal declined by speaker(s)!</Heading>
 
       <Section className={styles.card}>

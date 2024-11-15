@@ -34,7 +34,7 @@ export function sendProposalConfirmedEmailToOrganizers(data: EmailData) {
 
 export default function ProposalConfirmedEmail({ event, proposal }: EmailData) {
   return (
-    <BaseEventEmail logoUrl={event.logoUrl} preview={`"${proposal.title}" confirmed by speaker(s).`}>
+    <BaseEventEmail logoUrl={event.logoUrl}>
       <Heading className={styles.h1}>Proposal confirmed by speaker(s)!</Heading>
 
       <Section className={styles.card}>

@@ -22,15 +22,18 @@ export const sendEmail = job<Email>({
 
     if (!emailProvider) return Promise.reject('Email provider not found');
 
-    const html = await renderEmail(payload.template, payload.data);
+    const emailRendered = await renderEmail(payload.template, payload.data);
 
-    if (!html) return Promise.reject('Email rendering failed');
+    if (!emailRendered) return Promise.reject('Email rendering failed');
+
+    const { html, text } = emailRendered;
 
     return emailProvider.send({
       from: payload.from,
       to: payload.to.filter(Boolean),
       subject: payload.subject,
       html,
+      text,
     });
   },
 });

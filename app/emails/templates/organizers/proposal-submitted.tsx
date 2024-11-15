@@ -34,7 +34,7 @@ export function sendProposalSubmittedEmailToOrganizers(data: EmailData) {
 
 export default function ProposalSubmittedEmail({ event, proposal }: EmailData) {
   return (
-    <BaseEventEmail logoUrl={event.logoUrl} preview={`"${proposal.title}" applied for ${event.name}.`}>
+    <BaseEventEmail logoUrl={event.logoUrl}>
       <Heading className={styles.h1}>New proposal applied!</Heading>
 
       <Section className={styles.card}>

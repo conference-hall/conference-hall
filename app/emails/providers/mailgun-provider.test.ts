@@ -27,6 +27,7 @@ describe('MailgunProvider', () => {
       to: ['to1@example.com', 'to2@example.com'],
       subject: 'Hello',
       html: 'World',
+      text: 'World text',
     };
 
     await mailgunProvider.send(email);
@@ -36,6 +37,7 @@ describe('MailgunProvider', () => {
       to: email.to,
       subject: email.subject,
       html: email.html,
+      text: 'World text',
     });
   });
 });

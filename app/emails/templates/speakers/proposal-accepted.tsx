@@ -21,7 +21,7 @@ export function sendProposalAcceptedEmailToSpeakers(data: EmailData) {
 
 export default function ProposalAcceptedEmail({ event, proposal }: EmailData) {
   return (
-    <BaseEventEmail logoUrl={event.logoUrl} preview={`"${proposal.title}" accepted to ${event.name}.`}>
+    <BaseEventEmail logoUrl={event.logoUrl}>
       <Heading className={styles.h1}>Proposal accepted!</Heading>
 
       <Text>
