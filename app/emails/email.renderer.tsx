@@ -4,7 +4,9 @@ export async function renderEmail(name: string, data: Record<string, any>): Prom
   try {
     const EmailTemplate = await import(`./templates/${name}.tsx`).then((module) => module.default);
 
-    return render(<EmailTemplate {...data} />, { pretty: true });
+    const html = await render(<EmailTemplate {...data} />, { pretty: true });
+
+    return html.replaceAll('http://www.w3.org', 'https://www.w3.org');
   } catch (err) {
     console.error(`Error rendering email template "${name}"`, err);
     return null;
