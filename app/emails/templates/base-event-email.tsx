@@ -5,9 +5,9 @@ type BaseEventEmailProps = BaseEmailProps & {
   logoUrl: string | null;
 };
 
-export default function BaseEventEmail({ logoUrl, preview, children, lang }: BaseEventEmailProps) {
+export default function BaseEventEmail({ logoUrl, children, lang }: BaseEventEmailProps) {
   return (
-    <BaseEmail preview={preview} lang={lang}>
+    <BaseEmail lang={lang}>
       {logoUrl ? <Img className={styles.logo} height={100} src={logoUrl} /> : null}
 
       {children}

@@ -21,7 +21,7 @@ export function sendProposalSubmittedEmailToSpeakers(data: EmailData) {
 
 export default function ProposalSubmittedEmail({ event, proposal }: EmailData) {
   return (
-    <BaseEventEmail logoUrl={event.logoUrl} preview={`"${proposal.title}" submitted to ${event.name}.`}>
+    <BaseEventEmail logoUrl={event.logoUrl}>
       <Heading className={styles.h1}>Thank you for your proposal!</Heading>
 
       <Text>
