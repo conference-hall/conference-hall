@@ -22,6 +22,7 @@ describe('MailpitProvider', () => {
       to: ['to1@example.com', 'to2@example.com'],
       subject: 'Hello',
       html: 'World',
+      text: 'World text',
     };
 
     await mailpitProvider.send(email);
@@ -31,6 +32,7 @@ describe('MailpitProvider', () => {
       to: email.to,
       subject: email.subject,
       html: email.html,
+      text: email.text,
     });
   });
 });

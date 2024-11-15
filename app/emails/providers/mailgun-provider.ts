@@ -25,6 +25,7 @@ export class MailgunProvider implements EmailProvider {
         to: recipientEmails,
         subject: email.subject,
         html: email.html,
+        text: email.text,
       });
     } catch (error) {
       console.error(error);
