@@ -68,11 +68,15 @@ export default function PublicationRoute() {
             </ProgressCard>
 
             <StatisticCard label="Accepted proposals to publish" stat={`${statistics.accepted.notPublished}`}>
-              <PublicationButton type="ACCEPTED" statistics={statistics.accepted} />
+              <StatisticCard.Footer>
+                <PublicationButton type="ACCEPTED" statistics={statistics.accepted} />
+              </StatisticCard.Footer>
             </StatisticCard>
 
             <StatisticCard label="Rejected proposals to publish" stat={`${statistics.rejected.notPublished}`}>
-              <PublicationButton type="REJECTED" statistics={statistics.rejected} />
+              <StatisticCard.Footer>
+                <PublicationButton type="REJECTED" statistics={statistics.rejected} />
+              </StatisticCard.Footer>
             </StatisticCard>
           </Card.Content>
         </Card>
