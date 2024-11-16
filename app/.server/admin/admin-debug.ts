@@ -27,7 +27,7 @@ export class AdminDebug {
     return sendEmail.trigger({
       template: 'base-event-email',
       subject: 'Test email from Conference Hall',
-      from: 'Test email <no-reply@conference-hall.io>',
+      from: 'Test email <no-reply@mg.conference-hall.io>',
       to: [email.to],
       data: {
         children: 'This is a test email from Conference Hall',

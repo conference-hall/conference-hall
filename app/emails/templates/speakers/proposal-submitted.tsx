@@ -13,7 +13,7 @@ export function sendProposalSubmittedEmailToSpeakers(data: EmailData) {
   return sendEmail.trigger({
     template: 'speakers/proposal-submitted',
     subject: `[${data.event.name}] Submission confirmed`,
-    from: `${data.event.name} <no-reply@conference-hall.io>`,
+    from: `${data.event.name} <no-reply@mg.conference-hall.io>`,
     to: data.proposal.speakers.map((speaker) => speaker.email),
     data,
   });

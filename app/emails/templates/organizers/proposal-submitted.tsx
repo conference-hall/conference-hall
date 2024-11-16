@@ -26,7 +26,7 @@ export function sendProposalSubmittedEmailToOrganizers(data: EmailData) {
   return sendEmail.trigger({
     template: 'organizers/proposal-submitted',
     subject: `[${data.event.name}] New proposal applied`,
-    from: `${data.event.name} <no-reply@conference-hall.io>`,
+    from: `${data.event.name} <no-reply@mg.conference-hall.io>`,
     to: [data.event.emailOrganizer],
     data,
   });

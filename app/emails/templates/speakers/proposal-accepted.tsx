@@ -13,7 +13,7 @@ export function sendProposalAcceptedEmailToSpeakers(data: EmailData) {
   return sendEmail.trigger({
     template: 'speakers/proposal-accepted',
     subject: `[${data.event.name}] Congrats! Your proposal has been accepted`,
-    from: `${data.event.name} <no-reply@conference-hall.io>`,
+    from: `${data.event.name} <no-reply@mg.conference-hall.io>`,
     to: data.proposal.speakers.map((speaker) => speaker.email),
     data,
   });

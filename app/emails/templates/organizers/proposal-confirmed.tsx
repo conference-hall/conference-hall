@@ -26,7 +26,7 @@ export function sendProposalConfirmedEmailToOrganizers(data: EmailData) {
   return sendEmail.trigger({
     template: 'organizers/proposal-confirmed',
     subject: `[${data.event.name}] Proposal confirmed by speaker`,
-    from: `${data.event.name} <no-reply@conference-hall.io>`,
+    from: `${data.event.name} <no-reply@mg.conference-hall.io>`,
     to: [data.event.emailOrganizer],
     data,
   });

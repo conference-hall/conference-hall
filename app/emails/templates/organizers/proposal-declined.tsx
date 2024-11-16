@@ -26,7 +26,7 @@ export function sendProposalDeclinedEmailToOrganizers(data: EmailData) {
   return sendEmail.trigger({
     template: 'organizers/proposal-declined',
     subject: `[${data.event.name}] Proposal declined by speaker`,
-    from: `${data.event.name} <no-reply@conference-hall.io>`,
+    from: `${data.event.name} <no-reply@mg.conference-hall.io>`,
     to: [data.event.emailOrganizer],
     data,
   });
