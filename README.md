@@ -6,7 +6,7 @@ https://conference-hall.io
 
 ## Sponsors
 
-[<img src="./docs/sponsors/devlille.svg" alt="DevLille logo" height="100"/>](https://devlille.fr)
+[<img  src="./docs/sponsors/devlille.svg" alt="DevLille logo" height="68"/>](https://devlille.fr)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<img src="./docs/sponsors/gdgnantes.png" alt="GDG Nantes logo" height="68"/>](https://gdgnantes.com)
 
 ## Features
 
