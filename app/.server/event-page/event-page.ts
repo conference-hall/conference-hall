@@ -1,6 +1,8 @@
 import { db } from 'prisma/db.server.ts';
 
 import { EventNotFoundError } from '~/libs/errors.server.ts';
+import { flags } from '~/libs/feature-flags/flags.server.ts';
+import { SurveyConfig } from '../event-survey/models/survey-config.ts';
 
 export class EventPage {
   constructor(private slug: string) {}
@@ -16,6 +18,9 @@ export class EventPage {
     });
 
     if (!event) throw new EventNotFoundError();
+
+    const newSurveyActive = await flags.get('custom-survey');
+    const surveyEnabled = newSurveyActive ? new SurveyConfig(event.surveyConfig).isActiveForEvent : event.surveyEnabled;
 
     return {
       id: event.id,
@@ -33,7 +38,7 @@ export class EventPage {
       cfpEnd: event.cfpEnd,
       cfpState: event.cfpState,
       isCfpOpen: event.isCfpOpen,
-      surveyEnabled: event.surveyEnabled,
+      surveyEnabled: surveyEnabled,
       websiteUrl: event.websiteUrl,
       contactEmail: event.contactEmail,
       codeOfConductUrl: event.codeOfConductUrl,

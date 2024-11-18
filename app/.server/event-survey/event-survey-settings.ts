@@ -27,18 +27,12 @@ export class EventSurveySettings extends UserEvent {
       };
     }
 
-    // Automatically convert to legacy survey config
-    let customSurvey = null;
-    if (event.surveyEnabled) {
-      customSurvey = await this.convertFromLegacySurvey(event);
-    } else {
-      customSurvey = new SurveyConfig(event.surveyConfig);
-    }
+    const survey = new SurveyConfig(event.surveyConfig);
 
     return {
       legacy: false,
-      enabled: customSurvey.enabled,
-      questions: customSurvey.questions,
+      enabled: survey.enabled,
+      questions: survey.questions,
     };
   }
 
@@ -81,7 +75,18 @@ export class EventSurveySettings extends UserEvent {
     await db.event.update({ data: { surveyConfig: survey.toConfig() }, where: { id: event.id } });
   }
 
-  // legacy survey functions
+  async toggleLegacySurvey() {
+    const event = await this.needsPermission('canEditEvent');
+    await db.event.update({ data: { surveyEnabled: !event.surveyEnabled }, where: { id: event.id } });
+    return !event.surveyEnabled;
+  }
+
+  async updateLegacyQuestions({ activeQuestions }: LegacyEventSurveyConfig) {
+    const event = await this.needsPermission('canEditEvent');
+    await db.event.update({ data: { surveyQuestions: activeQuestions }, where: { id: event.id } });
+  }
+
+  // TODO: [survey] to use in migration script
   async convertFromLegacySurvey(event: Event) {
     const enabled = true;
     const activeQuestions = (event.surveyQuestions as Array<string>) || [];
@@ -92,16 +97,5 @@ export class EventSurveySettings extends UserEvent {
       where: { id: event.id },
     });
     return survey;
-  }
-
-  async toggleLegacySurvey() {
-    const event = await this.needsPermission('canEditEvent');
-    await db.event.update({ data: { surveyEnabled: !event.surveyEnabled }, where: { id: event.id } });
-    return !event.surveyEnabled;
-  }
-
-  async updateLegacyQuestions({ activeQuestions }: LegacyEventSurveyConfig) {
-    const event = await this.needsPermission('canEditEvent');
-    await db.event.update({ data: { surveyQuestions: activeQuestions }, where: { id: event.id } });
   }
 }

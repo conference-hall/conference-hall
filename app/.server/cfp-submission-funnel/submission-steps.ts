@@ -1,6 +1,8 @@
 import { db } from 'prisma/db.server.ts';
 
 import { EventNotFoundError } from '~/libs/errors.server.ts';
+import { flags } from '~/libs/feature-flags/flags.server.ts';
+import { SurveyConfig } from '../event-survey/models/survey-config.ts';
 
 type Step = { key: string; name: string; path: string; form?: string; enabled: boolean };
 
@@ -11,15 +13,18 @@ export class SubmissionSteps {
 
   static async for(eventSlug: string, proposalId?: string) {
     const event = await db.event.findUnique({
-      select: { surveyEnabled: true, categories: true, formats: true },
+      select: { surveyEnabled: true, surveyConfig: true, categories: true, formats: true },
       where: { slug: eventSlug },
     });
     if (!event) throw new EventNotFoundError();
 
+    const newSurveyActive = await flags.get('custom-survey');
+    const surveyEnabled = newSurveyActive ? new SurveyConfig(event.surveyConfig).isActiveForEvent : event.surveyEnabled;
+
     return new SubmissionSteps({
       eventSlug,
       proposalId,
-      hasSurvey: event.surveyEnabled,
+      hasSurvey: surveyEnabled,
       hasTracks: event.categories.length > 0 || event.formats.length > 0,
     });
   }

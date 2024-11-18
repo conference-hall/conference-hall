@@ -22,14 +22,15 @@ export class SpeakerSurvey {
     });
     if (!event) throw new EventNotFoundError();
 
+    const newSurveyActive = await flags.get('custom-survey');
+
     // Legacy survey
-    if (event.surveyEnabled) {
+    if (!newSurveyActive) {
+      if (!event.surveyEnabled) throw new SurveyNotEnabledError();
+
       const enabledQuestions = event.surveyQuestions as string[];
       return defaultQuestions.filter((question) => enabledQuestions.includes(question.id));
     }
-
-    const newSurveyActive = await flags.get('custom-survey');
-    if (!newSurveyActive) throw new SurveyNotEnabledError();
 
     const survey = new SurveyConfig(event.surveyConfig);
     if (!survey.isActiveForEvent) throw new SurveyNotEnabledError();
