@@ -2,7 +2,7 @@ import { db } from 'prisma/db.server.ts';
 
 import { EventNotFoundError, SurveyNotEnabledError } from '~/libs/errors.server.ts';
 
-import { questions } from './survey-questions.ts';
+import { defaultQuestions } from '../event-survey/models/default-survey-questions.ts';
 
 export class CfpSurvey {
   constructor(private eventSlug: string) {}
@@ -21,6 +21,6 @@ export class CfpSurvey {
     if (!event.surveyEnabled) throw new SurveyNotEnabledError();
 
     const enabledQuestions = event.surveyQuestions as string[];
-    return questions.filter((question) => enabledQuestions.includes(question.id));
+    return defaultQuestions.filter((question) => enabledQuestions.includes(question.id));
   }
 }

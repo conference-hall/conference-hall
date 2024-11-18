@@ -1,13 +1,13 @@
 import { Form } from '@remix-run/react';
+import type { SurveyQuestion } from '~/.server/event-survey/types.ts';
 
 import { Checkbox, CheckboxGroup } from '~/design-system/forms/checkboxes.tsx';
 import { Radio, RadioGroup } from '~/design-system/forms/radio-group.tsx';
 import { TextArea } from '~/design-system/forms/textarea.tsx';
-import type { SurveyQuestions } from '~/types/survey.types.ts';
 
 export type Props = {
   id: string;
-  questions: SurveyQuestions;
+  questions: Array<SurveyQuestion>;
   initialValues: { [key: string]: unknown };
 };
 
