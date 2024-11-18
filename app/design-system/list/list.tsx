@@ -34,7 +34,7 @@ List.Content = Content;
 
 // <List.Row /> component
 function Row({ children, className }: { children: ReactNode; className?: string }) {
-  return <li className={cx('flex items-center', className)}>{children}</li>;
+  return <li className={cx('flex sm:items-center', className)}>{children}</li>;
 }
 
 List.Row = Row;

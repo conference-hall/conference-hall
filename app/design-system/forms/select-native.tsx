@@ -11,7 +11,7 @@ type Props = {
   srOnly?: boolean;
 } & SelectHTMLAttributes<HTMLSelectElement>;
 
-export function SelectNative({ name, label, options, inline, srOnly, ...rest }: Props) {
+export function SelectNative({ name, label, options, inline, srOnly, className, ...rest }: Props) {
   return (
     <div className={cx({ 'flex items-center gap-2': inline })}>
       <Label htmlFor={name} className={cx({ 'sr-only': srOnly })}>
@@ -21,7 +21,10 @@ export function SelectNative({ name, label, options, inline, srOnly, ...rest }: 
       <select
         id={name}
         name={name}
-        className="block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-sm leading-6 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+        className={cx(
+          'block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-sm leading-6 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600',
+          className,
+        )}
         {...rest}
       >
         {options.map((option) => (
