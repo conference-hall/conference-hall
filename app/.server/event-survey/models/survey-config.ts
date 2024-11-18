@@ -15,6 +15,10 @@ export class SurveyConfig {
     this.questions = data.questions;
   }
 
+  get isActiveForEvent() {
+    return this.enabled && this.questions.length > 0;
+  }
+
   toggle() {
     this.enabled = !this.enabled;
   }

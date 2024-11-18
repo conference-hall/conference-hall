@@ -3,9 +3,9 @@ import { db } from 'prisma/db.server.ts';
 import { ProposalNotFoundError, ReviewDisabledError } from '~/libs/errors.server.ts';
 
 import { sortBy } from '~/libs/utils/arrays-sort-by.ts';
-import { SpeakersAnswers } from '../cfp-survey/speaker-answers.ts';
-import type { SurveyData } from '../cfp-survey/speaker-answers.types.ts';
 import { UserEvent } from '../event-settings/user-event.ts';
+import { SpeakerSurvey } from '../event-survey/speaker-survey.ts';
+import type { SurveyData } from '../event-survey/types.ts';
 import { ProposalSearchBuilder } from '../shared/proposal-search-builder.ts';
 import type { ProposalsFilters } from '../shared/proposal-search-builder.types.ts';
 import type { SocialLinks } from '../speaker-profile/speaker-profile.types.ts';
@@ -45,11 +45,8 @@ export class ProposalReview {
 
     let answers: Array<{ userId: string; answers: SurveyData }>;
     if (proposal.speakers) {
-      const surveys = new SpeakersAnswers(
-        proposal.speakers.map((s) => s.id),
-        event.slug,
-      );
-      answers = await surveys.getAnswers();
+      const survey = SpeakerSurvey.for(event.slug);
+      answers = await survey.getMultipleSpeakerAnswers(proposal.speakers.map((s) => s.id));
     }
 
     return {

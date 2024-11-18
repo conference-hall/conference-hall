@@ -1,14 +1,44 @@
 import { eventFactory } from 'tests/factories/events.ts';
+
 import { surveyFactory } from 'tests/factories/surveys.ts';
 import { userFactory } from 'tests/factories/users.ts';
+import { EventNotFoundError, SurveyNotEnabledError } from '~/libs/errors.server.ts';
+import { SpeakerSurvey } from './speaker-survey.ts';
 
-import { EventNotFoundError } from '~/libs/errors.server.ts';
+describe('SpeakerSurvey', () => {
+  describe('getQuestions', () => {
+    it('returns the default survey questions', async () => {
+      const event = await eventFactory({ traits: ['withSurvey'] });
 
-import { SpeakerAnswers, SpeakersAnswers } from './speaker-answers.ts';
-import { SurveySchema } from './speaker-answers.types.ts';
+      const questions = await SpeakerSurvey.for(event.slug).getQuestions();
 
-describe('SpeakerAnswers', () => {
-  describe('getAnswers', () => {
+      const questionIds = questions.map(({ id }) => id);
+      expect(questionIds).toEqual(['gender', 'tshirt', 'accomodation', 'transports', 'diet', 'info']);
+    });
+
+    it('returns the selected survey questions', async () => {
+      const event = await eventFactory({
+        traits: ['withSurvey'],
+        attributes: { surveyQuestions: ['gender'] },
+      });
+
+      const questions = await SpeakerSurvey.for(event.slug).getQuestions();
+
+      const questionIds = questions.map(({ id }) => id);
+      expect(questionIds).toEqual(['gender']);
+    });
+
+    it('throws an error when event not found', async () => {
+      await expect(SpeakerSurvey.for('XXX').getQuestions()).rejects.toThrowError(EventNotFoundError);
+    });
+
+    it('throws an error when survey not enabled', async () => {
+      const event = await eventFactory();
+      await expect(SpeakerSurvey.for(event.slug).getQuestions()).rejects.toThrowError(SurveyNotEnabledError);
+    });
+  });
+
+  describe('getSpeakerAnswers', () => {
     it('returns the user answers for an event', async () => {
       const event = await eventFactory({ traits: ['withSurvey'] });
       const user1 = await userFactory();
@@ -24,7 +54,7 @@ describe('SpeakerAnswers', () => {
         attributes: { answers: { gender: 'female' } },
       });
 
-      const answers = await SpeakerAnswers.for(user2.id, event.slug).getAnswers();
+      const answers = await SpeakerSurvey.for(event.slug).getSpeakerAnswers(user2.id);
 
       expect(answers).toEqual({ gender: 'female' });
     });
@@ -32,24 +62,24 @@ describe('SpeakerAnswers', () => {
     it('returns nothing when user hasnt respond any questions', async () => {
       const event = await eventFactory({ traits: ['withSurvey'] });
       const user = await userFactory();
-      const answers = await SpeakerAnswers.for(user.id, event.slug).getAnswers();
+      const answers = await SpeakerSurvey.for(event.slug).getSpeakerAnswers(user.id);
       expect(answers).toEqual({});
     });
 
     it('returns nothing when event doesnt exist', async () => {
       const user = await userFactory();
-      const answers = await SpeakerAnswers.for(user.id, 'XXX').getAnswers();
+      const answers = await SpeakerSurvey.for('XXX').getSpeakerAnswers(user.id);
       expect(answers).toEqual({});
     });
   });
 
-  describe('save', () => {
+  describe('saveSpeakerAnswer', () => {
     it('creates user survey for event when it exists', async () => {
       const event = await eventFactory({ traits: ['withSurvey'] });
       const user = await userFactory();
 
-      const survey = SpeakerAnswers.for(user.id, event.slug);
-      await survey.save({
+      const survey = SpeakerSurvey.for(event.slug);
+      await survey.saveSpeakerAnswer(user.id, {
         gender: 'male',
         tshirt: 'XL',
         accomodation: null,
@@ -58,7 +88,7 @@ describe('SpeakerAnswers', () => {
         info: 'Hello',
       });
 
-      const answers = await survey.getAnswers();
+      const answers = await survey.getSpeakerAnswers(user.id);
       expect(answers).toEqual({
         gender: 'male',
         tshirt: 'XL',
@@ -87,8 +117,8 @@ describe('SpeakerAnswers', () => {
         },
       });
 
-      const survey = SpeakerAnswers.for(user.id, event.slug);
-      await survey.save({
+      const survey = SpeakerSurvey.for(event.slug);
+      await survey.saveSpeakerAnswer(user.id, {
         gender: 'female',
         tshirt: 'L',
         accomodation: null,
@@ -97,7 +127,7 @@ describe('SpeakerAnswers', () => {
         info: 'World',
       });
 
-      const answers = await survey.getAnswers();
+      const answers = await survey.getSpeakerAnswers(user.id);
       expect(answers).toEqual({
         gender: 'female',
         tshirt: 'L',
@@ -111,7 +141,7 @@ describe('SpeakerAnswers', () => {
     it('throws an error when event not found', async () => {
       const user = await userFactory();
       await expect(
-        SpeakerAnswers.for(user.id, 'XXX').save({
+        SpeakerSurvey.for('XXX').saveSpeakerAnswer(user.id, {
           gender: 'female',
           tshirt: 'L',
           accomodation: null,
@@ -123,33 +153,8 @@ describe('SpeakerAnswers', () => {
     });
   });
 
-  describe('Validate SurveySchema', () => {
-    it('validates survey form inputs', async () => {
-      const data = {
-        gender: 'male',
-        tshirt: 'XL',
-        accomodation: 'true',
-        transports: ['taxi', 'train'],
-        diet: ['vegan', 'vegetarian'],
-        info: 'Hello',
-      };
-
-      const result = SurveySchema.safeParse(data);
-      expect(result.success && result.data).toEqual({
-        gender: 'male',
-        tshirt: 'XL',
-        accomodation: 'true',
-        transports: ['taxi', 'train'],
-        diet: ['vegan', 'vegetarian'],
-        info: 'Hello',
-      });
-    });
-  });
-});
-
-describe('SpeakersAnswers', () => {
-  describe('getAnswers', () => {
-    it('returns the user answers for an event', async () => {
+  describe('getMultipleSpeakerAnswers', () => {
+    it('returns multiple speakers answers for an event', async () => {
       const event = await eventFactory({ traits: ['withSurvey'] });
       const event2 = await eventFactory({ traits: ['withSurvey'] });
       const user1 = await userFactory();
@@ -171,7 +176,7 @@ describe('SpeakersAnswers', () => {
         attributes: { answers: { gender: 'female' } },
       });
 
-      const answers = await SpeakersAnswers.for([user1.id, user2.id], event.slug).getAnswers();
+      const answers = await SpeakerSurvey.for(event.slug).getMultipleSpeakerAnswers([user1.id, user2.id]);
 
       expect(answers).toEqual(
         expect.arrayContaining([
@@ -184,13 +189,13 @@ describe('SpeakersAnswers', () => {
     it('returns nothing when user hasnt respond any questions', async () => {
       const event = await eventFactory({ traits: ['withSurvey'] });
       const user = await userFactory();
-      const answers = await SpeakersAnswers.for([user.id], event.slug).getAnswers();
+      const answers = await SpeakerSurvey.for(event.slug).getMultipleSpeakerAnswers([user.id]);
       expect(answers).toEqual([]);
     });
 
     it('returns nothing when event doesnt exist', async () => {
       const user = await userFactory();
-      const answers = await SpeakersAnswers.for([user.id], 'XXX').getAnswers();
+      const answers = await SpeakerSurvey.for('XXX').getMultipleSpeakerAnswers([user.id]);
       expect(answers).toEqual([]);
     });
   });

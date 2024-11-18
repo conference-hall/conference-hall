@@ -6,9 +6,8 @@ import { useLoaderData, useNavigate } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { SubmissionSteps } from '~/.server/cfp-submission-funnel/submission-steps.ts';
-import { CfpSurvey } from '~/.server/cfp-survey/cfp-survey.ts';
-import { SpeakerAnswers } from '~/.server/cfp-survey/speaker-answers.ts';
-import { SurveySchema } from '~/.server/cfp-survey/speaker-answers.types.ts';
+import { SpeakerSurvey } from '~/.server/event-survey/speaker-survey.ts';
+import { SurveySchema } from '~/.server/event-survey/types.ts';
 import { Button } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
@@ -22,8 +21,10 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
 
-  const questions = await CfpSurvey.of(params.event).questions();
-  const answers = await SpeakerAnswers.for(userId, params.event).getAnswers();
+  const survey = SpeakerSurvey.for(params.event);
+  const questions = await survey.getQuestions();
+  const answers = await survey.getSpeakerAnswers(userId);
+
   return { questions, answers };
 };
 
@@ -36,7 +37,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   const result = parseWithZod(form, { schema: SurveySchema });
   if (result.status !== 'success') return null;
 
-  await SpeakerAnswers.for(userId, params.event).save(result.value);
+  await SpeakerSurvey.for(params.event).saveSpeakerAnswer(userId, result.value);
 
   const nextStep = await SubmissionSteps.nextStepFor('survey', params.event, params.talk);
   return redirect(nextStep.path);
