@@ -39,7 +39,7 @@ If you want to contribute and make **Conference Hall** better, read our [Contrib
 
 ### Stack
 
-React / Remix / Typescript / Tailwind / HeadlessUI / Conform / Zod / Prisma / Firebase Auth / Mailgun / Express / Postgresql / Redis / Bull / Biome
+React / Remix / Typescript / Tailwind / HeadlessUI / Conform / Zod / Prisma / Firebase Auth / Mailgun / Express / Postgresql / Redis / Bull / Biome / Vitest / Cypress
 
 ### Prerequisites
 
