@@ -40,16 +40,14 @@ export function ProposalItem({ proposal, isSelected, isAllPagesSelected, toggle 
         />
       ) : undefined}
 
-      <div className="flex items-center justify-between gap-4 py-3 grow min-w-0">
+      <Link
+        to={{ pathname: id, search: params.toString() }}
+        aria-label={`Open proposal "${title}"`}
+        className="flex items-center justify-between gap-4 py-3 grow min-w-0 hover:text-indigo-700"
+      >
         <div className="space-y-2 md:space-y-1 min-w-0">
           <div className="flex flex-wrap items-center gap-2">
-            <Link
-              to={{ pathname: id, search: params.toString() }}
-              aria-label={`Open proposal "${title}"`}
-              className="font-semibold hover:text-indigo-700"
-            >
-              {title}
-            </Link>
+            <span className="font-semibold">{title}</span>
 
             {canDeliberateEventProposals && proposal.deliberationStatus !== 'PENDING' ? (
               <>
@@ -73,7 +71,7 @@ export function ProposalItem({ proposal, isSelected, isAllPagesSelected, toggle 
           <UserReviewNote feeling={you.feeling} note={you.note} />
           {summary && <GlobalReviewNote feeling="NEUTRAL" note={summary.average} hideEmpty />}
         </div>
-      </div>
+      </Link>
     </>
   );
 }
