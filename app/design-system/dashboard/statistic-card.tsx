@@ -1,6 +1,5 @@
-import slugify from '@sindresorhus/slugify';
 import { cx } from 'class-variance-authority';
-import type { ReactNode } from 'react';
+import { type ReactNode, useId } from 'react';
 
 import { Divider } from '~/design-system/divider.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
@@ -9,7 +8,7 @@ import { Text } from '~/design-system/typography.tsx';
 type Props = { label: string; stat: string | number; children?: ReactNode };
 
 export function StatisticCard({ label, stat, children }: Props) {
-  const id = slugify(label);
+  const id = useId();
 
   return (
     <Card className="flex flex-col" aria-labelledby={id}>

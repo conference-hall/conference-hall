@@ -1,6 +1,5 @@
-import slugify from '@sindresorhus/slugify';
 import { cx } from 'class-variance-authority';
-import { useState } from 'react';
+import { useId, useState } from 'react';
 
 import { Button } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
@@ -19,7 +18,7 @@ interface BarListCardProps<T = unknown> {
 const MAX_BAR = 7;
 
 export function BarListCard({ label, data = [] }: BarListCardProps) {
-  const id = slugify(label);
+  const id = useId();
   const [open, setOpen] = useState(false);
   const onOpen = () => setOpen(true);
   const onClose = () => setOpen(false);

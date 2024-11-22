@@ -79,23 +79,16 @@ describe('Proposal review page', () => {
     it('manage tags', () => {
       review.visit('team-1', 'conference-1', 'proposal-1');
 
-      cy.findByRole('link', { name: 'Tag 1' }).should('exist');
-      cy.findByRole('link', { name: 'Tag 2' }).should('not.exist');
+      cy.findByText('Tag 1').should('exist');
+      cy.findByText('Tag 2').should('not.exist');
 
       cy.findByRole('button', { name: 'Tags' }).click();
       cy.findByRole('option', { name: 'Tag 1' }).click();
       cy.findByRole('option', { name: 'Tag 2' }).click();
       cy.findByRole('button', { name: 'Tags' }).click();
 
-      cy.findByRole('link', { name: 'Tag 1' }).should('not.exist');
-      cy.findByRole('link', { name: 'Tag 2' }).should('exist');
-
-      cy.findByRole('link', { name: 'Tag 2' }).click();
-      proposals.isPageVisible();
-
-      cy.assertText('1 proposals');
-      proposals.proposal('Talk 1').should('exist');
-      cy.findByRole('link', { name: 'Tag 2' }).should('exist');
+      cy.findByText('Tag 1').should('not.exist');
+      cy.findByText('Tag 2').should('exist');
     });
 
     it('navigates between proposals', () => {

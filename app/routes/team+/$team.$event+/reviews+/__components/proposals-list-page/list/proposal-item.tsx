@@ -57,7 +57,7 @@ export function ProposalItem({ proposal, isSelected, isAllPagesSelected, toggle 
             ) : null}
 
             {proposal.tags.map((tag) => (
-              <Tag key={tag.id} tag={tag} />
+              <Tag key={tag.id} tag={tag} isSearchLink={false} />
             ))}
           </div>
 
