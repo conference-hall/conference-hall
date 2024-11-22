@@ -12,8 +12,13 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const passThrough = new PassThrough();
 
   snapshotStream.on('data', (chunk) => passThrough.write(chunk));
-  snapshotStream.on('end', () => passThrough.end());
+  snapshotStream.on('end', () => {
+    passThrough.end();
+    snapshotStream.destroy();
+  });
   snapshotStream.on('error', () => {
+    passThrough.destroy();
+    snapshotStream.destroy();
     throw new Response('Error generating heap snapshot', { status: 500 });
   });
 
