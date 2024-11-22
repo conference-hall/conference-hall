@@ -44,9 +44,11 @@ export default function AdminDebugPage() {
       <H1 srOnly>Debug page</H1>
 
       <Card>
-        <Card.Content>
+        <Card.Title>
           <H2>Debug tools</H2>
-          <Form method="POST" className="space-x-8">
+        </Card.Title>
+        <Card.Content className="flex gap-8">
+          <Form method="POST" className="flex gap-8">
             <Button type="submit" name="intent" value="test-job-call" variant="secondary">
               Test job call
             </Button>
@@ -54,12 +56,25 @@ export default function AdminDebugPage() {
               Simulate server error
             </Button>
           </Form>
+          <form
+            method="GET"
+            action="/admin/debug/heap-snapshot"
+            onSubmit={() => {
+              if (!confirm('Are you sure?')) return;
+            }}
+          >
+            <Button type="submit" variant="secondary">
+              Generate Heap Snapshot
+            </Button>
+          </form>
         </Card.Content>
       </Card>
 
       <Card>
-        <Card.Content>
+        <Card.Title>
           <H2>Email tester</H2>
+        </Card.Title>
+        <Card.Content>
           <Form method="POST" className="flex gap-2">
             <Input type="email" name="to" placeholder="Email" error={errors?.to} required />
             <Button type="submit" name="intent" value="send-email" variant="secondary">
