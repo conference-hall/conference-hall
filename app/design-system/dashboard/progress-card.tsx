@@ -1,5 +1,4 @@
-import slugify from '@sindresorhus/slugify';
-import type { ReactNode } from 'react';
+import { type ReactNode, useId } from 'react';
 
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Subtitle, Text } from '~/design-system/typography.tsx';
@@ -10,7 +9,7 @@ import { Divider } from '../divider.tsx';
 type Props = { label: string; value?: number; max?: number; children?: ReactNode };
 
 export function ProgressCard({ label, value = 0, max = 100, children }: Props) {
-  const id = slugify(label);
+  const id = useId();
   const safeValue = Math.min(max, Math.max(value, 0));
   const percentage = max ? (safeValue / max) * 100 : safeValue;
 

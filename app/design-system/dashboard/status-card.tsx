@@ -1,17 +1,17 @@
-import slugify from '@sindresorhus/slugify';
 import type React from 'react';
 
 import { Divider } from '~/design-system/divider.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
 
+import { useId } from 'react';
 import type { StatusPillProps } from '../charts/status-pill.tsx';
 import { StatusPill } from '../charts/status-pill.tsx';
 
 type Props = { label: string; subtitle?: string; children?: React.ReactNode } & StatusPillProps;
 
 export function StatusCard({ status, label, subtitle, children }: Props) {
-  const id = slugify(label);
+  const id = useId();
 
   return (
     <Card className="flex flex-col" aria-labelledby={id}>
