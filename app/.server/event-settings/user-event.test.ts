@@ -89,8 +89,6 @@ describe('UserEvent', () => {
         contactEmail: event.contactEmail,
         logoUrl: event.logoUrl,
         maxProposals: event.maxProposals,
-        surveyEnabled: event.surveyEnabled,
-        surveyQuestions: [],
         reviewEnabled: event.reviewEnabled,
         displayProposalsReviews: event.displayProposalsReviews,
         displayProposalsSpeakers: event.displayProposalsSpeakers,

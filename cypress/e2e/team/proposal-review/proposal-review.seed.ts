@@ -50,6 +50,8 @@ export const seed = async () => {
     attributes: {
       name: 'Conference 1',
       slug: 'conference-1',
+      surveyEnabled: true,
+      surveyQuestions: ['gender', 'tshirt', 'accomodation', 'transports', 'diet', 'info'],
       formatsAllowMultiple: true,
       categoriesAllowMultiple: true,
     },
