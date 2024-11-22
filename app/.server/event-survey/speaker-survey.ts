@@ -2,10 +2,12 @@ import { db } from 'prisma/db.server.ts';
 
 import { EventNotFoundError, SurveyNotEnabledError } from '~/libs/errors.server.ts';
 
+import type { Event } from '@prisma/client';
+import { z } from 'zod';
 import { flags } from '~/libs/feature-flags/flags.server.ts';
 import { defaultQuestions } from '../event-survey/models/default-survey-questions.ts';
 import { SurveyConfig } from './models/survey-config.ts';
-import type { SurveyData } from './types.ts';
+import type { SurveyDetailedAnswer, SurveyQuestion, SurveyRawAnswers } from './types.ts';
 
 // TODO: [survey] Add tests
 export class SpeakerSurvey {
@@ -38,31 +40,27 @@ export class SpeakerSurvey {
     return survey.questions;
   }
 
-  // TODO: [survey] Build and test
-  async buildValidationSchema() {
+  // TODO: [survey] Add tests
+  async buildSurveySchema() {
     const questions = await this.getQuestions();
-    return questions;
+
+    const schema = questions.reduce<z.ZodRawShape>((schema, question) => {
+      if (question.type === 'checkbox') {
+        schema[question.id] = question.required
+          ? z.array(z.string().trim()).nonempty()
+          : z.array(z.string().trim()).nullable().optional();
+      } else {
+        schema[question.id] = question.required
+          ? z.string().trim().max(500).min(1)
+          : z.string().trim().max(500).nullable().optional().default(null);
+      }
+      return schema;
+    }, {});
+
+    return z.object(schema);
   }
 
-  async getSpeakerAnswers(speakerId: string) {
-    const userSurvey = await db.survey.findFirst({
-      select: { answers: true },
-      where: { event: { slug: this.eventSlug }, user: { id: speakerId } },
-    });
-
-    return (userSurvey?.answers ?? {}) as SurveyData;
-  }
-
-  async getMultipleSpeakerAnswers(speakerIds: Array<string>) {
-    const userSurveys = await db.survey.findMany({
-      select: { userId: true, answers: true },
-      where: { event: { slug: this.eventSlug }, userId: { in: speakerIds } },
-    });
-
-    return userSurveys.map((survey) => ({ userId: survey.userId, answers: survey.answers as SurveyData }));
-  }
-
-  async saveSpeakerAnswer(speakerId: string, answers: SurveyData) {
+  async saveSpeakerAnswer(speakerId: string, answers: SurveyRawAnswers) {
     const event = await db.event.findUnique({
       select: { id: true },
       where: { slug: this.eventSlug },
@@ -74,5 +72,78 @@ export class SpeakerSurvey {
       create: { eventId: event.id, userId: speakerId, answers: answers },
       update: { answers },
     });
+  }
+
+  async getSpeakerAnswers(speakerId: string) {
+    const userSurvey = await db.survey.findFirst({
+      select: { answers: true },
+      where: { event: { slug: this.eventSlug }, user: { id: speakerId } },
+    });
+
+    return (userSurvey?.answers ?? {}) as SurveyRawAnswers;
+  }
+
+  async getMultipleSpeakerAnswers(event: Event, speakerIds: Array<string>) {
+    let questions: Array<SurveyQuestion>;
+
+    const newSurveyActive = await flags.get('custom-survey');
+    if (!newSurveyActive) {
+      const enabledQuestions = (event.surveyQuestions as string[]) || [];
+      questions = defaultQuestions.filter((question) => enabledQuestions.includes(question.id));
+    } else {
+      const survey = new SurveyConfig(event.surveyConfig);
+      questions = survey.questions;
+    }
+
+    const userSurveys = await db.survey.findMany({
+      select: { userId: true, answers: true },
+      where: { event: { slug: this.eventSlug }, userId: { in: speakerIds } },
+    });
+
+    return userSurveys.reduce<Record<string, Array<SurveyDetailedAnswer>>>((acc, userSurvey) => {
+      const answers = (userSurvey.answers ?? {}) as SurveyRawAnswers;
+      acc[userSurvey.userId] = this.mapSurveyDetailedAnswers(questions, answers);
+      return acc;
+    }, {});
+  }
+
+  private mapSurveyDetailedAnswers(
+    questions: Array<SurveyQuestion>,
+    answers: SurveyRawAnswers,
+  ): Array<SurveyDetailedAnswer> {
+    const mapOption = (question: SurveyQuestion, answer: string[]) => {
+      return question.options?.filter((option) => answer.includes(option.id)) || [];
+    };
+
+    return questions
+      .filter((question) => Boolean(answers[question.id]))
+      .map((question) => {
+        const answer = answers[question.id];
+
+        if (question.type === 'text') {
+          return {
+            id: question.id,
+            label: question.label,
+            type: 'text',
+            answer: typeof answer === 'string' ? answer : null,
+          };
+        }
+
+        if (question.type === 'radio') {
+          return {
+            id: question.id,
+            label: question.label,
+            type: 'radio',
+            answers: typeof answer === 'string' ? mapOption(question, [answer]) : [],
+          };
+        }
+
+        return {
+          id: question.id,
+          label: question.label,
+          type: 'checkbox',
+          answers: Array.isArray(answer) ? mapOption(question, answer) : [],
+        };
+      });
   }
 }

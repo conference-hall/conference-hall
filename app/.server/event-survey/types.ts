@@ -27,14 +27,24 @@ export type SurveyConfigType = z.infer<typeof SurveyConfigSchema>;
 export type SurveyQuestion = z.infer<typeof SurveyQuestionSchema>;
 export type LegacyEventSurveyConfig = z.infer<typeof LegacyEventSurveySettingsSchema>;
 
-// TODO: [survey] Create a schema builder from survey questions
-export const SurveySchema = z.object({
-  gender: z.string().trim().nullable().default(null),
-  tshirt: z.string().trim().nullable().default(null),
-  accomodation: z.string().trim().nullable().default(null),
-  transports: z.array(z.string().trim()).nullable().optional(),
-  diet: z.array(z.string().trim()).nullable().optional(),
-  info: z.string().trim().nullable().default(null),
-});
+export type SurveyRawAnswers = Record<string, string | string[] | null>;
 
-export type SurveyData = z.infer<typeof SurveySchema>;
+export type SurveyDetailedAnswer =
+  | {
+      id: string;
+      label: string;
+      type: 'text';
+      answer: string | null;
+    }
+  | {
+      id: string;
+      label: string;
+      type: 'radio';
+      answers: Array<{ id: string; label: string }>;
+    }
+  | {
+      id: string;
+      label: string;
+      type: 'checkbox';
+      answers: Array<{ id: string; label: string }>;
+    };

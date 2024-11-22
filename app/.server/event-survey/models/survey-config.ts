@@ -3,12 +3,15 @@ import { SurveyConfigSchema, type SurveyConfigType, type SurveyQuestion } from '
 import { defaultQuestions } from './default-survey-questions.ts';
 
 // TODO: [survey] Add tests
+// TODO: [survey] Use it directly in event prisma extension ?
 export class SurveyConfig {
   public enabled: boolean;
   public questions: Array<SurveyQuestion>;
 
   constructor(json: JsonValue) {
     const result = SurveyConfigSchema.safeParse(json);
+
+    // TODO: [survey] Set default questions only en event settings !
     const data = result.success ? result.data : { enabled: false, questions: defaultQuestions };
 
     this.enabled = data.enabled;

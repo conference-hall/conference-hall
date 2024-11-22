@@ -10,8 +10,9 @@ import { IconExternalLink } from '~/design-system/icon-buttons.tsx';
 import { GitHubIcon } from '~/design-system/icons/github-icon.tsx';
 import { TwitterIcon } from '~/design-system/icons/twitter-icon.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
-import { Text } from '~/design-system/typography.tsx';
+import { H2, Text } from '~/design-system/typography.tsx';
 
+import type { SurveyDetailedAnswer } from '~/.server/event-survey/types.ts';
 import { InvitationModal } from '../invitation-modal.tsx';
 
 export type SpeakerProps = {
@@ -23,14 +24,7 @@ export type SpeakerProps = {
   bio?: string | null;
   references?: string | null;
   location?: string | null;
-  survey?: {
-    gender: string | null;
-    tshirt: string | null;
-    diet?: Array<string> | null;
-    accomodation: string | null;
-    transports?: Array<string> | null;
-    info: string | null;
-  };
+  survey?: Array<SurveyDetailedAnswer>;
   socials?: {
     twitter?: string | null;
     github?: string | null;
@@ -147,12 +141,6 @@ function SpeakerDrawer({ speaker, canEdit, open, onClose }: SpeakerDrawerProps) 
     { key: 'bio', label: 'Biography', value: speaker.bio },
     { key: 'references', label: 'References', value: speaker.references },
     { key: 'location', label: 'Location', value: speaker.location },
-    { key: 'gender', label: 'Gender', value: speaker.survey?.gender },
-    { key: 'tshirt', label: 'Tshirt size', value: speaker.survey?.tshirt },
-    { key: 'diet', label: 'Diet', value: speaker.survey?.diet?.join(', ') },
-    { key: 'accomodation', label: 'Need accomodation fees', value: speaker.survey?.accomodation },
-    { key: 'transports', label: 'Need Transport fees', value: speaker.survey?.transports?.join(', ') },
-    { key: 'survey', label: 'More information', value: speaker.survey?.info },
   ].filter((detail) => Boolean(detail.value));
 
   return (
@@ -185,18 +173,20 @@ function SpeakerDrawer({ speaker, canEdit, open, onClose }: SpeakerDrawerProps) 
             </div>
           </div>
         )}
+
         {canEdit && (
           <div className="p-6">
             <RemoveCoSpeakerButton speakerId={speaker.id} speakerName={speaker.name} />
           </div>
         )}
+
         <dl className="divide-y">
           {details.map((detail) => (
             <div key={detail.label} className="px-4 py-6 sm:px-6">
               <dt className="text-sm font-medium leading-6 text-gray-900">{detail.label}</dt>
               <dd className="mt-1 text-sm leading-6 text-gray-700 break-words">
                 {(detail.key === 'bio' || detail.key === 'references') && detail.value ? (
-                  <Markdown>{detail.value}</Markdown>
+                  <Markdown>{detail.value as string}</Markdown>
                 ) : (
                   detail.value
                 )}
@@ -204,6 +194,22 @@ function SpeakerDrawer({ speaker, canEdit, open, onClose }: SpeakerDrawerProps) 
             </div>
           ))}
         </dl>
+
+        {speaker.survey && speaker.survey.length > 0 ? (
+          <section className="px-4 py-6 sm:px-6 space-y-6">
+            <H2 variant="secondary">Survey</H2>
+            <dl className="space-y-4">
+              {speaker.survey?.map((question) => (
+                <div key={question.id}>
+                  <dt className="text-sm font-medium leading-6 text-gray-900">{question.label}</dt>
+                  <dd className="text-sm leading-6 text-gray-700 break-words">
+                    {question.type === 'text' ? question.answer : question.answers?.map((a) => a.label).join(', ')}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+        ) : null}
       </SlideOver.Content>
     </SlideOver>
   );

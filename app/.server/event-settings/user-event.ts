@@ -56,8 +56,6 @@ export class UserEvent {
       contactEmail: event.contactEmail,
       logoUrl: event.logoUrl,
       maxProposals: event.maxProposals,
-      surveyEnabled: event.surveyEnabled,
-      surveyQuestions: (event.surveyQuestions || []) as Array<string>,
       reviewEnabled: event.reviewEnabled,
       displayProposalsReviews: event.displayProposalsReviews,
       displayProposalsSpeakers: event.displayProposalsSpeakers,

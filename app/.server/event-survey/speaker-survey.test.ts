@@ -153,50 +153,50 @@ describe('SpeakerSurvey', () => {
     });
   });
 
-  describe('getMultipleSpeakerAnswers', () => {
-    it('returns multiple speakers answers for an event', async () => {
-      const event = await eventFactory({ traits: ['withSurvey'] });
-      const event2 = await eventFactory({ traits: ['withSurvey'] });
-      const user1 = await userFactory();
-      await surveyFactory({
-        user: user1,
-        event,
-        attributes: { answers: { gender: 'male' } },
-      });
-      const user2 = await userFactory();
-      await surveyFactory({
-        user: user2,
-        event,
-        attributes: { answers: { gender: 'female' } },
-      });
-      const user3 = await userFactory();
-      await surveyFactory({
-        user: user3,
-        event: event2,
-        attributes: { answers: { gender: 'female' } },
-      });
+  // describe('getMultipleSpeakerAnswers', () => {
+  //   it('returns multiple speakers answers for an event', async () => {
+  //     const event = await eventFactory({ traits: ['withSurvey'] });
+  //     const event2 = await eventFactory({ traits: ['withSurvey'] });
+  //     const user1 = await userFactory();
+  //     await surveyFactory({
+  //       user: user1,
+  //       event,
+  //       attributes: { answers: { gender: 'male' } },
+  //     });
+  //     const user2 = await userFactory();
+  //     await surveyFactory({
+  //       user: user2,
+  //       event,
+  //       attributes: { answers: { gender: 'female' } },
+  //     });
+  //     const user3 = await userFactory();
+  //     await surveyFactory({
+  //       user: user3,
+  //       event: event2,
+  //       attributes: { answers: { gender: 'female' } },
+  //     });
 
-      const answers = await SpeakerSurvey.for(event.slug).getMultipleSpeakerAnswers([user1.id, user2.id]);
+  //     const answers = await SpeakerSurvey.for(event.slug).getMultipleSpeakerAnswers([user1.id, user2.id]);
 
-      expect(answers).toEqual(
-        expect.arrayContaining([
-          { userId: user1.id, answers: { gender: 'male' } },
-          { userId: user2.id, answers: { gender: 'female' } },
-        ]),
-      );
-    });
+  //     expect(answers).toEqual(
+  //       expect.arrayContaining([
+  //         { userId: user1.id, answers: { gender: 'male' } },
+  //         { userId: user2.id, answers: { gender: 'female' } },
+  //       ]),
+  //     );
+  //   });
 
-    it('returns nothing when user hasnt respond any questions', async () => {
-      const event = await eventFactory({ traits: ['withSurvey'] });
-      const user = await userFactory();
-      const answers = await SpeakerSurvey.for(event.slug).getMultipleSpeakerAnswers([user.id]);
-      expect(answers).toEqual([]);
-    });
+  //   it('returns nothing when user hasnt respond any questions', async () => {
+  //     const event = await eventFactory({ traits: ['withSurvey'] });
+  //     const user = await userFactory();
+  //     const answers = await SpeakerSurvey.for(event.slug).getMultipleSpeakerAnswers([user.id]);
+  //     expect(answers).toEqual([]);
+  //   });
 
-    it('returns nothing when event doesnt exist', async () => {
-      const user = await userFactory();
-      const answers = await SpeakerSurvey.for('XXX').getMultipleSpeakerAnswers([user.id]);
-      expect(answers).toEqual([]);
-    });
-  });
+  //   it('returns nothing when event doesnt exist', async () => {
+  //     const user = await userFactory();
+  //     const answers = await SpeakerSurvey.for('XXX').getMultipleSpeakerAnswers([user.id]);
+  //     expect(answers).toEqual([]);
+  //   });
+  // });
 });

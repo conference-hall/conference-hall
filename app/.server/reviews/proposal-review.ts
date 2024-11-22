@@ -5,7 +5,7 @@ import { ProposalNotFoundError, ReviewDisabledError } from '~/libs/errors.server
 import { sortBy } from '~/libs/utils/arrays-sort-by.ts';
 import { UserEvent } from '../event-settings/user-event.ts';
 import { SpeakerSurvey } from '../event-survey/speaker-survey.ts';
-import type { SurveyData } from '../event-survey/types.ts';
+import type { SurveyDetailedAnswer } from '../event-survey/types.ts';
 import { ProposalSearchBuilder } from '../shared/proposal-search-builder.ts';
 import type { ProposalsFilters } from '../shared/proposal-search-builder.types.ts';
 import type { SocialLinks } from '../speaker-profile/speaker-profile.types.ts';
@@ -43,10 +43,13 @@ export class ProposalReview {
 
     const reviews = new ReviewDetails(proposal.reviews);
 
-    let answers: Array<{ userId: string; answers: SurveyData }>;
+    let answers: Record<string, Array<SurveyDetailedAnswer>> = {};
     if (proposal.speakers) {
       const survey = SpeakerSurvey.for(event.slug);
-      answers = await survey.getMultipleSpeakerAnswers(proposal.speakers.map((s) => s.id));
+      answers = await survey.getMultipleSpeakerAnswers(
+        event,
+        proposal.speakers.map((s) => s.id),
+      );
     }
 
     return {
@@ -76,7 +79,7 @@ export class ProposalReview {
           email: speaker.email,
           location: speaker.location,
           socials: speaker.socials as SocialLinks,
-          survey: answers?.find((a) => a.userId === speaker.id)?.answers as SurveyData,
+          survey: answers[speaker.id],
         })) || [],
       tags: sortBy(
         proposal.tags.map((tag) => ({ id: tag.id, name: tag.name, color: tag.color })),

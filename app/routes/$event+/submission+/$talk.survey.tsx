@@ -2,12 +2,11 @@ import { parseWithZod } from '@conform-to/zod';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import type { ActionFunction, LoaderFunctionArgs } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
-import { useLoaderData, useNavigate } from '@remix-run/react';
+import { useActionData, useLoaderData, useNavigate } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
 import { SubmissionSteps } from '~/.server/cfp-submission-funnel/submission-steps.ts';
 import { SpeakerSurvey } from '~/.server/event-survey/speaker-survey.ts';
-import { SurveySchema } from '~/.server/event-survey/types.ts';
 import { Button } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
@@ -30,12 +29,15 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 
 export const action: ActionFunction = async ({ request, params }) => {
   const userId = await requireSession(request);
-  const form = await request.formData();
   invariant(params.event, 'Invalid event slug');
   invariant(params.talk, 'Invalid talk id');
 
-  const result = parseWithZod(form, { schema: SurveySchema });
-  if (result.status !== 'success') return null;
+  const survey = SpeakerSurvey.for(params.event);
+  const schema = await survey.buildSurveySchema();
+
+  const form = await request.formData();
+  const result = parseWithZod(form, { schema });
+  if (result.status !== 'success') return result.error;
 
   await SpeakerSurvey.for(params.event).saveSpeakerAnswer(userId, result.value);
 
@@ -46,6 +48,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 export default function SubmissionSurveyRoute() {
   const navigate = useNavigate();
   const { questions, answers } = useLoaderData<typeof loader>();
+  const errors = useActionData<typeof action>();
 
   return (
     <Page>
@@ -54,7 +57,7 @@ export default function SubmissionSurveyRoute() {
           <H2>We have some questions for you</H2>
         </Card.Title>
         <Card.Content>
-          <SurveyForm id="survey-form" questions={questions} initialValues={answers} />
+          <SurveyForm id="survey-form" questions={questions} initialValues={answers} errors={errors} />
         </Card.Content>
         <Card.Actions>
           <Button onClick={() => navigate(-1)} variant="secondary">

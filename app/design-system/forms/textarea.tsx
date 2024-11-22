@@ -37,7 +37,7 @@ export function TextArea({ name, label, description, className, error, ...rest }
         aria-describedby={description || error ? `${name}-describe` : undefined}
       />
       <div id={`${name}-describe`}>
-        {description && <p className="mt-3 text-sm text-gray-600">{description}</p>}
+        {description && <p className="mt-2 text-sm text-gray-500">{description}</p>}
         {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
       </div>
     </div>
