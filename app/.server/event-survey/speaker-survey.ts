@@ -9,7 +9,6 @@ import { defaultQuestions } from '../event-survey/models/default-survey-question
 import { SurveyConfig } from './models/survey-config.ts';
 import type { SurveyDetailedAnswer, SurveyQuestion, SurveyRawAnswers } from './types.ts';
 
-// TODO: [survey] Add tests
 export class SpeakerSurvey {
   constructor(private eventSlug: string) {}
 
@@ -40,7 +39,6 @@ export class SpeakerSurvey {
     return survey.questions;
   }
 
-  // TODO: [survey] Add tests
   async buildSurveySchema() {
     const questions = await this.getQuestions();
 

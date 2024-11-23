@@ -7,7 +7,6 @@ import { defaultQuestions } from './models/default-survey-questions.ts';
 import { SurveyConfig } from './models/survey-config.ts';
 import type { LegacyEventSurveyConfig, SurveyMoveQuestion, SurveyQuestion } from './types.ts';
 
-// TODO: [survey] Add tests
 export class EventSurveySettings extends UserEvent {
   static for(userId: string, teamSlug: string, eventSlug: string) {
     return new EventSurveySettings(userId, teamSlug, eventSlug);
