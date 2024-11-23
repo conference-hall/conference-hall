@@ -12,11 +12,8 @@ import { QUESTION_TYPES, SurveyQuestionModal } from './survey-question-modal.tsx
 
 const MAX_QUESTIONS = 8;
 
-type SurveySettingsFormProps = { config: SerializeFrom<typeof loader> };
+export type SurveySettingsFormProps = { config: SerializeFrom<typeof loader> };
 
-// TODO: [survey] Add tests
-// TODO: [survey] Add "new" badge to sidebar
-// TODO: [survey] Add confirmation on delete
 export function SurveySettingsForm({ config }: SurveySettingsFormProps) {
   const { questions } = config;
 
@@ -27,6 +24,7 @@ export function SurveySettingsForm({ config }: SurveySettingsFormProps) {
   };
 
   const handleRemoveQuestion = (id: string) => () => {
+    if (!confirm('Are you sure you want to delete this question?')) return;
     fetcher.submit({ intent: 'remove-question', id }, { method: 'POST' });
   };
 
@@ -34,7 +32,9 @@ export function SurveySettingsForm({ config }: SurveySettingsFormProps) {
     <Card as="section">
       <Card.Title className="flex items-center gap-3">
         <H2>Speaker survey</H2>
-        <Badge color="blue">New</Badge>
+        <Badge color="blue" compact>
+          New
+        </Badge>
       </Card.Title>
 
       <Card.Content>
@@ -117,7 +117,7 @@ export function SurveySettingsForm({ config }: SurveySettingsFormProps) {
                       </Button>
                     )}
                   </SurveyQuestionModal>
-                  <Button type="submit" variant="important" size="s" onClick={handleRemoveQuestion(question.id)}>
+                  <Button variant="important" size="s" onClick={handleRemoveQuestion(question.id)}>
                     Delete
                   </Button>
                 </div>

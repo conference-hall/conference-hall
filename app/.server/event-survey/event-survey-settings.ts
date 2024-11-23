@@ -85,7 +85,6 @@ export class EventSurveySettings extends UserEvent {
     await db.event.update({ data: { surveyQuestions: activeQuestions }, where: { id: event.id } });
   }
 
-  // TODO: [survey] to use in migration script
   async convertFromLegacySurvey(event: Event) {
     const enabled = true;
     const activeQuestions = (event.surveyQuestions as Array<string>) || [];

@@ -25,7 +25,6 @@ type SurveyModalProps = {
   children: (props: { onOpen: () => void }) => ReactNode;
 };
 
-// TODO: [survey] Add tests
 export function SurveyQuestionModal({ initialValues, children }: SurveyModalProps) {
   const [open, setOpen] = useState(false);
 
@@ -137,8 +136,14 @@ function OptionsFieldList({ options, setOptions }: OptionsFieldListProps) {
             required
             onChange={(event) => handleUpdateOption(index, event.target.value)}
           />
-          <Button type="button" variant="important" size="square-m" onClick={() => handleRemoveOption(index)}>
-            <TrashIcon className="size-5" aria-label={`Remove answer: ${option.label}`} />
+          <Button
+            type="button"
+            aria-label={`Remove answer: ${option.label}`}
+            variant="important"
+            size="square-m"
+            onClick={() => handleRemoveOption(index)}
+          >
+            <TrashIcon className="size-5" aria-hidden="true" />
           </Button>
         </div>
       ))}
@@ -173,8 +178,15 @@ function NewOptionInput({ setOptions }: NewOptionInputProps) {
         className="w-full"
         autoFocus
       />
-      <Button type="button" variant="secondary" disabled={!label} size="square-m" onClick={handleAddOption}>
-        <PlusIcon className="size-5" aria-label="Add answer" />
+      <Button
+        type="button"
+        variant="secondary"
+        aria-label="Add answer"
+        disabled={!label}
+        size="square-m"
+        onClick={handleAddOption}
+      >
+        <PlusIcon className="size-5" aria-hidden="true" />
       </Button>
     </div>
   );
