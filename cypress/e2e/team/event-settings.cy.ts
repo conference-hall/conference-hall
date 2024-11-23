@@ -41,7 +41,7 @@ describe('Event settings', () => {
       settings.openSetting('Tracks');
       tracks.isPageVisible();
 
-      settings.openSetting('Proposal tags');
+      settings.openSetting(/Proposal tags/);
       tags.isPageVisible();
 
       settings.openSetting('Customize');
@@ -270,13 +270,17 @@ describe('Event settings', () => {
       });
     });
 
-    describe('survey settings', () => {
+    describe('survey settings (legacy)', () => {
+      beforeEach(() => cy.task('setFlag', { key: 'custom-survey', value: false }));
+
+      afterEach(() => cy.task('resetFlags'));
+
       it('enables or disables survey', () => {
         survey.visit('team-1', 'conference-1');
-        survey.saveQuestion().should('be.disabled');
+        survey.legacy_saveQuestion().should('be.disabled');
 
         survey.toggleSurvey().click();
-        survey.saveQuestion().should('not.be.disabled');
+        survey.legacy_saveQuestion().should('not.be.disabled');
         cy.assertToast('Speaker survey enabled');
 
         cy.findByLabelText("What's your gender?").click();
@@ -285,17 +289,59 @@ describe('Event settings', () => {
         cy.findByLabelText('Do you need transports funding?').click();
         cy.findByLabelText('Do you have any special diet restrictions?').click();
         cy.findByLabelText('Do you have specific information to share?').click();
-        survey.saveQuestion().click();
+        survey.legacy_saveQuestion().click();
         cy.assertToast('Survey questions saved.');
 
         cy.reload();
-        survey.saveQuestion().should('not.be.disabled');
+        survey.legacy_saveQuestion().should('not.be.disabled');
         cy.findByLabelText("What's your gender?").should('be.checked');
         cy.findByLabelText("What's your Tshirt size?").should('be.checked');
         cy.findByLabelText('Do you need accommodation funding? (Hotel, AirBnB...)').should('be.checked');
         cy.findByLabelText('Do you need transports funding?').should('be.checked');
         cy.findByLabelText('Do you have any special diet restrictions?').should('be.checked');
         cy.findByLabelText('Do you have specific information to share?').should('be.checked');
+      });
+    });
+
+    describe('survey settings', () => {
+      beforeEach(() => cy.task('setFlag', { key: 'custom-survey', value: true }));
+
+      afterEach(() => cy.task('resetFlags'));
+
+      it('enables or disables survey', () => {
+        survey.visit('team-1', 'conference-1');
+        cy.assertText('0 questions');
+
+        survey.toggleSurvey().click();
+        cy.assertToast('Speaker survey enabled');
+
+        survey.addQuestion().click();
+        survey.createQuestion('What is your favorite color?', 'text', true);
+        cy.assertToast('Question added.');
+        cy.assertText('1 questions');
+        cy.assertText('What is your favorite color?');
+
+        survey.editQuestion().click();
+        survey.updateQuestion('What is your favorite color? (updated)');
+        cy.assertText('What is your favorite color? (updated)');
+
+        survey.deleteQuestion().click();
+
+        survey.addQuestion().click();
+        survey.createQuestion('What is your favorite animal?', 'radio', false, ['Dog', 'Cat', 'Bird']);
+        cy.assertToast('Question added.');
+        cy.assertText('What is your favorite animal?');
+        cy.assertText('Single choice');
+        cy.assertText('Dog, Cat, Bird');
+
+        survey.addQuestion().click();
+        survey.createQuestion('What is your favorite food?', 'checkbox', false, ['Pizza', 'Burger', 'Salad']);
+        cy.assertToast('Question added.');
+        cy.assertText('What is your favorite food?');
+        cy.assertText('Multi choice');
+        cy.assertText('Pizza, Burger, Salad');
+
+        cy.assertText('2 questions');
       });
     });
 
