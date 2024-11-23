@@ -13,7 +13,7 @@ const defaultBadge = cva('inline-flex items-center text-nowrap', {
       purple: 'bg-purple-50 text-purple-700 ring-1 ring-inset ring-purple-700/10',
       pink: 'bg-pink-50 text-pink-700 ring-1 ring-inset ring-pink-700/10',
     },
-    compact: { true: 'px-2 py-0.5 text-[10px]', false: 'px-2 py-1 text-xs font-medium' },
+    compact: { true: 'px-1.5 py-0.5 h-5 text-[10px] font-medium', false: 'px-2 py-1 text-xs font-medium' },
     pill: { true: 'rounded-full', false: 'rounded-md' },
   },
   defaultVariants: { color: 'gray', pill: false, compact: false },

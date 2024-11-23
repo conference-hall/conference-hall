@@ -21,6 +21,7 @@ import { H2 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 
 import { useCurrentEvent } from '~/routes/__components/contexts/event-team-context';
+import { useFlag } from '~/routes/__components/contexts/flags-context.tsx';
 import { useCurrentTeam } from '~/routes/__components/contexts/team-context.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
@@ -31,13 +32,18 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   return null;
 };
 
-const getMenuItems = (team?: string, event?: string) => [
+const getMenuItems = (team?: string, event?: string, options?: Record<string, boolean>) => [
   { to: `/team/${team}/${event}/settings`, icon: Cog6ToothIcon, label: 'General' },
   { to: `/team/${team}/${event}/settings/cfp`, icon: PaperAirplaneIcon, label: 'Call for paper' },
   { to: `/team/${team}/${event}/settings/tracks`, icon: SwatchIcon, label: 'Tracks' },
-  { to: `/team/${team}/${event}/settings/tags`, icon: TagIcon, label: 'Proposal tags' },
+  { to: `/team/${team}/${event}/settings/tags`, icon: TagIcon, label: 'Proposal tags', isNew: true },
   { to: `/team/${team}/${event}/settings/customize`, icon: PaintBrushIcon, label: 'Customize' },
-  { to: `/team/${team}/${event}/settings/survey`, icon: QuestionMarkCircleIcon, label: 'Speaker survey' },
+  {
+    to: `/team/${team}/${event}/settings/survey`,
+    icon: QuestionMarkCircleIcon,
+    label: 'Speaker survey',
+    isNew: options?.customSurveyEnabled,
+  },
   { to: `/team/${team}/${event}/settings/review`, icon: StarIcon, label: 'Reviews' },
   { to: `/team/${team}/${event}/settings/notifications`, icon: EnvelopeIcon, label: 'Email notifications' },
   { to: `/team/${team}/${event}/settings/integrations`, icon: CpuChipIcon, label: 'Integrations' },
@@ -48,7 +54,9 @@ export default function OrganizationSettingsRoute() {
   const currentTeam = useCurrentTeam();
   const currentEvent = useCurrentEvent();
 
-  const menus = getMenuItems(currentTeam.slug, currentEvent.slug);
+  const customSurveyEnabled = useFlag('custom-survey');
+
+  const menus = getMenuItems(currentTeam.slug, currentEvent.slug, { customSurveyEnabled });
 
   return (
     <Page className="lg:grid lg:grid-cols-12">
