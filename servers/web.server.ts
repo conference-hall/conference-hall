@@ -1,10 +1,10 @@
 import compression from 'compression';
 import express from 'express';
-import { createExpressApp } from 'remix-create-express-app';
 
 import { initEnvironment } from '~/libs/env/env.server.ts';
 import { initMonitoring } from '~/libs/monitoring/monitoring.server.ts';
 
+import { createExpressApp } from './express/create-express-app.ts';
 import { applyLocalhostRedirect } from './middlewares/localhost-redirect.ts';
 import { applyLogging } from './middlewares/logging.ts';
 import { applyProxyFirebaseAuth } from './middlewares/proxy-firebase-auth.ts';
@@ -52,8 +52,9 @@ export function createAppServer() {
       // Cache assets
       app.use('/fonts', express.static('build/client/fonts', { immutable: true, maxAge: '1y' }));
     },
+
     // Load context should match the AppLoadContext interface defined above
-    getLoadContext: async (_, res) => {
+    getLoadContext: (_, res) => {
       return { cspNonce: res.locals.cspNonce };
     },
   });
