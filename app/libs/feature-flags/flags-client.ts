@@ -63,7 +63,7 @@ export class FlagsClient<C extends FlagsConfig> {
 
   async withTag<G extends Tags<C>, K extends FlagTaggedKey<C, G>>(tag: G): Promise<FlagTaggedValues<C, K>> {
     const taggedConfig = Object.fromEntries(
-      Object.entries(this.config).filter(([, config]) => config.tags.includes(tag)),
+      Object.entries(this.config).filter(([, config]) => config.tags?.includes(tag)),
     ) as FlagTaggedConfig<C, K>;
 
     const keys = Object.keys(taggedConfig) as K[];

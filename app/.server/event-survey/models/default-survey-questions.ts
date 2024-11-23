@@ -1,6 +1,6 @@
-import type { SurveyQuestions } from '~/types/survey.types';
+import type { SurveyQuestion } from '../types.ts';
 
-export const questions: SurveyQuestions = [
+export const defaultQuestions: Array<SurveyQuestion> = [
   {
     id: 'gender',
     label: "What's your gender?",

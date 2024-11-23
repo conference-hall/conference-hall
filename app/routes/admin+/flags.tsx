@@ -63,7 +63,7 @@ export default function AdminFlagsRoute() {
   );
 }
 
-type FlagInputProps = { flag: { key: string; value: boolean | number | string; type: string } };
+type FlagInputProps = { flag: { key: string; value: boolean | number | string | undefined; type: string | undefined } };
 
 function FlagInput({ flag }: FlagInputProps) {
   const inputType = flag.type === 'number' ? 'number' : 'text';

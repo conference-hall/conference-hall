@@ -73,7 +73,9 @@ describe('ProposalReview', () => {
             company: speaker.company,
             references: speaker.references,
             socials: speaker.socials,
-            survey: { gender: 'male' },
+            survey: [
+              { id: 'gender', label: "What's your gender?", type: 'radio', answers: [{ id: 'male', label: 'Male' }] },
+            ],
           },
         ],
         reviews: {

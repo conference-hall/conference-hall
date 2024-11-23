@@ -126,6 +126,7 @@ model Event {
   displayProposalsSpeakers Boolean                  @default(true)
   surveyEnabled            Boolean                  @default(false)
   surveyQuestions          Json                     @default("[]")
+  surveyConfig             Json                     @default("{}")
   emailOrganizer           String?
   emailNotifications       Json                     @default("[]")
   slackWebhookUrl          String?

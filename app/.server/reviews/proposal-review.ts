@@ -3,9 +3,9 @@ import { db } from 'prisma/db.server.ts';
 import { ProposalNotFoundError, ReviewDisabledError } from '~/libs/errors.server.ts';
 
 import { sortBy } from '~/libs/utils/arrays-sort-by.ts';
-import { SpeakersAnswers } from '../cfp-survey/speaker-answers.ts';
-import type { SurveyData } from '../cfp-survey/speaker-answers.types.ts';
 import { UserEvent } from '../event-settings/user-event.ts';
+import { SpeakerSurvey } from '../event-survey/speaker-survey.ts';
+import type { SurveyDetailedAnswer } from '../event-survey/types.ts';
 import { ProposalSearchBuilder } from '../shared/proposal-search-builder.ts';
 import type { ProposalsFilters } from '../shared/proposal-search-builder.types.ts';
 import type { SocialLinks } from '../speaker-profile/speaker-profile.types.ts';
@@ -43,13 +43,13 @@ export class ProposalReview {
 
     const reviews = new ReviewDetails(proposal.reviews);
 
-    let answers: Array<{ userId: string; answers: SurveyData }>;
+    let answers: Record<string, Array<SurveyDetailedAnswer>> = {};
     if (proposal.speakers) {
-      const surveys = new SpeakersAnswers(
+      const survey = SpeakerSurvey.for(event.slug);
+      answers = await survey.getMultipleSpeakerAnswers(
+        event,
         proposal.speakers.map((s) => s.id),
-        event.slug,
       );
-      answers = await surveys.getAnswers();
     }
 
     return {
@@ -79,7 +79,7 @@ export class ProposalReview {
           email: speaker.email,
           location: speaker.location,
           socials: speaker.socials as SocialLinks,
-          survey: answers?.find((a) => a.userId === speaker.id)?.answers as SurveyData,
+          survey: answers[speaker.id],
         })) || [],
       tags: sortBy(
         proposal.tags.map((tag) => ({ id: tag.id, name: tag.name, color: tag.color })),

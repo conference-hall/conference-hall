@@ -2,6 +2,7 @@ import { cx } from 'class-variance-authority';
 import type { ReactNode, Ref } from 'react';
 import { forwardRef } from 'react';
 
+import type { SubmissionError } from '~/types/errors.types.ts';
 import { Label, Text } from '../typography.tsx';
 
 type CheckboxGroupProps = {
@@ -10,17 +11,19 @@ type CheckboxGroupProps = {
   inline?: boolean;
   className?: string;
   children: ReactNode;
+  error?: SubmissionError;
 };
 
-export function CheckboxGroup({ label, description, inline, className, children }: CheckboxGroupProps) {
+export function CheckboxGroup({ label, description, inline, className, children, error }: CheckboxGroupProps) {
   const layoutStyle = cx('space-y-4', {
     'sm:flex sm:items-center sm:space-y-0 sm:space-x-10': inline,
   });
 
   return (
     <div className={className}>
-      <Label>{label}</Label>
+      <Label aria-invalid={Boolean(error)}>{label}</Label>
       {description && <p className="text-sm leading-5 text-gray-500">{description}</p>}
+      {error && <p className="text-sm leading-5 text-red-600">{error}</p>}
       <fieldset className="mt-2">
         <legend className="sr-only">{label}</legend>
         <div className={layoutStyle}>{children}</div>
@@ -72,8 +75,10 @@ export function CheckboxField(
         />
       </div>
       {children && (
-        <div className="pl-3">
-          <Label htmlFor={id}>{children}</Label>
+        <div>
+          <Label htmlFor={id} weight="normal" className="pl-3">
+            {children}
+          </Label>
 
           {description && (
             <Text id={`${id}-describe`} variant="secondary">

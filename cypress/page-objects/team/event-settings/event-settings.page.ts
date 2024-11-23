@@ -14,7 +14,7 @@ class OrganizerEventSettingsPage extends BasePage {
     return cy.findByRole('navigation', { name: 'Event settings menu' });
   }
 
-  openSetting(name: string) {
+  openSetting(name: string | RegExp) {
     this.nav().within(() => cy.findByRole('link', { name }).click());
   }
 }

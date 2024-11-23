@@ -100,6 +100,12 @@ export class ForbiddenOperationError extends ForbiddenError {
   }
 }
 
+export class SurveyInvalidError extends BadRequestError {
+  constructor(message?: string) {
+    super(message ?? 'Survey invalid');
+  }
+}
+
 export class ApiKeyInvalidError extends BadRequestError {
   constructor() {
     super('API key invalid');

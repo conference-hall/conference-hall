@@ -55,11 +55,14 @@ const Callout = React.forwardRef<HTMLDivElement, CalloutProps>(
       <div ref={forwardedRef} className={cx(calloutVariants({ variant }), className)} {...props}>
         {title ? (
           <div className="flex items-start">
-            {Icon ? <Icon className={cx('mr-1.5 h-5 w-5 shrink-0')} aria-hidden="true" /> : null}
+            {Icon ? <Icon className={cx('mr-1.5 size-5 shrink-0')} aria-hidden="true" /> : null}
             <span className={cx('font-semibold')}>{title}</span>
           </div>
         ) : null}
-        <div className={cx('overflow-y-auto', children && title ? 'mt-2' : '')}>{children}</div>
+        <div className={cx('flex items-start overflow-y-auto', children && title ? 'mt-2' : '')}>
+          {Icon && !title ? <Icon className={cx('mr-1.5 size-5 shrink-0')} aria-hidden="true" /> : null}
+          <span>{children}</span>
+        </div>
       </div>
     );
   },

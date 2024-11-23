@@ -1,5 +1,6 @@
 import { NotFoundError } from '~/libs/errors.server.ts';
 import { flags } from '~/libs/feature-flags/flags.server.ts';
+import type { FlagConfig } from '~/libs/feature-flags/types.ts';
 import { needsAdminRole } from './authorization.ts';
 
 export class AdminFlags {
@@ -15,12 +16,12 @@ export class AdminFlags {
     const values = await flags.all();
 
     return Object.entries(values).map(([key, value]) => {
-      const config = flagsConfig[key as keyof typeof flagsConfig];
+      const config = flagsConfig[key as keyof typeof flagsConfig] as FlagConfig | undefined;
       return {
         key,
         description: config?.description,
         type: config?.type,
-        tags: config?.tags,
+        tags: config?.tags ?? [],
         value,
       };
     });

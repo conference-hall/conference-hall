@@ -10,7 +10,6 @@ import {
 } from '@ngneat/falso';
 import type { Prisma, Team, User } from '@prisma/client';
 import { EventType, EventVisibility } from '@prisma/client';
-
 import { db } from '../../prisma/db.server.ts';
 import { applyTraits } from './helpers/traits.ts';
 import { teamFactory } from './team.ts';
@@ -59,6 +58,25 @@ const TRAITS = {
   withSurvey: {
     surveyEnabled: true,
     surveyQuestions: ['gender', 'tshirt', 'diet', 'accomodation', 'transports', 'info'],
+  },
+  withSurveyConfig: {
+    surveyConfig: {
+      enabled: true,
+      questions: [
+        {
+          id: 'name',
+          label: 'What is your name?',
+          required: true,
+          type: 'text',
+        },
+        {
+          id: 'info',
+          label: 'Do you have specific information to share?',
+          required: false,
+          type: 'text',
+        },
+      ],
+    },
   },
   withSchedule: {
     schedules: {
