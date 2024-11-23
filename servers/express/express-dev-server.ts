@@ -46,7 +46,6 @@ export function expressDevServer(options?: DevServerOptions): VitePlugin {
         ): Promise<void> {
           // exclude requests that should be handled by Vite dev server
           const exclude = [/^\/@.+$/, /^\/node_modules\/.*/];
-
           for (const pattern of exclude) {
             if (req.url) {
               if (pattern instanceof RegExp) {
@@ -58,6 +57,7 @@ export function expressDevServer(options?: DevServerOptions): VitePlugin {
               }
             }
           }
+
           // check if url is a physical file in the app directory
           if (appDirectoryPattern.test(req.url!)) {
             const url = new URL(req.url!, 'http://localhost');
@@ -72,7 +72,6 @@ export function expressDevServer(options?: DevServerOptions): VitePlugin {
           }
 
           let ssrModule: any;
-
           try {
             const module = await server.moduleGraph.getModuleByUrl(entry);
             if (module) {
@@ -92,15 +91,16 @@ export function expressDevServer(options?: DevServerOptions): VitePlugin {
           }
 
           // explicitly typed since express handle function is not exported
-          let app = entryModule[exportName] as AppHandle | Promise<AppHandle>;
-          if (!app) {
+          let expressApp = entryModule[exportName] as AppHandle | Promise<AppHandle>;
+          if (!expressApp) {
             return next(new Error(`Failed to find a named export "${exportName}" from ${entry}`));
           }
-          if (app instanceof Promise) {
-            app = await app;
+          if (expressApp instanceof Promise) {
+            expressApp = await expressApp;
           }
+
           // pass request to the Express app
-          app.handle(req, res, next);
+          expressApp.handle(req, res, next);
         };
       }
 

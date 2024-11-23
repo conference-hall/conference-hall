@@ -1,90 +1,56 @@
+import * as fs from 'node:fs';
 import path from 'node:path';
 import url from 'node:url';
 import { createRequestHandler } from '@remix-run/express';
 import type { AppLoadContext, ServerBuild } from '@remix-run/node';
 import express, { type Application } from 'express';
+import sourceMapSupport from 'source-map-support';
 
 type ConfigureFunction = (app: Application) => Promise<void> | void;
+type GetLoadContextFunction = (req: express.Request, res: express.Response) => Promise<AppLoadContext> | AppLoadContext;
+type CreateExpressAppArgs = { configure: ConfigureFunction; getLoadContext: GetLoadContextFunction };
 
-type GetLoadContextFunction = (
-  req: express.Request,
-  res: express.Response,
-  args: {
-    build: ServerBuild;
-  },
-) => Promise<AppLoadContext> | AppLoadContext;
+const BUILD_DIR = 'build';
+const SERVER_BUILD_FILE = 'index.js';
 
-type CreateExpressAppArgs = {
-  configure: ConfigureFunction;
-  getLoadContext: GetLoadContextFunction;
-  buildDirectory?: string;
-  serverBuildFile?: string;
-};
+const mode = process.env.NODE_ENV === 'test' ? 'development' : process.env.NODE_ENV;
+const isProductionMode = mode === 'production';
 
-export async function createExpressApp({
-  configure,
-  getLoadContext,
-  buildDirectory = 'build',
-  serverBuildFile = 'index.js',
-}: CreateExpressAppArgs): Promise<Application> {
-  // sourceMapSupport.install({
-  //   retrieveSourceMap: (source: any) => {
-  //     const match = source.startsWith('file://');
-  //     if (match) {
-  //       const filePath = url.fileURLToPath(source);
-  //       const sourceMapPath = `${filePath}.map`;
-  //       if (fs.existsSync(sourceMapPath)) {
-  //         return {
-  //           url: source,
-  //           map: fs.readFileSync(sourceMapPath, 'utf8'),
-  //         };
-  //       }
-  //     }
-  //     return null;
-  //   },
-  // });
+export async function createExpressApp({ configure, getLoadContext }: CreateExpressAppArgs): Promise<Application> {
+  // Install source map support
+  sourceMapSupport.install({
+    retrieveSourceMap: (source: any) => {
+      const match = source.startsWith('file://');
+      if (match) {
+        const filePath = url.fileURLToPath(source);
+        const sourceMapPath = `${filePath}.map`;
+        if (fs.existsSync(sourceMapPath)) {
+          return {
+            url: source,
+            map: fs.readFileSync(sourceMapPath, 'utf8'),
+          };
+        }
+      }
+      return null;
+    },
+  });
 
-  const mode = process.env.NODE_ENV === 'test' ? 'development' : process.env.NODE_ENV;
-
-  const isProductionMode = mode === 'production';
-
+  // Create the express app
   const app = express();
 
-  // call custom configure function if provided
+  // Apply web server configuration
   await configure(app);
 
   // Vite fingerprints its assets so we can cache forever.
-  app.use(
-    '/assets',
-    express.static(`${buildDirectory}/client/assets`, {
-      immutable: true,
-      maxAge: '1y',
-    }),
-  );
+  app.use('/assets', express.static(`${BUILD_DIR}/client/assets`, { immutable: true, maxAge: '1y' }));
 
-  // Everything else (like favicon.ico) is cached for an hour. You may want to be
-  // more aggressive with this caching.
-  app.use(
-    express.static(isProductionMode ? `${buildDirectory}/client` : 'public', {
-      maxAge: '1h',
-    }),
-  );
+  // Everything else (like favicon.ico) is cached for an hour.
+  app.use(express.static(isProductionMode ? `${BUILD_DIR}/client` : 'public', { maxAge: '1h' }));
 
-  // handle remix requests
+  // Handle remix requests
   app.all('*', async (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    const build = isProductionMode
-      ? await importProductionBuild(buildDirectory, serverBuildFile)
-      : await importDevBuild();
-
-    const expressGetLoadContextFunction = (req: any, res: any) => {
-      return getLoadContext(req, res, { build }) ?? {};
-    };
-
-    return createRequestHandler({
-      build,
-      mode,
-      getLoadContext: expressGetLoadContextFunction,
-    })(req, res, next);
+    const build = isProductionMode ? await importProductionBuild() : await importDevBuild();
+    return createRequestHandler({ build, mode, getLoadContext })(req, res, next);
   });
 
   const port = process.env.PORT ?? 3000;
@@ -112,16 +78,16 @@ const viteDevServer =
     ? undefined
     : await import('vite').then((vite) =>
         vite.createServer({
-          server: { middlewareMode: true },
+          server: { middlewareMode: true, ws: false },
           appType: 'custom',
         }),
       );
 
-function importProductionBuild(buildDirectory: string, serverBuildFile: string) {
+function importProductionBuild() {
   return import(
     /*@vite-ignore*/
     url
-      .pathToFileURL(path.resolve(path.join(process.cwd(), `/${buildDirectory}/server/${serverBuildFile}`)))
+      .pathToFileURL(path.resolve(path.join(process.cwd(), `/${BUILD_DIR}/server/${SERVER_BUILD_FILE}`)))
       .toString()
   ) as Promise<ServerBuild>;
 }
