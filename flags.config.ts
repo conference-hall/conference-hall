@@ -5,6 +5,7 @@ export default defineFlagsConfig({
     description: 'Enables custom survey feature.',
     type: 'boolean',
     defaultValue: false,
+    tags: ['frontend'] as const,
   },
   seo: {
     description: 'Enables SEO features like sitemap.xml and robots.txt.',
