@@ -27,7 +27,7 @@ export default function AdminUserRoute() {
 
   return (
     <Page className="space-y-6">
-      <Link to="/admin" iconLeft={ChevronLeftIcon}>
+      <Link to="/admin/users" iconLeft={ChevronLeftIcon}>
         Go back
       </Link>
 

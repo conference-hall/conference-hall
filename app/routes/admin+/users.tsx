@@ -48,7 +48,7 @@ export default function AdminUsersRoute() {
 
         <List.Content aria-label="Users list">
           {results.map((user) => (
-            <List.RowLink key={user.id} to={`users/${user.id}`} className="flex justify-between items-center gap-4">
+            <List.RowLink key={user.id} to={user.id} className="flex justify-between items-center gap-4">
               <div className="min-w-0">
                 <Text size="s" weight="medium" truncate>
                   {user.name}
