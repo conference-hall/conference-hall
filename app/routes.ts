@@ -31,7 +31,7 @@ export default [
 
   // Invitation pages
   route('invite/proposal/:code', './routes/invite+/proposal.$code.tsx'),
-  route('invite/talk/:code', './routes/invite+/talk.$code.tsx'), // TODO: [routes] vite dev server when file is not found
+  route('invite/talk/:code', './routes/invite+/talk.$code.tsx'),
   route('invite/team/:code', './routes/invite+/team.$code.tsx'),
 
   // Notifications pages
