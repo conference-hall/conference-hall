@@ -10,7 +10,7 @@ import { createAppServer } from '../servers/web.server.ts';
 
 import { NonceContext } from './libs/nonce/use-nonce.ts';
 
-const ABORT_DELAY = 8_000;
+export const streamTimeout = 5_000;
 
 export default function handleRequest(
   request: Request,
@@ -26,7 +26,7 @@ export default function handleRequest(
     const nonce = String(loadContext.cspNonce) ?? undefined;
     const { pipe, abort } = renderToPipeableStream(
       <NonceContext.Provider value={nonce}>
-        <RemixServer abortDelay={ABORT_DELAY} context={remixContext} url={request.url} nonce={nonce} />
+        <RemixServer context={remixContext} url={request.url} nonce={nonce} />
       </NonceContext.Provider>,
       {
         [callbackName]() {
@@ -57,7 +57,7 @@ export default function handleRequest(
     );
 
     // Automatically timeout the react renderer
-    setTimeout(abort, ABORT_DELAY);
+    setTimeout(abort, streamTimeout + 1_000);
   });
 }
 

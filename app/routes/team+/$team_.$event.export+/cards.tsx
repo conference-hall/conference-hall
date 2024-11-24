@@ -1,5 +1,3 @@
-import './cards.css';
-
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
@@ -11,6 +9,12 @@ import { requireSession } from '~/libs/auth/session.ts';
 import { getLanguage } from '~/libs/formatters/languages.ts';
 import { getLevel } from '~/libs/formatters/levels.ts';
 import { formatReviewNote } from '~/libs/formatters/reviews.ts';
+
+import styles from './cards.css?url';
+
+export const links = () => {
+  return [{ rel: 'stylesheet', href: styles }];
+};
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await requireSession(request);
