@@ -17,6 +17,7 @@ export const seed = async () => {
       websiteUrl: 'https://devfest.gdgnantes.com',
       contactEmail: 'contact@example.com',
       codeOfConductUrl: 'https://devfest.gdgnantes.com/cod.html',
+      migrationId: 'legacy-event-id',
     },
     traits: ['conference-cfp-open'],
   });

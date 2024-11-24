@@ -41,6 +41,12 @@ describe('View event page', () => {
     event.assertPageNotFound('Event not found');
   });
 
+  it('redirects to the new URL when visiting the legacy URL', () => {
+    event.visitLegacyUrl('legacy-event-id');
+    cy.assertText('Devfest Nantes');
+    event.isPageVisible('devfest-nantes');
+  });
+
   it('can submit a proposal', () => {
     cy.login();
     event.visit('devfest-nantes');
