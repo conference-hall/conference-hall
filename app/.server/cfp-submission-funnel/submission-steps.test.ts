@@ -4,6 +4,7 @@ import { eventFormatFactory } from 'tests/factories/formats.ts';
 
 import { SubmissionSteps } from './submission-steps.ts';
 
+// TODO: [submission] Replaced by hook tests
 describe('SubmissionSteps', () => {
   describe('#steps', () => {
     it('return all steps for a full event', async () => {

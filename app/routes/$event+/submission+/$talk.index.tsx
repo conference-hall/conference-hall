@@ -2,20 +2,19 @@ import { parseWithZod } from '@conform-to/zod';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
-import { useActionData, useLoaderData, useNavigate } from '@remix-run/react';
+import { useActionData, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
-
-import { SubmissionSteps } from '~/.server/cfp-submission-funnel/submission-steps.ts';
 import { TalkSubmission } from '~/.server/cfp-submission-funnel/talk-submission.ts';
 import { TalksLibrary } from '~/.server/speaker-talks-library/talks-library.ts';
 import { TalkSaveSchema } from '~/.server/speaker-talks-library/talks-library.types.ts';
-import { Button } from '~/design-system/buttons.tsx';
+import { Button, ButtonLink } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { TalkAlreadySubmittedError } from '~/libs/errors.server.ts';
 import { TalkForm } from '~/routes/__components/talks/talk-forms/talk-form.tsx';
+import { useCurrentStep } from './__components/submission-context.tsx';
 
 export const handle = { step: 'proposal' };
 
@@ -46,14 +45,13 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const submission = TalkSubmission.for(speakerId, params.event);
   const proposal = await submission.saveDraft(params.talk, result.value);
 
-  const nextStep = await SubmissionSteps.nextStepFor('proposal', params.event, proposal.talkId);
-  return redirect(nextStep.path);
+  return redirect(`/${params.event}/submission/${proposal.talkId}/speakers`);
 };
 
 export default function SubmissionTalkRoute() {
-  const navigate = useNavigate();
   const talk = useLoaderData<typeof loader>();
   const errors = useActionData<typeof action>();
+  const currentStep = useCurrentStep();
 
   return (
     <Page>
@@ -65,9 +63,11 @@ export default function SubmissionTalkRoute() {
           <TalkForm id="talk-form" initialValues={talk} errors={errors} />
         </Card.Content>
         <Card.Actions>
-          <Button onClick={() => navigate(-1)} variant="secondary">
-            Go back
-          </Button>
+          {currentStep?.previousPath ? (
+            <ButtonLink to={currentStep?.previousPath} variant="secondary">
+              Go back
+            </ButtonLink>
+          ) : null}
           <Button type="submit" form="talk-form" iconRight={ArrowRightIcon}>
             Continue
           </Button>

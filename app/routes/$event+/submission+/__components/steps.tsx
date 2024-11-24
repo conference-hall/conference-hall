@@ -1,12 +1,9 @@
 import { CheckIcon } from '@heroicons/react/20/solid';
 import { Link } from '@remix-run/react';
+import { useCurrentStepName, useSteps } from './submission-context.tsx';
 
 type Props = {
-  steps: Array<{
-    key: string;
-    path: string;
-    name: string;
-  }>;
+  steps: Array<{ key: string; path: string; name: string }>;
   currentStep?: string;
 };
 
@@ -112,11 +109,13 @@ function StepsDesktop({ steps, currentStep }: Props) {
   );
 }
 
-export function Steps(props: Props) {
+export function Steps() {
+  const steps = useSteps();
+  const currentStepName = useCurrentStepName();
   return (
     <>
-      <StepsMobile {...props} />
-      <StepsDesktop {...props} />
+      <StepsMobile steps={steps} currentStep={currentStepName} />
+      <StepsDesktop steps={steps} currentStep={currentStepName} />
     </>
   );
 }
