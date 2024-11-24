@@ -1,7 +1,7 @@
 import { type RouteConfig, index, route } from '@react-router/dev/routes';
 
 export default [
-  // homepage
+  // Homepage
   index('./routes/index.tsx'),
 
   // Authentication pages
@@ -44,13 +44,6 @@ export default [
     route('talks', './routes/speaker+/talks.index.tsx'),
     route('talks/new', './routes/speaker+/talks.new.tsx'),
     route('talks/:talk', './routes/speaker+/talks.$talk.index.tsx'),
-  ]),
-
-  // Docs pages
-  route('docs', './routes/docs+/_layout.tsx', [
-    route('terms', './routes/docs+/terms.tsx'),
-    route('privacy', './routes/docs+/privacy.tsx'),
-    route('license', './routes/docs+/license.tsx'),
   ]),
 
   // Team pages
@@ -123,10 +116,17 @@ export default [
     route('debug/heap-snapshot', './routes/admin+/debug.heap-snapshot.tsx'),
   ]),
 
+  // Docs pages
+  route('docs', './routes/docs+/_layout.tsx', [
+    route('terms', './routes/docs+/terms.tsx'),
+    route('privacy', './routes/docs+/privacy.tsx'),
+    route('license', './routes/docs+/license.tsx'),
+  ]),
+
   // Api pages
   route('api/v1/event/:event', './routes/api+/v1.event.$event.tsx'),
 
-  // Misc routes
+  // SEO routes
   route('robots.txt', './routes/_misc+/robots[.txt].ts'),
   route('sitemap.xml', './routes/_misc+/sitemap[.]xml.ts'),
 
