@@ -9,7 +9,7 @@ import { EventPage } from './event-page.ts';
 
 describe('EventPage', () => {
   describe('#get', () => {
-    it('returns the default response', async () => {
+    it('returns the event informations', async () => {
       const team = await teamFactory();
       const event = await eventFactory({ team, traits: ['conference-cfp-open', 'withSurvey'] });
       const format = await eventFormatFactory({ event });
@@ -57,6 +57,20 @@ describe('EventPage', () => {
 
     it('throws an error when event not found', async () => {
       await expect(EventPage.of('XXX').get()).rejects.toThrowError(EventNotFoundError);
+    });
+  });
+
+  describe('#getByLegacyId', () => {
+    it('returns the event corresponding to the legacy Conference Hall id', async () => {
+      const event = await eventFactory({ attributes: { migrationId: 'legacy-event-id' } });
+
+      const result = await EventPage.getByLegacyId('legacy-event-id');
+
+      expect(result.id).toEqual(event.id);
+    });
+
+    it('throws an error when event not found', async () => {
+      await expect(EventPage.getByLegacyId('unknown-event-id')).rejects.toThrowError(EventNotFoundError);
     });
   });
 });

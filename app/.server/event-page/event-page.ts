@@ -61,4 +61,11 @@ export class EventPage {
       categoriesAllowMultiple: event.categoriesAllowMultiple,
     };
   }
+
+  static async getByLegacyId(legacyId: string) {
+    const event = await db.event.findFirst({ where: { migrationId: legacyId } });
+    if (!event) throw new EventNotFoundError();
+
+    return event;
+  }
 }

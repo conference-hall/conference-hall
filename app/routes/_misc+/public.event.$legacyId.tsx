@@ -1,16 +1,12 @@
 import { type LoaderFunctionArgs, redirect } from '@remix-run/node';
-import { db } from 'prisma/db.server.ts';
 import invariant from 'tiny-invariant';
-import { EventNotFoundError } from '~/libs/errors.server.ts';
+import { EventPage } from '~/.server/event-page/event-page.ts';
 
 // Redirect Conference Hall beta event URLs
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   invariant(params.legacyId, 'Invalid legacy id');
 
-  const event = await db.event.findFirst({ where: { migrationId: params.legacyId } });
-  if (!event) {
-    throw new EventNotFoundError();
-  }
+  const event = await EventPage.getByLegacyId(params.legacyId);
 
   return redirect(`/${event.slug}`, 301);
 };

@@ -6,6 +6,10 @@ class EventPage extends BasePage {
     this.isPageVisible(slug);
   }
 
+  visitLegacyUrl(legacyId: string) {
+    cy.visit(`/public/event/${legacyId}`, { failOnStatusCode: false });
+  }
+
   isPageVisible(slug: string) {
     cy.assertUrl(`/${slug}`);
   }
