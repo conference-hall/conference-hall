@@ -1,14 +1,7 @@
 import { useMatches } from '@remix-run/react';
 import { type ReactNode, createContext, useContext, useMemo } from 'react';
 
-type Step = {
-  key: string;
-  name: string;
-  path: string;
-  enabled: boolean;
-};
-
-const SubmissionContext = createContext<Array<Step> | undefined>(undefined);
+type Step = { key: string; name: string; path: string; enabled: boolean };
 
 type SubmissionContextProviderProps = {
   eventSlug: string;
@@ -18,7 +11,8 @@ type SubmissionContextProviderProps = {
   children: ReactNode;
 };
 
-// TODO: [submission] Add tests
+const SubmissionContext = createContext<Array<Step> | undefined>(undefined);
+
 export const SubmissionContextProvider = ({
   eventSlug,
   talkId,
@@ -26,6 +20,8 @@ export const SubmissionContextProvider = ({
   hasSurvey,
   children,
 }: SubmissionContextProviderProps) => {
+  const currentTalkId = talkId || 'new';
+
   const steps = useMemo(
     () =>
       [
@@ -38,35 +34,35 @@ export const SubmissionContextProvider = ({
         {
           key: 'proposal',
           name: 'Proposal',
-          path: `/${eventSlug}/submission/${talkId}`,
+          path: `/${eventSlug}/submission/${currentTalkId}`,
           enabled: true,
         },
         {
           key: 'speakers',
           name: 'Speakers',
-          path: `/${eventSlug}/submission/${talkId}/speakers`,
+          path: `/${eventSlug}/submission/${currentTalkId}/speakers`,
           enabled: true,
         },
         {
           key: 'tracks',
           name: 'Tracks',
-          path: `/${eventSlug}/submission/${talkId}/tracks`,
+          path: `/${eventSlug}/submission/${currentTalkId}/tracks`,
           enabled: hasTracks,
         },
         {
           key: 'survey',
           name: 'Survey',
-          path: `/${eventSlug}/submission/${talkId}/survey`,
+          path: `/${eventSlug}/submission/${currentTalkId}/survey`,
           enabled: hasSurvey,
         },
         {
           key: 'submission',
           name: 'Submission',
-          path: `/${eventSlug}/submission/${talkId}/submit`,
+          path: `/${eventSlug}/submission/${currentTalkId}/submit`,
           enabled: true,
         },
       ].filter((step) => step.enabled),
-    [eventSlug, talkId, hasTracks, hasSurvey],
+    [eventSlug, currentTalkId, hasTracks, hasSurvey],
   );
 
   return <SubmissionContext.Provider value={steps}>{children}</SubmissionContext.Provider>;
