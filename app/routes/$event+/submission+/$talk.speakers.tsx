@@ -15,7 +15,7 @@ import { ExternalLink } from '~/design-system/links.tsx';
 import { H2, Subtitle, Text } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { CoSpeakers } from '~/routes/__components/talks/co-speaker.tsx';
-import { useCurrentStep } from './__components/submission-context.tsx';
+import { useSubmissionNavigation } from './__components/submission-context.tsx';
 
 export const handle = { step: 'speakers' };
 
@@ -43,7 +43,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const intent = form.get('intent');
 
   if (intent === 'remove-speaker') {
-    const speakerId = form.get('_speakerId')?.toString() as string;
+    const speakerId = String(form.get('_speakerId'));
     await TalkSubmission.for(userId, params.event).removeCoSpeaker(params.talk, speakerId);
     return null;
   } else {
@@ -52,14 +52,14 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     await SpeakerProfile.for(userId).save(result.value);
   }
 
-  const redirectTo = form.get('redirectTo')?.toString() ?? '';
+  const redirectTo = String(form.get('redirectTo'));
   return redirect(redirectTo);
 };
 
 export default function SubmissionSpeakerRoute() {
   const { speaker, speakers, isOwner, invitationLink } = useLoaderData<typeof loader>();
   const errors = useActionData<typeof action>();
-  const currentStep = useCurrentStep();
+  const { previousPath, nextPath } = useSubmissionNavigation();
 
   return (
     <Page>
@@ -67,6 +67,7 @@ export default function SubmissionSpeakerRoute() {
         <Card.Title>
           <H2>Speaker details</H2>
         </Card.Title>
+
         <Card.Content>
           <Form id="speakers-form" method="POST">
             <MarkdownTextArea
@@ -89,19 +90,12 @@ export default function SubmissionSpeakerRoute() {
             <CoSpeakers speakers={speakers} invitationLink={invitationLink} canEdit={isOwner} className="mt-6" />
           </div>
         </Card.Content>
+
         <Card.Actions>
-          {currentStep?.previousPath ? (
-            <ButtonLink to={currentStep?.previousPath} variant="secondary">
-              Go back
-            </ButtonLink>
-          ) : null}
-          <Button
-            type="submit"
-            form="speakers-form"
-            name="redirectTo"
-            value={currentStep?.nextPath ?? ''}
-            iconRight={ArrowRightIcon}
-          >
+          <ButtonLink to={previousPath} variant="secondary">
+            Go back
+          </ButtonLink>
+          <Button type="submit" form="speakers-form" name="redirectTo" value={nextPath} iconRight={ArrowRightIcon}>
             Continue
           </Button>
         </Card.Actions>

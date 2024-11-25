@@ -13,7 +13,7 @@ import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast } from '~/libs/toasts/toast.server.ts';
 import { useCurrentEvent } from '~/routes/__components/contexts/event-page-context.tsx';
 import { TalkSection } from '~/routes/__components/talks/talk-section.tsx';
-import { useCurrentStep } from './__components/submission-context.tsx';
+import { useSubmissionNavigation } from './__components/submission-context.tsx';
 
 export const handle = { step: 'submission' };
 
@@ -38,7 +38,7 @@ export default function SubmissionSubmitRoute() {
   const currentEvent = useCurrentEvent();
   const proposal = useLoaderData<typeof loader>();
   const [acceptedCod, setAcceptCod] = useState(!currentEvent.codeOfConductUrl);
-  const currentStep = useCurrentStep();
+  const { previousPath } = useSubmissionNavigation();
 
   return (
     <Page className="space-y-4">
@@ -69,11 +69,9 @@ export default function SubmissionSubmitRoute() {
             )}
 
             <div className="flex flex-row justify-end items-center gap-4">
-              {currentStep?.previousPath ? (
-                <ButtonLink to={currentStep?.previousPath} variant="secondary">
-                  Go back
-                </ButtonLink>
-              ) : null}
+              <ButtonLink to={previousPath} variant="secondary">
+                Go back
+              </ButtonLink>
               <Button type="submit" form="submit-form" disabled={!acceptedCod}>
                 Submit proposal
               </Button>

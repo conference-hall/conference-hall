@@ -1,21 +1,24 @@
 import { useMatches } from '@remix-run/react';
-import { type ReactNode, createContext, useContext } from 'react';
+import { type ReactNode, createContext, useContext, useMemo } from 'react';
 
 type Step = {
   key: string;
   name: string;
   path: string;
-  previousPath: string | null;
-  nextPath: string | null;
-  form?: string;
   enabled: boolean;
 };
 
 const SubmissionContext = createContext<Array<Step> | undefined>(undefined);
 
-type SubmissionProps = { eventSlug: string; talkId?: string; hasTracks: boolean; hasSurvey: boolean };
-type SubmissionContextProviderProps = SubmissionProps & { children: ReactNode };
+type SubmissionContextProviderProps = {
+  eventSlug: string;
+  talkId?: string;
+  hasTracks: boolean;
+  hasSurvey: boolean;
+  children: ReactNode;
+};
 
+// TODO: [submission] Add tests
 export const SubmissionContextProvider = ({
   eventSlug,
   talkId,
@@ -23,79 +26,51 @@ export const SubmissionContextProvider = ({
   hasSurvey,
   children,
 }: SubmissionContextProviderProps) => {
-  const steps = getSteps({ eventSlug, talkId, hasTracks, hasSurvey });
+  const steps = useMemo(
+    () =>
+      [
+        {
+          key: 'selection',
+          name: 'Selection',
+          path: `/${eventSlug}/submission`,
+          enabled: true,
+        },
+        {
+          key: 'proposal',
+          name: 'Proposal',
+          path: `/${eventSlug}/submission/${talkId}`,
+          enabled: true,
+        },
+        {
+          key: 'speakers',
+          name: 'Speakers',
+          path: `/${eventSlug}/submission/${talkId}/speakers`,
+          enabled: true,
+        },
+        {
+          key: 'tracks',
+          name: 'Tracks',
+          path: `/${eventSlug}/submission/${talkId}/tracks`,
+          enabled: hasTracks,
+        },
+        {
+          key: 'survey',
+          name: 'Survey',
+          path: `/${eventSlug}/submission/${talkId}/survey`,
+          enabled: hasSurvey,
+        },
+        {
+          key: 'submission',
+          name: 'Submission',
+          path: `/${eventSlug}/submission/${talkId}/submit`,
+          enabled: true,
+        },
+      ].filter((step) => step.enabled),
+    [eventSlug, talkId, hasTracks, hasSurvey],
+  );
 
   return <SubmissionContext.Provider value={steps}>{children}</SubmissionContext.Provider>;
 };
-
-function getSteps({ eventSlug, talkId, hasTracks, hasSurvey }: SubmissionProps): Array<Step> {
-  return [
-    {
-      key: 'selection',
-      name: 'Selection',
-      form: undefined,
-      path: `/${eventSlug}/submission`,
-      nextPath: `/${eventSlug}/submission/${talkId}`,
-      previousPath: null,
-      enabled: true,
-    },
-    {
-      key: 'proposal',
-      name: 'Proposal',
-      form: 'proposal-form',
-      path: `/${eventSlug}/submission/${talkId}`,
-      nextPath: `/${eventSlug}/submission/${talkId}/speakers`,
-      previousPath: `/${eventSlug}/submission`,
-      enabled: true,
-    },
-    {
-      key: 'speakers',
-      name: 'Speakers',
-      form: 'speakers-form',
-      path: `/${eventSlug}/submission/${talkId}/speakers`,
-      nextPath: hasTracks
-        ? `/${eventSlug}/submission/${talkId}/tracks`
-        : hasSurvey
-          ? `/${eventSlug}/submission/${talkId}/survey`
-          : `/${eventSlug}/submission/${talkId}/submit`,
-      previousPath: `/${eventSlug}/submission/${talkId}`,
-      enabled: true,
-    },
-    {
-      key: 'tracks',
-      name: 'Tracks',
-      form: 'tracks-form',
-      path: `/${eventSlug}/submission/${talkId}/tracks`,
-      nextPath: hasSurvey ? `/${eventSlug}/submission/${talkId}/survey` : `/${eventSlug}/submission/${talkId}/submit`,
-      previousPath: `/${eventSlug}/submission/${talkId}/speakers`,
-      enabled: hasTracks,
-    },
-    {
-      key: 'survey',
-      name: 'Survey',
-      form: 'survey-form',
-      path: `/${eventSlug}/submission/${talkId}/survey`,
-      nextPath: `/${eventSlug}/submission/${talkId}/submit`,
-      previousPath: hasTracks
-        ? `/${eventSlug}/submission/${talkId}/tracks`
-        : `/${eventSlug}/submission/${talkId}/speakers`,
-      enabled: hasSurvey,
-    },
-    {
-      key: 'submission',
-      name: 'Submission',
-      form: undefined,
-      path: `/${eventSlug}/submission/${talkId}/submit`,
-      nextPath: null,
-      previousPath: hasTracks
-        ? `/${eventSlug}/submission/${talkId}/tracks`
-        : hasSurvey
-          ? `/${eventSlug}/submission/${talkId}/survey`
-          : `/${eventSlug}/submission/${talkId}/speakers`,
-      enabled: true,
-    },
-  ].filter((step) => step.enabled);
-}
 
 export function useSteps() {
   const context = useContext(SubmissionContext);
@@ -111,8 +86,25 @@ export function useCurrentStepName() {
   return handle.step;
 }
 
-export function useCurrentStep() {
+export function useSubmissionNavigation() {
   const currentStep = useCurrentStepName();
   const steps = useSteps();
-  return steps.find((step) => step.key === currentStep);
+
+  const currentStepIndex = steps.findIndex((step) => step.key === currentStep);
+  const previousStep = steps[currentStepIndex - 1];
+  const nextStep = steps[currentStepIndex + 1];
+
+  let previousPath = '';
+  let nextPath = '';
+
+  if (previousStep && !nextStep) {
+    previousPath = previousStep.path;
+  } else if (!previousStep && nextStep) {
+    nextPath = nextStep.path;
+  } else {
+    previousPath = previousStep.path;
+    nextPath = nextStep.path;
+  }
+
+  return useMemo(() => ({ previousPath, nextPath }), [previousPath, nextPath]);
 }

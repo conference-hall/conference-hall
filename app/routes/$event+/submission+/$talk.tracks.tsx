@@ -17,7 +17,7 @@ import { CategoriesForm } from '~/routes/__components/talks/talk-forms/categorie
 import { FormatsForm } from '~/routes/__components/talks/talk-forms/formats-form.tsx';
 
 import { useCurrentEvent } from '~/routes/__components/contexts/event-page-context.tsx';
-import { useCurrentStep } from './__components/submission-context.tsx';
+import { useSubmissionNavigation } from './__components/submission-context.tsx';
 
 export const handle = { step: 'tracks' };
 
@@ -44,7 +44,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const submission = TalkSubmission.for(userId, params.event);
   await submission.saveTracks(params.talk, result.value);
 
-  const redirectTo = form.get('redirectTo')?.toString() ?? '';
+  const redirectTo = String(form.get('redirectTo'));
   return redirect(redirectTo);
 };
 
@@ -52,7 +52,7 @@ export default function SubmissionTracksRoute() {
   const currentEvent = useCurrentEvent();
   const proposal = useLoaderData<typeof loader>();
   const errors = useActionData<typeof action>();
-  const currentStep = useCurrentStep();
+  const { previousPath, nextPath } = useSubmissionNavigation();
 
   return (
     <Page>
@@ -60,6 +60,7 @@ export default function SubmissionTracksRoute() {
         <Card.Title>
           <H2>Proposal tracks</H2>
         </Card.Title>
+
         <Card.Content>
           <Form id="tracks-form" method="POST">
             <div className="space-y-12">
@@ -93,19 +94,12 @@ export default function SubmissionTracksRoute() {
             </div>
           </Form>
         </Card.Content>
+
         <Card.Actions>
-          {currentStep?.previousPath ? (
-            <ButtonLink to={currentStep?.previousPath} variant="secondary">
-              Go back
-            </ButtonLink>
-          ) : null}
-          <Button
-            type="submit"
-            form="tracks-form"
-            name="redirectTo"
-            value={currentStep?.nextPath ?? ''}
-            iconRight={ArrowRightIcon}
-          >
+          <ButtonLink to={previousPath} variant="secondary">
+            Go back
+          </ButtonLink>
+          <Button type="submit" form="tracks-form" name="redirectTo" value={nextPath} iconRight={ArrowRightIcon}>
             Continue
           </Button>
         </Card.Actions>

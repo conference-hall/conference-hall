@@ -11,7 +11,7 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { SurveyForm } from '~/routes/__components/talks/talk-forms/survey-form.tsx';
-import { useCurrentStep } from './__components/submission-context.tsx';
+import { useSubmissionNavigation } from './__components/submission-context.tsx';
 
 export const handle = { step: 'survey' };
 
@@ -40,14 +40,14 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   await SpeakerSurvey.for(params.event).saveSpeakerAnswer(userId, result.value);
 
-  const redirectTo = form.get('redirectTo')?.toString() ?? '';
+  const redirectTo = String(form.get('redirectTo'));
   return redirect(redirectTo);
 };
 
 export default function SubmissionSurveyRoute() {
   const { questions, answers } = useLoaderData<typeof loader>();
   const errors = useActionData<typeof action>();
-  const currentStep = useCurrentStep();
+  const { previousPath, nextPath } = useSubmissionNavigation();
 
   return (
     <Page>
@@ -55,22 +55,16 @@ export default function SubmissionSurveyRoute() {
         <Card.Title>
           <H2>We have some questions for you</H2>
         </Card.Title>
+
         <Card.Content>
           <SurveyForm id="survey-form" questions={questions} initialValues={answers} errors={errors} />
         </Card.Content>
+
         <Card.Actions>
-          {currentStep?.previousPath ? (
-            <ButtonLink to={currentStep?.previousPath} variant="secondary">
-              Go back
-            </ButtonLink>
-          ) : null}
-          <Button
-            type="submit"
-            form="survey-form"
-            name="redirectTo"
-            value={currentStep?.nextPath ?? ''}
-            iconRight={ArrowRightIcon}
-          >
+          <ButtonLink to={previousPath} variant="secondary">
+            Go back
+          </ButtonLink>
+          <Button type="submit" form="survey-form" name="redirectTo" value={nextPath} iconRight={ArrowRightIcon}>
             Continue
           </Button>
         </Card.Actions>

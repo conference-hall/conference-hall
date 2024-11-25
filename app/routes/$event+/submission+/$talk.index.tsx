@@ -14,7 +14,7 @@ import { H2 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { TalkAlreadySubmittedError } from '~/libs/errors.server.ts';
 import { TalkForm } from '~/routes/__components/talks/talk-forms/talk-form.tsx';
-import { useCurrentStep } from './__components/submission-context.tsx';
+import { useSubmissionNavigation } from './__components/submission-context.tsx';
 
 export const handle = { step: 'proposal' };
 
@@ -51,7 +51,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 export default function SubmissionTalkRoute() {
   const talk = useLoaderData<typeof loader>();
   const errors = useActionData<typeof action>();
-  const currentStep = useCurrentStep();
+  const { previousPath } = useSubmissionNavigation();
 
   return (
     <Page>
@@ -59,15 +59,15 @@ export default function SubmissionTalkRoute() {
         <Card.Title>
           <H2>Your proposal</H2>
         </Card.Title>
+
         <Card.Content>
           <TalkForm id="talk-form" initialValues={talk} errors={errors} />
         </Card.Content>
+
         <Card.Actions>
-          {currentStep?.previousPath ? (
-            <ButtonLink to={currentStep?.previousPath} variant="secondary">
-              Go back
-            </ButtonLink>
-          ) : null}
+          <ButtonLink to={previousPath} variant="secondary">
+            Go back
+          </ButtonLink>
           <Button type="submit" form="talk-form" iconRight={ArrowRightIcon}>
             Continue
           </Button>
