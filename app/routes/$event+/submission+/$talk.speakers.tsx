@@ -2,14 +2,12 @@ import { parseWithZod } from '@conform-to/zod';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
-import { Form, useActionData, useLoaderData, useNavigate } from '@remix-run/react';
+import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
-
-import { SubmissionSteps } from '~/.server/cfp-submission-funnel/submission-steps.ts';
 import { TalkSubmission } from '~/.server/cfp-submission-funnel/talk-submission.ts';
 import { SpeakerProfile } from '~/.server/speaker-profile/speaker-profile.ts';
 import { DetailsSchema } from '~/.server/speaker-profile/speaker-profile.types.ts';
-import { Button } from '~/design-system/buttons.tsx';
+import { Button, ButtonLink } from '~/design-system/buttons.tsx';
 import { MarkdownTextArea } from '~/design-system/forms/markdown-textarea.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
@@ -17,6 +15,7 @@ import { ExternalLink } from '~/design-system/links.tsx';
 import { H2, Subtitle, Text } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { CoSpeakers } from '~/routes/__components/talks/co-speaker.tsx';
+import { useSubmissionNavigation } from './__components/submission-context.tsx';
 
 export const handle = { step: 'speakers' };
 
@@ -44,7 +43,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const intent = form.get('intent');
 
   if (intent === 'remove-speaker') {
-    const speakerId = form.get('_speakerId')?.toString() as string;
+    const speakerId = String(form.get('_speakerId'));
     await TalkSubmission.for(userId, params.event).removeCoSpeaker(params.talk, speakerId);
     return null;
   } else {
@@ -53,14 +52,14 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     await SpeakerProfile.for(userId).save(result.value);
   }
 
-  const nextStep = await SubmissionSteps.nextStepFor('speakers', params.event, params.talk);
-  return redirect(nextStep.path);
+  const redirectTo = String(form.get('redirectTo'));
+  return redirect(redirectTo);
 };
 
 export default function SubmissionSpeakerRoute() {
-  const navigate = useNavigate();
   const { speaker, speakers, isOwner, invitationLink } = useLoaderData<typeof loader>();
   const errors = useActionData<typeof action>();
+  const { previousPath, nextPath } = useSubmissionNavigation();
 
   return (
     <Page>
@@ -68,6 +67,7 @@ export default function SubmissionSpeakerRoute() {
         <Card.Title>
           <H2>Speaker details</H2>
         </Card.Title>
+
         <Card.Content>
           <Form id="speakers-form" method="POST">
             <MarkdownTextArea
@@ -90,11 +90,12 @@ export default function SubmissionSpeakerRoute() {
             <CoSpeakers speakers={speakers} invitationLink={invitationLink} canEdit={isOwner} className="mt-6" />
           </div>
         </Card.Content>
+
         <Card.Actions>
-          <Button onClick={() => navigate(-1)} variant="secondary">
+          <ButtonLink to={previousPath} variant="secondary">
             Go back
-          </Button>
-          <Button type="submit" form="speakers-form" iconRight={ArrowRightIcon}>
+          </ButtonLink>
+          <Button type="submit" form="speakers-form" name="redirectTo" value={nextPath} iconRight={ArrowRightIcon}>
             Continue
           </Button>
         </Card.Actions>

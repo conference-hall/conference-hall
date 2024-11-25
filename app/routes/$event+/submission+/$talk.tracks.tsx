@@ -2,14 +2,12 @@ import { parseWithZod } from '@conform-to/zod';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
-import { Form, useActionData, useLoaderData, useNavigate } from '@remix-run/react';
+import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
-
-import { SubmissionSteps } from '~/.server/cfp-submission-funnel/submission-steps.ts';
 import { TalkSubmission } from '~/.server/cfp-submission-funnel/talk-submission.ts';
 import { getTracksSchema } from '~/.server/cfp-submission-funnel/talk-submission.types.ts';
 import { EventPage } from '~/.server/event-page/event-page.ts';
-import { Button } from '~/design-system/buttons.tsx';
+import { Button, ButtonLink } from '~/design-system/buttons.tsx';
 import { Callout } from '~/design-system/callout.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
@@ -19,6 +17,7 @@ import { CategoriesForm } from '~/routes/__components/talks/talk-forms/categorie
 import { FormatsForm } from '~/routes/__components/talks/talk-forms/formats-form.tsx';
 
 import { useCurrentEvent } from '~/routes/__components/contexts/event-page-context.tsx';
+import { useSubmissionNavigation } from './__components/submission-context.tsx';
 
 export const handle = { step: 'tracks' };
 
@@ -45,15 +44,15 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const submission = TalkSubmission.for(userId, params.event);
   await submission.saveTracks(params.talk, result.value);
 
-  const nextStep = await SubmissionSteps.nextStepFor('tracks', params.event, params.talk);
-  return redirect(nextStep.path);
+  const redirectTo = String(form.get('redirectTo'));
+  return redirect(redirectTo);
 };
 
 export default function SubmissionTracksRoute() {
-  const navigate = useNavigate();
   const currentEvent = useCurrentEvent();
   const proposal = useLoaderData<typeof loader>();
   const errors = useActionData<typeof action>();
+  const { previousPath, nextPath } = useSubmissionNavigation();
 
   return (
     <Page>
@@ -61,6 +60,7 @@ export default function SubmissionTracksRoute() {
         <Card.Title>
           <H2>Proposal tracks</H2>
         </Card.Title>
+
         <Card.Content>
           <Form id="tracks-form" method="POST">
             <div className="space-y-12">
@@ -94,11 +94,12 @@ export default function SubmissionTracksRoute() {
             </div>
           </Form>
         </Card.Content>
+
         <Card.Actions>
-          <Button onClick={() => navigate(-1)} variant="secondary">
+          <ButtonLink to={previousPath} variant="secondary">
             Go back
-          </Button>
-          <Button type="submit" form="tracks-form" iconRight={ArrowRightIcon}>
+          </ButtonLink>
+          <Button type="submit" form="tracks-form" name="redirectTo" value={nextPath} iconRight={ArrowRightIcon}>
             Continue
           </Button>
         </Card.Actions>

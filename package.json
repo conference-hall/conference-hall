@@ -79,6 +79,7 @@
     "@remix-run/dev": "^2.15.0",
     "@remix-run/route-config": "^2.15.0",
     "@remix-run/routes-option-adapter": "^2.15.0",
+    "@remix-run/testing": "^2.15.0",
     "@sentry/vite-plugin": "^2.22.6",
     "@tailwindcss/forms": "^0.5.9",
     "@tailwindcss/typography": "^0.5.15",

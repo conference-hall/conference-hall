@@ -152,7 +152,7 @@ class EventSubmissionPage extends BasePage {
    * Error
    */
   assertCfpNotFound() {
-    cy.findByRole('heading', { name: 'CFP not open' }).should('be.visible');
+    cy.findByText('The call for papers is not open yet.').should('be.visible');
   }
 }
 

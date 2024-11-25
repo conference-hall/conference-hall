@@ -1,10 +1,10 @@
 import type { ActionFunction, LoaderFunctionArgs } from '@remix-run/node';
-import { Form, useLoaderData, useNavigate } from '@remix-run/react';
+import { Form, useLoaderData } from '@remix-run/react';
 import { useState } from 'react';
 import invariant from 'tiny-invariant';
 
 import { TalkSubmission } from '~/.server/cfp-submission-funnel/talk-submission.ts';
-import { Button } from '~/design-system/buttons.tsx';
+import { Button, ButtonLink } from '~/design-system/buttons.tsx';
 import { Checkbox } from '~/design-system/forms/checkboxes.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
@@ -13,6 +13,7 @@ import { requireSession } from '~/libs/auth/session.ts';
 import { redirectWithToast } from '~/libs/toasts/toast.server.ts';
 import { useCurrentEvent } from '~/routes/__components/contexts/event-page-context.tsx';
 import { TalkSection } from '~/routes/__components/talks/talk-section.tsx';
+import { useSubmissionNavigation } from './__components/submission-context.tsx';
 
 export const handle = { step: 'submission' };
 
@@ -34,10 +35,10 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export default function SubmissionSubmitRoute() {
-  const navigate = useNavigate();
   const currentEvent = useCurrentEvent();
   const proposal = useLoaderData<typeof loader>();
   const [acceptedCod, setAcceptCod] = useState(!currentEvent.codeOfConductUrl);
+  const { previousPath } = useSubmissionNavigation();
 
   return (
     <Page className="space-y-4">
@@ -68,9 +69,9 @@ export default function SubmissionSubmitRoute() {
             )}
 
             <div className="flex flex-row justify-end items-center gap-4">
-              <Button onClick={() => navigate(-1)} variant="secondary">
+              <ButtonLink to={previousPath} variant="secondary">
                 Go back
-              </Button>
+              </ButtonLink>
               <Button type="submit" form="submit-form" disabled={!acceptedCod}>
                 Submit proposal
               </Button>
