@@ -54,11 +54,8 @@ describe('Submit a talk to event', () => {
       // Step: survey
       submission.isSurveyStepVisible();
       submission.fillSurveyForm({
-        gender: 'Male',
-        tshirt: 'XXXL',
         accomodation: 'Yes',
         transport: 'Taxi',
-        meal: 'Vegetarian',
         message: 'Thanks!',
       });
       submission.continue();
@@ -89,11 +86,8 @@ describe('Submit a talk to event', () => {
 
       // Check survey info
       survey.visit('devfest-nantes');
-      survey.gender('Male').should('be.checked');
-      survey.tshirt('XXXL').should('be.checked');
       survey.accommodation('Yes').should('be.checked');
       survey.transport('Taxi').should('be.checked');
-      survey.meal('Vegetarian').should('be.checked');
       survey.message().should('contain.value', 'Thanks!');
     });
 
@@ -246,7 +240,7 @@ describe('Submit a talk to event', () => {
 
       // Step: survey
       submission.isSurveyStepVisible();
-      submission.fillSurveyForm({ gender: 'Male' });
+      submission.fillSurveyForm({ accomodation: 'No' });
       submission.continue();
 
       // Step: confirmation

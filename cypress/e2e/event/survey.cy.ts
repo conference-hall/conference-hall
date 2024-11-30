@@ -18,28 +18,20 @@ describe('Submit a talk to event', () => {
     cy.login();
     survey.visit('devfest-nantes');
 
-    cy.assertRadioChecked('Male');
-    cy.assertRadioChecked('XL');
+    cy.assertRadioChecked('Yes');
     cy.assertChecked('Train');
     cy.assertChecked('Taxi');
-    cy.assertChecked('Vegan');
     cy.assertInputText('Do you have specific information to share?', 'Hello');
 
-    survey.gender('Female').click();
-    survey.tshirt('XXL').click();
     survey.accommodation('No').click();
     survey.transport('Plane').click();
-    survey.meal('Halal').click();
     survey.message().clear().type('World');
 
     survey.submit().click();
     cy.assertToast('Survey saved.');
 
-    cy.assertRadioChecked('Female');
-    cy.assertRadioChecked('XXL');
     cy.assertRadioChecked('No');
     cy.assertChecked('Plane');
-    cy.assertChecked('Halal');
     cy.assertInputText('Do you have specific information to share?', 'World');
   });
 });

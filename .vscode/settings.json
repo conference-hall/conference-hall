@@ -2,7 +2,7 @@
   "tailwindCSS.experimental.classRegex": [["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]],
   "biome.searchInPath": false,
   "editor.codeActionsOnSave": {
-    // "source.organizeImports.biome": "explicit",
+    "source.organizeImports.biome": "explicit",
     "quickfix.biome": "explicit"
   },
   "[typescript]": {

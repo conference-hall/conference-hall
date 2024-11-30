@@ -46,7 +46,7 @@ export const seed = async () => {
 
   const event = await eventFactory({
     team,
-    traits: ['conference-cfp-open'],
+    traits: ['conference-cfp-open', 'withSurveyConfig'],
     attributes: {
       name: 'Conference 1',
       slug: 'conference-1',
@@ -105,11 +105,8 @@ export const seed = async () => {
     user: speaker1,
     attributes: {
       answers: {
-        gender: 'male',
-        tshirt: 'XL',
         accomodation: 'yes',
         transports: ['taxi', 'train'],
-        diet: ['vegan'],
         info: 'Hello',
       },
     },

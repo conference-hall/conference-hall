@@ -47,7 +47,7 @@ describe('Event settings', () => {
       settings.openSetting('Customize');
       customize.isPageVisible();
 
-      settings.openSetting('Speaker survey');
+      settings.openSetting(/Speaker survey/);
       survey.isPageVisible();
 
       settings.openSetting('Reviews');
