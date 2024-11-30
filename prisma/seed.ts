@@ -1,3 +1,4 @@
+import { disconnectDB } from 'tests/db-helpers.ts';
 import { eventProposalTagFactory } from 'tests/factories/proposal-tags.ts';
 import { eventCategoryFactory } from '../tests/factories/categories.ts';
 import { eventFactory } from '../tests/factories/events.ts';
@@ -132,4 +133,11 @@ async function seed() {
   await organizerKeyFactory({ attributes: { id: '123456' } });
 }
 
-seed();
+try {
+  await seed();
+} catch (error) {
+  console.error(error);
+  process.exit(1);
+} finally {
+  await disconnectDB();
+}
