@@ -30,7 +30,7 @@ describe('ProposalReview', () => {
     member = await userFactory({ traits: ['bruce-wayne'] });
     speaker = await userFactory({ traits: ['peter-parker'] });
     team = await teamFactory({ owners: [owner], members: [member], reviewers: [speaker] });
-    event = await eventFactory({ team, traits: ['withSurvey'] });
+    event = await eventFactory({ team, traits: ['withSurveyConfig'] });
     format = await eventFormatFactory({ event });
     category = await eventCategoryFactory({ event });
     tag = await eventProposalTagFactory({ event });
@@ -45,7 +45,7 @@ describe('ProposalReview', () => {
         tags: [tag],
         talk: await talkFactory({ speakers: [speaker] }),
       });
-      await surveyFactory({ event, user: speaker, attributes: { answers: { gender: 'male' } } });
+      await surveyFactory({ event, user: speaker, attributes: { answers: { info: 'Hello world' } } });
 
       const review = await ProposalReview.for(owner.id, team.slug, event.slug, proposal.id).get();
 
@@ -74,7 +74,7 @@ describe('ProposalReview', () => {
             references: speaker.references,
             socials: speaker.socials,
             survey: [
-              { id: 'gender', label: "What's your gender?", type: 'radio', answers: [{ id: 'male', label: 'Male' }] },
+              { id: 'info', label: 'Do you have specific information to share?', type: 'text', answer: 'Hello world' },
             ],
           },
         ],

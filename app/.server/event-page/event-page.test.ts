@@ -11,7 +11,7 @@ describe('EventPage', () => {
   describe('#get', () => {
     it('returns the event informations', async () => {
       const team = await teamFactory();
-      const event = await eventFactory({ team, traits: ['conference-cfp-open', 'withSurvey'] });
+      const event = await eventFactory({ team, traits: ['conference-cfp-open', 'withSurveyConfig'] });
       const format = await eventFormatFactory({ event });
       const category = await eventCategoryFactory({ event });
 
@@ -38,7 +38,7 @@ describe('EventPage', () => {
         cfpEnd: event.cfpEnd,
         cfpState: 'OPENED',
         isCfpOpen: true,
-        surveyEnabled: true,
+        hasSurvey: true,
         hasTracks: true,
         formats: [{ id: format.id, name: format.name, description: format.description }],
         formatsRequired: false,

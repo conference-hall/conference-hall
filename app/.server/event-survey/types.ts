@@ -17,15 +17,10 @@ export const SurveyConfigSchema = z.object({
   questions: z.array(SurveyQuestionSchema),
 });
 
-export const LegacyEventSurveySettingsSchema = z.object({
-  activeQuestions: z.array(z.string()),
-});
-
 export type SurveyRemoveQuestion = z.infer<typeof SurveyRemoveQuestionSchema>;
 export type SurveyMoveQuestion = z.infer<typeof SurveyMoveQuestionSchema>;
 export type SurveyConfigType = z.infer<typeof SurveyConfigSchema>;
 export type SurveyQuestion = z.infer<typeof SurveyQuestionSchema>;
-export type LegacyEventSurveyConfig = z.infer<typeof LegacyEventSurveySettingsSchema>;
 
 export type SurveyRawAnswers = Record<string, string | string[] | null>;
 

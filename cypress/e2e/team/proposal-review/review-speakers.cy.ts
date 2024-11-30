@@ -24,12 +24,6 @@ describe('Speakers in proposal review page', () => {
       cy.assertText('MJ References');
       cy.assertText('Location');
       cy.assertText('Nantes');
-      cy.assertText("What's your gender?");
-      cy.assertText('Male');
-      cy.assertText("What's your Tshirt size?");
-      cy.assertText('XL');
-      cy.assertText('Do you have any special diet restrictions?');
-      cy.assertText('Vegan');
       cy.assertText('Do you need accommodation funding? (Hotel, AirBnB...)');
       cy.assertText('Yes');
       cy.assertText('Do you need transports funding?');

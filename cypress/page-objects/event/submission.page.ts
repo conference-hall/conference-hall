@@ -118,11 +118,8 @@ class EventSubmissionPage extends BasePage {
   }
 
   fillSurveyForm(data: SurveyFormType) {
-    if (data.gender) cy.findByRole('radio', { name: data.gender }).click();
-    if (data.tshirt) cy.findByRole('radio', { name: data.tshirt }).click();
     if (data.accomodation) cy.findByRole('radio', { name: data.accomodation }).click();
     if (data.transport) cy.findByRole('checkbox', { name: data.transport }).click();
-    if (data.meal) cy.findByRole('checkbox', { name: data.meal }).click();
     if (data.message) cy.typeOn('Do you have specific information to share?', data.message);
   }
 

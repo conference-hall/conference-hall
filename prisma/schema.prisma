@@ -124,8 +124,6 @@ model Event {
   reviewEnabled            Boolean                  @default(true)
   displayProposalsReviews  Boolean                  @default(true)
   displayProposalsSpeakers Boolean                  @default(true)
-  surveyEnabled            Boolean                  @default(false)
-  surveyQuestions          Json                     @default("[]")
   surveyConfig             Json                     @default("{}")
   emailOrganizer           String?
   emailNotifications       Json                     @default("[]")

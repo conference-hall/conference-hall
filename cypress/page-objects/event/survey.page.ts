@@ -14,23 +14,11 @@ class EventSurveyPage extends BasePage {
     return cy.findByRole('button', { name: 'Save survey' });
   }
 
-  gender(value: string) {
-    return cy.findByRole('radio', { name: value });
-  }
-
-  tshirt(value: string) {
-    return cy.findByRole('radio', { name: value });
-  }
-
   accommodation(value: string) {
     return cy.findByRole('radio', { name: value });
   }
 
   transport(value: string) {
-    return cy.findByRole('checkbox', { name: value });
-  }
-
-  meal(value: string) {
     return cy.findByRole('checkbox', { name: value });
   }
 

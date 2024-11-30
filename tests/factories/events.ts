@@ -55,25 +55,36 @@ const TRAITS = {
   archived: {
     archived: true,
   },
-  withSurvey: {
-    surveyEnabled: true,
-    surveyQuestions: ['gender', 'tshirt', 'diet', 'accomodation', 'transports', 'info'],
-  },
   withSurveyConfig: {
     surveyConfig: {
       enabled: true,
       questions: [
         {
-          id: 'name',
-          label: 'What is your name?',
-          required: true,
-          type: 'text',
+          id: 'accomodation',
+          label: 'Do you need accommodation funding? (Hotel, AirBnB...)',
+          type: 'radio',
+          required: false,
+          options: [
+            { id: 'yes', label: 'Yes' },
+            { id: 'no', label: 'No' },
+          ],
+        },
+        {
+          id: 'transports',
+          label: 'Do you need transports funding?',
+          type: 'checkbox',
+          required: false,
+          options: [
+            { id: 'taxi', label: 'Taxi' },
+            { id: 'train', label: 'Train' },
+            { id: 'plane', label: 'Plane' },
+          ],
         },
         {
           id: 'info',
           label: 'Do you have specific information to share?',
-          required: false,
           type: 'text',
+          required: false,
         },
       ],
     },

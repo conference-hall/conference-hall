@@ -21,7 +21,6 @@ import { H2 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 
 import { useCurrentEvent } from '~/routes/__components/contexts/event-team-context';
-import { useFlag } from '~/routes/__components/contexts/flags-context.tsx';
 import { useCurrentTeam } from '~/routes/__components/contexts/team-context.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
@@ -54,9 +53,7 @@ export default function OrganizationSettingsRoute() {
   const currentTeam = useCurrentTeam();
   const currentEvent = useCurrentEvent();
 
-  const customSurveyEnabled = useFlag('custom-survey');
-
-  const menus = getMenuItems(currentTeam.slug, currentEvent.slug, { customSurveyEnabled });
+  const menus = getMenuItems(currentTeam.slug, currentEvent.slug, { customSurveyEnabled: true });
 
   return (
     <Page className="lg:grid lg:grid-cols-12">
