@@ -13,16 +13,31 @@ describe('SpeakerSurvey', () => {
 
       expect(questions).toEqual([
         {
-          id: 'name',
-          label: 'What is your name?',
-          required: true,
-          type: 'text',
+          id: 'accomodation',
+          label: 'Do you need accommodation funding? (Hotel, AirBnB...)',
+          type: 'radio',
+          required: false,
+          options: [
+            { id: 'yes', label: 'Yes' },
+            { id: 'no', label: 'No' },
+          ],
+        },
+        {
+          id: 'transports',
+          label: 'Do you need transports funding?',
+          type: 'checkbox',
+          required: false,
+          options: [
+            { id: 'taxi', label: 'Taxi' },
+            { id: 'train', label: 'Train' },
+            { id: 'plane', label: 'Plane' },
+          ],
         },
         {
           id: 'info',
           label: 'Do you have specific information to share?',
-          required: false,
           type: 'text',
+          required: false,
         },
       ]);
     });
@@ -46,7 +61,7 @@ describe('SpeakerSurvey', () => {
       const schema = await survey.buildSurveySchema();
 
       const validData = {
-        name: 'John Doe',
+        accomodation: 'yes',
         info: 'Some info',
       };
 

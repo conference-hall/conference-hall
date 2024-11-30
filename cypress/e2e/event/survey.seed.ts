@@ -7,7 +7,7 @@ export const seed = async () => {
 
   const event = await eventFactory({
     attributes: { name: 'Devfest Nantes 1', slug: 'devfest-nantes' },
-    traits: ['conference', 'conference-cfp-open'],
+    traits: ['conference', 'conference-cfp-open', 'withSurveyConfig'],
   });
 
   await surveyFactory({
@@ -15,11 +15,8 @@ export const seed = async () => {
     event,
     attributes: {
       answers: {
-        gender: 'male',
-        tshirt: 'XL',
-        accomodation: null,
+        accomodation: 'yes',
         transports: ['taxi', 'train'],
-        diet: ['vegan'],
         info: 'Hello',
       },
     },

@@ -45,7 +45,7 @@ describe('ProposalReview', () => {
         tags: [tag],
         talk: await talkFactory({ speakers: [speaker] }),
       });
-      await surveyFactory({ event, user: speaker, attributes: { answers: { name: 'Hello world' } } });
+      await surveyFactory({ event, user: speaker, attributes: { answers: { info: 'Hello world' } } });
 
       const review = await ProposalReview.for(owner.id, team.slug, event.slug, proposal.id).get();
 
@@ -73,7 +73,9 @@ describe('ProposalReview', () => {
             company: speaker.company,
             references: speaker.references,
             socials: speaker.socials,
-            survey: [{ id: 'name', label: 'What is your name?', type: 'text', answer: 'Hello world' }],
+            survey: [
+              { id: 'info', label: 'Do you have specific information to share?', type: 'text', answer: 'Hello world' },
+            ],
           },
         ],
         reviews: {
