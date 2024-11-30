@@ -1,11 +1,8 @@
-import type { Event } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
 import { SurveyInvalidError } from '~/libs/errors.server.ts';
-import { flags } from '~/libs/feature-flags/flags.server.ts';
 import { UserEvent } from '../event-settings/user-event.ts';
-import { defaultQuestions } from './models/default-survey-questions.ts';
-import { SurveyConfig } from './models/survey-config.ts';
-import type { LegacyEventSurveyConfig, SurveyMoveQuestion, SurveyQuestion } from './types.ts';
+import { SurveyConfig } from './survey-config.ts';
+import type { SurveyMoveQuestion, SurveyQuestion } from './types.ts';
 
 export class EventSurveySettings extends UserEvent {
   static for(userId: string, teamSlug: string, eventSlug: string) {
@@ -14,18 +11,6 @@ export class EventSurveySettings extends UserEvent {
 
   async getConfig() {
     const event = await this.needsPermission('canEditEvent');
-    const newSurveyActive = await flags.get('custom-survey');
-
-    // Legacy survey
-    if (!newSurveyActive) {
-      return {
-        legacy: true,
-        enabled: event.surveyEnabled,
-        questions: defaultQuestions,
-        activeQuestions: (event.surveyQuestions || []) as Array<string>,
-      };
-    }
-
     const survey = new SurveyConfig(event.surveyConfig);
 
     return {
@@ -72,28 +57,5 @@ export class EventSurveySettings extends UserEvent {
     const survey = new SurveyConfig(event.surveyConfig);
     survey.moveQuestion(id, direction);
     await db.event.update({ data: { surveyConfig: survey.toConfig() }, where: { id: event.id } });
-  }
-
-  async toggleLegacySurvey() {
-    const event = await this.needsPermission('canEditEvent');
-    await db.event.update({ data: { surveyEnabled: !event.surveyEnabled }, where: { id: event.id } });
-    return !event.surveyEnabled;
-  }
-
-  async updateLegacyQuestions({ activeQuestions }: LegacyEventSurveyConfig) {
-    const event = await this.needsPermission('canEditEvent');
-    await db.event.update({ data: { surveyQuestions: activeQuestions }, where: { id: event.id } });
-  }
-
-  async convertFromLegacySurvey(event: Event) {
-    const enabled = true;
-    const activeQuestions = (event.surveyQuestions as Array<string>) || [];
-    const questions = defaultQuestions.filter((q) => activeQuestions.includes(q.id));
-    const survey = new SurveyConfig({ enabled, questions });
-    await db.event.update({
-      data: { surveyConfig: survey.toConfig(), surveyEnabled: false, surveyQuestions: [] },
-      where: { id: event.id },
-    });
-    return survey;
   }
 }

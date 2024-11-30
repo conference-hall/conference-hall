@@ -4,9 +4,7 @@ import { EventNotFoundError, SurveyNotEnabledError } from '~/libs/errors.server.
 
 import type { Event } from '@prisma/client';
 import { z } from 'zod';
-import { flags } from '~/libs/feature-flags/flags.server.ts';
-import { defaultQuestions } from '../event-survey/models/default-survey-questions.ts';
-import { SurveyConfig } from './models/survey-config.ts';
+import { SurveyConfig } from './survey-config.ts';
 import type { SurveyDetailedAnswer, SurveyQuestion, SurveyRawAnswers } from './types.ts';
 
 export class SpeakerSurvey {
@@ -18,20 +16,10 @@ export class SpeakerSurvey {
 
   async getQuestions() {
     const event = await db.event.findUnique({
-      select: { id: true, surveyEnabled: true, surveyQuestions: true, surveyConfig: true },
+      select: { id: true, surveyConfig: true },
       where: { slug: this.eventSlug },
     });
     if (!event) throw new EventNotFoundError();
-
-    const newSurveyActive = await flags.get('custom-survey');
-
-    // Legacy survey
-    if (!newSurveyActive) {
-      if (!event.surveyEnabled) throw new SurveyNotEnabledError();
-
-      const enabledQuestions = event.surveyQuestions as string[];
-      return defaultQuestions.filter((question) => enabledQuestions.includes(question.id));
-    }
 
     const survey = new SurveyConfig(event.surveyConfig);
     if (!survey.isActiveForEvent) throw new SurveyNotEnabledError();
@@ -82,16 +70,7 @@ export class SpeakerSurvey {
   }
 
   async getMultipleSpeakerAnswers(event: Event, speakerIds: Array<string>) {
-    let questions: Array<SurveyQuestion>;
-
-    const newSurveyActive = await flags.get('custom-survey');
-    if (!newSurveyActive) {
-      const enabledQuestions = (event.surveyQuestions as string[]) || [];
-      questions = defaultQuestions.filter((question) => enabledQuestions.includes(question.id));
-    } else {
-      const survey = new SurveyConfig(event.surveyConfig);
-      questions = survey.questions;
-    }
+    const survey = new SurveyConfig(event.surveyConfig);
 
     const userSurveys = await db.survey.findMany({
       select: { userId: true, answers: true },
@@ -100,7 +79,7 @@ export class SpeakerSurvey {
 
     return userSurveys.reduce<Record<string, Array<SurveyDetailedAnswer>>>((acc, userSurvey) => {
       const answers = (userSurvey.answers ?? {}) as SurveyRawAnswers;
-      acc[userSurvey.userId] = this.mapSurveyDetailedAnswers(questions, answers);
+      acc[userSurvey.userId] = this.mapSurveyDetailedAnswers(survey.questions, answers);
       return acc;
     }, {});
   }

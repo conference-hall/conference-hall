@@ -27,7 +27,7 @@ export const seed = async () => {
       formatsAllowMultiple: true,
       categoriesAllowMultiple: true,
     },
-    traits: ['conference-cfp-open', 'withSurvey'],
+    traits: ['conference-cfp-open'],
   });
   await eventFormatFactory({ event: event1, attributes: { name: 'Quickie' } });
   await eventCategoryFactory({ event: event1, attributes: { name: 'Web' } });
@@ -50,7 +50,7 @@ export const seed = async () => {
   // Without tracks
   await eventFactory({
     attributes: { name: 'Devfest Nantes', slug: 'without-tracks' },
-    traits: ['conference-cfp-open', 'withSurvey'],
+    traits: ['conference-cfp-open'],
   });
 
   // Without survey & tracks

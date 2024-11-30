@@ -42,9 +42,7 @@ export function SurveySettingsForm({ config }: SurveySettingsFormProps) {
           label="Speaker survey activation"
           description="When enabled, your questions will be asked to speakers when they submit a proposal."
           value={config.enabled}
-          onChange={(checked) =>
-            fetcher.submit({ intent: 'toggle-survey', surveyEnabled: String(checked) }, { method: 'POST' })
-          }
+          onChange={() => fetcher.submit({ intent: 'toggle-survey' }, { method: 'POST' })}
         />
 
         <List>

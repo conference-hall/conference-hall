@@ -1,5 +1,5 @@
 import type { JsonValue } from '@prisma/client/runtime/library';
-import { SurveyConfigSchema, type SurveyConfigType, type SurveyQuestion } from '../types.ts';
+import { SurveyConfigSchema, type SurveyConfigType, type SurveyQuestion } from './types.ts';
 
 // TODO: Use it directly in event prisma extension ?
 export class SurveyConfig {

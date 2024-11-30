@@ -9,12 +9,12 @@ type Props = {
   slug: string;
   type: EventType;
   cfpState: CfpState;
-  surveyEnabled: boolean;
+  hasSurvey: boolean;
   isAuthenticated: boolean;
   className?: string;
 };
 
-export function EventTabs({ slug, type, cfpState, surveyEnabled, isAuthenticated, className }: Props) {
+export function EventTabs({ slug, type, cfpState, hasSurvey, isAuthenticated, className }: Props) {
   return (
     <Page.NavHeader className="flex flex-col pb-2 sm:pb-0 sm:flex-row sm:items-center sm:space-between">
       <NavTabs py={4} scrollable className={cx('grow', className)}>
@@ -24,7 +24,7 @@ export function EventTabs({ slug, type, cfpState, surveyEnabled, isAuthenticated
 
         {isAuthenticated ? <NavTab to={`/${slug}/proposals`}>Your proposals</NavTab> : null}
 
-        {isAuthenticated && surveyEnabled ? <NavTab to={`/${slug}/survey`}>Survey</NavTab> : null}
+        {isAuthenticated && hasSurvey ? <NavTab to={`/${slug}/survey`}>Survey</NavTab> : null}
       </NavTabs>
 
       {cfpState === 'OPENED' && <ButtonLink to="submission">Submit a proposal</ButtonLink>}

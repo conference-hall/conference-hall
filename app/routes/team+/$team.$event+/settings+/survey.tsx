@@ -4,14 +4,12 @@ import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 import { EventSurveySettings } from '~/.server/event-survey/event-survey-settings';
 import {
-  LegacyEventSurveySettingsSchema,
   SurveyMoveQuestionSchema,
   SurveyQuestionSchema,
   SurveyRemoveQuestionSchema,
 } from '~/.server/event-survey/types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-import { LegacySurveySettingsForm } from './__components/survey/legacy-survey-settings-form.tsx';
 import { SurveySettingsForm } from './__components/survey/survey-settings-form.tsx';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
@@ -34,16 +32,6 @@ export const action = async ({ request, params }: LoaderFunctionArgs) => {
   const intent = form.get('intent');
 
   switch (intent) {
-    case 'toggle-legacy-survey': {
-      const enabled = await surveySettings.toggleLegacySurvey();
-      return toast('success', `Speaker survey ${enabled ? 'enabled' : 'disabled'}`);
-    }
-    case 'update-legacy-questions': {
-      const result = parseWithZod(form, { schema: LegacyEventSurveySettingsSchema });
-      if (result.status !== 'success') return null;
-      await surveySettings.updateLegacyQuestions(result.value);
-      return toast('success', 'Survey questions saved.');
-    }
     case 'toggle-survey': {
       const enabled = await surveySettings.toggleSurvey();
       return toast('success', `Speaker survey ${enabled ? 'enabled' : 'disabled'}`);
@@ -80,8 +68,5 @@ export const action = async ({ request, params }: LoaderFunctionArgs) => {
 export default function EventSurveySettingsRoute() {
   const config = useLoaderData<typeof loader>();
 
-  if (config.legacy) {
-    return <LegacySurveySettingsForm config={config} />;
-  }
   return <SurveySettingsForm config={config} />;
 }

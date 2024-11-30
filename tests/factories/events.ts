@@ -55,10 +55,6 @@ const TRAITS = {
   archived: {
     archived: true,
   },
-  withSurvey: {
-    surveyEnabled: true,
-    surveyQuestions: ['gender', 'tshirt', 'diet', 'accomodation', 'transports', 'info'],
-  },
   withSurveyConfig: {
     surveyConfig: {
       enabled: true,

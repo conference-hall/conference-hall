@@ -18,7 +18,7 @@ export const seed = async () => {
       formatsAllowMultiple: true,
       categoriesAllowMultiple: true,
     },
-    traits: ['conference-cfp-open', 'withSurvey'],
+    traits: ['conference-cfp-open'],
   });
   const format = await eventFormatFactory({ event, attributes: { name: 'Quickie' } });
   await eventFormatFactory({ event, attributes: { name: 'Quickie 2' } });

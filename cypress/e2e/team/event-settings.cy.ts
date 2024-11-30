@@ -270,44 +270,7 @@ describe('Event settings', () => {
       });
     });
 
-    describe('survey settings (legacy)', () => {
-      beforeEach(() => cy.task('setFlag', { key: 'custom-survey', value: false }));
-
-      afterEach(() => cy.task('resetFlags'));
-
-      it('enables or disables survey', () => {
-        survey.visit('team-1', 'conference-1');
-        survey.legacy_saveQuestion().should('be.disabled');
-
-        survey.toggleSurvey().click();
-        survey.legacy_saveQuestion().should('not.be.disabled');
-        cy.assertToast('Speaker survey enabled');
-
-        cy.findByLabelText("What's your gender?").click();
-        cy.findByLabelText("What's your Tshirt size?").click();
-        cy.findByLabelText('Do you need accommodation funding? (Hotel, AirBnB...)').click();
-        cy.findByLabelText('Do you need transports funding?').click();
-        cy.findByLabelText('Do you have any special diet restrictions?').click();
-        cy.findByLabelText('Do you have specific information to share?').click();
-        survey.legacy_saveQuestion().click();
-        cy.assertToast('Survey questions saved.');
-
-        cy.reload();
-        survey.legacy_saveQuestion().should('not.be.disabled');
-        cy.findByLabelText("What's your gender?").should('be.checked');
-        cy.findByLabelText("What's your Tshirt size?").should('be.checked');
-        cy.findByLabelText('Do you need accommodation funding? (Hotel, AirBnB...)').should('be.checked');
-        cy.findByLabelText('Do you need transports funding?').should('be.checked');
-        cy.findByLabelText('Do you have any special diet restrictions?').should('be.checked');
-        cy.findByLabelText('Do you have specific information to share?').should('be.checked');
-      });
-    });
-
     describe('survey settings', () => {
-      beforeEach(() => cy.task('setFlag', { key: 'custom-survey', value: true }));
-
-      afterEach(() => cy.task('resetFlags'));
-
       it('enables or disables survey', () => {
         survey.visit('team-1', 'conference-1');
         cy.assertText('0 questions');

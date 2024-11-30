@@ -11,7 +11,7 @@ export const seed = async () => {
 
   const event = await eventFactory({
     attributes: { name: 'Devfest Nantes', slug: 'devfest-nantes' },
-    traits: ['conference-cfp-open', 'withSurvey'],
+    traits: ['conference-cfp-open'],
   });
   const format = await eventFormatFactory({ event, attributes: { name: 'Quickie' } });
   const category = await eventCategoryFactory({ event, attributes: { name: 'Web' } });

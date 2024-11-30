@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import type { SurveyQuestion } from '../types.ts';
 import { SurveyConfig } from './survey-config.ts';
+import type { SurveyQuestion } from './types.ts';
 
 describe('SurveyConfig', () => {
   const question: SurveyQuestion = { id: 'q1', label: 'Sample question', type: 'text', required: false };

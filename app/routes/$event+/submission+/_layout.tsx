@@ -21,7 +21,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 export default function EventSubmissionRoute() {
   const { talk } = useParams();
-  const { name, slug, hasTracks, surveyEnabled, isCfpOpen } = useCurrentEvent();
+  const { name, slug, hasTracks, hasSurvey, isCfpOpen } = useCurrentEvent();
 
   if (!isCfpOpen) {
     return (
@@ -32,7 +32,7 @@ export default function EventSubmissionRoute() {
   }
 
   return (
-    <SubmissionContextProvider eventSlug={slug} talkId={talk} hasTracks={hasTracks} hasSurvey={surveyEnabled}>
+    <SubmissionContextProvider eventSlug={slug} talkId={talk} hasTracks={hasTracks} hasSurvey={hasSurvey}>
       <Page.NavHeader className="flex w-full items-center justify-between gap-4 py-4">
         <Steps />
         <IconLink label="Cancel submission" to={`/${slug}`} icon={XMarkIcon} variant="secondary" />
