@@ -8,3 +8,10 @@ export const getRedisClient = () => {
   }
   return redis;
 };
+
+export const disconnectRedis = async () => {
+  if (redis) {
+    await redis.quit();
+    redis = null;
+  }
+};

@@ -4,6 +4,7 @@ import { installGlobals } from '@remix-run/node';
 import { cleanup } from '@testing-library/react';
 
 import { flags } from '~/libs/feature-flags/flags.server.ts';
+import { disconnectRedis } from '~/libs/redis.ts';
 import { disconnectDB, resetDB } from './db-helpers.ts';
 
 // This installs globals such as "fetch", "Response", "Request" and "Headers.
@@ -17,6 +18,7 @@ afterEach(async () => {
 
 afterAll(async () => {
   await disconnectDB();
+  await disconnectRedis();
 });
 
 // Mock jobs
