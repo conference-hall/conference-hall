@@ -41,6 +41,7 @@ describe('CfpReviewsSearch', () => {
           deliberationStatus: proposal.deliberationStatus,
           confirmationStatus: proposal.confirmationStatus,
           publicationStatus: proposal.publicationStatus,
+          createdAt: proposal.createdAt,
           speakers: [{ name: speaker.name, picture: speaker.picture }],
           tags: [{ id: tag.id, name: tag.name, color: tag.color }],
           reviews: {
