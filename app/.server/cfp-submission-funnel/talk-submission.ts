@@ -121,6 +121,7 @@ export class TalkSubmission {
       references: proposal.references,
       isOwner: this.speakerId === proposal?.talk?.creatorId,
       invitationLink: proposal.invitationLink,
+      createdAt: proposal.createdAt,
       speakers: proposal.speakers
         .map((speaker) => ({
           id: speaker.id,

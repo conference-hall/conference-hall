@@ -6,9 +6,11 @@ import { Checkbox } from '~/design-system/forms/checkboxes.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { GlobalReviewNote, UserReviewNote } from '~/routes/__components/reviews/review-note.tsx';
 
+import { format } from 'date-fns';
 import { useCurrentTeam } from '~/routes/__components/contexts/team-context.tsx';
 import { ReviewComments } from '~/routes/__components/reviews/review-comments';
 import { Tag } from '~/routes/__components/tags/tag.tsx';
+import { ClientOnly } from '~/routes/__components/utils/client-only.tsx';
 import type { ProposalData } from './types';
 
 type ProposalItemProps = {
@@ -63,6 +65,7 @@ export function ProposalItem({ proposal, isSelected, isAllPagesSelected, toggle 
 
           <Text size="xs" variant="secondary">
             {proposal.speakers.length ? `by ${proposal.speakers.map((a) => a.name).join(', ')}` : null}
+            <ClientOnly>{() => format(proposal.createdAt, " 'on' MMM d, y")}</ClientOnly>
           </Text>
         </div>
 

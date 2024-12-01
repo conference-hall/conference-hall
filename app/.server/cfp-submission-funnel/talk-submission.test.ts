@@ -347,6 +347,7 @@ describe('TalkSubmission', () => {
         level: proposal.level,
         references: proposal.references,
         invitationLink: `${process.env.APP_URL}/invite/proposal/${proposal.invitationCode}`,
+        createdAt: proposal.createdAt,
         isOwner: true,
         speakers: [
           { id: speaker.id, name: speaker.name, bio: speaker.bio, picture: speaker.picture, isCurrentUser: true },

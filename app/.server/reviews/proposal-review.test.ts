@@ -58,6 +58,7 @@ describe('ProposalReview', () => {
         deliberationStatus: proposal.deliberationStatus,
         publicationStatus: proposal.publicationStatus,
         confirmationStatus: proposal.confirmationStatus,
+        createdAt: proposal.createdAt,
         languages: ['en'],
         formats: [{ id: format.id, name: format.name }],
         categories: [{ id: category.id, name: category.name }],

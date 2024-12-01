@@ -61,6 +61,7 @@ export class ProposalReview {
       deliberationStatus: proposal.deliberationStatus,
       publicationStatus: proposal.publicationStatus,
       confirmationStatus: proposal.confirmationStatus,
+      createdAt: proposal.createdAt,
       languages: proposal.languages as string[],
       formats: proposal.formats.map(({ id, name }) => ({ id, name })),
       categories: proposal.categories.map(({ id, name }) => ({ id, name })),

@@ -3,17 +3,17 @@ import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 import type { TalkLevel } from '@prisma/client';
 import { cx } from 'class-variance-authority';
-
+import { format } from 'date-fns';
+import type { ReactNode } from 'react';
 import { Badge } from '~/design-system/badges.tsx';
 import { IconLink } from '~/design-system/icon-buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
-import { H1 } from '~/design-system/typography.tsx';
+import { H1, Text } from '~/design-system/typography.tsx';
 import { getLanguage } from '~/libs/formatters/languages.ts';
 import { getLevel } from '~/libs/formatters/levels.ts';
 import type { SubmissionErrors } from '~/types/errors.types.ts';
-
-import type { ReactNode } from 'react';
+import { ClientOnly } from '../utils/client-only.tsx';
 import type { SpeakerProps } from './co-speaker';
 import { CoSpeakers } from './co-speaker.tsx';
 import { TalkArchiveButton } from './talk-forms/talk-archive-button.tsx';
@@ -33,6 +33,7 @@ type Props = {
     archived?: boolean;
     formats?: Array<{ id: string; name: string }>;
     categories?: Array<{ id: string; name: string }>;
+    createdAt: Date;
   };
   event?: {
     formats?: Array<{ id: string; name: string; description: string | null }>;
@@ -86,12 +87,17 @@ export function TalkSection({
         </div>
       </div>
 
-      <CoSpeakers
-        speakers={talk.speakers}
-        invitationLink={talk.invitationLink}
-        canEdit={canEditSpeakers && !talk.archived}
-        className="p-4"
-      />
+      <div className="p-4 flex gap-4">
+        <CoSpeakers
+          speakers={talk.speakers}
+          invitationLink={talk.invitationLink}
+          canEdit={canEditSpeakers && !talk.archived}
+          className="grow"
+        />
+        <Text size="xs" variant="secondary" className="text-nowrap hidden sm:block">
+          <ClientOnly>{() => format(talk.createdAt, "'Created on' MMM d, y")}</ClientOnly>
+        </Text>
+      </div>
 
       <dl className="p-6 pt-4 flex flex-col gap-8">
         <div>

@@ -11,6 +11,6 @@ export function setMinutesFromStartOfDay(date: Date, minutes: number): Date {
 }
 
 // Format a date to a time HH:mm
-export const toTimeFormat = (time: Date): string => {
+export function toTimeFormat(time: Date): string {
   return format(time, 'HH:mm');
-};
+}
