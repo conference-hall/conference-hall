@@ -31,13 +31,14 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       const result = parseWithZod(form, { schema: TeamUpdateSchema });
       if (result.status !== 'success') return result.error;
 
+      let team = null;
       try {
-        const team = await UserTeam.for(userId, params.team).updateSettings(result.value);
-        const headers = await toastHeaders('success', 'Team settings saved.');
-        throw redirect(`/team/${team.slug}/settings`, { headers });
+        team = await UserTeam.for(userId, params.team).updateSettings(result.value);
       } catch (_error) {
         return { slug: ['This URL already exists, please try another one.'] };
       }
+      const headers = await toastHeaders('success', 'Team settings saved.');
+      throw redirect(`/team/${team.slug}/settings`, { headers });
     }
     case 'leave-team': {
       await TeamMembers.for(userId, params.team).leave();

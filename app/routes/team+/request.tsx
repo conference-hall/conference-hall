@@ -26,10 +26,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   try {
     await TeamBetaAccess.for(userId).validateAccessKey(String(form.get('key')));
-    throw redirect('/team/new');
   } catch (_error) {
     return { key: ['Invalid access key'] };
   }
+  throw redirect('/team/new');
 };
 
 export default function RequestAccessRoute() {

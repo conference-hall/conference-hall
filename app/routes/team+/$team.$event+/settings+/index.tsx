@@ -34,13 +34,14 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     case 'general': {
       const result = parseWithZod(form, { schema: EventGeneralSettingsSchema });
       if (result.status !== 'success') return result.error;
+      let updated = null;
       try {
-        const updated = await event.update(result.value);
-        const headers = await toastHeaders('success', 'Event saved.');
-        throw redirect(`/team/${params.team}/${updated.slug}/settings`, { headers });
+        updated = await event.update(result.value);
       } catch (_error) {
         return { slug: ['This URL already exists, please try another one.'] } as Record<string, string[]>;
       }
+      const headers = await toastHeaders('success', 'Event saved.');
+      throw redirect(`/team/${params.team}/${updated.slug}/settings`, { headers });
     }
     case 'details': {
       const result = parseWithZod(form, { schema: EventDetailsSettingsSchema });

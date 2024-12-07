@@ -22,12 +22,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const result = parseWithZod(form, { schema: TeamCreateSchema });
   if (result.status !== 'success') return result.error;
 
+  let team = null;
   try {
-    const team = await UserTeams.for(userId).create(result.value);
-    throw redirect(`/team/${team.slug}`);
+    team = await UserTeams.for(userId).create(result.value);
   } catch (_error) {
     return { slug: ['This URL already exists, please try another one.'] };
   }
+  throw redirect(`/team/${team.slug}`);
 };
 
 export default function NewTeamRoute() {

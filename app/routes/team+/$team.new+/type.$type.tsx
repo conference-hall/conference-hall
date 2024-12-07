@@ -27,12 +27,13 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const result = parseWithZod(form, { schema: EventCreateSchema });
   if (result.status !== 'success') return result.error;
 
+  let event = null;
   try {
-    const event = await TeamEvents.for(userId, params.team).create(result.value);
-    throw redirect(`/team/${params.team}/new/${event.slug}/details`);
+    event = await TeamEvents.for(userId, params.team).create(result.value);
   } catch (_error) {
     return { slug: ['This URL already exists, please try another one.'] };
   }
+  throw redirect(`/team/${params.team}/new/${event.slug}/details`);
 };
 
 export default function NewEventRoute() {
