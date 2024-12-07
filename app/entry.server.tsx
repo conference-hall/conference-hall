@@ -3,7 +3,7 @@ import { PassThrough } from 'node:stream';
 import type { ActionFunctionArgs, AppLoadContext, EntryContext, LoaderFunctionArgs } from '@remix-run/node';
 import { createReadableStreamFromReadable } from '@remix-run/node';
 import { RemixServer } from '@remix-run/react';
-import * as Sentry from '@sentry/remix';
+import * as Sentry from '@sentry/node';
 import { isbot } from 'isbot';
 import { renderToPipeableStream } from 'react-dom/server';
 import { createAppServer } from '../servers/web.server.ts';
@@ -61,12 +61,10 @@ export default function handleRequest(
   });
 }
 
-export function handleError(error: unknown, { request, params, context }: LoaderFunctionArgs | ActionFunctionArgs) {
-  if (!request.signal.aborted) {
-    console.error(error);
-    // @ts-expect-error
-    Sentry.sentryHandleError(error, { request, params, context });
-  }
+export function handleError(error: unknown, { request }: LoaderFunctionArgs | ActionFunctionArgs) {
+  if (request.signal.aborted) return;
+  console.error(error);
+  Sentry.captureException(error);
 }
 
 export const app = createAppServer();

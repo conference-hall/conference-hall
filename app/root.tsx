@@ -1,7 +1,6 @@
 import type { LinksFunction, LoaderFunctionArgs, MetaFunction } from '@remix-run/node';
 import { data } from '@remix-run/node';
 import { Links, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData } from '@remix-run/react';
-import { withSentry } from '@sentry/remix';
 import type { ReactNode } from 'react';
 
 import { UserInfo } from './.server/user-registration/user-info.ts';
@@ -123,4 +122,4 @@ export function ErrorBoundary() {
   );
 }
 
-export default withSentry(App);
+export default App;

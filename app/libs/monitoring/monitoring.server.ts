@@ -1,4 +1,4 @@
-import * as Sentry from '@sentry/remix';
+import * as Sentry from '@sentry/node';
 
 export function initMonitoring() {
   if (ENV.NODE_ENV !== 'production') return;
@@ -9,6 +9,5 @@ export function initMonitoring() {
     environment: ENV.NODE_ENV,
     tracesSampleRate: 1,
     integrations: [Sentry.prismaIntegration()],
-    autoInstrumentRemix: true,
   });
 }
