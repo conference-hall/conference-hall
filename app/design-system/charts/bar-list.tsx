@@ -1,8 +1,8 @@
 // Tremor Raw BarList [v0.1.0]
 
-import { Link } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
 import React from 'react';
+import { Link } from 'react-router';
 
 type Bar<T> = T & {
   id?: string;

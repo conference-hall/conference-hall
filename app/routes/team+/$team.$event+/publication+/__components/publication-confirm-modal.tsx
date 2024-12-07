@@ -1,7 +1,7 @@
 import { CheckIcon } from '@heroicons/react/20/solid';
-import { Form } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
 import { useState } from 'react';
+import { Form } from 'react-router';
 
 import { Button } from '~/design-system/buttons.tsx';
 import { StatisticCard } from '~/design-system/dashboard/statistic-card.tsx';

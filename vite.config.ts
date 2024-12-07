@@ -1,16 +1,10 @@
 import mdx from '@mdx-js/rollup';
-import { vitePlugin as remix } from '@remix-run/dev';
+import { reactRouter } from '@react-router/dev/vite';
 import { sentryVitePlugin } from '@sentry/vite-plugin';
 import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 import { expressDevServer } from './servers/express/express-dev-server.ts';
-
-declare module '@remix-run/server-runtime' {
-  interface Future {
-    v3_singleFetch: true;
-  }
-}
 
 const withSourcemap = Boolean(process.env.SENTRY_AUTH_TOKEN);
 
@@ -23,17 +17,7 @@ export default defineConfig({
   plugins: [
     expressDevServer(),
     mdx(),
-    remix({
-      future: {
-        v3_fetcherPersist: true,
-        v3_lazyRouteDiscovery: true,
-        v3_relativeSplatPath: true,
-        v3_routeConfig: true,
-        v3_singleFetch: true,
-        v3_throwAbortReason: true,
-        unstable_optimizeDeps: true,
-      },
-    }),
+    reactRouter(),
     tsconfigPaths(),
     withSourcemap
       ? sentryVitePlugin({

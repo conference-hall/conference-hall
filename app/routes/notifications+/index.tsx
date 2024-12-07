@@ -1,6 +1,6 @@
 import { BellSlashIcon } from '@heroicons/react/24/outline';
-import type { LoaderFunctionArgs } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
+import type { LoaderFunctionArgs } from 'react-router';
+import { useLoaderData } from 'react-router';
 
 import { Notifications } from '~/.server/user-notifications/notifications.ts';
 import { CardLink } from '~/design-system/layouts/card.tsx';

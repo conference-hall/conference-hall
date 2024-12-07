@@ -1,6 +1,6 @@
-import type { LoaderFunctionArgs } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
 import { useState } from 'react';
+import type { LoaderFunctionArgs } from 'react-router';
+import { useLoaderData } from 'react-router';
 import invariant from 'tiny-invariant';
 
 import { EventMetrics } from '~/.server/event-metrics/event-metrics.tsx';

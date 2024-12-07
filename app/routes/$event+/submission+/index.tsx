@@ -1,6 +1,6 @@
 import { PlusIcon } from '@heroicons/react/20/solid';
-import type { LoaderFunctionArgs } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
+import type { LoaderFunctionArgs } from 'react-router';
+import { useLoaderData } from 'react-router';
 import invariant from 'tiny-invariant';
 
 import { Submissions } from '~/.server/cfp-submissions/submissions.ts';

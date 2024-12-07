@@ -1,4 +1,4 @@
-import { useLocation } from '@remix-run/react';
+import { useLocation } from 'react-router';
 
 import { NavTab, NavTabs } from '~/design-system/navigation/nav-tabs.tsx';
 

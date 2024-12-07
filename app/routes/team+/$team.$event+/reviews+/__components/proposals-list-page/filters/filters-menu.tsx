@@ -1,7 +1,7 @@
 import { Fieldset, Label, Legend, Popover, PopoverButton, PopoverPanel, Radio, RadioGroup } from '@headlessui/react';
 import { AdjustmentsHorizontalIcon } from '@heroicons/react/20/solid';
-import { Form, useLocation, useSearchParams } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
+import { Form, useLocation, useSearchParams } from 'react-router';
 
 import { Button, ButtonLink, button } from '~/design-system/buttons.tsx';
 import Select from '~/design-system/forms/select.tsx';

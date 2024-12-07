@@ -1,7 +1,7 @@
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import { InboxIcon } from '@heroicons/react/24/outline';
-import type { LoaderFunctionArgs } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
+import type { LoaderFunctionArgs } from 'react-router';
+import { useLoaderData } from 'react-router';
 import invariant from 'tiny-invariant';
 
 import { Submissions } from '~/.server/cfp-submissions/submissions.ts';

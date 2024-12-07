@@ -1,6 +1,6 @@
-import { useNavigation } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
 import * as React from 'react';
+import { useNavigation } from 'react-router';
 
 // Component copied from Gustavo Guichard
 // source: https://dev.to/gugaguichard/creating-a-github-like-progress-bar-for-your-remix-app-153l

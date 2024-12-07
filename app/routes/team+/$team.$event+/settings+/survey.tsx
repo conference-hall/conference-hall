@@ -1,6 +1,6 @@
 import { parseWithZod } from '@conform-to/zod';
-import type { LoaderFunctionArgs } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
+import type { LoaderFunctionArgs } from 'react-router';
+import { useLoaderData } from 'react-router';
 import invariant from 'tiny-invariant';
 import { EventSurveySettings } from '~/.server/event-survey/event-survey-settings';
 import {

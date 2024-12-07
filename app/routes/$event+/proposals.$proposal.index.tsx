@@ -1,6 +1,6 @@
 import { parseWithZod } from '@conform-to/zod';
-import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { useActionData, useLoaderData } from '@remix-run/react';
+import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
+import { redirect, useActionData, useLoaderData } from 'react-router';
 import invariant from 'tiny-invariant';
 
 import { UserProposal } from '~/.server/cfp-submissions/user-proposal.ts';
@@ -8,7 +8,7 @@ import { ProposalParticipationSchema, getProposalUpdateSchema } from '~/.server/
 import { EventPage } from '~/.server/event-page/event-page.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
+import { toast, toastHeaders } from '~/libs/toasts/toast.server.ts';
 import { SpeakerProposalStatus } from '~/types/speaker.types.ts';
 
 import { useCurrentEvent } from '../__components/contexts/event-page-context.tsx';
@@ -36,7 +36,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   switch (intent) {
     case 'proposal-delete': {
       await proposal.delete();
-      return redirectWithToast(`/${params.event}/proposals`, 'success', 'Proposal submission removed.');
+      const headers = await toastHeaders('success', 'Proposal submission removed.');
+      throw redirect(`/${params.event}/proposals`, { headers });
     }
     case 'proposal-confirmation': {
       const result = parseWithZod(form, { schema: ProposalParticipationSchema });

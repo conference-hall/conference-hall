@@ -1,7 +1,7 @@
-import type { LinkProps } from '@remix-run/react';
-import { Link } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
+import type { LinkProps } from 'react-router';
+import { Link } from 'react-router';
 
 import { Pagination, PaginationMobile } from '~/design-system/list/pagination.tsx';
 

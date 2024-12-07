@@ -1,6 +1,6 @@
 import { LockClosedIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import type { LoaderFunctionArgs } from '@remix-run/node';
-import { Outlet, useParams } from '@remix-run/react';
+import type { LoaderFunctionArgs } from 'react-router';
+import { Outlet, useParams } from 'react-router';
 import { IconLink } from '~/design-system/icon-buttons.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { requireSession } from '~/libs/auth/session.ts';

@@ -1,6 +1,6 @@
 import { type ReactNode, createContext, useContext } from 'react';
 import type { loader } from '~/root.tsx';
-import type { SerializeFrom } from '~/types/remix.types.ts';
+import type { SerializeFrom } from '~/types/react-router.types';
 
 type Flags = SerializeFrom<typeof loader>['flags'];
 

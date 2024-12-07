@@ -1,7 +1,7 @@
 import { ChevronLeftIcon } from '@heroicons/react/20/solid';
-import type { LoaderFunctionArgs } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
 import { format } from 'date-fns';
+import type { LoaderFunctionArgs } from 'react-router';
+import { useLoaderData } from 'react-router';
 import invariant from 'tiny-invariant';
 import { AdminUsers } from '~/.server/admin/admin-users.ts';
 import { Card } from '~/design-system/layouts/card.tsx';

@@ -1,6 +1,5 @@
-import type { ActionFunction, LoaderFunctionArgs } from '@remix-run/node';
-import { redirect } from '@remix-run/node';
-import { Form, useLoaderData } from '@remix-run/react';
+import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
+import { Form, redirect, useLoaderData } from 'react-router';
 import invariant from 'tiny-invariant';
 
 import { CoSpeakerTalkInvite } from '~/.server/speaker-talks-library/co-speaker-talk-invite.ts';
@@ -24,7 +23,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   return talk;
 };
 
-export const action: ActionFunction = async ({ request, params }) => {
+export const action = async ({ request, params }: ActionFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.code, 'Invalid code');
 

@@ -1,5 +1,5 @@
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
-import { useParams, useSearchParams } from '@remix-run/react';
+import { useParams, useSearchParams } from 'react-router';
 
 import { IconLink } from '~/design-system/icon-buttons.tsx';
 import { Text } from '~/design-system/typography.tsx';

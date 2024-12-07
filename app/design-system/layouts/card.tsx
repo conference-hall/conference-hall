@@ -1,7 +1,7 @@
-import type { LinkProps } from '@remix-run/react';
-import { Link } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
 import type { HTMLAttributes } from 'react';
+import type { LinkProps } from 'react-router';
+import { Link } from 'react-router';
 
 const ROUNDED = {
   sm: 'rounded-sm',

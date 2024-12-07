@@ -1,4 +1,4 @@
-import { Link } from '@remix-run/react';
+import { Link } from 'react-router';
 
 import { ConferenceHallLogo } from '~/design-system/logo.tsx';
 import { Text } from '~/design-system/typography.tsx';

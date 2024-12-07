@@ -2,8 +2,6 @@ import type { EventType } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
 import { needsAdminRole } from './authorization.ts';
 
-import {} from '@prisma/client/sql';
-
 export class AdminDashboard {
   private constructor() {}
 

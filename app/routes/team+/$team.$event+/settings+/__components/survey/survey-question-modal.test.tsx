@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import { RouterProvider, createMemoryRouter } from 'react-router-dom';
+import { RouterProvider, createMemoryRouter } from 'react-router';
 import type { SurveyQuestion } from '~/.server/event-survey/types.ts';
 import { SurveyQuestionModal } from './survey-question-modal.tsx';
 

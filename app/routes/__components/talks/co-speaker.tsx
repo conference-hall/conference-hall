@@ -1,7 +1,7 @@
 import { PlusIcon } from '@heroicons/react/20/solid';
-import { Form } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
 import { useState } from 'react';
+import { Form } from 'react-router';
 
 import { Avatar } from '~/design-system/avatar.tsx';
 import { Button } from '~/design-system/buttons.tsx';

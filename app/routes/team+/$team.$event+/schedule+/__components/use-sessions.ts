@@ -1,5 +1,5 @@
-import { useFetchers, useSubmit } from '@remix-run/react';
 import { toZonedTime } from 'date-fns-tz';
+import { useFetchers, useSubmit } from 'react-router';
 import { v4 as uuid } from 'uuid';
 
 import type { TimeSlot } from '~/libs/datetimes/timeslots.ts';

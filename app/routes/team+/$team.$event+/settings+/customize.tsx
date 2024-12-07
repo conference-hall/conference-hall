@@ -1,7 +1,7 @@
-import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { unstable_parseMultipartFormData } from '@remix-run/node';
-import { Form, useActionData, useSubmit } from '@remix-run/react';
+import { parseFormData } from '@mjackson/form-data-parser';
 import type { ChangeEvent } from 'react';
+import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
+import { Form, useActionData, useSubmit } from 'react-router';
 import invariant from 'tiny-invariant';
 import { z } from 'zod';
 
@@ -17,6 +17,10 @@ import { uploadToStorageHandler } from '~/libs/storage/storage.server.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { useCurrentEvent } from '~/routes/__components/contexts/event-team-context';
 
+const MAX_FILE_SIZE = 300 * 1024;
+
+const FILE_SCHEMA = z.object({ name: z.string().url() });
+
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);
   return null;
@@ -30,13 +34,11 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const event = await UserEvent.for(userId, params.team, params.event);
   await event.needsPermission('canEditEvent');
 
-  const formData = await unstable_parseMultipartFormData(
-    request,
-    uploadToStorageHandler({ name: 'logoUrl', maxFileSize: 300_000 }),
-  );
-  const result = z.string().url().safeParse(formData.get('logoUrl'));
+  const formData = await parseFormData(request, uploadToStorageHandler({ name: 'logo', maxFileSize: MAX_FILE_SIZE }));
+  const result = FILE_SCHEMA.safeParse(formData.get('logo'));
+
   if (result.success) {
-    await event.update({ logoUrl: result.data });
+    await event.update({ logoUrl: result.data.name });
     return toast('success', 'Logo updated.');
   } else {
     return { status: 'error', message: 'An error occurred during upload, you may exceed max file size.' };
@@ -77,7 +79,7 @@ export default function EventGeneralSettingsRoute() {
 
       <Card.Actions>
         <Form method="POST" encType="multipart/form-data" onChange={handleSubmit}>
-          <ButtonFileUpload name="logoUrl" accept="image/jpeg,image/png,image/webp,image/avif">
+          <ButtonFileUpload name="logo" accept="image/jpeg,image/png,image/webp,image/avif">
             Change logo
           </ButtonFileUpload>
         </Form>

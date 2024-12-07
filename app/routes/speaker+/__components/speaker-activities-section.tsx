@@ -1,7 +1,7 @@
 import { ArrowTopRightOnSquareIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
 import { FireIcon } from '@heroicons/react/24/outline';
-import { Link as RemixLink } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
+import { Link as RouterLink } from 'react-router';
 
 import { Avatar } from '~/design-system/avatar.tsx';
 import { ButtonLink } from '~/design-system/buttons.tsx';
@@ -73,7 +73,7 @@ export function SpeakerActivitiesSection({ activities, nextPage, hasNextPage, cl
                 .filter((proposal) => DISPLAYED_PROPOSAL_STATUSES.includes(proposal.status))
                 .map((submission) => (
                   <li key={submission.id}>
-                    <RemixLink
+                    <RouterLink
                       to={`/${event.slug}/proposals/${submission.id}`}
                       className="flex justify-between items-center gap-4 p-4 hover:bg-gray-50 focus-visible:-outline-offset-1"
                     >
@@ -91,7 +91,7 @@ export function SpeakerActivitiesSection({ activities, nextPage, hasNextPage, cl
                         <ProposalStatusLabel status={submission.status} />
                         <ChevronRightIcon className="h-5 w-5 flex-none text-gray-400" aria-hidden="true" />
                       </div>
-                    </RemixLink>
+                    </RouterLink>
                   </li>
                 ))}
               <li className="flex gap-1 px-4 py-3">

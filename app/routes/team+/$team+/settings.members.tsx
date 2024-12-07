@@ -1,8 +1,8 @@
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { CubeTransparentIcon } from '@heroicons/react/24/outline';
 import type { TeamRole } from '@prisma/client';
-import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { Form, useLoaderData, useSearchParams } from '@remix-run/react';
+import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
+import { Form, useLoaderData, useSearchParams } from 'react-router';
 import invariant from 'tiny-invariant';
 
 import { parseUrlPage } from '~/.server/shared/pagination.ts';

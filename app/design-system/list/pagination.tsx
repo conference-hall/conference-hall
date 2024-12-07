@@ -1,7 +1,7 @@
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
-import { Link, useLocation, useSearchParams } from '@remix-run/react';
 import { cva } from 'class-variance-authority';
 import { useMemo } from 'react';
+import { Link, useLocation, useSearchParams } from 'react-router';
 
 import { ButtonLink } from '../buttons.tsx';
 

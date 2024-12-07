@@ -1,9 +1,9 @@
 import * as fs from 'node:fs';
 import path from 'node:path';
 import url from 'node:url';
-import { createRequestHandler } from '@remix-run/express';
-import type { AppLoadContext, ServerBuild } from '@remix-run/node';
+import { createRequestHandler } from '@react-router/express';
 import express, { type Application } from 'express';
+import type { AppLoadContext, ServerBuild } from 'react-router';
 import sourceMapSupport from 'source-map-support';
 
 type ConfigureFunction = (app: Application) => Promise<void> | void;
@@ -47,7 +47,7 @@ export async function createExpressApp({ configure, getLoadContext }: CreateExpr
   // Everything else (like favicon.ico) is cached for an hour.
   app.use(express.static(isProductionMode ? `${BUILD_DIR}/client` : 'public', { maxAge: '1h' }));
 
-  // Handle remix requests
+  // Handle react-router requests
   app.all('*', async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const build = isProductionMode ? await importProductionBuild() : await importDevBuild();
     return createRequestHandler({ build, mode, getLoadContext })(req, res, next);
@@ -101,5 +101,5 @@ function importProductionBuild() {
 }
 
 function importDevBuild() {
-  return viteDevServer?.ssrLoadModule('virtual:remix/server-build') as Promise<ServerBuild>;
+  return viteDevServer?.ssrLoadModule('virtual:react-router/server-build') as Promise<ServerBuild>;
 }

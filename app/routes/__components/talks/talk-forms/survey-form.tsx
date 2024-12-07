@@ -1,4 +1,4 @@
-import { Form } from '@remix-run/react';
+import { Form } from 'react-router';
 import type { SurveyQuestion } from '~/.server/event-survey/types.ts';
 
 import { Checkbox, CheckboxGroup } from '~/design-system/forms/checkboxes.tsx';

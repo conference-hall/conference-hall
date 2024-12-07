@@ -1,4 +1,4 @@
-import { type LoaderFunctionArgs, redirect } from '@remix-run/node';
+import { type LoaderFunctionArgs, redirect } from 'react-router';
 import invariant from 'tiny-invariant';
 import { EventPage } from '~/.server/event-page/event-page.ts';
 

@@ -1,5 +1,5 @@
 import { CheckIcon } from '@heroicons/react/20/solid';
-import { Link } from '@remix-run/react';
+import { Link } from 'react-router';
 import { useCurrentStepName, useSteps } from './submission-context.tsx';
 
 type Props = {

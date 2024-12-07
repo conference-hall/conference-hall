@@ -1,4 +1,4 @@
-import { Form } from '@remix-run/react';
+import { Form } from 'react-router';
 
 import { Button } from '~/design-system/buttons.tsx';
 import { Input } from '~/design-system/forms/input.tsx';

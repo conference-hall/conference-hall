@@ -1,5 +1,5 @@
-import type { LoaderFunctionArgs } from '@remix-run/node';
-import { Outlet, useLoaderData, useMatch } from '@remix-run/react';
+import type { LoaderFunctionArgs } from 'react-router';
+import { Outlet, useLoaderData, useMatch } from 'react-router';
 import invariant from 'tiny-invariant';
 
 import { EventPage } from '~/.server/event-page/event-page.ts';

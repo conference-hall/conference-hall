@@ -1,5 +1,5 @@
-import { Form, useNavigation } from '@remix-run/react';
 import { useEffect, useRef } from 'react';
+import { Form, useNavigation } from 'react-router';
 
 import { Avatar } from '~/design-system/avatar.tsx';
 import { Button } from '~/design-system/buttons.tsx';

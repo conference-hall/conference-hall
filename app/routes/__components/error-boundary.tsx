@@ -1,5 +1,5 @@
-import { isRouteErrorResponse, useRouteError } from '@remix-run/react';
 import * as Sentry from '@sentry/react';
+import { isRouteErrorResponse, useRouteError } from 'react-router';
 
 import { ErrorPage } from './errors/error-page.tsx';
 import { Forbidden } from './errors/forbidden.tsx';

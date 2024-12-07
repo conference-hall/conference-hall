@@ -1,8 +1,8 @@
-import type { LinkProps as RemixLinkProps } from '@remix-run/react';
-import { Link as RemixLink } from '@remix-run/react';
 import type { VariantProps } from 'class-variance-authority';
 import { cva, cx } from 'class-variance-authority';
 import type React from 'react';
+import type { LinkProps as RouterLinkProps } from 'react-router';
+import { Link as RouterLink } from 'react-router';
 
 import type { TypographyVariantProps } from './typography.tsx';
 import { typography } from './typography.tsx';
@@ -24,7 +24,7 @@ type Icon = React.ComponentType<{ className?: string }>;
 
 type LinkIcons = { iconLeft?: Icon; iconRight?: Icon };
 
-type LinkProps = LinkVariants & LinkIcons & RemixLinkProps;
+type LinkProps = LinkVariants & LinkIcons & RouterLinkProps;
 
 export function Link({
   to,
@@ -44,11 +44,11 @@ export function Link({
   const linkStyle = link({ variant });
 
   return (
-    <RemixLink to={to} className={cx(defaultStyle, linkStyle)} {...rest}>
+    <RouterLink to={to} className={cx(defaultStyle, linkStyle)} {...rest}>
       {IconLeft && <IconLeft className="mr-1.5 h-5 w-5" aria-hidden="true" />}
       {children}
       {IconRight && <IconRight className="ml-1.5 h-5 w-5" aria-hidden="true" />}
-    </RemixLink>
+    </RouterLink>
   );
 }
 

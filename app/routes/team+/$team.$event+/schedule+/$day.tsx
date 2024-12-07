@@ -1,9 +1,8 @@
 import { parseWithZod } from '@conform-to/zod';
-import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { redirect } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
 import { useState } from 'react';
+import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
+import { redirect, useLoaderData } from 'react-router';
 import invariant from 'tiny-invariant';
 
 import { EventSchedule } from '~/.server/event-schedule/event-schedule.ts';
@@ -36,10 +35,10 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const eventSchedule = EventSchedule.for(userId, params.team, params.event);
 
   const result = ScheduleDayIdSchema.safeParse(params.day);
-  if (!result.success) return redirect(`/team/${params.team}/${params.event}`);
+  if (!result.success) throw redirect(`/team/${params.team}/${params.event}`);
 
   const schedule = await eventSchedule.getSchedulesByDay(result.data);
-  if (!schedule) return redirect(`/team/${params.team}/${params.event}/schedule`);
+  if (!schedule) throw redirect(`/team/${params.team}/${params.event}/schedule`);
 
   return schedule;
 };

@@ -1,9 +1,8 @@
 import { parseWithZod } from '@conform-to/zod';
 import { CheckIcon } from '@heroicons/react/20/solid';
 import { ClockIcon } from '@heroicons/react/24/outline';
-import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { redirect } from '@remix-run/node';
-import { useActionData, useLoaderData } from '@remix-run/react';
+import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
+import { redirect, useActionData, useLoaderData } from 'react-router';
 import invariant from 'tiny-invariant';
 
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
@@ -25,7 +24,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const event = await UserEvent.for(userId, params.team, params.event).get();
 
   if (event.type === 'MEETUP') {
-    return redirect(`/team/${params.team}/${params.event}`);
+    throw redirect(`/team/${params.team}/${params.event}`);
   }
 
   return event;
@@ -42,7 +41,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   if (result.status !== 'success') return result.error;
   await event.update(result.value);
 
-  return redirect(`/team/${params.team}/${params.event}`);
+  throw redirect(`/team/${params.team}/${params.event}`);
 };
 
 export default function NewEventDetailsRoute() {

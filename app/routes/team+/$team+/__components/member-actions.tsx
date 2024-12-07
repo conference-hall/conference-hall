@@ -1,6 +1,6 @@
 import { UserPlusIcon } from '@heroicons/react/20/solid';
-import { Form } from '@remix-run/react';
 import { useState } from 'react';
+import { Form } from 'react-router';
 
 import { Button } from '~/design-system/buttons.tsx';
 import { Modal } from '~/design-system/dialogs/modals.tsx';

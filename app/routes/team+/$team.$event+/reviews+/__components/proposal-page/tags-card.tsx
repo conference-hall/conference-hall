@@ -1,5 +1,5 @@
 import { Cog6ToothIcon } from '@heroicons/react/24/outline';
-import { useFetcher } from '@remix-run/react';
+import { useFetcher } from 'react-router';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Text } from '~/design-system/typography.tsx';
 import { sortBy } from '~/libs/utils/arrays-sort-by.ts';

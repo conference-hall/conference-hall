@@ -1,9 +1,9 @@
 {
   "exclude": ["./cypress", "./cypress.config.ts"],
-  "include": ["**/*.ts", "**/*.tsx", "./app/.server/**/*.ts", "./app/.server/**/*.tsx"],
+  "include": ["**/*.ts", "**/*.tsx", "./app/.server/**/*.ts", "./app/.server/**/*.tsx", ".react-router/types/**/*"],
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
-    "types": ["@remix-run/node", "vitest/globals"],
+    "types": ["@react-router/node", "vitest/globals"],
     "isolatedModules": true,
     "esModuleInterop": true,
     "jsx": "react-jsx",
@@ -11,11 +11,13 @@
     "moduleResolution": "Bundler",
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
+    "verbatimModuleSyntax": true,
     "target": "ES2022",
     "strict": true,
     "allowJs": true,
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
+    "rootDirs": [".", "./.react-router/types"],
     "paths": {
       "~/*": ["./app/*"],
       "tests/*": ["./tests/*"]

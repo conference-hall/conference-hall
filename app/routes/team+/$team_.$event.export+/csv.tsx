@@ -1,5 +1,5 @@
-import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json2csv } from 'json-2-csv';
+import type { LoaderFunctionArgs } from 'react-router';
 import invariant from 'tiny-invariant';
 import { CfpReviewsExports } from '~/.server/reviews/cfp-reviews-exports.ts';
 

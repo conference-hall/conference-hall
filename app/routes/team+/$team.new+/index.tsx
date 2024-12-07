@@ -1,6 +1,6 @@
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
-import type { LoaderFunctionArgs } from '@remix-run/node';
 import { useState } from 'react';
+import type { LoaderFunctionArgs } from 'react-router';
 
 import { ButtonLink } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';

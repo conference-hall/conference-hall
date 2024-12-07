@@ -1,4 +1,4 @@
-import { Outlet } from '@remix-run/react';
+import { Outlet } from 'react-router';
 
 import { Page } from '~/design-system/layouts/page.tsx';
 

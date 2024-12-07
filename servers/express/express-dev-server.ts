@@ -11,7 +11,7 @@ export type DevServerOptions = {
 };
 
 export const defaultOptions: Required<DevServerOptions> = {
-  entry: 'virtual:remix/server-build',
+  entry: 'virtual:react-router/server-build',
   exportName: 'app',
   appDirectory: './app',
   configureServer: () => {},

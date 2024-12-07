@@ -1,4 +1,4 @@
-import { Form } from '@remix-run/react';
+import { Form } from 'react-router';
 
 import { Callout } from '~/design-system/callout.tsx';
 import { Input } from '~/design-system/forms/input.tsx';

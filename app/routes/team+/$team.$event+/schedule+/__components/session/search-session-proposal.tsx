@@ -1,8 +1,8 @@
 import { Combobox, ComboboxInput, ComboboxOption, ComboboxOptions } from '@headlessui/react';
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import { DocumentPlusIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
-import { useFetcher, useParams } from '@remix-run/react';
 import type { ChangeEvent } from 'react';
+import { useFetcher, useParams } from 'react-router';
 import { useDebouncedCallback } from 'use-debounce';
 
 import type { loader as AutocompleteLoader } from '../../../reviews+/autocomplete.tsx';

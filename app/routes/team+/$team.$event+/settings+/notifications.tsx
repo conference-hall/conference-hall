@@ -1,6 +1,6 @@
 import { parseWithZod } from '@conform-to/zod';
-import type { LoaderFunctionArgs } from '@remix-run/node';
-import { Form, useActionData, useFetcher } from '@remix-run/react';
+import type { LoaderFunctionArgs } from 'react-router';
+import { Form, useActionData, useFetcher } from 'react-router';
 import invariant from 'tiny-invariant';
 
 import { UserEvent } from '~/.server/event-settings/user-event.ts';

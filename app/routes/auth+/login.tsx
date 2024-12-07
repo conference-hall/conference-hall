@@ -1,6 +1,3 @@
-import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { redirect } from '@remix-run/node';
-import { useFetcher, useSearchParams } from '@remix-run/react';
 import {
   GithubAuthProvider,
   GoogleAuthProvider,
@@ -9,6 +6,9 @@ import {
   signInWithRedirect,
 } from 'firebase/auth';
 import { useCallback, useEffect, useState } from 'react';
+import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
+import { redirect } from 'react-router';
+import { useFetcher, useSearchParams } from 'react-router';
 
 import { Callout } from '~/design-system/callout.tsx';
 import { LoadingIcon } from '~/design-system/icons/loading-icon.tsx';

@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
-import { createRemixStub } from '@remix-run/testing';
 import { render } from '@testing-library/react';
+import { createRoutesStub } from 'react-router';
 import { SubmissionContextProvider, useSteps, useSubmissionNavigation } from './submission-context.tsx';
 
 describe('SubmissionContext', () => {
@@ -111,7 +111,7 @@ describe('useSubmissionNavigation', () => {
 
   it('returns first step paths', () => {
     const path = '/event-1/submission';
-    const RouteStub = createRemixStub([
+    const RouteStub = createRoutesStub([
       {
         path,
         handle: { step: 'selection' },
@@ -131,7 +131,7 @@ describe('useSubmissionNavigation', () => {
 
   it('returns previous and next step paths', () => {
     const path = '/event-1/submission/talk-1/speakers';
-    const RouteStub = createRemixStub([
+    const RouteStub = createRoutesStub([
       {
         path,
         handle: { step: 'speakers' },
@@ -151,7 +151,7 @@ describe('useSubmissionNavigation', () => {
 
   it('returns last step paths', () => {
     const path = '/event-1/submission/talk-1/submit';
-    const RouteStub = createRemixStub([
+    const RouteStub = createRoutesStub([
       {
         path,
         handle: { step: 'submission' },

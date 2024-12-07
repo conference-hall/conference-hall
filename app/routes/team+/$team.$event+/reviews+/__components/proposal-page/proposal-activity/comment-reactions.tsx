@@ -1,4 +1,4 @@
-import { useFetchers, useSubmit } from '@remix-run/react';
+import { useFetchers, useSubmit } from 'react-router';
 import { EmojiReactions } from '~/routes/__components/emojis/emoji-reactions.tsx';
 import type { Emoji, EmojiReaction } from '~/types/emojis.types';
 

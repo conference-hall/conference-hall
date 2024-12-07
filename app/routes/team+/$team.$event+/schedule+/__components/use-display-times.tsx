@@ -1,6 +1,6 @@
-import { useFetcher } from '@remix-run/react';
 import { addMinutes } from 'date-fns';
 import { toZonedTime } from 'date-fns-tz';
+import { useFetcher } from 'react-router';
 
 export function useDisplayTimes(
   currentDay: Date,

@@ -1,7 +1,7 @@
 import { parseWithZod } from '@conform-to/zod';
 import { ArchiveBoxArrowDownIcon, ArchiveBoxXMarkIcon } from '@heroicons/react/24/outline';
-import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { Form, useActionData } from '@remix-run/react';
+import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
+import { Form, redirect, useActionData } from 'react-router';
 import invariant from 'tiny-invariant';
 
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
@@ -11,7 +11,7 @@ import { Callout } from '~/design-system/callout.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { redirectWithToast, toast } from '~/libs/toasts/toast.server.ts';
+import { toast, toastHeaders } from '~/libs/toasts/toast.server.ts';
 import { useCurrentEvent } from '~/routes/__components/contexts/event-team-context';
 import { EventDetailsForm } from '~/routes/__components/events/event-details-form.tsx';
 import { EventForm } from '~/routes/__components/events/event-form.tsx';
@@ -34,12 +34,14 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     case 'general': {
       const result = parseWithZod(form, { schema: EventGeneralSettingsSchema });
       if (result.status !== 'success') return result.error;
+      let updated = null;
       try {
-        const updated = await event.update(result.value);
-        return redirectWithToast(`/team/${params.team}/${updated.slug}/settings`, 'success', 'Event saved.');
+        updated = await event.update(result.value);
       } catch (_error) {
         return { slug: ['This URL already exists, please try another one.'] } as Record<string, string[]>;
       }
+      const headers = await toastHeaders('success', 'Event saved.');
+      throw redirect(`/team/${params.team}/${updated.slug}/settings`, { headers });
     }
     case 'details': {
       const result = parseWithZod(form, { schema: EventDetailsSettingsSchema });

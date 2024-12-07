@@ -1,5 +1,5 @@
 import { ArrowRightIcon, CheckIcon, XMarkIcon } from '@heroicons/react/20/solid';
-import { Form } from '@remix-run/react';
+import { Form } from 'react-router';
 
 import { Button, ButtonLink } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
