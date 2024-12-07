@@ -69,6 +69,14 @@ export async function createExpressApp({ configure, getLoadContext }: CreateExpr
     });
   }
 
+  // Avoid server crash due to unhandled promise rejections
+  const processEvents = process.eventNames();
+  if (!processEvents.includes('unhandledRejection')) {
+    process.on('unhandledRejection', (reason: string, promise: Promise<any>) => {
+      console.error('Unhandled Rejection', promise, reason);
+    });
+  }
+
   return app;
 }
 
