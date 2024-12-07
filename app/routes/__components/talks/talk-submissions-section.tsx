@@ -1,6 +1,6 @@
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
-import { Link } from '@remix-run/react';
 import { formatDistanceToNowStrict } from 'date-fns';
+import { Link } from 'react-router';
 
 import { Avatar } from '~/design-system/avatar.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';

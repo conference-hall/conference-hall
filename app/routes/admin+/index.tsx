@@ -1,6 +1,6 @@
-import type { LoaderFunctionArgs } from '@remix-run/node';
-import { Await, useLoaderData } from '@remix-run/react';
 import { Suspense } from 'react';
+import type { LoaderFunctionArgs } from 'react-router';
+import { Await, useLoaderData } from 'react-router';
 import { AdminDashboard } from '~/.server/admin/admin-dashboard.ts';
 import { KpiProgressBar } from '~/design-system/dashboard/kpi-progress-bar.tsx';
 import { StatisticCard } from '~/design-system/dashboard/statistic-card.tsx';

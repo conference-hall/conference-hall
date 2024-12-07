@@ -1,6 +1,6 @@
 import stream from 'node:stream';
+import type { FileUpload, FileUploadHandler } from '@mjackson/form-data-parser';
 
-import type { UploadHandler } from '@remix-run/node';
 import { v4 as uuid } from 'uuid';
 
 import { storage } from '../auth/firebase.server.ts';
@@ -15,35 +15,37 @@ const CONTENT_TYPES: Record<string, string> = {
   'image/webp': 'webp',
 };
 
-export function uploadToStorageHandler(options: StorageUploaderOptions): UploadHandler {
-  return async ({ name, data, contentType }) => {
-    if (name !== options.name) return;
-    if (!Object.keys(CONTENT_TYPES).includes(contentType)) return;
+export function uploadToStorageHandler(options: StorageUploaderOptions): FileUploadHandler {
+  return (file) => {
+    if (file.fieldName !== options.name) return;
+    if (!Object.keys(CONTENT_TYPES).includes(file.type)) return;
 
-    const extension = CONTENT_TYPES[contentType];
+    const extension = CONTENT_TYPES[file.type];
     const filepath = `${uuid()}.${extension}`;
-    return await uploadToStorage(data, filepath, options.maxFileSize);
+
+    return uploadToStorage(file, filepath, options.maxFileSize);
   };
 }
 
-async function uploadToStorage(data: AsyncIterable<Uint8Array>, filepath: string, maxFileSize = 1_000_000) {
-  const file = storage.bucket().file(filepath);
+async function uploadToStorage(file: FileUpload, filepath: string, maxFileSize = 1_000_000) {
+  const storedFile = storage.bucket().file(filepath);
 
-  const passthroughStream = new stream.PassThrough();
   let size = 0;
-  for await (const chunk of data) {
-    size += chunk.byteLength;
-    if (size > maxFileSize) {
-      passthroughStream.destroy();
-      return null;
-    }
-    passthroughStream.write(chunk);
+  const chunks: Uint8Array[] = [];
+  const passthroughStream = new stream.PassThrough();
+  const reader = file.stream().getReader();
+  while (size < maxFileSize) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    size += value.byteLength;
+    chunks.push(value);
+    passthroughStream.write(value);
   }
   passthroughStream.end();
 
   try {
     await new Promise((resolve, reject) => {
-      const writeStream = file.createWriteStream();
+      const writeStream = storedFile.createWriteStream();
       passthroughStream.pipe(writeStream).on('finish', resolve).on('error', reject);
     });
   } catch (_error) {
@@ -51,7 +53,7 @@ async function uploadToStorage(data: AsyncIterable<Uint8Array>, filepath: string
     return null;
   }
 
-  return getStorageProxyUrl(filepath);
+  return new File(chunks, getStorageProxyUrl(filepath), { type: file.type });
 }
 
 function getStorageProxyUrl(filepath: string) {

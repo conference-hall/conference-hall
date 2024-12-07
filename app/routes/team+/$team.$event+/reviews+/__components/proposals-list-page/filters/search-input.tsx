@@ -1,5 +1,5 @@
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
-import { Form, useSearchParams } from '@remix-run/react';
+import { Form, useSearchParams } from 'react-router';
 
 import { Input } from '~/design-system/forms/input.tsx';
 

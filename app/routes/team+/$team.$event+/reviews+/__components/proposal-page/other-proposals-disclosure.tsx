@@ -1,6 +1,6 @@
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
-import { Link } from '@remix-run/react';
+import { Link } from 'react-router';
 import { Text } from '~/design-system/typography.tsx';
 import { GlobalReviewNote } from '~/routes/__components/reviews/review-note.tsx';
 

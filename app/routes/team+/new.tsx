@@ -1,7 +1,6 @@
 import { parseWithZod } from '@conform-to/zod';
-import type { ActionFunctionArgs, LoaderFunction } from '@remix-run/node';
-import { redirect } from '@remix-run/node';
-import { Form, useActionData } from '@remix-run/react';
+import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
+import { Form, redirect, useActionData } from 'react-router';
 
 import { TeamCreateSchema, UserTeams } from '~/.server/team/user-teams.ts';
 import { Button } from '~/design-system/buttons.tsx';
@@ -11,7 +10,7 @@ import { TeamForm } from '~/routes/__components/teams/team-form.tsx';
 
 import { FullscreenPage } from '../__components/fullscreen-page.tsx';
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireSession(request);
   return null;
 };
@@ -25,7 +24,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   try {
     const team = await UserTeams.for(userId).create(result.value);
-    return redirect(`/team/${team.slug}`);
+    throw redirect(`/team/${team.slug}`);
   } catch (_error) {
     return { slug: ['This URL already exists, please try another one.'] };
   }

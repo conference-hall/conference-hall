@@ -1,6 +1,6 @@
 import { parseWithZod } from '@conform-to/zod';
-import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { useActionData, useLoaderData } from '@remix-run/react';
+import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
+import { useActionData, useLoaderData } from 'react-router';
 import invariant from 'tiny-invariant';
 
 import { TalksLibrary } from '~/.server/speaker-talks-library/talks-library.ts';

@@ -1,6 +1,6 @@
 import { parseWithZod } from '@conform-to/zod';
-import type { ActionFunctionArgs } from '@remix-run/node';
-import { Form, useActionData } from '@remix-run/react';
+import type { ActionFunctionArgs } from 'react-router';
+import { Form, useActionData } from 'react-router';
 import { AdminDebug, TestEmailSchema } from '~/.server/admin/admin-debug.ts';
 
 import { Button } from '~/design-system/buttons.tsx';

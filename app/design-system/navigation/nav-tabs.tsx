@@ -1,7 +1,6 @@
-import { NavLink } from '@remix-run/react';
-import type { RemixNavLinkProps } from '@remix-run/react/dist/components';
 import { cx } from 'class-variance-authority';
 import type { ReactNode } from 'react';
+import { NavLink, type NavLinkProps } from 'react-router';
 
 type Props = {
   children: ReactNode;
@@ -59,7 +58,7 @@ type NavTabProps = {
   variant?: keyof typeof BACKGROUND;
   icon?: React.ComponentType<{ className?: string }>;
   className?: string;
-} & RemixNavLinkProps;
+} & NavLinkProps;
 
 export function NavTab({ to, end, count, variant = 'light', icon: Icon, className, children }: NavTabProps) {
   return (

@@ -1,6 +1,6 @@
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/20/solid';
 import { CalendarIcon, Cog6ToothIcon, HomeIcon, MegaphoneIcon, QueueListIcon } from '@heroicons/react/24/outline';
-import { useSearchParams } from '@remix-run/react';
+import { useSearchParams } from 'react-router';
 
 import { Page } from '~/design-system/layouts/page.tsx';
 import { Link } from '~/design-system/links.tsx';

@@ -4,7 +4,8 @@ node_modules
 # logs
 *.log
 
-# remix
+# react router
+.react-router
 /build
 /public/build
 

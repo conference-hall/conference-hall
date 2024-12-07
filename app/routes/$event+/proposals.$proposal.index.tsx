@@ -1,6 +1,6 @@
 import { parseWithZod } from '@conform-to/zod';
-import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { useActionData, useLoaderData } from '@remix-run/react';
+import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
+import { useActionData, useLoaderData } from 'react-router';
 import invariant from 'tiny-invariant';
 
 import { UserProposal } from '~/.server/cfp-submissions/user-proposal.ts';
@@ -36,7 +36,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   switch (intent) {
     case 'proposal-delete': {
       await proposal.delete();
-      return redirectWithToast(`/${params.event}/proposals`, 'success', 'Proposal submission removed.');
+      throw redirectWithToast(`/${params.event}/proposals`, 'success', 'Proposal submission removed.');
     }
     case 'proposal-confirmation': {
       const result = parseWithZod(form, { schema: ProposalParticipationSchema });

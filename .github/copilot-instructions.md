@@ -1,6 +1,6 @@
 Write all TypeScript code using single quotes and 2-space indentation to maintain consistency across our codebase.
 
-Our primary web framework is Remix, and it’s served by an Express server, so structure any backend or routing suggestions accordingly.
+Our primary web framework is "React Router v7", and it’s served by an Express server, so structure any backend or routing suggestions accordingly.
 
 We use Prisma as our ORM, so ensure that all database queries and models follow Prisma's syntax and conventions.
 

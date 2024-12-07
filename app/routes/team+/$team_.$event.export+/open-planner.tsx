@@ -1,4 +1,4 @@
-import type { ActionFunctionArgs } from '@remix-run/node';
+import type { ActionFunctionArgs } from 'react-router';
 import invariant from 'tiny-invariant';
 import { CfpReviewsExports } from '~/.server/reviews/cfp-reviews-exports.ts';
 

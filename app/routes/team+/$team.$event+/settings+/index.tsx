@@ -1,7 +1,7 @@
 import { parseWithZod } from '@conform-to/zod';
 import { ArchiveBoxArrowDownIcon, ArchiveBoxXMarkIcon } from '@heroicons/react/24/outline';
-import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { Form, useActionData } from '@remix-run/react';
+import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
+import { Form, useActionData } from 'react-router';
 import invariant from 'tiny-invariant';
 
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
@@ -36,7 +36,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       if (result.status !== 'success') return result.error;
       try {
         const updated = await event.update(result.value);
-        return redirectWithToast(`/team/${params.team}/${updated.slug}/settings`, 'success', 'Event saved.');
+        throw redirectWithToast(`/team/${params.team}/${updated.slug}/settings`, 'success', 'Event saved.');
       } catch (_error) {
         return { slug: ['This URL already exists, please try another one.'] } as Record<string, string[]>;
       }

@@ -1,8 +1,7 @@
 import { parseWithZod } from '@conform-to/zod';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
-import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { redirect } from '@remix-run/node';
-import { useActionData, useLoaderData } from '@remix-run/react';
+import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
+import { redirect, useActionData, useLoaderData } from 'react-router';
 import invariant from 'tiny-invariant';
 import { TalkSubmission } from '~/.server/cfp-submission-funnel/talk-submission.ts';
 import { TalksLibrary } from '~/.server/speaker-talks-library/talks-library.ts';
@@ -45,7 +44,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const submission = TalkSubmission.for(speakerId, params.event);
   const proposal = await submission.saveDraft(params.talk, result.value);
 
-  return redirect(`/${params.event}/submission/${proposal.talkId}/speakers`);
+  throw redirect(`/${params.event}/submission/${proposal.talkId}/speakers`);
 };
 
 export default function SubmissionTalkRoute() {

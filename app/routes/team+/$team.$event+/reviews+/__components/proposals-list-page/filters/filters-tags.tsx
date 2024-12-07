@@ -1,4 +1,4 @@
-import { useLocation, useNavigate, useSearchParams } from '@remix-run/react';
+import { useLocation, useNavigate, useSearchParams } from 'react-router';
 
 import type { ProposalsFilters } from '~/.server/shared/proposal-search-builder.types.ts';
 import { Text } from '~/design-system/typography.tsx';

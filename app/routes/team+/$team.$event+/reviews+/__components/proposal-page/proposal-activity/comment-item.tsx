@@ -1,5 +1,5 @@
-import { Form } from '@remix-run/react';
 import { formatDistanceToNowStrict } from 'date-fns';
+import { Form } from 'react-router';
 
 import type { FeedItem } from '~/.server/reviews/activity-feed.ts';
 import { Avatar } from '~/design-system/avatar.tsx';

@@ -1,8 +1,7 @@
 import { parseWithZod } from '@conform-to/zod';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
-import type { ActionFunction, LoaderFunctionArgs } from '@remix-run/node';
-import { redirect } from '@remix-run/node';
-import { useActionData, useLoaderData } from '@remix-run/react';
+import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
+import { redirect, useActionData, useLoaderData } from 'react-router';
 import invariant from 'tiny-invariant';
 import { SpeakerSurvey } from '~/.server/event-survey/speaker-survey.ts';
 import { Button, ButtonLink } from '~/design-system/buttons.tsx';
@@ -26,7 +25,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   return { questions, answers };
 };
 
-export const action: ActionFunction = async ({ request, params }) => {
+export const action = async ({ request, params }: ActionFunctionArgs) => {
   const userId = await requireSession(request);
   invariant(params.event, 'Invalid event slug');
   invariant(params.talk, 'Invalid talk id');
@@ -41,7 +40,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   await SpeakerSurvey.for(params.event).saveSpeakerAnswer(userId, result.value);
 
   const redirectTo = String(form.get('redirectTo'));
-  return redirect(redirectTo);
+  throw redirect(redirectTo);
 };
 
 export default function SubmissionSurveyRoute() {

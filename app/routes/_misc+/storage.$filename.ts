@@ -1,10 +1,10 @@
-import type { LoaderFunction } from '@remix-run/node';
+import type { LoaderFunctionArgs } from 'react-router';
 import { storage } from '../../libs/auth/firebase.server.ts';
 
 const ONE_YEAR_IN_SECONDS = 60 * 60 * 24 * 365;
 
 // TODO: Extract into libs/storage/storage.server.ts
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader = async ({ params }: LoaderFunctionArgs) => {
   const { filename } = params;
 
   if (!filename) {

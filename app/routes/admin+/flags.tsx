@@ -1,5 +1,5 @@
-import type { LoaderFunctionArgs } from '@remix-run/node';
-import { Form, useLoaderData, useSubmit } from '@remix-run/react';
+import type { LoaderFunctionArgs } from 'react-router';
+import { Form, useLoaderData, useSubmit } from 'react-router';
 import { AdminFlags } from '~/.server/admin/admin-flags.ts';
 import { Badge } from '~/design-system/badges.tsx';
 import { Button } from '~/design-system/buttons.tsx';

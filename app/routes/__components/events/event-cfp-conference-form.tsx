@@ -1,4 +1,4 @@
-import { Form } from '@remix-run/react';
+import { Form } from 'react-router';
 
 import { Callout } from '~/design-system/callout.tsx';
 import { DateRangeInput } from '~/design-system/forms/date-range-input.tsx';

@@ -1,4 +1,4 @@
-import { useLocation, useMatch, useNavigate, useSearchParams } from '@remix-run/react';
+import { useLocation, useMatch, useNavigate, useSearchParams } from 'react-router';
 
 export function useScheduleFullscreen() {
   const scheduleRoute = useMatch('/team/:team/:event/schedule/:day');

@@ -1,6 +1,6 @@
 import { PaintBrushIcon } from '@heroicons/react/24/outline';
-import { Form } from '@remix-run/react';
 import { type ReactNode, useState } from 'react';
+import { Form } from 'react-router';
 import { Button } from '~/design-system/buttons.tsx';
 import { Modal } from '~/design-system/dialogs/modals.tsx';
 import { Input } from '~/design-system/forms/input.tsx';

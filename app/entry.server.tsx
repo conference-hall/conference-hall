@@ -1,11 +1,11 @@
 import { PassThrough } from 'node:stream';
 
-import type { ActionFunctionArgs, AppLoadContext, EntryContext, LoaderFunctionArgs } from '@remix-run/node';
-import { createReadableStreamFromReadable } from '@remix-run/node';
-import { RemixServer } from '@remix-run/react';
+import { createReadableStreamFromReadable } from '@react-router/node';
 import * as Sentry from '@sentry/node';
 import { isbot } from 'isbot';
 import { renderToPipeableStream } from 'react-dom/server';
+import type { ActionFunctionArgs, AppLoadContext, EntryContext, LoaderFunctionArgs } from 'react-router';
+import { ServerRouter } from 'react-router';
 import { createAppServer } from '../servers/web.server.ts';
 
 import { NonceContext } from './libs/nonce/use-nonce.ts';
@@ -16,7 +16,7 @@ export default function handleRequest(
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
-  remixContext: EntryContext,
+  reactRouterContext: EntryContext,
   loadContext: AppLoadContext,
 ) {
   const callbackName = isbot(request.headers.get('user-agent')) ? 'onAllReady' : 'onShellReady';
@@ -26,7 +26,7 @@ export default function handleRequest(
     const nonce = String(loadContext.cspNonce) ?? undefined;
     const { pipe, abort } = renderToPipeableStream(
       <NonceContext.Provider value={nonce}>
-        <RemixServer context={remixContext} url={request.url} nonce={nonce} />
+        <ServerRouter context={reactRouterContext} url={request.url} nonce={nonce} />
       </NonceContext.Provider>,
       {
         [callbackName]() {

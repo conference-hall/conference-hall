@@ -1,6 +1,6 @@
 import { parseWithZod } from '@conform-to/zod';
-import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { Form, useActionData } from '@remix-run/react';
+import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
+import { Form, useActionData } from 'react-router';
 import invariant from 'tiny-invariant';
 
 import { TeamUpdateSchema, UserTeam } from '~/.server/team/user-team.ts';
@@ -33,14 +33,14 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
       try {
         const team = await UserTeam.for(userId, params.team).updateSettings(result.value);
-        return redirectWithToast(`/team/${team.slug}/settings`, 'success', 'Team settings saved.');
+        throw redirectWithToast(`/team/${team.slug}/settings`, 'success', 'Team settings saved.');
       } catch (_error) {
         return { slug: ['This URL already exists, please try another one.'] };
       }
     }
     case 'leave-team': {
       await TeamMembers.for(userId, params.team).leave();
-      return redirectWithToast('/speaker', 'success', "You've successfully left the team.");
+      throw redirectWithToast('/speaker', 'success', "You've successfully left the team.");
     }
   }
   return null;

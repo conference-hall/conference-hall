@@ -1,8 +1,8 @@
-import type { LinkProps } from '@remix-run/react';
-import { Link } from '@remix-run/react';
 import type { VariantProps } from 'class-variance-authority';
 import { cva } from 'class-variance-authority';
 import type React from 'react';
+import type { LinkProps } from 'react-router';
+import { Link } from 'react-router';
 
 export const button = cva(
   [

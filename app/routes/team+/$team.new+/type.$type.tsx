@@ -1,8 +1,7 @@
 import { parseWithZod } from '@conform-to/zod';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
-import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { redirect } from '@remix-run/node';
-import { Form, useActionData, useParams } from '@remix-run/react';
+import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
+import { Form, redirect, useActionData, useParams } from 'react-router';
 import invariant from 'tiny-invariant';
 
 import { EventCreateSchema, TeamEvents } from '~/.server/team/team-events.ts';
@@ -30,7 +29,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
   try {
     const event = await TeamEvents.for(userId, params.team).create(result.value);
-    return redirect(`/team/${params.team}/new/${event.slug}/details`);
+    throw redirect(`/team/${params.team}/new/${event.slug}/details`);
   } catch (_error) {
     return { slug: ['This URL already exists, please try another one.'] };
   }

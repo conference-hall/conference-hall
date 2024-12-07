@@ -1,9 +1,8 @@
 import { parseWithZod } from '@conform-to/zod';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { CheckIcon, ClockIcon } from '@heroicons/react/24/outline';
-import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { redirect } from '@remix-run/node';
-import { useActionData, useLoaderData } from '@remix-run/react';
+import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
+import { redirect, useActionData, useLoaderData } from 'react-router';
 import invariant from 'tiny-invariant';
 
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
@@ -37,7 +36,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   if (result.status !== 'success') return result.error;
   await event.update(result.value);
 
-  return redirect(`/team/${params.team}/new/${params.event}/cfp`);
+  throw redirect(`/team/${params.team}/new/${params.event}/cfp`);
 };
 
 export default function NewEventDetailsRoute() {

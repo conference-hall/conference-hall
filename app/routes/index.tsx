@@ -1,7 +1,7 @@
 import { FaceFrownIcon } from '@heroicons/react/24/outline';
-import type { LoaderFunctionArgs } from '@remix-run/node';
-import { useLoaderData, useSearchParams } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
+import type { LoaderFunctionArgs } from 'react-router';
+import { useLoaderData, useSearchParams } from 'react-router';
 
 import { EventsSearch } from '~/.server/event-search/event-search.ts';
 import { parseUrlFilters } from '~/.server/event-search/event-search.types.ts';

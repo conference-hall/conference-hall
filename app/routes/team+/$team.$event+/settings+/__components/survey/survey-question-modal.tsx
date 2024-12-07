@@ -1,8 +1,8 @@
 import { PlusIcon } from '@heroicons/react/20/solid';
 import { TrashIcon } from '@heroicons/react/24/outline';
-import { Form } from '@remix-run/react';
 import slugify from '@sindresorhus/slugify';
 import { type ReactNode, useState } from 'react';
+import { Form } from 'react-router';
 import { v4 as uuid } from 'uuid';
 import type { SurveyQuestion } from '~/.server/event-survey/types.ts';
 import { Button } from '~/design-system/buttons.tsx';

@@ -1,4 +1,4 @@
-import { Link, useParams, useSearchParams } from '@remix-run/react';
+import { Link, useParams, useSearchParams } from 'react-router';
 import { getContrastColor } from '~/libs/colors/colors.ts';
 import type { Tag as TagType } from '~/types/tags.types.ts';
 

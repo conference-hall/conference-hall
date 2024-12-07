@@ -1,6 +1,6 @@
 import { Cog6ToothIcon, UserGroupIcon } from '@heroicons/react/24/outline';
-import type { LoaderFunctionArgs } from '@remix-run/node';
-import { Outlet } from '@remix-run/react';
+import type { LoaderFunctionArgs } from 'react-router';
+import { Outlet } from 'react-router';
 import invariant from 'tiny-invariant';
 
 import { UserTeam } from '~/.server/team/user-team.ts';

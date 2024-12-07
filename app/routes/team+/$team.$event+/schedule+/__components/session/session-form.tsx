@@ -6,9 +6,9 @@ import {
   PaintBrushIcon,
   TrashIcon,
 } from '@heroicons/react/24/outline';
-import { useParams } from '@remix-run/react';
 import type { FormEvent } from 'react';
 import { useEffect, useRef, useState } from 'react';
+import { useParams } from 'react-router';
 
 import { Button } from '~/design-system/buttons.tsx';
 import ColorPicker from '~/design-system/forms/color-picker.tsx';

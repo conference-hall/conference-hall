@@ -1,5 +1,5 @@
 import { TrashIcon } from '@heroicons/react/24/outline';
-import { Form } from '@remix-run/react';
+import { Form } from 'react-router';
 
 import { IconButton } from '~/design-system/icon-buttons.tsx';
 import { Subtitle, Text } from '~/design-system/typography.tsx';

@@ -1,6 +1,6 @@
 import { PassThrough } from 'node:stream';
 import { getHeapSnapshot } from 'node:v8';
-import type { LoaderFunctionArgs } from '@remix-run/node';
+import type { LoaderFunctionArgs } from 'react-router';
 import { needsAdminRole } from '~/.server/admin/authorization.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 

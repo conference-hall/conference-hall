@@ -19,5 +19,5 @@ Set the following secrets to the build server:
 ```
 SENTRY_AUTH_TOKEN=<auth_token>
 SENTRY_ORG=<org_slug>
-SENTRY_PROJECT=javascript-remix
+SENTRY_PROJECT=my-project
 ```

@@ -1,12 +1,12 @@
 import { ArrowDownIcon, ArrowUpIcon, PlusIcon } from '@heroicons/react/20/solid';
-import { useFetcher } from '@remix-run/react';
+import { useFetcher } from 'react-router';
 import { Badge } from '~/design-system/badges.tsx';
 import { Button } from '~/design-system/buttons.tsx';
 import { ToggleGroup } from '~/design-system/forms/toggles.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { H2, Text } from '~/design-system/typography.tsx';
-import type { SerializeFrom } from '~/types/remix.types.ts';
+import type { SerializeFrom } from '~/types/react-router.types.ts';
 import type { action, loader } from '../../survey.tsx';
 import { QUESTION_TYPES, SurveyQuestionModal } from './survey-question-modal.tsx';
 

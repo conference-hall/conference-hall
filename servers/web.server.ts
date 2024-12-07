@@ -13,12 +13,6 @@ import { applySecurity } from './middlewares/security.ts';
 import { applySeoHeader } from './middlewares/seo.ts';
 import { applyUrlCleaning } from './middlewares/url-cleaning.ts';
 
-declare module '@remix-run/node' {
-  interface AppLoadContext {
-    cspNonce: string;
-  }
-}
-
 initEnvironment();
 initMonitoring();
 

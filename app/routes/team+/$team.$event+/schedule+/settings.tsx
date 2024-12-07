@@ -1,8 +1,8 @@
 import { parseWithZod } from '@conform-to/zod';
 import { ArrowLeftIcon } from '@heroicons/react/20/solid';
-import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { redirect } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
+import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
+import { redirect } from 'react-router';
+import { useLoaderData } from 'react-router';
 import invariant from 'tiny-invariant';
 
 import { EventSchedule } from '~/.server/event-schedule/event-schedule.ts';
@@ -20,7 +20,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   invariant(params.event, 'Invalid event slug');
 
   const schedule = await EventSchedule.for(userId, params.team, params.event).get();
-  if (!schedule) return redirect(`/team/${params.team}/${params.event}/schedule`);
+  if (!schedule) throw redirect(`/team/${params.team}/${params.event}/schedule`);
 
   return schedule;
 };

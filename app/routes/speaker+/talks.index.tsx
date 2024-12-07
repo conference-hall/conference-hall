@@ -1,7 +1,7 @@
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import { InboxIcon } from '@heroicons/react/24/outline';
-import type { LoaderFunctionArgs } from '@remix-run/node';
-import { useLoaderData, useSearchParams } from '@remix-run/react';
+import type { LoaderFunctionArgs } from 'react-router';
+import { useLoaderData, useSearchParams } from 'react-router';
 
 import { TalksLibrary } from '~/.server/speaker-talks-library/talks-library.ts';
 import { TalksListFilterSchema } from '~/.server/speaker-talks-library/talks-library.types.ts';

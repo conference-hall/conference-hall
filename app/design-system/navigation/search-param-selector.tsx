@@ -1,6 +1,6 @@
-import { Link, useSearchParams } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
 import { useCallback } from 'react';
+import { Link, useSearchParams } from 'react-router';
 
 type Selector = { label: string; value: string };
 type SearchParamSelectorProps = { param: string; defaultValue?: string; selectors: Array<Selector> };

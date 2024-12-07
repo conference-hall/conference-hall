@@ -1,5 +1,5 @@
-import { Link, useSearchParams } from '@remix-run/react';
 import type { ChangeEvent } from 'react';
+import { Link, useSearchParams } from 'react-router';
 
 import { BadgeDot } from '~/design-system/badges.tsx';
 import { Checkbox } from '~/design-system/forms/checkboxes.tsx';

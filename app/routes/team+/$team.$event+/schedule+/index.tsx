@@ -1,7 +1,7 @@
 import { parseWithZod } from '@conform-to/zod';
-import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { redirect } from '@remix-run/node';
-import { Form, useActionData, useLoaderData } from '@remix-run/react';
+import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
+import { redirect } from 'react-router';
+import { Form, useActionData, useLoaderData } from 'react-router';
 import invariant from 'tiny-invariant';
 
 import { EventSchedule } from '~/.server/event-schedule/event-schedule.ts';
@@ -24,7 +24,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const schedule = await EventSchedule.for(userId, params.team, params.event).get();
 
   if (schedule) {
-    return redirect(`/team/${params.team}/${params.event}/schedule/0`);
+    throw redirect(`/team/${params.team}/${params.event}/schedule/0`);
   }
 
   const event = await UserEvent.for(userId, params.team, params.event).get();
@@ -49,7 +49,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
   await schedule.create(result.value);
 
-  return redirect(`/team/${params.team}/${params.event}/schedule`);
+  throw redirect(`/team/${params.team}/${params.event}/schedule`);
 };
 
 export default function ScheduleRoute() {

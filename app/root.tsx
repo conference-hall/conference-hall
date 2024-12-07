@@ -1,7 +1,6 @@
-import type { LinksFunction, LoaderFunctionArgs, MetaFunction } from '@remix-run/node';
-import { data } from '@remix-run/node';
-import { Links, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData } from '@remix-run/react';
 import type { ReactNode } from 'react';
+import type { LinksFunction, LoaderFunctionArgs, MetaFunction } from 'react-router';
+import { Links, Meta, Outlet, Scripts, ScrollRestoration, data, useLoaderData } from 'react-router';
 
 import { UserInfo } from './.server/user-registration/user-info.ts';
 import { initializeFirebaseClient } from './libs/auth/firebase.ts';

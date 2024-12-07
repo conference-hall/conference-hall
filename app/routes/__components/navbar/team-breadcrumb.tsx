@@ -1,4 +1,4 @@
-import { useParams } from '@remix-run/react';
+import { useParams } from 'react-router';
 
 import { SlashBarIcon } from '~/design-system/icons/slash-bar-icon.tsx';
 

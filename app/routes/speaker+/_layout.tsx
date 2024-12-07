@@ -1,6 +1,6 @@
-import type { LoaderFunctionArgs } from '@remix-run/node';
-import { Outlet, useLoaderData } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
+import type { LoaderFunctionArgs } from 'react-router';
+import { Outlet, useLoaderData } from 'react-router';
 
 import { SpeakerProfile } from '~/.server/speaker-profile/speaker-profile.ts';
 import { Avatar } from '~/design-system/avatar.tsx';

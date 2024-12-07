@@ -1,5 +1,5 @@
-import type { LoaderFunctionArgs } from '@remix-run/node';
-import { Outlet, useLoaderData, useMatch, useRouteLoaderData } from '@remix-run/react';
+import type { LoaderFunctionArgs } from 'react-router';
+import { Outlet, useLoaderData, useMatch, useRouteLoaderData } from 'react-router';
 import invariant from 'tiny-invariant';
 
 import { UserTeam } from '~/.server/team/user-team.ts';

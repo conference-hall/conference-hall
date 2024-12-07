@@ -1,5 +1,5 @@
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
-import { useSubmit } from '@remix-run/react';
+import { useSubmit } from 'react-router';
 
 import { Button } from '~/design-system/buttons.tsx';
 import { Callout } from '~/design-system/callout.tsx';

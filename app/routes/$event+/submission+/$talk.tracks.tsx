@@ -1,8 +1,7 @@
 import { parseWithZod } from '@conform-to/zod';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
-import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { redirect } from '@remix-run/node';
-import { Form, useActionData, useLoaderData } from '@remix-run/react';
+import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
+import { Form, redirect, useActionData, useLoaderData } from 'react-router';
 import invariant from 'tiny-invariant';
 import { TalkSubmission } from '~/.server/cfp-submission-funnel/talk-submission.ts';
 import { getTracksSchema } from '~/.server/cfp-submission-funnel/talk-submission.types.ts';
@@ -45,7 +44,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   await submission.saveTracks(params.talk, result.value);
 
   const redirectTo = String(form.get('redirectTo'));
-  return redirect(redirectTo);
+  throw redirect(redirectTo);
 };
 
 export default function SubmissionTracksRoute() {

@@ -1,4 +1,4 @@
-import type { LoaderFunctionArgs } from '@remix-run/node';
+import type { LoaderFunctionArgs } from 'react-router';
 import invariant from 'tiny-invariant';
 
 import { EventApi } from '~/.server/event-web-api/event-api.ts';

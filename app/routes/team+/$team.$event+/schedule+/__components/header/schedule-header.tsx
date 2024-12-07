@@ -7,9 +7,9 @@ import {
   MagnifyingGlassMinusIcon,
   MagnifyingGlassPlusIcon,
 } from '@heroicons/react/24/outline';
-import { useSearchParams } from '@remix-run/react';
 import { cx } from 'class-variance-authority';
 import { format } from 'date-fns';
+import { useSearchParams } from 'react-router';
 
 import { IconButton, IconLink } from '~/design-system/icon-buttons.tsx';
 import { H2 } from '~/design-system/typography.tsx';

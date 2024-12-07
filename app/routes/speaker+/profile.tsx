@@ -1,7 +1,7 @@
 import { parseWithZod } from '@conform-to/zod';
 import { CreditCardIcon, KeyIcon, UserCircleIcon } from '@heroicons/react/20/solid';
-import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { useActionData } from '@remix-run/react';
+import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
+import { useActionData } from 'react-router';
 
 import { SpeakerProfile } from '~/.server/speaker-profile/speaker-profile.ts';
 import {

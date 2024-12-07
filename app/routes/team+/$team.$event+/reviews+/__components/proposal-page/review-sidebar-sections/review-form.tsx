@@ -1,4 +1,4 @@
-import { useParams, useSearchParams, useSubmit } from '@remix-run/react';
+import { useParams, useSearchParams, useSubmit } from 'react-router';
 
 import { H2 } from '~/design-system/typography.tsx';
 import type { ReviewFeeling, UserReview } from '~/types/proposals.types.ts';
