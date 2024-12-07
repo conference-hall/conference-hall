@@ -1,5 +1,5 @@
 import { isRouteErrorResponse, useRouteError } from '@remix-run/react';
-import { captureRemixErrorBoundaryError } from '@sentry/remix';
+import * as Sentry from '@sentry/react';
 
 import { ErrorPage } from './errors/error-page.tsx';
 import { Forbidden } from './errors/forbidden.tsx';
@@ -19,8 +19,6 @@ export function GeneralErrorBoundary() {
 export function NestedErrorBoundary() {
   const error = useRouteError();
 
-  captureRemixErrorBoundaryError(error);
-
   if (typeof document !== 'undefined') {
     console.error(error);
   }
@@ -31,6 +29,8 @@ export function NestedErrorBoundary() {
     if (error.status === 500) return <InternalServerError />;
 
     return <NotFound text={error.statusText} />;
+  } else if (error && error instanceof Error) {
+    Sentry.captureException(error);
   }
 
   return <UnexpectedError error={getError(error)} />;
