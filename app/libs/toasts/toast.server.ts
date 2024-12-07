@@ -1,4 +1,4 @@
-import { createCookieSessionStorage, data, redirect } from 'react-router';
+import { createCookieSessionStorage, data } from 'react-router';
 import { v4 as uuid } from 'uuid';
 import { z } from 'zod';
 
@@ -16,11 +16,6 @@ type ToastType = z.infer<typeof TypeSchema>;
 
 export type Toast = z.infer<typeof ToastSchema>;
 
-export type OptionalToast = Omit<Toast, 'id' | 'type'> & {
-  id?: string;
-  type?: ToastType;
-};
-
 export const toastSessionStorage = createCookieSessionStorage({
   cookie: {
     name: '__toast',
@@ -32,12 +27,8 @@ export const toastSessionStorage = createCookieSessionStorage({
   },
 });
 
-export async function redirectWithToast(url: string, type: ToastType, title: string) {
-  return redirect(url, { headers: await createToastHeaders({ type, title }) });
-}
-
 export async function toast(type: ToastType, title: string) {
-  return data(null, { headers: await createToastHeaders({ type, title }) });
+  return data(null, { headers: await toastHeaders(type, title) });
 }
 
 export async function getToast(request: Request) {
@@ -54,10 +45,10 @@ export async function getToast(request: Request) {
   };
 }
 
-export async function createToastHeaders(optionalToast: OptionalToast) {
+export async function toastHeaders(type: ToastType, title: string) {
   const session = await toastSessionStorage.getSession();
-  const toast = ToastSchema.parse(optionalToast);
+  const toast = ToastSchema.parse({ type, title });
   session.flash(toastKey, toast);
   const cookie = await toastSessionStorage.commitSession(session);
-  return new Headers({ 'set-cookie': cookie });
+  return { 'set-cookie': cookie };
 }

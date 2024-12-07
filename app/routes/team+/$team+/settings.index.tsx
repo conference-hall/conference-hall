@@ -1,6 +1,6 @@
 import { parseWithZod } from '@conform-to/zod';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
-import { Form, useActionData } from 'react-router';
+import { Form, redirect, useActionData } from 'react-router';
 import invariant from 'tiny-invariant';
 
 import { TeamUpdateSchema, UserTeam } from '~/.server/team/user-team.ts';
@@ -8,7 +8,7 @@ import { Button } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { redirectWithToast } from '~/libs/toasts/toast.server.ts';
+import { toastHeaders } from '~/libs/toasts/toast.server.ts';
 import { TeamForm } from '~/routes/__components/teams/team-form.tsx';
 
 import { TeamMembers } from '~/.server/team/team-members.ts';
@@ -33,14 +33,16 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
       try {
         const team = await UserTeam.for(userId, params.team).updateSettings(result.value);
-        throw redirectWithToast(`/team/${team.slug}/settings`, 'success', 'Team settings saved.');
+        const headers = await toastHeaders('success', 'Team settings saved.');
+        throw redirect(`/team/${team.slug}/settings`, { headers });
       } catch (_error) {
         return { slug: ['This URL already exists, please try another one.'] };
       }
     }
     case 'leave-team': {
       await TeamMembers.for(userId, params.team).leave();
-      throw redirectWithToast('/speaker', 'success', "You've successfully left the team.");
+      const headers = await toastHeaders('success', "You've successfully left the team.");
+      throw redirect('/speaker', { headers });
     }
   }
   return null;

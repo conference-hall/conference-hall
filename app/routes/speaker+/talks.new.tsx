@@ -1,6 +1,6 @@
 import { parseWithZod } from '@conform-to/zod';
 import type { LoaderFunctionArgs } from 'react-router';
-import { useActionData } from 'react-router';
+import { redirect, useActionData } from 'react-router';
 
 import { TalksLibrary } from '~/.server/speaker-talks-library/talks-library.ts';
 import { TalkSaveSchema } from '~/.server/speaker-talks-library/talks-library.types.ts';
@@ -10,7 +10,7 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { H1 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
-import { redirectWithToast } from '~/libs/toasts/toast.server.ts';
+import { toastHeaders } from '~/libs/toasts/toast.server.ts';
 
 import { TalkForm } from '../__components/talks/talk-forms/talk-form.tsx';
 
@@ -24,7 +24,9 @@ export const action = async ({ request }: LoaderFunctionArgs) => {
   if (result.status !== 'success') return result.error;
 
   const talk = await TalksLibrary.of(userId).add(result.value);
-  throw redirectWithToast(`/speaker/talks/${talk.id}`, 'success', 'New talk created.');
+
+  const headers = await toastHeaders('success', 'New talk created.');
+  throw redirect(`/speaker/talks/${talk.id}`, { headers });
 };
 
 export default function NewTalkRoute() {

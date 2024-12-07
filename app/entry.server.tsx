@@ -63,7 +63,7 @@ export default function handleRequest(
 
 export function handleError(error: unknown, { request }: LoaderFunctionArgs | ActionFunctionArgs) {
   if (request.signal.aborted) return;
-  console.error(error);
+  console.error('Error', error);
   Sentry.captureException(error);
 }
 
