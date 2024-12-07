@@ -100,7 +100,7 @@
     "dotenv-cli": "^7.4.4",
     "jsdom": "^25.0.1",
     "lefthook": "^1.9.0",
-    "prisma": "^5.22.0",
+    "prisma": "^6.0.1",
     "remix-flat-routes": "^0.6.5",
     "tailwindcss": "^3.4.16",
     "tsx": "^4.19.2",
