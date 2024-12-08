@@ -1,6 +1,7 @@
 import { Outlet, useMatch, useRouteLoaderData } from 'react-router';
 import { UserTeam } from '~/.server/team/user-team.ts';
 import { requireSession } from '~/libs/auth/session.ts';
+import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { CurrentTeamProvider } from '../components/contexts/team-context.tsx';
 import { Navbar } from '../components/navbar/navbar.tsx';
 import { EventTabs } from './$team+/components/event-tabs.tsx';
@@ -9,7 +10,9 @@ import type { loader as routeEventLoader } from './$team.$event+/_layout';
 import { useScheduleFullscreen } from './$team.$event+/schedule+/components/header/use-schedule-fullscreen.tsx';
 import type { Route } from './+types/$team.ts';
 
-export const meta = ({ data }: Route.MetaArgs) => [{ title: `${data.name} | Conference Hall` }];
+export const meta = (args: Route.MetaArgs) => {
+  return mergeMeta(args.matches, [{ title: `${args.data.name} | Conference Hall` }]);
+};
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const userId = await requireSession(request);

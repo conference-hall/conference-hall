@@ -10,9 +10,12 @@ import { List } from '~/design-system/list/list.tsx';
 import { SearchParamSelector } from '~/design-system/navigation/search-param-selector.tsx';
 import { H1, Text } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
+import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import type { Route } from './+types/talks.index.ts';
 
-export const meta = () => [{ title: 'My talks library | Conference Hall' }];
+export const meta = (args: Route.MetaArgs) => {
+  return mergeMeta(args.matches, [{ title: 'My talks library | Conference Hall' }]);
+};
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const userId = await requireSession(request);

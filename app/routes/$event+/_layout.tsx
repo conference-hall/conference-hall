@@ -4,6 +4,7 @@ import { Avatar } from '~/design-system/avatar.tsx';
 import { BG_GRADIENT_COLOR } from '~/design-system/colors.ts';
 import { Container } from '~/design-system/layouts/container.tsx';
 import { H1, Text } from '~/design-system/typography.tsx';
+import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { eventSocialCard } from '~/libs/meta/social-cards.ts';
 import { Footer } from '~/routes/components/footer.tsx';
 import { Navbar } from '~/routes/components/navbar/navbar.tsx';
@@ -12,11 +13,14 @@ import { useUser } from '../components/contexts/user-context.tsx';
 import type { Route } from './+types/_layout.ts';
 import { EventTabs } from './components/event-tabs.tsx';
 
-export const meta = ({ data }: Route.MetaArgs) => [
-  { title: `${data.name} | Conference Hall` },
-  { name: 'description', content: `Submit your proposal to ${data.name} call for papers.` },
-  ...eventSocialCard({ name: data.name, slug: data.slug, logoUrl: data.logoUrl }),
-];
+export const meta = (args: Route.MetaArgs) => {
+  const { data, matches } = args;
+  return mergeMeta(matches, [
+    { title: `${data.name} | Conference Hall` },
+    { name: 'description', content: `Submit your proposal to ${data.name} call for papers.` },
+    ...eventSocialCard({ name: data.name, slug: data.slug, logoUrl: data.logoUrl }),
+  ]);
+};
 
 export const loader = async ({ params }: Route.LoaderArgs) => {
   const event = await EventPage.of(params.event).get();

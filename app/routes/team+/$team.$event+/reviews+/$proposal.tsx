@@ -16,6 +16,7 @@ import {
 import { parseUrlFilters } from '~/.server/shared/proposal-search-builder.types.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
+import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
 import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
@@ -30,7 +31,9 @@ import { TagsCard } from './components/proposal-page/tags-card.tsx';
 
 export type ProposalData = ProposalReviewData;
 
-export const meta = () => [{ title: 'Review proposal | Conference Hall' }];
+export const meta = (args: Route.MetaArgs) => {
+  return mergeMeta(args.matches, [{ title: 'Review proposal | Conference Hall' }]);
+};
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const userId = await requireSession(request);

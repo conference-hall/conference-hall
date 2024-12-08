@@ -3,12 +3,15 @@ import { SpeakerActivities } from '~/.server/speaker-activities/speaker-activiti
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H1 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
+import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { useSpeakerProfile } from '../components/contexts/speaker-profile-context.tsx';
 import type { Route } from './+types/index.ts';
 import { SpeakerActivitiesSection } from './components/speaker-activities-section.tsx';
 import { SpeakerDetailsSection } from './components/speaker-details-section.tsx';
 
-export const meta = () => [{ title: 'Activity | Conference Hall' }];
+export const meta = (args: Route.MetaArgs) => {
+  return mergeMeta(args.matches, [{ title: 'Activity | Conference Hall' }]);
+};
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const userId = await requireSession(request);

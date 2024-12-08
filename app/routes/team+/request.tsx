@@ -7,10 +7,13 @@ import { DividerWithLabel } from '~/design-system/divider.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
+import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { FullscreenPage } from '../components/fullscreen-page.tsx';
 import type { Route } from './+types/request.ts';
 
-export const meta = () => [{ title: 'Request access | Conference Hall' }];
+export const meta = (args: Route.MetaArgs) => {
+  return mergeMeta(args.matches, [{ title: 'Request access | Conference Hall' }]);
+};
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   await requireSession(request);

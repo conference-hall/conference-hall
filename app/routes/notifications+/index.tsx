@@ -5,11 +5,14 @@ import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
+import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { Footer } from '~/routes/components/footer.tsx';
 import { Navbar } from '~/routes/components/navbar/navbar.tsx';
 import type { Route } from './+types/index.ts';
 
-export const meta = () => [{ title: 'Notifications | Conference Hall' }];
+export const meta = (args: Route.MetaArgs) => {
+  return mergeMeta(args.matches, [{ title: 'Notifications | Conference Hall' }]);
+};
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const userId = await requireSession(request);

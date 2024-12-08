@@ -4,12 +4,15 @@ import { TalkSaveSchema } from '~/.server/speaker-talks-library/talks-library.ty
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H1 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
+import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { TalkSection } from '../components/talks/talk-section.tsx';
 import { TalkSubmissionsSection } from '../components/talks/talk-submissions-section.tsx';
 import type { Route } from './+types/talks.$talk.index.ts';
 
-export const meta = ({ data }: Route.MetaArgs) => [{ title: `${data?.title} | Conference Hall` }];
+export const meta = (args: Route.MetaArgs) => {
+  return mergeMeta(args.matches, [{ title: `${args.data.title} | Conference Hall` }]);
+};
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const userId = await requireSession(request);

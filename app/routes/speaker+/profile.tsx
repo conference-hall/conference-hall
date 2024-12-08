@@ -10,6 +10,7 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { NavSideMenu } from '~/design-system/navigation/nav-side-menu.tsx';
 import { H1 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
+import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { useSpeakerProfile } from '../components/contexts/speaker-profile-context.tsx';
 import type { Route } from './+types/profile.ts';
@@ -17,7 +18,9 @@ import { AdditionalInfoForm } from './components/additional-info-form.tsx';
 import { PersonalInfoForm } from './components/personal-info-form.tsx';
 import { SpeakerDetailsForm } from './components/speaker-details-form.tsx';
 
-export const meta = () => [{ title: 'My profile | Conference Hall' }];
+export const meta = (args: Route.MetaArgs) => {
+  return mergeMeta(args.matches, [{ title: 'My profile | Conference Hall' }]);
+};
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   await requireSession(request);

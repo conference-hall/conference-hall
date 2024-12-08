@@ -16,7 +16,9 @@ import { Footer } from '../components/footer.tsx';
 import { useHydrated } from '../components/utils/use-hydrated.ts';
 import type { Route } from './+types/login.ts';
 
-export const meta = mergeMeta(() => [{ title: 'Login | Conference Hall' }]);
+export const meta = (args: Route.MetaArgs) => {
+  return mergeMeta(args.matches, [{ title: 'Login | Conference Hall' }]);
+};
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const userId = await getSessionUserId(request);

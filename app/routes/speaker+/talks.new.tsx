@@ -7,11 +7,14 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H1 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
+import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toastHeaders } from '~/libs/toasts/toast.server.ts';
 import { TalkForm } from '../components/talks/talk-forms/talk-form.tsx';
 import type { Route } from './+types/talks.new.ts';
 
-export const meta = () => [{ title: 'New talk | Conference Hall' }];
+export const meta = (args: Route.MetaArgs) => {
+  return mergeMeta(args.matches, [{ title: 'New talk | Conference Hall' }]);
+};
 
 export const action = async ({ request }: Route.ActionArgs) => {
   const userId = await requireSession(request);

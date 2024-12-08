@@ -5,11 +5,14 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
+import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { FullscreenPage } from '../components/fullscreen-page.tsx';
 import { SpeakerPill } from '../components/talks/co-speaker.tsx';
 import type { Route } from './+types/talk.$code.ts';
 
-export const meta = () => [{ title: 'Talk invitation | Conference Hall' }];
+export const meta = (args: Route.MetaArgs) => {
+  return mergeMeta(args.matches, [{ title: 'Talk invitation | Conference Hall' }]);
+};
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   await requireSession(request);
