@@ -1,13 +1,12 @@
 import { PassThrough } from 'node:stream';
 import { getHeapSnapshot } from 'node:v8';
-import type { LoaderFunctionArgs } from 'react-router';
 import { needsAdminRole } from '~/.server/admin/authorization.ts';
 import { requireSession } from '~/libs/auth/session.ts';
+import type { Route } from './+types/debug.heap-snapshot.ts';
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+export const loader = async ({ request }: Route.LoaderArgs) => {
   const userId = await requireSession(request);
   await needsAdminRole(userId);
-
   const snapshotStream = getHeapSnapshot();
   const passThrough = new PassThrough();
 

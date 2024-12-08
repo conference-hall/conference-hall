@@ -1,41 +1,30 @@
 import { parseWithZod } from '@conform-to/zod';
 import { CheckIcon } from '@heroicons/react/20/solid';
 import { ClockIcon } from '@heroicons/react/24/outline';
-import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
-import { redirect, useActionData, useLoaderData } from 'react-router';
-import invariant from 'tiny-invariant';
-
+import { redirect } from 'react-router';
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
 import { CfpConferenceOpeningSchema } from '~/.server/event-settings/user-event.types.ts';
 import { Button, ButtonLink } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { EventCfpConferenceForm } from '~/routes/__components/events/event-cfp-conference-form.tsx';
-import { FullscreenPage } from '~/routes/__components/fullscreen-page.tsx';
+import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
+import { EventCfpConferenceForm } from '~/routes/components/events/event-cfp-conference-form.tsx';
+import { FullscreenPage } from '~/routes/components/fullscreen-page.tsx';
+import type { Route } from './+types/$event.cfp.ts';
+import { EventCreationStepper } from './components/event-creation-stepper.tsx';
 
-import { useCurrentTeam } from '~/routes/__components/contexts/team-context.tsx';
-import { EventCreationStepper } from '../__components/event-creation-stepper.tsx';
-
-export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const userId = await requireSession(request);
-  invariant(params.team, 'Invalid team slug');
-  invariant(params.event, 'Invalid event slug');
-
   const event = await UserEvent.for(userId, params.team, params.event).get();
-
   if (event.type === 'MEETUP') {
     throw redirect(`/team/${params.team}/${params.event}`);
   }
-
   return event;
 };
 
-export const action = async ({ request, params }: ActionFunctionArgs) => {
+export const action = async ({ request, params }: Route.ActionArgs) => {
   const userId = await requireSession(request);
-  invariant(params.team, 'Invalid team slug');
-  invariant(params.event, 'Invalid event slug');
   const event = UserEvent.for(userId, params.team, params.event);
-
   const form = await request.formData();
   const result = parseWithZod(form, { schema: CfpConferenceOpeningSchema });
   if (result.status !== 'success') return result.error;
@@ -44,10 +33,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   throw redirect(`/team/${params.team}/${params.event}`);
 };
 
-export default function NewEventDetailsRoute() {
+export default function NewEventDetailsRoute({ loaderData: event, actionData: errors }: Route.ComponentProps) {
   const currentTeam = useCurrentTeam();
-  const event = useLoaderData<typeof loader>();
-  const errors = useActionData<typeof action>();
 
   return (
     <>

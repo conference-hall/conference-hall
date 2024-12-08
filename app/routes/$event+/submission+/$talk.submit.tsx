@@ -1,8 +1,5 @@
 import { useState } from 'react';
-import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
-import { Form, redirect, useLoaderData } from 'react-router';
-import invariant from 'tiny-invariant';
-
+import { Form, redirect } from 'react-router';
 import { TalkSubmission } from '~/.server/cfp-submission-funnel/talk-submission.ts';
 import { Button, ButtonLink } from '~/design-system/buttons.tsx';
 import { Checkbox } from '~/design-system/forms/checkboxes.tsx';
@@ -11,34 +8,29 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { ExternalLink } from '~/design-system/links.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toastHeaders } from '~/libs/toasts/toast.server.ts';
-import { useCurrentEvent } from '~/routes/__components/contexts/event-page-context.tsx';
-import { TalkSection } from '~/routes/__components/talks/talk-section.tsx';
-import { useSubmissionNavigation } from './__components/submission-context.tsx';
+import { useCurrentEvent } from '~/routes/components/contexts/event-page-context.tsx';
+import { TalkSection } from '~/routes/components/talks/talk-section.tsx';
+import type { Route } from './+types/$talk.submit.ts';
+import { useSubmissionNavigation } from './components/submission-context.tsx';
 
 export const handle = { step: 'submission' };
 
-export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const userId = await requireSession(request);
-  invariant(params.event, 'Invalid event slug');
-  invariant(params.talk, 'Invalid talk id');
-
   return TalkSubmission.for(userId, params.event).get(params.talk);
 };
 
-export const action = async ({ request, params }: ActionFunctionArgs) => {
-  const speakerId = await requireSession(request);
-  invariant(params.event, 'Invalid event slug');
-  invariant(params.talk, 'Invalid talk id');
+export const action = async ({ request, params }: Route.ActionArgs) => {
+  const userId = await requireSession(request);
 
-  await TalkSubmission.for(speakerId, params.event).submit(params.talk);
+  await TalkSubmission.for(userId, params.event).submit(params.talk);
 
   const headers = await toastHeaders('success', 'Congratulation! Proposal submitted!');
   throw redirect(`/${params.event}/proposals`, { headers });
 };
 
-export default function SubmissionSubmitRoute() {
+export default function SubmissionSubmitRoute({ loaderData: proposal }: Route.ComponentProps) {
   const currentEvent = useCurrentEvent();
-  const proposal = useLoaderData<typeof loader>();
   const [acceptedCod, setAcceptCod] = useState(!currentEvent.codeOfConductUrl);
   const { previousPath } = useSubmissionNavigation();
 

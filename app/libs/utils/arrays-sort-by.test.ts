@@ -1,5 +1,3 @@
-import { describe, expect, it } from 'vitest';
-
 import { sortBy } from './arrays-sort-by.ts';
 
 describe('sortBy', () => {

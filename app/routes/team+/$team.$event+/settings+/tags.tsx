@@ -1,9 +1,7 @@
 import { parseWithZod } from '@conform-to/zod';
 import { MagnifyingGlassIcon, PlusIcon } from '@heroicons/react/20/solid';
 import { TagIcon } from '@heroicons/react/24/outline';
-import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
-import { Form, useLoaderData } from 'react-router';
-import invariant from 'tiny-invariant';
+import { Form } from 'react-router';
 import { EventProposalTags } from '~/.server/event-settings/event-proposal-tags.ts';
 import { TagDeleteSchema, TagSaveSchema, parseUrlFilters } from '~/.server/event-settings/event-proposal-tags.types.ts';
 import { parseUrlPage } from '~/.server/shared/pagination.ts';
@@ -11,38 +9,30 @@ import { Button } from '~/design-system/buttons.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
-
 import { List } from '~/design-system/list/list.tsx';
 import { Pagination } from '~/design-system/list/pagination.tsx';
 import { H2, Text } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-import { TagModal } from '~/routes/__components/tags/tag-modal.tsx';
-import { Tag } from '~/routes/__components/tags/tag.tsx';
+import { TagModal } from '~/routes/components/tags/tag-modal.tsx';
+import { Tag } from '~/routes/components/tags/tag.tsx';
+import type { Route } from './+types/tags.ts';
 
-export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const userId = await requireSession(request);
-  invariant(params.team, 'Invalid team slug');
-  invariant(params.event, 'Invalid event slug');
-
   const filters = parseUrlFilters(request.url);
   const page = parseUrlPage(request.url);
   const { count, tags, pagination } = await EventProposalTags.for(userId, params.team, params.event).list(
     filters,
     page,
   );
-
   return { count, tags, filters, pagination };
 };
 
-export const action = async ({ request, params }: ActionFunctionArgs) => {
+export const action = async ({ request, params }: Route.ActionArgs) => {
   const userId = await requireSession(request);
-  invariant(params.team, 'Invalid team slug');
-  invariant(params.event, 'Invalid event slug');
-
   const form = await request.formData();
   const intent = form.get('intent');
-
   const tags = EventProposalTags.for(userId, params.team, params.event);
 
   switch (intent) {
@@ -63,8 +53,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   return null;
 };
 
-export default function ProposalTagsRoute() {
-  const { count, tags, filters, pagination } = useLoaderData<typeof loader>();
+export default function ProposalTagsRoute({ loaderData }: Route.ComponentProps) {
+  const { count, tags, filters, pagination } = loaderData;
 
   return (
     <Card as="section">

@@ -1,37 +1,30 @@
-import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
-import { Form, redirect, useLoaderData } from 'react-router';
-import invariant from 'tiny-invariant';
-
+import { Form, redirect } from 'react-router';
 import { TeamMemberInvite } from '~/.server/team/team-member-invite.ts';
 import { Button } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H1, Subtitle } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
+import { FullscreenPage } from '../components/fullscreen-page.tsx';
+import type { Route } from './+types/team.$code.ts';
 
-import { FullscreenPage } from '../__components/fullscreen-page.tsx';
+export const meta = (args: Route.MetaArgs) => {
+  return mergeMeta(args.matches, [{ title: 'Team invitation | Conference Hall' }]);
+};
 
-export const meta = mergeMeta(() => [{ title: 'Team invitation | Conference Hall' }]);
-
-export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+export const loader = async ({ request, params }: Route.LoaderArgs) => {
   await requireSession(request);
-  invariant(params.code, 'Invalid code');
-
   const team = await TeamMemberInvite.with(params.code).check();
   return { name: team.name };
 };
 
-export const action = async ({ request, params }: ActionFunctionArgs) => {
+export const action = async ({ request, params }: Route.ActionArgs) => {
   const userId = await requireSession(request);
-  invariant(params.code, 'Invalid code');
-
   const team = await TeamMemberInvite.with(params.code).addMember(userId);
-  return redirect(`/team/${team.slug}`);
+  throw redirect(`/team/${team.slug}`);
 };
 
-export default function InvitationRoute() {
-  const team = useLoaderData<typeof loader>();
-
+export default function InvitationRoute({ loaderData: team }: Route.ComponentProps) {
   return (
     <FullscreenPage navbar="default" className="text-center">
       <Card className="p-8 md:p-16 space-y-16">

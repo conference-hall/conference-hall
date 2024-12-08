@@ -1,9 +1,6 @@
 import { parseWithZod } from '@conform-to/zod';
-import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
 import { redirect } from 'react-router';
-import { Form, useActionData, useLoaderData } from 'react-router';
-import invariant from 'tiny-invariant';
-
+import { Form } from 'react-router';
 import { EventSchedule } from '~/.server/event-schedule/event-schedule.ts';
 import { ScheduleCreateSchema } from '~/.server/event-schedule/event-schedule.types.ts';
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
@@ -15,20 +12,14 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
+import type { Route } from './+types/index.ts';
 
-export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const userId = await requireSession(request);
-  invariant(params.team, 'Invalid team slug');
-  invariant(params.event, 'Invalid event slug');
-
   const schedule = await EventSchedule.for(userId, params.team, params.event).get();
-
-  if (schedule) {
-    throw redirect(`/team/${params.team}/${params.event}/schedule/0`);
-  }
+  if (schedule) throw redirect(`/team/${params.team}/${params.event}/schedule/0`);
 
   const event = await UserEvent.for(userId, params.team, params.event).get();
-
   return {
     name: `${event.name} schedule`,
     start: event.conferenceStart,
@@ -37,25 +28,18 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   };
 };
 
-export const action = async ({ request, params }: ActionFunctionArgs) => {
+export const action = async ({ request, params }: Route.ActionArgs) => {
   const userId = await requireSession(request);
-  invariant(params.team, 'Invalid team slug');
-  invariant(params.event, 'Invalid event slug');
   const schedule = EventSchedule.for(userId, params.team, params.event);
-
   const form = await request.formData();
   const result = parseWithZod(form, { schema: ScheduleCreateSchema });
   if (result.status !== 'success') return result.error;
 
   await schedule.create(result.value);
-
   throw redirect(`/team/${params.team}/${params.event}/schedule`);
 };
 
-export default function ScheduleRoute() {
-  const schedule = useLoaderData<typeof loader>();
-  const errors = useActionData<typeof action>();
-
+export default function ScheduleRoute({ loaderData: schedule, actionData: errors }: Route.ComponentProps) {
   return (
     <Page>
       <Card as="section">

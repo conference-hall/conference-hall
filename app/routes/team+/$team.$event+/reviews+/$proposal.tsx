@@ -1,8 +1,6 @@
 import { parseWithZod } from '@conform-to/zod';
-import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
-import { Await, useActionData, useLoaderData } from 'react-router';
-import invariant from 'tiny-invariant';
-
+import { Suspense } from 'react';
+import { Await } from 'react-router';
 import { Publication } from '~/.server/publications/publication.ts';
 import { ActivityFeed } from '~/.server/reviews/activity-feed.ts';
 import { Comments } from '~/.server/reviews/comments.ts';
@@ -20,28 +18,25 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-import { TalkSection } from '~/routes/__components/talks/talk-section.tsx';
-
-import { Suspense } from 'react';
-import { useCurrentEvent } from '~/routes/__components/contexts/event-team-context.tsx';
-import { useCurrentTeam } from '~/routes/__components/contexts/team-context.tsx';
-import { OtherProposalsDisclosure } from './__components/proposal-page/other-proposals-disclosure.tsx';
-import { LoadingActivities } from './__components/proposal-page/proposal-activity/loading-activities.tsx';
-import { ProposalActivityFeed as Feed } from './__components/proposal-page/proposal-activity/proposal-activity-feed.tsx';
-import { ReviewHeader } from './__components/proposal-page/review-header.tsx';
-import { ReviewSidebar } from './__components/proposal-page/review-sidebar.tsx';
-import { TagsCard } from './__components/proposal-page/tags-card.tsx';
+import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
+import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
+import { TalkSection } from '~/routes/components/talks/talk-section.tsx';
+import type { Route } from './+types/$proposal.ts';
+import { OtherProposalsDisclosure } from './components/proposal-page/other-proposals-disclosure.tsx';
+import { LoadingActivities } from './components/proposal-page/proposal-activity/loading-activities.tsx';
+import { ProposalActivityFeed as Feed } from './components/proposal-page/proposal-activity/proposal-activity-feed.tsx';
+import { ReviewHeader } from './components/proposal-page/review-header.tsx';
+import { ReviewSidebar } from './components/proposal-page/review-sidebar.tsx';
+import { TagsCard } from './components/proposal-page/tags-card.tsx';
 
 export type ProposalData = ProposalReviewData;
 
-export const meta = mergeMeta(() => [{ title: 'Review proposal | Conference Hall' }]);
+export const meta = (args: Route.MetaArgs) => {
+  return mergeMeta(args.matches, [{ title: 'Review proposal | Conference Hall' }]);
+};
 
-export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const userId = await requireSession(request);
-  invariant(params.event, 'Invalid event slug');
-  invariant(params.team, 'Invalid team slug');
-  invariant(params.proposal, 'Invalid proposal id');
-
   const filters = parseUrlFilters(request.url);
   const proposalReview = ProposalReview.for(userId, params.team, params.event, params.proposal);
   const activityFeed = ActivityFeed.for(userId, params.team, params.event, params.proposal);
@@ -54,12 +49,8 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   return { proposal, pagination, activityPromise, otherProposalsPromise };
 };
 
-export const action = async ({ request, params }: ActionFunctionArgs) => {
+export const action = async ({ request, params }: Route.ActionArgs) => {
   const userId = await requireSession(request);
-  invariant(params.event, 'Invalid event slug');
-  invariant(params.team, 'Invalid team slug');
-  invariant(params.proposal, 'Invalid proposal id');
-
   const form = await request.formData();
   const intent = form.get('intent') as string;
 
@@ -122,15 +113,11 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   return null;
 };
 
-export default function ProposalReviewLayoutRoute() {
+export default function ProposalReviewLayoutRoute({ loaderData, actionData: errors }: Route.ComponentProps) {
   const currentTeam = useCurrentTeam();
-  const { canEditEvent, canEditEventProposals, canDeliberateEventProposals } = currentTeam.userPermissions;
-
   const currentEvent = useCurrentEvent();
-
-  const { proposal, pagination, activityPromise, otherProposalsPromise } = useLoaderData<typeof loader>();
-  const errors = useActionData<typeof action>();
-
+  const { canEditEvent, canEditEventProposals, canDeliberateEventProposals } = currentTeam.userPermissions;
+  const { proposal, pagination, activityPromise, otherProposalsPromise } = loaderData;
   const hasFormats = proposal.formats && proposal.formats.length > 0;
   const hasCategories = proposal.categories && proposal.categories.length > 0;
 

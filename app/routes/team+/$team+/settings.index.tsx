@@ -1,28 +1,23 @@
 import { parseWithZod } from '@conform-to/zod';
-import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
-import { Form, redirect, useActionData } from 'react-router';
-import invariant from 'tiny-invariant';
-
+import { Form, redirect } from 'react-router';
+import { TeamMembers } from '~/.server/team/team-members.ts';
 import { TeamUpdateSchema, UserTeam } from '~/.server/team/user-team.ts';
 import { Button } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toastHeaders } from '~/libs/toasts/toast.server.ts';
-import { TeamForm } from '~/routes/__components/teams/team-form.tsx';
+import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
+import { TeamForm } from '~/routes/components/teams/team-form.tsx';
+import type { Route } from './+types/settings.index.ts';
 
-import { TeamMembers } from '~/.server/team/team-members.ts';
-import { useCurrentTeam } from '~/routes/__components/contexts/team-context.tsx';
-
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+export const loader = async ({ request }: Route.LoaderArgs) => {
   await requireSession(request);
   return null;
 };
 
-export const action = async ({ request, params }: ActionFunctionArgs) => {
+export const action = async ({ request, params }: Route.ActionArgs) => {
   const userId = await requireSession(request);
-  invariant(params.team, 'Invalid team slug');
-
   const form = await request.formData();
   const intent = form.get('intent') as string;
 
@@ -49,8 +44,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   return null;
 };
 
-export default function TeamSettingsRoute() {
-  const errors = useActionData<typeof action>();
+export default function TeamSettingsRoute({ actionData: errors }: Route.ComponentProps) {
   const currentTeam = useCurrentTeam();
   const { canEditTeam, canLeaveTeam } = currentTeam.userPermissions;
 

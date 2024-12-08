@@ -1,9 +1,6 @@
 import { parseWithZod } from '@conform-to/zod';
 import { ArchiveBoxArrowDownIcon, ArchiveBoxXMarkIcon } from '@heroicons/react/24/outline';
-import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
-import { Form, redirect, useActionData } from 'react-router';
-import invariant from 'tiny-invariant';
-
+import { Form, redirect } from 'react-router';
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
 import { EventDetailsSettingsSchema, EventGeneralSettingsSchema } from '~/.server/event-settings/user-event.types.ts';
 import { Button } from '~/design-system/buttons.tsx';
@@ -12,21 +9,19 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast, toastHeaders } from '~/libs/toasts/toast.server.ts';
-import { useCurrentEvent } from '~/routes/__components/contexts/event-team-context';
-import { EventDetailsForm } from '~/routes/__components/events/event-details-form.tsx';
-import { EventForm } from '~/routes/__components/events/event-form.tsx';
+import { useCurrentEvent } from '~/routes/components/contexts/event-team-context';
+import { EventDetailsForm } from '~/routes/components/events/event-details-form.tsx';
+import { EventForm } from '~/routes/components/events/event-form.tsx';
+import type { Route } from './+types/index.ts';
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+export const loader = async ({ request }: Route.LoaderArgs) => {
   await requireSession(request);
   return null;
 };
 
-export const action = async ({ request, params }: ActionFunctionArgs) => {
+export const action = async ({ request, params }: Route.ActionArgs) => {
   const userId = await requireSession(request);
-  invariant(params.team, 'Invalid team slug');
-  invariant(params.event, 'Invalid event slug');
   const event = UserEvent.for(userId, params.team, params.event);
-
   const form = await request.formData();
   const intent = form.get('intent');
 
@@ -58,9 +53,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   return null;
 };
 
-export default function EventGeneralSettingsRoute() {
+export default function EventGeneralSettingsRoute({ actionData: errors }: Route.ComponentProps) {
   const currentEvent = useCurrentEvent();
-  const errors = useActionData<typeof action>();
 
   return (
     <>

@@ -1,5 +1,3 @@
-import { describe, expect, it } from 'vitest';
-
 import { getObjectHash } from './object-hash.ts';
 
 describe('getObjectHash', () => {

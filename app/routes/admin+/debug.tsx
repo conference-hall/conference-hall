@@ -1,8 +1,6 @@
 import { parseWithZod } from '@conform-to/zod';
-import type { ActionFunctionArgs } from 'react-router';
-import { Form, useActionData } from 'react-router';
+import { Form } from 'react-router';
 import { AdminDebug, TestEmailSchema } from '~/.server/admin/admin-debug.ts';
-
 import { Button } from '~/design-system/buttons.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
@@ -10,13 +8,14 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { H1, H2 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
+import type { Route } from './+types/debug.ts';
 
-export const action = async ({ request }: ActionFunctionArgs) => {
+export const action = async ({ request }: Route.ActionArgs) => {
   const userId = await requireSession(request);
-  const form = await request.formData();
   const debug = await AdminDebug.for(userId);
-
+  const form = await request.formData();
   const intent = form.get('intent') as string;
+
   switch (intent) {
     case 'simulate-server-error': {
       debug.simulateServerError();
@@ -36,9 +35,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   return null;
 };
 
-export default function AdminDebugPage() {
-  const errors = useActionData<typeof action>();
-
+export default function AdminDebugPage({ actionData: errors }: Route.ComponentProps) {
   return (
     <Page className="space-y-6">
       <H1 srOnly>Debug page</H1>

@@ -1,8 +1,4 @@
 import { parseWithZod } from '@conform-to/zod';
-import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
-import { useActionData, useLoaderData } from 'react-router';
-import invariant from 'tiny-invariant';
-
 import { TalksLibrary } from '~/.server/speaker-talks-library/talks-library.ts';
 import { TalkSaveSchema } from '~/.server/speaker-talks-library/talks-library.types.ts';
 import { Page } from '~/design-system/layouts/page.tsx';
@@ -10,27 +6,22 @@ import { H1 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
+import { TalkSection } from '../components/talks/talk-section.tsx';
+import { TalkSubmissionsSection } from '../components/talks/talk-submissions-section.tsx';
+import type { Route } from './+types/talks.$talk.index.ts';
 
-import { TalkSection } from '../__components/talks/talk-section.tsx';
-import { TalkSubmissionsSection } from '../__components/talks/talk-submissions-section.tsx';
+export const meta = (args: Route.MetaArgs) => {
+  return mergeMeta(args.matches, [{ title: `${args.data.title} | Conference Hall` }]);
+};
 
-export const meta = mergeMeta<typeof loader>(({ data }) =>
-  data ? [{ title: `${data?.title} | Conference Hall` }] : [],
-);
-
-export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const userId = await requireSession(request);
-  invariant(params.talk, 'Invalid talk id');
-
   return TalksLibrary.of(userId).talk(params.talk).get();
 };
 
-export const action = async ({ request, params }: ActionFunctionArgs) => {
+export const action = async ({ request, params }: Route.ActionArgs) => {
   const userId = await requireSession(request);
-  invariant(params.talk, 'Invalid talk id');
-
   const talk = TalksLibrary.of(userId).talk(params.talk);
-
   const form = await request.formData();
   const intent = form.get('intent');
 
@@ -58,10 +49,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   }
 };
 
-export default function SpeakerTalkRoute() {
-  const talk = useLoaderData<typeof loader>();
-  const errors = useActionData<typeof action>();
-
+export default function SpeakerTalkRoute({ loaderData: talk, actionData: errors }: Route.ComponentProps) {
   return (
     <Page>
       <H1 srOnly>Talk page</H1>

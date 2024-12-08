@@ -1,5 +1,4 @@
 import nodemailer from 'nodemailer';
-
 import { isValidEmail } from '../utils/email.ts';
 import type { Email, EmailProvider } from './provider.ts';
 

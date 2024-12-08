@@ -1,22 +1,15 @@
-import type { LoaderFunctionArgs } from 'react-router';
-import { Outlet, useLoaderData } from 'react-router';
-import invariant from 'tiny-invariant';
-
+import { Outlet } from 'react-router';
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
 import { requireSession } from '~/libs/auth/session.ts';
-import { CurrentEventTeamProvider } from '~/routes/__components/contexts/event-team-context';
+import { CurrentEventTeamProvider } from '~/routes/components/contexts/event-team-context';
+import type { Route } from './+types/_layout.ts';
 
-export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const userId = await requireSession(request);
-  invariant(params.team, 'Invalid team slug');
-  invariant(params.event, 'Invalid event slug');
-
   return UserEvent.for(userId, params.team, params.event).get();
 };
 
-export default function EventLayoutRoute() {
-  const event = useLoaderData<typeof loader>();
-
+export default function EventLayoutRoute({ loaderData: event }: Route.ComponentProps) {
   return (
     <CurrentEventTeamProvider event={event}>
       <Outlet />

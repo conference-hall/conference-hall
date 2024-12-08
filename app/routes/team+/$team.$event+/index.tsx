@@ -1,8 +1,4 @@
 import { useState } from 'react';
-import type { LoaderFunctionArgs } from 'react-router';
-import { useLoaderData } from 'react-router';
-import invariant from 'tiny-invariant';
-
 import { EventMetrics } from '~/.server/event-metrics/event-metrics.tsx';
 import { BarListCard } from '~/design-system/dashboard/bar-list-card.tsx';
 import { ProgressCard } from '~/design-system/dashboard/progress-card.tsx';
@@ -11,33 +7,26 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
+import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
+import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
+import { SponsorLink } from '~/routes/components/sponsor-link.tsx';
+import type { Route } from './+types/index.ts';
+import { CfpStatusCard } from './components/overview-page/cfp-status-card.tsx';
+import { ChartSelector } from './components/overview-page/charts-selector.tsx';
+import type { ChartType } from './components/overview-page/proposals-by-days-chart.tsx';
+import { ProposalsByDayChart } from './components/overview-page/proposals-by-days-chart.tsx';
+import { ReviewStatusCard } from './components/overview-page/review-status-card.tsx';
+import { VisibilityStatusCard } from './components/overview-page/visibility-status-card.tsx';
 
-import { useCurrentEvent } from '~/routes/__components/contexts/event-team-context.tsx';
-import { useCurrentTeam } from '~/routes/__components/contexts/team-context.tsx';
-import { SponsorLink } from '~/routes/__components/sponsor-link.tsx';
-import { CfpStatusCard } from './__components/overview-page/cfp-status-card.tsx';
-import { ChartSelector } from './__components/overview-page/charts-selector.tsx';
-import type { ChartType } from './__components/overview-page/proposals-by-days-chart.tsx';
-import { ProposalsByDayChart } from './__components/overview-page/proposals-by-days-chart.tsx';
-import { ReviewStatusCard } from './__components/overview-page/review-status-card.tsx';
-import { VisibilityStatusCard } from './__components/overview-page/visibility-status-card.tsx';
-
-export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const userId = await requireSession(request);
-  invariant(params.team, 'Invalid team slug');
-  invariant(params.event, 'Invalid event slug');
-
   return EventMetrics.for(userId, params.team, params.event).globalMetrics();
 };
 
-export default function OverviewRoute() {
-  const metrics = useLoaderData<typeof loader>();
-
+export default function OverviewRoute({ loaderData: metrics }: Route.ComponentProps) {
   const currentTeam = useCurrentTeam();
-  const { canEditEvent } = currentTeam.userPermissions;
-
   const currentEvent = useCurrentEvent();
-
+  const { canEditEvent } = currentTeam.userPermissions;
   const [chartSelected, setChartSelected] = useState<ChartType>('cumulative');
 
   return (

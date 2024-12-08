@@ -1,10 +1,7 @@
 import { parseWithZod } from '@conform-to/zod';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
-import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
-import { Form, redirect, useActionData, useLoaderData } from 'react-router';
-import invariant from 'tiny-invariant';
+import { Form, redirect } from 'react-router';
 import { TalkSubmission } from '~/.server/cfp-submission-funnel/talk-submission.ts';
-import { getTracksSchema } from '~/.server/cfp-submission-funnel/talk-submission.types.ts';
 import { EventPage } from '~/.server/event-page/event-page.ts';
 import { Button, ButtonLink } from '~/design-system/buttons.tsx';
 import { Callout } from '~/design-system/callout.tsx';
@@ -12,45 +9,35 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { CategoriesForm } from '~/routes/__components/talks/talk-forms/categories-form.tsx';
-import { FormatsForm } from '~/routes/__components/talks/talk-forms/formats-form.tsx';
-
-import { useCurrentEvent } from '~/routes/__components/contexts/event-page-context.tsx';
-import { useSubmissionNavigation } from './__components/submission-context.tsx';
+import { useCurrentEvent } from '~/routes/components/contexts/event-page-context.tsx';
+import { CategoriesForm } from '~/routes/components/talks/talk-forms/categories-form.tsx';
+import { FormatsForm } from '~/routes/components/talks/talk-forms/formats-form.tsx';
+import type { Route } from './+types/$talk.tracks.ts';
+import { useSubmissionNavigation } from './components/submission-context.tsx';
 
 export const handle = { step: 'tracks' };
 
-export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const userId = await requireSession(request);
-  invariant(params.event, 'Invalid event slug');
-  invariant(params.talk, 'Invalid talk id');
-
   const proposal = await TalkSubmission.for(userId, params.event).get(params.talk);
   return { formats: proposal.formats.map(({ id }) => id), categories: proposal.categories.map(({ id }) => id) };
 };
 
-export const action = async ({ request, params }: ActionFunctionArgs) => {
+export const action = async ({ request, params }: Route.ActionArgs) => {
   const userId = await requireSession(request);
   const form = await request.formData();
-  invariant(params.event, 'Invalid event slug');
-  invariant(params.talk, 'Invalid talk id');
-
-  const { formatsRequired, categoriesRequired } = await EventPage.of(params.event).get();
-
-  const result = parseWithZod(form, { schema: getTracksSchema(formatsRequired, categoriesRequired) });
+  const schema = await EventPage.of(params.event).buildTracksSchema();
+  const result = parseWithZod(form, { schema });
   if (result.status !== 'success') return result.error;
 
   const submission = TalkSubmission.for(userId, params.event);
   await submission.saveTracks(params.talk, result.value);
 
-  const redirectTo = String(form.get('redirectTo'));
-  throw redirect(redirectTo);
+  throw redirect(String(form.get('redirectTo')));
 };
 
-export default function SubmissionTracksRoute() {
+export default function SubmissionTracksRoute({ loaderData: proposal, actionData: errors }: Route.ComponentProps) {
   const currentEvent = useCurrentEvent();
-  const proposal = useLoaderData<typeof loader>();
-  const errors = useActionData<typeof action>();
   const { previousPath, nextPath } = useSubmissionNavigation();
 
   return (

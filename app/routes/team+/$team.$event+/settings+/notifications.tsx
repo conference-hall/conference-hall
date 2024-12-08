@@ -1,8 +1,5 @@
 import { parseWithZod } from '@conform-to/zod';
-import type { LoaderFunctionArgs } from 'react-router';
-import { Form, useActionData, useFetcher } from 'react-router';
-import invariant from 'tiny-invariant';
-
+import { Form, useFetcher } from 'react-router';
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
 import {
   EventEmailNotificationsSettingsSchema,
@@ -15,19 +12,17 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-import { useCurrentEvent } from '~/routes/__components/contexts/event-team-context';
+import { useCurrentEvent } from '~/routes/components/contexts/event-team-context';
+import type { Route } from './+types/notifications.ts';
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+export const loader = async ({ request }: Route.LoaderArgs) => {
   await requireSession(request);
   return null;
 };
 
-export const action = async ({ request, params }: LoaderFunctionArgs) => {
+export const action = async ({ request, params }: Route.ActionArgs) => {
   const userId = await requireSession(request);
-  invariant(params.team, 'Invalid team slug');
-  invariant(params.event, 'Invalid event slug');
   const event = UserEvent.for(userId, params.team, params.event);
-
   const form = await request.formData();
   const intent = form.get('intent');
 
@@ -48,9 +43,8 @@ export const action = async ({ request, params }: LoaderFunctionArgs) => {
   return null;
 };
 
-export default function EventNotificationsSettingsRoute() {
+export default function EventNotificationsSettingsRoute({ actionData: errors }: Route.ComponentProps) {
   const { emailNotifications, emailOrganizer } = useCurrentEvent();
-  const errors = useActionData<typeof action>();
   const fetcher = useFetcher<typeof action>();
 
   const handleChangeNotification = (name: string, checked: boolean) => {

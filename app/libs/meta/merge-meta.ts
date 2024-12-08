@@ -1,42 +1,26 @@
-import type { MetaDescriptor, MetaFunction } from 'react-router';
+import type { MetaDescriptors } from 'react-router/route-module';
 
-// source: https://gist.github.com/ryanflorence/ec1849c6d690cfbffcb408ecd633e069
-export function mergeMeta<T>(overrideFn: MetaFunction<T>, appendFn?: MetaFunction<T>): MetaFunction<T> {
-  return (arg) => {
-    // get meta from parent routes
-    let mergedMeta = arg.matches.reduce((acc, match: any) => {
-      overrideMeta(acc, match.meta || []);
-      return acc;
-    }, [] as MetaDescriptor[]);
+type MetaMatches = Array<{ meta: MetaDescriptors } | undefined>;
 
-    // replace any parent meta with the same name or property with the override
-    const overrides = overrideFn(arg);
-    if (overrides) overrideMeta(mergedMeta, overrides);
-
-    // append any additional meta
-    if (appendFn) {
-      const additionalMeta = appendFn(arg);
-      if (additionalMeta) mergedMeta = mergedMeta.concat(additionalMeta);
-    }
-
-    return mergedMeta;
-  };
+export function mergeMeta(matches: MetaMatches, routeMeta: MetaDescriptors) {
+  const parentMeta = matches?.flatMap((match) => match?.meta ?? []);
+  return overrideMeta(parentMeta, routeMeta);
 }
 
-function overrideMeta(origin: MetaDescriptor[], overrides: MetaDescriptor[]) {
+function overrideMeta(origin: MetaDescriptors, overrides: MetaDescriptors) {
+  const overriddenMeta = [...origin];
   for (const override of overrides) {
-    const index = origin.findIndex(
+    const index = overriddenMeta.findIndex(
       (meta) =>
         ('name' in meta && 'name' in override && meta.name === override.name) ||
         ('property' in meta && 'property' in override && meta.property === override.property) ||
-        ('title' in meta && 'title' in override) ||
-        ('charset' in meta && 'charset' in override) ||
-        ('viewport' in meta && 'viewport' in override),
+        ('title' in meta && 'title' in override),
     );
     if (index !== -1) {
-      origin.splice(index, 1, override);
+      overriddenMeta.splice(index, 1, override);
     } else {
-      origin.push(override);
+      overriddenMeta.push(override);
     }
   }
+  return overriddenMeta;
 }

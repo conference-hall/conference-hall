@@ -60,6 +60,43 @@ describe('EventPage', () => {
     });
   });
 
+  describe('#buildTracksSchema', () => {
+    it('validates tracks form inputs', async () => {
+      const event = await eventFactory();
+      const format = await eventFormatFactory({ event });
+      const category = await eventCategoryFactory({ event });
+
+      const schema = await EventPage.of(event.slug).buildTracksSchema();
+      const result = schema.safeParse({ formats: [format.name], categories: [category.name] });
+
+      expect(result.success && result.data).toEqual({ formats: [format.name], categories: [category.name] });
+    });
+
+    it('validates tracks when no tracks', async () => {
+      const event = await eventFactory();
+      await eventFormatFactory({ event });
+      await eventCategoryFactory({ event });
+
+      const schema = await EventPage.of(event.slug).buildTracksSchema();
+      const result = schema.safeParse({ formats: [], categories: [] });
+
+      expect(result.success && result.data).toEqual({ formats: [], categories: [] });
+    });
+
+    it('returns errors when no tracks and tracks are mandatory', async () => {
+      const event = await eventFactory({ attributes: { formatsRequired: true, categoriesRequired: true } });
+      await eventFormatFactory({ event });
+      await eventCategoryFactory({ event });
+
+      const schema = await EventPage.of(event.slug).buildTracksSchema();
+      const result = schema.safeParse({ formats: [], categories: [] });
+
+      const errors = result.error?.flatten();
+      expect(errors?.fieldErrors.formats).toEqual(['Array must contain at least 1 element(s)']);
+      expect(errors?.fieldErrors.categories).toEqual(['Array must contain at least 1 element(s)']);
+    });
+  });
+
   describe('#getByLegacyId', () => {
     it('returns the event corresponding to the legacy Conference Hall id', async () => {
       const event = await eventFactory({ attributes: { migrationId: 'legacy-event-id' } });

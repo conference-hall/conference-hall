@@ -1,31 +1,26 @@
-import type { LoaderFunctionArgs } from 'react-router';
-import { Outlet, useLoaderData, useMatch, useRouteLoaderData } from 'react-router';
-import invariant from 'tiny-invariant';
-
+import { Outlet, useMatch, useRouteLoaderData } from 'react-router';
 import { UserTeam } from '~/.server/team/user-team.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
-
-import { CurrentTeamProvider } from '../__components/contexts/team-context.tsx';
-import { Navbar } from '../__components/navbar/navbar.tsx';
-import { EventTabs } from './$team+/__components/event-tabs.tsx';
-import { TeamTabs } from './$team+/__components/team-tabs.tsx';
+import { CurrentTeamProvider } from '../components/contexts/team-context.tsx';
+import { Navbar } from '../components/navbar/navbar.tsx';
+import { EventTabs } from './$team+/components/event-tabs.tsx';
+import { TeamTabs } from './$team+/components/team-tabs.tsx';
 import type { loader as routeEventLoader } from './$team.$event+/_layout';
-import { useScheduleFullscreen } from './$team.$event+/schedule+/__components/header/use-schedule-fullscreen.tsx';
+import { useScheduleFullscreen } from './$team.$event+/schedule+/components/header/use-schedule-fullscreen.tsx';
+import type { Route } from './+types/$team.ts';
 
-export const meta = mergeMeta<typeof loader>(({ data }) => (data ? [{ title: `${data.name} | Conference Hall` }] : []));
+export const meta = (args: Route.MetaArgs) => {
+  return mergeMeta(args.matches, [{ title: `${args.data.name} | Conference Hall` }]);
+};
 
-export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const userId = await requireSession(request);
-  invariant(params.team, 'Invalid team slug');
-
   return UserTeam.for(userId, params.team).get();
 };
 
-export default function TeamLayout() {
-  const team = useLoaderData<typeof loader>();
+export default function TeamLayout({ loaderData: team }: Route.ComponentProps) {
   const event = useRouteLoaderData<typeof routeEventLoader>('team-current-event');
-
   const { isFullscreen } = useScheduleFullscreen();
   const isEventCreationRoute = Boolean(useMatch('/team/:team/new/*'));
 

@@ -1,28 +1,20 @@
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import { InboxIcon } from '@heroicons/react/24/outline';
-import type { LoaderFunctionArgs } from 'react-router';
-import { useLoaderData } from 'react-router';
-import invariant from 'tiny-invariant';
-
 import { Submissions } from '~/.server/cfp-submissions/submissions.ts';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { Text } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
+import { ProposalStatusLabel } from '../components/proposals/proposal-status-label.tsx';
+import type { Route } from './+types/proposals.index.ts';
 
-import { ProposalStatusLabel } from '../__components/proposals/proposal-status-label.tsx';
-
-export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const userId = await requireSession(request);
-  invariant(params.event, 'Invalid event slug');
-
   return Submissions.for(userId, params.event).list();
 };
 
-export default function EventSpeakerProposalsRoute() {
-  const proposals = useLoaderData<typeof loader>();
-
+export default function EventSpeakerProposalsRoute({ loaderData: proposals }: Route.ComponentProps) {
   return (
     <Page>
       <h1 className="sr-only">Your proposals</h1>

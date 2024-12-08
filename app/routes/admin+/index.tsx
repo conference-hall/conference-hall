@@ -1,18 +1,16 @@
 import { Suspense } from 'react';
-import type { LoaderFunctionArgs } from 'react-router';
-import { Await, useLoaderData } from 'react-router';
+import { Await } from 'react-router';
 import { AdminDashboard } from '~/.server/admin/admin-dashboard.ts';
 import { KpiProgressBar } from '~/design-system/dashboard/kpi-progress-bar.tsx';
 import { StatisticCard } from '~/design-system/dashboard/statistic-card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H1 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
+import type { Route } from './+types/index.ts';
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+export const loader = async ({ request }: Route.LoaderArgs) => {
   const userId = await requireSession(request);
-
   const dashboard = await AdminDashboard.for(userId);
-
   return {
     users: dashboard.usersMetrics(),
     conferences: dashboard.eventsMetrics('CONFERENCE'),
@@ -22,8 +20,9 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   };
 };
 
-export default function AdminDashboardRoute() {
-  const { users, conferences, meetups, teams, proposals } = useLoaderData<typeof loader>();
+export default function AdminDashboardRoute({ loaderData }: Route.ComponentProps) {
+  const { users, conferences, meetups, teams, proposals } = loaderData;
+
   return (
     <Page>
       <H1 srOnly>Dashboard</H1>

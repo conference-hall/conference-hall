@@ -1,7 +1,4 @@
 import { BellSlashIcon } from '@heroicons/react/24/outline';
-import type { LoaderFunctionArgs } from 'react-router';
-import { useLoaderData } from 'react-router';
-
 import { Notifications } from '~/.server/user-notifications/notifications.ts';
 import { CardLink } from '~/design-system/layouts/card.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
@@ -9,18 +6,20 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
-import { Footer } from '~/routes/__components/footer.tsx';
-import { Navbar } from '~/routes/__components/navbar/navbar.tsx';
+import { Footer } from '~/routes/components/footer.tsx';
+import { Navbar } from '~/routes/components/navbar/navbar.tsx';
+import type { Route } from './+types/index.ts';
 
-export const meta = mergeMeta(() => [{ title: 'Notifications | Conference Hall' }]);
+export const meta = (args: Route.MetaArgs) => {
+  return mergeMeta(args.matches, [{ title: 'Notifications | Conference Hall' }]);
+};
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+export const loader = async ({ request }: Route.LoaderArgs) => {
   const userId = await requireSession(request);
   return Notifications.for(userId).list();
 };
 
-export default function OrganizerRoute() {
-  const notifications = useLoaderData<typeof loader>();
+export default function OrganizerRoute({ loaderData: notifications }: Route.ComponentProps) {
   const hasNotifications = Boolean(notifications && notifications.length > 0);
 
   return (

@@ -1,15 +1,7 @@
-import {
-  GithubAuthProvider,
-  GoogleAuthProvider,
-  TwitterAuthProvider,
-  getRedirectResult,
-  signInWithRedirect,
-} from 'firebase/auth';
+import * as Firebase from 'firebase/auth';
 import { useCallback, useEffect, useState } from 'react';
-import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
 import { redirect } from 'react-router';
 import { useFetcher, useSearchParams } from 'react-router';
-
 import { Callout } from '~/design-system/callout.tsx';
 import { LoadingIcon } from '~/design-system/icons/loading-icon.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
@@ -19,20 +11,22 @@ import { ConferenceHallLogo } from '~/design-system/logo.tsx';
 import { getClientAuth } from '~/libs/auth/firebase.ts';
 import { createSession, getSessionUserId } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
-import { AuthProviderButton } from '~/routes/__components/auth-provider-button.tsx';
+import { AuthProviderButton } from '~/routes/components/auth-provider-button.tsx';
+import { Footer } from '../components/footer.tsx';
+import { useHydrated } from '../components/utils/use-hydrated.ts';
+import type { Route } from './+types/login.ts';
 
-import { Footer } from '../__components/footer.tsx';
-import { useHydrated } from '../__components/utils/use-hydrated.ts';
+export const meta = (args: Route.MetaArgs) => {
+  return mergeMeta(args.matches, [{ title: 'Login | Conference Hall' }]);
+};
 
-export const meta = mergeMeta(() => [{ title: 'Login | Conference Hall' }]);
-
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+export const loader = async ({ request }: Route.LoaderArgs) => {
   const userId = await getSessionUserId(request);
-  if (userId) return redirect('/');
+  if (userId) throw redirect('/');
   return null;
 };
 
-export const action = async ({ request }: ActionFunctionArgs) => {
+export const action = async ({ request }: Route.ActionArgs) => {
   return createSession(request);
 };
 
@@ -48,7 +42,7 @@ export default function Login() {
 
   useEffect(() => {
     const clientAuth = getClientAuth();
-    getRedirectResult(clientAuth)
+    Firebase.getRedirectResult(clientAuth)
       .then(async (credentials) => {
         if (!credentials) return;
         const token = await credentials.user.getIdToken();
@@ -67,19 +61,19 @@ export default function Login() {
       }
 
       if (provider === 'google') {
-        const authProvider = new GoogleAuthProvider();
+        const authProvider = new Firebase.GoogleAuthProvider();
         authProvider.setCustomParameters({ prompt: 'select_account' });
-        return signInWithRedirect(getClientAuth(), authProvider);
+        return Firebase.signInWithRedirect(getClientAuth(), authProvider);
       }
 
       if (provider === 'twitter') {
-        const authProvider = new TwitterAuthProvider();
-        return signInWithRedirect(getClientAuth(), authProvider);
+        const authProvider = new Firebase.TwitterAuthProvider();
+        return Firebase.signInWithRedirect(getClientAuth(), authProvider);
       }
 
       if (provider === 'github') {
-        const authProvider = new GithubAuthProvider();
-        return signInWithRedirect(getClientAuth(), authProvider);
+        const authProvider = new Firebase.GithubAuthProvider();
+        return Firebase.signInWithRedirect(getClientAuth(), authProvider);
       }
     },
     [hydrated, redirectTo],

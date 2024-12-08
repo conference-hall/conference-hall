@@ -1,7 +1,4 @@
-import type { LoaderFunctionArgs } from 'react-router';
-import { Outlet, useLoaderData, useMatch } from 'react-router';
-import invariant from 'tiny-invariant';
-
+import { Outlet, useMatch } from 'react-router';
 import { EventPage } from '~/.server/event-page/event-page.ts';
 import { Avatar } from '~/design-system/avatar.tsx';
 import { BG_GRADIENT_COLOR } from '~/design-system/colors.ts';
@@ -9,36 +6,30 @@ import { Container } from '~/design-system/layouts/container.tsx';
 import { H1, Text } from '~/design-system/typography.tsx';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { eventSocialCard } from '~/libs/meta/social-cards.ts';
-import { Footer } from '~/routes/__components/footer.tsx';
-import { Navbar } from '~/routes/__components/navbar/navbar.tsx';
+import { Footer } from '~/routes/components/footer.tsx';
+import { Navbar } from '~/routes/components/navbar/navbar.tsx';
+import { CurrentEventPageProvider } from '../components/contexts/event-page-context.tsx';
+import { useUser } from '../components/contexts/user-context.tsx';
+import type { Route } from './+types/_layout.ts';
+import { EventTabs } from './components/event-tabs.tsx';
 
-import { CurrentEventPageProvider } from '../__components/contexts/event-page-context.tsx';
-import { useUser } from '../__components/contexts/user-context.tsx';
-import { EventTabs } from './__components/event-tabs.tsx';
+export const meta = (args: Route.MetaArgs) => {
+  const { data, matches } = args;
+  return mergeMeta(matches, [
+    { title: `${data.name} | Conference Hall` },
+    { name: 'description', content: `Submit your proposal to ${data.name} call for papers.` },
+    ...eventSocialCard({ name: data.name, slug: data.slug, logoUrl: data.logoUrl }),
+  ]);
+};
 
-export const meta = mergeMeta<typeof loader>(
-  ({ data }) =>
-    data
-      ? [
-          { title: `${data.name} | Conference Hall` },
-          { name: 'description', content: `Submit your proposal to ${data.name}'s call for papers.` },
-        ]
-      : [],
-  ({ data }) => (data ? eventSocialCard({ name: data.name, slug: data.slug, logoUrl: data.logoUrl }) : []),
-);
-
-export const loader = async ({ params }: LoaderFunctionArgs) => {
-  invariant(params.event, 'Invalid event slug');
-
+export const loader = async ({ params }: Route.LoaderArgs) => {
   const event = await EventPage.of(params.event).get();
   return event;
 };
 
-export default function EventRoute() {
+export default function EventRoute({ loaderData: event }: Route.ComponentProps) {
   const user = useUser();
-  const event = useLoaderData<typeof loader>();
-
-  const submissionRoute = useMatch('/:event/submission/*');
+  const isSubmissionRoute = useMatch('/:event/submission/*');
 
   return (
     <>
@@ -73,7 +64,7 @@ export default function EventRoute() {
         </Container>
       </header>
 
-      {!submissionRoute ? (
+      {!isSubmissionRoute ? (
         <EventTabs
           slug={event.slug}
           type={event.type}

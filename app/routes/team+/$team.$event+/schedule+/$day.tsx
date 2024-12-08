@@ -1,10 +1,7 @@
 import { parseWithZod } from '@conform-to/zod';
 import { cx } from 'class-variance-authority';
 import { useState } from 'react';
-import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
-import { redirect, useLoaderData } from 'react-router';
-import invariant from 'tiny-invariant';
-
+import { redirect } from 'react-router';
 import { EventSchedule } from '~/.server/event-schedule/event-schedule.ts';
 import {
   SchedulSessionIdSchema,
@@ -15,23 +12,19 @@ import {
 } from '~/.server/event-schedule/event-schedule.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
+import type { Route } from './+types/$day.ts';
+import { ScheduleHeader } from './components/header/schedule-header.tsx';
+import { useScheduleFullscreen } from './components/header/use-schedule-fullscreen.tsx';
+import { useZoomHandlers } from './components/header/use-zoom-handlers.tsx';
+import type { ScheduleSession } from './components/schedule.types.ts';
+import Schedule from './components/schedule/schedule.tsx';
+import { SessionBlock } from './components/session/session-block.tsx';
+import { SessionModal } from './components/session/session-modal.tsx';
+import { useDisplayTimes } from './components/use-display-times.tsx';
+import { useSessions } from './components/use-sessions.ts';
 
-import { ScheduleHeader } from './__components/header/schedule-header.tsx';
-import { useScheduleFullscreen } from './__components/header/use-schedule-fullscreen.tsx';
-import { useZoomHandlers } from './__components/header/use-zoom-handlers.tsx';
-import type { ScheduleSession } from './__components/schedule.types.ts';
-import Schedule from './__components/schedule/schedule.tsx';
-import { SessionBlock } from './__components/session/session-block.tsx';
-import { SessionModal } from './__components/session/session-modal.tsx';
-import { useDisplayTimes } from './__components/use-display-times.tsx';
-import { useSessions } from './__components/use-sessions.ts';
-
-export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const userId = await requireSession(request);
-  invariant(params.team, 'Invalid team slug');
-  invariant(params.event, 'Invalid event slug');
-  invariant(params.day, 'Invalid day');
-
   const eventSchedule = EventSchedule.for(userId, params.team, params.event);
 
   const result = ScheduleDayIdSchema.safeParse(params.day);
@@ -43,14 +36,9 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   return schedule;
 };
 
-export const action = async ({ request, params }: ActionFunctionArgs) => {
+export const action = async ({ request, params }: Route.ActionArgs) => {
   const userId = await requireSession(request);
-  invariant(params.team, 'Invalid team slug');
-  invariant(params.event, 'Invalid event slug');
-  invariant(params.day, 'Invalid day');
-
   const eventSchedule = EventSchedule.for(userId, params.team, params.event);
-
   const form = await request.formData();
   const intent = form.get('intent');
 
@@ -83,21 +71,16 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   return null;
 };
 
-export default function ScheduleRoute() {
-  const schedule = useLoaderData<typeof loader>();
-
+export default function ScheduleRoute({ loaderData: schedule }: Route.ComponentProps) {
   const sessions = useSessions(schedule.sessions, schedule.timezone);
-
   const displayTimes = useDisplayTimes(
     schedule.currentDay,
     schedule.displayStartMinutes,
     schedule.displayEndMinutes,
     schedule.timezone,
   );
-
   const { isFullscreen } = useScheduleFullscreen();
   const zoomHandlers = useZoomHandlers();
-
   const [openSession, setOpenSession] = useState<ScheduleSession | null>(null);
   const onCloseSession = () => setOpenSession(null);
 

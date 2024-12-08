@@ -1,7 +1,4 @@
-import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
-import { Form, redirect, useLoaderData } from 'react-router';
-import invariant from 'tiny-invariant';
-
+import { Form, redirect } from 'react-router';
 import { CoSpeakerTalkInvite } from '~/.server/speaker-talks-library/co-speaker-talk-invite.ts';
 import { Button } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
@@ -9,31 +6,27 @@ import { Markdown } from '~/design-system/markdown.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
+import { FullscreenPage } from '../components/fullscreen-page.tsx';
+import { SpeakerPill } from '../components/talks/co-speaker.tsx';
+import type { Route } from './+types/talk.$code.ts';
 
-import { FullscreenPage } from '../__components/fullscreen-page.tsx';
-import { SpeakerPill } from '../__components/talks/co-speaker.tsx';
+export const meta = (args: Route.MetaArgs) => {
+  return mergeMeta(args.matches, [{ title: 'Talk invitation | Conference Hall' }]);
+};
 
-export const meta = mergeMeta(() => [{ title: 'Talk invitation | Conference Hall' }]);
-
-export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+export const loader = async ({ request, params }: Route.LoaderArgs) => {
   await requireSession(request);
-  invariant(params.code, 'Invalid code');
-
   const talk = await CoSpeakerTalkInvite.with(params.code).check();
   return talk;
 };
 
-export const action = async ({ request, params }: ActionFunctionArgs) => {
+export const action = async ({ request, params }: Route.ActionArgs) => {
   const userId = await requireSession(request);
-  invariant(params.code, 'Invalid code');
-
   const talk = await CoSpeakerTalkInvite.with(params.code).addCoSpeaker(userId);
-  return redirect(`/speaker/talks/${talk.id}`);
+  throw redirect(`/speaker/talks/${talk.id}`);
 };
 
-export default function InvitationRoute() {
-  const talk = useLoaderData<typeof loader>();
-
+export default function InvitationRoute({ loaderData: talk }: Route.ComponentProps) {
   return (
     <FullscreenPage navbar="default">
       <FullscreenPage.Title title="Talk invitation." subtitle="You have been invited to be co-speaker on a talk." />

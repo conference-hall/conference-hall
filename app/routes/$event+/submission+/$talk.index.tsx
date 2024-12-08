@@ -1,8 +1,6 @@
 import { parseWithZod } from '@conform-to/zod';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
-import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
-import { redirect, useActionData, useLoaderData } from 'react-router';
-import invariant from 'tiny-invariant';
+import { redirect } from 'react-router';
 import { TalkSubmission } from '~/.server/cfp-submission-funnel/talk-submission.ts';
 import { TalksLibrary } from '~/.server/speaker-talks-library/talks-library.ts';
 import { TalkSaveSchema } from '~/.server/speaker-talks-library/talks-library.types.ts';
@@ -12,44 +10,35 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { TalkAlreadySubmittedError } from '~/libs/errors.server.ts';
-import { TalkForm } from '~/routes/__components/talks/talk-forms/talk-form.tsx';
-import { useSubmissionNavigation } from './__components/submission-context.tsx';
+import { TalkForm } from '~/routes/components/talks/talk-forms/talk-form.tsx';
+import type { Route } from './+types/$talk.index.ts';
+import { useSubmissionNavigation } from './components/submission-context.tsx';
 
 export const handle = { step: 'proposal' };
 
-export const loader = async ({ request, params }: LoaderFunctionArgs) => {
-  const speakerId = await requireSession(request);
-  invariant(params.event, 'Invalid event slug');
-  invariant(params.talk, 'Invalid talk id');
-
+export const loader = async ({ request, params }: Route.LoaderArgs) => {
+  const userId = await requireSession(request);
   if (params.talk === 'new') return null;
 
-  const talk = TalksLibrary.of(speakerId).talk(params.talk);
-
+  const talk = TalksLibrary.of(userId).talk(params.talk);
   const alreadySubmitted = await talk.isSubmittedTo(params.event);
   if (alreadySubmitted) throw new TalkAlreadySubmittedError();
 
   return talk.get();
 };
 
-export const action = async ({ request, params }: ActionFunctionArgs) => {
-  const speakerId = await requireSession(request);
-  invariant(params.event, 'Invalid event slug');
-  invariant(params.talk, 'Invalid talk id');
-
+export const action = async ({ request, params }: Route.ActionArgs) => {
+  const userId = await requireSession(request);
   const form = await request.formData();
   const result = parseWithZod(form, { schema: TalkSaveSchema });
   if (result.status !== 'success') return result.error;
 
-  const submission = TalkSubmission.for(speakerId, params.event);
+  const submission = TalkSubmission.for(userId, params.event);
   const proposal = await submission.saveDraft(params.talk, result.value);
-
   throw redirect(`/${params.event}/submission/${proposal.talkId}/speakers`);
 };
 
-export default function SubmissionTalkRoute() {
-  const talk = useLoaderData<typeof loader>();
-  const errors = useActionData<typeof action>();
+export default function SubmissionTalkRoute({ loaderData: talk, actionData: errors }: Route.ComponentProps) {
   const { previousPath } = useSubmissionNavigation();
 
   return (
