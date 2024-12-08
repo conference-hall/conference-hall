@@ -1,6 +1,5 @@
 import * as Sentry from '@sentry/react';
 import { isRouteErrorResponse, useRouteError } from 'react-router';
-
 import { ErrorPage } from './errors/error-page.tsx';
 import { Forbidden } from './errors/forbidden.tsx';
 import { InternalServerError } from './errors/internal-server-error.tsx';

@@ -1,8 +1,6 @@
 import type { ReactNode } from 'react';
-
 import { ConferenceHallLogo } from '~/design-system/logo.tsx';
 import { H1 } from '~/design-system/typography.tsx';
-
 import { Footer } from '../footer.tsx';
 
 type Props = { children?: ReactNode };

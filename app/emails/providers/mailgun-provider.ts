@@ -1,7 +1,6 @@
 import formData from 'form-data';
 import Mailgun from 'mailgun.js';
 import type { IMailgunClient } from 'mailgun.js/Interfaces';
-
 import { isValidEmail } from '../utils/email.ts';
 import type { Email, EmailProvider } from './provider.ts';
 

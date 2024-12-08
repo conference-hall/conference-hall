@@ -1,5 +1,4 @@
 import { Worker } from 'bullmq';
-
 import { getRedisClient } from '../redis.ts';
 import type { Job } from './job.ts';
 import { logger } from './logger.ts';

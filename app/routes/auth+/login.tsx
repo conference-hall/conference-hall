@@ -20,7 +20,7 @@ export const meta = mergeMeta(() => [{ title: 'Login | Conference Hall' }]);
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const userId = await getSessionUserId(request);
-  if (userId) return redirect('/');
+  if (userId) throw redirect('/');
   return null;
 };
 
