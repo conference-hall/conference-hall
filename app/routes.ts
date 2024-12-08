@@ -67,7 +67,7 @@ export default [
     ]),
 
     // Team event pages
-    route(':event', './routes/team+/$team.$event+/_layout.tsx', [
+    route(':event', './routes/team+/$team.$event+/_layout.tsx', { id: 'team-current-event' }, [
       index('./routes/team+/$team.$event+/index.tsx'),
 
       // Event review pages
