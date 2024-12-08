@@ -7,7 +7,7 @@ import { DividerWithLabel } from '~/design-system/divider.tsx';
 import { Input } from '~/design-system/forms/input.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { FullscreenPage } from '../__components/fullscreen-page.tsx';
+import { FullscreenPage } from '../components/fullscreen-page.tsx';
 import type { Route } from './+types/request.ts';
 
 export const meta = () => [{ title: 'Request access | Conference Hall' }];

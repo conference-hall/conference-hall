@@ -5,8 +5,8 @@ import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { Footer } from '~/routes/__components/footer.tsx';
-import { Navbar } from '~/routes/__components/navbar/navbar.tsx';
+import { Footer } from '~/routes/components/footer.tsx';
+import { Navbar } from '~/routes/components/navbar/navbar.tsx';
 import type { Route } from './+types/index.ts';
 
 export const meta = () => [{ title: 'Notifications | Conference Hall' }];

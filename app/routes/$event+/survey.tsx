@@ -5,7 +5,7 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-import { SurveyForm } from '../__components/talks/talk-forms/survey-form.tsx';
+import { SurveyForm } from '../components/talks/talk-forms/survey-form.tsx';
 import type { Route } from './+types/survey.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {

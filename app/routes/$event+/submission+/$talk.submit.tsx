@@ -8,10 +8,10 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { ExternalLink } from '~/design-system/links.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toastHeaders } from '~/libs/toasts/toast.server.ts';
-import { useCurrentEvent } from '~/routes/__components/contexts/event-page-context.tsx';
-import { TalkSection } from '~/routes/__components/talks/talk-section.tsx';
+import { useCurrentEvent } from '~/routes/components/contexts/event-page-context.tsx';
+import { TalkSection } from '~/routes/components/talks/talk-section.tsx';
 import type { Route } from './+types/$talk.submit.ts';
-import { useSubmissionNavigation } from './__components/submission-context.tsx';
+import { useSubmissionNavigation } from './components/submission-context.tsx';
 
 export const handle = { step: 'submission' };
 

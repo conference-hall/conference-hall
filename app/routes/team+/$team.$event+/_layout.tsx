@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router';
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
 import { requireSession } from '~/libs/auth/session.ts';
-import { CurrentEventTeamProvider } from '~/routes/__components/contexts/event-team-context';
+import { CurrentEventTeamProvider } from '~/routes/components/contexts/event-team-context';
 import type { Route } from './+types/_layout.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {

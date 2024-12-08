@@ -5,7 +5,7 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-import { useCurrentEvent } from '~/routes/__components/contexts/event-team-context';
+import { useCurrentEvent } from '~/routes/components/contexts/event-team-context';
 import type { Route } from './+types/review.ts';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {

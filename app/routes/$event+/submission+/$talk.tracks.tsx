@@ -10,11 +10,11 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { useCurrentEvent } from '~/routes/__components/contexts/event-page-context.tsx';
-import { CategoriesForm } from '~/routes/__components/talks/talk-forms/categories-form.tsx';
-import { FormatsForm } from '~/routes/__components/talks/talk-forms/formats-form.tsx';
+import { useCurrentEvent } from '~/routes/components/contexts/event-page-context.tsx';
+import { CategoriesForm } from '~/routes/components/talks/talk-forms/categories-form.tsx';
+import { FormatsForm } from '~/routes/components/talks/talk-forms/formats-form.tsx';
 import type { Route } from './+types/$talk.tracks.ts';
-import { useSubmissionNavigation } from './__components/submission-context.tsx';
+import { useSubmissionNavigation } from './components/submission-context.tsx';
 
 export const handle = { step: 'tracks' };
 

@@ -7,10 +7,10 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-import { useCurrentEvent } from '~/routes/__components/contexts/event-team-context.tsx';
+import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
 import type { Route } from './+types/tracks.ts';
-import { NewTrackButton } from './__components/save-track-form.tsx';
-import { TrackList } from './__components/track-list.tsx';
+import { NewTrackButton } from './components/save-track-form.tsx';
+import { TrackList } from './components/track-list.tsx';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   await requireSession(request);

@@ -16,8 +16,8 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { NavSideMenu } from '~/design-system/navigation/nav-side-menu.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { useCurrentEvent } from '~/routes/__components/contexts/event-team-context';
-import { useCurrentTeam } from '~/routes/__components/contexts/team-context.tsx';
+import { useCurrentEvent } from '~/routes/components/contexts/event-team-context';
+import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
 import type { Route } from './+types/_layout.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {

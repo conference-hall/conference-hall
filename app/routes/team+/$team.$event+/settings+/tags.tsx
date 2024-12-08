@@ -14,8 +14,8 @@ import { Pagination } from '~/design-system/list/pagination.tsx';
 import { H2, Text } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-import { TagModal } from '~/routes/__components/tags/tag-modal.tsx';
-import { Tag } from '~/routes/__components/tags/tag.tsx';
+import { TagModal } from '~/routes/components/tags/tag-modal.tsx';
+import { Tag } from '~/routes/components/tags/tag.tsx';
 import type { Route } from './+types/tags.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {

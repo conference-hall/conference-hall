@@ -1,12 +1,12 @@
 import { Outlet, useMatch, useRouteLoaderData } from 'react-router';
 import { UserTeam } from '~/.server/team/user-team.ts';
 import { requireSession } from '~/libs/auth/session.ts';
-import { CurrentTeamProvider } from '../__components/contexts/team-context.tsx';
-import { Navbar } from '../__components/navbar/navbar.tsx';
-import { EventTabs } from './$team+/__components/event-tabs.tsx';
-import { TeamTabs } from './$team+/__components/team-tabs.tsx';
+import { CurrentTeamProvider } from '../components/contexts/team-context.tsx';
+import { Navbar } from '../components/navbar/navbar.tsx';
+import { EventTabs } from './$team+/components/event-tabs.tsx';
+import { TeamTabs } from './$team+/components/team-tabs.tsx';
 import type { loader as routeEventLoader } from './$team.$event+/_layout';
-import { useScheduleFullscreen } from './$team.$event+/schedule+/__components/header/use-schedule-fullscreen.tsx';
+import { useScheduleFullscreen } from './$team.$event+/schedule+/components/header/use-schedule-fullscreen.tsx';
 import type { Route } from './+types/$team.ts';
 
 export const meta = ({ data }: Route.MetaArgs) => [{ title: `${data.name} | Conference Hall` }];

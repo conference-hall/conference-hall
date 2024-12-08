@@ -5,11 +5,11 @@ import { IconLink } from '~/design-system/icon-buttons.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { useCurrentEvent } from '~/routes/__components/contexts/event-page-context.tsx';
-import { NestedErrorBoundary } from '~/routes/__components/error-boundary.tsx';
+import { useCurrentEvent } from '~/routes/components/contexts/event-page-context.tsx';
+import { NestedErrorBoundary } from '~/routes/components/error-boundary.tsx';
 import type { Route } from './+types/_layout.ts';
-import { Steps } from './__components/steps.tsx';
-import { SubmissionContextProvider } from './__components/submission-context.tsx';
+import { Steps } from './components/steps.tsx';
+import { SubmissionContextProvider } from './components/submission-context.tsx';
 
 export const handle = { step: 'root' };
 

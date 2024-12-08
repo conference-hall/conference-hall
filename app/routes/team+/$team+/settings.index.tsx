@@ -7,8 +7,8 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toastHeaders } from '~/libs/toasts/toast.server.ts';
-import { useCurrentTeam } from '~/routes/__components/contexts/team-context.tsx';
-import { TeamForm } from '~/routes/__components/teams/team-form.tsx';
+import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
+import { TeamForm } from '~/routes/components/teams/team-form.tsx';
 import type { Route } from './+types/settings.index.ts';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {

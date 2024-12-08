@@ -4,7 +4,7 @@ import { Button } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H1, Subtitle } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { FullscreenPage } from '../__components/fullscreen-page.tsx';
+import { FullscreenPage } from '../components/fullscreen-page.tsx';
 import type { Route } from './+types/team.$code.ts';
 
 export const meta = () => [{ title: 'Team invitation | Conference Hall' }];

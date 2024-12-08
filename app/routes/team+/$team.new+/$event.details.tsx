@@ -7,11 +7,11 @@ import { EventDetailsSettingsSchema } from '~/.server/event-settings/user-event.
 import { Button, ButtonLink } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { useCurrentTeam } from '~/routes/__components/contexts/team-context.tsx';
-import { EventDetailsForm } from '~/routes/__components/events/event-details-form.tsx';
-import { FullscreenPage } from '~/routes/__components/fullscreen-page.tsx';
-import { EventCreationStepper } from '../__components/event-creation-stepper.tsx';
+import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
+import { EventDetailsForm } from '~/routes/components/events/event-details-form.tsx';
+import { FullscreenPage } from '~/routes/components/fullscreen-page.tsx';
 import type { Route } from './+types/$event.details.ts';
+import { EventCreationStepper } from './components/event-creation-stepper.tsx';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const userId = await requireSession(request);

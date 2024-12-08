@@ -7,9 +7,9 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast, toastHeaders } from '~/libs/toasts/toast.server.ts';
 import { SpeakerProposalStatus } from '~/types/speaker.types.ts';
-import { useCurrentEvent } from '../__components/contexts/event-page-context.tsx';
-import { ProposalStatusSection } from '../__components/proposals/proposal-status-section.tsx';
-import { TalkSection } from '../__components/talks/talk-section.tsx';
+import { useCurrentEvent } from '../components/contexts/event-page-context.tsx';
+import { ProposalStatusSection } from '../components/proposals/proposal-status-section.tsx';
+import { TalkSection } from '../components/talks/talk-section.tsx';
 import type { Route } from './+types/proposals.$proposal.index.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {

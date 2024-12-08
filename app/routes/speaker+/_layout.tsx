@@ -6,11 +6,11 @@ import { BG_GRADIENT_COLOR } from '~/design-system/colors.ts';
 import { Container } from '~/design-system/layouts/container.tsx';
 import { H1, Text } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { Navbar } from '~/routes/__components/navbar/navbar.tsx';
-import { SpeakerProfileProvider } from '../__components/contexts/speaker-profile-context.tsx';
-import { Footer } from '../__components/footer.tsx';
+import { Navbar } from '~/routes/components/navbar/navbar.tsx';
+import { SpeakerProfileProvider } from '../components/contexts/speaker-profile-context.tsx';
+import { Footer } from '../components/footer.tsx';
 import type { Route } from './+types/_layout.ts';
-import { SpeakerTabs } from './__components/speaker-tabs.tsx';
+import { SpeakerTabs } from './components/speaker-tabs.tsx';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const userId = await requireSession(request);

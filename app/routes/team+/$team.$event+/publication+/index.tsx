@@ -13,7 +13,7 @@ import { requireSession } from '~/libs/auth/session.ts';
 import { BadRequestError } from '~/libs/errors.server.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import type { Route } from './+types/index.ts';
-import { PublicationButton } from './__components/publication-confirm-modal.tsx';
+import { PublicationButton } from './components/publication-confirm-modal.tsx';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const userId = await requireSession(request);

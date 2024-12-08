@@ -1,7 +1,7 @@
 import { cx } from 'class-variance-authority';
 import { NavLink } from 'react-router';
 
-import { SponsorLink } from '~/routes/__components/sponsor-link.tsx';
+import { SponsorLink } from '~/routes/components/sponsor-link.tsx';
 import { Badge } from '../badges.tsx';
 import { IconLabel } from '../icon-label.tsx';
 import { Card } from '../layouts/card.tsx';

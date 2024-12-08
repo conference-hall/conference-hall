@@ -7,11 +7,11 @@ import {
 } from '~/.server/event-settings/user-event.types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-import { useCurrentEvent } from '~/routes/__components/contexts/event-team-context.tsx';
+import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
 import type { Route } from './+types/cfp.ts';
-import { CommonCfpSetting } from './__components/common-cfp-setting.tsx';
-import { ConferenceCfpOpening } from './__components/conference-cfp-opening.tsx';
-import { MeetupCfpOpening } from './__components/meetup-cfp-opening.tsx';
+import { CommonCfpSetting } from './components/common-cfp-setting.tsx';
+import { ConferenceCfpOpening } from './components/conference-cfp-opening.tsx';
+import { MeetupCfpOpening } from './components/meetup-cfp-opening.tsx';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   await requireSession(request);

@@ -5,9 +5,9 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { EventCard } from '../__components/events/event-card.tsx';
-import { FullscreenPage } from '../__components/fullscreen-page.tsx';
-import { SpeakerPill } from '../__components/talks/co-speaker.tsx';
+import { EventCard } from '../components/events/event-card.tsx';
+import { FullscreenPage } from '../components/fullscreen-page.tsx';
+import { SpeakerPill } from '../components/talks/co-speaker.tsx';
 import type { Route } from './+types/proposal.$code.ts';
 
 export const meta = () => [{ title: 'Proposal invitation | Conference Hall' }];

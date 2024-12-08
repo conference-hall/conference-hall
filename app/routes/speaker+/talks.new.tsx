@@ -8,7 +8,7 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { H1 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toastHeaders } from '~/libs/toasts/toast.server.ts';
-import { TalkForm } from '../__components/talks/talk-forms/talk-form.tsx';
+import { TalkForm } from '../components/talks/talk-forms/talk-form.tsx';
 import type { Route } from './+types/talks.new.ts';
 
 export const meta = () => [{ title: 'New talk | Conference Hall' }];

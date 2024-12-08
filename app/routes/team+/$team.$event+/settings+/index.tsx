@@ -9,9 +9,9 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast, toastHeaders } from '~/libs/toasts/toast.server.ts';
-import { useCurrentEvent } from '~/routes/__components/contexts/event-team-context';
-import { EventDetailsForm } from '~/routes/__components/events/event-details-form.tsx';
-import { EventForm } from '~/routes/__components/events/event-form.tsx';
+import { useCurrentEvent } from '~/routes/components/contexts/event-team-context';
+import { EventDetailsForm } from '~/routes/components/events/event-details-form.tsx';
+import { EventForm } from '~/routes/components/events/event-form.tsx';
 import type { Route } from './+types/index.ts';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {

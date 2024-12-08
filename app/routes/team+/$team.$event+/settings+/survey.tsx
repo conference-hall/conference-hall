@@ -8,7 +8,7 @@ import {
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import type { Route } from './+types/survey.ts';
-import { SurveySettingsForm } from './__components/survey/survey-settings-form.tsx';
+import { SurveySettingsForm } from './components/survey/survey-settings-form.tsx';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const userId = await requireSession(request);

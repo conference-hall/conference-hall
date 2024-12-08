@@ -8,12 +8,12 @@ import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { getObjectHash } from '~/libs/utils/object-hash.ts';
 import type { Route } from './+types/index.ts';
-import { ExportMenu } from './__components/proposals-list-page/actions/export-menu.tsx';
-import { FiltersMenu } from './__components/proposals-list-page/filters/filters-menu.tsx';
-import { FiltersTags } from './__components/proposals-list-page/filters/filters-tags.tsx';
-import { SearchInput } from './__components/proposals-list-page/filters/search-input.tsx';
-import { SortMenu } from './__components/proposals-list-page/filters/sort-menu.tsx';
-import { ProposalsList } from './__components/proposals-list-page/proposals-list.tsx';
+import { ExportMenu } from './components/proposals-list-page/actions/export-menu.tsx';
+import { FiltersMenu } from './components/proposals-list-page/filters/filters-menu.tsx';
+import { FiltersTags } from './components/proposals-list-page/filters/filters-tags.tsx';
+import { SearchInput } from './components/proposals-list-page/filters/search-input.tsx';
+import { SortMenu } from './components/proposals-list-page/filters/sort-menu.tsx';
+import { ProposalsList } from './components/proposals-list-page/proposals-list.tsx';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const userId = await requireSession(request);

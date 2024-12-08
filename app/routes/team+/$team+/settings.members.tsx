@@ -13,10 +13,10 @@ import { H3, Subtitle } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { ROLE_NAMES } from '~/libs/formatters/team-roles.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-import { useCurrentTeam } from '~/routes/__components/contexts/team-context.tsx';
-import { useUser } from '~/routes/__components/contexts/user-context.tsx';
+import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
+import { useUser } from '~/routes/components/contexts/user-context.tsx';
 import type { Route } from './+types/settings.members.ts';
-import { ChangeRoleButton, InviteMemberButton, RemoveButton } from './__components/member-actions.tsx';
+import { ChangeRoleButton, InviteMemberButton, RemoveButton } from './components/member-actions.tsx';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const userId = await requireSession(request);

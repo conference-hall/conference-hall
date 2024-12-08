@@ -1,9 +1,9 @@
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
-import { useCurrentEvent } from '../__components/contexts/event-page-context.tsx';
-import { CfpSection } from './__components/cfp-section.tsx';
-import { DetailsSection } from './__components/details-section.tsx';
-import { TrackSection } from './__components/track-section.tsx';
+import { useCurrentEvent } from '../components/contexts/event-page-context.tsx';
+import { CfpSection } from './components/cfp-section.tsx';
+import { DetailsSection } from './components/details-section.tsx';
+import { TrackSection } from './components/track-section.tsx';
 
 export default function EventRoute() {
   const currentEvent = useCurrentEvent();

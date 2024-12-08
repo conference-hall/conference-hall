@@ -10,14 +10,14 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { Link } from '~/design-system/links.tsx';
 import { Pagination } from '~/design-system/list/pagination.tsx';
 import { H1, H2 } from '~/design-system/typography.tsx';
-import { Footer } from '~/routes/__components/footer.tsx';
-import { Navbar } from '~/routes/__components/navbar/navbar.tsx';
+import { Footer } from '~/routes/components/footer.tsx';
+import { Navbar } from '~/routes/components/navbar/navbar.tsx';
 import type { Route } from './+types/index.ts';
-import { useUser } from './__components/contexts/user-context.tsx';
-import { EventCardLink } from './__components/events/event-card.tsx';
-import { SearchEventsFilters } from './__components/search/search-events-filters.tsx';
-import { SearchEventsInput } from './__components/search/search-events-input.tsx';
-import { SponsorLink } from './__components/sponsor-link.tsx';
+import { useUser } from './components/contexts/user-context.tsx';
+import { EventCardLink } from './components/events/event-card.tsx';
+import { SearchEventsFilters } from './components/search/search-events-filters.tsx';
+import { SearchEventsInput } from './components/search/search-events-input.tsx';
+import { SponsorLink } from './components/sponsor-link.tsx';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const filters = parseUrlFilters(request.url);

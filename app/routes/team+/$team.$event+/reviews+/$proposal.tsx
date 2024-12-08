@@ -17,16 +17,16 @@ import { parseUrlFilters } from '~/.server/shared/proposal-search-builder.types.
 import { Page } from '~/design-system/layouts/page.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-import { useCurrentEvent } from '~/routes/__components/contexts/event-team-context.tsx';
-import { useCurrentTeam } from '~/routes/__components/contexts/team-context.tsx';
-import { TalkSection } from '~/routes/__components/talks/talk-section.tsx';
+import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
+import { useCurrentTeam } from '~/routes/components/contexts/team-context.tsx';
+import { TalkSection } from '~/routes/components/talks/talk-section.tsx';
 import type { Route } from './+types/$proposal.ts';
-import { OtherProposalsDisclosure } from './__components/proposal-page/other-proposals-disclosure.tsx';
-import { LoadingActivities } from './__components/proposal-page/proposal-activity/loading-activities.tsx';
-import { ProposalActivityFeed as Feed } from './__components/proposal-page/proposal-activity/proposal-activity-feed.tsx';
-import { ReviewHeader } from './__components/proposal-page/review-header.tsx';
-import { ReviewSidebar } from './__components/proposal-page/review-sidebar.tsx';
-import { TagsCard } from './__components/proposal-page/tags-card.tsx';
+import { OtherProposalsDisclosure } from './components/proposal-page/other-proposals-disclosure.tsx';
+import { LoadingActivities } from './components/proposal-page/proposal-activity/loading-activities.tsx';
+import { ProposalActivityFeed as Feed } from './components/proposal-page/proposal-activity/proposal-activity-feed.tsx';
+import { ReviewHeader } from './components/proposal-page/review-header.tsx';
+import { ReviewSidebar } from './components/proposal-page/review-sidebar.tsx';
+import { TagsCard } from './components/proposal-page/tags-card.tsx';
 
 export type ProposalData = ProposalReviewData;
 

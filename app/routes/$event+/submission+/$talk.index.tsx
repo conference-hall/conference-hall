@@ -10,9 +10,9 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { TalkAlreadySubmittedError } from '~/libs/errors.server.ts';
-import { TalkForm } from '~/routes/__components/talks/talk-forms/talk-form.tsx';
+import { TalkForm } from '~/routes/components/talks/talk-forms/talk-form.tsx';
 import type { Route } from './+types/$talk.index.ts';
-import { useSubmissionNavigation } from './__components/submission-context.tsx';
+import { useSubmissionNavigation } from './components/submission-context.tsx';
 
 export const handle = { step: 'proposal' };
 

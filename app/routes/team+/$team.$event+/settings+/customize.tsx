@@ -12,7 +12,7 @@ import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { uploadToStorageHandler } from '~/libs/storage/storage.server.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-import { useCurrentEvent } from '~/routes/__components/contexts/event-team-context';
+import { useCurrentEvent } from '~/routes/components/contexts/event-team-context';
 import type { Route } from './+types/customize.ts';
 
 const MAX_FILE_SIZE = 300 * 1024; // 300kB

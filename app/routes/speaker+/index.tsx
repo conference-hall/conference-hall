@@ -3,10 +3,10 @@ import { SpeakerActivities } from '~/.server/speaker-activities/speaker-activiti
 import { Page } from '~/design-system/layouts/page.tsx';
 import { H1 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { useSpeakerProfile } from '../__components/contexts/speaker-profile-context.tsx';
+import { useSpeakerProfile } from '../components/contexts/speaker-profile-context.tsx';
 import type { Route } from './+types/index.ts';
-import { SpeakerActivitiesSection } from './__components/speaker-activities-section.tsx';
-import { SpeakerDetailsSection } from './__components/speaker-details-section.tsx';
+import { SpeakerActivitiesSection } from './components/speaker-activities-section.tsx';
+import { SpeakerDetailsSection } from './components/speaker-details-section.tsx';
 
 export const meta = () => [{ title: 'Activity | Conference Hall' }];
 

@@ -4,11 +4,11 @@ import { TalksLibrary } from '~/.server/speaker-talks-library/talks-library.ts';
 import { ButtonLink } from '~/design-system/buttons.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { useCurrentEvent } from '~/routes/__components/contexts/event-page-context.tsx';
+import { useCurrentEvent } from '~/routes/components/contexts/event-page-context.tsx';
 import type { Route } from './+types/index.ts';
-import { MaxProposalsAlert, MaxProposalsReached } from './__components/max-proposals.tsx';
-import { NoSubmissionState } from './__components/no-submissions-state.tsx';
-import { SubmissionTalksList } from './__components/submission-talks-list.tsx';
+import { MaxProposalsAlert, MaxProposalsReached } from './components/max-proposals.tsx';
+import { NoSubmissionState } from './components/no-submissions-state.tsx';
+import { SubmissionTalksList } from './components/submission-talks-list.tsx';
 
 export const handle = { step: 'selection' };
 

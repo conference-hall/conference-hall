@@ -11,9 +11,9 @@ import { ConferenceHallLogo } from '~/design-system/logo.tsx';
 import { getClientAuth } from '~/libs/auth/firebase.ts';
 import { createSession, getSessionUserId } from '~/libs/auth/session.ts';
 import { mergeMeta } from '~/libs/meta/merge-meta.ts';
-import { AuthProviderButton } from '~/routes/__components/auth-provider-button.tsx';
-import { Footer } from '../__components/footer.tsx';
-import { useHydrated } from '../__components/utils/use-hydrated.ts';
+import { AuthProviderButton } from '~/routes/components/auth-provider-button.tsx';
+import { Footer } from '../components/footer.tsx';
+import { useHydrated } from '../components/utils/use-hydrated.ts';
 import type { Route } from './+types/login.ts';
 
 export const meta = mergeMeta(() => [{ title: 'Login | Conference Hall' }]);

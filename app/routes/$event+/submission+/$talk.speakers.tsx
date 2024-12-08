@@ -11,9 +11,9 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { ExternalLink } from '~/design-system/links.tsx';
 import { H2, Subtitle, Text } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { CoSpeakers } from '~/routes/__components/talks/co-speaker.tsx';
+import { CoSpeakers } from '~/routes/components/talks/co-speaker.tsx';
 import type { Route } from './+types/$talk.speakers.ts';
-import { useSubmissionNavigation } from './__components/submission-context.tsx';
+import { useSubmissionNavigation } from './components/submission-context.tsx';
 
 export const handle = { step: 'speakers' };
 

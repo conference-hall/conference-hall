@@ -7,8 +7,8 @@ import { ButtonLink } from '~/design-system/buttons.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import type { Route } from './+types/settings.ts';
-import { ScheduleDeleteForm } from './__components/forms/schedule-delete-form.tsx';
-import { TracksForm } from './__components/forms/tracks-form.tsx';
+import { ScheduleDeleteForm } from './components/forms/schedule-delete-form.tsx';
+import { TracksForm } from './components/forms/tracks-form.tsx';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const userId = await requireSession(request);

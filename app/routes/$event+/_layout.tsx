@@ -5,12 +5,12 @@ import { BG_GRADIENT_COLOR } from '~/design-system/colors.ts';
 import { Container } from '~/design-system/layouts/container.tsx';
 import { H1, Text } from '~/design-system/typography.tsx';
 import { eventSocialCard } from '~/libs/meta/social-cards.ts';
-import { Footer } from '~/routes/__components/footer.tsx';
-import { Navbar } from '~/routes/__components/navbar/navbar.tsx';
-import { CurrentEventPageProvider } from '../__components/contexts/event-page-context.tsx';
-import { useUser } from '../__components/contexts/user-context.tsx';
+import { Footer } from '~/routes/components/footer.tsx';
+import { Navbar } from '~/routes/components/navbar/navbar.tsx';
+import { CurrentEventPageProvider } from '../components/contexts/event-page-context.tsx';
+import { useUser } from '../components/contexts/user-context.tsx';
 import type { Route } from './+types/_layout.ts';
-import { EventTabs } from './__components/event-tabs.tsx';
+import { EventTabs } from './components/event-tabs.tsx';
 
 export const meta = ({ data }: Route.MetaArgs) => [
   { title: `${data.name} | Conference Hall` },

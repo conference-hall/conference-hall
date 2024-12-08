@@ -1,10 +1,10 @@
 import { v4 as uuid } from 'uuid';
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
 import { requireSession } from '~/libs/auth/session.ts';
-import { useCurrentEvent } from '~/routes/__components/contexts/event-team-context.tsx';
+import { useCurrentEvent } from '~/routes/components/contexts/event-team-context.tsx';
 import type { Route } from './+types/api.ts';
-import { ApiTryoutSection } from './__components/api-tryout-section.tsx';
-import { EnableApiSection } from './__components/enable-api-section.tsx';
+import { ApiTryoutSection } from './components/api-tryout-section.tsx';
+import { EnableApiSection } from './components/enable-api-section.tsx';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   await requireSession(request);

@@ -13,15 +13,15 @@ import {
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import type { Route } from './+types/$day.ts';
-import { ScheduleHeader } from './__components/header/schedule-header.tsx';
-import { useScheduleFullscreen } from './__components/header/use-schedule-fullscreen.tsx';
-import { useZoomHandlers } from './__components/header/use-zoom-handlers.tsx';
-import type { ScheduleSession } from './__components/schedule.types.ts';
-import Schedule from './__components/schedule/schedule.tsx';
-import { SessionBlock } from './__components/session/session-block.tsx';
-import { SessionModal } from './__components/session/session-modal.tsx';
-import { useDisplayTimes } from './__components/use-display-times.tsx';
-import { useSessions } from './__components/use-sessions.ts';
+import { ScheduleHeader } from './components/header/schedule-header.tsx';
+import { useScheduleFullscreen } from './components/header/use-schedule-fullscreen.tsx';
+import { useZoomHandlers } from './components/header/use-zoom-handlers.tsx';
+import type { ScheduleSession } from './components/schedule.types.ts';
+import Schedule from './components/schedule/schedule.tsx';
+import { SessionBlock } from './components/session/session-block.tsx';
+import { SessionModal } from './components/session/session-modal.tsx';
+import { useDisplayTimes } from './components/use-display-times.tsx';
+import { useSessions } from './components/use-sessions.ts';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const userId = await requireSession(request);
