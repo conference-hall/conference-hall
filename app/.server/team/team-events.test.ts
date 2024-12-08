@@ -3,9 +3,7 @@ import { db } from 'prisma/db.server.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-
-import { ForbiddenOperationError, SlugAlreadyExistsError } from '~/libs/errors.server.ts';
-
+import { ForbiddenOperationError } from '~/libs/errors.server.ts';
 import { EventCreateSchema, TeamEvents } from './team-events.ts';
 
 describe('TeamEvents', () => {
@@ -110,20 +108,6 @@ describe('TeamEvents', () => {
       expect(event?.creatorId).toBe(owner.id);
     });
 
-    it('returns an error message when slug already exists', async () => {
-      await eventFactory({ team, attributes: { slug: 'hello-world' } });
-
-      await expect(
-        TeamEvents.for(owner.id, team.slug).create({
-          type: 'CONFERENCE',
-          name: 'Hello world',
-          slug: 'hello-world',
-          visibility: 'PUBLIC',
-          timezone: 'Europe/Paris',
-        }),
-      ).rejects.toThrowError(SlugAlreadyExistsError);
-    });
-
     it('throws an error if user is not owner', async () => {
       await expect(
         TeamEvents.for(reviewer.id, team.slug).create({
@@ -152,7 +136,7 @@ describe('TeamEvents', () => {
 
   describe('Validate EventCreateSchema', () => {
     it('validates valid inputs', async () => {
-      const result = EventCreateSchema.safeParse({
+      const result = await EventCreateSchema.safeParseAsync({
         type: 'CONFERENCE',
         name: 'Event name',
         visibility: 'PUBLIC',
@@ -170,7 +154,12 @@ describe('TeamEvents', () => {
     });
 
     it('returns validation errors', async () => {
-      const result = EventCreateSchema.safeParse({ type: 'toto', name: '', visibility: 'toto', slug: '!@#' });
+      const result = await EventCreateSchema.safeParseAsync({
+        type: 'toto',
+        name: '',
+        visibility: 'toto',
+        slug: '!@#',
+      });
 
       expect(result.success).toBe(false);
       if (!result.success) {
@@ -179,6 +168,23 @@ describe('TeamEvents', () => {
         expect(fieldErrors.slug).toEqual(['Must only contain lower case alphanumeric and dashes (-).']);
         expect(fieldErrors.type).toEqual(["Invalid enum value. Expected 'CONFERENCE' | 'MEETUP', received 'toto'"]);
         expect(fieldErrors.visibility).toEqual(["Invalid enum value. Expected 'PUBLIC' | 'PRIVATE', received 'toto'"]);
+      }
+    });
+
+    it('returns an error when slug already exists', async () => {
+      await eventFactory({ attributes: { slug: 'hello-world' } });
+
+      const result = await EventCreateSchema.safeParseAsync({
+        type: 'CONFERENCE',
+        name: 'Hello',
+        visibility: 'PUBLIC',
+        slug: 'hello-world',
+      });
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        const { fieldErrors } = result.error.flatten();
+        expect(fieldErrors.slug).toEqual(['This URL already exists.']);
       }
     });
   });

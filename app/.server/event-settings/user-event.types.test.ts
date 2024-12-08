@@ -1,6 +1,40 @@
-import { CfpConferenceOpeningSchema, EventDetailsSettingsSchema } from './user-event.types.ts';
+import {
+  CfpConferenceOpeningSchema,
+  EventDetailsSettingsSchema,
+  EventGeneralSettingsSchema,
+} from './user-event.types.ts';
 
 describe('UserEvent types', () => {
+  describe('#EventGeneralSettingsSchema', () => {
+    it('validates valid inputs', async () => {
+      const result = await EventGeneralSettingsSchema.safeParseAsync({
+        name: 'Event name',
+        visibility: 'PUBLIC',
+        slug: 'event-name',
+        timezone: 'Europe/Paris',
+      });
+
+      expect(result.success && result.data).toEqual({
+        name: 'Event name',
+        slug: 'event-name',
+        visibility: 'PUBLIC',
+        timezone: 'Europe/Paris',
+      });
+    });
+
+    it('returns validation errors', async () => {
+      const result = await EventGeneralSettingsSchema.safeParseAsync({ name: '', visibility: 'toto', slug: '!@#' });
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        const { fieldErrors } = result.error.flatten();
+        expect(fieldErrors.name).toEqual(['String must contain at least 3 character(s)']);
+        expect(fieldErrors.slug).toEqual(['Must only contain lower case alphanumeric and dashes (-).']);
+        expect(fieldErrors.visibility).toEqual(["Invalid enum value. Expected 'PUBLIC' | 'PRIVATE', received 'toto'"]);
+      }
+    });
+  });
+
   describe('#EventDetailsSettingsSchema', () => {
     it('validates EventDetailsSettingsSchema inputs and transform dates with TZ', async () => {
       const result = EventDetailsSettingsSchema.safeParse({

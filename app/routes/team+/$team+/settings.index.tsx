@@ -1,7 +1,7 @@
 import { parseWithZod } from '@conform-to/zod';
 import { Form, redirect } from 'react-router';
 import { TeamMembers } from '~/.server/team/team-members.ts';
-import { TeamUpdateSchema, UserTeam } from '~/.server/team/user-team.ts';
+import { UserTeam } from '~/.server/team/user-team.ts';
 import { Button } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
@@ -23,15 +23,12 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 
   switch (intent) {
     case 'save-team': {
-      const result = parseWithZod(form, { schema: TeamUpdateSchema });
+      const userTeam = await UserTeam.for(userId, params.team);
+      const schema = await userTeam.buildUpdateSchema();
+      const result = await parseWithZod(form, { schema, async: true });
       if (result.status !== 'success') return result.error;
 
-      let team = null;
-      try {
-        team = await UserTeam.for(userId, params.team).updateSettings(result.value);
-      } catch (_error) {
-        return { slug: ['This URL already exists, please try another one.'] };
-      }
+      const team = await userTeam.updateSettings(result.value);
       const headers = await toastHeaders('success', 'Team settings saved.');
       throw redirect(`/team/${team.slug}/settings`, { headers });
     }

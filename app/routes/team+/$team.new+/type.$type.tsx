@@ -19,15 +19,10 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 export const action = async ({ request, params }: Route.ActionArgs) => {
   const userId = await requireSession(request);
   const form = await request.formData();
-  const result = parseWithZod(form, { schema: EventCreateSchema });
+  const result = await parseWithZod(form, { schema: EventCreateSchema, async: true });
   if (result.status !== 'success') return result.error;
 
-  let event = null;
-  try {
-    event = await TeamEvents.for(userId, params.team).create(result.value);
-  } catch (_error) {
-    return { slug: ['This URL already exists, please try another one.'] };
-  }
+  const event = await TeamEvents.for(userId, params.team).create(result.value);
   throw redirect(`/team/${params.team}/new/${event.slug}/details`);
 };
 

@@ -1,18 +1,7 @@
 import { db } from 'prisma/db.server.ts';
 import { z } from 'zod';
-
-import { SlugAlreadyExistsError } from '~/libs/errors.server.ts';
 import { SlugSchema } from '~/libs/validators/slug.ts';
-
 import { UserTeam } from './user-team.ts';
-
-export const EventCreateSchema = z.object({
-  name: z.string().trim().min(3).max(50),
-  visibility: z.enum(['PUBLIC', 'PRIVATE']),
-  type: z.enum(['CONFERENCE', 'MEETUP']),
-  timezone: z.string(),
-  slug: SlugSchema,
-});
 
 export class TeamEvents {
   constructor(private team: UserTeam) {}
@@ -44,19 +33,26 @@ export class TeamEvents {
 
   async create(data: z.infer<typeof EventCreateSchema>) {
     await this.team.needsPermission('canCreateEvent');
-
     const { userId, slug } = this.team;
-    return await db.$transaction(async (trx) => {
-      const existSlug = await trx.event.findFirst({ where: { slug: data.slug } });
-      if (existSlug) throw new SlugAlreadyExistsError();
-
-      return await trx.event.create({
-        data: {
-          ...data,
-          creator: { connect: { id: userId } },
-          team: { connect: { slug } },
-        },
-      });
+    return db.event.create({
+      data: {
+        ...data,
+        creator: { connect: { id: userId } },
+        team: { connect: { slug } },
+      },
     });
   }
+
+  static async isSlugValid(slug: string) {
+    const count = await db.event.count({ where: { slug } });
+    return count === 0;
+  }
 }
+
+export const EventCreateSchema = z.object({
+  name: z.string().trim().min(3).max(50),
+  visibility: z.enum(['PUBLIC', 'PRIVATE']),
+  type: z.enum(['CONFERENCE', 'MEETUP']),
+  timezone: z.string(),
+  slug: SlugSchema.refine(TeamEvents.isSlugValid, { message: 'This URL already exists.' }),
+});

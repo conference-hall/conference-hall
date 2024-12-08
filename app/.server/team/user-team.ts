@@ -1,13 +1,11 @@
 import { db } from 'prisma/db.server.ts';
 import { z } from 'zod';
-
-import { ForbiddenOperationError, SlugAlreadyExistsError, TeamNotFoundError } from '~/libs/errors.server.ts';
+import { ForbiddenOperationError, TeamNotFoundError } from '~/libs/errors.server.ts';
 import { SlugSchema } from '~/libs/validators/slug.ts';
-
 import type { Permission } from './user-permissions.ts';
 import { UserPermissions } from './user-permissions.ts';
 
-export const TeamUpdateSchema = z.object({
+const TeamUpdateSchema = z.object({
   name: z.string().trim().min(3).max(50),
   slug: SlugSchema,
 });
@@ -56,13 +54,17 @@ export class UserTeam {
   }
 
   async updateSettings(data: z.infer<typeof TeamUpdateSchema>) {
-    const member = await this.needsPermission('canEditTeam');
+    await this.needsPermission('canEditTeam');
+    return db.team.update({ where: { slug: this.slug }, data });
+  }
 
-    return db.$transaction(async (trx) => {
-      const existSlug = await trx.team.findFirst({ where: { slug: data.slug, id: { not: member.teamId } } });
-      if (existSlug) throw new SlugAlreadyExistsError();
-
-      return trx.team.update({ where: { id: member.teamId }, data });
-    });
+  async buildUpdateSchema() {
+    return TeamUpdateSchema.refine(
+      async ({ slug }) => {
+        const count = await db.team.count({ where: { AND: [{ slug }, { slug: { not: this.slug } }] } });
+        return count === 0;
+      },
+      { message: 'This URL already exists.', path: ['slug'] },
+    );
   }
 }
