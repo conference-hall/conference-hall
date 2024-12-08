@@ -11,4 +11,10 @@ describe('Slug schema for Zod', () => {
     expect(result.success).toBe(false);
     expect(result.error?.errors.at(0)?.message).toEqual('Must only contain lower case alphanumeric and dashes (-).');
   });
+
+  it('returns error when slug is a reserved word', () => {
+    const result = SlugSchema.safeParse('new');
+    expect(result.success).toBe(false);
+    expect(result.error?.errors.at(0)?.message).toEqual('This URL is reserved.');
+  });
 });

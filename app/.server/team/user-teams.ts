@@ -1,16 +1,9 @@
 import { db } from 'prisma/db.server.ts';
 import { z } from 'zod';
-
-import { ForbiddenOperationError, SlugAlreadyExistsError } from '~/libs/errors.server.ts';
+import { ForbiddenOperationError } from '~/libs/errors.server.ts';
 import { sortBy } from '~/libs/utils/arrays-sort-by.ts';
 import { SlugSchema } from '~/libs/validators/slug.ts';
-
 import { TeamBetaAccess } from './team-beta-access.ts';
-
-export const TeamCreateSchema = z.object({
-  name: z.string().trim().min(3).max(50),
-  slug: SlugSchema,
-});
 
 export class UserTeams {
   constructor(private userId: string) {}
@@ -45,14 +38,19 @@ export class UserTeams {
     if (!hasBetaAccess) throw new ForbiddenOperationError();
 
     return await db.$transaction(async (trx) => {
-      const existSlug = await trx.team.findFirst({ where: { slug: data.slug } });
-      if (existSlug) throw new SlugAlreadyExistsError();
-
       const team = await trx.team.create({ data });
-      await trx.teamMember.create({
-        data: { memberId: this.userId, teamId: team.id, role: 'OWNER' },
-      });
+      await trx.teamMember.create({ data: { memberId: this.userId, teamId: team.id, role: 'OWNER' } });
       return team;
     });
   }
+
+  static async isSlugValid(slug: string) {
+    const count = await db.team.count({ where: { slug } });
+    return count === 0;
+  }
 }
+
+export const TeamCreateSchema = z.object({
+  name: z.string().trim().min(3).max(50),
+  slug: SlugSchema.refine(UserTeams.isSlugValid, { message: 'This URL already exists.' }),
+});

@@ -3,9 +3,7 @@ import { db } from 'prisma/db.server.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-
-import { EventNotFoundError, ForbiddenOperationError, SlugAlreadyExistsError } from '~/libs/errors.server.ts';
-
+import { EventNotFoundError, ForbiddenOperationError } from '~/libs/errors.server.ts';
 import { UserEvent } from './user-event.ts';
 
 describe('UserEvent', () => {
@@ -175,14 +173,6 @@ describe('UserEvent', () => {
 
     it.todo('test location geocoding');
 
-    it('returns an error message when slug already exists', async () => {
-      await eventFactory({ team, attributes: { slug: 'hello-world' } });
-
-      await expect(UserEvent.for(owner.id, team.slug, event.slug).update({ slug: 'hello-world' })).rejects.toThrowError(
-        SlugAlreadyExistsError,
-      );
-    });
-
     it('throws an error if user is not owner', async () => {
       await expect(
         UserEvent.for(reviewer.id, team.slug, event.slug).update({ name: 'Hello world' }),
@@ -194,6 +184,52 @@ describe('UserEvent', () => {
       await expect(UserEvent.for(user.id, team.slug, event.slug).update({ name: 'Hello world' })).rejects.toThrowError(
         ForbiddenOperationError,
       );
+    });
+  });
+
+  describe('#buildGeneralSettingsSchema', () => {
+    let owner: User;
+    let team: Team;
+    let event: Event;
+
+    beforeEach(async () => {
+      owner = await userFactory();
+      team = await teamFactory({ owners: [owner] });
+      event = await eventFactory({ team });
+    });
+
+    it('validates when slug is the same as the original', async () => {
+      const schema = await UserEvent.for(owner.id, team.slug, event.slug).buildGeneralSettingsSchema();
+
+      const result = await schema.safeParseAsync({
+        name: 'Hello',
+        visibility: 'PUBLIC',
+        slug: event.slug,
+        timezone: 'Europe/Paris',
+      });
+
+      console.log(result.error);
+
+      expect(result.success).toBe(true);
+    });
+
+    it('returns an error when slug already exists', async () => {
+      await eventFactory({ attributes: { slug: 'hello-world' } });
+
+      const schema = await UserEvent.for(owner.id, team.slug, event.slug).buildGeneralSettingsSchema();
+
+      const result = await schema.safeParseAsync({
+        name: 'Hello',
+        visibility: 'PUBLIC',
+        slug: 'hello-world',
+        timezone: 'Europe/Paris',
+      });
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        const { fieldErrors } = result.error.flatten();
+        expect(fieldErrors.slug).toEqual(['This URL already exists.']);
+      }
     });
   });
 });

@@ -1,11 +1,10 @@
-import type { User } from '@prisma/client';
+import type { Team, User } from '@prisma/client';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-
 import { appUrl } from '~/libs/env/env.server.ts';
-import { ForbiddenOperationError, SlugAlreadyExistsError } from '~/libs/errors.server.ts';
+import { ForbiddenOperationError } from '~/libs/errors.server.ts';
 
-import { TeamUpdateSchema, UserTeam } from './user-team.ts';
+import { UserTeam } from './user-team.ts';
 
 describe('UserTeam', () => {
   let user: User;
@@ -107,25 +106,24 @@ describe('UserTeam', () => {
         UserTeam.for(user.id, team.slug).updateSettings({ name: 'name', slug: 'slug' }),
       ).rejects.toThrowError(ForbiddenOperationError);
     });
-
-    it('throws an error if the slug already exists', async () => {
-      const team = await teamFactory({ attributes: { slug: 'hello-world' }, owners: [user] });
-      await teamFactory({ attributes: { slug: 'hello-world-exist' }, owners: [user] });
-
-      await expect(
-        UserTeam.for(user.id, team.slug).updateSettings({ name: 'Hello world', slug: 'hello-world-exist' }),
-      ).rejects.toThrowError(SlugAlreadyExistsError);
-    });
   });
 
-  describe('Validate TeamUpdateSchema', () => {
+  describe('#buildUpdateSchema', () => {
+    let team: Team;
+
+    beforeEach(async () => {
+      team = await teamFactory({ owners: [user], attributes: { name: 'Hello world', slug: 'hello-world' } });
+    });
+
     it('validates the team data', async () => {
-      const result = TeamUpdateSchema.safeParse({ name: 'Hello world', slug: 'hello-world' });
+      const schema = await UserTeam.for(user.id, team.slug).buildUpdateSchema();
+      const result = await schema.safeParseAsync({ name: 'Hello world', slug: 'hello-world' });
       expect(result.success && result.data).toEqual({ name: 'Hello world', slug: 'hello-world' });
     });
 
     it('returns errors when data invalid', async () => {
-      const result = TeamUpdateSchema.safeParse({ name: 'H', slug: 'h' });
+      const schema = await UserTeam.for(user.id, team.slug).buildUpdateSchema();
+      const result = await schema.safeParseAsync({ name: 'H', slug: 'h' });
 
       expect(result.success).toBe(false);
       if (!result.success) {
@@ -136,12 +134,26 @@ describe('UserTeam', () => {
     });
 
     it('validates slug format (alpha-num and dash only)', async () => {
-      const result = TeamUpdateSchema.safeParse({ name: 'Hello world', slug: 'Hello world/' });
+      const schema = await UserTeam.for(user.id, team.slug).buildUpdateSchema();
+      const result = await schema.safeParseAsync({ name: 'Hello world', slug: 'Hello world/' });
 
       expect(result.success).toBe(false);
       if (!result.success) {
         const { fieldErrors } = result.error.flatten();
         expect(fieldErrors.slug).toEqual(['Must only contain lower case alphanumeric and dashes (-).']);
+      }
+    });
+
+    it('returns an error when slug already exists', async () => {
+      await teamFactory({ attributes: { slug: 'hello-world2' } });
+
+      const schema = await UserTeam.for(user.id, team.slug).buildUpdateSchema();
+      const result = await schema.safeParseAsync({ name: 'Hello world', slug: 'hello-world2' });
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        const { fieldErrors } = result.error.flatten();
+        expect(fieldErrors.slug).toEqual(['This URL already exists.']);
       }
     });
   });

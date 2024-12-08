@@ -1,12 +1,11 @@
 import type { Prisma } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
-
-import { EventNotFoundError, ForbiddenOperationError, SlugAlreadyExistsError } from '~/libs/errors.server.ts';
-import type { EventEmailNotificationsKeys } from '~/types/events.types.ts';
-
+import { EventNotFoundError, ForbiddenOperationError } from '~/libs/errors.server.ts';
 import { sortBy } from '~/libs/utils/arrays-sort-by.ts';
+import type { EventEmailNotificationsKeys } from '~/types/events.types.ts';
 import type { Permission } from '../team/user-permissions.ts';
 import { UserPermissions } from '../team/user-permissions.ts';
+import { EventGeneralSettingsSchema } from './user-event.types.ts';
 
 export class UserEvent {
   constructor(
@@ -83,13 +82,16 @@ export class UserEvent {
 
   async update(data: Partial<Prisma.EventCreateInput>) {
     const event = await this.needsPermission('canEditEvent');
+    return db.event.update({ where: { id: event.id }, data: { ...data } });
+  }
 
-    return db.$transaction(async (trx) => {
-      if (data.slug) {
-        const existSlug = await trx.event.findFirst({ where: { slug: data.slug, id: { not: event.id } } });
-        if (existSlug) throw new SlugAlreadyExistsError();
-      }
-      return trx.event.update({ where: { id: event.id }, data: { ...data } });
-    });
+  async buildGeneralSettingsSchema() {
+    return EventGeneralSettingsSchema.refine(
+      async ({ slug }) => {
+        const count = await db.event.count({ where: { AND: [{ slug }, { slug: { not: this.eventSlug } }] } });
+        return count === 0;
+      },
+      { message: 'This URL already exists.', path: ['slug'] },
+    );
   }
 }

@@ -2,7 +2,7 @@ import { parseWithZod } from '@conform-to/zod';
 import { ArchiveBoxArrowDownIcon, ArchiveBoxXMarkIcon } from '@heroicons/react/24/outline';
 import { Form, redirect } from 'react-router';
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
-import { EventDetailsSettingsSchema, EventGeneralSettingsSchema } from '~/.server/event-settings/user-event.types.ts';
+import { EventDetailsSettingsSchema } from '~/.server/event-settings/user-event.types.ts';
 import { Button } from '~/design-system/buttons.tsx';
 import { Callout } from '~/design-system/callout.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
@@ -27,14 +27,10 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 
   switch (intent) {
     case 'general': {
-      const result = parseWithZod(form, { schema: EventGeneralSettingsSchema });
+      const schema = await event.buildGeneralSettingsSchema();
+      const result = await parseWithZod(form, { schema, async: true });
       if (result.status !== 'success') return result.error;
-      let updated = null;
-      try {
-        updated = await event.update(result.value);
-      } catch (_error) {
-        return { slug: ['This URL already exists, please try another one.'] } as Record<string, string[]>;
-      }
+      const updated = await event.update(result.value);
       const headers = await toastHeaders('success', 'Event saved.');
       throw redirect(`/team/${params.team}/${updated.slug}/settings`, { headers });
     }

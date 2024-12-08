@@ -30,6 +30,6 @@ describe('Team create', () => {
     teamNew.fillForm({ name: 'team 1' });
     cy.assertInputText('Team URL', 'team-1');
     teamNew.newTeam().click();
-    teamNew.inputError('Team URL').should('contains.text', 'This URL already exists, please try another one.');
+    teamNew.inputError('Team URL').should('contains.text', 'This URL already exists.');
   });
 });

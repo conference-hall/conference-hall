@@ -1,11 +1,9 @@
 import type { User } from '@prisma/client';
 import { db } from 'prisma/db.server.ts';
+import { eventFactory } from 'tests/factories/events.ts';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
-
-import { ForbiddenOperationError, SlugAlreadyExistsError } from '~/libs/errors.server.ts';
-
-import { eventFactory } from 'tests/factories/events.ts';
+import { ForbiddenOperationError } from '~/libs/errors.server.ts';
 import { TeamCreateSchema, UserTeams } from './user-teams.ts';
 
 describe('UserTeams', () => {
@@ -62,24 +60,16 @@ describe('UserTeams', () => {
         ForbiddenOperationError,
       );
     });
-
-    it('returns an error when slug already exists', async () => {
-      await teamFactory({ attributes: { slug: 'hello-world' } });
-
-      await expect(UserTeams.for(user.id).create({ name: 'Hello world', slug: 'hello-world' })).rejects.toThrowError(
-        SlugAlreadyExistsError,
-      );
-    });
   });
 
   describe('Validate TeamCreateSchema', () => {
     it('validates the team data', async () => {
-      const result = TeamCreateSchema.safeParse({ name: 'Hello world', slug: 'hello-world' });
+      const result = await TeamCreateSchema.safeParseAsync({ name: 'Hello world', slug: 'hello-world' });
       expect(result.success && result.data).toEqual({ name: 'Hello world', slug: 'hello-world' });
     });
 
     it('returns errors when data invalid', async () => {
-      const result = TeamCreateSchema.safeParse({ name: 'H', slug: 'h' });
+      const result = await TeamCreateSchema.safeParseAsync({ name: 'H', slug: 'h' });
 
       expect(result.success).toBe(false);
       if (!result.success) {
@@ -90,12 +80,24 @@ describe('UserTeams', () => {
     });
 
     it('validates slug format (alpha-num and dash only)', async () => {
-      const result = TeamCreateSchema.safeParse({ name: 'Hello world', slug: 'Hello world/' });
+      const result = await TeamCreateSchema.safeParseAsync({ name: 'Hello world', slug: 'Hello world/' });
 
       expect(result.success).toBe(false);
       if (!result.success) {
         const { fieldErrors } = result.error.flatten();
         expect(fieldErrors.slug).toEqual(['Must only contain lower case alphanumeric and dashes (-).']);
+      }
+    });
+
+    it('returns an error when slug already exists', async () => {
+      await teamFactory({ attributes: { slug: 'hello-world' } });
+
+      const result = await TeamCreateSchema.safeParseAsync({ name: 'Hello world', slug: 'hello-world' });
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        const { fieldErrors } = result.error.flatten();
+        expect(fieldErrors.slug).toEqual(['This URL already exists.']);
       }
     });
   });
