@@ -68,7 +68,6 @@ export class UserProposal {
       where: { id: this.proposalId },
       data: {
         ...talk,
-        speakers: { set: [], connect: [{ id: this.speakerId }] },
         formats: { set: [], connect: formats?.map((id) => ({ id })) },
         categories: { set: [], connect: categories?.map((id) => ({ id })) },
       },
