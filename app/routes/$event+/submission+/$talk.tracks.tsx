@@ -2,7 +2,6 @@ import { parseWithZod } from '@conform-to/zod';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { Form, redirect } from 'react-router';
 import { TalkSubmission } from '~/.server/cfp-submission-funnel/talk-submission.ts';
-import { getTracksSchema } from '~/.server/cfp-submission-funnel/talk-submission.types.ts';
 import { EventPage } from '~/.server/event-page/event-page.ts';
 import { Button, ButtonLink } from '~/design-system/buttons.tsx';
 import { Callout } from '~/design-system/callout.tsx';
@@ -27,9 +26,8 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 export const action = async ({ request, params }: Route.ActionArgs) => {
   const userId = await requireSession(request);
   const form = await request.formData();
-  const { formatsRequired, categoriesRequired } = await EventPage.of(params.event).get();
-  // TODO: [routes] Add a build tracks schema in EvenPage
-  const result = parseWithZod(form, { schema: getTracksSchema(formatsRequired, categoriesRequired) });
+  const schema = await EventPage.of(params.event).buildTracksSchema();
+  const result = parseWithZod(form, { schema });
   if (result.status !== 'success') return result.error;
 
   const submission = TalkSubmission.for(userId, params.event);

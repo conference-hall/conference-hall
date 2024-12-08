@@ -7,7 +7,7 @@ import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import type { Mock } from 'vitest';
-
+import { sendEmail } from '~/emails/send-email.job.ts';
 import {
   CfpNotOpenError,
   EventNotFoundError,
@@ -15,11 +15,8 @@ import {
   ProposalNotFoundError,
   TalkNotFoundError,
 } from '~/libs/errors.server.ts';
-
-import { sendEmail } from '~/emails/send-email.job.ts';
 import { sendSubmittedTalkSlackMessage } from './slack/slack.services.ts';
 import { TalkSubmission } from './talk-submission.ts';
-import { getTracksSchema } from './talk-submission.types.ts';
 
 vi.mock('./slack/slack.services.ts', () => {
   return { sendSubmittedTalkSlackMessage: vi.fn() };
@@ -419,35 +416,5 @@ describe('TalkSubmission', () => {
         TalkSubmission.for(speaker.id, event.slug).removeCoSpeaker('XXX', cospeaker.id),
       ).rejects.toThrowError(ProposalNotFoundError);
     });
-  });
-});
-
-describe('#getTracksSchema', () => {
-  it('validates tracks form inputs', () => {
-    const TrackSchema = getTracksSchema(true, true);
-    const result = TrackSchema.safeParse({
-      formats: ['format 1', 'format 2'],
-      categories: ['category 1', 'category 2'],
-    });
-    expect(result.success && result.data).toEqual({
-      formats: ['format 1', 'format 2'],
-      categories: ['category 1', 'category 2'],
-    });
-  });
-
-  it('validates tracks when no tracks', () => {
-    const TrackSchema = getTracksSchema(false, false);
-    const result = TrackSchema.safeParse({ formats: [], categories: [] });
-
-    expect(result.success && result.data).toEqual({ formats: [], categories: [] });
-  });
-
-  it('returns errors when no tracks and tracks are mandatory', () => {
-    const TrackSchema = getTracksSchema(true, true);
-    const result = TrackSchema.safeParse({ formats: [], categories: [] });
-
-    const errors = result.error?.flatten();
-    expect(errors?.fieldErrors.formats).toEqual(['Array must contain at least 1 element(s)']);
-    expect(errors?.fieldErrors.categories).toEqual(['Array must contain at least 1 element(s)']);
   });
 });
