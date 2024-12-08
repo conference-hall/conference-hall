@@ -24,7 +24,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 
 export default function TeamLayout() {
   const team = useLoaderData<typeof loader>();
-  const event = useRouteLoaderData<typeof routeEventLoader>('routes/team+/$team.$event+/_layout');
+  const event = useRouteLoaderData<typeof routeEventLoader>('team-current-event');
 
   const { isFullscreen } = useScheduleFullscreen();
   const isEventCreationRoute = Boolean(useMatch('/team/:team/new/*'));
