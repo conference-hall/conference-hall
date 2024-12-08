@@ -1,13 +1,13 @@
-import type { MetaDescriptor } from 'react-router';
+import type { MetaDescriptors } from 'react-router/route-module';
 
-type MetaMatches = Array<{ meta: MetaDescriptor[] } | undefined>;
+type MetaMatches = Array<{ meta: MetaDescriptors } | undefined>;
 
-export function mergeMeta(matches: MetaMatches, routeMeta: MetaDescriptor[]) {
+export function mergeMeta(matches: MetaMatches, routeMeta: MetaDescriptors) {
   const parentMeta = matches?.flatMap((match) => match?.meta ?? []);
   return overrideMeta(parentMeta, routeMeta);
 }
 
-function overrideMeta(origin: MetaDescriptor[], overrides: MetaDescriptor[]) {
+function overrideMeta(origin: MetaDescriptors, overrides: MetaDescriptors) {
   const overriddenMeta = [...origin];
   for (const override of overrides) {
     const index = overriddenMeta.findIndex(

@@ -10,6 +10,10 @@ Components are styled using Tailwind CSS, so any styling suggestions should be c
 
 Our tests are run with Vitest, so please structure all test-related code and examples to align with Vitest’s syntax and best practices.
 
+No need to import Vitest functions and helpers, they are declared globally.
+
+Test names must not start with "should" but with a verb.
+
 All javascript and typescript file imports includes the file extensions (ex: import { Example } from './example.ts' ), use this syntax for the suggestions.
 
 Prefer named exports over default exports, use this convention for the suggestions.

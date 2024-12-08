@@ -1,6 +1,6 @@
 import { eventSocialCard } from './social-cards.ts';
 
-describe('#eventSocialCard', () => {
+describe('eventSocialCard', () => {
   it('returns an event social card with a logo', () => {
     const socialCard = eventSocialCard({ name: 'Devfest', slug: 'devfest', logoUrl: 'https://devfest.com/logo.png' });
 
