@@ -108,7 +108,7 @@ export class SurveyInvalidError extends BadRequestError {
 
 export class ApiKeyInvalidError extends BadRequestError {
   constructor() {
-    super('API key invalid');
+    super('API key is invalid');
   }
 }
 
