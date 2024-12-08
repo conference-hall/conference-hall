@@ -1,7 +1,4 @@
-import type { LoaderFunctionArgs } from 'react-router';
 import { useFetcher } from 'react-router';
-import invariant from 'tiny-invariant';
-
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
 import { ToggleGroup } from '~/design-system/forms/toggles.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
@@ -9,18 +6,16 @@ import { H2 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { useCurrentEvent } from '~/routes/__components/contexts/event-team-context';
+import type { Route } from './+types/review.ts';
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+export const loader = async ({ request }: Route.LoaderArgs) => {
   await requireSession(request);
   return null;
 };
 
-export const action = async ({ request, params }: LoaderFunctionArgs) => {
+export const action = async ({ request, params }: Route.ActionArgs) => {
   const userId = await requireSession(request);
-  invariant(params.team, 'Invalid team slug');
-  invariant(params.event, 'Invalid event slug');
   const event = UserEvent.for(userId, params.team, params.event);
-
   const form = await request.formData();
   const settingName = form.get('_setting') as string;
   await event.update({ [settingName]: form.get(settingName) === 'true' });
@@ -29,7 +24,6 @@ export const action = async ({ request, params }: LoaderFunctionArgs) => {
 
 export default function EventReviewSettingsRoute() {
   const currentEvent = useCurrentEvent();
-
   const fetcher = useFetcher<typeof action>();
 
   return (

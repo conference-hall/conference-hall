@@ -1,8 +1,5 @@
 import { parseWithZod } from '@conform-to/zod';
 import { CreditCardIcon, KeyIcon, UserCircleIcon } from '@heroicons/react/20/solid';
-import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
-import { useActionData } from 'react-router';
-
 import { SpeakerProfile } from '~/.server/speaker-profile/speaker-profile.ts';
 import {
   AdditionalInfoSchema,
@@ -13,22 +10,21 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { NavSideMenu } from '~/design-system/navigation/nav-side-menu.tsx';
 import { H1 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { mergeMeta } from '~/libs/meta/merge-meta.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-
 import { useSpeakerProfile } from '../__components/contexts/speaker-profile-context.tsx';
+import type { Route } from './+types/profile.ts';
 import { AdditionalInfoForm } from './__components/additional-info-form.tsx';
 import { PersonalInfoForm } from './__components/personal-info-form.tsx';
 import { SpeakerDetailsForm } from './__components/speaker-details-form.tsx';
 
-export const meta = mergeMeta(() => [{ title: 'My profile | Conference Hall' }]);
+export const meta = () => [{ title: 'My profile | Conference Hall' }];
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+export const loader = async ({ request }: Route.LoaderArgs) => {
   await requireSession(request);
   return null;
 };
 
-export const action = async ({ request }: ActionFunctionArgs) => {
+export const action = async ({ request }: Route.ActionArgs) => {
   const userId = await requireSession(request);
   const form = await request.formData();
   const intent = form.get('intent') as string;
@@ -63,9 +59,8 @@ const MENU_ITEMS = [
   { to: '#additional-info', icon: CreditCardIcon, label: 'Additional information' },
 ];
 
-export default function ProfileRoute() {
+export default function ProfileRoute({ actionData: errors }: Route.ComponentProps) {
   const profile = useSpeakerProfile();
-  const errors = useActionData<typeof action>();
 
   return (
     <Page className="lg:grid lg:grid-cols-12">

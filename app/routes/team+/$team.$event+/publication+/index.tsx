@@ -1,8 +1,4 @@
 import { parseWithZod } from '@conform-to/zod';
-import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
-import { useLoaderData } from 'react-router';
-import invariant from 'tiny-invariant';
-
 import { Publication } from '~/.server/publications/publication.ts';
 import { PublishResultFormSchema } from '~/.server/publications/publication.types.ts';
 import { Callout } from '~/design-system/callout.tsx';
@@ -16,35 +12,26 @@ import { H1, H2, Subtitle } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { BadRequestError } from '~/libs/errors.server.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-
+import type { Route } from './+types/index.ts';
 import { PublicationButton } from './__components/publication-confirm-modal.tsx';
 
-export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const userId = await requireSession(request);
-  invariant(params.event, 'Invalid event slug');
-  invariant(params.team, 'Invalid team slug');
-
   return Publication.for(userId, params.team, params.event).statistics();
 };
 
-export const action = async ({ request, params }: ActionFunctionArgs) => {
+export const action = async ({ request, params }: Route.ActionArgs) => {
   const userId = await requireSession(request);
-  invariant(params.team, 'Invalid team slug');
-  invariant(params.event, 'Invalid event slug');
-
   const form = await request.formData();
   const result = parseWithZod(form, { schema: PublishResultFormSchema });
   if (result.status !== 'success') throw new BadRequestError('Invalid form data');
 
   const { type, sendEmails } = result.value;
   await Publication.for(userId, params.team, params.event).publishAll(type, sendEmails);
-
   return toast('success', type === 'ACCEPTED' ? 'Accepted proposals published.' : 'Rejected proposals published.');
 };
 
-export default function PublicationRoute() {
-  const statistics = useLoaderData<typeof loader>();
-
+export default function PublicationRoute({ loaderData: statistics }: Route.ComponentProps) {
   return (
     <Page>
       <H1 srOnly>Publication</H1>

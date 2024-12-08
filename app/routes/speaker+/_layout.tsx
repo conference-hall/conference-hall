@@ -1,7 +1,5 @@
 import { cx } from 'class-variance-authority';
-import type { LoaderFunctionArgs } from 'react-router';
-import { Outlet, useLoaderData } from 'react-router';
-
+import { Outlet } from 'react-router';
 import { SpeakerProfile } from '~/.server/speaker-profile/speaker-profile.ts';
 import { Avatar } from '~/design-system/avatar.tsx';
 import { BG_GRADIENT_COLOR } from '~/design-system/colors.ts';
@@ -9,19 +7,17 @@ import { Container } from '~/design-system/layouts/container.tsx';
 import { H1, Text } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { Navbar } from '~/routes/__components/navbar/navbar.tsx';
-
 import { SpeakerProfileProvider } from '../__components/contexts/speaker-profile-context.tsx';
 import { Footer } from '../__components/footer.tsx';
+import type { Route } from './+types/_layout.ts';
 import { SpeakerTabs } from './__components/speaker-tabs.tsx';
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+export const loader = async ({ request }: Route.LoaderArgs) => {
   const userId = await requireSession(request);
   return SpeakerProfile.for(userId).get();
 };
 
-export default function SpeakerRoute() {
-  const profile = useLoaderData<typeof loader>();
-
+export default function SpeakerRoute({ loaderData: profile }: Route.ComponentProps) {
   return (
     <>
       <Navbar />

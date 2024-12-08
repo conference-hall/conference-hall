@@ -1,8 +1,4 @@
 import { parseWithZod } from '@conform-to/zod';
-import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
-import { useLoaderData } from 'react-router';
-import invariant from 'tiny-invariant';
-
 import { CfpReviewsSearch } from '~/.server/reviews/cfp-reviews-search.ts';
 import { Deliberate, DeliberateBulkSchema } from '~/.server/reviews/deliberate.ts';
 import { parseUrlPage } from '~/.server/shared/pagination.ts';
@@ -11,7 +7,7 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { getObjectHash } from '~/libs/utils/object-hash.ts';
-
+import type { Route } from './+types/index.ts';
 import { ExportMenu } from './__components/proposals-list-page/actions/export-menu.tsx';
 import { FiltersMenu } from './__components/proposals-list-page/filters/filters-menu.tsx';
 import { FiltersTags } from './__components/proposals-list-page/filters/filters-tags.tsx';
@@ -19,28 +15,21 @@ import { SearchInput } from './__components/proposals-list-page/filters/search-i
 import { SortMenu } from './__components/proposals-list-page/filters/sort-menu.tsx';
 import { ProposalsList } from './__components/proposals-list-page/proposals-list.tsx';
 
-export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const userId = await requireSession(request);
-  invariant(params.team, 'Invalid team slug');
-  invariant(params.event, 'Invalid event slug');
-
   const filters = parseUrlFilters(request.url);
   const page = parseUrlPage(request.url);
   return CfpReviewsSearch.for(userId, params.team, params.event).search(filters, page);
 };
 
-export const action = async ({ request, params }: ActionFunctionArgs) => {
+export const action = async ({ request, params }: Route.ActionArgs) => {
   const userId = await requireSession(request);
-  invariant(params.team, 'Invalid team slug');
-  invariant(params.event, 'Invalid event slug');
-
   const form = await request.formData();
   const result = parseWithZod(form, { schema: DeliberateBulkSchema });
   if (result.status !== 'success') return null;
 
   const { selection, status, allPagesSelected } = result.value;
   const deliberate = Deliberate.for(userId, params.team, params.event);
-
   let count = 0;
   if (allPagesSelected) {
     const filters = parseUrlFilters(request.url);
@@ -51,9 +40,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   return toast('success', `${count} proposals marked as "${status.toLowerCase()}".`);
 };
 
-export default function ReviewsRoute() {
-  const { results, filters, pagination, statistics } = useLoaderData<typeof loader>();
-
+export default function ReviewsRoute({ loaderData }: Route.ComponentProps) {
+  const { results, filters, pagination, statistics } = loaderData;
   const filtersHash = getObjectHash(filters);
 
   return (

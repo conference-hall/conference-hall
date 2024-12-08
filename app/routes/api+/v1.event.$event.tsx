@@ -1,12 +1,9 @@
-import type { LoaderFunctionArgs } from 'react-router';
 import invariant from 'tiny-invariant';
-
 import { EventApi } from '~/.server/event-web-api/event-api.ts';
 import { parseUrlFilters } from '~/.server/shared/proposal-search-builder.types.ts';
+import type { Route } from './+types/v1.event.$event.ts';
 
-export const loader = async ({ request, params }: LoaderFunctionArgs) => {
-  invariant(params.event, 'Invalid event slug');
-
+export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const url = new URL(request.url);
   const key = url.searchParams.get('key');
   invariant(key, 'Invalid api key');

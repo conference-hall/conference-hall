@@ -1,8 +1,8 @@
 import { parseWithZod } from '@conform-to/zod';
-import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
-import { Form, useActionData, useLoaderData } from 'react-router';
-import invariant from 'tiny-invariant';
-
+import { Form } from 'react-router';
+import { z } from 'zod';
+import { EventIntegrations } from '~/.server/event-settings/event-integrations.ts';
+import { OpenPlannerConfigSchema } from '~/.server/event-settings/event-integrations.types.ts';
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
 import { EventSlackSettingsSchema } from '~/.server/event-settings/user-event.types.ts';
 import { Button } from '~/design-system/buttons.tsx';
@@ -12,29 +12,19 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { ExternalLink } from '~/design-system/links.tsx';
 import { H2, Text } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-
-import { z } from 'zod';
-import { EventIntegrations } from '~/.server/event-settings/event-integrations.ts';
-import { OpenPlannerConfigSchema } from '~/.server/event-settings/event-integrations.types.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
 import { useCurrentEvent } from '~/routes/__components/contexts/event-team-context';
+import type { Route } from './+types/integrations.ts';
 
-export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const userId = await requireSession(request);
-  invariant(params.team, 'Invalid team slug');
-  invariant(params.event, 'Invalid event slug');
-
   const eventIntegrations = EventIntegrations.for(userId, params.team, params.event);
   const openPlanner = await eventIntegrations.getConfiguration('OPEN_PLANNER');
-
   return { openPlanner };
 };
 
-export const action = async ({ request, params }: ActionFunctionArgs) => {
+export const action = async ({ request, params }: Route.ActionArgs) => {
   const userId = await requireSession(request);
-  invariant(params.team, 'Invalid team slug');
-  invariant(params.event, 'Invalid event slug');
-
   const form = await request.formData();
   const intent = form.get('intent');
 
@@ -78,10 +68,9 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   return null;
 };
 
-export default function EventIntegrationsSettingsRoute() {
-  const { openPlanner } = useLoaderData<typeof loader>();
-  const errors = useActionData<typeof action>();
+export default function EventIntegrationsSettingsRoute({ loaderData, actionData: errors }: Route.ComponentProps) {
   const { slackWebhookUrl } = useCurrentEvent();
+  const { openPlanner } = loaderData;
 
   return (
     <div className="space-y-8">

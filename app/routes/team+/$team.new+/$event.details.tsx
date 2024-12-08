@@ -1,49 +1,37 @@
 import { parseWithZod } from '@conform-to/zod';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { CheckIcon, ClockIcon } from '@heroicons/react/24/outline';
-import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
-import { redirect, useActionData, useLoaderData } from 'react-router';
-import invariant from 'tiny-invariant';
-
+import { redirect } from 'react-router';
 import { UserEvent } from '~/.server/event-settings/user-event.ts';
 import { EventDetailsSettingsSchema } from '~/.server/event-settings/user-event.types.ts';
 import { Button, ButtonLink } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
+import { useCurrentTeam } from '~/routes/__components/contexts/team-context.tsx';
 import { EventDetailsForm } from '~/routes/__components/events/event-details-form.tsx';
 import { FullscreenPage } from '~/routes/__components/fullscreen-page.tsx';
-
-import { useCurrentTeam } from '~/routes/__components/contexts/team-context.tsx';
 import { EventCreationStepper } from '../__components/event-creation-stepper.tsx';
+import type { Route } from './+types/$event.details.ts';
 
-export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const userId = await requireSession(request);
-  invariant(params.team, 'Invalid team slug');
-  invariant(params.event, 'Invalid event slug');
-
   return UserEvent.for(userId, params.team, params.event).get();
 };
 
-export const action = async ({ request, params }: ActionFunctionArgs) => {
+export const action = async ({ request, params }: Route.ActionArgs) => {
   const userId = await requireSession(request);
-  invariant(params.team, 'Invalid team slug');
-  invariant(params.event, 'Invalid event slug');
-
   const event = UserEvent.for(userId, params.team, params.event);
-
   const form = await request.formData();
   const result = parseWithZod(form, { schema: EventDetailsSettingsSchema });
   if (result.status !== 'success') return result.error;
+
   await event.update(result.value);
 
   throw redirect(`/team/${params.team}/new/${params.event}/cfp`);
 };
 
-export default function NewEventDetailsRoute() {
+export default function NewEventDetailsRoute({ loaderData: event, actionData: errors }: Route.ComponentProps) {
   const currentTeam = useCurrentTeam();
-  const event = useLoaderData<typeof loader>();
-  const errors = useActionData<typeof action>();
-
   const isConference = event.type === 'CONFERENCE';
 
   return (

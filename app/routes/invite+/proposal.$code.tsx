@@ -1,40 +1,30 @@
-import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
-import { Form, redirect, useLoaderData } from 'react-router';
-import invariant from 'tiny-invariant';
-
+import { Form, redirect } from 'react-router';
 import { CoSpeakerProposalInvite } from '~/.server/cfp-submissions/co-speaker-proposal-invite.ts';
 import { Button } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Markdown } from '~/design-system/markdown.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { mergeMeta } from '~/libs/meta/merge-meta.ts';
-
 import { EventCard } from '../__components/events/event-card.tsx';
 import { FullscreenPage } from '../__components/fullscreen-page.tsx';
 import { SpeakerPill } from '../__components/talks/co-speaker.tsx';
+import type { Route } from './+types/proposal.$code.ts';
 
-export const meta = mergeMeta(() => [{ title: 'Proposal invitation | Conference Hall' }]);
+export const meta = () => [{ title: 'Proposal invitation | Conference Hall' }];
 
-export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+export const loader = async ({ request, params }: Route.LoaderArgs) => {
   await requireSession(request);
-  invariant(params.code, 'Invalid code');
-
   const proposal = await CoSpeakerProposalInvite.with(params.code).check();
   return proposal;
 };
 
-export const action = async ({ request, params }: ActionFunctionArgs) => {
+export const action = async ({ request, params }: Route.ActionArgs) => {
   const userId = await requireSession(request);
-  invariant(params.code, 'Invalid code');
-
   const proposal = await CoSpeakerProposalInvite.with(params.code).addCoSpeaker(userId);
-  return redirect(`/${proposal.event.slug}/proposals/${proposal.id}`);
+  throw redirect(`/${proposal.event.slug}/proposals/${proposal.id}`);
 };
 
-export default function InvitationRoute() {
-  const proposal = useLoaderData<typeof loader>();
-
+export default function InvitationRoute({ loaderData: proposal }: Route.ComponentProps) {
   return (
     <FullscreenPage navbar="default">
       <FullscreenPage.Title

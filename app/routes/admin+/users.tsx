@@ -1,7 +1,6 @@
 import { parseWithZod } from '@conform-to/zod';
 import { ChevronRightIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid';
-import type { LoaderFunctionArgs } from 'react-router';
-import { Form, useLoaderData } from 'react-router';
+import { Form } from 'react-router';
 import { AdminUsers, UsersSearchFiltersSchema } from '~/.server/admin/admin-users.ts';
 import { parseUrlPage } from '~/.server/shared/pagination.ts';
 import { Input } from '~/design-system/forms/input.tsx';
@@ -9,23 +8,20 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { H1, Text } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
+import type { Route } from './+types/users.ts';
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+export const loader = async ({ request }: Route.LoaderArgs) => {
   const userId = await requireSession(request);
-
-  const adminUsers = await AdminUsers.for(userId);
-
   const { searchParams } = new URL(request.url);
   const result = parseWithZod(searchParams, { schema: UsersSearchFiltersSchema });
   const filters = result.status === 'success' ? result.value : {};
-
   const page = parseUrlPage(request.url);
-
+  const adminUsers = await AdminUsers.for(userId);
   return adminUsers.listUsers(filters, page);
 };
 
-export default function AdminUsersRoute() {
-  const { results, filters, pagination, statistics } = useLoaderData<typeof loader>();
+export default function AdminUsersRoute({ loaderData }: Route.ComponentProps) {
+  const { results, filters, pagination, statistics } = loaderData;
 
   return (
     <Page>

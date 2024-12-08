@@ -1,8 +1,6 @@
 import { parseWithZod } from '@conform-to/zod';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
-import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
-import { Form, redirect, useActionData, useLoaderData } from 'react-router';
-import invariant from 'tiny-invariant';
+import { Form, redirect } from 'react-router';
 import { TalkSubmission } from '~/.server/cfp-submission-funnel/talk-submission.ts';
 import { SpeakerProfile } from '~/.server/speaker-profile/speaker-profile.ts';
 import { DetailsSchema } from '~/.server/speaker-profile/speaker-profile.types.ts';
@@ -14,17 +12,16 @@ import { ExternalLink } from '~/design-system/links.tsx';
 import { H2, Subtitle, Text } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { CoSpeakers } from '~/routes/__components/talks/co-speaker.tsx';
+import type { Route } from './+types/$talk.speakers.ts';
 import { useSubmissionNavigation } from './__components/submission-context.tsx';
 
 export const handle = { step: 'speakers' };
 
-export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const userId = await requireSession(request);
-  invariant(params.event, 'Invalid event slug');
-  invariant(params.talk, 'Invalid talk id');
-
   const speaker = await SpeakerProfile.for(userId).get();
   const proposal = await TalkSubmission.for(userId, params.event).get(params.talk);
+
   return {
     speaker,
     invitationLink: proposal.invitationLink,
@@ -33,11 +30,8 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   };
 };
 
-export const action = async ({ request, params }: ActionFunctionArgs) => {
+export const action = async ({ request, params }: Route.ActionArgs) => {
   const userId = await requireSession(request);
-  invariant(params.event, 'Invalid event slug');
-  invariant(params.talk, 'Invalid talk id');
-
   const form = await request.formData();
   const intent = form.get('intent');
 
@@ -51,13 +45,11 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     await SpeakerProfile.for(userId).save(result.value);
   }
 
-  const redirectTo = String(form.get('redirectTo'));
-  throw redirect(redirectTo);
+  throw redirect(String(form.get('redirectTo')));
 };
 
-export default function SubmissionSpeakerRoute() {
-  const { speaker, speakers, isOwner, invitationLink } = useLoaderData<typeof loader>();
-  const errors = useActionData<typeof action>();
+export default function SubmissionSpeakerRoute({ loaderData, actionData: errors }: Route.ComponentProps) {
+  const { speaker, speakers, isOwner, invitationLink } = loaderData;
   const { previousPath, nextPath } = useSubmissionNavigation();
 
   return (

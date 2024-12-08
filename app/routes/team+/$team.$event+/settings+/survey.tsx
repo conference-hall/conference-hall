@@ -1,7 +1,4 @@
 import { parseWithZod } from '@conform-to/zod';
-import type { LoaderFunctionArgs } from 'react-router';
-import { useLoaderData } from 'react-router';
-import invariant from 'tiny-invariant';
 import { EventSurveySettings } from '~/.server/event-survey/event-survey-settings';
 import {
   SurveyMoveQuestionSchema,
@@ -10,24 +7,18 @@ import {
 } from '~/.server/event-survey/types.ts';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
+import type { Route } from './+types/survey.ts';
 import { SurveySettingsForm } from './__components/survey/survey-settings-form.tsx';
 
-export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const userId = await requireSession(request);
-  invariant(params.team, 'Invalid team slug');
-  invariant(params.event, 'Invalid event slug');
-
   const surveySettings = EventSurveySettings.for(userId, params.team, params.event);
-  const config = await surveySettings.getConfig();
-  return config;
+  return surveySettings.getConfig();
 };
 
-export const action = async ({ request, params }: LoaderFunctionArgs) => {
+export const action = async ({ request, params }: Route.ActionArgs) => {
   const userId = await requireSession(request);
-  invariant(params.team, 'Invalid team slug');
-  invariant(params.event, 'Invalid event slug');
   const surveySettings = EventSurveySettings.for(userId, params.team, params.event);
-
   const form = await request.formData();
   const intent = form.get('intent');
 
@@ -65,8 +56,6 @@ export const action = async ({ request, params }: LoaderFunctionArgs) => {
   return null;
 };
 
-export default function EventSurveySettingsRoute() {
-  const config = useLoaderData<typeof loader>();
-
+export default function EventSurveySettingsRoute({ loaderData: config }: Route.ComponentProps) {
   return <SurveySettingsForm config={config} />;
 }

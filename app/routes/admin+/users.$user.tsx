@@ -1,8 +1,5 @@
 import { ChevronLeftIcon } from '@heroicons/react/20/solid';
 import { format } from 'date-fns';
-import type { LoaderFunctionArgs } from 'react-router';
-import { useLoaderData } from 'react-router';
-import invariant from 'tiny-invariant';
 import { AdminUsers } from '~/.server/admin/admin-users.ts';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
@@ -10,21 +7,17 @@ import { Link } from '~/design-system/links.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { H1, H2, H3, Subtitle, Text } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
+import type { Route } from './+types/users.$user.ts';
 
 const DATETIME_FORMAT = 'dd/MM/yyyy HH:mm';
 
-export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const userId = await requireSession(request);
-  invariant(params.user);
-
   const adminUsers = await AdminUsers.for(userId);
-
   return adminUsers.getUserInfo(params.user);
 };
 
-export default function AdminUserRoute() {
-  const user = useLoaderData<typeof loader>();
-
+export default function AdminUserRoute({ loaderData: user }: Route.ComponentProps) {
   return (
     <Page className="space-y-6">
       <Link to="/admin/users" iconLeft={ChevronLeftIcon}>

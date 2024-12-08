@@ -1,36 +1,34 @@
 import { FaceFrownIcon } from '@heroicons/react/24/outline';
 import { cx } from 'class-variance-authority';
-import type { LoaderFunctionArgs } from 'react-router';
-import { useLoaderData, useSearchParams } from 'react-router';
-
+import { useSearchParams } from 'react-router';
 import { EventsSearch } from '~/.server/event-search/event-search.ts';
 import { parseUrlFilters } from '~/.server/event-search/event-search.types.ts';
 import { parseUrlPage } from '~/.server/shared/pagination.ts';
 import { BG_GRADIENT_COLOR } from '~/design-system/colors.ts';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
+import { Link } from '~/design-system/links.tsx';
 import { Pagination } from '~/design-system/list/pagination.tsx';
 import { H1, H2 } from '~/design-system/typography.tsx';
 import { Footer } from '~/routes/__components/footer.tsx';
 import { Navbar } from '~/routes/__components/navbar/navbar.tsx';
-
-import { Link } from '~/design-system/links.tsx';
+import type { Route } from './+types/index.ts';
 import { useUser } from './__components/contexts/user-context.tsx';
 import { EventCardLink } from './__components/events/event-card.tsx';
 import { SearchEventsFilters } from './__components/search/search-events-filters.tsx';
 import { SearchEventsInput } from './__components/search/search-events-input.tsx';
 import { SponsorLink } from './__components/sponsor-link.tsx';
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+export const loader = async ({ request }: Route.LoaderArgs) => {
   const filters = parseUrlFilters(request.url);
   const page = parseUrlPage(request.url);
   const results = await EventsSearch.with(filters, page).search();
   return results;
 };
 
-export default function IndexRoute() {
+export default function IndexRoute({ loaderData }: Route.ComponentProps) {
   const user = useUser();
-  const { filters, results, pagination } = useLoaderData<typeof loader>();
+  const { filters, results, pagination } = loaderData;
   const [searchParams] = useSearchParams();
   const talkId = searchParams.get('talkId');
 

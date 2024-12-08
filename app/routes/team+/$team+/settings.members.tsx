@@ -1,10 +1,7 @@
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { CubeTransparentIcon } from '@heroicons/react/24/outline';
 import type { TeamRole } from '@prisma/client';
-import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
-import { Form, useLoaderData, useSearchParams } from 'react-router';
-import invariant from 'tiny-invariant';
-
+import { Form, useSearchParams } from 'react-router';
 import { parseUrlPage } from '~/.server/shared/pagination.ts';
 import { TeamMembers, parseUrlFilters } from '~/.server/team/team-members.ts';
 import { AvatarName } from '~/design-system/avatar.tsx';
@@ -14,32 +11,27 @@ import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Pagination } from '~/design-system/list/pagination.tsx';
 import { H3, Subtitle } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { toast } from '~/libs/toasts/toast.server.ts';
-
 import { ROLE_NAMES } from '~/libs/formatters/team-roles.ts';
+import { toast } from '~/libs/toasts/toast.server.ts';
 import { useCurrentTeam } from '~/routes/__components/contexts/team-context.tsx';
 import { useUser } from '~/routes/__components/contexts/user-context.tsx';
+import type { Route } from './+types/settings.members.ts';
 import { ChangeRoleButton, InviteMemberButton, RemoveButton } from './__components/member-actions.tsx';
 
-export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const userId = await requireSession(request);
-  invariant(params.team, 'Invalid team slug');
-
   const filters = parseUrlFilters(request.url);
   const page = parseUrlPage(request.url);
-
   return TeamMembers.for(userId, params.team).list(filters, page);
 };
 
-export const action = async ({ request, params }: ActionFunctionArgs) => {
+export const action = async ({ request, params }: Route.ActionArgs) => {
   const userId = await requireSession(request);
-  invariant(params.team, 'Invalid team slug');
-
   const form = await request.formData();
   const intent = form.get('intent')!;
   const memberId = String(form.get('memberId'))!;
-
   const members = TeamMembers.for(userId, params.team);
+
   switch (intent) {
     case 'change-role': {
       await members.changeRole(memberId, form.get('memberRole') as TeamRole);
@@ -53,13 +45,12 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   return null;
 };
 
-export default function TeamMembersRoute() {
+export default function TeamMembersRoute({ loaderData }: Route.ComponentProps) {
   const user = useUser();
   const currentTeam = useCurrentTeam();
-  const [searchParams] = useSearchParams();
-  const { results, pagination } = useLoaderData<typeof loader>();
-
   const { canManageTeamMembers } = currentTeam.userPermissions;
+  const { results, pagination } = loaderData;
+  const [searchParams] = useSearchParams();
 
   return (
     <Card as="section">

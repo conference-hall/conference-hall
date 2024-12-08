@@ -1,5 +1,4 @@
-import type { LoaderFunctionArgs } from 'react-router';
-import { Form, useLoaderData, useSubmit } from 'react-router';
+import { Form, useSubmit } from 'react-router';
 import { AdminFlags } from '~/.server/admin/admin-flags.ts';
 import { Badge } from '~/design-system/badges.tsx';
 import { Button } from '~/design-system/buttons.tsx';
@@ -9,15 +8,16 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { List } from '~/design-system/list/list.tsx';
 import { H1, Text } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
+import type { Route } from './+types/flags.ts';
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+export const loader = async ({ request }: Route.LoaderArgs) => {
   const userId = await requireSession(request);
   const adminFlags = await AdminFlags.for(userId);
   const flags = await adminFlags.list();
   return flags;
 };
 
-export const action = async ({ request }: LoaderFunctionArgs) => {
+export const action = async ({ request }: Route.ActionArgs) => {
   const userId = await requireSession(request);
   const formData = await request.formData();
   const key = formData.get('key') as string;
@@ -27,9 +27,7 @@ export const action = async ({ request }: LoaderFunctionArgs) => {
   return null;
 };
 
-export default function AdminFlagsRoute() {
-  const flags = useLoaderData<typeof loader>();
-
+export default function AdminFlagsRoute({ loaderData: flags }: Route.ComponentProps) {
   return (
     <Page>
       <H1 srOnly>Feature flags</H1>

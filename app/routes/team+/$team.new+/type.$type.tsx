@@ -1,29 +1,24 @@
 import { parseWithZod } from '@conform-to/zod';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
-import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
-import { Form, redirect, useActionData, useParams } from 'react-router';
-import invariant from 'tiny-invariant';
-
+import { Form, redirect } from 'react-router';
 import { EventCreateSchema, TeamEvents } from '~/.server/team/team-events.ts';
 import { Button, ButtonLink } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { FullscreenPage } from '~/routes/__components/fullscreen-page.tsx';
 import type { EventType } from '~/types/events.types.ts';
-
 import { EventForm } from '../../__components/events/event-form.tsx';
 import { EventCreationStepper } from '../__components/event-creation-stepper.tsx';
+import type { Route } from './+types/type.$type.ts';
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+export const loader = async ({ request }: Route.LoaderArgs) => {
   await requireSession(request);
   return null;
 };
 
-export const action = async ({ request, params }: ActionFunctionArgs) => {
+export const action = async ({ request, params }: Route.ActionArgs) => {
   const userId = await requireSession(request);
-  invariant(params.team, 'Invalid team slug');
   const form = await request.formData();
-
   const result = parseWithZod(form, { schema: EventCreateSchema });
   if (result.status !== 'success') return result.error;
 
@@ -36,11 +31,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   throw redirect(`/team/${params.team}/new/${event.slug}/details`);
 };
 
-export default function NewEventRoute() {
-  const errors = useActionData<typeof action>();
-  const params = useParams();
+export default function NewEventRoute({ params, actionData: errors }: Route.ComponentProps) {
   const type = (params.type || 'CONFERENCE') as EventType;
-
   const title = type === 'CONFERENCE' ? 'Create a new conference.' : 'Create a new meetup.';
 
   return (

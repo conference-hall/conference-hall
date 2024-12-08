@@ -1,8 +1,5 @@
 import { parseWithZod } from '@conform-to/zod';
-import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
 import { useFetcher } from 'react-router';
-import invariant from 'tiny-invariant';
-
 import { EventTracksSettings } from '~/.server/event-settings/event-tracks-settings.ts';
 import { TrackSaveSchema, TracksSettingsSchema } from '~/.server/event-settings/event-tracks-settings.types.ts';
 import { ToggleGroup } from '~/design-system/forms/toggles.tsx';
@@ -10,23 +7,19 @@ import { Card } from '~/design-system/layouts/card.tsx';
 import { H2, Subtitle } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { toast } from '~/libs/toasts/toast.server.ts';
-
 import { useCurrentEvent } from '~/routes/__components/contexts/event-team-context.tsx';
+import type { Route } from './+types/tracks.ts';
 import { NewTrackButton } from './__components/save-track-form.tsx';
 import { TrackList } from './__components/track-list.tsx';
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+export const loader = async ({ request }: Route.LoaderArgs) => {
   await requireSession(request);
   return null;
 };
 
-export const action = async ({ request, params }: ActionFunctionArgs) => {
+export const action = async ({ request, params }: Route.ActionArgs) => {
   const userId = await requireSession(request);
-  invariant(params.team, 'Invalid team slug');
-  invariant(params.event, 'Invalid event slug');
-
   const tracks = EventTracksSettings.for(userId, params.team, params.event);
-
   const form = await request.formData();
   const intent = form.get('intent');
 
@@ -65,7 +58,6 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
 export default function EventTracksSettingsRoute() {
   const currentEvent = useCurrentEvent();
-
   const fetcher = useFetcher<typeof action>();
   const handleUpdateSettings = (name: string, checked: boolean) => {
     fetcher.submit(

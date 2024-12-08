@@ -1,23 +1,20 @@
 import { parseWithZod } from '@conform-to/zod';
-import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
-import { Form, redirect, useActionData } from 'react-router';
-
+import { Form, redirect } from 'react-router';
 import { TeamCreateSchema, UserTeams } from '~/.server/team/user-teams.ts';
 import { Button } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { TeamForm } from '~/routes/__components/teams/team-form.tsx';
-
 import { FullscreenPage } from '../__components/fullscreen-page.tsx';
+import type { Route } from './+types/new.ts';
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+export const loader = async ({ request }: Route.LoaderArgs) => {
   await requireSession(request);
   return null;
 };
 
-export const action = async ({ request }: ActionFunctionArgs) => {
+export const action = async ({ request }: Route.ActionArgs) => {
   const userId = await requireSession(request);
-
   const form = await request.formData();
   const result = parseWithZod(form, { schema: TeamCreateSchema });
   if (result.status !== 'success') return result.error;
@@ -31,9 +28,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   throw redirect(`/team/${team.slug}`);
 };
 
-export default function NewTeamRoute() {
-  const errors = useActionData<typeof action>();
-
+export default function NewTeamRoute({ actionData: errors }: Route.ComponentProps) {
   return (
     <FullscreenPage navbar="default">
       <FullscreenPage.Title

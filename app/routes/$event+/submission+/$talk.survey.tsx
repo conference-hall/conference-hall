@@ -1,8 +1,6 @@
 import { parseWithZod } from '@conform-to/zod';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
-import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
-import { redirect, useActionData, useLoaderData } from 'react-router';
-import invariant from 'tiny-invariant';
+import { redirect } from 'react-router';
 import { SpeakerSurvey } from '~/.server/event-survey/speaker-survey.ts';
 import { Button, ButtonLink } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
@@ -10,42 +8,34 @@ import { Page } from '~/design-system/layouts/page.tsx';
 import { H2 } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
 import { SurveyForm } from '~/routes/__components/talks/talk-forms/survey-form.tsx';
+import type { Route } from './+types/$talk.survey.ts';
 import { useSubmissionNavigation } from './__components/submission-context.tsx';
 
 export const handle = { step: 'survey' };
 
-export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const userId = await requireSession(request);
-  invariant(params.event, 'Invalid event slug');
-
   const survey = SpeakerSurvey.for(params.event);
   const questions = await survey.getQuestions();
   const answers = await survey.getSpeakerAnswers(userId);
-
   return { questions, answers };
 };
 
-export const action = async ({ request, params }: ActionFunctionArgs) => {
+export const action = async ({ request, params }: Route.ActionArgs) => {
   const userId = await requireSession(request);
-  invariant(params.event, 'Invalid event slug');
-  invariant(params.talk, 'Invalid talk id');
-
   const survey = SpeakerSurvey.for(params.event);
   const schema = await survey.buildSurveySchema();
-
   const form = await request.formData();
   const result = parseWithZod(form, { schema });
   if (result.status !== 'success') return result.error;
 
   await SpeakerSurvey.for(params.event).saveSpeakerAnswer(userId, result.value);
 
-  const redirectTo = String(form.get('redirectTo'));
-  throw redirect(redirectTo);
+  throw redirect(String(form.get('redirectTo')));
 };
 
-export default function SubmissionSurveyRoute() {
-  const { questions, answers } = useLoaderData<typeof loader>();
-  const errors = useActionData<typeof action>();
+export default function SubmissionSurveyRoute({ loaderData, actionData: errors }: Route.ComponentProps) {
+  const { questions, answers } = loaderData;
   const { previousPath, nextPath } = useSubmissionNavigation();
 
   return (

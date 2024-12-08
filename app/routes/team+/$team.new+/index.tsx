@@ -1,24 +1,21 @@
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { useState } from 'react';
-import type { LoaderFunctionArgs } from 'react-router';
-
 import { ButtonLink } from '~/design-system/buttons.tsx';
 import { Card } from '~/design-system/layouts/card.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
+import { useCurrentTeam } from '~/routes/__components/contexts/team-context.tsx';
 import { FullscreenPage } from '~/routes/__components/fullscreen-page.tsx';
 import type { EventType } from '~/types/events.types.ts';
-
-import { useCurrentTeam } from '~/routes/__components/contexts/team-context.tsx';
 import { EventTypeRadioGroup } from '../../__components/events/event-type-radio-group.tsx';
+import type { Route } from './+types/index.ts';
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+export const loader = async ({ request }: Route.LoaderArgs) => {
   await requireSession(request);
   return null;
 };
 
 export default function NewEventTypeRoute() {
   const currentTeam = useCurrentTeam();
-
   const [type, setType] = useState<EventType>('CONFERENCE');
 
   return (

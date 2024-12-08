@@ -1,7 +1,6 @@
 import { parseWithZod } from '@conform-to/zod';
 import { CalendarIcon, MagnifyingGlassIcon, UserGroupIcon } from '@heroicons/react/20/solid';
-import type { LoaderFunctionArgs } from 'react-router';
-import { Form, useLoaderData } from 'react-router';
+import { Form } from 'react-router';
 import { AdminTeams, TeamsSearchFiltersSchema } from '~/.server/admin/admin-teams.ts';
 import { parseUrlPage } from '~/.server/shared/pagination.ts';
 import { Input } from '~/design-system/forms/input.tsx';
@@ -11,18 +10,15 @@ import { List } from '~/design-system/list/list.tsx';
 import { SortMenu } from '~/design-system/list/sort-menu.tsx';
 import { H1, Text } from '~/design-system/typography.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
+import type { Route } from './+types/teams.ts';
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+export const loader = async ({ request }: Route.LoaderArgs) => {
   const userId = await requireSession(request);
-
   const adminTeams = await AdminTeams.for(userId);
-
   const { searchParams } = new URL(request.url);
   const result = parseWithZod(searchParams, { schema: TeamsSearchFiltersSchema });
   const filters = result.status === 'success' ? result.value : {};
-
   const page = parseUrlPage(request.url);
-
   return adminTeams.listTeams(filters, page);
 };
 
@@ -33,8 +29,8 @@ const options = [
   { name: 'Events', value: 'events' },
 ];
 
-export default function AdminTeamsRoute() {
-  const { results, filters, pagination, statistics } = useLoaderData<typeof loader>();
+export default function AdminTeamsRoute({ loaderData }: Route.ComponentProps) {
+  const { results, filters, pagination, statistics } = loaderData;
 
   return (
     <Page>

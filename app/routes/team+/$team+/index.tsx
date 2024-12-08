@@ -1,36 +1,27 @@
 import { PlusIcon } from '@heroicons/react/20/solid';
 import { Square3Stack3DIcon } from '@heroicons/react/24/outline';
-import type { LoaderFunctionArgs } from 'react-router';
-import { useLoaderData, useSearchParams } from 'react-router';
-import invariant from 'tiny-invariant';
-
+import { useSearchParams } from 'react-router';
 import { TeamEvents } from '~/.server/team/team-events.ts';
 import { ButtonLink } from '~/design-system/buttons.tsx';
 import { EmptyState } from '~/design-system/layouts/empty-state.tsx';
 import { Page } from '~/design-system/layouts/page.tsx';
 import { requireSession } from '~/libs/auth/session.ts';
-import { EventCardLink } from '~/routes/__components/events/event-card.tsx';
-
 import { useCurrentTeam } from '~/routes/__components/contexts/team-context.tsx';
+import { EventCardLink } from '~/routes/__components/events/event-card.tsx';
+import type { Route } from './+types/index.ts';
 import { ArchivedFilters } from './__components/archived-filter.tsx';
 
-export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const userId = await requireSession(request);
-  invariant(params.team, 'Invalid team slug');
-
   const url = new URL(request.url);
   const archived = url.searchParams.get('archived') === 'true';
-
   return TeamEvents.for(userId, params.team).list(archived);
 };
 
-export default function TeamEventsRoute() {
+export default function TeamEventsRoute({ loaderData: events }: Route.ComponentProps) {
   const currentTeam = useCurrentTeam();
-  const events = useLoaderData<typeof loader>();
-
   const [searchParams] = useSearchParams();
   const archived = searchParams.get('archived') === 'true';
-
   const hasEvent = events.length > 0;
 
   return (

@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
-import type { LinksFunction, LoaderFunctionArgs, MetaFunction } from 'react-router';
-import { Links, Meta, Outlet, Scripts, ScrollRestoration, data, useLoaderData } from 'react-router';
-
+import { Links, Meta, Outlet, Scripts, ScrollRestoration, data } from 'react-router';
+import type { Route } from './+types/root.ts';
 import { UserInfo } from './.server/user-registration/user-info.ts';
 import { initializeFirebaseClient } from './libs/auth/firebase.ts';
 import { destroySession, getSessionUserId } from './libs/auth/session.ts';
@@ -22,25 +21,21 @@ const ONE_DAY_IN_SECONDS = String(24 * 60 * 60);
 
 const isMaintenanceMode = process.env.MAINTENANCE_ENABLED === 'true';
 
-export const meta: MetaFunction<typeof loader> = ({ data }) => {
+export const meta = ({ data }: Route.MetaArgs) => {
   const metatags = [
     { charset: 'utf-8' },
     { title: 'Conference Hall' },
-    {
-      name: 'description',
-      content:
-        'Open SaaS for managing call for papers, speaker submissions, and event organization with automated workflows, reviews, and team collaboration.',
-    },
+    { name: 'description', content: 'Open SaaS app for call for papers.' },
     { name: 'viewport', content: 'width=device-width,initial-scale=1' },
   ];
 
-  const isSeoEnabled = data?.flags.seo;
+  const isSeoEnabled = data.flags.seo;
   if (!isSeoEnabled) metatags.push({ name: 'robots', content: 'noindex' });
 
   return metatags;
 };
 
-export const links: LinksFunction = () => {
+export const links: Route.LinksFunction = () => {
   return [
     { rel: 'icon', type: 'image/svg+xml', href: '/favicons/favicon.svg' },
     { rel: 'mask-icon', href: '/favicons/mask-icon.svg' },
@@ -52,7 +47,7 @@ export const links: LinksFunction = () => {
   ];
 };
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+export const loader = async ({ request }: Route.LoaderArgs) => {
   if (isMaintenanceMode) {
     throw new Response('Maintenance', { status: 503, headers: { 'Retry-After': ONE_DAY_IN_SECONDS } });
   }
@@ -94,8 +89,8 @@ function Document({ children, toast, nonce, env = {} }: DocumentProps) {
   );
 }
 
-function App() {
-  const { user, env, toast, flags } = useLoaderData<typeof loader>();
+export default function App({ loaderData }: Route.ComponentProps) {
+  const { user, env, toast, flags } = loaderData;
   const nonce = useNonce();
 
   initializeFirebaseClient(env);
@@ -120,5 +115,3 @@ export function ErrorBoundary() {
     </Document>
   );
 }
-
-export default App;
