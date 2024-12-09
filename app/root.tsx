@@ -26,7 +26,7 @@ export const meta = ({ data }: Route.MetaArgs) => {
     { title: 'Conference Hall' },
     { name: 'description', content: 'Open SaaS app for call for papers.' },
   ];
-  const isSeoEnabled = data.flags.seo;
+  const isSeoEnabled = data?.flags?.seo;
   if (!isSeoEnabled) metatags.push({ name: 'robots', content: 'noindex' });
   return metatags;
 };
