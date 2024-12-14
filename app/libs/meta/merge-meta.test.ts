@@ -16,8 +16,15 @@ describe('mergeMeta', () => {
     ]);
   });
 
-  it('overrides parent meta with routeMeta', () => {
-    const matches = [{ meta: [{ name: 'description', content: 'Parent description' }] }];
+  it('overrides and deduplicate parent meta with routeMeta', () => {
+    const matches = [
+      {
+        meta: [
+          { name: 'description', content: 'Parent description' },
+          { name: 'description', content: 'Parent description 2' },
+        ],
+      },
+    ];
     const routeMeta = [{ name: 'description', content: 'Route description' }];
 
     const result = mergeMeta(matches, routeMeta);
@@ -30,8 +37,8 @@ describe('mergeMeta', () => {
 
     const result = mergeMeta(matches, routeMeta);
     expect(result).toEqual([
-      { name: 'keywords', content: 'Parent keywords' },
       { name: 'description', content: 'Route description' },
+      { name: 'keywords', content: 'Parent keywords' },
     ]);
   });
 
@@ -43,7 +50,7 @@ describe('mergeMeta', () => {
     const routeMeta = [{ title: 'Route Title' }, { property: 'og:title', content: 'Route OG Title' }];
 
     const result = mergeMeta(matches, routeMeta);
-    expect(result).toEqual([{ title: 'Route Title' }, { property: 'og:title', content: 'Route OG Title' }]);
+    expect(result).toEqual([{ property: 'og:title', content: 'Route OG Title' }, { title: 'Route Title' }]);
   });
 
   it('handles empty matches and routeMeta', () => {

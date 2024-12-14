@@ -2,7 +2,7 @@
 
 import type { VariantProps } from 'class-variance-authority';
 import { cva, cx } from 'class-variance-authority';
-import React from 'react';
+import type React from 'react';
 
 const calloutVariants = cva('flex flex-col overflow-hidden rounded-md p-4 text-sm', {
   variants: {
@@ -44,30 +44,27 @@ const calloutVariants = cva('flex flex-col overflow-hidden rounded-md p-4 text-s
   },
 });
 
-interface CalloutProps extends React.ComponentPropsWithoutRef<'div'>, VariantProps<typeof calloutVariants> {
+interface CalloutProps extends React.ComponentProps<'div'>, VariantProps<typeof calloutVariants> {
   title?: string;
   icon?: React.ElementType;
 }
 
-const Callout = React.forwardRef<HTMLDivElement, CalloutProps>(
-  ({ title, icon: Icon, className, variant, children, ...props }: CalloutProps, forwardedRef) => {
-    return (
-      <div ref={forwardedRef} className={cx(calloutVariants({ variant }), className)} {...props}>
-        {title ? (
-          <div className="flex items-start">
-            {Icon ? <Icon className={cx('mr-1.5 size-5 shrink-0')} aria-hidden="true" /> : null}
-            <span className={cx('font-semibold')}>{title}</span>
-          </div>
-        ) : null}
-        <div className={cx('flex items-start overflow-y-auto', children && title ? 'mt-2' : '')}>
-          {Icon && !title ? <Icon className={cx('mr-1.5 size-5 shrink-0')} aria-hidden="true" /> : null}
-          <span>{children}</span>
+const Callout = ({ title, icon: Icon, className, variant, children, ref, ...props }: CalloutProps) => {
+  return (
+    <div ref={ref} className={cx(calloutVariants({ variant }), className)} {...props}>
+      {title ? (
+        <div className="flex items-start">
+          {Icon ? <Icon className={cx('mr-1.5 size-5 shrink-0')} aria-hidden="true" /> : null}
+          <span className={cx('font-semibold')}>{title}</span>
         </div>
-      </div>
-    );
-  },
-);
+      ) : null}
 
-Callout.displayName = 'Callout';
+      <div className={cx('flex items-start overflow-y-auto', children && title ? 'mt-2' : '')}>
+        {Icon && !title ? <Icon className={cx('mr-1.5 size-5 shrink-0')} aria-hidden="true" /> : null}
+        <span>{children}</span>
+      </div>
+    </div>
+  );
+};
 
 export { Callout, type CalloutProps, calloutVariants };

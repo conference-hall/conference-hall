@@ -1,6 +1,5 @@
 import { cx } from 'class-variance-authority';
-import type { ReactNode, Ref } from 'react';
-import { forwardRef } from 'react';
+import type { ReactNode } from 'react';
 
 import type { SubmissionError } from '~/types/errors.types.ts';
 import { Label, Text } from '../typography.tsx';
@@ -49,15 +48,9 @@ export function CheckboxHeadingGroup({ label, description, inline, className, ch
   );
 }
 
-type CheckboxProps = {
-  description?: string | null;
-  className?: string;
-} & React.InputHTMLAttributes<HTMLInputElement>;
+type CheckboxProps = { description?: string | null; className?: string } & React.ComponentProps<'input'>;
 
-export function CheckboxField(
-  { id, name, description, className, children, ...rest }: CheckboxProps,
-  ref: Ref<HTMLInputElement>,
-) {
+export function Checkbox({ id, name, description, className, children, ref, ...rest }: CheckboxProps) {
   return (
     <div className={cx('relative flex ', { 'items-start': description, 'items-center': !description }, className)}>
       <div className="flex h-5 items-center">
@@ -90,5 +83,3 @@ export function CheckboxField(
     </div>
   );
 }
-
-export const Checkbox = forwardRef(CheckboxField);

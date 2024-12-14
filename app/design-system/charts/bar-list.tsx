@@ -11,7 +11,7 @@ type Bar<T> = T & {
   name: string;
 };
 
-interface BarListProps<T = unknown> extends React.HTMLAttributes<HTMLDivElement> {
+interface BarListProps<T = unknown> extends React.ComponentProps<'div'> {
   data: Bar<T>[];
   valueFormatter?: (value: number) => string;
   showAnimation?: boolean;
@@ -19,17 +19,15 @@ interface BarListProps<T = unknown> extends React.HTMLAttributes<HTMLDivElement>
   sortOrder?: 'ascending' | 'descending' | 'none';
 }
 
-function BarListInner<T>(
-  {
-    data = [],
-    valueFormatter = (value) => value.toString(),
-    showAnimation = false,
-    sortOrder = 'descending',
-    className,
-    ...props
-  }: BarListProps<T>,
-  forwardedRef: React.ForwardedRef<HTMLDivElement>,
-) {
+function BarListInner<T>({
+  data = [],
+  valueFormatter = (value) => value.toString(),
+  showAnimation = false,
+  sortOrder = 'descending',
+  className,
+  ref,
+  ...props
+}: BarListProps<T>) {
   const sortedData = React.useMemo(() => {
     if (sortOrder === 'none') {
       return data;
@@ -47,12 +45,7 @@ function BarListInner<T>(
   const rowHeight = 'h-8';
 
   return (
-    <div
-      ref={forwardedRef}
-      className={cx('flex justify-between space-x-6', className)}
-      aria-sort={sortOrder}
-      {...props}
-    >
+    <div ref={ref} className={cx('flex justify-between space-x-6', className)} aria-sort={sortOrder} {...props}>
       <div className="relative w-full space-y-1.5">
         {sortedData.map((item, index) => (
           <div key={item.id ?? item.name} className="group w-full rounded">
@@ -132,8 +125,6 @@ function BarListInner<T>(
 
 BarListInner.displayName = 'BarList';
 
-const BarList = React.forwardRef(BarListInner) as <T>(
-  p: BarListProps<T> & { ref?: React.ForwardedRef<HTMLDivElement> },
-) => ReturnType<typeof BarListInner>;
+const BarList = BarListInner as <T>(p: BarListProps<T>) => ReturnType<typeof BarListInner>;
 
 export { BarList, type BarListProps };

@@ -7,7 +7,7 @@ import { DeliberationButton } from '../actions/deliberation-button.tsx';
 import { ReviewsProgress } from './reviews-progress.tsx';
 
 type Props = {
-  checkboxRef: React.RefObject<HTMLInputElement>;
+  checkboxRef: React.RefObject<HTMLInputElement | null>;
   total: number;
   totalSelected: number;
   totalReviewed: number;
