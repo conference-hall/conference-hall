@@ -51,10 +51,8 @@ React / React router v7 / Typescript / Tailwind / HeadlessUI / Conform / Zod / P
 Install dependencies:
 
 ```sh
-npm install --legacy-peer-deps
+npm install
 ```
-
-> [!NOTE] > `--legacy-peer-deps` is necessary since React 19 upgrade and needed for some dependencies not fully-compatible (`dnd-kit`). It will be not necessary anymore in the future.
 
 Start Docker image for Postgres DB, Firebase emulators and Mailpit:
 
