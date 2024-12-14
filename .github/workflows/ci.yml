@@ -24,7 +24,7 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --legacy-peer-deps
 
       - name: Linting
         run: npm run lint:ci
@@ -46,7 +46,7 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --legacy-peer-deps
 
       - name: Start database and firebase emulators
         run: docker compose up -d --build
@@ -85,6 +85,7 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
+          install-command: npm ci --legacy-peer-deps
           build: npx dotenv -e .env.e2e -- npm run build
           start: npx dotenv -e .env.e2e -- npm start
           command-prefix: 'dotenv -e .env.e2e --'

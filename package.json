@@ -7,7 +7,7 @@
   "license": "AGPL-3.0",
   "scripts": {
     "dev": "dotenv -e .env.dev -- concurrently -k -c '#fdba74,#93c5fd' 'npm:dev:*'",
-    "dev:vite": "react-router dev",
+    "dev:vite": "vite",
     "dev:jobs": "tsx watch --clear-screen=false ./servers/jobs.server.ts",
     "build": "react-router build",
     "start": "npm run start:db && npm run start:server",
@@ -28,6 +28,9 @@
   },
   "prisma": {
     "seed": "tsx ./prisma/seed.ts"
+  },
+  "overrides": {
+    "react-is": "^19.0.0"
   },
   "dependencies": {
     "@conform-to/zod": "^1.2.2",
@@ -61,8 +64,8 @@
     "marked": "^15.0.3",
     "morgan": "^1.10.0",
     "nodemailer": "^6.9.16",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "react-router": "^7.0.2",
     "recharts": "^2.15.0",
     "sitemap": "^8.0.0",
@@ -87,8 +90,8 @@
     "@types/compression": "^1.7.5",
     "@types/morgan": "^1.9.9",
     "@types/nodemailer": "^6.4.17",
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
+    "@types/react": "^19.0.1",
+    "@types/react-dom": "^19.0.2",
     "@types/source-map-support": "^0.5.10",
     "autoprefixer": "^10.4.20",
     "close-with-grace": "^2.1.0",

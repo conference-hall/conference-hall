@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 export const useListSelection = (ids: Array<string>, total: number, hash: string) => {
   const ref = useRef<HTMLInputElement>(null);
-  const lastHash = useRef<string>();
+  const lastHash = useRef<string>(null);
   const [selection, setSelection] = useState<Array<string>>([]);
   const [allPagesSelected, setAllPagesSelected] = useState(false);
 

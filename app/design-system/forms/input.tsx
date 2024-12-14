@@ -1,6 +1,4 @@
 import { cva } from 'class-variance-authority';
-import type { InputHTMLAttributes, Ref } from 'react';
-import { forwardRef } from 'react';
 
 import type { SubmissionError } from '~/types/errors.types.ts';
 
@@ -14,12 +12,22 @@ export type InputProps = {
   icon?: React.ComponentType<{ className?: string }>;
   size?: 'm' | 'l';
   color?: 'light' | 'dark';
-} & Omit<InputHTMLAttributes<HTMLInputElement>, 'size'>;
+} & Omit<React.ComponentProps<'input'>, 'size'>;
 
-function InputField(
-  { name, label, type = 'text', icon: Icon, addon, error, description, color, size, className, ...rest }: InputProps,
-  ref: Ref<HTMLInputElement>,
-) {
+export function Input({
+  name,
+  label,
+  type = 'text',
+  icon: Icon,
+  addon,
+  error,
+  description,
+  color,
+  size,
+  className,
+  ref,
+  ...rest
+}: InputProps) {
   return (
     <div className={className}>
       {label && (
@@ -118,5 +126,3 @@ const descriptionStyle = cva('mt-2 text-sm', {
   },
   defaultVariants: { color: 'light', error: false },
 });
-
-export const Input = forwardRef(InputField);
