@@ -208,8 +208,6 @@ describe('UserEvent', () => {
         timezone: 'Europe/Paris',
       });
 
-      console.log(result.error);
-
       expect(result.success).toBe(true);
     });
 
