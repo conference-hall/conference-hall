@@ -18,12 +18,28 @@ export class HomePage {
 
   async goto() {
     await this.page.goto('/');
+    await this.waitFor();
+  }
+
+  async waitFor() {
     await this.heading.waitFor();
   }
 
   async search(query: string) {
     await this.searchInput.fill(query);
     await this.searchInput.press('Enter');
+  }
+
+  async filterAll() {
+    await this.page.getByRole('link', { name: 'All', exact: true }).click();
+  }
+
+  async filterConferences() {
+    await this.page.getByRole('link', { name: 'Conferences' }).click();
+  }
+
+  async filterMeetups() {
+    await this.page.getByRole('link', { name: 'Meetups' }).click();
   }
 
   item(name: RegExp) {
