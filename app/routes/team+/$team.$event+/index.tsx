@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { EventMetrics } from '~/.server/event-metrics/event-metrics.tsx';
+import { EventMetrics } from '~/.server/event-metrics/event-metrics.ts';
 import { BarListCard } from '~/design-system/dashboard/bar-list-card.tsx';
 import { ProgressCard } from '~/design-system/dashboard/progress-card.tsx';
 import { StatisticCard } from '~/design-system/dashboard/statistic-card.tsx';
