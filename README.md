@@ -39,7 +39,7 @@ If you want to contribute and make **Conference Hall** better, read our [Contrib
 
 ### Stack
 
-React / React router v7 / Typescript / Tailwind / HeadlessUI / Conform / Zod / Prisma / Firebase Auth / Mailgun / Express / Postgresql / Redis / Bull / Biome / Vitest / Cypress
+React / React router v7 / Typescript / Tailwind / HeadlessUI / Conform / Zod / Prisma / Firebase Auth / Mailgun / Express / Postgresql / Redis / BullMQ / Biome / Vitest / Cypress
 
 ### Prerequisites
 
@@ -83,6 +83,12 @@ npm run db:reset
 #### Execute tests
 
 The docker image for Postgres DB and Firebase emulators MUST be running.
+
+Install Playwright browser for Vitest browser tests:
+
+```sh
+npx playwright install --with-deps chromium
+```
 
 Execute unit and integration tests:
 

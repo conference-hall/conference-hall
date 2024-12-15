@@ -54,6 +54,9 @@ jobs:
       - name: Wait for database start...
         run: ./docker/wait-for-db.sh
 
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps --only-shell chromium
+
       - name: Execute tests
         run: npm test
 

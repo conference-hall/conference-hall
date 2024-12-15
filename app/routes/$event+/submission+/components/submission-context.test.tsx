@@ -1,4 +1,3 @@
-// @vitest-environment jsdom
 import { render } from '@testing-library/react';
 import { createRoutesStub } from 'react-router';
 import { SubmissionContextProvider, useSteps, useSubmissionNavigation } from './submission-context.tsx';

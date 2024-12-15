@@ -1,16 +1,14 @@
-// @vitest-environment jsdom
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import { RouterProvider, createMemoryRouter } from 'react-router';
+import { createRoutesStub } from 'react-router';
 
+import type { JSX } from 'react';
 import { EventsDropdown } from './events-dropdown.tsx';
 
 describe('EventsDropdown component', () => {
-  const renderComponent = (element: React.ReactNode) => {
-    const user = userEvent.setup();
-    const router = createMemoryRouter([{ path: '/', element }]);
-    render(<RouterProvider router={router} />);
-    return { user };
+  const renderComponent = (Component: JSX.Element) => {
+    const RouteStub = createRoutesStub([{ path: '/', Component: () => Component }]);
+    render(<RouteStub />);
   };
 
   const events = [
@@ -23,14 +21,12 @@ describe('EventsDropdown component', () => {
     const currentTeam = { slug: 'team-1', name: 'Team 1' };
     const currentEvent = { slug: 'event-1', name: 'Event 1', logoUrl: null };
 
-    const { user } = renderComponent(
-      <EventsDropdown events={events} currentTeam={currentTeam} currentEvent={currentEvent} />,
-    );
+    renderComponent(<EventsDropdown events={events} currentTeam={currentTeam} currentEvent={currentEvent} />);
 
     const button = screen.getByRole('button');
     expect(button).toHaveTextContent('Event 1');
 
-    await user.click(button);
+    await userEvent.click(button);
 
     const eventLink1 = screen.getByRole('menuitem', { name: /Event 1/ });
     expect(eventLink1).toHaveAttribute('href', '/team/team-1/event-1');
