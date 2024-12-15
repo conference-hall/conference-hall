@@ -10,7 +10,7 @@ export const test = base.extend<{}, { forEachWorker: void }>({
       // This code runs before all the tests in the worker process.
       await resetDB();
 
-      // Execute the test.
+      // Execute the tests.
       await use();
 
       // This code runs after all the tests in the worker process.
