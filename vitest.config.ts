@@ -10,13 +10,9 @@ export default defineConfig({
   plugins: [tsconfigPaths()],
   test: {
     globals: true,
-    pool: 'threads',
-    poolOptions: { threads: { singleThread: true } },
-    setupFiles: ['./tests/setup-tests.ts'],
-    include: ['**/*.test.ts?(x)'],
+    restoreMocks: true,
     reporters: isCI ? ['default', 'junit'] : 'default',
     outputFile: './test-results/unit.xml',
-    restoreMocks: true,
   },
   server: { watch: { ignored: ['.*\\/node_modules\\/.*', '.*\\/build\\/.*'] } },
 });

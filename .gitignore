@@ -19,7 +19,7 @@ node_modules
 test-results
 
 # typescript
-tsconfig.tsbuildinfo
+*.tsbuildinfo
 
 # vite
 vite.config.ts.timestamp*.mjs

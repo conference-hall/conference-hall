@@ -1,4 +1,3 @@
-// @vitest-environment jsdom
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import type { Emoji } from '../../../types/emojis.types.ts';
@@ -11,31 +10,29 @@ const EMOJIS: Array<Emoji> = [
 
 describe('EmojiPicker component', () => {
   it('displays emoji picker and select an emoji', async () => {
-    const user = userEvent.setup();
     const onSelectEmoji = vi.fn();
 
     render(<EmojiPicker emojis={EMOJIS} onSelectEmoji={onSelectEmoji} />);
 
     const button = screen.getByRole('button', { name: 'Select a reaction' });
     expect(button).toHaveAttribute('aria-expanded', 'false');
-    await user.click(button);
+    await userEvent.click(button);
     expect(button).toHaveAttribute('aria-expanded', 'true');
 
     const thumbsUpButton = await screen.findByRole('button', { name: 'Thumbs up' });
-    await user.click(thumbsUpButton);
+    await userEvent.click(thumbsUpButton);
 
     expect(button).toHaveAttribute('aria-expanded', 'false');
     expect(onSelectEmoji).toHaveBeenCalledWith(EMOJIS.at(0));
   });
 
   it('can disable some emojis', async () => {
-    const user = userEvent.setup();
     const onSelectEmoji = vi.fn();
 
     render(<EmojiPicker emojis={EMOJIS} disabledEmojis={['+1']} onSelectEmoji={onSelectEmoji} />);
 
     const button = screen.getByRole('button', { name: 'Select a reaction' });
-    await user.click(button);
+    await userEvent.click(button);
 
     const thumbsUpButton = await screen.findByRole('button', { name: 'Thumbs up' });
     expect(thumbsUpButton).toHaveAttribute('disabled');

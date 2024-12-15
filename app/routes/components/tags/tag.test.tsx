@@ -1,6 +1,6 @@
-// @vitest-environment jsdom
 import { render, screen } from '@testing-library/react';
-import { RouterProvider, createMemoryRouter } from 'react-router';
+import type { JSX } from 'react';
+import { createRoutesStub } from 'react-router';
 import { describe, expect, it } from 'vitest';
 import { getContrastColor } from '~/libs/colors/colors.ts';
 import { Tag } from './tag.tsx';
@@ -12,9 +12,9 @@ describe('Tag component', () => {
     color: '#ff0000',
   };
 
-  const renderComponent = (element: React.ReactNode, initialEntries = ['/team/team-1/event-1']) => {
-    const router = createMemoryRouter([{ path: '/team/:team/:event/*', element }], { initialEntries });
-    render(<RouterProvider router={router} />);
+  const renderComponent = (Component: JSX.Element, initialEntries = ['/team/team-1/event-1']) => {
+    const RouteStub = createRoutesStub([{ path: '/team/:team/:event/*', Component: () => Component }]);
+    render(<RouteStub initialEntries={initialEntries} />);
   };
 
   it('renders the tag name', () => {

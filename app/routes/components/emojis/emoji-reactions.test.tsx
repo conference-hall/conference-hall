@@ -1,4 +1,3 @@
-// @vitest-environment jsdom
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import type { Emoji, EmojiReaction } from '../../../types/emojis.types.ts';
@@ -16,7 +15,6 @@ const REACTIONS: Array<EmojiReaction> = [
 
 describe('EmojiReactions component', () => {
   it('displays emoji reactions', async () => {
-    const user = userEvent.setup();
     const onChangeEmoji = vi.fn();
 
     render(<EmojiReactions emojis={EMOJIS} reactions={REACTIONS} onChangeEmoji={onChangeEmoji} />);
@@ -25,11 +23,11 @@ describe('EmojiReactions component', () => {
     expect(addButton).toHaveAttribute('aria-expanded', 'false');
 
     const thumbsUpButton = await screen.findByRole('button', { name: 'Thumbs up' });
-    await user.click(thumbsUpButton);
+    await userEvent.click(thumbsUpButton);
     expect(onChangeEmoji).toHaveBeenCalledWith(EMOJIS.at(0));
 
     const thumbsDownButton = await screen.findByRole('button', { name: 'Thumbs down' });
-    await user.click(thumbsDownButton);
+    await userEvent.click(thumbsDownButton);
     expect(onChangeEmoji).toHaveBeenCalledWith(EMOJIS.at(1));
   });
 });
