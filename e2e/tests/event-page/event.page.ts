@@ -9,6 +9,10 @@ export class EventPage {
 
   async goto(slug: string, name: string) {
     await this.page.goto(`/${slug}`);
+    await this.waitFor(name);
+  }
+
+  async waitFor(name: string) {
     await this.heading(name).waitFor();
   }
 

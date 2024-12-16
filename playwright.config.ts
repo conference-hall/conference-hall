@@ -22,7 +22,7 @@ export default defineConfig({
   reporter: CI ? 'dot' : 'list',
 
   projects: [
-    { name: 'setup', testMatch: /setup\/.*\.setup\.ts/ },
+    { name: 'setup', testMatch: /.*\.setup\.ts/ },
     { name: 'browser', use: { ...devices['Desktop Chrome'] }, dependencies: ['setup'] },
   ],
 
