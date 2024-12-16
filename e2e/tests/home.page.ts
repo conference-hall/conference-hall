@@ -1,5 +1,5 @@
 import type { Locator, Page } from '@playwright/test';
-import { EventPage } from './event.page.ts';
+import { EventPage } from './event-page/event.page.ts';
 
 export class HomePage {
   readonly page: Page;
@@ -42,11 +42,11 @@ export class HomePage {
     await this.page.getByRole('link', { name: 'Meetups' }).click();
   }
 
-  item(name: RegExp) {
-    return this.page.getByRole('link', { name });
+  item(name: string) {
+    return this.results.getByRole('link', { name });
   }
 
-  async openEventPage(name: RegExp) {
+  async openEventPage(name: string) {
     await this.item(name).click();
     return new EventPage(this.page);
   }

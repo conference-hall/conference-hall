@@ -1,7 +1,7 @@
 import { userFactory } from 'tests/factories/users.ts';
-import { LoginPage } from './page-objects/login.page.ts';
-import { ProfilePage } from './page-objects/profile.page.ts';
-import { test } from './setup/fixtures.ts';
+import { test } from '../fixtures.ts';
+import { LoginPage } from './login.page.ts';
+import { ProfilePage } from './speaker/profile.page.ts';
 
 test('log in and redirect', async ({ page }) => {
   const user = await userFactory({ traits: ['clark-kent'] });
@@ -15,5 +15,5 @@ test('log in and redirect', async ({ page }) => {
   const profilePage = new ProfilePage(page);
   await profilePage.waitFor();
 
-  // TODO: test user menu
+  // TODO: test user menu in dedicated tests (e2e or component)
 });
