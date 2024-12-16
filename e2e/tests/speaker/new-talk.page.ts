@@ -1,11 +1,11 @@
 import type { Locator, Page } from '@playwright/test';
+import { PageObject } from 'e2e/page-object.ts';
 
-export class NewTalkPage {
-  readonly page: Page;
+export class NewTalkPage extends PageObject {
   readonly heading: Locator;
 
   constructor(page: Page) {
-    this.page = page;
+    super(page);
     this.heading = page.getByRole('heading', { name: 'Create a new talk' });
   }
 
