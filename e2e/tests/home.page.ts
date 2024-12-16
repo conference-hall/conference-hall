@@ -1,15 +1,15 @@
 import type { Locator, Page } from '@playwright/test';
+import { PageObject } from 'e2e/page-object.ts';
 import { EventPage } from './event-page/event.page.ts';
 
-export class HomePage {
-  readonly page: Page;
+export class HomePage extends PageObject {
   readonly heading: Locator;
   readonly searchInput: Locator;
   readonly results: Locator;
   readonly noResults: Locator;
 
   constructor(page: Page) {
-    this.page = page;
+    super(page);
     this.heading = this.page.getByRole('heading', { name: 'Call for papers for conferences and meetups.' });
     this.searchInput = this.page.getByLabel('Search conferences and meetups.');
     this.results = this.page.getByRole('list', { name: 'Search results' }).locator('li');

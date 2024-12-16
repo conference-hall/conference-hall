@@ -1,15 +1,15 @@
 import type { Locator, Page } from '@playwright/test';
+import { PageObject } from 'e2e/page-object.ts';
 import { ProposalPage } from '../event-page/proposal.page.ts';
 import { NewTalkPage } from './new-talk.page.ts';
 import { ProfilePage } from './profile.page.ts';
 
-export class ActivityPage {
-  readonly page: Page;
+export class ActivityPage extends PageObject {
   readonly heading: Locator;
   readonly activities: Locator;
 
   constructor(page: Page) {
-    this.page = page;
+    super(page);
     this.heading = page.getByRole('heading', { name: 'Your activity' });
     this.activities = this.page.getByRole('list', { name: 'Activities list' }).locator('>li');
   }
