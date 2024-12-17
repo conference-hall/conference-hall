@@ -13,4 +13,13 @@ export class PageObject {
     const subjectDescriptionId = await input.getAttribute('aria-describedby');
     return this.page.locator(`id=${subjectDescriptionId}`);
   }
+
+  async selectOptions(locator: Locator, values: string[]) {
+    await locator.scrollIntoViewIfNeeded();
+    await locator.click();
+    for (const value of values) {
+      await this.page.getByRole('option', { name: value }).click();
+    }
+    await locator.click();
+  }
 }
