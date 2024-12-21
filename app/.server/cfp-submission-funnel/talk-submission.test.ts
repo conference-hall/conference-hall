@@ -1,4 +1,4 @@
-import { TalkLevel } from '@prisma/client';
+import { TalkLevel } from '@prisma/client/app/index.js';
 import { db } from 'prisma/db.server.ts';
 import { eventCategoryFactory } from 'tests/factories/categories.ts';
 import { eventFactory } from 'tests/factories/events.ts';

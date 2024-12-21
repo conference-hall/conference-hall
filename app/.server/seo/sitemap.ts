@@ -1,4 +1,4 @@
-import { EventType, EventVisibility } from '@prisma/client';
+import { EventType, EventVisibility } from '@prisma/client/app/index.js';
 import { db } from 'prisma/db.server.ts';
 
 export async function getEventsForSitemap() {

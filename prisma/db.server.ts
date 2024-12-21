@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client/app/index.js';
 
 import { eventExtension } from './extensions/event.ts';
 import { proposalExtension } from './extensions/proposal.ts';

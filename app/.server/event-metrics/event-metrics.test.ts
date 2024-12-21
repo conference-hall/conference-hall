@@ -1,4 +1,4 @@
-import type { Event, EventCategory, EventFormat, Team, User } from '@prisma/client';
+import type { Event, EventCategory, EventFormat, Team, User } from '@prisma/client/app/index.js';
 import { eventCategoryFactory } from 'tests/factories/categories.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { eventFormatFactory } from 'tests/factories/formats.ts';

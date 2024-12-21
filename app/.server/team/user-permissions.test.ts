@@ -1,4 +1,4 @@
-import { TeamRole } from '@prisma/client';
+import { TeamRole } from '@prisma/client/app/index.js';
 
 import { UserPermissions } from './user-permissions.ts';
 

@@ -1,4 +1,4 @@
-import { ConfirmationStatus, DeliberationStatus, Prisma, PublicationStatus } from '@prisma/client';
+import { ConfirmationStatus, DeliberationStatus, Prisma, PublicationStatus } from '@prisma/client/app/index.js';
 
 import { appUrl } from '../../app/libs/env/env.server.ts';
 import { SpeakerProposalStatus } from '../../app/types/speaker.types.ts';

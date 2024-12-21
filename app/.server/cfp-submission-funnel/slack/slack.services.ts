@@ -1,4 +1,4 @@
-import type { Event, EventCategory, EventFormat, Proposal, Team, User } from '@prisma/client';
+import type { Event, EventCategory, EventFormat, Proposal, Team, User } from '@prisma/client/app/index.js';
 import { db } from 'prisma/db.server.ts';
 
 import { appUrl } from '~/libs/env/env.server.ts';

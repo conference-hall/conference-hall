@@ -1,4 +1,4 @@
-import { CommentChannel, type Prisma, type Proposal, type User } from '@prisma/client';
+import { CommentChannel, type Prisma, type Proposal, type User } from '@prisma/client/app/index.js';
 
 import { db } from '../../prisma/db.server.ts';
 

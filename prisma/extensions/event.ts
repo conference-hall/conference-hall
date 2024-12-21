@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client/app/index.js';
 
 import type { CfpState } from '../../app/types/events.types.ts';
 

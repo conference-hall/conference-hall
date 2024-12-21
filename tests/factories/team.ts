@@ -1,6 +1,6 @@
 import { randSportsTeam, randUuid } from '@ngneat/falso';
-import type { Prisma, User } from '@prisma/client';
-import { TeamRole } from '@prisma/client';
+import type { Prisma, User } from '@prisma/client/app/index.js';
+import { TeamRole } from '@prisma/client/app/index.js';
 
 import { db } from '../../prisma/db.server.ts';
 import { applyTraits } from './helpers/traits.ts';

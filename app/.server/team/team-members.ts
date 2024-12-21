@@ -1,5 +1,5 @@
 import { parseWithZod } from '@conform-to/zod';
-import type { TeamRole } from '@prisma/client';
+import type { TeamRole } from '@prisma/client/app/index.js';
 import { db } from 'prisma/db.server.ts';
 import { z } from 'zod';
 

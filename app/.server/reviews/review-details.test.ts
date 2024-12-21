@@ -1,4 +1,4 @@
-import { ReviewFeeling } from '@prisma/client';
+import { ReviewFeeling } from '@prisma/client/app/index.js';
 
 import { ReviewDetails } from './review-details.ts';
 

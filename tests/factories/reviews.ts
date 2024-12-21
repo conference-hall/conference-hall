@@ -1,4 +1,4 @@
-import { type Prisma, type Proposal, ReviewFeeling, type User } from '@prisma/client';
+import { type Prisma, type Proposal, ReviewFeeling, type User } from '@prisma/client/app/index.js';
 
 import { ReviewDetails } from '../../app/.server/reviews/review-details.ts';
 import { db } from '../../prisma/db.server.ts';

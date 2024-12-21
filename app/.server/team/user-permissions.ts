@@ -1,4 +1,4 @@
-import { TeamRole } from '@prisma/client';
+import { TeamRole } from '@prisma/client/app/index.js';
 
 export type UserPermissions = {
   canAccessTeam: boolean;

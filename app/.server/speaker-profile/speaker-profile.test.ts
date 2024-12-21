@@ -1,4 +1,4 @@
-import type { User } from '@prisma/client';
+import type { User } from '@prisma/client/app/index.js';
 import { userFactory } from 'tests/factories/users.ts';
 
 import { ProfileNotFoundError, SpeakerProfile } from './speaker-profile.ts';

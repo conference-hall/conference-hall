@@ -1,7 +1,7 @@
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import { ChevronLeftIcon } from '@heroicons/react/24/outline';
-import type { TalkLevel } from '@prisma/client';
+import type { TalkLevel } from '@prisma/client/app/index.js';
 import { cx } from 'class-variance-authority';
 import { format } from 'date-fns';
 import type { ReactNode } from 'react';

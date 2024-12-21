@@ -1,4 +1,4 @@
-import type { Prisma } from '@prisma/client';
+import type { Prisma } from '@prisma/client/app/index.js';
 import { db } from 'prisma/db.server.ts';
 import { EventNotFoundError, ForbiddenOperationError } from '~/libs/errors.server.ts';
 import { sortBy } from '~/libs/utils/arrays-sort-by.ts';

@@ -1,4 +1,4 @@
-import { CommentChannel, type Team, type User } from '@prisma/client';
+import { CommentChannel, type Team, type User } from '@prisma/client/app/index.js';
 import { commentFactory } from 'tests/factories/comments.ts';
 import { eventFactory } from 'tests/factories/events.ts';
 import { proposalFactory } from 'tests/factories/proposals.ts';

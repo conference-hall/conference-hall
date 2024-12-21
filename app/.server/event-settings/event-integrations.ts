@@ -1,6 +1,6 @@
 import { db } from 'prisma/db.server.ts';
 
-import type { EventIntegrationName } from '@prisma/client';
+import type { EventIntegrationName } from '@prisma/client/app/index.js';
 import { OpenPlanner } from '~/libs/integrations/open-planner.ts';
 import type { EventIntegrationConfigData } from './event-integrations.types.ts';
 import { UserEvent } from './user-event.ts';

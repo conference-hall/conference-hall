@@ -1,5 +1,5 @@
 import { randText } from '@ngneat/falso';
-import type { Event, Prisma } from '@prisma/client';
+import type { Event, Prisma } from '@prisma/client/app/index.js';
 
 import { db } from '../../prisma/db.server.ts';
 import { eventFactory } from './events.ts';

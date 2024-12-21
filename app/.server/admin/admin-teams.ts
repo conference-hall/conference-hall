@@ -1,4 +1,4 @@
-import type { Prisma } from '@prisma/client';
+import type { Prisma } from '@prisma/client/app/index.js';
 import { db } from 'prisma/db.server.ts';
 import { z } from 'zod';
 import { Pagination } from '../shared/pagination.ts';

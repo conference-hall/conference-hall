@@ -1,4 +1,4 @@
-import type { Event, Prisma, User } from '@prisma/client';
+import type { Event, Prisma, User } from '@prisma/client/app/index.js';
 
 import { db } from '../../prisma/db.server.ts';
 

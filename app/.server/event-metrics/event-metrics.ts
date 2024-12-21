@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client/app/index.js';
 import { db } from 'prisma/db.server.ts';
 
 import { UserEvent } from '../event-settings/user-event.ts';

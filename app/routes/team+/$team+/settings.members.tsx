@@ -1,6 +1,6 @@
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { CubeTransparentIcon } from '@heroicons/react/24/outline';
-import type { TeamRole } from '@prisma/client';
+import type { TeamRole } from '@prisma/client/app/index.js';
 import { Form, useSearchParams } from 'react-router';
 import { parseUrlPage } from '~/.server/shared/pagination.ts';
 import { TeamMembers, parseUrlFilters } from '~/.server/team/team-members.ts';

@@ -1,4 +1,4 @@
-import type { Review, User } from '@prisma/client';
+import type { Review, User } from '@prisma/client/app/index.js';
 
 import { sortBy } from '../../libs/utils/arrays-sort-by.ts';
 

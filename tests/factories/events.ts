@@ -8,8 +8,8 @@ import {
   randUrl,
   randUuid,
 } from '@ngneat/falso';
-import type { Prisma, Team, User } from '@prisma/client';
-import { EventType, EventVisibility } from '@prisma/client';
+import type { Prisma, Team, User } from '@prisma/client/app/index.js';
+import { EventType, EventVisibility } from '@prisma/client/app/index.js';
 import { db } from '../../prisma/db.server.ts';
 import { applyTraits } from './helpers/traits.ts';
 import { teamFactory } from './team.ts';

@@ -2,7 +2,7 @@ import { db } from 'prisma/db.server.ts';
 
 import { EventNotFoundError, SurveyNotEnabledError } from '~/libs/errors.server.ts';
 
-import type { Event } from '@prisma/client';
+import type { Event } from '@prisma/client/app/index.js';
 import { z } from 'zod';
 import { SurveyConfig } from './survey-config.ts';
 import type { SurveyDetailedAnswer, SurveyQuestion, SurveyRawAnswers } from './types.ts';

@@ -1,4 +1,4 @@
-import { EventType, type Prisma } from '@prisma/client';
+import { EventType, type Prisma } from '@prisma/client/app/index.js';
 import { db } from 'prisma/db.server.ts';
 
 import { Pagination } from '../shared/pagination.ts';

@@ -1,4 +1,4 @@
-import type { Prisma } from '@prisma/client';
+import type { Prisma } from '@prisma/client/app/index.js';
 import { addDays, isAfter, isBefore } from 'date-fns';
 import { db } from 'prisma/db.server.ts';
 

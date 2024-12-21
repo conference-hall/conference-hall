@@ -1,4 +1,4 @@
-import type { Team, User } from '@prisma/client';
+import type { Team, User } from '@prisma/client/app/index.js';
 import { teamFactory } from 'tests/factories/team.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { appUrl } from '~/libs/env/env.server.ts';

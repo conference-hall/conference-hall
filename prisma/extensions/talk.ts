@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client/app/index.js';
 
 import { appUrl } from '../../app/libs/env/env.server.ts';
 

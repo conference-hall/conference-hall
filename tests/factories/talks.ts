@@ -1,6 +1,6 @@
 import { randLine, randPost } from '@ngneat/falso';
-import type { Prisma, User } from '@prisma/client';
-import { TalkLevel } from '@prisma/client';
+import type { Prisma, User } from '@prisma/client/app/index.js';
+import { TalkLevel } from '@prisma/client/app/index.js';
 
 import { db } from '../../prisma/db.server.ts';
 import { applyTraits } from './helpers/traits.ts';
