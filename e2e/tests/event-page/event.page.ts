@@ -1,12 +1,6 @@
-import type { Page } from '@playwright/test';
+import { PageObject } from 'e2e/page-object.ts';
 
-export class EventPage {
-  readonly page: Page;
-
-  constructor(page: Page) {
-    this.page = page;
-  }
-
+export class EventPage extends PageObject {
   async goto(slug: string, name: string) {
     await this.page.goto(`/${slug}`);
     await this.waitFor(name);

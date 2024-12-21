@@ -51,6 +51,6 @@ test('open event page', async ({ page }) => {
   const homepage = new HomePage(page);
   await homepage.goto();
 
-  const eventPage = await homepage.openEventPage('Devfest Nantes');
+  const eventPage = await homepage.clickOnEvent('Devfest Nantes');
   await expect(eventPage.heading('Devfest Nantes')).toBeVisible();
 });
