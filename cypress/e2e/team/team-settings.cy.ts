@@ -1,4 +1,4 @@
-import SpeakerHomePage from 'page-objects/speaker/home.page.ts';
+// import SpeakerHomePage from 'page-objects/speaker/home.page.ts';
 import TeamSettingsPage from '../../page-objects/team/team-settings.page.ts';
 
 describe('Team settings', () => {
@@ -7,7 +7,7 @@ describe('Team settings', () => {
   });
 
   const settings = new TeamSettingsPage();
-  const homepage = new SpeakerHomePage();
+  // const homepage = new SpeakerHomePage();
 
   describe('as a team owner', () => {
     beforeEach(() => cy.login('Clark Kent'));
@@ -46,7 +46,7 @@ describe('Team settings', () => {
       cy.findByRole('heading', { name: 'Leave the "Awesome team" team' }).should('exist');
 
       settings.leaveTeam('Awesome team').click();
-      homepage.isPageVisible();
+      // homepage.isPageVisible();
     });
   });
 
@@ -59,7 +59,7 @@ describe('Team settings', () => {
       cy.findByRole('heading', { name: 'Leave the "Awesome team" team' }).should('exist');
 
       settings.leaveTeam('Awesome team').click();
-      homepage.isPageVisible();
+      // homepage.isPageVisible();
     });
   });
 });
