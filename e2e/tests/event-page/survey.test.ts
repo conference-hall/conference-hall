@@ -61,7 +61,7 @@ test.describe('when user is connected', () => {
   });
 });
 
-test.describe('when user is connected', () => {
+test.describe('when user is not connected', () => {
   test('redirects to signin', async ({ page }) => {
     await page.goto(`/${event.slug}/survey`);
     const loginPage = new LoginPage(page);
