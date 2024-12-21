@@ -34,6 +34,8 @@ export default defineConfig({
 
   use: {
     baseURL: APP_URL,
+    locale: 'en-GB',
+    timezoneId: 'Europe/Paris',
     trace: 'on-first-retry',
   },
 });

@@ -2,11 +2,13 @@ import type { Locator, Page } from '@playwright/test';
 import { PageObject } from 'e2e/page-object.ts';
 
 export class SubmissionPage extends PageObject {
+  readonly selectionStep: Locator;
   readonly proposalStep: Locator;
   readonly alreadySubmittedError: Locator;
 
   constructor(page: Page) {
     super(page);
+    this.selectionStep = page.getByRole('heading', { name: 'Submit a proposal' });
     this.proposalStep = page.getByRole('heading', { name: 'Your proposal' });
     this.alreadySubmittedError = page.getByRole('heading', { name: 'Talk already submitted' });
   }
