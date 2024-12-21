@@ -26,7 +26,7 @@ test.beforeEach(async () => {
 
 loginWith('clark-kent');
 
-test('displays the talk page', async ({ page }) => {
+test('displays and manages a talk', async ({ page }) => {
   const talkPage = new TalkPage(page);
   await talkPage.goto(talk.id);
 

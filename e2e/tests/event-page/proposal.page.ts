@@ -1,12 +1,20 @@
 import type { Locator, Page } from '@playwright/test';
 import { PageObject } from 'e2e/page-object.ts';
+import { ProposalListPage } from './proposal-list.page.ts';
+import { SubmissionPage } from './submission.page.ts';
 
 export class ProposalPage extends PageObject {
   readonly heading: Locator;
+  readonly speakers: Locator;
+  readonly removeConfirmationDialog: Locator;
 
   constructor(page: Page) {
     super(page);
     this.heading = page.getByRole('heading', { name: 'Proposal page' });
+    this.speakers = page.getByRole('list', { name: 'Speakers' }).locator('>li');
+    this.removeConfirmationDialog = page.getByRole('heading', {
+      name: 'Are you sure you want to remove your submission?',
+    });
   }
 
   async goto(slug: string, proposalId: string) {
@@ -16,5 +24,36 @@ export class ProposalPage extends PageObject {
 
   async waitFor() {
     await this.heading.waitFor();
+  }
+
+  speaker(name: string) {
+    return this.page.getByLabel(`View ${name} profile`);
+  }
+
+  async clickOnContinueSubmission() {
+    await this.page.getByRole('link', { name: 'Continue submission' }).click();
+    return new SubmissionPage(this.page);
+  }
+
+  async clickOnConfirmation() {
+    await this.page.getByRole('button', { name: 'Confirm' }).click();
+  }
+
+  async clickOnDecline() {
+    await this.page.getByRole('button', { name: 'Decline' }).click();
+  }
+
+  async clickOnRemoveProposal() {
+    await this.page.getByRole('button', { name: 'Remove proposal' }).click();
+    await this.removeConfirmationDialog.waitFor();
+  }
+
+  async clickOnConfirmRemoveProposal() {
+    await this.page.getByRole('dialog').getByRole('button', { name: 'Remove proposal' }).click();
+    return new ProposalListPage(this.page);
+  }
+
+  async clickOnReferences() {
+    await this.page.getByText('Talk references').click();
   }
 }
