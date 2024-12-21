@@ -21,24 +21,16 @@ export class TalkEditFormComponent extends PageObject {
     await this.heading.waitFor();
   }
 
-  levelRadio(level: string) {
-    return this.page.getByRole('radio', { name: level });
+  radioInput(name: string) {
+    return this.page.getByRole('radio', { name });
   }
 
   async fillForm(title: string, abstract: string, level: string, language: string, references: string) {
     await this.titleInput.fill(title);
     await this.abstractInput.fill(abstract);
-    await this.levelRadio(level).click();
+    await this.radioInput(level).click();
     await this.selectOptions(this.languageSelect, [language]);
     await this.referencesInput.fill(references);
-  }
-
-  async selectFormatTrack(format: string) {
-    await this.page.getByRole('checkbox', { name: format }).click();
-  }
-
-  async selectCategoryTrack(category: string) {
-    await this.page.getByRole('checkbox', { name: category }).click();
   }
 
   async save() {

@@ -26,7 +26,7 @@ test.beforeEach(async () => {
 
 loginWith('clark-kent');
 
-test('displays the talk page', async ({ page }) => {
+test('displays and manages a talk', async ({ page }) => {
   const talkPage = new TalkPage(page);
   await talkPage.goto(talk.id);
 
@@ -83,7 +83,7 @@ test('edits a talk', async ({ page }) => {
   await test.step('displays original talk values', async () => {
     await expect(talkEdit.titleInput).toHaveValue(talk.title);
     await expect(talkEdit.abstractInput).toHaveValue(talk.abstract);
-    await expect(talkEdit.levelRadio('Intermediate')).toBeChecked();
+    await expect(talkEdit.radioInput('Intermediate')).toBeChecked();
     await expect(talkEdit.languageSelect).toHaveText('English');
   });
 
