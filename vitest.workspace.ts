@@ -11,7 +11,7 @@ export default defineWorkspace([
       environment: 'node',
       pool: 'threads',
       poolOptions: { threads: { singleThread: true } },
-      include: ['./**/*.test.ts', '!./**/*.test.tsx'],
+      include: ['./**/*.test.ts', '!./**/*.test.tsx', '!./e2e/**/*'],
       setupFiles: ['./tests/setup.server.ts'],
     },
   },
@@ -23,7 +23,7 @@ export default defineWorkspace([
       name: 'browser',
       css: true,
       includeTaskLocation: true,
-      include: ['./**/*.test.tsx', '!./**/*.test.ts'],
+      include: ['./**/*.test.tsx', '!./**/*.test.ts', '!./e2e/**/*'],
       setupFiles: ['./tests/setup.browser.tsx'],
       browser: {
         enabled: true,
