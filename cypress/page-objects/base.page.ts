@@ -4,7 +4,7 @@ class BasePage {
   }
 
   talksLibrary() {
-    cy.findByRole('link', { name: 'Talks library' }).click();
+    cy.findByRole('link', { name: 'Talk library' }).click();
   }
 
   profile() {
