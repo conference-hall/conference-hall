@@ -46,7 +46,7 @@ export class HomePage extends PageObject {
     return this.results.getByRole('link', { name });
   }
 
-  async openEventPage(name: string) {
+  async clickOnEvent(name: string) {
     await this.item(name).click();
     return new EventPage(this.page);
   }

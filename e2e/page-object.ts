@@ -6,7 +6,11 @@ export class PageObject {
 
   constructor(page: Page) {
     this.page = page;
-    this.toast = page.getByLabel('Notifications').locator('[data-sonner-toast]');
+    this.toast = page.getByLabel('Notifications').locator('[data-sonner-toast]').first();
+  }
+
+  async closeModal() {
+    await this.page.getByRole('button', { name: 'Close' }).click();
   }
 
   async getInputDescription(input: Locator) {

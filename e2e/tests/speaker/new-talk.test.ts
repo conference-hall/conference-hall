@@ -22,7 +22,7 @@ test('create a new talk', async ({ page }) => {
   await talkPage.waitFor();
   await talkPage.clickOnReferences();
 
-  await expect(talkPage.speakers.getByText('Clark Kent')).toBeVisible();
+  await expect(talkPage.speaker('Clark Kent')).toBeVisible();
   await expect(page.getByText('Awesome title')).toBeVisible();
   await expect(page.getByText('Awesome abstract')).toBeVisible();
   await expect(page.getByText('Intermediate')).toBeVisible();

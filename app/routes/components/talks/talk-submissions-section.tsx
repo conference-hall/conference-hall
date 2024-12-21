@@ -27,7 +27,7 @@ export function TalkSubmissionsSection({ submissions }: Props) {
         <H3>Talk submissions</H3>
       </div>
 
-      <ul className="flex flex-col divide-y divide-gray-200">
+      <ul aria-label="Talk submission list" className="flex flex-col divide-y divide-gray-200">
         {submissions.map((submission) => (
           <li key={submission.slug}>
             <Link
