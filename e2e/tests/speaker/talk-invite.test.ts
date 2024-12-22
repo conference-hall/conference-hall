@@ -9,12 +9,12 @@ let talk: Talk;
 test.beforeEach(async () => {
   await userFactory({ traits: ['bruce-wayne'] });
   const user1 = await userFactory({ traits: ['clark-kent'] });
-  talk = await talkFactory({ speakers: [user1], attributes: { title: 'My talk 1' } });
+  talk = await talkFactory({ speakers: [user1] });
 });
 
 loginWith('bruce-wayne');
 
-test('displays the talks', async ({ page }) => {
+test('accepts invite to a talk', async ({ page }) => {
   const talkInvitePage = new TalkInvitePage(page);
   await talkInvitePage.goto(talk.invitationCode);
 
