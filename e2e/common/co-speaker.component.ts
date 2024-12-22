@@ -6,7 +6,7 @@ export class CoSpeakerComponent extends PageObject {
 
   constructor(page: Page) {
     super(page);
-    this.heading = page.getByText('Biography'); // TODO: Add a title for the modal
+    this.heading = page.getByRole('heading', { name: 'Speaker information panel' });
   }
 
   async waitFor() {

@@ -26,4 +26,12 @@ export class PageObject {
     }
     await locator.click();
   }
+
+  radioInput(name: string) {
+    return this.page.getByRole('radio', { name });
+  }
+
+  checkboxInput(name: string) {
+    return this.page.getByRole('checkbox', { name });
+  }
 }

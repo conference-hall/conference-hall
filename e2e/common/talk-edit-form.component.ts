@@ -21,10 +21,6 @@ export class TalkEditFormComponent extends PageObject {
     await this.heading.waitFor();
   }
 
-  radioInput(name: string) {
-    return this.page.getByRole('radio', { name });
-  }
-
   async fillForm(title: string, abstract: string, level: string, language: string, references: string) {
     await this.titleInput.fill(title);
     await this.abstractInput.fill(abstract);
