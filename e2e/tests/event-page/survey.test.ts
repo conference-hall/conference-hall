@@ -3,7 +3,7 @@ import { eventFactory } from 'tests/factories/events.ts';
 import { surveyFactory } from 'tests/factories/surveys.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { expect, loginWith, test } from '../../fixtures.ts';
-import { LoginPage } from '../login.page.ts';
+import { LoginPage } from '../global/login.page.ts';
 import { SurveyPage } from './survey.page.ts';
 
 let event: Event;

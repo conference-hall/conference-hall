@@ -1,6 +1,6 @@
 import type { Locator, Page } from '@playwright/test';
 import { PageObject } from 'e2e/page-object.ts';
-import { EventPage } from './event-page/event.page.ts';
+import { EventPage } from '../event-page/event.page.ts';
 
 export class HomePage extends PageObject {
   readonly heading: Locator;

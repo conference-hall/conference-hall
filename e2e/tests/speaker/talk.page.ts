@@ -3,7 +3,7 @@ import { CoSpeakerComponent } from 'e2e/common/co-speaker.component.ts';
 import { TalkEditFormComponent } from 'e2e/common/talk-edit-form.component.ts';
 import { PageObject } from 'e2e/page-object.ts';
 import { ProposalListPage } from '../event-page/proposal-list.page.ts';
-import { HomePage } from '../home.page.ts';
+import { HomePage } from '../global/home.page.ts';
 
 export class TalkPage extends PageObject {
   readonly heading: Locator;

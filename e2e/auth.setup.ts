@@ -1,5 +1,5 @@
-import { HomePage } from 'e2e/tests/home.page.ts';
-import { LoginPage } from 'e2e/tests/login.page.ts';
+import { HomePage } from 'e2e/tests/global/home.page.ts';
+import { LoginPage } from 'e2e/tests/global/login.page.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { test as setup } from './fixtures.ts';
 import { TEST_USERS, getUserAuthPath } from './helpers.ts';

@@ -1,5 +1,5 @@
 import { eventFactory } from 'tests/factories/events.ts';
-import { expect, test } from '../fixtures.ts';
+import { expect, test } from '../../fixtures.ts';
 import { HomePage } from './home.page.ts';
 
 test.beforeEach(async () => {

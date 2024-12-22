@@ -4,7 +4,7 @@ import { proposalFactory } from 'tests/factories/proposals.ts';
 import { talkFactory } from 'tests/factories/talks.ts';
 import { userFactory } from 'tests/factories/users.ts';
 import { expect, loginWith, test } from '../../fixtures.ts';
-import { LoginPage } from '../login.page.ts';
+import { LoginPage } from '../global/login.page.ts';
 import { ProposalListPage } from './proposal-list.page.ts';
 
 let eventOpen: Event;
