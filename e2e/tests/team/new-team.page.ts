@@ -1,6 +1,6 @@
 import type { Locator, Page } from '@playwright/test';
 import { PageObject } from 'e2e/page-object.ts';
-import { TeamHomePage } from './home.page.ts';
+import { TeamHomePage } from './team-home.page.ts';
 
 export class NewTeamPage extends PageObject {
   readonly heading: Locator;
