@@ -4,12 +4,10 @@ import { TalkPage } from './talk.page.ts';
 
 export class TalkInvitePage extends PageObject {
   readonly heading: Locator;
-  readonly acceptButton: Locator;
 
   constructor(page: Page) {
     super(page);
     this.heading = page.getByRole('heading', { name: 'Talk invitation.' });
-    this.acceptButton = page.getByRole('button', { name: 'Accept invitation' });
   }
 
   async goto(code: string) {
@@ -21,8 +19,8 @@ export class TalkInvitePage extends PageObject {
     await this.heading.waitFor();
   }
 
-  async acceptInvite() {
-    await this.acceptButton.click();
+  async clickOnAcceptInvite() {
+    await this.page.getByRole('button', { name: 'Accept invitation' }).click();
     return new TalkPage(this.page);
   }
 }

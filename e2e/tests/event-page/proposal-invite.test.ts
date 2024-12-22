@@ -22,7 +22,7 @@ test('accepts invite to a proposal', async ({ page }) => {
   const proposalInvitePage = new ProposalInvitePage(page);
   await proposalInvitePage.goto(proposal.invitationCode);
 
-  const proposalPage = await proposalInvitePage.acceptInvite();
+  const proposalPage = await proposalInvitePage.clickOnAcceptInvite();
   await proposalPage.waitFor();
 
   expect(await proposalPage.speakers).toHaveCount(3);
