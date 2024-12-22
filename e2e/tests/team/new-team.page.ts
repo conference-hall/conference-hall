@@ -1,12 +1,17 @@
 import type { Locator, Page } from '@playwright/test';
 import { PageObject } from 'e2e/page-object.ts';
+import { TeamHomePage } from './home.page.ts';
 
 export class NewTeamPage extends PageObject {
   readonly heading: Locator;
+  readonly nameInput: Locator;
+  readonly slugInput: Locator;
 
   constructor(page: Page) {
     super(page);
     this.heading = page.getByRole('heading', { name: 'Create a new team.' });
+    this.nameInput = page.getByRole('textbox', { name: 'Team name' });
+    this.slugInput = page.getByRole('textbox', { name: 'Team URL' });
   }
 
   async goto() {
@@ -18,12 +23,8 @@ export class NewTeamPage extends PageObject {
     await this.heading.waitFor();
   }
 
-  async fillForm(name: string, slug: string) {
-    await this.page.getByLabel('Team name').fill(name);
-    await this.page.getByLabel('Team URL').fill(slug);
-  }
-
   async clickOnCreate() {
     await this.page.getByRole('button', { name: 'Create team' }).click();
+    return new TeamHomePage(this.page);
   }
 }
