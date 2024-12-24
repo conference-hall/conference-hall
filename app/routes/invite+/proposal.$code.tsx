@@ -32,7 +32,7 @@ export default function InvitationRoute({ loaderData: proposal }: Route.Componen
     <FullscreenPage navbar="default">
       <FullscreenPage.Title
         title="Talk invitation."
-        subtitle={`You have been invited to be co-speaker on a talk for the ${proposal.event.slug} event.`}
+        subtitle={`You have been invited to be co-speaker on a talk for the ${proposal.event.name} event.`}
       />
 
       <div className="space-y-8">

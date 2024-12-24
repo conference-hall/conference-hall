@@ -30,7 +30,7 @@ export default function SpeakerTalksRoute({ loaderData: talks }: Route.Component
 
   return (
     <Page>
-      <H1 srOnly>Talks library</H1>
+      <H1 srOnly>Talk library</H1>
 
       <List>
         <List.Header>
