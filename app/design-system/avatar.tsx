@@ -69,7 +69,7 @@ export function Avatar({
   className,
 }: AvatarProps) {
   const styles = cx(
-    'shrink-0 bg-gray-300',
+    'shrink-0 bg-white',
     sizes_tw[size],
     ring ? rings[size] : null,
     ring ? ringsColor[ringColor] : null,
