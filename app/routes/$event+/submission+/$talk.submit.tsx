@@ -26,7 +26,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
   await TalkSubmission.for(userId, params.event).submit(params.talk);
 
   const headers = await toastHeaders('success', 'Congratulation! Proposal submitted!');
-  throw redirect(`/${params.event}/proposals`, { headers });
+  return redirect(`/${params.event}/proposals`, { headers });
 };
 
 export default function SubmissionSubmitRoute({ loaderData: proposal }: Route.ComponentProps) {

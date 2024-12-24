@@ -21,7 +21,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 export const action = async ({ request, params }: Route.ActionArgs) => {
   const userId = await requireSession(request);
   const team = await TeamMemberInvite.with(params.code).addMember(userId);
-  throw redirect(`/team/${team.slug}`);
+  return redirect(`/team/${team.slug}`);
 };
 
 export default function InvitationRoute({ loaderData: team }: Route.ComponentProps) {

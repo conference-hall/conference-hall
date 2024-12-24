@@ -32,7 +32,6 @@ export async function createSession(request: Request) {
 
   if (!token) return destroySession(request);
 
-  let session: Session | null = null;
   try {
     const { uid, name, email, email_verified, picture, firebase } = await serverAuth.verifyIdToken(token, true);
 
@@ -46,16 +45,16 @@ export async function createSession(request: Request) {
       provider: firebase.sign_in_provider,
     });
 
-    session = await getSession(request);
+    const session = await getSession(request);
     session.set('jwt', jwt);
     session.set('uid', uid);
     session.set('userId', userId);
+
+    return redirect(redirectTo, { headers: { 'Set-Cookie': await commitSession(session) } });
   } catch (error) {
     console.error(error);
     throw error;
   }
-
-  throw redirect(redirectTo, { headers: { 'Set-Cookie': await commitSession(session) } });
 }
 
 export async function destroySession(request: Request) {

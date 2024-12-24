@@ -28,10 +28,10 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const eventSchedule = EventSchedule.for(userId, params.team, params.event);
 
   const result = ScheduleDayIdSchema.safeParse(params.day);
-  if (!result.success) throw redirect(`/team/${params.team}/${params.event}`);
+  if (!result.success) return redirect(`/team/${params.team}/${params.event}`);
 
   const schedule = await eventSchedule.getSchedulesByDay(result.data);
-  if (!schedule) throw redirect(`/team/${params.team}/${params.event}/schedule`);
+  if (!schedule) return redirect(`/team/${params.team}/${params.event}/schedule`);
 
   return schedule;
 };

@@ -31,7 +31,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 
   await SpeakerSurvey.for(params.event).saveSpeakerAnswer(userId, result.value);
 
-  throw redirect(String(form.get('redirectTo')));
+  return redirect(String(form.get('redirectTo')));
 };
 
 export default function SubmissionSurveyRoute({ loaderData, actionData: errors }: Route.ComponentProps) {

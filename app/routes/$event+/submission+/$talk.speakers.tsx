@@ -45,7 +45,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
     await SpeakerProfile.for(userId).save(result.value);
   }
 
-  throw redirect(String(form.get('redirectTo')));
+  return redirect(String(form.get('redirectTo')));
 };
 
 export default function SubmissionSpeakerRoute({ loaderData, actionData: errors }: Route.ComponentProps) {

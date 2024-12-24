@@ -22,7 +22,7 @@ export const meta = (args: Route.MetaArgs) => {
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const userId = await getSessionUserId(request);
-  if (userId) throw redirect('/');
+  if (userId) return redirect('/');
   return null;
 };
 

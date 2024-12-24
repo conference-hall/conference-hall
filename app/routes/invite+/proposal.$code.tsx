@@ -24,7 +24,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 export const action = async ({ request, params }: Route.ActionArgs) => {
   const userId = await requireSession(request);
   const proposal = await CoSpeakerProposalInvite.with(params.code).addCoSpeaker(userId);
-  throw redirect(`/${proposal.event.slug}/proposals/${proposal.id}`);
+  return redirect(`/${proposal.event.slug}/proposals/${proposal.id}`);
 };
 
 export default function InvitationRoute({ loaderData: proposal }: Route.ComponentProps) {

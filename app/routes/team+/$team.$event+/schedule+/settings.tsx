@@ -13,7 +13,7 @@ import { TracksForm } from './components/forms/tracks-form.tsx';
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const userId = await requireSession(request);
   const schedule = await EventSchedule.for(userId, params.team, params.event).get();
-  if (!schedule) throw redirect(`/team/${params.team}/${params.event}/schedule`);
+  if (!schedule) return redirect(`/team/${params.team}/${params.event}/schedule`);
   return schedule;
 };
 

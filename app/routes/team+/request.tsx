@@ -29,7 +29,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
   } catch (_error) {
     return { key: ['Invalid access key'] };
   }
-  throw redirect('/team/new');
+  return redirect('/team/new');
 };
 
 export default function RequestAccessRoute({ actionData: errors }: Route.ComponentProps) {

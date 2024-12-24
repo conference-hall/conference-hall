@@ -32,7 +32,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
       if (result.status !== 'success') return result.error;
       const updated = await event.update(result.value);
       const headers = await toastHeaders('success', 'Event saved.');
-      throw redirect(`/team/${params.team}/${updated.slug}/settings`, { headers });
+      return redirect(`/team/${params.team}/${updated.slug}/settings`, { headers });
     }
     case 'details': {
       const result = parseWithZod(form, { schema: EventDetailsSettingsSchema });
