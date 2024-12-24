@@ -33,7 +33,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
   const submission = TalkSubmission.for(userId, params.event);
   await submission.saveTracks(params.talk, result.value);
 
-  throw redirect(String(form.get('redirectTo')));
+  return redirect(String(form.get('redirectTo')));
 };
 
 export default function SubmissionTracksRoute({ loaderData: proposal, actionData: errors }: Route.ComponentProps) {

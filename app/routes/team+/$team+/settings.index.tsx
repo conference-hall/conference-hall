@@ -30,12 +30,12 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 
       const team = await userTeam.updateSettings(result.value);
       const headers = await toastHeaders('success', 'Team settings saved.');
-      throw redirect(`/team/${team.slug}/settings`, { headers });
+      return redirect(`/team/${team.slug}/settings`, { headers });
     }
     case 'leave-team': {
       await TeamMembers.for(userId, params.team).leave();
       const headers = await toastHeaders('success', "You've successfully left the team.");
-      throw redirect('/speaker', { headers });
+      return redirect('/speaker', { headers });
     }
   }
   return null;

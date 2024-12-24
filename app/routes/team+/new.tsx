@@ -20,7 +20,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
   if (result.status !== 'success') return result.error;
 
   const team = await UserTeams.for(userId).create(result.value);
-  throw redirect(`/team/${team.slug}`);
+  return redirect(`/team/${team.slug}`);
 };
 
 export default function NewTeamRoute({ actionData: errors }: Route.ComponentProps) {

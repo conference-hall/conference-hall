@@ -23,7 +23,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
   if (result.status !== 'success') return result.error;
 
   const event = await TeamEvents.for(userId, params.team).create(result.value);
-  throw redirect(`/team/${params.team}/new/${event.slug}/details`);
+  return redirect(`/team/${params.team}/new/${event.slug}/details`);
 };
 
 export default function NewEventRoute({ params, actionData: errors }: Route.ComponentProps) {

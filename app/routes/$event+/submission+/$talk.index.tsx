@@ -35,7 +35,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 
   const submission = TalkSubmission.for(userId, params.event);
   const proposal = await submission.saveDraft(params.talk, result.value);
-  throw redirect(`/${params.event}/submission/${proposal.talkId}/speakers`);
+  return redirect(`/${params.event}/submission/${proposal.talkId}/speakers`);
 };
 
 export default function SubmissionTalkRoute({ loaderData: talk, actionData: errors }: Route.ComponentProps) {

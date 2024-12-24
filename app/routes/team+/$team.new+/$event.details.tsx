@@ -27,7 +27,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 
   await event.update(result.value);
 
-  throw redirect(`/team/${params.team}/new/${params.event}/cfp`);
+  return redirect(`/team/${params.team}/new/${params.event}/cfp`);
 };
 
 export default function NewEventDetailsRoute({ loaderData: event, actionData: errors }: Route.ComponentProps) {

@@ -23,7 +23,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 export const action = async ({ request, params }: Route.ActionArgs) => {
   const userId = await requireSession(request);
   const talk = await CoSpeakerTalkInvite.with(params.code).addCoSpeaker(userId);
-  throw redirect(`/speaker/talks/${talk.id}`);
+  return redirect(`/speaker/talks/${talk.id}`);
 };
 
 export default function InvitationRoute({ loaderData: talk }: Route.ComponentProps) {

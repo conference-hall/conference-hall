@@ -28,7 +28,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
     case 'proposal-delete': {
       await proposal.delete();
       const headers = await toastHeaders('success', 'Proposal submission removed.');
-      throw redirect(`/${params.event}/proposals`, { headers });
+      return redirect(`/${params.event}/proposals`, { headers });
     }
     case 'proposal-confirmation': {
       const result = parseWithZod(form, { schema: ProposalParticipationSchema });

@@ -17,7 +17,7 @@ import type { Route } from './+types/index.ts';
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const userId = await requireSession(request);
   const schedule = await EventSchedule.for(userId, params.team, params.event).get();
-  if (schedule) throw redirect(`/team/${params.team}/${params.event}/schedule/0`);
+  if (schedule) return redirect(`/team/${params.team}/${params.event}/schedule/0`);
 
   const event = await UserEvent.for(userId, params.team, params.event).get();
   return {
@@ -36,7 +36,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
   if (result.status !== 'success') return result.error;
 
   await schedule.create(result.value);
-  throw redirect(`/team/${params.team}/${params.event}/schedule`);
+  return redirect(`/team/${params.team}/${params.event}/schedule`);
 };
 
 export default function ScheduleRoute({ loaderData: schedule, actionData: errors }: Route.ComponentProps) {

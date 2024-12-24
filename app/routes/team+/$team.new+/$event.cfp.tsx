@@ -17,7 +17,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const userId = await requireSession(request);
   const event = await UserEvent.for(userId, params.team, params.event).get();
   if (event.type === 'MEETUP') {
-    throw redirect(`/team/${params.team}/${params.event}`);
+    return redirect(`/team/${params.team}/${params.event}`);
   }
   return event;
 };
@@ -30,7 +30,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
   if (result.status !== 'success') return result.error;
   await event.update(result.value);
 
-  throw redirect(`/team/${params.team}/${params.event}`);
+  return redirect(`/team/${params.team}/${params.event}`);
 };
 
 export default function NewEventDetailsRoute({ loaderData: event, actionData: errors }: Route.ComponentProps) {

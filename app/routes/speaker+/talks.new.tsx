@@ -25,7 +25,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
   const talk = await TalksLibrary.of(userId).add(result.value);
 
   const headers = await toastHeaders('success', 'New talk created.');
-  throw redirect(`/speaker/talks/${talk.id}`, { headers });
+  return redirect(`/speaker/talks/${talk.id}`, { headers });
 };
 
 export default function NewTalkRoute({ actionData: errors }: Route.ComponentProps) {
