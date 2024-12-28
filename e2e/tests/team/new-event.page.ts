@@ -1,6 +1,6 @@
 import type { Locator, Page } from '@playwright/test';
 import { PageObject } from 'e2e/page-object.ts';
-import { OverviewPage } from '../team-event/overview.page.ts';
+import { OverviewPage } from '../event-management/overview.page.ts';
 
 export class NewEventPage extends PageObject {
   readonly heading: Locator;
