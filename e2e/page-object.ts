@@ -3,10 +3,12 @@ import type { Locator, Page } from '@playwright/test';
 export class PageObject {
   readonly page: Page;
   readonly toast: Locator;
+  readonly forbiddenPage: Locator;
 
   constructor(page: Page) {
     this.page = page;
     this.toast = page.getByLabel('Notifications').locator('[data-sonner-toast]').first();
+    this.forbiddenPage = page.getByRole('heading', { name: 'Forbidden action', exact: true });
   }
 
   async closeModal() {
