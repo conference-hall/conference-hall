@@ -38,7 +38,7 @@ export function ProposalsList({ proposals, pagination, statistics, filtersHash }
         isAllPagesSelected={selector.isAllPagesSelected}
         toggleAllPages={selector.toggleAllPages}
       />
-      <List.Content>
+      <List.Content aria-label="Proposals list">
         {proposals.map((proposal) => (
           <List.Row key={proposal.id} className="hover:bg-gray-50 px-4 sm:px-6">
             <ProposalItem

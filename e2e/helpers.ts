@@ -2,7 +2,7 @@ import path from 'node:path';
 
 const TEMP_DIR = '../node_modules/.playwright';
 
-export const TEST_USERS = ['clark-kent', 'bruce-wayne'] as const;
+export const TEST_USERS = ['clark-kent', 'bruce-wayne', 'peter-parker'] as const;
 
 export type TestUser = (typeof TEST_USERS)[number];
 
