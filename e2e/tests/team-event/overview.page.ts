@@ -17,4 +17,12 @@ export class OverviewPage extends PageObject {
   async waitFor() {
     await this.heading.waitFor();
   }
+
+  dashboardCard(title: string) {
+    return this.page.getByLabel(title, { exact: true });
+  }
+
+  dashboardCardLink(title: string, link: string) {
+    return this.dashboardCard(title).getByRole('link', { name: link });
+  }
 }
