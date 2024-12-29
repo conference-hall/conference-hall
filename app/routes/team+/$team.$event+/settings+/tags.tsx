@@ -88,7 +88,7 @@ export default function ProposalTagsRoute({ loaderData }: Route.ComponentProps) 
             <Text weight="medium">{count} tags</Text>
           </List.Header>
 
-          <List.Content>
+          <List.Content aria-label="Tags list">
             {tags.map((tag) => (
               <List.Row key={tag.id} className="p-4 flex justify-between">
                 <Tag tag={tag} />
