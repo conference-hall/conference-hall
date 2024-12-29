@@ -68,40 +68,7 @@ jobs:
     name: E2E tests
     runs-on: ubuntu-latest
     needs: static-tests
-    timeout-minutes: 20
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: 'npm'
-
-      - name: Start database and firebase emulators
-        run: docker compose up -d --build
-
-      - name: Wait for database start...
-        run: ./docker/wait-for-db.sh
-
-      - name: Cypress run
-        uses: cypress-io/github-action@v6
-        with:
-          build: npx dotenv -e .env.e2e -- npm run build
-          start: npx dotenv -e .env.e2e -- npm start
-          command-prefix: 'dotenv -e .env.e2e --'
-          wait-on: 'http://127.0.0.1:3000'
-
-      - name: Stop database and firebase emulators
-        if: always()
-        run: docker compose down
-
-  e2e-pw-tests:
-    name: E2E Playwright tests
-    runs-on: ubuntu-latest
-    needs: static-tests
-    timeout-minutes: 20
+    timeout-minutes: 10
 
     steps:
       - name: Checkout
@@ -128,7 +95,7 @@ jobs:
         run: npx dotenv -e .env.e2e -- npm run build
 
       - name: Run e2e tests
-        run: npm run test:pw
+        run: npm run test:e2e
 
       - name: Stop database and firebase emulators
         if: always()

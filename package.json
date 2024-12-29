@@ -19,15 +19,14 @@
     "test:db": "dotenv -e .env.test -- prisma db push --accept-data-loss",
     "test:unit": "dotenv -e .env.test -- vitest --browser.headless",
     "test:ui": "dotenv -e .env.test -- vitest --project browser",
-    "test:e2e": "dotenv -e .env.dev -- cypress open --e2e -b electron",
-    "test:pw": "playwright test",
-    "test:pw:ui": "playwright test --ui --ui-host=localhost",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui --ui-host=localhost",
     "db:migrate": "dotenv -e .env.dev -- prisma migrate dev",
     "db:reset": "dotenv -e .env.dev -- prisma migrate reset -f",
     "emails": "dotenv -e .env.dev -- npx --yes react-email dev --dir ./app/emails/templates --port 3002",
     "lint": "biome check",
     "lint:ci": "biome ci",
-    "tsc": "react-router typegen && tsc -b && tsc -b cypress"
+    "tsc": "react-router typegen && tsc -b"
   },
   "prisma": {
     "seed": "tsx ./prisma/seed.ts"
@@ -88,7 +87,6 @@
     "@sentry/vite-plugin": "^2.22.7",
     "@tailwindcss/forms": "^0.5.9",
     "@tailwindcss/typography": "^0.5.15",
-    "@testing-library/cypress": "^10.0.2",
     "@testing-library/react": "^16.1.0",
     "@testing-library/user-event": "^14.5.2",
     "@types/compression": "^1.7.5",
@@ -100,7 +98,6 @@
     "autoprefixer": "^10.4.20",
     "close-with-grace": "^2.1.0",
     "concurrently": "^9.1.0",
-    "cypress": "^13.17.0",
     "dotenv-cli": "^8.0.0",
     "lefthook": "^1.10.0",
     "prisma": "^6.1.0",
