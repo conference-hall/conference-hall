@@ -13,7 +13,7 @@ type TrackListProps = {
 
 export function TrackList({ type, tracks }: TrackListProps) {
   return (
-    <ul className="divide-y divide-gray-200 rounded-md border border-gray-200">
+    <ul className="divide-y divide-gray-200 rounded-md border border-gray-200" aria-label={`${type} list`}>
       {tracks.map((track) => (
         <li key={track.id} className="flex items-center justify-between p-4">
           <div className="truncate">

@@ -66,7 +66,7 @@ export function UserMenu({ email, name, picture, hasTeamAccess, teams, notificat
               </MenuLink>
 
               <MenuLink to="/speaker/talks" icon={MicrophoneIcon} onClick={handleClose}>
-                Talks library
+                Talk library
               </MenuLink>
 
               <Divider as="li" className="my-2" />

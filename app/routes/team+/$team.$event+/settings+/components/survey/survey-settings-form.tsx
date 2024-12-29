@@ -68,7 +68,7 @@ export function SurveySettingsForm({ config }: SurveySettingsFormProps) {
             </SurveyQuestionModal>
           </List.Header>
 
-          <List.Content>
+          <List.Content aria-label="Questions list">
             {questions.map((question, index) => (
               <List.Row
                 key={question.id}

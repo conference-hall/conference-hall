@@ -51,7 +51,7 @@ export function Input({
           autoComplete="off"
           {...rest}
           aria-invalid={Boolean(error)}
-          aria-describedby={error || description ? `${name}-describe` : undefined}
+          aria-describedby={`${name}-describe`}
         />
       </div>
       {(error || description) && (

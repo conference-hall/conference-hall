@@ -32,7 +32,5 @@ export async function resetDB() {
     db.user.deleteMany(),
   ]);
 
-  await disconnectDB();
-
   return 'db reset done';
 }

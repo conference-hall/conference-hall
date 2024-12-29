@@ -15,11 +15,12 @@ node_modules
 # docker
 /docker/firebase/.cache/firebase
 
-# tests
-test-results
-
 # typescript
 *.tsbuildinfo
 
 # vite
 vite.config.ts.timestamp*.mjs
+
+# playwright
+e2e/setup/.auth
+e2e/results
