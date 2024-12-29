@@ -12,9 +12,9 @@ test('updates event settings', async ({ page }) => {
   const event = await eventFactory({ team, traits: ['conference-cfp-open'] });
 
   const generalPage = new GeneralSettingsPage(page);
-  await generalPage.goto(team.slug, event.slug);
 
   // General settings
+  await generalPage.goto(team.slug, event.slug);
   await generalPage.nameInput.fill('New name');
   await generalPage.slugInput.fill('new-slug');
   await generalPage.privateRadio.click();
@@ -22,6 +22,7 @@ test('updates event settings', async ({ page }) => {
   await expect(generalPage.toast).toHaveText('Event saved.');
 
   // Details settings
+  await generalPage.goto(team.slug, 'new-slug');
   await generalPage.startDateInput.fill('2022-01-01');
   await generalPage.endDateInput.fill('2022-01-02');
   await generalPage.locationInput.fill('New location');
@@ -32,8 +33,7 @@ test('updates event settings', async ({ page }) => {
   await expect(generalPage.toast).toHaveText('Event details saved.');
 
   // Check values
-  await page.reload();
-  await generalPage.waitFor();
+  await generalPage.goto(team.slug, 'new-slug');
   await expect(generalPage.nameInput).toHaveValue('New name');
   await expect(generalPage.slugInput).toHaveValue('new-slug');
   await expect(generalPage.privateRadio).toBeChecked();
@@ -48,6 +48,9 @@ test('updates event settings', async ({ page }) => {
   await generalPage.switchOnlineEvent().click();
   await generalPage.saveDetailsButton.click();
   await expect(generalPage.toast).toHaveText('Event details saved.');
+
+  // Check values
+  await generalPage.goto(team.slug, 'new-slug');
   await expect(generalPage.switchOnlineEvent()).toBeChecked();
   await expect(generalPage.locationInput).not.toBeVisible();
 

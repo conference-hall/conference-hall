@@ -12,9 +12,9 @@ test('updates integrations settings', async ({ page }) => {
   const event = await eventFactory({ team, traits: ['conference-cfp-open'] });
 
   const integrationsPage = new IntegrationsSettingsPage(page);
-  await integrationsPage.goto(team.slug, event.slug);
 
   // Save Slack configuration with invalid URL
+  await integrationsPage.goto(team.slug, event.slug);
   await integrationsPage.slackWebhookInput.fill('foo');
   await integrationsPage.saveSlackButton.click();
   const webhookError = await integrationsPage.getInputDescription(integrationsPage.slackWebhookInput);
@@ -23,10 +23,10 @@ test('updates integrations settings', async ({ page }) => {
   // Save Slack configuration with valid URL
   await integrationsPage.slackWebhookInput.fill('http://example.com');
   await integrationsPage.saveSlackButton.click();
-  await integrationsPage.goto(team.slug, event.slug);
   await expect(integrationsPage.slackWebhookInput).toHaveValue('http://example.com');
 
   // Save OpenPlanner configuration
+  await integrationsPage.goto(team.slug, event.slug);
   await integrationsPage.openPlannerEventIdInput.fill('eventId!');
   await integrationsPage.openPlannerApiKeyInput.fill('apiKey!');
   await integrationsPage.saveOpenPlannerButton.click();
@@ -35,6 +35,7 @@ test('updates integrations settings', async ({ page }) => {
   await expect(integrationsPage.openPlannerApiKeyInput).toHaveValue('apiKey!');
 
   // Disable OpenPlanner
+  await integrationsPage.goto(team.slug, event.slug);
   await integrationsPage.disableOpenPlannerButton.click();
   await integrationsPage.goto(team.slug, event.slug);
   await expect(integrationsPage.openPlannerEventIdInput).toHaveValue('');

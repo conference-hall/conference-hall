@@ -12,23 +12,23 @@ test('updates conference CFP settings', async ({ page }) => {
   const event = await eventFactory({ team, traits: ['conference-cfp-open'] });
 
   const cfpPage = new CfpSettingsPage(page);
-  await cfpPage.goto(team.slug, event.slug);
 
   // Update CFP settings
+  await cfpPage.goto(team.slug, event.slug);
   await cfpPage.startInput.fill('2022-12-12');
   await cfpPage.endInput.fill('2022-12-13');
   await cfpPage.saveOpeningsButton.click();
   await expect(cfpPage.toast).toHaveText('Call for paper updated.');
 
   // Update CFP preferences
+  await cfpPage.goto(team.slug, event.slug);
   await cfpPage.maxProposalsInput.fill('3');
   await cfpPage.codeOfConductUrlInput.fill('https://example.com');
   await cfpPage.savePreferencesButton.click();
   await expect(cfpPage.toast).toHaveText('Call for paper updated.');
 
   // Check if the values are saved
-  await page.reload();
-  await cfpPage.waitFor();
+  await cfpPage.goto(team.slug, event.slug);
   await expect(cfpPage.startInput).toHaveValue('2022-12-12');
   await expect(cfpPage.endInput).toHaveValue('2022-12-13');
   await expect(cfpPage.maxProposalsInput).toHaveValue('3');
@@ -48,7 +48,6 @@ test('updates meetup CFP settings', async ({ page }) => {
   await expect(cfpPage.toast).toHaveText('Call for paper updated.');
 
   // Check if the values are saved
-  await page.reload();
-  await cfpPage.waitFor();
+  await cfpPage.goto(team.slug, event.slug);
   await expect(cfpPage.cfpActivationSwitch).toBeChecked();
 });

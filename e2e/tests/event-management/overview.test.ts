@@ -41,7 +41,7 @@ test.beforeEach(async () => {
 test.describe('As a team owner', () => {
   loginWith('clark-kent');
 
-  test('it displays event overview', async ({ page }) => {
+  test('displays event overview', async ({ page }) => {
     const overviewPage = new OverviewPage(page);
     await overviewPage.goto(team.slug, event.slug);
 
@@ -61,7 +61,7 @@ test.describe('As a team owner', () => {
 test.describe('As a team reviewer', () => {
   loginWith('bruce-wayne');
 
-  test('it displays event overview', async ({ page }) => {
+  test('displays event overview', async ({ page }) => {
     const overviewPage = new OverviewPage(page);
     await overviewPage.goto(team.slug, event.slug);
 
