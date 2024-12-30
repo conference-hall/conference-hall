@@ -24,7 +24,7 @@ test('updates event settings', async ({ page }) => {
   // Details settings
   await generalPage.goto(team.slug, 'new-slug');
   await generalPage.fill(generalPage.startDateInput, '01/01/2022');
-  await generalPage.fill(generalPage.endDateInput, '02/01/2022');
+  await generalPage.fill(generalPage.endDateInput, '02/02/2022');
   await generalPage.fill(generalPage.locationInput, 'New location');
   await generalPage.fill(generalPage.descriptionInput, 'New description');
   await generalPage.fill(generalPage.websiteUrlInput, 'https://new-website.com');
@@ -38,7 +38,7 @@ test('updates event settings', async ({ page }) => {
   await expect(generalPage.slugInput).toHaveValue('new-slug');
   await expect(generalPage.privateRadio).toBeChecked();
   await expect(generalPage.startDateInput).toHaveValue('2022-01-01');
-  await expect(generalPage.endDateInput).toHaveValue('2022-01-02');
+  await expect(generalPage.endDateInput).toHaveValue('2022-02-02');
   await expect(generalPage.locationInput).toHaveValue('New location');
   await expect(generalPage.descriptionInput).toHaveValue('New description');
   await expect(generalPage.websiteUrlInput).toHaveValue('https://new-website.com');
