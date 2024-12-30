@@ -17,8 +17,8 @@ test('adds, edits and removes a format', async ({ page }) => {
   // New track format
   await tracksPage.newFormatButton.click();
   await tracksPage.formatModal.waitFor();
-  await tracksPage.nameInput.fill('Quickie');
-  await tracksPage.descriptionInput.fill('A short talk');
+  await tracksPage.fill(tracksPage.nameInput, 'Quickie');
+  await tracksPage.fill(tracksPage.descriptionInput, 'A short talk');
   await tracksPage.saveFormatButton.click();
 
   // Check the new track format
@@ -32,8 +32,8 @@ test('adds, edits and removes a format', async ({ page }) => {
   await tracksPage.formatModal.waitFor();
   expect(tracksPage.nameInput).toHaveValue('Quickie');
   expect(tracksPage.descriptionInput).toHaveValue('A short talk');
-  await tracksPage.nameInput.fill('Conference');
-  await tracksPage.descriptionInput.fill('A long talk');
+  await tracksPage.fill(tracksPage.nameInput, 'Conference');
+  await tracksPage.fill(tracksPage.descriptionInput, 'A long talk');
   await tracksPage.saveFormatButton.click();
 
   // Change the format settings
@@ -66,8 +66,8 @@ test('adds, edits and removes a category', async ({ page }) => {
   // New track category
   await tracksPage.newCategoryButton.click();
   await tracksPage.categoryModal.waitFor();
-  await tracksPage.nameInput.fill('Beginner');
-  await tracksPage.descriptionInput.fill('For beginners');
+  await tracksPage.fill(tracksPage.nameInput, 'Beginner');
+  await tracksPage.fill(tracksPage.descriptionInput, 'For beginners');
   await tracksPage.saveCategoryButton.click();
 
   // Check the new track category
@@ -81,8 +81,8 @@ test('adds, edits and removes a category', async ({ page }) => {
   await tracksPage.categoryModal.waitFor();
   expect(tracksPage.nameInput).toHaveValue('Beginner');
   expect(tracksPage.descriptionInput).toHaveValue('For beginners');
-  await tracksPage.nameInput.fill('Intermediate');
-  await tracksPage.descriptionInput.fill('For intermediates');
+  await tracksPage.fill(tracksPage.nameInput, 'Intermediate');
+  await tracksPage.fill(tracksPage.descriptionInput, 'For intermediates');
   await tracksPage.saveCategoryButton.click();
 
   // Change the category settings

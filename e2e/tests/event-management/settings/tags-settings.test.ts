@@ -17,19 +17,19 @@ test('adds, edits and removes a tag', async ({ page }) => {
 
   // New tags
   await tagsPage.newTagButton.click();
-  await tagsPage.nameInput.fill('Foo');
+  await tagsPage.fill(tagsPage.nameInput, 'Foo');
   await tagsPage.createTagButton.click();
   await expect(tagsPage.toast).toContainText('Tag saved.');
 
   await tagsPage.newTagButton.click();
-  await tagsPage.nameInput.fill('Bar');
+  await tagsPage.fill(tagsPage.nameInput, 'Bar');
   await tagsPage.createTagButton.click();
   await expect(tagsPage.toast).toContainText('Tag saved.');
 
   await expect(tagsPage.tagsList).toHaveCount(2);
 
   // Search tags
-  await tagsPage.searchTagsInput.fill('Bar');
+  await tagsPage.fill(tagsPage.searchTagsInput, 'Bar');
   await page.keyboard.press('Enter');
   await expect(tagsPage.tagsList).toHaveCount(1);
   await expect(tagsPage.tagsList.first()).toContainText('Bar');
@@ -37,7 +37,7 @@ test('adds, edits and removes a tag', async ({ page }) => {
   // Edit tag
   const tag = tagsPage.tagsList.first();
   await tag.getByRole('button', { name: 'Edit' }).click();
-  await tagsPage.nameInput.fill('BarBaz');
+  await tagsPage.fill(tagsPage.nameInput, 'BarBaz');
   await tagsPage.saveTagButton.click();
   await expect(tagsPage.toast).toContainText('Tag saved.');
   await expect(tagsPage.tagsList.first()).toContainText('BarBaz');

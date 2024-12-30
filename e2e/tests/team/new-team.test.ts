@@ -13,15 +13,15 @@ test('creates a new team', async ({ page }) => {
   await newTeamPage.goto();
 
   // Cannot create when URL already exists
-  await newTeamPage.nameInput.fill('Team 1');
-  await newTeamPage.slugInput.fill('team-1');
+  await newTeamPage.fill(newTeamPage.nameInput, 'Team 1');
+  await newTeamPage.fill(newTeamPage.slugInput, 'team-1');
   await newTeamPage.clickOnCreate();
   const inputError = await newTeamPage.getInputDescription(newTeamPage.slugInput);
   await expect(inputError).toHaveText('This URL already exists.');
 
   // Create a new team
-  await newTeamPage.nameInput.fill('Team 2');
-  await newTeamPage.slugInput.fill('team-2');
+  await newTeamPage.fill(newTeamPage.nameInput, 'Team 2');
+  await newTeamPage.fill(newTeamPage.slugInput, 'team-2');
   const teamHomePage = await newTeamPage.clickOnCreate();
   await teamHomePage.waitFor();
 });

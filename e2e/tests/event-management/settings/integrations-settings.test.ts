@@ -15,20 +15,20 @@ test('updates integrations settings', async ({ page }) => {
 
   // Save Slack configuration with invalid URL
   await integrationsPage.goto(team.slug, event.slug);
-  await integrationsPage.slackWebhookInput.fill('foo');
+  await integrationsPage.fill(integrationsPage.slackWebhookInput, 'foo');
   await integrationsPage.saveSlackButton.click();
   const webhookError = await integrationsPage.getInputDescription(integrationsPage.slackWebhookInput);
   await expect(webhookError).toHaveText('Invalid url');
 
   // Save Slack configuration with valid URL
-  await integrationsPage.slackWebhookInput.fill('http://example.com');
+  await integrationsPage.fill(integrationsPage.slackWebhookInput, 'http://example.com');
   await integrationsPage.saveSlackButton.click();
   await expect(integrationsPage.slackWebhookInput).toHaveValue('http://example.com');
 
   // Save OpenPlanner configuration
   await integrationsPage.goto(team.slug, event.slug);
-  await integrationsPage.openPlannerEventIdInput.fill('eventId!');
-  await integrationsPage.openPlannerApiKeyInput.fill('apiKey!');
+  await integrationsPage.fill(integrationsPage.openPlannerEventIdInput, 'eventId!');
+  await integrationsPage.fill(integrationsPage.openPlannerApiKeyInput, 'apiKey!');
   await integrationsPage.saveOpenPlannerButton.click();
   await integrationsPage.goto(team.slug, event.slug);
   await expect(integrationsPage.openPlannerEventIdInput).toHaveValue('eventId!');

@@ -137,7 +137,7 @@ test('displays proposal data and review the proposal', async ({ page }) => {
   await expect(second.getByRole('button', { name: 'Thumbs up' })).toBeVisible();
 
   // Add a comment
-  await proposalPage.commentInput.fill('This is a new comment');
+  await proposalPage.fill(proposalPage.commentInput, 'This is a new comment');
   await proposalPage.commentButton.click();
   await expect(proposalPage.activityFeed).toHaveCount(4);
   const fourth = await proposalPage.activityFeed.nth(3);

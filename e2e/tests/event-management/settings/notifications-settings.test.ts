@@ -20,13 +20,13 @@ test('updates notifications settings', async ({ page }) => {
   await expect(notificationsPage.declinedProposalSwitch).not.toBeChecked();
 
   // Update notifications with errors
-  await notificationsPage.emailInput.fill('blablabla');
+  await notificationsPage.fill(notificationsPage.emailInput, 'blablabla');
   await notificationsPage.saveButton.click();
   const emailError = await notificationsPage.getInputDescription(notificationsPage.emailInput);
   await expect(emailError).toHaveText('Invalid email');
 
   // Update notification email
-  await notificationsPage.emailInput.fill('test@email.com');
+  await notificationsPage.fill(notificationsPage.emailInput, 'test@email.com');
   await notificationsPage.saveButton.click();
   await expect(notificationsPage.toast).toHaveText('Notification email saved.');
 
