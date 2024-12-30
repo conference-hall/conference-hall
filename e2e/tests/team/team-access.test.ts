@@ -16,13 +16,13 @@ test('gets access with a beta access key', async ({ page }) => {
   await expect(teamAccessPage.formLink).toHaveAttribute('href', 'https://forms.gle/AnArRCSHibmG59zw7');
 
   // Fill form with errors
-  await teamAccessPage.keyInput.fill('123');
+  await teamAccessPage.fill(teamAccessPage.keyInput, '123');
   await teamAccessPage.clickOnGetAccess();
   const inputError = await teamAccessPage.getInputDescription(teamAccessPage.keyInput);
   await expect(inputError).toHaveText('Invalid access key');
 
   // Fill form with success
-  await teamAccessPage.keyInput.fill('123456');
+  await teamAccessPage.fill(teamAccessPage.keyInput, '123456');
   const newTeamPage = await teamAccessPage.clickOnGetAccess();
   await newTeamPage.waitFor();
 });

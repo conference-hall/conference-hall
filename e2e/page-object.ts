@@ -15,6 +15,13 @@ export class PageObject {
     await this.page.getByRole('button', { name: 'Close' }).click();
   }
 
+  async fill(input: Locator, value: string) {
+    await input.scrollIntoViewIfNeeded();
+    await input.focus();
+    await input.clear();
+    await input.pressSequentially(value);
+  }
+
   async getInputDescription(input: Locator) {
     const subjectDescriptionId = await input.getAttribute('aria-describedby');
     return this.page.locator(`id=${subjectDescriptionId}`);

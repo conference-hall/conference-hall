@@ -24,7 +24,7 @@ test('updates survey settings', async ({ page }) => {
 
   // Add "text" question
   await surveyPage.addQuestionButton.click();
-  await surveyPage.questionInput.fill('What is your favorite color?');
+  await surveyPage.fill(surveyPage.questionInput, 'What is your favorite color?');
   await surveyPage.typeSelect.selectOption('text');
   await surveyPage.requiredCheckbox.check();
   await surveyPage.questionDialog.getByRole('button', { name: 'Add question' }).click();
@@ -34,7 +34,7 @@ test('updates survey settings', async ({ page }) => {
 
   // Edit question
   await surveyPage.editQuestionButton.click();
-  await surveyPage.questionInput.fill('What is your favorite color? (updated)');
+  await surveyPage.fill(surveyPage.questionInput, 'What is your favorite color? (updated)');
   await surveyPage.questionDialog.getByRole('button', { name: 'Save' }).click();
   await expect(surveyPage.toast).toHaveText('Question updated.');
   await expect(question).toContainText('What is your favorite color? (updated)');
@@ -47,11 +47,11 @@ test('updates survey settings', async ({ page }) => {
 
   // Add "radio" question
   await surveyPage.addQuestionButton.click();
-  await surveyPage.questionInput.fill('What is your favorite animal?');
+  await surveyPage.fill(surveyPage.questionInput, 'What is your favorite animal?');
   await surveyPage.typeSelect.selectOption('radio');
-  await surveyPage.newAnswerInput.fill('Dog');
+  await surveyPage.fill(surveyPage.newAnswerInput, 'Dog');
   await surveyPage.addAnswerButton.click();
-  await surveyPage.newAnswerInput.fill('Cat');
+  await surveyPage.fill(surveyPage.newAnswerInput, 'Cat');
   await surveyPage.addAnswerButton.click();
   await surveyPage.questionDialog.getByRole('button', { name: 'Add question' }).click();
   await expect(surveyPage.toast).toHaveText('Question added.');
@@ -62,11 +62,11 @@ test('updates survey settings', async ({ page }) => {
 
   // Add "checkbox" question
   await surveyPage.addQuestionButton.click();
-  await surveyPage.questionInput.fill('What are your favorite food?');
+  await surveyPage.fill(surveyPage.questionInput, 'What are your favorite food?');
   await surveyPage.typeSelect.selectOption('checkbox');
-  await surveyPage.newAnswerInput.fill('Pizza');
+  await surveyPage.fill(surveyPage.newAnswerInput, 'Pizza');
   await surveyPage.addAnswerButton.click();
-  await surveyPage.newAnswerInput.fill('Burger');
+  await surveyPage.fill(surveyPage.newAnswerInput, 'Burger');
   await surveyPage.addAnswerButton.click();
   await surveyPage.questionDialog.getByRole('button', { name: 'Add question' }).click();
   await expect(surveyPage.toast).toHaveText('Question added.');

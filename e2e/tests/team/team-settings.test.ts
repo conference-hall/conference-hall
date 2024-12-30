@@ -45,7 +45,7 @@ test.describe('as a team owner', () => {
 
     // Member list
     await expect(settingsPage.members).toHaveCount(2);
-    await settingsPage.findMember.fill('bru');
+    await settingsPage.fill(settingsPage.findMember, 'bru');
     await page.keyboard.press('Enter');
     await expect(settingsPage.members).toHaveCount(1);
 

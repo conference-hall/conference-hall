@@ -15,15 +15,15 @@ test('updates conference CFP settings', async ({ page }) => {
 
   // Update CFP settings
   await cfpPage.goto(team.slug, event.slug);
-  await cfpPage.startInput.fill('2022-12-12');
-  await cfpPage.endInput.fill('2022-12-13');
+  await cfpPage.fill(cfpPage.startInput, '12/12/2022');
+  await cfpPage.fill(cfpPage.endInput, '13/12/2022');
   await cfpPage.saveOpeningsButton.click();
   await expect(cfpPage.toast).toHaveText('Call for paper updated.');
 
   // Update CFP preferences
   await cfpPage.goto(team.slug, event.slug);
-  await cfpPage.maxProposalsInput.fill('3');
-  await cfpPage.codeOfConductUrlInput.fill('https://example.com');
+  await cfpPage.fill(cfpPage.maxProposalsInput, '3');
+  await cfpPage.fill(cfpPage.codeOfConductUrlInput, 'https://example.com');
   await cfpPage.savePreferencesButton.click();
   await expect(cfpPage.toast).toHaveText('Call for paper updated.');
 

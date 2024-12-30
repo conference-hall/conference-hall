@@ -66,7 +66,7 @@ test('displays and filters proposals', async ({ page }) => {
   await expect(proposalsPage.proposal(proposal3.title)).toBeVisible();
 
   // filter by title
-  await proposalsPage.searchInput.fill('first');
+  await proposalsPage.fill(proposalsPage.searchInput, 'first');
   await page.keyboard.press('Enter');
   await expect(proposalsPage.proposalCount(1)).toBeVisible();
   await expect(proposalsPage.proposal(proposal1.title)).toBeVisible();
@@ -74,7 +74,7 @@ test('displays and filters proposals', async ({ page }) => {
   await expect(proposalsPage.proposalCount(3)).toBeVisible();
 
   // filter by speaker name
-  await proposalsPage.searchInput.fill('johnny');
+  await proposalsPage.fill(proposalsPage.searchInput, 'johnny');
   await page.keyboard.press('Enter');
   await expect(proposalsPage.proposalCount(2)).toBeVisible();
   await expect(proposalsPage.proposal(proposal2.title)).toBeVisible();

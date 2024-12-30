@@ -45,7 +45,7 @@ test.describe('when user is connected', () => {
       await accomodationRadioNo.click();
       await transportTaxiCheckbox.click();
       await transportPlaneCheckbox.click();
-      await commentInput.fill('World');
+      await surveyPage.fill(commentInput, 'World');
       await surveyPage.clickOnSave();
       await expect(surveyPage.toast).toHaveText('Survey saved.');
     });

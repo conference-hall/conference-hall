@@ -15,20 +15,20 @@ test('updates event settings', async ({ page }) => {
 
   // General settings
   await generalPage.goto(team.slug, event.slug);
-  await generalPage.nameInput.fill('New name');
-  await generalPage.slugInput.fill('new-slug');
+  await generalPage.fill(generalPage.nameInput, 'New name');
+  await generalPage.fill(generalPage.slugInput, 'new-slug');
   await generalPage.privateRadio.click();
   await generalPage.saveGeneralButton.click();
   await expect(generalPage.toast).toHaveText('Event saved.');
 
   // Details settings
   await generalPage.goto(team.slug, 'new-slug');
-  await generalPage.startDateInput.fill('2022-01-01');
-  await generalPage.endDateInput.fill('2022-01-02');
-  await generalPage.locationInput.fill('New location');
-  await generalPage.descriptionInput.fill('New description');
-  await generalPage.websiteUrlInput.fill('https://new-website.com');
-  await generalPage.contactEmailInput.fill('test@email.com');
+  await generalPage.fill(generalPage.startDateInput, '01/01/2022');
+  await generalPage.fill(generalPage.endDateInput, '02/01/2022');
+  await generalPage.fill(generalPage.locationInput, 'New location');
+  await generalPage.fill(generalPage.descriptionInput, 'New description');
+  await generalPage.fill(generalPage.websiteUrlInput, 'https://new-website.com');
+  await generalPage.fill(generalPage.contactEmailInput, 'test@email.com');
   await generalPage.saveDetailsButton.click();
   await expect(generalPage.toast).toHaveText('Event details saved.');
 
