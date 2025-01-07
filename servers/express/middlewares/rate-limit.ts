@@ -50,8 +50,8 @@ export function applyRateLimits(app: express.Application) {
     //   return strongRateLimit(req, res, next);
     // }
 
-    // Rate limit for GET /api
-    if (req.path.startsWith('/api')) {
+    // Rate limit for GET /api/
+    if (req.path.startsWith('/api/')) {
       return apiRateLimit(req, res, next);
     }
 
