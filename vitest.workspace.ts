@@ -13,6 +13,7 @@ export default defineWorkspace([
       poolOptions: { threads: { singleThread: true } },
       include: ['./**/*.test.ts', '!./**/*.test.tsx', '!./e2e/**/*'],
       setupFiles: ['./tests/setup.server.ts'],
+      globalSetup: ['./tests/setup.global.ts'],
     },
   },
   {
