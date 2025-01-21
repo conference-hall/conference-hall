@@ -90,7 +90,7 @@ type MardownPreviewModalProps = {
   label: string;
   markdown?: string | null;
   isOpen: boolean;
-  onClose: () => void;
+  onClose: VoidFunction;
 };
 
 function MardownPreviewModal({ label, markdown, isOpen, onClose }: MardownPreviewModalProps) {
