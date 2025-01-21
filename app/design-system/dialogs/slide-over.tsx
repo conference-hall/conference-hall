@@ -7,7 +7,7 @@ import { Background, SlideOverTransition } from '../transitions.tsx';
 type Props = {
   open: boolean;
   size?: 's' | 'm' | 'l' | 'xl';
-  onClose: () => void;
+  onClose: VoidFunction;
   children: React.ReactNode;
 };
 
@@ -40,7 +40,12 @@ export function SlideOver({ open, size = 'm', onClose, children }: Props) {
   );
 }
 
-type ContentProps = { title: React.ReactNode; children: React.ReactNode; onClose: () => void; className?: string };
+type ContentProps = {
+  title: React.ReactNode;
+  children: React.ReactNode;
+  onClose: VoidFunction;
+  className?: string;
+};
 
 function Content({ title, children, onClose, className }: ContentProps) {
   return (
