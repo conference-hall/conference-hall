@@ -1,6 +1,6 @@
-import { render, screen } from '@testing-library/react';
-import { userEvent } from '@testing-library/user-event';
+import { userEvent } from '@vitest/browser/context';
 import { createRoutesStub } from 'react-router';
+import { render } from 'vitest-browser-react';
 
 import type { JSX } from 'react';
 import { EventsDropdown } from './events-dropdown.tsx';
@@ -8,7 +8,7 @@ import { EventsDropdown } from './events-dropdown.tsx';
 describe('EventsDropdown component', () => {
   const renderComponent = (Component: JSX.Element) => {
     const RouteStub = createRoutesStub([{ path: '/', Component: () => Component }]);
-    render(<RouteStub />);
+    return render(<RouteStub />);
   };
 
   const events = [
@@ -21,30 +21,34 @@ describe('EventsDropdown component', () => {
     const currentTeam = { slug: 'team-1', name: 'Team 1' };
     const currentEvent = { slug: 'event-1', name: 'Event 1', logoUrl: null };
 
-    renderComponent(<EventsDropdown events={events} currentTeam={currentTeam} currentEvent={currentEvent} />);
+    const screen = renderComponent(
+      <EventsDropdown events={events} currentTeam={currentTeam} currentEvent={currentEvent} />,
+    );
 
     const button = screen.getByRole('button');
-    expect(button).toHaveTextContent('Event 1');
+    await expect.element(button).toHaveTextContent('Event 1');
 
     await userEvent.click(button);
 
     const eventLink1 = screen.getByRole('menuitem', { name: /Event 1/ });
-    expect(eventLink1).toHaveAttribute('href', '/team/team-1/event-1');
+    await expect.element(eventLink1).toHaveAttribute('href', '/team/team-1/event-1');
 
     const eventLink2 = screen.getByRole('menuitem', { name: /Event 2/ });
-    expect(eventLink2).toHaveAttribute('href', '/team/team-1/event-2');
+    await expect.element(eventLink2).toHaveAttribute('href', '/team/team-1/event-2');
 
-    const eventLink3 = screen.queryByRole('menuitem', { name: /Event 3/ });
-    expect(eventLink3).toBeNull();
+    const eventLink3 = screen.getByRole('menuitem', { name: /Event 3/ });
+    await expect.element(eventLink3).not.toBeInTheDocument();
   });
 
   it('displays an archived event if it is the current one', async () => {
     const currentTeam = { slug: 'team-1', name: 'Team 1' };
     const currentEvent = { slug: 'event-3', name: 'Event 3', logoUrl: null };
 
-    renderComponent(<EventsDropdown events={events} currentTeam={currentTeam} currentEvent={currentEvent} />);
+    const screen = renderComponent(
+      <EventsDropdown events={events} currentTeam={currentTeam} currentEvent={currentEvent} />,
+    );
 
     const button = screen.getByRole('button');
-    expect(button).toHaveTextContent('Event 3');
+    await expect.element(button).toHaveTextContent('Event 3');
   });
 });
