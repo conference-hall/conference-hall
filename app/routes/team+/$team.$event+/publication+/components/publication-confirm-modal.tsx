@@ -44,7 +44,7 @@ export function PublicationButton({ type, statistics }: PublicationProps) {
 
 type ModalProps = {
   open: boolean;
-  onClose: () => void;
+  onClose: VoidFunction;
 } & PublicationProps;
 
 function PublicationConfirmModal({ type, statistics, open, onClose }: ModalProps) {

@@ -45,7 +45,7 @@ export function TalkEditButton(props: TalkEditProps) {
 
 type TalkEditDrawerProps = TalkEditProps & {
   open: boolean;
-  onClose: () => void;
+  onClose: VoidFunction;
 };
 
 function TalkEditDrawer({ initialValues, event, errors, open, onClose }: TalkEditDrawerProps) {

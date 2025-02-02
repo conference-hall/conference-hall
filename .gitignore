@@ -24,3 +24,6 @@ vite.config.ts.timestamp*.mjs
 # playwright
 e2e/setup/.auth
 e2e/results
+
+# other
+.DS_Store

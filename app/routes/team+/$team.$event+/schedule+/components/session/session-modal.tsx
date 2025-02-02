@@ -11,7 +11,7 @@ type SessionModalProps = {
   startTime: Date;
   endTime: Date;
   tracks: Array<Track>;
-  onClose: () => void;
+  onClose: VoidFunction;
   onUpdateSession: (current: ScheduleSession, updated: ScheduleSession) => void;
   onDeleteSession: (session: ScheduleSession) => void;
 };

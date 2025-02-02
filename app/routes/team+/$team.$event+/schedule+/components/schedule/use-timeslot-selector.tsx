@@ -14,9 +14,9 @@ export type TimeSlotSelector = {
   isSelecting: boolean;
   getSelectedSlot: (trackId: string) => TimeSlot | null;
   isSelectedSlot: (trackId: string, slot: TimeSlot) => boolean;
-  onSelectStart: (trackId: string, slot: TimeSlot) => () => void;
-  onSelectHover: (trackId: string, slot: TimeSlot) => () => void;
-  onSelect: () => void;
+  onSelectStart: (trackId: string, slot: TimeSlot) => VoidFunction;
+  onSelectHover: (trackId: string, slot: TimeSlot) => VoidFunction;
+  onSelect: VoidFunction;
 };
 
 export function useTimeslotSelector(

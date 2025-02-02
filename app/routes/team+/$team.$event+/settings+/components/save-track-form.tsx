@@ -47,7 +47,7 @@ export function EditTrackButton({ type, initialValues }: EditTrackButtonProps) {
   );
 }
 
-type SaveTrackFormModalProps = { type: TrackType; initialValues?: TrackData; isOpen: boolean; onClose: () => void };
+type SaveTrackFormModalProps = { type: TrackType; initialValues?: TrackData; isOpen: boolean; onClose: VoidFunction };
 
 function SaveTrackFormModal({ type, initialValues, isOpen, onClose }: SaveTrackFormModalProps) {
   return (

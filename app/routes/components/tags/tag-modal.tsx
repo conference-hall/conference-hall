@@ -12,7 +12,7 @@ import { Tag } from './tag.tsx';
 type TagModalProps = {
   mode: 'create' | 'edit';
   initialValues?: TagType;
-  children: (props: { onOpen: () => void }) => ReactNode;
+  children: (props: { onOpen: VoidFunction }) => ReactNode;
 };
 
 export function TagModal({ mode, initialValues, children }: TagModalProps) {
@@ -36,7 +36,7 @@ type TagModalContentProps = {
   mode: 'create' | 'edit';
   initialValues?: TagType;
   open: boolean;
-  onClose: () => void;
+  onClose: VoidFunction;
 };
 
 function TagModaContent({ mode, initialValues, open, onClose }: TagModalContentProps) {

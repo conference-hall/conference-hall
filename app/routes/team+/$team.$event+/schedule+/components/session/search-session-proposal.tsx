@@ -10,7 +10,7 @@ import type { ScheduleProposalData } from '../schedule.types.ts';
 
 type SearchSessionProposalProps = {
   onChange: (proposal: ScheduleProposalData | null) => void;
-  onClose: () => void;
+  onClose: VoidFunction;
 };
 
 export function SearchSessionProposal({ onChange, onClose }: SearchSessionProposalProps) {

@@ -5,7 +5,7 @@ type SelectAllBannerProps = {
   totalSelected: number;
   isCurrentPageSelected: boolean;
   isAllPagesSelected: boolean;
-  toggleAllPages: () => void;
+  toggleAllPages: VoidFunction;
 };
 
 export function SelectAllBanner({

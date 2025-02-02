@@ -10,7 +10,11 @@ const layout = cva(
   'relative transform overflow-hidden rounded-lg bg-white text:left shadow-xl transition-all w-full p-4 md:p-8',
   {
     variants: {
-      size: { m: 'sm:max-w-lg', l: 'sm:max-w-2xl', full: 'sm:max-w-4xl h-full overflow-y-auto' },
+      size: {
+        m: 'sm:max-w-lg',
+        l: 'sm:max-w-2xl',
+        full: 'sm:max-w-4xl h-full overflow-y-auto',
+      },
     },
     defaultVariants: { size: 'm' },
   },
@@ -20,7 +24,7 @@ type Props = {
   title: ReactNode;
   children: React.ReactNode;
   open: boolean;
-  onClose: () => void;
+  onClose: VoidFunction;
 } & VariantProps<typeof layout>;
 
 export function Modal({ title, children, size, open, onClose }: Props) {
@@ -46,7 +50,13 @@ export function Modal({ title, children, size, open, onClose }: Props) {
 
 // MODAL Title
 
-function Title({ children, onClose }: { children: ReactNode; onClose: () => void }) {
+function Title({
+  children,
+  onClose,
+}: {
+  children: ReactNode;
+  onClose: VoidFunction;
+}) {
   return (
     <div className="flex items-start justify-between">
       <DialogTitle as="h1" className="text-base font-semibold leading-6 text-gray-900 truncate">
@@ -70,7 +80,13 @@ Modal.Title = Title;
 
 // Modal Content
 
-function Content({ children, className }: { children: ReactNode; className?: string }) {
+function Content({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
   return <div className={cx('pt-6', className)}>{children}</div>;
 }
 

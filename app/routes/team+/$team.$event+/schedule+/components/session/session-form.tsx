@@ -29,8 +29,8 @@ type Props = {
   endTime: Date;
   tracks: Array<Track>;
   isSearching: boolean;
-  onFinish: () => void;
-  onToggleSearch: () => void;
+  onFinish: VoidFunction;
+  onToggleSearch: VoidFunction;
   onUpdateSession: (current: ScheduleSession, updated: ScheduleSession) => void;
   onDeleteSession: (session: ScheduleSession) => void;
 };

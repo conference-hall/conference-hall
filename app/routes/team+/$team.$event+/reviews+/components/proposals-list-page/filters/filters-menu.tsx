@@ -44,7 +44,7 @@ export function FiltersMenu() {
   );
 }
 
-type FiltersContentProps = { close: () => void };
+type FiltersContentProps = { close: VoidFunction };
 
 function FiltersContent({ close }: FiltersContentProps) {
   const currentTeam = useCurrentTeam();

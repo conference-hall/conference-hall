@@ -22,7 +22,7 @@ type QuestionType = 'text' | 'checkbox' | 'radio';
 
 type SurveyModalProps = {
   initialValues?: SurveyQuestion;
-  children: (props: { onOpen: () => void }) => ReactNode;
+  children: (props: { onOpen: VoidFunction }) => ReactNode;
 };
 
 export function SurveyQuestionModal({ initialValues, children }: SurveyModalProps) {
@@ -45,7 +45,7 @@ export function SurveyQuestionModal({ initialValues, children }: SurveyModalProp
 type SurveyQuestionModalContentProps = {
   initialValues?: SurveyQuestion;
   open: boolean;
-  onClose: () => void;
+  onClose: VoidFunction;
 };
 
 function SurveyQuestionModalContent({ initialValues, open, onClose }: SurveyQuestionModalContentProps) {
